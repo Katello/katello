@@ -42,16 +42,16 @@ angular.module('Katello').controller('SystemsController',
             show: true
         }];
 
-        var transform = function(data){
+        var transform = function(data) {
             var rows = [];
 
             angular.forEach(data.systems,
-                function(system){
+                function(system) {
                     var row = {
                         'row_id' : system.id,
                         'show'  : true,
                         'cells': [{
-                            display: $compile('<a ng-click="select_item(\'' + system.uuid + '\')">' + system.name + '</a>')($scope),
+                            display: $compile('<a ng-click="table.select_item(\'' + KT.routes.edit_system_path(system.id) + '\',' + system.id + ')">' + system.name + '</a>')($scope),
                             column_id: 'name'
                         },{
                             display: system.description,
@@ -81,41 +81,53 @@ angular.module('Katello').controller('SystemsController',
         };
 
         $scope.table                = Nutupane.table;
-        $scope.table.url            = '/katello/api/systems/';
+        $scope.table.url            = KT.routes.api_systems_path();
         $scope.table.transform      = transform;
         $scope.table.model          = 'Systems';
         $scope.table.data.columns   = columns;
+        $scope.table.active_item    = {};
 
         var allColumns = $scope.table.data.columns.slice(0);
         var nameColumn = $scope.table.data.columns.slice(0).splice(0, 1);
 
+        $scope.table.select_item = function(url, id){
+            var system;
 
-        $scope.select_item = function(id){
-            $location.search('item', id);
+            if (id) {
+                angular.forEach($scope.table.data.rows, function(row) {
+                    if (row.row_id.toString() === id.toString()) {
+                        system = row;
+                    }
+                });
+            }
+            url = url ? url : KT.routes.edit_system_path(id);
 
-            $http.get('/katello/api/systems/' + id, {
+            $http.get(url, {
                 params : {
                     expanded : true
                 }
             })
             .then(function(response){
                 $scope.table.visible = false;
-                $scope.system = response.data;
-                // Remove all columns except name and replace them with the details pane
-                $scope.table.data.columns = nameColumn;
+
+                // Only reset the active_item if an ID is provided
+                if (id) {
+                    // Remove all columns except name and replace them with the details pane
+                    $scope.table.data.columns = nameColumn;
+                    $scope.table.select_all(false);
+                    $scope.table.active_item = system;
+                    $scope.table.active_item.selected  = true;
+                    $scope.rowSelect = false;
+                }
+                $scope.table.active_item.html = response.data;
             });
         };
 
-        $scope.close_item = function () {
-            $location.search("");
+        $scope.table.close_item = function () {
             $scope.table.visible = true;
             // Restore the former columns
             $scope.table.data.columns = allColumns;
         };
-
-        if( $location.search().item ){
-            $scope.select_item($location.search().item);
-        }
 
         Nutupane.get();
     }]
