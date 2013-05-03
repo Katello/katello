@@ -216,7 +216,7 @@ Schedules the consumer identity certificate regeneration
       }
     end
 
-    respond
+    respond({ :collection => systems })
   end
 
   api :GET, "/consumers/:id", "Show a system (compatibility)"
