@@ -14,10 +14,12 @@ $:.unshift(__FILE__, ".") #add  current path to the classpath
 
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 ENV["RAILS_ENV"] ||= 'test' # ok
+require 'simplecov'
+SimpleCov.start if ENV["COVERAGE"] # ok
+
 require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
 require 'webrat'
-require 'simplecov'
 require 'helpers/login_helper_methods'
 require 'helpers/authorization_helper_methods'
 require 'helpers/locale_helper_methods'
