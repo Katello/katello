@@ -71,6 +71,7 @@ class Api::V1::OrganizationDefaultInfoController < Api::V1::ApiController
 
   api :POST, '/organizations/:organization_id/default_info/:informable_type/apply', "Apply existing default info on all informable resources"
   param_group :informable_identifier
+  param :async, :boolean, :required => false, :desc => "directive to run this asynchronously or not"
   def apply_to_all
     params[:async] = true if params[:async].nil?
 
@@ -89,10 +90,6 @@ class Api::V1::OrganizationDefaultInfoController < Api::V1::ApiController
       response[:task] = retval
     end
     render :json => response.to_json
-  end
-
-  def apply_to_all_status
-    render :json => TaskStatus.find_by_id(@organization.apply_info_task_id).to_json
   end
 
   private
