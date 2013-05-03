@@ -26,8 +26,10 @@ instead.
 Found a bug?
 ------------
 
-That's rather unfortunate. But don't worry! We can help. Just
-[file a bug](https://bugzilla.redhat.com/enter_bug.cgi?product=Katello).
+That's rather unfortunate. But don't worry! We can help. Just file a bug
+[on our Bugzilla](https://bugzilla.redhat.com/enter_bug.cgi?product=Katello) or
+[in Github](https://github.com/Katello/katello-cli/issues)
+
 
 Contributing
 ------------
@@ -43,6 +45,7 @@ What's included in this repository:
 Contact & Resources
 -------------------
 
+ * [Katello.org](http://katello.org)
  * [Wiki](https://fedorahosted.org/katello/wiki)
  * [User mailing list](https://fedorahosted.org/mailman/listinfo/katello)
  * [Developer mailing list](https://www.redhat.com/mailman/listinfo/katello-devel)
