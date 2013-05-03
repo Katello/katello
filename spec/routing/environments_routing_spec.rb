@@ -16,31 +16,31 @@ describe EnvironmentsController do
   describe "routing" do
 
     it "recognizes and generates #index" do
-      { :get => "/organizations/1/environments" }.should route_to(:controller => "environments", :action => "index", :organization_id =>"1")
+      { :get => "/organizations/1/environments" }.should route_to(:controller => "environments", :action => "index", :organization_id => "1")
     end
 
     it "recognizes and generates #new" do
-      { :get => "/organizations/1/environments/new" }.should route_to(:controller => "environments", :action => "new", :organization_id =>"1")
+      { :get => "/organizations/1/environments/new" }.should route_to(:controller => "environments", :action => "new", :organization_id => "1")
     end
 
     it "recognizes and generates #show" do
-      { :get => "/organizations/1/environments/1" }.should route_to(:controller => "environments", :action => "show", :id => "1", :organization_id =>"1")
+      { :get => "/organizations/1/environments/1" }.should route_to(:controller => "environments", :action => "show", :id => "1", :organization_id => "1")
     end
 
     it "recognizes and generates #edit" do
-      { :get => "/organizations/1/environments/1/edit" }.should route_to(:controller => "environments", :action => "edit", :id => "1", :organization_id =>"1")
+      { :get => "/organizations/1/environments/1/edit" }.should route_to(:controller => "environments", :action => "edit", :id => "1", :organization_id => "1")
     end
 
     it "recognizes and generates #create" do
-      { :post => "/organizations/1/environments" }.should route_to(:controller => "environments", :action => "create", :organization_id =>"1")
+      { :post => "/organizations/1/environments" }.should route_to(:controller => "environments", :action => "create", :organization_id => "1")
     end
 
     it "recognizes and generates #update" do
-      { :put => "/organizations/1/environments/1" }.should route_to(:controller => "environments", :action => "update", :id => "1", :organization_id =>"1")
+      { :put => "/organizations/1/environments/1" }.should route_to(:controller => "environments", :action => "update", :id => "1", :organization_id => "1")
     end
 
     it "recognizes and generates #destroy" do
-      { :delete => "/organizations/1/environments/1" }.should route_to(:controller => "environments", :action => "destroy", :id => "1", :organization_id =>"1")
+      { :delete => "/organizations/1/environments/1" }.should route_to(:controller => "environments", :action => "destroy", :id => "1", :organization_id => "1")
     end
 
   end

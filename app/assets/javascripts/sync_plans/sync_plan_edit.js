@@ -93,7 +93,7 @@ $(document).ready(function() {
                     $("#current_plan").text(plan_name);
                 }
                 var id = $('#plan_id');
-                list.refresh(id.attr('name'), id.attr('data-ajax_url'));
+                list.refresh(id.attr('value'), id.attr('data-ajax_url'));
             },
             onerror     :  function(settings, original, xhr) {
             original.reset();

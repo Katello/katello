@@ -19,7 +19,7 @@
               %tbody
                 - for product_content in contents
                   - content_enabled = product_content.katello_enabled?
-                  %tr.collapsed.repo_set{:id=>"#{tab_id}_repo_set_#{product_content.content.id}", :class=>(:disable if !content_enabled)}
+                  %tr.collapsed.repo_set{:id=>"repo_set_#{product_content.content.id}", :class=>(:disable if !content_enabled)}
                     %td
                       =image_tag( "icons/spinner.gif", :class=>"hidden fl repo_set_spinner",
                           :id=>"spinner_set_#{product_content.content.id}", :style=>"margin-right:1px;")

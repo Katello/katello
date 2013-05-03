@@ -36,8 +36,8 @@ module Katello
         @config_file_paths        = options[:config_file_paths] || raise(ArgumentError)
         @default_config_file_path = options[:default_config_file_path] || raise(ArgumentError)
         @validation               = options[:validation] || raise(ArgumentError)
-        @config_post_process      = options[:config_post_process] || lambda {}
-        @load_yml_post_process    = options[:load_yml_post_process] || lambda {}
+        @config_post_process      = options[:config_post_process]
+        @load_yml_post_process    = options[:load_yml_post_process]
       end
 
       # raw config data from katello.yml represented with Node
@@ -85,7 +85,7 @@ module Katello
       def load(environment = nil)
         Node.new.tap do |c|
           load_config_file c, environment
-          config_post_process.call c, environment
+          config_post_process.call c, environment  if config_post_process
           validate c, environment
         end
       end
@@ -102,7 +102,7 @@ module Katello
                           end
 
         Node.new(hash_parsed_yml).tap do |config|
-          load_yml_post_process.call(config)
+          load_yml_post_process.call(config) if load_yml_post_process
         end
       end
 

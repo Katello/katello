@@ -93,8 +93,8 @@ EOKEY
     Resources::Candlepin::Product.stub!(:pools).and_return([])
     Resources::Candlepin::Product.stub!(:delete_subscriptions).and_return(nil)
 
-    Resources::Candlepin::Content.stub!(:create).and_return({ :id => '123' })
-    Resources::Candlepin::Content.stub!(:update).and_return({ :id => '123' })
+    Resources::Candlepin::Content.stub!(:create).and_return({ :id => '123', :type=>'yum' })
+    Resources::Candlepin::Content.stub!(:update).and_return({ :id => '123', :type=>'yum' })
 
     # pulp orchestration
     Resources::Candlepin::Product.stub!(:certificate).and_return("")
@@ -164,9 +164,9 @@ EOKEY
       Runcible::Extensions::Repository.stub(:find).with(RepoTestData::CLONED_REPO_ID).and_return(RepoTestData::CLONED_PROPERTIES)
     end
 
-    Resources::Candlepin::Content.stub!(:create).and_return({ :id => '123' })
-    Resources::Candlepin::Content.stub!(:update).and_return({ :id => '123' })
-    Resources::Candlepin::Content.stub!(:get).and_return({ :id => '123' })
+    Resources::Candlepin::Content.stub!(:create).and_return({ :id => '123', :type=>'yum'})
+    Resources::Candlepin::Content.stub!(:update).and_return({ :id => '123', :type=>'yum' })
+    Resources::Candlepin::Content.stub!(:get).and_return({ :id => '123', :type=>'yum'})
 
     Repository.instance_eval do
       define_method(:index_packages) {
