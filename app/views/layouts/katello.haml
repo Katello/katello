@@ -19,8 +19,10 @@
 = content_for(:body) do
   %article{ 'ng-app' => 'Katello' }
     = render :file => "common/menu"
-    %section.maincontent
-      = yield
+  #wrapper
+    %article#maincontent
+      %section.maincontent
+        = yield
 
 = content_for(:footer) do
   = render :partial => "common/footer"

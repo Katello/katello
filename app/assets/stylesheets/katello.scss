@@ -5,7 +5,7 @@
 @import "alchemy/composites/content_elements";
 @import "alchemy/components/helpers";
 @import 'alchemy-buttons/buttons';
-@import "alchemy/components/normalize";
+//@import "alchemy/components/normalize";
 
 @import "katello_base";
 
@@ -35,10 +35,6 @@
 @import "ui.spinner";
 
 @import "custom_info";
-
-body {
-  background-color: white;
-}
 
 pre  { text-indent: 18px; }
 a { outline: 0 none;}
@@ -610,7 +606,7 @@ fieldset {
         @include border-right-radius(5px);
         background-color: $lightergrey_color;
         margin-top: 79px;
-        margin-right: 5px;
+        margin-right: 20px;
         position: relative;
         .panel_action {
             .disabled {
@@ -1345,14 +1341,16 @@ footer a {
   @extend .clearfix;
 }
 
-.maincontent {
+#maincontent section.maincontent {
   box-shadow: none !important;
   background: white;
-  //width: 100%;
   margin: 0 auto;
-  padding: 0 20px;
   box-sizing: border-box;
-  margin-top: 40px;
+  padding-top: 40px;
+  padding-bottom: 20px;
+  width: 1172px;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
 .center {
