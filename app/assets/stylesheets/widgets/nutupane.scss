@@ -1,6 +1,7 @@
 @import "compass";
 @import "katello_colors";
 @import "alchemy-tables/tables";
+@import "alchemy/_mixins";
 
 .container_16 {
   float: none;
@@ -85,7 +86,7 @@ input {
   border-radius: 5px 5px 0 0;
 }
 
-.nutupane-details {
+.nutupane-pane {
   display: none;
   background: white;
   border: 1px solid #CCC;
@@ -114,6 +115,20 @@ input {
   position: fixed;
   width: 78%;
   top: 5%;
+}
+
+#nutupaneNewItem {
+  display: block;
+  left: 20%;
+  padding: 20px;
+  position: absolute;
+  right: 20%;
+  top: 30%;
+  z-index: 100;
+
+  .button {
+    color: $text_color;
+  }
 }
 
 input, textarea {
