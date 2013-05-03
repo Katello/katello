@@ -422,15 +422,16 @@ ActiveRecord::Schema.define(:version => 20130430162020) do
     t.string   "name"
     t.string   "description"
     t.string   "label"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
-    t.integer  "task_id"
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
+    t.integer  "deletion_task_id"
     t.text     "default_info"
+    t.integer  "apply_info_task_id"
   end
 
+  add_index "organizations", ["deletion_task_id"], :name => "index_organizations_on_task_id"
   add_index "organizations", ["label"], :name => "index_organizations_on_cp_key", :unique => true
   add_index "organizations", ["name"], :name => "index_organizations_on_name", :unique => true
-  add_index "organizations", ["task_id"], :name => "index_organizations_on_task_id"
 
   create_table "organizations_users", :id => false, :force => true do |t|
     t.integer "organization_id"

@@ -38,10 +38,11 @@ class CustomInfo < ActiveRecord::Base
     return informable
   end
 
-  # Apply a set of custom info to a list of objects.
-  # Does not apply to a particular object if it already has custom info with the given keyname.
-  # Returns a list of the objects that had at least one custom info added to them.
-  def self.apply_to_set(list_of_objects, custom_info_list)
+  def self.apply_to_set(ids_and_types, custom_info_list)
+    list_of_objects = ids_and_types.inject([]) do |collection, obj|
+      collection << CustomInfo.find_informable(obj[:informable_type], obj[:informable_id])
+    end
+
     affected = []
 
     list_of_objects.each do |obj|
@@ -49,7 +50,7 @@ class CustomInfo < ActiveRecord::Base
 
       custom_info_list.select { |c| to_apply.include?(c[:keyname]) }.each do |info|
         obj.custom_info.create!(info)
-        affected << obj
+        affected << { :informable_type => obj.class.name, :informable_id => obj.id }
       end
     end
 

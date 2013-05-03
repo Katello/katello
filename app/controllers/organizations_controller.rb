@@ -219,8 +219,11 @@ class OrganizationsController < ApplicationController
 
   def default_info
     Organization.check_informable_type!(params[:informable_type])
+    task = TaskStatus.find_by_id(@organization.apply_info_task_id)
+    task_state = (task.blank? ? nil : task.state)
+    task_uuid = (task.blank? ? nil : task.uuid)
     render :partial => "default_info",
-      :locals => { :org => @organization, :informable_type => params[:informable_type] }
+      :locals => { :org => @organization, :informable_type => params[:informable_type], :task_state => task_state, :task_uuid => task_uuid }
   end
 
   protected
