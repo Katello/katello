@@ -121,13 +121,27 @@ describe Api::V1::OrganizationDefaultInfoController do
       @org.default_info["system"] << "test_key"
       @org.save!
 
-      get :apply_to_all, :organization_id => @org.label, :informable_type => "system"
+      get :apply_to_all, :organization_id => @org.label, :informable_type => "system", :async => false
       response.code.should == "200"
+      JSON.parse(response.body)["systems"].nil?.should == false
+      JSON.parse(response.body)["task"].nil?.should == true
 
       @org.systems.each do |s|
-        s.custom_info.empty?.should == false
+        s.custom_info.size.should == @org.default_info["system"].size
       end
     end
 
+    it "should kick off a task when running asynchronously" do
+      @org.systems.each do |s|
+        s.custom_info.empty?.should == true
+      end
+      @org.default_info["system"] << "test_key"
+      @org.save!
+
+      get :apply_to_all, :organization_id => @org.label, :informable_type => "system", :async => true
+      response.code.should == "200"
+      JSON.parse(response.body)['systems'].empty?.should == true
+      JSON.parse(response.body)['task'].nil?.should == false
+    end
   end
 end
