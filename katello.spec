@@ -32,7 +32,7 @@
 %endif
 
 Name:           katello
-Version:        1.3.23
+Version:        1.3.24
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -835,6 +835,13 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Fri May 03 2013 Justin Sherrill <jsherril@redhat.com> 1.3.24-1
+- monkey patching multi_json to parse "" as json properly
+- fixing package details
+- Sync Plans Fixes #2142 - Sync plan name edits weren't updating the tupane
+  header or left hand list due to grabbing the wrong property off of a DOM
+  element.
+
 * Wed May 01 2013 Justin Sherrill <jsherril@redhat.com> 1.3.23-1
 - adding back katelllo 1.3 rel-eng (jsherril@redhat.com)
 - 948733 - Worked on content view definition update options
