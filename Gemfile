@@ -30,6 +30,7 @@ else
   gem 'pg'
 end
 
+gem 'foreigner'
 gem 'delayed_job', '~> 3.0.2'
 gem 'delayed_job_active_record', '~> 0.3.3'
 gem 'daemons', '>= 1.1.4'

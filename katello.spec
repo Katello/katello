@@ -116,6 +116,7 @@ Requires:       %{?scl_prefix}rubygem(ruby-openid) >= 2.2.3
 Requires:       %{?scl_prefix}rubygem(rabl)
 Requires:       %{?scl_prefix}rubygem(dynflow)
 Requires:       %{?scl_prefix}rubygem(minitest)
+Requires:       %{?scl_prefix}rubygem(foreigner)
 Requires:       signo >= 0.0.5
 Requires:       signo-katello >= 0.0.5
 Requires:       lsof

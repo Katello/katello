@@ -29,7 +29,7 @@ class ContentView < ActiveRecord::Base
   alias :versions :content_view_versions
 
   belongs_to :environment_default, :class_name => "KTEnvironment", :inverse_of => :default_content_view,
-             :foreign_key => :environment_default_id
+             :foreign_key => :environment_default_id # TODO this relation seems to be broken
 
   has_many :component_content_views
   has_many :composite_content_view_definitions,
