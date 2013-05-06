@@ -18,7 +18,6 @@
  * Date: 09/01/2010
  */
 
-
 //Katello global object namespace that all others should be attached to
 var KT = {};
 KT.widget = {};
@@ -30,7 +29,9 @@ var Katello = angular.module('Katello', ['alchemy', 'alch-templates', 'ngSanitiz
 
 // Must be at the top to prevent AngularJS unnecessary digest operations
 // And to handle the hashPrefix that AngularJS adds that confuses BBQ
-$.bbq.pushState('!', '');
+if ($.bbq !== undefined) {
+    $.bbq.pushState('!', '');
+}
 
 //i18n global variable
 var i18n = {};
@@ -400,7 +401,11 @@ KT.common = (function() {
             return root_url;
         },
         getSearchParams : function(val) {
-            var search_string = $.bbq.getState('list_search');
+            var search_string; 
+
+            if ($.bbq) {
+                search_string = $.bbq.getState('list_search');
+            }
 
             if( search_string ){
                 return { 'search' : search_string };

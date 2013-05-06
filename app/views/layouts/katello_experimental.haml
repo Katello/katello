@@ -27,6 +27,11 @@
       = yield
 
 = content_for(:javascripts_block) do
+  = javascript_include_tag "common/vendor"
+  %script{ :type => "text/javascript" }
+    - if defined?(experimental_ui)
+      :plain
+        $.bbq = undefined;
   = javascript_include_tag :common
   = javascript_include_tag 'common/experimental'
   %script{ :type => "text/javascript" }
