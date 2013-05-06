@@ -672,7 +672,6 @@ usermod -a -G katello-shared tomcat
 %dir %{homedir}/app/lib/resources
 %{homedir}/app/lib/resources/cdn.rb
 %{homedir}/app/lib/content_search
-%{homedir}/app/lib/experimental
 %{homedir}/lib/tasks
 %exclude %{homedir}/lib/tasks/yard.rake
 %exclude %{homedir}/lib/tasks/hudson.rake
