@@ -94,7 +94,7 @@ angular.module('Katello').controller('SystemsController',
          * Set the visibility of the details pane.
          * @param visibility boolean
          */
-        function setDetailsVisibility (visibility) {
+        var setDetailsVisibility = function (visibility) {
             if (visibility) {
                 // Remove all columns except name and replace them with the details pane
                 $scope.table.data.columns = nameColumn;
@@ -109,11 +109,11 @@ angular.module('Katello').controller('SystemsController',
          * Set the visibility of the new systems pane.
          * @param visibility boolean
          */
-        function setNewSystemVisibility (visibility) {
+        var setNewSystemVisibility = function (visibility) {
             $scope.newPaneVisible = visibility;
         }
 
-        createSuccess = function(data){
+        var createSuccess = function (data) {
             $scope.$apply(function () {
                 setNewSystemVisibility(false);
             });
@@ -124,7 +124,7 @@ angular.module('Katello').controller('SystemsController',
             // Temporarily get the old new systems UI
             // TODO REPLACE ME
             $http.get(KT.routes.new_system_path()).then(function (response) {
-                var content = $('#nutupaneNewItem .nutupane-pane-content'),
+                var content = $('#nutupane-new-item .nutupane-pane-content'),
                     data = KT.common.getSearchParams() || {},
                     button = content.find('input[type|="submit"]');
                 content.html(response.data);
@@ -132,7 +132,7 @@ angular.module('Katello').controller('SystemsController',
                 setNewSystemVisibility(true);
 
                 content.find('#new_system').submit(function (event) {
-                    event.preventDefault()
+                    event.preventDefault();
                     $(this).ajaxSubmit({
                         url: KT.routes.systems_path(),
                         data: data,
@@ -180,7 +180,7 @@ angular.module('Katello').controller('SystemsController',
         };
 
         $scope.table.close_item = function () {
-            $location.search("")
+            $location.search("");
             setDetailsVisibility(false);
         };
 
