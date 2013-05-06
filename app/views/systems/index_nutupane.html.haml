@@ -5,13 +5,13 @@
   %h1
     = _("Systems")
   %div{ 'alch-table-toolbar' => 'table' }
-    %button{'ng-click' => 'createNewSystem()'}
+    %button.primary{'ng-click' => 'createNewSystem()'}
       = _("Create New System")
     %button{'ng-click' => 'removeSelectedSystems()', 'ng-show' => 'table.num_selected > 0'}
       = _("Delete")
   %table#nutupane-table.table.stable.stripe-row{ 'alch-table' => 'table', 'row-select' => 'true', 'ng-class' => '{ "table-mask" : table.working, "details-visible": table.detailsVisible}' }
-  %div#nutupane-new-item.nutupane-pane{'ng-show' => 'newPaneVisible', 'ng-cloak' => true}
-    %a.fr{ 'ng-click' => 'newPaneVisible = false' }
+  %div#nutupane-new-item.nutupane-pane{'ng-show' => 'table.newPaneVisible', 'ng-cloak' => true}
+    %a.fr{ 'ng-click' => 'table.newPaneVisible = false' }
       = 'x'
     %div.nutupane-pane-content
-  %span.nutupane-details.panel#nutupane-details{ 'nutupane-details'=>'table.visible', 'model'=>'table', 'ng-class' => '{ "nutupane-details-open" : !table.visible }' }
+  %span.nutupane-details.panel.nutupane-pane#nutupane-details{ 'nutupane-details'=>'table.detailsVisible', 'model'=>'table', 'ng-class' => '{ "nutupane-details-open" : model.detailsVisible }' }
