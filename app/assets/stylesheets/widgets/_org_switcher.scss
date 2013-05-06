@@ -24,8 +24,10 @@
     .menu-item-link.clickable {
       cursor: pointer;
     }
-    .menu-item-link:hover {
-      display: none;
+    .menu-item-link:hover:not(.active-item) {
+      background: transparent;
+      border: none;
+      box-shadow: none;
     }
     #manage_orgs:hover
     {
