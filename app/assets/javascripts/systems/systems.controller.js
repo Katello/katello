@@ -101,6 +101,7 @@ angular.module('Katello').controller('SystemsController',
             } else {
                 // Restore the former columns
                 $scope.table.data.columns = allColumns;
+                $location.search("");
             }
             $scope.table.detailsVisible = visibility;
         }
@@ -113,14 +114,15 @@ angular.module('Katello').controller('SystemsController',
             $scope.newPaneVisible = visibility;
         }
 
-        var createSuccess = function (data) {
-            $scope.$apply(function () {
-                setNewSystemVisibility(false);
-            });
-            notices.checkNotices();
-        };
-
         $scope.createNewSystem = function () {
+            var createSuccess = function (data) {
+                $scope.$apply(function () {
+                    setNewSystemVisibility(false);
+                    $scope.table.select_item(KT.routes.edit_system_path(data.system.id));
+                });
+                notices.checkNotices();
+            };
+
             // Temporarily get the old new systems UI
             // TODO REPLACE ME
             $http.get(KT.routes.new_system_path()).then(function (response) {
@@ -146,8 +148,9 @@ angular.module('Katello').controller('SystemsController',
             });
         };
 
-        $scope.table.select_item = function(url, id){
-            $location.search('item', id);
+        $scope.table.select_item = function(url, id) {
+            var system;
+
             if (id) {
                 angular.forEach($scope.table.data.rows, function(row) {
                     if (row.row_id.toString() === id.toString()) {
@@ -167,11 +170,10 @@ angular.module('Katello').controller('SystemsController',
 
                 // Only reset the active_item if an ID is provided
                 if (id) {
-                    // Remove all columns except name and replace them with the details pane
-                    $scope.table.data.columns = nameColumn;
+                    $location.search('item', id);
                     $scope.table.select_all(false);
                     $scope.table.active_item = system;
-                    $scope.table.active_item.selected  = true;
+                    $scope.table.active_item.selected = true;
                     $scope.rowSelect = false;
                 }
                 $scope.table.active_item.html = response.data;
@@ -180,7 +182,6 @@ angular.module('Katello').controller('SystemsController',
         };
 
         $scope.table.close_item = function () {
-            $location.search("");
             setDetailsVisibility(false);
         };
 
