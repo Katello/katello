@@ -10,7 +10,7 @@
     %button{'ng-click' => 'removeSelectedSystems()', 'ng-show' => 'table.num_selected > 0'}
       = _("Delete")
   %table#nutupane-table.table.stable.stripe-row{ 'alch-table' => 'table', 'row-select' => 'true', 'ng-class' => '{ "table-mask" : table.working, "details-visible": table.detailsVisible}' }
-  %div#nutupaneNewItem.nutupane-pane{'ng-show' => 'newPaneVisible', 'ng-cloak' => true}
+  %div#nutupane-new-item.nutupane-pane{'ng-show' => 'newPaneVisible', 'ng-cloak' => true}
     %a.fr{ 'ng-click' => 'newPaneVisible = false' }
       = 'x'
     %div.nutupane-pane-content
