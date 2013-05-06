@@ -215,6 +215,32 @@ class AddForeignKeys < ActiveRecord::Migration
     add_foreign_key_deferred 'users', 'environments',
                              :name   => 'users_default_environment_id_fk',
                              :column => 'default_environment_id'
+
+    # TODO ADD remove_foreign_key
+    add_foreign_key_deferred 'organizations_users', 'users',
+                             :name => 'organizations_users_user_id_fk',
+                             :column => 'user_id'
+    add_foreign_key_deferred 'organizations_users', 'organization',
+                             :name => 'organizations_users_organization_id_fk',
+                             :column => 'organization_id'
+    add_foreign_key_deferred 'filters_repositories', 'filters',
+                             :name => 'filters_repositories_filter_id_fk',
+                             :column => 'filter_id'
+    add_foreign_key_deferred 'filters_repositories', 'repositories',
+                             :name => 'filters_repositories_repository_id_fk',
+                             :column => 'repository_id'
+    add_foreign_key_deferred 'filters_product', 'filters',
+                             :name => 'filters_product_filter_id_fk',
+                             :column => 'filter_id'
+    add_foreign_key_deferred 'filters_product', 'products',
+                             :name => 'filters_product_product_id_fk',
+                             :column => 'product_id'
+    add_foreign_key_deferred 'filters', 'content_view_definition_bases',
+                             :name => 'filters_content_view_definition_id_fk',
+                             :column => 'content_view_definition_id'
+    add_foreign_key_deferred 'filter_rules', 'filter',
+                             :name => 'filters_rules_filter_id_fk',
+                             :column => 'filter_id'
   end
 
   def self.down
@@ -411,5 +437,21 @@ class AddForeignKeys < ActiveRecord::Migration
                        :name => 'user_notices_user_id_fk'
     remove_foreign_key 'users',
                        :name => 'users_default_environment_id_fk'
+    remove_foreign_key 'organizations_users',
+                       :name => 'organizations_users_user_id_fk',
+    remove_foreign_key 'organizations_users',
+                       :name => 'organizations_users_organization_id_fk',
+    remove_foreign_key 'filters_repositories',
+                       :name => 'filters_repositories_filter_id_fk',
+    remove_foreign_key 'filters_repositories',
+                       :name => 'filters_repositories_repository_id_fk',
+    remove_foreign_key 'filters_product',
+                       :name => 'filters_product_filter_id_fk',
+    remove_foreign_key 'filters_product',
+                       :name => 'filters_product_product_id_fk',
+    remove_foreign_key 'filters',
+                       :name => 'filters_content_view_definition_id_fk',
+    remove_foreign_key 'filter_rules',
+                       :name => 'filters_rules_filter_id_fk',
   end
 end
