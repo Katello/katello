@@ -2,16 +2,16 @@
   %ul#organizationSwitcher.menu-container{"ng-click" => "showMenu=!showMenu", "ng-cloak" => ''}
     %li.menu-item
       - if current_organization && !current_organization.name.nil?
-        %a.menu-item-link.organization-name.clickable{:href => "#", :title=>"#{current_organization.name}", "ng-class" => "{'active-item': showMenu}"}
+        %a.menu-item-link.organization-name.clickable{:title=>"#{current_organization.name}", "ng-class" => "{'active-item': showMenu}"}
           = current_organization.name
-          %i.down_arrow_icon-grey
+          %i.down_arrow_icon-white
       - elsif user.allowed_organizations.length == 0
         %a.menu-item-link.organization-name{"ng-class" => "{'active-item': showMenu}"}
           = _("No Organization")
       - else
-        %a.menu-item-link.organization-name.clickable{:href => "#", :title=>""}
+        %a.menu-item-link.organization-name.clickable{:title=>""}
           = _("Select an Organization")
-          %i.down_arrow_icon-grey
+          %i.down_arrow_icon-white
       %ul.dropdown{"ng-show" => "showMenu", "ng-class" => "{'dropdown-active': true}"}
         %li
           %ul
