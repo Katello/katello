@@ -5,6 +5,7 @@
 @import "alchemy/composites/content_elements";
 @import "alchemy/components/helpers";
 @import 'alchemy-buttons/buttons';
+//@import "alchemy/components/normalize";
 
 @import "katello_base";
 
@@ -34,10 +35,6 @@
 @import "ui.spinner";
 
 @import "custom_info";
-
-body {
-  min-width: $static_width;
-}
 
 pre  { text-indent: 18px; }
 a { outline: 0 none;}
@@ -609,7 +606,7 @@ fieldset {
         @include border-right-radius(5px);
         background-color: $lightergrey_color;
         margin-top: 79px;
-        margin-right: 5px;
+        margin-right: 20px;
         position: relative;
         .panel_action {
             .disabled {
@@ -864,6 +861,21 @@ fieldset {
     overflow: auto;
   }
 }
+
+.subnav-header {
+  height: 30px;
+  z-index: 100;
+
+  background-color: rgb(194, 223, 255);
+  border-bottom: 1px solid #CCC;
+
+  nav { height: inherit; }
+
+  .menu-item {
+    a, a:visited, a:hover { color: black; }
+  }
+}
+
 .panel {
   background-color:$panel_color;
   width:490px;
@@ -1315,6 +1327,10 @@ footer a {
 
 .flash_hud {
   margin: 5px 0;
+
+  ul li a {
+    color: $kselected_color;
+  }
 }
 .flash_messages {
   background-color: $helptip-background_color;
@@ -1323,6 +1339,33 @@ footer a {
   border: 1px solid $helptip-border_color;
   margin: 10px auto 5px auto;
   @extend .clearfix;
+}
+
+#maincontent section.maincontent {
+  box-shadow: none !important;
+  background: white;
+  margin: 0 auto;
+  box-sizing: border-box;
+  padding-top: 40px;
+  padding-bottom: 20px;
+  width: 1172px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.center {
+  width: $static_width;
+  margin: 0 auto;
+  position: relative;
+}
+
+.logo {
+  background: $logo_img;
+  text-indent: -5555px;
+  width: 100px;
+  height: 15px;
+  display: block;
+  margin-top: 5px;
 }
 
 .simple-box {
@@ -1367,4 +1410,8 @@ footer a {
 
 .btn.processing {
     background: url("icons/spinner.gif") no-repeat 50% 50%, linear-gradient(#ffffff, #e5e5e4);
+}
+
+#experimental_indicator {
+  display: none;
 }
