@@ -54,10 +54,10 @@ Katello.controller('MenuController', ['$scope', '$location', '$document', functi
     }
 
     // Hide the org switcher menu if the user clicks outside of it
-    var orgSwitcherMenuLink = angular.element('#orgSwitcherNav a.organization-name');
+    var orgSwitcherMenu = angular.element('#organizationSwitcher');
     $document.bind('click', function (event) {
         var target = angular.element(event.target);
-        if (target[0] !== orgSwitcherMenuLink[0]) {
+        if (!orgSwitcherMenu.find(target).length) {
             $scope.showMenu = false;
             $scope.$apply();
         }
