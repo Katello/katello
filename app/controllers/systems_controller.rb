@@ -134,8 +134,12 @@ class SystemsController < ApplicationController
       notify.success _("System '%s' was created.") % @system['name']
 
       if search_validate(System, @system.id, params[:search])
-        render :partial=>"systems/list_systems",
+        if current_user.experimental_ui
+          render :json => {:system => @system}
+        else
+          render :partial=>"systems/list_systems",
           :locals=>{:accessor=>"id", :columns=>['name', 'lastCheckin','created' ], :collection=>[@system], :name=> controller_display_name}
+        end
       else
         notify.message _("'%s' did not meet the current search criteria and is not being shown.") % @system["name"]
         render :json => { :no_match => true }
