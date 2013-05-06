@@ -14,7 +14,7 @@
 
 var Katello = angular.module('Katello', ['alchemy', 'alch-templates', 'ngSanitize', 'infinite-scroll']);
 
-Katello.config(['$httpProvider', function($httpProvider){
+Katello.config(['$httpProvider', '$locationProvider', function($httpProvider, $locationProvider){
     $httpProvider.defaults.headers.common['X-CSRF-TOKEN'] = $('meta[name=csrf-token]').attr('content');
 }]);
 

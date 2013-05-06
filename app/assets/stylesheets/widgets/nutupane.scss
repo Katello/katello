@@ -15,54 +15,56 @@ tbody {
 }
 
 table.details-visible {
-  display: inline-block;
+  display: block;
   width: 20%;
+  float: left;
 }
 
-th {
-  cursor: pointer !important;
-  font-weight: bold;
-}
+.table {
+  th {
+    cursor: pointer !important;
+    font-weight: bold;
+  }
 
-tr:hover td,
-tr.focus td{
-  background-color: $listhover_color;
-  color:#FFF;
-}
+  tr:hover td,
+  tr.focus td{
+    background-color: $listhover_color;
+    color:#FFF;
+  }
 
-th.row-select,
-td.row-select
-{
-  width: 1%;
-  max-width: 1%;
-}
+  th.row-select,
+  td.row-select {
+    width: 1%;
+    max-width: 1%;
+  }
 
-td, th {
-  border-left: 1px solid #CCC;
-  border-right: 1px solid #CCC;
-}
+  td, th {
+    border-left: 1px solid #CCC;
+    border-right: 1px solid #CCC;
+  }
 
-th {
-  border-top: 1px solid #CCC !important;
-  border-bottom: 2px solid #CCC !important;
-}
+  th {
+    border-top: 1px solid #CCC !important;
+    border-bottom: 2px solid #CCC !important;
+  }
 
-.table tr.active, .table tbody tr:hover {
-  background-color: $listhover_color !important;
-  color:#FFF;
+  tr.active, tbody tr:hover {
+    background-color: $listhover_color !important;
+    color:#FFF;
 
-  a {
-    color: #FFF;
-    text-decoration: underline;
+    a {
+      color: #FFF;
+      text-decoration: underline;
+    }
+
+    th:hover {
+      background: white;
+    }
   }
 }
 
 input {
   background: white !important;
-}
-
-th:hover {
-  background: white;
 }
 
 .spinner {
@@ -100,9 +102,11 @@ th:hover {
 
 .nutupane-details-open {
   @include transition(background-color 1.25s ease-in-out);
-  display: inline;
-  float: right;
-  width: 79.5%;
+  display: block;
+  float: left;
+  width: 79.65%;
+  opacity: 1;
+  border-radius: 0;
 }
 
 .nutupane-details-open.scrolling{

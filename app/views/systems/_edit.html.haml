@@ -11,163 +11,182 @@
 
 = content_for :content do
   #system
-    %input#panel_element_id{:name => @system.id, :type => "hidden", :value => "#{name}_#{system.id.to_s}", "data-ajax_url"=>url_for(:action=> 'update')}
-    .grid_8
-      %h5 #{_("System Info")}
-    .grid_8#system_info
-      %fieldset
-        .grid_2.ra.fieldset
-          = label :id, :id, _("ID")
-        .grid_5.la #{system.id}
-      %fieldset
-        .grid_2.ra.fieldset
-          = label :uuid, :uuid, _("UUID")
-        .grid_5.la #{system.uuid}
-    .clear
-    .grid_8
-      %h5 #{_("Networking")}
-    .grid_8#system_info
-      %fieldset
-        .grid_2.ra.fieldset
-          = label :hostname, :hostname, _("Hostname")
-        .grid_5.la #{system.hostname}
-      %fieldset
-        .grid_2.ra.fieldset
-          = label :interfaces, :interfaces, _("Interfaces")
-        .grid_5
-          %table#interface_table
-            - system.interfaces.each do |interface|
-              %tr
-                %td.interface_name
-                  = interface[:name]
-                %td.interface_addr
-                  = interface[:addr]
-    .clear
-    .grid_8
-      %h5 #{_("System Properties")}
-    .grid_8#system_properties
-      %fieldset
-        .grid_2.ra.fieldset
-          = label :system, :name, _("Name")
-        .grid_5.la#system_name{'name' => 'system[name]', :class=>("editable edit_panel_element" if editable), 'data-url'=>system_path(system.id)} #{system[:name]}
-      %fieldset
-        .grid_2.ra.fieldset
-          = label :system, :description, _("Description")
-        .grid_5.la#system_description{'name' => 'system[description]', :class=>("editable edit_textarea" if editable), 'data-url'=>system_path(system.id)} #{system[:description]}
-      %fieldset
-        .grid_2.ra.fieldset
-          = label :os, :os, _("OS")
-        .grid_5.la #{system.distribution_name}
-      %fieldset
-        .grid_2.ra.fieldset
-          = label :release, :release, _("Release")
-        .grid_5.la #{system.kernel}
-      %fieldset
-        .grid_2.ra.fieldset
-          - help_message = _("Setting the release version limits content to this version only, preventing newer packages from being available for installation.")
-          %span.tipsify.details_icon-grey{:title => help_message}
-          = label :releaseVer, :releaseVer, _("Release Version")
-        - if !releases_error.nil?
-          .grid_5.la{'name' => 'system[releaseVer]', 'class' => ("editable edit_select_system_releasever_message error_message" if editable), 'data-url'=>system_path(system.id), 'data-message'=>releases_error}
-            = system.release == "" ? _("System Default") : system.release
-        - elsif releases == []
-          - if Katello.config.katello?
-            - none_message = ("No alternate release version choices are available. These choices are based upon the repositories that have been enabled and promoted to this system's environment.")
-          - else
-            - none_message = _("No alternate release version choices are available. These choices are based upon the Red Hat manifest imported and the content available in the CDN.")
-          .grid_5.la{'name' => 'system[releaseVer]', 'class' => ("editable edit_select_system_releasever_message" if editable), 'data-url'=>system_path(system.id), 'data-message'=>none_message}
-            = system.release == "" ? _("System Default") : system.release
-        - else
-          .grid_5.la{'name' => 'system[releaseVer]', 'class' => ("editable edit_select_system_releasever" if editable), 'data-url' => system_path(system.id), 'data-options' => system_releasevers_edit(system, releases)}
-            = system.release
-      %fieldset
-        .grid_2.ra.fieldset
-          = label :arch, :arch, _("Arch")
-        .grid_5.la #{System.architectures[system.arch]}
-      %fieldset
-        .grid_2.ra.fieldset
-          = label :memory, :memory, _("RAM (MB)")
-        .grid_5.la #{system.memory}
-      %fieldset
-        .grid_2.ra.fieldset
-          = label :sockets, :sockets, _("Sockets")
-        .grid_5.la #{system.sockets}
-      %fieldset
-        .grid_2.ra.fieldset
-          = label :location, :location, _("Location")
-        .grid_5.la#system_location{'name' => 'system[location]', :class=>("editable edit_textfield" if editable), 'data-url'=>system_path(system.id)} #{system[:location]}
-      %fieldset
-        .grid_2.ra.fieldset
-          = label :arch, :arch, _("Environment")
-        .grid_5.la#environment_path_selector{'name'=> 'system[environment_id]', :class=>("editable" if editable), 'data-url'=>system_path(system.id)}
-          %span #{system_environment_name system}
-      - if Katello.config.katello?
-        %fieldset
-          .grid_2.ra.fieldset
-            = label :content_view, :content_view, _("Content View")
-          .grid_5.la#system_content_view{'name' => 'system[content_view_id]', :class=>("editable edit_select" if editable), 'data-url'=>system_path(system.id), 'data-options' => system_content_view_opts(system)} #{system.content_view}
+    %form.form
+      %input#panel_element_id{:name => @system.id, :type => "hidden", :value => "#{name}_#{system.id.to_s}", "data-ajax_url"=>url_for(:action=> 'update')}
+        %h5 #{_("Basic Information")}
+        .control-group
+          .label
+            = label :id, :id, _("ID")
+          .input
+            .value
+              = system.id
+        .control-group
+          .label
+            = label :id, :id, _("UUID")
+          .input
+            .value
+              = system.uuid
 
-    .clear
-    .grid_8
-      %h5 #{_("System Events")}
-    .grid_8#system_events
-      %fieldset
-        .grid_2.ra.fieldset
-          = label :checked_in, :checked_in, _("Checked In")
-        .grid_5.la
-          = get_checkin(system)
-      %fieldset
-        .grid_2.ra.fieldset
-          = label :registered_date, :registered_date, _("Registered")
-        .grid_5.la
-          = convert_time(system.created)
-      %fieldset
-        .grid_2.ra.fieldset
-          = label :last_booted, :last_booted, _("Last Booted")
-        .grid_5.la #{_("None")}
-      %fieldset
-        .grid_2.ra.fieldset
-          = label :host_guest, :activation_key, _("Activation Key")
-        - if @system.activation_keys.blank?
-          .grid_5.la= _("None")
-        - else
-          .grid_5
-            - @system.activation_keys.each do |key|
-              %table#interface_table
+        %h5 #{_("Networking")}
+        .control-group
+          .label
+            = label :hostname, :hostname, _("Hostname")
+          .input
+            %span.value
+              = system.hostname
+        .control-group
+          .label
+            = label :interfaces, :interfaces, _("Interfaces")
+          .input
+            %table#interface_table
+              - system.interfaces.each do |interface|
                 %tr
-                  %td
-                    - if ActivationKey.readable? key.organization
-                      = link_to key.name, activation_keys_path(:anchor => "panel=activation_key_#{key.id}")
-                    - else
-                      = key[:name]
-    .clear
-    .grid_8
-      %h5 #{_("Host & Guest Info")}
-    .grid_8#system_host_guest
+                  %td.interface_name
+                    = interface[:name]
+                  %td.interface_addr
+                    = interface[:addr]
 
-      %fieldset
-        .grid_2.ra.fieldset
-          = label :host_guest, :host_type, _("System Type")
-        .grid_5.la
-          = system_type system
+        %h5 #{_("System Properties")}
+        .control-group
+          .label
+            = label :system, :name, _("Name")
+          .input
+            %span.value{'name' => 'system[name]', :class=>("editable edit_panel_element" if editable), 'data-url'=>system_path(system.id)} #{system[:name]}
+        .control-group
+          .label
+            = label :system, :description, _("Description")
+          .input
+            %span.value{'name' => 'system[description]', :class=>("editable edit_textarea" if editable), 'data-url'=>system_path(system.id)} #{system[:description]}
+        .control-group
+          .label
+            = label :os, :os, _("OS")
+          .input
+            %span.value
+              = system.distribution_name
+        .control-group
+          .label
+            = label :release, :release, _("Release")
+          .input
+            %span.value
+              = system.kernel
+        .control-group
+          .label
+            - help_message = _("Setting the release version limits content to this version only, preventing newer packages from being available for installation.")
+            %span.tipsify.details_icon-grey{:title => help_message}
+            = label :releaseVer, :releaseVer, _("Release Version")
+          .input
+            - if !releases_error.nil?
+              %span.value{'name' => 'system[releaseVer]', 'class' => ("editable edit_select_system_releasever_message error_message" if editable), 'data-url'=>system_path(system.id), 'data-message'=>releases_error}
+                = system.release == "" ? _("System Default") : system.release
+            - elsif releases == []
+              - if Katello.config.katello?
+                - none_message = ("No alternate release version choices are available. These choices are based upon the repositories that have been enabled and promoted to this system's environment.")
+              - else
+                - none_message = _("No alternate release version choices are available. These choices are based upon the Red Hat manifest imported and the content available in the CDN.")
+              %span.value{'name' => 'system[releaseVer]', 'class' => ("editable edit_select_system_releasever_message" if editable), 'data-url'=>system_path(system.id), 'data-message'=>none_message}
+                = system.release == "" ? _("System Default") : system.release
+            - else
+              %span.value{'name' => 'system[releaseVer]', 'class' => ("editable edit_select_system_releasever" if editable), 'data-url' => system_path(system.id), 'data-options' => system_releasevers_edit(system, releases)}
+                = system.release
+        .control-group
+          .label
+            = label :arch, :arch, _("Arch")
+          .input
+            %span.value
+              = System.architectures[system.arch]
+        .control-group
+          .label
+            = label :memory, :memory, _("RAM (MB)")
+          .input
+            %span.value
+              = system.memory
+        .control-group
+          .label
+            = label :sockets, :sockets, _("Sockets")
+          .input
+            %span.value
+              = system.sockets
+        .control-group
+          .label
+            = label :location, :location, _("Location")
+          .input
+            %span.value{'name' => 'system[location]', :class=>("editable edit_textfield" if editable), 'data-url'=>system_path(system.id)} #{system[:location]}
+        .control-group
+          .label
+            = label :arch, :arch, _("Environment")
+          .input
+            %span.value#environment_path_selector{'name'=> 'system[environment_id]', :class=>("editable" if editable), 'data-url'=>system_path(system.id)}
+              #{system_environment_name system}
+        - if Katello.config.katello?
+          .control_group
+            .label
+              = label :content_view, :content_view, _("Content View")
+            .input
+              %span.value{'name' => 'system[content_view_id]', :class=>("editable edit_select" if editable), 'data-url'=>system_path(system.id), 'data-options' => system_content_view_opts(system)}
+                = system.content_view
 
-      %fieldset
-        - if system.guest == 'true'
-          .grid_2.ra.fieldset
-            = label :host_guest, :host, _("Host")
-          .grid_5.la
-            = system.host ? system.host.attributes['name'] : _("Unknown")
-        -else
-          .grid_2.ra.fieldset
-            = label :host_guest, :guest, _("Guests")
-          - if system.guests.length < 1
-            .grid_5.la
+        %h5 #{_("System Events")}
+        .control-group
+          .label
+            = label :checked_in, :checked_in, _("Checked In")
+          .input
+            %span.value
+              = get_checkin(system)
+        .control-group
+          .label
+            = label :registered_date, :registered_date, _("Registered")
+          .input
+            %span.value
+              = convert_time(system.created)
+        .control-group
+          .label
+            = label :last_booted, :last_booted, _("Last Booted")
+          .input
+            %span.value
               = _("None")
-          - else
-            .grid_5.la
-              %ul
-              - system.guests.each do |guest|
-                %li{:style=>'list-style: none;'}
-                  = guest.attributes['name']
+        .control-group
+          .label
+            = label :host_guest, :activation_key, _("Activation Key")
+          .input
+            %span.value
+              - if @system.activation_keys.blank?
+                = _("None")
+              - else
+                - @system.activation_keys.each do |key|
+                  %table#interface_table
+                    %tr
+                      %td
+                        - if ActivationKey.readable? key.organization
+                          = link_to key.name, activation_keys_path(:anchor => "panel=activation_key_#{key.id}")
+                        - else
+                          = key[:name]
+
+        %h5 #{_("Host & Guest Info")}
+        .control-group
+          .label
+            = label :host_guest, :host_type, _("System Type")
+          .input
+            %span.value
+              = system_type(system)
+
+        .control-group
+          - if system.guest == 'true'
+            .label
+              = label :host_guest, :host, _("Host")
+            .input
+              %span.value
+                = system.host ? system.host.attributes['name'] : _("Unknown")
+          -else
+            .label
+              = label :host_guest, :guest, _("Guests")
+            .input
+              %span.value
+                - if system.guests.length < 1
+                  = _("None")
+                - else
+                  %ul
+                  - system.guests.each do |guest|
+                    %li{:style=>'list-style: none;'}
+                      = guest.attributes['name']
 
 = render :template => "layouts/tupane_layout"
