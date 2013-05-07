@@ -76,7 +76,8 @@ describe Api::V1::PermissionsController do
     let(:perm_desc) { 'permission_y description' }
     let(:resource_type) { 'environments' }
     let(:perm_params) { { :organization_id => @org.label, :name => perm_name, :description => perm_desc, 'type' => resource_type, 'verbs' => [], 'tags' => [], :role_id => role_id } }
-    let(:all_tags_perm_params) { { :organization_id => @org.label, :name => all_tags_perm_name, :description => perm_desc, 'type' => resource_type, 'all_tags' => "True", 'tags' => [], :role_id => role_id } }
+    let(:all_tags_perm_params) { { :organization_id => @org.label, :name => all_tags_perm_name, :description => perm_desc,
+                                 'type' => resource_type, 'all_tags' => "True", 'tags' => [], :role_id => role_id, :all_verbs=>"True"} }
     let(:action) { :create }
     let(:req) { post :create, perm_params }
     let(:all_tags_req) { post :create, all_tags_perm_params }
@@ -116,7 +117,8 @@ describe Api::V1::PermissionsController do
           :role          => @role,
           :resource_type => @resource_type,
           :organization  => @org,
-          :all_tags      => true
+          :all_tags      => true,
+          :all_verbs     => true
       }
 
       Permission.should_receive(:create!).with(hash_including(expected_params))
