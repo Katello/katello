@@ -96,8 +96,9 @@ class AddForeignKeys < ActiveRecord::Migration
     #                         :column => 'environment_default_id'
     add_foreign_key_deferred 'content_views', 'organizations',
                              :name => 'content_views_organization_id_fk'
-    #add_foreign_key_deferred 'distributors', 'content_views',
-    #                         :name => 'distributors_content_view_id_fk'
+    add_foreign_key_deferred 'distributors', 'content_views',
+                             :name => 'distributors_content_view_id_fk',
+                             :column => 'content_view_id'
     add_foreign_key_deferred 'distributors', 'environments',
                              :name => 'distributors_environment_id_fk'
     add_foreign_key_deferred 'environment_priors', 'environments',
@@ -215,8 +216,6 @@ class AddForeignKeys < ActiveRecord::Migration
     add_foreign_key_deferred 'users', 'environments',
                              :name   => 'users_default_environment_id_fk',
                              :column => 'default_environment_id'
-
-    # TODO ADD remove_foreign_key
     add_foreign_key_deferred 'organizations_users', 'users',
                              :name => 'organizations_users_user_id_fk',
                              :column => 'user_id'
@@ -241,6 +240,12 @@ class AddForeignKeys < ActiveRecord::Migration
     add_foreign_key_deferred 'filter_rules', 'filter',
                              :name => 'filters_rules_filter_id_fk',
                              :column => 'filter_id'
+    add_foreign_key_deferred 'organizations', 'task_statuses',
+                             :name => 'organizations_deletion_task_id_fk',
+                             :column => 'deletion_task_id'
+    add_foreign_key_deferred 'organizations', 'task_statuses',
+                             :name => 'organizations_apply_info_task_id_fk',
+                             :column => 'apply_info_task_id'
   end
 
   def self.down
@@ -453,5 +458,9 @@ class AddForeignKeys < ActiveRecord::Migration
                        :name => 'filters_content_view_definition_id_fk',
     remove_foreign_key 'filter_rules',
                        :name => 'filters_rules_filter_id_fk',
+    remove_foreign_key 'organizations',
+                       :name => 'organizations_deletion_task_id_fk',
+    remove_foreign_key 'organizations',
+                       :name => 'organizations_apply_info_task_id_fk',
   end
 end
