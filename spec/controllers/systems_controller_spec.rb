@@ -63,7 +63,7 @@ describe SystemsController do
         describe "GET index multiple orgs with #{perm} on #{resource}" do
           before do
             new_test_org
-            @environment = KTEnvironment.new(:name=>'test2', :label=> 'test2', :prior => @organization.library.id, :organization => @organization)
+            @environment = KTEnvironment.create!(:name=>'test2', :label=> 'test2', :prior => @organization.library.id, :organization => @organization)
             @system2 = System.create!(:name=>"bar2", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""})
           end
           let(:action) {:items}
