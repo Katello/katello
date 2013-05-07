@@ -216,7 +216,7 @@ class AddForeignKeys < ActiveRecord::Migration
     add_foreign_key_deferred 'organizations_users', 'users',
                              :name => 'organizations_users_user_id_fk',
                              :column => 'user_id'
-    add_foreign_key_deferred 'organizations_users', 'organization',
+    add_foreign_key_deferred 'organizations_users', 'organizations',
                              :name => 'organizations_users_organization_id_fk',
                              :column => 'organization_id'
     add_foreign_key_deferred 'filters_repositories', 'filters',
@@ -225,16 +225,16 @@ class AddForeignKeys < ActiveRecord::Migration
     add_foreign_key_deferred 'filters_repositories', 'repositories',
                              :name => 'filters_repositories_repository_id_fk',
                              :column => 'repository_id'
-    add_foreign_key_deferred 'filters_product', 'filters',
+    add_foreign_key_deferred 'filters_products', 'filters',
                              :name => 'filters_product_filter_id_fk',
                              :column => 'filter_id'
-    add_foreign_key_deferred 'filters_product', 'products',
+    add_foreign_key_deferred 'filters_products', 'products',
                              :name => 'filters_product_product_id_fk',
                              :column => 'product_id'
     add_foreign_key_deferred 'filters', 'content_view_definition_bases',
                              :name => 'filters_content_view_definition_id_fk',
                              :column => 'content_view_definition_id'
-    add_foreign_key_deferred 'filter_rules', 'filter',
+    add_foreign_key_deferred 'filter_rules', 'filters',
                              :name => 'filters_rules_filter_id_fk',
                              :column => 'filter_id'
     add_foreign_key_deferred 'organizations', 'task_statuses',
