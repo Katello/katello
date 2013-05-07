@@ -34,7 +34,8 @@ class Api::V1::PermissionsController < Api::V1::ApiController
   end
   def param_rules
     {
-        :create => [:name, :description, :role_id, :organization_id, :verbs, :tags, :type, :all_tags]
+        :create => [:name, :description, :role_id, :organization_id, :verbs, :tags,
+                    :type, :all_tags, :all_verbs]
     }
   end
 
@@ -62,13 +63,15 @@ class Api::V1::PermissionsController < Api::V1::ApiController
   param :type, String, :desc => "name of a resource or 'all'", :required => true
   param :verbs, Array, :desc => "array of permission verbs"
   param :all_tags, :bool, :desc => "True if the permission should use all tags"
+  param :all_verbs, :bool, :desc => "True if the permission should use all verbs"
   def create
     new_params = {
         :name         => params[:name],
         :description  => params[:description],
         :role         => @role,
         :organization => @organization,
-        :all_tags     => (params[:all_tags].to_bool if params[:all_tags])
+        :all_tags     => (params[:all_tags].to_bool if params[:all_tags]),
+        :all_verbs    => (params[:all_verbs].to_bool if params[:all_verbs])
     }
 
     new_params[:verb_values] = params[:verbs] || []
