@@ -13,12 +13,13 @@
 
 'use strict';
 
-Katello.controller('MenuController', ['$scope', '$location', '$document', function($scope, $location, $document){
+Katello.controller('MenuController', ['$scope', '$location', '$document', '$http', function($scope, $location, $document, $http) {
 
     $scope.menu       = KT.main_menu;
     $scope.user_menu  = KT.user_menu;
     $scope.admin_menu = KT.admin_menu;
     $scope.notices    = KT.notices;
+    $scope.orgSwitcherVisible = false;
 
     /**
      * Set the active menu item.
@@ -58,7 +59,7 @@ Katello.controller('MenuController', ['$scope', '$location', '$document', functi
     $document.bind('click', function (event) {
         var target = angular.element(event.target);
         if (!orgSwitcherMenu.find(target).length) {
-            $scope.showMenu = false;
+            $scope.orgSwitcherVisible = false;
             $scope.$apply();
         }
     });
@@ -67,4 +68,14 @@ Katello.controller('MenuController', ['$scope', '$location', '$document', functi
     var allMenus = $scope.menu.items.concat($scope.user_menu.items).
         concat($scope.admin_menu.items).concat($scope.notices);
     setActiveMenuItem(getActiveMenuItem(allMenus));
+
+    $scope.toggleOrgSwitcher = function() {
+        $scope.orgSwitcherVisible = !$scope.orgSwitcherVisible;
+        // Refresh the list of organizations if the org switcher was just opened.
+        if ($scope.orgSwitcherVisible) {
+            $http.get(KT.routes.allowed_orgs_user_session_path()).then(function(response) {
+                $('#allowed-orgs').html(response.data);
+            });
+        }
+    };
 }]);
