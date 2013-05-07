@@ -1,6 +1,6 @@
 /**
  * Copyright 2013 Red Hat, Inc.
- * 
+ *
  * This software is licensed to you under the GNU General Public
  * License as published by the Free Software Foundation; either version
  * 2 of the License (GPLv2) or (at your option) any later version.
@@ -46,7 +46,7 @@ Katello.config(['$locationProvider', function($locationProvider){
  *   $scope.table.model          = 'Systems';
  *   $scope.table.data.columns   = columns;
  *   $scope.table.active_item    = {};
- *       
+ *
  *   Nutupane.set_columns();
  *
  *   Nutupane.default_item_url = function(id) {
@@ -88,9 +88,8 @@ angular.module('Katello').factory('Nutupane', ['$location', '$http', 'current_or
         } else {
             // Restore the former columns
             table.data.columns = allColumns;
-            $location.search("");
         }
-        
+
         table.detailsVisible = visibility;
     };
 
@@ -250,7 +249,7 @@ angular.module('Katello').factory('Nutupane', ['$location', '$http', 'current_or
  *
  * @description
  *   Turns an element into a container for holding detail pages fetched by Nutupane. By setting
- *   the html property on the bound model, the payload wll be inserted as the html into the 
+ *   the html property on the bound model, the payload wll be inserted as the html into the
  *   element as inner html. Connects up a close button to remove the element form view and allows
  *   sub-menu items to call out to the select_item() functionality of Nutupane. This is currently
  *   tied to the legacy tupane details page fetching.
