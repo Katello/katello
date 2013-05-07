@@ -32,7 +32,7 @@
 %endif
 
 Name:           katello
-Version:        1.3.24
+Version:        1.3.25
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -835,6 +835,13 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Tue May 07 2013 Justin Sherrill <jsherril@redhat.com> 1.3.25-1
+- fixes 2125 - busted activation key systems page
+- fixing sync error not showing as an error in the UI
+- Bug 920135 - Adds missing save if default environment is specified when
+  creating a user in the API. (ericdhelms@gmail.com)
+- 960145 -  publishing red hat content via http
+
 * Fri May 03 2013 Justin Sherrill <jsherril@redhat.com> 1.3.24-1
 - monkey patching multi_json to parse "" as json properly
 - fixing package details
