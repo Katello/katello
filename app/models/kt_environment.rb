@@ -18,10 +18,10 @@ class KTEnvironment < ActiveRecord::Base
 
   include Glue::Event
   def create_event
-    Katello::Actions::EnvCreate
+    Katello::Actions::EnvironmentCreate
   end
   def destroy_event
-    Katello::Actions::EnvDestroy
+    Katello::Actions::EnvironmentDestroy
   end
 
   self.table_name = "environments"

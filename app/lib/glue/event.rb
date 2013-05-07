@@ -40,13 +40,11 @@ module Glue
 
     def self.trigger(event_class, *args)
       execution_plan = event_class.trigger(*args)
-      failed = false
       execution_plan.failed_steps.each do |step|
         Notify.warning(_("Failed to perform additional action %{action}: %{message}") %
                        { :action => step.action_class.name,
                          :message => step.error['message'] },
                        { :asynchronous => true, :persist => true })
-        failed = true
       end
 
       log_message = execution_plan.steps.map do |step|
@@ -58,7 +56,7 @@ module Glue
           message
       end.join("\n")
 
-      if failed
+      if execution_plan.failed_steps.any?
         ::Logging.logger['glue'].error(log_message)
       else
         ::Logging.logger['glue'].debug(log_message)

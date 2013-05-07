@@ -12,18 +12,18 @@
 
 module Katello
   module Actions
-    class EnvDestroy < Dynflow::Action
+    class EnvironmentDestroy < Dynflow::Action
 
-      def plan(env)
-        plan_self('name' => env.name,
-                  'label' => env.label,
-                  'org_label' => env.organization.label)
+      def plan(environment)
+        plan_self('name' => environment.name,
+                  'label' => environment.label,
+                  'organization_label' => environment.organization.label)
       end
 
       input_format do
         param :name, String
         param :label, String
-        param :org_label, String
+        param :organization_label, String
       end
 
     end
