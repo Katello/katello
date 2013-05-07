@@ -113,6 +113,7 @@ Requires:       %{?scl_prefix}rubygem(bundler_ext) >= 0.3
 Requires:       %{?scl_prefix}rubygem(rack-openid) >= 1.3.1
 Requires:       %{?scl_prefix}rubygem(ruby-openid) >= 2.2.3
 Requires:       %{?scl_prefix}rubygem(rabl)
+Requires:       %{?scl_prefix}rubygem(dynflow)
 Requires:       signo >= 0.0.5
 Requires:       signo-katello >= 0.0.5
 Requires:       lsof
@@ -718,6 +719,7 @@ usermod -a -G katello-shared tomcat
 %dir %{homedir}/lib
 %dir %{homedir}/app/lib
 %dir %{homedir}/app/lib/resources
+%{homedir}/lib/headpin
 %{homedir}/lib/util
 %{homedir}/app/lib/util
 %{homedir}/script/service-wait
