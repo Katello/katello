@@ -77,7 +77,10 @@ class Api::V1::UsersController < Api::V1::ApiController
                          :email    => params[:email],
                          :disabled => params[:disabled])
 
-    @user.default_environment = KTEnvironment.find(params[:default_environment_id]) if params[:default_environment_id]
+    if params[:default_environment_id]
+      @user.default_environment = KTEnvironment.find(params[:default_environment_id])
+      @user.save!
+    end
 
     if !params[:default_locale].blank?
       if Katello.config.available_locales.include? params[:default_locale]
