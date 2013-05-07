@@ -443,24 +443,24 @@ class AddForeignKeys < ActiveRecord::Migration
     remove_foreign_key 'users',
                        :name => 'users_default_environment_id_fk'
     remove_foreign_key 'organizations_users',
-                       :name => 'organizations_users_user_id_fk',
+                       :name => 'organizations_users_user_id_fk'
     remove_foreign_key 'organizations_users',
-                       :name => 'organizations_users_organization_id_fk',
+                       :name => 'organizations_users_organization_id_fk'
     remove_foreign_key 'filters_repositories',
-                       :name => 'filters_repositories_filter_id_fk',
+                       :name => 'filters_repositories_filter_id_fk'
     remove_foreign_key 'filters_repositories',
-                       :name => 'filters_repositories_repository_id_fk',
+                       :name => 'filters_repositories_repository_id_fk'
     remove_foreign_key 'filters_product',
-                       :name => 'filters_product_filter_id_fk',
+                       :name => 'filters_product_filter_id_fk'
     remove_foreign_key 'filters_product',
-                       :name => 'filters_product_product_id_fk',
+                       :name => 'filters_product_product_id_fk'
     remove_foreign_key 'filters',
-                       :name => 'filters_content_view_definition_id_fk',
+                       :name => 'filters_content_view_definition_id_fk'
     remove_foreign_key 'filter_rules',
-                       :name => 'filters_rules_filter_id_fk',
+                       :name => 'filters_rules_filter_id_fk'
     remove_foreign_key 'organizations',
-                       :name => 'organizations_deletion_task_id_fk',
+                       :name => 'organizations_deletion_task_id_fk'
     remove_foreign_key 'organizations',
-                       :name => 'organizations_apply_info_task_id_fk',
+                       :name => 'organizations_apply_info_task_id_fk'
   end
 end
