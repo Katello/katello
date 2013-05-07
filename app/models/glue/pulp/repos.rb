@@ -47,18 +47,21 @@ module Glue::Pulp::Repos
     "/" + parts.map{|x| x.gsub(/[^-\w]/,"_") }.join("/")
   end
 
-  def self.clone_repo_path_for_cp(repo)
-    Repository.clone_repo_path(repo, nil, nil, true)
-  end
+  def self.prepopulate!(products, environment, repos = [], content_view = nil)
+    if content_view.nil?
+      if environment.library?
+        content_view = environment.default_content_view
+      else
+        raise "No content view specified for a Non library environment #{environment.inspect}"
+      end
+    end
 
-
-  def self.prepopulate!(products, environment, repos = [])
     items = Runcible::Extensions::Repository.search_by_repository_ids(Repository.in_environment(environment).pluck(:pulp_id))
     full_repos = {}
     items.each { |item| full_repos[item["id"]] = item }
 
     products.each do |prod|
-      prod.repos(environment, true).each do |repo|
+      prod.repos(environment, true, content_view).each do |repo|
         repo.populate_from(full_repos)
       end
     end

@@ -43,7 +43,8 @@ describe System do
     disable_org_orchestration
 
     @organization = Organization.create!(:name=>'test_org', :label=> 'test_org')
-    @environment = KTEnvironment.create!(:name=>'test', :label=> 'test', :prior => @organization.library.id, :organization => @organization)
+    @environment = @organization.library
+    #create_environment(:name=>'test', :label=> 'test', :prior => @organization.library.id, :organization => @organization)
     @organization.reload #reload to get environment info
 
     @system = System.new(:name => system_name,
@@ -90,10 +91,10 @@ describe System do
     o = Organization.find(@organization.id)
     o.default_info["system"] << "test_key"
     o.save!
-    e = KTEnvironment.create!(:name=>'test2', :label=> 'test2', :prior => o.library.id, :organization => o)
+#    e = create_environment(:name=>'test2', :label=> 'test2', :prior => o.library.id, :organization => o)
 
     s = System.new(:name => system_name,
-        :environment => e,
+        :environment => o.library,
         :cp_type => cp_type,
         :facts => facts,
         :description => description,
@@ -306,9 +307,8 @@ describe System do
       disable_product_orchestration
       disable_repo_orchestration
       @product = Product.create!(:name=>"prod1", :label=> "prod1", :cp_id => '12345', :provider => @organization.redhat_provider)
-      @environment = KTEnvironment.create!({:name=>"Dev", :label=> "Dev", :prior => @organization.library, :organization => @organization})
+      @environment = create_environment({:name=>"Dev", :label=> "Dev", :prior => @organization.library, :organization => @organization})
       environment = Katello.config.katello? ? @environment : @organization.library
-
       @releases = %w[6.1 6.2 6Server]
       @releases.each do |release|
         Repository.create!(:name => "Repo #{release}",
@@ -322,7 +322,7 @@ describe System do
                           :cp_label => "repo",
                           :relative_path=>'/foo',
                           :content_id=>'foo',
-                          :content_view_version=>environment.default_content_view_version,
+                          :content_view_version=>environment.content_view_versions.first,
                           :feed => 'https://localhost')
       end
       Repository.create!(:name => "Repo without releases",
@@ -336,9 +336,10 @@ describe System do
                          :cp_label => "repo",
                          :relative_path=>'/foo',
                          :content_id=>'foo',
-                         :content_view_version=>environment.default_content_view_version,
+                         :content_view_version=>environment.content_view_versions.first,
                          :feed => 'https://localhost')
       @system.environment = environment
+      @system.content_view = environment.content_views.first
       @system.save!
     end
 
@@ -648,8 +649,6 @@ describe System do
       @system.editable?.should == false
       @system.deletable?.should == true
     end
-
-
   end
 
 end

@@ -20,7 +20,7 @@ module RepositoryHelperMethods
                           :name => name, :label =>  "#{name}-#{random_id}",
                           :relative_path => path, :pulp_id => "pulp-id-#{random_id}",
                           :content_id => "content-id-#{random_id}", :enabled => enabled,
-                          :content_view_version=>env.default_content_view_version,
+                          :content_view_version=>env.content_view_versions.first,
                           :feed=>'http://localhost.com/foo')
     repo.library_instance = library_instance if library_instance
     repo.stub(:create_pulp_repo).and_return([])

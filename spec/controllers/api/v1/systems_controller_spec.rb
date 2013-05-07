@@ -60,61 +60,60 @@ describe Api::V1::SystemsController do
     end
 
     @organization  = Organization.create!(:name => 'test_org', :label => 'test_org')
-    @environment_1 = KTEnvironment.create!(:name => 'test_1', :label => 'test_1', :prior => @organization.library.id, :organization => @organization)
+    if Katello.config.katello?
+      @environment_1 = create_environment(:name => 'test_1', :label => 'test_1', :prior => @organization.library.id, :organization => @organization)
+    else
+      @environment_1 = @organization.library
+    end
+
+    @cv = @environment_1.content_views.first
+    @cve = ContentViewEnvironment.where(:content_view_id => @cv.id, :environment_id => @environment_1.id).first
 
     @system_group_1 = SystemGroup.create!(:name => 'System Group 1', :organization_id => @organization.id)
     @system_group_2 = SystemGroup.create!(:name => 'System Group 2', :description => "fake description", :organization => @organization)
 
+    ContentView.stub_chain(:readable, :find_by_id).and_return(@cv)
     login_user_api.stub(:default_environment).and_return(nil)
   end
 
   describe "create a system" do
-
-    let(:action) { :create }
-    let(:req) { post :create, :owner => @organization.name, :environment_id => @environment_1.id, :name => 'test', :cp_type => 'system', :facts => facts }
-    let(:authorized_user) { user_with_create_permissions }
-    let(:unauthorized_user) { user_without_create_permissions }
-    it_should_behave_like "protected action"
-
     it "requires either environment_id, owner, or organization_id to be specified" do
       post :create
       response.code.should == "404"
     end
 
     it "sets installed products to the consumer" do
-      System.should_receive(:create!).with(hash_including(:environment => @environment_1, :cp_type => 'system', :installedProducts => installed_products, :name => 'test')).once.and_return({})
-      post :create, :organization_id => @organization.name, :environment_id => @environment_1.id, :name => 'test', :cp_type => 'system', :installedProducts => installed_products
+      System.should_receive(:create!).with(hash_including(:environment => @environment_1, :content_view => @cv,
+                                            :cp_type => 'system', :installedProducts => installed_products, :name => 'test')).once.and_return({})
+      post :create, :organization_id => @organization.name, :environment_id => @cve.cp_id,
+        :name => 'test', :cp_type => 'system', :installedProducts => installed_products
     end
 
     it "sets the content view" do
-      view = create(:content_view)
-      ContentView.stub(:readable).and_return(ContentView)
-      System.should_receive(:create!).with(hash_including(content_view: view, environment: @environment_1, cp_type: "system", name: "test"))
+      System.should_receive(:create!).with(hash_including(content_view: @cv, environment: @environment_1, cp_type: "system", name: "test"))
       post :create, :organization_id => @organization.name, :environment_id => @environment_1.id, :name => 'test', :cp_type => 'system',
-        :content_view_id => view.id
+        :content_view_id => @cv.id
     end
 
     context "in organization with one environment" do
       it "requires either organization_id" do
         System.should_receive(:create!).with(hash_including(:environment => @environment_1, :cp_type => 'system', :facts => facts, :name => 'test')).once.and_return({})
-        post :create, :organization_id => @organization.name, :environment_id => @environment_1.id, :name => 'test', :cp_type => 'system', :facts => facts
+        post :create, :organization_id => @organization.name, :environment_id => @cve.cp_id, :name => 'test', :cp_type => 'system', :facts => facts
       end
 
       it "or requires owner (key)" do
         System.should_receive(:create!).with(hash_including(:environment => @environment_1, :cp_type => 'system', :facts => facts, :name => 'test')).once.and_return({})
-        post :create, :owner => @organization.name, :environment_id => @environment_1.id, :name => 'test', :cp_type => 'system', :facts => facts
+        post :create, :owner => @organization.name, :environment_id => @cve.cp_id, :name => 'test', :cp_type => 'system', :facts => facts
       end
     end
 
-    context "in organization with multiple environments" do
-      before(:each) do
-        @environment_2 = KTEnvironment.new(:name => 'test_2', :label => 'test_2', :prior => @environment_1, :organization => @organization)
-        @environment_2.save!
-      end
-
+    context "in organization with multiple environments", :katello => true do
       it "requires environment id" do
+        cv = @environment_1.content_views.first
+        cve = ContentViewEnvironment.where(:content_view_id => cv.id, :environment_id => @environment_1.id).first
+
         System.should_receive(:create!).with(hash_including('environment' => @environment_1, 'cp_type' => 'system', 'facts' => facts, 'name' => 'test')).once.and_return({})
-        post :create, :environment_id => @environment_1.id, :name => 'test', :cp_type => 'system', :facts => facts
+        post :create, :environment_id => cve.cp_id, :name => 'test', :cp_type => 'system', :facts => facts
       end
 
       it "fails if no environment_id was specified" do
@@ -125,15 +124,14 @@ describe Api::V1::SystemsController do
 
     context "with environment_id containing environment-content_view" do
       it "assigns the system to the environment and view" do
-        view           = ContentView.create(:name => 'test view', :label => 'test_view', :organization => @organization)
-        environment_id = @environment_1.id.to_s + '-' + view.id.to_s
-
+        view = @environment_1.content_views.first
+        cve = ContentViewEnvironment.where(:content_view_id => view.id, :environment_id => @environment_1.id).first
         System.should_receive(:create!).with(hash_including(:environment  => @environment_1,
                                                             :content_view => view,
                                                             :cp_type      => 'system', :facts => facts,
                                                             :name         => 'test')).once.and_return({})
 
-        post :create, :organization_id => @organization.name, :environment_id => environment_id,
+        post :create, :organization_id => @organization.name, :environment_id => cve.cp_id,
              :name                     => 'test', :cp_type => 'system', :facts => facts
       end
     end
@@ -141,11 +139,11 @@ describe Api::V1::SystemsController do
     context "when activation keys are provided" do
 
       before(:each) do
-        @activation_key_1 = ActivationKey.create!(:environment   => @environment_1,
+        @activation_key_1 = create_activation_key(:environment   => @environment_1,
                                                   :organization  => @organization,
                                                   :name          => "activation_key_1",
                                                   :system_groups => [@system_group_1], :user => @user)
-        @activation_key_2 = ActivationKey.create!(:environment   => @environment_1, :organization => @organization, :name => "activation_key_2",
+        @activation_key_2 = create_activation_key(:environment   => @environment_1, :organization => @organization, :name => "activation_key_2",
                                                   :system_groups => [@system_group_2])
 
         @activation_key_1.stub(:subscribe_system).and_return()
@@ -157,6 +155,7 @@ describe Api::V1::SystemsController do
             :name            => "Test System 1",
             :facts           => facts,
             :environment_id  => @environment_1.id,
+            :content_view_id => @environment_1.content_views.first,
             :cp_type         => "system",
             :organization_id => @organization.label,
             :activation_keys => "#{@activation_key_1.name},#{@activation_key_2.name}"
@@ -197,7 +196,7 @@ describe Api::V1::SystemsController do
         end
 
         it "should set the system's content view to the key's view" do
-          @activation_key_3 = ActivationKey.create!(:environment => @environment_1,
+          @activation_key_3 = create_activation_key(:environment => @environment_1,
                                                     :content_view => @environment_1.default_content_view,
                                                     :organization => @organization, :name => "activation_key_3",
                                                     :system_groups => [@system_group_2])
@@ -245,7 +244,12 @@ describe Api::V1::SystemsController do
       User.stub(:consumer? => true)
     end
 
-    let(:virt_who_params) { { "env" => @environment_1.name, "host2" => ["GUEST3", "GUEST4"], "owner" => @organization.name } }
+    let(:virt_who_params) do
+      cv = @environment_1.content_views.first
+      cve = ContentViewEnvironment.where(:content_view_id => cv.id, :environment_id => @environment_1.id).first
+        { "env" => cve.label,
+          "host2" => ["GUEST3", "GUEST4"], "owner" => @organization.name }
+    end
 
     it "requires either environment_id, owner, or organization_id to be specified" do
       post :create
@@ -253,7 +257,7 @@ describe Api::V1::SystemsController do
     end
 
     it "creates hypervisor" do
-      System.should_receive(:register_hypervisors).with(@environment_1, virt_who_params)
+      System.should_receive(:register_hypervisors).with(@environment_1, @environment_1.content_views.first, virt_who_params)
       post :hypervisors_update, virt_who_params
     end
 
@@ -320,7 +324,7 @@ describe Api::V1::SystemsController do
 
       before :each do
         Resources::Candlepin::Consumer.stub!(:create).and_return({ :uuid => uuid_3 })
-        @system_3 = System.create!(:name => 'test3', :environment => @environment_2, :cp_type => 'system', :facts => facts)
+        @system_3 = create_system(:name => 'test3', :environment => @environment_2, :cp_type => 'system', :facts => facts)
         System.stub(:all_by_pool_uuid).and_return([@system_1.uuid, @system_3.uuid])
         Glue::ElasticSearch::Items.any_instance.should_receive(:retrieve).and_return([[@system_1, @system_3], 2])
       end
@@ -403,8 +407,8 @@ describe Api::V1::SystemsController do
 
   describe "update a system" do
     before(:each) do
-      @sys           = System.create!(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts, :uuid => uuid, :description => "fake description")
-      @environment_2 = KTEnvironment.create!(:name => 'test_2', :label => 'test_2', :prior => @organization.library.id, :organization => @organization)
+      @sys           = create_system(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts, :uuid => uuid, :description => "fake description")
+      @environment_2 = create_environment(:name => 'test_2', :label => 'test_2', :prior => @organization.library.id, :organization => @organization)
       Resources::Candlepin::Consumer.stub!(:get).and_return({ :uuid => uuid })
       System.stub!(:first).and_return(@sys)
     end
@@ -436,13 +440,11 @@ describe Api::V1::SystemsController do
       response.should be_success
     end
 
-    it "should change the content view" do
-      view = build_stubbed(:content_view)
-      ContentView.stub_chain(:readable, :find_by_id).and_return(view)
-      ContentView.stub(:find).and_return(view)
-      view.stub(:in_environment?).and_return(true)
-      put :update, id: uuid, content_view_id: @environment_2.default_content_view.id
-      @sys.reload.content_view_id.should eql(@environment_2.default_content_view.id)
+    it "should change the content view", :katello => true do
+      promote_content_view(@sys.content_view, @environment_1, @environment_2)
+      view = @sys.content_view
+      put :update, id: uuid, content_view_id: view.id
+      @sys.reload.content_view_id.should eql(view.id)
     end
 
     it "should update installed products" do
@@ -472,11 +474,12 @@ describe Api::V1::SystemsController do
       response.should be_success
     end
 
-    it "should update environment" do
+    it "should update environment", :katello => true do
+      promote_content_view(@sys.content_view, @environment_1, @environment_2)
       @sys.facts = {}
       @sys.stub(:guest => 'false', :guests => [], :environment => @environment_2)
       Resources::Candlepin::Consumer.should_receive(:update).once.with(uuid, {}, nil, nil, nil, nil, nil,
-                                                                       @environment_2.id.to_s).and_return(true)
+                                                  "#{@environment_2.id}-#{@sys.content_view.id}").and_return(true)
       put :update, :id => uuid, :environment_id => @environment_2.id
       response.body.should == @sys.to_json
       response.should be_success
@@ -486,7 +489,7 @@ describe Api::V1::SystemsController do
 
   describe "add system groups to a system" do
     before(:each) do
-      @system = System.create!(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts, :uuid => uuid, :description => "fake description")
+      @system = create_system(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts, :uuid => uuid, :description => "fake description")
       Resources::Candlepin::Consumer.stub!(:get).and_return({ :uuid => uuid })
       System.stub!(:first).and_return(@system)
     end
@@ -509,7 +512,7 @@ describe Api::V1::SystemsController do
 
   describe "remove system groups to a system" do
     before(:each) do
-      @system = System.create!(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts,
+      @system = create_system(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts,
                                :uuid => uuid, :description => "fake description", :system_group_ids => [@system_group_1.id, @system_group_2.id])
       Resources::Candlepin::Consumer.stub!(:get).and_return({ :uuid => uuid })
       System.stub!(:first).and_return(@system)
@@ -532,7 +535,7 @@ describe Api::V1::SystemsController do
 
   describe "list errata", :katello => true do
     before(:each) do
-      @system = System.create(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts, :uuid => uuid)
+      @system = create_system(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts, :uuid => uuid)
       System.stub!(:first).and_return(@system)
     end
 
@@ -555,7 +558,7 @@ describe Api::V1::SystemsController do
 
   describe "list available pools" do
     before(:each) do
-      @system = System.create(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts, :uuid => uuid)
+      @system = create_system(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts, :uuid => uuid)
       System.stub!(:first).and_return(@system)
     end
 
@@ -591,7 +594,7 @@ describe Api::V1::SystemsController do
 
   describe "list available releases" do
     before(:each) do
-      @system = System.create(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts, :uuid => uuid)
+      @system = create_system(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts, :uuid => uuid)
       System.stub!(:first).and_return(@system)
     end
 
@@ -611,7 +614,7 @@ describe Api::V1::SystemsController do
   describe "update enabled_repos", :katello => true do
     before do
       User.stub(:consumer? => true)
-      @system = System.create(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts, :uuid => uuid)
+      @system = create_system(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts, :uuid => uuid)
       System.stub!(:first).and_return(@system)
       Repository.stub!(:where).with(:relative_path=>'foo').and_return([OpenStruct.new({ :pulp_id => 'a' })])
       Repository.stub!(:where).with(:relative_path=>'bar').and_return([OpenStruct.new({ :pulp_id => 'b' })])

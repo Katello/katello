@@ -33,15 +33,17 @@ describe ActivationKeysController do
     controller.stub(:search_validate).and_return(true)
     Resources::Candlepin::Pool.stub(:find).and_return(true)
     @organization = new_test_org
-    @environment_1 = KTEnvironment.create!(:name=>'dev', :label=> 'dev', :prior => @organization.library.id, :organization => @organization)
-    @environment_2 = KTEnvironment.create!(:name=>'prod', :label=> 'prod', :prior => @environment_1.id, :organization => @organization)
-    @a_key = ActivationKey.create!(:name => "another test key", :organization => @organization, :environment => @environment_1)
+    @environment_1 = create_environment(:name=>'dev', :label=> 'dev', :prior => @organization.library.id, :organization => @organization)
+    @environment_2 = create_environment(:name=>'prod', :label=> 'prod', :prior => @environment_1.id, :organization => @organization)
+    @a_key = create_activation_key(:name => "another test key", :organization => @organization, :environment => @environment_1)
     @subscription = ::Pool.create!(:cp_id => "Test Subscription",
                                           :key_pools => [KeyPool.create!(:activation_key => @a_key)])
 
     @akey_params = {:activation_key => { :name => "test key", :description => "this is the test key",
-                                         :environment_id => @environment_1.id }} if Katello.config.katello?
-    @akey_params = {:activation_key => { :name => "test key", :description => "this is the test key", :environment_id => @environment_1.id}} unless Katello.config.katello?
+                                         :environment_id => @environment_1.id,
+                                         :content_view_id => @environment_1.content_views.first.id}} if Katello.config.katello?
+    @akey_params = {:activation_key => { :name => "test key", :description => "this is the test key",
+                                        :environment_id => @organization.library.id}} unless Katello.config.katello?
   end
 
 

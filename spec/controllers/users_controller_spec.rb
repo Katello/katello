@@ -31,7 +31,7 @@ describe UsersController do
 
     before(:each) do
       @organization = new_test_org
-      @environment = KTEnvironment.create!(:name=>'first-env', :label=> 'first-env', :prior => @organization.library.id, :organization => @organization)
+      @environment = create_environment(:name=>'first-env', :label=> 'first-env', :prior => @organization.library.id, :organization => @organization)
     end
 
     it "should create a user correctly", :katello => true do #TODO headpin

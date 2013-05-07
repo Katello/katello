@@ -78,11 +78,18 @@ class Product < ActiveRecord::Base
     super
   end
 
-  def repos(env, include_disabled = false, content_view=nil)
+  def repos(env, include_disabled = false, content_view = nil)
+    if content_view.nil?
+      if !env.library?
+        raise "No content view specified for the repos call in a " +
+                        "Non library environment #{env.inspect}"
+      else
+        content_view = env.default_content_view
+      end
+    end
+
     # cache repos so we can cache lazy_accessors
     @repo_cache ||= {}
-
-    content_view ||= env.default_content_view
     @repo_cache[env.id] ||= content_view.repos_in_product(env, self)
 
     if @repo_cache[env.id].blank? || include_disabled

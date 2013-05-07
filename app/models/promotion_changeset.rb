@@ -59,8 +59,6 @@ class PromotionChangeset < Changeset
 
     from_env = self.environment.prior
     to_env   = self.environment
-
-    to_env.content_view_environment.update_cp_content
     update_progress! '30'
     PulpTaskStatus.wait_for_tasks(promote_views(from_env, to_env, self.content_views.composite(false)))
     update_progress! '50'
