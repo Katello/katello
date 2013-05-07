@@ -72,20 +72,23 @@ class Api::UsersController < Api::ApiController
   param_group :user
   def create
     # warning - request already contains "username" and "password" (logged user)
-    user = User.create!(:username => params[:username],
+    @user = User.create!(:username => params[:username],
                         :password => params[:password],
                         :email    => params[:email],
                         :disabled => params[:disabled])
 
-    user.default_environment = KTEnvironment.find(params[:default_environment_id]) if params[:default_environment_id]
+    if params[:default_environment_id]
+      @user.default_environment = KTEnvironment.find(params[:default_environment_id])
+      @user.save!
+    end
 
     if !params[:default_locale].blank?
         if Katello.config.available_locales.include? params[:default_locale]
-            user.default_locale = params[:default_locale]
-            user.save!
+            @user.default_locale = params[:default_locale]
+            @user.save!
         end
     end
-    render :json => user.to_json
+    render :json => @user.to_json
   end
 
   api :PUT, "/users/:id", "Update an user"
