@@ -16,7 +16,6 @@ class Api::V1::ProductsController < Api::V1::ApiController
   before_filter :find_environment, :only => [:index, :repositories]
   before_filter :find_content_view, :only => [:repositories]
   before_filter :find_product, :only => [:repositories, :show, :update, :destroy, :set_sync_plan, :remove_sync_plan]
-  before_filter :find_environment, :only => [:index, :repositories]
   before_filter :verify_presence_of_organization_or_environment, :only => [:index]
   before_filter :authorize
 
@@ -153,7 +152,10 @@ class Api::V1::ProductsController < Api::V1::ApiController
   end
 
   def find_content_view
-    ContentViewDefinition.readable(@organization).find(params[:content_view_id]) if params[:content_view_id]
+    if params[:content_view_id]
+      organization = @organization || @environment.organization
+      @content_view = ContentView.readable(organization).find(params[:content_view_id])
+    end
   end
 
   def verify_presence_of_organization_or_environment

@@ -231,6 +231,17 @@ describe Api::V1::ProductsController, :katello => true do
       get 'repositories', :organization_id => @organization.label, :environment_id => @environment.id, :id => @product.id
       response.body.should == @repositories.to_json
     end
+
+    it "should call product repos with a content view" do
+      @content_view = build_stubbed(:content_view)
+      @product.stub!(:readable?).and_return(true)
+      @repositories.stub!(:where).and_return(@repositories)
+      ContentView.stub_chain(:readable, :find).and_return(@content_view)
+      @product.should_receive(:repos).with(@environment, nil, @content_view)
+      get 'repositories', :organization_id => @organization.label,
+        :environment_id => @environment.id, :id => @product.id,
+        :content_view_id => @content_view.id
+    end
   end
 
 end
