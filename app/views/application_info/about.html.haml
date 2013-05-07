@@ -20,7 +20,7 @@
               %tr
                 %td= component_status_icon(status[:result])
                 %th= component
-                %td= status[:result] == 'OK' ? _('OK') : _('FAIL')
+                %td= status[:result].downcase == 'ok' ? _('OK') : _('FAIL')
                 %td= status[:message]
     .dash
       .dashhead
