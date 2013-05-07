@@ -53,7 +53,7 @@ class Api::V1::ProxiesController < Api::V1::ApiController
         (User.consumer? or @organization.readable?)
       when :api_proxy_consumer_certificates_path, :api_proxy_consumer_releases_path, :api_proxy_certificate_serials_path,
           :api_proxy_consumer_entitlements_path, :api_proxy_consumer_entitlements_post_path, :api_proxy_consumer_entitlements_delete_path,
-          :api_proxy_consumer_dryrun_path, :api_proxy_consumer_owners_path
+          :api_proxy_consumer_dryrun_path, :api_proxy_consumer_owners_path, :api_proxy_consumer_compliance_path
         User.consumer? and current_user.uuid == params[:id]
       when :api_proxy_consumer_certificates_delete_path
         User.consumer? and current_user.uuid == params[:consumer_id]
