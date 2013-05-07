@@ -1,26 +1,17 @@
-%nav#orgSwitcherNav.nav.left{"ng-class" => "{'active-item': showMenu}"}
-  %ul#organizationSwitcher.menu-container{"ng-click" => "showMenu=!showMenu", "ng-cloak" => ''}
+%nav#orgSwitcherNav.nav.left{"ng-class" => "{'active-item': orgSwitcherVisible}"}
+  %ul#organizationSwitcher.menu-container{"ng-click" => "toggleOrgSwitcher()", "ng-cloak" => ''}
     %li.menu-item
       - if current_organization && !current_organization.name.nil?
-        %a.menu-item-link.organization-name.clickable{:title=>"#{current_organization.name}", "ng-class" => "{'active-item': showMenu}"}
+        %a.menu-item-link.organization-name.clickable{:title=>"#{current_organization.name}", "ng-class" => "{'active-item': orgSwitcherVisible}"}
           = current_organization.name
           %i.down_arrow_icon-white
       - elsif user.allowed_organizations.length == 0
-        %a.menu-item-link.organization-name{"ng-class" => "{'active-item': showMenu}"}
+        %a.menu-item-link.organization-name{"ng-class" => "{'active-item': orgSwitcherVisible}"}
           = _("No Organization")
       - else
         %a.menu-item-link.organization-name.clickable{:title=>""}
           = _("Select an Organization")
           %i.down_arrow_icon-white
-      %ul.dropdown{"ng-show" => "showMenu", "ng-class" => "{'dropdown-active': true}"}
+      %ul.dropdown{"ng-show" => "orgSwitcherVisible", "ng-class" => "{'dropdown-active': true}"}
         %li
-          %ul
-            - for org in user.allowed_organizations
-              %li.menu-item
-                = render :partial=>"common/fav", :locals => {:org=>org, :current_user=>current_user}
-                = link_to org.name, set_org_user_session_path(:org_id=>org.id), :method=>"POST", :class=>"selected", :title=>_("Current Organization")
-            - if current_organization && !current_organization.name.nil? && Organization.any_readable?
-              %li#manage_orgs.menu-item
-                %a.menu-item{:href=>organizations_path()}
-                  %span{:class=>"fl clearfix"}
-                    #{_("Manage Organizations")}
+          %ul#allowed-orgs
