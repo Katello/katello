@@ -17,7 +17,7 @@
     .full
       = kt_form_for(System.new, :action => "create", :id => "new_system") do |form|
         = hidden_field_tag 'system[environment_id]', @environment.id
-        .grid_8#new_system
+        .grid_10#new_system
           = form.text_field :name, :label => _("Name of Your System:")
 
           = form.field :arch, :label => _("Architecture:") do
@@ -41,7 +41,7 @@
                   :url_content_views_proc => url_content_views_proc)
 
           - if Katello.config.katello?
-            = form.field :content_view_id, :label => _("Content View:") do
+            = form.field :content_view_id, :label => _("Content View:"), :grid => [2,7] do
               = content_view_select(current_organization, @environment)
 
 
