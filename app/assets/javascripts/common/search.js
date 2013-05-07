@@ -254,7 +254,7 @@ KT.search = function(form_id, list_id, list_module, params, extra_params){
                 "offset": offset
             },
             expand_list = list_elem.hasClass("expand_list") ? list_elem : list_elem.find(".expand_list");
-            
+
         if ($.bbq) {
             search = $.bbq.getState(search_hash);
         }

@@ -14,7 +14,7 @@
 /**
  * @ngdoc controller
  * @name  Katello.controller:SystemsController
- * 
+ *
  * @requires $scope
  * @requires Nutupane
  * @requires $location
@@ -25,7 +25,7 @@
  *   Provides the functionality specific to Systems for use with the Nutupane UI pattern.
  *   Defines the columns to display and the transform function for how to generate each row
  *   within the table.
- */ 
+ */
 angular.module('Katello').controller('SystemsController',
     ['$scope', 'Nutupane', '$location', '$compile', '$http',
     function($scope, Nutupane, $location, $compile, $http) {
@@ -100,7 +100,7 @@ angular.module('Katello').controller('SystemsController',
         $scope.table.model          = 'Systems';
         $scope.table.data.columns   = columns;
         $scope.table.active_item    = {};
-        
+
         Nutupane.set_columns();
 
         $scope.createNewSystem = function () {
