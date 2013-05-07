@@ -102,7 +102,12 @@ module Glue::ElasticSearch::Errata
 
       def self.search query, start, page_size, filters={}, sort=[:errata_id_sort, "DESC"],
                                                         default_field = 'id_title'
-        return [] if !Tire.index(self.index).exists?
+
+        repoids = filters[:repoids]
+        if !Tire.index(self.index).exists? || (repoids && repoids.empty?)
+                  return Util::Support.array_with_total
+        end
+
         all_rows = query.blank?
         search = Tire::Search::Search.new(self.index)
         search.instance_eval do
