@@ -8,7 +8,7 @@ group :development do
   gem 'yard', '>= 0.5.3'
 
   # Enable to have attributes and associations of ActiveRecord documented
-  # gem 'yard-activerecord', :git => 'git://github.com/pitr-ch/yard-activerecord.git'
+  gem 'yard-activerecord'
 
   # Enable to be able to generate graphs
   # gem 'railroady'
