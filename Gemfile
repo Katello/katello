@@ -75,4 +75,4 @@ Dir[File.expand_path('bundler.d/*.rb', File.dirname(__FILE__))].each do |bundle|
   self.instance_eval(Bundler.read_file(bundle), bundle)
 end
 
-gem 'dynflow'
+gem 'dynflow', '>= 0.1.0'

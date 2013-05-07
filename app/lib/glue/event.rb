@@ -27,11 +27,30 @@ module Glue
     end
 
     def self.trigger(event_class, *args)
-      event_class.trigger(*args)
-    rescue => e
-      ::Logging.logger['glue'].error("#{e.class}: #{e.message}")
-      ::Logging.logger['glue'].error("#{e.response}") if e.respond_to? :response
-      ::Logging.logger['glue'].error(e.backtrace.join("\n"))
+      execution_plan = event_class.trigger(*args)
+      failed = false
+      execution_plan.failed_steps.each do |step|
+        Notify.warning(_("Failed to perform additional action %{action}: %{message}") %
+                       { :action => step.action_class.name,
+                         :message => step.error['message'] },
+                       { :asynchronous => true, :persist => true })
+        failed = true
+      end
+
+      log_message = execution_plan.steps.map do |step|
+        message = "#{step.action_class.name}:#{step.status}:#{step.input.inspect} -> #{step.output.inspect}"
+        if step.status == 'error'
+          message << "#{step.error['exception']}: #{step.error['message']}\n"
+          message << step.error['backtrace'].join("\n")
+        end
+          message
+      end.join("\n")
+
+      if failed
+        ::Logging.logger['glue'].error(log_message)
+      else
+        ::Logging.logger['glue'].debug(log_message)
+      end
     end
   end
 end
