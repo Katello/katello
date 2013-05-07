@@ -39,7 +39,9 @@ class System < ActiveRecord::Base
   has_many :custom_info, :as => :informable, :dependent => :destroy
   belongs_to :content_view
 
+  before_validation :set_default_content_view, :unless => Proc.new { |model| model.persisted? }
   validates :environment, :presence => true
+  validates :content_view, :presence => true, :allow_blank => false
   validates_with Validators::NonLibraryEnvironmentValidator, :attributes => :environment
   # multiple systems with a single name are supported
   validates :name, :presence => true
@@ -209,6 +211,10 @@ class System < ActiveRecord::Base
     def fill_defaults
       self.description = _("Initial Registration Params") unless self.description
       self.location = _("None") unless self.location
+    end
+
+    def set_default_content_view
+      self.content_view = self.environment.try(:default_content_view) unless self.content_view
     end
 
     def collect_installed_product_names

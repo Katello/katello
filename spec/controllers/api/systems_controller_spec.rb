@@ -192,20 +192,21 @@ describe Api::SystemsController do
         end
 
         it "should set the system's content view to the key's view" do
-          @activation_key_3 = ActivationKey.create!(:environment => @environment_1, :organization => @organization, :name => "activation_key_3",
+          @activation_key_3 = ActivationKey.create!(:environment => @environment_1,
+                                                    :content_view => @environment_1.default_content_view,
+                                                    :organization => @organization, :name => "activation_key_3",
                                                     :system_groups => [@system_group_2])
           @controller.stub(:find_activation_keys).and_return([@activation_key_3])
           System.any_instance.stub(:facts).and_return(@system_data[:facts])
 
           content_view = FactoryGirl.build_stubbed(:content_view)
-          @activation_key_3.stub(:content_view_id).and_return(content_view.id)
           ContentView.stub(:find).and_return(content_view)
           content_view.stub(:in_environment?).and_return(true)
           @system_data[:activation_keys] = [@activation_key_3.name]
 
           post :activate, @system_data
           response.should be_success
-          System.last.content_view_id.should eql(content_view.id)
+          System.last.content_view_id.should eql(@activation_key_3.content_view.id)
         end
 
       end
@@ -435,8 +436,8 @@ describe Api::SystemsController do
       view = build_stubbed(:content_view)
       ContentView.stub(:find).and_return(view)
       view.stub(:in_environment?).and_return(true)
-      put :update, id: uuid, content_view_id: view.id
-      @sys.reload.content_view_id.should eql(view.id)
+      put :update, id: uuid, content_view_id: @environment_2.default_content_view.id
+      @sys.reload.content_view_id.should eql(@environment_2.default_content_view.id)
     end
 
     it "should update installed products" do
@@ -469,7 +470,8 @@ describe Api::SystemsController do
     it "should update environment" do
       @sys.facts = {}
       @sys.stub(:guest => 'false', :guests => [], :environment => @environment_2)
-      Resources::Candlepin::Consumer.should_receive(:update).once.with(uuid, {}, nil, nil, nil, nil, nil, @environment_2.id).and_return(true)
+      Resources::Candlepin::Consumer.should_receive(:update).once.with(uuid, {}, nil, nil, nil, nil, nil,
+                                                                       @environment_2.id.to_s).and_return(true)
       put :update, :id => uuid, :environment_id => @environment_2.id
       response.body.should == @sys.to_json
       response.should be_success
