@@ -203,8 +203,7 @@ module Glue::Candlepin::Consumer
     end
 
     def to_json(options={})
-      options.merge(:methods => [:href, :facts, :idCert, :owner, :autoheal, :release, :releaseVer, :checkin_time, :installedProducts])
-      super(options)
+      super(options.merge(:methods => [:href, :facts, :idCert, :owner, :autoheal, :release, :releaseVer, :checkin_time, :installedProducts]))
     end
 
     def convert_from_cp_fields(cp_json)
