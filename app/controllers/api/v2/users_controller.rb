@@ -43,7 +43,11 @@ class Api::V2::UsersController < Api::V1::UsersController
     user_attrs = params[:user]
 
     @user = User.create!(user_attrs)
-    @user.default_environment = KTEnvironment.find(user_attrs[:default_environment_id]) if user_attrs[:default_environment_id]
+
+    if user_attrs[:default_environment_id]
+      @user.default_environment = KTEnvironment.find(user_attrs[:default_environment_id])
+      @user.save!
+    end
 
     if !user_attrs[:default_locale].blank?
       #TODO: this should be placed in model validations
