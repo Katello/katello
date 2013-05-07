@@ -204,9 +204,6 @@ class AddForeignKeys < ActiveRecord::Migration
                              :name => 'systems_environment_id_fk'
     add_foreign_key_deferred 'task_statuses', 'organizations',
                              :name => 'task_statuses_organization_id_fk'
-    add_foreign_key_deferred 'task_statuses', 'systems',
-                             :name   => 'task_statuses_task_owner_id_fk',
-                             :column => 'task_owner_id'
     add_foreign_key_deferred 'task_statuses', 'users',
                              :name => 'task_statuses_user_id_fk'
     add_foreign_key_deferred 'user_notices', 'notices',
@@ -432,8 +429,6 @@ class AddForeignKeys < ActiveRecord::Migration
                        :name => 'systems_environment_id_fk'
     remove_foreign_key 'task_statuses',
                        :name => 'task_statuses_organization_id_fk'
-    remove_foreign_key 'task_statuses',
-                       :name => 'task_statuses_task_owner_id_fk'
     remove_foreign_key 'task_statuses',
                        :name => 'task_statuses_user_id_fk'
     remove_foreign_key 'user_notices',
