@@ -478,7 +478,9 @@ module Glue::Candlepin::Consumer
                        :endDate => Date.parse(pool["endDate"]),
                        :startDate => Date.parse(pool["startDate"]),
                        :contractNumber => pool["contractNumber"],
-                       :providedProducts => provided_products)
+                       :providedProducts => provided_products,
+                       :accountNumber => pool["accountNumber"],
+                       :productId => pool["productId"])
       }
       consumed_entitlements.sort! {|a,b| a.poolName <=> b.poolName}
       consumed_entitlements
