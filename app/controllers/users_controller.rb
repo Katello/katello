@@ -238,7 +238,7 @@ class UsersController < ApplicationController
 
     @environment              = default_environment_id.nil? ? nil : KTEnvironment.find(default_environment_id)
     @user.default_environment = @environment
-    #@user.save!
+    @user.save!
 
     @organization             = @environment.try :organization
 
