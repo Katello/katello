@@ -41,26 +41,19 @@ module SystemsHelper
 
   def architecture_select
     select(:arch, "arch_id", System.architectures.invert,
-             {:prompt => _('Select Architecture'), :id=>"arch_field"}, {:tabindex => 3})
+             {:prompt => _('Select Architecture'), :id => "arch_field"}, {:tabindex => 3})
   end
 
   def content_view_select(org, env)
     views = ContentView.readable(org).non_default.in_environment(env)
     choices = views.map {|v| [v.name, v.id]}
-    select(:system, "content_view_id", choices,
-             {:prompt => no_content_view, :id=>"content_view_field"},
-             {:tabindex => 2})
+    select(:system, "content_view_id", choices, {:id => "content_view_field"}, {:tabindex => 2})
   end
 
   def system_content_view_opts(system)
     keys = {}
-    if system.environment
-      content_views = system.environment.content_views.readable(current_organization)
-    else
-      content_views = ContentView.readable(current_organization)
-    end
-    content_views.non_default.each do |view|
-      keys[view.id] = view.name
+    system.environment.content_views.readable(current_organization).each do |view|
+      view.default? ? keys[view.id] = _('Default View') : keys[view.id] = view.name
     end
     keys[""] = ""
     keys["selected"] = system.content_view_id || ""

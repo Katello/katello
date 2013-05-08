@@ -277,8 +277,8 @@ class SystemsController < ApplicationController
 
     # Stuff into var for use in spec tests
     @locals_hash = { :system => @system, :editable => @system.editable?,
-                    :releases => releases, :releases_error => releases_error, :name => controller_display_name,
-                    :environments => environment_paths(library_path_element, environment_path_element("systems_readable?")) }
+                     :releases => releases, :releases_error => releases_error, :name => controller_display_name,
+                     :environments => environment_paths(library_path_element, environment_path_element("systems_readable?")) }
     render :partial => "edit", :locals => @locals_hash
   end
 
@@ -302,7 +302,6 @@ class SystemsController < ApplicationController
         params[:system][:serviceLevel] = val[1..-1]
       end
     end
-    params[:system][:content_view_id] = nil if params[:system].has_key? :environment_id
 
     @system.update_attributes!(params[:system])
     notify.success _("System '%s' was updated.") % @system["name"]
