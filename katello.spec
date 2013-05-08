@@ -32,7 +32,7 @@
 %endif
 
 Name:           katello
-Version:        1.3.25
+Version:        1.3.26
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -835,6 +835,10 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Tue May 07 2013 Justin Sherrill <jsherril@redhat.com> 1.3.26-1
+- consumer errata - ui - add support to dashboard and system
+  (bbuckingham@redhat.com)
+
 * Tue May 07 2013 Justin Sherrill <jsherril@redhat.com> 1.3.25-1
 - fixes 2125 - busted activation key systems page
 - fixing sync error not showing as an error in the UI
