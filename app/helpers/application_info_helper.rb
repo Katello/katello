@@ -13,9 +13,9 @@
 module ApplicationInfoHelper
 
   def component_status_icon(status)
-    if status == "fail"
+    if status.downcase == "fail"
       content_tag :span, "", :class => "error_icon"
-    elsif status == "ok"
+    elsif status.downcase == "ok"
       content_tag :span, "", :class => "check_icon"
     else
       ""
