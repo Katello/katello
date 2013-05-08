@@ -1,20 +1,34 @@
 /**
- Copyright 2013 Red Hat, Inc.
-
- This software is licensed to you under the GNU General Public
- License as published by the Free Software Foundation; either version
- 2 of the License (GPLv2) or (at your option) any later version.
- There is NO WARRANTY for this software, express or implied,
- including the implied warranties of MERCHANTABILITY,
- NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
- have received a copy of GPLv2 along with this software; if not, see
- http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
+ * Copyright 2013 Red Hat, Inc.
+ *
+ * This software is licensed to you under the GNU General Public
+ * License as published by the Free Software Foundation; either version
+ * 2 of the License (GPLv2) or (at your option) any later version.
+ * There is NO WARRANTY for this software, express or implied,
+ * including the implied warranties of MERCHANTABILITY,
+ * NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
+ * have received a copy of GPLv2 along with this software; if not, see
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
 
-
+/**
+ * @ngdoc controller
+ * @name  Katello.controller:SystemsController
+ *
+ * @requires $scope
+ * @requires Nutupane
+ * @requires $location
+ * @requires $compile
+ * @requires $http
+ *
+ * @description
+ *   Provides the functionality specific to Systems for use with the Nutupane UI pattern.
+ *   Defines the columns to display and the transform function for how to generate each row
+ *   within the table.
+ */
 angular.module('Katello').controller('SystemsController',
-    ['$scope', 'Nutupane', '$location', '$http', '$compile',
-    function($scope, Nutupane, $location, $http, $compile) {
+    ['$scope', 'Nutupane', '$location', '$compile', '$http',
+    function($scope, Nutupane, $location, $compile, $http) {
 
         var columns = [{
             id: 'name',
@@ -87,37 +101,12 @@ angular.module('Katello').controller('SystemsController',
         $scope.table.data.columns   = columns;
         $scope.table.active_item    = {};
 
-        var allColumns = $scope.table.data.columns.slice(0);
-        var nameColumn = $scope.table.data.columns.slice(0).splice(0, 1);
-
-        /**
-         * Set the visibility of the details pane.
-         * @param visibility boolean
-         */
-        var setDetailsVisibility = function (visibility) {
-            if (visibility) {
-                // Remove all columns except name and replace them with the details pane
-                $scope.table.data.columns = nameColumn;
-            } else {
-                // Restore the former columns
-                $scope.table.data.columns = allColumns;
-                $location.search("");
-            }
-            $scope.table.detailsVisible = visibility;
-        }
-
-        /**
-         * Set the visibility of the new systems pane.
-         * @param visibility boolean
-         */
-        var setNewSystemVisibility = function (visibility) {
-            $scope.newPaneVisible = visibility;
-        }
+        Nutupane.set_columns();
 
         $scope.createNewSystem = function () {
             var createSuccess = function (data) {
                 $scope.$apply(function () {
-                    setNewSystemVisibility(false);
+                    Nutupane.setNewSystemVisibility(false);
                     $scope.table.select_item(KT.routes.edit_system_path(data.system.id));
                 });
                 notices.checkNotices();
@@ -129,9 +118,10 @@ angular.module('Katello').controller('SystemsController',
                 var content = $('#nutupane-new-item .nutupane-pane-content'),
                     data = KT.common.getSearchParams() || {},
                     button = content.find('input[type|="submit"]');
+
                 content.html(response.data);
-                setDetailsVisibility(false);
-                setNewSystemVisibility(true);
+                Nutupane.setDetailsVisibility(false);
+                Nutupane.setNewSystemVisibility(true);
 
                 content.find('#new_system').submit(function (event) {
                     event.preventDefault();
@@ -148,47 +138,14 @@ angular.module('Katello').controller('SystemsController',
             });
         };
 
-        $scope.table.select_item = function(url, id) {
-            var system;
+        Nutupane.default_item_url = function(id) {
+            return KT.routes.edit_system_path(id);
+        };
 
-            if (id) {
-                angular.forEach($scope.table.data.rows, function(row) {
-                    if (row.row_id.toString() === id.toString()) {
-                        system = row;
-                    }
-                });
+        Nutupane.get(function() {
+            if ($location.search().item) {
+                $scope.table.select_item(undefined, $location.search().item);
             }
-            url = url ? url : KT.routes.edit_system_path(id);
-
-            $http.get(url, {
-                params : {
-                    expanded : true
-                }
-            })
-            .then(function(response){
-                $scope.table.visible = false;
-
-                // Only reset the active_item if an ID is provided
-                if (id) {
-                    $location.search('item', id);
-                    $scope.table.select_all(false);
-                    $scope.table.active_item = system;
-                    $scope.table.active_item.selected = true;
-                    $scope.rowSelect = false;
-                }
-                $scope.table.active_item.html = response.data;
-                setDetailsVisibility(true);
-            });
-        };
-
-        $scope.table.close_item = function () {
-            setDetailsVisibility(false);
-        };
-
-        if( $location.search().item ){
-            $scope.select_item($location.search().item);
-        }
-
-        Nutupane.get();
+        });
     }]
 );
