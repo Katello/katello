@@ -15,14 +15,14 @@ module NavigationHelper
 
   def generate_menu
     if !Katello.config.katello?
-      main_menu   = Experimental::Navigation::Menus::Headpin::Main.new(current_organization)
-      site_menu   = Experimental::Navigation::Menus::Headpin::Site.new
+      main_menu   = Navigation::Menus::Headpin::Main.new(current_organization)
+      site_menu   = Navigation::Menus::Headpin::Site.new
     else
-      main_menu   = Experimental::Navigation::Menus::Main.new(current_organization)
-      site_menu   = Experimental::Navigation::Menus::Site.new
+      main_menu   = Navigation::Menus::Main.new(current_organization)
+      site_menu   = Navigation::Menus::Site.new
     end
 
-    user_menu   = Experimental::Navigation::Menus::User.new(current_user)
+    user_menu   = Navigation::Menus::User.new(current_user)
 
     menu = {
       :location => 'left',

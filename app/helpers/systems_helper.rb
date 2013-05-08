@@ -104,9 +104,14 @@ module SystemsHelper
   end
 
   def system_servicelevel system
-    _("Auto-attach %{val}, %{sla}") %
-      {:val => system.autoheal ? _("On") : _("Off"),
-       :sla => ( system.serviceLevel == '' ? _("No Service Level Preference") : (_("Service Level %s") % system.serviceLevel))}
+    if system.serviceLevel.blank?
+      org_sla = system.organization.service_level
+      sla = org_sla.blank? ? _("No Service Level Preference") : (_("Organization Service Level %s") % org_sla)
+    else
+      sla = _("Service Level %s") % system.serviceLevel
+    end
+
+    _("Auto-attach %{val}, %{sla}") % {:val => system.autoheal ? _("On") : _("Off"), :sla => sla}
   end
 
   def system_servicelevel_edit system
@@ -116,8 +121,8 @@ module SystemsHelper
       levels["0#{level}"] = _("Auto-attach Off, Service Level %s") % level
     }
 
-    levels['1'] = _("Auto-attach On, No Service Level Preference")
-    levels['0'] = _("Auto-attach Off, No Service Level Preference")
+    levels['1'] = _("Auto-attach On, Use Organization Service Level")
+    levels['0'] = _("Auto-attach Off, Use Organization Service Level")
 
     levels["selected"] = system_servicelevel(system)
 

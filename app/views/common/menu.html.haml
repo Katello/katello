@@ -2,14 +2,14 @@
 
 = generate_menu
 
-%div{ 'ng-controller' => 'MenuController' }
+#navigation{ 'ng-controller' => 'MenuController' }
   %header.header.logo-header
     %a.fl.logo{ 'href' => 'dashboard' }
     %span#experimental_indicator
       = "experimental"
     %nav{ 'alch-menu' => "user_menu" }
   %header.header.nav-header
-    = render :file => 'components/org_switcher_experimental'
+    = render :file => 'components/org_switcher'
     .nav(compact){ "alch-menu" => "menu" }
     .nav.right
       %ul.menu-container.menu-item-notices
