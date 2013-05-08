@@ -200,3 +200,7 @@ FastGettext.add_text_domain('katello', {
 }.update(old_fast_gettext ? { :ignore_obsolete => true } : { :report_warning => false }))
 
 FastGettext.default_text_domain = 'katello'
+
+if defined? Dynflow
+  Dir[File.join(Rails.root,'lib/{katello,headpin}/actions/*.rb')].each { |f| require f }
+end

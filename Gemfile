@@ -43,7 +43,7 @@ gem 'compass-rails'
 gem 'compass'
 gem 'compass-960-plugin', '>= 0.10.4', :require => 'ninesixty'
 gem 'simple-navigation', '>= 3.3.4'
-gem 'ui_alchemy-rails', '1.0.8'
+gem 'ui_alchemy-rails', '1.0.9'
 
 # Stuff for i18n
 gem 'gettext_i18n_rails'
@@ -74,3 +74,5 @@ gem 'logging', '>= 1.8.0'
 Dir[File.expand_path('bundler.d/*.rb', File.dirname(__FILE__))].each do |bundle|
   self.instance_eval(Bundler.read_file(bundle), bundle)
 end
+
+gem 'dynflow', '>= 0.1.0'

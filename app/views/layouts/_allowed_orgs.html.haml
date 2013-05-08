@@ -1,9 +1,9 @@
 - for org in user.allowed_organizations
-  - if current_organization && org.name == current_organization.name
-    .row.clickable.selected
-      = render :partial=>"common/fav", :locals => {:org=>org, :current_user=>current_user}
-      = link_to current_organization.name, set_org_user_session_path(:org_id=>org.id), :method=>"POST", :class=>"selected", :title=>_("Current Organization")
-  - else
-    .row.clickable
-      = render :partial=>"common/fav", :locals => {:org=>org, :current_user=>current_user}
-      = link_to org.name, set_org_user_session_path(:org_id=>org.id), :method=>"POST", :title=>org.name
+  %li.menu-item
+    = render :partial=>"common/fav", :locals => {:org=>org, :current_user=>current_user}
+    = link_to org.name, set_org_user_session_path(:org_id=>org.id), :method=>"POST", :class=>"selected dropdown-menu-item-link", :title=>_("Current Organization")
+- if current_organization && !current_organization.name.nil? && Organization.any_readable?
+  %li#manage_orgs.menu-item
+    %a.menu-item{:href=>organizations_path()}
+      %span{:class=>"fl clearfix"}
+        #{_("Manage Organizations")}

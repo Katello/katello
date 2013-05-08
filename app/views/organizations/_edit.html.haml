@@ -31,7 +31,7 @@
           .grid_8.la#organization_name{:title=>@organization[:name], 'name' => 'organization[name]', 'data-url' => organization_path(@organization.label),
                                        :class=>editable_class(editable)} #{@organization[:name]}
 
-        %fieldset
+        %fieldset.clear
           .grid_3.ra
             %label #{_("Label")}:
           .grid_8.la.multiline #{@organization.label}

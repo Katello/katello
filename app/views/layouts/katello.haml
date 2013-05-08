@@ -4,7 +4,7 @@
   = default_title
 
 = content_for(:stylesheets_block) do
-  = stylesheet_link_tag "katello"
+  = stylesheet_link_tag :katello
   = stylesheet_link_tag "#{controller.section_id}"
   = yield :stylesheets
 
@@ -15,15 +15,13 @@
   / [if IE]
     = stylesheet_link_tag :ie
 
-= content_for(:content) do
-  - if not current_user
-    #formwindow
-      = yield
-  - else
-    %nav.subnav#subnav
-      = render_main_sub_menu
-    .inner.container_16
-      = yield
+= content_for(:body) do
+  %article{ 'ng-app' => 'Katello' }
+    = render :file => "common/menu"
+  #wrapper
+    %article#maincontent
+      %section.maincontent.container_16
+        = yield
 
 = content_for(:footer) do
   = render :partial => "common/footer"
@@ -42,6 +40,4 @@
 
   = yield :javascripts
 
-= render :partial => 'common/header'
-
-= render :file => 'alchemy/layouts/shell_layout'
+= render :file => 'alchemy/layouts/base'

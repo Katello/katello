@@ -225,6 +225,8 @@ class ContentView < ActiveRecord::Base
       end
     end
 
+    Glue::Event.trigger(Katello::Actions::ContentViewPromote, self, from_env, to_env)
+
     tasks
   end
 
@@ -237,6 +239,7 @@ class ContentView < ActiveRecord::Base
       raise Errors::ChangesetContentException.new(_("Cannot delete from %s, view does not exist there.") % from_env.name)
     end
     version = ContentViewVersion.find(version.id)
+    Glue::Event.trigger(Katello::Actions::ContentViewDemote, self, from_env)
     version.delete(from_env)
     self.destroy if self.versions.empty?
   end

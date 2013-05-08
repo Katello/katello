@@ -114,6 +114,7 @@ class Candlepin::ProductContent
                                     :content_type => self.content.type,
                                     :preserve_metadata => true, #preserve repo metadata when importing from cp
                                     :enabled =>false,
+                                    :unprotected => true,
                                     :content_view_version=>env_prod.environment.organization.library.default_content_view_version
                                    )
         end
