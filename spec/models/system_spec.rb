@@ -70,7 +70,10 @@ describe System do
   end
 
   it "registers system in candlepin and pulp on create", :katello => true do #TODO headpin
-    Resources::Candlepin::Consumer.should_receive(:create).once.with(@environment.id, @organization.name, system_name, cp_type, facts, installed_products, nil, nil, nil).and_return({:uuid => uuid, :owner => {:key => uuid}})
+    Resources::Candlepin::Consumer.should_receive(:create).once.with(@environment.id.to_s, @organization.name,
+                                                                     system_name, cp_type, facts, installed_products,
+                                                                     nil, nil, nil).and_return({:uuid => uuid,
+                                                                                                :owner => {:key => uuid}})
     Runcible::Extensions::Consumer.should_receive(:create).once.with(uuid, {:display_name => system_name}).and_return({:id => uuid}) if Katello.config.katello?
     @system.save!
   end
