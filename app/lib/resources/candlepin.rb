@@ -158,7 +158,8 @@ module Resources
         def consume_entitlement uuid, pool, quantity = nil
           uri = join_path(path(uuid), 'entitlements') + "?pool=#{pool}"
           uri += "&quantity=#{quantity}" if quantity
-          self.post(uri, "", self.default_headers).body
+          response = self.post(uri, "", self.default_headers).body
+          response.blank? ? [] : JSON.parse(response)
         end
 
         def remove_entitlement uuid, ent_id
