@@ -4,4 +4,6 @@
   };
   KT.routes.options.prefix = KT.config['root_url'];
 
-  angular.module('Katello').value('current_organization', '#{current_organization.label}');
+-if current_organization
+  :plain
+    angular.module('Katello').value('current_organization', '#{current_organization.label}');
