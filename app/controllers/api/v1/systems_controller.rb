@@ -17,6 +17,7 @@ class Api::V1::SystemsController < Api::V1::ApiController
   before_filter :find_optional_organization, :only => [:create, :hypervisors_update, :index, :activate, :report, :tasks]
   before_filter :find_only_environment, :only => [:create]
   before_filter :find_environment, :only => [:index, :report, :tasks]
+  before_filter :find_content_view, :only => [:create]
   before_filter :find_environment_and_content_view, :only => [:create]
   before_filter :find_environment_by_name, :only => [:hypervisors_update]
   before_filter :find_system, :only => [:destroy, :show, :update, :regenerate_identity_certificates,
@@ -533,5 +534,9 @@ This information is then used for computing the errata available for the system.
 
   def readable_filters
     { :environment_id => KTEnvironment.systems_readable(@organization).collect { |item| item.id } }
+  end
+
+  def find_content_view
+    @content_view = ContentView.readable(@organization).find_by_id(params[:content_view_id]) if @organization
   end
 end
