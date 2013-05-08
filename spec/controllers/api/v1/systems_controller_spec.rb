@@ -89,6 +89,14 @@ describe Api::V1::SystemsController do
       post :create, :organization_id => @organization.name, :name => 'test', :cp_type => 'system', :installedProducts => installed_products
     end
 
+    it "sets the content view" do
+      view = create(:content_view)
+      ContentView.stub(:readable).and_return(ContentView)
+      System.should_receive(:create!).with(hash_including(content_view: view, environment: @environment_1, cp_type: "system", name: "test"))
+      post :create, :organization_id => @organization.name, :name => 'test', :cp_type => 'system',
+        :content_view_id => view.id
+    end
+
     context "in organization with one environment" do
       it "requires either organization_id" do
         System.should_receive(:create!).with(hash_including(:environment => @environment_1, :cp_type => 'system', :facts => facts, :name => 'test')).once.and_return({})

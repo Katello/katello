@@ -382,6 +382,7 @@ Src::Application.routes.draw do
       get :environments_partial
       get :events
       get :download_debug_certificate
+      get :apply_default_info_status
     end
     resources :environments do
       get :default_label, :on => :collection

@@ -17,7 +17,8 @@ class Api::V2::PermissionsController < Api::V1::PermissionsController
 
   def param_rules
     {
-        :create => { :permission => [:name, :description, :role_id, :organization_id, :verbs, :tags, :type, :all_tags] }
+        :create => { :permission => [:name, :description, :role_id, :organization_id, :verbs, :tags, :type, :all_tags,
+                                     :all_verbs] }
     }
   end
 
@@ -34,6 +35,7 @@ class Api::V2::PermissionsController < Api::V1::PermissionsController
     param :type, String, :desc => "name of a resource or 'all'", :required => true
     param :verbs, Array, :desc => "array of permission verbs"
     param :all_tags, :bool, :desc => "True if the permission should use all tags"
+    param :all_verbs, :bool, :desc => "True if the permission should use all verbs"
   end
   def create
     perm_attrs = params[:permission]
@@ -41,6 +43,7 @@ class Api::V2::PermissionsController < Api::V1::PermissionsController
         :role          => @role,
         :organization  => @organization,
         :all_tags      => (params[:all_tags].to_bool if params[:all_tags]),
+        :all_verbs      => (params[:all_verbs].to_bool if params[:all_verbs]),
         :verb_values   => perm_attrs[:verbs] || [],
         :tag_values    => perm_attrs[:tags] || [],
         :resource_type => ResourceType.find_or_create_by_name(perm_attrs[:type])
