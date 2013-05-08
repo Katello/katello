@@ -49,7 +49,7 @@ $(document).ready(function() {
     };
 
     $('#activation_key_content_view_id').live('change', function() {
-        KT.activation_key.highlight_content_views(false);
+        KT.activation_key.remove_content_view_highlight(false);
         KT.activation_key.get_products();
     });
 
@@ -119,7 +119,7 @@ KT.activation_key = (function($) {
     initialize_edit = function() {
         reset_env_select();
         enable_buttons();
-        highlight_content_views(false);
+        remove_content_view_highlight();
     },
     reset_env_select = function() {
         $('#path-expanded').hide();
@@ -135,11 +135,11 @@ KT.activation_key = (function($) {
 
         data.ajaxSubmit({
             success: function(data) {
-                highlight_content_views(false);
+                remove_content_view_highlight();
                 enable_buttons();
                 refresh_list_item(this.url.match(/\d+/)[0]);
             }, error: function(e) {
-                highlight_content_views(false);
+                remove_content_view_highlight();
                 enable_buttons();
         }});
     },
@@ -262,17 +262,18 @@ KT.activation_key = (function($) {
                     var options = '';
                     var opt_template = KT.utils.template("<option value='<%= key %>'><%= text %></option>");
 
-                    // create an html option list using the response
-                    options += opt_template({key: "", text: i18n.no_content_view});
-                    $.each(response, function(key, item) {
-                        options += opt_template({key: item.id, text: item.name});
-                    });
-
+                    if (response.length > 0) {
+                        // create an html option list using the response
+                        $.each(response, function(key, item) {
+                            options += opt_template({key: item.id, text: item.name});
+                        });
+                        highlight_content_views(i18n.select_content_view);
+                    } else {
+                        // the user selected an environment that has not views, warn them
+                        highlight_content_views(i18n.no_content_views_available);
+                    }
                     $("#activation_key_content_view_id").html(options);
 
-                    if (response.length > 0) {
-                        highlight_content_views(true);
-                    }
                     enable_buttons();
                 },
                 error: function(data) {
@@ -293,21 +294,23 @@ KT.activation_key = (function($) {
         $('#cancel_key').removeAttr('disabled');
         $('input[id^=save_key]').removeAttr('disabled');
     },
-    highlight_content_views = function(add_highlight) {
-        highlight_input("#activation_key_content_view_id", add_highlight);
-    };
-    highlight_input = function(element_id, add_highlight) {
-        var select_input = $(element_id);
-        if (add_highlight) {
-            if( !select_input.next('span').hasClass('highlight_input_text')) {
-                select_input.addClass('highlight_input');
-                select_input.after('<span class ="highlight_input_text">' + i18n.select_content_view + '</span>');
-            }
+    highlight_content_views = function(text){
+        var select_input = $("#activation_key_content_view_id"),
+            highlight_text = select_input.next('span.highlight_input_text');
+
+        select_input.addClass('highlight_input');
+        if (highlight_text.length > 0) {
+            highlight_text.html(text);
         } else {
-            select_input.removeClass('highlight_input');
-            $('.highlight_input_text').remove();
+            select_input.after('<span class ="highlight_input_text">' + text + '</span>');
         }
+    },
+    remove_content_view_highlight = function() {
+        var select_input = $("#activation_key_content_view_id");
+        select_input.removeClass('highlight_input');
+        select_input.next('span.highlight_input_text').remove();
     };
+
     return {
         subscription_setup: subscription_setup,
         initialize_new: initialize_new,
@@ -325,7 +328,7 @@ KT.activation_key = (function($) {
         disable_buttons: disable_buttons,
         enable_buttons: enable_buttons,
         highlight_content_views: highlight_content_views,
-        highlight_input: highlight_input,
+        remove_content_view_highlight: remove_content_view_highlight,
         refresh_list_item: refresh_list_item
     }
 }(jQuery));
