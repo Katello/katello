@@ -105,7 +105,7 @@ module Glue::ElasticSearch::Errata
 
         repoids = filters[:repoids]
         if !Tire.index(self.index).exists? || (repoids && repoids.empty?)
-                  return Util::Support.array_with_total
+          return Util::Support.array_with_total
         end
 
         all_rows = query.blank?
