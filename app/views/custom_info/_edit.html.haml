@@ -22,6 +22,6 @@
             %td.ra
               = label :custom_info, space_safe_keyname.to_sym, info.keyname
             %td
-              %div{:name => "value", :class => ("editable edit_textfield_custom_info" if informable.editable?), "data-method" => "put", "data-url" => api_update_custom_info_path(informable_type, informable_id, info.keyname)} #{info.value}
+              %div{:name => "custom_info_#{space_safe_keyname}", :class => ("editable edit_textfield_custom_info" if informable.editable?), "data-method" => "put", "data-url" => api_update_custom_info_path(informable_type, informable_id, info.keyname)} #{info.value}
             %td
               %input.btn.warning.remove_custom_info_button{:value => _("Remove"), :type => "submit", "data-url" => api_destroy_custom_info_path(informable_type, informable_id, info.keyname), "data-method" => "delete", "data-id" => "custom_info_#{space_safe_keyname}"}
