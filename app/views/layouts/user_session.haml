@@ -33,3 +33,9 @@
   = render :partial => "common/footer"
 
 = render :partial => "alchemy/layouts/user_session_layout"
+
+:javascript
+  KT.config = {
+    'root_url'  : '#{root_path()}'
+  };
+  KT.routes.options.prefix = KT.config['root_url'];

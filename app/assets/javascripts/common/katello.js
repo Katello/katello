@@ -311,86 +311,9 @@ KT.common = (function() {
           });
         },
         orgSwitcherSetup : function() {
-            //org switcher
-            var button = $('#switcherButton');
-            var container = $('#switcherContainer');
-            var box = $('#switcherBox');
-            var form = $('#switcherForm');
-            var orgbox = $('#orgbox');
-            var orgboxapi = null;
-            button.removeAttr('href');
-            button.click(function(switcher) {
-                box.fadeToggle('fast');
-                button.toggleClass('active');
-                container.toggleClass('active');
-                if(button.hasClass('active')){
-                    if(!(box.hasClass('jspScrollable'))){
-                      //the horizontalDragMaxWidth kills the horizontal scroll bar
-                      // (on purpose, since we have ellipsis...)
-                      orgbox.jScrollPane({ hideFocus: true, horizontalDragMaxWidth: 0 });
-                      orgbox.bind('jsp-initialised', function(event, isScrollable) {
-                          $('#orgfilter_input').focus();
-                        }
-                      );
-                      orgboxapi = orgbox.data('jsp');
-                    }
-                    $.ajax({
-                        type: "GET",
-                        url: orgbox.attr("data-url"),
-                        cache: false,
-                        success: function(data) {
-                          orgboxapi.getContentPane().html(data);
-                          orgboxapi.reinitialise();
-                        },
-                        error: function(data) {
-                          orgboxapi.getContentPane().html('<div class="spinner" style="margin-top:3px"></div>');
-                          orgboxapi.reinitialise();
-                        },
-                        complete: function() {
-                          orgbox.trigger('jsp-initialised');
-                        }
-                    });
-                }
-            });
-            form.mouseup(function() {
-                return false;
-            });
-            $(document).mouseup(function(switcher) {
-                if(!($(switcher.target).parents('#switcherContainer').length > 0)) {
-                    button.removeClass('active');
-                    container.removeClass('active');
-                    box.fadeOut('fast');
-                }
-            });
-            if ($('#switcherContainer').length >0){
-              $('#orgbox a').live('click', function(){
-                 $(document).mouseup();
-                 $('#switcherContainer').html('<div class="spinner" style="margin-top:3px"></div>');
-              });
-            }
-            $('.favorite').live('click', function(e) {
+             $('.favorite').live('click', function(e) {
                 KT.orgswitcher.checkboxChanged($(this).parent().find('.default_org'));
             });
-        },
-        orgBoxRefresh : function (){
-          var orgbox = $('#orgbox');
-          var orgboxapi = orgbox.data('jsp');
-          orgboxapi.reinitialise();
-        },
-        orgFilterSetup : function(){
-            $('form.filter').submit(function(){
-                $('#orgfilter_input').change();
-                return false;
-            });
-            $('#orgfilter_input').live('change, keyup', function(){
-                if ($.trim($(this).val()).length >= 2) {
-                    $("#orgbox .row:not(:contains('" + $(this).val() + "'))").filter(':not').fadeOut('fast');
-                    $("#orgbox .row:contains('" + $(this).val() + "')").filter(':hidden').fadeIn('fast');
-                } else {
-                    $("#orgbox .row").fadeIn('fast');
-                }
-            });
-            $('#orgfilter_input').val("").change();
         },
         rootURL : function() {
             if (root_url === undefined) {
@@ -585,8 +508,6 @@ $(document).ready(function (){
     KT.tipsy.custom.enable_forms_tooltips();
 
     KT.common.orgSwitcherSetup();
-    KT.common.orgFilterSetup();
-
 });
 
 /**

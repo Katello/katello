@@ -9,9 +9,10 @@
  NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
  have received a copy of GPLv2 along with this software; if not, see
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
-*/
+ **/
 
-//= require "alchemy/login"
-//= require "alchemy/password"
-//= require "widgets/org_switcher"
-//= require "user_sessions/user_sessions.controller"
+Katello.controller('UserSessionsController', ['$scope', function($scope) {
+    $('#login_form').bind('ajax:complete', function () {
+        $scope.orgSwitcher.refresh();
+    });
+}]);
