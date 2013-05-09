@@ -142,7 +142,7 @@ class Api::V1::ContentViewDefinitionsController < Api::V1::ApiController
   end
   def clone
     new_def = @definition.copy(params[:content_view_definition])
-    respond :resource => new_def
+    respond_for_show :resource => new_def
   end
 
   api :GET, "/content_view_definitions/:id/content_views",
