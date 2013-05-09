@@ -22,7 +22,9 @@ KT.panel.set_expand_cb(function(){
     setTimeout("$('#subscription_filters').attr('disabled', false).trigger('liszt:updated');", 500);
 });
 
-KT.panel_search_autocomplete = KT.panel_search_autocomplete.concat(["distribution.name:", "distribution.version:", "network.hostname:", "network.ipaddr:"]);
+if (KT.panel_search_autocomplete !== undefined) {
+    KT.panel_search_autocomplete = KT.panel_search_autocomplete.concat(["distribution.name:", "distribution.version:", "network.hostname:", "network.ipaddr:"]);
+}
 
 (function(){
     var options = { create : 'new_system' };
@@ -43,12 +45,14 @@ KT.panel_search_autocomplete = KT.panel_search_autocomplete.concat(["distributio
         $.extend(options, { 'extra_params' :
                     [ { hash_id     : 'env_id',
                         init_func     : function(){
-                            var state = $.bbq.getState('env_id');
+                            if ($.bbq) {
+                                var state = $.bbq.getState('env_id');
 
-                            if( state ){
-                                env_select.set_selected(state);
-                            } else {
-                                $.bbq.pushState({ env_id : env_select.get_selected_env() });
+                                if( state ){
+                                    env_select.set_selected(state);
+                                } else {
+                                    $.bbq.pushState({ env_id : env_select.get_selected_env() });
+                                }
                             }
                         }
                     }

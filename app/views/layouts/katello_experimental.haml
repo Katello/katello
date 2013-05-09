@@ -27,6 +27,11 @@
       = yield
 
 = content_for(:javascripts_block) do
+  = javascript_include_tag "common/vendor"
+  %script{ :type => "text/javascript" }
+    - if defined?(experimental_ui)
+      :plain
+        $.bbq = undefined;
   = javascript_include_tag :common
   = javascript_include_tag 'common/experimental'
   %script{ :type => "text/javascript" }
@@ -34,7 +39,7 @@
       :plain
         var AUTH_TOKEN = #{form_authenticity_token.inspect};
     = render :partial => "common/common_i18n"
-    = render :partial => 'common/config'
+    = render :partial => 'common/config_experimental'
     = render :partial => 'common/ajax_notices'
     = render :partial => 'common/notification'
     = yield :inline_javascript

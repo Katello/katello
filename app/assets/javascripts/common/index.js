@@ -10,7 +10,6 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
 
-//= require "common/vendor"
 //= require "common/katello"
 //= require "common/menu"
 //= require "common/routes"
