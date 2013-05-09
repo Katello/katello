@@ -19,4 +19,11 @@
               %i.validation_icon-white.icon
               %span#unread_notices_count
                 {{notices.count}}
+      - if defined? KatelloForemanEngine
+        %ul.menu-container
+          %li.menu-item{ "ng-mouseenter" => "handle_hover(foreman, true)", "ng-mouseleave" => "handle_hover(foreman, false)" }
+            %a.menu-item-link{ :href => Katello.config.foreman.url, "ng-class" => "{ 'active-item' : foreman.active }"}
+              %span
+                Foreman
+                = image_tag("cross_link.png", :class => 'link_icon icon')
     .nav.admin_menu{ "alch-menu" => "admin_menu" }
