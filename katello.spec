@@ -790,6 +790,7 @@ usermod -a -G katello-shared tomcat
 %{homedir}/lib/tasks
 %{homedir}/lib/util
 %{homedir}/app/lib/util
+%{homedir}/app/lib/glue/event.rb
 %{homedir}/app/lib/glue/queue.rb
 %{homedir}/app/lib/glue/task.rb
 %{homedir}/locale
