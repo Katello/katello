@@ -62,7 +62,9 @@ class Api::V1::CustomInfoController < Api::V1::ApiController
   param :keyname, String, :desc => "Custom info key", :required => true
   param :value, String, :required => true
   def update
-    value = params[:value].strip
+    value = params[:value]
+    value ||= params[:custom_info][params[:keyname]]
+    value.strip!
     @single_custom_info.update_attributes!(:value => value)
     respond :resource => @single_custom_info.value
   end
