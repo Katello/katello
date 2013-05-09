@@ -649,10 +649,6 @@ usermod -a -G katello-shared tomcat
 %{homedir}/config
 %{homedir}/db/migrate/
 %{homedir}/db/products.json
-%{homedir}/db/openid-store/
-%attr(755, katello, katello) %{datadir}/openid-store/associations
-%attr(755, katello, katello) %{datadir}/openid-store/nonces
-%attr(755, katello, katello) %{datadir}/openid-store/temp
 %{homedir}/db/seeds.rb
 %{homedir}/integration_spec
 %{homedir}/lib/*.rb
@@ -723,6 +719,11 @@ usermod -a -G katello-shared tomcat
 %{homedir}/lib/util
 %{homedir}/app/lib/util
 %{homedir}/script/service-wait
+%{homedir}/db/openid-store/
+%attr(755, katello, katello) %{datadir}/openid-store/associations
+%attr(755, katello, katello) %{datadir}/openid-store/nonces
+%attr(755, katello, katello) %{datadir}/openid-store/temp
+
 
 %defattr(-, katello, katello)
 %dir %{homedir}
