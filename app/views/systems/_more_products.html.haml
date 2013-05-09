@@ -1,5 +1,10 @@
 -products.each do |p|
   %tr
-    %td{:class=>'product'}
-      .status_icon{:class => "#{@system.product_compliance_color p['productId']}"}
-      #{p['productName']}
+    %td{:class=>'product grid_12'}
+      %ul
+        %li
+          .status_icon{:class => "#{@system.product_compliance_color p['productId']}"}
+          #{p['productName']}
+        %li
+          = system_subscription_status_message(@system, p)
+
