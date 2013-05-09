@@ -18,7 +18,6 @@
  * Date: 09/01/2010
  */
 
-
 //Katello global object namespace that all others should be attached to
 var KT = {};
 KT.widget = {};
@@ -34,7 +33,10 @@ $(window).bind("hashchange", function(event) {
 // refresh the favicon to make sure it shows up
     $('link[type*=icon]').detach().appendTo('head');
 });
-$.bbq.pushState('!', '');
+
+if ($.bbq !== undefined) {
+    $.bbq.pushState('!', '');
+}
 
 //i18n global variable
 var i18n = {};
@@ -327,7 +329,11 @@ KT.common = (function() {
             return root_url;
         },
         getSearchParams : function(val) {
-            var search_string = $.bbq.getState('list_search');
+            var search_string;
+
+            if ($.bbq) {
+                search_string = $.bbq.getState('list_search');
+            }
 
             if( search_string ){
                 return { 'search' : search_string };

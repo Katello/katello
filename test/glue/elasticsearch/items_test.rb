@@ -34,9 +34,10 @@ class GlueElasticSearchTest < MiniTest::Rails::ActiveSupport::TestCase
     @results.expect(:total, 0)
 
     @FakeClass.stub(:search, @results) do
-      items = @items.retrieve("*")
+      items, count = @items.retrieve("*")
 
       assert_empty items
+      assert_equal 0, count
     end
   end
 
