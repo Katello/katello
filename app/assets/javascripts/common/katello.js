@@ -30,6 +30,10 @@ var Katello = angular.module('Katello', ['alchemy', 'alch-templates', 'ngSanitiz
 
 // Must be at the top to prevent AngularJS unnecessary digest operations
 // And to handle the hashPrefix that AngularJS adds that confuses BBQ
+$(window).bind("hashchange", function(event) {
+// refresh the favicon to make sure it shows up
+    $('link[type*=icon]').detach().appendTo('head');
+});
 $.bbq.pushState('!', '');
 
 //i18n global variable
@@ -537,9 +541,4 @@ $(window).ready(function(){
     $.rails.confirm = function(message) {
         KT.common.customConfirm({message: message}); return false;
     };
-
-    $(window).bind("hashchange", function(event) {
-        // refresh the favicon to make sure it shows up
-        $('link[type*=icon]').detach().appendTo('head');
-    });
 });
