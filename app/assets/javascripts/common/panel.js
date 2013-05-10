@@ -83,14 +83,14 @@ $(document).ready(function () {
                 last_ajax_panelpage = undefined;
             }
 
-            if(event.ctrlKey && !thisPanel.hasClass('opened') && !(event.target.id == "new") && !activeBlock.hasClass('active')) {
+            if(event.ctrlKey && !thisPanel.hasClass('opened') && (event.target.id !== "new") && !activeBlock.hasClass('active')) {
                 if (activeBlock.hasClass('active')) {
                     activeBlock.removeClass('active');
                 } else {
                     activeBlock.addClass('active');
                     activeBlock.find('.arrow-right').hide();
                 }
-            } else if (event.ctrlKey && !thisPanel.hasClass('opened') && !(event.target.id == "new") && activeBlock.hasClass('active') && $('.block.active').length > 1) {
+            } else if (event.ctrlKey && !thisPanel.hasClass('opened') && (event.target.id !== "new") && activeBlock.hasClass('active') && $('.block.active').length > 1) {
               activeBlock.removeClass('active');
             } else {
                 if(activeBlock.hasClass('active') && thisPanel.hasClass('opened')){
@@ -188,7 +188,9 @@ $(document).ready(function () {
                 KT.panel.copy.initialize();
 
                 for( cb in callbacks ){
-                    callbacks[cb]();
+                    if(callbacks.hasOwnProperty(cb)) {
+                        callbacks[cb]();
+                    }
                 }
             }
         });
@@ -263,7 +265,7 @@ KT.panel = (function ($) {
         panels_list = [],
         left_list_content = "",
         expand_cb = [],
-        search = undefined,
+        search,
         //callback after a pane is loaded
         contract_cb = function () {},
         switch_content_cb = function () {},
@@ -365,7 +367,9 @@ KT.panel = (function ($) {
                     KT.panel.copy.initialize();
 
                     for( callback in expand_cb ){
-                        expand_cb[callback](name);
+                        if(expand_cb.hasOwnProperty(callback)) {
+                            expand_cb[callback](name);
+                        }
                     }
                     // Add a handler for ellipsis
                     $(".one-line-ellipsis").ellipsis(true);
@@ -434,9 +438,10 @@ KT.panel = (function ($) {
             }
         },
         closePanel = function (jPanel) {
-            var jPanel = jPanel || $('#panel'),
-                content = jPanel.find('.panel-content'),
+            var content = jPanel.find('.panel-content'),
                 position;
+
+            jPanel = jPanel || $('#panel');
             if (jPanel.hasClass("opened")) {
                 KT.panel.copy.hide_form();
                 $('.block.active').removeClass('active');
@@ -624,7 +629,7 @@ KT.panel = (function ($) {
         },
         // http://devnull.djolley.net/2010/11/accessing-query-string-parameters-from.html
         queryParameters = function () {
-            var queryString = new Object;
+            var queryString = {};
             var qstr = window.location.search.substring(1);
             var params = qstr.split('&');
             $.each(params, function(index, item){
@@ -641,7 +646,7 @@ KT.panel = (function ($) {
             var active = $('#list').find('.active');
             var full_ajax_url;
             if (source_url === undefined) {
-                full_ajax_url = active.attr("data-ajax_url") + '/' + active.attr("data-ajax_panelpage")
+                full_ajax_url = active.attr("data-ajax_url") + '/' + active.attr("data-ajax_panelpage");
             } else {
                 full_ajax_url = source_url;
             }
@@ -659,7 +664,7 @@ KT.panel = (function ($) {
         },
         actions = (function(){
             var action_list = {},
-                current_request_action = undefined;
+                current_request_action;
 
             var registerDefaultActions = function() {
                 var actions = $(".panel_action");
@@ -766,7 +771,7 @@ KT.panel = (function ($) {
                 registerAction: registerAction,
                 registerDefaultActions: registerDefaultActions,
                 resetActions: resetActions
-            }
+            };
         })();
     return {
         set_expand_cb: function (callBack) {
@@ -946,7 +951,7 @@ KT.panel.list = (function () {
                         // Unless an explicit #heading_title element exists, use the first div
                         // (which was the previous default behavior).
                         var heading_title = jQid.find('#heading_title');
-                        if (heading_title.length == 0) {
+                        if (heading_title.length === 0) {
                             heading_title = jQid.children('div:first');
                         }
                         $('.pane_heading').html(heading_title.html());

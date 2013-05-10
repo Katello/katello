@@ -17,11 +17,11 @@
  */
 
 
-KT.events = function() {
+KT.events = (function() {
 
     var total_events = 0,
     total_loaded = 0,
-    actions_updater = undefined,
+    actions_updater,
     loaded_summary = $('#loaded_summary'),
     more_button = $('#more'),
     page_size = 0,
@@ -57,8 +57,8 @@ KT.events = function() {
 
         if (tasks) {
             $.each(tasks, function(index, status) {
-                var node = undefined,
-                    msg = undefined;
+                var node,
+                    msg;
 
                 if(!status["pending?"]) {
                     node = $('.event_name[data-pending-task-id=' + status['id'] + ']');
@@ -71,8 +71,8 @@ KT.events = function() {
 
         if (jobs) {
             $.each(jobs, function(index, status) {
-                var node = undefined,
-                    msg = undefined;
+                var node,
+                    msg;
 
                 if(!status["pending?"]) {
                     node = $('.event_name[data-pending-job-id=' + status['id'] + ']');
@@ -174,7 +174,7 @@ KT.events = function() {
     return {
         initEvents: initEvents
     };
-}();
+})();
 
 $(document).ready(function() {
     KT.events.initEvents();

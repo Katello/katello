@@ -16,7 +16,7 @@
  *
  */
 $(document).ready(function() {
-  if (schedule.syncable == false) {
+  if (schedule.syncable === false) {
     $('.block').die('click');
   }
   $('#apply_button').live('click', function(e)

@@ -14,7 +14,7 @@
 
 
 KT.repo_discovery = (function(){
-    var updater = undefined,
+    var updater,
         form_id = '#repo_discovery_form',
         list_id = '#discovered_repos';
 
@@ -175,7 +175,7 @@ KT.repo_discovery = (function(){
         page_close: page_close,
         clear_selections: clear_selections,
         init_updater: init_updater
-    }
+    };
 })();
 
 
@@ -204,7 +204,7 @@ KT.discovery_templates = (function(){
         if (KT.utils.indexOf(selected_list, item.url) !== -1){
             selected = 'checked';
         }
-        html = '<tr class="' + alt + '"><td><label>'
+        html = '<tr class="' + alt + '"><td><label>';
         html += '<input type="checkbox"' + selected + ' value="' + item.url + '"/>' + item.path + '</label>';
         html += '</td>';
         html += '<td>' + existing_tipsy(item.existing) + '</td></tr>';
@@ -237,7 +237,7 @@ KT.discovery_templates = (function(){
 
     return {
         url_list:url_list
-    }
+    };
 
 })();
 
@@ -264,7 +264,7 @@ KT.repo_discovery.new_page = (function(){
 
         disable_form();
 
-        if (product_details.find('input[type=radio]:checked').val() == 'true'){
+        if (product_details.find('input[type=radio]:checked').val() === 'true'){
             name = product_details.find('input[type=text][name=product_name]').val();
             label = product_details.find('input[type=text][name=product_label]').val();
             create_product(name, label, $('#new_product').data('url'));
@@ -287,7 +287,7 @@ KT.repo_discovery.new_page = (function(){
                 url = repo_div.find('input[type=hidden]').val(),
                 id = '#' + repo_div.attr('id'),
                 unprotected = $('#unprotected').find('input[type=checkbox]:checked').val() === '1';
-            repos.push({name:name, label:label, feed:url, id:id, unprotected:unprotected})
+            repos.push({name:name, label:label, feed:url, id:id, unprotected:unprotected});
         });
         $(window).trigger('repo.create', [create_url, repos]);
     },
@@ -330,10 +330,10 @@ KT.repo_discovery.new_page = (function(){
 
                     created_num = $('.created_repo').length;
                     if (created_num === 1) {
-                        created_msg = i18n.discovery_success_one
+                        created_msg = i18n.discovery_success_one;
                     }
                     else{
-                        created_msg = i18n.discovery_success_multi(created_num)
+                        created_msg = i18n.discovery_success_multi(created_num);
                     }
 
                     KT.panel.closeSubPanel($('#subpanel'));
@@ -372,5 +372,5 @@ KT.repo_discovery.new_page = (function(){
 
     return {
         init_panel:init_panel
-    }
+    };
 })();

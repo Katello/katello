@@ -52,7 +52,7 @@ KT.products = (function(){
                     $('#filter').keyup();
                     $('.scroll-pane').jScrollPane().data('jsp').reinitialise();
                     offset = offset + page_size;
-                    if (data.length == 0 || offset >= products_count) {
+                    if (data.length === 0 || offset >= products_count) {
                         more.hide(); // Hide more button, but still use it to hold data
                     }
                     more.attr("data-offset", offset);
@@ -66,7 +66,7 @@ KT.products = (function(){
         sortOrder : function(){
             var productSort = $('#products_sort');
             var productSortOrder = productSort.attr("data-sort");
-            if (productSort.attr("data-sort") == "asc"){
+            if (productSort.attr("data-sort") === "asc"){
                 productSortOrder = "desc";
                 productSort.removeClass("ascending").addClass("descending");
             } else {
@@ -96,7 +96,7 @@ KT.products = (function(){
                     list.append(data);
                     $('#filter').keyup();
                     $('.scroll-pane').jScrollPane().data('jsp').reinitialise();
-                    if (data.length == 0) {
+                    if (data.length === 0) {
                         more.empty().remove();
                     }else{
                         $('#products_more').attr("data-offset", reverse);
@@ -109,5 +109,5 @@ KT.products = (function(){
             });
         },
         retrievingNewContent : true
-    }
+    };
 })();

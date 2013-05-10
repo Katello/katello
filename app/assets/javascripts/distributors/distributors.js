@@ -17,7 +17,9 @@ KT.panel.set_expand_cb(function(){
         KT.menu.hoverMenu(item, { top : '75px' });
     });
 
-    setTimeout("$('#subscription_filters').attr('disabled', false).trigger('liszt:updated');", 500);
+    setTimeout(function () {
+        $('#subscription_filters').attr('disabled', false).trigger('liszt:updated');
+    }, 500);
 });
 
 KT.panel_search_autocomplete = KT.panel_search_autocomplete.concat(["distribution.name:", "distribution.version:", "network.hostname:", "network.ipaddr:"]);
@@ -29,7 +31,7 @@ KT.panel_search_autocomplete = KT.panel_search_autocomplete.concat(["distributio
 
         // When the env selector changes, update the pre-populated attributes
         env_select.env_changed_callback = function(env_id) {
-            if(env_select.envsys == true){
+            if(env_select.envsys === true){
                 $('#new').attr('data-ajax_url', KT.routes.new_distributor_path() + '?env_id=' + env_id);
             }
             $('#distributor_environment_id').attr('value', env_id);
@@ -124,7 +126,7 @@ KT.distributors_page = (function() {
       env_change : env_change,
       create_distributor : create_distributor,
       registerActions : registerActions
-  }
+  };
 })();
 
 KT.subs = (function() {
@@ -139,13 +141,13 @@ KT.subs = (function() {
         unsubcheckboxes.each(function(){
             $(this).change(function(){
                 if($(this).is(":checked")){
-                    checked++;
+                    checked += 1;
                     if(!(unsubbutton.is(":visible"))){
                         fakeunsubbutton.fadeOut("fast", function(){unsubbutton.fadeIn()});
                     }
                 }else{
-                    checked--;
-                    if((unsubbutton.is(":visible")) && checked == 0){
+                    checked -= 1;
+                    if((unsubbutton.is(":visible")) && checked === 0){
                         unsubbutton.fadeOut("fast", function(){fakeunsubbutton.fadeIn()});
                     }
                 }
@@ -199,11 +201,11 @@ KT.subs = (function() {
                     of_string;
 
                 if($(this).is(":checked")) {
-                    _checked++;
+                    _checked += 1;
                     direction = "increment";
                     value = 1;
                 } else {
-                    _checked--;
+                    _checked -= 1;
                     direction = "decrement";
                     value = 0;
                 }
@@ -240,26 +242,28 @@ KT.subs = (function() {
     },
 
     spinnerSetup = function(){
-        setTimeout("$('.ui-spinner').spinner()",1000);
+        setTimeout(function() {
+            $('.ui-spinner').spinner();
+        }, 1000);
         $('.ui-spinner').each(function() {
             $(this).change(function(e) {
                 var id = $(this).attr("id").substring("spinner_".length),
                     checkbox = $("#subscription_" + id)[0],
                     val = e.currentTarget.value,
-                    check = (val != 0);
+                    check = (val !== 0);
 
-                if (checkbox.checked != check) {
+                if (checkbox.checked !== check) {
                     checkbox.checked = check;
                     if (check) {
-                        _checked++;
+                        _checked += 1;
                     } else {
-                        _checked--;
+                        _checked -= 1;
                     }
                     updateSubButtons();
                 }
             });
             $(this).keypress(function(e) {
-               if (e.which == 13) {
+               if (e.which === 13) {
                    $(this).trigger("change");
                }
             });
@@ -274,5 +278,5 @@ KT.subs = (function() {
         save_selected_environment: save_selected_environment,
         initialize_edit: initialize_edit,
         reset_env_select: reset_env_select
-    }
+    };
 })();
