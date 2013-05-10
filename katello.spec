@@ -221,6 +221,20 @@ This is the Katello meta-package.  If you want to install Katello and all
 of its dependencies on a single machine, you should install this package
 and then run katello-configure to configure everything.
 
+%package foreman-all
+BuildArch:      noarch
+Summary:        A meta-package to pull in all components for Katello and Foreman
+Requires:       %{name}-all
+Requires:       %{name}-configure-foreman
+
+%description foreman-all
+
+This is a meta-package for Katello-Foreman integration. If you want to
+install Katello and all of its dependencies, including Foreman, on a
+single machine, you should install this package and then run
+katello-configure to configure everything.
+
+
 %package glue-elasticsearch
 BuildArch:      noarch
 Summary:         Katello connection classes for the Elastic Search backend
@@ -746,6 +760,8 @@ usermod -a -G katello-shared tomcat
 %{homedir}/app/lib/resources/candlepin.rb
 
 %files all
+
+%files foreman-all
 
 %files headpin
 %attr(600, katello, katello)
