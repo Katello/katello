@@ -10,23 +10,24 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-
 module Navigation
   module Menus
     module Headpin
-      class Providers < Navigation::Menu
+      class Subscriptions < Navigation::Menu
 
         def initialize(organization)
-          @key           = :providers_headpin
-          @display       = _("Repositories")
-          @authorization = true
-          @type          = 'flyout'
+          @key           = :subscriptions
+          @display       = _("Subscriptions")
+          @authorization = lambda{ organization }
+          @type          = 'dropdown'
           @items         = [
-            Navigation::Items::RedhatProvider.new(organization)
+            Navigation::Items::Subscriptions.new(organization),
+            Navigation::Items::Distributors.new(organization),
+            Navigation::Items::ActivationKeys.new(organization),
+            Navigation::Items::ImportHistory.new(organization)
           ]
           super
         end
-
       end
     end
   end
