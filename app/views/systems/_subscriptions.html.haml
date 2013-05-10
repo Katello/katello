@@ -12,14 +12,9 @@
     .subs_top
       .subs_image_wrapper
         .subs_image{:class => "#{@system.compliance_color}"}
-      .subs_text.fl
-        - if @system.compliance_color == 'green'
-          - until_time = @system.compliant_until
-          = until_time ? _("Subscriptions are Current Until %s") % format_time(until_time) : _("Subscriptions are Current")
-        - elsif @system.compliance_color == 'yellow'
-          = _("Insufficient Subscriptions are Attached to This System")
-        - else
-          = _("Subscriptions are not Current")
+      .subs_text.fl.panel_link
+        = system_status_message(@system)
+        = link_to(_('Details'), edit_system_path(@system))
     .subs_servicelevel{'name' => 'system[serviceLevel]', 'class' => ("editable edit_select_system_servicelevel" if editable), 'data-url' => system_path(system.id), 'data-options' => system_servicelevel_edit(system)}
       = system_servicelevel(system)
     .clear

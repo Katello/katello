@@ -208,7 +208,13 @@ module Resources
         def compliance uuid
           response = Candlepin::CandlepinResource.get(join_path(path(uuid), 'compliance'), self.default_headers).body
           unless response.empty?
-            JSON.parse(response).with_indifferent_access
+            json = JSON.parse(response).with_indifferent_access
+            if json['reasons']
+              json['reasons'].sort!{|x,y| x['attributes']['name'] <=> y['attributes']['name']}
+            else
+              json['reasons'] = []
+            end
+            json
           else
             return nil
           end

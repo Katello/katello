@@ -23,7 +23,8 @@ class Api::V1::SystemsController < Api::V1::ApiController
   before_filter :find_system, :only => [:destroy, :show, :update, :regenerate_identity_certificates,
                                         :upload_package_profile, :errata, :package_profile, :subscribe,
                                         :unsubscribe, :subscriptions, :pools, :enabled_repos, :releases,
-                                        :add_system_groups, :remove_system_groups, :refresh_subscriptions, :checkin]
+                                        :add_system_groups, :remove_system_groups, :refresh_subscriptions, :checkin,
+                                        :subscription_status]
   before_filter :authorize, :except => :activate
 
   skip_before_filter :require_user, :only => [:activate]
@@ -53,6 +54,7 @@ class Api::V1::SystemsController < Api::V1::ApiController
         :update                           => edit_system,
         :index                            => index_systems,
         :show                             => read_system,
+        :subscription_status              => read_system,
         :destroy                          => delete_system,
         :package_profile                  => read_system,
         :errata                           => read_system,
@@ -233,6 +235,12 @@ Schedules the consumer identity certificate regeneration
   def destroy
     @system.destroy
     respond :message => _("Deleted system '%s'") % params[:id], :status => 204
+  end
+
+  api :GET, "/systems/:id/subscription_status", "Show status of subscriptions on the system"
+  param :id, String, :desc => "UUID of the system", :required => true
+  def subscription_status
+    respond_for_collection :collection => @system.compliance
   end
 
   api :GET, "/systems/:id/pools", "List pools a system is subscribed to"

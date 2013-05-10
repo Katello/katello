@@ -26,7 +26,22 @@
           .input
             .value
               = system.uuid
-
+        %h5 #{_("Subscription Status Details")}
+        .control-group
+          .label
+            = label :reason, :reason, _('Subscription Status')
+          .input
+            .product
+              .status_icon{:class => "#{system.compliance_color}"}
+            .value
+              = system_status_message(system)
+        - system.compliance['reasons'].each do |reason|
+          .control-group
+            .label
+              = label :sub_name, :sub_name, reason['attributes']['name']
+            .input
+              .value
+                = reason['message']
         %h5 #{_("Networking")}
         .control-group
           .label
@@ -38,13 +53,14 @@
           .label
             = label :interfaces, :interfaces, _("Interfaces")
           .input
-            %table#interface_table
-              - system.interfaces.each do |interface|
-                %tr
-                  %td.interface_name
-                    = interface[:name]
-                  %td.interface_addr
-                    = interface[:addr]
+            %span.value
+              %table#interface_table
+                - system.interfaces.each do |interface|
+                  %tr
+                    %td.interface_name
+                      = interface[:name]
+                    %td.interface_addr
+                      = interface[:addr]
 
         %h5 #{_("System Properties")}
         .control-group
