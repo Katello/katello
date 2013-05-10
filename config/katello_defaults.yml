@@ -65,9 +65,13 @@ common:
 
   redhat_repository_url: https://cdn.redhat.com
 
-  # this enables gems used for profiling. will also enable newrelic in development mode
-  # for newrelic, go to /newrelic
-  profiling: false
+  # Add actions you want to profile with ruby-prof to profiling option, e.g.
+  #   profiling:
+  #     - "user_sessions#new"
+  #     - "user_sessions#create"
+  # Profiles will be stored in `tmp/profiles/`.
+  # When no action is present profiling is disabled, which is default.
+  profiling:
 
   # if paranoia is set to true even children of Exception will be rescued
   exception_paranoia: false
