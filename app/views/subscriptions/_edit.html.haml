@@ -64,7 +64,7 @@
         .grid_2.ra.fieldset
           =label :limits, :limits, _("Limits")
         .grid_8.la
-          = _("Sockets: %s") % @subscription.sockets
+          = _("Sockets: %s") % @subscription.sockets if @subscription.sockets != 0
           = _(", RAM: %s") % @subscription.ram if @subscription.ram != 0
       %fieldset
         .grid_2.ra.fieldset
