@@ -27,8 +27,8 @@
  *   within the table.
  */
 angular.module('Katello').controller('SystemsController',
-    ['$scope', 'Nutupane', '$location', '$compile', '$http',
-    function($scope, Nutupane, $location, $compile, $http) {
+    ['$scope', 'Nutupane', '$location', '$compile', '$filter', '$http',
+    function($scope, Nutupane, $location, $compile, $filter, $http) {
 
         var columns = [{
             id: 'name',
@@ -77,10 +77,10 @@ angular.module('Katello').controller('SystemsController',
                             display: system.content_view_id ? system.content_view_id : "",
                             column_id: 'content_view_id'
                         },{
-                            display: system.created_at,
+                            display: $filter('date')(system.created_at, 'medium'),
                             column_id: 'created_at'
                         },{
-                            display: system.updated_at,
+                            display: $filter('date')(system.updated_at, 'medium'),
                             column_id: 'updated_at'
                         }]
                     };
