@@ -45,6 +45,12 @@ module Katello
         has_values key, [true, false]
       end
 
+      def is_type(key, *types)
+        unless types.any? { |type| type === config[key] }
+          raise error_format(key.to_sym, "has to be one of #{types.inspect} types")
+        end
+      end
+
       def has_values(key, values, options = {})
         values << nil if options[:allow_nil]
         return true if values.include?(config[key])
