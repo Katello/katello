@@ -142,13 +142,11 @@ EOKEY
 
 
   def disable_consumer_group_orchestration
-    if Katello.config.katello?
-      Runcible::Extensions::ConsumerGroup.stub!(:create).and_return({})
-      Runcible::Extensions::ConsumerGroup.stub!(:delete).and_return(200)
-      Runcible::Extensions::ConsumerGroup.stub!(:retrieve).and_return({})
-      Runcible::Extensions::ConsumerGroup.stub!(:add_consumers_by_id).and_return(200)
-      Runcible::Extensions::ConsumerGroup.stub!(:remove_consumers_by_id).and_return(200)
-    end
+    Runcible::Extensions::ConsumerGroup.stub!(:create).and_return({})
+    Runcible::Extensions::ConsumerGroup.stub!(:delete).and_return(200)
+    Runcible::Extensions::ConsumerGroup.stub!(:retrieve).and_return({})
+    Runcible::Extensions::ConsumerGroup.stub!(:add_consumers_by_id).and_return(200)
+    Runcible::Extensions::ConsumerGroup.stub!(:remove_consumers_by_id).and_return(200)
   end
 
   def disable_repo_orchestration
