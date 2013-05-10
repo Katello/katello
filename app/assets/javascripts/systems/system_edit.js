@@ -15,16 +15,16 @@ update_content_views = function(env_id) {
     // update content view options
     $.ajax({  url: KT.routes.content_views_environment_path(env_id),
               type: "GET",
-              success: (function(data) {
+              success: function(data) {
                   options = {'': ''};
                   $.each(data, function(key, value) {
                        options[value.id] = value.name;
                   });
                   $("#system_content_view").data("options", options);
                   $("#system_content_view").show();
-              })
+              }
             });
-}
+};
 
 $(document).ready(function() {
 
@@ -82,7 +82,7 @@ $(document).ready(function() {
         {select_mode:'single', submit_button_text: i18n.save, cancel_button_text: i18n.cancel, activate_on_click: true});
 
     $(document).bind(path_select.get_submit_event(), function(event, environments) {
-        var selected_env_ids = KT.utils.values(path_select.get_selected())
+        var selected_env_ids = KT.utils.values(path_select.get_selected());
         if (selected_env_ids.length < 1) {
             return;
         }
@@ -112,7 +112,7 @@ $(document).ready(function() {
             notices.checkNotices();
 
             update_content_views(selected_env_ids[0]['id']);
-            if($("#system_content_view").text() != i18n.clickToEdit) {
+            if($("#system_content_view").text() !== i18n.clickToEdit) {
                 alert(i18n.contentViewReset);
                 $("#system_content_view").text(i18n.clickToEdit);
             }

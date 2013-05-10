@@ -12,9 +12,7 @@
 */
 
 
-
-
-KT.user_page = function() {
+KT.user_page = (function() {
     var clearHelptips = function() {
         var chkbox = $(this);
         var url = chkbox.attr("data-url");
@@ -63,7 +61,7 @@ KT.user_page = function() {
         var a = $('#password_field').val();
         var b = $('#confirm_field').val();
 
-        if(a!= b){
+        if(a !== b){
             $("#password_conflict").text(i18n.password_match);
             $(match_button).addClass("disabled");
             $('#save_password').die('click');
@@ -73,7 +71,7 @@ KT.user_page = function() {
         else {
             //this is to say, if there is an environment available from which to select, then
             //allow the creation of a user
-            if ($('#no_env_box').length == 0)
+            if ($('#no_env_box').length === 0)
             {
                 $("#password_conflict").text("");
                 $(match_button).removeClass("disabled");
@@ -82,7 +80,7 @@ KT.user_page = function() {
                 $('#save_password').die('click');
                 $('#save_password').live('click',changePassword);
                 //reset the new user button
-                if (a == "" && b == "") {
+                if (a === "" && b === "") {
                     $('#save_user').addClass('disabled');
                     $('#save_password').addClass('disabled');
                 } else {
@@ -201,5 +199,5 @@ KT.user_page = function() {
         clearHelptips: clearHelptips,
         updateRoles: updateRoles,
         registerEdits: registerEdits
-    }
-}();
+    };
+})();

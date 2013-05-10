@@ -15,7 +15,7 @@ var KT = (KT === undefined) ? {} : KT;
 
 KT.default_info = (function() {
 
-    var task_status_updater = undefined;
+    var task_status_updater;
 
     var start_updater = function(task_uuid) {
         allow_default_info_manipulation(false);
@@ -99,7 +99,7 @@ KT.default_info = (function() {
             url    : $button.data('url'),
             type   : $button.data('method'),
             success: function(data) {
-                start_updater(data['task']['uuid'])
+                start_updater(data['task']['uuid']);
             },
             error  : function(data) {
                 // task didn't start correctly
@@ -116,7 +116,7 @@ KT.default_info = (function() {
             type    : $button.data("method"),
             dataType: 'json',
             data    : { "keyname" : keyname }, success : function(data) {
-                add_default_info_row(data)
+                add_default_info_row(data);
             }
         });
     };
@@ -145,14 +145,14 @@ KT.default_info = (function() {
         var org = data["organization"];
         var destroy_path = KT.routes.api_organization_destroy_default_info_path(org["name"], informable_type, esc_keyname);
 
-        var new_row = "<tr class=\"primary_color\" data-id=\"default_info_" + _keyname + "\">"
-            + "<td class=\"ra\">"
-            + "<label for=\"default_info_" + _keyname + "\">" + keyname + "</label>"
-            + "</td>"
-            + "<td>"
-            + "<input class=\"btn warning remove_default_info_button\" data-id=\"default_info_" + _keyname + "\" data-method=\"delete\" data-url=\"" + destroy_path + "\" type=\"submit\" value=\"" + i18n.remove + "\">"
-            + "</td>"
-            + "</tr>";
+        var new_row = "<tr class=\"primary_color\" data-id=\"default_info_" + _keyname + "\">" +
+            "<td class=\"ra\">" +
+            "<label for=\"default_info_" + _keyname + "\">" + keyname + "</label>" +
+            "</td>" +
+            "<td>" +
+            "<input class=\"btn warning remove_default_info_button\" data-id=\"default_info_" + _keyname + "\" data-method=\"delete\" data-url=\"" + destroy_path + "\" type=\"submit\" value=\"" + i18n.remove + "\">" +
+            "</td>" +
+            "</tr>";
 
         $("#new_default_info_row").after(new_row);
         setTimeout(function() {$("tr[data-id='default_info_" + _keyname + "']").addClass("row_fade_in"); }, 1); // hax

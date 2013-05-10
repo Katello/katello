@@ -11,6 +11,14 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
 
+function toggle_form(form) {
+  if (form.is(':hidden')) {
+    form.show();
+  } else {
+    form.hide();
+  }
+}
+
 $(document).ready(function() {
 
   $("#new_product").hide();
@@ -36,12 +44,4 @@ $(document).ready(function() {
     return false;
   });
 });
-
-function toggle_form(form) {
-  if (form.is(':hidden')) {
-    form.show();
-  } else {
-    form.hide();
-  }
-}
 

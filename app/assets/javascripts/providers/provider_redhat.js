@@ -91,7 +91,7 @@ KT.redhat_provider_page = (function($) {
             success: function(data, textStatus, jqXHR){
               KT.redhat_provider_page.checkboxHighlightRow(data['id']);
               if(data['can_disable_repo_set']){
-                set_checkbox.removeAttr('disabled')
+                set_checkbox.removeAttr('disabled');
               }
               else {
                 set_checkbox.attr('disabled','disabled');
@@ -108,7 +108,7 @@ KT.redhat_provider_page = (function($) {
             refresh_repo_set(url, content_id, is_refresh);
         }
         else {
-            disable_repo_set(disable_url, content_id)
+            disable_repo_set(disable_url, content_id);
         }
     },
     disable_repo_set = function(url, content_id){
@@ -197,5 +197,5 @@ KT.redhat_provider_page = (function($) {
         on_node_show: on_node_show,
         repoSetChange: repoSetChange,
         hide_repos: hide_repos
-    }
+    };
 }(jQuery));

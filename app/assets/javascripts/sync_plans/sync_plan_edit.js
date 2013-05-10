@@ -33,7 +33,7 @@ $(document).ready(function() {
             onsuccess   :  function(result, status, xhr) {
                 var plan_date = $("#plan_date").text();
                 var current_plan = $("#current_plan").text();
-                if (plan_date != current_plan) {
+                if (plan_date !== current_plan) {
                     $("#current_plan").text(plan_date);
                 }
                 var id = $('#plan_id');
