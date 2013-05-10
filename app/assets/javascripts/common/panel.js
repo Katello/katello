@@ -32,7 +32,7 @@ $(document).ready(function () {
         panelLeft = left.width();
         $('.block').not('#new').width(panelLeft - 17);
         apanel.width((page_width - 21) - panelLeft);
-        right.width((page_width - 65) - panelLeft);
+        right.width((page_width - 62) - panelLeft);
         if (apanel.hasClass('opened')) {
             apanel.css({
                 "left": (panelLeft)
