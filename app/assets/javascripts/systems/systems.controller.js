@@ -43,7 +43,7 @@ angular.module('Katello').controller('SystemsController',
             display: 'Environment',
             show: true
         },{
-            id: 'content_view_id',
+            id: 'content_view',
             display: 'Content View',
             show: true
         },{
@@ -74,8 +74,8 @@ angular.module('Katello').controller('SystemsController',
                             display: system.environment.name,
                             column_id: 'environment'
                         },{
-                            display: system.content_view_id ? system.content_view_id : "",
-                            column_id: 'content_view_id'
+                            display: system.content_view ? system.content_view.name : "",
+                            column_id: 'content_view'
                         },{
                             display: $filter('date')(system.created_at, 'medium'),
                             column_id: 'created_at'
