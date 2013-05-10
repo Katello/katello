@@ -105,7 +105,7 @@ KT.menu = (function(){
         li.prepend($('<div class="arrow_icon_menu"></div>'));
       }
       var ul = li.find('ul');
-      var options = options || {};
+      options = options || {};
 
       if( options.top ){
         ul.css('top', options.top);

@@ -66,20 +66,20 @@ KT.sg_table = (function(){
         rows = tbody.find('tr').not('.empty_row');
         missing = min_rows - rows.length;
         if (missing > 0){
-            for(var i = 0; i < missing; i++){
+            for(var i = 0; i < missing; i += 1){
                 tbody.append("<tr class='stub'><td><br></td><td></td></tr>");
             }
         }
         rows = tbody.find('tr').not('.empty_row').not('.stub');
         var alt = 1;
         rows.each(function(index, value){
-            if(alt % 2 == 0){
-                $(value).addClass('alt')
+            if(alt % 2 === 0){
+                $(value).addClass('alt');
             }
             else {
-                $(value).removeClass('alt')
+                $(value).removeClass('alt');
             }
-            alt++;
+            alt += 1;
         });
 
     };
@@ -98,7 +98,7 @@ KT.system_groups = (function(){
         selected_systems,
     refresh_list_item = function(){
         var id = $('#system_group_id');
-        list.refresh(id.val(), id.data('ajax_url'))
+        list.refresh(id.val(), id.data('ajax_url'));
     },
     quota_setup = function() {
         // quota_setup is used for both the 'new' and 'edit' panes.  While the logic is nearly the same
@@ -198,6 +198,7 @@ KT.system_groups = (function(){
             url: KT.routes.destroy_systems_system_group_path(id),
             cache: false,
             success: function(data) {
+                /*jslint evil: true */
                 eval(data);
             }
         });
@@ -209,6 +210,7 @@ KT.system_groups = (function(){
             url: KT.routes.system_group_path(id),
             cache: false,
             success: function(data) {
+                /*jslint evil: true */
                 eval(data);
             }
         });
@@ -439,5 +441,5 @@ KT.system_groups = (function(){
         env_content_view_setup: env_content_view_setup,
         add_system : add_system,
         refresh_list_item: refresh_list_item
-    }
+    };
 })();

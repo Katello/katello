@@ -94,7 +94,7 @@ KT.tipsy.templates = (function(){
           html = errata(element);
       }
       else if (element.attr('data-url')){
-        html = url(element)
+        html = url(element);
       } else if (element.hasClass('task-info')) {
           html = task(element);
       } else {

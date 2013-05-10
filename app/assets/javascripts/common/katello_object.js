@@ -67,7 +67,7 @@ KT.object.label = (function(){
             $('.name_input').bind('click, focusin', function() {
                 disable_inputs($(this));
                 initial_name_value = $(this).val();
-            })
+            });
         },
     show_label = function(label, show) {
         if (show === true) {
@@ -99,5 +99,5 @@ KT.object.label = (function(){
 
     return {
         initialize: initialize
-    }
+    };
 })();

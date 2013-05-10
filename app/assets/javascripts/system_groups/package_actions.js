@@ -105,6 +105,7 @@ KT.package_actions = (function() {
         var id = packages_container.data('parent_id');
         if (packages_for === 'system') {
             // TODO: update for system packages when it is used
+            var todo = 1;
         } else {
             // packages_for === 'system_group'
             content_add_url = KT.routes.add_system_group_packages_path(id);
@@ -125,7 +126,7 @@ KT.package_actions = (function() {
         KT.tipsy.custom.system_packages_tooltips();
     },
     updateContentLinks = function(data) {
-        if ($.trim($(this).val()).length == 0) {
+        if ($.trim($(this).val()).length === 0) {
             // the user cleared the content box, so disable the add/remove links
             disableContentButtons();
 
@@ -153,7 +154,7 @@ KT.package_actions = (function() {
             content,
             validation_error;
 
-        if (selected_action == 'perform_action_packages') {
+        if (selected_action === 'perform_action_packages') {
             validation_error = validate_action_requested(content_array, KT.package_action_types.PKG);
             content = {'packages':content_string};
         } else {
@@ -223,18 +224,19 @@ KT.package_actions = (function() {
         } else {
             var item;
             $.each(content, function(index, content_item) {
+                var status;
                 item = $.trim(content_item);
                 switch (content_type) {
                     case KT.package_action_types.PKG:
                         // look for an existing node for the package, where there is an action pending
-                        var status = $("tr.package > td[data-name='"+item+"'] + td.status[data-pending-action-id]");
+                        status = $("tr.package > td[data-name='"+item+"'] + td.status[data-pending-action-id]");
                         if (status.length > 0) {
                             validation_error = i18n.validation_error_package_pending;
                         }
                         break;
                     case KT.package_action_types.PKG_GRP:
                         // look for an existing node for the group, where there is an action pending
-                        var status = $("tr.group > td[data-name='"+item+"'] + td.status[data-pending-action-id]");
+                        status = $("tr.group > td[data-name='"+item+"'] + td.status[data-pending-action-id]");
                         if (status.length > 0) {
                             validation_error = i18n.validation_error_group_pending;
                         }
@@ -298,6 +300,6 @@ KT.package_actions = (function() {
         addContent: addContent,
         removeContent: removeContent,
         updateContent: updateContent
-    }
+    };
 })();
 

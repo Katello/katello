@@ -94,7 +94,7 @@ KT.gpg_key = (function($){
             return {
                 'gpg_key_save'    : $('#save_gpg_key'),
                 'gpg_key_upload': $('#upload_gpg_key')
-            }
+            };
         },
         enable_buttons = function(){
             var buttons = get_buttons();

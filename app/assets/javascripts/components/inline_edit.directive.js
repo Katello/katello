@@ -27,7 +27,7 @@ angular.module('Katello').directive('inlineEditText', function() {
         template: '<input type="text" on-enter="save()" ng-model="model" ng-show="editMode">' +
                   '<span inline-edit></span>',
         scope: {
-            model: '=inlineEditText',
+            model: '=inlineEditText'
         },
         controller: ['$scope', function($scope) {
         }]
@@ -39,7 +39,7 @@ angular.module('Katello').directive('inlineEditTextarea', function() {
         template: '<textarea on-enter="save()" rows=8 cols=40 ng-model="model" ng-show="editMode"></textarea>' +
                   '<span inline-edit></span>',
         scope: {
-            model: '=inlineEditTextarea',
+            model: '=inlineEditTextarea'
         },
         controller: ['$scope', function($scope) {
         }]

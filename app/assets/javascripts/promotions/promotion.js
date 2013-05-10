@@ -11,6 +11,588 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
 
+
+var changesetEdit = (function(){
+
+    var opened = false;
+
+    var toggle = function(delay){
+        var edit_window = $('#changeset_edit'),
+        name_box = $('.edit_name_text'),
+        edit_button = $('#edit_changeset > span'),
+        description = $('.edit_description'),
+        type = $('.edit_type'),
+        changeset = promotion_page.get_changeset(),
+        animate_time = 500;
+
+        if (delay !== undefined){
+            animate_time = delay;
+        }
+
+        opened = !opened;
+
+        var after_function;
+        if (opened) {
+            $('#edit_changeset').attr('original-title', i18n.close_edit_title);
+            name_box.html(changeset.getName());
+            edit_button.html(i18n.close_details);
+            description.html(changeset.getDescription());
+            type.html(changeset.type());
+            edit_button.parent().addClass("highlighted");
+            after_function = setup_edit;
+        }
+        else {
+            $('#edit_changeset').attr('original-title', i18n.edit_title);
+            edit_button.html(i18n.edit_details);
+            edit_button.parent().removeClass("highlighted");
+        }
+
+        edit_window.slideToggle(animate_time, after_function);
+    },
+    setup_edit = function() {
+
+        var changeset = promotion_page.get_changeset(),
+        url = KT.common.rootURL() + "changesets/" + changeset.id,
+        name_box = $('.edit_name_text'),
+        description = $('.edit_description');
+
+        name_box.each(function() {
+            $(this).editable('destroy');
+            $(this).editable( url, {
+                type        :  'text',
+                width       :  270,
+                method      :  'PUT',
+                name        :  $(this).attr('name'),
+                cancel      :  i18n.cancel,
+                submit      :  i18n.save,
+                indicator   :  i18n.saving,
+                tooltip     :  i18n.clickToEdit,
+                placeholder :  i18n.clickToEdit,
+                submitdata  :  {authenticity_token: AUTH_TOKEN},
+                onsuccess   :  function(data) {
+                    var parsed = $.parseJSON(data);
+                    changeset.setName(parsed.name);
+                    $('.edit_name_text').html(parsed.name);
+                    changeset.set_timestamp(parsed.timestamp);
+                    promotion_page.get_changeset_tree().rerender_breadcrumb();
+                },
+                onerror     :  function(settings, original, xhr) {
+                    original.reset();
+                }
+            });
+        });
+
+        description.each(function() {
+            $(this).editable('destroy');
+            $(this).editable(url , {
+                type        :  'textarea',
+                method      :  'PUT',
+                name        :  $(this).attr('name'),
+                cancel      :  i18n.cancel,
+                submit      :  i18n.save,
+                indicator   :  i18n.saving,
+                tooltip     :  i18n.clickToEdit,
+                placeholder :  i18n.clickToEdit,
+                submitdata  :  {authenticity_token: AUTH_TOKEN},
+                rows        :  5,
+                cols        :  30,
+                onsuccess   :  function(data) {
+                    var parsed = $.parseJSON(data);
+                    $('.edit_description').html(parsed.description);
+                    changeset.setDescription(data.description);
+                    changeset.set_timestamp(parsed.timestamp);
+                },
+                onerror     :  function(settings, original, xhr) {
+                    original.reset();
+                }
+            });
+        });
+    },
+    close = function() {
+        if (opened) {
+            toggle(0);
+        }
+    };
+
+    return {
+        toggle: function() {toggle();},
+        close: close
+    };
+})();
+
+
+var templateLibrary = (function(){
+    var contentProductsList = function(content) {
+            // Render the product list for the content tree
+            var products_list = content['products'],
+                has_products = false,
+                html = '<ul class="expand_list">';
+
+            // loop through the content to find products (i.e. details_*)
+            $.each(content, function(item){
+                if( content.hasOwnProperty(item) ){
+                    if( item.split("_")[0] === "details" ){
+                        // using the product found, retrieve the html that will be used for the product list item
+                        // this is stored in the 'products' list as a hash where key is product_id and value is html
+                        html += products_list[content[item].product_id];
+                        has_products = true;
+                    }
+                }
+            });
+            if (has_products === false) {
+                html += i18n.content_no_products;
+            }
+            html += '</ul>';
+            return html;
+        },
+        changesetsListItem = function(id, name){
+            var html ='<li class="slide_link">' + '<div class="simple_link link_details" id="' + id + '">';
+
+            html += '<span class="sort_attr">'+ name + '</span></div></li>';
+            return html;
+        },
+        changesetsList = function(changesets){
+            var html = '<ul class="filterable">';
+            $.each(changesets, function(item){
+                if( changesets.hasOwnProperty(item) ){
+                    //do the search filter here
+                    if( item.split("_")[0] === "changeset" ){
+                        html += changesetsListItem(item, changesets[item].name);
+                    }
+                }
+            });
+            html += '</ul>';
+            return html;
+        },
+        productDetailList = function(product, subtypes, changeset_id) {
+            var html = '<ul class="filterable">';
+             $.each(subtypes, function(index, type) {
+                 if (product[type]) {
+                    html += '<li class="slide_link"><div class="simple_link link_details"';
+                 } else {
+                     html += '<li><div ';
+                 }
+
+                 html += 'id=' + type +'-cs_' + changeset_id + '_' + product.id + '>';
+
+                html += '<span class="sort_attr">' + i18n[type];
+                if (product[type]) {
+                    html += ' (' + product[type].length  + ')';
+                }
+                else {
+                    html += "<img class='fr' src='" + KT.common.spinner_path() + "'>";
+                }
+
+                html += '</span></li>';
+             });
+            html += '</ul>';
+            return html;
+        },
+        dependencyItems = function(products, product_id) {
+            if (!products[product_id].deps) {
+                return i18n.loading_deps + "&nbsp;" + "<img  src='" + KT.common.spinner_path() + "'>";
+            }
+
+            var html = '<ul class="filterable">';
+            $.each(products[product_id].deps, function(index, item) {
+                html += '<li><div class="no_slide"><span class="sort_attr">'  + item.name + ' ' + '</span>';
+               // html += '<div class="dependency_of">' + i18n.dep_of + "&nbsp;" + item.dep_of + "</div>";
+                html += '</div></li>';
+
+            });
+            html += '</ul>';
+            return html;
+        },
+        listItems = function(products, type, product_id, showButton) {
+            var html = '<ul class="filterable">';
+            var items = products[product_id][type];
+            if (items.length === 0) {
+                return i18n["no_" + type]; //no_errata no_package no_repo no_distribution
+            }
+            $.each(items, function(index, item) {
+               //for item names that mach item.name from search hash
+               html += listItem(item.id, item.name, type, product_id, showButton, item.filtered);
+            });
+            html += '</ul>';
+            return html;
+        },
+        listItem = function(id, name, type, product_id, showButton, isFiltered) {
+            var anchor = "",
+                filter_repo_class = "";
+            if ( showButton && permissions.manage_changesets){
+                anchor = '<a ' + 'class="fr content_add_remove remove_' + type + ' + st_button"' + 'data-display_name="' + name +
+                                 '" data-type="' + type + '" data-product_id="[' + product_id +  ']" data-id="' + id + '">';
+                anchor += i18n.remove + "</a>";
+
+            }
+            if(type === "repo" && isFiltered) {
+                filter_repo_class = '<span class="filter_warning_icon fl promotion_tipsify"' + " data-content_id=\"" +
+                            id +"\" data-content_type=\"repo\""  + '>&nbsp;</span> ';
+            }
+
+
+            return '<li>' + anchor + '<div class="no_slide">' + filter_repo_class + '<span class="sort_attr">'  + name + '</span></div></li>';
+
+        },
+        productList = function(changeset, changeset_id, showButton){
+            var ul_start = '<ul class="filterable">',
+                ul_end = '</ul>',
+                html = ul_start,
+                all_list = '',
+                partial_list = '',
+                content_views_list = '',
+                product, provider,
+                content_views = changeset.getContentViews(),
+                products = changeset.getProducts();
+
+            if( changeset.productCount() === 0 ){
+                html += '<h5>'+i18n.product_plural+'</h5>';
+                html += '<div class="empty_list">' + i18n['no_products'] + '</div>';
+                //html += i18n['no_products'];
+            } else {
+                for( var key in products ){
+                    if( products.hasOwnProperty(key) ){
+                        product = products[key];
+                        provider = (product.provider === 'REDHAT') ? 'rh' : 'custom';
+                        toSlide = product.all ? 'no_slide' : 'slide_link';
+                        if( product.all ){
+                          all_list += productListItem(changeset_id, key, product.name, provider, toSlide, showButton, product.filtered);
+                        }
+                        else {
+                            partial_list += productListItem(changeset_id, key, product.name, provider, toSlide, false, product.filtered);
+                        }
+                    }
+                }
+            }
+
+            for(var vkey in content_views) {
+                if(content_views.hasOwnProperty(vkey) ){
+                    content_view = content_views[vkey];
+                    content_views_list += contentViewItem(changeset_id, vkey, content_view.name, showButton);
+                }
+            }
+            html += ul_end + ul_start;
+
+            html += all_list ? ('<h5>'+i18n.full_product+'</h5>' + all_list) : '';
+            html += ul_end + ul_start;
+            html += partial_list ? ('<h5>'+i18n.partial_product+'</h5>' + partial_list) : '';
+            html += ul_end + ul_start;
+            html += '<h5>'+i18n.content_view_plural+'</h5>';
+            html += content_views_list ? content_views_list : '<div class="empty_list">' + i18n['no_content_views'] + '</div>';
+            html += ul_end + ul_start;
+            return html;
+        },
+        contentViewItem = function(changeset_id, id, name, showButton){
+            var anchor = "",
+                html = '';
+            if ( showButton ){
+                anchor = '<a class="st_button content_add_remove fr remove_content_view" data-display_name="' +
+                    name +'" data-id="' + id + '" data-type="content_view" id="add_remove_content_view_' + id +
+                    '" data-content_view_id="' + id +
+                    '">' + i18n.remove + '</a>';
+            }
+            html += '<li class="clear">' + anchor;
+            html += '<div id="simple_link content_view-cs_' + changeset_id + '_' + id + '">' +
+                '<span class="content_view-icon sort_attr" >' + name + '</span>' +
+                '</div></li>';
+
+            return html;
+        },
+        productListItem = function(changeset_id, product_id, name, provider, slide_link, showButton, isFiltered){
+            var anchor = "",
+                html = '';
+
+            if ( showButton ){
+                anchor = '<a class="st_button content_add_remove fr remove_product" data-display_name="' +
+                    name +'" data-id="' + product_id + '" data-type="product" id="add_remove_product_' + product_id +
+                    '" data-product_id="[' + product_id +
+                    ']">' + i18n.remove + '</a>';
+            }
+            html += '<li class="clear ' + slide_link + '">' + anchor + '<div class="simple_link ';
+            html += (slide_link === 'slide_link') ? 'link_details' : '';
+            html += '" id="product-cs_' + changeset_id + '_' + product_id + '">';
+            if (isFiltered) {
+                html += '<span class="filter_warning_icon fl promotion_tipsify"' + " data-content_id=\"" +
+                            product_id +"\" data-content_type=\"product\""  + '>&nbsp;</span> ';
+            }
+            html += '<span class="' + provider + '-product-sprite"></span>' +
+                    '<span class="sort_attr" >' + name + '</span>' +
+                    '</div></li>';
+
+            return html;
+        },
+        conflictFullProducts = function(added, removed) {
+            if (added.length === 0 && removed.length === 0) {
+                return "";
+            }
+            var html = "<h3>"+ i18n.full_product +"</h3>";
+            html +="<div>";
+            html += conflictAccordianListItem(true, added);
+            html += conflictAccordianListItem(false, removed);
+            html += "</div>";
+            return html;
+        },
+        conflictProduct = function(product_name, conflict_product) {
+            var html = '<h3><a href="#">'+ product_name+ '</a></h3>';
+            html +="<div>";
+            $.each(promotion_page.subtypes, function(index, type){
+                var added = conflict_product[type + "_add"];
+                var removed = conflict_product[type + "_remove"];
+
+                if (added.length > 0 || removed.length > 0) {
+                    html += '<div>' + i18n[type] + ':</div>';
+                    html += conflictAccordianListItem(true, added);
+                    html += conflictAccordianListItem(false, removed);
+                }
+            });
+            html += "</div>";
+            return html;
+        },
+        conflictAccordianListItem = function(added, items) {
+            if (items.length === 0) {
+                return "";
+            }
+
+            var html = '<div class="conflict_item_type"><div>' + (added ? i18n.added : i18n.removed) + '</div>';
+            html += '<ul>';
+            $.each(items, function(index, item) {
+                html += "<li class='conflict_item'>" + item +  "</li>";
+            });
+            html += '</ul></div>';
+            return html;
+        };
+
+    return {
+        contentProductsList: contentProductsList,
+        changesetsList: changesetsList,
+        productList: productList,
+        listItems : listItems,
+        productDetailList: productDetailList,
+        conflictFullProducts: conflictFullProducts,
+        conflictProduct: conflictProduct,
+        dependencyItems: dependencyItems
+    };
+})();
+
+var promotionsRenderer = (function(){
+    var render = function(hash, render_cb){
+            if( hash === 'changesets'){
+                var post_wait_function = function() {
+                    promotion_page.set_changeset(undefined);
+                    render_cb(templateLibrary.changesetsList(promotion_page.get_current_changeset_breadcrumb()));
+                };
+                //any pending updates, if so wait!
+                if (!promotion_page.are_updates_complete()) {
+                    promotion_page.wait(promotion_page.are_updates_complete, function() {
+                        post_wait_function();
+                    });
+                }
+                else {
+                    post_wait_function();
+                }
+            }
+            else {
+                var split = hash.split("_"),
+                page = split[0],
+                changeset_id = split[1],
+                product_id = split[2],
+                cs = promotion_page.get_changeset();
+
+                //if we've come to a page with a different changset than what we have, clear the current changeset
+                if (page === "changeset" && cs !== undefined && changeset_id !==  cs.id) {
+                   promotion_page.set_changeset(undefined);
+                }
+
+                if (promotion_page.get_changeset() === undefined) {
+                    promotion_page.fetch_changeset(changeset_id, function() {
+                        render_cb(getContent(page, changeset_id, product_id));
+                    });
+                }
+                else {
+                    render_cb(getContent(page, changeset_id, product_id));
+                }
+            }
+            promotion_page.reset_page();
+        },
+    renderContent = function(hash, render_cb) {
+        // This function handles client-side rendering for the product list in the 'content' tree.
+        if (hash === 'products') {
+            render_cb(templateLibrary.contentProductsList(content_breadcrumb));
+            promotion_page.reset_page();
+        }
+    },
+    getContent =  function(key, changeset_id, product_id) {
+             //changeset_id = hash.split("_")[1];
+             //   product_id = hash.split("_")[2],
+             //   key = hash.split("_")[0],
+            var    changeset = promotion_page.get_changeset(),
+                inReviewPhase = (!changeset.is_new() && (changeset.state() !== "failed"));
+
+            if (key === 'package-cs'){
+                return templateLibrary.listItems(changeset.getProducts(), "package", product_id, !inReviewPhase);
+            }
+            else if (key === 'errata-cs'){
+                return templateLibrary.listItems(changeset.getProducts(), "errata", product_id, !inReviewPhase);
+            }
+            else if (key === 'repo-cs'){
+                return templateLibrary.listItems(changeset.getProducts(), "repo", product_id, !inReviewPhase);
+            }
+            else if (key === 'distribution-cs'){
+                return templateLibrary.listItems(changeset.getProducts(), "distribution", product_id, !inReviewPhase);
+            }
+            else if (key === 'deps-cs'){
+                return templateLibrary.dependencyItems(changeset.getProducts(), product_id);
+            }
+            else if (key === 'product-cs'){
+
+                //var types = promotion_page.subtypes;
+                var types = promotion_page.subtypes.slice(0); //copy the array
+                if (!promotion_page.get_changeset().is_new()) {
+                    types.push("deps");
+                }
+                return templateLibrary.productDetailList(changeset.getProducts()[product_id], types, changeset_id);
+            }
+            else if (key === 'changeset'){
+                return templateLibrary.productList(changeset, changeset.id, !inReviewPhase);
+            }
+        },
+        renderConflict = function(conflict) {
+            var html = templateLibrary.conflictFullProducts(conflict.products_added, conflict.products_removed);
+            $.each(conflict.products, function(key, product){
+                html += templateLibrary.conflictProduct(key, product);
+            });
+            return html;
+        };
+
+    return {
+        render: render,
+        renderContent: renderContent,
+        renderConflict: renderConflict
+    };
+})();
+
+
+var changesetStatusActions = (function($){
+    var set_margins = function(){
+            if( $('.progressbar').length ) {
+                $('#cslist .slider .link_details:not(:has(.progressbar)):not(:has(.locked_icon))').css('margin-left', '43px');
+                $('#cslist .slider .link_details:not(:has(.progressbar)) .locked_icon').css({'margin-left': '9px', 'margin-right' : '22px'});
+            } else if( $('#cslist .locked_icon').length ){
+                $('#cslist .slider .link_details:not(:has(.progressbar)):not(:has(.locked_icon))').css('margin-left', '20px');
+            }
+        },
+        initProgressBar = function(id, status, status_text){
+            var changeset = $('#' + id),
+                status_title = status_text;
+
+            if (status_text === undefined) {
+                status_text = i18n.changeset_applying;
+                status_title = i18n.changeset_progress;
+            }
+
+            changeset.css('margin-left', '0');
+            changeset.prepend('<span class="changeset_status"><span class="progressbar"></span><label></label></span>');
+            changeset.find('.changeset_status label').text(status + '%');
+            //changeset.find('.progressbar').progressbar({value: status});
+            changeset.addClass('being_promoted');
+            changeset.attr('title', status_title);
+            changeset.find('.changeset_status label').text(status_text);
+            set_margins();
+        },
+        setProgress = function(id, progress){
+            var changeset = $('#' + id);
+            //changeset.find(".progressbar").progressbar({value: progress});
+            //changeset.find('.changeset_status label').text(progress + '%');
+        },
+        finish = function(id){
+            var changeset = $('#' + id);
+            changeset.find(".changeset_status label").text(i18n.changeset_applied);
+            changeset.attr('title', i18n.changeset_applied);
+            /*changeset.parent().fadeOut(3000, function(){
+                changeset.parent().remove();
+                if( !$('.changeset_status').length ){
+                    $('#cslist .slider .link_details').animate({'margin-left' : '0'}, 200);
+                }
+            });*/
+        },
+        failed = function(id){
+            // if the promotion failed, check the server for additional details (via notices)
+            notices.checkNotices();
+
+            var changeset = $('#' + id);
+            changeset.find(".changeset_status label").text(i18n.changeset_apply_failed);
+            changeset.attr('title', i18n.changeset_apply_failed);
+
+            promotion_page.get_current_changeset_breadcrumb()[id].has_failed = true;
+        },
+        setLocked = function(id){
+            var changeset = $('#' + id);
+            changeset.css('margin-left', '0');
+            changeset.prepend('<img class="fl locked_icon" src="' + KT.common.rootURL() + 'assets/icons/locked.png">');
+            set_margins();
+        },
+        removeLocked = function(id){
+            var changeset = $('#' + id);
+            changeset.find('img').remove();
+            changeset.css('margin-left', '20px');
+            if( !$('#cslist .locked_icon').length ){
+                $('#cslist .slider .link_details').css('margin-left', '0');
+            }
+        },
+        checkProgressTask = function(id){
+            var timeout = 8000;
+            var updater = $.PeriodicalUpdater(KT.routes.status_changeset_path(id), {
+                method: 'GET',
+                type: 'JSON',
+                cache: false,
+                global: false,
+                minTimeout: timeout,
+                maxTimeout: timeout
+            }, function(data, success){
+
+                setProgress(data.id, data.progress);
+
+                if (success === "notmodified") {
+                  // received a 304 not modified...
+                  var changeset_id = 'changeset_' + id;
+                  if (promotion_page.get_current_changeset_breadcrumb()[changeset_id].has_failed === true) {
+                      // attempting to promote this changeset previously failed..., so if the promotion progress
+                      // remains 'not modified' that implies that it failed again...
+                      failed(changeset_id);
+                      updater.stop();
+                  }
+                } else if ((data.state === 'promoted') || (data.state === 'deleted')){
+                    delete promotion_page.get_current_changeset_breadcrumb()['changeset_' + id];
+
+                    // if the user deleted one or more products with the changeset, remove those products
+                    // from the content tree
+                    if (data.state === 'deleted' && data.product_ids) {
+                        $.each(data.product_ids, function(index, product_id) {
+                            delete content_breadcrumb['details_' + product_id];
+                        });
+                        promotion_page.get_content_tree().rerender_content('content');
+                    }
+
+                    finish(data.id);
+                    updater.stop();
+                } else if (data.state === 'failed') {
+                    failed(data.id);
+                    updater.stop();
+                }
+            });
+        };
+
+    return {
+        initProgressBar     : initProgressBar,
+        setProgress         : setProgress,
+        finishProgess       : finish,
+        checkProgressTask   : checkProgressTask,
+        setLocked           : setLocked,
+        removeLocked        : removeLocked
+    };
+})(jQuery);
+
+
 var promotion_page = (function($){
     var types =             ["errata", "product", "package", "repo", "distribution", "content_view"],
         subtypes =          ["errata", "package", "repo", "distribution"],
@@ -858,18 +1440,20 @@ var changeset_obj = function(data_struct) {
                 product_count = productCount();
 
             for( item in products ){
-                product = products[item];
-                errata = product.errata;
-                length = errata.length;
+                if(products.hasOwnProperty(item)) {
+                    product = products[item];
+                    errata = product.errata;
+                    length = errata.length;
 
-                for( i = 0; i < length; i += 1){
-                    erratum_id = errata[i]["id"];
+                    for( i = 0; i < length; i += 1){
+                        erratum_id = errata[i]["id"];
 
-                    if( collection[erratum_id] ){
-                        collection[erratum_id]["product_ids"].push(product.id);
-                    } else {
-                        errata[i]["product_ids"] = [product.id];
-                        collection[erratum_id] = errata[i];
+                        if( collection[erratum_id] ){
+                            collection[erratum_id]["product_ids"].push(product.id);
+                        } else {
+                            errata[i]["product_ids"] = [product.id];
+                            collection[erratum_id] = errata[i];
+                        }
                     }
                 }
             }
@@ -877,7 +1461,7 @@ var changeset_obj = function(data_struct) {
             return collection;
         },
         has_item: function(type, id, product_id) {
-            var found = undefined;
+            var found;
             if (type === 'content_view') {
                 if( content_views.hasOwnProperty(id) ){
                     return true;
@@ -913,7 +1497,7 @@ var changeset_obj = function(data_struct) {
         remove_item:function(type, id, product_id) {
             if( type === 'product' ){
                 delete products[id];
-            } else if (type == 'content_view') {
+            } else if (type === 'content_view') {
                 delete content_views[id];
             } else if (products[product_id] !== undefined) {
                 $.each(products[product_id][type], function(index,item) {
@@ -957,7 +1541,7 @@ var changeset_obj = function(data_struct) {
                     buttons[i18n.cancel] = function(){$(this).dialog('close'); on_error();};
                     buttons[i18n.continue_promotion] =function(){
                         $(this).dialog('close');
-                        cs.promote(on_success, on_error, true)
+                        cs.promote(on_success, on_error, true);
                     };
                     warn_elem.dialog({
                         closeOnEscape: false,
@@ -965,7 +1549,7 @@ var changeset_obj = function(data_struct) {
                         title: i18n.warning,
                         buttons: buttons,
                         open: function(event, ui) { $(".ui-dialog-titlebar-close").hide(); }
-                    })
+                    });
                 }
                 else {
                     if (on_success) {
@@ -1010,6 +1594,7 @@ var changeset_obj = function(data_struct) {
         }
     };
 };
+
 
 //doc ready
 var registerEvents = function(){
@@ -1138,584 +1723,7 @@ var registerEvents = function(){
     });
 };
 
-var changesetEdit = (function(){
 
-    var opened = false;
-
-    var toggle = function(delay){
-        var edit_window = $('#changeset_edit'),
-        name_box = $('.edit_name_text'),
-        edit_button = $('#edit_changeset > span'),
-        description = $('.edit_description'),
-        type = $('.edit_type'),
-        changeset = promotion_page.get_changeset(),
-        animate_time = 500;
-
-        if (delay != undefined){
-            animate_time = delay;
-        }
-
-        opened = !opened;
-
-        var after_function = undefined;
-        if (opened) {
-            $('#edit_changeset').attr('original-title', i18n.close_edit_title);
-            name_box.html(changeset.getName());
-            edit_button.html(i18n.close_details);
-            description.html(changeset.getDescription());
-            type.html(changeset.type());
-            edit_button.parent().addClass("highlighted");
-            after_function = setup_edit;
-        }
-        else {
-            $('#edit_changeset').attr('original-title', i18n.edit_title);
-            edit_button.html(i18n.edit_details);
-            edit_button.parent().removeClass("highlighted");
-        }
-
-        edit_window.slideToggle(animate_time, after_function);
-    },
-    setup_edit = function() {
-
-        var changeset = promotion_page.get_changeset(),
-        url = KT.common.rootURL() + "changesets/" + changeset.id,
-        name_box = $('.edit_name_text'),
-        description = $('.edit_description');
-
-        name_box.each(function() {
-            $(this).editable('destroy');
-            $(this).editable( url, {
-                type        :  'text',
-                width       :  270,
-                method      :  'PUT',
-                name        :  $(this).attr('name'),
-                cancel      :  i18n.cancel,
-                submit      :  i18n.save,
-                indicator   :  i18n.saving,
-                tooltip     :  i18n.clickToEdit,
-                placeholder :  i18n.clickToEdit,
-                submitdata  :  {authenticity_token: AUTH_TOKEN},
-                onsuccess   :  function(data) {
-                    var parsed = $.parseJSON(data);
-                    changeset.setName(parsed.name);
-                    $('.edit_name_text').html(parsed.name);
-                    changeset.set_timestamp(parsed.timestamp);
-                    promotion_page.get_changeset_tree().rerender_breadcrumb();
-                },
-                onerror     :  function(settings, original, xhr) {
-                    original.reset();
-                }
-            });
-        });
-
-        description.each(function() {
-            $(this).editable('destroy');
-            $(this).editable(url , {
-                type        :  'textarea',
-                method      :  'PUT',
-                name        :  $(this).attr('name'),
-                cancel      :  i18n.cancel,
-                submit      :  i18n.save,
-                indicator   :  i18n.saving,
-                tooltip     :  i18n.clickToEdit,
-                placeholder :  i18n.clickToEdit,
-                submitdata  :  {authenticity_token: AUTH_TOKEN},
-                rows        :  5,
-                cols        :  30,
-                onsuccess   :  function(data) {
-                    var parsed = $.parseJSON(data);
-                    $('.edit_description').html(parsed.description);
-                    changeset.setDescription(data.description);
-                    changeset.set_timestamp(parsed.timestamp);
-                },
-                onerror     :  function(settings, original, xhr) {
-                    original.reset();
-                }
-            });
-        });
-    },
-    close = function() {
-        if (opened) {
-            toggle(0);
-        }
-    };
-
-    return {
-        toggle: function() {toggle();},
-        close: close
-    };
-})();
-
-
-var promotionsRenderer = (function(){
-    var render = function(hash, render_cb){
-            if( hash === 'changesets'){
-                var post_wait_function = function() {
-                    promotion_page.set_changeset(undefined);
-                    render_cb(templateLibrary.changesetsList(promotion_page.get_current_changeset_breadcrumb()));
-                };
-                //any pending updates, if so wait!
-                if (!promotion_page.are_updates_complete()) {
-                    promotion_page.wait(promotion_page.are_updates_complete, function() {
-                        post_wait_function();
-                    });
-                }
-                else {
-                    post_wait_function();
-                }
-            }
-            else {
-                var split = hash.split("_"),
-                page = split[0],
-                changeset_id = split[1],
-                product_id = split[2],
-                cs = promotion_page.get_changeset();
-
-                //if we've come to a page with a different changset than what we have, clear the current changeset
-                if (page === "changeset" && cs !== undefined && changeset_id !==  cs.id) {
-                   promotion_page.set_changeset(undefined);
-                }
-
-                if (promotion_page.get_changeset() === undefined) {
-                    promotion_page.fetch_changeset(changeset_id, function() {
-                        render_cb(getContent(page, changeset_id, product_id));
-                    });
-                }
-                else {
-                    render_cb(getContent(page, changeset_id, product_id));
-                }
-            }
-            promotion_page.reset_page();
-        },
-    renderContent = function(hash, render_cb) {
-        // This function handles client-side rendering for the product list in the 'content' tree.
-        if (hash === 'products') {
-            render_cb(templateLibrary.contentProductsList(content_breadcrumb));
-            promotion_page.reset_page();
-        }
-    },
-    getContent =  function(key, changeset_id, product_id) {
-             //changeset_id = hash.split("_")[1];
-             //   product_id = hash.split("_")[2],
-             //   key = hash.split("_")[0],
-            var    changeset = promotion_page.get_changeset(),
-                inReviewPhase = (!changeset.is_new() && (changeset.state() !== "failed"));
-
-            if (key === 'package-cs'){
-                return templateLibrary.listItems(changeset.getProducts(), "package", product_id, !inReviewPhase);
-            }
-            else if (key === 'errata-cs'){
-                return templateLibrary.listItems(changeset.getProducts(), "errata", product_id, !inReviewPhase);
-            }
-            else if (key === 'repo-cs'){
-                return templateLibrary.listItems(changeset.getProducts(), "repo", product_id, !inReviewPhase);
-            }
-            else if (key === 'distribution-cs'){
-                return templateLibrary.listItems(changeset.getProducts(), "distribution", product_id, !inReviewPhase);
-            }
-            else if (key === 'deps-cs'){
-                return templateLibrary.dependencyItems(changeset.getProducts(), product_id);
-            }
-            else if (key === 'product-cs'){
-
-                //var types = promotion_page.subtypes;
-                var types = promotion_page.subtypes.slice(0); //copy the array
-                if (!promotion_page.get_changeset().is_new()) {
-                    types.push("deps");
-                }
-                return templateLibrary.productDetailList(changeset.getProducts()[product_id], types, changeset_id);
-            }
-            else if (key === 'changeset'){
-                return templateLibrary.productList(changeset, changeset.id, !inReviewPhase);
-            }
-        },
-        renderConflict = function(conflict) {
-            var html = templateLibrary.conflictFullProducts(conflict.products_added, conflict.products_removed);
-            $.each(conflict.products, function(key, product){
-                html += templateLibrary.conflictProduct(key, product);
-            });
-            return html;
-        };
-
-    return {
-        render: render,
-        renderContent: renderContent,
-        renderConflict: renderConflict
-    };
-})();
-
-var templateLibrary = (function(){
-    var contentProductsList = function(content) {
-            // Render the product list for the content tree
-            var products_list = content['products'],
-                has_products = false,
-                html = '<ul class="expand_list">';
-
-            // loop through the content to find products (i.e. details_*)
-            $.each(content, function(item){
-                if( content.hasOwnProperty(item) ){
-                    if( item.split("_")[0] === "details" ){
-                        // using the product found, retrieve the html that will be used for the product list item
-                        // this is stored in the 'products' list as a hash where key is product_id and value is html
-                        html += products_list[content[item].product_id];
-                        has_products = true;
-                    }
-                }
-            });
-            if (has_products === false) {
-                html += i18n.content_no_products;
-            }
-            html += '</ul>';
-            return html;
-        },
-        changesetsListItem = function(id, name){
-            var html ='<li class="slide_link">' + '<div class="simple_link link_details" id="' + id + '">';
-
-            html += '<span class="sort_attr">'+ name + '</span></div></li>';
-            return html;
-        },
-        changesetsList = function(changesets){
-            var html = '<ul class="filterable">';
-            $.each(changesets, function(item){
-                if( changesets.hasOwnProperty(item) ){
-                    //do the search filter here
-                    if( item.split("_")[0] === "changeset" ){
-                        html += changesetsListItem(item, changesets[item].name);
-                    }
-                }
-            });
-            html += '</ul>';
-            return html;
-        },
-        productDetailList = function(product, subtypes, changeset_id) {
-            var html = '<ul class="filterable">';
-             $.each(subtypes, function(index, type) {
-                 if (product[type]) {
-                    html += '<li class="slide_link"><div class="simple_link link_details"';
-                 } else {
-                     html += '<li><div ';
-                 }
-
-                 html += 'id=' + type +'-cs_' + changeset_id + '_' + product.id + '>';
-
-                html += '<span class="sort_attr">' + i18n[type];
-                if (product[type]) {
-                    html += ' (' + product[type].length  + ')';
-                }
-                else {
-                    html += "<img class='fr' src='" + KT.common.spinner_path() + "'>";
-                }
-
-                html += '</span></li>';
-             });
-            html += '</ul>';
-            return html;
-        },
-        dependencyItems = function(products, product_id) {
-            if (!products[product_id].deps) {
-                return i18n.loading_deps + "&nbsp;" + "<img  src='" + KT.common.spinner_path() + "'>";
-            }
-
-            var html = '<ul class="filterable">';
-            $.each(products[product_id].deps, function(index, item) {
-                html += '<li><div class="no_slide"><span class="sort_attr">'  + item.name + ' ' + '</span>';
-               // html += '<div class="dependency_of">' + i18n.dep_of + "&nbsp;" + item.dep_of + "</div>";
-                html += '</div></li>';
-
-            });
-            html += '</ul>';
-            return html;
-        },
-        listItems = function(products, type, product_id, showButton) {
-            var html = '<ul class="filterable">';
-            var items = products[product_id][type];
-            if (items.length === 0) {
-                return i18n["no_" + type]; //no_errata no_package no_repo no_distribution
-            }
-            $.each(items, function(index, item) {
-               //for item names that mach item.name from search hash
-               html += listItem(item.id, item.name, type, product_id, showButton, item.filtered);
-            });
-            html += '</ul>';
-            return html;
-        },
-        listItem = function(id, name, type, product_id, showButton, isFiltered) {
-            var anchor = "",
-                filter_repo_class = "";
-            if ( showButton && permissions.manage_changesets){
-                anchor = '<a ' + 'class="fr content_add_remove remove_' + type + ' + st_button"' + 'data-display_name="' + name +
-                                 '" data-type="' + type + '" data-product_id="[' + product_id +  ']" data-id="' + id + '">';
-                anchor += i18n.remove + "</a>";
-
-            }
-            if(type === "repo" && isFiltered) {
-                filter_repo_class = '<span class="filter_warning_icon fl promotion_tipsify"' + " data-content_id=\"" +
-                            id +"\" data-content_type=\"repo\""  + '>&nbsp;</span> ';
-            }
-
-
-            return '<li>' + anchor + '<div class="no_slide">' + filter_repo_class + '<span class="sort_attr">'  + name + '</span></div></li>';
-
-        },
-        productList = function(changeset, changeset_id, showButton){
-            var ul_start = '<ul class="filterable">',
-                ul_end = '</ul>',
-                html = ul_start,
-                all_list = '',
-                partial_list = '',
-                content_views_list = '',
-                product, provider,
-                content_views = changeset.getContentViews(),
-                products = changeset.getProducts();
-
-            if( changeset.productCount() === 0 ){
-                html += '<h5>'+i18n.product_plural+'</h5>';
-                html += '<div class="empty_list">' + i18n['no_products'] + '</div>';
-                //html += i18n['no_products'];
-            } else {
-                for( key in products ){
-                    if( products.hasOwnProperty(key) ){
-                        product = products[key];
-                        provider = (product.provider === 'REDHAT') ? 'rh' : 'custom';
-                        toSlide = product.all ? 'no_slide' : 'slide_link';
-                        if( product.all ){
-                          all_list += productListItem(changeset_id, key, product.name, provider, toSlide, showButton, product.filtered);
-                        }
-                        else {
-                            partial_list += productListItem(changeset_id, key, product.name, provider, toSlide, false, product.filtered);
-                        }
-                    }
-                }
-            }
-
-            for(key in content_views) {
-                if(content_views.hasOwnProperty(key) ){
-                    content_view = content_views[key];
-                    content_views_list += contentViewItem(changeset_id, key, content_view.name, showButton);
-                }
-            }
-            html += ul_end + ul_start;
-
-            html += all_list ? ('<h5>'+i18n.full_product+'</h5>' + all_list) : '';
-            html += ul_end + ul_start;
-            html += partial_list ? ('<h5>'+i18n.partial_product+'</h5>' + partial_list) : '';
-            html += ul_end + ul_start;
-            html += '<h5>'+i18n.content_view_plural+'</h5>';
-            html += content_views_list ? content_views_list : '<div class="empty_list">' + i18n['no_content_views'] + '</div>';
-            html += ul_end + ul_start;
-            return html;
-        },
-        contentViewItem = function(changeset_id, id, name, showButton){
-            var anchor = "",
-                html = '';
-            if ( showButton ){
-                anchor = '<a class="st_button content_add_remove fr remove_content_view" data-display_name="' +
-                    name +'" data-id="' + id + '" data-type="content_view" id="add_remove_content_view_' + id +
-                    '" data-content_view_id="' + id +
-                    '">' + i18n.remove + '</a>';
-            }
-            html += '<li class="clear">' + anchor;
-            html += '<div id="simple_link content_view-cs_' + changeset_id + '_' + id + '">' +
-                '<span class="content_view-icon sort_attr" >' + name + '</span>' +
-                '</div></li>';
-
-            return html;
-        },
-        productListItem = function(changeset_id, product_id, name, provider, slide_link, showButton, isFiltered){
-            var anchor = "",
-                html = '';
-
-            if ( showButton ){
-                anchor = '<a class="st_button content_add_remove fr remove_product" data-display_name="' +
-                    name +'" data-id="' + product_id + '" data-type="product" id="add_remove_product_' + product_id +
-                    '" data-product_id="[' + product_id +
-                    ']">' + i18n.remove + '</a>';
-            }
-            html += '<li class="clear ' + slide_link + '">' + anchor + '<div class="simple_link ';
-            html += (slide_link === 'slide_link') ? 'link_details' : '';
-            html += '" id="product-cs_' + changeset_id + '_' + product_id + '">';
-            if (isFiltered) {
-                html += '<span class="filter_warning_icon fl promotion_tipsify"' + " data-content_id=\"" +
-                            product_id +"\" data-content_type=\"product\""  + '>&nbsp;</span> ';
-            }
-            html += '<span class="' + provider + '-product-sprite"></span>' +
-                    '<span class="sort_attr" >' + name + '</span>' +
-                    '</div></li>';
-
-            return html;
-        },
-        conflictFullProducts = function(added, removed) {
-            if (added.length === 0 && removed.length === 0) {
-                return "";
-            }
-            var html = "<h3>"+ i18n.full_product +"</h3>";
-            html +="<div>";
-            html += conflictAccordianListItem(true, added);
-            html += conflictAccordianListItem(false, removed);
-            html += "</div>";
-            return html;
-        },
-        conflictProduct = function(product_name, conflict_product) {
-            var html = '<h3><a href="#">'+ product_name+ '</a></h3>';
-            html +="<div>";
-            $.each(promotion_page.subtypes, function(index, type){
-                var added = conflict_product[type + "_add"];
-                var removed = conflict_product[type + "_remove"];
-
-                if (added.length > 0 || removed.length > 0) {
-                    html += '<div>' + i18n[type] + ':</div>';
-                    html += conflictAccordianListItem(true, added);
-                    html += conflictAccordianListItem(false, removed);
-                }
-            });
-            html += "</div>";
-            return html;
-        },
-        conflictAccordianListItem = function(added, items) {
-            if (items.length === 0) {
-                return "";
-            }
-
-            var html = '<div class="conflict_item_type"><div>' + (added ? i18n.added : i18n.removed) + '</div>';
-            html += '<ul>';
-            $.each(items, function(index, item) {
-                html += "<li class='conflict_item'>" + item +  "</li>";
-            });
-            html += '</ul></div>';
-            return html;
-        };
-
-    return {
-        contentProductsList: contentProductsList,
-        changesetsList: changesetsList,
-        productList: productList,
-        listItems : listItems,
-        productDetailList: productDetailList,
-        conflictFullProducts: conflictFullProducts,
-        conflictProduct: conflictProduct,
-        dependencyItems: dependencyItems
-    };
-})();
-
-var changesetStatusActions = (function($){
-    var set_margins = function(){
-            if( $('.progressbar').length ) {
-                $('#cslist .slider .link_details:not(:has(.progressbar)):not(:has(.locked_icon))').css('margin-left', '43px');
-                $('#cslist .slider .link_details:not(:has(.progressbar)) .locked_icon').css({'margin-left': '9px', 'margin-right' : '22px'});
-            } else if( $('#cslist .locked_icon').length ){
-                $('#cslist .slider .link_details:not(:has(.progressbar)):not(:has(.locked_icon))').css('margin-left', '20px');
-            }
-        },
-        initProgressBar = function(id, status, status_text){
-            var changeset = $('#' + id),
-                status_title = status_text;
-
-            if (status_text === undefined) {
-                status_text = i18n.changeset_applying;
-                status_title = i18n.changeset_progress;
-            }
-
-            changeset.css('margin-left', '0');
-            changeset.prepend('<span class="changeset_status"><span class="progressbar"></span><label></label></span>');
-            changeset.find('.changeset_status label').text(status + '%');
-            //changeset.find('.progressbar').progressbar({value: status});
-            changeset.addClass('being_promoted');
-            changeset.attr('title', status_title);
-            changeset.find('.changeset_status label').text(status_text);
-            set_margins();
-        },
-        setProgress = function(id, progress){
-            var changeset = $('#' + id);
-            //changeset.find(".progressbar").progressbar({value: progress});
-            //changeset.find('.changeset_status label').text(progress + '%');
-        },
-        finish = function(id){
-            var changeset = $('#' + id);
-            changeset.find(".changeset_status label").text(i18n.changeset_applied);
-            changeset.attr('title', i18n.changeset_applied);
-            /*changeset.parent().fadeOut(3000, function(){
-                changeset.parent().remove();
-                if( !$('.changeset_status').length ){
-                    $('#cslist .slider .link_details').animate({'margin-left' : '0'}, 200);
-                }
-            });*/
-        },
-        failed = function(id){
-            // if the promotion failed, check the server for additional details (via notices)
-            notices.checkNotices();
-
-            var changeset = $('#' + id);
-            changeset.find(".changeset_status label").text(i18n.changeset_apply_failed);
-            changeset.attr('title', i18n.changeset_apply_failed);
-
-            promotion_page.get_current_changeset_breadcrumb()[id].has_failed = true;
-        },
-        setLocked = function(id){
-            var changeset = $('#' + id);
-            changeset.css('margin-left', '0');
-            changeset.prepend('<img class="fl locked_icon" src="' + KT.common.rootURL() + 'assets/icons/locked.png">');
-            set_margins();
-        },
-        removeLocked = function(id){
-            var changeset = $('#' + id);
-            changeset.find('img').remove();
-            changeset.css('margin-left', '20px');
-            if( !$('#cslist .locked_icon').length ){
-                $('#cslist .slider .link_details').css('margin-left', '0');
-            }
-        },
-        checkProgressTask = function(id){
-            var timeout = 8000;
-            var updater = $.PeriodicalUpdater(KT.routes.status_changeset_path(id), {
-                method: 'GET',
-                type: 'JSON',
-                cache: false,
-                global: false,
-                minTimeout: timeout,
-                maxTimeout: timeout
-            }, function(data, success){
-
-                setProgress(data.id, data.progress);
-
-                if (success === "notmodified") {
-                  // received a 304 not modified...
-                  var changeset_id = 'changeset_' + id;
-                  if (promotion_page.get_current_changeset_breadcrumb()[changeset_id].has_failed === true) {
-                      // attempting to promote this changeset previously failed..., so if the promotion progress
-                      // remains 'not modified' that implies that it failed again...
-                      failed(changeset_id);
-                      updater.stop();
-                  }
-                } else if ((data.state === 'promoted') || (data.state === 'deleted')){
-                    delete promotion_page.get_current_changeset_breadcrumb()['changeset_' + id];
-
-                    // if the user deleted one or more products with the changeset, remove those products
-                    // from the content tree
-                    if (data.state === 'deleted' && data.product_ids) {
-                        $.each(data.product_ids, function(index, product_id) {
-                            delete content_breadcrumb['details_' + product_id];
-                        });
-                        promotion_page.get_content_tree().rerender_content('content');
-                    }
-
-                    finish(data.id);
-                    updater.stop();
-                } else if (data.state === 'failed') {
-                    failed(data.id);
-                    updater.stop();
-                }
-            });
-        };
-
-    return {
-        initProgressBar     : initProgressBar,
-        setProgress         : setProgress,
-        finishProgess       : finish,
-        checkProgressTask   : checkProgressTask,
-        setLocked           : setLocked,
-        removeLocked        : removeLocked
-    };
-})(jQuery);
 
 //doc ready
 $(document).ready(function() {
@@ -1761,7 +1769,7 @@ $(document).ready(function() {
 
     if (selected_tree.data('cs_type') === "deletion") {
         promotion_page.set_current_changeset_breadcrumb(deletion_changeset_breadcrumb);
-    } else if (changeset_hash && changeset_hash != "changesets" &&
+    } else if (changeset_hash && changeset_hash !== "changesets" &&
       !$.isEmptyObject(deletion_changeset_breadcrumb[changeset_hash])) {
         promotion_page.set_current_changeset_breadcrumb(deletion_changeset_breadcrumb);
         $('.sliding_tree_category.selected').removeClass('selected');

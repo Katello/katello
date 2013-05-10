@@ -179,11 +179,12 @@ KT.editable = (function(){
                     submitdata      :  {authenticity_token: AUTH_TOKEN},
                     onsuccess       :  function(result, status, xhr){
                         element.css('background-image', settings.image);
-                        if ($(this).data('unlimited') != undefined) {
-                            if (parseInt(result,10) === $(this).data('unlimited'))
+                        if ($(this).data('unlimited') !== undefined) {
+                            if (parseInt(result,10) === $(this).data('unlimited')) {
                                 element.html(i18n.unlimited);
-                            else
+                            } else {
                                 element.html(result);
+                            }
                         } else {
                             element.html(result);
                         }

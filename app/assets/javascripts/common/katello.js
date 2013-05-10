@@ -43,7 +43,9 @@ var i18n = {};
 
 function localize(data) {
     for (var key in data) {
-        i18n[key] =  data[key];
+        if(data.hasOwnProperty(key)) {
+            i18n[key] = data[key];
+        }
     }
 }
 
@@ -55,7 +57,9 @@ function update_status() {
           dataType: 'json',
           success: function (json, status, xhr) {
               statusElement.text(json.status);
-              if (xhr.status == 200) clearInterval(i);
+              if (xhr.status === 200) {
+                  clearInterval(i);
+              }
           },
           error: function (xhr, status, error) {
               statusElement.text(jQuery.parseJSON(xhr.responseText).message);
@@ -90,21 +94,25 @@ $.fn.delayed_chosen = function(options, delay_time) {
     delay_time = (delay_time === undefined) ? 400 : delay_time;
     chzn_input = $(this).parent().find('.chzn-container :input');
     chzn_input.prop('disabled', true);
-    chzn_input.delay(delay_time).queue(function(){ $(this).prop('disabled', false); $(this).dequeue();} );
-}
+    chzn_input.delay(delay_time).queue(function() {
+        $(this).prop('disabled', false);
+        $(this).dequeue();
+    });
+};
 
 //requires jQuery
-KT.getData = (function(fieldNames) {
+KT.getData = function(fieldNames) {
     var data = {},
         value;
 
     $.each(fieldNames, function(i, fieldName){
         value = $('#'+fieldName).val();
-        if (value !== undefined)
+        if (value !== undefined) {
             data[fieldName] = value;
+        }
     });
     return data;
-});
+};
 
 
 KT.helptip =  (function($) {
@@ -158,8 +166,9 @@ KT.helptip =  (function($) {
 // https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object/keys
 if(!Object.keys) {
     Object.keys = function(o){
-     if (o !== Object(o))
+     if (o !== Object(o)) {
         throw new TypeError('Object.keys called on non-object');
+     }
      var ret=[],p;
      for(p in o) {
        if(Object.prototype.hasOwnProperty.call(o,p)){
@@ -204,7 +213,7 @@ $.expr[':'].contains = function(a, i, m) {
 
 //requires jQuery
 KT.common = (function() {
-    var root_url = undefined;
+    var root_url;
     return {
         height: function() {
             return $(window).height();
@@ -223,7 +232,7 @@ KT.common = (function() {
             return decoded.replace(/\+/g, " ");
         },
         escapeId: function(myid) {
-            return myid.replace(/([ #;&,.%+*~\':"!^$[\]()=>|\/])/g,'\\$1')
+            return myid.replace(/([ #;&,.%+*~\':"!\^$\[\]()=>|\/])/g,'\\$1');
         },
         customConfirm : function (params) {
           var settings = {
@@ -235,8 +244,8 @@ KT.common = (function() {
               no_callback: function(){},
               include_cancel: false
           },
-          confirmTrue = new Boolean(true),
-          confirmFalse = new Boolean(false);
+          confirmTrue = true,
+          confirmFalse = false;
 
           $.extend(settings, params);
 
@@ -359,11 +368,11 @@ KT.common = (function() {
             var sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB'],
                 i;
 
-            if (bytes == 0) {
+            if (bytes === 0) {
                 return '0';
             } else {
-                i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
-                return ((i == 0) ? (bytes / Math.pow(1024, i)) : (bytes / Math.pow(1024, i)).toFixed(1)) + ' ' + sizes[i];
+                i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)), 10);
+                return ((i === 0) ? (bytes / Math.pow(1024, i)) : (bytes / Math.pow(1024, i)).toFixed(1)) + ' ' + sizes[i];
             }
         },
         icon_hover_change : function(element, shade){
@@ -537,7 +546,7 @@ $(window).ready(function(){
 
     //allow all buttons with class .button to be clicked via enter or space button
     $('.button').live('keyup', function(e){
-        if(e.which == 13 || e.which == 32)
+        if(e.which === 13 || e.which === 32)
         {
             $(this).click();
         }
