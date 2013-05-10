@@ -55,9 +55,9 @@ module SystemsHelper
   def system_content_view_opts(system)
     keys = {}
     if system.environment
-      content_views = system.environment.content_views.readable(current_organization)
+      content_views = system.environment.content_views.subscribable(current_organization)
     else
-      content_views = ContentView.readable(current_organization)
+      content_views = ContentView.subscribable(current_organization)
     end
     content_views.non_default.each do |view|
       keys[view.id] = view.name
