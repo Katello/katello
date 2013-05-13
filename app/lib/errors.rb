@@ -30,6 +30,8 @@ module Errors
 
   class ContentViewRepositoryOverlap < StandardError; end
 
+  class ContentViewDefinitionBadContent < StandardError; end
+
   class SystemGroupEmptyException < StandardError
     def message
       _("System group is empty.")

@@ -87,7 +87,7 @@ class ContentViewTest < MiniTest::Rails::ActiveSupport::TestCase
 
   def test_component_content_views
     content_view = FactoryGirl.create(:content_view_with_definition)
-    definition = FactoryGirl.create(:content_view_definition)
+    definition = FactoryGirl.create(:content_view_definition, :composite)
     definition.component_content_views << content_view
 
     refute_empty definition.component_content_views

@@ -100,11 +100,6 @@ class ContentViewDefinitionTest < MiniTest::Rails::ActiveSupport::TestCase
     assert @content_view_def.save
   end
 
-  def test_adding_views_to_non_composite
-    @content_view_def.component_content_views << FactoryGirl.create(:content_view)
-    refute @content_view_def.save
-  end
-
   def test_publish
     content_view_def = FactoryGirl.create(:content_view_definition)
     content_view = content_view_def.publish('test_name', 'test_description', 'test_label')
@@ -156,6 +151,17 @@ class ContentViewDefinitionTest < MiniTest::Rails::ActiveSupport::TestCase
       content_view_def.component_content_views << content_views.last
     end
     assert_equal 1, content_view_def.component_content_views.reload.length
+  end
+
+  def test_validate_component_views_before_add
+    content_view_def = content_view_definition_bases(:simple_cvd)
+    ContentView.any_instance.stubs(:library_repo_ids).returns([1])
+    content_view = content_views(:library_dev_view)
+
+    assert_raises(Errors::ContentViewDefinitionBadContent) do
+      content_view_def.component_content_views << content_view
+    end
+    assert_empty content_view_def.component_content_views
   end
 
 end
