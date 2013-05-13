@@ -241,8 +241,6 @@ class ContentViewDefinition < ContentViewDefinitionBase
   def validate_content
     if has_content? && self.composite?
       errors.add(:base, _("cannot contain products, or repositories if composite definition"))
-    elsif has_component_views? && !self.composite?
-      errors.add(:base, _("cannot contain views if not composite definition"))
     end
   end
 
