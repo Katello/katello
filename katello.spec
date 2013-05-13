@@ -250,7 +250,7 @@ Requires:        %{name}-common
 Requires:        pulp-server
 Requires:        pulp-rpm-plugins
 Requires:        pulp-selinux
-Requires:        createrepo = 0.9.9-18
+Requires:        createrepo = 0.9.9-18%{?dist}
 Requires:        %{?scl_prefix}rubygem(runcible) >= 0.4.4
 
 %description glue-pulp
