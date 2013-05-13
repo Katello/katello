@@ -13,6 +13,11 @@ if Rails.env.development?
     Jshintrb::JshintTask.new :jshint do |t|
       t.pattern         = 'app/assets/javascripts/**/*.js'
       t.exclude_pattern = "{#{vendor_files}}.js"
+      t.globals         = {
+          "KT"      => true,
+          "Katello" => true,
+          "angular" => false,
+      }
       t.options         = {
           :bitwise   => true,
           :curly     => true,

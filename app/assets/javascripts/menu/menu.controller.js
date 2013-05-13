@@ -11,8 +11,6 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
  **/
 
-/*global Katello KT angular */
-
 (function() {
     'use strict';
 
