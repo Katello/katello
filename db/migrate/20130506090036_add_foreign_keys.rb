@@ -445,9 +445,9 @@ class AddForeignKeys < ActiveRecord::Migration
                        :name => 'filters_repositories_filter_id_fk'
     remove_foreign_key 'filters_repositories',
                        :name => 'filters_repositories_repository_id_fk'
-    remove_foreign_key 'filters_product',
+    remove_foreign_key 'filters_products',
                        :name => 'filters_product_filter_id_fk'
-    remove_foreign_key 'filters_product',
+    remove_foreign_key 'filters_products',
                        :name => 'filters_product_product_id_fk'
     remove_foreign_key 'filters',
                        :name => 'filters_content_view_definition_id_fk'
