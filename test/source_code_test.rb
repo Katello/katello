@@ -62,7 +62,8 @@ class SourceCodeTest < MiniTest::Rails::ActiveSupport::TestCase
   describe 'formatting' do
     it 'does not have trailing whitespaces' do
       SourceCode.
-          new('**/*.{rb,js,scss,haml}', %r'coverage').
+          new('**/*.{rb,js,scss,haml}',
+              %r'coverage|(public|vendor)/assets/.*\.js').
           check_lines { |line| line !~ / +$/ }
     end
 
