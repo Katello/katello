@@ -131,7 +131,7 @@
           .label
             = label :arch, :arch, _("Environment")
           .input
-            %span.value#environment_path_selector{'name'=> 'system[environment_id]', :class=>("editable" if editable), 'data-url'=>system_path(system.id)}
+            %span.value#environment_path_selector{'name'=> 'system[environment_id]', :class=>("editable" if editable && Katello.config.katello?), 'data-url'=>system_path(system.id)}
               #{system_environment_name system}
         - if Katello.config.katello?
           .control_group
