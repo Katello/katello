@@ -438,10 +438,11 @@ KT.panel = (function ($) {
             }
         },
         closePanel = function (jPanel) {
-            var content = jPanel.find('.panel-content'),
+            var content,
                 position;
 
             jPanel = jPanel || $('#panel');
+            content = jPanel.find('.panel-content');
             if (jPanel.hasClass("opened")) {
                 KT.panel.copy.hide_form();
                 $('.block.active').removeClass('active');
