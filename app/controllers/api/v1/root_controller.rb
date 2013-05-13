@@ -37,7 +37,8 @@ class Api::V1::RootController < Api::V1::ApiController
                     "/api/errata/",
                     "/api/disributions/",
                     "/api/tasks/",
-                    "/api/gpg_keys/"
+                    "/api/gpg_keys/",
+                    "/api/environments/"
     ]
 
     # filter out katello-only apis from headpin resource list
