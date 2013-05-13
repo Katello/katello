@@ -537,6 +537,10 @@ This information is then used for computing the errata available for the system.
   end
 
   def find_content_view
-    @content_view = ContentView.readable(@organization).find_by_id(params[:content_view_id]) if @organization
+    if params.has_key?(:content_view_id) && @organization
+      @content_view = ContentView.readable(@organization).find(params[:content_view_id])
+    else
+      @content_view = nil
+    end
   end
 end
