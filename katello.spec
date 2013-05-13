@@ -32,7 +32,7 @@
 %endif
 
 Name:           katello
-Version:        1.3.28
+Version:        1.3.29
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -836,6 +836,9 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Mon May 13 2013 Justin Sherrill <jsherril@redhat.com> 1.3.29-1
+- 960750 - Parsing consume entitlement response from Candlepin
+
 * Mon May 13 2013 Justin Sherrill <jsherril@redhat.com> 1.3.28-1
 - fixing createrepo requirement (jsherril@redhat.com)
 
