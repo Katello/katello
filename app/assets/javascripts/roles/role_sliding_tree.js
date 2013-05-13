@@ -16,7 +16,7 @@
  *
  */
 
-kT.roles = {};
+KT.roles = {};
 
 KT.roles.permissionWidget = function(){
 
