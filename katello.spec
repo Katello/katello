@@ -109,6 +109,7 @@ Requires:       %{?scl_prefix}rubygem(anemone)
 Requires:       %{?scl_prefix}rubygem(apipie-rails) >= 0.0.18
 Requires:       %{?scl_prefix}rubygem(logging) >= 1.8.0
 Requires:       %{?scl_prefix}rubygem(bundler_ext) >= 0.3
+Requires:       %{?scl_prefix}rubygem(uglifier)
 Requires:       lsof
 
 %if 0%{?rhel} == 6
