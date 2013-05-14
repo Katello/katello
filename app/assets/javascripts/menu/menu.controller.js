@@ -28,7 +28,9 @@
         function setActiveMenuItem (menuItem) {
             if (menuItem) {
                 $scope.menu.active_item = menuItem;
+                $scope.admin_menu.active_item = menuItem;
                 $scope.menu.active_item.active = true;
+                $scope.admin_menu.active_item.active = true;
             }
         }
 
