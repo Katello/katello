@@ -307,4 +307,12 @@ module ApplicationHelper
   def to_calendar_date(date)
     date.strftime('%m/%d/%Y')
   end
+
+  def subscription_limits_helper(sub)
+    lim = []
+    lim << _("Sockets: %s") % sub.sockets if sub.sockets > 0
+    lim << _("Cores: %s") % sub.cores if sub.cores > 0
+    lim << _("RAM: %s") % sub.ram if sub.ram > 0
+    lim.join(", ")
+  end
 end
