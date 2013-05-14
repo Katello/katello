@@ -39,7 +39,7 @@ class Organization < ActiveRecord::Base
   has_many :activation_keys, :dependent => :destroy
   has_many :providers, :dependent => :destroy
   has_many :products, :through => :providers
-  has_many :environments, :class_name => "KTEnvironment", :conditions => {:library => false}, :dependent => :destroy, :inverse_of => :organization
+  has_many :environments, :class_name => "KTEnvironment", :dependent => :destroy, :inverse_of => :organization
   has_one :library, :class_name =>"KTEnvironment", :conditions => {:library => true}, :dependent => :destroy
   has_many :gpg_keys, :dependent => :destroy, :inverse_of => :organization
   has_many :permissions, :dependent => :destroy, :inverse_of => :organization

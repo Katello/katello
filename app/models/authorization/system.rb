@@ -62,25 +62,19 @@ module Authorization::System
   included do
     def readable?
       sg_readable = false
-      if Katello.config.katello?
-        sg_readable = !::SystemGroup.systems_readable(self.organization).where(:id=>self.system_group_ids).empty?
-      end
+      sg_readable = !::SystemGroup.systems_readable(self.organization).where(:id=>self.system_group_ids).empty?
       environment.systems_readable? || sg_readable
     end
 
     def editable?
       sg_editable = false
-      if Katello.config.katello?
-        sg_editable = !::SystemGroup.systems_editable(self.organization).where(:id=>self.system_group_ids).empty?
-      end
+      sg_editable = !::SystemGroup.systems_editable(self.organization).where(:id=>self.system_group_ids).empty?
       environment.systems_editable? || sg_editable
     end
 
     def deletable?
       sg_deletable = false
-      if Katello.config.katello?
-        sg_deletable = !::SystemGroup.systems_deletable(self.organization).where(:id=>self.system_group_ids).empty?
-      end
+      sg_deletable = !::SystemGroup.systems_deletable(self.organization).where(:id=>self.system_group_ids).empty?
       environment.systems_deletable? || sg_deletable
     end
   end

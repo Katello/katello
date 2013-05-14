@@ -679,7 +679,7 @@ class SystemsController < ApplicationController
     if current_organization
       readable = KTEnvironment.systems_readable(current_organization)
       @environment = KTEnvironment.find(params[:env_id]) if params[:env_id]
-      @environment ||= first_env_in_path(readable, false)
+      @environment ||= first_env_in_path(readable, true)
       @environment ||=  current_organization.library
     end
   end

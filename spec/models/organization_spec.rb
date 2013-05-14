@@ -40,7 +40,7 @@ describe Organization do
     specify {@organization.label.should == 'test_org_label'}
     specify {@organization.library.should_not be_nil}
     specify {@organization.redhat_provider.should_not be_nil}
-    specify {@organization.environments.should be_empty}
+    specify {@organization.environments.size.should == 1}
     specify {Organization.where(:name => @organization.name).size.should == 1}
     specify {Organization.where(:name => @organization.name).first.should == @organization}
 
