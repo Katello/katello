@@ -1,4 +1,5 @@
 @import "katello_colors";
+@import "katello_vars";
 
 #orgSwitcherNav {
   margin-left: 20px;
@@ -27,6 +28,21 @@
   }
 
   #organizationSwitcher {
+    .spinner {
+      background: $spinner_img;
+      left: 0;
+      margin: 0 auto;
+      position: absolute;
+      right: 0;
+      top: 35%;
+    }
+
+    #allowed-orgs {
+      height: 250px;
+      overflow: auto;
+      width: 100%;
+    }
+
     .menu-item-link.clickable {
       cursor: pointer;
     }
@@ -39,9 +55,10 @@
       border: none;
       box-shadow: none;
     }
-    #manage_orgs:hover
+
+    #manage_orgs
     {
-      background: transparent;
+      @include background-image(linear-gradient(#F7F7F7, #EEEEEE));
     }
 
     #manage_orgs a {
@@ -50,6 +67,7 @@
       font-weight: bold;
       padding-left: 10px;
     }
+
 
     .dropdown {
       .menu-item {

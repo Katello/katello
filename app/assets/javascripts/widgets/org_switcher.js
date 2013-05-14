@@ -30,7 +30,15 @@ angular.module('Katello').directive('orgSwitcher', ['$http', function($http) {
     return {
         restrict: 'A',
         transclude: true,
+
         controller: ['$scope', function($scope) {
+            var jScrollApi;
+            var $allowedOrgList = $('#allowed-orgs');
+            var $spinner = $('#organizationSwitcher .spinner');
+
+            $allowedOrgList.jScrollPane();
+            jScrollApi = $allowedOrgList.data('jsp');
+
             $scope.orgSwitcher = {
                 visible: false
             };
@@ -39,9 +47,24 @@ angular.module('Katello').directive('orgSwitcher', ['$http', function($http) {
                 $scope.orgSwitcher.visible = !$scope.orgSwitcher.visible;
             };
 
-            $scope.orgSwitcher.refresh = function () {
+            $spinner.fadeIn();
+            $scope.orgSwitcher.refresh = function() {
                 $http.get(KT.routes.allowed_orgs_user_session_path()).then(function(response) {
-                    $('#allowed-orgs').html(response.data);
+                    $spinner.fadeOut();
+                    jScrollApi.getContentPane().html(response.data);
+                    jScrollApi.reinitialise();
+
+                    // Shrink the menu if there aren't enough organizations to fill it up.
+                    var shouldResize = false;
+                    var $listItems = $allowedOrgList.find('li');
+                    setTimeout(function() {
+                        var listHeight = $listItems.length * $listItems.height();
+                        shouldResize = listHeight < parseInt($allowedOrgList.css("height"), 10);
+                        if (shouldResize) {
+                            jScrollApi.destroy();
+                            $('#allowed-orgs').css("height", "auto");
+                        }
+                    }, 0);
                 });
             };
 
