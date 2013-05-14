@@ -102,6 +102,8 @@ class OrganizationsController < ApplicationController
       @new_env.organization = @organization
       @new_env.prior = @organization.library
       @new_env.save!
+    elsif env_params[:label].present?
+      @new_env = @organization.library
     end
 
     notify.success _("Organization '%s' was created.") % @organization["name"]
@@ -192,7 +194,7 @@ class OrganizationsController < ApplicationController
     end
 
     setup_environment_selector(@organization, accessible_envs)
-    @environment = first_env_in_path(accessible_envs, false, @organization)
+    @environment = first_env_in_path(accessible_envs, true, @organization)
     render :partial=>"environments", :locals=>{:accessible_envs => accessible_envs}
   end
 

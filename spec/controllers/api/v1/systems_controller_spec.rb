@@ -75,7 +75,7 @@ describe Api::V1::SystemsController do
   describe "create a system" do
 
     let(:action) { :create }
-    let(:req) { post :create, :owner => @organization.name, :name => 'test', :cp_type => 'system', :facts => facts }
+    let(:req) { post :create, :owner => @organization.name, :environment_id => @environment_1.id, :name => 'test', :cp_type => 'system', :facts => facts }
     let(:authorized_user) { user_with_create_permissions }
     let(:unauthorized_user) { user_without_create_permissions }
     it_should_behave_like "protected action"
@@ -85,28 +85,28 @@ describe Api::V1::SystemsController do
       response.code.should == "404"
     end
 
-    it "sets insatalled products to the consumer" do
+    it "sets installed products to the consumer" do
       System.should_receive(:create!).with(hash_including(:environment => @environment_1, :cp_type => 'system', :installedProducts => installed_products, :name => 'test')).once.and_return({})
-      post :create, :organization_id => @organization.name, :name => 'test', :cp_type => 'system', :installedProducts => installed_products
+      post :create, :organization_id => @organization.name, :environment_id => @environment_1.id, :name => 'test', :cp_type => 'system', :installedProducts => installed_products
     end
 
     it "sets the content view" do
       view = create(:content_view)
       ContentView.stub(:readable).and_return(ContentView)
       System.should_receive(:create!).with(hash_including(content_view: view, environment: @environment_1, cp_type: "system", name: "test"))
-      post :create, :organization_id => @organization.name, :name => 'test', :cp_type => 'system',
+      post :create, :organization_id => @organization.name, :environment_id => @environment_1.id, :name => 'test', :cp_type => 'system',
         :content_view_id => view.id
     end
 
     context "in organization with one environment" do
       it "requires either organization_id" do
         System.should_receive(:create!).with(hash_including(:environment => @environment_1, :cp_type => 'system', :facts => facts, :name => 'test')).once.and_return({})
-        post :create, :organization_id => @organization.name, :name => 'test', :cp_type => 'system', :facts => facts
+        post :create, :organization_id => @organization.name, :environment_id => @environment_1.id, :name => 'test', :cp_type => 'system', :facts => facts
       end
 
       it "or requires owner (key)" do
         System.should_receive(:create!).with(hash_including(:environment => @environment_1, :cp_type => 'system', :facts => facts, :name => 'test')).once.and_return({})
-        post :create, :owner => @organization.name, :name => 'test', :cp_type => 'system', :facts => facts
+        post :create, :owner => @organization.name, :environment_id => @environment_1.id, :name => 'test', :cp_type => 'system', :facts => facts
       end
     end
 
