@@ -12,6 +12,11 @@
         %a.menu-item-link.organization-name.clickable{:title=>""}
           = _("Select an Organization")
           %i.down_arrow_icon-white
-      %ul.dropdown{"ng-show" => "orgSwitcher.visible", "ng-class" => "{'dropdown-active': true}"}
-        %li
-          %ul#allowed-orgs{"org-switcher" => ""}
+      %span.dropdown{"ng-show" => "orgSwitcher.visible", "ng-class" => "{'dropdown-active': true}"}
+        %span.spinner
+        %ul#allowed-orgs{"org-switcher" => ""}
+        - if current_organization && !current_organization.name.nil? && Organization.any_readable?
+          %div#manage_orgs.menu-item
+            %a.menu-item{:href=>organizations_path()}
+              %span{:class=>"fl clearfix"}
+                #{_("Manage Organizations")}

@@ -12,6 +12,8 @@ $switcherformwidth: 300px;
 @import "widgets/scrollpane";
 @import "katello_base";
 
+@import "jquery.jscrollpane";
+
 //interstitial container
 #interstitial {
   h2 {
@@ -24,7 +26,8 @@ $switcherformwidth: 300px;
 #allowed-orgs {
   height: 200px;
   line-height: 2em;
-  overflow-y: auto;
+  overflow: auto;
+  width: 100%;
 
   input.default_org {
     display: none;

@@ -12,7 +12,7 @@
  **/
 
 Katello.controller('UserSessionsController', ['$scope', function($scope) {
-    $('#login_form').bind('ajax:complete', function () {
+    $('#login_form').bind('ajax:complete', function() {
         $scope.orgSwitcher.refresh();
     });
 }]);
