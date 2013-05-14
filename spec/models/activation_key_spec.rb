@@ -15,6 +15,7 @@ include OrchestrationHelper
 include SystemHelperMethods
 
 describe ActivationKey do
+  include AuthorizationHelperMethods
 
   let(:aname) { 'myactkey' }
   let(:adesc) { 'my activation key description' }
@@ -30,7 +31,16 @@ describe ActivationKey do
     @akey = ActivationKey.create!(:name => aname, :description => adesc, :organization => @organization,
                                   :environment_id => @environment_1.id) if Katello.config.katello?
     @akey = ActivationKey.create!(:name => aname, :description => adesc, :organization => @organization,
-                                  :environment_id => @environment_1.id) unless Katello.config.katello?
+                                  :environment_id => @organization_1.id) unless Katello.config.katello?
+  end
+
+  context "in valid state" do
+    it "should be valid if the environment is Library" do
+      @akey.name = 'valid key'
+      @akey.environment_id = @organization.library.id
+      @akey.should be_valid
+      @akey.errors[:base].should be_empty
+    end
   end
 
   context "in invalid state" do
@@ -53,13 +63,6 @@ describe ActivationKey do
 
       @akey.should_not be_valid
       @akey.errors[:environment].should_not be_empty
-    end
-
-    it "should be invalid if the environment is Library" do
-      @akey.name = 'invalid key'
-      @akey.environment = @organization.library
-      @akey.should_not be_valid
-      @akey.errors[:base].should_not be_empty
     end
 
     it "should be invalid if environment in another org is specified" do
@@ -144,6 +147,7 @@ describe ActivationKey do
     end
 
     it "should include pools details in json output" do
+      User.current = user_without_permissions
       Resources::Candlepin::Pool.stub!(:find).and_return({'productName' => 'p123'})
       pool = ::Pool.create!(:cp_id  => 'abc123')
       @akey.pools << pool
