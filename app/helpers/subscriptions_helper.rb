@@ -52,4 +52,10 @@ module SubscriptionsHelper
       label.nil? ? status['upstreamId'] : label
     end
   end
+
+  def subscriptions_candlepin_status
+    Resources::Candlepin::CandlepinPing.ping
+  rescue
+    {'rulesVersion'=>'', 'rulesSource'=>''}
+  end
 end
