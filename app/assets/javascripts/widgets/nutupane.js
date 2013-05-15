@@ -98,6 +98,11 @@ angular.module('Katello').factory('Nutupane', ['$location', '$http', 'current_or
      * @param visibility boolean
      */
     Nutupane.setNewSystemVisibility = function(visibility) {
+        if (visibility) {
+            $('body').addClass('no-scroll');
+        } else {
+            $('body').removeClass('no-scroll');
+        }
         Nutupane.table.newPaneVisible = visibility;
     };
 
