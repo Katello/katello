@@ -35,13 +35,18 @@
               .status_icon{:class => "#{system.compliance_color}"}
             .value
               = system_status_message(system)
-        - system.compliance['reasons'].each do |reason|
-          .control-group
-            .label
-              = label :sub_name, :sub_name, reason['attributes']['name']
-            .input
-              .value
-                = reason['message']
+        .control-group
+          .label
+            =label :details, :details, _("Details")
+          .input
+            %span.value
+              %table#details_table
+                - system.compliance['reasons'].each do |reason|
+                  %tr
+                    %td.interface_name
+                      = reason['attributes']['name']
+                    %td.interface_addr
+                      = reason['message']
         %h5 #{_("Networking")}
         .control-group
           .label
@@ -54,7 +59,7 @@
             = label :interfaces, :interfaces, _("Interfaces")
           .input
             %span.value
-              %table#interface_table
+              %table#details_table
                 - system.interfaces.each do |interface|
                   %tr
                     %td.interface_name
@@ -169,7 +174,7 @@
                 = _("None")
               - else
                 - @system.activation_keys.each do |key|
-                  %table#interface_table
+                  %table#details_table
                     %tr
                       %td
                         - if ActivationKey.readable? key.organization
