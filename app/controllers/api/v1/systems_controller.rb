@@ -240,7 +240,7 @@ Schedules the consumer identity certificate regeneration
   api :GET, "/systems/:id/subscription_status", "Show status of subscriptions on the system"
   param :id, String, :desc => "UUID of the system", :required => true
   def subscription_status
-    respond_for_collection :collection => @system.compliance
+    respond_for_index :collection => @system.compliance
   end
 
   api :GET, "/systems/:id/pools", "List pools a system is subscribed to"
