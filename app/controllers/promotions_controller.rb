@@ -249,7 +249,8 @@ class PromotionsController < ApplicationController
 
   def content_views
     # render the list of content views
-    view_versions = @environment.content_view_versions.non_default_view || []
+    view_versions = ContentViewVersion.promotable(@environment.organization) || []
+
     next_env_view_version_ids = @next_environment.nil? ? [].to_set :
                                 @next_environment.content_view_versions.non_default_view.
                                 pluck("content_view_versions.id").to_set

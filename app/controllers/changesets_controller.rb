@@ -377,8 +377,14 @@ class ChangesetsController < ApplicationController
             return false
           end
         else
-          if type == "errata"
-            return false if not update_errata_valid?(id)
+          case type
+            when "content_view"
+              return false if not update_content_view_valid?(id)
+            when "errata"
+              return false if not update_errata_valid?(id)
+            else
+              Rails.logger.debug('Unexpected type without a product id: ' + type)
+              return false
           end
         end
       end
@@ -388,8 +394,6 @@ class ChangesetsController < ApplicationController
 
   def update_item_valid? type, id, product_id
     case type
-      when "content_view"
-        item = ContentView.find(id)
       when "product"
         item = Product.find(id)
       when "package"
@@ -407,6 +411,11 @@ class ChangesetsController < ApplicationController
     else
       return false
     end
+  end
+
+  def update_content_view_valid? id
+    content_view = ContentView.find(id)
+    content_view.promotable?
   end
 
   def update_errata_valid? id
