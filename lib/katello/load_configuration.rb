@@ -36,7 +36,7 @@ module Katello
                     embed_yard_documentation logging system_lang profiling)
 
           has_values :app_mode, %w(katello headpin)
-          has_values :url_prefix, %w(/headpin /sam /cfse /katello)
+          has_values :url_prefix, %w(/headpin /sam /katello)
           is_not_empty :system_lang
           is_type :profiling, Array, nil
 
