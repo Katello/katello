@@ -19,10 +19,14 @@ KT.panel.set_expand_cb(function(){
 
     KT.system_groups_pane.register_multiselect();
 
-    setTimeout("$('#subscription_filters').attr('disabled', false).trigger('liszt:updated');", 500);
+    setTimeout(function() {
+        $('#subscription_filters').attr('disabled', false).trigger('liszt:updated');
+    }, 500);
 });
 
-KT.panel_search_autocomplete = KT.panel_search_autocomplete.concat(["distribution.name:", "distribution.version:", "network.hostname:", "network.ipaddr:"]);
+if (KT.panel_search_autocomplete !== undefined) {
+    KT.panel_search_autocomplete = KT.panel_search_autocomplete.concat(["distribution.name:", "distribution.version:", "network.hostname:", "network.ipaddr:"]);
+}
 
 (function(){
     var options = { create : 'new_system' };
@@ -31,7 +35,7 @@ KT.panel_search_autocomplete = KT.panel_search_autocomplete.concat(["distributio
 
         // When the systems index page env selector changes, update the pre-populated attributes
         env_select.env_changed_callback = function(env_id) {
-            if(env_select.envsys == true){
+            if(env_select.envsys === true){
                 $('#new').attr('data-ajax_url', KT.routes.new_system_path() + '?env_id=' + env_id);
             }
             if($("#system_content_view_id").length > 0) {
@@ -43,12 +47,14 @@ KT.panel_search_autocomplete = KT.panel_search_autocomplete.concat(["distributio
         $.extend(options, { 'extra_params' :
                     [ { hash_id     : 'env_id',
                         init_func     : function(){
-                            var state = $.bbq.getState('env_id');
+                            if ($.bbq) {
+                                var state = $.bbq.getState('env_id');
 
-                            if( state ){
-                                env_select.set_selected(state);
-                            } else {
-                                $.bbq.pushState({ env_id : env_select.get_selected_env() });
+                                if( state ){
+                                    env_select.set_selected(state);
+                                } else {
+                                    $.bbq.pushState({ env_id : env_select.get_selected_env() });
+                                }
                             }
                         }
                     }
@@ -90,7 +96,7 @@ $(document).ready(function() {
 });
 
 KT.systems_page = (function() {
-    var system_group_widget = undefined,
+    var system_group_widget,
     env_change = function(env_id, element) {
       var url = element.attr("data-url");
       window.location = url;
@@ -472,7 +478,7 @@ KT.systems_page = (function() {
       highlight_content_views: highlight_content_views,
       system_info_setup: system_info_setup,
       system_group_setup: system_group_setup
-  }
+  };
 })();
 
 KT.subs = (function() {
@@ -487,13 +493,13 @@ KT.subs = (function() {
         unsubcheckboxes.each(function(){
             $(this).change(function(){
                 if($(this).is(":checked")){
-                    checked++;
+                    checked += 1;
                     if(!(unsubbutton.is(":visible"))){
                         fakeunsubbutton.fadeOut("fast", function(){unsubbutton.fadeIn()});
                     }
                 }else{
-                    checked--;
-                    if((unsubbutton.is(":visible")) && checked == 0){
+                    checked -= 1;
+                    if((unsubbutton.is(":visible")) && checked === 0){
                         unsubbutton.fadeOut("fast", function(){fakeunsubbutton.fadeIn()});
                     }
                 }
@@ -541,11 +547,11 @@ KT.subs = (function() {
                     of_string;
 
                 if($(this).is(":checked")) {
-                    _checked++;
+                    _checked += 1;
                     direction = "increment";
                     value = 1;
                 } else {
-                    _checked--;
+                    _checked -= 1;
                     direction = "decrement";
                     value = 0;
                 }
@@ -570,26 +576,28 @@ KT.subs = (function() {
         });
     },
     spinnerSetup = function(){
-        setTimeout("$('.ui-spinner').spinner()",1000);
+        setTimeout(function() {
+            $('.ui-spinner').spinner();
+        }, 1000);
         $('.ui-spinner').each(function() {
             $(this).change(function(e) {
                 var id = $(this).attr("id").substring("spinner_".length),
                     checkbox = $("#subscription_" + id)[0],
                     val = e.currentTarget.value,
-                    check = (val != 0);
+                    check = (val !== 0);
 
-                if (checkbox.checked != check) {
+                if (checkbox.checked !== check) {
                     checkbox.checked = check;
                     if (check) {
-                        _checked++;
+                        _checked += 1;
                     } else {
-                        _checked--;
+                        _checked -= 1;
                     }
                     updateSubButtons();
                 }
             });
             $(this).keypress(function(e) {
-               if (e.which == 13) {
+               if (e.which === 13) {
                    $(this).trigger("change");
                }
             });
@@ -625,11 +633,11 @@ KT.subs = (function() {
                  data: { value: item.selected },
                  type: 'PUT',
                  success: function(data) {
-                     if (i == children.length-1) {
+                     if (i === children.length-1) {
                        $('#systems_subscriptions > a').click();  // Refresh page
                      }
                  }, error: function(e) {
-                     if (i == children.length-1) {
+                     if (i === children.length-1) {
                        $('#systems_subscriptions > a').click();  // Refresh page
                      }
                  }
@@ -647,5 +655,5 @@ KT.subs = (function() {
         reset_env_select: reset_env_select,
         autohealSetup: autohealSetup,
         matchsystemSetup: matchsystemSetup
-    }
+    };
 })();

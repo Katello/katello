@@ -10,14 +10,14 @@
  have received a copy of GPLv2 along with this software; if not, see
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
-KT.notices_list = function() {
+KT.notices_list = (function() {
     var deleteAll = function(e) {
         $('#notification_list').empty();
     };
     return {
         deleteAll: deleteAll
-    }
-}();
+    };
+})();
 
 $(document).ready(function() {
   $('#dialog_content').dialog({

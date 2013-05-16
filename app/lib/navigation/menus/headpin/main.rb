@@ -21,8 +21,8 @@ module Navigation
           @authorization = true
           @items         = [
             Navigation::Items::Dashboard.new,
-            Navigation::Menus::Headpin::Content.new(organization),
-            Navigation::Menus::Headpin::Systems.new(organization)
+            Navigation::Menus::Headpin::Subscriptions.new(organization),
+            Navigation::Menus::Headpin::Systems.new(organization),
           ]
           super
         end

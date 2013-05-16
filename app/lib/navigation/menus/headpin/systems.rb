@@ -22,7 +22,7 @@ module Navigation
         @authorization = true
         @items         = [
           Navigation::Items::Systems.new(organization),
-          Navigation::Items::SystemsByEnvironment.new(organization)
+          Navigation::Items::SystemGroups.new(organization)
         ]
         super
       end

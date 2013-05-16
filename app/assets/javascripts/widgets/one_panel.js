@@ -26,12 +26,12 @@ var one_panel = {
         var activeBlock = $(this);
 
         var activeBlockId = activeBlock.attr('id');
-        var singleSelect = activeBlock.parent().attr('data-single-selection') == "true";
+        var singleSelect = activeBlock.parent().attr('data-single-selection') === "true";
         var activeBlockPanelId = activeBlock.attr('panel_id');
 
         if(activeBlock.hasClass('active')){
             activeBlock.removeClass('active');
-            if (one_panel.selectedItems[activeBlockPanelId] != null) {
+            if (one_panel.selectedItems[activeBlockPanelId] !== null) {
                 var index = $.inArray(activeBlockId, one_panel.selectedItems[activeBlockPanelId]);
                 if(index > -1) {
                     one_panel.selectedItems[activeBlockPanelId].splice(index,1);
@@ -43,8 +43,8 @@ var one_panel = {
                 $(this).parent().find('.block').removeClass('active');
             }
             activeBlock.addClass('active');
-            if (one_panel.selectedItems[activeBlockPanelId] == null) {
-                var selected = new Array();
+            if (one_panel.selectedItems[activeBlockPanelId] === null) {
+                var selected = [];
                 selected.push(activeBlockId);
                 one_panel.selectedItems[activeBlockPanelId] = selected;
             }

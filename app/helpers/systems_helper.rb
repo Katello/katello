@@ -133,4 +133,39 @@ module SystemsHelper
     system.environment.name
   end
 
+  def system_status_message system
+
+    if system.compliant?
+      until_time = @system.compliant_until
+      message = until_time ? _("Subscriptions are Current Until %s") % format_time(until_time) : _("Subscriptions are Current")
+    else
+      general_message = system.compliance_color == 'yellow' ? _("Insufficient Subscriptions are Attached to This System") : _('Subscriptions are not Current')
+      message = nil
+      key = nil
+      system.compliance['reasons'].each do |reason|
+        message = key.nil? ? reason['message'] : general_message
+
+        # If there are more than one type of reason, return the general message
+        if !key.nil? && key != reason['key']
+          return general_message
+        end
+      end
+
+      # In case the system is not compliant and there are no messages
+      message = general_message if key.nil?
+    end
+
+    message
+  end
+
+  def system_subscription_status_message system, product
+    messages = []
+    system.compliance['reasons'].each do |reason|
+      if reason['attributes']['product_id'] == product['productId']
+        messages << reason['message']
+      end
+    end
+    messages.join(' ')
+  end
+
 end

@@ -23,7 +23,8 @@ class Api::V1::SystemsController < Api::V1::ApiController
   before_filter :find_system, :only => [:destroy, :show, :update, :regenerate_identity_certificates,
                                         :upload_package_profile, :errata, :package_profile, :subscribe,
                                         :unsubscribe, :subscriptions, :pools, :enabled_repos, :releases,
-                                        :add_system_groups, :remove_system_groups, :refresh_subscriptions, :checkin]
+                                        :add_system_groups, :remove_system_groups, :refresh_subscriptions, :checkin,
+                                        :subscription_status]
   before_filter :authorize, :except => :activate
 
   skip_before_filter :require_user, :only => [:activate]
@@ -53,6 +54,7 @@ class Api::V1::SystemsController < Api::V1::ApiController
         :update                           => edit_system,
         :index                            => index_systems,
         :show                             => read_system,
+        :subscription_status              => read_system,
         :destroy                          => delete_system,
         :package_profile                  => read_system,
         :errata                           => read_system,
@@ -206,10 +208,18 @@ Schedules the consumer identity certificate regeneration
     options[:sort_by] = params[:sort_by] if params[:sort_by]
     options[:sort_order]= params[:sort_order] if params[:sort_order]
 
-    items    = Glue::ElasticSearch::Items.new(System)
-    @systems = items.retrieve(query_string, params[:offset], options)
+    items = Glue::ElasticSearch::Items.new(System)
+    systems, total_count = items.retrieve(query_string, params[:offset], options)
 
-    respond
+    if params[:paged]
+      systems = {
+        :systems  => systems,
+        :subtotal => total_count,
+        :total    => items.total_items
+      }
+    end
+
+    respond({ :collection => systems })
   end
 
   api :GET, "/consumers/:id", "Show a system (compatibility)"
@@ -225,6 +235,12 @@ Schedules the consumer identity certificate regeneration
   def destroy
     @system.destroy
     respond :message => _("Deleted system '%s'") % params[:id], :status => 204
+  end
+
+  api :GET, "/systems/:id/subscription_status", "Show status of subscriptions on the system"
+  param :id, String, :desc => "UUID of the system", :required => true
+  def subscription_status
+    respond_for_index :collection => @system.compliance
   end
 
   api :GET, "/systems/:id/pools", "List pools a system is subscribed to"
@@ -537,6 +553,10 @@ This information is then used for computing the errata available for the system.
   end
 
   def find_content_view
-    @content_view = ContentView.readable(@organization).find_by_id(params[:content_view_id]) if @organization
+    if params.has_key?(:content_view_id) && @organization
+      @content_view = ContentView.readable(@organization).find(params[:content_view_id])
+    else
+      @content_view = nil
+    end
   end
 end

@@ -53,7 +53,7 @@
               #{_("No environments are currently available in this organization. Saving will set user to no system registration default environment.")}
         - else
           #env_box
-            = environment_selector(:path_widget_class=>"grid_10", :path_entries_class=>"grid_10", :library_clickable=>false,
+            = environment_selector(:path_widget_class=>"grid_10", :path_entries_class=>"grid_10", :library_clickable=>true,
               :accessible_envs=>accessible_envs)
       .clear
         &nbsp;

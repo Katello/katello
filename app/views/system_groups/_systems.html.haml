@@ -35,16 +35,21 @@
       %table#systems_table.filter_table.list
         %thead.header
           %tr
-            %td{:colspan => 4}
-              %a.edit_systems.subpanel_element{"data-url" => edit_systems_system_group_path(@group.id)}
-                = _("Edit Details for All Systems")
+            %td
+              %a.view_systems.subpanel_element
+                = link_to _('View in Systems List'), systems_path(:anchor => "!=&list_search=system_group:\"#{@group.name}\"")
+            %td{:colspan => 3}
+              - if Katello.config.katello?
+                %a.edit_systems.subpanel_element{"data-url" => edit_systems_system_group_path(@group.id)}
+                  = _("Edit Details for All Systems")
           %tr
             %th
               = _("Name")
             %th
               = _("Environment")
-            %th
-              = _("Content View")
+            - if Katello.config.katello?
+              %th
+                = _("Content View")
             %th
               = _("Added")
         %tbody

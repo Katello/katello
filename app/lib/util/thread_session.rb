@@ -54,7 +54,7 @@ module Util
               uri = URI.parse(Katello.config.pulp.url)
 
               ::Runcible::Base.config = {
-                :url      => "#{uri.scheme}://#{uri.host}",
+                :url      => "#{uri.scheme}://#{uri.host.downcase}",
                 :api_path => uri.path,
                 :user     => user_id,
                 :oauth    => {:oauth_secret => Katello.config.pulp.oauth_secret,

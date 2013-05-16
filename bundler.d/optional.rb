@@ -1,6 +1,3 @@
 group :optional do
-  unless defined? JRUBY_VERSION
-    gem 'ruby-prof'
-  end
-  gem 'newrelic_rpm'
+  gem 'ruby-prof' if Katello.early_config.profiling && !defined?(JRUBY_VERSION)
 end

@@ -184,5 +184,5 @@ KT.env_content_view_selector = (function(){
         initialize: initialize,
         save: save,
         cancel: cancel
-    }
+    };
 })();

@@ -103,7 +103,7 @@ KT.env_content_view_selector = (function() {
                     url: KT.routes.content_views_environment_path(env_ids[0]),
                     type: "GET",
                     data: {'include_default': 'true'},
-                    success: (function(response) {
+                    success: function(response) {
                         var options = '', highlight_text;
                         var opt_template = KT.utils.template("<option value='<%= key %>'><%= text %></option>");
 
@@ -126,7 +126,7 @@ KT.env_content_view_selector = (function() {
                             remove_content_view_highlight();
                         }
                         performing_cancel = false;
-                    })
+                    }
                 });
             }
         },

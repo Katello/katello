@@ -514,7 +514,7 @@ var changeset_obj = function(data_struct) {
         set_timestamp:function(ts) { timestamp = ts; },
         timestamp: function(){return timestamp;},
         has_item: function(type, id) {
-            var found = undefined;
+            var found;
             if (type === 'content_view') {
                 if( content_views.hasOwnProperty(id) ){
                     return true;
@@ -528,7 +528,7 @@ var changeset_obj = function(data_struct) {
             }
         },
         remove_item:function(type, id) {
-            if (type == 'content_view') {
+            if (type === 'content_view') {
                 delete content_views[id];
             }
         },
@@ -563,7 +563,7 @@ var changeset_obj = function(data_struct) {
                     buttons[i18n.cancel] = function(){$(this).dialog('close'); on_error();};
                     buttons[i18n.continue_promotion] =function(){
                         $(this).dialog('close');
-                        cs.promote(on_success, on_error, true)
+                        cs.promote(on_success, on_error, true);
                     };
                     warn_elem.dialog({
                         closeOnEscape: false,
@@ -571,7 +571,7 @@ var changeset_obj = function(data_struct) {
                         title: i18n.warning,
                         buttons: buttons,
                         open: function(event, ui) { $(".ui-dialog-titlebar-close").hide(); }
-                    })
+                    });
                 }
                 else {
                     if (on_success) {
@@ -753,13 +753,13 @@ var changesetEdit = (function(){
         changeset = promotion_page.get_changeset(),
         animate_time = 500;
 
-        if (delay != undefined){
+        if (delay !== undefined){
             animate_time = delay;
         }
 
         opened = !opened;
 
-        var after_function = undefined;
+        var after_function;
         if (opened) {
             $('#edit_changeset').attr('original-title', i18n.close_edit_title);
             name_box.html(changeset.getName());
@@ -939,7 +939,7 @@ var templateLibrary = (function(){
                 content_views_list = '',
                 content_views = changeset.getContentViews();
 
-            for(key in content_views) {
+            for(var key in content_views) {
                 if(content_views.hasOwnProperty(key) ){
                     content_view = content_views[key];
                     content_views_list += contentViewItem(changeset_id, key, content_view.name, showButton);
@@ -1179,7 +1179,7 @@ $(document).ready(function() {
 
     if (selected_tree.data('cs_type') === "deletion") {
         promotion_page.set_current_changeset_breadcrumb(deletion_changeset_breadcrumb);
-    } else if (changeset_hash && changeset_hash != "changesets" &&
+    } else if (changeset_hash && changeset_hash !== "changesets" &&
       !$.isEmptyObject(deletion_changeset_breadcrumb[changeset_hash])) {
         promotion_page.set_current_changeset_breadcrumb(deletion_changeset_breadcrumb);
         $('.sliding_tree_category.selected').removeClass('selected');
