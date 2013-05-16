@@ -153,6 +153,7 @@ angular.module('Katello').factory('Nutupane', ['$location', '$http', 'current_or
 
         column.active = true;
 
+        Nutupane.table.offset = 0;
         Nutupane.get(function(){
             angular.forEach(Nutupane.table.data.columns, function(column){
                 if (column.active) {
