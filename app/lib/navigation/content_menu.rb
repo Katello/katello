@@ -364,9 +364,7 @@ module Navigation
           :url => lambda{edit_activation_key_path(@activation_key.id)},
           :if => lambda{@activation_key},
           :options => {:class=>"panel_link"}
-        }
-      ]
-      menu << if Katello.config.katello?
+        },
         { :key => :system_mgmt,
           :name =>_("System Groups"),
           :items => lambda{ak_systems_subnav},
@@ -374,15 +372,7 @@ module Navigation
           :url => lambda{system_groups_activation_key_path(@activation_key.id)},
           :options => {:class=>'panel_link menu_parent'}
         }
-      else
-        { :key => :activation_keys_systems,
-          :name =>_("Systems"),
-          :url => lambda{systems_activation_key_path(@activation_key.id)},
-          :if => lambda{@activation_key},
-          :options => {:class=>"panel_link"}
-        }
-      end
-
+      ]
       menu
     end
 

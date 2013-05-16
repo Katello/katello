@@ -18,8 +18,9 @@ KT.subnet_page = (function() {
         var button = $(this),
             url = button.attr("data-url");
 
-        if (button.hasClass("disabled"))
+        if (button.hasClass("disabled")) {
             return;
+        }
 
         $.ajax({
             type: "PUT",
@@ -45,7 +46,7 @@ KT.subnet_page = (function() {
 
     return {
         register: register
-    }
+    };
 }());
 
 

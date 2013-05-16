@@ -192,7 +192,7 @@ KT.content_search = function(paths_in){
 
         utils.each(environment_list, function(env){
             env_obj[env.id] = env;
-            env_select.select(env.id)
+            env_select.select(env.id);
         });
         comparison_grid.show_columns(env_obj);
     },
@@ -200,8 +200,8 @@ KT.content_search = function(paths_in){
       $(document).bind('load_more.comparison_grid', function(event){
         var search = $.bbq.getState('search'),
             data_out = event.cell_data,
-            type = search.content_type;
-            ajax_type = undefined;
+            type = search.content_type,
+            ajax_type;
         if (search.subgrid && search.subgrid.type){
             type = search.subgrid.type;
         }
@@ -222,7 +222,7 @@ KT.content_search = function(paths_in){
             $(document).trigger('show_more.comparison_grid', [data.rows]);
             close_tipsy();
           }
-        })
+        });
       });
     },
     bind_search_event = function(){
@@ -305,9 +305,9 @@ KT.content_search = function(paths_in){
                     comparison_grid.set_right_select(search_modes, search_params.subgrid.mode);
                 }
                 if(subgrid.url.indexOf('view') === -1) {
-                    comparison_grid.set_default_row_level(3)
+                    comparison_grid.set_default_row_level(3);
                 } else {
-                    comparison_grid.set_default_row_level(1)
+                    comparison_grid.set_default_row_level(1);
                 }
 
                 var cols = data.cols ? data.cols : subgrid.cols;
@@ -359,8 +359,8 @@ KT.content_search = function(paths_in){
                 return;
             }
             utils.each(event.selected, function(item){
-                var split_ids = item.row_id.split('_')
-                formatted.push({env_id:item.col_id, view_id:split_ids[1], repo_id:split_ids[5]})
+                var split_ids = item.row_id.split('_');
+                formatted.push({env_id:item.col_id, view_id:split_ids[1], repo_id:split_ids[5]});
             });
             search.subgrid = {
                 type: 'repo_compare_packages',
@@ -377,7 +377,7 @@ KT.content_search = function(paths_in){
                 return;
             }
             utils.each(event.selected, function(item){
-                formatted.push({env_id:item.col_id, view_id:item.row_id.split('_')[1]})
+                formatted.push({env_id:item.col_id, view_id:item.row_id.split('_')[1]});
             });
             search.subgrid = {
                 type: 'view_compare_packages',
@@ -464,8 +464,8 @@ KT.content_search = function(paths_in){
         change_subgrid_type:change_subgrid_type,
         remove_subgrid: remove_subgrid,
         get_initial_environments: get_initial_environments,
-        get_initial_environment_ids:get_initial_environment_ids,
-    }
+        get_initial_environment_ids:get_initial_environment_ids
+    };
 };
 
 /**
@@ -473,8 +473,8 @@ KT.content_search = function(paths_in){
  */
 KT.content_search_cache = (function(){
     var utils = KT.utils,
-        saved_search = undefined,
-        saved_data = undefined;
+        saved_search,
+        saved_data;
 
     var save_state = function(grid, search){
         saved_search = $.extend(true, {}, search);
@@ -516,7 +516,7 @@ KT.widget.finder_box = function(container_id, search_id, autocomplete_id){
     init = function(){
         container = $('#' + container_id);
         setup_search(search_id);
-        setup_autocomplete(autocomplete_id)
+        setup_autocomplete(autocomplete_id);
         if(search_id && autocomplete_id){
             //if we have both, select one
             search_container.find('input:radio').click();
@@ -595,7 +595,7 @@ KT.widget.finder_box = function(container_id, search_id, autocomplete_id){
            return {autocomplete: ids};
         }
         else {
-            return {}
+            return {};
         }
     },
     set_results = function(results){
@@ -653,7 +653,7 @@ KT.widget.browse_box = function(selector_id, widgets, mapping, initial_values){
             if (initial_values && initial_values.content_type){
                 selector.val(initial_values.content_type);
                 utils.each(widgets, function(widget, key){
-                    widget.finder.set_results(initial_values[key])
+                    widget.finder.set_results(initial_values[key]);
                 });
             }
             selector.change();
@@ -698,7 +698,7 @@ KT.widget.browse_box = function(selector_id, widgets, mapping, initial_values){
         change_selection: change_selection,
         trigger_search : trigger_search,
         get_event: function(){return event_name;}
-    }
+    };
 };
 
 

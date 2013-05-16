@@ -38,7 +38,6 @@ class ActivationKey < ActiveRecord::Base
   validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
   validates :environment, :presence => true
   validate :environment_exists
-  validate :environment_not_library
   validate :environment_key_conflict
   validates :content_view, :presence => true, :allow_blank => false
   validates_each :usage_limit do |record, attr, value|
@@ -55,10 +54,6 @@ class ActivationKey < ActiveRecord::Base
     elsif environment.organization != self.organization
       errors.add(:environment, _("name: %s doesn't exist ") % environment.name)
     end
-  end
-
-  def environment_not_library
-    errors.add(:base, _("Cannot create activation keys in the '%s' environment") % "Library") if environment and environment.library?
   end
 
   def environment_key_conflict
@@ -161,6 +156,7 @@ class ActivationKey < ActiveRecord::Base
       pool.as_json
     end
     ret[:usage_count] = usage_count
+    ret[:editable] = ActivationKey.readable?(organization)
     ret
   end
 

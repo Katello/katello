@@ -69,7 +69,7 @@ $(document).ready(function() {
 
      $('input[id^=filter]').live('change, keyup', function(){
          // if the user has cleared the filter box, locate all parents and if a parent is collapsed, hide the children
-         if ($.trim($(this).val()).length == 0) {
+         if ($.trim($(this).val()).length === 0) {
              var parents = $('tr[data-family_begin]');
              parents.each(function(){
                  // if the parent is collapsed, hide the children
@@ -96,13 +96,13 @@ KT.activation_key = (function($) {
         subcheckboxes.each(function(){
             $(this).change(function(){
                 if($(this).is(":checked")){
-                    checked++;
+                    checked += 1;
                     if(!(subbutton.is(":visible"))){
                         fakesubbutton.fadeOut("fast", function(){subbutton.fadeIn()});
                     }
                 }else{
-                    checked--;
-                    if((subbutton.is(":visible")) && checked == 0){
+                    checked -= 1;
+                    if((subbutton.is(":visible")) && checked === 0){
                         subbutton.fadeOut("fast", function(){fakesubbutton.fadeIn()});
                     }
                 }
@@ -209,8 +209,12 @@ KT.activation_key = (function($) {
                     total = sibling_cbxs.length,
                     num_checked = 0;
 
-                sibling_cbxs.each( function() { if (this.checked) num_checked++; });
-                if (total == num_checked) {
+                sibling_cbxs.each( function() {
+                    if (this.checked) {
+                        num_checked += 1;
+                    }
+                });
+                if (total === num_checked) {
                     family_cbx.attr('checked', true);
                 }
                 else if (num_checked > 0) {
@@ -330,6 +334,6 @@ KT.activation_key = (function($) {
         highlight_content_views: highlight_content_views,
         remove_content_view_highlight: remove_content_view_highlight,
         refresh_list_item: refresh_list_item
-    }
+    };
 }(jQuery));
 

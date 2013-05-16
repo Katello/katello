@@ -42,6 +42,11 @@
         %h4= _("Support")
       .widget.support
         %p= ((_("To submit a new bug please visit %s.")) % redhat_bugzilla_link).html_safe
+      - if Rails.env.development?
+        .widget.support
+          %p= link_to(_('Katello reference documentation'), Katello.config.url_prefix + '/yard/docs/file/README.md')
+        .widget.support
+          %p= link_to(_('Katello user documentation'), 'http://www.fedorahosted.org/katello')
 
 
     - if can_read_system_info?

@@ -42,7 +42,8 @@ $(document).ready(function() {
         KT.panel.panelAjax('', button.attr("data-url") ,$('#panel'));
         KT.panel.closeSubPanel($('#subpanel'));
       },
-      function() {button.removeClass("disabled")
+      function() {
+          button.removeClass("disabled");
     });
   });
   $('#provider_contents').attr('size', '17');
@@ -54,12 +55,12 @@ var provider = (function() {
         toggleFields : function() {
               var val = $('#provider_provider_type option:selected').val();
               var fields = "#repository_url_field";
-              if (val == "Custom") {
+              if (val === "Custom") {
                   $(fields).attr("disabled", true);
               }
               else {
                   $(fields).removeAttr("disabled");
               }
         }
-    }
+    };
 })();

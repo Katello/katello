@@ -13,7 +13,7 @@
 
 KT.system = KT.system || {};
 
-KT.system.errata = function() {
+KT.system.errata = (function() {
     var errata_container,
         table_body,
         load_more,
@@ -304,7 +304,7 @@ KT.system.errata = function() {
         init    : init
     };
 
-}();
+})();
 
 // Call this init() from a location where the 'editable' flag can be set
 // appropriately. In this case it is called from errata/_index.html.haml

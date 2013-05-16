@@ -42,7 +42,6 @@ class System < ActiveRecord::Base
   before_validation :set_default_content_view, :unless => :persisted?
   validates :environment, :presence => true
   validates :content_view, :presence => true, :allow_blank => false
-  validates_with Validators::NonLibraryEnvironmentValidator, :attributes => :environment
   # multiple systems with a single name are supported
   validates :name, :presence => true
   validates_length_of :name, :maximum => 250
@@ -182,6 +181,26 @@ class System < ActiveRecord::Base
         json['guests'] = self.guests.map(&:attributes)
       end
     end
+
+    if options[:expanded]
+      json['editable'] = editable?
+      json['type'] = if guest == 'true'
+                        _("Guest")
+                      else
+                        case self
+                          when Hypervisor
+                            _("Hypervisor")
+                          else
+                            _("Host")
+                        end
+                      end
+      keys = []
+      ContentView.readable(organization).in_environment(environment).non_default.each do |view|
+        keys << { :value => view.id, :name => view.name }
+      end
+      json['available_content_views'] = keys
+    end
+
     json
   end
 

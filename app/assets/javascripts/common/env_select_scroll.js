@@ -42,8 +42,8 @@ KT.env_select_scroll = function(options) {
 
             anchors.each(function(index) {
                 var anchor = $(this),
-                    out_interval = undefined,
-                    over_interval= undefined,
+                    out_interval,
+                    over_interval,
                     total_width = anchor.width(),
                     my_min_size = min_size;
 

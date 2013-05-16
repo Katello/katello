@@ -53,7 +53,7 @@ KT.packages_filtertable = (function() {
     };
     return {
         initialize: initialize
-    }
+    };
 }(jQuery));
 
 $(document).ready(function() {

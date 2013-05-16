@@ -4,8 +4,8 @@
 @import "alchemy/composites/shell";
 @import "alchemy/composites/content_elements";
 @import "alchemy/components/helpers";
-@import 'alchemy-buttons/buttons';
-//@import "alchemy/components/normalize";
+@import "alchemy-forms/forms";
+@import "alchemy-buttons/buttons";
 
 @import "katello_base";
 
@@ -167,27 +167,27 @@ input:focus {
 
 /* custom ui spinner class for HTML5 like spinners */
 .ui-spinner {
-    width: 40px;
+  width: 40px;
 }
 
 .status_exclamation_icon {
-    background: $status_exclamation_icon;
-    height: 16px;
-    width: 16px;
-    position: absolute;
+  background: $status_exclamation_icon;
+  height: 16px;
+  width: 16px;
+  position: absolute;
 }
 .status_confirm_icon {
-    background: $status_confirm_icon;
-    @extend .status_exclamation_icon;
+  background: $status_confirm_icon;
+  @extend .status_exclamation_icon;
 }
 .status_alert_icon {
-    background: $status_alert_icon;
-    @extend .status_exclamation_icon;
+  background: $status_alert_icon;
+  @extend .status_exclamation_icon;
 }
 
 .status_warning_icon {
-    background: $warning_icon_triangle;
-    @extend .status_exclamation_icon;
+  background: $warning_icon_triangle;
+  @extend .status_exclamation_icon;
 }
 
 /* BUTTONS */
@@ -282,9 +282,9 @@ table {
       color: lighten($header_color,20%);
       text-transform: uppercase;
       border-right: 1px dotted darken($stroke_color,20%);
-        &:last-child {
-           border-right: 0 none;
-        }
+      &:last-child {
+        border-right: 0 none;
+      }
       a, a:hover {
         display: block;
         margin: 0;
@@ -354,12 +354,13 @@ table {
     margin-bottom: 7em;
   }
 }
+
 .treeTable {
-    td {
-        &:first-child {
-         padding-left: 18px;
-        }
+  td {
+    &:first-child {
+      padding-left: 18px;
     }
+  }
 }
 
 .lock_icon {
@@ -442,8 +443,8 @@ legend {
 
 /* When you need to seperate items within a fieldset */
 .fielditem {
-   margin-top: 5px;
-   margin-bottom: 5px;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
 fieldset {
@@ -489,18 +490,18 @@ fieldset {
 }
 
 .modalbox {
-    margin: 130px auto;
-    @include box-shadow(0 1px 5px rgba(0, 0, 0, 0.6));
-    width: 550px;
-    overflow: hidden;
-    background-color: $white_color;
-    h2 {
-      background-color: $formheadbg_color;
-      color: $formheadfg_color;
-      text-transform: uppercase;
-      font-size: 120%;
-      padding: 10px;
-    }
+  margin: 130px auto;
+  @include box-shadow(0 1px 5px rgba(0, 0, 0, 0.6));
+  width: 550px;
+  overflow: hidden;
+  background-color: $white_color;
+  h2 {
+    background-color: $formheadbg_color;
+    color: $formheadfg_color;
+    text-transform: uppercase;
+    font-size: 120%;
+    padding: 10px;
+  }
 }
 
 
@@ -520,39 +521,39 @@ fieldset {
 }
 
 .notifications {
-    tr.success {
-        @include background-image(linear-gradient(white, white, rgb(242,255,229)));
-        &:hover {
-            @include background-image(linear-gradient(white, rgb(242,255,229)));
-        }
+  tr.success {
+    @include background-image(linear-gradient(white, white, rgb(242,255,229)));
+    &:hover {
+      @include background-image(linear-gradient(white, rgb(242,255,229)));
     }
-    tr.error {
-        @include background-image(linear-gradient(white, white, rgb(255,229,229)));
-        &:hover {
-            @include background-image(linear-gradient(white, rgb(255,229,229)));
-        }
+  }
+  tr.error {
+    @include background-image(linear-gradient(white, white, rgb(255,229,229)));
+    &:hover {
+      @include background-image(linear-gradient(white, rgb(255,229,229)));
     }
-    tr.message {
-        @include background-image(linear-gradient(white, white, rgb(239,239,239)));
-        &:hover {
-            @include background-image(linear-gradient(white, rgb(239,239,239)));
-        }
+  }
+  tr.message {
+    @include background-image(linear-gradient(white, white, rgb(239,239,239)));
+    &:hover {
+      @include background-image(linear-gradient(white, rgb(239,239,239)));
     }
-    tr.warning {
-        @include background-image(linear-gradient(white, white, rgb(255,255,229)));
-        &:hover {
-            @include background-image(linear-gradient(white, rgb(255,255,229)));
-        }
+  }
+  tr.warning {
+    @include background-image(linear-gradient(white, white, rgb(255,255,229)));
+    &:hover {
+      @include background-image(linear-gradient(white, rgb(255,255,229)));
     }
+  }
 }
 
 #main {
   ul {
-   margin: 0;
-   padding: 0;
-   li {
-     list-style-type: none;
-   }
+    margin: 0;
+    padding: 0;
+    li {
+      list-style-type: none;
+    }
   }
   .actions {
     margin-top: 1em;
@@ -601,144 +602,143 @@ fieldset {
   margin:0 auto;
   min-height:600px;
   position: relative;
-    /* right side of 2 pane below the sliding pane */
-    .right_panel {
-        float:right;
-        width:448px;
-        min-height: 300px;
-        padding: 20px;
+  /* right side of 2 pane below the sliding pane */
+  .right_panel {
+    float:right;
+    width:448px;
+    min-height: 300px;
+    padding: 20px;
+    border: 1px solid $border_color;
+    @include border-right-radius(5px);
+    background-color: $lightergrey_color;
+    margin-top: 94.5px;
+    margin-right: 20px;
+    position: relative;
+    .panel_action {
+      .disabled {
+        &:hover {
+          text-decoration: none;
+          cursor: normal;
+        }
+      }
+      .options {
+        display: none;
+        @include border-radius(5px);
+        @include box-shadow(rgba(0,0,0,0.4), 2px 2px 2px);
+        background-color: white;
         border: 1px solid $border_color;
-        @include border-right-radius(5px);
-        background-color: $lightergrey_color;
-        margin-top: 79px;
-        margin-right: 20px;
-        position: relative;
-        .panel_action {
-            .disabled {
-              &:hover {
-                text-decoration: none;
-                cursor: normal;
-              }
-            }
-            .options {
-              display: none;
-              @include border-radius(5px);
-              @include box-shadow(rgba(0,0,0,0.4), 2px 2px 2px);
-              background-color: white;
-              border: 1px solid $border_color;
-              padding: 15px;
-              margin: 4px auto;
-              width: 85%;
-              .actions {
-                  float: right;
-              }
-            }
-            input[type="text"], .ui-multiselect {
-              margin-left: 20px;
-            }
-            .validation_error {
-              padding-left: 20px;
-              color: $validation_error_color;
-              font-weight: 600;
-            }
+        padding: 15px;
+        margin: 4px auto;
+        width: 85%;
+        .actions {
+          float: right;
         }
-        #select-result {
-            position: absolute;
-            right: 10px;
-            top: 10px;
-            font-size: 18px;
-            color: $lightgrey_color;
-        }
-        #select-none {
-            position: absolute;
-            top: 36px;
-            right: 10px;
-        }
-        .helptip_area {
-            float: left;
-            width: 62%;
-            clear: both;
-        }
-        .filter_button {
-
-
-        }
+      }
+      input[type="text"], .ui-multiselect {
+        margin-left: 20px;
+      }
+      .validation_error {
+        padding-left: 20px;
+        color: $validation_error_color;
+        font-weight: 600;
+      }
     }
+    #select-result {
+      position: absolute;
+      right: 10px;
+      top: 10px;
+      font-size: 18px;
+      color: $lightgrey_color;
+    }
+    #select-none {
+      position: absolute;
+      top: 36px;
+      right: 10px;
+    }
+    .helptip_area {
+      float: left;
+      width: 62%;
+      clear: both;
+    }
+    .filter_button {
 
-    /* left side of 2 pane that has clickable links */
-    .column_panel_1 { width: 300px; }
-    .column_panel_2 { width: 375px; }
-    .column_panel_3 { width: 450px; }
-    .left_panel {
-      float:left;
-      min-height:500px;
-      position:relative;
-      z-index: 0;
-      h2 {
-          margin-bottom: 8px;
-          width: 164px;
-          max-width: 164px;
-      }
-      #new {
-          border-bottom: 0 none;
-          padding: 8px;
-          margin: 0;
-          clear: right;
-          text-align: center;
-          width: 10em;
-          right: 0;
-          min-height: 21px;
-          height: auto;
-          font-size: 100% !important;
-          &.block{
-              &.active{
-                  .arrow-right {
-                      border-bottom: 19px solid transparent;
-                      border-left: 17px solid $kselected_color;
-                      border-top: 18px solid transparent;
-                      right: -17px;
-                  }
-                &:hover {
-                    background-color: darken($kselected_color, 10%);
-                    .arrow-right { border-left-color:darken($kselected_color, 10%); }
-                }
-              }
-              &:hover {
-                .arrow-right {
-                  border-left: 17px solid $listhover_color;
-                }
-              }
+
+    }
+  }
+
+  /* left side of 2 pane that has clickable links */
+  .column_panel_1 { width: 300px; }
+  .column_panel_2 { width: 375px; }
+  .column_panel_3 { width: 450px; }
+  .left_panel {
+    float:left;
+    min-height:500px;
+    z-index: 0;
+    h2 {
+      margin-bottom: 8px;
+      width: 164px;
+      max-width: 164px;
+    }
+    #new {
+      border-bottom: 0 none;
+      padding: 8px;
+      margin: 0;
+      clear: right;
+      text-align: center;
+      width: 10em;
+      right: 0;
+      min-height: 21px;
+      height: auto;
+      font-size: 100% !important;
+      &.block{
+        &.active{
+          .arrow-right {
+            border-bottom: 19px solid transparent;
+            border-left: 17px solid $kselected_color;
+            border-top: 18px solid transparent;
+            right: -17px;
           }
-      }
-      #heading_title {
-        font-weight: bold;
-      }
-       /* search forms */
-      .search {
-        float: right;
-        margin-bottom: 6px;
-        margin-top: 6px;
-        margin-right: 6px;
-        position: relative;
-        clear: right;
-        button {
-          position: absolute;
-          width: 16px; height: 16px;
-          text-indent: -4000em;
-          margin: -8px 0 0;
-          background-position: 0 0;
-          border: none;
-          padding: 0;
           &:hover {
-            @include box-shadow(none);
+            background-color: darken($kselected_color, 10%);
+            .arrow-right { border-left-color:darken($kselected_color, 10%); }
           }
         }
-        input[type="text"] {
-          float: right; /* webkit adds an extra padding and makes the widget narrower */
-          width: 185px;
+        &:hover {
+          .arrow-right {
+            border-left: 17px solid $listhover_color;
+          }
         }
       }
     }
+    #heading_title {
+      font-weight: bold;
+    }
+    /* search forms */
+    .search {
+      float: right;
+      margin-bottom: 6px;
+      margin-top: 6px;
+      margin-right: 6px;
+      position: relative;
+      clear: right;
+      button {
+        position: absolute;
+        width: 16px; height: 16px;
+        text-indent: -4000em;
+        margin: -8px 0 0;
+        background-position: 0 0;
+        border: none;
+        padding: 0;
+        &:hover {
+          @include box-shadow(none);
+        }
+      }
+      input[type="text"] {
+        float: right; /* webkit adds an extra padding and makes the widget narrower */
+        width: 185px;
+      }
+    }
+  }
 }
 .block_head {
   background-color: lighten($stroke_color,8%);
@@ -754,9 +754,9 @@ fieldset {
     text-transform: uppercase;
     white-space:nowrap;
     border-right: 1px dotted darken($stroke_color,20%);
-      &:last-child {
-        border-right: 0 none;
-      }
+    &:last-child {
+      border-right: 0 none;
+    }
     a, a:hover {
       display: block;
       margin: 0;
@@ -825,11 +825,11 @@ fieldset {
       z-index: 220;
     }
     &:hover {
-        background-color: darken($kselected_color, 10%);
-        .arrow-right { border-left-color:darken($kselected_color, 10%); }
+      background-color: darken($kselected_color, 10%);
+      .arrow-right { border-left-color:darken($kselected_color, 10%); }
     }
     a, a:hover, a:visited, a:active, a:link {
-     font-color: $white_color;
+      font-color: $white_color;
     }
   }
   &.add {
@@ -837,11 +837,11 @@ fieldset {
     color: $white_color;
   }
   &:hover {
-      background-color: $listhover_color;
-      color: $white_color;
-      .arrow-right {
-        border-left: 21px solid $listhover_color;
-      }
+    background-color: $listhover_color;
+    color: $white_color;
+    .arrow-right {
+      border-left: 21px solid $listhover_color;
+    }
   }
 }
 
@@ -911,10 +911,10 @@ fieldset {
       min-height: 0px;
 
       li {
+        background: none;
+        &.selected {
           background: none;
-          &.selected {
-            background: none;
-          }
+        }
       }
     }
   }
@@ -922,7 +922,7 @@ fieldset {
     background: none transparent;
   }
   .helptip-close{
-      float: right;
+    float: right;
   }
   .helptip-open-button {
     right: 50px;
@@ -971,7 +971,7 @@ fieldset {
     position: absolute;
     top: 9px;
     &:hover {
-        color: red;
+      color: red;
     }
   }
 
@@ -1075,16 +1075,16 @@ fieldset {
   }
 }
 #list-title, .list-title {
-    display: block;
-    height:74px;
-    width: 449px;
-    background-color: $white_color;
+  display: block;
+  height:74px;
+  width: 449px;
+  background-color: $white_color;
 
-    header { height: 40px;}
+  header { height: 40px;}
 
-    #items_count {
-      color: $text_color;
-    }
+  #items_count {
+    color: $text_color;
+  }
 }
 
 /* begin helptip */
@@ -1143,71 +1143,71 @@ fieldset {
 #path-widget {
 
   #path-controller {
-      border-style: solid;
-      border-width: 1px;
+    border-style: solid;
+    border-width: 1px;
 
-      border-color: $path-border_color;
-      height: 34px;
+    border-color: $path-border_color;
+    height: 34px;
 
-      padding: 6px;
+    padding: 6px;
 
-      .path_selector {
-          display: inline;
-          float: right;
-          vertical-align:middle;
-          margin-top: 8px;
-      }
+    .path_selector {
+      display: inline;
+      float: right;
+      vertical-align:middle;
+      margin-top: 8px;
+    }
   }
   .path_selected {
-     display: inline;
-     padding-bottom: 6px;
-     margin-bottom: 6px;
-     /*position: absolute;*/
+    display: inline;
+    padding-bottom: 6px;
+    margin-bottom: 6px;
+    /*position: absolute;*/
   }
   .path_entry_selected {
-        background-color: $lightgrey_color;
+    background-color: $lightgrey_color;
   }
   .path_entry {
-      padding-left: 6px;
-      padding-right: 6px;
-      padding-top: 6px;
-      padding-bottom: 6px;
+    padding-left: 6px;
+    padding-right: 6px;
+    padding-top: 6px;
+    padding-bottom: 6px;
 
-      &:hover {
-        background-color: $lightgrey_color;
-        color: $white_color;
-      }
+    &:hover {
+      background-color: $lightgrey_color;
+      color: $white_color;
+    }
   }
   .path_entries {
-      @include box-shadow(4px,4px,2px,rgba(0, 0, 0, 0));
+    @include box-shadow(4px,4px,2px,rgba(0, 0, 0, 0));
 
-      border-style: solid;
-      border-width: 1px;
-      border-color: $path-border_color;
+    border-style: solid;
+    border-width: 1px;
+    border-color: $path-border_color;
 
-      display: none;
+    display: none;
 
-      z-index: 200;
-      position: absolute;
-      background-color: $white_color;
-      margin-left: 0;
+    z-index: 200;
+    position: absolute;
+    background-color: $white_color;
+    margin-left: 0;
   }
 }
 
 .one-line-ellipsis {
-    h5 {
-      display: inline;
-      word-wrap:  normal;
-    }
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space:nowrap;
+  h5 {
+    display: inline;
+    word-wrap:  normal;
+  }
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space:nowrap;
 }
 
 .sprite {
-    height: 16px;
-    width: 16px;
-    text-indent: -4000em;
+  height: 16px;
+  width: 16px;
+  text-indent: -4000em;
 }
 
 .productsbox {
@@ -1222,10 +1222,10 @@ fieldset {
 
 /* box for "errors" on the custom 500 error page */
 .error {
-    @include border-radius(3px);
-    background-color: $lightergrey_color;
-    border:1px solid $border_color;
-    padding: 0 10px 10px 10px;
+  @include border-radius(3px);
+  background-color: $lightergrey_color;
+  border:1px solid $border_color;
+  padding: 0 10px 10px 10px;
 }
 
 /* classes to highlight or make "standout" inputs that require action from the user */
@@ -1234,13 +1234,13 @@ fieldset {
 
 
 .ui-widget-header {
-    font-family: $headlinefont;
-    border: 0 none;
+  font-family: $headlinefont;
+  border: 0 none;
 }
 .ui-widget-content {
-    table {
-         border: 1px solid $stroke_color !important;
-    }
+  table {
+    border: 1px solid $stroke_color !important;
+  }
 }
 
 .bordered-table {
@@ -1257,19 +1257,19 @@ fieldset {
 }
 
 .status_icons {
-    margin-right: 5px;
-     .check_icon {
-       width: 16px;
-       height: 16px;
-       @include action-icon($check_icon_black);
-       margin-left: 0px;
-     }
+  margin-right: 5px;
+  .check_icon {
+    width: 16px;
+    height: 16px;
+    @include action-icon($check_icon_black);
+    margin-left: 0px;
+  }
 
-     .error_icon {
-       width: 16px;
-       @include action-icon($warning_icon_black);
-       margin-left: 0px;
-     }
+  .error_icon {
+    width: 16px;
+    @include action-icon($warning_icon_black);
+    margin-left: 0px;
+  }
 }
 
 .validation_error_input {
@@ -1281,15 +1281,15 @@ fieldset {
 }
 
 .deletable, .deletable a {
-    color: darkRed;
-    &:hover {
-        color: red;
-    }
+  color: darkRed;
+  &:hover {
+    color: red;
+  }
 }
 
 .ui-button-text-only .ui-button-text {
-    padding-top: 0;
-    padding-bottom: 0;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
 /* override the header.scss from alchemy */
@@ -1393,12 +1393,12 @@ footer a {
 }
 
 .primary_color {
-    background-color: lighten($kprimary_color, 5%);
+  background-color: lighten($kprimary_color, 5%);
 }
 
 .row_fade_in {
-    background-color: rgba(0, 0, 0, 0);
-    @include transition(background-color 1.25s ease-in-out);
+  background-color: rgba(0, 0, 0, 0);
+  @include transition(background-color 1.25s ease-in-out);
 }
 
 .table-action {
@@ -1406,7 +1406,7 @@ footer a {
 }
 
 .btn.processing {
-    background: url("icons/spinner.gif") no-repeat 50% 50%, linear-gradient(#ffffff, #e5e5e4);
+  background: url("icons/spinner.gif") no-repeat 50% 50%, linear-gradient(#ffffff, #e5e5e4);
 }
 
 #experimental_indicator {

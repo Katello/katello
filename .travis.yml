@@ -8,7 +8,7 @@ before_install:
   - touch config/katello.yml
 
 install:
-  - bundle install --without checking:devboost:optional:debugging --quiet
+  - bundle install --without devboost:optional:debugging
 
 script:
   - "./script/ci/katello_pr_$JOB.sh"
@@ -17,3 +17,4 @@ env:
   - JOB=minitest
   - JOB=rspec
   - JOB=headpin_rspec
+  - JOB=other

@@ -50,11 +50,10 @@ module Profiling
   end
 
   def run_profiling?
-    Src::Application.config.do_profiles.include? "#{params[:controller]}##{params[:action]}"
+    Katello.config.profiling.include? "#{params[:controller]}##{params[:action]}"
   end
 
   def self.profiling_enabled?
-    Katello.config.profiling && Src::Application.config.respond_to?(:do_profiles) &&
-      !Src::Application.config.do_profiles.blank?
+    Katello.config.profiling.present?
   end
 end

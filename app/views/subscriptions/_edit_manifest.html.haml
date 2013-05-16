@@ -9,6 +9,7 @@
   #manifest
     %input#panel_element_id{:name=>@provider.id, :type=>"hidden", :value=>"#{@provider.name}_#{@provider.id.to_s}", "data-ajax_url"=>url_for(:action=>"refresh_manifest")}
     .grid_12#manifest_info
+      %h5 #{_('Subscription Details')}
       %fieldset
         .grid_3.ra.fieldset
           %label #{_("Upstream Subscription Management Application")}
@@ -41,5 +42,18 @@
         - if @upstream['updated']
           .grid_8.la.fl
             = format_time(Time.parse(@upstream['updated']))
+
+      %h5 #{_('Subscription Server Details')}
+      - status = subscriptions_candlepin_status
+      %fieldset
+        .grid_3.ra.fieldset
+          %label #{_("Rules Source")}
+        .grid_8.la.fl
+          #{status['rulesSource']}
+      %fieldset
+        .grid_3.ra.fieldset
+          %label #{_("Rules Version")}
+        .grid_8.la.fl
+          #{status['rulesVersion']}
 
 = render :template => "layouts/tupane_layout"

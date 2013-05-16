@@ -59,7 +59,7 @@ KT.favorite = function(form, input) {
         destroy: destroy,
         clear: clear
 
-    }
+    };
 };
 
 /**
@@ -93,7 +93,6 @@ KT.search = function(form_id, list_id, list_module, params, extra_params){
     current_search = {},
     retrievingNewContent = false,
     trigger_name = params.trigger || "hashchange", //custom event to trigger search
-    extra_params,
 
 
     init = function(){
@@ -134,7 +133,7 @@ KT.search = function(form_id, list_id, list_module, params, extra_params){
         }
     },
     set_url = function(url_in){
-        if (url != url_in){
+        if (url !== url_in){
             reset_current_search();
             url = url_in;
         }
@@ -248,12 +247,16 @@ KT.search = function(form_id, list_id, list_module, params, extra_params){
     extend = function(){
         var offset = list_module.current_count(),
             page_size = list_elem.attr("data-page_size"),
-            search = $.bbq.getState(search_hash),
+            search,
             pre_state = params.pre_search_state ? params.pre_search_state() : undefined,
             ajax_params = {
                 "offset": offset
             },
             expand_list = list_elem.hasClass("expand_list") ? list_elem : list_elem.find(".expand_list");
+
+        if ($.bbq) {
+            search = $.bbq.getState(search_hash);
+        }
 
         if (!url) {
             return;
@@ -261,7 +264,7 @@ KT.search = function(form_id, list_id, list_module, params, extra_params){
 
         if (list_elem.hasClass("ajaxScroll") && !retrievingNewContent && KT.common.scrollTop() >= ($(document).height() - $(window).height()) - 700) {
             retrievingNewContent = true;
-            if (parseInt(page_size) > parseInt(offset)) {
+            if (parseInt(page_size, 10) > parseInt(offset, 10)) {
                 return; //If we have fewer items than the pagesize, don't try to fetch anything else
             }
 
@@ -327,7 +330,7 @@ KT.search = function(form_id, list_id, list_module, params, extra_params){
         });
 
         input.focus(function( event ) {
-            if( $( this )[0].value == "" ) {
+            if( $( this )[0].value === "" ) {
                 $( this ).catcomplete( "search" );
             }
         });
@@ -339,14 +342,14 @@ KT.search = function(form_id, list_id, list_module, params, extra_params){
                     currentCategory = "";
 
                 $.each( items, function( index, item ) {
-                    if ( item.category != undefined && item.category != currentCategory ) {
+                    if ( item.category !== undefined && item.category !== currentCategory ) {
                         ul.append( "<li class='ui-autocomplete-category'>" + item.category + "</li>" );
                         currentCategory = item.category;
                     }
-                    if ( item.error != undefined ) {
+                    if ( item.error !== undefined ) {
                         ul.append( "<li class='ui-autocomplete-error'>" + item.error + "</li>" );
                     }
-                    if( item.completed != undefined ) {
+                    if( item.completed !== undefined ) {
                         $( "<li></li>" ).data( "item.autocomplete", item )
                             .append( "<a>" + "<strong class='ui-autocomplete-completed'>" + item.completed + "</strong>" + item.part + "</a>" )
                             .appendTo( ul );

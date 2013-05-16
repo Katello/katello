@@ -115,7 +115,7 @@ var notices = (function() {
             return true;
         },
         checkNotices : function() {
-            var url = KT.routes.notices_get_new_path()
+            var url = KT.routes.notices_get_new_path();
 
             //Make sure when we load the page we get notifs
             $.ajax({
@@ -139,7 +139,7 @@ var notices = (function() {
             }
         },
         start: function () {
-            var url = KT.routes.notices_get_new_path()
+            var url = KT.routes.notices_get_new_path();
 
             // do not wait for PeriodUpdater, check new notices immediately
             $.ajax({

@@ -24,7 +24,7 @@ module Navigation
         :options => {:class=>'systems top_level', "data-menu"=>"systems"},
         :items=> [ menu_systems_org_list, menu_systems_environments_list]
       }
-      menu[:items] << menu_system_groups if Katello.config.katello?
+      menu[:items] << menu_system_groups
       menu
     end
 
@@ -76,14 +76,14 @@ module Navigation
           :if => lambda{@system},
           :options => {:class=>"panel_link menu_parent"},
           :items => systems_content_subnav
-        }
-      ]
-      menu << { :key => :systems_system_groups,
+        },
+        { :key => :systems_system_groups,
           :name =>_("System Groups"),
           :url => lambda{system_groups_system_path(@system.id)},
           :if => lambda{@system},
           :options => {:class=>"panel_link"}
-        } if Katello.config.katello?
+        }
+      ]
       menu
     end
 
@@ -141,46 +141,48 @@ module Navigation
     end
 
     def system_groups_navigation
-      [
+      menu = [
+       { :key => :system_group_details,
+         :name =>_("Details"),
+         :url => lambda{edit_system_group_path(@group.id)},
+         :if => lambda{@group},
+         :options => {:class=>"panel_link menu_parent"},
+         :items => system_groups_subnav
+        },
         {
           :key => :system_groups_systems,
           :name => _('Systems'),
           :url => lambda{systems_system_group_path(@group.id)},
           :if => lambda{@group},
           :options => {:class=>"panel_link"}
-        },
-        { :key => :system_group_content,
+        }
+      ]
+      menu << { :key => :system_group_content,
           :name =>_("Content"),
           :url => lambda{system_group_packages_path(@group.id)},
           :if => lambda{@group},
           :options => {:class=>"panel_link menu_parent"},
           :items => system_groups_content_subnav
-        },
-        { :key => :system_group_details,
-          :name =>_("Details"),
-          :url => lambda{edit_system_group_path(@group.id)},
-          :if => lambda{@group},
-          :options => {:class=>"panel_link menu_parent"},
-          :items => system_groups_subnav
-        }
-      ]
+        } if Katello.config.katello?
+      menu
     end
 
     def system_groups_subnav
-      [
+      menu = [
         { :key => :system_group_info,
           :name =>_("System Group Info"),
           :url => lambda{edit_system_group_path(@group.id)},
           :if => lambda{@group},
           :options => {:class=>"third_level panel_link"},
-        },
-        { :key => :system_group_events,
+        }
+      ]
+      menu << { :key => :system_group_events,
           :name =>_("Events History"),
           :url => lambda{system_group_events_path(@group.id)},
           :if => lambda{@group},
           :options => {:class=>"third_level panel_link"}
-        }
-      ]
+        } if Katello.config.katello?
+      menu
     end
 
     def system_groups_content_subnav
