@@ -65,8 +65,8 @@ end
 
 UserPermission = Struct.new(:verbs, :resource_type, :tags, :org, :options) do
   def call(generator)
-    tags ||= []
-    options ||= {}
+    self.tags ||= []
+    self.options ||= {}
     generator.can(verbs, resource_type, tags, org, options)
   end
 

@@ -441,6 +441,7 @@ describe Api::V1::SystemsController do
 
     it "should change the content view" do
       view = build_stubbed(:content_view)
+      ContentView.stub_chain(:readable, :find_by_id).and_return(view)
       ContentView.stub(:find).and_return(view)
       view.stub(:in_environment?).and_return(true)
       put :update, id: uuid, content_view_id: view.id
