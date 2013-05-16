@@ -37,7 +37,7 @@ var env_select =   {
     recalc_scroll: function() {
         $(".path_entries").show();
         env_select.scroll_obj.bind();
-        $(".path_entries").hide()
+        $(".path_entries").hide();
     },
     expand: function() {
         $('#path-collapsed').hide();
@@ -119,7 +119,7 @@ var env_select =   {
 
         //Close the drop down if the user clicks somewhere else
         $('body').click(function(event){
-            if (!($(event.target).parents("#path-entries").size() > 0) && env_select.is_open()) {
+            if (($(event.target).parents("#path-entries").size() <= 0) && env_select.is_open()) {
                 env_select.close();
               }
         });

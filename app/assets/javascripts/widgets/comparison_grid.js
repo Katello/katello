@@ -181,7 +181,7 @@ KT.comparison_grid = function(){
             if( initial ){
                 models.rows.clear();
             } else {
-                append_rows = []
+                append_rows = [];
             }
 
             utils.each(data, function(item) {
@@ -599,7 +599,7 @@ KT.comparison_grid.controls = function(grid) {
                 hide    : hide,
                 slide   : slide,
                 reset   : reset
-            }
+            };
         }()),
 
         generic_select = function(id){
@@ -651,7 +651,7 @@ KT.comparison_grid.controls = function(grid) {
             return {
                 show:show,
                 hide:hide
-            }
+            };
         }()),
         row_collapse = (function(){
             var init = function(grid) {
@@ -679,7 +679,7 @@ KT.comparison_grid.controls = function(grid) {
 
                     show(id, false, rows);
 
-                    parent_row_header.find('.down_arrow_icon-black').hide()
+                    parent_row_header.find('.down_arrow_icon-black').hide();
                     parent_row_header.find('.right_arrow_icon-black').show();
                 },
                 expand = function(id, rows){
@@ -705,7 +705,7 @@ KT.comparison_grid.controls = function(grid) {
         left_select             : generic_select("#left_select"),
         right_select            : generic_select("#right_select"),
         comparison              : comparison
-    }
+    };
 };
 
 KT.comparison_grid.events = function(grid) {
@@ -780,7 +780,7 @@ KT.comparison_grid.events = function(grid) {
                 } else {
                     if( $('#compare_btn').hasClass('disabled') ){
                         $('#compare_btn').removeClass('disabled');
-                    };
+                    }
                 }
             });
             $('#compare_btn').tipsy({ gravity: 'w' });
@@ -810,7 +810,7 @@ KT.comparison_grid.templates = (function(i18n) {
                 hover = data['hover'] ? data['hover'] : false,
                 html = $('<div/>', {
                             'data-span' : data['span'],
-                            'class'     : 'grid_cell cell_' + data['id'],
+                            'class'     : 'grid_cell cell_' + data['id']
                         });
 
             if( data['in_column'] ){
@@ -921,21 +921,21 @@ KT.comparison_grid.templates = (function(i18n) {
             if( row_level === 2 ){
                 if( name.length > 30 && name.length < 60 ){
                     html.addClass('row_height_2');
-                    html.append($('<span/>').html(name));
+                    html.append($('<span/>', { 'class': 'one-line-ellipsis'}).html(name));
                 } else if( name.length >= 60 && name.length <= 94 ){
                     html.addClass('row_height_3');
-                    html.append($('<span/>').html(name));
+                    html.append($('<span/>', { 'class': 'one-line-ellipsis'}).html(name));
                 } else if( name.length > 94 ) {
                     html.addClass('row_height_3');
                     html.append($('<span/>', { 'class' : 'three-line-ellipsis tipsify', 'title' : name }).html(name));
                 } else {
-                    html.append($('<span/>').html(name));
+                    html.append($('<span/>', { 'class': 'one-line-ellipsis'}).html(name));
                 }
             } else if( row_level >= 3 ){
                 if( name.length > 30 ){
                     html.addClass('row_height_2');
                 }
-                html.append($('<span/>').html(name));
+                html.append($('<span/>', { 'class': 'one-line-ellipsis'}).html(name));
             } else {
                 if( (has_children && name.length > 26) || (parent_id && name.length > 28) || name.length > 28 ){
                     html.append($('<span/>', { 'class' : 'one-line-ellipsis tipsify', 'title' : name }).html(name));
@@ -1025,5 +1025,5 @@ KT.comparison_grid.templates = (function(i18n) {
         column_header           : column_header,
         load_more_row_header    : load_more_row_header,
         load_more_row           : load_more_row
-    }
+    };
 }(i18n));

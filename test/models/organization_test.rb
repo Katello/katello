@@ -39,7 +39,7 @@ class OrganizationTestCreate < OrganizationTestBase
     refute_nil org.library
     refute_nil org.default_content_view
     refute_nil org.library.default_content_view_version
-    assert_empty org.default_content_view.content_view_environments
+    refute_empty org.default_content_view.content_view_environments
   end
 
 end

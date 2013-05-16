@@ -357,6 +357,7 @@ describe SystemsController do
 
       before (:each) do
         System.stub!(:save!).and_return true
+        login_user({ :mock => false })
 
         # Stub out System.where().search_for()
         @system = System.create!(:name=>"bar", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""})

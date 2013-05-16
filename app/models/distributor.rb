@@ -30,7 +30,6 @@ class Distributor < ActiveRecord::Base
   belongs_to :content_view
 
   validates :environment, :presence => true
-  validates_with Validators::NonLibraryEnvironmentValidator, :attributes => :environment
   # multiple distributors with a single name are supported
   validates :name, :presence => true
   validates_length_of :name, :maximum => 250

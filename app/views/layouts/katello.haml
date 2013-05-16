@@ -27,6 +27,7 @@
   = render :partial => "common/footer"
 
 = content_for(:javascripts_block) do
+  = javascript_include_tag "common/vendor"
   = javascript_include_tag :common
   %script{ :type => "text/javascript" }
     -if protect_against_forgery?

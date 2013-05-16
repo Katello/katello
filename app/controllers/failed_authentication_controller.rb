@@ -43,7 +43,13 @@ class FailedAuthenticationController < ActionController::Base
   end
 
   # In case Warden would fail this returns some reasonable output too
+  # warden stores it's options, for API request a scope is :api,
+  # when the scope is nil it's using a default one (currently :user that is used fo UI)
   def unauthenticated
-    unauthenticated_api
+    if request.env['warden.options'][:scope] == :api
+      unauthenticated_api
+    else
+      unauthenticated_ui
+    end
   end
 end

@@ -15,13 +15,13 @@ update_content_views = function(env_id) {
     // update content view options
     $.ajax({  url: KT.routes.content_views_environment_path(env_id),
               type: "GET",
-              success: (function(data) {
+              success: function(data) {
                   options = {'': ''};
                   $.each(data, function(key, value) {
                        options[value.id] = value.name;
                   });
                   $("#distributor_content_view").data("options", options);
-              })
+              }
             });
-}
+};
 

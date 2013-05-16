@@ -16,10 +16,10 @@ $(document).ready(function() {
     $.editable.addInputType('password', {
         element : function(settings, original) {
             var input=$('<input type="password">');
-            if(settings.width!='none') {
+            if(settings.width!=='none') {
                 input.width(settings.width);
             }
-            if(settings.height!='none') {
+            if(settings.height!=='none') {
                 input.height(settings.height);
             }
             input.attr('autocomplete','off');
@@ -43,7 +43,7 @@ $(document).ready(function() {
             return(input);
         },
         content : function(string, settings, original) {
-            var checked = string.indexOf(i18n.checkbox_yes)!= -1 ? 1 : 0;
+            var checked = string.indexOf(i18n.checkbox_yes)!== -1 ? 1 : 0;
             var input = $(':input:first', this);
             $(input).attr("checked", checked);
             var value = $(input).attr("checked") ? i18n.checkbox_yes : i18n.checkbox_no;
@@ -83,7 +83,7 @@ $(document).ready(function() {
         content : function(string, settings, original) {
             var text_input = $('input', this).first();
             text_input.val(string);
-            if (settings.unlimited != undefined) {
+            if (settings.unlimited !== undefined) {
                 var check_input = $('input', this).last();
                 if (string === settings.unlimited || string === i18n.unlimited) {
                     text_input.val('');
@@ -97,10 +97,11 @@ $(document).ready(function() {
         },
 
         submit  : function(settings, original) {
-            if (settings.unlimited != undefined) {
+            if (settings.unlimited !== undefined) {
                 var text_input = $('input', this).first();
-                if (text_input.val() === '')
+                if (text_input.val() === '') {
                     text_input.val(settings.unlimited);
+                }
             }
         }
     });
@@ -109,33 +110,31 @@ $(document).ready(function() {
         element: function (settings, original) {
             var select = $('<select multiple="multiple" />');
 
-            if (settings.width != 'none') { select.width(settings.width); }
+            if (settings.width !== 'none') { select.width(settings.width); }
             if (settings.size) { select.attr('size', settings.size); }
 
             $(this).append(select);
             return (select);
         },
         content: function (data, settings, original) {
+            var json;
+
             /* If it is string assume it is json. */
-            if (String == data.constructor) {
-                eval('var json = ' + data);
+            if (data instanceof String) {
+                json = JSON.parse(data);
             } else {
                 /* Otherwise assume it is a hash already. */
-                var json = data;
+                json = data;
             }
             for (var key in json) {
-                if (!json.hasOwnProperty(key)) {
-                    continue;
+                if (json.hasOwnProperty(key) && 'selected' !== key) {
+                    var option = $('<option />').val(key).append(json[key]);
+                    $('select', this).append(option);
                 }
-                if ('selected' == key) {
-                    continue;
-                }
-                var option = $('<option />').val(key).append(json[key]);
-                $('select', this).append(option);
             }
 
-            if ($(this).val() == json['selected'] ||
-                $(this).html() == $.trim(original.revert)) {
+            if ($(this).val() === json['selected'] ||
+                $(this).html() === $.trim(original.revert)) {
                 $(this).attr('selected', 'selected');
             }
 
@@ -144,13 +143,14 @@ $(document).ready(function() {
                 if (json.selected) {
                     var option = $(this);
                     $.each(json.selected, function (index, value) {
-                        if (option.val() == value) {
+                        if (option.val() === value) {
                             option.attr('selected', 'selected');
                         }
                     });
                 } else {
-                    if (original.revert.indexOf($(this).html()) != -1)
+                    if (original.revert.indexOf($(this).html()) !== -1) {
                         $(this).attr('selected', 'selected');
+                    }
                 }
             });
         }
@@ -160,8 +160,8 @@ $(document).ready(function() {
         /* create input element */
         element: function( settings, original ) {
             var form = $( this ), input = $( '<input data-change="false"/>' );
-            if (settings.width != 'none') { input.width(settings.width); }
-            if (settings.height != 'none') { input.height(settings.height); }
+            if (settings.width !== 'none') { input.width(settings.width); }
+            if (settings.height !== 'none') { input.height(settings.height); }
             input.attr( 'autocomplete','off' );
             form.append( input );
             return input;
@@ -183,14 +183,14 @@ $(document).ready(function() {
                 },
                 // reset form if we lose focus and date was not selected
                 onClose: function() {
-                    if ($(this).attr('data-change') == 'false') {
+                    if ($(this).attr('data-change') === 'false') {
                         original.reset( form );
                     }
                 }
             };
             input.datepicker(datepicker).keyup(function(e) {
                 if (e.keyCode === 8 || e.keyCode === 46) {
-                    $.datepicker._clearDate(this)
+                    $.datepicker._clearDate(this);
                 }
             });
         }
@@ -200,8 +200,8 @@ $(document).ready(function() {
         /* create input element */
         element: function( settings, original ) {
             var form = $( this ), input = $( '<input data-change="false"/>' );
-            if (settings.width != 'none') { input.width(settings.width); }
-            if (settings.height != 'none') { input.height(settings.height); }
+            if (settings.width !== 'none') { input.width(settings.width); }
+            if (settings.height !== 'none') { input.height(settings.height); }
             input.attr( 'autocomplete','off' );
             form.append( input );
             return input;

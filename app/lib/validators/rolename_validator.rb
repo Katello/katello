@@ -16,6 +16,7 @@ module Validators
       if value
         #max length is 20 more than the usernam,e because we add 20 random characters
         #  on the end for the self role
+        record.errors[attribute] << N_("cannot contain characters >, <, or /") if value =~ %r{<|>|/}
         KatelloNameFormatValidator.validate_length(record, attribute, value, 148, 3)
       end
     end

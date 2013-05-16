@@ -22,7 +22,6 @@ module Navigation
           @authorization = lambda{ organization }
           @items         = [
             Navigation::Menus::Subscriptions.new(organization),
-            Navigation::Menus::Headpin::Providers.new(organization)
           ]
           super
         end

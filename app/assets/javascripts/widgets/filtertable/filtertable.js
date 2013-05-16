@@ -27,7 +27,7 @@ var filtertable = (function() {
             }).focus(); //Give focus to input field
             $('.filter_button').click(function(){filter.change()});
         }
-    }
+    };
 })();
 
 $(document).ready(function() {

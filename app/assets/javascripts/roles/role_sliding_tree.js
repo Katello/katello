@@ -15,11 +15,12 @@
  * A small javascript file needed to load things whenever a role is opened for editing
  *
  */
+
 KT.roles = {};
 
 KT.roles.permissionWidget = function(){
 
-    var current_stage       = undefined,
+    var current_stage,
         mode                = 'create',
         next_button         = $('#next_button'),
         previous_button     = $('#previous_button'),
@@ -597,14 +598,14 @@ KT.roles.permissionWidget.progressBar = (function($){
 })(jQuery);
 
 var roleActions = (function($){
-    var current_crumb = undefined,
-        current_organization = undefined,
+    var current_crumb,
+        current_organization,
 
         role_edit = function(options){
             var name_box        = $('.edit_name_text'),
                 edit_button     = $('#edit_role > span'),
                 description     = $('.edit_description'),
-                after_function  = undefined,
+                after_function,
                 nameBreadcrumb  = $('.tree_breadcrumb'),
                 opening         = options.opening,
 
@@ -749,10 +750,10 @@ var roleActions = (function($){
                        $.extend(roles_breadcrumb, data);
                        KT.roles.tree.rerender_content();
                        form[0].reset();
-                       roles_breadcrumb[current_organization].count += 1
+                       roles_breadcrumb[current_organization].count += 1;
 
                        if( data.type === "all" ){
-                           roles_breadcrumb[current_organization].full_access = true
+                           roles_breadcrumb[current_organization].full_access = true;
                        }
 
                        successCallback();
@@ -775,7 +776,7 @@ var roleActions = (function($){
                        form[0].reset();
 
                        if( data.type === "all" ){
-                           roles_breadcrumb[current_organization].full_access = true
+                           roles_breadcrumb[current_organization].full_access = true;
                        }
 
                        successCallback();
@@ -913,6 +914,7 @@ var roleActions = (function($){
                      // Generally a bad idea - trusting implicility the data being returned from the server
                      // This conforms with how other 'removes' on the site work - relying on a partial template
                      // to render and return the proper actions for a delete
+                     /*jshint evil: true */
                      eval(data);
                 }
            });
@@ -957,8 +959,9 @@ var templateLibrary = (function($){
             return html;
         },
         list = function(items, type, options){
-            var html = '<ul class="filterable">',
-                options = options ? options : {};
+            var html = '<ul class="filterable">';
+
+            options = options ? options : {};
             KT.utils.each(items, function(item, key){
                 if( key.split("_")[0] === type ){
                     html += listItem(key, item.name, false, false, options.no_slide);
@@ -969,9 +972,9 @@ var templateLibrary = (function($){
         },
         organizationsList = function(items, type, options){
             var html = '<ul class="filterable">',
-                options = options ? options : {},
                 full_access = false;
 
+            options = options ? options : {};
             html += listItem('global', items['global'].name, items['global'].count, false);
 
             KT.utils.each(items, function(item, key){
@@ -993,19 +996,19 @@ var templateLibrary = (function($){
               html += ' </li></ul>';
             }
             html +=  '<ul class="filterable">';
-            for( item in ldap_groups){
+            for( var item in ldap_groups){
               if( item.split("_")[0] === "ldap") {
               html += ldapGroupsListItem(ldap_groups[item].id, ldap_groups[item].name, options.show_button);
                 count += 1;
               }
-              }
+            }
             return html + "</ul>";
         },
         ldapGroupsListItem = function(group_id, name, showButton) {
             var anchor = "";
             if ( showButton ) {
-                anchor = '<a ' + 'class="fr remove_ldap_group remove_group st_button"'
-                               + 'data-type="group" data-id="' + group_id + '">';
+                anchor = '<a ' + 'class="fr remove_ldap_group remove_group st_button"' +
+                    'data-type="group" data-id="' + group_id + '">';
                 anchor += i18n.remove + "</a>";
             }
             return '<li >' + anchor + '<div class="simple_link" id="' + group_id + '"><span class="sort_attr">'  + name + '</span></div></li>';
@@ -1031,9 +1034,9 @@ var templateLibrary = (function($){
             var anchor = "";
 
             if ( showButton ) {
-                anchor = '<a ' + 'class="fr content_add_remove remove_permission st_button"'
-                                + 'data-type="permission" data-id="' + permission_id + '">';
-                            anchor += i18n.remove + "</a>";
+                anchor = '<a ' + 'class="fr content_add_remove remove_permission st_button"' +
+                    'data-type="permission" data-id="' + permission_id + '">';
+                anchor += i18n.remove + "</a>";
             }
 
             return '<li class="slide_link">' + anchor + '<div class="simple_link link_details" id="' + permission_id + '"><span class="sort_attr">'  + name + '</span></div></li>';
@@ -1046,7 +1049,7 @@ var templateLibrary = (function($){
             html += '<div class="permission_detail_container"><label class="grid_3 raf">' + i18n.description_colon + '</label><span>' + permission.description + '</span></div>';
             html += '<div class="permission_detail_container"><label class="grid_3 ra">' + i18n.permission_for_colon + '</label><span>' + permission.type_name + '</span></div>';
 
-            html += '<div class="permission_detail_container"><label class="grid_3 ra">' + i18n.verbs_colon + '</label><ul>'
+            html += '<div class="permission_detail_container"><label class="grid_3 ra">' + i18n.verbs_colon + '</label><ul>';
 
             if( permission.verbs === 'all'){
                     html += '<li>' + i18n.all + '</li>';
@@ -1093,7 +1096,7 @@ var templateLibrary = (function($){
         },
         usersList = function(users, options){
             var html = '<ul class="filterable">',
-                user = undefined;
+                user;
 
             KT.utils.each(users, function(user, key){
                 username = key.split("_");
@@ -1129,7 +1132,7 @@ var templateLibrary = (function($){
         ldapGroupsList      :    ldapGroupsList,
         globalsList         :    globalsList,
         permissionItem      :    permissionItem
-    }
+    };
 }(jQuery));
 
 var rolesRenderer = (function($){
@@ -1286,7 +1289,7 @@ var rolesRenderer = (function($){
         setTreeHeight   :   setTreeHeight,
         setSummary      :   setSummary,
         handleButtons   :   handleButtons
-    }
+    };
 
 }(jQuery));
 

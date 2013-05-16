@@ -77,7 +77,7 @@ $(document).ready(function() {
 
 KT.content_actions = (function(){
     var syncing = [],
-    updater = undefined,
+    updater,
     addSyncing = function(repo_ids){
         if (repo_ids.length === 0){
             return;
@@ -132,7 +132,7 @@ KT.content_actions = (function(){
               global: false
             },
             function(data,success) {
-               if (success == "notmodified") {
+               if (success === "notmodified") {
                  return;
                }
                $.each(data, function(index, repo){
@@ -207,7 +207,7 @@ KT.content = (function(){
             fadeUpdate(element.find(".duration"), '');
             fadeUpdate(element.find(".size"), display_size + ' (' + packages + ')');
             element.find('.size').data('size', size);
-            progress = progress == 100 ? 99 : progress;
+            progress = progress === 100 ? 99 : progress;
             value.animate({'width': progress },{ queue:false,
                                            duration:"slow", easing:"easeInSine" });
         },
@@ -223,13 +223,13 @@ KT.content = (function(){
                 element.html("");
             }
             else{
-                if (oldpg.length == 0){
+                if (oldpg.length === 0){
                     element.html($('<div/>').attr('class', 'progress').text(" "));
                     element.find(".progress").progressbar({value: 0});
                 }
                 else {
                     var value = oldpg.find(".ui-progressbar-value");
-                    percent = percent == 100 ? 99 : percent;
+                    percent = percent === 100 ? 99 : percent;
                     value.animate({'width': percent },{ queue:false,
                           duration:"slow", easing:"easeInSine" });
                 }
@@ -247,9 +247,11 @@ KT.content = (function(){
             $("#products_table").find("input[type=checkbox]").removeAttr('checked');
         },
         select_repo = function(){
-            $("input[name='repoids[]']:checked").length > 0 ?
-                $("#sync_button").removeClass("disabled") :
+            if($("input[name='repoids[]']:checked").length > 0) {
+                $("#sync_button").removeClass("disabled");
+            } else {
                 $("#sync_button").addClass("disabled");
+            }
         },
         reset_products = function(status_set){
             var products = {};
@@ -259,7 +261,7 @@ KT.content = (function(){
                     products[pid] = [];
                 }
                 if (item.is_running){
-                    products[pid].push(item.progress.progress)
+                    products[pid].push(item.progress.progress);
                 }
             });
             $.each(products, function(prod_id, percentages){
@@ -320,5 +322,5 @@ KT.content = (function(){
         showAll: showAll,
         expand_all: expand_all,
         collapse_all: collapse_all
-    }
+    };
 })();

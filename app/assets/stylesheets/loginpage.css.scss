@@ -7,53 +7,33 @@ $login_background_bottom-color: darken($primary_color, 10%) !default;
 $switcherformwidth: 300px;
 
 @import "alchemy/composites/login";
-@import "widgets/org_switcher";
+@import "widgets/_org_switcher";
 @import "widgets/search";
 @import "widgets/scrollpane";
 @import "katello_base";
 
+@import "jquery.jscrollpane";
+
 //interstitial container
 #interstitial {
+  h2 {
+    padding-bottom: 10px;
+  }
   left: 360px;
-  padding-top: 6em;
+  padding: 20px;
 }
 
-//org switcher modifications
-#switcherContainer {
-  #switcherBox {
-    margin-left: 0px;
-    top: 23px;
-    position: relative;
-    left: 0;
-  }
-  #switcherForm {
-    height: 120px;
-    #orgfilter_input {
-      font-size: 115%;
-      height: auto;
-    }
-  }
-  #orgbox {
-    margin-top: 32px;
-    height: 88px;
-  }
-  #manage_orgs {
+#allowed-orgs {
+  height: 200px;
+  line-height: 2em;
+  overflow: auto;
+  width: 100%;
+
+  input.default_org {
     display: none;
   }
-  .filter {
-    position: absolute;
-  }
-  //orgbox spinner
-  .spinner {
-    margin: 0 auto;
-    height: 16px;
-    width: 16px;
-    display: block;
-    position: relative;
-    z-index: 1000;
-    background: $spinner_img;
-    left: 0;
-    margin-top: 5px;
+  span.favorite {
+    display: none;
   }
 }
 
@@ -77,12 +57,6 @@ $switcherformwidth: 300px;
 @media \0screen {
   .container {
     padding: 0 !important;
-  }
-//org switcher modifications for IE8 org switcher
-  #switcherContainer {
-    #switcherBox {
-      top: 0;
-    }
   }
 }
 

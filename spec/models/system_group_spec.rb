@@ -13,7 +13,7 @@
 require 'spec_helper'
 
 
-describe SystemGroup, :katello => true do
+describe SystemGroup do
 
   include SystemHelperMethods
   include OrchestrationHelper
@@ -37,7 +37,7 @@ describe SystemGroup, :katello => true do
 
   context "create should" do
 
-    it "should create succesfully with an org" do
+    it "should create succesfully with an org", :katello => true do
       Runcible::Extensions::ConsumerGroup.should_receive(:create).and_return({})
       grp = SystemGroup.create!(:name=>"TestGroup", :organization=>@org)
       grp.pulp_id.should_not == nil
@@ -60,7 +60,7 @@ describe SystemGroup, :katello => true do
   end
 
   context "delete should" do
-    it "should delete a group successfully" do
+    it "should delete a group successfully", :katello => true do
       Runcible::Extensions::ConsumerGroup.should_receive(:delete).and_return(200)
       @group.destroy
       SystemGroup.where(:name=>@group.name).count.should == 0
@@ -76,7 +76,7 @@ describe SystemGroup, :katello => true do
     end
   end
 
-  context "changing consumer ids"  do
+  context "changing consumer ids", :katello => true  do
     it "should contact pulp if new ids are added" do
       Runcible::Extensions::ConsumerGroup.should_receive(:add_consumers_by_id).once
       grp = SystemGroup.create!(:name=>"TestGroup", :organization=>@org, :consumer_ids=>[:a, :b])
@@ -98,7 +98,7 @@ describe SystemGroup, :katello => true do
     end
   end
 
-  context "changing systems" do
+  context "changing systems", :katello => true do
     it "should call out to pulp when adding" do
       Runcible::Extensions::ConsumerGroup.should_receive(:add_consumers_by_id).once
       grp = SystemGroup.create!(:name=>"TestGroup", :organization=>@org)
@@ -252,7 +252,7 @@ describe SystemGroup, :katello => true do
 
   end
 
-  context "actions" do
+  context "actions", :katello => true do
     it "should raise exception on package install, if no systems in group" do
       lambda{ @group.install_packages("pkg1")}.should raise_exception(Errors::SystemGroupEmptyException)
     end

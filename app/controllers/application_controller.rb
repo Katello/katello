@@ -631,8 +631,8 @@ class ApplicationController < ActionController::Base
     flash_to_headers
   end
 
-  def first_env_in_path accessible_envs, include_library=false, organization = current_organization
-    return current_organization.library if include_library && accessible_envs.member?(current_organization.library)
+  def first_env_in_path(accessible_envs, include_library=false, organization=current_organization)
+    return organization.library if include_library && accessible_envs.member?(organization.library)
     organization.promotion_paths.each{|path|
       path.each{|env|
         if accessible_envs.member?(env)

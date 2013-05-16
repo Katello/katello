@@ -3,10 +3,14 @@
   %td
     %input.system_checkbox{:type => :checkbox, :name => "systems[#{system.system.id}]", 'data-id' => system.system.id,
                            :disabled => ('disabled' if !@group.editable?)}
-    = system.system.name
+    - if System.readable(system.system.organization)
+      = link_to system.system.name, systems_path(:anchor => "panel=system_#{system.system.id}")
+    - else
+      = system.system.name
   %td
     = system.system.environment.name
-  %td
-    = system.system.content_view.try(:name)
+  - if Katello.config.katello?
+    %td
+      = system.system.content_view.try(:name)
   %td
     = system.created_at
