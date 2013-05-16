@@ -106,7 +106,7 @@ angular.module('Katello').controller('SystemsController',
         $scope.createNewSystem = function () {
             var createSuccess = function (data) {
                 $scope.$apply(function () {
-                    Nutupane.setNewSystemVisibility(false);
+                    Nutupane.table.setNewItemVisibility(false);
                     $scope.table.select_item(KT.routes.edit_system_path(data.system.id));
                 });
                 notices.checkNotices();
@@ -120,8 +120,8 @@ angular.module('Katello').controller('SystemsController',
                     button = content.find('input[type|="submit"]');
 
                 content.html(response.data);
-                Nutupane.setDetailsVisibility(false);
-                Nutupane.setNewSystemVisibility(true);
+                Nutupane.table.setDetailsVisibility(false);
+                Nutupane.table.setNewItemVisibility(true);
 
                 content.find('#new_system').submit(function (event) {
                     event.preventDefault();
