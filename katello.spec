@@ -251,7 +251,7 @@ Requires:        pulp-server
 Requires:        pulp-rpm-plugins
 Requires:        pulp-selinux
 Requires:        createrepo = 0.9.9-18%{?dist}
-Requires:        %{?scl_prefix}rubygem(runcible) >= 0.4.4
+Requires:        %{?scl_prefix}rubygem(runcible) >= 0.4.7
 
 %description glue-pulp
 Katello connection classes for the Pulp backend
