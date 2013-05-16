@@ -19,6 +19,11 @@ class Repository < ActiveRecord::Base
   include Glue if (Katello.config.use_cp || Katello.config.use_pulp)
   include Authorization::Repository
 
+  include Glue::Event
+  def destroy_event
+    Katello::Actions::RepositoryDestroy
+  end
+
   include AsyncOrchestration
   include Ext::LabelFromName
   include Rails.application.routes.url_helpers
