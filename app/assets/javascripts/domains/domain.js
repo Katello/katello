@@ -22,11 +22,13 @@ KT.domain_page = (function() {
             dnsId = $('#dns_id').val(),
             domain_data = {};
 
-        if (button.hasClass("disabled"))
+        if (button.hasClass("disabled")) {
             return;
+        }
 
-        if (dnsId != null)
+        if (dnsId !== null) {
             domain_data["dns_id"] = dnsId;
+        }
 
         $.ajax({
             type: "PUT",
@@ -42,7 +44,7 @@ KT.domain_page = (function() {
 
     return {
         register: register
-    }
+    };
 }());
 
 

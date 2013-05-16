@@ -508,7 +508,9 @@ KT.filters = (function(){
 
     },
     add_repo = function(repo_id, prod_id, bump_up){
-        if(repo_id === null || repo_id === undefined) return;
+        if(repo_id === null || repo_id === undefined) {
+            return;
+        }
         prod_id = parseInt(prod_id, 10);
         if ($.inArray( prod_id, current_filter.products) > -1){
             KT.filters.pop_product(prod_id);
@@ -534,7 +536,7 @@ KT.filters = (function(){
         expand_product(prod_id);
     },
     lookup_repo_product = function(repo_id){
-      var found = undefined;
+      var found;
 
       $.each(KT.products, function(index, prod){
         $.each(prod.repos, function(index, repo){

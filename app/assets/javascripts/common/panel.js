@@ -32,7 +32,7 @@ $(document).ready(function () {
         panelLeft = left.width();
         $('.block').not('#new').width(panelLeft - 17);
         apanel.width((page_width - 21) - panelLeft);
-        right.width((page_width - 65) - panelLeft);
+        right.width((page_width - 62) - panelLeft);
         if (apanel.hasClass('opened')) {
             apanel.css({
                 "left": (panelLeft)
@@ -83,14 +83,14 @@ $(document).ready(function () {
                 last_ajax_panelpage = undefined;
             }
 
-            if(event.ctrlKey && !thisPanel.hasClass('opened') && !(event.target.id == "new") && !activeBlock.hasClass('active')) {
+            if(event.ctrlKey && !thisPanel.hasClass('opened') && (event.target.id !== "new") && !activeBlock.hasClass('active')) {
                 if (activeBlock.hasClass('active')) {
                     activeBlock.removeClass('active');
                 } else {
                     activeBlock.addClass('active');
                     activeBlock.find('.arrow-right').hide();
                 }
-            } else if (event.ctrlKey && !thisPanel.hasClass('opened') && !(event.target.id == "new") && activeBlock.hasClass('active') && $('.block.active').length > 1) {
+            } else if (event.ctrlKey && !thisPanel.hasClass('opened') && (event.target.id !== "new") && activeBlock.hasClass('active') && $('.block.active').length > 1) {
               activeBlock.removeClass('active');
             } else {
                 if(activeBlock.hasClass('active') && thisPanel.hasClass('opened')){
@@ -188,7 +188,9 @@ $(document).ready(function () {
                 KT.panel.copy.initialize();
 
                 for( cb in callbacks ){
-                    callbacks[cb]();
+                    if(callbacks.hasOwnProperty(cb)) {
+                        callbacks[cb]();
+                    }
                 }
             }
         });
@@ -263,7 +265,7 @@ KT.panel = (function ($) {
         panels_list = [],
         left_list_content = "",
         expand_cb = [],
-        search = undefined,
+        search,
         //callback after a pane is loaded
         contract_cb = function () {},
         switch_content_cb = function () {},
@@ -365,7 +367,9 @@ KT.panel = (function ($) {
                     KT.panel.copy.initialize();
 
                     for( callback in expand_cb ){
-                        expand_cb[callback](name);
+                        if(expand_cb.hasOwnProperty(callback)) {
+                            expand_cb[callback](name);
+                        }
                     }
                     // Add a handler for ellipsis
                     $(".one-line-ellipsis").ellipsis(true);
@@ -391,10 +395,14 @@ KT.panel = (function ($) {
                 tupane_header = $('.tupane_header').height() || 0,
                 tupane_footer = $('.tupane_footer').height() || 0,
                 window_height = $(window).height(),
-                container_offset = $('#container').offset().top,
+                container = $('#container'),
                 height,
                 default_height = 565,
                 default_spacing = header_spacing + subnav_spacing + tupane_header + tupane_footer + 30;
+
+            if (container.length > 0) {
+                container_offset = $('#container').offset().top;
+            }
 
             if (window_height <= (height + 80) && leftPanel.height() > 550) {
                 height = window_height - container_offset - default_spacing;
@@ -430,9 +438,11 @@ KT.panel = (function ($) {
             }
         },
         closePanel = function (jPanel) {
-            var jPanel = jPanel || $('#panel'),
-                content = jPanel.find('.panel-content'),
+            var content,
                 position;
+
+            jPanel = jPanel || $('#panel');
+            content = jPanel.find('.panel-content');
             if (jPanel.hasClass("opened")) {
                 KT.panel.copy.hide_form();
                 $('.block.active').removeClass('active');
@@ -620,7 +630,7 @@ KT.panel = (function ($) {
         },
         // http://devnull.djolley.net/2010/11/accessing-query-string-parameters-from.html
         queryParameters = function () {
-            var queryString = new Object;
+            var queryString = {};
             var qstr = window.location.search.substring(1);
             var params = qstr.split('&');
             $.each(params, function(index, item){
@@ -637,7 +647,7 @@ KT.panel = (function ($) {
             var active = $('#list').find('.active');
             var full_ajax_url;
             if (source_url === undefined) {
-                full_ajax_url = active.attr("data-ajax_url") + '/' + active.attr("data-ajax_panelpage")
+                full_ajax_url = active.attr("data-ajax_url") + '/' + active.attr("data-ajax_panelpage");
             } else {
                 full_ajax_url = source_url;
             }
@@ -655,7 +665,7 @@ KT.panel = (function ($) {
         },
         actions = (function(){
             var action_list = {},
-                current_request_action = undefined;
+                current_request_action;
 
             var registerDefaultActions = function() {
                 var actions = $(".panel_action");
@@ -762,7 +772,7 @@ KT.panel = (function ($) {
                 registerAction: registerAction,
                 registerDefaultActions: registerDefaultActions,
                 resetActions: resetActions
-            }
+            };
         })();
     return {
         set_expand_cb: function (callBack) {
@@ -925,30 +935,33 @@ KT.panel.list = (function () {
         },
         refresh = function (id, url, success_cb) {
             var jQid = $('#' + id);
-            $.ajax({
-                cache: 'false',
-                type: 'GET',
-                url: url,
-                dataType: 'html',
-                success: function (data) {
-                    notices.checkNotices();
-                    jQid.html(data);
-                    // Obtain the value from column_1 and place it in pane_heading. This is
-                    // to accommodate changes to an item's name, for example, and have it
-                    // dynamically update in both left list and the right title.
-                    //
-                    // Unless an explicit #heading_title element exists, use the first div
-                    // (which was the previous default behavior).
-                    var heading_title = jQid.find('#heading_title');
-                    if (heading_title.length == 0) {
-                        heading_title = jQid.children('div:first');
+
+            if ( $('#list').length > 0 ){
+                $.ajax({
+                    cache: 'false',
+                    type: 'GET',
+                    url: url,
+                    dataType: 'html',
+                    success: function (data) {
+                        notices.checkNotices();
+                        jQid.html(data);
+                        // Obtain the value from column_1 and place it in pane_heading. This is
+                        // to accommodate changes to an item's name, for example, and have it
+                        // dynamically update in both left list and the right title.
+                        //
+                        // Unless an explicit #heading_title element exists, use the first div
+                        // (which was the previous default behavior).
+                        var heading_title = jQid.find('#heading_title');
+                        if (heading_title.length === 0) {
+                            heading_title = jQid.children('div:first');
+                        }
+                        $('.pane_heading').html(heading_title.html());
+                        if (success_cb) {
+                            success_cb();
+                        }
                     }
-                    $('.pane_heading').html(heading_title.html());
-                    if (success_cb) {
-                        success_cb();
-                    }
-                }
-            });
+                });
+            }
             return false;
         },
         registerPage = function (resource_type, options) {

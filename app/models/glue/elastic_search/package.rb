@@ -119,7 +119,10 @@ module Glue::ElasticSearch::Package
 
       def self.search query, start, page_size, repoids=nil, sort=[:nvrea_sort, "ASC"],
                                             search_mode = :all, default_field = 'nvrea'
-        return Util::Support.array_with_total if !Tire.index(self.index).exists?
+
+        if !Tire.index(self.index).exists? || (repoids && repoids.empty?)
+          return Util::Support.array_with_total
+        end
 
         all_rows = query.blank? #if blank, get all rows
 

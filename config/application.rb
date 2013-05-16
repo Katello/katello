@@ -37,13 +37,8 @@ else
     ENV['BUNDLE_GEMFILE'] = File.expand_path('../../Gemfile', __FILE__)
   end
   if defined?(Bundler)
-    basic_groups = [:default]
-    if Katello.early_config.katello?
-      basic_groups = basic_groups + [:pulp]
-    end
-    if Katello.early_config.profiling
-      basic_groups += [:optional]
-    end
+    basic_groups = [:default, :optional]
+    basic_groups.push :pulp if Katello.early_config.katello?
     groups = case Rails.env.to_sym
              when :build
                basic_groups + [:development, :build, :assets]
@@ -142,10 +137,6 @@ module Src
       # cannot be added to routes.rb due to conflicting with engines
       app.routes.append{match '*a', :to => 'errors#routing'}
     end
-
-    # set actions to profile (eg. %w(user_sessions#new))
-    # profiles will be stored in tmp/profiles/
-    config.do_profiles = []
 
     # logging configuration
     config.colorize_logging = Katello.config.logging.colorize

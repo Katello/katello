@@ -126,6 +126,7 @@ Src::Application.routes.draw do
           get :errata
           get :pools
           get :releases
+          get :subscription_status
           put :enabled_repos
           post :system_groups, :action => :add_system_groups
           delete :system_groups, :action => :remove_system_groups

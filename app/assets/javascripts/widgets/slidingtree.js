@@ -91,7 +91,7 @@ var sliding_tree = function(tree_id, options) {
                    // If the crumb is searchable, let the search module take care of this
                  settings.fetching = id;
                 $.get(crumb.url, function(data) {
-                    if (settings.fetching == id) {
+                    if (settings.fetching === id) {
                         newPanel.html(data.html ? data.html : data);
                         settings.fetching = 0;
                         settings.tab_change_cb(id);
@@ -121,7 +121,7 @@ var sliding_tree = function(tree_id, options) {
 
             //If we have a direction, we need to slide
             if(settings.direction) {
-                var leaving = settings.direction == "right" ? "left" : "right",
+                var leaving = settings.direction === "right" ? "left" : "right",
                     width = $('.sliding_container').width();
                 //The old pane, we need to hide it away, remove the contents, and reset the classes
 
@@ -176,7 +176,7 @@ var sliding_tree = function(tree_id, options) {
             if(search) {
                 $.bbq.removeState(search.search_bbq());
             }
-            $.bbq.pushState(bbq)
+            $.bbq.pushState(bbq);
         },
         reset_breadcrumb = function(id) {
             var name;
@@ -210,7 +210,7 @@ var sliding_tree = function(tree_id, options) {
             }
 
             if( trail.length > 0){
-                for(var i = 0; i < crumbs.length; i++) {
+                for(var i = 0; i < crumbs.length; i += 1) {
                     html += create_crumb(crumbs[i]);
                 }
                 html += '<li class="fl"><span title="' + name + '" id="' + id +
@@ -251,7 +251,7 @@ var sliding_tree = function(tree_id, options) {
         },
         hash_change = function() {
             var newContent = $.bbq.getState(settings.bbq_tag) || settings.default_tab;
-            if (settings.current_tab != newContent) {
+            if (settings.current_tab !== newContent) {
                 prerender(newContent);
                 $(document).trigger('hashchange.' + tree_id, [newContent]);
             }
@@ -459,7 +459,7 @@ KT.sliding_tree.list = function(parent, bcs, sliding_tree){
         update_counts : update_counts,
         full_spinner  : full_spinner,
         current_count : current_count
-    }
+    };
 };
 
 sliding_tree.search = function(){
@@ -562,11 +562,11 @@ sliding_tree.search = function(){
 };
 
 sliding_tree.ActionBar = function(toggle_list){
-    var open_panel     = undefined,
-        toggle_list    = toggle_list || {},
+    toggle_list    = toggle_list || {};
 
+    var open_panel,
         toggle = function(id, options){
-            var options = options || {};
+            options = options || {};
 
             options.animate_time = 500;
 

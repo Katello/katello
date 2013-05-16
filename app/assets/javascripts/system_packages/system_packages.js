@@ -19,7 +19,9 @@
  * This file is for use with the packages subnav within systems page.
  */
 
-KT.package_action_types = function() {
+/*jshint loopfunc: true */
+
+KT.package_action_types = (function() {
     return {
         PKG : "pkg",
         PKG_INSTALL : "pkg_install",
@@ -30,9 +32,9 @@ KT.package_action_types = function() {
         PKG_GRP_UPDATE : "pkg_grp_update",
         PKG_GRP_REMOVE : "pkg_grp_remove"
     };
-}();
+})();
 
-KT.system_packages = function() {
+KT.system_packages = (function() {
     var system_id = $('.packages').attr('data-system_id'),
     retrievingNewContent = true,
     total_packages = $('.packages').attr('data-total_packages'),
@@ -55,7 +57,7 @@ KT.system_packages = function() {
     actions_in_progress = {},
     packages_in_progress = {},
     groups_in_progress = {},
-    actions_updater = undefined,
+    actions_updater,
 
     disableButtons = function() {
         remove_button.attr('disabled', 'disabled');
@@ -115,7 +117,7 @@ KT.system_packages = function() {
         }
     },
     getActionType = function(item) {
-        var action_type = undefined;
+        var action_type;
 
         if (item.find('td.package_action_status:contains("'+i18n.adding_package+'")').length > 0) {
             action_type = KT.package_action_types.PKG_INSTALL;
@@ -148,7 +150,7 @@ KT.system_packages = function() {
     },
     sortOrder = function() {
         var packageSortOrder = sort_button.attr("data-sort");
-        if (sort_button.attr("data-sort") == "asc"){
+        if (sort_button.attr("data-sort") === "asc"){
             packageSortOrder = "desc";
             sort_button.removeClass("ascending").addClass("descending");
         } else {
@@ -178,7 +180,7 @@ KT.system_packages = function() {
                 registerCheckboxEvents();
                 $('#filter').keyup();
                 $('.scroll-pane').jScrollPane().data('jsp').reinitialise();
-                if (data.length == 0) {
+                if (data.length === 0) {
                     more_button.empty().remove();
                 }else{
                     more_button.attr("data-offset", reverse);
@@ -197,12 +199,12 @@ KT.system_packages = function() {
         checkboxes.each(function(){
             $(this).change(function(){
                 if($(this).is(":checked")){
-                    selected_checkboxes++;
+                    selected_checkboxes += 1;
                     enableButtons();
                     disableUpdateAll();
                 }else{
-                    selected_checkboxes--;
-                    if(selected_checkboxes == 0){
+                    selected_checkboxes -= 1;
+                    if(selected_checkboxes === 0){
                         disableButtons();
                         enableUpdateAll();
                     }
@@ -430,7 +432,7 @@ KT.system_packages = function() {
         registerCheckboxEvents();
     },
     updateContentLinks = function(data) {
-        if ($.trim($(this).val()).length == 0) {
+        if ($.trim($(this).val()).length === 0) {
             // the user cleared the content box, so disable the add/remove links
             disableLinks();
 
@@ -445,9 +447,9 @@ KT.system_packages = function() {
         var selected_action = $("input[name=perform_action]:checked").attr('id'),
             content_string = content_form.find('#content_input').val(),
             content_array = content_string.split(/ *, */),
-            validation_error = undefined;
+            validation_error;
 
-        if (selected_action == 'perform_action_packages') {
+        if (selected_action === 'perform_action_packages') {
             validation_error = validate_action_requested(content_array, KT.package_action_types.PKG);
             if (validation_error === undefined) {
                 disableLinks();
@@ -459,7 +461,7 @@ KT.system_packages = function() {
                     success: function(data) {
                         monitorStatus(data, KT.package_action_types.PKG_INSTALL);
 
-                        for (var i = 0; i < content_array.length; i++) {
+                        for (var i = 0; i < content_array.length; i += 1) {
                             var pkg_name = $.trim(content_array[i]), already_exists = false;
                             packages_in_progress[pkg_name] = true;
 
@@ -503,7 +505,7 @@ KT.system_packages = function() {
                     success: function(data) {
                         monitorStatus(data, KT.package_action_types.PKG_GRP_INSTALL);
 
-                        for (var i = 0; i < content_array.length; i++) {
+                        for (var i = 0; i < content_array.length; i += 1) {
                             var group_name = $.trim(content_array[i]), already_exists = false;
                             groups_in_progress[group_name] = true;
 
@@ -543,9 +545,9 @@ KT.system_packages = function() {
         var selected_action = $("input[name=perform_action]:checked").attr('id'),
             content_string = content_form.find('#content_input').val(),
             content_array = content_string.split(/ *, */),
-            validation_error = undefined;
+            validation_error;
 
-        if (selected_action == 'perform_action_packages') {
+        if (selected_action === 'perform_action_packages') {
             validation_error = validate_action_requested(content_array, KT.package_action_types.PKG);
             if (validation_error === undefined) {
                 disableLinks();
@@ -557,7 +559,7 @@ KT.system_packages = function() {
                     success: function(data) {
                         monitorStatus(data, KT.package_action_types.PKG_REMOVE);
 
-                        for (var i = 0; i < content_array.length; i++) {
+                        for (var i = 0; i < content_array.length; i += 1) {
                             var pkg_name = $.trim(content_array[i]), already_exists = false;
                             packages_in_progress[pkg_name] = true;
 
@@ -601,7 +603,7 @@ KT.system_packages = function() {
                     success: function(data) {
                         monitorStatus(data, KT.package_action_types.PKG_GRP_REMOVE);
 
-                        for (var i = 0; i < content_array.length; i++) {
+                        for (var i = 0; i < content_array.length; i += 1) {
                             var group_name = $.trim(content_array[i]), already_exists = false;
                             groups_in_progress[group_name] = true;
 
@@ -705,7 +707,7 @@ KT.system_packages = function() {
     },
     validate_action_requested = function(content, content_type) {
         // validate the action being requested and return a validation error, if an error is found
-        var validation_error = undefined;
+        var validation_error;
 
         // validate the package list format
         if ((content_type === KT.package_action_types.PKG) && !KT.packages.valid_package_list_format(content)) {
@@ -757,8 +759,8 @@ KT.system_packages = function() {
         removePackages: removePackages,
         updatePackages: updatePackages,
         updateAllPackages: updateAllPackages
-    }
-}();
+    };
+})();
 
 $(document).ready(function() {
     KT.system_packages.initPackages();

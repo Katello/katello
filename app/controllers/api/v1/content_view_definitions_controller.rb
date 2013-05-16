@@ -142,7 +142,7 @@ class Api::V1::ContentViewDefinitionsController < Api::V1::ApiController
   end
   def clone
     new_def = @definition.copy(params[:content_view_definition])
-    respond :resource => new_def
+    respond_for_show :resource => new_def
   end
 
   api :GET, "/content_view_definitions/:id/content_views",
@@ -159,6 +159,8 @@ class Api::V1::ContentViewDefinitionsController < Api::V1::ApiController
   def update_content_views
     _update_content_views! params
     respond_for_index :collection => @definition.component_content_views
+  rescue => e
+    raise(HttpErrors::BadRequest, e.message)
   end
 
   api :GET, "/organizations/:organization_id/content_view_definitions/:id/repositories",

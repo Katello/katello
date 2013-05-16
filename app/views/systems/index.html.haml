@@ -23,7 +23,7 @@
             env_select.envsys = false
         });
   .grid_16.center
-    = environment_selector(:library_clickable=>false, :accessible_envs=>accessible_envs,  :url_proc => lambda {|a| environments_systems_path(:env_id =>a[:environment].id )})
+    = environment_selector(:library_clickable=>true, :accessible_envs=>accessible_envs,  :url_proc => lambda {|a| environments_systems_path(:env_id =>a[:environment].id )})
 -else
   = javascript do
     :plain

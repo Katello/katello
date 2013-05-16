@@ -491,8 +491,9 @@ module Glue::Candlepin::Consumer
 
     # As a convenience and common terminology
     def compliance_color
-      return 'green' if self.compliant?
-      return 'yellow' if self.compliance['partiallyCompliantProducts'].length > 0 && self.compliance['nonCompliantProducts'].length == 0
+      return 'green' if self.compliance['status'] == 'valid'
+      return 'red' if self.compliance['status'] == 'invalid'
+      return 'yellow' if self.compliance['status'] == 'partial'
       return 'red'
     end
 

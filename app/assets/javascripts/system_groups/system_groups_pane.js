@@ -12,7 +12,7 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
 
-KT.system_groups_pane = function() {
+KT.system_groups_pane = (function() {
     var system_groups = $("#system_groups"),
         multiselect_widget,
 
@@ -119,5 +119,5 @@ KT.system_groups_pane = function() {
         remove_groups: remove_groups,
         register_events: register_events,
         register_multiselect: register_multiselect
-    }
-}();
+    };
+})();

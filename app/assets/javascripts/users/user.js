@@ -27,12 +27,12 @@ $(document).ready(function() {
     env_select.ajax_params ={};
     env_select.original_env_id = undefined;
     env_select.env_changed_callback = function(env_id) {
-        if(env_select.original_env_id == env_id) {
+        if(env_select.original_env_id === env_id) {
             $('#update_user').addClass('disabled');
         }else{
             $('#update_user').removeClass('disabled');
         }
-    }
+    };
 
     ratings =
         [{'minScore': 0,
@@ -90,7 +90,7 @@ $(document).ready(function() {
             }
         }).live('keypress', function(e) {
             var keyCode = e.keyCode || e.which;
-            if (keyCode == 38 || keyCode == 40) { // if up or down key is pressed
+            if (keyCode === 38 || keyCode === 40) { // if up or down key is pressed
                $(this).change(); // trigger the change event
             }
         });
@@ -103,7 +103,7 @@ $(document).ready(function() {
         //from user.js
         $('#helptips_enabled').bind('change', KT.user_page.checkboxChanged);
         $('#experimental_ui').bind('change', KT.user_page.checkboxChanged);
-    })
+    });
 
 });
 

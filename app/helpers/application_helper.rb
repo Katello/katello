@@ -276,7 +276,12 @@ module ApplicationHelper
   end
 
   def kt_form_for(object, options = {}, &block)
-    options[:builder] = KatelloFormBuilder
+    if current_user.experimental_ui
+      options[:builder] = Experimental::KatelloFormBuilder
+      options[:html] = { :class => "form" }
+    else
+      options[:builder] = KatelloFormBuilder
+    end
     form_for(object, options, &block)
   end
 

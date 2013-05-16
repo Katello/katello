@@ -18,7 +18,7 @@ KT.dashboard = (function(){
                 series: {
                     pie:{
                         show: true,
-                        radius: .8,
+                        radius: 0.8,
                         stroke: {
                             width: 0
                         },
@@ -86,8 +86,12 @@ KT.dashboard = (function(){
       $('.dropbutton.active').tipsy('hide').removeClass('active').removeClass('showing');
     },
     widgetReload = function(theWidget, quantity, type) {
-        if(quantity == undefined){quantity=-1}
-        if(!typeof(type) != "string"){type="quantity"}
+        if(quantity === undefined) {
+            quantity =- 1;
+        }
+        if(typeof(type) === "string") {
+            type = "quantity";
+        }
         var div = theWidget;
         var url = div.attr("data-url");
         var id = div.attr("data-id");
@@ -138,7 +142,7 @@ KT.dashboard = (function(){
     register_sync_progress = function() {
         $(".progressbar").each(function(){
             var bar = $(this);
-            bar.progressbar({value: parseInt(bar.attr("percentage"))});
+            bar.progressbar({value: parseInt(bar.attr("percentage"), 10)});
         });
     },
     widget_map = function() {
@@ -146,14 +150,14 @@ KT.dashboard = (function(){
             subscriptions: plot,
             errata: register_errata,
             sync: register_sync_progress
-        }
+        };
     };
     return {
         widget_map: widget_map(),
         widgetReload: widgetReload,
         popoutClose : popoutClose,
         popoutSetup : popoutSetup
-    }
+    };
 })();
 
 
@@ -170,7 +174,7 @@ $(document).ready(function() {
 //wait until the entire page is loaded, to ensure images and things are downloaded
 $(window).load(function() {
     $(".loading").each(function(){
-       KT.dashboard.widgetReload($(this))
+       KT.dashboard.widgetReload($(this));
     });
     KT.tipsy.custom.tooltip($('.tipsy-icon.errata-info'));
 });

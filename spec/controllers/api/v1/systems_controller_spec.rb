@@ -49,7 +49,6 @@ describe Api::V1::SystemsController do
   let(:user_without_register_permissions) { user_with_permissions { |u| u.can([:read_systems], :organizations, nil, @organization) } }
 
   before (:each) do
-    login_user
     set_default_locale
     disable_org_orchestration
     disable_consumer_group_orchestration
@@ -69,43 +68,45 @@ describe Api::V1::SystemsController do
 
     @system_group_1 = SystemGroup.create!(:name => 'System Group 1', :organization_id => @organization.id)
     @system_group_2 = SystemGroup.create!(:name => 'System Group 2', :description => "fake description", :organization => @organization)
+
+    login_user_api.stub(:default_environment).and_return(nil)
   end
 
   describe "create a system" do
 
     let(:action) { :create }
-    let(:req) { post :create, :owner => @organization.name, :name => 'test', :cp_type => 'system', :facts => facts }
+    let(:req) { post :create, :owner => @organization.name, :environment_id => @environment_1.id, :name => 'test', :cp_type => 'system', :facts => facts }
     let(:authorized_user) { user_with_create_permissions }
     let(:unauthorized_user) { user_without_create_permissions }
     it_should_behave_like "protected action"
 
     it "requires either environment_id, owner, or organization_id to be specified" do
       post :create
-      response.code.should == "500"
+      response.code.should == "404"
     end
 
-    it "sets insatalled products to the consumer" do
+    it "sets installed products to the consumer" do
       System.should_receive(:create!).with(hash_including(:environment => @environment_1, :cp_type => 'system', :installedProducts => installed_products, :name => 'test')).once.and_return({})
-      post :create, :organization_id => @organization.name, :name => 'test', :cp_type => 'system', :installedProducts => installed_products
+      post :create, :organization_id => @organization.name, :environment_id => @environment_1.id, :name => 'test', :cp_type => 'system', :installedProducts => installed_products
     end
 
     it "sets the content view" do
       view = create(:content_view)
       ContentView.stub(:readable).and_return(ContentView)
       System.should_receive(:create!).with(hash_including(content_view: view, environment: @environment_1, cp_type: "system", name: "test"))
-      post :create, :organization_id => @organization.name, :name => 'test', :cp_type => 'system',
+      post :create, :organization_id => @organization.name, :environment_id => @environment_1.id, :name => 'test', :cp_type => 'system',
         :content_view_id => view.id
     end
 
     context "in organization with one environment" do
       it "requires either organization_id" do
         System.should_receive(:create!).with(hash_including(:environment => @environment_1, :cp_type => 'system', :facts => facts, :name => 'test')).once.and_return({})
-        post :create, :organization_id => @organization.name, :name => 'test', :cp_type => 'system', :facts => facts
+        post :create, :organization_id => @organization.name, :environment_id => @environment_1.id, :name => 'test', :cp_type => 'system', :facts => facts
       end
 
       it "or requires owner (key)" do
         System.should_receive(:create!).with(hash_including(:environment => @environment_1, :cp_type => 'system', :facts => facts, :name => 'test')).once.and_return({})
-        post :create, :owner => @organization.name, :name => 'test', :cp_type => 'system', :facts => facts
+        post :create, :owner => @organization.name, :environment_id => @environment_1.id, :name => 'test', :cp_type => 'system', :facts => facts
       end
     end
 
@@ -252,7 +253,7 @@ describe Api::V1::SystemsController do
 
     it "requires either environment_id, owner, or organization_id to be specified" do
       post :create
-      response.code.should == "500"
+      response.code.should == "404"
     end
 
     it "creates hypervisor" do
@@ -292,27 +293,26 @@ describe Api::V1::SystemsController do
     it_should_behave_like "protected action"
 
     it "requires either organization_id, owner, or environment_id" do
-      login_user.stub(:default_environment).and_return(nil)
       get :index
       response.code.should == "404"
     end
 
     it "should show all systems in the organization" do
-      Glue::ElasticSearch::Items.any_instance.should_receive(:retrieve).and_return([@system_1, @system_2])
+      Glue::ElasticSearch::Items.any_instance.should_receive(:retrieve).and_return([[@system_1, @system_2], 2])
 
       get :index, :organization_id => @organization.label
       response.body.should be_json([@system_1, @system_2].to_json)
     end
 
     it "should show all systems for the owner" do
-      Glue::ElasticSearch::Items.any_instance.should_receive(:retrieve).and_return([@system_1, @system_2])
+      Glue::ElasticSearch::Items.any_instance.should_receive(:retrieve).and_return([[@system_1, @system_2], 2])
 
       get :index, :owner => @organization.label
       response.body.should be_json([@system_1, @system_2].to_json)
     end
 
     it "should show only systems in the environment" do
-      Glue::ElasticSearch::Items.any_instance.should_receive(:retrieve).and_return([@system_1])
+      Glue::ElasticSearch::Items.any_instance.should_receive(:retrieve).and_return([[@system_1], 1])
 
       get :index, :environment_id => @environment_1.id
       response.body.should == [@system_1].to_json
@@ -326,7 +326,7 @@ describe Api::V1::SystemsController do
         Resources::Candlepin::Consumer.stub!(:create).and_return({ :uuid => uuid_3 })
         @system_3 = System.create!(:name => 'test3', :environment => @environment_2, :cp_type => 'system', :facts => facts)
         System.stub(:all_by_pool_uuid).and_return([@system_1.uuid, @system_3.uuid])
-        Glue::ElasticSearch::Items.any_instance.should_receive(:retrieve).and_return([@system_1, @system_3])
+        Glue::ElasticSearch::Items.any_instance.should_receive(:retrieve).and_return([[@system_1, @system_3], 2])
       end
 
       it "should show all systems in the organization that are subscribed to a pool" do

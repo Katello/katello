@@ -11,7 +11,7 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
 
-KT.packages = function() {
+KT.packages = (function() {
     var valid_package_list_format = function(packages){
         var length = packages.length;
 
@@ -30,5 +30,5 @@ KT.packages = function() {
     return {
         valid_package_list_format : valid_package_list_format,
         valid_package_name : valid_package_name
-    }
-}();
+    };
+})();

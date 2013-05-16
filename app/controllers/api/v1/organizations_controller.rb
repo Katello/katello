@@ -54,8 +54,7 @@ class Api::V1::OrganizationsController < Api::V1::ApiController
     respond :collection => Organization.without_deleting.readable.where(query_params)
   end
 
-  # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
-  api :GET, "/organizations/:id", "Show an organization"
+  api :GET, "/organizations/:label", "Show an organization"
   def show
     respond
   end
