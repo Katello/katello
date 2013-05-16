@@ -1,5 +1,12 @@
-@import "katello";
+@import "katello_base";
 @import "alchemy/components/normalize";
+@import "alchemy-forms/forms";
+@import "alchemy-buttons/buttons";
+@import "widgets/nutupane";
+
+body {
+  background: white;
+}
 
 ul {
   margin: 0;
@@ -21,8 +28,10 @@ body > footer {
 
 .maincontent {
   margin-top: 0;
-  padding-top: 40px;
-  border-bottom: none;
+  padding-top: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+  border: none;
 }
 
 #experimental_indicator {
@@ -31,4 +40,31 @@ body > footer {
   top: 3px;
   left: 132px;
   font-family: Overpass;
+}
+
+.editable {
+  padding: 0;
+}
+
+input {
+  background: white;
+}
+
+.editable {
+  background: $edit_icon;
+  cursor: pointer;
+  cursor: hand;
+  border-radius: 0;
+
+  &:hover {
+    background: $edit_hover_icon;
+  }
+}
+
+.value {
+  padding-left: 10px !important;
+}
+
+table {
+  margin: 0px;
 }

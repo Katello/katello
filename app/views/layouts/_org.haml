@@ -1,28 +1,5 @@
 / orgbox Starts Here
-#switcherContainer.clickable
-  - if current_organization && !current_organization.name.nil?
-    %a#switcherButton{:href => "#", :title=>"#{current_organization.name}"}
-      .one-line-ellipsis
-        #{current_organization.name}
-      .arrow_icon_menu
-  - else
-    %a#switcherButton{:href => "#", :title=>""}
-      .one-line-ellipsis
-        #{_("Select an Organization:")}
-      .arrow_icon_menu
-  #switcherBox
-    #switcherForm.org
-      #orgfilter
-        %form.filter
-          %input{ :name => "f", :type => "input", :placeholder => _("Filter..."), :id=>"orgfilter_input"}
-          %div.filter_button #{_("Filter")}
-      #orgbox{"data-url"=>allowed_orgs_user_session_path}
-        /Orgs pulled from above data-url dynamically each click.
-        .spinner
-      - if current_organization && !current_organization.name.nil? && Organization.any_readable?
-        %a#manage_orgs{:href=>organizations_path()}
-          .gears_icon
-          %span{:class=>"fl clearfix"}
-            #{_("Manage Organizations")}
-
+#orgSwitcher.scroll-pane.clickable{'ng-app' => 'Katello', 'ng-controller' => 'UserSessionsController'}
+  %span.spinner
+  %ul#allowed-orgs{"org-switcher" => ""}
 / orgbox Ends Here

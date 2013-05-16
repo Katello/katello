@@ -46,7 +46,8 @@ class Api::V1::PermissionsController < Api::V1::ApiController
   param :all_verbs, :bool, :desc => "filter by all_verbs flag"
   param :all_tags, :bool, :desc => "filter by all_flags flag"
   def index
-    respond :collection => @role.permissions.where(query_params)
+    queries = query_params.empty? ? {} : {:permissions => query_params}
+    respond :collection => @role.permissions.where(queries)
   end
 
   api :GET, "/roles/:role_id/permissions/:id", "Show a permission"

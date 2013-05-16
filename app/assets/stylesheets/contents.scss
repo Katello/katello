@@ -168,7 +168,6 @@ $container_width: ($static_width/2) - 36;
   }
   .progress {
     height: 16px;
-    display: inline-block !important;
     left: 0;
     margin-right: 4px;
     width: 100px;
@@ -421,9 +420,10 @@ $container_width: ($static_width/2) - 36;
     tbody tr {
       height: 28px !important;
       td a.cancel_sync {
-        float: right;
+        position: relative;
         text-align: left;
-        position: absolute;
+        bottom: 18px;
+        left: 110px;
       }
     }
   }

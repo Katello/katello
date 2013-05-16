@@ -48,36 +48,37 @@
             .org_servicelevel{'name' => 'organization[service_level]', 'class' => ("editable edit_select_org_servicelevel grid_8" if editable), 'data-url' => edit_organization_path(@organization.label), 'data-options' => organization_servicelevel_edit(@organization)}
               = organization_servicelevel(@organization)
 
-        .grid_7
-          %h5 #{_("Environment Promotion Paths")}:
-
-        - unless @organization.environments.empty?
-          %ul#promotion_paths
-          - @organization.promotion_paths.each do |path|
-            .clear
-              &nbsp;
-            .jbreadcrumb.grid_9
-              %ul
-                %li
-                  =link_to 'Library', "#", :class => "crumb-nohover"
-                - for env in path
-                  %li
-                    %a.subpanel_element{"data-url"=>edit_organization_environment_path(@organization.label, env.id)}
-                      %div
-                        #{env.name}
-
-        - else
+        - if Katello.config.katello?
           .grid_7
-            #{_("No environments are available in this organization. Please add some environments to be able register systems to this organization.")}:
+            %h5 #{_("Environment Promotion Paths")}:
+
+          - unless @organization.environments.empty?
+            %ul#promotion_paths
+            - @organization.promotion_paths.each do |path|
+              .clear
+                &nbsp;
+              .jbreadcrumb.grid_9
+                %ul
+                  %li
+                    =link_to 'Library', "#", :class => "crumb-nohover"
+                  - for env in path
+                    %li
+                      %a.subpanel_element{"data-url"=>edit_organization_environment_path(@organization.label, env.id)}
+                        %div
+                          #{env.name}
+
+          - else
+            .grid_7
+              #{_("No environments are available in this organization. Please add some environments to be able register systems to this organization.")}:
 
         .clear
           &nbsp;
 
-        - if editable
+        - if editable && Katello.config.katello?
           .button.subpanel_element{"data-url"=>new_organization_environment_path(@organization.label)}
             = _("Add New Environment")
 
-        - if editable
+        - if editable && Katello.config.katello?
           = render :partial=>"download_debug_certificate"
 
 = content_for :footer do

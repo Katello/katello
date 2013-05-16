@@ -38,7 +38,7 @@ $(document).ready(function () {
                 notices.checkNotices();
             }
         });
-    }
+    };
 
 
     $('.edit_select_product_gpg').each(function () {
@@ -58,10 +58,10 @@ $(document).ready(function () {
                             message: i18n.productUpdateKeyConfirm,
                             warning_message: i18n.productUpdateKeyWarning,
                             yes_callback: function () {
-                                update_product(element, result, true)
+                                update_product(element, result, true);
                             },
                             no_callback: function () {
-                                update_product(element, result, false)
+                                update_product(element, result, false);
                             }
                         });
                     }

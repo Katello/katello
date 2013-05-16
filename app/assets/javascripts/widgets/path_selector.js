@@ -124,7 +124,7 @@ KT.path_select = function(div_id, name, environments, options_in){
         hover_out = function(){
             path_selector.hide();
             $(document).trigger(options.submit_event, [get_selected()]);
-        }
+        };
         reposition_right = function(){
             var margin = 10,
                 window_width, selector_width, button_start, pos, top;
@@ -179,7 +179,7 @@ KT.path_select = function(div_id, name, environments, options_in){
                     select_elem.removeAttr('disabled');
                 }
                 if(options.link_first && select_elem.parents('li').is(':first-child')){
-                    select_nodes(first_nodes.find('input:checkbox').not(':checked'))
+                    select_nodes(first_nodes.find('input:checkbox').not(':checked'));
                 }
                 $(document).trigger(options.select_event, [true, $(this).data('node_id'), $(this).data('next_node_id')]);
             };
@@ -298,7 +298,7 @@ KT.path_select_template = {
         if(cancel_button_text){
             html += KT.path_select_template.button("KT_path_select_cancel_button", cancel_button_text);
         }
-        html += '</form>'
+        html += '</form>';
 
         if( footer ){
             html += KT.path_select_template.footer(footer);
@@ -321,7 +321,7 @@ KT.path_select_template = {
     path : function(path){
         var html = '';
         html += '<div><ul>';
-        for(var i = 0; i < path.length; i++){
+        for(var i = 0; i < path.length; i += 1){
             html += KT.path_select_template.path_node(path[i], path[i+1]);
         }
         html += '</ul></div>';

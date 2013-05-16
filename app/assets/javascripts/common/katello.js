@@ -18,7 +18,6 @@
  * Date: 09/01/2010
  */
 
-
 //Katello global object namespace that all others should be attached to
 var KT = {};
 KT.widget = {};
@@ -30,14 +29,23 @@ var Katello = angular.module('Katello', ['alchemy', 'alch-templates', 'ngSanitiz
 
 // Must be at the top to prevent AngularJS unnecessary digest operations
 // And to handle the hashPrefix that AngularJS adds that confuses BBQ
-$.bbq.pushState('!', '');
+$(window).bind("hashchange", function(event) {
+// refresh the favicon to make sure it shows up
+    $('link[type*=icon]').detach().appendTo('head');
+});
+
+if ($.bbq !== undefined) {
+    $.bbq.pushState('!', '');
+}
 
 //i18n global variable
 var i18n = {};
 
 function localize(data) {
     for (var key in data) {
-        i18n[key] =  data[key];
+        if(data.hasOwnProperty(key)) {
+            i18n[key] = data[key];
+        }
     }
 }
 
@@ -49,7 +57,9 @@ function update_status() {
           dataType: 'json',
           success: function (json, status, xhr) {
               statusElement.text(json.status);
-              if (xhr.status == 200) clearInterval(i);
+              if (xhr.status === 200) {
+                  clearInterval(i);
+              }
           },
           error: function (xhr, status, error) {
               statusElement.text(jQuery.parseJSON(xhr.responseText).message);
@@ -84,21 +94,25 @@ $.fn.delayed_chosen = function(options, delay_time) {
     delay_time = (delay_time === undefined) ? 400 : delay_time;
     chzn_input = $(this).parent().find('.chzn-container :input');
     chzn_input.prop('disabled', true);
-    chzn_input.delay(delay_time).queue(function(){ $(this).prop('disabled', false); $(this).dequeue();} );
-}
+    chzn_input.delay(delay_time).queue(function() {
+        $(this).prop('disabled', false);
+        $(this).dequeue();
+    });
+};
 
 //requires jQuery
-KT.getData = (function(fieldNames) {
+KT.getData = function(fieldNames) {
     var data = {},
         value;
 
     $.each(fieldNames, function(i, fieldName){
         value = $('#'+fieldName).val();
-        if (value !== undefined)
+        if (value !== undefined) {
             data[fieldName] = value;
+        }
     });
     return data;
-});
+};
 
 
 KT.helptip =  (function($) {
@@ -152,8 +166,9 @@ KT.helptip =  (function($) {
 // https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object/keys
 if(!Object.keys) {
     Object.keys = function(o){
-     if (o !== Object(o))
+     if (o !== Object(o)) {
         throw new TypeError('Object.keys called on non-object');
+     }
      var ret=[],p;
      for(p in o) {
        if(Object.prototype.hasOwnProperty.call(o,p)){
@@ -198,7 +213,7 @@ $.expr[':'].contains = function(a, i, m) {
 
 //requires jQuery
 KT.common = (function() {
-    var root_url = undefined;
+    var root_url;
     return {
         height: function() {
             return $(window).height();
@@ -217,7 +232,7 @@ KT.common = (function() {
             return decoded.replace(/\+/g, " ");
         },
         escapeId: function(myid) {
-            return myid.replace(/([ #;&,.%+*~\':"!^$[\]()=>|\/])/g,'\\$1')
+            return myid.replace(/([ #;&,.%+*~\':"!\^$\[\]()=>|\/])/g,'\\$1');
         },
         customConfirm : function (params) {
           var settings = {
@@ -229,8 +244,8 @@ KT.common = (function() {
               no_callback: function(){},
               include_cancel: false
           },
-          confirmTrue = new Boolean(true),
-          confirmFalse = new Boolean(false);
+          confirmTrue = true,
+          confirmFalse = false;
 
           $.extend(settings, params);
 
@@ -311,86 +326,9 @@ KT.common = (function() {
           });
         },
         orgSwitcherSetup : function() {
-            //org switcher
-            var button = $('#switcherButton');
-            var container = $('#switcherContainer');
-            var box = $('#switcherBox');
-            var form = $('#switcherForm');
-            var orgbox = $('#orgbox');
-            var orgboxapi = null;
-            button.removeAttr('href');
-            button.click(function(switcher) {
-                box.fadeToggle('fast');
-                button.toggleClass('active');
-                container.toggleClass('active');
-                if(button.hasClass('active')){
-                    if(!(box.hasClass('jspScrollable'))){
-                      //the horizontalDragMaxWidth kills the horizontal scroll bar
-                      // (on purpose, since we have ellipsis...)
-                      orgbox.jScrollPane({ hideFocus: true, horizontalDragMaxWidth: 0 });
-                      orgbox.bind('jsp-initialised', function(event, isScrollable) {
-                          $('#orgfilter_input').focus();
-                        }
-                      );
-                      orgboxapi = orgbox.data('jsp');
-                    }
-                    $.ajax({
-                        type: "GET",
-                        url: orgbox.attr("data-url"),
-                        cache: false,
-                        success: function(data) {
-                          orgboxapi.getContentPane().html(data);
-                          orgboxapi.reinitialise();
-                        },
-                        error: function(data) {
-                          orgboxapi.getContentPane().html('<div class="spinner" style="margin-top:3px"></div>');
-                          orgboxapi.reinitialise();
-                        },
-                        complete: function() {
-                          orgbox.trigger('jsp-initialised');
-                        }
-                    });
-                }
-            });
-            form.mouseup(function() {
-                return false;
-            });
-            $(document).mouseup(function(switcher) {
-                if(!($(switcher.target).parents('#switcherContainer').length > 0)) {
-                    button.removeClass('active');
-                    container.removeClass('active');
-                    box.fadeOut('fast');
-                }
-            });
-            if ($('#switcherContainer').length >0){
-              $('#orgbox a').live('click', function(){
-                 $(document).mouseup();
-                 $('#switcherContainer').html('<div class="spinner" style="margin-top:3px"></div>');
-              });
-            }
-            $('.favorite').live('click', function(e) {
+             $('.favorite').live('click', function(e) {
                 KT.orgswitcher.checkboxChanged($(this).parent().find('.default_org'));
             });
-        },
-        orgBoxRefresh : function (){
-          var orgbox = $('#orgbox');
-          var orgboxapi = orgbox.data('jsp');
-          orgboxapi.reinitialise();
-        },
-        orgFilterSetup : function(){
-            $('form.filter').submit(function(){
-                $('#orgfilter_input').change();
-                return false;
-            });
-            $('#orgfilter_input').live('change, keyup', function(){
-                if ($.trim($(this).val()).length >= 2) {
-                    $("#orgbox .row:not(:contains('" + $(this).val() + "'))").filter(':not').fadeOut('fast');
-                    $("#orgbox .row:contains('" + $(this).val() + "')").filter(':hidden').fadeIn('fast');
-                } else {
-                    $("#orgbox .row").fadeIn('fast');
-                }
-            });
-            $('#orgfilter_input').val("").change();
         },
         rootURL : function() {
             if (root_url === undefined) {
@@ -400,7 +338,11 @@ KT.common = (function() {
             return root_url;
         },
         getSearchParams : function(val) {
-            var search_string = $.bbq.getState('list_search');
+            var search_string;
+
+            if ($.bbq) {
+                search_string = $.bbq.getState('list_search');
+            }
 
             if( search_string ){
                 return { 'search' : search_string };
@@ -426,11 +368,11 @@ KT.common = (function() {
             var sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB'],
                 i;
 
-            if (bytes == 0) {
+            if (bytes === 0) {
                 return '0';
             } else {
-                i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
-                return ((i == 0) ? (bytes / Math.pow(1024, i)) : (bytes / Math.pow(1024, i)).toFixed(1)) + ' ' + sizes[i];
+                i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)), 10);
+                return ((i === 0) ? (bytes / Math.pow(1024, i)) : (bytes / Math.pow(1024, i)).toFixed(1)) + ' ' + sizes[i];
             }
         },
         icon_hover_change : function(element, shade){
@@ -585,8 +527,6 @@ $(document).ready(function (){
     KT.tipsy.custom.enable_forms_tooltips();
 
     KT.common.orgSwitcherSetup();
-    KT.common.orgFilterSetup();
-
 });
 
 /**
@@ -606,7 +546,7 @@ $(window).ready(function(){
 
     //allow all buttons with class .button to be clicked via enter or space button
     $('.button').live('keyup', function(e){
-        if(e.which == 13 || e.which == 32)
+        if(e.which === 13 || e.which === 32)
         {
             $(this).click();
         }
@@ -616,9 +556,4 @@ $(window).ready(function(){
     $.rails.confirm = function(message) {
         KT.common.customConfirm({message: message}); return false;
     };
-
-    $(window).bind("hashchange", function(event) {
-        // refresh the favicon to make sure it shows up
-        $('link[type*=icon]').detach().appendTo('head');
-    });
 });

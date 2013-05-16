@@ -13,7 +13,7 @@
 class Api::V1::PingController < Api::V1::ApiController
 
   skip_before_filter :authorize # ok - anyone authenticated can ask for status
-  skip_before_filter :require_user, :only => [:system_status]
+  skip_before_filter :require_user, :only => [:server_status]
 
   api :GET, "/ping", "Shows status of system and it's subcomponents"
   description "This service is only available for authenticated users"

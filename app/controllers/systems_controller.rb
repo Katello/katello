@@ -106,7 +106,15 @@ class SystemsController < ApplicationController
     # Environments page is displayed.
     envsys = !params[:env_id].nil?
 
-    render :partial=>"new", :locals=>{:system=>@system, :accessible_envs => accessible_envs, :envsys => envsys}
+    if current_user.experimental_ui
+      if request.xhr?
+        render :new_nutupane, :layout => false, :locals=>{:system=>@system, :accessible_envs => accessible_envs, :envsys => envsys}
+      else
+        render :new_nutupane, :locals=>{:system=>@system, :accessible_envs => accessible_envs, :envsys => envsys}
+      end
+    else
+      render :partial=>"new", :locals=>{:system=>@system, :accessible_envs => accessible_envs, :envsys => envsys}
+    end
   end
 
   def create
@@ -126,8 +134,12 @@ class SystemsController < ApplicationController
       notify.success _("System '%s' was created.") % @system['name']
 
       if search_validate(System, @system.id, params[:search])
-        render :partial=>"systems/list_systems",
+        if current_user.experimental_ui
+          render :json => {:system => @system}
+        else
+          render :partial=>"systems/list_systems",
           :locals=>{:accessor=>"id", :columns=>['name', 'lastCheckin','created' ], :collection=>[@system], :name=> controller_display_name}
+        end
       else
         notify.message _("'%s' did not meet the current search criteria and is not being shown.") % @system["name"]
         render :json => { :no_match => true }
@@ -147,6 +159,12 @@ class SystemsController < ApplicationController
 
   def index
     @system_groups = SystemGroup.where(:organization_id => current_organization).order(:name)
+
+    if current_user.experimental_ui
+      render :index_nutupane, :locals => { :experimental_ui => true }
+    else
+      render :index
+    end
   end
 
   def environments
@@ -330,7 +348,30 @@ class SystemsController < ApplicationController
 
   def show
     system = System.find(params[:id])
-    render :partial=>"systems/list_system_show", :locals=>{:item=>system, :accessor=>"id", :columns=> COLUMNS.keys, :noblock => 1}
+
+    if current_user.experimental_ui
+      begin
+        releases = @system.available_releases
+      rescue => e
+        releases_error = e.to_s
+        Rails.logger.error e.to_s
+      end
+      releases ||= []
+      releases_error ||= nil
+
+      # Stuff into var for use in spec tests
+      @locals_hash = { :system => @system, :editable => @system.editable?,
+                      :releases => releases, :releases_error => releases_error, :name => controller_display_name,
+                      :environments => environment_paths(library_path_element, environment_path_element("systems_readable?"))}
+
+      if request.xhr?
+        render :show_nutupane, :leyout => false, :locals => @locals_hash
+      else
+        render :show_nutupane, :locals => @locals_hash
+      end
+    else
+      render :partial=>"systems/list_system_show", :locals=>{:item=>system, :accessor=>"id", :columns=> COLUMNS.keys, :noblock => 1}
+    end
   end
 
   def section_id
@@ -637,7 +678,7 @@ class SystemsController < ApplicationController
     if current_organization
       readable = KTEnvironment.systems_readable(current_organization)
       @environment = KTEnvironment.find(params[:env_id]) if params[:env_id]
-      @environment ||= first_env_in_path(readable, false)
+      @environment ||= first_env_in_path(readable, true)
       @environment ||=  current_organization.library
     end
   end

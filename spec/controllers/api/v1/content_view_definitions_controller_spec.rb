@@ -135,7 +135,7 @@ describe Api::V1::ContentViewDefinitionsController, :katello => true do
 
   describe "update_content_views" do
     it "should update the definition's components" do
-      definition = FactoryGirl.create(:content_view_definition)
+      definition = FactoryGirl.create(:content_view_definition, :composite)
       views      = FactoryGirl.create_list(:content_view, 2)
       ContentView.stub_chain(:readable, :where).and_return(views)
       put :update_content_views, :id => definition.id, :views => views.map(&:id)
