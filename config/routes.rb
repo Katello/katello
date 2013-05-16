@@ -258,6 +258,7 @@ Src::Application.routes.draw do
       get :changelog
       get :filelist
       get :dependencies
+      get :details
     end
     collection do
       get :auto_complete_library
