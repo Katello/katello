@@ -1,5 +1,20 @@
-task :clear_search_indices do
-  Tire.index("_all").delete
+task :clear_search_indices => ["environment"] do
+  #Broken in elasticsearch 0.19.9
+  #Tire.index("_all").delete
+
+  ignore_list = ["CpConsumerUser", "PulpSyncStatus", "PulpTaskStatus", "Hypervisor", "Pool"]
+
+  User.current = User.hidden.first  
+  Dir.glob(Rails.root.to_s + '/app/models/*.rb').each { |file| require file }
+  models = ActiveRecord::Base.subclasses.sort{|a,b| a.name <=> b.name}
+  models.each{|mod|
+    if !ignore_list.include?(mod.name) && mod.respond_to?(:index)
+       mod.index.delete
+    end
+  }
+  Tire.index(Package.index).delete
+  Tire.index(Errata.index).delete
+  Tire.index(PackageGroup.index).delete
   puts "Search Indices cleared."
 end
 
