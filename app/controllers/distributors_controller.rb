@@ -20,6 +20,7 @@ class DistributorsController < ApplicationController
   before_filter :find_distributors, :only=>[:bulk_destroy]
 
   before_filter :find_environment, :only => [:environments, :new]
+  before_filter :find_environment_in_distributor, :only => [:create, :update]
   before_filter :authorize
 
   before_filter :setup_options, :only => [:index, :items, :create, :environments]
@@ -106,7 +107,7 @@ class DistributorsController < ApplicationController
     @distributor.name= params["distributor"]["name"]
     @distributor.cp_type = "candlepin"  # The 'candlepin' type is allowed to export a manifest
     @distributor.environment = KTEnvironment.find(params["distributor"]["environment_id"])
-    @distributor.content_view = ContentView.find_by_id(params["system"].try(:[], "content_view_id"))
+    @distributor.content_view = ContentView.find_by_id(params["distributor"].try(:[], "content_view_id"))
     #create it in candlepin, parse the JSON and create a new ruby object to pass to the view
     #find the newly created distributor
     if @distributor.save!
@@ -257,7 +258,7 @@ class DistributorsController < ApplicationController
   end
 
   def update
-    params[:system][:content_view_id] = nil if params[:system].has_key? :environment_id
+    params[:distributor][:content_view_id] = nil if params[:distributor].has_key? :environment_id
 
     @distributor.update_attributes!(params[:distributor])
     notify.success _("Distributor '%s' was updated.") % @distributor["name"]
@@ -348,6 +349,13 @@ class DistributorsController < ApplicationController
       @environment = KTEnvironment.find(params[:env_id]) if params[:env_id]
       @environment ||= first_env_in_path(readable, false)
       @environment ||=  current_organization.library
+    end
+  end
+
+  def find_environment_in_distributor
+    if params.has_key?(:distributor) && params[:distributor].has_key?(:environment_id)
+      @environment = KTEnvironment.distributors_readable(current_organization).
+                      where(:id => params[:distributor][:environment_id]).first
     end
   end
 
