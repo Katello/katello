@@ -7,11 +7,11 @@ task :clear_search_indices => ["environment"] do
   User.current = User.hidden.first  
   Dir.glob(Rails.root.to_s + '/app/models/*.rb').each { |file| require file }
   models = ActiveRecord::Base.subclasses.sort{|a,b| a.name <=> b.name}
-  models.each{|mod|
+  models.each do |mod| 
     if !ignore_list.include?(mod.name) && mod.respond_to?(:index)
        mod.index.delete
     end
-  }
+  end
   Tire.index(Package.index).delete
   Tire.index(Errata.index).delete
   Tire.index(PackageGroup.index).delete
