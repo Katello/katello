@@ -17,7 +17,7 @@ module Validators
     def validate_each(record, attribute, value)
       if value
         others = record.class.where(attribute => value).joins(:environment).where("environments.organization_id" => record.environment.organization_id)
-        others.where("id != ?", record.id) if record.id
+        others = others.where("#{record.class.table_name}.id != ?", record.id) if record.persisted?
         record.errors[attribute] << N_("already taken") if others.any?
       end
     end
