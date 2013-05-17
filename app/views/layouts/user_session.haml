@@ -8,6 +8,9 @@
 
 = content_for(:login_logo) do
   = image_tag("logo.png", :alt => _('Katello Logo'))
+  -if release_name == 'Katello' || release_name == 'Headpin'
+    %span.login-version
+      = Katello.config.katello_version
 
 = content_for(:title) do
   = project_name
@@ -29,9 +32,6 @@
     = render :partial => 'common/common_i18n'
     = render :partial => 'common/ajax_notices'
     = render :partial => 'common/notification'
-
-= content_for(:footer) do
-  = render :partial => "common/footer"
 
 = render :partial => "alchemy/layouts/user_session_layout"
 
