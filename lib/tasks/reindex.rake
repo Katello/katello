@@ -5,12 +5,12 @@ task :reindex=>["environment", "clear_search_indices"]  do
 
   Dir.glob(Rails.root.to_s + '/app/models/*.rb').each { |file| require file }
   models = ActiveRecord::Base.subclasses.sort{|a,b| a.name <=> b.name}
-  models.each{|mod|
+  models.each do |mod|
     if !ignore_list.include?(mod.name) && mod.respond_to?(:index)
        print "Re-indexing #{mod}\n"
        mod.index.import(mod.all) if mod.count > 0
     end
-  }
+  end
 
 
   print "Re-indexing Repositories\n"
