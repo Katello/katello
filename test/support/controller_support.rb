@@ -14,7 +14,7 @@
 module ControllerSupport
   def check_permission(params)
     permissions = params[:permission].is_a?(Array) ? params[:permission] : [params[:permission]]
-    permissions << nil if permissions.empty? || (params[:include_no_permissions] && !permissions.include?(nil))
+
     permissions.each do |permission|
       # TODO: allow user to be passed in via params and clear permissions between iterations
       user = no_permission_user
