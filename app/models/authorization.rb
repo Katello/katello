@@ -1,0 +1,2 @@
+module Authorization
+end

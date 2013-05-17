@@ -1,4 +1,4 @@
-Src::Application.configure do
+Katello::Engine.configure do
   # Settings specified here will take precedence over those in config/environment.rb
 
   # In the development environment your application's code is reloaded on
@@ -19,7 +19,7 @@ Src::Application.configure do
   config.active_support.deprecation = :log
 
   # Be sure to restart your server when you modify this file.
-  config.session_store :cookie_store, :key => '_katello_session_development'
+  #config.session_store :cookie_store, :key => '_katello_session_development'
 
   #support for reloadable Runcible
   #config.autoload_paths += %W(#{Rails.root}/../../runcible/lib)
@@ -27,9 +27,9 @@ Src::Application.configure do
   #ActiveSupport::Dependencies.explicitly_unloadable_constants << "::Runcible::Extensions"
 
   #Developemtn asset pipeline settings
-  config.assets.compile   = true
-  config.assets.compress  = false
-  config.assets.debug     = true
+  #config.assets.compile   = true
+  #config.assets.compress  = false
+  #config.assets.debug     = true
 
   Bundler.require(:debugging, Rails.env)
 end

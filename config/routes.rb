@@ -1,5 +1,4 @@
-
-Src::Application.routes.draw do
+Katello::Engine.routes.draw do
 
   apipie
 

@@ -14,14 +14,14 @@ require 'cgi'
 require 'base64'
 
 
-class ApplicationController < ActionController::Base
+class Katello::ApplicationController < ActionController::Base
   layout :set_layout
   include Notifications::ControllerHelper
   include Profiling
   include KTLocale
   clear_helpers
 
-  helper UIAlchemy::TranslationHelper
+  #helper UIAlchemy::TranslationHelper
   helper_method :current_organization
   helper_method :render_correct_nav
   before_filter :require_user,:require_org

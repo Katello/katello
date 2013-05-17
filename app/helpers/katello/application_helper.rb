@@ -12,7 +12,7 @@
 
 
 
-module ApplicationHelper
+module Katello::ApplicationHelper
 
   include LayoutHelper
   include BrandingHelper

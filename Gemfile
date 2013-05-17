@@ -13,10 +13,7 @@ else
   gem 'rails', '= 3.2.13'
 end
 gem 'json'
-gem 'rabl'
 gem 'rest-client', :require => 'rest_client'
-gem 'rails_warden', '>= 0.5.2'
-gem 'rack-openid'
 gem 'net-ldap'
 gem 'oauth'
 gem 'ldap_fluff', '>= 0.2.2'
@@ -29,8 +26,6 @@ if defined? JRUBY_VERSION
   gem 'tire', '>= 0.3.0'
 else
   gem 'thin', '>= 1.2.8'
-  gem 'tire', '>= 0.3.0', '< 0.4'
-  gem 'pg'
 end
 
 gem 'foreigner'
@@ -40,8 +35,6 @@ gem 'daemons', '>= 1.1.4'
 gem 'uuidtools'
 
 # Stuff for view/display/frontend
-gem 'haml', '~> 3.1.2'
-gem 'haml-rails', "= 0.3.4"
 gem 'sass-rails'
 gem 'compass-rails'
 gem 'compass'
@@ -50,7 +43,6 @@ gem 'simple-navigation', '>= 3.3.4'
 gem 'ui_alchemy-rails', '1.0.11'
 
 # Stuff for i18n
-gem 'gettext_i18n_rails'
 gem 'i18n_data', '>= 0.2.6', :require => 'i18n_data'
 
 # Reports - TODO this is hack that needs to be removed once ruport is officially released
@@ -66,13 +58,6 @@ gem 'pdf-reader', '<= 1.1.1'
 gem 'prawn'
 gem 'acts_as_reportable', '>=1.1.1', :require => 'ruport/acts_as_reportable'
 
-# Documentation
-gem "apipie-rails", '>= 0.0.13'
-
-gem 'hooks'
-
-# Better logging (syslog/rolling/trace)
-gem 'logging', '>= 1.8.0'
 
 # Load all sub-gemfiles from bundler.d directory
 Dir[File.expand_path('bundler.d/*.rb', File.dirname(__FILE__))].each do |bundle|
@@ -81,3 +66,5 @@ end
 
 gem 'dynflow', '>= 0.1.0'
 gem 'justified', :require => 'justified/standard_error'
+
+gemspec
