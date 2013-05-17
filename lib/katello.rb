@@ -1,0 +1,2 @@
+module Katello
+end
