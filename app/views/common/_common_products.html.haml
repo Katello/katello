@@ -1,10 +1,13 @@
+- content_types ||= nil
 = javascript do
   :plain
     KT.products = $.parseJSON('#{escape_javascript(get_products({:record => record,
+                                                                 :content_types => content_types,
                                                                  :readable_products => readable_products,
                                                                  :editable_products => editable_products}).to_json)}');
 
     KT.editable_products = $.parseJSON('#{escape_javascript(get_products({:record => record,
+                                                                          :content_types => content_types,
                                                                           :readable_products => readable_products,
                                                                           :editable_products => editable_products}).
                                                                         reject{|key,val|!val[:editable]}.to_json)}');

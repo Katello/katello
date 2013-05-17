@@ -145,9 +145,11 @@ module Glue::Pulp::Repo
         when Repository::YUM_TYPE
           Runcible::Extensions::YumDistributor.new(self.relative_path, (self.unprotected || false), true,
                   {:protected=>true, :id=>self.pulp_id,
-                      :auto_publish=>!self.environment.library?})
+                      :auto_publish=>true})
         when Repository::FILE_TYPE
-          Runcible::Extensions::IsoDistributor.new(true, true)
+          dist = Runcible::Extensions::IsoDistributor.new(true, true)
+          dist.auto_publish = true
+          dist
         else
           raise _("Unexpected repo type %s") % self.content_type
       end
