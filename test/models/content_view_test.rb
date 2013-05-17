@@ -186,7 +186,7 @@ class ContentViewTest < MiniTest::Rails::ActiveSupport::TestCase
     composite_view = content_views(:composite_view)
 
     assert_equal 2, composite_view.components_not_in_env(@dev).length
-    assert_equal composite_view.content_view_definition.component_content_views,
-      composite_view.components_not_in_env(@dev)
+    assert_equal composite_view.content_view_definition.component_content_views.sort,
+      composite_view.components_not_in_env(@dev).sort
   end
 end
