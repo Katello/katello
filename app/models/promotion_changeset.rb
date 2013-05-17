@@ -98,6 +98,9 @@ class PromotionChangeset < Changeset
 
     self.promotion_date = Time.now
     self.state          = Changeset::PROMOTED
+
+    Glue::Event.trigger(Katello::Actions::ChangesetPromote, self)
+
     self.save!
 
     index_repo_content to_env
