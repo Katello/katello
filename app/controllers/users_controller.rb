@@ -271,10 +271,15 @@ class UsersController < ApplicationController
   end
 
   def destroy
-    if @user.destroy
+    @user.destroy
+    if @user.destroyed?
       notify.success _("User '%s' was deleted.") % @user[:username]
       #render and do the removal in one swoop!
       render :partial => "common/list_remove", :locals => { :id => params[:id], :name => controller_display_name }
+    else
+      err_msg = N_("Removal of the user failed. If you continue having trouble with this, please contact an Administrator.")
+      notify.error err_msg
+      render :nothing => true
     end
   end
 
