@@ -62,6 +62,9 @@ class Repository < ActiveRecord::Base
   scope :in_default_view, joins(:content_view_version => :content_view).
     where("content_views.default" => true)
 
+  scope :yum_type, where(:content_type=>YUM_TYPE)
+  scope :file_type, where(:content_type=>FILE_TYPE)
+
   def self.ids_only
     with_exclusive_scope{pluck(:id)}
   end

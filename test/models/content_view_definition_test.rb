@@ -17,13 +17,16 @@ class ContentViewDefinitionTest < MiniTest::Rails::ActiveSupport::TestCase
   fixtures :all
 
   def self.before_suite
-    models = ["Organization", "KTEnvironment", "ContentViewEnvironment", "User", "Product", "Repository"]
-    disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
+    models = ["Product", "Repository","Organization", "KTEnvironment", "ContentViewDefinitionBase",
+              "ContentViewDefinition", "ContentViewEnvironment", "EnvironmentProduct",
+              "ContentViewDefinitionRepository", "ContentViewDefinitionProduct", "ContentViewVersion",
+              "User"]
+    disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch", "Foreman"], models, true)
   end
 
   def setup
     User.current = User.find(users(:admin))
-    @content_view_def = FactoryGirl.build(:content_view_definition)
+    @content_view_def = ContentViewDefinition.find(content_view_definition_bases(:simple_cvd).id)
     @repo = Repository.find(repositories(:fedora_17_x86_64).id)
     @product               = Product.find(products(:fedora).id)
   end
@@ -77,7 +80,7 @@ class ContentViewDefinitionTest < MiniTest::Rails::ActiveSupport::TestCase
     assert_includes @product.content_view_definitions.reload, @content_view_def
   end
 
-  def test_repos
+  def test_repositories
     @content_view_def.save!
     @content_view_def.repositories << @repo
     @content_view_def = @content_view_def.reload
@@ -85,10 +88,30 @@ class ContentViewDefinitionTest < MiniTest::Rails::ActiveSupport::TestCase
     assert_includes @content_view_def.repositories.map(&:id), @repo.id
   end
 
+  def test_repos_includes_repo
+    @content_view_def.repositories << @repo
+    assert_includes @content_view_def.repos, @repo
+  end
+
+  def test_repos_includes_product_repo
+    @content_view_def.products << @repo.product
+    @content_view_def.save!
+
+    assert_includes @content_view_def.repos.map(&:id), @repo.id
+  end
+
+  def test_repos_includes_file_types
+    @repo.content_type = Repository::FILE_TYPE
+    @repo.save!
+    @content_view_def.products << @repo.product
+
+    assert_includes @content_view_def.repos.map(&:id), @repo.id
+  end
+
   def test_adding_products_to_composite_view
     # verify that products cannot be added to a composite view
     @content_view_def.composite = true
-    @content_view_def.products << FactoryGirl.build_stubbed(:product)
+    @content_view_def.products << @repo.product
     refute @content_view_def.save
     refute_empty @content_view_def.errors
   end
