@@ -318,6 +318,20 @@ describe ContentViewDefinitionsController, :katello => true do
         ContentViewDefinition.where(:id=>@definition.id).first.products.first.should == @product
       end
 
+      it "should unset products if products param is nil" do
+        @definition.products = [@product]
+        @definition.save!
+        @definition.products.reload.length.should eql(1)
+
+        post :update_content, :id=>@definition.id
+        response.should be_success
+        @definition.products.reload.length.should eql(1)
+
+        post :update_content, :id=>@definition.id, :products => nil
+        response.should be_success
+        @definition.products.reload.length.should eql(0)
+      end
+
       it "should successfully update repositories" do
         assert @definition.repositories.size == 0
 
