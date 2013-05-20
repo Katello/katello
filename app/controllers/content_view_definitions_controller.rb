@@ -220,8 +220,8 @@ class ContentViewDefinitionsController < ApplicationController
   end
 
   def update_content
-    if params[:products]
-      products_ids = params[:products].empty? ? [] : Product.readable(current_organization).
+    if params.has_key?(:products)
+      products_ids = params[:products].blank? ? [] : Product.readable(current_organization).
           where(:id => params[:products]).pluck("products.id")
 
       @view_definition.product_ids = products_ids
