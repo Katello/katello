@@ -397,29 +397,42 @@ A hint for choosing the right value for the releaseVer param
 Used by katello-agent to keep the information about enabled repositories up to date.
 This information is then used for computing the errata available for the system.
   DESC
+  param :enabled_repos, Hash, :required => true do
+    param :repos, Array, :required => true do
+      params :baseurl, Array, :description=> "List of enabled repo urls for the repo (Only first is used.)", :required => false
+    end
+  end
   def enabled_repos
-    repos = params['enabled_repos'] rescue raise(HttpErrors::BadRequest, _("Expected attribute is missing:") + " enabled_repos")
-    update_labels = repos['repos'].collect { |r| r['repositoryid'] } rescue raise(HttpErrors::BadRequest, _("Unable to parse repositories: %s") % $!)
+    repos_params = params['enabled_repos'] rescue raise(HttpErrors::BadRequest, _("Expected attribute is missing:") + " enabled_repos")
+    repos_params = repos_params['repos'] || []
 
-    update_ids     = []
-    unknown_labels = []
-    update_labels.each do |label|
-      repo = @system.environment.repositories.find_by_cp_label label
-      if repo.nil?
-        logger.warn(_("Unknown repository label: %s") % label)
-        unknown_labels << label
+    unknown_paths = []
+    repos = []
+    repos_params.each do |repo|
+      if !repo['baseurl'].blank?
+        path = URI(repo['baseurl'].first).path
+        possible_repos = Repository.where(:relative_path => path.gsub('/pulp/repos/', ''))
+        if possible_repos.empty?
+          unknown_paths << path
+          logger.warn("System #{@system.name} (#{@system.id}) requested binding to unknown repo #{path}")
+        else
+          repos << possible_repos.first
+          logger.warn("System #{@system.name} (#{@system.id}) requested binding to path #{path} matching" +
+                       "#{possible_repos.size} repositories.") if possible_repos.size > 1
+        end
       else
-        update_ids << repo.pulp_id
+        logger.warn("System #{@system.name} (#{@system.id}) attempted to bind to unspecific repo (#{repo}).")
       end
     end
 
-    processed_ids, error_ids = @system.enable_repos(update_ids)
+    pulp_ids = repos.collect{|r| r.pulp_id}
+    processed_ids, error_ids = @system.enable_repos(pulp_ids)
 
     result                  = {}
     result[:processed_ids]  = processed_ids
     result[:error_ids]      = error_ids
-    result[:unknown_labels] = unknown_labels
-    if error_ids.count > 0 or unknown_labels.count > 0
+    result[:unknown_labels] = unknown_paths
+    if error_ids.count > 0 or unknown_paths.count > 0
       result[:result] = "error"
     else
       result[:result] = "ok"
