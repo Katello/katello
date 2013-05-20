@@ -455,6 +455,13 @@ KT.content_view_definition_filters = (function(){
         }
         register_remove($("#filters_form"));
         initialize_checkboxes($("#filters_form"));
+
+        $("#rule_input").live("keypress", function(event) {
+            if(event.keyCode === 13) {
+                event.preventDefault();
+                $("#add_rule").click();
+            }
+        });
     },
     initialize_filter = function() {
         var pane = $("#filter");
