@@ -83,9 +83,9 @@ class Api::V1::OrganizationDefaultInfoController < Api::V1::ApiController
     # retval will either be the Task, or an array of system names, based on whether the call is asynchronous or not
     retval = @organization.apply_default_info(params[:informable_type], to_apply, :async => params[:async])
 
-    response = {:systems => [], :task => nil}
+    response = {:informables => [], :task => nil}
     if params[:async] == false
-      response[:systems] = retval
+      response[:informables] = retval
     else
       response[:task] = retval
     end
