@@ -55,9 +55,14 @@ module DistributorsHelper
              {:tabindex => 2})
   end
 
-  def distributor_content_view_opts
+  def distributor_content_view_opts(distributor)
     keys = {}
-    ContentView.readable(current_organization).non_default.each do |view|
+    if distributor.environment
+      content_views = distributor.environment.content_views.subscribable(current_organization)
+    else
+      content_views = ContentView.subscribable(current_organization)
+    end
+    content_views.non_default.each do |view|
       keys[view.id] = view.name
     end
     keys[""] = ""

@@ -78,8 +78,15 @@ $(document).ready(function() {
         $(this).editable($(this).attr('data-url'), $.extend(common_settings, settings));
     });
 
+    var select_settings = {
+        select_mode:'single',
+        submit_button_text: i18n.save,
+        cancel_button_text: i18n.cancel,
+        activate_on_click: true,
+        library_select: true
+    };
     path_select = KT.path_select('environment_path_selector', 'edit_select_system_environment', KT.available_environments,
-        {select_mode:'single', submit_button_text: i18n.save, cancel_button_text: i18n.cancel, activate_on_click: true});
+        select_settings);
 
     $(document).bind(path_select.get_submit_event(), function(event, environments) {
         var selected_env_ids = KT.utils.values(path_select.get_selected());
