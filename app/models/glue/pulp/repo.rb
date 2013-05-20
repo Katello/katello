@@ -561,10 +561,10 @@ module Glue::Pulp::Repo
         history = Runcible::Extensions::Repository.sync_status(pulp_id)
 
         if history.nil? or history.empty?
-          history = Runcible::Extensions::Repository.sync_history(pulp_id)
+          history = PulpSyncStatus.convert_history(Runcible::Extensions::Repository.sync_history(pulp_id))
         end
       rescue => e
-          history = Runcible::Extensions::Repository.sync_history(pulp_id)
+          history = PulpSyncStatus.convert_history(Runcible::Extensions::Repository.sync_history(pulp_id))
       end
 
       if history.nil? or history.empty?
