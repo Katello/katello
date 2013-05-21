@@ -318,7 +318,8 @@ class SystemsController < ApplicationController
     # Stuff into var for use in spec tests
     @locals_hash = { :system => @system, :editable => @system.editable?,
                     :releases => releases, :releases_error => releases_error, :name => controller_display_name,
-                    :environments => environment_paths(library_path_element, environment_path_element("systems_readable?")) }
+                    :environments => environment_paths(library_path_element("systems_readable?"),
+                                                       environment_path_element("systems_readable?")) }
     render :partial => "edit", :locals => @locals_hash
   end
 
@@ -385,7 +386,8 @@ class SystemsController < ApplicationController
       # Stuff into var for use in spec tests
       @locals_hash = { :system => @system, :editable => @system.editable?,
                       :releases => releases, :releases_error => releases_error, :name => controller_display_name,
-                      :environments => environment_paths(library_path_element, environment_path_element("systems_readable?"))}
+                      :environments => environment_paths(library_path_element("systems_readable?"),
+                                                         environment_path_element("systems_readable?"))}
 
       if request.xhr?
         render :show_nutupane, :leyout => false, :locals => @locals_hash
