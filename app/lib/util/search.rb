@@ -50,5 +50,17 @@ module Util
       return search
     end
 
+    def self.active_record_search_classes
+      ignore_list =  ["CpConsumerUser", "PulpSyncStatus", "PulpTaskStatus", "Hypervisor", "Pool"]
+      classes = get_subclasses(ActiveRecord::Base)
+      classes.select{ |c| !ignore_list.include?(c.name) && c.respond_to?(:index) }.sort_by(&:name)
+    end
+
+    def self.get_subclasses(obj_class)
+      classes = obj_class.subclasses
+      subs = classes.collect {|c| get_subclasses(c) }.flatten
+      classes + subs
+    end
+
   end
 end
