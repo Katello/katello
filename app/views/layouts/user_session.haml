@@ -7,7 +7,10 @@
   = javascript_include_tag :user_sessions
 
 = content_for(:login_logo) do
-  = image_tag("logo.png", :alt => _('Katello Logo'))
+  - if Katello.config.katello?
+    = image_tag("katello-login-logo.png", :alt => _('Katello Logo'))
+  - else
+    = image_tag("headpin-login-logo.png", :alt => _('Headpin Logo'))
   -if release_name == 'Katello' || release_name == 'Headpin'
     %span.login-version
       = Katello.config.katello_version
