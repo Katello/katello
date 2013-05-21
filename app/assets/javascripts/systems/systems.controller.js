@@ -21,6 +21,7 @@
  * @requires $compile
  * @requires $http
  * @requires $state
+ * @requires Routes
  *
  * @description
  *   Provides the functionality specific to Systems for use with the Nutupane UI pattern.
@@ -28,8 +29,8 @@
  *   within the table.
  */
 angular.module('Katello').controller('SystemsController',
-    ['$scope', 'Nutupane', '$location', '$compile', '$filter', '$http', '$state',
-    function($scope, Nutupane, $location, $compile, $filter, $http, $state) {
+    ['$scope', 'Nutupane', '$location', '$compile', '$filter', '$http', '$state', 'Routes',
+    function($scope, Nutupane, $location, $compile, $filter, $http, $state, Routes) {
 
         var columns = [{
             id: 'name',
@@ -66,7 +67,7 @@ angular.module('Katello').controller('SystemsController',
                         'row_id' : system.id,
                         'show'  : true,
                         'cells': [{
-                            display: $compile('<a ng-click="table.select_item(\'' + KT.routes.edit_system_path(system.id) + '\',' + system.id + ')">' + system.name + '</a>')($scope),
+                            display: $compile('<a ng-click="table.select_item(\'' + Routes.edit_system_path(system.id) + '\',' + system.id + ')">' + system.name + '</a>')($scope),
                             column_id: 'name'
                         },{
                             display: system.description,
@@ -96,7 +97,7 @@ angular.module('Katello').controller('SystemsController',
         };
 
         $scope.table                = Nutupane.table;
-        $scope.table.url            = KT.routes.api_systems_path();
+        $scope.table.url            = Routes.api_systems_path();
         $scope.table.transform      = transform;
         $scope.table.model          = 'Systems';
         $scope.table.data.columns   = columns;
@@ -108,14 +109,14 @@ angular.module('Katello').controller('SystemsController',
             var createSuccess = function (data) {
                 $scope.$apply(function () {
                     Nutupane.table.setNewItemVisibility(false);
-                    $scope.table.select_item(KT.routes.edit_system_path(data.system.id));
+                    $scope.table.select_item(Routes.edit_system_path(data.system.id));
                 });
                 notices.checkNotices();
             };
 
             // Temporarily get the old new systems UI
             // TODO REPLACE ME
-            $http.get(KT.routes.new_system_path()).then(function (response) {
+            $http.get(Routes.new_system_path()).then(function (response) {
                 var content = $('#nutupane-new-item .nutupane-pane-content'),
                     data = KT.common.getSearchParams() || {},
                     button = content.find('input[type|="submit"]');
@@ -127,7 +128,7 @@ angular.module('Katello').controller('SystemsController',
                 content.find('#new_system').submit(function (event) {
                     event.preventDefault();
                     $(this).ajaxSubmit({
-                        url: KT.routes.systems_path(),
+                        url: Routes.systems_path(),
                         data: data,
                         success: createSuccess,
                         error: function (e) {
@@ -149,7 +150,7 @@ angular.module('Katello').controller('SystemsController',
         };
 
         Nutupane.default_item_url = function(id) {
-            return KT.routes.edit_system_path(id);
+            return Routes.edit_system_path(id);
         };
 
         Nutupane.get(function() {
