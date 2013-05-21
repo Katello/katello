@@ -137,7 +137,6 @@ module Glue::Pulp::Repo
         else
           raise _("Unexpected repo type %s") % self.content_type
       end
-
     end
 
     def generate_distributor
@@ -153,7 +152,14 @@ module Glue::Pulp::Repo
         else
           raise _("Unexpected repo type %s") % self.content_type
       end
+    end
 
+    def refresh_pulp_repo(feed_ca, feed_cert, feed_key)
+      self.feed_ca = feed_ca
+      self.feed_cert = feed_cert
+      self.feed_key = feed_key
+      Runcible::Extensions::Repository.update_importer(self.pulp_id, self.importers.first['id'], generate_importer.config)
+      Runcible::Extensions::Repository.update_distributor(self.pulp_id, self.distributors.first['id'], generate_distributor.config)
     end
 
     def promote from_env, to_env

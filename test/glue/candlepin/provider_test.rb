@@ -59,19 +59,13 @@ class GlueCandlepinProviderTestImport < GlueCandlepinProviderTestBase
     super
   end
 
-  #def test_manifest_import_nonexistent
-  #  assert_raises(RestClient::Gone) do
-  #    @@provider.queue_import_manifest("#{Dir.pwd}/fixtures/manifests/nonexistent.zip", {:notify => true})
-  #  end
-  #end
-
   def test_manifest_import
     skip "Need testable manifests"
 
     # Import the newest org1 manifest - should work
     manifest = 'minitest-org1-v2'
     VCR.use_cassette("support/candlepin/provider_#{manifest}", :match_requests_on => [:path, :params, :method]) do
-      @@provider.queue_import_manifest("test/fixtures/manifests/#{manifest}.zip", {:notify => true})
+      @@provider.queue_import_manifest(:notify => true, :zip_file_path=>"test/fixtures/manifests/#{manifest}.zip")
       notice = Notice.find_by_text("Subscription manifest uploaded successfully for provider 'Red Hat Provider'. Please enable the repositories you want to sync by selecting 'Enable Repositories' and selecting individual repositories to be enabled.")
       assert notice, "Notice of successful import of #{manifest}.zip missing"
       notice.destroy if notice # clean up
@@ -81,7 +75,7 @@ class GlueCandlepinProviderTestImport < GlueCandlepinProviderTestBase
     manifest = 'minitest-org1-v1'
     VCR.use_cassette("support/candlepin/provider_#{manifest}", :match_requests_on => [:path, :params, :method]) do
       assert_raises(RestClient::Conflict) do
-        @@provider.queue_import_manifest("test/fixtures/manifests/#{manifest}.zip", {:notify => true})
+        @@provider.queue_import_manifest(:notify => true, :zip_file_path=>"test/fixtures/manifests/#{manifest}.zip")
       end
       notice = Notice.find_by_text("Subscription manifest uploaded successfully for provider 'Red Hat Provider'. Please enable the repositories you want to sync by selecting 'Enable Repositories' and selecting individual repositories to be enabled.")
       assert notice, "Notice of successful import of #{manifest}.zip missing"
@@ -91,7 +85,7 @@ class GlueCandlepinProviderTestImport < GlueCandlepinProviderTestBase
     # Import different org2 manifest - should fail
     manifest = 'minitest-org2-v1'
     VCR.use_cassette("support/candlepin/provider_#{manifest}", :match_requests_on => [:path, :params, :method]) do
-      @@provider.queue_import_manifest("test/fixtures/manifests/#{manifest}.zip", {:notify => true})
+      @@provider.queue_import_manifest(:notify => true, :zip_file_path=>"test/fixtures/manifests/#{manifest}.zip")
       notice = Notice.find_by_text("Subscription manifest uploaded successfully for provider 'Red Hat Provider'. Please enable the repositories you want to sync by selecting 'Enable Repositories' and selecting individual repositories to be enabled.")
       assert notice, "Notice of successful import of #{manifest}.zip missing"
       notice.destroy if notice # clean up
