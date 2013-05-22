@@ -268,6 +268,17 @@ module Glue::Pulp::Repos
       url
     end
 
+    def update_repositories
+      org = self.organization
+      repos = self.repos(org.library, true, org.default_content_view)
+      key = self.key
+      cert = self.certificate
+      ca = File.read(Resources::CDN::CdnResource.ca_file)
+      repos.each do |repo|
+        repo.refresh_pulp_repo(ca, cert, key)
+      end
+    end
+
     def add_repo(label, name, url, repo_type, unprotected=false, gpg = nil)
       check_for_repo_conflicts(name, label)
       key = EnvironmentProduct.find_or_create(self.organization.library, self)
