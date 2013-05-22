@@ -20,6 +20,7 @@
  * @requires $location
  * @requires $compile
  * @requires $http
+ * @requires $state
  *
  * @description
  *   Provides the functionality specific to Systems for use with the Nutupane UI pattern.
@@ -27,8 +28,8 @@
  *   within the table.
  */
 angular.module('Katello').controller('SystemsController',
-    ['$scope', 'Nutupane', '$location', '$compile', '$filter', '$http',
-    function($scope, Nutupane, $location, $compile, $filter, $http) {
+    ['$scope', 'Nutupane', '$location', '$compile', '$filter', '$http', '$state',
+    function($scope, Nutupane, $location, $compile, $filter, $http, $state) {
 
         var columns = [{
             id: 'name',
@@ -138,6 +139,15 @@ angular.module('Katello').controller('SystemsController',
             });
         };
 
+        /**
+         * Fill the right pane with the specified state.
+         * @param state the state to fill the right pane with.
+         */
+        $scope.fillActionPaneWithState = function(state) {
+            $scope.table.openActionPane();
+            $state.transitionTo(state);
+        };
+
         Nutupane.default_item_url = function(id) {
             return KT.routes.edit_system_path(id);
         };
@@ -147,5 +157,13 @@ angular.module('Katello').controller('SystemsController',
                 $scope.table.select_item(undefined, $location.search().item);
             }
         });
+    }]
+);
+
+angular.module('Katello').controller('SystemsBulkActionController',
+    ['$scope',
+    function($scope) {
+        // To be used for all bulk actions rather than have a separate controller
+        // for each.
     }]
 );
