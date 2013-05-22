@@ -45,7 +45,7 @@ module SystemsHelper
   end
 
   def content_view_select(org, env)
-    views = ContentView.readable(org).non_default.in_environment(env)
+    views = ContentView.readable(org).in_environment(env)
     choices = views.map {|v| [v.name, v.id]}
     select(:system, "content_view_id", choices, {:id => "content_view_field"}, {:tabindex => 2})
   end
