@@ -28,7 +28,7 @@
  *   Defines the columns to display and the transform function for how to generate each row
  *   within the table.
  */
-angular.module('Katello').controller('SystemsController',
+angular.module('Katello.systems').controller('SystemsController',
     ['$scope', 'Nutupane', '$location', '$compile', '$filter', '$http', '$state', 'Routes',
     function($scope, Nutupane, $location, $compile, $filter, $http, $state, Routes) {
 
@@ -162,10 +162,19 @@ angular.module('Katello').controller('SystemsController',
     }]
 );
 
-angular.module('Katello').controller('SystemsBulkActionController',
-    ['$scope',
-    function($scope) {
-        // To be used for all bulk actions rather than have a separate controller
-        // for each.
+/**
+ * @ngdoc controller
+ * @name  Katello.systems:SystemsBulkActionController
+ *
+ * @requires $scope
+ * @requires SystemGroups
+ *
+ * @description
+ *   A controller for providing bulk action functionality to the systems page.
+ */
+angular.module('Katello.systems').controller('SystemsBulkActionController',
+    ['$scope', 'SystemGroups',
+    function($scope, SystemGroups) {
+        $scope.systemGroups = SystemGroups.query();
     }]
 );

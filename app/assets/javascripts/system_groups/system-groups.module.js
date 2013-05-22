@@ -1,4 +1,5 @@
-/* Copyright 2013 Red Hat, Inc.
+/**
+ Copyright 2013 Red Hat, Inc.
 
  This software is licensed to you under the GNU General Public
  License as published by the Free Software Foundation; either version
@@ -8,11 +9,13 @@
  NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
  have received a copy of GPLv2 along with this software; if not, see
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
-*/
+ **/
 
-//= require "i18n/i18n.module.js"
-//= require "i18n/i18n.filter.js"
-//= require "systems/systems.module.js"
-//= require "system_groups/system-groups.module"
-//= require "system_groups/system-groups.factory"
-//= require "common/experimental/routes.factory"
+/**
+ * @ngdoc module
+ * @name  Katello.system-groups
+ *
+ * @description
+ *   Module for system groups related functionality.
+ */
+angular.module('Katello.system-groups', ['ngResource']);

@@ -32,6 +32,7 @@
 //= require "alchemy/jquery/plugins/jquery.fancyqueries"
 //= require "alchemy/jquery/plugins/jquery.ba-resize"
 //= require "ui_alchemy/angular/angular"
+//= require "ui_alchemy/angular-resource/angular-resource"
 //= require "ui_alchemy/angular-sanitize/angular-sanitize"
 //= require "ui_alchemy/ngInfiniteScroll/ng-infinite-scroll"
 //= require "ui_alchemy/alchemy/alchemy"
