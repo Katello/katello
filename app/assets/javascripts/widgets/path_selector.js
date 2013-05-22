@@ -175,8 +175,8 @@ KT.path_select = function(div_id, name, environments, options_in){
             on_select = function(select_elem){
                 select_nodes(select_elem);
                 if(options.select_mode === 'single'){
-                    nodes.attr('disabled', 'disabled');
-                    select_elem.removeAttr('disabled');
+                    unselect_nodes(nodes);
+                    select_nodes(select_elem);
                 }
                 if(options.link_first && select_elem.parents('li').is(':first-child')){
                     select_nodes(first_nodes.find('input:checkbox').not(':checked'));
