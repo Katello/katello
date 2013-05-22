@@ -340,13 +340,10 @@ KT.systems_page = (function() {
             return;
         }
 
-//        KT.env_content_view_selector('edit_env_view',
-//            'environment_path_selector', KT.available_environments, KT.current_environment_id,
-//            'content_view_selector', KT.available_content_views, KT.current_content_view_id);
-
         KT.env_content_view_selector.init('edit_env_view',
             'environment_path_selector', KT.available_environments, KT.current_environment_id,
-            'content_view_selector', KT.available_content_views, KT.current_content_view_id);
+            'content_view_selector', KT.available_content_views, KT.current_content_view_id,
+            'env_content_view_selector_buttons');
     },
     system_group_setup = function() {
         $('#create_system_group').live('click', create_system_group);
