@@ -435,7 +435,7 @@ class ApplicationController < ActionController::Base
   end
 
   def environment_path_element(perms_method=nil)
-    Proc.new { |a_path| {:id=>a_path.id, :name=>a_path.name, :select=>(perms_method.nil? ? false : a_path.instance_eval(perms_method))} }
+    Proc.new { |a_path| {:id=>a_path.id, :name=>a_path.name, :select=>(perms_method.nil? ? false : a_path.send(perms_method))} }
   end
 
   def library_path_element(perms=nil)
