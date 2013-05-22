@@ -161,7 +161,7 @@ module Src
     config.assets.version = '1.0'
     config.assets.initialize_on_precompile = false
 
-    config.assets.paths << "#{self.root}/app/assets"
+    config.assets.paths << Rails.root.join("app", "assets")
 
     config.assets.precompile << Proc.new do |path|
       if path =~ /\.(css|js)\z/
