@@ -71,7 +71,6 @@ class SyncManagementController < ApplicationController
     custom_products.sort_by { |p| p.name.downcase }
 
     @products = redhat_products + custom_products
-    @sproducts = @products.select(&:syncable?)
     @product_size = Hash.new
     @repo_status = Hash.new
     @product_map = collect_repos(@products, org.library)
