@@ -253,7 +253,8 @@ class DistributorsController < ApplicationController
     # Stuff into var for use in spec tests
     @locals_hash = { :distributor => @distributor, :editable => @distributor.editable?,
                     :releases => releases, :releases_error => releases_error, :name => controller_display_name,
-                    :environments => environment_paths(library_path_element, environment_path_element("distributors_readable?")) }
+                    :environments => environment_paths(library_path_element("distributors_readable?"),
+                                                       environment_path_element("distributors_readable?")) }
     render :partial => "edit", :locals => @locals_hash
   end
 
