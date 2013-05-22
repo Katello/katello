@@ -11,16 +11,11 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
  **/
 
-Katello.controller('UserSessionsController', ['$scope', function($scope) {
-    $('#login_form').bind('ajax:complete', function(event, request) {
-        var status = request.status;
-
-        // 40x error means that user was not authenticated, for such case we don't want
-        // to trigger orgSwitcher refresh
-        if (status >= 400 && status < 500) {
-            notices.displayNotice("error", request.responseText);
-        } else {
-            $scope.orgSwitcher.refresh();
-        }
-    });
-}]);
+/**
+ * @ngdoc module
+ * @name  Katello.menu
+ *
+ * @description
+ *   Module for menu related functionality.
+ */
+angular.module('Katello.menu', ['alchemy', 'alch-templates', 'Katello.widgets']);
