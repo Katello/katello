@@ -174,9 +174,9 @@ angular.module('Katello').factory('Nutupane', ['$location', '$http', 'current_or
     Nutupane.table.setDetailsVisibility = function(visibility) {
         var table = Nutupane.table;
         if (visibility) {
-            table.openRightPane();
+            table.openActionPane();
         } else {
-            table.closeRightPane();
+            table.closeActionPane();
         }
 
         table.detailsVisible = visibility;
@@ -201,17 +201,17 @@ angular.module('Katello').factory('Nutupane', ['$location', '$http', 'current_or
     };
 
     /**
-     * Open the right pane by removing all but the name column.
+     * Open the action pane by removing all but the name column.
      */
-    Nutupane.table.openRightPane = function() {
+    Nutupane.table.openActionPane = function() {
         Nutupane.table.collapsed = true;
         Nutupane.table.data.columns = nameColumn;
     };
 
     /**
-     * Close the right pane by restoring the table columns.
+     * Close the action pane by restoring the table columns.
      */
-    Nutupane.table.closeRightPane = function() {
+    Nutupane.table.closeActionPane = function() {
         Nutupane.table.collapsed = false;
         Nutupane.table.data.columns = allColumns;
     };

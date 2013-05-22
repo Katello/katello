@@ -143,8 +143,8 @@ angular.module('Katello').controller('SystemsController',
          * Fill the right pane with the specified state.
          * @param state the state to fill the right pane with.
          */
-        $scope.fillRightPaneWithState = function(state) {
-            $scope.table.openRightPane();
+        $scope.fillActionPaneWithState = function(state) {
+            $scope.table.openActionPane();
             $state.transitionTo(state);
         };
 
