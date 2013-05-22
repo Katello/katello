@@ -96,19 +96,21 @@ angular.module('Katello.systems').controller('SystemsController',
             };
         };
 
-        $scope.table                = Nutupane.table;
+        var nutupane                = new Nutupane();
+
+        $scope.table                = nutupane.table;
         $scope.table.url            = Routes.api_systems_path();
         $scope.table.transform      = transform;
         $scope.table.model          = 'Systems';
         $scope.table.data.columns   = columns;
         $scope.table.active_item    = {};
 
-        Nutupane.setColumns([columns[0]]);
+        nutupane.setColumns([columns[0]]);
 
         $scope.createNewSystem = function () {
             var createSuccess = function (data) {
                 $scope.$apply(function () {
-                    Nutupane.table.setNewItemVisibility(false);
+                    nutupane.table.setNewItemVisibility(false);
                     $scope.table.select_item(Routes.edit_system_path(data.system.id));
                 });
                 notices.checkNotices();
@@ -122,8 +124,8 @@ angular.module('Katello.systems').controller('SystemsController',
                     button = content.find('input[type|="submit"]');
 
                 content.html(response.data);
-                Nutupane.table.setDetailsVisibility(false);
-                Nutupane.table.setNewItemVisibility(true);
+                nutupane.table.setDetailsVisibility(false);
+                nutupane.table.setNewItemVisibility(true);
 
                 content.find('#new_system').submit(function (event) {
                     event.preventDefault();
@@ -135,6 +137,7 @@ angular.module('Katello.systems').controller('SystemsController',
                             button.removeAttr('disabled');
                             notices.checkNotices();
                         }
+
                     });
                 });
             });
@@ -150,11 +153,11 @@ angular.module('Katello.systems').controller('SystemsController',
             $state.transitionTo(state);
         };
 
-        Nutupane.default_item_url = function(id) {
+        nutupane.default_item_url = function(id) {
             return Routes.edit_system_path(id);
         };
 
-        Nutupane.get(function() {
+        nutupane.get(function() {
             if ($location.search().item) {
                 $scope.table.select_item(undefined, $location.search().item);
             }
@@ -164,17 +167,75 @@ angular.module('Katello.systems').controller('SystemsController',
 
 /**
  * @ngdoc controller
- * @name  Katello.systems:SystemsBulkActionController
+ * @name  Katello.systems.controller:SystemsBulkActionController
  *
  * @requires $scope
  * @requires SystemGroups
+ * @requires Nutupane
+ * @requires Routes
+ * @requires CurrentOrganization
  *
  * @description
  *   A controller for providing bulk action functionality to the systems page.
  */
 angular.module('Katello.systems').controller('SystemsBulkActionController',
-    ['$scope', 'SystemGroups',
-    function($scope, SystemGroups) {
-        $scope.systemGroups = SystemGroups.query();
+    ['$scope', 'SystemGroups', 'Nutupane', 'Routes', 'CurrentOrganization',
+    function($scope, SystemGroups, Nutupane, Routes, CurrentOrganization) {
+
+        var columns = [{
+            id: 'name',
+            display: 'Name',
+            show: true
+        },{
+            id: 'max_systems',
+            display: 'Maximum Systems',
+            show: true
+        },{
+            id: 'num_systems',
+            display: 'Num Systems',
+            show: true
+        }];
+
+        var transform = function(data) {
+            var rows = [];
+
+            angular.forEach(data['system_groups'],
+                function(systemGroup) {
+                    var row = {
+                        'row_id' : systemGroup.id,
+                        'show'  : true,
+                        'cells': [{
+                            display: systemGroup.name,
+                            column_id: 'name'
+                        },{
+                            display: systemGroup.max_systems,
+                            column_id: 'max_systems'
+                        },{
+                            display: systemGroup.system.length,
+                            column_id: 'num_systems'
+                        }]
+                    };
+                    rows.push(row);
+                }
+            );
+
+            return {
+                rows    : rows,
+                total   : data.total,
+                subtotal: data.subtotal
+            };
+        };
+
+        var nutupane                       = new Nutupane();
+        $scope.systemGroups                = nutupane.table;
+        $scope.systemGroups.url            = Routes.api_organization_system_groups_path(CurrentOrganization);
+        $scope.systemGroups.transform      = transform;
+        $scope.systemGroups.model          = 'System Groups';
+        $scope.systemGroups.data.columns   = columns;
+        $scope.systemGroups.active_item    = {};
+
+        nutupane.setColumns();
+
+        nutupane.get();
     }]
 );
