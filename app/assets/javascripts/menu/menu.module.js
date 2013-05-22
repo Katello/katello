@@ -11,8 +11,11 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
  **/
 
-Katello.controller('UserSessionsController', ['$scope', function($scope) {
-    $('#login_form').bind('ajax:complete', function() {
-        $scope.orgSwitcher.refresh();
-    });
-}]);
+/**
+ * @ngdoc module
+ * @name  Katello.menu
+ *
+ * @description
+ *   Module for menu related functionality.
+ */
+angular.module('Katello.menu', ['alchemy', 'alch-templates', 'Katello.widgets']);
