@@ -66,7 +66,9 @@ angular.module('Katello').factory('Nutupane', ['$location', '$http', 'current_or
                 data: {},
                 offset: 0,
                 visible: true,
+                collapsed: false,
                 detailsVisible: false,
+                newPaneVisible: false,
                 total: 0,
                 search_string: $location.search().search,
                 loading_more: false
@@ -171,13 +173,10 @@ angular.module('Katello').factory('Nutupane', ['$location', '$http', 'current_or
      */
     Nutupane.table.setDetailsVisibility = function(visibility) {
         var table = Nutupane.table;
-
         if (visibility) {
-            // Remove all columns except name and replace them with the details pane
-            table.data.columns = nameColumn;
+            table.openActionPane();
         } else {
-            // Restore the former columns
-            table.data.columns = allColumns;
+            table.closeActionPane();
         }
 
         table.detailsVisible = visibility;
@@ -196,11 +195,25 @@ angular.module('Katello').factory('Nutupane', ['$location', '$http', 'current_or
         Nutupane.table.newPaneVisible = visibility;
     };
 
-    Nutupane.table.close_item = function () {
+    Nutupane.table.close_item = function() {
         Nutupane.table.setDetailsVisibility(false);
-        // Restore the former columns
-        Nutupane.table.data.columns = allColumns;
         $location.search('item', '');
+    };
+
+    /**
+     * Open the action pane by removing all but the name column.
+     */
+    Nutupane.table.openActionPane = function() {
+        Nutupane.table.collapsed = true;
+        Nutupane.table.data.columns = nameColumn;
+    };
+
+    /**
+     * Close the action pane by restoring the table columns.
+     */
+    Nutupane.table.closeActionPane = function() {
+        Nutupane.table.collapsed = false;
+        Nutupane.table.data.columns = allColumns;
     };
 
     Nutupane.table.select_item = function(url, id){
@@ -234,8 +247,7 @@ angular.module('Katello').factory('Nutupane', ['$location', '$http', 'current_or
                 table.active_item.selected  = true;
                 rowSelect = false;
             }
-
-            table.active_item.html = response.data;
+            Nutupane.table.active_item.html = response.data;
             Nutupane.table.setDetailsVisibility(true);
         });
     };

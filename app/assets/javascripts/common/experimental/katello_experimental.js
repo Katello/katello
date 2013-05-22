@@ -19,19 +19,54 @@
  *   Base module that defines the Katello module namespace and includes any thirdparty
  *   modules used by the application.
  */
-var Katello = angular.module('Katello', ['alchemy', 'alch-templates', 'ngSanitize', 'infinite-scroll']);
+var Katello = angular.module('Katello', ['alchemy', 'alch-templates', 'ngSanitize', 'infinite-scroll', 'ui.compat']);
 
 /**
  * @ngdoc config
  * @name  Katello.config
  *
  * @requires $httpProvider
- * @requires $locationProvider
+ * @requires $stateProvider
  *
  * @description
  *   Used for establishing application wide configuration such as adding the Rails CSRF token
- *   to every request.
+ *   to every request and setting up the ui state machine.
  */
-Katello.config(['$httpProvider', '$locationProvider', function($httpProvider, $locationProvider){
+Katello.config(['$httpProvider', '$stateProvider', function($httpProvider, $stateProvider){
     $httpProvider.defaults.headers.common['X-CSRF-TOKEN'] = $('meta[name=csrf-token]').attr('content');
+
+    $stateProvider.state('systems', {
+        views: {
+            '@': {
+                controller: 'SystemsController'
+            }
+        }
+    });
+
+    $stateProvider.state('systems.alter-content', {
+        views: {
+            '@': {
+                controller: 'SystemsBulkActionController',
+                templateUrl: 'views/systems/alter-content-bulk.html'
+            }
+        }
+    });
+
+    $stateProvider.state('systems.alter-system-groups', {
+        views: {
+            '@': {
+                controller: 'SystemsBulkActionController',
+                templateUrl: 'views/systems/alter-systems-group-bulk.html'
+            }
+        }
+    });
+
+    $stateProvider.state('systems.bulk-delete', {
+        views: {
+            '@': {
+                controller: 'SystemsBulkActionController',
+                templateUrl: 'views/systems/systems-delete-bulk.html'
+            }
+        }
+    });
 }]);
