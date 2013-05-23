@@ -20,13 +20,21 @@ class FailedAuthenticationController < ActionController::Base
     # The logic below will generate a flash vs using ApplicationController::errors.
     # The reason being, this controller purposely does not inherit from ApplicationController;
     # otherwise, these actions would report an error that user must be logged in to perform them.
+    message = _("You have entered an incorrect username/password combination, or your account may currently be disabled. Please try again or contact your administrator.")
 
-    if request.env['HTTP_X_FORWARDED_USER'].blank?
-      flash[:error] = {"notices" => [_("You have entered an incorrect username/password combination, or your account may currently be disabled. Please try again or contact your administrator.")]}.to_json
-      redirect_to new_user_session_url(:sso_tried => true)
-    else
-      flash[:error] = {"notices" => [_("You do not have valid credentials to access this system. Please contact your administrator.")]}.to_json
-      redirect_to show_user_session_url
+    respond_to do |format|
+      format.json { render :json => { :notices => [ message ] }, :status => 401 }
+      format.all do
+        if request.env['HTTP_X_FORWARDED_USER'].blank?
+          path = new_user_session_url(:sso_tried => true)
+        else
+          message = _("You do not have valid credentials to access this system. Please contact your administrator.")
+          path = show_user_session_url
+        end
+
+        flash[:error] = {'notices' => [ message ] }.to_json
+        redirect_to path
+      end
     end
 
     return false
