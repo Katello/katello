@@ -16,3 +16,4 @@
 //= require "i18n/i18n.filter.js"
 //= require "systems/systems.module.js"
 //= require "widgets/widgets.module.js"
+//= require "common/experimental/routes.service"
