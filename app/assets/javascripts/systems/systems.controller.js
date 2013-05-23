@@ -145,6 +145,7 @@ angular.module('Katello').controller('SystemsController',
          * @param state the state to fill the right pane with.
          */
         $scope.fillActionPaneWithState = function(state) {
+            $scope.table.setDetailsVisibility(false);
             $scope.table.openActionPane();
             $state.transitionTo(state);
         };
