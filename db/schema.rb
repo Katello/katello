@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130515153703) do
+ActiveRecord::Schema.define(:version => 20130521162439) do
 
   create_table "activation_keys", :force => true do |t|
     t.string   "name"
@@ -183,14 +183,14 @@ ActiveRecord::Schema.define(:version => 20130515153703) do
   add_index "content_view_environments", ["content_view_id"], :name => "index_content_view_environments_on_content_view_id"
   add_index "content_view_environments", ["environment_id"], :name => "index_content_view_environments_on_environment_id"
 
-  create_table "content_view_version_environments", :id => false, :force => true do |t|
+  create_table "content_view_version_environments", :force => true do |t|
     t.integer  "content_view_version_id"
     t.integer  "environment_id"
     t.datetime "created_at",              :null => false
     t.datetime "updated_at",              :null => false
   end
 
-  add_index "content_view_version_environments", ["content_view_version_id", "environment_id"], :name => "cvv_env_index"
+  add_index "content_view_version_environments", ["content_view_version_id", "environment_id"], :name => "cvv_env_index", :unique => true
 
   create_table "content_view_versions", :force => true do |t|
     t.integer  "content_view_id"
@@ -569,7 +569,7 @@ ActiveRecord::Schema.define(:version => 20130515153703) do
 
   add_index "roles", ["name"], :name => "index_roles_on_name", :unique => true
 
-  create_table "roles_users", :id => false, :force => true do |t|
+  create_table "roles_users", :force => true do |t|
     t.integer "role_id"
     t.integer "user_id"
     t.boolean "ldap"
