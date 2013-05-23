@@ -45,6 +45,10 @@ module Glue::Pulp::Package
     def nvrea
       Util::Package::build_nvrea(self.as_json.with_indifferent_access, false)
     end
+
+    def as_json(options = nil)
+      super(options).merge id: id
+    end
   end
 
 end
