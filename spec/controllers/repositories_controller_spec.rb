@@ -69,6 +69,49 @@ describe RepositoriesController, :katello => true do
     end
   end
 
+  describe "destroy a repository" do
+     before(:each) do
+       login_user
+
+       Provider.stub(:find).and_return(mock_model(Repository))
+       Product.stub(:find).and_return(@product = mock_model(Product))
+       @product.stub(:editable?).and_return(true)
+
+       @repository = mock_model(Repository, :name=>"deleted", :id => 123456).as_null_object
+       Repository.stub(:find).and_return(@repository)
+       @repository.stub(:destroy)
+     end
+
+     describe "on success" do
+       before(:each) { @repository.stub(:destroyed?).and_return(true) }
+
+       it "destroys the requested repository" do
+         @repository.should_receive(:destroy)
+         @repository.should_receive(:destroyed?)
+         delete :destroy, :id => "123456", :provider_id => "123", :product_id => "123"
+       end
+
+        it "updates the view" do
+          delete :destroy, :id => "123456", :provider_id => "123", :product_id => "123", :format => :js
+          response.should render_template(:partial => 'common/_post_delete_close_subpanel')
+        end
+     end
+
+     describe "on failure" do
+       before(:each) { @repository.stub(:destroyed?).and_return(false) }
+
+       it "should produce an error notice on failure" do
+         controller.should notify.error
+         delete :destroy, :id => "123456", :provider_id => "123", :product_id => "123"
+       end
+
+       it "shouldn't render anything on failure" do
+         delete :destroy, :id => "123456", :provider_id => "123", :product_id => "123"
+         response.body.should be_blank
+       end
+     end
+   end
+
   describe "other-tests" do
     before (:each) do
       login_user

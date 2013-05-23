@@ -136,6 +136,45 @@ describe UsersController do
 
   end
 
+  describe "destroy a user" do
+    before(:each) do
+      User.any_instance.stub(:deletable?).and_return(true)
+
+      @to_delete = mock_model(User, :username=>"deleted", :password=>"deleted", :email=>"delete@test").as_null_object
+      User.stub(:find).and_return(@to_delete)
+      @to_delete.stub(:destroy)
+    end
+
+    describe "on success" do
+      before(:each) { @to_delete.stub(:destroyed?).and_return(true) }
+
+      it "destroys the requested user", :katello => true do
+        @to_delete.should_receive(:destroy)
+        @to_delete.should_receive(:destroyed?)
+        delete :destroy, :id => "123456"
+      end
+
+      it "updates the user list", :katello => true do
+        delete :destroy, :id => "123456", :format => :js
+        response.should render_template(:partial => 'common/_list_remove')
+      end
+    end
+
+    describe "on failure" do
+      before(:each) { @to_delete.stub(:destroyed?).and_return(false) }
+
+      it "should produce an error notice on failure", :katello => true do
+        controller.should notify.error
+        delete :destroy, :id => "123456"
+      end
+
+      it "shouldn't render anything on failure", :katello => true do
+        delete :destroy, :id => "123456"
+        response.body.should be_blank
+      end
+    end
+  end
+
   describe "set helptips" do
 
     before(:each) do

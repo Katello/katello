@@ -110,8 +110,14 @@ class EnvironmentsController < ApplicationController
   # DELETE /environments/1
   def destroy
     @environment.destroy
-    notify.success _("Environment '%s' was deleted.") % @environment.name
-    render :partial => "common/post_delete_close_subpanel", :locals => {:path=>edit_organization_path(@organization.label)}
+    if @environment.destroyed?
+      notify.success _("Environment '%s' was deleted.") % @environment.name
+      render :partial => "common/post_delete_close_subpanel", :locals => {:path=>edit_organization_path(@organization.label)}
+    else
+      err_msg = N_("Removal of the environment failed. If you continue having trouble with this, please contact an Administrator.")
+      notify.error err_msg
+      render :nothing => true
+    end
   end
 
   # GET /environments/1/products
