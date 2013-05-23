@@ -147,4 +147,14 @@ class RepositoryInstanceTest < RepositoryTestBase
     assert_equal "acme_corporation_label-library_label-org_default_label-fedora_label-fedora_17_x86_64_label", repo_id
   end
 
+  def test_clone_repo_path_for_component
+    # validate that clone repo path for a component view does not include the component view label
+    @content_view_definition = content_view_definition_bases(:composite_def)
+    dev = KTEnvironment.find(environments(:dev).id)
+
+    relative_path = Repository.clone_repo_path(@fedora_17_x86_64, dev,
+                                               @content_view_definition.component_content_views.first)
+
+    assert_equal "/dev_label/library/fedora_17_label", relative_path
+  end
 end
