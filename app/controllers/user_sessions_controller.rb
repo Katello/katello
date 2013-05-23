@@ -45,12 +45,10 @@ class UserSessionsController < ApplicationController
   end
 
   def destroy
-    unless params[:final].present?
-      logout
-      self.current_organization = nil
-      notify.success _("Logout Successful"), :persist => false
-      redirect_to final_logout_path
-    end
+    logout
+    self.current_organization = nil
+    notify.success _("Logout Successful"), :persist => false unless Katello.config.sso.enable
+    redirect_to final_logout_path
   end
 
   def allowed_orgs
@@ -140,7 +138,7 @@ class UserSessionsController < ApplicationController
 
   def final_logout_path
     if Katello.config.sso.enable
-      Katello.config.sso.provider_url + Katello.config.sso.logout_path + "?return_url=#{URI.escape(logout_url(:final =>1))}"
+      Katello.config.sso.provider_url + Katello.config.sso.logout_path + "?return_url=#{URI.escape(root_url)}"
     else
       root_path
     end
