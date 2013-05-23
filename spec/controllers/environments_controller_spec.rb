@@ -210,18 +210,36 @@ describe EnvironmentsController do
         end
       end
     end
+
     describe "destroy an environment" do
-        before(:each) do
-          @env.stub(:destroy)
+      before(:each) { @env.stub(:destroy) }
+
+      describe "on success" do
+        before(:each) { @env.stub(:destroyed?).and_return(true) }
+
+        it "destroys the requested environment", :katello => true do #TODO headpin
+          @env.should_receive(:destroy)
+          @env.should_receive(:destroyed?)
+          delete :destroy, :id => @env.id, :organization_id => @org.label
         end
 
-      it "destroys the requested environment", :katello => true do #TODO headpin
-        @env.should_receive(:destroy)
-        delete :destroy, :id => @env.id, :organization_id => @org.label
+        it "redirects to the environments list", :katello => true do #TODO headpin
+          delete :destroy, :id => @env.id, :organization_id => @org.label
+        end
       end
 
-      it "redirects to the environments list", :katello => true do #TODO headpin
-        delete :destroy, :id => @env.id, :organization_id => @org.label
+      describe "on failure" do
+        before(:each) { @env.stub(:destroyed?).and_return(false) }
+
+        it "should produce an error notice on failure", :katello => true do
+          controller.should notify.error
+          delete :destroy, :id => @env.id, :organization_id => @org.label
+        end
+
+        it "shouldn't render anything on failure", :katello => true do
+          delete :destroy, :id => @env.id, :organization_id => @org.label
+          response.body.should be_blank
+        end
       end
     end
   end
