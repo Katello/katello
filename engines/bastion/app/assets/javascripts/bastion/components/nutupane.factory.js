@@ -284,7 +284,7 @@ angular.module('Katello').directive('nutupaneDetails', [function(){
                     KT.menu.hoverMenu(item, { top : '75px' });
                 });
 
-                elem.find('.panel_link > a').die().live('click', function() {
+                elem.find('.panel_link > a').on('click', function() {
                     var element = this;
 
                     scope.$apply(function() {
@@ -293,7 +293,7 @@ angular.module('Katello').directive('nutupaneDetails', [function(){
                 });
             });
 
-            elem.find('.close').live('click', function() {
+            elem.find('.close').on('click', function() {
                 scope.$apply(function() {
                     scope.model.close_item();
                 });

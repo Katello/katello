@@ -61,11 +61,16 @@ angular.module('Katello').controller('SystemsController',
 
             angular.forEach(data.systems,
                 function(system) {
+                    var name_row = $compile('<a ng-click="table.select_item(\'' +
+                                    KT.routes.edit_system_path(system.id) + '\',' +
+                                    system.id + ')">' + system.name +
+                                    '</a>')($scope);
+
                     var row = {
                         'row_id' : system.id,
                         'show'  : true,
                         'cells': [{
-                            display: $compile('<a ng-click="table.select_item(\'' + KT.routes.edit_system_path(system.id) + '\',' + system.id + ')">' + system.name + '</a>')($scope),
+                            display: name_row,
                             column_id: 'name'
                         },{
                             display: system.description,

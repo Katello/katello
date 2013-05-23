@@ -15,7 +15,7 @@ require 'base64'
 
 
 class ApplicationController < ActionController::Base
-  layout :set_layout
+  layout 'katello'
   include Notifications::ControllerHelper
   include Profiling
   include Locale
@@ -26,14 +26,6 @@ class ApplicationController < ActionController::Base
   helper_method :render_correct_nav
   before_filter :require_user,:require_org
   before_filter :check_deleted_org
-
-  def set_layout
-    if !current_user.nil? && current_user.experimental_ui == true
-      'katello_experimental'
-    else
-      'katello'
-    end
-  end
 
   protect_from_forgery # See ActionController::RequestForgeryProtection for details
 

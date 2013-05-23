@@ -183,7 +183,7 @@ class SystemsController < ApplicationController
     @system_groups = SystemGroup.where(:organization_id => current_organization).order(:name)
 
     if current_user.experimental_ui
-      render :index_nutupane, :locals => { :experimental_ui => true }
+      render 'bastion/systems/index', :layout => 'bastion/layouts/application'
     else
       render :index
     end
