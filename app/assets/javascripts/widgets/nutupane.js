@@ -274,7 +274,7 @@ angular.module('Katello').factory('Nutupane', ['$location', '$http', 'current_or
  * @example
  *   <span class="nutupane-details panel" id="nutupane-details" nutupane-details="table.visible" model="table" ng-class="{ 'nutupane-details-open' : !model.visible }">
  */
-angular.module('Katello').directive('nutupaneDetails', [function(){
+angular.module('Katello.widgets').directive('nutupaneDetails', [function(){
     return {
         replace: false,
         scope: {

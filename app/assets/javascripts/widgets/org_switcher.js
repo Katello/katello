@@ -26,7 +26,7 @@
  * @example
  *  <ul org-switcher></ul>
  */
-angular.module('Katello').directive('orgSwitcher', ['$http', function($http) {
+angular.module('Katello.widgets').directive('orgSwitcher', ['$http', function($http) {
     return {
         restrict: 'A',
         transclude: true,
