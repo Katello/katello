@@ -1,4 +1,5 @@
-/* Copyright 2013 Red Hat, Inc.
+/**
+ Copyright 2013 Red Hat, Inc.
 
  This software is licensed to you under the GNU General Public
  License as published by the Free Software Foundation; either version
@@ -8,11 +9,18 @@
  NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
  have received a copy of GPLv2 along with this software; if not, see
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
-*/
+ **/
 
-//= require "i18n/i18n.module.js"
-//= require "i18n/i18n.filter.js"
-//= require "systems/systems.module.js"
-//= require "system_groups/system-groups.module"
-//= require "system_groups/system-groups.factory"
-//= require "common/experimental/routes.factory"
+/**
+ * @ngdoc factory
+ * @name  Katello.system-groups:SystemGroups
+ *
+ * @requires $resource
+ *
+ * @description
+ *   Provides a $resource for system groups.
+ */
+angular.module('Katello.system-groups').factory('SystemGroups', ['$resource', function ($resource) {
+    // @TODO: make my organization dynamic.
+    return $resource(KT.routes.api_organization_system_groups_path('ACME_Corporation') + '/:systemGroupId', {systemGroupId: '@systemGroupId'});
+}]);

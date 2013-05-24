@@ -25,7 +25,8 @@ var Katello = angular.module('Katello', [
     'ngSanitize',
     'Katello.i18n',
     'Katello.menu',
-    'Katello.systems'
+    'Katello.systems',
+    'Katello.system-groups'
 ]);
 
 /**
