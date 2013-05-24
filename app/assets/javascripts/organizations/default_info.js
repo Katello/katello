@@ -115,8 +115,12 @@ KT.default_info = (function() {
             url     : $button.data("url"),
             type    : $button.data("method"),
             dataType: 'json',
-            data    : { "keyname" : keyname }, success : function(data) {
+            data    : { "keyname" : keyname },
+            success : function(data) {
                 add_default_info_row(data);
+            },
+            error   : function(data) {
+                notices.displayNotice("error", window.JSON.stringify({ "notices": [$.parseJSON(data.responseText)["displayMessage"]] }));
             }
         });
     };
