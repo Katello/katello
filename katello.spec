@@ -14,12 +14,10 @@
 %if "%{?scl}" == "ruby193"
     %global scl_prefix %{scl}-
     %global scl_ruby /usr/bin/ruby193-ruby
-    %global scl_rake scl enable ruby193 rake
     ### TODO temp disabled for SCL
     %global nodoc 1
 %else
     %global scl_ruby /usr/bin/ruby
-    %global scl_rake /usr/bin/rake
 %endif
 
 %global homedir %{_datarootdir}/%{name}
@@ -50,6 +48,8 @@ Provides:        %{name}-glue-foreman = 1.3.15
 Requires:        %{name}-glue-candlepin
 Requires:        %{name}-selinux
 Conflicts:       %{name}-headpin
+BuildRequires:   %{scl_ruby}
+Requires:        %{scl_ruby}
 
 %description
 Provides a package for managing application life-cycle for Linux systems.
@@ -70,6 +70,7 @@ Requires:       elasticsearch
 Requires:       wget
 Requires:       curl
 
+Requires:       %{scl_ruby}
 Requires:       %{?scl_prefix}rubygems
 Requires:       %{?scl_prefix}rubygem(rails) >= 3.2.8
 Requires:       %{?scl_prefix}rubygem(haml) >= 3.1.2
@@ -272,6 +273,7 @@ Requires:       %{name}-glue-candlepin
 Requires:       %{name}-glue-elasticsearch
 Requires:       katello-selinux
 Requires:       %{?scl_prefix}rubygem(bundler_ext)
+Requires:       %{scl_ruby}
 
 %description headpin
 A subscription management only version of Katello.
@@ -475,6 +477,8 @@ fi
     export BUNDLER_EXT_GROUPS="default assets"
 %{?scl:scl enable %{scl} "}
     rake  assets:precompile:primary --trace RAILS_ENV=production
+%{?scl:"}
+%{?scl:scl enable %{scl} "}
     rake  assets:precompile:nondigest --trace
 %{?scl:"}
     rm config/katello.yml
