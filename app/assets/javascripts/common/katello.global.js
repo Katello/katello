@@ -1,4 +1,5 @@
-/* Copyright 2013 Red Hat, Inc.
+/**
+ Copyright 2013 Red Hat, Inc.
 
  This software is licensed to you under the GNU General Public
  License as published by the Free Software Foundation; either version
@@ -10,5 +11,5 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
 
-//= require "common/experimental/katello_experimental"
-//= require "common/experimental/current_organization.value"
+//Katello global object namespace that all others should be attached to
+var KT = {};

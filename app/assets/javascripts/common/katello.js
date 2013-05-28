@@ -18,8 +18,7 @@
  * Date: 09/01/2010
  */
 
-//Katello global object namespace that all others should be attached to
-var KT = {};
+var KT = KT ? KT : {};
 KT.widget = {};
 
 KT.utils = _.noConflict();

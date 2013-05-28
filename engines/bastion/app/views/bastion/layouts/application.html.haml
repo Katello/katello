@@ -28,7 +28,6 @@
     :plain
       $.bbq = undefined;
   = javascript_include_tag :common
-  = javascript_include_tag 'common/experimental'
   %script{ :type => "text/javascript" }
     -if protect_against_forgery?
       :plain
@@ -38,6 +37,7 @@
     = render :partial => 'common/ajax_notices'
     = render :partial => 'common/notification'
     = yield :inline_javascript
+  = javascript_include_tag 'common/experimental'
 
   = yield :javascripts
 

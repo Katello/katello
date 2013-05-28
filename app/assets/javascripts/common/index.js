@@ -10,6 +10,7 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
 
+//= require "common/katello.global"
 //= require "common/katello"
 //= require "common/menu"
 //= require "common/routes"
