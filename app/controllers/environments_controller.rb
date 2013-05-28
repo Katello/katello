@@ -16,6 +16,7 @@ class EnvironmentsController < ApplicationController
   before_filter :find_organization, :only => [:show, :edit, :update, :destroy, :index, :new, :create, :default_label, :products]
   before_filter :authorize
   before_filter :find_environment, :only => [:show, :edit, :update, :destroy, :products, :content_views]
+  skip_before_filter :require_org
 
   def section_id
     'orgs'
