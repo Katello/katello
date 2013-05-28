@@ -17,12 +17,14 @@ module Headpin
       def plan(user)
         plan_self('username' => user.username,
                   'email' => user.email,
+                  'admin' => user.has_superadmin_role?,
                   'hidden' => user.hidden?)
       end
 
       input_format do
         param :username, String
         param :email, String
+        param :admin, :bool
         param :hidden, :bool
       end
 
