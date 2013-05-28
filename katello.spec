@@ -475,12 +475,10 @@ fi
     mv lib/tasks lib/tasks_disabled
     export BUNDLER_EXT_NOSTRICT=1
     export BUNDLER_EXT_GROUPS="default assets"
-%{?scl:scl enable %{scl} "}
+%{?scl:scl enable %{scl} - << \EOF}
     rake  assets:precompile:primary --trace RAILS_ENV=production
-%{?scl:"}
-%{?scl:scl enable %{scl} "}
     rake  assets:precompile:nondigest --trace
-%{?scl:"}
+%{?scl:EOF}
     rm config/katello.yml
     mv lib/tasks_disabled lib/tasks
 %endif
