@@ -14,6 +14,7 @@
 KT.env_content_view_selector = (function() {
     var env_div,
         content_view_div,
+        selector_buttons_div,
         env_select,
         content_view_select,
         saved_env_id,
@@ -21,11 +22,13 @@ KT.env_content_view_selector = (function() {
         performing_cancel = false,
 
         init = function(name, env_div_id, envs, current_env_id,
-                        content_view_div_id, content_views, current_content_view_id) {
+                        content_view_div_id, content_views, current_content_view_id,
+                        buttons_div_id) {
 
             // initialize the environment selector
             env_div = $('#' + env_div_id);
             content_view_div = $('#' + content_view_div_id);
+            selector_buttons_div = $('#' + buttons_div_id);
             saved_env_id = current_env_id;
             saved_content_view_id = current_content_view_id;
 
@@ -38,10 +41,16 @@ KT.env_content_view_selector = (function() {
             // if the user changes the environment, update the available content views
             $(document).bind(env_select.get_select_event(), function(event) {
                 update_content_views(KT.utils.keys(env_select.get_selected()));
+                enable_buttons();
             });
 
             // render the content view selector and the save/cancel buttons
-            render_selector(content_view_div, content_views, current_content_view_id);
+            render_selector(content_view_div, selector_buttons_div, content_views, current_content_view_id);
+
+            $('#content_view_select').unbind('change').change(function() {
+                enable_buttons();
+            });
+            disable_buttons();
 
             register_cancel();
             register_save();
@@ -59,12 +68,14 @@ KT.env_content_view_selector = (function() {
                     content_view_select.val(saved_content_view_id);
                     remove_content_view_highlight();
                 }
+                disable_buttons();
             });
         },
         register_save = function() {
             var save_button = $('.save_env_content_view');
             save_button.unbind('click').click(function(e) {
                 e.preventDefault();
+                disable_buttons();
 
                 var env_param = env_div.data('name'),
                     view_param = content_view_div.data('name'),
@@ -74,7 +85,7 @@ KT.env_content_view_selector = (function() {
                 data["authenticity_token"] = AUTH_TOKEN;
                 $.ajax({
                     type: 'PUT',
-                    url: content_view_div.data('url'),
+                    url: selector_buttons_div.data('url'),
                     data: data,
                     cache: false,
                     success: function(html) {
@@ -83,6 +94,7 @@ KT.env_content_view_selector = (function() {
                         saved_content_view_id = get_selected_content_view_id();
                     },
                     error: function() {
+                        enable_buttons();
                     }
                 });
             });
@@ -148,9 +160,9 @@ KT.env_content_view_selector = (function() {
             content_view_select.removeClass('highlight_input');
             content_view_select.next('span.highlight_input_text').remove();
         },
-        render_selector = function(content_view_div, available_views, current_view) {
+        render_selector = function(content_view_div, buttons_div, available_views, current_view) {
             render_select(content_view_div, current_view, available_views);
-            render_buttons(content_view_div);
+            render_buttons(buttons_div);
             content_view_select = $('#content_view_select');
         },
         render_select = function(content_view_div, current_view, available_views) {
@@ -173,11 +185,19 @@ KT.env_content_view_selector = (function() {
             var button_template = KT.utils.template("<input type='button' class='button <%= clazz %>' value='<%= text %>' > "),
                 html;
 
-            html = '<div class="fr">';
+            html = '<div class="input">';
             html += button_template({clazz: 'save_env_content_view', text: 'Save'});
             html += button_template({clazz: 'cancel_env_content_view', text: 'Cancel'});
             html += '</div>';
-            content_view_div.after(html);
+            content_view_div.append(html);
+        },
+        disable_buttons = function() {
+            $('.save_env_content_view').attr('disabled', 'disabled');
+            $('.cancel_env_content_view').attr('disabled', 'disabled');
+        },
+        enable_buttons = function() {
+            $('.save_env_content_view').removeAttr('disabled');
+            $('.cancel_env_content_view').removeAttr('disabled');
         };
 
     return {

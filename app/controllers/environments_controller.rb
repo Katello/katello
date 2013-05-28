@@ -134,7 +134,7 @@ class EnvironmentsController < ApplicationController
     content_views = if params[:include_default]
       @environment.content_views.readable(current_organization)
     else
-      ContentView.readable(current_organization).non_default.in_environment(@environment)
+      ContentView.readable(current_organization).in_environment(@environment)
     end
     respond_to do |format|
       format.json {render :json => content_views}
