@@ -51,7 +51,7 @@ angular.module('Katello.systems').config(['$stateProvider', function($stateProvi
         views: {
             '@': {
                 controller: 'SystemsBulkActionController',
-                templateUrl: 'views/systems/alter-systems-group-bulk.html'
+                templateUrl: 'assets/views/systems/alter-systems-group-bulk.html'
             }
         }
     });
