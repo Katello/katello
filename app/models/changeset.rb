@@ -286,19 +286,19 @@ class Changeset < ActiveRecord::Base
     self.content_views.each do |view|
       version = view.version(from_env)
       if version.try(:task_status).try(:pending?)
-        raise Errors::ContentViewTaskInProgress.new(_("A %{action} is currently in progress for content "\
-                                                      "view '%{content_view}'.  Please retry the changeset "\
-                                                      "after it completes.") %
-                                                      { :action => TaskStatus::TYPES[version.task_status.task_type][:english_name],
+        raise Errors::ContentViewTaskInProgress.new(_("A '%{type_of_action}' action is currently in progress for  "\
+                                                      "content view '%{content_view}'.  Please retry the changeset "\
+                                                      "after the action completes.") %
+                                                      { :type_of_action => TaskStatus::TYPES[version.task_status.task_type][:english_name],
                                                         :content_view => view.name })
       elsif view.composite
         view.content_view_definition.component_content_views.each do |component_view|
           version = component_view.version(from_env)
           if version.task_status.pending?
-            raise Errors::ContentViewTaskInProgress.new(_("A %{action} is currently in progress for component content "\
-                                                          "view '%{content_view}'.  Please retry the changeset "\
-                                                          "after it completes.") %
-                                                          { :action => TaskStatus::TYPES[version.task_status.task_type][:english_name],
+            raise Errors::ContentViewTaskInProgress.new(_("A '%{type_of_action}' action is currently in progress for "\
+                                                          "component content view '%{content_view}'.  Please retry "\
+                                                          "the changeset after the action completes.") %
+                                                          { :type_of_action => TaskStatus::TYPES[version.task_status.task_type][:english_name],
                                                             :content_view => view.name })
           end
         end
