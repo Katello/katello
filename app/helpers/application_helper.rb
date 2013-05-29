@@ -312,7 +312,7 @@ module ApplicationHelper
     lim = []
     lim << _("Sockets: %s") % sub.sockets if sub.sockets > 0
     lim << _("Cores: %s") % sub.cores if sub.cores > 0
-    lim << _("RAM: %s") % sub.ram if sub.ram > 0
+    lim << _("RAM: %s GB") % sub.ram if sub.ram > 0
     lim.join(", ")
   end
 end
