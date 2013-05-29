@@ -29,6 +29,8 @@ class PromotionChangeset < Changeset
       end
     end
 
+    validate_content_view_tasks_complete!
+
     # if the user is attempting to promote a composite view and one or more of the
     # component views neither exists in the target environment nor is part
     # of the changeset, stop the promotion
