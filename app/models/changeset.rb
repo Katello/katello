@@ -289,7 +289,7 @@ class Changeset < ActiveRecord::Base
         raise Errors::ContentViewTaskInProgress.new(_("A '%{type_of_action}' action is currently in progress for  "\
                                                       "content view '%{content_view}'.  Please retry the changeset "\
                                                       "after the action completes.") %
-                                                      { :type_of_action => TaskStatus::TYPES[version.task_status.task_type][:english_name],
+                                                      { :type_of_action => _(TaskStatus::TYPES[version.task_status.task_type][:english_name]),
                                                         :content_view => view.name })
       elsif view.composite
         view.content_view_definition.component_content_views.each do |component_view|
@@ -298,7 +298,7 @@ class Changeset < ActiveRecord::Base
             raise Errors::ContentViewTaskInProgress.new(_("A '%{type_of_action}' action is currently in progress for "\
                                                           "component content view '%{content_view}'.  Please retry "\
                                                           "the changeset after the action completes.") %
-                                                          { :type_of_action => TaskStatus::TYPES[version.task_status.task_type][:english_name],
+                                                          { :type_of_action => _(TaskStatus::TYPES[version.task_status.task_type][:english_name]),
                                                             :content_view => view.name })
           end
         end
