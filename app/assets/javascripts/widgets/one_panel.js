@@ -43,7 +43,7 @@ var one_panel = {
                 $(this).parent().find('.block').removeClass('active');
             }
             activeBlock.addClass('active');
-            if (one_panel.selectedItems[activeBlockPanelId] === null) {
+            if (one_panel.selectedItems[activeBlockPanelId] === undefined) {
                 var selected = [];
                 selected.push(activeBlockId);
                 one_panel.selectedItems[activeBlockPanelId] = selected;
