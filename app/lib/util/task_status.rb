@@ -123,9 +123,11 @@ module Util
             :user_message => nil
         },
         :content_view_publish => {
+            :english_name => N_("content view publish"),
             :type => :content_view_publish
         },
         :content_view_refresh => {
+            :english_name => N_("content view refresh"),
             :type => :content_view_refresh
         }
     }.with_indifferent_access

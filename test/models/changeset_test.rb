@@ -137,4 +137,27 @@ class ChangesetTest < MiniTest::Rails::ActiveSupport::TestCase
     assert_includes @dev.content_views(true), view
   end
 
+  def test_content_view_promotion_during_publish_or_refresh
+    task = FactoryGirl.create(:task_status)
+    ContentViewVersion.any_instance.stubs(:task_status).returns(task)
+    TaskStatus.any_instance.stubs(:pending?).returns(true)
+
+    content_view = ContentView.find(content_views(:library_view))
+
+    changeset = FactoryGirl.create(:promotion_changeset,
+                                   :environment => @dev,
+                                   :state => Changeset::REVIEW)
+    changeset.add_content_view!(content_view)
+
+    task.task_type = TaskStatus::TYPES[:content_view_publish][:type]
+    assert_raises(Errors::ContentViewTaskInProgress) do
+      changeset.apply
+    end
+
+    task.task_type = TaskStatus::TYPES[:content_view_refresh][:type]
+    assert_raises(Errors::ContentViewTaskInProgress) do
+      changeset.apply
+    end
+  end
+
 end

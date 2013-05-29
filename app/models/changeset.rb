@@ -278,6 +278,34 @@ class Changeset < ActiveRecord::Base
     elements.each { |e| raise ActiveRecord::RecordInvalid.new(e) if not e.valid? }
   end
 
+  def validate_content_view_tasks_complete!
+    # if the user is attempting to apply a view that is currently being
+    # published/refreshed or a view that has a component view that is
+    # currently being published/refreshed, stop the 'apply'
+    from_env = self.environment.prior
+    self.content_views.each do |view|
+      version = view.version(from_env)
+      if version.try(:task_status).try(:pending?)
+        raise Errors::ContentViewTaskInProgress.new(_("A '%{type_of_action}' action is currently in progress for  "\
+                                                      "content view '%{content_view}'.  Please retry the changeset "\
+                                                      "after the action completes.") %
+                                                      { :type_of_action => _(TaskStatus::TYPES[version.task_status.task_type][:english_name]),
+                                                        :content_view => view.name })
+      elsif view.composite
+        view.content_view_definition.component_content_views.each do |component_view|
+          version = component_view.version(from_env)
+          if version.task_status.pending?
+            raise Errors::ContentViewTaskInProgress.new(_("A '%{type_of_action}' action is currently in progress for "\
+                                                          "component content view '%{content_view}'.  Please retry "\
+                                                          "the changeset after the action completes.") %
+                                                          { :type_of_action => _(TaskStatus::TYPES[version.task_status.task_type][:english_name]),
+                                                            :content_view => view.name })
+          end
+        end
+      end
+    end
+  end
+
   def find_package_data(product, name_or_nvre)
     package_data = Util::Package.parse_nvrea_nvre(name_or_nvre)
 
