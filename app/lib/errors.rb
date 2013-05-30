@@ -32,6 +32,8 @@ module Errors
 
   class ContentViewDefinitionBadContent < StandardError; end
 
+  class ContentViewTaskInProgress < StandardError; end
+
   class SystemGroupEmptyException < StandardError
     def message
       _("System group is empty.")

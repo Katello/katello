@@ -30,7 +30,6 @@ class Api::V1::ContentViewsControllerTest < MiniTest::Rails::ActionController::T
     @environment = environments(:staging)
     @dev = environments(:dev)
     @organization = organizations(:acme_corporation)
-    @read_permission = lambda {|user| user.can(:read, :content_views) }
     @read_permission = UserPermission.new(:read, :content_views)
     @env_promote_permission = UserPermission.new(:promote_changesets, :environments, @environment.id)
     @promote_permission = UserPermission.new(:promote, :content_views) + @env_promote_permission

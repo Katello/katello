@@ -36,7 +36,7 @@ module Authorization::ContentView
   module ClassMethods
 
     def tags(ids)
-      select('id, name').where(:id => id).map do |v|
+      select('id, name').where(:id => ids).map do |v|
         VirtualTag.new(v.id, v.name)
       end
     end

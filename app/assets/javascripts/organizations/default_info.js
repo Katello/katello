@@ -115,8 +115,13 @@ KT.default_info = (function() {
             url     : $button.data("url"),
             type    : $button.data("method"),
             dataType: 'json',
-            data    : { "keyname" : keyname }, success : function(data) {
+            data    : { "keyname" : keyname },
+            success : function(data) {
                 add_default_info_row(data);
+                notices.displayNotice("success", window.JSON.stringify({ "notices": [i18n.default_info_create_success] }));
+            },
+            error   : function(data) {
+                notices.displayNotice("error", window.JSON.stringify({ "notices": [$.parseJSON(data.responseText)["displayMessage"]] }));
             }
         });
     };
@@ -127,6 +132,7 @@ KT.default_info = (function() {
             type   : $button.data("method"),
             success: function(data) {
                 remove_default_info_row($button.data("id"));
+                notices.displayNotice("success", window.JSON.stringify({ "notices": [i18n.default_info_delete_success] }));
             }
         });
     };

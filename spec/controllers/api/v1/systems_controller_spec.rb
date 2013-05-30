@@ -442,6 +442,7 @@ describe Api::V1::SystemsController do
 
     it "should change the content view" do
       view = build_stubbed(:content_view)
+      ContentView.stub_chain(:readable, :find_by_id).and_return(view)
       ContentView.stub(:find).and_return(view)
       view.stub(:in_environment?).and_return(true)
       put :update, id: uuid, content_view_id: @environment_2.default_content_view.id
@@ -616,17 +617,17 @@ describe Api::V1::SystemsController do
       User.stub(:consumer? => true)
       @system = System.create(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts, :uuid => uuid)
       System.stub!(:first).and_return(@system)
-      Repository.stub!(:find_by_cp_label).with('a').and_return(OpenStruct.new({ :pulp_id => 'a' }))
-      Repository.stub!(:find_by_cp_label).with('b').and_return(OpenStruct.new({ :pulp_id => 'b' }))
+      Repository.stub!(:where).with(:relative_path=>'foo').and_return([OpenStruct.new({ :pulp_id => 'a' })])
+      Repository.stub!(:where).with(:relative_path=>'bar').and_return([OpenStruct.new({ :pulp_id => 'b' })])
     end
     let(:enabled_repos) {
       {
           "repos" => [
               {
-                  "repositoryid" => "a",
+                  "baseurl" => ["https://hostname/pulp/repos/foo"],
               },
               {
-                  "repositoryid" => "b",
+                  "baseurl" => ["https://hostname/pulp/repos/bar"],
               },
           ]
       }

@@ -75,38 +75,6 @@ angular.module('Katello').factory('Nutupane', ['$location', '$http', 'current_or
         },
         allColumns, nameColumn;
 
-    /**
-     * Set the visibility of the details pane.
-     * @param visibility boolean
-     */
-    Nutupane.setDetailsVisibility = function(visibility) {
-        var table = Nutupane.table;
-
-        if (visibility) {
-            // Remove all columns except name and replace them with the details pane
-            table.data.columns = nameColumn;
-        } else {
-            // Restore the former columns
-            table.data.columns = allColumns;
-        }
-
-        table.detailsVisible = visibility;
-    };
-
-    /**
-     * Set the visibility of the new systems pane.
-     * @param visibility boolean
-     */
-    Nutupane.setNewSystemVisibility = function(visibility) {
-        if (visibility) {
-            $('body').addClass('no-scroll');
-        } else {
-            $('body').removeClass('no-scroll');
-        }
-        Nutupane.table.newPaneVisible = visibility;
-    };
-
-
     Nutupane.set_columns = function() {
         allColumns = Nutupane.table.data.columns.slice(0);
         nameColumn = Nutupane.table.data.columns.slice(0).splice(0, 1);
@@ -185,6 +153,7 @@ angular.module('Katello').factory('Nutupane', ['$location', '$http', 'current_or
 
         column.active = true;
 
+        Nutupane.table.offset = 0;
         Nutupane.get(function(){
             angular.forEach(Nutupane.table.data.columns, function(column){
                 if (column.active) {
@@ -196,8 +165,39 @@ angular.module('Katello').factory('Nutupane', ['$location', '$http', 'current_or
         });
     };
 
+    /**
+     * Set the visibility of the details pane.
+     * @param visibility boolean
+     */
+    Nutupane.table.setDetailsVisibility = function(visibility) {
+        var table = Nutupane.table;
+
+        if (visibility) {
+            // Remove all columns except name and replace them with the details pane
+            table.data.columns = nameColumn;
+        } else {
+            // Restore the former columns
+            table.data.columns = allColumns;
+        }
+
+        table.detailsVisible = visibility;
+    };
+
+    /**
+     * Set the visibility of the new item pane.
+     * @param visibility boolean
+     */
+    Nutupane.table.setNewItemVisibility = function(visibility) {
+        if (visibility) {
+            $('body').addClass('no-scroll');
+        } else {
+            $('body').removeClass('no-scroll');
+        }
+        Nutupane.table.newPaneVisible = visibility;
+    };
+
     Nutupane.table.close_item = function () {
-        Nutupane.setDetailsVisibility(false);
+        Nutupane.table.setDetailsVisibility(false);
         // Restore the former columns
         Nutupane.table.data.columns = allColumns;
         $location.search('item', '');
@@ -236,7 +236,7 @@ angular.module('Katello').factory('Nutupane', ['$location', '$http', 'current_or
             }
 
             table.active_item.html = response.data;
-            Nutupane.setDetailsVisibility(true);
+            Nutupane.table.setDetailsVisibility(true);
         });
     };
 

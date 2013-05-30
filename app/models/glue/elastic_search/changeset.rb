@@ -41,7 +41,7 @@ module Glue::ElasticSearch::Changeset
       :errata          => errata,
       :product         => products,
       :repo            => repos,
-      :user            => self.task_status.nil? ? "" : self.task_status.user.username
+      :user            => (self.task_status.nil? || self.task_status.user.nil?) ? "" : self.task_status.user.username
     }
   end
 

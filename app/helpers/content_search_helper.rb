@@ -32,7 +32,8 @@ module ContentSearchHelper
   def package_display package
     name = package.send(:name)
     ver_rel_arch = package.send(:nvrea).sub(package.send(:name) + '-', '')
-    return '<span class="one-line-ellipsis tipsify" title="' + name + '">' + name + '</span><span class="one-line-ellipsis">' + ver_rel_arch + '</span>';
+    url = details_package_path(package.id)
+    return "<span class=\"tipsify-package\" data-url=\"#{url}\">#{name}</span><span class='one-line-ellipsis'>#{ver_rel_arch}</span>"
   end
 
   def repo_compare_name_display repo

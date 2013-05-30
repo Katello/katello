@@ -41,7 +41,6 @@ KT.path_select = function(div_id, name, environments, options_in){
         init = function(){
             div = $('#' + KT.common.escapeId(div_id));
             paths_id = "path_select_" + name;
-            options.library_select = default_opt(options_in.library_select, true);
             options.inline = default_opt(options_in.inline, false);
             options.activate_on_click = default_opt(options_in.activate_on_click, false);
             options.select_mode = default_opt(options_in.select_mode, 'none');

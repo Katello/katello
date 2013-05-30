@@ -13,7 +13,11 @@
 
 module BrandingHelper
   def project_name
-    Katello.config.app_name
+    if Katello.config.katello?
+      'Katello'
+    else
+      'Headpin'
+    end
   end
 
   def default_title

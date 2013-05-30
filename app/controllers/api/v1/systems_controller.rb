@@ -17,7 +17,6 @@ class Api::V1::SystemsController < Api::V1::ApiController
   before_filter :find_optional_organization, :only => [:create, :hypervisors_update, :index, :activate, :report, :tasks]
   before_filter :find_only_environment, :only => [:create]
   before_filter :find_environment, :only => [:index, :report, :tasks]
-  before_filter :find_content_view, :only => [:create]
   before_filter :find_environment_and_content_view, :only => [:create]
   before_filter :find_environment_by_name, :only => [:hypervisors_update]
   before_filter :find_system, :only => [:destroy, :show, :update, :regenerate_identity_certificates,
@@ -25,6 +24,7 @@ class Api::V1::SystemsController < Api::V1::ApiController
                                         :unsubscribe, :subscriptions, :pools, :enabled_repos, :releases,
                                         :add_system_groups, :remove_system_groups, :refresh_subscriptions, :checkin,
                                         :subscription_status]
+  before_filter :find_content_view, :only => [:create, :update]
   before_filter :authorize, :except => :activate
 
   skip_before_filter :require_user, :only => [:activate]
@@ -35,9 +35,12 @@ class Api::V1::SystemsController < Api::V1::ApiController
 
   def rules
     index_systems          = lambda { System.any_readable?(@organization) }
-    register_system        = lambda { System.registerable?(@environment, @organization) }
+    register_system        = lambda { System.registerable?(@environment, @organization, @content_view) }
     consumer_only          = lambda { User.consumer? }
-    edit_system            = lambda { @system.editable? or User.consumer? }
+    edit_system            = lambda do
+      subscribable = @content_view ? @content_view.subscribable? : true
+      subscribable && (@system.editable? || User.consumer?)
+    end
     read_system            = lambda { @system.readable? or User.consumer? }
     delete_system          = lambda { @system.deletable? or User.consumer? }
 
@@ -159,11 +162,16 @@ Schedules the consumer identity certificate regeneration
   param_group :system
   def update
     attrs = params.clone
-    attrs[:content_view_id] = nil if attrs[:content_view_id] == false
-    @system.update_attributes!(attrs.slice(:name, :description, :location,
-                                           :facts, :guestIds, :installedProducts,
-                                           :releaseVer, :serviceLevel,
-                                           :environment_id, :content_view_id))
+    slice_attrs = [:name, :description, :location,
+                   :facts, :guestIds, :installedProducts,
+                   :releaseVer, :serviceLevel
+                   ]
+    unless User.consumer?
+      slice_attrs =  slice_attrs + [:environment_id, :content_view_id]
+      attrs[:content_view_id] = nil if attrs[:content_view_id] == false
+    end
+
+    @system.update_attributes!(attrs.slice(*slice_attrs))
     respond
   end
 
@@ -389,29 +397,42 @@ A hint for choosing the right value for the releaseVer param
 Used by katello-agent to keep the information about enabled repositories up to date.
 This information is then used for computing the errata available for the system.
   DESC
+  param :enabled_repos, Hash, :required => true do
+    param :repos, Array, :required => true do
+      params :baseurl, Array, :description=> "List of enabled repo urls for the repo (Only first is used.)", :required => false
+    end
+  end
   def enabled_repos
-    repos = params['enabled_repos'] rescue raise(HttpErrors::BadRequest, _("Expected attribute is missing:") + " enabled_repos")
-    update_labels = repos['repos'].collect { |r| r['repositoryid'] } rescue raise(HttpErrors::BadRequest, _("Unable to parse repositories: %s") % $!)
+    repos_params = params['enabled_repos'] rescue raise(HttpErrors::BadRequest, _("Expected attribute is missing:") + " enabled_repos")
+    repos_params = repos_params['repos'] || []
 
-    update_ids     = []
-    unknown_labels = []
-    update_labels.each do |label|
-      repo = @system.environment.repositories.find_by_cp_label label
-      if repo.nil?
-        logger.warn(_("Unknown repository label: %s") % label)
-        unknown_labels << label
+    unknown_paths = []
+    repos = []
+    repos_params.each do |repo|
+      if !repo['baseurl'].blank?
+        path = URI(repo['baseurl'].first).path
+        possible_repos = Repository.where(:relative_path => path.gsub('/pulp/repos/', ''))
+        if possible_repos.empty?
+          unknown_paths << path
+          logger.warn("System #{@system.name} (#{@system.id}) requested binding to unknown repo #{path}")
+        else
+          repos << possible_repos.first
+          logger.warn("System #{@system.name} (#{@system.id}) requested binding to path #{path} matching" +
+                       "#{possible_repos.size} repositories.") if possible_repos.size > 1
+        end
       else
-        update_ids << repo.pulp_id
+        logger.warn("System #{@system.name} (#{@system.id}) attempted to bind to unspecific repo (#{repo}).")
       end
     end
 
-    processed_ids, error_ids = @system.enable_repos(update_ids)
+    pulp_ids = repos.collect{|r| r.pulp_id}
+    processed_ids, error_ids = @system.enable_repos(pulp_ids)
 
     result                  = {}
     result[:processed_ids]  = processed_ids
     result[:error_ids]      = error_ids
-    result[:unknown_labels] = unknown_labels
-    if error_ids.count > 0 or unknown_labels.count > 0
+    result[:unknown_labels] = unknown_paths
+    if error_ids.count > 0 or unknown_paths.count > 0
       result[:result] = "error"
     else
       result[:result] = "ok"
@@ -493,7 +514,6 @@ This information is then used for computing the errata available for the system.
 
     if params[:environment_id].is_a? String
       ids = params[:environment_id].split('-')
-
       @environment = KTEnvironment.find(ids.first)
       raise HttpErrors::NotFound, _("Couldn't find environment '%s'") % ids.first if @environment.nil?
       @organization = @environment.organization
@@ -553,10 +573,21 @@ This information is then used for computing the errata available for the system.
   end
 
   def find_content_view
-    if params.has_key?(:content_view_id) && @organization
-      @content_view = ContentView.readable(@organization).find(params[:content_view_id])
+    if(content_view_id = (params[:content_view_id] || params[:system].try(:[], :content_view_id)))
+      setup_content_view(content_view_id)
+    end
+  end
+
+  def setup_content_view(cv_id)
+    return if @content_view
+    organization = @organization
+    organization ||= @system.organization if @system
+    if cv_id && organization
+      @content_view = ContentView.readable(organization).find_by_id(cv_id)
+      raise HttpErrors::NotFound, _("Couldn't find content view '%s'") % cv_id if @content_view.nil?
     else
       @content_view = nil
     end
   end
+
 end

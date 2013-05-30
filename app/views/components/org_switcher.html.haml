@@ -15,7 +15,7 @@
       %span.dropdown{"ng-show" => "orgSwitcher.visible", "ng-class" => "{'dropdown-active': true}"}
         %span.spinner
         %ul#allowed-orgs{"org-switcher" => ""}
-        - if current_organization && !current_organization.name.nil? && Organization.any_readable?
+        - if Organization.any_readable?
           %div#manage_orgs.menu-item
             %a.menu-item{:href=>organizations_path()}
               %span{:class=>"fl clearfix"}

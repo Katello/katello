@@ -71,6 +71,9 @@ LdapFluff::CONFIG = config_file_path unless LdapFluff::CONFIG == config_file_pat
 module Src
   class Application < Rails::Application
 
+    require 'katello/middleware/log_request_uuid'
+    config.middleware.insert_after ActionDispatch::RequestId, Katello::Middleware::LogRequestUUID
+
     # use dabase configuration form katello.yml instead database.yml
     config.class_eval do
       def database_configuration

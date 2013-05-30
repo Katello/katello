@@ -4,7 +4,10 @@
 
 #navigation{ 'ng-controller' => 'MenuController' }
   %header.header.logo-header
-    %a.fl.logo{ 'href' => 'dashboard' }
+    - if Katello.config.katello?
+      %a.fl.katello-logo.logo{ 'href' => 'dashboard' }
+    - else
+      %a.fl.headpin-logo.logo{ 'href' => 'dashboard' }
     %span#experimental_indicator
       = "experimental"
     %nav{ 'alch-menu' => "user_menu" }

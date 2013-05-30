@@ -17,11 +17,11 @@
     %input#system_group_id{:name => @group.id, :type => "hidden", :value => "#{name}_#{@group.id}", "data-ajax_url"=>url_for(:action=> 'update')}
     %form#system_form
       -if editable
-        %table.list
+        %table
           %thead
             %th
-              -#%span.fr.details-icon.tipsy{"data-help" => _('This allows you to search for systems and add them to the selected system group.')}
-              -##{_("Add Systems")}
+              %span.fr.details-icon.system_content_action{"data-help" => _('This allows you to search for systems and add them to the selected system group.')}
+              #{_("Add Systems")}
 
           %tbody
             %tr.no_sort.not_filtered

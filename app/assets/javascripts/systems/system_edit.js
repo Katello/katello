@@ -62,5 +62,6 @@ $(document).ready(function() {
             };
         $(this).editable($(this).attr('data-url'), $.extend(common_settings, settings));
     });
+
 });
 
