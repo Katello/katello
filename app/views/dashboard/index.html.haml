@@ -1,6 +1,6 @@
 = javascript :dashboard
 
-- if current_user.allowed_organizations.length == 0
+- if current_user && current_user.allowed_organizations.length == 0
   .grid_16.flash_hud
     %ul.flash_messages.warning
       %li
