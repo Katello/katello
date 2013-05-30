@@ -113,7 +113,6 @@ class Organization < ActiveRecord::Base
     self.providers << ::Provider.new(:name => "Red Hat", :provider_type => ::Provider::REDHAT, :organization => self)
   end
 
-  # TODO - this code seems to be dead
   def validate_destroy current_org
     def_error = _("Could not delete organization '%s'.")  % [self.name]
     if (current_org == self)

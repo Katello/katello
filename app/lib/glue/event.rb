@@ -24,10 +24,12 @@ module Glue
 
     def trigger_create_event
       Glue::Event.trigger(create_event, self) if create_event
+      return true
     end
 
     def trigger_destroy_event
       Glue::Event.trigger(destroy_event, self) if destroy_event
+      return true
     end
 
     # define the Dynflow action to be triggered after create

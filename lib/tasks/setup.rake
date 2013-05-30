@@ -1,5 +1,16 @@
-task :clear_search_indices do
-  Tire.index("_all").delete
+task :clear_search_indices => ["environment"] do
+  #Broken in elasticsearch 0.19.9
+  #Tire.index("_all").delete
+
+  User.current = User.hidden.first  
+  Dir.glob(Rails.root.to_s + '/app/models/*.rb').each { |file| require file }
+
+  Util::Search.active_record_search_classes.each do |model| 
+     model.index.delete
+  end
+  Tire.index(Package.index).delete
+  Tire.index(Errata.index).delete
+  Tire.index(PackageGroup.index).delete
   puts "Search Indices cleared."
 end
 

@@ -1,0 +1,88 @@
+.details_container
+  .item-container
+    %label.fl.ra
+      = _("ID:")
+    %p
+      = @package.id
+
+  .item-container
+    %label.fl.ra
+      = _("Description: ")
+    %p
+      = @package.description
+
+  .item-container
+    %label.fl.ra
+      =_("Architecture: ")
+    %p
+      = @package.arch
+
+  .item-container
+    %label.fl.ra
+      =_("Signature:")
+    %p
+      = "#{@package.checksumtype} : #{@package.checksum}"
+
+  .item-container
+    %label.fl.ra
+      =_("Build Host:")
+    %p
+      = @package.buildhost
+
+  .item-container
+    %label.fl.ra
+      =_("License:")
+    %p
+      = @package.buildhost
+
+  .item-container
+    %label.fl.ra
+      =_("Requires:")
+    %p
+      &nbsp;
+    - @package.requires.each do |item|
+      %p
+        = item
+
+  .item-container
+    %label.fl.ra
+      =_("Provides:")
+    %p
+      &nbsp;
+    - @package.provides.each do |item|
+      %p
+        = item
+
+  .details-link-container
+    %a{class: "package-filelist-link", data: {id: "#{@package.id}"}}View package files
+
+  .details-link-container
+    %a{class: "package-changelog-link", data: {id: "#{@package.id}"}}View package changelog
+
+.package-filelist{id: "package-filelist-#{@package.id}", title: (_("Files for %s") % @package.name)}
+  - if @package.filelist.length > 0
+    - @package.filelist.each do |file|
+      %p
+        = file
+  - else
+    %p
+      = _("There are no files in this repository.")
+
+.package-changelog{id: "package-changelog-#{@package.id}", title: (_("Changelog for %s") % @package.name)}
+  %table.changelog
+    %tbody
+      %tr
+        %th
+          = _("Date")
+        %th
+          = _("Author/Release")
+        %th
+          = _("Changes")
+        - @package.changelog.each do |change|
+          %tr
+            %td
+              = format_changelog_date(change[0].to_s)
+            %td
+              = change.try(:[], 1)
+            %td
+              = changelog_changes(change.try(:[], 2))

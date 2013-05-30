@@ -48,10 +48,9 @@ describe Api::V1::FilterRulesController do
       )
 
       refute_authorized(
-          :permission => perms.read_only,
+          :permission => [*perms.read_only, NO_PERMISSION],
           :action => action,
           :request => @req,
-          :include_no_permissions => true
       )
 
     end
@@ -84,10 +83,9 @@ describe Api::V1::FilterRulesController do
     )
 
     refute_authorized(
-        :permission => perms.read_only,
+        :permission => [*perms.read_only, NO_PERMISSION],
         :action => action,
-        :request => @req,
-        :include_no_permissions => true
+        :request => @req
     )
   end
 

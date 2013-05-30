@@ -1,4 +1,3 @@
-= tabindex = 100
 = javascript 'widgets/subpanel_new'
 = javascript 'providers/repo_discovery_create'
 
@@ -16,15 +15,15 @@
           = _("Create repositories within:")
         .grid_10
           %label
-            %input{:type=>:radio, :name=>:new_product, :value=>:false, :tabindex=>++tabindex,:checked=>:checked}
+            %input{:type=>:radio, :name=>:new_product, :value=>:false,:checked=>:checked}
             = _("Existing Product:")
-          %select.grid_6{:name=>'existing_product_select', :id=>'existing_product_select', :tabindex=>++tabindex}
+          %select.grid_6{:name=>'existing_product_select', :id=>'existing_product_select'}
             - for product in @provider.products
               %option{:value=>product.id}
                 = product.name
         .grid_10
           %label
-            %input{:type=>:radio, :name=>:new_product, :value=>:true, :tabindex=>++tabindex}
+            %input{:type=>:radio, :name=>:new_product, :value=>:true}
             = _("New Product:")
         .grid_10
           #new_product{:style=>'display:none;', :data=>{:url=>provider_products_path(@provider.id)}}
@@ -32,13 +31,13 @@
               .grid_2.ra
                 = _('New Product Name')
               .grid_5.la
-                %input{:type=>:text, :name=>'product_name', :label => _("New Product Name"), :class => :name_input, :tabindex=>++tabindex}
+                %input{:type=>:text, :name=>'product_name', :label => _("New Product Name"), :class => :name_input}
             %fieldset
               .grid_2.ra
                 = _('New Product Label')
               .grid_5.la
                 %input{:type=>:text, :name=>'product_label', :label => _("New Product Label"), :class => :label_input,
-                    :tabindex=>++tabindex, :data=>{:url=>default_label_provider_products_path(@provider.id)}}
+                    :data=>{:url=>default_label_provider_products_path(@provider.id)}}
 
       .grid_10
         %h3
@@ -48,7 +47,7 @@
             .grid_2.ra
               = _('Publish via http')
             .grid_5.la
-              = check_box :repo, :unprotected, :id=>"unprotected", :tabindex => ++tabindex, :checked=>false
+              = check_box :repo, :unprotected, :id=>"unprotected", :checked=>false
 
       .grid_10
         %h3
@@ -65,18 +64,18 @@
                   = _('Repository Name')
                 .grid_5.la
                   %input{:type=>:text, :name=>"repo_name", :label => _("Repository Name"), :size=>30,
-                    :class => :name_input, :tabindex=>++tabindex, :value=>name_from_url(@provider, url)}
+                    :class => :name_input, :value=>name_from_url(@provider, url)}
               %fieldset
                 .grid_2.ra
                   = _('Repository Label')
                 .grid_5.la
                   %input{:type=>:text, :name=>"repo_label", :value=>label_from_url(@provider, url), :label => _("Repository Label"),
-                    :class => :label_input, :tabindex=>++tabindex, :size=>30,
+                    :class => :label_input, :size=>30,
                     :data=>{:url=>default_label_provider_product_repositories_path(0, 0)}}
               %input{:type=>:hidden, :name=>"repo_url", :value=>url}
 
 
       .grid_10.ra
-        %input.button#create_repos{:type=>:submit, :tabindex=>++tabindex, :value=>_('Create Repositories')}
+        %input.button#create_repos{:type=>:submit, :value=>_('Create Repositories')}
 
 = render :template => "layouts/tupane_layout"

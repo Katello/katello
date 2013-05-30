@@ -62,11 +62,11 @@ $grid_cell_hover_link-color:                lighten($primary_color, 40%);
     color: $kselected_color;
   }
 }
-.tipsify-errata.tipsy-hover {
+.tipsify-errata.tipsy-hover, .tipsify-package.tipsy-hover {
   color: $kselected_color;
   background-color: transparent;
 }
-.tipsify-errata.tipsy-nohover {
+.tipsify-errata.tipsy-nohover, .tipsify-package.tipsy-nohover {
   background-color: transparent;
 }
 
@@ -77,6 +77,9 @@ $grid_cell_hover_link-color:                lighten($primary_color, 40%);
     margin-left: 70px;
     margin-right: 70px;
   }
+  .package-filelist, .package-changelog {
+    display: none;
+  }
 }
 
 .errata-icon {
@@ -85,6 +88,28 @@ $grid_cell_hover_link-color:                lighten($primary_color, 40%);
     padding: 0px;
     margin-left: 0px;
     margin-right: 4px;
+}
+
+table.changelog {
+  margin-top: 1em;
+
+  th {
+    font-weight: bold;
+    background: #eee;
+    padding: .2em;
+  }
+  td, th {
+    border: 1px solid #aaaaaa;
+  }
+
+  div.more-changelog {
+    display: none;
+  }
+  a.show-more-changelog {
+    color: #006885;
+    text-decoration: underline;
+    margin-top: .4em;
+  }
 }
 
 
@@ -347,7 +372,6 @@ $grid_cell_hover_link-color:                lighten($primary_color, 40%);
         width: 20px;
         position: absolute;
         right: -1px;
-        z-index: 15;
         padding: 0 0 0 5px;
         background: $white_color;
         line-height: $comparison_grid_column_header-height;

@@ -21,50 +21,40 @@ module Glue::Provider
 
   module InstanceMethods
 
-    def import_manifest zip_file_path, options = {}
-      options = { :async => false, :notify => false }.merge options
-      options.assert_valid_keys(:force, :async, :notify)
+    def import_manifest(zip_file_path, options = {})
+      options = { :async => false, :notify => false , :zip_file_path=>zip_file_path}.merge(options)
+      options.assert_valid_keys(:force, :async, :notify, :zip_file_path)
 
-      self.task_status
-
-      ret = if options[:async]
-              self.task_status = async(:organization => self.organization, :task_type => "import manifest").queue_import_manifest zip_file_path, options
-              self.save!
-            else
-              queue_import_manifest zip_file_path, options
-            end
-      return ret
+      if options[:async]
+        self.task_status = async(:organization => self.organization, :task_type => "import manifest").queue_import_manifest(options)
+        self.save!
+      else
+        queue_import_manifest options
+      end
     end
 
-    def delete_manifest options = {}
-      options = { :async => false, :notify => false }.merge options
+    def delete_manifest(options = {})
+      options = { :async => false, :notify => false }.merge(options)
       options.assert_valid_keys(:async, :notify)
 
-      self.task_status
-
-      ret = if options[:async]
-              self.task_status = async(:organization => self.organization, :task_type => "delete manifest").queue_delete_manifest options
-              Rails.logger.debug("DEBUG ASYNC #{task_status.task_type}")
-              self.save!
-            else
-              exec_delete_manifest
-            end
-      return ret
+      if options[:async]
+        self.task_status = async(:organization => self.organization, :task_type => "delete manifest").queue_delete_manifest(options)
+        self.save!
+      else
+        exec_delete_manifest
+      end
     end
 
     def refresh_manifest(upstream, options = {})
-      options = { :async => true, :notify => false }.merge options
-      options.assert_valid_keys(:async, :notify)
+      options = { :async => true, :notify => false, :upstream=>upstream }.merge(options)
+      options.assert_valid_keys(:async, :notify, :upstream)
 
-      self.task_status
-
-      ret = if options[:async]
-              self.task_status = async(:organization => self.organization, :task_type => "refresh manifest").queue_refresh_manifest upstream, options
-              self.save!
-            else
-              queue_refresh_manifest upstream, options
-            end
-      return ret
+      if options[:async]
+        self.task_status = async(:organization => self.organization, :task_type => "refresh manifest").queue_import_manifest(options)
+        self.save!
+      else
+        queue_import_manifest(options)
+      end
     end
 
     def sync
@@ -253,7 +243,16 @@ module Glue::Provider
       (s = failed_products.size) > 0 ? (_('%d products may have missing repositories') % s): _('OK')
     end
 
-    def queue_import_manifest zip_file_path, options
+
+    def queue_import_manifest(options)
+      options = options.with_indifferent_access
+      raise "zip_file_path or upstream must be specified" if options[:zip_file_path].nil? && options[:upstream].nil?
+
+      #if a manifest has already been imported, we need to update the products
+      manifest_update = self.products.any?
+      #are we refreshing from upstream?
+      manifest_refresh = options['zip_file_path'].nil?
+
       output = Logging.appenders.string_io.new('manifest_import_appender')
       import_logger = Logging.logger['manifest_import_logger']
       import_logger.additive = false
@@ -263,11 +262,24 @@ module Glue::Provider
       [Rails.logger, import_logger].each { |l| l.debug "Importing manifest for provider #{self.name}" }
 
       begin
+        if manifest_refresh
+          zip_file_path = "/tmp/#{rand}.zip"
+          upstream = options[:upstream]
+          pre_queue.create(:name     => "export upstream manifest for owner: #{self.organization.name}",
+                                   :priority => 2, :action => [self, :owner_upstream_export, upstream, zip_file_path, options],
+                                   :action_rollback => nil)
+        else
+          zip_file_path = options[:zip_file_path]
+        end
+
         pre_queue.create(:name     => "import manifest #{zip_file_path} for owner: #{self.organization.name}",
                          :priority => 3, :action => [self, :owner_import, zip_file_path, options],
                          :action_rollback => [self, :del_owner_import])
         pre_queue.create(:name     => "import of products in manifest #{zip_file_path}",
                          :priority => 5, :action => [self, :import_products_from_cp, options])
+        pre_queue.create(:name     => "refresh product repos",
+                         :priority => 6, :action => [self, :refresh_existing_products]) if manifest_update && Katello.config.use_pulp
+
         self.save!
 
         if options[:notify]
@@ -296,63 +308,13 @@ module Glue::Provider
                          :details      => output.read
         end
       rescue => error
-        display_manifest_message('import', error, options)
+        display_manifest_message(manifest_refresh ? 'refresh' : 'import', error, options)
         raise error
       end
     end
 
-    def queue_refresh_manifest(upstream, options)
-      output = Logging.appenders.string_io.new('manifest_refresh_appender')
-      refresh_logger = Logging.logger['manifest_refresh_logger']
-      refresh_logger.additive = false
-      refresh_logger.add_appenders(output)
-
-      zip_file_path = "/tmp/#{rand}.zip"
-
-      options.merge!(:refresh_logger => refresh_logger)
-      [Rails.logger, refresh_logger].each { |l| l.debug "Refreshing manifest for provider #{self.name}" }
-
-      begin
-        pre_queue.create(:name     => "export upstream manifest for owner: #{self.organization.name}",
-                         :priority => 3, :action => [self, :owner_upstream_export, upstream, zip_file_path, options],
-                         :action_rollback => nil)
-        pre_queue.create(:name     => "import manifest #{zip_file_path} for owner: #{self.organization.name}",
-                         :priority => 5, :action => [self, :owner_import, zip_file_path, options],
-                         :action_rollback => [self, :del_owner_import])
-        pre_queue.create(:name     => "import of products in manifest #{zip_file_path}",
-                         :priority => 7, :action => [self, :import_products_from_cp, options],
-                         :action_rollback => nil)
-        self.save!
-
-        if options[:notify]
-          message = if Katello.config.katello?
-                      _("Subscription manifest uploaded successfully for provider '%s'. " +
-                            "Please enable the repositories you want to sync by selecting 'Enable Repositories' and " +
-                            "selecting individual repositories to be enabled.")
-                    else
-                      _("Subscription manifest uploaded successfully for provider '%s'.")
-                    end
-          values = [self.name]
-          if self.failed_products.present?
-            message << _("There are %d products having repositories that could not be created.")
-            builder = Object.new.extend(ActionView::Helpers::UrlHelper, ActionView::Helpers::TagHelper)
-            path    = Katello.config.url_prefix + '/' + Rails.application.routes.url_helpers.refresh_products_providers_path(:id => self)
-            link    = builder.link_to(_('repository refresh'),
-                                      path,
-                                      :method => :put,
-                                      :remote => true)
-            message << _("You can run %s action to fix this. Note that it can take some time to complete." % link)
-            values.push self.failed_products.size
-          end
-          Notify.success message % values,
-                         :request_type => 'providers__update_redhat_provider',
-                         :organization => self.organization,
-                         :details      => output.read
-        end
-      rescue => error
-        display_manifest_message('refresh', error, options)
-        raise error
-      end
+    def refresh_existing_products
+      self.products.each{|p| p.update_repositories}
     end
 
     def import_products_from_cp(options={ })

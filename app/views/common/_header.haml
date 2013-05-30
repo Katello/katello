@@ -2,7 +2,10 @@
   = Katello.config.app_name.upcase
 
 = content_for(:logo) do
-  = link_to Katello.config.app_name.upcase, dashboard_index_path, :title=>Katello.config.app_name.upcase, :class => "logo"
+  - if Katello.config.katello?
+    = link_to Katello.config.app_name.upcase, dashboard_index_path, :title=>Katello.config.app_name.upcase, :class => "katello-logo"
+  - else
+    = link_to Katello.config.app_name.upcase, dashboard_index_path, :title=>Katello.config.app_name.upcase, :class => "headpin-logo"
 
 = content_for(:header_title_2) do
   = Katello.config.app_name.upcase

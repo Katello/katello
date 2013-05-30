@@ -29,7 +29,7 @@ describe CustomInfo do
     Resources::Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
     Resources::Candlepin::Consumer.stub!(:update).and_return(true)
 
-    Runcible::Extensions::Consumer.stub!(:create).and_return({:id => uuid})
+    Runcible::Extensions::Consumer.stub!(:create).and_return({:id => uuid}) if defined?(Runcible)
 
     @system = System.create!(:name => "test_system", :environment => @environment, :cp_type => 'system', :facts => {"distribution.name" => "Fedora"})
 
@@ -37,20 +37,22 @@ describe CustomInfo do
     CustomInfo.skip_callback(:destroy, :after, :reindex_informable)
   end
 
-  context "CustomInfo in invalid state should not be valid", :katello => true do #TODO headpin
+  context "CustomInfo in invalid state should not be valid" do
     specify { CustomInfo.new.should_not be_valid }
     specify { CustomInfo.new(:keyname => "test").should_not be_valid }
     specify { CustomInfo.new(:value => "1234").should_not be_valid }
     specify { CustomInfo.new(:keyname => "test", :value => "1234").should_not be_valid }
+    specify { @system.custom_info.new(:keyname => ("key" * 256), :value => "normal length value").should_not be_valid }
+    specify { @system.custom_info.new(:keyname => "normal length key", :value => ("value" * 256)).should_not be_valid }
   end
 
-  context "CustomInfo in valid state should be valid", :katello => true do #TODO headpin
+  context "CustomInfo in valid state should be valid" do
     specify { @system.custom_info.new(:keyname => "test", :value => "1234").should be_valid }
     specify { @system.custom_info.new(:keyname => "test", :value => "abcd").should be_valid }
     specify { @system.custom_info.new(:keyname => "test").should be_valid }
   end
 
-  it "should not allow duplicate keynames", :katello => true do #TODO headpin
+  it "should not allow duplicate keynames" do
     @system.custom_info.create!(:keyname => "test", :value => "1234")
     @system.custom_info.new(:keyname => "test", :value => "asdf").should_not be_valid
   end

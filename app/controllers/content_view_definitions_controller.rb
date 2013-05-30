@@ -191,7 +191,7 @@ class ContentViewDefinitionsController < ApplicationController
           :pending? => status.pending?,
           :status_html => render_to_string(:template => 'content_view_definitions/views/_version',
                                            :layout => false, :locals => {:version => status.task_owner,
-                                                                         :task => status})
+                                                                         :task => status, :view_definition => @view_definition})
       }
     end
 
@@ -220,8 +220,8 @@ class ContentViewDefinitionsController < ApplicationController
   end
 
   def update_content
-    if params[:products]
-      products_ids = params[:products].empty? ? [] : Product.readable(current_organization).
+    if params.has_key?(:products)
+      products_ids = params[:products].blank? ? [] : Product.readable(current_organization).
           where(:id => params[:products]).pluck("products.id")
 
       @view_definition.product_ids = products_ids

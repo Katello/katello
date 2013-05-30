@@ -18,5 +18,20 @@ module Authorization::ContentViewVersion
       view_ids = ::ContentView.readable(org).collect{|v| v.id}
       joins(:content_view).where("content_views.id" => view_ids)
     end
+
+    def promotable(org)
+      items(org, [:promote])
+    end
+
+    def items(org, verbs)
+      raise "scope requires an organization" if org.nil?
+      resource = :content_views
+
+      if User.allowed_all_tags?(verbs, resource, org)
+        joins(:content_view).where('content_views.organization_id' => org.id)
+      else
+        joins(:content_view).where("content_views.id in (#{User.allowed_tags_sql(verbs, resource, org)})")
+      end
+    end
   end
 end

@@ -22,35 +22,24 @@ KT.panel.set_expand_cb(function(){
     }, 500);
 });
 
-KT.panel_search_autocomplete = KT.panel_search_autocomplete.concat(["distribution.name:", "distribution.version:", "network.hostname:", "network.ipaddr:"]);
+KT.panel_search_autocomplete = KT.panel_search_autocomplete.concat(["distribution.name:", "distribution.version:"]);
 
 (function(){
     var options = { create : 'new_distributor' };
 
     if (window.env_select !== undefined) {
 
-        // When the env selector changes, update the pre-populated attributes
         env_select.env_changed_callback = function(env_id) {
             if(env_select.envsys === true){
                 $('#new').attr('data-ajax_url', KT.routes.new_distributor_path() + '?env_id=' + env_id);
             }
+            if($("#distributor_content_view_id").length > 0) {
+                KT.distributors_page.update_content_views();
+            }
             $('#distributor_environment_id').attr('value', env_id);
         };
-
-        $.extend(options, { 'extra_params' :
-            [ { hash_id     : 'env_id',
-                init_func     : function(){
-                    var state = $.bbq.getState('env_id');
-
-                    if( state ){
-                        env_select.set_selected(state);
-                    } else {
-                        $.bbq.pushState({ env_id : env_select.get_selected_env() });
-                    }
-                }
-            }
-            ]});
     }
+
     KT.panel.list.registerPage('distributors', options);
 }());
 
@@ -120,12 +109,56 @@ KT.distributors_page = (function() {
                 }
             }
         );
+    },
+    update_content_views = function(){
+        // this function will retrieve the views associated with a given environment and
+        // update the views box with the results
+        var url = $('.path_link.active').attr('data-content_views_url');
+        if (url !== undefined) {
+            $.ajax({
+                type: "GET",
+                url: url,
+                cache: false,
+                success: function(response) {
+                    // update the appropriate content on the page
+                    var options = '';
+                    var opt_template = KT.utils.template("<option value='<%= key %>'><%= text %></option>");
+
+                    // create an html option list using the response
+                    options += opt_template({key: "", text: i18n.no_content_view});
+                    $.each(response, function(key, item) {
+                        options += opt_template({key: item.id, text: item.name});
+                    });
+
+                    $("#distributor_content_view_id").html(options);
+
+                    if (response.length > 0) {
+                        highlight_content_views(true);
+                    }
+                }
+            });
+        }
+    },
+    highlight_content_views = function(add_highlight){
+        var select_input = $("#_content_view_id");
+        if (add_highlight) {
+            if( !select_input.next('span').hasClass('highlight_input_text')) {
+                select_input.addClass('highlight_input');
+                select_input.after('<span class ="highlight_input_text">' +
+                        i18n.select_content_view + '</span>');
+            }
+        } else {
+            select_input.removeClass('highlight_input');
+            $('.highlight_input_text').remove();
+        }
     };
 
   return {
       env_change : env_change,
       create_distributor : create_distributor,
-      registerActions : registerActions
+      registerActions : registerActions,
+      update_content_views: update_content_views,
+      highlight_content_views: highlight_content_views
   };
 })();
 

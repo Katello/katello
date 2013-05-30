@@ -18,7 +18,7 @@ module Glue::Pulp::Package
 
       attr_accessor :_id, :download_url, :checksum, :license, :group, :filename, :requires,  :provides, :description,
                     :size, :buildhost, :repoids, :name, :arch, :version, :_content_type_id, :epoch, :vendor, :relativepath,
-                    :children, :release, :checksumtype
+                    :children, :release, :checksumtype, :filelist, :changelog
 
       alias_method 'id=', '_id='
       alias_method 'id', '_id'
@@ -37,7 +37,6 @@ module Glue::Pulp::Package
   module InstanceMethods
 
     def initialize(params = {})
-      params.delete(:changelog) #ignore changelog for now
       params.delete(:repodata)
       params[:repoids] =  params.delete(:repository_memberships) if params.has_key?(:repository_memberships)
       params.each_pair {|k,v| instance_variable_set("@#{k}", v) unless v.nil? }
@@ -45,6 +44,10 @@ module Glue::Pulp::Package
 
     def nvrea
       Util::Package::build_nvrea(self.as_json.with_indifferent_access, false)
+    end
+
+    def as_json(options = nil)
+      super(options).merge id: id
     end
   end
 

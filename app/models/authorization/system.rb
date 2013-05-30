@@ -50,12 +50,10 @@ module Authorization::System
       end
     end
 
-    def registerable?(env, org)
-      if env
-        env.systems_registerable?
-      else
-        org.systems_registerable?
-      end
+    def registerable?(env, org, content_view = nil)
+      subscribable = content_view ? content_view.subscribable? : true
+      registerable = (env || org).systems_registerable?
+      subscribable && registerable
     end
   end
 
