@@ -6,12 +6,12 @@
     'data-status_url' => status_content_view_definition_path(view_definition.id)}
 
     %table#content_views
-
       %thead
         %tr{:style => "background-color: #F5FAFA;"}
-          %td{:colspan => 4, :style => "vertical-align:middle; font-size:130%;"}
-            #{_("Publish new content view from this view definition")}
-          = publish_button(view_definition)
+          - if view_definition.publishable?
+            %td{:colspan => 4, :style => "vertical-align:middle; font-size:130%;"}
+              #{_("Publish new content view from this view definition")}
+            = publish_button(view_definition)
 
         %tr
           %th #{_("Name")}
