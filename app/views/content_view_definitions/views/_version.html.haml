@@ -17,5 +17,5 @@
           #{_("Generating version: %{view_version}") % {:view_version => version.version}}
         - elsif task.error?
           #{_("Error generating version")}
-
-    = refresh_link(version, task)
+    - if view_definition.publishable?
+      = refresh_link(version, task)

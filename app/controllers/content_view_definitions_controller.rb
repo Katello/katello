@@ -191,7 +191,7 @@ class ContentViewDefinitionsController < ApplicationController
           :pending? => status.pending?,
           :status_html => render_to_string(:template => 'content_view_definitions/views/_version',
                                            :layout => false, :locals => {:version => status.task_owner,
-                                                                         :task => status})
+                                                                         :task => status, :view_definition => @view_definition})
       }
     end
 
