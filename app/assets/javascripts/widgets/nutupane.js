@@ -47,7 +47,7 @@ Katello.config(['$locationProvider', function($locationProvider){
  *   $scope.table.data.columns   = columns;
  *   $scope.table.active_item    = {};
  *
- *   Nutupane.set_columns();
+ *   Nutupane.setColumns();
  *
  *   Nutupane.default_item_url = function(id) {
  *       return KT.routes.edit_system_path(id);
@@ -73,11 +73,18 @@ angular.module('Katello').factory('Nutupane', ['$location', '$http', 'current_or
             },
             sort : sort
         },
-        allColumns, nameColumn;
+        allColumns, shownColums;
 
-    Nutupane.set_columns = function() {
+    /**
+     * @ngdoc function
+     * @name Katello.factory:Nutupane#setColumns
+     *
+     * @param {Array} columnsToShow list of column objects that will be shown when
+     *                              the details pane is made visible
+     */
+    Nutupane.setColumns = function(columnsToShow) {
         allColumns = Nutupane.table.data.columns.slice(0);
-        nameColumn = Nutupane.table.data.columns.slice(0).splice(0, 1);
+        shownColums = columnsToShow;
     };
 
     Nutupane.get = function(callback) {
@@ -174,7 +181,7 @@ angular.module('Katello').factory('Nutupane', ['$location', '$http', 'current_or
 
         if (visibility) {
             // Remove all columns except name and replace them with the details pane
-            table.data.columns = nameColumn;
+            table.data.columns = shownColums;
         } else {
             // Restore the former columns
             table.data.columns = allColumns;
@@ -228,7 +235,7 @@ angular.module('Katello').factory('Nutupane', ['$location', '$http', 'current_or
             // Only reset the active_item if an ID is provided
             if (id) {
                 // Remove all columns except name and replace them with the details pane
-                table.data.columns = nameColumn;
+                table.data.columns = shownColums;
                 table.select_all(false);
                 table.active_item = item;
                 table.active_item.selected  = true;
