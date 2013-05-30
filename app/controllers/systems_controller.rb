@@ -23,6 +23,7 @@ class SystemsController < ApplicationController
                                        :bulk_errata_install, :bulk_add_system_group, :bulk_remove_system_group]
 
   before_filter :find_environment, :only => [:environments, :new]
+  before_filter :find_environment_in_system, :only => [:create, :update]
   before_filter :authorize
 
   before_filter :setup_options, :only => [:index, :items, :create, :environments]
@@ -31,14 +32,24 @@ class SystemsController < ApplicationController
   COLUMNS = {'name' => 'name_sort', 'lastCheckin' => 'lastCheckin'}
 
   def rules
-    edit_system = lambda{System.find(params[:id]).editable?}
     read_system = lambda{System.find(params[:id]).readable?}
     env_system = lambda{@environment && @environment.systems_readable?}
     any_readable = lambda{current_organization && System.any_readable?(current_organization)}
     delete_systems = lambda{@system.deletable?}
     bulk_delete_systems = lambda{@systems.collect{|s| false unless s.deletable?}.compact.empty?}
     bulk_edit_systems = lambda{@systems.collect{|s| false unless s.editable?}.compact.empty?}
-    register_system = lambda { current_organization && System.registerable?(@environment, current_organization) }
+    register_system = lambda do
+      if current_organization
+        if params.has_key?(:system) && !params[:system][:content_view_id].blank?
+            content_view = ContentView.readable(current_organization).
+                              find_by_id(params[:system][:content_view_id])
+            System.registerable?(@environment, current_organization, content_view) if content_view
+        else
+            System.registerable?(@environment, current_organization)
+        end
+      end
+    end
+
     items_test = lambda do
       if params[:env_id]
         @environment = KTEnvironment.find(params[:env_id])
@@ -47,6 +58,17 @@ class SystemsController < ApplicationController
         current_organization && System.any_readable?(current_organization)
       end
     end
+
+    edit_system = lambda do
+      subscribable = true
+      if params.has_key?(:system) && !params[:system][:content_view_id].blank?
+          content_view = ContentView.readable(current_organization).
+                          find_by_id(params[:system][:content_view_id])
+          subscribable = content_view ? content_view.subscribable? : false
+      end
+      subscribable && System.find(params[:id]).editable?
+    end
+
     {
       :index => any_readable,
       :create => register_system,
@@ -295,8 +317,9 @@ class SystemsController < ApplicationController
 
     # Stuff into var for use in spec tests
     @locals_hash = { :system => @system, :editable => @system.editable?,
-                     :releases => releases, :releases_error => releases_error, :name => controller_display_name,
-                     :environments => environment_paths(library_path_element, environment_path_element("systems_readable?")) }
+                    :releases => releases, :releases_error => releases_error, :name => controller_display_name,
+                    :environments => environment_paths(library_path_element("systems_readable?"),
+                                                       environment_path_element("systems_readable?")) }
     render :partial => "edit", :locals => @locals_hash
   end
 
@@ -362,7 +385,8 @@ class SystemsController < ApplicationController
       # Stuff into var for use in spec tests
       @locals_hash = { :system => @system, :editable => @system.editable?,
                       :releases => releases, :releases_error => releases_error, :name => controller_display_name,
-                      :environments => environment_paths(library_path_element, environment_path_element("systems_readable?"))}
+                      :environments => environment_paths(library_path_element("systems_readable?"),
+                                                         environment_path_element("systems_readable?"))}
 
       if request.xhr?
         render :show_nutupane, :leyout => false, :locals => @locals_hash
@@ -680,6 +704,13 @@ class SystemsController < ApplicationController
       @environment = KTEnvironment.find(params[:env_id]) if params[:env_id]
       @environment ||= first_env_in_path(readable, true)
       @environment ||=  current_organization.library
+    end
+  end
+
+  def find_environment_in_system
+    if params.has_key?(:system) && params[:system].has_key?(:environment_id)
+      @environment = KTEnvironment.systems_readable(current_organization).
+                      where(:id => params[:system][:environment_id]).first
     end
   end
 

@@ -11,7 +11,7 @@
       = _("Delete")
   %table#nutupane-table.table.stable.stripe-row{ 'alch-table' => 'table', 'row-select' => 'true', 'ng-class' => '{ "table-mask" : table.working, "details-visible": table.detailsVisible}' }
   %div#nutupane-new-item.nutupane-pane{'ng-show' => 'table.newPaneVisible', 'ng-cloak' => true}
-    %a.fr{ 'ng-click' => 'table.newPaneVisible = false' }
+    %a.fr{ 'ng-click' => 'table.setNewItemVisibility(false)' }
       = 'x'
     %div.nutupane-pane-content
   %span.nutupane-details.panel.nutupane-pane#nutupane-details{ 'nutupane-details'=>'table.detailsVisible', 'model'=>'table', 'ng-class' => '{ "nutupane-details-open" : model.detailsVisible }' }

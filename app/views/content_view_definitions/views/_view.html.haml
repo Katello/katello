@@ -20,4 +20,4 @@
   - view.versions.each do |version|
     - if version.environments.length > 0
       = render :partial => 'content_view_definitions/views/version',
-        :locals => {:version => version, :task => version.task_status}
+        :locals => {:version => version, :task => version.task_status, :view_definition => view_definition}

@@ -140,6 +140,7 @@ KT.content_search = function(paths_in){
         bind_selectors();
         bind_repo_comparison();
         bind_view_comparison();
+        bind_package_modals();
 
         $(document).bind('return_to_results.comparison_grid', remove_subgrid);
 
@@ -231,6 +232,30 @@ KT.content_search = function(paths_in){
             if (!utils.isEqual(old_search_params, search_params)) {
                 do_search(search_params);
             }
+        });
+    },
+    bind_package_modals = function(){
+        $(".package-filelist-link, .package-changelog-link").live("click", function(e) {
+            var link = $(e.target),
+                link_class = link.attr("class"),
+                package_id = link.data("id"),
+                div = link_class.substring(0, link_class.indexOf("-link")) + "-" + package_id;
+
+            e.preventDefault();
+            width = (div.indexOf("changelog") === -1) ? "600px" : "960px";
+            $("#"+div).dialog({ modal: true,
+                                autoOpen: true,
+                                width: width
+            });
+
+            // hide the tipsy
+            close_tipsy();
+        });
+        $("a.show-more-changelog").live("click", function(e) {
+            var link = $(e.target);
+            e.preventDefault();
+            link.parent("p").next("div.more-changelog").show();
+            link.hide();
         });
     },
     do_search = function(search_params){
@@ -447,6 +472,7 @@ KT.content_search = function(paths_in){
         $('.view_tipsy').tipsy({html:true, gravity:'s', className:'content-tipsy',
                     title:find_text});
         KT.tipsy.custom.url_tooltip($('.tipsify-errata'), 'w');
+        KT.tipsy.custom.url_tooltip($('.tipsify-package'), 'w');
 
     },
     subgrid_selector_items = function(type) {

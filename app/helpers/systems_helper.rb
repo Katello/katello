@@ -52,8 +52,8 @@ module SystemsHelper
 
   def system_content_view_opts(system)
     keys = {}
-    system.environment.content_views.readable(current_organization).each do |view|
-      view.default? ? keys[view.id] = _('Default View') : keys[view.id] = view.name
+    system.environment.content_views.subscribable(current_organization).each do |view|
+      keys[view.id] = view.default? ? _('Default View') : view.name
     end
     keys[""] = ""
     keys["selected"] = system.content_view_id || ""

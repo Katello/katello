@@ -253,8 +253,23 @@ Src::Application.routes.draw do
   resources :operations, :only => [:index]  do
   end
 
-  resources :errata, :only => [] do
+  resources :packages, :only => [:show] do
     member do
+      get :changelog
+      get :filelist
+      get :dependencies
+      get :details
+    end
+    collection do
+      get :auto_complete_library
+      get :auto_complete_nvrea_library
+      get :validate_name_library
+    end
+  end
+
+  resources :errata, :only => [:show] do
+    member do
+      get :packages
       get :short_details
     end
   end

@@ -20,6 +20,8 @@ class DeletionChangeset < Changeset
     self.state == Changeset::REVIEW or
         raise _("Cannot delete the changeset '%s' because it is not in the review phase.") % self.name
 
+    validate_content_view_tasks_complete!
+
     validate_content! self.errata
     validate_content! self.packages
     validate_content! self.distributions
@@ -72,6 +74,9 @@ class DeletionChangeset < Changeset
 
     self.promotion_date = Time.now
     self.state          = Changeset::DELETED
+
+    Glue::Event.trigger(Katello::Actions::ChangesetPromote, self)
+
     self.save!
 
     index_repo_content from_env

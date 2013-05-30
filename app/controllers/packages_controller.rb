@@ -11,9 +11,9 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class PackagesController < ApplicationController
-
   before_filter :lookup_package
   before_filter :authorize
+  helper :packages
 
   def rules
 
@@ -26,7 +26,8 @@ class PackagesController < ApplicationController
       :show => view,
       :filelist => view,
       :changelog => view,
-      :dependencies => view
+      :dependencies => view,
+      :details => view
     }
   end
 
@@ -44,6 +45,10 @@ class PackagesController < ApplicationController
 
   def dependencies
     render :partial=>"dependencies"
+  end
+
+  def details
+    render :partial=>"details"
   end
 
   private

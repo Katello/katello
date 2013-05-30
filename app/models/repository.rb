@@ -19,6 +19,11 @@ class Repository < ActiveRecord::Base
   include Glue if (Katello.config.use_cp || Katello.config.use_pulp)
   include Authorization::Repository
 
+  include Glue::Event
+  def destroy_event
+    Katello::Actions::RepositoryDestroy
+  end
+
   include AsyncOrchestration
   include Ext::LabelFromName
   include Rails.application.routes.url_helpers
@@ -56,6 +61,9 @@ class Repository < ActiveRecord::Base
   scope :enabled, where(:enabled => true)
   scope :in_default_view, joins(:content_view_version => :content_view).
     where("content_views.default" => true)
+
+  scope :yum_type, where(:content_type=>YUM_TYPE)
+  scope :file_type, where(:content_type=>FILE_TYPE)
 
   def self.ids_only
     with_exclusive_scope{pluck(:id)}
@@ -189,6 +197,15 @@ class Repository < ActiveRecord::Base
 
   def self.clone_repo_path(repo, environment, content_view, for_cp = false)
     org, env, content_path = repo.relative_path.split("/",3)
+
+    # If the repo is part of a composite definition, strip the
+    # component content view name from the content path. That
+    # name is not needed, since the composite view name will be
+    # included.
+    if content_view.content_view_definition.try(:composite?)
+      content_view_label, content_path = content_path.split("/", 2)
+    end
+
     if for_cp
       "/#{content_path}"
     elsif (content_view.default? || !environment.library) &&

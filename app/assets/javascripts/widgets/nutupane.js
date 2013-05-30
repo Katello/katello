@@ -47,7 +47,7 @@ Katello.config(['$locationProvider', function($locationProvider){
  *   $scope.table.data.columns   = columns;
  *   $scope.table.active_item    = {};
  *
- *   Nutupane.set_columns();
+ *   Nutupane.setColumns();
  *
  *   Nutupane.default_item_url = function(id) {
  *       return KT.routes.edit_system_path(id);
@@ -73,43 +73,18 @@ angular.module('Katello').factory('Nutupane', ['$location', '$http', 'current_or
             },
             sort : sort
         },
-        allColumns, nameColumn;
+        allColumns, shownColums;
 
     /**
-     * Set the visibility of the details pane.
-     * @param visibility boolean
+     * @ngdoc function
+     * @name Katello.factory:Nutupane#setColumns
+     *
+     * @param {Array} columnsToShow list of column objects that will be shown when
+     *                              the details pane is made visible
      */
-    Nutupane.setDetailsVisibility = function(visibility) {
-        var table = Nutupane.table;
-
-        if (visibility) {
-            // Remove all columns except name and replace them with the details pane
-            table.data.columns = nameColumn;
-        } else {
-            // Restore the former columns
-            table.data.columns = allColumns;
-        }
-
-        table.detailsVisible = visibility;
-    };
-
-    /**
-     * Set the visibility of the new systems pane.
-     * @param visibility boolean
-     */
-    Nutupane.setNewSystemVisibility = function(visibility) {
-        if (visibility) {
-            $('body').addClass('no-scroll');
-        } else {
-            $('body').removeClass('no-scroll');
-        }
-        Nutupane.table.newPaneVisible = visibility;
-    };
-
-
-    Nutupane.set_columns = function() {
+    Nutupane.setColumns = function(columnsToShow) {
         allColumns = Nutupane.table.data.columns.slice(0);
-        nameColumn = Nutupane.table.data.columns.slice(0).splice(0, 1);
+        shownColums = columnsToShow;
     };
 
     Nutupane.get = function(callback) {
@@ -185,6 +160,7 @@ angular.module('Katello').factory('Nutupane', ['$location', '$http', 'current_or
 
         column.active = true;
 
+        Nutupane.table.offset = 0;
         Nutupane.get(function(){
             angular.forEach(Nutupane.table.data.columns, function(column){
                 if (column.active) {
@@ -196,8 +172,39 @@ angular.module('Katello').factory('Nutupane', ['$location', '$http', 'current_or
         });
     };
 
+    /**
+     * Set the visibility of the details pane.
+     * @param visibility boolean
+     */
+    Nutupane.table.setDetailsVisibility = function(visibility) {
+        var table = Nutupane.table;
+
+        if (visibility) {
+            // Remove all columns except name and replace them with the details pane
+            table.data.columns = shownColums;
+        } else {
+            // Restore the former columns
+            table.data.columns = allColumns;
+        }
+
+        table.detailsVisible = visibility;
+    };
+
+    /**
+     * Set the visibility of the new item pane.
+     * @param visibility boolean
+     */
+    Nutupane.table.setNewItemVisibility = function(visibility) {
+        if (visibility) {
+            $('body').addClass('no-scroll');
+        } else {
+            $('body').removeClass('no-scroll');
+        }
+        Nutupane.table.newPaneVisible = visibility;
+    };
+
     Nutupane.table.close_item = function () {
-        Nutupane.setDetailsVisibility(false);
+        Nutupane.table.setDetailsVisibility(false);
         // Restore the former columns
         Nutupane.table.data.columns = allColumns;
         $location.search('item', '');
@@ -228,7 +235,7 @@ angular.module('Katello').factory('Nutupane', ['$location', '$http', 'current_or
             // Only reset the active_item if an ID is provided
             if (id) {
                 // Remove all columns except name and replace them with the details pane
-                table.data.columns = nameColumn;
+                table.data.columns = shownColums;
                 table.select_all(false);
                 table.active_item = item;
                 table.active_item.selected  = true;
@@ -236,7 +243,7 @@ angular.module('Katello').factory('Nutupane', ['$location', '$http', 'current_or
             }
 
             table.active_item.html = response.data;
-            Nutupane.setDetailsVisibility(true);
+            Nutupane.table.setDetailsVisibility(true);
         });
     };
 

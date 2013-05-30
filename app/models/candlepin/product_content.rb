@@ -86,7 +86,6 @@ class Candlepin::ProductContent
       return true
     end
 
-
     ca = File.read(Resources::CDN::CdnResource.ca_file)
 
     cdn_var_substitutor.substitute_vars(self.content.contentUrl).each do |(substitutions, path)|
@@ -97,7 +96,8 @@ class Candlepin::ProductContent
 
       begin
         env_prod = EnvironmentProduct.find_or_create(product.organization.library, product)
-        unless Repository.where(:environment_product_id => env_prod.id, :pulp_id => product.repo_id(repo_name)).any?
+        existing_repos = Repository.where(:environment_product_id => env_prod.id, :pulp_id => product.repo_id(repo_name))
+        unless existing_repos.any?
           repo = Repository.create!(:environment_product=> env_prod, :pulp_id => product.repo_id(repo_name),
                                     :cp_label => self.content.label,
                                     :content_id=>self.content.id,

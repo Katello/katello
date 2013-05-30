@@ -92,7 +92,8 @@ module Katello
             rpm_command_present = system('which rpm &>/dev/null')
             if rpm_command_present
               package = config.katello? ? 'katello-common' : 'katello-headpin'
-              `rpm -q #{package} --queryformat '%{VERSION}-%{RELEASE}' 2>&1`
+              version = `rpm -q #{package} --queryformat '%{VERSION}-%{RELEASE}' 2>&1`
+              $? == 0 ? version : ""
             else
               hash = `git rev-parse --short HEAD 2>/dev/null`
               $? == 0 ? "git hash (#{hash.chop})" : "Unknown"
