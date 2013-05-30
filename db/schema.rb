@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130521162439) do
+ActiveRecord::Schema.define(:version => 20130529211902) do
 
   create_table "activation_keys", :force => true do |t|
     t.string   "name"
@@ -181,6 +181,8 @@ ActiveRecord::Schema.define(:version => 20130521162439) do
   end
 
   add_index "content_view_environments", ["content_view_id"], :name => "index_content_view_environments_on_content_view_id"
+  add_index "content_view_environments", ["cp_id"], :name => "index_cve_cp_id", :unique => true
+  add_index "content_view_environments", ["environment_id", "content_view_id"], :name => "index_cve_eid_cv_id", :unique => true
   add_index "content_view_environments", ["environment_id"], :name => "index_content_view_environments_on_environment_id"
 
   create_table "content_view_version_environments", :force => true do |t|
