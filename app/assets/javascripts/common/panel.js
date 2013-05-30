@@ -83,14 +83,14 @@ $(document).ready(function () {
                 last_ajax_panelpage = undefined;
             }
 
-            if(event.ctrlKey && !thisPanel.hasClass('opened') && (event.target.id !== "new") && !activeBlock.hasClass('active')) {
+            if((event.ctrlKey || event.metaKey) && !thisPanel.hasClass('opened') && (event.target.id !== "new") && !activeBlock.hasClass('active')) {
                 if (activeBlock.hasClass('active')) {
                     activeBlock.removeClass('active');
                 } else {
                     activeBlock.addClass('active');
                     activeBlock.find('.arrow-right').hide();
                 }
-            } else if (event.ctrlKey && !thisPanel.hasClass('opened') && (event.target.id !== "new") && activeBlock.hasClass('active') && $('.block.active').length > 1) {
+            } else if ((event.ctrlKey || event.metaKey) && !thisPanel.hasClass('opened') && (event.target.id !== "new") && activeBlock.hasClass('active') && $('.block.active').length > 1) {
               activeBlock.removeClass('active');
             } else {
                 if(activeBlock.hasClass('active') && thisPanel.hasClass('opened')){
