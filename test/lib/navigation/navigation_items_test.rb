@@ -213,7 +213,7 @@ class NavigationItemsTest < MiniTest::Rails::ActiveSupport::TestCase
     item = Navigation::Items::UserAccount.new(@admin)
 
     assert_equal  _('My Account'), item.display
-    assert_equal  "#{users_path(@admin)}#panel=user_#{@admin.id}&list_search=#{@admin.username}", item.url
+    assert_equal  "#{users_path(@admin)}#list_search=#{@admin.username}&panel=user_#{@admin.id}&panel_page=edit", item.url
     assert        item.accessible?
   end
 
