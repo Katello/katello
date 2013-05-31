@@ -197,6 +197,15 @@ class Repository < ActiveRecord::Base
 
   def self.clone_repo_path(repo, environment, content_view, for_cp = false)
     org, env, content_path = repo.relative_path.split("/",3)
+
+    # If the repo is part of a composite definition, strip the
+    # component content view name from the content path. That
+    # name is not needed, since the composite view name will be
+    # included.
+    if content_view.content_view_definition.try(:composite?)
+      content_view_label, content_path = content_path.split("/", 2)
+    end
+
     if for_cp
       "/#{content_path}"
     elsif (content_view.default? || !environment.library) &&

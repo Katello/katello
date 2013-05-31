@@ -87,6 +87,18 @@ common:
   notification:
     polling_seconds: 120
 
+  ldap_fluff_config:
+    host: ## ip address or hostname
+    port: 389 ## ip address or hostname
+    encryption: ## blank or :start_tls
+    base_dn: dc=redhat,dc=com ## baseDN for ldap auth, eg dc=redhat,dc=com
+    group_base: dc=redhat,dc=com ##baseDN for your ldap groups, eg ou=Groups,dc=redhat,dc=com
+    server_type: posix ## type of server. default == posix. :active_directory, :posix, :free_ipa
+    ad_domain: ## domain for your users if using active directory, eg redhat.com
+    service_user: ## service account for authenticating ldap calls in active directory or ipa
+    service_pass: ## service password for authenticating ldap calls in active directory or ipa
+    anon_queries: ## allow anonymous queries for AD or FreeIPA
+
   # authentication
   sso:
     enable: true
@@ -261,8 +273,6 @@ production:
     database: katello
   logging:
     loggers:
-      root:
-        path: /var/log/katello
       sql:
         level: fatal
 

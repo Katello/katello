@@ -50,10 +50,10 @@ module Glue::Provider
       options.assert_valid_keys(:async, :notify, :upstream)
 
       if options[:async]
-        self.task_status = async(:organization => self.organization, :task_type => "refresh manifest").queue_refresh_manifest(options)
+        self.task_status = async(:organization => self.organization, :task_type => "refresh manifest").queue_import_manifest(options)
         self.save!
       else
-        queue_refresh_manifest(options)
+        queue_import_manifest(options)
       end
     end
 

@@ -12,7 +12,15 @@
  **/
 
 angular.module('Katello.user-sessions').controller('UserSessionsController', ['$scope', function($scope) {
-    $('#login_form').bind('ajax:complete', function() {
-        $scope.orgSwitcher.refresh();
+    $('#login_form').bind('ajax:complete', function(event, request) {
+        var status = request.status;
+
+        // 40x error means that user was not authenticated, for such case we don't want
+        // to trigger orgSwitcher refresh
+        if (status >= 400 && status < 500) {
+            notices.displayNotice("error", request.responseText);
+        } else {
+            $scope.orgSwitcher.refresh();
+        }
     });
 }]);

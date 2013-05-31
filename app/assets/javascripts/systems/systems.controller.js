@@ -105,7 +105,7 @@ angular.module('Katello.systems').controller('SystemsController',
         $scope.table.data.columns   = columns;
         $scope.table.active_item    = {};
 
-        nutupane.setColumns();
+        nutupane.setColumns([columns[0]]);
 
         $scope.createNewSystem = function () {
             var createSuccess = function (data) {
@@ -234,7 +234,7 @@ angular.module('Katello.systems').controller('SystemsBulkActionController',
         $scope.systemGroups.data.columns   = columns;
         $scope.systemGroups.active_item    = {};
 
-        nutupane.setColumns();
+        nutupane.setColumns(columns);
 
         nutupane.get();
     }]

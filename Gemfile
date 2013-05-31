@@ -16,7 +16,7 @@ gem 'rails_warden', '>= 0.5.2'
 gem 'rack-openid'
 gem 'net-ldap'
 gem 'oauth'
-gem 'ldap_fluff', '>= 0.1.7'
+gem 'ldap_fluff', '>= 0.2.2'
 
 if defined? JRUBY_VERSION
   gem 'jruby-openssl'

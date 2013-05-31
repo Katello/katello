@@ -62,7 +62,7 @@ Katello.config(['$locationProvider', function($locationProvider){
 angular.module('Katello').factory('Nutupane', ['$location', '$http', 'CurrentOrganization', function($location, $http, CurrentOrganization){
     var sort = { by: 'name', order: 'ASC' },
         allColumns,
-        nameColumn;
+        shownColumns;
 
     var Nutupane = function() {
         var self = this;
@@ -80,11 +80,10 @@ angular.module('Katello').factory('Nutupane', ['$location', '$http', 'CurrentOrg
             loading_more: false
         };
 
-        self.setColumns = function() {
+        self.setColumns = function(columnsToShow) {
             allColumns = self.table.data.columns.slice(0);
-            nameColumn = self.table.data.columns.slice(0).splice(0, 1);
+            shownColumns = columnsToShow;
         };
-
         self.get = function(callback) {
             self.table.working = true;
 
@@ -208,7 +207,7 @@ angular.module('Katello').factory('Nutupane', ['$location', '$http', 'CurrentOrg
          */
         self.table.openActionPane = function() {
             self.table.collapsed = true;
-            self.table.data.columns = nameColumn;
+            self.table.data.columns = shownColumns;
         };
 
         /**
@@ -244,7 +243,7 @@ angular.module('Katello').factory('Nutupane', ['$location', '$http', 'CurrentOrg
                 // Only reset the active_item if an ID is provided
                 if (id) {
                     // Remove all columns except name and replace them with the details pane
-                    table.data.columns = nameColumn;
+                    table.data.columns = shownColumns;
                     table.select_all(false);
                     table.active_item = item;
                     table.active_item.selected  = true;

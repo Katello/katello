@@ -14,12 +14,10 @@
 %if "%{?scl}" == "ruby193"
     %global scl_prefix %{scl}-
     %global scl_ruby /usr/bin/ruby193-ruby
-    %global scl_rake scl enable ruby193 rake
     ### TODO temp disabled for SCL
     %global nodoc 1
 %else
     %global scl_ruby /usr/bin/ruby
-    %global scl_rake /usr/bin/rake
 %endif
 
 %global homedir %{_datarootdir}/%{name}
@@ -50,6 +48,8 @@ Provides:        %{name}-glue-foreman = 1.3.15
 Requires:        %{name}-glue-candlepin
 Requires:        %{name}-selinux
 Conflicts:       %{name}-headpin
+BuildRequires:   %{scl_ruby}
+Requires:        %{scl_ruby}
 
 %description
 Provides a package for managing application life-cycle for Linux systems.
@@ -70,6 +70,7 @@ Requires:       elasticsearch
 Requires:       wget
 Requires:       curl
 
+Requires:       %{scl_ruby}
 Requires:       %{?scl_prefix}rubygems
 Requires:       %{?scl_prefix}rubygem(rails) >= 3.2.8
 Requires:       %{?scl_prefix}rubygem(haml) >= 3.1.2
@@ -105,7 +106,7 @@ Requires:       %{?scl_prefix}rubygem(ui_alchemy-rails) >= 1.0.0
 Requires:       %{?scl_prefix}rubygem(chunky_png)
 Requires:       %{?scl_prefix}rubygem(tire) >= 0.3.0
 Requires:       %{?scl_prefix}rubygem(tire) < 0.4
-Requires:       %{?scl_prefix}rubygem(ldap_fluff)
+Requires:       %{?scl_prefix}rubygem(ldap_fluff) >= 0.2.1
 Requires:       %{?scl_prefix}rubygem(anemone)
 Requires:       %{?scl_prefix}rubygem(apipie-rails) >= 0.0.18
 Requires:       %{?scl_prefix}rubygem(logging) >= 1.8.0
@@ -114,6 +115,7 @@ Requires:       %{?scl_prefix}rubygem(rack-openid) >= 1.3.1
 Requires:       %{?scl_prefix}rubygem(ruby-openid) >= 2.2.3
 Requires:       %{?scl_prefix}rubygem(rabl)
 Requires:       %{?scl_prefix}rubygem(dynflow)
+Requires:       %{?scl_prefix}rubygem(minitest)
 Requires:       signo >= 0.0.5
 Requires:       signo-katello >= 0.0.5
 Requires:       lsof
@@ -272,6 +274,7 @@ Requires:       %{name}-glue-candlepin
 Requires:       %{name}-glue-elasticsearch
 Requires:       katello-selinux
 Requires:       %{?scl_prefix}rubygem(bundler_ext)
+Requires:       %{scl_ruby}
 
 %description headpin
 A subscription management only version of Katello.
@@ -473,10 +476,10 @@ fi
     mv lib/tasks lib/tasks_disabled
     export BUNDLER_EXT_NOSTRICT=1
     export BUNDLER_EXT_GROUPS="default assets"
-%{?scl:scl enable %{scl} "}
+%{?scl:scl enable %{scl} - << \EOF}
     rake  assets:precompile:primary --trace RAILS_ENV=production
     rake  assets:precompile:nondigest --trace
-%{?scl:"}
+%{?scl:EOF}
     rm config/katello.yml
     mv lib/tasks_disabled lib/tasks
 %endif

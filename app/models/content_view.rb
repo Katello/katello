@@ -206,7 +206,7 @@ class ContentView < ActiveRecord::Base
 
     promote_version = self.version(from_env)
     promote_version = ContentViewVersion.find(promote_version.id)
-    promote_version.environments << to_env
+    promote_version.environments << to_env unless promote_version.environments.include?(to_env)
     promote_version.save!
 
     repos_to_promote = get_repos_to_promote(from_env, to_env)
@@ -308,11 +308,13 @@ class ContentView < ActiveRecord::Base
   # a version of the view is promoted to an environment.  It is necessary for
   # candlepin to become aware that the view is available for consumers.
   def add_environment(env)
-    ContentViewEnvironment.create!(:name => env.name,
-                                   :label => self.cp_environment_label(env),
-                                   :cp_id => self.cp_environment_id(env),
-                                   :environment_id => env.id,
-                                   :content_view => self)
+    if self.content_view_environments.where(:environment_id => env.id ).empty?
+      ContentViewEnvironment.create!(:name => env.name,
+                                     :label => self.cp_environment_label(env),
+                                     :cp_id => self.cp_environment_id(env),
+                                     :environment_id => env.id,
+                                     :content_view => self)
+      end
   end
 
   # Unassociate an environment from this content view. This can occur whenever
