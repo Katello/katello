@@ -13,9 +13,10 @@
 module Validators
   class RolenameValidator < ActiveModel::EachValidator
     def validate_each(record, attribute, value)
-      if value
-        #max length is 20 more than the usernam,e because we add 20 random characters
-        #  on the end for the self role
+      # If role is self-role, no need to re-validate the rolename, since it is based on the username.
+      if value && !record.is_a?(UserOwnRole)
+         # max length is 20 more than the username because we add 20 random characters
+         # on the end for the self role
         record.errors[attribute] << N_("cannot contain characters >, <, or /") if value =~ %r{<|>|/}
         KatelloNameFormatValidator.validate_length(record, attribute, value, 148, 3)
       end
