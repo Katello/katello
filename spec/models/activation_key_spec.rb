@@ -208,7 +208,7 @@ describe ActivationKey do
       @system = System.new(:name => "test", :cp_type => "system", :facts => {"distribution.name"=>"Fedora"}, :uuid => "uuid-uuid")
       @system.should_receive(:sockets).and_return(sockets)
       dates.each do |k,v|
-        unless Product.find_by_cp_id(v[:productId])
+        unless Product.find_by_cp_id(v[:productId], @organization)
           product = @organization.redhat_provider.products.create!(:label =>"blah", :cp_id => v[:productId], :name => "Blah Server OS #{v[:productId]}") do |p|
             p.environments = [@organization.library,
                               @environment_1,
