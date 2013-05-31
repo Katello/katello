@@ -113,8 +113,7 @@
                       #{sub.support_level}
                   %td{:style => "padding-top:9px;"}
                     - if sub.provider_id == current_organization.redhat_provider.id
-                      = _("Sockets: %s") % sub.sockets
-                      = _(", RAM: %s") % sub.ram if sub.ram != 0
+                      = subscription_limits_helper(sub)
                   %td
                     - if sub.quantity < 0
                       = text_field_tag "spinner[#{sub.cp_id}]", nil, :min => 0, :max => 99999, :step=>1, :value=>0, :class=>"ui-spinner"
