@@ -7,11 +7,11 @@ describe('Factory: Nutupane', function () {
 
     beforeEach(function(){
         row_data = {
-            'columns' : [{ 
-                id : 1, 
-                name : 'Column 1', 
-                show : true 
-            }, { 
+            'columns' : [{
+                id : 1,
+                name : 'Column 1',
+                show : true
+            }, {
                 id: 2,
                 name: 'Column 2',
                 show: true
@@ -28,7 +28,7 @@ describe('Factory: Nutupane', function () {
                     column: 2
                 }]
             },{
-                'id': 'row_2',      
+                'id': 'row_2',
                 'cells' : [{
                     id: 1,
                     display: 1,

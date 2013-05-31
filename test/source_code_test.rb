@@ -63,14 +63,14 @@ class SourceCodeTest < MiniTest::Rails::ActiveSupport::TestCase
     it 'does not have trailing whitespaces' do
       SourceCode.
           new('**/*.{rb,js,scss,haml}',
-              %r'coverage|(public|vendor)/assets/.*\.js').
+              %r'coverage|engines/bastion/node_modules|engines/bastion/vendor|(public|vendor)/assets/.*\.js').
           check_lines { |line| line !~ / +$/ }
     end
 
     it 'does use soft-tabs' do
       SourceCode.
           new('**/*.{rb,js,scss,haml}',
-              %r'(coverage|(public|vendor)/assets/.*\.js)').# tab is ok in minified files, its shorter than space
+              %r'coverage|engines/bastion/node_modules|engines/bastion/vendor|(public|vendor)/assets/.*\.js').
           check_lines { |line| line !~ /\t/ }
     end
   end
@@ -89,6 +89,7 @@ see http://stackoverflow.com/questions/10048173/why-is-it-bad-style-to-rescue-ex
       SourceCode.
           new('**/*.rb',
               %r'config/(application|boot)\.rb',
+              %r'engines/bastion/test/test_helper\.rb',
               %r'test/minitest_helper\.rb', # TODO clean up minitest_helper
               %r'lib/util/puppet\.rb').
           check_lines(<<-DOC) { |line| (line !~ /ENV\[[^\]]+\]/) ? true : line =~ /#\s?ok/ }
@@ -117,6 +118,7 @@ Multiple anonymous placeholders:
       SourceCode.
           new('**/*.{rb,js,scss,haml}',
               %r'script/check-gettext\.rb',
+              %r'engines/bastion/node_modules',
               %r'test/source_code_test\.rb').
           check_lines doc do |line|
         line.scan(/_\((".*?"|'.*?')\)/).all? do |match|

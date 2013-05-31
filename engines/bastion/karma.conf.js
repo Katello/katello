@@ -18,8 +18,8 @@ files = [
   '../../app/assets/javascripts/common/katello.global.js',
   '../../app/assets/javascripts/common/experimental/katello_experimental.js',
   '../../app/assets/javascripts/common/experimental/current_organization.value.js',
-  'app/assets/javascripts/bastion/**/*.js',
-  
+  'app/assets/bastion/**/*.js',
+
   '.tmp/templates/**/*.js',
 
   'test/javascripts/**/*.js'
