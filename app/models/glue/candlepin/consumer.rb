@@ -335,7 +335,7 @@ module Glue::Candlepin::Consumer
       else
         mem = '0'
       end
-      memory_in_megabytes(mem)
+      memory_in_gigabytes(mem)
     end
 
     def memory=(mem)
@@ -371,19 +371,19 @@ module Glue::Candlepin::Consumer
       end
     end
 
-    def memory_in_megabytes(mem_str)
-      # convert total memory into megabytes
+    def memory_in_gigabytes(mem_str)
+      # convert total memory into gigabytes
       return 0 if mem_str.nil?
       mem,unit = mem_str.split
       total_mem = mem.to_f
       case unit
         when 'B'  then total_mem = 0
-        when 'kB' then total_mem = (total_mem / 1024)
-        when 'MB' then total_mem *= 1
-        when 'GB' then total_mem *= (1024)
-        when 'TB' then total_mem *= (1024*1024)
+        when 'kB' then total_mem = 0
+        when 'MB' then total_mem /= 1024
+        when 'GB' then total_mem *= 1
+        when 'TB' then total_mem *= 1024
         # default memtotal is in kB
-        else total_mem = (total_mem / 1024)
+        else total_mem = (total_mem / (1024*1024))
       end
       total_mem.to_i
     end
