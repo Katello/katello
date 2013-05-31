@@ -1,7 +1,12 @@
 <div class="action-panel">
-  <div alch-table-toolbar="systemGroups"></div>
-  <table class="table stripe-row"
+    <div alch-table-toolbar="systemGroups">
+        <span class="spinner" ng-show="working"></span>
+        <button class="primary" ng-click="addSystemsToGroups()" ng-disabled="systemGroups.num_selected == 0 || working">
+            {{"add" | i18n}}
+        </button>
+    </div>
+    <table class="table stripe-row"
          alch-table="systemGroups"
          row-select="true">
-  </table>
+    </table>
 </div>

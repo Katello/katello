@@ -170,6 +170,7 @@ angular.module('Katello.systems').controller('SystemsController',
  * @name  Katello.systems.controller:SystemsBulkActionController
  *
  * @requires $scope
+ * @requires $http
  * @requires SystemGroups
  * @requires Nutupane
  * @requires Routes
@@ -179,9 +180,8 @@ angular.module('Katello.systems').controller('SystemsController',
  *   A controller for providing bulk action functionality to the systems page.
  */
 angular.module('Katello.systems').controller('SystemsBulkActionController',
-    ['$scope', 'SystemGroups', 'Nutupane', 'Routes', 'CurrentOrganization',
-    function($scope, SystemGroups, Nutupane, Routes, CurrentOrganization) {
-
+    ['$scope', '$http', 'SystemGroups', 'Nutupane', 'Routes', 'CurrentOrganization',
+    function($scope, $http, SystemGroups, Nutupane, Routes, CurrentOrganization) {
         var columns = [{
             id: 'name',
             display: 'Name',
@@ -233,9 +233,27 @@ angular.module('Katello.systems').controller('SystemsBulkActionController',
         $scope.systemGroups.model          = 'System Groups';
         $scope.systemGroups.data.columns   = columns;
         $scope.systemGroups.active_item    = {};
+        $scope.working = false;
 
         nutupane.setColumns(columns);
 
         nutupane.get();
+
+        $scope.addSystemsToGroups = function() {
+            $scope.working = true;
+            var getIdFromRow = function(row) {
+                return row.row_id;
+            };
+            var systemIds = $.map($scope.table.get_selected_rows(), getIdFromRow);
+            var systemGroupIds = $.map($scope.systemGroups.get_selected_rows(), getIdFromRow);
+            var data = {group_ids: systemGroupIds, ids:systemIds};
+
+            $http.post(KT.routes.bulk_add_system_group_systems_path(), data).then(function(response) {
+                $scope.working = false;
+                // Work around AngularJS not providing direct access to the XHR object
+                response.getResponseHeader = response.headers;
+                notices.checkNoticesInResponse(response);
+            });
+        };
     }]
 );
