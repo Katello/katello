@@ -53,7 +53,7 @@ module Glue::Candlepin::Pool
     end
 
     def organization
-      Organization.find_by_name(self.owner["key"])
+      Organization.find_by_label(self.owner["key"])
     end
 
     # if defined +load_remote_data+ will be used by +lazy_accessors+
