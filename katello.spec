@@ -106,7 +106,7 @@ Requires:       %{?scl_prefix}rubygem(ui_alchemy-rails) >= 1.0.0
 Requires:       %{?scl_prefix}rubygem(chunky_png)
 Requires:       %{?scl_prefix}rubygem(tire) >= 0.3.0
 Requires:       %{?scl_prefix}rubygem(tire) < 0.4
-Requires:       %{?scl_prefix}rubygem(ldap_fluff)
+Requires:       %{?scl_prefix}rubygem(ldap_fluff) >= 0.2.1
 Requires:       %{?scl_prefix}rubygem(anemone)
 Requires:       %{?scl_prefix}rubygem(apipie-rails) >= 0.0.18
 Requires:       %{?scl_prefix}rubygem(logging) >= 1.8.0
