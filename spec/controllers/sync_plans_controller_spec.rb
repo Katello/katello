@@ -90,7 +90,7 @@ describe SyncPlansController, :katello => true do
       end
 
       it "should have a valid date" do
-        controller.should notify.exception
+        controller.should notify.error
         plan_create[:sync_plan].should_not be_nil
         data = plan_create
         data[:sync_plan][:plan_date] = '01/101/11'
@@ -184,14 +184,14 @@ describe SyncPlansController, :katello => true do
 
       it "should not update bad sync dates" do
         SyncPlan.first.should_not be_nil
-        controller.should notify.exception
+        controller.should notify.error
         put :update, :id => @plan.id, :sync_plan => {:date => '11/111111/11'}
         response.should_not be_success
       end
 
       it "should not update bad sync time" do
         SyncPlan.first.should_not be_nil
-        controller.should notify.exception
+        controller.should notify.error
         put :update, :id => @plan.id, :sync_plan => {:time => '30:00 pmm'}
         response.should_not be_success
       end

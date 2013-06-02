@@ -68,6 +68,7 @@ module Src
         Katello.database_configs
       end
     end
+
     # Setup additional routes by loading all routes file from routes directory
     config.paths["config/routes"] += Dir[Rails.root.join("config/routes/**/*.rb")]
 

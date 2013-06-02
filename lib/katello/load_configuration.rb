@@ -33,7 +33,8 @@ module Katello
                     search use_foreman password_reset_expiration redhat_repository_url port
                     elastic_url rest_client_timeout elastic_index
                     katello_version pulp email_reply_address
-                    embed_yard_documentation logging system_lang profiling)
+                    embed_yard_documentation logging system_lang profiling
+                    exception_paranoia hide_exceptions)
 
           has_values :app_mode, %w(katello headpin)
           has_values :url_prefix, %w(/headpin /sam /katello)
@@ -59,7 +60,8 @@ module Katello
             is_not_empty :thumbslug_url
           end
 
-          are_booleans :use_cp, :use_foreman, :use_pulp, :use_elasticsearch, :use_ssl, :ldap_roles, :validate_ldap, :gravatar
+          are_booleans :use_cp, :use_foreman, :use_pulp, :use_elasticsearch, :use_ssl, :ldap_roles,
+                       :validate_ldap, :gravatar, :exception_paranoia, :hide_exceptions
 
           if !early? && environment != :build
             validate :database do
