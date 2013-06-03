@@ -815,7 +815,6 @@ usermod -a -G katello-shared tomcat
 %{homedir}/script
 %{homedir}/spec
 %{homedir}/tmp
-%{homedir}/vendor
 %{homedir}/.bundle
 %{homedir}/config.ru
 %{homedir}/Gemfile.in
