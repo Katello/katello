@@ -738,7 +738,7 @@ usermod -a -G katello-shared tomcat
 %{homedir}/lib/util
 %{homedir}/app/lib/util
 %{homedir}/script/service-wait
-%{homedir}/db/openid-store/
+%dir %{homedir}/db/openid-store/
 %attr(755, katello, katello) %{datadir}/openid-store/associations
 %attr(755, katello, katello) %{datadir}/openid-store/nonces
 %attr(755, katello, katello) %{datadir}/openid-store/temp
