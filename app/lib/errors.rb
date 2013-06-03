@@ -40,6 +40,8 @@ module Errors
     end
   end
 
+  class ConnectionRefusedException < StandardError; end
+
   class UsageLimitExhaustedException < StandardError; end
 
   class UnsupportedActionException < StandardError
