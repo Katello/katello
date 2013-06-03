@@ -98,6 +98,13 @@ KT.path_select = function(div_id, name, environments, options_in){
                     });
                 }
             }
+
+            $(document).mouseup(function(e){
+                if(path_selector.has(e.target).length === 0){
+                    path_selector.hide();
+                }
+            });
+
             scroll_obj = KT.env_select_scroll({});
             recalc_scroll();
         },
@@ -290,13 +297,17 @@ KT.path_select = function(div_id, name, environments, options_in){
 KT.path_select_template = {
     selector : function(paths, div_id, submit_button_text, cancel_button_text, footer){
         var html = '<div id="' + div_id + '" class="path_selector"><form>';
-        html += KT.path_select_template.paths(paths);
-        if(submit_button_text){
-            html += KT.path_select_template.button("KT_path_select_submit_button", submit_button_text);
-        }
         if(cancel_button_text){
+            html += '<div class="action_buttons">';
             html += KT.path_select_template.button("KT_path_select_cancel_button", cancel_button_text);
         }
+        if(submit_button_text){
+            html += KT.path_select_template.button("KT_path_select_submit_button", submit_button_text);
+            html += '</div>';
+        }
+
+        html += KT.path_select_template.paths(paths);
+
         html += '</form>';
 
         if( footer ){
