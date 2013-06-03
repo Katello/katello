@@ -225,8 +225,9 @@ ActiveRecord::Schema.define(:version => 20130529211902) do
     t.string   "value",           :default => ""
     t.integer  "informable_id"
     t.string   "informable_type"
-    t.datetime "created_at",                      :null => false
-    t.datetime "updated_at",                      :null => false
+    t.datetime "created_at",                         :null => false
+    t.datetime "updated_at",                         :null => false
+    t.boolean  "org_default",     :default => false
   end
 
   add_index "custom_info", ["informable_type", "informable_id", "keyname"], :name => "index_custom_info_on_type_id_keyname"

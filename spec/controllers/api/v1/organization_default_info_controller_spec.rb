@@ -123,8 +123,8 @@ describe Api::V1::OrganizationDefaultInfoController do
 
       get :apply_to_all, :organization_id => @org.label, :informable_type => "system", :async => false
       response.code.should == "200"
-      JSON.parse(response.body)["systems"].nil?.should == false
-      JSON.parse(response.body)["task"].nil?.should == true
+      JSON.parse(response.body)["informables"].should_not be_nil
+      JSON.parse(response.body)["task"].should be_nil
 
       @org.systems.each do |s|
         s.custom_info.size.should == @org.default_info["system"].size
@@ -140,8 +140,8 @@ describe Api::V1::OrganizationDefaultInfoController do
 
       get :apply_to_all, :organization_id => @org.label, :informable_type => "system", :async => true
       response.code.should == "200"
-      JSON.parse(response.body)['systems'].empty?.should == true
-      JSON.parse(response.body)['task'].nil?.should == false
+      JSON.parse(response.body)["informables"].should be_empty
+      JSON.parse(response.body)["task"].should_not be_nil
     end
   end
 end

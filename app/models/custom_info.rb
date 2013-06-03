@@ -13,7 +13,7 @@
 class CustomInfo < ActiveRecord::Base
   acts_as_reportable
 
-  attr_accessible :keyname, :value
+  attr_accessible :keyname, :value, :org_default
 
   belongs_to :informable, :polymorphic => true
 
@@ -47,16 +47,23 @@ class CustomInfo < ActiveRecord::Base
     end
 
     affected = []
-
     list_of_objects.each do |obj|
-      to_apply = custom_info_list.collect { |c| c[:keyname] } - obj.custom_info.collect { |c| c[:keyname] }
 
+      to_apply = custom_info_list.collect { |c| c[:keyname] } - obj.custom_info.collect { |c| c[:keyname] }
       custom_info_list.select { |c| to_apply.include?(c[:keyname]) }.each do |info|
+        info[:org_default] = true
         obj.custom_info.create!(info)
         affected << { :informable_type => obj.class.name, :informable_id => obj.id }
       end
-    end
 
+      to_remove = obj.custom_info.select { |c| c[:org_default] }.collect { |c| c[:keyname] } - custom_info_list.collect { |c| c[:keyname] }
+      to_remove.each do |key|
+        ci = obj.custom_info.find_by_keyname(key)
+        ci.destroy
+        affected << { :informable_type => obj.class.name, :informable_id => obj.id }
+      end
+
+    end
     return affected.uniq
   end
 
