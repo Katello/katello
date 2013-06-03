@@ -21,5 +21,6 @@
 //= require "system_groups/system_groups_pane"
 //= require "systems/packages"
 //= require "systems/system_errata"
+//= require "system_events/system_events"
 //= require "systems/systems"
 //= require "systems/custom_info"
