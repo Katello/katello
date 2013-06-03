@@ -682,9 +682,6 @@ usermod -a -G katello-shared tomcat
 %{homedir}/app/lib/notifications
 %{homedir}/app/lib/validators
 %{homedir}/app/lib/api
-%{homedir}/app/lib/api/constraints
-%{homedir}/app/lib/api/v1
-%{homedir}/app/lib/api/v2
 %{homedir}/app/lib/dashboard
 %dir %{homedir}/app/lib/resources
 %{homedir}/app/lib/content_search
@@ -802,9 +799,6 @@ usermod -a -G katello-shared tomcat
 %{homedir}/app/lib/notifications
 %{homedir}/app/lib/validators
 %{homedir}/app/lib/api
-%{homedir}/app/lib/api/constraints
-%{homedir}/app/lib/api/v1
-%{homedir}/app/lib/api/v2
 %{homedir}/app/lib/dashboard
 %exclude %{homedir}/app/lib/resources/candlepin.rb
 %{homedir}/lib/tasks
