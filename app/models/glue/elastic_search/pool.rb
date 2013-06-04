@@ -90,10 +90,16 @@ module Glue::ElasticSearch::Pool
         json_pools = pools.collect{ |pool|
           pool.as_json.merge(pool.index_options)
         }
-        Tire.index self.index do
-          create :settings => ::Pool.index_settings, :mappings => ::Pool.index_mapping
-          import json_pools
-        end if !json_pools.empty?
+
+        unless json_pools.empty?
+          Tire.index self.index do
+            create :settings => ::Pool.index_settings, :mappings => ::Pool.index_mapping
+          end unless Tire.index(self.index).exists?
+
+          Tire.index self.index do
+            import json_pools
+          end
+        end
       end
 
       def self.search query, start, page_size, filters={}, sort=[:name_sort, "ASC"]
