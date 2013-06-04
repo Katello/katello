@@ -25,17 +25,13 @@ describe Api::V1::SystemsController do
   let(:uuid) { '1234' }
   let(:package_profile) {
     { :profile =>
-          [{ "epoch" => 0, "name" => "im-chooser", "arch" => "x86_64", "version" => "1.4.0", "vendor" => "Fedora Project", "release" => "1.fc14" },
-           { "epoch" => 0, "name" => "maven-enforcer-api", "arch" => "noarch", "version" => "1.0", "vendor" => "Fedora Project", "release" => "0.1.b2.fc14" },
-           { "epoch" => 0, "name" => "ppp", "arch" => "x86_64", "version" => "2.4.5", "vendor" => "Fedora Project", "release" => "12.fc14" },
-           { "epoch" => 0, "name" => "pulseaudio-module-bluetooth", "arch" => "x86_64", "version" => "0.9.21", "vendor" => "Fedora Project", "release" => "7.fc14" },
-           { "epoch" => 0, "name" => "dbus-cxx-glibmm", "arch" => "x86_64", "version" => "0.7.0", "vendor" => "Fedora Project", "release" => "2.fc14.1" },
-           { "epoch" => 0, "name" => "twolame-libs", "arch" => "x86_64", "version" => "0.3.12", "vendor" => "RPM Fusion", "release" => "4.fc11" },
-           { "epoch" => 0, "name" => "gtk-vnc", "arch" => "x86_64", "version" => "0.4.2", "vendor" => "Fedora Project", "release" => "4.fc14" }]
+          [Glue::Pulp::SimplePackage.new({ "epoch" => 0, "name" => "im-chooser", "arch" => "x86_64", "version" => "1.4.0", "vendor" => "Fedora Project", "release" => "1.fc14" }),
+           Glue::Pulp::SimplePackage.new({ "epoch" => 0, "name" => "maven-enforcer-api", "arch" => "noarch", "version" => "1.0", "vendor" => "Fedora Project", "release" => "0.1.b2.fc14" }),
+           Glue::Pulp::SimplePackage.new({"epoch" => 0, "name" => "ppp", "arch" => "x86_64", "version" => "2.4.5", "vendor" => "Fedora Project", "release" => "12.fc14" })]
     }.with_indifferent_access
   }
   let(:installed_products) { [{ "productId" => "69", "productName" => "Red Hat Enterprise Linux Server" }] }
-  let(:sorted) { package_profile[:profile].sort { |a, b| a["name"].downcase <=> b["name"].downcase } }
+  let(:sorted) { package_profile[:profile].sort { |a, b| a.name.downcase <=> b.name.downcase } }
 
   let(:user_with_read_permissions) { user_with_permissions { |u| u.can(:read_systems, :organizations, nil, @organization) } }
   let(:user_without_read_permissions) { user_without_permissions }
