@@ -54,7 +54,7 @@ Src::Application.routes.draw do
         end
         resources :sync_plans
         resources :tasks, :only => [:index]
-        resources :providers, :only => [:index]
+        resources :providers, :only => [:index], :constraints => { :organization_id => /[^\/]*/ }
         match '/systems' => 'systems#activate', :via => :post, :constraints => RegisterWithActivationKeyContraint.new
         resources :systems, :only => [:index, :create] do
           get :report, :on => :collection
