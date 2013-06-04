@@ -1,0 +1,9 @@
+wget http://www.rbt.ca/autodoc/binaries/postgresql_autodoc-1.41.tar.gz
+tar zxvf postgresql_autodoc-1.41.tar.gz
+cd postgresql_autodoc
+edit Makefile and disable MANPAGE in "all" target
+make install
+yum install perl-DBI perl-HTML-Template perl-TermReadKey perl-DBD-Pg
+runuser -c "postgresql_autodoc -d katellodb" - postgres
+
+result is located in /var/lib/pgsql/
