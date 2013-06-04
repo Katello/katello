@@ -27,6 +27,7 @@ class Api::V1::SyncController < Api::V1::ApiController
     api_version 'v2'
   end
 
+  before_filter :find_optional_organization, :only => [:index, :create, :cancel]
   before_filter :find_object, :only => [:index, :create, :cancel]
   before_filter :ensure_library, :only => [:create]
   respond_to :json
@@ -92,7 +93,8 @@ class Api::V1::SyncController < Api::V1::ApiController
   end
 
   def find_product
-    @product = Product.find_by_cp_id(params[:product_id])
+    raise _("Organization required") if @organization.nil?
+    @product = Product.find_by_cp_id(params[:product_id], @organization)
     raise HttpErrors::NotFound, _("Couldn't find product with id '%s'") % params[:product_id] if @product.nil?
     @product
   end

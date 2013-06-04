@@ -168,7 +168,7 @@ class Api::V2::ChangesetsContentController < Api::V2::ApiController
   end
 
   def find_product(product_id)
-    product = Product.find_by_cp_id(product_id.to_s)
+    product = Product.find_by_cp_id(product_id.to_s, @changeset.environment.organization)
     raise HttpErrors::NotFound, _("Couldn't find product with id '%s'") % product_id if product.nil?
     return product
   end

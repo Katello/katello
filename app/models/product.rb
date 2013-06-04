@@ -58,6 +58,14 @@ class Product < ActiveRecord::Base
         with_repos(env, true)
   }
 
+  def self.find_by_cp_id(cp_id, organization)
+    self.where(:cp_id=>cp_id).in_org(organization).first
+  end
+
+  def self.in_org(organization)
+    self.joins(:provider).where('providers.organization_id' => organization.id)
+  end
+
   scope :engineering, where(:type => "Product")
 
   before_save :assign_unique_label
