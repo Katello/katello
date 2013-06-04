@@ -278,14 +278,6 @@ Src::Application.routes.draw do
 
       api_resources :crls, :only => [:index]
 
-      # some paths conflicts with rhsm
-      scope 'katello' do
-
-        # routes for non-ActiveRecord-based resources
-        match '/products/:id/repositories' => 'products#repo_create', :via => :post, :constraints => { :id => /[0-9\.]*/ }
-
-      end
-
       # subscription-manager support
       match '/consumers' => 'systems#activate', :via => :post, :constraints => RegisterWithActivationKeyContraint.new
       match '/hypervisors' => 'systems#hypervisors_update', :via => :post

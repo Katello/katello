@@ -187,7 +187,7 @@ Pulp doesn't send correct headers."
   end
 
   def find_product
-    @product = Product.find_by_cp_id params[:product_id]
+    @product = Product.find_by_cp_id(params[:product_id])
     raise HttpErrors::NotFound, _("Couldn't find product with id '%s'") % params[:product_id] if @product.nil?
     @organization ||= @product.organization
   end
