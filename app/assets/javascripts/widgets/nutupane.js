@@ -62,7 +62,7 @@ Katello.config(['$locationProvider', function($locationProvider){
 angular.module('Katello').factory('Nutupane', ['$location', '$http', 'CurrentOrganization', function($location, $http, CurrentOrganization){
     var sort = { by: 'name', order: 'ASC' },
         allColumns,
-        nameColumn;
+        shownColumns;
 
     var Nutupane = function() {
         var self = this;
@@ -82,7 +82,7 @@ angular.module('Katello').factory('Nutupane', ['$location', '$http', 'CurrentOrg
 
         self.setColumns = function() {
             allColumns = self.table.data.columns.slice(0);
-            nameColumn = self.table.data.columns.slice(0).splice(0, 1);
+            shownColumns = self.table.data.columns.slice(0).splice(0, 1);
         };
 
         self.get = function(callback) {
@@ -202,7 +202,7 @@ angular.module('Katello').factory('Nutupane', ['$location', '$http', 'CurrentOrg
          */
         self.table.openActionPane = function() {
             self.table.collapsed = true;
-            self.table.data.columns = nameColumn;
+            self.table.data.columns = shownColumns;
         };
 
         /**
@@ -218,12 +218,12 @@ angular.module('Katello').factory('Nutupane', ['$location', '$http', 'CurrentOrg
                 table = self.table;
 
             if (id) {
-                // Remove all columns except name and replace them with the details pane
-                table.data.columns = shownColums;
-                table.select_all(false);
-                table.active_item = item;
-                table.active_item.selected  = true;
-                rowSelect = false;
+                angular.forEach(table.data.rows, function(row) {
+                    if (row.row_id.toString() === id.toString()) {
+                        item = row;
+                    }
+                });
+                $location.search('item', id.toString());
             }
             url = url ? url : self.default_item_url(id);
 
@@ -238,7 +238,7 @@ angular.module('Katello').factory('Nutupane', ['$location', '$http', 'CurrentOrg
                 // Only reset the active_item if an ID is provided
                 if (id) {
                     // Remove all columns except name and replace them with the details pane
-                    table.data.columns = nameColumn;
+                    table.data.columns = shownColumns;
                     table.select_all(false);
                     table.active_item = item;
                     table.active_item.selected  = true;
