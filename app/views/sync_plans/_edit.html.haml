@@ -18,7 +18,7 @@
       .grid_5.la#plan_name{'name' => 'sync_plan[name]', :class=>("editable edit_planname" if editable), 'data-url' => url_for(:action => 'update')} #{@plan[:name]}
     %fieldset.fl.clear
       %label.grid_2 #{_("Description")}:
-      .grid_5.la#plan_description{'name' => 'sync_plan[description]', :class=>("editable edit_textarea" if editable), 'data-url' => url_for(:action => 'update')}<> #{@plan[:description]}
+      .grid_5.la#plan_description{'name' => 'sync_plan[description]', :class=>("editable edit_textarea" if editable), 'data-maxlength'=> Validators::KatelloDescriptionFormatValidator::MAX_LENGTH, 'data-url' => url_for(:action => 'update')}<> #{@plan[:description]}
     %fieldset.fl.clear
       %label.grid_2 #{_("Interval")}:
       .grid_5.la#plan_interval{'name' => 'sync_plan[interval]', :class=>("editable edit_planinterval" if editable), 'data-url' => url_for(:action => 'update')} #{@plan[:interval]}

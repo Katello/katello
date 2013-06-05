@@ -13,7 +13,7 @@
         = text_field_tag 'organization[label]', nil, :tabindex => form.tabindex, :size => 30, :class => :label_input, 'data-url' => default_label_organizations_path()
         = image_tag "icons/spinner.gif", :class => 'label_spinner hidden'
 
-      = form.text_area :description, :label => _("Description"), :size => "40x5"
+      = form.text_area :description, :label => _("Description"), :size => "40x5", :maxlength => Validators::KatelloDescriptionFormatValidator::MAX_LENGTH
 
       - if Katello.config.katello?
         %fieldset
@@ -28,7 +28,7 @@
           = image_tag "icons/spinner.gif", :class => 'label_spinner hidden'
 
         = form.field :envdescription, :label => _("Description") do
-          = text_area_tag 'environment[description]', nil, :tabindex => form.tabindex, :size => "40x5"
+          = text_area_tag 'environment[description]', nil, :tabindex => form.tabindex, :size => "40x5" , :maxlength => Validators::KatelloDescriptionFormatValidator::MAX_LENGTH
 
         %fieldset
           .grid_7.la

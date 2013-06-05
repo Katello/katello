@@ -29,7 +29,7 @@
     %fieldset.clearfix
       .grid_2.ra
         %label #{_("Description")}:
-      .grid_5.la{:style => "word-wrap: break-word;", :class=>("editable edit_textarea" if editable), "data-url"=>organization_environment_path(@organization.label, @environment.id), 'name' => 'kt_environment[description]'}<> #{@environment.description}
+      .grid_5.la{:style => "word-wrap: break-word;", :class=>("editable edit_textarea" if editable), 'data-maxlength'=> Validators::KatelloDescriptionFormatValidator::MAX_LENGTH, "data-url"=>organization_environment_path(@organization.label, @environment.id), 'name' => 'kt_environment[description]'}<> #{@environment.description}
 
     %fieldset.clearfix
       %input{ :type => "hidden", :name => "prior_envs", :value => @env_labels_json }
