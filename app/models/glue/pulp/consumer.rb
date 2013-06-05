@@ -66,7 +66,7 @@ module Glue::Pulp::Consumer
 
       bind_ids.each do |repoid|
         begin
-          events.concat(Runcible::Extensions::Consumer.bind_all(uuid, repoid))
+          events.concat(Runcible::Extensions::Consumer.bind_all(uuid, repoid, false))
           processed_ids << repoid
         rescue => e
           Rails.logger.error "Failed to bind repo #{repoid}: #{e}, #{e.backtrace.join("\n")}"
@@ -139,7 +139,7 @@ module Glue::Pulp::Consumer
 
     def install_package packages
       Rails.logger.debug "Scheduling package install for consumer #{self.name}"
-      pulp_task = Runcible::Extensions::Consumer.install_content(self.uuid, 'rpm', packages)
+      pulp_task = Runcible::Extensions::Consumer.install_content(self.uuid, 'rpm', packages, {"importkeys" => true})
     rescue => e
       Rails.logger.error "Failed to schedule package install for pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -155,7 +155,7 @@ module Glue::Pulp::Consumer
 
     def update_package packages
       Rails.logger.debug "Scheduling package update for consumer #{self.name}"
-      pulp_task = Runcible::Extensions::Consumer.update_content(self.uuid, 'rpm', packages)
+      pulp_task = Runcible::Extensions::Consumer.update_content(self.uuid, 'rpm', packages, {"importkeys" => true})
     rescue => e
       Rails.logger.error "Failed to schedule package update for pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -163,7 +163,7 @@ module Glue::Pulp::Consumer
 
     def install_package_group groups
       Rails.logger.debug "Scheduling package group install for consumer #{self.name}"
-      pulp_task = Runcible::Extensions::Consumer.install_content(self.uuid, 'package_group', groups)
+      pulp_task = Runcible::Extensions::Consumer.install_content(self.uuid, 'package_group', groups, {"importkeys" => true})
     rescue => e
       Rails.logger.error "Failed to schedule package group install for pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -179,7 +179,7 @@ module Glue::Pulp::Consumer
 
     def install_consumer_errata errata_ids
       Rails.logger.debug "Scheduling errata install for consumer #{self.name}"
-      pulp_task = Runcible::Extensions::Consumer.install_content(self.uuid, 'erratum', errata_ids)
+      pulp_task = Runcible::Extensions::Consumer.install_content(self.uuid, 'erratum', errata_ids, {"importkeys" => true})
     rescue => e
       Rails.logger.error "Failed to schedule errata install for pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
       raise e

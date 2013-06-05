@@ -58,7 +58,8 @@ class GlueCandlepinOwnerTestSLA < GlueCandlepinOwnerTestBase
     e = assert_raises(RestClient::BadRequest) do
       @@org.service_level = 'Premium'
     end
-    assert_equal "{\n  \"displayMessage\" : \"Service level 'Premium' is not available to consumers of organization GlueCandlepinOwnerTestSystem_1.\"\n}", e.response
+    expected = "{\n  \"displayMessage\" : \"Service level 'Premium' is not available to consumers of organization GlueCandlepinOwnerTestSystem_1.\"\n}"
+    assert_equal JSON.parse(expected), JSON.parse(e.response)
     assert_equal nil, @@org.service_level
 
     # Should be able to set clear the default
