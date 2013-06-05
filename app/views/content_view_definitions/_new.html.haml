@@ -19,7 +19,7 @@
                          'data-url' => default_label_content_view_definitions_path)
         = image_tag "icons/spinner.gif", :class => 'label_spinner hidden'
 
-      = form.text_area :description, :size => "40x5", :label => _("Description")
+      = form.text_area :description, :size => "40x5", :label => _("Description"), :maxlength => Validators::KatelloDescriptionFormatValidator::MAX_LENGTH
 
       = form.field :composite, :label => _("Composite?") do
         = check_box_tag 'content_view_definition[composite]', "1", false, :tabindex => form.tabindex
