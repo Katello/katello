@@ -39,7 +39,7 @@
         %fieldset.clearfix
           .grid_3.ra
             %label #{_("Description")}:
-          .grid_8.la{:style => "word-wrap: break-word;", 'name' => 'organization[description]', :class=>("editable edit_textarea" if editable), 'data-url'=>edit_organization_path(@organization.label)} #{@organization[:description]}
+          .grid_8.la{:style => "word-wrap: break-word;", 'name' => 'organization[description]', :class=>("editable edit_textarea" if editable), 'data-maxlength'=> Validators::KatelloDescriptionFormatValidator::MAX_LENGTH, 'data-url'=>edit_organization_path(@organization.label)} #{@organization[:description]}
 
         %fieldset
           .grid_3.ra
