@@ -175,10 +175,10 @@ class PromotionChangeset < Changeset
         end
       end
     end
-    pkg_ids = []
 
+    pkg_ids = []
     pkgs_promote.each_pair do |repo, pkgs|
-      repo.add_packages(pkgs)
+      PulpTaskStatus::wait_for_tasks [repo.add_packages(pkgs)]
       pkg_ids.concat(pkgs)
     end
     Package.index_packages(pkg_ids)
@@ -196,8 +196,7 @@ class PromotionChangeset < Changeset
         if repo.is_cloned_in? to_env
           clone             = repo.get_clone to_env
 
-
-          if repo.has_erratum? err.errata_id and !clone.has_erratum? err.errata_id
+          if repo.has_erratum? err.display_name and !clone.has_erratum? err.display_name
             errata_promote[clone] ||= []
             errata_promote[clone] << err.errata_id
           end
@@ -207,7 +206,7 @@ class PromotionChangeset < Changeset
 
     errata_ids = []
     errata_promote.each_pair do |repo, errata|
-      repo.add_errata(errata)
+      PulpTaskStatus::wait_for_tasks [repo.add_errata(errata)]
       errata_ids.concat(errata)
     end
     Errata.index_errata(errata_ids)
@@ -236,7 +235,7 @@ class PromotionChangeset < Changeset
     end
 
     distribution_promote.each_pair do |repo, distro|
-      repo.add_distribution(distro)
+      PulpTaskStatus::wait_for_tasks [repo.add_distribution(distro)]
     end
   end
 
