@@ -212,8 +212,8 @@ class ChangesetsController < ApplicationController
 
           when "distribution"
             product = Product.find pid
-            @changeset.add_distribution! id, product if adding
-            @changeset.remove_distribution! id, product if !adding
+            @changeset.add_distribution! Distribution.find(id), product if adding
+            @changeset.remove_distribution! Distribution.find(id), product if !adding
         end
       end
       @changeset.updated_at = Time.now

@@ -39,6 +39,6 @@ class DistributionsController < ApplicationController
   end
 
   def find_distribution
-    @distribution = Glue::Pulp::Distribution.find params[:id]
+    @distribution = Distribution.find(params[:id])
   end
 end

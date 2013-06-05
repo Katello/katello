@@ -9,7 +9,7 @@
     %li.no_slide.block{:id => distribution.id, "data-ajax_url" => repository_distribution_path(repo.id, URI::escape(distribution.id))}
 
       - promoted = @next_env_distros.include? distribution.id
-      - promotable = !promoted and (@next_environment && !(@next_env_repos & repo.clone_ids).empty?)
+      - promotable = !promoted and (@next_environment && !(@next_env_repos).empty?)
 
       .fr
         %span.added.tipsify.hidden #{_("Added")}

@@ -16,6 +16,6 @@
       -@distribution.files.each do |file|
         %tr
           %td{:class=>'distribution'}
-            #{file}
+            #{file[:relativepath]}
 
 = render :template => "layouts/tupane_layout"

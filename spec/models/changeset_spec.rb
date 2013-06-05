@@ -198,14 +198,15 @@ describe Changeset, :katello => true do
                                  :content_view_version=>ep.environment.default_content_view_version,
                                  :feed => 'https://localhost')
 
-        @distribution = mock('Distribution', { :id => 'some-distro-id' })
+        @distribution = mock(Distribution, { "id" => "ks-Red Hat Enterprise Linux-Server-6.4-x86_64",
+                                             '_id' => "0b74d908-5b95-4315-a925-d3e97fd058f2" })
         @repo.stub(:distributions).and_return([@distribution])
         @repo.stub_chain(:distributions, :index).and_return([@distribution])
         @repo.stub(:packages).and_return([@pack])
         @repo.stub(:errata).and_return([@err])
         @repo.stub(:has_package?).with(1).and_return(true)
         @repo.stub(:has_erratum?).with('err').and_return(true)
-        @repo.stub(:has_distribution?).with('some-distro-id').and_return(true)
+        @repo.stub(:has_distribution?).with('ks-Red Hat Enterprise Linux-Server-6.4-x86_64').and_return(true)
         @repo.stub(:clone_ids).and_return([])
         Product.stub(:find).and_return(@prod)
         @changeset.stub(:find_package_data).and_return(@pack)
@@ -270,7 +271,7 @@ describe Changeset, :katello => true do
 
         it "should fail on add distribution" do
           @changeset.stub_chain(:environment, :prior, :repositories, :any?).and_return { true }
-          lambda { @changeset.add_distribution!("some-distro-id", @prod) }.
+          lambda { @changeset.add_distribution!(@distribution, @prod) }.
               should raise_error(ActiveRecord::RecordInvalid, /has not been promoted/)
         end
       end
@@ -317,9 +318,9 @@ describe Changeset, :katello => true do
 
         it "should add distribution" do
           @changeset.environment.stub_chain(:prior, :repositories, :any?).and_return { true }
-          @changeset.add_distribution!("some-distro-id", @prod)
+          @changeset.add_distribution!(@distribution, @prod)
           @changeset.distributions.length.should == 1
-          lambda { @changeset.add_distribution!("some-distro-id", @prod) }.
+          lambda { @changeset.add_distribution!(@distribution, @prod) }.
               should raise_error(ActiveRecord::RecordInvalid, /already been taken/)
         end
 
@@ -353,7 +354,8 @@ describe Changeset, :katello => true do
                                    :feed=>"http://localhost.com/foo/")
         @repo.stub(:create_pulp_repo).and_return([])
         @repo.save!
-        @distribution = mock('Distribution', { :id => 'some-distro-id' })
+        @distribution = mock(Distribution, { "id" => "ks-Red Hat Enterprise Linux-Server-6.4-x86_64",
+                                             '_id' => "0b74d908-5b95-4315-a925-d3e97fd058f2" })
         @repo.stub(:distributions).and_return([@distribution])
         @repo.stub(:packages).and_return([@pack])
         @repo.stub(:errata).and_return([@err])
@@ -396,9 +398,9 @@ describe Changeset, :katello => true do
 
       it "should remove distribution" do
         ChangesetDistribution.should_receive(:destroy_all).
-            with(:distribution_id => 'some-distro-id', :changeset_id => @changeset.id, :product_id => @prod.id).
+            with(:distribution_id => @distribution._id, :changeset_id => @changeset.id, :product_id => @prod.id).
             and_return(true)
-        @changeset.remove_distribution!('some-distro-id', @prod)
+        @changeset.remove_distribution!(@distribution, @prod)
       end
     end
 
@@ -418,7 +420,8 @@ describe Changeset, :katello => true do
 
         @pack         = mock('Pack', { :id => 1, :name => 'pack' })
         @err          = mock('Err', { :id => 'asdfasdf', :name => 'err' , :errata_id=>'err'})
-        @distribution = mock('Distribution', { :id => 'some-distro-id' })
+        @distribution = mock(Distribution, { "id" => "ks-Red Hat Enterprise Linux-Server-6.4-x86_64",
+                                             '_id' => "0b74d908-5b95-4315-a925-d3e97fd058f2" })
         ep            = EnvironmentProduct.find_or_create(@organization.library, @prod)
         @repo         = Repository.new(:environment_product => ep, :name => 'repo', :label => 'repo_label',
                                            :pulp_id => "test_pulp_id", :relative_path=>"/foo/", :content_id=>'aasfd',
@@ -436,7 +439,7 @@ describe Changeset, :katello => true do
         @repo.stub(:sync).and_return([])
         @repo.stub(:has_package?).and_return(true)
         @repo.stub(:has_erratum?).and_return(true)
-        @repo.stub(:has_distribution?).with('some-distro-id').and_return(true)
+        @repo.stub(:has_distribution?).with('ks-Red Hat Enterprise Linux-Server-6.4-x86_64').and_return(true)
 
         @repo.stub(:is_cloned_in?).and_return(true)
         @repo.stub(:clone_ids).and_return([])

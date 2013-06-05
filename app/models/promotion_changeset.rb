@@ -227,8 +227,8 @@ class PromotionChangeset < Changeset
         clone = repo.get_clone to_env
         next if clone.nil?
 
-        if repo.has_distribution? distro.distribution_id and
-            !clone.has_distribution? distro.distribution_id
+        if repo.has_distribution? distro.display_name and
+            !clone.has_distribution? distro.display_name
           distribution_promote[clone] = distro.distribution_id
         end
       end
