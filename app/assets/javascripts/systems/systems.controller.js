@@ -270,7 +270,7 @@ angular.module('Katello.systems').controller('SystemsBulkActionController',
                         }
                     });
 
-                    // TODO refacor this by providing direct access to the $scope model in alch-tables
+                    // TODO refactor this by providing direct access to the $scope model in alch-tables
                     $.each(selectedSystemGroups, function(groupIndex, systemGroup) {
                         $.each(selectedSystemNames, function(systemIndex, systemName) {
                             if (systemGroup.system.indexOf(systemName) === -1) {
