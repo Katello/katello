@@ -19,6 +19,6 @@
     %fieldset
       .grid_2.ra
         %label #{_("Description")}:
-      .grid_7.la{:style => "word-wrap: break-word;", 'name' => 'view_definition[description]', :class => ("editable edit_textarea" if editable), 'data-url' => content_view_definition_path(view_definition.id)}<> #{view_definition[:description]}
+      .grid_7.la{:style => "word-wrap: break-word;", 'name' => 'view_definition[description]', :class => ("editable edit_textarea" if editable), 'data-maxlength'=>Validators::KatelloDescriptionFormatValidator::MAX_LENGTH, 'data-url' => content_view_definition_path(view_definition.id)}<> #{view_definition[:description]}
 
 = render :template => "layouts/tupane_layout"

@@ -79,7 +79,7 @@
             %input{ :id => 'permission_name', :name => 'permission[name]', :type => "text", :tabindex => 4 }
             .permission_widget_container
             %label.ra.fl #{_("Description:")}
-            %textarea{ :id => 'description', :name => 'permission[description]', :tabindex => 5 }
+            %textarea{ :id => 'description', :name => 'permission[description]', :tabindex => 5, :maxlength => Validators::KatelloDescriptionFormatValidator::MAX_LENGTH }
           #permission_button_bar.clear
             .button.fl#previous_button
               #{_("<< Previous")}

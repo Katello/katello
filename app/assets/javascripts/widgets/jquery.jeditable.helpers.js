@@ -119,12 +119,14 @@ KT.editable = (function(){
         initialize_textarea = function() {
             $('.edit_textarea').each(function() {
                 $(this).editable('destroy');
+                var element = $(this);
                 var settings = {
                     type        :  'textarea',
                     data        :  null,
-                    name        :  $(this).attr('name'),
+                    name        :  element.attr('name'),
                     rows        :  8,
-                    cols        :  36
+                    cols        :  36,
+                    maxlength   :  $(this).data('maxlength')
                 };
                 $(this).editable($(this).attr('data-url'), $.extend(common_settings, settings));
             });

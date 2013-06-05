@@ -33,7 +33,7 @@
             = label :distributor, :description, _("Description")
           .input
             .value
-              #distributor_description{'name' => 'distributor[description]', :class=>("editable edit_textarea" if editable), 'data-url'=>distributor_path(distributor.id)} #{distributor[:description]}
+              #distributor_description{'name' => 'distributor[description]', :class=>("editable edit_textarea" if editable), 'data-maxlength'=> Validators::KatelloDescriptionFormatValidator::MAX_LENGTH, 'data-url'=>distributor_path(distributor.id)} #{distributor[:description]}
         .control-group
           .label
             = label :env, :env, _("Environment")
