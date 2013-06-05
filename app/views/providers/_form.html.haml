@@ -3,6 +3,6 @@
 
 = form.text_field :name, :label => _("Name")
 
-= form.text_area :description, :label => _("Description"), :size => "40x5"
+= form.text_area :description, :label => _("Description"), :size => "40x5", :maxlength=> Validators::KatelloDescriptionFormatValidator::MAX_LENGTH
 
 = form.submit _("Save")
