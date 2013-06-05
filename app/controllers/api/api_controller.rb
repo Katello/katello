@@ -57,7 +57,20 @@ class Api::ApiController < ActionController::Base
   end
 
   def request_from_katello_cli?
-    request.headers['User-Agent'].to_s =~ /^katello-cli/
+    request.user_agent.to_s =~ /^katello-cli/
+  end
+
+  # For situations where rhsm/subscirption-manager expect a bit
+  # different behaviour.
+  def request_from_rhsm?
+    # We should rather use "x-python-rhsm-version" that are sent in
+    # headers from subcription-manager, but this was added quite
+    # recently: https://bugzilla.redhat.com/show_bug.cgi?id=790481.
+    # For compatibility reasons we use the checking for katello_cli
+    # instead for now. Therefore this method should be used only
+    # rarely in cases where the expected behaviour differs between
+    # this two agents, without large impact on other possible clients.
+    !request_from_katello_cli?
   end
 
   def process_action(method_name, *args)

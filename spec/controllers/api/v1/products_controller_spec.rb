@@ -214,7 +214,7 @@ describe Api::V1::ProductsController, :katello => true do
     end
 
     it "should find product" do
-      Product.should_receive(:find_by_cp_id).once.with(@product.id.to_s).and_return(@products[0])
+      Product.should_receive(:find_by_cp_id).once.with(@product.id.to_s, @organization).and_return(@products[0])
       get 'repositories', :organization_id => @organization.label, :environment_id => @environment.id, :id => @product.id
     end
 

@@ -123,7 +123,9 @@ class SubscriptionsController < ApplicationController
 
   def new
     get_manifest_details
-    render :partial=>"new", :locals=>{:provider=>@provider, :statuses=>@statuses, :details=>@details, :upstream=>@upstream, :name => controller_display_name}
+    can_refresh = @upstream['idCert'] && @upstream['idCert']['cert']
+    render :partial=>"new", :locals=>{:provider=>@provider, :statuses=>@statuses, :details=>@details, :upstream=>@upstream,
+                                      :name => controller_display_name, :can_refresh=>can_refresh}
   end
 
   def edit_manifest

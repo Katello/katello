@@ -289,13 +289,6 @@ Src::Application.routes.draw do
 
       match "/status" => "ping#server_status", :via => :get
       match "/version" => "ping#version", :via => :get
-      # some paths conflicts with rhsm
-      scope 'katello' do
-
-        # routes for non-ActiveRecord-based resources
-        match '/products/:id/repositories' => 'products#repo_create', :via => :post, :constraints => { :id => /[0-9\.]*/ }
-
-      end
 
       # subscription-manager support
       match '/consumers' => 'systems#activate', :via => :post, :constraints => RegisterWithActivationKeyContraint.new

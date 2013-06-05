@@ -381,7 +381,7 @@ class Changeset < ActiveRecord::Base
     products_ids += self.errata.map { |e| e.product.cp_id }
     products_ids -= self.products.collect { |p| p.cp_id }
     products_ids.uniq.collect do |product_cp_id|
-      Product.find_by_cp_id(product_cp_id)
+      Product.find_by_cp_id(product_cp_id, self.environment.organization)
     end
   end
 

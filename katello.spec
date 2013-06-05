@@ -228,6 +228,7 @@ BuildArch:      noarch
 Summary:        A meta-package to pull in all components for Katello and Foreman
 Requires:       %{name}-all
 Requires:       %{name}-configure-foreman
+Requires:       foreman-proxy-installer
 
 %description foreman-all
 
@@ -253,7 +254,7 @@ Requires:        pulp-server
 Requires:        pulp-rpm-plugins
 Requires:        pulp-selinux
 Requires:        createrepo = 0.9.9-18%{?dist}
-Requires:        %{?scl_prefix}rubygem(runcible) >= 0.4.8
+Requires:        %{?scl_prefix}rubygem(runcible) >= 0.4.9
 
 %description glue-pulp
 Katello connection classes for the Pulp backend

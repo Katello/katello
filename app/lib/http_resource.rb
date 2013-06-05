@@ -65,12 +65,12 @@ class HttpResource
         logger.error "Error parsing the body: " << error.backtrace.join("\n")
         if ["404", "500", "502", "503", "504"].member? resp.code.to_s
           logger.error "Remote server status code " << resp.code.to_s
-          raise RestClientException,{:message => error.to_s, :service_code => service_code, :code => status_code}, caller
+          raise RestClientException, {:message => error.to_s, :service_code => service_code, :code => status_code}, caller
         else
           raise NetworkException, [resp.code.to_s, resp.body].reject{|s| s.nil? or s.empty?}.join(' ')
         end
       end
-      raise RestClientException,{:message => message, :service_code => service_code, :code => status_code}, caller
+      raise RestClientException, {:message => message, :service_code => service_code, :code => status_code}, caller
     end
 
     def print_debug_info(a_path, headers={}, payload={})
@@ -97,6 +97,9 @@ class HttpResource
       result
     rescue RestClient::Exception => e
       raise_rest_client_exception e, a_path, "GET"
+    rescue Errno::ECONNREFUSED => e
+      service = a_path.split("/").second
+      raise Errors::ConnectionRefusedException, _("A backend service [ %s ] is unreachable") % service.capitalize
     end
 
     def post(a_path, payload={}, headers={})
@@ -108,6 +111,9 @@ class HttpResource
       result
     rescue RestClient::Exception => e
       raise_rest_client_exception e, a_path, "POST"
+    rescue Errno::ECONNREFUSED => e
+      service = a_path.split("/").second
+      raise Errors::ConnectionRefusedException, _("A backend service [ %s ] is unreachable") % service.capitalize
     end
 
     def put(a_path, payload={}, headers={})
@@ -119,6 +125,9 @@ class HttpResource
       result
     rescue RestClient::Exception => e
       raise_rest_client_exception e, a_path, "PUT"
+    rescue Errno::ECONNREFUSED => e
+      service = a_path.split("/").second
+      raise Errors::ConnectionRefusedException, _("A backend service [ %s ] is unreachable") % service.capitalize
     end
 
     def delete(a_path=nil, headers={})
@@ -130,6 +139,9 @@ class HttpResource
       result
     rescue RestClient::Exception => e
       raise_rest_client_exception e, a_path, "DELETE"
+    rescue Errno::ECONNREFUSED => e
+      service = a_path.split("/").second
+      raise Errors::ConnectionRefusedException, _("A backend service [ %s ] is unreachable") % service.capitalize
     end
 
     # re-raise the same exception with nicer error message

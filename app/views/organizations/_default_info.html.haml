@@ -4,9 +4,11 @@
 = javascript do
   :plain
     localize({
-       "default_info_apply_error": '#{escape_javascript(_("An error has occurred while applying default info. Please contact your administrator"))}',
-       "default_info_create_success": '#{escape_javascript(_("Successfully created default information keyname"))}',
-       "default_info_delete_success": '#{escape_javascript(_("Successfully deleted default information keyname"))}'
+      "default_info_apply_success": '#{escape_javascript(_("Successfully synced default info"))}',
+      "default_info_apply_error": '#{escape_javascript(_("An error has occurred while syncing default info. Please contact your administrator"))}',
+      "default_info_create_success": '#{escape_javascript(_("Successfully created default information keyname"))}',
+      "default_info_delete_success": '#{escape_javascript(_("Successfully deleted default information keyname"))}',
+      "default_info_warning": '#{escape_javascript(_("Caution: this action will remove default custom info, even those containing values"))}'
     });
 
 = content_for :title do
@@ -22,7 +24,7 @@
         = _('%s Default Custom Info') % informable_type.capitalize
     .grid_4
       #apply_default_info_button_container
-        %input.btn.fullwidth#apply_default_info_button{ :value => _("Apply default info to all %s") % informable_type.pluralize, :type => "button", "data-url" => api_organization_apply_default_info_path(org.label, informable_type), "data-method" => "post", :disabled => org.default_info[informable_type].empty?, "data-taskstate" => task_state, "data-taskuuid" => task_uuid }
+        %input.btn.fullwidth#apply_default_info_button{ :value => _("Sync default info to all %s") % informable_type.pluralize, :type => "button", "data-url" => api_organization_apply_default_info_path(org.label, informable_type), "data-method" => "post", :disabled => org.default_info[informable_type].empty?, "data-taskstate" => task_state, "data-taskuuid" => task_uuid }
       %table#default_info_table.default_info
         %tbody
           %tr#new_default_info_row
