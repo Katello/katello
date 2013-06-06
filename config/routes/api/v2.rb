@@ -27,7 +27,7 @@ Src::Application.routes.draw do
         api_resources :environments
         api_resources :sync_plans, :only => [:index, :create]
         api_resources :tasks, :only => [:index]
-        api_resources :providers, :only => [:index]
+        api_resources :providers, :only => [:index], :constraints => { :organization_id => /[^\/]*/ }
         match '/systems' => 'systems#activate', :via => :post, :constraints => RegisterWithActivationKeyContraint.new
         api_resources :systems, :only => [:index, :create] do
           get :report, :on => :collection
