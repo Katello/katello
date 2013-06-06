@@ -22,7 +22,7 @@ class KTEnvironmentTestBase < MiniTest::Rails::ActiveSupport::TestCase
   def self.before_suite
     services  = ['Candlepin', 'Pulp', 'ElasticSearch', 'Foreman']
     models    = ['Repository', 'KTEnvironment', 'EnvironmentProduct',
-                 'ContentView', 'ContentViewEnvironment']
+                 'ContentView', 'ContentViewEnvironment', 'Organization']
     disable_glue_layers(services, models, true)
   end
 
@@ -59,5 +59,12 @@ class KTEnvironmentTest < KTEnvironmentTestBase
     default_version = env.default_content_view_version
     env.destroy
     assert_empty ContentViewVersion.where(:id=>default_version.id)
+  end
+
+  def test_destroy_library
+    org = FactoryGirl.create(:organization)
+    env = org.library
+    env.destroy
+    refute env.destroyed?
   end
 end
