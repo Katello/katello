@@ -32,6 +32,14 @@ class KatelloNameFormatValidatorTest < MiniTest::Rails::ActiveSupport::TestCase
     refute_empty @model.errors[:name]
   end
 
+  test "accepts utf8" do
+    # Amanhã
+    utf8_str = [65, 109, 97, 110, 104, 195, 163].pack('c*').force_encoding('UTF-8')
+    @validator.validate_each(@model, :name, utf8_str)
+
+    assert_empty @model.errors[:name]
+  end
+
   test "fails with more than 128 characters" do
     cs = [*'0'..'9', *'a'..'z', *'A'..'Z']
     random_string = 129.times.map { cs.sample }.join
