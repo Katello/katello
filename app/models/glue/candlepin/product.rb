@@ -147,10 +147,11 @@ module Glue::Candlepin::Product
 
     def set_product
       Rails.logger.debug "Creating a product in candlepin: #{name}"
+      self.attrs ||=  [{:name=>"arch", :value=>"ALL"}]
       json = Resources::Candlepin::Product.create({
         :name => self.name,
         :multiplier => self.multiplier || 1,
-        :attributes => self.attrs || [] # name collision with ActiveRecord
+        :attributes => self.attrs # name collision with ActiveRecord
       })
       self.cp_id = json[:id]
     rescue => e

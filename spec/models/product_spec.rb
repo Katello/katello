@@ -120,7 +120,7 @@ describe Product, :katello => true do
 
       it "should have the value of 'arch' attribute" do
         Resources::Candlepin::Product.stub!(:get).and_return([ProductTestData::SIMPLE_PRODUCT.merge(:attributes => [{:name => 'arch', :value => 'i386'}])])
-        @p.arch.should == 'i386'
+        Product.find(@p.id).arch.should == 'i386'
       end
     end
 
