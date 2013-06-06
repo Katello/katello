@@ -71,6 +71,7 @@ class ContentViewDefinition < ContentViewDefinitionBase
     # Copy all pkg groups over
     # Copy all distro over
     # Start Filtering errata in the copied
+    # Make sure packages belonging to the errata are included/excluded
     # Start Filtering package groups in the copied repo
     # Start Filtering packages in the copied repo
     # Remove all empty errata
@@ -120,6 +121,7 @@ class ContentViewDefinition < ContentViewDefinitionBase
   # by the filters and filter rules
   def unassociate_contents(repos)
     # Start Filtering errata in the copied repo
+    # Make sure packages belonging to the errata are included/excluded
     # Start Filtering package groups in the copied repo
     # Start Filtering packages in the copied repo
     repos.each do |repo|
@@ -128,6 +130,13 @@ class ContentViewDefinition < ContentViewDefinitionBase
         if filter_clauses
           pulp_task = repo.unassociate_by_filter(content_type, filter_clauses)
           PulpTaskStatus::wait_for_tasks [pulp_task]
+          if content_type == FilterRule::ERRATA
+            pkg_clause = errata_package_unassociate_clauses(filter_clauses)
+            unless pkg_clause.empty?
+              pulp_task = repo.unassociate_by_filter(FilterRule::PACKAGE, pkg_clause)
+              PulpTaskStatus::wait_for_tasks [pulp_task]
+            end
+          end
         end
       end
     end
@@ -198,6 +207,15 @@ class ContentViewDefinition < ContentViewDefinitionBase
   end
 
   protected
+
+  def errata_package_unassociate_clauses(errata_clauses)
+    ret = {}
+    unless errata_clauses.empty?
+      pkg_filenames = Errata.list_by_filter_clauses(errata_clauses).collect(&:package_filenames).flatten
+      ret = {'filename' => {"$in" => pkg_filenames}} unless pkg_filenames.empty?
+    end
+    ret
+  end
 
   def unassociation_clauses(repo, content_type)
     # find applicable filters
