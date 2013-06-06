@@ -336,6 +336,7 @@ describe Permission do
       end
 
       specify "should result in removal of organization-specific tags" do
+        Organization.any_instance.stub(:being_deleted?).and_return(true)
         @organization2.destroy
         Permission.find_by_name('test1001').tag_values.should == [@organization.id]
       end
