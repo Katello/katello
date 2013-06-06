@@ -51,6 +51,14 @@ class GluePulpErrataTest < GluePulpErrataTestBase
     assert_kind_of  Errata, erratum
   end
 
+  def test_list_by_filters
+    errata = Errata.list_by_filter_clauses(:_id => { '$in'=> [@@erratum_id] })
+
+    refute_nil      errata
+    refute_empty     errata
+    assert_kind_of  Errata, errata.first
+  end
+
   def test_errata_by_consumer
     Runcible::Extensions::Consumer.expects(:applicable_errata).
         with([], [RepositorySupport.repo.pulp_id], false).returns({})
