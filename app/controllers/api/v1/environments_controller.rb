@@ -173,7 +173,7 @@ class Api::V1::EnvironmentsController < Api::V1::ApiController
   param :id, :identifier, :desc => "environment identifier"
   param :organization_id, :identifier, :desc => "organization identifier"
   def destroy
-    if @environment.confirm_last_env
+    if @environment.is_deletable?
       @environment.destroy
       respond :message => _("Deleted environment '%s'") % params[:id]
     else
