@@ -142,7 +142,8 @@ class Api::V2::ChangesetsContentController < Api::V2::ApiController
   end
   def add_distribution
     product = find_product(params[:distribution][:product_id])
-    @changeset.add_distribution!(params[:distribution][:distribution_id], product)
+    distribution = Distribution.find(params[:distribution][:distribution_id])
+    @changeset.add_distribution!(distribution, product)
     respond_for_create :resource => @changeset, :template => :show
   end
 
@@ -150,7 +151,9 @@ class Api::V2::ChangesetsContentController < Api::V2::ApiController
   param :changeset_id, :number
   param :distribution_id, :number, :desc => "id of the distribution to remove"
   def remove_distribution
-    ChangesetErratum.find(params[:id]).destroy
+    product = find_product(params[:distribution][:product_id])
+    distribution = Distribution.find(params[:distribution][:distribution_id])
+    @changeset.remove_distribution!(distribution, product)
     respond_for_show :resource => @changeset, :template => :show
   end
 

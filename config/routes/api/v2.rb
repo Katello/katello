@@ -182,7 +182,7 @@ Src::Application.routes.draw do
           get :search, :on => :collection
         end
         api_resources :errata, :only => [:index, :show], :constraints => { :id => /[0-9a-zA-Z\-\+%_.:]+/ }
-        api_resources :distributions, :only => [:index, :show], :constraints => { :id => /[0-9a-zA-Z\-\+%_.]+/ }
+        api_resources :distributions, :only => [:index, :show], :constraints => { :id => /[0-9a-zA-Z \-\+%_.]+/ }
         member do
           get :package_groups
           get :package_group_categories

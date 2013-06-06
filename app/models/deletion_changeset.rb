@@ -174,7 +174,7 @@ class DeletionChangeset < Changeset
     not_included_distribution.each do |distro|
       product = distro.product
       product.repos(from_env).each do |repo|
-        if repo.has_distribution? distro.distribution_id
+        if repo.has_distribution? distro.display_name
           @affected_repos << repo
           distribution_delete[repo] = distro.distribution_id
         end

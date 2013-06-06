@@ -372,7 +372,7 @@ Src::Application.routes.draw do
       get :auto_complete_library
     end
 
-    resources :distributions, :only => [:show], :constraints => { :id => /[0-9a-zA-Z\-\+%_.]+/ } do
+    resources :distributions, :only => [:show], :constraints => { :id => /[0-9a-zA-Z \-\+%_.]+/ } do
       member do
         get :filelist
       end
