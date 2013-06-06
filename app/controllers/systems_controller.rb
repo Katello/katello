@@ -117,66 +117,14 @@ class SystemsController < ApplicationController
   end
 
   def new
-    @system = System.new
-    @system.facts = {} #this is nil to begin with
-    @organization = current_organization
-    accessible_envs = current_organization.environments
-    setup_environment_selector(current_organization, accessible_envs)
+    install_cert_command = "rpm -Uvh http://#{request.host}/pub/candlepin-cert-consumer-latest.noarch.rpm"
+    register_command = "subscription-manager register --org=\"#{@environment.organization.name}\""
 
-    # This controls whether the New System page will display an environment selector or not.
-    # Since only one selector may exist at a time, it is left off of the New page when the
-    # Environments page is displayed.
-    envsys = !params[:env_id].nil?
-
-    if current_user.experimental_ui
-      if request.xhr?
-        render :new_nutupane, :layout => false, :locals=>{:system=>@system, :accessible_envs => accessible_envs, :envsys => envsys}
-      else
-        render :new_nutupane, :locals=>{:system=>@system, :accessible_envs => accessible_envs, :envsys => envsys}
-      end
-    else
-      render :partial=>"new", :locals=>{:system=>@system, :accessible_envs => accessible_envs, :envsys => envsys}
-    end
-  end
-
-  def create
-    @system = System.new
-    @system.facts = {}
-    @system.arch = params["arch"]["arch_id"]
-    @system.sockets = params["system"]["sockets"]
-    @system.memory = params["system"]["memory"]
-    @system.guest = (params["system_type"]["virtualized"] == 'virtual')
-    @system.name= params["system"]["name"]
-    @system.cp_type = "system"
-    @system.environment = KTEnvironment.find(params["system"]["environment_id"])
-    @system.content_view = ContentView.find_by_id(params["system"].try(:[], "content_view_id"))
-    #create it in candlepin, parse the JSON and create a new ruby object to pass to the view
-    #find the newly created system
-    if @system.save!
-      notify.success _("System '%s' was created.") % @system['name']
-
-      if search_validate(System, @system.id, params[:search])
-        if current_user.experimental_ui
-          render :json => {:system => @system}
-        else
-          render :partial=>"systems/list_systems",
-          :locals=>{:accessor=>"id", :columns=>['name', 'lastCheckin','created' ], :collection=>[@system], :name=> controller_display_name}
-        end
-      else
-        notify.message _("'%s' did not meet the current search criteria and is not being shown.") % @system["name"]
-        render :json => { :no_match => true }
-      end
-    end
-
-  rescue ActiveRecord::RecordInvalid => error
-    raise error # handle error by ApplicationController's rescue_from
-  rescue => error
-    display_message = if error.respond_to?('response') && error.response.include?('displayMessage')
-                         JSON.parse(error.response)['displayMessage']
-                      end
-    notify.exception *[display_message, error].compact
-    Rails.logger.error error.backtrace.join("\n")
-    render :text => error, :status => :bad_request
+    render :partial=>"new",
+      :locals => {
+        :install_cert_command => install_cert_command,
+        :register_command => register_command
+      }
   end
 
   def index
@@ -730,9 +678,9 @@ class SystemsController < ApplicationController
       :col => ["name_sort", "lastCheckin"],
       :titles => [_("Name"), _("Registered / Last Checked In")],
       :custom_rows => true,
-      :enable_create => Katello.config.katello? && System.registerable?(@environment, current_organization),
+      :enable_create => System.registerable?(@environment, current_organization),
       :create => _("System"),
-      :create_label => _('+ New System'),
+      :create_label => _('+ Register System'),
       :enable_sort => true,
       :name => controller_display_name,
       :list_partial => 'systems/list_systems',
