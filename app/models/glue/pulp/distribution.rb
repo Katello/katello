@@ -16,7 +16,7 @@ module Glue::Pulp::Distribution
     base.send :include, InstanceMethods
 
     base.class_eval do
-      attr_accessor :id, :description, :files, :family, :variant, :version, :url, :arch
+      attr_accessor :_id, :id, :description, :files, :family, :variant, :version, :url, :arch
 
       def self.find(id)
         ::Distribution.new(Runcible::Extensions::Distribution.find(id))
@@ -36,6 +36,14 @@ module Glue::Pulp::Distribution
           instance_variable_set("@#{k}", v)
         end
       end
+    end
+
+    def as_json(*args)
+      result = super(*args)
+      result['files'] = result['files'].inject([]) do |paths, file|
+        paths << file['relativepath']
+      end
+      result
     end
 
   end

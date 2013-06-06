@@ -195,6 +195,10 @@ describe Api::V1::ChangesetsContentController, :katello => true do
   describe "distributions" do
     before(:each) do
       Product.should_receive(:find_by_cp_id).with(product_cp_id.to_s, @org).and_return(@product)
+
+      @distribution = mock(Distribution, { "id" => "ks-Red Hat Enterprise Linux-Server-6.4-x86_64",
+                                           '_id' => "0b74d908-5b95-4315-a925-d3e97fd058f2" })
+      Distribution.stub(:find).and_return(@distribution)
     end
 
     let(:action) { :add_distribution }
@@ -202,7 +206,7 @@ describe Api::V1::ChangesetsContentController, :katello => true do
     it_should_behave_like "protected action"
 
     it "should add a distribution" do
-      @cs.should_receive(:add_distribution!).with(distribution_id.to_s, @product).and_return(@product)
+      @cs.should_receive(:add_distribution!).with(@distribution, @product).and_return(@product)
       req
       response.should be_success
     end
@@ -211,6 +215,10 @@ describe Api::V1::ChangesetsContentController, :katello => true do
   describe "distributions" do
     before(:each) do
       Product.should_receive(:find_by_cp_id).with(product_cp_id.to_s, @org).and_return(@product)
+
+      @distribution = mock(Distribution, { "id" => "ks-Red Hat Enterprise Linux-Server-6.4-x86_64",
+                                           '_id' => "0b74d908-5b95-4315-a925-d3e97fd058f2" })
+      Distribution.stub(:find).and_return(@distribution)
     end
 
     let(:action) { :remove_distribution }
@@ -218,7 +226,7 @@ describe Api::V1::ChangesetsContentController, :katello => true do
     it_should_behave_like "protected action"
 
     it "should remove a distribution" do
-      @cs.should_receive(:remove_distribution!).with(distribution_id.to_s, @product).and_return(@product)
+      @cs.should_receive(:remove_distribution!).with(@distribution, @product).and_return(@product)
       req
       response.should be_success
     end

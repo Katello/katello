@@ -16,9 +16,12 @@ describe "distributions/_filelist.html.haml", :katello => true do
   before(:each) do
     view.stub(:render_menu)
     view.stub(:promotion_distribution_navigation).and_return([])
-    @filename = "/path/to/file/in/distribution"
+    @files = [ { 'relativepath' => "/path/to/file/in/distribution" } ]
     @distribution = Distribution.new()
-    @distribution.stub!(:files).and_return([@filename])
+    @distribution = mock(Distribution, { "id" => "ks-Red Hat Enterprise Linux-Server-6.4-x86_64",
+                                         '_id' => "0b74d908-5b95-4315-a925-d3e97fd058f2" })
+
+    @distribution.stub!(:files).and_return(@files)
   end
 
   it "content_for :title is included" do
