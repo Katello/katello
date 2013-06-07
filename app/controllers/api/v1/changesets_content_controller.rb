@@ -57,4 +57,5 @@ class Api::V1::ChangesetsContentController < Api::V1::ApiController
              { :text => (options[:not_found] or raise ArgumentError), :status => 404 }
            end)
   end
+
 end

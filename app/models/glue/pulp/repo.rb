@@ -479,15 +479,15 @@ module Glue::Pulp::Repo
     end
 
     def delete_packages package_id_list
-      Runcible::Extensions::Rpm.unassociate_unit_ids_from_repo(self.pulp_id,  package_id_list)
+      Runcible::Extensions::Rpm.unassociate_unit_ids_from_repo(self.pulp_id, package_id_list)
     end
 
     def delete_errata errata_id_list
-      Runcible::Extensions::Errata.unassociate_ids_from_repo(self.pulp_id,  errata_id_list)
+      Runcible::Extensions::Errata.unassociate_ids_from_repo(self.pulp_id, errata_id_list)
     end
 
     def delete_distribution distribution_id
-      Runcible::Extensions::Distribution.unassociate_ids_from_repo(self.pulp_id, [distribution_id])
+      Runcible::Extensions::Distribution.unassociate_unit_ids_from_repo(self.pulp_id, [distribution_id])
     end
 
     def cancel_sync

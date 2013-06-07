@@ -134,7 +134,7 @@ KT.events = (function() {
                     search_field = $('#event_search_filter'),
                 spinner = $('#list-spinner');
 
-            search_button.bind('click', function(evt){
+            search_button.live('click', function(evt){
                 evt.preventDefault();
                 $.ajax({
                     type: "GET",

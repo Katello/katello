@@ -191,15 +191,15 @@ class Changeset < ActiveRecord::Base
      return repository
    end
 
-   def add_distribution! distribution_id, product
-     env_to_verify_on_add_content.repositories.any? { |repo| repo.has_distribution? distribution_id } or
+   def add_distribution! distribution, product
+     env_to_verify_on_add_content.repositories.any? { |repo| repo.has_distribution? distribution.id } or
          raise Errors::ChangesetContentException.new(
                    "Distribution not found within this environment you want to promote from.")
 
-     distro = ChangesetDistribution.create!(:distribution_id => distribution_id,
-                                       :display_name    => distribution_id,
-                                       :product_id      => product.id,
-                                       :changeset       => self)
+     distro = ChangesetDistribution.create!(:distribution_id => distribution._id,
+                                            :display_name    => distribution.id,
+                                            :product_id      => product.id,
+                                            :changeset       => self)
      self.distributions << distro
      save!
      distro
@@ -257,8 +257,8 @@ class Changeset < ActiveRecord::Base
     return deleted
   end
 
-  def remove_distribution! distribution_id, product
-    deleted = ChangesetDistribution.destroy_all(:distribution_id => distribution_id,
+  def remove_distribution! distribution, product
+    deleted = ChangesetDistribution.destroy_all(:distribution_id => distribution._id,
                                                 :changeset_id    => self.id, :product_id => product.id)
     save!
     return deleted
@@ -381,7 +381,7 @@ class Changeset < ActiveRecord::Base
     products_ids += self.errata.map { |e| e.product.cp_id }
     products_ids -= self.products.collect { |p| p.cp_id }
     products_ids.uniq.collect do |product_cp_id|
-      Product.find_by_cp_id(product_cp_id)
+      Product.find_by_cp_id(product_cp_id, self.environment.organization)
     end
   end
 

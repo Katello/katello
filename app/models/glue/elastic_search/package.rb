@@ -158,12 +158,18 @@ module Glue::ElasticSearch::Package
       def self.index_packages pkg_ids
         pkgs = pkg_ids.collect{ |pkg_id|
           pkg = self.find(pkg_id)
-          pkg.as_json.merge(pkg.index_options)
+          pkg.as_json.except('changelog', 'files', 'filelist').merge(pkg.index_options)
         }
-        Tire.index ::Package.index do
-          create :settings => Package.index_settings, :mappings => Package.index_mapping
-          import pkgs
-        end if !pkgs.empty?
+
+        unless pkgs.empty?
+          Tire.index ::Package.index do
+            create :settings => Package.index_settings, :mappings => Package.index_mapping
+          end unless Tire.index(::Package.index).exists?
+
+          Tire.index ::Package.index do
+            import pkgs
+          end
+        end
       end
 
     end

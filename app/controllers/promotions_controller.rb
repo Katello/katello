@@ -57,7 +57,8 @@ class PromotionsController < ApplicationController
   # AJAX Calls
   def content_views
     # render the list of content views
-    view_versions = ContentViewVersion.non_default_view.promotable(@environment.organization) || []
+    view_versions = ContentViewVersion.non_default_view.promotable(@environment.organization).
+        in_environment(@environment) || []
 
     next_env_view_version_ids = @next_environment.nil? ? [].to_set :
                                 @next_environment.content_view_versions.non_default_view.

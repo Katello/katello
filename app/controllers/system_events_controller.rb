@@ -85,7 +85,7 @@ class SystemEventsController < ApplicationController
     search = params[:search]
     render_panel_direct(TaskStatus, {:no_search_history => true,:render_list_proc => render_proc},
                         search, params[:offset], [:finish_time, 'desc'],
-                        :filter => {:task_owner_id => [@system.id], :task_owner_type => System.class.name},
+                        :filter => {:task_owner_id => [@system.id], :task_owner_type => [System.class_name]},
                         :load => true,
                         :simple_query => "status:#{search} OR #{search}" )
   end

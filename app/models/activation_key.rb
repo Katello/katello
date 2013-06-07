@@ -122,7 +122,7 @@ class ActivationKey < ActiveRecord::Base
 
       # we sort just to make the order deterministig.
       self.pools.group_by(&:product_id).sort_by(&:first).each do |product_id, pools|
-        product = Product.find_by_cp_id(product_id)
+        product = Product.find_by_cp_id(product_id, self.organization)
         consumption = calculate_consumption(product, pools, allocate)
 
         Rails.logger.debug "Autosubscribing pools: #{consumption.map { |pool, amount| "#{pool.cp_id} => #{amount}"}.join(", ")}"

@@ -106,7 +106,7 @@ Requires:       %{?scl_prefix}rubygem(ui_alchemy-rails) >= 1.0.0
 Requires:       %{?scl_prefix}rubygem(chunky_png)
 Requires:       %{?scl_prefix}rubygem(tire) >= 0.3.0
 Requires:       %{?scl_prefix}rubygem(tire) < 0.4
-Requires:       %{?scl_prefix}rubygem(ldap_fluff)
+Requires:       %{?scl_prefix}rubygem(ldap_fluff) >= 0.2.1
 Requires:       %{?scl_prefix}rubygem(anemone)
 Requires:       %{?scl_prefix}rubygem(apipie-rails) >= 0.0.18
 Requires:       %{?scl_prefix}rubygem(logging) >= 1.8.0
@@ -115,6 +115,7 @@ Requires:       %{?scl_prefix}rubygem(rack-openid) >= 1.3.1
 Requires:       %{?scl_prefix}rubygem(ruby-openid) >= 2.2.3
 Requires:       %{?scl_prefix}rubygem(rabl)
 Requires:       %{?scl_prefix}rubygem(dynflow)
+Requires:       %{?scl_prefix}rubygem(minitest)
 Requires:       signo >= 0.0.5
 Requires:       signo-katello >= 0.0.5
 Requires:       lsof
@@ -227,6 +228,7 @@ BuildArch:      noarch
 Summary:        A meta-package to pull in all components for Katello and Foreman
 Requires:       %{name}-all
 Requires:       %{name}-configure-foreman
+Requires:       foreman-proxy-installer
 
 %description foreman-all
 
@@ -252,7 +254,7 @@ Requires:        pulp-server
 Requires:        pulp-rpm-plugins
 Requires:        pulp-selinux
 Requires:        createrepo = 0.9.9-18%{?dist}
-Requires:        %{?scl_prefix}rubygem(runcible) >= 0.4.8
+Requires:        %{?scl_prefix}rubygem(runcible) >= 0.4.9
 
 %description glue-pulp
 Katello connection classes for the Pulp backend

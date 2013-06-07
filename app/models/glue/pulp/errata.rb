@@ -40,6 +40,17 @@ module Glue::Pulp::Errata
         ::Errata.new(erratum_attrs) if not erratum_attrs.nil?
       end
 
+      def self.list_by_filter_clauses(clauses)
+        errata = Runcible::Extensions::Errata.search(::Errata::CONTENT_TYPE,
+                                :filters => clauses)
+        if errata
+          errata.collect do |attrs|
+            ::Errata.new(attrs) if attrs
+          end.compact
+        else
+          []
+        end
+      end
     end
 
   end
