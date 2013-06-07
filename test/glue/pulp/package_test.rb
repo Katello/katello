@@ -60,4 +60,10 @@ class GluePulpPackageTest < GluePulpPackageTestBase
     refute_nil package.nvrea
   end
 
+  def test_ignored_fields
+    refute_includes Package::PULP_SELECT_FIELDS, 'changelog'
+    refute_includes Package::PULP_SELECT_FIELDS, 'repodata'
+    refute_includes Package::PULP_SELECT_FIELDS, 'filelist'
+  end
+
 end
