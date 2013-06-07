@@ -59,7 +59,7 @@ class Product < ActiveRecord::Base
   }
 
   def self.find_by_cp_id(cp_id, organization)
-    self.where(:cp_id=>cp_id).in_org(organization).first
+    self.where(:cp_id=>cp_id).in_org(organization).scoped(:readonly=>false).first
   end
 
   def self.in_org(organization)
