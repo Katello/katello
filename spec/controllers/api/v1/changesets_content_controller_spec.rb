@@ -27,15 +27,9 @@ require 'spec_helper.rb'
 describe Api::V1::ChangesetsContentController, :katello => true do
   include LoginHelperMethods
   include AuthorizationHelperMethods
+  fixtures :content_views
 
   let(:changeset_id) { '1' }
-  let(:product_cp_id) { '123456' }
-  let(:package_name) { "package-123" }
-  let(:erratum_id) { "erratum-123" }
-  let(:erratum_unit_id) { "asdfasdf" }
-
-  let(:repo_id) { '2' }
-  let(:distribution_id) { '4' }
 
   before(:each) do
     @library    = KTEnvironment.new(:name => 'Library', :label => 'Library', :library => true)
@@ -49,8 +43,8 @@ describe Api::V1::ChangesetsContentController, :katello => true do
     @environment.stub(:prior).and_return(@library)
     @library.stub(:successor).and_return(@environment)
 
-    @product = mock(Product, { "name" => "prod", 'id' => 0 })
-    @repo    = mock(Product, { "name" => "repo" })
+    @view = content_views(:library_dev_view)
+    ContentView.stub(:find_by_id).and_return(@view)
 
     @cs = PromotionChangeset.new(:name => "changeset", :environment => @environment, :id => changeset_id)
     Changeset.stub(:find_by_id).and_return(@cs)
@@ -60,173 +54,34 @@ describe Api::V1::ChangesetsContentController, :katello => true do
   end
 
   let(:authorized_user) do
-    user_with_permissions { |u| u.can(:manage_changesets, :environments, @environment.id, @organization) }
+    user_with_permissions do |u|
+      u.can(:manage_changesets, :environments, @environment.id, @organization)
+      u.can(:promote, :content_views, @view.id, @organization)
+    end
   end
   let(:unauthorized_user) do
     user_without_permissions
   end
 
-  describe "products" do
-    before(:each) do
-      Product.should_receive(:find_by_cp_id).with(product_cp_id.to_s, @org).and_return(@product)
-    end
-
-    let(:action) { :add_product }
-    let(:req) { post :add_product, :changeset_id => changeset_id, :product_id => product_cp_id }
+  describe "add_content_view" do
+    let(:action) { :add_content_view }
+    let(:req) { post action, changeset_id: changeset_id, content_view_id: @view.id }
     it_should_behave_like "protected action"
 
-    it "should add a product" do
-      @cs.should_receive(:add_product!).with(@product).and_return(@product)
+    it "should add a content view" do
+      @cs.should_receive(:add_content_view!).with(@view).and_return(@view)
       req
       response.should be_success
     end
   end
 
-  describe "products" do
-    before(:each) do
-      Product.should_receive(:find_by_cp_id).with(product_cp_id.to_s, @org).and_return(@product)
-    end
-
-    let(:action) { :remove_product }
-    let(:req) { delete :remove_product, :changeset_id => changeset_id, :id => product_cp_id }
+  describe "remove_content_view" do
+    let(:action) { :remove_content_view }
+    let(:req) { post action, changeset_id: changeset_id, id: @view.id }
     it_should_behave_like "protected action"
 
-    it "should remove a product" do
-      @cs.should_receive(:remove_product!).with(@product).and_return([true])
-      req
-      response.should be_success
-    end
-  end
-
-  describe "packages" do
-    before(:each) do
-      Product.should_receive(:find_by_cp_id).with(product_cp_id.to_s, @org).and_return(@product)
-    end
-
-    let(:action) { :add_package }
-    let(:req) { post :add_package, :changeset_id => changeset_id, :name => package_name, :product_id => product_cp_id }
-    it_should_behave_like "protected action"
-
-    it "should add a package" do
-      @cs.should_receive(:add_package!).with(package_name, @product).and_return({})
-      req
-      response.should be_success
-    end
-  end
-
-  describe "packages" do
-    before(:each) do
-      Product.should_receive(:find_by_cp_id).with(product_cp_id.to_s, @org).and_return(@product)
-    end
-
-    let(:action) { :remove_package }
-    let(:req) { delete :remove_package, :changeset_id => changeset_id, :id => package_name, :product_id => product_cp_id }
-    it_should_behave_like "protected action"
-
-    it "should remove a package" do
-      @cs.should_receive(:remove_package!).with(package_name, @product).and_return([true])
-      req
-      response.should be_success
-    end
-  end
-
-  describe "erratum" do
-    before(:each) do
-      Product.should_receive(:find_by_cp_id).with(product_cp_id, @org).and_return(@product)
-      @errata = Errata.new({ :id => erratum_unit_id, :errata_id => erratum_id })
-      Errata.stub(:find_by_errata_id).and_return(@errata)
-    end
-
-    let(:action) { :add_erratum }
-    let(:req) { post :add_erratum, :changeset_id => changeset_id, :erratum_id => erratum_id, :product_id => product_cp_id }
-    it_should_behave_like "protected action"
-
-    it "should add an erratum" do
-      @cs.should_receive(:add_erratum!).with(@errata, @product)
-      req
-      response.should be_success
-    end
-  end
-
-  describe "erratum" do
-    before(:each) do
-      Product.should_receive(:find_by_cp_id).with(product_cp_id, @org).and_return(@product)
-      @errata = Errata.new({ :id => erratum_unit_id, :errata_id => erratum_id })
-      Errata.stub(:find_by_errata_id).and_return(@errata)
-    end
-
-    let(:action) { :remove_erratum }
-    let(:req) { delete :remove_erratum, :changeset_id => changeset_id, :id => erratum_id, :product_id => product_cp_id }
-    it_should_behave_like "protected action"
-
-    it "should remove an erratum" do
-      @cs.should_receive(:remove_erratum!).with(@errata, @product).and_return([true])
-      req
-      response.should be_success
-    end
-  end
-
-  describe "repos" do
-    let(:action) { :add_repo }
-    let(:req) { post :add_repo, :changeset_id => changeset_id, :repository_id => repo_id, :product_id => product_cp_id }
-    it_should_behave_like "protected action"
-
-    it "should add a repo" do
-      Repository.should_receive(:find).with(repo_id.to_s).and_return(@repo)
-      @cs.should_receive(:add_repository!).with(@repo).and_return(@repo)
-      req
-      response.should be_success
-    end
-  end
-
-  describe "repos" do
-    let(:action) { :remove_repo }
-    let(:req) { delete :remove_repo, :changeset_id => changeset_id, :id => repo_id, :product_id => product_cp_id }
-    it_should_behave_like "protected action"
-
-    it "should remove a repo" do
-      Repository.should_receive(:find).with(repo_id.to_s).and_return(@repo)
-      @cs.should_receive(:remove_repository!).with(@repo).and_return(@repo)
-      req
-      response.should be_success
-    end
-  end
-
-  describe "distributions" do
-    before(:each) do
-      Product.should_receive(:find_by_cp_id).with(product_cp_id.to_s, @org).and_return(@product)
-
-      @distribution = mock(Distribution, { "id" => "ks-Red Hat Enterprise Linux-Server-6.4-x86_64",
-                                           '_id' => "0b74d908-5b95-4315-a925-d3e97fd058f2" })
-      Distribution.stub(:find).and_return(@distribution)
-    end
-
-    let(:action) { :add_distribution }
-    let(:req) { post :add_distribution, :changeset_id => changeset_id, :distribution_id => distribution_id, :product_id => product_cp_id }
-    it_should_behave_like "protected action"
-
-    it "should add a distribution" do
-      @cs.should_receive(:add_distribution!).with(@distribution, @product).and_return(@product)
-      req
-      response.should be_success
-    end
-  end
-
-  describe "distributions" do
-    before(:each) do
-      Product.should_receive(:find_by_cp_id).with(product_cp_id.to_s, @org).and_return(@product)
-
-      @distribution = mock(Distribution, { "id" => "ks-Red Hat Enterprise Linux-Server-6.4-x86_64",
-                                           '_id' => "0b74d908-5b95-4315-a925-d3e97fd058f2" })
-      Distribution.stub(:find).and_return(@distribution)
-    end
-
-    let(:action) { :remove_distribution }
-    let(:req) { delete :remove_distribution, :changeset_id => changeset_id, :id => distribution_id, :product_id => product_cp_id.to_s }
-    it_should_behave_like "protected action"
-
-    it "should remove a distribution" do
-      @cs.should_receive(:remove_distribution!).with(@distribution, @product).and_return(@product)
+    it "should remove a content view" do
+      @cs.should_receive(:remove_content_view!).with(@view).and_return(@view)
       req
       response.should be_success
     end

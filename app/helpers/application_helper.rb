@@ -285,14 +285,17 @@ module ApplicationHelper
     form_for(object, options, &block)
   end
 
+  def select_content_view
+    _('Select Content View')
+  end
+
   def no_content_view
-    _("No Content View")
+    _('No Content View')
   end
 
   def content_view_select_labels(organization, environment)
-    labels = [[no_content_view, '']]
     if environment
-      labels += ContentView.readable(organization).non_default.
+      labels = ContentView.readable(organization).
           in_environment(environment).collect {|cv| [cv.name, cv.id]}
     else
       labels = []

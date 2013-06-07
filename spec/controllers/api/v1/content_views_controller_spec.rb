@@ -56,7 +56,7 @@ describe Api::V1::ContentViewsController, :katello => true do
 
         get "index", :organization_id => @org.name, :environment_id => env.id
         response.should be_success
-        ids = env.content_views(true).select { |cv| !cv.default }.map(&:id)
+        ids = env.content_views(true).map(&:id)
         assigns[:content_views].map(&:id).should eql(ids)
       end
     end
@@ -81,7 +81,7 @@ describe Api::V1::ContentViewsController, :katello => true do
       @def                          = FactoryGirl.build_stubbed(:content_view_definition)
       @view                         = FactoryGirl.build_stubbed(:content_view, :organization => @org)
       @view.content_view_definition = @def
-      ContentView.stub_chain(:non_default, :find).with(@view.id.to_s).and_return(@view)
+      ContentView.stub(:find).with(@view.id.to_s).and_return(@view)
     end
 
     it "should call ContentView#refresh" do

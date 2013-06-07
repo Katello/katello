@@ -18,6 +18,7 @@
 //= require "alchemy/jquery/plugins/chosen.jquery"
 //= require "alchemy/jquery/plugins/jquery.treeTable"
 //= require "widgets/auto_complete"
+//= require "widgets/env_content_view_selector"
 //= require "system_groups/system_groups_pane"
 //= require "systems/packages"
 //= require "systems/system_errata"
