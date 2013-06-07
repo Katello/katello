@@ -110,7 +110,7 @@ class ResourceType < ActiveRecord::Base
         :users => { :model => User, :name => _("Users"), :global=>true},
         :roles => { :model => Role, :name => _("Roles"), :global=>true},
         :content_view_definitions => { :model => ContentViewDefinition,
-          :name => _("Content View Defintions"), :global => false},
+          :name => _("Content View Definitions"), :global => false},
         :content_views => { :model => ContentView, :name => _("Content View"), :global => false},
         :all => { :model => DefaultModel, :name => _("All"), :global => false}
      }.with_indifferent_access
