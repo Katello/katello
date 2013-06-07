@@ -664,7 +664,7 @@ ActiveRecord::Schema.define(:version => 20130604124100) do
 
   create_table "task_statuses", :force => true do |t|
     t.string   "type"
-    t.integer  "organization_id",                :null => true
+    t.integer  "organization_id"
     t.string   "uuid",                           :null => false
     t.string   "state"
     t.text     "result"
