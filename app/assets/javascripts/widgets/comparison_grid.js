@@ -33,10 +33,10 @@ KT.comparison_grid = function(){
         },
         add_row = function(id, name, cell_data, parent_id, comparable){
             var cells = [],
-                child_list,
                 cell_columns = utils.keys(cell_data),
                 has_children = models.rows.has_children(id),
                 row_element,
+                parent,
                 row_level = models.rows.get_nested_level(id) - 1 + default_row_level;
 
             utils.each(models.columns, function(col){
@@ -55,19 +55,15 @@ KT.comparison_grid = function(){
             row_element = templates.row(id, models.columns.length, cells, row_level, has_children, parent_id, name);
 
             if( parent_id ){
-                child_list = $('#child_list_' + parent_id);
-
-                if( child_list.find('.load_row').length > 0 ){
-                    child_list.find('.load_row').before(row_element);
-                } else {
-                    child_list.append(row_element);
-                }
+                parent = $('#child_list_' + parent_id);
             } else {
-                if( grid_content_el.children('.load_row').length > 0 ) {
-                    grid_content_el.children('.load_row').before(row_element);
-                } else {
-                    grid_content_el.append(row_element);
-                }
+                parent = grid_content_el;
+            }
+
+            if( parent.children('.load_row').length > 0 ){
+                parent.children('.load_row').before(row_element);
+            } else {
+                parent.append(row_element);
             }
         },
         add_metadata_row = function(id, parent_id, page_size, current, total){
@@ -106,23 +102,18 @@ KT.comparison_grid = function(){
             }
         },
         add_row_header = function(id, name, row_level, has_children, parent_id) {
-            var child_list;
+            var parent;
 
             if( parent_id ){
-                child_list = $('#child_header_list_' + parent_id);
-
-                if( child_list.find('.load_row_header').length > 0 ){
-                    child_list.find('.load_row_header').before(templates.row_header(id, name, row_level, has_children, parent_id));
-                } else {
-                    child_list.append(templates.row_header(id, name, row_level, has_children, parent_id));
-                }
+                parent = $('#child_header_list_' + parent_id);
             } else {
+                parent = grid_row_headers_el;
+            }
 
-                if( grid_row_headers_el.children('.load_row_header').length > 0 ) {
-                    grid_row_headers_el.children('.load_row_header').before(templates.row_header(id, name, row_level, has_children, parent_id));
-                } else {
-                    grid_row_headers_el.append(templates.row_header(id, name, row_level, has_children, parent_id));
-                }
+            if( parent.children('.load_row_header').length > 0 ) {
+                parent.children('.load_row_header').before(templates.row_header(id, name, row_level, has_children, parent_id));
+            } else {
+                parent.append(templates.row_header(id, name, row_level, has_children, parent_id));
             }
         },
         add_rows = function(append) {
