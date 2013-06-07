@@ -77,7 +77,7 @@
           .label
             = label :system, :description, _("Description")
           .input
-            %span.value{'name' => 'system[description]', :class=>("editable edit_textarea" if editable), 'data-url'=>system_path(system.id)} #{system[:description]}
+            %span.value{'name' => 'system[description]', :class=>("editable edit_textarea" if editable), 'data-maxlength'=> Validators::KatelloDescriptionFormatValidator::MAX_LENGTH, 'data-url'=>system_path(system.id)} #{system[:description]}
         .control-group
           .label
             = label :os, :os, _("OS")

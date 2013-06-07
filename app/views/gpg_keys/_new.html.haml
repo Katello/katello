@@ -19,7 +19,7 @@
 
     = kt_form_for GpgKey.new, :html => {:id => "new_gpg_key"}, :tabindex => 5 do |form|
 
-      = form.text_area :content, :id=> "gpg_key_content", :size => "40x15", :label => _("Paste GPG Key"), :class => "grid_6"
+      = form.text_area :content, :id=> "gpg_key_content", :size => "40x15", :label => _("Paste GPG Key"), :class => "grid_6", :maxlength=> Validators::KatelloDescriptionFormatValidator::MAX_LENGTH
 
       %fieldset
         .grid_2.la.push_2
