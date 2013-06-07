@@ -28,9 +28,7 @@ angular.module('Katello').directive('inlineEditText', function() {
                   '<span inline-edit></span>',
         scope: {
             model: '=inlineEditText'
-        },
-        controller: ['$scope', function($scope) {
-        }]
+        }
     };
 });
 
@@ -40,9 +38,7 @@ angular.module('Katello').directive('inlineEditTextarea', function() {
                   '<span inline-edit></span>',
         scope: {
             model: '=inlineEditTextarea'
-        },
-        controller: ['$scope', function($scope) {
-        }]
+        }
     };
 });
 
@@ -54,8 +50,6 @@ angular.module('Katello').directive('inlineEditSelect', function() {
         scope: {
             model: '=inlineEditSelect',
             options: '=inlineEditSelectOptions'
-        },
-        controller: ['$scope', function($scope) {
-        }]
+        }
     };
 });

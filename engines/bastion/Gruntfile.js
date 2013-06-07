@@ -11,8 +11,7 @@
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
  */
 
-/*global module*/
-'use strict';
+/*global module,require*/
 
 var lrSnippet = require('grunt-contrib-livereload/lib/utils').livereloadSnippet;
 var mountFolder = function (connect, dir) {
@@ -61,6 +60,15 @@ module.exports = function (grunt) {
                 }
             }
         },
+        jshint: {
+            options: {
+                jshintrc: '.jshintrc'
+            },
+            all: [
+                'Gruntfile.js',
+                '<%= bastion.src %>/**/*.js'
+            ]
+        },
         karma: {
             //continuous integration mode
             ci: {
@@ -91,11 +99,15 @@ module.exports = function (grunt) {
 
     grunt.registerTask('ci', [
         'connect:test',
+        //TODO uncomment me after merging systems.controller.js
+        //'jshint',
         'karma:ci'
     ]);
 
     grunt.registerTask('build', [
         'clean:build',
+        //TODO uncomment me after merging systems.controller.js
+        //'jshint',
         'test'
     ]);
 
