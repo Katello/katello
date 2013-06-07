@@ -2,7 +2,7 @@
 http_interactions: 
 - request: 
     method: delete
-    uri: https://katello-f18-rails32/pulp/api/v2/users/batman/
+    uri: https://localhost/pulp/api/v2/users/
     body: 
       encoding: US-ASCII
       string: ""
@@ -14,35 +14,37 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="yUdB5DbiartddBd41IA8p2B8DJCrrxzTce7eWPekE", oauth_signature="%2FiT1ovGqYFyqzu2g2a2bZwYEriU%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1368638996", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="JzrI2biFdJXDXz9jnkqhmgBdybcLAO9YsrpN0BZmU", oauth_signature="SGX0hCwgA3paTtqHIqyHD3ajb9o%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1370533598", oauth_version="1.0"
       Pulp-User: 
       - admin
       User-Agent: 
       - Ruby
   response: 
     status: 
-      code: 200
-      message: OK
+      code: 405
+      message: Method Not Allowed
     headers: 
       Date: 
-      - Wed, 15 May 2013 17:29:56 GMT
+      - Thu, 06 Jun 2013 15:46:38 GMT
       Server: 
-      - Apache/2.4.4 (Fedora) OpenSSL/1.0.1c-fips mod_wsgi/3.4 Python/2.7.3
-      Content-Length: 
-      - "4"
+      - Apache/2.4.4 (Fedora) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.3
+      Allow: 
+      - GET, POST
+      Transfer-Encoding: 
+      - chunked
       Content-Type: 
-      - application/json
+      - text/html; charset=UTF-8
     body: 
       encoding: US-ASCII
-      string: "null"
+      string: None
     http_version: 
-  recorded_at: Wed, 15 May 2013 17:29:56 GMT
+  recorded_at: Thu, 06 Jun 2013 15:46:38 GMT
 - request: 
     method: post
-    uri: https://katello-f18-rails32/pulp/api/v2/users/
+    uri: https://localhost/pulp/api/v2/users/
     body: 
       encoding: US-ASCII
-      string: "{\"login\":\"batman\",\"name\":\"batman\",\"password\":\"NzGSLW2HOi8HuBu7\"}"
+      string: "{\"login\":\"batman\",\"name\":\"batman\",\"password\":\"ZiF2fg4eRQloqoFQ\"}"
     headers: 
       Accept: 
       - application/json
@@ -51,7 +53,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="UCGr5Xu3j3AhqI90tgxPfk2RhgI51wAUVd56GeR5L8", oauth_signature="gySD37OszsP7d0Dax9ecFipGlXo%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1368638996", oauth_version="1.0"
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="YVvD9L4Gr0BKwszMxi2NIWYHSeKB0bQMzSYQ8JgaYVQ", oauth_signature="tbYdboWoglrFvhc%2BVwAy8wtTFA8%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1370533600", oauth_version="1.0"
       Pulp-User: 
       - admin
       Content-Length: 
@@ -64,9 +66,9 @@ http_interactions:
       message: Created
     headers: 
       Date: 
-      - Wed, 15 May 2013 17:29:56 GMT
+      - Thu, 06 Jun 2013 15:46:40 GMT
       Server: 
-      - Apache/2.4.4 (Fedora) OpenSSL/1.0.1c-fips mod_wsgi/3.4 Python/2.7.3
+      - Apache/2.4.4 (Fedora) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.3
       Location: 
       - batman
       Content-Length: 
@@ -75,12 +77,12 @@ http_interactions:
       - application/json
     body: 
       encoding: US-ASCII
-      string: "{\"_id\": {\"$oid\": \"5193c614f45cbb6f3e8a6a5c\"}, \"name\": \"batman\", \"roles\": [], \"_ns\": \"users\", \"login\": \"batman\", \"id\": \"5193c614f45cbb6f3e8a6a5c\", \"_href\": \"/pulp/api/v2/users/batman/\"}"
+      string: "{\"_id\": {\"$oid\": \"51b0aee0196cbe7f35f430cf\"}, \"name\": \"batman\", \"roles\": [], \"_ns\": \"users\", \"login\": \"batman\", \"id\": \"51b0aee0196cbe7f35f430cf\", \"_href\": \"/pulp/api/v2/users/batman/\"}"
     http_version: 
-  recorded_at: Wed, 15 May 2013 17:29:56 GMT
+  recorded_at: Thu, 06 Jun 2013 15:46:40 GMT
 - request: 
     method: delete
-    uri: https://katello-f18-rails32/pulp/api/v2/users/
+    uri: https://localhost/pulp/api/v2/users/batman/
     body: 
       encoding: US-ASCII
       string: ""
@@ -92,29 +94,27 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="XXuNLdR2jp98ts1bneoSyKiSFrcqnSSR800uaj1Apc", oauth_signature="7jh54HGb0jtra64ZGe7oz4WOgrg%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1368638996", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="h7Pf5ffNpRHNhKsBuKPfGeTCIzSpzFa3ZA5JUuDI", oauth_signature="tS7iRiRawZ4Tfb%2BtjVwdkoF96YQ%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1370533601", oauth_version="1.0"
       Pulp-User: 
       - admin
       User-Agent: 
       - Ruby
   response: 
     status: 
-      code: 405
-      message: Method Not Allowed
+      code: 200
+      message: OK
     headers: 
       Date: 
-      - Wed, 15 May 2013 17:29:56 GMT
+      - Thu, 06 Jun 2013 15:46:41 GMT
       Server: 
-      - Apache/2.4.4 (Fedora) OpenSSL/1.0.1c-fips mod_wsgi/3.4 Python/2.7.3
-      Allow: 
-      - GET, POST
+      - Apache/2.4.4 (Fedora) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.3
       Content-Length: 
       - "4"
       Content-Type: 
-      - text/html; charset=UTF-8
+      - application/json
     body: 
       encoding: US-ASCII
-      string: None
+      string: "null"
     http_version: 
-  recorded_at: Wed, 15 May 2013 17:29:56 GMT
+  recorded_at: Thu, 06 Jun 2013 15:46:41 GMT
 recorded_with: VCR 2.4.0

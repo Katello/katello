@@ -16,7 +16,6 @@ module AsyncOrchestration
     def initialize(target, options)
       @target = target
 
-      raise ArgumentError, "Please pass in organization to which the sync job belongs to" unless options.has_key?(:organization)
       @organization = options.delete(:organization)
 
       @task_type = options.delete(:task_type)

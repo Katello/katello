@@ -35,9 +35,13 @@
           - if !@provider.manifest_task || @provider.manifest_task.finished?
             .grid_3.ra.fieldset
               &nbsp;
-            = form_for @provider, :html => {:method => :post, :id => :refresh_manifest}, :remote => true, :url => refresh_manifest_subscriptions_path do |f|
-              .grid_2.la#refresh_button
-                = f.submit _("Refresh Manifest"), :id => :refresh_form_button
+            - if can_refresh
+              = form_for @provider, :html => {:method => :post, :id => :refresh_manifest}, :remote => true, :url => refresh_manifest_subscriptions_path do |f|
+                .grid_2.la#refresh_button
+                  = f.submit _("Refresh Manifest"), :id => :refresh_form_button
+            -else
+              .grid_6.la
+                = _("Refreshing manifest not supported by this manifest.")
             - if Katello.config.headpin?
               = form_for @provider, :html => {:method => :post, :id => :delete_manifest}, :remote => true, :url => delete_manifest_subscriptions_path do |f|
                 .grid_4.la#delete_button

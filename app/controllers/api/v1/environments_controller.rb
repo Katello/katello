@@ -100,7 +100,7 @@ class Api::V1::EnvironmentsController < Api::V1::ApiController
 
     # The following is a workaround to handle the fact that rhsm currently requests the
     # environment using the 'name' parameter; however, the value is actually the environment label.
-    if @environments.empty?
+    if request_from_rhsm? && @environments.empty?
       if query_params.has_key?(:name)
         query_params[:label] = query_params[:name]
         query_params.delete(:name)
@@ -173,7 +173,7 @@ class Api::V1::EnvironmentsController < Api::V1::ApiController
   param :id, :identifier, :desc => "environment identifier"
   param :organization_id, :identifier, :desc => "organization identifier"
   def destroy
-    if @environment.confirm_last_env
+    if @environment.is_deletable?
       @environment.destroy
       respond :message => _("Deleted environment '%s'") % params[:id]
     else

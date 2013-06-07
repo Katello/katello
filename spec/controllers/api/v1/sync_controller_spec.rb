@@ -154,7 +154,7 @@ describe Api::V1::SyncController, :katello => true do
       it "should find product if :product_id is specified" do
         stub_product_with_repo
         controller.stub!(:params).and_return({ :organization_id => @organization.label, :product_id => @product.id })
-
+        controller.send(:find_optional_organization)
         subject.should == @product
       end
 

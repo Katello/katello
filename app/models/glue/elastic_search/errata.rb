@@ -150,10 +150,15 @@ module Glue::ElasticSearch::Errata
           erratum.as_json.merge(erratum.index_options)
         }
 
-        Tire.index Errata.index do
-          create :settings => Errata.index_settings, :mappings => Errata.index_mapping
-          import errata
-        end if !errata.empty?
+        unless errata.empty?
+          Tire.index Errata.index do
+            create :settings => Errata.index_settings, :mappings => Errata.index_mapping
+          end unless Tire.index(::Errata.index).exists?
+
+          Tire.index Errata.index do
+            import errata
+          end
+        end
       end
     end
   end

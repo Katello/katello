@@ -7,7 +7,7 @@
 
 :ruby
   sockets_help = _("The number of CPU Sockets or LPARs which this system uses")
-  memory_help = _("The amount of RAM memory, in megabytes (MB), which this system has")
+  memory_help = _("The amount of RAM memory, in gigabytes (GB), which this system has")
 
 
 - if @environment
@@ -25,7 +25,7 @@
 
           = form.text_field :sockets, :label => _("Number of Sockets or LPARs:"), :help => sockets_help, :value => 1
 
-          = form.text_field :memory, :label => _("Amount of RAM (MB):"), :help => memory_help, :value => ''
+          = form.text_field :memory, :label => _("Amount of RAM (GB):"), :help => memory_help, :value => ''
 
           = form.field :virtual, :label => _("System Type:") do
             = virtual_buttons
