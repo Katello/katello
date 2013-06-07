@@ -144,6 +144,7 @@ module Src
 
     config.logger = Logging.logger['app']
     config.active_record.logger = Logging.logger['sql']
+    config.active_record.schema_format = :sql
 
     config.assets.enabled = true
     config.assets.version = '1.0'
