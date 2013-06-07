@@ -11,6 +11,10 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Glue::Pulp::Package
+
+  #fields we use to trim down our unit association calls to pulp
+  PULP_SELECT_FIELDS = ['name', 'epoch', 'version', 'release', 'arch', 'checksumtype', 'checksum']
+
   def self.included(base)
     base.send :include, InstanceMethods
 
