@@ -71,6 +71,7 @@ User documentation can be found on [wiki](https://fedorahosted.org/katello/).
 -   {file:doc/YARDDocumentation.md}
 -   {file:doc/ForemanIntegration.md}
 -   {file:doc/Graphs.md}
+-   {file:db/structure.sql DB schema}
 -   Original Rails generated README {file:doc/RailsReadme}, we may do certain things differently
 
     -   we use `doc` directory for storing markdown guides instead of a generated documentation
