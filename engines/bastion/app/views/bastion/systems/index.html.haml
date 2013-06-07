@@ -1,15 +1,10 @@
-= javascript 'bastion/systems/systems.controller', 'bastion/components/nutupane.factory', 'bastion/components/scrollWithPage.directive.js'
+= javascript 'bastion/systems/systems.controller', 'bastion/components/nutupane.factory'
+= javascript 'bastion/components/scrollWithPage.directive', 'bastion/incubator/table.directive'
 
 %div{ 'ng-controller' => 'SystemsController' }
   %div{'ng-class' => '{"modal-mask": table.newPaneVisible}'}
-  %h1
-    = _("Systems")
-  %div{ 'alch-table-toolbar' => 'table' }
-    %button.primary{'ng-click' => 'createNewSystem()'}
-      = _("Create New System")
-    %button{'ng-click' => 'removeSelectedSystems()', 'ng-show' => 'table.num_selected > 0'}
-      = _("Delete")
-  %table#nutupane-table.table.stable.stripe-row{ 'alch-table' => 'table', 'row-select' => 'true', 'ng-class' => '{ "table-mask" : table.working, "details-visible": table.detailsVisible}' }
+  %div(ng-include){ 'src'=>"'systems/views/systems.html'" }
+
   %div#nutupane-new-item.nutupane-pane{'ng-show' => 'table.newPaneVisible', 'ng-cloak' => true}
     %a.fr{ 'ng-click' => 'table.setNewItemVisibility(false)' }
       = 'x'
