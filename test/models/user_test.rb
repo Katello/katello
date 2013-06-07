@@ -81,6 +81,12 @@ class UserCreateTest < UserTestBase
     assert_includes @user.errors, :username
   end
 
+  def test_create_with_long_username
+    @user.username = 'a'*129
+    assert !@user.save
+    assert_equal 1, @user.errors.size
+  end
+
   def test_before_create_self_role
     @user.save
 

@@ -27,7 +27,7 @@ Src::Application.routes.draw do
         api_resources :environments
         api_resources :sync_plans, :only => [:index, :create]
         api_resources :tasks, :only => [:index]
-        api_resources :providers, :only => [:index]
+        api_resources :providers, :only => [:index], :constraints => { :organization_id => /[^\/]*/ }
         match '/systems' => 'systems#activate', :via => :post, :constraints => RegisterWithActivationKeyContraint.new
         api_resources :systems, :only => [:index, :create] do
           get :report, :on => :collection
@@ -182,7 +182,7 @@ Src::Application.routes.draw do
           get :search, :on => :collection
         end
         api_resources :errata, :only => [:index, :show], :constraints => { :id => /[0-9a-zA-Z\-\+%_.:]+/ }
-        api_resources :distributions, :only => [:index, :show], :constraints => { :id => /[0-9a-zA-Z\-\+%_.]+/ }
+        api_resources :distributions, :only => [:index, :show], :constraints => { :id => /[0-9a-zA-Z \-\+%_.]+/ }
         member do
           get :package_groups
           get :package_group_categories
@@ -277,14 +277,6 @@ Src::Application.routes.draw do
     scope :module => :v1, :constraints => ApiVersionConstraint.new(:version => 2) do
 
       api_resources :crls, :only => [:index]
-
-      # some paths conflicts with rhsm
-      scope 'katello' do
-
-        # routes for non-ActiveRecord-based resources
-        match '/products/:id/repositories' => 'products#repo_create', :via => :post, :constraints => { :id => /[0-9\.]*/ }
-
-      end
 
       # subscription-manager support
       match '/consumers' => 'systems#activate', :via => :post, :constraints => RegisterWithActivationKeyContraint.new

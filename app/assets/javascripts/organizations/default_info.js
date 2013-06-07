@@ -59,10 +59,12 @@ KT.default_info = (function() {
                 $("#apply_default_info_button").removeClass("processing");
                 allow_default_info_manipulation(true);
                 task_status_updater.stop();
+                if (data['result'].length > 0) {
+                    notices.displayNotice("success", window.JSON.stringify({ "notices": [i18n.default_info_apply_success] }));
+                }
             }
         }
     };
-
 
     var check_for_apply_button_enable = function() {
         if ($("#default_info_table tr").length > 1) {
@@ -177,7 +179,7 @@ KT.default_info = (function() {
         var button = $(this);
         e.preventDefault();
         KT.common.customConfirm({
-            message     : i18n.take_a_while_you_sure,
+            message     : i18n.default_info_warning,
             yes_callback: function() {
                 apply_default_info(button);
             }

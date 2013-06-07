@@ -24,7 +24,7 @@ class Role < ActiveRecord::Base
 
   # scope to facilitate retrieving roles that are 'non-self' roles... group() so that unique roles are returned
   scope :non_self, where("type <> 'UserOwnRole' or type is NULL").order('roles.name')
-  validates :name, :uniqueness => true, :length => {:maximum => 128, :minimum => 1}, :presence => true
+  validates :name, :uniqueness => true, :presence => true
   validates_with Validators::NoTrailingSpaceValidator, :attributes => :name
   validates_with Validators::RolenameValidator, :attributes => :name
 

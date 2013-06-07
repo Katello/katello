@@ -35,8 +35,10 @@ describe Api::V1::ChangesetsContentController, :katello => true do
     @library    = KTEnvironment.new(:name => 'Library', :label => 'Library', :library => true)
     @library.id = 2
     @library.stub(:library?).and_return(true)
-    @environment    = KTEnvironment.new(:name => 'environment', :label => 'environment', :library => false)
+    @org = Organization.new(:name=>"blahorg")
+    @environment    = KTEnvironment.new(:name => 'environment', :label => 'environment', :library => false, :organization=>@org)
     @environment.id = 1
+
     @environment.stub(:library?).and_return(false)
     @environment.stub(:prior).and_return(@library)
     @library.stub(:successor).and_return(@environment)
@@ -84,5 +86,4 @@ describe Api::V1::ChangesetsContentController, :katello => true do
       response.should be_success
     end
   end
-
 end

@@ -75,6 +75,35 @@ describe Api::V1::EnvironmentsController do
       KTEnvironment.should_receive(:where).once
       req
     end
+
+    context 'from katello cli' do
+      before do
+        request.stub(:user_agent).and_return('katello-cli')
+      end
+
+      it 'should return empty set when not found by name' do
+        KTEnvironment.stub(:where => [])
+        KTEnvironment.should_receive(:where).once
+        req
+      end
+    end
+
+    context 'from subscription-manager' do
+      before do
+        request.stub(:user_agent).and_return(nil)
+      end
+
+      it ' should try again with label when not found by name' do
+        KTEnvironment.should_receive(:where).with do |search_query|
+          search_query['name'] == 'foo'
+        end.once.and_return([])
+        KTEnvironment.should_receive(:where).with do |search_query|
+          search_query['label'] == 'foo'
+        end.once
+        req
+      end
+    end
+
   end
 
 

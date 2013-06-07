@@ -16,13 +16,14 @@ module Glue::ElasticSearch::TaskStatus
     base.send :include, Ext::IndexedModel
 
     base.class_eval do
-      index_options :json=>{:only=> [:parameters, :result, :organization_id, :start_time, :finish_time, :task_owner_id, :task_owner_type ]},
-                    :extended_json=>:extended_index_attrs
+      index_options :json => { :only => [:parameters, :result, :organization_id, :start_time, :finish_time, :task_owner_id, :task_owner_type ] },
+                    :extended_json => :extended_index_attrs
 
       mapping do
-       indexes :start_time, :type=>'date'
-       indexes :finish_time, :type=>'date'
-       indexes :status, :type=>'string', :analyzer => 'snowball'
+       indexes :start_time, :type => 'date'
+       indexes :finish_time, :type => 'date'
+       indexes :status, :type => 'string', :analyzer => 'snowball'
+       indexes :task_owner_type, :type => 'string', :index => :not_analyzed
       end
     end
 
@@ -50,7 +51,7 @@ module Glue::ElasticSearch::TaskStatus
        if (::System.class.name == task_owner_type)
          tt = TaskStatus::TYPES[task_type][:english_name]
        end
-       ret[:status] +=" #{tt}"
+       ret[:status] += " #{tt}"
      end
      ret
    end

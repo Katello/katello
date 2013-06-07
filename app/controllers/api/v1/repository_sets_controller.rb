@@ -13,9 +13,9 @@
 class Api::V1::RepositorySetsController < Api::V1::ApiController
   respond_to :json
 
+  before_filter :find_organization
   before_filter :find_product, :only => [:enable, :disable, :index]
   before_filter :find_product_content, :only => [:enable, :disable]
-
   before_filter :authorize
 
 
@@ -30,7 +30,7 @@ class Api::V1::RepositorySetsController < Api::V1::ApiController
   end
 
 
-  api :POST, "/product/:product_id/repository_sets/:id/enable", "Enable a repository set for a product."
+  api :POST, "/organizations/:organization_id/product/:product_id/repository_sets/:id/enable", "Enable a repository set for a product."
   param :organization_id, :identifier, :required => true, :desc => "id of an organization the repository will be contained in"
   param :product_id, :number, :required => true, :desc => "id of a product the repository will be contained in"
   param :id, :number, :required => true, :desc => "id or name of the repository set to enable"
@@ -39,7 +39,7 @@ class Api::V1::RepositorySetsController < Api::V1::ApiController
     respond_for_async :resource => @product.async(:organization => @organization).refresh_content(@product_content.content.id)
   end
 
-  api :POST, "/product/:product_id/repository_sets/:id/disable", "Enable a repository set for a product."
+  api :POST, "/organizations/:organization_id/product/:product_id/repository_sets/:id/disable", "Enable a repository set for a product."
   param :organization_id, :identifier, :required => true, :desc => "id of an organization the repository will be contained in"
   param :product_id, :number, :required => true, :desc => "id of a product the repository will be contained in"
   param :id, :number, :required => true, :desc => "id of the repository set to disable"
@@ -48,7 +48,7 @@ class Api::V1::RepositorySetsController < Api::V1::ApiController
     respond_for_async :resource => @product.async(:organization => @organization).disable_content(@product_content.content.id)
   end
 
-  api :GET, "/product/:product_id/repository_sets/", "List repository sets for a product."
+  api :GET, "/organizations/:organization_id/product/:product_id/repository_sets/", "List repository sets for a product."
   param :product_id, :number, :required => true, :desc => "id of a product to list repository sets for"
   def index
     raise _('Repository sets are not available for custom products.') if @product.custom?
@@ -69,7 +69,7 @@ class Api::V1::RepositorySetsController < Api::V1::ApiController
   end
 
   def find_product
-    @product = Product.find_by_cp_id(params[:product_id])
+    @product = Product.find_by_cp_id(params[:product_id], @organization)
     raise HttpErrors::NotFound, _("Couldn't find product with id '%s'") % params[:product_id] if @product.nil?
     @organization = @product.organization
   end

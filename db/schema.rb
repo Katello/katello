@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130529211902) do
+ActiveRecord::Schema.define(:version => 20130604124100) do
 
   create_table "activation_keys", :force => true do |t|
     t.string   "name"
@@ -225,8 +225,9 @@ ActiveRecord::Schema.define(:version => 20130529211902) do
     t.string   "value",           :default => ""
     t.integer  "informable_id"
     t.string   "informable_type"
-    t.datetime "created_at",                      :null => false
-    t.datetime "updated_at",                      :null => false
+    t.datetime "created_at",                         :null => false
+    t.datetime "updated_at",                         :null => false
+    t.boolean  "org_default",     :default => false
   end
 
   add_index "custom_info", ["informable_type", "informable_id", "keyname"], :name => "index_custom_info_on_type_id_keyname"
@@ -663,7 +664,7 @@ ActiveRecord::Schema.define(:version => 20130529211902) do
 
   create_table "task_statuses", :force => true do |t|
     t.string   "type"
-    t.integer  "organization_id",                :null => false
+    t.integer  "organization_id",                :null => true
     t.string   "uuid",                           :null => false
     t.string   "state"
     t.text     "result"

@@ -91,25 +91,20 @@ KT.activation_key = (function($) {
         var fakesubbutton = $('#fake_subscription_submit_button');
         var subcheckboxes = $('#subscription_form input[type="checkbox"]');
         var checked = 0;
-        subbutton.hide();
 
         subcheckboxes.each(function(){
             $(this).change(function(){
                 if($(this).is(":checked")){
                     checked += 1;
-                    if(!(subbutton.is(":visible"))){
-                        fakesubbutton.fadeOut("fast", function(){subbutton.fadeIn()});
-                    }
-                }else{
+                    subbutton.removeAttr('disabled');
+                } else {
                     checked -= 1;
-                    if((subbutton.is(":visible")) && checked === 0){
-                        subbutton.fadeOut("fast", function(){fakesubbutton.fadeIn()});
+                    if (checked === 0) {
+                        subbutton.attr('disabled', 'disabled');
                     }
                 }
             });
         });
-
-        //subbutton.unbind('click').click(disable_submit);
     },
     initialize_new = function() {
         $('#usage_limit_checkbox').live('click', function() {

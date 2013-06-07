@@ -57,19 +57,22 @@ module Glue::ElasticSearch::Repository
       pkgs = self.packages.collect{|pkg| pkg.as_json.merge(pkg.index_options)}
       pulp_id = self.pulp_id
 
-      Tire.index Package.index do
-        create :settings => Package.index_settings, :mappings => Package.index_mapping
+      unless pkgs.empty?
+        Tire.index Package.index do
+          create :settings => Package.index_settings, :mappings => Package.index_mapping
+        end unless Tire.index(Package.index).exists?
 
-        import pkgs do |documents|
-          documents.each do |document|
-            if !document["repoids"].nil? && document["repoids"].length > 1
-              # if there is more than 1 repo associated w/ the pkg, remove this repo
-              document["repoids"].delete(pulp_id)
+        Tire.index Package.index do
+          import pkgs do |documents|
+            documents.each do |document|
+              if !document["repoids"].nil? && document["repoids"].length > 1
+                # if there is more than 1 repo associated w/ the pkg, remove this repo
+                document["repoids"].delete(pulp_id)
+              end
             end
           end
         end
-
-      end if !pkgs.empty?
+      end
 
       # now, for any package that only had this repo asscociated with it, remove the package from the index
       repoids = "repoids:#{pulp_id}"
@@ -79,10 +82,15 @@ module Glue::ElasticSearch::Repository
 
     def index_errata
       errata = self.errata.collect{|err| err.as_json.merge(err.index_options)}
-      Tire.index Errata.index do
-        create :settings => Errata.index_settings, :mappings => Errata.index_mapping
-        import errata
-      end if !errata.empty?
+      unless errata.empty?
+        Tire.index Errata.index do
+          create :settings => Errata.index_settings, :mappings => Errata.index_mapping
+        end unless Tire.index(Errata.index).exists?
+
+        Tire.index Errata.index do
+          import errata
+        end
+      end
     end
 
     def update_errata_index
@@ -90,19 +98,22 @@ module Glue::ElasticSearch::Repository
       errata = self.errata.collect{|err| err.as_json.merge(err.index_options)}
       pulp_id = self.pulp_id
 
-      Tire.index Errata.index do
-        create :settings => Errata.index_settings, :mappings => Errata.index_mapping
+      unless errata.empty?
+        Tire.index Errata.index do
+          create :settings => Errata.index_settings, :mappings => Errata.index_mapping
+        end unless Tire.index(Errata.index).exists?
 
-        import errata do |documents|
-          documents.each do |document|
-            if !document["repoids"].nil? && document["repoids"].length > 1
-              # if there is more than 1 repo associated w/ the errata, remove this repo
-              document["repoids"].delete(pulp_id)
+        Tire.index Errata.index do
+          import errata do |documents|
+            documents.each do |document|
+              if !document["repoids"].nil? && document["repoids"].length > 1
+                # if there is more than 1 repo associated w/ the errata, remove this repo
+                document["repoids"].delete(pulp_id)
+              end
             end
           end
         end
-
-      end if !errata.empty?
+      end
 
       # now, for any errata that only had this repo asscociated with it, remove the errata from the index
       repoids = "repoids:#{pulp_id}"
@@ -112,10 +123,16 @@ module Glue::ElasticSearch::Repository
 
     def index_package_groups
       package_groups_map = self.package_groups.collect{|pg| pg.as_json.merge(pg.index_options)}
-      Tire.index PackageGroup.index do
-        create :settings => PackageGroup.index_settings, :mappings => PackageGroup.index_mapping
-        import package_groups_map
-      end unless package_groups_map.empty?
+
+      unless package_groups_map.empty?
+        Tire.index PackageGroup.index do
+          create :settings => PackageGroup.index_settings, :mappings => PackageGroup.index_mapping
+        end unless Tire.index(PackageGroup.index).exists?
+
+        Tire.index PackageGroup.index do
+          import package_groups_map
+        end
+      end
     end
 
     def update_package_group_index
