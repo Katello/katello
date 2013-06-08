@@ -180,6 +180,11 @@ class System < ActiveRecord::Base
       end
     end
 
+    json['compliance'] = self.compliance
+    json['registered'] = self.created
+    json['checkin_time'] = self.checkin_time
+    json['distribution'] = self.distribution
+
     if options[:expanded]
       json['editable'] = editable?
       json['type'] = if guest == 'true'

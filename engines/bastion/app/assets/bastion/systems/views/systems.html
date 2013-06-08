@@ -30,11 +30,11 @@
                ng-change="table.selectAll(table.allSelected)">
       </th>
       <th>{{ "Name" }}</th>
-      <th>{{ "Description" }}</th>
+      <th>{{ "OS" }}</th>
       <th>{{ "Environment" }}</th>
       <th>{{ "Content View" }}</th>
-      <th>{{ "Created At" }}</th>
-      <th>{{ "Last Updated" }}</th>
+      <th>{{ "Registered" }}</th>
+      <th>{{ "Last Checkin" }}</th>
     </tr>
   </thead>
 
@@ -50,12 +50,15 @@
                ng-model="system.selected" 
                ng-change="table.itemSelected(system.selected)">
       </td>
-      <td>{{ system.name }}</td>
-      <td>{{ system.description }}</td>
+      <td>
+        <span class="status_icon" ng-class="getStatusColor(system.compliance.status)"></span>
+        {{ system.name }}
+      </td>
+      <td>{{ system.distribution }}</td>
       <td>{{ system.environment.name }}</td>
       <td>{{ system.content_view.name || "" }}</td>
-      <td>{{ system.created_at | date:'medium' }}</td>
-      <td>{{ system.updated_at | date:'medium' }}</td>
+      <td>{{ system.registered | date:'short' }}</td>
+      <td>{{ system.checkin_time || 'Never checked in' | date:'short' }}</td>
     </tr>
   </tbody>
 </table>

@@ -41,5 +41,19 @@ angular.module('Katello').controller('SystemsController',
         $scope.selectItem = function(id) {
             Nutupane.selectItem(KT.routes.edit_system_path(id), id);
         }
+
+        $scope.getStatusColor = function(status) {
+            var color = '';
+
+            if (status === 'valid') {
+                color = 'green';
+            } else if (status === 'partial') {
+                color = 'yellow';
+            } else {
+                color = 'red';
+            }
+
+            return color;
+        };
     }]
 );

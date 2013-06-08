@@ -70,7 +70,8 @@ angular.module('Katello').factory('Nutupane', ['$location', '$http', 'current_or
                 'sort_order':       sort.order,
                 'paged':            true,
                 'offset':           Nutupane.table.offset,
-                'page_size':        25
+                'page_size':        25,
+                'expanded':         true
             }
         })
         .then(function(response){
