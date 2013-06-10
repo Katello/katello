@@ -1,0 +1,109 @@
+$row-highlight: rgb(0, 162, 155) !default;
+
+.table {
+  border-spacing:0;
+  border-style: none;
+  width: 100%;
+
+  td, th {
+    text-align: center;
+    vertical-align: middle;
+    padding: 8px;
+    font-size: 90%;
+  }
+
+  th {
+    font-size: 100%;
+    border-bottom: 1px solid #CCC;
+  }
+
+  td {
+    border-bottom: 1px solid #EEE;
+    border-bottom-color: rgba(0, 0, 0, 0.033);
+    vertical-align: bottom;
+  }
+
+  .active-column {
+    background: rgb(175, 175, 175);
+  }
+
+  .active-row {
+    background-color: $row-highlight;
+    color: #FFF;
+  }
+
+  .row-select {
+    width: 5%;
+  }
+}
+
+.table-bordered {
+  th {
+    border-top: 1px solid #CCC;
+    border-bottom: 1px solid #CCC;
+  }
+
+  td, th {
+    border-left: 1px solid #CCC;
+  }
+
+  td {
+    border-collapse: separate;
+  }
+
+  tr:last-child td {
+    border-bottom: 1px solid #EEE;
+  }
+}
+
+.deselect-action {
+  cursor: pointer;
+  color: $linkfg_color;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.disabled-link, .disabled-link:hover {
+  color: rgb(100, 100, 100);
+  opacity: 0.5;
+  cursor: default;
+  text-decoration: none;
+}
+
+.table-striped {
+  th {
+    background-color: rgba(216, 216, 216, 0.3);
+  }
+
+  tr:nth-child(even) td {
+    background-color: rgba(216, 216, 216, 0.15);
+  }
+}
+
+.table-selection-row {
+  text-align: center;
+  display: block;
+}
+
+.table-toolbar {
+  background: white;
+  overflow: auto;
+  padding: 10px;
+}
+
+.table-searchbar {
+  background: rgb(238, 238, 238);
+  overflow: auto;
+  padding: 10px;
+  border-bottom: 1px solid #CCC;
+}
+
+.select-all-action-container {
+  text-align: center;
+}
+
+.search-input-container {
+  width: 100%;
+}

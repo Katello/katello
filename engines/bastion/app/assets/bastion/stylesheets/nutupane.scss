@@ -1,16 +1,18 @@
 @import "katello_colors";
-@import "alchemy-tables/tables";
-
-.container_16 {
-  float: none;
-}
+@import "bastion/incubator/stylesheets/tables";
 
 .table .active-column {
   background: rgb(216, 216, 216) !important
 }
 
-tbody {
-  width: 100%;
+.search-input-container {
+  input {
+    width: 400px;
+  }
+
+  .result-count {
+    font-size: 110%;
+  }
 }
 
 table.details-visible {
@@ -20,35 +22,22 @@ table.details-visible {
 }
 
 .table {
-  th {
-    cursor: pointer !important;
-    font-weight: bold;
-  }
+  font-size: 110%;
 
   tr:hover td,
-  tr.focus td{
+  tr.focus td {
     background-color: $listhover_color;
-    color:#FFF;
+    color: #FFF;
   }
 
   th.row-select,
   td.row-select {
-    width: 1%;
-    max-width: 1%;
+    width: 3%;
+    max-width: 3%;
   }
 
-  td, th {
-    border-left: 1px solid #CCC;
-    border-right: 1px solid #CCC;
-  }
-
-  th {
-    border-top: 1px solid #CCC !important;
-    border-bottom: 2px solid #CCC !important;
-  }
-
-  tr.active, tbody tr:hover {
-    background-color: $listhover_color !important;
+  tr.active, tbody tr:hover, .active-row {
+    background-color: $listhover_color;
     color:#FFF;
 
     a {
@@ -60,10 +49,14 @@ table.details-visible {
       background: white;
     }
   }
-}
 
-input {
-  background: white !important;
+  th {
+    border-right: none;
+    color: rgb(92, 92, 92);
+    background: white;
+    line-height: 1;
+    vertical-align: bottom;
+  }
 }
 
 .spinner {
@@ -90,15 +83,6 @@ input {
   opacity: 0.4;
 }
 
-.table-toolbar {
-  background: rgb(238, 238, 238);
-  overflow: auto;
-  padding: 10px 12px 4px 12px;
-  @include box-sizing(border-box);
-  border: 1px solid #CCC;
-  border-radius: 5px 5px 0 0;
-}
-
 .nutupane-pane {
   display: none;
   background: white;
@@ -118,7 +102,7 @@ input {
   @include transition(background-color 1.25s ease-in-out);
   display: block;
   float: left;
-  width: 79.8%;
+  width: 80%;
   opacity: 1;
   border-radius: 0;
 }
@@ -144,6 +128,11 @@ input {
   }
 }
 
-input, textarea {
-  background: #FAFAFA;
+.table-searchbar {
+  width: 100%;
+  background: rgb(250, 250, 250);
+}
+
+.selected-action-container {
+  vertical-align: middle;
 }

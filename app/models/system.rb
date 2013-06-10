@@ -13,7 +13,8 @@
 
 class System < ActiveRecord::Base
   include Hooks
-  define_hooks :add_system_group_hook, :remove_system_group_hook
+  define_hooks :add_system_group_hook, :remove_system_group_hook,
+               :as_json_hook
 
   include Glue::Candlepin::Consumer if Katello.config.use_cp
   include Glue::Pulp::Consumer if Katello.config.use_pulp
@@ -198,6 +199,8 @@ class System < ActiveRecord::Base
       end
       json['available_content_views'] = keys
     end
+
+    run_hook(:as_json_hook, json)
 
     json
   end

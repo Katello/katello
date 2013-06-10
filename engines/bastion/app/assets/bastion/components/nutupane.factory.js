@@ -11,22 +11,6 @@
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
  */
 
-
-/**
- * @ngdoc config
- * @name  Katello.config
- *
- * @requires $locationProvider
- *
- * @description
- *   Sets the hashPrefix for Nutupane pages to '!/', but due to jQuery BBQ this cannot
- *   be set application wide yet.
- */
-Katello.config(['$locationProvider', function($locationProvider){
-    $locationProvider.hashPrefix('!/');
-}]);
-
-
 /**
  * @ngdoc factory
  * @name  Katello.factory:Nutupane
@@ -63,29 +47,17 @@ angular.module('Katello').factory('Nutupane', ['$location', '$http', 'current_or
     var sort = { by: 'name', order: 'ASC' },
         Nutupane = {
             table : {
-                data: {},
                 offset: 0,
                 visible: true,
                 detailsVisible: false,
                 total: 0,
-                search_string: $location.search().search,
-                loading_more: false
+                searchString: $location.search().search,
+                loading_more: false,
+                items: []
             },
             sort : sort
         },
         allColumns, shownColums;
-
-    /**
-     * @ngdoc function
-     * @name Katello.factory:Nutupane#setColumns
-     *
-     * @param {Array} columnsToShow list of column objects that will be shown when
-     *                              the details pane is made visible
-     */
-    Nutupane.setColumns = function(columnsToShow) {
-        allColumns = Nutupane.table.data.columns.slice(0);
-        shownColums = columnsToShow;
-    };
 
     Nutupane.get = function(callback) {
         Nutupane.table.working = true;
@@ -97,40 +69,47 @@ angular.module('Katello').factory('Nutupane', ['$location', '$http', 'current_or
                 'sort_by':          sort.by,
                 'sort_order':       sort.order,
                 'paged':            true,
-                'offset':           Nutupane.table.offset
+                'offset':           Nutupane.table.offset,
+                'page_size':        25,
+                'expanded':         true
             }
         })
         .then(function(response){
             var table = Nutupane.table,
-                data = table.transform(response.data);
+                data = response.data;
 
             if( !table.loading_more ){
-                table.offset    = data.rows.length;
-                table.data.rows = data.rows;
+                table.items     = data.records;
+                table.offset    = data.records.length;
                 table.total     = data.total;
                 table.subtotal  = data.subtotal;
             } else {
-                table.offset += data.rows.length;
-                table.data.rows = table.data.rows.concat(data.rows);
+                table.offset += data.records.length;
+                table.items  = table.items.concat(data.records);
+            }
+
+            if ($location.search().search) {
+                table.searchTerm = $location.search().search;
             }
 
             if (callback) {
-                callback();
+                callback(data);
             }
 
             table.working = false;
         });
     };
 
-    Nutupane.table.search = function(searchTerm){
+    Nutupane.table.search = function(searchTerm) {
         $location.search('search', searchTerm);
         Nutupane.table.offset = 0;
         Nutupane.table.close_item();
+        Nutupane.table.loading_more = false;
 
         Nutupane.get();
     };
 
-    Nutupane.table.next_page = function(){
+    Nutupane.table.nextPage = function(){
         var table = Nutupane.table;
 
         if (table.loading_more || table.working || table.subtotal === table.offset) {
@@ -181,10 +160,10 @@ angular.module('Katello').factory('Nutupane', ['$location', '$http', 'current_or
 
         if (visibility) {
             // Remove all columns except name and replace them with the details pane
-            table.data.columns = shownColums;
+            //table.data.columns = shownColums;
         } else {
             // Restore the former columns
-            table.data.columns = allColumns;
+            //table.data.columns = allColumns;
         }
 
         table.detailsVisible = visibility;
@@ -206,22 +185,15 @@ angular.module('Katello').factory('Nutupane', ['$location', '$http', 'current_or
     Nutupane.table.close_item = function () {
         Nutupane.table.setDetailsVisibility(false);
         // Restore the former columns
-        Nutupane.table.data.columns = allColumns;
+        Nutupane.table.columns = allColumns;
         $location.search('item', '');
     };
 
-    Nutupane.table.select_item = function(url, id){
+    Nutupane.selectItem = function(url, id){
         var item,
             table = Nutupane.table;
 
-        if (id) {
-            angular.forEach(table.data.rows, function(row) {
-                if (row.row_id.toString() === id.toString()) {
-                    item = row;
-                }
-            });
-            $location.search('item', id.toString());
-        }
+        $location.search('item', id.toString());
         url = url ? url : Nutupane.default_item_url(id);
 
         $http.get(url, {
@@ -235,11 +207,11 @@ angular.module('Katello').factory('Nutupane', ['$location', '$http', 'current_or
             // Only reset the active_item if an ID is provided
             if (id) {
                 // Remove all columns except name and replace them with the details pane
-                table.data.columns = shownColums;
-                table.select_all(false);
-                table.active_item = item;
-                table.active_item.selected  = true;
-                rowSelect = false;
+                //table.data.columns = shownColums;
+                table.selectAll(false);
+                //table.active_item = item;
+                //table.active_item.selected  = true;
+                //rowSelect = false;
             }
 
             table.active_item.html = response.data;

@@ -59,6 +59,8 @@ describe Api::V1::SystemsController do
       Runcible::Extensions::Consumer.stub!(:update).and_return(true)
     end
 
+    System.any_instance.stub(:consumer_as_json).and_return({})
+
     @organization  = Organization.create!(:name => 'test_org', :label => 'test_org')
     @environment_1 = KTEnvironment.create!(:name => 'test_1', :label => 'test_1', :prior => @organization.library.id, :organization => @organization)
 
@@ -446,7 +448,8 @@ describe Api::V1::SystemsController do
 
     it "should update installed products" do
       @sys.facts = {}
-      @sys.stub(:guest => 'false', :guests => [])
+      System.any_instance.stub(:guest).and_return('false')
+      System.any_instance.stub(:guests).and_return([])
       Resources::Candlepin::Consumer.should_receive(:update).once.with(uuid, {}, nil, installed_products, nil, nil, nil, anything).and_return(true)
       put :update, :id => uuid, :installedProducts => installed_products
       response.body.should == @sys.to_json
@@ -455,7 +458,8 @@ describe Api::V1::SystemsController do
 
     it "should update releaseVer" do
       @sys.facts = {}
-      @sys.stub(:guest => 'false', :guests => [])
+      System.any_instance.stub(:guest).and_return('false')
+      System.any_instance.stub(:guests).and_return([])
       Resources::Candlepin::Consumer.should_receive(:update).once.with(uuid, {}, nil, nil, nil, "1.1", nil, anything).and_return(true)
       put :update, :id => uuid, :releaseVer => "1.1"
       response.body.should == @sys.to_json
@@ -464,7 +468,8 @@ describe Api::V1::SystemsController do
 
     it "should update service level agreement" do
       @sys.facts = {}
-      @sys.stub(:guest => 'false', :guests => [])
+      System.any_instance.stub(:guest).and_return('false')
+      System.any_instance.stub(:guests).and_return([])
       Resources::Candlepin::Consumer.should_receive(:update).once.with(uuid, {}, nil, nil, nil, nil, "SLA", anything).and_return(true)
       put :update, :id => uuid, :serviceLevel => "SLA"
       response.body.should == @sys.to_json
@@ -473,7 +478,8 @@ describe Api::V1::SystemsController do
 
     it "should update environment" do
       @sys.facts = {}
-      @sys.stub(:guest => 'false', :guests => [], :environment => @environment_2)
+      System.any_instance.stub(:guest).and_return('false')
+      System.any_instance.stub(:guests).and_return([])
       Resources::Candlepin::Consumer.should_receive(:update).once.with(uuid, {}, nil, nil, nil, nil, nil, @environment_2.id).and_return(true)
       put :update, :id => uuid, :environment_id => @environment_2.id
       response.body.should == @sys.to_json

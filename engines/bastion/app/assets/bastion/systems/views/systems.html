@@ -1,0 +1,64 @@
+<div class="table-searchbar">
+  <h1>{{ "Systems" }}</h1>
+  <div class="fl form">
+    <input type="text"
+           class="input input-search" 
+           placeholder="Search..." 
+           ng-model="table.searchTerm" 
+           on-enter="table.search(table.searchTerm)">
+    <span class="result-count">Showing {{ table.offset }} of {{ table.subtotal }} ({{ table.total }} Total) {{ table.modelName }}</span>
+  </div>
+  <div class="fr">
+    <span>{{ table.numSelected }} Selected</span>
+    <span>|</span>
+    <a class="deselect-action"
+       ng-class="{ 'disabled-link' : table.numSelected == 0 }"
+       ng-click="table.selectAll(false)">
+      Deselect All
+    </a>
+  </div>
+</div>
+
+<table class="table table-striped" alch-table="table">
+  <thead>
+    <tr>   
+      <th class="row-select">
+        <input class="select-all" 
+               type="checkbox" 
+               name="selectAll" 
+               ng-model="table.allSelected" 
+               ng-change="table.selectAll(table.allSelected)">
+      </th>
+      <th>{{ "Name" }}</th>
+      <th>{{ "OS" }}</th>
+      <th>{{ "Environment" }}</th>
+      <th>{{ "Content View" }}</th>
+      <th>{{ "Registered" }}</th>
+      <th>{{ "Last Checkin" }}</th>
+    </tr>
+  </thead>
+
+  <tbody infinite-scroll="table.nextPage()" 
+         infinite-scroll-disable="table.loadingMore" 
+         infinite-scroll-distance="table.scrollDistance">
+    <tr ng-repeat="system in table.items"
+        ng-class="{ 'active-row' : system.selected }">
+      <td class="row-select">
+        <input type="checkbox" 
+               name="{{ system.id }}" 
+               value="{{ system.id }}" 
+               ng-model="system.selected" 
+               ng-change="table.itemSelected(system.selected)">
+      </td>
+      <td>
+        <span class="status_icon" ng-class="getStatusColor(system.compliance.status)"></span>
+        {{ system.name }}
+      </td>
+      <td>{{ system.distribution }}</td>
+      <td>{{ system.environment.name }}</td>
+      <td>{{ system.content_view.name || "" }}</td>
+      <td>{{ system.registered | date:'short' }}</td>
+      <td>{{ system.checkin_time || 'Never checked in' | date:'short' }}</td>
+    </tr>
+  </tbody>
+</table>

@@ -1,3 +1,9 @@
+@import "compass";
+
+* {
+  @include box-sizing(border-box);
+}
+
 @import "katello_base";
 @import "alchemy/components/normalize";
 @import "alchemy-forms/forms";
@@ -29,9 +35,6 @@ body > footer {
 
 .maincontent {
   margin-top: 0;
-  padding-top: 20px;
-  padding-left: 20px;
-  padding-right: 20px;
   border: none;
 }
 
@@ -68,4 +71,21 @@ input {
 
 table {
   margin: 0px;
+}
+
+.status_icon {
+  height: 15px;
+  width: 15px;
+  background: $status_icons_green_small;
+  //margin: 2px 1px 1px 1px;
+
+  &.green {
+    background: $status_icons_green_small;
+  }
+  &.yellow {
+    background: $status_icons_yellow_small;
+  }
+  &.red {
+    background: $status_icons_red_small;
+  }
 }
