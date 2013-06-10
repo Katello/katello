@@ -1,8 +1,28 @@
+@import "compass";
+
+* {
+  @include box-sizing(border-box);
+}
+
+
+@import "overrides";
+@import "katello_base";
+@import "widgets/org_switcher";
+@import "bastion/stylesheets/vars";
+
+$spritePath: url("../alchemy/icons/action-icons.png");
+
 @import "alchemy/components/normalize";
 @import "alchemy-forms/forms";
 @import "alchemy-buttons/buttons";
+@import "alchemy/components/sprites/sprites";
+@import "alchemy/components/text/text";
 
+@import "header";
 @import "nutupane";
+
+@import "widgets/tipsy_custom";
+@import "jquery.tipsy";
 
 .maincontent {
   margin-top: 0;
@@ -20,3 +40,43 @@
 .fl { float: left; }
 .fr { float: right; }
 
+.logo {
+  text-indent: -5555px;
+  width: 100px;
+  height: 15px;
+  display: block;
+  margin-top: 5px;
+}
+
+.katello-logo {
+  background: $katello_logo_img;
+}
+
+.headpin-logo {
+  background: $headpin_logo_img;
+}
+
+.hidden {
+  display: none;
+}
+
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+  display: none;
+}
+
+.status_icon {
+  height: 15px;
+  width: 15px;
+  background: $status_icons_green_small;
+  //margin: 2px 1px 1px 1px;
+
+  &.green {
+    background: $status_icons_green_small;
+  }
+  &.yellow {
+    background: $status_icons_yellow_small;
+  }
+  &.red {
+    background: $status_icons_red_small;
+  }
+}

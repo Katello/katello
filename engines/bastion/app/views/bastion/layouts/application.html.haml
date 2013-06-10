@@ -1,20 +1,9 @@
 = content_for(:title) do
-  = project_name
-  = "-"
-  = default_title
+  = project_name + "-" + default_title
 
 = content_for(:stylesheets_block) do
-  = stylesheet_link_tag :katello
-  = stylesheet_link_tag :katello_experimental
-  = stylesheet_link_tag controller.section_id
+  = stylesheet_link_tag "stylesheets/bastion"
   = yield :stylesheets
-
-= content_for(:head) do
-  = csrf_meta_tag
-  / [if lt IE 9]
-    = javascript_include_tag  :html5
-  / [if IE]
-    = stylesheet_link_tag :ie, :embed_assets => false
 
 = content_for(:body) do
   %article{ 'ng-app' => 'Katello' }
@@ -41,4 +30,4 @@
 
   = yield :javascripts
 
-= render :file => 'alchemy/layouts/base'
+= render :file => 'bastion/layouts/base'

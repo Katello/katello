@@ -56,6 +56,15 @@ $row-highlight: rgb(0, 162, 155) !default;
   }
 }
 
+.deselect-action {
+  cursor: pointer;
+  color: $linkfg_color;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
 .disabled-link, .disabled-link:hover {
   color: rgb(100, 100, 100);
   opacity: 0.5;
@@ -89,11 +98,6 @@ $row-highlight: rgb(0, 162, 155) !default;
   overflow: auto;
   padding: 10px;
   border-bottom: 1px solid #CCC;
-}
-
-.deselect-action-container {
-  display: block;
-  float: left;
 }
 
 .select-all-action-container {
