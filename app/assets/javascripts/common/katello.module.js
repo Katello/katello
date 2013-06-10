@@ -19,19 +19,26 @@
  *   Base module that defines the Katello module namespace and includes any thirdparty
  *   modules used by the application.
  */
-var Katello = angular.module('Katello', ['alchemy', 'alch-templates', 'ngSanitize', 'infinite-scroll']);
+var Katello = angular.module('Katello', [
+    'alchemy',
+    'alch-templates',
+    'ngSanitize',
+    'Katello.i18n',
+    'Katello.menu',
+    'Katello.systems',
+    'Katello.system-groups'
+]);
 
 /**
  * @ngdoc config
  * @name  Katello.config
  *
  * @requires $httpProvider
- * @requires $locationProvider
  *
  * @description
  *   Used for establishing application wide configuration such as adding the Rails CSRF token
  *   to every request.
  */
-Katello.config(['$httpProvider', '$locationProvider', function($httpProvider, $locationProvider){
+Katello.config(['$httpProvider', function($httpProvider){
     $httpProvider.defaults.headers.common['X-CSRF-TOKEN'] = $('meta[name=csrf-token]').attr('content');
 }]);
