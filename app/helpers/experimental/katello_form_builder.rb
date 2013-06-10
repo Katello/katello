@@ -88,7 +88,7 @@ module Experimental
       options.symbolize_keys!
       options[:tabindex] ||= tabindex
       options[:class] ||= []
-      options[:class] << "button primary"
+      options[:class] = options[:class].to_s + " button primary"
       args.push options
 
       content_tag :div, :class => "control-group buttons" do

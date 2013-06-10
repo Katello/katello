@@ -35,5 +35,4 @@
 //= require "ui_alchemy/angular-sanitize/angular-sanitize"
 //= require "ui_alchemy/ngInfiniteScroll/ng-infinite-scroll"
 //= require "ui_alchemy/alchemy/alchemy"
-//= require "ui_alchemy/alchemy-tables/alchemy-tables"
 //= require "ui_alchemy/alchemy-header/alchemy-header"

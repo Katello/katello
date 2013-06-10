@@ -12,6 +12,8 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class Distributor < ActiveRecord::Base
+  include Hooks
+  define_hooks :as_json_hook
 
   include Glue::Candlepin::Consumer if Katello.config.use_cp
   include Glue if Katello.config.use_cp

@@ -221,7 +221,7 @@ Schedules the consumer identity certificate regeneration
 
     if params[:paged]
       systems = {
-        :systems  => systems,
+        :records  => systems,
         :subtotal => total_count,
         :total    => items.total_items
       }
