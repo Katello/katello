@@ -11,8 +11,6 @@ angular.module('alchemy').directive('alchInput', function() {
                   '</div>',
         scope: {
             label: '@label'
-        },
-        controller: ['$scope', function($scope) {
-        }]
+        }
     };
 });
