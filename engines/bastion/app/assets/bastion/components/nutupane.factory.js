@@ -28,7 +28,6 @@
  *   $scope.table.url            = KT.routes.api_systems_path();
  *   $scope.table.transform      = transform;
  *   $scope.table.model          = 'Systems';
- *   $scope.table.data.columns   = columns;
  *   $scope.table.activeItem    = {};
  *
  *   Nutupane.setColumns();
@@ -130,15 +129,7 @@ angular.module('Katello').factory('Nutupane', ['$location', '$http', 'CurrentOrg
             column.active = true;
 
             self.table.offset = 0;
-            self.get(function(){
-                angular.forEach(self.table.data.columns, function(column){
-                    if (column.active) {
-                        column.active = false;
-                    }
-                });
-
-                column.active = true;
-            });
+            self.get();
         };
 
         /**
@@ -179,7 +170,6 @@ angular.module('Katello').factory('Nutupane', ['$location', '$http', 'CurrentOrg
          */
         self.table.openActionPane = function() {
             self.table.collapsed = true;
-            self.table.data.columns = shownColumns;
         };
 
         /**
@@ -187,7 +177,6 @@ angular.module('Katello').factory('Nutupane', ['$location', '$http', 'CurrentOrg
          */
         self.table.closeActionPane = function() {
             self.table.collapsed = false;
-            self.table.data.columns = allColumns;
         };
 
         self.table.selectItem = function(url, id) {
@@ -208,7 +197,6 @@ angular.module('Katello').factory('Nutupane', ['$location', '$http', 'CurrentOrg
                 // Only reset the activeItem if an ID is provided
                 if (id) {
                     // Remove all columns except name and replace them with the details pane
-                    table.data.columns = shownColumns;
                     table.selectAll(false);
                     table.activeItem = item;
                     table.activeItem.selected  = true;
