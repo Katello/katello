@@ -1,0 +1,29 @@
+= javascript 'systems/systems.controller', 'widgets/nutupane', 'components/scrollWithPage.directive.js', 'components/inline_edit.directive', 'components/input.directive'
+
+= javascript do
+  :plain
+    localize({
+      add_systems_to_group:'#{escape_javascript(_("Add System(s)"))}',
+    })
+
+
+%div{ 'ng-controller' => 'SystemsController' }
+  %div{'ng-class' => '{"modal-mask": table.newPaneVisible}'}
+  %h1
+    = _("Systems")
+  %div{ 'alch-table-toolbar' => 'table' }
+    %button.primary{'ng-click' => 'createNewSystem()'}
+      = _("Create New System")
+    -#%button{'ng-click' => 'fillActionPaneWithState("systems.alter-content")', 'ng-disabled' => 'table.num_selected == 0'}
+      = _("Alter Content")
+    %button{'ng-click' => 'fillActionPaneWithState("systems.alter-system-groups")', 'ng-disabled' => 'table.num_selected == 0'}
+      = _("Alter System Group(s)")
+    -#%button{'ng-click' => 'fillActionPaneWithState("systems.bulk-delete")', 'ng-disabled' => 'table.num_selected == 0'}
+      = _("Delete")
+  %table#nutupane-table.table.stable.stripe-row{ 'alch-table' => 'table', 'row-select' => 'true', 'ng-class' => '{ "table-mask" : table.working, "details-visible": table.collapsed}' }
+  %div#nutupane-new-item.nutupane-pane{'ng-show' => 'table.newPaneVisible', 'ng-cloak' => true}
+    %a.fr{ 'ng-click' => 'table.setNewItemVisibility(false)' }
+      = 'x'
+    %div.nutupane-pane-content
+  %span.nutupane-details.panel.nutupane-pane#nutupane-details{ 'nutupane-details'=>'table.detailsVisible', 'model'=>'table', 'ng-class' => '{ "nutupane-details-open" : model.detailsVisible }' }
+  %span.nutupane-details.panel.nutupane-pane{ 'ui-view' => true, 'ng-class' => '{ "nutupane-details-open" : table.collapsed }' }

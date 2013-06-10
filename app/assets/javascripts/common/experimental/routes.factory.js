@@ -12,10 +12,14 @@
  */
 
 /**
- * @ngdoc value
- * @name  Katello.value:current_organization
+ * @ngdoc module
+ * @name  Katello.factory:Routes
  *
  * @description
- *   Provides a value wrapper around the current_organization.
+ *   Provides a wrapper factory around KT.routes.
  */
-angular.module('Katello').value('CurrentOrganization', KT.current_organization);
+angular.module('Katello').factory('Routes', [function() {
+    var Routes = KT.routes;
+
+    return Routes;
+}]);
