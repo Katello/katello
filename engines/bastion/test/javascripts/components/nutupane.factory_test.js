@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Factory: Nutupane', function () {
-    var scope, row_data;
+    var scope, row_data, nutupane;
 
     beforeEach(module('Katello'));
 
@@ -45,15 +45,17 @@ describe('Factory: Nutupane', function () {
     describe('setNewItemVisibility', function(){
 
         beforeEach(inject(function($rootScope, $compile, Nutupane){
+            nutupane = new Nutupane();
+
             scope = $rootScope;
-            scope.table = Nutupane.table;
-            scope.table.data = row_data;
+            scope.table = nutupane.table;
+            scope.table.items = row_data;
         }));
 
-        it('should set newPaneVisible', inject(function ($rootScope, $compile, Nutupane) {
-            Nutupane.table.setNewItemVisibility(true);
+        it('should set newPaneVisible', inject(function ($rootScope, $compile) {
+            nutupane.table.setNewItemVisibility(true);
 
-            expect(Nutupane.table.newPaneVisible).toBe(true);
+            expect(nutupane.table.newPaneVisible).toBe(true);
         }));
     });
 
