@@ -230,12 +230,16 @@ $forty: $static_width - $sixty;
       .row_item {
         .col_1 {
           white-space: nowrap;
-          width: 190px;
+          width: $big_width * .6;
           padding-right: 10px;
           overflow: hidden;
           display: inline-block;
           margin-bottom: -5px;
           text-overflow: ellipsis;
+
+          &.environment {
+            vertical-align: top;
+          }
         }
         .col_2 {
           display: inline-block;
