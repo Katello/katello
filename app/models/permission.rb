@@ -24,7 +24,7 @@ class Permission < ActiveRecord::Base
 
 
   validates :name, :presence => true
-  validates_with Validators::NonHtmlNameValidator, :attributes => :name
+  validates_with Validators::KatelloNameFormatValidator, :attributes => :name
   validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
   validates_uniqueness_of :name, :scope => [:organization_id, :role_id], :message => N_("Label has already been taken")
   validates_with Validators::PermissionValidator
