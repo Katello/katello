@@ -13,6 +13,7 @@
 //= require "common/katello.global"
 //= require "common/katello"
 //= require "common/menu"
+//= require "common/bastion-routes.js"
 //= require "common/routes"
 //= require "common/chosen.jquery"
 //= require "common/spin.min"

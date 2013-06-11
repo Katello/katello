@@ -30,19 +30,19 @@ angular.module('Katello').controller('SystemsController',
         var nutupane = new Nutupane();
 
         $scope.table                = nutupane.table;
-        $scope.table.url            = Routes.api_systems_path();
+        $scope.table.url            = Routes.apiSystemsPath();
         $scope.table.activeItem    = {};
         $scope.table.modelName      = "Systems";
 
         nutupane.get();
 
         nutupane.defaultItemUrl = function(id) {
-            return Routes.edit_system_path(id);
+            return Routes.editSystemPath(id);
         };
 
         $scope.selectItem = function(id) {
-            nutupane.selectItem(KT.routes.edit_system_path(id), id);
-        }
+            nutupane.selectItem(Routes.editSystemPath(id), id);
+        };
 
         $scope.getStatusColor = function(status) {
             var color = '';
@@ -56,16 +56,6 @@ angular.module('Katello').controller('SystemsController',
             }
 
             return color;
-        };
-
-        /**
-         * Fill the right pane with the specified state.
-         * @param state the state to fill the right pane with.
-         */
-        $scope.fillActionPaneWithState = function(state) {
-            $scope.table.setDetailsVisibility(false);
-            $scope.table.openActionPane();
-            $state.transitionTo(state);
         };
     }]
 );
@@ -91,10 +81,9 @@ angular.module('Katello.systems').controller('SystemsBulkActionController',
 
         var nutupane                       = new Nutupane();
         $scope.systemGroups                = nutupane.table;
-        $scope.systemGroups.url            = Routes.api_organization_system_groups_path(CurrentOrganization);
-        $scope.systemGroups.transform      = transform;
+        $scope.systemGroups.url            = Routes.apiOrganizationSystemGroupsPath(CurrentOrganization);
         $scope.systemGroups.model          = 'System Groups';
-        $scope.systemGroups.active_item    = {};
+        $scope.systemGroups["active_item"]    = {};
         $scope.working = false;
 
         nutupane.get();
@@ -102,18 +91,17 @@ angular.module('Katello.systems').controller('SystemsBulkActionController',
         $scope.addSystemsToGroups = function() {
             $scope.working = true;
             var getIdFromRow = function(row) {
-                return row.row_id;
+                return row["row_id"];
             };
-            var selectedSystemGroupRows = $scope.systemGroups.get_selected_rows();
-            var systemIds = $.map($scope.table.get_selected_rows(), getIdFromRow);
+            var selectedSystemGroupRows = $scope.systemGroups.getSelectedRows();
+            var systemIds = $.map($scope.table.getSelectedRows(), getIdFromRow);
             var systemGroupIds = $.map(selectedSystemGroupRows, getIdFromRow);
-            var data = {group_ids: systemGroupIds, ids:systemIds};
+            var data = {"group_ids": systemGroupIds, ids:systemIds};
 
-            $http.post(Routes.bulk_add_system_group_systems_path(), data).then(function(response) {
+            $http.post(Routes.bulkAddSystemGroupSystemsPath(), data).then(function(response) {
                 $scope.working = false;
                 // Work around AngularJS not providing direct access to the XHR object
                 response.getResponseHeader = response.headers;
-                notices.checkNoticesInResponse(response);
 
                 // Update the count of systems for each system group
                 if (response.status === 200) {
@@ -134,7 +122,7 @@ angular.module('Katello.systems').controller('SystemsBulkActionController',
                             if (systemGroup.system.indexOf(systemName) === -1) {
                                 systemGroup.system.push(systemName);
                                 $.each(selectedSystemGroupRows[groupIndex].cells, function(cellIndex, cell) {
-                                    if (cell.column_id === "num_systems") {
+                                    if (cell["column_id"] === "num_systems") {
                                         cell.display = systemGroup.system.length;
                                     }
                                 });

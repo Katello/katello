@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * @ngdoc directive
  * @name alchemy.directive:alchTable
@@ -42,8 +40,7 @@ angular.module('alchemy').directive('alchTable', ['$window', '$location', functi
 
                 table.allSelected = selected;
 
-                count = table.allSelected ? table.items.length : 0;
-                $scope.table.numSelected = count;
+                $scope.table.numSelected = table.allSelected ? table.items.length : 0;
 
                 angular.forEach($scope.table.items, function(item){
                     item.selected = table.allSelected;
@@ -51,8 +48,7 @@ angular.module('alchemy').directive('alchTable', ['$window', '$location', functi
             };
 
             $scope.table.itemSelected = function(selected) {
-                var count = selected ? 1 : -1;
-                $scope.table.numSelected += count;
+                $scope.table.numSelected += selected ? 1 : -1;
                 $scope.table.allSelected = false;
             };
 
@@ -120,7 +116,7 @@ angular.module('alchemy').directive('alchTableHead', [function () {
 
             scope.selectAll = function(selected) {
                 scope.table.selectAll(selected);
-            }
+            };
         }
     };
 }]);
