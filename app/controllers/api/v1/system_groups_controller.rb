@@ -67,8 +67,27 @@ class Api::V1::SystemGroupsController < Api::V1::ApiController
   param :organization_id, :identifier, :desc => "organization identifier", :required => true
   param :name, String, :desc => "System group name to filter by"
   def index
-    query_params.delete(:organization_id)
-    respond :collection => SystemGroup.readable(@organization).where(query_params)
+    query_string = params[:name] ? "name:#{params[:name]}" : params[:search]
+
+    options = {}
+    options.merge!(params.slice(:sort_by, :sort_order))
+
+    if params[:paged]
+      options[:page_size] = params[:page_size] || current_user.page_size
+    end
+
+    items = Glue::ElasticSearch::Items.new(SystemGroup)
+    system_groups, total_count = items.retrieve(query_string, params[:offset], options)
+
+    if params[:paged]
+      system_groups = {
+        :system_groups  => system_groups,
+        :subtotal => total_count,
+        :total    => items.total_items
+      }
+    end
+
+    respond :collection => system_groups
   end
 
   api :GET, "/organizations/:organization_id/system_groups/:id", "Show a system group"

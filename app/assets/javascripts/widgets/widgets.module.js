@@ -9,11 +9,13 @@
  NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
  have received a copy of GPLv2 along with this software; if not, see
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
-*/
+ **/
 
-//= require "alchemy/login"
-//= require "alchemy/password"
-//= require "widgets/widgets.module.js"
-//= require "widgets/org_switcher"
-//= require "user_sessions/user-sessions.module"
-//= require "user_sessions/user-sessions.controller"
+/**
+ * @ngdoc module
+ * @name  Katello.widgets
+ *
+ * @description
+ *   Module for common Katello widgets.
+ */
+angular.module('Katello.widgets', ['alchemy', 'alch-templates', 'infinite-scroll']);
