@@ -16,6 +16,7 @@
  * @name Katello.directive:orgSwitcher
  *
  * @requires $http
+ * @requires Routes
  *
  * @description
  *  Used to provide an organization switcher for the logged in user.  Currently simply stuffs
@@ -24,20 +25,16 @@
  *  TODO: angularize this directive.
  *
  * @example
+ *  <span class="spinner"></span>
  *  <ul org-switcher></ul>
  */
-angular.module('Katello.widgets').directive('orgSwitcher', ['$http', function($http) {
+angular.module('Katello.widgets').directive('orgSwitcher', ['$http', 'Routes', function($http, Routes) {
     return {
         restrict: 'A',
         transclude: true,
 
-        controller: ['$scope', function($scope) {
-            var jScrollApi;
-            var $allowedOrgList = $('#allowed-orgs');
-            var $spinner = $('#organizationSwitcher .spinner');
-
-            $allowedOrgList.jScrollPane();
-            jScrollApi = $allowedOrgList.data('jsp');
+        controller: ['$scope', '$element', function($scope, $element) {
+            var $spinner = $element.parent().find('.spinner');
 
             $scope.orgSwitcher = {
                 visible: false
@@ -49,22 +46,9 @@ angular.module('Katello.widgets').directive('orgSwitcher', ['$http', function($h
 
             $spinner.fadeIn();
             $scope.orgSwitcher.refresh = function() {
-                $http.get(KT.routes.allowed_orgs_user_session_path()).then(function(response) {
+                $http.get(Routes.allowedOrgsUserSessionPath()).then(function(response) {
                     $spinner.fadeOut();
-                    jScrollApi.getContentPane().html(response.data);
-                    jScrollApi.reinitialise();
-
-                    // Shrink the menu if there aren't enough organizations to fill it up.
-                    var shouldResize = false;
-                    var $listItems = $allowedOrgList.find('li');
-                    setTimeout(function() {
-                        var listHeight = $listItems.length * $listItems.height();
-                        shouldResize = listHeight < parseInt($allowedOrgList.css("height"), 10);
-                        if (shouldResize) {
-                            jScrollApi.destroy();
-                            $('#allowed-orgs').css("height", "auto");
-                        }
-                    }, 0);
+                    $element.html(response.data);
                 });
             };
 

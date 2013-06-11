@@ -9,11 +9,13 @@
  NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
  have received a copy of GPLv2 along with this software; if not, see
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
-*/
+ **/
 
-//= require "alchemy/login"
-//= require "alchemy/password"
-//= require "bastion/widgets/widgets.module.js"
-//= require "bastion/widgets/org-switcher.widget.js"
-//= require "user_sessions/user-sessions.module"
-//= require "user_sessions/user-sessions.controller"
+/**
+ * @ngdoc module
+ * @name  Katello.utils
+ *
+ * @description
+ *   Module for common Katello utils.
+ */
+angular.module('Katello.utils', []);

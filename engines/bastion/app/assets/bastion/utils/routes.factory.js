@@ -1,3 +1,4 @@
+/*global BASTION*/
 /**
  * Copyright 2013 Red Hat, Inc.
  *
@@ -18,6 +19,7 @@
  * @description
  *   Provides a wrapper factory around KT.routes.
  */
-angular.module('Katello').factory('Routes', [function() {
+angular.module('Katello.utils').factory('Routes', [function() {
     return BASTION.KT.routes;
 }]);
+
