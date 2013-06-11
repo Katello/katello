@@ -99,15 +99,13 @@ module.exports = function (grunt) {
 
     grunt.registerTask('ci', [
         'connect:test',
-        //TODO uncomment me after merging systems.controller.js
-        //'jshint',
+        'jshint',
         'karma:ci'
     ]);
 
     grunt.registerTask('build', [
         'clean:build',
-        //TODO uncomment me after merging systems.controller.js
-        //'jshint',
+        'jshint',
         'test'
     ]);
 

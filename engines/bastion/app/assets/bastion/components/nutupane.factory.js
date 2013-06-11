@@ -1,3 +1,4 @@
+/*global KT*/
 /**
  * Copyright 2013 Red Hat, Inc.
  *
@@ -200,7 +201,6 @@ angular.module('Katello').factory('Nutupane', ['$location', '$http', 'CurrentOrg
                     table.selectAll(false);
                     table.activeItem = item;
                     table.activeItem.selected  = true;
-                    rowSelect = false;
                 }
                 self.table.activeItem.html = response.data;
                 self.table.setDetailsVisibility(true);
@@ -223,7 +223,7 @@ angular.module('Katello').factory('Nutupane', ['$location', '$http', 'CurrentOrg
  *   Turns an element into a container for holding detail pages fetched by Nutupane. By setting
  *   the html property on the bound model, the payload wll be inserted as the html into the
  *   element as inner html. Connects up a close button to remove the element form view and allows
- *   sub-menu items to call out to the select_item() functionality of Nutupane. This is currently
+ *   sub-menu items to call out to the selectItem() functionality of Nutupane. This is currently
  *   tied to the legacy tupane details page fetching.
  *
  * @example
@@ -235,12 +235,12 @@ angular.module('Katello.widgets').directive('nutupaneDetails', [function(){
         scope: {
             'model': '='
         },
-        link: function(scope, elem, attrs) {
+        link: function(scope, elem) {
             scope.$watch('model.active_item.html', function(item){
                 elem.html(item);
 
                 var children = angular.element(elem).find('.menu_parent');
-                angular.forEach(children, function(item, index) {
+                angular.forEach(children, function(item) {
                     KT.menu.hoverMenu(item, { top : '75px' });
                 });
 
@@ -248,14 +248,14 @@ angular.module('Katello.widgets').directive('nutupaneDetails', [function(){
                     var element = this;
 
                     scope.$apply(function() {
-                        scope.model.select_item(angular.element(element).attr('href'));
+                        scope.model.selectItem(angular.element(element).attr('href'));
                     });
                 });
             });
 
             elem.find('.close').on('click', function() {
                 scope.$apply(function() {
-                    scope.model.close_item();
+                    scope.model.closeItem();
                 });
             });
 

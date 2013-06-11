@@ -19,7 +19,5 @@
  *   Provides a wrapper factory around KT.routes.
  */
 angular.module('Katello').factory('Routes', [function() {
-    var Routes = KT.routes;
-
-    return Routes;
+    return BASTION.KT.routes;
 }]);
