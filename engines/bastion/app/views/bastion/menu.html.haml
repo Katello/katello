@@ -8,7 +8,7 @@
       %a.fl.headpin-logo.logo{ 'href' => 'dashboard' }
     %span#experimental_indicator
       = "experimental"
-    %nav{ 'alch-menu' => "user_menu" }
+    %nav{ 'alch-menu' => "userMenu" }
   %header.header.nav-header
     = render :file => 'bastion/widgets/org_switcher'
     .nav(compact){ "alch-menu" => "menu" }
@@ -27,4 +27,4 @@
               %span
                 Foreman
                 = image_tag("cross_link.png", :class => 'link_icon icon')
-    .nav.admin_menu{ "alch-menu" => "admin_menu" }
+    .nav.admin_menu{ "alch-menu" => "adminMenu" }
