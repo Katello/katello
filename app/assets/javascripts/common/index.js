@@ -10,6 +10,8 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
 
+//= require "bastion/widgets/widgets.module.js"
+//= require "bastion/widgets/org-switcher.widget.js"
 //= require "common/katello.global"
 //= require "common/katello"
 //= require "common/menu"
@@ -29,6 +31,4 @@
 //= require "common/katello.module"
 //= require "menu/menu.module.js"
 //= require "menu/menu.controller.js"
-//= require "widgets/widgets.module.js"
-//= require "widgets/org_switcher.js"
 //= require "common/experimental/"

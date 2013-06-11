@@ -18,4 +18,4 @@
  * @description
  *   Module for common Katello widgets.
  */
-angular.module('Katello.widgets', ['alchemy', 'alch-templates', 'infinite-scroll']);
+angular.module('Katello.widgets', ['alchemy', 'alch-templates', 'infinite-scroll', 'Katello.utils']);
