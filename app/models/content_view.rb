@@ -44,7 +44,7 @@ class ContentView < ActiveRecord::Base
   validates :name, :presence => true, :uniqueness => {:scope => :organization_id}
   validates :organization_id, :presence => true
 
-  validates_with Validators::NonHtmlNameValidator, :attributes => :name
+  validates_with Validators::KatelloNameFormatValidator, :attributes => :name
   validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
 
 
