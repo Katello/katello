@@ -5,31 +5,33 @@ basePath = '';
 
 // list of files / patterns to load in the browser
 files = [
-  JASMINE,
-  JASMINE_ADAPTER,
+    JASMINE,
+    JASMINE_ADAPTER,
 
-  'vendor/assets/components/jquery/jquery.js',
-  'vendor/assets/components/angular/angular.js',
-  'vendor/assets/components/angular-mocks/angular-mocks.js',
-  'vendor/assets/components/angular-sanitize/angular-sanitize.js',
-  'vendor/assets/components/angular-resource/angular-resource.js',
-  'vendor/assets/components/ngInfiniteScroll/ng-infinite-scroll.js',
-  'vendor/assets/components/alchemy/alchemy.js',
-  '../../vendor/assets/javascripts/angular-ui-states.js',
+    'vendor/assets/components/jquery/jquery.js',
+    'vendor/assets/components/angular/angular.js',
+    'vendor/assets/components/angular-mocks/angular-mocks.js',
+    'vendor/assets/components/angular-sanitize/angular-sanitize.js',
+    'vendor/assets/components/angular-resource/angular-resource.js',
+    'vendor/assets/components/ngInfiniteScroll/ng-infinite-scroll.js',
+    'vendor/assets/components/alchemy/alchemy.js',
+    '../../vendor/assets/javascripts/angular-ui-states.js',
 
-  '../../app/assets/javascripts/common/katello.global.js',
-  '../../app/assets/javascripts/common/katello.module.js',
-  '../../app/assets/javascripts/widgets/widgets.module.js',
-  '../../app/assets/javascripts/i18n/i18n.module.js',
-  '../../app/assets/javascripts/menu/menu.module.js',
-  '../../app/assets/javascripts/systems/systems.module.js',
-  '../../app/assets/javascripts/system_groups/system-groups.module.js',
-  '../../app/assets/javascripts/common/experimental/current_organization.value.js',
-  'app/assets/bastion/**/*.js',
+    '../../app/assets/javascripts/common/katello.global.js',
+    '../../app/assets/javascripts/common/katello.module.js',
+    '../../app/assets/javascripts/i18n/i18n.module.js',
+    '../../app/assets/javascripts/menu/menu.module.js',
+    '../../app/assets/javascripts/systems/systems.module.js',
+    '../../app/assets/javascripts/system_groups/system-groups.module.js',
+    '../../app/assets/javascripts/common/experimental/current_organization.value.js',
 
-  '.tmp/templates/**/*.js',
+    // Must load modules first
+    'app/assets/bastion/**/*.module.js',
+    'app/assets/bastion/**/*.js',
 
-  'test/javascripts/**/*.js'
+    '.tmp/templates/**/*.js',
+
+    'test/javascripts/**/*.js'
 ];
 
 // list of files to exclude
