@@ -20,7 +20,6 @@ files = [
     '../../app/assets/javascripts/common/katello.global.js',
     '../../app/assets/javascripts/common/katello.module.js',
     '../../app/assets/javascripts/i18n/i18n.module.js',
-    '../../app/assets/javascripts/menu/menu.module.js',
     '../../app/assets/javascripts/systems/systems.module.js',
     '../../app/assets/javascripts/system_groups/system-groups.module.js',
     '../../app/assets/javascripts/common/experimental/current_organization.value.js',
