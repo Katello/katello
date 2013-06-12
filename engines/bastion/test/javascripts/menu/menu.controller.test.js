@@ -16,7 +16,7 @@ describe('Controller:MenuController', function() {
 
     var orgSwitcherElement;
 
-    // load the widgets module
+    // load the menu module
     beforeEach(module('Katello.menu'));
 
     // Set up the mocks

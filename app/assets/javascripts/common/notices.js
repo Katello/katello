@@ -173,4 +173,6 @@ $(document).ready(function() {
         // look for notices in the response (e.g. sync scenarios)
         notices.checkNoticesInResponse(xhr);
     });
+
+    angular.module('Katello').constant('notices', notices);
 });

@@ -13,7 +13,7 @@
 
 /**
  * @ngdoc controller
- * @name Katello.controller:MenuController
+ * @name Katello.menu.controller:MenuController
  *
  * @requires $scope
  * @requires $location
