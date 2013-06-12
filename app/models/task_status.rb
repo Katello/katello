@@ -155,21 +155,21 @@ class TaskStatus < ActiveRecord::Base
         if p.length == 1
           return p.first
         else
-          return  _("%{package} (%{rest} other packages)") % {:package => p.first, :rest => p.length - 1}
+          return  _("%{package} (%{total} other packages)") % {:package => p.first, :total => p.length - 1}
         end
       when :package_group
         p = self.parameters[:groups]
         if p.length == 1
           return p.first
         else
-          return  _("%{group} (%{rest} other package groups)") % {:group => p.first, :rest => p.length - 1}
+          return  _("%{group} (%{total} other package groups)") % {:group => p.first, :total => p.length - 1}
         end
       when :errata
         p = self.parameters[:errata_ids]
         if p.length == 1
           return p.first
         else
-          return  _("%{errata} (%{rest} other errata)") % {:errata => p.first, :rest => p.length - 1}
+          return  _("%{errata} (%{total} other errata)") % {:errata => p.first, :total => p.length - 1}
         end
     end
   end
@@ -197,17 +197,20 @@ class TaskStatus < ActiveRecord::Base
           return ""
         end
         msg = details[:event_messages][self.overall_status]
-        return n_(msg[1], msg[2], p.length) % { package: p.first, rest: p.length - 1 }
+        #return n_(msg[1], msg[2], p.length) % [p.first, p.length - 1]
+        return n_(msg[1], msg[2], p.length) % { package: p.first, total: p.length - 1 }
       when :candlepin_event
         return self.result
       when :package_group
         p = self.parameters[:groups]
         msg = details[:event_messages][self.overall_status]
-        return n_(msg[1], msg[2], p.length) % { package: p.first, rest: p.length - 1 }
+        #return n_(msg[1], msg[2], p.length) % [p.first, p.length - 1]
+        return n_(msg[1], msg[2], p.length) % { group: p.first, total: p.length - 1 }
       when :errata
         p = self.parameters[:errata_ids]
         msg = details[:event_messages][self.overall_status]
-        return n_(msg[1], msg[2], p.length) % { package: p.first, rest: p.length - 1 }
+        #return n_(msg[1], msg[2], p.length) % [p.first, p.length - 1]
+        return n_(msg[1], msg[2], p.length) % { errata: p.first, total: p.length - 1 }
     end
   end
 
@@ -222,6 +225,9 @@ class TaskStatus < ActiveRecord::Base
     end
     if groups = self.parameters[:groups]
       humanized_parameters.concat(groups.map {|g| g =~ /^@/ ? g : "@#{g}"})
+    end
+    if errata = self.parameters[:errata_ids]
+      humanized_parameters.concat(errata)
     end
     humanized_parameters.join(", ")
   end
@@ -256,7 +262,7 @@ class TaskStatus < ActiveRecord::Base
     if task_type =~ /^package_group/
       action = task_type.include?("remove") ? :removed : :installed
       ret << packages_change_description(result[:details][:package_group], action)
-    elsif task_type == "package_install"
+    elsif task_type == "package_install" || task_type == "errata_install"
       ret << packages_change_description(result[:details][:rpm], :installed)
     elsif task_type == "package_update"
       ret << packages_change_description(result[:details][:rpm], :updated)
@@ -348,24 +354,26 @@ class TaskStatus < ActiveRecord::Base
   def packages_change_description(data, action)
     ret = ""
 
-    if data[:succeeded]
-      packages = data.nil? ? [] : (data[:details][:resolved] + data[:details][:deps])
-      if packages.empty?
-        case action
-          when :updated
-            ret << _("No packages updated")
-          when :removed
-            ret << _("No packages removed")
-          else
-            ret << _("No new packages installed")
+    unless data.nil?
+      if data[:succeeded]
+        packages = data.nil? ? [] : (data[:details][:resolved] + data[:details][:deps])
+        if packages.empty?
+          case action
+            when :updated
+              ret << _("No packages updated")
+            when :removed
+              ret << _("No packages removed")
+            else
+              ret << _("No new packages installed")
+          end
+        else
+          ret << packages.map do |package_attrs|
+            package_attrs[:qname]
+          end.join("\n")
         end
       else
-        ret << packages.map do |package_attrs|
-          package_attrs[:qname]
-        end.join("\n")
+        ret << data[:details][:message]
       end
-    else
-      ret << data[:details][:message]
     end
     ret
   end
