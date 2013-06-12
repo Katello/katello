@@ -92,60 +92,22 @@ angular.module('alchemy').directive('alchTable', ['$window', '$location', functi
     };
 }]);
 
-/**
- * @ngdoc directive
- * @name alchemy.directive:alchTableHead
- * @restrict AC
- *
- * @description
- *
- * @example
- */
-angular.module('alchemy').directive('alchTableHead', [function () {
+angular.module('alchemy').directive('alchTableScroll', ['$window', function ($window) {
     return {
         restrict: 'A',
-        require: '^alchTable',
-        transclude: true,
-        scope: {
-            'table': '=alchTableHead',
-        },
-        templateUrl: 'component/templates/table-head.html',
+        replace: true,
 
-        link: function(scope, element, attrs, alchTableController){
-            scope.rowSelect = alchTableController.hasRowSelect();
+        link: function (scope, element) {
 
-            scope.selectAll = function(selected) {
-                scope.table.selectAll(selected);
-            };
-        }
-    };
-}]);
+            angular.element($window).bind('resize', function() {
+                var windowWidth = angular.element($window).width(),
+                    windowHeight = angular.element($window).height(),
+                    offset = element.offset().top;
 
-/**
- * @ngdoc directive
- * @name alchemy.directive:alchTableBody
- * @restrict AC
- *
- * @description
- *
- * @example
- */
-angular.module('alchemy').directive('alchTableBody', [function () {
-    return {
-        restrict: 'A',
-        transclude: 'element',
-        require: '^alchTable',
-        scope: {
-            'items': '=items',
-        },
-        templateUrl: 'component/templates/table-body.html',
+                element.find('table').width(windowWidth);
+                element.height(windowHeight - offset);
 
-        link: function(scope, element, attrs, alchTableController){
-            scope.rowSelect = alchTableController.hasRowSelect();
-
-            scope.itemSelected = function(selected) {
-                alchTableController.itemSelected(selected);
-            };
+            }).trigger('resize');
         }
     };
 }]);

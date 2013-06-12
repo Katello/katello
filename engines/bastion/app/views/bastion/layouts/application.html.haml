@@ -6,10 +6,9 @@
   = yield :stylesheets
 
 = content_for(:body) do
-  %article{ 'ng-app' => 'Katello' }
-    = render :file => "bastion/menu"
-    %section.maincontent
-      = yield
+  = render :file => "common/menu"
+  %article.maincontent
+    = yield
 
 = content_for(:javascripts_block) do
   = javascript_include_tag "common/vendor"
@@ -30,4 +29,4 @@
 
   = yield :javascripts
 
-= render :file => 'bastion/layouts/base'
+= render :file => "bastion/layouts/base", :locals => { :ng_app_name=>"Katello" }

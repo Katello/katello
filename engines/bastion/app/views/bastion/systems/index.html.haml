@@ -1,12 +1,6 @@
 = javascript 'bastion/systems/systems.controller', 'bastion/components/nutupane.factory'
 = javascript 'bastion/components/scrollWithPage.directive', 'bastion/incubator/table.directive'
 
-%div{ 'ng-controller' => 'SystemsController' }
-  %div{'ng-class' => '{"modal-mask": table.newPaneVisible}'}
+%section{ 'ng-controller' => 'SystemsController' }
+  %div(ng-include){ 'src'=>"'systems/views/toolbar.html'" }
   %div(ng-include){ 'src'=>"'systems/views/systems.html'" }
-
-  %div#nutupane-new-item.nutupane-pane{'ng-show' => 'table.newPaneVisible', 'ng-cloak' => true}
-    %a.fr{ 'ng-click' => 'table.setNewItemVisibility(false)' }
-      = 'x'
-    %div.nutupane-pane-content
-  %span.nutupane-details.panel.nutupane-pane#nutupane-details{ 'nutupane-details'=>'table.detailsVisible', 'model'=>'table', 'ng-class' => '{ "nutupane-details-open" : model.detailsVisible }' }
