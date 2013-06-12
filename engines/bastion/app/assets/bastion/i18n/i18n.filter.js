@@ -11,11 +11,11 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
  **/
 
-/*global i18n*/
-
 /**
  * @ngdoc filter
- * @name  Katello.i18n:i18n
+ * @name  Katello.i18n.filter:i18n
+ *
+ * @requires i18nDictionary
  *
  * @description
  *   Looks up a key in the i18n dictionary and returns the translated string.
@@ -24,13 +24,13 @@
  *   {{ "some_i18n_code" | i18n }}
  *   {{ "some_i18n_code_with_replacements" | i18n: ["why", "hello"] }}
  */
-angular.module('Katello.i18n').filter('i18n', function() {
+angular.module('Katello.i18n').filter('i18n', ['i18nDictionary', function(i18nDictionary) {
     return function(i18nKey, replacements) {
         var translation;
         var translated = i18nKey;
 
-        if (i18n.hasOwnProperty(i18nKey)) {
-            translation = i18n[i18nKey];
+        if (i18nDictionary.hasOwnProperty(i18nKey)) {
+            translation = i18nDictionary[i18nKey];
             translated = translation;
             if (typeof translation === 'function') {
                 translated = translation.apply(this, replacements);
@@ -38,4 +38,4 @@ angular.module('Katello.i18n').filter('i18n', function() {
         }
         return translated;
     };
-});
+}]);
