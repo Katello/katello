@@ -11,11 +11,11 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130604124100) do
+ActiveRecord::Schema.define(:version => 20130612212512) do
 
   create_table "activation_keys", :force => true do |t|
     t.string   "name"
-    t.string   "description"
+    t.text     "description"
     t.integer  "organization_id",                 :null => false
     t.integer  "environment_id",                  :null => false
     t.datetime "created_at",                      :null => false
@@ -105,7 +105,7 @@ ActiveRecord::Schema.define(:version => 20130604124100) do
     t.datetime "promotion_date"
     t.string   "state",          :default => "new",                :null => false
     t.integer  "task_status_id"
-    t.string   "description"
+    t.text     "description"
     t.string   "type",           :default => "PromotionChangeset"
   end
 
@@ -251,7 +251,7 @@ ActiveRecord::Schema.define(:version => 20130604124100) do
   create_table "distributors", :force => true do |t|
     t.string   "uuid"
     t.string   "name"
-    t.string   "description"
+    t.text     "description"
     t.string   "location"
     t.integer  "environment_id"
     t.datetime "created_at",      :null => false
@@ -287,7 +287,7 @@ ActiveRecord::Schema.define(:version => 20130604124100) do
 
   create_table "environments", :force => true do |t|
     t.string   "name",                               :null => false
-    t.string   "description"
+    t.text     "description"
     t.boolean  "library",         :default => false, :null => false
     t.integer  "organization_id",                    :null => false
     t.datetime "created_at",                         :null => false
@@ -423,7 +423,7 @@ ActiveRecord::Schema.define(:version => 20130604124100) do
 
   create_table "organizations", :force => true do |t|
     t.string   "name"
-    t.string   "description"
+    t.text     "description"
     t.string   "label"
     t.datetime "created_at",         :null => false
     t.datetime "updated_at",         :null => false
@@ -463,7 +463,7 @@ ActiveRecord::Schema.define(:version => 20130604124100) do
     t.datetime "created_at",                          :null => false
     t.datetime "updated_at",                          :null => false
     t.string   "name",             :default => ""
-    t.string   "description",      :default => ""
+    t.text     "description",      :default => ""
   end
 
   add_index "permissions", ["name", "organization_id", "role_id"], :name => "index_permissions_on_name_and_organization_id_and_role_id", :unique => true
@@ -489,7 +489,7 @@ ActiveRecord::Schema.define(:version => 20130604124100) do
 
   create_table "products", :force => true do |t|
     t.string   "name"
-    t.string   "description"
+    t.text     "description"
     t.string   "cp_id"
     t.integer  "multiplier"
     t.integer  "provider_id",                               :null => false
@@ -509,7 +509,7 @@ ActiveRecord::Schema.define(:version => 20130604124100) do
 
   create_table "providers", :force => true do |t|
     t.string   "name"
-    t.string   "description"
+    t.text     "description"
     t.string   "repository_url"
     t.string   "provider_type"
     t.integer  "organization_id"
@@ -563,10 +563,10 @@ ActiveRecord::Schema.define(:version => 20130604124100) do
 
   create_table "roles", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at",                                    :null => false
-    t.datetime "updated_at",                                    :null => false
-    t.string   "description", :limit => 250
-    t.boolean  "locked",                     :default => false
+    t.datetime "created_at",                     :null => false
+    t.datetime "updated_at",                     :null => false
+    t.text     "description"
+    t.boolean  "locked",      :default => false
     t.string   "type"
   end
 
@@ -626,7 +626,7 @@ ActiveRecord::Schema.define(:version => 20130604124100) do
   create_table "system_groups", :force => true do |t|
     t.string   "name",                            :null => false
     t.string   "pulp_id",                         :null => false
-    t.string   "description"
+    t.text     "description"
     t.integer  "max_systems",     :default => -1, :null => false
     t.integer  "organization_id",                 :null => false
     t.datetime "created_at",                      :null => false
@@ -650,7 +650,7 @@ ActiveRecord::Schema.define(:version => 20130604124100) do
   create_table "systems", :force => true do |t|
     t.string   "uuid"
     t.string   "name"
-    t.string   "description"
+    t.text     "description"
     t.string   "location"
     t.integer  "environment_id"
     t.datetime "created_at",                            :null => false
