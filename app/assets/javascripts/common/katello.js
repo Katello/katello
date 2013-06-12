@@ -39,6 +39,7 @@ if ($.bbq !== undefined) {
 
 //i18n global variable
 var i18n = {};
+angular.module('Katello').constant('i18nDictionary', i18n);
 
 function localize(data) {
     for (var key in data) {

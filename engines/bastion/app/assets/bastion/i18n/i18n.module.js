@@ -19,3 +19,4 @@
  *   Module for internationalization.
  */
 angular.module('Katello.i18n', []);
+
