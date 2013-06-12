@@ -26,36 +26,6 @@ describe SystemsController do
     login_user(User.find(users(:admin)), @org)
   end
 
-  describe "create"  do
-    before do
-      @content_view = content_views(:library_dev_view)
-      @cv_id = @content_view.id
-      @env_id = @system.environment.id
-      @subscribe_permission = UserPermission.new(:subscribe, :content_views, @cv_id, @content_view.organization)
-      @register_system_perm = UserPermission.new(:register_systems, :environments, @env_id, @system.environment.organization)
-      @req = lambda do
-        post :create, :system => {:environment_id => @env_id,
-                        :content_view_id => @cv_id,
-                        :name => @system.name + "-foo#{rand 10**6}"}
-      end
-    end
-
-    it "permission" do
-      master_perm = @subscribe_permission + @register_system_perm
-      action = :create
-      assert_authorized(
-                :permission => master_perm,
-                :action => action,
-                :request => @req
-      )
-      refute_authorized(
-          :permission => [@register_system_perm, @subscribe_permission, NO_PERMISSION],
-          :action => action,
-          :request => @req
-      )
-    end
-  end
-
   describe "update"  do
     before do
       @content_view = content_views(:library_dev_view)
