@@ -366,7 +366,7 @@ class ContentView < ActiveRecord::Base
         # a version of this repo is being promoted, so clear it and later
         # we'll regenerate the content... this is more efficient than
         # destroying the repo and recreating it...
-        result << repo.clear_contents
+        result += repo.clear_contents
       else
         # a version of this repo is not being promoted, so destroy it
         repo.destroy
