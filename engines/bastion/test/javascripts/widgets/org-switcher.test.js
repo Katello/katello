@@ -12,7 +12,7 @@
  */
 describe('Directive:orgSwitcher', function() {
     // Mocks
-    var $scope, $compile, $httpBackend;
+    var $scope, $compile, $document, $httpBackend;
 
     var orgSwitcherElement;
 
@@ -31,9 +31,10 @@ describe('Directive:orgSwitcher', function() {
             $provide.value('Routes', Routes);
         });
 
-        inject(function(_$compile_, _$rootScope_, _$httpBackend_) {
+        inject(function(_$compile_, _$rootScope_, _$document_, _$httpBackend_) {
             $compile = _$compile_;
             $scope = _$rootScope_.$new();
+            $document = _$document_;
             $httpBackend = _$httpBackend_;
         });
     });
@@ -76,5 +77,22 @@ describe('Directive:orgSwitcher', function() {
         orgSwitcher.toggleVisibility();
         $scope.$digest();
         expect(orgSwitcher.refresh).toHaveBeenCalled();
+    });
+
+    describe("determines the visibility of the org switcher based on click event", function() {
+        beforeEach(function() {
+            $scope.orgSwitcher = {};
+        });
+
+        it("hides the org switcher menu if a user clicks outside of it.", function() {
+            $document.trigger('click');
+            expect($scope.orgSwitcher.visible).toBe(false);
+        });
+
+        it("keeps the org switcher open if a user clicks on it", function() {
+            $scope.orgSwitcher.visible = true;
+            $('<div id="#organizationSwitcher"></div>').trigger('click');
+            expect($scope.orgSwitcher.visible).toBe(true);
+        });
     });
 });

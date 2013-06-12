@@ -11,35 +11,45 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
  **/
 
+/**
+ * @ngdoc controller
+ * @name Katello.controller:MenuController
+ *
+ * @requires $scope
+ * @requires $location
+ * @requires Menus
+ *
+ * @description
+ *  A controller for all menu related functionality.
+ */
 (function() {
     'use strict';
 
-    angular.module('Katello.menu').controller('MenuController', ['$scope', '$location', '$document', function($scope, $location, $document) {
-
-        $scope.menu       = KT.main_menu;
-        $scope.user_menu  = KT.user_menu;
-        $scope.admin_menu = KT.admin_menu;
-        $scope.notices    = KT.notices;
+    angular.module('Katello.menu').controller('MenuController', ['$scope', '$location', 'Menus', function($scope, $location, Menus) {
+        $scope.menu       = Menus.menu;
+        $scope.userMenu  = Menus.userMenu;
+        $scope.adminMenu = Menus.adminMenu;
+        $scope.notices    = Menus.notices;
 
         /**
          * Set the active menu item.
          * @param menuItem the menuItem to make active.
          */
-        function setActiveMenuItem (menuItem) {
+        $scope.setActiveMenuItem = function(menuItem) {
             if (menuItem) {
-                $scope.menu.active_item = menuItem;
-                $scope.admin_menu.active_item = menuItem;
-                $scope.menu.active_item.active = true;
-                $scope.admin_menu.active_item.active = true;
+                $scope.menu.activeItem = menuItem;
+                $scope.adminMenu.activeItem = menuItem;
+                $scope.menu.activeItem.active = true;
+                $scope.adminMenu.activeItem.active = true;
             }
-        }
+        };
 
         /**
          * Get the active menu item based on the $location service.
          * @param menuItems
          * @returns the active menu item.
          */
-        function getActiveMenuItem (menuItems) {
+        $scope.getActiveMenuItem = function(menuItems) {
             var activeMenuItem;
             for (var i = 0; i < menuItems.length; i += 1) {
                 var menuItem = menuItems[i];
@@ -48,27 +58,17 @@
                 } else if (menuItem.hasOwnProperty('items')) {
                     // If the active page is a child of a top level menu item
                     // then set the top level menu item as active.
-                    if (getActiveMenuItem(menuItem.items)) {
+                    if ($scope.getActiveMenuItem(menuItem.items)) {
                         activeMenuItem = menuItem;
                     }
                 }
             }
             return activeMenuItem;
-        }
-
-        // Hide the org switcher menu if the user clicks outside of it
-        var orgSwitcherMenu = angular.element('#organizationSwitcher');
-        $document.bind('click', function (event) {
-            var target = angular.element(event.target);
-            if (!orgSwitcherMenu.find(target).length) {
-                $scope.orgSwitcher.visible = false;
-                $scope.$apply();
-            }
-        });
+        };
 
         // Combine all menu items and figure out which one ought to be active.
-        var allMenus = $scope.menu.items.concat($scope.user_menu.items).
-            concat($scope.admin_menu.items).concat($scope.notices);
-        setActiveMenuItem(getActiveMenuItem(allMenus));
+        var allMenus = $scope.menu.items.concat($scope.userMenu.items).
+            concat($scope.adminMenu.items).concat($scope.notices);
+        $scope.setActiveMenuItem($scope.getActiveMenuItem(allMenus));
     }]);
 })();

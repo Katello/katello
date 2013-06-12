@@ -12,6 +12,8 @@
 
 //= require "bastion/widgets/widgets.module.js"
 //= require "bastion/widgets/org-switcher.widget.js"
+//= require "bastion/menu/menu.module.js"
+//= require "bastion/menu/menu.controller.js"
 //= require "common/katello.global"
 //= require "common/katello"
 //= require "common/menu"
@@ -29,6 +31,5 @@
 //= require "common/env_select_scroll"
 //= require "common/env_select"
 //= require "common/katello.module"
-//= require "menu/menu.module.js"
-//= require "menu/menu.controller.js"
 //= require "common/experimental/"
+

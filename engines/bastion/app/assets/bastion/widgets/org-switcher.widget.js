@@ -16,6 +16,7 @@
  * @name Katello.directive:orgSwitcher
  *
  * @requires $http
+ * @requires $document
  * @requires Routes
  *
  * @description
@@ -28,7 +29,7 @@
  *  <span class="spinner"></span>
  *  <ul org-switcher></ul>
  */
-angular.module('Katello.widgets').directive('orgSwitcher', ['$http', 'Routes', function($http, Routes) {
+angular.module('Katello.widgets').directive('orgSwitcher', ['$http', '$document', 'Routes', function($http, $document, Routes) {
     return {
         restrict: 'A',
         transclude: true,
@@ -59,6 +60,15 @@ angular.module('Katello.widgets').directive('orgSwitcher', ['$http', 'Routes', f
                 }
             });
 
+            // Hide the org switcher menu if the user clicks outside of it
+            var orgSwitcherMenu = angular.element('#organizationSwitcher');
+            $document.bind('click', function (event) {
+                var target = angular.element(event.target);
+                if (!orgSwitcherMenu.find(target).length) {
+                    $scope.orgSwitcher.visible = false;
+                    $scope.$apply();
+                }
+            });
         }]
     };
 }]);

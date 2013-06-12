@@ -40,10 +40,15 @@ module NavigationHelper
     }
 
     javascript do
-      ("KT.main_menu = " + menu.to_json + ";\n").html_safe +
-      ("KT.admin_menu = " + site_menu.to_json + ";\n").html_safe +
-      ("KT.user_menu = " + user_menu.to_json + ";\n").html_safe +
-      ("KT.notices = " + add_notices.to_json + ";\n").html_safe
+      # TODO Get rid of this ugliness
+      (
+        'angular.module("Katello").constant("Menus", {
+          menu: ' + menu.to_json + ',
+          adminMenu: ' + site_menu.to_json + ',
+          userMenu: ' + user_menu.to_json + ',
+          notices: ' + add_notices.to_json + '
+        });'
+      ).html_safe
     end
   end
 
