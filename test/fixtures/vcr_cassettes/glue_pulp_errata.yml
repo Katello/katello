@@ -2,10 +2,10 @@
 http_interactions: 
 - request: 
     method: post
-    uri: https://localhost/pulp/api/v2/content/units/erratum/search/
+    uri: https://abed.usersys.redhat.com/pulp/api/v2/content/units/erratum/search/
     body: 
       encoding: US-ASCII
-      string: "{\"criteria\":{\"filters\":{\"_id\":{\"$in\":[\"b18fa55a-db84-401f-8661-16820fb47ffe\"]}}},\"include_repos\":true}"
+      string: "{\"criteria\":{\"filters\":{\"_id\":{\"$in\":[\"b47f788a-8484-4d42-94d4-8f5be05104cf\"]}}},\"include_repos\":true}"
     headers: 
       Accept: 
       - application/json
@@ -14,7 +14,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="uEj2fa1Fv6iP6wnhW2RVwmCcM6svIObnGmDKSEGQ", oauth_signature="AQCqPt4ZydPeWA%2BDlyDoLTE%2BRUE%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1370533535", oauth_version="1.0"
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="Y7gTj2KnPzxesAEnl9HTSp1jNYjqdPFW3q75fCpSk", oauth_signature="8NfOXyLQxkyK%2FOzGd9YAE7eUa6w%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371158451", oauth_version="1.0"
       Pulp-User: 
       - admin
       Content-Length: 
@@ -27,24 +27,24 @@ http_interactions:
       message: OK
     headers: 
       Date: 
-      - Thu, 06 Jun 2013 15:45:35 GMT
+      - Thu, 13 Jun 2013 21:20:51 GMT
       Server: 
-      - Apache/2.4.4 (Fedora) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.3
+      - Apache/2.2.15 (Red Hat)
       Content-Length: 
       - "834"
       Content-Type: 
       - application/json
     body: 
       encoding: US-ASCII
-      string: "[{\"issued\": \"2010-01-01 01:01:01\", \"references\": [], \"_content_type_id\": \"erratum\", \"id\": \"RHEA-2010:0002\", \"severity\": \"\", \"title\": \"One package errata\", \"version\": \"1\", \"reboot_suggested\": false, \"type\": \"security\", \"pkglist\": [{\"packages\": [{\"src\": \"http://www.fedoraproject.org\", \"name\": \"elephant\", \"filename\": \"elephant-0.3-0.8.noarch.rpm\", \"epoch\": null, \"version\": \"0.3\", \"release\": \"0.8\", \"arch\": \"noarch\"}], \"name\": \"1\", \"short\": \"\"}], \"status\": \"stable\", \"updated\": \"\", \"description\": \"One package errata\", \"pushcount\": 1, \"from_str\": \"lzap+pub@redhat.com\", \"_storage_path\": null, \"rights\": \"\", \"solution\": \"\", \"summary\": \"\", \"release\": \"1\", \"_id\": \"b18fa55a-db84-401f-8661-16820fb47ffe\", \"_href\": \"/pulp/api/v2/content/units/erratum/b18fa55a-db84-401f-8661-16820fb47ffe/\", \"children\": {}, \"repository_memberships\": [\"1\"]}]"
+      string: "[{\"issued\": \"2010-01-01 01:01:01\", \"references\": [], \"_content_type_id\": \"erratum\", \"id\": \"RHEA-2010:0002\", \"severity\": \"\", \"title\": \"One package errata\", \"version\": \"1\", \"reboot_suggested\": false, \"type\": \"security\", \"pkglist\": [{\"packages\": [{\"src\": \"http://www.fedoraproject.org\", \"name\": \"elephant\", \"filename\": \"elephant-0.3-0.8.noarch.rpm\", \"epoch\": null, \"version\": \"0.3\", \"release\": \"0.8\", \"arch\": \"noarch\"}], \"name\": \"1\", \"short\": \"\"}], \"status\": \"stable\", \"updated\": \"\", \"description\": \"One package errata\", \"pushcount\": 1, \"from_str\": \"lzap+pub@redhat.com\", \"_storage_path\": null, \"rights\": \"\", \"solution\": \"\", \"summary\": \"\", \"release\": \"1\", \"_id\": \"b47f788a-8484-4d42-94d4-8f5be05104cf\", \"_href\": \"/pulp/api/v2/content/units/erratum/b47f788a-8484-4d42-94d4-8f5be05104cf/\", \"children\": {}, \"repository_memberships\": [\"1\"]}]"
     http_version: 
-  recorded_at: Thu, 06 Jun 2013 15:45:35 GMT
+  recorded_at: Thu, 13 Jun 2013 21:20:51 GMT
 - request: 
     method: post
-    uri: https://localhost/pulp/api/v2/content/units/erratum/search/
+    uri: https://abed.usersys.redhat.com/pulp/api/v2/content/units/erratum/search/
     body: 
       encoding: US-ASCII
-      string: "{\"criteria\":{\"filters\":{\"_id\":{\"$in\":[\"b18fa55a-db84-401f-8661-16820fb47ffe\"]}}}}"
+      string: "{\"criteria\":{\"filters\":{\"_id\":{\"$in\":[\"b47f788a-8484-4d42-94d4-8f5be05104cf\"]}}},\"include_repos\":true}"
     headers: 
       Accept: 
       - application/json
@@ -53,7 +53,46 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="WlKd3oafJDlIIG4f8WULdBTtgPRa1xCZpvpxsJKo0", oauth_signature="vuBuYbcdbDzBtaw7V2X7zJbRL%2BE%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1370533535", oauth_version="1.0"
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="1PMLeEaEVsxvpanAcrUuirppKrL2wkFSffNLam3qY", oauth_signature="TCV9r%2FG%2F2djT0Q9V3klzKudLOHY%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371158451", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      Content-Length: 
+      - "102"
+      User-Agent: 
+      - Ruby
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Date: 
+      - Thu, 13 Jun 2013 21:20:51 GMT
+      Server: 
+      - Apache/2.2.15 (Red Hat)
+      Content-Length: 
+      - "834"
+      Content-Type: 
+      - application/json
+    body: 
+      encoding: US-ASCII
+      string: "[{\"issued\": \"2010-01-01 01:01:01\", \"references\": [], \"_content_type_id\": \"erratum\", \"id\": \"RHEA-2010:0002\", \"severity\": \"\", \"title\": \"One package errata\", \"version\": \"1\", \"reboot_suggested\": false, \"type\": \"security\", \"pkglist\": [{\"packages\": [{\"src\": \"http://www.fedoraproject.org\", \"name\": \"elephant\", \"filename\": \"elephant-0.3-0.8.noarch.rpm\", \"epoch\": null, \"version\": \"0.3\", \"release\": \"0.8\", \"arch\": \"noarch\"}], \"name\": \"1\", \"short\": \"\"}], \"status\": \"stable\", \"updated\": \"\", \"description\": \"One package errata\", \"pushcount\": 1, \"from_str\": \"lzap+pub@redhat.com\", \"_storage_path\": null, \"rights\": \"\", \"solution\": \"\", \"summary\": \"\", \"release\": \"1\", \"_id\": \"b47f788a-8484-4d42-94d4-8f5be05104cf\", \"_href\": \"/pulp/api/v2/content/units/erratum/b47f788a-8484-4d42-94d4-8f5be05104cf/\", \"children\": {}, \"repository_memberships\": [\"1\"]}]"
+    http_version: 
+  recorded_at: Thu, 13 Jun 2013 21:20:51 GMT
+- request: 
+    method: post
+    uri: https://abed.usersys.redhat.com/pulp/api/v2/content/units/erratum/search/
+    body: 
+      encoding: US-ASCII
+      string: "{\"criteria\":{\"filters\":{\"_id\":{\"$in\":[\"b47f788a-8484-4d42-94d4-8f5be05104cf\"]}}}}"
+    headers: 
+      Accept: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Content-Type: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="jKLlDhpLa6OPhZaEwCb2pwwMK8udY6SgKHom2QwfU", oauth_signature="AJaBcnVjEiHdpbvQi4HRbgM%2BKtg%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371158451", oauth_version="1.0"
       Pulp-User: 
       - admin
       Content-Length: 
@@ -66,24 +105,24 @@ http_interactions:
       message: OK
     headers: 
       Date: 
-      - Thu, 06 Jun 2013 15:45:35 GMT
+      - Thu, 13 Jun 2013 21:20:51 GMT
       Server: 
-      - Apache/2.4.4 (Fedora) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.3
+      - Apache/2.2.15 (Red Hat)
       Content-Length: 
       - "801"
       Content-Type: 
       - application/json
     body: 
       encoding: US-ASCII
-      string: "[{\"issued\": \"2010-01-01 01:01:01\", \"references\": [], \"_content_type_id\": \"erratum\", \"id\": \"RHEA-2010:0002\", \"severity\": \"\", \"title\": \"One package errata\", \"version\": \"1\", \"reboot_suggested\": false, \"type\": \"security\", \"pkglist\": [{\"packages\": [{\"src\": \"http://www.fedoraproject.org\", \"name\": \"elephant\", \"filename\": \"elephant-0.3-0.8.noarch.rpm\", \"epoch\": null, \"version\": \"0.3\", \"release\": \"0.8\", \"arch\": \"noarch\"}], \"name\": \"1\", \"short\": \"\"}], \"status\": \"stable\", \"updated\": \"\", \"description\": \"One package errata\", \"pushcount\": 1, \"from_str\": \"lzap+pub@redhat.com\", \"_storage_path\": null, \"rights\": \"\", \"solution\": \"\", \"summary\": \"\", \"release\": \"1\", \"_id\": \"b18fa55a-db84-401f-8661-16820fb47ffe\", \"_href\": \"/pulp/api/v2/content/units/erratum/b18fa55a-db84-401f-8661-16820fb47ffe/\", \"children\": {}}]"
+      string: "[{\"issued\": \"2010-01-01 01:01:01\", \"references\": [], \"_content_type_id\": \"erratum\", \"id\": \"RHEA-2010:0002\", \"severity\": \"\", \"title\": \"One package errata\", \"version\": \"1\", \"reboot_suggested\": false, \"type\": \"security\", \"pkglist\": [{\"packages\": [{\"src\": \"http://www.fedoraproject.org\", \"name\": \"elephant\", \"filename\": \"elephant-0.3-0.8.noarch.rpm\", \"epoch\": null, \"version\": \"0.3\", \"release\": \"0.8\", \"arch\": \"noarch\"}], \"name\": \"1\", \"short\": \"\"}], \"status\": \"stable\", \"updated\": \"\", \"description\": \"One package errata\", \"pushcount\": 1, \"from_str\": \"lzap+pub@redhat.com\", \"_storage_path\": null, \"rights\": \"\", \"solution\": \"\", \"summary\": \"\", \"release\": \"1\", \"_id\": \"b47f788a-8484-4d42-94d4-8f5be05104cf\", \"_href\": \"/pulp/api/v2/content/units/erratum/b47f788a-8484-4d42-94d4-8f5be05104cf/\", \"children\": {}}]"
     http_version: 
-  recorded_at: Thu, 06 Jun 2013 15:45:35 GMT
+  recorded_at: Thu, 13 Jun 2013 21:20:51 GMT
 - request: 
     method: post
-    uri: https://localhost/pulp/api/v2/content/units/erratum/search/
+    uri: https://abed.usersys.redhat.com/pulp/api/v2/content/units/erratum/search/
     body: 
       encoding: US-ASCII
-      string: "{\"criteria\":{\"filters\":{\"_id\":{\"$in\":[\"b18fa55a-db84-401f-8661-16820fb47ffe\"]}}},\"include_repos\":true}"
+      string: "{\"criteria\":{\"filters\":{\"_id\":{\"$in\":[\"b47f788a-8484-4d42-94d4-8f5be05104cf\"]}}},\"include_repos\":true}"
     headers: 
       Accept: 
       - application/json
@@ -92,7 +131,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="PpjgB4QTBu9ff0WDaEJSMJTRKztBaP0M1kcGcm1DyTI", oauth_signature="qU9cgC64z49msHJMZljYVnLYrN0%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1370533535", oauth_version="1.0"
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="3JTDGXAge2mE8IdToA5DTvJct29zCslT13GOhKK4m7Y", oauth_signature="JIN97jfOJU9qEcSDjS7CjazJCy4%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371158451", oauth_version="1.0"
       Pulp-User: 
       - admin
       Content-Length: 
@@ -105,60 +144,21 @@ http_interactions:
       message: OK
     headers: 
       Date: 
-      - Thu, 06 Jun 2013 15:45:36 GMT
+      - Thu, 13 Jun 2013 21:20:51 GMT
       Server: 
-      - Apache/2.4.4 (Fedora) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.3
+      - Apache/2.2.15 (Red Hat)
       Content-Length: 
       - "834"
       Content-Type: 
       - application/json
     body: 
       encoding: US-ASCII
-      string: "[{\"issued\": \"2010-01-01 01:01:01\", \"references\": [], \"_content_type_id\": \"erratum\", \"id\": \"RHEA-2010:0002\", \"severity\": \"\", \"title\": \"One package errata\", \"version\": \"1\", \"reboot_suggested\": false, \"type\": \"security\", \"pkglist\": [{\"packages\": [{\"src\": \"http://www.fedoraproject.org\", \"name\": \"elephant\", \"filename\": \"elephant-0.3-0.8.noarch.rpm\", \"epoch\": null, \"version\": \"0.3\", \"release\": \"0.8\", \"arch\": \"noarch\"}], \"name\": \"1\", \"short\": \"\"}], \"status\": \"stable\", \"updated\": \"\", \"description\": \"One package errata\", \"pushcount\": 1, \"from_str\": \"lzap+pub@redhat.com\", \"_storage_path\": null, \"rights\": \"\", \"solution\": \"\", \"summary\": \"\", \"release\": \"1\", \"_id\": \"b18fa55a-db84-401f-8661-16820fb47ffe\", \"_href\": \"/pulp/api/v2/content/units/erratum/b18fa55a-db84-401f-8661-16820fb47ffe/\", \"children\": {}, \"repository_memberships\": [\"1\"]}]"
+      string: "[{\"issued\": \"2010-01-01 01:01:01\", \"references\": [], \"_content_type_id\": \"erratum\", \"id\": \"RHEA-2010:0002\", \"severity\": \"\", \"title\": \"One package errata\", \"version\": \"1\", \"reboot_suggested\": false, \"type\": \"security\", \"pkglist\": [{\"packages\": [{\"src\": \"http://www.fedoraproject.org\", \"name\": \"elephant\", \"filename\": \"elephant-0.3-0.8.noarch.rpm\", \"epoch\": null, \"version\": \"0.3\", \"release\": \"0.8\", \"arch\": \"noarch\"}], \"name\": \"1\", \"short\": \"\"}], \"status\": \"stable\", \"updated\": \"\", \"description\": \"One package errata\", \"pushcount\": 1, \"from_str\": \"lzap+pub@redhat.com\", \"_storage_path\": null, \"rights\": \"\", \"solution\": \"\", \"summary\": \"\", \"release\": \"1\", \"_id\": \"b47f788a-8484-4d42-94d4-8f5be05104cf\", \"_href\": \"/pulp/api/v2/content/units/erratum/b47f788a-8484-4d42-94d4-8f5be05104cf/\", \"children\": {}, \"repository_memberships\": [\"1\"]}]"
     http_version: 
-  recorded_at: Thu, 06 Jun 2013 15:45:36 GMT
+  recorded_at: Thu, 13 Jun 2013 21:20:51 GMT
 - request: 
     method: post
-    uri: https://localhost/pulp/api/v2/content/units/erratum/search/
-    body: 
-      encoding: US-ASCII
-      string: "{\"criteria\":{\"filters\":{\"_id\":{\"$in\":[\"b18fa55a-db84-401f-8661-16820fb47ffe\"]}}},\"include_repos\":true}"
-    headers: 
-      Accept: 
-      - application/json
-      Accept-Encoding: 
-      - gzip, deflate
-      Content-Type: 
-      - application/json
-      Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="H9MKX7zUPmHLB0vcbMS0KQL7nxUWvV1FAusa2PFKvps", oauth_signature="6IgjQjWk0veZGArIooji8GnQAjs%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1370533536", oauth_version="1.0"
-      Pulp-User: 
-      - admin
-      Content-Length: 
-      - "102"
-      User-Agent: 
-      - Ruby
-  response: 
-    status: 
-      code: 200
-      message: OK
-    headers: 
-      Date: 
-      - Thu, 06 Jun 2013 15:45:36 GMT
-      Server: 
-      - Apache/2.4.4 (Fedora) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.3
-      Content-Length: 
-      - "834"
-      Content-Type: 
-      - application/json
-    body: 
-      encoding: US-ASCII
-      string: "[{\"issued\": \"2010-01-01 01:01:01\", \"references\": [], \"_content_type_id\": \"erratum\", \"id\": \"RHEA-2010:0002\", \"severity\": \"\", \"title\": \"One package errata\", \"version\": \"1\", \"reboot_suggested\": false, \"type\": \"security\", \"pkglist\": [{\"packages\": [{\"src\": \"http://www.fedoraproject.org\", \"name\": \"elephant\", \"filename\": \"elephant-0.3-0.8.noarch.rpm\", \"epoch\": null, \"version\": \"0.3\", \"release\": \"0.8\", \"arch\": \"noarch\"}], \"name\": \"1\", \"short\": \"\"}], \"status\": \"stable\", \"updated\": \"\", \"description\": \"One package errata\", \"pushcount\": 1, \"from_str\": \"lzap+pub@redhat.com\", \"_storage_path\": null, \"rights\": \"\", \"solution\": \"\", \"summary\": \"\", \"release\": \"1\", \"_id\": \"b18fa55a-db84-401f-8661-16820fb47ffe\", \"_href\": \"/pulp/api/v2/content/units/erratum/b18fa55a-db84-401f-8661-16820fb47ffe/\", \"children\": {}, \"repository_memberships\": [\"1\"]}]"
-    http_version: 
-  recorded_at: Thu, 06 Jun 2013 15:45:36 GMT
-- request: 
-    method: post
-    uri: https://localhost/pulp/api/v2/repositories/1/search/units/
+    uri: https://abed.usersys.redhat.com/pulp/api/v2/repositories/1/search/units/
     body: 
       encoding: US-ASCII
       string: "{\"criteria\":{\"type_ids\":[\"erratum\"],\"fields\":{\"unit\":[],\"association\":[\"unit_id\"]}}}"
@@ -170,7 +170,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="ewR0phv2HMQNYDdMvww2mJyGn9jIENw1tBluT1lbw", oauth_signature="mO%2BmBMbKr4Z7T5XP25g0aNfcIxs%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1370533539", oauth_version="1.0"
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="6lCdqmMt731sWG8JieA6WInJ3niOlst24ozWAeq0bI", oauth_signature="Aijb2Qv6v2aKHXpJKLh5kS0n9Y8%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371158454", oauth_version="1.0"
       Pulp-User: 
       - admin
       Content-Length: 
@@ -183,24 +183,24 @@ http_interactions:
       message: OK
     headers: 
       Date: 
-      - Thu, 06 Jun 2013 15:45:39 GMT
+      - Thu, 13 Jun 2013 21:20:54 GMT
       Server: 
-      - Apache/2.4.4 (Fedora) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.3
+      - Apache/2.2.15 (Red Hat)
       Content-Length: 
       - "372"
       Content-Type: 
       - application/json
     body: 
       encoding: US-ASCII
-      string: "[{\"_id\": {\"$oid\": \"51b0aea2196cbe7f35f42c65\"}, \"unit_id\": \"94c66464-f06b-48e2-87ce-37f9f7895be4\", \"unit_type_id\": \"erratum\", \"metadata\": {\"_id\": \"94c66464-f06b-48e2-87ce-37f9f7895be4\"}}, {\"_id\": {\"$oid\": \"51b0aea2196cbe7f35f42c67\"}, \"unit_id\": \"b18fa55a-db84-401f-8661-16820fb47ffe\", \"unit_type_id\": \"erratum\", \"metadata\": {\"_id\": \"b18fa55a-db84-401f-8661-16820fb47ffe\"}}]"
+      string: "[{\"_id\": {\"$oid\": \"51ba37b55ca01344a5ca921b\"}, \"unit_id\": \"4dee489b-915d-4d48-9961-86b7efe9cc53\", \"unit_type_id\": \"erratum\", \"metadata\": {\"_id\": \"4dee489b-915d-4d48-9961-86b7efe9cc53\"}}, {\"_id\": {\"$oid\": \"51ba37b55ca01344a5ca921d\"}, \"unit_id\": \"b47f788a-8484-4d42-94d4-8f5be05104cf\", \"unit_type_id\": \"erratum\", \"metadata\": {\"_id\": \"b47f788a-8484-4d42-94d4-8f5be05104cf\"}}]"
     http_version: 
-  recorded_at: Thu, 06 Jun 2013 15:45:40 GMT
+  recorded_at: Thu, 13 Jun 2013 21:20:54 GMT
 - request: 
     method: post
-    uri: https://localhost/pulp/api/v2/content/units/erratum/search/
+    uri: https://abed.usersys.redhat.com/pulp/api/v2/content/units/erratum/search/
     body: 
       encoding: US-ASCII
-      string: "{\"criteria\":{\"filters\":{\"_id\":{\"$in\":[\"94c66464-f06b-48e2-87ce-37f9f7895be4\",\"b18fa55a-db84-401f-8661-16820fb47ffe\"]}}},\"include_repos\":true}"
+      string: "{\"criteria\":{\"filters\":{\"_id\":{\"$in\":[\"4dee489b-915d-4d48-9961-86b7efe9cc53\",\"b47f788a-8484-4d42-94d4-8f5be05104cf\"]}}},\"include_repos\":true}"
     headers: 
       Accept: 
       - application/json
@@ -209,7 +209,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="Ajvnv9nKKNBopgAr5jzteHapwqfg4Os4ExQxd3Ww", oauth_signature="Yi9vr8eyRTc3r0Egpo8PYOlQE38%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1370533540", oauth_version="1.0"
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="o9Q9VNkWYRT7CANpLNKLrlVE1hbeuDmrIRUuFznMSq4", oauth_signature="tfJACeD41YlgZpfC5Y2rcn3q614%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371158454", oauth_version="1.0"
       Pulp-User: 
       - admin
       Content-Length: 
@@ -222,16 +222,16 @@ http_interactions:
       message: OK
     headers: 
       Date: 
-      - Thu, 06 Jun 2013 15:45:40 GMT
+      - Thu, 13 Jun 2013 21:20:54 GMT
       Server: 
-      - Apache/2.4.4 (Fedora) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.3
+      - Apache/2.2.15 (Red Hat)
       Content-Length: 
       - "1443"
       Content-Type: 
       - application/json
     body: 
       encoding: US-ASCII
-      string: "[{\"issued\": \"2010-01-01 01:01:01\", \"references\": [], \"_content_type_id\": \"erratum\", \"id\": \"RHEA-2010:0001\", \"severity\": \"\", \"title\": \"Empty errata\", \"version\": \"1\", \"reboot_suggested\": false, \"type\": \"security\", \"pkglist\": [], \"status\": \"stable\", \"updated\": \"\", \"description\": \"Empty errata\", \"pushcount\": 1, \"from_str\": \"lzap+pub@redhat.com\", \"_storage_path\": null, \"rights\": \"\", \"solution\": \"\", \"summary\": \"\", \"release\": \"1\", \"_id\": \"94c66464-f06b-48e2-87ce-37f9f7895be4\", \"_href\": \"/pulp/api/v2/content/units/erratum/94c66464-f06b-48e2-87ce-37f9f7895be4/\", \"children\": {}, \"repository_memberships\": [\"1\"]}, {\"issued\": \"2010-01-01 01:01:01\", \"references\": [], \"_content_type_id\": \"erratum\", \"id\": \"RHEA-2010:0002\", \"severity\": \"\", \"title\": \"One package errata\", \"version\": \"1\", \"reboot_suggested\": false, \"type\": \"security\", \"pkglist\": [{\"packages\": [{\"src\": \"http://www.fedoraproject.org\", \"name\": \"elephant\", \"filename\": \"elephant-0.3-0.8.noarch.rpm\", \"epoch\": null, \"version\": \"0.3\", \"release\": \"0.8\", \"arch\": \"noarch\"}], \"name\": \"1\", \"short\": \"\"}], \"status\": \"stable\", \"updated\": \"\", \"description\": \"One package errata\", \"pushcount\": 1, \"from_str\": \"lzap+pub@redhat.com\", \"_storage_path\": null, \"rights\": \"\", \"solution\": \"\", \"summary\": \"\", \"release\": \"1\", \"_id\": \"b18fa55a-db84-401f-8661-16820fb47ffe\", \"_href\": \"/pulp/api/v2/content/units/erratum/b18fa55a-db84-401f-8661-16820fb47ffe/\", \"children\": {}, \"repository_memberships\": [\"1\"]}]"
+      string: "[{\"issued\": \"2010-01-01 01:01:01\", \"references\": [], \"_content_type_id\": \"erratum\", \"id\": \"RHEA-2010:0001\", \"severity\": \"\", \"title\": \"Empty errata\", \"version\": \"1\", \"reboot_suggested\": false, \"type\": \"security\", \"pkglist\": [], \"status\": \"stable\", \"updated\": \"\", \"description\": \"Empty errata\", \"pushcount\": 1, \"from_str\": \"lzap+pub@redhat.com\", \"_storage_path\": null, \"rights\": \"\", \"solution\": \"\", \"summary\": \"\", \"release\": \"1\", \"_id\": \"4dee489b-915d-4d48-9961-86b7efe9cc53\", \"_href\": \"/pulp/api/v2/content/units/erratum/4dee489b-915d-4d48-9961-86b7efe9cc53/\", \"children\": {}, \"repository_memberships\": [\"1\"]}, {\"issued\": \"2010-01-01 01:01:01\", \"references\": [], \"_content_type_id\": \"erratum\", \"id\": \"RHEA-2010:0002\", \"severity\": \"\", \"title\": \"One package errata\", \"version\": \"1\", \"reboot_suggested\": false, \"type\": \"security\", \"pkglist\": [{\"packages\": [{\"src\": \"http://www.fedoraproject.org\", \"name\": \"elephant\", \"filename\": \"elephant-0.3-0.8.noarch.rpm\", \"epoch\": null, \"version\": \"0.3\", \"release\": \"0.8\", \"arch\": \"noarch\"}], \"name\": \"1\", \"short\": \"\"}], \"status\": \"stable\", \"updated\": \"\", \"description\": \"One package errata\", \"pushcount\": 1, \"from_str\": \"lzap+pub@redhat.com\", \"_storage_path\": null, \"rights\": \"\", \"solution\": \"\", \"summary\": \"\", \"release\": \"1\", \"_id\": \"b47f788a-8484-4d42-94d4-8f5be05104cf\", \"_href\": \"/pulp/api/v2/content/units/erratum/b47f788a-8484-4d42-94d4-8f5be05104cf/\", \"children\": {}, \"repository_memberships\": [\"1\"]}]"
     http_version: 
-  recorded_at: Thu, 06 Jun 2013 15:45:40 GMT
+  recorded_at: Thu, 13 Jun 2013 21:20:54 GMT
 recorded_with: VCR 2.4.0

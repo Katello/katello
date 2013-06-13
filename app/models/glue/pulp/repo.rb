@@ -425,13 +425,14 @@ module Glue::Pulp::Repo
       # (e.g. changelog, filelist...etc).
       events << Runcible::Extensions::Rpm.copy(self.pulp_id, to_repo.pulp_id,
                                                { :fields => Package::PULP_SELECT_FIELDS })
-
       events << Runcible::Extensions::Distribution.copy(self.pulp_id, to_repo.pulp_id)
 
       # Since the rpms will be copied above, during the copy of errata and package groups,
       # include the copy_children flag to request that pulp skip copying them again.
       events << Runcible::Extensions::Errata.copy(self.pulp_id, to_repo.pulp_id, { :copy_children => false })
       events << Runcible::Extensions::PackageGroup.copy(self.pulp_id, to_repo.pulp_id, { :copy_children => false })
+      events << Runcible::Extensions::YumRepoMetadataFile.copy(self.pulp_id, to_repo.pulp_id)
+
       events
     end
 
