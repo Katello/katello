@@ -3,99 +3,111 @@
 
 = content_for :content do
   #subscription
-    %input#panel_element_id{:name=>@subscription.id, :type=>"hidden", :value=>"#{name}_#{subscription.id.to_s}", "data-ajax_url"=>url_for(:action=>"update")}
-    .grid_10
-      %h5 #{_("Subscription Info")}
-    .grid_10#subscription_info
-      %fieldset
-        .grid_2.ra.fieldset
-          =label :name, :name, _("Name")
-        .grid_8.la
-          = @subscription.product_name
-      %fieldset
-        .grid_2.ra.fieldset
-          =label :name, :name, _("Description")
-        .grid_8.la
-          = @subscription.description
-      %fieldset
-        .grid_2.ra.fieldset
-          =label :consumed, :consumed, _("Consumed")
-        .grid_8.la
-          - if @subscription.quantity < 0
-            = _("Unlimited")
-          - else
-            = _("%{consumed} of %{total}") % {:consumed => @subscription.consumed, :total => @subscription.quantity}
-      %fieldset
-        .grid_2.ra.fieldset
-          =label :date_range, :date_range, _("Starts / Ends")
-        .grid_8.la
-          = _("%{start_date} / %{end_date}") % {:start_date => format_time(@subscription.start_date), :end_date => format_time(@subscription.end_date)}
-      %fieldset
-        .grid_2.ra.fieldset
-          =label :contract, :contract, _("Contract Number")
-        .grid_8.la
-          = @subscription.contract_number
-      %fieldset
-        .grid_2.ra.fieldset
-          =label :account, :account, _("Account Number")
-        .grid_8.la
-          = @subscription.account_number
-      %fieldset
-        .grid_2.ra.fieldset
-          =label :supportLevel, :supportLevel, _("Support Level")
-        .grid_8.la
-          = @subscription.support_level
-      %fieldset
-        .grid_2.ra.fieldset
-          =label :supporttype, :supporttype, _("Support Type")
-        .grid_8.la
-          = @subscription.support_type
-      %fieldset
-        .grid_2.ra.fieldset
-          =label :arch, :arch, _("Arch")
-        .grid_8.la
-          = @subscription.arch
-      %fieldset
-        .grid_2.ra.fieldset
-          =label :systype, :systype, _("Type")
-        .grid_8.la
-          = @subscription.virt_only ? _("Virtual Only") : _("Physical or Virtual")
-      %fieldset
-        .grid_2.ra.fieldset
-          =label :limits, :limits, _("Limits")
-        .grid_8.la
-          = subscription_limits_helper(@subscription)
-      %fieldset
-        .grid_2.ra.fieldset
-          =label :multientitlement, :multientitlement, _("Multi-entitlement")
-        .grid_8.la
-          = @subscription.multi_entitlement ? _("Yes") : _("No")
-      - if @subscription.stacking_id != ''
-        %fieldset
-          .grid_2.ra.fieldset
-            =label :stacking, :stacking, _("Stacking ID")
-          .grid_8.la
-            = @subscription.stacking_id
-      - if !@subscription.source_pool_id.nil?
-        %fieldset
-          .grid_2.ra.fieldset
-            =label :sourcepool, :sourcepool, _("Virt Guest From")
-          .grid_8.la
-            = subscriptions_pool_link_helper(@subscription.product_name, @subscription.source_pool_id, current_organization.redhat_provider.id, current_organization)
-      - if !@subscription.host_id.nil?
-        %fieldset
-          .grid_2.ra.fieldset
-            =label :host, :host, _("Required Host")
-          .grid_8.la
-            = subscriptions_system_link_helper @subscription.host_id
-    - if @subscription.provided_products.length > 0
-      .clear
-      .grid_10
+    %form.form
+      %input#panel_element_id{:name=>@subscription.id, :type=>"hidden", :value=>"#{name}_#{subscription.id.to_s}", "data-ajax_url"=>url_for(:action=>"update")}
+        %h5 #{_("Subscription Info")}
+        .control-group
+          .label
+            = label :name, :name, _("Name")
+          .input
+            .value
+              = @subscription.product_name
+        .control-group
+          .label
+            = label :name, :name, _("Description")
+          .input
+            .value
+              = @subscription.description
+        .control-group
+          .label
+            = label :consumed, :consumed, _("Consumed")
+          .input
+            .value
+              - if @subscription.quantity < 0
+                = _("Unlimited")
+              - else
+                = _("%{consumed} of %{total}") % {:consumed => @subscription.consumed, :total => @subscription.quantity}
+        .control-group
+          .label
+            =label :date_range, :date_range, _("Starts / Ends")
+          .input
+            .value
+              = _("%{start_date} / %{end_date}") % {:start_date => format_time(@subscription.start_date), :end_date => format_time(@subscription.end_date)}
+        .control-group
+          .label
+            =label :contract, :contract, _("Contract Number")
+          .input
+            .value
+              = @subscription.contract_number
+        .control-group
+          .label
+            =label :account, :account, _("Account Number")
+          .input
+            .value
+              = @subscription.account_number
+        .control-group
+          .label
+            =label :supportLevel, :supportLevel, _("Support Level")
+          .input
+            .value
+              = @subscription.support_level
+        .control-group
+          .label
+            =label :supporttype, :supporttype, _("Support Type")
+          .input
+            .value
+              = @subscription.support_type
+        .control-group
+          .label
+            =label :arch, :arch, _("Arch")
+          .input
+            .value
+              = @subscription.arch
+        .control-group
+          .label
+            =label :systype, :systype, _("Type")
+          .input
+            .value
+              = @subscription.virt_only ? _("Virtual Only") : _("Physical or Virtual")
+        .control-group
+          .label
+            =label :limits, :limits, _("Limits")
+          .input
+            .value
+              = subscription_limits_helper(@subscription)
+        .control-group
+          .label
+            =label :multientitlement, :multientitlement, _("Multi-entitlement")
+          .input
+            .value
+              = @subscription.multi_entitlement ? _("Yes") : _("No")
+        - if @subscription.stacking_id != ''
+          .control-group
+            .label
+              =label :stacking, :stacking, _("Stacking ID")
+            .input
+              .value
+                = @subscription.stacking_id
+        - if !@subscription.source_pool_id.nil?
+          .control-group
+            .label
+              =label :sourcepool, :sourcepool, _("Virt Guest From")
+            .input
+              .value
+                = subscriptions_pool_link_helper(@subscription.product_name, @subscription.source_pool_id, current_organization.redhat_provider.id, current_organization)
+        - if !@subscription.host_id.nil?
+          .control-group
+            .label
+              =label :host, :host, _("Required Host")
+            .input
+              .value
+                = subscriptions_system_link_helper @subscription.host_id
+      - if @subscription.provided_products.length > 0
         %h5 #{_("Provided Products")}
-      .grid_10#provided_products
-        %fieldset
-          - @subscription.provided_products.each do |providedProduct|
-            .grid_8.la
-              = providedProduct['productName']
+        .control-group
+          .input
+            - @subscription.provided_products.each do |providedProduct|
+              .grid_8.la
+                = providedProduct['productName']
 
 = render :template => "layouts/tupane_layout"

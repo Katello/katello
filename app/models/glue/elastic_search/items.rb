@@ -65,9 +65,9 @@ module Glue
           @query_string = search_options[:simple_query]
         end
 
-        total_count = total_items
-        page_size = search_options[:page_size] || total_count
+        page_size = search_options[:page_size] || total_items
         filters = @filters
+        filters = [filters] if !filters.is_a? Array
 
         @results = @obj_class.search :load=>false do
           query do
@@ -80,7 +80,6 @@ module Glue
 
           sort {by sort_by, sort_order.to_s.downcase } if sort_by && sort_order
 
-          filters = [filters] if !filters.is_a? Array
           filters.each{ |i| filter  :terms, i } if !filters.empty?
 
           size page_size
@@ -125,6 +124,7 @@ module Glue
       def total_items
         @total = 0
         filters = @filters
+        filters = [filters] if !filters.is_a? Array
 
         results = @obj_class.search do
           query do
