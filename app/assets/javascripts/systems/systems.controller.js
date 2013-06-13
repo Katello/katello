@@ -19,6 +19,7 @@
  * @requires Nutupane
  * @requires $location
  * @requires $compile
+ * @requires $filter
  * @requires $http
  * @requires $state
  * @requires Routes

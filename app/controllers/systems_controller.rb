@@ -338,7 +338,7 @@ class SystemsController < ApplicationController
                                                          environment_path_element("systems_readable?"))}
 
       if request.xhr?
-        render :show_nutupane, :leyout => false, :locals => @locals_hash
+        render :show_nutupane, :layout => false, :locals => @locals_hash
       else
         render :show_nutupane, :locals => @locals_hash
       end
