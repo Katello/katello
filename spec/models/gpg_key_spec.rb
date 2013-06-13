@@ -81,6 +81,11 @@ describe GpgKey, :katello => true do
       gpg_key = GpgKey.new(:name => "Gpg Key 1", :content =>"\231\001\r\004\026\001\b\000\276", :organization => @organization)
       gpg_key.should_not be_valid
     end
+
+    it "should be unsuccessful with a key longer than #{GpgKey::MAX_CONTENT_LENGTH} characters" do
+      gpg_key = GpgKey.new(:name => "Gpg Key 8", :content => ("abc123" * GpgKey::MAX_CONTENT_LENGTH), :organization => @organization)
+      gpg_key.should_not be_valid
+    end
   end
 
 end
