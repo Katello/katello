@@ -13,9 +13,9 @@
 
 /**
  * @ngdoc module
- * @name  Katello.utils
+ * @name  Bastion.utils
  *
  * @description
- *   Module for common Katello utils.
+ *   Module for common utilities.
  */
-angular.module('Katello.utils', []);
+angular.module('Bastion.utils', []);

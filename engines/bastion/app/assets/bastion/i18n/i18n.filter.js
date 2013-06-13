@@ -13,7 +13,7 @@
 
 /**
  * @ngdoc filter
- * @name  Katello.i18n.filter:i18n
+ * @name  Bastion.i18n.filter:i18n
  *
  * @requires i18nDictionary
  *
@@ -24,7 +24,7 @@
  *   {{ "some_i18n_code" | i18n }}
  *   {{ "some_i18n_code_with_replacements" | i18n: ["why", "hello"] }}
  */
-angular.module('Katello.i18n').filter('i18n', ['i18nDictionary', function(i18nDictionary) {
+angular.module('Bastion.i18n').filter('i18n', ['i18nDictionary', function(i18nDictionary) {
     return function(i18nKey, replacements) {
         var translation;
         var translated = i18nKey;

@@ -13,9 +13,9 @@
 
 /**
  * @ngdoc module
- * @name  Katello.widgets
+ * @name  Bastion.widgets
  *
  * @description
- *   Module for common Katello widgets.
+ *   Module for common Bastion widgets.
  */
-angular.module('Katello.widgets', ['alchemy', 'alch-templates', 'infinite-scroll', 'Katello.utils']);
+angular.module('Bastion.widgets', ['alchemy', 'alch-templates', 'infinite-scroll', 'Bastion.utils']);

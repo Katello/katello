@@ -84,8 +84,33 @@ module.exports = function (grunt) {
                 configFile: 'karma.conf.js',
                 singleRun: true
             }
+        },
+        docular: {
+            groups: [{
+                groupTitle: 'Bastion',
+                groupId: 'bastion',
+                sections: [{
+                    id: 'bastion_api',
+                    title: 'API Reference',
+                    scripts: [
+                        'app/assets/bastion/components/',
+                        'app/assets/bastion/i18n/',
+                        'app/assets/bastion/incubator',
+                        'app/assets/bastion/menu',
+                        'app/assets/bastion/systems',
+                        'app/assets/bastion/utils',
+                        'app/assets/bastion/widgets'
+                    ]
+                }]
+            }],
+            showDocularDocs: false,
+            showAngularDocs: false
         }
     });
+
+    grunt.registerTask('docs', [
+        'docular'
+    ]);
 
     grunt.registerTask('test', [
         'connect:test',

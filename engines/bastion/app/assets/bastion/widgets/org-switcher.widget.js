@@ -13,7 +13,7 @@
 
 /**
  * @ngdoc directive
- * @name Katello.directive:orgSwitcher
+ * @name Bastion.widgets.directive:orgSwitcher
  *
  * @requires $http
  * @requires $document
@@ -29,7 +29,7 @@
  *  <span class="spinner"></span>
  *  <ul org-switcher></ul>
  */
-angular.module('Katello.widgets').directive('orgSwitcher', ['$http', '$document', 'Routes', function($http, $document, Routes) {
+angular.module('Bastion.widgets').directive('orgSwitcher', ['$http', '$document', 'Routes', function($http, $document, Routes) {
     return {
         restrict: 'A',
         transclude: true,

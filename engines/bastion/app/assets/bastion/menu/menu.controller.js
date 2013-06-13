@@ -11,21 +11,21 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
  **/
 
-/**
- * @ngdoc controller
- * @name Katello.menu.controller:MenuController
- *
- * @requires $scope
- * @requires $location
- * @requires Menus
- *
- * @description
- *  A controller for all menu related functionality.
- */
 (function() {
     'use strict';
 
-    angular.module('Katello.menu').controller('MenuController', ['$scope', '$location', 'Menus', function($scope, $location, Menus) {
+    /**
+     * @ngdoc object
+     * @name Bastion.menu.controller:MenuController
+     *
+     * @requires $scope
+     * @requires $location
+     * @requires Menus
+     *
+     * @description
+     * A controller for all menu related functionality.
+     */
+    angular.module('Bastion.menu').controller('MenuController', ['$scope', '$location', 'Menus', function($scope, $location, Menus) {
         $scope.menu       = Menus.menu;
         $scope.userMenu  = Menus.userMenu;
         $scope.adminMenu = Menus.adminMenu;

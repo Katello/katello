@@ -3,6 +3,9 @@
  * @name alchemy.directive:alchTable
  * @restrict A
  *
+ * @requires $window
+ * @requires $location
+ *
  * @description
  *
  * @example
@@ -92,10 +95,28 @@ angular.module('alchemy').directive('alchTable', ['$window', '$location', functi
     };
 }]);
 
+/**
+ * @ngdoc directive
+ * @name alchemy.directive:alchTableScroll
+ * @restrict A
+ *
+ * @requires $window
+ *
+ * @description
+ *   The table scroll directive should be applied to a wrapping div around a table and
+ *   turns that table into one that allows the body of the table to scroll.
+ *
+ * @example
+ *   <pre>
+       <div alch-table-scroll></div>
+     </pre>
+ */
 angular.module('alchemy').directive('alchTableScroll', ['$window', function ($window) {
     return {
         restrict: 'A',
         replace: true,
+        transclude: true,
+        template: '<div class="table-scroll-wrapper" ng-transclude></div>',
 
         link: function (scope, element) {
 
