@@ -35,8 +35,6 @@ class Product < ActiveRecord::Base
     end
   end
 
-  has_and_belongs_to_many :changesets
-
   belongs_to :provider, :inverse_of => :products
   belongs_to :sync_plan, :inverse_of => :products
   belongs_to :gpg_key, :inverse_of => :products

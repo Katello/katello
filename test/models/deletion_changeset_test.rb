@@ -64,27 +64,6 @@ class DeletionChangesetTest < MiniTest::Rails::ActiveSupport::TestCase
     assert_equal Changeset::DELETED, @changeset.state
   end
 
-  def test_product_delete
-    @changeset.add_product!(@product)
-    @changeset.state = Changeset::REVIEW
-    @changeset.apply(:async=>false)
-
-    assert_includes Product.find(@product).environments, @library
-    refute_includes Product.find(@product).environments, @dev
-    assert_empty Repository.where(:id=>@repo_dev.id)
-  end
-
-  def test_repo_delete
-    @changeset.add_repository!(@repo_dev)
-    @changeset.state = Changeset::REVIEW
-    @changeset.apply(:async=>false)
-
-    assert_includes Product.find(@product).environments, @library
-    assert_includes Product.find(@product).environments, @dev
-    assert_empty Repository.where(:id=>@repo_dev.id)
-    refute_empty Repository.where(:id=>@repo_library.id)
-  end
-
   def test_content_view_delete
     assert_includes @library_dev_view.environments, @dev
     @changeset.add_content_view!(@library_dev_view)
