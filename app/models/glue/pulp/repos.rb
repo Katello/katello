@@ -293,6 +293,8 @@ module Glue::Pulp::Repos
           :content_type => repo_type,
           :content_view_version=>self.organization.library.default_content_view_version
       )
+      self.organization.default_content_view.update_cp_content(self.organization.library)
+      repo.generate_metadata
     end
 
     def setup_sync_schedule

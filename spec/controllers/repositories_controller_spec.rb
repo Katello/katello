@@ -156,7 +156,7 @@ describe RepositoriesController, :katello => true do
 
         Resources::Candlepin::Content.stub!(:get).and_return(content)
         Resources::Candlepin::Content.stub!(:create).and_return(content)
-
+        Runcible::Extensions::Repository.stub(:publish_all).and_return([])
         @repo_name = "repo-#{rand 10 ** 8}"
         post :create, { :product_id => @product.id,
                         :provider_id => @product.provider.id,
