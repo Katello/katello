@@ -19,7 +19,7 @@
         .grid_2.ra
           %label #{_("Description")}:
         .grid_4.la
-          = form.text_area :description, :rows=>8
+          = form.text_area :description, :rows=>8, :maxlength => default_description_limit
 
       %fieldset.fl.clear
         .grid_4

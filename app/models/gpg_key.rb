@@ -28,7 +28,6 @@ class GpgKey < ActiveRecord::Base
   validates_presence_of :organization
   validates_uniqueness_of :name, :scope => :organization_id, :message => N_("Label has already been taken")
 
-
   def as_json(options = {})
     options ||= {}
     ret = super(options.except(:details))
