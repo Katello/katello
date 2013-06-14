@@ -1,8 +1,373 @@
 --- 
 http_interactions: 
 - request: 
-    method: get
-    uri: https://abed.usersys.redhat.com/pulp/api/v2/consumers/010E99C0-3276-11E2-81C1-0800200C9A66/bindings//
+    method: post
+    uri: https://localhost/pulp/api/v2/consumer_groups/simple_group/actions/content/install/
+    body: 
+      encoding: US-ASCII
+      string: "{\"units\":[{\"type_id\":\"rpm\",\"unit_key\":{\"name\":\"elephant\"}}],\"options\":{\"importkeys\":true}}"
+    headers: 
+      Accept: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Content-Type: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="bXYs1PIWwW9uJ0OoinZjxjDMNoXsKqZPbpB3Nhxos", oauth_signature="RvbHmbMHPJvH4nvWO3FXjfm3fkQ%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371180881", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      Content-Length: 
+      - "90"
+      User-Agent: 
+      - Ruby
+  response: 
+    status: 
+      code: 202
+      message: Accepted
+    headers: 
+      Date: 
+      - Fri, 14 Jun 2013 03:34:41 GMT
+      Server: 
+      - Apache/2.2.15 (Red Hat)
+      Content-Encoding: 
+      - utf-8
+      Content-Length: 
+      - "752"
+      Content-Type: 
+      - application/json
+    body: 
+      encoding: US-ASCII
+      string: "[{\"task_group_id\": \"b54f80bd-48e2-47ec-af54-d3b0cd42c2b8\", \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/task_groups/b54f80bd-48e2-47ec-af54-d3b0cd42c2b8/\", \"task_id\": \"b62edbcd-bd89-4122-92b8-dace1432261c\", \"call_request_tags\": [\"pulp:consumer:010E99C0-3276-11E2-81C1-0800200C9A66\", \"pulp:action:unit_install\"], \"reasons\": [], \"start_time\": null, \"tags\": [\"pulp:consumer:010E99C0-3276-11E2-81C1-0800200C9A66\", \"pulp:action:unit_install\"], \"state\": \"waiting\", \"finish_time\": null, \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {}, \"call_request_group_id\": \"b54f80bd-48e2-47ec-af54-d3b0cd42c2b8\", \"call_request_id\": \"b62edbcd-bd89-4122-92b8-dace1432261c\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}]"
+    http_version: 
+  recorded_at: Fri, 14 Jun 2013 03:34:41 GMT
+- request: 
+    method: post
+    uri: https://localhost/pulp/api/v2/repositories/1/search/units/
+    body: 
+      encoding: US-ASCII
+      string: "{\"criteria\":{\"type_ids\":[\"erratum\"],\"fields\":{\"unit\":[],\"association\":[\"unit_id\"]}}}"
+    headers: 
+      Accept: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Content-Type: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="Y8Ci5F61K9TARIWfWNLC9y5GxpZpq9WKPZoEzYjk", oauth_signature="q86fQ4ZzY46Dzd2SLtgKdwds430%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371180893", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      Content-Length: 
+      - "84"
+      User-Agent: 
+      - Ruby
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Date: 
+      - Fri, 14 Jun 2013 03:34:53 GMT
+      Server: 
+      - Apache/2.2.15 (Red Hat)
+      Content-Length: 
+      - "372"
+      Content-Type: 
+      - application/json
+    body: 
+      encoding: US-ASCII
+      string: "[{\"_id\": {\"$oid\": \"51ba8f543cbbb55b0e00147a\"}, \"unit_id\": \"a1a40618-3280-4611-b5c8-ef236b341b07\", \"unit_type_id\": \"erratum\", \"metadata\": {\"_id\": \"a1a40618-3280-4611-b5c8-ef236b341b07\"}}, {\"_id\": {\"$oid\": \"51ba8f543cbbb55b0e00147d\"}, \"unit_id\": \"9f82f15c-ef3c-45c4-b438-f194e75269e0\", \"unit_type_id\": \"erratum\", \"metadata\": {\"_id\": \"9f82f15c-ef3c-45c4-b438-f194e75269e0\"}}]"
+    http_version: 
+  recorded_at: Fri, 14 Jun 2013 03:34:53 GMT
+- request: 
+    method: post
+    uri: https://localhost/pulp/api/v2/content/units/erratum/search/
+    body: 
+      encoding: US-ASCII
+      string: "{\"criteria\":{\"filters\":{\"_id\":{\"$in\":[\"a1a40618-3280-4611-b5c8-ef236b341b07\",\"9f82f15c-ef3c-45c4-b438-f194e75269e0\"]}}},\"include_repos\":true}"
+    headers: 
+      Accept: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Content-Type: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="Sm0SqiR8FTEocbXP0T4INKVOb95PaasHU0FwZrpKBo", oauth_signature="YCaL4ssSGK0t3oeARkfolJyVYKM%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371180893", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      Content-Length: 
+      - "141"
+      User-Agent: 
+      - Ruby
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Date: 
+      - Fri, 14 Jun 2013 03:34:53 GMT
+      Server: 
+      - Apache/2.2.15 (Red Hat)
+      Content-Length: 
+      - "1443"
+      Content-Type: 
+      - application/json
+    body: 
+      encoding: US-ASCII
+      string: "[{\"issued\": \"2010-01-01 01:01:01\", \"references\": [], \"_content_type_id\": \"erratum\", \"id\": \"RHEA-2010:0002\", \"severity\": \"\", \"title\": \"One package errata\", \"version\": \"1\", \"reboot_suggested\": false, \"type\": \"security\", \"pkglist\": [{\"packages\": [{\"src\": \"http://www.fedoraproject.org\", \"name\": \"elephant\", \"filename\": \"elephant-0.3-0.8.noarch.rpm\", \"epoch\": null, \"version\": \"0.3\", \"release\": \"0.8\", \"arch\": \"noarch\"}], \"name\": \"1\", \"short\": \"\"}], \"status\": \"stable\", \"updated\": \"\", \"description\": \"One package errata\", \"pushcount\": 1, \"from_str\": \"lzap+pub@redhat.com\", \"_storage_path\": null, \"rights\": \"\", \"solution\": \"\", \"summary\": \"\", \"release\": \"1\", \"_id\": \"9f82f15c-ef3c-45c4-b438-f194e75269e0\", \"_href\": \"/pulp/api/v2/content/units/erratum/9f82f15c-ef3c-45c4-b438-f194e75269e0/\", \"children\": {}, \"repository_memberships\": [\"1\"]}, {\"issued\": \"2010-01-01 01:01:01\", \"references\": [], \"_content_type_id\": \"erratum\", \"id\": \"RHEA-2010:0001\", \"severity\": \"\", \"title\": \"Empty errata\", \"version\": \"1\", \"reboot_suggested\": false, \"type\": \"security\", \"pkglist\": [], \"status\": \"stable\", \"updated\": \"\", \"description\": \"Empty errata\", \"pushcount\": 1, \"from_str\": \"lzap+pub@redhat.com\", \"_storage_path\": null, \"rights\": \"\", \"solution\": \"\", \"summary\": \"\", \"release\": \"1\", \"_id\": \"a1a40618-3280-4611-b5c8-ef236b341b07\", \"_href\": \"/pulp/api/v2/content/units/erratum/a1a40618-3280-4611-b5c8-ef236b341b07/\", \"children\": {}, \"repository_memberships\": [\"1\"]}]"
+    http_version: 
+  recorded_at: Fri, 14 Jun 2013 03:34:53 GMT
+- request: 
+    method: post
+    uri: https://localhost/pulp/api/v2/consumer_groups/simple_group/actions/content/install/
+    body: 
+      encoding: US-ASCII
+      string: "{\"units\":[{\"type_id\":\"erratum\",\"unit_key\":{\"id\":\"9f82f15c-ef3c-45c4-b438-f194e75269e0\"}}],\"options\":{\"importkeys\":true}}"
+    headers: 
+      Accept: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Content-Type: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="fbaPQpJ8frZv50gh0rmzpRZ27T2Gq1NisLh4wLKQcIU", oauth_signature="t23jSNJBqK0y147sfv%2FwoJgpi9Q%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371180893", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      Content-Length: 
+      - "120"
+      User-Agent: 
+      - Ruby
+  response: 
+    status: 
+      code: 202
+      message: Accepted
+    headers: 
+      Date: 
+      - Fri, 14 Jun 2013 03:34:53 GMT
+      Server: 
+      - Apache/2.2.15 (Red Hat)
+      Content-Encoding: 
+      - utf-8
+      Content-Length: 
+      - "752"
+      Content-Type: 
+      - application/json
+    body: 
+      encoding: US-ASCII
+      string: "[{\"task_group_id\": \"12d8b826-1bd0-465a-bace-2bb92cafdad5\", \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/task_groups/12d8b826-1bd0-465a-bace-2bb92cafdad5/\", \"task_id\": \"6184036a-a567-46ab-aad5-cc191ddd185e\", \"call_request_tags\": [\"pulp:consumer:010E99C0-3276-11E2-81C1-0800200C9A66\", \"pulp:action:unit_install\"], \"reasons\": [], \"start_time\": null, \"tags\": [\"pulp:consumer:010E99C0-3276-11E2-81C1-0800200C9A66\", \"pulp:action:unit_install\"], \"state\": \"waiting\", \"finish_time\": null, \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {}, \"call_request_group_id\": \"12d8b826-1bd0-465a-bace-2bb92cafdad5\", \"call_request_id\": \"6184036a-a567-46ab-aad5-cc191ddd185e\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}]"
+    http_version: 
+  recorded_at: Fri, 14 Jun 2013 03:34:53 GMT
+- request: 
+    method: post
+    uri: https://localhost/pulp/api/v2/consumer_groups/simple_group/actions/content/uninstall/
+    body: 
+      encoding: US-ASCII
+      string: "{\"units\":[{\"type_id\":\"package_group\",\"unit_key\":{\"name\":\"mammals\"}}],\"options\":{}}"
+    headers: 
+      Accept: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Content-Type: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="sWc7d3d73H69s4vhNk4knI7hcN4XzJwhbSfOMg8rLOw", oauth_signature="iOQxT7pXOP75zKLFjZQNYgB3Pqo%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371180905", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      Content-Length: 
+      - "82"
+      User-Agent: 
+      - Ruby
+  response: 
+    status: 
+      code: 202
+      message: Accepted
+    headers: 
+      Date: 
+      - Fri, 14 Jun 2013 03:35:05 GMT
+      Server: 
+      - Apache/2.2.15 (Red Hat)
+      Content-Encoding: 
+      - utf-8
+      Content-Length: 
+      - "756"
+      Content-Type: 
+      - application/json
+    body: 
+      encoding: US-ASCII
+      string: "[{\"task_group_id\": \"cbcc24dd-f03d-48c2-bc82-2cb2405a8d4a\", \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/task_groups/cbcc24dd-f03d-48c2-bc82-2cb2405a8d4a/\", \"task_id\": \"ed8ca05d-20c5-4fc3-85da-7e3dbb837a37\", \"call_request_tags\": [\"pulp:consumer:010E99C0-3276-11E2-81C1-0800200C9A66\", \"pulp:action:unit_uninstall\"], \"reasons\": [], \"start_time\": null, \"tags\": [\"pulp:consumer:010E99C0-3276-11E2-81C1-0800200C9A66\", \"pulp:action:unit_uninstall\"], \"state\": \"waiting\", \"finish_time\": null, \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {}, \"call_request_group_id\": \"cbcc24dd-f03d-48c2-bc82-2cb2405a8d4a\", \"call_request_id\": \"ed8ca05d-20c5-4fc3-85da-7e3dbb837a37\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}]"
+    http_version: 
+  recorded_at: Fri, 14 Jun 2013 03:35:05 GMT
+- request: 
+    method: post
+    uri: https://localhost/pulp/api/v2/consumer_groups/simple_group/actions/content/uninstall/
+    body: 
+      encoding: US-ASCII
+      string: "{\"units\":[{\"type_id\":\"rpm\",\"unit_key\":{\"name\":\"cheetah\"}}],\"options\":{}}"
+    headers: 
+      Accept: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Content-Type: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="8459Yow303NlwQt8sKUOy2uJBNPuTvGkEnk45Vcs", oauth_signature="0XGFvSlP7KZ%2F8GETnHeaL3T4m6k%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371180917", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      Content-Length: 
+      - "72"
+      User-Agent: 
+      - Ruby
+  response: 
+    status: 
+      code: 202
+      message: Accepted
+    headers: 
+      Date: 
+      - Fri, 14 Jun 2013 03:35:17 GMT
+      Server: 
+      - Apache/2.2.15 (Red Hat)
+      Content-Encoding: 
+      - utf-8
+      Content-Length: 
+      - "756"
+      Content-Type: 
+      - application/json
+    body: 
+      encoding: US-ASCII
+      string: "[{\"task_group_id\": \"3540169c-9434-4c2f-8b54-37b454e15e81\", \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/task_groups/3540169c-9434-4c2f-8b54-37b454e15e81/\", \"task_id\": \"dd7daa5c-1113-4707-adb9-9371c468952b\", \"call_request_tags\": [\"pulp:consumer:010E99C0-3276-11E2-81C1-0800200C9A66\", \"pulp:action:unit_uninstall\"], \"reasons\": [], \"start_time\": null, \"tags\": [\"pulp:consumer:010E99C0-3276-11E2-81C1-0800200C9A66\", \"pulp:action:unit_uninstall\"], \"state\": \"waiting\", \"finish_time\": null, \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {}, \"call_request_group_id\": \"3540169c-9434-4c2f-8b54-37b454e15e81\", \"call_request_id\": \"dd7daa5c-1113-4707-adb9-9371c468952b\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}]"
+    http_version: 
+  recorded_at: Fri, 14 Jun 2013 03:35:17 GMT
+- request: 
+    method: post
+    uri: https://localhost/pulp/api/v2/consumer_groups/simple_group/actions/content/install/
+    body: 
+      encoding: US-ASCII
+      string: "{\"units\":[{\"type_id\":\"package_group\",\"unit_key\":{\"name\":\"mammals\"}}],\"options\":{\"importkeys\":true}}"
+    headers: 
+      Accept: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Content-Type: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="LAyB9WPy1pp7swjTY6Ra5hmA5i9EpJM4NphubOVn4", oauth_signature="FSe%2BXGb4RcDJtZOLsWcx%2FKmqa9E%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371180929", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      Content-Length: 
+      - "99"
+      User-Agent: 
+      - Ruby
+  response: 
+    status: 
+      code: 202
+      message: Accepted
+    headers: 
+      Date: 
+      - Fri, 14 Jun 2013 03:35:29 GMT
+      Server: 
+      - Apache/2.2.15 (Red Hat)
+      Content-Encoding: 
+      - utf-8
+      Content-Length: 
+      - "752"
+      Content-Type: 
+      - application/json
+    body: 
+      encoding: US-ASCII
+      string: "[{\"task_group_id\": \"793608df-0718-4800-b7b1-b4d6ccb47033\", \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/task_groups/793608df-0718-4800-b7b1-b4d6ccb47033/\", \"task_id\": \"b3f87c0e-0a94-4497-a08d-755b6d0465f4\", \"call_request_tags\": [\"pulp:consumer:010E99C0-3276-11E2-81C1-0800200C9A66\", \"pulp:action:unit_install\"], \"reasons\": [], \"start_time\": null, \"tags\": [\"pulp:consumer:010E99C0-3276-11E2-81C1-0800200C9A66\", \"pulp:action:unit_install\"], \"state\": \"waiting\", \"finish_time\": null, \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {}, \"call_request_group_id\": \"793608df-0718-4800-b7b1-b4d6ccb47033\", \"call_request_id\": \"b3f87c0e-0a94-4497-a08d-755b6d0465f4\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}]"
+    http_version: 
+  recorded_at: Fri, 14 Jun 2013 03:35:29 GMT
+- request: 
+    method: post
+    uri: https://localhost/pulp/api/v2/consumer_groups/simple_group/actions/content/update/
+    body: 
+      encoding: US-ASCII
+      string: "{\"units\":[{\"type_id\":\"rpm\",\"unit_key\":{\"name\":\"cheetah\"}}],\"options\":{\"importkeys\":true}}"
+    headers: 
+      Accept: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Content-Type: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="hCaLHXsIEleoFyE9C2T504jpdlvmN7WNs1Y8vJns", oauth_signature="wcfoCY5Jb77P%2FNPsWrdc6hTPYt0%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371180942", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      Content-Length: 
+      - "89"
+      User-Agent: 
+      - Ruby
+  response: 
+    status: 
+      code: 202
+      message: Accepted
+    headers: 
+      Date: 
+      - Fri, 14 Jun 2013 03:35:42 GMT
+      Server: 
+      - Apache/2.2.15 (Red Hat)
+      Content-Encoding: 
+      - utf-8
+      Content-Length: 
+      - "750"
+      Content-Type: 
+      - application/json
+    body: 
+      encoding: US-ASCII
+      string: "[{\"task_group_id\": \"764dd4a0-63a3-4897-85ce-42d7678a3169\", \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/task_groups/764dd4a0-63a3-4897-85ce-42d7678a3169/\", \"task_id\": \"9c4772d6-a136-4840-8e79-38d56c474637\", \"call_request_tags\": [\"pulp:consumer:010E99C0-3276-11E2-81C1-0800200C9A66\", \"pulp:action:unit_update\"], \"reasons\": [], \"start_time\": null, \"tags\": [\"pulp:consumer:010E99C0-3276-11E2-81C1-0800200C9A66\", \"pulp:action:unit_update\"], \"state\": \"waiting\", \"finish_time\": null, \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {}, \"call_request_group_id\": \"764dd4a0-63a3-4897-85ce-42d7678a3169\", \"call_request_id\": \"9c4772d6-a136-4840-8e79-38d56c474637\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}]"
+    http_version: 
+  recorded_at: Fri, 14 Jun 2013 03:35:42 GMT
+- request: 
+    method: post
+    uri: https://localhost/pulp/api/v2/consumer_groups/
+    body: 
+      encoding: US-ASCII
+      string: "{\"id\":\"simple_group\",\"description\":\"Super administrator with all access.\",\"consumer_ids\":[\"010E99C0-3276-11E2-81C1-0800200C9A66\"]}"
+    headers: 
+      Accept: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Content-Type: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="rC9P3eYw59GgONDWDbv1X6GdIqe3EKCokdW2zblsh98", oauth_signature="tRkoy29mKF5ygk%2Bj8fAdPmKn7vc%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371180953", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      Content-Length: 
+      - "130"
+      User-Agent: 
+      - Ruby
+  response: 
+    status: 
+      code: 201
+      message: Created
+    headers: 
+      Date: 
+      - Fri, 14 Jun 2013 03:35:53 GMT
+      Server: 
+      - Apache/2.2.15 (Red Hat)
+      Location: 
+      - /pulp/api/v2/consumer_groups/simple_group/
+      Content-Length: 
+      - "316"
+      Content-Type: 
+      - application/json
+    body: 
+      encoding: US-ASCII
+      string: "{\"scratchpad\": null, \"display_name\": null, \"description\": \"Super administrator with all access.\", \"_ns\": \"consumer_groups\", \"notes\": {}, \"consumer_ids\": [\"010E99C0-3276-11E2-81C1-0800200C9A66\"], \"_id\": {\"$oid\": \"51ba8f9a3cbbb55b0e00174b\"}, \"id\": \"simple_group\", \"_href\": \"/pulp/api/v2/consumer_groups/simple_group/\"}"
+    http_version: 
+  recorded_at: Fri, 14 Jun 2013 03:35:54 GMT
+- request: 
+    method: delete
+    uri: https://localhost/pulp/api/v2/consumer_groups/simple_group/
     body: 
       encoding: US-ASCII
       string: ""
@@ -14,7 +379,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="dLkME54yAywWjvGG9Ag4vb3HUCyD2lVCD6n85b4fVE", oauth_signature="KfLkyUlCMYRrk8WeGpjsk8OBo1E%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371158413", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="20Xq0tISs24jpdmGlar9ax7BfbvzhKqnZDuLpzPD5YQ", oauth_signature="sGZEdDmlnro6aixkg32334TVBWQ%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371180954", oauth_version="1.0"
       Pulp-User: 
       - admin
       User-Agent: 
@@ -25,21 +390,21 @@ http_interactions:
       message: OK
     headers: 
       Date: 
-      - Thu, 13 Jun 2013 21:20:13 GMT
+      - Fri, 14 Jun 2013 03:35:54 GMT
       Server: 
       - Apache/2.2.15 (Red Hat)
       Content-Length: 
-      - "2"
+      - "4"
       Content-Type: 
       - application/json
     body: 
       encoding: US-ASCII
-      string: "[]"
+      string: "null"
     http_version: 
-  recorded_at: Thu, 13 Jun 2013 21:20:13 GMT
+  recorded_at: Fri, 14 Jun 2013 03:35:54 GMT
 - request: 
     method: get
-    uri: https://abed.usersys.redhat.com/pulp/api/v2/repositories/367202338/?details=true
+    uri: https://localhost/pulp/api/v2/consumer_groups/simple_group/
     body: 
       encoding: US-ASCII
       string: ""
@@ -51,7 +416,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="49D4LFNt8ahrrpMMDoMozNEavCv8HNHRyR0uQhA8EuI", oauth_signature="ixDVVcPYCD%2FeIreeQi50dw1ATH4%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371158413", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="Y5muhBELTOq2hVOOlrFAJNFr5WUYiXkQq7nBXzDg", oauth_signature="9eAig7cWYutVETvXIPQVXYcQcn4%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371180954", oauth_version="1.0"
       Pulp-User: 
       - admin
       User-Agent: 
@@ -62,46 +427,7 @@ http_interactions:
       message: Not Found
     headers: 
       Date: 
-      - Thu, 13 Jun 2013 21:20:13 GMT
-      Server: 
-      - Apache/2.2.15 (Red Hat)
-      Content-Encoding: 
-      - utf-8
-      Content-Length: 
-      - "229"
-      Content-Type: 
-      - application/json
-    body: 
-      encoding: US-ASCII
-      string: "{\"http_request_method\": \"GET\", \"exception\": null, \"error_message\": \"Missing resource(s): repo=367202338\", \"_href\": \"/pulp/api/v2/repositories/367202338/\", \"http_status\": 404, \"traceback\": null, \"resources\": {\"repo\": \"367202338\"}}"
-    http_version: 
-  recorded_at: Thu, 13 Jun 2013 21:20:13 GMT
-- request: 
-    method: get
-    uri: https://abed.usersys.redhat.com/pulp/api/v2/consumer_groups/simple_group/
-    body: 
-      encoding: US-ASCII
-      string: ""
-    headers: 
-      Accept: 
-      - application/json
-      Accept-Encoding: 
-      - gzip, deflate
-      Content-Type: 
-      - application/json
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="3Ceu5HXXWd0zLC22tZD97UF5pPjk03mDGiBPeehLYU", oauth_signature="Qqtnqjw2r7eC7AmUmEJxowacncU%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371158415", oauth_version="1.0"
-      Pulp-User: 
-      - admin
-      User-Agent: 
-      - Ruby
-  response: 
-    status: 
-      code: 404
-      message: Not Found
-    headers: 
-      Date: 
-      - Thu, 13 Jun 2013 21:20:15 GMT
+      - Fri, 14 Jun 2013 03:35:54 GMT
       Server: 
       - Apache/2.2.15 (Red Hat)
       Content-Encoding: 
@@ -114,10 +440,10 @@ http_interactions:
       encoding: US-ASCII
       string: "{\"http_request_method\": \"GET\", \"exception\": null, \"error_message\": \"Missing resource(s): consumer_group=simple_group\", \"_href\": \"/pulp/api/v2/consumer_groups/simple_group/\", \"http_status\": 404, \"traceback\": null, \"resources\": {\"consumer_group\": \"simple_group\"}}"
     http_version: 
-  recorded_at: Thu, 13 Jun 2013 21:20:15 GMT
+  recorded_at: Fri, 14 Jun 2013 03:35:54 GMT
 - request: 
     method: post
-    uri: https://abed.usersys.redhat.com/pulp/api/v2/consumer_groups/
+    uri: https://localhost/pulp/api/v2/consumer_groups/
     body: 
       encoding: US-ASCII
       string: "{\"id\":\"simple_group\",\"description\":\"Super administrator with all access.\",\"consumer_ids\":[\"010E99C0-3276-11E2-81C1-0800200C9A66\"]}"
@@ -129,7 +455,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="73UQYA5Y1qyFwZdIt2CC3lD9CAmhV5kXBK4LXAyW3w", oauth_signature="aADeHsa9qjXYK7tpRJM%2Fo51%2FLAQ%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371158415", oauth_version="1.0"
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="Gb578nCjoaD9pCYTBXT6Rnm7vPSneeQFw4bPFIk3Uzw", oauth_signature="JBM0gxauetiY%2BFifFMK4LnlnhSQ%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371180954", oauth_version="1.0"
       Pulp-User: 
       - admin
       Content-Length: 
@@ -142,7 +468,7 @@ http_interactions:
       message: Created
     headers: 
       Date: 
-      - Thu, 13 Jun 2013 21:20:15 GMT
+      - Fri, 14 Jun 2013 03:35:54 GMT
       Server: 
       - Apache/2.2.15 (Red Hat)
       Location: 
@@ -153,12 +479,12 @@ http_interactions:
       - application/json
     body: 
       encoding: US-ASCII
-      string: "{\"scratchpad\": null, \"display_name\": null, \"description\": \"Super administrator with all access.\", \"_ns\": \"consumer_groups\", \"notes\": {}, \"consumer_ids\": [\"010E99C0-3276-11E2-81C1-0800200C9A66\"], \"_id\": {\"$oid\": \"51ba378f5ca01344a5ca8ea4\"}, \"id\": \"simple_group\", \"_href\": \"/pulp/api/v2/consumer_groups/simple_group/\"}"
+      string: "{\"scratchpad\": null, \"display_name\": null, \"description\": \"Super administrator with all access.\", \"_ns\": \"consumer_groups\", \"notes\": {}, \"consumer_ids\": [\"010E99C0-3276-11E2-81C1-0800200C9A66\"], \"_id\": {\"$oid\": \"51ba8f9b3cbbb55b0e001771\"}, \"id\": \"simple_group\", \"_href\": \"/pulp/api/v2/consumer_groups/simple_group/\"}"
     http_version: 
-  recorded_at: Thu, 13 Jun 2013 21:20:15 GMT
+  recorded_at: Fri, 14 Jun 2013 03:35:55 GMT
 - request: 
     method: post
-    uri: https://abed.usersys.redhat.com/pulp/api/v2/consumer_groups/simple_group/actions/associate/
+    uri: https://localhost/pulp/api/v2/consumer_groups/simple_group/actions/associate/
     body: 
       encoding: US-ASCII
       string: "{\"criteria\":{\"filters\":{\"id\":{\"$in\":[\"010E99C0-3276-11E2-81C1-0800200C9A66\"]}}}}"
@@ -170,7 +496,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="ogA9wupChiuJC9ACTvIs1trh6G7xrrJ2qvbS2AHmtSE", oauth_signature="hcOSJ43tfJTpgwjIDYL7JGcMWME%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371158415", oauth_version="1.0"
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="rSMCTfIOY9lhvnKcNf1OBGDSeOh9qFimMrxCtJ0", oauth_signature="Ygnrzuv9Xxzmdx9KzpmxV7%2FYUYM%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371180955", oauth_version="1.0"
       Pulp-User: 
       - admin
       Content-Length: 
@@ -183,7 +509,7 @@ http_interactions:
       message: OK
     headers: 
       Date: 
-      - Thu, 13 Jun 2013 21:20:15 GMT
+      - Fri, 14 Jun 2013 03:35:55 GMT
       Server: 
       - Apache/2.2.15 (Red Hat)
       Content-Length: 
@@ -194,10 +520,10 @@ http_interactions:
       encoding: US-ASCII
       string: "[\"010E99C0-3276-11E2-81C1-0800200C9A66\"]"
     http_version: 
-  recorded_at: Thu, 13 Jun 2013 21:20:15 GMT
+  recorded_at: Fri, 14 Jun 2013 03:35:55 GMT
 - request: 
     method: get
-    uri: https://abed.usersys.redhat.com/pulp/api/v2/consumer_groups/simple_group/
+    uri: https://localhost/pulp/api/v2/consumer_groups/simple_group/
     body: 
       encoding: US-ASCII
       string: ""
@@ -209,7 +535,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="kiBuMVgFHs6xZ3bFg39X4DVwmk0XxP1zmf5EB1Ww", oauth_signature="jqIMZiNmvvmjw56KmX4zKea3jLo%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371158416", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="zY0u48pjoAHAbSiWEzl8XRUxWlmYIBeeWQIF8LFw", oauth_signature="heRkWv8vJUGL%2F9KKeXLR9PJv29w%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371180955", oauth_version="1.0"
       Pulp-User: 
       - admin
       User-Agent: 
@@ -220,7 +546,7 @@ http_interactions:
       message: OK
     headers: 
       Date: 
-      - Thu, 13 Jun 2013 21:20:16 GMT
+      - Fri, 14 Jun 2013 03:35:55 GMT
       Server: 
       - Apache/2.2.15 (Red Hat)
       Content-Length: 
@@ -229,12 +555,12 @@ http_interactions:
       - application/json
     body: 
       encoding: US-ASCII
-      string: "{\"scratchpad\": null, \"display_name\": null, \"description\": \"Super administrator with all access.\", \"_ns\": \"consumer_groups\", \"notes\": {}, \"consumer_ids\": [], \"_id\": {\"$oid\": \"51ba378f5ca01344a5ca8ea4\"}, \"id\": \"simple_group\", \"_href\": \"/pulp/api/v2/consumer_groups/simple_group/\"}"
+      string: "{\"scratchpad\": null, \"display_name\": null, \"description\": \"Super administrator with all access.\", \"_ns\": \"consumer_groups\", \"notes\": {}, \"consumer_ids\": [], \"_id\": {\"$oid\": \"51ba8f9b3cbbb55b0e001771\"}, \"id\": \"simple_group\", \"_href\": \"/pulp/api/v2/consumer_groups/simple_group/\"}"
     http_version: 
-  recorded_at: Thu, 13 Jun 2013 21:20:16 GMT
+  recorded_at: Fri, 14 Jun 2013 03:35:55 GMT
 - request: 
     method: delete
-    uri: https://abed.usersys.redhat.com/pulp/api/v2/consumer_groups/simple_group/
+    uri: https://localhost/pulp/api/v2/consumer_groups/simple_group/
     body: 
       encoding: US-ASCII
       string: ""
@@ -246,7 +572,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="kxQ54BfVsFO378qKP9Es7FmauUZWb1S3BNrrl3VnU", oauth_signature="KxmWDXI06QIoi5Wa%2BmvOnBvkf1Y%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371158416", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="Z0jztDYoXoqMETpfEiPyRXtoPExCgDpO3I7wxbEzMB0", oauth_signature="UPN%2BZX9A95pgtmE4fGm%2BzO8o4ls%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371180955", oauth_version="1.0"
       Pulp-User: 
       - admin
       User-Agent: 
@@ -257,7 +583,7 @@ http_interactions:
       message: OK
     headers: 
       Date: 
-      - Thu, 13 Jun 2013 21:20:16 GMT
+      - Fri, 14 Jun 2013 03:35:55 GMT
       Server: 
       - Apache/2.2.15 (Red Hat)
       Content-Length: 
@@ -268,10 +594,10 @@ http_interactions:
       encoding: US-ASCII
       string: "null"
     http_version: 
-  recorded_at: Thu, 13 Jun 2013 21:20:16 GMT
+  recorded_at: Fri, 14 Jun 2013 03:35:55 GMT
 - request: 
     method: post
-    uri: https://abed.usersys.redhat.com/pulp/api/v2/consumer_groups/
+    uri: https://localhost/pulp/api/v2/consumer_groups/
     body: 
       encoding: US-ASCII
       string: "{\"id\":\"simple_group\",\"description\":\"Super administrator with all access.\",\"consumer_ids\":[\"010E99C0-3276-11E2-81C1-0800200C9A66\"]}"
@@ -283,7 +609,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="GgTCkNIOz1eOU1BNffNsgY7E8gUaNGX2LbNnOFTJQ", oauth_signature="BPNDD9GokypSZhOFGNN%2BXyHz2SQ%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371158416", oauth_version="1.0"
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="sNtZzWIeo2XyYodnV2qvQpP0WXygSyjsrGeWfpoE", oauth_signature="PtNNCo%2FiZp8gpkQpYtFd5nOKaOk%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371180956", oauth_version="1.0"
       Pulp-User: 
       - admin
       Content-Length: 
@@ -296,7 +622,7 @@ http_interactions:
       message: Created
     headers: 
       Date: 
-      - Thu, 13 Jun 2013 21:20:16 GMT
+      - Fri, 14 Jun 2013 03:35:56 GMT
       Server: 
       - Apache/2.2.15 (Red Hat)
       Location: 
@@ -307,12 +633,12 @@ http_interactions:
       - application/json
     body: 
       encoding: US-ASCII
-      string: "{\"scratchpad\": null, \"display_name\": null, \"description\": \"Super administrator with all access.\", \"_ns\": \"consumer_groups\", \"notes\": {}, \"consumer_ids\": [\"010E99C0-3276-11E2-81C1-0800200C9A66\"], \"_id\": {\"$oid\": \"51ba37905ca01344a5ca8ed4\"}, \"id\": \"simple_group\", \"_href\": \"/pulp/api/v2/consumer_groups/simple_group/\"}"
+      string: "{\"scratchpad\": null, \"display_name\": null, \"description\": \"Super administrator with all access.\", \"_ns\": \"consumer_groups\", \"notes\": {}, \"consumer_ids\": [\"010E99C0-3276-11E2-81C1-0800200C9A66\"], \"_id\": {\"$oid\": \"51ba8f9c3cbbb55b0e0017a1\"}, \"id\": \"simple_group\", \"_href\": \"/pulp/api/v2/consumer_groups/simple_group/\"}"
     http_version: 
-  recorded_at: Thu, 13 Jun 2013 21:20:16 GMT
+  recorded_at: Fri, 14 Jun 2013 03:35:56 GMT
 - request: 
     method: post
-    uri: https://abed.usersys.redhat.com/pulp/api/v2/consumer_groups/simple_group/actions/associate/
+    uri: https://localhost/pulp/api/v2/consumer_groups/simple_group/actions/associate/
     body: 
       encoding: US-ASCII
       string: "{\"criteria\":{\"filters\":{\"id\":{\"$in\":[\"010E99C0-3276-11E2-81C1-0800200C9A66\"]}}}}"
@@ -324,7 +650,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="8Y3Jv8GkRuaZLoo6Fkuk5QprEQVGFAznhVzV8ewxQ", oauth_signature="oU%2FTPG5XeixGMwzFqT2h6cYKZ7w%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371158416", oauth_version="1.0"
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="FKnBSQRwUjc3HU3d2lOhqLAKavEUrfPRILOHo4l6w", oauth_signature="uuFlH%2FZeVvg8tGvmypgmnfMZiOE%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371180956", oauth_version="1.0"
       Pulp-User: 
       - admin
       Content-Length: 
@@ -337,7 +663,7 @@ http_interactions:
       message: OK
     headers: 
       Date: 
-      - Thu, 13 Jun 2013 21:20:16 GMT
+      - Fri, 14 Jun 2013 03:35:56 GMT
       Server: 
       - Apache/2.2.15 (Red Hat)
       Content-Length: 
@@ -348,10 +674,10 @@ http_interactions:
       encoding: US-ASCII
       string: "[\"010E99C0-3276-11E2-81C1-0800200C9A66\"]"
     http_version: 
-  recorded_at: Thu, 13 Jun 2013 21:20:17 GMT
+  recorded_at: Fri, 14 Jun 2013 03:35:56 GMT
 - request: 
     method: post
-    uri: https://abed.usersys.redhat.com/pulp/api/v2/consumer_groups/simple_group/actions/unassociate/
+    uri: https://localhost/pulp/api/v2/consumer_groups/simple_group/actions/unassociate/
     body: 
       encoding: US-ASCII
       string: "{\"criteria\":{\"filters\":{\"id\":{\"$in\":[\"010E99C0-3276-11E2-81C1-0800200C9A66\"]}}}}"
@@ -363,7 +689,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="Xlaab8uFfUjrYAbk8Ut321c8LzVfXVwnW9YEvqG4M", oauth_signature="FK96Jh7nbJn78CJR1Xv5LqbCIls%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371158417", oauth_version="1.0"
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="Qynwx9mjLI6QOWKq92HarUuVQ8TuC5kvFOZUrNusmY", oauth_signature="eUvls24%2B8iiSv8hrQvfbebMxQiE%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371180956", oauth_version="1.0"
       Pulp-User: 
       - admin
       Content-Length: 
@@ -376,7 +702,7 @@ http_interactions:
       message: OK
     headers: 
       Date: 
-      - Thu, 13 Jun 2013 21:20:17 GMT
+      - Fri, 14 Jun 2013 03:35:56 GMT
       Server: 
       - Apache/2.2.15 (Red Hat)
       Content-Length: 
@@ -387,10 +713,10 @@ http_interactions:
       encoding: US-ASCII
       string: "[\"010E99C0-3276-11E2-81C1-0800200C9A66\"]"
     http_version: 
-  recorded_at: Thu, 13 Jun 2013 21:20:17 GMT
+  recorded_at: Fri, 14 Jun 2013 03:35:56 GMT
 - request: 
     method: get
-    uri: https://abed.usersys.redhat.com/pulp/api/v2/consumer_groups/simple_group/
+    uri: https://localhost/pulp/api/v2/consumer_groups/simple_group/
     body: 
       encoding: US-ASCII
       string: ""
@@ -402,7 +728,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="aAKzChVWywm2BnIPe5EaNMrikdtdjDDAvE452D30s0", oauth_signature="pQCjMnIj3At6sTGQnOgou9aMXNE%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371158417", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="W5UW4br6yjLAidkrihG4oS6lRXJ120Nteug0Q43kro", oauth_signature="0VI8Je%2BY0ZgIliS1K05MjbX055s%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371180956", oauth_version="1.0"
       Pulp-User: 
       - admin
       User-Agent: 
@@ -413,7 +739,7 @@ http_interactions:
       message: OK
     headers: 
       Date: 
-      - Thu, 13 Jun 2013 21:20:17 GMT
+      - Fri, 14 Jun 2013 03:35:56 GMT
       Server: 
       - Apache/2.2.15 (Red Hat)
       Content-Length: 
@@ -422,12 +748,12 @@ http_interactions:
       - application/json
     body: 
       encoding: US-ASCII
-      string: "{\"scratchpad\": null, \"display_name\": null, \"description\": \"Super administrator with all access.\", \"_ns\": \"consumer_groups\", \"notes\": {}, \"consumer_ids\": [], \"_id\": {\"$oid\": \"51ba37905ca01344a5ca8ed4\"}, \"id\": \"simple_group\", \"_href\": \"/pulp/api/v2/consumer_groups/simple_group/\"}"
+      string: "{\"scratchpad\": null, \"display_name\": null, \"description\": \"Super administrator with all access.\", \"_ns\": \"consumer_groups\", \"notes\": {}, \"consumer_ids\": [], \"_id\": {\"$oid\": \"51ba8f9c3cbbb55b0e0017a1\"}, \"id\": \"simple_group\", \"_href\": \"/pulp/api/v2/consumer_groups/simple_group/\"}"
     http_version: 
-  recorded_at: Thu, 13 Jun 2013 21:20:17 GMT
+  recorded_at: Fri, 14 Jun 2013 03:35:56 GMT
 - request: 
     method: delete
-    uri: https://abed.usersys.redhat.com/pulp/api/v2/consumer_groups/simple_group/
+    uri: https://localhost/pulp/api/v2/consumer_groups/simple_group/
     body: 
       encoding: US-ASCII
       string: ""
@@ -439,7 +765,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="VBad8ir3RuD3UNbhKwwEx8N4Goda2QK0uBAPXh1cIo", oauth_signature="S%2BEDvMs8%2BsNVUxkik0z%2FqmnqdMU%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371158417", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="M568SeQHCJPLzHTrhkNIfSpGMlCyaiYgf9zjZbNOy8", oauth_signature="8bNiMFeuDXk3CckolOUKK8XMeT0%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371180956", oauth_version="1.0"
       Pulp-User: 
       - admin
       User-Agent: 
@@ -450,7 +776,7 @@ http_interactions:
       message: OK
     headers: 
       Date: 
-      - Thu, 13 Jun 2013 21:20:17 GMT
+      - Fri, 14 Jun 2013 03:35:56 GMT
       Server: 
       - Apache/2.2.15 (Red Hat)
       Content-Length: 
@@ -461,10 +787,10 @@ http_interactions:
       encoding: US-ASCII
       string: "null"
     http_version: 
-  recorded_at: Thu, 13 Jun 2013 21:20:17 GMT
+  recorded_at: Fri, 14 Jun 2013 03:35:57 GMT
 - request: 
     method: post
-    uri: https://abed.usersys.redhat.com/pulp/api/v2/consumer_groups/
+    uri: https://localhost/pulp/api/v2/consumer_groups/
     body: 
       encoding: US-ASCII
       string: "{\"id\":\"simple_group\",\"description\":\"Super administrator with all access.\",\"consumer_ids\":[\"010E99C0-3276-11E2-81C1-0800200C9A66\"]}"
@@ -476,7 +802,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="xmOx5pa5ht6osQiZAyEcJl8ShfQtwNKIBmJ6QbkGimE", oauth_signature="W5TmulcD2FZDZW6ighB7nFWhZO8%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371158418", oauth_version="1.0"
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="Qze8XrjRfn9iAbDlljuepwNEktG7UTCdqp3pQjUVdtY", oauth_signature="K2lHwOaR4h90GGVke6GGoFLGz%2F0%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371180957", oauth_version="1.0"
       Pulp-User: 
       - admin
       Content-Length: 
@@ -489,7 +815,7 @@ http_interactions:
       message: Created
     headers: 
       Date: 
-      - Thu, 13 Jun 2013 21:20:18 GMT
+      - Fri, 14 Jun 2013 03:35:57 GMT
       Server: 
       - Apache/2.2.15 (Red Hat)
       Location: 
@@ -500,12 +826,12 @@ http_interactions:
       - application/json
     body: 
       encoding: US-ASCII
-      string: "{\"scratchpad\": null, \"display_name\": null, \"description\": \"Super administrator with all access.\", \"_ns\": \"consumer_groups\", \"notes\": {}, \"consumer_ids\": [\"010E99C0-3276-11E2-81C1-0800200C9A66\"], \"_id\": {\"$oid\": \"51ba37925ca01344a5ca8f0d\"}, \"id\": \"simple_group\", \"_href\": \"/pulp/api/v2/consumer_groups/simple_group/\"}"
+      string: "{\"scratchpad\": null, \"display_name\": null, \"description\": \"Super administrator with all access.\", \"_ns\": \"consumer_groups\", \"notes\": {}, \"consumer_ids\": [\"010E99C0-3276-11E2-81C1-0800200C9A66\"], \"_id\": {\"$oid\": \"51ba8f9d3cbbb55b0e0017da\"}, \"id\": \"simple_group\", \"_href\": \"/pulp/api/v2/consumer_groups/simple_group/\"}"
     http_version: 
-  recorded_at: Thu, 13 Jun 2013 21:20:18 GMT
+  recorded_at: Fri, 14 Jun 2013 03:35:58 GMT
 - request: 
     method: post
-    uri: https://abed.usersys.redhat.com/pulp/api/v2/consumer_groups/simple_group/actions/associate/
+    uri: https://localhost/pulp/api/v2/consumer_groups/simple_group/actions/associate/
     body: 
       encoding: US-ASCII
       string: "{\"criteria\":{\"filters\":{\"id\":{\"$in\":[\"010E99C0-3276-11E2-81C1-0800200C9A66\"]}}}}"
@@ -517,7 +843,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="dU400Sc7GHR4bVoOChA5kWKmPm71GX6qnrNMxaWYfg", oauth_signature="g5bQav48usehQS353LRFR8JqEYQ%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371158418", oauth_version="1.0"
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="BFAkOMav5cLY3qtsyl2iK6YeCIenu6ox1awPZ5NE", oauth_signature="DolNMK%2F%2BIV7mqV0eCmyGBHL6Fig%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371180958", oauth_version="1.0"
       Pulp-User: 
       - admin
       Content-Length: 
@@ -530,7 +856,7 @@ http_interactions:
       message: OK
     headers: 
       Date: 
-      - Thu, 13 Jun 2013 21:20:18 GMT
+      - Fri, 14 Jun 2013 03:35:58 GMT
       Server: 
       - Apache/2.2.15 (Red Hat)
       Content-Length: 
@@ -541,10 +867,10 @@ http_interactions:
       encoding: US-ASCII
       string: "[\"010E99C0-3276-11E2-81C1-0800200C9A66\"]"
     http_version: 
-  recorded_at: Thu, 13 Jun 2013 21:20:18 GMT
+  recorded_at: Fri, 14 Jun 2013 03:35:58 GMT
 - request: 
     method: post
-    uri: https://abed.usersys.redhat.com/pulp/api/v2/consumer_groups/simple_group/actions/unassociate/
+    uri: https://localhost/pulp/api/v2/consumer_groups/simple_group/actions/unassociate/
     body: 
       encoding: US-ASCII
       string: "{\"criteria\":{\"filters\":{\"id\":{\"$in\":[\"010E99C0-3276-11E2-81C1-0800200C9A66\"]}}}}"
@@ -556,7 +882,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="SoArSknGyHsvTg371VMkhA1w4VsKa0JuZ5teyowflfk", oauth_signature="MpJQpJ2YTnq%2FDjvLBY%2FoSXW9kf8%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371158418", oauth_version="1.0"
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="AvO0ytOUoHCsgAORHUcZ1pGZ4h4s8jCBCapwv9w", oauth_signature="09T6Xmtpk8w0ovTaRzTjMLjITXw%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371180958", oauth_version="1.0"
       Pulp-User: 
       - admin
       Content-Length: 
@@ -569,7 +895,7 @@ http_interactions:
       message: OK
     headers: 
       Date: 
-      - Thu, 13 Jun 2013 21:20:18 GMT
+      - Fri, 14 Jun 2013 03:35:58 GMT
       Server: 
       - Apache/2.2.15 (Red Hat)
       Content-Length: 
@@ -580,10 +906,10 @@ http_interactions:
       encoding: US-ASCII
       string: "[\"010E99C0-3276-11E2-81C1-0800200C9A66\"]"
     http_version: 
-  recorded_at: Thu, 13 Jun 2013 21:20:18 GMT
+  recorded_at: Fri, 14 Jun 2013 03:35:58 GMT
 - request: 
     method: get
-    uri: https://abed.usersys.redhat.com/pulp/api/v2/consumer_groups/simple_group/
+    uri: https://localhost/pulp/api/v2/consumer_groups/simple_group/
     body: 
       encoding: US-ASCII
       string: ""
@@ -595,7 +921,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="UcTN3MLm8Cm9mXeoMyvnZk2t51CaaSmL0rowq0o", oauth_signature="otWM7TTcOXgv4JFYHy%2F8FhJ0AtQ%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371158419", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="nRmdJnqf8JaEOfcS9elqezDZJLsBXtUAIFmWmvCs", oauth_signature="RPgVtuqKZZOemQnH4mlzf9Rj0io%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371180958", oauth_version="1.0"
       Pulp-User: 
       - admin
       User-Agent: 
@@ -606,7 +932,7 @@ http_interactions:
       message: OK
     headers: 
       Date: 
-      - Thu, 13 Jun 2013 21:20:19 GMT
+      - Fri, 14 Jun 2013 03:35:58 GMT
       Server: 
       - Apache/2.2.15 (Red Hat)
       Content-Length: 
@@ -615,12 +941,12 @@ http_interactions:
       - application/json
     body: 
       encoding: US-ASCII
-      string: "{\"scratchpad\": null, \"display_name\": null, \"description\": \"Super administrator with all access.\", \"_ns\": \"consumer_groups\", \"notes\": {}, \"consumer_ids\": [], \"_id\": {\"$oid\": \"51ba37925ca01344a5ca8f0d\"}, \"id\": \"simple_group\", \"_href\": \"/pulp/api/v2/consumer_groups/simple_group/\"}"
+      string: "{\"scratchpad\": null, \"display_name\": null, \"description\": \"Super administrator with all access.\", \"_ns\": \"consumer_groups\", \"notes\": {}, \"consumer_ids\": [], \"_id\": {\"$oid\": \"51ba8f9d3cbbb55b0e0017da\"}, \"id\": \"simple_group\", \"_href\": \"/pulp/api/v2/consumer_groups/simple_group/\"}"
     http_version: 
-  recorded_at: Thu, 13 Jun 2013 21:20:19 GMT
+  recorded_at: Fri, 14 Jun 2013 03:35:58 GMT
 - request: 
     method: delete
-    uri: https://abed.usersys.redhat.com/pulp/api/v2/consumer_groups/simple_group/
+    uri: https://localhost/pulp/api/v2/consumer_groups/simple_group/
     body: 
       encoding: US-ASCII
       string: ""
@@ -632,7 +958,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="RdXZd4p0FsTCQSv0dEx8jE6bHWkRzXKQmwKRgjtiEWw", oauth_signature="NmnKn4TgbrrmZYY%2BnFL%2F8DdYsNA%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371158419", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="8wd4MHZsXdc2miA0N2vHp5BosARsPGzeFeyp3uFTg", oauth_signature="rkOJVsZlzKkzQRHVZE4BNAoXPP4%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371180958", oauth_version="1.0"
       Pulp-User: 
       - admin
       User-Agent: 
@@ -643,7 +969,7 @@ http_interactions:
       message: OK
     headers: 
       Date: 
-      - Thu, 13 Jun 2013 21:20:19 GMT
+      - Fri, 14 Jun 2013 03:35:58 GMT
       Server: 
       - Apache/2.2.15 (Red Hat)
       Content-Length: 
@@ -654,10 +980,10 @@ http_interactions:
       encoding: US-ASCII
       string: "null"
     http_version: 
-  recorded_at: Thu, 13 Jun 2013 21:20:19 GMT
+  recorded_at: Fri, 14 Jun 2013 03:35:58 GMT
 - request: 
     method: post
-    uri: https://abed.usersys.redhat.com/pulp/api/v2/consumer_groups/
+    uri: https://localhost/pulp/api/v2/consumer_groups/
     body: 
       encoding: US-ASCII
       string: "{\"id\":\"simple_group\",\"description\":\"Super administrator with all access.\",\"consumer_ids\":[\"010E99C0-3276-11E2-81C1-0800200C9A66\"]}"
@@ -669,7 +995,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="nYH1Ju56jmte8jOkShLHcxhRD2gkuN5UI5vAgLqxDxo", oauth_signature="ICb2HWpvQzAXm0UhEgjbND4HVLU%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371158419", oauth_version="1.0"
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="d97Z98HCTiOEGlzEynRd40AOU6xkIBjZ4AGiAe2w", oauth_signature="6mY3gMHHeekz%2BzB3wm%2F0KDatYGI%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371180959", oauth_version="1.0"
       Pulp-User: 
       - admin
       Content-Length: 
@@ -682,7 +1008,7 @@ http_interactions:
       message: Created
     headers: 
       Date: 
-      - Thu, 13 Jun 2013 21:20:19 GMT
+      - Fri, 14 Jun 2013 03:35:59 GMT
       Server: 
       - Apache/2.2.15 (Red Hat)
       Location: 
@@ -693,12 +1019,12 @@ http_interactions:
       - application/json
     body: 
       encoding: US-ASCII
-      string: "{\"scratchpad\": null, \"display_name\": null, \"description\": \"Super administrator with all access.\", \"_ns\": \"consumer_groups\", \"notes\": {}, \"consumer_ids\": [\"010E99C0-3276-11E2-81C1-0800200C9A66\"], \"_id\": {\"$oid\": \"51ba37935ca01344a5ca8f46\"}, \"id\": \"simple_group\", \"_href\": \"/pulp/api/v2/consumer_groups/simple_group/\"}"
+      string: "{\"scratchpad\": null, \"display_name\": null, \"description\": \"Super administrator with all access.\", \"_ns\": \"consumer_groups\", \"notes\": {}, \"consumer_ids\": [\"010E99C0-3276-11E2-81C1-0800200C9A66\"], \"_id\": {\"$oid\": \"51ba8f9f3cbbb55b0e001813\"}, \"id\": \"simple_group\", \"_href\": \"/pulp/api/v2/consumer_groups/simple_group/\"}"
     http_version: 
-  recorded_at: Thu, 13 Jun 2013 21:20:19 GMT
+  recorded_at: Fri, 14 Jun 2013 03:35:59 GMT
 - request: 
     method: post
-    uri: https://abed.usersys.redhat.com/pulp/api/v2/consumer_groups/simple_group/actions/associate/
+    uri: https://localhost/pulp/api/v2/consumer_groups/simple_group/actions/associate/
     body: 
       encoding: US-ASCII
       string: "{\"criteria\":{\"filters\":{\"id\":{\"$in\":[\"010E99C0-3276-11E2-81C1-0800200C9A66\"]}}}}"
@@ -710,7 +1036,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="kVspnJhJIGEp9JsFbCm60jGvi0MS1ZWA0sXJmZHnxjY", oauth_signature="V%2FzvgQhtjl029p5c1zVWPuu5zs8%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371158419", oauth_version="1.0"
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="32AFzfSVzpiXRLZhnhNQb3mvLVRsc986AYMfD0Xfs", oauth_signature="3YFh32RWo8ZPFzuUUoZLe5cZ9Ek%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371180959", oauth_version="1.0"
       Pulp-User: 
       - admin
       Content-Length: 
@@ -723,7 +1049,7 @@ http_interactions:
       message: OK
     headers: 
       Date: 
-      - Thu, 13 Jun 2013 21:20:19 GMT
+      - Fri, 14 Jun 2013 03:35:59 GMT
       Server: 
       - Apache/2.2.15 (Red Hat)
       Content-Length: 
@@ -734,10 +1060,10 @@ http_interactions:
       encoding: US-ASCII
       string: "[\"010E99C0-3276-11E2-81C1-0800200C9A66\"]"
     http_version: 
-  recorded_at: Thu, 13 Jun 2013 21:20:19 GMT
+  recorded_at: Fri, 14 Jun 2013 03:35:59 GMT
 - request: 
     method: get
-    uri: https://abed.usersys.redhat.com/pulp/api/v2/consumer_groups/simple_group/
+    uri: https://localhost/pulp/api/v2/consumer_groups/simple_group/
     body: 
       encoding: US-ASCII
       string: ""
@@ -749,7 +1075,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="QLBKAUaVAB85bxywOJLMzBiudgiPXHGX9gH6rcPHfI", oauth_signature="BYoCf56AE9usApgjeiLBfKyQylU%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371158420", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="yyHnwne1uMqsJURCmGdMUgIj4sBy7bhBmMgAOSCtB6A", oauth_signature="ccX7hzt%2BGaJ7rMg3jXV%2FCqC9LSE%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371180959", oauth_version="1.0"
       Pulp-User: 
       - admin
       User-Agent: 
@@ -760,7 +1086,7 @@ http_interactions:
       message: OK
     headers: 
       Date: 
-      - Thu, 13 Jun 2013 21:20:20 GMT
+      - Fri, 14 Jun 2013 03:35:59 GMT
       Server: 
       - Apache/2.2.15 (Red Hat)
       Content-Length: 
@@ -769,12 +1095,12 @@ http_interactions:
       - application/json
     body: 
       encoding: US-ASCII
-      string: "{\"scratchpad\": null, \"display_name\": null, \"description\": \"Super administrator with all access.\", \"_ns\": \"consumer_groups\", \"notes\": {}, \"consumer_ids\": [], \"_id\": {\"$oid\": \"51ba37935ca01344a5ca8f46\"}, \"id\": \"simple_group\", \"_href\": \"/pulp/api/v2/consumer_groups/simple_group/\"}"
+      string: "{\"scratchpad\": null, \"display_name\": null, \"description\": \"Super administrator with all access.\", \"_ns\": \"consumer_groups\", \"notes\": {}, \"consumer_ids\": [], \"_id\": {\"$oid\": \"51ba8f9f3cbbb55b0e001813\"}, \"id\": \"simple_group\", \"_href\": \"/pulp/api/v2/consumer_groups/simple_group/\"}"
     http_version: 
-  recorded_at: Thu, 13 Jun 2013 21:20:20 GMT
+  recorded_at: Fri, 14 Jun 2013 03:35:59 GMT
 - request: 
     method: delete
-    uri: https://abed.usersys.redhat.com/pulp/api/v2/consumer_groups/simple_group/
+    uri: https://localhost/pulp/api/v2/consumer_groups/simple_group/
     body: 
       encoding: US-ASCII
       string: ""
@@ -786,7 +1112,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="TSfiFCkbrWNeYFa6K8kMh5t0tkzbuGNFshbXSNqnw", oauth_signature="tdGEKhUDZOgimraORxl%2BzT9UqgU%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371158420", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="U2NhfXfBdZLQEtvctZ9lDcm2IZrHFxnPW8RQAk9uziA", oauth_signature="G9zYEfCOB%2BnLHYWoyEgssMZ5Q1Y%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371180959", oauth_version="1.0"
       Pulp-User: 
       - admin
       User-Agent: 
@@ -797,7 +1123,7 @@ http_interactions:
       message: OK
     headers: 
       Date: 
-      - Thu, 13 Jun 2013 21:20:20 GMT
+      - Fri, 14 Jun 2013 03:35:59 GMT
       Server: 
       - Apache/2.2.15 (Red Hat)
       Content-Length: 
@@ -808,10 +1134,10 @@ http_interactions:
       encoding: US-ASCII
       string: "null"
     http_version: 
-  recorded_at: Thu, 13 Jun 2013 21:20:20 GMT
+  recorded_at: Fri, 14 Jun 2013 03:36:00 GMT
 - request: 
     method: post
-    uri: https://abed.usersys.redhat.com/pulp/api/v2/consumer_groups/
+    uri: https://localhost/pulp/api/v2/consumer_groups/
     body: 
       encoding: US-ASCII
       string: "{\"id\":\"simple_group\",\"description\":\"Super administrator with all access.\",\"consumer_ids\":[\"010E99C0-3276-11E2-81C1-0800200C9A66\"]}"
@@ -823,7 +1149,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="mKhCNLc009jhAZpXVSImrHDeixWp7ffI468hn5tb3rU", oauth_signature="wdIpYBlNJggMRRvfM2al90c1eE0%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371158420", oauth_version="1.0"
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="Zcv6W73cy2RHESYelkaWd5gFUaTrikDOIXyfYGlYzc", oauth_signature="v%2BC0G4MUXYfFnFtDeO%2Fmw2%2F2ty4%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371180960", oauth_version="1.0"
       Pulp-User: 
       - admin
       Content-Length: 
@@ -836,7 +1162,7 @@ http_interactions:
       message: Created
     headers: 
       Date: 
-      - Thu, 13 Jun 2013 21:20:20 GMT
+      - Fri, 14 Jun 2013 03:36:00 GMT
       Server: 
       - Apache/2.2.15 (Red Hat)
       Location: 
@@ -847,12 +1173,12 @@ http_interactions:
       - application/json
     body: 
       encoding: US-ASCII
-      string: "{\"scratchpad\": null, \"display_name\": null, \"description\": \"Super administrator with all access.\", \"_ns\": \"consumer_groups\", \"notes\": {}, \"consumer_ids\": [\"010E99C0-3276-11E2-81C1-0800200C9A66\"], \"_id\": {\"$oid\": \"51ba37945ca01344a5ca8f76\"}, \"id\": \"simple_group\", \"_href\": \"/pulp/api/v2/consumer_groups/simple_group/\"}"
+      string: "{\"scratchpad\": null, \"display_name\": null, \"description\": \"Super administrator with all access.\", \"_ns\": \"consumer_groups\", \"notes\": {}, \"consumer_ids\": [\"010E99C0-3276-11E2-81C1-0800200C9A66\"], \"_id\": {\"$oid\": \"51ba8fa13cbbb55b0e001843\"}, \"id\": \"simple_group\", \"_href\": \"/pulp/api/v2/consumer_groups/simple_group/\"}"
     http_version: 
-  recorded_at: Thu, 13 Jun 2013 21:20:21 GMT
+  recorded_at: Fri, 14 Jun 2013 03:36:01 GMT
 - request: 
     method: delete
-    uri: https://abed.usersys.redhat.com/pulp/api/v2/consumer_groups/simple_group/
+    uri: https://localhost/pulp/api/v2/consumer_groups/simple_group/
     body: 
       encoding: US-ASCII
       string: ""
@@ -864,7 +1190,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="zROQQdbHlc31jaenBVpXKepaELbxNCUDMfufFSpM", oauth_signature="lsf38YHWCxZhh8w7wVyVKLsP3Eg%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371158421", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="5WJoOk5lYCHY7zHcjC4IlmVqpSzggJcKk5aSao7w", oauth_signature="H7Zf9wr4tIAqySvDFlfdUXUt6P8%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371180961", oauth_version="1.0"
       Pulp-User: 
       - admin
       User-Agent: 
@@ -875,7 +1201,7 @@ http_interactions:
       message: OK
     headers: 
       Date: 
-      - Thu, 13 Jun 2013 21:20:21 GMT
+      - Fri, 14 Jun 2013 03:36:01 GMT
       Server: 
       - Apache/2.2.15 (Red Hat)
       Content-Length: 
@@ -886,5 +1212,5 @@ http_interactions:
       encoding: US-ASCII
       string: "null"
     http_version: 
-  recorded_at: Thu, 13 Jun 2013 21:20:21 GMT
+  recorded_at: Fri, 14 Jun 2013 03:36:01 GMT
 recorded_with: VCR 2.4.0

@@ -24,10 +24,9 @@ class Job < ActiveRecord::Base
     def refresh_tasks(ids)
       unless ids.nil? || ids.empty?
         uuids = TaskStatus.where(:id => ids).pluck(:uuid)
-        ret = Runcible::Resources::Task.poll_all(uuids)
-
-        ret.each do |pulp_task|
-          PulpTaskStatus.dump_state(pulp_task, TaskStatus.find_by_uuid(pulp_task["id"]))
+        uuids.each do |uuid|
+          pulp_task = Runcible::Resources::Task.poll(uuid)
+          PulpTaskStatus.dump_state(pulp_task, TaskStatus.find_by_uuid(pulp_task[:task_id]))
         end
       end
     end
@@ -60,8 +59,8 @@ class Job < ActiveRecord::Base
     tasks = []
     pulp_tasks.each do |task|
       # if the task was returned with a UUID belonging to a system, associate that system with the task
-      if !task[:args].blank?
-        uuid = task[:args].first
+      if !task[:call_request_tags].blank?
+        uuid = task[:call_request_tags].first.split('pulp:consumer:').last
         system = System.where(:uuid => uuid).first
       end
 
