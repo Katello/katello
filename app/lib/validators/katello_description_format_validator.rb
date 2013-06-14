@@ -12,10 +12,10 @@
 
 module Validators
   class KatelloDescriptionFormatValidator < ActiveModel::EachValidator
+    MAX_LENGTH = 1000
     def validate_each(record, attribute, value)
       if value
-        max_length = 255
-        record.errors[attribute] << N_("cannot contain more than %s characters") % max_length unless value.length <= max_length
+        record.errors[attribute] << N_("cannot contain more than %s characters") % MAX_LENGTH unless value.length <= MAX_LENGTH
       end
     end
   end
