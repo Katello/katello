@@ -2,7 +2,7 @@
 http_interactions: 
 - request: 
     method: delete
-    uri: https://localhost/pulp/api/v2/users/
+    uri: https://abed.usersys.redhat.com/pulp/api/v2/users/
     body: 
       encoding: US-ASCII
       string: ""
@@ -14,7 +14,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="JzrI2biFdJXDXz9jnkqhmgBdybcLAO9YsrpN0BZmU", oauth_signature="SGX0hCwgA3paTtqHIqyHD3ajb9o%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1370533598", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="oV2OfsDQ5wJutXaVDmlqYduxH1EZ7Dhc7MZT6EVws", oauth_signature="SRvC3ILbBli8Yj84qffY%2FblMQGk%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371158498", oauth_version="1.0"
       Pulp-User: 
       - admin
       User-Agent: 
@@ -25,26 +25,32 @@ http_interactions:
       message: Method Not Allowed
     headers: 
       Date: 
-      - Thu, 06 Jun 2013 15:46:38 GMT
+      - Thu, 13 Jun 2013 21:21:38 GMT
       Server: 
-      - Apache/2.4.4 (Fedora) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.3
+      - Apache/2.2.15 (Red Hat)
       Allow: 
       - GET, POST
-      Transfer-Encoding: 
-      - chunked
+      Vary: 
+      - Accept-Encoding
+      Content-Encoding: 
+      - gzip
+      Content-Length: 
+      - "24"
       Content-Type: 
       - text/html; charset=UTF-8
     body: 
-      encoding: US-ASCII
-      string: None
+      encoding: ASCII-8BIT
+      string: !binary |
+        H4sIAAAAAAAAA/PLz0sFAPGvot8EAAAA
+
     http_version: 
-  recorded_at: Thu, 06 Jun 2013 15:46:38 GMT
+  recorded_at: Thu, 13 Jun 2013 21:21:38 GMT
 - request: 
     method: post
-    uri: https://localhost/pulp/api/v2/users/
+    uri: https://abed.usersys.redhat.com/pulp/api/v2/users/
     body: 
       encoding: US-ASCII
-      string: "{\"login\":\"batman\",\"name\":\"batman\",\"password\":\"ZiF2fg4eRQloqoFQ\"}"
+      string: "{\"login\":\"batman\",\"name\":\"batman\",\"password\":\"7acrtsKBPNQsfbfk\"}"
     headers: 
       Accept: 
       - application/json
@@ -53,7 +59,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="YVvD9L4Gr0BKwszMxi2NIWYHSeKB0bQMzSYQ8JgaYVQ", oauth_signature="tbYdboWoglrFvhc%2BVwAy8wtTFA8%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1370533600", oauth_version="1.0"
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="tICdcuRKzq2zbr4K5WSvboNQZRbzBlBFB3L0vocNOVw", oauth_signature="vappPBwjHCxiqj1J1Z4KFAH8iGo%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371158498", oauth_version="1.0"
       Pulp-User: 
       - admin
       Content-Length: 
@@ -66,9 +72,9 @@ http_interactions:
       message: Created
     headers: 
       Date: 
-      - Thu, 06 Jun 2013 15:46:40 GMT
+      - Thu, 13 Jun 2013 21:21:38 GMT
       Server: 
-      - Apache/2.4.4 (Fedora) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.3
+      - Apache/2.2.15 (Red Hat)
       Location: 
       - batman
       Content-Length: 
@@ -77,12 +83,12 @@ http_interactions:
       - application/json
     body: 
       encoding: US-ASCII
-      string: "{\"_id\": {\"$oid\": \"51b0aee0196cbe7f35f430cf\"}, \"name\": \"batman\", \"roles\": [], \"_ns\": \"users\", \"login\": \"batman\", \"id\": \"51b0aee0196cbe7f35f430cf\", \"_href\": \"/pulp/api/v2/users/batman/\"}"
+      string: "{\"_id\": {\"$oid\": \"51ba37e25ca01344a5ca96c9\"}, \"name\": \"batman\", \"roles\": [], \"_ns\": \"users\", \"login\": \"batman\", \"id\": \"51ba37e25ca01344a5ca96c9\", \"_href\": \"/pulp/api/v2/users/batman/\"}"
     http_version: 
-  recorded_at: Thu, 06 Jun 2013 15:46:40 GMT
+  recorded_at: Thu, 13 Jun 2013 21:21:38 GMT
 - request: 
     method: delete
-    uri: https://localhost/pulp/api/v2/users/batman/
+    uri: https://abed.usersys.redhat.com/pulp/api/v2/users/batman/
     body: 
       encoding: US-ASCII
       string: ""
@@ -94,7 +100,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="h7Pf5ffNpRHNhKsBuKPfGeTCIzSpzFa3ZA5JUuDI", oauth_signature="tS7iRiRawZ4Tfb%2BtjVwdkoF96YQ%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1370533601", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="Ve4tkx0l7l644pY4m3HdN0aBHBdt4SyqL2K8jzg", oauth_signature="cB2EMkTPdPUorT4PnywvuTeDvTg%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371158498", oauth_version="1.0"
       Pulp-User: 
       - admin
       User-Agent: 
@@ -105,9 +111,9 @@ http_interactions:
       message: OK
     headers: 
       Date: 
-      - Thu, 06 Jun 2013 15:46:41 GMT
+      - Thu, 13 Jun 2013 21:21:38 GMT
       Server: 
-      - Apache/2.4.4 (Fedora) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.3
+      - Apache/2.2.15 (Red Hat)
       Content-Length: 
       - "4"
       Content-Type: 
@@ -116,5 +122,5 @@ http_interactions:
       encoding: US-ASCII
       string: "null"
     http_version: 
-  recorded_at: Thu, 06 Jun 2013 15:46:41 GMT
+  recorded_at: Thu, 13 Jun 2013 21:21:39 GMT
 recorded_with: VCR 2.4.0
