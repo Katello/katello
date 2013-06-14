@@ -70,6 +70,11 @@ User documentation can be found on [wiki](https://fedorahosted.org/katello/).
 
 -   {file:doc/YARDDocumentation.md}
 -   {file:doc/Graphs.md}
+
+### Debugging
+
+-   {file:doc/how_to/add_praise.md Enabling Praise} - raise/exception investigation
+
 -   {file:doc/katellodb.html DB schema documentation}
 -   Original Rails generated README {file:doc/RailsReadme}, we may do certain things differently
 
