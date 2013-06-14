@@ -17,19 +17,14 @@ class DeletionChangeset < Changeset
   def apply(options = { })
     options = { :async => true, :notify => false }.merge options
 
-    self.state == Changeset::REVIEW or
-        raise _("Cannot delete the changeset '%s' because it is not in the review phase.") % self.name
-
+    check_review_state!
     validate_content_view_tasks_complete!
 
     # check no collision exists
-    if (collision = Changeset.started.colliding(self).first)
-      raise _("Cannot promote the changeset '%{changeset}' while another colliding changeset (%{another_changeset}) is being promoted.") %
-                { :changeset => self.name, :another_changeset => collision.name }
-    else
-      self.state = Changeset::DELETING
-      self.save!
-    end
+    check_collisions!
+
+    self.state = Changeset::DELETING
+    self.save!
 
     if options[:async]
       task  = self.async(:organization => self.environment.organization).delete_content(options[:notify])

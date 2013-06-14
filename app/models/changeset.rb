@@ -102,6 +102,23 @@ class Changeset < ActiveRecord::Base
     self.class == PromotionChangeset
   end
 
+  def in_review?
+    self.state == REVIEW
+  end
+
+  def check_review_state!
+    if !in_review?
+      raise _("Cannot apply the changeset '%s' because it is not in the review phase.") % self.name
+    end
+  end
+
+  def check_collisions!
+    if (collision = Changeset.started.colliding(self).first)
+      raise _("Cannot apply the changeset '%{changeset}' while another colliding changeset (%{another_changeset}) is being applied.") %
+                { :changeset => self.name, :another_changeset => collision.name }
+    end
+  end
+
   def self.create_for( acct_type, options)
     if PROMOTION == acct_type
       PromotionChangeset.create!(options)

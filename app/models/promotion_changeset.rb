@@ -18,8 +18,7 @@ class PromotionChangeset < Changeset
   def apply(options = { })
     options = { :async => true, :notify => false }.merge options
 
-    self.state == Changeset::REVIEW or
-        raise _("Cannot promote the changeset '%s' because it is not in the review phase.") % self.name
+    check_review_state!
 
     validate_content_view_tasks_complete!
 
@@ -38,13 +37,10 @@ class PromotionChangeset < Changeset
     validate_content! self.content_views
 
     # check no collision exists
-    if (collision = Changeset.started.colliding(self).first)
-      raise _("Cannot promote the changeset '%{changeset}' while another colliding changeset (%{another_changeset}) is being promoted.") %
-                { :changeset => self.name, :another_changeset => collision.name }
-    else
-      self.state = Changeset::PROMOTING
-      self.save!
-    end
+    check_collisions!
+
+    self.state = Changeset::PROMOTING
+    self.save!
 
     if options[:async]
       task             = self.async(:organization => self.environment.organization).promote_content(options[:notify])
