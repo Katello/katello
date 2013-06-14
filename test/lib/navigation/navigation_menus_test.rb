@@ -109,10 +109,18 @@ class NavigationMenusTest < MiniTest::Rails::ActiveSupport::TestCase
   def test_user_menu
     menu = Navigation::Menus::User.new(@admin)
 
-    assert_equal  @admin.username, menu.display
     assert_equal  2, menu.items.length
     assert_equal  'dropdown', menu.type
     assert        menu.accessible?
   end
+
+  def test_gravatar
+    menu = Navigation::Menus::User.new(@admin)
+
+    Katello.config[:gravatar] ? assert_equal("<img src=\"https:///secure.gravatar.com/avatar/985b643b38ac0b1589b212197e27a143?d=mm&s=25\" class=\"gravatar\"><span class=\"gravatar-span\">admin", menu.display) : assert_equal(@admin.user, menu.display)
+    assert        menu.accessible?
+  end
+
+
 
 end
