@@ -69,7 +69,6 @@ User documentation can be found on [wiki](https://fedorahosted.org/katello/).
 ### Guides
 
 -   {file:doc/YARDDocumentation.md}
--   {file:doc/ForemanIntegration.md}
 -   {file:doc/Graphs.md}
 -   {file:doc/katellodb.html DB schema documentation}
 -   Original Rails generated README {file:doc/RailsReadme}, we may do certain things differently
