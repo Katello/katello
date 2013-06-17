@@ -137,6 +137,9 @@ module Glue::Candlepin::Consumer
     def del_candlepin_consumer
       Rails.logger.debug "Deleting consumer in candlepin: #{name}"
       Resources::Candlepin::Consumer.destroy(self.uuid)
+    rescue RestClient::Gone => e
+      #ignore already deleted system
+      true
     rescue => e
       Rails.logger.error "Failed to delete candlepin consumer #{name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
