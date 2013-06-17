@@ -29,55 +29,55 @@
                 = _("%{consumed} of %{total}") % {:consumed => @subscription.consumed, :total => @subscription.quantity}
         .control-group
           .label
-            =label :date_range, :date_range, _("Starts / Ends")
+            = label :date_range, :date_range, _("Starts / Ends")
           .input
             .value
               = _("%{start_date} / %{end_date}") % {:start_date => format_time(@subscription.start_date), :end_date => format_time(@subscription.end_date)}
         .control-group
           .label
-            =label :contract, :contract, _("Contract Number")
+            = label :contract, :contract, _("Contract Number")
           .input
             .value
               = @subscription.contract_number
         .control-group
           .label
-            =label :account, :account, _("Account Number")
+            = label :account, :account, _("Account Number")
           .input
             .value
               = @subscription.account_number
         .control-group
           .label
-            =label :supportLevel, :supportLevel, _("Support Level")
+            = label :supportLevel, :supportLevel, _("Support Level")
           .input
             .value
               = @subscription.support_level
         .control-group
           .label
-            =label :supporttype, :supporttype, _("Support Type")
+            = label :supporttype, :supporttype, _("Support Type")
           .input
             .value
               = @subscription.support_type
         .control-group
           .label
-            =label :arch, :arch, _("Arch")
+            = label :arch, :arch, _("Arch")
           .input
             .value
               = @subscription.arch
         .control-group
           .label
-            =label :systype, :systype, _("Type")
+            = label :systype, :systype, _("Type")
           .input
             .value
               = @subscription.virt_only ? _("Virtual Only") : _("Physical or Virtual")
         .control-group
           .label
-            =label :limits, :limits, _("Limits")
+            = label :limits, :limits, _("Limits")
           .input
             .value
               = subscription_limits_helper(@subscription)
         .control-group
           .label
-            =label :multientitlement, :multientitlement, _("Multi-entitlement")
+            = label :multientitlement, :multientitlement, _("Multi-entitlement")
           .input
             .value
               = @subscription.multi_entitlement ? _("Yes") : _("No")
@@ -90,21 +90,21 @@
         - if @subscription.stacking_id != ''
           .control-group
             .label
-              =label :stacking, :stacking, _("Stacking ID")
+              = label :stacking, :stacking, _("Stacking ID")
             .input
               .value
                 = @subscription.stacking_id
         - if !@subscription.source_pool_id.nil?
           .control-group
             .label
-              =label :sourcepool, :sourcepool, _("Virt Guest From")
+              = label :sourcepool, :sourcepool, _("Virt Guest From")
             .input
               .value
                 = subscriptions_pool_link_helper(@subscription.product_name, @subscription.source_pool_id, current_organization.redhat_provider.id, current_organization)
         - if !@subscription.host_id.nil?
           .control-group
             .label
-              =label :host, :host, _("Required Host")
+              = label :host, :host, _("Required Host")
             .input
               .value
                 = subscriptions_system_link_helper @subscription.host_id
