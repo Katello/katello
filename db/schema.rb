@@ -11,11 +11,11 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130604124100) do
+ActiveRecord::Schema.define(:version => 20130612212512) do
 
   create_table "activation_keys", :force => true do |t|
     t.string   "name"
-    t.string   "description"
+    t.text     "description"
     t.integer  "organization_id",                 :null => false
     t.integer  "environment_id",                  :null => false
     t.datetime "created_at",                      :null => false
@@ -38,55 +38,6 @@ ActiveRecord::Schema.define(:version => 20130604124100) do
     t.datetime "updated_at",      :null => false
   end
 
-  create_table "changeset_dependencies", :force => true do |t|
-    t.integer "changeset_id"
-    t.string  "package_id"
-    t.string  "display_name"
-    t.integer "product_id",    :null => false
-    t.string  "dependency_of"
-  end
-
-  add_index "changeset_dependencies", ["changeset_id"], :name => "index_changeset_dependencies_on_changeset_id"
-  add_index "changeset_dependencies", ["package_id"], :name => "index_changeset_dependencies_on_package_id"
-  add_index "changeset_dependencies", ["product_id"], :name => "index_changeset_dependencies_on_product_id"
-
-  create_table "changeset_distributions", :force => true do |t|
-    t.integer "changeset_id"
-    t.string  "distribution_id"
-    t.string  "display_name"
-    t.integer "product_id",      :null => false
-  end
-
-  add_index "changeset_distributions", ["changeset_id"], :name => "index_changeset_distributions_on_changeset_id"
-  add_index "changeset_distributions", ["distribution_id", "changeset_id", "product_id"], :name => "index_cs_distro_distro_id_cs_id_p_id", :unique => true
-  add_index "changeset_distributions", ["distribution_id"], :name => "index_changeset_distributions_on_distribution_id"
-  add_index "changeset_distributions", ["product_id"], :name => "index_changeset_distributions_on_product_id"
-
-  create_table "changeset_errata", :force => true do |t|
-    t.integer "changeset_id"
-    t.string  "errata_id"
-    t.string  "display_name"
-    t.integer "product_id",   :null => false
-  end
-
-  add_index "changeset_errata", ["changeset_id"], :name => "index_changeset_errata_on_changeset_id"
-  add_index "changeset_errata", ["errata_id", "changeset_id"], :name => "index_changeset_errata_on_errata_id_and_changeset_id", :unique => true
-  add_index "changeset_errata", ["errata_id"], :name => "index_changeset_errata_on_errata_id"
-  add_index "changeset_errata", ["product_id"], :name => "index_changeset_errata_on_product_id"
-
-  create_table "changeset_packages", :force => true do |t|
-    t.integer "changeset_id"
-    t.string  "package_id"
-    t.string  "display_name"
-    t.integer "product_id",   :null => false
-    t.string  "nvrea"
-  end
-
-  add_index "changeset_packages", ["changeset_id"], :name => "index_changeset_packages_on_changeset_id"
-  add_index "changeset_packages", ["nvrea", "changeset_id"], :name => "index_changeset_packages_on_nvrea_and_changeset_id", :unique => true
-  add_index "changeset_packages", ["package_id"], :name => "index_changeset_packages_on_package_id"
-  add_index "changeset_packages", ["product_id"], :name => "index_changeset_packages_on_product_id"
-
   create_table "changeset_users", :force => true do |t|
     t.integer  "changeset_id"
     t.integer  "user_id"
@@ -105,29 +56,13 @@ ActiveRecord::Schema.define(:version => 20130604124100) do
     t.datetime "promotion_date"
     t.string   "state",          :default => "new",                :null => false
     t.integer  "task_status_id"
-    t.string   "description"
+    t.text     "description"
     t.string   "type",           :default => "PromotionChangeset"
   end
 
   add_index "changesets", ["environment_id"], :name => "index_changesets_on_environment_id"
   add_index "changesets", ["name", "environment_id"], :name => "index_changesets_on_name_and_environment_id", :unique => true
   add_index "changesets", ["task_status_id"], :name => "index_changesets_on_task_status_id"
-
-  create_table "changesets_products", :id => false, :force => true do |t|
-    t.integer "changeset_id"
-    t.integer "product_id"
-  end
-
-  add_index "changesets_products", ["changeset_id"], :name => "index_changesets_products_on_changeset_id"
-  add_index "changesets_products", ["product_id"], :name => "index_changesets_products_on_product_id"
-
-  create_table "changesets_repositories", :id => false, :force => true do |t|
-    t.integer "changeset_id",  :null => false
-    t.integer "repository_id", :null => false
-  end
-
-  add_index "changesets_repositories", ["changeset_id"], :name => "index_changesets_repositories_on_changeset_id"
-  add_index "changesets_repositories", ["repository_id"], :name => "index_changesets_repositories_on_repository_id"
 
   create_table "component_content_views", :force => true do |t|
     t.integer  "content_view_definition_id"
@@ -251,7 +186,7 @@ ActiveRecord::Schema.define(:version => 20130604124100) do
   create_table "distributors", :force => true do |t|
     t.string   "uuid"
     t.string   "name"
-    t.string   "description"
+    t.text     "description"
     t.string   "location"
     t.integer  "environment_id"
     t.datetime "created_at",      :null => false
@@ -287,7 +222,7 @@ ActiveRecord::Schema.define(:version => 20130604124100) do
 
   create_table "environments", :force => true do |t|
     t.string   "name",                               :null => false
-    t.string   "description"
+    t.text     "description"
     t.boolean  "library",         :default => false, :null => false
     t.integer  "organization_id",                    :null => false
     t.datetime "created_at",                         :null => false
@@ -423,7 +358,7 @@ ActiveRecord::Schema.define(:version => 20130604124100) do
 
   create_table "organizations", :force => true do |t|
     t.string   "name"
-    t.string   "description"
+    t.text     "description"
     t.string   "label"
     t.datetime "created_at",         :null => false
     t.datetime "updated_at",         :null => false
@@ -463,7 +398,7 @@ ActiveRecord::Schema.define(:version => 20130604124100) do
     t.datetime "created_at",                          :null => false
     t.datetime "updated_at",                          :null => false
     t.string   "name",             :default => ""
-    t.string   "description",      :default => ""
+    t.text     "description",      :default => ""
   end
 
   add_index "permissions", ["name", "organization_id", "role_id"], :name => "index_permissions_on_name_and_organization_id_and_role_id", :unique => true
@@ -489,7 +424,7 @@ ActiveRecord::Schema.define(:version => 20130604124100) do
 
   create_table "products", :force => true do |t|
     t.string   "name"
-    t.string   "description"
+    t.text     "description"
     t.string   "cp_id"
     t.integer  "multiplier"
     t.integer  "provider_id",                               :null => false
@@ -509,7 +444,7 @@ ActiveRecord::Schema.define(:version => 20130604124100) do
 
   create_table "providers", :force => true do |t|
     t.string   "name"
-    t.string   "description"
+    t.text     "description"
     t.string   "repository_url"
     t.string   "provider_type"
     t.integer  "organization_id"
@@ -563,10 +498,10 @@ ActiveRecord::Schema.define(:version => 20130604124100) do
 
   create_table "roles", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at",                                    :null => false
-    t.datetime "updated_at",                                    :null => false
-    t.string   "description", :limit => 250
-    t.boolean  "locked",                     :default => false
+    t.datetime "created_at",                     :null => false
+    t.datetime "updated_at",                     :null => false
+    t.text     "description"
+    t.boolean  "locked",      :default => false
     t.string   "type"
   end
 
@@ -626,7 +561,7 @@ ActiveRecord::Schema.define(:version => 20130604124100) do
   create_table "system_groups", :force => true do |t|
     t.string   "name",                            :null => false
     t.string   "pulp_id",                         :null => false
-    t.string   "description"
+    t.text     "description"
     t.integer  "max_systems",     :default => -1, :null => false
     t.integer  "organization_id",                 :null => false
     t.datetime "created_at",                      :null => false
@@ -650,7 +585,7 @@ ActiveRecord::Schema.define(:version => 20130604124100) do
   create_table "systems", :force => true do |t|
     t.string   "uuid"
     t.string   "name"
-    t.string   "description"
+    t.text     "description"
     t.string   "location"
     t.integer  "environment_id"
     t.datetime "created_at",                            :null => false
@@ -664,7 +599,7 @@ ActiveRecord::Schema.define(:version => 20130604124100) do
 
   create_table "task_statuses", :force => true do |t|
     t.string   "type"
-    t.integer  "organization_id",                :null => true
+    t.integer  "organization_id"
     t.string   "uuid",                           :null => false
     t.string   "state"
     t.text     "result"
