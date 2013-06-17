@@ -31,7 +31,6 @@ class KTEnvironment < ActiveRecord::Base
 
   # RAILS3458: before_destroys before associations. see http://tinyurl.com/rails3458
   before_destroy :confirm_last_env
-  before_destroy :delete_default_view_version
 
   belongs_to :organization, :inverse_of => :environments
   has_many :activation_keys, :dependent => :destroy, :foreign_key => :environment_id
@@ -59,7 +58,7 @@ class KTEnvironment < ActiveRecord::Base
   has_many :changeset_history, :conditions => {:state => Changeset::PROMOTED}, :foreign_key => :environment_id, :dependent => :destroy, :class_name=>"Changeset", :dependent => :destroy, :inverse_of => :environment
 
   has_many :content_view_version_environments, :foreign_key=>:environment_id
-  has_many :content_view_versions, :through=>:content_view_version_environments, :inverse_of=>:environments
+  has_many :content_view_versions, :through=>:content_view_version_environments, :inverse_of=>:environments, :dependent=>:destroy
   has_many :content_view_environments, :foreign_key=>:environment_id, :inverse_of=>:environment, :dependent=>:destroy
 
   has_many :users, :foreign_key => :default_environment_id, :inverse_of => :default_environment, :dependent => :nullify
@@ -300,9 +299,5 @@ class KTEnvironment < ActiveRecord::Base
       version.save!
       content_view.save! #save content_view, since ContentViewEnvironment was added
     end
-  end
-
-  def delete_default_view_version
-    self.default_content_view_version.destroy
   end
 end
