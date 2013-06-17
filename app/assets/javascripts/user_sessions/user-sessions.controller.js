@@ -11,7 +11,7 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
  **/
 
-Katello.controller('UserSessionsController', ['$scope', function($scope) {
+angular.module('Katello.user-sessions').controller('UserSessionsController', ['$scope', function($scope) {
     $('#login_form').bind('ajax:complete', function(event, request) {
         var status = request.status;
 

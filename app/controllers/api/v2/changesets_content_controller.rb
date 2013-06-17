@@ -142,7 +142,8 @@ class Api::V2::ChangesetsContentController < Api::V2::ApiController
   end
   def add_distribution
     product = find_product(params[:distribution][:product_id])
-    @changeset.add_distribution!(params[:distribution][:distribution_id], product)
+    distribution = Distribution.find(params[:distribution][:distribution_id])
+    @changeset.add_distribution!(distribution, product)
     respond_for_create :resource => @changeset, :template => :show
   end
 
@@ -150,7 +151,9 @@ class Api::V2::ChangesetsContentController < Api::V2::ApiController
   param :changeset_id, :number
   param :distribution_id, :number, :desc => "id of the distribution to remove"
   def remove_distribution
-    ChangesetErratum.find(params[:id]).destroy
+    product = find_product(params[:distribution][:product_id])
+    distribution = Distribution.find(params[:distribution][:distribution_id])
+    @changeset.remove_distribution!(distribution, product)
     respond_for_show :resource => @changeset, :template => :show
   end
 
@@ -168,7 +171,7 @@ class Api::V2::ChangesetsContentController < Api::V2::ApiController
   end
 
   def find_product(product_id)
-    product = Product.find_by_cp_id(product_id.to_s)
+    product = Product.find_by_cp_id(product_id.to_s, @changeset.environment.organization)
     raise HttpErrors::NotFound, _("Couldn't find product with id '%s'") % product_id if product.nil?
     return product
   end

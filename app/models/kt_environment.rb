@@ -30,7 +30,7 @@ class KTEnvironment < ActiveRecord::Base
   acts_as_reportable
 
   # RAILS3458: before_destroys before associations. see http://tinyurl.com/rails3458
-  before_destroy :confirm_last_env
+  before_destroy :is_deletable?
 
   belongs_to :organization, :inverse_of => :environments
   has_many :activation_keys, :dependent => :destroy, :foreign_key => :environment_id
@@ -154,17 +154,20 @@ class KTEnvironment < ActiveRecord::Base
         'task_statuses.state' => [TaskStatus::Status::WAITING,  TaskStatus::Status::RUNNING])
   end
 
-  def confirm_last_env
-    # when deleting env while org is deleted, self.organization is nil (and we
-    # can't do this logic properly)
-    # we don't have to check this anyway, all environments will be destroyed
-    # with the org.
-    return true unless self.organization
+  def is_deletable?
+    return true if self.organization.nil? || self.organization.being_deleted?
 
-    return true if successor.nil?
-    errors.add :base,
-               _("Environment %s has a successor.  Only the last environment on a path can be deleted") % self.name
-    return false
+    if library?
+      errors.add :base,
+                _("Library environments may not be deleted.")
+      return false
+    elsif !successor.nil?
+      errors.add :base,
+                 _("Environment %s has a successor.  Only the last environment on a path can be deleted") % self.name
+      return false
+    end
+
+    return true
   end
 
   #Unlike path which only gives the path from this environment going forward

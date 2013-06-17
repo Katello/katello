@@ -12,4 +12,8 @@
 
 module GpgKeysHelper
 
+  def gpg_content_limit
+    GpgKey::MAX_CONTENT_LENGTH
+  end
+
 end

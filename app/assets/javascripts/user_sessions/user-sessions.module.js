@@ -9,7 +9,5 @@
  NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
  have received a copy of GPLv2 along with this software; if not, see
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
- */
-
-KT.panel.list.registerPage('hardware_models', {create: 'new_hardware_model'});
-
+ **/
+angular.module('Katello.user-sessions', ['alchemy', 'alch-templates', 'Katello.widgets']);

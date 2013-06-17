@@ -36,7 +36,10 @@ describe DistributionsController, :katello => true do
     ep_library = EnvironmentProduct.find_or_create(@organization.library, @product)
     @repo = new_test_repo(ep_library, "repo", "#{@organization.name}/Library/prod/repo")
     Repository.stub(:find).and_return(@repo)
-    Glue::Pulp::Distribution.stub(:find).and_return([])
+
+    @distribution = mock(Distribution, { "id" => "ks-Red Hat Enterprise Linux-Server-6.4-x86_64",
+                                         '_id' => "0b74d908-5b95-4315-a925-d3e97fd058f2" })
+    Distribution.stub(:find).and_return(@distribution)
   end
 
   let(:authorized_user) do
@@ -51,23 +54,21 @@ describe DistributionsController, :katello => true do
 
   describe "GET show" do
     let(:action) {:show}
-    let(:req) { get :show, :repository_id => @repo.id, :id => distribution_id }
+    let(:req) { get :show, :repository_id => @repo.id, :id => @distribution.id }
 
     it_should_behave_like "protected action"
 
     it "should lookup the distribution" do
-      Glue::Pulp::Distribution.should_receive(:find).once.with(distribution_id).and_return(distribution)
+      Distribution.should_receive(:find).once.with(@distribution.id).and_return(@distribution)
       req
     end
 
     it "renders show partial" do
-      Glue::Pulp::Distribution.should_receive(:find).once.with(distribution_id).and_return(distribution)
       req
       response.should render_template(:partial => "_show")
     end
 
     it "should be successful" do
-      Glue::Pulp::Distribution.should_receive(:find).once.with(distribution_id).and_return(distribution)
       req
       response.should be_success
     end
@@ -75,23 +76,21 @@ describe DistributionsController, :katello => true do
 
   describe "GET filelist" do
     let(:action) {:filelist}
-    let(:req) { get :filelist, :repository_id => @repo.id, :id => distribution_id }
+    let(:req) { get :filelist, :repository_id => @repo.id, :id => @distribution.id }
 
     it_should_behave_like "protected action"
 
     it "should lookup the distribution" do
-      Glue::Pulp::Distribution.should_receive(:find).once.with(distribution_id).and_return(distribution)
+      Distribution.should_receive(:find).once.with(@distribution.id).and_return(@distribution)
       req
     end
 
     it "renders the file list partial" do
-      Glue::Pulp::Distribution.should_receive(:find).once.with(distribution_id).and_return(distribution)
       req
       response.should render_template(:partial => "_filelist")
     end
 
     it "should be successful" do
-      Glue::Pulp::Distribution.should_receive(:find).once.with(distribution_id).and_return(distribution)
       req
       response.should be_success
     end

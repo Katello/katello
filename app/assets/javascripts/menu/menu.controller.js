@@ -14,7 +14,7 @@
 (function() {
     'use strict';
 
-    Katello.controller('MenuController', ['$scope', '$location', '$document', function($scope, $location, $document) {
+    angular.module('Katello.menu').controller('MenuController', ['$scope', '$location', '$document', function($scope, $location, $document) {
 
         $scope.menu       = KT.main_menu;
         $scope.user_menu  = KT.user_menu;

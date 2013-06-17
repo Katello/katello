@@ -54,7 +54,8 @@ Src::Application.routes.draw do
         end
         resources :sync_plans
         resources :tasks, :only => [:index]
-        resources :providers, :only => [:index]
+        resources :providers, :only => [:index], :constraints => { :organization_id => /[^\/]*/ }
+
         match '/systems' => 'systems#activate', :via => :post, :constraints => RegisterWithActivationKeyContraint.new
         resources :systems, :only => [:index, :create] do
           get :report, :on => :collection
@@ -174,6 +175,12 @@ Src::Application.routes.draw do
         end
       end
 
+      resources :subscriptions, :only => [] do
+        collection do
+          get :index, :action => :organization_index
+        end
+      end
+
       resources :content_view_definitions, :only => [:destroy, :content_views] do
         get :content_views, :on => :member
         put :content_views, :on => :member, :action => :update_content_views
@@ -228,7 +235,7 @@ Src::Application.routes.draw do
           get :search, :on => :collection
         end
         resources :errata, :only => [:index, :show], :constraints => { :id => /[0-9a-zA-Z\-\+%_.:]+/ }
-        resources :distributions, :only => [:index, :show], :constraints => { :id => /[0-9a-zA-Z\-\+%_.]+/ }
+        resources :distributions, :only => [:index, :show], :constraints => { :id => /[0-9a-zA-Z \-\+%_.]+/ }
         member do
           get :package_groups
           get :package_group_categories
@@ -289,13 +296,6 @@ Src::Application.routes.draw do
 
       match "/status" => "ping#server_status", :via => :get
       match "/version" => "ping#version", :via => :get
-      # some paths conflicts with rhsm
-      scope 'katello' do
-
-        # routes for non-ActiveRecord-based resources
-        match '/products/:id/repositories' => 'products#repo_create', :via => :post, :constraints => { :id => /[0-9\.]*/ }
-
-      end
 
       # subscription-manager support
       match '/consumers' => 'systems#activate', :via => :post, :constraints => RegisterWithActivationKeyContraint.new

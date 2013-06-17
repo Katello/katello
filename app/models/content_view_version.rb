@@ -117,7 +117,7 @@ class ContentViewVersion < ActiveRecord::Base
         # this repo is in both the definition and in the previous library version,
         # so clear it and later we'll regenerate the content... this is more
         # efficient than deleting the repo and recreating it...
-        async_tasks << repo.clear_contents
+        async_tasks +=  repo.clear_contents
       else
         # this repo no longer exists in the definition, so destroy it
         repo.destroy

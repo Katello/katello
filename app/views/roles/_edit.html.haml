@@ -42,7 +42,7 @@
           .grid_2.ra
             %label #{_("Description:")}
           - if Role.editable?
-            .grid_7.la.multiline.editable.edit_description{'name' => 'role[description]'} #{@role.i18n_description}
+            .grid_7.la.multiline.editable.edit_description{'data-maxlength'=>default_description_limit, 'name' => 'role[description]'} #{@role.i18n_description}
           - else
             .grid_7.la.multiline #{@role.i18n_description}
       #permission_widget.slide_up_container
@@ -79,7 +79,7 @@
             %input{ :id => 'permission_name', :name => 'permission[name]', :type => "text", :tabindex => 4 }
             .permission_widget_container
             %label.ra.fl #{_("Description:")}
-            %textarea{ :id => 'description', :name => 'permission[description]', :tabindex => 5 }
+            %textarea{ :id => 'description', :maxlength => default_description_limit, :name => 'permission[description]', :tabindex => 5 }
           #permission_button_bar.clear
             .button.fl#previous_button
               #{_("<< Previous")}

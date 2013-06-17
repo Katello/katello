@@ -15,6 +15,3 @@ then
   exit 1
 fi
 
-echo ""
-echo "********* Source Code Lint Tests ****************"
-ruby -Itest test/source_code_test.rb || exit 1

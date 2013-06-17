@@ -12,9 +12,9 @@
 
 class Api::V1::ChangesetsContentController < Api::V1::ApiController
 
+  before_filter :find_changeset!
   before_filter :find_product, :only => [:add_product, :remove_product, :add_package, :remove_package, :add_erratum,
                                          :remove_erratum, :add_distribution, :remove_distribution]
-  before_filter :find_changeset!
   before_filter :find_content_view!, :only => [:add_content_view, :remove_content_view]
   before_filter :authorize
 
@@ -119,15 +119,17 @@ class Api::V1::ChangesetsContentController < Api::V1::ApiController
   param :distribution_id, :number, :desc => "The id of the distribution to add"
   param :product_id, :number, :desc => "The product which contains the distribution"
   def add_distribution
-    @changeset.add_distribution!(params[:distribution_id], @product)
+    distribution = Distribution.find(params[:distribution_id])
+    @changeset.add_distribution!(distribution, @product)
     render :text => _("Added distribution '%s'") % params[:distribution_id]
   end
 
   api :DELETE, "/changesets/:changeset_id/distributions/:id", "Remove a distribution from a changeset"
   def remove_distribution
-    render_after_removal @changeset.remove_distribution!(params[:id], @product),
-                         :success   => _("Removed distribution '%s'") % params[:id],
-                         :not_found => _("Distribution '%s' not found in the changeset") % params[:id]
+    distribution = Distribution.find(params[:content_id])
+    render_after_removal @changeset.remove_distribution!(distribution, @product),
+                         :success   => _("Removed distribution '%s'") % params[:content_id],
+                         :not_found => _("Distribution '%s' not found in the changeset") % params[:content_id]
   end
 
   private
@@ -152,13 +154,8 @@ class Api::V1::ChangesetsContentController < Api::V1::ApiController
   end
 
   def find_product
-    product_id = nil
-    if params[:product_id]
-      product_id = params[:product_id]
-    elsif params[:id]
-      product_id = params[:id]
-    end
-    @product = Product.find_by_cp_id(product_id.to_s) unless product_id.nil?
+    product_id = params[:product_id] || params[:id]
+    @product = Product.find_by_cp_id(product_id.to_s, @changeset.environment.organization) if product_id
     raise HttpErrors::NotFound, _("Couldn't find product with id '%s'") % product_id if @product.nil?
   end
 end

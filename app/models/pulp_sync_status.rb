@@ -21,7 +21,7 @@ class PulpSyncProgress
       ht = HashUtil.new
 
       details =  ht.null_safe_get(progress_attrs, nil, ['progress','yum_importer', 'content'] )    ||
-            ht.null_safe_get(progress_attrs, nil, ['details','packages', 'sync_report'] )
+            ht.null_safe_get(progress_attrs, nil, ['progress', 'details','packages', 'sync_report'] )
 
       @total_size  = ht.null_safe_get(details, 0, ['size_total'])
       @size_left   = ht.null_safe_get(details, 0, ['size_left'])
@@ -37,8 +37,7 @@ class PulpSyncStatus < PulpTaskStatus
   use_index_of TaskStatus
 
   HISTORY_ERROR = 'failed'
-
-  SUCCESS   = "success"
+  HISTORY_SUCCESS = 'success'
   FINISHED  = "finished"
   ERROR     = "error"
   RUNNING   = "running"
@@ -92,8 +91,10 @@ class PulpSyncStatus < PulpTaskStatus
     history_list.collect do |history|
       result = history['result']
       result = ERROR if result == HISTORY_ERROR
+      result = FINISHED if result == HISTORY_SUCCESS
       {
           :state =>  result,
+          :progress => {:details=> history["details"]},
           :finish_time => history['completed'],
           :start_time => history['started']
       }.with_indifferent_access

@@ -424,31 +424,37 @@ module Glue::Pulp::Repo
       # are listed, pulp will retrieve every field it knows about for the rpm
       # (e.g. changelog, filelist...etc).
       events << Runcible::Extensions::Rpm.copy(self.pulp_id, to_repo.pulp_id,
-                                               { :fields => ['name', 'epoch', 'version', 'release', 'arch',
-                                                             'checksumtype', 'checksum'] })
-
+                                               { :fields => Package::PULP_SELECT_FIELDS })
       events << Runcible::Extensions::Distribution.copy(self.pulp_id, to_repo.pulp_id)
 
       # Since the rpms will be copied above, during the copy of errata and package groups,
       # include the copy_children flag to request that pulp skip copying them again.
       events << Runcible::Extensions::Errata.copy(self.pulp_id, to_repo.pulp_id, { :copy_children => false })
       events << Runcible::Extensions::PackageGroup.copy(self.pulp_id, to_repo.pulp_id, { :copy_children => false })
+      events << Runcible::Extensions::YumRepoMetadataFile.copy(self.pulp_id, to_repo.pulp_id)
+
       events
     end
 
     def unassociate_by_filter(content_type, filter_clauses)
-      content_unit = {
-        Runcible::Extensions::Rpm.content_type() => Runcible::Extensions::Rpm,
-        Runcible::Extensions::Errata.content_type() => Runcible::Extensions::Errata,
-        Runcible::Extensions::PackageGroup.content_type() => Runcible::Extensions::PackageGroup,
-        Runcible::Extensions::Distribution.content_type() => Runcible::Extensions::Distribution
-      }
-      content_unit[content_type].unassociate_from_repo(self.pulp_id, :unit => filter_clauses)
+
+      criteria = {:type_ids=>[content_type], :filters=>{:unit=>filter_clauses}}
+      if content_type == Runcible::Extensions::Rpm.content_type()
+        criteria[:fields] = { :unit => Package::PULP_SELECT_FIELDS}
+      end
+      Runcible::Extensions::Repository.unassociate_units(self.pulp_id, criteria)
     end
 
     def clear_contents
       self.clear_content_indices if Katello.config.use_elasticsearch
-      Runcible::Extensions::Repository.unassociate_units(self.pulp_id)
+      tasks = [Runcible::Extensions::Errata, Runcible::Extensions::PackageGroup,
+                                             Runcible::Extensions::Distribution].collect do |type|
+        type.unassociate_from_repo(self.pulp_id, {})
+      end.flatten(1)
+
+      tasks << Runcible::Extensions::Repository.unassociate_units(self.pulp_id,
+                 {:type_ids=>['rpm'], :filters=>{}, :fields => { :unit => Package::PULP_SELECT_FIELDS}})
+      tasks
     end
 
     def sync_start
@@ -479,15 +485,15 @@ module Glue::Pulp::Repo
     end
 
     def delete_packages package_id_list
-      Runcible::Extensions::Rpm.unassociate_unit_ids_from_repo(self.pulp_id,  package_id_list)
+      Runcible::Extensions::Rpm.unassociate_unit_ids_from_repo(self.pulp_id, package_id_list)
     end
 
     def delete_errata errata_id_list
-      Runcible::Extensions::Errata.unassociate_ids_from_repo(self.pulp_id,  errata_id_list)
+      Runcible::Extensions::Errata.unassociate_unit_ids_from_repo(self.pulp_id, errata_id_list)
     end
 
     def delete_distribution distribution_id
-      Runcible::Extensions::Distribution.unassociate_ids_from_repo(self.pulp_id, [distribution_id])
+      Runcible::Extensions::Distribution.unassociate_unit_ids_from_repo(self.pulp_id, [distribution_id])
     end
 
     def cancel_sync

@@ -46,6 +46,7 @@ $forty: $static_width - $sixty;
     }
     .dashhead {
         position: relative;
+        height: 34px;
     }
 
     #dashboard_subscriptions {
@@ -230,12 +231,16 @@ $forty: $static_width - $sixty;
       .row_item {
         .col_1 {
           white-space: nowrap;
-          width: 190px;
+          width: $big_width * .6;
           padding-right: 10px;
           overflow: hidden;
           display: inline-block;
           margin-bottom: -5px;
           text-overflow: ellipsis;
+
+          &.environment {
+            vertical-align: top;
+          }
         }
         .col_2 {
           display: inline-block;
@@ -249,6 +254,9 @@ $forty: $static_width - $sixty;
     #dashboard_sync {
       h5 {
         display: inline;
+      }
+      .col_1, .col_2, .col_3 {
+        vertical-align: top;
       }
       .col_1 {
         white-space: nowrap;

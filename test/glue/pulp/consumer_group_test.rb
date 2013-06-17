@@ -13,7 +13,7 @@
 require 'minitest_helper'
 require './test/support/repository_support'
 require './test/support/consumer_support'
-
+require './test/support/user_support'
 
 class GluePulpConsumerGroupTestBase < MiniTest::Rails::ActiveSupport::TestCase
   extend  ActiveRecord::TestFixtures
@@ -27,7 +27,7 @@ class GluePulpConsumerGroupTestBase < MiniTest::Rails::ActiveSupport::TestCase
     configure_runcible
 
     services  = ['Candlepin', 'ElasticSearch', 'Foreman']
-    models    = ['System', 'Repository', 'SystemGroup']
+    models    = ['System', 'Repository', 'SystemGroup', 'User']
     disable_glue_layers(services, models)
 
     User.current = User.find(@loaded_fixtures['users']['admin']['id'])
@@ -107,50 +107,76 @@ end
 
 class GluePulpConsumerGroupRequiresBoundRepoTest < GluePulpConsumerGroupTestBase
 
-  @@simple_server = nil
+  #@@simple_server = nil
+  #@@simple_group = nil
 
-  def self.before_suite
+  def setup
     super
+    UserSupport.setup_hidden_user(@loaded_fixtures['users']['hidden']['id'])
     RepositorySupport.create_and_sync_repo(@loaded_fixtures['repositories']['fedora_17_x86_64']['id'])
 
-    @@simple_server = ConsumerSupport.create_consumer(@loaded_fixtures['systems']['simple_server']['id'])
-    @@simple_server.enable_repos([RepositorySupport.repo_id])
+    @simple_server = ConsumerSupport.create_consumer(@loaded_fixtures['systems']['simple_server']['id'])
+    @simple_group = SystemGroup.find(@loaded_fixtures['system_groups']['simple_group']['id'])
+    @simple_group.set_pulp_consumer_group
   end
 
-  def self.after_suite
+  def teardown
+    UserSupport.delete_hidden_user(@loaded_fixtures['users']['hidden']['id'])
+    @simple_group.try(:del_pulp_consumer_group)
     ConsumerSupport.destroy_consumer
     RepositorySupport.destroy_repo
     super
+  rescue RestClient::ResourceNotFound => e
+    #do nothing
   end
 
   def test_install_package
-    skip "Needs corresponding Runcible call once fixed in Pulp"
-    assert false
+    job = @simple_group.install_package(['elephant'])
+    task = job.first
+    TaskSupport.wait_on_task(task)
+
+    assert_includes task['tags'], 'pulp:action:unit_install'
   end
 
   def test_uninstall_package
-    skip "Needs corresponding Runcible call once fixed in Pulp"
-    assert false
+    job = @simple_group.uninstall_package(['cheetah'])
+    task = job.first
+    TaskSupport.wait_on_task(task)
+
+    assert_includes task['tags'], 'pulp:action:unit_uninstall'
   end
 
   def test_update_package
-    skip "Needs corresponding Runcible call once fixed in Pulp"
-    assert false
+    job = @simple_group.update_package(['cheetah'])
+    task = job.first
+    TaskSupport.wait_on_task(task)
+
+    assert_includes task['tags'], 'pulp:action:unit_update'
   end
 
   def test_install_package_group
-    skip "Needs corresponding Runcible call once fixed in Pulp"
-    assert false
+    job = @simple_group.install_package_group(['mammals'])
+    task = job.first
+    TaskSupport.wait_on_task(task)
+
+    assert_includes task['tags'], 'pulp:action:unit_install'
   end
 
   def test_uninstall_package_group
-    skip "Needs corresponding Runcible call once fixed in Pulp"
-    assert false
+    job = @simple_group.uninstall_package_group(['mammals'])
+    task = job.first
+    TaskSupport.wait_on_task(task)
+
+    assert_includes task['tags'], 'pulp:action:unit_uninstall'
   end
 
-  def test_install_consumer_errata
-    skip "Needs corresponding Runcible call once fixed in Pulp"
-    assert false
+  def test_install_errata
+    erratum_id = RepositorySupport.repo.errata.select{ |errata| errata.errata_id == 'RHEA-2010:0002' }.first.id
+    job = @simple_group.install_consumer_errata([erratum_id])
+    task = job.first
+    TaskSupport.wait_on_task(task)
+
+    assert_includes task['tags'], 'pulp:action:unit_install'
   end
 
 end

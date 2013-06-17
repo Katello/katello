@@ -100,10 +100,16 @@ module Glue::ElasticSearch::PackageGroup
           pkg_grp = self.find(pkg_grp_id)
           pkg_grp.as_json.merge(pkg_grp.index_options)
         }
-        Tire.index ::PackageGroup.index do
-          create :settings => PackageGroup.index_settings, :mappings => PackageGroup.index_mapping
-          import pkg_grps
-        end unless pkg_grps.empty?
+
+        unless pkg_grps.empty?
+          Tire.index ::PackageGroup.index do
+            create :settings => PackageGroup.index_settings, :mappings => PackageGroup.index_mapping
+          end unless Tire.index(::PackageGroup.index).exists?
+
+          Tire.index ::PackageGroup.index do
+            import pkg_grps
+          end
+        end
       end
 
     end

@@ -56,7 +56,7 @@ module Authorization::ContentViewDefinition
       {
         :create  => _("Administer Content View Definitions"),
         :read    => _("Read Content View Definitions"),
-        :update  => _("Modify Content View Defintions"),
+        :update  => _("Modify Content View Definitions"),
         :delete  => _("Delete Content View Definitions"),
         :publish => _("Publish Content View Definitions")
       }.with_indifferent_access

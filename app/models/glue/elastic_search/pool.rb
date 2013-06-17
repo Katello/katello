@@ -79,7 +79,12 @@ module Glue::ElasticSearch::Pool
       def self.index_pools(pools, clear_filters=nil)
         # Clear previous pools index
         if !clear_filters.nil?
-          results = self.search nil, 0, 0, clear_filters
+          items = Glue::ElasticSearch::Items.new(Pool)
+          options = {
+              :filter => clear_filters,
+              :load_records? => false
+          }
+          results, total_count = items.retrieve('', 0, options)
           Tire.index self.index do
             results.each do |result|
               remove :pool, result.id
@@ -90,44 +95,25 @@ module Glue::ElasticSearch::Pool
         json_pools = pools.collect{ |pool|
           pool.as_json.merge(pool.index_options)
         }
-        Tire.index self.index do
-          create :settings => ::Pool.index_settings, :mappings => ::Pool.index_mapping
-          import json_pools
-        end if !json_pools.empty?
+
+        unless json_pools.empty?
+          Tire.index self.index do
+            create :settings => ::Pool.index_settings, :mappings => ::Pool.index_mapping
+          end unless Tire.index(self.index).exists?
+
+          Tire.index self.index do
+            import json_pools
+          end
+
+          Tire.index(self.index).refresh
+        end
       end
 
-      def self.search query, start, page_size, filters={}, sort=[:name_sort, "ASC"]
-        return [] if !Tire.index(self.index).exists?
-
-        all_rows = query.blank? #if blank, get all rows
-
-        search = Tire.search self.index do
-          query do
-            if all_rows
-              all
-            else
-              # No default_field is specified to let search span all indexed fields
-              string query, {}
-            end
-          end
-
-          if page_size > 0
-           size page_size
-           from start
-          end
-
-          if filters.has_key?(:org)
-            filter :term, :org=>filters[:org]
-          end
-          if filters.has_key?(:provider_id)
-            filter :term, :provider_id=>filters[:provider_id]
-          end
-
-          sort { by sort[0], sort[1] } unless !all_rows
-        end
-        return search.results
-      rescue
-        return []
+      def self.search(*args, &block)
+        Tire.index self.index do
+          create :settings => ::Pool.index_settings, :mappings => ::Pool.index_mapping
+        end unless Tire.index(self.index).exists?
+        Tire.search(self.index, &block).results
       end
 
       def self.index_settings

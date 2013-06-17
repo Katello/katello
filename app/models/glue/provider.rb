@@ -367,7 +367,7 @@ module Glue::Provider
 
 
       product_to_remove_ids = (product_in_katello_ids - products_in_candlepin_ids).uniq
-      product_to_remove_ids.each { |cp_id| Product.find_by_cp_id(cp_id).destroy }
+      product_to_remove_ids.each { |cp_id| Product.find_by_cp_id(cp_id, self.organization).destroy }
 
       self.index_subscriptions
       true
@@ -419,7 +419,7 @@ module Glue::Provider
 
       # Index pools
       # Note: Only the Red Hat provider subscriptions are being indexed.
-      ::Pool.index_pools(subscriptions, {:org=>self.organization.label, :provider_id=>self.organization.redhat_provider.id})
+      ::Pool.index_pools(subscriptions, [{:org=>[self.organization.label]}, {:provider_id=>[self.organization.redhat_provider.id]}])
 
       subscriptions
     end

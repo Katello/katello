@@ -7,7 +7,7 @@
 
       = form.text_field :name, :label =>_("Name")
 
-      = form.text_area :description, :label => _("Description"), :size => "40x4"
+      = form.text_area :description, :label => _("Description"), :size => "40x4", :maxlength => default_description_limit
 
       .promotion_paths
         = hidden_field_tag 'activation_key[environment_id]', @environment.id unless @environment.nil?

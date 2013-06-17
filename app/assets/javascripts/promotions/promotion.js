@@ -88,6 +88,7 @@ var changesetEdit = (function(){
                 type        :  'textarea',
                 method      :  'PUT',
                 name        :  $(this).attr('name'),
+                maxlength   :  $(this).data('maxlength'),
                 cancel      :  i18n.cancel,
                 submit      :  i18n.save,
                 indicator   :  i18n.saving,

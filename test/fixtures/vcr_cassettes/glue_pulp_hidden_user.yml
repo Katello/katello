@@ -2,10 +2,10 @@
 http_interactions: 
 - request: 
     method: post
-    uri: https://katello-f18-rails32/pulp/api/v2/users/
+    uri: https://localhost/pulp/api/v2/users/
     body: 
       encoding: US-ASCII
-      string: "{\"login\":\"hidden\",\"name\":\"hidden\",\"password\":\"EEpFY2trdGDjIX8h\"}"
+      string: "{\"login\":\"hidden\",\"name\":\"hidden\",\"password\":\"A9ptDuE2ZoHpC9Gj\"}"
     headers: 
       Accept: 
       - application/json
@@ -14,7 +14,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="9edwXyGKc0vD2FzyaFTGGswd7Ulaytf2IaSOtoCT4", oauth_signature="l7%2BJj0elpFhykqkV%2B9YTGezUS%2B8%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1368638913", oauth_version="1.0"
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="uSrn8jARzcZGCqtKHfm8h7kDIszHhJOtLXmGsLds", oauth_signature="VUB8cDaerxja%2FUQD0xwMQQSeX%2Fo%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371180961", oauth_version="1.0"
       Pulp-User: 
       - admin
       Content-Length: 
@@ -27,9 +27,9 @@ http_interactions:
       message: Created
     headers: 
       Date: 
-      - Wed, 15 May 2013 17:28:33 GMT
+      - Fri, 14 Jun 2013 03:36:01 GMT
       Server: 
-      - Apache/2.4.4 (Fedora) OpenSSL/1.0.1c-fips mod_wsgi/3.4 Python/2.7.3
+      - Apache/2.2.15 (Red Hat)
       Location: 
       - hidden
       Content-Length: 
@@ -38,12 +38,12 @@ http_interactions:
       - application/json
     body: 
       encoding: US-ASCII
-      string: "{\"_id\": {\"$oid\": \"5193c5c2f45cbb6f3e8a6401\"}, \"name\": \"hidden\", \"roles\": [], \"_ns\": \"users\", \"login\": \"hidden\", \"id\": \"5193c5c2f45cbb6f3e8a6401\", \"_href\": \"/pulp/api/v2/users/hidden/\"}"
+      string: "{\"_id\": {\"$oid\": \"51ba8fa13cbbb55b0e00185e\"}, \"name\": \"hidden\", \"roles\": [], \"_ns\": \"users\", \"login\": \"hidden\", \"id\": \"51ba8fa13cbbb55b0e00185e\", \"_href\": \"/pulp/api/v2/users/hidden/\"}"
     http_version: 
-  recorded_at: Wed, 15 May 2013 17:28:34 GMT
+  recorded_at: Fri, 14 Jun 2013 03:36:01 GMT
 - request: 
     method: post
-    uri: https://katello-f18-rails32/pulp/api/v2/roles/super-users/users/
+    uri: https://localhost/pulp/api/v2/roles/super-users/users/
     body: 
       encoding: US-ASCII
       string: "{\"login\":\"hidden\"}"
@@ -55,7 +55,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="IeKnSNHkWBMn8f57XY0WS5nBueh4JY9a1v0z7qaXOU", oauth_signature="HSIkCJZKgf6vrWilht222ecCnf0%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1368638914", oauth_version="1.0"
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="9VayK19MlYvg0mbvjFe5P8M7n5bt5jozIdRDIgK2w", oauth_signature="LHoEe4pXsVn1A0S%2BJJLUy3myfwo%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371180961", oauth_version="1.0"
       Pulp-User: 
       - admin
       Content-Length: 
@@ -68,9 +68,9 @@ http_interactions:
       message: OK
     headers: 
       Date: 
-      - Wed, 15 May 2013 17:28:34 GMT
+      - Fri, 14 Jun 2013 03:36:02 GMT
       Server: 
-      - Apache/2.4.4 (Fedora) OpenSSL/1.0.1c-fips mod_wsgi/3.4 Python/2.7.3
+      - Apache/2.2.15 (Red Hat)
       Content-Length: 
       - "4"
       Content-Type: 
@@ -79,10 +79,10 @@ http_interactions:
       encoding: US-ASCII
       string: "null"
     http_version: 
-  recorded_at: Wed, 15 May 2013 17:28:34 GMT
+  recorded_at: Fri, 14 Jun 2013 03:36:02 GMT
 - request: 
     method: delete
-    uri: https://katello-f18-rails32/pulp/api/v2/users/hidden/
+    uri: https://localhost/pulp/api/v2/users/hidden/
     body: 
       encoding: US-ASCII
       string: ""
@@ -94,7 +94,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="j7zwyZr93lpA2OlpYm0xroexPks0wPRx6xrPXDrqCyA", oauth_signature="%2BP1eW4zwyH9U0E0jrynW8u2p2Uo%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1368638921", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="rr9raIxPn1gFTwi0q6PaecMHdWzXW9EBkfCuoY0wxg", oauth_signature="wIWLG19J2XpBmgoQXvnsc%2B%2BmSvM%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371180971", oauth_version="1.0"
       Pulp-User: 
       - admin
       User-Agent: 
@@ -105,9 +105,9 @@ http_interactions:
       message: OK
     headers: 
       Date: 
-      - Wed, 15 May 2013 17:28:41 GMT
+      - Fri, 14 Jun 2013 03:36:11 GMT
       Server: 
-      - Apache/2.4.4 (Fedora) OpenSSL/1.0.1c-fips mod_wsgi/3.4 Python/2.7.3
+      - Apache/2.2.15 (Red Hat)
       Content-Length: 
       - "4"
       Content-Type: 
@@ -116,5 +116,5 @@ http_interactions:
       encoding: US-ASCII
       string: "null"
     http_version: 
-  recorded_at: Wed, 15 May 2013 17:28:41 GMT
+  recorded_at: Fri, 14 Jun 2013 03:36:11 GMT
 recorded_with: VCR 2.4.0
