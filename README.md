@@ -57,20 +57,28 @@ Contact & Resources
 Documentation
 -------------
 
-YARD documentation is intended for developers. This documentation contains:
+Documentation is generated with [YARD](http://yardoc.org/) and hosted at <http://katello.github.io/katello/>.
+This documentation is intended for developers, user documentation can be found on
+[wiki](https://fedorahosted.org/katello/). Developer documentation contains:
 
 -   code documentation
 -   high level guides to architectures and implementation details
+-   how-tos
 
-User documentation can be found on [wiki](https://fedorahosted.org/katello/).
+*Note: older developer guides can be found on our wiki, they are being migrated.*
 
-*Note: older developer guides can be found on wiki, they have not been migrated.*
-
-### Guides
+Current documentation
+---------------------
 
 -   {file:doc/YARDDocumentation.md}
--   {file:doc/ForemanIntegration.md}
 -   {file:doc/Graphs.md}
+
+### Debugging
+
+-   {file:doc/how_to/add_praise.md Enabling Praise} - raise/exception investigation
+
+### Other
+
 -   {file:doc/katellodb.html DB schema documentation}
 -   Original Rails generated README {file:doc/RailsReadme}, we may do certain things differently
 
