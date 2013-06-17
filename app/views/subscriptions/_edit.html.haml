@@ -81,6 +81,12 @@
           .input
             .value
               = @subscription.multi_entitlement ? _("Yes") : _("No")
+        .control-group
+          .label
+            = label :instance_based, :instance_based, _("Instance-based")
+          .input
+            .value
+              = @subscription.instance_multiplier ? _("Yes") : _("No")
         - if @subscription.stacking_id != ''
           .control-group
             .label
