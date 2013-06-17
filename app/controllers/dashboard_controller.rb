@@ -26,6 +26,14 @@ class DashboardController < ApplicationController
     'dashboard'
   end
 
+  def update
+    if params[:columns]
+      columns = params[:columns].map { |key, column| column }
+      update_user_preference(:layout, columns)
+    end
+    render :nothing => true
+  end
+
   def sync
     render :partial=>"sync", :locals=>{:quantity=> quantity}
   end
@@ -92,11 +100,16 @@ class DashboardController < ApplicationController
     action = params[:action]
     num_of_items = params[:quantity].to_i
     if num_of_items && num_of_items > 0 && quantity != num_of_items
-      current_user.preferences = HashWithIndifferentAccess.new  unless current_user.preferences
-      current_user.preferences[:dashboard] = {} unless current_user.preferences.has_key? :dashboard
-      current_user.preferences[:dashboard][action] = {:page_size => num_of_items}
+      update_user_preference(action, {:page_size => num_of_items})
       current_user.save!
     end
+  end
+
+  def update_user_preference(key, value)
+    current_user.preferences = HashWithIndifferentAccess.new  unless current_user.preferences
+    current_user.preferences[:dashboard] = {} unless current_user.preferences.has_key? :dashboard
+    current_user.preferences[:dashboard][key] = value
+    current_user.save!
   end
 
   helper_method :quantity

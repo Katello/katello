@@ -1262,16 +1262,6 @@
   if (!options){ options = {}; }
   return Utils.build_path(["id"], ["format"], [2,[2,[2,[2,[2,[2,[2,[2,[7,"/",false],[6,"api",false]],[7,"/",false]],[6,"systems",false]],[7,"/",false]],[3,"id",false]],[7,"/",false]],[6,"checkin",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
   },
-// checkin_list_splice_reports_filter_reports => /splice_reports/filters/:filter_id/reports/checkin_list(.:format)
-  checkin_list_splice_reports_filter_reports_path: function(_filter_id, options) {
-  if (!options){ options = {}; }
-  return Utils.build_path(["filter_id"], ["format"], [2,[2,[2,[2,[2,[2,[2,[2,[2,[2,[7,"/",false],[6,"splice_reports",false]],[7,"/",false]],[6,"filters",false]],[7,"/",false]],[3,"filter_id",false]],[7,"/",false]],[6,"reports",false]],[7,"/",false]],[6,"checkin_list",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
-  },
-// checkin_splice_reports_filter_reports => /splice_reports/filters/:filter_id/reports/checkin(.:format)
-  checkin_splice_reports_filter_reports_path: function(_filter_id, options) {
-  if (!options){ options = {}; }
-  return Utils.build_path(["filter_id"], ["format"], [2,[2,[2,[2,[2,[2,[2,[2,[2,[2,[7,"/",false],[6,"splice_reports",false]],[7,"/",false]],[6,"filters",false]],[7,"/",false]],[3,"filter_id",false]],[7,"/",false]],[6,"reports",false]],[7,"/",false]],[6,"checkin",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
-  },
 // clear_helptips_user => /users/:id/clear_helptips(.:format)
   clear_helptips_user_path: function(_id, options) {
   if (!options){ options = {}; }
@@ -1812,16 +1802,6 @@
   if (!options){ options = {}; }
   return Utils.build_path(["id"], ["format"], [2,[2,[2,[2,[2,[2,[7,"/",false],[6,"roles",false]],[7,"/",false]],[3,"id",false]],[7,"/",false]],[6,"edit",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
   },
-// edit_splice_reports_filter => /splice_reports/filters/:id/edit(.:format)
-  edit_splice_reports_filter_path: function(_id, options) {
-  if (!options){ options = {}; }
-  return Utils.build_path(["id"], ["format"], [2,[2,[2,[2,[2,[2,[2,[2,[7,"/",false],[6,"splice_reports",false]],[7,"/",false]],[6,"filters",false]],[7,"/",false]],[3,"id",false]],[7,"/",false]],[6,"edit",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
-  },
-// edit_splice_reports_filter_report => /splice_reports/filters/:filter_id/reports/:id/edit(.:format)
-  edit_splice_reports_filter_report_path: function(_filter_id, _id, options) {
-  if (!options){ options = {}; }
-  return Utils.build_path(["filter_id","id"], ["format"], [2,[2,[2,[2,[2,[2,[2,[2,[2,[2,[2,[2,[7,"/",false],[6,"splice_reports",false]],[7,"/",false]],[6,"filters",false]],[7,"/",false]],[3,"filter_id",false]],[7,"/",false]],[6,"reports",false]],[7,"/",false]],[3,"id",false]],[7,"/",false]],[6,"edit",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
-  },
 // edit_subscription => /subscriptions/:id/edit(.:format)
   edit_subscription_path: function(_id, options) {
   if (!options){ options = {}; }
@@ -1967,11 +1947,6 @@
   if (!options){ options = {}; }
   return Utils.build_path(["id"], ["format"], [2,[2,[2,[2,[2,[2,[2,[2,[7,"/",false],[6,"api",false]],[7,"/",false]],[6,"distributors",false]],[7,"/",false]],[3,"id",false]],[7,"/",false]],[6,"export",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
   },
-// facts_splice_reports_filter_reports => /splice_reports/filters/:filter_id/reports/facts(.:format)
-  facts_splice_reports_filter_reports_path: function(_filter_id, options) {
-  if (!options){ options = {}; }
-  return Utils.build_path(["filter_id"], ["format"], [2,[2,[2,[2,[2,[2,[2,[2,[2,[2,[7,"/",false],[6,"splice_reports",false]],[7,"/",false]],[6,"filters",false]],[7,"/",false]],[3,"filter_id",false]],[7,"/",false]],[6,"reports",false]],[7,"/",false]],[6,"facts",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
-  },
 // facts_system => /systems/:id/facts(.:format)
   facts_system_path: function(_id, options) {
   if (!options){ options = {}; }
@@ -2096,16 +2071,6 @@
   items_roles_path: function(options) {
   if (!options){ options = {}; }
   return Utils.build_path([], ["format"], [2,[2,[2,[2,[7,"/",false],[6,"roles",false]],[7,"/",false]],[6,"items",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
-  },
-// items_splice_reports_filter_reports => /splice_reports/filters/:filter_id/reports/items(.:format)
-  items_splice_reports_filter_reports_path: function(_filter_id, options) {
-  if (!options){ options = {}; }
-  return Utils.build_path(["filter_id"], ["format"], [2,[2,[2,[2,[2,[2,[2,[2,[2,[2,[7,"/",false],[6,"splice_reports",false]],[7,"/",false]],[6,"filters",false]],[7,"/",false]],[3,"filter_id",false]],[7,"/",false]],[6,"reports",false]],[7,"/",false]],[6,"items",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
-  },
-// items_splice_reports_filters => /splice_reports/filters/items(.:format)
-  items_splice_reports_filters_path: function(options) {
-  if (!options){ options = {}; }
-  return Utils.build_path([], ["format"], [2,[2,[2,[2,[2,[2,[7,"/",false],[6,"splice_reports",false]],[7,"/",false]],[6,"filters",false]],[7,"/",false]],[6,"items",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
   },
 // items_subscriptions => /subscriptions/items(.:format)
   items_subscriptions_path: function(options) {
@@ -2397,16 +2362,6 @@
   if (!options){ options = {}; }
   return Utils.build_path([], ["format"], [2,[2,[2,[2,[7,"/",false],[6,"roles",false]],[7,"/",false]],[6,"new",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
   },
-// new_splice_reports_filter => /splice_reports/filters/new(.:format)
-  new_splice_reports_filter_path: function(options) {
-  if (!options){ options = {}; }
-  return Utils.build_path([], ["format"], [2,[2,[2,[2,[2,[2,[7,"/",false],[6,"splice_reports",false]],[7,"/",false]],[6,"filters",false]],[7,"/",false]],[6,"new",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
-  },
-// new_splice_reports_filter_report => /splice_reports/filters/:filter_id/reports/new(.:format)
-  new_splice_reports_filter_report_path: function(_filter_id, options) {
-  if (!options){ options = {}; }
-  return Utils.build_path(["filter_id"], ["format"], [2,[2,[2,[2,[2,[2,[2,[2,[2,[2,[7,"/",false],[6,"splice_reports",false]],[7,"/",false]],[6,"filters",false]],[7,"/",false]],[3,"filter_id",false]],[7,"/",false]],[6,"reports",false]],[7,"/",false]],[6,"new",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
-  },
 // new_subscription => /subscriptions/new(.:format)
   new_subscription_path: function(options) {
   if (!options){ options = {}; }
@@ -2632,11 +2587,6 @@
   if (!options){ options = {}; }
   return Utils.build_path(["id"], ["format"], [2,[2,[2,[2,[2,[2,[7,"/",false],[6,"providers",false]],[7,"/",false]],[3,"id",false]],[7,"/",false]],[6,"products_repos",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
   },
-// products_splice_reports_filter_reports => /splice_reports/filters/:filter_id/reports/products(.:format)
-  products_splice_reports_filter_reports_path: function(_filter_id, options) {
-  if (!options){ options = {}; }
-  return Utils.build_path(["filter_id"], ["format"], [2,[2,[2,[2,[2,[2,[2,[2,[2,[2,[7,"/",false],[6,"splice_reports",false]],[7,"/",false]],[6,"filters",false]],[7,"/",false]],[3,"filter_id",false]],[7,"/",false]],[6,"reports",false]],[7,"/",false]],[6,"products",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
-  },
 // products_subscription => /subscriptions/:id/products(.:format)
   products_subscription_path: function(_id, options) {
   if (!options){ options = {}; }
@@ -2726,11 +2676,6 @@
   rails_info_properties_path: function(options) {
   if (!options){ options = {}; }
   return Utils.build_path([], ["format"], [2,[2,[2,[2,[2,[2,[7,"/",false],[6,"rails",false]],[7,"/",false]],[6,"info",false]],[7,"/",false]],[6,"properties",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
-  },
-// record_splice_reports_filter_reports => /splice_reports/filters/:filter_id/reports/record(.:format)
-  record_splice_reports_filter_reports_path: function(_filter_id, options) {
-  if (!options){ options = {}; }
-  return Utils.build_path(["filter_id"], ["format"], [2,[2,[2,[2,[2,[2,[2,[2,[2,[2,[7,"/",false],[6,"splice_reports",false]],[7,"/",false]],[6,"filters",false]],[7,"/",false]],[3,"filter_id",false]],[7,"/",false]],[6,"reports",false]],[7,"/",false]],[6,"record",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
   },
 // redhat_provider_providers => /providers/redhat_provider(.:format)
   redhat_provider_providers_path: function(options) {
@@ -2986,26 +2931,6 @@
   show_user_session_path: function(options) {
   if (!options){ options = {}; }
   return Utils.build_path([], ["format"], [2,[2,[7,"/",false],[6,"user_session",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
-  },
-// splice_reports_filter => /splice_reports/filters/:id(.:format)
-  splice_reports_filter_path: function(_id, options) {
-  if (!options){ options = {}; }
-  return Utils.build_path(["id"], ["format"], [2,[2,[2,[2,[2,[2,[7,"/",false],[6,"splice_reports",false]],[7,"/",false]],[6,"filters",false]],[7,"/",false]],[3,"id",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
-  },
-// splice_reports_filter_report => /splice_reports/filters/:filter_id/reports/:id(.:format)
-  splice_reports_filter_report_path: function(_filter_id, _id, options) {
-  if (!options){ options = {}; }
-  return Utils.build_path(["filter_id","id"], ["format"], [2,[2,[2,[2,[2,[2,[2,[2,[2,[2,[7,"/",false],[6,"splice_reports",false]],[7,"/",false]],[6,"filters",false]],[7,"/",false]],[3,"filter_id",false]],[7,"/",false]],[6,"reports",false]],[7,"/",false]],[3,"id",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
-  },
-// splice_reports_filter_reports => /splice_reports/filters/:filter_id/reports(.:format)
-  splice_reports_filter_reports_path: function(_filter_id, options) {
-  if (!options){ options = {}; }
-  return Utils.build_path(["filter_id"], ["format"], [2,[2,[2,[2,[2,[2,[2,[2,[7,"/",false],[6,"splice_reports",false]],[7,"/",false]],[6,"filters",false]],[7,"/",false]],[3,"filter_id",false]],[7,"/",false]],[6,"reports",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
-  },
-// splice_reports_filters => /splice_reports/filters(.:format)
-  splice_reports_filters_path: function(options) {
-  if (!options){ options = {}; }
-  return Utils.build_path([], ["format"], [2,[2,[2,[2,[7,"/",false],[6,"splice_reports",false]],[7,"/",false]],[6,"filters",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
   },
 // status_changeset => /changesets/:id/status(.:format)
   status_changeset_path: function(_id, options) {
