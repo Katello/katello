@@ -1093,7 +1093,7 @@ var promotion_page = (function($){
                     });
                     if (current_changeset.type() === "deletion") {
                         // show all add/remove links
-                        buttons.show();
+                        buttons.not('[data-block_delete="true"]').show();
 
                     } else { // promotion changeset
                         // show add/remove links for only promotable objects
