@@ -809,6 +809,7 @@ usermod -a -G katello-shared tomcat
 %{homedir}/app/lib/api/constraints
 %{homedir}/app/lib/api/v1
 %{homedir}/app/lib/api/v2
+%{homedir}/app/lib/dashboard
 %exclude %{homedir}/app/lib/resources/candlepin.rb
 %{homedir}/lib/tasks
 %{homedir}/lib/util
