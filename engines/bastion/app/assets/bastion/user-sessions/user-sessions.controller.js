@@ -16,13 +16,14 @@
  * @name Katello.user-sessions.controller:UserSessionsController
  *
  * @requires $scope
+ * @requires $document
  * @requires notices
  *
  * @description
  *  A controller for all user session (i.e. login page) functionality.
  */
-angular.module('Katello.user-sessions').controller('UserSessionsController', ['$scope', 'notices', function($scope, notices) {
-    $(document).bind('ajax:complete', function(event, request) {
+angular.module('Katello.user-sessions').controller('UserSessionsController', ['$scope', '$document', 'notices', function($scope, $document, notices) {
+    $document.bind('ajax:complete', function(event, request) {
         var status = request.status;
 
         // Don't trigger orgSwitcher refresh for error cases.

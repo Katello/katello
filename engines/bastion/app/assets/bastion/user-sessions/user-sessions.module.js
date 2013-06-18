@@ -10,4 +10,12 @@
  have received a copy of GPLv2 along with this software; if not, see
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
  **/
-angular.module('Katello.user-sessions', ['alchemy', 'alch-templates', 'Katello.widgets']);
+
+/**
+ * @ngdoc module
+ * @name  Katello.user-sessions
+ *
+ * @description
+ *   Module for user session related functionality.
+ */
+angular.module('Katello.user-sessions', ['alchemy', 'alch-templates', 'Katello.globals', 'Katello.widgets']);

@@ -37,18 +37,6 @@ if ($.bbq !== undefined) {
     $.bbq.pushState('!', '');
 }
 
-//i18n global variable
-var i18n = {};
-angular.module('Katello').constant('i18nDictionary', i18n);
-
-function localize(data) {
-    for (var key in data) {
-        if(data.hasOwnProperty(key)) {
-            i18n[key] = data[key];
-        }
-    }
-}
-
 function update_status() {
   var statusElement = $(".status");
   var i = setInterval(function() {
