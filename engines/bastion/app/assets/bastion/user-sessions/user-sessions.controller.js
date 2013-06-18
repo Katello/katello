@@ -13,7 +13,7 @@
 
 /**
  * @ngdoc controller
- * @name Katello.user-sessions.controller:UserSessionsController
+ * @name Bastion.user-sessions.controller:UserSessionsController
  *
  * @requires $scope
  * @requires $document
@@ -22,7 +22,7 @@
  * @description
  *  A controller for all user session (i.e. login page) functionality.
  */
-angular.module('Katello.user-sessions').controller('UserSessionsController', ['$scope', '$document', 'notices', function($scope, $document, notices) {
+angular.module('Bastion.user-sessions').controller('UserSessionsController', ['$scope', '$document', 'notices', function($scope, $document, notices) {
     $document.bind('ajax:complete', function(event, request) {
         var status = request.status;
 

@@ -13,9 +13,9 @@
 
 /**
  * @ngdoc module
- * @name  Katello.user-sessions
+ * @name  Bastion.user-sessions
  *
  * @description
  *   Module for user session related functionality.
  */
-angular.module('Katello.user-sessions', ['alchemy', 'alch-templates', 'Katello.globals', 'Katello.widgets']);
+angular.module('Bastion.user-sessions', ['alchemy', 'alch-templates', 'Katello.globals', 'Bastion.widgets']);

@@ -16,7 +16,7 @@ describe('Controller: UserSessionsController', function() {
     var $scope, $document, notices;
 
     // load the user-sessions module
-    beforeEach(module('Katello.user-sessions'));
+    beforeEach(module('Bastion.user-sessions'));
 
     // Provide global notices variable
     beforeEach(module(function($provide) {
