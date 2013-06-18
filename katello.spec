@@ -228,7 +228,7 @@ BuildArch:      noarch
 Summary:        A meta-package to pull in all components for Katello and Foreman
 Requires:       %{name}-all
 Requires:       %{name}-configure-foreman
-Requires:       foreman-proxy-installer
+Requires:       %{name}-configure-foreman-proxy
 
 %description foreman-all
 
