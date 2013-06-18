@@ -154,7 +154,17 @@ class ContentViewVersion < ActiveRecord::Base
     async_tasks.flatten(1)
   end
 
+  def deletable?(from_env)
+    !System.exists?(:environment_id=>from_env, :content_view_id=>self.content_view)
+  end
+
   def delete(from_env)
+    unless deletable?(from_env)
+          raise Errors::ChangesetContentException.new(_("Cannot delete view %{view} from %{env}, systems are currently subscribed. " +
+                                                      "Please move subscribed systems to another content view or environment.") %
+                                                          {:env=>from_env.name, :view=>self.content_view.name})
+    end
+
     self.environments.delete(from_env)
     self.repositories.in_environment(from_env).each{|r| r.destroy}
     if self.environments.empty?
