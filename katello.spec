@@ -685,6 +685,7 @@ usermod -a -G katello-shared tomcat
 %{homedir}/app/lib/api/constraints
 %{homedir}/app/lib/api/v1
 %{homedir}/app/lib/api/v2
+%{homedir}/app/lib/dashboard
 %dir %{homedir}/app/lib/resources
 %{homedir}/app/lib/resources/cdn.rb
 %{homedir}/app/lib/content_search
