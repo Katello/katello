@@ -435,6 +435,9 @@ testing.
 %build
 export RAILS_ENV=build
 
+#don't distribute quiet_paths
+rm -f config/initializers/quiet_paths.rb
+
 # when running in SCL we do not distribute any devel packages yet
 %if %{?scl:1}%{!?scl:0}
     rm -f bundler.d/checking.rb
