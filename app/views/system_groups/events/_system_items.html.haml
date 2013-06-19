@@ -14,7 +14,7 @@
           &nbsp;&nbsp;
       .event_status
         = t.system.name
-        %span.tipsy-icon.info.task-info{"data-result" => t.result_description}
+        %span.tipsy-icon.info.task-info{"data-result" => t.result_description.gsub("\n", "<br/>")}
 
   %td.event_date
     - if t.pending?

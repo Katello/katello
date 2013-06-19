@@ -1,5 +1,5 @@
 //Edit/view page as seen on the 2 pane changeset history list
-= javascript 'changesets/changeset_edit'
+= javascript 'widgets/jquery.jeditable.helpers', 'changesets/changeset_edit'
 
 = content_for :title do
   = _("Details")
@@ -17,7 +17,7 @@
       .grid_3.ra
         %label #{_("Description:")}
       .grid_5.la{:name=>"description", :class=>("editable edit_description" if editable),
-          "data-id"=>@changeset.id,"data-url"=>changeset_path(@changeset.id)}<
+          "data-id"=>@changeset.id,'data-maxlength'=>default_description_limit,"data-url"=>changeset_path(@changeset.id)}<
         = @changeset.description.blank? ? _("None") : @changeset.description
     .fieldset
       .grid_3.ra

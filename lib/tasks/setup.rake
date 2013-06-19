@@ -11,6 +11,7 @@ task :clear_search_indices => ["environment"] do
   Tire.index(Package.index).delete
   Tire.index(Errata.index).delete
   Tire.index(PackageGroup.index).delete
+  Tire.index(Pool.index).delete
   puts "Search Indices cleared."
 end
 

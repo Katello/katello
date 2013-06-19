@@ -395,7 +395,7 @@ module Glue::Candlepin::Consumer
         # default memtotal is in kB
         else total_mem = (total_mem / (1024*1024))
       end
-      total_mem.to_i
+      total_mem.round(2)
     end
 
     def available_pools_full listall=false

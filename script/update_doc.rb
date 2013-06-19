@@ -32,8 +32,11 @@ end
 
 Dir.chdir "#{root}/yardoc" do
   cmd 'git checkout gh-pages'
+  cmd 'git fetch origin'
+  cmd 'git reset --hard origin/gh-pages'
+  cmd 'git add --all'
   if push_to_github
-    cmd "git ac -m '#{message}'"
+    cmd "git commit -m '#{message}'"
     cmd 'git push origin gh-pages'
   end
 end
