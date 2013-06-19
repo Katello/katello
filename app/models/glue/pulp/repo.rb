@@ -236,9 +236,8 @@ module Glue::Pulp::Repo
         tmp_packages = []
         package_fields = ['name', 'version', 'release', 'arch', 'suffix', 'epoch',
                           'download_url', 'checksum', 'checksumtype', 'license', 'group',
-                          'children', 'vendor', 'filename', 'relativepath', 'requires',
-                          'provides', 'description', 'size', 'buildhost',
-                          '_id', '_content_type_id', '_href', '_storage_path', '_type']
+                          'children', 'vendor', 'filename', 'relativepath', 'description',
+                          'size', 'buildhost', '_id', '_content_type_id', '_href', '_storage_path', '_type']
 
         self.package_ids.each_slice(Katello.config.pulp.bulk_load_size) do |sub_list|
           tmp_packages.concat(Runcible::Extensions::Rpm.find_all_by_unit_ids(sub_list, package_fields))
