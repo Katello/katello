@@ -655,13 +655,7 @@ usermod -a -G katello-shared tomcat
 %{homedir}/app/models/ext
 %{homedir}/app/models/roles_permissions
 %{homedir}/app/assets/
-%{homedir}/app/assets/stylesheets
-%{homedir}/app/assets/javascripts
-%{homedir}/app/assets/images
 %{homedir}/vendor
-%{homedir}/vendor/assets
-%{homedir}/vendor/assets/stylesheets
-%{homedir}/vendor/assets/images
 %{homedir}/app/views
 %{homedir}/autotest
 %{homedir}/ca
@@ -781,13 +775,7 @@ usermod -a -G katello-shared tomcat
 %exclude %{homedir}/lib/tasks/test.rake
 %exclude %{homedir}/lib/tasks/simplecov.rake
 %{homedir}/app/assets/
-%{homedir}/app/assets/stylesheets
-%{homedir}/app/assets/javascripts
-%{homedir}/app/assets/images
 %{homedir}/vendor
-%{homedir}/vendor/assets
-%{homedir}/vendor/assets/stylesheets
-%{homedir}/vendor/assets/images
 %{homedir}/app/views
 %{homedir}/autotest
 %{homedir}/ca
