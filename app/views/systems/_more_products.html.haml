@@ -4,7 +4,7 @@
       %ul
         %li
           .status_icon{:class => "#{@system.product_compliance_color p['productId']}"}
-          #{p['productName']}
+          = "#{p['productName']} #{p['version']}"
         %li
           = system_subscription_status_message(@system, p)
 

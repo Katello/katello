@@ -187,7 +187,8 @@ class ContentSearchController < ApplicationController
   def errata_items
     view = ContentView.readable(current_organization).where(:id=>params[:view_id]).first
     repo = Repository.libraries_content_readable(current_organization).where(:id=>params[:repo_id]).first
-    errata = spanned_repo_content(repo, 'errata', process_params(:errata), params[:offset], process_search_mode, process_env_ids) || {:content_rows=>[]}
+    offset = params[:offset].try(:to_i) || 0
+    errata = spanned_repo_content(view, repo, 'errata', process_params(:errata), params[:offset], process_search_mode, process_env_ids) || {:content_rows=>[]}
     meta = metadata_row(errata[:total], offset + errata[:content_rows].length,
                          {:repo_id=>repo.id, :view_id=>view.id}, "#{view.id}_#{repo.id}", ContentSearch::RepoSearch.id(view, repo))
     render :json=>{:rows=>(errata[:content_rows] + [meta])}

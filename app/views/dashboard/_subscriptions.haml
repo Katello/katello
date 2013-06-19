@@ -6,7 +6,7 @@
                             {data:#{escape_javascript(owner_info.total_partial_compliance_consumers.to_s)}, color:"#f0e960"},  //yellow  partial
                             {data:#{escape_javascript(owner_info.total_valid_compliance_consumers + owner_info.total_partial_compliance_consumers + owner_info.total_invalid_compliance_consumers == 0 ? "100" : owner_info.total_valid_compliance_consumers.to_s)}, color:"#9ccc50"}]; //green   valid
 
-#dashboard_subscriptions.big_widget
+#dashboard_subscriptions.widget
   .left_side
     .line
     .stats

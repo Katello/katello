@@ -419,7 +419,7 @@ module Glue::Provider
 
       # Index pools
       # Note: Only the Red Hat provider subscriptions are being indexed.
-      ::Pool.index_pools(subscriptions, {:org=>self.organization.label, :provider_id=>self.organization.redhat_provider.id})
+      ::Pool.index_pools(subscriptions, [{:org=>[self.organization.label]}, {:provider_id=>[self.organization.redhat_provider.id]}])
 
       subscriptions
     end

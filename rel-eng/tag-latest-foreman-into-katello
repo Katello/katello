@@ -1,0 +1,35 @@
+#!/bin/bash
+
+# PURPOSE:
+# This script MUST be run from katello.git/rel-eng/ directory
+# It take latest builds from foreman-nightly-* tag and re-tag them
+# into katello-thirdparty-foreman-* tag.
+# It does that for ever package listed in comps-katello-foreman-server-*.xml
+# and for every build, which is newer in foreman-nightly-* compared to equivalent
+# build in katello-thirdparty-foreman-*
+#
+# REQUIREMENTS
+#   rpmdevtools
+#   koji
+#  and config for katello koji in ~/.koji/katello-config
+
+for COMPS_FILE in comps/comps-katello-foreman-server-*.xml; do
+    # e.g. fedora18 or rhel6
+    PLATFORM=$(echo $COMPS_FILE | sed 's/comps\/comps-katello-foreman-server-\(.*\)\.xml/\1/')
+
+    for PACKAGE in $(
+        cat $COMPS_FILE | awk '/packagereq/ { print $2 }' | sed  's/.*>\(.*\)<.*/\1/g'
+        ); do
+        LATEST_BUILD=$( koji -c ~/.koji/katello-config latest-build --quiet foreman-nightly-$PLATFORM $PACKAGE | awk '{ print $1 }')
+        # if there is no build then it is probably subpackage, just skip it, otherwise do:
+        if [ -n "$LATEST_BUILD" ]; then
+            KATELLO_LATEST_BUILD=$( koji -c ~/.koji/katello-config latest-build --quiet katello-thirdparty-foreman-$PLATFORM $PACKAGE | awk '{ print $1 }')
+            rpmdev-vercmp "$LATEST_BUILD" "$KATELLO_LATEST_BUILD" >/dev/null
+            CMP_RESULT=$?  # 11 is >, 12 is <, 0 is ==
+            if [ "$LATEST_BUILD" != "$KATELLO_LATEST_BUILD" -a 0$CMP_RESULT -eq 11 ]; then
+                echo Tagging $LATEST_BUILD into katello-thirdparty-foreman-$PLATFORM
+                koji -c ~/.koji/katello-config tag-build --nowait katello-thirdparty-foreman-$PLATFORM $LATEST_BUILD >/dev/null
+            fi
+        fi
+    done
+done

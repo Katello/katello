@@ -72,55 +72,70 @@ module Glue::Pulp::ConsumerGroup
     end
 
     def install_package(packages)
-      raise NotImplementedError
       Rails.logger.debug "Scheduling package install for consumer group #{self.pulp_id}"
-      #TODO: Needs corresponding Runcible call once fixed in Pulp
+
+      pulp_task = Runcible::Extensions::ConsumerGroup.install_content(self.pulp_id,
+                                                                      'rpm',
+                                                                      packages,
+                                                                      {'importkeys' => true})
     rescue => e
       Rails.logger.error "Failed to schedule package install for pulp consumer group #{self.pulp_id}: #{e}, #{e.backtrace.join("\n")}"
       raise e
     end
 
     def uninstall_package(packages)
-      raise NotImplementedError
       Rails.logger.debug "Scheduling package uninstall for consumer group #{self.pulp_id}"
-      # initiate the action and return the response... a successful response will include a job containing 1 or more tasks
-      #TODO: Needs corresponding Runcible call once fixed in Pulp
+
+      pulp_task = Runcible::Extensions::ConsumerGroup.uninstall_content(self.pulp_id,
+                                                                        'rpm',
+                                                                        packages)
     rescue => e
       Rails.logger.error "Failed to schedule package uninstall for pulp consumer group #{self.pulp_id}: #{e}, #{e.backtrace.join("\n")}"
       raise e
     end
 
     def update_package(packages)
-      raise NotImplementedError
-      Rails.logger.debug "Scheduling package update for consumer #{self.name}"
-      #TODO: Needs corresponding Runcible call once fixed in Pulp
+      Rails.logger.debug "Scheduling package update for consumer group #{self.pulp_id}"
+
+      pulp_task = Runcible::Extensions::ConsumerGroup.update_content(self.pulp_id,
+                                                                     'rpm',
+                                                                     packages,
+                                                                     {'importkeys' => true})
     rescue => e
       Rails.logger.error "Failed to schedule package update for pulp consumer group #{self.pulp_id}: #{e}, #{e.backtrace.join("\n")}"
       raise e
     end
 
     def install_package_group(groups)
-      raise NotImplementedError
       Rails.logger.debug "Scheduling package group install for consumer group #{self.pulp_id}"
-      #TODO: Needs corresponding Runcible call once fixed in Pulp
+
+      pulp_task = Runcible::Extensions::ConsumerGroup.install_content(self.pulp_id,
+                                                                      'package_group',
+                                                                      groups,
+                                                                      {'importkeys' => true})
     rescue => e
       Rails.logger.error "Failed to schedule package group install for pulp consumer group #{self.pulp_id}: #{e}, #{e.backtrace.join("\n")}"
       raise e
     end
 
     def uninstall_package_group(groups)
-      raise NotImplementedError
       Rails.logger.debug "Scheduling package group uninstall for consumer group #{self.pulp_id}"
-      #TODO: Needs corresponding Runcible call once fixed in Pulp
+
+      pulp_task = Runcible::Extensions::ConsumerGroup.uninstall_content(self.pulp_id,
+                                                                        'package_group',
+                                                                        groups)
     rescue => e
       Rails.logger.error "Failed to schedule package group uninstall for pulp consumer group #{self.pulp_id}: #{e}, #{e.backtrace.join("\n")}"
       raise e
     end
 
     def install_consumer_errata(errata_ids)
-      raise NotImplementedError
       Rails.logger.debug "Scheduling errata install for consumer group #{self.pulp_id}"
-      #TODO: Needs corresponding Runcible call once fixed in Pulp
+
+      pulp_task = Runcible::Extensions::ConsumerGroup.install_content(self.pulp_id,
+                                                                      'erratum',
+                                                                      errata_ids,
+                                                                      {'importkeys' => true})
     rescue => e
       Rails.logger.error "Failed to schedule errata install for pulp consumer group #{self.pulp_id}: #{e}, #{e.backtrace.join("\n")}"
       raise e

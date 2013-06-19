@@ -1,28 +1,40 @@
 @import "katello_base";
 
-$sixty: (($static_width) * 0.6);
-$forty: $static_width - $sixty;
-.sixty, .forty {
+$col_width: (($static_width) * 0.5);
+.column {
   float: left;
-  margin: 0 10px
-}
-.sixty {
+  margin: 0 10px;
   margin-left: 20px;
-  width: $sixty - 50;
+  width: $col_width - 50;
+  min-height: 650px;
+
+  &.right {
+    margin-left: 10px;
+  }
+  &.highlight {
+    background: #FFFF36;
+  }
 }
-.forty {
-  width: $forty - 10;
-  margin-right: 0;
+
+.dashboard-container {
+  .helptip-open {
+    width: ($col_width * 2) - 100;
+    margin: -20px 4px 15px 22px;
+  }
+  .helptip-close {
+    margin: -20px 4px 10px 8px;
+  }
 }
 
 /* box for "errors" on the custom 500 error page */
 .dash {
-    $big_height: 350px;
-    $big_width: $sixty - 85;
-    $small_height: 153px;
-    $small_width: $forty - 35;
+    $height: 160px;
+    $header_height: 34px;
+    $width: $col_width - 85;
 
     @include border-radius(3px);
+    height: $height + $header_height;
+    overflow: hidden;
     background-color: $lightergrey_color;
     border:1px solid $border_color;
     padding: 10px 10px 0 15px;
@@ -37,6 +49,7 @@ $forty: $static_width - $sixty;
     }
     h2 {
       font-size: 145%;
+      cursor: move;
     }
     hr {
       height: 1px;
@@ -46,10 +59,11 @@ $forty: $static_width - $sixty;
     }
     .dashhead {
         position: relative;
+        height: $header_height;
     }
 
     #dashboard_subscriptions {
-      height: $small_height;
+      height: $height;
       .sub_count {
         font-family: $headlinefont;
         font-size: 140%;
@@ -75,7 +89,7 @@ $forty: $static_width - $sixty;
         font-size: 115%;
       }
       .left_side {
-        width: ($big_width * 0.70);
+        width: ($width * 0.63);
         display: inline-block;
 
         .icon {
@@ -94,7 +108,6 @@ $forty: $static_width - $sixty;
         width: 150px;
         display: inline-block;
         position: relative;
-        margin-right: 10px;
         margin-top: -20px;
         float: right;
         #overlay {
@@ -111,10 +124,10 @@ $forty: $static_width - $sixty;
 
     #dashboard_errata {
       .scroll-pane {
-        height: $small_height - 26;
+        height: $height - 26;
       }
       .list {
-        height: $small_height - 10;
+        height: $height - 10;
         min-height: inherit;
       }
 
@@ -167,13 +180,13 @@ $forty: $static_width - $sixty;
       }
       .col_1 {
         display: inline-block;
-        width: $big_width * .07;
+        width: $width * .07;
         padding-left: 2px;
 
       }
       .col_2 {
         display: inline-block;
-        width: $big_width * .4;
+        width: $width * .4;
         padding-left: 2px;
       }
       .subcol_2 {
@@ -193,12 +206,12 @@ $forty: $static_width - $sixty;
       }
       .col_3 {
         display: inline-block;
-        width: $big_width* .40;
+        width: $width* .40;
         padding-left: 2px;
       }
       .col_4 {
         display: inline-block;
-        width: $big_width * .05;
+        width: $width * .05;
         padding-left: 2px;
       }
       .collapsed {
@@ -230,12 +243,16 @@ $forty: $static_width - $sixty;
       .row_item {
         .col_1 {
           white-space: nowrap;
-          width: 190px;
+          width: $width * .6;
           padding-right: 10px;
           overflow: hidden;
           display: inline-block;
           margin-bottom: -5px;
           text-overflow: ellipsis;
+
+          &.environment {
+            vertical-align: top;
+          }
         }
         .col_2 {
           display: inline-block;
@@ -249,6 +266,9 @@ $forty: $static_width - $sixty;
     #dashboard_sync {
       h5 {
         display: inline;
+      }
+      .col_1, .col_2, .col_3 {
+        vertical-align: top;
       }
       .col_1 {
         white-space: nowrap;
@@ -337,10 +357,10 @@ $forty: $static_width - $sixty;
 
     #dashboard_system_groups {
       .scroll-pane {
-        height: $small_height - 26;
+        height: $height - 26;
       }
       .list {
-        height: $small_height - 10;
+        height: $height - 10;
         min-height: inherit;
       }
 
@@ -385,7 +405,7 @@ $forty: $static_width - $sixty;
       }
       .col_1 {
         display: inline-block;
-        width: $big_width * .12;
+        width: $width * .12;
         padding-left: 2px;
 
         .status_icon {
@@ -406,12 +426,12 @@ $forty: $static_width - $sixty;
       }
       .col_2 {
         display: inline-block;
-        width: $big_width * .5;
+        width: $width * .5;
         padding-left: 2px;
       }
       .col_3 {
         display: inline-block;
-        width: $big_width * .15;
+        width: $width * .15;
         padding-left: 2px;
       }
     }
@@ -446,10 +466,10 @@ $forty: $static_width - $sixty;
       @include action-icon($clock_icon_black);
       margin-left: 0px;
     }
-    .small_widget {
+    .widget {
         overflow: hidden;
-        height: $small_height;
-        width: $small_width;
+        height: $height;
+        width: $width;
         list-style: None;
         li {
           margin-bottom: 5px;
@@ -462,42 +482,6 @@ $forty: $static_width - $sixty;
           margin-bottom: -1px;
           margin-top: 0;
           font-size: 110%;
-        }
-      }
-    .small_widget_headpin {
-        overflow: hidden;
-        height: 170px;
-        width: $small_width;
-        list-style: None;
-        li {
-          margin-bottom: 5px;
-          @include border-radius(10px);
-          &:hover {
-            background-color: $g1;
-          }
-        }
-        h5 {
-          margin-bottom: -1px;
-          margin-top: 0;
-          font-size: 110%;
-        }
-      }
-    .big_widget {
-        overflow: hidden;
-        height: $small_height;
-        width: $big_width;
-        list-style: none;
-        li {
-          margin: 5px 0 3px 0;
-          padding: 3px;
-          @include border-radius(10px);
-          &:hover {
-            background-color: $g1;
-          }
-        }
-        h5 {
-          margin-bottom: -5px;
-          margin-top: 0;
         }
       }
       .loading {
@@ -568,7 +552,7 @@ $forty: $static_width - $sixty;
 
   }
 
-  .sixty {
+  .column {
     margin-left: 10px;
   }
 
@@ -595,18 +579,6 @@ $forty: $static_width - $sixty;
     }
   }
 
-  .widget {
-    overflow-y: auto;
-    height: 175px;
-
-    p {
-      margin: 4px 0 8px;
-    }
-  }
-
-  .widget .package:last-child {
-    margin-bottom: 3px;
-  }
   .support {
     height: 30px;
   }

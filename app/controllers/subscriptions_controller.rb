@@ -32,7 +32,6 @@ class SubscriptionsController < ApplicationController
     {
       :index => read_provider_test,
       :items => read_provider_test,
-      :show => read_provider_test,
       :edit => read_provider_test,  # Note: edit is the callback for sliding out right panel
       :products => read_provider_test,
       :consumers => read_provider_test,
@@ -59,49 +58,54 @@ class SubscriptionsController < ApplicationController
     # is too restrictive, preventing viewing of previously imported subscriptions.
     if @provider.editable?
       details = current_organization.owner_details
-      if (details['upstreamUuid'].nil? || details['upstreamUuid'] == '' ||
+      if (details['upstreamConsumer'].nil? ||
           (!@provider.task_status.nil? && !@provider.task_status.finish_time))
         @panel_options[:initial_state] = {:panel => :new}
       end
     end
+
+    if current_user.experimental_ui
+      render :index_nutupane, :locals => { :experimental_ui => true }
+    else
+      render :index
+    end
   end
 
+  # TODO: remove this method and route since nutupane (experimental mode) uses the api method subscriptions_controller#organization_index
   def items
     order = split_order(params[:order])
-    search = params[:search]
+    query_string = params[:search]
     offset = params[:offset].to_i || 0
-    filters = {}
+    filters = []
 
-    # Without any search terms, all subscriptions for an org are queried directly from candlepin instead of
-    # hitting elastic search. This is important since this is then only time subscriptions get reindexed
-    # currently.
-    # Note: This does open the possibility that the elastic search contents will be out of date compared to
-    #       what is actually in candlepin. This could only happen, though, if the user was performing a
-    #       search and didn't refresh the page while the data was changing behind the scenes. Until this
-    #       becomes a specific issue, re-indexing will not be performed constantly.
-    if search.nil?
-      subscriptions = current_organization.redhat_provider.index_subscriptions
+    # Limit subscriptions to current org and Red Hat provider
+    filters << {:org=>[current_organization.label]}
+    filters << {:provider_id=>[current_organization.redhat_provider.id]}
 
-      if offset != 0
-        render :text => "" and return if subscriptions.empty?
-      end
-      render_panel_items(subscriptions, @panel_options, nil, offset.to_s)
-    else
-      # Limit subscriptions to current org and Red Hat provider
-      filters = {:org=>current_organization.label, :provider_id=>current_organization.redhat_provider.id}
-      search_results = ::Pool.search(search, offset, current_user.page_size, filters)
-      results_total = search_results.empty? ? 0 : search_results.total
-      render_panel_results(search_results, results_total, @panel_options)
+    options = {
+        :filter => filters,
+        :load_records? => false,
+        :default_field => :name
+    }
+    options[:page_size] = params[:page_size] || current_user.page_size
+    params[:sort_by] ||= :name_sort
+    params[:sort_order] ||= 'ASC'
+    options.merge!(params.slice(:sort_by, :sort_order))
+
+    # Without any search terms, reindex all subscriptions in elasticsearch. This is to insure
+    # that the latest information is searchable.
+    if query_string.nil? || query_string == ''
+      current_organization.redhat_provider.index_subscriptions
     end
+
+    items = Glue::ElasticSearch::Items.new(Pool)
+    subscriptions, total_count = items.retrieve(query_string, offset, options)
+
+    render_panel_results(subscriptions, items.total_items, @panel_options)
   end
 
   def edit
     render :partial => "edit", :locals => {:subscription => @subscription, :editable => false, :name => controller_display_name}
-  end
-
-  def show
-    @provider = current_organization.redhat_provider
-    render :partial=>"subscriptions/list_subscription_show", :locals=>{:item=>@subscription, :columns => COLUMNS.keys, :noblock => 1}
   end
 
   def products

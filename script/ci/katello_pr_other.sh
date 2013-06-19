@@ -18,3 +18,12 @@ then
 fi
 echo "Javascript code checked."
 
+echo ""
+echo "********* Testing Asset Precompile ****************"
+bundle exec rake assets:precompile
+
+if [ $? -ne 0 ]
+then
+  exit 1
+fi
+echo "Asset precompile works."

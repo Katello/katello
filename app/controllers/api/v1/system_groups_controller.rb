@@ -67,21 +67,14 @@ class Api::V1::SystemGroupsController < Api::V1::ApiController
   param :organization_id, :identifier, :desc => "organization identifier", :required => true
   param :name, String, :desc => "System group name to filter by"
   def index
-    sort_order = params[:sort_order] if params[:sort_order]
-    sort_by = params[:sort_by] if params[:sort_by]
     query_string = params[:name] ? "name:#{params[:name]}" : params[:search]
-    filters      = []
 
-    options = {
-        :filter => filters
-    }
+    options = {}
+    options.merge!(params.slice(:sort_by, :sort_order))
 
     if params[:paged]
       options[:page_size] = params[:page_size] || current_user.page_size
     end
-
-    options[:sort_by] = params[:sort_by] if params[:sort_by]
-    options[:sort_order]= params[:sort_order] if params[:sort_order]
 
     items = Glue::ElasticSearch::Items.new(SystemGroup)
     system_groups, total_count = items.retrieve(query_string, params[:offset], options)
