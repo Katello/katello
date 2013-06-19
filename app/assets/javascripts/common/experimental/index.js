@@ -14,7 +14,7 @@
 //= require "bastion/i18n/i18n.filter.js"
 //= require "bastion/utils/utils.module.js"
 //= require "bastion/utils/routes.factory.js"
-//= require "common/experimental/current_organization.value"
+//= require "common/experimental/katello-globals.module.js"
 //= require "systems/systems.module.js"
 //= require "system_groups/system-groups.module"
 //= require "system_groups/system-groups.factory"

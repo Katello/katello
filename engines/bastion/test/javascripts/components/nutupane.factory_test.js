@@ -42,8 +42,11 @@ describe('Factory: Nutupane', function () {
         }
     });
 
-    describe('setNewItemVisibility', function(){
+    beforeEach(module(function($provide){
+        $provide.value("CurrentOrganization", "ACME");
+    }));
 
+    describe('setNewItemVisibility', function(){
         beforeEach(inject(function($rootScope, $compile, Nutupane){
             nutupane = new Nutupane();
 

@@ -23,6 +23,7 @@ var Katello = angular.module('Katello', [
     'alchemy',
     'alch-templates',
     'ngSanitize',
+    'Katello.globals',
     'Katello.i18n',
     'Katello.menu',
     'Katello.systems',
