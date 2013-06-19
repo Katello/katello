@@ -200,6 +200,8 @@ common:
     # adds an extra line after each log message with information from which file:line and method
     # was this message logged
     log_trace: false
+    #do not log certain paths (example  /notices/get_new)
+    ignored_paths: []
     # configuration of all loggers used in app
     loggers:
       # this logger is parent of all other loggers, by default this is the only one having appender
