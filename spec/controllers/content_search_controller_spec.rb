@@ -44,12 +44,10 @@ describe ContentSearchController, :katello => true do
       @product = Product.new({:name=>"prod", :label=> "prod"})
 
       @product.provider = @provider
-      @product.environments << @organization.library
       @product.stub(:arch).and_return('noarch')
       @product.save!
-      ep_library = EnvironmentProduct.find_or_create(@organization.library, @product)
 
-      @repo_library = new_test_repo(ep_library, "repo", "#{@organization.name}/Library/prod/repo")
+      @repo_library = new_test_repo(@organization.library, @product, "repo", "#{@organization.name}/Library/prod/repo")
       @repo = promote(@repo_library, @env1)
       Repository.stub(:search).and_return([@repo])
       ContentView.any_instance.stub(:total_package_count).and_return(0)

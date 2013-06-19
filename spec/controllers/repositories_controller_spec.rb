@@ -33,7 +33,6 @@ describe RepositoriesController, :katello => true do
       @product = Product.new({:name=>"prod", :label=> "prod"})
 
       @product.provider = @provider
-      @product.environments << @organization.library
       @product.stub(:arch).and_return('noarch')
       @product.save!
       Product.stub!(:find).and_return(@product)
@@ -120,7 +119,6 @@ describe RepositoriesController, :katello => true do
       @org = new_test_org
       @product = new_test_product(@org, @org.library)
       @gpg = GpgKey.create!(:name => "foo", :organization => @organization, :content => "222")
-      @ep = EnvironmentProduct.find_or_create(@organization.library, @product)
       controller.stub!(:current_organization).and_return(@org)
       Resources::Candlepin::Content.stub(:create => {:id => "123"})
     end
@@ -189,7 +187,7 @@ describe RepositoriesController, :katello => true do
         Resources::Candlepin::Content.stub!(:get).and_return(content)
         Resources::Candlepin::Content.stub!(:create).and_return(content)
 
-        @repo = new_test_repo(@ep, "newname#{rand 10**6}", "http://fedorahosted org")
+        @repo = new_test_repo(@organization.library, @product, "newname#{rand 10**6}", "http://fedorahosted org")
         product = @repo.product
         Repository.stub(:find).and_return(@repo)
         @repo.stub(:content).and_return(OpenStruct.new(:gpgUrl=>""))

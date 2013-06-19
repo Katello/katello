@@ -18,8 +18,11 @@ class RepositoryCreateTest < RepositoryTestBase
   def setup
     super
     User.current = @admin
-    @repo = build(:repository, :fedora_17_el6, :environment_product => EnvironmentProduct.find(environment_products(:library_fedora)),
-                                              :content_view_version=>@library.default_content_view_version)
+    @repo = build(:repository, :fedora_17_el6,
+                  :environment => @library,
+                  :product => products(:fedora),
+                  :content_view_version => @library.default_content_view_version
+                 )
   end
 
   def teardown

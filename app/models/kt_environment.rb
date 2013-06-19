@@ -40,15 +40,8 @@ class KTEnvironment < ActiveRecord::Base
   has_and_belongs_to_many :successors, {:class_name => "KTEnvironment", :foreign_key => "prior_id",
     :join_table => "environment_priors", :association_foreign_key => :environment_id, :readonly => true}
 
-  has_many :environment_products, :class_name => "EnvironmentProduct", :foreign_key => "environment_id", :dependent => :destroy, :uniq=>true
-  has_many :products, :uniq => true, :through => :environment_products  do
-    def <<(*items)
-      super( items - @association.owner.environment_products.collect{|ep| ep.product} )
-    end
-  end
-
-  has_many :repositories, :through => :environment_products, :source => :repositories
-
+  has_many :repositories, dependent: :destroy, foreign_key: :environment_id
+  has_many :products, through: :repositories, readonly: true
   has_many :systems, :inverse_of => :environment, :dependent => :destroy,  :foreign_key => :environment_id
   has_many :distributors, :inverse_of => :environment, :dependent => :destroy,  :foreign_key => :environment_id
   has_many :working_changesets, :conditions => ["state != '#{Changeset::PROMOTED}'"], :foreign_key => :environment_id, :dependent => :destroy, :class_name=>"Changeset", :dependent => :destroy, :inverse_of => :environment
@@ -65,6 +58,8 @@ class KTEnvironment < ActiveRecord::Base
   has_many :users, :foreign_key => :default_environment_id, :inverse_of => :default_environment, :dependent => :nullify
 
   scope :completer_scope, lambda { |options| where('organization_id = ?', options[:organization_id])}
+  scope :non_library, where(library: false)
+  scope :library, where(library: true)
 
   validates :name, :exclusion => { :in => ["Library"], :message => N_(": '%s' is a built-in environment") % "Library" }, :unless => :library?
   validates :label, :exclusion => { :in => ["Library"], :message => N_(": '%s' is a built-in environment") % "Library" }, :unless => :library?
