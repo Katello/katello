@@ -20,20 +20,19 @@
           - else
             %strong #{env.display_name}
             - break
-      .fr
-        = render :partial => "common/filter_table"
 
     .full.lower_content.clear
+      .fl
+        = render :partial => "common/filter_table"
       = form_tag remove_subscriptions_activation_key_path(@activation_key), :id=>"subscription_form", :method=>"post", :remote=>true do
+
+        - if applied_subs.length > 0 && editable
+          = submit_tag _('Remove'), :class => 'submit button fr', :id=>"subscription_submit_button", :disabled=>"disabled"
 
         = render :partial => "subscriptions", :locals => {:product_families => applied_subs}
 
         - if editable
           .actions.panel_link
             = link_to(_("Add Subscriptions ▸"), available_subscriptions_activation_key_path(@activation_key))
-
-            - if applied_subs.length > 0
-              = submit_tag _('Remove'), :class => 'submit dialogbutton', :id=>"subscription_submit_button", :style => 'display:none;'
-              %a{:class=>'dialogbutton button disabled', :id=>"fake_subscription_submit_button"} #{_('Remove')}
 
 = render :template => "layouts/tupane_layout"

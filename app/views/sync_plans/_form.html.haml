@@ -3,7 +3,7 @@
 
 = form.text_field :name, :label => _("Name")
 
-= form.text_field :description, :label => _("Description")
+= form.text_field :description, :label => _("Description"), :maxlength => default_description_limit
 
 = form.select :interval, options_for_select(SyncPlan::TYPES, @plan.interval), :label => _("Interval")
 

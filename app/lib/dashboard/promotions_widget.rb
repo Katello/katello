@@ -10,16 +10,19 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-module Validators
-  class NonHtmlNameValidator < ActiveModel::EachValidator
-    def validate_each(record, attribute, value)
-      if value
-        record.errors[attribute] << N_("cannot contain characters >, <, or /") if value =~ %r{<|>|/}
-        NoTrailingSpaceValidator.validate_trailing_space(record, attribute, value)
-        KatelloNameFormatValidator.validate_length(record, attribute, value, 128, 1)
-      else
-        record.errors[attribute] << N_("cannot be blank")
-      end
-    end
+class Dashboard::PromotionsWidget < Dashboard::Widget
+
+  def accessible?
+    Katello.config.katello? && current_organization &&
+        KTEnvironment.any_viewable_for_promotions?(current_organization)
   end
+
+  def title
+    _("Promotions Overview")
+  end
+
+  def content_path
+    promotions_dashboard_index_path
+  end
+
 end

@@ -228,7 +228,7 @@ BuildArch:      noarch
 Summary:        A meta-package to pull in all components for Katello and Foreman
 Requires:       %{name}-all
 Requires:       %{name}-configure-foreman
-Requires:       foreman-proxy-installer
+Requires:       %{name}-configure-foreman-proxy
 
 %description foreman-all
 
@@ -254,7 +254,7 @@ Requires:        pulp-server
 Requires:        pulp-rpm-plugins
 Requires:        pulp-selinux
 Requires:        createrepo = 0.9.9-18%{?dist}
-Requires:        %{?scl_prefix}rubygem(runcible) >= 0.4.9
+Requires:        %{?scl_prefix}rubygem(runcible) >= 0.4.10
 
 %description glue-pulp
 Katello connection classes for the Pulp backend
@@ -685,6 +685,7 @@ usermod -a -G katello-shared tomcat
 %{homedir}/app/lib/api/constraints
 %{homedir}/app/lib/api/v1
 %{homedir}/app/lib/api/v2
+%{homedir}/app/lib/dashboard
 %dir %{homedir}/app/lib/resources
 %{homedir}/app/lib/resources/cdn.rb
 %{homedir}/app/lib/content_search
@@ -808,6 +809,7 @@ usermod -a -G katello-shared tomcat
 %{homedir}/app/lib/api/constraints
 %{homedir}/app/lib/api/v1
 %{homedir}/app/lib/api/v2
+%{homedir}/app/lib/dashboard
 %exclude %{homedir}/app/lib/resources/candlepin.rb
 %{homedir}/lib/tasks
 %{homedir}/lib/util

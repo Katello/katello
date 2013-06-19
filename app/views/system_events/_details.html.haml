@@ -27,6 +27,8 @@
     .grid_7
       %h5 #{_("Result")}
     .grid_7.multiline
-      = task.result_description
+      - task.result_description.split("\n").each do |result|
+        = result
+        %br
 
 = render :template => "layouts/tupane_layout"

@@ -315,4 +315,8 @@ module ApplicationHelper
     lim << _("RAM: %s GB") % sub.ram if sub.ram > 0
     lim.join(", ")
   end
+
+  def default_description_limit
+    return Validators::KatelloDescriptionFormatValidator::MAX_LENGTH
+  end
 end

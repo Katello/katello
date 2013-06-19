@@ -99,7 +99,7 @@ class GlueCandlepinConsumerTestSystem < GlueCandlepinConsumerTestBase
 
   # Memory values
   def test_memory_candlepin_consumer
-    assert_equal (256 / 1024), @@sys.memory
+    assert_equal (256.0 / 1024.0), @@sys.memory
 
     @@sys.facts['memory.memtotal'] = '2 GB'
     @@sys.facts['dmi.memory.size'] = '4 GB'
