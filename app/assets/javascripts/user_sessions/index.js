@@ -13,7 +13,8 @@
 
 //= require "alchemy/login"
 //= require "alchemy/password"
+//= require "common/experimental/katello-globals.module.js"
+//= require "bastion/user-sessions/user-sessions.module"
+//= require "bastion/user-sessions/user-sessions.controller"
 //= require "bastion/widgets/widgets.module.js"
 //= require "bastion/widgets/org-switcher.widget.js"
-//= require "user_sessions/user-sessions.module"
-//= require "user_sessions/user-sessions.controller"
