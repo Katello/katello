@@ -112,7 +112,6 @@ describe ProductsController, :katello => true do
       before do
         @product = Product.new({:name=>"prod", :label=> "prod"})
         @product.provider = @provider
-        @product.environments << @organization.library
         @product.stub(:arch).and_return('noarch')
         @product.save!
       end

@@ -78,7 +78,6 @@ class GpgKeysController < ApplicationController
     products_repos = Hash.new { |h, k| h[k] = [] }
     @gpg_key.repositories.
         in_environment(@gpg_key.organization.library).
-        includes(:environment_product => :product).
         order('products.name ASC').
         each { |repo| products_repos[repo.product.name] << repo }
 

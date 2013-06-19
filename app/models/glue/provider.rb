@@ -158,7 +158,6 @@ module Glue::Provider
         self.products << product
         product.provider = self
         product.gpg_key = gpg
-        product.environments << self.organization.library
         product.save!
         product
       rescue => e
@@ -337,7 +336,6 @@ module Glue::Provider
 
             Glue::Candlepin::Product.import_from_cp(product_attrs) do |p|
               p.provider = self
-              p.environments << self.organization.library
             end
             adjusted_eng_products << product_attrs
             if import_logger
@@ -356,10 +354,10 @@ module Glue::Provider
         product_in_katello_ids.concat(adjusted_eng_products.map{|p| p["id"]})
 
         unless product_in_katello_ids.include?(marketing_product_id)
-          engineering_product_in_katello_ids = self.organization.library.products.where(:cp_id => engineering_product_ids).map(&:id)
+          engineering_product_in_katello_ids = Product.in_org(self.organization).
+            where(:cp_id => engineering_product_ids).pluck("products.id")
           Glue::Candlepin::Product.import_marketing_from_cp(Resources::Candlepin::Product.get(marketing_product_id)[0], engineering_product_in_katello_ids) do |p|
             p.provider = self
-            p.environments << self.organization.library
           end
           product_in_katello_ids << marketing_product_id
         end

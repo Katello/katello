@@ -25,7 +25,7 @@ class GluePulpRepoTestBase < MiniTest::Rails::ActiveSupport::TestCase
 
     services  = ['Candlepin', 'ElasticSearch', 'Foreman']
     models    = ['KTEnvironment', 'Repository', 'Package', 'ContentView',
-                 'Organization', 'Product', 'EnvironmentProduct', 'ContentViewEnvironment']
+                 'Organization', 'Product', 'ContentViewEnvironment']
     disable_glue_layers(services, models, true)
 
     @@admin = User.find(@loaded_fixtures['users']['admin']['id'])

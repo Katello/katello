@@ -305,43 +305,40 @@ describe System do
     before do
       disable_product_orchestration
       disable_repo_orchestration
-      @product = Product.create!(:name=>"prod1", :label=> "prod1", :cp_id => '12345', :provider => @organization.redhat_provider, :environments => [@organization.library])
-      @environment = KTEnvironment.create!({:name=>"Dev", :label=> "Dev", :prior => @organization.library, :organization => @organization}) do |e|
-        e.products << @product
-      end
-      if Katello.config.katello?
-        env_product = @product.environment_products.where(:environment_id => @environment.id).first
-      else
-        env_product = @product.environment_products.where(:environment_id => @organization.library.id).first
-      end
+      @product = Product.create!(:name=>"prod1", :label=> "prod1", :cp_id => '12345', :provider => @organization.redhat_provider)
+      @environment = KTEnvironment.create!({:name=>"Dev", :label=> "Dev", :prior => @organization.library, :organization => @organization})
+      environment = Katello.config.katello? ? @environment : @organization.library
+
       @releases = %w[6.1 6.2 6Server]
       @releases.each do |release|
         Repository.create!(:name => "Repo #{release}",
                           :label => "Repo#{release.gsub(".", "_")}",
                           :pulp_id => "repo #{release}",
                           :enabled => true,
-                          :environment_product_id => env_product.id,
+                          :environment => environment,
+                          :product => @product,
                           :major => "6",
                           :minor => release,
                           :cp_label => "repo",
                           :relative_path=>'/foo',
                           :content_id=>'foo',
-                          :content_view_version=>env_product.environment.default_content_view_version,
+                          :content_view_version=>environment.default_content_view_version,
                           :feed => 'https://localhost')
       end
       Repository.create!(:name => "Repo without releases",
                          :label => "Repo_without_releases",
                          :pulp_id => "repo_without_release",
                          :enabled => true,
-                         :environment_product_id => env_product.id,
+                         :environment => environment,
+                         :product => @product,
                          :major => nil,
                          :minor => nil,
                          :cp_label => "repo",
                          :relative_path=>'/foo',
                          :content_id=>'foo',
-                         :content_view_version=>env_product.environment.default_content_view_version,
+                         :content_view_version=>environment.default_content_view_version,
                          :feed => 'https://localhost')
-      @system.environment = @environment
+      @system.environment = environment
       @system.save!
     end
 

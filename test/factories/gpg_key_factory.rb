@@ -1,3 +1,4 @@
+
 #
 # Copyright 2013 Red Hat, Inc.
 #
@@ -10,14 +11,8 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-class EnvironmentProduct < ActiveRecord::Base
-  belongs_to :product, :inverse_of => :environment_products
-  belongs_to :environment, :class_name => "KTEnvironment", :inverse_of => :environment_products
-  has_many :repositories, :dependent => :destroy, :inverse_of => :environment_product
-
-  def self.find_or_create(env, product)
-    item = EnvironmentProduct.where(:environment_id=> env.id, :product_id=> product.id).first
-    item ||= EnvironmentProduct.create!(:environment=> env, :product=> product)
-    item
+FactoryGirl.define do
+  factory :gpg_key do
+    sequence(:content) { |n| "abc123#{n}" }
   end
 end

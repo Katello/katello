@@ -1,17 +1,23 @@
+#
+# Copyright 2013 Red Hat, Inc.
+#
+# This software is licensed to you under the GNU General Public
+# License as published by the Free Software Foundation; either version
+# 2 of the License (GPLv2) or (at your option) any later version.
+# There is NO WARRANTY for this software, express or implied,
+# including the implied warranties of MERCHANTABILITY,
+# NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
+# have received a copy of GPLv2 along with this software; if not, see
+# http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
+
 require 'spec_helper'
 
 describe Repository do
 
   let(:repository) do
-    repository = Repository.new.tap do |r|
-      r.id = rand(100)
-      r.name = "name-#{rand(100)}"
-      r.environment_product = EnvironmentProduct.new(
-          :environment => KTEnvironment.new(:organization => Organization.new(:label => "organization-label-#{100}")),
-          :product => Product.new(:label => "product-label-#{rand(100)}"))
-      r.label = "label-#{rand(100)}"
-      r.gpg_key = GpgKey.new(:content => "rand(100")
-    end
+    repository = Repository.new(attributes_for(:repository))
+    repository.product = build(:product)
+    repository.gpg_key = build(:gpg_key)
     repository.stub(:content_id).and_return("content_id-rand#{rand(100)}")
     repository
   end
@@ -50,6 +56,8 @@ describe Repository do
     remote_content.stub(:update).and_return(remote_content)
     Candlepin::Content.stub(:find).and_return(remote_content)
     repository.stub(:should_update_content?).and_return(true)
+    repository.stub(:id).and_return(1)
+    repository.stub_chain(:organization, :label).and_return("ACME_Corporation")
 
     remote_content.should_receive(:update).with(hash_including(
       :name => repository.name,

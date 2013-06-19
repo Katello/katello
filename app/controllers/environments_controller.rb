@@ -127,7 +127,7 @@ class EnvironmentsController < ApplicationController
       view = ContentView.find(params[:content_view_id])
       view.try(:products, @environment) || []
     else
-      @environment.products
+      @environment.library? ? current_organization.products : @environment.products
     end
 
     respond_to do |format|

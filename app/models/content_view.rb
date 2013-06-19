@@ -167,12 +167,12 @@ class ContentView < ActiveRecord::Base
 
   def products(env)
     repos = repos(env)
-    Product.joins(:environment_products => :repositories).where(:repositories => {:id => repos.map(&:id)}).uniq
+    Product.joins(:repositories).where(:repositories => {:id => repos.map(&:id)}).uniq
   end
 
   #list all products associated to this view across all versions
   def all_version_products
-    Product.joins(:environment_products=>:repositories).where('repositories.id'=>self.all_version_repos).uniq
+    Product.joins(:repositories).where('repositories.id'=>self.all_version_repos).uniq
   end
 
   #get the library instances of all repos within this view
