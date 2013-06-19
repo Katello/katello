@@ -107,11 +107,15 @@ KT.editable = (function(){
         initialize_textfield_custom_info = function() {
             $('.edit_textfield_custom_info').each(function() {
                 $(this).editable('destroy');
+                var element = $(this);
                 var settings = {
-                    type        :  'text',
+                    type        :  'custom_info',
                     data        :  null,
                     width       :  158,
-                    name        :  $(this).attr('name')
+                    name        :  $(this).attr('name'),
+                    onsuccess   : function(result, status, xhr) {
+                        element.text(result);
+                    }
                 };
                 $(this).editable($(this).attr('data-url'), $.extend(common_settings, settings));
             });
