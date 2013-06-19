@@ -50,6 +50,7 @@ KT.custom_info = (function() {
             type   : $button.data("method"),
             success: function() {
                 remove_custom_info_row($button.data("id"));
+                notices.displayNotice("success", window.JSON.stringify({ "notices": [i18n.custom_info_delete_success] }));
             },
             error  : function(data) {
                 notices.displayNotice("error", window.JSON.stringify({ "notices": [$.parseJSON(data.responseText)["displayMessage"]] }));
@@ -68,6 +69,7 @@ KT.custom_info = (function() {
             data    : { "keyname": keyname, "value": value },
             success : function(data) {
                 add_custom_info_row(data);
+                notices.displayNotice("success", window.JSON.stringify({ "notices": [i18n.custom_info_create_success] }));
             },
             error   : function(data) {
                 notices.displayNotice("error", window.JSON.stringify({ "notices": [$.parseJSON(data.responseText)["displayMessage"]] }));
