@@ -128,9 +128,33 @@ table.details-visible {
   }
 }
 
-.table-searchbar {
+.nutupane-titlebar {
   width: 100%;
   background: rgb(250, 250, 250);
+  overflow: auto;
+  padding: 5px 10px;
+  border-bottom: 1px solid rgb(230, 230, 230);
+
+  .nutupane-title {
+    margin: 0;
+  }
+}
+
+.nutupane-actionbar {
+  width: 100%;
+  background: rgb(250, 250, 250);
+  overflow: auto;
+  padding: 10px 10px;
+  border-bottom: 1px solid rgb(230, 230, 230);
+
+  .form {
+    width: auto;
+    float: left;
+
+    input {
+      margin-bottom: 0;
+    }
+  }
 }
 
 .selected-action-container {
@@ -150,4 +174,12 @@ table.details-visible {
     border: none;
     padding: 10px 0;
   }
+}
+
+.table-reduced {
+  width: 20%;
+}
+
+.table-full {
+  width: 100% !important;
 }
