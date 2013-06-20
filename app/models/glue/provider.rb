@@ -41,7 +41,7 @@ module Glue::Provider
         self.task_status = async(:organization => self.organization, :task_type => "delete manifest").queue_delete_manifest(options)
         self.save!
       else
-        exec_delete_manifest
+        queue_delete_manifest(options)
       end
     end
 
@@ -438,6 +438,10 @@ module Glue::Provider
         pre_queue.create(:name     => "delete manifest for owner: #{self.organization.name}",
                          :priority => 3, :action => [self, :exec_delete_manifest],
                          :action_rollback => [self, :rollback_delete_manifest])
+        if Katello.config.use_pulp
+          pre_queue.create(:name => "refresh product repos for deletion",
+                       :priority => 6, :action => [self, :refresh_existing_products])
+        end
         self.save!
 
         if options[:notify]

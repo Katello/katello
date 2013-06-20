@@ -1,7 +1,7 @@
 -# repo,  parent_set
 %tr{:class=>parent_set_class(parent_set) + " #{cycle_class}", :id=>repo_id(repo), "data-product_id"=>repo.product.id, "data-id"=>repo.id}
   %td.one-line-ellipsis
-    -if syncable?
+    -if syncable?(repo.product)
       =check_box_tag "repoids[]", repo.id, false, :id=>"input_repo_#{repo.id}", :class=>"fl"
     %label.fl{:for=>"input_repo_#{repo.id}"}
       #{repo.name}
