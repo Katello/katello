@@ -12,7 +12,7 @@
         - promoted = next_env_view_version_ids.include?(view_version.id)
 
         .fr
-          %span.added.tipsify.hidden #{_("Added")}
+          %span.added.fl.tipsify.hidden #{_("Added")}
           %a{:class => "fr content_add_remove remove_content_view st_button hidden","data-display_name"=> view.name,
              "data-id" => view.id, "data-type" => "content_view", "data-promotable" => "#{!promoted}",
              :id => "add_remove_content_view_#{view.id}"}
