@@ -25,3 +25,11 @@
               %div{:name => "custom_info[#{info.keyname}]", :class => ("editable edit_textfield_custom_info" if informable.editable?), "data-method" => "put", "data-url" => api_update_custom_info_path(informable_type, informable_id, info.keyname)} #{info.value}
             %td
               %input.btn.warning.remove_custom_info_button{:value => _("Remove"), :type => "submit", "data-url" => api_destroy_custom_info_path(informable_type, informable_id, info.keyname), "data-method" => "delete", "data-id" => "custom_info_#{space_safe_keyname}"}
+
+= javascript do
+  :plain
+    localize({
+      "custom_info_create_success": '#{escape_javascript(_("Successfully created custom information"))}',
+      "custom_info_delete_success": '#{escape_javascript(_("Successfully deleted custom information"))}',
+      "custom_info_update_success": '#{escape_javascript(_("Successfully updated custom information"))}'
+    });

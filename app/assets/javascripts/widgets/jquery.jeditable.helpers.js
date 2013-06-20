@@ -115,6 +115,11 @@ KT.editable = (function(){
                     name        :  $(this).attr('name'),
                     onsuccess   : function(result, status, xhr) {
                         element.text(result);
+                        notices.displayNotice("success", window.JSON.stringify({ "notices": [i18n.custom_info_update_success] }));
+                    },
+                    onerror     : function(settings, original, xhr) {
+                        original.reset();
+                        notices.displayNotice("error", window.JSON.stringify({ "notices": [$.parseJSON(xhr.responseText)["displayMessage"]] }));
                     }
                 };
                 $(this).editable($(this).attr('data-url'), $.extend(common_settings, settings));
