@@ -644,6 +644,8 @@ usermod -a -G katello-shared tomcat
 usermod -a -G katello-shared tomcat
 
 %files
+### if you put something here and it should go to headpin as well
+### then add it to "files headpin" section few pages below too
 %attr(600, katello, katello)
 %{_bindir}/katello-*
 %ghost %attr(600, katello, katello) %{_sysconfdir}/%{name}/secret_token
@@ -715,6 +717,8 @@ usermod -a -G katello-shared tomcat
 %config(noreplace) %{_sysconfdir}/%{name}/service-list
 %{homedir}/Rakefile
 %{_mandir}/man8/katello-service.8*
+### if you put something here and it should go to headpin as well
+### then add it to "files headpin" section few pages below too
 
 %files common
 %doc LICENSE.txt
