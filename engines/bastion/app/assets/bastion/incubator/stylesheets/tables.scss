@@ -3,12 +3,13 @@ $row-highlight: rgb(0, 162, 155) !default;
 .table {
   border-spacing:0;
   border-style: none;
+  table-layout: fixed;
   width: 100%;
 
   td, th {
     text-align: center;
     vertical-align: middle;
-    padding: 8px;
+    padding: 8px 4px;
     font-size: 90%;
   }
 
@@ -105,5 +106,12 @@ $row-highlight: rgb(0, 162, 155) !default;
 }
 
 .search-input-container {
+  width: 100%;
+}
+
+.table-scroll-wrapper {
+  position: fixed;
+  overflow-x: hidden;
+  height: 100%;
   width: 100%;
 }

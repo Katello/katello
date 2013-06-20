@@ -17,7 +17,7 @@ describe('Directive:orgSwitcher', function() {
     var orgSwitcherElement;
 
     // load the widgets module
-    beforeEach(module('Katello.widgets'));
+    beforeEach(module('Bastion.widgets'));
 
     // Set up the mocks
     beforeEach(function() {

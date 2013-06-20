@@ -17,7 +17,7 @@
   = yield :head
   = csrf_meta_tag
 
-  %body
+  %body{"ng-app"=>ng_app_name}
     / [if lt IE 7]
       %p
         You are using an unsupported browser.
