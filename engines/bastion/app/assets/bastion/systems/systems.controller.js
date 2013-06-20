@@ -16,7 +16,9 @@
  * @name  Bastion.systems.controller:SystemsController
  *
  * @requires $scope
+ * @requires $state
  * @requires Nutupane
+ * @requires Routes
  *
  * @description
  *   Provides the functionality specific to Systems for use with the Nutupane UI pattern.
@@ -24,8 +26,8 @@
  *   within the table.
  */
 angular.module('Bastion.systems').controller('SystemsController',
-    ['$scope', 'Nutupane', 'Routes',
-    function($scope, Nutupane, Routes) {
+    ['$scope', '$state', 'Nutupane', 'Routes',
+    function($scope, $state, Nutupane, Routes) {
 
         var nutupane = new Nutupane();
 
@@ -57,80 +59,9 @@ angular.module('Bastion.systems').controller('SystemsController',
 
             return color;
         };
-    }]
-);
 
-/**
- * @ngdoc object
- * @name  Bastion.systems.controller:SystemsBulkActionController
- *
- * @requires $scope
- * @requires $http
- * @requires SystemGroups
- * @requires Nutupane
- * @requires Routes
- * @requires CurrentOrganization
- *
- * @description
- *   A controller for providing bulk action functionality to the systems page.
- */
-angular.module('Bastion.systems').controller('SystemsBulkActionController',
-    ['$scope', '$http', 'SystemGroups', 'Nutupane', 'Routes', 'CurrentOrganization',
-    function($scope, $http, SystemGroups, Nutupane, Routes, CurrentOrganization) {
-        var systemGroups = [];
-
-        var nutupane                       = new Nutupane();
-        $scope.systemGroups                = nutupane.table;
-        $scope.systemGroups.url            = Routes.apiOrganizationSystemGroupsPath(CurrentOrganization);
-        $scope.systemGroups.model          = 'System Groups';
-        $scope.systemGroups["active_item"]    = {};
-        $scope.working = false;
-
-        nutupane.get();
-
-        $scope.addSystemsToGroups = function() {
-            $scope.working = true;
-            var getIdFromRow = function(row) {
-                return row["row_id"];
-            };
-            var selectedSystemGroupRows = $scope.systemGroups.getSelectedRows();
-            var systemIds = $.map($scope.table.getSelectedRows(), getIdFromRow);
-            var systemGroupIds = $.map(selectedSystemGroupRows, getIdFromRow);
-            var data = {"group_ids": systemGroupIds, ids:systemIds};
-
-            $http.post(Routes.bulkAddSystemGroupSystemsPath(), data).then(function(response) {
-                $scope.working = false;
-                // Work around AngularJS not providing direct access to the XHR object
-                response.getResponseHeader = response.headers;
-
-                // Update the count of systems for each system group
-                if (response.status === 200) {
-                    var selectedSystemNames = $.map($scope.systems, function(system) {
-                        if (systemIds.indexOf(system.id) >= 0) {
-                            return system.name;
-                        }
-                    });
-                    var selectedSystemGroups = $.map(systemGroups, function(systemGroup) {
-                        if (systemGroupIds.indexOf(systemGroup.id) >= 0) {
-                            return systemGroup;
-                        }
-                    });
-
-                    // TODO refactor this by providing direct access to the $scope model in alch-tables
-                    $.each(selectedSystemGroups, function(groupIndex, systemGroup) {
-                        $.each(selectedSystemNames, function(systemIndex, systemName) {
-                            if (systemGroup.system.indexOf(systemName) === -1) {
-                                systemGroup.system.push(systemName);
-                                $.each(selectedSystemGroupRows[groupIndex].cells, function(cellIndex, cell) {
-                                    if (cell["column_id"] === "num_systems") {
-                                        cell.display = systemGroup.system.length;
-                                    }
-                                });
-                            }
-                        });
-                    });
-                }
-            });
+        $scope.table.openDetails = function (systemId) {
+            $state.transitionTo('systems.details', {systemId: systemId});
         };
     }]
 );

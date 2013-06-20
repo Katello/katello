@@ -25,15 +25,32 @@ angular.module('Bastion.systems', ['alchemy', 'alch-templates', 'ui.compat', 'Ba
  * @name Bastion.systems.config
  *
  * @requires $stateProvider
+ * @requires $urlRouterProvider
  *
  * @description
  *   Used for systems level configuration such as setting up the ui state machine.
  */
-angular.module('Bastion.systems').config(['$stateProvider', function($stateProvider){
+angular.module('Bastion.systems').config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
     $stateProvider.state('systems', {
+        abstract: true,
         views: {
             '@': {
-                controller: 'SystemsController'
+                controller: 'SystemsController',
+                templateUrl: 'systems/views/systems-table.html'
+            }
+        }
+    });
+
+    $stateProvider.state('systems.index', {
+        url: '/index'
+    });
+
+    $stateProvider.state('systems.details', {
+        url: '/system/:systemId',
+        views: {
+            'action-panel': {
+                controller: 'SystemDetailsController',
+                templateUrl: 'systems/views/system-details.html'
             }
         }
     });
@@ -42,7 +59,7 @@ angular.module('Bastion.systems').config(['$stateProvider', function($stateProvi
         views: {
             '@': {
                 controller: 'SystemsBulkActionController',
-                templateUrl: 'views/systems/alter-content-bulk.html'
+                templateUrl: 'systems/views/alter-content-bulk.html'
             }
         }
     });
@@ -51,7 +68,7 @@ angular.module('Bastion.systems').config(['$stateProvider', function($stateProvi
         views: {
             '@': {
                 controller: 'SystemsBulkActionController',
-                templateUrl: 'assets/views/systems/alter-systems-group-bulk.html'
+                templateUrl: 'systems/views/alter-systems-group-bulk.html'
             }
         }
     });
@@ -60,8 +77,18 @@ angular.module('Bastion.systems').config(['$stateProvider', function($stateProvi
         views: {
             '@': {
                 controller: 'SystemsBulkActionController',
-                templateUrl: 'views/systems/systems-delete-bulk.html'
+                templateUrl: 'systems/views/systems-delete-bulk.html'
             }
         }
     });
+
+    // Default state URL
+    $urlRouterProvider.otherwise("/index");
 }]);
+
+angular.module('Bastion.systems').run(['$rootScope', '$state', '$stateParams',
+    function ($rootScope, $state, $stateParams) {
+        $rootScope.$state = $state;
+        $rootScope.$stateParams = $stateParams;
+    }
+]);

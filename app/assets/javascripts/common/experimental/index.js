@@ -12,9 +12,9 @@
 
 //= require "bastion/i18n/i18n.module.js"
 //= require "bastion/i18n/i18n.filter.js"
+//= require "bastion/systems/systems.module.js"
 //= require "bastion/utils/utils.module.js"
 //= require "bastion/utils/routes.factory.js"
 //= require "common/experimental/katello-globals.module.js"
-//= require "bastion/systems/systems.module.js"
 //= require "system_groups/system-groups.module"
 //= require "system_groups/system-groups.factory"
