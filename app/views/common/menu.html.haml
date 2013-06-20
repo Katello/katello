@@ -17,7 +17,7 @@
         %li.menu-item{ "ng-mouseenter" => "handle_hover(notices, true)", "ng-mouseleave" => "handle_hover(notices, false)" }
           %a.menu-item-link{ :href => "{{ notices.url }}", "ng-class" => "{ 'active-item' : notices.active }"}
             %span#unread_notices{"ng-cloak" => true}
-              %i.validation_icon-white.icon
+              %i.icon-warning-sign
               %span#unread_notices_count
                 {{notices.count}}
       - if defined? KatelloForemanEngine
