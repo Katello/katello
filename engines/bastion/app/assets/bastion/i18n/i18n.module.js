@@ -13,10 +13,10 @@
 
 /**
  * @ngdoc module
- * @name  Katello.i18n
+ * @name  Bastion.i18n
  *
  * @description
  *   Module for internationalization.
  */
-angular.module('Katello.i18n', []);
+angular.module('Bastion.i18n', []);
 

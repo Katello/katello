@@ -1,6 +1,6 @@
 = generate_menu
 
-#navigation{ 'ng-controller' => 'MenuController' }
+%section#navigation{ "ng-controller"=>"MenuController" }
   %header.header.logo-header
     - if Katello.config.katello?
       %a.fl.katello-logo.logo{ 'href' => 'dashboard' }

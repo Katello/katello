@@ -14,7 +14,7 @@ describe('Filter:i18n', function() {
     var i18n, i18nFilter, i18nDictionary;
 
     // load the i18n module and i18nDictionary constant.
-    beforeEach(module('Katello.i18n'));
+    beforeEach(module('Bastion.i18n'));
 
     // Set up mocks
     beforeEach(module(function($provide) {

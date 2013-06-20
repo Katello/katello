@@ -13,8 +13,8 @@
  */
 
 /**
- * @ngdoc factory
- * @name  Katello.factory:Nutupane
+ * @ngdoc service
+ * @name  Bastion.widgets.service:Nutupane
  *
  * @requires $location
  * @requires $http
@@ -24,26 +24,24 @@
  *   Defines the Nutupane factory for adding common functionality to the Nutupane master-detail
  *   pattern.
  *
- * @example - Within a controller, the following needs to be set
- *   $scope.table                = Nutupane.table;
- *   $scope.table.url            = KT.routes.api_systems_path();
- *   $scope.table.transform      = transform;
- *   $scope.table.model          = 'Systems';
- *   $scope.table.activeItem    = {};
- *
- *   Nutupane.setColumns();
- *
- *   Nutupane.defaultItemUrl = function(id) {
- *       return KT.routes.edit_system_path(id);
- *   };
- *
- *   Nutupane.get(function() {
- *       if ($location.search().item) {
- *           $scope.table.selectItem(undefined, $location.search().item);
- *       }
- *   });
+ * @example
+ *   <pre>
+       angular.module('example').controller('ExampleController',
+           ['Nutupane', 'Routes', function(Nutupane, Routes) {
+               var nutupane                = new Nutupane();
+               $scope.table                = nutupane.table;
+               $scope.table.url            = Routes.examplePath();
+               $scope.table.model          = 'Examples';
+               $scope.table.activeItem     = {};
+
+               nutupane.defaultItemUrl = function(id) {
+                   return Routes.defaultPath(id);
+               };
+           }]
+       );
+    </pre>
  */
-angular.module('Katello').factory('Nutupane', ['$location', '$http', 'CurrentOrganization', function($location, $http, CurrentOrganization){
+angular.module('Bastion.widgets').factory('Nutupane', ['$location', '$http', 'CurrentOrganization', function($location, $http, CurrentOrganization){
     var sort = { by: 'name', order: 'ASC' };
 
     var Nutupane = function() {
@@ -213,7 +211,7 @@ angular.module('Katello').factory('Nutupane', ['$location', '$http', 'CurrentOrg
 
 /**
  * @ngdoc directive
- * @name  Katello.directive:nutupaneDetails
+ * @name  Bastion.widgets.directive:nutupaneDetails
  *
  * @scope
  *
@@ -229,7 +227,7 @@ angular.module('Katello').factory('Nutupane', ['$location', '$http', 'CurrentOrg
  * @example
  *   <span class="nutupane-details panel" id="nutupane-details" nutupane-details="table.visible" model="table" ng-class="{ 'nutupane-details-open' : !model.visible }">
  */
-angular.module('Katello.widgets').directive('nutupaneDetails', [function(){
+angular.module('Bastion.widgets').directive('nutupaneDetails', [function(){
     return {
         replace: false,
         scope: {

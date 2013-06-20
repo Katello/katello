@@ -13,13 +13,13 @@
  */
 
 /**
- * @ngdoc module
- * @name  Katello.factory:Routes
+ * @ngdoc service
+ * @name  Bastion.utils.factory:Routes
  *
  * @description
  *   Provides a wrapper factory around KT.routes.
  */
-angular.module('Katello.utils').factory('Routes', [function() {
+angular.module('Bastion.utils').factory('Routes', [function() {
     return BASTION.KT.routes;
 }]);
 

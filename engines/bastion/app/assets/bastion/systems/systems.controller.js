@@ -12,8 +12,8 @@
 */
 
 /**
- * @ngdoc controller
- * @name  Katello.controller:SystemsController
+ * @ngdoc object
+ * @name  Bastion.systems.controller:SystemsController
  *
  * @requires $scope
  * @requires Nutupane
@@ -23,7 +23,7 @@
  *   Defines the columns to display and the transform function for how to generate each row
  *   within the table.
  */
-angular.module('Katello').controller('SystemsController',
+angular.module('Bastion.systems').controller('SystemsController',
     ['$scope', 'Nutupane', 'Routes',
     function($scope, Nutupane, Routes) {
 
@@ -61,8 +61,8 @@ angular.module('Katello').controller('SystemsController',
 );
 
 /**
- * @ngdoc controller
- * @name  Katello.systems.controller:SystemsBulkActionController
+ * @ngdoc object
+ * @name  Bastion.systems.controller:SystemsBulkActionController
  *
  * @requires $scope
  * @requires $http
@@ -74,7 +74,7 @@ angular.module('Katello').controller('SystemsController',
  * @description
  *   A controller for providing bulk action functionality to the systems page.
  */
-angular.module('Katello.systems').controller('SystemsBulkActionController',
+angular.module('Bastion.systems').controller('SystemsBulkActionController',
     ['$scope', '$http', 'SystemGroups', 'Nutupane', 'Routes', 'CurrentOrganization',
     function($scope, $http, SystemGroups, Nutupane, Routes, CurrentOrganization) {
         var systemGroups = [];

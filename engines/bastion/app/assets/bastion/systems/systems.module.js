@@ -13,23 +13,23 @@
 
 /**
  * @ngdoc module
- * @name  Katello.systems
+ * @name  Bastion.systems
  *
  * @description
  *   Module for systems related functionality.
  */
-angular.module('Katello.systems', ['alchemy', 'alch-templates', 'ui.compat', 'Katello.widgets']);
+angular.module('Bastion.systems', ['alchemy', 'alch-templates', 'ui.compat', 'Bastion.widgets']);
 
 /**
- * @ngdoc config
- * @name  Katello.config
+ * @ngdoc object
+ * @name Bastion.systems.config
  *
  * @requires $stateProvider
  *
  * @description
  *   Used for systems level configuration such as setting up the ui state machine.
  */
-angular.module('Katello.systems').config(['$stateProvider', function($stateProvider){
+angular.module('Bastion.systems').config(['$stateProvider', function($stateProvider){
     $stateProvider.state('systems', {
         views: {
             '@': {

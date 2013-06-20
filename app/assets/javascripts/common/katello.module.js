@@ -24,9 +24,9 @@ var Katello = angular.module('Katello', [
     'alch-templates',
     'ngSanitize',
     'Katello.globals',
-    'Katello.i18n',
-    'Katello.menu',
-    'Katello.systems',
+    'Bastion.i18n',
+    'Bastion.menu',
+    'Bastion.systems',
     'Katello.system-groups'
 ]);
 

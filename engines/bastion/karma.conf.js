@@ -30,7 +30,7 @@ files = [
 
     '.tmp/templates/**/*.js',
 
-    'test/javascripts/**/*.js'
+    'test/**/*test.js'
 ];
 
 // list of files to exclude
