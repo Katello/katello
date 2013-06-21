@@ -59,7 +59,7 @@ module Katello
             is_not_empty :thumbslug_url
           end
 
-          are_booleans :use_cp, :use_foreman, :use_pulp, :use_elasticsearch, :use_ssl, :ldap_roles, :validate_ldap
+          are_booleans :use_cp, :use_foreman, :use_pulp, :use_elasticsearch, :use_ssl, :ldap_roles, :validate_ldap, :gravatar
 
           if !early? && environment != :build
             validate :database do
