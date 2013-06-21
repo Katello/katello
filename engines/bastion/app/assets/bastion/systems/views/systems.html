@@ -1,65 +1,32 @@
-<table class="table table-striped" alch-table="table">
-  <thead>
-    <tr>   
-      <th class="row-select">
-        <input class="select-all" 
-               type="checkbox" 
-               name="selectAll" 
-               ng-model="table.allSelected" 
-               ng-change="table.selectAll(table.allSelected)">
-      </th>
-      <th>{{ "Name" }}</th>
-      <th>{{ "OS" }}</th>
-      <th>{{ "Environment" }}</th>
-      <th>{{ "Content View" }}</th>
-      <th>{{ "Registered" }}</th>
-      <th>{{ "Last Checkin" }}</th>
-    </tr>
-  </thead>
-</table>
+<div alch-table="table" nutupane-table>
+  <div alch-table-scroll>
+    <table class="table table-striped">
+      <thead class="hidden">
+        <tr alch-table-head row-select>   
+          <th alch-table-column>{{ "Name" }}</th>
+          <th alch-table-column>{{ "OS" }}</th>
+          <th alch-table-column>{{ "Environment" }}</th>
+          <th alch-table-column>{{ "Content View" }}</th>
+          <th alch-table-column>{{ "Registered" }}</th>
+          <th alch-table-column>{{ "Last Checkin" }}</th>
+        </tr>
+      </thead>
 
-<div alch-table-scroll>
-  <table class="table table-striped" alch-table="table">
-    <thead class="hidden">
-      <tr>   
-        <th class="row-select">
-          <input class="select-all" 
-                 type="checkbox" 
-                 name="selectAll" 
-                 ng-model="table.allSelected" 
-                 ng-change="table.selectAll(table.allSelected)">
-        </th>
-        <th>{{ "Name" }}</th>
-        <th>{{ "OS" }}</th>
-        <th>{{ "Environment" }}</th>
-        <th>{{ "Content View" }}</th>
-        <th>{{ "Registered" }}</th>
-        <th>{{ "Last Checkin" }}</th>
-      </tr>
-    </thead>
-
-    <tbody infinite-scroll="table.nextPage()" 
-           infinite-scroll-disable="table.loadingMore" 
-           infinite-scroll-distance="table.scrollDistance">
-      <tr ng-repeat="system in table.items"
-          ng-class="{ 'active-row' : system.selected }">
-        <td class="row-select">
-          <input type="checkbox" 
-                 name="{{ system.id }}" 
-                 value="{{ system.id }}" 
-                 ng-model="system.selected" 
-                 ng-change="table.itemSelected(system.selected)">
-        </td>
-        <td>
-          <span class="status_icon" ng-class="getStatusColor(system.compliance.status)"></span>
-          {{ system.name }}
-        </td>
-        <td>{{ system.distribution }}</td>
-        <td>{{ system.environment.name }}</td>
-        <td>{{ system.content_view.name || "" }}</td>
-        <td>{{ system.registered | date:'short' }}</td>
-        <td>{{ system.checkin_time || 'Never checked in' | date:'short' }}</td>
-      </tr>
-    </tbody>
-  </table>
+      <tbody infinite-scroll="table.nextPage()">
+        <tr alch-table-row="system"
+            ng-repeat="system in table.items"
+            row-select>
+          <td alch-table-cell>
+            <span class="status_icon" ng-class="getStatusColor(system.compliance.status)"></span>
+            {{ system.name }}
+          </td>
+          <td alch-table-cell>{{ system.distribution }}</td>
+          <td alch-table-cell>{{ system.environment.name }}</td>
+          <td alch-table-cell>{{ system.content_view.name || "" }}</td>
+          <td alch-table-cell>{{ system.registered | date:'short' }}</td>
+          <td alch-table-cell>{{ system.checkin_time || 'Never checked in' | date:'short' }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
