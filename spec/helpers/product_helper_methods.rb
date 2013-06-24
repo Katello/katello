@@ -33,7 +33,9 @@ module ProductHelperMethods
     disable_repo_orchestration
     @provider = org.redhat_provider if !custom
     @provider ||= Provider.create!({:organization => org, :name => 'provider' + suffix, :repository_url => "https://something.url", :provider_type => Provider::CUSTOM})
-    @p = Product.create!(ProductTestData::SIMPLE_PRODUCT.merge({:name=>'product' + suffix, :provider => @provider}))
+    product_attributes = ProductTestData::SIMPLE_PRODUCT.merge({:name=>'product' + suffix, :provider => @provider})
+    product_attributes[:productContent] = []
+    @p = Product.create!(product_attributes)
 
     repo = Repository.new(:environment => env, :product => @p, :name=>"FOOREPO" + suffix,
                           :label=>"FOOREPO" + suffix, :pulp_id=>RepoTestData::REPO_ID,
