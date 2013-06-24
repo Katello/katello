@@ -21,7 +21,7 @@ module Glue::Candlepin::Pool
       lazy_accessor :remote_data, :pool_derived, :product_name, :consumed, :quantity, :support_level, :support_type,
         :start_date, :end_date, :attrs, :owner, :product_id, :account_number, :contract_number,
         :source_pool_id, :host_id, :virt_only, :virt_limit, :multi_entitlement, :stacking_id,
-        :arch, :sockets, :cores, :ram, :description, :product_family, :variant, :provided_products, :instance_multiplier,
+        :arch, :sockets, :cores, :ram, :description, :product_family, :variant, :provided_products, :instance_multiplier, :suggested_quantity,
         :initializer => lambda {|s|
           json = Resources::Candlepin::Pool.find(cp_id)
           # symbol "attributes" is reserved by Rails and cannot be used
@@ -130,6 +130,15 @@ module Glue::Candlepin::Pool
             @instance_multiplier = attr['value'].to_i
         end
       end if attrs['productAttributes']
+
+      @suggested_quantity = 1
+      attrs['calculatedAttributes'].each_key do |key|
+        calc_attrs = attrs['calculatedAttributes']
+        case key
+          when 'suggested_quantity'
+            @suggested_quantity = calc_attrs['suggested_quantity'].to_i
+        end
+      end if attrs['calculatedAttributes']
     end
 
   end
