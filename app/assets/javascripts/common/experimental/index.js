@@ -10,4 +10,9 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
 
-//= require "common/experimental/katello_experimental"
+//= require "i18n/i18n.module.js"
+//= require "i18n/i18n.filter.js"
+//= require "systems/systems.module.js"
+//= require "system_groups/system-groups.module"
+//= require "system_groups/system-groups.factory"
+//= require "common/experimental/routes.factory"

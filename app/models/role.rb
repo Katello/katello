@@ -28,7 +28,7 @@ class Role < ActiveRecord::Base
   validates_with Validators::NoTrailingSpaceValidator, :attributes => :name
   validates_with Validators::RolenameValidator, :attributes => :name
 
-  validates :description, :length => { :maximum => 250 }
+  validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
   validates_with Validators::LockValidator, :on => :update
 
   #validates_associated :permissions

@@ -96,6 +96,10 @@ module Glue::Candlepin::Product
       super
     end
 
+    def orphaned?
+      self.provider.redhat_provider? && self.certificate.nil?
+    end
+
     def build_product_content(attrs)
       @productContent = attrs.collect { |pc| ::Candlepin::ProductContent.new pc }
     end

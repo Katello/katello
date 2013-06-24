@@ -107,11 +107,20 @@ KT.editable = (function(){
         initialize_textfield_custom_info = function() {
             $('.edit_textfield_custom_info').each(function() {
                 $(this).editable('destroy');
+                var element = $(this);
                 var settings = {
-                    type        :  'text',
+                    type        :  'custom_info',
                     data        :  null,
                     width       :  158,
-                    name        :  $(this).attr('name')
+                    name        :  $(this).attr('name'),
+                    onsuccess   : function(result, status, xhr) {
+                        element.text(result);
+                        notices.displayNotice("success", window.JSON.stringify({ "notices": [i18n.custom_info_update_success] }));
+                    },
+                    onerror     : function(settings, original, xhr) {
+                        original.reset();
+                        notices.displayNotice("error", window.JSON.stringify({ "notices": [$.parseJSON(xhr.responseText)["displayMessage"]] }));
+                    }
                 };
                 $(this).editable($(this).attr('data-url'), $.extend(common_settings, settings));
             });
@@ -119,12 +128,14 @@ KT.editable = (function(){
         initialize_textarea = function() {
             $('.edit_textarea').each(function() {
                 $(this).editable('destroy');
+                var element = $(this);
                 var settings = {
                     type        :  'textarea',
                     data        :  null,
-                    name        :  $(this).attr('name'),
+                    name        :  element.attr('name'),
                     rows        :  8,
-                    cols        :  36
+                    cols        :  36,
+                    maxlength   :  element.data('maxlength')
                 };
                 $(this).editable($(this).attr('data-url'), $.extend(common_settings, settings));
             });

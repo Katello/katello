@@ -102,3 +102,18 @@ class GlueCandlepinProviderTestImport < GlueCandlepinProviderTestBase
   end
 
 end
+
+
+class GlueCandlepinProviderTestDelete < GlueCandlepinProviderTestBase
+
+  #until we can import a fake manifest into candlepin, this the best we can do
+  def test_manifest_delete
+    @@provider.stubs(:index_subscriptions).returns(true)
+    Resources::Candlepin::Owner.stubs(:pools).returns([])
+    Resources::Candlepin::Owner.stubs(:destroy_imports).with(@@provider.organization.label, true).returns(true)
+    Runcible::Extensions::Repository.stubs(:update_importer)
+    Runcible::Extensions::Repository.stubs(:update_distributor)
+    @@provider.delete_manifest
+  end
+end
+

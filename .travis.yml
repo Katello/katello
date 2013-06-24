@@ -8,7 +8,7 @@ before_install:
   - touch config/katello.yml
 
 install:
-  - bundle install --without devboost:optional:debugging
+  - travis_retry bundle install --without devboost:optional:debugging
 
 script:
   - "./script/ci/katello_pr_$JOB.sh"

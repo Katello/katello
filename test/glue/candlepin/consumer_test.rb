@@ -99,7 +99,7 @@ class GlueCandlepinConsumerTestSystem < GlueCandlepinConsumerTestBase
 
   # Memory values
   def test_memory_candlepin_consumer
-    assert_equal (256 / 1024), @@sys.memory
+    assert_equal (256.0 / 1024.0), @@sys.memory
 
     @@sys.facts['memory.memtotal'] = '2 GB'
     @@sys.facts['dmi.memory.size'] = '4 GB'
@@ -151,9 +151,7 @@ class GlueCandlepinConsumerTestSecondDelete < GlueCandlepinConsumerTestBase
     # First delete
     CandlepinConsumerSupport.destroy_system(@sys.id)
     # Second delete
-    assert_raises(RestClient::Gone) do
-      CandlepinConsumerSupport.destroy_system(@sys.id, 'support/candlepin/system_delete')
-    end
+    assert_equal true, CandlepinConsumerSupport.destroy_system(@sys.id, 'support/candlepin/system_delete')
   end
 
   def test_candlepin_distributor_second_delete
@@ -161,9 +159,7 @@ class GlueCandlepinConsumerTestSecondDelete < GlueCandlepinConsumerTestBase
     # First delete
     CandlepinConsumerSupport.destroy_distributor(@dist.id)
     # Second delete
-    assert_raises(RestClient::Gone) do
-      CandlepinConsumerSupport.destroy_distributor(@dist.id, 'support/candlepin/distributor_delete')
-    end
+    assert_equal true, CandlepinConsumerSupport.destroy_distributor(@dist.id, 'support/candlepin/distributor_delete')
   end
 
 end

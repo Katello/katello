@@ -26,10 +26,10 @@ module Util
             :event_messages => {
                 :running => [N_('Installing Package...'), N_('installing package...'), N_('installing packages...')],
                 :waiting => [N_('Installing Package...'), N_('installing package...'), N_('installing packages...')],
-                :finished => [N_('Package Install Complete'), N_('%s package installed'), N_('%{package}s (%{rest}s other packages) installed')],
-                :error=> [N_('Package Install Failed'), N_('%s package install failed'), N_('%{package}s (%{rest}s other packages) install failed')],
-                :cancelled => [N_('Package Install Canceled'), N_('%s package install canceled'), N_('%{package}s (%{rest}s other packages) install canceled')],
-                :timed_out =>[N_('Package Install Timed Out'), N_('%s package install timed out'), N_('%{package}s (%{rest}s other packages) install timed out')],
+                :finished => [N_('Package Install Complete'), N_('%{package} package installed'), N_('%{package} (%{total} other packages) installed')],
+                :error=> [N_('Package Install Failed'), N_('%{package} package install failed'), N_('%{package} (%{total} other packages) install failed')],
+                :cancelled => [N_('Package Install Canceled'), N_('%{package} package install canceled'), N_('%{package} (%{total} other packages) install canceled')],
+                :timed_out =>[N_('Package Install Timed Out'), N_('%{package} package install timed out'), N_('%{package} (%{total} other packages) install timed out')],
             },
            :user_message => _('Package Install scheduled by %s')
 
@@ -40,10 +40,10 @@ module Util
             :event_messages => {
                 :running => [N_('Updating Package...'), N_('updating package...'), N_('updating packages...')],
                 :waiting => [N_('Updating Package...'), N_('updating package...'), N_('updating packages...')],
-                :finished =>[N_('Package Update Complete'), N_('%s package updated'), N_('%{package}s (%{rest}s other packages) updated')],
-                :error => [N_('Package Update Failed'), N_('%s package update failed'), N_('%{package}s (%{rest}s other packages) update failed')],
-                :cancelled =>[N_('Package Update Canceled'), N_('%s package update canceled'), N_('%{package}s (%{rest}s other packages) update canceled')],
-                :timed_out =>[N_('Package Update Timed Out'), N_('%s package update timed out'), N_('%{package}s (%{rest}s other packages) update timed out')],
+                :finished =>[N_('Package Update Complete'), N_('%{package} package updated'), N_('%{package} (%{total} other packages) updated')],
+                :error => [N_('Package Update Failed'), N_('%{package} package update failed'), N_('%{package} (%{total} other packages) update failed')],
+                :cancelled =>[N_('Package Update Canceled'), N_('%{package} package update canceled'), N_('%{package} (%{total} other packages) update canceled')],
+                :timed_out =>[N_('Package Update Timed Out'), N_('%{package} package update timed out'), N_('%{package} (%{total} other packages) update timed out')],
             },
             :user_message => _('Package Update scheduled by %s')
         },
@@ -53,10 +53,10 @@ module Util
             :event_messages => {
                 :running => [N_('Removing Package...'), N_('removing package...'), N_('removing packages...')],
                 :waiting => [N_('Removing Package...'), N_('removing package...'), N_('removing packages...')],
-                :finished => [N_('Package Remove Complete'), N_('%s package removed'), N_('%{package}s (%{rest}s other packages) removed')],
-                :error => [N_('Package Remove Failed'), N_('%s package remove failed'), N_('%{package}s (%{rest}s other packages) remove failed')],
-                :cancelled => [N_('Package Remove Canceled'), N_('%s package remove canceled'), N_('%{package}s (%{rest}s other packages) remove canceled')],
-                :timed_out => [N_('Package Remove Timed Out'), N_('%s package remove timed out'), N_('%{package}s (%{rest}s other packages) remove timed out')],
+                :finished => [N_('Package Remove Complete'), N_('%{package} package removed'), N_('%{package} (%{total} other packages) removed')],
+                :error => [N_('Package Remove Failed'), N_('%{package} package remove failed'), N_('%{package} (%{total} other packages) remove failed')],
+                :cancelled => [N_('Package Remove Canceled'), N_('%{package} package remove canceled'), N_('%{package} (%{total} other packages) remove canceled')],
+                :timed_out => [N_('Package Remove Timed Out'), N_('%{package} package remove timed out'), N_('%{package} (%{total} other packages) remove timed out')],
             },
             :user_message => _('Package Remove scheduled by %s')
         },
@@ -67,10 +67,10 @@ module Util
             :event_messages => {
                 :running => [N_('Installing Package Group...'), N_('installing package group...'), N_('installing package groups...')],
                 :waiting => [N_('Installing Package Group...'), N_('installing package group...'), N_('installing package groups...')],
-                :finished => [N_('Package Group Install Complete'), N_('%s package group installed'), N_('%{package}s (%{rest}s other package groups) installed')],
-                :error=> [N_('Package Group Install Failed'), N_('%s package group install failed'), N_('%{package}s (%{rest}s other package groups) install failed')],
-                :cancelled => [N_('Package Group Install Canceled'), N_('%s package group install canceled'), N_('%{package}s (%{rest}s other package groups) install canceled')],
-                :timed_out =>[N_('Package Group Install Timed Out'), N_('%s package group install timed out'), N_('%{package}s (%{rest}s other package groups) install timed out')],
+                :finished => [N_('Package Group Install Complete'), N_('%{group} package group installed'), N_('%{group} (%{total} other package groups) installed')],
+                :error=> [N_('Package Group Install Failed'), N_('%{group} package group install failed'), N_('%{group} (%{total} other package groups) install failed')],
+                :cancelled => [N_('Package Group Install Canceled'), N_('%{group} package group install canceled'), N_('%{group} (%{total} other package groups) install canceled')],
+                :timed_out =>[N_('Package Group Install Timed Out'), N_('%{group} package group install timed out'), N_('%{group} (%{total} other package groups) install timed out')],
             },
             :user_message => _('Package Group Install scheduled by %s')
         },
@@ -80,10 +80,10 @@ module Util
             :event_messages => {
                 :running => [N_('Updating package group...'), N_('updating package group...'), N_('updating package groups...')],
                 :waiting => [N_('Updating package group...'), N_('updating package group...'), N_('updating package groups...')],
-                :finished =>[N_('Package group update complete'), N_('%s package group updated'), N_('%{package}s (%{rest}s other package groups) updated')],
-                :error => [N_('Package group update failed'), N_('%s package group update failed'), N_('%{package}s (%{rest}s other package groups) update failed')],
-                :cancelled =>[N_('Package group update canceled'), N_('%s package group update canceled'), N_('%{package}s (%{rest}s other package groups) update canceled')],
-                :timed_out =>[N_('Package group update timed out'), N_('%s package group update timed out'), N_('%{package}s (%{rest}s other package groups) update timed out')],
+                :finished =>[N_('Package group update complete'), N_('%{group} package group updated'), N_('%{group} (%{total} other package groups) updated')],
+                :error => [N_('Package group update failed'), N_('%{group} package group update failed'), N_('%{group} (%{total} other package groups) update failed')],
+                :cancelled =>[N_('Package group update canceled'), N_('%{group} package group update canceled'), N_('%{group} (%{total} other package groups) update canceled')],
+                :timed_out =>[N_('Package group update timed out'), N_('%{group} package group update timed out'), N_('%{group} (%{total} other package groups) update timed out')],
 
             },
             :user_message => _('Package Group Update scheduled by %s')
@@ -94,10 +94,10 @@ module Util
             :event_messages => {
                 :running => [N_('Removing Package Group...'), N_('removing package group...'), N_('removing package groups...')],
                 :waiting => [N_('Removing Package Group...'), N_('removing package group...'), N_('removing package groups...')],
-                :finished => [N_('Package Group Remove Complete'), N_('%s package group removed'), N_('%{package}s (%{rest}s other package groups) removed')],
-                :error => [N_('Package Group Remove Failed'), N_('%s package group remove failed'), N_('%{package}s (%{rest}s other package groups) remove failed')],
-                :cancelled => [N_('Package Group Remove Canceled'), N_('%s package group remove canceled'), N_('%{package}s (%{rest}s other package groups) remove canceled')],
-                :timed_out => [N_('Package Group Remove Timed Out'), N_('%s package group remove timed out'), N_('%{package}s (%{rest}s other package groups) remove timed out')],
+                :finished => [N_('Package Group Remove Complete'), N_('%{group} package group removed'), N_('%{group} (%{total} other package groups) removed')],
+                :error => [N_('Package Group Remove Failed'), N_('%{group} package group remove failed'), N_('%{group} (%{total} other package groups) remove failed')],
+                :cancelled => [N_('Package Group Remove Canceled'), N_('%{group} package group remove canceled'), N_('%{group} (%{total} other package groups) remove canceled')],
+                :timed_out => [N_('Package Group Remove Timed Out'), N_('%{group} package group remove timed out'), N_('%{group} (%{total} other package groups) remove timed out')],
 
             },
             :user_message => _('Package Group Remove scheduled by %s')
@@ -108,10 +108,10 @@ module Util
             :event_messages => {
                 :running => [N_('Installing Erratum...'), N_('installing erratum...'), N_('installing errata...')],
                 :waiting => [N_('Installing Erratum...'), N_('installing erratum...'), N_('installing errata...')],
-                :finished => [N_('Erratum Install Complete'), N_('%s erratum installed'), N_('%{package}s (%{rest}s other errata) installed')],
-                :error=> [N_('Erratum Install Failed'), N_('%s erratum install failed'), N_('%{package}s (%{rest}s other errata) install failed')],
-                :cancelled => [N_('Erratum Install Canceled'), N_('%s erratum install canceled'), N_('%{package}s (%{rest}s other errata) install canceled')],
-                :timed_out =>[N_('Erratum Install Timed Out'), N_('%s erratum install timed out'), N_('%{package}s (%{rest}s other errata) install timed out')],
+                :finished => [N_('Erratum Install Complete'), N_('%{errata} erratum installed'), N_('%{errata} (%{total} other errata) installed')],
+                :error=> [N_('Erratum Install Failed'), N_('%{errata} erratum install failed'), N_('%{errata} (%{total} other errata) install failed')],
+                :cancelled => [N_('Erratum Install Canceled'), N_('%{errata} erratum install canceled'), N_('%{errata} (%{total} other errata) install canceled')],
+                :timed_out =>[N_('Erratum Install Timed Out'), N_('%{errata} erratum install timed out'), N_('%{errata} (%{total} other errata) install timed out')],
             },
            :user_message => _('Errata Install scheduled by %s')
         },

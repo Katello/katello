@@ -301,7 +301,7 @@ class GluePulpRepoRequiresSyncTest < GluePulpRepoTestBase
     @@fedora_17_x86_64_dev.create_pulp_repo
 
     task_list = @@fedora_17_x86_64.clone_contents(@@fedora_17_x86_64_dev)
-    assert_equal 4, task_list.length
+    assert_equal 5, task_list.length
 
     self.class.wait_on_tasks(task_list)
   ensure

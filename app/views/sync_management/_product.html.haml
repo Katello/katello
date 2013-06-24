@@ -1,7 +1,9 @@
 - pid = prod[:id]
 - cycle_class = cycle("", "alt", :name => 'product')
 %tr.product{:id=>product_id(pid), :class => cycle_class}
-  %td= prod[:name]
+  %td
+    = "#{prod[:name]} "
+    = "(Orphaned)" if prod[:object].orphaned?
   %td.max_width.start_time
   %td.max_width.duration
   %td.size= @product_size[pid]

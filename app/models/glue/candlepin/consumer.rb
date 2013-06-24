@@ -137,6 +137,9 @@ module Glue::Candlepin::Consumer
     def del_candlepin_consumer
       Rails.logger.debug "Deleting consumer in candlepin: #{name}"
       Resources::Candlepin::Consumer.destroy(self.uuid)
+    rescue RestClient::Gone => e
+      #ignore already deleted system
+      true
     rescue => e
       Rails.logger.error "Failed to delete candlepin consumer #{name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -385,7 +388,7 @@ module Glue::Candlepin::Consumer
         # default memtotal is in kB
         else total_mem = (total_mem / (1024*1024))
       end
-      total_mem.to_i
+      total_mem.round(2)
     end
 
     def available_pools_full listall=false
