@@ -133,10 +133,9 @@ module Glue::Candlepin::Pool
 
       @suggested_quantity = 1
       attrs['calculatedAttributes'].each_key do |key|
-        calc_attrs = attrs['calculatedAttributes']
         case key
           when 'suggested_quantity'
-            @suggested_quantity = calc_attrs['suggested_quantity'].to_i
+            @suggested_quantity = attrs['calculatedAttributes']['suggested_quantity'].to_i
         end
       end if attrs['calculatedAttributes']
     end
