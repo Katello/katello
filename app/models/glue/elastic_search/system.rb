@@ -43,7 +43,9 @@ module Glue::ElasticSearch::System
                                        "custom_info.KEYNAME",
                                        :content_view,
                                        :memory,
-                                       :sockets]
+                                       :sockets,
+                                       :status
+                    ]
 
       dynamic_templates = [
           {
@@ -80,6 +82,7 @@ module Glue::ElasticSearch::System
         end
         indexes :custom_info, :path => "just_name" do
         end
+        indexes :status, :type => 'string'
 
       end
 
@@ -95,7 +98,8 @@ module Glue::ElasticSearch::System
      :installed_products=>collect_installed_product_names,
      :sockets => self.sockets,
      :custom_info=>collect_custom_info,
-     :content_view => self.content_view.try(:name)
+     :content_view => self.content_view.try(:name),
+     :status => self.compliance_color
     }
   end
 end

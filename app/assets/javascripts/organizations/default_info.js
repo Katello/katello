@@ -146,21 +146,32 @@ KT.default_info = (function() {
 
     var add_default_info_row = function(data) {
         var keyname = data["keyname"];
-        var esc_keyname = escape(data["keyname"]);
-        var _keyname = data["keyname"].replace(" ", "_");
+        var _keyname = escape(keyname);
 
         var informable_type = data["informable_type"];
         var org = data["organization"];
-        var destroy_path = KT.routes.api_organization_destroy_default_info_path(org["name"], informable_type, esc_keyname);
+        var destroy_path = KT.routes.api_organization_destroy_default_info_path(org["name"], informable_type, _keyname);
 
-        var new_row = "<tr class=\"primary_color\" data-id=\"default_info_" + _keyname + "\">" +
-            "<td class=\"ra\">" +
-            "<label for=\"default_info_" + _keyname + "\">" + keyname + "</label>" +
-            "</td>" +
-            "<td>" +
-            "<input class=\"btn warning remove_default_info_button\" data-id=\"default_info_" + _keyname + "\" data-method=\"delete\" data-url=\"" + destroy_path + "\" type=\"submit\" value=\"" + i18n.remove + "\">" +
-            "</td>" +
-            "</tr>";
+        var new_row = $('<tr/>', {
+            'class': 'primary_color',
+            'data-id': 'default_info_' + _keyname,
+            'html': $('<td/>', {
+                'class': 'ra',
+                'html': $('<label/>', {
+                    'for': 'default_info_' + _keyname,
+                    'text': keyname
+                })
+            }).after($('<td/>', {
+                'html': $('<input/>', {
+                    'class': 'btn warning remove_default_info_button',
+                    'data-id': 'default_info_' + _keyname,
+                    'data-method': 'delete',
+                    'data-url': destroy_path,
+                    'type': 'submit',
+                    'value': i18n.remove
+                })
+            }))
+        });
 
         $("#new_default_info_row").after(new_row);
         setTimeout(function() {$("tr[data-id='default_info_" + _keyname + "']").addClass("row_fade_in"); }, 1); // hax

@@ -2,6 +2,92 @@
 http_interactions: 
 - request: 
     method: delete
+    uri: https://localhost/pulp/api/v2/users/
+    body: 
+      encoding: US-ASCII
+      string: ""
+    headers: 
+      Accept: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Content-Type: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="vptLGYsVG04SmovjrjT7UqYjh0Z78u9L7Gn8vWGc", oauth_signature="nYCIykeyuaEYmRycq6KhcH0nfUk%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1372097877", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      User-Agent: 
+      - Ruby
+  response: 
+    status: 
+      code: 405
+      message: Method Not Allowed
+    headers: 
+      Date: 
+      - Mon, 24 Jun 2013 18:17:57 GMT
+      Server: 
+      - Apache/2.2.15 (Red Hat)
+      Allow: 
+      - GET, POST
+      Vary: 
+      - Accept-Encoding
+      Content-Encoding: 
+      - gzip
+      Content-Length: 
+      - "24"
+      Content-Type: 
+      - text/html; charset=UTF-8
+    body: 
+      encoding: ASCII-8BIT
+      string: !binary |
+        H4sIAAAAAAAAA/PLz0sFAPGvot8EAAAA
+
+    http_version: 
+  recorded_at: Mon, 24 Jun 2013 18:17:57 GMT
+- request: 
+    method: post
+    uri: https://localhost/pulp/api/v2/users/
+    body: 
+      encoding: US-ASCII
+      string: "{\"login\":\"batman\",\"name\":\"batman\",\"password\":\"A4dmlVC26cDhirUK\"}"
+    headers: 
+      Accept: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Content-Type: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="WNRFDWWaIyGnYDlwZYjamGoBdgUAa4AJ2B004RjJ8HE", oauth_signature="UypfckOzWJEGkjEf6TSv4kS4RbU%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1372097878", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      Content-Length: 
+      - "64"
+      User-Agent: 
+      - Ruby
+  response: 
+    status: 
+      code: 409
+      message: Conflict
+    headers: 
+      Date: 
+      - Mon, 24 Jun 2013 18:17:58 GMT
+      Server: 
+      - Apache/2.2.15 (Red Hat)
+      Content-Encoding: 
+      - utf-8
+      Content-Length: 
+      - "193"
+      Content-Type: 
+      - application/json
+    body: 
+      encoding: US-ASCII
+      string: "{\"http_request_method\": \"POST\", \"exception\": null, \"error_message\": \"Duplicate resource: batman\", \"_href\": \"/pulp/api/v2/users/\", \"http_status\": 409, \"resource_id\": \"batman\", \"traceback\": null}"
+    http_version: 
+  recorded_at: Mon, 24 Jun 2013 18:17:58 GMT
+- request: 
+    method: delete
     uri: https://localhost/pulp/api/v2/users/batman/
     body: 
       encoding: US-ASCII
@@ -14,7 +100,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="KyBxmtGYoXL62HY34lXvAX9qGIRoId6a3fWNPQA0BI", oauth_signature="xQOzD4yfTRJtmFH%2FCknFP%2FqUc6c%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371490254", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="BNj5opZKW6uLIRxuNalZz7z6uCl8QnR3w8byXhEuVI", oauth_signature="JMVI5HspWGZIO29mU7p4jk1vaL8%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1372097878", oauth_version="1.0"
       Pulp-User: 
       - admin
       User-Agent: 
@@ -25,9 +111,9 @@ http_interactions:
       message: OK
     headers: 
       Date: 
-      - Mon, 17 Jun 2013 17:30:54 GMT
+      - Mon, 24 Jun 2013 18:17:58 GMT
       Server: 
-      - Apache/2.4.4 (Fedora) OpenSSL/1.0.1e-fips PHP/5.4.14 mod_wsgi/3.4 Python/2.7.3 mod_perl/2.0.8-dev Perl/v5.16.3
+      - Apache/2.2.15 (Red Hat)
       Content-Length: 
       - "4"
       Content-Type: 
@@ -36,85 +122,5 @@ http_interactions:
       encoding: US-ASCII
       string: "null"
     http_version: 
-  recorded_at: Mon, 17 Jun 2013 17:30:54 GMT
-- request: 
-    method: post
-    uri: https://localhost/pulp/api/v2/users/
-    body: 
-      encoding: US-ASCII
-      string: "{\"login\":\"batman\",\"name\":\"batman\",\"password\":\"pSMbz92WHDaYTuPK\"}"
-    headers: 
-      Accept: 
-      - application/json
-      Accept-Encoding: 
-      - gzip, deflate
-      Content-Type: 
-      - application/json
-      Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="XoMQtWhNmDr5IlOhrh8vYUbo3l1WQFTf164fT2i80", oauth_signature="oTaxgWus%2Fwf2CvLIlZOzaEJf6gc%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371490254", oauth_version="1.0"
-      Pulp-User: 
-      - admin
-      Content-Length: 
-      - "64"
-      User-Agent: 
-      - Ruby
-  response: 
-    status: 
-      code: 201
-      message: Created
-    headers: 
-      Date: 
-      - Mon, 17 Jun 2013 17:30:54 GMT
-      Server: 
-      - Apache/2.4.4 (Fedora) OpenSSL/1.0.1e-fips PHP/5.4.14 mod_wsgi/3.4 Python/2.7.3 mod_perl/2.0.8-dev Perl/v5.16.3
-      Location: 
-      - batman
-      Content-Length: 
-      - "184"
-      Content-Type: 
-      - application/json
-    body: 
-      encoding: US-ASCII
-      string: "{\"_id\": {\"$oid\": \"51bf47cfd60ea32d37405baf\"}, \"name\": \"batman\", \"roles\": [], \"_ns\": \"users\", \"login\": \"batman\", \"id\": \"51bf47cfd60ea32d37405baf\", \"_href\": \"/pulp/api/v2/users/batman/\"}"
-    http_version: 
-  recorded_at: Mon, 17 Jun 2013 17:30:55 GMT
-- request: 
-    method: delete
-    uri: https://localhost/pulp/api/v2/users/
-    body: 
-      encoding: US-ASCII
-      string: ""
-    headers: 
-      Accept: 
-      - application/json
-      Accept-Encoding: 
-      - gzip, deflate
-      Content-Type: 
-      - application/json
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="Q3M5wrk7wjBTO8wg0h1OYWLBxUgQZFPZE6AONMI1A", oauth_signature="Dr8yj9ATdIusIb%2FJBTz3CAOIEg0%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371490255", oauth_version="1.0"
-      Pulp-User: 
-      - admin
-      User-Agent: 
-      - Ruby
-  response: 
-    status: 
-      code: 405
-      message: Method Not Allowed
-    headers: 
-      Date: 
-      - Mon, 17 Jun 2013 17:30:55 GMT
-      Server: 
-      - Apache/2.4.4 (Fedora) OpenSSL/1.0.1e-fips PHP/5.4.14 mod_wsgi/3.4 Python/2.7.3 mod_perl/2.0.8-dev Perl/v5.16.3
-      Allow: 
-      - GET, POST
-      Content-Length: 
-      - "4"
-      Content-Type: 
-      - text/html; charset=UTF-8
-    body: 
-      encoding: US-ASCII
-      string: None
-    http_version: 
-  recorded_at: Mon, 17 Jun 2013 17:30:55 GMT
-recorded_with: VCR 2.5.0
+  recorded_at: Mon, 24 Jun 2013 18:17:58 GMT
+recorded_with: VCR 2.4.0

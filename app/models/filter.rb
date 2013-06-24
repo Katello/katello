@@ -39,10 +39,10 @@ class Filter < ActiveRecord::Base
     prod_diff = self.products - cvd.resulting_products
     repo_diff = self.repositories - cvd.repos
     unless prod_diff.empty?
-      errors.add(:base, _("cannot contain filters whose products do not belong this content view definition"))
+      errors.add(:base, _("cannot contain filters whose products do not belong to this content view definition"))
     end
     unless repo_diff.empty?
-      errors.add(:base, _("cannot contain filters whose repositories do not belong this content view definition"))
+      errors.add(:base, _("cannot contain filters whose repositories do not belong to this content view definition"))
     end
   end
 

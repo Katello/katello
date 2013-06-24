@@ -195,6 +195,7 @@ Src::Application.routes.draw do
       get :systems
       get :system_groups
       get :subscriptions
+      put :update
     end
   end
 

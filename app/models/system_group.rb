@@ -215,8 +215,8 @@ class SystemGroup < ActiveRecord::Base
   end
 
   def save_job pulp_job, job_type, parameters_type, parameters
-    job = Job.create!(:pulp_id => pulp_job[:id], :job_owner => self)
-    job.create_tasks(self, pulp_job[:tasks], job_type, parameters_type => parameters)
+    job = Job.create!(:pulp_id => pulp_job.first[:task_group_id], :job_owner => self)
+    job.create_tasks(self, pulp_job, job_type, parameters_type => parameters)
     job
   end
 

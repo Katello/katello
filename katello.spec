@@ -228,7 +228,7 @@ BuildArch:      noarch
 Summary:        A meta-package to pull in all components for Katello and Foreman
 Requires:       %{name}-all
 Requires:       %{name}-configure-foreman
-Requires:       foreman-proxy-installer
+Requires:       %{name}-configure-foreman-proxy
 
 %description foreman-all
 
@@ -254,7 +254,7 @@ Requires:        pulp-server
 Requires:        pulp-rpm-plugins
 Requires:        pulp-selinux
 Requires:        createrepo = 0.9.9-18%{?dist}
-Requires:        %{?scl_prefix}rubygem(runcible) >= 0.4.9
+Requires:        %{?scl_prefix}rubygem(runcible) >= 0.4.10
 
 %description glue-pulp
 Katello connection classes for the Pulp backend
@@ -434,6 +434,9 @@ testing.
 
 %build
 export RAILS_ENV=build
+
+#don't distribute quiet_paths
+rm -f config/initializers/quiet_paths.rb
 
 # when running in SCL we do not distribute any devel packages yet
 %if %{?scl:1}%{!?scl:0}
@@ -641,6 +644,8 @@ usermod -a -G katello-shared tomcat
 usermod -a -G katello-shared tomcat
 
 %files
+### if you put something here and it should go to headpin as well
+### then add it to "files headpin" section few pages below too
 %attr(600, katello, katello)
 %{_bindir}/katello-*
 %ghost %attr(600, katello, katello) %{_sysconfdir}/%{name}/secret_token
@@ -685,6 +690,7 @@ usermod -a -G katello-shared tomcat
 %{homedir}/app/lib/api/constraints
 %{homedir}/app/lib/api/v1
 %{homedir}/app/lib/api/v2
+%{homedir}/app/lib/dashboard
 %dir %{homedir}/app/lib/resources
 %{homedir}/app/lib/resources/cdn.rb
 %{homedir}/app/lib/content_search
@@ -711,6 +717,8 @@ usermod -a -G katello-shared tomcat
 %config(noreplace) %{_sysconfdir}/%{name}/service-list
 %{homedir}/Rakefile
 %{_mandir}/man8/katello-service.8*
+### if you put something here and it should go to headpin as well
+### then add it to "files headpin" section few pages below too
 
 %files common
 %doc LICENSE.txt
@@ -808,6 +816,7 @@ usermod -a -G katello-shared tomcat
 %{homedir}/app/lib/api/constraints
 %{homedir}/app/lib/api/v1
 %{homedir}/app/lib/api/v2
+%{homedir}/app/lib/dashboard
 %exclude %{homedir}/app/lib/resources/candlepin.rb
 %{homedir}/lib/tasks
 %{homedir}/lib/util

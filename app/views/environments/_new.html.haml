@@ -17,7 +17,7 @@
       = text_field_tag 'kt_environment[label]', nil, :tabindex => form.tabindex, :size => 30, :class => :label_input, 'data-url' => default_label_organization_environments_path(@organization.label)
       = image_tag "icons/spinner.gif", :class => 'label_spinner hidden'
 
-    = form.text_area :description, :size => "40x5", :label => _("Description")
+    = form.text_area :description, :size => "40x5", :label => _("Description"), :maxlength => default_description_limit
 
     = form.select :prior, options_for_select(@env_labels, @selected), {}, {:label => _("Prior Environment"), :size=>1, :tabindex => form.tabindex}
 

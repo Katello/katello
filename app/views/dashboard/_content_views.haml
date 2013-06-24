@@ -1,4 +1,4 @@
-#dashboard_content_views.small_widget.scroll-pane{"data-quantity"=>quantity}
+#dashboard_content_views.widget.scroll-pane{"data-quantity"=>quantity}
   - if (view_versions = content_view_versions).empty?
     #{_("No content views found.")}
 
@@ -7,10 +7,9 @@
     - view_versions.each do |version|
       %li
         %div.row_item
-          %span.icon_wrap.fl
-            %span.fl{:class=>content_view_class(version)}
-
           .col_1.one-line-ellipsis{:title=>version.content_view.name}
+            %span.icon_wrap.fl
+              %span.fl{:class=>content_view_class(version)}
             %h5
               #{content_view_name(version)}
           .col_2

@@ -14,7 +14,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="0VixYMrlbxeRcpBG0cUeASNwhQM8OjkroAUxLSPNA", oauth_signature="MKASsXINPihgUIwszXw9tKi72LQ%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371490251", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="AFSPl5buz0jsXGwmdV4Yc1N6dmwYtiZnyTypPWqLKd0", oauth_signature="WtCV5%2Frh7MwD1Jvf1MP%2FmAWnvtU%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1372097874", oauth_version="1.0"
       Pulp-User: 
       - admin
       User-Agent: 
@@ -25,9 +25,9 @@ http_interactions:
       message: Not Found
     headers: 
       Date: 
-      - Mon, 17 Jun 2013 17:30:51 GMT
+      - Mon, 24 Jun 2013 18:17:54 GMT
       Server: 
-      - Apache/2.4.4 (Fedora) OpenSSL/1.0.1e-fips PHP/5.4.14 mod_wsgi/3.4 Python/2.7.3 mod_perl/2.0.8-dev Perl/v5.16.3
+      - Apache/2.2.15 (Red Hat)
       Content-Encoding: 
       - utf-8
       Content-Length: 
@@ -38,13 +38,13 @@ http_interactions:
       encoding: US-ASCII
       string: "{\"http_request_method\": \"DELETE\", \"exception\": null, \"error_message\": \"Missing resource(s): resource_id=batman\", \"_href\": \"/pulp/api/v2/users/batman/\", \"http_status\": 404, \"traceback\": null, \"resources\": {\"resource_id\": \"batman\"}}"
     http_version: 
-  recorded_at: Mon, 17 Jun 2013 17:30:51 GMT
+  recorded_at: Mon, 24 Jun 2013 18:17:54 GMT
 - request: 
     method: post
     uri: https://localhost/pulp/api/v2/users/
     body: 
       encoding: US-ASCII
-      string: "{\"name\":null,\"password\":\"j6BfTzXEnI7ITTHk\"}"
+      string: "{\"name\":null,\"password\":\"oGrTEJxTpj1E4Kkn\"}"
     headers: 
       Accept: 
       - application/json
@@ -53,7 +53,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="UzZFMHJZiiLii6AT2ScIZ91PpFZe1F68SCzbO2QFiso", oauth_signature="XuXMmspSlYDHtrkEfJ4UYARF4BY%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371490255", oauth_version="1.0"
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="V8ePhtGqmm8mpYYXHcwzreVRi1phstnZzaexyNQX6g", oauth_signature="WxbiUraHm2sTPPv3IqZYgOQH9wk%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1372097877", oauth_version="1.0"
       Pulp-User: 
       - admin
       Content-Length: 
@@ -66,9 +66,9 @@ http_interactions:
       message: Internal Server Error
     headers: 
       Date: 
-      - Mon, 17 Jun 2013 17:30:55 GMT
+      - Mon, 24 Jun 2013 18:17:57 GMT
       Server: 
-      - Apache/2.4.4 (Fedora) OpenSSL/1.0.1e-fips PHP/5.4.14 mod_wsgi/3.4 Python/2.7.3 mod_perl/2.0.8-dev Perl/v5.16.3
+      - Apache/2.2.15 (Red Hat)
       Content-Encoding: 
       - utf-8
       Content-Length: 
@@ -79,7 +79,7 @@ http_interactions:
       - application/json
     body: 
       encoding: US-ASCII
-      string: "{\"http_request_method\": \"POST\", \"exception\": [\"TypeError: sequence item 2: expected string, NoneType found\\n\"], \"error_message\": \"Unhandled Exception\", \"_href\": \"/pulp/api/v2/users/\", \"http_status\": 500, \"traceback\": [\"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/webservices/middleware/exception.py\\\", line 44, in __call__\\n    return self.app(environ, start_response)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/webservices/middleware/postponed.py\\\", line 39, in __call__\\n    return self.app(environ, start_response)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/web/application.py\\\", line 279, in wsgi\\n    result = self.handle_with_processors()\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/webservices/application.py\\\", line 26, in _handle_with_processors\\n    return process(self.processors)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/webservices/application.py\\\", line 23, in process\\n    return p(lambda : process(processors))\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/web/application.py\\\", line 566, in processor\\n    return handler()\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/webservices/application.py\\\", line 23, in <lambda>\\n    return p(lambda : process(processors))\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/webservices/application.py\\\", line 23, in process\\n    return p(lambda : process(processors))\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/web/application.py\\\", line 581, in processor\\n    result = handler()\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/webservices/application.py\\\", line 23, in <lambda>\\n    return p(lambda : process(processors))\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/webservices/application.py\\\", line 25, in process\\n    return self.handle()\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/web/application.py\\\", line 230, in handle\\n    return self._delegate(fn, self.fvars, args)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/web/application.py\\\", line 422, in _delegate\\n    return f()\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/web/application.py\\\", line 430, in <lambda>\\n    f = lambda: self._delegate_sub_application(pat, what)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/web/application.py\\\", line 455, in _delegate_sub_application\\n    return app.handle_with_processors()\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/webservices/application.py\\\", line 26, in _handle_with_processors\\n    return process(self.processors)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/webservices/application.py\\\", line 23, in process\\n    return p(lambda : process(processors))\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/web/application.py\\\", line 566, in processor\\n    return handler()\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/webservices/application.py\\\", line 23, in <lambda>\\n    return p(lambda : process(processors))\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/webservices/application.py\\\", line 23, in process\\n    return p(lambda : process(processors))\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/web/application.py\\\", line 581, in processor\\n    result = handler()\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/webservices/application.py\\\", line 23, in <lambda>\\n    return p(lambda : process(processors))\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/webservices/application.py\\\", line 25, in process\\n    return self.handle()\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/web/application.py\\\", line 230, in handle\\n    return self._delegate(fn, self.fvars, args)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/web/application.py\\\", line 420, in _delegate\\n    return handle_class(cls)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/web/application.py\\\", line 396, in handle_class\\n    return tocall(*args)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/webservices/controllers/decorators.py\\\", line 231, in _auth_decorator\\n    value = method(self, *args, **kwargs)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/webservices/controllers/users.py\\\", line 93, in POST\\n    tags = [resource_tag(dispatch_constants.RESOURCE_USER_TYPE, login),\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/common/tags.py\\\", line 71, in resource_tag\\n    return _NAMESPACE_DELIMITER.join((_PULP_NAMESPACE, resource_type, resource_id))\\n\"]}"
+      string: "{\"http_request_method\": \"POST\", \"exception\": [\"TypeError: sequence item 2: expected string, NoneType found\\n\"], \"error_message\": \"Unhandled Exception\", \"_href\": \"/pulp/api/v2/users/\", \"http_status\": 500, \"traceback\": [\"  File \\\"/usr/lib/python2.6/site-packages/pulp/server/webservices/middleware/exception.py\\\", line 44, in __call__\\n    return self.app(environ, start_response)\\n\", \"  File \\\"/usr/lib/python2.6/site-packages/pulp/server/webservices/middleware/postponed.py\\\", line 39, in __call__\\n    return self.app(environ, start_response)\\n\", \"  File \\\"/usr/lib/python2.6/site-packages/web/application.py\\\", line 279, in wsgi\\n    result = self.handle_with_processors()\\n\", \"  File \\\"/usr/lib/python2.6/site-packages/pulp/server/webservices/application.py\\\", line 26, in _handle_with_processors\\n    return process(self.processors)\\n\", \"  File \\\"/usr/lib/python2.6/site-packages/pulp/server/webservices/application.py\\\", line 23, in process\\n    return p(lambda : process(processors))\\n\", \"  File \\\"/usr/lib/python2.6/site-packages/web/application.py\\\", line 566, in processor\\n    return handler()\\n\", \"  File \\\"/usr/lib/python2.6/site-packages/pulp/server/webservices/application.py\\\", line 23, in <lambda>\\n    return p(lambda : process(processors))\\n\", \"  File \\\"/usr/lib/python2.6/site-packages/pulp/server/webservices/application.py\\\", line 23, in process\\n    return p(lambda : process(processors))\\n\", \"  File \\\"/usr/lib/python2.6/site-packages/web/application.py\\\", line 581, in processor\\n    result = handler()\\n\", \"  File \\\"/usr/lib/python2.6/site-packages/pulp/server/webservices/application.py\\\", line 23, in <lambda>\\n    return p(lambda : process(processors))\\n\", \"  File \\\"/usr/lib/python2.6/site-packages/pulp/server/webservices/application.py\\\", line 25, in process\\n    return self.handle()\\n\", \"  File \\\"/usr/lib/python2.6/site-packages/web/application.py\\\", line 230, in handle\\n    return self._delegate(fn, self.fvars, args)\\n\", \"  File \\\"/usr/lib/python2.6/site-packages/web/application.py\\\", line 422, in _delegate\\n    return f()\\n\", \"  File \\\"/usr/lib/python2.6/site-packages/web/application.py\\\", line 430, in <lambda>\\n    f = lambda: self._delegate_sub_application(pat, what)\\n\", \"  File \\\"/usr/lib/python2.6/site-packages/web/application.py\\\", line 455, in _delegate_sub_application\\n    return app.handle_with_processors()\\n\", \"  File \\\"/usr/lib/python2.6/site-packages/pulp/server/webservices/application.py\\\", line 26, in _handle_with_processors\\n    return process(self.processors)\\n\", \"  File \\\"/usr/lib/python2.6/site-packages/pulp/server/webservices/application.py\\\", line 23, in process\\n    return p(lambda : process(processors))\\n\", \"  File \\\"/usr/lib/python2.6/site-packages/web/application.py\\\", line 566, in processor\\n    return handler()\\n\", \"  File \\\"/usr/lib/python2.6/site-packages/pulp/server/webservices/application.py\\\", line 23, in <lambda>\\n    return p(lambda : process(processors))\\n\", \"  File \\\"/usr/lib/python2.6/site-packages/pulp/server/webservices/application.py\\\", line 23, in process\\n    return p(lambda : process(processors))\\n\", \"  File \\\"/usr/lib/python2.6/site-packages/web/application.py\\\", line 581, in processor\\n    result = handler()\\n\", \"  File \\\"/usr/lib/python2.6/site-packages/pulp/server/webservices/application.py\\\", line 23, in <lambda>\\n    return p(lambda : process(processors))\\n\", \"  File \\\"/usr/lib/python2.6/site-packages/pulp/server/webservices/application.py\\\", line 25, in process\\n    return self.handle()\\n\", \"  File \\\"/usr/lib/python2.6/site-packages/web/application.py\\\", line 230, in handle\\n    return self._delegate(fn, self.fvars, args)\\n\", \"  File \\\"/usr/lib/python2.6/site-packages/web/application.py\\\", line 420, in _delegate\\n    return handle_class(cls)\\n\", \"  File \\\"/usr/lib/python2.6/site-packages/web/application.py\\\", line 396, in handle_class\\n    return tocall(*args)\\n\", \"  File \\\"/usr/lib/python2.6/site-packages/pulp/server/webservices/controllers/decorators.py\\\", line 231, in _auth_decorator\\n    value = method(self, *args, **kwargs)\\n\", \"  File \\\"/usr/lib/python2.6/site-packages/pulp/server/webservices/controllers/users.py\\\", line 93, in POST\\n    tags = [resource_tag(dispatch_constants.RESOURCE_USER_TYPE, login),\\n\", \"  File \\\"/usr/lib/python2.6/site-packages/pulp/common/tags.py\\\", line 71, in resource_tag\\n    return _NAMESPACE_DELIMITER.join((_PULP_NAMESPACE, resource_type, resource_id))\\n\"]}"
     http_version: 
-  recorded_at: Mon, 17 Jun 2013 17:30:55 GMT
-recorded_with: VCR 2.5.0
+  recorded_at: Mon, 24 Jun 2013 18:17:57 GMT
+recorded_with: VCR 2.4.0

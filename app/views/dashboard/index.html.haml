@@ -6,10 +6,14 @@
       %li
         = _("You do not currently have access to any organizations.  Please contact an administrator to get permission to access an organization.")
 
-.center
-  .sixty
-    - if current_organization && current_organization.readable?
-      = dashboard_entry(_("System Subscription Status"), "subscriptions", false)
+.center.dashboard-container
+  = help_tip_button
+  = help_tip((_('Your dashboard can be rearranged by clicking on a widget\'s title and dragging the widget ' + |
+                'to another position.'))) |
+
+  = render_dashboard
+
+  .comment
     -#TODO: CONSUMER_ERRATA: the following should be uncommented once pulp changes are in
     -#place to be better support this with large repos and consumers.  Currently, it
     -#will generate RequestTimeout
@@ -24,16 +28,6 @@
     -#- if Katello.config.katello? && current_organization && SystemGroup.any_readable?(current_organization)
     -#  = dashboard_ajax_entry(_("System Group Overview"), "system_groups", system_groups_dashboard_index_path(), "big_widget", true)
 
-  .forty
-    - widget_class = Katello.config.katello? ? "small_widget" : "small_widget_headpin"
-    = dashboard_ajax_entry(_("Latest Notifications"), "notices", notices_dashboard_index_path(), widget_class, true)
-    - if Katello.config.katello? && current_organization
-      - if ContentView.any_readable?(current_organization)
-        = dashboard_ajax_entry(_("Content Views Overview"), "content_views", content_views_dashboard_index_path(), "small_widget", true)
-      - if KTEnvironment.any_viewable_for_promotions?(current_organization)
-        = dashboard_ajax_entry(_("Promotions Overview"), "promotions", promotions_dashboard_index_path(), "small_widget", true)
-      - if current_organization.syncable?
-        = dashboard_ajax_entry(_("Sync Overview"), "sync", sync_dashboard_index_path(), "small_widget", true)
 
   .dashboard_popout.hidden
     .popout_row.popout
