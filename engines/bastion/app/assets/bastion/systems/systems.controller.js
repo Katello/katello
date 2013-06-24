@@ -40,10 +40,6 @@ angular.module('Bastion.systems').controller('SystemsController',
             return Routes.editSystemPath(id);
         };
 
-        $scope.selectItem = function(id) {
-            nutupane.selectItem(Routes.editSystemPath(id), id);
-        };
-
         $scope.getStatusColor = function(status) {
             var color = '';
 
