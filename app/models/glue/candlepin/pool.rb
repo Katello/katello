@@ -21,7 +21,7 @@ module Glue::Candlepin::Pool
       lazy_accessor :remote_data, :pool_derived, :product_name, :consumed, :quantity, :support_level, :support_type,
         :start_date, :end_date, :attrs, :owner, :product_id, :account_number, :contract_number,
         :source_pool_id, :host_id, :virt_only, :virt_limit, :multi_entitlement, :stacking_id,
-        :arch, :sockets, :cores, :ram, :description, :product_family, :variant, :provided_products,
+        :arch, :sockets, :cores, :ram, :description, :product_family, :variant, :provided_products, :instance_multiplier,
         :initializer => lambda {|s|
           json = Resources::Candlepin::Pool.find(cp_id)
           # symbol "attributes" is reserved by Rails and cannot be used
@@ -126,6 +126,8 @@ module Glue::Candlepin::Pool
             @multi_entitlement = (attr['value'] == 'true' || attr['value'] == 'yes') ? true : false
           when 'stacking_id'
             @stacking_id = attr['value']
+          when 'instance_multiplier'
+            @instance_multiplier = attr['value'].to_i
         end
       end if attrs['productAttributes']
     end
