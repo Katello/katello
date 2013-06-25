@@ -31,11 +31,11 @@ class ContentView < ActiveRecord::Base
   belongs_to :environment_default, :class_name => "KTEnvironment", :inverse_of => :default_content_view,
              :foreign_key => :environment_default_id # TODO this relation seems to be broken
 
-  has_many :component_content_views
+  has_many :component_content_views, :dependent => :destroy
   has_many :composite_content_view_definitions,
     :through => :component_content_views, :source => "content_view_definition"
 
-  has_many :changeset_content_views
+  has_many :changeset_content_views, :dependent => :destroy
   has_many :changesets, :through => :changeset_content_views
   has_many :activation_keys
 
