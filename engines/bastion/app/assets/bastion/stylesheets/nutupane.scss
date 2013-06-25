@@ -168,7 +168,8 @@ table.details-visible {
 .action-panel {
   height:500px;
   left: 20%;
-  padding: 20px 0 20px 20px;
+  min-width: 30%;
+  padding: 5px 0 20px 20px;
   position: absolute;
   width: 80%;
 
@@ -176,6 +177,43 @@ table.details-visible {
     background: transparent;
     border: none;
     padding: 10px 0;
+  }
+
+  h2 {
+    margin: 0;
+  }
+
+  ul {
+    border-bottom: 1px solid #d3d3d3;
+    list-style: none;
+    margin-right: 22px;
+    padding: 0 5px;
+
+    li {
+      display: inline;
+      margin-right: 20px;
+    }
+  }
+
+  nav.actions {
+    display: inline-block;
+    padding-right: 15px;
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+
+  .details {
+    display: inline-block;
+    padding: 20px;
+    vertical-align: top;
+    width: 40%;
+
+    .info-label {
+      display: inline-block;
+      line-height: 1.75em;
+      width: 50%;
+    }
   }
 }
 
@@ -186,3 +224,4 @@ table.details-visible {
 .table-full {
   width: 100% !important;
 }
+
