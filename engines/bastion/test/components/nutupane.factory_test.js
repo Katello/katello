@@ -45,21 +45,4 @@ describe('Factory: Nutupane', function () {
     beforeEach(module(function($provide){
         $provide.value("CurrentOrganization", "ACME");
     }));
-
-    describe('setNewItemVisibility', function(){
-        beforeEach(inject(function($rootScope, $compile, Nutupane){
-            nutupane = new Nutupane();
-
-            scope = $rootScope;
-            scope.table = nutupane.table;
-            scope.table.items = row_data;
-        }));
-
-        it('should set newPaneVisible', inject(function ($rootScope, $compile) {
-            nutupane.table.setNewItemVisibility(true);
-
-            expect(nutupane.table.newPaneVisible).toBe(true);
-        }));
-    });
-
 });
