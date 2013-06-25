@@ -21,7 +21,7 @@ common:
   use_foreman: # set to true/false if you want to override default
   use_elasticsearch: # set to true/false if you want to override default
   app_name: # set a name if you want to override default
-
+  gravatar: true # set to true/false for enabling disabling gravatar
   warden: database
   ldap_roles: false
   validate_ldap: false
@@ -200,6 +200,8 @@ common:
     # adds an extra line after each log message with information from which file:line and method
     # was this message logged
     log_trace: false
+    #do not log certain paths (example  /notices/get_new)
+    ignored_paths: []
     # configuration of all loggers used in app
     loggers:
       # this logger is parent of all other loggers, by default this is the only one having appender
@@ -291,6 +293,7 @@ development:
   sso:
     enable: false
   logging:
+    ignored_paths: ['/notices/get_new', '/assets/']
     colorize: true
     loggers:
       root:

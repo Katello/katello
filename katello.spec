@@ -435,6 +435,9 @@ testing.
 %build
 export RAILS_ENV=build
 
+#don't distribute quiet_paths
+rm -f config/initializers/quiet_paths.rb
+
 # when running in SCL we do not distribute any devel packages yet
 %if %{?scl:1}%{!?scl:0}
     rm -f bundler.d/checking.rb
@@ -641,6 +644,8 @@ usermod -a -G katello-shared tomcat
 usermod -a -G katello-shared tomcat
 
 %files
+### if you put something here and it should go to headpin as well
+### then add it to "files headpin" section few pages below too
 %attr(600, katello, katello)
 %{_bindir}/katello-*
 %ghost %attr(600, katello, katello) %{_sysconfdir}/%{name}/secret_token
@@ -712,6 +717,8 @@ usermod -a -G katello-shared tomcat
 %config(noreplace) %{_sysconfdir}/%{name}/service-list
 %{homedir}/Rakefile
 %{_mandir}/man8/katello-service.8*
+### if you put something here and it should go to headpin as well
+### then add it to "files headpin" section few pages below too
 
 %files common
 %doc LICENSE.txt

@@ -1,12 +1,6 @@
 @import "ui_alchemy/alchemy/alchemy";
 @import "alchemy-header/header";
 
-.logo-header {
-  .menu-item {
-    a { color: white; }
-  }
-}
-
 .fade-in-down, .fade-in-bottom{
 -webkit-animation: fade-in-down .9s ease 0;
    -moz-animation: fade-in-down .9s ease 0;
@@ -16,11 +10,11 @@
 }
 
 .flyout {
-  min-width: 230px;
+  min-width: 200px;
 }
 
-.icon {
-  margin: 2px 4px;
+.dropdown {
+  min-width: 180px;
 }
 
 .menu-item-notices .menu-item {
@@ -35,10 +29,25 @@
   }
 }
 
-.dropdown-menu-item-link, .flyout li a {
+.dropdown-item-link, .flyout li a {
+  font-family: "Liberation Sans", sans-serif;
+}
+
+.dropdown-item-link, .flyout li a {
   font-family: "Liberation Sans", sans-serif;
 }
 
 .menu-container {
   padding: 0;
+}
+
+.gravatar {
+  height: 25px;
+  width:  30px;
+  float: left;
+}
+
+.gravatar-span {
+  line-height: 1;
+  vertical-align: bottom;
 }

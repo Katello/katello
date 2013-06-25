@@ -42,10 +42,9 @@
             -else
               .grid_6.la
                 = _("Refreshing manifest not supported by this manifest.")
-            - if Katello.config.headpin?
-              = form_for @provider, :html => {:method => :post, :id => :delete_manifest}, :remote => true, :url => delete_manifest_subscriptions_path do |f|
-                .grid_4.la#delete_button
-                  = f.submit _("Delete Manifest"), :id => :delete_form_button, :confirm => _("Deleting a manifest " + |
+            = form_for @provider, :html => {:method => :post, :id => :delete_manifest}, :remote => true, :url => delete_manifest_subscriptions_path do |f|
+              .grid_4.la#delete_button
+                = f.submit _("Delete Manifest"), :id => :delete_form_button, :confirm => _("Deleting a manifest " + |
                           "will permanently remove all current subscriptions. All systems consuming these subscriptions " + |
                           "have them removed. Do you wish to proceed with removing this manifest?") |
           - elsif @provider.manifest_task && !@provider.manifest_task.finished? && (@provider.manifest_task.task_type == "delete manifest" || @provider.manifest_task.task_type == "refresh manifest")
