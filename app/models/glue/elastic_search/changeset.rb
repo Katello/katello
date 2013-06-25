@@ -18,31 +18,20 @@ module Glue::ElasticSearch::Changeset
     base.class_eval do
 
       index_options :extended_json => :extended_index_attrs,
-                    :display_attrs => [:name, :description, :package, :errata, :product, :repo, :user, :type]
+                    :display_attrs => [:name, :description, :user, :type]
 
       mapping do
         indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
         indexes :name_sort, :type => 'string', :index => :not_analyzed
       end
-
-
     end
   end
 
   def extended_index_attrs
     type      = self.type == "PromotionChangeset" ? Changeset::PROMOTION : Changeset::DELETION
-    pkgs      = self.packages.collect { |pkg| pkg.display_name }
-    errata    = self.errata.collect { |err| err.display_name }
-    products  = self.products.collect { |prod| prod.name }
-    repos     = self.repos.collect { |repo| repo.name }
     { :name_sort       => self.name.downcase,
       :type            => type,
-      :package         => pkgs,
-      :errata          => errata,
-      :product         => products,
-      :repo            => repos,
       :user            => (self.task_status.nil? || self.task_status.user.nil?) ? "" : self.task_status.user.username
     }
   end
-
 end

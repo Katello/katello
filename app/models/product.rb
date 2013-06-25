@@ -22,29 +22,15 @@ class Product < ActiveRecord::Base
 
   include Ext::LabelFromName
 
-  has_many :environment_products, :class_name => "EnvironmentProduct", :dependent => :destroy, :uniq=>true
-  has_many :environments, :class_name => "KTEnvironment", :uniq => true , :through => :environment_products  do
-    def <<(*items)
-      super( items - @association.owner.environment_products.collect{|ep| ep.environment} )
-    end
-
-    def default_view
-      select do |env|
-        env.default_content_view.products(env).include?(proxy_owner)
-      end
-    end
-  end
-
-  has_and_belongs_to_many :changesets
-
   belongs_to :provider, :inverse_of => :products
   belongs_to :sync_plan, :inverse_of => :products
   belongs_to :gpg_key, :inverse_of => :products
   has_many :content_view_definition_products
   has_many :content_view_definitions, :through => :content_view_definition_products
+  has_many :repositories, :dependent => :destroy
+  has_many :environments, through: :repositories, readonly: true
 
   validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
-  validates_with Validators::LibraryPresenceValidator, :attributes => :environments
   validates :name, :presence => true
   validates :label, :presence => true
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name
@@ -113,7 +99,7 @@ class Product < ActiveRecord::Base
   end
 
   def library
-    environments.select {|e| e.library}.first
+    organization.library
   end
 
   def plan_name
@@ -157,10 +143,8 @@ class Product < ActiveRecord::Base
 
   # TODO: this should be a part of product update orchestration
   def reset_repo_gpgs!
-    self.environment_products.each do |ep|
-      ep.repositories.each do |repo|
-        repo.update_attributes!(:gpg_key => self.gpg_key)
-      end
+    repositories.each do |repo|
+      repo.update_attributes!(:gpg_key => self.gpg_key)
     end
   end
 
@@ -205,10 +189,9 @@ class Product < ActiveRecord::Base
   protected
 
 
-  def self.with_repos env, enabled_only
-    query = EnvironmentProduct.joins(:repositories).where(
-          :environment_id => env).select("environment_products.product_id")
-    query = query.where("repositories.enabled" => true) if enabled_only
+  def self.with_repos(env, enabled_only)
+    query = Repository.in_environment(env.id).select(:product_id)
+    query = query.enabled if enabled_only
     joins(:provider).where('providers.organization_id' => env.organization).
         where("(providers.provider_type ='#{::Provider::CUSTOM}') OR ( providers.provider_type ='#{::Provider::REDHAT}' AND products.id in (#{query.to_sql}))")
   end

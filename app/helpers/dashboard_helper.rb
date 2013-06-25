@@ -160,12 +160,7 @@ module DashboardHelper
     products = []
     unless errata[:repoids].blank?
       errata[:repoids].each do |repoid|
-        repos.each do |repo|
-          if repo.pulp_id == repoid
-            products << repo.environment_product.product.name
-            break
-          end
-        end
+        products << (repos.detect { |r| r.pulp_id == repo.id }).product.name
       end
     end
     products.empty? ? "" : products.join(', ')

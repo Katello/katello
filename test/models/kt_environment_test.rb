@@ -21,8 +21,8 @@ class KTEnvironmentTestBase < MiniTest::Rails::ActiveSupport::TestCase
 
   def self.before_suite
     services  = ['Candlepin', 'Pulp', 'ElasticSearch', 'Foreman']
-    models    = ['Repository', 'KTEnvironment', 'EnvironmentProduct',
-                 'ContentView', 'ContentViewEnvironment', 'Organization']
+    models    = ['Repository', 'KTEnvironment', 'ContentView',
+                 'ContentViewEnvironment', 'Organization']
     disable_glue_layers(services, models, true)
   end
 
