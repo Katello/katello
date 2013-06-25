@@ -12,7 +12,7 @@
 
       = form.text_field :name, :label => _("Name"), :grid => [2,4]
 
-      = form.text_area :description, :label => _("Description"), :grid => [2,4]
+      = form.text_area :description, :label => _("Description"), :grid => [2,4], :maxlength => default_description_limit
 
       -# if the user is currently in the Library, only changesets of type 'promotion' are allowed;
       -# else if the user is currently in the last env on the path, only changesets of type

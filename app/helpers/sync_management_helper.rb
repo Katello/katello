@@ -33,8 +33,12 @@ module SyncManagementHelper
     "repo-#{repo.id}"
   end
 
-  def syncable?
-    return current_organization.syncable?
+  def syncable?(product)
+    current_organization.syncable? && !product.orphaned?
+  end
+
+  def any_syncable?
+    current_organization.syncable?
   end
 
   module RepoMethods
@@ -44,7 +48,7 @@ module SyncManagementHelper
 
       products.map do |prod|
         minor_repos, repos_without_minor = collect_minor(prod.repos(env, include_disabled))
-        { :name     => prod.name, :id => prod.id, :type => "product", :repos => repos_without_minor,
+        { :name     => prod.name, :object=> prod, :id => prod.id, :type => "product", :repos => repos_without_minor,
           :children => minors(minor_repos), :organization => prod.organization.name }
       end
     end

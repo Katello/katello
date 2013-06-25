@@ -10,14 +10,16 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-
 module Navigation
   module Menus
+
     class User < Navigation::Menu
+
+      include ApplicationHelper
 
       def initialize(user)
         @key           = :user
-        @display       = user.username
+        @display       = Katello.config[:gravatar] ? "#{gravatar_image_tag(user.email)}#{user.username}" : user.username
         @authorization = true
         @type          = 'dropdown'
         @items         = [

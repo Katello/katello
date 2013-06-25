@@ -297,7 +297,7 @@ var promotion_page = (function($){
                 });
                 if (current_changeset.type() === "deletion") {
                     // show all add/remove links
-                    buttons.show();
+                    buttons.not('[data-block_delete="true"]').show();
 
                 } else { // promotion changeset
                     // show add/remove links for only promotable objects
@@ -816,6 +816,7 @@ var changesetEdit = (function(){
                 type        :  'textarea',
                 method      :  'PUT',
                 name        :  $(this).attr('name'),
+                maxlength   :  $(this).data('maxlength'),
                 cancel      :  i18n.cancel,
                 submit      :  i18n.save,
                 indicator   :  i18n.saving,

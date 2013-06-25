@@ -47,7 +47,7 @@ class Api::V1::SystemsController < Api::V1::ApiController
     # After a system registers, it immediately uploads its packages. Although newer subscription-managers send
     # certificate (User.consumer? == true), some do not. In this case, confirm that the user has permission to
     # register systems in the system's organization and environment.
-    upload_system_packages = lambda { @system.editable? or System.registerable?(@system.environment, @system.organization) or User.consumer? }
+   upload_system_packages = lambda { @system.editable? or System.registerable?(@system.environment, @system.organization) or User.consumer? }
 
     {
         :new                              => register_system,
@@ -190,8 +190,6 @@ Schedules the consumer identity certificate regeneration
   param :pool_id, String, :desc => "Filter systems by subscribed pool"
   param :search, String, :desc => "Filter systems by advanced search query"
   def index
-    sort_order = params[:sort_order] if params[:sort_order]
-    sort_by = params[:sort_by] if params[:sort_by]
     query_string = params[:name] ? "name:#{params[:name]}" : params[:search]
     filters      = []
 
@@ -208,13 +206,11 @@ Schedules the consumer identity certificate regeneration
         :filter        => filters,
         :load_records? => true
     }
+    options.merge!(params.slice(:sort_by, :sort_order))
 
     if params[:paged]
       options[:page_size] = params[:page_size] || current_user.page_size
     end
-
-    options[:sort_by] = params[:sort_by] if params[:sort_by]
-    options[:sort_order]= params[:sort_order] if params[:sort_order]
 
     items = Glue::ElasticSearch::Items.new(System)
     systems, total_count = items.retrieve(query_string, params[:offset], options)

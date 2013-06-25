@@ -15,6 +15,7 @@ class GpgKey < ActiveRecord::Base
 
   include Glue::ElasticSearch::GpgKey if Katello.config.use_elasticsearch
   include Authorization::GpgKey
+  MAX_CONTENT_LENGTH = 100000
 
   has_many :repositories, :inverse_of => :gpg_key
   has_many :products, :inverse_of => :gpg_key
@@ -25,9 +26,9 @@ class GpgKey < ActiveRecord::Base
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name
   validates :content, :presence => true
   validates_with Validators::ContentValidator, :attributes => :content
+  validates_length_of :content, :maximum => MAX_CONTENT_LENGTH
   validates_presence_of :organization
   validates_uniqueness_of :name, :scope => :organization_id, :message => N_("Label has already been taken")
-
 
   def as_json(options = {})
     options ||= {}

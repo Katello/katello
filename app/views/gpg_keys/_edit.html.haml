@@ -40,6 +40,6 @@
         .grid_1.ra
           %label #{_("Key")}:
         .grid_8.la
-          .grid_8.la.multiline#gpg_key_content{'name' => 'gpg_key[content]', :class => ("editable edit_textarea" if editable), 'data-url' => gpg_key_path(@gpg_key.id)} #{@gpg_key[:content]}
+          .grid_8.la.multiline#gpg_key_content{'name' => 'gpg_key[content]', :class => ("editable edit_textarea" if editable), 'data-maxlength' => gpg_content_limit, 'data-url' => gpg_key_path(@gpg_key.id)} #{@gpg_key[:content]}
 
 = render :template => "layouts/tupane_layout"

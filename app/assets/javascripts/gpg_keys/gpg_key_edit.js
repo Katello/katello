@@ -50,8 +50,9 @@ $(document).ready(function(){
         var settings = {
                 type            :  'textarea',
                 name            :  $(this).attr('name'),
-                height            :  '300',
-                width            :  $(this).width() - 20
+                height          :  '300',
+                width           :  $(this).width() - 20,
+                maxlength       :  $(this).data('maxlength')
         };
         $(this).editable($(this).attr('data-url'), $.extend(common_settings, settings));
     });

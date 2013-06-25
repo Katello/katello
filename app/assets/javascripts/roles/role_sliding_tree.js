@@ -647,6 +647,7 @@ var roleActions = (function($){
                         var settings = {
                                 type        :  'textarea',
                                 name        :  $(this).attr('name'),
+                                maxlength   :  $(this).data('maxlength'),
                                 rows        :  5,
                                 cols        :  30,
                                 onsuccess   :  function(data) {

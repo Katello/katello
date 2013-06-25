@@ -17,5 +17,5 @@
           %td{:colspan=>(@show_org ? 6 : 5)}
             = (_("There are no products or repositories enabled. Try enabling via %{custom} or %{redhat}.") % {:custom => link_to(_("Custom Content Repositories"), providers_path), :redhat => link_to(_(" Red Hat Repositories"), redhat_provider_providers_path)}).html_safe
 
-  - if syncable?
+  - if any_syncable?
     = submit_tag _('Synchronize Now'), :class => 'button fr', :id => 'sync_button'

@@ -1,3 +1,4 @@
+# encoding: utf-8
 #
 # Copyright 2013 Red Hat, Inc.
 #
@@ -21,7 +22,7 @@ class KatelloNameFormatValidatorTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def test_validate_each
-    @validator.validate_each(@model, :name, "Test2 Name_underline-dash")
+    @validator.validate_each(@model, :name, "Test2 Name_underline-dash í18n_chäřs")
 
     assert_empty @model.errors[:name]
   end
