@@ -342,8 +342,8 @@ class AddForeignKeys < ActiveRecord::Migration
     #                   :name => 'content_views_environment_default_id_fk'
     remove_foreign_key 'content_views',
                        :name => 'content_views_organization_id_fk'
-    #remove_foreign_key 'distributors',
-    #                   :name => 'distributors_content_view_id_fk'
+    remove_foreign_key 'distributors',
+                       :name => 'distributors_content_view_id_fk'
     remove_foreign_key 'distributors',
                        :name => 'distributors_environment_id_fk'
     remove_foreign_key 'environment_priors',
