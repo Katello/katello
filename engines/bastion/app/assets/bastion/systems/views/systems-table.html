@@ -1,26 +1,3 @@
-<div class="nutupane-titlebar">
-  <h1 class="nutupane-title">{{ "Systems" }}</h1>
-</div>
-<div class="nutupane-actionbar">
-  <div class="form">
-    <input type="text"
-           class="input input-search"
-           placeholder="Search..."
-           ng-model="table.searchTerm"
-           on-enter="table.search(table.searchTerm)">
-    <span class="result-count">Showing {{ table.offset }} of {{ table.subtotal }} ({{ table.total }} Total) {{ table.modelName }}</span>
-  </div>
-  <div class="fr">
-    <span>{{ table.numSelected }} Selected</span>
-    <span>|</span>
-    <a class="deselect-action"
-       ng-class="{ 'disabled-link' : table.numSelected == 0 }"
-       ng-click="table.selectAll(false)">
-      Deselect All
-    </a>
-  </div>
-</div>
-
 <div alch-table="table" nutupane-table>
   <div alch-table-scroll>
     <table class="table table-striped">
