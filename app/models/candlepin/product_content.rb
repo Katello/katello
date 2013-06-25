@@ -95,10 +95,14 @@ class Candlepin::ProductContent
       version = Resources::CDN::Utils.parse_version(substitutions["releasever"])
 
       begin
-        env_prod = EnvironmentProduct.find_or_create(product.organization.library, product)
-        existing_repos = Repository.where(:environment_product_id => env_prod.id, :pulp_id => product.repo_id(repo_name))
+        existing_repos = Repository.where(product_id: product.id,
+                                          environment_id: product.organization.library.id,
+                                          pulp_id: product.repo_id(repo_name)
+                                         )
         unless existing_repos.any?
-          repo = Repository.create!(:environment_product=> env_prod, :pulp_id => product.repo_id(repo_name),
+          repo = Repository.create!(:environment => product.organization.library,
+                                    :product => product,
+                                    :pulp_id => product.repo_id(repo_name),
                                     :cp_label => self.content.label,
                                     :content_id=>self.content.id,
                                     :arch => arch,
@@ -115,7 +119,7 @@ class Candlepin::ProductContent
                                     :preserve_metadata => true, #preserve repo metadata when importing from cp
                                     :enabled =>false,
                                     :unprotected => true,
-                                    :content_view_version=>env_prod.environment.organization.library.default_content_view_version
+                                    :content_view_version=>product.organization.library.default_content_view_version
                                    )
         end
         product.repositories_cdn_import_passed! unless product.cdn_import_success?

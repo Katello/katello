@@ -57,7 +57,7 @@ describe Api::V1::ContentViewsController, :katello => true do
         get "index", :organization_id => @org.name, :environment_id => env.id
         response.should be_success
         ids = env.content_views(true).map(&:id)
-        assigns[:content_views].map(&:id).should eql(ids)
+        assigns[:content_views].map(&:id).sort.should eql(ids.sort)
       end
     end
 

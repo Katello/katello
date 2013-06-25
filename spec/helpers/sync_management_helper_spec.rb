@@ -36,7 +36,7 @@ describe SyncManagementHelper do
     disable_product_orchestration
     disable_org_orchestration
     Runcible::Extensions::Repository.stub(:search_by_repository_ids).and_return([]) if Katello.config.katello?
-    ProductTestData::PRODUCT_WITH_ATTRS.merge!({ :provider => provider, :environments => [organization.library] })
+    ProductTestData::PRODUCT_WITH_ATTRS.merge!({ :provider => provider })
   end
 
   let(:organization) { Organization.create!(:name => 'test_organization', :label => 'test_organization') }

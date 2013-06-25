@@ -36,11 +36,11 @@ describe Product, :katello => true do
     Resources::CDN::CdnResource.stub(:new => @cdn_mock)
     disable_cdn
 
-    ProductTestData::SIMPLE_PRODUCT.merge!({:provider => @provider, :environments => [@organization.library]})
-    ProductTestData::SIMPLE_PRODUCT_WITH_INVALID_NAME.merge!({:provider => @provider, :environments => [@organization.library]})
-    ProductTestData::PRODUCT_WITH_ATTRS.merge!({:provider => @provider, :environments => [@organization.library]})
-    ProductTestData::PRODUCT_WITH_CONTENT.merge!({:provider => @provider, :environments => [@organization.library]})
-    ProductTestData::PRODUCT_WITH_CP_CONTENT.merge!({:provider => @provider, :environments => [@organization.library]})
+    ProductTestData::SIMPLE_PRODUCT.merge!({:provider => @provider})
+    ProductTestData::SIMPLE_PRODUCT_WITH_INVALID_NAME.merge!({:provider => @provider})
+    ProductTestData::PRODUCT_WITH_ATTRS.merge!({:provider => @provider})
+    ProductTestData::PRODUCT_WITH_CONTENT.merge!({:provider => @provider})
+    ProductTestData::PRODUCT_WITH_CP_CONTENT.merge!({:provider => @provider})
   end
 
   describe "create product" do
@@ -58,7 +58,7 @@ describe Product, :katello => true do
 
       specify { @p.name.should == ProductTestData::SIMPLE_PRODUCT['name'] }
       specify { @p.created_at.should_not be_nil }
-      specify { @p.environments.should include(@organization.library) }
+      specify { @p.library.should eql(@organization.library) }
     end
 
     context "candlepin orchestration" do
@@ -94,8 +94,7 @@ describe Product, :katello => true do
         :name => ProductTestData::PRODUCT_NAME,
         :id => ProductTestData::PRODUCT_ID,
         :productContent => [],
-        :provider => @provider,
-        :environments => [@organization.library]
+        :provider => @provider
       })
     end
 
@@ -140,10 +139,10 @@ describe Product, :katello => true do
       disable_product_orchestration
     end
 
-    specify { Product.new(:label=> "goo", :name => 'contains /', :environments => [@organization.library], :provider => @provider).should_not be_valid }
-    specify { Product.new(:label=>"boo", :name => 'contains #', :environments => [@organization.library], :provider => @provider).should_not be_valid }
-    specify { Product.new(:label=> "shoo", :name => 'contains space', :environments => [@organization.library], :provider => @provider).should be_valid }
-    specify { Product.new(:label => "bar foo", :name=> "foo", :environments => [@organization.library], :provider => @provider).should_not be_valid}
+    specify { Product.new(:label=> "goo", :name => 'contains /', :provider => @provider).should_not be_valid }
+    specify { Product.new(:label=>"boo", :name => 'contains #', :provider => @provider).should_not be_valid }
+    specify { Product.new(:label=> "shoo", :name => 'contains space', :provider => @provider).should be_valid }
+    specify { Product.new(:label => "bar foo", :name=> "foo", :provider => @provider).should_not be_valid}
 
     it "should be successful when creating a product with a duplicate name in one organization" do
       @p = Product.create!(ProductTestData::SIMPLE_PRODUCT)
@@ -151,8 +150,7 @@ describe Product, :katello => true do
       Product.new({:name=>@p.name, :label=> @p.name,
         :id => @p.cp_id,
         :productContent => @p.productContent,
-        :provider => @p.provider,
-        :environments => @p.environments
+        :provider => @p.provider
       }).should be_valid
     end
   end
@@ -207,7 +205,6 @@ describe Product, :katello => true do
         let(:eng_product_after_import) do
           product = Product.new(ProductTestData::PRODUCT_WITH_CP_CONTENT.merge("id" => "20", "name" => "Red Hat Enterprise Server 6")) do |p|
             p.provider = @provider
-            p.environments << @organization.library
           end
           product.orchestration_for = :import_from_cp_ar_setup
           product.save!
@@ -242,9 +239,6 @@ describe Product, :katello => true do
             end
             @substitutor_mock.instance_variable_set("@substitutions", ret)
           end
-          env_product = mock_model(EnvironmentProduct, {:id => 1})
-          EnvironmentProduct.stub(:find_or_create).and_return(env_product)
-          env_product.stub(:environment).and_return(@organization.library)
 
           @product = Product.new(ProductTestData::PRODUCT_WITH_CONTENT)
           @product.orchestration_for = :import_from_cp
@@ -272,9 +266,6 @@ describe Product, :katello => true do
             ret
           end
 
-          env_product = mock_model(EnvironmentProduct, {:id => 1})
-          EnvironmentProduct.stub(:find_or_create).and_return(env_product)
-          env_product.stub(:environment).and_return(@organization.library)
           p = Product.new(ProductTestData::PRODUCT_WITH_CONTENT)
           p.stub(:attrs => [{:name => 'arch', :value => 'x86_64,i386'}])
           p.orchestration_for = :import_from_cp
@@ -307,14 +298,14 @@ describe Product, :katello => true do
       User.current = superadmin
       @product = Product.new({:name=>"prod", :label=> "prod"})
       @product.provider = @organization.redhat_provider
-      @product.environments << @organization.library
       @product.stub(:arch).and_return('noarch')
       @product.save!
-      @ep = EnvironmentProduct.find_or_create(@organization.library, @product)
-      @repo = Repository.create!(:environment_product => @ep, :name => "testrepo",
+      @repo = Repository.create!(:product => @product,
+                                 :environment => @organization.library,
+                                 :name => "testrepo",
                                  :label => "testrepo_label", :pulp_id=>"1010",
                                  :content_id=>'123', :relative_path=>"/foo/",
-                                 :content_view_version=>@ep.environment.default_content_view_version,
+                                 :content_view_version=>@organization.library.default_content_view_version,
                                  :feed => 'https://localhost')
       @repo.stub(:promoted?).and_return(false)
       @repo.stub(:update_content).and_return(Candlepin::Content.new)
@@ -358,25 +349,21 @@ describe Product, :katello => true do
                               :repository_url => "https://something.url", :provider_type => Provider::CUSTOM})
       @product = Product.new({:name=>"prod#{suffix}", :label=> "prod#{suffix}"})
       @product.provider = @provider
-      @product.environments << @organization.library
       @product.stub(:arch).and_return('noarch')
       @product.save!
 
-      @ep = EnvironmentProduct.find_or_create(@organization.library, @product)
-
-      @repo = Repository.create!(:environment_product => @ep,
+      @repo = Repository.create!(:environment => @organization.library,
+                                 :product => @product,
                                  :name => "testrepo",
                                  :label => "testrepo_label",
                                  :pulp_id=>"1010",
                                  :content_id=>"123",
                                  :relative_path => "#{@organization.name}/library/Prod/Repo",
-                                 :content_view_version=>@ep.environment.default_content_view_version,
+                                 :content_view_version=>@organization.library.default_content_view_version,
                                  :feed => 'https://localhost')
       @repo.stub(:product).and_return(@product)
       @repo.stub(:promoted?).and_return(false)
       @repo.stub(:update_content).and_return(Candlepin::Content.new)
-      @ep.stub(:repositories).and_return([@repo])
-      @product.stub(:environment_products).and_return([@ep])
     end
 
     context "resetting product gpg and asking repos to reset should work" do
@@ -396,17 +383,15 @@ describe Product, :katello => true do
         @new_repo = promote(@repo, @env)
         @new_repo.stub(:content).and_return(OpenStruct.new(:id=>"adsf", :gpgUrl=>'http://foo'))
         @repo.stub(:content).and_return(OpenStruct.new(:id=>"adsf", :gpgUrl=>''))
-        @ep.stub(:repositories).and_return([@repo, @new_repo])
 
         @product = Product.find(@product.id)
         @new_repo.stub(:product).and_return(@product)
         @repo.stub(:product).and_return(@product)
         @repo.stub(:update_content).and_return(Candlepin::Content.new)
         @new_repo.stub(:update_content).and_return(Candlepin::Content.new)
-        @product.stub(:environment_products).and_return([@ep])
-        @ep.stub(:repositories).and_return([@repo, @new_repo])
 
         #@product.should_receive(:refresh_content).once
+        @product.stub(:repositories).and_return([@new_repo, @repo])
 
         @product.update_attributes!(:gpg_key => @gpg)
         @product.reset_repo_gpgs!
@@ -421,7 +406,7 @@ describe Product, :katello => true do
         @product.update_attributes!(:gpg_key => @gpg)
         @product.reset_repo_gpgs!
 
-        @repo.should_receive(:update_content).and_return(Candlepin::Content.new)
+        @product.repositories.first.should_receive(:update_content).and_return(Candlepin::Content.new)
         @product.update_attributes!(:gpg_key => nil)
         @product.reset_repo_gpgs!
       end

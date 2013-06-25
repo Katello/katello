@@ -18,7 +18,7 @@ describe Api::V1::ContentViewDefinitionsController do
 
   before do
     models = ["Organization", "KTEnvironment", "User","ContentViewEnvironment",
-             "ContentViewDefinition", "Product", "EnvironmentProduct", "Repository"]
+             "ContentViewDefinition", "Product", "Repository"]
     disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
     login_user(User.find(users(:admin)))
     @organization = Organization.find(organizations(:acme_corporation))

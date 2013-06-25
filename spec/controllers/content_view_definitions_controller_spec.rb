@@ -404,8 +404,7 @@ describe ContentViewDefinitionsController, :katello => true do
       it "should copy repositories from the original definition to the clone" do
         # create a repo and add it to the definition
         @product = new_test_product(@organization, @organization.library)
-        @ep = EnvironmentProduct.find_or_create(@organization.library, @product)
-        @repo = new_test_repo(@ep, "newname#{rand 10**6}", "http://fedorahosted org")
+        @repo = new_test_repo(@organization.library, @product, "newname#{rand 10**6}", "http://fedorahosted org")
         @definition.repositories << @repo
         @definition.save!
 

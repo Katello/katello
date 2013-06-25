@@ -64,8 +64,9 @@ class ContentViewVersion < ActiveRecord::Base
     # The repository model has a default scope that orders repositories by name;
     # however, for content views, it is desirable to order the repositories
     # based on the name of the product the repository is part of.
-    Repository.send(:with_exclusive_scope) {self.repositories.joins(:environment_product => :product).
-        in_environment(env).order('products.name asc')}
+    Repository.send(:with_exclusive_scope) do
+      self.repositories.joins(:product).in_environment(env).order('products.name asc')
+    end
   end
 
   def get_repo_clone(env, repo)
