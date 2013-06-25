@@ -1,31 +1,8 @@
-<div class="nutupane-titlebar">
-  <h1 class="nutupane-title">{{ "Systems" }}</h1>
-</div>
-<div class="nutupane-actionbar">
-  <div class="form">
-    <input type="text"
-           class="input input-search"
-           placeholder="Search..."
-           ng-model="table.searchTerm"
-           on-enter="table.search(table.searchTerm)">
-    <span class="result-count">Showing {{ table.offset }} of {{ table.subtotal }} ({{ table.total }} Total) {{ table.modelName }}</span>
-  </div>
-  <div class="fr">
-    <span>{{ table.numSelected }} Selected</span>
-    <span>|</span>
-    <a class="deselect-action"
-       ng-class="{ 'disabled-link' : table.numSelected == 0 }"
-       ng-click="table.selectAll(false)">
-      Deselect All
-    </a>
-  </div>
-</div>
-
 <div alch-table="table" nutupane-table>
   <div alch-table-scroll>
     <table class="table table-striped">
       <thead>
-        <tr alch-table-head row-select>
+        <tr alch-table-head row-select>   
           <th alch-table-column>{{ "Name" }}</th>
           <th alch-table-column>{{ "OS" }}</th>
           <th alch-table-column>{{ "Environment" }}</th>
@@ -35,13 +12,13 @@
         </tr>
       </thead>
 
-      <tbody>
+      <tbody infinite-scroll="table.nextPage()">
         <tr alch-table-row
             ng-repeat="system in table.items"
             row-select>
           <td alch-table-cell>
             <span class="status_icon" ng-class="getStatusColor(system.compliance.status)"></span>
-            <a class="clickable" ng-click="table.openDetails(system.id)">{{ system.name }}</a>
+            {{ system.name }}
           </td>
           <td alch-table-cell>{{ system.distribution }}</td>
           <td alch-table-cell>{{ system.environment.name }}</td>
@@ -53,4 +30,3 @@
     </table>
   </div>
 </div>
-<span class="action-panel" ui-view="action-panel"></span>
