@@ -43,5 +43,11 @@ describe('Controller: SystemsController', function() {
         expect($scope.getStatusColor("partial")).toBe("yellow");
         expect($scope.getStatusColor("error")).toBe("red");
     });
+
+    it("provides a way to open the details panel.", function() {
+        spyOn($state, "transitionTo");
+        $scope.table.openDetails(2);
+        expect($state.transitionTo).toHaveBeenCalledWith('systems.details', {systemId: 2});
+    });
 });
 

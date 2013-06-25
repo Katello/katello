@@ -18,7 +18,7 @@
  * @description
  *   Module for systems related functionality.
  */
-angular.module('Bastion.systems', ['alchemy', 'alch-templates', 'ui.compat', 'Bastion.widgets']);
+angular.module('Bastion.systems', ['ngResource', 'alchemy', 'alch-templates', 'ui.compat', 'Bastion.widgets']);
 
 /**
  * @ngdoc object

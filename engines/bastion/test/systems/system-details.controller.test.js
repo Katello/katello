@@ -20,13 +20,17 @@ describe('Controller: SystemDetailsController', function() {
     // Initialize controller
     beforeEach(inject(function($controller, $rootScope) {
         $scope = $rootScope.$new();
+        // Mocks
         $scope.table = {
             showColumns: function() {}
         }
         $state = {
             transitionTo: function() {}
         };
-        $controller('SystemDetailsController', {$scope: $scope, $state: $state});
+        var System = {
+            get: function() {}
+        };
+        $controller('SystemDetailsController', {$scope: $scope, $state: $state, System: System});
     }));
 
     it("provides a way to close the details panel.", function() {

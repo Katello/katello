@@ -1,4 +1,183 @@
-<div class="system-details">
-  Hello, I am a system.
-  <button class="btn-mini fr" ng-click="closeDetails()">Close</button>
-</div>
+<section class="system-details" ng-cloak>
+  <h2>System "{{system.name}}"</h2>
+
+  <nav class="actions">
+    <button class="btn-mini" ng-click="closeDetails()">Clone</button>
+    <button class="btn-mini" ng-click="removeSystem()">Remove System</button>
+    <button class="btn-mini" ng-click="closeDetails()">Close</button>
+  </nav>
+
+  <nav class="sub-navigation">
+    <ul>
+      <li><a>Details</a></li>
+      <li><a>Subscriptions</a></li>
+      <li><a>Content</a></li>
+      <li><a>System Groups</a></li>
+    </ul>
+  </nav>
+
+  <section class="details">
+    <h3>Basic Information</h3>
+    <div class="detail">
+      <span class="info-label">
+        ID
+      </span>
+      <span class="info-value">
+        {{system.id}}
+      </span>
+    </div>
+
+    <div class="detail">
+      <span class="info-label">
+        UUID
+      </span>
+      <span class="info-value">
+        {{system.uuid}}
+      </span>
+    </div>
+  </section>
+
+  <section class="details">
+    <h3>Subscription Status Details</h3>
+    <div class="detail">
+      <span class="info-label">
+        Subscription Status
+      </span>
+      <span class="info-value">
+        <span class="status_icon" ng-class="getStatusColor(system.compliance.status)"></span>
+        {{system.compliance.status}}
+      </span>
+    </div>
+
+    <div class="detail">
+      <span class="info-label">
+        Details
+      </span>
+      <span class="info-value">
+        {{system.compliance.reasons}}
+      </span>
+    </div>
+  </section>
+
+  <section class="details">
+    <h3>Networking</h3>
+    <div class="detail">
+      <span class="info-label">
+        Hostname
+      </span>
+      <span class="info-value">
+        {{system.facts["network.hostname"]}}
+      </span>
+    </div>
+
+    <div class="detail">
+      <span class="info-label">
+        Interfaces
+      </span>
+      <span class="info-value">
+      </span>
+    </div>
+  </section>
+
+  <section class="details">
+    <h3>System Properties</h3>
+    <div class="detail">
+      <span class="info-label">
+        Name
+      </span>
+      <span class="info-value">
+        {{system.name}}
+      </span>
+    </div>
+
+    <div class="detail">
+      <span class="info-label">
+        Description
+      </span>
+      <span class="info-value">
+        {{system.description}}
+      </span>
+    </div>
+
+    <div class="detail">
+      <span class="info-label">
+        OS
+      </span>
+      <span class="info-value">
+        {{system.distribution_name}}
+      </span>
+    </div>
+
+    <div class="detail">
+      <span class="info-label">
+        Release
+      </span>
+      <span class="info-value">
+        {{system.kernel}}
+      </span>
+    </div>
+
+    <div class="detail">
+      <span class="info-label">
+        Release Version
+      </span>
+      <span class="info-value">
+        {{system.release || "System Default"}}
+      </span>
+    </div>
+
+    <div class="detail">
+      <span class="info-label">
+        Arch
+      </span>
+      <span class="info-value">
+        {{system.arch}}
+      </span>
+    </div>
+
+    <div class="detail">
+      <span class="info-label">
+        RAM (GB)
+      </span>
+      <span class="info-value">
+        {{system.memory}}
+      </span>
+    </div>
+
+    <div class="detail">
+      <span class="info-label">
+        Sockets
+      </span>
+      <span class="info-value">
+        {{system.sockets}}
+      </span>
+    </div>
+
+    <div class="detail">
+      <span class="info-label">
+        Location
+      </span>
+      <span class="info-value">
+        {{system.location}}
+      </span>
+    </div>
+
+    <div class="detail">
+      <span class="info-label">
+        Environment
+      </span>
+      <span class="info-value">
+        {{system.environment_id}}
+      </span>
+    </div>
+
+    <div class="detail">
+      <span class="info-label">
+        Content View
+      </span>
+      <span class="info-value">
+        {{system.content_view_id}}
+      </span>
+    </div>
+  </section>
+</section>
