@@ -1,36 +1,34 @@
 // Testacular configuration
 
 // base path, that will be used to resolve files and exclude
-basePath = '';
+basePath = 'app/assets/bastion/';
 
 // list of files / patterns to load in the browser
 files = [
     JASMINE,
     JASMINE_ADAPTER,
 
-    'vendor/assets/components/jquery/jquery.js',
-    'vendor/assets/components/angular/angular.js',
-    'vendor/assets/components/angular-mocks/angular-mocks.js',
-    'vendor/assets/components/angular-sanitize/angular-sanitize.js',
-    'vendor/assets/components/angular-resource/angular-resource.js',
-    'vendor/assets/components/ngInfiniteScroll/ng-infinite-scroll.js',
-    'vendor/assets/components/alchemy/alchemy.js',
-    '../../vendor/assets/javascripts/angular-ui-states.js',
+    '../../../vendor/assets/components/jquery/jquery.js',
+    '../../../vendor/assets/components/angular/angular.js',
+    '../../../vendor/assets/components/angular-mocks/angular-mocks.js',
+    '../../../vendor/assets/components/angular-sanitize/angular-sanitize.js',
+    '../../../vendor/assets/components/angular-resource/angular-resource.js',
+    '../../../vendor/assets/components/ngInfiniteScroll/ng-infinite-scroll.js',
+    '../../../vendor/assets/components/alchemy/alchemy.js',
+    '../../../../../vendor/assets/javascripts/angular-ui-states.js',
 
-    '../../app/assets/javascripts/common/katello.global.js',
-    '../../app/assets/javascripts/common/katello.module.js',
-    '../../app/assets/javascripts/common/notices.js',
-    '../../app/assets/javascripts/common/experimental/katello-globals.module.js',
-    '../../app/assets/javascripts/systems/systems.module.js',
-    '../../app/assets/javascripts/system_groups/system-groups.module.js',
+    '../../../../../app/assets/javascripts/common/katello.global.js',
+    '../../../../../app/assets/javascripts/common/katello.module.js',
+    '../../../../../app/assets/javascripts/common/notices.js',
+    '../../../../../app/assets/javascripts/common/experimental/katello-globals.module.js',
+    '../../../../../app/assets/javascripts/system_groups/system-groups.module.js',
 
     // Must load modules first
-    'app/assets/bastion/**/*.module.js',
-    'app/assets/bastion/**/*.js',
+    '**/*.module.js',
+    '**/*.js',
+    '**/views/*.html',
 
-    '.tmp/templates/**/*.js',
-
-    'test/**/*test.js'
+    '../../../test/**/*test.js'
 ];
 
 // list of files to exclude
@@ -68,3 +66,7 @@ browsers = ['PhantomJS'];
 // Continuous Integration mode
 // if true, it capture browsers, run tests and exit
 singleRun = false;
+
+preprocessors = {
+    '**/views/*.html': 'html2js'
+};

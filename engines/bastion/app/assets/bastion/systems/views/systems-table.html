@@ -1,0 +1,56 @@
+<div class="nutupane-titlebar">
+  <h1 class="nutupane-title">{{ "Systems" }}</h1>
+</div>
+<div class="nutupane-actionbar">
+  <div class="form">
+    <input type="text"
+           class="input input-search"
+           placeholder="Search..."
+           ng-model="table.searchTerm"
+           on-enter="table.search(table.searchTerm)">
+    <span class="result-count">Showing {{ table.offset }} of {{ table.subtotal }} ({{ table.total }} Total) {{ table.modelName }}</span>
+  </div>
+  <div class="fr">
+    <span>{{ table.numSelected }} Selected</span>
+    <span>|</span>
+    <a class="deselect-action"
+       ng-class="{ 'disabled-link' : table.numSelected == 0 }"
+       ng-click="table.selectAll(false)">
+      Deselect All
+    </a>
+  </div>
+</div>
+
+<div alch-table="table" nutupane-table>
+  <div alch-table-scroll>
+    <table class="table table-striped">
+      <thead class="hidden">
+      <tr alch-table-head row-select>
+        <th alch-table-column>{{ "Name" }}</th>
+        <th alch-table-column>{{ "OS" }}</th>
+        <th alch-table-column>{{ "Environment" }}</th>
+        <th alch-table-column>{{ "Content View" }}</th>
+        <th alch-table-column>{{ "Registered" }}</th>
+        <th alch-table-column>{{ "Last Checkin" }}</th>
+      </tr>
+      </thead>
+
+      <tbody infinite-scroll="table.nextPage()">
+      <tr alch-table-row="system"
+          ng-repeat="system in table.items"
+          row-select>
+        <td alch-table-cell>
+          <span class="status_icon" ng-class="getStatusColor(system.compliance.status)"></span>
+          <a class="clickable" ng-click="table.openDetails(system.id)">{{ system.name }}</a>
+        </td>
+        <td alch-table-cell>{{ system.distribution }}</td>
+        <td alch-table-cell>{{ system.environment.name }}</td>
+        <td alch-table-cell>{{ system.content_view.name || "" }}</td>
+        <td alch-table-cell>{{ system.registered | date:'short' }}</td>
+        <td alch-table-cell>{{ system.checkin_time || 'Never checked in' | date:'short' }}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<span class="action-panel" ui-view="action-panel"></span>
