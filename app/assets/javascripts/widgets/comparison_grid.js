@@ -10,8 +10,8 @@
  have received a copy of GPLv2 along with this software; if not, see
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
-var KT = (KT === undefined) ? {} : KT;
 
+var KT = (KT === undefined) ? {} : KT;
 
 KT.comparison_grid = function(){
     var templates = KT.comparison_grid.templates,
@@ -31,7 +31,7 @@ KT.comparison_grid = function(){
             controls = KT.comparison_grid.controls(this);
             default_row_level = 0;
         },
-        add_row = function(id, name, cell_data, parent_id, comparable){
+        add_row = function(id, name, type, cell_data, parent_id, comparable){
             var cells = [],
                 cell_columns = utils.keys(cell_data),
                 has_children = models.rows.has_children(id),
@@ -50,9 +50,9 @@ KT.comparison_grid = function(){
                 }
             });
 
-            add_row_header(id, name, row_level, has_children, parent_id);
+            add_row_header(id, name, type, row_level, has_children, parent_id);
 
-            row_element = templates.row(id, models.columns.length, cells, row_level, has_children, parent_id, name);
+            row_element = templates.row(id, models.columns.length, cells, row_level, has_children, parent_id, name, type);
 
             if( parent_id ){
                 parent = $('#child_list_' + parent_id);
@@ -101,7 +101,7 @@ KT.comparison_grid = function(){
                 metadata_row.find('span').html(i18n.counts.replace('%C', current).replace('%T', total));
             }
         },
-        add_row_header = function(id, name, row_level, has_children, parent_id) {
+        add_row_header = function(id, name, type, row_level, has_children, parent_id) {
             var parent;
 
             if( parent_id ){
@@ -111,9 +111,9 @@ KT.comparison_grid = function(){
             }
 
             if( parent.children('.load_row_header').length > 0 ) {
-                parent.children('.load_row_header').before(templates.row_header(id, name, row_level, has_children, parent_id));
+                parent.children('.load_row_header').before(templates.row_header(id, name, type, row_level, has_children, parent_id));
             } else {
-                parent.append(templates.row_header(id, name, row_level, has_children, parent_id));
+                parent.append(templates.row_header(id, name, type, row_level, has_children, parent_id));
             }
         },
         add_rows = function(append) {
@@ -129,7 +129,7 @@ KT.comparison_grid = function(){
                     if( row['metadata'] ){
                         update_metadata_row(row['id'], row['current'], row['total']);
                     } else {
-                        add_row(row['id'], row['name'], row['cells'], row['parent_id'], row['comparable']);
+                        add_row(row['id'], row['name'], row['data_type'], row['cells'], row['parent_id'], row['comparable']);
                     }
                 });
             } else {
@@ -137,7 +137,7 @@ KT.comparison_grid = function(){
                     if( row['metadata'] ){
                         add_metadata_row(row['id'], row['parent_id'], row['page_size'], row['current'], row['total']);
                     } else {
-                        add_row(row['id'], row['name'], row['cells'], row['parent_id'], row['comparable']);
+                        add_row(row['id'], row['name'], row['data_type'], row['cells'], row['parent_id'], row['comparable']);
                     }
                 });
             }
@@ -216,7 +216,7 @@ KT.comparison_grid = function(){
                 var to_display, custom;
 
                 if( col['content'] ){
-                    to_display = col['content']['custom'] ? col['content']['custom'] : col['content']['name'],
+                    to_display = col['content']['custom'] ? col['content'] : col['content']['name'],
                     custom = col['content']['custom'] ? true : false;
                 } else {
                     to_display = col['name'];
@@ -331,6 +331,9 @@ KT.comparison_grid = function(){
         },
         set_title = function(title){
             $('#grid_header').find('header h2[data-title="details"]').html(title);
+        },
+        set_templates = function(templates_object) {
+            templates = templates_object;
         };
 
     return {
@@ -351,7 +354,8 @@ KT.comparison_grid = function(){
         set_right_select        : set_right_select,
         set_title               : set_title,
         get_num_columns_shown   : function(){ return num_columns_shown; },
-        get_max_visible_columns : function(){ return max_visible_columns; }
+        get_max_visible_columns : function(){ return max_visible_columns; },
+        set_templates           : set_templates
     };
 };
 
@@ -836,13 +840,14 @@ KT.comparison_grid.templates = (function(i18n) {
 
             return html;
         },
-        row = function(id, num_columns, cell_data, row_level, has_children, parent_id, name) {
+        row = function(id, num_columns, cell_data, row_level, has_children, parent_id, name, type) {
             var i,
                 html = $('<div/>', {
                     'id'    : 'grid_row_' + id,
                     'class' : 'grid_row grid_row_level_' + row_level
                 });
 
+            name = this.row_header_content(name, type);
             if( parent_id !== undefined ){
                 html.attr('data-parent_id', parent_id);
             }
@@ -898,46 +903,12 @@ KT.comparison_grid.templates = (function(i18n) {
 
             return temp_html.html();
         },
-        package_header = function(display) {
-            display["url"] = KT.routes.details_package_path(KT.utils.escape(display["id"]));
-
-            return KT.utils.template("<span data-url='<%= url %>' class='tipsify-package'><%- name %></span> \
-                       <span class='one-line-ellipsis'><%- vel_rel_arch %></span>", display);
-        },
-        errata_header = function(display) {
-            if(display["errata_type"] === "bugfix") {
-                display["icon_class"] = "bug_icon-black";
-            }
-            else if(display["errata_type"] === "enhancement") {
-                display["icon_class"] = "plus_icon-black";
-            }
-            else if(display["errata_type"] === "security") {
-                display["icon_class"] = "shield_icon-black";
-            }
-            else {
-                display["icon_class"] = "enhancement_icon";
-            }
-            display["url"] = KT.routes.short_details_erratum_path(KT.utils.escape(display["id"]));
-
-            return KT.utils.template("<i class=\"errata-icon <%= icon_class %>\"  /><span class=\"tipsify-errata\" data-url=\"<%= url %>\"><%- errata_id %></span>",
-                    display);
-        },
         row_header_content = function(name, type) {
-            if(type === "package") {
-                html = package_header(name);
-            }
-            else if(type === "errata") {
-                html = errata_header(name);
-            }
-            else {
-                html = KT.utils.escape(name);
-            }
-
-            return html;
+            // override me
+            return name;
         },
         row_header = function(id, name, type, row_level, has_children, parent_id) {
-            var title = (type === "package" || type === "errata") ? "" : name,
-                html = $('<li/>', {
+            var html = $('<li/>', {
                             'data-id'   : id,
                             'id'        : 'row_header_' + id,
                             'class'     : 'row_header grid_row_level_' + row_level
@@ -946,25 +917,26 @@ KT.comparison_grid.templates = (function(i18n) {
             if( parent_id !== undefined ){
                 html.attr('data-parent_id', parent_id);
             }
+            name = this.row_header_content(name, type);
 
             if( row_level === 2 ){
                 if( name.length > 30 && name.length < 60 ){
                     html.addClass('row_height_2');
-                    html.append($('<span/>', { 'class': 'one-line-ellipsis', 'title': title }).html(name));
+                    html.append($('<span/>', { 'class': 'one-line-ellipsis'}).html(name));
                 } else if( name.length >= 60 && name.length <= 94 ){
                     html.addClass('row_height_3');
-                    html.append($('<span/>', { 'class': 'one-line-ellipsis', 'title': title }).html(name));
+                    html.append($('<span/>', { 'class': 'one-line-ellipsis'}).html(name));
                 } else if( name.length > 94 ) {
                     html.addClass('row_height_3');
                     html.append($('<span/>', { 'class' : 'three-line-ellipsis tipsify', 'title' : name }).html(name));
                 } else {
-                    html.append($('<span/>', { 'class': 'one-line-ellipsis', 'title' : title }).html(name));
+                    html.append($('<span/>', { 'class': 'one-line-ellipsis'}).html(name));
                 }
             } else if( row_level >= 3 ){
                 if( name.length > 30 ){
                     html.addClass('row_height_2');
                 }
-                html.append($('<span/>', { 'class': 'one-line-ellipsis', 'title': title }).html(name));
+                html.append($('<span/>', { 'class': 'one-line-ellipsis'}).html(name));
             } else {
                 if( (has_children && name.length > 26) || (parent_id && name.length > 28) || name.length > 28 ){
                     html.append($('<span/>', { 'class' : 'one-line-ellipsis tipsify', 'title' : name }).html(name));
@@ -1051,8 +1023,10 @@ KT.comparison_grid.templates = (function(i18n) {
         cell                    : cell,
         row                     : row,
         row_header              : row_header,
+        row_header_content      : row_header_content,
         column_header           : column_header,
         load_more_row_header    : load_more_row_header,
-        load_more_row           : load_more_row
+        load_more_row           : load_more_row,
+        collapse_arrow          : collapse_arrow
     };
 }(i18n));
