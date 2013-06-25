@@ -1,6 +1,6 @@
-= javascript 'bastion/systems/systems.controller', 'bastion/components/nutupane.factory'
-= javascript 'bastion/components/scrollWithPage.directive', 'bastion/incubator/table.directive'
+= javascript 'bastion/systems/systems.controller.js', 'bastion/systems/system-details.controller.js', 'bastion/components/nutupane.factory.js'
+= javascript 'bastion/components/scrollWithPage.directive.js', 'bastion/incubator/table.directive.js'
 
 %section{ 'ng-controller' => 'SystemsController' }
-  %div(ng-include){ 'src'=>"'systems/views/toolbar.html'" }
-  %div(ng-include){ 'src'=>"'systems/views/systems.html'" }
+  %div{'ui-view' => ''}
+
