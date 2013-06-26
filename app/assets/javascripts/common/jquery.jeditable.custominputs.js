@@ -28,6 +28,18 @@ $(document).ready(function() {
         }
     });
 
+    $.editable.addInputType('custom_info', {
+        element: function(settings, original) {
+            var input = $("<input/>");
+            $(this).append(input);
+            return input;
+        },
+        content: function(string, settings, original) {
+            var input = $(':input:first', this);
+            $(input).val($("<div/>").html(string).text());
+        }
+    });
+
     // Create a custom input type for checkboxes
     $.editable.addInputType("checkbox", {
         element : function(settings, original) {

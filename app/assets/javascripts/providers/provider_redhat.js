@@ -124,8 +124,12 @@ KT.redhat_provider_page = (function($) {
             data: {content_id:content_id},
             cache: false,
             success: function(data){
+                var checkbox = row.find('.repo_set_enable');
                 row.find('table').replaceWith('<table style="display: none;"> </table>');
-                row.find('.repo_set_enable').show();
+                checkbox.show();
+                if (checkbox.data('orphaned')) {
+                    checkbox.attr("disabled", "disabled");
+                }
                 row.find('.repo_set_spinner').hide();
                 row.find('.expander').removeClass('disabled').hide();
                 row.find('.repo_set_refresh').removeClass('disabled').hide();

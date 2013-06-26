@@ -909,20 +909,20 @@ KT.comparison_grid.templates = (function(i18n) {
                 html.attr('data-parent_id', parent_id);
             }
 
-            if( row_level === 2 ){
+            if( row_level === 2 || row_level === 3 ){
                 if( name.length > 30 && name.length < 60 ){
                     html.addClass('row_height_2');
-                    html.append($('<span/>', { 'class': 'one-line-ellipsis'}).html(name));
+                    html.append($('<span/>', { 'class': 'one-line-ellipsis', 'title': name}).html(name));
                 } else if( name.length >= 60 && name.length <= 94 ){
                     html.addClass('row_height_3');
-                    html.append($('<span/>', { 'class': 'one-line-ellipsis'}).html(name));
+                    html.append($('<span/>', { 'class': 'one-line-ellipsis', 'title': name}).html(name));
                 } else if( name.length > 94 ) {
                     html.addClass('row_height_3');
                     html.append($('<span/>', { 'class' : 'three-line-ellipsis tipsify', 'title' : name }).html(name));
                 } else {
-                    html.append($('<span/>', { 'class': 'one-line-ellipsis'}).html(name));
+                    html.append($('<span/>', { 'class': 'one-line-ellipsis', 'title': name}).html(name));
                 }
-            } else if( row_level >= 3 ){
+            } else if( row_level >= 4 ){
                 if( name.length > 30 ){
                     html.addClass('row_height_2');
                 }
