@@ -18,7 +18,7 @@ class ContentViewDefinitionTest < MiniTest::Rails::ActiveSupport::TestCase
 
   def self.before_suite
     models = ["Product", "Repository","Organization", "KTEnvironment", "ContentViewDefinitionBase",
-              "ContentViewDefinition", "ContentViewEnvironment", "EnvironmentProduct",
+              "ContentViewDefinition", "ContentViewEnvironment",
               "ContentViewDefinitionRepository", "ContentViewDefinitionProduct", "ContentViewVersion",
               "User"]
     disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch", "Foreman"], models, true)

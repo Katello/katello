@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130612212512) do
+ActiveRecord::Schema.define(:version => 20130619151418) do
 
   create_table "activation_keys", :force => true do |t|
     t.string   "name"
@@ -204,13 +204,6 @@ ActiveRecord::Schema.define(:version => 20130612212512) do
 
   add_index "environment_priors", ["environment_id"], :name => "index_environment_priors_on_environment_id"
   add_index "environment_priors", ["prior_id"], :name => "index_environment_priors_on_prior_id"
-
-  create_table "environment_products", :force => true do |t|
-    t.integer "environment_id", :null => false
-    t.integer "product_id",     :null => false
-  end
-
-  add_index "environment_products", ["environment_id", "product_id"], :name => "index_environment_products_on_environment_id_and_product_id", :unique => true
 
   create_table "environment_system_groups", :force => true do |t|
     t.integer "environment_id"
@@ -464,7 +457,6 @@ ActiveRecord::Schema.define(:version => 20130612212512) do
     t.string   "name"
     t.string   "pulp_id",                                       :null => false
     t.boolean  "enabled",                 :default => true
-    t.integer  "environment_product_id",                        :null => false
     t.datetime "created_at",                                    :null => false
     t.datetime "updated_at",                                    :null => false
     t.integer  "major"
@@ -480,14 +472,16 @@ ActiveRecord::Schema.define(:version => 20130612212512) do
     t.string   "feed"
     t.boolean  "unprotected",             :default => false,    :null => false
     t.string   "content_type",            :default => "yum",    :null => false
+    t.integer  "product_id"
+    t.integer  "environment_id"
   end
 
   add_index "repositories", ["content_view_version_id"], :name => "index_repositories_on_content_view_version_id"
   add_index "repositories", ["cp_label"], :name => "index_repositories_on_cp_label"
-  add_index "repositories", ["environment_product_id"], :name => "index_repositories_on_environment_product_id"
+  add_index "repositories", ["environment_id"], :name => "index_repositories_on_environment_id"
   add_index "repositories", ["gpg_key_id"], :name => "index_repositories_on_gpg_key_id"
-  add_index "repositories", ["label", "content_view_version_id", "environment_product_id"], :name => "repositories_l_cvvi_epi", :unique => true
   add_index "repositories", ["library_instance_id"], :name => "index_repositories_on_library_instance_id"
+  add_index "repositories", ["product_id"], :name => "index_repositories_on_product_id"
   add_index "repositories", ["pulp_id"], :name => "index_repositories_on_pulp_id"
 
   create_table "resource_types", :force => true do |t|
