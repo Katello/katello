@@ -41,7 +41,7 @@
        );
     </pre>
  */
-angular.module('Bastion.widgets').factory('Nutupane', ['$location', '$http', 'CurrentOrganization', function($location, $http, CurrentOrganization){
+angular.module('Bastion.widgets').factory('Nutupane', ['$location', '$http', 'CurrentOrganization', function($location, $http, CurrentOrganization) {
     var sort = { by: 'name', order: 'ASC' };
 
     var Nutupane = function() {
@@ -73,7 +73,7 @@ angular.module('Bastion.widgets').factory('Nutupane', ['$location', '$http', 'Cu
                     'offset':           self.table.offset
                 }
             })
-            .then(function(response){
+            .then(function(response) {
                 var table = self.table,
                     data  = response.data;
 
@@ -103,6 +103,11 @@ angular.module('Bastion.widgets').factory('Nutupane', ['$location', '$http', 'Cu
             self.get();
         };
 
+        // Must be overridden
+        self.table.closeItem = function() {
+            throw "NotImplementedError";
+        };
+
         self.table.nextPage = function(){
             var table = self.table;
 
@@ -130,82 +135,7 @@ angular.module('Bastion.widgets').factory('Nutupane', ['$location', '$http', 'Cu
             self.table.offset = 0;
             self.get();
         };
-
-        /**
-         * Set the visibility of the details pane.
-         * @param visibility boolean
-         */
-        self.table.setDetailsVisibility = function(visibility) {
-            var table = self.table;
-            if (visibility) {
-                table.openActionPane();
-            } else {
-                table.closeActionPane();
-            }
-
-            table.detailsVisible = visibility;
-        };
-
-        /**
-         * Set the visibility of the new item pane.
-         * @param visibility boolean
-         */
-        self.table.setNewItemVisibility = function(visibility) {
-            if (visibility) {
-                $('body').addClass('no-scroll');
-            } else {
-                $('body').removeClass('no-scroll');
-            }
-            self.table.newPaneVisible = visibility;
-        };
-
-        self.table.closeItem = function() {
-            self.table.setDetailsVisibility(false);
-            $location.search('item', '');
-        };
-
-        /**
-         * Open the action pane by removing all but the name column.
-         */
-        self.table.openActionPane = function() {
-            self.table.collapsed = true;
-        };
-
-        /**
-         * Close the action pane by restoring the table columns.
-         */
-        self.table.closeActionPane = function() {
-            self.table.collapsed = false;
-        };
-
-        self.table.selectItem = function(url, id) {
-            var item,
-                table = self.table;
-
-            $location.search('item', id.toString());
-            url = url ? url : self.defaultItemUrl(id);
-
-            $http.get(url, {
-                params : {
-                    expanded : true
-                }
-            })
-            .then(function(response){
-                table.visible = false;
-
-                // Only reset the activeItem if an ID is provided
-                if (id) {
-                    // Remove all columns except name and replace them with the details pane
-                    table.selectAll(false);
-                    table.activeItem = item;
-                    table.activeItem.selected  = true;
-                }
-                self.table.activeItem.html = response.data;
-                self.table.setDetailsVisibility(true);
-            });
-        };
     };
-
     return Nutupane;
 }]);
 

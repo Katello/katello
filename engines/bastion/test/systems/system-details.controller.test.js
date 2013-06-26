@@ -37,7 +37,7 @@ describe('Controller: SystemDetailsController', function() {
         spyOn($state, "transitionTo");
         spyOn($scope.table, 'showColumns');
 
-        $scope.closeDetails();
+        $scope.table.closeItem();
         expect($state.transitionTo).toHaveBeenCalledWith('systems.index');
         expect($scope.table.showColumns).toHaveBeenCalled();
     });
