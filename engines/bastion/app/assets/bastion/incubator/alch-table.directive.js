@@ -91,11 +91,11 @@ angular.module('alchemy')
 
         $scope.shrinkTable = function(shrink) {
             if (shrink) {
-                angular.element($element.find('table')[0]).addClass('table-reduced');
+                $element.addClass('table-reduced');
                 angular.element($element.find('table')[1]).addClass('table-full');
                 $element.find('[alch-table-scroll]').addClass('table-reduced');
             } else {
-                angular.element($element.find('table')[0]).removeClass('table-reduced');
+                $element.removeClass('table-reduced');
                 angular.element($element.find('table')[1]).removeClass('table-full');
                 $element.find('[alch-table-scroll]').removeClass('table-reduced');
             }
