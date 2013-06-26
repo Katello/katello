@@ -27,7 +27,7 @@ angular.module('Bastion.systems').controller('SystemDetailsController', ['$scope
 
         $scope.system = System.get({systemId: $scope.$stateParams.systemId});
 
-        $scope.closeDetails = function() {
+        $scope.table.closeItem = function() {
             $state.transitionTo('systems.index');
             $scope.table.showColumns();
         };

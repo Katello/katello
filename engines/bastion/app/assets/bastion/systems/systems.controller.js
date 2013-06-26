@@ -31,10 +31,10 @@ angular.module('Bastion.systems').controller('SystemsController',
 
         var nutupane = new Nutupane();
 
-        $scope.table                = nutupane.table;
-        $scope.table.url            = Routes.apiSystemsPath();
-        $scope.table.activeItem    = {};
-        $scope.table.modelName      = "Systems";
+        $scope.table = nutupane.table;
+        $scope.table.url = Routes.apiSystemsPath();
+        $scope.table.activeItem = {};
+        $scope.table.modelName = "Systems";
 
         nutupane.get();
 
