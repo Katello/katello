@@ -25,12 +25,11 @@ angular.module('Bastion.systems', ['ngResource', 'alchemy', 'alch-templates', 'u
  * @name Bastion.systems.config
  *
  * @requires $stateProvider
- * @requires $urlRouterProvider
  *
  * @description
  *   Used for systems level configuration such as setting up the ui state machine.
  */
-angular.module('Bastion.systems').config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
+angular.module('Bastion.systems').config(['$stateProvider', '$urlRouterProvider', function($stateProvider) {
     $stateProvider.state('systems', {
         abstract: true,
         controller: 'SystemsController',
@@ -84,9 +83,6 @@ angular.module('Bastion.systems').config(['$stateProvider', '$urlRouterProvider'
             }
         }
     });
-
-    // Default state URL
-    $urlRouterProvider.otherwise("/index");
 }]);
 
 angular.module('Bastion.systems').run(['$rootScope', '$state', '$stateParams',
