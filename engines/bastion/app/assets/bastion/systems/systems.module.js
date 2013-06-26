@@ -33,9 +33,12 @@ angular.module('Bastion.systems', ['ngResource', 'alchemy', 'alch-templates', 'u
 angular.module('Bastion.systems').config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
     $stateProvider.state('systems', {
         abstract: true,
+        controller: 'SystemsController',
         views: {
+            'sub-header': {
+                templateUrl: 'systems/views/systems-sub-header.html'
+            },
             '@': {
-                controller: 'SystemsController',
                 templateUrl: 'systems/views/systems-table.html'
             }
         }
