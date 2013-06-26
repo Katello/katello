@@ -898,8 +898,46 @@ KT.comparison_grid.templates = (function(i18n) {
 
             return temp_html.html();
         },
-        row_header = function(id, name, row_level, has_children, parent_id) {
-            var html = $('<li/>', {
+        package_header = function(display) {
+            display["url"] = KT.routes.details_package_path(KT.utils.escape(display["id"]));
+
+            return KT.utils.template("<span data-url='<%= url %>' class='tipsify-package'><%- name %></span> \
+                       <span class='one-line-ellipsis'><%- vel_rel_arch %></span>", display);
+        },
+        errata_header = function(display) {
+            if(display["errata_type"] === "bugfix") {
+                display["icon_class"] = "bug_icon-black";
+            }
+            else if(display["errata_type"] === "enhancement") {
+                display["icon_class"] = "plus_icon-black";
+            }
+            else if(display["errata_type"] === "security") {
+                display["icon_class"] = "shield_icon-black";
+            }
+            else {
+                display["icon_class"] = "enhancement_icon";
+            }
+            display["url"] = KT.routes.short_details_erratum_path(KT.utils.escape(display["id"]));
+
+            return KT.utils.template("<i class=\"errata-icon <%= icon_class %>\"  /><span class=\"tipsify-errata\" data-url=\"<%= url %>\"><%- errata_id %></span>",
+                    display);
+        },
+        row_header_content = function(name, type) {
+            if(type === "package") {
+                html = package_header(name);
+            }
+            else if(type === "errata") {
+                html = errata_header(name);
+            }
+            else {
+                html = KT.utils.escape(name);
+            }
+
+            return html;
+        },
+        row_header = function(id, name, type, row_level, has_children, parent_id) {
+            var title = (type === "package" || type === "errata") ? "" : name,
+                html = $('<li/>', {
                             'data-id'   : id,
                             'id'        : 'row_header_' + id,
                             'class'     : 'row_header grid_row_level_' + row_level
@@ -909,24 +947,24 @@ KT.comparison_grid.templates = (function(i18n) {
                 html.attr('data-parent_id', parent_id);
             }
 
-            if( row_level === 2 || row_level === 3 ){
+            if( row_level === 2 ){
                 if( name.length > 30 && name.length < 60 ){
                     html.addClass('row_height_2');
-                    html.append($('<span/>', { 'class': 'one-line-ellipsis', 'title': name}).html(name));
+                    html.append($('<span/>', { 'class': 'one-line-ellipsis', 'title': title }).html(name));
                 } else if( name.length >= 60 && name.length <= 94 ){
                     html.addClass('row_height_3');
-                    html.append($('<span/>', { 'class': 'one-line-ellipsis', 'title': name}).html(name));
+                    html.append($('<span/>', { 'class': 'one-line-ellipsis', 'title': title }).html(name));
                 } else if( name.length > 94 ) {
                     html.addClass('row_height_3');
                     html.append($('<span/>', { 'class' : 'three-line-ellipsis tipsify', 'title' : name }).html(name));
                 } else {
-                    html.append($('<span/>', { 'class': 'one-line-ellipsis', 'title': name}).html(name));
+                    html.append($('<span/>', { 'class': 'one-line-ellipsis', 'title' : title }).html(name));
                 }
-            } else if( row_level >= 4 ){
+            } else if( row_level >= 3 ){
                 if( name.length > 30 ){
                     html.addClass('row_height_2');
                 }
-                html.append($('<span/>', { 'class': 'one-line-ellipsis'}).html(name));
+                html.append($('<span/>', { 'class': 'one-line-ellipsis', 'title': title }).html(name));
             } else {
                 if( (has_children && name.length > 26) || (parent_id && name.length > 28) || name.length > 28 ){
                     html.append($('<span/>', { 'class' : 'one-line-ellipsis tipsify', 'title' : name }).html(name));
