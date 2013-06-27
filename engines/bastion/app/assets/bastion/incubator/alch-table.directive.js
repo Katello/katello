@@ -28,6 +28,12 @@ angular.module('alchemy')
 
         this.addRow = function(row) {
             rows.push(row);
+
+            if (headers.length) {
+                angular.forEach(headers[0].columns, function(column, columnIndex) {
+                    row.cells[columnIndex].show = column.show;
+                });
+            }
         };
 
         this.addHeader = function(columns) {
@@ -64,7 +70,7 @@ angular.module('alchemy')
             });
 
             angular.forEach(headers, function(header) {
-                angular.forEach(header, function(column, columnIndex) {
+                angular.forEach(header.columns, function(column, columnIndex) {
                     if (columnIndex !== index) {
                         column.show = false;
                     }
@@ -81,7 +87,7 @@ angular.module('alchemy')
                 });
             });
             angular.forEach(headers, function(header) {
-                angular.forEach(header, function(column) {
+                angular.forEach(header.columns, function(column) {
                     column.show = true;
                 });
             });
@@ -91,11 +97,11 @@ angular.module('alchemy')
 
         $scope.shrinkTable = function(shrink) {
             if (shrink) {
-                angular.element($element.find('table')[0]).addClass('table-reduced');
+                $element.addClass('table-reduced');
                 angular.element($element.find('table')[1]).addClass('table-full');
                 $element.find('[alch-table-scroll]').addClass('table-reduced');
             } else {
-                angular.element($element.find('table')[0]).removeClass('table-reduced');
+                $element.removeClass('table-reduced');
                 angular.element($element.find('table')[1]).removeClass('table-full');
                 $element.find('[alch-table-scroll]').removeClass('table-reduced');
             }
@@ -120,7 +126,7 @@ angular.module('alchemy')
                 }
 
                 return function (scope, element, attrs, alchTableController) {
-                    alchTableController.addHeader(scope.row.columns);
+                    alchTableController.addHeader(scope.row);
 
                     scope.itemSelected = function(row) {
                         alchTableController.selectAll(row.selected);

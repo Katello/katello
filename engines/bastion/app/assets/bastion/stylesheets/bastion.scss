@@ -1,4 +1,5 @@
 @import "compass";
+@import "alchemy/components/normalize";
 
 * {
   @include box-sizing(border-box);
@@ -15,7 +16,6 @@ $spritePath: url("../alchemy/icons/action-icons.png");
 
 @import "font-awesome/font-awesome";
 
-@import "alchemy/components/normalize";
 @import "alchemy-forms/forms";
 @import "alchemy-buttons/buttons";
 @import "alchemy/components/sprites/sprites";
@@ -30,12 +30,13 @@ $spritePath: url("../alchemy/icons/action-icons.png");
 body {
   width: 100%;
   height: 100%;
+  overflow: hidden;
 }
 
 #experimental_indicator {
   position: absolute;
   color: rgb(255, 196, 90);
-  top: 0;
+  top: 6px;
   left: 132px;
   font-family: Overpass;
 }

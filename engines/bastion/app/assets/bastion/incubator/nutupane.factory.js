@@ -108,7 +108,7 @@ angular.module('Bastion.widgets').factory('Nutupane', ['$location', '$http', 'Cu
             throw "NotImplementedError";
         };
 
-        self.table.nextPage = function(){
+        self.table.nextPage = function() {
             var table = self.table;
 
             if (table.loadingMore || table.working || table.subtotal === table.offset) {

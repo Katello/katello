@@ -78,12 +78,12 @@ describe('Directive: alchTable', function() {
 
         it("should append a table head with columns", function() {
             var col1 = {}, col2 = {},
-                tableHead = [col1, col2];
+                tableHead = { columns: [col1, col2] };
 
             expect(scope.headers).toEqual([]);
 
             tableController.addHeader(tableHead);
-            expect(scope.headers).toEqual([[col1, col2]]);
+            expect(scope.headers).toEqual([{ columns: [col1, col2] }]);
         });
 
         it("should update the selected row count", function() {
@@ -124,7 +124,7 @@ describe('Directive: alchTable', function() {
                     selected: true,
                     cells: [{ show: true }, { show: true }]
                 },
-                tableHead = [col1, col2];
+                tableHead = { columns: [col1, col2] };
 
             tableController.addRow(row);
             tableController.addHeader(tableHead);
