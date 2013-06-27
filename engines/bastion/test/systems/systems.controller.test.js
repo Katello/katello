@@ -46,7 +46,7 @@ describe('Controller: SystemsController', function() {
 
     it("provides a way to open the details panel.", function() {
         spyOn($state, "transitionTo");
-        $scope.table.openDetails(2);
+        $scope.table.openDetails({ uuid: 2 });
         expect($state.transitionTo).toHaveBeenCalledWith('systems.details', {systemId: 2});
     });
 });

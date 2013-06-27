@@ -36,6 +36,10 @@ table.details-visible {
     max-width: 3%;
   }
 
+  td {
+    position: relative;
+  }
+
   tr.active, tbody tr:hover, .active-row {
     background-color: $listhover_color;
     color:#FFF;
@@ -56,6 +60,18 @@ table.details-visible {
     background: white;
     line-height: 1;
     vertical-align: bottom;
+  }
+
+  .selected-row {
+    background-color: $rh-blue;
+    color: white;
+
+    .selected-icon {
+      margin-top: 1px;
+      font-size: 14px;
+      position: absolute;
+      right: 15px;
+    }
   }
 }
 
@@ -170,7 +186,7 @@ table.details-visible {
   height: 100%;
   left: 20%;
   min-width: 30%;
-  padding: 20px 20px 20px 20px;
+  padding: 20px;
   position: absolute;
   width: 80%;
   border-left: 1px solid #CCC;
@@ -199,9 +215,7 @@ table.details-visible {
     display: inline-block;
 
     button {
-      margin-top: 0;
-      margin-bottom: 0;
-      margin-right: 0;
+      margin: 0;
     }
   }
 
@@ -231,7 +245,7 @@ table.details-visible {
         }
       }
 
-      .active{
+      .active {
         top: 2px;
         position: relative;
         color: darken($tone, 40%);

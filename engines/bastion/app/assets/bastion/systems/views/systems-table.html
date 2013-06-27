@@ -4,6 +4,7 @@
       <thead>
         <tr alch-table-head row-select>
           <th alch-table-column>{{ "Name" }}</th>
+          <th alch-table-column>{{ "Status" }}</th>
           <th alch-table-column>{{ "OS" }}</th>
           <th alch-table-column>{{ "Environment" }}</th>
           <th alch-table-column>{{ "Content View" }}</th>
@@ -17,8 +18,11 @@
             ng-repeat="system in table.items"
             row-select>
           <td alch-table-cell>
+            <a class="clickable" ng-click="table.openDetails(system)">{{ system.name }}</a>
+            <i class="icon-chevron-right selected-icon" ng-show="system.selected"></i>
+          </td>
+          <td alch-table-cell>
             <span class="status_icon" ng-class="getStatusColor(system.compliance.status)"></span>
-            <a class="clickable" ng-click="table.openDetails(system.uuid)">{{ system.name }}</a>
           </td>
           <td alch-table-cell>{{ system.distribution }}</td>
           <td alch-table-cell>{{ system.environment.name }}</td>

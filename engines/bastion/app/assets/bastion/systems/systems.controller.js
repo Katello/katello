@@ -60,8 +60,8 @@ angular.module('Bastion.systems').controller('SystemsController',
             return color;
         };
 
-        $scope.table.openDetails = function (systemId) {
-            $state.transitionTo('systems.details', {systemId: systemId});
+        $scope.table.openDetails = function (system) {
+            $state.transitionTo('systems.details', {systemId: system.uuid});
         };
     }]
 );
