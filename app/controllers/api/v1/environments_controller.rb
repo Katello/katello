@@ -119,16 +119,12 @@ class Api::V1::EnvironmentsController < Api::V1::ApiController
   api :GET, "/owners/:organization_id/environments", "List environments for RHSM"
   param_group :search_params
   def rhsm_index
-    if query_params.has_key?(:name)
-      # retrieve the requested environment
-      @all_environments = get_content_view_environments(query_params[:name]).
-          collect { |env| { :id          => env.cp_id, :name => env.label,
-                            :description => env.content_view.description } }
-    else
-      # retrieve the list of all environments
-      @all_environments = get_content_view_environments.collect { |env| { :id          => env.cp_id, :name => env.label,
-                                                                          :description => env.content_view.description } }
-    end
+    @all_environments = get_content_view_environments(query_params[:name]).
+        collect { |env| { :id  => env.cp_id,
+                          :name => env.label,
+                          :display_name => env.name,
+                          :description => env.content_view.description } }
+
     respond_for_index :collection => @all_environments
   end
 
