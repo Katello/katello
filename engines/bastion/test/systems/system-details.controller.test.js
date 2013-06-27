@@ -12,34 +12,27 @@
  **/
 
 describe('Controller: SystemDetailsController', function() {
-    var $scope, $state;
+    var $scope, System;
 
     // load the systems module and template
-    beforeEach(module('Bastion.systems', 'systems/views/systems-table.html'));
+    beforeEach(module('Bastion.systems', 'systems/views/systems.html'));
 
     // Initialize controller
     beforeEach(inject(function($controller, $rootScope) {
         $scope = $rootScope.$new();
         // Mocks
-        $scope.table = {
-            showColumns: function() {}
-        }
-        $state = {
-            transitionTo: function() {}
-        };
-        var System = {
+        System = {
             get: function() {}
         };
-        $controller('SystemDetailsController', {$scope: $scope, $state: $state, System: System});
+        spyOn(System, 'get').andReturn({value: 'yo'});
+        $scope.$stateParams = {systemId: 2};
+
+        $controller('SystemDetailsController', {$scope: $scope, System: System});
     }));
 
-    it("provides a way to close the details panel.", function() {
-        spyOn($state, "transitionTo");
-        spyOn($scope.table, 'showColumns');
-
-        $scope.table.closeItem();
-        expect($state.transitionTo).toHaveBeenCalledWith('systems.index');
-        expect($scope.table.showColumns).toHaveBeenCalled();
+    it("gets the system using the System service and puts in on the $scope.", function() {
+        expect(System.get).toHaveBeenCalledWith({systemId: 2});
+        expect($scope.system.value).toBe('yo');
     });
 });
 

@@ -63,5 +63,9 @@ angular.module('Bastion.systems').controller('SystemsController',
         $scope.table.openDetails = function (system) {
             $state.transitionTo('systems.details', {systemId: system.uuid});
         };
+
+        $scope.table.closeItem = function() {
+            $state.transitionTo('systems.index');
+        };
     }]
 );

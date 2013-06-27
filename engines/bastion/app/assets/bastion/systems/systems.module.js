@@ -29,27 +29,38 @@ angular.module('Bastion.systems', ['ngResource', 'alchemy', 'alch-templates', 'u
  * @description
  *   Used for systems level configuration such as setting up the ui state machine.
  */
-angular.module('Bastion.systems').config(['$stateProvider', '$urlRouterProvider', function($stateProvider) {
+angular.module('Bastion.systems').config(['$stateProvider', function($stateProvider) {
     $stateProvider.state('systems', {
         abstract: true,
-        controller: 'SystemsController',
         views: {
-            'sub-header': {
-                templateUrl: 'systems/views/systems-sub-header.html'
-            },
-            '@': {
-                templateUrl: 'systems/views/systems-table.html'
+            'systems': {
+                controller: 'SystemsController',
+                templateUrl: 'systems/views/systems.html'
             }
         }
     });
 
     $stateProvider.state('systems.index', {
-        url: '/index'
+        url: '/index',
+        views: {
+            'sub-header': {
+                templateUrl: 'systems/views/systems-sub-header.html'
+            },
+            'table': {
+                templateUrl: 'systems/views/systems-table-full.html'
+            }
+        }
     });
 
     $stateProvider.state('systems.details', {
         url: '/system/:systemId',
         views: {
+            'sub-header': {
+                templateUrl: 'systems/views/systems-sub-header.html'
+            },
+            'table': {
+                templateUrl: 'systems/views/systems-table-collapsed.html'
+            },
             'action-panel': {
                 controller: 'SystemDetailsController',
                 templateUrl: 'systems/views/system-details.html'
@@ -59,7 +70,7 @@ angular.module('Bastion.systems').config(['$stateProvider', '$urlRouterProvider'
 
     $stateProvider.state('systems.alter-content', {
         views: {
-            '@': {
+            'action-panel': {
                 controller: 'SystemsBulkActionController',
                 templateUrl: 'systems/views/alter-content-bulk.html'
             }
@@ -68,7 +79,7 @@ angular.module('Bastion.systems').config(['$stateProvider', '$urlRouterProvider'
 
     $stateProvider.state('systems.alter-system-groups', {
         views: {
-            '@': {
+            'action-panel': {
                 controller: 'SystemsBulkActionController',
                 templateUrl: 'systems/views/alter-systems-group-bulk.html'
             }
@@ -77,7 +88,7 @@ angular.module('Bastion.systems').config(['$stateProvider', '$urlRouterProvider'
 
     $stateProvider.state('systems.bulk-delete', {
         views: {
-            '@': {
+            'action-panel': {
                 controller: 'SystemsBulkActionController',
                 templateUrl: 'systems/views/systems-delete-bulk.html'
             }

@@ -23,7 +23,9 @@ describe('Controller: SystemsController', function() {
             transitionTo: function() {}
         };
         Nutupane = function() {
-            this.table = {};
+            this.table = {
+                showColumns: function() {}
+            };
             this.get = function() {};
         };
         Routes = {
@@ -48,6 +50,12 @@ describe('Controller: SystemsController', function() {
         spyOn($state, "transitionTo");
         $scope.table.openDetails({ uuid: 2 });
         expect($state.transitionTo).toHaveBeenCalledWith('systems.details', {systemId: 2});
+    });
+
+    it("provides a way to close the details panel.", function() {
+        spyOn($state, "transitionTo");
+        $scope.table.closeItem();
+        expect($state.transitionTo).toHaveBeenCalledWith('systems.index');
     });
 });
 
