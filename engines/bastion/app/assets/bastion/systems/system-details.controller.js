@@ -16,26 +16,11 @@
  * @name  Bastion.systems.controller:SystemDetailsController
  *
  * @requires $scope
- * @requires $state
  * @requires System
  *
  * @description
  *   Provides the functionality for the system details action pane.
  */
-angular.module('Bastion.systems').controller('SystemDetailsController', ['$scope', '$state', 'System',
-    function($scope, $state, System) {
-
-        $scope.system = System.get({systemId: $scope.$stateParams.systemId});
-
-        $scope.table.closeItem = function() {
-            $state.transitionTo('systems.index');
-            $scope.table.showColumns();
-        };
-
-        $scope.$watch('table.total', function(total) {
-            if (total > 0) {
-                $scope.table.reduceColumns(0);
-            }
-        });
-    }
-]);
+angular.module('Bastion.systems').controller('SystemDetailsController', ['$scope', 'System', function($scope, System) {
+    $scope.system = System.get({systemId: $scope.$stateParams.systemId});
+}]);
