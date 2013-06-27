@@ -36,6 +36,10 @@ table.details-visible {
     max-width: 3%;
   }
 
+  td {
+    position: relative;
+  }
+
   tr.active, tbody tr:hover, .active-row {
     background-color: $listhover_color;
     color:#FFF;
@@ -56,6 +60,18 @@ table.details-visible {
     background: white;
     line-height: 1;
     vertical-align: bottom;
+  }
+
+  .selected-row {
+    background-color: $rh-blue;
+    color: white;
+
+    .selected-icon {
+      margin-top: 1px;
+      font-size: 14px;
+      position: absolute;
+      right: 15px;
+    }
   }
 }
 
@@ -167,11 +183,14 @@ table.details-visible {
 
 .system-details {
   height:500px;
+  height: 100%;
   left: 20%;
   min-width: 30%;
-  padding: 5px 0 20px 20px;
+  padding: 20px;
   position: absolute;
   width: 80%;
+  border-left: 1px solid #CCC;
+  @include box-shadow(0 0 5px #dddddd inset);
 
   .table-toolbar {
     background: transparent;
@@ -183,45 +202,90 @@ table.details-visible {
     margin: 0;
   }
 
-  ul {
-    border-bottom: 1px solid #d3d3d3;
-    list-style: none;
-    margin-right: 22px;
-    padding: 0 5px;
+  h4 {
+    margin: 10px 0;
+  }
 
-    li {
-      display: inline;
-      margin-right: 20px;
+  .details-header {
+    height: 40px;
+    position: relative;
+  }
+
+  .details-actions {
+    display: inline-block;
+
+    button {
+      margin: 0;
     }
   }
 
-  nav.actions {
+  .details-navigation {
+    margin-bottom: 10px;
+    border-bottom: 3px solid #e3e5e7;
+    width: 100%;
+
+    ul {
+      list-style: none;
+      margin: 0;
+      margin-right: 22px;
+      padding: 0 5px;
+      -webkit-padding-start: 0;
+      height: 25px;
+
+      li {
+        font-size: 14px;
+        font-weight: bold;
+        display: inline-block;
+
+        a {
+          padding: 0 10px;
+          display: block;
+          height: 25px;
+          text-align: center;
+        }
+      }
+
+      .active {
+        top: 2px;
+        position: relative;
+        color: darken($tone, 40%);
+        border-bottom: 3px solid $rh-blue;
+        @include background( linear-gradient(top , rgba(lighten($tone, 30%),0.0) 90%, lighten($rh-blue, 32%) 100%));
+      }
+
+    }
+  }
+
+  .divider {
+    height: 30px;
+    border-bottom: 1px solid #CCC;
     display: inline-block;
-    padding-right: 15px;
-    position: absolute;
-    right: 0;
-    top: 0;
+    width: 100%;
   }
 
   .details {
     display: inline-block;
-    padding: 20px;
+    padding: 0 20px 20px 20px;
     vertical-align: top;
-    width: 40%;
+    width: 50%;
 
     .info-label {
       display: inline-block;
       line-height: 1.75em;
-      width: 50%;
+      width: 30%;
     }
   }
 }
 
 .table-reduced {
   width: 20%;
+  float: left;
 }
 
 .table-full {
   width: 100% !important;
 }
 
+.select-action {
+  margin-top: 8px;
+}

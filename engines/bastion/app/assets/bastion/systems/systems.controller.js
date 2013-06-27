@@ -26,17 +26,21 @@
  *   within the table.
  */
 angular.module('Bastion.systems').controller('SystemsController',
-    ['$scope', '$state', 'Nutupane', 'Routes',
-    function($scope, $state, Nutupane, Routes) {
+    ['$scope', '$state', 'Nutupane', 'Routes', '$timeout',
+    function($scope, $state, Nutupane, Routes, $timeout) {
 
         var nutupane = new Nutupane();
 
-        $scope.table = nutupane.table;
-        $scope.table.url = Routes.apiSystemsPath();
-        $scope.table.activeItem = {};
-        $scope.table.modelName = "Systems";
+        $scope.table                = nutupane.table;
+        $scope.table.url            = Routes.apiSystemsPath();
+        $scope.table.activeItem     = {};
+        $scope.table.modelName      = "Systems";
 
-        nutupane.get();
+        var get = function() {
+            nutupane.get();
+        };
+
+        $timeout(get, 0);
 
         nutupane.defaultItemUrl = function(id) {
             return Routes.editSystemPath(id);
@@ -56,8 +60,8 @@ angular.module('Bastion.systems').controller('SystemsController',
             return color;
         };
 
-        $scope.table.openDetails = function (systemId) {
-            $state.transitionTo('systems.details', {systemId: systemId});
+        $scope.table.openDetails = function (system) {
+            $state.transitionTo('systems.details', {systemId: system.uuid});
         };
     }]
 );
