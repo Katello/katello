@@ -8,12 +8,19 @@
 
 - job.task_statuses.each do |task|
 
-  - unless task.parameters[:packages].blank?
-    - task.parameters[:packages].each do |name|
+  - if task.parameters.has_key?(:packages)
+    - if task.parameters[:packages].empty?
       %tr.package{:class => "#{shading}"}
-        %td{'data-name' => "#{name}"}
-          #{name}
+        %td{'data-name' => "update_all_packages"}
+          #{_("All Packages")}
         = render :partial => 'system_groups/packages/status', :locals => {:group_id => group_id, :id => job.id, :state => state, :status_message => status_message}
+
+    - else
+      - task.parameters[:packages].each do |name|
+        %tr.package{:class => "#{shading}"}
+          %td{'data-name' => "#{name}"}
+            #{name}
+          = render :partial => 'system_groups/packages/status', :locals => {:group_id => group_id, :id => job.id, :state => state, :status_message => status_message}
 
   - unless task.parameters[:groups].blank?
     - task.parameters[:groups].each do |name|
