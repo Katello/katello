@@ -34,7 +34,7 @@
               %input.btn.primary#add_default_info_button{ :value => _("Add"), :type => "submit", "data-url" => api_organization_create_default_info_path(org.label, informable_type), "data-method" => "post", :disabled => true }
           - org.default_info[informable_type].sort.each do |info|
             - escaped_info = url_encode(info)
-            %tr{"data-id" => "default_info_#{escaped_info}" }
+            %tr.multiline{"data-id" => "default_info_#{escaped_info}" }
               %td.ra
                 = label :default_info, escaped_info, info
               %td
