@@ -227,10 +227,15 @@ class SystemsController < ApplicationController
     end
     consumed_entitlements = @system.consumed_entitlements
     avail_pools = @system.available_pools_full
-    render :partial=>"subs_update", :locals=>{:system=>@system, :avail_subs => avail_pools,
-                                              :consumed_subs => consumed_entitlements,
-                                              :editable=>@system.editable?}
+    render :partial => "subs_update",
+           :locals => { :system => @system,
+                        :avail_subs => avail_pools,
+                        :consumed_subs => consumed_entitlements,
+                        :editable => @system.editable? }
     notify.success _("System subscriptions updated.")
+  rescue RestClient::Exception => e
+    notify.error(JSON.parse(e.response)["displayMessage"])
+    render :text => "", :status => 500
   end
 
   def products

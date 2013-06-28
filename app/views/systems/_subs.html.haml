@@ -116,7 +116,7 @@
                     = subscription_limits_helper(sub)
                   - if sub.multi_entitlement
                     %td
-                      = text_field_tag "spinner[#{sub.cp_id}]", nil, :min => 0, :max => (sub.quantity-sub.consumed), :step=>1, :value=>0, :class=>"ui-spinner"
+                      = text_field_tag "spinner[#{sub.cp_id}]", nil, :min => 0, :max => (sub.quantity - sub.consumed), :step => (sub.instance_multiplier ? sub.instance_multiplier : 1), :value => 0, :class => "ui-spinner", 'data-suggested' => sub.suggested_quantity
                       %span{:style => "padding-top:9px;"}
                         = "of #{sub.quantity - sub.consumed}"
                   - else
@@ -124,8 +124,8 @@
                       - if sub.quantity < 0
                         = _("Unlimited")
                       -else
-                        %div{:id=>"spinner_label_#{sub.cp_id}", :class=>"ui-nonspinner-label"} 0 of #{sub.quantity - sub.consumed}
-                      = hidden_field_tag "spinner[#{sub.cp_id}]", 0, :class => "ui-nonspinner"
+                        %div{:id => "spinner_label_#{sub.cp_id}", :class => "ui-nonspinner-label"} 0 of #{sub.quantity - sub.consumed}
+                      = hidden_field_tag "spinner[#{sub.cp_id}]", 0, :class => "ui-nonspinner", 'data-suggested' => sub.suggested_quantity
                   %td{:style => "padding-top:9px;"} #{format_time sub.start_date}
                   %td{:style => "padding-top:9px;"} #{format_time sub.end_date}
                 - sub.provided_products.each do |product|
