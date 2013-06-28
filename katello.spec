@@ -692,7 +692,6 @@ usermod -a -G katello-shared tomcat
 %{homedir}/app/lib/api/v2
 %{homedir}/app/lib/dashboard
 %dir %{homedir}/app/lib/resources
-%{homedir}/app/lib/resources/cdn.rb
 %{homedir}/app/lib/content_search
 %{homedir}/lib/tasks
 %exclude %{homedir}/lib/tasks/yard.rake
@@ -742,6 +741,7 @@ usermod -a -G katello-shared tomcat
 %dir %{homedir}/lib
 %dir %{homedir}/app/lib
 %dir %{homedir}/app/lib/resources
+%{homedir}/app/lib/resources/cdn.rb
 %{homedir}/lib/headpin
 %{homedir}/lib/util
 %{homedir}/app/lib/util
