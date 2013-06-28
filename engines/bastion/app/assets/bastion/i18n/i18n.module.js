@@ -18,5 +18,4 @@
  * @description
  *   Module for internationalization.
  */
-angular.module('Bastion.i18n', []);
-
+angular.module('Bastion.i18n', ['ngResource']);

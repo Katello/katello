@@ -31,15 +31,6 @@ angular.module('Katello.globals').value('CurrentOrganization', KT.current_organi
 
 /**
  * @ngdoc value
- * @name  Katello.globals.value:i18nDictionary
- *
- * @description
- *   Provides a value wrapper around Katello's i18n object.
- */
-angular.module('Katello.globals').value('i18nDictionary', i18n);
-
-/**
- * @ngdoc value
  * @name  Katello.globals.value:notices
  *
  * @description

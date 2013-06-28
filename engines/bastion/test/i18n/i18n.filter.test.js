@@ -19,10 +19,12 @@ describe('Filter:i18n', function() {
     // Set up mocks
     beforeEach(module(function($provide) {
         i18nDictionary = {
-            sandwich: "torta",
-            taco: "taco",
-            eat: function(x,y) {
-                return "Me gusta comer %x y %y.".replace('%x', x).replace('%y', y);
+            get:function() {
+                return {
+                    sandwich: "torta",
+                    taco: "taco",
+                    eat: "Me gusta comer %food1 y %food2."
+                };
             }
         };
         $provide.value('i18nDictionary', i18nDictionary);
@@ -46,11 +48,11 @@ describe('Filter:i18n', function() {
 
     describe("Allows for replacement strings in translations.", function() {
         it("substitues the provided replacement strings.", function() {
-           expect(i18nFilter('eat', ['burritos', 'enchiladas'])).toBe("Me gusta comer burritos y enchiladas.");
+           expect(i18nFilter('eat', {food1: 'burritos', food2: 'enchiladas'})).toBe("Me gusta comer burritos y enchiladas.");
         });
 
-        it("ignores extra replacement strings.", function() {
-            expect(i18nFilter('eat', ['burritos', 'enchiladas', 'carnitas'])).toBe("Me gusta comer burritos y enchiladas.");
+        it("ignores invalid replacement strings.", function() {
+            expect(i18nFilter('eat', {hello: 'burritos', you: 'enchiladas'})).toBe("Me gusta comer %food1 y %food2.");
         });
     });
 });
