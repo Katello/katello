@@ -987,6 +987,11 @@
   if (!options){ options = {}; }
   return Utils.build_path([], ["format"], [2,[2,[2,[2,[2,[2,[7,"/",false],[6,"api",false]],[7,"/",false]],[6,"status",false]],[7,"/",false]],[6,"memory",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
   },
+// api_subscriptions => /api/subscriptions(.:format)
+  apiSubscriptionsPath: function(options) {
+  if (!options){ options = {}; }
+  return Utils.build_path([], ["format"], [2,[2,[2,[2,[7,"/",false],[6,"api",false]],[7,"/",false]],[6,"subscriptions",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
+  },
 // api_sync_plan => /api/sync_plans/:id(.:format)
   apiSyncPlanPath: function(_id, options) {
   if (!options){ options = {}; }
@@ -2001,6 +2006,11 @@
   historySubscriptionsPath: function(options) {
   if (!options){ options = {}; }
   return Utils.build_path([], ["format"], [2,[2,[2,[2,[7,"/",false],[6,"subscriptions",false]],[7,"/",false]],[6,"history",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
+  },
+// i18n_dictionary => /i18n/dictionary(.:format)
+  i18nDictionaryPath: function(options) {
+  if (!options){ options = {}; }
+  return Utils.build_path([], ["format"], [2,[2,[2,[2,[7,"/",false],[6,"i18n",false]],[7,"/",false]],[6,"dictionary",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
   },
 // import_manifest_api_provider => /api/providers/:id/import_manifest(.:format)
   importManifestApiProviderPath: function(_id, options) {
