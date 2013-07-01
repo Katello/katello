@@ -22,19 +22,21 @@
  *
  * @example
  *   {{ "some_i18n_code" | i18n }}
- *   {{ "some_i18n_code_with_replacements" | i18n: ["why", "hello"] }}
+ *   {{ "some_i18n_code_with_replacements" | i18n: {question: "why", answer: "hello"} }}
  */
 angular.module('Bastion.i18n').filter('i18n', ['i18nDictionary', function(i18nDictionary) {
     return function(i18nKey, replacements) {
-        var translation;
         var translated = i18nKey;
+        var dictionary = i18nDictionary.get();
 
-        if (i18nDictionary.hasOwnProperty(i18nKey)) {
-            translation = i18nDictionary[i18nKey];
-            translated = translation;
-            if (typeof translation === 'function') {
-                translated = translation.apply(this, replacements);
-            }
+        if (dictionary.hasOwnProperty(i18nKey)) {
+            translated = dictionary[i18nKey];
+        }
+
+        if (replacements) {
+            angular.forEach(replacements, function(value, key) {
+                translated = translated.replace('%' + key, value);
+            });
         }
         return translated;
     };

@@ -1,38 +1,38 @@
 <section class="system-details" ng-cloak>
   <header class="details-header">
-    <h2 class="fl">System "{{system.name}}"</h2>
+    <h2 class="fl">{{ "System %systemName" | i18n: {systemName: system.name} }}</h2>
 
     <div class="details-actions fr">
-      <button class="btn-mini btn-danger" ng-click="removeSystem()">Remove System</button>
+      <button class="btn-mini btn-danger" ng-click="removeSystem()">{{ "Remove System" | i18n }}</button>
       <button class="btn-mini" ng-click="table.closeItem()">
         <i class="icon-remove"></i>
-        Close
+        {{ "Close" | i18n }}
       </button>
     </div>
   </header>
 
   <nav class="details-navigation">
     <ul>
-      <li><a class="active">Details</a></li>
+      <li><a class="active">{{ "Details" | i18n }}</a></li>
     </ul>
   </nav>
-  
+
   <div class="details fl">
     <section>
-      <h4>Basic Information</h4>
+      <h4>{{ "Basic Information" | i18n }}</h4>
 
       <div class="detail">
-        <span class="info-label">{{ "Name" }}</span>
+        <span class="info-label">{{ "Name" | i18n }}</span>
         <span class="info-value">{{ system.name }}</span>
       </div>
 
       <div class="detail">
-        <span class="info-label">UUID</span>
+        <span class="info-label">{{ "UUID" | i18n }}</span>
         <span class="info-value">{{ system.uuid }}</span>
       </div>
 
       <div class="detail">
-        <span class="info-label">{{ "Description" }}</span>
+        <span class="info-label">{{ "Description" | i18n }}</span>
         <span class="info-value">{{ system.description }}</span>
       </div>
 
@@ -40,50 +40,50 @@
     </section>
 
     <section>
-      <h4>System Properties</h4>
+      <h4>{{ "System Properties" | i18n }}</h4>
 
       <div class="detail">
-        <span class="info-label">OS</span>
+        <span class="info-label">{{ "OS" | i18n }} </span>
         <span class="info-value">{{ system.distribution_name }}</span>
       </div>
 
       <div class="detail">
-        <span class="info-label">{{ "Release" }}</span>
+        <span class="info-label">{{ "Release" | i18n }}</span>
         <span class="info-value">{{ system.kernel }}</span>
       </div>
 
       <div class="detail">
-        <span class="info-label">{{ "Release Version" }}</span>
-        <span class="info-value">{{ system.release || "System Default" }}</span>
+        <span class="info-label">{{ "Release Version" | i18n }}</span>
+        <span class="info-value">{{ system.release || ("System Default" | i18n) }}</span>
       </div>
 
       <div class="detail">
-        <span class="info-label">{{ "Arch" }}</span>
+        <span class="info-label">{{ "Arch" | i18n }}</span>
         <span class="info-value">{{ system.arch }}</span>
       </div>
 
       <div class="detail">
-        <span class="info-label">RAM (GB)</span>
+        <span class="info-label">{{ "RAM (GB)" | i18n }}</span>
         <span class="info-value">{{ system.memory }}</span>
       </div>
 
       <div class="detail">
-        <span class="info-label">{{ "Sockets" }}</span>
+        <span class="info-label">{{ "Sockets" | i18n }}</span>
         <span class="info-value">{{ system.facts["cpu.cpu_sockets"] }}</span>
       </div>
 
       <div class="detail">
-        <span class="info-label">{{ "Location" }}</span>
+        <span class="info-label">{{ "Location" | i18n }}</span>
         <span class="info-value">{{ system.location }}</span>
       </div>
 
       <div class="detail">
-        <span class="info-label">{{ "Environment" }}</span>
+        <span class="info-label">{{ "Environment" | i18n }}</span>
         <span class="info-value">{{ system.environment.name }}</span>
       </div>
 
       <div class="detail">
-        <span class="info-label">{{ "Content View" }}</span>
+        <span class="info-label">{{ "Content View" | i18n }}</span>
         <span class="info-value">{{ system.content_view_id }}</span>
       </div>
 
@@ -91,20 +91,20 @@
     </section>
 
     <section>
-      <h4>Networking</h4>
+      <h4>{{ "Networking" | i18n }}</h4>
 
       <div class="detail">
-        <span class="info-label">{{ "Hostname" }}</span>
+        <span class="info-label">{{ "Hostname" | i18n }}</span>
         <span class="info-value">{{ system.facts["network.hostname"] }}</span>
       </div>
 
       <div class="detail">
-        <span class="info-label">{{ "IP Address" }}</span>
+        <span class="info-label">{{ "IP Address" | i18n }}</span>
         <span class="info-value">{{ system.ipv4_address }}</span>
       </div>
 
       <div class="detail">
-        <span class="info-label">{{ "Interfaces" }}</span>
+        <span class="info-label">{{ "Interfaces" | i18n }}</span>
         <span class="info-value"></span>
       </div>
     </section>
@@ -112,10 +112,10 @@
 
   <div class="fl details">
     <section>
-      <h4>Subscription Status Details</h4>
+      <h4>{{ "Subscription Status Details" | i18n }}</h4>
 
       <div class="detail">
-        <span class="info-label">{{ "Subscription Status" }}</span>
+        <span class="info-label">{{ "Subscription Status" | i18n }}</span>
         <span class="info-value">
           <span class="status_icon" ng-class="getStatusColor(system.compliance.status)"></span>
             {{ system.compliance.status }}
@@ -123,17 +123,17 @@
       </div>
 
       <div class="detail">
-        <span class="info-label">{{ "Autoheal" }}</span>
+        <span class="info-label">{{ "Autoheal" | i18n }}</span>
         <span class="info-value">{{ system.autoheal }}</span>
       </div>
 
       <div class="detail">
-        <span class="info-label">{{ "Service Level" }}</span>
+        <span class="info-label">{{ "Service Level" | i18n }}</span>
         <span class="info-value">{{ system.serviceLevel }}</span>
       </div>
 
       <div class="detail">
-        <span class="info-label">{{ "Details" }}</span>
+        <span class="info-label">{{ "Details" | i18n }}</span>
         <span class="info-value">{{ system.compliance.reasons }}</span>
       </div>
 
@@ -141,16 +141,16 @@
     </section>
 
     <section>
-      <h4>System Status</h4>
+      <h4>{{ "System Status" | i18n }}</h4>
 
       <div class="detail">
-        <span class="info-label">{{ "Registered" }}</span>
+        <span class="info-label">{{ "Registered" | i18n }}</span>
         <span class="info-value">{{ system.registered | date:'short' }}</span>
       </div>
 
       <div class="detail">
-        <span class="info-label">{{ "Checkin" }}</span>
-        <span class="info-value">{{ system.checkin_time || 'Never checked in' | date:'short' }}</span>
+        <span class="info-label">{{ "Checkin" | i18n }}</span>
+        <span class="info-value">{{ (system.checkin_time | date:'short') || ("Never checked in" | i18n) }}</span>
       </div>
     </section>
   </div>
