@@ -28,7 +28,6 @@ class Product < ActiveRecord::Base
   has_many :content_view_definition_products
   has_many :content_view_definitions, :through => :content_view_definition_products
   has_many :repositories, :dependent => :destroy
-  has_many :environments, through: :repositories, readonly: true
 
   validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
   validates :name, :presence => true
@@ -184,6 +183,11 @@ class Product < ActiveRecord::Base
   def environments_for_view view
     versions = view.versions.select{|version| version.products.include?(self)}
     versions.collect{|v|v.environments}.flatten
+  end
+
+  def environments
+    KTEnvironment.where(:organization_id => organization.id).
+      where("library = ? OR id IN (?)", true, repositories.map(&:environment_id))
   end
 
   protected

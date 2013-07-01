@@ -22,7 +22,8 @@ class KTEnvironmentTestBase < MiniTest::Rails::ActiveSupport::TestCase
   def self.before_suite
     services  = ['Candlepin', 'Pulp', 'ElasticSearch', 'Foreman']
     models    = ['Repository', 'KTEnvironment', 'ContentView',
-                 'ContentViewEnvironment', 'Organization']
+                 'ContentViewEnvironment', 'Organization', 'Product',
+                 'Provider']
     disable_glue_layers(services, models, true)
   end
 
@@ -66,5 +67,18 @@ class KTEnvironmentTest < KTEnvironmentTestBase
     env = org.library
     env.destroy
     refute env.destroyed?
+  end
+
+  def test_products_are_unique
+    provider = create(:provider, organization: @acme_corporation)
+    product = create(:product, provider: provider)
+    2.times do
+      create(:repository, product: product, environment: @library,
+             content_view_version: @library.default_content_view_version)
+    end
+
+    refute_empty @library.products
+    assert_equal @library.products.uniq.sort, @library.products.sort
+    assert_operator @library.repositories.map(&:product).length, :>, @library.products.length
   end
 end

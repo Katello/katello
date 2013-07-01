@@ -41,7 +41,6 @@ class KTEnvironment < ActiveRecord::Base
     :join_table => "environment_priors", :association_foreign_key => :environment_id, :readonly => true}
 
   has_many :repositories, dependent: :destroy, foreign_key: :environment_id
-  has_many :products, through: :repositories, readonly: true
   has_many :systems, :inverse_of => :environment, :dependent => :destroy,  :foreign_key => :environment_id
   has_many :distributors, :inverse_of => :environment, :dependent => :destroy,  :foreign_key => :environment_id
   has_many :working_changesets, :conditions => ["state != '#{Changeset::PROMOTED}'"], :foreign_key => :environment_id, :dependent => :destroy, :class_name=>"Changeset", :dependent => :destroy, :inverse_of => :environment
@@ -187,6 +186,9 @@ class KTEnvironment < ActiveRecord::Base
     return prior_products - self.products
   end
 
+  def products
+    self.library? ? Product.in_org(self.organization) : Product.where(id: repositories.map(&:product_id))
+  end
 
   def as_json options = {}
     to_ret = self.attributes
