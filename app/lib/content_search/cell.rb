@@ -18,7 +18,7 @@ class ContentSearch::Cell
     to_ret = {
         :id => id
     }
-    to_ret[:display] = content unless content.nil?
+    to_ret[:content] = content unless content.nil?
     to_ret[:display] = display unless display.nil?
     to_ret[:hover] = self.hover.nil? ? '' : self.hover.call
     to_ret
