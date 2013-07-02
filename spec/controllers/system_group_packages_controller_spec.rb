@@ -260,21 +260,27 @@ describe SystemGroupPackagesController, :katello => true do
           response.should be_success
           response.should render_template(:partial => 'system_groups/packages/_items')
         end
+      end
 
-        it 'should generate an error notice, if no package names provided' do
-          controller.should notify.error
-          @group.should_not_receive(:update_packages)
+      describe 'update all packages' do
+        it 'should support an empty package list' do
+          @group.should_receive(:update_packages).with([]).and_return(@job)
           put :update, :system_group_id => @group.id, :packages => ""
           response.should be_success
-          response.should_not render_template(:partial => 'system_groups/packages/_items')
         end
 
-        it 'should return an error notice, if no packages structure provided' do
-          controller.should notify.error
-          @group.should_not_receive(:update_packages)
-          put :update, :system_group_id => @group.id
+        it 'should generate a notice on success' do
+          controller.should notify.success
+          @group.stub!(:update_packages).and_return(@job)
+          put :update, :system_group_id => @group.id, :packages => ""
           response.should be_success
-          response.should_not render_template(:partial => 'system_groups/packages/_items')
+        end
+
+        it 'should render the items partial on success' do
+          @group.stub!(:update_packages).and_return(@job)
+          put :update, :system_group_id => @group.id, :packages => ""
+          response.should be_success
+          response.should render_template(:partial => 'system_groups/packages/_items')
         end
       end
 
