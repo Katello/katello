@@ -41,7 +41,7 @@ describe('Controller: SystemsController', function() {
 
             this.update = function() {};
 
-            this.getCollection = function(args, callback) {
+            this.query = function(args, callback) {
                 callback(systemsCollection);
             }
 
