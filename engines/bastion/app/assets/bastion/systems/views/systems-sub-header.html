@@ -8,7 +8,7 @@
            placeholder="Search..."
            ng-model="table.searchTerm"
            on-enter="table.search(table.searchTerm)">
-    <span class="result-count">Showing {{ table.offset }} of {{ table.subtotal }} ({{ table.total }} Total) {{ table.modelName }}</span>
+    <span class="result-count">Showing {{ table.resource.offset }} of {{ table.resource.subtotal }} ({{ table.resource.total }} Total) Systems</span>
   </div>
   <div class="fr select-action">
     <span>{{ table.numSelected }} Selected</span>

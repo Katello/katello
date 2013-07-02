@@ -26,38 +26,20 @@
  *   within the table.
  */
 angular.module('Bastion.systems').controller('SystemsController',
-    ['$scope', '$state', 'Nutupane', 'Routes', '$timeout',
-    function($scope, $state, Nutupane, Routes, $timeout) {
+    ['$scope', '$state', 'Nutupane', 'System',
+    function($scope, $state, Nutupane, System) {
 
-        var nutupane = new Nutupane();
-
-        $scope.table                = nutupane.table;
-        $scope.table.url            = Routes.apiSystemsPath();
-        $scope.table.activeItem     = {};
-        $scope.table.modelName      = "Systems";
-
-        var get = function() {
-            nutupane.get();
-        };
-
-        $timeout(get, 0);
-
-        nutupane.defaultItemUrl = function(id) {
-            return Routes.editSystemPath(id);
-        };
+        var nutupane = new Nutupane(System);
+        $scope.table = nutupane.table;
 
         $scope.getStatusColor = function(status) {
-            var color = '';
+            var colors = {
+                    'valid': 'green',
+                    'partial': 'yellow',
+                    'invalid': 'red'
+                };
 
-            if (status === 'valid') {
-                color = 'green';
-            } else if (status === 'partial') {
-                color = 'yellow';
-            } else {
-                color = 'red';
-            }
-
-            return color;
+            return colors[status] ? colors[status] : 'red';
         };
 
         $scope.table.openDetails = function (system) {
