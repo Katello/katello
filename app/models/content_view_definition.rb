@@ -56,9 +56,23 @@ class ContentViewDefinition < ContentViewDefinitionBase
       version.task_status = async_task
       version.save!
     else
-      version.task_status = nil
+      # We need to track the status for even the non async case because
+      # the lack of a task status is automatically implied as a failure
+      # by the UI.
+      # At present sync publish call is used by the migration script.
+      # but it makes sense for this to be the general behavior.
+      version.task_status = ::TaskStatus.create!(:uuid => ::UUIDTools::UUID.random_create.to_s, :user_id=>::User.current.id,
+                               :organization => self.organization,
+                               :state => ::TaskStatus::Status::WAITING,
+                               :task_type => TaskStatus::TYPES[:content_view_publish][:type])
       version.save!
-      generate_repos(view, options[:notify])
+      begin
+        generate_repos(view, options[:notify])
+        version.task_status.update_attributes!(:state => ::TaskStatus::Status::FINISHED)
+      rescue => e
+        version.task_status.update_attributes!(:state => ::TaskStatus::Status::ERROR)
+        raise e
+      end
     end
 
     view

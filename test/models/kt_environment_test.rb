@@ -38,27 +38,18 @@ end
 
 class KTEnvironmentTest < KTEnvironmentTestBase
 
-  def test_create_validate_view
+  def test_create_and_validate_default_content_view
     env = KTEnvironment.create(:organization=>@acme_corporation, :name=>"SomeEnv", :prior=>@library)
-    refute_nil env.default_content_view
-    refute_nil env.default_content_view_version
-    refute_empty env.default_content_view.content_view_environments.where(:environment_id=>env.id)
+    assert_nil env.default_content_view
+    assert_nil env.default_content_view_version
   end
 
   def test_destroy_content_view_environment
     env = @staging
-    refute_empty env.default_content_view.content_view_environments.where(:environment_id=>env.id)
-    cve = env.default_content_view.content_view_environments.where(:environment_id=>env.id).first
+    cve = env.content_views.first.content_view_environments.where(:environment_id=>env.id).first
     cve_cp_id = cve.cp_id
     env.destroy
     assert_empty ContentViewEnvironment.where(:cp_id=>cve_cp_id)
-  end
-
-  def test_destroy_default_content_view_version
-    env = @staging
-    default_version = env.default_content_view_version
-    env.destroy
-    assert_empty ContentViewVersion.where(:id=>default_version.id)
   end
 
   def test_destroy_library

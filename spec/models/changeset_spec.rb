@@ -23,7 +23,7 @@ describe Changeset, :katello => true do
 
       User.current  = User.find_or_create_by_username(:username => 'admin', :password => 'admin12345')
       @organization = Organization.create!(:name=>'candyroom', :label => 'test_organization')
-      @environment  = KTEnvironment.create!(:name=>'julia', :label=> 'julia', :prior => @organization.library,
+      @environment  = create_environment(:name=>'julia', :label=> 'julia', :prior => @organization.library,
                                             :organization => @organization)
       @changeset    = PromotionChangeset.create!(:environment => @environment, :name => "foo-changeset")
     end
@@ -90,10 +90,10 @@ describe Changeset, :katello => true do
 
       describe ".colliding(changeset)" do
         before do
-          @alpha      = KTEnvironment.create!(:name         => 'alpha', :label => 'alpha',
+          @alpha      = create_environment(:name         => 'alpha', :label => 'alpha',
                                               :prior        => @environment,
                                               :organization => @organization)
-          @beta       = KTEnvironment.create!(:name         => 'beta', :label => 'beta',
+          @beta       = create_environment(:name         => 'beta', :label => 'beta',
                                               :prior        => @organization.library,
                                               :organization => @organization)
           @collision = PromotionChangeset.create!(:environment => @alpha,
@@ -146,7 +146,7 @@ describe Changeset, :katello => true do
         @changeset.state = Changeset::REVIEW
         @content_view_environment = @environment.content_view_environment
         @environment.stub(:content_view_environment).and_return(@content_view_environment)
-        @content_view_environment.should_receive(:update_cp_content)
+        @changeset.should_receive(:update_view_cp_content)
         @changeset.apply(:async => false)
       end
 

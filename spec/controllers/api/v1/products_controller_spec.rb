@@ -32,7 +32,7 @@ describe Api::V1::ProductsController, :katello => true do
 
     @organization = new_test_org
 
-    @environment = KTEnvironment.create!(:name => "foo123", :label => "foo123", :organization => @organization, :prior => @organization.library)
+    @environment = create_environment(:name => "foo123", :label => "foo123", :organization => @organization, :prior => @organization.library)
     @provider    = Provider.create!(:name         => "provider", :provider_type => Provider::CUSTOM,
                                     :organization => @organization, :repository_url => "https://something.url/stuff")
     @product     = Product.new({ :name => "prod", :label => "prod" })

@@ -274,9 +274,18 @@ class ContentView < ActiveRecord::Base
       version.task_status = task
       version.save!
     else
-      version.task_status = nil
+      version.task_status = ::TaskStatus.create!(:uuid => ::UUIDTools::UUID.random_create.to_s, :user_id=>::User.current.id,
+                               :organization => self.organization,
+                               :state => ::TaskStatus::Status::WAITING,
+                               :task_type => TaskStatus::TYPES[:content_view_refresh][:type])
       version.save!
-      version.refresh_version(library_version, options[:notify])
+      begin
+        version.refresh_version(library_version, options[:notify])
+        version.task_status.update_attributes!(:state => ::TaskStatus::Status::FINISHED)
+      rescue => e
+        version.task_status.update_attributes!(:state => ::TaskStatus::Status::ERROR)
+        raise e
+      end
     end
 
     version
@@ -288,30 +297,14 @@ class ContentView < ActiveRecord::Base
     view_env.update_cp_content if view_env
   end
 
-  def cp_environment_label(env)
-    # The label for a default view, will simply be the env label; otherwise, it
-    # will be a combination of env and view label.  The reason being, the label
-    # for a default view is internally generated (e.g. 'Default_View_for_dev')
-    # and we do not need to expose it to the user.
-    self.default ? env.label : [env.label, self.label].join('/')
-  end
-
-  def cp_environment_id(env)
-    # The id for a default view, will simply be the env id; otherwise, it
-    # will be a combination of env id and view id.  The reason being,
-    # for a default view, the same candlepin environment will be referenced
-    # by the kt_environment and content_view_environment.
-    self.default ? env.id.to_s : [env.id, self.id].join('-')
-  end
-
   # Associate an environment with this content view.  This can occur whenever
   # a version of the view is promoted to an environment.  It is necessary for
   # candlepin to become aware that the view is available for consumers.
   def add_environment(env)
     if self.content_view_environments.where(:environment_id => env.id ).empty?
       ContentViewEnvironment.create!(:name => env.name,
-                                     :label => self.cp_environment_label(env),
-                                     :cp_id => self.cp_environment_id(env),
+                                     :label => self.generate_cp_environment_label(env),
+                                     :cp_id => self.generate_cp_environment_id(env),
                                      :environment_id => env.id,
                                      :content_view => self)
       end
@@ -336,8 +329,31 @@ class ContentView < ActiveRecord::Base
     end
   end
 
+  def cp_environment_label(env)
+    ContentViewEnvironment.where(:content_view_id => self, :environment_id => env).first.label
+  end
+
+  def cp_environment_id(env)
+    ContentViewEnvironment.where(:content_view_id => self, :environment_id => env).first.cp_id
+  end
 
   protected
+
+  def generate_cp_environment_label(env)
+    # The label for a default view, will simply be the env label; otherwise, it
+    # will be a combination of env and view label.  The reason being, the label
+    # for a default view is internally generated (e.g. 'Default_View_for_dev')
+    # and we do not need to expose it to the user.
+    self.default ? env.label : [env.label, self.label].join('/')
+  end
+
+  def generate_cp_environment_id(env)
+    # The id for a default view, will simply be the env id; otherwise, it
+    # will be a combination of env id and view id.  The reason being,
+    # for a default view, the same candlepin environment will be referenced
+    # by the kt_environment and content_view_environment.
+    self.default ? env.id.to_s : [env.id, self.id].join('-')
+  end
 
   def get_repos_to_promote(from_env, to_env)
     # Retrieve the repos that will end up in the to_env as a result of promoting this view.

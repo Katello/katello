@@ -29,7 +29,10 @@ describe SyncManagementController, :katello => true do
       Runcible::Extensions::Repository.stub(:search_by_repository_ids).and_return([])
       setup_current_organization
       @library = KTEnvironment.new
+      @library.stub!(:library?).and_return(true)
       @mock_org.stub!(:library).and_return(@library)
+      Glue::Pulp::Repos.stub!(:prepopulate!).and_return({})
+
       @library.stub!(:products).and_return(
           OpenStruct.new.tap do |os|
             def os.readable(org); []; end
