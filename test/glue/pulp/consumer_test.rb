@@ -161,6 +161,16 @@ class GluePulpConsumerRequiresBoundRepoTest < GluePulpConsumerTestBase
     assert_includes task['tags'], 'pulp:action:unit_update'
   end
 
+  def test_update_all_packages
+    task = @@simple_server.install_package(['cheetah'])
+    TaskSupport.wait_on_task(task)
+
+    task = @@simple_server.update_package([])
+    TaskSupport.wait_on_task(task)
+
+    assert_includes task['tags'], 'pulp:action:unit_update'
+  end
+
   def test_install_package_group
     task = @@simple_server.install_package_group(['mammls'])
     TaskSupport.wait_on_task(task)

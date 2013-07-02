@@ -2,7 +2,7 @@
 http_interactions: 
 - request: 
     method: get
-    uri: https://abed.usersys.redhat.com/pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/
+    uri: https://localhost/pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/
     body: 
       encoding: US-ASCII
       string: ""
@@ -14,7 +14,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="Zi8bGOtktlBhSnqABVAvTIH9plfyMvIENcj6RIVEmI", oauth_signature="V6haUMsJHuB4%2BK94zl66koB7M5g%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371693187", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="5Nv36HZE2xzlutEsPomk5jGoV0aHr5Vtzx7C0rck", oauth_signature="GfoyffUUAzIjQweQSBjWHZvQ270%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1372418821", oauth_version="1.0"
       Pulp-User: 
       - admin
       User-Agent: 
@@ -25,7 +25,7 @@ http_interactions:
       message: OK
     headers: 
       Date: 
-      - Thu, 20 Jun 2013 01:53:07 GMT
+      - Fri, 28 Jun 2013 11:27:01 GMT
       Server: 
       - Apache/2.2.15 (Red Hat)
       Content-Length: 
@@ -36,13 +36,13 @@ http_interactions:
       encoding: US-ASCII
       string: "[]"
     http_version: 
-  recorded_at: Thu, 20 Jun 2013 01:53:07 GMT
+  recorded_at: Fri, 28 Jun 2013 11:27:01 GMT
 - request: 
     method: post
-    uri: https://abed.usersys.redhat.com/pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/
+    uri: https://localhost/pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/
     body: 
       encoding: US-ASCII
-      string: "{\"schedule\":\"2014-06-19T21:53:07-04:00/P1D\"}"
+      string: "{\"schedule\":\"2014-06-28T07:27:01-04:00/P1D\"}"
     headers: 
       Accept: 
       - application/json
@@ -51,7 +51,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="SQOm5kK9gkOyYLZOmDFli7BeERGp8hSI4NSHkfLhCNw", oauth_signature="B159ulVYmcSZUGEKbomo9AUzIPk%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1371693187", oauth_version="1.0"
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="y0ninQNrp8UKUj203cy7HdxUoB9R8BjjO0308ENcN8", oauth_signature="PeQC6gAsagpFlGojP1FLr%2BlYFcA%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1372418821", oauth_version="1.0"
       Pulp-User: 
       - admin
       Content-Length: 
@@ -64,18 +64,18 @@ http_interactions:
       message: Created
     headers: 
       Date: 
-      - Thu, 20 Jun 2013 01:53:07 GMT
+      - Fri, 28 Jun 2013 11:27:01 GMT
       Server: 
       - Apache/2.2.15 (Red Hat)
       Location: 
-      - /pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/51c260835ca01342b1083c03/
+      - /pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/51cd73063cbbb55cb8000c6c/
       Content-Length: 
       - "393"
       Content-Type: 
       - application/json
     body: 
       encoding: US-ASCII
-      string: "{\"next_run\": \"2014-06-20T01:53:07Z\", \"_href\": \"/pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/51c260835ca01342b1083c03/\", \"schedule\": \"2014-06-19T21:53:07-04:00/P1D\", \"override_config\": {}, \"remaining_runs\": null, \"first_run\": \"2014-06-20T01:53:07Z\", \"enabled\": true, \"last_run\": null, \"failure_threshold\": null, \"_id\": \"51c260835ca01342b1083c03\", \"consecutive_failures\": 0}"
+      string: "{\"next_run\": \"2014-06-28T11:27:01Z\", \"_href\": \"/pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/51cd73063cbbb55cb8000c6c/\", \"schedule\": \"2014-06-28T07:27:01-04:00/P1D\", \"override_config\": {}, \"remaining_runs\": null, \"first_run\": \"2014-06-28T11:27:01Z\", \"enabled\": true, \"last_run\": null, \"failure_threshold\": null, \"_id\": \"51cd73063cbbb55cb8000c6c\", \"consecutive_failures\": 0}"
     http_version: 
-  recorded_at: Thu, 20 Jun 2013 01:53:07 GMT
+  recorded_at: Fri, 28 Jun 2013 11:27:02 GMT
 recorded_with: VCR 2.4.0
