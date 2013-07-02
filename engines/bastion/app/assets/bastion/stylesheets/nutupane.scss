@@ -232,9 +232,10 @@ table.details-visible {
   .details-actions {
     display: inline-block;
 
-    button {
-      margin: 0;
-    }
+  }
+
+  button {
+    margin: 0;
   }
 
   .details-navigation {
@@ -287,10 +288,20 @@ table.details-visible {
     vertical-align: top;
     width: 50%;
 
+    .detail {
+      margin-bottom: 5px;
+    }
+
     .info-label {
       display: inline-block;
-      line-height: 1.75em;
       width: 30%;
+      vertical-align: top;
+    }
+
+    .info-value {
+      width: 69%;
+      display: inline-block;
+      padding-left: 4px;
     }
   }
 }
@@ -306,4 +317,25 @@ table.details-visible {
 
 .select-action {
   margin-top: 8px;
+}
+
+.inline-edit-icon {
+  float: right;
+  font-size: 110%;
+  margin-top: 3px;
+  margin-right: 3px;
+}
+
+.editable {
+  overflow: auto;
+}
+
+.editable:hover {
+  background: rgb(245, 245, 245);
+}
+
+.editable-value-container {
+  width: 90%;
+  float: left;
+  display: block;
 }

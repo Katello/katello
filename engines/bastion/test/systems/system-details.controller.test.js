@@ -31,7 +31,7 @@ describe('Controller: SystemDetailsController', function() {
     }));
 
     it("gets the system using the System service and puts in on the $scope.", function() {
-        expect(System.get).toHaveBeenCalledWith({systemId: 2});
+        expect(System.get).toHaveBeenCalledWith({id: 2});
         expect($scope.system.value).toBe('yo');
     });
 });

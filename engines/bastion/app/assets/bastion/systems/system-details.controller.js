@@ -22,5 +22,5 @@
  *   Provides the functionality for the system details action pane.
  */
 angular.module('Bastion.systems').controller('SystemDetailsController', ['$scope', 'System', function($scope, System) {
-    $scope.system = System.get({systemId: $scope.$stateParams.systemId});
+    $scope.system = System.get({ id: $scope.$stateParams.systemId });
 }]);

@@ -40,7 +40,7 @@ angular.module('Bastion.systems').factory('System',
             callback = callback || function() {};
 
             if (args['id']) {
-                resource.get(args, function(record) {
+                return resource.get(args, function(record) {
                     replaceInCollection(record);
                     callback();
                 });
@@ -67,7 +67,7 @@ angular.module('Bastion.systems').factory('System',
             }
         };
 
-        resource = $resource(Routes.apiSystemsPath() + '/:systemId', {systemId: '@uuid'}, {
+        resource = $resource(Routes.apiSystemsPath() + '/:id', {id: '@uuid'}, {
             update: { method: 'PUT'},
             query: { method: 'GET', isArray: false}
         });
