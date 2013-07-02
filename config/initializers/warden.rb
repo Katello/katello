@@ -197,8 +197,8 @@ Warden::Strategies.add(:oauth) do
   end
 
   def consumer(consumer_key)
-    OAuth::Consumer.new Katello.config[consumer_key.to_sym].oauth_key,
-                        Katello.config[consumer_key.to_sym].oauth_secret
+    OAuth::Consumer.new Katello.config[consumer_key].oauth_key,
+                        Katello.config[consumer_key].oauth_secret
   end
 end
 
