@@ -6,21 +6,6 @@ class AddForeignKeys < ActiveRecord::Migration
   end
 
   def self.up
-    execute <<-SQL
-      delete from content_view_version_environments
-      where not exists (
-        select id
-        from content_view_versions
-        where id=content_view_version_environments.content_view_version_id)
-    SQL
-    execute <<-SQL
-      delete from content_view_version_environments
-      where not exists (
-        select id
-        from content_view_environments
-        where id=content_view_version_environments.environment_id)
-    SQL
-
     add_foreign_key_deferred 'activation_keys', 'content_views',
                              :name => 'activation_keys_content_view_id_fk'
     add_foreign_key_deferred 'activation_keys', 'environments',
@@ -112,7 +97,7 @@ class AddForeignKeys < ActiveRecord::Migration
     add_foreign_key_deferred 'content_views', 'organizations',
                              :name => 'content_views_organization_id_fk'
     add_foreign_key_deferred 'distributors', 'content_views',
-                             :name   => 'distributors_content_view_id_fk',
+                             :name => 'distributors_content_view_id_fk',
                              :column => 'content_view_id'
     add_foreign_key_deferred 'distributors', 'environments',
                              :name => 'distributors_environment_id_fk'
@@ -229,34 +214,34 @@ class AddForeignKeys < ActiveRecord::Migration
                              :name   => 'users_default_environment_id_fk',
                              :column => 'default_environment_id'
     add_foreign_key_deferred 'organizations_users', 'users',
-                             :name   => 'organizations_users_user_id_fk',
+                             :name => 'organizations_users_user_id_fk',
                              :column => 'user_id'
     add_foreign_key_deferred 'organizations_users', 'organizations',
-                             :name   => 'organizations_users_organization_id_fk',
+                             :name => 'organizations_users_organization_id_fk',
                              :column => 'organization_id'
     add_foreign_key_deferred 'filters_repositories', 'filters',
-                             :name   => 'filters_repositories_filter_id_fk',
+                             :name => 'filters_repositories_filter_id_fk',
                              :column => 'filter_id'
     add_foreign_key_deferred 'filters_repositories', 'repositories',
-                             :name   => 'filters_repositories_repository_id_fk',
+                             :name => 'filters_repositories_repository_id_fk',
                              :column => 'repository_id'
     add_foreign_key_deferred 'filters_products', 'filters',
-                             :name   => 'filters_product_filter_id_fk',
+                             :name => 'filters_product_filter_id_fk',
                              :column => 'filter_id'
     add_foreign_key_deferred 'filters_products', 'products',
-                             :name   => 'filters_product_product_id_fk',
+                             :name => 'filters_product_product_id_fk',
                              :column => 'product_id'
     add_foreign_key_deferred 'filters', 'content_view_definition_bases',
-                             :name   => 'filters_content_view_definition_id_fk',
+                             :name => 'filters_content_view_definition_id_fk',
                              :column => 'content_view_definition_id'
     add_foreign_key_deferred 'filter_rules', 'filters',
-                             :name   => 'filters_rules_filter_id_fk',
+                             :name => 'filters_rules_filter_id_fk',
                              :column => 'filter_id'
     add_foreign_key_deferred 'organizations', 'task_statuses',
-                             :name   => 'organizations_deletion_task_id_fk',
+                             :name => 'organizations_deletion_task_id_fk',
                              :column => 'deletion_task_id'
     add_foreign_key_deferred 'organizations', 'task_statuses',
-                             :name   => 'organizations_apply_info_task_id_fk',
+                             :name => 'organizations_apply_info_task_id_fk',
                              :column => 'apply_info_task_id'
   end
 
