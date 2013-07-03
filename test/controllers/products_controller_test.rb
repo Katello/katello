@@ -52,7 +52,7 @@ class ProductsControllerTest < MiniTest::Rails::ActionController::TestCase
     @redhat_product.stubs(:refresh_content).with('3').returns(@pc)
 
     put :refresh_content, {:id => @custom_product.id,  :content_id=>'3'}
-    assert_response :error
+    assert_response :bad_request
   end
 
 
@@ -61,7 +61,7 @@ class ProductsControllerTest < MiniTest::Rails::ActionController::TestCase
     @redhat_product.stubs(:disable_content).with('3').returns(@pc)
 
     put :disable_content, {:id => @custom_product.id,  :content_id=>'3'}
-    assert_response :error
+    assert_response :bad_request
   end
 
 

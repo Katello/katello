@@ -87,7 +87,8 @@ class OrganizationsController < ApplicationController
 
   def create
     org_label_assigned = ""
-    org_params = params[:organization]
+    org_params = params[:organization] or
+        return render_bad_parameters
     org_params[:label], org_label_assigned = generate_label(org_params[:name], 'organization') if org_params[:label].blank?
     @organization = Organization.new(:name => org_params[:name], :label => org_params[:label], :description => org_params[:description])
     @organization.save!
@@ -145,6 +146,7 @@ class OrganizationsController < ApplicationController
   end
 
   def update
+    return render_bad_parameters unless params[:organization]
     result = params[:organization].values.first
 
     @organization.name = params[:organization][:name] unless params[:organization][:name].nil?

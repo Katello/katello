@@ -114,7 +114,7 @@ describe OrganizationsController do
 
     describe 'with invalid paramaters' do
       it 'should generate an error notice' do
-        controller.should notify.exception
+        controller.should notify.error
         post 'create', { :name => "", :description => "" }
         response.should_not be_success
       end
@@ -275,7 +275,7 @@ describe OrganizationsController do
       end
 
       it "should generate an error notice" do
-        controller.should notify.exception
+        controller.should notify.error
         put 'update', :id => OrgControllerTest::ORG_ID
       end
 
