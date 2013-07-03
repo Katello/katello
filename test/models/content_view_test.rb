@@ -101,18 +101,11 @@ class ContentViewTest < MiniTest::Rails::ActiveSupport::TestCase
     assert_includes @library.content_views, @library_view
   end
 
-  def test_environment_default_content_view_destroy
+  def test_environment_content_view_env_destroy
     env = @dev
-    content_view = @dev.default_content_view
+    cve = env.content_views.first.content_view_environments.where(:environment_id=>env.id).first
     env.destroy
-    refute_nil ContentView.find_by_id(content_view.id)
-  end
-
-  def test_environment_default_content_view_version_destroy
-    env = @dev
-    version = @dev.default_content_view_version
-    env.destroy
-    assert_nil ContentViewVersion.find_by_id(version.id)
+    assert_nil ContentViewEnvironment.find_by_id(cve.id)
   end
 
   def test_changesets
@@ -131,7 +124,8 @@ class ContentViewTest < MiniTest::Rails::ActiveSupport::TestCase
     refute_includes content_view.environments, @dev
     content_view.promote(@library, @dev)
     assert_includes content_view.environments, @dev
-    refute_empty ContentViewEnvironment.where(:label => content_view.cp_environment_label(@dev))
+    refute_empty ContentViewEnvironment.where(:content_view_id => content_view,
+                                                :environment_id => @dev)
   end
 
   def test_destroy

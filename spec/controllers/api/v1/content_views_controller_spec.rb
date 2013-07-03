@@ -45,7 +45,7 @@ describe Api::V1::ContentViewsController, :katello => true do
 
     context "with environment filter param" do
       it "should return only the environment's views" do
-        env          = @org.environments.first || KTEnvironment.create!(:name            => "Test",
+        env          = @org.environments.first || create_environment(:name            => "Test",
                                                                         :library         => false,
                                                                         :priors          => [@org.library],
                                                                         :organization_id => @org.id

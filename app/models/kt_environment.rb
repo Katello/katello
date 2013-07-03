@@ -282,25 +282,27 @@ class KTEnvironment < ActiveRecord::Base
   end
 
   def create_default_content_view_version
-    #Sadly this has to be created here, if it is created in the org
-    #  it will not actually exist when we go to create library and so
-    #  we can't look it up via a query (org.default_content_view)
-    content_view = self.organization.default_content_view
-    if content_view.nil?
-      content_view = ContentView.new(:default=>true, :name=>"Default Organization View",
-                                     :organization=>self.organization)
-    end
+    if library?
+      #Sadly this has to be created here, if it is created in the org
+      #  it will not actually exist when we go to create library and so
+      #  we can't look it up via a query (org.default_content_view)
+      content_view = self.organization.default_content_view
+      if content_view.nil?
+        content_view = ContentView.new(:default=>true, :name=>"Default Organization View",
+                                       :organization=>self.organization)
+      end
 
-    if content_view.version(self).nil?
-      version = ContentViewVersion.new(:content_view => content_view,
-                                       :version => 1)
-      version.environments << self
-      version.save!
-      content_view.save! #save content_view, since ContentViewEnvironment was added
+      if content_view.version(self).nil?
+        version = ContentViewVersion.new(:content_view => content_view,
+                                         :version => 1)
+        version.environments << self
+        version.save!
+        content_view.save! #save content_view, since ContentViewEnvironment was added
+      end
     end
   end
 
   def delete_default_view_version
-    self.default_content_view_version.destroy
+    self.default_content_view_version.destroy if library?
   end
 end

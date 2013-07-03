@@ -34,7 +34,7 @@ describe Api::V1::OrganizationDefaultInfoController do
     Runcible::Extensions::Consumer.stub!(:create).and_return({ :id => uuid }) if Katello.config.app_mode == "katello"
 
     @org  = Organization.create!(:name => "test_org", :label => "test_org")
-    @env1 = KTEnvironment.create!(:name => "test_env", :label => "test_env", :prior => @org.library.id, :organization => @org)
+    @env1 = create_environment(:name => "test_env", :label => "test_env", :prior => @org.library.id, :organization => @org)
 
     CustomInfo.skip_callback(:save, :after, :reindex_informable)
     CustomInfo.skip_callback(:destroy, :after, :reindex_informable)
@@ -110,7 +110,7 @@ describe Api::V1::OrganizationDefaultInfoController do
 
     before(:each) do
       (1..50).each do |i|
-        System.create!(:name => "test_sys#{i}", :cp_type => "system", :environment => @env1, :facts => facts)
+        create_system(:name => "test_sys#{i}", :cp_type => "system", :environment => @env1, :facts => facts)
       end
     end
 

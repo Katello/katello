@@ -527,8 +527,8 @@ module Glue::Candlepin::Consumer
       return system_uuids
     end
 
-    def create_hypervisor(environment_id, hypervisor_json)
-      hypervisor = Hypervisor.new(:environment_id => environment_id)
+    def create_hypervisor(environment_id, content_view_id, hypervisor_json)
+      hypervisor = Hypervisor.new(:environment_id => environment_id, :content_view_id => content_view_id)
       hypervisor.name = hypervisor_json[:name]
       hypervisor.cp_type = 'hypervisor'
       hypervisor.orchestration_for = :hypervisor
@@ -537,10 +537,10 @@ module Glue::Candlepin::Consumer
       hypervisor
     end
 
-    def register_hypervisors(environment, hypervisors_attrs)
+    def register_hypervisors(environment, content_view, hypervisors_attrs)
       consumers_attrs = Resources::Candlepin::Consumer.register_hypervisors(hypervisors_attrs)
       created = consumers_attrs[:created].map do |hypervisor_attrs|
-        System.create_hypervisor(environment.id, hypervisor_attrs)
+        System.create_hypervisor(environment.id, content_view.id, hypervisor_attrs)
       end
       return consumers_attrs, created
     end

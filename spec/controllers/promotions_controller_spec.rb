@@ -69,8 +69,8 @@ describe "rules" do
     before (:each) do
       @organization = new_test_org
       @env1 = @organization.library
-      @env2 = KTEnvironment.create!(:name=>"FOO", :label=> "FOO", :prior => @env1, :organization=>@organization)
-      @env3 = KTEnvironment.create!(:name=>"FOO2", :label=> "FOO2", :prior => @env2, :organization=>@organization)
+      @env2 = create_environment(:name=>"FOO", :label=> "FOO", :prior => @env1, :organization=>@organization)
+      @env3 = create_environment(:name=>"FOO2", :label=> "FOO2", :prior => @env2, :organization=>@organization)
       Glue::Pulp::Repos.stub!(:prepopulate!).and_return([])
     end
 
