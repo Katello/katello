@@ -2,10 +2,10 @@
 http_interactions: 
 - request: 
     method: post
-    uri: https://localhost/pulp/api/v2/repositories/
+    uri: https://abed.usersys.redhat.com/pulp/api/v2/repositories/
     body: 
       encoding: US-ASCII
-      string: "{\"id\":\"1\",\"display_name\":\"Fedora 17 x86_64\",\"importer_type_id\":\"yum_importer\",\"importer_config\":{\"ssl_ca_cert\":null,\"ssl_client_cert\":null,\"ssl_client_key\":null,\"feed_url\":\"file:///home/bbucking/github/katello/test/fixtures/zoo5\"},\"distributors\":[{\"distributor_type\":\"yum_distributor\",\"distributor_config\":{\"relative_url\":\"/test_path/\",\"http\":false,\"https\":true,\"protected\":true},\"auto_publish\":true,\"distributor_id\":\"1\"}]}"
+      string: "{\"id\":\"1\",\"display_name\":\"Fedora 17 x86_64\",\"importer_type_id\":\"yum_importer\",\"importer_config\":{\"ssl_ca_cert\":null,\"ssl_client_cert\":null,\"ssl_client_key\":null,\"feed_url\":\"file:///home/jlsherri/git/katello/test/fixtures/zoo5\"},\"distributors\":[{\"distributor_type\":\"yum_distributor\",\"distributor_config\":{\"relative_url\":\"/test_path/\",\"http\":false,\"https\":true,\"protected\":true},\"auto_publish\":true,\"distributor_id\":\"1\"}]}"
     headers: 
       Accept: 
       - application/json
@@ -14,11 +14,11 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="iCztzVu0xZuCGGWJfQNlC6F0ctQNzXBvfOFk5TXM", oauth_signature="MTpuzDnMumUovaDo%2F6ZMaiZPGjs%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1372418778", oauth_version="1.0"
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="qATCj6MQ2LaQdHhO3IKxjtxRLH8uxtLrDGGLJQ3un94", oauth_signature="YnBXOVti1PlRRcEZFY34n%2FUZobc%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1372889122", oauth_version="1.0"
       Pulp-User: 
       - admin
       Content-Length: 
-      - "423"
+      - "420"
       User-Agent: 
       - Ruby
   response: 
@@ -27,7 +27,7 @@ http_interactions:
       message: Created
     headers: 
       Date: 
-      - Fri, 28 Jun 2013 11:26:18 GMT
+      - Wed, 03 Jul 2013 22:05:22 GMT
       Server: 
       - Apache/2.2.15 (Red Hat)
       Location: 
@@ -38,12 +38,12 @@ http_interactions:
       - application/json
     body: 
       encoding: US-ASCII
-      string: "{\"scratchpad\": {}, \"display_name\": \"Fedora 17 x86_64\", \"description\": null, \"_ns\": \"repos\", \"notes\": {}, \"content_unit_counts\": {}, \"_id\": {\"$oid\": \"51cd72da3cbbb55cb800093f\"}, \"id\": \"1\", \"_href\": \"/pulp/api/v2/repositories/1/\"}"
+      string: "{\"scratchpad\": {}, \"display_name\": \"Fedora 17 x86_64\", \"description\": null, \"_ns\": \"repos\", \"notes\": {}, \"content_unit_counts\": {}, \"_id\": {\"$oid\": \"51d4a0225ca01330ee97ec3f\"}, \"id\": \"1\", \"_href\": \"/pulp/api/v2/repositories/1/\"}"
     http_version: 
-  recorded_at: Fri, 28 Jun 2013 11:26:18 GMT
+  recorded_at: Wed, 03 Jul 2013 22:05:22 GMT
 - request: 
     method: post
-    uri: https://localhost/pulp/api/v2/repositories/1/actions/sync/
+    uri: https://abed.usersys.redhat.com/pulp/api/v2/repositories/1/actions/sync/
     body: 
       encoding: US-ASCII
       string: "{\"override_config\":{\"num_threads\":4}}"
@@ -55,7 +55,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="aH01hlDsDn2OKHipkWYnhObaNdOVxm20ei69QB7D4", oauth_signature="53mkIAJgRxSEZorLRYwEQE7ITfY%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1372418778", oauth_version="1.0"
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="hdjdfJs89W3rEwbWYtZSof5zqWxngzLFIYNYyYLi4", oauth_signature="M97b61GoJrvEWMo6K9txeFrqbTQ%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1372889122", oauth_version="1.0"
       Pulp-User: 
       - admin
       Content-Length: 
@@ -68,7 +68,7 @@ http_interactions:
       message: Accepted
     headers: 
       Date: 
-      - Fri, 28 Jun 2013 11:26:18 GMT
+      - Wed, 03 Jul 2013 22:05:22 GMT
       Server: 
       - Apache/2.2.15 (Red Hat)
       Content-Encoding: 
@@ -79,12 +79,12 @@ http_interactions:
       - application/json
     body: 
       encoding: US-ASCII
-      string: "[{\"task_group_id\": \"0052a29c-405a-46d6-96b3-24c2032c4d1e\", \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/task_groups/0052a29c-405a-46d6-96b3-24c2032c4d1e/\", \"task_id\": \"f94f5d7e-46a3-472f-b153-83345901e01c\", \"call_request_tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"reasons\": [], \"start_time\": null, \"tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"state\": \"waiting\", \"finish_time\": null, \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {}, \"call_request_group_id\": \"0052a29c-405a-46d6-96b3-24c2032c4d1e\", \"call_request_id\": \"f94f5d7e-46a3-472f-b153-83345901e01c\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}, {\"task_group_id\": \"0052a29c-405a-46d6-96b3-24c2032c4d1e\", \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/task_groups/0052a29c-405a-46d6-96b3-24c2032c4d1e/\", \"task_id\": \"7cd3c090-5e4f-4dd1-afda-b3eee27d0c08\", \"call_request_tags\": [\"pulp:repository:1\", \"pulp:action:auto_publish\", \"pulp:action:publish\"], \"reasons\": [], \"start_time\": null, \"tags\": [\"pulp:repository:1\", \"pulp:action:auto_publish\", \"pulp:action:publish\"], \"state\": \"waiting\", \"finish_time\": null, \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {}, \"call_request_group_id\": \"0052a29c-405a-46d6-96b3-24c2032c4d1e\", \"call_request_id\": \"7cd3c090-5e4f-4dd1-afda-b3eee27d0c08\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}]"
+      string: "[{\"task_group_id\": \"d767e447-bc27-47ed-b064-1bfd3c7fa819\", \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/task_groups/d767e447-bc27-47ed-b064-1bfd3c7fa819/\", \"task_id\": \"57c35bab-9ff7-44ce-9b59-80d022dddf72\", \"call_request_tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"reasons\": [], \"start_time\": null, \"tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"state\": \"waiting\", \"finish_time\": null, \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {}, \"call_request_group_id\": \"d767e447-bc27-47ed-b064-1bfd3c7fa819\", \"call_request_id\": \"57c35bab-9ff7-44ce-9b59-80d022dddf72\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}, {\"task_group_id\": \"d767e447-bc27-47ed-b064-1bfd3c7fa819\", \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/task_groups/d767e447-bc27-47ed-b064-1bfd3c7fa819/\", \"task_id\": \"643cde7f-31f2-4d01-b4e9-b5889d4dab65\", \"call_request_tags\": [\"pulp:repository:1\", \"pulp:action:auto_publish\", \"pulp:action:publish\"], \"reasons\": [], \"start_time\": null, \"tags\": [\"pulp:repository:1\", \"pulp:action:auto_publish\", \"pulp:action:publish\"], \"state\": \"waiting\", \"finish_time\": null, \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {}, \"call_request_group_id\": \"d767e447-bc27-47ed-b064-1bfd3c7fa819\", \"call_request_id\": \"643cde7f-31f2-4d01-b4e9-b5889d4dab65\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}]"
     http_version: 
-  recorded_at: Fri, 28 Jun 2013 11:26:18 GMT
+  recorded_at: Wed, 03 Jul 2013 22:05:22 GMT
 - request: 
     method: delete
-    uri: https://localhost/pulp/api/v2/repositories/1/
+    uri: https://abed.usersys.redhat.com/pulp/api/v2/repositories/1/
     body: 
       encoding: US-ASCII
       string: ""
@@ -96,7 +96,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="3pkY301mXLGrPNRczd8sTuJJNmnbBFR5YSnSGmnDg", oauth_signature="B3WvBXB6Qz1NA46mMFTcznbEW0M%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1372418782", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="FzFmqqjuC0Rj0SgGsulXdEDpOaiRJkTCHo8zzzmq50M", oauth_signature="iJz%2F3Ic8Xkj57HswbJXTWAYlgQw%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1372889125", oauth_version="1.0"
       Pulp-User: 
       - admin
       User-Agent: 
@@ -107,7 +107,7 @@ http_interactions:
       message: Accepted
     headers: 
       Date: 
-      - Fri, 28 Jun 2013 11:26:22 GMT
+      - Wed, 03 Jul 2013 22:05:25 GMT
       Server: 
       - Apache/2.2.15 (Red Hat)
       Content-Encoding: 
@@ -118,7 +118,7 @@ http_interactions:
       - application/json
     body: 
       encoding: US-ASCII
-      string: "[{\"task_group_id\": \"83a4f9d0-40b2-4365-a3eb-6f6fe606c4dd\", \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/task_groups/83a4f9d0-40b2-4365-a3eb-6f6fe606c4dd/\", \"task_id\": \"7415d701-8eb6-4924-90d4-919fa39b5f4f\", \"call_request_tags\": [\"pulp:repository:1\", \"pulp:action:delete\"], \"reasons\": [], \"start_time\": null, \"tags\": [\"pulp:repository:1\", \"pulp:action:delete\"], \"state\": \"waiting\", \"finish_time\": null, \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {}, \"call_request_group_id\": \"83a4f9d0-40b2-4365-a3eb-6f6fe606c4dd\", \"call_request_id\": \"7415d701-8eb6-4924-90d4-919fa39b5f4f\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}]"
+      string: "[{\"task_group_id\": \"3f6b3fbe-2669-4e92-8a1f-a1609504825f\", \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/task_groups/3f6b3fbe-2669-4e92-8a1f-a1609504825f/\", \"task_id\": \"6e6b14c3-b7a5-4e43-a1a3-2efb151a7f4d\", \"call_request_tags\": [\"pulp:repository:1\", \"pulp:action:delete\"], \"reasons\": [], \"start_time\": null, \"tags\": [\"pulp:repository:1\", \"pulp:action:delete\"], \"state\": \"waiting\", \"finish_time\": null, \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {}, \"call_request_group_id\": \"3f6b3fbe-2669-4e92-8a1f-a1609504825f\", \"call_request_id\": \"6e6b14c3-b7a5-4e43-a1a3-2efb151a7f4d\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}]"
     http_version: 
-  recorded_at: Fri, 28 Jun 2013 11:26:22 GMT
+  recorded_at: Wed, 03 Jul 2013 22:05:25 GMT
 recorded_with: VCR 2.4.0
