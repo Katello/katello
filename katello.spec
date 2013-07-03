@@ -117,6 +117,7 @@ Requires:       %{?scl_prefix}rubygem(rabl)
 Requires:       %{?scl_prefix}rubygem(dynflow)
 Requires:       %{?scl_prefix}rubygem(minitest)
 Requires:       %{?scl_prefix}rubygem(foreigner)
+Requires:       %{?scl_prefix}rubygem(justified)
 Requires:       signo >= 0.0.5
 Requires:       signo-katello >= 0.0.5
 Requires:       lsof
