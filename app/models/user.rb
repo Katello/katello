@@ -42,7 +42,7 @@ class User < ActiveRecord::Base
   # PROCEED DEPENDENT ASSOCIATIONS tinyurl.com/rails3458
   before_destroy :not_last_super_user?, :destroy_own_role
 
-  has_many :roles_users
+  has_many :roles_users, :dependent => :destroy
   has_many :roles, :through => :roles_users, :before_remove => :super_admin_check, :uniq => true, :extend => RolesPermissions::UserOwnRole
   validates_with Validators::OwnRolePresenceValidator, :attributes => :roles
   has_many :help_tips

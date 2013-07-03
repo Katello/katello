@@ -58,7 +58,7 @@ class KTEnvironment < ActiveRecord::Base
 
   has_many :changeset_history, :conditions => {:state => Changeset::PROMOTED}, :foreign_key => :environment_id, :dependent => :destroy, :class_name=>"Changeset", :dependent => :destroy, :inverse_of => :environment
 
-  has_many :content_view_version_environments, :foreign_key=>:environment_id
+  has_many :content_view_version_environments, :foreign_key=>:environment_id, :dependent=>:destroy
   has_many :content_view_versions, :through=>:content_view_version_environments, :inverse_of=>:environments
   has_many :content_view_environments, :foreign_key=>:environment_id, :inverse_of=>:environment, :dependent=>:destroy
 

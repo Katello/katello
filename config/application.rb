@@ -69,6 +69,9 @@ module Src
       end
     end
 
+    # :ruby format cannot represent currently used 'INITIALLY DEFERRED' option on constrains
+    config.active_record.schema_format = :sql
+
     # Setup additional routes by loading all routes file from routes directory
     config.paths["config/routes"] += Dir[Rails.root.join("config/routes/**/*.rb")]
 
