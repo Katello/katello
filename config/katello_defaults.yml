@@ -75,6 +75,8 @@ common:
 
   # if paranoia is set to true even children of Exception will be rescued
   exception_paranoia: false
+  # set true to hide exceptions from user
+  hide_exceptions: false
 
   # run yard server inside katello server
   embed_yard_documentation: false
@@ -271,6 +273,7 @@ common:
 #
 production:
   exception_paranoia: true
+  hide_exceptions: true
   database:
     database: katello
   logging:

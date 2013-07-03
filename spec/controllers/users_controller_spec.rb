@@ -50,10 +50,12 @@ describe UsersController do
       response.should_not be_success
     end
 
-    it "should error if no password", :katello => true do #TODO headpin
+    it 'should error if blank password', :katello => true do #TODO headpin
       post 'create', {:user => {:username=>"testuser", :password=>"", :email=> "user@somewhere.com", :env_id => @environment.id}}
       response.should_not be_success
+    end
 
+    it 'should error if no password', :katello => true do #TODO headpin
       post 'create', {:user => {:username=>"testuser", :email=> "user@somewhere.com", :env_id => @environment.id}}
       response.should_not be_success
     end
@@ -151,7 +153,7 @@ describe UsersController do
       it "destroys the requested user", :katello => true do
         @to_delete.should_receive(:destroy)
         @to_delete.should_receive(:destroyed?)
-        delete :destroy, :id => "123456"
+        delete :destroy, :id => '123456', :format => :js
       end
 
       it "updates the user list", :katello => true do
