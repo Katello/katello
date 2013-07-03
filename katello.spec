@@ -730,6 +730,7 @@ usermod -a -G katello-shared tomcat
 %{homedir}/log
 %dir %{homedir}/db
 %{homedir}/db/schema.rb
+%{homedir}/db/structure.sql
 %dir %{homedir}/lib
 %dir %{homedir}/app/lib
 %dir %{homedir}/app/lib/resources
