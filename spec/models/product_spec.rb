@@ -414,4 +414,20 @@ describe Product, :katello => true do
       its(:gpg_key){should be_nil}
     end
   end
+
+  describe "#environments" do
+    it "should contain a unique list of environments" do
+      disable_repo_orchestration
+      product = Product.create!(ProductTestData::SIMPLE_PRODUCT)
+      2.times do
+        create(:repository, product: product, environment: @organization.library,
+               content_view_version: @organization.library.default_content_view_version,
+               feed: "http://something")
+      end
+      product.repositories.length.should eql(2)
+      product.repositories.map(&:environment).length.should > (product.environments.length)
+      product.repositories.map(&:environment).uniq.length.should eql(product.environments.length)
+      product.environments.map(&:id).should eql([@organization.library.id])
+    end
+  end
 end
