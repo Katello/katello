@@ -94,7 +94,7 @@ class SubscriptionsController < ApplicationController
 
     # Without any search terms, reindex all subscriptions in elasticsearch. This is to insure
     # that the latest information is searchable.
-    if query_string.nil? || query_string == ''
+    if offset == 0 && query_string.blank?
       current_organization.redhat_provider.index_subscriptions
     end
 

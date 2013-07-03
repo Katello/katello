@@ -24,6 +24,12 @@ unless File.exist? "#{root}/yardoc/.git"
   end
 end
 
+Dir.chdir "#{root}/yardoc" do
+  cmd 'git checkout gh-pages'
+  cmd 'git fetch origin'
+  cmd 'git reset --hard origin/gh-pages'
+end
+
 message = nil
 Dir.chdir(root) do
   puts "commit message: #{message = `git log -n 1 --oneline`.strip}"
@@ -31,12 +37,9 @@ Dir.chdir(root) do
 end
 
 Dir.chdir "#{root}/yardoc" do
-  cmd 'git checkout gh-pages'
-  cmd 'git fetch origin'
-  cmd 'git reset --hard origin/gh-pages'
   cmd 'git add --all'
+  cmd "git commit -m '#{message}'"
   if push_to_github
-    cmd "git commit -m '#{message}'"
     cmd 'git push origin gh-pages'
   end
 end

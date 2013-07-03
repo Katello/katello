@@ -43,7 +43,7 @@ class Changeset < ActiveRecord::Base
   has_many :users, :class_name => "ChangesetUser", :inverse_of => :changeset
   belongs_to :environment, :class_name => "KTEnvironment"
   belongs_to :task_status
-  has_many :changeset_content_views
+  has_many :changeset_content_views, :dependent => :destroy
   has_many :content_views, :through => :changeset_content_views
 
   # find changesets in given state/states

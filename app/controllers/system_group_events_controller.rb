@@ -14,6 +14,8 @@ class SystemGroupEventsController < ApplicationController
   before_filter :find_group
   before_filter :authorize
 
+  helper SystemGroupEventsHelper
+
   def section_id
     'systems'
   end

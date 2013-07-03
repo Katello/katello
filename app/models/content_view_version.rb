@@ -16,7 +16,7 @@ class ContentViewVersion < ActiveRecord::Base
   include Authorization::ContentViewVersion
 
   belongs_to :content_view
-  has_many :content_view_version_environments
+  has_many :content_view_version_environments, :dependent => :destroy
   has_many :environments, {:through      => :content_view_version_environments,
                            :class_name   => "KTEnvironment",
                            :inverse_of   => :content_view_versions,

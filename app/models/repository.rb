@@ -36,7 +36,7 @@ class Repository < ActiveRecord::Base
   belongs_to :product, :inverse_of => :repositories
   belongs_to :gpg_key, :inverse_of => :repositories
   belongs_to :library_instance, :class_name=>"Repository"
-  has_many :content_view_definition_repositories
+  has_many :content_view_definition_repositories, :dependent => :destroy
   has_many :content_view_definitions, :through => :content_view_definition_repositories
   has_and_belongs_to_many :filters
   belongs_to :content_view_version, :inverse_of=>:repositories

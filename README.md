@@ -67,6 +67,15 @@ This documentation is intended for developers, user documentation can be found o
 
 *Note: older developer guides can be found on our wiki, they are being migrated.*
 
+### How to
+
+-   to see YARD documentation start Katello server and find the link on "About" page or go directly to
+    <http://path.to.katello/url_prefix/yard/docs/katello/frames>
+
+    -   if it fails run `bundle exec yard doc --no-cache` first, which will rebuild whole documentation
+
+-   see {file:doc/YARDDocumentation.md}
+
 Current documentation
 ---------------------
 
@@ -76,6 +85,10 @@ Current documentation
 ### Debugging
 
 -   {file:doc/how_to/add_praise.md Enabling Praise} - raise/exception investigation
+
+### Packaging
+
+-   {file:doc/how_to/package_new_gem.md How to package new gem}
 
 ### Other
 
@@ -88,12 +101,3 @@ Current documentation
 
 -   {Katello::Configuration}
 -   {Notifications}
-
-## How to YARD
-
--   to see YARD documentation start Katello server and click on the link in the UI footer or go directly to
-    {http://path.to.katello/a_prefix/yard/docs/katello/frames}
-
-    -   if it fails run `bundle exec yard doc --no-cache` first
-
--   see {file:doc/YARDDocumentation.md}

@@ -84,13 +84,12 @@ KT.custom_info = (function() {
     }
 
     function add_custom_info_row(data) {
-        var esc_keyname = escape(data["keyname"]);
-        var _keyname = data["keyname"].replace(" ", "_");
+        var _keyname = escape(data["keyname"]);
         var value = data["value"];
         var informable_type = data["informable_type"];
         var informable_id = data["informable_id"];
-        var update_path = KT.routes.api_update_custom_info_path(informable_type, informable_id, esc_keyname);
-        var destroy_path = KT.routes.api_destroy_custom_info_path(informable_type, informable_id, esc_keyname);
+        var update_path = KT.routes.api_update_custom_info_path(informable_type, informable_id, _keyname);
+        var destroy_path = KT.routes.api_destroy_custom_info_path(informable_type, informable_id, _keyname);
 
         var new_row = $('<tr/>', {
             'class': 'primary_color custom_info_row',
@@ -99,7 +98,7 @@ KT.custom_info = (function() {
                 'class': 'ra',
                 'html': $('<label/>', {
                     'for': 'custom_info_' + _keyname,
-                    'html': data["keyname"]
+                    'text': data["keyname"]
                 })
             }).after($('<td/>', {
                 'html': $('<div/>', {

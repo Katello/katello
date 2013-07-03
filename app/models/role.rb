@@ -16,7 +16,7 @@ class Role < ActiveRecord::Base
 
   acts_as_reportable
 
-  has_many :roles_users
+  has_many :roles_users, :dependent => :destroy
   has_many :users, :through => :roles_users, :before_remove =>:super_admin_check
   has_many :permissions, :dependent => :destroy, :inverse_of =>:role, :class_name=>"Permission", :extend => RolesPermissions::DefaultSystemRegistrationPermission
   has_many :ldap_group_roles, :dependent => :destroy, :inverse_of => :role
