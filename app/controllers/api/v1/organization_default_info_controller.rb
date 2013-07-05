@@ -17,6 +17,7 @@ class Api::V1::OrganizationDefaultInfoController < Api::V1::ApiController
   before_filter :find_organization
   before_filter :authorize
   before_filter :check_informable_type
+  before_filter :find_default_info, :only => :destroy
   before_filter :check_apply_default_info, :only => :apply_to_all
 
   def rules
@@ -107,7 +108,14 @@ class Api::V1::OrganizationDefaultInfoController < Api::V1::ApiController
     if @organization.applying_default_info?
       raise HttpErrors::BadRequest,
         _("Organization [ %{org} ] is currently applying default custom info. Please try again later.") %
-          {:org => @organization.name}
+          { :org => @organization.name }
+    end
+  end
+
+  def find_default_info
+    unless @organization.default_info[params[:informable_type]].include?(params[:keyname])
+      raise HttpErrors::NotFound, _("Couldn't find default_info with keyname [ %{keyname} ]") %
+        { :keyname => params[:keyname] }
     end
   end
 

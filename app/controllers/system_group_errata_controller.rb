@@ -45,6 +45,8 @@ class SystemGroupErrataController < ApplicationController
     chunk_size = current_user.page_size
     errata, errata_systems, total_count, results_count = get_errata(offset.to_i, offset.to_i+chunk_size, filter_type, errata_state)
 
+    return render_bad_parameters unless errata
+
     rendered_html = render_to_string(:partial=>"systems/errata/items", :locals => { :errata => errata,
                                                                                     :errata_systems => errata_systems,
                                                                                     :editable => @group.systems_editable? })

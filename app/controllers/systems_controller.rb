@@ -227,10 +227,15 @@ class SystemsController < ApplicationController
     end
     consumed_entitlements = @system.consumed_entitlements
     avail_pools = @system.available_pools_full
-    render :partial=>"subs_update", :locals=>{:system=>@system, :avail_subs => avail_pools,
-                                              :consumed_subs => consumed_entitlements,
-                                              :editable=>@system.editable?}
+    render :partial => "subs_update",
+           :locals => { :system => @system,
+                        :avail_subs => avail_pools,
+                        :consumed_subs => consumed_entitlements,
+                        :editable => @system.editable? }
     notify.success _("System subscriptions updated.")
+  rescue RestClient::Exception => e
+    notify.error(JSON.parse(e.response)["displayMessage"])
+    render :text => "", :status => 500
   end
 
   def products
@@ -394,9 +399,9 @@ class SystemsController < ApplicationController
         end
       end
       if !invalid_perms.empty?
-        raise _("System Group membership modification not allowed for group(s): %s") % invalid_perms.join(', ')
+        return render_bad_parameters _("System Group membership modification not allowed for group(s): %s") % invalid_perms.join(', ')
       elsif !max_systems_exceeded.empty?
-        raise _("System Group maximum number of systems exceeded for group(s): %s") % max_systems_exceeded.join(', ')
+        return render_bad_parameters _("System Group maximum number of systems exceeded for group(s): %s") % max_systems_exceeded.join(', ')
       end
 
       @systems.each do |system|
@@ -590,6 +595,7 @@ class SystemsController < ApplicationController
 
   def system_groups
     # retrieve the available groups that aren't currently assigned to the system and that haven't reached their max
+    # TODO move the sql to the model
     @system_groups = SystemGroup.where(:organization_id=>current_organization).
         select("system_groups.id, system_groups.name").
         joins("LEFT OUTER JOIN system_system_groups ON system_system_groups.system_group_id = system_groups.id").

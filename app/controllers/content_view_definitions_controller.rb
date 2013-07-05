@@ -159,14 +159,16 @@ class ContentViewDefinitionsController < ApplicationController
 
   def publish
     # perform the publish
-    @view_definition.publish(params[:content_view][:name], params[:content_view][:description],
-                             params[:content_view][:label], {:notify => true}) if params.has_key?(:content_view)
+    if params.has_key?(:content_view)
+      @view_definition.publish(params[:content_view][:name], params[:content_view][:description],
+                               params[:content_view][:label], {:notify => true})
+      notify.success(_("Started publish of content view '%{view_name}' from definition '%{definition_name}'.") %
+                         {:view_name => params[:content_view][:name], :definition_name => @view_definition.name})
 
-    notify.success(_("Started publish of content view '%{view_name}' from definition '%{definition_name}'.") %
-                       {:view_name => params[:content_view][:name], :definition_name => @view_definition.name})
-
-    render :nothing => true
-
+      render :nothing => true
+    else
+      render_bad_parameters
+    end
   rescue => e
     notify.exception(_("Failed to publish content view '%{view_name}' from definition '%{definition_name}'.") %
                          {:view_name => params[:content_view][:name], :definition_name => @view_definition.name}, e)

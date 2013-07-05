@@ -125,7 +125,7 @@ describe RolesController do
     end
 
     it 'should successfully delete', :katello => true do #TODO headpin
-      delete 'destroy', { :id => @role.id }
+      delete 'destroy', :id => @role.id, :format => :js
       Role.exists?(@role.id).should be_false
     end
 

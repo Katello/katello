@@ -186,7 +186,7 @@ describe GpgKeysController, :katello => true do
 
     describe "with invalid params" do
       it "should generate an error notice" do
-        controller.should notify.exception
+        controller.should notify.error
         post :create, GPGKeyControllerTest::GPGKEY_INVALID
       end
 
