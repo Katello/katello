@@ -107,9 +107,9 @@ class GluePulpConsumerBindTest < GluePulpConsumerTestBase
   end
 
   def test_enable_repos
-    ids = @@simple_server.enable_repos([RepositorySupport.repo.pulp_id])
-    assert_includes ids.first, RepositorySupport.repo.pulp_id
-    refute_includes ids.last, RepositorySupport.repo.pulp_id
+    processed_ids, error_ids = @@simple_server.enable_repos([RepositorySupport.repo.pulp_id])
+    assert_includes processed_ids, RepositorySupport.repo.pulp_id
+    refute_includes error_ids, RepositorySupport.repo.pulp_id
   end
 
 end
@@ -156,6 +156,16 @@ class GluePulpConsumerRequiresBoundRepoTest < GluePulpConsumerTestBase
     TaskSupport.wait_on_task(task)
 
     task = @@simple_server.update_package(['cheetah'])
+    TaskSupport.wait_on_task(task)
+
+    assert_includes task['tags'], 'pulp:action:unit_update'
+  end
+
+  def test_update_all_packages
+    task = @@simple_server.install_package(['cheetah'])
+    TaskSupport.wait_on_task(task)
+
+    task = @@simple_server.update_package([])
     TaskSupport.wait_on_task(task)
 
     assert_includes task['tags'], 'pulp:action:unit_update'

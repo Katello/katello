@@ -25,7 +25,7 @@ class Product < ActiveRecord::Base
   belongs_to :provider, :inverse_of => :products
   belongs_to :sync_plan, :inverse_of => :products
   belongs_to :gpg_key, :inverse_of => :products
-  has_many :content_view_definition_products
+  has_many :content_view_definition_products, :dependent => :destroy
   has_many :content_view_definitions, :through => :content_view_definition_products
   has_many :repositories, :dependent => :destroy
 

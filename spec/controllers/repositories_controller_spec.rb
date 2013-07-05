@@ -87,7 +87,7 @@ describe RepositoriesController, :katello => true do
        it "destroys the requested repository" do
          @repository.should_receive(:destroy)
          @repository.should_receive(:destroyed?)
-         delete :destroy, :id => "123456", :provider_id => "123", :product_id => "123"
+         delete :destroy, :id => "123456", :provider_id => "123", :product_id => "123", :format => :js
        end
 
         it "updates the view" do

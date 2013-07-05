@@ -23,6 +23,7 @@ class NavigationItemsTest < MiniTest::Rails::ActiveSupport::TestCase
     @admin = User.find(users(:admin).id)
     User.current = @admin
     @acme_corporation = Organization.find(organizations(:acme_corporation).id)
+    Katello.config.stubs(hide_exceptions: true)
   end
 
   def test_dashboard_item

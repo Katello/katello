@@ -13,9 +13,9 @@
 
 class ContentViewDefinitionBase < ActiveRecord::Base
   belongs_to :organization, :inverse_of => :content_view_definitions
-  has_many :content_view_definition_products, :foreign_key => "content_view_definition_id"
+  has_many :content_view_definition_products, :foreign_key => "content_view_definition_id", :dependent => :destroy
   has_many :products, :through => :content_view_definition_products, :after_remove => :remove_product
-  has_many :content_view_definition_repositories, :foreign_key => "content_view_definition_id"
+  has_many :content_view_definition_repositories, :foreign_key => "content_view_definition_id", :dependent => :destroy
   has_many :repositories, :through => :content_view_definition_repositories, :after_remove => :remove_repository
   has_many :components, :class_name => "ComponentContentView",
     :foreign_key => "content_view_definition_id"

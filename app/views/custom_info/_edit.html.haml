@@ -18,7 +18,7 @@
             %input.btn.primary#create_custom_info_button{:value => _("Add"), :type => "submit", "data-url" => api_create_custom_info_path(informable_type, informable_id), "data-method" => "post", :disabled => true}
         - informable.custom_info.sort.each do |info|
           - space_safe_keyname = info.keyname.gsub(" ", "_")
-          %tr.custom_info_row{"data-id" => "custom_info_#{space_safe_keyname}"}
+          %tr.multiline.custom_info_row{"data-id" => "custom_info_#{space_safe_keyname}"}
             %td.ra
               = label :custom_info, space_safe_keyname.to_sym, info.keyname
             %td

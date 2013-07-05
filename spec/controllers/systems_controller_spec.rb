@@ -179,12 +179,6 @@ describe SystemsController do
         end
       end
 
-      it "should throw an exception when the search parameters are invalid" do
-        controller.should notify.exception
-        get :items, :search => 1
-        response.should_not be_success
-      end
-
       describe 'and requesting individual data' do
         before (:each) do
           @system = create_system(:name=>"verbose", :environment => @environment, :cp_type=>"system", :facts=>{"Test1"=>1, "verbose_facts" => "Test facts"})
@@ -295,13 +289,6 @@ describe SystemsController do
         assigns[:system].releaseVer.should == "6Server"
       end
 
-      # The params to #update_subscriptions are entirely wrong here. The only reason the test
-      # used to pass was because the error handler was not passing back an error status
-      it "should not update a subscription", :katello => true do #TODO headpin
-        put :update_subscriptions, { :id => @system.id, :system => { :name=> "foo" }}
-        response.should_not be_success
-      end
-
       it "should throw an error with bad parameters", :katello => true do #TODO headpin
         invalid_name = " Foo   "
         put :update, { :id => @system.id, :system => { :name=> invalid_name }}
@@ -360,7 +347,14 @@ describe SystemsController do
 
       describe "listing/viewing" do
         it "retrieves the system groups to display", :katello => true do #TODO headpin
-          SystemGroup.should_receive(:where).with(:organization_id => @organization).and_return([@group1, @group2])
+          System.any_instance.tap do |any|
+            any.stub(:editable?).and_return true
+            any.stub(:readable?).and_return true
+          end
+          SystemGroup.
+              should_receive(:where).
+              with(:organization_id => @organization).
+              and_return mock.tap { |m| m.stub_chain(:select, :joins, :group, :order).and_return([@group1, @group2]) }
           get :system_groups, :id => @system.id
         end
 
@@ -460,7 +454,7 @@ describe SystemsController do
           @group1.max_systems = 1
           @group1.systems << @system1
           @group1.save!
-          controller.should notify.exception
+          controller.should notify.error
           put :bulk_add_system_group, {:ids => [@system2.id], :group_ids => [@group1.id]}
           response.should_not be_success
         end

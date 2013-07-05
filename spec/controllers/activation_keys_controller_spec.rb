@@ -317,7 +317,10 @@ describe ActivationKeysController do
     end
 
     it "retrieves the system groups to display", :katello => true do #TODO headpin
-      SystemGroup.should_receive(:where).with(:organization_id => @organization)
+      SystemGroup.
+          should_receive(:where).
+          with(:organization_id => @organization).
+          and_return(mock(:order => []))
       get :system_groups, :id => @a_key.id
     end
 

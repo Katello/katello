@@ -176,10 +176,11 @@ module ContentSearch
     end
 
     def view_compare_name_display(view, env)
-      version = _("version %s") % view.version(env).version
-      {:custom => <<EOS
-<span title=\"#{view.name} #{version}\" class=\"one-line-ellipsis tipsify\">#{view.name}</span><span class=\"one-line-ellipsis\">#{env.name}</span>
-EOS
+      { view_name: view.name,
+        view_version: (_("version %s") % view.version(env).version),
+        environment_name: env.name,
+        type: "content-view-comparison",
+        custom: true
       }
     end
 
