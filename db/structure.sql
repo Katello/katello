@@ -4,23 +4,10 @@
 
 SET statement_timeout = 0;
 SET client_encoding = 'UTF8';
-SET standard_conforming_strings = on;
+SET standard_conforming_strings = off;
 SET check_function_bodies = false;
 SET client_min_messages = warning;
-
---
--- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: -
---
-
-CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
-
-
---
--- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: -
---
-
-COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
-
+SET escape_string_warning = off;
 
 SET search_path = public, pg_catalog;
 
@@ -53,8 +40,8 @@ CREATE TABLE activation_keys (
 CREATE SEQUENCE activation_keys_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MINVALUE
     NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -85,8 +72,8 @@ CREATE TABLE changeset_content_views (
 CREATE SEQUENCE changeset_content_views_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MINVALUE
     NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -118,8 +105,8 @@ CREATE TABLE changeset_dependencies (
 CREATE SEQUENCE changeset_dependencies_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MINVALUE
     NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -150,8 +137,8 @@ CREATE TABLE changeset_distributions (
 CREATE SEQUENCE changeset_distributions_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MINVALUE
     NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -182,8 +169,8 @@ CREATE TABLE changeset_errata (
 CREATE SEQUENCE changeset_errata_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MINVALUE
     NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -215,8 +202,8 @@ CREATE TABLE changeset_packages (
 CREATE SEQUENCE changeset_packages_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MINVALUE
     NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -247,8 +234,8 @@ CREATE TABLE changeset_users (
 CREATE SEQUENCE changeset_users_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MINVALUE
     NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -284,8 +271,8 @@ CREATE TABLE changesets (
 CREATE SEQUENCE changesets_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MINVALUE
     NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -336,8 +323,8 @@ CREATE TABLE component_content_views (
 CREATE SEQUENCE component_content_views_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MINVALUE
     NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -373,8 +360,8 @@ CREATE TABLE content_view_definition_bases (
 CREATE SEQUENCE content_view_definition_bases_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MINVALUE
     NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -405,8 +392,8 @@ CREATE TABLE content_view_definition_products (
 CREATE SEQUENCE content_view_definition_products_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MINVALUE
     NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -437,8 +424,8 @@ CREATE TABLE content_view_definition_repositories (
 CREATE SEQUENCE content_view_definition_repositories_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MINVALUE
     NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -472,8 +459,8 @@ CREATE TABLE content_view_environments (
 CREATE SEQUENCE content_view_environments_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MINVALUE
     NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -504,8 +491,8 @@ CREATE TABLE content_view_version_environments (
 CREATE SEQUENCE content_view_version_environments_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MINVALUE
     NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -537,8 +524,8 @@ CREATE TABLE content_view_versions (
 CREATE SEQUENCE content_view_versions_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MINVALUE
     NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -573,8 +560,8 @@ CREATE TABLE content_views (
 CREATE SEQUENCE content_views_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MINVALUE
     NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -608,8 +595,8 @@ CREATE TABLE custom_info (
 CREATE SEQUENCE custom_info_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MINVALUE
     NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -647,8 +634,8 @@ CREATE TABLE delayed_jobs (
 CREATE SEQUENCE delayed_jobs_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MINVALUE
     NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -683,8 +670,8 @@ CREATE TABLE distributors (
 CREATE SEQUENCE distributors_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MINVALUE
     NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -723,8 +710,8 @@ CREATE TABLE environment_products (
 CREATE SEQUENCE environment_products_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MINVALUE
     NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -753,8 +740,8 @@ CREATE TABLE environment_system_groups (
 CREATE SEQUENCE environment_system_groups_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MINVALUE
     NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -788,8 +775,8 @@ CREATE TABLE environments (
 CREATE SEQUENCE environments_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MINVALUE
     NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -822,8 +809,8 @@ CREATE TABLE filter_rules (
 CREATE SEQUENCE filter_rules_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MINVALUE
     NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -854,8 +841,8 @@ CREATE TABLE filters (
 CREATE SEQUENCE filters_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MINVALUE
     NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -907,8 +894,8 @@ CREATE TABLE gpg_keys (
 CREATE SEQUENCE gpg_keys_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MINVALUE
     NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -939,8 +926,8 @@ CREATE TABLE help_tips (
 CREATE SEQUENCE help_tips_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MINVALUE
     NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -969,8 +956,8 @@ CREATE TABLE job_tasks (
 CREATE SEQUENCE job_tasks_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MINVALUE
     NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -1000,8 +987,8 @@ CREATE TABLE jobs (
 CREATE SEQUENCE jobs_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MINVALUE
     NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -1030,8 +1017,8 @@ CREATE TABLE key_pools (
 CREATE SEQUENCE key_pools_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MINVALUE
     NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -1060,8 +1047,8 @@ CREATE TABLE key_system_groups (
 CREATE SEQUENCE key_system_groups_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MINVALUE
     NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -1092,8 +1079,8 @@ CREATE TABLE ldap_group_roles (
 CREATE SEQUENCE ldap_group_roles_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MINVALUE
     NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -1122,8 +1109,8 @@ CREATE TABLE marketing_engineering_products (
 CREATE SEQUENCE marketing_engineering_products_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MINVALUE
     NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -1158,8 +1145,8 @@ CREATE TABLE notices (
 CREATE SEQUENCE notices_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MINVALUE
     NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -1194,8 +1181,8 @@ CREATE TABLE organizations (
 CREATE SEQUENCE organizations_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MINVALUE
     NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -1236,8 +1223,8 @@ CREATE TABLE permission_tags (
 CREATE SEQUENCE permission_tags_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MINVALUE
     NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -1273,8 +1260,8 @@ CREATE TABLE permissions (
 CREATE SEQUENCE permissions_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MINVALUE
     NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -1314,8 +1301,8 @@ CREATE TABLE pools (
 CREATE SEQUENCE pools_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MINVALUE
     NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -1354,8 +1341,8 @@ CREATE TABLE products (
 CREATE SEQUENCE products_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MINVALUE
     NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -1393,8 +1380,8 @@ CREATE TABLE providers (
 CREATE SEQUENCE providers_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MINVALUE
     NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -1440,8 +1427,8 @@ CREATE TABLE repositories (
 CREATE SEQUENCE repositories_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MINVALUE
     NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -1471,8 +1458,8 @@ CREATE TABLE resource_types (
 CREATE SEQUENCE resource_types_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MINVALUE
     NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -1505,8 +1492,8 @@ CREATE TABLE roles (
 CREATE SEQUENCE roles_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MINVALUE
     NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -1536,8 +1523,8 @@ CREATE TABLE roles_users (
 CREATE SEQUENCE roles_users_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MINVALUE
     NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -1578,8 +1565,8 @@ CREATE TABLE search_favorites (
 CREATE SEQUENCE search_favorites_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MINVALUE
     NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -1611,8 +1598,8 @@ CREATE TABLE search_histories (
 CREATE SEQUENCE search_histories_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MINVALUE
     NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -1646,8 +1633,8 @@ CREATE TABLE sync_plans (
 CREATE SEQUENCE sync_plans_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MINVALUE
     NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -1676,8 +1663,8 @@ CREATE TABLE system_activation_keys (
 CREATE SEQUENCE system_activation_keys_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MINVALUE
     NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -1711,8 +1698,8 @@ CREATE TABLE system_groups (
 CREATE SEQUENCE system_groups_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MINVALUE
     NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -1743,8 +1730,8 @@ CREATE TABLE system_system_groups (
 CREATE SEQUENCE system_system_groups_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MINVALUE
     NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -1780,8 +1767,8 @@ CREATE TABLE systems (
 CREATE SEQUENCE systems_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MINVALUE
     NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -1823,8 +1810,8 @@ CREATE TABLE task_statuses (
 CREATE SEQUENCE task_statuses_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MINVALUE
     NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -1854,8 +1841,8 @@ CREATE TABLE user_notices (
 CREATE SEQUENCE user_notices_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MINVALUE
     NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -1897,8 +1884,8 @@ CREATE TABLE users (
 CREATE SEQUENCE users_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MINVALUE
     NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -1928,8 +1915,8 @@ CREATE TABLE verbs (
 CREATE SEQUENCE verbs_id_seq
     START WITH 1
     INCREMENT BY 1
-    NO MINVALUE
     NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
