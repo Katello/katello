@@ -98,136 +98,6 @@ ALTER SEQUENCE changeset_content_views_id_seq OWNED BY changeset_content_views.i
 
 
 --
--- Name: changeset_dependencies; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE changeset_dependencies (
-    id integer NOT NULL,
-    changeset_id integer,
-    package_id character varying(255),
-    display_name character varying(255),
-    product_id integer NOT NULL,
-    dependency_of character varying(255)
-);
-
-
---
--- Name: changeset_dependencies_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE changeset_dependencies_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: changeset_dependencies_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE changeset_dependencies_id_seq OWNED BY changeset_dependencies.id;
-
-
---
--- Name: changeset_distributions; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE changeset_distributions (
-    id integer NOT NULL,
-    changeset_id integer,
-    distribution_id character varying(255),
-    display_name character varying(255),
-    product_id integer NOT NULL
-);
-
-
---
--- Name: changeset_distributions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE changeset_distributions_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: changeset_distributions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE changeset_distributions_id_seq OWNED BY changeset_distributions.id;
-
-
---
--- Name: changeset_errata; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE changeset_errata (
-    id integer NOT NULL,
-    changeset_id integer,
-    errata_id character varying(255),
-    display_name character varying(255),
-    product_id integer NOT NULL
-);
-
-
---
--- Name: changeset_errata_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE changeset_errata_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: changeset_errata_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE changeset_errata_id_seq OWNED BY changeset_errata.id;
-
-
---
--- Name: changeset_packages; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE changeset_packages (
-    id integer NOT NULL,
-    changeset_id integer,
-    package_id character varying(255),
-    display_name character varying(255),
-    product_id integer NOT NULL,
-    nvrea character varying(255)
-);
-
-
---
--- Name: changeset_packages_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE changeset_packages_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: changeset_packages_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE changeset_packages_id_seq OWNED BY changeset_packages.id;
-
-
---
 -- Name: changeset_users; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -294,26 +164,6 @@ CREATE SEQUENCE changesets_id_seq
 --
 
 ALTER SEQUENCE changesets_id_seq OWNED BY changesets.id;
-
-
---
--- Name: changesets_products; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE changesets_products (
-    changeset_id integer,
-    product_id integer
-);
-
-
---
--- Name: changesets_repositories; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE changesets_repositories (
-    changeset_id integer NOT NULL,
-    repository_id integer NOT NULL
-);
 
 
 --
@@ -703,36 +553,6 @@ CREATE TABLE environment_priors (
     environment_id integer,
     prior_id integer NOT NULL
 );
-
-
---
--- Name: environment_products; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE environment_products (
-    id integer NOT NULL,
-    environment_id integer NOT NULL,
-    product_id integer NOT NULL
-);
-
-
---
--- Name: environment_products_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE environment_products_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: environment_products_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE environment_products_id_seq OWNED BY environment_products.id;
 
 
 --
@@ -1414,7 +1234,6 @@ CREATE TABLE repositories (
     name character varying(255),
     pulp_id character varying(255) NOT NULL,
     enabled boolean DEFAULT true,
-    environment_product_id integer NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     major integer,
@@ -1429,7 +1248,9 @@ CREATE TABLE repositories (
     relative_path character varying(255) NOT NULL,
     feed character varying(255),
     unprotected boolean DEFAULT false NOT NULL,
-    content_type character varying(255) DEFAULT 'yum'::character varying NOT NULL
+    content_type character varying(255) DEFAULT 'yum'::character varying NOT NULL,
+    product_id integer,
+    environment_id integer
 );
 
 
@@ -1958,34 +1779,6 @@ ALTER TABLE ONLY changeset_content_views ALTER COLUMN id SET DEFAULT nextval('ch
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY changeset_dependencies ALTER COLUMN id SET DEFAULT nextval('changeset_dependencies_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY changeset_distributions ALTER COLUMN id SET DEFAULT nextval('changeset_distributions_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY changeset_errata ALTER COLUMN id SET DEFAULT nextval('changeset_errata_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY changeset_packages ALTER COLUMN id SET DEFAULT nextval('changeset_packages_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
 ALTER TABLE ONLY changeset_users ALTER COLUMN id SET DEFAULT nextval('changeset_users_id_seq'::regclass);
 
 
@@ -2071,13 +1864,6 @@ ALTER TABLE ONLY delayed_jobs ALTER COLUMN id SET DEFAULT nextval('delayed_jobs_
 --
 
 ALTER TABLE ONLY distributors ALTER COLUMN id SET DEFAULT nextval('distributors_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY environment_products ALTER COLUMN id SET DEFAULT nextval('environment_products_id_seq'::regclass);
 
 
 --
@@ -2335,38 +2121,6 @@ ALTER TABLE ONLY changeset_content_views
 
 
 --
--- Name: changeset_dependencies_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY changeset_dependencies
-    ADD CONSTRAINT changeset_dependencies_pkey PRIMARY KEY (id);
-
-
---
--- Name: changeset_distributions_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY changeset_distributions
-    ADD CONSTRAINT changeset_distributions_pkey PRIMARY KEY (id);
-
-
---
--- Name: changeset_errata_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY changeset_errata
-    ADD CONSTRAINT changeset_errata_pkey PRIMARY KEY (id);
-
-
---
--- Name: changeset_packages_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY changeset_packages
-    ADD CONSTRAINT changeset_packages_pkey PRIMARY KEY (id);
-
-
---
 -- Name: changeset_users_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -2468,14 +2222,6 @@ ALTER TABLE ONLY delayed_jobs
 
 ALTER TABLE ONLY distributors
     ADD CONSTRAINT distributors_pkey PRIMARY KEY (id);
-
-
---
--- Name: environment_products_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY environment_products
-    ADD CONSTRAINT environment_products_pkey PRIMARY KEY (id);
 
 
 --
@@ -2828,104 +2574,6 @@ CREATE INDEX index_activation_keys_on_user_id ON activation_keys USING btree (us
 
 
 --
--- Name: index_changeset_dependencies_on_changeset_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_changeset_dependencies_on_changeset_id ON changeset_dependencies USING btree (changeset_id);
-
-
---
--- Name: index_changeset_dependencies_on_package_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_changeset_dependencies_on_package_id ON changeset_dependencies USING btree (package_id);
-
-
---
--- Name: index_changeset_dependencies_on_product_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_changeset_dependencies_on_product_id ON changeset_dependencies USING btree (product_id);
-
-
---
--- Name: index_changeset_distributions_on_changeset_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_changeset_distributions_on_changeset_id ON changeset_distributions USING btree (changeset_id);
-
-
---
--- Name: index_changeset_distributions_on_distribution_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_changeset_distributions_on_distribution_id ON changeset_distributions USING btree (distribution_id);
-
-
---
--- Name: index_changeset_distributions_on_product_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_changeset_distributions_on_product_id ON changeset_distributions USING btree (product_id);
-
-
---
--- Name: index_changeset_errata_on_changeset_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_changeset_errata_on_changeset_id ON changeset_errata USING btree (changeset_id);
-
-
---
--- Name: index_changeset_errata_on_errata_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_changeset_errata_on_errata_id ON changeset_errata USING btree (errata_id);
-
-
---
--- Name: index_changeset_errata_on_errata_id_and_changeset_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE UNIQUE INDEX index_changeset_errata_on_errata_id_and_changeset_id ON changeset_errata USING btree (errata_id, changeset_id);
-
-
---
--- Name: index_changeset_errata_on_product_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_changeset_errata_on_product_id ON changeset_errata USING btree (product_id);
-
-
---
--- Name: index_changeset_packages_on_changeset_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_changeset_packages_on_changeset_id ON changeset_packages USING btree (changeset_id);
-
-
---
--- Name: index_changeset_packages_on_nvrea_and_changeset_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE UNIQUE INDEX index_changeset_packages_on_nvrea_and_changeset_id ON changeset_packages USING btree (nvrea, changeset_id);
-
-
---
--- Name: index_changeset_packages_on_package_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_changeset_packages_on_package_id ON changeset_packages USING btree (package_id);
-
-
---
--- Name: index_changeset_packages_on_product_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_changeset_packages_on_product_id ON changeset_packages USING btree (product_id);
-
-
---
 -- Name: index_changeset_users_on_changeset_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -2958,34 +2606,6 @@ CREATE UNIQUE INDEX index_changesets_on_name_and_environment_id ON changesets US
 --
 
 CREATE INDEX index_changesets_on_task_status_id ON changesets USING btree (task_status_id);
-
-
---
--- Name: index_changesets_products_on_changeset_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_changesets_products_on_changeset_id ON changesets_products USING btree (changeset_id);
-
-
---
--- Name: index_changesets_products_on_product_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_changesets_products_on_product_id ON changesets_products USING btree (product_id);
-
-
---
--- Name: index_changesets_repositories_on_changeset_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_changesets_repositories_on_changeset_id ON changesets_repositories USING btree (changeset_id);
-
-
---
--- Name: index_changesets_repositories_on_repository_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_changesets_repositories_on_repository_id ON changesets_repositories USING btree (repository_id);
 
 
 --
@@ -3038,13 +2658,6 @@ CREATE UNIQUE INDEX index_content_views_on_organization_id_and_label ON content_
 
 
 --
--- Name: index_cs_distro_distro_id_cs_id_p_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE UNIQUE INDEX index_cs_distro_distro_id_cs_id_p_id ON changeset_distributions USING btree (distribution_id, changeset_id, product_id);
-
-
---
 -- Name: index_custom_info_on_type_id_keyname; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -3091,13 +2704,6 @@ CREATE INDEX index_environment_priors_on_environment_id ON environment_priors US
 --
 
 CREATE INDEX index_environment_priors_on_prior_id ON environment_priors USING btree (prior_id);
-
-
---
--- Name: index_environment_products_on_environment_id_and_product_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE UNIQUE INDEX index_environment_products_on_environment_id_and_product_id ON environment_products USING btree (environment_id, product_id);
 
 
 --
@@ -3465,10 +3071,10 @@ CREATE INDEX index_repositories_on_cp_label ON repositories USING btree (cp_labe
 
 
 --
--- Name: index_repositories_on_environment_product_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: index_repositories_on_environment_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
-CREATE INDEX index_repositories_on_environment_product_id ON repositories USING btree (environment_product_id);
+CREATE INDEX index_repositories_on_environment_id ON repositories USING btree (environment_id);
 
 
 --
@@ -3483,6 +3089,13 @@ CREATE INDEX index_repositories_on_gpg_key_id ON repositories USING btree (gpg_k
 --
 
 CREATE INDEX index_repositories_on_library_instance_id ON repositories USING btree (library_instance_id);
+
+
+--
+-- Name: index_repositories_on_product_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_repositories_on_product_id ON repositories USING btree (product_id);
 
 
 --
@@ -3668,13 +3281,6 @@ CREATE UNIQUE INDEX index_users_on_username ON users USING btree (username);
 
 
 --
--- Name: repositories_l_cvvi_epi; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE UNIQUE INDEX repositories_l_cvvi_epi ON repositories USING btree (label, content_view_version_id, environment_product_id);
-
-
---
 -- Name: unique_schema_migrations; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -3738,70 +3344,6 @@ ALTER TABLE ONLY changeset_content_views
 
 
 --
--- Name: changeset_dependencies_changeset_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY changeset_dependencies
-    ADD CONSTRAINT changeset_dependencies_changeset_id_fk FOREIGN KEY (changeset_id) REFERENCES changesets(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: changeset_dependencies_product_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY changeset_dependencies
-    ADD CONSTRAINT changeset_dependencies_product_id_fk FOREIGN KEY (product_id) REFERENCES products(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: changeset_distributions_changeset_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY changeset_distributions
-    ADD CONSTRAINT changeset_distributions_changeset_id_fk FOREIGN KEY (changeset_id) REFERENCES changesets(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: changeset_distributions_product_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY changeset_distributions
-    ADD CONSTRAINT changeset_distributions_product_id_fk FOREIGN KEY (product_id) REFERENCES products(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: changeset_errata_changeset_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY changeset_errata
-    ADD CONSTRAINT changeset_errata_changeset_id_fk FOREIGN KEY (changeset_id) REFERENCES changesets(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: changeset_errata_product_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY changeset_errata
-    ADD CONSTRAINT changeset_errata_product_id_fk FOREIGN KEY (product_id) REFERENCES products(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: changeset_packages_changeset_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY changeset_packages
-    ADD CONSTRAINT changeset_packages_changeset_id_fk FOREIGN KEY (changeset_id) REFERENCES changesets(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: changeset_packages_product_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY changeset_packages
-    ADD CONSTRAINT changeset_packages_product_id_fk FOREIGN KEY (product_id) REFERENCES products(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
 -- Name: changeset_users_changeset_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3823,38 +3365,6 @@ ALTER TABLE ONLY changeset_users
 
 ALTER TABLE ONLY changesets
     ADD CONSTRAINT changesets_environment_id_fk FOREIGN KEY (environment_id) REFERENCES environments(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: changesets_products_changeset_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY changesets_products
-    ADD CONSTRAINT changesets_products_changeset_id_fk FOREIGN KEY (changeset_id) REFERENCES changesets(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: changesets_products_product_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY changesets_products
-    ADD CONSTRAINT changesets_products_product_id_fk FOREIGN KEY (product_id) REFERENCES products(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: changesets_repositories_changeset_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY changesets_repositories
-    ADD CONSTRAINT changesets_repositories_changeset_id_fk FOREIGN KEY (changeset_id) REFERENCES changesets(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: changesets_repositories_repository_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY changesets_repositories
-    ADD CONSTRAINT changesets_repositories_repository_id_fk FOREIGN KEY (repository_id) REFERENCES repositories(id) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
@@ -4023,22 +3533,6 @@ ALTER TABLE ONLY environment_priors
 
 ALTER TABLE ONLY environment_priors
     ADD CONSTRAINT environment_priors_prior_id_fk FOREIGN KEY (prior_id) REFERENCES environments(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: environment_products_environment_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY environment_products
-    ADD CONSTRAINT environment_products_environment_id_fk FOREIGN KEY (environment_id) REFERENCES environments(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: environment_products_product_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY environment_products
-    ADD CONSTRAINT environment_products_product_id_fk FOREIGN KEY (product_id) REFERENCES products(id) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
@@ -4343,14 +3837,6 @@ ALTER TABLE ONLY providers
 
 ALTER TABLE ONLY repositories
     ADD CONSTRAINT repositories_content_view_version_id_fk FOREIGN KEY (content_view_version_id) REFERENCES content_view_versions(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: repositories_environment_product_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY repositories
-    ADD CONSTRAINT repositories_environment_product_id_fk FOREIGN KEY (environment_product_id) REFERENCES environment_products(id) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
@@ -4836,3 +4322,9 @@ INSERT INTO schema_migrations (version) VALUES ('20130604124100');
 INSERT INTO schema_migrations (version) VALUES ('20130612212512');
 
 INSERT INTO schema_migrations (version) VALUES ('20130613090036');
+
+INSERT INTO schema_migrations (version) VALUES ('20130617213707');
+
+INSERT INTO schema_migrations (version) VALUES ('20130619151418');
+
+INSERT INTO schema_migrations (version) VALUES ('20130622171955');
