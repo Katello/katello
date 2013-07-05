@@ -27,19 +27,16 @@ module ConsumerSupport
 
   def self.create_consumer(consumer_id)
     @consumer = System.find(consumer_id)
-
-    VCR.use_cassette('support/consumer') do
-      @consumer.set_pulp_consumer
-    end
-  rescue => e
+    @consumer.set_pulp_consumer
+  rescue Exception => e
+    puts e
+    puts e.backtrace
   ensure
     return @consumer
   end
 
-  def self.destroy_consumer(id=@consumer_id)
-    VCR.use_cassette('support/consumer') do
-      @consumer.del_pulp_consumer
-    end
+  def self.destroy_consumer
+    @consumer.del_pulp_consumer
   rescue RestClient::ResourceNotFound => e
     #ignore if not found
   end

@@ -1,0 +1,120 @@
+--- 
+http_interactions: 
+- request: 
+    method: post
+    uri: https://localhost.localdomain/pulp/api/v2/users/
+    body: 
+      encoding: US-ASCII
+      string: "{\"login\":\"batman\",\"name\":\"batman\",\"password\":\"ihaveaterriblepassword\"}"
+    headers: 
+      Accept: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Content-Type: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="6OobJ5YaGrPLDJMEi1iea2BaF4ZhoedohDRPRXMyc", oauth_signature="JNFvKZeU%2F7wFKU%2F1OriudPv6f3Q%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1373090190", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      Content-Length: 
+      - "70"
+      User-Agent: 
+      - Ruby
+  response: 
+    status: 
+      code: 201
+      message: Created
+    headers: 
+      Date: 
+      - Sat, 06 Jul 2013 05:56:30 GMT
+      Server: 
+      - Apache/2.4.4 (Fedora) OpenSSL/1.0.1c-fips PHP/5.4.9 mod_wsgi/3.4 Python/2.7.3 mod_perl/2.0.7 Perl/v5.16.3
+      Location: 
+      - batman
+      Content-Length: 
+      - "184"
+      Content-Type: 
+      - application/json
+    body: 
+      encoding: US-ASCII
+      string: "{\"_id\": {\"$oid\": \"51d7b18ee138232bc589a5cf\"}, \"name\": \"batman\", \"roles\": [], \"_ns\": \"users\", \"login\": \"batman\", \"id\": \"51d7b18ee138232bc589a5cf\", \"_href\": \"/pulp/api/v2/users/batman/\"}"
+    http_version: 
+  recorded_at: Sat, 06 Jul 2013 05:56:30 GMT
+- request: 
+    method: delete
+    uri: https://localhost.localdomain/pulp/api/v2/users/batman/
+    body: 
+      encoding: US-ASCII
+      string: ""
+    headers: 
+      Accept: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Content-Type: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="smX3mNmxgXxwrgIg2NHzt4JIzTIVOkvowkFbeBMqI", oauth_signature="sZzX%2BQ5%2B9%2FUmKgXS1vG8uYPOJ2M%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1373090190", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      User-Agent: 
+      - Ruby
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Date: 
+      - Sat, 06 Jul 2013 05:56:30 GMT
+      Server: 
+      - Apache/2.4.4 (Fedora) OpenSSL/1.0.1c-fips PHP/5.4.9 mod_wsgi/3.4 Python/2.7.3 mod_perl/2.0.7 Perl/v5.16.3
+      Content-Length: 
+      - "4"
+      Content-Type: 
+      - application/json
+    body: 
+      encoding: US-ASCII
+      string: "null"
+    http_version: 
+  recorded_at: Sat, 06 Jul 2013 05:56:31 GMT
+- request: 
+    method: delete
+    uri: https://localhost.localdomain/pulp/api/v2/users/fake/
+    body: 
+      encoding: US-ASCII
+      string: ""
+    headers: 
+      Accept: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Content-Type: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="BmK8l1QxqSA1hilLOgeoK1nwuBYun64gl9RdkmfmYQ", oauth_signature="274Lji9q5Jg2UwSlrm5Oic6SOg8%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1373090191", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      User-Agent: 
+      - Ruby
+  response: 
+    status: 
+      code: 404
+      message: Not Found
+    headers: 
+      Date: 
+      - Sat, 06 Jul 2013 05:56:31 GMT
+      Server: 
+      - Apache/2.4.4 (Fedora) OpenSSL/1.0.1c-fips PHP/5.4.9 mod_wsgi/3.4 Python/2.7.3 mod_perl/2.0.7 Perl/v5.16.3
+      Content-Encoding: 
+      - utf-8
+      Content-Length: 
+      - "224"
+      Content-Type: 
+      - application/json
+    body: 
+      encoding: US-ASCII
+      string: "{\"http_request_method\": \"DELETE\", \"exception\": null, \"error_message\": \"Missing resource(s): resource_id=fake\", \"_href\": \"/pulp/api/v2/users/fake/\", \"http_status\": 404, \"traceback\": null, \"resources\": {\"resource_id\": \"fake\"}}"
+    http_version: 
+  recorded_at: Sat, 06 Jul 2013 05:56:31 GMT
+recorded_with: VCR 2.5.0

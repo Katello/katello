@@ -11,10 +11,10 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require 'minitest_helper'
-require './test/support/repository_support'
+require './test/support/pulp/repository_support'
 
 class GluePulpErrataTestBase < MiniTest::Rails::ActiveSupport::TestCase
-  extend  ActiveRecord::TestFixtures
+  extend ActiveRecord::TestFixtures
   include RepositorySupport
 
   fixtures :all
@@ -27,10 +27,11 @@ class GluePulpErrataTestBase < MiniTest::Rails::ActiveSupport::TestCase
     models    = ['Repository', 'Errata', 'Package']
     disable_glue_layers(services, models)
 
+    VCR.insert_cassette('pulp/content/errata')
+
     User.current = User.find(@loaded_fixtures['users']['admin']['id'])
     RepositorySupport.create_and_sync_repo(@loaded_fixtures['repositories']['fedora_17_x86_64']['id'])
 
-    VCR.insert_cassette('glue_pulp_errata', :match_requests_on => [:path, :params, :method, :body_json])
     @@erratum_id = RepositorySupport.repo.errata.select{ |errata| errata.errata_id == 'RHEA-2010:0002' }.first.id
   end
 

@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require 'minitest_helper'
-require './test/support/repository_support'
+require './test/support/pulp/repository_support'
 
 
 class GluePulpPackageTestBase < MiniTest::Rails::ActiveSupport::TestCase
@@ -30,10 +30,11 @@ class GluePulpPackageTestBase < MiniTest::Rails::ActiveSupport::TestCase
     models    = ['Repository', 'Package']
     disable_glue_layers(services, models)
 
+    VCR.insert_cassette('pulp/content/package')
+
     User.current = User.find(@loaded_fixtures['users']['admin']['id'])
     RepositorySupport.create_and_sync_repo(@loaded_fixtures['repositories']['fedora_17_x86_64']['id'])
 
-    VCR.insert_cassette('glue_pulp_package', :match_requests_on => [:path, :params, :method, :body_json])
     @@package_id = RepositorySupport.repo.packages.first.id
   end
 

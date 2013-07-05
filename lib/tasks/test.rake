@@ -30,6 +30,8 @@ if defined?(MiniTest)
     Rake::Task["minitest"].clear
     Rake::Task["minitest:models"].clear
     Rake::Task["minitest:controllers"].clear
+    Rake::Task["db:test:prepare"].clear
+
     if ENV['method']
       if not ENV['method'].starts_with?('test_')
         ENV['method'] = "test_#{ENV['method']}"
@@ -44,8 +46,6 @@ if defined?(MiniTest)
 
     MINITEST_TASKS  = %w(models helpers controllers glue lib)
     GLUE_LAYERS     = %w(pulp candlepin elasticsearch)
-
-    Rake::Task["db:test:prepare"].clear
 
     MINITEST_TASKS.each do |task|
       if ENV['test']

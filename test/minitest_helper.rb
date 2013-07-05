@@ -6,9 +6,9 @@ require File.expand_path('../../config/environment', __FILE__)
 require 'minitest/autorun'
 require 'minitest/rails'
 require 'json'
-require 'support/auth_support'
-require 'support/warden_support'
-require 'support/controller_support'
+require './test/support/auth_support'
+require './test/support/warden_support'
+require './test/support/controller_support'
 require 'mocha/setup'
 
 require './lib/monkeys/foreign_keys_postgresql'
@@ -73,7 +73,7 @@ def configure_vcr
 
     c.default_cassette_options = {
       :record => mode,
-      :match_requests_on => [:method, :path, :params],
+      :match_requests_on => [:method, :path, :params, :body_json],
       :serialize_with => :syck
     }
 

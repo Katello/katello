@@ -11,13 +11,14 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require 'minitest_helper'
+require './test/support/pulp/task_support'
 
 
 class GluePulpRepoTestBase < MiniTest::Rails::ActiveSupport::TestCase
   extend ActiveRecord::TestFixtures
+  include TaskSupport
 
   fixtures :all
-  @@admin = nil
 
   def self.before_suite
     @loaded_fixtures = load_fixtures
@@ -29,46 +30,26 @@ class GluePulpRepoTestBase < MiniTest::Rails::ActiveSupport::TestCase
     disable_glue_layers(services, models, true)
 
     @@admin = User.find(@loaded_fixtures['users']['admin']['id'])
-  end
+    User.current = @@admin
 
-  def self.wait_on_tasks(task_list)
-    VCR.use_cassette('glue_pulp_repo_tasks', :erb => true, :match_requests_on => [:path, :method]) do
-      task_list.each do |task|
-        while !(['finished', 'error', 'timed_out', 'canceled', 'reset', 'success'].include?(task['state'])) do
-          task = PulpSyncStatus.pulp_task(Runcible::Resources::Task.poll(task["task_id"]))
-          sleep 0.5 # do not overload backend engines
-        end
-      end
-    end
-  end
-
-  def self.wait_on_task(task)
-    VCR.use_cassette('glue_pulp_repo_tasks', :erb => true, :match_requests_on => [:path, :method]) do
-      while !(['finished', 'error', 'timed_out', 'canceled', 'reset', 'success'].include?(task['state'])) do
-        task = PulpSyncStatus.pulp_task(Runcible::Resources::Task.poll(task["uuid"]))
-        sleep 0.5 # do not overload backend engines
-      end
-    end
-  end
-
-  def setup
-    VCR.insert_cassette('glue_pulp_repo', :match_requests_on => [:path, :params, :method])
-  end
-
-  def teardown
-    VCR.eject_cassette
+    @@fedora_17_x86_64 = Repository.find(@loaded_fixtures['repositories']['fedora_17_x86_64']['id'])
+    @@fedora_17_x86_64.relative_path = '/test_path/'
+    @@fedora_17_x86_64.feed = "file://#{File.expand_path(File.dirname(__FILE__))}".gsub("glue/pulp", "fixtures/zoo5")
   end
 
 end
 
 
-class GluePulpRepoTestCreateDestroy < GluePulpRepoTestBase
+class GluePulpRepoCreateDestroyTest < GluePulpRepoTestBase
 
   def setup
     super
-    @fedora_17_x86_64 = Repository.find(repositories(:fedora_17_x86_64).id)
-    @fedora_17_x86_64.relative_path = '/test_path/'
-    @fedora_17_x86_64.feed = "file://#{File.expand_path(File.dirname(__FILE__))}".gsub("glue/pulp", "fixtures/zoo5")
+    @fedora_17_x86_64 = @@fedora_17_x86_64
+    VCR.insert_cassette('pulp/repository/create')
+  end
+
+  def teardown
+    VCR.eject_cassette
   end
 
   def test_create_pulp_repo
@@ -86,51 +67,21 @@ end
 
 class GluePulpRepoTest < GluePulpRepoTestBase
 
-  @@fedora_17_x86_64 = nil
-
   def self.before_suite
     super
-    @@fedora_17_x86_64 = Repository.find(@loaded_fixtures['repositories']['fedora_17_x86_64']['id'])
-    @@fedora_17_x86_64.relative_path = '/test_path/'
-    @@fedora_17_x86_64.feed = "file://#{File.expand_path(File.dirname(__FILE__))}".gsub("glue/pulp", "fixtures/zoo5")
-
-    VCR.use_cassette('glue_pulp_repo_helper') do
-      @@fedora_17_x86_64.create_pulp_repo
-    end
+    VCR.insert_cassette('pulp/repository/repository')
+    @@fedora_17_x86_64.create_pulp_repo
   end
 
   def self.after_suite
-    VCR.use_cassette('glue_pulp_repo_helper') do
-      @@fedora_17_x86_64.destroy_repo
-    end
+    @@fedora_17_x86_64.destroy_repo
+    VCR.eject_cassette
   end
 
   def setup
     super
-    User.current = @@admin
     @fedora_17_x86_64 = @@fedora_17_x86_64
     @fedora_17_x86_64.relative_path = '/test_path/'
-  end
-
-  def test_sync
-    task_list = @fedora_17_x86_64.sync
-
-    refute_empty    task_list
-    assert_kind_of  PulpSyncStatus, task_list.first
-
-    @task = task_list.first
-    self.class.wait_on_task(@task)
-  end
-
-  def test_set_sync_schedule
-    VCR.use_cassette('glue_pulp_repo_sync_schedule', :match_requests_on => [:path, :params, :method]) do
-      assert @fedora_17_x86_64.set_sync_schedule(Time.now.advance(:years => 1).iso8601 << "/P1D")
-    end
-  end
-
-  def test_cancel_sync
-    #@@fedora_17_x86_64.sync
-    #assert @@fedora_17_x86_64.cancel_sync
   end
 
   def test_relative_path
@@ -143,44 +94,44 @@ class GluePulpRepoTest < GluePulpRepoTestBase
     refute_equal '/test_path/', @fedora_17_x86_64.relative_path
   end
 
-  def test_generate_distributor
-    assert_kind_of Runcible::Extensions::YumDistributor, @fedora_17_x86_64.generate_distributor
-  end
-
   def test_populate_from
     assert @fedora_17_x86_64.populate_from({ @fedora_17_x86_64.pulp_id => {} })
+  end
+
+  def test_sync
+    task_list = @fedora_17_x86_64.sync
+
+    refute_empty    task_list
+    assert_kind_of  PulpSyncStatus, task_list.first
+
+    TaskSupport.wait_on_tasks(task_list)
+  end
+
+  def test_set_sync_schedule
+    assert @fedora_17_x86_64.set_sync_schedule(Time.parse("Aug 2013").iso8601 << "/P1D")
+  end
+
+  def test_generate_distributor
+    assert_kind_of Runcible::Extensions::YumDistributor, @fedora_17_x86_64.generate_distributor
   end
 
 end
 
 
-class GluePulpRepoRequiresSyncTest < GluePulpRepoTestBase
-
-  i_suck_and_my_tests_are_order_dependent!
-
-  @@fedora_17_x86_64 = nil
-  @@fedora_17_x86_64_dev = nil
+class GluePulpRepoContentsTest < GluePulpRepoTestBase
 
   def self.before_suite
     super
-    User.current = @@admin
-    @@fedora_17_x86_64 = Repository.find(@loaded_fixtures['repositories']['fedora_17_x86_64']['id'])
-    @@fedora_17_x86_64_dev = Repository.find(@loaded_fixtures['repositories']['fedora_17_x86_64_dev']['id'])
+    VCR.insert_cassette('pulp/repository/contents')
 
-    @@fedora_17_x86_64.relative_path = '/test_path/'
-    @@fedora_17_x86_64.feed = "file://#{File.expand_path(File.dirname(__FILE__))}".gsub("glue/pulp", "fixtures/zoo5")
-
-    VCR.use_cassette('glue_pulp_repo_helper') do
-      @@fedora_17_x86_64.create_pulp_repo
-      task = @@fedora_17_x86_64.sync.first
-      wait_on_task(task)
-    end
+    @@fedora_17_x86_64.create_pulp_repo
+    task_list = @@fedora_17_x86_64.sync
+    TaskSupport.wait_on_tasks(task_list)
   end
 
   def self.after_suite
-    VCR.use_cassette('glue_pulp_repo_helper') do
-      @@fedora_17_x86_64.destroy_repo
-    end
+    @@fedora_17_x86_64.destroy_repo
+    VCR.eject_cassette
   end
 
   def test_last_sync
@@ -208,55 +159,39 @@ class GluePulpRepoRequiresSyncTest < GluePulpRepoTestBase
   end
 
   def test_sync_finish
-    VCR.use_cassette('glue_pulp_repo_sync_status', :match_requests_on => [:path, :params, :method]) do
-      refute_nil @@fedora_17_x86_64.sync_finish
-    end
+    refute_nil @@fedora_17_x86_64.sync_finish
   end
 
   def test_sync_start
-    VCR.use_cassette('glue_pulp_repo_sync_status', :match_requests_on => [:path, :params, :method]) do
-      refute_nil @@fedora_17_x86_64.sync_start
-    end
+    refute_nil @@fedora_17_x86_64.sync_start
   end
 
   def test_packages
-    VCR.use_cassette('glue_pulp_repo_units', :match_requests_on => [:body_json, :path, :method]) do
-      refute_empty @@fedora_17_x86_64.packages.select { |package| package.name == 'elephant' }
-    end
+    refute_empty @@fedora_17_x86_64.packages.select { |package| package.name == 'elephant' }
   end
 
   def test_has_package?
-    VCR.use_cassette('glue_pulp_repo_units', :match_requests_on => [:body_json, :path, :method]) do
-      pkg_id = @@fedora_17_x86_64.packages.sort_by(&:id).first.id
-      assert @@fedora_17_x86_64.has_package?(pkg_id)
-    end
+    pkg_id = @@fedora_17_x86_64.packages.sort_by(&:id).first.id
+    assert @@fedora_17_x86_64.has_package?(pkg_id)
   end
 
   def test_errata
-    VCR.use_cassette('glue_pulp_repo_units', :match_requests_on => [:body_json, :path, :method]) do
-      refute_empty @@fedora_17_x86_64.errata.select { |errata| errata.errata_id == "RHEA-2010:0002" }
-    end
+    refute_empty @@fedora_17_x86_64.errata.select { |errata| errata.errata_id == "RHEA-2010:0002" }
   end
 
   def test_has_erratum?
-    VCR.use_cassette('glue_pulp_repo_units', :match_requests_on => [:body_json, :path, :method]) do
-      e_id = @@fedora_17_x86_64.errata.first.errata_id
-      assert @@fedora_17_x86_64.has_erratum?(e_id)
-    end
+    e_id = @@fedora_17_x86_64.errata.first.errata_id
+    assert @@fedora_17_x86_64.has_erratum?(e_id)
   end
 
   def test_distributions
-    VCR.use_cassette('glue_pulp_repo_units', :match_requests_on => [:body_json, :path, :method]) do
-      distributions = @@fedora_17_x86_64.distributions
+    distributions = @@fedora_17_x86_64.distributions
 
-      refute_empty distributions.select { |distribution| distribution.id == "ks-Test Family-TestVariant-16-x86_64" }
-    end
+    refute_empty distributions.select { |distribution| distribution.id == "ks-Test Family-TestVariant-16-x86_64" }
   end
 
   def test_has_distribution?
-    VCR.use_cassette('glue_pulp_repo_units', :match_requests_on => [:body_json, :path, :method]) do
-      assert @@fedora_17_x86_64.has_distribution?("ks-Test Family-TestVariant-16-x86_64")
-    end
+    assert @@fedora_17_x86_64.has_distribution?("ks-Test Family-TestVariant-16-x86_64")
   end
 
   def test_find_packages_by_name
@@ -272,19 +207,36 @@ class GluePulpRepoRequiresSyncTest < GluePulpRepoTestBase
   end
 
   def test_package_groups
-    VCR.use_cassette('glue_pulp_repo_units', :match_requests_on => [:body_json, :path, :method]) do
-      package_groups = @@fedora_17_x86_64.package_groups
+    package_groups = @@fedora_17_x86_64.package_groups
 
-      refute_empty package_groups.select { |group| group.name == 'mammal' }
-    end
+    refute_empty package_groups.select { |group| group.name == 'mammal' }
   end
 
   def test_package_group_categories
-    VCR.use_cassette('glue_pulp_repo_units', :match_requests_on => [:body_json, :path, :method]) do
-      categories = @@fedora_17_x86_64.package_group_categories
+    categories = @@fedora_17_x86_64.package_group_categories
 
-      refute_empty categories.select { |category| category['name'] == 'all' }
-    end
+    refute_empty categories.select { |category| category['name'] == 'all' }
+  end
+
+end
+
+
+class GluePulpRepoOperationsTest < GluePulpRepoTestBase
+
+  def self.before_suite
+    super
+    VCR.insert_cassette('pulp/repository/operations')
+
+    @@fedora_17_x86_64_dev = Repository.find(@loaded_fixtures['repositories']['fedora_17_x86_64_dev']['id'])
+
+    @@fedora_17_x86_64.create_pulp_repo
+    task_list = @@fedora_17_x86_64.sync
+    TaskSupport.wait_on_tasks(task_list)
+  end
+
+  def self.after_suite
+    @@fedora_17_x86_64.destroy_repo
+    VCR.eject_cassette
   end
 
   def test_create_clone
@@ -305,7 +257,7 @@ class GluePulpRepoRequiresSyncTest < GluePulpRepoTestBase
     task_list = @@fedora_17_x86_64.clone_contents(@@fedora_17_x86_64_dev)
     assert_equal 5, task_list.length
 
-    self.class.wait_on_tasks(task_list)
+    TaskSupport.wait_on_tasks(task_list)
   ensure
     @@fedora_17_x86_64_dev.destroy_repo
   end
@@ -316,7 +268,7 @@ class GluePulpRepoRequiresSyncTest < GluePulpRepoTestBase
 
     task_list = @@fedora_17_x86_64.promote(library, staging)
     assert_equal 5, task_list.length
-    self.class.wait_on_tasks(task_list)
+    TaskSupport.wait_on_tasks(task_list)
 
     clone_id = @@fedora_17_x86_64.clone_id(staging, staging.default_content_view)
     cloned_repo = Repository.where(:pulp_id => clone_id).first
@@ -326,46 +278,30 @@ class GluePulpRepoRequiresSyncTest < GluePulpRepoTestBase
 end
 
 
-class GluePulpRepoRequiresEmptyPromoteTest < GluePulpRepoTestBase
-
-  @@fedora_17_x86_64  = nil
-  @@cloned_repo       = nil
-  @@staging           = nil
-  @@library           = nil
+class GluePulpRepoAddContentTest < GluePulpRepoTestBase
 
   def self.before_suite
     super
-    User.current = @@admin
-
-    @@fedora_17_x86_64 = Repository.find(@loaded_fixtures['repositories']['fedora_17_x86_64']['id'])
-    @@fedora_17_x86_64.relative_path = '/test_path/'
-    @@fedora_17_x86_64.feed = "file://#{File.expand_path(File.dirname(__FILE__))}".gsub("glue/pulp", "fixtures/zoo5")
+    VCR.insert_cassette('pulp/repository/add_contents')
 
     @@library = KTEnvironment.find(@loaded_fixtures['environments']['library']['id'])
     @@staging = KTEnvironment.find(@loaded_fixtures['environments']['staging']['id'])
 
-    VCR.use_cassette('glue_pulp_repo_helper') do
-      #clone_id = @@fedora_17_x86_64.clone_id(@@staging)
-      #Runcible::Resources::Repository.delete(clone_id)
-      ##@@fedora_17_x86_64.destroy_repo
-      @@fedora_17_x86_64.create_pulp_repo
-      task_list = @@fedora_17_x86_64.promote(@@library, @@staging)
-      wait_on_tasks(task_list)
+    @@fedora_17_x86_64.create_pulp_repo
+    task_list = @@fedora_17_x86_64.sync
+    TaskSupport.wait_on_tasks(task_list)
 
-      task = @@fedora_17_x86_64.sync.first
-      wait_on_task(task)
+    task_list = @@fedora_17_x86_64.promote(@@library, @@staging)
+    TaskSupport.wait_on_tasks(task_list)
 
-
-      clone_id = @@fedora_17_x86_64.clone_id(@@staging, @@staging.default_content_view)
-      @@cloned_repo = Repository.where(:pulp_id => clone_id).first
-    end
+    clone_id = @@fedora_17_x86_64.clone_id(@@staging, @@staging.default_content_view)
+    @@cloned_repo = Repository.where(:pulp_id => clone_id).first
   end
 
   def self.after_suite
-    VCR.use_cassette('glue_pulp_repo_helper') do
-      @@cloned_repo.destroy if @@cloned_repo
-      @@fedora_17_x86_64.destroy_repo if @@fedora_17_x86_64
-    end
+    @@cloned_repo.destroy if @@cloned_repo
+    @@fedora_17_x86_64.destroy_repo if @@fedora_17_x86_64
+    VCR.eject_cassette
   end
 
   def test_add_packages
@@ -385,42 +321,30 @@ class GluePulpRepoRequiresEmptyPromoteTest < GluePulpRepoTestBase
 end
 
 
-class GluePulpRepoRequiresSyncAndPromoteTest < GluePulpRepoTestBase
-
-  @@fedora_17_x86_64  = nil
-  @@cloned_repo       = nil
-  @@staging           = nil
-  @@library           = nil
+class GluePulpRepoRemoveContentTest < GluePulpRepoTestBase
 
   def self.before_suite
     super
-    User.current = @@admin
-
-    @@fedora_17_x86_64 = Repository.find(@loaded_fixtures['repositories']['fedora_17_x86_64']['id'])
-    @@fedora_17_x86_64.relative_path = '/test_path/'
-    @@fedora_17_x86_64.feed = "file://#{File.expand_path(File.dirname(__FILE__))}".gsub("glue/pulp", "fixtures/zoo5")
+    VCR.insert_cassette('pulp/repository/remove_contents')
 
     @@library = KTEnvironment.find(@loaded_fixtures['environments']['library']['id'])
     @@staging = KTEnvironment.find(@loaded_fixtures['environments']['staging']['id'])
 
-    VCR.use_cassette('glue_pulp_repo_helper') do
-      @@fedora_17_x86_64.create_pulp_repo
-      task = @@fedora_17_x86_64.sync.first
-      wait_on_task(task)
+    @@fedora_17_x86_64.create_pulp_repo
+    task_list = @@fedora_17_x86_64.sync
+    TaskSupport.wait_on_tasks(task_list)
 
-      task_list = @@fedora_17_x86_64.promote(@@library, @@staging)
-      wait_on_tasks(task_list)
+    task_list = @@fedora_17_x86_64.promote(@@library, @@staging)
+    TaskSupport.wait_on_tasks(task_list)
 
-      clone_id = @@fedora_17_x86_64.clone_id(@@staging, @@staging.default_content_view)
-      @@cloned_repo = Repository.where(:pulp_id => clone_id).first
-    end
+    clone_id = @@fedora_17_x86_64.clone_id(@@staging, @@staging.default_content_view)
+    @@cloned_repo = Repository.where(:pulp_id => clone_id).first
   end
 
   def self.after_suite
-    VCR.use_cassette('glue_pulp_repo_helper') do
-      @@fedora_17_x86_64.destroy_repo
-      @@cloned_repo.destroy
-    end
+    @@cloned_repo.destroy if @@cloned_repo
+    @@fedora_17_x86_64.destroy_repo if @@fedora_17_x86_64
+    VCR.eject_cassette
   end
 
   def test_delete_packages
