@@ -54,12 +54,30 @@ table.details-visible {
     }
   }
 
+  th.sortable {
+    cursor: pointer;
+  }
+
   th {
+    background: white;
     border-right: none;
     color: rgb(92, 92, 92);
-    background: white;
     line-height: 1;
     vertical-align: bottom;
+
+    .sort-icon {
+      position: relative;
+      left: 4px;
+    }
+
+    .icon-sort-down {
+      bottom: 2px;
+    }
+
+    .icon-sort-up {
+      top: 4px;
+    }
+
   }
 
   .selected-row {

@@ -144,7 +144,10 @@ angular.module('alchemy')
             $scope.row.columns.push(column);
         };
     }])
-    .directive('alchTableColumn', [function() {
+    .directive('alchTableColumn', ['$compile', function($compile) {
+        var sortIconTemplate = '<th ng-click="table.sortBy(column)">' +
+                                  '<i class="sort-icon" ng-show="table.sort.by == column.id" ng-class="{\'icon-sort-down\': column.sortOrder == \'DESC\', \'icon-sort-up\': column.sortOrder == \'ASC\'}"></i>' +
+                               '</th>';
         return {
             require: '^alchTableHead',
             restrict: 'A',
@@ -152,13 +155,25 @@ angular.module('alchemy')
             controller: ['$scope', function($scope) {
                 $scope.column = { show: true };
             }],
-            link: function(scope, element, attrs, alchTableHeadController) {
-                alchTableHeadController.addColumn(scope.column);
+            compile: function(element, attributes) {
+                if (attributes.hasOwnProperty("sortable")) {
+                    var newElement = angular.element(sortIconTemplate);
+                    newElement.find('.sort-icon').before(element.html());
+                    newElement.addClass('sortable');
+                    element.replaceWith(newElement);
+                }
+                return function(scope, element, attributes, alchTableHeadController) {
+                    if (attributes.hasOwnProperty("sortable")) {
+                        $compile(element)(scope);
+                    }
+                    scope.column.id = attributes["alchTableColumn"];
+                    alchTableHeadController.addColumn(scope.column);
 
-                scope.$watch('column.show', function(show) {
-                    var display = show ? '' : 'none';
-                    element.css('display', display);
-                });
+                    scope.$watch('column.show', function(show) {
+                        var display = show ? '' : 'none';
+                        element.css('display', display);
+                    });
+                };
             }
         };
     }])
