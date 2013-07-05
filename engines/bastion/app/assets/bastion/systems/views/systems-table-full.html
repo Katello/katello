@@ -1,5 +1,5 @@
-<div alch-table="table" nutupane-table>
-  <div alch-table-scroll>
+<div alch-table="table" nutupane-table ng-class="{'table-mask': table.loadingMore}">
+  <div alch-table-scroll alch-infinite-scroll="table.nextPage()">
     <table class="table table-striped">
       <thead>
       <tr alch-table-head row-select>
