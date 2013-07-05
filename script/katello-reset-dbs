@@ -150,7 +150,9 @@ echo "Initializing Katello database"
 # cannot use initdb for this (BZ 745542)
 pushd $KATELLO_HOME >/dev/null
 
-RAKE_TASKS=( 'clear_search_indices' 'db:reset' )
+# SCHEMA: return to schema usage after FKs fixed
+#RAKE_TASKS=( 'clear_search_indices' 'db:reset' )
+RAKE_TASKS=( 'clear_search_indices' 'db:migrate' 'db:seed' )
 for i in ${RAKE_TASKS[@]};  do 
   RAILS_ENV=$KATELLO_ENV RAILS_RELATIVE_URL_ROOT=$KATELLO_PREFIX rake $i --trace  2>&1
 done
