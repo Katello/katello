@@ -28,6 +28,10 @@ module RepositorySupport
     @repo
   end
 
+  def self.repo_url
+    @repo_url
+  end
+
   def self.create_and_sync_repo(repo_id)
     destroy_repo
     @repo = create_repo(repo_id)

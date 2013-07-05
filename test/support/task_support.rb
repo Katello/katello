@@ -13,6 +13,16 @@
 require 'minitest_helper'
 
 
+class PulpTaskStatus
+  class << self
+    alias actually_wait_for_tasks wait_for_tasks
+    def wait_for_tasks(tasks)
+      return tasks.collect{|t| using_pulp_task(t)} unless VCR.live?
+      actually_wait_for_tasks(tasks)
+    end
+  end
+end
+
 module TaskSupport
 
   def self.wait_on_tasks(task_list)
@@ -22,6 +32,7 @@ module TaskSupport
   end
 
   def self.wait_on_task(task)
+    return task unless VCR.live?
     VCR.use_cassette('task_support', :erb => true, :match_requests_on => [:path, :method, :body_json]) do
       while !(['finished', 'error', 'timed_out', 'canceled', 'reset', 'success'].include?(task['state'])) do
         task = PulpSyncStatus.pulp_task(Runcible::Resources::Task.poll(task['progress']["task_id"]))
@@ -36,5 +47,4 @@ module TaskSupport
       sleep 0.5 # do not overload backend engines
     end
   end
-
 end
