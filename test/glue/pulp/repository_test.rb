@@ -280,6 +280,8 @@ end
 
 class GluePulpRepoAddContentTest < GluePulpRepoTestBase
 
+  @@cloned_repo = nil
+
   def self.before_suite
     super
     VCR.insert_cassette('pulp/repository/add_contents')

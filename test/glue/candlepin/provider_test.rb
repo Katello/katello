@@ -12,7 +12,6 @@
 
 require 'minitest_helper'
 require 'mocha/setup'
-require './test/support/user_support'
 
 
 class GlueCandlepinProviderTestBase < MiniTest::Rails::ActiveSupport::TestCase

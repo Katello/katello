@@ -28,7 +28,7 @@ module ConsumerSupport
   def self.create_consumer(consumer_id)
     @consumer = System.find(consumer_id)
     @consumer.set_pulp_consumer
-  rescue Exception => e
+  rescue => e
     puts e
     puts e.backtrace
   ensure

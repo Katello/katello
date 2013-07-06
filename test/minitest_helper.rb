@@ -6,6 +6,7 @@ require File.expand_path('../../config/environment', __FILE__)
 require 'minitest/autorun'
 require 'minitest/rails'
 require 'json'
+require 'logging'
 require './test/support/auth_support'
 require './test/support/warden_support'
 require './test/support/controller_support'
@@ -116,7 +117,14 @@ def configure_runcible
                     :oauth_key    => Katello.config.pulp.oauth_key }
     }
 
-    Runcible::Base.config[:logger] = 'stdout' if ENV['logging'] == "true"
+    if ENV['logging']
+      logger = Logging.logger(STDOUT)
+      Runcible::Base.config[:logging] = {
+        :logger => logger,
+        :debug  => true,
+        :exception => true
+      }
+    end
   end
 end
 
