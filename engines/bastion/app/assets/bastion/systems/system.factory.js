@@ -51,7 +51,7 @@ angular.module('Bastion.systems').factory('System',
                     Collection.offset = args['offset'];
                 }
 
-                resource.getCollection(args, function(data) {
+                resource.query(args, function(data) {
                     if (Collection.offset === 0) {
                         Collection.records = data.records;
                     } else {
@@ -69,7 +69,7 @@ angular.module('Bastion.systems').factory('System',
 
         resource = $resource(Routes.apiSystemsPath() + '/:systemId', {systemId: '@uuid'}, {
             update: { method: 'PUT'},
-            getCollection: { method: 'GET'}
+            query: { method: 'GET', isArray: false}
         });
 
         findIndex = function(record) {

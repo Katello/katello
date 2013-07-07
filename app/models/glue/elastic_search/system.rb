@@ -71,7 +71,7 @@ module Glue::ElasticSearch::System
       mapping   :dynamic_templates => dynamic_templates do
         indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
         indexes :description, :type => 'string'
-        indexes :name_sort, :type => 'string', :index => :not_analyzed
+        indexes :content_view, :type => 'string', :analyzer => :kt_name_analyzer
         indexes :lastCheckin, :type=>'date'
         indexes :name_autocomplete, :type=>'string', :analyzer=>'autcomplete_name_analyzer'
         indexes :installed_products, :type=>'string', :analyzer=>:kt_name_analyzer
@@ -84,6 +84,10 @@ module Glue::ElasticSearch::System
         end
         indexes :status, :type => 'string'
 
+        # Sortable attributes
+        indexes :name_sort, :type => 'string', :index => :not_analyzed
+        indexes :environment_sort, :type => 'string', :index => :not_analyzed
+        indexes :content_view_sort, :type => 'string', :index => :not_analyzed
       end
 
       update_related_indexes :system_groups, :name
@@ -92,14 +96,18 @@ module Glue::ElasticSearch::System
 
   def extended_index_attrs
     {:facts=>self.facts, :organization_id=>self.organization.id,
-     :name_sort=>name.downcase, :name_autocomplete=>self.name,
      :system_group=>self.system_groups.collect{|g| g.name},
      :system_group_ids=>self.system_group_ids,
      :installed_products=>collect_installed_product_names,
      :sockets => self.sockets,
      :custom_info=>collect_custom_info,
      :content_view => self.content_view.try(:name),
-     :status => self.compliance_color
+     :status => self.compliance_color,
+
+     # Sortable attributes
+     :name_sort=>name.downcase, :name_autocomplete=>self.name,
+     :content_view_sort => self.content_view.try(:name),
+     :environment_sort => self.environment.try(:name)
     }
   end
 end

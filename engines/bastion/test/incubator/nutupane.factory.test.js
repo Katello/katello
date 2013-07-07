@@ -109,6 +109,39 @@ describe('Factory: Nutupane', function() {
 
             expect(Resource.get).not.toHaveBeenCalled();
         });
+
+        describe("provides a way to sort the table", function(){
+            it ("defaults the sort to ascending if the previous sort does not match the new sort.", function() {
+                nutupane.table.sort = {};
+                nutupane.table.sortBy({id: "name"});
+                expect(nutupane.table.sort.by).toBe("name");
+                expect(nutupane.table.sort.order).toBe("ASC");
+            });
+
+            it("toggles the sort order if already sorting by that column", function() {
+                nutupane.table.sort = {
+                    by: 'name',
+                    order: 'ASC'
+                };
+                nutupane.table.sortBy({id: "name"});
+                expect(nutupane.table.sort.by).toBe("name");
+                expect(nutupane.table.sort.order).toBe("DESC");
+            });
+
+            it("sets the column sort order and marks it as active.", function() {
+                var column = {id: "name"}
+                nutupane.table.sort = {};
+                nutupane.table.sortBy(column);
+                expect(column.sortOrder).toBe(nutupane.table.sort.order);
+                expect(column.active).toBe(true);
+            });
+
+            it("refreshes the table by calling get()", function() {
+                spyOn(nutupane, "get");
+                nutupane.table.sortBy({id: "name"});
+                expect(nutupane.get).toHaveBeenCalled();
+            });
+        });
     });
 
 });

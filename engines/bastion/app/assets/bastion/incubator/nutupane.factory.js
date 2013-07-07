@@ -39,23 +39,22 @@ angular.module('Bastion.widgets').factory('Nutupane',
         var Nutupane = function(resource) {
             var self = this;
 
-            self.sort = {
-                by: 'name',
-                order: 'ASC'
-            };
-
             self.table = {
                 resource: resource,
                 searchString: $location.search().search,
-                loadingMore: false
+                loadingMore: false,
+                sort: {
+                    by: 'name',
+                    order: 'ASC'
+                }
             };
 
             self.get = function(callback) {
                 var params = {
                     'organization_id':  CurrentOrganization,
                     'search':           $location.search().search || "",
-                    'sort_by':          self.sort.by,
-                    'sort_order':       self.sort.order,
+                    'sort_by':          self.table.sort.by,
+                    'sort_order':       self.table.sort.order,
                     'paged':            true,
                     'offset':           self.table.resource.offset
                 };
@@ -100,17 +99,18 @@ angular.module('Bastion.widgets').factory('Nutupane',
                 });
             };
 
-            self.table.sort = function(column) {
-                if (column.id === self.sort.by) {
-                    self.sort.order = (self.sort.order === 'ASC') ? 'DESC' : 'ASC';
+            self.table.sortBy = function(column) {
+                var sort = self.table.sort;
+                if (column.id === sort.by) {
+                    sort.order = (sort.order === 'ASC') ? 'DESC' : 'ASC';
                 } else {
-                    self.sort.order = 'ASC';
-                    self.sort.by = column.id;
+                    sort.order = 'ASC';
+                    sort.by = column.id;
                 }
 
+                column.sortOrder = sort.order;
                 column.active = true;
-
-                self.table.offset = 0;
+                self.table.resource.offset = 0;
                 self.get();
             };
 
