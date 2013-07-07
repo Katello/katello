@@ -29,6 +29,6 @@ end
 desc "task to perform steps required for katello to work"
 # SCHEMA: return to schema usage after FKs fixed
 # task :setup => ['environment', "clear_search_indices", "db:reset"] do
-task :setup => ['environment', "clear_search_indices", "db:migrate", "db:seed"] do
+task :setup => ['environment', "clear_search_indices", "db:migrate:reset", "db:seed"] do
   puts "Database sucessfully recreated in #{Rails.env}"
 end
