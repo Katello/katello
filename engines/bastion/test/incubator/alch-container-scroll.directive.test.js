@@ -12,7 +12,7 @@
  */
 
 
-describe('Directive: alchTableScroll', function() {
+describe('Directive: alchContainerScroll', function() {
     var scope,
         compile,
         window,
@@ -28,7 +28,7 @@ describe('Directive: alchTableScroll', function() {
 
     beforeEach(function() {
         tableElement = angular.element(
-            '<div alch-table-scroll>' +
+            '<div alch-container-scroll control-width="table">' +
               '<table>' +
                 '<thead>' +
                   '<tr><th>Column 1</th></tr>' +
