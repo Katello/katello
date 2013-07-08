@@ -93,7 +93,6 @@ angular.module('Bastion.widgets').factory('Nutupane',
                 }
 
                 table.loadingMore = true;
-
                 self.get(function() {
                     table.loadingMore = false;
                 });
