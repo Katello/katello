@@ -156,6 +156,8 @@ end
 
 class GluePulpRepoRequiresSyncTest < GluePulpRepoTestBase
 
+  i_suck_and_my_tests_are_order_dependent!
+
   @@fedora_17_x86_64 = nil
   @@fedora_17_x86_64_dev = nil
 

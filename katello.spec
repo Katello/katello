@@ -116,6 +116,8 @@ Requires:       %{?scl_prefix}rubygem(ruby-openid) >= 2.2.3
 Requires:       %{?scl_prefix}rubygem(rabl)
 Requires:       %{?scl_prefix}rubygem(dynflow)
 Requires:       %{?scl_prefix}rubygem(minitest)
+Requires:       %{?scl_prefix}rubygem(foreigner)
+Requires:       %{?scl_prefix}rubygem(justified)
 Requires:       signo >= 0.0.5
 Requires:       signo-katello >= 0.0.5
 Requires:       lsof
@@ -253,8 +255,8 @@ Requires:        %{name}-common
 Requires:        pulp-server
 Requires:        pulp-rpm-plugins
 Requires:        pulp-selinux
-Requires:        createrepo = 0.9.9-18%{?dist}
-Requires:        %{?scl_prefix}rubygem(runcible) >= 0.4.10
+Requires:        createrepo >= 0.9.9-18%{?dist}
+Requires:        %{?scl_prefix}rubygem(runcible) >= 0.4.11
 
 %description glue-pulp
 Katello connection classes for the Pulp backend
@@ -660,13 +662,7 @@ usermod -a -G katello-shared tomcat
 %{homedir}/app/models/ext
 %{homedir}/app/models/roles_permissions
 %{homedir}/app/assets/
-%{homedir}/app/assets/stylesheets
-%{homedir}/app/assets/javascripts
-%{homedir}/app/assets/images
 %{homedir}/vendor
-%{homedir}/vendor/assets
-%{homedir}/vendor/assets/stylesheets
-%{homedir}/vendor/assets/images
 %{homedir}/app/views
 %{homedir}/autotest
 %{homedir}/ca
@@ -687,12 +683,8 @@ usermod -a -G katello-shared tomcat
 %{homedir}/app/lib/notifications
 %{homedir}/app/lib/validators
 %{homedir}/app/lib/api
-%{homedir}/app/lib/api/constraints
-%{homedir}/app/lib/api/v1
-%{homedir}/app/lib/api/v2
 %{homedir}/app/lib/dashboard
 %dir %{homedir}/app/lib/resources
-%{homedir}/app/lib/resources/cdn.rb
 %{homedir}/app/lib/content_search
 %{homedir}/lib/tasks
 %exclude %{homedir}/lib/tasks/yard.rake
@@ -742,11 +734,12 @@ usermod -a -G katello-shared tomcat
 %dir %{homedir}/lib
 %dir %{homedir}/app/lib
 %dir %{homedir}/app/lib/resources
+%{homedir}/app/lib/resources/cdn.rb
 %{homedir}/lib/headpin
 %{homedir}/lib/util
 %{homedir}/app/lib/util
 %{homedir}/script/service-wait
-%{homedir}/db/openid-store/
+%dir %{homedir}/db/openid-store/
 %attr(755, katello, katello) %{datadir}/openid-store/associations
 %attr(755, katello, katello) %{datadir}/openid-store/nonces
 %attr(755, katello, katello) %{datadir}/openid-store/temp
@@ -788,13 +781,7 @@ usermod -a -G katello-shared tomcat
 %exclude %{homedir}/lib/tasks/test.rake
 %exclude %{homedir}/lib/tasks/simplecov.rake
 %{homedir}/app/assets/
-%{homedir}/app/assets/stylesheets
-%{homedir}/app/assets/javascripts
-%{homedir}/app/assets/images
 %{homedir}/vendor
-%{homedir}/vendor/assets
-%{homedir}/vendor/assets/stylesheets
-%{homedir}/vendor/assets/images
 %{homedir}/app/views
 %{homedir}/autotest
 %{homedir}/ca
@@ -813,9 +800,6 @@ usermod -a -G katello-shared tomcat
 %{homedir}/app/lib/notifications
 %{homedir}/app/lib/validators
 %{homedir}/app/lib/api
-%{homedir}/app/lib/api/constraints
-%{homedir}/app/lib/api/v1
-%{homedir}/app/lib/api/v2
 %{homedir}/app/lib/dashboard
 %exclude %{homedir}/app/lib/resources/candlepin.rb
 %{homedir}/lib/tasks
@@ -832,7 +816,6 @@ usermod -a -G katello-shared tomcat
 %{homedir}/script
 %{homedir}/spec
 %{homedir}/tmp
-%{homedir}/vendor
 %{homedir}/.bundle
 %{homedir}/config.ru
 %{homedir}/Gemfile.in

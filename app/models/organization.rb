@@ -47,6 +47,7 @@ class Organization < ActiveRecord::Base
   has_many :system_groups, :dependent => :destroy, :inverse_of => :organization
   has_many :content_view_definitions, :class_name => "ContentViewDefinitionBase", :dependent=> :destroy
   has_many :content_views, :dependent=> :destroy
+  has_many :task_statuses, :dependent => :destroy, :inverse_of => :organization
   serialize :default_info, Hash
 
   attr_accessor :statistics

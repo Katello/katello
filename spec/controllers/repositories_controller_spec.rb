@@ -88,7 +88,7 @@ describe RepositoriesController, :katello => true do
        it "destroys the requested repository" do
          @repository.should_receive(:destroy)
          @repository.should_receive(:destroyed?)
-         delete :destroy, :id => "123456", :provider_id => "123", :product_id => "123"
+         delete :destroy, :id => "123456", :provider_id => "123", :product_id => "123", :format => :js
        end
 
         it "updates the view" do
@@ -156,7 +156,7 @@ describe RepositoriesController, :katello => true do
 
         Resources::Candlepin::Content.stub!(:get).and_return(content)
         Resources::Candlepin::Content.stub!(:create).and_return(content)
-
+        Runcible::Extensions::Repository.stub(:publish_all).and_return([])
         @repo_name = "repo-#{rand 10 ** 8}"
         post :create, { :product_id => @product.id,
                         :provider_id => @product.provider.id,

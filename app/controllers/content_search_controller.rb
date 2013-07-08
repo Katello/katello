@@ -269,10 +269,12 @@ class ContentSearchController < ApplicationController
 
       if is_package
         name = package_display(pack)
+        data_type = "package"
       else
         name = errata_display(pack)
+        data_type = "errata"
       end
-      {:name => name, :id => pack.id, :cols => cols}
+      {:name => name, :id => pack.id, :cols => cols, :data_type => data_type}
     end
 
     cols = {}
