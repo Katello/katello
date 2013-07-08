@@ -17,7 +17,7 @@ require './test/support/pulp/task_support'
 module RepositorySupport
   include TaskSupport
 
-  @repo_url = "file://#{File.expand_path(File.dirname(__FILE__))}".gsub("support", "fixtures/zoo5")
+  @repo_url = "file:///var/www/test_repo"
   @repo     = nil
 
   def self.repo_id

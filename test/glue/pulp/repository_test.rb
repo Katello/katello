@@ -34,7 +34,7 @@ class GluePulpRepoTestBase < MiniTest::Rails::ActiveSupport::TestCase
 
     @@fedora_17_x86_64 = Repository.find(@loaded_fixtures['repositories']['fedora_17_x86_64']['id'])
     @@fedora_17_x86_64.relative_path = '/test_path/'
-    @@fedora_17_x86_64.feed = "file://#{File.expand_path(File.dirname(__FILE__))}".gsub("glue/pulp", "fixtures/zoo5")
+    @@fedora_17_x86_64.feed = "file:///var/www/test_repo"
   end
 
 end
@@ -108,7 +108,8 @@ class GluePulpRepoTest < GluePulpRepoTestBase
   end
 
   def test_set_sync_schedule
-    assert @fedora_17_x86_64.set_sync_schedule(Time.parse("Aug 2013").iso8601 << "/P1D")
+    time = "2013-08-01T00:00:00-04:00/P1D"
+    assert @fedora_17_x86_64.set_sync_schedule(time)
   end
 
   def test_generate_distributor
