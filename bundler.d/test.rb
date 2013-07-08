@@ -1,6 +1,6 @@
 group :test do
   # (also appears in development group)
-  gem 'rspec-rails', '>= 2.0.0'
+  gem 'rspec-rails', '~> 2.13.2'
 
   gem 'webrat', '>=0.7.3'
   gem 'nokogiri', '>= 1.5.0'
