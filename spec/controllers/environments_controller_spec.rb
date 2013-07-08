@@ -220,11 +220,11 @@ describe EnvironmentsController do
         it "destroys the requested environment", :katello => true do #TODO headpin
           @env.should_receive(:destroy)
           @env.should_receive(:destroyed?)
-          delete :destroy, :id => @env.id, :organization_id => @org.label
+          delete :destroy, :id => @env.id, :organization_id => @org.label, :format => :js
         end
 
         it "redirects to the environments list", :katello => true do #TODO headpin
-          delete :destroy, :id => @env.id, :organization_id => @org.label
+          delete :destroy, :id => @env.id, :organization_id => @org.label, :format => :js
         end
       end
 

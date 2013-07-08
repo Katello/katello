@@ -97,10 +97,12 @@ module Glue::Pulp::ConsumerGroup
     def update_package(packages)
       Rails.logger.debug "Scheduling package update for consumer group #{self.pulp_id}"
 
+      options = {"importkeys" => true}
+      options[:all] = true if packages.blank?
       pulp_task = Runcible::Extensions::ConsumerGroup.update_content(self.pulp_id,
                                                                      'rpm',
                                                                      packages,
-                                                                     {'importkeys' => true})
+                                                                     options)
     rescue => e
       Rails.logger.error "Failed to schedule package update for pulp consumer group #{self.pulp_id}: #{e}, #{e.backtrace.join("\n")}"
       raise e

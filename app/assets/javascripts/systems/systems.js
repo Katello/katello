@@ -527,21 +527,21 @@ KT.subs = (function() {
                     value,
                     of_string;
 
-                if($(this).is(":checked")) {
+                spinner = $("#spinner_" + id);
+                if ($(this).is(":checked")) {
                     _checked += 1;
                     direction = "increment";
-                    value = 1;
+                    value = spinner.data("suggested");
                 } else {
                     _checked -= 1;
                     direction = "decrement";
                     value = 0;
                 }
-                spinner = $("#spinner_" + id);
-                if(spinner.length > 0) {
+                if (spinner.length > 0) {
                     if (spinner.attr("class") === "ui-spinner") {
-                        if((spinner.spinner("value") === 0 && direction === "increment") ||
-                           (spinner.spinner("value") !== 0 && direction === "decrement")) {
-                            spinner.spinner(direction);
+                        if ((spinner.spinner("value") === 0 && value > 0) ||
+                           (spinner.spinner("value") !== 0 && value === 0)) {
+                            spinner.spinner("value", value);
                         }
                     } else if (spinner.attr("class") === "ui-nonspinner") {
                         spinner.val(value);

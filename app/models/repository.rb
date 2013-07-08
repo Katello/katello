@@ -36,7 +36,7 @@ class Repository < ActiveRecord::Base
   belongs_to :gpg_key, :inverse_of => :repositories
   belongs_to :library_instance, :class_name=>"Repository"
   has_and_belongs_to_many :changesets
-  has_many :content_view_definition_repositories
+  has_many :content_view_definition_repositories, :dependent => :destroy
   has_many :content_view_definitions, :through => :content_view_definition_repositories
   has_and_belongs_to_many :filters
   belongs_to :content_view_version, :inverse_of=>:repositories
@@ -64,10 +64,6 @@ class Repository < ActiveRecord::Base
 
   scope :yum_type, where(:content_type=>YUM_TYPE)
   scope :file_type, where(:content_type=>FILE_TYPE)
-
-  def self.ids_only
-    with_exclusive_scope{pluck(:id)}
-  end
 
   def product
     self.environment_product.product
@@ -267,7 +263,6 @@ class Repository < ActiveRecord::Base
     clone.save!
     return clone
   end
-
 
   # returns other instances of this repo with the same library
   # equivalent of repo

@@ -51,6 +51,9 @@ class SystemErrataController < ApplicationController
     errata_state = params[:errata_state] if params[:errata_state]
     chunk_size = current_user.page_size
     errata, total_count, results_count = get_errata(offset.to_i, offset.to_i+chunk_size, filter_type, errata_state)
+
+    return render_bad_parameters unless errata
+
     rendered_html = render_to_string(:partial=>"systems/errata/items", :locals => { :errata => errata, :editable => @system.editable? })
     render :json => {:html => rendered_html,
                       :results_count => results_count,

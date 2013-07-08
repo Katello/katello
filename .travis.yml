@@ -5,7 +5,7 @@ rvm:
   - "1.9.3"
 
 before_install:
-  - touch config/katello.yml
+  - cp script/ci/katello.yml config/katello.yml
 
 install:
   - travis_retry bundle install --without devboost:optional:debugging

@@ -32,6 +32,8 @@ require 'models/model_spec_helper'
 require "helpers/user_helper_methods"
 require "helpers/search_helper_methods"
 
+require './lib/monkeys/foreign_keys_postgresql'
+
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
 Dir[Rails.root.join("spec/support/**/*.rb")].each do |f|
