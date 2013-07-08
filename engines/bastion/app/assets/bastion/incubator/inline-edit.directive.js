@@ -80,4 +80,20 @@ angular.module('alchemy')
                         '<div alch-edit></div>' +
                       '</div>'
         };
+    })
+    .directive('alchEditSelect', function() {
+        return {
+            replace: true,
+            scope: {
+                model: '=alchEditSelect',
+                options: '=options',
+                handleSave: '&onSave',
+                handleCancel: '&onCancel'
+            },
+            template: '<div>' +
+                        '<select ng-model="model" ng-options="option for option in options" ng-show="editMode">' +
+                        '</select>' +
+                        '<div alch-edit></div>' +
+                      '</div>'
+        };
     });

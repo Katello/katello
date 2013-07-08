@@ -22,6 +22,7 @@ describe('Directive: alchEdit', function() {
     beforeEach(module(function($provide) {
         testItem = {
             name: 'Test Name',
+            taco: 'carnitas',
             save: function() {},
             revert: function() {}
         };
@@ -123,7 +124,7 @@ describe('Directive: alchEdit', function() {
 
     });
 
-    describe('alchEditText directive', function() {
+    describe('alchEditTextarea directive', function() {
         var editableElement;
 
         beforeEach(function() {
@@ -131,6 +132,7 @@ describe('Directive: alchEdit', function() {
                 '<span alch-edit-textarea="item.name"></span>');
 
             scope.item = testItem;
+            scope.tacoOptions = ['baja shrimp', 'barbacoa', 'carnitas', 'spicy tinga chicken'];
 
             compile(editableElement)(scope);
             scope.$digest();
@@ -139,6 +141,29 @@ describe('Directive: alchEdit', function() {
         it("should display a textarea on editable click", function() {
             var element = editableElement.find('.editable'),
                 input = editableElement.find('textarea');
+            element.trigger('click');
+
+            expect(input.css('display')).not.toBe('none');
+        });
+
+    });
+
+    describe('alchEditSelect directive', function() {
+        var editableElement;
+
+        beforeEach(function() {
+            editableElement = angular.element(
+                '<span alch-edit-select="item.taco" options="tacoOptions"></span>');
+
+            scope.item = testItem;
+
+            compile(editableElement)(scope);
+            scope.$digest();
+        });
+
+        it("should display a select on editable click", function() {
+            var element = editableElement.find('.editable'),
+                input = editableElement.find('select');
             element.trigger('click');
 
             expect(input.css('display')).not.toBe('none');

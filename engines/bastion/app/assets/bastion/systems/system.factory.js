@@ -22,18 +22,54 @@
  *   Provides a $resource for system or list of systems.
  */
 angular.module('Bastion.systems').factory('System',
-    ['$resource', 'Routes',
-    function($resource, Routes) {
+    ['$resource', '$q', 'Routes',
+    function($resource, $q, Routes) {
         var Collection = {},
             resource,
             updateCounts,
             findIndex,
             replaceInCollection;
 
+        resource = $resource(Routes.apiSystemsPath() + '/:id/:action', {id: '@uuid'}, {
+            update: { method: 'PUT'},
+            query: { method: 'GET'},
+            releaseVersions: { method: 'GET', params: {action: 'releases'}}
+        });
+
+        findIndex = function(record) {
+            var index;
+
+            angular.forEach(Collection.records, function(item, itemIndex) {
+                if (item.id === record.id) {
+                    index = itemIndex;
+                }
+            });
+
+            return index;
+        };
+
+        replaceInCollection = function(record) {
+            var index = findIndex(record);
+
+            if (index) {
+                Collection.records[index] = record;
+            } else {
+                Collection.records.push(record);
+                updateCounts(1);
+            }
+        };
+
+        updateCounts = function(count) {
+            Collection.offset += count;
+            Collection.total  += count;
+            Collection.subtotal += count;
+        };
+
         Collection.records  = [];
         Collection.offset   = 0;
         Collection.total    = 0;
         Collection.subtotal = 0;
+        Collection.resource = resource;
 
         Collection.get = function(args, callback) {
             args = args || {};
@@ -67,39 +103,16 @@ angular.module('Bastion.systems').factory('System',
             }
         };
 
-        resource = $resource(Routes.apiSystemsPath() + '/:id', {id: '@uuid'}, {
-            update: { method: 'PUT'},
-            query: { method: 'GET', isArray: false}
-        });
+        Collection.releaseVersions = function(args) {
+            var deferred = $q.defer();
 
-        findIndex = function(record) {
-            var index;
-
-            angular.forEach(Collection.records, function(item, itemIndex) {
-                if (item.id === record.id) {
-                    index = itemIndex;
-                }
+            resource.releaseVersions(args, function(data) {
+                deferred.resolve(data.releases);
             });
 
-            return index;
+            return deferred.promise;
         };
 
-        replaceInCollection = function(record) {
-            var index = findIndex(record);
-
-            if (index) {
-                Collection.records[index] = record;
-            } else {
-                Collection.records.push(record);
-                updateCounts(1);
-            }
-        };
-
-        updateCounts = function(count) {
-            Collection.offset += count;
-            Collection.total  += count;
-            Collection.subtotal += count;
-        };
 
         return Collection;
     }]

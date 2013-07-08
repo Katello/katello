@@ -23,4 +23,6 @@
  */
 angular.module('Bastion.systems').controller('SystemDetailsController', ['$scope', 'System', function($scope, System) {
     $scope.system = System.get({ id: $scope.$stateParams.systemId });
+
+    $scope.releaseVersions = System.releaseVersions({ id: $scope.$stateParams.systemId });
 }]);

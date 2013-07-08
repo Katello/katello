@@ -11,52 +11,96 @@
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
  **/
 
-describe('Controller: SystemsController', function() {
-    var $scope, $state, Nutupane, Routes;
+describe('Factory: System', function() {
+    var $resource,
+        $q,
+        Routes,
+        releaseVersions,
+        systemsCollection;
 
-    // load the systems module and template
     beforeEach(module('Bastion.systems'));
 
-    // Set up mocks
-    beforeEach(function() {
-        $state = {
-            transitionTo: function() {}
+    beforeEach(module(function($provide) {
+        systemsCollection = {
+            records: [
+                { name: 'System1', id: 1 },
+                { name: 'System2', id: 2 }
+            ],
+            total: 2,
+            subtotal: 2
         };
-        Nutupane = function() {
-            this.table = {
-                showColumns: function() {}
-            };
-            this.get = function() {};
-        };
+
+        releaseVersions = ['RHEL 6', 'Burrito'];
+
         Routes = {
             apiSystemsPath: function() { return '/api/systems';},
             editSystemPath: function(id) { return '/system/' + id;}
         };
-        System = {};
-    });
 
-    // Initialize controller
-    beforeEach(inject(function($controller, $rootScope) {
-        $scope = $rootScope.$new();
-        $controller('SystemsController', {$scope: $scope, $state: $state, Nutupane: Nutupane, System: System});
+        $resource = function() {
+            this.get = function(args, callback) {
+                callback(systemsCollection.records[0]);
+            };
+
+            this.update = function() {};
+
+            this.query = function(args, callback) {
+                callback(systemsCollection);
+            };
+
+            this.releaseVersions = function(args, callback) {
+                var deferred = $q.defer();
+
+                deferred.resolve(releaseVersions);
+
+                return deferred.promise;
+            };
+
+            return this;
+        };
+
+        $provide.value('$resource', $resource);
+        $provide.value('Routes', Routes);
     }));
 
-    it("provides a way to get the status color for the system.", function() {
-        expect($scope.getStatusColor("valid")).toBe("green");
-        expect($scope.getStatusColor("partial")).toBe("yellow");
-        expect($scope.getStatusColor("error")).toBe("red");
+    beforeEach(inject(function(_System_, _$q_) {
+        System = _System_;
+        $q = _$q_;
+    }));
+
+    it("provides a way to get a collection of systems", function() {
+        System.get();
+
+        expect(System.records).toEqual(systemsCollection.records);
+        expect(System.total).toEqual(systemsCollection.total);
+        expect(System.subtotal).toEqual(systemsCollection.subtotal);
+        expect(System.offset).toEqual(2);
     });
 
-    it("provides a way to open the details panel.", function() {
-        spyOn($state, "transitionTo");
-        $scope.table.openDetails({ uuid: 2 });
-        expect($state.transitionTo).toHaveBeenCalledWith('systems.details', {systemId: 2});
+    it("provides a way to get a single system by the system ID", function() {
+        System.get({ id: systemsCollection.records[0].id });
+
+        expect(System.records).toEqual([systemsCollection.records[0]]);
+        expect(System.total).toEqual(1);
+        expect(System.subtotal).toEqual(1);
+        expect(System.offset).toEqual(1);
     });
 
-    it("provides a way to close the details panel.", function() {
-        spyOn($state, "transitionTo");
-        $scope.table.closeItem();
-        expect($state.transitionTo).toHaveBeenCalledWith('systems.index');
+    it("updates a single system's occurence within the collection", function() {
+        System.get();
+
+        systemsCollection.records[1].name = 'NewSystemName';
+        System.get({ id: systemsCollection.records[1].id });
+
+        expect(System.records[1].name).toEqual('NewSystemName');
+    });
+
+    it("provides a way to get the possible release versions for a system via a promise", function() {
+        var releasePromise = System.releaseVersions({ id: systemsCollection.records[0].id });
+
+        releasePromise.then(function(data) {
+            expect(data).toEqual(releaseVersions);
+        });
     });
 });
 
