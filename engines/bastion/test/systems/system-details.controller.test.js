@@ -22,17 +22,25 @@ describe('Controller: SystemDetailsController', function() {
         $scope = $rootScope.$new();
         // Mocks
         System = {
-            get: function() {}
+            get: function() {},
+            releaseVersions: function() {}
         };
         spyOn(System, 'get').andReturn({value: 'yo'});
+        spyOn(System, 'releaseVersions').andReturn(['RHEL6']);
+
         $scope.$stateParams = {systemId: 2};
 
         $controller('SystemDetailsController', {$scope: $scope, System: System});
     }));
 
-    it("gets the system using the System service and puts in on the $scope.", function() {
-        expect(System.get).toHaveBeenCalledWith({systemId: 2});
+    it("gets the system using the System service and puts it on the $scope.", function() {
+        expect(System.get).toHaveBeenCalledWith({id: 2});
         expect($scope.system.value).toBe('yo');
+    });
+
+    it("gets the available release versions and puts them on the $scope", function() {
+        expect(System.releaseVersions).toHaveBeenCalledWith({id: 2});
+        expect($scope.releaseVersions).toEqual(['RHEL6']);
     });
 });
 

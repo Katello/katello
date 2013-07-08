@@ -1,6 +1,6 @@
 <section class="system-details" ng-cloak>
   <header class="details-header">
-    <h2 class="fl">{{ "System %systemName" | i18n: {systemName: system.name} }}</h2>
+    <h2 class="fl">{{ "System \"%systemName\"" | i18n: {systemName: system.name} }}</h2>
 
     <div class="details-actions fr">
       <button class="btn-mini btn-danger" ng-click="removeSystem()">{{ "Remove System" | i18n }}</button>
@@ -23,7 +23,7 @@
 
       <div class="detail">
         <span class="info-label">{{ "Name" | i18n }}</span>
-        <span class="info-value">{{ system.name }}</span>
+        <span class="info-value" alch-edit-text="system.name" on-save="system.$update()"></span>
       </div>
 
       <div class="detail">
@@ -33,7 +33,7 @@
 
       <div class="detail">
         <span class="info-label">{{ "Description" | i18n }}</span>
-        <span class="info-value">{{ system.description }}</span>
+        <span class="info-value" alch-edit-textarea="system.description" on-save="system.$update()"></span>
       </div>
 
       <div class="divider"></div>
@@ -54,7 +54,8 @@
 
       <div class="detail">
         <span class="info-label">{{ "Release Version" | i18n }}</span>
-        <span class="info-value">{{ system.release || ("System Default" | i18n) }}</span>
+        <span class="info-value" alch-edit-select="system.releaseVer.releaseVer" 
+              options="releaseVersions" on-save="system.$update()"></span>
       </div>
 
       <div class="detail">
@@ -74,7 +75,7 @@
 
       <div class="detail">
         <span class="info-label">{{ "Location" | i18n }}</span>
-        <span class="info-value">{{ system.location }}</span>
+        <span class="info-value" alch-edit-text="system.location" on-save="system.$update()"></span>
       </div>
 
       <div class="detail">
@@ -134,7 +135,11 @@
 
       <div class="detail">
         <span class="info-label">{{ "Details" | i18n }}</span>
-        <span class="info-value">{{ system.compliance.reasons }}</span>
+        <span class="info-value">
+          <ul>
+            <li ng-repeat="reason in system.compliance.reasons">{{ reason }}</li>
+          </ul>
+        </span>
       </div>
 
       <div class="divider"></div>
