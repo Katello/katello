@@ -1,6 +1,6 @@
 group :development do
   # <test gems> that are here to make things (rake) easier
-    gem 'rspec-rails', '>= 2.0.0'
+    gem 'rspec-rails', '~> 2.13.2'
     gem "parallel_tests"
   # </test gems>
 
