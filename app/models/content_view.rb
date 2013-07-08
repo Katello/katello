@@ -29,13 +29,13 @@ class ContentView < ActiveRecord::Base
   alias :versions :content_view_versions
 
   belongs_to :environment_default, :class_name => "KTEnvironment", :inverse_of => :default_content_view,
-             :foreign_key => :environment_default_id
+             :foreign_key => :environment_default_id # TODO this relation seems to be broken
 
-  has_many :component_content_views
+  has_many :component_content_views, :dependent => :destroy
   has_many :composite_content_view_definitions,
     :through => :component_content_views, :source => "content_view_definition"
 
-  has_many :changeset_content_views
+  has_many :changeset_content_views, :dependent => :destroy
   has_many :changesets, :through => :changeset_content_views
   has_many :activation_keys
 
@@ -130,7 +130,7 @@ class ContentView < ActiveRecord::Base
   end
 
   def version(env)
-    self.versions.in_environment(env).order('content_view_versions.id ASC').last
+    self.versions.in_environment(env).order('content_view_versions.id ASC').scoped(:readonly=>false).last
   end
 
   def version_environment(env)
@@ -259,26 +259,31 @@ class ContentView < ActiveRecord::Base
     # at this point, we don't want to delete the version as we need to reference the repos it
     # contains during the refresh
     library_version = self.version(self.organization.library)
-    library_version.environments.delete(self.organization.library)
 
     # create a new version
     version = ContentViewVersion.new(:version => next_version_id, :content_view => self)
     version.environments << organization.library
     version.save!
 
+    #move all the existing repos over to the new version
+    library_version.repos(organization.library).each do |repo|
+      repo.content_view_version = version
+    end
+    library_version.reload
+    library_version.delete(self.organization.library)
+
     if options[:async]
       task  = version.async(:organization => self.organization,
                             :task_type => TaskStatus::TYPES[:content_view_refresh][:type]).
-                      refresh_version(library_version, options[:notify])
+                      refresh_version(options[:notify])
 
       version.task_status = task
       version.save!
     else
       version.task_status = nil
       version.save!
-      version.refresh_version(library_version, options[:notify])
+      version.refresh_version(options[:notify])
     end
-
     version
   end
 

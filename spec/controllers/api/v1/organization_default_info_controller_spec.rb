@@ -104,6 +104,12 @@ describe Api::V1::OrganizationDefaultInfoController do
       Organization.find(@org.id).default_info["system"].size.should == 1
     end
 
+    it "should raise error with a bad keyname" do
+      Organization.find(@org.id).default_info["system"].include?("bad_keyname").should be_false
+      post :destroy, :organization_id => @org.label, :keyname => "bad_keyname", :informable_type => "system"
+      response.code.should == "404"
+    end
+
   end
 
   describe "apply default custom info to an org's existing systems" do

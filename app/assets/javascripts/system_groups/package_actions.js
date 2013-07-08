@@ -35,60 +35,13 @@ KT.package_actions = (function() {
     content_input,
     add_content_button,
     update_content_button,
+    update_all_content_button,
     remove_content_button,
     error_message,
     add_row_shading = true,
     actions_updater,
     actions_updater_running = false,
 
-    disableContentButtons = function() {
-        add_content_button.unbind();
-        update_content_button.unbind();
-        remove_content_button.unbind();
-
-        add_content_button.attr('disabled', 'disabled');
-        update_content_button.attr('disabled', 'disabled');
-        remove_content_button.attr('disabled', 'disabled');
-
-        add_content_button.addClass('disabled');
-        update_content_button.addClass('disabled');
-        remove_content_button.addClass('disabled');
-    },
-    enableContentButtons = function() {
-        if (add_content_button.hasClass('disabled')) {
-            add_content_button.bind('click', addContent);
-            add_content_button.bind('keypress', function(event) {
-                if( event.which === 13) {
-                    event.preventDefault();
-                    KT.package_actions.addContent(event);
-                }
-            });
-            add_content_button.removeAttr('disabled');
-            add_content_button.removeClass('disabled');
-        }
-        if (update_content_button.hasClass('disabled')) {
-            update_content_button.bind('click', updateContent);
-            update_content_button.bind('keypress', function(event) {
-                if( event.which === 13) {
-                    event.preventDefault();
-                    KT.package_actions.updateContent(event);
-                }
-            });
-            update_content_button.removeAttr('disabled');
-            update_content_button.removeClass('disabled');
-        }
-        if (remove_content_button.hasClass('disabled')) {
-            remove_content_button.bind('click', removeContent);
-            remove_content_button.bind('keypress', function(event) {
-                if( event.which === 13) {
-                    event.preventDefault();
-                    KT.package_actions.removeContent(event);
-                }
-            });
-            remove_content_button.removeAttr('disabled');
-            remove_content_button.removeClass('disabled');
-        }
-    },
     init = function(editable, page) {
         packages_container = $('#packages_container');
         packages_top = $('.packages').find('tbody');
@@ -96,6 +49,7 @@ KT.package_actions = (function() {
         content_input = $('#content_input');
         add_content_button = $('#add_content');
         update_content_button = $('#update_content');
+        update_all_content_button = $('#update_all_content');
         remove_content_button = $('#remove_content');
         error_message = $('#error_message');
 
@@ -115,25 +69,82 @@ KT.package_actions = (function() {
         }
 
         disableContentButtons();
+        enableUpdateAll();
 
-        content_input.bind('change, keyup', updateContentLinks);
+        content_input.bind('change, keyup', refreshButtons);
         content_input.bind('keypress', function(event) {
             // if the user presses enter, ignore it... do not submit the form...
             if( event.which === 13) {
                 event.preventDefault();
             }
         });
+
+        $('.perform_action').change(refreshButtons);
         KT.tipsy.custom.system_packages_tooltips();
     },
-    updateContentLinks = function(data) {
-        if ($.trim($(this).val()).length === 0) {
-            // the user cleared the content box, so disable the add/remove links
+    refreshButtons = function() {
+        if (content_input.val().length === 0) {
             disableContentButtons();
 
+            var selected_action = $("input[name=perform_action]:checked").attr('id');
+            if (selected_action === 'perform_action_packages') {
+                enableUpdateAll();
+            } else {  // perform_action_package_groups
+                disableUpdateAll();
+            }
+
         } else {
-            // the user has entered content in the content box, so enable the add/remove links
+            disableUpdateAll();
             enableContentButtons();
         }
+    },
+    disableContentButtons = function() {
+        add_content_button.unbind().attr('disabled', 'disabled').addClass('disabled');
+        update_content_button.unbind().attr('disabled', 'disabled').addClass('disabled');
+        remove_content_button.unbind().attr('disabled', 'disabled').addClass('disabled');
+    },
+    enableContentButtons = function() {
+        if (add_content_button.hasClass('disabled')) {
+            add_content_button.unbind().bind('click', addContent).removeAttr('disabled').removeClass('disabled');
+            add_content_button.bind('keypress', function(event) {
+                if( event.which === 13) {
+                    event.preventDefault();
+                    KT.package_actions.addContent(event);
+                }
+            });
+        }
+
+        if (update_content_button.hasClass('disabled')) {
+            update_content_button.unbind().bind('click', updateContent).removeAttr('disabled').removeClass('disabled');
+            update_content_button.bind('keypress', function(event) {
+                if( event.which === 13) {
+                    event.preventDefault();
+                    KT.package_actions.updateContent(event);
+                }
+            });
+        }
+
+        if (remove_content_button.hasClass('disabled')) {
+            remove_content_button.unbind().bind('click', removeContent).removeAttr('disabled').removeClass('disabled');
+            remove_content_button.bind('keypress', function(event) {
+                if( event.which === 13) {
+                    event.preventDefault();
+                    KT.package_actions.removeContent(event);
+                }
+            });
+        }
+    },
+    enableUpdateAll = function() {
+        update_all_content_button.unbind().bind('click', updateContent).removeAttr('disabled').removeClass('disabled');
+        update_all_content_button.bind('keypress', function(event) {
+            if( event.which === 13) {
+                event.preventDefault();
+                KT.package_actions.updateContent(event);
+            }
+        });
+    },
+    disableUpdateAll = function() {
+        update_all_content_button.unbind().attr('disabled', 'disabled').addClass('disabled');
     },
     addContent = function(data) {
         data.preventDefault();
@@ -165,6 +176,7 @@ KT.package_actions = (function() {
 
         if (validation_error === undefined) {
             disableContentButtons();
+            disableUpdateAll();
             $.ajax({
                 url: url,
                 type: 'PUT',
@@ -200,12 +212,12 @@ KT.package_actions = (function() {
                             }
                         }
                     });
-                    enableContentButtons();
+                    refreshButtons();
                     show_validation_error(false);
                     startUpdater();  // ensure polling is enabled for updates on the action
                 },
                 error: function() {
-                    enableContentButtons();
+                    refreshButtons();
                 }
             });
         } else {

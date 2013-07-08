@@ -107,9 +107,9 @@ class Api::V1::UsersController < Api::V1::ApiController
       #TODO: this should be placed in model validations
       if Katello.config.available_locales.include? user_params[:default_locale]
         @user.default_locale = user_params[:default_locale]
-        @user.save!
       end
     end
+    @user.save!
     respond
   end
 

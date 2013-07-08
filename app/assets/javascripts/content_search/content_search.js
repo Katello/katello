@@ -11,7 +11,7 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
 
-
+/*jshint multistr: true */
 
 $(document).ready(function() {
 
@@ -32,6 +32,151 @@ $(document).ready(function() {
     Spinner({lines: 13, width: 4}).spin($('.large_spinner').get(0));
 });
 
+KT.content_search_templates = (function(i18n) {
+    var auto_collapse_rows = [2, 3],
+        package_header = function(display) {
+            display["url"] = KT.routes.details_package_path(KT.utils.escape(display["id"]));
+
+            return KT.utils.template("<span data-url='<%= url %>' class='tipsify-package'><%- name %></span> \
+                       <span class='one-line-ellipsis'><%- vel_rel_arch %></span>", display);
+        },
+        errata_header = function(display) {
+            if(display["errata_type"] === "bugfix") {
+                display["icon_class"] = "bug_icon-black";
+            }
+            else if(display["errata_type"] === "enhancement") {
+                display["icon_class"] = "plus_icon-black";
+            }
+            else if(display["errata_type"] === "security") {
+                display["icon_class"] = "shield_icon-black";
+            }
+            else {
+                display["icon_class"] = "enhancement_icon";
+            }
+            display["url"] = KT.routes.short_details_erratum_path(KT.utils.escape(display["id"]));
+
+            return KT.utils.template("<i class=\"errata-icon <%= icon_class %>\"  /><span class=\"tipsify-errata\" data-url=\"<%= url %>\"><%- errata_id %></span>",
+                    display);
+        },
+        row_header_content = function(name, type) {
+            if(type === "package") {
+                html = package_header(name);
+            }
+            else if(type === "errata") {
+                html = errata_header(name);
+            }
+            else {
+                html = KT.utils.escape(name);
+            }
+
+            return html;
+        },
+        row_header = function(id, name, type, row_level, has_children, parent_id) {
+            var title = (type === "package" || type === "errata") ? "" : name,
+                html = $('<li/>', {
+                            'data-id'   : id,
+                            'id'        : 'row_header_' + id,
+                            'class'     : 'row_header grid_row_level_' + row_level
+                        });
+
+
+            name = row_header_content(name, type);
+            if( parent_id !== undefined ){
+                html.attr('data-parent_id', parent_id);
+            }
+
+            if( row_level === 2 ){
+                if( name.length > 30 && name.length < 60 ){
+                    html.addClass('row_height_2');
+                    html.append($('<span/>', { 'class': 'one-line-ellipsis', 'title': title }).html(name));
+                } else if( name.length >= 60 && name.length <= 94 ){
+                    html.addClass('row_height_3');
+                    html.append($('<span/>', { 'class': 'one-line-ellipsis', 'title': title }).html(name));
+                } else if( name.length > 94 ) {
+                    html.addClass('row_height_3');
+                    html.append($('<span/>', { 'class' : 'three-line-ellipsis tipsify', 'title' : name }).html(name));
+                } else {
+                    html.append($('<span/>', { 'class': 'one-line-ellipsis', 'title' : title }).html(name));
+                }
+            } else if( row_level >= 3 ){
+                if( name.length > 30 ){
+                    html.addClass('row_height_2');
+                }
+                html.append($('<span/>', { 'class': 'one-line-ellipsis', 'title': title }).html(name));
+            } else {
+                if( (has_children && name.length > 26) || (parent_id && name.length > 28) || name.length > 28 ){
+                    html.append($('<span/>', { 'class' : 'one-line-ellipsis tipsify', 'title' : name }).html(name));
+                } else {
+                    html.append($('<span/>').html(name));
+                }
+            }
+
+            var temp_html = $('<div/>');
+
+            if( has_children ){
+                if (KT.utils.contains(auto_collapse_rows, row_level)) {
+                    html.prepend(this.collapse_arrow({ open : false }));
+                    html.attr('data-collapsed', "true");
+                    temp_html.append(html);
+                    temp_html.append($('<ul/>', { 'id' : 'child_header_list_' + id, 'class' : 'hidden' }));
+                } else {
+                    html.prepend(this.collapse_arrow({ open : true }));
+                    html.attr('data-collapsed', "false");
+                    temp_html.append(html);
+                    temp_html.append($('<ul/>', { 'id' : 'child_header_list_' + id }));
+                }
+            } else {
+                temp_html.append(html);
+            }
+
+            return temp_html.html();
+        },
+        repo_comparison_header = function(display) {
+            return KT.utils.template(" \
+                <span title=\"<%- environment_name %>\" class=\"one-line-ellipsis\"><%- environment_name %></span> \
+                <span class=\"one-line-ellipsis tipsify\" title=\"<%- content_view_name %>\"><%- content_view_name %></span> \
+                <span class=\"one-line-ellipsis tipsify\" title=\"<%- repo_name %>\"><%- repo_name %></span> \
+            ", display);
+        },
+        content_view_comparison_header = function(display) {
+            return KT.utils.template(" \
+                <span title=\"<%- view_name %> <%- view_version %>\" class=\"one-line-ellipsis tipsify\"><%- view_name %></span> \
+                <span class=\"one-line-ellipsis\"><%- environment_name %></span> \
+            ", display);
+        },
+        column_header = function(id, to_display, span) {
+            var content = "";
+
+            if ( to_display["custom"] && to_display["content"]["type"] === "content-view-comparison") {
+                content = content_view_comparison_header(to_display["content"]);
+            } else if ( to_display["custom"] && to_display["content"]["type"] === "repo-comparison" ) {
+                content = repo_comparison_header(to_display["content"]);
+            } else {
+                content = KT.utils.escape(to_display["content"]);
+            }
+
+            var html = $('<li/>', {
+                    'id'        : 'column_' + id,
+                    'data-id'   : id,
+                    'data-span' : span,
+                    'class'     : 'column_header hidden'
+                }).html(content);
+
+            if( !to_display['custom'] ){
+                if( content > span * 12 ){
+                    html.addClass('tipsify one-line-ellipsis').attr('title', content);
+                }
+            }
+
+            return html;
+        };
+
+    return {
+        row_header              : row_header,
+        row_header_content      : row_header_content,
+        column_header           : column_header
+    };
+}(i18n));
 
 
 KT.content_search = function(paths_in){
@@ -127,6 +272,7 @@ KT.content_search = function(paths_in){
         comparison_grid.init();
         comparison_grid.controls = comparison_grid.controls();
         comparison_grid.set_columns(env_select.get_paths(), true);
+        comparison_grid.set_templates(templates());
 
         browse_box = KT.widget.browse_box("content_selector", KT.widgets, KT.mapping, initial_search);
         $(document).bind(browse_box.get_event(), search_initiated);
@@ -482,6 +628,10 @@ KT.content_search = function(paths_in){
             to_ret.push(subgrids[item]);
         });
         return to_ret;
+    },
+    templates = function() {
+      extended_templates = $.extend({}, KT.comparison_grid.templates, KT.content_search_templates);
+      return extended_templates;
     };
 
     init();
@@ -490,7 +640,8 @@ KT.content_search = function(paths_in){
         change_subgrid_type:change_subgrid_type,
         remove_subgrid: remove_subgrid,
         get_initial_environments: get_initial_environments,
-        get_initial_environment_ids:get_initial_environment_ids
+        get_initial_environment_ids:get_initial_environment_ids,
+        templates: templates
     };
 };
 

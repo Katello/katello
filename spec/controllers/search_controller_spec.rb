@@ -73,15 +73,6 @@ describe SearchController do
       response.should be_success
     end
 
-    it "generates an error notification, if exception raised" do
-      mock = mock("search", :where => [])
-      mock.stub(:create!).with({:path=>"/resource", :params=>"provider.name => theBest"}).and_raise(StandardError)
-      controller.stub_chain(:current_user, :search_favorites).and_return(mock)
-
-      controller.should notify.exception
-      post :create_favorite, {:favorite => @favoriteText}
-    end
-
     it "renders search partial" do
       post :create_favorite, {:favorite => @favoriteText}
       response.should render_template("common/_search")

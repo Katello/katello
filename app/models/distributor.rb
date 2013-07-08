@@ -29,7 +29,7 @@ class Distributor < ActiveRecord::Base
 
   has_many :task_statuses, :as => :task_owner, :dependent => :destroy
   has_many :custom_info, :as => :informable, :dependent => :destroy
-  belongs_to :content_view
+  belongs_to :content_view # TODO may be dead relation
 
   validates :environment, :presence => true
   # multiple distributors with a single name are supported

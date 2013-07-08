@@ -33,9 +33,12 @@
             %tr
               %td
                 %div#content_type
-                = radio_button_tag :perform_action, :packages, true, :tabindex => auto_tab_index
+                = radio_button_tag :perform_action, :packages, true,
+                  {:class => :perform_action, :tabindex => auto_tab_index}
                 = label_tag _('Packages')
-                = radio_button_tag :perform_action, :package_groups, false, :tabindex => auto_tab_index
+
+                = radio_button_tag :perform_action, :package_groups, false,
+                  {:class => :perform_action, :tabindex => auto_tab_index}
                 = label_tag _('Package Groups')
 
             %tr#error_message_container
@@ -47,9 +50,10 @@
                 %div#content_form
                   - help_text = _("Enter Selected Content...")
                   %input{:type=>'text', :id=>'content_input', :size=>'30', :placeholder => help_text, :title => help_text, :tabindex => auto_tab_index}
-                  %input#add_content.button{:type=>'button', :value=>_('Install'), :disabled => 'disabled', 'data-method'=>"POST", 'data-url'=>add_system_group_packages_path(), :tabindex => auto_tab_index}
-                  %input#update_content.button{:type=>'button', :value=>_('Update'), :disabled => 'disabled', 'data-method'=>"POST", 'data-url'=>system_group_packages_path(), :tabindex => auto_tab_index}
-                  %input#remove_content.button{:type=>'button', :value=>_('Remove'), :disabled => 'disabled', 'data-method'=>"POST", 'data-url'=>remove_system_group_packages_path(), :tabindex => auto_tab_index}
+                  %input#add_content.button.hidden{:type=>'button', :value=>_('Install'), 'data-method'=>"POST", 'data-url'=>add_system_group_packages_path(), :tabindex => auto_tab_index}
+                  %input#update_content.button.hidden{:type=>'button', :value=>_('Update'), :'data-method'=>"POST", 'data-url'=>system_group_packages_path(), :tabindex => auto_tab_index}
+                  %input#remove_content.button.hidden{:type=>'button', :value=>_('Remove'), :'data-method'=>"POST", 'data-url'=>remove_system_group_packages_path(), :tabindex => auto_tab_index}
+                  %input#update_all_content.button{:type=>'button', :value=>_('Update All'), 'data-method'=>"POST", 'data-url'=>system_group_packages_path(), :tabindex => auto_tab_index}
     .clear
       &nbsp;
 

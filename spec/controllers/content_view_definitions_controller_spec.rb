@@ -259,9 +259,8 @@ describe ContentViewDefinitionsController, :katello => true do
       end
 
       it "should fail if content view not provided" do
-        controller.should notify.exception
         post :publish, :id=>@definition.id
-        response.should_not be_success
+        response.should be_bad_request
       end
 
     end
