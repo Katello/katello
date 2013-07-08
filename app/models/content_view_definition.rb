@@ -74,7 +74,6 @@ class ContentViewDefinition < ContentViewDefinitionBase
         raise e
       end
     end
-
     view
   end
 
@@ -104,10 +103,11 @@ class ContentViewDefinition < ContentViewDefinitionBase
       async_tasks << repo.clone_contents(clone)
       cloned_repos << clone
     end
-    PulpTaskStatus::wait_for_tasks async_tasks.flatten(1)
+    PulpTaskStatus::wait_for_tasks(async_tasks.flatten(1))
 
     unassociate_contents(cloned_repos)
-
+    view.update_cp_content(view.organization.library)
+    PulpTaskStatus::wait_for_tasks(view.versions.first.generate_metadata)
     if notify
       message = _("Successfully published content view '%{view_name}' from definition '%{definition_name}'.") %
           {:view_name => view.name, :definition_name => self.name}

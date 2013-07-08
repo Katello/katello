@@ -20,7 +20,7 @@ class ContentViewVersion < ActiveRecord::Base
   has_many :environments, {:through      => :content_view_version_environments,
                            :class_name   => "KTEnvironment",
                            :inverse_of   => :content_view_versions,
-                           :after_add    => :add_environment,
+                           :before_add    => :add_environment,
                            :after_remove => :remove_environment
                           }
 
@@ -79,9 +79,11 @@ class ContentViewVersion < ActiveRecord::Base
         order('content_view_version_environments.environment_id')
   end
 
-  def refresh_version(library_version, notify = false)
-    PulpTaskStatus::wait_for_tasks refresh_repos(library_version)
+  def refresh_version(notify = false)
+    PulpTaskStatus::wait_for_tasks self.refresh_repos
+    PulpTaskStatus::wait_for_tasks self.generate_metadata
     self.content_view.index_repositories(self.content_view.organization.library)
+    self.content_view.update_cp_content(self.content_view.organization.library) if Katello.config.use_cp
 
     if notify
       message = _("Successfully generated content view '%{view_name}' version %{view_version}.") %
@@ -106,14 +108,14 @@ class ContentViewVersion < ActiveRecord::Base
     raise e
   end
 
-  def refresh_repos(library_version)
+  def refresh_repos
     # generate a hash of the repos associated with the definition, where key = repo id & value = repo
     definition_repos_hash = has_definition? ?
         Hash[ self.content_view.content_view_definition.repos.collect{|repo| [repo.id, repo]}] : {}
 
     async_tasks = []
     # prepare the repos currently in the library for the refresh
-    library_version.repositories.in_environment(self.content_view.organization.library).each do |repo|
+    self.repositories.in_environment(self.content_view.organization.library).each do |repo|
       if definition_repos_hash.include?(repo.library_instance_id)
         # this repo is in both the definition and in the previous library version,
         # so clear it and later we'll regenerate the content... this is more
@@ -123,7 +125,7 @@ class ContentViewVersion < ActiveRecord::Base
         # this repo no longer exists in the definition, so destroy it
         repo.destroy
       end
-      library_version.reload
+      self.reload
     end
     PulpTaskStatus::wait_for_tasks async_tasks unless async_tasks.blank?
 
@@ -132,7 +134,7 @@ class ContentViewVersion < ActiveRecord::Base
     definition_repos_hash.each do |repo_id, repo|
       # the repos from the definition are based upon initial synced repos, we need to
       # determine if each of those repos has been cloned in the view...
-      library_clone = library_version.get_repo_clone(self.content_view.organization.library, repo).first
+      library_clone = self.content_view.get_repo_clone(self.content_view.organization.library, repo).first
       if library_clone.nil?
         # this repo doesn't currently exist in the library
         clone = repo.create_clone(self.content_view.organization.library, self.content_view)
@@ -141,8 +143,6 @@ class ContentViewVersion < ActiveRecord::Base
       else
         # this repo already exists in the library, so update it
         library_clone = Repository.find(library_clone) # reload readonly obj
-        library_clone.content_view_version = self
-        library_clone.save!
         async_tasks << repo.clone_contents(library_clone)
         repos_to_filter << library_clone
       end
@@ -151,12 +151,12 @@ class ContentViewVersion < ActiveRecord::Base
       self.content_view.content_view_definition.unassociate_contents(repos_to_filter)
     end
 
-    library_version.destroy if library_version.environments.length == 0
     async_tasks.flatten(1)
   end
 
   def deletable?(from_env)
-    !System.exists?(:environment_id=>from_env, :content_view_id=>self.content_view)
+    !System.exists?(:environment_id=>from_env, :content_view_id=>self.content_view) ||
+        self.content_view.versions.in_environment(from_env).count > 1
   end
 
   def delete(from_env)
@@ -175,14 +175,18 @@ class ContentViewVersion < ActiveRecord::Base
     end
   end
 
+  def generate_metadata
+    self.repositories.collect{|repo| repo.generate_metadata}.flatten(1)
+  end
+
   private
 
   def add_environment(env)
-    content_view.add_environment(env)
+    content_view.add_environment(env) if content_view.content_view_versions.in_environment(env).count == 0
   end
 
   def remove_environment(env)
-    content_view.remove_environment(env)
+    content_view.remove_environment(env)  unless content_view.content_view_versions.in_environment(env).count > 1
   end
 
   def create_archived_definition

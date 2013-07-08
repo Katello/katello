@@ -56,7 +56,9 @@ Src::Application.routes.draw do
         resources :tasks, :only => [:index]
         resources :providers, :only => [:index], :constraints => { :organization_id => /[^\/]*/ }
 
-        match '/systems' => 'systems#activate', :via => :post, :constraints => RegisterWithActivationKeyContraint.new
+        scope :constraints => RegisterWithActivationKeyContraint.new do
+          match '/systems' => 'systems#activate', :via => :post
+        end
         resources :systems, :only => [:index, :create] do
           get :report, :on => :collection
 
@@ -248,7 +250,9 @@ Src::Application.routes.draw do
       end
 
       resources :environments, :only => [:show, :update, :destroy] do
-        match '/systems' => 'systems#activate', :via => :post, :constraints => RegisterWithActivationKeyContraint.new
+        scope :constraints => RegisterWithActivationKeyContraint.new do
+          match '/systems' => 'systems#activate', :via => :post
+        end
         resources :systems, :only => [:create, :index] do
           get :report, :on => :collection
         end
@@ -298,7 +302,9 @@ Src::Application.routes.draw do
       match "/version" => "ping#version", :via => :get
 
       # subscription-manager support
-      match '/consumers' => 'systems#activate', :via => :post, :constraints => RegisterWithActivationKeyContraint.new
+      scope :constraints => RegisterWithActivationKeyContraint.new do
+        match '/consumers' => 'systems#activate', :via => :post
+      end
       match '/hypervisors' => 'systems#hypervisors_update', :via => :post
       resources :consumers, :controller => 'systems'
       match '/owners/:organization_id/environments' => 'environments#rhsm_index', :via => :get
