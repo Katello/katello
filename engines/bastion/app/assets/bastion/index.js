@@ -11,7 +11,7 @@
  */
 
 //= require "bastion/incubator/alch-table.directive"
-//= require "bastion/incubator/alch-table-scroll.directive"
+//= require "bastion/incubator/alch-container-scroll.directive"
 //= require "bastion/incubator/alch-infinite-scroll.directive"
 //= require "bastion/incubator/nutupane-table.directive"
 //= require "bastion/incubator/nutupane.factory"
