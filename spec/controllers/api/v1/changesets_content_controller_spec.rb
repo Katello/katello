@@ -28,7 +28,6 @@ describe Api::V1::ChangesetsContentController, :katello => true do
   include LoginHelperMethods
   include AuthorizationHelperMethods
   include OrchestrationHelper
-  fixtures :content_views
 
   let(:changeset_id) { '1' }
 
