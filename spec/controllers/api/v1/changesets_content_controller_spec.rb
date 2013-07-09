@@ -27,26 +27,24 @@ require 'spec_helper.rb'
 describe Api::V1::ChangesetsContentController, :katello => true do
   include LoginHelperMethods
   include AuthorizationHelperMethods
+  include OrchestrationHelper
   fixtures :content_views
 
   let(:changeset_id) { '1' }
 
   before(:each) do
-    @library    = KTEnvironment.new(:name => 'Library', :label => 'Library', :library => true)
-    @library.id = 2
-    @library.stub(:library?).and_return(true)
-    @org = Organization.new(:name=>"blahorg")
-    @environment    = KTEnvironment.new(:name => 'environment', :label => 'environment', :library => false, :organization=>@org)
-    @environment.id = 1
-
-    @environment.stub(:library?).and_return(false)
-    @environment.stub(:prior).and_return(@library)
+    disable_product_orchestration
+    disable_repo_orchestration
+    disable_org_orchestration
+    @org = Organization.create!(:name=>'test_organization', :label=> 'test_organization')
+    @library    = @org.library
+    @environment    = create_environment(:name => 'environment', :label => 'environment', :prior => @library, :organization=>@org)
     @library.stub(:successor).and_return(@environment)
 
-    @view = content_views(:library_dev_view)
+    @view = @environment.content_views.first
     ContentView.stub(:find_by_id).and_return(@view)
 
-    @cs = PromotionChangeset.new(:name => "changeset", :environment => @environment, :id => changeset_id)
+    @cs = PromotionChangeset.create!(:name => "changeset", :environment => @environment)
     Changeset.stub(:find_by_id).and_return(@cs)
 
     @request.env["HTTP_ACCEPT"] = "application/json"
