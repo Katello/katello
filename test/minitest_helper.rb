@@ -11,6 +11,8 @@ require 'support/warden_support'
 require 'support/controller_support'
 require 'mocha/setup'
 
+require './lib/monkeys/foreign_keys_postgresql'
+
 class MiniTest::Rails::ActiveSupport::TestCase
   include FactoryGirl::Syntax::Methods
 
