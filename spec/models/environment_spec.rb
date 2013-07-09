@@ -93,8 +93,10 @@ describe KTEnvironment do
       @third_product = Product.create!(:name =>"prod3", :label=> "prrod3",:cp_id => '45678', :provider => @provider)
       @fourth_product = Product.create!(:name =>"prod4", :label => "prod4", :cp_id => '32683', :provider => @provider)
       @environment = create_environment({:name=>@env_name, :organization => @organization, :label=> @env_name, :prior => @organization.library})
-      FactoryGirl.create(:repository, product: @first_product, environment: @environment, content_view_version_id: 1)
-      FactoryGirl.create(:repository, product: @third_product, environment: @environment, content_view_version_id: 1)
+      FactoryGirl.create(:repository, product: @first_product, environment: @environment,
+                             content_view_version_id: @environment.content_view_versions.first.id)
+      FactoryGirl.create(:repository, product: @third_product, environment: @environment,
+                            content_view_version_id: @environment.content_view_versions.first.id)
     end
 
     specify { @environment.name.should == @env_name }

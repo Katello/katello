@@ -66,10 +66,6 @@ class Repository < ActiveRecord::Base
   scope :yum_type, where(:content_type=>YUM_TYPE)
   scope :file_type, where(:content_type=>FILE_TYPE)
 
-  def self.ids_only
-    with_exclusive_scope{pluck(:id)}
-  end
-
   def organization
     self.environment.organization
   end
@@ -235,7 +231,6 @@ class Repository < ActiveRecord::Base
     clone.save!
     return clone
   end
-
 
   # returns other instances of this repo with the same library
   # equivalent of repo
