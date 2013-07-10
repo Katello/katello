@@ -50,8 +50,12 @@ module Glue::Pulp::Package
       Util::Package::build_nvrea(self.as_json.with_indifferent_access, false)
     end
 
+    def sortable_version
+      Util::Package.sortable_version(self.version)
+    end
+
     def as_json(options = nil)
-      super(options).merge id: id
+      super(options).merge(id: id, sortable_version: sortable_version)
     end
   end
 

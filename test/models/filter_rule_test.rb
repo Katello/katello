@@ -24,6 +24,7 @@ class FilterRuleTest < MiniTest::Rails::ActiveSupport::TestCase
   def setup
     @repo = Repository.find(repositories(:fedora_17_x86_64).id)
     @product = Product.find(products(:fedora).id)
+    Repository.any_instance.stubs(:package_count).returns(2)
   end
 
   def test_package_names
@@ -50,15 +51,19 @@ class FilterRuleTest < MiniTest::Rails::ActiveSupport::TestCase
     search_results2 = array_to_struct([{:filename => "103"},
                                       {:filename => "104"}])
     expected_ids2 = search_results2.collect(&:filename)
+    search_results3 = array_to_struct([{:filename => "105"},
+                                      {:filename => "106"}])
+    expected_ids3 = search_results3.collect(&:filename)
+
     units = {:units => [{:name => "foo*", :version => "5.0"},
                         {:name => "goo*", :min_version => "0.5", :max_version => "0.7" }]}
     expected = [{"$and" => [{"filename"=>{"$in"=> expected_ids1}}, {"version" => "5.0"}]},
-                {"$and" => [{"filename"=>{"$in"=> expected_ids2}}, {"version" => {"$gte" => "0.5", "$lte" => "0.7"}}]}
+                {"$and" => [{"filename"=>{"$in"=> expected_ids2}}, {"filename"=>{"$in"=> expected_ids3}}]}
                ]
-    Package.expects(:search).twice.returns(search_results1, search_results2)
+    Package.expects(:search).times(3).returns(search_results1, search_results2, search_results3)
     exec_test_includes("rpm", units, expected)
 
-    Package.expects(:search).twice.returns(search_results1, search_results2)
+    Package.expects(:search).times(3).returns(search_results1, search_results2, search_results3)
     exec_test_excludes("rpm", units, expected)
   end
 
