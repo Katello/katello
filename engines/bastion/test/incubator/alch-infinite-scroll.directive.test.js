@@ -11,42 +11,74 @@
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
  */
 describe('Directive: alchInfiniteScroll', function () {
-    var $scope, $compile, element;
+    var $scope, $compile, $q, element;
 
     beforeEach(module('alchemy'));
 
-    beforeEach(inject(function ($rootScope, _$compile_){
+    beforeEach(inject(function ($rootScope, _$compile_, _$q_){
         $scope = $rootScope;
         $compile = _$compile_;
+        $q = _$q_;
 
         $scope.scrollHandler = {
-            doIt: function () {}
+            doIt: function() {
+                var deferred = $q.defer();
+                element.append('<p style="height: 10px">lalala</p>');
+                deferred.resolve({});
+                return deferred.promise;
+            }
         };
 
-        element = angular.element('<div alch-infinite-scroll="scrollHandler.doIt()" style="height: 10px; position: absolute; overflow-y: auto;"><p style="height: 100px">lalala</p></div>');
+        element = angular.element('<div alch-infinite-scroll="scrollHandler.doIt()" style="height: 100px; position: absolute; overflow-y: auto;"></div>');
         $('body').append(element);
-        $compile(element)($scope);
-        $scope.$digest();
-
     }));
 
-    it("calls the provided scroll function when scrolling near the bottom.", function() {
-        spyOn($scope.scrollHandler, "doIt");
+    describe("loads more results if scrolling near the bottom", function() {
+        beforeEach(function() {
+            $compile(element)($scope);
+            $scope.$digest();
+        });
 
-        // 95% of the height of the scroll area
-        element.scrollTop(element[0].scrollHeight *.95);
-        element.trigger('scroll');
+        it("calls the provided scroll function when scrolling near the bottom.", function() {
+            spyOn($scope.scrollHandler, "doIt");
 
-        expect($scope.scrollHandler.doIt).toHaveBeenCalled();
+            // 95% of the height of the scroll area
+            element.scrollTop(element[0].scrollHeight *.95);
+            element.trigger('scroll');
+
+            expect($scope.scrollHandler.doIt).toHaveBeenCalled();
+        });
+
+        it("does not calls the provided scroll function when not scrolling near the bottom.", function() {
+            spyOn($scope.scrollHandler, "doIt");
+
+            // 10% of the height of the scroll area
+            element.scrollTop(element[0].scrollHeight *.10);
+            element.trigger('scroll');
+
+            expect($scope.scrollHandler.doIt).not.toHaveBeenCalled();
+        });
     });
 
-    it("does not calls the provided scroll function when not scrolling near the bottom", function() {
-        spyOn($scope.scrollHandler, "doIt");
+    describe("loads more results if there is not a scrollbar", function() {
+        it("on initial load.", function() {
+            spyOn($scope.scrollHandler, "doIt").andCallThrough();
+            $compile(element)($scope);
+            $scope.$digest();
+            expect($scope.scrollHandler.doIt.callCount).toBe(5);
+        });
+    });
 
-        // 10% of the height of the scroll area
-        element.scrollTop(element[0].scrollHeight *.10);
-        element.trigger('scroll');
+    describe("does not load more results if there is already a scrollbar", function() {
+        beforeEach(function() {
+            $compile(element)($scope);
+            $scope.$digest();
+        });
 
-        expect($scope.scrollHandler.doIt).not.toHaveBeenCalled();
+        it("on initial load.", function() {
+            spyOn($scope.scrollHandler, "doIt").andCallThrough();
+            $scope.$digest();
+            expect($scope.scrollHandler.doIt.callCount).toBe(0);
+        });
     });
 });

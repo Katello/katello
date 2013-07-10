@@ -16,7 +16,7 @@
  * @name  Bastion.widgets.service:Nutupane
  *
  * @requires $location
- * @requires $http
+ * @requires $q
  * @requires CurrentOrganization
  *
  * @description
@@ -34,22 +34,21 @@
     </pre>
  */
 angular.module('Bastion.widgets').factory('Nutupane',
-    ['$location', '$timeout', 'CurrentOrganization',
-    function($location, $timeout, CurrentOrganization) {
+    ['$location', '$q', 'CurrentOrganization',
+    function($location, $q, CurrentOrganization) {
         var Nutupane = function(resource) {
             var self = this;
 
             self.table = {
                 resource: resource,
                 searchString: $location.search().search,
-                loadingMore: false,
                 sort: {
                     by: 'name',
                     order: 'ASC'
                 }
             };
 
-            self.get = function(callback) {
+            self.get = function() {
                 var params = {
                     'organization_id':  CurrentOrganization,
                     'search':           $location.search().search || "",
@@ -60,14 +59,12 @@ angular.module('Bastion.widgets').factory('Nutupane',
                 };
 
                 self.table.working = true;
-
-                return self.table.resource.get(params, function() {
+                var deferred = $q.defer();
+                self.table.resource.get(params, function(resource) {
+                    deferred.resolve(resource);
                     self.table.working = false;
-
-                    if (callback) {
-                        callback();
-                    }
                 });
+                return deferred.promise;
             };
 
             self.table.search = function(searchTerm) {
@@ -87,15 +84,14 @@ angular.module('Bastion.widgets').factory('Nutupane',
 
             self.table.nextPage = function() {
                 var table = self.table;
-
-                if (table.loadingMore || table.working || table.resource.subtotal === table.resource.offset) {
+                if (table.working || (table.resource.offset > 0 && table.hasMore())) {
                     return;
                 }
+                return self.get();
+            };
 
-                table.loadingMore = true;
-                self.get(function() {
-                    table.loadingMore = false;
-                });
+            self.table.hasMore = function() {
+                return self.table.resource.subtotal === self.table.resource.offset;
             };
 
             self.table.sortBy = function(column) {
@@ -112,8 +108,6 @@ angular.module('Bastion.widgets').factory('Nutupane',
                 self.table.resource.offset = 0;
                 self.get();
             };
-
-            $timeout(self.get, 0);
         };
 
         return Nutupane;
