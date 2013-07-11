@@ -15,9 +15,6 @@ module Validators
   class KatelloNameFormatValidator < ActiveModel::EachValidator
     def validate_each(record, attribute, value)
       if value
-        unless value =~ /\A[[:alnum:] ._-]*\z/
-          record.errors[attribute] << N_("cannot contain characters other than alpha numerals, space, '_', '-', '.'")
-        end
         NoTrailingSpaceValidator.validate_trailing_space(record, attribute, value)
         KatelloNameFormatValidator.validate_length(record, attribute, value)
       else
@@ -25,7 +22,7 @@ module Validators
       end
     end
 
-    def self.validate_length(record, attribute, value, max_length = 128, min_length = 1)
+    def self.validate_length(record, attribute, value, max_length = 255, min_length = 1)
       if value
         record.errors[attribute] << _("cannot contain more than %s characters") % max_length unless value.length <= max_length
         record.errors[attribute] << _("must contain at least %s character") % min_length unless value.length >= min_length

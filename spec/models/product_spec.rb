@@ -140,8 +140,8 @@ describe Product, :katello => true do
       disable_product_orchestration
     end
 
-    specify { Product.new(:label=> "goo", :name => 'contains /', :environments => [@organization.library], :provider => @provider).should_not be_valid }
-    specify { Product.new(:label=>"boo", :name => 'contains #', :environments => [@organization.library], :provider => @provider).should_not be_valid }
+    specify { Product.new(:label=> "goo", :name => 'contains /', :environments => [@organization.library], :provider => @provider).should be_valid }
+    specify { Product.new(:label=>"boo", :name => 'contains #', :environments => [@organization.library], :provider => @provider).should be_valid }
     specify { Product.new(:label=> "shoo", :name => 'contains space', :environments => [@organization.library], :provider => @provider).should be_valid }
     specify { Product.new(:label => "bar foo", :name=> "foo", :environments => [@organization.library], :provider => @provider).should_not be_valid}
 
