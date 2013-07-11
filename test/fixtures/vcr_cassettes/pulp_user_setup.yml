@@ -14,7 +14,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="0Ct018Y2214VINDShzF9m9dF9sInsFMmkVoHCsEE", oauth_signature="A8cYx5CKZpzS0NNxvB6ho%2FWOV3E%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1373298206", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="dtugvV7LVkwHR9x78vMyUPv4aTawuozBug0CCOAWYog", oauth_signature="W8yzNCHHB9GCqAelS%2BtIxoW7oTw%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1373555319", oauth_version="1.0"
       Pulp-User: 
       - admin
       User-Agent: 
@@ -25,7 +25,7 @@ http_interactions:
       message: Method Not Allowed
     headers: 
       Date: 
-      - Mon, 08 Jul 2013 15:43:26 GMT
+      - Thu, 11 Jul 2013 15:08:39 GMT
       Server: 
       - Apache/2.4.4 (Fedora) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.3
       Allow: 
@@ -38,13 +38,13 @@ http_interactions:
       encoding: US-ASCII
       string: None
     http_version: 
-  recorded_at: Mon, 08 Jul 2013 15:43:26 GMT
+  recorded_at: Thu, 11 Jul 2013 15:08:39 GMT
 - request: 
     method: post
     uri: https://localhost/pulp/api/v2/users/
     body: 
       encoding: US-ASCII
-      string: "{\"login\":\"batman\",\"name\":\"batman\",\"password\":\"etAuw1fb2IQ2iabn\"}"
+      string: "{\"login\":\"batman\",\"name\":\"batman\",\"password\":\"DI3sCfl2gqDaRhTA\"}"
     headers: 
       Accept: 
       - application/json
@@ -53,7 +53,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="GMhY849XLNn0VWh7JtPYdbVE0VXl83dKBkHBOgba2nM", oauth_signature="YWjMubz03fGgYneMkXReOkjy11Y%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1373298206", oauth_version="1.0"
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="lwSJpX2GmZbdGKQjcDfaJkWy5oTqmWZsxjVbLSAmg", oauth_signature="xJLBIdHhbpy2onY5CSCQKM%2BzRFY%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1373555320", oauth_version="1.0"
       Pulp-User: 
       - admin
       Content-Length: 
@@ -62,24 +62,24 @@ http_interactions:
       - Ruby
   response: 
     status: 
-      code: 409
-      message: Conflict
+      code: 201
+      message: Created
     headers: 
       Date: 
-      - Mon, 08 Jul 2013 15:43:26 GMT
+      - Thu, 11 Jul 2013 15:08:40 GMT
       Server: 
       - Apache/2.4.4 (Fedora) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.3
-      Content-Encoding: 
-      - utf-8
+      Location: 
+      - batman
       Content-Length: 
-      - "193"
+      - "184"
       Content-Type: 
       - application/json
     body: 
       encoding: US-ASCII
-      string: "{\"http_request_method\": \"POST\", \"exception\": null, \"error_message\": \"Duplicate resource: batman\", \"_href\": \"/pulp/api/v2/users/\", \"http_status\": 409, \"resource_id\": \"batman\", \"traceback\": null}"
+      string: "{\"_id\": {\"$oid\": \"51deca79d60ea3359c6e4098\"}, \"name\": \"batman\", \"roles\": [], \"_ns\": \"users\", \"login\": \"batman\", \"id\": \"51deca79d60ea3359c6e4098\", \"_href\": \"/pulp/api/v2/users/batman/\"}"
     http_version: 
-  recorded_at: Mon, 08 Jul 2013 15:43:27 GMT
+  recorded_at: Thu, 11 Jul 2013 15:08:41 GMT
 - request: 
     method: delete
     uri: https://localhost/pulp/api/v2/users/batman/
@@ -94,7 +94,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="pLoRLQFvNcwdcI5CrWK9czCeXPgIFFlGQQf8UIpA", oauth_signature="UYSed3V0Qt4PUKXUTRnFPMINoXw%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1373298207", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="fIQ7HVTstaW6OihxCYnEUZPJKJw1HRqRD0t0wyqd5A", oauth_signature="sv2oG99NEoSQHgDCQJj%2B4GWyto4%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1373555321", oauth_version="1.0"
       Pulp-User: 
       - admin
       User-Agent: 
@@ -105,7 +105,7 @@ http_interactions:
       message: OK
     headers: 
       Date: 
-      - Mon, 08 Jul 2013 15:43:27 GMT
+      - Thu, 11 Jul 2013 15:08:41 GMT
       Server: 
       - Apache/2.4.4 (Fedora) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.3
       Content-Length: 
@@ -116,5 +116,5 @@ http_interactions:
       encoding: US-ASCII
       string: "null"
     http_version: 
-  recorded_at: Mon, 08 Jul 2013 15:43:27 GMT
+  recorded_at: Thu, 11 Jul 2013 15:08:41 GMT
 recorded_with: VCR 2.5.0
