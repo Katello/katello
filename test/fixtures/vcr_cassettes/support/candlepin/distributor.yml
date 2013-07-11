@@ -67,49 +67,6 @@ http_interactions:
     http_version: 
   recorded_at: Mon, 08 Jul 2013 15:36:12 GMT
 - request: 
-    method: post
-    uri: https://localhost:8443/candlepin/environments/7/consumers/
-    body: 
-      encoding: US-ASCII
-      string: "{\"name\":\"GlueCandlepinConsumerTestDistributor_1\",\"type\":\"candlepin\",\"facts\":{},\"installedProducts\":null,\"autoheal\":null,\"releaseVer\":null,\"serviceLevel\":null}"
-    headers: 
-      Accept: 
-      - application/json
-      Accept-Encoding: 
-      - gzip, deflate
-      Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="16On8ujZFrd71MfOg9QKCiKSTwAyg3myNTwT1Le48Y", oauth_signature="4kB5%2FOET4kIlGa5l2VW3ByDMonI%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1373298011", oauth_version="1.0"
-      Accept-Language: 
-      - en
-      Content-Type: 
-      - application/json
-      Cp-User: 
-      - admin
-      Content-Length: 
-      - "158"
-      User-Agent: 
-      - Ruby
-  response: 
-    status: 
-      code: 200
-      message: OK
-    headers: 
-      Server: 
-      - Apache-Coyote/1.1
-      X-Candlepin-Version: 
-      - 0.8.5-1
-      Content-Type: 
-      - application/json
-      Transfer-Encoding: 
-      - chunked
-      Date: 
-      - Mon, 08 Jul 2013 15:40:12 GMT
-    body: 
-      encoding: US-ASCII
-      string: "{\"created\":\"2013-07-08T15:40:11.192+0000\",\"updated\":\"2013-07-08T15:40:12.250+0000\",\"id\":\"ff8080813fbee56b013fbef0ac38003c\",\"uuid\":\"e0f917a7-4157-4c27-917e-ec5a0935410e\",\"name\":\"GlueCandlepinConsumerTestDistributor_1\",\"username\":\"admin\",\"entitlementStatus\":\"valid\",\"serviceLevel\":\"\",\"releaseVer\":{\"releaseVer\":null},\"idCert\":{\"created\":\"2013-07-08T15:40:12.110+0000\",\"updated\":\"2013-07-08T15:40:12.110+0000\",\"key\":\"-----BEGIN RSA PRIVATE KEY-----\\nMIIEowIBAAKCAQEAp7Y1crXy8nuKu5UDCdQlUjxIK+9a18nlm1G2uHpjGvsHTGwb\\nspQrmrstHBk30dHUfBTHSfPfLe8OH3E9o1ON1txEedN5l819t6SUydv6y4a7ETqS\\nANlitG3aNHN4q3VM9F3FoCJEUEapzZo4A4Ae1DAXmIH97aobo9c3MKlWpbvqKNRN\\nx9leCb5ZEiLQelO9UoR5kDP2g1I84eQvyXsgUVgWiOWm+Rvaz0JZmSmdWXfuFldJ\\nSTJwN/TD+pUDIs9x82rLDWxo3Jlf6nBW//UvALIdfwmORxZ4ZGjxwBGPwPVgF821\\nvZydyu/epn6q497gBWMdezWYcJMufnZFNnSZPQIDAQABAoIBAQCbyghQLHAni1dN\\n9JfD84tPnqu0FD2goe1loDxJlXamQ3V+KhZ4hmcS7rhyl4Jgp7foIy0UpzMz6hKG\\nZpzJMP5bDnWVbTpQJxSXGI0WDgAkO11eHbgujcDAtiKyAmmfa/E2Nj00CWDH6Twm\\nvxE1PzhkBuCETIxiz1eplGuyCjtw61snZx1f6D6WNrht3EyHC5wWWgOzP0dxcLqq\\nWASfBWCfzhWmNVThiBFzonEffw6OqvyzL5fG7KYSWoWCooxeflCT0CR4tkvLnGpu\\nf76o1LyeOxJoZ21LJfL5OWIA8/4v0UeMTkmcDKCUHwaQFxCONvG//hFIWyrVh9GQ\\not0u0jvBAoGBAP3anj+t0TF4P9JurFaALr6PpWqhJK3/zER+yTldkXYqU1A3s0Ol\\nEMLl8UBr7eIEBc2hPW/wbAQw1p7wYNTBn7UCnNXwQUz/ElnFY7sbrEeDBhxnA+Eh\\nx7nb/nPL+K/v72ZkhuR3JLzOSdXPpkSX14GMb2AtH+916R+eSAe0j0E1AoGBAKkh\\nKia7JiEeuw9v+wMeHVhwpMzbhL8alnZcJaxW7dzlHOOiVb17kUzdGN04XiV2y17p\\nS8KHDhK/pzuITpxDhUY6r4cnkZPN82PbP5qaQHRKnU8RTZXa9KUFBVyhcOzJMhTb\\n2TLOw5XdAJ5cUVhJ3G0nISH5Xbskc7+ZQUx2UUDpAoGAG2yKvAZjGx0KiAk8xPuE\\nEUIjdKmD9Og1gRDRXEkndcSMy5W44A3tCaEdtv/x6wDUP6qzoGwwvyMnjHQbgeCJ\\nCF0H5HTYGSFVMi2I4KXUrsUQ2/ClEqU7lnCVxJy8eQVKr50clYHpjhwbDeYo6DAf\\nL/ej8JfvY0cxsCDBV1PCRiECgYBsSaC8Za03HX71lmQoDdsKKi1KQO8QkMxvgfZZ\\nDtuDSGqj0OeGx5wzk4h8879Ly3DRFxx7s48uL+m6Mz7pzE2DtsV2Cr6p3P6OG+3w\\nZf0IuFFaM6DyZtum4L0bHv63jOZ09oJthncx9+uSeVdX6QqqFJihMRFzZhZ6QXzO\\noR7LKQKBgBtwt8UGWZ1dG7uQzf2Td1QAqpx74wwkaDvQLS0kOU5Si09ITLyF+TXX\\neGu6VPYWo20MkLEAGyrmq6w8ZGKZRNF5rmX4PZuThciJjjxoz4C0Tx2KgxW+uJ88\\nWlwuYaunqwG6aKotlNSDNuGYJWLYjSawuqL980CXWqyjd9PeFs/+\\n-----END RSA PRIVATE KEY-----\\n\",\"cert\":\"-----BEGIN CERTIFICATE-----\\nMIIEijCCA3KgAwIBAgIIEWWFBPfvIsIwDQYJKoZIhvcNAQEFBQAwgYMxCzAJBgNV\\nBAYTAlVTMRcwFQYDVQQIEw5Ob3J0aCBDYXJvbGluYTEQMA4GA1UEBxMHUmFsZWln\\naDEQMA4GA1UEChMHU29tZU9yZzEUMBIGA1UECxMLU29tZU9yZ1VuaXQxITAfBgNV\\nBAMTGGthZmthLnVzZXJzeXMucmVkaGF0LmNvbTAeFw0xMzA3MDgxNTQwMTFaFw0y\\nOTA3MDgxNTQwMTFaMC8xLTArBgNVBAMTJGUwZjkxN2E3LTQxNTctNGMyNy05MTdl\\nLWVjNWEwOTM1NDEwZTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAKe2\\nNXK18vJ7iruVAwnUJVI8SCvvWtfJ5ZtRtrh6Yxr7B0xsG7KUK5q7LRwZN9HR1HwU\\nx0nz3y3vDh9xPaNTjdbcRHnTeZfNfbeklMnb+suGuxE6kgDZYrRt2jRzeKt1TPRd\\nxaAiRFBGqc2aOAOAHtQwF5iB/e2qG6PXNzCpVqW76ijUTcfZXgm+WRIi0HpTvVKE\\neZAz9oNSPOHkL8l7IFFYFojlpvkb2s9CWZkpnVl37hZXSUkycDf0w/qVAyLPcfNq\\nyw1saNyZX+pwVv/1LwCyHX8JjkcWeGRo8cARj8D1YBfNtb2cncrv3qZ+quPe4AVj\\nHXs1mHCTLn52RTZ0mT0CAwEAAaOCAVMwggFPMBEGCWCGSAGG+EIBAQQEAwIFoDAL\\nBgNVHQ8EBAMCBLAwgbgGA1UdIwSBsDCBrYAUH+bpWXRID4wEty0uF4/DuNUorg2h\\ngYmkgYYwgYMxCzAJBgNVBAYTAlVTMRcwFQYDVQQIEw5Ob3J0aCBDYXJvbGluYTEQ\\nMA4GA1UEBxMHUmFsZWlnaDEQMA4GA1UEChMHU29tZU9yZzEUMBIGA1UECxMLU29t\\nZU9yZ1VuaXQxITAfBgNVBAMTGGthZmthLnVzZXJzeXMucmVkaGF0LmNvbYIJAK38\\nfES5zDorMB0GA1UdDgQWBBTTjcdnpVMPYwcWGOOI4V4Ks/f8DDATBgNVHSUEDDAK\\nBggrBgEFBQcDAjA+BgNVHREENzA1pDMwMTEvMC0GA1UEAwwmR2x1ZUNhbmRsZXBp\\nbkNvbnN1bWVyVGVzdERpc3RyaWJ1dG9yXzEwDQYJKoZIhvcNAQEFBQADggEBAIyY\\nUwRYNwCVhzTrjYwdgQrZjz1RxxTEj/q55XandV32GkJUldf4/ZgRj/iDZMaLXnZg\\nuswugIGc9U7OuZ1ZRJq88CBGoOh4H8ojcCnWKk8mXPDVXCZfgv6ZLyYl7nurcEsU\\nLvVQAiSMh9ajsWL4HVOaWLSmd30tOF5C2Lxkv6oQNr7yHIthmPZec8OXkQoBczw6\\n77X63TW1VUQGCySh2zSAprDO6IfsLhEqaBAFz5spbGxaOpaTtsTmf3KSUtgk08rB\\np8z8HoEkeiPPKLn3axM+uTBlniOyLPQrDRSyrvCTeQ61G6LGkkQt82sexlqZEhNI\\nK71I5nYxvBex3I/Lj7U=\\n-----END CERTIFICATE-----\\n\",\"id\":\"ff8080813fbee56b013fbef0afce003e\",\"serial\":{\"created\":\"2013-07-08T15:40:11.195+0000\",\"updated\":\"2013-07-08T15:40:11.195+0000\",\"id\":1253554327678558914,\"revoked\":false,\"collected\":false,\"expiration\":\"2029-07-08T15:40:11.195+0000\",\"serial\":1253554327678558914}},\"type\":{\"id\":\"1003\",\"label\":\"candlepin\",\"manifest\":true},\"owner\":{\"id\":\"ff8080813fbee56b013fbef0aaed003a\",\"key\":\"candlepin_org_label\",\"displayName\":\"Candlepin_Org\",\"href\":\"/owners/candlepin_org_label\"},\"environment\":{\"created\":\"2013-07-08T15:40:11.065+0000\",\"updated\":\"2013-07-08T15:40:11.065+0000\",\"owner\":{\"id\":\"ff8080813fbee56b013fbef0aaed003a\",\"key\":\"candlepin_org_label\",\"displayName\":\"Candlepin_Org\",\"href\":\"/owners/candlepin_org_label\"},\"name\":\"candlepin_library_dev_cve\",\"description\":null,\"id\":\"7\",\"environmentContent\":[]},\"entitlementCount\":0,\"facts\":{},\"lastCheckin\":null,\"installedProducts\":null,\"canActivate\":false,\"guestIds\":null,\"autoheal\":true,\"href\":\"/consumers/e0f917a7-4157-4c27-917e-ec5a0935410e\"}"
-    http_version: 
-  recorded_at: Mon, 08 Jul 2013 15:40:12 GMT
-- request: 
     method: delete
     uri: https://localhost:8443/candlepin/consumers/e0f917a7-4157-4c27-917e-ec5a0935410e
     body: 
@@ -143,49 +100,6 @@ http_interactions:
     http_version: 
   recorded_at: Mon, 08 Jul 2013 15:40:12 GMT
 - request: 
-    method: post
-    uri: https://localhost:8443/candlepin/environments/7/consumers/
-    body: 
-      encoding: US-ASCII
-      string: "{\"name\":\"GlueCandlepinConsumerTestSecondDelete_2\",\"type\":\"candlepin\",\"facts\":{},\"installedProducts\":null,\"autoheal\":null,\"releaseVer\":null,\"serviceLevel\":null}"
-    headers: 
-      Accept: 
-      - application/json
-      Accept-Encoding: 
-      - gzip, deflate
-      Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="DxybuBvxvINoeMYHWZYU3jCoAs5yIk8urfzLhzX3Y", oauth_signature="Kr0cwWlEXUPKHKMYwZEIJhyDShM%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1373298013", oauth_version="1.0"
-      Accept-Language: 
-      - en
-      Content-Type: 
-      - application/json
-      Cp-User: 
-      - admin
-      Content-Length: 
-      - "159"
-      User-Agent: 
-      - Ruby
-  response: 
-    status: 
-      code: 200
-      message: OK
-    headers: 
-      Server: 
-      - Apache-Coyote/1.1
-      X-Candlepin-Version: 
-      - 0.8.5-1
-      Content-Type: 
-      - application/json
-      Transfer-Encoding: 
-      - chunked
-      Date: 
-      - Mon, 08 Jul 2013 15:40:13 GMT
-    body: 
-      encoding: US-ASCII
-      string: "{\"created\":\"2013-07-08T15:40:13.458+0000\",\"updated\":\"2013-07-08T15:40:14.029+0000\",\"id\":\"ff8080813fbee56b013fbef0b5120046\",\"uuid\":\"5c27229d-54ba-4b3f-9186-c59f7605339f\",\"name\":\"GlueCandlepinConsumerTestSecondDelete_2\",\"username\":\"admin\",\"entitlementStatus\":\"valid\",\"serviceLevel\":\"\",\"releaseVer\":{\"releaseVer\":null},\"idCert\":{\"created\":\"2013-07-08T15:40:13.903+0000\",\"updated\":\"2013-07-08T15:40:13.903+0000\",\"key\":\"-----BEGIN RSA PRIVATE KEY-----\\nMIIEpAIBAAKCAQEAgnwo4e8121wcFmAabV/zqYSkZsMdPDkvq79wq/Nhlp1KZWUF\\n0FXT+Fghet3G/ZII8u2fV48md3CFhNbvlicMybOnTyMxnU/ZYBg3SUSxhaxiFRMd\\neCRrCJNyFV5fIUNCTW/OuKK7cxY+dLxEK75p9ks4f0ANe+I+oxRS/42ksVEdv9tf\\nHcn7l9PHOym8N8dB/dBn/tSkRIvGqmplXHVEIAfU3RjLqcdxmKSqka3nuw5pXcon\\nY+YC529VhJCdh8asqtmyaiDw3BeITFlQQm06RYU6YuQwOyN4TMRzDpdH2eONl0YQ\\nZTzJbG2eolzJT/JVnvOn07GhJrOtIMBfl/6x+QIDAQABAoIBADFGCXooBsJrKgAZ\\nEmGzFiQxfpN/oo6XWbUVecq1AWkKxIk9eNCPWJgzT5FCJl6iwtZZfQ5ndDMuPn1H\\nXPnqjR2txcRQme+5s3BiNJ5qXk8IJZGnwj0YI4L9itse4/V/nI35Zqq6aOaww6z5\\nWxTZttHW3eLPoUfiy5xxlFYEeuiqGtozecclUA/c1UUOs+kzrZrf5CmvFMTgKGzc\\nSH9FtiBRNMbvyRPjH+TmwsffC9c2YefBJZm9j6Sya243+TL1RV+H/I7YeVCOTp5/\\nP0lyLgrofA/TfyXnNd4F9oyRXF8zr4uJaajoVrcA+1bnnFup191lcFYXdnz2+bgS\\nW2fauzECgYEAvf5+htxXPpOwqUjV7Lj7sG42T9nnOOKrzd14l3HVKJ5Br/jeZhy+\\nJNasFFJm1iqwwy5BNXkNrYSFO+sEdMcWWjRQOHRQW9HuB38UrOpZt1w4x2C/cf+K\\nz5B3fQ+P3fEp8+zY/jeOpjWOpsPMhxEIKJT2kwZTFux+ty6lW74zUdsCgYEAr9Ea\\nb0vX30OkSNXHCSJyH6oxIXATdgRFNUiH0thQW/4pEL1JVWrQvVgvCtyoOZf0yb90\\nSKe9dysIt7yEbX23ECss36LCou6GsV7FoiMOl8EN0KQ43OuMdIvZjegbY50re6JO\\nZfFqHhcjTIcvnAqh+lGOte3vZSYqTI7MvCmr5bsCgYADepV2grJWQv4JG3xPSVPS\\ndzInZCYHtJ7Qti1vGHZ+t+ccAcKQvBX/Nq8P8DJR2ZZC/KXVBNJrSvHllvgN61dN\\nb4fIgNi31bA2Eu2d/OyHnvirLepTfApeopaNg6tutOu/u6Z9gSbrhC+Ifi1Qi89K\\nbu/U4VjEIrBvSjtc4q6t4QKBgQCTC3PseaZGmLAiKomY3jJMwW7t5GqiXdf0RIE0\\nmq47AkseMPHQetGySrqtfvdDlA+rXHDJA2G29UsJQKYRXP9qinGxaNMYqh4E4pqw\\njFl8Gn6PbYoRWv/RydVeli2yFpVzhb/ECzERkZB4ROhQvaPTU7rj9egu1Miz1wrs\\npH2cWQKBgQCECMdv3nWx0uw8WR0Y769PCrS+8A8SWm6K+w9PKqOEGNPFb7JkIFS1\\ngp8rQzsjL7elpimfEFy0XK7CqljHaQTxleeNLM8idRo8F3kS4uxTLbcstkynNqWT\\nG23VEgA1BO79DoirApTRlDUtNjn3lb7HOckgVrQZ2awh3dhp6VqKSg==\\n-----END RSA PRIVATE KEY-----\\n\",\"cert\":\"-----BEGIN CERTIFICATE-----\\nMIIEizCCA3OgAwIBAgIIIn02BCS2efEwDQYJKoZIhvcNAQEFBQAwgYMxCzAJBgNV\\nBAYTAlVTMRcwFQYDVQQIEw5Ob3J0aCBDYXJvbGluYTEQMA4GA1UEBxMHUmFsZWln\\naDEQMA4GA1UEChMHU29tZU9yZzEUMBIGA1UECxMLU29tZU9yZ1VuaXQxITAfBgNV\\nBAMTGGthZmthLnVzZXJzeXMucmVkaGF0LmNvbTAeFw0xMzA3MDgxNTQwMTNaFw0y\\nOTA3MDgxNTQwMTNaMC8xLTArBgNVBAMTJDVjMjcyMjlkLTU0YmEtNGIzZi05MTg2\\nLWM1OWY3NjA1MzM5ZjCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAIJ8\\nKOHvNdtcHBZgGm1f86mEpGbDHTw5L6u/cKvzYZadSmVlBdBV0/hYIXrdxv2SCPLt\\nn1ePJndwhYTW75YnDMmzp08jMZ1P2WAYN0lEsYWsYhUTHXgkawiTchVeXyFDQk1v\\nzriiu3MWPnS8RCu+afZLOH9ADXviPqMUUv+NpLFRHb/bXx3J+5fTxzspvDfHQf3Q\\nZ/7UpESLxqpqZVx1RCAH1N0Yy6nHcZikqpGt57sOaV3KJ2PmAudvVYSQnYfGrKrZ\\nsmog8NwXiExZUEJtOkWFOmLkMDsjeEzEcw6XR9njjZdGEGU8yWxtnqJcyU/yVZ7z\\np9OxoSazrSDAX5f+sfkCAwEAAaOCAVQwggFQMBEGCWCGSAGG+EIBAQQEAwIFoDAL\\nBgNVHQ8EBAMCBLAwgbgGA1UdIwSBsDCBrYAUH+bpWXRID4wEty0uF4/DuNUorg2h\\ngYmkgYYwgYMxCzAJBgNVBAYTAlVTMRcwFQYDVQQIEw5Ob3J0aCBDYXJvbGluYTEQ\\nMA4GA1UEBxMHUmFsZWlnaDEQMA4GA1UEChMHU29tZU9yZzEUMBIGA1UECxMLU29t\\nZU9yZ1VuaXQxITAfBgNVBAMTGGthZmthLnVzZXJzeXMucmVkaGF0LmNvbYIJAK38\\nfES5zDorMB0GA1UdDgQWBBQl7rmUb/kklPHEHvGWeYh5g5aGLTATBgNVHSUEDDAK\\nBggrBgEFBQcDAjA/BgNVHREEODA2pDQwMjEwMC4GA1UEAwwnR2x1ZUNhbmRsZXBp\\nbkNvbnN1bWVyVGVzdFNlY29uZERlbGV0ZV8yMA0GCSqGSIb3DQEBBQUAA4IBAQBV\\nTwPeRBtwaZW9jE6G5xvLpb3NM+SsGcUTSGsjriVlbfCdl8Hav2yqLvZmkTYcuPQ2\\n9/+xARPl48kYWUgBcQxdnqhNaqYN+L8ENRhbr/K0IzeiFnahuUurKh6I0QPTYFGn\\n0W9m/chuy79MdOGNY1b2OHPu3ujTi3C4ievQZwEPAbiDJf3GaMDeRnaCtVudPAgs\\nlB5cKi/udruiqH1gBJdXyNyCQuUZ7mrS+seld/5qQhSQJu+ASDEdCt/iLK0ffUx0\\nsIT4QGp3AVJNj5EdlBkhm/P4Me/VnfNfzwA8U+D6/tyHM7USaQB4Ij48eDRhluMB\\nfmEcUmz6VvaxWjqrtL2n\\n-----END CERTIFICATE-----\\n\",\"id\":\"ff8080813fbee56b013fbef0b6cf0048\",\"serial\":{\"created\":\"2013-07-08T15:40:13.460+0000\",\"updated\":\"2013-07-08T15:40:13.460+0000\",\"id\":2485201960802089457,\"revoked\":false,\"collected\":false,\"expiration\":\"2029-07-08T15:40:13.460+0000\",\"serial\":2485201960802089457}},\"type\":{\"id\":\"1003\",\"label\":\"candlepin\",\"manifest\":true},\"owner\":{\"id\":\"ff8080813fbee56b013fbef0b3d70044\",\"key\":\"candlepin_org_label\",\"displayName\":\"Candlepin_Org\",\"href\":\"/owners/candlepin_org_label\"},\"environment\":{\"created\":\"2013-07-08T15:40:13.340+0000\",\"updated\":\"2013-07-08T15:40:13.340+0000\",\"owner\":{\"id\":\"ff8080813fbee56b013fbef0b3d70044\",\"key\":\"candlepin_org_label\",\"displayName\":\"Candlepin_Org\",\"href\":\"/owners/candlepin_org_label\"},\"name\":\"candlepin_library_dev_cve\",\"description\":null,\"id\":\"7\",\"environmentContent\":[]},\"entitlementCount\":0,\"facts\":{},\"lastCheckin\":null,\"installedProducts\":null,\"canActivate\":false,\"guestIds\":null,\"autoheal\":true,\"href\":\"/consumers/5c27229d-54ba-4b3f-9186-c59f7605339f\"}"
-    http_version: 
-  recorded_at: Mon, 08 Jul 2013 15:40:14 GMT
-- request: 
     method: delete
     uri: https://localhost:8443/candlepin/consumers/5c27229d-54ba-4b3f-9186-c59f7605339f
     body: 
@@ -218,4 +132,156 @@ http_interactions:
       string: ""
     http_version: 
   recorded_at: Mon, 08 Jul 2013 15:40:14 GMT
+- request: 
+    method: post
+    uri: https://localhost:8443/candlepin/environments/7/consumers/
+    body: 
+      encoding: US-ASCII
+      string: "{\"name\":\"GlueCandlepinConsumerTestDistributor_1\",\"type\":\"candlepin\",\"facts\":{},\"installedProducts\":null,\"autoheal\":null,\"releaseVer\":null,\"serviceLevel\":null}"
+    headers: 
+      Accept: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="qmbzAM9Rgm0aR2D5dP3A8Mgl80wzrQdtQOqaiF3Ms", oauth_signature="Xd0cLJ83IP6xAfVDJmQKfreWo6A%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1373555099", oauth_version="1.0"
+      Accept-Language: 
+      - en
+      Content-Type: 
+      - application/json
+      Cp-User: 
+      - admin
+      Content-Length: 
+      - "158"
+      User-Agent: 
+      - Ruby
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Server: 
+      - Apache-Coyote/1.1
+      X-Candlepin-Version: 
+      - 0.8.16-1
+      Content-Type: 
+      - application/json
+      Transfer-Encoding: 
+      - chunked
+      Date: 
+      - Thu, 11 Jul 2013 15:05:01 GMT
+    body: 
+      encoding: US-ASCII
+      string: "{\"created\":\"2013-07-11T15:04:59.375+0000\",\"updated\":\"2013-07-11T15:05:01.201+0000\",\"id\":\"ff8080813fce17d7013fce4386ef0008\",\"uuid\":\"50636ead-fe76-41bb-91f7-7f60fa89522d\",\"name\":\"GlueCandlepinConsumerTestDistributor_1\",\"username\":\"admin\",\"entitlementStatus\":\"valid\",\"serviceLevel\":\"\",\"releaseVer\":{\"releaseVer\":null},\"idCert\":{\"created\":\"2013-07-11T15:05:00.358+0000\",\"updated\":\"2013-07-11T15:05:00.358+0000\",\"key\":\"-----BEGIN RSA PRIVATE KEY-----\\nMIIEowIBAAKCAQEAjn5w3pYxHkzS5Wr+nNB8xOiUTZR3m+0Pu+4r0/L0a+M1RaJK\\nrwpTXX092nuaf1HXPrdB4PoVPGMOwfWFjOv7oHzEC9aM8EU12NVfwGviAwom5Y/2\\nR3jDoWovWXp8KtAwa6ZQjSXtMKr9oKlD2cEtUGT4Jcb55994fDvB9H4TQPtVck19\\n5VmMpWQItKx/kjeJIGM8TES7RWMN2hjGVqbp8Z0lW7vJglblP0nWv24Fz02KlFoD\\nXZ7y2LoAhWxH8tY7TOUX2rlaLv08N9BVq/6PWOP8A0Rp5cJ4zMisI5JNsEohclI0\\nuqDH/BcIlrl1zg29egPGdl3F2qUoGd/a1/Pp0QIDAQABAoIBAFe8QoLKtzOQ2cmo\\nN10Wgbw7+BRMddjr/eQYoaO+1AAZxZM6egGMuge2NX9w24/JNF7JNybu1GR6GXwT\\nUEeUhTormAox8FWAR8dambpAsshsV8bA/ULEeK/KUZ0mbY1u4mFl5fMChyiQH9ns\\nXnqVFvGJOcEI4paCYg0cPi/r8K7xJG48dEDdukZmJar2V1pvdQ19eOWmN1ymUjcn\\nH1XfXu4X03H9EtPs2T3RJ5sO6f23JNby/8aQRalSGsVG2njl3K9+kaF3oqaAHxFv\\nOvJp10HTsBCk/mIyxoniOMqyWSBM6N3uNwWh7BeRZ1Fkq7eBpZ8Ci7yyMlTj5Ynj\\n0G+nNgECgYEA2Po6qTT00NcXdhWe/iBJymPA6WJf5rYjLo10W4Cdo9hsKhgwUtE8\\nUM27QKOgTjF1NXXraQob+oNufBA7MoWVTn9eeQrK1qBEaYbvo4nt5B2TYpCvtLLM\\nnlUb/t3iyEm5M4lS4OFPCF8ADnn/N4cPvAOwAQgs2eK4PGz5PWl2G2UCgYEAqB7x\\n7UVKk2FHN8QGyqBgJXslbhj/paUwjUxHS2NXgUr9ABLrdV2q1sLmQPfuKtkeJyX+\\nzR7UTQfLy8UrMqmL5y+ciebQPR+n8AQ5vX3L/SzU2cZ+r+AFog0Jb+FTiB/hD76f\\nxzzXOAq7oMS/Ikkj/MnqvrxdSU9Ig9kZM4m/i/0CgYEAlNNN2THRmk1ucjhyTayn\\n8IJrl6k6Tm0vxIaSARE/D1srFdRxkNyjmmkCv1t8YSXbV0gCqJGejz4HUmFvuT+X\\nIbiLfErCxmQ3iIpdZLb+zTDcHwdO/YqGfzOxeCeJngezWH4gss7X/s3qpANZ4yRo\\nznVZC9wnp2uzIv88Fbt4n2ECgYA8G2w1f4uNK79xoaUn9rTJUcDtHwTvrSKxse7f\\ndjIH6M6RozIJsSZuSBpYagv9x8hvCLeTkI0oyTvEq8apA1MgobYe26Xh5Jp/RpN6\\nOyqeZtPm1H/g04BQEscn9/CMf5FQtr+bVRZBVB0G+rC3Sl0SeQJzlRbpKe5sLUdE\\nVOBl5QKBgD+1XkOl5cdINYpzf9y2NOI2i/GwaR1ikmJuKw5pOUmOQ42JveNIof5M\\nFRuukU6MfWObvmFSZ9TEux8vvds6QNOYBTFR8P2NFqC8B1L7IoEokcBMSqAeufjI\\nC9aPKReiAyKp1GVvLz1kbeoHzvRRJAsrxJfE3N63lGp5GogKmNoh\\n-----END RSA PRIVATE KEY-----\\n\",\"cert\":\"-----BEGIN CERTIFICATE-----\\nMIIEXDCCA0SgAwIBAgIIFzLEONzIR9QwDQYJKoZIhvcNAQEFBQAwbjELMAkGA1UE\\nBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRAwDgYDVQQHEwdSYWxlaWdo\\nMRAwDgYDVQQKEwdTb21lT3JnMRQwEgYDVQQLEwtTb21lT3JnVW5pdDEMMAoGA1UE\\nAxMDZjE4MB4XDTEzMDcxMTE1MDQ1OVoXDTI5MDcxMTE1MDQ1OVowLzEtMCsGA1UE\\nAxMkNTA2MzZlYWQtZmU3Ni00MWJiLTkxZjctN2Y2MGZhODk1MjJkMIIBIjANBgkq\\nhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAjn5w3pYxHkzS5Wr+nNB8xOiUTZR3m+0P\\nu+4r0/L0a+M1RaJKrwpTXX092nuaf1HXPrdB4PoVPGMOwfWFjOv7oHzEC9aM8EU1\\n2NVfwGviAwom5Y/2R3jDoWovWXp8KtAwa6ZQjSXtMKr9oKlD2cEtUGT4Jcb55994\\nfDvB9H4TQPtVck195VmMpWQItKx/kjeJIGM8TES7RWMN2hjGVqbp8Z0lW7vJglbl\\nP0nWv24Fz02KlFoDXZ7y2LoAhWxH8tY7TOUX2rlaLv08N9BVq/6PWOP8A0Rp5cJ4\\nzMisI5JNsEohclI0uqDH/BcIlrl1zg29egPGdl3F2qUoGd/a1/Pp0QIDAQABo4IB\\nOzCCATcwEQYJYIZIAYb4QgEBBAQDAgWgMAsGA1UdDwQEAwIEsDCBoAYDVR0jBIGY\\nMIGVgBTskg6r8jbjIOJ2W2zRdrboL4r68qFypHAwbjELMAkGA1UEBhMCVVMxFzAV\\nBgNVBAgTDk5vcnRoIENhcm9saW5hMRAwDgYDVQQHEwdSYWxlaWdoMRAwDgYDVQQK\\nEwdTb21lT3JnMRQwEgYDVQQLEwtTb21lT3JnVW5pdDEMMAoGA1UEAxMDZjE4ggkA\\nv3lqxcbGeOcwHQYDVR0OBBYEFCx5r8wDBzB8a6vQkNUJdakYTWMoMBMGA1UdJQQM\\nMAoGCCsGAQUFBwMCMD4GA1UdEQQ3MDWkMzAxMS8wLQYDVQQDDCZHbHVlQ2FuZGxl\\ncGluQ29uc3VtZXJUZXN0RGlzdHJpYnV0b3JfMTANBgkqhkiG9w0BAQUFAAOCAQEA\\npS5L1Pno8NozNg5fYKvmrh/Fm31fzp1BCaElk9TJKbgX/Os+lGgDSDfY+sNZyjeg\\nBYwDCNdYLu9xD9m0+9aVZzZcihDAY9R69Q4YLtZ0zR+jl1zwfVy1Y/gH40r2myxr\\ncdx9EyUxDypU5FYyOV9onLNJrHjWXHSFR6ypbhHU9m1W8SQ2hRJe5+TVFyqkJh5S\\nfdQLKO/8hh1LBSUzuDvTPBdiG1qvS4HM0Wo223Wr1CvcOnSaOdNzG/9dTs4DGjnV\\noM8jXMbRiFDDy5CC/PdsW/focWpkBKiYhPbOATX3VbKoQncw08/WiTnerbRV9Cgl\\nkvQbLFkQ/gVrw0c6N0/4ew==\\n-----END CERTIFICATE-----\\n\",\"id\":\"ff8080813fce17d7013fce438ac6000a\",\"serial\":{\"created\":\"2013-07-11T15:04:59.381+0000\",\"updated\":\"2013-07-11T15:04:59.381+0000\",\"id\":1671614160209201108,\"revoked\":false,\"collected\":false,\"expiration\":\"2029-07-11T15:04:59.380+0000\",\"serial\":1671614160209201108}},\"type\":{\"id\":\"1003\",\"label\":\"candlepin\",\"manifest\":true},\"owner\":{\"id\":\"ff8080813fce17d7013fce4385600006\",\"key\":\"candlepin_org_label\",\"displayName\":\"Candlepin_Org\",\"href\":\"/owners/candlepin_org_label\"},\"environment\":{\"created\":\"2013-07-11T15:04:59.159+0000\",\"updated\":\"2013-07-11T15:04:59.159+0000\",\"owner\":{\"id\":\"ff8080813fce17d7013fce4385600006\",\"key\":\"candlepin_org_label\",\"displayName\":\"Candlepin_Org\",\"href\":\"/owners/candlepin_org_label\"},\"name\":\"candlepin_library_dev_cve\",\"description\":null,\"id\":\"7\",\"environmentContent\":[]},\"entitlementCount\":0,\"facts\":{},\"lastCheckin\":null,\"installedProducts\":null,\"canActivate\":false,\"guestIds\":null,\"capabilities\":null,\"autoheal\":true,\"href\":\"/consumers/50636ead-fe76-41bb-91f7-7f60fa89522d\"}"
+    http_version: 
+  recorded_at: Thu, 11 Jul 2013 15:05:01 GMT
+- request: 
+    method: delete
+    uri: https://localhost:8443/candlepin/consumers/50636ead-fe76-41bb-91f7-7f60fa89522d
+    body: 
+      encoding: US-ASCII
+      string: ""
+    headers: 
+      Accept: 
+      - "*/*; q=0.5, application/xml"
+      Accept-Encoding: 
+      - gzip, deflate
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="AV4n93iceOLAD2X5vdjtp7p5dhm16aaNrljZXEiAw", oauth_signature="8PDPEl%2FsyeJR9d0gCXQSXVu3gxE%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1373555101", oauth_version="1.0"
+      Cp-User: 
+      - admin
+      User-Agent: 
+      - Ruby
+  response: 
+    status: 
+      code: 204
+      message: No Content
+    headers: 
+      Server: 
+      - Apache-Coyote/1.1
+      X-Candlepin-Version: 
+      - 0.8.16-1
+      Date: 
+      - Thu, 11 Jul 2013 15:05:01 GMT
+    body: 
+      encoding: US-ASCII
+      string: ""
+    http_version: 
+  recorded_at: Thu, 11 Jul 2013 15:05:02 GMT
+- request: 
+    method: post
+    uri: https://localhost:8443/candlepin/environments/7/consumers/
+    body: 
+      encoding: US-ASCII
+      string: "{\"name\":\"GlueCandlepinConsumerTestSecondDelete_2\",\"type\":\"candlepin\",\"facts\":{},\"installedProducts\":null,\"autoheal\":null,\"releaseVer\":null,\"serviceLevel\":null}"
+    headers: 
+      Accept: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="2t3GtoCg3dCtDrp1Q3aOnaOqHfd2a5RXaC3OExxw0", oauth_signature="DAQiLsKLRhS4%2BRJm3KAs9xEobbA%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1373555102", oauth_version="1.0"
+      Accept-Language: 
+      - en
+      Content-Type: 
+      - application/json
+      Cp-User: 
+      - admin
+      Content-Length: 
+      - "159"
+      User-Agent: 
+      - Ruby
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Server: 
+      - Apache-Coyote/1.1
+      X-Candlepin-Version: 
+      - 0.8.16-1
+      Content-Type: 
+      - application/json
+      Transfer-Encoding: 
+      - chunked
+      Date: 
+      - Thu, 11 Jul 2013 15:05:04 GMT
+    body: 
+      encoding: US-ASCII
+      string: "{\"created\":\"2013-07-11T15:05:03.004+0000\",\"updated\":\"2013-07-11T15:05:04.135+0000\",\"id\":\"ff8080813fce17d7013fce43951c0012\",\"uuid\":\"8584caee-58e2-40c7-8561-a7e089a0bcc6\",\"name\":\"GlueCandlepinConsumerTestSecondDelete_2\",\"username\":\"admin\",\"entitlementStatus\":\"valid\",\"serviceLevel\":\"\",\"releaseVer\":{\"releaseVer\":null},\"idCert\":{\"created\":\"2013-07-11T15:05:04.084+0000\",\"updated\":\"2013-07-11T15:05:04.084+0000\",\"key\":\"-----BEGIN RSA PRIVATE KEY-----\\nMIIEowIBAAKCAQEAq9XuucWq0YmLdoJATJ3+lZX6egcHQ8Lkm6swGUOiYHSYecYj\\njEBUiJfFp0FQjzi0G2U3HOWYi4ymlZBl7Boz2NjvhD7iHzAqXnwWi0ly9TEynqRV\\nT9oK1cShqq3x3i4POv12SAlsv4QkvkMIeEnzKadG5BXNLAHfrbyhOjtuYbrZX0mm\\nmVJfu7a3PavbhlqHVeq+kxmoEX70sL9GnWqUqO44yYpSO7K02e87N7zu7d2y5aos\\nCjnthJ5hnIOWBfsm6WmM8BixrEfSgDF8SgCmTu/QAwBG24zuPjMrGBIrY2ioPM2c\\nNVtrwMuZJChilNW+B3KTPMLBDuG1Cg6uJShbEQIDAQABAoIBAQCjX+V3jy5XxrRo\\nWnKT5eu1gUECYEhR7qy4LMywWJO7rV+C+BW4NTmqHNL5sKnNYhYrrdH2kXy1wWZo\\n8T9WeZst4yPm0nrfOEYwSz6L86tu3/XGy2upXh/LGwayZmt92MD2TyH0X7GbbSIa\\nG1WkOHsO8VH/bZMC8k0evCd2XCcYlqUFARD/WUsVWrRQg170Y/oezP0Nz4tDPysE\\n2FcOmbNrOjKCrXUsGBdjJdFYj3brQVOJZT3mFYFp5bQ/AJjg30avgp+Cpf/BufqR\\nxpHN+Pm7gCTkzb5XVy2R1jwq37cZHCBr/ve0JYHyA5mWixrUUEP0LzAADwDClcWE\\nJXQYPVihAoGBANqqWJS0zrcT3si7tEO4WVCKzGN5J+gPboCApPcZkBoWWf+WNj+u\\nLoCxeTHm890l3B+fls4CM3n1u3cABtbP9ekcL13bqP1rLkyxnfn5zvpGKzQerjqk\\nRObc174xRavE/6oJDok/RH1O1Z0IgiI/0ZxmilKLl0dNUUXF1xwojikFAoGBAMks\\ntCyBdzM5YBJrSiJ96xEykvJ6vwF6Sxjr/q9+ZO02SZb1+waTBEBF46xrypNHJX8l\\nuv0GQtC9vCoiQ7SDwrwovhyNtF0Qp0n9A463+sA844k6Kzv12f3T9+a9BjCmdS5B\\nKLRe/aOhq6fXoFy/sVPoCXTuNatlhgxG4Bl6TtedAoGAaW4+/ZxcGzvSbDjMxuYo\\n8kOqHsA49JQUNJNSdu31ZA6o4CoeCABE3bo0dFIl/NgXVYwOG1BGX6SS+eKiaYql\\nx/rV/8w8o8u87C+ruu6u1E9m3193pEC2FBYhU8vQCu0WVHa/cn9113FeX7PNgxQA\\nTgfG49v4WeG2sQyeFi6btL0CgYBhRHsM9b/zhW89GKDskmNAmmpQUSbfCQkcUKaA\\npaUYyGHGWsJ3iEfK57/QEwIMOZ8Ynd6ODiPqF4LOAGkp83cJUM2yspUdVjr8XBgH\\nPk8/+XCuXfCfehxfTMiUyJoglascpSaQJ0mNf1KmwWvozEpp3kwMPEy4xUqNzwr1\\nZpyORQKBgHdyFlbslOc76SyglQ9w+eBHyLsHsGs1Zy5rQGkVM8r56/qYJWdmp0He\\nflFwu+1Q4Duc9ehUFg4lEzslcJzZnI5hnWuUzUgmE+KWEbD/DqOcsLmmJw3N9Ch0\\nXvrDFA6qakvxRmH8VMV3G11HdfLQ1kpShBy/5DBYw+uonVnbYpGl\\n-----END RSA PRIVATE KEY-----\\n\",\"cert\":\"-----BEGIN CERTIFICATE-----\\nMIIEXTCCA0WgAwIBAgIIHqnQ+53K8lgwDQYJKoZIhvcNAQEFBQAwbjELMAkGA1UE\\nBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRAwDgYDVQQHEwdSYWxlaWdo\\nMRAwDgYDVQQKEwdTb21lT3JnMRQwEgYDVQQLEwtTb21lT3JnVW5pdDEMMAoGA1UE\\nAxMDZjE4MB4XDTEzMDcxMTE1MDUwM1oXDTI5MDcxMTE1MDUwM1owLzEtMCsGA1UE\\nAxMkODU4NGNhZWUtNThlMi00MGM3LTg1NjEtYTdlMDg5YTBiY2M2MIIBIjANBgkq\\nhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAq9XuucWq0YmLdoJATJ3+lZX6egcHQ8Lk\\nm6swGUOiYHSYecYjjEBUiJfFp0FQjzi0G2U3HOWYi4ymlZBl7Boz2NjvhD7iHzAq\\nXnwWi0ly9TEynqRVT9oK1cShqq3x3i4POv12SAlsv4QkvkMIeEnzKadG5BXNLAHf\\nrbyhOjtuYbrZX0mmmVJfu7a3PavbhlqHVeq+kxmoEX70sL9GnWqUqO44yYpSO7K0\\n2e87N7zu7d2y5aosCjnthJ5hnIOWBfsm6WmM8BixrEfSgDF8SgCmTu/QAwBG24zu\\nPjMrGBIrY2ioPM2cNVtrwMuZJChilNW+B3KTPMLBDuG1Cg6uJShbEQIDAQABo4IB\\nPDCCATgwEQYJYIZIAYb4QgEBBAQDAgWgMAsGA1UdDwQEAwIEsDCBoAYDVR0jBIGY\\nMIGVgBTskg6r8jbjIOJ2W2zRdrboL4r68qFypHAwbjELMAkGA1UEBhMCVVMxFzAV\\nBgNVBAgTDk5vcnRoIENhcm9saW5hMRAwDgYDVQQHEwdSYWxlaWdoMRAwDgYDVQQK\\nEwdTb21lT3JnMRQwEgYDVQQLEwtTb21lT3JnVW5pdDEMMAoGA1UEAxMDZjE4ggkA\\nv3lqxcbGeOcwHQYDVR0OBBYEFBjoTiyih/+ToK61jwPOKBEorqb2MBMGA1UdJQQM\\nMAoGCCsGAQUFBwMCMD8GA1UdEQQ4MDakNDAyMTAwLgYDVQQDDCdHbHVlQ2FuZGxl\\ncGluQ29uc3VtZXJUZXN0U2Vjb25kRGVsZXRlXzIwDQYJKoZIhvcNAQEFBQADggEB\\nAJNaZQKiSsHLkMMLXBJO+Q5Ps9CQQbEN9QL+C3V1trASYPZq1ipd8QXYSXDKWUAD\\n67GdgwspAwNezTPKlqTuy4jXe0W2p/ujSNmn7XeIBbzgt03vd2Q3lCDYb9VtzUWH\\nMrrT/+aqMa+VjWmJWJVAOI9intUKDLTSmlZeEttFH1du9Wyns3wotWd1Ee6MT2nh\\nm9qq0HGCoAndYoUk6YESrHl5YKw/bLiSke/IB7j/NqYxvUhXBFEGk3ukOyEo7aiS\\nb7T3O7fAKeyakwN3jeKuC/r6PRQc3SNjpqQ1BlKI7TM/MVt0lwygvEiomG1Uf8Ge\\nt+6oE0Gr/SDPXLke8j3GWuY=\\n-----END CERTIFICATE-----\\n\",\"id\":\"ff8080813fce17d7013fce4399540014\",\"serial\":{\"created\":\"2013-07-11T15:05:03.007+0000\",\"updated\":\"2013-07-11T15:05:03.007+0000\",\"id\":2209526871304630872,\"revoked\":false,\"collected\":false,\"expiration\":\"2029-07-11T15:05:03.006+0000\",\"serial\":2209526871304630872}},\"type\":{\"id\":\"1003\",\"label\":\"candlepin\",\"manifest\":true},\"owner\":{\"id\":\"ff8080813fce17d7013fce4394000010\",\"key\":\"candlepin_org_label\",\"displayName\":\"Candlepin_Org\",\"href\":\"/owners/candlepin_org_label\"},\"environment\":{\"created\":\"2013-07-11T15:05:02.894+0000\",\"updated\":\"2013-07-11T15:05:02.894+0000\",\"owner\":{\"id\":\"ff8080813fce17d7013fce4394000010\",\"key\":\"candlepin_org_label\",\"displayName\":\"Candlepin_Org\",\"href\":\"/owners/candlepin_org_label\"},\"name\":\"candlepin_library_dev_cve\",\"description\":null,\"id\":\"7\",\"environmentContent\":[]},\"entitlementCount\":0,\"facts\":{},\"lastCheckin\":null,\"installedProducts\":null,\"canActivate\":false,\"guestIds\":null,\"capabilities\":null,\"autoheal\":true,\"href\":\"/consumers/8584caee-58e2-40c7-8561-a7e089a0bcc6\"}"
+    http_version: 
+  recorded_at: Thu, 11 Jul 2013 15:05:04 GMT
+- request: 
+    method: delete
+    uri: https://localhost:8443/candlepin/consumers/8584caee-58e2-40c7-8561-a7e089a0bcc6
+    body: 
+      encoding: US-ASCII
+      string: ""
+    headers: 
+      Accept: 
+      - "*/*; q=0.5, application/xml"
+      Accept-Encoding: 
+      - gzip, deflate
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="UmO9QTVJOVma9nxQNaLesJpDvaa1zA1SOZmLKUqoJo", oauth_signature="cgbNLqZp4lqX5CXPi2uB3de0Vus%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1373555104", oauth_version="1.0"
+      Cp-User: 
+      - admin
+      User-Agent: 
+      - Ruby
+  response: 
+    status: 
+      code: 204
+      message: No Content
+    headers: 
+      Server: 
+      - Apache-Coyote/1.1
+      X-Candlepin-Version: 
+      - 0.8.16-1
+      Date: 
+      - Thu, 11 Jul 2013 15:05:04 GMT
+    body: 
+      encoding: US-ASCII
+      string: ""
+    http_version: 
+  recorded_at: Thu, 11 Jul 2013 15:05:04 GMT
 recorded_with: VCR 2.5.0
