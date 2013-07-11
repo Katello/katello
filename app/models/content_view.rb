@@ -280,7 +280,9 @@ class ContentView < ActiveRecord::Base
       version.task_status = task
       version.save!
     else
-      version.task_status = ::TaskStatus.create!(:uuid => ::UUIDTools::UUID.random_create.to_s, :user_id=>::User.current.id,
+      version.task_status = ::TaskStatus.create!(
+                               :uuid => ::UUIDTools::UUID.random_create.to_s,
+                               :user_id => ::User.current.id,
                                :organization => self.organization,
                                :state => ::TaskStatus::Status::WAITING,
                                :task_type => TaskStatus::TYPES[:content_view_refresh][:type])
