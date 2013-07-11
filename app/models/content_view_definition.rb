@@ -61,7 +61,9 @@ class ContentViewDefinition < ContentViewDefinitionBase
       # by the UI.
       # At present sync publish call is used by the migration script.
       # but it makes sense for this to be the general behavior.
-      version.task_status = ::TaskStatus.create!(:uuid => ::UUIDTools::UUID.random_create.to_s, :user_id=>::User.current.id,
+      version.task_status = ::TaskStatus.create!(
+                               :uuid => ::UUIDTools::UUID.random_create.to_s,
+                               :user_id => ::User.current.id,
                                :organization => self.organization,
                                :state => ::TaskStatus::Status::WAITING,
                                :task_type => TaskStatus::TYPES[:content_view_publish][:type])
