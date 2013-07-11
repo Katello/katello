@@ -57,6 +57,7 @@ end
 class ResourceType < ActiveRecord::Base
   belongs_to :permission
   validates :name, :length => { :maximum => 255 }
+  validates_with Validators::KatelloNameFormatValidator, :attributes => :name
 
   def display_name
     ResourceType::TYPES[name][:name]
