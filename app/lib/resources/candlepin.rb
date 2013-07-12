@@ -137,8 +137,7 @@ module Resources
 
         def checkin(uuid, checkin_date)
           checkin_date ||= DateTime.now
-          uri = "%s?checkin_date=%s" % [join_path(path(uuid), 'checkin'), checkin_date]
-          self.put(uri, {}.to_json, self.default_headers).body
+          self.put(path(uuid), {:lastCheckin => checkin_date}.to_json, self.default_headers).body
         end
 
         def available_pools(uuid, listall=false)
