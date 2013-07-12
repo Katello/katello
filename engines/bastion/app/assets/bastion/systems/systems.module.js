@@ -60,6 +60,7 @@ angular.module('Bastion.systems').config(['$stateProvider', function($stateProvi
 
     $stateProvider.state('systems.details', {
         url: '/system/:systemId',
+        collapsed: true,
         views: {
             'sub-header': {
                 templateUrl: 'systems/views/systems-sub-header.html'
