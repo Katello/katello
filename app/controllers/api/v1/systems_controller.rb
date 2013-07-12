@@ -603,6 +603,7 @@ This information is then used for computing the errata available for the system.
     return if @content_view
     organization = @organization
     organization ||= @system.organization if @system
+    organization ||= @environment.organization if @environment
     if cv_id && organization
       @content_view = ContentView.readable(organization).find_by_id(cv_id)
       raise HttpErrors::NotFound, _("Couldn't find content view '%s'") % cv_id if @content_view.nil?
