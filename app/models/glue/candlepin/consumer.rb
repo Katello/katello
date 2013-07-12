@@ -22,7 +22,8 @@ module Glue::Candlepin::Consumer
       before_destroy :destroy_candlepin_orchestration
       after_rollback :rollback_on_candlepin_create, :on => :create
 
-      lazy_accessor :href, :facts, :cp_type, :href, :idCert, :owner, :lastCheckin, :created, :guestIds, :installedProducts, :autoheal, :releaseVer, :serviceLevel,
+      lazy_accessor :href, :facts, :cp_type, :href, :idCert, :owner, :lastCheckin, :created, :guestIds,
+                    :installedProducts, :autoheal, :releaseVer, :serviceLevel, :capabilities,
         :initializer => lambda {|s|
                           if uuid
                             consumer_json = Resources::Candlepin::Consumer.get(uuid)
@@ -93,7 +94,8 @@ module Glue::Candlepin::Consumer
                                                             self.installedProducts,
                                                             self.autoheal,
                                                             self.releaseVer,
-                                                            self.serviceLevel)
+                                                            self.serviceLevel,
+                                                            self.capabilities)
 
       load_from_cp(consumer_json)
     rescue => e
@@ -112,7 +114,7 @@ module Glue::Candlepin::Consumer
     def update_candlepin_consumer
       Rails.logger.debug "Updating consumer in candlepin: #{name}"
       Resources::Candlepin::Consumer.update(self.uuid, @facts, @guestIds, @installedProducts, @autoheal,
-                                            @releaseVer, self.serviceLevel, self.cp_environment_id)
+                                            @releaseVer, self.serviceLevel, self.cp_environment_id, @capabilities)
     rescue => e
       Rails.logger.error "Failed to update candlepin consumer #{name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -206,7 +208,8 @@ module Glue::Candlepin::Consumer
     end
 
     def to_json(options={})
-      super(options.merge(:methods => [:href, :facts, :idCert, :owner, :autoheal, :release, :releaseVer, :checkin_time, :installedProducts]))
+      super(options.merge(:methods => [:href, :facts, :idCert, :owner, :autoheal, :release, :releaseVer, :checkin_time,
+                                       :installedProducts, :capabilities]))
     end
 
     def convert_from_cp_fields(cp_json)
