@@ -60,7 +60,7 @@ module LazyAccessor
         send :define_method, "#{symbol.to_s}=" do |val|
           attr = symbol.to_s
 
-          old = instance_variable_get("@#{symbol.to_s}").nil? ? self.instance_eval(symbol.to_s) : instance_variable_get("@#{symbol.to_s}")
+          old = instance_variable_get("@#{symbol.to_s}").nil? ? self.send(symbol) : instance_variable_get("@#{symbol.to_s}")
           changed_remote_attributes[attr] = old if old != val
 
           instance_variable_set("@#{attr}", val)
