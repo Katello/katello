@@ -36,9 +36,27 @@ angular.module('alchemy').directive('alchInfiniteScroll', [function() {
             elem.bind('scroll', function() {
                 var sliderPosition = raw.scrollTop + raw.offsetHeight;
                 if (sliderPosition > 0 && sliderPosition >= raw.scrollHeight) {
-                    scope.$apply(attr.alchInfiniteScroll);
+                    scope.$apply(attr["alchInfiniteScroll"]);
                 }
             });
+
+            var getScrollHeight = function() {
+                var scrollHeight = 0;
+                elem.children().each(function() {
+                    scrollHeight = scrollHeight + $(this).get(0).scrollHeight;
+                });
+                return scrollHeight;
+            };
+
+            var loadUntilScroll = function() {
+                if (getScrollHeight() < elem.height()) {
+                    scope.$eval(attr["alchInfiniteScroll"]).then(loadUntilScroll);
+                }
+            };
+
+            // load first batch of results and continue loading until there are enough to scroll
+            loadUntilScroll();
+
         }
     };
 }]);

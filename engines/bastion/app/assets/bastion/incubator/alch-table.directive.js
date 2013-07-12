@@ -31,7 +31,9 @@ angular.module('alchemy')
 
             if (headers.length) {
                 angular.forEach(headers[0].columns, function(column, columnIndex) {
-                    row.cells[columnIndex].show = column.show;
+                    if (row.cells[columnIndex]) {
+                        row.cells[columnIndex].show = column.show;
+                    }
                 });
             }
         };
