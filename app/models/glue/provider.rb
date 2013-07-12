@@ -189,6 +189,29 @@ module Glue::Provider
       Resources::Candlepin::Owner.import self.organization.label, zip_file_path, options
     end
 
+    def owner_upstream_update upstream, options
+
+      if !upstream['idCert'] || !upstream['idCert']['cert'] || !upstream['idCert']['key']
+        Rails.logger.error "Upstream identity certificate not available"
+        raise _("Upstream identity certificate not available")
+      end
+
+      # Default to Red Hat
+      url = upstream['apiUrl'] || 'https://subscription.rhn.redhat.com/subscription/consumers/'
+
+      # TODO: wait until ca_path is supported
+      #       https://github.com/L2G/rest-client-fork/pull/8
+      #ca_file = '/etc/candlepin/certs/upstream/subscription.rhn.stage.redhat.com.crt'
+      ca_file = nil
+
+      capabilities = Resources::Candlepin::CandlepinPing.ping['managerCapabilities'].inject([]) do |result, element|
+        result << {'name' => element}
+      end
+      Resources::Candlepin::UpstreamConsumer.update("#{url}#{upstream['uuid']}", upstream['idCert']['cert'],
+                                                    upstream['idCert']['key'], ca_file, {:capabilities => capabilities})
+
+    end
+
     def owner_upstream_export upstream, zip_file_path, options
 
       if !upstream['idCert'] || !upstream['idCert']['cert'] || !upstream['idCert']['key']
@@ -197,7 +220,7 @@ module Glue::Provider
       end
 
       # Default to Red Hat
-      url = upstream['apiUrl'] || 'https://subscription.rhn.stage.redhat.com/subscription/consumers/'
+      url = upstream['apiUrl'] || 'https://subscription.rhn.redhat.com/subscription/consumers/'
 
       # TODO: wait until ca_path is supported
       #       https://github.com/L2G/rest-client-fork/pull/8
@@ -265,15 +288,18 @@ module Glue::Provider
         if manifest_refresh
           zip_file_path = "/tmp/#{rand}.zip"
           upstream = options[:upstream]
-          pre_queue.create(:name     => "export upstream manifest for owner: #{self.organization.name}",
-                                   :priority => 2, :action => [self, :owner_upstream_export, upstream, zip_file_path, options],
-                                   :action_rollback => nil)
+          pre_queue.create(:name => "export upstream manifest for owner: #{self.organization.name}",
+                           :priority => 2, :action => [self, :owner_upstream_update, upstream, options],
+                           :action_rollback => nil)
+          pre_queue.create(:name => "export upstream manifest for owner: #{self.organization.name}",
+                           :priority => 3, :action => [self, :owner_upstream_export, upstream, zip_file_path, options],
+                           :action_rollback => nil)
         else
           zip_file_path = options[:zip_file_path]
         end
 
         pre_queue.create(:name     => "import manifest #{zip_file_path} for owner: #{self.organization.name}",
-                         :priority => 3, :action => [self, :owner_import, zip_file_path, options],
+                         :priority => 4, :action => [self, :owner_import, zip_file_path, options],
                          :action_rollback => [self, :del_owner_import])
         pre_queue.create(:name     => "import of products in manifest #{zip_file_path}",
                          :priority => 5, :action => [self, :import_products_from_cp, options])
