@@ -277,7 +277,7 @@ class Api::V1::SystemGroupsController < Api::V1::ApiController
   # to make sure that the changes are reflected to elasticsearch immediately
   # otherwise the index action doesn't have to know about the changes
   def refresh_index
-    SystemGroup.index.refresh
+    SystemGroup.index.refresh if Katello.config.use_elasticsearch
   end
 
 end

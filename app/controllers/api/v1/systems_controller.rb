@@ -591,7 +591,7 @@ This information is then used for computing the errata available for the system.
   # to make sure that the changes are reflected to elasticsearch immediately
   # otherwise the index action doesn't have to know about the changes
   def refresh_index
-    System.index.refresh
+    System.index.refresh if Katello.config.use_elasticsearch
   end
 
 end

@@ -50,6 +50,8 @@ describe Api::V1::SystemsController do
     disable_consumer_group_orchestration
     disable_system_orchestration
 
+    System.stub(:index).and_return(stub.as_null_object)
+
     Resources::Candlepin::Consumer.stub!(:create).and_return({ :uuid => uuid, :owner => { :key => uuid } })
     Resources::Candlepin::Consumer.stub!(:update).and_return(true)
     Resources::Candlepin::Consumer.stub!(:available_pools).and_return([])
@@ -92,6 +94,12 @@ describe Api::V1::SystemsController do
       System.should_receive(:create!).with(hash_including(content_view: view, environment: @environment_1, cp_type: "system", name: "test"))
       post :create, :organization_id => @organization.name, :environment_id => @environment_1.id, :name => 'test', :cp_type => 'system',
         :content_view_id => view.id
+    end
+
+    it "should refresh ES index" do
+      System.index.should_receive(:refresh)
+      System.stub(:create!).and_return({})
+      post :create, :organization_id => @organization.name, :environment_id => @environment_1.id, :name => 'test', :cp_type => 'system', :installedProducts => installed_products
     end
 
     context "in organization with one environment" do
@@ -213,6 +221,10 @@ describe Api::V1::SystemsController do
           System.last.content_view_id.should eql(content_view.id)
         end
 
+        it "should refresh ES index" do
+          System.index.should_receive(:refresh)
+          post :activate, @system_data
+        end
       end
 
       context "and they are not in the system" do
@@ -487,6 +499,11 @@ describe Api::V1::SystemsController do
       put :update, :id => uuid, :environment_id => @environment_2.id
       response.body.should == @sys.to_json
       response.should be_success
+    end
+
+    it "should refresh ES index" do
+      System.index.should_receive(:refresh)
+      put :update, :id => uuid, :name => "foo_name"
     end
 
   end
