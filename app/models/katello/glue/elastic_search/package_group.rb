@@ -17,12 +17,16 @@ module Glue::ElasticSearch::PackageGroup
   # rubocop:disable MethodLength
   def self.included(base)
     base.class_eval do
-
+      include Glue::ElasticSearch::BackendIndexedModel
       def index_options
         {
-          "_type" => :package_group,
+          "_type" => ::PackageGroup.search_type,
           "name_autocomplete" => name
         }
+      end
+
+      def self.search_type
+        :package_group
       end
 
       def self.index_settings

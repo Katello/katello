@@ -44,20 +44,32 @@ module Glue::ElasticSearch::Repository
       self.product.provider.update_index if self.product.provider.respond_to? :update_index
     end
 
-    def index_packages
-      Tire.index Katello::Package.index do
+    def index_packages(force=false)
+      Tire.index ::Package.index do
         create :settings => Katello::Package.index_settings, :mappings => Katello::Package.index_mapping
       end
-      pkgs = self.packages.collect{|pkg| pkg.as_json.merge(pkg.index_options)}
-      pkgs.each_slice(Katello.config.pulp.bulk_load_size) do |sublist|
-        Tire.index Katello::Package.index do
-          import sublist
-        end if !sublist.empty?
+
+      if self.content_view.default? || force
+        print "SlowImport\n"
+        pkgs = self.packages.collect{|pkg| pkg.as_json.merge(pkg.index_options)}
+        pkgs.each_slice(Katello.config.pulp.bulk_load_size) do |sublist|
+          Tire.index ::Package.index do
+            import sublist
+          end if !sublist.empty?
+        end
+      else
+        print "FastImport\n"
+        pkg_ids = self.package_ids
+        Package.update_repoids(pkg_ids, [self.pulp_id])
       end
     end
 
-    def update_packages_index
+    def clear_packages_index
       # for each of the packages in the repo, unassociate the repo from the package
+      pkg_ids = self.package_ids
+      Package.update_package_repoids(pkg_ids, [], [self.pulp_id])
+
+
       pkgs = self.packages.collect{|pkg| pkg.as_json.merge(pkg.index_options)}
       pulp_id = self.pulp_id
 
@@ -84,16 +96,16 @@ module Glue::ElasticSearch::Repository
       Tire.index('katello_package').refresh
     end
 
-    def index_errata
-      errata = self.errata.collect{|err| err.as_json.merge(err.index_options)}
-      unless errata.empty?
-        Tire.index Errata.index do
-          create :settings => Errata.index_settings, :mappings => Errata.index_mapping
-        end unless Tire.index(Errata.index).exists?
-
+    def index_errata(force=false)
+      if self.content_view.default? || force
+        errata = self.errata.collect{|err| err.as_json.merge(err.index_options)}
+        Errata.create_index
         Tire.index Errata.index do
           import errata
-        end
+        end unless errata.empty?
+      else
+        errata_ids = self.errata_ids
+        Errata.update_repoids(errata_ids, [self.pulp_id], [])
       end
     end
 
@@ -103,10 +115,7 @@ module Glue::ElasticSearch::Repository
       pulp_id = self.pulp_id
 
       unless errata.empty?
-        Tire.index Errata.index do
-          create :settings => Errata.index_settings, :mappings => Errata.index_mapping
-        end unless Tire.index(Errata.index).exists?
-
+        Errata.create_index
         Tire.index Errata.index do
           import errata do |documents|
             documents.each do |document|
@@ -135,7 +144,8 @@ module Glue::ElasticSearch::Repository
 
         Tire.index Katello::PackageGroup.index do
           import package_groups_map
-        end
+        end unless package_groups_map.empty?
+
       end
     end
 
@@ -214,7 +224,7 @@ module Glue::ElasticSearch::Repository
     end
 
     def clear_content_indices
-      update_packages_index
+      clear_packages_index
       update_errata_index
       update_package_group_index
       update_puppet_modules_index
