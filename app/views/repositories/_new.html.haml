@@ -3,9 +3,6 @@
 = content_for :title do
   = _("Product: ") + @product.name
 
-= content_for :navigation do
-  / pretty
-
 = content_for :subcontent do
   %h3
     = _("Create Repository")
@@ -24,6 +21,14 @@
       .grid_5.la
         = text_field :repo, :label, :class=>:label_input, :tabindex => auto_tab_index, 'data-url' => default_label_provider_product_repositories_path(@provider.id, @product.id)
         = image_tag "icons/spinner.gif", :class => 'label_spinner hidden'
+
+    %fieldset.clearfix
+      .grid_2.ra
+        = label :repo, :feed, _("Type")
+      .grid_5.la
+        = select_tag 'repo[content_type]',
+          options_for_select([Repository::YUM_TYPE, Repository::PUPPET_TYPE], Repository::YUM_TYPE),
+          :tabindex => auto_tab_index
 
     %fieldset.clearfix
       .grid_2.ra

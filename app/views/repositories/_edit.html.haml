@@ -37,6 +37,11 @@
 
   %fieldset
     .grid_2.ra
+      %label #{_("Type")}:
+    .grid_5.la.multiline#repo_type #{@repository[:content_type]}
+
+  %fieldset
+    .grid_2.ra
       %label #{_("URL")}:
     .grid_5.la{'name' => 'repo[feed]', 'data-url' => provider_path(@provider.id)} #{@repository.feed}
 
@@ -45,7 +50,6 @@
       %label #{_("Publish via http")}
     .grid_5.la
       = @repository.unprotected ? _("Yes") : _("No")
-
 
   %fieldset
     .grid_2.ra

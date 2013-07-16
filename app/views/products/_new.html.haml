@@ -24,24 +24,4 @@
 
     = form.submit _("Create"), :class => 'subpanel_create create_button', :disable_with => _("Creating...")
 
-    -# Content to be implemented and used at a later date
-      %fieldset.clearfix
-        .grid_2.ra
-          = label :product, :feed, _("URL")
-        .grid_5.la
-          = text_field :product, :feed, :id=>"product_url_field", :tabindex => auto_tab_index
-      %fieldset.clearfix
-        .grid_2.ra
-          = label :product, :types, _("Types")
-        %br.clear
-        .grid_2.ra
-          = label :product, :types, _("Yum")
-        .grid_5.la
-          = check_box_tag :yum_type, :tabindex => auto_tab_index
-        %br.clear
-        .grid_2.ra
-          = label :product, :types, _("File")
-        .grid_5.la
-          = check_box_tag :file_type, :tabindex => auto_tab_index
-
 = render :template => "layouts/tupane_layout"

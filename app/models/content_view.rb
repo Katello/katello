@@ -338,6 +338,7 @@ class ContentView < ActiveRecord::Base
     self.repos(env).each do |repo|
       repo.index_packages
       repo.index_errata
+      repo.index_puppet_modules
     end
   end
 

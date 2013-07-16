@@ -66,10 +66,7 @@ class ContentViewDefinition < ContentViewDefinitionBase
   def generate_repos(view, notify = false)
     # Publish algorithm
     #
-    # Copy all rpms over
-    # Copy all errata over
-    # Copy all pkg groups over
-    # Copy all distro over
+    # Copy all content (e.g. rpms, errata, pkg groups, distros, puppet modules...etc) over
     # Start Filtering errata in the copied
     # Make sure packages belonging to the errata are included/excluded
     # Start Filtering package groups in the copied repo
@@ -80,10 +77,6 @@ class ContentViewDefinition < ContentViewDefinitionBase
     async_tasks = []
     cloned_repos = []
 
-    # Copy all rpms over
-    # Copy all errata over
-    # Copy all pkg groups over
-    # Copy all distro over
     repos.each do |repo|
       clone = repo.create_clone(self.organization.library, view)
       async_tasks << repo.clone_contents(clone)
