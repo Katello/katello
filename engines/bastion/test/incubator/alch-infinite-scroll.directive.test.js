@@ -29,7 +29,7 @@ describe('Directive: alchInfiniteScroll', function () {
             }
         };
 
-        element = angular.element('<div alch-infinite-scroll="scrollHandler.doIt()" style="height: 100px; position: absolute; overflow-y: auto;"></div>');
+        element = angular.element('<div alch-infinite-scroll="scrollHandler.doIt()" style=" height: 100px; position: absolute; overflow-y: auto;"></div>');
         $('body').append(element);
     }));
 
@@ -79,6 +79,36 @@ describe('Directive: alchInfiniteScroll', function () {
             spyOn($scope.scrollHandler, "doIt").andCallThrough();
             $scope.$digest();
             expect($scope.scrollHandler.doIt.callCount).toBe(0);
+        });
+    });
+
+    describe("loads more results based on the height of the elements", function() {
+        beforeEach(function() {
+            element.append('<p style="height: 10px;"></p>');
+        });
+
+        it("does not load more results if the scroll height is less than element height.", function() {
+            spyOn($scope.scrollHandler, "doIt").andCallThrough();
+            element.height("9px");
+            $compile(element)($scope);
+            $scope.$digest();
+            expect($scope.scrollHandler.doIt.callCount).toBe(0);
+        });
+
+        it("loads more results if the scroll height is equal to the element height.", function() {
+            spyOn($scope.scrollHandler, "doIt").andCallThrough();
+            element.height("10px");
+            $compile(element)($scope);
+            $scope.$digest();
+            expect($scope.scrollHandler.doIt.callCount).toBe(1);
+        });
+
+        it("loads more results if the scroll height is equal to the element height.", function() {
+            spyOn($scope.scrollHandler, "doIt").andCallThrough();
+            element.height("11px");
+            $compile(element)($scope);
+            $scope.$digest();
+            expect($scope.scrollHandler.doIt.callCount).toBe(1);
         });
     });
 });

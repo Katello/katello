@@ -49,7 +49,7 @@ angular.module('alchemy').directive('alchInfiniteScroll', [function() {
             };
 
             var loadUntilScroll = function() {
-                if (getScrollHeight() < elem.height()) {
+                if (getScrollHeight() <= elem.height()) {
                     scope.$eval(attr["alchInfiniteScroll"]).then(loadUntilScroll);
                 }
             };
