@@ -42,7 +42,7 @@ module NavigationHelper
     javascript do
       # TODO Get rid of this ugliness
       (
-        'angular.module("Katello").constant("Menus", {
+        'angular.module("Bastion.menu").constant("Menus", {
           menu: ' + menu.to_json + ',
           adminMenu: ' + site_menu.to_json + ',
           userMenu: ' + user_menu.to_json + ',
