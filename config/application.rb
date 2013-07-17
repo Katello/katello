@@ -14,6 +14,9 @@ require 'katello/load_configuration'
 require 'katello/logging'
 require 'katello/url_constrained_cookie_store'
 
+# bundler_ext does not support inline gem's currently so we have to mount
+# the engine through a requires instead of within the Gemfile
+require './engines/bastion/lib/bastion'
 
 # If you have a Gemfile, require the gems listed there, including any gems
 # you've limited to :test, :development, or :production.
