@@ -160,6 +160,31 @@ module Glue::ElasticSearch::Errata
           end
         end
       end
+
+      def self.autocomplete_search(text, repoids=nil, page_size=15)
+        return [] if !Tire.index(self.index).exists?
+
+        if text.blank?
+          query = "id_title:(*)"
+        else
+          text = Util::Search::filter_input(text.downcase)
+          query = "id_title:(*#{text}*)"
+        end
+
+        search = Tire.search self.index do
+          fields [:id_title, :errata_id]
+          query do
+            string query
+          end
+          size page_size
+
+          if repoids
+            filter :terms, :repoids => repoids
+          end
+        end
+
+        search.results
+      end
     end
   end
 end
