@@ -11,9 +11,8 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class ErrataController < ApplicationController
-
-
-  before_filter :lookup_errata
+  before_filter :lookup_errata, except: [:auto_complete]
+  before_filter :find_filter
   before_filter :authorize
 
   def rules
@@ -21,10 +20,20 @@ class ErrataController < ApplicationController
       !Repository.readable_in_org(current_organization).where(
           :pulp_id=>@errata.repoids).empty?
     }
+
+    auto_complete = lambda do
+      if @def_filter
+        @def_filter.content_view_definition.readable?
+      else
+        false
+      end
+    end
+
     {
         :show => view,
         :packages => view,
-        :short_details => view
+        :short_details => view,
+        :auto_complete => auto_complete
     }
   end
 
@@ -40,11 +49,25 @@ class ErrataController < ApplicationController
     render :partial=>"short_details"
   end
 
-  private
+  def auto_complete
+    if @def_filter
+      repos = @def_filter.products.map { |prod| prod.repos(current_organization.library) }.flatten
+      repos += @def_filter.repositories
+      results = Errata.autocomplete_search("#{params[:term]}*", repos.map(&:pulp_id))
+      results = results.map { |erratum| {label: erratum.id_title, value: erratum.errata_id} }
+    end
 
+    render :json => results
+  end
+
+  private
 
   def lookup_errata
     @errata = Errata.find(params[:id])
+  end
+
+  def find_filter
+    @def_filter = Filter.find_by_id(params[:filter_id])
   end
 
 end
