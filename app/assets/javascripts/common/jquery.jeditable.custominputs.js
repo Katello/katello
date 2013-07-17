@@ -13,6 +13,11 @@
 
 $(document).ready(function() {
 
+    // override textarea
+    $.editable.types.textarea.content = function(string, settings, original) {
+        $(':input:first', this).val($("<div/>").html(string).text());
+    };
+
     $.editable.addInputType('password', {
         element : function(settings, original) {
             var input=$('<input type="password">');
