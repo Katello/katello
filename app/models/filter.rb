@@ -20,7 +20,7 @@ class Filter < ActiveRecord::Base
   validates :name, :presence => true, :allow_blank => false,
               :length => { :maximum => 255 },
               :uniqueness => {:scope => :content_view_definition_id}
-  validates_with Validators::KatelloNameFormatValidator, :attributes => :name
+ validates_with Validators::KatelloNameFormatValidator, :attributes => :name
 
   def self.applicable(repo)
     query = %{filters.id in (select filter_id from  filters_repositories where repository_id = #{repo.id})
