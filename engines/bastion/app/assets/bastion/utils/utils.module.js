@@ -18,4 +18,4 @@
  * @description
  *   Module for common utilities.
  */
-angular.module('Bastion.utils', []);
+angular.module('Bastion.utils', ['Katello.globals']);
