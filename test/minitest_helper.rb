@@ -53,6 +53,13 @@ class Minitest::Rails::ActionController::TestCase
   include ControllerSupport
 end
 
+
+module VCR
+  def self.live?
+    VCR.configuration.default_cassette_options[:record] != :none
+  end
+end
+
 def configure_vcr
   require "vcr"
 

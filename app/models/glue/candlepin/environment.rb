@@ -44,6 +44,10 @@ module Glue::Candlepin::Environment
       Resources::Candlepin::Environment.find(self.cp_id)
     end
 
+    def content_ids
+      self.candlepin_info['environmentContent'].collect{ |c| c['id'] }
+    end
+
     def del_environment
       Rails.logger.info _("Deleting environment in candlepin: %s") % self.label
       Resources::Candlepin::Environment.destroy(self.cp_id)

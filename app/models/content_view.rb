@@ -266,8 +266,9 @@ class ContentView < ActiveRecord::Base
     version.save!
 
     #move all the existing repos over to the new version
-    library_version.repos(organization.library).each do |repo|
+    library_version.repos(organization.library).scoped(:readonly=>false).each do |repo|
       repo.content_view_version = version
+      repo.save!
     end
     library_version.reload
     library_version.delete(self.organization.library)
