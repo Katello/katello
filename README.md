@@ -53,6 +53,7 @@ Contact & Resources
  * [Developer mailing list](https://www.redhat.com/mailman/listinfo/katello-devel)
  * [IRC Freenode](http://freenode.net/using_the_network.shtml): #katello
  * [Twitter](https://twitter.com/Katello_Project)
+ * {file:doc/resources.md Resources for developers}
 
 Documentation
 -------------
