@@ -4,7 +4,7 @@
   = _("Product: ") + @product.name
 
 = content_for :subcontent do
-  %h3
+  %h3#new_repo
     = _("Create Repository")
   .clear
     &nbsp;
@@ -43,7 +43,7 @@
         = check_box :repo, :unprotected, :id=>"unprotected", :tabindex => auto_tab_index, :checked=>false
 
 
-    %fieldset.clearfix
+    %fieldset.clearfix#gpg_key
       .grid_2.ra
         = label :repo, :gpg_key, _("GPG Key")
       .grid_5.la
