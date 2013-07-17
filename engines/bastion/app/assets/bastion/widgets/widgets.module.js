@@ -18,4 +18,4 @@
  * @description
  *   Module for common Bastion widgets.
  */
-angular.module('Bastion.widgets', ['alchemy', 'alch-templates', 'infinite-scroll', 'Bastion.utils']);
+angular.module('Bastion.widgets', ['Bastion.utils']);

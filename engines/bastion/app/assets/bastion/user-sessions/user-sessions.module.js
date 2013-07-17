@@ -18,4 +18,4 @@
  * @description
  *   Module for user session related functionality.
  */
-angular.module('Bastion.user-sessions', ['alchemy', 'alch-templates', 'Katello.globals', 'Bastion.widgets']);
+angular.module('Bastion.user-sessions', ['Bastion.widgets', 'Katello.globals']);

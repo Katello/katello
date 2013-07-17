@@ -22,15 +22,6 @@ angular.module('Katello.globals', []);
 
 /**
  * @ngdoc value
- * @name  Katello.globals.value:CurrentOrganization
- *
- * @description
- *   Provides a value wrapper around the current_organization.
- */
-angular.module('Katello.globals').value('CurrentOrganization', KT.current_organization);
-
-/**
- * @ngdoc value
  * @name  Katello.globals.value:notices
  *
  * @description

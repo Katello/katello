@@ -25,7 +25,8 @@ var Katello = angular.module('Katello', [
     'ngSanitize',
     'Katello.globals',
     'Bastion.i18n',
-    'Bastion.menu'
+    'Bastion.menu',
+    'Bastion.systems'
 ]);
 
 /**
