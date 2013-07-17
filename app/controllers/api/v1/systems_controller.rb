@@ -541,6 +541,7 @@ This information is then used for computing the errata available for the system.
       else
         # assumption here is :content_view_id is passed as a separate attrib
         @environment = KTEnvironment.find(params[:environment_id])
+        @organization = @environment.organization
         raise HttpErrors::NotFound, _("Couldn't find environment '%s'") % params[:environment_id] if @environment.nil?
       end
       return @environment, @content_view
@@ -603,6 +604,7 @@ This information is then used for computing the errata available for the system.
     return if @content_view
     organization = @organization
     organization ||= @system.organization if @system
+    organization ||= @environment.organization if @environment
     if cv_id && organization
       @content_view = ContentView.readable(organization).find_by_id(cv_id)
       raise HttpErrors::NotFound, _("Couldn't find content view '%s'") % cv_id if @content_view.nil?
