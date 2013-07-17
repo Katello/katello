@@ -5,10 +5,11 @@
         %div.one-line-ellipsis#heading_title
           %span#name
             = item.send('name')
-      %li.one-line-ellipsis
-        = _('Env: ')
-        %span#environment
-          = distributor_environment_name item
+      - if Katello.config.katello?
+        %li.one-line-ellipsis
+          = _('Env: ')
+          %span#environment
+            = distributor_environment_name item
   %div{:class => 'column_2'}
     %ul
       %li

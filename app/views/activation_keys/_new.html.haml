@@ -12,6 +12,7 @@
       .promotion_paths
         = hidden_field_tag 'activation_key[environment_id]', @environment.id unless @environment.nil?
 
+      - if Katello.config.katello?
         = form.field :environment_id, :label => _("Environment"), :grid => [2,7] do
           - if @environment.nil?
             #{_("No environments are currently available in this organization.  Please add some to be able to create activation keys.")}
@@ -21,7 +22,6 @@
         .clear
           &nbsp;
 
-      - if Katello.config.katello?
         = form.field :content_view_id, :label => _("Content View"), :wrapper => {:id => "content_views"}, :grid => [2,7] do
           = select_tag 'activation_key[content_view_id]',
             options_for_select(content_view_select_labels(@organization, @environment), no_content_view),
