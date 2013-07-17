@@ -1,4 +1,4 @@
-<section class="system-details" ng-cloak>
+<section class="system-details" ng-cloak alch-container-scroll>
   <header class="details-header">
     <h2 class="fl">{{ "System \"%systemName\"" | i18n: {systemName: system.name} }}</h2>
 
@@ -49,12 +49,12 @@
 
       <div class="detail">
         <span class="info-label">{{ "Release" | i18n }}</span>
-        <span class="info-value">{{ system.kernel }}</span>
+        <span class="info-value">{{ system.kernel  }}</span>
       </div>
 
       <div class="detail">
         <span class="info-label">{{ "Release Version" | i18n }}</span>
-        <span class="info-value" alch-edit-select="system.releaseVer.releaseVer" 
+        <span class="info-value" alch-edit-select="system.releaseVer.releaseVer"
               options="releaseVersions" on-save="system.$update()"></span>
       </div>
 
@@ -64,13 +64,24 @@
       </div>
 
       <div class="detail">
-        <span class="info-label">{{ "RAM (GB)" | i18n }}</span>
-        <span class="info-value">{{ system.memory }}</span>
+        <span class="info-label">{{ "Number of CPUs" | i18n }}</span>
+        <span class="info-value">{{ systemFacts.cpu["cpu(s)"] }}</span>
       </div>
 
       <div class="detail">
         <span class="info-label">{{ "Sockets" | i18n }}</span>
-        <span class="info-value">{{ system.facts["cpu.cpu_sockets"] }}</span>
+        <span class="info-value">{{ systemFacts.cpu["cpu_socket(s)"] }}</span>
+      </div>
+
+      <div class="detail">
+        <span class="info-label">{{ "Cores per Socket" | i18n }}</span>
+        <span class="info-value">{{ systemFacts.cpu["core(s)_per_socket"] }}</span>
+      </div>
+
+
+      <div class="detail">
+        <span class="info-label">{{ "RAM" | i18n }}</span>
+        <span class="info-value">{{ system.memory }}</span>
       </div>
 
       <div class="detail">
@@ -87,31 +98,10 @@
         <span class="info-label">{{ "Content View" | i18n }}</span>
         <span class="info-value">{{ system.content_view_id }}</span>
       </div>
-
-      <div class="divider"></div>
-    </section>
-
-    <section>
-      <h4>{{ "Networking" | i18n }}</h4>
-
-      <div class="detail">
-        <span class="info-label">{{ "Hostname" | i18n }}</span>
-        <span class="info-value">{{ system.facts["network.hostname"] }}</span>
-      </div>
-
-      <div class="detail">
-        <span class="info-label">{{ "IP Address" | i18n }}</span>
-        <span class="info-value">{{ system.ipv4_address }}</span>
-      </div>
-
-      <div class="detail">
-        <span class="info-label">{{ "Interfaces" | i18n }}</span>
-        <span class="info-value"></span>
-      </div>
     </section>
   </div>
 
-  <div class="fl details">
+  <div class="fr details">
     <section>
       <h4>{{ "Subscription Status Details" | i18n }}</h4>
 
@@ -135,11 +125,11 @@
 
       <div class="detail">
         <span class="info-label">{{ "Details" | i18n }}</span>
-        <span class="info-value">
+        <div class="info-value">
           <ul>
             <li ng-repeat="reason in system.compliance.reasons">{{ reason }}</li>
           </ul>
-        </span>
+        </div>
       </div>
 
       <div class="divider"></div>
@@ -157,7 +147,69 @@
         <span class="info-label">{{ "Checkin" | i18n }}</span>
         <span class="info-value">{{ (system.checkin_time | date:'short') || ("Never checked in" | i18n) }}</span>
       </div>
+
+      <div class="divider"></div>
+    </section>
+
+    <section>
+      <h4>{{ "Networking" | i18n }}</h4>
+
+      <div class="detail">
+        <span class="info-label">{{ "Hostname" | i18n }}</span>
+        <span class="info-value">{{ systemFacts.network.hostname }}</span>
+      </div>
+
+      <div class="detail">
+        <span class="info-label">{{ "IPv4 Address" | i18n }}</span>
+        <span class="info-value">{{ systemFacts.network.ipv4_address }}</span>
+      </div>
+
+      <div class="detail">
+        <span class="info-label">{{ "IPv6 Address" | i18n }}</span>
+        <span class="info-value">{{ systemFacts.network.ipv6_address }}</span>
+      </div>
+
+      <div class="detail">
+        <span class="info-label">{{ "Interfaces" | i18n }}</span>
+        <div class="info-value">
+          <div ng-repeat="(interfaceName, interface) in systemFacts.net.interface" >
+            <i ng-class="{'icon-plus': !expanded, 'icon-minus': expanded}" class="expand-icon clickable"
+               ng-hide="editMode" ng-click="expanded = !expanded"></i>
+            {{ interfaceName }}
+            <div class="sub-detail" ng-show="expanded">
+              <div ng-repeat="(key, value) in interface">
+                <span class="info-sub-label">{{ key.replace("_", " ") }}:</span>
+                <span class="info-sub-value">{{ value }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
   </div>
-
+  <div class="advanced-info" ng-show="hasAdvancedInfo">
+    <header class="details-sub-header advanced-header">
+      <i class="expand-icon clickable" ng-class="{'icon-plus': !showAdvanced, 'icon-minus': showAdvanced}"
+         ng-click="showAdvanced = !showAdvanced"></i>
+      <h3>{{ "Advanced Information" | i18n }}</h3>
+    </header>
+    <div ng-show="showAdvanced" class="details fl">
+      <section ng-show="showAdvanced" ng-repeat="(sectionName, subSection) in advancedInfoLeft">
+        <h4>{{ sectionName }}</h4>
+        <div ng-repeat="(key, value) in subSection" >
+          <div ng-include="getTemplateForType(value)"></div>
+        </div>
+        <div class="divider" ng-show="!$last"></div>
+      </section>
+    </div>
+    <div ng-show="showAdvanced" class="details fr">
+      <section ng-show="showAdvanced" ng-repeat="(sectionName, subSection) in advancedInfoRight">
+        <h4>{{ sectionName }}</h4>
+        <div ng-repeat="(key, value) in subSection" >
+          <div ng-include="getTemplateForType(value)"></div>
+        </div>
+        <div class="divider" ng-show="!$last"></div>
+      </section>
+    </div>
+  </div>
 </section>

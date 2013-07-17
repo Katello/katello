@@ -207,6 +207,7 @@ table.details-visible {
   position: absolute;
   width: 80%;
   border-left: 1px solid #CCC;
+  overflow-y: auto;
   @include box-shadow(0 0 5px #dddddd inset);
 
   .table-toolbar {
@@ -219,8 +220,13 @@ table.details-visible {
     margin: 0;
   }
 
-  h4 {
+  h4, h5 {
     margin: 10px 0;
+    text-transform: capitalize;
+  }
+
+  h5 {
+    font-size:  120%;
   }
 
   .details-header {
@@ -302,6 +308,21 @@ table.details-visible {
       display: inline-block;
       padding-left: 4px;
     }
+
+    .sub-detail {
+      margin: 5px 15px 0;
+    }
+  }
+}
+
+.advanced-header {
+  clear: both;
+  h3 {
+    display: inline-block;
+  }
+
+  i {
+    padding-left: 20px;
   }
 }
 
@@ -318,11 +339,15 @@ table.details-visible {
   margin-top: 8px;
 }
 
-.inline-edit-icon {
+.inline-icon {
   float: right;
   font-size: 110%;
   margin-top: 3px;
   margin-right: 3px;
+}
+
+.expand-icon {
+  padding-right: 5px;
 }
 
 .editable {
