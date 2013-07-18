@@ -30,21 +30,22 @@
       %h5
         #{_("System Registration Defaults")}
       = form.field :org, :label => _("Organization:") do
-        = organization_select
+        = organization_select(nil, true, _('No Default'))
 
       .promotion_paths
         = hidden_field_tag 'user[environment_id]', @environment.id unless @environment.nil?
-        = form.field :environment, :label => _("Environment:") do
-          = image_tag( "icons/spinner.gif", :id=>"org_spinner", :class=>"hidden fl")
-          - if @environment.nil?
-            #env_box
-              -if @organization.nil?
-                #{_("No default environment. Select an organization to choose from available environments.")}
-              -else
-                = no_env_available_msg
-          - else
-            #env_box
-              = render "environments", :accessible_envs => accessible_envs
+        - if Katello.config.katello?
+          = form.field :environment, :label => _("Environment:") do
+            = image_tag( "icons/spinner.gif", :id=>"org_spinner", :class=>"hidden fl")
+            - if @environment.nil?
+              #env_box
+                -if @organization.nil?
+                  #{_("No default environment. Select an organization to choose from available environments.")}
+                -else
+                  = no_env_available_msg
+            - else
+              #env_box
+                = render "environments", :accessible_envs => accessible_envs
 
       = form.submit _("Save User"), :id => :save_user
 
