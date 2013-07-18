@@ -142,6 +142,10 @@ module Glue::Candlepin::Owner
       end
     end
 
+    def owner_auto_attach
+      Resources::Candlepin::Owner.auto_attach(self.label)
+    end
+
   end
 
 end

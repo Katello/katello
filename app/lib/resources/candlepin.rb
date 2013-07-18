@@ -400,6 +400,15 @@ module Resources
           end
         end
 
+        def auto_attach(key)
+          response = self.post(join_path(path(key), 'entitlements'), "", self.default_headers).body
+          unless response.empty?
+            JSON.parse(response)
+          else
+            return []
+          end
+        end
+
         def path(id=nil)
           "/candlepin/owners/#{id}"
         end
