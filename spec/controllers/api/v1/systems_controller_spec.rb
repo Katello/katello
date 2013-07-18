@@ -100,7 +100,8 @@ describe Api::V1::SystemsController do
     it "should refresh ES index" do
       System.index.should_receive(:refresh)
       System.stub(:create!).and_return({})
-      post :create, :organization_id => @organization.name, :environment_id => @environment_1.id, :name => 'test', :cp_type => 'system', :installedProducts => installed_products
+      post :create, :organization_id => @organization.name, :environment_id => @environment_1.id, :name => 'test',
+        :cp_type => 'system', :installedProducts => installed_products, :content_view_id => @cv.id
     end
 
     context "in organization with one environment" do
@@ -498,6 +499,7 @@ describe Api::V1::SystemsController do
     end
 
     it "should update capabilities" do
+      promote_content_view(@sys.content_view, @environment_1, @environment_2)
       @sys.capabilities = {:name => 'cores'}
       @sys.stub(:guest => 'false', :guests => [])
       Resources::Candlepin::Consumer.should_receive(:update).once.with(uuid, {"sockets" => 0}, nil, nil, nil, nil, nil, anything, {:name => "cores"}).and_return(true)

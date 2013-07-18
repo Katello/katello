@@ -75,7 +75,7 @@ describe System do
   end
 
   it "registers system in candlepin and pulp on create", :katello => true do
-    Resources::Candlepin::Consumer.should_receive(:create).once.with(@environment.id, @organization.name,
+    Resources::Candlepin::Consumer.should_receive(:create).once.with(@environment.id.to_s, @organization.name,
                                                                       system_name, cp_type, facts, installed_products,
                                                                       nil, nil, nil, nil).and_return({:uuid => uuid,
                                                                                                 :owner => {:key => uuid}})
