@@ -132,13 +132,13 @@
             = label :location, :location, _("Location")
           .input
             %span.value{'name' => 'system[location]', :class=>("editable edit_textfield" if editable), 'data-url'=>system_path(system.id)} #{system[:location]}
-        .control-group
-          .label
-            = label :arch, :arch, _("Environment")
-          .input
-            %span.value#environment_path_selector{'name'=> 'system[environment_id]', :class=>("editable" if editable && Katello.config.katello?), 'data-url'=>system_path(system.id)}
-              #{system_environment_name system}
         - if Katello.config.katello?
+          .control-group
+            .label
+              = label :arch, :arch, _("Environment")
+            .input
+              %span.value#environment_path_selector{'name'=> 'system[environment_id]', :class=>("editable" if editable && Katello.config.katello?), 'data-url'=>system_path(system.id)}
+                #{system_environment_name system}
           .control_group
             .label
               = label :content_view, :content_view, _("Content View")
