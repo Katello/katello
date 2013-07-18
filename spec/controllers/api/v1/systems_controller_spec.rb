@@ -498,7 +498,7 @@ describe Api::V1::SystemsController do
       response.should be_success
     end
 
-    it "should update capabilities" do
+    it "should update capabilities", :katello => true  do
       promote_content_view(@sys.content_view, @environment_1, @environment_2)
       @sys.capabilities = {:name => 'cores'}
       @sys.stub(:guest => 'false', :guests => [])
