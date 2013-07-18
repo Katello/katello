@@ -53,4 +53,10 @@ class KatelloNameFormatValidatorTest < MiniTest::Rails::ActiveSupport::TestCase
     refute_empty @model.errors[:name]
   end
 
+  test "succeeds with dot" do
+    @validator.validate_each(@model, :name, "Weightlifting Dept.")
+
+    assert_empty @model.errors[:name]
+  end
+
 end

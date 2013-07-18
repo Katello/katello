@@ -88,7 +88,8 @@ module Resources
           JSON.parse(super(path(uuid), self.default_headers).body).with_indifferent_access
         end
 
-        def create env_id, key, name, type, facts, installed_products, autoheal=true, release_ver=nil, service_level=""
+        def create(env_id, key, name, type, facts, installed_products, autoheal=true, release_ver=nil,
+                   service_level="", capabilities=nil)
           url = "/candlepin/environments/#{url_encode(env_id)}/consumers/"
           attrs = {:name => name,
                    :type => type,
@@ -96,7 +97,8 @@ module Resources
                    :installedProducts => installed_products,
                    :autoheal => autoheal,
                    :releaseVer => release_ver,
-                   :serviceLevel => service_level}
+                   :serviceLevel => service_level,
+                   :capabilities => capabilities}
           response = self.post(url, attrs.to_json, self.default_headers).body
           JSON.parse(response).with_indifferent_access
         end
@@ -109,14 +111,17 @@ module Resources
           JSON.parse(response).with_indifferent_access
         end
 
-        def update(uuid, facts, guest_ids = nil, installed_products = nil, autoheal = nil, release_ver = nil, service_level=nil, environment_id=nil)
+        def update(uuid, facts, guest_ids = nil, installed_products = nil, autoheal = nil, release_ver = nil,
+                   service_level=nil, environment_id=nil, capabilities=nil)
           attrs = {:facts => facts,
                    :guestIds => guest_ids,
                    :releaseVer => release_ver,
                    :installedProducts => installed_products,
                    :autoheal => autoheal,
                    :serviceLevel => service_level,
-                   :environment => environment_id.nil? ? nil : {:id => environment_id} }.delete_if {|k,v| v.nil?}
+                   :environment => environment_id.nil? ? nil : {:id => environment_id},
+                   :capabilities => capabilities
+                  }.delete_if { |k,v| v.nil? }
           unless attrs.empty?
             response = self.put(path(uuid), attrs.to_json, self.default_headers).body
           else[]
@@ -132,8 +137,7 @@ module Resources
 
         def checkin(uuid, checkin_date)
           checkin_date ||= DateTime.now
-          uri = "%s?checkin_date=%s" % [join_path(path(uuid), 'checkin'), checkin_date]
-          self.put(uri, {}.to_json, self.default_headers).body
+          self.put(path(uuid), {:lastCheckin => checkin_date}.to_json, self.default_headers).body
         end
 
         def available_pools(uuid, listall=false)
@@ -233,7 +237,30 @@ module Resources
 
     class UpstreamConsumer < ::HttpResource
 
+      def self.logger
+        ::Logging.logger['cp_rest']
+      end
+
+      def self.resource(url, client_cert, client_key, ca_file)
+        RestClient::Resource.new(url,
+                                 :ssl_client_cert => OpenSSL::X509::Certificate.new(client_cert),
+                                 :ssl_client_key => OpenSSL::PKey::RSA.new(client_key),
+                                 :ssl_ca_file => ca_file,
+                                 :verify_ssl => ca_file ? OpenSSL::SSL::VERIFY_PEER : OpenSSL::SSL::VERIFY_NONE
+        )
+      end
+
       def self.export(url, client_cert, client_key, ca_file)
+
+        logger.debug "Sending GET request to upstream Candlepin: #{url}"
+        return resource(url, client_cert, client_key, ca_file).get
+      rescue => e
+        raise e
+      end
+
+      def self.update(url, client_cert, client_key, ca_file, attributes)
+
+        logger.debug "Sending POST request to upstream Candlepin: #{url} #{attributes.to_json}"
 
         resource = RestClient::Resource.new(url,
                                             :ssl_client_cert => OpenSSL::X509::Certificate.new(client_cert),
@@ -242,9 +269,10 @@ module Resources
                                             :verify_ssl => ca_file ? OpenSSL::SSL::VERIFY_PEER : OpenSSL::SSL::VERIFY_NONE
         )
 
-        return resource.get
-      rescue => e
-        raise e
+        return resource(url, client_cert, client_key, ca_file).put(attributes.to_json,
+                                                                   {'accept' => 'application/json',
+                                                                    'accept-language' => I18n.locale,
+                                                                    'content-type' => 'application/json'})
       end
 
     end
