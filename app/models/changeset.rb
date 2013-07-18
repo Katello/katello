@@ -39,7 +39,7 @@ class Changeset < ActiveRecord::Base
   validates :environment, :presence => true
   validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
   validates_with Validators::NotInLibraryValidator
-
+  validates_with Validators::KatelloNameFormatValidator, :attributes => :name
   has_and_belongs_to_many :products, :uniq => true
   has_many :packages, :class_name => "ChangesetPackage", :inverse_of => :changeset
   has_many :users, :class_name => "ChangesetUser", :inverse_of => :changeset
