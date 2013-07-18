@@ -161,7 +161,7 @@ class ContentViewDefinition < ContentViewDefinitionBase
     repos.each do |repo|
       repo.purge_empty_groups_errata
       # update search indices for package and errata
-      repo.index_content
+      repo.index_content if Katello.config.use_elasticsearch
     end
   end
 

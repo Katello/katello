@@ -13,7 +13,7 @@
 
 
 class PulpTaskStatus < TaskStatus
-  use_index_of TaskStatus
+  use_index_of TaskStatus if Katello.config.use_elasticsearch
 
   def refresh
     PulpTaskStatus.refresh(self)
