@@ -22,6 +22,9 @@ class Product < ActiveRecord::Base
 
   include Ext::LabelFromName
 
+  has_many :marketing_engineering_products, :foreign_key=>:engineering_product_id
+  has_many :marketing_products, :through => :marketing_engineering_products
+
   has_many :environment_products, :class_name => "EnvironmentProduct", :dependent => :destroy, :uniq=>true
   has_many :environments, :class_name => "KTEnvironment", :uniq => true , :through => :environment_products  do
     def <<(*items)
