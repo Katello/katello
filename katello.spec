@@ -290,6 +290,7 @@ Requires:       katello-cli
 Requires:       postgresql-server
 Requires:       postgresql
 Requires(post): candlepin-tomcat6
+Requires:       candlepin-selinux
 Requires:       thumbslug
 Requires:       thumbslug-selinux
 
