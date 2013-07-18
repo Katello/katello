@@ -49,6 +49,7 @@ class Repository < ActiveRecord::Base
   validates :label, :presence => true
   validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
   validates_with Validators::RepoDisablementValidator, :attributes => :enabled, :on => :update
+  validates_with Validators::KatelloNameFormatValidator, :attributes => :name
 
   validates_inclusion_of :content_type,
       :in => TYPES,

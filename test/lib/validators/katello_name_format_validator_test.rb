@@ -27,19 +27,41 @@ class KatelloNameFormatValidatorTest < MiniTest::Rails::ActiveSupport::TestCase
     assert_empty @model.errors[:name]
   end
 
-  test "fails with HTML tag" do
+  test "succeeds with HTML tag" do
     @validator.validate_each(@model, :name, '<a href="">Test Name</a>')
 
-    refute_empty @model.errors[:name]
+    assert_empty @model.errors[:name]
   end
 
-  test "fails with more than 128 characters" do
+  test "fails with more than 255 characters" do
     cs = [*'0'..'9', *'a'..'z', *'A'..'Z']
-    random_string = 129.times.map { cs.sample }.join
+    random_string = 256.times.map { cs.sample }.join
     @validator.validate_each(@model, :name, random_string)
 
     refute_empty @model.errors[:name]
   end
+
+  test "succeeds with 255 characters" do
+    cs = [*'0'..'9', *'a'..'z', *'A'..'Z']
+    random_string = 255.times.map { cs.sample }.join
+    @validator.validate_each(@model, :name, random_string)
+
+    assert_empty @model.errors[:name]
+  end
+
+
+  test "succeeds with special characters" do
+    @validator.validate_each(@model, :name, '@!#$%^&*()')
+
+    assert_empty @model.errors[:name]
+  end
+
+  test "succeeds with special characters and html tag" do
+    @validator.validate_each(@model, :name, 'bar_+{}|"?<blink>hi</blink>')
+
+    assert_empty @model.errors[:name]
+  end
+
 
   test "fails if blank" do
     @validator.validate_each(@model, :name, '')
