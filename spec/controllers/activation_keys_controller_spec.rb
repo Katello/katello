@@ -441,4 +441,50 @@ describe ActivationKeysController do
       end
     end
   end
+
+  describe "GET available_subscriptions" do
+    before(:each) do
+      @product1 = Product.new(name: "Product1", :cp_id => "Product1")
+      @marketing_product = Product.new(name: "MarketingProduct", :cp_id => "MarketingProduct")
+      @custom_product = Product.new(name: "CustomProduct", :cp_id => "CustomProduct")
+
+      @custom_product.stub(:custom?).and_return(true)
+      @product1.stub(:custom?).and_return(false)
+      @product1.stub(:marketing_products).and_return([@marketing_product])
+      @products = [@product1, @marketing_product, @custom_product]
+
+      pools = @products.map do |product|
+        pool = Pool.create!(:cp_id => product.cp_id,
+                            :product_id => product.cp_id)
+        pool.stub(:product_name).and_return(product.name)
+        pool
+      end
+
+      Pool.stub(:find_pool) { |id, _| pools.detect { |pool| pool.id == id } }
+      Product.stub(:where) { |prod_hash| @products.select {|prod| prod.cp_id == prod_hash[:cp_id] } }
+
+      ActivationKey.stub(:find).with(@a_key.id.to_s).and_return(@a_key)
+      Resources::Candlepin::Owner.stub(:pools).and_return(pools)
+      @a_key.stub_chain(:content_view, :products).and_return(@products - [@marketing_product])
+    end
+
+    let(:action) { :available_subscriptions }
+    let(:req) { get :available_subscriptions, :id => @a_key.id }
+    let(:authorized_user) do
+      user_with_permissions { |u| u.can(:read_all, :activation_keys, @a_key.id) }
+    end
+    let(:unauthorized_user) do
+      user_without_permissions
+    end
+    it_should_behave_like "protected action"
+
+    it "should create a mapping with marketing_product and custom_product" do
+      get :available_subscriptions, :id => @a_key.id.to_s
+      response.should be_success
+      response.should render_template(:partial => "_available_subscriptions")
+
+      available_products = [@custom_product.name, @marketing_product.name].sort
+      assigns[:available_pools].map { |arr| arr.first }.sort.should eql(available_products)
+    end
+  end
 end
