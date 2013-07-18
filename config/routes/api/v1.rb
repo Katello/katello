@@ -298,6 +298,9 @@ Src::Application.routes.draw do
 
       resources :crls, :only => [:index]
 
+      resources :about, :only => [:index]
+
+
       match "/status" => "ping#server_status", :via => :get
       match "/version" => "ping#version", :via => :get
 

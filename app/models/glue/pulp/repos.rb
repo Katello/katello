@@ -299,6 +299,7 @@ module Glue::Pulp::Repos
       )
       self.organization.default_content_view.update_cp_content(self.organization.library)
       repo.generate_metadata
+      repo
     end
 
     def setup_sync_schedule
