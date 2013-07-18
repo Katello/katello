@@ -136,8 +136,16 @@ module Glue::Candlepin::Product
     def convert_from_cp_fields(cp_json)
       ar_safe_json = cp_json.has_key?(:attributes) ? cp_json.merge(:attrs => cp_json.delete(:attributes)) : cp_json
       ar_safe_json[:productContent] = ar_safe_json[:productContent].collect { |pc| ::Candlepin::ProductContent.new(pc, self.id) }
-      ar_safe_json[:attrs] ||=[]
+      ar_safe_json[:attrs] = remove_hibernate_fields(cp_json[:attrs]) if ar_safe_json.has_key?(:attrs)
+      ar_safe_json[:attrs] ||= []
       ar_safe_json.except('id')
+    end
+
+    # Candlepin sends back its internal hibernate fields in the json. However it does not accept them in return
+    # when updating (PUT) objects.
+    def remove_hibernate_fields(elements)
+      return nil if !elements
+      elements.collect{ |e| e.except(:id, :created, :updated)}
     end
 
     def add_content content
