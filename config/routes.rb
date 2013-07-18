@@ -265,10 +265,14 @@ Src::Application.routes.draw do
       get :auto_complete_library
       get :auto_complete_nvrea_library
       get :validate_name_library
+      get :auto_complete
     end
   end
 
   resources :errata, :only => [:show] do
+    collection do
+      get :auto_complete
+    end
     member do
       get :packages
       get :short_details

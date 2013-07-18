@@ -34,11 +34,12 @@ class Changeset < ActiveRecord::Base
                          :allow_blank => false,
                          :message     => "A changeset must have one of the following states: #{STATES.join(', ')}."
 
-  validates :name, :presence => true, :allow_blank => false, :length => { :maximum => 255 }
+  validates :name, :presence => true, :allow_blank => false
   validates_uniqueness_of :name, :scope => :environment_id, :message => N_("Label has already been taken")
   validates :environment, :presence => true
   validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
   validates_with Validators::NotInLibraryValidator
+  validates_with Validators::KatelloNameFormatValidator, :attributes => :name
 
   has_many :users, :class_name => "ChangesetUser", :inverse_of => :changeset
   belongs_to :environment, :class_name => "KTEnvironment"

@@ -30,7 +30,7 @@ class Role < ActiveRecord::Base
 
   validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
   validates_with Validators::LockValidator, :on => :update
-
+  validates_with Validators::KatelloNameFormatValidator, :attributes => :name
   #validates_associated :permissions
   accepts_nested_attributes_for :permissions, :allow_destroy => true
 
