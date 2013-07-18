@@ -139,11 +139,10 @@ describe Product, :katello => true do
       disable_product_orchestration
     end
 
-    specify { Product.new(:label=> "goo", :name => 'contains /', :provider => @provider).should_not be_valid }
-    specify { Product.new(:label=>"boo", :name => 'contains #', :provider => @provider).should_not be_valid }
+    specify { Product.new(:label=> "goo", :name => 'contains /', :provider => @provider).should be_valid }
+    specify { Product.new(:label=>"boo", :name => 'contains #', :provider => @provider).should be_valid }
     specify { Product.new(:label=> "shoo", :name => 'contains space', :provider => @provider).should be_valid }
     specify { Product.new(:label => "bar foo", :name=> "foo", :provider => @provider).should_not be_valid}
-
     it "should be successful when creating a product with a duplicate name in one organization" do
       @p = Product.create!(ProductTestData::SIMPLE_PRODUCT)
 
