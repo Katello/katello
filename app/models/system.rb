@@ -47,9 +47,9 @@ class System < ActiveRecord::Base
   validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
   validates_length_of :location, :maximum => 255
   validates_with Validators::ContentViewEnvironmentValidator
+  validates_with Validators::KatelloNameFormatValidator, :attributes => :name
 
   before_create  :fill_defaults
-
   after_create :init_default_custom_info
 
   scope :by_env, lambda { |env| where('environment_id = ?', env) unless env.nil?}
