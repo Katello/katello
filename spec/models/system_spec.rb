@@ -76,10 +76,9 @@ describe System do
 
   it "registers system in candlepin and pulp on create", :katello => true do
     Resources::Candlepin::Consumer.should_receive(:create).once.with(@environment.id.to_s, @organization.name,
-                                                                     system_name, cp_type, facts, installed_products,
-                                                                     nil, nil, nil).and_return({:uuid => uuid,
+                                                                      system_name, cp_type, facts, installed_products,
+                                                                      nil, nil, nil, nil).and_return({:uuid => uuid,
                                                                                                 :owner => {:key => uuid}})
-
     Runcible::Extensions::Consumer.should_receive(:create).once.with(uuid, {:display_name => system_name}).and_return({:id => uuid}) if Katello.config.katello?
     @system.save!
   end
@@ -175,14 +174,14 @@ describe System do
     it "should give facts to Resources::Candlepin::Consumer" do
       @system.facts = facts
       @system.installedProducts = nil # simulate it's not loaded in memory
-      Resources::Candlepin::Consumer.should_receive(:update).once.with(uuid, facts, nil, nil, nil, nil, nil, anything).and_return(true)
+      Resources::Candlepin::Consumer.should_receive(:update).once.with(uuid, facts, nil, nil, nil, nil, nil, anything, nil).and_return(true)
       @system.save!
     end
 
     it "should give installeProducts to Resources::Candlepin::Consumer" do
       @system.installedProducts = installed_products
       @system.facts = nil # simulate it's not loaded in memory
-      Resources::Candlepin::Consumer.should_receive(:update).once.with(uuid, nil, nil, installed_products, nil, nil, nil, anything).and_return(true)
+      Resources::Candlepin::Consumer.should_receive(:update).once.with(uuid, nil, nil, installed_products, nil, nil, nil, anything, nil).and_return(true)
       @system.save!
     end
 

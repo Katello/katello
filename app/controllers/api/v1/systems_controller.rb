@@ -27,6 +27,8 @@ class Api::V1::SystemsController < Api::V1::ApiController
   before_filter :find_content_view, :only => [:create, :update]
   before_filter :authorize, :except => :activate
 
+  after_filter :refresh_index, :only => [:create, :activate, :update]
+
   skip_before_filter :require_user, :only => [:activate]
 
   def organization_id_keys
@@ -611,6 +613,12 @@ This information is then used for computing the errata available for the system.
     else
       @content_view = nil
     end
+  end
+
+  # to make sure that the changes are reflected to elasticsearch immediately
+  # otherwise the index action doesn't have to know about the changes
+  def refresh_index
+    System.index.refresh if Katello.config.use_elasticsearch
   end
 
 end
