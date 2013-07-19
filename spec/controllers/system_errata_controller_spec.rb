@@ -38,13 +38,13 @@ describe SystemErrataController, :katello => true do
 
     describe "viewing systems" do
       before (:each) do
-        20.times{|a| System.create!(:name=>"bar#{a}", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""})}
+        20.times{|a| create_system(:name=>"bar#{a}", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""})}
         @systems = System.select(:id).where(:environment_id => @environment.id).all.collect{|s| s.id}
       end
 
       describe 'and requesting errata' do
         before (:each) do
-          @system = System.create!(:name=>"verbose", :environment => @environment, :cp_type=>"system", :facts=>{"Test1"=>1, "verbose_facts" => "Test facts"})
+          @system = create_system(:name=>"verbose", :environment => @environment, :cp_type=>"system", :facts=>{"Test1"=>1, "verbose_facts" => "Test facts"})
 
           types = [Glue::Pulp::Errata::SECURITY, Glue::Pulp::Errata::ENHANCEMENT, Glue::Pulp::Errata::BUGZILLA]
 

@@ -47,18 +47,21 @@ module Glue::Pulp::Repos
     "/" + parts.map{|x| x.gsub(/[^-\w]/,"_") }.join("/")
   end
 
-  def self.clone_repo_path_for_cp(repo)
-    Repository.clone_repo_path(repo, nil, nil, true)
-  end
+  def self.prepopulate!(products, environment, repos = [], content_view = nil)
+    if content_view.nil?
+      if environment.library?
+        content_view = environment.default_content_view
+      else
+        raise "No content view specified for a Non library environment #{environment.inspect}"
+      end
+    end
 
-
-  def self.prepopulate!(products, environment, repos = [])
     items = Runcible::Extensions::Repository.search_by_repository_ids(Repository.in_environment(environment).pluck(:pulp_id))
     full_repos = {}
     items.each { |item| full_repos[item["id"]] = item }
 
     products.each do |prod|
-      prod.repos(environment, true).each do |repo|
+      prod.repos(environment, true, content_view).each do |repo|
         repo.populate_from(full_repos)
       end
     end
@@ -281,8 +284,9 @@ module Glue::Pulp::Repos
 
     def add_repo(label, name, url, repo_type, unprotected=false, gpg = nil)
       check_for_repo_conflicts(name, label)
-      key = EnvironmentProduct.find_or_create(self.organization.library, self)
-      repo = Repository.create!(:environment_product => key, :pulp_id => repo_id(label),
+      repo = Repository.create!(:environment => self.organization.library,
+          :product => self,
+          :pulp_id => repo_id(label),
           :relative_path => Glue::Pulp::Repos.custom_repo_path(self.library, self, label),
           :arch => arch,
           :name => name,
@@ -322,7 +326,7 @@ module Glue::Pulp::Repos
     def del_repos
       #destroy all repos in all environments
       Rails.logger.debug "deleting all repositories in product #{self.label}"
-      self.environment_products.destroy_all
+      self.repositories.destroy_all
       true
     end
 
@@ -348,6 +352,7 @@ module Glue::Pulp::Repos
     end
 
     protected
+
     def promote_repos repos, from_env, to_env
       async_tasks = []
       repos.each do |repo|
@@ -357,14 +362,18 @@ module Glue::Pulp::Repos
     end
 
     def check_for_repo_conflicts(repo_name, repo_label)
-      is_dupe =  Repository.joins(:environment_product).where( :name=> repo_name,
-              "environment_products.product_id" => self.id, "environment_products.environment_id"=> self.library.id).count > 0
+      is_dupe =  Repository.where(:name => repo_name,
+                                  :product_id => self.id,
+                                  :environment_id => self.library.id
+                                 ).count > 0
       if is_dupe
         raise Errors::ConflictException.new(_("Label has already been taken"))
       end
       unless repo_label.blank?
-        is_dupe =  Repository.joins(:environment_product).where( :label=> repo_label,
-               "environment_products.product_id" => self.id, "environment_products.environment_id"=> self.library.id).count > 0
+        is_dupe =  Repository.where(:label => repo_label,
+                                    :product_id => self.id,
+                                    :environment_id => self.library.id
+                                   ).count > 0
         if is_dupe
           raise Errors::ConflictException.new(_("Label has already been taken"))
         end

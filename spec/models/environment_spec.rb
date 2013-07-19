@@ -21,7 +21,7 @@ describe KTEnvironment do
       disable_org_orchestration
       @organization = Organization.create!(:name=>'test_organization', :label=> 'test_organization')
       @env_name =  'test_environment'
-      @environment = KTEnvironment.create!({:name=>@env_name, :label=> @env_name, :organization => @organization, :prior => @organization.library})
+      @environment = create_environment({:name=>@env_name, :label=> @env_name, :organization => @organization, :prior => @organization.library})
     end
     describe "check on operations" do
 
@@ -77,29 +77,26 @@ describe KTEnvironment do
     before(:each) do
 
       disable_product_orchestration
+      disable_repo_orchestration
       disable_org_orchestration
+      Repository.any_instance.stub(:save_content_orchestration).and_return(true)
+      Repository.any_instance.stub(:clear_content_indices).and_return(true)
+      Repository.any_instance.stub(:destroy_repo_orchestration).and_return(true)
 
       @env_name =  'test_environment'
 
       @organization = Organization.create!(:name=>'test_organization', :label=> 'test_organization')
       @provider = @organization.redhat_provider
 
-      @first_product = Product.new(:name =>"prod1", :label=>"prod1", :cp_id => '12345', :provider => @provider, :environments => [@organization.library])
-      @second_product = Product.new(:name =>"prod2", :label=> "prod2", :cp_id => '67890', :provider => @provider, :environments => [@organization.library])
-      @third_product = Product.new(:name =>"prod3", :label=> "prrod3",:cp_id => '45678', :provider => @provider, :environments => [@organization.library])
-      @fourth_product = Product.new(:name =>"prod4", :label => "prod4", :cp_id => '32683', :provider => @provider, :environments => [@organization.library])
-
-      @environment = KTEnvironment.new({:name=>@env_name, :label=> @env_name, :prior => @organization.library}) do |e|
-        e.products << @first_product
-        e.products << @third_product
-      end
-      @organization.environments << @environment
-      @organization.save!
-      @environment.save!
-      @first_product.save!
-      @second_product.save!
-      @third_product.save!
-      @fourth_product.save!
+      @first_product = Product.create!(:name =>"prod1", :label=>"prod1", :cp_id => '12345', :provider => @provider)
+      @second_product = Product.create!(:name =>"prod2", :label=> "prod2", :cp_id => '67890', :provider => @provider)
+      @third_product = Product.create!(:name =>"prod3", :label=> "prrod3",:cp_id => '45678', :provider => @provider)
+      @fourth_product = Product.create!(:name =>"prod4", :label => "prod4", :cp_id => '32683', :provider => @provider)
+      @environment = create_environment({:name=>@env_name, :organization => @organization, :label=> @env_name, :prior => @organization.library})
+      FactoryGirl.create(:repository, product: @first_product, environment: @environment,
+                             content_view_version_id: @environment.content_view_versions.first.id)
+      FactoryGirl.create(:repository, product: @third_product, environment: @environment,
+                            content_view_version_id: @environment.content_view_versions.first.id)
     end
 
     specify { @environment.name.should == @env_name }
@@ -112,7 +109,7 @@ describe KTEnvironment do
     specify { @environment.products.should include @third_product }
 
     context "prior environment can be set" do
-      before { @new_env = KTEnvironment.create!({:name=>@environment.name + '-prior', :label=> @environment.name + '-prior',
+      before { @new_env = create_environment({:name=>@environment.name + '-prior', :label=> @environment.name + '-prior',
           :prior => @environment.id,
           :organization => @organization
       })}
@@ -140,19 +137,19 @@ describe KTEnvironment do
     context "available products" do
 
       before(:each) do
-        @prior_env = KTEnvironment.new({:name=>@env_name + '-prior', :label=> @env_name + '-prior', :prior => @environment.id}) do |e|
-          e.products << @first_product
-          e.products << @second_product
-          e.products << @third_product
-        end
+        @prior_env = KTEnvironment.new({:name=>@env_name + '-prior', :label=> @env_name + '-prior', :prior => @environment.id})
         @organization.environments << @prior_env
         @prior_env.save!
         @organization.save!
 
-        @organization.library.products << @first_product
-        @organization.library.products << @second_product
-        @organization.library.products << @third_product
-        @organization.library.products << @fourth_product
+        FactoryGirl.create(:repository, environment: @prior_env, product: @first_product, content_view_version_id: 1)
+        FactoryGirl.create(:repository, environment: @prior_env, product: @second_product, content_view_version_id: 1)
+        FactoryGirl.create(:repository, environment: @prior_env, product: @third_product, content_view_version_id: 1)
+
+        FactoryGirl.create(:repository, environment: @organization.library, product: @first_product, content_view_version_id: 1)
+        FactoryGirl.create(:repository, environment: @organization.library, product: @second_product, content_view_version_id: 1)
+        FactoryGirl.create(:repository, environment: @organization.library, product: @third_product, content_view_version_id: 1)
+        FactoryGirl.create(:repository, environment: @organization.library, product: @fourth_product, content_view_version_id: 1)
       end
 
       it "should return products from prior env" do
@@ -207,16 +204,16 @@ describe KTEnvironment do
 
     context "Test priors" do
       before(:each) do
-        @e1 = KTEnvironment.create!({:name=>@env_name + '-succ1', :label=> @env_name + '-succ1',
+        @e1 = create_environment({:name=>@env_name + '-succ1', :label=> @env_name + '-succ1',
                   :organization => @organization, :prior => @environment})
-        @e2 = KTEnvironment.create!({:name=>@env_name + '-succ2', :label=> @env_name + '-succ2',
+        @e2 = create_environment({:name=>@env_name + '-succ2', :label=> @env_name + '-succ2',
                   :organization => @organization, :prior => @e1})
 
         @organization.environments << @e1
         @organization.environments << @e2
       end
 
-      specify{ lambda {KTEnvironment.create!({:name=>@env_name + '-succ3', :label=> @env_name + '-succ3',
+      specify{ lambda {create_environment({:name=>@env_name + '-succ3', :label=> @env_name + '-succ3',
                 :organization => @organization, :prior => @e1})}.should raise_error(ActiveRecord::RecordInvalid)}
 
     end
@@ -239,10 +236,12 @@ describe KTEnvironment do
 
     describe "updating CP content assignment" do
       it "should add content not already promoted" do
-        @content_view_environment = @environment.content_view_environment
+        @content_view_environment = @environment.content_views.first.
+                content_view_environments.where(:environment_id=>@environment.id).first
         already_promoted_content("123", "456")
         newly_promoted_content("123", "456", "789", "10")
-        Resources::Candlepin::Environment.should_receive(:add_content).with(@environment.id.to_s, Set.new(["789", "10"]))
+        Resources::Candlepin::Environment.should_receive(:add_content).with(@content_view_environment.cp_id,
+                                                                                Set.new(["789", "10"]))
         @content_view_environment.update_cp_content
       end
 

@@ -35,7 +35,7 @@ describe ChangesetsController, :katello => true do
 
     CSControllerTest::ENVIRONMENT["organization"] = @org
     CSControllerTest::ENVIRONMENT["prior"] = @org.library.id
-    @env = KTEnvironment.create!(CSControllerTest::ENVIRONMENT)
+    @env = create_environment(CSControllerTest::ENVIRONMENT)
     CSControllerTest::NEXT_ENVIRONMENT["organization"] = @org
     @next_env = KTEnvironment.new(CSControllerTest::NEXT_ENVIRONMENT)
     @next_env.prior = @env
@@ -198,8 +198,8 @@ describe ChangesetsController, :katello => true do
     before (:each) do
       @organization = new_test_org
       @env1 = @organization.library
-      @env2 = KTEnvironment.create!(:name=>"FOO", :label=> "FOO", :prior => @env1, :organization=>@organization)
-      @env3 = KTEnvironment.create!(:name=>"FOO2", :label=> "FOO2", :prior => @env2, :organization=>@organization)
+      @env2 = create_environment(:name=>"FOO", :label=> "FOO", :prior => @env1, :organization=>@organization)
+      @env3 = create_environment(:name=>"FOO2", :label=> "FOO2", :prior => @env2, :organization=>@organization)
       @cs = PromotionChangeset.create!(:name=>"FOO", :environment=>@env3, :state=>"promoted")
     end
 

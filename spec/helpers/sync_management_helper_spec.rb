@@ -36,16 +36,13 @@ describe SyncManagementHelper do
     disable_product_orchestration
     disable_org_orchestration
     Runcible::Extensions::Repository.stub(:search_by_repository_ids).and_return([]) if Katello.config.katello?
-    ProductTestData::PRODUCT_WITH_ATTRS.merge!({ :provider => provider, :environments => [organization.library] })
+    ProductTestData::PRODUCT_WITH_ATTRS.merge!({ :provider => provider })
   end
 
   let(:organization) { Organization.create!(:name => 'test_organization', :label => 'test_organization') }
   let(:provider) { organization.redhat_provider }
   let(:env_name) { 'test_environment' }
-  let(:environment) { KTEnvironment.create!({ :name         => env_name,
-                                              :label        => env_name,
-                                              :organization => organization,
-                                              :prior        => organization.library }) }
+  let(:environment) { organization.library }
   let(:object) { DummyObject.new }
   let(:product_1) { Product.create!(ProductTestData::PRODUCT_WITH_ATTRS) }
   describe "#collect_repos", :katello => true do #TODO headpin

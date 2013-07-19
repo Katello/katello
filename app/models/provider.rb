@@ -30,6 +30,7 @@ class Provider < ActiveRecord::Base
   belongs_to :task_status
   belongs_to :discovery_task, :class_name=>'TaskStatus'
   has_many :products, :inverse_of => :provider
+  has_many :repositories, through: :products
 
   validates :name, :presence => true
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name
@@ -153,10 +154,6 @@ class Provider < ActiveRecord::Base
       raise _("Unable to retrieve release versions from Repository URL %{url}. Error message: %{error}") % {:url => self.repository_url, :error => e.to_s}
     end
     releases.uniq.sort
-  end
-
-  def repositories
-    Repository.joins(:environment_product => :product).where("products.provider_id" => self.id)
   end
 
   def manifest_task

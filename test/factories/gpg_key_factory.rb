@@ -1,3 +1,4 @@
+
 #
 # Copyright 2013 Red Hat, Inc.
 #
@@ -10,16 +11,8 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-
-class ChangesetDependency < ActiveRecord::Base
-
-  belongs_to :changeset, :inverse_of=>:dependencies
-  belongs_to :product
-
-  validates :display_name, :length => { :maximum => 255 }
-
-  # returns list of virtual permission tags for the current user
-  def self.list_tags
-    select('id,display_name').all.collect { |m| VirtualTag.new(m.id, m.display_name) }
+FactoryGirl.define do
+  factory :gpg_key do
+    sequence(:content) { |n| "abc123#{n}" }
   end
 end
