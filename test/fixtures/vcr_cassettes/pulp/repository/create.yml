@@ -1,0 +1,83 @@
+--- 
+http_interactions: 
+- request: 
+    method: post
+    uri: https://localhost.localdomain/pulp/api/v2/repositories/
+    body: 
+      encoding: US-ASCII
+      string: "{\"id\":\"1\",\"display_name\":\"Fedora 17 x86_64\",\"importer_type_id\":\"yum_importer\",\"importer_config\":{\"ssl_ca_cert\":null,\"ssl_client_cert\":null,\"ssl_client_key\":null,\"feed_url\":\"file:///var/www/test_repo\"},\"distributors\":[{\"distributor_type\":\"yum_distributor\",\"distributor_config\":{\"relative_url\":\"/test_path/\",\"http\":false,\"https\":true,\"protected\":true},\"auto_publish\":true,\"distributor_id\":\"1\"}]}"
+    headers: 
+      Accept: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Content-Type: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="W7MkCVskQUZy1QiHDfM9BymbKDdetFyXcIMsYx1dE", oauth_signature="8fksUjdr0MhNu%2F5rD3jyA9lyErY%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1373290977", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      Content-Length: 
+      - "393"
+      User-Agent: 
+      - Ruby
+  response: 
+    status: 
+      code: 201
+      message: Created
+    headers: 
+      Date: 
+      - Mon, 08 Jul 2013 13:42:57 GMT
+      Server: 
+      - Apache/2.4.4 (Fedora) OpenSSL/1.0.1c-fips PHP/5.4.9 mod_wsgi/3.4 Python/2.7.3 mod_perl/2.0.7 Perl/v5.16.3
+      Location: 
+      - "1"
+      Content-Length: 
+      - "228"
+      Content-Type: 
+      - application/json
+    body: 
+      encoding: US-ASCII
+      string: "{\"scratchpad\": {}, \"display_name\": \"Fedora 17 x86_64\", \"description\": null, \"_ns\": \"repos\", \"notes\": {}, \"content_unit_counts\": {}, \"_id\": {\"$oid\": \"51dac1e1e138234996ed8c5a\"}, \"id\": \"1\", \"_href\": \"/pulp/api/v2/repositories/1/\"}"
+    http_version: 
+  recorded_at: Mon, 08 Jul 2013 13:42:57 GMT
+- request: 
+    method: delete
+    uri: https://localhost.localdomain/pulp/api/v2/repositories/1/
+    body: 
+      encoding: US-ASCII
+      string: ""
+    headers: 
+      Accept: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Content-Type: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="x6liG7qeFYrXPPvvIsiFxCdXM9XHonex5yZQf1snww", oauth_signature="Z6axJ25tTdbTSIcvK5oYF1X1UCM%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1373290977", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      User-Agent: 
+      - Ruby
+  response: 
+    status: 
+      code: 202
+      message: Accepted
+    headers: 
+      Date: 
+      - Mon, 08 Jul 2013 13:42:57 GMT
+      Server: 
+      - Apache/2.4.4 (Fedora) OpenSSL/1.0.1c-fips PHP/5.4.9 mod_wsgi/3.4 Python/2.7.3 mod_perl/2.0.7 Perl/v5.16.3
+      Content-Encoding: 
+      - utf-8
+      Content-Length: 
+      - "674"
+      Content-Type: 
+      - application/json
+    body: 
+      encoding: US-ASCII
+      string: "[{\"task_group_id\": \"ee33c38b-88a8-4cd0-9f4d-b285523c36b3\", \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/task_groups/ee33c38b-88a8-4cd0-9f4d-b285523c36b3/\", \"task_id\": \"c687e36b-31d7-49d1-a241-f7d964379d99\", \"call_request_tags\": [\"pulp:repository:1\", \"pulp:action:delete\"], \"reasons\": [], \"start_time\": null, \"tags\": [\"pulp:repository:1\", \"pulp:action:delete\"], \"state\": \"waiting\", \"finish_time\": null, \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {}, \"call_request_group_id\": \"ee33c38b-88a8-4cd0-9f4d-b285523c36b3\", \"call_request_id\": \"c687e36b-31d7-49d1-a241-f7d964379d99\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}]"
+    http_version: 
+  recorded_at: Mon, 08 Jul 2013 13:42:57 GMT
+recorded_with: VCR 2.5.0

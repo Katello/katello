@@ -11,13 +11,13 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require 'minitest_helper'
-require './test/support/task_support'
+require './test/support/pulp/task_support'
 
 
 module RepositorySupport
   include TaskSupport
 
-  @repo_url = "file://#{File.expand_path(File.dirname(__FILE__))}".gsub("support", "fixtures/zoo5")
+  @repo_url = "file:///var/www/test_repo"
   @repo     = nil
 
   def self.repo_id
@@ -29,9 +29,8 @@ module RepositorySupport
   end
 
   def self.create_and_sync_repo(repo_id)
-    destroy_repo
     @repo = create_repo(repo_id)
-    sync_repo(repo_id)
+    sync_repo
   end
 
   def self.create_repo(repo_id)
@@ -39,26 +38,20 @@ module RepositorySupport
     @repo.relative_path = '/test_path/'
     @repo.feed = @repo_url
 
-    VCR.use_cassette('support/repository') do
-      @repo.create_pulp_repo
-    end
+    @repo.create_pulp_repo
   rescue => e
   ensure
     return @repo
   end
 
-  def self.sync_repo(repo_id)
-    VCR.use_cassette('support/repository') do
-      @task = @repo.sync
-      TaskSupport.wait_on_tasks(@task)
-    end
+  def self.sync_repo
+    tasks = @repo.sync
+    TaskSupport.wait_on_tasks(tasks)
   rescue => e
   end
 
-  def self.destroy_repo(id=@repo_id)
-    VCR.use_cassette('support/repository') do
-      @repo.destroy_repo
-    end
+  def self.destroy_repo
+    @repo.destroy_repo
   rescue => e
   end
 

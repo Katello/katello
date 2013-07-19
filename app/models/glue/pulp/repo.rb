@@ -335,7 +335,7 @@ module Glue::Pulp::Repo
     def set_sync_schedule(date_and_time)
       type = Runcible::Extensions::YumImporter::ID
       if date_and_time
-          Runcible::Extensions::Repository.create_or_update_schedule(self.pulp_id, type, date_and_time)
+        Runcible::Extensions::Repository.create_or_update_schedule(self.pulp_id, type, date_and_time)
       else
         Runcible::Extensions::Repository.remove_schedules(self.pulp_id, type)
       end

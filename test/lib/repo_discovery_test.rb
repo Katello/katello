@@ -11,7 +11,6 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 
-
 require 'minitest_helper'
 
 
@@ -28,7 +27,7 @@ class FileRepoDiscoveryTest < MiniTest::Rails::ActiveSupport::TestCase
     found_final = rd.run(add_proc, continue_proc)
     assert_equal  found, found_final  #validate that final list equals incremental list
     assert_equal 1, found.size
-    assert_equal found.first, base_url + 'zoo5'
+    assert_equal found.first, base_url + 'test_repo'
   end
 
 end

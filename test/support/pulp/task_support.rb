@@ -22,11 +22,9 @@ module TaskSupport
   end
 
   def self.wait_on_task(task)
-    VCR.use_cassette('task_support', :erb => true, :match_requests_on => [:path, :method, :body_json]) do
-      while !(['finished', 'error', 'timed_out', 'canceled', 'reset', 'success'].include?(task['state'])) do
-        task = PulpSyncStatus.pulp_task(Runcible::Resources::Task.poll(task['progress']["task_id"]))
-        sleep_if_needed
-      end
+    while !(['finished', 'error', 'timed_out', 'canceled', 'reset', 'success'].include?(task['state'])) do
+      task = PulpSyncStatus.pulp_task(Runcible::Resources::Task.poll(task['progress']["task_id"]))
+      sleep_if_needed
     end
   rescue => e
   end

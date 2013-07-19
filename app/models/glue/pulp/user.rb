@@ -39,8 +39,13 @@ module Glue::Pulp::User
       return attrs
     end
 
-    def set_pulp_user
-      Runcible::Resources::User.create(self.remote_id, {:name => self.remote_id, :password => Password.generate_random_string(16)})
+    def set_pulp_user(args={})
+      password = args.fetch(:password, Password.generate_random_string(16))
+
+      Runcible::Resources::User.create(self.remote_id, {
+        :name => self.remote_id,
+        :password => password
+      })
     rescue RestClient::ExceptionWithResponse => e
       if e.http_code == 409
         Rails.logger.info "pulp user #{self.remote_id}: already exists. continuing"

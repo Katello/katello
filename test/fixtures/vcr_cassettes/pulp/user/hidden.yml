@@ -1,0 +1,120 @@
+--- 
+http_interactions: 
+- request: 
+    method: post
+    uri: https://localhost.localdomain/pulp/api/v2/users/
+    body: 
+      encoding: US-ASCII
+      string: "{\"login\":\"hidden\",\"name\":\"hidden\",\"password\":\"nimda\"}"
+    headers: 
+      Accept: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Content-Type: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="LahyXnKONWiey9Om42lRT4PYHDIuOcCwibUIJwiR7g", oauth_signature="JvBVjSqkVdyV%2Fhqv2dtzngfJZZc%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1373290864", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      Content-Length: 
+      - "53"
+      User-Agent: 
+      - Ruby
+  response: 
+    status: 
+      code: 201
+      message: Created
+    headers: 
+      Date: 
+      - Mon, 08 Jul 2013 13:41:05 GMT
+      Server: 
+      - Apache/2.4.4 (Fedora) OpenSSL/1.0.1c-fips PHP/5.4.9 mod_wsgi/3.4 Python/2.7.3 mod_perl/2.0.7 Perl/v5.16.3
+      Location: 
+      - hidden
+      Content-Length: 
+      - "184"
+      Content-Type: 
+      - application/json
+    body: 
+      encoding: US-ASCII
+      string: "{\"_id\": {\"$oid\": \"51dac171e138234996ed83cc\"}, \"name\": \"hidden\", \"roles\": [], \"_ns\": \"users\", \"login\": \"hidden\", \"id\": \"51dac171e138234996ed83cc\", \"_href\": \"/pulp/api/v2/users/hidden/\"}"
+    http_version: 
+  recorded_at: Mon, 08 Jul 2013 13:41:05 GMT
+- request: 
+    method: post
+    uri: https://localhost.localdomain/pulp/api/v2/roles/super-users/users/
+    body: 
+      encoding: US-ASCII
+      string: "{\"login\":\"hidden\"}"
+    headers: 
+      Accept: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Content-Type: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="MJzbFR8MNWFAFeY2sHMfzaaOT3s5fk8o5grMpvWMFrk", oauth_signature="wrWnTaVgr2cPsBdnxESugEQ7wLo%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1373290865", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      Content-Length: 
+      - "18"
+      User-Agent: 
+      - Ruby
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Date: 
+      - Mon, 08 Jul 2013 13:41:05 GMT
+      Server: 
+      - Apache/2.4.4 (Fedora) OpenSSL/1.0.1c-fips PHP/5.4.9 mod_wsgi/3.4 Python/2.7.3 mod_perl/2.0.7 Perl/v5.16.3
+      Content-Length: 
+      - "4"
+      Content-Type: 
+      - application/json
+    body: 
+      encoding: US-ASCII
+      string: "null"
+    http_version: 
+  recorded_at: Mon, 08 Jul 2013 13:41:05 GMT
+- request: 
+    method: delete
+    uri: https://localhost.localdomain/pulp/api/v2/users/hidden/
+    body: 
+      encoding: US-ASCII
+      string: ""
+    headers: 
+      Accept: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Content-Type: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="Gr8M5Y4WRGptFGbZ7yrfnJ7wzL32s0s8EWV3CoVFrLY", oauth_signature="HCTJTm9kDwho1J5akcUzjZw6Izs%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1373290876", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      User-Agent: 
+      - Ruby
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Date: 
+      - Mon, 08 Jul 2013 13:41:16 GMT
+      Server: 
+      - Apache/2.4.4 (Fedora) OpenSSL/1.0.1c-fips PHP/5.4.9 mod_wsgi/3.4 Python/2.7.3 mod_perl/2.0.7 Perl/v5.16.3
+      Content-Length: 
+      - "4"
+      Content-Type: 
+      - application/json
+    body: 
+      encoding: US-ASCII
+      string: "null"
+    http_version: 
+  recorded_at: Mon, 08 Jul 2013 13:41:16 GMT
+recorded_with: VCR 2.5.0
