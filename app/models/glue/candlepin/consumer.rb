@@ -214,7 +214,19 @@ module Glue::Candlepin::Consumer
 
     def convert_from_cp_fields(cp_json)
       cp_json.merge(:cp_type => cp_json.delete(:type)) if cp_json.has_key?(:type)
-      reject_db_columns(cp_json)
+      cp_json = reject_db_columns(cp_json)
+
+      cp_json[:guestIds] = remove_hibernate_fields(cp_json[:guestIds]) if cp_json.has_key?(:guestIds)
+      cp_json[:installedProducts] = remove_hibernate_fields(cp_json[:installedProducts]) if cp_json.has_key?(:installedProducts)
+
+      cp_json
+    end
+
+    # Candlepin sends back its internal hibernate fields in the json. However it does not accept them in return
+    # when updating (PUT) objects.
+    def remove_hibernate_fields(elements)
+      return nil if !elements
+      elements.collect{ |e| e.except(:id, :created, :updated)}
     end
 
     def reject_db_columns(cp_json)
