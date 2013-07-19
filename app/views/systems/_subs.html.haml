@@ -61,7 +61,7 @@
   %h5
     #{_("Available Subscriptions")}
   = form_tag update_preference_user_path(current_user), :id=>"matchsystem_form", :method=>"put", :remote=>false do
-    = select_tag 'subscription_filters', subscription_filters.html_safe, :prompt => _("Filters"), :multiple => true, "data-placeholder" => _("Subscription Filter Options"), :disabled => true
+    = select_tag 'subscription_filters', subscription_filters.html_safe, :multiple => true, "data-placeholder" => _("Subscription Filter Options"), :disabled => true
   = form_tag update_subscriptions_system_path, :id=>"subscribe", :method=>"post", :remote=>true do
     = hidden_field_tag "subscribe_action", "subscribe"
     %div.hidden#available_spinner

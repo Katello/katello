@@ -22,6 +22,9 @@ class Product < ActiveRecord::Base
 
   include Ext::LabelFromName
 
+  has_many :marketing_engineering_products, :foreign_key=>:engineering_product_id
+  has_many :marketing_products, :through => :marketing_engineering_products
+
   belongs_to :provider, :inverse_of => :products
   belongs_to :sync_plan, :inverse_of => :products
   belongs_to :gpg_key, :inverse_of => :products

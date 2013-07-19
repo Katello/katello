@@ -137,19 +137,19 @@
           .input
             %span.value{'name' => 'system[location]', :class=>("editable edit_textfield" if editable), 'data-url'=>system_path(system.id)} #{system[:location]}
 
-        %h5 #{_("Content Available From")}
-        .control-group
-          .label
-            = label :arch, :arch, _("Environment")
-          .input
-            %span.value#environment_path_selector{'data-name'=> 'system[environment_id]'}
         - if Katello.config.katello?
+          %h5 #{_("Content Available From")}
+          .control-group
+            .label
+              = label :arch, :arch, _("Environment")
+            .input
+              %span.value#environment_path_selector{'data-name'=> 'system[environment_id]'}
           .control-group
             .label
               = label :content_view, :content_view, _("Content View")
             .input
               %span.value#content_view_selector{'data-name' => 'system[content_view_id]', 'data-options' => system_content_view_opts(system)}
-        .control-group#env_content_view_selector_buttons{'data-url'=>system_path(system.id)}
+          .control-group#env_content_view_selector_buttons{'data-url'=>system_path(system.id)}
 
         %h5 #{_("System Events")}
         .control-group

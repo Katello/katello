@@ -34,13 +34,13 @@
           .input
             .value
               #distributor_description{'name' => 'distributor[description]', :class=>("editable edit_textarea" if editable), 'data-maxlength' => default_description_limit, 'data-url'=>distributor_path(distributor.id)} #{distributor[:description]}
-        .control-group
-          .label
-            = label :env, :env, _("Environment")
-          .input
-            %span.value#environment_path_selector{'name'=> 'distributor[environment_id]', :class=>("editable" if editable && Katello.config.katello?), 'data-url'=>distributor_path(distributor.id)}
-              #{distributor_environment_name distributor}
         - if Katello.config.katello?
+          .control-group
+            .label
+              = label :env, :env, _("Environment")
+            .input
+              %span.value#environment_path_selector{'name'=> 'distributor[environment_id]', :class=>("editable" if editable && Katello.config.katello?), 'data-url'=>distributor_path(distributor.id)}
+                #{distributor_environment_name distributor}
           .control_group
             .label
               = label :content_view, :content_view, _("Content View")

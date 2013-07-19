@@ -12,18 +12,13 @@
 
 = content_for :content do
   #subscriptions
-    .full
-      .fl
-        - for env in @activation_key.environment.full_path
-          - if env != @activation_key.environment
-            #{env.display_name} >
-          - else
-            %strong #{env.display_name}
-            - break
-
     .full.lower_content.clear
-      .fl
+      .subscription-info
+        =image_tag( "icons/info.png", :class=>"fl", :id=>"info_#{@activation_key.id}", :style=>"margin-right:1px;")
+        = _("Displaying subscriptions for selected environment: %{env} and selected content view: %{cv}.") % {:env=>@activation_key.environment.name, :cv=>@activation_key.content_view.name}
+      %div
         = render :partial => "common/filter_table"
+
       = form_tag add_subscriptions_activation_key_path(@activation_key), :id=>"subscription_form", :method=>"post", :remote=>true do
 
         - if editable && available_subs.length > 0
