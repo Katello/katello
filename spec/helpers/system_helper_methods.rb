@@ -34,7 +34,18 @@ module SystemHelperMethods
       required_uuid = attrs.with_indifferent_access[:uuid]
       Resources::Candlepin::Consumer.stub!(:create).and_return({:uuid => required_uuid, :owner => {:key => required_uuid}})
     end
-    System.create!(attrs)
+
+    if attrs[:environment] && !attrs[:environment].library? && !attrs[:content_view]
+      view = find_or_create_content_view(attrs[:environment])
+      attrs[:content_view] = view
+    end
+
+    sys = System.create!(attrs)
+    if block_given?
+      yield sys
+      sys.save!
+    end
+    sys
   end
 
   def pulp_task_without_error

@@ -25,29 +25,14 @@ class Product < ActiveRecord::Base
   has_many :marketing_engineering_products, :foreign_key=>:engineering_product_id
   has_many :marketing_products, :through => :marketing_engineering_products
 
-  has_many :environment_products, :class_name => "EnvironmentProduct", :dependent => :destroy, :uniq=>true
-  has_many :environments, :class_name => "KTEnvironment", :uniq => true , :through => :environment_products  do
-    def <<(*items)
-      super( items - @association.owner.environment_products.collect{|ep| ep.environment} )
-    end
-
-    def default_view
-      select do |env|
-        env.default_content_view.products(env).include?(proxy_owner)
-      end
-    end
-  end
-
-  has_and_belongs_to_many :changesets
-
   belongs_to :provider, :inverse_of => :products
   belongs_to :sync_plan, :inverse_of => :products
   belongs_to :gpg_key, :inverse_of => :products
   has_many :content_view_definition_products, :dependent => :destroy
   has_many :content_view_definitions, :through => :content_view_definition_products
+  has_many :repositories, :dependent => :destroy
 
   validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
-  validates_with Validators::LibraryPresenceValidator, :attributes => :environments
   validates :name, :presence => true
   validates :label, :presence => true
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name
@@ -95,11 +80,18 @@ class Product < ActiveRecord::Base
     super
   end
 
-  def repos(env, include_disabled = false, content_view=nil)
+  def repos(env, include_disabled = false, content_view = nil)
+    if content_view.nil?
+      if !env.library?
+        raise "No content view specified for the repos call in a " +
+                        "Non library environment #{env.inspect}"
+      else
+        content_view = env.default_content_view
+      end
+    end
+
     # cache repos so we can cache lazy_accessors
     @repo_cache ||= {}
-
-    content_view ||= env.default_content_view
     @repo_cache[env.id] ||= content_view.repos_in_product(env, self)
 
     if @repo_cache[env.id].blank? || include_disabled
@@ -116,7 +108,7 @@ class Product < ActiveRecord::Base
   end
 
   def library
-    environments.select {|e| e.library}.first
+    organization.library
   end
 
   def plan_name
@@ -160,10 +152,8 @@ class Product < ActiveRecord::Base
 
   # TODO: this should be a part of product update orchestration
   def reset_repo_gpgs!
-    self.environment_products.each do |ep|
-      ep.repositories.each do |repo|
-        repo.update_attributes!(:gpg_key => self.gpg_key)
-      end
+    repositories.each do |repo|
+      repo.update_attributes!(:gpg_key => self.gpg_key)
     end
   end
 
@@ -205,13 +195,17 @@ class Product < ActiveRecord::Base
     versions.collect{|v|v.environments}.flatten
   end
 
+  def environments
+    KTEnvironment.where(:organization_id => organization.id).
+      where("library = ? OR id IN (?)", true, repositories.map(&:environment_id))
+  end
+
   protected
 
 
-  def self.with_repos env, enabled_only
-    query = EnvironmentProduct.joins(:repositories).where(
-          :environment_id => env).select("environment_products.product_id")
-    query = query.where("repositories.enabled" => true) if enabled_only
+  def self.with_repos(env, enabled_only)
+    query = Repository.in_environment(env.id).select(:product_id)
+    query = query.enabled if enabled_only
     joins(:provider).where('providers.organization_id' => env.organization).
         where("(providers.provider_type ='#{::Provider::CUSTOM}') OR ( providers.provider_type ='#{::Provider::REDHAT}' AND products.id in (#{query.to_sql}))")
   end

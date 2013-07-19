@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :product do
-    sequence(:name) { |n| "Product#{n}" }
-    environments { [FactoryGirl.build(:library)] }
+    sequence(:name) { |n| "Product #{n}" }
+    sequence(:label) { |n| "product_#{n}" }
 
     trait :fedora do
       name          "Fedora"

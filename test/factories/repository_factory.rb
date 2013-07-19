@@ -1,9 +1,11 @@
 FactoryGirl.define do
   factory :repository do
-    sequence(:name) { |n| "Repo#{n}" }
+    sequence(:name) { |n| "Repo #{n}" }
+    sequence(:label) { |n| "repo_#{n}" }
     sequence(:pulp_id) { |n| "pulp-#{n}" }
     sequence(:content_id)
     sequence(:relative_path) {|n| "/ACME_Corporation/DEV/Repo#{n}"}
+
     ignore do
       stubbed = true
     end

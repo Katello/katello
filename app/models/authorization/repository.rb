@@ -17,7 +17,7 @@ module Authorization::Repository
   included do
     # only repositories in a given environment
     scope :in_environment, lambda { |env|
-      joins(:environment_product).where(:environment_products => {:environment_id => env.id})
+      where(environment_id: env.id)
     }
   end
 
@@ -25,7 +25,7 @@ module Authorization::Repository
     def readable(env)
       prod_ids = ::Product.readable(env.organization).collect{|p| p.id}
       if env.contents_readable?
-        joins(:environment_product).where("environment_products.environment_id" => env.id)
+        where(environment_id: env.id)
       else
         #none readable
         where("1=0")
@@ -42,14 +42,12 @@ module Authorization::Repository
     def content_readable(org)
       prod_ids = ::Product.readable(org).collect{|p| p.id}
       env_ids = KTEnvironment.content_readable(org)
-      joins(:environment_product).where("environment_products.product_id" => prod_ids).
-          where("environment_products.environment_id"=>env_ids)
+      where(environment_id: env_ids, product_id: prod_ids)
     end
 
     def readable_for_product(env, prod)
       if env.contents_readable?
-        joins(:environment_product).where("environment_products.environment_id" => env.id).where(
-                                  'environment_products.product_id'=>prod.id)
+        where(environment_id: env.id, product_id: prod.id)
       else
         #none readable
         where("1=0")
@@ -57,22 +55,20 @@ module Authorization::Repository
     end
 
     def editable_in_library(org)
-      joins(:environment_product).
-          where("environment_products.environment_id" => org.library.id).
-          where("environment_products.product_id in (#{Product.editable(org).select("products.id").to_sql})")
+      where(environment_id: org.library.id, product_id: Product.editable(org).pluck("products.id"))
     end
 
     def readable_in_org(org, *skip_library)
       if (skip_library.empty? || skip_library.first.nil?)
         # 'skip library' not included, so retrieve repos in library in the result
-        joins(:environment_product).where("environment_products.environment_id" =>  KTEnvironment.content_readable(org))
+        where(environment_id: KTEnvironment.content_readable(org))
       else
-        joins(:environment_product).where("environment_products.environment_id" =>  KTEnvironment.content_readable(org).where(:library => false))
+        where(environment_id: KTEnvironment.content_readable(org).non_library)
       end
     end
 
-    def any_readable_in_org? org, skip_library = false
-      KTEnvironment.any_contents_readable? org, skip_library
+    def any_readable_in_org?(org, skip_library = false)
+      KTEnvironment.any_contents_readable?(org, skip_library)
     end
   end
 

@@ -57,13 +57,11 @@ describe Provider do
       })
       @provider.save!
 
-      @product = Product.create!({:cp_id => "product_id",:label=>"prod", :name=> "prod", :productContent => [], :provider => @provider, :environments => [@organization.library]})
+      @product = Product.create!({:cp_id => "product_id",:label=>"prod", :name=> "prod", :productContent => [], :provider => @provider})
     end
 
     specify { @product.should_not be_nil }
     specify { @product.provider.should == @provider }
-    specify { @product.environments.should include(@organization.library) }
-    specify { @organization.library.products.should include(@product) }
   end
 
   context "import manifest via RED HAT provider" do
@@ -91,7 +89,6 @@ describe Provider do
       let(:eng_product_after_import) do
           product = Product.new(eng_product_attrs) do |p|
             p.provider = @provider
-            p.environments << @organization.library
           end
           product.orchestration_for = :import_from_cp_ar_setup
           product.save!
@@ -123,7 +120,7 @@ describe Provider do
         before do
           Glue::Candlepin::Product.stub(:import_from_cp => [], :import_marketing_from_cp => true)
           Resources::Candlepin::Product.stub!(:destroy).and_return(true)
-          @rh_product = Product.create!({:label=>"prod",:name=> "rh_product", :productContent => [], :provider => @provider, :environments => [@organization.library]})
+          @rh_product = Product.create!({:label=>"prod",:name=> "rh_product", :productContent => [], :provider => @provider})
           @custom_provider = Provider.create!({
             :name => 'test_provider',
             :repository_url => 'https://something.net',
@@ -132,7 +129,7 @@ describe Provider do
           })
           # cp_id gets set based on Product.create in Candlepin so we need a stub to return something besides 1
           Resources::Candlepin::Product.stub!(:create).and_return({:id => 2})
-          @custom_product = Product.create!({:label=> "custom-prod",:name=> "custom_product", :productContent => [], :provider => @custom_provider, :environments => [@organization.library]})
+          @custom_product = Product.create!({:label=> "custom-prod",:name=> "custom_product", :productContent => [], :provider => @custom_provider})
         end
 
         it "should be removed from the Katello products"  do
@@ -170,9 +167,7 @@ describe Provider do
     end
 
     def create_product_with_content(product_name, releases)
-      product = @provider.products.create!(:name => product_name, :label => "#{product_name.hash}", :cp_id => product_name.hash) do |product|
-        product.environments << @organization.library
-      end
+      product = @provider.products.create!(:name => product_name, :label => "#{product_name.hash}", :cp_id => product_name.hash)
 
       product.productContent = [product_content(product_name)]
       product.productContent.first.stub(:katello_enabled?).and_return(true)
@@ -181,8 +176,8 @@ describe Provider do
           version = Resources::CDN::Utils.parse_version(release)
           repo_name = "#{product_content.content.name} #{release}"
           repo_label = repo_name.gsub(/[^-\w]/,"_")
-          ep = EnvironmentProduct.find_or_create(product.organization.library, product)
-          repo = Repository.new(:environment_product => ep,
+          repo = Repository.new(:environment => product.organization.library,
+                             :product => product,
                              :cp_label => product_content.content.label,
                              :name => repo_name,
                              :label => repo_label,
@@ -191,7 +186,7 @@ describe Provider do
                              :minor => version[:minor],
                              :relative_path=>'/foo',
                              :content_id=>'asdfasdf',
-                             :content_view_version=>ep.environment.default_content_view_version,
+                             :content_view_version=>product.organization.library.default_content_view_version,
                              :feed => 'https://localhost')
           repo.stub(:create_pulp_repo).and_return({})
           repo.save!
@@ -258,8 +253,8 @@ describe Provider do
         p.organization = @organization
       end
 
-      @product1 = Product.create!({:cp_id => "product1_id",:label => "prod1", :name=> "product1", :productContent => [], :provider => @provider, :environments => [@organization.library]})
-      @product2 = Product.create!({:cp_id => "product2_id", :label=> "prod2", :name=> "product2", :productContent => [], :provider => @provider, :environments => [@organization.library]})
+      @product1 = Product.create!({:cp_id => "product1_id",:label => "prod1", :name=> "product1", :productContent => [], :provider => @provider})
+      @product2 = Product.create!({:cp_id => "product2_id", :label=> "prod2", :name=> "product2", :productContent => [], :provider => @provider})
     end
 
     it "should create sync for all it's products" do

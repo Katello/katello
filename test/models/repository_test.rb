@@ -18,8 +18,11 @@ class RepositoryCreateTest < RepositoryTestBase
   def setup
     super
     User.current = @admin
-    @repo = build(:repository, :fedora_17_el6, :environment_product => EnvironmentProduct.find(environment_products(:library_fedora)),
-                                              :content_view_version=>@library.default_content_view_version)
+    @repo = build(:repository, :fedora_17_el6,
+                  :environment => @library,
+                  :product => products(:fedora),
+                  :content_view_version => @library.default_content_view_version
+                 )
   end
 
   def teardown
@@ -151,10 +154,11 @@ class RepositoryInstanceTest < RepositoryTestBase
     # validate that clone repo path for a component view does not include the component view label
     @content_view_definition = content_view_definition_bases(:composite_def)
     dev = KTEnvironment.find(environments(:dev).id)
+    cv = @content_view_definition.component_content_views.first
+    cve = ContentViewEnvironment.where(:environment_id => dev,
+                                        :content_view_id => cv).first
 
-    relative_path = Repository.clone_repo_path(@fedora_17_x86_64, dev,
-                                               @content_view_definition.component_content_views.first)
-
-    assert_equal "/dev_label/library/fedora_17_label", relative_path
+    relative_path = Repository.clone_repo_path(@fedora_17_x86_64, dev, cv)
+    assert_equal "/#{cve.label}/library/fedora_17_label", relative_path
   end
 end

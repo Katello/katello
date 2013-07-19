@@ -376,12 +376,6 @@ Src::Application.routes.draw do
     collection do
       get :auto_complete_library
     end
-
-    resources :distributions, :only => [:show], :constraints => { :id => /[0-9a-zA-Z \-\+%_.]+/ } do
-      member do
-        get :filelist
-      end
-    end
   end
 
   resources :promotions, :only =>[] do
@@ -390,15 +384,9 @@ Src::Application.routes.draw do
     end
     member do
       get :show
-      get :products
-      get :packages
-      get :errata
-      get :repos
-      get :distributions
       get :details
       get :content_views
     end
-
   end
 
   match '/organizations/:org_id/environments/:env_id/edit' => 'environments#update', :via => :put

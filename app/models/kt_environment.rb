@@ -40,15 +40,7 @@ class KTEnvironment < ActiveRecord::Base
   has_and_belongs_to_many :successors, {:class_name => "KTEnvironment", :foreign_key => "prior_id",
     :join_table => "environment_priors", :association_foreign_key => :environment_id, :readonly => true}
 
-  has_many :environment_products, :class_name => "EnvironmentProduct", :foreign_key => "environment_id", :dependent => :destroy, :uniq=>true
-  has_many :products, :uniq => true, :through => :environment_products  do
-    def <<(*items)
-      super( items - @association.owner.environment_products.collect{|ep| ep.product} )
-    end
-  end
-
-  has_many :repositories, :through => :environment_products, :source => :repositories
-
+  has_many :repositories, dependent: :destroy, foreign_key: :environment_id
   has_many :systems, :inverse_of => :environment, :dependent => :destroy,  :foreign_key => :environment_id
   has_many :distributors, :inverse_of => :environment, :dependent => :destroy,  :foreign_key => :environment_id
   has_many :working_changesets, :conditions => ["state != '#{Changeset::PROMOTED}'"], :foreign_key => :environment_id, :dependent => :destroy, :class_name=>"Changeset", :dependent => :destroy, :inverse_of => :environment
@@ -65,6 +57,8 @@ class KTEnvironment < ActiveRecord::Base
   has_many :users, :foreign_key => :default_environment_id, :inverse_of => :default_environment, :dependent => :nullify
 
   scope :completer_scope, lambda { |options| where('organization_id = ?', options[:organization_id])}
+  scope :non_library, where(library: false)
+  scope :library, where(library: true)
 
   validates :name, :exclusion => { :in => ["Library"], :message => N_(": '%s' is a built-in environment") % "Library" }, :unless => :library?
   validates :label, :exclusion => { :in => ["Library"], :message => N_(": '%s' is a built-in environment") % "Library" }, :unless => :library?
@@ -192,6 +186,9 @@ class KTEnvironment < ActiveRecord::Base
     return prior_products - self.products
   end
 
+  def products
+    self.library? ? Product.in_org(self.organization) : Product.where(id: repositories.map(&:product_id))
+  end
 
   def as_json options = {}
     to_ret = self.attributes
@@ -287,25 +284,27 @@ class KTEnvironment < ActiveRecord::Base
   end
 
   def create_default_content_view_version
-    #Sadly this has to be created here, if it is created in the org
-    #  it will not actually exist when we go to create library and so
-    #  we can't look it up via a query (org.default_content_view)
-    content_view = self.organization.default_content_view
-    if content_view.nil?
-      content_view = ContentView.new(:default=>true, :name=>"Default Organization View",
-                                     :organization=>self.organization)
-    end
+    if library?
+      #Sadly this has to be created here, if it is created in the org
+      #  it will not actually exist when we go to create library and so
+      #  we can't look it up via a query (org.default_content_view)
+      content_view = self.organization.default_content_view
+      if content_view.nil?
+        content_view = ContentView.new(:default=>true, :name=>"Default Organization View",
+                                       :organization=>self.organization)
+      end
 
-    if content_view.version(self).nil?
-      version = ContentViewVersion.new(:content_view => content_view,
-                                       :version => 1)
-      version.environments << self
-      version.save!
-      content_view.save! #save content_view, since ContentViewEnvironment was added
+      if content_view.version(self).nil?
+        version = ContentViewVersion.new(:content_view => content_view,
+                                         :version => 1)
+        version.environments << self
+        version.save!
+        content_view.save! #save content_view, since ContentViewEnvironment was added
+      end
     end
   end
 
   def delete_default_view_version
-    self.default_content_view_version.destroy
+    self.default_content_view_version.destroy if library?
   end
 end

@@ -277,14 +277,12 @@ describe Api::V1::SyncController, :katello => true do
     Provider.stub!(:find).and_return(@provider)
     @product          = Product.new({ :name => "prod", :label => "prod" })
     @product.provider = @provider
-    @product.environments << @organization.library
     @product.stub(:arch).and_return('noarch')
     @product.save!
     Product.stub!(:find).and_return(@product)
     Product.stub!(:find_by_cp_id).and_return(@product)
-    ep           = EnvironmentProduct.find_or_create(@organization.library, @product)
-    @repository  = new_test_repo(ep, "repo_1", "#{@organization.name}/Library/prod/repo")
-    @repository2 = new_test_repo(ep, "repo_2", "#{@organization.name}/Library/prod/repo")
+    @repository  = new_test_repo(@organization.library, @product, "repo_1", "#{@organization.name}/Library/prod/repo")
+    @repository2 = new_test_repo(@organization.library, @product, "repo_2", "#{@organization.name}/Library/prod/repo")
 
     Repository.stub(:find).and_return(@repository)
   end

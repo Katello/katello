@@ -41,8 +41,8 @@ describe Api::V1::SystemPackagesController do
     end
 
     @organization  = Organization.create!(:name => 'test_org', :label => 'test_org')
-    @environment_1 = KTEnvironment.create!(:name => 'test_1', :label => 'test_1', :prior => @organization.library.id, :organization => @organization)
-    @system        = System.create!(:environment => @environment_1, :uuid => "1234", :name => "system.example.com", :cp_type => 'system', :facts => { :foo => :bar })
+    @environment_1 = create_environment(:name => 'test_1', :label => 'test_1', :prior => @organization.library.id, :organization => @organization)
+    @system        = create_system(:environment => @environment_1, :uuid => "1234", :name => "system.example.com", :cp_type => 'system', :facts => { :foo => :bar })
     System.stub(:first => @system)
   end
 

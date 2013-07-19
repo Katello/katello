@@ -30,8 +30,7 @@ describe Api::V1::PackagesController, :katello => true do
     @organization = new_test_org
     @env          = @organization.library
     @product      = new_test_product(@organization, @env)
-    ep_library    = EnvironmentProduct.find_or_create(@organization.library, @product)
-    @repo         = new_test_repo(ep_library, "repo", "#{@organization.name}/Library/prod/repo")
+    @repo         = new_test_repo(@env, @product, "repo", "#{@organization.name}/Library/prod/repo")
 
     @product.stub(:repos).and_return([@repository])
     @repo.stub(:has_distribution?).and_return(true)

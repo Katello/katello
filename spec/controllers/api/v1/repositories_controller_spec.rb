@@ -42,14 +42,12 @@ describe Api::V1::RepositoriesController, :katello => true do
       @product = Product.new({ :name => "prod", :label => "prod" })
 
       @product.provider = @provider
-      @product.environments << @organization.library
       @product.stub(:arch).and_return('noarch')
       @product.save!
       Product.stub!(:find).and_return(@product)
       Product.stub!(:where).and_return([@product])
-      ep          = EnvironmentProduct.find_or_create(@organization.library, @product)
-      @repository = new_test_repo(ep, "repo_1", "#{@organization.name}/Library/prod/repo")
-      Repository.stub(:find).and_return(@repository)
+      @repo = new_test_repo(@organization.library, @product, "repo_1", "#{@organization.name}/Library/prod/repo")
+      Repository.stub(:find).and_return(@repo)
       PulpSyncStatus.stub(:using_pulp_task).and_return(task_stub)
       Runcible::Extensions::PackageGroup.stub(:all => {})
       Runcible::Extensions::PackageCategory.stub(:all => {})
@@ -151,7 +149,6 @@ describe Api::V1::RepositoriesController, :katello => true do
       @provider         = @organization.redhat_provider
       @product          = Product.new({ :name => "product for repo test", :label => "product_for_repo_test" })
       @product.provider = @provider
-      @product.environments << @organization.library
       @product.stub(:arch).and_return('noarch')
       @product.save!
       @request.env["HTTP_ACCEPT"] = "application/json"
