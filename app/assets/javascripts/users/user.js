@@ -83,7 +83,11 @@ $(document).ready(function() {
                         refill.html(data);
                         // On successful update, update the original env id and disable save button
                         env_select.init();
-                        env_select.env_changed_callback(env_select.get_selected_env());
+                        var env_id = env_select.get_selected_env();
+                        if (!env_id) {
+                            env_id = $(data).find(".path_link.active").attr("data-env_id");
+                        }
+                        env_select.env_changed_callback(env_id);
                         spinner.hide();
                     }
                 });
