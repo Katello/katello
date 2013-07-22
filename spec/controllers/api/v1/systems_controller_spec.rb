@@ -463,7 +463,7 @@ describe Api::V1::SystemsController do
     it "should update installed products" do
       @sys.facts = {}
       @sys.stub(:guest => 'false', :guests => [])
-      Resources::Candlepin::Consumer.should_receive(:update).once.with(uuid, {}, nil, installed_products, nil, nil, nil, anything, nil).and_return(true)
+      Resources::Candlepin::Consumer.should_receive(:update).once.with(uuid, {}, nil, installed_products, nil, nil, nil, anything, nil, nil).and_return(true)
       put :update, :id => uuid, :installedProducts => installed_products
       response.body.should == @sys.to_json
       response.should be_success
@@ -472,16 +472,26 @@ describe Api::V1::SystemsController do
     it "should update releaseVer" do
       @sys.facts = {}
       @sys.stub(:guest => 'false', :guests => [])
-      Resources::Candlepin::Consumer.should_receive(:update).once.with(uuid, {}, nil, nil, nil, "1.1", nil, anything, nil).and_return(true)
+      Resources::Candlepin::Consumer.should_receive(:update).once.with(uuid, {}, nil, nil, nil, "1.1", nil, anything, nil, nil).and_return(true)
       put :update, :id => uuid, :releaseVer => "1.1"
       response.body.should == @sys.to_json
       response.should be_success
     end
 
+    it "should update lastCheckin" do
+        @sys.facts = {}
+        @sys.stub(:guest => 'false', :guests => [])
+        timestamp = 3.days.ago
+        Resources::Candlepin::Consumer.should_receive(:update).once.with(uuid, {}, nil, nil, nil, nil, nil, anything, nil, timestamp.strftime('%F %T')).and_return(true)
+        put :update, :id => uuid, :lastCheckin => timestamp
+        response.body.should == @sys.to_json
+        response.should be_success
+    end
+
     it "should update service level agreement" do
       @sys.facts = {}
       @sys.stub(:guest => 'false', :guests => [])
-      Resources::Candlepin::Consumer.should_receive(:update).once.with(uuid, {}, nil, nil, nil, nil, "SLA", anything, nil).and_return(true)
+      Resources::Candlepin::Consumer.should_receive(:update).once.with(uuid, {}, nil, nil, nil, nil, "SLA", anything, nil, nil).and_return(true)
       put :update, :id => uuid, :serviceLevel => "SLA"
       response.body.should == @sys.to_json
       response.should be_success
@@ -492,7 +502,7 @@ describe Api::V1::SystemsController do
       @sys.facts = {}
       @sys.stub(:guest => 'false', :guests => [], :environment => @environment_2)
       Resources::Candlepin::Consumer.should_receive(:update).once.with(uuid, {}, nil, nil, nil, nil, nil,
-                                                            "#{@environment_2.id}-#{@sys.content_view.id}", nil).and_return(true)
+                                                            "#{@environment_2.id}-#{@sys.content_view.id}", nil, nil).and_return(true)
       put :update, :id => uuid, :environment_id => @environment_2.id
       response.body.should == @sys.to_json
       response.should be_success
@@ -502,7 +512,7 @@ describe Api::V1::SystemsController do
       promote_content_view(@sys.content_view, @environment_1, @environment_2)
       @sys.capabilities = {:name => 'cores'}
       @sys.stub(:guest => 'false', :guests => [])
-      Resources::Candlepin::Consumer.should_receive(:update).once.with(uuid, {"sockets" => 0}, nil, nil, nil, nil, nil, anything, {:name => "cores"}).and_return(true)
+      Resources::Candlepin::Consumer.should_receive(:update).once.with(uuid, {"sockets" => 0}, nil, nil, nil, nil, nil, anything, {:name => "cores"}, nil).and_return(true)
       put :update, :id => uuid, :environment_id => @environment_2.id
       response.body.should == @sys.to_json
       response.should be_success
