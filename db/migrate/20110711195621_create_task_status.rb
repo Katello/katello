@@ -1,4 +1,4 @@
-class TaskStatus < ActiveRecord::Migration
+class CreateTaskStatus < ActiveRecord::Migration
   def self.up
     create_table :task_statuses do |t|
       t.string :type

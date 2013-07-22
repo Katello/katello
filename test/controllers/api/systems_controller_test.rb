@@ -30,13 +30,14 @@ describe Api::V1::SystemsController do
       @content_view = content_views(:library_dev_view)
       @cv_id = @content_view.id
       @env_id = @system.environment.id
+      @cve = ContentViewEnvironment.where(:content_view_id => @cv_id, :environment_id => @env_id).first
+
       @subscribe_permission = UserPermission.new(:subscribe, :content_views, @cv_id, @content_view.organization)
       @register_system_perm = UserPermission.new(:register_systems, :environments, @env_id, @system.environment.organization)
       @req = lambda do
         post :create, :organization_id => @system.organization.label,
-                      :environment_id => "#{@env_id}-#{@cv_id}",
-                      :system => {:environment_id => @system.environment.id,
-                        :name => @system.name + "-foo#{rand 10**6}"}
+                      :environment_id => @cve.cp_id.to_s,
+                      :system => {:name => @system.name + "-foo#{rand 10**6}"}
       end
     end
     it "permission" do

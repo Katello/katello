@@ -28,18 +28,16 @@ module ProductHelperMethods
     new_test_product org, @library
   end
 
-  def new_test_product org, env, suffix="", custom=true
+  def new_test_product(org, env, suffix="", custom=true)
     disable_product_orchestration
     disable_repo_orchestration
     @provider = org.redhat_provider if !custom
     @provider ||= Provider.create!({:organization => org, :name => 'provider' + suffix, :repository_url => "https://something.url", :provider_type => Provider::CUSTOM})
-    @p = Product.create!(ProductTestData::SIMPLE_PRODUCT.merge({:name=>'product' + suffix, :environments => [env],
-                                                                :provider => @provider}))
+    product_attributes = ProductTestData::SIMPLE_PRODUCT.merge({:name=>'product' + suffix, :provider => @provider})
+    product_attributes[:productContent] = []
+    @p = Product.create!(product_attributes)
 
-    env_product = EnvironmentProduct.find_or_create(env, @p)
-
-
-    repo = Repository.new(:environment_product => env_product, :name=>"FOOREPO" + suffix,
+    repo = Repository.new(:environment => env, :product => @p, :name=>"FOOREPO" + suffix,
                           :label=>"FOOREPO" + suffix, :pulp_id=>RepoTestData::REPO_ID,
                           :content_id=> "1234", :content_view_version=>env.default_content_view_version,
                           :relative_path=>'/foo/', :feed => 'https://localhost.com/foo')
@@ -64,8 +62,7 @@ module ProductHelperMethods
 
     lib_instance = repo.library_instance.nil? ? repo : repo.library_instance
 
-    ep_to_env = EnvironmentProduct.find_or_create(environment, repo.product)
-    repo_clone = new_test_repo(ep_to_env, repo.name,
+    repo_clone = new_test_repo(environment, repo.product, repo.name,
                                "#{environment.organization.name}/#{environment.name}/prod/repo", true, "", lib_instance)
     repo.stub(:create_clone).and_return(repo_clone)
     repo.stub(:clone_contents).and_return([])
@@ -73,9 +70,7 @@ module ProductHelperMethods
 
     repo.stub!(:pulp_repo_facts).and_return({:clone_ids => []})
     repo.stub(:content => {:id => "123"})
-    repo.promote(environment.prior, environment)
-    ep = EnvironmentProduct.find_or_create(environment, repo.product)
-    Repository.where(:environment_product_id => ep).first.tap do |promoted|
+    Repository.where(:environment_id => environment, :product_id => repo.product).first.tap do |promoted|
         promoted.stub(:feed => repo.feed)
     end
   end

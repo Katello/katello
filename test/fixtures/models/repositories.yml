@@ -2,7 +2,8 @@ fedora_17_x86_64:
   name:                 Fedora 17 x86_64
   pulp_id:              1
   content_id:           1
-  environment_product:  library_fedora
+  environment:          library
+  product:              fedora
   gpg_key:              fedora_gpg_key
   label:                fedora_17_x86_64_label
   content_view_version: library_default_version
@@ -12,7 +13,8 @@ fedora_17_x86_64_dev:
   name:                 Fedora 17 x86_64
   pulp_id:              2
   content_id:           1
-  environment_product:  dev_fedora
+  product:              fedora
+  environment:          dev
   gpg_key:              fedora_gpg_key
   library_instance:     fedora_17_x86_64
   label:                fedora_17_dev_label
@@ -23,7 +25,8 @@ rhel_6_x86_64:
   name:                 RHEL 6 x86_64
   pulp_id:              3
   content_id:           1
-  environment_product:  library_redhat
+  environment:          library
+  product:              redhat
   label:                rhel_6_x86_64_label
   content_view_version: library_default_version
   relative_path:        '/ACME_Corporation/library/rhel_6_label'
@@ -32,7 +35,8 @@ fedora_17_x86_64_library_view:
   name:                 Fedora 17 x86_64
   pulp_id:              3
   content_id:           1
-  environment_product:  library_fedora
+  environment:          library
+  product:              fedora
   gpg_key:              fedora_gpg_key
   label:                fedora_17_x86_64_label
   content_view_version: library_view_version

@@ -135,7 +135,13 @@ KT.editable = (function(){
                     name        :  element.attr('name'),
                     rows        :  8,
                     cols        :  36,
-                    maxlength   :  element.data('maxlength')
+                    maxlength   :  element.data('maxlength'),
+                    onsuccess   : function(result, status, xhr) {
+                        element.text(KT.utils.unescape(result)); // hax
+                    },
+                    onerror     : function(settings, original, xhr) {
+                        original.reset();
+                    }
                 };
                 $(this).editable($(this).attr('data-url'), $.extend(common_settings, settings));
             });

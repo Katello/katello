@@ -81,7 +81,7 @@ class Api::V1::ProductsController < Api::V1::ApiController
     query_params.delete(:organization_id)
     query_params.delete(:environment_id)
 
-    if @environment.nil?
+    if @environment.nil? || @environment.library?
       products = Product.all_readable(@organization)
     else
       products = @environment.products.all_readable(@organization)

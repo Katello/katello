@@ -586,7 +586,9 @@ KT.content_view_definition_filters = (function(){
         });
     },
     initialize_common_rule_params = function() {
-        var pane = $("#parameter_list");
+        var pane = $("#parameter_list"),
+            rule_type = $("#add_rule").data("rule_type"),
+            filter_id = $("#add_rule").data("filter_id");
         if (pane.length === 0) {
             return;
         }
@@ -597,6 +599,21 @@ KT.content_view_definition_filters = (function(){
                 $("#add_rule").click();
             }
         });
+
+        // setup autocomplete
+        if (rule_type === "erratum") {
+            $("#rule_input").autocomplete({
+                source: KT.routes.auto_complete_errata_path({filter_id: filter_id}),
+                minLength: 3
+            });
+        } else if (rule_type === "rpm") {
+            $("#rule_input").autocomplete({
+                source: KT.routes.auto_complete_packages_path({filter_id: filter_id})
+            });
+        }
+
+        // setup the tipsy
+        $(".rule-search-tipsy").tipsy();
 
         $('#add_rule').unbind('click').click(function() {
             var rule_input = $('input#rule_input').val(),

@@ -23,7 +23,7 @@ class SystemTestBase < MiniTest::Rails::ActiveSupport::TestCase
     configure_runcible
 
     services  = ['Candlepin', 'Pulp', 'ElasticSearch', 'Foreman']
-    models    = ['User', 'System', 'SystemGroup', 'KTEnvironment', 'Organization', 'Product']
+    models    = ['User', 'SystemGroup', 'KTEnvironment', 'Organization', 'Product', "ContentView", "System", "ContentViewVersion"]
     disable_glue_layers(services, models)
   end
 
