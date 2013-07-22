@@ -24,7 +24,7 @@ describe SystemEventsController do
       login_user(:mock => false)
       set_default_locale
       @organization = setup_system_creation
-      @environment = KTEnvironment.create!(:name=>'test', :label=> 'test', :prior => @organization.library.id, :organization => @organization)
+      @environment = create_environment(:name=>'test', :label=> 'test', :prior => @organization.library.id, :organization => @organization)
 
       Resources::Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
       Resources::Candlepin::Consumer.stub!(:update).and_return(true)
@@ -36,7 +36,7 @@ describe SystemEventsController do
 
     describe "system tasks", :katello => true do
       before do
-        @system = System.create!(:name=>"bar", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""})
+        @system = create_system(:name=>"bar", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""})
       end
       context "shows the Tasks list" do
         before do

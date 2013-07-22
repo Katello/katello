@@ -24,6 +24,7 @@ class Api::V1::ContentViewsControllerTest < MiniTest::Rails::ActionController::T
 
   def setup
     @content_view = content_views(:library_dev_view)
+    @default_view = content_views(:acme_default)
     @definition = ContentViewDefinition.find(content_view_definition_bases(:simple_cvd))
     @content_view.update_attribute(:content_view_definition_id, @definition.id)
     @environment = environments(:staging)
@@ -97,6 +98,12 @@ class Api::V1::ContentViewsControllerTest < MiniTest::Rails::ActionController::T
     assert_raises(ActionController::RoutingError) do
       post :promote, :environment_id => @environment.id
     end
+  end
+
+  test "promote should throw an error if the view is a default view" do
+    login_user(@promote_permission)
+    post :promote, :id => @default_view.id, :environment_id => @environment.id
+    assert_response 400
   end
 
   test "should assign a content view" do

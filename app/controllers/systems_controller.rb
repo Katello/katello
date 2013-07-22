@@ -296,7 +296,6 @@ class SystemsController < ApplicationController
         params[:system][:serviceLevel] = val[1..-1]
       end
     end
-    params[:system][:content_view_id] = nil if params[:system].has_key? :environment_id
 
     @system.update_attributes!(params[:system])
     notify.success _("System '%s' was updated.") % @system["name"]

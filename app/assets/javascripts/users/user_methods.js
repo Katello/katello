@@ -160,6 +160,7 @@ KT.user_page = (function() {
             success: function(data) {
                 $('#env_name').html(data.env);
                 $('#org_name').html(data.org);
+                env_id = data.env_id;
                 env_select.original_env_id = env_id;
                 env_select.env_changed_callback(env_id);
             },

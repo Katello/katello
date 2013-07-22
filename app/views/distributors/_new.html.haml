@@ -16,17 +16,17 @@
         .grid_8#new_distributor
           = form.text_field :name, :label => _("Name of Your Distributor:")
 
-          = form.field :environment, :label => envsys ? _("Environment:") : _("Choose Environment:") do
-            - if envsys
-              = @environment.name
-            - else
-              = environment_selector(:path_widget_class => "grid_10",
-                  :path_entries_class => "grid_10", :library_clickable => true,
-                  :accessible_envs => accessible_envs,
-                  :url_products_proc => url_products_proc,
-                  :url_content_views_proc => url_content_views_proc)
-
           - if Katello.config.katello?
+            = form.field :environment, :label => envsys ? _("Environment:") : _("Choose Environment:") do
+              - if envsys
+                = @environment.name
+              - else
+                = environment_selector(:path_widget_class => "grid_10",
+                    :path_entries_class => "grid_10", :library_clickable => true,
+                    :accessible_envs => accessible_envs,
+                    :url_products_proc => url_products_proc,
+                    :url_content_views_proc => url_content_views_proc)
+
             = form.field :content_view_id, :label => _("Content View:") do
               = content_view_select(current_organization, @environment)
 

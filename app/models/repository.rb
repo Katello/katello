@@ -32,22 +32,24 @@ class Repository < ActiveRecord::Base
   FILE_TYPE = 'file'
   TYPES = [YUM_TYPE, FILE_TYPE]
 
-  belongs_to :environment_product, :inverse_of => :repositories
+  belongs_to :environment, :inverse_of => :repositories, :class_name => "KTEnvironment"
+  belongs_to :product, :inverse_of => :repositories
   belongs_to :gpg_key, :inverse_of => :repositories
   belongs_to :library_instance, :class_name=>"Repository"
-  has_and_belongs_to_many :changesets
   has_many :content_view_definition_repositories, :dependent => :destroy
   has_many :content_view_definitions, :through => :content_view_definition_repositories
   has_and_belongs_to_many :filters
   belongs_to :content_view_version, :inverse_of=>:repositories
 
-  validates :environment_product, :presence => true
+  validates :product_id, :presence => true
+  validates :environment_id, :presence => true
   validates :pulp_id, :presence => true, :uniqueness => true
   validates :name, :presence => true
   #validates :content_id, :presence => true #add back after fixing add_repo orchestration
   validates :label, :presence => true
   validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
   validates_with Validators::RepoDisablementValidator, :attributes => :enabled, :on => :update
+  validates_with Validators::KatelloNameFormatValidator, :attributes => :name
 
   validates_inclusion_of :content_type,
       :in => TYPES,
@@ -65,18 +67,6 @@ class Repository < ActiveRecord::Base
   scope :yum_type, where(:content_type=>YUM_TYPE)
   scope :file_type, where(:content_type=>FILE_TYPE)
 
-  def product
-    self.environment_product.product
-  end
-
-  def product_id
-    self.environment_product.product_id
-  end
-
-  def environment
-    self.environment_product.environment
-  end
-
   def organization
     self.environment.organization
   end
@@ -85,12 +75,12 @@ class Repository < ActiveRecord::Base
     self.content_view_version.content_view
   end
 
-  def self.in_environment(env)
-    joins(:environment_product).where(:environment_products => { :environment_id => env })
+  def self.in_environment(env_id)
+    where(environment_id: env_id)
   end
 
-  def self.in_product(product)
-    joins(:environment_product).where("environment_products.product_id" => product.id)
+  def self.in_product(prod)
+    where(product_id: prod.id)
   end
 
   def self.in_content_views(views)
@@ -102,8 +92,7 @@ class Repository < ActiveRecord::Base
   end
 
   def self.in_environments_products(env_ids, product_ids)
-    joins(:environment_product).where(:environment_products => { :environment_id => env_ids, :product_id=>product_ids})
-
+    in_environment(env_ids).in_product(product_ids)
   end
 
   def other_repos_with_same_product_and_content
@@ -116,10 +105,6 @@ class Repository < ActiveRecord::Base
     list = Repository.where(:content_id=>self.content_id).all
     list.delete(self)
     list
-  end
-
-  def environment_id
-    self.environment.id
   end
 
   def yum_gpg_key_url
@@ -191,28 +176,12 @@ class Repository < ActiveRecord::Base
     ret
   end
 
-  def self.clone_repo_path(repo, environment, content_view, for_cp = false)
-    org, env, content_path = repo.relative_path.split("/",3)
-
-    # If the repo is part of a composite definition, strip the
-    # component content view name from the content path. That
-    # name is not needed, since the composite view name will be
-    # included.
-    if content_view.content_view_definition.try(:composite?)
-      content_view_label, content_path = content_path.split("/", 2)
-    end
-
-    if for_cp
-      "/#{content_path}"
-    elsif (content_view.default? || !environment.library) &&
-        !content_view.content_view_definition.try(:composite?)
-      # if this repo is in a non-library environment and is not related to a
-      # composite content view definition, the content view has already been
-      # added to the path, so we do not need to add it again
-      "#{org}/#{environment.label}/#{content_path}"
-    else
-      "#{org}/#{environment.label}/#{content_view.label}/#{content_path}"
-    end
+  def self.clone_repo_path(repo, environment, content_view)
+    repo_lib = repo.library_instance ? repo.library_instance : repo
+    org, env, content_path = repo_lib.relative_path.split("/",3)
+    cve = ContentViewEnvironment.where(:environment_id => environment,
+                                      :content_view_id => content_view).first
+    "#{org}/#{cve.label}/#{content_path}"
   end
 
   def self.repo_id(product_label, repo_label, env_label, organization_label, view_label)
@@ -243,8 +212,8 @@ class Repository < ActiveRecord::Base
           content_view.repos(to_env).where(:library_instance_id=>library.id).count > 0
     end
 
-    key = EnvironmentProduct.find_or_create(to_env, self.product)
-    clone = Repository.new(:environment_product => key,
+    clone = Repository.new(:environment => to_env,
+                           :product => self.product,
                            :cp_label => self.cp_label,
                            :library_instance=>library,
                            :label=>self.label,

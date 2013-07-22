@@ -24,7 +24,7 @@ module Navigation
     def user_navigation
       [
         { :key => :environment,
-          :name =>_("Environments"),
+          :name =>_("Defaults"),
           :url => lambda{edit_environment_user_path(@user.id)},
           :if => lambda {@user},
           :options => {:class=>"panel_link"}

@@ -1,6 +1,10 @@
 = javascript do
   :plain
+    KT.current_environment_id = #{system.environment_id};
     KT.available_environments = $.parseJSON('#{escape_javascript(environments.to_json)}');
+    KT.current_content_view_id = #{system.content_view_id || -1};
+    KT.available_content_views = $.parseJSON('#{escape_javascript(system.environment.content_views.readable(current_organization).to_json)}');
+
     localize({
         "systemReleaseVerDefault": '#{escape_javascript(_("System Default"))}',
         "contentViewReset": 'The selected content view was unset. Please choose another one.'
@@ -132,19 +136,20 @@
             = label :location, :location, _("Location")
           .input
             %span.value{'name' => 'system[location]', :class=>("editable edit_textfield" if editable), 'data-url'=>system_path(system.id)} #{system[:location]}
-        .control-group
-          .label
-            = label :arch, :arch, _("Environment")
-          .input
-            %span.value#environment_path_selector{'name'=> 'system[environment_id]', :class=>("editable" if editable && Katello.config.katello?), 'data-url'=>system_path(system.id)}
-              #{system_environment_name system}
+
         - if Katello.config.katello?
-          .control_group
+          %h5 #{_("Content Available From")}
+          .control-group
+            .label
+              = label :arch, :arch, _("Environment")
+            .input
+              %span.value#environment_path_selector{'data-name'=> 'system[environment_id]'}
+          .control-group
             .label
               = label :content_view, :content_view, _("Content View")
             .input
-              %span.value{'name' => 'system[content_view_id]', :class=>("editable edit_select" if editable), 'data-url'=>system_path(system.id), 'data-options' => system_content_view_opts(system)}
-                = system.content_view
+              %span.value#content_view_selector{'data-name' => 'system[content_view_id]', 'data-options' => system_content_view_opts(system)}
+          .control-group#env_content_view_selector_buttons{'data-url'=>system_path(system.id)}
 
         %h5 #{_("System Events")}
         .control-group

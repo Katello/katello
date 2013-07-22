@@ -19,6 +19,8 @@ class Api::V1::SystemGroupsController < Api::V1::ApiController
   before_filter :find_organization, :only => [:index, :create, :copy]
   before_filter :authorize
 
+  after_filter :refresh_index, :only => [:create, :update]
+
   def rules
     any_readable         = lambda { @organization && SystemGroup.any_readable?(@organization) }
     read_perm            = lambda { @system_group.readable? }
@@ -270,6 +272,12 @@ class Api::V1::SystemGroupsController < Api::V1::ApiController
     system_ids = System.where(:uuid => ids).collect { |s| s.id }
     raise Errors::NotFound.new(_("Systems [%s] not found.") % ids.join(',')) if system_ids.blank?
     system_ids
+  end
+
+  # to make sure that the changes are reflected to elasticsearch immediately
+  # otherwise the index action doesn't have to know about the changes
+  def refresh_index
+    SystemGroup.index.refresh if Katello.config.use_elasticsearch
   end
 
 end

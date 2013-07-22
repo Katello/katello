@@ -29,7 +29,7 @@ describe SystemGroupsController, :katello => true do
 
     controller.stub(:search_validate).and_return(true)
     @org = Organization.create!(:name=>'test_org', :label=> 'test_org')
-    @environment = KTEnvironment.create!(:name=>"DEV", :label=> "DEV", :prior=>@org.library, :organization=>@org)
+    @environment = create_environment(:name=>"DEV", :label=> "DEV", :prior=>@org.library, :organization=>@org)
     @org = @org.reload
     setup_current_organization(@org)
     setup_system_creation
@@ -38,7 +38,7 @@ describe SystemGroupsController, :katello => true do
     Resources::Candlepin::Consumer.stub!(:destroy).and_return(true)
     Runcible::Extensions::Consumer.stub!(:delete).and_return(true)
 
-    @system = System.create!(:name=>"bar1", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""})
+    @system = create_system(:name=>"bar1", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""})
   end
 
 
@@ -350,10 +350,10 @@ describe SystemGroupsController, :katello => true do
       before(:each) do
         Resources::Candlepin::Consumer.stub!(:get).and_return({:uuid => uuid, :owner => {:key => uuid}})
 
-        @next_environment = KTEnvironment.create!(:name => "TEST", :label => "TEST", :prior => @environment,
+        @next_environment = create_environment(:name => "TEST", :label => "TEST", :prior => @environment,
                                                  :organization => @org)
-
-        @system2 = System.create!(:name=>"bar2", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""})
+        promote_content_view(@environment.content_views.first, @environment, @next_environment)
+        @system2 = create_system(:name=>"bar2", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""})
 
         @group.systems = [@system, @system2]
         @group.save
