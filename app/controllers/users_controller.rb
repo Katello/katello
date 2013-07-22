@@ -117,8 +117,16 @@ class UsersController < ApplicationController
   end
 
   def create
-    # Pulp quietly ignored unkonwn attributes; Headpin needs to remove
-    default_environment_id = params[:user].delete(:env_id)
+    if Katello.config.katello?
+      # Pulp quietly ignored unkonwn attributes; Headpin needs to remove
+      default_environment_id = params[:user].delete(:env_id)
+    else
+      default_environment_id = nil
+      if !params['org_id']['org_id'].blank?
+        @organization = Organization.find_by_id(params['org_id']['org_id'].try(:to_i))
+        default_environment_id = @organization.library.id
+      end
+    end
     @user = User.new(params[:user])
 
     if default_environment_id
@@ -226,7 +234,16 @@ class UsersController < ApplicationController
   end
 
   def update_environment
-    default_environment_id = params['env_id'].try(:[], 'env_id').try(:to_i)
+    if Katello.config.katello?
+      default_environment_id = params['env_id'].try(:[], 'env_id').try(:to_i)
+    else
+      default_environment_id = nil
+      if !params['org_id'].blank?
+        @organization = Organization.find_by_id(params['org_id'].try(:to_i))
+        default_environment_id = @organization.library.id
+      end
+    end
+
 
     if @user.default_environment.try(:id) == default_environment_id
       err_msg = N_("The system registration default you supplied was the same as the old system registration default.")
@@ -245,7 +262,7 @@ class UsersController < ApplicationController
     notify.success _("User System Registration Environment updated successfully.")
 
     if @organization && @environment
-      render :json => { :org => @organization.name, :env => @environment.name }
+      render :json => { :org => @organization.name, :env => @environment.name, :env_id => @environment.id }
     else
       render :json => { :org => _("No system registration default set for this user."), :env => _("No system registration default set for this user.") }
     end
