@@ -183,7 +183,7 @@
                     %tr
                       %td
                         - if ActivationKey.readable? key.organization
-                          = link_to key.name, activation_keys_path(:anchor => "panel=activation_key_#{key.id}")
+                          = link_to key.name, activation_keys_path(:anchor => "/!=&panel=activation_key_#{key.id}")
                         - else
                           = key[:name]
 
