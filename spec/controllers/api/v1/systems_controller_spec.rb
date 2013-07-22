@@ -498,6 +498,15 @@ describe Api::V1::SystemsController do
       response.should be_success
     end
 
+    it "handle memory as int" do
+      @sys.facts = {'memory.memtotal' => 20000}
+      @sys.stub(:guest => 'false', :guests => [])
+      Resources::Candlepin::Consumer.should_receive(:update).once.with(uuid, {'memory.memtotal' => 20000}, nil, nil, nil, nil, nil, anything, nil).and_return(true)
+      put :update, :id => uuid
+      response.body.should == @sys.to_json
+      response.should be_success
+    end
+
     it "should update capabilities", :katello => true  do
       promote_content_view(@sys.content_view, @environment_1, @environment_2)
       @sys.capabilities = {:name => 'cores'}

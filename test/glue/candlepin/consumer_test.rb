@@ -109,6 +109,8 @@ class GlueCandlepinConsumerTestSystem < GlueCandlepinConsumerTestBase
 
     @@sys.memory = 'abc'
     assert_equal 0, @@sys.memory
+    @@sys.facts['memory.memtotal'] = 3145728 # 3MB
+    assert_equal 3, @@sys.memory
   end
 
   def test_candlepin_system_export
