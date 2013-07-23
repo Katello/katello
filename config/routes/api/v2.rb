@@ -260,6 +260,7 @@ Src::Application.routes.draw do
 
       api_resources :sync_plans, :only => [:show, :update, :destroy]
       api_resources :tasks, :only => [:show]
+      api_resources :about, :only => [:index]
 
       match "/version" => "ping#version", :via => :get
       match "/status" => "ping#server_status", :via => :get

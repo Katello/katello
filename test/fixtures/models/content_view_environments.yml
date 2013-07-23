@@ -24,22 +24,25 @@ library_view_environment:
   label:          'published_library_view_environment'
   content_view:   library_view
   environment :   library
+  cp_id:          4
 
 library_dev_view_environment:
   name:           Published Library and dev view environment
   label:          'published_dev_view_environment'
   content_view:   library_dev_view
   environment:    dev
+  cp_id:          5
 
-# For use with glue/candlepin tests
-candlepin_library_cve:
-  name:           Library Content View Environment
-  label:          'candlepin_library_cve'
-  content_view:   candlepin_default_cv
-  environment:    library
+dev_componenent_view_environment:
+  name:          Component Published Dev view environment
+  label:          'dev/component_view_1'
+  content_view:   component_view_1
+  environment:    dev
+  cp_id:          8
 
 candlepin_library_dev_cve:
   name:           Library and Dev Content View Environment
   label:          'candlepin_library_dev_cve'
-  content_view:   candlepin_default_cv
-  environment:    dev
+  content_view:   candlepin_library_dev_cv
+  environment:    candlepin_dev
+  cp_id:        7

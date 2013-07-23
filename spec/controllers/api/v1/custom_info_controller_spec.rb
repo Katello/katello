@@ -34,9 +34,9 @@ describe Api::V1::CustomInfoController do
     Runcible::Extensions::Consumer.stub!(:create).and_return({ :id => uuid }) if Katello.config.katello?
 
     @org  = Organization.create!(:name => "test_org", :label => "test_org")
-    @env1 = KTEnvironment.create!(:name => "test_env", :label => "test_env", :prior => @org.library.id, :organization => @org)
+    @env1 = create_environment(:name => "test_env", :label => "test_env", :prior => @org.library.id, :organization => @org)
 
-    @system = System.create!(:name => "test_sys", :cp_type => "system", :environment => @env1, :facts => facts)
+    @system = create_system(:name => "test_sys", :cp_type => "system", :environment => @env1, :facts => facts)
 
     CustomInfo.skip_callback(:save, :after, :reindex_informable)
     CustomInfo.skip_callback(:destroy, :after, :reindex_informable)

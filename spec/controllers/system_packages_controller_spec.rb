@@ -38,13 +38,13 @@ describe SystemPackagesController, :katello => true do
 
     describe "viewing packages" do
       before (:each) do
-        100.times{|a| System.create!(:name=>"bar#{a}", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""})}
+        100.times{|a| create_system(:name=>"bar#{a}", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""})}
         @systems = System.select(:id).where(:environment_id => @environment.id).all.collect{|s| s.id}
       end
 
       describe 'and requesting individual data' do
         before (:each) do
-          @system = System.create!(:name=>"verbose", :environment => @environment, :cp_type=>"system", :facts=>{"Test1"=>1, "verbose_facts" => "Test facts"})
+          @system = create_system(:name=>"verbose", :environment => @environment, :cp_type=>"system", :facts=>{"Test1"=>1, "verbose_facts" => "Test facts"})
 
           Runcible::Extensions::Consumer.stub!(:retrieve_profile).and_return({"profile" => []})
 
@@ -61,7 +61,7 @@ describe SystemPackagesController, :katello => true do
 
     describe 'package actions' do
       before (:each) do
-        @system = System.create!(:name=>"bar", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""})
+        @system = create_system(:name=>"bar", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""})
         System.stub!(:find).and_return(@system)
 
         # mock task to be return when user invokes the 'action' on the model (e.g. install_packages)

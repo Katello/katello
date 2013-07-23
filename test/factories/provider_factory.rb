@@ -1,5 +1,7 @@
 FactoryGirl.define do
   factory :provider do
+    sequence(:name) { |n| "Adobe #{n}" }
+    provider_type "Custom"
     association   :organization
 
     trait :fedora_hosted do

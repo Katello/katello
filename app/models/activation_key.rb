@@ -31,6 +31,7 @@ class ActivationKey < ActiveRecord::Base
 
   after_find :validate_pools
 
+  before_validation :set_default_content_view, :unless => :persisted?
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name
   validates :name, :presence => true
   validates_uniqueness_of :name, :scope => :organization_id
@@ -38,6 +39,7 @@ class ActivationKey < ActiveRecord::Base
   validates :environment, :presence => true
   validate :environment_exists
   validate :environment_key_conflict
+  validates :content_view, :presence => true, :allow_blank => false
   validates_each :usage_limit do |record, attr, value|
     if not value.nil? and (value < -1 or value == 0 or (value != -1 and value < record.usage_count))
       # we don't let users to set usage limit lower than current usage
@@ -159,6 +161,10 @@ class ActivationKey < ActiveRecord::Base
   end
 
   private
+
+  def set_default_content_view
+    self.content_view = self.environment.try(:default_content_view) unless self.content_view
+  end
 
   # Fetch each of the pools from candlepin, removing any that no longer
   # exist (eg. from loss of a Virtual Guest pool)

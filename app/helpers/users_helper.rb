@@ -17,7 +17,7 @@ module UsersHelper
     user.password.gsub(/./, "&#9679;")
   end
 
-  def organization_select(org_id=nil, optional=true)
+  def organization_select(org_id=nil, optional=true, no_org_choice=nil)
     if current_user.id == @user.id
       orgs = current_user.allowed_organizations.reject do |org|
         !org.any_systems_registerable?
@@ -29,7 +29,8 @@ module UsersHelper
     if optional
       selected = org_id
       prompt = nil
-      choices.unshift [_('Select Organization'), nil]
+      no_org_choice ||= _('Select Organization')
+      choices.unshift [no_org_choice, nil]
     else
       selected = org_id || current_organization.id
       prompt = _('Select Organization')

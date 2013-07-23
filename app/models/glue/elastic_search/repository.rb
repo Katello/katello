@@ -17,7 +17,7 @@ module Glue::ElasticSearch::Repository
 
     base.class_eval do
       index_options :extended_json=>:extended_index_attrs,
-                    :json=>{:except=>[:pulp_repo_facts, :feed_cert, :environment_product_id]}
+                    :json=>{:except=>[:pulp_repo_facts, :feed_cert]}
 
       mapping do
         indexes :name, :type => 'string', :analyzer => :kt_name_analyzer

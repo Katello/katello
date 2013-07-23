@@ -25,8 +25,10 @@ describe Api::V1::SystemGroupsController, :katello => true do
     disable_org_orchestration
     disable_consumer_group_orchestration
 
+    SystemGroup.stub(:index).and_return(stub.as_null_object)
+
     @org         = Organization.create!(:name => 'test_org', :label => 'test_org')
-    @environment = KTEnvironment.create!(:name => 'test_1', :label => 'test_1', :prior => @org.library.id, :organization => @org)
+    @environment = create_environment(:name => 'test_1', :label => 'test_1', :prior => @org.library.id, :organization => @org)
 
     setup_system_creation
 
@@ -35,7 +37,7 @@ describe Api::V1::SystemGroupsController, :katello => true do
     Resources::Candlepin::Consumer.stub!(:destroy).and_return(true)
     Runcible::Extensions::Consumer.stub!(:delete).and_return(true)
 
-    @system = System.create!(:name => "bar1", :environment => @environment, :cp_type => "system", :facts => { "Test" => "" })
+    @system = create_system(:name => "bar1", :environment => @environment, :cp_type => "system", :facts => { "Test" => "" })
 
     @request.env["HTTP_ACCEPT"] = "application/json"
     login_user_api
@@ -114,6 +116,11 @@ describe Api::V1::SystemGroupsController, :katello => true do
         user_without_permissions
       end
       it_should_behave_like "protected action"
+
+      it "should refresh ES index" do
+        SystemGroup.index.should_receive(:refresh)
+        post :create, :organization_id => @org.label, :system_group => { :name => "foo", :description => "describe", :max_systems => 5 }
+      end
 
       it "should create a group correctly" do
         post :create, :organization_id => @org.label, :system_group => { :name => "foo", :description => "describe", :max_systems => 5 }
@@ -215,6 +222,11 @@ describe Api::V1::SystemGroupsController, :katello => true do
         user_without_permissions
       end
       it_should_behave_like "protected action"
+
+      it "should refresh ES index" do
+        SystemGroup.index.should_receive(:refresh)
+        put :update, :organization_id => @org.label, :id => @group.id, :system_group => { :name => "rocky" }
+      end
 
       it "should allow name to be changed" do
         old_name = @group.name

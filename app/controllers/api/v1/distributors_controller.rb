@@ -62,6 +62,7 @@ class Api::V1::DistributorsController < Api::V1::ApiController
       param :serviceLevel, String, :allow_nil => true, :desc => "A service level for auto-healing process, e.g. SELF-SUPPORT"
       param :releaseVer, String, :desc => "Release of the os. The $releasever variable in repo url will be replaced with this value"
       param :location, String, :desc => "Physical of the distributor"
+      param :capabilities, Array, :desc => "List of subscription capabilities"
     end
   end
 
@@ -84,9 +85,13 @@ class Api::V1::DistributorsController < Api::V1::ApiController
 
   api :PUT, "/distributors/:id", "Update distributor information"
   param_group :distributors
+  param :capabilities, Array, :desc => "For backwards capability with Red Hat hosted candlepin - List of subscription capabilities"
   def update
     distributor_params = params[:distributor]
-    @distributor.update_attributes!(distributor_params.slice(:name, :description, :location, :facts, :guestIds, :installedProducts, :releaseVer, :serviceLevel, :environment_id))
+    distributor_params = params.slice(:capabilities) if distributor_params.nil?
+    distributor_params = [] if distributor_params.nil?
+
+    @distributor.update_attributes!(distributor_params.slice(:name, :description, :location, :facts, :guestIds, :installedProducts, :releaseVer, :serviceLevel, :environment_id, :capabilities))
     respond
   end
 
