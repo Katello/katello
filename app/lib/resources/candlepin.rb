@@ -112,7 +112,7 @@ module Resources
         end
 
         def update(uuid, facts, guest_ids = nil, installed_products = nil, autoheal = nil, release_ver = nil,
-                   service_level=nil, environment_id=nil, capabilities=nil)
+                   service_level=nil, environment_id=nil, capabilities=nil, last_checkin = nil)
           attrs = {:facts => facts,
                    :guestIds => guest_ids,
                    :releaseVer => release_ver,
@@ -120,7 +120,8 @@ module Resources
                    :autoheal => autoheal,
                    :serviceLevel => service_level,
                    :environment => environment_id.nil? ? nil : {:id => environment_id},
-                   :capabilities => capabilities
+                   :capabilities => capabilities,
+                   :lastCheckin => last_checkin
                   }.delete_if { |k,v| v.nil? }
           unless attrs.empty?
             response = self.put(path(uuid), attrs.to_json, self.default_headers).body

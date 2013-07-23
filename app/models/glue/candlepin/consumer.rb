@@ -114,7 +114,7 @@ module Glue::Candlepin::Consumer
     def update_candlepin_consumer
       Rails.logger.debug "Updating consumer in candlepin: #{name}"
       Resources::Candlepin::Consumer.update(self.uuid, @facts, @guestIds, @installedProducts, @autoheal,
-                                            @releaseVer, self.serviceLevel, self.cp_environment_id, @capabilities)
+                                            @releaseVer, self.serviceLevel, self.cp_environment_id, @capabilities, @lastCheckin)
     rescue => e
       Rails.logger.error "Failed to update candlepin consumer #{name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
