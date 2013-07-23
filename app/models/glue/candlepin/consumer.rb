@@ -353,7 +353,7 @@ module Glue::Candlepin::Consumer
       else
         mem = '0'
       end
-      memory_in_gigabytes(mem)
+      memory_in_gigabytes(mem.to_s)
     end
 
     def memory=(mem)
