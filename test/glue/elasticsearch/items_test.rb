@@ -43,6 +43,7 @@ class GlueElasticSearchTest < MiniTest::Rails::ActiveSupport::TestCase
 
   def test_load_records
     @results.expect(:length, 0)
+    @results.expect(:order, [], [[]])
 
     @FakeClass.stub(:where, @results) do
       @items.results = []
