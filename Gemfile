@@ -37,7 +37,6 @@ gem 'daemons', '>= 1.1.4'
 gem 'uuidtools'
 
 # Stuff for view/display/frontend
-gem 'bastion', :path => 'engines/bastion'
 gem 'haml', '~> 3.1.2'
 gem 'haml-rails', "= 0.3.4"
 gem 'sass-rails'
