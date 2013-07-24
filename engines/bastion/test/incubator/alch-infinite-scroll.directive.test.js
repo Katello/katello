@@ -84,31 +84,32 @@ describe('Directive: alchInfiniteScroll', function () {
 
     describe("loads more results based on the height of the elements", function() {
         beforeEach(function() {
-            element.append('<p style="height: 10px;"></p>');
+            element.empty();
         });
 
-        it("does not load more results if the scroll height is less than element height.", function() {
-            spyOn($scope.scrollHandler, "doIt").andCallThrough();
+        it("loads more results if the scroll height is less than element height.", function() {
+            spyOn($scope.scrollHandler, "doIt");
             element.height("9px");
             $compile(element)($scope);
+            $scope.$digest();
+            // Two because once for initial load and once for the scroll height being less than the element height
+            expect($scope.scrollHandler.doIt.callCount).toBe(2);
+        });
+
+        it("does not load more results if the scroll height is equal to the element height.", function() {
+            element.height("10px");
+            $compile(element)($scope);
+            spyOn($scope.scrollHandler, "doIt");
             $scope.$digest();
             expect($scope.scrollHandler.doIt.callCount).toBe(0);
         });
 
-        it("loads more results if the scroll height is equal to the element height.", function() {
-            spyOn($scope.scrollHandler, "doIt").andCallThrough();
-            element.height("10px");
-            $compile(element)($scope);
-            $scope.$digest();
-            expect($scope.scrollHandler.doIt.callCount).toBe(1);
-        });
-
-        it("loads more results if the scroll height is equal to the element height.", function() {
-            spyOn($scope.scrollHandler, "doIt").andCallThrough();
+        it("does not load more results if the scroll height is greater than the element height.", function() {
             element.height("11px");
             $compile(element)($scope);
+            spyOn($scope.scrollHandler, "doIt");
             $scope.$digest();
-            expect($scope.scrollHandler.doIt.callCount).toBe(1);
+            expect($scope.scrollHandler.doIt.callCount).toBe(0);
         });
     });
 });
