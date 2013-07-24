@@ -467,15 +467,114 @@ KT.systems_page = (function() {
         select_input.next('span.highlight_input_text').remove();
     };
 
-  return {
-      env_change : env_change,
-      create_system : create_system,
-      registerActions : registerActions,
-      update_content_views: update_content_views,
-      highlight_content_views: highlight_content_views,
-      system_info_setup: system_info_setup,
-      system_group_setup: system_group_setup
-  };
+    return {
+        env_change : env_change,
+        create_system : create_system,
+        registerActions : registerActions,
+        update_content_views: update_content_views,
+        highlight_content_views: highlight_content_views,
+        system_info_setup: system_info_setup,
+        system_group_setup: system_group_setup
+    };
+})();
+
+KT.system_auto_attaching = (function() {
+
+    var task_status_updater;
+
+    $(document).ready(function() {
+        KT.system_auto_attaching.setup();
+        KT.system_auto_attaching.async_panel_refresh();
+    });
+
+    var async_panel_refresh = function() {
+        if (auto_attach_all_button().length > 0) {
+            if (task_status_updater !== undefined) {
+                task_status_updater.stop();
+            }
+            var state = auto_attach_all_button().data("taskstate");
+            if (state === "waiting" || state === "running") {
+                start_updater(auto_attach_all_button().data("taskuuid"));
+            }
+        }
+    };
+
+    var start_updater = function(task_uuid) {
+        allow_auto_attach_all_systems(false);
+        auto_attach_all_button().addClass("processing");
+        var timeout = 6000;
+
+        if (task_status_updater !== undefined) {
+            task_status_updater.stop();
+        }
+
+        task_status_updater = $.PeriodicalUpdater(
+            KT.routes.api_task_path(task_uuid),
+            {
+                method: 'get',
+                type: 'json',
+                cache: false,
+                global: false,
+                minTimeout: timeout,
+                maxTimeout: timeout
+            },
+            update_status
+        );
+    };
+
+    var update_status = function(data, success, xhr, handle) {
+        if (data !== "") {
+            var state = data['state'];
+            if (state !== "waiting" && state !== "running") {
+                auto_attach_all_button().removeClass("processing");
+                allow_auto_attach_all_systems(true);
+                task_status_updater.stop();
+                if (data['result'].length > 0) {
+                    notices.displayNotice("success", window.JSON.stringify({"notices": [i18n.auto_attach_all_systems_success] }));
+                }
+            }
+        }
+    };
+
+    var setup = function() {
+        auto_attach_all_button().live("click", function() {
+            auto_attach_all_systems();
+        });
+    };
+
+    var auto_attach_all_systems = function() {
+        var button = auto_attach_all_button();
+        $.ajax({
+            url: button.data("url"),
+            type: button.data("method"),
+            data: '',
+            success: function(data) {
+                start_updater(data['uuid']);
+            },
+            error: function(data) {
+                notices.displayNotice("error", window.JSON.stringify({"notices": [i18n.auto_attach_all_systems_failure] }));
+            }
+        });
+    };
+
+    var allow_auto_attach_all_systems = function(allow) {
+        if (allow === true) {
+            auto_attach_all_button().removeAttr('disabled');
+        } else {
+            auto_attach_all_button().attr('disabled', 'true');
+        }
+    };
+
+    var auto_attach_all_button = function() {
+        return $(".panel_action #auto_attach_all_button");
+    };
+
+    return {
+        setup : setup,
+        auto_attach_all_systems: auto_attach_all_systems,
+        auto_attach_all_button: auto_attach_all_button,
+        async_panel_refresh: async_panel_refresh
+    };
 })();
 
 KT.subs = (function() {

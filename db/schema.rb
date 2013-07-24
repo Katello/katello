@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130622171955) do
+ActiveRecord::Schema.define(:version => 20130702164147) do
 
   create_table "activation_keys", :force => true do |t|
     t.string   "name"
@@ -353,11 +353,12 @@ ActiveRecord::Schema.define(:version => 20130622171955) do
     t.string   "name"
     t.text     "description"
     t.string   "label"
-    t.datetime "created_at",         :null => false
-    t.datetime "updated_at",         :null => false
+    t.datetime "created_at",                            :null => false
+    t.datetime "updated_at",                            :null => false
     t.integer  "deletion_task_id"
     t.text     "default_info"
     t.integer  "apply_info_task_id"
+    t.integer  "owner_auto_attach_all_systems_task_id"
   end
 
   add_index "organizations", ["deletion_task_id"], :name => "index_organizations_on_task_id"
