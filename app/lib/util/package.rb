@@ -153,12 +153,29 @@ module Util
       end
     end
 
-    def self.version_filter(minimum=nil, maximum=nil)
+    def self.version_filter(minimum, maximum)
       range = Hash.new
-      range[:from] = sortable_version(minimum) if minimum.present?
-      range[:to] = sortable_version(maximum) if maximum.present?
+      range[:from] = convert_epoch_version(minimum) if minimum.present?
+      range[:to] = convert_epoch_version(maximum) if maximum.present?
 
-      range.empty? ? nil : [:range, {sortable_version: range}]
+      if minimum =~ /:/ || maximum =~ /:/
+        [:range, {sortable_epoch_version: range}]
+      else
+        [:range, {sortable_version: range}]
+      end
+    end
+
+    def self.parse_epoch_version(eversion)
+      if eversion =~ /:/
+        eversion.match(/\A(\d+):(.*)\z/) ? eversion.match(/\A(\d+):(.*)\z/)[1,2] : [0, eversion]
+      else
+        [nil, eversion]
+      end
+    end
+
+    def self.convert_epoch_version(eversion)
+      epoch, version = parse_epoch_version(eversion)
+      sortable_epoch_version(version, epoch)
     end
 
     # Converts a package version to a sortable string
@@ -176,6 +193,14 @@ module Util
         chunk =~ /\d+/ ? "#{"%02d" % chunk.length}-#{chunk}" : "$#{chunk}"
       end
       pieces.join(".")
+    end
+
+    def self.sortable_epoch_version(version, epoch)
+      if epoch
+        "#{"%05d" % epoch.to_i}-#{sortable_version(version)}"
+      else
+        sortable_version(version)
+      end
     end
   end
 end

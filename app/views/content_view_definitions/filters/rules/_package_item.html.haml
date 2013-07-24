@@ -27,6 +27,8 @@
       = text_field_tag("units[version_value2]", value2, :size => 4,
         :class => 'range input' + (['version_range'].include?(version_selected) ? '' : ' hidden'))
 
+      %span.rule-search-tipsy.details_icon-grey{title: _('The format for package versions is E:X.X.X where E represents epoch and X.X.X represents version; each part is optional (e.g. 1:1.2.3, 2.2.2, 2:0.9, 1.2.3beta)')}
+
       = link_to(_("Save"),
         update_parameter_content_view_definition_filter_rule_path(rule.filter.content_view_definition.id,
         rule.filter.id, rule.id), :class => 'save_version hidden')
