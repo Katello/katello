@@ -24,7 +24,7 @@ class PuppetModuleRule < FilterRule
   # @param repo [Repository] a repository containing packages to filter
   # @return [Array] an array of hashes with MongoDB conditions
   def generate_clauses(repo)
-    parameters[:units].map do |unit|
+    ids = parameters[:units].map do |unit|
       next if unit[:name].blank?
 
       filters = []
@@ -32,12 +32,12 @@ class PuppetModuleRule < FilterRule
       filters << author_filter(unit)
       filters.compact!
 
-      results = PuppetModule.search(unit[:name], :page_size => repo.puppet_module_count, :repoids => [repo.pulp_id],
+      PuppetModule.search(unit[:name], :page_size => repo.puppet_module_count, :repoids => [repo.pulp_id],
                                     :filters => filters).map(&:_id).compact
-      next if results.empty?
-
-      {'_id' => {"$in" => results}}
     end
+    ids.flatten!
+    ids.compact!
+    {'unit_id' => {"$in" => ids}} unless ids.empty?
   end
 
   protected
