@@ -31,7 +31,6 @@ Src::Application.routes.draw do
           end
         end
 
-
         resources :system_groups, :except => [:new, :edit] do
           member do
             get :systems
@@ -85,6 +84,8 @@ Src::Application.routes.draw do
         match '/default_info/:informable_type' => 'organization_default_info#create', :via => :post, :as => :create_default_info
         match '/default_info/:informable_type/:keyname' => 'organization_default_info#destroy', :via => :delete, :as => :destroy_default_info
         match '/default_info/:informable_type/apply' => 'organization_default_info#apply_to_all', :via => :post, :as => :apply_default_info
+
+        match '/auto_attach' => 'organizations#auto_attach_all_systems', :via => :post, :as => :auto_attach_all_systems
 
         resources :content_views, :only => [:index, :show, :destroy]
         resources :content_view_definitions do

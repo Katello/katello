@@ -13,8 +13,10 @@
       "confirm_errata_action" : function(x){ return '#{escape_javascript(_("Are you sure you want to install the errata entered on the %X selected system(s)?"))}'.replace("%X", x); },
 
       "confirm_system_group_add_action" : function(x){ return '#{escape_javascript(_("Are you sure you want to add the %X selected system(s) to the system group(s) entered?"))}'.replace("%X", x); },
-      "confirm_system_group_remove_action" : function(x){ return '#{escape_javascript(_("Are you sure you want to remove the %X selected system(s) from the system group(s) entered?"))}'.replace("%X", x); }
-      });
+      "confirm_system_group_remove_action" : function(x){ return '#{escape_javascript(_("Are you sure you want to remove the %X selected system(s) from the system group(s) entered?"))}'.replace("%X", x); },
+      "auto_attach_all_systems_success" : '#{escape_javascript(_("Successfully completed 'auto-attach all systems' action"))}',
+      "auto_attach_all_systems_failure" : '#{escape_javascript(_("An error occured during the 'auto-attach all systems' action"))}'
+    });
 
 %h4
   #{_('List Actions')}:
@@ -85,6 +87,9 @@
         %input.cancel.button{:type=>"button", :value=>_('No')}
         %input.trigger.button{:type=>"button", :value=>_('Yes') }
       %br.clearfloat
+
+.panel_action{'data-id' => 'auto_attach_all_systems_action'}
+  %input.btn#auto_attach_all_button{ :value => _("Auto-attach available subscriptions to all systems"), :type => "button", :data => { :url => api_organization_auto_attach_all_systems_path(current_organization.label), :method => "post", :taskstate => @auto_attach_task.try(:state), :taskuuid => @auto_attach_task.try(:uuid) } }
 
 .panel_action{'data-id'=>"select_none"}
   #select-result
