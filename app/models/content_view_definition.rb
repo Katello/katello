@@ -80,27 +80,10 @@ class ContentViewDefinition < ContentViewDefinitionBase
   end
 
   def generate_repos(view, notify = false)
-    # Publish algorithm
-    #
-    # Copy all content (e.g. rpms, errata, pkg groups, distros, puppet modules...etc) over
-    # Start Filtering errata in the copied
-    # Make sure packages belonging to the errata are included/excluded
-    # Start Filtering package groups in the copied repo
-    # Start Filtering packages in the copied repo
-    # Remove all empty errata
-    # Remove all empty package groups
-    # Publish metadata
-    async_tasks = []
-    cloned_repos = []
-
     repos.each do |repo|
-      clone = repo.create_clone(self.organization.library, view)
-      async_tasks << repo.clone_contents(clone)
-      cloned_repos << clone
+      cloned = repo.create_clone(self.organization.library, view)
+      associate_contents(cloned)
     end
-    PulpTaskStatus::wait_for_tasks(async_tasks.flatten(1))
-
-    unassociate_contents(cloned_repos)
     view.update_cp_content(view.organization.library)
     PulpTaskStatus::wait_for_tasks(view.versions.first.generate_metadata)
     Glue::Event.trigger(Katello::Actions::ContentViewPublish, view)
@@ -128,36 +111,109 @@ class ContentViewDefinition < ContentViewDefinitionBase
     raise e
   end
 
-  # Runs through the filtering process
-  # and unassociates contents dictated
-  # by the filters and filter rules
-  def unassociate_contents(repos)
-    # Start Filtering errata in the copied repo
-    # Make sure packages belonging to the errata are included/excluded
-    # Start Filtering package groups in the copied repo
-    # Start Filtering packages in the copied repo
-    repos.each do |repo|
-      FilterRule::CONTENT_TYPES.each do |content_type|
-        filter_clauses = unassociation_clauses(repo.library_instance, content_type)
-        if filter_clauses
-          pulp_task = repo.unassociate_by_filter(content_type, filter_clauses)
-          PulpTaskStatus::wait_for_tasks [pulp_task]
-          if content_type == FilterRule::ERRATA
-            pkg_clause = errata_package_unassociate_clauses(filter_clauses)
-            unless pkg_clause.empty?
-              pulp_task = repo.unassociate_by_filter(FilterRule::PACKAGE, pkg_clause)
-              PulpTaskStatus::wait_for_tasks [pulp_task]
-            end
-          end
-        end
+  def associate_contents(cloned)
+    # Intended Behaviour
+    # Includes are cumulative -> If you say include errata and include packages, its the sum
+    # Excludes are processed after includes
+    # Excludes dont handle dependency. So if you say Include errata with pkgs P1, P2
+    #         and exclude P1  and P1 has a dependency P1d1, what gets copied over is P1d1, P2
+
+    # Publish algorithm
+    # Copy filtered puppet module over (with no deps)
+    # Copy filtered errata over (with no deps)
+    # Copy filtered pkg groups over (with no deps)
+    # From the cloned repo get a list of pkgs belonging to those groups and errataa
+    # Copy filtered pkgs + rpms from the previous step With the deps
+    # Remove "excluded" rpms from the cloned
+    # Remove "excluded" errata rpms from the cloned
+    # Remove "excluded" package group rpms from the cloned
+    # Remove empty errata and package groups
+    # Index the cloned repo for search
+    repo = cloned.library_instance_id ? cloned.library_instance : cloned
+    async_tasks = []
+    applicable_filters = filters.applicable(repo)
+    errata_added = false
+    package_groups_added = false
+    [FilterRule::PUPPET_MODULE, FilterRule::ERRATA, FilterRule::PACKAGE_GROUP].each do |content_type|
+      filter_clauses = association_clauses(repo, content_type)
+      non_content_type_rule_count = case content_type
+                                      when FilterRule::PACKAGE_GROUP
+                                        FilterRule.non_package_group.whitelist.
+                                          where(:filter_id => applicable_filters).count
+                                      when FilterRule::ERRATA
+                                        FilterRule.non_errata.whitelist.
+                                          where(:filter_id => applicable_filters).count
+                                      else
+                                        0
+                                      end
+
+      if (filter_clauses && filter_clauses.size > 0) || non_content_type_rule_count == 0
+        pulp_task = repo.clone_contents_by_filter(cloned, content_type, filter_clauses)
+        async_tasks << pulp_task
+        errata_added = true if content_type == FilterRule::ERRATA
+        package_groups_added = true if content_type == FilterRule::PACKAGE_GROUP
       end
     end
+    PulpTaskStatus::wait_for_tasks(async_tasks) if async_tasks.size > 0
+    async_tasks = []
 
-    repos.each do |repo|
-      repo.purge_empty_groups_errata
-      # update search indices for package and errata
-      repo.index_content if Katello.config.use_elasticsearch
+    package_inclusion_rules = PackageRule.whitelist.where(:filter_id => applicable_filters)
+    package_exclusion_rules = PackageRule.blacklist.where(:filter_id => applicable_filters)
+
+    package_inclusion_clauses = []
+    package_inclusion_clauses << errata_package_clauses(cloned) if errata_added
+    package_inclusion_clauses << group_package_clauses(cloned) if package_groups_added
+
+    if package_inclusion_rules.count > 0
+      package_inclusion_clauses << generate_clauses(repo, package_inclusion_rules, true)
+    elsif FilterRule.non_package.whitelist.where(:filter_id => applicable_filters).count == 0
+      package_inclusion_clauses << {"filename" => {"$exists" => true}}
     end
+    package_inclusion_clauses =  package_inclusion_clauses.select {|cls| cls && (cls.size > 0)}
+
+    package_clauses = []
+    if package_inclusion_clauses.size > 0
+      package_inclusion_clauses = package_inclusion_clauses.size > 1 ? {"$or" => package_inclusion_clauses} :
+                                                                      package_inclusion_clauses.first
+      package_clauses << package_inclusion_clauses
+    end
+
+    package_clauses << generate_clauses(repo, package_exclusion_rules, false) if package_exclusion_rules.count > 0
+
+    package_clauses = package_clauses.size > 1 ? {"$and" => package_clauses} : package_clauses.first
+
+    pulp_task =  repo.clone_contents_by_filter(cloned, FilterRule::PACKAGE,
+                                                 package_clauses , :recursive => true)
+    PulpTaskStatus::wait_for_tasks [pulp_task]
+
+    # we now need to exclude what the user wants to exclude
+    package_blacklist_clauses = []
+
+    pg_black_list_rules = PackageGroupRule.blacklist.where(:filter_id => applicable_filters)
+    if pg_black_list_rules.size > 0
+      package_blacklist_clauses  << group_package_clauses_by_filter(
+                             generate_clauses(repo, pg_black_list_rules, true))
+    end
+
+
+    errata_black_list_rules = ErratumRule.blacklist.where(:filter_id => applicable_filters)
+    if errata_black_list_rules.size > 0
+      package_blacklist_clauses  << errata_package_clauses_by_filter(
+                        generate_clauses(repo, errata_black_list_rules, true))
+    end
+
+    package_blacklist_clauses  << generate_clauses(repo, package_exclusion_rules, true) if package_exclusion_rules.size > 0
+
+    if package_blacklist_clauses.size > 0
+      package_blacklist_clauses = package_blacklist_clauses.size > 1 ? {"$or" => package_blacklist_clauses} :
+                                                                      package_blacklist_clauses.first
+      pulp_task = cloned.unassociate_by_filter(FilterRule::PACKAGE, package_blacklist_clauses)
+      PulpTaskStatus::wait_for_tasks [pulp_task]
+    end
+
+    cloned.purge_empty_groups_errata
+    # update search indices for package and errata
+    cloned.index_content if Katello.config.use_elasticsearch
   end
 
   def has_promoted_views?
@@ -220,7 +276,16 @@ class ContentViewDefinition < ContentViewDefinitionBase
 
   protected
 
-  def errata_package_unassociate_clauses(errata_clauses)
+  def errata_package_clauses(repo)
+    ret = {}
+    pkg_filenames = repo.errata.collect(&:package_filenames).flatten
+    ret = {'filename' => {"$in" => pkg_filenames}} unless pkg_filenames.empty?
+    ret
+  end
+
+
+
+  def errata_package_clauses_by_filter(errata_clauses)
     ret = {}
     unless errata_clauses.empty?
       pkg_filenames = Errata.list_by_filter_clauses(errata_clauses).collect(&:package_filenames).flatten
@@ -229,7 +294,26 @@ class ContentViewDefinition < ContentViewDefinitionBase
     ret
   end
 
-  def unassociation_clauses(repo, content_type)
+
+  def group_package_clauses(repo)
+    ret = {}
+    pkg_names = repo.package_groups.collect(&:package_names).flatten
+    ret = {'name' => {"$in" => pkg_names}} unless pkg_names.empty?
+    ret
+  end
+
+
+  def group_package_clauses_by_filter(group_clauses)
+    ret = {}
+    unless group_clauses.empty?
+      pkg_names = PackageGroup.list_by_filter_clauses(group_clauses).collect(&:package_names).flatten
+      ret = {'name' => {"$in" => pkg_names}} unless pkg_names.empty?
+    end
+    ret
+  end
+
+
+  def association_clauses(repo, content_type)
     # find applicable filters
     # split filter rules by content type, since each content type has its own copy call
     # depending on include or exclude filters combine or remove
@@ -239,20 +323,20 @@ class ContentViewDefinition < ContentViewDefinitionBase
     inclusion_rules = applicable_rules.where(:inclusion => true)
     exclusion_rules = applicable_rules.where(:inclusion => false)
 
-    #   If there is no include/exclude filters  -  Everything is included. - so do not delete anything
+    #   If there is no include/exclude filters  -  Everything is included. - so no filters
     return if inclusion_rules.count == 0 && exclusion_rules.count == 0
 
 
     #  If there are only exclude filters (aka blacklist filters),
-    #  then unassociate them from the repo
+    #  then
     #  If there are only include filters (aka whitelist) then only the packages/errata included will get included.
     #    Everything else is thus excluded.
-    #  If there are include and exclude filters, the exclude filters then the include filters, get processed first,
+    #  If there are include and exclude filters, the include filters, get processed first,
     #     then the exclude filter excludes content from the set included by the include filters.
     clauses = [generate_clauses(repo, inclusion_rules, true)] + [generate_clauses(repo, exclusion_rules, false)]
     clauses = clauses.compact
     if clauses.size > 1
-      return {'$or' => clauses}
+      return {'$and' => clauses}
     elsif clauses.size == 1
       return clauses.first
     end
@@ -282,9 +366,8 @@ class ContentViewDefinition < ContentViewDefinitionBase
   end
 
 
-  def generate_clauses(repo, rules, inclusion = true)
-    join_clause = "$nor"
-    join_clause = "$or" unless inclusion
+  def generate_clauses(repo, rules, join_by_or)
+    join_clause = join_by_or ? "$or" : "$nor"
 
     if rules.count > 0
       rule_items = rules.collect do |rule|

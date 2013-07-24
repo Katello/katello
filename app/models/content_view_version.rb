@@ -138,17 +138,17 @@ class ContentViewVersion < ActiveRecord::Base
       if library_clone.nil?
         # this repo doesn't currently exist in the library
         clone = repo.create_clone(self.content_view.organization.library, self.content_view)
-        async_tasks << repo.clone_contents(clone)
         repos_to_filter << clone
       else
         # this repo already exists in the library, so update it
         library_clone = Repository.find(library_clone) # reload readonly obj
-        async_tasks << repo.clone_contents(library_clone)
         repos_to_filter << library_clone
       end
     end
     if has_definition?
-      self.content_view.content_view_definition.unassociate_contents(repos_to_filter)
+      repos_to_filter.each do |repo|
+        self.content_view.content_view_definition.associate_contents(repo)
+      end
     end
 
     async_tasks.flatten(1)

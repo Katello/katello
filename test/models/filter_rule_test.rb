@@ -170,13 +170,13 @@ class FilterRuleTest < MiniTest::Rails::ActiveSupport::TestCase
 
   def exec_test_includes(content_type, units, expected_fragments)
     actual = get_filter_clause(true, content_type, units)
-    expected = {"$nor"=> expected_fragments}
+    expected = {"$or"=> expected_fragments}
     assert_equal expected, actual
   end
 
   def exec_test_excludes(content_type, units, expected_fragments)
     actual = get_filter_clause(false, content_type, units)
-    expected = {"$or"=> expected_fragments}
+    expected = {"$nor"=> expected_fragments}
     assert_equal expected, actual
   end
 
@@ -197,6 +197,6 @@ class FilterRuleTest < MiniTest::Rails::ActiveSupport::TestCase
     cvd =  @filter.content_view_definition
     cvd.repositories << @repo
     @filter.repositories << @repo
-    cvd.send(:unassociation_clauses, @repo, @filter_rule.content_type)
+    cvd.send(:association_clauses, @repo, @filter_rule.content_type)
    end
 end
