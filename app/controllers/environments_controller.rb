@@ -34,7 +34,8 @@ class EnvironmentsController < ApplicationController
       :update => manage_rule,
       :destroy => manage_rule,
       :products => view_akey_rule,
-      :content_views => view_akey_rule
+      :content_views => view_akey_rule,
+      :registerable_paths => lambda{ true }
     }
   end
 
@@ -145,6 +146,15 @@ class EnvironmentsController < ApplicationController
     end
     respond_to do |format|
       format.json {render :json => content_views}
+    end
+  end
+
+  # GET /environments/registerable_paths
+  def registerable_paths
+    paths = environment_paths(library_path_element("systems_readable?"),
+                              environment_path_element("systems_readable?"))
+    respond_to do |format|
+      format.json { render :json => paths }
     end
   end
 

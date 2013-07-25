@@ -15,4 +15,22 @@ class Api::V2::SystemsController < Api::V1::SystemsController
 
   include Api::V2::Rendering
 
+  def_param_group :system do
+    param :facts, Hash, :desc => "Key-value hash of system-specific facts", :action_aware => true
+    param :installedProducts, Array, :desc => "List of products installed on the system", :action_aware => true
+    param :name, String, :desc => "Name of the system", :required => true, :action_aware => true
+    param :type, String, :desc => "Type of the system, it should always be 'system'", :required => true, :action_aware => true
+    param :serviceLevel, String, :allow_nil => true, :desc => "A service level for auto-healing process, e.g. SELF-SUPPORT", :action_aware => true
+    param :location, String, :desc => "Physical of the system"
+    param :content_view_id, :identifier
+    param :environment_id, :identifier
+  end
+
+  api :PUT, "/consumers/:id", "Update system information (compatibility)"
+  api :PUT, "/systems/:id", "Update system information"
+  param_group :system
+  def update
+    super
+  end
+
 end

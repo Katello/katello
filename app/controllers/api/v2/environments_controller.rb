@@ -15,4 +15,11 @@ class Api::V2::EnvironmentsController < Api::V1::EnvironmentsController
 
   include Api::V2::Rendering
 
+  api :GET, "/organizations/:organization_id/environments/systems_registerable", "List environments that systems can be registered to"
+  param :organization_id, :identifier, :desc => "organization identifier"
+  def systems_registerable
+    @environments = KTEnvironment.systems_registerable(@organization)
+    respond_for_index :collection => @environments
+  end
+
 end
