@@ -147,6 +147,46 @@ module Glue::ElasticSearch::Repository
       Tire.index('katello_package_group').refresh
     end
 
+    def index_puppet_modules
+      Tire.index ::PuppetModule.index do
+        create :settings => PuppetModule.index_settings, :mappings => PuppetModule.index_mapping
+      end
+      puppet_modules = self.puppet_modules.collect{|puppet_module| puppet_module.as_json.merge(puppet_module.index_options)}
+      puppet_modules.each_slice(Katello.config.pulp.bulk_load_size) do |sublist|
+        Tire.index ::PuppetModule.index do
+          import sublist
+        end if !sublist.empty?
+      end
+    end
+
+    def update_puppet_modules_index
+      # for each of the puppet_modules in the repo, unassociate the repo from the module
+      puppet_modules = self.puppet_modules.collect{|puppet_module| puppet_module.as_json.merge(puppet_module.index_options)}
+      pulp_id = self.pulp_id
+
+      unless puppet_modules.empty?
+        Tire.index PuppetModule.index do
+          create :settings => PuppetModule.index_settings, :mappings => PuppetModule.index_mapping
+        end unless Tire.index(PuppetModule.index).exists?
+
+        Tire.index PuppetModule.index do
+          import puppet_modules do |documents|
+            documents.each do |document|
+              if !document["repoids"].nil? && document["repoids"].length > 1
+                # if there is more than 1 repo associated w/ the pkg, remove this repo
+                document["repoids"].delete(pulp_id)
+              end
+            end
+          end
+        end
+      end
+
+      # now, for any module that only had this repo asscociated with it, remove the module from the index
+      repoids = "repoids:#{pulp_id}"
+      Tire::Configuration.client.delete "#{Tire::Configuration.url}/katello_puppet_module/_query?q=#{repoids}"
+      Tire.index('katello_puppet_module').refresh
+    end
+
     def errata_count
       results = ::Errata.search('', 0, 1, :repoids => [self.pulp_id])
       results.empty? ? 0 : results.total
@@ -157,10 +197,16 @@ module Glue::ElasticSearch::Repository
       results.empty? ? 0 : results.total
     end
 
+    def puppet_module_count
+      results = ::PuppetModule.search('', 0, 1, :repoids => [self.pulp_id])
+      results.empty? ? 0 : results.total
+    end
+
     def index_content
       self.index_packages
       self.index_errata
       self.index_package_groups
+      self.index_puppet_modules
       true
     end
 
@@ -168,6 +214,7 @@ module Glue::ElasticSearch::Repository
       update_packages_index
       update_errata_index
       update_package_group_index
+      update_puppet_modules_index
     end
 
   end

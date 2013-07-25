@@ -30,7 +30,8 @@ class Repository < ActiveRecord::Base
 
   YUM_TYPE = 'yum'
   FILE_TYPE = 'file'
-  TYPES = [YUM_TYPE, FILE_TYPE]
+  PUPPET_TYPE = 'puppet'
+  TYPES = [YUM_TYPE, FILE_TYPE, PUPPET_TYPE]
 
   belongs_to :environment, :inverse_of => :repositories, :class_name => "KTEnvironment"
   belongs_to :product, :inverse_of => :repositories
@@ -66,6 +67,7 @@ class Repository < ActiveRecord::Base
 
   scope :yum_type, where(:content_type=>YUM_TYPE)
   scope :file_type, where(:content_type=>FILE_TYPE)
+  scope :puppet_type, where(:content_type=>PUPPET_TYPE)
 
   def organization
     self.environment.organization

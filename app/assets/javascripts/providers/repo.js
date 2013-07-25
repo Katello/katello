@@ -9,10 +9,19 @@
  NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
  have received a copy of GPLv2 along with this software; if not, see
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
-*/
+ */
 
-//= require "alchemy/jquery/plugins/jquery.treeTable"
-//= require "alchemy/jquery/plugins/jquery.uitablefilter"
-//= require "providers/provider"
-//= require "providers/repo_discovery"
-//= require "providers/repo"
+KT.repo = (function(){
+    var page_load = function(){
+        $('#repo_content_type').unbind('change').change(function() {
+            if ($(this).val() === 'puppet') {
+                $('#gpg_key').hide();
+            } else {
+                $('#gpg_key').show();
+            }
+        });
+    };
+    return {
+        page_load: page_load
+    };
+})();
