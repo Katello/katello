@@ -19,7 +19,7 @@ describe Api::V1::FiltersController do
   before :suite do
     models = ["User", "Role", "UserOwnRole", "Permission", "Organization", "KTEnvironment",
               "Filter", "ContentViewDefinition",
-              "Product", "EnvironmentProduct", "Repository"]
+              "Product", "Repository"]
 
     disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
   end

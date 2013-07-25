@@ -18,7 +18,7 @@ class Api::V1::SystemsController < Api::V1::ApiController
   before_filter :find_only_environment, :only => [:create]
   before_filter :find_environment, :only => [:index, :report, :tasks]
   before_filter :find_environment_and_content_view, :only => [:create]
-  before_filter :find_environment_by_name, :only => [:hypervisors_update]
+  before_filter :find_hypervisor_environment_and_content_view, :only => [:hypervisors_update]
   before_filter :find_system, :only => [:destroy, :show, :update, :regenerate_identity_certificates,
                                         :upload_package_profile, :errata, :package_profile, :subscribe,
                                         :unsubscribe, :subscriptions, :pools, :enabled_repos, :releases,
@@ -26,6 +26,8 @@ class Api::V1::SystemsController < Api::V1::ApiController
                                         :subscription_status]
   before_filter :find_content_view, :only => [:create, :update]
   before_filter :authorize, :except => :activate
+
+  after_filter :refresh_index, :only => [:create, :activate, :update]
 
   skip_before_filter :require_user, :only => [:activate]
 
@@ -112,7 +114,7 @@ See virt-who tool for more details.
 DESC
   # TODO refactor render
   def hypervisors_update
-    cp_response, hypervisors = System.register_hypervisors(@environment, params.except(:controller, :action))
+    cp_response, hypervisors = System.register_hypervisors(@environment, @content_view, params.except(:controller, :action))
     render :json => cp_response
   end
 
@@ -164,7 +166,7 @@ Schedules the consumer identity certificate regeneration
     attrs = params.clone
     slice_attrs = [:name, :description, :location,
                    :facts, :guestIds, :installedProducts,
-                   :releaseVer, :serviceLevel
+                   :releaseVer, :serviceLevel, :lastCheckin
                    ]
     unless User.consumer?
       slice_attrs =  slice_attrs + [:environment_id, :content_view_id]
@@ -489,8 +491,32 @@ This information is then used for computing the errata available for the system.
     end
   end
 
-  def find_environment_by_name
-    @environment = @organization.environments.find_by_name!(params[:env])
+  def find_hypervisor_environment_and_content_view
+    cve = get_content_view_environment_by_label(params[:env])
+    @environment = cve.environment
+    @content_view = cve.content_view
+  end
+
+  def get_content_view_environment_by_label(label)
+    get_content_view_environment("label", label)
+  end
+
+  def get_content_view_environment(key, value)
+    cve = nil
+    if value
+      cve = ContentViewEnvironment.where(key => value).first
+      raise HttpErrors::NotFound, _("Couldn't find environment '%s'") % value unless cve
+      if @organization.nil? || !@organization.readable?
+        unless cve.content_view.readable?
+          raise Errors::SecurityViolation, _("Could not access content view in environment '%s'") % value
+        end
+      end
+    end
+    cve
+  end
+
+  def get_content_view_environment_by_cp_id(id)
+    get_content_view_environment("cp_id", id)
   end
 
   def find_environment
@@ -509,14 +535,16 @@ This information is then used for computing the errata available for the system.
     return unless params.has_key?(:environment_id)
 
     if params[:environment_id].is_a? String
-      ids = params[:environment_id].split('-')
-      @environment = KTEnvironment.find(ids.first)
-      raise HttpErrors::NotFound, _("Couldn't find environment '%s'") % ids.first if @environment.nil?
-      @organization = @environment.organization
-
-      if ids.length > 1
-        @content_view = ContentView.find(ids.last)
-        raise HttpErrors::NotFound, _("Couldn't find content view '%s'") % ids.last if @content_view.nil?
+      if !params.has_key?(:content_view_id)
+        cve = get_content_view_environment_by_cp_id(params[:environment_id])
+        @environment = cve.environment
+        @organization = @environment.organization
+        @content_view = cve.content_view
+      else
+        # assumption here is :content_view_id is passed as a separate attrib
+        @environment = KTEnvironment.find(params[:environment_id])
+        @organization = @environment.organization
+        raise HttpErrors::NotFound, _("Couldn't find environment '%s'") % params[:environment_id] if @environment.nil?
       end
       return @environment, @content_view
     else
@@ -578,12 +606,19 @@ This information is then used for computing the errata available for the system.
     return if @content_view
     organization = @organization
     organization ||= @system.organization if @system
+    organization ||= @environment.organization if @environment
     if cv_id && organization
       @content_view = ContentView.readable(organization).find_by_id(cv_id)
       raise HttpErrors::NotFound, _("Couldn't find content view '%s'") % cv_id if @content_view.nil?
     else
       @content_view = nil
     end
+  end
+
+  # to make sure that the changes are reflected to elasticsearch immediately
+  # otherwise the index action doesn't have to know about the changes
+  def refresh_index
+    System.index.refresh if Katello.config.use_elasticsearch
   end
 
 end

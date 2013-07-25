@@ -13,9 +13,12 @@
             - help_text = _("Enter %{type} Name...") % {:type => rule_type.singularize}
             %input{:type=>'text', :id=>'rule_input', :size=>'30', :placeholder => help_text,
                    :title => help_text, :tabindex => auto_tab_index}
+            - if ["Errata", "Packages"].include?(rule_type)
+              %span.rule-search-tipsy.details_icon-grey{title: _('Autocomplete is enabled if the filter has been assigned content. The minimum number of characters is 1 for package names and 3 for erratum names.')}
             %a#add_rule{:style => 'padding-left: 10px;', :tabindex => auto_tab_index,
                         'data-url' => add_parameter_content_view_definition_filter_rule_path(view_definition.id, filter.id, rule.id),
-                        'data-rule_type' => rule.content_type} #{_('+ Add')}
+                        'data-rule_type' => rule.content_type,
+                        'data-filter_id' => rule.filter.id} #{_('+ Add')}
 
         %tr#empty_row{:class=>(:hidden unless rule.parameters[:units].blank?)}
           %td{:colspan => 2}

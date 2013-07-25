@@ -76,7 +76,7 @@ describe SyncPlan, :katello => true do
 
       organization = Organization.create!(:name=>ProductTestData::ORG_ID, :label => 'admin-org-37070')
       @plan.products.create! ProductTestData::SIMPLE_PRODUCT.merge(
-                                 :provider => organization.redhat_provider, :environments => [organization.library])
+                                 :provider => organization.redhat_provider)
       @plan.save!
       @plan.reload
       @plan.should have(1).products

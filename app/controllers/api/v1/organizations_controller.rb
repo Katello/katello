@@ -12,13 +12,13 @@
 
 class Api::V1::OrganizationsController < Api::V1::ApiController
 
-  before_filter :find_organization, :only => [:show, :update, :destroy]
+  before_filter :find_organization, :only => [:show, :update, :destroy, :auto_attach_all_systems]
 
   respond_to :json
   before_filter :authorize
 
   def organization_id_keys
-    [:id]
+    [:id, :organization_id]
   end
 
   def rules
@@ -33,6 +33,7 @@ class Api::V1::OrganizationsController < Api::V1::ApiController
       :create  => create_test,
       :update  => edit_test,
       :destroy => delete_test,
+      :auto_attach_all_systems => edit_test
     }
   end
   def param_rules
@@ -79,6 +80,12 @@ class Api::V1::OrganizationsController < Api::V1::ApiController
   api :DELETE, "/organizations/:id", "Destroy an organization. Asynchronous operation."
   def destroy
     async_job = OrganizationDestroyer.destroy @organization
+    respond_for_async :resource => async_job
+  end
+
+  api :POST, "/organizations/:id/heal", "Auto-attach available subscriptions to all systems within an organization. Asynchronous operation."
+  def auto_attach_all_systems
+    async_job = @organization.auto_attach_all_systems
     respond_for_async :resource => async_job
   end
 

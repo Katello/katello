@@ -27,7 +27,7 @@ describe SystemsController do
       @environment.save!
       Resources::Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
       Resources::Candlepin::Consumer.stub!(:update).and_return(true)
-      @system = System.create!(:name=>"bar1", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""})
+      @system = create_system(:name=>"bar1", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""})
       @run_auth_action = lambda do |resource, perm|
             if :organization == resource
               user_with_permissions { |u| u.can([perm], :organizations, nil, @organization) }
@@ -63,8 +63,8 @@ describe SystemsController do
         describe "GET index multiple orgs with #{perm} on #{resource}" do
           before do
             new_test_org
-            @environment = KTEnvironment.new(:name=>'test2', :label=> 'test2', :prior => @organization.library.id, :organization => @organization)
-            @system2 = System.create!(:name=>"bar2", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""})
+            @environment = create_environment(:name=>'test2', :label=> 'test2', :prior => @organization.library.id, :organization => @organization)
+            @system2 = create_system(:name=>"bar2", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""})
           end
           let(:action) {:items}
           let(:req) { get :items}
@@ -133,13 +133,10 @@ describe SystemsController do
       set_default_locale
 
       @organization = setup_system_creation
-      @environment = KTEnvironment.new(:name=>'test', :label=> 'test', :prior => @organization.library.id, :organization => @organization)
-      @environment.save!
+      @environment = create_environment(:name=>'test', :label=> 'test', :prior => @organization.library.id, :organization => @organization)
 
-      @env1 = KTEnvironment.new(:name=>'env1', :label=> 'env1', :prior => @organization.library.id, :organization => @organization)
-      @env1.save!
-      @env2 = KTEnvironment.new(:name=>'env2', :label=> 'env2', :prior => @env1.id, :organization => @organization)
-      @env2.save!
+      @env1 = create_environment(:name=>'env1', :label=> 'env1', :prior => @organization.library.id, :organization => @organization)
+      @env2 = create_environment(:name=>'env2', :label=> 'env2', :prior => @env1.id, :organization => @organization)
 
       controller.stub(:search_validate).and_return(false)
 
@@ -151,7 +148,7 @@ describe SystemsController do
 
     describe "viewing systems" do
       before (:each) do
-        100.times{|a| System.create!(:name=>"bar#{a}", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""})}
+        100.times{|a| create_system(:name=>"bar#{a}", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""})}
         @systems = System.select(:id).where(:environment_id => @environment.id).all.collect{|s| s.id}
       end
 
@@ -184,7 +181,7 @@ describe SystemsController do
 
       describe 'and requesting individual data' do
         before (:each) do
-          @system = System.create!(:name=>"verbose", :environment => @environment, :cp_type=>"system", :facts=>{"Test1"=>1, "verbose_facts" => "Test facts"})
+          @system = create_system(:name=>"verbose", :environment => @environment, :cp_type=>"system", :facts=>{"Test1"=>1, "verbose_facts" => "Test facts"})
 
         end
 
@@ -205,7 +202,7 @@ describe SystemsController do
         it "should show systems by env" do
           @environment2 = KTEnvironment.new(:name=>'testenv', :label=> 'testenv', :prior => @organization.library.id, :organization => @organization)
           @environment2.save!
-          @system2 = System.create!(:name=>"verbose2", :environment => @environment2, :cp_type=>"system", :facts => {"Test1"=>1 , "verbose_facts" => "Test facts"})
+          @system2 = create_system(:name=>"verbose2", :environment => @environment2, :cp_type=>"system", :facts => {"Test1"=>1 , "verbose_facts" => "Test facts"})
           get :environments, :env_id => @environment2.id
           response.should be_success
         end
@@ -277,7 +274,7 @@ describe SystemsController do
 
     describe 'updating a system' do
       before (:each) do
-        @system = System.create!(:name=>"bar", :environment => @environment, :cp_type=>"system", :facts => { "test" => "test" }, :serviceLevel => nil)
+        @system = create_system(:name=>"bar", :environment => @environment, :cp_type=>"system", :facts => { "test" => "test" }, :serviceLevel => nil)
       end
 
       it "should update the system name", :katello => true do #TODO headpin
@@ -316,7 +313,7 @@ describe SystemsController do
 
     describe 'bulk deleting a system' do
       before (:each) do
-        @system = System.create!(:name=>"bar", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""})
+        @system = create_system(:name=>"bar", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""})
         System.stub(:find).and_return [@system]
       end
       it "should delete the system", :katello => true do #TODO headpin
@@ -328,7 +325,7 @@ describe SystemsController do
 
     describe 'delete a single system' do
       before (:each) do
-        @system = System.create!(:name=>"bar", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""})
+        @system = create_system(:name=>"bar", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""})
         @id = @system.id
         System.stub(:find).and_return @system
       end
@@ -341,7 +338,7 @@ describe SystemsController do
 
     describe "system groups" do
       before (:each) do
-        @system = System.create!(:name=>"bar1", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""})
+        @system = create_system(:name=>"bar1", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""})
 
         disable_consumer_group_orchestration
         @group1 = SystemGroup.create!(:name=>"test_group1", :organization=>@organization)
@@ -390,7 +387,7 @@ describe SystemsController do
         end
 
         it "should generate an error notice, if the group has reached max membership" do
-          @system1 = System.create!(:name=>"system1", :environment => @environment, :cp_type=>"system", :facts=>{"Test"=>""})
+          @system1 = create_system(:name=>"system1", :environment => @environment, :cp_type=>"system", :facts=>{"Test"=>""})
           @group1.max_systems = 1
           @group1.systems << @system1
           @group1.save!
@@ -427,8 +424,8 @@ describe SystemsController do
     describe "bulk actions" do
       describe "add system group" do
         before (:each) do
-          @system1 = System.create!(:name=>"system1", :environment => @environment, :cp_type=>"system", :facts=>{"Test"=>""})
-          @system2 = System.create!(:name=>"system2", :environment => @environment, :cp_type=>"system", :facts=>{"Test"=>""})
+          @system1 = create_system(:name=>"system1", :environment => @environment, :cp_type=>"system", :facts=>{"Test"=>""})
+          @system2 = create_system(:name=>"system2", :environment => @environment, :cp_type=>"system", :facts=>{"Test"=>""})
 
           disable_consumer_group_orchestration
           @group1 = SystemGroup.create!(:name=>"test_group1", :organization=>@organization)
@@ -465,8 +462,8 @@ describe SystemsController do
 
       describe "remove system group" do
         before (:each) do
-          @system1 = System.create!(:name=>"system1", :environment => @environment, :cp_type=>"system", :facts=>{"Test"=>""})
-          @system2 = System.create!(:name=>"system2", :environment => @environment, :cp_type=>"system", :facts=>{"Test"=>""})
+          @system1 = create_system(:name=>"system1", :environment => @environment, :cp_type=>"system", :facts=>{"Test"=>""})
+          @system2 = create_system(:name=>"system2", :environment => @environment, :cp_type=>"system", :facts=>{"Test"=>""})
 
           disable_consumer_group_orchestration
           @group1 = SystemGroup.new(:name=>"test_group1", :organization=>@organization)
@@ -498,8 +495,8 @@ describe SystemsController do
 
       describe 'package actions' do
         before (:each) do
-          @system1 = System.create!(:name=>"system1", :environment => @environment, :cp_type=>"system", :facts=>{"Test"=>""})
-          @system2 = System.create!(:name=>"system2", :environment => @environment, :cp_type=>"system", :facts=>{"Test"=>""})
+          @system1 = create_system(:name=>"system1", :environment => @environment, :cp_type=>"system", :facts=>{"Test"=>""})
+          @system2 = create_system(:name=>"system2", :environment => @environment, :cp_type=>"system", :facts=>{"Test"=>""})
           System.stub(:find).and_return([@system1, @system2])
         end
 
@@ -698,7 +695,7 @@ describe SystemsController do
 
     describe "get/set system details" do
       before (:each) do
-        @system = System.create!(:name=>"bar", :environment => @environment, :cp_type=>"system", :facts => { "test" => "test" }, :serviceLevel => nil)
+        @system = create_system(:name=>"bar", :environment => @environment, :cp_type=>"system", :facts => { "test" => "test" }, :serviceLevel => nil)
         System.stub(:find).and_return(@system)
       end
 
@@ -730,7 +727,7 @@ describe SystemsController do
     describe "custom info" do
 
       before (:each) do
-        @system = System.create!(:name=>"bar", :environment => @environment, :cp_type=>"system", :facts => { "test" => "test" }, :serviceLevel => nil)
+        @system = create_system(:name=>"bar", :environment => @environment, :cp_type=>"system", :facts => { "test" => "test" }, :serviceLevel => nil)
         System.stub(:find).and_return(@system)
       end
 

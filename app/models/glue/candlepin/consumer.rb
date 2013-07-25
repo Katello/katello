@@ -22,7 +22,8 @@ module Glue::Candlepin::Consumer
       before_destroy :destroy_candlepin_orchestration
       after_rollback :rollback_on_candlepin_create, :on => :create
 
-      lazy_accessor :href, :facts, :cp_type, :href, :idCert, :owner, :lastCheckin, :created, :guestIds, :installedProducts, :autoheal, :releaseVer, :serviceLevel,
+      lazy_accessor :href, :facts, :cp_type, :href, :idCert, :owner, :lastCheckin, :created, :guestIds,
+                    :installedProducts, :autoheal, :releaseVer, :serviceLevel, :capabilities,
         :initializer => lambda {|s|
                           if uuid
                             consumer_json = Resources::Candlepin::Consumer.get(uuid)
@@ -33,13 +34,15 @@ module Glue::Candlepin::Consumer
       lazy_accessor :pools, :initializer => lambda {|s| entitlements.collect { |ent| Resources::Candlepin::Pool.find ent["pool"]["id"]} }
       lazy_accessor :available_pools, :initializer => lambda {|s| Resources::Candlepin::Consumer.available_pools(uuid, false) }
       lazy_accessor :all_available_pools, :initializer => lambda {|s| Resources::Candlepin::Consumer.available_pools(uuid, true) }
-      lazy_accessor :host, :initializer => lambda {|s|
+      lazy_accessor :host, :initializer => lambda { |s|
         host_attributes = Resources::Candlepin::Consumer.host(self.uuid)
-        System.new(host_attributes) if host_attributes
+        (System.find_by_uuid(host_attributes['uuid']) || System.new(host_attributes)) if host_attributes
       }
-      lazy_accessor :guests, :initializer => lambda {|s|
+      lazy_accessor :guests, :initializer => lambda { |s|
         guests_attributes = Resources::Candlepin::Consumer.guests(self.uuid)
-        guests_attributes.map { |attr| System.new(attr) }
+        guests_attributes.map do |attr|
+          System.find_by_uuid(attr['uuid']) || System.new(attr)
+        end
       }
       lazy_accessor :compliance, :initializer => lambda {|s| Resources::Candlepin::Consumer.compliance(uuid) }
       lazy_accessor :events, :initializer => lambda {|s| Resources::Candlepin::Consumer.events(uuid) }
@@ -93,7 +96,8 @@ module Glue::Candlepin::Consumer
                                                             self.installedProducts,
                                                             self.autoheal,
                                                             self.releaseVer,
-                                                            self.serviceLevel)
+                                                            self.serviceLevel,
+                                                            self.capabilities)
 
       load_from_cp(consumer_json)
     rescue => e
@@ -112,7 +116,7 @@ module Glue::Candlepin::Consumer
     def update_candlepin_consumer
       Rails.logger.debug "Updating consumer in candlepin: #{name}"
       Resources::Candlepin::Consumer.update(self.uuid, @facts, @guestIds, @installedProducts, @autoheal,
-                                            @releaseVer, self.serviceLevel, self.cp_environment_id)
+                                            @releaseVer, self.serviceLevel, self.cp_environment_id, @capabilities, @lastCheckin)
     rescue => e
       Rails.logger.error "Failed to update candlepin consumer #{name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -206,12 +210,25 @@ module Glue::Candlepin::Consumer
     end
 
     def to_json(options={})
-      super(options.merge(:methods => [:href, :facts, :idCert, :owner, :autoheal, :release, :releaseVer, :checkin_time, :installedProducts]))
+      super(options.merge(:methods => [:href, :facts, :idCert, :owner, :autoheal, :release, :releaseVer, :checkin_time,
+                                       :installedProducts, :capabilities]))
     end
 
     def convert_from_cp_fields(cp_json)
       cp_json.merge(:cp_type => cp_json.delete(:type)) if cp_json.has_key?(:type)
-      reject_db_columns(cp_json)
+      cp_json = reject_db_columns(cp_json)
+
+      cp_json[:guestIds] = remove_hibernate_fields(cp_json[:guestIds]) if cp_json.has_key?(:guestIds)
+      cp_json[:installedProducts] = remove_hibernate_fields(cp_json[:installedProducts]) if cp_json.has_key?(:installedProducts)
+
+      cp_json
+    end
+
+    # Candlepin sends back its internal hibernate fields in the json. However it does not accept them in return
+    # when updating (PUT) objects.
+    def remove_hibernate_fields(elements)
+      return nil if !elements
+      elements.collect{ |e| e.except(:id, :created, :updated)}
     end
 
     def reject_db_columns(cp_json)
@@ -338,7 +355,7 @@ module Glue::Candlepin::Consumer
       else
         mem = '0'
       end
-      memory_in_gigabytes(mem)
+      memory_in_gigabytes(mem.to_s)
     end
 
     def memory=(mem)
@@ -527,8 +544,8 @@ module Glue::Candlepin::Consumer
       return system_uuids
     end
 
-    def create_hypervisor(environment_id, hypervisor_json)
-      hypervisor = Hypervisor.new(:environment_id => environment_id)
+    def create_hypervisor(environment_id, content_view_id, hypervisor_json)
+      hypervisor = Hypervisor.new(:environment_id => environment_id, :content_view_id => content_view_id)
       hypervisor.name = hypervisor_json[:name]
       hypervisor.cp_type = 'hypervisor'
       hypervisor.orchestration_for = :hypervisor
@@ -537,10 +554,10 @@ module Glue::Candlepin::Consumer
       hypervisor
     end
 
-    def register_hypervisors(environment, hypervisors_attrs)
+    def register_hypervisors(environment, content_view, hypervisors_attrs)
       consumers_attrs = Resources::Candlepin::Consumer.register_hypervisors(hypervisors_attrs)
       created = consumers_attrs[:created].map do |hypervisor_attrs|
-        System.create_hypervisor(environment.id, hypervisor_attrs)
+        System.create_hypervisor(environment.id, content_view.id, hypervisor_attrs)
       end
       return consumers_attrs, created
     end

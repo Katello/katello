@@ -25,8 +25,8 @@ describe Api::V1::ChangesetsController, :katello => true do
   before(:each) do
     disable_org_orchestration
     @organization  = Organization.create!(:name => 'test_org', :label => 'test_org')
-    @environment   = KTEnvironment.create!(:name => 'test_1', :label => 'test_1', :prior => @organization.library.id, :organization => @organization)
-    @environment_2 = KTEnvironment.create!(:name => 'test_2', :label => 'test_2', :prior => @environment, :organization => @organization)
+    @environment   = create_environment(:name => 'test_1', :label => 'test_1', :prior => @organization.library.id, :organization => @organization)
+    @environment_2 = create_environment(:name => 'test_2', :label => 'test_2', :prior => @environment, :organization => @organization)
     KTEnvironment.stub(:find).and_return(@environment)
 
     @changeset = mock(PromotionChangeset)

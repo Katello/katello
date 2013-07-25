@@ -11,7 +11,8 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class PackagesController < ApplicationController
-  before_filter :lookup_package
+  before_filter :lookup_package, except: [:auto_complete]
+  before_filter :find_filter, only: [:auto_complete]
   before_filter :authorize
   helper :packages
 
@@ -22,13 +23,32 @@ class PackagesController < ApplicationController
           :pulp_id=>@package.repoids).empty?
     }
 
+    auto_complete = lambda do
+      if @def_filter
+        @def_filter.content_view_definition.readable?
+      else
+        false
+      end
+    end
+
     {
+      :auto_complete => auto_complete,
       :show => view,
       :filelist => view,
       :changelog => view,
       :dependencies => view,
       :details => view
     }
+  end
+
+  def auto_complete
+    if @def_filter
+      repos = @def_filter.products.map { |prod| prod.repos(current_organization.library) }.flatten
+      repos += @def_filter.repositories
+      results = Package.autocomplete_name("#{params[:term]}*", repos.map(&:pulp_id))
+    end
+
+    render :json => results
   end
 
   def show
@@ -57,6 +77,10 @@ class PackagesController < ApplicationController
     @package_id = params[:id]
     @package = Package.find @package_id
     raise _("Unable to find package %s")% @package_id if @package.nil?
+  end
+
+  def find_filter
+    @def_filter = Filter.find_by_id(params[:filter_id])
   end
 
 end

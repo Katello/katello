@@ -39,8 +39,8 @@ describe Api::V1::SubscriptionsController do
     Runcible::Extensions::Consumer.stub!(:update).and_return(true)
 
     @organization  = Organization.create!(:name => 'test_org', :label => 'test_org')
-    @environment_1 = KTEnvironment.create!(:name => 'test_1', :label => 'test_1', :prior => @organization.library.id, :organization => @organization)
-    @system        = System.create!(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts, :uuid => uuid)
+    @environment_1 = create_environment(:name => 'test_1', :label => 'test_1', :prior => @organization.library.id, :organization => @organization)
+    @system        = create_system(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts, :uuid => uuid)
     System.stub!(:first).and_return(@system)
   end
 

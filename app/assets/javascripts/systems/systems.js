@@ -66,6 +66,7 @@ if (KT.panel_search_autocomplete !== undefined) {
 $(document).ready(function() {
 
     KT.panel.set_expand_cb(function() {
+        KT.systems_page.system_info_setup();
         KT.subs.initialize_edit();
     });
 
@@ -333,6 +334,17 @@ KT.systems_page = (function() {
             }
         );
     },
+    system_info_setup = function() {
+        var pane = $("#system");
+        if (pane.length === 0) {
+            return;
+        }
+
+        KT.env_content_view_selector.init('edit_env_view',
+            'environment_path_selector', KT.available_environments, KT.current_environment_id,
+            'content_view_selector', KT.available_content_views, KT.current_content_view_id,
+            'env_content_view_selector_buttons');
+    },
     system_group_setup = function() {
         $('#create_system_group').live('click', create_system_group);
         $('#update_system_groups').live('submit', update_system_groups);
@@ -423,43 +435,146 @@ KT.systems_page = (function() {
                     var options = '';
                     var opt_template = KT.utils.template("<option value='<%= key %>'><%= text %></option>");
 
-                    // create an html option list using the response
-                    options += opt_template({key: "", text: i18n.no_content_view});
-                    $.each(response, function(key, item) {
-                        options += opt_template({key: item.id, text: item.name});
-                    });
-
-                    $("#system_content_view_id").html(options);
-
                     if (response.length > 0) {
-                        highlight_content_views(true);
+                        // create an html option list using the response
+                        $.each(response, function(key, item) {
+                            options += opt_template({key: item.id, text: item.name});
+                        });
+                        highlight_content_views(i18n.select_content_view);
+                    } else {
+                        // the user selected an environment that has not views, warn them
+                        highlight_content_views(i18n.no_content_views_available);
                     }
+                    $("#system_content_view_id").html(options);
                 }
             });
         }
     },
-    highlight_content_views = function(add_highlight){
-        var select_input = $("#system_content_view_id");
-        if (add_highlight) {
-            if( !select_input.next('span').hasClass('highlight_input_text')) {
-                select_input.addClass('highlight_input');
-                select_input.after('<span class ="highlight_input_text">' +
-                        i18n.select_content_view + '</span>');
-            }
+    highlight_content_views = function(text){
+        var select_input = $("#system_content_view_id"),
+            highlight_text = select_input.next('span.highlight_input_text');
+
+        select_input.addClass('highlight_input');
+        if (highlight_text.length > 0) {
+            highlight_text.html(text);
         } else {
-            select_input.removeClass('highlight_input');
-            $('.highlight_input_text').remove();
+            select_input.after('<span class ="highlight_input_text">' + text + '</span>');
+        }
+    },
+    remove_content_view_highlight = function() {
+        var select_input = $("#system_content_view_id");
+        select_input.removeClass('highlight_input');
+        select_input.next('span.highlight_input_text').remove();
+    };
+
+    return {
+        env_change : env_change,
+        create_system : create_system,
+        registerActions : registerActions,
+        update_content_views: update_content_views,
+        highlight_content_views: highlight_content_views,
+        system_info_setup: system_info_setup,
+        system_group_setup: system_group_setup
+    };
+})();
+
+KT.system_auto_attaching = (function() {
+
+    var task_status_updater;
+
+    $(document).ready(function() {
+        KT.system_auto_attaching.setup();
+        KT.system_auto_attaching.async_panel_refresh();
+    });
+
+    var async_panel_refresh = function() {
+        if (auto_attach_all_button().length > 0) {
+            if (task_status_updater !== undefined) {
+                task_status_updater.stop();
+            }
+            var state = auto_attach_all_button().data("taskstate");
+            if (state === "waiting" || state === "running") {
+                start_updater(auto_attach_all_button().data("taskuuid"));
+            }
         }
     };
 
-  return {
-      env_change : env_change,
-      create_system : create_system,
-      registerActions : registerActions,
-      update_content_views: update_content_views,
-      highlight_content_views: highlight_content_views,
-      system_group_setup: system_group_setup
-  };
+    var start_updater = function(task_uuid) {
+        allow_auto_attach_all_systems(false);
+        auto_attach_all_button().addClass("processing");
+        var timeout = 6000;
+
+        if (task_status_updater !== undefined) {
+            task_status_updater.stop();
+        }
+
+        task_status_updater = $.PeriodicalUpdater(
+            KT.routes.api_task_path(task_uuid),
+            {
+                method: 'get',
+                type: 'json',
+                cache: false,
+                global: false,
+                minTimeout: timeout,
+                maxTimeout: timeout
+            },
+            update_status
+        );
+    };
+
+    var update_status = function(data, success, xhr, handle) {
+        if (data !== "") {
+            var state = data['state'];
+            if (state !== "waiting" && state !== "running") {
+                auto_attach_all_button().removeClass("processing");
+                allow_auto_attach_all_systems(true);
+                task_status_updater.stop();
+                if (data['result'].length > 0) {
+                    notices.displayNotice("success", window.JSON.stringify({"notices": [i18n.auto_attach_all_systems_success] }));
+                }
+            }
+        }
+    };
+
+    var setup = function() {
+        auto_attach_all_button().live("click", function() {
+            auto_attach_all_systems();
+        });
+    };
+
+    var auto_attach_all_systems = function() {
+        var button = auto_attach_all_button();
+        $.ajax({
+            url: button.data("url"),
+            type: button.data("method"),
+            data: '',
+            success: function(data) {
+                start_updater(data['uuid']);
+            },
+            error: function(data) {
+                notices.displayNotice("error", window.JSON.stringify({"notices": [i18n.auto_attach_all_systems_failure] }));
+            }
+        });
+    };
+
+    var allow_auto_attach_all_systems = function(allow) {
+        if (allow === true) {
+            auto_attach_all_button().removeAttr('disabled');
+        } else {
+            auto_attach_all_button().attr('disabled', 'true');
+        }
+    };
+
+    var auto_attach_all_button = function() {
+        return $(".panel_action #auto_attach_all_button");
+    };
+
+    return {
+        setup : setup,
+        auto_attach_all_systems: auto_attach_all_systems,
+        auto_attach_all_button: auto_attach_all_button,
+        async_panel_refresh: async_panel_refresh
+    };
 })();
 
 KT.subs = (function() {

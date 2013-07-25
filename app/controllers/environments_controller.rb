@@ -127,7 +127,7 @@ class EnvironmentsController < ApplicationController
       view = ContentView.find(params[:content_view_id])
       view.try(:products, @environment) || []
     else
-      @environment.products
+      @environment.library? ? current_organization.products : @environment.products
     end
 
     respond_to do |format|
@@ -141,7 +141,7 @@ class EnvironmentsController < ApplicationController
     content_views = if params[:include_default]
       @environment.content_views.readable(current_organization)
     else
-      ContentView.readable(current_organization).non_default.in_environment(@environment)
+      ContentView.readable(current_organization).in_environment(@environment)
     end
     respond_to do |format|
       format.json {render :json => content_views}

@@ -276,9 +276,9 @@ module ApplicationHelper
   # a custom provider is important, pass in the provider_id and the current org.
   def subscriptions_pool_link_helper pool_name, pool_id, provider_id, org
     if provider_id == org.redhat_provider.id
-      link_to pool_name, subscriptions_path(:anchor => "panel=subscription_#{pool_id}")
+      link_to pool_name, subscriptions_path(:anchor => "/!=&panel=subscription_#{pool_id}")
     elsif !provider_id.nil?
-      link_to pool_name, providers_path(:anchor => "panel=provider_#{provider_id}")
+      link_to pool_name, providers_path(:anchor => "/!=&panel=provider_#{provider_id}")
     else
       pool_name
     end
@@ -294,14 +294,17 @@ module ApplicationHelper
     form_for(object, options, &block)
   end
 
+  def select_content_view
+    _('Select Content View')
+  end
+
   def no_content_view
-    _("No Content View")
+    _('No Content View')
   end
 
   def content_view_select_labels(organization, environment)
-    labels = [[no_content_view, '']]
     if environment
-      labels += ContentView.readable(organization).non_default.
+      labels = ContentView.readable(organization).
           in_environment(environment).collect {|cv| [cv.name, cv.id]}
     else
       labels = []

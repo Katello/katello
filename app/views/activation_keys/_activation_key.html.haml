@@ -4,11 +4,11 @@
       %div.one-line-ellipsis#heading_title
         %span#name
           = activation_key.name
-    %li.one-line-ellipsis
-      = _('Env: ')
-      %span#environment
-        = activation_key.environment
     - if Katello.config.katello?
+      %li.one-line-ellipsis
+        = _('Env: ')
+        %span#environment
+          = activation_key.environment
       %li.one-line-ellipsis
         = _('View: ')
         %span#view
