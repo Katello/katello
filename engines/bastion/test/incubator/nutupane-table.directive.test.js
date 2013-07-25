@@ -12,7 +12,7 @@
  */
 
 
-describe('Directive: alchTableScroll', function() {
+describe('Directive: nutupaneTable', function() {
     var scope,
         compile,
         tableElement;
@@ -41,6 +41,8 @@ describe('Directive: alchTableScroll', function() {
 
         compile(tableElement)(scope);
         scope.$digest();
+        scope.$broadcast("$stateChangeStart");
+        scope.$broadcast("$stateChangeSuccess");
     });
 
     it("should create a new table element with just the thead", function() {
@@ -55,5 +57,15 @@ describe('Directive: alchTableScroll', function() {
         var originalTableHead = angular.element(tableElement.find('thead')[1]);
 
         expect(originalTableHead.css('display')).toBe('none');
+    });
+
+    it("should remove the duplicate row select from the cloned table if present", function() {
+        var rowSelectTable = tableElement.clone();
+        rowSelectTable.find('thead').prepend("<tr><th class='row-select'></th></tr>");
+        compile(rowSelectTable)(scope);
+        scope.$digest();
+        scope.$broadcast("$stateChangeStart");
+        scope.$broadcast("$stateChangeSuccess");
+        expect(rowSelectTable.find('.row-select').length).toBe(1);
     });
 });
