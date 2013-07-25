@@ -49,14 +49,17 @@ angular.module('alchemy').directive('alchInfiniteScroll', [function() {
             };
 
             var loadUntilScroll = function() {
-                if (getScrollHeight() <= elem.height()) {
-                    scope.$eval(attr["alchInfiniteScroll"]).then(loadUntilScroll);
+                if (getScrollHeight() < elem.height()) {
+                    scope.$eval(attr["alchInfiniteScroll"]).then(function() {
+                        if (getScrollHeight() < elem.height()) {
+                            loadUntilScroll();
+                        }
+                    });
                 }
             };
 
             // load first batch of results and continue loading until there are enough to scroll
-            loadUntilScroll();
-
+            scope.$eval(attr["alchInfiniteScroll"]).then(loadUntilScroll);
         }
     };
 }]);

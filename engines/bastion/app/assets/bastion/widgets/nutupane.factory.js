@@ -34,8 +34,8 @@
     </pre>
  */
 angular.module('Bastion.widgets').factory('Nutupane',
-    ['$location', '$q', 'CurrentOrganization',
-    function($location, $q, CurrentOrganization) {
+    ['$location', '$q', '$timeout', 'CurrentOrganization',
+    function($location, $q, $timeout, CurrentOrganization) {
         var Nutupane = function(resource) {
             var self = this;
 
@@ -61,7 +61,10 @@ angular.module('Bastion.widgets').factory('Nutupane',
                 self.table.working = true;
                 var deferred = $q.defer();
                 self.table.resource.get(params, function(resource) {
-                    deferred.resolve(resource);
+                    // This $timeout is necessary to cause a $digest cycle for displaying
+                    $timeout(function() {
+                        deferred.resolve(resource);
+                    }, 0);
                     self.table.working = false;
                 });
                 return deferred.promise;

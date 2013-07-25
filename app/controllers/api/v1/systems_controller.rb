@@ -166,7 +166,7 @@ Schedules the consumer identity certificate regeneration
     attrs = params.clone
     slice_attrs = [:name, :description, :location,
                    :facts, :guestIds, :installedProducts,
-                   :releaseVer, :serviceLevel
+                   :releaseVer, :serviceLevel, :lastCheckin
                    ]
     unless User.consumer?
       slice_attrs =  slice_attrs + [:environment_id, :content_view_id]

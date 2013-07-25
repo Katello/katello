@@ -80,7 +80,7 @@ class Repository < ActiveRecord::Base
   end
 
   def self.in_product(prod)
-    where(product_id: prod.id)
+    where(product_id: prod)
   end
 
   def self.in_content_views(views)
