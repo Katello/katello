@@ -10,7 +10,7 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-module Locale
+module KTLocale
 
   def self.included(controller)
     controller.before_filter :set_locale_from_header
@@ -22,8 +22,8 @@ module Locale
 
   def set_locale locales
     locales = Array(locales)
-    if User.current && User.current.default_locale
-      I18n.locale = User.current.default_locale
+    if current_user && current_user.default_locale
+      I18n.locale = current_user.default_locale
     else
       I18n.locale = pick_available_locale locales
     end
@@ -70,4 +70,3 @@ module Locale
   end
 
 end
-

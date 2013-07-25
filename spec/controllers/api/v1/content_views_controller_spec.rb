@@ -45,7 +45,7 @@ describe Api::V1::ContentViewsController, :katello => true do
 
     context "with environment filter param" do
       it "should return only the environment's views" do
-        env          = @org.environments.first || KTEnvironment.create!(:name            => "Test",
+        env          = @org.environments.first || create_environment(:name            => "Test",
                                                                         :library         => false,
                                                                         :priors          => [@org.library],
                                                                         :organization_id => @org.id
@@ -56,8 +56,8 @@ describe Api::V1::ContentViewsController, :katello => true do
 
         get "index", :organization_id => @org.name, :environment_id => env.id
         response.should be_success
-        ids = env.content_views(true).select { |cv| !cv.default }.map(&:id)
-        assigns[:content_views].map(&:id).should eql(ids)
+        ids = env.content_views(true).map(&:id)
+        assigns[:content_views].map(&:id).sort.should eql(ids.sort)
       end
     end
 
@@ -81,7 +81,7 @@ describe Api::V1::ContentViewsController, :katello => true do
       @def                          = FactoryGirl.build_stubbed(:content_view_definition)
       @view                         = FactoryGirl.build_stubbed(:content_view, :organization => @org)
       @view.content_view_definition = @def
-      ContentView.stub_chain(:non_default, :find).with(@view.id.to_s).and_return(@view)
+      ContentView.stub(:find).with(@view.id.to_s).and_return(@view)
     end
 
     it "should call ContentView#refresh" do

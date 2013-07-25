@@ -16,7 +16,7 @@ class FiltersControllerTest < MiniTest::Rails::ActionController::TestCase
   fixtures :all
 
   def self.before_suite
-    models = ["Organization", "KTEnvironment", "User", "Product", "EnvironmentProduct", "Repository",
+    models = ["Organization", "KTEnvironment", "User", "Product", "Repository",
               "ContentViewEnvironment", "Filter", "ContentViewDefinitionBase",
               "ContentViewDefinition", "ContentViewDefinitionRepository",
               "ContentViewDefinitionProduct", "FilterRule", "PackageRule",

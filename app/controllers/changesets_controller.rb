@@ -37,8 +37,6 @@ class ChangesetsController < ApplicationController
       :edit => read_perm,
       :update => update_perm,
       :destroy =>manage_perm,
-      :products => read_perm,
-      :dependencies => read_perm,
       :object => read_perm,
       :auto_complete_search => read_perm,
       :apply => apply_perm,
@@ -79,19 +77,6 @@ class ChangesetsController < ApplicationController
   ####
   # Promotion methods
   ####
-
-  def dependencies
-    to_ret = {}
-    #if @changeset.promotion?
-    #  @changeset.calc_dependencies.each do |dependency|
-    #    to_ret[dependency.product_id] ||= []
-    #    to_ret[dependency.product_id] << {:name=>dependency.display_name, :dep_of=>dependency.dependency_of}
-    #  end
-    #end
-
-
-    render :json=>to_ret
-  end
 
   def object
     render :json => simplify_changeset(@changeset), :content_type => :json
@@ -172,8 +157,6 @@ class ChangesetsController < ApplicationController
         adding = item["adding"]
         type   = item["type"]
         id     = item["item_id"]   #id of item being added/removed
-        name   = item["item_name"] #display of item being added/removed
-        pid    = item["product_id"]
         case type
           when "content_view"
             @changeset.remove_content_view! ContentView.find(id) if !adding
@@ -190,38 +173,15 @@ class ChangesetsController < ApplicationController
                 send_changeset = true
               end
             end
-
-          when "product"
-            @changeset.add_product! Product.find(id) if adding
-            @changeset.remove_product! Product.find(id) if !adding
-
-          when "errata"
-            product = Product.find pid
-            erratum = Errata.find(id)
-            @changeset.add_erratum! erratum, product if adding
-            @changeset.remove_erratum! erratum, product if !adding
-
-          when "package"
-            product = Product.find pid
-            @changeset.add_package! name, product if adding
-            @changeset.remove_package! id, product if !adding
-
-          when "repo"
-            @changeset.add_repository! Repository.find(id) if adding
-            @changeset.remove_repository! Repository.find(id) if !adding
-
-          when "distribution"
-            product = Product.find pid
-            @changeset.add_distribution! Distribution.find(id), product if adding
-            @changeset.remove_distribution! Distribution.find(id), product if !adding
         end
       end
+
       @changeset.updated_at = Time.now
       @changeset.save!
       csu = ChangesetUser.find_or_create_by_user_id_and_changeset_id(current_user.id, @changeset.id)
       csu.save!
-
     end
+
     to_ret = {:timestamp=>@changeset.updated_at.to_i.to_s}
     to_ret[:changeset] = simplify_changeset(@changeset) if send_changeset
     render :json=>to_ret
@@ -229,7 +189,6 @@ class ChangesetsController < ApplicationController
 
   def destroy
     name = @changeset.name
-    id = @changeset.id
     @changeset.destroy
     notify.success _("Promotion Changeset '%s' was deleted.") % name
     render :text=>""
@@ -241,19 +200,20 @@ class ChangesetsController < ApplicationController
       syncing = []
       errors = []
 
-      @changeset.involved_products.each{|prod|
-        prod.repos(current_organization.library).each{ |repo|
-          status = repo.sync_status
-          syncing << repo.name if status.state == PulpSyncStatus::RUNNING
-          errors << repo.name if status.state == PulpSyncStatus::ERROR
-        }
-      }
-      messages[:syncing] =  syncing if !syncing.empty?
-      messages[:error] =  errors if !errors.empty?
+      # TODO: CONTENT VIEW IN PROGRESS - to check if refresh is in progress... this will be done in separate commit
+      #@changeset.involved_products.each{|prod|
+      #  prod.repos(current_organization.library).each{ |repo|
+      #    status = repo.sync_status
+      #    syncing << repo.name if status.state == PulpSyncStatus::RUNNING
+      #    errors << repo.name if status.state == PulpSyncStatus::ERROR
+      #  }
+      #}
+      #messages[:syncing] =  syncing if !syncing.empty?
+      #messages[:error] =  errors if !errors.empty?
     end
 
     to_ret = {}
-    if  !messages.empty?
+    if !messages.empty?
       to_ret[:warnings] = render_to_string(:partial=>'warning', :locals=>messages)
     else
       @changeset.apply :notify => true, :async => true
@@ -274,8 +234,7 @@ class ChangesetsController < ApplicationController
   def changeset_status
     progress = @changeset.task_status.progress
     state = @changeset.state
-    to_ret = {'id' => 'changeset_' + @changeset.id.to_s, 'state' => state, 'progress' => progress.to_i,
-              'product_ids' => @changeset.product_ids}
+    to_ret = {'id' => 'changeset_' + @changeset.id.to_s, 'state' => state, 'progress' => progress.to_i}
     render :json=>to_ret
   end
 
@@ -329,108 +288,29 @@ class ChangesetsController < ApplicationController
 
   #produce a simple datastructure of a changeset for the browser
   def simplify_changeset cs
-
     to_ret = {:id => cs.id.to_s, :name => cs.name, :type => cs.action_type, :description => cs.description,
-              :timestamp => cs.updated_at.to_i.to_s, :content_views => {}, :products => {},
+              :timestamp => cs.updated_at.to_i.to_s, :content_views => {},
               :is_new => cs.state == Changeset::NEW, :state => cs.state}
 
     cs.content_views.each do |view|
-      to_ret[:content_views][view.id] = {:id=> view.id, :name=>view.name}
+      to_ret[:content_views][view.id] = {:id => view.id, :name => view.name}
     end
 
-    cs.involved_products.each{|product|
-      to_ret[:products][product.id] = {:id=> product.id, :name=>product.name,
-        :provider=>product.provider.provider_type,
-      'package'=>[], 'errata'=>[], 'repo'=>[], 'distribution'=>[]}
-    }
-
-    cs.products.each {|product|
-      to_ret[:products][product.id][:all] =  true
-    }
-
-    cs.repos.each{|item|
-      pid = item.product.id
-      cs_product = to_ret[:products][pid]
-      cs_product['repo'] << {:id=>item.id, :name=>item.name}
-    }
-
-    ['errata', 'package', 'distribution'].each{ |type|
-      cs.send(type.pluralize).each{|item|
-        pid = item.product.id
-        cs_product = to_ret[:products][pid]
-        cs_product[type] << {:id=>item.send("#{type}_id"), :name=>item.display_name}
-      }
-    }
     to_ret
   end
 
   def update_artifacts_valid?
-    if params.has_key? :data
+    if params.has_key?(:data)
       params[:data].each do |item|
-        product_id = item["product_id"]
-        type = item["type"]
-        id = item["item_id"]
-        item = nil
-
-        if not product_id.nil?
-          if not update_item_valid?(type, id, product_id)
-            return false
-          end
-        else
-          case type
-            when "content_view"
-              return false if not update_content_view_valid?(id)
-            when "errata"
-              return false if not update_errata_valid?(id)
-            else
-              Rails.logger.debug('Unexpected type without a product id: ' + type)
-              return false
-          end
-        end
+        return false if not update_item_valid?(item["type"], item["item_id"])
       end
     end
     true
   end
 
-  def update_item_valid? type, id, product_id
-    case type
-      when "product"
-        item = Product.find(id)
-      when "package"
-        item = Product.find(product_id)
-      when "errata"
-        item = Product.find(product_id)
-      when "repo"
-        item = Product.find(product_id)
-      when "distribution"
-        item = Product.find(product_id)
-    end
-
-    if item && item.readable?()
-      return true
-    else
-      return false
-    end
-  end
-
-  def update_content_view_valid? id
-    content_view = ContentView.find(id)
-    content_view.promotable?
-  end
-
-  def update_errata_valid? id
-    errata = Errata.find(id)
-
-    errata.repoids.each{ |repoid|
-      repo = Repository.where(:pulp_id => repoid)[0]
-      product = repo.product
-
-      if not product && product.readable?
-        return false
-      end
-    }
-
-    return true
+  def update_item_valid?(type, id)
+    item = ContentView.find(id) if type == "content_view"
+    (item && item.readable?) ? true : false
   end
 
 end

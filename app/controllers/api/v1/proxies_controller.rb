@@ -63,6 +63,8 @@ class Api::V1::ProxiesController < Api::V1::ApiController
         User.consumer? # query is restricted in Candlepin
       when :api_proxy_subscriptions_post_path
         User.consumer? and current_user.uuid == params[:consumer_uuid]
+      when :api_proxy_deleted_consumers_path
+        current_user.has_superadmin_role?
       else
         Rails.logger.warn "Unknown proxy route #{request.method} #{request.fullpath}, access denied"
         # give the proxy route name using :as parameter and implement rule check here

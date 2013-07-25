@@ -159,10 +159,11 @@ describe Organization do
     end
 
     it "can delete an org where there is a full environment path" do
-       dev = KTEnvironment.create!(:name=>"Dev-34343", :label=> "Dev", :organization => @organization, :prior => @organization.library)
-       qa = KTEnvironment.create!(:name=>"QA", :label=> "QA", :organization => @organization, :prior => dev)
-       prod =  KTEnvironment.create!(:name=>"prod", :label=> "prod", :organization => @organization, :prior => qa)
+       dev = create_environment(:name=>"Dev-34343", :label=> "Dev", :organization => @organization, :prior => @organization.library)
+       qa = create_environment(:name=>"QA", :label=> "QA", :organization => @organization, :prior => dev)
+       prod =  create_environment(:name=>"prod", :label=> "prod", :organization => @organization, :prior => qa)
        Organization.any_instance.stub(:being_deleted?).and_return(true)
+
        @organization = @organization.reload
        @organization.destroy
        lambda{Organization.find(@organization.id)}.should raise_error(ActiveRecord::RecordNotFound)

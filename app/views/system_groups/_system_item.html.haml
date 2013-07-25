@@ -4,7 +4,7 @@
     %input.system_checkbox{:type => :checkbox, :name => "systems[#{system.system.id}]", 'data-id' => system.system.id,
                            :disabled => ('disabled' if !@group.editable?)}
     - if System.readable(system.system.organization)
-      = link_to system.system.name, systems_path(:anchor => "panel=system_#{system.system.id}")
+      = link_to system.system.name, systems_path(:anchor => "/!=&panel=system_#{system.system.id}")
     - else
       = system.system.name
   %td

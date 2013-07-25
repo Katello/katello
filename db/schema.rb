@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130613090036) do
+ActiveRecord::Schema.define(:version => 20130702164147) do
 
   create_table "activation_keys", :force => true do |t|
     t.string   "name"
@@ -38,55 +38,6 @@ ActiveRecord::Schema.define(:version => 20130613090036) do
     t.datetime "updated_at",      :null => false
   end
 
-  create_table "changeset_dependencies", :force => true do |t|
-    t.integer "changeset_id"
-    t.string  "package_id"
-    t.string  "display_name"
-    t.integer "product_id",    :null => false
-    t.string  "dependency_of"
-  end
-
-  add_index "changeset_dependencies", ["changeset_id"], :name => "index_changeset_dependencies_on_changeset_id"
-  add_index "changeset_dependencies", ["package_id"], :name => "index_changeset_dependencies_on_package_id"
-  add_index "changeset_dependencies", ["product_id"], :name => "index_changeset_dependencies_on_product_id"
-
-  create_table "changeset_distributions", :force => true do |t|
-    t.integer "changeset_id"
-    t.string  "distribution_id"
-    t.string  "display_name"
-    t.integer "product_id",      :null => false
-  end
-
-  add_index "changeset_distributions", ["changeset_id"], :name => "index_changeset_distributions_on_changeset_id"
-  add_index "changeset_distributions", ["distribution_id", "changeset_id", "product_id"], :name => "index_cs_distro_distro_id_cs_id_p_id", :unique => true
-  add_index "changeset_distributions", ["distribution_id"], :name => "index_changeset_distributions_on_distribution_id"
-  add_index "changeset_distributions", ["product_id"], :name => "index_changeset_distributions_on_product_id"
-
-  create_table "changeset_errata", :force => true do |t|
-    t.integer "changeset_id"
-    t.string  "errata_id"
-    t.string  "display_name"
-    t.integer "product_id",   :null => false
-  end
-
-  add_index "changeset_errata", ["changeset_id"], :name => "index_changeset_errata_on_changeset_id"
-  add_index "changeset_errata", ["errata_id", "changeset_id"], :name => "index_changeset_errata_on_errata_id_and_changeset_id", :unique => true
-  add_index "changeset_errata", ["errata_id"], :name => "index_changeset_errata_on_errata_id"
-  add_index "changeset_errata", ["product_id"], :name => "index_changeset_errata_on_product_id"
-
-  create_table "changeset_packages", :force => true do |t|
-    t.integer "changeset_id"
-    t.string  "package_id"
-    t.string  "display_name"
-    t.integer "product_id",   :null => false
-    t.string  "nvrea"
-  end
-
-  add_index "changeset_packages", ["changeset_id"], :name => "index_changeset_packages_on_changeset_id"
-  add_index "changeset_packages", ["nvrea", "changeset_id"], :name => "index_changeset_packages_on_nvrea_and_changeset_id", :unique => true
-  add_index "changeset_packages", ["package_id"], :name => "index_changeset_packages_on_package_id"
-  add_index "changeset_packages", ["product_id"], :name => "index_changeset_packages_on_product_id"
-
   create_table "changeset_users", :force => true do |t|
     t.integer  "changeset_id"
     t.integer  "user_id"
@@ -112,22 +63,6 @@ ActiveRecord::Schema.define(:version => 20130613090036) do
   add_index "changesets", ["environment_id"], :name => "index_changesets_on_environment_id"
   add_index "changesets", ["name", "environment_id"], :name => "index_changesets_on_name_and_environment_id", :unique => true
   add_index "changesets", ["task_status_id"], :name => "index_changesets_on_task_status_id"
-
-  create_table "changesets_products", :id => false, :force => true do |t|
-    t.integer "changeset_id"
-    t.integer "product_id"
-  end
-
-  add_index "changesets_products", ["changeset_id"], :name => "index_changesets_products_on_changeset_id"
-  add_index "changesets_products", ["product_id"], :name => "index_changesets_products_on_product_id"
-
-  create_table "changesets_repositories", :id => false, :force => true do |t|
-    t.integer "changeset_id",  :null => false
-    t.integer "repository_id", :null => false
-  end
-
-  add_index "changesets_repositories", ["changeset_id"], :name => "index_changesets_repositories_on_changeset_id"
-  add_index "changesets_repositories", ["repository_id"], :name => "index_changesets_repositories_on_repository_id"
 
   create_table "component_content_views", :force => true do |t|
     t.integer  "content_view_definition_id"
@@ -269,13 +204,6 @@ ActiveRecord::Schema.define(:version => 20130613090036) do
 
   add_index "environment_priors", ["environment_id"], :name => "index_environment_priors_on_environment_id"
   add_index "environment_priors", ["prior_id"], :name => "index_environment_priors_on_prior_id"
-
-  create_table "environment_products", :force => true do |t|
-    t.integer "environment_id", :null => false
-    t.integer "product_id",     :null => false
-  end
-
-  add_index "environment_products", ["environment_id", "product_id"], :name => "index_environment_products_on_environment_id_and_product_id", :unique => true
 
   create_table "environment_system_groups", :force => true do |t|
     t.integer "environment_id"
@@ -425,11 +353,12 @@ ActiveRecord::Schema.define(:version => 20130613090036) do
     t.string   "name"
     t.text     "description"
     t.string   "label"
-    t.datetime "created_at",         :null => false
-    t.datetime "updated_at",         :null => false
+    t.datetime "created_at",                            :null => false
+    t.datetime "updated_at",                            :null => false
     t.integer  "deletion_task_id"
     t.text     "default_info"
     t.integer  "apply_info_task_id"
+    t.integer  "owner_auto_attach_all_systems_task_id"
   end
 
   add_index "organizations", ["deletion_task_id"], :name => "index_organizations_on_task_id"
@@ -529,7 +458,6 @@ ActiveRecord::Schema.define(:version => 20130613090036) do
     t.string   "name"
     t.string   "pulp_id",                                       :null => false
     t.boolean  "enabled",                 :default => true
-    t.integer  "environment_product_id",                        :null => false
     t.datetime "created_at",                                    :null => false
     t.datetime "updated_at",                                    :null => false
     t.integer  "major"
@@ -545,14 +473,16 @@ ActiveRecord::Schema.define(:version => 20130613090036) do
     t.string   "feed"
     t.boolean  "unprotected",             :default => false,    :null => false
     t.string   "content_type",            :default => "yum",    :null => false
+    t.integer  "product_id"
+    t.integer  "environment_id"
   end
 
   add_index "repositories", ["content_view_version_id"], :name => "index_repositories_on_content_view_version_id"
   add_index "repositories", ["cp_label"], :name => "index_repositories_on_cp_label"
-  add_index "repositories", ["environment_product_id"], :name => "index_repositories_on_environment_product_id"
+  add_index "repositories", ["environment_id"], :name => "index_repositories_on_environment_id"
   add_index "repositories", ["gpg_key_id"], :name => "index_repositories_on_gpg_key_id"
-  add_index "repositories", ["label", "content_view_version_id", "environment_product_id"], :name => "repositories_l_cvvi_epi", :unique => true
   add_index "repositories", ["library_instance_id"], :name => "index_repositories_on_library_instance_id"
+  add_index "repositories", ["product_id"], :name => "index_repositories_on_product_id"
   add_index "repositories", ["pulp_id"], :name => "index_repositories_on_pulp_id"
 
   create_table "resource_types", :force => true do |t|
@@ -729,29 +659,11 @@ ActiveRecord::Schema.define(:version => 20130613090036) do
   add_foreign_key "changeset_content_views", "changesets", :name => "changeset_content_views_changeset_id_fk"
   add_foreign_key "changeset_content_views", "content_views", :name => "changeset_content_views_content_view_id_fk"
 
-  add_foreign_key "changeset_dependencies", "changesets", :name => "changeset_dependencies_changeset_id_fk"
-  add_foreign_key "changeset_dependencies", "products", :name => "changeset_dependencies_product_id_fk"
-
-  add_foreign_key "changeset_distributions", "changesets", :name => "changeset_distributions_changeset_id_fk"
-  add_foreign_key "changeset_distributions", "products", :name => "changeset_distributions_product_id_fk"
-
-  add_foreign_key "changeset_errata", "changesets", :name => "changeset_errata_changeset_id_fk"
-  add_foreign_key "changeset_errata", "products", :name => "changeset_errata_product_id_fk"
-
-  add_foreign_key "changeset_packages", "changesets", :name => "changeset_packages_changeset_id_fk"
-  add_foreign_key "changeset_packages", "products", :name => "changeset_packages_product_id_fk"
-
   add_foreign_key "changeset_users", "changesets", :name => "changeset_users_changeset_id_fk"
   add_foreign_key "changeset_users", "users", :name => "changeset_users_user_id_fk"
 
   add_foreign_key "changesets", "environments", :name => "changesets_environment_id_fk"
   add_foreign_key "changesets", "task_statuses", :name => "changesets_task_status_id_fk"
-
-  add_foreign_key "changesets_products", "changesets", :name => "changesets_products_changeset_id_fk"
-  add_foreign_key "changesets_products", "products", :name => "changesets_products_product_id_fk"
-
-  add_foreign_key "changesets_repositories", "changesets", :name => "changesets_repositories_changeset_id_fk"
-  add_foreign_key "changesets_repositories", "repositories", :name => "changesets_repositories_repository_id_fk"
 
   add_foreign_key "component_content_views", "content_view_definition_bases", :name => "component_content_views_content_view_definition_id_fk", :column => "content_view_definition_id"
   add_foreign_key "component_content_views", "content_views", :name => "component_content_views_content_view_id_fk"
@@ -783,9 +695,6 @@ ActiveRecord::Schema.define(:version => 20130613090036) do
 
   add_foreign_key "environment_priors", "environments", :name => "environment_priors_environment_id_fk"
   add_foreign_key "environment_priors", "environments", :name => "environment_priors_prior_id_fk", :column => "prior_id"
-
-  add_foreign_key "environment_products", "environments", :name => "environment_products_environment_id_fk"
-  add_foreign_key "environment_products", "products", :name => "environment_products_product_id_fk"
 
   add_foreign_key "environment_system_groups", "environments", :name => "environment_system_groups_environment_id_fk"
   add_foreign_key "environment_system_groups", "system_groups", :name => "environment_system_groups_system_group_id_fk"
@@ -846,7 +755,6 @@ ActiveRecord::Schema.define(:version => 20130613090036) do
   add_foreign_key "providers", "task_statuses", :name => "providers_task_status_id_fk"
 
   add_foreign_key "repositories", "content_view_versions", :name => "repositories_content_view_version_id_fk"
-  add_foreign_key "repositories", "environment_products", :name => "repositories_environment_product_id_fk"
   add_foreign_key "repositories", "gpg_keys", :name => "repositories_gpg_key_id_fk"
   add_foreign_key "repositories", "repositories", :name => "repositories_library_instance_id_fk", :column => "library_instance_id"
 

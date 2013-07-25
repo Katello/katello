@@ -67,7 +67,7 @@ describe EnvironmentsController do
       login_user
       set_default_locale
       new_test_org
-      @environment = KTEnvironment.create!(:name=>"boo", :label=> "boo", :organization=> @organization, :prior => @organization.library)
+      @environment = create_environment(:name=>"boo", :label=> "boo", :organization=> @organization, :prior => @organization.library)
     end
     it_should_behave_like "bad request"  do
       let(:req) do

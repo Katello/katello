@@ -24,14 +24,14 @@ describe CustomInfo do
     disable_org_orchestration
 
     @organization = Organization.create!(:name => "test_org", :label => "test_org")
-    @environment = KTEnvironment.create!(:name => "test_env", :label => "test_env", :prior => @organization.library.id, :organization => @organization)
+    @environment = create_environment(:name => "test_env", :label => "test_env", :prior => @organization.library.id, :organization => @organization)
 
     Resources::Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
     Resources::Candlepin::Consumer.stub!(:update).and_return(true)
 
     Runcible::Extensions::Consumer.stub!(:create).and_return({:id => uuid}) if defined?(Runcible)
 
-    @system = System.create!(:name => "test_system", :environment => @environment, :cp_type => 'system', :facts => {"distribution.name" => "Fedora"})
+    @system = create_system(:name => "test_system", :environment => @environment, :cp_type => 'system', :facts => {"distribution.name" => "Fedora"})
 
     CustomInfo.skip_callback(:save, :after, :reindex_informable)
     CustomInfo.skip_callback(:destroy, :after, :reindex_informable)

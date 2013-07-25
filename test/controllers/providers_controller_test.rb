@@ -23,9 +23,10 @@ class ProvidersControllerTest < MiniTest::Rails::ActionController::TestCase
     login_user(User.find(users(:admin)), @org)
 
 
-    models = ["Organization", "KTEnvironment"]
+    models = ["Organization", "KTEnvironment", "Provider", "Product"]
     services = ["Candlepin", "Pulp", "ElasticSearch", "Foreman"]
     disable_glue_layers(services, models)
+    Provider.stubs(:display_attributes).returns([])
   end
 
   test 'test index should be successful' do

@@ -8,7 +8,7 @@ require 'katello/load_configuration'
 # With a pull request, send also link to our (or Fedora) koji with RPMs.
 source 'http://rubygems.org'
 
-gem 'rails', '~> 3.2.8'
+gem 'rails', '~> 3.2.8', "< 3.2.14"
 gem 'json'
 gem 'rabl'
 gem 'rest-client', :require => 'rest_client'

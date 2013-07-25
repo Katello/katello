@@ -44,30 +44,6 @@
             #{_("This changeset contains no content.")}
         -else
           #accordion.grid_8.prefix_1.cs_history_tab
-            - if !@changeset.products.empty?
-              %h3
-                %a{:href=>'#'} #{_("Full Products")}
-              #full_products.cs_history_tab
-                %ul
-                  -for prod in @changeset.products
-                    %li #{prod.name}
-            - for prod in @changeset.partial_products
-              %h3
-                %a{:href=>'#'} #{_(prod.name)}
-              .cs_history_tab
-                = render :partial=>"content_type",
-                    :locals=>{:items=>@changeset.packages.where(:product_id=>prod.id).collect{|i| i.display_name},
-                    :type_string=>_("Packages")}
-                = render :partial=>"content_type",
-                    :locals=>{:items=>@changeset.errata.where(:product_id=>prod.id).collect{|i| i.display_name},
-                    :type_string=>_("Errata")}
-                = render :partial=>"content_type",
-                    :locals=>{:items=>@changeset.repos.in_product(prod).all.collect{|i| i.name},
-                    :type_string=>_("Repositories")}
-                = render :partial=>"content_type",
-                    :locals=>{:items=>@changeset.distributions.where(:product_id=>prod.id).collect{|i| i.display_name},
-                    :type_string=>_("Distributions")}
-
             - if !@changeset.content_views.empty?
               %h3
                 %a{:href=>'#'} #{_("Content Views")}
