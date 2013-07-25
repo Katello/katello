@@ -15,6 +15,7 @@
       .subs_text.fl.panel_link
         = system_status_message(@system)
         = link_to(_('Details'), edit_system_path(@system))
+    %input.fr.button#heal_system_button{:type=>"button",:value=>_("Run Auto-Attach"),'data-url'=>refresh_subscriptions_api_system_path(@system.uuid), 'data-method' => "post"}
     .subs_servicelevel{'name' => 'system[serviceLevel]', 'class' => ("editable edit_select_system_servicelevel" if editable), 'data-url' => system_path(system.id), 'data-options' => system_servicelevel_edit(system)}
       = system_servicelevel(system)
     .clear
