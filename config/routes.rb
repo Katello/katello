@@ -411,6 +411,9 @@ Src::Application.routes.draw do
         get :products
         get :content_views
       end
+      collection do
+        get :registerable_paths
+      end
       resources :content_view_versions, :only => [:show] do
         member do
           get :content

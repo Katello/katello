@@ -17,62 +17,106 @@
  *
  * @requires $scope
  * @requires System
+ * @requires Environment
+ * @requires ContentView
  *
  * @description
  *   Provides the functionality for the system details action pane.
  */
-angular.module('Bastion.systems').controller('SystemDetailsInfoController', ['$scope', 'System', function($scope, System) {
-    var dotNotationToObj = function(dotString) {
-        var dotObject = {}, tempObject, parts, part, key;
-        for (var property in dotString) {
-            if (dotString.hasOwnProperty(property)) {
-                tempObject = dotObject;
-                parts = property.split('.');
-                key = parts.pop();
-                while (parts.length) {
-                    part = parts.shift();
-                    tempObject = tempObject[part] = tempObject[part] || {};
-                }
-                tempObject[key] = dotString[property];
-            }
-        }
-        return dotObject;
-    };
+angular.module('Bastion.systems').controller('SystemDetailsInfoController',
+    ['$scope', 'System', 'ContentView', 'Environment', '$q',
+    function($scope, System, ContentView, Environment, $q) {
 
-    var populateExcludedFacts = function () {
-        $scope.advancedInfoLeft = {};
-        $scope.advancedInfoRight = {};
-        var index = 0;
-        angular.forEach($scope.systemFacts, function(value, key) {
-            if (index % 2 === 0) {
-                $scope.advancedInfoLeft[key] = value;
-            } else {
-                $scope.advancedInfoRight[key] = value;
+        $scope.editContentView = false;
+        $scope.previousEnvironment = -1;
+
+        $scope.setEnvironment = function(environmentId) {
+            if ($scope.previousEnvironment !== $scope.system.environment.id) {
+                $scope.previousEnvironment = $scope.system.environment.id;
+                $scope.system.environment.id = environmentId;
+                $scope.editContentView = true;
+                $scope.$apply();
             }
-            index = index + 1;
+        };
+
+        $scope.cancelContentViewUpdate = function() {
+            if ($scope.editContentView) {
+                $scope.editContentView = false;
+                $scope.system.environment.id = $scope.previousEnvironment;
+                $scope.pathSelector.select($scope.previousEnvironment);
+            }
+        };
+
+        $scope.releaseVersions = function() {
+            var deferred = $q.defer();
+
+            System.releaseVersions({ id: $scope.$stateParams.systemId }, function(response) {
+                deferred.resolve(response);
+            });
+
+            return deferred.promise;
+        };
+
+        $scope.contentViews = function() {
+            var deferred = $q.defer();
+
+            ContentView.query({ 'environment_id': $scope.system.environment.id }, function(response) {
+                deferred.resolve(response.records);
+            });
+
+            return deferred.promise;
+        };
+
+        $scope.$watch("system.facts", function(systemFacts) {
+            if (!systemFacts) {
+                return;
+            }
+            $scope.systemFacts = dotNotationToObj(systemFacts);
+            populateExcludedFacts();
         });
-        $scope.hasAdvancedInfo = Object.keys($scope.advancedInfoLeft).length > 0 ||
-            Object.keys($scope.advancedInfoRight).length > 0;
 
-    };
+        // TODO upgrade to Angular 1.1.4 so we can move this into a directive
+        // and use dynamic templates (http://code.angularjs.org/1.1.4/docs/partials/guide/directive.html)
+        $scope.getTemplateForType = function(value) {
+            var template = 'systems/details/views/partials/system-detail-value.html';
+            if (typeof(value) === 'object') {
+                template = 'systems/details/views/partials/system-detail-object.html';
+            }
+            return template;
+        };
 
-    $scope.$watch("system.facts", function(systemFacts) {
-        if (!systemFacts) {
-            return;
+        function dotNotationToObj(dotString) {
+            var dotObject = {}, tempObject, parts, part, key;
+            for (var property in dotString) {
+                if (dotString.hasOwnProperty(property)) {
+                    tempObject = dotObject;
+                    parts = property.split('.');
+                    key = parts.pop();
+                    while (parts.length) {
+                        part = parts.shift();
+                        tempObject = tempObject[part] = tempObject[part] || {};
+                    }
+                    tempObject[key] = dotString[property];
+                }
+            }
+            return dotObject;
         }
-        $scope.systemFacts = dotNotationToObj(systemFacts);
-        populateExcludedFacts();
-    });
 
-    $scope.releaseVersions = System.releaseVersions({ id: $scope.$stateParams.systemId });
+        function populateExcludedFacts() {
+            $scope.advancedInfoLeft = {};
+            $scope.advancedInfoRight = {};
+            var index = 0;
+            angular.forEach($scope.systemFacts, function(value, key) {
+                if (index % 2 === 0) {
+                    $scope.advancedInfoLeft[key] = value;
+                } else {
+                    $scope.advancedInfoRight[key] = value;
+                }
+                index = index + 1;
+            });
+            $scope.hasAdvancedInfo = Object.keys($scope.advancedInfoLeft).length > 0 ||
+                Object.keys($scope.advancedInfoRight).length > 0;
 
-    // TODO upgrade to Angular 1.1.4 so we can move this into a directive
-    // and use dynamic templates (http://code.angularjs.org/1.1.4/docs/partials/guide/directive.html)
-    $scope.getTemplateForType = function(value) {
-        var template = 'systems/details/views/partials/system-detail-value.html';
-        if (typeof(value) === 'object') {
-            template = 'systems/details/views/partials/system-detail-object.html';
         }
-        return template;
-    };
-}]);
+    }]
+);

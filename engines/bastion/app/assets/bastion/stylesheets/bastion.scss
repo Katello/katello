@@ -5,10 +5,8 @@
   @include box-sizing(border-box);
 }
 
-
-@import "overrides";
-@import "katello_base";
-@import "bastion/stylesheets/vars";
+@import "vars";
+@import "katello_colors";
 
 $font_path: "../alchemy/";
 $FontAwesomePath: "../font-awesome/font";
@@ -23,6 +21,7 @@ $spritePath: url("../alchemy/icons/action-icons.png");
 
 @import "header";
 @import "nutupane";
+@import "widgets/path_selector";
 
 @import "widgets/tipsy_custom";
 @import "jquery.tipsy";
@@ -32,6 +31,8 @@ body {
   height: 100%;
   overflow: hidden;
 }
+
+ul { -webkit-padding-start: 0; }
 
 #experimental_indicator {
   position: absolute;

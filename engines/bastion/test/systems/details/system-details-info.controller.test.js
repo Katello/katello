@@ -21,7 +21,7 @@ describe('Controller: SystemDetailsInfoController', function() {
     beforeEach(inject(function(_$controller_, $rootScope) {
         $controller = _$controller_;
         $scope = $rootScope.$new();
-        // Mocks
+
         mockSystem = {
             facts: {
                 cpu: "Itanium",
@@ -34,25 +34,38 @@ describe('Controller: SystemDetailsInfoController', function() {
             get: function() {
                 return mockSystem;
             },
-            releaseVersions: function() {}
+            releaseVersions: function(params, callback) {
+                callback.apply(this, [['RHEL6']]);
+            }
         };
-        spyOn(System, 'get').andCallThrough();
-        spyOn(System, 'releaseVersions').andReturn(['RHEL6']);
+
+        Environment = {};
+        ContentView = {};
 
         $scope.$stateParams = {systemId: 2};
 
-        $controller('SystemDetailsInfoController', {$scope: $scope, System: System});
+        $controller('SystemDetailsInfoController', {
+            $scope: $scope,
+            System: System,
+            Environment: Environment,
+            ContentView: ContentView,
+        });
     }));
 
     it("gets the available release versions and puts them on the $scope", function() {
-        expect(System.releaseVersions).toHaveBeenCalledWith({id: 2});
-        expect($scope.releaseVersions).toEqual(['RHEL6']);
+        $scope.releaseVersions().then(function(releases) {
+            expect(releases).toEqual(['RHEL6']);
+        });
     });
 
     describe("populates advanced system information", function () {
         beforeEach(function() {
             $scope.system = System.get();
             $scope.$digest();
+            System.get = function(systemId, callback) {
+                callback.apply();
+            }
+            $controller('SystemDetailsController', {$scope: $scope, System: System});
         });
 
         it("creates the system facts object by converting dot notation response to an object.", function() {

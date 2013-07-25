@@ -1,4 +1,22 @@
-<div class="nutupane-sub-section">
+<section class="system-details" ng-cloak alch-container-scroll>
+  <header class="details-header">
+    <h2 class="fl">{{ "System \"%systemName\"" | i18n: {systemName: system.name} }}</h2>
+
+    <div class="details-actions fr">
+      <button class="btn-mini btn-danger" ng-click="removeSystem()">{{ "Remove System" | i18n }}</button>
+      <button class="btn-mini" ng-click="table.closeItem()">
+        <i class="icon-remove"></i>
+        {{ "Close" | i18n }}
+      </button>
+    </div>
+  </header>
+
+  <nav class="details-navigation">
+    <ul>
+      <li><a class="active">{{ "Details" | i18n }}</a></li>
+    </ul>
+  </nav>
+
   <div class="details fl">
     <section>
       <h4>{{ "Basic Information" | i18n }}</h4>
@@ -114,7 +132,7 @@
         <span class="info-label">{{ "Content View" | i18n }}</span>
         <span class="info-value"
               alch-edit-select="system.content_view.name"
-              object="system.content_view.id"
+              object="system.content_view_id"
               on-options="contentViews()"
               on-cancel="cancelContentViewUpdate()"
               on-save="system.$update()"
@@ -125,8 +143,8 @@
       <div class="detail">
         <span class="info-label">{{ "Environment" | i18n }}</span>
         <span id="environment_path_selector" 
-              path-selector="system.environment.id"
-              organization="system.environment.organization_name"
+              path-selector="system.environment_id"
+              paths="environmentPaths"
               on-change="setEnvironment(environment_id)">
         </span>
       </div>
@@ -212,4 +230,4 @@
       </section>
     </div>
   </div>
-</div>
+</section>
