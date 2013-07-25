@@ -31,7 +31,7 @@ class PackageRule < FilterRule
         rule_clauses << {'filename' => {"$in" => results}}
         unless results.empty?
           # now add version info
-          rule_clauses << generate_version_clause(repo, unit)
+          rule_clauses += generate_version_clause(repo, unit)
         end
         rule_clauses.compact!
         if rule_clauses.size == 1
@@ -46,15 +46,19 @@ class PackageRule < FilterRule
   protected
 
   def generate_version_clause(repo, unit)
-    if unit.has_key?(:version)
-      {'version' => unit[:version] }
-    elsif unit.has_key?(:min_version) || unit.has_key?(:max_version)
+    clauses = Array.new
+    if unit[:version].present?
+      epoch, version = Util::Package.parse_epoch_version(unit[:version])
+      clauses << {"version" => version} if version
+      clauses << {"epoch" => epoch} if epoch
+    elsif unit[:min_version].present? || unit[:max_version].present?
       filter = Util::Package.version_filter(unit[:min_version], unit[:max_version])
       results = Package.search(unit[:name], 0, repo.package_count, [repo.pulp_id],
-          [:nvrea_sort, "ASC"], :all, 'name', filter).map(&:filename).compact
-
-      {'filename' => {"$in" => results}}
+          [:nvrea_sort, "ASC"], :all, 'name', [filter]).map(&:filename).compact
+      clauses << {'filename' => {"$in" => results}}
     end
+
+    clauses
   end
 
 end

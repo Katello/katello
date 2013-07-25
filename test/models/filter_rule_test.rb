@@ -55,9 +55,9 @@ class FilterRuleTest < MiniTest::Rails::ActiveSupport::TestCase
                                       {:filename => "106"}])
     expected_ids3 = search_results3.collect(&:filename)
 
-    units = {:units => [{:name => "foo*", :version => "5.0"},
+    units = {:units => [{:name => "foo*", :version => "4:5.0.3"},
                         {:name => "goo*", :min_version => "0.5", :max_version => "0.7" }]}
-    expected = [{"$and" => [{"filename"=>{"$in"=> expected_ids1}}, {"version" => "5.0"}]},
+    expected = [{"$and" => [{"filename"=>{"$in"=> expected_ids1}}, {"version" => "5.0.3"}, {"epoch" => "4"}]},
                 {"$and" => [{"filename"=>{"$in"=> expected_ids2}}, {"filename"=>{"$in"=> expected_ids3}}]}
                ]
     Package.expects(:search).times(3).returns(search_results1, search_results2, search_results3)

@@ -54,8 +54,15 @@ module Glue::Pulp::Package
       Util::Package.sortable_version(self.version)
     end
 
+    def sortable_epoch_version
+      Util::Package.sortable_epoch_version(self.version, self.epoch)
+    end
+
     def as_json(options = nil)
-      super(options).merge(id: id, sortable_version: sortable_version)
+      super(options).merge(id: id,
+                           sortable_version: sortable_version,
+                           sortable_epoch_version: sortable_epoch_version
+                          )
     end
   end
 

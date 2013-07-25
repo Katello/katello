@@ -22,6 +22,7 @@ module Glue::ElasticSearch::Package
           "nvrea" => nvrea,
           "nvrea_autocomplete" => nvrea,
           "sortable_version" => sortable_version,
+          "sortable_epoch_version" => sortable_epoch_version,
           "name_autocomplete" => name
         }
       end
@@ -48,7 +49,9 @@ module Glue::ElasticSearch::Package
               :nvrea         => { :type=> 'string', :analyzer=>:kt_name_analyzer},
               :nvrea_sort    => { :type => 'string', :index=> :not_analyzed },
               :repoids       => { :type=> 'string', :index=>:not_analyzed},
-              :sortable_version => { :type => 'string', :index => :not_analyzed }
+              :sortable_version => { :type => 'string', :index => :not_analyzed },
+              :sortable_epoch_version => { :type => 'string', :index => :not_analyzed },
+              :epoch         => { :type => "integer", :index => :not_analyzed }
             }
           }
         }
@@ -120,7 +123,7 @@ module Glue::ElasticSearch::Package
       end
 
       def self.search(query, start=0, page_size=15, repoids=nil, sort=[:nvrea_sort, "ASC"],
-                      search_mode = :all, default_field = 'nvrea', filter=nil)
+                      search_mode = :all, default_field = 'nvrea', filters=[])
         if !Tire.index(self.index).exists? || (repoids && repoids.empty?)
           return Util::Support.array_with_total
         end
@@ -130,7 +133,7 @@ module Glue::ElasticSearch::Package
         search = Tire::Search::Search.new(self.index)
 
         search.instance_eval do
-          fields [:id, :name, :nvrea, :repoids, :description, :filename, :sortable_version, :version]
+          fields [:id, :name, :nvrea, :repoids, :description, :filename, :version, :epoch]
 
           query do
             if all_rows
@@ -151,7 +154,7 @@ module Glue::ElasticSearch::Package
           Util::Package.setup_shared_unique_filter(repoids, search_mode, search)
         end
 
-        if filter
+        filters.each do |filter|
           search.filter *filter
         end
 
