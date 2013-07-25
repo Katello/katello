@@ -13,6 +13,11 @@
 
 $(document).ready(function() {
 
+    // override textfield
+    $.editable.types.text.content = function(string, settings, original) {
+        $(':input:first', this).val($("<div/>").html(string).text());
+    };
+
     // override textarea
     $.editable.types.textarea.content = function(string, settings, original) {
         $(':input:first', this).val($("<div/>").html(string).text());

@@ -18,7 +18,7 @@ class ApplicationController < ActionController::Base
   layout 'katello'
   include Notifications::ControllerHelper
   include Profiling
-  include Locale
+  include KTLocale
   clear_helpers
 
   helper UIAlchemy::TranslationHelper

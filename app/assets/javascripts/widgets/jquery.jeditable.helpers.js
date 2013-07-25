@@ -99,7 +99,13 @@ KT.editable = (function(){
                     type        :  'text',
                     data        :  null,
                     width       :  270,
-                    name        :  $(this).attr('name')
+                    name        :  $(this).attr('name'),
+                    onsuccess   : function(result, status, xhr) {
+                        element.text(KT.utils.unescape(result)); // hax
+                    },
+                    onerror     : function(settings, original, xhr) {
+                        original.reset();
+                    }
                 };
                 $(this).editable($(this).attr('data-url'), $.extend(common_settings, settings));
             });

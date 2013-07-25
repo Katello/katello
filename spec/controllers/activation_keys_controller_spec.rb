@@ -444,7 +444,7 @@ describe ActivationKeysController do
     end
   end
 
-  describe "GET available_subscriptions" do
+  pending "GET available_subscriptions" do
     before(:each) do
       @product1 = Product.new(name: "Product1", :cp_id => "Product1")
       @marketing_product = Product.new(name: "MarketingProduct", :cp_id => "MarketingProduct")
