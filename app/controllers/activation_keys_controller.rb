@@ -82,13 +82,33 @@ class ActivationKeysController < ApplicationController
   end
 
   def available_subscriptions
+    @organization = current_organization
+
     all_pools = retrieve_all_pools
-    available_pools = retrieve_available_pools(all_pools).sort
-
-    engineering_products = @activation_key.content_view.products(@activation_key.environment)
-    marketing_products = engineering_products.map { |ep| ep.custom? ? ep.name : ep.marketing_products.map(&:name) }.flatten
-
-    @available_pools = available_pools.select{ |prod, prod_aray| marketing_products.include?(prod) }
+    if Katello.config.katello?
+      engineering_products = @activation_key.content_view ? @activation_key.content_view.products(@activation_key.environment) : @activation_key.environment.products
+      ep_ids = engineering_products.collect do |ep|
+        ep.cp_id
+      end
+      matching_pools = all_pools.find_all do |pool|
+        if pool[1].provided_products.empty? && !Product.find_by_cp_id(pool[1].product_id, @organization)
+          true  # Always match pools with no provided products unless a custom product
+        else
+          # Custom products don't have any provided products. However, there is both a Product and a MarketingProduct
+          # in the products table so simply use the product_id as the provided product
+          if pool[1].provided_products.empty?
+            ids = [pool[1].product_id]
+          else
+            ids = pool[1].provided_products.collect {|p| p['productId']}
+          end
+          matching = ids.find_all { |id| ep_ids.include? id }
+          !matching.empty?  # ... or match when there are matching product id
+        end
+      end
+    else
+      matching_pools = all_pools
+    end
+    @available_pools = pools_hash(matching_pools)
 
     render :partial=>"available_subscriptions",
            :locals => {:akey => @activation_key, :editable => ActivationKey.manageable?(current_organization),

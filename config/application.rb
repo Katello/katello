@@ -183,7 +183,7 @@ old_fast_gettext = !defined?(FastGettext::Version) ||
 
 FastGettext.add_text_domain('katello', {
   :path => File.expand_path("../../locale", __FILE__),
-  :type => :mo,
+  :type => :po,
   :ignore_fuzzy => true
 }.update(old_fast_gettext ? { :ignore_obsolete => true } : { :report_warning => false }))
 

@@ -105,7 +105,8 @@ module Glue
       #
       # @return [Array] a list of ActiveRecord objects
       def load_records
-        collection = @obj_class.where(:id => @results.collect{|r| r.id})
+        collection = @obj_class.where(:id => @results.collect{|r| r.id}).
+            order(@results.collect{|r| "id = #{r.id} DESC"})
 
         #set total since @items will be just an array
         @total = @results.empty? ? 0 : @results.total

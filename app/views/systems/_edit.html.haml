@@ -183,7 +183,7 @@
                     %tr
                       %td
                         - if ActivationKey.readable? key.organization
-                          = link_to key.name, activation_keys_path(:anchor => "panel=activation_key_#{key.id}")
+                          = link_to key.name, activation_keys_path(:anchor => "/!=&panel=activation_key_#{key.id}")
                         - else
                           = key[:name]
 
@@ -201,7 +201,14 @@
               = label :host_guest, :host, _("Host")
             .input
               %span.value
-                = system.host ? system.host.attributes['name'] : _("Unknown")
+                - if system.host
+                  - if system.host.id
+                    = link_to(system.host.attributes['name'],
+                                        systems_path(:anchor => "/!=&panel=system_#{system.host.id}"))
+                  - else
+                    = system.host.attributes['name']
+                - else
+                  = _("Unknown")
           -else
             .label
               = label :host_guest, :guest, _("Guests")
@@ -213,6 +220,10 @@
                   %ul
                   - system.guests.each do |guest|
                     %li{:style=>'list-style: none;'}
-                      = guest.attributes['name']
+                      - if guest.id
+                        = link_to(guest.attributes['name'],
+                                  systems_path(:anchor => "/!=&panel=system_#{guest.id}"))
+                      - else
+                        = guest.attributes['name']
 
 = render :template => "layouts/tupane_layout"

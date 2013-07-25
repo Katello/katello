@@ -133,6 +133,7 @@ class SystemsController < ApplicationController
     if current_user.experimental_ui
       render 'bastion/systems/index', :layout => 'bastion/layouts/application'
     else
+      @auto_attach_task = TaskStatus.find_by_id(current_organization.owner_auto_attach_all_systems_task_id)
       render :index
     end
   end
@@ -693,8 +694,8 @@ class SystemsController < ApplicationController
       :ajax_scroll => items_systems_path(),
       :actions => System.any_deletable?(@environment, current_organization) ? 'actions' : nil,
       :initial_action => :subscriptions,
-      :search_class=>System,
-      :disable_create=> current_organization.environments.length == 0 ? _("At least one environment is required to create or register systems in your current organization.") : false
+      :search_class => System,
+      :disable_create => current_organization.environments.length == 0 ? _("At least one environment is required to create or register systems in your current organization.") : false
     }
   end
 

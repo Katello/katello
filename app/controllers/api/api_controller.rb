@@ -13,7 +13,7 @@
 class Api::ApiController < ActionController::Base
   include ActionController::HttpAuthentication::Basic
   include Profiling
-  include Locale
+  include KTLocale
 
   respond_to :json
   before_filter :require_user
