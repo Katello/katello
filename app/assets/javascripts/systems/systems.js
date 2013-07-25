@@ -626,7 +626,34 @@ KT.subs = (function() {
         } else if (_checked === 0 && subbutton.is(":visible")) {
             subbutton.fadeOut("fast", function(){fakesubbutton.fadeIn()});
         }
+    };
+
+    KT.panel.set_expand_cb(function() {
+        setup();
+    });
+
+    setup = function() {
+        heal_system_button().live("click", function() {
+           heal_system();
+        });
     },
+   heal_system = function() {
+        var button = heal_system_button();
+        $.ajax({
+                url  : button.data("url"),
+                type : button.data("method"),
+                data : '',
+                success: function(data) {
+                        console.log("success");
+                },
+                error: function(data) {
+                        notices.displayNotice("error", window.JSON.stringify({"notices": ["System cannot be healed.Please contact your system administrator"]}));
+                }
+        });
+   },
+   heal_system_button = function() {
+        return $("#heal_system_button");
+   },
     subSetup = function(){
         var subcheckboxes = $('#subscribe input[type="checkbox"]'),
             subbutton = $('#sub_submit');
