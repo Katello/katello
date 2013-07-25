@@ -10,23 +10,25 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-class UserNotice < ActiveRecord::Base
+module Katello
+  class UserNotice < ActiveRecord::Base
 
-  belongs_to :user
-  belongs_to :notice
+    belongs_to :user
+    belongs_to :notice
 
-  def check_permissions operation
-    # anybody can create user_notice relationships
-    return true if operation == :create
-    # only notice owner can update or destroy
-    if operation == :update or operation == :destroy
-      return true if user.id and User.current and user.id == User.current.id
+    def check_permissions operation
+      # anybody can create user_notice relationships
+      return true if operation == :create
+      # only notice owner can update or destroy
+      if operation == :update or operation == :destroy
+        return true if user.id and User.current and user.id == User.current.id
+      end
+      false
     end
-    false
-  end
 
-  def read!
-    update_attributes! :viewed => true
-  end
+    def read!
+      update_attributes! :viewed => true
+    end
 
+  end
 end

@@ -13,7 +13,8 @@ Gem::Specification.new do |s|
   s.summary     = ""
   s.description = ""
 
-  s.files = Dir["{app,vendor,lib,config}/**/*"] + ["LICENSE.txt", "Rakefile", "README.md"]
+  s.files = Dir["{app,vendor,lib,db}/**/*"] + ["LICENSE.txt", "Rakefile", "README.md"]
+  s.require_paths = ["lib"]
 
   # Documentation
   s.add_dependency "apipie-rails", ">= 0.0.13"
@@ -31,10 +32,17 @@ Gem::Specification.new do |s|
   s.add_dependency "hooks"
   s.add_dependency "haml-rails"
   s.add_dependency "ui_alchemy-rails", "1.0.9"
+  s.add_dependency "logger"
 
   # Reporting
   s.add_dependency "acts_as_reportable", ">=1.1.1"
     
   # Pulp
   s.add_dependency "runcible", "~> 0.4.7"
+
+  # UI
+  s.add_dependency "ui_alchemy-rails"
+
+  # Development
+  s.add_development_dependency "simplecov"
 end
