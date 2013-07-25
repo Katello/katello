@@ -56,7 +56,7 @@ describe Role do
    end
 
    context "Check the envs" do
-     let(:environment){KTEnvironment.create!(:name=>"my_env", :label=> "my_env", :organization => organization, :prior => organization.library)}
+     let(:environment){create_environment(:name=>"my_env", :label=> "my_env", :organization => organization, :prior => organization.library)}
      KTEnvironment.read_verbs.each do |verb|
        specify{user.allowed_to?(verb, :environments,environment.id,organization).should be_true}
        specify{user.allowed_to?(verb, :environments).should be_false}

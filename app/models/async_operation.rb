@@ -44,7 +44,7 @@ AsyncOperation = Struct.new(:status_id, :username, :object, :method_name, :args)
     else
       # if user did not set his locale we are not able to detect browser setting here and we have to
       # fall back to system language
-      I18n.locale = Locale.pick_available_locale Katello.config.system_lang
+      I18n.locale = KTLocale.pick_available_locale Katello.config.system_lang
     end
     Rails.logger.debug "Setting locale: #{I18n.locale}"
 

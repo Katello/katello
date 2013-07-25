@@ -12,7 +12,6 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class Api::V1::ContentViewsController < Api::V1::ApiController
-
   before_filter :find_environment, :only => [:promote]
   before_filter :find_environment_or_organization, :only => [:index]
   before_filter :find_content_view, :only => [:show, :promote, :refresh, :destroy]
@@ -45,7 +44,7 @@ class Api::V1::ContentViewsController < Api::V1::ApiController
     query_params.delete(:environment_id)
     query_params.delete(:organization_id)
 
-    search         = ContentView.non_default.where(query_params)
+    search         = ContentView.where(query_params)
     @content_views = if @environment
                        search.readable(@organization).in_environment(@environment)
                      else
@@ -91,7 +90,10 @@ class Api::V1::ContentViewsController < Api::V1::ApiController
   private
 
   def find_content_view
-    @view = ContentView.non_default.find(params[:id])
+    @view = ContentView.find(params[:id])
+    if params[:action] != "show" && @view.default?
+      raise HttpErrors::BadRequest, _("The default content view cannot be edited, promoted, refreshed, or destroyed.")
+    end
   end
 
   def find_environment

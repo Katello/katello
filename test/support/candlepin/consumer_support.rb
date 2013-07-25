@@ -43,6 +43,7 @@ module CandlepinConsumerSupport
     end
   rescue => e
     puts e
+    puts e.backtrace
   ensure
     return @system
   end
@@ -79,6 +80,7 @@ module CandlepinConsumerSupport
     end
   rescue => e
     puts e
+    puts e.backtrace
   ensure
     return @distributor
   end

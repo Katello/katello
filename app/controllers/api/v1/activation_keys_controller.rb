@@ -51,7 +51,7 @@ class Api::V1::ActivationKeysController < Api::V1::ApiController
     param :activation_key, Hash, :required => true, :action_aware => true do
       param :name, :identifier, :required => true, :desc => "activation key identifier (alphanum characters, space, _ and -)"
       param :description, String, :allow_nil => true
-      param :content_view_id, :identifier, :desc => "content view id"
+      param :content_view_id, :identifier, :desc => "content view id", :required => true
     end
   end
 

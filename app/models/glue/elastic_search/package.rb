@@ -21,6 +21,7 @@ module Glue::ElasticSearch::Package
           "nvrea_sort" => nvrea.downcase,
           "nvrea" => nvrea,
           "nvrea_autocomplete" => nvrea,
+          "sortable_version" => sortable_version,
           "name_autocomplete" => name
         }
       end
@@ -46,7 +47,8 @@ module Glue::ElasticSearch::Package
               :nvrea_autocomplete  => { :type=> 'string', :analyzer=>'autcomplete_name_analyzer'},
               :nvrea         => { :type=> 'string', :analyzer=>:kt_name_analyzer},
               :nvrea_sort    => { :type => 'string', :index=> :not_analyzed },
-              :repoids       => { :type=> 'string', :index=>:not_analyzed}
+              :repoids       => { :type=> 'string', :index=>:not_analyzed},
+              :sortable_version => { :type => 'string', :index => :not_analyzed }
             }
           }
         }
@@ -117,9 +119,8 @@ module Glue::ElasticSearch::Package
         search.results
       end
 
-      def self.search query, start, page_size, repoids=nil, sort=[:nvrea_sort, "ASC"],
-                                            search_mode = :all, default_field = 'nvrea'
-
+      def self.search(query, start=0, page_size=15, repoids=nil, sort=[:nvrea_sort, "ASC"],
+                      search_mode = :all, default_field = 'nvrea', filter=nil)
         if !Tire.index(self.index).exists? || (repoids && repoids.empty?)
           return Util::Support.array_with_total
         end
@@ -129,7 +130,7 @@ module Glue::ElasticSearch::Package
         search = Tire::Search::Search.new(self.index)
 
         search.instance_eval do
-          fields [:id, :name, :nvrea, :repoids, :description, :filename]
+          fields [:id, :name, :nvrea, :repoids, :description, :filename, :sortable_version, :version]
 
           query do
             if all_rows
@@ -148,6 +149,10 @@ module Glue::ElasticSearch::Package
 
         if repoids
           Util::Package.setup_shared_unique_filter(repoids, search_mode, search)
+        end
+
+        if filter
+          search.filter *filter
         end
 
         return search.perform.results

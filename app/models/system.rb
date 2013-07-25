@@ -39,7 +39,9 @@ class System < ActiveRecord::Base
   has_many :custom_info, :as => :informable, :dependent => :destroy
   belongs_to :content_view
 
+  before_validation :set_default_content_view, :unless => :persisted?
   validates :environment, :presence => true
+  validates :content_view, :presence => true, :allow_blank => false
   # multiple systems with a single name are supported
   validates :name, :presence => true
   validates_length_of :name, :maximum => 250
@@ -47,9 +49,9 @@ class System < ActiveRecord::Base
   validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
   validates_length_of :location, :maximum => 255
   validates_with Validators::ContentViewEnvironmentValidator
+  validates_with Validators::KatelloNameFormatValidator, :attributes => :name
 
   before_create  :fill_defaults
-
   after_create :init_default_custom_info
 
   scope :by_env, lambda { |env| where('environment_id = ?', env) unless env.nil?}
@@ -228,6 +230,10 @@ class System < ActiveRecord::Base
     def fill_defaults
       self.description = _("Initial Registration Params") unless self.description
       self.location = _("None") unless self.location
+    end
+
+    def set_default_content_view
+      self.content_view = self.environment.try(:default_content_view) unless self.content_view
     end
 
     def collect_installed_product_names

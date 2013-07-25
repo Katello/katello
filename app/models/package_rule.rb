@@ -26,12 +26,12 @@ class PackageRule < FilterRule
     parameters[:units].collect do |unit|
       rule_clauses = []
       unless unit[:name].blank?
-        results = Package.search(unit[:name], 0, 0, [repo.pulp_id],
+        results = Package.search(unit[:name], 0, repo.package_count, [repo.pulp_id],
                         [:nvrea_sort, "ASC"], :all, 'name' ).collect(&:filename).compact
         rule_clauses << {'filename' => {"$in" => results}}
         unless results.empty?
           # now add version info
-          rule_clauses << generate_version_clause(unit)
+          rule_clauses << generate_version_clause(repo, unit)
         end
         rule_clauses.compact!
         if rule_clauses.size == 1
@@ -44,14 +44,17 @@ class PackageRule < FilterRule
   end
 
   protected
-  def generate_version_clause(unit)
+
+  def generate_version_clause(repo, unit)
     if unit.has_key?(:version)
       {'version' => unit[:version] }
-    else
-      version_clause = {}
-      version_clause["$gte"] = unit[:min_version] if unit.has_key? :min_version
-      version_clause["$lte"] = unit[:max_version] if unit.has_key? :max_version
-      {'version' => version_clause} unless version_clause.empty?
+    elsif unit.has_key?(:min_version) || unit.has_key?(:max_version)
+      filter = Util::Package.version_filter(unit[:min_version], unit[:max_version])
+      results = Package.search(unit[:name], 0, repo.package_count, [repo.pulp_id],
+          [:nvrea_sort, "ASC"], :all, 'name', filter).map(&:filename).compact
+
+      {'filename' => {"$in" => results}}
     end
   end
+
 end

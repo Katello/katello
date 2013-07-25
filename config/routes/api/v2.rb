@@ -49,6 +49,8 @@ Src::Application.routes.draw do
         match '/default_info/:informable_type/:keyname' => 'organization_default_info#destroy', :via => :delete, :as => :destroy_default_info
         match '/default_info/:informable_type/apply' => 'organization_default_info#apply_to_all', :via => :post, :as => :apply_default_info
 
+        match '/auto_attach' => 'organizations#auto_attach_all_systems', :via => :post, :as => :auto_attach_all_systems
+
         api_resources :content_views, :only => [:index, :create]
         api_resources :content_view_definitions, :only => [:index, :create]
       end
@@ -260,6 +262,7 @@ Src::Application.routes.draw do
 
       api_resources :sync_plans, :only => [:show, :update, :destroy]
       api_resources :tasks, :only => [:show]
+      api_resources :about, :only => [:index]
 
       match "/version" => "ping#version", :via => :get
       match "/status" => "ping#server_status", :via => :get
@@ -305,6 +308,7 @@ Src::Application.routes.draw do
       match '/consumers/:consumer_id/certificates/:id' => 'candlepin_proxies#delete', :via => :delete, :as => :proxy_consumer_certificates_delete_path
       match '/consumers/:id/deletionrecord' => 'candlepin_proxies#delete', :via => :delete, :as => :proxy_consumer_deletionrecord_delete_path
       match '/pools' => 'candlepin_proxies#get', :via => :get, :as => :proxy_pools_path
+      match '/deleted_consumers' => 'candlepin_proxies#get', :via => :get, :as => :proxy_deleted_consumers_path
       match '/entitlements/:id' => 'candlepin_proxies#get', :via => :get, :as => :proxy_entitlements_path
       match '/subscriptions' => 'candlepin_proxies#post', :via => :post, :as => :proxy_subscriptions_post_path
       match '/consumers/:id/profile/' => 'systems#upload_package_profile', :via => :put

@@ -43,7 +43,8 @@ describe System do
     disable_org_orchestration
 
     @organization = Organization.create!(:name=>'test_org', :label=> 'test_org')
-    @environment = KTEnvironment.create!(:name=>'test', :label=> 'test', :prior => @organization.library.id, :organization => @organization)
+    @environment = @organization.library
+    #create_environment(:name=>'test', :label=> 'test', :prior => @organization.library.id, :organization => @organization)
     @organization.reload #reload to get environment info
 
     @system = System.new(:name => system_name,
@@ -74,7 +75,10 @@ describe System do
   end
 
   it "registers system in candlepin and pulp on create", :katello => true do
-    Resources::Candlepin::Consumer.should_receive(:create).once.with(@environment.id, @organization.name, system_name, cp_type, facts, installed_products, nil, nil, nil).and_return({:uuid => uuid, :owner => {:key => uuid}})
+    Resources::Candlepin::Consumer.should_receive(:create).once.with(@environment.id.to_s, @organization.name,
+                                                                      system_name, cp_type, facts, installed_products,
+                                                                      nil, nil, nil, nil).and_return({:uuid => uuid,
+                                                                                                :owner => {:key => uuid}})
     Runcible::Extensions::Consumer.should_receive(:create).once.with(uuid, {:display_name => system_name}).and_return({:id => uuid}) if Katello.config.katello?
     @system.save!
   end
@@ -86,10 +90,10 @@ describe System do
     o = Organization.find(@organization.id)
     o.default_info["system"] << "test_key"
     o.save!
-    e = KTEnvironment.create!(:name=>'test2', :label=> 'test2', :prior => o.library.id, :organization => o)
+#    e = create_environment(:name=>'test2', :label=> 'test2', :prior => o.library.id, :organization => o)
 
     s = System.new(:name => system_name,
-        :environment => e,
+        :environment => o.library,
         :cp_type => cp_type,
         :facts => facts,
         :description => description,
@@ -170,14 +174,14 @@ describe System do
     it "should give facts to Resources::Candlepin::Consumer" do
       @system.facts = facts
       @system.installedProducts = nil # simulate it's not loaded in memory
-      Resources::Candlepin::Consumer.should_receive(:update).once.with(uuid, facts, nil, nil, nil, nil, nil, anything).and_return(true)
+      Resources::Candlepin::Consumer.should_receive(:update).once.with(uuid, facts, nil, nil, nil, nil, nil, anything, nil, nil).and_return(true)
       @system.save!
     end
 
     it "should give installeProducts to Resources::Candlepin::Consumer" do
       @system.installedProducts = installed_products
       @system.facts = nil # simulate it's not loaded in memory
-      Resources::Candlepin::Consumer.should_receive(:update).once.with(uuid, nil, nil, installed_products, nil, nil, nil, anything).and_return(true)
+      Resources::Candlepin::Consumer.should_receive(:update).once.with(uuid, nil, nil, installed_products, nil, nil, nil, anything, nil, nil).and_return(true)
       @system.save!
     end
 
@@ -301,43 +305,40 @@ describe System do
     before do
       disable_product_orchestration
       disable_repo_orchestration
-      @product = Product.create!(:name=>"prod1", :label=> "prod1", :cp_id => '12345', :provider => @organization.redhat_provider, :environments => [@organization.library])
-      @environment = KTEnvironment.create!({:name=>"Dev", :label=> "Dev", :prior => @organization.library, :organization => @organization}) do |e|
-        e.products << @product
-      end
-      if Katello.config.katello?
-        env_product = @product.environment_products.where(:environment_id => @environment.id).first
-      else
-        env_product = @product.environment_products.where(:environment_id => @organization.library.id).first
-      end
+      @product = Product.create!(:name=>"prod1", :label=> "prod1", :cp_id => '12345', :provider => @organization.redhat_provider)
+      @environment = create_environment({:name=>"Dev", :label=> "Dev", :prior => @organization.library, :organization => @organization})
+      environment = Katello.config.katello? ? @environment : @organization.library
       @releases = %w[6.1 6.2 6Server]
       @releases.each do |release|
         Repository.create!(:name => "Repo #{release}",
                           :label => "Repo#{release.gsub(".", "_")}",
                           :pulp_id => "repo #{release}",
                           :enabled => true,
-                          :environment_product_id => env_product.id,
+                          :environment => environment,
+                          :product => @product,
                           :major => "6",
                           :minor => release,
                           :cp_label => "repo",
                           :relative_path=>'/foo',
                           :content_id=>'foo',
-                          :content_view_version=>env_product.environment.default_content_view_version,
+                          :content_view_version=>environment.content_view_versions.first,
                           :feed => 'https://localhost')
       end
       Repository.create!(:name => "Repo without releases",
                          :label => "Repo_without_releases",
                          :pulp_id => "repo_without_release",
                          :enabled => true,
-                         :environment_product_id => env_product.id,
+                         :environment => environment,
+                         :product => @product,
                          :major => nil,
                          :minor => nil,
                          :cp_label => "repo",
                          :relative_path=>'/foo',
                          :content_id=>'foo',
-                         :content_view_version=>env_product.environment.default_content_view_version,
+                         :content_view_version=>environment.content_view_versions.first,
                          :feed => 'https://localhost')
-      @system.environment = @environment
+      @system.environment = environment
+      @system.content_view = environment.content_views.first
       @system.save!
     end
 
@@ -647,8 +648,6 @@ describe System do
       @system.editable?.should == false
       @system.deletable?.should == true
     end
-
-
   end
 
 end

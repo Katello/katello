@@ -37,21 +37,17 @@ describe ContentSearchController, :katello => true do
 
       @organization = new_test_org #controller.current_organization
       controller.stub!(:current_organization).and_return(@organization)
-      @env1 = KTEnvironment.create!(:name=>"env1", :label=> "env1", :organization => @organization, :prior => @organization.library)
-      @env2 = KTEnvironment.create!(:name=>"env2", :label=> "env2", :organization => @organization, :prior => @env1)
+      @env1 = create_environment(:name=>"env1", :label=> "env1", :organization => @organization, :prior => @organization.library)
       @provider = Provider.create!(:name => "provider", :provider_type => Provider::CUSTOM,
                                    :organization => @organization, :repository_url => "https://something.url/stuff")
       @product = Product.new({:name=>"prod", :label=> "prod"})
 
       @product.provider = @provider
-      @product.environments << @organization.library
       @product.stub(:arch).and_return('noarch')
       @product.save!
-      ep_library = EnvironmentProduct.find_or_create(@organization.library, @product)
-
-      @repo_library = new_test_repo(ep_library, "repo", "#{@organization.name}/Library/prod/repo")
-      @repo = promote(@repo_library, @env1)
-      Repository.stub(:search).and_return([@repo])
+      @repo_library = new_test_repo(@organization.library, @product, "repo", "#{@organization.name}/Library/prod/repo")
+      @cv_library = @organization.library.content_views.first
+      promote_content_view(@cv_library, @organization.library, @env1)
       ContentView.any_instance.stub(:total_package_count).and_return(0)
       ContentView.any_instance.stub(:total_errata_count).and_return(0)
       Repository.any_instance.stub(:package_count).and_return(0)
@@ -64,6 +60,10 @@ describe ContentSearchController, :katello => true do
       [:all, :shared, :unique].each do |mode|
         context "#{content_type} #{mode} case" do
           before do
+            @env1 = KTEnvironment.find(@env1.id)
+            content_view = @env1.content_views.where(:id => @cv_library.id).first
+            @repo = content_view.repos(@env1).first
+            Repository.stub(:search).and_return([@repo])
             repo_filter_ids = [@repo_library.pulp_id, @repo.pulp_id].collect do |repo|
                   {:term => {:repoids => [repo]}}
             end

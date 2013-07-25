@@ -345,9 +345,9 @@ describe Permission do
     describe "after environment deletion" do
       before do
         disable_env_orchestration
-        @environment = KTEnvironment.create!(
+        @environment = create_environment(
             {:name=>"test1000", :label=> "test100", :organization => @organization, :prior => @organization.library})
-        @environment2 = KTEnvironment.create!(
+        @environment2 = create_environment(
             {:name=>"test1001", :label=> "test101", :organization => @organization, :prior => @organization.library})
 
         p = Permission.new(:name => 'test1001', :role => @some_role, :tag_values=> [@environment.id, @environment2.id],
