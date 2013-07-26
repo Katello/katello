@@ -38,41 +38,46 @@ angular.module('Bastion.systems', [
 angular.module('Bastion.systems').config(['$stateProvider', function($stateProvider) {
     $stateProvider.state('systems', {
         abstract: true,
-        views: {
-            'systems': {
-                controller: 'SystemsController',
-                templateUrl: 'systems/views/systems.html'
-            }
-        }
+        controller: 'SystemsController',
+        templateUrl: 'systems/views/systems.html'
     });
 
     $stateProvider.state('systems.index', {
         url: '/index',
         views: {
-            'sub-header': {
-                templateUrl: 'systems/views/systems-sub-header.html'
-            },
             'table': {
                 templateUrl: 'systems/views/systems-table-full.html'
             }
         }
     });
 
-    $stateProvider.state('systems.details', {
+    $stateProvider.state("systems.details", {
+        abstract: true,
         url: '/system/:systemId',
         collapsed: true,
         views: {
-            'sub-header': {
-                templateUrl: 'systems/views/systems-sub-header.html'
-            },
             'table': {
                 templateUrl: 'systems/views/systems-table-collapsed.html'
             },
             'action-panel': {
                 controller: 'SystemDetailsController',
-                templateUrl: 'systems/views/system-details.html'
+                templateUrl: 'systems/details/views/system-details.html'
             }
         }
+    });
+
+    $stateProvider.state('systems.details.info', {
+        url: '/info',
+        collapsed: true,
+        controller: 'SystemDetailsInfoController',
+        templateUrl: 'systems/details/views/system-info.html'
+    });
+
+    $stateProvider.state('systems.details.subscriptions', {
+        url: '/subscriptions',
+        collapsed: true,
+        controller: function() {},
+        templateUrl: 'systems/details/views/system-subscriptions.html'
     });
 
     $stateProvider.state('systems.alter-content', {
