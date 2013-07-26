@@ -32,6 +32,7 @@ class Api::V2::RepositoriesController < Api::V1::RepositoriesController
       param :url, :undef, :required => true, :desc => "repository source url"
       param :gpg_key_name, String, :desc => "name of a gpg key that will be assigned to the new repository"
       param :enabled, :bool, :desc => "flag that enables/disables the repository"
+      param :content_type, String, :desc => "type of repo (either 'yum' or 'puppet', defaults to 'yum')"
     end
   end
 
