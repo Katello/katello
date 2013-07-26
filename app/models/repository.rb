@@ -32,6 +32,7 @@ class Repository < ActiveRecord::Base
   FILE_TYPE = 'file'
   PUPPET_TYPE = 'puppet'
   TYPES = [YUM_TYPE, FILE_TYPE, PUPPET_TYPE]
+  SELECTABLE_TYPES = [YUM_TYPE, PUPPET_TYPE]
 
   belongs_to :environment, :inverse_of => :repositories, :class_name => "KTEnvironment"
   belongs_to :product, :inverse_of => :repositories

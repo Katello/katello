@@ -179,6 +179,39 @@ describe Api::V1::RepositoriesController, :katello => true do
         post 'create', :name => 'repo_1', :label => 'repo_1', :url => 'http://www.repo.org', :product_id => 'product_1', :organization_id => @organization.label
       end
 
+      describe 'with content_type' do
+        let(:attrs) do
+          {:name => 'repo_1',
+           :label => 'repo_1',
+           :url => 'http://www.repo.org',
+           :product_id => 'product_1',
+           :organization_id => @organization.label,
+           :content_type => "puppet"
+          }
+        end
+
+        it "should use the content_type parameter" do
+          @product.should_receive(:add_repo).with(anything, anything, anything,
+                                                  'puppet', anything, anything).and_return({})
+          post 'create', attrs
+          response.should be_success
+        end
+
+        it "should use the default content type if content_type parameter is blank" do
+          @product.should_receive(:add_repo).with(anything, anything, anything,
+                                                  'yum', anything, anything).and_return({})
+          post 'create', attrs.merge(:content_type => "")
+          response.should be_success
+        end
+
+        it "should return 400 if content_type is not yum or puppet" do
+          @product.should_not_receive(:add_repo).with(anything, anything, anything,
+                                                  'file', anything, anything).and_return({})
+          post 'create', attrs.merge(:content_type => 'file')
+          response.code.should eql("400")
+        end
+      end
+
       context 'red hat providers' do
         it "does not support creation" do
           @product.stub!(:custom?).and_return(false)
