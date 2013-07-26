@@ -15,6 +15,7 @@ require "ruport/acts_as_reportable"
 #require "haml-rails"
 #require "ui_alchemy-rails"
 #require "logger"
+require "foreigner"
 
 module Katello
 end

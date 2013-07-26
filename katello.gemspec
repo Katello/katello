@@ -33,6 +33,7 @@ Gem::Specification.new do |s|
   s.add_dependency "haml-rails"
   s.add_dependency "ui_alchemy-rails", "1.0.9"
   s.add_dependency "logger"
+  s.add_dependency "foreigner"
 
   # Reporting
   s.add_dependency "acts_as_reportable", ">=1.1.1"
