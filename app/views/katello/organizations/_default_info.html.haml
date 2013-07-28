@@ -1,5 +1,5 @@
 -# org, informable_type, task_state, and task_uuid from locals
-= javascript 'widgets/jquery.jeditable.helpers'
+= javascript 'katello/widgets/jquery.jeditable.helpers'
 
 = javascript do
   :plain
@@ -41,4 +41,4 @@
                 %input.btn.warning.remove_default_info_button{ :value => _("Remove"), :type => "submit", "data-url" => api_organization_destroy_default_info_path(org.label, informable_type, info), "data-method" => "delete", "data-id" => "default_info_#{escaped_info}" }
 
 
-= render :template => "layouts/tupane_layout"
+= render :template => "katello/layouts/tupane_layout"

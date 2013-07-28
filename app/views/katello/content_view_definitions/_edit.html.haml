@@ -1,6 +1,6 @@
-= javascript "widgets/jquery.jeditable.helpers"
+= javascript "katello/widgets/jquery.jeditable.helpers"
 
-= render :partial => "content_view_definitions/tupane_header"
+= render :partial => "katello/content_view_definitions/tupane_header"
 
 = content_for :content do
   %input#panel_element_id{:name => view_definition.id, :type => "hidden", :value => "#{name}_#{view_definition.id}", "data-ajax_url"=>content_view_definition_path(view_definition.id)}
@@ -21,4 +21,4 @@
         %label #{_("Description")}:
       .grid_7.la{:style => "word-wrap: break-word;", 'name' => 'view_definition[description]', :class => ("editable edit_textarea" if editable), 'data-maxlength' => default_description_limit, 'data-url' => content_view_definition_path(view_definition.id)}<> #{view_definition[:description]}
 
-= render :template => "layouts/tupane_layout"
+= render :template => "katello/layouts/tupane_layout"

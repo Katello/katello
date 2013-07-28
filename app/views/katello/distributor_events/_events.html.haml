@@ -1,6 +1,6 @@
-= javascript 'widgets/filtertable', 'distributors/distributor_events'
+= javascript 'katello/widgets/filtertable', 'katello/distributors/distributor_events'
 
-= render :partial => "distributors/distributor_tupane_header_nav"
+= render :partial => "katello/distributors/distributor_tupane_header_nav"
 
 = content_for :content do
   - if total_events_length > 0
@@ -33,4 +33,4 @@
     - if total_events_length > 0
       %span{:id => 'loaded_summary', :style => "padding-left: 20px;"}
 
-= render :template => "layouts/tupane_layout"
+= render :template => "katello/layouts/tupane_layout"

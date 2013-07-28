@@ -1,4 +1,4 @@
-= javascript 'providers/products_repos'
+= javascript 'katello/providers/products_repos'
 
 = content_for :title do
   #{@provider.name}
@@ -47,4 +47,4 @@
                   .button.subpanel_element{"data-url"=>new_provider_product_repository_path(@provider.id, product.id)}
                     #{_("Add Repository")}
 
-= render :template => "layouts/tupane_layout"
+= render :template => "katello/layouts/tupane_layout"

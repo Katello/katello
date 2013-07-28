@@ -1,5 +1,5 @@
 //Edit/view page as seen on the 2 pane changeset history list
-= javascript 'widgets/jquery.jeditable.helpers', 'changesets/changeset_edit'
+= javascript 'katello/widgets/jquery.jeditable.helpers', 'katello/changesets/changeset_edit'
 
 = content_for :title do
   = _("Details")
@@ -52,4 +52,4 @@
                   -for view in @changeset.content_views
                     %li #{view.name}
 
-= render :template => "layouts/tupane_layout"
+= render :template => "katello/layouts/tupane_layout"

@@ -11,5 +11,5 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
 
-//= require "organizations/organization"
-//= require "organizations/default_info"
+//= require "katello/organizations/organization"
+//= require "katello/organizations/default_info"

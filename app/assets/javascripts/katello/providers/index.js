@@ -13,5 +13,5 @@
 
 //= require "alchemy/jquery/plugins/jquery.treeTable"
 //= require "alchemy/jquery/plugins/jquery.uitablefilter"
-//= require "providers/provider"
-//= require "providers/repo_discovery"
+//= require "katello/providers/provider"
+//= require "katello/providers/repo_discovery"

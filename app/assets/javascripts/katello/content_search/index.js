@@ -12,7 +12,7 @@
 */
 
 //= require "alchemy/jquery/plugins/chosen.jquery"
-//= require "widgets/comparison_grid"
-//= require "content_search/content_search"
-//= require "widgets/auto_complete"
+//= require "katello/widgets/comparison_grid"
+//= require "katello/content_search/content_search"
+//= require "katello/widgets/auto_complete"
 //= require "alchemy/jquery/plugins/jquery.trunk8"

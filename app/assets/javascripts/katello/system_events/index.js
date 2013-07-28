@@ -12,4 +12,4 @@
 */
 
 //= require "widgets/filtertable"
-//= require "system_events/system_events"
+//= require "katello/system_events/system_events"

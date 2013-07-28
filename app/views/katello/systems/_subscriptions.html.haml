@@ -3,7 +3,7 @@
     localize({
         "systemSelectAutoheal": '#{escape_javascript(_("Select Auto-attach Level..."))}'
     });
-= javascript 'widgets/jquery.jeditable.helpers', 'systems/system_subscriptions'
+= javascript 'katello/widgets/jquery.jeditable.helpers', 'katello/systems/system_subscriptions'
 
 = render :partial => "system_tupane_header_nav"
 
@@ -23,4 +23,4 @@
     = render :partial=>"subs", :locals=>{:system=>@system, :avail_subs => avail_subs, :consumed_entitlements => consumed_entitlements, :editable=>editable, :subscription_filters=>subscription_filters}
   %br.clear
 
-= render :template => "layouts/tupane_layout"
+= render :template => "katello/layouts/tupane_layout"

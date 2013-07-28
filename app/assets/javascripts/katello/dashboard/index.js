@@ -13,5 +13,5 @@
 
 //= require "alchemy/jquery/plugins/flot-0.7/jquery.flot.js"
 //= require "alchemy/jquery/plugins/flot-0.7/jquery.flot.pie"
-//= require "widgets/scroll_pane"
-//= require "dashboard/dashboard"
+//= require "katello/widgets/scroll_pane"
+//= require "katello/dashboard/dashboard"

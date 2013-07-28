@@ -1,4 +1,4 @@
-= javascript_include_tag "widgets/treetable", 'widgets/filtertable'
+= javascript_include_tag "katello/widgets/treetable", 'katello/widgets/filtertable'
 
 - content_view = @view_version.content_view
 
@@ -11,7 +11,7 @@
 = content_for :content do
   .grid_8
     .fr
-      = render :partial => "common/filter_table"
+      = render :partial => "katello/common/filter_table"
 
   .grid_8
     %table#content_view_content.filter_table
@@ -36,4 +36,4 @@
                 %label #{_("Repository")}:
                 #{repo.name}
 
-= render :template => "layouts/tupane_layout"
+= render :template => "katello/layouts/tupane_layout"

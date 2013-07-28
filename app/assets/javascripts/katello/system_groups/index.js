@@ -11,9 +11,9 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
 
-//= require "system_groups/system_groups"
-//= require "system_groups/system_group_events"
-//= require "systems/system_errata"
-//= require "systems/packages"
-//= require "system_groups/package_actions"
-//= require "widgets/auto_complete"
+//= require "katello/system_groups/system_groups"
+//= require "katello/system_groups/system_group_events"
+//= require "katello/systems/system_errata"
+//= require "katello/systems/packages"
+//= require "katello/system_groups/package_actions"
+//= require "katello/widgets/auto_complete"

@@ -1,4 +1,4 @@
-= javascript 'widgets/jquery.jeditable.helpers', 'sync_plans/sync_plan_edit'
+= javascript 'katello/widgets/jquery.jeditable.helpers', 'katello/sync_plans/sync_plan_edit'
 
 = content_for :title do
   #{@plan.name}
@@ -29,4 +29,4 @@
       %label.grid_2 #{_("Time")}:
       .grid_5.la#plan_time{'name' => 'sync_plan[time]', :class=>("editable edit_timepicker" if editable), 'data-url' => url_for(:action => 'update')} #{@plan.plan_time}
 
-= render :template => "layouts/tupane_layout"
+= render :template => "katello/layouts/tupane_layout"

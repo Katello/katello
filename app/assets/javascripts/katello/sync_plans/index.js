@@ -12,4 +12,4 @@
 */
 
 //= require "alchemy/jquery/plugins/jquery.timepickr"
-//= require "sync_plans/sync_plan"
+//= require "katello/sync_plans/sync_plan"

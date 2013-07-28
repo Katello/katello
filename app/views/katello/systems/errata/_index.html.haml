@@ -1,4 +1,4 @@
-= javascript 'widgets/filtertable'
+= javascript 'katello/widgets/filtertable'
 = javascript do
   -if editable
     :plain
@@ -11,7 +11,7 @@
         KT.system.errata.init(false, 'system');
       });
 
-= render :partial => "systems/system_tupane_header_nav"
+= render :partial => "katello/systems/system_tupane_header_nav"
 
 = content_for :header do
   #errata_header.clear
@@ -59,4 +59,4 @@
       %button.button.disabled{:id => 'run_errata_button', 'data-url' => system_errata_path(@system.id) }
         #{_('Install')}
 
-= render :template => "layouts/tupane_layout"
+= render :template => "katello/layouts/tupane_layout"

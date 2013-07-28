@@ -3,7 +3,7 @@
     localize({
         "orgSelectAutoheal": '#{escape_javascript(_("No Service Level Preference"))}'
     });
-= javascript 'widgets/jquery.jeditable.helpers', 'organizations/organization_edit'
+= javascript 'katello/widgets/jquery.jeditable.helpers', 'katello/organizations/organization_edit'
 
 = content_for :title do
   #{@organization.name}
@@ -82,6 +82,6 @@
           = render :partial=>"download_debug_certificate"
 
 = content_for :footer do
-  = render :partial => "organizations/footer"
+  = render :partial => "katello/organizations/footer"
 
-= render :template => "layouts/tupane_layout"
+= render :template => "katello/layouts/tupane_layout"

@@ -1,5 +1,5 @@
-= javascript 'providers/redhat'
-= stylesheet 'widgets/tabs', :dashboard
+= javascript 'katello/providers/redhat'
+= stylesheet 'katello/widgets/tabs', :dashboard
 
 #redhat_provider
   .grid_16
@@ -36,6 +36,4 @@
             = _("No products are available containing this content type.")
           - else
             - reset_cycle
-            = render :partial=>"providers/redhat/repo_sets", :locals=>{:tab_id=>tab[:id], :provider=>@provider, :product_map=>tab[:products]}
-
-
+            = render :partial=>"katello/providers/redhat/repo_sets", :locals=>{:tab_id=>tab[:id], :provider=>@provider, :product_map=>tab[:products]}

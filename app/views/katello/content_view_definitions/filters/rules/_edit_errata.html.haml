@@ -1,4 +1,4 @@
-= javascript 'widgets/jquery.jeditable.helpers'
+= javascript 'katello/widgets/jquery.jeditable.helpers'
 
 %div
   %strong #{_("Filter Errata by")}
@@ -15,12 +15,12 @@
 
 .rule_parameters
   - if rule.parameters.include?(:units)
-    = render :partial => "content_view_definitions/filters/rules/parameter_list",
+    = render :partial => "katello/content_view_definitions/filters/rules/parameter_list",
              :locals => {:view_definition => view_definition, :filter => filter,
                          :rule => rule, :rule_type => rule_type,
                          :editable => editable, :item_partial => item_partial}
   - else
-    = render :partial => "content_view_definitions/filters/rules/edit_errata_parameters",
+    = render :partial => "katello/content_view_definitions/filters/rules/edit_errata_parameters",
              :locals => {:view_definition => view_definition, :filter => filter,
                          :rule => rule, :rule_type => rule_type,
                          :editable => editable}

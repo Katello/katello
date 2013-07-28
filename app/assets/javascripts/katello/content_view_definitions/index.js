@@ -11,8 +11,8 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
 
-//= require "content_view_definitions/content_view_definition"
-//= require "content_view_definitions/product_repo_selector"
+//= require "katello/content_view_definitions/content_view_definition"
+//= require "katello/content_view_definitions/product_repo_selector"
 //= require "alchemy/jquery/plugins/jquery.sortElements"
 //= require "alchemy/jquery/plugins/jquery.treeTable"
-//= require "widgets/auto_complete"
+//= require "katello/widgets/auto_complete"

@@ -1,4 +1,4 @@
-= javascript 'widgets/jquery.jeditable.helpers'
+= javascript 'katello/widgets/jquery.jeditable.helpers'
 
 = content_for :title do
   #{@provider.name}
@@ -29,4 +29,4 @@
 
 %input#provider_id{:name => @provider.id, :type => "hidden", :value => @provider.id, "data-ajax_url"=>url_for(:action=> 'update')}
 
-= render :template => "layouts/tupane_layout"
+= render :template => "katello/layouts/tupane_layout"

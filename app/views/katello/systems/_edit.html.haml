@@ -10,7 +10,7 @@
         "contentViewReset": 'The selected content view was unset. Please choose another one.'
     });
 
-= javascript 'widgets/jquery.jeditable.helpers', 'systems/system_edit'
+= javascript 'katello/widgets/jquery.jeditable.helpers', 'katello/systems/system_edit'
 = render :partial => "system_tupane_header_nav"
 
 = content_for :content do
@@ -226,4 +226,4 @@
                       - else
                         = guest.attributes['name']
 
-= render :template => "layouts/tupane_layout"
+= render :template => "katello/layouts/tupane_layout"

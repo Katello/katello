@@ -1,4 +1,4 @@
-= javascript 'widgets/jquery.jeditable.helpers', 'distributors/distributor_subscriptions'
+= javascript 'katello/widgets/jquery.jeditable.helpers', 'katello/distributors/distributor_subscriptions'
 
 = render :partial => "distributor_tupane_header_nav"
 
@@ -19,4 +19,4 @@
     = render :partial=>"subs", :locals=>{:distributor=>@distributor, :avail_subs => avail_subs, :consumed_entitlements => consumed_entitlements, :editable=>editable}
   %br.clear
 
-= render :template => "layouts/tupane_layout"
+= render :template => "katello/layouts/tupane_layout"

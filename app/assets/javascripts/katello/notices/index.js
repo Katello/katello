@@ -11,4 +11,4 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
 
-//= require "notices/notices_list"
+//= require "katello/notices/notices_list"

@@ -1,4 +1,4 @@
-= javascript 'widgets/jquery.jeditable.helpers', 'environments/environment_edit'
+= javascript 'katello/widgets/jquery.jeditable.helpers', 'katello/environments/environment_edit'
 
 = content_for :title do
   = _("Environment") + ": " + @environment.name
@@ -37,4 +37,4 @@
         %label #{_("Prior Environment")}:
       .grid_5.la #{@environment.prior.name}
 
-= render :template => "layouts/tupane_layout"
+= render :template => "katello/layouts/tupane_layout"

@@ -13,5 +13,5 @@
 
 //= require "alchemy/jquery/plugins/jquery.treeTable"
 //= require "alchemy/jquery/plugins/jquery.ui.multiselect"
-//= require "subscriptions/subscription"
-//= require "subscriptions/headpin.sparkline"
+//= require "katello/subscriptions/subscription"
+//= require "katello/subscriptions/headpin.sparkline"

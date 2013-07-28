@@ -12,4 +12,4 @@
 */
 
 //= require "widgets/one_panel"
-//= require "sync_schedules/sync_schedule"
+//= require "katello/sync_schedules/sync_schedule"

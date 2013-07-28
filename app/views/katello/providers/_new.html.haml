@@ -1,4 +1,4 @@
-= javascript 'providers/provider_create'
+= javascript 'katello/providers/provider_create'
 
 = content_for :title do
   #{_("New Provider")}
@@ -8,4 +8,4 @@
     = kt_form_for @provider do |form|
       = render :partial => 'form', :locals => { :form => form }
 
-= render :template => "layouts/tupane_layout"
+= render :template => "katello/layouts/tupane_layout"

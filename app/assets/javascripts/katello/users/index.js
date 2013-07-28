@@ -12,5 +12,5 @@
 */
 
 //= require "alchemy/jquery/plugins/jquery.ui.multiselect"
-//= require "users/user_methods"
-//= require "users/user"
+//= require "katello/users/user_methods"
+//= require "katello/users/user"

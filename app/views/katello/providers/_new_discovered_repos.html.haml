@@ -1,5 +1,5 @@
-= javascript 'widgets/subpanel_new'
-= javascript 'providers/repo_discovery_create'
+= javascript 'katello/widgets/subpanel_new'
+= javascript 'katello/providers/repo_discovery_create'
 
 = content_for :title do
   #{_("Create Repositories Under A Product")}
@@ -78,4 +78,4 @@
       .grid_10.ra
         %input.button#create_repos{:type=>:submit, :value=>_('Create Repositories')}
 
-= render :template => "layouts/tupane_layout"
+= render :template => "katello/layouts/tupane_layout"

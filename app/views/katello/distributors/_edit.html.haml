@@ -5,7 +5,7 @@
         "contentViewReset": 'The selected content view was unset. Please choose another one.'
     });
 
-= javascript 'widgets/jquery.jeditable.helpers', 'distributors/distributor_edit'
+= javascript 'katello/widgets/jquery.jeditable.helpers', 'katello/distributors/distributor_edit'
 = render :partial => "distributor_tupane_header_nav"
 
 = content_for :content do
@@ -62,4 +62,4 @@
             .value
               = convert_time(distributor.created)
 
-= render :template => "layouts/tupane_layout"
+= render :template => "katello/layouts/tupane_layout"
