@@ -15,22 +15,21 @@ require 'util/password'
 module Katello
   class User < ActiveRecord::Base
     include Glue::Pulp::User if Katello.config.use_pulp
-    include Glue::ElasticSearch::User if Katello.config.use_elasticsearch
+    #include Glue::ElasticSearch::User if Katello.config.use_elasticsearch
     include Glue if Katello.config.use_cp || Katello.config.use_pulp
 
     include Glue::Event
     def create_event
-      Headpin::Actions::UserCreate
+      ::Headpin::Actions::UserCreate
     end
     def destroy_event
-      Headpin::Actions::UserDestroy
+      ::Headpin::Actions::UserDestroy
     end
 
     include AsyncOrchestration
-    include Ext::IndexedModel
 
     include AsyncOrchestration
-    include Authorization::User
+    include Katello::Authorization::User
     include Authorization::Enforcement
     include Util::ThreadSession::UserModel
 
@@ -51,8 +50,8 @@ module Katello
     has_many :notices, :through => :user_notices
     has_many :search_favorites, :dependent => :destroy
     has_many :search_histories, :dependent => :destroy
-    belongs_to :default_environment, :class_name => "KTEnvironment"
-    serialize :preferences, HashWithIndifferentAccess
+    belongs_to :default_environment, :class_name => "Katello::KTEnvironment"
+    serialize :preferences, ActiveSupport::HashWithIndifferentAccess
 
     validates :username, :uniqueness => true, :presence => true
     validates_with Validators::UsernameValidator, :attributes => :username
@@ -84,7 +83,7 @@ module Katello
     end
 
     def setup_preferences
-      self.preferences = HashWithIndifferentAccess.new unless self.preferences
+      self.preferences = ActiveSupport::HashWithIndifferentAccess.new unless self.preferences
     end
 
     def not_last_super_user?

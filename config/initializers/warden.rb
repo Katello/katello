@@ -2,11 +2,13 @@ require 'oauth/request_proxy/rack_request'
 
 require 'openid/store/filesystem'
 require 'rack/openid'
+require 'rails_warden'
+
 openid_store_path = Pathname.new(Rails.root).join('db').join('openid-store')
 Rails.configuration.middleware.use Rack::OpenID, OpenID::Store::Filesystem.new(openid_store_path)
 
 Rails.configuration.middleware.use RailsWarden::Manager do |config|
-  config.failure_app = FailedAuthenticationController
+  config.failure_app = Katello::FailedAuthenticationController
   config.default_scope = :user
 
   # all UI requests are handled in the default scope

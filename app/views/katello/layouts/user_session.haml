@@ -1,0 +1,45 @@
+= content_for(:stylesheets_block) do
+  = stylesheet_link_tag "katello/loginpage"
+
+= content_for(:javascripts_block) do
+  = javascript_include_tag 'katello/common/vendor'
+  = javascript_include_tag 'katello/common'
+  = javascript_include_tag 'katello/user_sessions'
+
+= content_for(:login_logo) do
+  - if Katello.config.katello?
+    = image_tag("katello-login-logo.png", :alt => _('Katello Logo'))
+  - else
+    = image_tag("headpin-login-logo.png", :alt => _('Headpin Logo'))
+  -if release_name == 'Katello' || release_name == 'Headpin'
+    %span.login-version
+      = Katello.config.katello_version
+
+= content_for(:title) do
+  = project_name
+  = "-"
+  = default_title
+
+= content_for(:head) do
+  = csrf_meta_tag
+  / [if lt IE 9]
+    = javascript_include_tag  :html5
+  / [if IE]
+    = stylesheet_link_tag :ie
+
+= content_for(:extra) do
+  %script{ :type => "text/javascript" }
+    -if protect_against_forgery?
+      :plain
+        var AUTH_TOKEN = #{form_authenticity_token.inspect};
+    = render :partial => 'katello/common/common_i18n'
+    = render :partial => 'katello/common/ajax_notices'
+    = render :partial => 'katello/common/notification'
+
+= render :partial => "alchemy/layouts/user_session_layout"
+
+:javascript
+  KT.config = {
+    'root_url'  : '#{root_path()}'
+  };
+  KT.routes.options.prefix = KT.config['root_url'];

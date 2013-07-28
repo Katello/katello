@@ -1,0 +1,66 @@
+@import "katello/katello_base";
+
+
+.jspContainer {
+  .jspHorizontalBar, .jspVerticalBar, .jspTrack {
+    background: transparent !important;
+  }
+
+  .jspDrag {
+      background: $kselected_color !important;
+      @include border-radius(10px);
+      @include opacity(0.3);
+  }
+
+
+  .jspTrack {
+    .jspActive, .jspHover, .jspDrag:hover {
+       background: $jScrollPane-bar_color;
+       @include opacity(1);
+     }
+   }
+
+  .jspArrow
+  {
+    background: url(../image/ui-icons_222222_256x240.png) no-repeat;
+
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+
+    &:hover { background-image: url('../image/ui-icons_cd0a0a_256x240.png'); }
+  }
+
+  .jspVerticalBar {
+    &, .jspDrag, .jspTrack{
+      width: 10px;
+    }
+    .jspActive {
+      background-image: url('../image/ui-icons_cd0a0a_256x240.png');
+    }
+    .jspDisabled, .jspDisabled:hover {
+      background-color: transparent;
+      background-image: url('../image/ui-icons_888888_256x240.png');
+    }
+    .jspArrow { height: 15px; }
+  }
+
+  .jspHorizontalBar {
+    height: auto;
+
+    .jspDisabled, .jspDisabled:hover {
+      background-color: transparent;
+      background-image: url('../image/ui-icons_888888_256x240.png');
+    }
+    .jspArrow { width: 15px; }
+    .jspDrag {
+      height: 10px;
+    }
+    .jspCorner { display: none; }
+  }
+
+  .jspArrowUp { background-position: 0 0; }
+  .jspArrowDown { background-position: -64px 0 !important; }
+  .jspArrowLeft { background-position: -96px 0 !important; }
+  .jspArrowRight{ background-position: -32px 0 !important; }
+}

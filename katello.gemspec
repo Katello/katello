@@ -20,28 +20,41 @@ Gem::Specification.new do |s|
   s.add_dependency "apipie-rails", ">= 0.0.13"
   s.add_dependency "maruku"
 
-  s.add_dependency "rabl"
-  s.add_dependency "simple-navigation", ">= 3.3.4"
-  s.add_dependency "tire", ">= 0.3.0", "< 0.4"
-  s.add_dependency "logging", ">= 1.8.0"
-  s.add_dependency "oauth"
+  s.add_dependency "rails", "~> 3.2.8"
   s.add_dependency "rack-openid"
   s.add_dependency "rails_warden", ">= 0.5.2"
-  s.add_dependency "rails_warden", ">= 0.5.2"
+  s.add_dependency "warden"
+  s.add_dependency "json"
+  s.add_dependency "rest-client"
+  s.add_dependency "net-ldap"
+  s.add_dependency "oauth"
+  s.add_dependency "ldap_fluff", ">= 0.2.2"
+  
+  s.add_dependency "foreigner"
+  s.add_dependency "daemons", ">= 1.1.4"
+  s.add_dependency "uuidtools"
+
+  s.add_dependency "rabl"
+  s.add_dependency "tire"
+  s.add_dependency "logging", ">= 1.8.0"
   s.add_dependency "gettext_i18n_rails"
   s.add_dependency "hooks"
-  s.add_dependency "haml-rails"
-  s.add_dependency "ui_alchemy-rails", "1.0.9"
   s.add_dependency "logger"
-  s.add_dependency "foreigner"
+  s.add_dependency "dynflow"
+  s.add_dependency "justified"
 
   # Reporting
   s.add_dependency "acts_as_reportable", ">=1.1.1"
     
   # Pulp
   s.add_dependency "runcible", "~> 0.4.7"
+  s.add_dependency "anemone"
 
   # UI
+  s.add_dependency "simple-navigation", ">= 3.3.4"
+  s.add_dependency "sass-rails"
+  s.add_dependency "compass-rails"
+  s.add_dependency "haml-rails"
   s.add_dependency "ui_alchemy-rails"
 
   # Development
