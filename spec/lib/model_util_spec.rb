@@ -37,7 +37,8 @@ describe Util::Model do
     specify {Util::Model::labelize("sweet-home+alabama").should == "sweet-home_alabama"}
     specify {Util::Model::labelize("sweet home 谷歌地球").should_not  =~ /sweet*/}
     specify {Util::Model::labelize("sweet home 谷歌地球").should  =~ /^[a-zA-Z0-9\-_]+$/}
-  end
+    specify {Util::Model::labelize('a' * 129).length.should <= 128 }
+end
 
   context "setup_label_from_name" do
     before(:each) do
