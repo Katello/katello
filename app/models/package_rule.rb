@@ -17,44 +17,45 @@ class PackageRule < FilterRule
     {:units => [[:name, :version, :min_version, :max_version]]}
   end
 
-  # input -> {:units => [{:name => "pulp-admin-*", :version =>"2.0.8"},
-  #             {:name => "pulp-rpm-*", :min_version =>"2.0.3", :max_version =>"2.0.9"}]}
-  # output ->  [{"$and" => [{"filename"=>{"$in"=> ["pulp-admin-client"]}}, {"version" => "2.0.8"}]},
-  #              {"$and" => [{"filename"=>{"$in"=> ["pulp-rpm-plugins", "pulp-rpm-admin"]}},
-  #                         {"version" => {"$gte" => "2.0.3", "$lte" => "2.0.9"}}]}]
+  # Returns a set of Pulp/MongoDB conditions to filter out packages in the
+  # repo repository that match parameters
+  #
+  # @param repo [Repository] a repository containing packages to filter
+  # @return [Array] an array of hashes with MongoDB conditions
   def generate_clauses(repo)
-    parameters[:units].collect do |unit|
-      rule_clauses = []
-      unless unit[:name].blank?
-        results = Package.search(unit[:name], 0, repo.package_count, [repo.pulp_id],
-                        [:nvrea_sort, "ASC"], :all, 'name' ).collect(&:filename).compact
-        rule_clauses << {'filename' => {"$in" => results}}
-        unless results.empty?
-          # now add version info
-          rule_clauses << generate_version_clause(repo, unit)
-        end
-        rule_clauses.compact!
-        if rule_clauses.size == 1
-          rule_clauses.first
-        else
-          {'$and' => rule_clauses}
-        end
+    parameters[:units].each_with_object([]) do |unit, rule_clauses|
+      next if unit[:name].blank?
+      clauses = []
+
+      results = Package.search(unit[:name], 0, repo.package_count, [repo.pulp_id],
+                      [:nvrea_sort, "ASC"], :all, 'name' ).collect(&:filename).compact
+      next if results.empty?
+
+      clauses << {'filename' => {"$in" => results}}
+
+      if (version_clause = generate_version_clause(repo, unit))
+        clauses << version_clause
       end
-    end.compact
+
+      rule_clauses << (clauses.length == 1 ? clauses.first : {'$and' => clauses})
+    end
   end
 
   protected
 
   def generate_version_clause(repo, unit)
-    if unit.has_key?(:version)
-      {'version' => unit[:version] }
-    elsif unit.has_key?(:min_version) || unit.has_key?(:max_version)
-      filter = Util::Package.version_filter(unit[:min_version], unit[:max_version])
-      results = Package.search(unit[:name], 0, repo.package_count, [repo.pulp_id],
-          [:nvrea_sort, "ASC"], :all, 'name', filter).map(&:filename).compact
+    return unless unit.keys.any? { |key| [:version, :min_version, :max_version].include?(key.to_sym) }
 
-      {'filename' => {"$in" => results}}
+    if unit.has_key?(:version)
+      filter = Util::Package.version_eq_filter(unit[:version])
+    else
+      filter = Util::Package.version_filter(unit[:min_version], unit[:max_version])
     end
+
+    results = Package.search(unit[:name], 0, repo.package_count, [repo.pulp_id],
+        [:nvrea_sort, "ASC"], :all, 'name', filter).map(&:filename).compact
+
+    {'filename' => {"$in" => results}}
   end
 
 end
