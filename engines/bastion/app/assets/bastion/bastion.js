@@ -55,4 +55,5 @@
 //= require "bastion/systems/system-url-router.config.temporary"
 //= require "bastion/systems/system.factory"
 //= require "bastion/systems/systems.controller"
-//= require "bastion/systems/system-details.controller"
+//= require "bastion/systems/details/system-details.controller"
+//= require "bastion/systems/details/system-details-info.controller"

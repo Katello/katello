@@ -1,0 +1,26 @@
+<section class="system-details" ng-cloak alch-container-scroll>
+  <header class="details-header">
+    <h2 class="fl">{{ "System \"%systemName\"" | i18n: {systemName: system.name} }}</h2>
+
+    <div class="details-actions fr">
+      <button class="btn-mini btn-danger" ng-click="removeSystem()">{{ "Remove System" | i18n }}</button>
+      <button class="btn-mini" ng-click="table.closeItem()">
+        <i class="icon-remove"></i>
+        {{ "Close" | i18n }}
+      </button>
+    </div>
+  </header>
+
+  <nav class="details-navigation">
+    <ul>
+      <li>
+        <a class="clickable" ng-click="transitionTo('systems.details.info')" ng-class="{active: isState('systems.details.info')}">{{ "Details" | i18n }}</a>
+      </li>
+      <li>
+        <a class="clickable" ng-click="transitionTo('systems.details.subscriptions')" ng-class="{active: isState('systems.details.subscriptions')}">{{ "Subscriptions" | i18n }}</a>
+      </li>
+    </ul>
+  </nav>
+
+  <div ui-view></div>
+</section>

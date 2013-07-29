@@ -13,27 +13,33 @@ angular.module('alchemy').directive('nutupaneTable', ['$compile', function($comp
     return {
         restrict: 'A',
 
-        link:  function (scope, element) {
-            scope.$on("$stateChangeStart", function() {
-                element.find('.cloned-nutupane-table').remove();
-            });
+        link: function(scope, element) {
+            var originalTable, clonedTable;
 
-            scope.$on("$stateChangeSuccess", function() {
-                var originalTable = element.find('table'),
+            scope.$on("$stateChangeSuccess", function(event, newState, newParams, oldState) {
+                // Only clone the table if the collapsed value changed or it's the first time.
+                if (newState.collapsed !== oldState.collapsed || !oldState.name) {
+                    element.find('.cloned-nutupane-table').remove();
+
+                    originalTable = element.find('table');
                     clonedTable = originalTable.clone();
 
-                clonedTable.removeAttr("nutupane-table");
-                clonedTable.addClass("cloned-nutupane-table");
-                clonedTable.find('tbody').remove();
-                originalTable.find('thead').css('display', 'none');
+                    clonedTable.removeAttr("nutupane-table");
+                    clonedTable.addClass("cloned-nutupane-table");
+                    clonedTable.find('tbody').remove();
 
-                element.prepend(clonedTable);
-                $compile(element.find('.cloned-nutupane-table'))(scope);
+                    originalTable.find('thead').hide();
 
-                // Need to remove duplicate row-select created by second $compile
-                var rowSelect = element.find(".row-select")[0];
-                if (rowSelect) {
-                    angular.element(rowSelect).remove();
+                    element.prepend(clonedTable);
+                    $compile(element.find('.cloned-nutupane-table'))(scope);
+
+                    // Need to remove duplicate row-select created by second $compile
+                    var rowSelect = element.find(".row-select")[0];
+                    if (rowSelect) {
+                        angular.element(rowSelect).remove();
+                    }
+                } else {
+                    element.find("table:not(.cloned-nutupane-table)").find('thead').hide();
                 }
             });
         }

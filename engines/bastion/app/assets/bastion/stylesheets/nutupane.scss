@@ -263,6 +263,8 @@ table.details-visible {
 
         a {
           padding: 0 10px;
+          position: relative;
+          top: 2px;
           display: block;
           height: 25px;
           text-align: center;
@@ -270,8 +272,6 @@ table.details-visible {
       }
 
       .active {
-        top: 2px;
-        position: relative;
         color: darken($tone, 40%);
         border-bottom: 3px solid $rh-blue;
         @include background( linear-gradient(top , rgba(lighten($tone, 30%),0.0) 90%, lighten($rh-blue, 32%) 100%));
