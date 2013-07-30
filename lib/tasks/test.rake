@@ -47,20 +47,21 @@ if defined?(MiniTest)
 
     Rake::Task["db:test:prepare"].clear
 
-    MINITEST_TASKS.each do |task|
-      if ENV['test']
-        #Rake::Task["minitest:models"].clear
-        Rake::Task["db:test:prepare"].clear
-        MiniTest::Rails::Tasks::SubTestTask.new(task => 'test:prepare') do |t|
-          t.libs.push 'test'
-          t.pattern = "test/#{task}/#{ENV['test']}_test.rb"
-        end
-      else
-        desc "Runs the #{task} tests"
+    namespace :default do
+      MINITEST_TASKS.each do |task|
+        if ENV['test']
+          Rake::Task["db:test:prepare"].clear
+          MiniTest::Rails::Tasks::SubTestTask.new(task => 'test:prepare') do |t|
+            t.libs.push 'test'
+            t.pattern = "test/#{task}/#{ENV['test']}_test.rb"
+          end
+        else
+          desc "Runs the #{task} tests"
 
-        MiniTest::Rails::Tasks::SubTestTask.new(task => 'test:prepare') do |t|
-          t.libs.push 'test'
-          t.pattern = "test/#{task}/**/*_test.rb"
+          MiniTest::Rails::Tasks::SubTestTask.new(task => 'test:prepare') do |t|
+            t.libs.push 'test'
+            t.pattern = "test/#{task}/**/*_test.rb"
+          end
         end
       end
     end

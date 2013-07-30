@@ -128,12 +128,12 @@ module Glue::Pulp::Repo
           Runcible::Extensions::YumImporter.new(:ssl_ca_cert=>self.feed_ca,
                         :ssl_client_cert=>self.feed_cert,
                         :ssl_client_key=>self.feed_key,
-                        :feed_url=>self.feed)
+                        :feed=>self.feed)
         when Repository::FILE_TYPE
           Runcible::Extensions::IsoImporter.new(:ssl_ca_cert=>self.feed_ca,
                         :ssl_client_cert=>self.feed_cert,
                         :ssl_client_key=>self.feed_key,
-                        :feed_url=>self.feed)
+                        :feed=>self.feed)
         else
           raise _("Unexpected repo type %s") % self.content_type
       end

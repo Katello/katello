@@ -71,7 +71,10 @@ class Api::V1::SystemGroupsController < Api::V1::ApiController
   def index
     query_string = params[:name] ? "name:#{params[:name]}" : params[:search]
 
-    options = {}
+    filters = [{ :id => SystemGroup.readable(@organization).pluck(:id)}]
+    options = {
+        :filter => filters
+    }
     options.merge!(params.slice(:sort_by, :sort_order))
 
     if params[:paged]
