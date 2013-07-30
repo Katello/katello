@@ -4,8 +4,8 @@
   = default_title
 
 = content_for(:stylesheets_block) do
-  = stylesheet_link_tag :katello
-  = stylesheet_link_tag :katello_experimental
+  = stylesheet_link_tag 'katello/katello'
+  = stylesheet_link_tag 'katello/katello_experimental'
   = stylesheet_link_tag controller.section_id
   = yield :stylesheets
 
@@ -32,7 +32,7 @@
     - if defined?(experimental_ui)
       :plain
         $.bbq = undefined;
-  = javascript_include_tag :common
+  = javascript_include_tag 'katello/common'
   = javascript_include_tag 'katello/common/experimental'
   %script{ :type => "text/javascript" }
     -if protect_against_forgery?
