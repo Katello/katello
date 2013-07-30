@@ -53,7 +53,9 @@
             = text_field_tag(:search, params[:search], {:type => "text", :placeholder => _("Search..."), :class => "auto_complete_input ui-autocomplete-input"})
             %button.action{:form => "search_form", :id => "search_button"} #{_("Search")}
 
-      #list.list.clear.expand_list{:class => ("ajaxScroll" if ajax_scroll), "data-scroll_url" => ajax_scroll, "data-page_size" => current_user.page_size}
+      -# TODO: ENGINIFY - temporarily removing page_size.  Need additional attribute on User.
+      -##list.list.clear.expand_list{:class => ("ajaxScroll" if ajax_scroll), "data-scroll_url" => ajax_scroll, "data-page_size" => current_user.page_size}
+      #list.list.clear.expand_list{:class => ("ajaxScroll" if ajax_scroll), "data-scroll_url" => ajax_scroll, "data-page_size" => 25}
         %header
           .block_head.clear
             - columns.each_index do |index|
