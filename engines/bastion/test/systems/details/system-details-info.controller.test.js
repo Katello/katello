@@ -11,11 +11,11 @@
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
  **/
 
-describe('Controller: SystemDetailsController', function() {
+describe('Controller: SystemDetailsInfoController', function() {
     var $scope, $controller, System, mockSystem;
 
     // load the systems module and template
-    beforeEach(module('Bastion.systems', 'systems/views/systems.html'));
+    beforeEach(module('Bastion.systems', 'systems/details/views/system-info.html'));
 
     // Initialize controller
     beforeEach(inject(function(_$controller_, $rootScope) {
@@ -41,13 +41,8 @@ describe('Controller: SystemDetailsController', function() {
 
         $scope.$stateParams = {systemId: 2};
 
-        $controller('SystemDetailsController', {$scope: $scope, System: System});
+        $controller('SystemDetailsInfoController', {$scope: $scope, System: System});
     }));
-
-    it("gets the system using the System service and puts it on the $scope.", function() {
-        expect(System.get).toHaveBeenCalledWith({id: 2}, jasmine.any(Function));
-        expect($scope.system).toBe(mockSystem);
-    });
 
     it("gets the available release versions and puts them on the $scope", function() {
         expect(System.releaseVersions).toHaveBeenCalledWith({id: 2});
@@ -56,10 +51,8 @@ describe('Controller: SystemDetailsController', function() {
 
     describe("populates advanced system information", function () {
         beforeEach(function() {
-            System.get = function(systemId, callback) {
-                callback.apply();
-            }
-            $controller('SystemDetailsController', {$scope: $scope, System: System});
+            $scope.system = System.get();
+            $scope.$digest();
         });
 
         it("creates the system facts object by converting dot notation response to an object.", function() {
@@ -74,10 +67,10 @@ describe('Controller: SystemDetailsController', function() {
         });
     });
 
-    // TODO remove me when we upgrade to AngularJS 1.1.4, see note in system-details.controller.js
+    // TODO remove me when we upgrade to AngularJS 1.1.4, see note in system-details-info.controller.js
     it("retrieves the correct template for each field based on it's type", function() {
-        expect($scope.getTemplateForType("somethingElse")).toBe("systems/views/partials/system-detail-value.html");
-        expect($scope.getTemplateForType({})).toBe("systems/views/partials/system-detail-object.html");
+        expect($scope.getTemplateForType("somethingElse")).toBe("systems/details/views/partials/system-detail-value.html");
+        expect($scope.getTemplateForType({})).toBe("systems/details/views/partials/system-detail-object.html");
     });
 });
 

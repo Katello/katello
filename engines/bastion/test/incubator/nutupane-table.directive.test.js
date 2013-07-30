@@ -41,8 +41,7 @@ describe('Directive: nutupaneTable', function() {
 
         compile(tableElement)(scope);
         scope.$digest();
-        scope.$broadcast("$stateChangeStart");
-        scope.$broadcast("$stateChangeSuccess");
+        scope.$broadcast("$stateChangeSuccess", {}, {}, {}, {});
     });
 
     it("should create a new table element with just the thead", function() {
@@ -64,8 +63,7 @@ describe('Directive: nutupaneTable', function() {
         rowSelectTable.find('thead').prepend("<tr><th class='row-select'></th></tr>");
         compile(rowSelectTable)(scope);
         scope.$digest();
-        scope.$broadcast("$stateChangeStart");
-        scope.$broadcast("$stateChangeSuccess");
+        scope.$broadcast("$stateChangeSuccess", {}, {}, {}, {});
         expect(rowSelectTable.find('.row-select').length).toBe(1);
     });
 });
