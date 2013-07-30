@@ -42,7 +42,6 @@ module RepositorySupport
     VCR.use_cassette('support/repository') do
       @repo.create_pulp_repo
     end
-  rescue => e
   ensure
     return @repo
   end
@@ -52,7 +51,6 @@ module RepositorySupport
       @task = @repo.sync
       TaskSupport.wait_on_tasks(@task)
     end
-  rescue => e
   end
 
   def self.destroy_repo(id=@repo_id)
