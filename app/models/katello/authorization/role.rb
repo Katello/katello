@@ -23,19 +23,27 @@ module Katello
 
     module ClassMethods
       def creatable?
-        User.allowed_to?([:create], :roles, nil)
+        # TODO: ENGINIFY: assume all actions are allowed
+        #User.allowed_to?([:create], :roles, nil)
+        true
       end
 
       def editable?
-        User.allowed_to?([:update, :create], :roles, nil)
+        # TODO: ENGINIFY: assume all actions are allowed
+        #User.allowed_to?([:update, :create], :roles, nil)
+        true
       end
 
       def deletable?
-        User.allowed_to?([:delete, :create],:roles, nil)
+        # TODO: ENGINIFY: assume all actions are allowed
+        #User.allowed_to?([:delete, :create],:roles, nil)
+        true
       end
 
       def any_readable?
-        User.allowed_to?(READ_PERM_VERBS, :roles, nil)
+        # TODO: ENGINIFY: assume all actions are allowed
+        #User.allowed_to?(READ_PERM_VERBS, :roles, nil)
+        true
       end
 
       def readable?

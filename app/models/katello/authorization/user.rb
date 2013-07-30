@@ -19,11 +19,15 @@ module Katello
 
     module ClassMethods
       def creatable?
-        User.allowed_to?([:create], :users, nil)
+        # TODO: ENGINIFY: assume all actions are allowed
+        #User.allowed_to?([:create], :users, nil)
+        true
       end
 
       def any_readable?
-        User.allowed_to?(READ_PERM_VERBS, :users, nil)
+        # TODO: ENGINIFY: assume all actions are allowed
+        #User.allowed_to?(READ_PERM_VERBS, :users, nil)
+        true
       end
 
       def list_verbs(global=false)
@@ -53,11 +57,15 @@ module Katello
       end
 
       def editable?
-        User.allowed_to?([:create, :update], :users, nil) && !hidden
+        # TODO: ENGINIFY: assume all actions are allowed
+        #User.allowed_to?([:create, :update], :users, nil) && !hidden
+        true
       end
 
       def deletable?
-        self.id != User.current.id && User.allowed_to?([:delete], :users, nil)
+        # TODO: ENGINIFY: assume all actions are allowed
+        #self.id != User.current.id && User.allowed_to?([:delete], :users, nil)
+        true
       end
 
       def allowed_organizations

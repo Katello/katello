@@ -23,15 +23,21 @@ module Katello
     end
 
     def readable?
-      User.allowed_to?(READ_PERM_VERBS, :content_views, self.id, self.organization)
+      # TODO: ENGINIFY: assume all actions are allowed
+      #User.allowed_to?(READ_PERM_VERBS, :content_views, self.id, self.organization)
+      true
     end
 
     def promotable?
-      User.allowed_to?([:promote], :content_views, self.id, self.organization)
+      # TODO: ENGINIFY: assume all actions are allowed
+      #User.allowed_to?([:promote], :content_views, self.id, self.organization)
+      true
     end
 
     def subscribable?
-      User.allowed_to?([:subscribe], :content_views, self.id, self.organization)
+      # TODO: ENGINIFY: assume all actions are allowed
+      #User.allowed_to?([:subscribe], :content_views, self.id, self.organization)
+      true
     end
 
     module ClassMethods
@@ -65,7 +71,9 @@ module Katello
       end
 
       def any_readable?(org)
-        User.allowed_to?(READ_PERM_VERBS, :content_views, nil, org)
+        # TODO: ENGINIFY: assume all actions are allowed
+        #User.allowed_to?(READ_PERM_VERBS, :content_views, nil, org)
+        true
       end
 
       def readable(org)
@@ -85,11 +93,12 @@ module Katello
         resource = :content_views
 
         if Katello.config.katello?
-          if User.allowed_all_tags?(verbs, resource, org)
+          # TODO: ENGINIFY: assume all actions are allowed
+          #if User.allowed_all_tags?(verbs, resource, org)
             where(:organization_id => org.id)
-          else
-            where("content_views.id in (#{User.allowed_tags_sql(verbs, resource, org)})")
-          end
+          #else
+          #  where("content_views.id in (#{User.allowed_tags_sql(verbs, resource, org)})")
+          #end
         else
           where("0 = 1")
         end

@@ -40,11 +40,15 @@ module Katello
       end
 
       def readable?(org)
-        User.allowed_to?([:read_all, :manage_all], :activation_keys, nil, org)
+        # TODO: ENGINIFY: assume all actions are allowed
+        #User.allowed_to?([:read_all, :manage_all], :activation_keys, nil, org)
+        true
       end
 
       def manageable?(org)
-        User.allowed_to?([:manage_all], :activation_keys, nil, org)
+        # TODO: ENGINIFY: assume all actions are allowed
+        #User.allowed_to?([:manage_all], :activation_keys, nil, org)
+        true
       end
     end
 

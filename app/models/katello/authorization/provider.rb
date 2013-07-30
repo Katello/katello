@@ -33,11 +33,15 @@ module Katello
       end
 
       def creatable?(org)
-        User.allowed_to?([:create], :providers, nil, org)
+        # TODO: ENGINIFY: assume all actions are allowed
+        #User.allowed_to?([:create], :providers, nil, org)
+        true
       end
 
       def any_readable?(org)
-        (Katello.config.katello? && org.syncable?) || User.allowed_to?(READ_PERM_VERBS, :providers, nil, org)
+        # TODO: ENGINIFY: assume all actions are allowed
+        #(Katello.config.katello? && org.syncable?) || User.allowed_to?(READ_PERM_VERBS, :providers, nil, org)
+        true
       end
 
       def read_verbs
@@ -75,28 +79,36 @@ module Katello
       def items(org, verbs)
         raise "scope requires an organization" if org.nil?
         resource = :providers
-        if (Katello.config.katello? && verbs.include?(:read) && org.syncable?) ||  User.allowed_all_tags?(verbs, resource, org)
+        # TODO: ENGINIFY: assume all actions are allowed
+        #if (Katello.config.katello? && verbs.include?(:read) && org.syncable?) ||  User.allowed_all_tags?(verbs, resource, org)
            where(:organization_id => org)
-        else
-          where("providers.id in (#{User.allowed_tags_sql(verbs, resource, org)})")
-        end
+        #else
+        #  where("providers.id in (#{User.allowed_tags_sql(verbs, resource, org)})")
+        #end
+        true
       end
     end
 
     included do
       def readable?
         return organization.readable? if redhat_provider?
-        User.allowed_to?(READ_PERM_VERBS, :providers, self.id, self.organization) || (Katello.config.katello? && self.organization.syncable?)
+        # TODO: ENGINIFY: assume all actions are allowed
+        #User.allowed_to?(READ_PERM_VERBS, :providers, self.id, self.organization) || (Katello.config.katello? && self.organization.syncable?)
+        true
       end
 
       def editable?
         return organization.editable? if redhat_provider?
-        User.allowed_to?([:update, :create], :providers, self.id, self.organization)
+        # TODO: ENGINIFY: assume all actions are allowed
+        #User.allowed_to?([:update, :create], :providers, self.id, self.organization)
+        true
       end
 
       def deletable?
         return false if redhat_provider?
-        User.allowed_to?([:delete, :create], :providers, self.id, self.organization)
+        # TODO: ENGINIFY: assume all actions are allowed
+        #User.allowed_to?([:delete, :create], :providers, self.id, self.organization)
+        true
       end
     end
 

@@ -23,7 +23,9 @@ module Katello
 
     module ClassMethods
       def creatable?
-        User.allowed_to?([:create], :organizations)
+        # TODO: ENGINIFY: assume all actions are allowed
+        #User.allowed_to?([:create], :organizations)
+        true
       end
 
       def any_readable?
@@ -76,9 +78,11 @@ module Katello
       end
 
       def authorized_items verbs, resource = :organizations
-        if !User.allowed_all_tags?(verbs, resource)
-          where("organizations.id in (#{User.allowed_tags_sql(verbs, resource)})")
-        end
+        # TODO: ENGINIFY: assume all actions are allowed
+        #if !User.allowed_all_tags?(verbs, resource)
+        #  where("organizations.id in (#{User.allowed_tags_sql(verbs, resource)})")
+        #end
+        where("1 = 1")
       end
     end
 
@@ -88,59 +92,87 @@ module Katello
       scope :readable, lambda {authorized_items(READ_PERM_VERBS)}
 
       def editable?
-          User.allowed_to?([:update, :create], :organizations, nil, self)
+        # TODO: ENGINIFY: assume all actions are allowed
+        #User.allowed_to?([:update, :create], :organizations, nil, self)
+        true
       end
 
       def deletable?
-        User.allowed_to?([:delete, :create], :organizations)
+        # TODO: ENGINIFY: assume all actions are allowed
+        #User.allowed_to?([:delete, :create], :organizations)
+        true
       end
 
       def readable?
-        User.allowed_to?(READ_PERM_VERBS, :organizations,nil, self)
+        # TODO: ENGINIFY: assume all actions are allowed
+        #User.allowed_to?(READ_PERM_VERBS, :organizations,nil, self)
+        true
       end
 
       def environments_manageable?
-        User.allowed_to?([:update, :create], :organizations, nil, self)
+        # TODO: ENGINIFY: assume all actions are allowed
+        #User.allowed_to?([:update, :create], :organizations, nil, self)
+        true
       end
 
       def systems_readable?
-        User.allowed_to?(SYSTEMS_READABLE, :organizations, nil, self)
+        # TODO: ENGINIFY: assume all actions are allowed
+        #User.allowed_to?(SYSTEMS_READABLE, :organizations, nil, self)
+        true
       end
 
       def systems_deletable?
-        User.allowed_to?([:delete_systems], :organizations, nil, self)
+        # TODO: ENGINIFY: assume all actions are allowed
+        #User.allowed_to?([:delete_systems], :organizations, nil, self)
+        true
       end
 
       def systems_registerable?
-        User.allowed_to?([:register_systems], :organizations, nil, self)
+        # TODO: ENGINIFY: assume all actions are allowed
+        #User.allowed_to?([:register_systems], :organizations, nil, self)
+        true
       end
 
       def any_systems_registerable?
-        systems_registerable? || User.allowed_to?([:register_systems], :environments, environment_ids, self, true)
+        # TODO: ENGINIFY: assume all actions are allowed
+        #systems_registerable? || User.allowed_to?([:register_systems], :environments, environment_ids, self, true)
+        true
       end
 
       def distributors_readable?
-        User.allowed_to?(DISTRIBUTORS_READABLE, :organizations, nil, self)
+        # TODO: ENGINIFY: assume all actions are allowed
+        #User.allowed_to?(DISTRIBUTORS_READABLE, :organizations, nil, self)
+        true
       end
 
       def distributors_deletable?
-        User.allowed_to?([:delete_distributors], :organizations, nil, self)
+        # TODO: ENGINIFY: assume all actions are allowed
+        #User.allowed_to?([:delete_distributors], :organizations, nil, self)
+        true
       end
 
       def distributors_registerable?
-        User.allowed_to?([:register_distributors], :organizations, nil, self)
+        # TODO: ENGINIFY: assume all actions are allowed
+        #User.allowed_to?([:register_distributors], :organizations, nil, self)
+        true
       end
 
       def any_distributors_registerable?
-        distributors_registerable? || User.allowed_to?([:register_distributors], :environments, environment_ids, self, true)
+        # TODO: ENGINIFY: assume all actions are allowed
+        #distributors_registerable? || User.allowed_to?([:register_distributors], :environments, environment_ids, self, true)
+        true
       end
 
       def gpg_keys_manageable?
-        ::User.allowed_to?([:gpg], :organizations, nil, self)
+        # TODO: ENGINIFY: assume all actions are allowed
+        #::User.allowed_to?([:gpg], :organizations, nil, self)
+        true
       end
 
       def syncable?
-        ::User.allowed_to?(SYNC_PERM_VERBS, :organizations, nil, self)
+        # TODO: ENGINIFY: assume all actions are allowed
+        #::User.allowed_to?(SYNC_PERM_VERBS, :organizations, nil, self)
+        true
       end
     end
 

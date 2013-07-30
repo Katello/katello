@@ -40,11 +40,15 @@ module Katello
       end
 
       def creatable? org
-        ::User.allowed_to?([:create], :system_groups, nil, org)
+        # TODO: ENGINIFY: assume all actions are allowed
+        #::User.allowed_to?([:create], :system_groups, nil, org)
+        true
       end
 
       def any_readable?(org)
-        ::User.allowed_to?(READ_PERM_VERBS, :system_groups, nil, org)
+        # TODO: ENGINIFY: assume all actions are allowed
+        #::User.allowed_to?(READ_PERM_VERBS, :system_groups, nil, org)
+        true
       end
 
       def list_tags(org_id)
@@ -78,37 +82,50 @@ module Katello
       def items(org, verbs)
         raise "scope requires an organization" if org.nil?
         resource = :system_groups
-        if ::User.allowed_all_tags?(verbs, resource, org)
+        # TODO: ENGINIFY: assume all actions are allowed
+        #if ::User.allowed_all_tags?(verbs, resource, org)
            where(:organization_id => org)
-        else
-          where("system_groups.id in (#{::User.allowed_tags_sql(verbs, resource, org)})")
-        end
+        #else
+        #  where("system_groups.id in (#{::User.allowed_tags_sql(verbs, resource, org)})")
+        #end
       end
     end
 
     included do
       def systems_readable?
-        ::User.allowed_to?(SYSTEM_READ_PERMS, :system_groups, self.id, self.organization)
+        # TODO: ENGINIFY: assume all actions are allowed
+        #::User.allowed_to?(SYSTEM_READ_PERMS, :system_groups, self.id, self.organization)
+        true
       end
 
       def systems_deletable?
-        ::User.allowed_to?([:delete_systems], :system_groups, self.id, self.organization)
+        # TODO: ENGINIFY: assume all actions are allowed
+        #::User.allowed_to?([:delete_systems], :system_groups, self.id, self.organization)
+        true
       end
 
       def systems_editable?
-        ::User.allowed_to?([:update_systems], :system_groups, self.id, self.organization)
+        # TODO: ENGINIFY: assume all actions are allowed
+        #::User.allowed_to?([:update_systems], :system_groups, self.id, self.organization)
+        true
       end
 
       def readable?
-        ::User.allowed_to?(READ_PERM_VERBS, :system_groups, self.id, self.organization)
+        # TODO: ENGINIFY: assume all actions are allowed
+        #::User.allowed_to?(READ_PERM_VERBS, :system_groups, self.id, self.organization)
+        true
       end
 
       def editable?
-        User.allowed_to?([:update, :create], :system_groups, self.id, self.organization)
+        # TODO: ENGINIFY: assume all actions are allowed
+        #User.allowed_to?([:update, :create], :system_groups, self.id, self.organization)
+        true
       end
 
       def deletable?
-        ::User.allowed_to?([:delete, :create], :system_groups, self.id, self.organization)
+        # TODO: ENGINIFY: assume all actions are allowed
+        #::User.allowed_to?([:delete, :create], :system_groups, self.id, self.organization)
+        true
       end
     end
 

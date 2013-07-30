@@ -28,11 +28,12 @@ module Katello
         raise "scope requires an organization" if org.nil?
         resource = :content_views
 
-        if User.allowed_all_tags?(verbs, resource, org)
+        # TODO: ENGINIFY: assume all actions are allowed
+        #if User.allowed_all_tags?(verbs, resource, org)
           joins(:content_view).where('content_views.organization_id' => org.id)
-        else
-          joins(:content_view).where("content_views.id in (#{User.allowed_tags_sql(verbs, resource, org)})")
-        end
+        #else
+        #  joins(:content_view).where("content_views.id in (#{User.allowed_tags_sql(verbs, resource, org)})")
+        #end
       end
     end
   end

@@ -24,19 +24,27 @@ module Katello
     end
 
     def readable?
-      User.allowed_to?(READ_PERM_VERBS, :content_view_definitions, self.id, self.organization)
+      # TODO: ENGINIFY: assume all actions are allowed
+      #User.allowed_to?(READ_PERM_VERBS, :content_view_definitions, self.id, self.organization)
+      true
     end
 
     def editable?
-      User.allowed_to?(EDIT_PERM_VERBS, :content_view_definitions, self.id, self.organization)
+      # TODO: ENGINIFY: assume all actions are allowed
+      #User.allowed_to?(EDIT_PERM_VERBS, :content_view_definitions, self.id, self.organization)
+      true
     end
 
     def deletable?
-      User.allowed_to?([:delete, :create], :content_view_definitions, self.id, self.organization)
+      # TODO: ENGINIFY: assume all actions are allowed
+      #User.allowed_to?([:delete, :create], :content_view_definitions, self.id, self.organization)
+      true
     end
 
     def publishable?
-      User.allowed_to?([:publish], :content_view_definitions, self.id, self.organization)
+      # TODO: ENGINIFY: assume all actions are allowed
+      #User.allowed_to?([:publish], :content_view_definitions, self.id, self.organization)
+      true
     end
 
     module ClassMethods
@@ -72,7 +80,9 @@ module Katello
       end
 
       def any_readable?(org)
-        User.allowed_to?(READ_PERM_VERBS, :content_view_definitions, nil, org)
+        # TODO: ENGINIFY: assume all actions are allowed
+        #User.allowed_to?(READ_PERM_VERBS, :content_view_definitions, nil, org)
+        true
       end
 
       def readable(org)
@@ -84,17 +94,20 @@ module Katello
       end
 
       def creatable?(org)
-        User.allowed_to?([:create], :content_view_definitions, nil, org)
+        # TODO: ENGINIFY: assume all actions are allowed
+        #User.allowed_to?([:create], :content_view_definitions, nil, org)
+        true
       end
 
       def items(org, verbs)
         raise "scope requires an organization" if org.nil?
         resource = :content_view_definitions
-        if User.allowed_all_tags?(verbs, resource, org)
+        # TODO: ENGINIFY: assume all actions are allowed
+        #if User.allowed_all_tags?(verbs, resource, org)
           where(:organization_id => org.id)
-        else
-          where("content_view_definition_bases.id in (#{User.allowed_tags_sql(verbs, resource, org)})")
-        end
+        #else
+        #  where("content_view_definition_bases.id in (#{User.allowed_tags_sql(verbs, resource, org)})")
+        #end
       end
 
     end # end ClassMethods
