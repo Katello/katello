@@ -19,7 +19,8 @@ module Katello
         def initialize
           @key           = :users
           @display       = _("Users")
-          @authorization = lambda{ User.any_readable? }
+          # TODO: ENGINIFY: allow the action to be performed... this needs to be adapted to Foreman User
+          @authorization = lambda{ true }
           @url           = users_path
         end
 

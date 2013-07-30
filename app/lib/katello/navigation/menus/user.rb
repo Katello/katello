@@ -20,7 +20,9 @@ module Katello
 
         def initialize(user)
           @key           = :user
-          @display       = Katello.config[:gravatar] ? "#{gravatar_image_tag(user.email)}#{user.username}" : user.username
+          # TODO: ENGINIFY: the following needs to be updated for Foreman user
+          #@display       = Katello.config[:gravatar] ? "#{gravatar_image_tag(user.email)}#{user.username}" : user.username
+          @display       = user.login
           @authorization = true
           @type          = 'dropdown'
           @items         = [

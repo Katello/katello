@@ -14,11 +14,12 @@ require 'cgi'
 require 'base64'
 
 module Katello
-  class ApplicationController < ActionController::Base
+  class ApplicationController < ::ApplicationController
     layout :set_layout
     include Notifications::ControllerHelper
     include Profiling
-    include KTLocale
+    # TODO: ENGINIFY: disabling KTLocale, as it requires certain properties on a User
+    #include KTLocale
     clear_helpers
 
     helper UIAlchemy::TranslationHelper
@@ -28,11 +29,12 @@ module Katello
     before_filter :check_deleted_org
 
     def set_layout
-      if !current_user.nil? && current_user.experimental_ui == true
-        'katello_experimental'
-      else
-        'katello'
-      end
+      # TODO: ENGINIFY: disabling katello_experimental, as it requires certain properties on a User
+      #if !current_user.nil? && current_user.experimental_ui == true
+      #  'katello_experimental'
+      #else
+        'katello/katello'
+      #end
     end
 
     protect_from_forgery # See ActionController::RequestForgeryProtection for details
@@ -103,7 +105,8 @@ module Katello
     end
     # support for session (thread-local) variables must be the last filter (except authorize)in this class
     include Util::ThreadSession::Controller
-    include AuthorizationRules
+    # TODO: ENGINIFY: disabling AuthorizationRules
+    #include AuthorizationRules
     include Menu
 
     before_filter :verify_ldap
@@ -193,24 +196,26 @@ module Katello
     end
 
     def current_organization
-      unless session[:current_organization_id]
-        return nil unless session[:current_organization_id]
-      end
-      begin
-        if @current_org.nil? && current_user
-          o = Organization.find(session[:current_organization_id])
-          if current_user.allowed_organizations.include?(o)
-            @current_org = o
-          else
-            raise ActiveRecord::RecordNotFound.new _("Permission Denied. User '%{user}' does not have permissions to access organization '%{org}'.") % {:user => User.current.username, :org => o.name}
-          end
-        end
-        return @current_org
-      rescue ActiveRecord::RecordNotFound => error
-        log_exception error
-        session.delete(:current_organization_id)
-        org_not_found_error(error)
-      end
+      # TODO: ENGINIFY: need to handle 'current_organization', currently returning 'first'
+      Katello::Organization.first
+      #unless session[:current_organization_id]
+      #  return nil unless session[:current_organization_id]
+      #end
+      #begin
+      #  if @current_org.nil? && current_user
+      #    o = Organization.find(session[:current_organization_id])
+      #    if current_user.allowed_organizations.include?(o)
+      #      @current_org = o
+      #    else
+      #      raise ActiveRecord::RecordNotFound.new _("Permission Denied. User '%{user}' does not have permissions to access organization '%{org}'.") % {:user => User.current.login, :org => o.name}
+      #    end
+      #  end
+      #  return @current_org
+      #rescue ActiveRecord::RecordNotFound => error
+      #  log_exception error
+      #  session.delete(:current_organization_id)
+      #  org_not_found_error(error)
+      #end
     end
 
     def current_organization=(org)
@@ -321,16 +326,17 @@ module Katello
 
     def require_no_user
       if current_user
-        notify.success _("Welcome Back") + ", " + current_user.username, :persist => false
+        notify.success _("Welcome Back") + ", " + current_user.login, :persist => false
         execute_after_filters
         redirect_to dashboard_index_url
         return false
       end
     end
 
-    def current_user
-      user
-    end
+    # TODO: ENGINIFY: commenting our 'current_user', should be inherited from parent (e.g. Core/Foreman)
+    #def current_user
+    #  user
+    #end
 
     # render 403 page
     def render_403

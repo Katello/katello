@@ -19,7 +19,8 @@ module Katello
         def initialize
           @key           = :synchronization
           @display       = _("Synchronization")
-          @authorization = lambda{ User.current.has_superadmin_role? }
+          # TODO: ENGINIFY: allow the action to be performed... this needs to be adapted to Foreman User
+          @authorization = lambda{ true }
           @url           = sync_management_manage_path
         end
 

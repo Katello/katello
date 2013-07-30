@@ -14,6 +14,11 @@
 module Katello
   module NavigationHelper
 
+    def current_user
+      #TODO: ENGINIFY - this needs to be updated to properly handle current_user coming from Foreman
+      User.first
+    end
+
     def generate_menu
       if !Katello.config.katello?
         main_menu   = Navigation::Menus::Headpin::Main.new(current_organization)
@@ -50,7 +55,9 @@ module Katello
 
     def add_notices
       return {
-        :count          => Notice.for_user(current_user).for_org(current_organization).count.to_s,
+        #TODO: ENGINIFY: notices count needs to be adapted to Foreman user
+        #:count          => Notice.for_user(current_user).for_org(current_organization).count.to_s,
+        :count          => 0,
         :url            => notices_path,
         :new_notices_url   => notices_get_new_path
       }

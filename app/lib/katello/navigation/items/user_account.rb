@@ -20,7 +20,9 @@ module Katello
           @key           = :user_account
           @display       = _("My Account")
           @authorization = true
-          @url           = "#{users_path(user)}#list_search=#{user.username}&panel=user_#{user.id}&panel_page=edit"
+          #TODO: ENGINIFY: account url needs to be updated to point to foreman user
+          #@url           = "#{users_path(user)}#list_search=#{user.username}&panel=user_#{user.id}&panel_page=edit"
+          @url            = "#"
         end
 
       end
