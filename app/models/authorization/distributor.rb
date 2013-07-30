@@ -44,12 +44,10 @@ module Authorization::Distributor
       end
     end
 
-    def registerable?(env, org)
-      if env
-        env.distributors_registerable?
-      else
-        org.distributors_registerable?
-      end
+    def registerable?(env, org, content_view=nil)
+      subscribable = content_view ? content_view.subscribable? : true
+      registerable = (env || org).distributors_registerable?
+      subscribable && registerable
     end
   end
 
