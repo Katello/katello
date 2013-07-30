@@ -26,7 +26,7 @@
           .panel_action{'data-id' => "select_none"}
             #select-result
             %a#select-none #{_("Select None")}
-    = render :partial => "common/tupane"
+    = render :partial => "katello/common/tupane"
 
     %div.left_panel{:class => left_panel_width ? left_panel_width : 'column_panel_' + columns.length.to_s }
       #list-title
@@ -70,6 +70,6 @@
             = render_rows(:collection => collection, :columns => columns, :accessor => accessor, :name => name)
         - else
           %section
-            = render :partial => "common/list_item", :collection => collection, :as => :item, :locals => {:accessor => accessor, :columns => columns, :name => name, :initial_action => initial_action}
+            = render :partial => "katello/common/list_item", :collection => collection, :as => :item, :locals => {:accessor => accessor, :columns => columns, :name => name, :initial_action => initial_action}
 
       %br.clear

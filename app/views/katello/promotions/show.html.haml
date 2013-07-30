@@ -162,7 +162,7 @@
             %h2 #{_("Changesets")}
             = _("An environment does not exist.  If you would like to manage changesets and content, please create a new environment.")
 
-      = render :partial=>"common/tupane"
+      = render :partial=>"katello/common/tupane"
 
       #content_tree.left_panel.sliding_tree
         - if show_new_button?(manage_promotion_changesets, manage_deletion_changesets)

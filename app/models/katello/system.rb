@@ -15,12 +15,12 @@ class System < ActiveRecord::Base
   include Hooks
   define_hooks :add_system_group_hook, :remove_system_group_hook
 
-  include Glue::Candlepin::Consumer if Katello.config.use_cp
-  include Glue::Pulp::Consumer if Katello.config.use_pulp
-  include Glue if Katello.config.use_cp || Katello.config.use_pulp
-  include Glue::ElasticSearch::System if Katello.config.use_elasticsearch
-  include Authorization::System
-  include AsyncOrchestration
+  include Katello::Glue::Candlepin::Consumer if Katello.config.use_cp
+  include Katello::Glue::Pulp::Consumer if Katello.config.use_pulp
+  include Katello::Glue if Katello.config.use_cp || Katello.config.use_pulp
+  include Katello::Glue::ElasticSearch::System if Katello.config.use_elasticsearch
+  include Katello::Authorization::System
+  include Katello::AsyncOrchestration
 
   after_rollback :rollback_on_create, :on => :create
 
@@ -45,11 +45,11 @@ class System < ActiveRecord::Base
   # multiple systems with a single name are supported
   validates :name, :presence => true
   validates_length_of :name, :maximum => 250
-  validates_with Validators::NoTrailingSpaceValidator, :attributes => :name
-  validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
+  validates_with Katello::Validators::NoTrailingSpaceValidator, :attributes => :name
+  validates_with Katello::Validators::KatelloDescriptionFormatValidator, :attributes => :description
   validates_length_of :location, :maximum => 255
-  validates_with Validators::ContentViewEnvironmentValidator
-  validates_with Validators::KatelloNameFormatValidator, :attributes => :name
+  validates_with Katello::Validators::ContentViewEnvironmentValidator
+  validates_with Katello::Validators::KatelloNameFormatValidator, :attributes => :name
 
   before_create  :fill_defaults
   after_create :init_default_custom_info

@@ -58,7 +58,7 @@ module Katello
 
     # Headpin inclusion
     def stats_line(stats, options ={})
-      render :partial => "common/stats_line",
+      render :partial => "katello/common/stats_line",
         :locals => {:stats => stats}
     end
 
@@ -84,7 +84,7 @@ module Katello
 
       raise ":titles option not provided" unless options[:titles]
 
-      render :partial => "common/panel",
+      render :partial => "katello/common/panel",
              :locals => {
                :title => options[:title],
                :name => options[:name],
@@ -113,7 +113,7 @@ module Katello
       options[:accessor] ||= "id"
       panel_id ||= "panel"
 
-      render :partial => "common/one_panel",
+      render :partial => "katello/common/one_panel",
              :locals => {
                :single_select => options[:single_select] || false,
                :hover_text_cb => options[:hover_text_cb],
@@ -147,7 +147,7 @@ module Katello
       options[:url_products_proc] = nil if options[:url_products_proc].nil?
       options[:url_content_views_proc] = nil if options[:url_content_views_proc].nil?
 
-      render :partial=>"/common/env_select", :locals => options
+      render :partial=>"katello/common/env_select", :locals => options
     end
 
 =begin
