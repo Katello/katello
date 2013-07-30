@@ -17,5 +17,7 @@
 //= require "alchemy/jquery/plugins/chosen.jquery"
 //= require "alchemy/jquery/plugins/jquery.treeTable"
 //= require "widgets/auto_complete"
+//= require "widgets/env_content_view_selector"
+//= require "widgets/jquery.jeditable.helpers"
 //= require "distributors/distributors"
 //= require "systems/custom_info"

@@ -29,14 +29,24 @@ class DistributorsController < ApplicationController
   COLUMNS = {'name' => 'name_sort', 'lastCheckin' => 'lastCheckin'}
 
   def rules
-    edit_distributor = lambda{Distributor.find(params[:id]).editable?}
     read_distributor = lambda{Distributor.find(params[:id]).readable?}
     env_distributor = lambda{@environment && @environment.distributors_readable?}
     any_readable = lambda{current_organization && Distributor.any_readable?(current_organization)}
     delete_distributors = lambda{@distributor.deletable?}
     bulk_delete_distributors = lambda{@distributors.collect{|s| false unless s.deletable?}.compact.empty?}
     bulk_edit_distributors = lambda{@distributors.collect{|s| false unless s.editable?}.compact.empty?}
-    register_distributor = lambda { current_organization && Distributor.registerable?(@environment, current_organization) }
+    register_distributor = lambda do
+      if current_organization
+        if params.has_key?(:distributor) && !params[:distributor][:content_view_id].blank?
+            content_view = ContentView.readable(current_organization).
+                              find_by_id(params[:distributor][:content_view_id])
+            Distributor.registerable?(@environment, current_organization, content_view) if content_view
+        else
+            Distributor.registerable?(@environment, current_organization)
+        end
+      end
+    end
+
     items_test = lambda do
       if params[:env_id]
         @environment = KTEnvironment.find(params[:env_id])
@@ -45,6 +55,17 @@ class DistributorsController < ApplicationController
         current_organization && Distributor.any_readable?(current_organization)
       end
     end
+
+    edit_distributor = lambda do
+      subscribable = true
+      if params.has_key?(:distributor) && !params[:distributor][:content_view_id].blank?
+          content_view = ContentView.readable(current_organization).
+                          find_by_id(params[:distributor][:content_view_id])
+          subscribable = content_view ? content_view.subscribable? : false
+      end
+      subscribable && Distributor.find(params[:id]).editable?
+    end
+
     {
       :index => any_readable,
       :create => register_distributor,
@@ -103,7 +124,7 @@ class DistributorsController < ApplicationController
 
   def create
     @distributor = Distributor.new
-    @distributor.facts = {}
+    @distributor.facts = {'system.certificate_version' => '3.2'}  # TODO: Currently forcing distributor to latest version
     @distributor.name= params["distributor"]["name"]
     @distributor.cp_type = "candlepin"  # The 'candlepin' type is allowed to export a manifest
     @distributor.environment = KTEnvironment.find(params["distributor"]["environment_id"])
@@ -241,18 +262,9 @@ class DistributorsController < ApplicationController
   end
 
   def edit
-    begin
-      releases = @distributor.available_releases
-    rescue => e
-      releases_error = e.to_s
-      Rails.logger.error e.to_s
-    end
-    releases ||= []
-    releases_error ||= nil
-
     # Stuff into var for use in spec tests
     @locals_hash = { :distributor => @distributor, :editable => @distributor.editable?,
-                    :releases => releases, :releases_error => releases_error, :name => controller_display_name,
+                    :name => controller_display_name,
                     :environments => environment_paths(library_path_element("distributors_readable?"),
                                                        environment_path_element("distributors_readable?")) }
     render :partial => "edit", :locals => @locals_hash
@@ -260,6 +272,11 @@ class DistributorsController < ApplicationController
 
   def update
     params[:distributor][:content_view_id] = nil if params[:distributor].has_key? :environment_id
+
+    # TODO: Currently forcing distributor to latest version
+    facts = @distributor.facts
+    facts['system.certificate_version'] ||= '3.2'
+    params[:distributor][:facts] = facts
 
     @distributor.update_attributes!(params[:distributor])
     notify.success _("Distributor '%s' was updated.") % @distributor["name"]
