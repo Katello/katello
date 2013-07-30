@@ -14,7 +14,6 @@ module Validators
   class UsernameValidator < ActiveModel::EachValidator
     def validate_each(record, attribute, value)
       if value
-        record.errors[attribute] << N_("cannot contain characters >, <, or /") if value =~ %r{<|>|/}
         KatelloNameFormatValidator.validate_length(record, attribute, value, 128, 3)
       end
     end

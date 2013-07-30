@@ -31,14 +31,13 @@ module ConsumerSupport
     VCR.use_cassette('support/consumer') do
       @consumer.set_pulp_consumer
     end
-  rescue => e
   ensure
     return @consumer
   end
 
   def self.destroy_consumer(id=@consumer_id)
     VCR.use_cassette('support/consumer') do
-      @consumer.del_pulp_consumer
+      @consumer.del_pulp_consumer if @consumer
     end
   rescue RestClient::ResourceNotFound => e
     #ignore if not found

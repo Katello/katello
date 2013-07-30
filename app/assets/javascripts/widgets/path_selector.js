@@ -99,12 +99,6 @@ KT.path_select = function(div_id, name, environments, options_in){
                 }
             }
 
-            $(document).mouseup(function(e){
-                if(path_selector.has(e.target).length === 0){
-                    path_selector.hide();
-                }
-            });
-
             scroll_obj = KT.env_select_scroll({});
             recalc_scroll();
         },
