@@ -13,18 +13,18 @@
   #providers
     %input#panel_element_id{:name => @provider.id, :type => "hidden", :value => "#{name}_#{@provider.id}", "data-ajax_url"=>url_for(:action=> 'update')}
     .full#provider
-      = form_for(@provider, :html => {:multipart => true, :method => :put, :id => 'provider_edit', :remote => true}, :url => provider_path(@provider)) do |f|
+      = form_for(@provider, :html => {:multipart => true, :method => :put, :id => 'provider_edit', :remote => true}, :url => katello_provider_path(@provider)) do |f|
 
         %fieldset.fl.clear
           .grid_2.ra
             %label #{_("Name")}:
-          .grid_9.la#provider_name{:title=>@provider[:name], 'name' => 'provider[name]', 'data-url' => provider_path(@provider.id),
+          .grid_9.la#provider_name{:title=>@provider[:name], 'name' => 'provider[name]', 'data-url' => katello_provider_path(@provider.id),
                                   :class=>editable_class(editable)} #{@provider[:name]}
 
         %fieldset.fl.clear
           .grid_2.ra
             %label #{_("Description")}:
-          .grid_9.la{'name' => 'provider[description]', 'data-maxlength' => default_description_limit, 'data-url' => provider_path(@provider.id), :class=>("editable edit_textarea" if editable)}<> #{@provider.description}
+          .grid_9.la{'name' => 'provider[description]', 'data-maxlength' => default_description_limit, 'data-url' => katello_provider_path(@provider.id), :class=>("editable edit_textarea" if editable)}<> #{@provider.description}
 
 
 %input#provider_id{:name => @provider.id, :type => "hidden", :value => @provider.id, "data-ajax_url"=>url_for(:action=> 'update')}

@@ -15,7 +15,6 @@ require 'base64'
 
 module Katello
   class ApplicationController < ::ApplicationController
-    layout :set_layout
     include Notifications::ControllerHelper
     include Profiling
     # TODO: ENGINIFY: disabling KTLocale, as it requires certain properties on a User
@@ -27,15 +26,6 @@ module Katello
     helper_method :render_correct_nav
     before_filter :require_user,:require_org
     before_filter :check_deleted_org
-
-    def set_layout
-      # TODO: ENGINIFY: disabling katello_experimental, as it requires certain properties on a User
-      #if !current_user.nil? && current_user.experimental_ui == true
-      #  'katello_experimental'
-      #else
-        'katello/katello'
-      #end
-    end
 
     protect_from_forgery # See ActionController::RequestForgeryProtection for details
 

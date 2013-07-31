@@ -16,7 +16,9 @@ module Katello
     end
 
     initializer "katello.assets.paths", :group => :all do |app|
-      app.config.assets.paths << "#{::Katello::Engine.root}/vendor/assets/katello/font-awesome"
+      app.config.assets.paths << "#{::UIAlchemy::Engine.root}/vendor/assets/ui_alchemy/alchemy-forms"
+      app.config.assets.paths << "#{::UIAlchemy::Engine.root}/vendor/assets/ui_alchemy/alchemy-buttons"
+      app.config.assets.paths << "#{::Katello::Engine.root}/vendor/assets/stylesheets/katello/font-awesome"
     end
 
     initializer "logging" do |app|

@@ -1,0 +1,17 @@
+= stylesheet_link_tag 'katello/katello'
+= stylesheet_link_tag "katello/#{controller.section_id}"
+= yield :stylesheets
+
+#wrapper
+  %article#maincontent
+    %section.maincontent.container_16
+      = yield(:katello_content)
+
+= javascript_include_tag "katello/common/vendor"
+= javascript_include_tag 'katello/common'
+%script{ :type => "text/javascript" }
+  = render :partial => "katello/common/common_i18n"
+  = render :partial => 'katello/common/config'
+  = yield :inline_javascript
+
+= yield :javascripts

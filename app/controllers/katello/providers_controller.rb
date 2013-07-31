@@ -13,7 +13,7 @@
 
 module Katello
   class ProvidersController < Katello::ApplicationController
-    include AutoCompleteSearch
+    #include AutoCompleteSearch
 
     before_filter :find_rh_provider, :only => [:redhat_provider]
 

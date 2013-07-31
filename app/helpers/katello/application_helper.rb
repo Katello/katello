@@ -14,6 +14,8 @@
 module Katello
   module ApplicationHelper
 
+    include ::ApplicationHelper
+    include ::TaxonomyHelper
     include LayoutHelper
     include BrandingHelper
     include NavigationHelper

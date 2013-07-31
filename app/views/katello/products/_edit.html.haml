@@ -24,13 +24,13 @@
   %fieldset
     .grid_2.ra
       %label #{_("Description")}:
-    .grid_5.la.multiline{'name' => 'product[description]', :class=>("editable edit_textarea" if editable), 'data-maxlength' => default_description_limit, 'data-url' => provider_product_path(@provider.id)}<> #{@product.description}
+    .grid_5.la.multiline{'name' => 'product[description]', :class=>("editable edit_textarea" if editable), 'data-maxlength' => default_description_limit, 'data-url' => katello_provider_product_path(@provider.id)}<> #{@product.description}
 
   %fieldset
     .grid_2.ra
       %label #{_("GPG Key")}:
     - if gpg_keys.length != 0
-      .grid_5.la{'name' => 'product[gpg_key]', 'class' => ("editable edit_select_product_gpg" if editable), 'data-url' => provider_product_path(@provider.id), 'data-options' => gpg_keys_edit } #{@product.gpg_key.name if @product.gpg_key}
+      .grid_5.la{'name' => 'product[gpg_key]', 'class' => ("editable edit_select_product_gpg" if editable), 'data-url' => katello_provider_product_path(@provider.id), 'data-options' => gpg_keys_edit } #{@product.gpg_key.name if @product.gpg_key}
     - else
       .grid_5.la
         #{_("None defined for this Organization.")}

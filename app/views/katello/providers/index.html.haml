@@ -1,12 +1,3 @@
-.grid_16
-  = help_tip_button
-  = help_tip(_("Providers provide many types of content such as packages, errata, " + |
-             "kickstart trees, and installation disc images.  A provider may be delivering " + |
-             "all of your paid content or it could simply be a local yum repository providing a few yum repos.")) |
-
-.grid_16#main
-  = two_panel(@providers, @panel_options)
-
 = javascript 'katello/providers'
 
 = javascript do
@@ -15,3 +6,17 @@
       "productUpdateKeyConfirm" : "#{escape_javascript(_('Do you want to set this GPG Key as the key for all repositories within this product?'))}",
       "productUpdateKeyWarning" : "#{escape_javascript(_('This will override any GPG keys already associated with a repository within this product'))}"
     });
+
+
+= content_for(:katello_content) do
+  .grid_16
+    = help_tip_button
+    = help_tip(_("Providers provide many types of content such as packages, errata, " + |
+               "kickstart trees, and installation disc images.  A provider may be delivering " + |
+               "all of your paid content or it could simply be a local yum repository providing a few yum repos.")) |
+
+  .grid_16#main
+    = two_panel(@providers, @panel_options)
+
+
+= render :file => 'katello/layouts/katello_base'

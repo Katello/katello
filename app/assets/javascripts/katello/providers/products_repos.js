@@ -37,9 +37,9 @@ $(document).ready(function() {
 
     var arrow = $(this);
     if(arrow.attr("src").indexOf("collapsed") === -1){
-      arrow.attr("src", KT.common.rootURL() + "assets/icons/expander-collapsed.png");
+      arrow.attr("src", KT.common.rootURL() + "assets/katello/icons/expander-collapsed.png");
     } else {
-      arrow.attr("src", KT.common.rootURL() + "assets/icons/expander-expanded.png");
+      arrow.attr("src", KT.common.rootURL() + "assets/katello/icons/expander-expanded.png");
     }
     return false;
   });

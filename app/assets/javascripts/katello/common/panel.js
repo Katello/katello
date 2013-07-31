@@ -133,6 +133,7 @@ $(document).ready(function () {
         KT.panel.panelResize($('#panel_main'), false);
         KT.panel.panelResize($('#subpanel_main'), true);
     });
+
     $('.subpanel_element').live('click', function () {
         KT.panel.openSubPanel($(this).attr('data-url'));
     });
@@ -1008,12 +1009,12 @@ KT.panel.list = (function () {
                         button.attr("disabled", "disabled");
 
                         $(this).ajaxSubmit({
-                            url: KT.routes[resource_type + '_path'](),
+                            url: $(this).attr('action'),
                             data: data,
                             success: createSuccess,
                             error: function (e) {
                                 button.removeAttr('disabled');
-                                notices.checkNotices();
+                                //notices.checkNotices();
                             }
                         });
                     }

@@ -11,7 +11,7 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
 
-KT.panel.list.registerPage('providers', { create : 'new_provider' });
+KT.panel.list.registerPage('providers', { create : 'new_katello_provider' });
 
 $(document).ready(function() {
 
@@ -29,7 +29,7 @@ $(document).ready(function() {
         }
     });
 
-  $('.repo_create').live('click', function(event) {
+   $('.repo_create').live('click', function(event) {
     var button = $(this);
     button.addClass("disabled");
 
