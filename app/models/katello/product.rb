@@ -52,7 +52,7 @@ module Katello
     end
 
     def self.in_org(organization)
-      self.joins(:provider).where('providers.organization_id' => organization.id)
+      self.joins(:provider).where("#{Provider.table_name}.organization_id" => organization.id)
     end
 
     scope :engineering, where(:type => "Product")
@@ -207,8 +207,8 @@ module Katello
     def self.with_repos(env, enabled_only)
       query = Repository.in_environment(env.id).select(:product_id)
       query = query.enabled if enabled_only
-      joins(:provider).where('providers.organization_id' => env.organization).
-          where("(providers.provider_type ='#{Provider::CUSTOM}') OR ( providers.provider_type ='#{Provider::REDHAT}' AND products.id in (#{query.to_sql}))")
+      joins(:provider).where("#{Provider.table_name}.organization_id" => env.organization).
+          where("(#{Provider.table_name}.provider_type ='#{Provider::CUSTOM}') OR ( #{Provider.table_name}.provider_type ='#{Provider::REDHAT}' AND #{Product.table_name}.id in (#{query.to_sql}))")
     end
   end
 end

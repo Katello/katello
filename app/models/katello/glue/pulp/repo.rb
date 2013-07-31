@@ -498,7 +498,7 @@ module Katello
       def cancel_sync
         Rails.logger.info "Cancelling synchronization of repository #{self.pulp_id}"
         history = self.sync_status
-        return if history.nil? || history.state == ::PulpSyncStatus::Status::NOT_SYNCED
+        return if history.nil? || history.state == PulpSyncStatus::Status::NOT_SYNCED
         Runcible::Resources::Task.cancel(history.uuid)
       end
 
@@ -519,7 +519,7 @@ module Katello
 
       def sync_state
         status = sync_status
-        return ::PulpSyncStatus::Status::NOT_SYNCED if status.nil?
+        return PulpSyncStatus::Status::NOT_SYNCED if status.nil?
         status.state
       end
 
@@ -579,7 +579,7 @@ module Katello
         end
 
         if history.nil? or history.empty?
-          return ::PulpSyncStatus.new(:state => ::PulpSyncStatus::Status::NOT_SYNCED)
+          return PulpSyncStatus.new(:state => PulpSyncStatus::Status::NOT_SYNCED)
         else
           history = sort_sync_status(history)
           return PulpSyncStatus.pulp_task(history.first.with_indifferent_access)

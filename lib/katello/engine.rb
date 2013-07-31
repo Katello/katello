@@ -1,6 +1,3 @@
-require 'katello_home_helper_patch'
-require 'logging'
-
 module Katello
 
   class Engine < ::Rails::Engine
@@ -36,7 +33,7 @@ module Katello
 
     config.to_prepare do
       # Patch the menu
-      ::HomeHelper.send :include, KatelloHomeHelperPatch
+      ::HomeHelper.send :include, Katello::HomeHelperPatch
     end
 
   end
