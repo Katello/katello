@@ -50,7 +50,7 @@ module Katello
     end
 
     def create
-      product_params = params[:product]
+      product_params = params[:katello_product]
       requested_label = String.new(product_params[:label]) unless product_params[:label].blank?
       product_params[:label], label_assigned = generate_label(product_params[:name], 'product') if product_params[:label].blank?
 
@@ -143,5 +143,6 @@ module Katello
     def find_product
       @product = Product.find(params[:id])
     end
+
   end
 end

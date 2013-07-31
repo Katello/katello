@@ -34,11 +34,11 @@ module Katello
 
     before_validation :create_archived_definition
 
-    scope :default_view, joins(:content_view).where('katello_content_views.default = ?', true)
-    scope :non_default_view, joins(:content_view).where('katello_content_views.default = ?', false)
+    scope :default_view, joins(:content_view).where("#{ContentView.table_name}.default" => true)
+    scope :non_default_view, joins(:content_view).where("#{ContentView.table_name}.default" => false)
 
     def has_default_content_view?
-      ContentViewVersion.default_view.pluck("content_view_versions.id").include?(self.id)
+      ContentViewVersion.default_view.pluck("#{ContentViewVersion.table_name}.id").include?(self.id)
     end
 
     def repos(env)
@@ -66,13 +66,13 @@ module Katello
       # however, for content views, it is desirable to order the repositories
       # based on the name of the product the repository is part of.
       Repository.send(:with_exclusive_scope) do
-        self.repositories.joins(:product).in_environment(env).order('products.name asc')
+        self.repositories.joins(:product).in_environment(env).order("#{Product.table_name}.name asc")
       end
     end
 
     def get_repo_clone(env, repo)
       lib_id = repo.library_instance_id || repo.id
-      self.repos(env).where('katello_repositories.library_instance_id' => lib_id)
+      self.repos(env).where("#{Repository.table_name}.library_instance_id" => lib_id)
     end
 
     def self.in_environment(env)

@@ -46,7 +46,7 @@ class InitialMigrate < ActiveRecord::Migration
       t.string   "state",          :default => "new",                :null => false
       t.integer  "task_status_id"
       t.text     "description"
-      t.string   "type",           :default => "PromotionChangeset"
+      t.string   "type",           :default => "Katello::PromotionChangeset"
     end
 
     add_index "katello_changesets", ["environment_id"], :name => "index_changesets_on_environment_id"
@@ -414,7 +414,7 @@ class InitialMigrate < ActiveRecord::Migration
       t.datetime "created_at",                                :null => false
       t.datetime "updated_at",                                :null => false
       t.integer  "gpg_key_id"
-      t.string   "type",               :default => "Product", :null => false
+      t.string   "type",               :default => "Katello::Product", :null => false
       t.integer  "sync_plan_id"
       t.string   "label",                                     :null => false
       t.boolean  "cdn_import_success", :default => true,      :null => false
@@ -574,7 +574,7 @@ class InitialMigrate < ActiveRecord::Migration
       t.integer  "environment_id"
       t.datetime "created_at",                            :null => false
       t.datetime "updated_at",                            :null => false
-      t.string   "type",            :default => "System"
+      t.string   "type",            :default => "Katello::System"
       t.integer  "content_view_id"
     end
 

@@ -11,7 +11,7 @@
     = _("Create Repository")
   .clear
     &nbsp;
-  = form_tag provider_product_repositories_path(@provider.id, @product.id), :id => "new_subpanel", :method => "post", :remote => true do
+  = form_tag katello_provider_product_repositories_path(@provider.id, @product.id), :id => "new_subpanel", :method => "post", :remote => true do
     %fieldset.clearfix
       .grid_2.ra
         = label :repo, :name, _("Name")
@@ -22,7 +22,7 @@
       .grid_2.ra
         = label :repo, :label, _("Label")
       .grid_5.la
-        = text_field :repo, :label, :class=>:label_input, :tabindex => auto_tab_index, 'data-url' => default_label_provider_product_repositories_path(@provider.id, @product.id)
+        = text_field :repo, :label, :class=>:label_input, :tabindex => auto_tab_index, 'data-url' => default_label_katello_provider_product_repositories_path(@provider.id, @product.id)
         = image_tag "icons/spinner.gif", :class => 'label_spinner hidden'
 
     %fieldset.clearfix

@@ -18,7 +18,7 @@ module Katello
     include Glue::ElasticSearch::Repository if Katello.config.use_elasticsearch
 
     include Glue if (Katello.config.use_cp || Katello.config.use_pulp)
-    include Authorization::Repository
+    include Katello::Authorization::Repository
 
     include Glue::Event
     def destroy_event
@@ -36,7 +36,7 @@ module Katello
     belongs_to :environment, :inverse_of => :repositories, :class_name => "KTEnvironment"
     belongs_to :product, :inverse_of => :repositories
     belongs_to :gpg_key, :inverse_of => :repositories
-    belongs_to :library_instance, :class_name=>"Repository"
+    belongs_to :library_instance, :class_name=>"Katello::Repository"
     has_many :content_view_definition_repositories, :dependent => :destroy
     has_many :content_view_definitions, :through => :content_view_definition_repositories
     has_and_belongs_to_many :filters
@@ -58,12 +58,12 @@ module Katello
         :message => (_("Please select content type from one of the following: %s") % TYPES.join(', '))
 
     belongs_to :gpg_key, :inverse_of => :repositories
-    belongs_to :library_instance, :class_name=>"Repository"
+    belongs_to :library_instance, :class_name=>"Katello::Repository"
 
-    default_scope order('repositories.name ASC')
+    default_scope order("#{Repository.table_name}.name ASC")
     scope :enabled, where(:enabled => true)
     scope :in_default_view, joins(:content_view_version => :content_view).
-      where("content_views.default" => true)
+      where("#{ContentView.table_name}.default" => true)
 
     scope :yum_type, where(:content_type=>YUM_TYPE)
     scope :file_type, where(:content_type=>FILE_TYPE)
@@ -85,7 +85,7 @@ module Katello
     end
 
     def self.in_content_views(views)
-      joins(:content_view_version).where('content_view_versions.content_view_id' => views.map(&:id))
+      joins(:content_view_version).where("#{ContentViewVerion.table_name}.content_view_id" => views.map(&:id))
     end
 
     def in_default_view?
@@ -149,7 +149,7 @@ module Katello
         # this repo is part of a default content view
         lib_id = self.library_instance_id || self.id
         Repository.in_environment(env).where(:library_instance_id => lib_id).
-            joins(:content_view_version => :content_view).where('content_views.default'=>true).first
+            joins(:content_view_version => :content_view).where("#{ContentView.table_name}.default"=>true).first
       else
         # this repo is part of a content view that was published from a user created definition
         self.content_view.get_repo_clone(env, self).first
@@ -238,7 +238,7 @@ module Katello
     # equivalent of repo
     def environmental_instances(view)
       repo = self.library_instance || self
-      search = Repository.where("library_instance_id=%s or repositories.id=%s"  % [repo.id, repo.id] )
+      search = Repository.where("library_instance_id=%s or #{Repository.table_name}.id=%s"  % [repo.id, repo.id] )
       search.in_content_views([view])
     end
   end

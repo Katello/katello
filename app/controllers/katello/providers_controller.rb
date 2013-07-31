@@ -95,7 +95,8 @@ module Katello
 
     def items
       ids = Provider.readable(current_organization).collect{|p| p.id}
-      render_panel_direct(Provider, @panel_options, params[:search], params[:offset], [:name_sort, 'asc'],
+      offset = params[:offset] || 0
+      render_panel_direct(Provider, @panel_options, params[:search], 0, [:name_sort, 'asc'],
                     {:default_field => :name, :filter=>[{"id"=>ids}, {:provider_type=>[Provider::CUSTOM.downcase]}]})
     end
 
@@ -116,12 +117,12 @@ module Katello
     end
 
     def create
-      @provider = Provider.create! params[:provider].merge({:provider_type => Provider::CUSTOM,
+      @provider = Provider.create! params[:katello_provider].merge({:provider_type => Provider::CUSTOM,
                                                                     :organization => current_organization})
       notify.success _("Provider '%s' was created.") % @provider['name']
 
       if search_validate(Provider, @provider.id, params[:search])
-        render :partial=>"common/list_item", :locals=>{:item=>@provider, :initial_action=>:products_repos, :accessor=>"id", :columns=>['name'], :name=>controller_display_name}
+        render :partial=>"katello/common/list_item", :locals=>{:item=>@provider, :initial_action=>:products_repos, :accessor=>"id", :columns=>['name'], :name=>controller_display_name}
       else
         notify.message _("'%s' did not meet the current search criteria and is not being shown.") % @provider["name"]
         render :json => { :no_match => true }
@@ -227,7 +228,7 @@ module Katello
                :create_label => _('+ New Provider'),
                :name => controller_display_name,
                :ajax_load => true,
-               :ajax_scroll=>items_providers_path(),
+               :ajax_scroll=>items_katello_providers_path(),
                :initial_action => :products_repos,
                :search_class => Provider,
                :enable_create => Provider.creatable?(current_organization)}

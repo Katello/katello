@@ -13,7 +13,7 @@ Gem::Specification.new do |gem|
   gem.summary     = ""
   gem.description = ""
 
-  gem.files = Dir["{app,vendor,lib,db}/**/*"] + ["LICENSE.txt", "Rakefile", "README.md"]
+  gem.files = Dir["{app,vendor,lib,db,config}/**/*"] + ["LICENSE.txt", "Rakefile", "README.md"]
   gem.require_paths = ["lib"]
 
   # Core Dependencies
@@ -59,6 +59,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency "simple-navigation", ">= 3.3.4"
   gem.add_dependency "sass-rails"
   gem.add_dependency "compass-rails"
+  gem.add_dependency "compass-960-plugin"
   gem.add_dependency "haml-rails"
   gem.add_dependency "ui_alchemy-rails"
 

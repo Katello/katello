@@ -45,7 +45,7 @@
           = raw _("Viewing %{current} of %{results} results (%{items} Total %{name})") % {:current => '<span id="current_items_count">0</span>', :results => '<span id="total_results_count">0</span>', :items => '<span id="total_items_count">0</span>', :name => title}
 
         - if url.nil?
-          %form#search_form.search{"data-url" => search_index_path()}
+          %form#search_form.search{"data-url" => katello_search_index_path()}
             = text_field_tag(:search, params[:search], {:type => "text", :placeholder => _("Search..."), :class => "auto_complete_input ui-autocomplete-input"})
             %button.action{:form => "search_form", :id => "search_button"} #{_("Search")}
         - else

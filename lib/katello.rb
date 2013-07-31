@@ -17,8 +17,10 @@ require "justified/standard_error"
 
 require "runcible"
 
+require "simple_navigation"
 require "haml-rails"
 require "compass-rails"
+require "ninesixty"
 require "ui_alchemy-rails"
 
 require "headpin"

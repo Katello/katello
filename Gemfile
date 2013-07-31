@@ -11,9 +11,9 @@ source 'http://rubygems.org'
 
 # Reports - TODO this is hack that needs to be removed once ruport is officially released
 if (`rpm -q rubygem-ruport` rescue "") =~ /^rubygem-ruport-1.7.0\S+/ && ! defined?(JRUBY_VERSION)
-  gem 'ruport', '>=1.7.0'
+  #gem 'ruport', '>=1.7.0'
 else
-  gem 'ruport', '>=1.7.0', :git => 'git://github.com/ruport/ruport.git'
+  #gem 'ruport', '>=1.7.0', :git => 'git://github.com/ruport/ruport.git'
 end
 #not an actual katello dependency, but
 #Does not pull in  hashery, matches RPM

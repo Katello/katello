@@ -286,7 +286,8 @@ module Katello
     end
 
     def kt_form_for(object, options = {}, &block)
-      if current_user.experimental_ui
+      # ENGINIFY: Foreman user does not have experimental_ui column
+      if false#current_user.experimental_ui
         options[:builder] = Experimental::KatelloFormBuilder
         options[:html] = { :class => "form" }
       else

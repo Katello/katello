@@ -21,7 +21,7 @@ module Katello
 
     def self.find(id)
       found = ::Resources::Candlepin::Content.get(id)
-      ::Candlepin::Content.new(found)
+      Candlepin::Content.new(found)
     end
 
     def create

@@ -254,7 +254,8 @@ module Katello
 
 
     def retain_search_history
-      current_user.create_or_update_search_history(URI(@_request.env['HTTP_REFERER']).path, params[:search])
+      # ENGINIFY: User Object needs updating
+      #current_user.create_or_update_search_history(URI(@_request.env['HTTP_REFERER']).path, params[:search])
     rescue => error
       log_exception(error)
     end
@@ -519,7 +520,8 @@ module Katello
       load = search_options[:load] || false
       all_rows = false
       skip_render = search_options[:skip_render] || false
-      page_size = search_options[:page_size] || current_user.page_size
+      # ENGINIFY: Until the user object supports page_size
+      page_size = search_options[:page_size] || 25
 
       if search.nil? || search== ''
         all_rows = true
@@ -606,7 +608,7 @@ module Katello
       elsif options[:render_list_proc]
         rendered_html = options[:render_list_proc].call(@items, options)
       else
-        rendered_html = render_to_string(:partial=>"common/list_items", :locals=>options)
+        rendered_html = render_to_string(:partial=>"katello/common/list_items", :locals=>options)
       end
 
 
@@ -648,7 +650,7 @@ module Katello
       if options[:list_partial]
         rendered_html = render_to_string(:partial=>options[:list_partial], :locals=>options)
       else
-        rendered_html = render_to_string(:partial=>"common/list_items", :locals=>options)
+        rendered_html = render_to_string(:partial=>"katello/common/list_items", :locals=>options)
       end
 
       render :json => {:html => rendered_html,

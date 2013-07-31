@@ -2,7 +2,7 @@ Rails.application.routes.draw do
 
   apipie
 
-  scope 'katello' do
+  scope 'katello', :as => 'katello' do
     scope :module => :katello do
 
       resources :system_groups do

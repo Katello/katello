@@ -4,12 +4,12 @@
   #{_("Create Product")}
 
 = content_for :subcontent do
-  = kt_form_for [@provider, Product.new], :remote => true, :html => {:id => "new_subpanel"} do |form|
+  = kt_form_for(Katello::Product.new, url: katello_provider_products_path(@provider.id), :remote => true, :html => {:id => "new_subpanel"}) do |form|
 
     = form.text_field :name, :label => _("Name"), :class => :name_input
 
     = form.field :label, :label => _("Label") do
-      = text_field_tag 'product[label]', nil, :tabindex => form.tabindex, :size => 30, :class => :label_input, 'data-url' => default_label_provider_products_path(@provider.id)
+      = text_field_tag 'product[label]', nil, :tabindex => form.tabindex, :size => 30, :class => :label_input, 'data-url' => default_label_katello_provider_products_path(@provider.id)
       = image_tag "icons/spinner.gif", :class => 'label_spinner hidden'
 
     = form.text_area :description, :label => _("Description"), :size => "40x5", :maxlength => default_description_limit

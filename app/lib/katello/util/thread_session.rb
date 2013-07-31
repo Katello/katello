@@ -96,7 +96,27 @@ module Katello
       module Controller
         def self.included(base)
           base.class_eval do
-            around_filter :thread_locals
+            #around_filter :thread_locals
+            before_filter :setup_runcible
+          end
+        end
+
+        def setup_runcible
+          if Katello.config.use_pulp
+            uri = URI.parse(Katello.config.pulp.url)
+
+              ::Runcible::Base.config = {
+                :url      => "#{uri.scheme}://#{uri.host.downcase}",
+                :api_path => uri.path,
+                :user     => ::User.current.login,
+                :timeout      => Katello.config.rest_client_timeout,
+                :open_timeout => Katello.config.rest_client_timeout,
+                :oauth    => {:oauth_secret => Katello.config.pulp.oauth_secret,
+                              :oauth_key    => Katello.config.pulp.oauth_key },
+                :logging  => {:logger     => ::Logging.logger['pulp_rest'],
+                              :exception  => true,
+                              :debug      => true }
+              }
           end
         end
 

@@ -85,7 +85,6 @@ module Katello
         #else
         #  where("providers.id in (#{User.allowed_tags_sql(verbs, resource, org)})")
         #end
-        true
       end
     end
 

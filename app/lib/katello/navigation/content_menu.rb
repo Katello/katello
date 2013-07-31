@@ -63,21 +63,21 @@ module Katello
         [
           { :key => :products_repos,
             :name =>_("Products & Repositories"),
-            :url => (@provider.nil? || @provider.new_record?) ? "" : products_repos_provider_path(@provider.id),
+            :url => (@provider.nil? || @provider.new_record?) ? "" : products_repos_katello_provider_path(@provider.id),
             :if => lambda{!@provider.nil? && @provider.readable? &&
                           !@provider.new_record? && !@provider.has_subscriptions?},
             :options => {:class=>"panel_link"}
           },
           { :key => :repo_discovery,
             :name =>_("Repository Discovery"),
-            :url => (@provider.nil? || @provider.new_record?) ? "" : repo_discovery_provider_path(@provider.id),
+            :url => (@provider.nil? || @provider.new_record?) ? "" : repo_discovery_katello_provider_path(@provider.id),
             :if => lambda{!@provider.nil? && @provider.editable? &&
                           !@provider.new_record?},
             :options => {:class=>"panel_link"}
           },
           { :key => :edit_custom_providers,
             :name =>_("Details"),
-            :url => (@provider.nil? || @provider.new_record?) ? "" : edit_provider_path(@provider.id),
+            :url => (@provider.nil? || @provider.new_record?) ? "" : edit_katello_provider_path(@provider.id),
             :if => lambda{!@provider.nil? && @provider.readable? && !@provider.new_record?},
             :options => {:class=>"panel_link"}
           }

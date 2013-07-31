@@ -19,7 +19,7 @@ module Katello
       #controls whether repo is enabled in yum repo file on client
       #  unrelated to enable/disable from katello
       @enabled = params[:enabled]
-      @content = ::Candlepin::Content.new(params[:content])
+      @content = Candlepin::Content.new(params[:content])
       @product_id = product_id
     end
 

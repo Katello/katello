@@ -146,26 +146,27 @@ fi
 echo "Starting Candlepin instance"
 $SRV tomcat6 restart
 
-echo "Initializing Katello database"
+# ENGINIFY: Foreman base application handles DB setup now, convert this to use that functionality
+#echo "Initializing Katello database"
 # cannot use initdb for this (BZ 745542)
-pushd $KATELLO_HOME >/dev/null
+#pushd $KATELLO_HOME >/dev/null
 
 # SCHEMA: return to schema usage after FKs fixed
 #RAKE_TASKS=( 'clear_search_indices' 'db:reset' )
-RAKE_TASKS=( 'clear_search_indices' 'db:migrate:reset' 'db:seed' )
-for i in ${RAKE_TASKS[@]};  do 
-  RAILS_ENV=$KATELLO_ENV RAILS_RELATIVE_URL_ROOT=$KATELLO_PREFIX rake $i --trace  2>&1
-done
-popd >/dev/null
+#RAKE_TASKS=( 'clear_search_indices' 'db:migrate:reset' 'db:seed' )
+#for i in ${RAKE_TASKS[@]};  do 
+  #RAILS_ENV=$KATELLO_ENV RAILS_RELATIVE_URL_ROOT=$KATELLO_PREFIX rake $i --trace  2>&1
+#done
+#popd >/dev/null
 
 # Only stop the services if we are in production mode
-if [ $KATELLO_ENV = "production" ]
-then
-    echo "Starting Katello instance"
-    $SRV katello start
+#if [ $KATELLO_ENV = "production" ]
+#then
+    #echo "Starting Katello instance"
+    #$SRV katello start
 
-    echo "Starting Katello jobs instance"
-    $SRV katello-jobs start
-fi
+    #echo "Starting Katello jobs instance"
+    #$SRV katello-jobs start
+#fi
 
-echo "DONE. CHECK ALL THE MESSAGES ABOVE!"
+#echo "DONE. CHECK ALL THE MESSAGES ABOVE!"

@@ -42,7 +42,7 @@ module Katello
 
       def set_owner
         Rails.logger.debug _("Creating an owner in candlepin: %s") % name
-        #Katello::Resources::Candlepin::Owner.create(label, name)
+        Katello::Resources::Candlepin::Owner.create(label, name)
       rescue => e
         Rails.logger.error _("Failed to create candlepin owner %s") % "#{name}: #{e}, #{e.backtrace.join("\n")}"
         raise e

@@ -36,10 +36,10 @@ module Katello
 
     belongs_to :organization, :inverse_of => :environments
     has_many :activation_keys, :dependent => :destroy, :foreign_key => :environment_id
-    has_and_belongs_to_many :priors, {:class_name => "KTEnvironment", :foreign_key => :environment_id,
-      :join_table => "environment_priors", :association_foreign_key => "prior_id", :uniq => true}
-    has_and_belongs_to_many :successors, {:class_name => "KTEnvironment", :foreign_key => "prior_id",
-      :join_table => "environment_priors", :association_foreign_key => :environment_id, :readonly => true}
+    has_and_belongs_to_many :priors, {:class_name => "Katello::KTEnvironment", :foreign_key => :environment_id,
+      :join_table => "katello_environment_priors", :association_foreign_key => "prior_id", :uniq => true}
+    has_and_belongs_to_many :successors, {:class_name => "Katello::KTEnvironment", :foreign_key => "prior_id",
+      :join_table => "katello_environment_priors", :association_foreign_key => :environment_id, :readonly => true}
 
     has_many :repositories, dependent: :destroy, foreign_key: :environment_id
     has_many :systems, :inverse_of => :environment, :dependent => :destroy,  :foreign_key => :environment_id
@@ -101,7 +101,7 @@ module Katello
     def content_views(reload = false)
       @content_views = nil if reload
       @content_views ||= ContentView.joins(:content_view_versions => :content_view_version_environments).
-          where("content_view_version_environments.environment_id" => self.id)
+          where("katello_content_view_version_environments.environment_id" => self.id)
     end
 
     def successor
@@ -146,8 +146,8 @@ module Katello
 
     #list changesets promoting
     def promoting
-        Changeset.joins(:task_status).where('changesets.environment_id' => self.id,
-          'task_statuses.state' => [TaskStatus::Status::WAITING,  TaskStatus::Status::RUNNING])
+        Changeset.joins(:task_status).where('katello_changesets.environment_id' => self.id,
+          'katello_task_statuses.state' => [TaskStatus::Status::WAITING,  TaskStatus::Status::RUNNING])
     end
 
     def is_deletable?

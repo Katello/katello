@@ -16,15 +16,13 @@
     = stylesheet_link_tag :ie
 
 = content_for(:body) do
-  %article{ 'ng-app' => 'Katello' }
+  -# ENGINIFY
+  -#%article{ 'ng-app' => 'Katello' }
     = render :file => "katello/common/menu"
   #wrapper
     %article#maincontent
       %section.maincontent.container_16
         = yield
-
-= content_for(:footer) do
-  = render :partial => "katello/common/footer"
 
 = content_for(:javascripts_block) do
   = javascript_include_tag "katello/common/vendor"

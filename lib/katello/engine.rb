@@ -6,14 +6,17 @@ module Katello
   class Engine < ::Rails::Engine
     engine_name 'katello'
 
-    initializer "foreman_content.load_app_instance_data" do |app|
+    initializer "katello.simple_navigation" do |app|
+      SimpleNavigation::config_file_paths << File.expand_path("../../../config", __FILE__)
+    end
+
+    initializer "katello.load_app_instance_data" do |app|
       app.config.paths['db/migrate'] += Katello::Engine.paths['db/migrate'].existent
       app.config.autoload_paths += Dir["#{config.root}/app/lib)"]
     end
 
-    initializer "bastion.assets.paths", :group => :all do |app|
-      app.config.assets.paths << "#{::UIAlchemy::Engine.root}/vendor/assets/ui_alchemy/alchemy-forms"
-      app.config.assets.paths << "#{::UIAlchemy::Engine.root}/vendor/assets/ui_alchemy/alchemy-buttons"
+    initializer "katello.assets.paths", :group => :all do |app|
+      app.config.assets.paths << "#{::Katello::Engine.root}/vendor/assets/katello/font-awesome"
     end
 
     initializer "logging" do |app|

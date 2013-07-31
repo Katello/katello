@@ -21,7 +21,7 @@
       %input{ :type => "hidden", :id=> "provider_id", :name => "provider_id", :value => @provider.id }
 
       -if editable
-        .button.subpanel_element.fl{"data-url"=>new_provider_product_path(@provider.id)}
+        .button.subpanel_element.fl{"data-url"=>new_katello_provider_product_path(@provider.id)}
           = _("Add Product")
 
       -@products.each do |product|
@@ -30,7 +30,7 @@
           %li
             .grid_1.ra
               = image_tag('icons/expander-expanded.png', :alt => _('Expanded'), :class => :clickable)
-            .grid_7.editable.subpanel_element{"data-url"=>edit_provider_product_path(@provider.id, product.id)}
+            .grid_7.editable.subpanel_element{"data-url"=>edit_katello_provider_product_path(@provider.id, product.id)}
               .multiline
                 %label #{_("Product")}:
                 &nbsp;#{product.name}
@@ -38,13 +38,13 @@
             %ul.fl.clear{:class=>cssclass}
               -product.repos(product.organization.library).each do |repo|
                 %li{:class=>'repo'}
-                  .grid_7.prefix_1.editable.subpanel_element{"data-url"=>edit_provider_product_repository_path(@provider.id, product.id, repo.id)}
+                  .grid_7.prefix_1.editable.subpanel_element{"data-url"=>edit_katello_provider_product_repository_path(@provider.id, product.id, repo.id)}
                     .multiline{:style => 'padding-left:2px'}
                       %label #{_("Repository")}:
                       &nbsp;#{repo.name}
               .prefix_1
                 - if editable
-                  .button.subpanel_element{"data-url"=>new_provider_product_repository_path(@provider.id, product.id)}
+                  .button.subpanel_element{"data-url"=>new_katello_provider_product_repository_path(@provider.id, product.id)}
                     #{_("Add Repository")}
 
 = render :template => "katello/layouts/tupane_layout"

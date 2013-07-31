@@ -81,7 +81,7 @@ module Katello
       def content
         return @content unless @content.nil?
         unless self.content_id.nil?
-          @content = ::Candlepin::Content.find(self.content_id)
+          @content = Candlepin::Content.find(self.content_id)
         end
         @content
       end
@@ -105,7 +105,7 @@ module Katello
       def create_content
         #only used for custom content
         raise 'Can only create content for custom providers' if self.product.provider.redhat_provider?
-        new_content = ::Candlepin::ProductContent.new({
+        new_content = Candlepin::ProductContent.new({
           :content => {
             :name => self.name,
             :contentUrl => Glue::Pulp::Repos.custom_content_path(self.product, self.label),

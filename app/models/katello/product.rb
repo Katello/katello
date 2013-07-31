@@ -18,7 +18,7 @@ module Katello
     include Glue::Pulp::Repos if Katello.config.use_pulp
     include Glue if Katello.config.use_cp || Katello.config.use_pulp
 
-    include Authorization::Product
+    include Katello::Authorization::Product
     include AsyncOrchestration
 
     include Ext::LabelFromName
@@ -158,7 +158,7 @@ module Katello
       end
     end
 
-    scope :all_in_org, lambda{|org| ::Product.joins(:provider).where('providers.organization_id = ?', org.id)}
+    scope :all_in_org, lambda{|org| Product.joins(:provider).where('katello_providers.organization_id = ?', org.id)}
 
     scope :repositories_cdn_import_failed, where(:cdn_import_success => false)
 
@@ -166,7 +166,7 @@ module Katello
       self.label = Util::Model::labelize(self.name) if self.label.blank?
 
       # if the object label is already being used in this org, append the id to make it unique
-      if Product.all_in_org(self.organization).where('products.label = ?', self.label).count > 0
+      if Product.all_in_org(self.organization).where("#{Product.table_name}.label = ?", self.label).count > 0
         self.label.concat("_" + self.cp_id) unless self.cp_id.blank?
       end
     end

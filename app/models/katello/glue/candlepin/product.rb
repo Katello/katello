@@ -102,7 +102,7 @@ module Katello
       end
 
       def build_product_content(attrs)
-        @productContent = attrs.collect { |pc| ::Candlepin::ProductContent.new pc }
+        @productContent = attrs.collect { |pc| Katello::Candlepin::ProductContent.new pc }
       end
 
       def support_level
@@ -136,7 +136,7 @@ module Katello
 
       def convert_from_cp_fields(cp_json)
         ar_safe_json = cp_json.has_key?(:attributes) ? cp_json.merge(:attrs => cp_json.delete(:attributes)) : cp_json
-        ar_safe_json[:productContent] = ar_safe_json[:productContent].collect { |pc| ::Candlepin::ProductContent.new(pc, self.id) }
+        ar_safe_json[:productContent] = ar_safe_json[:productContent].collect { |pc| Katello::Candlepin::ProductContent.new(pc, self.id) }
         ar_safe_json[:attrs] = remove_hibernate_fields(cp_json[:attrs]) if ar_safe_json.has_key?(:attrs)
         ar_safe_json[:attrs] ||= []
         ar_safe_json.except('id')

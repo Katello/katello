@@ -25,19 +25,19 @@ module Katello
         def self.post path, body
           logger.debug "Sending POST request to Candlepin: #{path}"
           client = CandlepinResource.rest_client(Net::HTTP::Post, :post, path_with_cp_prefix(path))
-          client.post body, {:accept => :json, :content_type => :json}.merge(User.cp_oauth_header)
+          client.post body, {:accept => :json, :content_type => :json}.merge({ 'cp-user' => ::User.current.login })
         end
 
         def self.delete path
           logger.debug "Sending DELETE request to Candlepin: #{path}"
           client = CandlepinResource.rest_client(Net::HTTP::Delete, :delete, path_with_cp_prefix(path))
-          client.delete({:accept => :json, :content_type => :json}.merge(User.cp_oauth_header))
+          client.delete({:accept => :json, :content_type => :json}.merge({ 'cp-user' => ::User.current.login }))
         end
 
         def self.get path
           logger.debug "Sending GET request to Candlepin: #{path}"
           client = CandlepinResource.rest_client(Net::HTTP::Get, :get, path_with_cp_prefix(path))
-          client.get({:accept => :json}.merge(User.cp_oauth_header))
+          client.get({:accept => :json}.merge({ 'cp-user' => ::User.current.login }))
         end
 
         def self.path_with_cp_prefix path
@@ -62,7 +62,7 @@ module Katello
         def self.default_headers
           {'accept' => 'application/json',
            'accept-language' => I18n.locale,
-           'content-type' => 'application/json'}.merge(User.cp_oauth_header)
+           'content-type' => 'application/json'}.merge({ 'cp-user' => User.current.login })# ENGINIFY: { 'cp-user' => ::User.current.login }
         end
 
         def self.name_to_key a_name
@@ -134,7 +134,7 @@ module Katello
           end
 
           def destroy uuid
-            self.delete(path(uuid), User.cp_oauth_header).code.to_i
+            self.delete(path(uuid), { 'cp-user' => ::User.current.login }).code.to_i
           end
 
           def checkin(uuid, checkin_date)
@@ -283,7 +283,7 @@ module Katello
         class << self
 
           def find key
-              owner_json = self.get(path(key), {'accept' => 'application/json'}.merge(User.cp_oauth_header)).body
+              owner_json = self.get(path(key), {'accept' => 'application/json'}.merge({ 'cp-user' => ::User.current.login })).body
               JSON.parse(owner_json).with_indifferent_access
           end
 
@@ -311,11 +311,11 @@ module Katello
           end
 
           def destroy key
-            self.delete(path(key), User.cp_oauth_header).code.to_i
+            self.delete(path(key), { 'cp-user' => ::User.current.login }).code.to_i
           end
 
           def find key
-              owner_json = self.get(path(key), {'accept' => 'application/json'}.merge(User.cp_oauth_header)).body
+              owner_json = self.get(path(key), {'accept' => 'application/json'}.merge({ 'cp-user' => ::User.current.login })).body
               JSON.parse(owner_json).with_indifferent_access
           end
 
@@ -376,7 +376,7 @@ module Katello
           end
 
           def get_ueber_cert key
-            ueber_cert_json = self.get(join_path(path(key), "uebercert"), {'accept' => 'application/json'}.merge(User.cp_oauth_header)).body
+            ueber_cert_json = self.get(join_path(path(key), "uebercert"), {'accept' => 'application/json'}.merge({ 'cp-user' => ::User.current.login })).body
             JSON.parse(ueber_cert_json).with_indifferent_access
           end
 
@@ -436,7 +436,7 @@ module Katello
           end
 
           def destroy id
-            self.delete(path(id), User.cp_oauth_header).code.to_i
+            self.delete(path(id), { 'cp-user' => ::User.current.login }).code.to_i
           end
 
           def path(id='')
