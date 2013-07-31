@@ -16,5 +16,3 @@ task :refresh_pulp_repo_details=>["environment"] do
     product.update_repositories
   end
 end
-
-
