@@ -16,7 +16,7 @@ module Glue::Pulp::User
     base.send :include, InstanceMethods
     base.send :include, LazyAccessor
     base.class_eval do
-      lazy_accessor :login, :name, :initializer => lambda {|s| Runcible::Resources::User.retrieve(self.remote_id) }
+      lazy_accessor :login, :name, :initializer => lambda {|s| Katello.pulp_server.resources.user.retrieve(self.remote_id) }
       before_save :save_pulp_orchestration
       before_destroy :destroy_pulp_orchestration
     end
@@ -40,7 +40,7 @@ module Glue::Pulp::User
     end
 
     def set_pulp_user
-      Runcible::Resources::User.create(self.remote_id, {:name => self.remote_id, :password => Password.generate_random_string(16)})
+      Katello.pulp_server.resources.user.create(self.remote_id, {:name => self.remote_id, :password => Password.generate_random_string(16)})
     rescue RestClient::ExceptionWithResponse => e
       if e.http_code == 409
         Rails.logger.info "pulp user #{self.remote_id}: already exists. continuing"
@@ -55,19 +55,19 @@ module Glue::Pulp::User
     end
 
     def set_super_user_role
-      Runcible::Resources::Role.add "super-users", self.remote_id
+      Katello.pulp_server.resources.role.add "super-users", self.remote_id
       true #assume everything is ok unless there was an exception thrown
     end
 
     def del_pulp_user
-      Runcible::Resources::User.delete(self.remote_id)
+      Katello.pulp_server.resources.user.delete(self.remote_id)
     rescue => e
       Rails.logger.error "Failed to delete pulp user #{self.remote_id}: #{e}, #{e.backtrace.join("\n")}"
       raise e
     end
 
     def del_super_admin_role
-      Runcible::Resources::Role.remove("super-users", self.remote_id)
+      Katello.pulp_server.resources.role.remove("super-users", self.remote_id)
       true #assume everything is ok unless there was an exception thrown
     end
 

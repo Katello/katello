@@ -35,8 +35,8 @@ describe Api::V1::SubscriptionsController do
     Resources::Candlepin::Consumer.stub!(:create).and_return({ :uuid => uuid, :owner => { :key => uuid } })
     Resources::Candlepin::Consumer.stub!(:update).and_return(true)
 
-    Runcible::Extensions::Consumer.stub!(:create).and_return({ :id => uuid })
-    Runcible::Extensions::Consumer.stub!(:update).and_return(true)
+    Katello.pulp_server.extensions.consumer.stub!(:create).and_return({ :id => uuid })
+    Katello.pulp_server.extensions.consumer.stub!(:update).and_return(true)
 
     @organization  = Organization.create!(:name => 'test_org', :label => 'test_org')
     @environment_1 = create_environment(:name => 'test_1', :label => 'test_1', :prior => @organization.library.id, :organization => @organization)

@@ -236,7 +236,7 @@ describe Provider do
       @organization.library.repositories(true).map(&:name).sort.should == ["product-with-change 1.0",
                                                                            "product-without-change 1.0",
                                                                            "product-without-change 1.1"]
-      Runcible::Extensions::Repository.stub(:create).and_return({})
+      Katello.pulp_server.extensions.repository.stub(:create).and_return({})
       @provider.refresh_products
       @organization.library.repositories(true).map(&:name).sort.should == ["product-with-change 1.0",
                                                                            "product-with-change 1.1",

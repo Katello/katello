@@ -39,7 +39,7 @@ describe Api::V1::PackagesController, :katello => true do
 
     @repo.stub(:packages).and_return([])
     package = { 'repository_memberships' => [repo_id] }.with_indifferent_access
-    Runcible::Extensions::Rpm.stub(:find_by_unit_id).and_return(package)
+    Katello.pulp_server.extensions.rpm.stub(:find_by_unit_id).and_return(package)
 
     @request.env["HTTP_ACCEPT"] = "application/json"
     login_user_api
@@ -94,7 +94,7 @@ describe Api::V1::PackagesController, :katello => true do
 
     describe "show a package" do
       it "should call pulp find package api" do
-        Runcible::Extensions::Rpm.should_receive(:find_by_unit_id).once.with('1')
+        Katello.pulp_server.extensions.rpm.should_receive(:find_by_unit_id).once.with('1')
         get 'show', :id => '1', :repository_id => repo_id
       end
     end

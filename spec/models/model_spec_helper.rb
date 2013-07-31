@@ -101,8 +101,8 @@ EOKEY
     Resources::Candlepin::Product.stub!(:key).and_return("")
 
     if Katello.config.katello?
-      Runcible::Extensions::Repository.stub!(:create_or_update_schedule).and_return(true)
-      Runcible::Extensions::Repository.stub!(:remove_schedules).and_return(true)
+      Katello.pulp_server.extensions.repository.stub!(:create_or_update_schedule).and_return(true)
+      Katello.pulp_server.extensions.repository.stub!(:remove_schedules).and_return(true)
     end
   end
 
@@ -132,10 +132,10 @@ EOKEY
 
   def disable_user_orchestration(options = {})
     if Katello.config.katello?
-      Runcible::Resources::User.stub!(:create).and_return({})
-      Runcible::Resources::User.stub!(:delete).and_return(200)
-      Runcible::Resources::Role.stub!(:add).and_return(true)
-      Runcible::Resources::Role.stub!(:remove).and_return(true)
+      Katello.pulp_server.resources.user.stub!(:create).and_return({})
+      Katello.pulp_server.resources.user.stub!(:delete).and_return(200)
+      Katello.pulp_server.resources.role.stub!(:add).and_return(true)
+      Katello.pulp_server.resources.role.stub!(:remove).and_return(true)
     end
 
   end
@@ -143,25 +143,25 @@ EOKEY
 
   def disable_consumer_group_orchestration
     if Katello.config.katello?
-      Runcible::Extensions::ConsumerGroup.stub!(:create).and_return({})
-      Runcible::Extensions::ConsumerGroup.stub!(:delete).and_return(200)
-      Runcible::Extensions::ConsumerGroup.stub!(:retrieve).and_return({})
-      Runcible::Extensions::ConsumerGroup.stub!(:add_consumers_by_id).and_return(200)
-      Runcible::Extensions::ConsumerGroup.stub!(:remove_consumers_by_id).and_return(200)
+      Katello.pulp_server.extensions.consumer_group.stub!(:create).and_return({})
+      Katello.pulp_server.extensions.consumer_group.stub!(:delete).and_return(200)
+      Katello.pulp_server.extensions.consumer_group.stub!(:retrieve).and_return({})
+      Katello.pulp_server.extensions.consumer_group.stub!(:add_consumers_by_id).and_return(200)
+      Katello.pulp_server.extensions.consumer_group.stub!(:remove_consumers_by_id).and_return(200)
     end
   end
 
   def disable_repo_orchestration
     if Katello.config.katello?
-      Runcible::Extensions::Repository.stub(:create).and_return({})
-      Runcible::Extensions::Repository.stub(:sync_history).and_return([])
-      Runcible::Resources::Task.stub!(:destroy).and_return({})
+      Katello.pulp_server.extensions.repository.stub(:create).and_return({})
+      Katello.pulp_server.extensions.repository.stub(:sync_history).and_return([])
+      Katello.pulp_server.resources.task.stub!(:destroy).and_return({})
 
-      Runcible::Extensions::Repository.stub(:packages).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_PACKAGES)
-      Runcible::Extensions::Repository.stub(:errata).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_ERRATA)
-      Runcible::Extensions::Repository.stub(:distributions).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_DISTRIBUTIONS)
-      Runcible::Extensions::Repository.stub(:find).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_PROPERTIES)
-      Runcible::Extensions::Repository.stub(:find).with(RepoTestData::CLONED_REPO_ID).and_return(RepoTestData::CLONED_PROPERTIES)
+      Katello.pulp_server.extensions.repository.stub(:packages).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_PACKAGES)
+      Katello.pulp_server.extensions.repository.stub(:errata).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_ERRATA)
+      Katello.pulp_server.extensions.repository.stub(:distributions).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_DISTRIBUTIONS)
+      Katello.pulp_server.extensions.repository.stub(:find).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_PROPERTIES)
+      Katello.pulp_server.extensions.repository.stub(:find).with(RepoTestData::CLONED_REPO_ID).and_return(RepoTestData::CLONED_PROPERTIES)
     end
 
     Resources::Candlepin::Content.stub!(:create).and_return({ :id => '123', :type=>'yum'})

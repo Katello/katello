@@ -30,8 +30,8 @@ describe SystemEventsController do
       Resources::Candlepin::Consumer.stub!(:update).and_return(true)
       Resources::Candlepin::Consumer.stub!(:events).and_return([])
 
-      Runcible::Extensions::Consumer.stub!(:create).and_return({:id => uuid})
-      Runcible::Extensions::Consumer.stub!(:update).and_return(true)
+      Katello.pulp_server.extensions.consumer.stub!(:create).and_return({:id => uuid})
+      Katello.pulp_server.extensions.consumer.stub!(:update).and_return(true)
     end
 
     describe "system tasks", :katello => true do

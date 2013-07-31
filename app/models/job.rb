@@ -25,7 +25,7 @@ class Job < ActiveRecord::Base
       unless ids.nil? || ids.empty?
         uuids = TaskStatus.where(:id => ids).pluck(:uuid)
         uuids.each do |uuid|
-          pulp_task = Runcible::Resources::Task.poll(uuid)
+          pulp_task = Katello.pulp_server.resources.task.poll(uuid)
           PulpTaskStatus.dump_state(pulp_task, TaskStatus.find_by_uuid(pulp_task[:task_id]))
         end
       end
