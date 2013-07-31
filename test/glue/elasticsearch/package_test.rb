@@ -19,7 +19,7 @@ class PackageTest < MiniTest::Rails::ActiveSupport::TestCase
 
   def self.before_suite
     disable_glue_layers(["Pulp"], ["Package"]) # enable glue layers
-    VCR.insert_cassette("glue_elasticsearch_package")
+    VCR.insert_cassette("elasticsearch/package")
     Tire.index(Package.index).delete
     Tire.index Package.index do
       create :settings => Package.index_settings, :mappings => Package.index_mapping
