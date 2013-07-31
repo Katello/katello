@@ -10,8 +10,10 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 #
-class SearchHistory < ActiveRecord::Base
-  belongs_to :user
-  validates :params, :length => { :maximum => 255 }
-  validates :path, :length => { :maximum => 255 }
+module Katello
+  class SearchHistory < ActiveRecord::Base
+    belongs_to :user
+    validates :params, :length => { :maximum => 255 }
+    validates :path, :length => { :maximum => 255 }
+  end
 end

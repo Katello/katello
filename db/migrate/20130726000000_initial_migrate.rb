@@ -613,26 +613,27 @@ class InitialMigrate < ActiveRecord::Migration
     add_index "katello_user_notices", ["notice_id"], :name => "index_user_notices_on_notice_id"
     add_index "katello_user_notices", ["user_id"], :name => "index_user_notices_on_user_id"
 
-    create_table "katello_users", :force => true do |t|
-      t.string   "username"
-      t.string   "password"
-      t.boolean  "helptips_enabled",       :default => true
-      t.boolean  "hidden",                 :default => false, :null => false
-      t.datetime "created_at",                                :null => false
-      t.datetime "updated_at",                                :null => false
-      t.integer  "page_size",              :default => 25,    :null => false
-      t.boolean  "disabled",               :default => false
-      t.string   "email"
-      t.string   "password_reset_token"
-      t.datetime "password_reset_sent_at"
-      t.text     "preferences"
-      t.integer  "foreman_id"
-      t.string   "remote_id"
-      t.integer  "default_environment_id"
-    end
+# TODO: ENGINIFY: skipping creation of katello_users, will extend Foreman user
+#    create_table "katello_users", :force => true do |t|
+#      t.string   "username"
+#      t.string   "password"
+#      t.boolean  "helptips_enabled",       :default => true
+#      t.boolean  "hidden",                 :default => false, :null => false
+#      t.datetime "created_at",                                :null => false
+#      t.datetime "updated_at",                                :null => false
+#      t.integer  "page_size",              :default => 25,    :null => false
+#      t.boolean  "disabled",               :default => false
+#      t.string   "email"
+#      t.string   "password_reset_token"
+#      t.datetime "password_reset_sent_at"
+#      t.text     "preferences"
+#      t.integer  "foreman_id"
+#      t.string   "remote_id"
+#      t.integer  "default_environment_id"
+#    end
 
-    add_index "katello_users", ["remote_id"], :name => "index_users_on_remote_id", :unique => true
-    add_index "katello_users", ["username"], :name => "index_users_on_username", :unique => true
+#    add_index "katello_users", ["remote_id"], :name => "index_users_on_remote_id", :unique => true
+#    add_index "katello_users", ["username"], :name => "index_users_on_username", :unique => true
 
     create_table "katello_verbs", :force => true do |t|
       t.string   "verb"
@@ -694,7 +695,8 @@ class InitialMigrate < ActiveRecord::Migration
     drop_table "katello_systems"
     drop_table "katello_task_statuses"
     drop_table "katello_user_notices"
-    drop_table "katello_users"
+# TODO: ENGINIFY: disabling deletion of katello_users, since it wasn't created
+#    drop_table "katello_users"
     drop_table "katello_verbs"
   end
 

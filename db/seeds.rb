@@ -28,28 +28,46 @@ superadmin_role = Katello::Role.make_super_admin_role
 #raise "Unable to create reader role: #{format_errors reader_role}" if reader_role.nil? || reader_role.errors.size > 0
 #reader_role.update_attributes(:locked => true)
 
+# obtain an auth source for the users
+src = ::AuthSourceInternal.find_or_create_by_type "AuthSourceInternal"
+src.update_attribute :name, "Internal"
+
+# TODO: ENGINIFY: the seed will need to be updated to support headpin (e.g. shouldn't need set_pulp_user & foreman)
 # create the super admin if none exist - it must be created before any statement in the seed.rb script
-Katello::User.current = user_admin = Katello::User.find_by_username(first_user_name)
-unless user_admin
-  user_admin   = Katello::User.new(
-      :roles    => [superadmin_role],
-      :username => first_user_name,
-      :password => first_user_password,
-      :email    => first_user_email,
-      :remote_id => first_user_name)
-  Katello::User.current = user_admin
-  user_admin.save!
+user_admin = ::User.find_by_login(first_user_name)
+if user_admin
+  if user_admin.remote_id.nil?
+    user_admin.remote_id = first_user_name
+    ::User.current = user_admin
+    user_admin.set_pulp_user
+    user_admin.save!
+  end
+else
+  ::User.current = user_admin
+  user_admin   = ::User.new(
+      :roles     => [superadmin_role],
+      :login     => first_user_name,
+      :password  => first_user_password,
+      :mail      => first_user_email,
+      :remote_id => first_user_name,
+      :auth_source_id => src.id)
+  ::User.current = user_admin
+  user_admin.save_without_auditing
 end
 raise "Unable to create admin user: #{format_errors user_admin}" if user_admin.nil? or user_admin.errors.size > 0
 
-unless hidden_user = Katello::User.hidden.first
-  hidden_user = Katello::User.new(
-    :roles => [],
-    :username => "hidden-#{Password.generate_random_string(6)}",
+unless hidden_user = ::User.hidden.first
+  login = "hidden-#{Password.generate_random_string(6)}"
+  ::User.current = user_admin
+  hidden_user = ::User.new(
+    :roles    => [],
+    :login    => login,
     :password => Password.generate_random_string(25),
-    :email => "#{Password.generate_random_string(10)}@localhost",
-    :hidden=>true)
-  hidden_user.save!
+    :mail     => "#{Password.generate_random_string(10)}@localhost",
+    :hidden   => true,
+    :remote_id => login,
+    :auth_source_id => src.id)
+  hidden_user.save_without_auditing
 end
 raise "Unable to create hidden user: #{format_errors hidden_user}" if hidden_user.nil? or hidden_user.errors.size > 0
 

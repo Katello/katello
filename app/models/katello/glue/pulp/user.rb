@@ -14,12 +14,14 @@
 module Katello
   module Glue::Pulp::User
     def self.included(base)
-      base.send :include, InstanceMethods
-      base.send :include, LazyAccessor
-      base.class_eval do
-        lazy_accessor :login, :name, :initializer => lambda {|s| Runcible::Resources::User.retrieve(self.remote_id) }
-        before_save :save_pulp_orchestration
-        before_destroy :destroy_pulp_orchestration
+      if (base.method_defined?(:remote_id))
+        base.send :include, InstanceMethods
+        base.send :include, LazyAccessor
+        base.class_eval do
+          lazy_accessor :login, :name, :initializer => lambda {|s| Runcible::Resources::User.retrieve(self.remote_id)}
+          before_save :save_pulp_orchestration
+          before_destroy :destroy_pulp_orchestration
+        end
       end
     end
 

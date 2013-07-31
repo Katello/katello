@@ -9,13 +9,14 @@ class AddForeignKeys < ActiveRecord::Migration
     add_foreign_key_deferred "katello_activation_keys", "katello_content_views", :name => "activation_keys_content_view_id_fk"
     add_foreign_key_deferred "katello_activation_keys", "katello_environments", :name => "activation_keys_environment_id_fk"
     add_foreign_key_deferred "katello_activation_keys", "katello_organizations", :name => "activation_keys_organization_id_fk"
-    add_foreign_key_deferred "katello_activation_keys", "katello_users", :name => "activation_keys_user_id_fk"
+    # TODO: ENGINIFY: changing all 'katello_users' to 'users', to use core apps user
+    add_foreign_key_deferred "katello_activation_keys", "users", :name => "activation_keys_user_id_fk"
 
     add_foreign_key_deferred "katello_changeset_content_views", "katello_changesets", :name => "changeset_content_views_changeset_id_fk"
     add_foreign_key_deferred "katello_changeset_content_views", "katello_content_views", :name => "changeset_content_views_content_view_id_fk"
 
     add_foreign_key_deferred "katello_changeset_users", "katello_changesets", :name => "changeset_users_changeset_id_fk"
-    add_foreign_key_deferred "katello_changeset_users", "katello_users", :name => "changeset_users_user_id_fk"
+    add_foreign_key_deferred "katello_changeset_users", "users", :name => "changeset_users_user_id_fk"
 
     add_foreign_key_deferred "katello_changesets", "katello_environments", :name => "changesets_environment_id_fk"
     add_foreign_key_deferred "katello_changesets", "katello_task_statuses", :name => "changesets_task_status_id_fk"
@@ -68,7 +69,7 @@ class AddForeignKeys < ActiveRecord::Migration
 
     add_foreign_key_deferred "katello_gpg_keys", "katello_organizations", :name => "gpg_keys_organization_id_fk"
 
-    add_foreign_key_deferred "katello_help_tips", "katello_users", :name => "help_tips_user_id_fk"
+    add_foreign_key_deferred "katello_help_tips", "users", :name => "help_tips_user_id_fk"
 
     add_foreign_key_deferred "katello_job_tasks", "katello_jobs", :name => "job_tasks_job_id_fk"
     add_foreign_key_deferred "katello_job_tasks", "katello_task_statuses", :name => "job_tasks_task_status_id_fk"
@@ -90,7 +91,7 @@ class AddForeignKeys < ActiveRecord::Migration
     add_foreign_key_deferred "katello_organizations", "katello_task_statuses", :name => "organizations_deletion_task_id_fk", :column => "deletion_task_id"
 
     add_foreign_key_deferred "katello_organizations_users", "katello_organizations", :name => "organizations_users_organization_id_fk"
-    add_foreign_key_deferred "katello_organizations_users", "katello_users", :name => "organizations_users_user_id_fk"
+    add_foreign_key_deferred "katello_organizations_users", "users", :name => "organizations_users_user_id_fk"
 
     add_foreign_key_deferred "katello_permission_tags", "katello_permissions", :name => "permission_tags_permission_id_fk"
 
@@ -114,11 +115,11 @@ class AddForeignKeys < ActiveRecord::Migration
     add_foreign_key_deferred "katello_repositories", "katello_repositories", :name => "repositories_library_instance_id_fk", :column => "library_instance_id"
 
     add_foreign_key_deferred "katello_roles_users", "katello_roles", :name => "roles_users_role_id_fk"
-    add_foreign_key_deferred "katello_roles_users", "katello_users", :name => "roles_users_user_id_fk"
+    add_foreign_key_deferred "katello_roles_users", "users", :name => "roles_users_user_id_fk"
 
-    add_foreign_key_deferred "katello_search_favorites", "katello_users", :name => "search_favorites_user_id_fk"
+    add_foreign_key_deferred "katello_search_favorites", "users", :name => "search_favorites_user_id_fk"
 
-    add_foreign_key_deferred "katello_search_histories", "katello_users", :name => "search_histories_user_id_fk"
+    add_foreign_key_deferred "katello_search_histories", "users", :name => "search_histories_user_id_fk"
 
     add_foreign_key_deferred "katello_sync_plans", "katello_organizations", :name => "sync_plans_organization_id_fk"
 
@@ -134,12 +135,12 @@ class AddForeignKeys < ActiveRecord::Migration
     add_foreign_key_deferred "katello_systems", "katello_environments", :name => "systems_environment_id_fk"
 
     add_foreign_key_deferred "katello_task_statuses", "katello_organizations", :name => "task_statuses_organization_id_fk"
-    add_foreign_key_deferred "katello_task_statuses", "katello_users", :name => "task_statuses_user_id_fk"
+    add_foreign_key_deferred "katello_task_statuses", "users", :name => "task_statuses_user_id_fk"
 
     add_foreign_key_deferred "katello_user_notices", "katello_notices", :name => "user_notices_notice_id_fk"
-    add_foreign_key_deferred "katello_user_notices", "katello_users", :name => "user_notices_user_id_fk"
+    add_foreign_key_deferred "katello_user_notices", "users", :name => "user_notices_user_id_fk"
 
-    add_foreign_key_deferred "katello_users", "katello_environments", :name => "users_default_environment_id_fk", :column => "default_environment_id"
+    add_foreign_key_deferred "users", "katello_environments", :name => "users_default_environment_id_fk", :column => "default_environment_id"
   end
 
 
@@ -277,7 +278,7 @@ remove_foreign_key
     remove_foreign_key "katello_user_notices", :name => "user_notices_notice_id_fk"
     remove_foreign_key "katello_user_notices", :name => "user_notices_user_id_fk"
 
-    remove_foreign_key "katello_users", :name => "users_default_environment_id_fk", :column => "default_environment_id"
+    remove_foreign_key "users", :name => "users_default_environment_id_fk", :column => "default_environment_id"
   end
 
 end

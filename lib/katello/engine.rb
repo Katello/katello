@@ -34,6 +34,7 @@ module Katello
     config.to_prepare do
       # Patch the menu
       ::HomeHelper.send :include, Katello::HomeHelperPatch
+      ::User.send :include, Katello::UserExtensions
     end
 
   end
