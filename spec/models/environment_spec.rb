@@ -52,18 +52,18 @@ describe KTEnvironment do
             User.current = user_with_permissions{|u| u.can(perm, :environments,nil, @organization, :all_tags => true)}
             KTEnvironment.find(@environment.id).send(op).should be_true
           end
-          it "user without perms should not  be allowed" do
+          it "user without perms should not  be allowed", :katello => true do
             User.current = user_without_permissions
             KTEnvironment.find(@environment.id).send(op).should_not be_true
           end
         end
         false_ops = all_verb_methods - true_ops
         false_ops.each do |op|
-          it "user with #{perm} on environments should NOT be allowed to #{op}" do
+          it "user with #{perm} on environments should NOT be allowed to #{op}", :katello => true do
             User.current = user_with_permissions{|u| u.can(perm, :environments,nil, @organization, :all_tags => true)}
             KTEnvironment.find(@environment.id).send(op).should_not be_true
           end
-          it "user without perms should not  be allowed" do
+          it "user without perms should not  be allowed", :katello => true do
             User.current = user_without_permissions
             KTEnvironment.find(@environment.id).send(op).should_not be_true
           end

@@ -342,7 +342,7 @@ describe Permission do
       end
     end
 
-    describe "after environment deletion" do
+    describe "after environment deletion", :katello => true do
       before do
         disable_env_orchestration
         @environment = create_environment(
