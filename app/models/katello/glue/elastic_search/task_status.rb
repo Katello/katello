@@ -32,7 +32,7 @@ module Katello
 
     def extended_index_attrs
        ret = {}
-       ret[:username] = user.username if user
+       ret[:username] = user.login if user
 
        ret[:status] = state.to_s
        ret[:status] += " pending" if pending?
@@ -49,7 +49,7 @@ module Katello
 
        if task_type
          tt = task_type
-         if (::System.class.name == task_owner_type)
+         if (Katello::System.class.name == task_owner_type)
            tt = TaskStatus::TYPES[task_type][:english_name]
          end
          ret[:status] += " #{tt}"
