@@ -127,8 +127,11 @@ module Glue::ElasticSearch::System
       :content_view => self.content_view.try(:name),
       :status => self.compliance_color
     }
-    attrs[:host] = self.guest == 'true' ? self.host.name : ''
-    attrs[:guests] = self.guest == 'true' ? '' : self.guests.map(&:name)
+    if self.guest.to_bool
+      attrs[:host] = self.host ? self.host.name : ''
+    else
+      attrs[:guests] = self.guests.map(&:name)
+    end
 
     attrs
   end
