@@ -94,12 +94,7 @@ module Katello
     end
 
     def items
-      #ENGINIFY: Deal with authorization readable(current_organization).collect{|p| p.id}
-      if Organization.current
-        ids = Provider.where(:organization_id => Organization.current.id).collect{ |provider| provider.id }
-      else
-        ids = Provider.all.collect{ |provider| provider.id }
-      end
+      ids = Provider.all.collect{ |provider| provider.id }
 
       offset = params[:offset] || 0
       render_panel_direct(Provider, @panel_options, params[:search], 0, [:name_sort, 'asc'],

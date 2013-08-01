@@ -12,6 +12,7 @@
 
 module Katello
   class Provider < ActiveRecord::Base
+    include Katello::Concerns::Taxonomix
 
     include Glue::ElasticSearch::Provider if Katello.config.use_elasticsearch
     include Glue::Provider
@@ -27,7 +28,6 @@ module Katello
 
     serialize :discovered_repos, Array
 
-    belongs_to :organization
     belongs_to :task_status
     belongs_to :discovery_task, :class_name=>'TaskStatus'
     has_many :products, :inverse_of => :provider
@@ -52,8 +52,12 @@ module Katello
                    :attributes => :repository_url
 
 
+    default_scope lambda {
+      with_taxonomy_scope
+    }
     scope :redhat, where(:provider_type => REDHAT)
     scope :custom, where(:provider_type => CUSTOM)
+
     def only_one_rhn_provider
       # validate only when new record is added (skip explicit valid? calls)
       if new_record? and provider_type == REDHAT and count_providers(REDHAT) != 0

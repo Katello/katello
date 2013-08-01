@@ -22,7 +22,7 @@ module Katello
       base.class_eval do
         attr_reader :old
 
-        before_validation :setup_clone
+        #before_validation :setup_clone
 
         around_save :on_save
         around_destroy :on_destroy
