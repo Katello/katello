@@ -20,6 +20,12 @@
             %label #{_("Name")}:
           .grid_9.la#provider_name{:title=>@provider[:name], 'name' => 'provider[name]', 'data-url' => katello_provider_path(@provider.id),
                                   :class=>editable_class(editable)} #{@provider[:name]}
+        
+        %fieldset.fl.clear
+          .grid_2.ra
+            %label #{_("Organization")}:
+          .grid_9.la#organization{:title=>@provider[:organization]}
+            = @provider.organization.name
 
         %fieldset.fl.clear
           .grid_2.ra

@@ -3,6 +3,11 @@
 
 = form.text_field :name, :label => _("Name")
 
+- if Organization.current
+  = form.select :organization_id, options_from_collection_for_select([Organization.current], :id, :name)
+- else
+  = form.select :organization_id, options_from_collection_for_select(Organization.all, :id, :name)
+
 = form.text_area :description, :label => _("Description"), :size => "40x5", :maxlength => default_description_limit
 
 = form.submit _("Save")

@@ -18,7 +18,7 @@ module Katello
 
     module ClassMethods
       def readable(org)
-         if org.readable? || org.gpg_keys_manageable? || ::Provider.any_readable?(org)
+         if org.readable? || org.gpg_keys_manageable? || Provider.any_readable?(org)
             where(:organization_id => org.id)
          else
            where("0 = 1")
@@ -38,7 +38,7 @@ module Katello
       end
 
       def any_readable?(organization)
-        organization.readable? || organization.gpg_keys_manageable? || ::Provider.any_readable?(organization)
+        organization.readable? || organization.gpg_keys_manageable? || Provider.any_readable?(organization)
       end
     end
 

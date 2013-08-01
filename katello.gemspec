@@ -52,7 +52,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency "acts_as_reportable", ">=1.1.1"
     
   # Pulp
-  gem.add_dependency "runcible", "~> 0.4.7"
+  gem.add_dependency "runcible", "0.4.11"
   gem.add_dependency "anemone"
 
   # UI
@@ -62,7 +62,17 @@ Gem::Specification.new do |gem|
   gem.add_dependency "compass-960-plugin"
   gem.add_dependency "haml-rails"
   gem.add_dependency "ui_alchemy-rails"
+  gem.add_dependency "deface"
 
   # Development
   gem.add_development_dependency "simplecov"
+  gem.add_development_dependency "rspec-rails", "~> 2.13.2"
+  gem.add_development_dependency "yard", ">= 0.5.3"
+  gem.add_development_dependency "yard-activerecord"
+  gem.add_development_dependency "js-routes", "~> 0.9.0"
+  gem.add_development_dependency "gettext", ">= 1.9.3"
+  gem.add_development_dependency "ruby_parser"
+  gem.add_development_dependency "sexp_processor"
+  gem.add_development_dependency "minitest-rails"
+  gem.add_development_dependency "factory_girl_rails", "~> 1.4.0"
 end

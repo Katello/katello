@@ -94,7 +94,13 @@ module Katello
     end
 
     def items
-      ids = Provider.readable(current_organization).collect{|p| p.id}
+      #ENGINIFY: Deal with authorization readable(current_organization).collect{|p| p.id}
+      if Organization.current
+        ids = Provider.where(:organization_id => Organization.current.id).collect{ |provider| provider.id }
+      else
+        ids = Provider.all.collect{ |provider| provider.id }
+      end
+
       offset = params[:offset] || 0
       render_panel_direct(Provider, @panel_options, params[:search], 0, [:name_sort, 'asc'],
                     {:default_field => :name, :filter=>[{"id"=>ids}, {:provider_type=>[Provider::CUSTOM.downcase]}]})
@@ -117,8 +123,7 @@ module Katello
     end
 
     def create
-      @provider = Provider.create! params[:katello_provider].merge({:provider_type => Provider::CUSTOM,
-                                                                    :organization => current_organization})
+      @provider = Provider.create! params[:katello_provider].merge({:provider_type => Provider::CUSTOM})
       notify.success _("Provider '%s' was created.") % @provider['name']
 
       if search_validate(Provider, @provider.id, params[:search])

@@ -17,9 +17,10 @@ else
 end
 #not an actual katello dependency, but
 #Does not pull in  hashery, matches RPM
-gem 'pdf-reader', '<= 1.1.1'
+# ENGINIFY
+#gem 'pdf-reader', '<= 1.1.1'
 
-gem 'prawn'
+#gem 'prawn'
 
 # Load all sub-gemfiles from bundler.d directory
 Dir[File.expand_path('bundler.d/*.rb', File.dirname(__FILE__))].each do |bundle|

@@ -25,7 +25,12 @@ module Katello
     end
 
     def gpg_keys
-      GpgKey.readable(current_organization)
+      # ENGINIFY: Handle Organization taxonomy
+      if Organization.current
+        GpgKey.readable(Organization.current)
+      else
+        GpgKey.all
+      end
     end
   end
 

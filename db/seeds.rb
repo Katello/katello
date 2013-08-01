@@ -71,6 +71,7 @@ unless hidden_user = ::User.hidden.first
 end
 raise "Unable to create hidden user: #{format_errors hidden_user}" if hidden_user.nil? or hidden_user.errors.size > 0
 
+=begin
 first_org_desc = first_org_name + " Organization"
 first_org_label = first_org_name.gsub(' ', '_')
 # create the default org = "admin" if none exist
@@ -94,7 +95,7 @@ if Katello::Provider.count == 0
       :provider_type => Katello::Provider::REDHAT
   })
 end
-
+=end
 if Katello.config.use_pulp
   Katello::Repository.ensure_sync_notification
 end
