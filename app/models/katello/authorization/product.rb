@@ -56,7 +56,7 @@ module Katello
       end
 
       def sync_items org
-        org.syncable? ? (joins(:provider).where('providers.organization_id' => org)) : where("0=1")
+        org.syncable? ? (joins(:provider).where("#{Provider.table_name}.organization_id" => org)) : where("0=1")
       end
     end
 

@@ -1,4 +1,4 @@
-= javascript :sync_management
+= javascript 'katello/sync_management'
 
 = javascript do
   :plain
@@ -10,7 +10,7 @@
     });
 
     KT.repo_status = $.parseJSON('#{escape_javascript(@repo_status.to_json)}');
-    KT.permissions = { "syncable" : #{syncable?} };
+    KT.permissions = { "syncable" : true };
 
 .grid_4
   %h2= _("Sync Status")
@@ -23,3 +23,5 @@
   %h2.clear= _("Sync Plans")
 
   = render 'sync_plans'
+
+= render :file => 'katello/layouts/katello_base'

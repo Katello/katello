@@ -35,11 +35,19 @@ module Katello
     end
 
     def syncable?(product)
-      current_organization.syncable? && !product.orphaned?
+      if current_organization
+        current_organization.syncable? && !product.orphaned?
+      else
+        true
+      end
     end
 
     def any_syncable?
-      current_organization.syncable?
+      if current_organization
+        current_organization.syncable?
+      else
+        true
+      end
     end
 
     module RepoMethods

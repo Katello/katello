@@ -65,6 +65,7 @@ module Katello
     end
 
     def index
+=begin
       org = current_organization
       @products = org.library.products.readable(org)
       redhat_products, custom_products = @products.partition(&:redhat?)
@@ -77,6 +78,32 @@ module Katello
       @product_map = collect_repos(@products, org.library)
 
       @products.each { |product| get_product_info(product) }
+=end
+      @products     = Array.new
+      @sproducts    = Array.new
+      @product_map  = Array.new
+      @product_size = Hash.new
+      @repo_status  = Hash.new
+      @show_org     = true
+
+      if current_organization
+        organizations = [current_organization]
+      else
+        organizations = Organization.all
+      end
+
+      organizations.each do |org|
+        products = org.library.products.readable(org)
+        next if products.blank?
+        @sproducts.concat products.select(&:syncable?)
+        @product_map.concat collect_repos(products, org.library)
+        products.each { |product| get_product_info(product) }
+        @products.concat products
+      end
+
+      @sync_plans = SyncPlan.all
+
+      render 'katello/sync_management/manage'
     end
 
     def manage
@@ -87,7 +114,7 @@ module Katello
       @repo_status  = Hash.new
       @show_org     = true
 
-      User.current.allowed_organizations.each do |org|
+      Organizations.each do |org|
         products = org.library.products.readable(org)
         next if products.blank?
         @sproducts.concat products.select(&:syncable?)

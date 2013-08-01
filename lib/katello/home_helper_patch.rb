@@ -14,7 +14,7 @@ module Katello
         choices = setting_options_without_content_link
         content_group =
             [[_('Providers'),    :"katello/providers"],
-             [_('Sync Status'),  :"katello/sync_management"]
+             [_('Sync Management'),  :"katello/sync_management"]
             ]
         choices.insert(3,[:divider],[:group, _("Content"), content_group])
       end

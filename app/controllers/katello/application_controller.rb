@@ -191,12 +191,12 @@ module Katello
     end
 
     def current_organization
-      unless session[:current_organization_id]
-        return nil unless session[:current_organization_id]
-      end
+      #unless session[:current_organization_id]
+        #return nil unless session[:current_organization_id]
+      #end
       begin
         if @current_org.nil? && current_user
-          organization = ::Organization.find(session[:current_organization_id])
+          organization = Organization.current
           @current_org = organization
       #   ENGINIFY: Re-enable authorization around user allowed orgs
       #   if current_user.allowed_organizations.include?(o)
