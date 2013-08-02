@@ -25,9 +25,11 @@ KT.user_page = (function() {
             success: function(data) {
                 chkbox.button('destroy');
                 chkbox.text(data);
+                $('#clear_helptips').die('click',clearHelptips);
             },
             error: function(data) {
                 chkbox.removeClass("disabled");
+                $('#clear_helptips').live('click',clearHelptips);
                 chkbox.button('option',  'label', data);
             },
             complete: function(e) {
