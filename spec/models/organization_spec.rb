@@ -33,6 +33,21 @@ describe Organization do
     specify { Organization.new(:name => 'without label').should be_valid }
     specify { Organization.new(:label => 'without_name').should_not be_valid }
     specify { Organization.new(:label => 'without_name').should_not be_valid }
+    specify do
+      o = Organization.new(:name => "default_info_valid")
+      o.default_info["system"] << "less than 256 characters"
+      o.should be_valid
+    end
+    specify do
+      o = Organization.new(:name => "default_info_invalid")
+      o.default_info["system"] << ""
+      o.should_not be_valid
+    end
+    specify do
+      o = Organization.new(:name => "default_info_invalid")
+      o.default_info["system"] << ("a" * 300)
+      o.should_not be_valid
+    end
   end
 
   context "create an organization" do
