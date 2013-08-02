@@ -33,7 +33,6 @@ module Katello
 
       include Katello::Authorization::User
       include Authorization::Enforcement
-      include Util::ThreadSession::UserModel
 
       #acts_as_reportable
 

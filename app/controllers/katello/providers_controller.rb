@@ -103,7 +103,7 @@ module Katello
 
     def show
       provider = Provider.find(params[:id])
-      render :partial=>"common/list_update", :locals=>{:item=>provider, :accessor=>"id", :columns=>['name']}
+      render :partial=>"katello/common/list_update", :locals=>{:item=>provider, :accessor=>"id", :columns=>['name']}
     end
 
     def edit
@@ -133,7 +133,7 @@ module Katello
       if @provider.destroy
         notify.success _("Provider '%s' was deleted.") % @provider[:name]
         #render and do the removal in one swoop!
-        render :partial => "common/list_remove", :locals => {:id=>params[:id], :name=>controller_display_name}
+        render :partial => "katello/common/list_remove", :locals => {:id=>params[:id], :name=>controller_display_name}
       end
     end
 
