@@ -16,7 +16,7 @@ module Katello
     include Glue if Katello.config.use_cp
 
     belongs_to :content_view
-    belongs_to :environment, :class_name => "KTEnvironment"
+    belongs_to :environment, :class_name => "Katello::KTEnvironment"
 
     # retrieve the owning environment for this content view environment.
     def owner

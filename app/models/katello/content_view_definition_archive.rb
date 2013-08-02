@@ -13,7 +13,7 @@
 
 module Katello
   class ContentViewDefinitionArchive < ContentViewDefinitionBase
-    belongs_to :source, :class_name => "ContentViewDefinition"
+    belongs_to :source, :class_name => Katello::ContentViewDefinition
     has_many :content_view_versions, :inverse_of => :definition_archive
   end
 end

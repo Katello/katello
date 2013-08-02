@@ -55,7 +55,7 @@ module Katello
         content_tag(:td,
                     tag(:input, {:type => 'button', :class => 'fr button subpanel_element publish',
                                   :value => _('Publish'),
-                                  'data-url' => publish_setup_content_view_definition_path(definition.id)}))
+                                  'data-url' => publish_setup_katello_content_view_definition_path(definition.id)}))
       end
     end
 
@@ -73,7 +73,7 @@ module Katello
             content_tag(:a, task.nil? || task.error? ? _('Retry') : _('Refresh'),
                         {:type => 'button', :href => '#', :class => 'refresh_action tipsify',
                          'original-title' => _('Refresh'),
-                         'data-url' => refresh_content_view_definition_content_view_path(
+                         'data-url' => refresh_katello_content_view_definition_content_view_path(
                              version.content_view.content_view_definition.id, version.content_view.id)})
           end
         end

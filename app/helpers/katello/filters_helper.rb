@@ -47,8 +47,8 @@ module Katello
 
     def filter_rule_url(rule)
       link_to(rule_summary(rule),
-              edit_content_view_definition_filter_rule_path(rule.filter.content_view_definition.id,
-                                                            rule.filter.id, rule.id))
+              edit_katello_content_view_definition_filter_rule_path(rule.filter.content_view_definition.id,
+                                                                    rule.filter.id, rule.id))
     end
 
     def rule_summary(rule)

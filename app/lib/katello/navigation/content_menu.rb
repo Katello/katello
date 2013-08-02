@@ -33,26 +33,26 @@ module Katello
         [
           { :key => :view_definition_views,
             :name =>_("Views"),
-            :url => (@view_definition.nil? || @view_definition.new_record?) ? "" : views_content_view_definition_path(@view_definition.id),
+            :url => (@view_definition.nil? || @view_definition.new_record?) ? "" : views_katello_content_view_definition_path(@view_definition.id),
             :if => lambda{!@view_definition.nil? && @view_definition.readable? && !@view_definition.new_record?},
             :options => {:class=>"panel_link"}
           },
           { :key => :view_definition_content,
             :name =>_("Content"),
-            :url => (@view_definition.nil? || @view_definition.new_record?) ? "" : content_content_view_definition_path(@view_definition.id),
+            :url => (@view_definition.nil? || @view_definition.new_record?) ? "" : content_katello_content_view_definition_path(@view_definition.id),
             :if => lambda{!@view_definition.nil? && @view_definition.readable? && !@view_definition.new_record?},
             :options => {:class=>"panel_link"}
           },
           { :key => :view_definition_filter,
             :name =>_("Filters"),
-            :url => (@view_definition.nil? || @view_definition.new_record?) ? "" : content_view_definition_filters_path(@view_definition.id),
+            :url => (@view_definition.nil? || @view_definition.new_record?) ? "" : katello_content_view_definition_filters_path(@view_definition.id),
             :if => lambda{!@view_definition.nil? && @view_definition.readable? && !@view_definition.new_record? &&
                 !@view_definition.composite},
             :options => {:class=>"panel_link"}
           },
           { :key => :view_definition_details,
             :name =>_("Details"),
-            :url => (@view_definition.nil? || @view_definition.new_record?) ? "" : edit_content_view_definition_path(@view_definition.id),
+            :url => (@view_definition.nil? || @view_definition.new_record?) ? "" : edit_katello_content_view_definition_path(@view_definition.id),
             :if => lambda{!@view_definition.nil? && @view_definition.readable? && !@view_definition.new_record?},
             :options => {:class=>"panel_link"}
           }

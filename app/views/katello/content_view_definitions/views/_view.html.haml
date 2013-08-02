@@ -11,7 +11,7 @@
         %a.disabled.tipsify{'original-title' => unable_to_remove_view} #{_('Remove')}
       - else
         %a.remove_view.disabled.tipsify{'original-title' => _('Remove'),
-          'data-url' => content_view_definition_content_view_path(view_definition.id, view.id)} #{_('Remove')}
+          'data-url' => katello_content_view_definition_content_view_path(view_definition.id, view.id)} #{_('Remove')}
 
         -#= link_to(_("Remove"), '#',
         -#  'data-url' => content_view_definition_content_view_path(view_definition.id, view.id),
@@ -19,5 +19,5 @@
 
   - view.versions.each do |version|
     - if version.environments.length > 0
-      = render :partial => 'content_view_definitions/views/version',
+      = render :partial => 'katello/content_view_definitions/views/version',
         :locals => {:version => version, :task => version.task_status, :view_definition => view_definition}

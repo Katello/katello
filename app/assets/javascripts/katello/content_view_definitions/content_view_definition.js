@@ -11,7 +11,7 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
 
-KT.panel.list.registerPage('content_view_definitions', { create : 'new_content_view_definition' });
+KT.panel.list.registerPage('content_view_definitions', { create : 'new_katello_content_view_definition' });
 
 KT.panel.set_expand_cb(function() {
     $('a.remove.disabled').tipsy({ fade:true, gravity:'s', delayIn:500, html:true, className:'content_definition-tipsy',

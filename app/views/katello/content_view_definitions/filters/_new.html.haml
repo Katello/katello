@@ -5,10 +5,11 @@
 
   #filter_create
 
-    = kt_form_for([view_definition, Filter.new], :remote => true, :html => {:id => "filter_form"}) do |form|
+    = kt_form_for(Katello::Filter.new, :url => katello_content_view_definition_filters_path(view_definition),
+      :remote => true, :html => {:id => "filter_form"}) do |form|
 
       = form.text_field :name, :label => _("Name"), :class => :name_input
 
       = form.submit _("Create"), :disable_with => _("Creating..."), :class => 'create_button'
 
-= render :template => "layouts/tupane_layout"
+= render :template => "katello/layouts/tupane_layout"

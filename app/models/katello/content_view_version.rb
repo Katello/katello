@@ -19,7 +19,7 @@ module Katello
     belongs_to :content_view
     has_many :content_view_version_environments, :dependent => :destroy
     has_many :environments, {:through      => :content_view_version_environments,
-                             :class_name   => "KTEnvironment",
+                             :class_name   => "Katello::KTEnvironment",
                              :inverse_of   => :content_view_versions,
                              :before_add    => :add_environment,
                              :after_remove => :remove_environment
@@ -27,7 +27,7 @@ module Katello
 
     has_many :repositories, :dependent => :destroy
     has_one :task_status, :as => :task_owner, :dependent => :destroy
-    belongs_to :definition_archive, :class_name => "ContentViewDefinitionArchive",
+    belongs_to :definition_archive, :class_name => Katello::ContentViewDefinitionArchive,
       :inverse_of => :content_view_versions
 
     validates :definition_archive_id, :presence => true, :if => :has_definition?

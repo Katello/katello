@@ -1,4 +1,4 @@
-= render :partial => "content_view_definitions/tupane_header"
+= render :partial => "katello/content_view_definitions/tupane_header"
 
 = content_for :content do
 
@@ -6,9 +6,9 @@
 
     .panel_link
       = link_to(_("◀ Back to Filter List"),
-        content_view_definition_filters_path(view_definition.id), {:class => "separator"})
+        katello_content_view_definition_filters_path(view_definition.id), {:class => "separator"})
       = link_to(_("Filter: %{name}") % {:name => filter.name},
-        edit_content_view_definition_filter_path(view_definition.id, filter.id))
+        edit_katello_content_view_definition_filter_path(view_definition.id, filter.id))
 
     %br
 
@@ -20,20 +20,20 @@
 
         #inclusion{'data-initial_value' => included_text(rule)}
           = _("Specifying %{rule_type} to %{include}") % {:include => included_text(rule), :rule_type => rule_type}
-          %a.subpanel_element{"data-url" => edit_inclusion_content_view_definition_filter_rule_path(view_definition, filter, rule)}
+          %a.subpanel_element{"data-url" => edit_inclusion_katello_content_view_definition_filter_rule_path(view_definition, filter, rule)}
             = _("(Edit)")
 
-        - if rule.content_type == FilterRule::ERRATA
+        - if rule.content_type == Katello::FilterRule::ERRATA
           %br
-          = render :partial => "content_view_definitions/filters/rules/edit_errata",
+          = render :partial => "katello/content_view_definitions/filters/rules/edit_errata",
                    :locals => {:view_definition => view_definition, :filter => filter,
                                :rule => rule, :rule_type => rule_type,
                                :editable => editable, :item_partial => item_partial}
 
         - else
-          = render :partial => "content_view_definitions/filters/rules/parameter_list",
+          = render :partial => "katello/content_view_definitions/filters/rules/parameter_list",
                    :locals => {:view_definition => view_definition, :filter => filter,
                                :rule => rule, :rule_type => rule_type,
                                :editable => editable, :item_partial => item_partial}
 
-= render :template => "layouts/tupane_layout"
+= render :template => "katello/layouts/tupane_layout"

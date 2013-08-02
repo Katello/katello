@@ -14,7 +14,7 @@
 
 module Katello
   class ContentViewVersionEnvironment < ActiveRecord::Base
-    belongs_to :environment, :class_name=>'KTEnvironment'
+    belongs_to :environment, :class_name => 'Katello::KTEnvironment'
     belongs_to :content_view_version
 
     before_create :verify_not_exists

@@ -18,10 +18,10 @@ module Katello
     has_many :products, :through => :content_view_definition_products, :after_remove => :remove_product
     has_many :content_view_definition_repositories, :foreign_key => "content_view_definition_id", :dependent => :destroy
     has_many :repositories, :through => :content_view_definition_repositories, :after_remove => :remove_repository
-    has_many :components, :class_name => "ComponentContentView",
+    has_many :components, :class_name => Katello::ComponentContentView,
       :foreign_key => "content_view_definition_id"
     has_many :component_content_views, :through => :components,
-      :source => :content_view, :class_name => "ContentView", before_add: :validate_component_views
+      :source => :content_view, :class_name => Katello::ContentView, before_add: :validate_component_views
     has_many :filters, :inverse_of => :content_view_definition,
       :foreign_key => "content_view_definition_id"
 

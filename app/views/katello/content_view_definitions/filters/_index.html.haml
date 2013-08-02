@@ -1,4 +1,4 @@
-= render :partial => "content_view_definitions/tupane_header"
+= render :partial => "katello/content_view_definitions/tupane_header"
 
 = content_for :content do
 
@@ -7,11 +7,11 @@
     - if editable
       .grid_12
         %input.button.subpanel_element.fr{:type=>"button", :value=>_("New Filter"),
-                                          "data-url"=>new_content_view_definition_filter_path(view_definition.id)}
+                                          "data-url"=>new_katello_content_view_definition_filter_path(view_definition.id)}
         &nbsp;
 
     .grid_12
-      = kt_form_for(view_definition, :url => destroy_filters_content_view_definition_filters_path(view_definition.id),
+      = kt_form_for(view_definition, :url => destroy_filters_katello_content_view_definition_filters_path(view_definition.id),
         :html => {:id => "filters_form"}) do |form|
 
         %table
@@ -30,11 +30,11 @@
                   - if editable
                     .panel_link
                       = check_box_tag "filters[#{filter.id}]", filter.name, false, {'data-id' => filter.id}
-                      = link_to(filter.name, edit_content_view_definition_filter_path(view_definition.id, filter.id))
+                      = link_to(filter.name, edit_katello_content_view_definition_filter_path(view_definition.id, filter.id))
                   - else
                     = filter.name
 
         - if editable
           %input.button.fr.disabled{:type=>"button", :id=>"remove_button", :value=>_("Remove")}
 
-= render :template => "layouts/tupane_layout"
+= render :template => "katello/layouts/tupane_layout"

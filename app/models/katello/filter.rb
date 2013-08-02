@@ -12,10 +12,16 @@
 
 module Katello
   class Filter < ActiveRecord::Base
-    belongs_to :content_view_definition, :class_name => "ContentViewDefinitionBase"
-    has_many  :rules, :class_name => "FilterRule", :dependent => :destroy
-    has_and_belongs_to_many :repositories, :class_name => "Repository", :uniq => true
-    has_and_belongs_to_many :products, :uniq => true
+    belongs_to :content_view_definition, :class_name => Katello::ContentViewDefinitionBase
+    has_many :rules, :class_name => Katello::FilterRule, :dependent => :destroy
+
+    has_and_belongs_to_many :repositories, :uniq => true,
+                            :class_name => Katello::Repository,
+                            :join_table => :katello_filters_repositories
+
+    has_and_belongs_to_many :products, :uniq => true,
+                            :class_name => Katello::Product,
+                            :join_table => :katello_filters_products
 
     validate :validate_products_and_repos
     validates :name, :presence => true, :allow_blank => false,
@@ -23,8 +29,8 @@ module Katello
     validates_with Validators::KatelloNameFormatValidator, :attributes => :name
 
     def self.applicable(repo)
-      query = %{filters.id in (select filter_id from  filters_repositories where repository_id = #{repo.id})
-                OR filters.id in (select filter_id from  filters_products where product_id = #{repo.product_id}) }
+      query = %{filters.id in (select filter_id from katello_filters_repositories where repository_id = #{repo.id})
+                OR filters.id in (select filter_id from katello_filters_products where product_id = #{repo.product_id}) }
       where(query).select("DISTINCT filters.id")
     end
 

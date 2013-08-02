@@ -16,7 +16,7 @@
             - if ["Errata", "Packages"].include?(rule_type)
               %span.rule-search-tipsy.details_icon-grey{title: _('Autocomplete is enabled if the filter has been assigned content. The minimum number of characters is 1 for package names and 3 for erratum names.')}
             %a#add_rule{:style => 'padding-left: 10px;', :tabindex => auto_tab_index,
-                        'data-url' => add_parameter_content_view_definition_filter_rule_path(view_definition.id, filter.id, rule.id),
+                        'data-url' => add_parameter_katello_content_view_definition_filter_rule_path(view_definition.id, filter.id, rule.id),
                         'data-rule_type' => rule.content_type,
                         'data-filter_id' => rule.filter.id} #{_('+ Add')}
 
@@ -30,5 +30,5 @@
 
     - if editable
       %input.button.fr.disabled{:type => "button", :id => "remove_button", :value => _("Remove"),
-        'data-url' => destroy_parameters_content_view_definition_filter_rule_path(view_definition.id,
-                                                                                  filter.id, rule.id)}
+        'data-url' => destroy_parameters_katello_content_view_definition_filter_rule_path(view_definition.id,
+                                                                                          filter.id, rule.id)}

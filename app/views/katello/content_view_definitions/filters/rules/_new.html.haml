@@ -5,11 +5,13 @@
 
   #rule_create
 
-    = kt_form_for([view_definition, FilterRule.new], :remote => true, :html => {:id => "filter_rule_form"}) do |form|
+    = kt_form_for(Katello::FilterRule.new,
+      :url => katello_content_view_definition_filter_rules_path(view_definition, filter),
+      :remote => true, :html => {:id => "filter_rule_form"}) do |form|
 
-      = form.select :content_type, options_for_select(FilterRule::CONTENT_OPTIONS.sort.reverse, FilterRule::PACKAGE), {},
+      = form.select :content_type, options_for_select(Katello::FilterRule::CONTENT_OPTIONS.sort.reverse, Katello::FilterRule::PACKAGE), {},
         {:label => _("Filter on"), :size=>1, :tabindex => form.tabindex}
 
       = form.submit _("Create"), :disable_with => _("Creating..."), :class => 'create_button'
 
-= render :template => "layouts/tupane_layout"
+= render :template => "katello/layouts/tupane_layout"

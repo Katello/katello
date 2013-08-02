@@ -1,7 +1,4 @@
-.grid_16#main
-  = two_panel(@view_definitions, @panel_options)
-
-= javascript :content_view_definitions
+= javascript 'katello/content_view_definitions'
 
 = javascript do
   :plain
@@ -10,3 +7,9 @@
       "view_conflicts" : function(x){ return '#{escape_javascript(_("ERROR: This content view has one or more repositories in common with the following views: %X.<br/>Please unselect views that should no longer be included in this definition."))}'.replace("%X", x);},
       "environments" : function(e){ return '#{escape_javascript(_("Environment(s): %E"))}'.replace("%E", e); }
     });
+
+= content_for(:katello_content) do
+  .grid_16#main
+    = two_panel(@view_definitions, @panel_options)
+
+= render :file => 'katello/layouts/katello_base'

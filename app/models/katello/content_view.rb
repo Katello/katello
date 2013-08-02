@@ -70,7 +70,7 @@ module Katello
       # list of component content views, if any, that do not exist in the environment
       # provided.
       if composite
-        content_view_definition.component_content_views.select("distinct content_views.*").
+        content_view_definition.component_content_views.select("distinct katello_content_views.*").
                 joins(:content_view_versions => :content_view_version_environments).
                 where(["katello_content_view_version_environments.content_view_version_id "\
                    "NOT IN (SELECT content_view_version_id FROM "\
@@ -80,8 +80,9 @@ module Katello
 
     def self.promoted(safe = false)
       # retrieve the view, if it has been promoted (i.e. exists in more than 1 environment)
-      relation = select("distinct content_views.*").joins(:content_view_versions => :environments).
-                 where("environments.library IS NOT true AND content_views.default IS NOT true")
+      relation = select("distinct katello_content_views.*").joins(:content_view_versions => :environments).
+                 where("#{KTEnvironment.table_name}.library" => false).
+                 where("#{ContentView.table_name}.default" => false)
 
       if safe
         # do not include group and having in returned relation

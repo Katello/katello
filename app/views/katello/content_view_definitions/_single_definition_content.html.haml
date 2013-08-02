@@ -1,13 +1,13 @@
 -# Partial for the 'Content' pane of a 'single' content view definitio
 
-= render :partial => "content_view_definitions/tupane_header"
+= render :partial => "katello/content_view_definitions/tupane_header"
 
 = content_for :content do
-  = render :partial => "common/common_product_repo_selector",
+  = render :partial => "katello/common/common_product_repo_selector",
            :locals => {:editable => editable,
                        :record => view_definition,
-                       :readable_products => Product.readable(current_organization),
-                       :editable_products => Product.editable(current_organization),
-                       :save_url => update_content_content_view_definition_path(view_definition.id)}
+                       :readable_products => Katello::Product.readable(current_organization),
+                       :editable_products => Katello::Product.editable(current_organization),
+                       :save_url => update_content_katello_content_view_definition_path(view_definition.id)}
 
-= render :template => "layouts/tupane_layout"
+= render :template => "katello/layouts/tupane_layout"

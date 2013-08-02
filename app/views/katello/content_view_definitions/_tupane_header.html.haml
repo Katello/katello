@@ -3,8 +3,8 @@
 
 = content_for :remove_item do
   .pane_actions
-    - if ContentViewDefinition.creatable?(current_organization)
-      %a.pane_action.separator.copy-tipsy{'data-url' => clone_content_view_definition_path(@view_definition.id)}
+    - if Katello::ContentViewDefinition.creatable?(current_organization)
+      %a.pane_action.separator.copy-tipsy{'data-url' => clone_katello_content_view_definition_path(@view_definition.id)}
         = _('Clone')
 
     - if @view_definition.editable?
@@ -15,7 +15,7 @@
           .la.content_definition-tipsy
             = _("Before removing this definition, all promoted content views must first be deleted from their respective environments using a deletion changeset.")
       - else
-        = link_to(_("Remove"), content_view_definition_path(@view_definition.id), :confirm => _('Are you sure?'),
+        = link_to(_("Remove"), katello_content_view_definition_path(@view_definition.id), :confirm => _('Are you sure?'),
           :method => :delete, :class => "pane_action remove", :remote => true)
 
 = content_for :navigation do

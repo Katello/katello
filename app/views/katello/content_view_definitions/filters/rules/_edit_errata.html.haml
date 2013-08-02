@@ -5,12 +5,12 @@
 
   = radio_button_tag("errata", "date_type", rule.parameters.include?(:units) ? false : true,
                      {:class => :filter_method, :tabindex => auto_tab_index,
-                      'data-url' => edit_date_type_parameters_content_view_definition_filter_rule_path(view_definition.id, filter.id, rule.id)})
+                      'data-url' => edit_date_type_parameters_katello_content_view_definition_filter_rule_path(view_definition.id, filter.id, rule.id)})
   = label_tag(_('Date and Type'))
 
   = radio_button_tag("errata", "specify", rule.parameters.include?(:units) ? true : false,
                      {:class => :filter_method, :tabindex => auto_tab_index,
-                      'data-url' => edit_parameter_list_content_view_definition_filter_rule_path(view_definition.id, filter.id, rule.id)})
+                      'data-url' => edit_parameter_list_katello_content_view_definition_filter_rule_path(view_definition.id, filter.id, rule.id)})
   = label_tag(_('Errata ID'))
 
 .rule_parameters

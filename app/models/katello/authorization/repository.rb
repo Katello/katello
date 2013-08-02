@@ -24,7 +24,7 @@ module Katello
 
     module ClassMethods
       def readable(env)
-        prod_ids = ::Product.readable(env.organization).collect{|p| p.id}
+        prod_ids = Product.readable(env.organization).collect{|p| p.id}
         if env.contents_readable?
           where(environment_id: env.id)
         else
@@ -41,7 +41,7 @@ module Katello
       end
 
       def content_readable(org)
-        prod_ids = ::Product.readable(org).collect{|p| p.id}
+        prod_ids = Product.readable(org).collect{|p| p.id}
         env_ids = KTEnvironment.content_readable(org)
         where(environment_id: env_ids, product_id: prod_ids)
       end
