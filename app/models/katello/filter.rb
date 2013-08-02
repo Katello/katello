@@ -29,9 +29,9 @@ module Katello
     validates_with Validators::KatelloNameFormatValidator, :attributes => :name
 
     def self.applicable(repo)
-      query = %{filters.id in (select filter_id from katello_filters_repositories where repository_id = #{repo.id})
-                OR filters.id in (select filter_id from katello_filters_products where product_id = #{repo.product_id}) }
-      where(query).select("DISTINCT filters.id")
+      query = %{katello_filters.id in (select filter_id from katello_filters_repositories where repository_id = #{repo.id})
+                OR katello_filters.id in (select filter_id from katello_filters_products where product_id = #{repo.product_id}) }
+      where(query).select("DISTINCT katello_filters.id")
     end
 
     def as_json(options = {})

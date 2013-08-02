@@ -45,13 +45,13 @@ module Katello
 
     def total_package_count env, view
       repo_ids = view.repos(env).in_product(self).collect{|r| r.pulp_id}
-      result = ::Package.search('*', 0, 1, repo_ids)
+      result = Package.search('*', 0, 1, repo_ids)
       result.length > 0 ? result.total : 0
     end
 
     def total_errata_count env, view
       repo_ids = view.repos(env).in_product(self).collect{|r| r.pulp_id}
-      results = ::Errata.search('', 0, 1, :repoids => repo_ids)
+      results = Errata.search('', 0, 1, :repoids => repo_ids)
       results.empty? ? 0 : results.total
     end
 

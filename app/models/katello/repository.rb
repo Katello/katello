@@ -39,7 +39,8 @@ module Katello
     belongs_to :library_instance, :class_name=>"Katello::Repository"
     has_many :content_view_definition_repositories, :dependent => :destroy
     has_many :content_view_definitions, :through => :content_view_definition_repositories
-    has_and_belongs_to_many :filters
+    has_and_belongs_to_many :filters, :class_name => Katello::Filter,
+                            :join_table => :katello_filters_repositories
     belongs_to :content_view_version, :inverse_of=>:repositories
 
     validates :product_id, :presence => true

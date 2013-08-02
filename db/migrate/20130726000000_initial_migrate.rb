@@ -156,7 +156,7 @@ class InitialMigrate < ActiveRecord::Migration
 
     add_index "katello_custom_info", ["informable_type", "informable_id", "keyname"], :name => "index_custom_info_on_type_id_keyname"
 
-    create_table "katello_delayed_jobs", :force => true do |t|
+    create_table "delayed_jobs", :force => true do |t|
       t.integer  "priority",   :default => 0
       t.integer  "attempts",   :default => 0
       t.text     "handler"
@@ -170,7 +170,7 @@ class InitialMigrate < ActiveRecord::Migration
       t.string   "queue"
     end
 
-    add_index "katello_delayed_jobs", ["priority", "run_at"], :name => "delayed_jobs_priority"
+    add_index "delayed_jobs", ["priority", "run_at"], :name => "delayed_jobs_priority"
 
     create_table "katello_distributors", :force => true do |t|
       t.string   "uuid"
@@ -656,7 +656,7 @@ class InitialMigrate < ActiveRecord::Migration
     drop_table "katello_content_view_versions"
     drop_table "katello_content_views"
     drop_table "katello_custom_info"
-    drop_table "katello_delayed_jobs"
+    drop_table "delayed_jobs"
     drop_table "katello_distributors"
     drop_table "katello_environment_priors"
     drop_table "katello_environment_system_groups"

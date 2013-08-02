@@ -168,11 +168,11 @@ module Katello
           }
 
           unless pkgs.empty?
-            Tire.index ::Package.index do
+            Tire.index Package.index do
               create :settings => Package.index_settings, :mappings => Package.index_mapping
             end unless Tire.index(::Package.index).exists?
 
-            Tire.index ::Package.index do
+            Tire.index Package.index do
               import pkgs
             end
           end

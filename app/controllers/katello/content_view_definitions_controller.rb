@@ -162,11 +162,11 @@ module Katello
 
     def publish
       # perform the publish
-      if params.has_key?(:content_view)
-        @view_definition.publish(params[:content_view][:name], params[:content_view][:description],
-                                 params[:content_view][:label], {:notify => true})
+      if params.has_key?(:katello_content_view)
+        @view_definition.publish(params[:katello_content_view][:name], params[:katello_content_view][:description],
+                                 params[:katello_content_view][:label], {:notify => true})
         notify.success(_("Started publish of content view '%{view_name}' from definition '%{definition_name}'.") %
-                           {:view_name => params[:content_view][:name], :definition_name => @view_definition.name})
+                           {:view_name => params[:katello_content_view][:name], :definition_name => @view_definition.name})
 
         render :nothing => true
       else
@@ -174,7 +174,7 @@ module Katello
       end
     rescue => e
       notify.exception(_("Failed to publish content view '%{view_name}' from definition '%{definition_name}'.") %
-                           {:view_name => params[:content_view][:name], :definition_name => @view_definition.name}, e)
+                           {:view_name => params[:katello_content_view][:name], :definition_name => @view_definition.name}, e)
       log_exception(e)
 
       render :text => e.to_s, :status => 500
@@ -194,7 +194,7 @@ module Katello
         statuses[:task_statuses] << {
             :id => status.id,
             :pending? => status.pending?,
-            :status_html => render_to_string(:template => 'content_view_definitions/views/_version',
+            :status_html => render_to_string(:template => 'katello/content_view_definitions/views/_version',
                                              :layout => false, :locals => {:version => status.task_owner,
                                                                            :task => status, :view_definition => @view_definition})
         }

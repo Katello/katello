@@ -24,6 +24,9 @@ require "ninesixty"
 require "ui_alchemy-rails"
 require "deface"
 
+require "uuidtools"
+require "delayed_job"
+
 require "headpin"
 
 module Katello

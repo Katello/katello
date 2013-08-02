@@ -24,7 +24,7 @@ module Katello
       if self.name_changed?
         self.organization.reload #must reload organization, otherwise old name is saved
         self.organization.update_index
-        ::ActivationKey.index.import(self.activation_keys) if !self.activation_keys.empty?
+        ActivationKey.index.import(self.activation_keys) if !self.activation_keys.empty?
       end
     end
 

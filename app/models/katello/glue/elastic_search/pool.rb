@@ -99,7 +99,7 @@ module Katello
 
           unless json_pools.empty?
             Tire.index self.index do
-              create :settings => ::Pool.index_settings, :mappings => ::Pool.index_mapping
+              create :settings => Pool.index_settings, :mappings => Pool.index_mapping
             end unless Tire.index(self.index).exists?
 
             Tire.index self.index do
@@ -112,7 +112,7 @@ module Katello
 
         def self.search(*args, &block)
           Tire.index self.index do
-            create :settings => ::Pool.index_settings, :mappings => ::Pool.index_mapping
+            create :settings => Pool.index_settings, :mappings => Pool.index_mapping
           end unless Tire.index(self.index).exists?
           Tire.search(self.index, &block).results
         end

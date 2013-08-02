@@ -249,7 +249,7 @@ module Katello
 
       def packages=attrs
         @repo_packages = attrs.collect do |package|
-          ::Package.new(package)
+          Package.new(package)
         end
         @repo_packages
       end
@@ -270,7 +270,7 @@ module Katello
 
       def errata=attrs
         @repo_errata = attrs.collect do |erratum|
-          ::Errata.new(erratum)
+          Errata.new(erratum)
         end
         @repo_errata
       end
@@ -284,7 +284,7 @@ module Katello
 
       def distributions=attrs
         @repo_distributions = attrs.collect do |dist|
-            ::Distribution.new(dist)
+            Distribution.new(dist)
         end
         @repo_distributions
       end
@@ -299,7 +299,7 @@ module Katello
 
       def package_groups=attrs
         @repo_package_groups = attrs.collect do |group|
-          ::PackageGroup.new(group)
+          PackageGroup.new(group)
         end
         @repo_package_groups
       end
@@ -529,7 +529,7 @@ module Katello
       end
 
       def successful_sync?(sync_history_item)
-        sync_history_item['state'] == ::PulpTaskStatus::Status::FINISHED.to_s
+        sync_history_item['state'] == PulpTaskStatus::Status::FINISHED.to_s
       end
 
       def generate_metadata
