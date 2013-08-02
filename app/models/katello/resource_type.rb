@@ -108,12 +108,12 @@ module Katello
 
     if Katello.config.katello?
       TYPES = {
-          :organizations => {:model => Katello::Organization, :name => _("Organizations"), :global=>false},
+          :organizations => {:model => ::Organization, :name => _("Organizations"), :global=>false},
           :environments => {:model => Katello::KTEnvironment, :name => _("Environments"), :global=>false},
           :activation_keys => { :model => Katello::ActivationKey, :name => _("Activation Keys"), :global=>false},
           :system_groups => {:model => Katello::SystemGroup, :name=>_("System Groups"), :global=>false},
           :providers => { :model => Katello::Provider, :name => _("Providers"), :global=>false},
-          :users => { :model => Katello::User, :name => _("Users"), :global=>true},
+          :users => { :model => ::User, :name => _("Users"), :global=>true},
           :roles => { :model => Katello::Role, :name => _("Roles"), :global=>true},
           :content_view_definitions => { :model => Katello::ContentViewDefinition,
             :name => _("Content View Definitions"), :global => false},

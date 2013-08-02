@@ -93,7 +93,7 @@ module Katello
         end
 
         # set the current user in the thread-local variable (before notification)
-        User.current = Katello::User.first#current_user
+        User.current = ::User.first#current_user
         # set ldap roles
         current_user.set_ldap_roles if Katello.config.ldap_roles
 
