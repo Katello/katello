@@ -18,7 +18,8 @@ module Katello
         base.send :include, InstanceMethods
         base.send :include, LazyAccessor
         base.class_eval do
-          lazy_accessor :login, :name, :initializer => lambda {|s| Runcible::Resources::User.retrieve(self.remote_id)}
+          # ENGINIFY: Removed lazy retrieval of login since it isn't used and clashes with Foreman user
+          lazy_accessor :name, :initializer => lambda {|s| Runcible::Resources::User.retrieve(self.remote_id)}
           before_save :save_pulp_orchestration
           before_destroy :destroy_pulp_orchestration
         end

@@ -32,7 +32,7 @@ module Katello
 
     def extended_index_attrs
        ret = {}
-       ret[:username] = user.login if user
+       ret[:username] = user.remote_id if user
 
        ret[:status] = state.to_s
        ret[:status] += " pending" if pending?
