@@ -33,7 +33,6 @@ module Katello
 
       include Katello::Authorization::User
       include Authorization::Enforcement
-      include Util::ThreadSession::UserModel
 
       #acts_as_reportable
 
@@ -54,7 +53,7 @@ module Katello
       has_many :search_favorites, :dependent => :destroy, :class_name => Katello::SearchFavorite
       has_many :search_histories, :dependent => :destroy, :class_name => Katello::SearchHistory
       belongs_to :default_environment, :class_name => "Katello::KTEnvironment"
-      serialize :preferences, ActiveSupport::HashWithIndifferentAccess
+      serialize :preferences
 
       # TODO: ENGINIFY: temporarily disabling some logic that should not be necessary; however, will delete it later
       #validates :username, :uniqueness => true, :presence => true

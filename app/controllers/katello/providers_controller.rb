@@ -94,12 +94,7 @@ module Katello
     end
 
     def items
-      #ENGINIFY: Deal with authorization readable(current_organization).collect{|p| p.id}
-      if Organization.current
-        ids = Provider.where(:organization_id => Organization.current.id).collect{ |provider| provider.id }
-      else
-        ids = Provider.all.collect{ |provider| provider.id }
-      end
+      ids = Provider.pluck(:id)
 
       offset = params[:offset] || 0
       render_panel_direct(Provider, @panel_options, params[:search], 0, [:name_sort, 'asc'],
@@ -108,7 +103,7 @@ module Katello
 
     def show
       provider = Provider.find(params[:id])
-      render :partial=>"common/list_update", :locals=>{:item=>provider, :accessor=>"id", :columns=>['name']}
+      render :partial=>"katello/common/list_update", :locals=>{:item=>provider, :accessor=>"id", :columns=>['name']}
     end
 
     def edit
@@ -138,7 +133,7 @@ module Katello
       if @provider.destroy
         notify.success _("Provider '%s' was deleted.") % @provider[:name]
         #render and do the removal in one swoop!
-        render :partial => "common/list_remove", :locals => {:id=>params[:id], :name=>controller_display_name}
+        render :partial => "katello/common/list_remove", :locals => {:id=>params[:id], :name=>controller_display_name}
       end
     end
 
