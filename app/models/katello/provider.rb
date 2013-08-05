@@ -12,7 +12,7 @@
 
 module Katello
   class Provider < ActiveRecord::Base
-    include Katello::Concerns::Taxonomix
+    include Katello::Taxonomix
 
     include Glue::ElasticSearch::Provider if Katello.config.use_elasticsearch
     include Glue::Provider

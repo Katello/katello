@@ -94,7 +94,7 @@ module Katello
     end
 
     def items
-      ids = Provider.all.collect{ |provider| provider.id }
+      ids = Provider.pluck(:id)
 
       offset = params[:offset] || 0
       render_panel_direct(Provider, @panel_options, params[:search], 0, [:name_sort, 'asc'],
