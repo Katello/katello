@@ -54,16 +54,18 @@ class FilterRuleTest < MiniTest::Rails::ActiveSupport::TestCase
     search_results3 = array_to_struct([{:filename => "105"},
                                       {:filename => "106"}])
     expected_ids3 = search_results3.collect(&:filename)
+    search_results4 = array_to_struct([{:filename => "106"}])
+    expected_ids4 = search_results4.collect(&:filename)
 
     units = {:units => [{:name => "foo*", :version => "5.0"},
                         {:name => "goo*", :min_version => "0.5", :max_version => "0.7" }]}
-    expected = [{"$and" => [{"filename"=>{"$in"=> expected_ids1}}, {"version" => "5.0"}]},
-                {"$and" => [{"filename"=>{"$in"=> expected_ids2}}, {"filename"=>{"$in"=> expected_ids3}}]}
+    expected = [{"$and" => [{"filename"=>{"$in"=> expected_ids1}}, {"filename"=>{"$in"=> expected_ids2}}]},
+                {"$and" => [{"filename"=>{"$in"=> expected_ids3}}, {"filename"=>{"$in"=> expected_ids4}}]}
                ]
-    Package.expects(:search).times(3).returns(search_results1, search_results2, search_results3)
+    Package.expects(:search).times(4).returns(search_results1, search_results2, search_results3, search_results4)
     exec_test_includes("rpm", units, expected)
 
-    Package.expects(:search).times(3).returns(search_results1, search_results2, search_results3)
+    Package.expects(:search).times(4).returns(search_results1, search_results2, search_results3, search_results4)
     exec_test_excludes("rpm", units, expected)
   end
 

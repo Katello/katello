@@ -26,10 +26,10 @@ class UsernameValidatorTest < MiniTest::Rails::ActiveSupport::TestCase
     assert_empty @model.errors[:name]
   end
 
-  test "fails with HTML tag" do
+  test "succeeds with HTML tag" do
     @validator.validate_each(@model, :name, '<a href="">Test Name</a>')
 
-    refute_empty @model.errors[:name]
+    assert_empty @model.errors[:name]
   end
 
   test "fails with more than 128 characters" do

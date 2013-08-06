@@ -2,7 +2,7 @@
 http_interactions: 
 - request: 
     method: get
-    uri: https://localhost/pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/
+    uri: https://abed.usersys.redhat.com/pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/
     body: 
       encoding: US-ASCII
       string: ""
@@ -14,7 +14,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="cLLDapdYawjpeDyLFDY9mL5aoBpLWVHSzytlfYc", oauth_signature="%2Byh%2FvGtQFlXG0lin7bU%2F46URTcE%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1374128088", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="vXJbX5SwhrFyBrWIClbv8lpj9pEc6uQEz8HlLDskNS0", oauth_signature="LSQarSO61TvMRefVrFPMauaGgBA%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1375196534", oauth_version="1.0"
       Pulp-User: 
       - admin
       User-Agent: 
@@ -25,9 +25,9 @@ http_interactions:
       message: OK
     headers: 
       Date: 
-      - Thu, 18 Jul 2013 06:14:48 GMT
+      - Tue, 30 Jul 2013 15:02:14 GMT
       Server: 
-      - Apache/2.4.4 (Fedora) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.3
+      - Apache/2.2.15 (Red Hat)
       Content-Length: 
       - "2"
       Content-Type: 
@@ -36,13 +36,13 @@ http_interactions:
       encoding: US-ASCII
       string: "[]"
     http_version: 
-  recorded_at: Thu, 18 Jul 2013 06:14:48 GMT
+  recorded_at: Tue, 30 Jul 2013 15:02:14 GMT
 - request: 
     method: post
-    uri: https://localhost/pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/
+    uri: https://abed.usersys.redhat.com/pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/
     body: 
       encoding: US-ASCII
-      string: "{\"schedule\":\"2014-07-18T02:14:48-04:00/P1D\"}"
+      string: "{\"schedule\":\"2014-07-30T11:02:14-04:00/P1D\"}"
     headers: 
       Accept: 
       - application/json
@@ -51,7 +51,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="4bXtBZ1Y3wnbJfUgYpvbYWuyEDbU6HbRPsDIhAZhaM", oauth_signature="RHG7YLInU9hdThchobmYxuD%2FN0Y%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1374128088", oauth_version="1.0"
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="xTlsNwRXWoJAtkZHHPCraFjF4czHcy6nvvbU4V8gkQ", oauth_signature="GntDpjMaL1eKHEDg7Xl5lMdsA4Y%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1375196534", oauth_version="1.0"
       Pulp-User: 
       - admin
       Content-Length: 
@@ -64,18 +64,18 @@ http_interactions:
       message: Created
     headers: 
       Date: 
-      - Thu, 18 Jul 2013 06:14:48 GMT
+      - Tue, 30 Jul 2013 15:02:14 GMT
       Server: 
-      - Apache/2.4.4 (Fedora) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.3
+      - Apache/2.2.15 (Red Hat)
       Location: 
-      - /pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/51e787d9196cbe5ce3f96f1c/
+      - /pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/51f7d5765ca0137fe757a0d4/
       Content-Length: 
       - "393"
       Content-Type: 
       - application/json
     body: 
       encoding: US-ASCII
-      string: "{\"next_run\": \"2014-07-18T06:14:48Z\", \"_href\": \"/pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/51e787d9196cbe5ce3f96f1c/\", \"schedule\": \"2014-07-18T02:14:48-04:00/P1D\", \"override_config\": {}, \"remaining_runs\": null, \"first_run\": \"2014-07-18T06:14:48Z\", \"enabled\": true, \"last_run\": null, \"failure_threshold\": null, \"_id\": \"51e787d9196cbe5ce3f96f1c\", \"consecutive_failures\": 0}"
+      string: "{\"next_run\": \"2014-07-30T15:02:14Z\", \"_href\": \"/pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/51f7d5765ca0137fe757a0d4/\", \"schedule\": \"2014-07-30T11:02:14-04:00/P1D\", \"override_config\": {}, \"remaining_runs\": null, \"first_run\": \"2014-07-30T15:02:14Z\", \"enabled\": true, \"last_run\": null, \"failure_threshold\": null, \"_id\": \"51f7d5765ca0137fe757a0d4\", \"consecutive_failures\": 0}"
     http_version: 
-  recorded_at: Thu, 18 Jul 2013 06:14:49 GMT
+  recorded_at: Tue, 30 Jul 2013 15:02:14 GMT
 recorded_with: VCR 2.5.0

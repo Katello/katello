@@ -84,7 +84,7 @@ hr { color: $border_color; }
 .role-alt { color: #888;}
 .ca { text-align: center; } /* text align center */
 .fc { display: inline-block; margin: 0 auto; } /* "float", center */
-.multiline{word-wrap: break-word;}
+.multiline { word-wrap: break-word; word-break: break-all; }
 .full { width: 98%; padding: 0 1%;}
 .twocolumn {
   @include column-count(2);
@@ -205,12 +205,10 @@ input[type='submit'], button, .button {
   border: 1px solid darken($stroke_color, 20%);
   color: #221e1f;
   cursor: pointer;
-  margin: 4px;
   padding: 4px 8px;
   @include border-radius(5px);
   @include text-shadow(0 1px 0 rgba($white_color, 1));
   min-height: 14px;
-
   .nomargin {
     margin: 0;
   }

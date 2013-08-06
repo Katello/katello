@@ -22,7 +22,9 @@ KT.panel.set_expand_cb(function(){
     }, 500);
 });
 
-KT.panel_search_autocomplete = KT.panel_search_autocomplete.concat(["distribution.name:", "distribution.version:"]);
+if (KT.panel_search_autocomplete !== undefined) {
+    KT.panel_search_autocomplete = KT.panel_search_autocomplete.concat(["distribution.name:", "distribution.version:"]);
+}
 
 (function(){
     var options = { create : 'new_distributor' };
@@ -39,13 +41,13 @@ KT.panel_search_autocomplete = KT.panel_search_autocomplete.concat(["distributio
             $('#distributor_environment_id').attr('value', env_id);
         };
     }
-
     KT.panel.list.registerPage('distributors', options);
 }());
 
 $(document).ready(function() {
 
     KT.panel.set_expand_cb(function() {
+        KT.distributors_page.distributor_info_setup();
         KT.subs.initialize_edit();
     });
 
@@ -110,6 +112,17 @@ KT.distributors_page = (function() {
             }
         );
     },
+    distributor_info_setup = function() {
+        var pane = $("#distributor");
+        if (pane.length === 0) {
+            return;
+        }
+
+        KT.env_content_view_selector.init('edit_env_view',
+            'environment_path_selector', KT.available_environments, KT.current_environment_id,
+            'content_view_selector', KT.available_content_views, KT.current_content_view_id,
+            'env_content_view_selector_buttons');
+    },
     update_content_views = function(){
         // this function will retrieve the views associated with a given environment and
         // update the views box with the results
@@ -124,33 +137,36 @@ KT.distributors_page = (function() {
                     var options = '';
                     var opt_template = KT.utils.template("<option value='<%= key %>'><%= text %></option>");
 
-                    // create an html option list using the response
-                    options += opt_template({key: "", text: i18n.no_content_view});
-                    $.each(response, function(key, item) {
-                        options += opt_template({key: item.id, text: item.name});
-                    });
-
-                    $("#distributor_content_view_id").html(options);
-
                     if (response.length > 0) {
-                        highlight_content_views(true);
+                        // create an html option list using the response
+                        $.each(response, function(key, item) {
+                            options += opt_template({key: item.id, text: item.name});
+                        });
+                        highlight_content_views(i18n.select_content_view);
+                    } else {
+                        // the user selected an environment that has not views, warn them
+                        highlight_content_views(i18n.no_content_views_available);
                     }
+                    $("#distributor_content_view_id").html(options);
                 }
             });
         }
     },
-    highlight_content_views = function(add_highlight){
-        var select_input = $("#_content_view_id");
-        if (add_highlight) {
-            if( !select_input.next('span').hasClass('highlight_input_text')) {
-                select_input.addClass('highlight_input');
-                select_input.after('<span class ="highlight_input_text">' +
-                        i18n.select_content_view + '</span>');
-            }
+    highlight_content_views = function(text){
+        var select_input = $("#distributor_content_view_id"),
+            highlight_text = select_input.next('span.highlight_input_text');
+
+        select_input.addClass('highlight_input');
+        if (highlight_text.length > 0) {
+            highlight_text.html(text);
         } else {
-            select_input.removeClass('highlight_input');
-            $('.highlight_input_text').remove();
+            select_input.after('<span class ="highlight_input_text">' + text + '</span>');
         }
+    },
+    remove_content_view_highlight = function() {
+        var select_input = $("#distributor_content_view_id");
+        select_input.removeClass('highlight_input');
+        select_input.next('span.highlight_input_text').remove();
     };
 
   return {
@@ -158,7 +174,8 @@ KT.distributors_page = (function() {
       create_distributor : create_distributor,
       registerActions : registerActions,
       update_content_views: update_content_views,
-      highlight_content_views: highlight_content_views
+      highlight_content_views: highlight_content_views,
+      distributor_info_setup: distributor_info_setup
   };
 })();
 

@@ -11,11 +11,15 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Validators
-  class DefaultInfoNotBlankValidator < ActiveModel::EachValidator
+  class DefaultInfoValidator < ActiveModel::EachValidator
+
+    MAX_SIZE = 256
+
     def validate_each(record, attribute, value)
       value.each_key do |type|
         value[type].each do |key|
           record.errors[attribute] << _("cannot contain blank keynames") and return if key.blank?
+          record.errors[attribute] << _("must be less than %d characters") % MAX_SIZE and return if key.size >= MAX_SIZE
         end
       end
     end

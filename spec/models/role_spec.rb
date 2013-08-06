@@ -55,7 +55,7 @@ describe Role do
      specify{user.allowed_to?(:update, :organizations).should be_false}
    end
 
-   context "Check the envs" do
+   context "Check the envs", :katello => true do
      let(:environment){create_environment(:name=>"my_env", :label=> "my_env", :organization => organization, :prior => organization.library)}
      KTEnvironment.read_verbs.each do |verb|
        specify{user.allowed_to?(verb, :environments,environment.id,organization).should be_true}
