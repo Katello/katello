@@ -173,6 +173,8 @@ Schedules the consumer identity certificate regeneration
       attrs[:content_view_id] = nil if attrs[:content_view_id] == false
     end
 
+    attrs[:installedProducts] = [] if attrs.has_key?(:installedProducts) && attrs[:installedProducts].nil?
+
     @system.update_attributes!(attrs.slice(*slice_attrs))
     respond
   end
