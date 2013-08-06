@@ -26,22 +26,22 @@ module Glue::Pulp::Errata
                     :reboot_suggested, :references, :pkglist, :severity, :repoids
 
       def self.errata_by_consumer(repos)
-        errata = Runcible::Extensions::Consumer.applicable_errata([], repos.map(&:pulp_id), false)
+        errata = Katello.pulp_server.extensions.consumer.applicable_errata([], repos.map(&:pulp_id), false)
         errata[:erratum] || []
       end
 
       def self.find(id)
-        erratum_attrs = Runcible::Extensions::Errata.find_by_unit_id(id)
+        erratum_attrs = Katello.pulp_server.extensions.errata.find_by_unit_id(id)
         ::Errata.new(erratum_attrs) if not erratum_attrs.nil?
       end
 
       def self.find_by_errata_id(id)
-        erratum_attrs = Runcible::Extensions::Errata.find(id)
+        erratum_attrs = Katello.pulp_server.extensions.errata.find(id)
         ::Errata.new(erratum_attrs) if not erratum_attrs.nil?
       end
 
       def self.list_by_filter_clauses(clauses)
-        errata = Runcible::Extensions::Errata.search(::Errata::CONTENT_TYPE,
+        errata = Katello.pulp_server.extensions.errata.search(::Errata::CONTENT_TYPE,
                                 :filters => clauses)
         if errata
           errata.collect do |attrs|

@@ -56,7 +56,7 @@ module Glue::Pulp::Repos
       end
     end
 
-    items = Runcible::Extensions::Repository.search_by_repository_ids(Repository.in_environment(environment).pluck(:pulp_id))
+    items = Katello.pulp_server.extensions.repository.search_by_repository_ids(Repository.in_environment(environment).pluck(:pulp_id))
     full_repos = {}
     items.each { |item| full_repos[item["id"]] = item }
 

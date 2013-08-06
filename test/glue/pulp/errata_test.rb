@@ -60,7 +60,7 @@ class GluePulpErrataTest < GluePulpErrataTestBase
   end
 
   def test_errata_by_consumer
-    Runcible::Extensions::Consumer.expects(:applicable_errata).
+    Katello.pulp_server.extensions.consumer.expects(:applicable_errata).
         with([], [RepositorySupport.repo.pulp_id], false).returns({})
 
     Errata.errata_by_consumer([RepositorySupport.repo])

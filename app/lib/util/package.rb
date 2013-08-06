@@ -154,11 +154,15 @@ module Util
     end
 
     def self.version_filter(minimum=nil, maximum=nil)
-      range = Hash.new
-      range[:from] = sortable_version(minimum) if minimum.present?
-      range[:to] = sortable_version(maximum) if maximum.present?
+      filters = []
+      filters << PackageFilter.new(minimum, "gt").clauses if minimum
+      filters << PackageFilter.new(maximum, "lt").clauses if maximum
 
-      range.empty? ? nil : [:range, {sortable_version: range}]
+      filters
+    end
+
+    def self.version_eq_filter(version)
+      [PackageFilter.new(version, "eq").clauses]
     end
 
     # Converts a package version to a sortable string
@@ -172,6 +176,7 @@ module Util
     # @param version [String] a package version (e.g. "3.9")
     # @return [String] a string that can be sorted (e.g. "01-3.01-9")
     def self.sortable_version(version)
+      return "" if version.blank?
       pieces = version.scan(/([A-Za-z]+|\d+)/).flatten.map do |chunk|
         chunk =~ /\d+/ ? "#{"%02d" % chunk.length}-#{chunk}" : "$#{chunk}"
       end

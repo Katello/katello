@@ -74,11 +74,11 @@ describe PulpTaskStatus, :katello => true do
         end
         @t.save!
 
-        Runcible::Resources::Task.stub(:poll).and_return(updated_pulp_task)  if Katello.config.katello?
+        Katello.pulp_server.resources.task.stub(:poll).and_return(updated_pulp_task)  if Katello.config.katello?
       end
 
       it "should fetch data from pulp" do
-        Runcible::Resources::Task.should_receive(:poll).once.with(@t.uuid).and_return(updated_pulp_task)
+        Katello.pulp_server.resources.task.should_receive(:poll).once.with(@t.uuid).and_return(updated_pulp_task)
         @t.refresh
       end
 

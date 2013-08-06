@@ -333,7 +333,9 @@ module Glue::Candlepin::Consumer
     end
 
     def guest
-      facts["virt.is_guest"]
+      v = facts["virt.is_guest"]
+      return false if (v == false || v.nil?)
+      return(v == true || v.to_bool)
     end
 
     def guest=(val)

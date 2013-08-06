@@ -59,7 +59,7 @@ describe System do
     Resources::Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
     Resources::Candlepin::Consumer.stub!(:update).and_return(true)
 
-    Runcible::Extensions::Consumer.stub!(:create).and_return({:id => uuid}) if Katello.config.katello?
+    Katello.pulp_server.extensions.consumer.stub!(:create).and_return({:id => uuid}) if Katello.config.katello?
   end
 
   context "system in valid state should be valid" do
@@ -79,7 +79,7 @@ describe System do
                                                                       system_name, cp_type, facts, installed_products,
                                                                       nil, nil, nil, nil).and_return({:uuid => uuid,
                                                                                                 :owner => {:key => uuid}})
-    Runcible::Extensions::Consumer.should_receive(:create).once.with(uuid, {:display_name => system_name}).and_return({:id => uuid}) if Katello.config.katello?
+    Katello.pulp_server.extensions.consumer.should_receive(:create).once.with(uuid, {:display_name => system_name}).and_return({:id => uuid}) if Katello.config.katello?
     @system.save!
   end
 
@@ -114,7 +114,7 @@ describe System do
 
     it "should delete consumer in candlepin and pulp" do
       Resources::Candlepin::Consumer.should_receive(:destroy).once.with(uuid).and_return(true)
-      Runcible::Extensions::Consumer.should_receive(:delete).once.with(uuid).and_return(true) if Katello.config.katello?
+      Katello.pulp_server.extensions.consumer.should_receive(:delete).once.with(uuid).and_return(true) if Katello.config.katello?
       @system.destroy
     end
   end
@@ -296,7 +296,7 @@ describe System do
 
   context "pulp attributes", :katello => true do
     it "should update package-profile" do
-      Runcible::Extensions::Consumer.should_receive(:upload_profile).once.with(uuid, 'rpm', package_profile).and_return(true)
+      Katello.pulp_server.extensions.consumer.should_receive(:upload_profile).once.with(uuid, 'rpm', package_profile).and_return(true)
       @system.upload_package_profile(package_profile)
     end
   end
@@ -423,7 +423,7 @@ describe System do
       User.current =  user_with_permissions{ |u| u.can(:create, :providers, nil, @organization) }
     end
 
-    it "Should not be able to do anything with systems" do
+    it "Should not be able to do anything with systems", :katello => true do
       System.readable(@organization).should_not include(@system)
       System.any_readable?(@organization).should == false
       System.registerable?(@environment, @organization).should == false
@@ -442,7 +442,7 @@ describe System do
       @system.save!
     end
 
-    it "should be readable if user can read systems for environment" do
+    it "should be readable if user can read systems for environment", :katello => true do
       User.current =  user_with_permissions { |u| u.can(:read_systems, :environments, @environment.id, @organization) }
       System.readable(@organization).should include(@system)
       System.any_readable?(@organization).should == true
@@ -455,7 +455,7 @@ describe System do
       @system.deletable?.should == false
     end
 
-    it "should be editable if user can edit systems for environment" do
+    it "should be editable if user can edit systems for environment", :katello => true do
       User.current =  user_with_permissions { |u| u.can(:update_systems, :environments, @environment.id, @organization) }
       System.readable(@organization).should include(@system)
       System.any_readable?(@organization).should == true
@@ -468,7 +468,7 @@ describe System do
       @system.deletable?.should == false
     end
 
-    it "should be registerable if user can edit systems for environment" do
+    it "should be registerable if user can edit systems for environment", :katello => true do
       User.current =  user_with_permissions { |u| u.can(:register_systems, :environments, @environment.id, @organization) }
       System.readable(@organization).should include(@system)
       System.any_readable?(@organization).should == true
@@ -481,7 +481,7 @@ describe System do
       @system.deletable?.should == false
     end
 
-    it "should be deletable if user can delete systems for environment" do
+    it "should be deletable if user can delete systems for environment", :katello => true do
       User.current =  user_with_permissions { |u| u.can(:delete_systems, :environments, @environment.id, @organization) }
       System.readable(@organization).should include(@system)
       System.any_readable?(@organization).should == true
@@ -610,7 +610,7 @@ describe System do
       @system.save!
     end
 
-    it "should be readable if user can read systems for organization" do
+    it "should be readable if user can read systems for organization", :katello => true do
       User.current =  user_with_permissions { |u| u.can(:read_systems, :system_groups, @group.id, @organization) }
       System.readable(@organization).should include(@system)
       System.any_readable?(@organization).should == true
@@ -623,7 +623,7 @@ describe System do
       @system.deletable?.should == false
     end
 
-    it "should be editable if user can edit systems for organization" do
+    it "should be editable if user can edit systems for organization", :katello => true do
       User.current =  user_with_permissions { |u| u.can(:update_systems, :system_groups, @group.id, @organization) }
       System.readable(@organization).should include(@system)
       System.any_readable?(@organization).should == true
@@ -636,7 +636,7 @@ describe System do
       @system.deletable?.should == false
     end
 
-    it "should be deletable if user can delete systems for organization" do
+    it "should be deletable if user can delete systems for organization", :katello => true do
       User.current =  user_with_permissions { |u| u.can(:delete_systems, :system_groups, @group.id, @organization) }
       System.readable(@organization).should include(@system)
       System.any_readable?(@organization).should == true
