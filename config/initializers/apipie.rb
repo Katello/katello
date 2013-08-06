@@ -9,6 +9,7 @@ Apipie.configure do |config|
   config.doc_base_url            = "/apidoc"
   config.use_cache               = Rails.env.production?
   config.validate                = false
+  config.default_version         = 'v1'
 
   unless config.use_cache?
     require 'maruku'
@@ -32,6 +33,16 @@ Apipie.configure do |config|
                         Api::V1::TasksController
                         Api::V1::TemplatesController
                         Api::V1::TemplatesContentController
+                        Api::V2::ChangesetsController
+                        Api::V2::ChangesetsContentController
+                        Api::V2::ErrataController
+                        Api::V2::DistributionsController
+                        Api::V2::GpgKeysController
+                        Api::V2::RepositoriesController
+                        Api::V2::PackagesController
+                        Api::V2::TasksController
+                        Api::V2::TemplatesController
+                        Api::V2::TemplatesContentController
                         ]
 
     config.cache_dir = File.join(Rails.root, "public/headpin-apipie-cache")
