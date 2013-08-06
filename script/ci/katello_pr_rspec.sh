@@ -17,3 +17,22 @@ if [ $? -ne 0 ]
 then
   exit 1
 fi
+
+RAILS_ENV=test bundle exec rake db:drop
+
+
+echo ""
+echo "********* Headpin RSPEC Unit Tests ****************"
+echo "common:" > config/katello.yml
+echo "  app_mode: headpin" >> config/katello.yml
+
+RAILS_ENV=test bundle exec rake db:create
+
+# SCHEMA: return to schema usage after FKs fixed
+# bundle exec rake db:test:load > /dev/null
+RAILS_ENV=test bundle exec rake db:migrate > /dev/null
+bundle exec rspec ./spec --tag '~katello'
+if [ $? -ne 0 ]
+then
+  exit 1
+fi
