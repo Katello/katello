@@ -36,7 +36,7 @@ describe SystemGroupsController, :katello => true do
     Resources::Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
     Resources::Candlepin::Consumer.stub!(:update).and_return(true)
     Resources::Candlepin::Consumer.stub!(:destroy).and_return(true)
-    Runcible::Extensions::Consumer.stub!(:delete).and_return(true)
+    Katello.pulp_server.extensions.consumer.stub!(:delete).and_return(true)
 
     @system = create_system(:name=>"bar1", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""})
   end

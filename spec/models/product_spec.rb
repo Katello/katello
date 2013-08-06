@@ -157,7 +157,7 @@ describe Product, :katello => true do
   context "product repos" do
     before(:each) do
       disable_product_orchestration
-      Runcible::Extensions::Repository.stub(:publish_all).and_return([])
+      Katello.pulp_server.extensions.repository.stub(:publish_all).and_return([])
     end
 
     context "repo id" do
