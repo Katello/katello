@@ -4,6 +4,7 @@
 group :build do
   # for apipie (it is in default group)
   gem 'maruku'
+  gem 'sqlite3'
 end
 
 group :ci do
