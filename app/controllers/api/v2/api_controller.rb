@@ -20,4 +20,8 @@ class Api::V2::ApiController < Api::ApiController
   include Util::ThreadSession::Controller
   include AuthorizationRules
 
+  resource_description do
+    api_version 'v2'
+  end
+
 end

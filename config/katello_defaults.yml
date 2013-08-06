@@ -354,3 +354,10 @@ test:
 # The following configuration values override ones from the common section
 #
 build:
+  use_pulp: false
+  use_candlepin: false
+  database:
+    adapter: sqlite3
+    database: db/build.sqlite3
+    pool: 5
+    timeout: 5000

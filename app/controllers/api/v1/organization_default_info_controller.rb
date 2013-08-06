@@ -72,7 +72,7 @@ class Api::V1::OrganizationDefaultInfoController < Api::V1::ApiController
 
   api :POST, '/organizations/:organization_id/default_info/:informable_type/apply', "Apply existing default info on all informable resources"
   param_group :informable_identifier
-  param :async, :boolean, :required => false, :desc => "directive to run this asynchronously or not"
+  param :async, :bool, :required => false, :desc => "directive to run this asynchronously or not"
   def apply_to_all
     params[:async] = true if params[:async].nil?
 
