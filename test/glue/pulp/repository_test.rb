@@ -35,7 +35,7 @@ class GluePulpRepoTestBase < MiniTest::Rails::ActiveSupport::TestCase
     VCR.use_cassette('glue_pulp_repo_tasks', :erb => true, :match_requests_on => [:path, :method]) do
       task_list.each do |task|
         while !(['finished', 'error', 'timed_out', 'canceled', 'reset', 'success'].include?(task['state'])) do
-          task = PulpSyncStatus.pulp_task(Runcible::Resources::Task.poll(task["task_id"]))
+          task = PulpSyncStatus.pulp_task(Katello.pulp_server.resources.task.poll(task["task_id"]))
           sleep 0.5 # do not overload backend engines
         end
       end
@@ -45,7 +45,7 @@ class GluePulpRepoTestBase < MiniTest::Rails::ActiveSupport::TestCase
   def self.wait_on_task(task)
     VCR.use_cassette('glue_pulp_repo_tasks', :erb => true, :match_requests_on => [:path, :method]) do
       while !(['finished', 'error', 'timed_out', 'canceled', 'reset', 'success'].include?(task['state'])) do
-        task = PulpSyncStatus.pulp_task(Runcible::Resources::Task.poll(task["uuid"]))
+        task = PulpSyncStatus.pulp_task(Katello.pulp_server.resources.task.poll(task["uuid"]))
         sleep 0.5 # do not overload backend engines
       end
     end
@@ -144,7 +144,7 @@ class GluePulpRepoTest < GluePulpRepoTestBase
   end
 
   def test_generate_distributor
-    assert_kind_of Runcible::Extensions::YumDistributor, @fedora_17_x86_64.generate_distributor
+    assert_kind_of Runcible::Models::YumDistributor, @fedora_17_x86_64.generate_distributor
   end
 
   def test_populate_from

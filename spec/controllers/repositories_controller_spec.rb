@@ -54,7 +54,7 @@ describe RepositoriesController, :katello => true do
     describe "GET Edit" do
       before do
         Product.stub!(:find).and_return(@product)
-        Runcible::Extensions::Repository.stub(:find).and_return(@repository)
+        Katello.pulp_server.extensions.repository.stub(:find).and_return(@repository)
       end
       let(:action) {:edit}
       let(:req) { get :edit, :provider_id => @provider.id, :product_id => @product.id, :id => @repository.id}
@@ -154,7 +154,7 @@ describe RepositoriesController, :katello => true do
 
         Resources::Candlepin::Content.stub!(:get).and_return(content)
         Resources::Candlepin::Content.stub!(:create).and_return(content)
-        Runcible::Extensions::Repository.stub(:publish_all).and_return([])
+        Katello.pulp_server.extensions.repository.stub(:publish_all).and_return([])
         @repo_name = "repo-#{rand 10 ** 8}"
         post :create, { :product_id => @product.id,
                         :provider_id => @product.provider.id,

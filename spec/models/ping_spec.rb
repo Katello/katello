@@ -51,12 +51,12 @@ describe Ping do
         stub_request(:get, "#{Katello.config.pulp.url}/services/status/") # gotta have that trailing slash
 
         # pulp - with oauth
-        Runcible::Resources::User.stub!(:retrieve_all).and_return()
+        Katello.pulp_server.resources.user.stub!(:retrieve_all).and_return([])
 
         Ping.should_receive(:pulp_without_oauth).and_return(nil)
       end
 
-      subject { Ping.ping[:result] }
+      subject {Ping.ping[:result]}
       it(:katello => true) { should eql('ok') }
     end
 

@@ -29,7 +29,7 @@ describe CustomInfo do
     Resources::Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
     Resources::Candlepin::Consumer.stub!(:update).and_return(true)
 
-    Runcible::Extensions::Consumer.stub!(:create).and_return({:id => uuid}) if defined?(Runcible)
+    Katello.pulp_server.extensions.consumer.stub!(:create).and_return({:id => uuid}) if defined?(Runcible)
 
     @system = create_system(:name => "test_system", :environment => @environment, :cp_type => 'system', :facts => {"distribution.name" => "Fedora"})
 
