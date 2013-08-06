@@ -153,7 +153,7 @@ KT.default_info = (function() {
         var destroy_path = KT.routes.api_organization_destroy_default_info_path(org["name"], informable_type, _keyname);
 
         var new_row = $('<tr/>', {
-            'class': 'primary_color',
+            'class': 'multiline primary_color',
             'data-id': 'default_info_' + _keyname,
             'html': $('<td/>', {
                 'class': 'ra',

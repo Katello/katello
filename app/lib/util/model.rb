@@ -30,7 +30,7 @@ module Util
 
     def self.labelize(name)
       if name
-        name.ascii_only? ? name.gsub(/[^a-z0-9\-_]/i,"_") : uuid
+        (name.ascii_only? && name.length <= 128)?name.gsub(/[^a-z0-9\-_]/i,"_") : uuid
       end
     end
 

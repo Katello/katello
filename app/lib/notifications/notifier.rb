@@ -122,6 +122,7 @@ class Notifications::Notifier
   def notice(notices, options = { })
     options = process_options options
     notices = [*notices].compact
+    notices.collect! { |n| n.gsub(/[\<\>]/, '<' => '&lt;', '>' => '&gt;') }
 
     unless options[:asynchronous]
       # On a sync request, the client should expect to receive a notification

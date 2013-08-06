@@ -78,7 +78,9 @@ describe GpgKey, :katello => true do
     end
 
     it "should be unsuccessful with binary content" do
-      gpg_key = GpgKey.new(:name => "Gpg Key 1", :content =>"\231\001\r\004\026\001\b\000\276", :organization => @organization)
+      content = "\x81\xA4user\x83\xA3age\x18\xA4name\xA4ivan\xA5float\xCB@\x93J=p\xA3\xD7\n"
+      content.force_encoding(::Encoding::ASCII_8BIT)
+      gpg_key = GpgKey.new(:name => "Gpg Key 1", :content => content, :organization => @organization)
       gpg_key.should_not be_valid
     end
 

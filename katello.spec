@@ -30,7 +30,7 @@
 %endif
 
 Name:           katello
-Version:        1.4.2
+Version:        1.4.3
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -256,7 +256,7 @@ Requires:        pulp-server
 Requires:        pulp-rpm-plugins
 Requires:        pulp-selinux
 Requires:        createrepo >= 0.9.9-18%{?dist}
-Requires:        %{?scl_prefix}rubygem(runcible) >= 0.4.11
+Requires:        %{?scl_prefix}rubygem(runcible) >= 0.4.12
 
 %description glue-pulp
 Katello connection classes for the Pulp backend
@@ -890,6 +890,1281 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Wed Jul 31 2013 Bryan Kearney <bkearney@redhat.com> 1.4.3-1
+- Merge pull request #2702 from thomasmckay/elasticsearch-doc
+  (thomasmckay@redhat.com)
+- elasticsearch-doc - add some comments on ES and index host/guest
+  (thomasmckay@redhat.com)
+- Merge pull request #2695 from komidore64/system-remove-deletion
+  (komidore64@gmail.com)
+- Merge pull request #2700 from jlsherrill/comps (jlsherrill@gmail.com)
+- updating comps for new pulp packages (jsherril@redhat.com)
+- 896074 - CLI - user without access can call "system remove_deletion" command.
+  (komidore64@gmail.com)
+- Adding support for pulp 2.2 (jsherril@redhat.com)
+- distributor-ui - fix distributor UI and version (thomasmckay@redhat.com)
+- Made Sys Groups index call only return 'readable' system groups
+  (paji@redhat.com)
+- 987670 - CLI: Env/org name and Label needs to have same character limit.
+  Creating an env/org name with more that 128 characters throws an incorrect
+  error string. (pgodhani@redhat.com)
+- Merge pull request #2689 from waldenraines/fix-nutupane-styling
+  (walden@redhat.com)
+- Nutupane: fix alignment of details panel to table header. (walden@redhat.com)
+- Nutupane: fixing Angular expression === JS errors. (walden@redhat.com)
+- Merge pull request #2675 from pgodhani/username (pgodhani@redhat.com)
+- Merge pull request #2632 from jlsherrill/default_namespace
+  (jlsherrill@gmail.com)
+- 975593(username) -  Make name field validation consistent across entities,
+  and use the non-html validator (pgodhani@redhat.com)
+- tests - adding default namespace to keep some tests from running twice
+  (jsherril@redhat.com)
+- Merge pull request #2676 from parthaa/2.0-changes (parthaa@gmail.com)
+- Merge pull request #2671 from pgodhani/heal_single_system
+  (pgodhani@redhat.com)
+- Merge pull request #2680 from komidore64/org-html (komidore64@gmail.com)
+- Merge pull request #2682 from thomasmckay/actkeys-filter
+  (thomasmckay@redhat.com)
+- actkeys-filter - properly filter available subscriptions
+  (thomasmckay@redhat.com)
+- 987909 - Org names rendered as HTML (komidore64@gmail.com)
+- Changes to make katello run on Ruby 2.0 (paji@redhat.com)
+- Add a per system run autoheal button (pgodhani@redhat.com)
+- Fixing in_product scope to accept a product or id/ids (daviddavis@redhat.com)
+- Merge pull request #2673 from daviddavis/temp/1374670807
+  (daviddavis@redhat.com)
+- Merge pull request #2629 from komidore64/org-healer-magic
+  (komidore64@gmail.com)
+- Capping rails version since 3.2.14 doesn't work (daviddavis@redhat.com)
+- Merge pull request #2669 from thomasmckay/system-crosslink
+  (thomasmckay@redhat.com)
+- 914820-locale - correctly get current user and use .po files
+  (thomasmckay@redhat.com)
+- system-crosslink - host and guest systems now pulled from katello db
+  (thomasmckay@redhat.com)
+- org auto-attach - auto-attach available subscriptions to all systems in an
+  org (komidore64@gmail.com)
+- Merge pull request #2615 from beav/deleted-consumer-passthrough
+  (cduryee@redhat.com)
+- Merge pull request #2663 from daviddavis/versioning-fix
+  (daviddavis@redhat.com)
+- add passthrough for calling deleted_consumers in candlepin
+  (cduryee@redhat.com)
+- Order by id so SQL results will use elastic search ordering, fixes #2647.
+  (walden@redhat.com)
+- Content Views: Fixing package version filtering when publishing
+  (daviddavis@redhat.com)
+- fix spec test that expects wrong number of args (cduryee@redhat.com)
+- Merge pull request #2662 from beav/memory-in-gb-as-string
+  (cduryee@redhat.com)
+- Merge pull request #2661 from beav/last-checkin-update (cduryee@redhat.com)
+- convert memory totals to strings before parsing (cduryee@redhat.com)
+- 986867-crosslink - update anchor for crosslinking between pages
+  (thomasmckay@redhat.com)
+- allow lastCheckin to propogate through update calls to candlepin
+  (cduryee@redhat.com)
+- Merge pull request #2660 from thomasmckay/984848 (thomasmckay@redhat.com)
+- Merge pull request #2640 from daviddavis/temp/1374070734
+  (daviddavis@redhat.com)
+- 984848 - rename menu (thomasmckay@redhat.com)
+- 984848 - cleaning up default org and env (thomasmckay@redhat.com)
+- Merge remote-tracking branch 'upstream/master' into delete-legacy-promotion
+  (daviddavis@redhat.com)
+- Merge pull request #2634 from mptap/first_feature (mtapaswi@redhat.com)
+- 961024 - Limit available subscriptions for activationkeys by content view
+  (mtapaswi@redhat.com)
+- Added elastic search if to help with migration (paji@redhat.com)
+- Merge pull request #2651 from thomasmckay/970774 (thomasmckay@redhat.com)
+- Merge pull request #2642 from thomasmckay/985444-clean-cp-json
+  (thomasmckay@redhat.com)
+- Merge pull request #2650 from thomasmckay/985092 (thomasmckay@redhat.com)
+- 985444-clean-cp-json - remove hibernate fields from candlepin json
+  (thomasmckay@redhat.com)
+- Merge 'master' to delete-legacy-promotion (paji@redhat.com)
+- Quick fix for a headpin rspec breakage (paji@redhat.com)
+- Merge pull request #2623 from pgodhani/orgname (pgodhani@redhat.com)
+- Merge pull request #2641 from komidore64/ui-editing-descriptions
+  (komidore64@gmail.com)
+- Fixed a bunch of tests (paji@redhat.com)
+- 975593 - Make name field validation consistent across entities, and use the
+  non-html validator (pgodhani@redhat.com)
+- Merge pull request #2637 from Katello/bkearney/983647
+  (bryan.kearney@gmail.com)
+- Merge 'master' to delete-legacy-promotion branch (paji@redhat.com)
+- Merge pull request #2639 from daviddavis/filter_autocomplete
+  (daviddavis@redhat.com)
+- Fixed sys controller to work with content view id (paji@redhat.com)
+- Merge pull request #2646 from jlsherrill/repo_fix (jlsherrill@gmail.com)
+- 970774 - further removal of environment visibility in UI in headpin mode
+  (thomasmckay@redhat.com)
+- 985092 - removed obsolete Filter prompt, which was appearing as a choice in
+  the list (thomasmckay@redhat.com)
+- Filtering: Adding autocompletion for package and errata names
+  (daviddavis@redhat.com)
+- fixing issue where  Product#add_repo returned a task (jsherril@redhat.com)
+- 982196 - UI editing description (komidore64@gmail.com)
+- Content Search: expanding the row header column (daviddavis@redhat.com)
+- 983647: katello-headpin-all should pull in candlepin-selinux
+  (bkearney@redhat.com)
+- 974487-product-fk - error when refreshing manifest w/ some marketing products
+  removed (thomasmckay@redhat.com)
+- Merge pull request #2631 from mccun934/add-threaddump-handler
+  (mmccune@gmail.com)
+- fixing trailing whitespace (mmccune@redhat.com)
+- adding new signal trap that allows a sysadmin to dump threads
+  (mmccune@redhat.com)
+- Fix unit tests for refreshing system and system_group indexes in API
+  (inecas@redhat.com)
+- Refresh system groups index after modification through API
+  (inecas@redhat.com)
+- Refresh systems index after modification through API (inecas@redhat.com)
+- candlepin-checkin - corrected call to candlepin api (thomasmckay@redhat.com)
+- Merge pull request #2611 from thomasmckay/upstream-update
+  (thomasmckay@redhat.com)
+- upstream-update - replaced instance_eval with send (thomasmckay@redhat.com)
+- Merge pull request #2624 from parthaa/migration-pill (mmccune@gmail.com)
+- Renamed the migration class TaskStatus to not mix with model
+  (paji@redhat.com)
+- upstream-update - send candlepin capabilities to upstream distributor
+  (thomasmckay@redhat.com)
+- Prettified couple of lines as recommended in PR 2600 (paji@redhat.com)
+- Delete legacy promotion: Updating cassettes (daviddavis@redhat.com)
+- Readding repo glue tests since methods still exist (daviddavis@redhat.com)
+- Environment Product Removal: fixing migration to work with FKs
+  (daviddavis@redhat.com)
+- allow "." in org names (cduryee@redhat.com)
+- Removed FK issues due to fixtures (paji@redhat.com)
+- Fixed another test to create real ids (paji@redhat.com)
+- Fixed some tests (paji@redhat.com)
+- Adding API support for the About page. (ogmaciel@gnome.org)
+- Merge branch 'master' into delete-legacy-promotion (paji@redhat.com)
+- Fixed schema.rb (paji@redhat.com)
+- Rspec: Setting the version of rspec to 2.13.0 to eliminate deprecation
+  warnings and allow Travis to complete. (ehelms@redhat.com)
+- Merge branch 'master' into delete-legacy-promotion (paji@redhat.com)
+- Reset DB: Fixing call to migrate (daviddavis@redhat.com)
+- Merge pull request #2596 from jlsherrill/test-fix (jlsherrill@gmail.com)
+- rerunning glue tests with repo_test having order locked (jsherril@redhat.com)
+- fixing issue with foreign key constraints causing fixtures to fail to load
+  (jsherril@redhat.com)
+- Merge pull request #2594 from jlsherrill/keys (jlsherrill@gmail.com)
+- Removing structure.sql from katello.spec (daviddavis@redhat.com)
+- Update schema.rb (daviddavis@redhat.com)
+- Stop using structure.sql due to #2592 (daviddavis@redhat.com)
+- Fixed some migration script (paji@redhat.com)
+- Merge pull request #2495 from jlsherrill/cp_content (jlsherrill@gmail.com)
+- 981311 - fix nested constraints with match routes (inecas@redhat.com)
+- Merge branch 'master' into delete-legacy-promotion (paji@redhat.com)
+- Merge pull request #2583 from thomasmckay/980523-user-env
+  (thomasmckay@redhat.com)
+- Moving migration to later date (paji@redhat.com)
+- switch to a greater than or equals for createrepo. (mmccune@redhat.com)
+- Merge pull request #2587 from jlsherrill/test_fix (jlsherrill@gmail.com)
+- fixing broken spec test due to cassettes generated with old runcible
+  (jsherril@redhat.com)
+- Merge pull request #2579 from daviddavis/temp/1372797408
+  (daviddavis@redhat.com)
+- Merge pull request #2586 from jlsherrill/spec_fix (jlsherrill@gmail.com)
+- adding db/structure.sql to rpm to fix build (jsherril@redhat.com)
+- ensuring library content is accessible by consumers (jsherril@redhat.com)
+- Ensuring that products/environments are unique (daviddavis@redhat.com)
+- Add rubygem-justified dependency (inecas@redhat.com)
+- 980523-user-env - always save user object in api update
+  (thomasmckay@redhat.com)
+- Merge pull request #2416 from pitr-ch/story/foreign-keys (kontakt@pitr.ch)
+- Merge pull request #2574 from iNecas/katello-cli-tests-fakecert
+  (inecas@redhat.com)
+- Revert "remove data from M:N table which points to non existent data"
+  (git@pitr.ch)
+- Fix Travis (git@pitr.ch)
+- Add missing :dependent => :destroy (git@pitr.ch)
+- Use structure.sql instead of schema.rb (git@pitr.ch)
+- Fix missing constraint removal in down (git@pitr.ch)
+- install openid-store just as %%dir (msuchy@redhat.com)
+- do not list /vendor/ twice (msuchy@redhat.com)
+- do not list app/lib twice (msuchy@redhat.com)
+- do not list files twice (msuchy@redhat.com)
+- remove data from M:N table which points to non existent data
+  (msuchy@redhat.com)
+- fix typo (git@pitr.ch)
+- add missing dependent: :destroy (msuchy@redhat.com)
+- fix typo in name of table (msuchy@redhat.com)
+- task_statuses_task_owner_id_fk should not be FK (msuchy@redhat.com)
+- fix typoe in remove_foreign_key (msuchy@redhat.com)
+- manually add FK - round 2 (msuchy@redhat.com)
+- manually add FK - round 1 (msuchy@redhat.com)
+- add ruby193-rubygem-foreigner to rhel6 comps (msuchy@redhat.com)
+- add deferred foreign keys (git@pitr.ch)
+- Do not hide exceptions (git@pitr.ch)
+- Migration script for promotion code (paji@redhat.com)
+- Add katello-cli-tests-fakecert to comps (inecas@redhat.com)
+- Merge pull request #2568 from bbuckingham/issue-2353 (bbuckingham@redhat.com)
+- runcible - increase to 0.4.11 (bbuckingham@redhat.com)
+- Merge pull request #2571 from komidore64/html-characters-still
+  (komidore64@gmail.com)
+- Merge pull request #2547 from bbuckingham/issue-2513 (bbuckingham@redhat.com)
+- Merge pull request #2530 from thomasmckay/subs-reindex
+  (thomasmckay@redhat.com)
+- 951231 - Systems Custom Information - Keyname and value should not accept
+  html characters < > / (komidore64@gmail.com)
+- Merge pull request #2560 from daviddavis/content-search-html
+  (daviddavis@redhat.com)
+- Content Search: Build row and column headers in javascript
+  (daviddavis@redhat.com)
+- 976058: Fixing problem with titles on tipsy content (daviddavis@redhat.com)
+- Merge pull request #2539 from Katello/bkearney/915505
+  (bryan.kearney@gmail.com)
+- Merge pull request #2564 from komidore64/custom-info-no-resize
+  (komidore64@gmail.com)
+- Merge pull request #2567 from komidore64/default-info-multiline
+  (komidore64@gmail.com)
+- Merge pull request #2561 from komidore64/default-info-delete-not-there
+  (komidore64@gmail.com)
+- Merge pull request #2543 from komidore64/instance-based-sub-spinner
+  (komidore64@gmail.com)
+- issue 2353 - regenerating vcr cassettes (bbuckingham@redhat.com)
+- Merge pull request #2484 from ares/feature/simplecov (ares@igloonet.cz)
+- Merge pull request #2544 from ares/bug/976460_crossdomain_support
+  (ares@igloonet.cz)
+- Merge pull request #2563 from daviddavis/temp/1372280830
+  (daviddavis@redhat.com)
+- issue 2353: system/system group - update backend to support 'update all'
+  packages (bbuckingham@redhat.com)
+- issue 2353: system groups - enhance to support 'Update All' for packages
+  (bbuckingham@redhat.com)
+- subscriptions - suggested_quantity and instance_multiplier
+  (komidore64@gmail.com)
+- default_info - account for really long keynames (komidore64@gmail.com)
+- Merge pull request #2556 from bbuckingham/977912 (bbuckingham@redhat.com)
+- Merge pull request #2551 from bbuckingham/978001 (bbuckingham@redhat.com)
+- 977912 - system group event ui - fix for handling error responses
+  (bbuckingham@redhat.com)
+- 978001 - add 'display_name' to rhsm environment listing
+  (bbuckingham@redhat.com)
+- Fix script/update_doc.rb (git@pitr.ch)
+- Use db:reset instead of migrate:reset to load db (daviddavis@redhat.com)
+- 951236 - Systems Custom Information - The page layout should not change with
+  the character lengths of the keyname/value (komidore64@gmail.com)
+- 965877 - Default system custom info: cli default_info remove command gives
+  success message when asked to remove an invalid keyname
+  (komidore64@gmail.com)
+- Content Search: Fixing content view comparison (daviddavis@redhat.com)
+- API tests: Fixing intermittent test failure (daviddavis@redhat.com)
+- Product: Fixing intermittent test failure (daviddavis@redhat.com)
+- Legacy promotion removal: Removing environment_product model
+  (daviddavis@redhat.com)
+- issue 2513 - fix activation key subscriptions format issues
+  (bbuckingham@redhat.com)
+- 976460 - Support for crossdomain authentication (mhulan@redhat.com)
+- Merge pull request #2537 from pitr-ch/tdd/justified-rpm (kontakt@pitr.ch)
+- subscriptions - adding suggested_quantity to Pool (komidore64@gmail.com)
+- Merge remote branch 'upstream/master' into delete-legacy-promotion
+  (bbuckingham@redhat.com)
+- Add how-to package new gem doc (git@pitr.ch)
+- Merge pull request #2497 from pgodhani/gravatar_katello (pgodhani@redhat.com)
+- Merge pull request #2535 from thomasmckay/color-search
+  (thomasmckay@redhat.com)
+- Gravatar Image - Adding gravatar image to the Katello User Page
+  (pgodhani@redhat.com)
+- 915505: Move the cdn connection to common so that headpin can make use of it
+  (bkearney@redhat.com)
+- Add justified package (git@pitr.ch)
+- Merge pull request #2439 from daviddavis/subscription-graph
+  (daviddavis@redhat.com)
+- color-search - 1 liter of goodness color-search - renamed search term from
+  color to status (thomasmckay@redhat.com)
+- Add missing deps into foreman comps (inecas@redhat.com)
+- Dashboard: Fixing subscription graph in Chrome (daviddavis@redhat.com)
+- Merge pull request #2528 from xsuchy/pull-req-foreman-comps4
+  (miroslav@suchy.cz)
+- Merge pull request #2515 from xsuchy/pull-req-headpin-note
+  (miroslav@suchy.cz)
+- Merge pull request #2534 from mptap/chg_sltree_view (mtapaswi@redhat.com)
+- Changesets: Fixing changeset tree in Chrome (mtapaswi@redhat.com)
+- Merge pull request #2503 from komidore64/oddyssey (komidore64@gmail.com)
+- Merge pull request #2533 from ehelms/alchemy-updates (ericdhelms@gmail.com)
+- Merge pull request #2529 from komidore64/fricken-length-validations-slash-
+  notifications-and-stuff (komidore64@gmail.com)
+- Merge pull request #2524 from jlsherrill/quietlogging (jlsherrill@gmail.com)
+- Merge pull request #2360 from jlsherrill/manifest_delete
+  (jlsherrill@gmail.com)
+- Merge pull request #2531 from jlsherrill/provides_requires
+  (jlsherrill@gmail.com)
+- vcr update (jsherril@redhat.com)
+- Merge pull request #2532 from jlsherrill/cs_alt (jlsherrill@gmail.com)
+- 976058 - making ellipsied names in content search have alt text
+  (jsherril@redhat.com)
+- do not index provides and requires (jsherril@redhat.com)
+- subs-reindex - don't reindex when paging through data
+  (thomasmckay@redhat.com)
+- 951228 - Systems Custom Information - Keyname and value needs to enforce
+  maximum length restrictions (komidore64@gmail.com)
+- add rubygem-highline to foreman rhel6 comps (msuchy@redhat.com)
+- add rubygem-gettext_i18n_rails to foreman comps for F18 (msuchy@redhat.com)
+- add rubygem-po_to_json to foreman comps (msuchy@redhat.com)
+- add rubygem-rkerberos to foreman comps (msuchy@redhat.com)
+- adding empty ignored paths to config (jsherril@redhat.com)
+- logging - add configurable way to silence certain actions from logging
+  (jsherril@redhat.com)
+- 951231 - Systems Custom Information - Keyname and value should not accept
+  html characters < > / (komidore64@gmail.com)
+- Merge pull request #2507 from jlsherrill/sys_delete_fix
+  (jlsherrill@gmail.com)
+- Merge pull request #2520 from jlsherrill/retry (jlsherrill@gmail.com)
+- Merge pull request #2523 from daviddavis/temp/1371643963
+  (weissj.github@jweiss.com)
+- Assets: Added extension to font-awesome license (daviddavis@redhat.com)
+- Add simplecov gems to repository (mhulan@redhat.com)
+- have travis retry the bundle install to hopefully fix timeouts
+  (jsherril@redhat.com)
+- Merge pull request #2516 from jlsherrill/cv_delete (jlsherrill@gmail.com)
+- supporting delete manifest in katello (jsherril@redhat.com)
+- 973785 - content views - fix to allow promotion of refreshed view
+  (bbuckingham@redhat.com)
+- consumer glue - ignore deleted consumers that were already deleted
+  (jsherril@redhat.com)
+- 975061 - prevent deletion of CV from environment with systems
+  (jsherril@redhat.com)
+- Legacy promotion removal: elasticsearch changeset removal
+  (bbuckingham@redhat.com)
+- Alchemy: Updates for header component updates and font pathing.
+  (ericdhelms@gmail.com)
+- Merge pull request #2514 from daviddavis/temp/1371576198
+  (daviddavis@redhat.com)
+- Merge pull request #2508 from mptap/env_lib (mtapaswi@redhat.com)
+- Merge pull request #2512 from daviddavis/temp/1371570497
+  (daviddavis@redhat.com)
+- add note for devels to not forget on headpin (msuchy@redhat.com)
+- Packaging: Adding dashboard files to headpin rpm (daviddavis@redhat.com)
+- Merge pull request #2511 from ehelms/font-awesome-support
+  (ericdhelms@gmail.com)
+- 966670 - Environment named "Library" incorrect error (mtapaswi@redhat.com)
+- 974078: Fixing errata content search (daviddavis@redhat.com)
+- Merge pull request #2510 from daviddavis/temp/1371559208
+  (daviddavis@redhat.com)
+- Packaging: Adding in dashboard Ruby code (daviddavis@redhat.com)
+- Merge pull request #2502 from iNecas/katello-configure-foreman-proxy
+  (inecas@redhat.com)
+- Merge pull request #2500 from daviddavis/dashboard-tweaks
+  (daviddavis@redhat.com)
+- Dashboard: Allowing users to rearrange dashboard widgets
+  (daviddavis@redhat.com)
+- Minitest: Regenerated VCR cassettes (daviddavis@redhat.com)
+- Documentation: Wrote a development environment guide (daviddavis@redhat.com)
+- Merge pull request #2501 from daviddavis/temp/1371469229
+  (daviddavis@redhat.com)
+- formatting - adding space between = and label (komidore64@gmail.com)
+- subscriptions - display which subscriptions are instance-based
+  (komidore64@gmail.com)
+- Use katello-configure-foreman-proxy instead of foreman-proxy-installer
+  (inecas@redhat.com)
+- Merge pull request #2483 from komidore64/new-n-tasty (komidore64@gmail.com)
+- System: attempting to fix system memory test (daviddavis@redhat.com)
+- Merge pull request #2493 from pitr-ch/quick/praise (kontakt@pitr.ch)
+- FontAwesome: Adding font-awesome icon set support. (ericdhelms@gmail.com)
+- 973811: Small vms show ram as 0. (bkearney@redhat.com)
+- Merge pull request #2492 from daviddavis/temp/1371165034
+  (daviddavis@redhat.com)
+- Changesets: Encapsulating common code (daviddavis@redhat.com)
+- Legacy promotion removal: Removing changeset code (daviddavis@redhat.com)
+- Merge pull request #2488 from mptap/jeditable_textarea (mtapaswi@redhat.com)
+- 961594 - Set maxlength of Description jeditable textarea
+  (mtapaswi@redhat.com)
+- GPG Keys: Limiting the length of content (daviddavis@redhat.com)
+- Update README (git@pitr.ch)
+- Add documentation how to enable Praise (git@pitr.ch)
+- Remove old foreman documentation (git@pitr.ch)
+- Merge pull request #2490 from xsuchy/pull-req-po_to_json (inecas@redhat.com)
+- 955706 - regenerating vcr cassettes (bbuckingham@redhat.com)
+- 955706 - removed lines that were commented out (bbuckingham@redhat.com)
+- 955706 - system group actions - updates to support pulpv2
+  (bbuckingham@redhat.com)
+- Merge pull request #2491 from jlsherrill/yum_metadata (jlsherrill@gmail.com)
+- test fixes (jsherril@redhat.com)
+- 970232 - clone productid xml when cloning repos (jsherril@redhat.com)
+- Merge pull request #2465 from thomasmckay/subs-nutupane
+  (thomasmckay@redhat.com)
+- Merge pull request #2487 from bbuckingham/970617-2 (bbuckingham@redhat.com)
+- Merge pull request #2489 from jlsherrill/timeout (jlsherrill@gmail.com)
+- add ruby193-rubygem-po_to_json to comps-katello-foreman-server-rhel6
+  (msuchy@redhat.com)
+- Merge pull request #2417 from xsuchy/pull-req-db-doc (miroslav@suchy.cz)
+- simplify documentation (msuchy@redhat.com)
+- 970617 - errata deletion - update to use unit_id vs id
+  (bbuckingham@redhat.com)
+- subs-nutupane - basic nutupane for subscriptions (thomasmckay@redhat.com)
+- 973834 - telling runcible to use our rest timeout values
+  (jsherril@redhat.com)
+- Fixed a notification message for content views. (ogmaciel@gnome.org)
+- 965793 - Default system custom info: Not able to remove the keyname which
+  contains special characters (komidore64@gmail.com)
+- Merge pull request #2482 from bbuckingham/973785 (bbuckingham@redhat.com)
+- 973785 - content views - fix to allow promotion of refreshed view
+  (bbuckingham@redhat.com)
+- Merge pull request #2444 from komidore64/ca-certs (komidore64@gmail.com)
+- Merge pull request #2480 from daviddavis/temp/1371044147
+  (daviddavis@redhat.com)
+- Merge pull request #2461 from thomasmckay/sys-prod-versions
+  (thomasmckay@redhat.com)
+- Schema: Wrote a test to ensure schema is up to date (daviddavis@redhat.com)
+- 971468 - Reducing bulk load size, due to timeouts (jsherril@redhat.com)
+- Merge pull request #2470 from daviddavis/temp_1370966920
+  (daviddavis@redhat.com)
+- validators - removing redundant checks for <, >, and / (komidore64@gmail.com)
+- Dashboard: fixing the vertical alignment in sync widget
+  (daviddavis@redhat.com)
+- KatelloNameFormatValidator - shortening up the regex (komidore64@gmail.com)
+- Merge pull request #2434 from Katello/nutupane-bulk-actions
+  (walden@redhat.com)
+- Merge pull request #2459 from daviddavis/temp_1370881542
+  (daviddavis@redhat.com)
+- Merge pull request #2467 from ehelms/asset-precompile-test
+  (ericdhelms@gmail.com)
+- Merge pull request #2456 from daviddavis/971970 (daviddavis@redhat.com)
+- Nutupane Bulk - Cleaning up API controllers. (ehelms@redhat.com)
+- Merge pull request #2271 from pitr-ch/quick/praise (kontakt@pitr.ch)
+- Add ignore rules for local initializers (git@pitr.ch)
+- add script for retagging foreman-nightly-* into katello-thirdparty-foreman-*
+  (msuchy@redhat.com)
+- Nutupane: using triple equals instead of double and fixing HTML spacing.
+  (walden@redhat.com)
+- sys-prod-versions - display the installed product's version on system's
+  software tab (thomasmckay@redhat.com)
+- Dashboard: setting dashhead height to align widgets (daviddavis@redhat.com)
+- Merge pull request #2419 from jhadvig/model_name_utf_validation
+  (j.hadvig@gmail.com)
+- 971970: Rearranged dashboard (daviddavis@redhat.com)
+- Merge pull request #2453 from komidore64/schema-changed
+  (daviddavis@redhat.com)
+- schema - updating the schema from a new migration (komidore64@gmail.com)
+- Merge pull request #2450 from jlsherrill/memory_fix (jlsherrill@gmail.com)
+- Merge pull request #2442 from daviddavis/temp_1370551062
+  (daviddavis@redhat.com)
+- 971468 - fixing high memory usage during unit unassociate calls
+  (jsherril@redhat.com)
+- Merge branch 'master' into delete-legacy-promotion (daviddavis@redhat.com)
+- register systems - no longer using the "New System" pane
+  (komidore64@gmail.com)
+- Merge pull request #2443 from mptap/spl_err_cvd (mtapaswi@redhat.com)
+- 971142 - Fixed spelling error " Defintions" -> " Definitions"
+  (mtapaswi@redhat.com)
+- updating comps for missing rpms (jsherril@redhat.com)
+- Merge pull request #2438 from ehelms/bug-960695 (ericdhelms@gmail.com)
+- Merge pull request #2446 from jlsherrill/cp_id (bbuckingham@redhat.com)
+- 971617 - ensuring that find_by_cp_id returns a read/write object
+  (jsherril@redhat.com)
+- 968090: Product was being incorrectly nested in content search
+  (daviddavis@redhat.com)
+- Merge pull request #2435 from jlsherrill/cp_fix (jlsherrill@gmail.com)
+- Merge pull request #2437 from parthaa/errata-publish-update
+  (parthaa@gmail.com)
+- Merge pull request #2436 from daviddavis/temp_1370469385
+  (daviddavis@redhat.com)
+- Added a unit test and commiting cassette changes to go with it
+  (paji@redhat.com)
+- 971478-Updated Content View errata publish code (paji@redhat.com)
+- 966901: Preventing users from deleting Library (daviddavis@redhat.com)
+- 960695 - Fixes alignment issue with the attach and remove buttons.
+  (ehelms@redhat.com)
+- spec fix (jsherril@redhat.com)
+- Merge pull request #2332 from daviddavis/runcible-config-error
+  (daviddavis@redhat.com)
+- Merge pull request #2433 from bbuckingham/970684 (bbuckingham@redhat.com)
+- Merge pull request #2420 from ehelms/bug-970644 (ericdhelms@gmail.com)
+- Update update_doc.rb script (git@pitr.ch)
+- Merge pull request #2428 from xsuchy/pull-req-task_statuses-organization_id
+  (miroslav@suchy.cz)
+- Nutupane bulk actions: fixes after cherry-picking. (walden@redhat.com)
+- 970570 - create an arch on custom products (jsherril@redhat.com)
+- Nutupane: minor stylistic changes to nutupane bulk actions.
+  (walden@redhat.com)
+- Nutupane - Minor style tweaks to system group pane. (ehelms@redhat.com)
+- 970684 - changesets - fix deletion/promotion of distributions
+  (bbuckingham@redhat.com)
+- Nutupane: updating count after adding new system to system group.
+  (walden@redhat.com)
+- Nutupane: provide ability to add systems to system groups.
+  (walden@redhat.com)
+- Nutupane - Re-factoring and clean-up, addition of SystemGroup loading.
+  (ericdhelms@gmail.com)
+- Nutupane - Moving bulk action templates under app/assets/views.
+  (ericdhelms@gmail.com)
+- Adding a system-groups $resource. (walden@redhat.com)
+- Moving javascript so modules will work in non-experimental mode.
+  (walden@redhat.com)
+- Adding i18n angular filter for translations. (walden@redhat.com)
+- Nutupane: ensure bulk actions pane opens if details are visible.
+  (walden@redhat.com)
+- Nutupane - Adding a wrapping factory for KT.routes. (ericdhelms@gmail.com)
+- System nutupane: reorganize angular functionality into modules.
+  (walden@redhat.com)
+- Systems Nutupane: renaming "right pane" to "action pane". (walden@redhat.com)
+- Systems: adding scaffolding for nutupane bulk actions. (walden@redhat.com)
+- Merge pull request #2418 from bbuckingham/918093 (bbuckingham@redhat.com)
+- Merge pull request #2425 from bbuckingham/970617 (bbuckingham@redhat.com)
+- Merge pull request #2414 from jlsherrill/old_sync (jlsherrill@gmail.com)
+- Merge pull request #2423 from jlsherrill/package_list (jlsherrill@gmail.com)
+- Merge pull request #2430 from jlsherrill/cp_id (jlsherrill@gmail.com)
+- fixing instance of find_by_cp_id (jsherril@redhat.com)
+- Merge pull request #2424 from bbuckingham/969603 (bbuckingham@redhat.com)
+- Runcible: Overriding the default config error message (daviddavis@redhat.com)
+- Merge pull request #2422 from jlsherrill/gpg (jlsherrill@gmail.com)
+- Merge pull request #2398 from ehelms/travis-update (ericdhelms@gmail.com)
+- Merge pull request #2411 from ehelms/asset-cleanup (ericdhelms@gmail.com)
+- allow to be task_statuses.organization_id null (msuchy@redhat.com)
+- fixing owner test and cassette update (jsherril@redhat.com)
+- 970248 - updating to support auto gpg install (jsherril@redhat.com)
+- 968207 - fixing cli/api systems package list (jsherril@redhat.com)
+- 969603 - changesets - list views based on environment
+  (bbuckingham@redhat.com)
+- 970617 - fix content promotion/deletion of packages and errata
+  (bbuckingham@redhat.com)
+- Merge pull request #2409 from bbuckingham/969216 (bbuckingham@redhat.com)
+- Merge pull request #2412 from pgodhani/tomcat6 (pgodhani@redhat.com)
+- Merge pull request #2413 from jlsherrill/cp_id (jlsherrill@gmail.com)
+- 970644 - Allows passing organization name with a dot in the path to providers
+  API. (ehelms@redhat.com)
+- 956308 - Some models no longer accept names with i18n characters
+  (jhadvig@redhat.com)
+- Merge pull request #2415 from jlsherrill/stop_refresh (jlsherrill@gmail.com)
+- 918093 - update ES index for packages and other document types
+  (bbuckingham@redhat.com)
+- Add documentation of db schema (msuchy@redhat.com)
+- Merge pull request #2404 from komidore64/default-info-sync
+  (komidore64@gmail.com)
+- 726401: Systems page - needs better error behavior when tomcat6 is not
+  running (pgodhani@redhat.com)
+- 966027 - hiding ability to refresh a manifest if its not supported
+  (jsherril@redhat.com)
+- 969001 - requiring org when calling Product.find_by_cp_id
+  (jsherril@redhat.com)
+- 966949 - properly convert finished state for sync history
+  (jsherril@redhat.com)
+- default_info - converting apply to sync (komidore64@gmail.com)
+- Merge pull request #2390 from pgodhani/bugfix (komidore64@gmail.com)
+- Merge pull request #2378 from jhadvig/missing_env_buttons_fix
+  (j.hadvig@gmail.com)
+- 859106 - UI fix - Missing Save/Cancel buttons in system change environment
+  (jhadvig@redhat.com)
+- Merge pull request #2408 from ares/ldap_fluff_update (miroslav@suchy.cz)
+- We need new ldap_fluff for Fedora (mhulan@redhat.com)
+- Merge pull request #2406 from iNecas/bz/965724 (inecas@redhat.com)
+- Merge pull request #2407 from iNecas/bz/967467 (inecas@redhat.com)
+- Merge pull request #2333 from daviddavis/temp_1368975142
+  (daviddavis@redhat.com)
+- Merge pull request #2373 from mptap/rolename_validator (mptapasw@ncsu.edu)
+- 915900 - Systems - Events History - Clear search does not work
+  (pgodhani@redhat.com)
+- Technical Debt - Removing old JavaScript from previous Foreman integration.
+  (ericdhelms@gmail.com)
+- 969216 - retrieve org by label when org identified in pool details
+  (bbuckingham@redhat.com)
+- Merge pull request #2405 from jlsherrill/require_minitest
+  (jlsherrill@gmail.com)
+- 967467 - search for env by label when not found by name only for rhsm
+  (inecas@redhat.com)
+- Merge pull request #2392 from komidore64/ram-in-GB (komidore64@gmail.com)
+- Merge pull request #2381 from xsuchy/pull-req-comps-f19 (miroslav@suchy.cz)
+- 965724 - install foreman-proxy-installer as a part of katello-foreman-all
+  (inecas@redhat.com)
+- 966256 - Fixes for new ldap_fluff API (mhulan@redhat.com)
+- 969229 - require minitest for installation to support rails console
+  (jsherril@redhat.com)
+- 967103 - RAM and Cores limit displayed wrong (komidore64@gmail.com)
+- Merge branch 'master' into delete-legacy-promotion (paji@redhat.com)
+- Merge pull request #2402 from waldenraines/2401 (walden@redhat.com)
+- Merge pull request #2400 from ehelms/style-updates (ericdhelms@gmail.com)
+- Dashboard: check for user being nil before accessing, fixes #2401.
+  (walden@redhat.com)
+- Merge branch 'master' into delete-legacy-promotion (paji@redhat.com)
+- Merge branch 'master' into delete-legacy-promotion (paji@redhat.com)
+- Merge pull request #2389 from mptap/content_view_perm (mptapasw@ncsu.edu)
+- Travis - Moving code linting to the same job. (ehelms@redhat.com)
+- Style - Adding min-widths on the body in regular and experimental views.
+  (ehelms@redhat.com)
+- Merge pull request #2395 from ehelms/nutupane-update (ericdhelms@gmail.com)
+- Merge pull request #2399 from jlsherrill/refresh_manifest
+  (jlsherrill@gmail.com)
+- Merge pull request #2394 from jlsherrill/org_delete (jlsherrill@gmail.com)
+- 960587 - duplicate CVEs created when promoting a CV (jsherril@redhat.com)
+- Merge pull request #2397 from ehelms/travis-fix (ericdhelms@gmail.com)
+- 966027 - fixing refresh manifest (jsherril@redhat.com)
+- 960552 - publish button shouldn't be displayed for read only
+  (mtapaswi@redhat.com)
+- Travis - Setting LDAP Fluff version to keep new version from being pulled in
+  and breaking the ability to run tests. (ehelms@redhat.com)
+- Merge pull request #2393 from mptap/sync_plans_assgn (mptapasw@ncsu.edu)
+- Issue 1712 - Incorrect error notification when creating user
+  (mtapaswi@katello.devel)
+- Merge pull request #2391 from waldenraines/859443 (walden@redhat.com)
+- Nutupane - Allowing customization of shown columns in details mode.
+  (ehelms@redhat.com)
+- Merge pull request #2388 from waldenraines/961517 (walden@redhat.com)
+- Merge pull request #2385 from jlsherrill/reindex (jlsherrill@gmail.com)
+- Merge pull request #2380 from bbuckingham/967943 (bbuckingham@redhat.com)
+- 965200 - sync plans cannot be assigned to products (mtapaswi@redhat.com)
+- 859443 - fixing multi-select on OSX in old tupane. (walden@redhat.com)
+- 961517 - fix order of params so account page always displays.
+  (walden@redhat.com)
+- Merge pull request #2383 from jlsherrill/CV_list (jlsherrill@gmail.com)
+- Merge pull request #2386 from waldenraines/961128 (walden@redhat.com)
+- 961128 - removing title element on allowed org list. (walden@redhat.com)
+- task_status doesnt need a user (jsherril@redhat.com)
+- 968054 - fixed showing default view on promotion page (jsherril@redhat.com)
+- 967943 - translate the taskstatus type (bbuckingham@redhat.com)
+- 967943 - improve strings for translations (bbuckingham@redhat.com)
+- add comps files for fedora19 (msuchy@redhat.com)
+- Merge pull request #2370 from xsuchy/pull-req-ruby193scl-wrapper-ruby3
+  (miroslav@suchy.cz)
+- 967943 - changeset apply - error if view publish/refresh in progress
+  (bbuckingham@redhat.com)
+- Merge pull request #2379 from waldenraines/966708-962484 (walden@redhat.com)
+- 962484 - Manage Orgs: remove unnecessary require_org. (walden@redhat.com)
+- 966708 - Menu: show manage orgs link without an org selected.
+  (walden@redhat.com)
+- Adding success notifications for creating and removing custom information
+  keynames. (ogmaciel@gnome.org)
+- Merge pull request #2363 from komidore64/bug_951228 (komidore64@gmail.com)
+- change scl format to allow more commands under one scl session
+  (msuchy@redhat.com)
+- 951228 - Systems Custom Information - Keyname and value needs to enforce
+  maximum length restrictions (komidore64@gmail.com)
+- Merge pull request #2372 from ares/bug/965790_admin_flag_propagation
+  (inecas@redhat.com)
+- Merge pull request #2375 from jlsherrill/reindex (jlsherrill@gmail.com)
+- properly recreating model index upon reindexing (jsherril@redhat.com)
+- Merge pull request #2364 from komidore64/bug_965735 (komidore64@gmail.com)
+- 965790 - Publish user admin flag (mhulan@redhat.com)
+- require ruby193scl-wrapper-ruby (msuchy@redhat.com)
+- Merge pull request #2348 from ares/bug/login_unauthenticated_requests
+  (ares@igloonet.cz)
+- Merge pull request #2331 from daviddavis/temp_1368894675
+  (daviddavis@redhat.com)
+- 965735 - Default System Custom Info : No error displayed on trying to enter a
+  duplicate keyname (komidore64@gmail.com)
+- Merge pull request #2361 from bbuckingham/965899 (bbuckingham@redhat.com)
+- 965899 - added test for clone_repo_path for component view
+  (bbuckingham@redhat.com)
+- Merge pull request #2357 from jlsherrill/reindex (jlsherrill@gmail.com)
+- 965688 - properly looking through class deps to find indexed classes
+  (jsherril@redhat.com)
+- Merge pull request #2310 from ares/bug/2502_session_expirations
+  (ares@igloonet.cz)
+- Merge pull request #2324 from witlessbird/961122 (witlessbird@gmail.com)
+- 966396: Add missing ids in relation tables (git@pitr.ch)
+- Merge pull request #2352 from pitr-ch/bug/package-list (kontakt@pitr.ch)
+- 921103: Add missing id to package json (git@pitr.ch)
+- Merge remote-tracking branch 'origin/master' into pull-req-ruby193
+  -libselinux-ruby2 (msuchy@redhat.com)
+- Merge pull request #2350 from pitr-ch/quick/var-log (kontakt@pitr.ch)
+- Merge pull request #2347 from iNecas/tech-depts (inecas@redhat.com)
+- wrong package name, didn't need the rubygems (mmccune@redhat.com)
+- 965899 - do not include component view label in composite view path
+  (bbuckingham@redhat.com)
+- Merge pull request #2354 from jlsherrill/repo_update (jlsherrill@gmail.com)
+- add ruby193-libselinux-ruby package (msuchy@redhat.com)
+- remove rubygems for ruby18, add -doc and -debuginfo packages
+  (msuchy@redhat.com)
+- rel-eng - adding some needed comps for some needed BuildRequires
+  (mmccune@redhat.com)
+- Merge pull request #2341 from jlsherrill/pulp_sync (jlsherrill@gmail.com)
+- Merge pull request #2351 from thomasmckay/logo-branding
+  (thomasmckay@redhat.com)
+- 952728 - fixing sync status reporting issue (jsherril@redhat.com)
+- 908026 - updating feed certs in pulp upon new manifest import
+  (jsherril@redhat.com)
+- Merge pull request #2255 from xsuchy/pull-req-scl-rake (miroslav@suchy.cz)
+- logo-branding - working on if/else logo-branding - distinguishing between
+  headpin and katello logo-branding - headpin logos (thomasmckay@redhat.com)
+- Do not log to /var/log/katello by default (git@pitr.ch)
+- path selector - update behavior of select_mode=single
+  (bbuckingham@redhat.com)
+- Merge pull request #2345 from bbuckingham/select_library
+  (bbuckingham@redhat.com)
+- Fixes login issues with JS (mhulan@redhat.com)
+- Whitespace (inecas@redhat.com)
+- Fix log correlation by request uuid (git@pitr.ch)
+- Use send instead of instance_eval (inecas@redhat.com)
+- content views - enable/disable buttons on env content view selector
+  (bbuckingham@redhat.com)
+- content views - include all views in select on systems, akeys...
+  (bbuckingham@redhat.com)
+- content views - update authorization to handle headpin mode
+  (bbuckingham@redhat.com)
+- 965776 - allow library to be selectable (bbuckingham@redhat.com)
+- Merge pull request #2337 from thomasmckay/dist-fixes (thomasmckay@redhat.com)
+- Merge pull request #2302 from waldenraines/960620 (walden@redhat.com)
+- Promotions: only show readable changesets, fixes #960620. (walden@redhat.com)
+- adding SCL puppet which is needed for katello-configure (mmccune@redhat.com)
+- Merge pull request #2330 from daviddavis/temp_1368884796
+  (daviddavis@redhat.com)
+- dist-fixes - fixing edit/new dist ui dist-fixes - removed system references
+  in distrib dist-fixes - working as well as can be dist-fixes - jshint error
+  cleanup (thomasmckay@redhat.com)
+- Handle logout and session expiration better (mhulan@redhat.com)
+-  #961122: fixes "Missing template users/destroy" error.
+  (dmitri@appliedlogic.ca)
+- Merge pull request #2338 from daviddavis/temp_1369055854
+  (daviddavis@redhat.com)
+- Merge pull request #2329 from jlsherrill/893596 (jlsherrill@gmail.com)
+- 959895 - Handling nil for products (daviddavis@redhat.com)
+- 957049 - Fixing problems due to bubbling (daviddavis@redhat.com)
+- 893596 - fixing repobinding to be specific to a single repo
+  (jsherril@redhat.com)
+- 957049 - Fixing 500 error from pressing enter (daviddavis@redhat.com)
+- Adding a CONTRIBUTING document (daviddavis@redhat.com)
+- 950943 - Fixing tags method for content views (daviddavis@redhat.com)
+- 959546 - publish ISOs by default in library (jsherril@redhat.com)
+- Merge pull request #2277 from daviddavis/temp_1368547562
+  (daviddavis@redhat.com)
+- Distributors: fixed name validation on save (daviddavis@redhat.com)
+- Merge pull request #2269 from ehelms/validator-refactor
+  (ericdhelms@gmail.com)
+- Merge pull request #2284 from waldenraines/954316 (walden@redhat.com)
+- Content views: list and show default content views (daviddavis@redhat.com)
+- Merge pull request #2326 from jlsherrill/reindex (jlsherrill@gmail.com)
+- Merge pull request #2313 from ehelms/footer-removal (ericdhelms@gmail.com)
+- converting block style (jsherril@redhat.com)
+- Merge pull request #2325 from ehelms/bug-961836 (ericdhelms@gmail.com)
+- Merge pull request #2281 from waldenraines/2279 (walden@redhat.com)
+- Merge pull request #2249 from ehelms/my-account-isolation
+  (ericdhelms@gmail.com)
+- BZ 961836: Fixes broken user deletion. (ehelms@redhat.com)
+- Merge pull request #2304 from parthaa/headpin-migrate (parthaa@gmail.com)
+- Navigation - Changing my account link to isolate the users appearing in the
+  left hand list to only that of the current user. (ericdhelms@gmail.com)
+- Merge pull request #2318 from daviddavis/temp_1368726720
+  (daviddavis@redhat.com)
+- Merge pull request #2296 from komidore64/cores-yo (komidore64@gmail.com)
+- Script to migrate nonlibrary environment artifacts (paji@redhat.com)
+- Tests: standardizing the no permission case (daviddavis@redhat.com)
+- Publish actions for repositories changes (necasik@gmail.com)
+- Merge pull request #2320 from ehelms/nutupane-sort-fix (ericdhelms@gmail.com)
+- Merge pull request #2321 from jlsherrill/reindex (daviddavis@redhat.com)
+- issue 2312: fixing rake clear_search_indice (jsherril@redhat.com)
+- Nutupane - Sort wasn't properly re-setting the offset. (ehelms@redhat.com)
+- core/ram - ability to view the limits of subscriptions (komidore64@gmail.com)
+- Menu: preventing elements from overlapping the menu, fixes #2268.
+  (walden@redhat.com)
+- UI - Removing footer from the login page and adding version display.
+  (ehelms@redhat.com)
+- Merge pull request #2294 from daviddavis/package-info (daviddavis@redhat.com)
+- Nutupane: fix scrolling after closing the create new dialog.
+  (walden@redhat.com)
+- Merge pull request #2283 from parthaa/953444 (parthaa@gmail.com)
+- Merge remote branch 'upstream/master' into delete-legacy-promotion-merge
+  (bbuckingham@redhat.com)
+- 953444 - Fixed perm related to cv and systems (paji@redhat.com)
+- requring new runcible (jsherril@redhat.com)
+- Content Search: Show package details (daviddavis@redhat.com)
+- Nutupane: making create new dialog modal. (walden@redhat.com)
+- Merge pull request #2291 from thomasmckay/headpin-sys-groups
+  (thomasmckay@redhat.com)
+- Merge pull request #2293 from thomasmckay/sys-sub-details
+  (komidore64@gmail.com)
+- Merge pull request #2295 from thomasmckay/cp-rules-version
+  (komidore64@gmail.com)
+- Merge pull request #2298 from thomasmckay/dashboard-pie
+  (thomasmckay@redhat.com)
+- Merge pull request #2292 from thomasmckay/subscription_status
+  (thomasmckay@redhat.com)
+- Merge pull request #2278 from waldenraines/2235 (walden@redhat.com)
+- headpin-sys-groups - update UI to allow system groups in headpin mode
+  (thomasmckay@redhat.com)
+- Merge pull request #2297 from ehelms/glue-test-fix (ericdhelms@gmail.com)
+- dashboard-pie - correctly draw when some yellow systems
+  (thomasmckay@redhat.com)
+- Test - Fixes intermittent test failure for has_package? function.
+  (ehelms@redhat.com)
+- Removing bad tabindex from create repository via sync, fixes #954316.
+  (walden@redhat.com)
+- Merge pull request #2276 from waldenraines/956697 (walden@redhat.com)
+- cp-rules-version - added candlepin rulesSource and rulesVersion to UI
+  (thomasmckay@redhat.com)
+- Merge pull request #2286 from ehelms/cfse-removal (ericdhelms@gmail.com)
+- Merge pull request #2290 from xsuchy/pull-req-fix-build46 (miroslav@suchy.cz)
+- sys-sub-details - format details as table (thomasmckay@redhat.com)
+- subscription_status - fixed incorrect method call (thomasmckay@redhat.com)
+- Merge pull request #2270 from ares/bug/ldap_login_not_existing_users
+  (ares@igloonet.cz)
+- add missing import (msuchy@redhat.com)
+- Merge pull request #2282 from thomasmckay/lib-migration
+  (ericdhelms@gmail.com)
+- Technical Debt - Removing all instances of 'cfse'. (ehelms@redhat.com)
+- Merge pull request #2248 from ehelms/documentation-links
+  (ericdhelms@gmail.com)
+- Runcible - Re-running tests due to an upgrade in Runcible.
+  (ehelms@redhat.com)
+- lib-migration - create candlepin env for existing Library envs
+  (thomasmckay@redhat.com)
+- System Groups: fixing display of add systems, fixes #2279.
+  (walden@redhat.com)
+- Merge pull request #2252 from waldenraines/2196 (walden@redhat.com)
+- Menu: making manage orgs stay at bottom of org switcher. (walden@redhat.com)
+- Merge pull request #2273 from thomasmckay/lib-register
+  (thomasmckay@redhat.com)
+- Menu: preserve active state when mousing over admin menu, fixes #2235.
+  (walden@redhat.com)
+- lib-register - allow system register to Library lib-register - fence Runcible
+  for spec tests lib-register - fixing spec/mini tests lib-register - final
+  test fixes (thomasmckay@redhat.com)
+- API - Requiring content view for activation keys (daviddavis@redhat.com)
+- Sync mgt: prevent pulsing of sync mgt. display, fixes #956697.
+  (walden@redhat.com)
+- Merge pull request #2262 from ehelms/bug-901657 (ericdhelms@gmail.com)
+- Merge pull request #2260 from waldenraines/fix_styling_on_content_search
+  (walden@redhat.com)
+- Reenable chance to login for not existing users (mhulan@redhat.com)
+- Merge pull request #2258 from daviddavis/temp_1368456830
+  (daviddavis@redhat.com)
+- Making org switcher scrollable, fixes #2196. (walden@redhat.com)
+- Validators - Adding a set of unit tests targeted at validators that use
+  KatelloNameFormatValidator validate_length to facilitate future re-factoring.
+  (ehelms@redhat.com)
+- Merge pull request #2266 from jlsherrill/spec_fix (jlsherrill@gmail.com)
+- Bug 901657 - Adding check for HTML characters in the Role name validator to
+  prevent cross-site scripting and match the naming requirements of usernames
+  since self-roles are generated from the username. (ehelms@redhat.com)
+- Merge pull request #2264 from daviddavis/temp_1368467168
+  (daviddavis@redhat.com)
+- fixing createrepo requirement
+- Merge pull request #2261 from ehelms/role-page-typo (ericdhelms@gmail.com)
+- Avoiding code that would cause problems for headpin (daviddavis@redhat.com)
+- Roles - Fixing JavaScript typo that declared 'kT' instead of 'KT'.
+  (ehelms@redhat.com)
+- 959933 - Preventing component views from getting added
+  (daviddavis@redhat.com)
+- Ensure product/repository names fit into the repository search grid cells,
+  fixes #953681. (walden@redhat.com)
+- fixes 2232 - require custom create repo (jsherril@redhat.com)
+- Merge pull request #2253 from daviddavis/2251 (daviddavis@redhat.com)
+- Merge pull request #2256 from daviddavis/temp_1368449157
+  (daviddavis@redhat.com)
+- Merge pull request #2254 from daviddavis/temp_1368362029
+  (daviddavis@redhat.com)
+- Fixing tupane error (daviddavis@redhat.com)
+- no one use rubyge-rake (msuchy@redhat.com)
+- Merge pull request #2226 from pitr-ch/quick/yard-doc (kontakt@pitr.ch)
+- Updating jshintrb to accept globals hash (daviddavis@redhat.com)
+- Show the core/ram subscriptions if number > 0 (komidore64@gmail.com)
+- Travis - Adding Job to Travis to test asset precompile.
+  (ericdhelms@gmail.com)
+- Merge pull request #2250 from daviddavis/temp_1368212120
+  (daviddavis@redhat.com)
+- Enabling jshint in Travis (daviddavis@redhat.com)
+- Merge pull request #2237 from daviddavis/temp_1368199226
+  (daviddavis@redhat.com)
+- Documentation - Adding documentation links to the About page now that the
+  footer has been removed. (ericdhelms@gmail.com)
+- Showing content view name instead of id in systems pane
+  (daviddavis@redhat.com)
+- Remove bad panel positioning css and adjust width in panel js, fixes #2246.
+  (walden@redhat.com)
+- Merge pull request #2242 from ehelms/table-styling (ericdhelms@gmail.com)
+- Merge pull request #2239 from waldenraines/2238 (walden@redhat.com)
+- Merge pull request #2241 from thomasmckay/reasons (thomasmckay@redhat.com)
+- Fixes tables not showing up styled correctly. (ericdhelms@gmail.com)
+- Merge pull request #1748 from pitr-ch/quick-fix/profiling (kontakt@pitr.ch)
+- reasons - reasons for subscriptions red/yellow displayed
+  (thomasmckay@redhat.com)
+- use configuration for profiling settings, require ruby-prof only when needed
+  (git@pitr.ch)
+- remove newrelic profiling (git@pitr.ch)
+- katello-foreman-all for easier way how to install everything on one machine
+  (necasik@gmail.com)
+- Making date/times more readable in systems table, fixes #2238.
+  (walden@redhat.com)
+- Merge pull request #2236 from ehelms/experimental-fix (walden@redhat.com)
+- Merge pull request #2219 from ehelms/systems-nutupane (walden@redhat.com)
+- Merge pull request #2223 from RedHatQE/namethattune2 (komidore64@gmail.com)
+- Systems Nutupane - Fixes bug where login page was mising new split up of
+  Katello common and vendor libraries in the view that prevented interstitial
+  from appearing. (ericdhelms@gmail.com)
+- Systems Nutupane - Adding check that current_organization exists.
+  (ericdhelms@gmail.com)
+- Systems Nutupane - Minor tweaks to handle search persistance.
+  (ehelms@redhat.com)
+- Systems Nutupane - Adds back page reloading that adheres to search and item
+  selection. Adds closing of details page when performing a search.
+  (ericdhelms@gmail.com)
+- Open the newly created system after creating it. (walden@redhat.com)
+- Minor fixes to create new system functionality. (walden@redhat.com)
+- Adding create new system functionality to nutupane. (walden@redhat.com)
+- Systems Nutupane - Adds functionality to load classic tupane details view
+  when clicking on items within the nutupane list. Hooks up the functionality
+  for third-level nav within the details pages. (ericdhelms@gmail.com)
+- Systems Nutupane - Adding functionality to render the current details views
+  and support the navigation within those detail pages. (ericdhelms@gmail.com)
+- Systems Nutupane - Updating new API calls to respond correctly.
+  (ericdhelms@gmail.com)
+- Fix search items test. (walden@redhat.com)
+- Experimental UI - making nutupane details sticky when scrolling.
+  (walden@redhat.com)
+- Minor css fixes including using @include box-sizing. (walden@redhat.com)
+- Adding mechanism to close and open nutupane details. (walden@redhat.com)
+- Systems Nutupane - Re-factors a lot of functionality from the controller to
+  the Nutupane factory to allow for easier re-use later on by other pages.
+  (ericdhelms@gmail.com)
+- Systems Nutupane - Adding directive that generates basic input/label
+  structure. (ericdhelms@gmail.com)
+- Systems Nutupane - Adding begginings of transform details pane with new
+  inline edit directives and updates to system model JSON to provide necessary
+  UI data. (ericdhelms@gmail.com)
+- Systems Nutupane - Addding ngInfiniteScroll dependency.
+  (ericdhelms@gmail.com)
+- Systems Nutupane - Creates an experimental form builder that adds Alchemy
+  form styling and creates a new systems page based off this. Also, allows the
+  new and edit page to be loaded as a page outside of tupane.
+  (ehelms@redhat.com)
+- Systems Nutupane - Adds basic single page view for a system as the starting
+  place for new details view. (ehelms@redhat.com)
+- Systems Nutupane - Adds infinite scroll support to systems nutupane table.
+  (ericdhelms@gmail.com)
+- Systems Nutupane - Adding first pass of nutupane on systems page under the
+  experimental UI. Includes rendering of the basic table, search and sort.
+  (ericdhelms@gmail.com)
+- Systems - Updating the systems API to return total and subtotal values when
+  requesting paged data. (ehelms@redhat.com)
+- Merge pull request #2234 from daviddavis/2234 (daviddavis@redhat.com)
+- Merge pull request #2208 from parthaa/949937 (parthaa@gmail.com)
+- adjust api controller and javascript to work correctly with
+  ```custom_info[KEYNAME]``` (komidore64@gmail.com)
+- Merge pull request #2230 from iNecas/foreman_crosslink (inecas@redhat.com)
+- 949937-Modified the scope of a search paramter to search on permission table
+  (paji@redhat.com)
+- Merge pull request #2167 from daviddavis/rm_legacy_path_api
+  (daviddavis@redhat.com)
+- Add Foreman cross-link (necasik@gmail.com)
+- Merge pull request #2199 from jlsherrill/search-fix (jlsherrill@gmail.com)
+- Merge pull request #2180 from ehelms/issue-1668 (mmccune@gmail.com)
+- indentation fix (jsherril@redhat.com)
+- Merge pull request #2185 from jlsherrill/akey_systems (jlsherrill@gmail.com)
+- Merge pull request #2197 from jlsherrill/sync_error (jlsherrill@gmail.com)
+- Merge pull request #2200 from jlsherrill/oauth (jlsherrill@gmail.com)
+- Experimental UI - Fixes mis-colored header in experimental mode.
+  (ericdhelms@gmail.com)
+- Merge pull request #2222 from waldenraines/fix_org_switcher_issues
+  (walden@redhat.com)
+- Fixing hashtag not showing up in Firefox (daviddavis@redhat.com)
+- Minor styling tweaks to old tupane. (walden@redhat.com)
+- Merge pull request #2225 from iNecas/headpin-spec-fix (inecas@redhat.com)
+- Merge pull request #2227 from daviddavis/temp_1368099072
+  (daviddavis@redhat.com)
+- 961293 - Fixing broken response (daviddavis@redhat.com)
+- add help to update_doc script (git@pitr.ch)
+- link filenames in module/class doc to github (git@pitr.ch)
+- add script for YARD documentation on Github pages (git@pitr.ch)
+- Add missing files to headpin package (necasik@gmail.com)
+- Make openid storage symlink also for Headpin (mhulan@redhat.com)
+- Adding PR #1975 back as it looks like it got dropped. (ogmaciel@gnome.org)
+- Remove unused $location. (walden@redhat.com)
+- Getting interstitial org switcher functional and related refactorings, fixes
+  #2189. (walden@redhat.com)
+- Merge remote-tracking branch 'upstream/master' into delete-legacy-promotion
+  (daviddavis@redhat.com)
+- GH 1781 - Fixed css alignment issues on a couple of pages
+  (ericdhelms@gmail.com)
+- delete-legacy-promotion - ui/model - make view required for system and akey
+  (bbuckingham@redhat.com)
+- Merge pull request #2191 from ehelms/menu-style-updates
+  (ericdhelms@gmail.com)
+- Merge pull request #2215 from daviddavis/temp_1368021513
+  (daviddavis@redhat.com)
+- Merge pull request #2184 from daviddavis/953475 (daviddavis@redhat.com)
+- Merge pull request #2195 from thomasmckay/2173-subs-json
+  (thomasmckay@redhat.com)
+- 960750 - Parsing consume entitlement response from Candlepin
+  (daviddavis@redhat.com)
+- Merge pull request #2194 from daviddavis/temp_1367944808
+  (daviddavis@redhat.com)
+- Fix comps - scl version of apipie-params (necasik@gmail.com)
+- Fix comps - scl version of dynflow (necasik@gmail.com)
+- Merge pull request #2212 from iNecas/katello-foreman-engine-comps
+  (mmccune@gmail.com)
+- Merge pull request #2174 from jlsherrill/unprotected (jlsherrill@gmail.com)
+- Merge pull request #2183 from ehelms/bug-920135 (ericdhelms@gmail.com)
+- Add katello-foreman-engine into katello comps (necasik@gmail.com)
+- Menu - Small updates to enforce libersation sans font, hightlight text color
+  on org switcher and removing grey area around content. (ericdhelms@gmail.com)
+- Merge pull request #2182 from iNecas/dynflow (inecas@redhat.com)
+- Review issues addressed (necasik@gmail.com)
+- Merge pull request #2204 from thomasmckay/958458-cp-proxy (mmccune@gmail.com)
+- Merge pull request #2209 from jlsherrill/all_verbs (jlsherrill@gmail.com)
+- fixes 2065 - adding all_verbs option to permission creation in api
+  (jsherril@redhat.com)
+- 958458-cp-proxy - added /consumers//compliance for subscription-manager
+  (thomasmckay@redhat.com)
+- Merge pull request #2187 from waldenraines/fix_org_switcher_issues
+  (walden@redhat.com)
+- Bug 920135 - Adds missing save if default environment is specified when
+  creating a user in the API. (ericdhelms@gmail.com)
+- Merge pull request #2186 from daviddavis/temp_1367938277
+  (daviddavis@redhat.com)
+- 2173-subs-json - include accountNumber and productId (thomasmckay@redhat.com)
+- 863528 - fixing oauth pulp issue with capitalized hostnames
+- 892683 - Fixing system statuses and about page layout (daviddavis@redhat.com)
+- 956854 - fixing errors in logs on content search (jsherril@redhat.com)
+- 953475 - Systems can register with content views (daviddavis@redhat.com)
+- Repopulating the org switcher menu each time it's opened, fixes #2178.
+  (walden@redhat.com)
+- fixing sync error not showing as an error in the UI (jsherril@redhat.com)
+- 950539 - Fixing retrieval of content view (daviddavis@redhat.com)
+- Add licence into files (necasik@gmail.com)
+- 2163-sys-facts - incorrectly setting additional methods for json
+  (thomasmckay@redhat.com)
+- fixes 2125 - busted activation key systems page (jsherril@redhat.com)
+- Add dynflow deps into comps (necasik@gmail.com)
+- Log Dynflow event actions and notify about errors (necasik@gmail.com)
+- Fixes #1668 - Fixes small documentation issue where organization can only be
+  retrieved from the API via it's label and not ID. (ericdhelms@gmail.com)
+- Events for Foreman integration (necasik@gmail.com)
+- 2177 - make clicking the down arrow also open the org switcher.
+  (walden@redhat.com)
+- 2176 - fixing on hover styling of org switcher. (walden@redhat.com)
+- Merge pull request #2171 from thomasmckay/sys-sla (thomasmckay@redhat.com)
+- Removing legacy path from api (daviddavis@redhat.com)
+- Merge pull request #2175 from daviddavis/temp_1367862412
+  (daviddavis@redhat.com)
+- Setting fixtures path in rspec (daviddavis@redhat.com)
+- 960145 -  publishing red hat content via http (jsherril@redhat.com)
+- Merge pull request #2172 from ehelms/menu-updates (ericdhelms@gmail.com)
+- sys-sla - display organization's SLA if system's is not set sys-sla - changed
+  conditional check to sla.blank? (thomasmckay@redhat.com)
+- Merge pull request #2170 from jlsherrill/bump_runcible (jlsherrill@gmail.com)
+- Merge pull request #2158 from daviddavis/eui_to_main (daviddavis@redhat.com)
+- Menu - Updates new menu to use white dropdown arrows, better vertically
+  aligns the arrow, and adjusting max-width of dropdowns for Firefox.
+  (ericdhelms@gmail.com)
+- Merge pull request #2160 from xsuchy/pull-req-require-tito
+  (miroslav@suchy.cz)
+- bumping runcible to 0.4.4 (jsherril@redhat.com)
+- Tweaks to better center body (daviddavis@redhat.com)
+- Removing empty experimental dir from spec file (daviddavis@redhat.com)
+- Moving experimental navigation out of experimental namespace
+  (daviddavis@redhat.com)
+- Merge pull request #2150 from jlsherrill/json_monkey_patch
+  (jlsherrill@gmail.com)
+- Merge pull request #2113 from komidore64/async_apply (daviddavis@redhat.com)
+- removing some unused code and adding api documentation (komidore64@gmail.com)
+- asynchronous default info in the UI (komidore64@gmail.com)
+- Merge remote-tracking branch 'upstream/master' into delete-legacy-promotion
+  (daviddavis@redhat.com)
+- Fixed simplecov (daviddavis@redhat.com)
+- some tests for default_info apply (komidore64@gmail.com)
+- wow, i totally removed this by accident in commit
+  e6f7cbd99ae3aa7d76327563690b672a167cdc89 (komidore64@gmail.com)
+- schema changes (komidore64@gmail.com)
+- asynchronous default_info info apply in the CLI (komidore64@gmail.com)
+- Merge pull request #2162 from daviddavis/doh (daviddavis@redhat.com)
+- Merge pull request #2155 from jlsherrill/pkg_fix (jlsherrill@gmail.com)
+- Oops wrong link (daviddavis@redhat.com)
+- Merge pull request #2161 from daviddavis/temp_1367586665
+  (daviddavis@redhat.com)
+- Updating README based on feedback in Katello/katello-cli#10
+  (daviddavis@redhat.com)
+- org-sla-cli - allow update of org default service level org-sla-cli - updated
+  rabl and params (thomasmckay@redhat.com)
+- promotion - remove legacy promotion in the UI (bbuckingham@redhat.com)
+- require recent tito which builds correctly into SCL (msuchy@redhat.com)
+- Fog requires newer versions of excon, net-scp and net-ssh than in Fedora
+  (necasik@gmail.com)
+- fixing package details (jsherril@redhat.com)
+- monkey patching multi_json to parse "" as json properly (jsherril@redhat.com)
+- Merge pull request #2145 from tstrachota/locale_fix (tstrachota@redhat.com)
+- Merge pull request #2147 from daviddavis/temp_1367492812
+  (daviddavis@redhat.com)
+- Retreiving stuff from old README (daviddavis@redhat.com)
+- locale - fix for non-existent method (tstrachota@redhat.com)
+- api v2 whitespace formatting (git@pitr.ch)
+- Merge branch 'master' of git://github.com/Katello/katello into katello
+  (mhulan@redhat.com)
+- Merge pull request #2144 from ehelms/coverage-fix (ericdhelms@gmail.com)
+- Merge pull request #2139 from daviddavis/temp_1367431223
+  (daviddavis@redhat.com)
+- Coverage - Fixes the source code tests to ignore the coverage directory.
+  (ehelms@redhat.com)
+- Merge pull request #2143 from ehelms/sync-plan-fix (ericdhelms@gmail.com)
+- Sync Plans Fixes #2142 - Sync plan name edits weren't updating the tupane
+  header or left hand list due to grabbing the wrong property off of a DOM
+  element. (ehelms@redhat.com)
+- Merge pull request #2099 from ehelms/sync-status-page-fix
+  (ericdhelms@gmail.com)
+- Merge pull request #2100 from ehelms/favorite-org-fix (ericdhelms@gmail.com)
+- Merge pull request #2134 from parthaa/filter-rule-model-update
+  (parthaa@gmail.com)
+-  953594 - Allowing UTF-8 names for content views and definitions
+  (daviddavis@redhat.com)
+- Merge pull request #2131 from jlsherrill/promotion_fix (jlsherrill@gmail.com)
+- Removed Runcible references from filter_rule models (paji@redhat.com)
+- Merge pull request #2136 from daviddavis/temp_1367412898
+  (daviddavis@redhat.com)
+- Comps - missing rabl gem for new API (ehelms@redhat.com)
+- Merge pull request #2108 from jlsherrill/iso_importer_split
+  (jlsherrill@gmail.com)
+- Menu - Fixing up the copyrights. (ehelms@redhat.com)
+- Menu - Cleaning up errant commas, and making as_json just contain the hash.
+  (ericdhelms@gmail.com)
+- Menu - Adding specific headpin menu generation. (ericdhelms@gmail.com)
+- Menu - Fixing whitespace. (ericdhelms@gmail.com)
+- adding the ability to modify navigation (jsherril@redhat.com)
+- Experimental Menu - Removes the need for a file to instantiate menus and
+  moves the prune into the menu class itself. Includes updates to tests and
+  menus to account for this new structure. (ericdhelms@gmail.com)
+- Menu - Converts to a structure of items and menus with base classes that
+  define each.  All clickable links are items while collections of items and
+  menus are menus. (ericdhelms@gmail.com)
+- Checking environment for view promotion. Fixes #2089 (daviddavis@redhat.com)
+- Fixing 'It is not allowed to' messages (daviddavis@redhat.com)
+- Merge pull request #2110 from xsuchy/pull-req-gem2rpm (miroslav@suchy.cz)
+- Merge pull request #2058 from tstrachota/api_v2 (tstrachota@redhat.com)
+- api v2 - removed default error route (tstrachota@redhat.com)
+- api v2 - content view fixes (tstrachota@redhat.com)
+- remove unused template content routing test (tstrachota@redhat.com)
+- soft-tabs converted to spaces (tstrachota@redhat.com)
+- Api V2 - filter rules controller (mbacovsk@redhat.com)
+- Api V2 - filters controller (mbacovsk@redhat.com)
+- Api V2 - content view definitions controller updated to match upstream
+  (mbacovsk@redhat.com)
+- Remove trailing whitespace (tstrachota@redhat.com)
+- Api V2 - routes clean out (mbacovsk@redhat.com)
+- Api V2 - distributors controller added (mbacovsk@redhat.com)
+- api v2 - docs and route cleanup (tstrachota@redhat.com)
+- api v2 - changeset content (tstrachota@redhat.com)
+- api v2 - updated spec file (mbacovsk@redhat.com)
+- api v2 - error handling refactored (mbacovsk@redhat.com)
+- api v2 - distributions controller (tstrachota@redhat.com)
+- api v2 - gpg keys controller (tstrachota@redhat.com)
+- api v2 - users controller 2 (tstrachota@redhat.com)
+- Api v2 - added ping (mbacovsk@redhat.com)
+- Api V2 - system group errata controller (mbacovsk@redhat.com)
+- Api V2 - system group packages controller (mbacovsk@redhat.com)
+- Api V2 - system packages controller (mbacovsk@redhat.com)
+- Api V2 - added releases to environments (mbacovsk@redhat.com)
+- API V2 - root controller (mbacovsk@redhat.com)
+- api v2 - systems controller (mbacovsk@redhat.com)
+- api v2 - documentation fixes (tstrachota@redhat.com)
+- api v2 - org default info controller (tstrachota@redhat.com)
+- System_groups controller in V2 (mbacovsk@redhat.com)
+- Subscriptions API moved to V2 (mbacovsk@redhat.com)
+- api v2 - status controller (tstrachota@redhat.com)
+- api v2 - tasks controller (tstrachota@redhat.com)
+- api v2 - repository sets controller (tstrachota@redhat.com)
+- rabl - partials for common identifiers and org reference
+  (tstrachota@redhat.com)
+- api v2 - errata controller (tstrachota@redhat.com)
+- api v2 - permissions controller (tstrachota@redhat.com)
+- api v2 - sync plan controller (tstrachota@redhat.com)
+- api v2 - sync controller (tstrachota@redhat.com)
+- api v2 - changeset controller (tstrachota@redhat.com)
+- api v2 - uebercerts controller (tstrachota@redhat.com)
+- api v2 - custom info controller (tstrachota@redhat.com)
+- Removed templates routes, system_info_keys to default_info
+  (mbacovsk@redhat.com)
+- Util::Data::ostructize added (mbacovsk@redhat.com)
+- Packages controller in V2 (mbacovsk@redhat.com)
+- rabl - new method render_for_async (tstrachota@redhat.com)
+- routing tests class name fix (tstrachota@redhat.com)
+- api v2 - content_views and definitions controller (tstrachota@redhat.com)
+- RolesLdapGroups controller to V2 (mbacovsk@redhat.com)
+- api v2 - repositories controller (tstrachota@redhat.com)
+- Roles controller to V2 (mbacovsk@redhat.com)
+- rabl - utility for rendering hashes (tstrachota@redhat.com)
+- api - v1 made default (tstrachota@redhat.com)
+- api v2 - fix in locale module (tstrachota@redhat.com)
+- api v2 - activation keys controller (tstrachota@redhat.com)
+- api v2 - users controller (tstrachota@redhat.com)
+- api v2 - products controller (tstrachota@redhat.com)
+- api v2 - providers controller (tstrachota@redhat.com)
+- api v2 - lib/ moved to app/lib/ (tstrachota@redhat.com)
+- api v2 - org controller (tstrachota@redhat.com)
+- api v2 - initial refactoring of env controller (mbacovsk@redhat.com)
+- api v2 - helper method for creating nested resources (tstrachota@redhat.com)
+- api - controller and routing tests moved to subdirectory v1
+  (tstrachota@redhat.com)
+- api v2 - version 2 made default (tstrachota@redhat.com)
+- api v2 - copied from version 1 (tstrachota@redhat.com)
+- api - constraints classes moved to a common location (tstrachota@redhat.com)
+- api - namespaced to v1 (tstrachota@redhat.com)
+- api - routes moved into separate file (tstrachota@redhat.com)
+- Merge pull request #2123 from ehelms/experimental-menu-panel-fix
+  (ericdhelms@gmail.com)
+- localizing message for repo content type (jsherril@redhat.com)
+- Merge pull request #2117 from thomasmckay/org-default-sla-hand
+  (thomasmckay@redhat.com)
+- ensuring content_type is preserved across clone (jsherril@redhat.com)
+- Merge pull request #2130 from thomasmckay/dist-cli (thomasmckay@redhat.com)
+- fixing issue where changeset would say applied when it wasnt finished
+  (jsherril@redhat.com)
+- dist-cli - provider refresh_manifest (thomasmckay@redhat.com)
+- migrating to storing content_Type in the repo object
+- using runcible iso modules
+- initial iso_importer work (jsherril@redhat.com)
+- Add default SLA to org UI (thomasmckay@redhat.com)
+- Merge pull request #2118 from daviddavis/gc_hack (daviddavis@redhat.com)
+- Experimental Menu - Fixes an issue where clicking the new button on tupane
+  wouldn't directly open the panel by injecting a root hash on the end of the
+  URL. This is needed because of angularjs $locationProvider adding a
+  hashPrefix. (ehelms@redhat.com)
+- Merge pull request #2119 from jlsherrill/content_search_fix
+  (jlsherrill@gmail.com)
+- Speeding up rspec by deferring garbage collection (daviddavis@redhat.com)
+- Merge pull request #2036 from daviddavis/temp_1366726909
+  (daviddavis@redhat.com)
+- Merge pull request #2120 from daviddavis/temp_1367273302
+  (daviddavis@redhat.com)
+- Merge pull request #1768 from daviddavis/1768 (daviddavis@redhat.com)
+- Merge pull request #2112 from daviddavis/956266 (daviddavis@redhat.com)
+- another workaround that "tito tag" does not create correct path in metadata
+  file if package is in git-root (msuchy@redhat.com)
+- Merge pull request #2111 from xsuchy/pull-req-workaround-tito
+  (miroslav@suchy.cz)
+- fixing content search subgrid links (jsherril@redhat.com)
+- Hudson - Changing hudson rake task names to avoid circular dependency.
+  (ehelms@redhat.com)
+- Fixing iconv deprecation warnings (daviddavis@redhat.com)
+- Renaming status actions. Fixes #1768 (daviddavis@redhat.com)
+- Hudson - Updating hudson rake to run spec directly and not in parallel.
+  (ehelms@redhat.com)
+- 956266 - Fixing bad content views SQL statement (daviddavis@redhat.com)
+- 916164 - Removing old call to default_systems_reg_permission
+  (daviddavis@redhat.com)
+- workaround that "tito tag" does not create correct path in metadata file if
+  package is in git-root (msuchy@redhat.com)
+- gem2rpm is obsolete (msuchy@redhat.com)
+- Renaming the permission method in minitest (daviddavis@redhat.com)
+- Merge pull request #2103 from xsuchy/pull-req-releng-reorg
+  (miroslav@suchy.cz)
+- Merge pull request #2104 from xsuchy/pull-req-gitignore (miroslav@suchy.cz)
+- Merge pull request #2105 from xsuchy/pull-req-tx-reorg (miroslav@suchy.cz)
+- Added permissions tests for content view def api (daviddavis@redhat.com)
+- fix paths in .tx/config after git reorganization (msuchy@redhat.com)
+- In .tx/config - resource katello.cli is no more part of this git
+  (msuchy@redhat.com)
+- remove duplicate lines and lines for files which are not any more in this git
+  (msuchy@redhat.com)
+- add back original .tx/config (msuchy@redhat.com)
+- return back original .gitignore (msuchy@redhat.com)
+- build katello-nightly-rhel6 into scl ruby193 (msuchy@redhat.com)
+- clean up left overs in rel-eng dir after git reorganization
+  (msuchy@redhat.com)
+- Updating spec to handle new location of ci script for Travis.
+  (ehelms@redhat.com)
+- Organization Favorite - Fixes errant checkbox showing up at the bottom of the
+  organization details. (ericdhelms@gmail.com)
+- Experimental Menu - Fixes sync status page in experimental mode to prevent
+  actions from cluttering. (ericdhelms@gmail.com)
+- Fixed wrong test (mhulan@redhat.com)
+- Fedora 18 has newer therubyracer gem (mhulan@redhat.com)
+- Store OpenID secrets persistently (mhulan@redhat.com)
+- Better Signo auth logging (mhulan@redhat.com)
+- RPM requires Signo (mhulan@redhat.com)
+- Fix code reviews (ares@igloonet.cz)
+- Enable fallback to casual authentication (ares@igloonet.cz)
+- Code reviews implementations (ares@igloonet.cz)
+- Katello configure support for Signo (ares@igloonet.cz)
+- Fixes for config library (ares@igloonet.cz)
+- Signo support (ares@igloonet.cz)
+
 * Sat Apr 27 2013 Eric D Helms <ehelms@redhat.com> 1.4.2-1
 - Updating Travis configs. (ehelms@redhat.com)
 - Add 'rel-eng/' from commit '540c534bc7d509665d44b86529659766fa7ef087'
