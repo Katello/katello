@@ -29,10 +29,6 @@ module Katello
     Thread.current[:pulp_server] = server
   end
 
-  def self.update_runcible_user(username)
-    self.pulp_server.update_config('user', username)
-  end
-
   def self.pulp_server
     Thread.current[:pulp_server]
   end
@@ -59,7 +55,24 @@ module Util
             Rails.logger.debug "Setting current user thread-local variable to " + username
             Thread.current[:user] = o
 
-            Katello.update_runcible_user(remote_id) if Katello.config.use_pulp
+
+            if Katello.config.use_pulp && o
+              uri = URI.parse(Katello.config.pulp.url)
+
+              Katello.pulp_server = Runcible::Instance.new({
+                :url      => "#{uri.scheme}://#{uri.host.downcase}",
+                :api_path => uri.path,
+                :user     => o.remote_id,
+                :timeout      => Katello.config.rest_client_timeout,
+                :open_timeout => Katello.config.rest_client_timeout,
+                :oauth    => {:oauth_secret => Katello.config.pulp.oauth_secret,
+                              :oauth_key    => Katello.config.pulp.oauth_key },
+                :logging  => {:logger     => ::Logging.logger['pulp_rest'],
+                              :exception  => true,
+                              :debug      => true }
+              })
+            end
+
           end
 
           # Executes given block on behalf of a different user. Mostly for debuggin purposes since
