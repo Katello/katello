@@ -158,7 +158,7 @@ describe ActivationKey do
   describe "#apply_to_system" do
 
     before(:each) do
-      Runcible::Extensions::Consumer.stub!(:create).and_return({:id => "1234"}) if Katello.config.katello?
+      Katello.pulp_server.extensions.consumer.stub!(:create).and_return({:id => "1234"}) if Katello.config.katello?
       Resources::Candlepin::Consumer.stub!(:create).and_return({:uuid => "1234", :owner => {:key => "1234"}})
       @system = System.new(:name => "test", :cp_type => "system", :facts => {"distribution.name"=>"Fedora"})
       @system2 = System.new(:name => "test2", :cp_type => "system", :facts => {"distribution.name"=>"Fedora"})

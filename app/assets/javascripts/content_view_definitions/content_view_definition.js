@@ -584,6 +584,8 @@ KT.content_view_definition_filters = (function(){
             var version_selector = $(this).parent('.version_selector');
             version_selector.find('.save_version').show();
         });
+        // setup the tipsy
+        $(".rule-search-tipsy").tipsy();
     },
     initialize_common_rule_params = function() {
         var pane = $("#parameter_list"),
@@ -612,9 +614,6 @@ KT.content_view_definition_filters = (function(){
             });
         }
 
-        // setup the tipsy
-        $(".rule-search-tipsy").tipsy();
-
         $('#add_rule').unbind('click').click(function() {
             var rule_input = $('input#rule_input').val(),
                 data;
@@ -636,7 +635,7 @@ KT.content_view_definition_filters = (function(){
                         empty_row.hide();
                         initialize_checkboxes($("#parameters_form"));
 
-                        var new_parameter = $('.parameter_checkbox[data-id=' + rule_input + ']').closest('tr');
+                        var new_parameter = $('.parameter_checkbox[data-id="' + rule_input + '"]').closest('tr');
                         initialize_version_save(new_parameter.find('.save_version'));
                         initialize_version_select(new_parameter.find('.version_type'));
                         initialize_version_input(new_parameter.find('.input.input'));

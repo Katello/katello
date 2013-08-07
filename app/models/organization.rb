@@ -67,7 +67,7 @@ class Organization < ActiveRecord::Base
   validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
   validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
   validate :unique_name_and_label
-  validates_with Validators::DefaultInfoNotBlankValidator, :attributes => :default_info
+  validates_with Validators::DefaultInfoValidator, :attributes => :default_info
 
 
   # Ensure that the name and label namespaces do not overlap
