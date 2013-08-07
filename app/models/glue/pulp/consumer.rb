@@ -23,15 +23,15 @@ module Glue::Pulp::Consumer
       add_system_group_hook     lambda { |system_group| system_group.add_consumer(self) }
       remove_system_group_hook  lambda { |system_group| system_group.remove_consumer(self) }
 
-      lazy_accessor :pulp_facts, :initializer => lambda {|s| Runcible::Extensions::Consumer.retrieve(uuid) }
+      lazy_accessor :pulp_facts, :initializer => lambda {|s| Katello.pulp_server.extensions.consumer.retrieve(uuid) }
       lazy_accessor :package_profile, :initializer => lambda{|s| fetch_package_profile}
       lazy_accessor :simple_packages, :initializer => lambda {|s| fetch_package_profile["profile"].
                                                               collect{|package| Glue::Pulp::SimplePackage.new(package)} }
-      lazy_accessor :errata, :initializer => lambda {|s| Runcible::Extensions::Consumer.applicable_errata(uuid).
+      lazy_accessor :errata, :initializer => lambda {|s| Katello.pulp_server.extensions.consumer.applicable_errata(uuid).
                                                           map{|k,v| v.values}.flatten.
                                                           map{|e| Errata.new(e[:details])}
                                                     }
-      lazy_accessor :repoids, :initializer => lambda {|s| Runcible::Extensions::Consumer.retrieve_bindings(uuid).
+      lazy_accessor :repoids, :initializer => lambda {|s| Katello.pulp_server.extensions.consumer.retrieve_bindings(uuid).
                                                               collect{ |repo| repo["repo_id"]} }
     end
   end
@@ -56,7 +56,7 @@ module Glue::Pulp::Consumer
 
       unbind_ids.each do |repoid|
         begin
-          events.concat(Runcible::Extensions::Consumer.unbind_all(uuid, repoid))
+          events.concat(Katello.pulp_server.extensions.consumer.unbind_all(uuid, repoid))
           processed_ids << repoid
         rescue => e
           Rails.logger.error "Failed to unbind repo #{repoid}: #{e}, #{e.backtrace.join("\n")}"
@@ -66,7 +66,7 @@ module Glue::Pulp::Consumer
 
       bind_ids.each do |repoid|
         begin
-          events.concat(Runcible::Extensions::Consumer.bind_all(uuid, repoid, false))
+          events.concat(Katello.pulp_server.extensions.consumer.bind_all(uuid, repoid, false))
           processed_ids << repoid
         rescue => e
           Rails.logger.error "Failed to bind repo #{repoid}: #{e}, #{e.backtrace.join("\n")}"
@@ -95,7 +95,7 @@ module Glue::Pulp::Consumer
 
     def del_pulp_consumer
       Rails.logger.debug "Deleting consumer in pulp: #{self.name}"
-      Runcible::Extensions::Consumer.delete(self.uuid)
+      Katello.pulp_server.extensions.consumer.delete(self.uuid)
     rescue => e
       Rails.logger.error "Failed to delete pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -113,7 +113,7 @@ module Glue::Pulp::Consumer
 
     def set_pulp_consumer
       Rails.logger.debug "Creating a consumer in pulp: #{self.name}"
-      return Runcible::Extensions::Consumer.create(self.uuid, {:display_name => self.name})
+      return Katello.pulp_server.extensions.consumer.create(self.uuid, {:display_name => self.name})
     rescue => e
       Rails.logger.error "Failed to create pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -123,7 +123,7 @@ module Glue::Pulp::Consumer
       return true if @changed_attributes.empty?
 
       Rails.logger.debug "Updating consumer in pulp: #{self.name}"
-      Runcible::Extensions::Consumer.update(self.uuid, :display_name => self.name)
+      Katello.pulp_server.extensions.consumer.update(self.uuid, :display_name => self.name)
     rescue => e
       Rails.logger.error "Failed to update pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -131,7 +131,7 @@ module Glue::Pulp::Consumer
 
     def upload_package_profile profile
       Rails.logger.debug "Uploading package profile for consumer #{self.name}"
-      Runcible::Extensions::Consumer.upload_profile(self.uuid, 'rpm', profile)
+      Katello.pulp_server.extensions.consumer.upload_profile(self.uuid, 'rpm', profile)
     rescue => e
       Rails.logger.error "Failed to upload package profile to pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -139,7 +139,7 @@ module Glue::Pulp::Consumer
 
     def install_package packages
       Rails.logger.debug "Scheduling package install for consumer #{self.name}"
-      pulp_task = Runcible::Extensions::Consumer.install_content(self.uuid, 'rpm', packages, {"importkeys" => true})
+      pulp_task = Katello.pulp_server.extensions.consumer.install_content(self.uuid, 'rpm', packages, {"importkeys" => true})
     rescue => e
       Rails.logger.error "Failed to schedule package install for pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -147,7 +147,7 @@ module Glue::Pulp::Consumer
 
     def uninstall_package packages
       Rails.logger.debug "Scheduling package uninstall for consumer #{self.name}"
-      pulp_task = Runcible::Extensions::Consumer.uninstall_content(self.uuid, 'rpm', packages)
+      pulp_task = Katello.pulp_server.extensions.consumer.uninstall_content(self.uuid, 'rpm', packages)
     rescue => e
       Rails.logger.error "Failed to schedule package uninstall for pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -157,7 +157,7 @@ module Glue::Pulp::Consumer
       Rails.logger.debug "Scheduling package update for consumer #{self.name}"
       options = {"importkeys" => true}
       options[:all] = true if packages.blank?
-      pulp_task = Runcible::Extensions::Consumer.update_content(self.uuid, 'rpm', packages, options)
+      pulp_task = Katello.pulp_server.extensions.consumer.update_content(self.uuid, 'rpm', packages, options)
     rescue => e
       Rails.logger.error "Failed to schedule package update for pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -165,7 +165,7 @@ module Glue::Pulp::Consumer
 
     def install_package_group groups
       Rails.logger.debug "Scheduling package group install for consumer #{self.name}"
-      pulp_task = Runcible::Extensions::Consumer.install_content(self.uuid, 'package_group', groups, {"importkeys" => true})
+      pulp_task = Katello.pulp_server.extensions.consumer.install_content(self.uuid, 'package_group', groups, {"importkeys" => true})
     rescue => e
       Rails.logger.error "Failed to schedule package group install for pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -173,7 +173,7 @@ module Glue::Pulp::Consumer
 
     def uninstall_package_group groups
       Rails.logger.debug "Scheduling package group uninstall for consumer #{self.name}"
-      pulp_task = Runcible::Extensions::Consumer.uninstall_content(self.uuid, 'package_group', groups)
+      pulp_task = Katello.pulp_server.extensions.consumer.uninstall_content(self.uuid, 'package_group', groups)
     rescue => e
       Rails.logger.error "Failed to schedule package group uninstall for pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -181,7 +181,7 @@ module Glue::Pulp::Consumer
 
     def install_consumer_errata errata_ids
       Rails.logger.debug "Scheduling errata install for consumer #{self.name}"
-      pulp_task = Runcible::Extensions::Consumer.install_content(self.uuid, 'erratum', errata_ids, {"importkeys" => true})
+      pulp_task = Katello.pulp_server.extensions.consumer.install_content(self.uuid, 'erratum', errata_ids, {"importkeys" => true})
     rescue => e
       Rails.logger.error "Failed to schedule errata install for pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -200,7 +200,7 @@ module Glue::Pulp::Consumer
     private
 
     def fetch_package_profile
-      Runcible::Extensions::Consumer.retrieve_profile(uuid, 'rpm')
+      Katello.pulp_server.extensions.consumer.retrieve_profile(uuid, 'rpm')
     rescue RestClient::ResourceNotFound =>e
       {:profile=>[]}.with_indifferent_access
     end

@@ -24,6 +24,20 @@
 # http://rails-bestpractices.com/posts/47-fetch-current-user-in-models
 #
 
+module Katello
+  def self.pulp_server=(server)
+    Thread.current[:pulp_server] = server
+  end
+
+  def self.update_runcible_user(username)
+    self.pulp_server.update_config('user', username)
+  end
+
+  def self.pulp_server
+    Thread.current[:pulp_server]
+  end
+end
+
 
 module Util
   module ThreadSession
@@ -45,27 +59,7 @@ module Util
             Rails.logger.debug "Setting current user thread-local variable to " + username
             Thread.current[:user] = o
 
-            set_pulp_config(remote_id) if Katello.config.katello?
-
-          end
-
-          def self.set_pulp_config(user_id)
-            if user_id
-              uri = URI.parse(Katello.config.pulp.url)
-
-              ::Runcible::Base.config = {
-                :url      => "#{uri.scheme}://#{uri.host.downcase}",
-                :api_path => uri.path,
-                :user     => user_id,
-                :timeout      => Katello.config.rest_client_timeout,
-                :open_timeout => Katello.config.rest_client_timeout,
-                :oauth    => {:oauth_secret => Katello.config.pulp.oauth_secret,
-                              :oauth_key    => Katello.config.pulp.oauth_key },
-                :logging  => {:logger     => ::Logging.logger['pulp_rest'],
-                              :exception  => true,
-                              :debug      => true }
-              }
-            end
+            Katello.update_runcible_user(remote_id) if Katello.config.use_pulp
           end
 
           # Executes given block on behalf of a different user. Mostly for debuggin purposes since

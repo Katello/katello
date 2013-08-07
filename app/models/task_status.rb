@@ -307,7 +307,7 @@ class TaskStatus < ActiveRecord::Base
   def self.refresh(ids)
     unless ids.nil? || ids.empty?
       uuids = TaskStatus.where(:id=>ids).pluck(:uuid)
-      ret = Runcible::Resources::Task.poll_all(uuids)
+      ret = Katello.pulp_server.resources.task.poll_all(uuids)
       ret.each do |pulp_task|
         PulpTaskStatus.dump_state(pulp_task, TaskStatus.find_by_uuid(pulp_task[:task_id]))
       end

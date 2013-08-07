@@ -28,7 +28,7 @@ module Glue::Pulp::Package
       alias_method 'id', '_id'
 
       def self.find(id)
-        package_attrs = Runcible::Extensions::Rpm.find_by_unit_id(id)
+        package_attrs = Katello.pulp_server.extensions.rpm.find_by_unit_id(id)
         return if package_attrs.nil?
         Package.new(package_attrs) if package_attrs
       rescue RestClient::ResourceNotFound => exception
@@ -54,8 +54,15 @@ module Glue::Pulp::Package
       Util::Package.sortable_version(self.version)
     end
 
+    def sortable_release
+      Util::Package.sortable_version(self.release)
+    end
+
     def as_json(options = nil)
-      super(options).merge(id: id, sortable_version: sortable_version)
+      super(options).merge(id: id,
+                           sortable_version: sortable_version,
+                           sortable_release: sortable_release
+                          )
     end
   end
 

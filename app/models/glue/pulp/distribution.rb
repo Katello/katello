@@ -19,7 +19,7 @@ module Glue::Pulp::Distribution
       attr_accessor :_id, :id, :description, :files, :family, :variant, :version, :url, :arch
 
       def self.find(id)
-        ::Distribution.new(Runcible::Extensions::Distribution.find(id))
+        ::Distribution.new(Katello.pulp_server.extensions.distribution.find(id))
       end
     end
   end

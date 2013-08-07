@@ -57,8 +57,8 @@ describe Api::V1::SystemsController do
     Resources::Candlepin::Consumer.stub!(:available_pools).and_return([])
 
     if Katello.config.katello?
-      Runcible::Extensions::Consumer.stub!(:create).and_return({ :id => uuid })
-      Runcible::Extensions::Consumer.stub!(:update).and_return(true)
+      Katello.pulp_server.extensions.consumer.stub!(:create).and_return({ :id => uuid })
+      Katello.pulp_server.extensions.consumer.stub!(:update).and_return(true)
     end
 
     System.any_instance.stub(:consumer_as_json).and_return({})
@@ -380,7 +380,7 @@ describe Api::V1::SystemsController do
       it_should_behave_like "protected action"
 
       it "successfully with update permissions" do
-        Runcible::Extensions::Consumer.should_receive(:upload_profile).once.with(uuid, 'rpm', package_profile[:profile]).and_return(true)
+        Katello.pulp_server.extensions.consumer.should_receive(:upload_profile).once.with(uuid, 'rpm', package_profile[:profile]).and_return(true)
         put :upload_package_profile, :id => uuid, :_json => package_profile[:profile], :format => :json
         response.body.should == @sys.to_json
       end
@@ -392,7 +392,7 @@ describe Api::V1::SystemsController do
       it_should_behave_like "protected action"
 
       it "successfully with register permissions" do
-        Runcible::Extensions::Consumer.should_receive(:upload_profile).once.with(uuid, 'rpm', package_profile[:profile]).and_return(true)
+        Katello.pulp_server.extensions.consumer.should_receive(:upload_profile).once.with(uuid, 'rpm', package_profile[:profile]).and_return(true)
         put :upload_package_profile, :id => uuid, :_json => package_profile[:profile], :format => :json
         response.body.should == @sys.to_json
       end
@@ -435,21 +435,21 @@ describe Api::V1::SystemsController do
     it_should_behave_like "protected action"
 
     it "should change the name" do
-      Runcible::Extensions::Consumer.should_receive(:update).once.with(uuid, { :display_name => "foo_name" }).and_return(true) if Katello.config.katello?
+      Katello.pulp_server.extensions.consumer.should_receive(:update).once.with(uuid, { :display_name => "foo_name" }).and_return(true) if Katello.config.katello?
       put :update, :id => uuid, :name => "foo_name"
       response.body.should == @sys.to_json
       response.should be_success
     end
 
     it "should change the description" do
-      Runcible::Extensions::Consumer.should_receive(:update).once.with(uuid, { :display_name => "test" }).and_return(true) if Katello.config.katello?
+      Katello.pulp_server.extensions.consumer.should_receive(:update).once.with(uuid, { :display_name => "test" }).and_return(true) if Katello.config.katello?
       put :update, :id => uuid, :description => "redkin is awesome."
       response.body.should == @sys.to_json
       response.should be_success
     end
 
     it "should change the location" do
-      Runcible::Extensions::Consumer.should_receive(:update).once.with(uuid, { :display_name => "test" }).and_return(true) if Katello.config.katello?
+      Katello.pulp_server.extensions.consumer.should_receive(:update).once.with(uuid, { :display_name => "test" }).and_return(true) if Katello.config.katello?
       put :update, :id => uuid, :location => "never-neverland"
       response.body.should == @sys.to_json
       response.should be_success
@@ -607,7 +607,7 @@ describe Api::V1::SystemsController do
     end
 
     it "should retrieve Consumer's errata from pulp" do
-      Runcible::Extensions::Consumer.should_receive(:applicable_errata).with(@system.uuid)
+      Katello.pulp_server.extensions.consumer.should_receive(:applicable_errata).with(@system.uuid)
       get :errata, :id => @system.uuid
     end
   end
@@ -690,45 +690,45 @@ describe Api::V1::SystemsController do
     let(:enabled_repos_empty) { { "repos" => [] } }
 
     it "should not bind any" do
-      Runcible::Extensions::Consumer.should_receive(:retrieve_bindings).with(@system.uuid).once.and_return([{ 'repo_id' => 'a' }, { 'repo_id' => 'b' }])
+      Katello.pulp_server.extensions.consumer.should_receive(:retrieve_bindings).with(@system.uuid).once.and_return([{ 'repo_id' => 'a' }, { 'repo_id' => 'b' }])
 
       put :enabled_repos, :id => @system.uuid, :enabled_repos => enabled_repos
       response.status.should == 200
     end
 
     it "should bind one" do
-      Runcible::Extensions::Consumer.should_receive(:retrieve_bindings).with(@system.uuid).once.and_return([{ 'repo_id' => 'a' }])
-      Runcible::Extensions::Consumer.should_receive(:bind_all).with(@system.uuid, 'b', false).once.and_return([])
+      Katello.pulp_server.extensions.consumer.should_receive(:retrieve_bindings).with(@system.uuid).once.and_return([{ 'repo_id' => 'a' }])
+      Katello.pulp_server.extensions.consumer.should_receive(:bind_all).with(@system.uuid, 'b', false).once.and_return([])
       put :enabled_repos, :id => @system.uuid, :enabled_repos => enabled_repos
       response.status.should == 200
     end
 
     it "should bind two" do
-      Runcible::Extensions::Consumer.should_receive(:retrieve_bindings).with(@system.uuid).once.and_return({})
-      Runcible::Extensions::Consumer.should_receive(:bind_all).with(@system.uuid, 'a', false).once.once.and_return([])
-      Runcible::Extensions::Consumer.should_receive(:bind_all).with(@system.uuid, 'b', false).once.once.and_return([])
+      Katello.pulp_server.extensions.consumer.should_receive(:retrieve_bindings).with(@system.uuid).once.and_return({})
+      Katello.pulp_server.extensions.consumer.should_receive(:bind_all).with(@system.uuid, 'a', false).once.once.and_return([])
+      Katello.pulp_server.extensions.consumer.should_receive(:bind_all).with(@system.uuid, 'b', false).once.once.and_return([])
       put :enabled_repos, :id => @system.uuid, :enabled_repos => enabled_repos
       response.status.should == 200
     end
 
     it "should bind one and unbind one" do
-      Runcible::Extensions::Consumer.should_receive(:retrieve_bindings).with(@system.uuid).once.and_return([{ 'repo_id' => 'b' }, { 'repo_id' => 'c' }])
-      Runcible::Extensions::Consumer.should_receive(:bind_all).with(@system.uuid, 'a', false).once.once.and_return([])
-      Runcible::Extensions::Consumer.should_receive(:unbind_all).with(@system.uuid, 'c').once.and_return([])
+      Katello.pulp_server.extensions.consumer.should_receive(:retrieve_bindings).with(@system.uuid).once.and_return([{ 'repo_id' => 'b' }, { 'repo_id' => 'c' }])
+      Katello.pulp_server.extensions.consumer.should_receive(:bind_all).with(@system.uuid, 'a', false).once.once.and_return([])
+      Katello.pulp_server.extensions.consumer.should_receive(:unbind_all).with(@system.uuid, 'c').once.and_return([])
       put :enabled_repos, :id => @system.uuid, :enabled_repos => enabled_repos
       response.status.should == 200
     end
 
     it "should unbind two" do
-      Runcible::Extensions::Consumer.should_receive(:retrieve_bindings).with(@system.uuid).once.and_return([{ 'repo_id' => 'a' }, { 'repo_id' => 'b' }])
-      Runcible::Extensions::Consumer.should_receive(:unbind_all).with(@system.uuid, 'a').once.once.and_return([])
-      Runcible::Extensions::Consumer.should_receive(:unbind_all).with(@system.uuid, 'b').once.once.and_return([])
+      Katello.pulp_server.extensions.consumer.should_receive(:retrieve_bindings).with(@system.uuid).once.and_return([{ 'repo_id' => 'a' }, { 'repo_id' => 'b' }])
+      Katello.pulp_server.extensions.consumer.should_receive(:unbind_all).with(@system.uuid, 'a').once.once.and_return([])
+      Katello.pulp_server.extensions.consumer.should_receive(:unbind_all).with(@system.uuid, 'b').once.once.and_return([])
       put :enabled_repos, :id => @system.uuid, :enabled_repos => enabled_repos_empty
       response.status.should == 200
     end
 
     it "should do nothing" do
-      Runcible::Extensions::Consumer.should_receive(:retrieve_bindings).with(@system.uuid).once.and_return({})
+      Katello.pulp_server.extensions.consumer.should_receive(:retrieve_bindings).with(@system.uuid).once.and_return({})
       put :enabled_repos, :id => @system.uuid, :enabled_repos => enabled_repos_empty
       response.status.should == 200
     end

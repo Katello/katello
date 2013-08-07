@@ -85,7 +85,7 @@ class Ping
       # pulp - ping with oauth
       if Katello.config.katello?
         exception_watch(result[:status][:pulp_auth]) do
-          Runcible::Resources::User.retrieve_all
+          Katello.pulp_server.resources.user.retrieve_all
         end
       end
 

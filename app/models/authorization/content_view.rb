@@ -22,6 +22,7 @@ module Authorization::ContentView
   end
 
   def readable?
+    return true if !Katello.config.katello?
     User.allowed_to?(READ_PERM_VERBS, :content_views, self.id, self.organization)
   end
 
@@ -30,6 +31,7 @@ module Authorization::ContentView
   end
 
   def subscribable?
+    return true if !Katello.config.katello?
     User.allowed_to?([:subscribe], :content_views, self.id, self.organization)
   end
 

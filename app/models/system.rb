@@ -45,7 +45,6 @@ class System < ActiveRecord::Base
   validates :content_view, :presence => true, :allow_blank => false
   # multiple systems with a single name are supported
   validates :name, :presence => true
-  validates_length_of :name, :maximum => 250
   validates_with Validators::NoTrailingSpaceValidator, :attributes => :name
   validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
   validates_length_of :location, :maximum => 255
