@@ -15,7 +15,7 @@ class HeadpinMigration < ActiveRecord::Migration
           s = System.find(system_id)
           s.system_groups << group
           s.environment = env.organization.library
-          s.content_view = nil
+          s.content_view = s.environment.default_content_view
           s.save!
         end
       end
@@ -31,9 +31,9 @@ class HeadpinMigration < ActiveRecord::Migration
       #  All activation keys will be switched to Library
       ActivationKey.all.each do |ak|
         if ak.environment && !ak.environment.library?
-          ak.content_view = nil
+          ak.system_groups << SystemGroup.find_by_name(ak.environment.name)
           ak.environment = ak.environment.organization.library
-          ak.system_groups << ActivationKey.find_by_name(ak.environment.name)
+          ak.content_view = ak.environment.default_content_view
           ak.save!
         end
       end

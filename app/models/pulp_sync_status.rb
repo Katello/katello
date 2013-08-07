@@ -34,7 +34,7 @@ class PulpSyncProgress
 end
 
 class PulpSyncStatus < PulpTaskStatus
-  use_index_of TaskStatus
+  use_index_of TaskStatus if Katello.config.use_elasticsearch
 
   HISTORY_ERROR = 'failed'
   HISTORY_SUCCESS = 'success'
