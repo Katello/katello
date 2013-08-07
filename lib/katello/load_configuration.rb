@@ -126,7 +126,7 @@ module Katello
   # @return [Hash{String => Hash}] database configurations
   def self.database_configs
     @database_configs ||= begin
-      %w(production development test).inject({}) do |hash, environment|
+      %w(production development test build).inject({}) do |hash, environment|
         config_data = configuration_loader.config_data
         common      = config_data.common.database.to_hash
         if config_data.present?(environment.to_sym, :database)
