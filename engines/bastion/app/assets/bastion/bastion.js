@@ -57,3 +57,7 @@
 //= require "bastion/systems/systems.controller"
 //= require "bastion/systems/details/system-details.controller"
 //= require "bastion/systems/details/system-details-info.controller"
+//= require "bastion/systems/details/system-subscriptions.controller"
+
+//= require "bastion/subscriptions/subscriptions.module.js"
+//= require "bastion/subscriptions/subscriptions.factory.js"
