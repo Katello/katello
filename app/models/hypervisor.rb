@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class Hypervisor < System
-  use_index_of System
+  use_index_of System if Katello.config.use_elasticsearch
 
   UNSUPPORTED_ACTIONS = [:package_profile, :pulp_facts, :simple_packages, :errata, :del_pulp_consumer, :set_pulp_consumer,
                          :update_pulp_consumer, :upload_package_profile, :install_package, :uninstall_package,
