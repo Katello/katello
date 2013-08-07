@@ -62,7 +62,7 @@ module Util
               Katello.pulp_server = Runcible::Instance.new({
                 :url      => "#{uri.scheme}://#{uri.host.downcase}",
                 :api_path => uri.path,
-                :user     => o.username,
+                :user     => o.remote_id,
                 :timeout      => Katello.config.rest_client_timeout,
                 :open_timeout => Katello.config.rest_client_timeout,
                 :oauth    => {:oauth_secret => Katello.config.pulp.oauth_secret,
