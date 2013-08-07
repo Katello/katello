@@ -14,15 +14,10 @@ class PopulateContentViewEnvironments < ActiveRecord::Migration
        ActiveRecord::Base.connection.raw_connection.exec_prepared('insert_cvve', [version.id, env.id, DateTime.now, DateTime.now])
 
         ContentViewEnvironment.create!(:content_view=>view,
-                                     :name => env.name,
-                                     :label => view.cp_environment_label(env),
-                                     :cp_id => view.cp_environment_id(env))
+                                       :name => env.name,
+                                       :label => view.send(:generate_cp_environment_label, env),
+                                       :cp_id => view.send(:generate_cp_environment_id, env))
 
-        # perform a save on each of the environment's repos.
-        # this will trigger an update to the search index
-        env.repositories.each do |repo|
-          repo.save!
-        end
       end
     end
   end

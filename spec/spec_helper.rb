@@ -40,6 +40,8 @@ Dir[Rails.root.join("spec/support/**/*.rb")].each do |f|
   require f unless f =~ /monkey/
 end
 
+Katello.pulp_server = Runcible::Instance.new if Katello.config.use_pulp
+
 RSpec.configure do |config|
   # == Mock Framework
   #
@@ -89,6 +91,12 @@ RSpec.configure do |config|
     Dir.mkdir("#{Rails.root}/tmp")
   end
 
+end
+
+module Katello
+  def self.pulp_server= runcible
+    "Noop"
+  end
 end
 
 Webrat.configure do |config|

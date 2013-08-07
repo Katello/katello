@@ -170,7 +170,8 @@ module Authorization::Environment
 
     def systems_readable?
       self.organization.systems_readable? ||
-          User.allowed_to?(SYSTEMS_READABLE, :environments, self.id, self.organization)
+          (Katello.config.katello? &&
+              User.allowed_to?(SYSTEMS_READABLE, :environments, self.id, self.organization))
     end
 
     def systems_editable?

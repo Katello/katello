@@ -14,8 +14,6 @@
 %if "%{?scl}" == "ruby193"
     %global scl_prefix %{scl}-
     %global scl_ruby /usr/bin/ruby193-ruby
-    ### TODO temp disabled for SCL
-    %global nodoc 1
 %else
     %global scl_ruby /usr/bin/ruby
 %endif
@@ -23,11 +21,6 @@
 %global homedir %{_datarootdir}/%{name}
 %global datadir %{_sharedstatedir}/%{name}
 %global confdir deploy/common
-
-### TODO temp disabled for F18 ###
-%if 0%{?fedora} == 18
-%global nodoc 1
-%endif
 
 Name:           katello
 Version:        1.4.3
@@ -171,30 +164,33 @@ BuildRequires: ruby193-build
 %endif
 
 # we require this to be able to build api-docs
-BuildRequires:       %{?scl_prefix}rubygem(rails) >= 3.0.10
+BuildRequires:       %{?scl_prefix}rubygem(acts_as_reportable) >= 1.1.1
+BuildRequires:       %{?scl_prefix}rubygem(apipie-rails) >= 0.0.18
+BuildRequires:       %{?scl_prefix}rubygem(daemons) >= 1.1.4
+BuildRequires:       %{?scl_prefix}rubygem(gettext_i18n_rails)
 BuildRequires:       %{?scl_prefix}rubygem(haml) >= 3.1.2
 BuildRequires:       %{?scl_prefix}rubygem(haml-rails)
+BuildRequires:       %{?scl_prefix}rubygem(i18n_data) >= 0.2.6
 BuildRequires:       %{?scl_prefix}rubygem(json)
-BuildRequires:       %{?scl_prefix}rubygem(rest-client)
-BuildRequires:       %{?scl_prefix}rubygem(rails_warden)
+BuildRequires:       %{?scl_prefix}rubygem(ldap_fluff)
+BuildRequires:       %{?scl_prefix}rubygem(maruku)
 BuildRequires:       %{?scl_prefix}rubygem(net-ldap)
 BuildRequires:       %{?scl_prefix}rubygem(oauth)
-BuildRequires:       %{?scl_prefix}rubygem(i18n_data) >= 0.2.6
-BuildRequires:       %{?scl_prefix}rubygem(gettext_i18n_rails)
-BuildRequires:       %{?scl_prefix}rubygem(simple-navigation) >= 3.3.4
 BuildRequires:       %{?scl_prefix}rubygem(pg)
-BuildRequires:       %{?scl_prefix}rubygem(acts_as_reportable) >= 1.1.1
-BuildRequires:       %{?scl_prefix}rubygem(ruport) >= 1.7.0
 BuildRequires:       %{?scl_prefix}rubygem(prawn)
-BuildRequires:       %{?scl_prefix}rubygem(daemons) >= 1.1.4
-BuildRequires:       %{?scl_prefix}rubygem(uuidtools)
-BuildRequires:       %{?scl_prefix}rubygem(thin)
+BuildRequires:       %{?scl_prefix}rubygem(rack-openid) >= 1.3.1
+BuildRequires:       %{?scl_prefix}rubygem(rails) >= 3.0.10
+BuildRequires:       %{?scl_prefix}rubygem(rails_warden)
+BuildRequires:       %{?scl_prefix}rubygem(rest-client)
+BuildRequires:       %{?scl_prefix}rubygem(ruby-openid) >= 2.2.3
+BuildRequires:       %{?scl_prefix}rubygem(ruport) >= 1.7.0
 BuildRequires:       %{?scl_prefix}rubygem(sass)
-BuildRequires:       %{?scl_prefix}rubygem(tire) >= 0.3.0
+BuildRequires:       %{?scl_prefix}rubygem(simple-navigation) >= 3.3.4
+BuildRequires:       %{?scl_prefix}rubygem(sqlite3)
+BuildRequires:       %{?scl_prefix}rubygem(thin)
 BuildRequires:       %{?scl_prefix}rubygem(tire) < 0.4
-BuildRequires:       %{?scl_prefix}rubygem(ldap_fluff)
-BuildRequires:       %{?scl_prefix}rubygem(apipie-rails) >= 0.0.18
-BuildRequires:       %{?scl_prefix}rubygem(maruku)
+BuildRequires:       %{?scl_prefix}rubygem(tire) >= 0.3.0
+BuildRequires:       %{?scl_prefix}rubygem(uuidtools)
 
 %description common
 Common bits for all Katello instances
@@ -501,8 +497,8 @@ a2x -d manpage -f manpage man/katello-service.8.asciidoc
     mv lib/tasks lib/tasks_disabled
     # by default do not stop on missing dep and only require "build" environment
     export BUNDLER_EXT_NOSTRICT=1
-    export BUNDLER_EXT_GROUPS="default apipie"
-    export RAILS_ENV=production # TODO - this is already defined above!
+    export BUNDLER_EXT_GROUPS="default build"
+    export RAILS_ENV=build
     touch config/katello.yml
 %{?scl:scl enable %{scl} "}
     rake apipie:static apipie:cache --trace
@@ -514,7 +510,7 @@ a2x -d manpage -f manpage man/katello-service.8.asciidoc
 %{?scl:scl enable %{scl} "}
     rake apipie:static apipie:cache OUT=doc/headpin-apidoc --trace
 %{?scl:"}
-    rm config/katello.yml
+    rm -rf config/katello.yml db/build.sqlite3 db/openid-store
     mv lib/tasks_disabled lib/tasks
 %endif
 

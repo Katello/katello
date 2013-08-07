@@ -1,22 +1,24 @@
 class MigrateEnvironmentDefaultContentViewToVersion < ActiveRecord::Migration
   def self.up
     change_column :content_views, :environment_default_id, :integer, :null=>true
-    Organization.all.each do |org|
-      default_view = ContentView.create!(:name=>"Default Organization View",
-                      :organization=>org,
-                      :default=>true)
-      (org.environments + [org.library]).each do |env|
-         old_view = ContentView.where(:environment_default_id=>env.id).first
-         cve = old_view.content_view_environments.first
-         version = ContentViewVersion.find(old_view.version(env))
+    if Katello.config.katello?
+      Organization.all.each do |org|
+        default_view = ContentView.create!(:name=>"Default Organization View",
+                        :organization=>org,
+                        :default=>true)
+        (org.environments + [org.library]).each do |env|
+           old_view = ContentView.where(:environment_default_id=>env.id).first
+           cve = old_view.content_view_environments.first
+           version = ContentViewVersion.find(old_view.version(env))
 
-         version.content_view = default_view
-         version.save!
-         cve.content_view = default_view
-         cve.save!
-         old_view.destroy
+           version.content_view = default_view
+           version.save!
+           cve.content_view = default_view
+           cve.save!
+           old_view.destroy
+        end
+        default_view.save!
       end
-      default_view.save!
     end
     remove_column :content_views, :environment_default_id
 
