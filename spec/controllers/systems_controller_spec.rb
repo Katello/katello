@@ -699,7 +699,7 @@ describe SystemsController do
         System.stub(:find).and_return(@system)
       end
 
-      it "should get release version choices" do
+      it "should get release version choices", :katello => true do
         @system.stub(:available_releases).and_return(["5Server", "6Server"])
         get :edit, :id => @system.id
         response.should render_template(:edit)
@@ -707,7 +707,7 @@ describe SystemsController do
         assigns[:locals_hash][:releases_error].should == nil
       end
 
-      it "should get empty release version choices" do
+      it "should get empty release version choices", :katello => true do
         @system.stub(:available_releases).and_return([])
         get :edit, :id => @system.id
         response.should render_template(:edit)
@@ -715,7 +715,7 @@ describe SystemsController do
         assigns[:locals_hash][:releases_error].should == nil
       end
 
-      it "should get release version error" do
+      it "should get release version error", :katello => true do
         @system.stub(:available_releases).and_raise("some error")
         get :edit, :id => @system.id
         response.should render_template(:edit)
