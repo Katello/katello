@@ -1,1 +1,84 @@
-Subscriptions Page Goes Here!
+<section class="nutupane-sub-section">
+  <div class="nutupane-titlebar">
+    <h3 class="nutupane-title">{{ "Current Subscription(s)" | i18n }}</h3>
+  </div>
+  <div class="nutupane-actionbar">
+    <div class="form">
+      <input type="text"
+             class="input input-search"
+             placeholder="{{ 'Filter' | i18n }}"
+             ng-model="systemSearch">
+    </div>
+  </div>
+
+  <p ng-show="systemSubscriptions.length == 0">
+    {{ "You have no current subscriptions" | i18n }}
+  </p>
+
+  <table ng-show="systemSubscriptions.length > 0" class="table table-striped">
+    <thead>
+      <tr>
+        <th>{{ "Name" | i18n }}</th>
+        <th>{{ "SLA" | i18n }}</th>
+        <th>{{ "Contract" | i18n }}</th>
+        <th>{{ "Quantity" | i18n }}</th>
+        <th>{{ "Start Date" | i18n }}</th>
+        <th>{{ "End Date" | i18n }}</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr ng-repeat="subscription in systemSubscriptions | filter:systemSearch" row-select>
+        <td>{{ subscription.poolName }}</td>
+        <td>{{ subscription.sla }}</td>
+        <td>{{ subscription.contractNumber }}</td>
+        <td>{{ subscription.quantity }}</td>
+        <td>{{ subscription.startDate }}</td>
+        <td>{{ subscription.endDate }}</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+
+<section class="nutupane-sub-section">
+  <div class="nutupane-titlebar">
+    <h3 class="nutupane-title">{{ "Available Subscription(s)" | i18n }}</h3>
+  </div>
+  <div class="nutupane-actionbar">
+    <div class="form">
+      <input type="text"
+             class="input input-search"
+             placeholder="{{ 'Filter' | i18n }}"
+             ng-model="availableSearch">
+    </div>
+  </div>
+
+  <p ng-show="availableSubscriptions.length == 0">
+    {{ "You have no available subscriptions" | i18n }}
+  </p>
+
+  <table ng-show="availableSubscriptions.length > 0" class="table table-striped">
+    <thead>
+      <tr>
+        <th>{{ "Name" | i18n }}</th>
+        <th>{{ "SLA" | i18n }}</th>
+        <th>{{ "Contract" | i18n }}</th>
+        <th>{{ "Quantity" | i18n }}</th>
+        <th>{{ "Start Date" | i18n }}</th>
+        <th>{{ "End Date" | i18n }}</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr ng-repeat="subscription in availableSubscriptions | filter:availableSearch" row-select>
+        <td>{{ subscription.name }}</td>
+        <td>{{ subscription.sla }}</td>
+        <td>{{ subscription.contractNumber }}</td>
+        <td>{{ subscription.quantity }}</td>
+        <td>{{ subscription.startDate | date:"short" }}</td>
+        <td>{{ subscription.endDate | date:"short"}}</td>
+      </tr>
+    </tbody>
+  </table>
+</section>

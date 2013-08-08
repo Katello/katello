@@ -69,7 +69,7 @@ describe('Factory: System', function() {
     }));
 
     it("provides a way to get a collection of systems", function() {
-        System.get();
+        System.query();
 
         expect(System.records).toEqual(systemsCollection.records);
         expect(System.total).toEqual(systemsCollection.total);
@@ -87,7 +87,7 @@ describe('Factory: System', function() {
     });
 
     it("updates a single system's occurence within the collection", function() {
-        System.get();
+        System.query();
 
         systemsCollection.records[1].name = 'NewSystemName';
         System.get({ id: systemsCollection.records[1].id });
