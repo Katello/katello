@@ -320,8 +320,7 @@ KT.common = (function() {
         },
         rootURL : function() {
             if (root_url === undefined) {
-                //root_url = $('#root_url').attr('data-url');
-                root_url = KT.config['root_url'];
+                root_url = KT.routes.options.prefix;
             }
             return root_url;
         },
