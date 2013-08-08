@@ -23,7 +23,8 @@ angular.module('Bastion.systems', [
     'alchemy',
     'alch-templates',
     'ui.compat',
-    'Bastion.widgets'
+    'Bastion.widgets',
+    'Bastion.subscriptions'
 ]);
 
 /**
@@ -76,7 +77,7 @@ angular.module('Bastion.systems').config(['$stateProvider', function($stateProvi
     $stateProvider.state('systems.details.subscriptions', {
         url: '/subscriptions',
         collapsed: true,
-        controller: function() {},
+        controller: 'SystemSubscriptionsController',
         templateUrl: 'systems/details/views/system-subscriptions.html'
     });
 

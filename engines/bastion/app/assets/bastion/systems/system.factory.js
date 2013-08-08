@@ -33,7 +33,8 @@ angular.module('Bastion.systems').factory('System',
         resource = $resource(Routes.apiSystemsPath() + '/:id/:action', {id: '@uuid'}, {
             update: { method: 'PUT'},
             query: { method: 'GET'},
-            releaseVersions: { method: 'GET', params: {action: 'releases'}}
+            releaseVersions: { method: 'GET', params: {action: 'releases'}},
+            subscriptions: { method: 'GET', params: {action: 'subscriptions'}}
         });
 
         findIndex = function(record) {
@@ -80,27 +81,31 @@ angular.module('Bastion.systems').factory('System',
                     replaceInCollection(record);
                     callback();
                 });
+            }
+        };
+
+        Collection.query = function(args, callback) {
+            args = args || {};
+            callback = callback || function() {};
+
+            if (args['offset'] === 0) {
+                Collection.offset = 0;
             } else {
-                if (args['offset'] === 0) {
-                    Collection.offset = 0;
+                Collection.offset = args['offset'];
+            }
+
+            resource.query(args, function(data) {
+                if (Collection.offset === 0) {
+                    Collection.records = data.records;
                 } else {
-                    Collection.offset = args['offset'];
+                    Collection.records = Collection.records.concat(data.records);
                 }
 
-                resource.query(args, function(data) {
-                    if (Collection.offset === 0) {
-                        Collection.records = data.records;
-                    } else {
-                        Collection.records = Collection.records.concat(data.records);
-                    }
-
-                    Collection.offset = Collection.records.length;
-                    Collection.total = data.total;
-                    Collection.subtotal = data.subtotal;
-
-                    callback();
-                });
-            }
+                Collection.offset = Collection.records.length;
+                Collection.total = data.total;
+                Collection.subtotal = data.subtotal;
+                callback();
+            });
         };
 
         Collection.releaseVersions = function(args) {
@@ -113,7 +118,15 @@ angular.module('Bastion.systems').factory('System',
             return deferred.promise;
         };
 
+        Collection.subscriptions = function(args) {
+            var deferred = $q.defer();
 
+            resource.subscriptions(args, function(data) {
+                deferred.resolve(data.entitlements);
+            });
+
+            return deferred.promise;
+        };
         return Collection;
     }]
 );

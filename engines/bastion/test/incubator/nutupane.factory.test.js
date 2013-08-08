@@ -22,7 +22,7 @@ describe('Factory: Nutupane', function() {
 
     beforeEach(module(function($provide) {
         Resource = {
-            get: function(params, callback) {
+            query: function(params, callback) {
                 callback();
             },
             total: 10,
@@ -48,33 +48,33 @@ describe('Factory: Nutupane', function() {
         });
 
         it("providing a method to fetch records for the table", function() {
-            spyOn(Resource, 'get');
-            nutupane.get();
+            spyOn(Resource, 'query');
+            nutupane.query();
 
-            expect(Resource.get).toHaveBeenCalled();
+            expect(Resource.query).toHaveBeenCalled();
         });
 
         it("providing a method to perform a search", function() {
-            spyOn(Resource, 'get');
+            spyOn(Resource, 'query');
             nutupane.table.closeItem = function() {};
 
             nutupane.table.search();
 
-            expect(Resource.get).toHaveBeenCalled();
+            expect(Resource.query).toHaveBeenCalled();
         });
 
         it("refusing to perform a search if the table is currently fetching", function() {
-            spyOn(Resource, 'get');
+            spyOn(Resource, 'query');
             nutupane.table.closeItem = function() {};
             nutupane.table.working = true;
 
             nutupane.table.search();
 
-            expect(Resource.get).not.toHaveBeenCalled();
+            expect(Resource.query).not.toHaveBeenCalled();
         });
 
         it("setting the search parameter in the URL when performing a search", function() {
-            spyOn(Resource, 'get');
+            spyOn(Resource, 'query');
             nutupane.table.closeItem = function() {};
             nutupane.table.working = true;
 
@@ -88,26 +88,26 @@ describe('Factory: Nutupane', function() {
         });
 
         it("providing a method that fetches more data", function() {
-            spyOn(Resource, 'get');
+            spyOn(Resource, 'query');
             nutupane.table.nextPage();
 
-            expect(Resource.get).toHaveBeenCalled();
+            expect(Resource.query).toHaveBeenCalled();
         });
 
         it("refusing to fetch more data if the table is currently working", function() {
-            spyOn(Resource, 'get');
+            spyOn(Resource, 'query');
             nutupane.table.working = true;
             nutupane.table.nextPage();
 
-            expect(Resource.get).not.toHaveBeenCalled();
+            expect(Resource.query).not.toHaveBeenCalled();
         });
 
         it("refusing to fetch more data if the subtotal of records equals the offset", function() {
-            spyOn(Resource, 'get');
+            spyOn(Resource, 'query');
             nutupane.table.resource.offset = 8;
             nutupane.table.nextPage();
 
-            expect(Resource.get).not.toHaveBeenCalled();
+            expect(Resource.query).not.toHaveBeenCalled();
         });
 
         describe("provides a way to sort the table", function(){
@@ -136,10 +136,10 @@ describe('Factory: Nutupane', function() {
                 expect(column.active).toBe(true);
             });
 
-            it("refreshes the table by calling get()", function() {
-                spyOn(nutupane, "get");
+            it("refreshes the table by calling query()", function() {
+                spyOn(nutupane, "query");
                 nutupane.table.sortBy({id: "name"});
-                expect(nutupane.get).toHaveBeenCalled();
+                expect(nutupane.query).toHaveBeenCalled();
             });
         });
     });

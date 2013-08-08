@@ -48,7 +48,7 @@ angular.module('Bastion.widgets').factory('Nutupane',
                 }
             };
 
-            self.get = function() {
+            self.query = function() {
                 var params = {
                     'organization_id':  CurrentOrganization,
                     'search':           $location.search().search || "",
@@ -60,7 +60,8 @@ angular.module('Bastion.widgets').factory('Nutupane',
 
                 self.table.working = true;
                 var deferred = $q.defer();
-                self.table.resource.get(params, function(resource) {
+
+                self.table.resource.query(params, function(resource) {
                     // This $timeout is necessary to cause a $digest cycle for displaying
                     $timeout(function() {
                         deferred.resolve(resource);
@@ -76,7 +77,7 @@ angular.module('Bastion.widgets').factory('Nutupane',
                 self.table.closeItem();
 
                 if (!self.table.working) {
-                    self.get();
+                    self.query();
                 }
             };
 
@@ -90,7 +91,7 @@ angular.module('Bastion.widgets').factory('Nutupane',
                 if (table.working || (table.resource.offset > 0 && table.hasMore())) {
                     return;
                 }
-                return self.get();
+                return self.query();
             };
 
             self.table.hasMore = function() {
@@ -109,10 +110,9 @@ angular.module('Bastion.widgets').factory('Nutupane',
                 column.sortOrder = sort.order;
                 column.active = true;
                 self.table.resource.offset = 0;
-                self.get();
+                self.query();
             };
         };
-
         return Nutupane;
     }]
 );
