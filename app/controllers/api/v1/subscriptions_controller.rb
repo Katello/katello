@@ -43,7 +43,14 @@ class Api::V1::SubscriptionsController < Api::V1::ApiController
   api :GET, "/systems/:system_id/subscriptions", "List subscriptions"
   param_group :system
   def index
-    respond :collection => { :entitlements => @system.consumed_entitlements }
+    response = { :entitlements => @system.consumed_entitlements }
+    if params[:paged]
+      response = {
+        :results  => @system.consumed_entitlements,
+        :subtotal => @system.consumed_entitlements.length
+      }
+    end
+    respond :collection => response
   end
 
   api :GET, "/subscriptions", "List subscriptions"
@@ -82,9 +89,13 @@ class Api::V1::SubscriptionsController < Api::V1::ApiController
 
     if params[:paged]
       subscriptions = {
-        :subscriptions => subscriptions.results,
+        :results  => subscriptions.results,
+        :offset   => params[:offset],
+        :limit    => options[:page_size],
+        :search   => params[:search],
+        :sort     => { :by => params[:sort_by], :order => params[:sort_order] },
         :subtotal => total_count,
-        :total => items.total_items
+        :total    => items.total_items
       }
     end
 

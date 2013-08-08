@@ -222,7 +222,11 @@ Schedules the consumer identity certificate regeneration
 
     if params[:paged]
       systems = {
-        :records  => systems,
+        :results  => systems,
+        :offset   => params[:offset],
+        :limit    => options[:page_size],
+        :search   => params[:search],
+        :sort     => { :by => params[:sort_by], :order => params[:sort_order] },
         :subtotal => total_count,
         :total    => items.total_items
       }
