@@ -144,10 +144,9 @@ module Glue::Pulp::Repo
         when Repository::YUM_TYPE
           yum_dist_id = self.pulp_id
           yum_dist = Runcible::Models::YumDistributor.new(self.relative_path, (self.unprotected || false), true,
-                  {:protected=>true, :id=>yum_dist_id,
-                      :auto_publish=>true})
+                  {:protected=>true, :id=>yum_dist_id, :auto_publish=>true})
           clone_dist = Runcible::Models::YumCloneDistributor.new(:id=>"#{self.pulp_id}_clone",
-                                                                     :destination_distributor_id => yum_dist_id )
+                                                                 :destination_distributor_id => yum_dist_id )
           [yum_dist, clone_dist]
         when Repository::FILE_TYPE
           dist = Runcible::Models::IsoDistributor.new(true, true)
