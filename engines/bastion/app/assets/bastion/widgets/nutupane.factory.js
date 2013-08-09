@@ -100,11 +100,16 @@ angular.module('Bastion.widgets').factory('Nutupane',
 
             self.table.sortBy = function(column) {
                 var sort = self.table.sort;
+
+                if (!column) {
+                    return;
+                }
+
                 if (column.id === sort.by) {
                     sort.order = (sort.order === 'ASC') ? 'DESC' : 'ASC';
                 } else {
-                    sort.order = 'ASC';
                     sort.by = column.id;
+                    sort.order = 'ASC';
                 }
 
                 column.sortOrder = sort.order;
