@@ -36,8 +36,8 @@ describe Api::V1::SystemPackagesController do
     Resources::Candlepin::Consumer.stub!(:update).and_return(true)
 
     if Katello.config.katello?
-      Runcible::Extensions::Consumer.stub!(:create).and_return({ :id => uuid })
-      Runcible::Extensions::Consumer.stub!(:update).and_return(true)
+      Katello.pulp_server.extensions.consumer.stub!(:create).and_return({ :id => uuid })
+      Katello.pulp_server.extensions.consumer.stub!(:update).and_return(true)
     end
 
     @organization  = Organization.create!(:name => 'test_org', :label => 'test_org')

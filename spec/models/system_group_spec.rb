@@ -39,7 +39,7 @@ describe SystemGroup do
   context "create should" do
 
     it "should create succesfully with an org", :katello => true do
-      Runcible::Extensions::ConsumerGroup.should_receive(:create).and_return({})
+      Katello.pulp_server.extensions.consumer_group.should_receive(:create).and_return({})
       grp = SystemGroup.create!(:name=>"TestGroup", :organization=>@org)
       grp.pulp_id.should_not == nil
     end
@@ -62,7 +62,7 @@ describe SystemGroup do
 
   context "delete should" do
     it "should delete a group successfully", :katello => true do
-      Runcible::Extensions::ConsumerGroup.should_receive(:delete).and_return(200)
+      Katello.pulp_server.extensions.consumer_group.should_receive(:delete).and_return(200)
       @group.destroy
       SystemGroup.where(:name=>@group.name).count.should == 0
     end
@@ -79,20 +79,20 @@ describe SystemGroup do
 
   context "changing consumer ids", :katello => true  do
     it "should contact pulp if new ids are added" do
-      Runcible::Extensions::ConsumerGroup.should_receive(:add_consumers_by_id).once
+      Katello.pulp_server.extensions.consumer_group.should_receive(:add_consumers_by_id).once
       grp = SystemGroup.create!(:name=>"TestGroup", :organization=>@org, :consumer_ids=>[:a, :b])
       grp.consumer_ids = [:a, :b, :c, :d]
       grp.save!
     end
     it "should contact pulp if new ids are removed" do
-      Runcible::Extensions::ConsumerGroup.should_receive(:remove_consumers_by_id).once
+      Katello.pulp_server.extensions.consumer_group.should_receive(:remove_consumers_by_id).once
       grp = SystemGroup.create!(:name=>"TestGroup", :organization=>@org, :consumer_ids=>[:a, :b])
       grp.consumer_ids = []
       grp.save!
     end
     it "should contact pulp if new ids are added and removed" do
-      Runcible::Extensions::ConsumerGroup.should_receive(:add_consumers_by_id).once
-      Runcible::Extensions::ConsumerGroup.should_receive(:remove_consumers_by_id).once
+      Katello.pulp_server.extensions.consumer_group.should_receive(:add_consumers_by_id).once
+      Katello.pulp_server.extensions.consumer_group.should_receive(:remove_consumers_by_id).once
       grp = SystemGroup.create!(:name=>"TestGroup", :organization=>@org, :consumer_ids=>[:a, :b])
       grp.consumer_ids = [:c, :d]
       grp.save!
@@ -101,14 +101,14 @@ describe SystemGroup do
 
   context "changing systems", :katello => true do
     it "should call out to pulp when adding" do
-      Runcible::Extensions::ConsumerGroup.should_receive(:add_consumers_by_id).once
+      Katello.pulp_server.extensions.consumer_group.should_receive(:add_consumers_by_id).once
       grp = SystemGroup.create!(:name=>"TestGroup", :organization=>@org)
       grp.systems << @system
       grp.save!
     end
     it "should call out to pulp when removing" do
-      Runcible::Extensions::ConsumerGroup.should_receive(:add_consumers_by_id).once
-      Runcible::Extensions::ConsumerGroup.should_receive(:remove_consumers_by_id).once
+      Katello.pulp_server.extensions.consumer_group.should_receive(:add_consumers_by_id).once
+      Katello.pulp_server.extensions.consumer_group.should_receive(:remove_consumers_by_id).once
       grp = SystemGroup.create!(:name=>"TestGroup", :organization=>@org)
       grp.systems << @system
       grp.systems = grp.systems - [@system]

@@ -110,6 +110,9 @@
                 - none_message = _("No alternate release version choices are available. These choices are based upon the Red Hat manifest imported and the content available in the CDN.")
               %span.value{'name' => 'system[releaseVer]', 'class' => ("editable edit_select_system_releasever_message" if editable), 'data-url'=>system_path(system.id), 'data-message'=>none_message}
                 = system.release == "" ? _("System Default") : system.release
+            - elsif releases.nil?
+              %span.value{'name' => 'system[releaseVer]', 'class' => ("editable edit_select_system_releasever" if editable), 'data-url' => system_path(system.id), 'data-loadurl' => releases_system_path(system.id, {:ui=>true}), 'data-options' => system_releasevers_edit(system, [])}
+                = system.release
             - else
               %span.value{'name' => 'system[releaseVer]', 'class' => ("editable edit_select_system_releasever" if editable), 'data-url' => system_path(system.id), 'data-options' => system_releasevers_edit(system, releases)}
                 = system.release

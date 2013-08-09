@@ -62,7 +62,7 @@ describe Api::V1::ProductsController, :katello => true do
 
   describe "show product" do
     before do
-      Runcible::Extensions::Repository.stub(:retrieve).and_return(RepoTestData::REPO_PROPERTIES)
+      Katello.pulp_server.extensions.repository.stub(:retrieve).and_return(RepoTestData::REPO_PROPERTIES)
     end
 
     let(:action) { :show }
@@ -80,7 +80,7 @@ describe Api::V1::ProductsController, :katello => true do
     let(:gpg_key) { GpgKey.create!(:name => "Gpg key", :content => "100", :organization => @organization) }
 
     before do
-      Runcible::Extensions::Repository.stub(:retrieve).and_return(RepoTestData::REPO_PROPERTIES)
+      Katello.pulp_server.extensions.repository.stub(:retrieve).and_return(RepoTestData::REPO_PROPERTIES)
       Product.stub(:find_by_cp_id).with(@product.cp_id).and_return(@product)
       @product.stub(:update_attributes! => true)
     end

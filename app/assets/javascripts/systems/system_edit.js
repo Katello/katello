@@ -34,6 +34,7 @@ $(document).ready(function() {
                 type            :  'select',
                 name            :  element.attr('name'),
                 data            :  element.data('options'),
+                loadurl         :  element.data('loadurl'),
                 onsuccess       :  function(result, status, xhr){
                     notices.checkNotices();
                 },
