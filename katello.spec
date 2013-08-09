@@ -253,6 +253,7 @@ Requires:        pulp-rpm-plugins
 Requires:        pulp-katello-plugins
 Requires:        pulp-selinux
 Requires:        pulp-puppet-plugins
+Requires:        pulp-nodes-parent
 Requires:        createrepo >= 0.9.9-18%{?dist}
 Requires:        %{?scl_prefix}rubygem(runcible) >= 1.0.0
 

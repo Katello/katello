@@ -31,22 +31,43 @@ module Glue::Pulp::Consumer
                                                           map{|k,v| v.values}.flatten.
                                                           map{|e| Errata.new(e[:details])}
                                                     }
-      lazy_accessor :repoids, :initializer => lambda {|s| Katello.pulp_server.extensions.consumer.retrieve_bindings(uuid).
-                                                              collect{ |repo| repo["repo_id"]} }
     end
   end
 
   module InstanceMethods
 
-    def enable_repos update_ids
+    def bound_yum_repos
+      bindings(Runcible::Models::YumDistributor.type_id)
+    end
+
+    def bound_node_repos
+      bindings(Runcible::Models::NodesHttpDistributor.type_id)
+    end
+
+    def bindings(type_id)
+      bindings = Katello.pulp_server.extensions.consumer.retrieve_bindings(uuid)
+      bindings.select{ |b| b['type_id'] == type_id }.collect{ |repo| repo["repo_id"] }
+    end
+
+    def enable_yum_repos(repo_ids)
+      enable_repos(Runcible::Models::YumDistributor.type_id, bound_yum_repos, repo_ids, {:notify_agent => false})
+    end
+
+    def enable_node_repos(repo_ids)
+      enable_repos(Runcible::Models::NodesHttpDistributor.type_id, bound_node_repos, repo_ids,
+                   {:notify_agent => false, :binding_config => {:strategy=>'mirror'}})
+    end
+
+    #Binds and unbinds distributors of a certain type across repos
+    def enable_repos(distributor_type, existing_ids, update_ids, bind_options={})
       # calculate repoids to bind/unbind
-      bound_ids     = repoids
+      bound_ids     = existing_ids
       intersection  = update_ids & bound_ids
       bind_ids      = update_ids - intersection
       unbind_ids    = bound_ids - intersection
 
-      Rails.logger.debug "Bound repo ids: #{bound_ids.inspect}"
-      Rails.logger.debug "Update repo ids: #{update_ids.inspect}"
+      Rails.logger.debug "Bound #{} repo ids: #{bound_ids.inspect}"
+      Rails.logger.debug "Update #{} repo ids: #{update_ids.inspect}"
       Rails.logger.debug "Repo ids to bind: #{bind_ids.inspect}"
       Rails.logger.debug "Repo ids to unbind: #{unbind_ids.inspect}"
 
@@ -56,7 +77,7 @@ module Glue::Pulp::Consumer
 
       unbind_ids.each do |repoid|
         begin
-          events.concat(Katello.pulp_server.extensions.consumer.unbind_all(uuid, repoid))
+          events.concat(Katello.pulp_server.extensions.consumer.unbind_all(uuid,  repoid, distributor_type))
           processed_ids << repoid
         rescue => e
           Rails.logger.error "Failed to unbind repo #{repoid}: #{e}, #{e.backtrace.join("\n")}"
@@ -66,7 +87,7 @@ module Glue::Pulp::Consumer
 
       bind_ids.each do |repoid|
         begin
-          events.concat(Katello.pulp_server.extensions.consumer.bind_all(uuid, repoid, false))
+          events.concat(Katello.pulp_server.extensions.consumer.bind_all(uuid, repoid, distributor_type, bind_options))
           processed_ids << repoid
         rescue => e
           Rails.logger.error "Failed to bind repo #{repoid}: #{e}, #{e.backtrace.join("\n")}"
@@ -77,8 +98,8 @@ module Glue::Pulp::Consumer
       begin
         #the consumer user does not have access to check tasks in pulp
         #   so we have to switch to the hidden user temporarily
-        previous_user = User.current
-        User.current = User.hidden.first
+        previous_user = ::User.current
+        ::User.current = ::User.hidden.first
         #reject agent bind events, and wait for others
         events.reject!{|event| !(event['tags'] & ['pulp:action:agent_bind', 'pulp:action:agent_unbind',
                                                   'pulp:action:delete_binding']).empty? }
@@ -89,7 +110,7 @@ module Glue::Pulp::Consumer
         Rails.logger.error "Failed to enable repositories: #{e}, #{e.backtrace.join("\n")}"
         raise e
       ensure
-        User.current = previous_user
+        ::User.current = previous_user
       end
     end
 
@@ -163,6 +184,19 @@ module Glue::Pulp::Consumer
       raise e
     end
 
+    def sync_pulp_node(repoids=nil)
+      if repoids.nil?
+        Rails.logger.debug "Scheduling full node update for consumer #{self.name}"
+        Katello.pulp_server.extensions.consumer.update_content(self.uuid, 'node',  nil, {})
+      else
+        Rails.logger.debug "Scheduling partial node update for consumer #{self.name}"
+        Katello.pulp_server.extensions.consumer.update_content(self.uuid, 'repository',  repoids, {})
+      end
+    rescue => e
+      Rails.logger.error "Failed to schedule node update for pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
+      raise e
+    end
+
     def install_package_group groups
       Rails.logger.debug "Scheduling package group install for consumer #{self.name}"
       pulp_task = Katello.pulp_server.extensions.consumer.install_content(self.uuid, 'package_group', groups, {"importkeys" => true})
@@ -185,6 +219,14 @@ module Glue::Pulp::Consumer
     rescue => e
       Rails.logger.error "Failed to schedule errata install for pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
+    end
+
+    def activate_pulp_node
+      Katello.pulp_server.extensions.consumer.activate_node(self.uuid, 'mirror')
+    end
+
+    def deactivate_pulp_node
+      Katello.pulp_server.extensions.consumer.deactivate_node(self.uuid)
     end
 
     def save_pulp_orchestration

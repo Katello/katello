@@ -690,39 +690,43 @@ describe Api::V1::SystemsController do
     let(:enabled_repos_empty) { { "repos" => [] } }
 
     it "should not bind any" do
-      Katello.pulp_server.extensions.consumer.should_receive(:retrieve_bindings).with(@system.uuid).once.and_return([{ 'repo_id' => 'a' }, { 'repo_id' => 'b' }])
+      Katello.pulp_server.extensions.consumer.should_receive(:retrieve_bindings).with(@system.uuid).once.and_return(
+          [{ 'repo_id' => 'a', 'type_id' =>'yum_distributor'  }, { 'repo_id' => 'b', 'type_id' => 'yum_distributor'}])
 
       put :enabled_repos, :id => @system.uuid, :enabled_repos => enabled_repos
       response.status.should == 200
     end
 
     it "should bind one" do
-      Katello.pulp_server.extensions.consumer.should_receive(:retrieve_bindings).with(@system.uuid).once.and_return([{ 'repo_id' => 'a' }])
-      Katello.pulp_server.extensions.consumer.should_receive(:bind_all).with(@system.uuid, 'b', false).once.and_return([])
+      Katello.pulp_server.extensions.consumer.should_receive(:retrieve_bindings).with(@system.uuid).once.and_return(
+          [{ 'repo_id' => 'a', 'type_id' => 'yum_distributor' }])
+      Katello.pulp_server.extensions.consumer.should_receive(:bind_all).with(@system.uuid, 'b', "yum_distributor", {:notify_agent=>false}).once.and_return([])
       put :enabled_repos, :id => @system.uuid, :enabled_repos => enabled_repos
       response.status.should == 200
     end
 
     it "should bind two" do
       Katello.pulp_server.extensions.consumer.should_receive(:retrieve_bindings).with(@system.uuid).once.and_return({})
-      Katello.pulp_server.extensions.consumer.should_receive(:bind_all).with(@system.uuid, 'a', false).once.once.and_return([])
-      Katello.pulp_server.extensions.consumer.should_receive(:bind_all).with(@system.uuid, 'b', false).once.once.and_return([])
+      Katello.pulp_server.extensions.consumer.should_receive(:bind_all).with(@system.uuid, 'a', "yum_distributor", {:notify_agent=>false}).once.once.and_return([])
+      Katello.pulp_server.extensions.consumer.should_receive(:bind_all).with(@system.uuid, 'b', "yum_distributor", {:notify_agent=>false}).once.once.and_return([])
       put :enabled_repos, :id => @system.uuid, :enabled_repos => enabled_repos
       response.status.should == 200
     end
 
     it "should bind one and unbind one" do
-      Katello.pulp_server.extensions.consumer.should_receive(:retrieve_bindings).with(@system.uuid).once.and_return([{ 'repo_id' => 'b' }, { 'repo_id' => 'c' }])
-      Katello.pulp_server.extensions.consumer.should_receive(:bind_all).with(@system.uuid, 'a', false).once.once.and_return([])
-      Katello.pulp_server.extensions.consumer.should_receive(:unbind_all).with(@system.uuid, 'c').once.and_return([])
+      Katello.pulp_server.extensions.consumer.should_receive(:retrieve_bindings).with(@system.uuid).once.and_return(
+          [{ 'repo_id' => 'b', 'type_id' =>'yum_distributor'  }, { 'repo_id' => 'c', 'type_id' =>'yum_distributor'  }])
+      Katello.pulp_server.extensions.consumer.should_receive(:bind_all).with(@system.uuid, 'a', "yum_distributor", {:notify_agent=>false}).once.once.and_return([])
+      Katello.pulp_server.extensions.consumer.should_receive(:unbind_all).with(@system.uuid, 'c', 'yum_distributor').once.and_return([])
       put :enabled_repos, :id => @system.uuid, :enabled_repos => enabled_repos
       response.status.should == 200
     end
 
     it "should unbind two" do
-      Katello.pulp_server.extensions.consumer.should_receive(:retrieve_bindings).with(@system.uuid).once.and_return([{ 'repo_id' => 'a' }, { 'repo_id' => 'b' }])
-      Katello.pulp_server.extensions.consumer.should_receive(:unbind_all).with(@system.uuid, 'a').once.once.and_return([])
-      Katello.pulp_server.extensions.consumer.should_receive(:unbind_all).with(@system.uuid, 'b').once.once.and_return([])
+      Katello.pulp_server.extensions.consumer.should_receive(:retrieve_bindings).with(@system.uuid).once.and_return(
+          [{ 'repo_id' => 'a', 'type_id' =>'yum_distributor'  }, { 'repo_id' => 'b', 'type_id' =>'yum_distributor'  }])
+      Katello.pulp_server.extensions.consumer.should_receive(:unbind_all).with(@system.uuid, 'a', 'yum_distributor').once.once.and_return([])
+      Katello.pulp_server.extensions.consumer.should_receive(:unbind_all).with(@system.uuid, 'b', 'yum_distributor').once.once.and_return([])
       put :enabled_repos, :id => @system.uuid, :enabled_repos => enabled_repos_empty
       response.status.should == 200
     end

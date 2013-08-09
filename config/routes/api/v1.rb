@@ -350,8 +350,6 @@ Src::Application.routes.draw do
       match '/custom_info/:informable_type/:informable_id/:keyname' => 'custom_info#update', :via => :put, :as => :update_custom_info
       match '/custom_info/:informable_type/:informable_id/:keyname' => 'custom_info#destroy', :via => :delete, :as => :destroy_custom_info
 
-      match '*a', :to => 'errors#render_404'
-
     end # v1 scope
 
   end # '/api' namespace

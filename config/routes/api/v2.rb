@@ -325,8 +325,6 @@ Src::Application.routes.draw do
         match 'status/memory' => 'status#memory', :via => :get
       end
 
-      match '*a', :to => 'errors#render_404'
-
     end # module v1
 
 

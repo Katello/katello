@@ -182,8 +182,7 @@ describe Product, :katello => true do
         Resources::Candlepin::Content.stub!(:create).and_return({:id => "123", :type=>'yum'})
         Resources::Candlepin::Content.stub!(:update).and_return({:id => "123", :type=>'yum'})
         Resources::Candlepin::Content.stub!(:get).and_return({:id => "123", :type=>'yum'})
-        Repository.any_instance.stub(:publish_distributor)
-
+        Repository.any_instance.stub(:generate_metadata)
         @p = Product.create!(ProductTestData::SIMPLE_PRODUCT)
       end
 

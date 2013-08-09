@@ -1,0 +1,17 @@
+source "http://rubygems.org"
+
+gemspec
+
+path = File.expand_path('../../../lib', __FILE__)
+$LOAD_PATH << path unless $LOAD_PATH.include? path
+
+KATELLO_GEMFILE=File.expand_path('../../../Gemfile', __FILE__)
+unless File.exist?(KATELLO_GEMFILE)
+  puts "Cannot find katello Gemfile"
+else
+  self.instance_eval(Bundler.read_file(KATELLO_GEMFILE))
+end
+
+Dir[File.expand_path('../../bundler.d/*.rb', File.dirname(__FILE__))].each do |bundle|
+  self.instance_eval(Bundler.read_file(bundle), bundle)
+end

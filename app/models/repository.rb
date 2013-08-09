@@ -24,6 +24,10 @@ class Repository < ActiveRecord::Base
     Katello::Actions::RepositoryDestroy
   end
 
+  def create_event
+    Katello::Actions::RepositoryCreate
+  end
+
   include AsyncOrchestration
   include Ext::LabelFromName
   include Rails.application.routes.url_helpers
@@ -243,4 +247,5 @@ class Repository < ActiveRecord::Base
     search = Repository.where("library_instance_id=%s or repositories.id=%s"  % [repo.id, repo.id] )
     search.in_content_views([view])
   end
+
 end
