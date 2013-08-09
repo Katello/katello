@@ -177,8 +177,8 @@ describe Api::V1::SyncController, :katello => true do
       before(:each) do
         stub_product_with_repo
 
-        Runcible::Extensions::Repository.stub(:sync).with(@repository.pulp_id, anything()).and_return([async_task_1])
-        Runcible::Extensions::Repository.stub(:sync).with(@repository2.pulp_id, anything()).and_return([async_task_2])
+        Katello.pulp_server.extensions.repository.stub(:sync).with(@repository.pulp_id, anything()).and_return([async_task_1])
+        Katello.pulp_server.extensions.repository.stub(:sync).with(@repository2.pulp_id, anything()).and_return([async_task_2])
       end
 
       it "should find provider" do

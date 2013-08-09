@@ -5,7 +5,7 @@ http_interactions:
     uri: https://abed.usersys.redhat.com/pulp/api/v2/users/
     body: 
       encoding: US-ASCII
-      string: "{\"login\":\"batman\",\"name\":\"batman\",\"password\":\"zKNk3KnzXc2Sm7iX\"}"
+      string: "{\"login\":\"batman\",\"name\":\"batman\",\"password\":\"4Sh9LEf5HXV5Tolt\"}"
     headers: 
       Accept: 
       - application/json
@@ -14,7 +14,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="nMxXwj00axsGWrJcPhwqyDR8qdVkwoYR6bRcOy68yMg", oauth_signature="A8uJte98X9t%2BFwnFZAe%2F1t1r%2B4k%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1375196537", oauth_version="1.0"
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="iMOfkWeU3oIl2p2nGXsZzEpl0EeB8c0hNR3CI7lCtbk", oauth_signature="oqX7J4GwXoPiBxGb4SMGOdsuMAI%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1375362402", oauth_version="1.0"
       Pulp-User: 
       - admin
       Content-Length: 
@@ -27,7 +27,7 @@ http_interactions:
       message: Created
     headers: 
       Date: 
-      - Tue, 30 Jul 2013 15:02:17 GMT
+      - Thu, 01 Aug 2013 13:06:42 GMT
       Server: 
       - Apache/2.2.15 (Red Hat)
       Location: 
@@ -38,85 +38,9 @@ http_interactions:
       - application/json
     body: 
       encoding: US-ASCII
-      string: "{\"_id\": {\"$oid\": \"51f7d57a5ca0137fe757a14a\"}, \"name\": \"batman\", \"roles\": [], \"_ns\": \"users\", \"login\": \"batman\", \"id\": \"51f7d57a5ca0137fe757a14a\", \"_href\": \"/pulp/api/v2/users/batman/\"}"
+      string: "{\"_id\": {\"$oid\": \"51fa5d625ca013687ad58ff6\"}, \"name\": \"batman\", \"roles\": [], \"_ns\": \"users\", \"login\": \"batman\", \"id\": \"51fa5d625ca013687ad58ff6\", \"_href\": \"/pulp/api/v2/users/batman/\"}"
     http_version: 
-  recorded_at: Tue, 30 Jul 2013 15:02:18 GMT
-- request: 
-    method: post
-    uri: https://abed.usersys.redhat.com/pulp/api/v2/roles/super-users/users/
-    body: 
-      encoding: US-ASCII
-      string: "{\"login\":\"batman\"}"
-    headers: 
-      Accept: 
-      - application/json
-      Accept-Encoding: 
-      - gzip, deflate
-      Content-Type: 
-      - application/json
-      Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="BVTlbRFEcFdih2DPUNVItcMXZBpNFbQlsERDuU7mmYM", oauth_signature="83rS4PRiYgEAMmCm7t8tbCxxfUI%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1375196539", oauth_version="1.0"
-      Pulp-User: 
-      - admin
-      Content-Length: 
-      - "18"
-      User-Agent: 
-      - Ruby
-  response: 
-    status: 
-      code: 200
-      message: OK
-    headers: 
-      Date: 
-      - Tue, 30 Jul 2013 15:02:19 GMT
-      Server: 
-      - Apache/2.2.15 (Red Hat)
-      Content-Length: 
-      - "4"
-      Content-Type: 
-      - application/json
-    body: 
-      encoding: US-ASCII
-      string: "null"
-    http_version: 
-  recorded_at: Tue, 30 Jul 2013 15:02:19 GMT
-- request: 
-    method: delete
-    uri: https://abed.usersys.redhat.com/pulp/api/v2/roles/super-users/users/batman/
-    body: 
-      encoding: US-ASCII
-      string: ""
-    headers: 
-      Accept: 
-      - application/json
-      Accept-Encoding: 
-      - gzip, deflate
-      Content-Type: 
-      - application/json
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="nP9P1GHjKgZ3B7vMIoWeuk4DkddNISKJL5HO40hWfA", oauth_signature="cHQC4GiBrSj6bxT5y6RNp5lpmTc%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1375196539", oauth_version="1.0"
-      Pulp-User: 
-      - admin
-      User-Agent: 
-      - Ruby
-  response: 
-    status: 
-      code: 200
-      message: OK
-    headers: 
-      Date: 
-      - Tue, 30 Jul 2013 15:02:19 GMT
-      Server: 
-      - Apache/2.2.15 (Red Hat)
-      Content-Length: 
-      - "4"
-      Content-Type: 
-      - application/json
-    body: 
-      encoding: US-ASCII
-      string: "null"
-    http_version: 
-  recorded_at: Tue, 30 Jul 2013 15:02:19 GMT
+  recorded_at: Thu, 01 Aug 2013 13:06:42 GMT
 - request: 
     method: delete
     uri: https://abed.usersys.redhat.com/pulp/api/v2/users/batman/
@@ -131,7 +55,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="1Sa5o22lp18SbwPetTaWB0q12ThUzJXHSHpq2co4", oauth_signature="3ZnA0NT3hcBnVtd8eK8xRnVhieA%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1375196540", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="jKhSGjnr7gCEnOEva5P9DUoWJFl0JACHSiuGn1TB0", oauth_signature="gecKcoH6e6vNiL55md19dIkUY6M%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1375362403", oauth_version="1.0"
       Pulp-User: 
       - admin
       User-Agent: 
@@ -142,7 +66,7 @@ http_interactions:
       message: OK
     headers: 
       Date: 
-      - Tue, 30 Jul 2013 15:02:20 GMT
+      - Thu, 01 Aug 2013 13:06:43 GMT
       Server: 
       - Apache/2.2.15 (Red Hat)
       Content-Length: 
@@ -153,5 +77,81 @@ http_interactions:
       encoding: US-ASCII
       string: "null"
     http_version: 
-  recorded_at: Tue, 30 Jul 2013 15:02:20 GMT
+  recorded_at: Thu, 01 Aug 2013 13:06:43 GMT
+- request: 
+    method: delete
+    uri: https://abed.usersys.redhat.com/pulp/api/v2/roles/super-users/users/batman/
+    body: 
+      encoding: US-ASCII
+      string: ""
+    headers: 
+      Accept: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Content-Type: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="HF38kLWNCxqoMzV2qukmSMesiI5O2ZMNFOD1RKI", oauth_signature="n9o7L%2BHc22tF9G7Xg8eftwP2fV4%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1375362404", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      User-Agent: 
+      - Ruby
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Date: 
+      - Thu, 01 Aug 2013 13:06:44 GMT
+      Server: 
+      - Apache/2.2.15 (Red Hat)
+      Content-Length: 
+      - "4"
+      Content-Type: 
+      - application/json
+    body: 
+      encoding: US-ASCII
+      string: "null"
+    http_version: 
+  recorded_at: Thu, 01 Aug 2013 13:06:44 GMT
+- request: 
+    method: post
+    uri: https://abed.usersys.redhat.com/pulp/api/v2/roles/super-users/users/
+    body: 
+      encoding: US-ASCII
+      string: "{\"login\":\"batman\"}"
+    headers: 
+      Accept: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Content-Type: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="NvULM3imJqcFM4hpdffovNdFAa26DKDBbgR9nrX0xOw", oauth_signature="HiKq8K65jm0rFd9sFbBE9Jvpl1E%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1375362405", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      Content-Length:
+      - "18"
+      User-Agent: 
+      - Ruby
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Date: 
+      - Thu, 01 Aug 2013 13:06:45 GMT
+      Server: 
+      - Apache/2.2.15 (Red Hat)
+      Content-Length: 
+      - "4"
+      Content-Type: 
+      - application/json
+    body: 
+      encoding: US-ASCII
+      string: "null"
+    http_version: 
+  recorded_at: Thu, 01 Aug 2013 13:06:45 GMT
 recorded_with: VCR 2.5.0

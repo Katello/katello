@@ -78,27 +78,14 @@ class ActivationKey < ActiveRecord::Base
     system.system_activation_keys.build(:activation_key => self)
   end
 
-  # compute number of consumptions per pool for a product to satisfy
-  # the allocate requirement
   def calculate_consumption(product, pools, allocate)
     pools = pools.sort_by { |pool| [pool.start_date, pool.cp_id] }
     consumption = {}
 
     if product.provider.redhat_provider?
-      not_allocated = pools.reduce(allocate) do |left_to_allocate, pool|
-        break if left_to_allocate <= 0
-        sockets = [pool.sockets, 1].max
-        available = (pool.quantity == -1 ? 999_999_999 : pool.quantity) - pool.consumed
-        # take the number of sockets per pool into account
-        to_consume = [(left_to_allocate.to_f / sockets).ceil, available].min
-        consumption[pool] = to_consume
-        left_to_allocate - (to_consume * sockets)
-      end
-
-      if not_allocated.to_i > 0
-        raise _("Not enough pools: %{not_allocated} sockets " +
-                "out of %{allocate} not covered") %
-                {:not_allocated => not_allocated, :allocate => allocate}
+      pools.each do |pool|
+        consumption[pool] ||= 0
+        consumption[pool] += 1
       end
     else
       consumption[pools.first] = 1

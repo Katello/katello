@@ -28,7 +28,7 @@ module Glue::Pulp::Package
       alias_method 'id', '_id'
 
       def self.find(id)
-        package_attrs = Runcible::Extensions::Rpm.find_by_unit_id(id)
+        package_attrs = Katello.pulp_server.extensions.rpm.find_by_unit_id(id)
         return if package_attrs.nil?
         Package.new(package_attrs) if package_attrs
       rescue RestClient::ResourceNotFound => exception

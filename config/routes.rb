@@ -236,6 +236,7 @@ Src::Application.routes.draw do
       put :add_system_groups
       put :remove_system_groups
       get :custom_info
+      get :releases
     end
     collection do
       get :auto_complete

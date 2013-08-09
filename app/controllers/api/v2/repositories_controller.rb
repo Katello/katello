@@ -39,7 +39,7 @@ class Api::V2::RepositoriesController < Api::V1::RepositoriesController
   api :POST, "/products/:product_id/repositories", "Create a repository"
   param :product_id, :number, :required => true, :desc => "id of a product the repository will be contained in"
   param_group :repo
-  see "v2#gpg_keys#index"
+  see "v1#gpg_keys#index"
   def create
     raise HttpErrors::BadRequest, _("Repository can be only created for custom provider.") unless @product.custom?
 
