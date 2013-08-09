@@ -4,6 +4,7 @@ if Rails.env.development?
 
     vendor_files = [
       'app/assets/javascripts/common/routes',
+      'app/assets/javascripts/common/bastion-routes',
       'app/assets/javascripts/common/chosen.jquery',
       'app/assets/javascripts/common/spin.min',
       'app/assets/javascripts/html5/excanvas',

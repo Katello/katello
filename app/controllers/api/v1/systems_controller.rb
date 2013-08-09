@@ -210,7 +210,8 @@ Schedules the consumer identity certificate regeneration
         :filter        => filters,
         :load_records? => true
     }
-    options.merge!(params.slice(:sort_by, :sort_order))
+    options[:sort_by] = params[:sort_by] if params[:sort_by]
+    options[:sort_order]= params[:sort_order] if params[:sort_order]
 
     if params[:paged]
       options[:page_size] = params[:page_size] || current_user.page_size
@@ -221,7 +222,7 @@ Schedules the consumer identity certificate regeneration
 
     if params[:paged]
       systems = {
-        :systems  => systems,
+        :records  => systems,
         :subtotal => total_count,
         :total    => items.total_items
       }

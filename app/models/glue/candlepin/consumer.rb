@@ -22,6 +22,8 @@ module Glue::Candlepin::Consumer
       before_destroy :destroy_candlepin_orchestration
       after_rollback :rollback_on_candlepin_create, :on => :create
 
+      as_json_hook :consumer_as_json
+
       lazy_accessor :href, :facts, :cp_type, :href, :idCert, :owner, :lastCheckin, :created, :guestIds,
                     :installedProducts, :autoheal, :releaseVer, :serviceLevel, :capabilities,
         :initializer => lambda {|s|
@@ -78,6 +80,14 @@ module Glue::Candlepin::Consumer
       hash = super(options)
       hash = hash.merge(:serviceLevel => self.serviceLevel)
       hash
+    end
+
+    def consumer_as_json(json={})
+      json['compliance'] = self.compliance
+      json['registered'] = self.created
+      json['checkin_time'] = self.checkin_time
+      json['distribution'] = self.distribution
+      json
     end
 
     def validate_cp_consumer

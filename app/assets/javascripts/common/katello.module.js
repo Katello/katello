@@ -23,10 +23,9 @@ var Katello = angular.module('Katello', [
     'alchemy',
     'alch-templates',
     'ngSanitize',
-    'Katello.i18n',
-    'Katello.menu',
-    'Katello.systems',
-    'Katello.system-groups'
+    'Katello.globals',
+    'Bastion.i18n',
+    'Bastion.menu'
 ]);
 
 /**
@@ -39,6 +38,18 @@ var Katello = angular.module('Katello', [
  *   Used for establishing application wide configuration such as adding the Rails CSRF token
  *   to every request.
  */
-Katello.config(['$httpProvider', function($httpProvider){
+Katello.config(['$httpProvider', function($httpProvider) {
     $httpProvider.defaults.headers.common['X-CSRF-TOKEN'] = $('meta[name=csrf-token]').attr('content');
+}]);
+
+
+/**
+ * @ngdoc run
+ * @name Bastion.i18n.dictionary.run
+ *
+ * @description
+ *   Prime the i18n dictionary to avoid delay in translation replacement.
+ */
+angular.module('Katello').run(['i18nDictionary', function(i18nDictionary) {
+    i18nDictionary.get();
 }]);
