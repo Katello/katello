@@ -1,84 +1,103 @@
 <section class="nutupane-sub-section">
   <div class="nutupane-titlebar">
-    <h3 class="nutupane-title">{{ "Current Subscription(s)" | i18n }}</h3>
+    <h1 class="nutupane-title">{{ "Current Subscription(s)" | i18n }}</h1>
   </div>
   <div class="nutupane-actionbar">
     <div class="form">
       <input type="text"
              class="input input-search"
              placeholder="{{ 'Filter' | i18n }}"
-             ng-model="systemSearch">
+             ng-model="currentSubscriptionsTable.filter">
+      <span class="result-count">Showing {{ currentSubscriptionsTable.rows.length }} of {{ currentSubscriptionsTable.resource.subtotal }} ({{ currentSubscriptionsTable.resource.total }} Total) Subscriptions</span>
+    </div>
+    <div class="fr select-action">
+      <span>{{ currentSubscriptionsTable.numSelected }} Selected</span>
+      <span>|</span>
+      <a class="deselect-action"
+         ng-class="{ 'disabled-link' : currentSubscriptionsTable.numSelected == 0 }"
+         ng-click="currentSubscriptionsTable.selectAll(false)">
+        Deselect All
+      </a>
     </div>
   </div>
 
-  <p ng-show="systemSubscriptions.length == 0">
-    {{ "You have no current subscriptions" | i18n }}
-  </p>
+  <div alch-table="currentSubscriptionsTable">
+    <div alch-container-scroll control-width="table" alch-infinite-scroll="table.nextPage()">
+      <table ng-class="{'table-mask': table.working}" class="table table-full table-striped">
+        <thead>
+        <tr alch-table-head row-select>
+          <th alch-table-column="name">{{ "Name" | i18n }}</th>
+          <th alch-table-column="sla">{{ "SLA" | i18n }}</th>
+          <th alch-table-column="contract">{{ "Contract" | i18n }}</th>
+          <th alch-table-column="quantity">{{ "Quantity" | i18n }}</th>
+          <th alch-table-column="startDate">{{ "Start Date" | i18n }}</th>
+          <th alch-table-column="endDate">{{ "End Date" | i18n }}</th>
+        </tr>
+        </thead>
 
-  <table ng-show="systemSubscriptions.length > 0" class="table table-striped">
-    <thead>
-      <tr>
-        <th>{{ "Name" | i18n }}</th>
-        <th>{{ "SLA" | i18n }}</th>
-        <th>{{ "Contract" | i18n }}</th>
-        <th>{{ "Quantity" | i18n }}</th>
-        <th>{{ "Start Date" | i18n }}</th>
-        <th>{{ "End Date" | i18n }}</th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <tr ng-repeat="subscription in systemSubscriptions | filter:systemSearch" row-select>
-        <td>{{ subscription.poolName }}</td>
-        <td>{{ subscription.sla }}</td>
-        <td>{{ subscription.contractNumber }}</td>
-        <td>{{ subscription.quantity }}</td>
-        <td>{{ subscription.startDate }}</td>
-        <td>{{ subscription.endDate }}</td>
-      </tr>
-    </tbody>
-  </table>
+        <tbody>
+          <tr alch-table-row ng-repeat="subscription in table.rows | filter:table.filter" row-select>
+            <td alch-table-cell>{{ subscription.poolName }}</td>
+            <td alch-table-cell>{{ subscription.sla }}</td>
+            <td alch-table-cell>{{ subscription.contractNumber }}</td>
+            <td alch-table-cell>{{ subscription.quantity }}</td>
+            <td alch-table-cell>{{ subscription.startDate | date:"short" }}</td>
+            <td alch-table-cell>{{ subscription.endDate | date:"short"}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </section>
-
 
 <section class="nutupane-sub-section">
   <div class="nutupane-titlebar">
-    <h3 class="nutupane-title">{{ "Available Subscription(s)" | i18n }}</h3>
+    <h1 class="nutupane-title">{{ "Available Subscription(s)" | i18n }}</h1>
   </div>
   <div class="nutupane-actionbar">
     <div class="form">
       <input type="text"
              class="input input-search"
              placeholder="{{ 'Filter' | i18n }}"
-             ng-model="availableSearch">
+             ng-model="availableSubscriptionsTable.filter">
+      <span class="result-count">Showing {{ availableSubscriptionsTable.rows.length }} of {{ availableSubscriptionsTable.resource.subtotal }} ({{ availableSubscriptionsTable.resource.total }} Total) Subscriptions</span>
+    </div>
+    <div class="fr select-action">
+      <span>{{ availableSubscriptionsTable.numSelected }} Selected</span>
+      <span>|</span>
+      <a class="deselect-action"
+         ng-class="{ 'disabled-link' : availableSubscriptionsTable.numSelected == 0 }"
+         ng-click="availableSubscriptionsTable.selectAll(false)">
+        Deselect All
+      </a>
     </div>
   </div>
 
-  <p ng-show="availableSubscriptions.length == 0">
-    {{ "You have no available subscriptions" | i18n }}
-  </p>
+  <div alch-table="availableSubscriptionsTable">
+    <div alch-container-scroll control-width="table" alch-infinite-scroll="table.nextPage()">
+      <table ng-class="{'table-mask': table.working}" class="table table-full table-striped">
+        <thead>
+          <tr alch-table-head row-select>
+            <th alch-table-column="name">{{ "Name" | i18n }}</th>
+            <th alch-table-column="sla">{{ "SLA" | i18n }}</th>
+            <th alch-table-column="contract">{{ "Contract" | i18n }}</th>
+            <th alch-table-column="quantity">{{ "Quantity" | i18n }}</th>
+            <th alch-table-column="startDate">{{ "Start Date" | i18n }}</th>
+            <th alch-table-column="endDate">{{ "End Date" | i18n }}</th>
+          </tr>
+        </thead>
 
-  <table ng-show="availableSubscriptions.length > 0" class="table table-striped">
-    <thead>
-      <tr>
-        <th>{{ "Name" | i18n }}</th>
-        <th>{{ "SLA" | i18n }}</th>
-        <th>{{ "Contract" | i18n }}</th>
-        <th>{{ "Quantity" | i18n }}</th>
-        <th>{{ "Start Date" | i18n }}</th>
-        <th>{{ "End Date" | i18n }}</th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <tr ng-repeat="subscription in availableSubscriptions | filter:availableSearch" row-select>
-        <td>{{ subscription.name }}</td>
-        <td>{{ subscription.sla }}</td>
-        <td>{{ subscription.contractNumber }}</td>
-        <td>{{ subscription.quantity }}</td>
-        <td>{{ subscription.startDate | date:"short" }}</td>
-        <td>{{ subscription.endDate | date:"short"}}</td>
-      </tr>
-    </tbody>
-  </table>
+        <tbody>
+          <tr alch-table-row ng-repeat="subscription in table.rows | filter:table.filter" row-select>
+            <td alch-table-cell>{{ subscription.name }}</td>
+            <td alch-table-cell>{{ subscription.sla }}</td>
+            <td alch-table-cell>{{ subscription.contractNumber }}</td>
+            <td alch-table-cell>{{ subscription.quantity }}</td>
+            <td alch-table-cell>{{ subscription.startDate | date:"short" }}</td>
+            <td alch-table-cell>{{ subscription.endDate | date:"short"}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </section>

@@ -148,7 +148,7 @@ angular.module('alchemy')
     }])
     .directive('alchTableColumn', ['$compile', function($compile) {
         var sortIconTemplate = '<th ng-click="table.sortBy(column)">' +
-                                  '<i class="sort-icon" ng-show="table.sort.by == column.id" ng-class="{\'icon-sort-down\': column.sortOrder == \'DESC\', \'icon-sort-up\': column.sortOrder == \'ASC\'}"></i>' +
+                                  '<i class="sort-icon" ng-show="table.resource.sort.by == column.id" ng-class="{\'icon-sort-down\': column.sortOrder == \'DESC\', \'icon-sort-up\': column.sortOrder == \'ASC\'}"></i>' +
                                '</th>';
         return {
             require: '^alchTableHead',

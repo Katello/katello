@@ -14,7 +14,6 @@
 describe('Factory: Nutupane', function() {
     var $timeout,
         $location,
-        CurrentOrganization,
         Resource,
         Nutupane;
 
@@ -23,14 +22,16 @@ describe('Factory: Nutupane', function() {
     beforeEach(module(function($provide) {
         Resource = {
             query: function(params, callback) {
-                callback();
+                return {results: []};
             },
             total: 10,
             subtotal: 8,
-            offset: 5
+            offset: 5,
+            sort: {
+                by: "description",
+                order: "ASC"
+            }
         };
-
-        $provide.value('CurrentOrganization', 'ACME');
     }));
 
     beforeEach(inject(function(_$location_, _$timeout_, _Nutupane_) {
@@ -102,9 +103,9 @@ describe('Factory: Nutupane', function() {
             expect(Resource.query).not.toHaveBeenCalled();
         });
 
-        it("refusing to fetch more data if the subtotal of records equals the offset", function() {
+        it("refusing to fetch more data if the subtotal of records equals the number of rows", function() {
             spyOn(Resource, 'query');
-            nutupane.table.resource.offset = 8;
+            nutupane.table.rows = new Array(8);
             nutupane.table.nextPage();
 
             expect(Resource.query).not.toHaveBeenCalled();
@@ -112,27 +113,27 @@ describe('Factory: Nutupane', function() {
 
         describe("provides a way to sort the table", function(){
             it ("defaults the sort to ascending if the previous sort does not match the new sort.", function() {
-                nutupane.table.sort = {};
+                nutupane.table.resource.sort = {};
                 nutupane.table.sortBy({id: "name"});
-                expect(nutupane.table.sort.by).toBe("name");
-                expect(nutupane.table.sort.order).toBe("ASC");
+                expect(nutupane.table.resource.sort.by).toBe("name");
+                expect(nutupane.table.resource.sort.order).toBe("ASC");
             });
 
             it("toggles the sort order if already sorting by that column", function() {
-                nutupane.table.sort = {
+                nutupane.table.resource.sort = {
                     by: 'name',
                     order: 'ASC'
                 };
                 nutupane.table.sortBy({id: "name"});
-                expect(nutupane.table.sort.by).toBe("name");
-                expect(nutupane.table.sort.order).toBe("DESC");
+                expect(nutupane.table.resource.sort.by).toBe("name");
+                expect(nutupane.table.resource.sort.order).toBe("DESC");
             });
 
             it("sets the column sort order and marks it as active.", function() {
                 var column = {id: "name"}
-                nutupane.table.sort = {};
+                nutupane.table.resource.sort = {};
                 nutupane.table.sortBy(column);
-                expect(column.sortOrder).toBe(nutupane.table.sort.order);
+                expect(column.sortOrder).toBe(nutupane.table.resource.sort.order);
                 expect(column.active).toBe(true);
             });
 

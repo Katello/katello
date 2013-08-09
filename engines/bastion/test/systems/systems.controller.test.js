@@ -38,7 +38,8 @@ describe('Controller: SystemsController', function() {
     // Initialize controller
     beforeEach(inject(function($controller, $rootScope) {
         $scope = $rootScope.$new();
-        $controller('SystemsController', {$scope: $scope, $state: $state, Nutupane: Nutupane, System: System});
+        $controller('SystemsController', {$scope: $scope, $state: $state, Nutupane: Nutupane,
+            System: System, CurrentOrganization: 'CurrentOrganization'});
     }));
 
     it("provides a way to get the status color for the system.", function() {
