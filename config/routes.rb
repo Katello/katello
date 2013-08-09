@@ -498,4 +498,5 @@ Src::Application.routes.draw do
 
   match 'about', :to => "application_info#about", :as => "about"
 
+  match '/i18n/dictionary' => 'i18n#show', :via=>:get
 end

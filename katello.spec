@@ -538,7 +538,7 @@ rm -f bundler.d/build.rb
 
 #copy the application to the target directory
 mkdir .bundle
-cp -R .bundle Gemfile.in bundler.d Rakefile app autotest ca config config.ru db integration_spec lib public script spec vendor %{buildroot}%{homedir}
+cp -R .bundle Gemfile.in bundler.d Rakefile app autotest ca config config.ru db integration_spec lib public script spec vendor engines %{buildroot}%{homedir}
 rm -f {buildroot}%{homedir}/script/katello-reset-dbs
 
 #copy MO files
@@ -681,6 +681,22 @@ usermod -a -G katello-shared tomcat
 %{homedir}/app/lib/validators
 %{homedir}/app/lib/api
 %{homedir}/app/lib/dashboard
+
+%dir %{homedir}/engines/bastion
+%{homedir}/engines/bastion/bastion.gemspec
+%{homedir}/engines/bastion/README
+%{homedir}/engines/bastion/app
+%{homedir}/engines/bastion/lib
+%{homedir}/engines/bastion/vendor/assets/components
+%exclude %{homedir}/engines/bastion/bower.json
+%exclude %{homedir}/engines/bastion/Gruntfile.js
+%exclude %{homedir}/engines/bastion/karma.conf.js
+%exclude %{homedir}/engines/bastion/package.json
+%exclude %{homedir}/engines/bastion/.bowerrc
+%exclude %{homedir}/engines/bastion/.jshintrc
+%exclude %{homedir}/engines/bastion/.gitignore
+%exclude %{homedir}/engines/bastion/test
+
 %dir %{homedir}/app/lib/resources
 %{homedir}/app/lib/content_search
 %{homedir}/lib/tasks
