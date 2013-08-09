@@ -162,6 +162,7 @@ describe RepositoriesController, :katello => true do
                               :label => @repo_name,
                               :feed => "http://foo.com",
                               :unprotected => false,
+                              :content_type => "yum",
                               :gpg_key =>@gpg.id.to_s}}
       end
       specify  do
