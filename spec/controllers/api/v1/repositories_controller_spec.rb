@@ -49,8 +49,8 @@ describe Api::V1::RepositoriesController, :katello => true do
       @repo = new_test_repo(@organization.library, @product, "repo_1", "#{@organization.name}/Library/prod/repo")
       Repository.stub(:find).and_return(@repo)
       PulpSyncStatus.stub(:using_pulp_task).and_return(task_stub)
-      Runcible::Extensions::PackageGroup.stub(:all => {})
-      Runcible::Extensions::PackageCategory.stub(:all => {})
+      Katello.pulp_server.extensions.package_group.stub(:all => {})
+      Katello.pulp_server.extensions.package_category.stub(:all => {})
     end
 
     describe "for create" do
@@ -410,10 +410,10 @@ describe Api::V1::RepositoriesController, :katello => true do
       before do
         @repo = Repository.new(:pulp_id => "123", :id => "123")
         Repository.stub(:find).and_return(@repo)
-        Runcible::Extensions::Repository.stub(:package_groups).and_return([])
+        Katello.pulp_server.extensions.repository.stub(:package_groups).and_return([])
       end
       it "should call Pulp layer" do
-        Runcible::Extensions::Repository.should_receive(:package_groups).with("123")
+        Katello.pulp_server.extensions.repository.should_receive(:package_groups).with("123")
         subject
       end
       it { should be_success }
@@ -425,10 +425,10 @@ describe Api::V1::RepositoriesController, :katello => true do
       before do
         @repo = Repository.new(:pulp_id => "123", :id => "123")
         Repository.stub(:find).and_return(@repo)
-        Runcible::Extensions::Repository.stub(:package_categories).and_return([])
+        Katello.pulp_server.extensions.repository.stub(:package_categories).and_return([])
       end
       it "should call Pulp layer" do
-        Runcible::Extensions::Repository.should_receive(:package_categories).with("123")
+        Katello.pulp_server.extensions.repository.should_receive(:package_categories).with("123")
         subject
       end
       it { should be_success }

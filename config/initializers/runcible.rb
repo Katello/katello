@@ -1,3 +1,5 @@
+require 'util/thread_session'
+
 if Katello.config.use_pulp
 
   # override Runcible's default configuration error message
@@ -8,5 +10,6 @@ if Katello.config.use_pulp
       end
     end
   end
+
 
 end

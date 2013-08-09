@@ -59,7 +59,7 @@ describe System do
     Resources::Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
     Resources::Candlepin::Consumer.stub!(:update).and_return(true)
 
-    Runcible::Extensions::Consumer.stub!(:create).and_return({:id => uuid}) if Katello.config.katello?
+    Katello.pulp_server.extensions.consumer.stub!(:create).and_return({:id => uuid}) if Katello.config.katello?
   end
 
   context "system in valid state should be valid" do
@@ -79,7 +79,7 @@ describe System do
                                                                       system_name, cp_type, facts, installed_products,
                                                                       nil, nil, nil, nil).and_return({:uuid => uuid,
                                                                                                 :owner => {:key => uuid}})
-    Runcible::Extensions::Consumer.should_receive(:create).once.with(uuid, {:display_name => system_name}).and_return({:id => uuid}) if Katello.config.katello?
+    Katello.pulp_server.extensions.consumer.should_receive(:create).once.with(uuid, {:display_name => system_name}).and_return({:id => uuid}) if Katello.config.katello?
     @system.save!
   end
 
@@ -114,7 +114,7 @@ describe System do
 
     it "should delete consumer in candlepin and pulp" do
       Resources::Candlepin::Consumer.should_receive(:destroy).once.with(uuid).and_return(true)
-      Runcible::Extensions::Consumer.should_receive(:delete).once.with(uuid).and_return(true) if Katello.config.katello?
+      Katello.pulp_server.extensions.consumer.should_receive(:delete).once.with(uuid).and_return(true) if Katello.config.katello?
       @system.destroy
     end
   end
@@ -296,7 +296,7 @@ describe System do
 
   context "pulp attributes", :katello => true do
     it "should update package-profile" do
-      Runcible::Extensions::Consumer.should_receive(:upload_profile).once.with(uuid, 'rpm', package_profile).and_return(true)
+      Katello.pulp_server.extensions.consumer.should_receive(:upload_profile).once.with(uuid, 'rpm', package_profile).and_return(true)
       @system.upload_package_profile(package_profile)
     end
   end

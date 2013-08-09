@@ -107,8 +107,7 @@ end
 def configure_runcible
   if Katello.config[:use_pulp]
     uri = URI.parse(Katello.config.pulp.url)
-
-    Runcible::Base.config = {
+    runcible_config = {
       :url      => "#{uri.scheme}://#{uri.host}",
       :api_path => uri.path,
       :user     => "admin",
@@ -116,7 +115,8 @@ def configure_runcible
                     :oauth_key    => Katello.config.pulp.oauth_key }
     }
 
-    Runcible::Base.config[:logger] = 'stdout' if ENV['logging'] == "true"
+    runcible_config[:logger] = 'stdout' if ENV['logging'] == "true"
+    Katello.pulp_server = Runcible::Instance.new(runcible_config)
   end
 end
 

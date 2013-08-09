@@ -69,7 +69,7 @@ module OrganizationHelperMethods
   end
 
   def promote_content_view(cv, from_env, to_env)
-    Runcible::Extensions::Repository.stub(:create).and_return({})
+    Katello.pulp_server.extensions.repository.stub(:create).and_return({})
     Repository.any_instance.stub(:clone_contents).and_return([])
     Repository.any_instance.stub(:sync).and_return([])
     Repository.any_instance.stub(:pulp_repo_facts).and_return({:clone_ids => []})

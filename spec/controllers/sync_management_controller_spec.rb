@@ -26,7 +26,7 @@ describe SyncManagementController, :katello => true do
 
   context "Environment is set" do
     before (:each) do
-      Runcible::Extensions::Repository.stub(:search_by_repository_ids).and_return([])
+      Katello.pulp_server.extensions.repository.stub(:search_by_repository_ids).and_return([])
       setup_current_organization
       @library = KTEnvironment.new
       @library.stub!(:library?).and_return(true)
