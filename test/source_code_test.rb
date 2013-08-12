@@ -132,6 +132,27 @@ the single entry point to configuration. ENV variables are processed there.
       end
     end
 
+    it "does not have any 'debugger' statements accidentally included in the ruby source" do
+      doc = "don't forget to remove all your 'debugger' statements"
+      SourceCode.new("**/*.rb").fail_on_ruby_token(doc) do |ripper_event, token|
+        ripper_event == :on_ident && token == "debugger"
+      end
+    end
+
+    it "does not have any 'debugger' statements accidentally left in the haml" do
+      doc = "don't forget to remove all your 'debugger' statements"
+      SourceCode.new("**/*.haml").check_lines(doc) do |line|
+        line !~ /\A\s+-\s+debugger(\s+[if|unless]\s+.+)?\z/
+      end
+    end
+
+    it "does not have any 'debugger' statements accidentally left in the JS" do
+      doc = "don't forget to remove all your 'debugger' statements"
+      SourceCode.new("**/*.js").check_lines(doc) do |line|
+        line !~ /\A\s+debugger\z/
+      end
+    end
+
   end
 
   describe 'gettext' do
