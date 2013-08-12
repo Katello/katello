@@ -101,6 +101,14 @@ the single entry point to configuration. ENV variables are processed there.
     it 'does not use general rescue => e' do
       skip 'to be enabled'
     end
+
+    it "does not have debugger statements" do
+      doc = "forgot to remove a debugger statement"
+      SourceCode.new('**/*.{rb,js,haml}').check_lines(doc) do |line|
+        line !~ /\A\s+debugger/
+      end
+    end
+
   end
 
   describe 'gettext' do
