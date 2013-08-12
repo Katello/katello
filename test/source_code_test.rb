@@ -11,6 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 # encoding: UTF-8
+require 'ripper'
 
 unless ENV['RAILS_ENV'] == 'build' # ok
   require_relative 'minitest_helper'
@@ -58,6 +59,19 @@ class SourceCodeTest < MiniTest::Rails::ActiveSupport::TestCase
                  join("\n")
     end
 
+    def fail_on_ruby_token(message = nil, &condition)
+      bad_tokens = each_file.collect do |file, file_path|
+        bad_tokens_in_file = Ripper.lex(file).collect do |line_column, ripper_event, token|
+          [file_path, line_column[0], line_column[1]] if condition.call(ripper_event, token)
+        end.compact
+        bad_tokens_in_file
+      end.flatten(1)
+      assert bad_tokens.empty?,
+        "#{message + "\n" if message}" + bad_tokens.collect { |file_path, line_no, column_no|
+          " - %s: [%d, %d]" % [file_path, line_no, column_no]
+        }.join("\n")
+    end
+
   end
 
   describe 'formatting' do
@@ -103,6 +117,21 @@ the single entry point to configuration. ENV variables are processed there.
     it 'does not use general rescue => e' do
       skip 'to be enabled'
     end
+
+    it "does not use 'and' in boolean expressions" do
+      doc = "don't use 'and' in boolean expressions https://github.com/styleguide/ruby"
+      SourceCode.new('**/*.rb').fail_on_ruby_token(doc) do |ripper_event, token|
+        ripper_event == :on_kw && token == "and"
+      end
+    end
+
+    it "does not use 'or' in boolean expressions" do
+      doc = "don't use 'or' in boolean expressions https://github.com/styleguide/ruby"
+      SourceCode.new('**/*.rb').fail_on_ruby_token(doc) do |ripper_event, token|
+        ripper_event == :on_kw && token == "or"
+      end
+    end
+
   end
 
   describe 'gettext' do
