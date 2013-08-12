@@ -43,13 +43,13 @@ class Api::V1::SystemsController < Api::V1::ApiController
       subscribable = @content_view ? @content_view.subscribable? : true
       subscribable && (@system.editable? || User.consumer?)
     end
-    read_system            = lambda { @system.readable? or User.consumer? }
-    delete_system          = lambda { @system.deletable? or User.consumer? }
+    read_system            = lambda { @system.readable? || User.consumer? }
+    delete_system          = lambda { @system.deletable? || User.consumer? }
 
     # After a system registers, it immediately uploads its packages. Although newer subscription-managers send
     # certificate (User.consumer? == true), some do not. In this case, confirm that the user has permission to
     # register systems in the system's organization and environment.
-   upload_system_packages = lambda { @system.editable? or System.registerable?(@system.environment, @system.organization) or User.consumer? }
+   upload_system_packages = lambda { @system.editable? || System.registerable?(@system.environment, @system.organization) || User.consumer? }
 
     {
         :new                              => register_system,
@@ -433,7 +433,7 @@ This information is then used for computing the errata available for the system.
     result[:processed_ids]  = processed_ids
     result[:error_ids]      = error_ids
     result[:unknown_labels] = unknown_paths
-    if error_ids.count > 0 or unknown_paths.count > 0
+    if error_ids.count > 0 || unknown_paths.count > 0
       result[:result] = "error"
     else
       result[:result] = "ok"
@@ -556,9 +556,10 @@ This information is then used for computing the errata available for the system.
   end
 
   def verify_presence_of_organization_or_environment
+    debugger
     # This has to grab the first default org associated with this user AND
     # the environment that goes with him.
-    return if params.has_key?(:organization_id) or params.has_key?(:owner) or params.has_key?(:environment_id)
+    return if params.has_key?(:organization_id) || params.has_key?(:owner) || params.has_key?(:environment_id)
 
     #At this point we know that they didn't supply an org or environment, so we can look up the default
     @environment = current_user.default_environment
