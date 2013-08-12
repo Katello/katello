@@ -57,6 +57,7 @@ class SourceCodeTest < MiniTest::Rails::ActiveSupport::TestCase
                  map { |line, line_number, file_path| ' - %s:%d: %s' % [file_path, line_number, line.strip] }.
                  join("\n")
     end
+
   end
 
   describe 'formatting' do
@@ -64,7 +65,7 @@ class SourceCodeTest < MiniTest::Rails::ActiveSupport::TestCase
       SourceCode.
           new('**/*.{rb,js,scss,haml}',
               %r'coverage|engines/bastion/node_modules|engines/bastion/vendor|(public|vendor)/assets/.*\.js').
-          check_lines { |line| line !~ / +$/ }
+          check_lines { |line| line !~ / +\z/ }
     end
 
     it 'does use soft-tabs' do
