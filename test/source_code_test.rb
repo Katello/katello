@@ -149,7 +149,7 @@ the single entry point to configuration. ENV variables are processed there.
     it "does not have any 'debugger' statements accidentally left in the JS" do
       doc = "don't forget to remove all your 'debugger' statements"
       SourceCode.new("**/*.js").check_lines(doc) do |line|
-        line !~ /\A\s+debugger\z/
+        line !~ /\A\s+debugger.*;\z/
       end
     end
 
