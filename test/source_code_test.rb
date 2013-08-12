@@ -53,7 +53,7 @@ class SourceCodeTest < MiniTest::Rails::ActiveSupport::TestCase
         [line, line_number, file_path] unless condition.call line
       end.compact
 
-      assert bad_lines.empty?,
+      assert_empty bad_lines,
              "#{message + "\n" if message}check lines:\n" + bad_lines.
                  map { |line, line_number, file_path| ' - %s:%d: %s' % [file_path, line_number, line.strip] }.
                  join("\n")
@@ -66,7 +66,7 @@ class SourceCodeTest < MiniTest::Rails::ActiveSupport::TestCase
         end.compact
         bad_tokens_in_file
       end.flatten(1)
-      assert bad_tokens.empty?,
+      assert_empty bad_tokens,
         "#{message + "\n" if message}" + bad_tokens.collect { |file_path, line_no, column_no|
           " - %s: [%d, %d]" % [file_path, line_no, column_no]
         }.join("\n")
