@@ -556,7 +556,6 @@ This information is then used for computing the errata available for the system.
   end
 
   def verify_presence_of_organization_or_environment
-    debugger
     # This has to grab the first default org associated with this user AND
     # the environment that goes with him.
     return if params.has_key?(:organization_id) || params.has_key?(:owner) || params.has_key?(:environment_id)
