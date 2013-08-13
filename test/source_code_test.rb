@@ -59,10 +59,12 @@ class SourceCodeTest < MiniTest::Rails::ActiveSupport::TestCase
                  join("\n")
     end
 
-    def fail_on_ruby_token(message = nil, &condition)
+    def fail_on_ruby_keyword(message = nil, &condition)
       bad_tokens = each_file.collect do |file, file_path|
-        bad_tokens_in_file = Ripper.lex(file).collect do |line_column, ripper_event, token|
-          [file_path, line_column[0], line_column[1]] if condition.call(ripper_event, token)
+        lexed_file = Ripper.lex(file)
+        bad_tokens_in_file = []
+        lexed_file.each_with_index do |entry, index|
+          bad_tokens_in_file << [file_path, entry[0][0], entry[0][1]] if condition.call(lexed_file, index, entry)
         end.compact
         bad_tokens_in_file
       end.flatten(1)
@@ -70,6 +72,10 @@ class SourceCodeTest < MiniTest::Rails::ActiveSupport::TestCase
         "#{message + "\n" if message}" + bad_tokens.collect { |file_path, line_no, column_no|
           " - %s: [%d, %d]" % [file_path, line_no, column_no]
         }.join("\n")
+    end
+
+    def self.token_is_keyword?(str, lex, index, token)
+      token[1] == :on_kw && token[2] == str && lex[index - 1][1] != :on_symbeg
     end
 
   end
@@ -120,29 +126,29 @@ the single entry point to configuration. ENV variables are processed there.
 
     it "does not use 'and' in boolean expressions" do
       doc = "don't use 'and' in boolean expressions https://github.com/styleguide/ruby"
-      SourceCode.new('**/*.rb').fail_on_ruby_token(doc) do |ripper_event, token|
-        ripper_event == :on_kw && token == "and"
+      SourceCode.new('**/*.rb').fail_on_ruby_keyword(doc) do |lex, index, token|
+        SourceCode.token_is_keyword?("and", lex, index, token)
       end
     end
 
     it "does not use 'or' in boolean expressions" do
       doc = "don't use 'or' in boolean expressions https://github.com/styleguide/ruby"
-      SourceCode.new('**/*.rb').fail_on_ruby_token(doc) do |ripper_event, token|
-        ripper_event == :on_kw && token == "or"
+      SourceCode.new('**/*.rb').fail_on_ruby_keyword(doc) do |lex, index, token|
+        SourceCode.token_is_keyword?("or", lex, index, token)
       end
     end
 
     it "does not use 'not' in boolean expresssions" do
       doc = "don't use 'not' in boolean expressions https://github.com/styleguide/ruby"
-      SourceCode.new("**/*.rb").fail_on_ruby_token(doc) do |ripper_event, token|
-        ripper_event == :on_kw && token == "not"
+      SourceCode.new("**/*.rb").fail_on_ruby_keyword(doc) do |lex, index, token|
+        SourceCode.token_is_keyword?("not", lex, index, token)
       end
     end
 
     it "does not have any 'debugger' statements accidentally included in the ruby source" do
       doc = "don't forget to remove all your 'debugger' statements"
-      SourceCode.new("**/*.rb").fail_on_ruby_token(doc) do |ripper_event, token|
-        ripper_event == :on_ident && token == "debugger"
+      SourceCode.new("**/*.rb").fail_on_ruby_keyword(doc) do |lex, index, token|
+        SourceCode.token_is_keyword?("debugger", lex, index, token)
       end
     end
 
