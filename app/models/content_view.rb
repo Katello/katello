@@ -330,11 +330,7 @@ class ContentView < ActiveRecord::Base
   end
 
   def index_repositories(env)
-    self.repos(env).each do |repo|
-      repo.index_packages
-      repo.index_errata
-      repo.index_puppet_modules
-    end
+    repos(env).each(&:index_contents)
   end
 
   def cp_environment_label(env)
