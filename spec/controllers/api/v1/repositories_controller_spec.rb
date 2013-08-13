@@ -15,6 +15,7 @@ require 'spec_helper'
 describe Api::V1::RepositoriesController, :katello => true do
   include OrchestrationHelper
   include LoginHelperMethods
+  include LocaleHelperMethods
   include AuthorizationHelperMethods
   include OrchestrationHelper
   include ProductHelperMethods
@@ -205,10 +206,8 @@ describe Api::V1::RepositoriesController, :katello => true do
         end
 
         it "should return 400 if content_type is not yum or puppet" do
-          @product.should_not_receive(:add_repo).with(anything, anything, anything,
-                                                  'file', anything, anything).and_return({})
-          post 'create', attrs.merge(:content_type => 'file')
-          response.code.should eql("400")
+          post 'create', attrs.merge(:content_type => 'wat')
+          response.code.should eql("422")
         end
       end
 
