@@ -39,6 +39,10 @@ module Authorization::Provider
       (Katello.config.katello? && org.syncable?) || User.allowed_to?(READ_PERM_VERBS, :providers, nil, org)
     end
 
+    def any_editable?(org)
+      User.allowed_to?(EDIT_PERM_VERBS, :providers, nil, org)
+    end
+
     def read_verbs
       [:read]
     end

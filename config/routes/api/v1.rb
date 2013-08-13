@@ -247,11 +247,15 @@ Src::Application.routes.draw do
           get :package_group_categories
           get :gpg_key_content
           post :enable
+          post :import_into_repo
         end
         collection do
           post :sync_complete
         end
       end
+
+      resources :content_uploads, :controller => :content_uploads, :only => [:create, :index, :destroy]
+      match '/content_uploads/:id/:offset/upload_bits' => 'content_uploads#upload_bits', :via=> :put
 
       resources :environments, :only => [:show, :update, :destroy] do
         scope :constraints => RegisterWithActivationKeyContraint.new do
