@@ -158,6 +158,8 @@ describe Product, :katello => true do
     before(:each) do
       disable_product_orchestration
       Katello.pulp_server.extensions.repository.stub(:publish_all).and_return([])
+      Repository.any_instance.stubs(:publish_yum_distributor)
+
     end
 
     context "repo id" do
@@ -181,6 +183,7 @@ describe Product, :katello => true do
         Resources::Candlepin::Content.stub!(:create).and_return({:id => "123", :type=>'yum'})
         Resources::Candlepin::Content.stub!(:update).and_return({:id => "123", :type=>'yum'})
         Resources::Candlepin::Content.stub!(:get).and_return({:id => "123", :type=>'yum'})
+        Repository.any_instance.stub(:publish_yum_distributor)
 
         @p = Product.create!(ProductTestData::SIMPLE_PRODUCT)
       end
