@@ -358,13 +358,11 @@ module Glue::Pulp::Repo
           tmp_modules.concat(Katello.pulp_server.extensions.puppet_module.find_all_by_unit_ids(sub_list))
         end
         self.puppet_modules = tmp_modules
-
-        #self.puppet_modules = Runcible::Extensions::Repository.puppet_modules(self.pulp_id)
       end
       @repo_puppet_modules
     end
 
-    def puppet_modules=attrs
+    def puppet_modules=(attrs)
       @repo_puppet_modules = attrs.collect do |puppet_module|
         ::PuppetModule.new(puppet_module)
       end
