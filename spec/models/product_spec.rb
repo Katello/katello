@@ -159,7 +159,6 @@ describe Product, :katello => true do
       disable_product_orchestration
       Katello.pulp_server.extensions.repository.stub(:publish_all).and_return([])
       Repository.any_instance.stubs(:publish_yum_distributor)
-
     end
 
     context "repo id" do

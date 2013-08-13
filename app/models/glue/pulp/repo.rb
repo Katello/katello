@@ -56,7 +56,7 @@ module Glue::Pulp::Repo
         end
 
         #only create a notifier if one doesn't exist with the correct url
-        exists = notifs.select{|n| n['event_types'] == [type] && n['notifier_config']['url'] == url}
+        exists = notifs.select{ |n| n['event_types'] == [type] && n['notifier_config']['url'] == url }
         resource.create(Runcible::Resources::EventNotifier::NotifierTypes::REST_API, {:url=>url}, [type]) if exists.empty?
       end
 
@@ -166,7 +166,7 @@ module Glue::Pulp::Repo
 
       existing_distributors = self.distributors
       generate_distributors.each do |distributor|
-        found = existing_distributors.select{|i| i['distributor_type_id'] == distributor.type_id}.first
+        found = existing_distributors.select{ |i| i['distributor_type_id'] == distributor.type_id }.first
         if found
           Katello.pulp_server.extensions.repository.update_distributor(self.pulp_id, found['id'], distributor.config)
         else
@@ -384,7 +384,7 @@ module Glue::Pulp::Repo
       sync_options[:max_speed] ||= Katello.config.pulp.sync_KBlimit if Katello.config.pulp.sync_KBlimit # set bandwidth limit
       sync_options[:num_threads] ||= Katello.config.pulp.sync_threads if Katello.config.pulp.sync_threads # set threads per sync
       pulp_tasks = Katello.pulp_server.extensions.repository.sync(self.pulp_id, {:override_config=>sync_options})
-      pulp_task = pulp_tasks.select{|i| i['tags'].include?("pulp:action:sync")}.first.with_indifferent_access
+      pulp_task = pulp_tasks.select{ |i| i['tags'].include?("pulp:action:sync") }.first.with_indifferent_access
 
       task      = PulpSyncStatus.using_pulp_task(pulp_task) do |t|
         t.organization         = self.environment.organization
@@ -572,11 +572,11 @@ module Glue::Pulp::Repo
     end
 
     def find_yum_distributor
-      self.distributors.select{|i| i["distributor_type_id"] == Runcible::Models::YumDistributor.type_id}.first
+      self.distributors.select{ |i| i["distributor_type_id"] == Runcible::Models::YumDistributor.type_id }.first
     end
 
     def find_yum_clone_distributor
-      self.distributors.select{|i| i["distributor_type_id"] == Runcible::Models::YumCloneDistributor.type_id}.first
+      self.distributors.select{ |i| i["distributor_type_id"] == Runcible::Models::YumCloneDistributor.type_id }.first
     end
 
     def sort_sync_status statuses
