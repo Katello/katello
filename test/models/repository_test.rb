@@ -41,6 +41,11 @@ class RepositoryCreateTest < RepositoryTestBase
     end
   end
 
+  def test_content_type
+    @repo.content_type = "puppet"
+    assert @repo.save
+    assert_equal "puppet", Repository.find(@repo.id).content_type
+  end
 end
 
 
