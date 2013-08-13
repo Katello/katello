@@ -143,8 +143,10 @@ class GluePulpRepoTest < GluePulpRepoTestBase
     refute_equal '/test_path/', @fedora_17_x86_64.relative_path
   end
 
-  def test_generate_distributor
-    assert_kind_of Runcible::Models::YumDistributor, @fedora_17_x86_64.generate_distributor
+  def test_generate_distributors
+    dists = @fedora_17_x86_64.generate_distributors
+    refute_empty dists.select{|d| d.is_a? Runcible::Models::YumDistributor}
+    refute_empty dists.select{|d| d.is_a? Runcible::Models::YumCloneDistributor}
   end
 
   def test_populate_from
