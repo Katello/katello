@@ -18,6 +18,7 @@ module RepositorySupport
   include TaskSupport
 
   @repo_url = "file://#{File.expand_path(File.dirname(__FILE__))}".gsub("support", "fixtures/zoo5")
+  @puppet_repo_url = "http://davidd.fedorapeople.org/repos/random_puppet/"
   @repo     = nil
 
   def self.repo_id
@@ -37,7 +38,7 @@ module RepositorySupport
   def self.create_repo(repo_id)
     @repo = Repository.find(repo_id)
     @repo.relative_path = '/test_path/'
-    @repo.feed = @repo_url
+    @repo.feed = @repo.content_type == 'puppet' ? @puppet_repo_url : @repo_url
 
     VCR.use_cassette('support/repository') do
       @repo.create_pulp_repo

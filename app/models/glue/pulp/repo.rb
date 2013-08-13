@@ -352,10 +352,10 @@ module Glue::Pulp::Repo
       if @repo_puppet_modules.nil?
         # we fetch ids and then fetch modules by id, because repo puppet modules
         #  do not contain all the info we need
-        ids = Runcible::Extensions::Repository.puppet_module_ids(self.pulp_id)
+        ids = Katello.pulp_server.extensions.repository.puppet_module_ids(self.pulp_id)
         tmp_modules = []
         ids.each_slice(Katello.config.pulp.bulk_load_size) do |sub_list|
-          tmp_modules.concat(Runcible::Extensions::PuppetModule.find_all_by_unit_ids(sub_list))
+          tmp_modules.concat(Katello.pulp_server.extensions.puppet_module.find_all_by_unit_ids(sub_list))
         end
         self.puppet_modules = tmp_modules
 
@@ -465,7 +465,7 @@ module Glue::Pulp::Repo
       events = []
 
       if self.content_type == Repository::PUPPET_TYPE
-        events << Runcible::Extensions::PuppetModule.copy(self.pulp_id, to_repo.pulp_id)
+        events << Katello.pulp_server.extensions.puppet_module.copy(self.pulp_id, to_repo.pulp_id)
       else
         # In order to reduce the memory usage of pulp during the copy process,
         # include the fields that will uniquely identify the rpm. If no fields
