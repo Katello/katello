@@ -132,6 +132,13 @@ the single entry point to configuration. ENV variables are processed there.
       end
     end
 
+    it "does not use 'not' in boolean expresssions" do
+      doc = "don't use 'not' in boolean expressions https://github.com/styleguide/ruby"
+      SourceCode.new("**/*.rb").fail_on_ruby_token(doc) do |ripper_event, token|
+        ripper_event == :on_kw && token == "not"
+      end
+    end
+
     it "does not have any 'debugger' statements accidentally included in the ruby source" do
       doc = "don't forget to remove all your 'debugger' statements"
       SourceCode.new("**/*.rb").fail_on_ruby_token(doc) do |ripper_event, token|
