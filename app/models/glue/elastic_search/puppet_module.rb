@@ -23,12 +23,12 @@ module Glue::ElasticSearch::PuppetModule
 
       def self.index_settings
         {
-            "index" => {
-                "analysis" => {
-                    "filter" => Util::Search::custom_filters,
-                    "analyzer" => Util::Search::custom_analyzers
-                }
+          "index" => {
+            "analysis" => {
+              "filter" => Util::Search::custom_filters,
+              "analyzer" => Util::Search::custom_analyzers
             }
+          }
         }
       end
 
