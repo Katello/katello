@@ -58,17 +58,13 @@ class Api::V1::RepositoriesController < Api::V1::ApiController
   def create
     raise HttpErrors::BadRequest, _("Repository can be only created for custom provider.") unless @product.custom?
 
-    content_type = params[:content_type].blank? ? Repository::YUM_TYPE : params[:content_type]
-    unless Repository::SELECTABLE_TYPES.include?(content_type)
-      raise HttpErrors::BadRequest, _("Content type can only be 'yum' or 'puppet'.")
-    end
-
     if params[:gpg_key_name].present?
       gpg = GpgKey.readable(@product.organization).find_by_name!(params[:gpg_key_name])
     elsif params[:gpg_key_name].nil?
       gpg = @product.gpg_key
     end
     params[:unprotected] ||= false
+    content_type         = params[:content_type].blank? ? Repository::YUM_TYPE : params[:content_type]
     content              = @product.add_repo(labelize_params(params), params[:name], params[:url], content_type, params[:unprotected], gpg)
     respond :resource => content
   end
