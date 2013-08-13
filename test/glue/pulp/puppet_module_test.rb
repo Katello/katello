@@ -54,6 +54,9 @@ class GluePulpPuppetModuleTest < MiniTest::Rails::ActiveSupport::TestCase
     @dev_repo = Repository.find(repositories(:dev_p_forge))
     @dev_repo.relative_path = "/test_path/"
     @dev_repo.create_pulp_repo
+
+    Katello.pulp_server.extensions.puppet_module.expects(:copy).
+      with(@repository.pulp_id, @dev_repo.pulp_id)
     tasks = @repository.clone_contents(@dev_repo)
     TaskSupport.wait_on_tasks(tasks)
 
