@@ -18,3 +18,8 @@ env:
   - JOB=rspec
   - JOB=other
   - JOB=javascript
+
+matrix:
+  exclude:
+    - rvm: "1.9.3"
+      env: "JOB=javascript"
