@@ -250,6 +250,7 @@ Summary:         Katello connection classes for the Pulp backend
 Requires:        %{name}-common
 Requires:        pulp-server
 Requires:        pulp-rpm-plugins
+Requires:        pulp-katello-plugins
 Requires:        pulp-selinux
 Requires:        createrepo >= 0.9.9-18%{?dist}
 Requires:        %{?scl_prefix}rubygem(runcible) >= 1.0.0
@@ -536,20 +537,22 @@ mkdir -p %{buildroot}/%{_mandir}/man8
 # remove build gem group
 rm -f bundler.d/build.rb
 
-#copy the application to the target directory
+# copy the application to the target directory
+# note that locale is listed here, which copies po files
 mkdir .bundle
-cp -R .bundle Gemfile.in bundler.d Rakefile app autotest ca config config.ru db integration_spec lib public script spec vendor %{buildroot}%{homedir}
+cp -R .bundle Gemfile.in bundler.d Rakefile app autotest ca config config.ru db integration_spec lib locale public script spec vendor engines %{buildroot}%{homedir}
 rm -f {buildroot}%{homedir}/script/katello-reset-dbs
 
-#copy MO files
-pushd locale
-for MOFILE in $(find . -name "*.mo"); do
-    DIR=$(dirname "$MOFILE")
-    install -d -m 0755 %{buildroot}%{_datadir}/katello/locale/$DIR
-    install -d -m 0755 %{buildroot}%{_datadir}/katello/locale/$DIR/LC_MESSAGES
-    install -m 0644 $DIR/*.mo %{buildroot}%{_datadir}/katello/locale/$DIR/LC_MESSAGES
-done
-popd
+# do not copy mo files for now, per tom
+##copy MO files
+#pushd locale
+#for MOFILE in $(find . -name "*.mo"); do
+#    DIR=$(dirname "$MOFILE")
+#    install -d -m 0755 %{buildroot}%{_datadir}/katello/locale/$DIR
+#    install -d -m 0755 %{buildroot}%{_datadir}/katello/locale/$DIR/LC_MESSAGES
+#    install -m 0644 $DIR/*.mo %{buildroot}%{_datadir}/katello/locale/$DIR/LC_MESSAGES
+#done
+#popd
 
 #copy configs and other var files (will be all overwriten with symlinks)
 touch %{buildroot}%{_sysconfdir}/%{name}/%{name}.yml
@@ -681,6 +684,22 @@ usermod -a -G katello-shared tomcat
 %{homedir}/app/lib/validators
 %{homedir}/app/lib/api
 %{homedir}/app/lib/dashboard
+
+%dir %{homedir}/engines/bastion
+%{homedir}/engines/bastion/bastion.gemspec
+%{homedir}/engines/bastion/README
+%{homedir}/engines/bastion/app
+%{homedir}/engines/bastion/lib
+%{homedir}/engines/bastion/vendor/assets/components
+%exclude %{homedir}/engines/bastion/bower.json
+%exclude %{homedir}/engines/bastion/Gruntfile.js
+%exclude %{homedir}/engines/bastion/karma.conf.js
+%exclude %{homedir}/engines/bastion/package.json
+%exclude %{homedir}/engines/bastion/.bowerrc
+%exclude %{homedir}/engines/bastion/.jshintrc
+%exclude %{homedir}/engines/bastion/.gitignore
+%exclude %{homedir}/engines/bastion/test
+
 %dir %{homedir}/app/lib/resources
 %{homedir}/app/lib/content_search
 %{homedir}/lib/tasks

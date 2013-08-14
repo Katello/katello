@@ -111,8 +111,6 @@ class GlueCandlepinProviderTestDelete < GlueCandlepinProviderTestBase
     @@provider.stubs(:index_subscriptions).returns(true)
     Resources::Candlepin::Owner.stubs(:pools).returns([])
     Resources::Candlepin::Owner.stubs(:destroy_imports).with(@@provider.organization.label, true).returns(true)
-    Katello.pulp_server.extensions.repository.stubs(:update_importer)
-    Katello.pulp_server.extensions.repository.stubs(:update_distributor)
     @@provider.delete_manifest
   end
 end

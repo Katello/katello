@@ -61,6 +61,8 @@ describe Api::V1::SystemsController do
       Katello.pulp_server.extensions.consumer.stub!(:update).and_return(true)
     end
 
+    System.any_instance.stub(:consumer_as_json).and_return({})
+
     @organization  = Organization.create!(:name => 'test_org', :label => 'test_org')
     if Katello.config.katello?
       @environment_1 = create_environment(:name => 'test_1', :label => 'test_1', :prior => @organization.library.id, :organization => @organization)
@@ -462,7 +464,8 @@ describe Api::V1::SystemsController do
 
     it "should update installed products" do
       @sys.facts = {}
-      @sys.stub(:guest => 'false', :guests => [])
+      System.any_instance.stub(:guest).and_return('false')
+      System.any_instance.stub(:guests).and_return([])
       Resources::Candlepin::Consumer.should_receive(:update).once.with(uuid, {}, nil, installed_products, nil, nil, nil, anything, nil, nil).and_return(true)
       put :update, :id => uuid, :installedProducts => installed_products
       response.body.should == @sys.to_json
@@ -471,7 +474,8 @@ describe Api::V1::SystemsController do
 
     it "should update releaseVer" do
       @sys.facts = {}
-      @sys.stub(:guest => 'false', :guests => [])
+      System.any_instance.stub(:guest).and_return('false')
+      System.any_instance.stub(:guests).and_return([])
       Resources::Candlepin::Consumer.should_receive(:update).once.with(uuid, {}, nil, nil, nil, "1.1", nil, anything, nil, nil).and_return(true)
       put :update, :id => uuid, :releaseVer => "1.1"
       response.body.should == @sys.to_json
@@ -480,7 +484,8 @@ describe Api::V1::SystemsController do
 
     it "should update lastCheckin" do
         @sys.facts = {}
-        @sys.stub(:guest => 'false', :guests => [])
+        System.any_instance.stub(:guest).and_return('false')
+        System.any_instance.stub(:guests).and_return([])
         timestamp = 3.days.ago
         Resources::Candlepin::Consumer.should_receive(:update).once.with(uuid, {}, nil, nil, nil, nil, nil, anything, nil, timestamp.strftime('%F %T')).and_return(true)
         put :update, :id => uuid, :lastCheckin => timestamp
@@ -490,7 +495,8 @@ describe Api::V1::SystemsController do
 
     it "should update service level agreement" do
       @sys.facts = {}
-      @sys.stub(:guest => 'false', :guests => [])
+      System.any_instance.stub(:guest).and_return('false')
+      System.any_instance.stub(:guests).and_return([])
       Resources::Candlepin::Consumer.should_receive(:update).once.with(uuid, {}, nil, nil, nil, nil, "SLA", anything, nil, nil).and_return(true)
       put :update, :id => uuid, :serviceLevel => "SLA"
       response.body.should == @sys.to_json
@@ -500,7 +506,8 @@ describe Api::V1::SystemsController do
     it "should update environment", :katello => true do
       promote_content_view(@sys.content_view, @environment_1, @environment_2)
       @sys.facts = {}
-      @sys.stub(:guest => 'false', :guests => [], :environment => @environment_2)
+      System.any_instance.stub(:guest).and_return('false')
+      System.any_instance.stub(:guests).and_return([])
       Resources::Candlepin::Consumer.should_receive(:update).once.with(uuid, {}, nil, nil, nil, nil, nil,
                                                             "#{@environment_2.id}-#{@sys.content_view.id}", nil, nil).and_return(true)
       put :update, :id => uuid, :environment_id => @environment_2.id
@@ -510,7 +517,8 @@ describe Api::V1::SystemsController do
 
     it "handle memory as int" do
       @sys.facts = {'memory.memtotal' => 20000}
-      @sys.stub(:guest => 'false', :guests => [])
+      System.any_instance.stub(:guest).and_return('false')
+      System.any_instance.stub(:guests).and_return([])
       Resources::Candlepin::Consumer.should_receive(:update).once.with(uuid, {'memory.memtotal' => 20000}, nil,
                                                                             nil, nil, nil, nil, anything, nil, nil).and_return(true)
       put :update, :id => uuid
@@ -521,7 +529,7 @@ describe Api::V1::SystemsController do
     it "should update capabilities", :katello => true  do
       promote_content_view(@sys.content_view, @environment_1, @environment_2)
       @sys.capabilities = {:name => 'cores'}
-      @sys.stub(:guest => 'false', :guests => [])
+      System.any_instance.stub(:guest).and_return('false')
       Resources::Candlepin::Consumer.should_receive(:update).once.with(uuid, {"sockets" => 0}, nil, nil, nil, nil, nil, anything, {:name => "cores"}, nil).and_return(true)
       put :update, :id => uuid, :environment_id => @environment_2.id
       response.body.should == @sys.to_json

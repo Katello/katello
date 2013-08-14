@@ -4,6 +4,14 @@
 = content_for(:javascripts_block) do
   = javascript_include_tag 'common/vendor'
   = javascript_include_tag :common
+  %script{ :type => "text/javascript" }
+    -if protect_against_forgery?
+      :plain
+        var AUTH_TOKEN = #{form_authenticity_token.inspect};
+    = render :partial => 'common/config'
+    = render :partial => 'common/common_i18n'
+    = render :partial => 'common/ajax_notices'
+    = render :partial => 'common/notification'
   = javascript_include_tag :user_sessions
 
 = content_for(:login_logo) do
@@ -27,19 +35,4 @@
   / [if IE]
     = stylesheet_link_tag :ie
 
-= content_for(:extra) do
-  %script{ :type => "text/javascript" }
-    -if protect_against_forgery?
-      :plain
-        var AUTH_TOKEN = #{form_authenticity_token.inspect};
-    = render :partial => 'common/common_i18n'
-    = render :partial => 'common/ajax_notices'
-    = render :partial => 'common/notification'
-
 = render :partial => "alchemy/layouts/user_session_layout"
-
-:javascript
-  KT.config = {
-    'root_url'  : '#{root_path()}'
-  };
-  KT.routes.options.prefix = KT.config['root_url'];
