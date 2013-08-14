@@ -32,7 +32,7 @@
 angular.module('alchemy').directive('alchInfiniteScroll', [function() {
     return {
         link: function(scope, elem, attr) {
-            var raw = elem[0];
+            var raw = elem[0], loadMoreFunction = attr["alchInfiniteScroll"], result;
             elem.bind('scroll', function() {
                 var sliderPosition = raw.scrollTop + raw.offsetHeight;
                 if (sliderPosition > 0 && sliderPosition >= raw.scrollHeight) {
@@ -48,18 +48,28 @@ angular.module('alchemy').directive('alchInfiniteScroll', [function() {
                 return scrollHeight;
             };
 
+            var isPromise = function(promise) {
+                return promise && promise.hasOwnProperty('then');
+            };
+
             var loadUntilScroll = function() {
                 if (getScrollHeight() < elem.height()) {
-                    scope.$eval(attr["alchInfiniteScroll"]).then(function() {
-                        if (getScrollHeight() < elem.height()) {
-                            loadUntilScroll();
-                        }
-                    });
+                    result = scope.$eval(loadMoreFunction);
+                    if (isPromise(result)) {
+                        result.then(function() {
+                            if (getScrollHeight() < elem.height()) {
+                                loadUntilScroll();
+                            }
+                        });
+                    }
                 }
             };
 
             // load first batch of results and continue loading until there are enough to scroll
-            scope.$eval(attr["alchInfiniteScroll"]).then(loadUntilScroll);
+            result = scope.$eval(loadMoreFunction);
+            if (isPromise(result)) {
+                result.then(loadUntilScroll);
+            }
         }
     };
 }]);
