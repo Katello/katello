@@ -81,10 +81,10 @@ module SystemsHelper
 
   def system_type system
 
-    return _("Guest") if system.guest == 'true'
+    return _("Guest") if system.guest
 
-    case system
-      when Hypervisor
+    case system.type
+      when "Hypervisor"
         _("Hypervisor")
       else
         _("Host")
