@@ -10,8 +10,11 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
 
+//= require "common/katello.global"
 //= require "common/katello"
 //= require "common/menu"
+//= require "common/notices"
+//= require "common/bastion-routes.js"
 //= require "common/routes"
 //= require "common/chosen.jquery"
 //= require "common/spin.min"
@@ -21,12 +24,21 @@
 //= require "common/katello_object"
 //= require "widgets/tipsy.custom"
 //= require "widgets/path_selector"
-//= require "common/notices"
 //= require "common/env_select_scroll"
 //= require "common/env_select"
+//= require "common/experimental/katello-globals.module"
+
 //= require "common/katello.module"
-//= require "menu/menu.module.js"
-//= require "menu/menu.controller.js"
-//= require "widgets/widgets.module.js"
-//= require "widgets/org_switcher.js"
-//= require "common/experimental/"
+
+//= require "bastion/i18n/i18n.module"
+//= require "bastion/i18n/i18n-dictionary.factory"
+//= require "bastion/i18n/i18n.filter"
+
+//= require "bastion/widgets/widgets.module.js"
+//= require "bastion/widgets/org-switcher.widget.js"
+
+//= require "bastion/menu/menu.module.js"
+//= require "bastion/menu/menu.controller.js"
+
+//= require "bastion/utils/utils.module"
+//= require "bastion/utils/routes.factory"

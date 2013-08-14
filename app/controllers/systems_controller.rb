@@ -132,7 +132,7 @@ class SystemsController < ApplicationController
     @system_groups = SystemGroup.where(:organization_id => current_organization).order(:name)
 
     if current_user.experimental_ui
-      render :index_nutupane, :locals => { :experimental_ui => true }
+      render 'bastion/systems/index', :layout => 'bastion/layouts/application'
     else
       @auto_attach_task = TaskStatus.find_by_id(current_organization.owner_auto_attach_all_systems_task_id)
       render :index

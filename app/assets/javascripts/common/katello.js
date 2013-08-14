@@ -18,8 +18,7 @@
  * Date: 09/01/2010
  */
 
-//Katello global object namespace that all others should be attached to
-var KT = {};
+var KT = KT ? KT : {};
 KT.widget = {};
 
 KT.utils = _.noConflict();
@@ -36,17 +35,6 @@ $(window).bind("hashchange", function(event) {
 
 if ($.bbq !== undefined) {
     $.bbq.pushState('!', '');
-}
-
-//i18n global variable
-var i18n = {};
-
-function localize(data) {
-    for (var key in data) {
-        if(data.hasOwnProperty(key)) {
-            i18n[key] = data[key];
-        }
-    }
 }
 
 function update_status() {
@@ -332,8 +320,7 @@ KT.common = (function() {
         },
         rootURL : function() {
             if (root_url === undefined) {
-                //root_url = $('#root_url').attr('data-url');
-                root_url = KT.config['root_url'];
+                root_url = KT.routes.options.prefix;
             }
             return root_url;
         },
