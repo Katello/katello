@@ -36,7 +36,7 @@ class Api::V1::ProxiesController < Api::V1::ApiController
           end
         end
         system = System.find_by_uuid params[:id]
-        User.consumer? || (system && system.editable? && (consumer_gone || consumer_live))
+        consumer_gone && (User.consumer? || Organization.all_editable?)
       when "api_proxy_owner_pools_path"
         find_optional_organization
         if params[:consumer]

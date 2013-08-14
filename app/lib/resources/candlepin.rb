@@ -21,19 +21,19 @@ module Resources
         ::Logging.logger['cp_proxy']
       end
 
-      def self.post path, body
+      def self.post(path, body)
         logger.debug "Sending POST request to Candlepin: #{path}"
         client = CandlepinResource.rest_client(Net::HTTP::Post, :post, path_with_cp_prefix(path))
         client.post body, {:accept => :json, :content_type => :json}.merge(User.cp_oauth_header)
       end
 
-      def self.delete path
+      def self.delete(path)
         logger.debug "Sending DELETE request to Candlepin: #{path}"
         client = CandlepinResource.rest_client(Net::HTTP::Delete, :delete, path_with_cp_prefix(path))
         client.delete({:accept => :json, :content_type => :json}.merge(User.cp_oauth_header))
       end
 
-      def self.get path
+      def self.get(path)
         logger.debug "Sending GET request to Candlepin: #{path}"
         client = CandlepinResource.rest_client(Net::HTTP::Get, :get, path_with_cp_prefix(path))
         client.get({:accept => :json}.merge(User.cp_oauth_header))
@@ -58,10 +58,20 @@ module Resources
         ::Logging.logger['cp_rest']
       end
 
-      def self.default_headers
+      def self.default_headers(uuid=nil)
+        # There are cases where virt-who needs to act on behalf of hypervisors it is managing.
+        # If the uuid is specified, then that consumer is used in the headers rather than the
+        # virt-who consumer uuid.
+        # Current example is creating a hypervisor that in turn needs to get compliance.
+        if !uuid.nil? && User.consumer?
+          cp_oauth_header = { 'cp-consumer' => uuid }
+        else
+          cp_oauth_header = User.cp_oauth_header
+        end
+
         {'accept' => 'application/json',
          'accept-language' => I18n.locale,
-         'content-type' => 'application/json'}.merge(User.cp_oauth_header)
+         'content-type' => 'application/json'}.merge(cp_oauth_header)
       end
 
       def self.name_to_key a_name
@@ -211,7 +221,7 @@ module Resources
         end
 
         def compliance uuid
-          response = Candlepin::CandlepinResource.get(join_path(path(uuid), 'compliance'), self.default_headers).body
+          response = Candlepin::CandlepinResource.get(join_path(path(uuid), 'compliance'), self.default_headers(uuid)).body
           unless response.empty?
             json = JSON.parse(response).with_indifferent_access
             if json['reasons']
