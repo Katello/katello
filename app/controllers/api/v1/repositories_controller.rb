@@ -53,6 +53,7 @@ class Api::V1::RepositoriesController < Api::V1::ApiController
   param :product_id, :number, :required => true, :desc => "id of a product the repository will be contained in"
   param :url, :undef, :required => true, :desc => "repository source url"
   param :gpg_key_name, String, :desc => "name of a gpg key that will be assigned to the new repository"
+  param :content_type, String, :desc => "type of repo (either 'yum' or 'puppet', defaults to 'yum')"
   see "v1#gpg_keys#index"
   def create
     raise HttpErrors::BadRequest, _("Repository can be only created for custom provider.") unless @product.custom?
@@ -63,7 +64,8 @@ class Api::V1::RepositoriesController < Api::V1::ApiController
       gpg = @product.gpg_key
     end
     params[:unprotected] ||= false
-    content              = @product.add_repo(labelize_params(params), params[:name], params[:url], 'yum', params[:unprotected], gpg)
+    content_type         = params[:content_type].blank? ? Repository::YUM_TYPE : params[:content_type]
+    content              = @product.add_repo(labelize_params(params), params[:name], params[:url], content_type, params[:unprotected], gpg)
     respond :resource => content
   end
 

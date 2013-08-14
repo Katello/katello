@@ -19,6 +19,8 @@ $(document).ready(function() {
         KT.object.label.initialize();
         if ($('#providers').length > 0) {
             notices.checkNotices();
+        } else if ($('#new_repo').length > 0) {
+            KT.repo.page_load();
         }
 
         if ($('#discovered_repos').length > 0){

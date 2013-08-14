@@ -3,11 +3,8 @@
 = content_for :title do
   = _("Product: ") + @product.name
 
-= content_for :navigation do
-  / pretty
-
 = content_for :subcontent do
-  %h3
+  %h3#new_repo
     = _("Create Repository")
   .clear
     &nbsp;
@@ -27,6 +24,14 @@
 
     %fieldset.clearfix
       .grid_2.ra
+        = label :repo, :feed, _("Type")
+      .grid_5.la
+        = select_tag 'repo[content_type]',
+          options_for_select([Repository::YUM_TYPE, Repository::PUPPET_TYPE], Repository::YUM_TYPE),
+          :tabindex => auto_tab_index
+
+    %fieldset.clearfix
+      .grid_2.ra
         = label :repo, :feed, _("URL")
       .grid_5.la
         = text_field :repo, :feed, :id=>"repo_url_field", :tabindex => auto_tab_index
@@ -38,7 +43,7 @@
         = check_box :repo, :unprotected, :id=>"unprotected", :tabindex => auto_tab_index, :checked=>false
 
 
-    %fieldset.clearfix
+    %fieldset.clearfix#gpg_key
       .grid_2.ra
         = label :repo, :gpg_key, _("GPG Key")
       .grid_5.la
