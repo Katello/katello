@@ -41,3 +41,27 @@ fedora_17_x86_64_library_view:
   label:                fedora_17_x86_64_label
   content_view_version: library_view_version
   relative_path:        '/ACME_Corporation/library/LibraryView/fedora_17_label'
+
+p_forge:
+  name:                 P Forge
+  pulp_id:              4
+  content_id:           1
+  content_type:         puppet
+  environment:          library
+  product:              puppet_product
+  gpg_key:              fedora_gpg_key
+  label:                p_forge
+  content_view_version: library_view_version
+  relative_path:        '/ACME_Corporation/library/LibraryView/p_forge'
+
+dev_p_forge:
+  name:                 P Forge
+  pulp_id:              5
+  content_id:           1
+  content_type:         puppet
+  environment:          dev
+  product:              puppet_product
+  gpg_key:              fedora_gpg_key
+  label:                p_forge
+  content_view_version: dev_default_version
+  relative_path:        '/ACME_Corporation/library/DevView/p_forge'
