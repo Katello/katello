@@ -222,13 +222,15 @@ class FilterRulesController < ApplicationController
 
   def item_partial(rule)
     case @rule.content_type
-       when FilterRule::PACKAGE
-         'content_view_definitions/filters/rules/package_item'
-       when FilterRule::PACKAGE_GROUP
-         'content_view_definitions/filters/rules/package_group_item'
-       when FilterRule::ERRATA
-         'content_view_definitions/filters/rules/errata_item'
-     end
+    when FilterRule::PACKAGE
+      'content_view_definitions/filters/rules/package_item'
+    when FilterRule::PACKAGE_GROUP
+      'content_view_definitions/filters/rules/package_group_item'
+    when FilterRule::ERRATA
+      'content_view_definitions/filters/rules/errata_item'
+    when FilterRule::PUPPET_MODULE
+      'content_view_definitions/filters/rules/puppet_module_item'
+    end
   end
 
   private

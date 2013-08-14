@@ -17,6 +17,10 @@ module Util
                        :version => :sortable_version,
                        :release => :sortable_release
                      }
+    LESS_THAN = "lt"
+    GREATER_THAN = "gt"
+    EQUAL = "eq"
+    OPERATORS = [LESS_THAN, GREATER_THAN, EQUAL]
 
     attr_accessor :operator, :version, :epoch, :release
 

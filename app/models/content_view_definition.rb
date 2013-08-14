@@ -135,7 +135,7 @@ class ContentViewDefinition < ContentViewDefinitionBase
     # Start Filtering package groups in the copied repo
     # Start Filtering packages in the copied repo
     repos.each do |repo|
-      [FilterRule::ERRATA, FilterRule::PACKAGE_GROUP, FilterRule::PACKAGE].each do |content_type|
+      FilterRule::CONTENT_TYPES.each do |content_type|
         filter_clauses = unassociation_clauses(repo.library_instance, content_type)
         if filter_clauses
           pulp_task = repo.unassociate_by_filter(content_type, filter_clauses)

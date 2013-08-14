@@ -16,8 +16,9 @@ module Glue::ElasticSearch::PuppetModule
 
       def index_options
         {
-          "_type" => :puppet_module,
-          "name_autocomplete" => name
+          "_type"             => :puppet_module,
+          "name_autocomplete" => name,
+          "sortable_version"  => sortable_version
         }
       end
 
@@ -36,10 +37,11 @@ module Glue::ElasticSearch::PuppetModule
         {
           :puppet_module => {
             :properties => {
-              :id        => { :type => 'string', :index => :not_analyzed },
-              :name      => { :type => 'string', :analyzer => :kt_name_analyzer },
-              :name_sort => { :type => 'string', :index => :not_analyzed },
-              :repoids   => { :type => 'string', :index => :not_analyzed }
+              :id               => { :type => 'string', :index    => :not_analyzed },
+              :name             => { :type => 'string', :analyzer => :kt_name_analyzer },
+              :name_sort        => { :type => 'string', :index    => :not_analyzed },
+              :sortable_version => { :type => 'string', :index    => :not_analyzed },
+              :repoids          => { :type => 'string', :index    => :not_analyzed }
             }
           }
         }
@@ -62,10 +64,16 @@ module Glue::ElasticSearch::PuppetModule
         search.results
       end
 
-      def self.search(query, start, page_size, repoids = nil, sort = [:name_sort, "ASC"],
-                      search_mode = :all, default_field = 'name')
+      def self.search(query, options = {})
+        options = {:start => 0,
+                   :page_size => 10,
+                   :repoids => nil,
+                   :sort => [:name_sort, "ASC"],
+                   :search_mode => :all,
+                   :default_field => 'name',
+                   :filters => nil}.merge(options)
 
-        if !Tire.index(self.index).exists? || (repoids && repoids.empty?)
+        if !Tire.index(self.index).exists? || options[:repoids].blank?
           return Util::Support.array_with_total
         end
 
@@ -76,19 +84,25 @@ module Glue::ElasticSearch::PuppetModule
             if all_rows
               all
             else
-              string query, { :default_field => default_field }
+              string query, { :default_field => options[:default_field] }
             end
           end
 
-          if page_size > 0
-           size page_size
-           from start
+          if options[:page_size] > 0
+           size options[:page_size]
+           from options[:start]
           end
-          sort { by sort[0], sort[1] } unless !all_rows
+          sort { by options[:sort][0], options[:sort][1] } unless !all_rows
         end
 
-        if repoids
-          Util::Package.setup_shared_unique_filter(repoids, search_mode, search)
+        if options[:filters]
+          options[:filters].each do |filter|
+            search.filter(filter.keys.first, filter.values.first)
+          end
+        end
+
+        if options[:repoids]
+          Util::Package.setup_shared_unique_filter(options[:repoids], options[:search_mode], search)
         end
 
         return search.perform.results
@@ -96,7 +110,7 @@ module Glue::ElasticSearch::PuppetModule
         Util::Support.array_with_total
       end
 
-      def self.index_puppet_modules puppet_module_ids
+      def self.index_puppet_modules(puppet_module_ids)
         puppet_modules = puppet_module_ids.collect{ |module_id|
           puppet_module = self.find(module_id)
           puppet_module.as_json.merge(puppet_module.index_options)

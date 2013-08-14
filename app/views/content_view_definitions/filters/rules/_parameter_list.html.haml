@@ -1,3 +1,5 @@
+- cols = rule.content_type == FilterRule::PUPPET_MODULE ? 3 : 2
+
 #parameter_list
   = kt_form_for(view_definition,
     :html => {:id => "parameters_form"}) do |form|
@@ -5,11 +7,11 @@
     %table
       %thead
         %tr
-          %th{:colspan => 2} #{_("Name")}
+          %th{:colspan => cols} #{_("Name")}
 
       %tbody
         %tr
-          %td{:colspan => 2}
+          %td{:colspan => cols}
             - help_text = _("Enter %{type} Name...") % {:type => rule_type.singularize}
             %input{:type=>'text', :id=>'rule_input', :size=>'30', :placeholder => help_text,
                    :title => help_text, :tabindex => auto_tab_index}
