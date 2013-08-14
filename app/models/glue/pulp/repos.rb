@@ -272,12 +272,17 @@ module Glue::Pulp::Repos
     end
 
     def update_repositories
-      org = self.organization
-      repos = self.repos(org.library, true, org.default_content_view)
-      key = self.key
-      cert = self.certificate
-      ca = File.read(Resources::CDN::CdnResource.ca_file)
+      repos = Repository.in_product(self)
+      upstream_ca = File.read(Resources::CDN::CdnResource.ca_file)
       repos.each do |repo|
+        key = nil
+        ca = nil
+        cert = nil
+        if repo.environment.library? && repo.content_view.default?
+          key = self.key
+          cert = self.certificate
+          ca = upstream_ca
+        end
         repo.refresh_pulp_repo(ca, cert, key)
       end
     end

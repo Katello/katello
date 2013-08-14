@@ -1,0 +1,31 @@
+<div>
+  <div class="nutupane-titlebar">
+    <h1 class="nutupane-title">{{ "Systems" }}</h1>
+  </div>
+  <div class="nutupane-actionbar">
+    <div class="form">
+      <input type="text"
+             class="input input-search"
+             placeholder="Search..."
+             ng-model="table.searchTerm"
+             on-enter="table.search(table.searchTerm)">
+      <span class="result-count">Showing {{ table.resource.offset }} of {{ table.resource.subtotal }} ({{ table.resource.total }} Total) Systems</span>
+    </div>
+    <div class="fr select-action">
+      <span>{{ table.numSelected }} Selected</span>
+      <span>|</span>
+      <a class="deselect-action"
+         ng-class="{ 'disabled-link' : table.numSelected == 0 }"
+         ng-click="table.selectAll(false)">
+        Deselect All
+      </a>
+    </div>
+  </div>
+
+  <div alch-table="table" nutupane-table ng-class="{'table-reduced': $root.$state.current.collapsed}">
+    <div alch-container-scroll control-width="table" alch-infinite-scroll="table.nextPage()">
+      <div ui-view="table"></div>
+    </div>
+  </div>
+  <span class="action-panel" ui-view="action-panel"></span>
+</div>

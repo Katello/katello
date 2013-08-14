@@ -1,0 +1,30 @@
+<table class="table table-striped" ng-class="{'table-mask': table.working}">
+  <thead>
+    <tr alch-table-head row-select>
+      <th alch-table-column="name" sortable>{{ "Name" | i18n }}</th>
+      <th alch-table-column="status" sortable>{{ "Status" | i18n }}</th>
+      <th alch-table-column="os" sortable>{{ "OS" | i18n }}</th>
+      <th alch-table-column="environment" sortable>{{ "Environment" | i18n }}</th>
+      <th alch-table-column="contentView" sortable>{{ "Content View" | i18n }}</th>
+      <th alch-table-column="registered" sortable>{{ "Registered" | i18n }}</th>
+      <th alch-table-column="lastCheckin" sortable>{{ "Last Checkin" | i18n }}</th>
+    </tr>
+  </thead>
+
+  <tbody>
+  <tr alch-table-row ng-repeat="system in table.resource.records" row-select>
+    <td alch-table-cell>
+      <a class="clickable" ng-click="table.openDetails(system)">{{ system.name }}</a>
+      <i class="icon-chevron-right selected-icon" ng-show="system.selected"></i>
+    </td>
+    <td alch-table-cell>
+      <span class="status_icon" ng-class="getStatusColor(system.compliance.status)"></span>
+    </td>
+    <td alch-table-cell>{{ system.distribution }}</td>
+    <td alch-table-cell>{{ system.environment.name }}</td>
+    <td alch-table-cell>{{ system.content_view.name || "" }}</td>
+    <td alch-table-cell>{{ system.registered | date:'short' }}</td>
+    <td alch-table-cell>{{ system.checkin_time || 'Never checked in' | date:'short' }}</td>
+  </tr>
+  </tbody>
+</table>
