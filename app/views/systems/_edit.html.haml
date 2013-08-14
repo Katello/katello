@@ -199,7 +199,7 @@
               = system_type(system)
 
         .control-group
-          - if system.guest == 'true'
+          - if system.guest
             .label
               = label :host_guest, :host, _("Host")
             .input
