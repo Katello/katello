@@ -46,6 +46,7 @@ describe Api::V1::SystemGroupsController, :katello => true do
 
   describe "Controller tests " do
     before(:each) do
+      SystemGroup.stub!(:search).and_return(stub.as_null_object)
       @group = SystemGroup.create!(:name => "test_group", :organization => @org, :max_systems => 5)
     end
 

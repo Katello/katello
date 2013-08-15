@@ -82,9 +82,7 @@ class Api::V1::SubscriptionsController < Api::V1::ApiController
 
     if params[:paged]
       subscriptions = {
-        # The following workaround will be removed before 08/31/13 when we upgrade tire
-        #:subscriptions => subscriptions.results
-        :subscriptions => subscriptions.results.collect { |item| OpenStruct.new(item.to_hash)},
+        :subscriptions => subscriptions.results,
         :subtotal => total_count,
         :total => items.total_items
       }
