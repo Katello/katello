@@ -14,23 +14,28 @@
 describe('Factory: Nutupane', function() {
     var $timeout,
         $location,
-        CurrentOrganization,
         Resource,
         Nutupane;
 
     beforeEach(module('Bastion.widgets'));
 
-    beforeEach(module(function($provide) {
+    beforeEach(module(function() {
         Resource = {
             query: function(params, callback) {
-                callback();
+                var result = {results: [{id: 1, value: "value"}, {id:2, value: "value2"}]};
+                if (callback) {
+                    callback(result);
+                }
+                return result;
             },
             total: 10,
             subtotal: 8,
-            offset: 5
+            offset: 5,
+            sort: {
+                by: "description",
+                order: "ASC"
+            }
         };
-
-        $provide.value('CurrentOrganization', 'ACME');
     }));
 
     beforeEach(inject(function(_$location_, _$timeout_, _Nutupane_) {
@@ -87,6 +92,13 @@ describe('Factory: Nutupane', function() {
             expect(nutupane.table.closeItem).toThrow();
         });
 
+        it("updates a single occurrence of a row within the list of rows.", function() {
+            var newRow = {id:1, value:"new value", anotherValue: "value"};
+            nutupane.query();
+            nutupane.table.replaceRow(newRow);
+            expect(nutupane.table.rows[0]).toBe(newRow);
+        });
+
         it("providing a method that fetches more data", function() {
             spyOn(Resource, 'query');
             nutupane.table.nextPage();
@@ -102,9 +114,9 @@ describe('Factory: Nutupane', function() {
             expect(Resource.query).not.toHaveBeenCalled();
         });
 
-        it("refusing to fetch more data if the subtotal of records equals the offset", function() {
+        it("refusing to fetch more data if the subtotal of records equals the number of rows", function() {
             spyOn(Resource, 'query');
-            nutupane.table.resource.offset = 8;
+            nutupane.table.rows = new Array(8);
             nutupane.table.nextPage();
 
             expect(Resource.query).not.toHaveBeenCalled();
@@ -112,27 +124,33 @@ describe('Factory: Nutupane', function() {
 
         describe("provides a way to sort the table", function(){
             it ("defaults the sort to ascending if the previous sort does not match the new sort.", function() {
-                nutupane.table.sort = {};
+                var expectedParams = {sort_by: 'name', sort_order: 'ASC', offset: 0, search: ''};
+                nutupane.table.resource.sort = {};
+
+                spyOn(Resource, 'query');
                 nutupane.table.sortBy({id: "name"});
-                expect(nutupane.table.sort.by).toBe("name");
-                expect(nutupane.table.sort.order).toBe("ASC");
+
+                expect(Resource.query).toHaveBeenCalledWith(expectedParams, jasmine.any(Function));
             });
 
             it("toggles the sort order if already sorting by that column", function() {
-                nutupane.table.sort = {
+                var expectedParams = {sort_by: 'name', sort_order: 'DESC', offset: 0, search: ''};
+                nutupane.table.resource.sort = {
                     by: 'name',
                     order: 'ASC'
                 };
+
+                spyOn(Resource, 'query');
                 nutupane.table.sortBy({id: "name"});
-                expect(nutupane.table.sort.by).toBe("name");
-                expect(nutupane.table.sort.order).toBe("DESC");
+
+                expect(Resource.query).toHaveBeenCalledWith(expectedParams, jasmine.any(Function));
             });
 
             it("sets the column sort order and marks it as active.", function() {
                 var column = {id: "name"}
-                nutupane.table.sort = {};
+                nutupane.table.resource.sort = {};
                 nutupane.table.sortBy(column);
-                expect(column.sortOrder).toBe(nutupane.table.sort.order);
+                expect(column.sortOrder).toBe("ASC");
                 expect(column.active).toBe(true);
             });
 

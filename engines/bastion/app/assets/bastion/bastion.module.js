@@ -41,6 +41,7 @@ var Katello = angular.module('Katello', [
  */
 Katello.config(['$httpProvider', function($httpProvider) {
     $httpProvider.defaults.headers.common['X-CSRF-TOKEN'] = $('meta[name=csrf-token]').attr('content');
+    $httpProvider.defaults.headers.common['ACCEPT'] = 'version=2';
 }]);
 
 

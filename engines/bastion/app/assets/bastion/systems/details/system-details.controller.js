@@ -23,7 +23,11 @@
  *   Provides the functionality for the system details action pane.
  */
 angular.module('Bastion.systems').controller('SystemDetailsController', ['$scope', '$state', 'System', function($scope, $state, System) {
-    $scope.system = System.get({id: $scope.$stateParams.systemId});
+    $scope.system = System.get({id: $scope.$stateParams.systemId}, function(system) {
+        $scope.$watch("table.rows.length > 0", function() {
+            $scope.table.replaceRow(system);
+        });
+    });
 
     $scope.transitionTo = function(state) {
         if ($scope.system && $scope.system.hasOwnProperty("uuid")) {

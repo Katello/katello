@@ -36,7 +36,7 @@
     <div class="detail">
       <span class="info-label">{{ "Release Version" | i18n }}</span>
         <span class="info-value" alch-edit-select="system.releaseVer.releaseVer"
-              options="releaseVersions" on-save="system.$update()"></span>
+              options="releaseVersions.releases" on-save="system.$update()"></span>
     </div>
 
     <div class="detail">
@@ -77,7 +77,7 @@
 
     <div class="detail">
       <span class="info-label">{{ "Content View" | i18n }}</span>
-      <span class="info-value">{{ system.content_view_id }}</span>
+      <span class="info-value">{{ system.content_view.name }}</span>
     </div>
   </section>
 </div>
@@ -121,7 +121,7 @@
 
     <div class="detail">
       <span class="info-label">{{ "Registered" | i18n }}</span>
-      <span class="info-value">{{ system.registered | date:'short' }}</span>
+      <span class="info-value">{{ system.created | date:'short' }}</span>
     </div>
 
     <div class="detail">
