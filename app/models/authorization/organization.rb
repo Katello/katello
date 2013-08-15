@@ -29,6 +29,10 @@ module Authorization::Organization
       Organization.readable.count > 0
     end
 
+    def all_editable?
+      User.allowed_to?([:update, :create], :organizations, nil, nil)
+    end
+
     def list_verbs global = false
       if Katello.config.katello?
         org_verbs = {

@@ -570,7 +570,17 @@ module Glue::Candlepin::Consumer
       consumers_attrs = Resources::Candlepin::Consumer.register_hypervisors(hypervisors_attrs)
       created = consumers_attrs[:created].map do |hypervisor_attrs|
         System.create_hypervisor(environment.id, content_view.id, hypervisor_attrs)
-      end
+      end if consumers_attrs[:created]
+      updated = consumers_attrs[:updated].each do |hypervisor_attrs|
+        if !System.find_by_uuid(hypervisor[:uuid])
+          created << System.create_hypervisor(environment.id, content_view.id, hypervisor)
+        end
+      end if consumers_attrs[:updated]
+      unchanged = consumers_attrs[:unchanged].each do |hypervisor|
+        if !System.find_by_uuid(hypervisor[:uuid])
+          created << System.create_hypervisor(environment.id, content_view.id, hypervisor)
+        end
+      end if consumers_attrs[:unchanged]
       return consumers_attrs, created
     end
   end

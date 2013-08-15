@@ -510,7 +510,7 @@ This information is then used for computing the errata available for the system.
       cve = ContentViewEnvironment.where(key => value).first
       raise HttpErrors::NotFound, _("Couldn't find environment '%s'") % value unless cve
       if @organization.nil? || !@organization.readable?
-        unless cve.content_view.readable?
+        unless cve.content_view.readable? || User.consumer?
           raise Errors::SecurityViolation, _("Could not access content view in environment '%s'") % value
         end
       end
