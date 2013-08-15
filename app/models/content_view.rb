@@ -330,7 +330,7 @@ class ContentView < ActiveRecord::Base
   end
 
   def index_repositories(env)
-    repos(env).each(&:index_contents)
+    repos(env).each(&:index_content)
   end
 
   def cp_environment_label(env)
