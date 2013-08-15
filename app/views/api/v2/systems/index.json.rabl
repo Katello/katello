@@ -6,5 +6,5 @@ node(:search) { params[:search] }
 node(:sort) { {:by => params[:sort_by], :order => params[:sort_order]} }
 
 node :results do
-    partial("/api/v2/subscriptions/show", :object => @collection[:subscriptions])
+    partial("/api/v2/systems/show", :object => @collection[:records])
 end

@@ -26,10 +26,19 @@
  *   within the table.
  */
 angular.module('Bastion.systems').controller('SystemsController',
-    ['$scope', '$state', 'Nutupane', 'System',
-    function($scope, $state, Nutupane, System) {
+    ['$scope', '$state', '$location', 'Nutupane', 'System', 'CurrentOrganization',
+    function($scope, $state, $location, Nutupane, System, CurrentOrganization) {
 
-        var nutupane = new Nutupane(System);
+        var params = {
+            'organization_id':  CurrentOrganization,
+            'search':           $location.search().search || "",
+            'offset':           0,
+            'sort_by':          'name',
+            'sort_order':       'ASC',
+            'paged':            true
+        };
+
+        var nutupane = new Nutupane(System, params);
         $scope.table = nutupane.table;
 
         $scope.getStatusColor = function(status) {
