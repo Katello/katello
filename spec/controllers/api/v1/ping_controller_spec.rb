@@ -92,5 +92,19 @@ describe Api::V1::PingController do
 
   end
 
+  context "version" do
+
+    it "should get back the correct app name for katello", :katello => true do
+      get :version
+      response.body.should == { :name => "katello", :version => Katello.config.katello_version }.to_json
+    end
+
+    it "should get back the correct app name for headpin", :headpin => true do
+      get :version
+      response.body.should == { :name => "headpin", :version => Katello.config.katello_version }.to_json
+    end
+
+  end
+
 
 end
