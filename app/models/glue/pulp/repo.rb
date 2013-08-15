@@ -603,34 +603,46 @@ module Glue::Pulp::Repo
     def generate_metadata(force=false)
       clone = self.content_view_version.repositories.where(:library_instance_id=>self.library_instance_id).where("id != #{self.id}").first
       if self.environment.library? || force || clone.nil?
-        self.publish_yum_distributor
+        self.publish_distributor
       else
         self.publish_clone_distributor(clone)
       end
     end
 
-    def publish_yum_distributor
-      dist = self.find_yum_distributor
+    def publish_distributor
+      dist = find_distributor
       Katello.pulp_server.extensions.repository.publish(self.pulp_id, dist['id'])
     end
 
     def publish_clone_distributor(source_repo)
-      dist = self.find_yum_clone_distributor
-      source_dist = source_repo.find_yum_distributor
+      dist = find_distributor(true)
+      source_dist = source_repo.find_distributor
 
-      raise "Could not find yum_clone distributor for #{self.pulp_id}" if dist.nil?
-      raise "Could not find yum distributor for #{source_repo.pulp_id}" if source_dist.nil?
+      raise "Could not find #{self.content_type} clone distributor for #{self.pulp_id}" if dist.nil?
+      raise "Could not find #{self.content_type} distributor for #{source_repo.pulp_id}" if source_dist.nil?
       Katello.pulp_server.extensions.repository.publish(self.pulp_id, dist['id'],
                                :override_config=>{:source_repo_id=>source_repo.pulp_id,
                                                   :source_distributor_id=>source_dist['id']})
     end
 
-    def find_yum_distributor
-      self.distributors.select{ |i| i["distributor_type_id"] == Runcible::Models::YumDistributor.type_id }.first
-    end
+    def find_distributor(use_clone_distributor = false)
+      dist_type_id = if use_clone_distributor
+                       case self.content_type
+                       when Repository::YUM_TYPE
+                         Runcible::Models::YumCloneDistributor.type_id
+                       when Repository::PUPPET_TYPE
+                         Runcible::Models::PuppetDistributor.type_id
+                       end
+                     else
+                       case self.content_type
+                       when Repository::YUM_TYPE
+                         Runcible::Models::YumDistributor.type_id
+                       when Repository::PUPPET_TYPE
+                         Runcible::Models::PuppetDistributor.type_id
+                       end
+                     end
 
-    def find_yum_clone_distributor
-      self.distributors.select{ |i| i["distributor_type_id"] == Runcible::Models::YumCloneDistributor.type_id }.first
+      distributors.detect { |dist| dist["distributor_type_id"] == dist_type_id }
     end
 
     def sort_sync_status statuses

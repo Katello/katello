@@ -155,6 +155,40 @@ class GluePulpRepoTest < GluePulpRepoTestBase
 
 end
 
+# TODO: uncomment this once runcible 1.0.4 or greater is out
+#class GluePulpPuppetRepoTest < GluePulpRepoTestBase
+
+  #@@p_forge = nil
+
+  #def self.before_suite
+    #super
+    #@@p_forge = Repository.find(@loaded_fixtures['repositories']['p_forge']['id'])
+    #@@p_forge.relative_path = '/test_path/'
+    #@@p_forge.feed = "http://davidd.fedorapeople.org/repos/random_puppet/"
+
+    #VCR.use_cassette('glue_pulp_repo_helper') do
+      #@@p_forge.create_pulp_repo
+    #end
+  #end
+
+  #def self.after_suite
+    #VCR.use_cassette('glue_pulp_repo_helper') do
+      #@@p_forge.destroy_repo
+    #end
+  #end
+
+  #def setup
+    #super
+    #User.current = @@admin
+    #@p_forge = @@p_forge
+    #@p_forge.relative_path = '/test_path/'
+  #end
+
+  #def test_generate_distributors
+    #refute_nil @@p_forge.find_distributor
+  #end
+
+#end
 
 class GluePulpRepoRequiresSyncTest < GluePulpRepoTestBase
 
