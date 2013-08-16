@@ -11,6 +11,7 @@
 */
 
 //= require "common/katello.global"
+//= require "common/katello.common.js"
 //= require "common/katello"
 //= require "common/menu"
 //= require "common/notices"

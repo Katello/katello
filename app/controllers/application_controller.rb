@@ -465,7 +465,7 @@ class ApplicationController < ActionController::Base
     to_ret = []
     paths.each do |path|
       path = path.collect{ |e| environment_path_element_generator.call(e) }
-      to_ret << [library] + path if path.any?{|e| e[:select]}
+      to_ret << [library] + path
     end
 
     if paths.empty?

@@ -236,6 +236,7 @@ Src::Application.routes.draw do
       put :add_system_groups
       put :remove_system_groups
       get :custom_info
+      get :releases
     end
     collection do
       get :auto_complete
@@ -409,6 +410,9 @@ Src::Application.routes.draw do
       member do
         get :products
         get :content_views
+      end
+      collection do
+        get :registerable_paths
       end
       resources :content_view_versions, :only => [:show] do
         member do

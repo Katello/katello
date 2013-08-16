@@ -154,6 +154,7 @@ describe RepositoriesController, :katello => true do
 
         Resources::Candlepin::Content.stub!(:get).and_return(content)
         Resources::Candlepin::Content.stub!(:create).and_return(content)
+        Repository.any_instance.stub(:publish_yum_distributor)
         Katello.pulp_server.extensions.repository.stub(:publish_all).and_return([])
         @repo_name = "repo-#{rand 10 ** 8}"
         post :create, { :product_id => @product.id,
@@ -162,6 +163,7 @@ describe RepositoriesController, :katello => true do
                               :label => @repo_name,
                               :feed => "http://foo.com",
                               :unprotected => false,
+                              :content_type => "yum",
                               :gpg_key =>@gpg.id.to_s}}
       end
       specify  do

@@ -40,6 +40,12 @@ describe Api::V1::EnvironmentsController do
     # user_with_permissions { |u| u.can([:update], :organizations, nil, @ogranization) }
     user_without_permissions
   end
+  let(:user_with_register_systems_permission) do
+    user_with_permissions { |u| u.can([:register_system], :organizations, nil, @ogranization) }
+  end
+  let(:user_without_register_systems_permission) do
+    user_without_permissions
+  end
 
 
   describe "create an environment" do
@@ -196,5 +202,19 @@ describe Api::V1::EnvironmentsController do
     end
   end
 
+  describe "list environments that the current user can register a system to" do
+    before(:each) do
+    end
 
+    let(:action) { :systems_registerable }
+    let(:req) { get :systems_registerable }
+    let(:authorized_user) { user_with_register_systems_permission }
+    let(:unauthorized_user) { user_without_resgister_systems_permission }
+    it_should_behave_like "protected action"
+
+    it "should show releases that are available in given environment" do
+      req
+      JSON.parse(response.body).should == [@environment] }
+    end
+  end
 end

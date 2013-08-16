@@ -104,6 +104,12 @@ Src::Application.routes.draw do
         end
       end
 
+      api_resources :subscriptions, :only => [] do
+        collection do
+          get :index, :action => :organization_index
+        end
+      end
+
       api_resources :providers, :except => [:index] do
         api_resources :sync, :only => [:index, :create] do
           delete :index, :on => :collection, :action => :cancel

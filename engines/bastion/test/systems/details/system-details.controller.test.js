@@ -11,7 +11,7 @@
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
  **/
 
-describe('Controller: SystemDetailsInfoController', function() {
+describe('Controller: SystemDetailsController', function() {
     var $scope, $controller, System, mockSystem;
 
     // load the systems module and template
@@ -44,7 +44,7 @@ describe('Controller: SystemDetailsInfoController', function() {
     }));
 
     it("gets the system using the System service and puts it on the $scope.", function() {
-        expect(System.get).toHaveBeenCalledWith({id: 2});
+        expect(System.get).toHaveBeenCalledWith({id: 2}, jasmine.any(Function));
         expect($scope.system).toBe(mockSystem);
     });
 });

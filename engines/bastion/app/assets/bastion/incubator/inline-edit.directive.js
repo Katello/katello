@@ -38,8 +38,29 @@ angular.module('alchemy')
         var previousValue;
 
         $scope.edit = function() {
+            var options;
+
             $scope.editMode = true;
             previousValue = $scope.model;
+
+            if ($scope.handleOptions !== undefined) {
+                options = $scope.handleOptions();
+            }
+
+            if (options !== undefined) {
+                if (options.hasOwnProperty('then')) {
+                    options.then(function(data) {
+                        $scope.options = data;
+
+                    });
+                } else {
+                    $scope.options = options;
+                }
+
+                if (options.length === 0) {
+                    $scope.disableSave = true;
+                }
+            }
         };
 
         $scope.save = function() {
@@ -51,7 +72,14 @@ angular.module('alchemy')
             $scope.editMode = false;
             $scope.model = previousValue;
             $scope.handleCancel({ value: $scope.model });
+            $scope.disableSave = false;
         };
+
+        $scope.$watch('triggerEdit', function(edit) {
+            if (edit) {
+                $scope.edit();
+            }
+        });
     }])
     .directive('alchEditText', function() {
         return {
@@ -86,12 +114,16 @@ angular.module('alchemy')
             replace: true,
             scope: {
                 model: '=alchEditSelect',
-                options: '=options',
+                object: '=',
+                handleOptions: '&onOptions',
                 handleSave: '&onSave',
-                handleCancel: '&onCancel'
+                handleCancel: '&onCancel',
+                triggerEdit: '='
             },
             template: '<div>' +
-                        '<select ng-model="model" ng-options="option for option in options" ng-show="editMode">' +
+                        '<select ng-model="object" ' +
+                                 'ng-options="option.id as option.name for option in options" ' +
+                                 'ng-show="editMode">' +
                         '</select>' +
                         '<div alch-edit></div>' +
                       '</div>'

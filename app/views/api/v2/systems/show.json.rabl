@@ -1,27 +1,17 @@
 object @system
 
-attributes :id, :uuid, :location, :servicelevel, :content_view_id
-attributes :environment_id, :description
+attributes :id, :uuid, :location, :servicelevel, :content_view
+attributes :environment, :description
 attributes :name, :release, :ipv4_address
-attributes :activation_key, :href, :system_template_id, :autoheal
+attributes :distribution_name, :kernel, :arch, :memory
+attributes :compliance, :serviceLevel, :autoheal
+attributes :activation_key, :href, :system_template_id
+attributes :created, :checkin_time
 # TODO needs investigation whether it is safe to remove
 attributes :facts
 
 node :releaseVer do |sys|
-  sys.releaseVer[:releaseVer]
-end
-
-child Util::Data::ostructize(@resource.idCert) => :idCert do
-  attributes :id, :key, :cert
-  attributes :created, :updated
-  child :serial => :serial do
-    attributes :id, :revoked, :collected, :serial, :expiration
-    attributes :created, :updated
-  end
-end
-
-child Util::Data::ostructize(@resource.owner) => :owner do
-  attributes :id, :key, :displayName, :href
+  sys.releaseVer.is_a?(Hash) ? sys.releaseVer[:releaseVer] : sys.releaseVer
 end
 
 child :environment => :environment do

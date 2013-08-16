@@ -26,7 +26,9 @@ var Katello = angular.module('Katello', [
     'Katello.globals',
     'Bastion.i18n',
     'Bastion.menu',
-    'Bastion.systems'
+    'Bastion.systems',
+    'Bastion.environments',
+    'Bastion.content-views'
 ]);
 
 /**
@@ -41,6 +43,7 @@ var Katello = angular.module('Katello', [
  */
 Katello.config(['$httpProvider', function($httpProvider) {
     $httpProvider.defaults.headers.common['X-CSRF-TOKEN'] = $('meta[name=csrf-token]').attr('content');
+    $httpProvider.defaults.headers.common['ACCEPT'] = 'version=2';
 }]);
 
 

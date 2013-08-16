@@ -14,11 +14,12 @@
 describe('Factory: System', function() {
     var $resource,
         $q,
+        System,
         Routes,
         releaseVersions,
         systemsCollection;
 
-    beforeEach(module('Bastion.systems'));
+    beforeEach(module('Bastion.systems', 'Bastion.utils'));
 
     beforeEach(module(function($provide) {
         systemsCollection = {
@@ -34,21 +35,21 @@ describe('Factory: System', function() {
 
         Routes = {
             apiSystemsPath: function() { return '/api/systems';},
-            editSystemPath: function(id) { return '/system/' + id;}
+            editSystemsPath: function(id) { return '/system/' + id;}
         };
 
         $resource = function() {
-            this.get = function(args, callback) {
-                callback(systemsCollection.records[0]);
+            this.get = function(id) {
+                return systemsCollection.records[0];
+            };
+            this.update = function(data) {
+                systemsCollection.records[0] = data;
+            };
+            this.query = function() {
+                return systemsCollection;
             };
 
-            this.update = function() {};
-
-            this.query = function(args, callback) {
-                callback(systemsCollection);
-            };
-
-            this.releaseVersions = function(args, callback) {
+            this.releaseVersions = function() {
                 var deferred = $q.defer();
 
                 deferred.resolve(releaseVersions);
@@ -61,6 +62,7 @@ describe('Factory: System', function() {
 
         $provide.value('$resource', $resource);
         $provide.value('Routes', Routes);
+        $provide.value('CurrentOrganization', 'ACME');
     }));
 
     beforeEach(inject(function(_System_, _$q_) {
@@ -68,31 +70,10 @@ describe('Factory: System', function() {
         $q = _$q_;
     }));
 
-    it("provides a way to get a collection of systems", function() {
-        System.query();
-
-        expect(System.records).toEqual(systemsCollection.records);
-        expect(System.total).toEqual(systemsCollection.total);
-        expect(System.subtotal).toEqual(systemsCollection.subtotal);
-        expect(System.offset).toEqual(2);
-    });
-
-    it("provides a way to get a single system by the system ID", function() {
-        System.get({ id: systemsCollection.records[0].id });
-
-        expect(System.records).toEqual([systemsCollection.records[0]]);
-        expect(System.total).toEqual(1);
-        expect(System.subtotal).toEqual(1);
-        expect(System.offset).toEqual(1);
-    });
-
-    it("updates a single system's occurence within the collection", function() {
-        System.query();
-
-        systemsCollection.records[1].name = 'NewSystemName';
-        System.get({ id: systemsCollection.records[1].id });
-
-        expect(System.records[1].name).toEqual('NewSystemName');
+    it("provides a way to update a system", function() {
+        System.update({name: 'NewSystemName', id: 1});
+        var response = System.get({ id: 1 });
+        expect(response.name).toEqual('NewSystemName');
     });
 
     it("provides a way to get the possible release versions for a system via a promise", function() {

@@ -19,7 +19,7 @@ module Navigation
         @key           = :user_account
         @display       = _("My Account")
         @authorization = true
-        @url           = "#{users_path(user)}#list_search=#{user.username}&panel=user_#{user.id}&panel_page=edit"
+        @url           = "#{users_path(user)}#list_search=#{user.username}&panel=user_#{user.id}&panelpage=edit"
       end
 
     end

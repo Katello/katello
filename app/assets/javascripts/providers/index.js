@@ -15,3 +15,4 @@
 //= require "alchemy/jquery/plugins/jquery.uitablefilter"
 //= require "providers/provider"
 //= require "providers/repo_discovery"
+//= require "providers/repo"

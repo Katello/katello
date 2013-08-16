@@ -34,4 +34,14 @@ class Api::V2::SubscriptionsController < Api::V1::SubscriptionsController
     respond :resource => @system
   end
 
+  def index
+    subscriptions = {
+        :subscriptions => @system.consumed_entitlements,
+        :subtotal => @system.consumed_entitlements.count,
+        :total => @system.consumed_entitlements.count
+    }
+
+    respond({:collection => subscriptions})
+  end
+
 end

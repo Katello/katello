@@ -134,9 +134,7 @@ class ActivationKeysController < ApplicationController
         else
           key_sub = KeyPool.where(:activation_key_id => @activation_key.id, :pool_id => kt_pool.id)[0]
 
-          if key_sub.nil?
-            KeyPool.create!(:activation_key_id => @activation_key.id, :pool_id => kt_pool.id)
-          end
+          KeyPool.create!(:activation_key_id => @activation_key.id, :pool_id => kt_pool.id)
         end
       end
     end
@@ -317,17 +315,12 @@ class ActivationKeysController < ApplicationController
   # The result will be a hash where the key is the product name and the value is an array of hashes where each entry
   # in the array is for a pool and the elements of the hash are details for that pool
   def retrieve_applied_pools all_pools
-    # using the list of pools provided, create a list of the ones that have been applied
     applied_pools = {}
-
-    # build a list of applied/consumed pools using the data associated with the key and
-    # the pool details retrieved from candlepin.
-    consumed = @activation_key.pools
-    consumed.each do |pool|
-      applied_pools[pool.cp_id] = all_pools[pool.cp_id]
+    @activation_key.pools.each do |pool|
+      applied_pools[pool.product_name] ||= []
+      applied_pools[pool.product_name] << pool
     end
-
-    pools_hash applied_pools
+    applied_pools
   end
 
   # Iterate the pools provided creating a hash where the key is the product name and the value is an array

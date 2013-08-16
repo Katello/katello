@@ -96,7 +96,7 @@ module Glue::Candlepin::Content
         :contentUrl => Glue::Pulp::Repos.custom_content_path(self.product, label),
         :gpgUrl => yum_gpg_key_url,
         :label => custom_content_label,
-        :type => "yum",
+        :type => self.content_type,
         :vendor => Provider::CUSTOM
       })
     end
@@ -108,7 +108,7 @@ module Glue::Candlepin::Content
         :content => {
           :name => self.name,
           :contentUrl => Glue::Pulp::Repos.custom_content_path(self.product, self.label),
-          :type => "yum",
+          :type => self.content_type,
           :label => self.custom_content_label,
           :vendor => Provider::CUSTOM
         },

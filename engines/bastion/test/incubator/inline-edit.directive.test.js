@@ -153,7 +153,7 @@ describe('Directive: alchEdit', function() {
 
         beforeEach(function() {
             editableElement = angular.element(
-                '<span alch-edit-select="item.taco" options="tacoOptions"></span>');
+                '<span alch-edit-select="item.taco" on-options="tacoOptions"></span>');
 
             scope.item = testItem;
 

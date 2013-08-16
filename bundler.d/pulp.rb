@@ -3,7 +3,7 @@
 if Katello.early_config.katello?
   group :pulp do
     # Pulp API bindings
-    gem 'runcible', '~> 1.0.0'
+    gem 'runcible', '= 1.0.3'
     gem 'anemone'
   end
 end

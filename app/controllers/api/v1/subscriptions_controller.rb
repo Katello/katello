@@ -82,13 +82,15 @@ class Api::V1::SubscriptionsController < Api::V1::ApiController
 
     if params[:paged]
       subscriptions = {
-        :subscriptions => subscriptions.results,
+        # The following workaround will be removed before 08/31/13 when we upgrade tire
+        #:subscriptions => subscriptions.results
+        :subscriptions => subscriptions.results.collect { |item| OpenStruct.new(item.to_hash)},
         :subtotal => total_count,
         :total => items.total_items
       }
     end
 
-    respond_for_index :collection => subscriptions
+    respond_for_index(:collection => subscriptions)
   end
 
   api :POST, "/systems/:system_id/subscriptions", "Create a subscription"

@@ -18,13 +18,18 @@
  * @requires $scope
  * @requires System
  * @requires Subscriptions
+ * @requires Nutupane
  *
  * @description
  *   Provides the functionality for the system details action pane.
  */
-angular.module('Bastion.systems').controller('SystemSubscriptionsController', ['$scope', 'System', 'Subscriptions',
-    function($scope, System, Subscriptions) {
-        $scope.systemSubscriptions = System.subscriptions({id: $scope.$stateParams.systemId});
-        $scope.availableSubscriptions = Subscriptions.query();
+angular.module('Bastion.systems').controller('SystemSubscriptionsController',
+    ['$scope', 'SystemSubscriptions', 'Subscriptions', 'Nutupane',
+    function($scope, SystemSubscriptions, Subscriptions, Nutupane) {
+        var currentSubscriptionsNutupane = new Nutupane(SystemSubscriptions, {id: $scope.$stateParams.systemId});
+        $scope.currentSubscriptionsTable = currentSubscriptionsNutupane.table;
+
+        var availableSubscriptionsNutupane = new Nutupane(Subscriptions, {paged: true});
+        $scope.availableSubscriptionsTable = availableSubscriptionsNutupane.table;
     }
 ]);

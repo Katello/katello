@@ -1,4 +1,4 @@
-object @resource
+object @content_view
 
 extends 'api/v2/common/identifier'
 extends 'api/v2/common/org_reference'
@@ -16,8 +16,5 @@ child :versions => :versions do
   attributes :created_at => :published
   attributes :environment_ids
 end
-child @object.repos(@environment) => :repositories do
-  attributes :id, :name
-end unless @environment.nil?
 
 extends 'api/v2/common/timestamps'

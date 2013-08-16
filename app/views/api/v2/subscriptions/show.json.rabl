@@ -1,5 +1,5 @@
-object @resource
+object @subscription
 
-attributes :sockets, :providedProducts, :serials, :sla, :poolName
+attributes :name, :poolName, :sla, :contractNumber, :quantity
 attributes :endDate, :startDate
-attributes :contractNumber, :quantity, :consumed, :entitlementId, :poolId
+attributes :id
