@@ -116,13 +116,16 @@ class Role < ActiveRecord::Base
     superadmin_role = Role.find_or_create_by_name(
       :name => ADMINISTRATOR,
       :description => 'Super administrator with all access.')
-    raise "Unable to create super-admin role: #{format_errors superadmin_role}" if superadmin_role.nil? or superadmin_role.errors.size > 0
+    raise "Unable to create super-admin role: #{superadmin_role}" if superadmin_role.nil? || superadmin_role.errors.size > 0
+
+    #unlock role in case permission needs to be created
+    superadmin_role.update_attributes(:locked => false)
 
     superadmin_role_perm = Permission.find_or_create_by_name(
       :name=> "super-admin-perm",
       :description => 'Super Admin permission',
       :role => superadmin_role, :all_types => true)
-    raise "Unable to create super-admin role permission: #{format_errors superadmin_role_perm}" if superadmin_role_perm.nil? or superadmin_role_perm.errors.size > 0
+    raise "Unable to create super-admin role permission: #{superadmin_role_perm}" if superadmin_role_perm.nil? || superadmin_role_perm.errors.size > 0
 
     superadmin_role.update_attributes(:locked => true)
     superadmin_role
