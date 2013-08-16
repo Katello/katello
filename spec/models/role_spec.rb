@@ -88,6 +88,24 @@ describe Role do
    end
  end
 
+ context "Admin permission should be recreated if role exists" do
+   before do
+     @admin_role = Role.make_super_admin_role
+     @admin_role.update_attributes(:locked=>false)
+     @admin_role.permissions.destroy_all
+     @admin_role.update_attributes(:locked=>true)
+   end
+
+   context "recreating permission" do
+     specify {
+       @admin_role.permissions.size.should == 0
+       @admin_role  = Role.make_super_admin_role
+       @admin_role.permissions.size.should == 1
+     }
+   end
+
+ end
+
  context "read ldap roles" do
    before do
      Katello.config[:ldap_roles] = true
