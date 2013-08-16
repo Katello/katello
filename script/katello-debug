@@ -98,6 +98,12 @@ FOREMAN = [
 "/etc/sysconfig/foreman"
 ]
 
+SIGNO = [
+"/etc/signo/thin.yml",
+"/etc/signo/sso.yml",
+"/var/log/signo"
+]
+
 # Exclude these files from the debug
 EXCLUDES = [
 "/etc/tomcat6/keystore",
@@ -121,6 +127,7 @@ sources += KATELLO_HEADPIN
 sources += ELASTIC_SEARCH
 sources += CANDLEPIN
 sources += PULP if deployment == 'katello'
+sources += SIGNO if deployment == 'katello'
 sources += FOREMAN if use_foreman
 sources += THUMBSLUG if deployment == 'headpin'
 
