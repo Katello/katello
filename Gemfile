@@ -29,7 +29,7 @@ if defined? JRUBY_VERSION
   gem 'tire', '>= 0.3.0'
 else
   gem 'thin', '>= 1.2.8'
-  gem 'tire', '>= 0.3.0', '< 0.4'
+  gem 'tire', '~> 0.6.0'
   gem 'pg'
 end
 

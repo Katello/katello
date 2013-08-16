@@ -507,6 +507,8 @@ class ApplicationController < ActionController::Base
     skip_render = search_options[:skip_render] || false
     page_size = search_options[:page_size] || current_user.page_size
 
+    start ||= 0
+
     if search.nil? || search== ''
       all_rows = true
     elsif search_options[:simple_query] && !Katello.config.simple_search_tokens.any?{|s| search.downcase.match(s)}
