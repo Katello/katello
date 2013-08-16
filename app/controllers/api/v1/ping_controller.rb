@@ -36,6 +36,6 @@ class Api::V1::PingController < Api::V1::ApiController
   api :GET, "/version", "Shows name and version information"
   description "This service is only available for authenticated users"
   def version
-    respond_for_show :resource => { :name => Katello.config.app_name, :version => Katello.config.katello_version }
+    respond_for_show :resource => { :name => Katello.config.app_mode, :version => Katello.config.katello_version }
   end
 end
