@@ -17,7 +17,7 @@ class Api::V1::ProxiesController < Api::V1::ApiController
   def rules
     proxy_test = lambda {
       route, match, params = Rails.application.routes.router.recognize(request) do |route, match, params|
-        break route, match, params
+        break route, match, params if route.name
       end
 
       # route names are defined in routes.rb (:as => :name)
