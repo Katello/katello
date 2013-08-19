@@ -1,11 +1,33 @@
 <div class="nutupane-sub-section">
+
+  <div class="flash_hud" ng-show="saveSuccess">
+    <a class="control" title="Close" ng-click="saveSuccess = false"></a>
+    <ul class="flash_messages success">
+      <li>
+        {{ "Save successful" | i18n }}
+      </li>
+    </ul>
+  </div>
+
+  <div class="flash_hud" ng-show="saveError">
+    <a class="control" title="Close" ng-click="saveError = false"></a>
+    <ul class="flash_messages error">
+      <li>
+        {{ "Error occurred saving:" | i18n }}
+      </li>
+      <ul>
+        <li ng-repeat="error in errors">{{ error }}</li>
+      </ul>
+    </ul>
+  </div>
+
   <div class="details fl">
     <section>
       <h4>{{ "Basic Information" | i18n }}</h4>
 
       <div class="detail">
         <span class="info-label">{{ "Name" | i18n }}</span>
-        <span class="info-value" alch-edit-text="system.name" on-save="system.$update()"></span>
+        <span class="info-value" alch-edit-text="system.name" on-save="save()"></span>
       </div>
 
       <div class="detail">
@@ -15,7 +37,7 @@
 
       <div class="detail">
         <span class="info-label">{{ "Description" | i18n }}</span>
-        <span class="info-value" alch-edit-textarea="system.description" on-save="system.$update()"></span>
+        <span class="info-value" alch-edit-textarea="system.description" on-save="save()"></span>
       </div>
 
       <div class="divider"></div>
@@ -104,9 +126,9 @@
         <span class="info-label">{{ "Release Version" | i18n }}</span>
         <span class="info-value"
               alch-edit-select="system.releaseVer.releaseVer"
-              object="system.releaseVer.releaseVer"
-              on-options="releaseVersions()"
-              on-save="system.$update()">
+              selector="system.releaseVer.releaseVer"
+              options="releaseVersions()"
+              on-save="save()">
         </span>
       </div>
 
@@ -114,11 +136,11 @@
         <span class="info-label">{{ "Content View" | i18n }}</span>
         <span class="info-value"
               alch-edit-select="system.content_view.name"
-              object="system.content_view.id"
-              on-options="contentViews()"
+              selector="system.content_view.id"
+              options="contentViews()"
               on-cancel="cancelContentViewUpdate()"
-              on-save="system.$update()"
-              trigger-edit="editContentView">
+              on-save="save()"
+              edit-trigger="editContentView">
         </span>
       </div>
 

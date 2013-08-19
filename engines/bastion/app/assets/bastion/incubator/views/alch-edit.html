@@ -1,8 +1,9 @@
 <div>
-  <div class="value editable clickable" ng-click="edit()" ng-hide="editMode">
+  <div class="value editable clickable" ng-click="edit()" ng-hide="editMode || savingMode">
     <span class="editable-value">{{ model }}</span>
-    <i class="icon-edit inline-icon" ng-hide="editMode"></i>
+    <i class="icon-edit inline-icon fr" ng-hide="editMode"></i>
   </div>
+  <div ng-show="savingMode"><i class="icon-spinner inline-icon icon-spin"></i><span>Saving...</span></div>
   <button class="btn primary small fl"
           ng-click="save()" 
           ng-disabled="disableSave" 

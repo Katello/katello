@@ -24,11 +24,30 @@
  *   Provides the functionality for the system details action pane.
  */
 angular.module('Bastion.systems').controller('SystemDetailsInfoController',
-    ['$scope', 'System', 'ContentView', 'Environment', '$q',
-    function($scope, System, ContentView, Environment, $q) {
+    ['$scope', 'System', 'ContentView', 'Environment', '$q', '$timeout',
+    function($scope, System, ContentView, Environment, $q, $timeout) {
 
         $scope.editContentView = false;
         $scope.previousEnvironment = -1;
+
+        $scope.save = function() {
+            var deferred = $q.defer();
+
+            $scope.system.$update(function() {
+                deferred.resolve();
+                $scope.saveSuccess = true;
+
+                $timeout(function() {
+                    $scope.saveSuccess = false;
+                }, 2000);
+            }, function(response) {
+                deferred.reject();
+                $scope.saveError = true;
+                $scope.errors = response.data.errors;
+            });
+
+            return deferred.promise;
+        };
 
         $scope.setEnvironment = function(environmentId) {
             if ($scope.previousEnvironment !== $scope.system.environment.id) {

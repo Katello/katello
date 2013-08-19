@@ -52,33 +52,49 @@ angular.module('alchemy')
                     options.then(function(data) {
                         $scope.options = data;
 
+                        if ($scope.options.length === 0) {
+                            $scope.disableSave = true;
+                        }
                     });
                 } else {
                     $scope.options = options;
+
+                    if ($scope.options.length === 0) {
+                        $scope.disableSave = true;
+                    }
                 }
 
-                if (options.length === 0) {
-                    $scope.disableSave = true;
-                }
             }
         };
 
         $scope.save = function() {
             $scope.editMode = false;
-            $scope.handleSave({ value: $scope.model });
+            $scope.savingMode = true;
+            $scope.handleSave({ value: $scope.model }).then(
+                function() {
+                    $scope.savingMode = false;
+                },
+                function() {
+                    $scope.savingMode = false;
+                    $scope.editMode = true;
+                });
         };
 
         $scope.cancel = function() {
             $scope.editMode = false;
+            $scope.disableSave = false;
             $scope.model = previousValue;
             $scope.handleCancel({ value: $scope.model });
-            $scope.disableSave = false;
         };
 
-        $scope.$watch('triggerEdit', function(edit) {
+        $scope.$watch('editTrigger', function(edit) {
             if (edit) {
                 $scope.edit();
             }
+        });
+
+        $scope.$watch('model', function(model) {
+            $scope.savingMode = false;
         });
     }])
     .directive('alchEditText', function() {
@@ -114,14 +130,14 @@ angular.module('alchemy')
             replace: true,
             scope: {
                 model: '=alchEditSelect',
-                object: '=',
-                handleOptions: '&onOptions',
+                selector: '=',
+                handleOptions: '&options',
                 handleSave: '&onSave',
                 handleCancel: '&onCancel',
-                triggerEdit: '='
+                editTrigger: '='
             },
             template: '<div>' +
-                        '<select ng-model="object" ' +
+                        '<select ng-model="selector" ' +
                                  'ng-options="option.id as option.name for option in options" ' +
                                  'ng-show="editMode">' +
                         '</select>' +
