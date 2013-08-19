@@ -32,7 +32,7 @@
             = subscriptions_manifest_link_helper({'webAppPrefix'=>@upstream[:webUrl], 'upstreamId'=>@upstream['uuid']}, @upstream['name'])
         %fieldset
         - if @provider.editable?
-          - if !@provider.manifest_task || @provider.manifest_task.finished?
+          - if @provider.manifest_task.nil? || @provider.manifest_task.finished? || @provider.organization.auto_attaching_all_systems?
             .grid_3.ra.fieldset
               &nbsp;
             - if can_refresh
