@@ -30,7 +30,7 @@ angular.module('Bastion.content-views').factory('ContentView',
             {id: '@id'},
             {
                 update: { method: 'PUT' },
-                query:  { method: 'GET', isArray: false, params: {paged: true}}
+                query:  { method: 'GET', isArray: false}
             }
         );
 

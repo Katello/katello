@@ -43,24 +43,15 @@ class Api::V1::ContentViewsController < Api::V1::ApiController
   def index
     query_params.delete(:environment_id)
     query_params.delete(:organization_id)
-    query_params.delete(:paged)
 
     search        = ContentView.where(query_params)
-    content_views = if @environment
+    @content_views = if @environment
                        search.readable(@organization).in_environment(@environment)
                      else
                        search.readable(@organization)
                      end
 
-    if params[:paged]
-      content_views = {
-        :records  => content_views,
-        :subtotal => content_views.length,
-        :total    => content_views.length
-      }
-    end
-
-    respond :collection => content_views
+    respond :collection => @content_views
   end
 
   api :GET, "/content_views/:id", "Show a content view"

@@ -27,7 +27,11 @@
 
       <div class="detail">
         <span class="info-label">{{ "Name" | i18n }}</span>
-        <span class="info-value" alch-edit-text="system.name" on-save="save()"></span>
+        <span class="info-value"
+              alch-edit-text="system.name"
+              readonly="system.readonly"
+              on-save="save(system)">
+        </span>
       </div>
 
       <div class="detail">
@@ -37,7 +41,11 @@
 
       <div class="detail">
         <span class="info-label">{{ "Description" | i18n }}</span>
-        <span class="info-value" alch-edit-textarea="system.description" on-save="save()"></span>
+        <span class="info-value"
+              alch-edit-textarea="system.description"
+              readonly="system.readonly"
+              on-save="save(system)">
+        </span>
       </div>
 
       <div class="divider"></div>
@@ -126,9 +134,10 @@
         <span class="info-label">{{ "Release Version" | i18n }}</span>
         <span class="info-value"
               alch-edit-select="system.releaseVer.releaseVer"
+              readonly="system.readonly"
               selector="system.releaseVer.releaseVer"
               options="releaseVersions()"
-              on-save="save()">
+              on-save="save(system)">
         </span>
       </div>
 
@@ -136,10 +145,11 @@
         <span class="info-label">{{ "Content View" | i18n }}</span>
         <span class="info-value"
               alch-edit-select="system.content_view.name"
+              readonly="system.readonly"
               selector="system.content_view.id"
               options="contentViews()"
               on-cancel="cancelContentViewUpdate()"
-              on-save="save()"
+              on-save="save(system)"
               edit-trigger="editContentView">
         </span>
       </div>
@@ -147,6 +157,7 @@
       <div class="detail">
         <span class="info-label">{{ "Environment" | i18n }}</span>
         <span id="environment_path_selector" 
+              readonly="system.readonly"
               path-selector="system.environment.id"
               organization="system.environment.organization_name"
               on-change="setEnvironment(environment_id)">

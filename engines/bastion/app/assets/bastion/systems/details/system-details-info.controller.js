@@ -16,32 +16,36 @@
  * @name  Bastion.systems.controller:SystemDetailsController
  *
  * @requires $scope
+ * @requires $q
  * @requires System
- * @requires Environment
  * @requires ContentView
  *
  * @description
  *   Provides the functionality for the system details action pane.
  */
 angular.module('Bastion.systems').controller('SystemDetailsInfoController',
-    ['$scope', 'System', 'ContentView', 'Environment', '$q', '$timeout',
-    function($scope, System, ContentView, Environment, $q, $timeout) {
+    ['$scope', '$q', 'System', 'ContentView',
+    function($scope, $q, System, ContentView) {
 
         $scope.editContentView = false;
-        $scope.previousEnvironment = -1;
+        $scope.saveSuccess = false;
+        $scope.saveError = false;
+        $scope.previousEnvironment = null;
 
-        $scope.save = function() {
+        $scope.$on('system.loaded', function() {
+            $scope.setupSelector();
+            $scope.systemFacts = dotNotationToObj($scope.system.facts);
+            populateExcludedFacts();
+        });
+
+        $scope.save = function(system) {
             var deferred = $q.defer();
 
-            $scope.system.$update(function() {
-                deferred.resolve();
+            system.$update(function(response) {
+                deferred.resolve(response);
                 $scope.saveSuccess = true;
-
-                $timeout(function() {
-                    $scope.saveSuccess = false;
-                }, 2000);
             }, function(response) {
-                deferred.reject();
+                deferred.reject(response);
                 $scope.saveError = true;
                 $scope.errors = response.data.errors;
             });
@@ -80,19 +84,11 @@ angular.module('Bastion.systems').controller('SystemDetailsInfoController',
             var deferred = $q.defer();
 
             ContentView.query({ 'environment_id': $scope.system.environment.id }, function(response) {
-                deferred.resolve(response.records);
+                deferred.resolve(response.results);
             });
 
             return deferred.promise;
         };
-
-        $scope.$watch("system.facts", function(systemFacts) {
-            if (!systemFacts) {
-                return;
-            }
-            $scope.systemFacts = dotNotationToObj(systemFacts);
-            populateExcludedFacts();
-        });
 
         // TODO upgrade to Angular 1.1.4 so we can move this into a directive
         // and use dynamic templates (http://code.angularjs.org/1.1.4/docs/partials/guide/directive.html)

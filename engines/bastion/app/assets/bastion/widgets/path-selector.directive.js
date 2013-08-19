@@ -28,18 +28,12 @@ angular.module('Bastion.widgets').directive('pathSelector',
         restrict: 'AE',
         scope: {
             pathSelector: '=',
-            paths: '=',
-            onChange: '&',
-            organization: '&'
+            readonly: '=',
+            organization: '&',
+            onChange: '&'
         },
         link: function(scope) {
-            var pathSelect,
-                options = {
-                    inline: true,
-                    'select_mode': 'single',
-                    expand: false,
-                    selected: scope.pathSelector
-                };
+            var pathSelect;
 
             scope.$watch('pathSelector', function(selected) {
                 if (selected !== undefined && pathSelect) {
@@ -47,28 +41,34 @@ angular.module('Bastion.widgets').directive('pathSelector',
                 }
             });
 
-            $http.get(Routes.organizationEnvironmentsPath(scope.organization) + '/registerable_paths')
-            .success(function(data) {
-                setupSelector(data);
-            });
+            scope.$parent.setupSelector = function() {
+                $http.get(Routes.organizationEnvironmentsPath(scope.organization) + '/registerable_paths')
+                .success(function(paths) {
+                    var options = {
+                            inline: true,
+                            'select_mode': 'single',
+                            expand: false,
+                            selected: scope.pathSelector,
+                            readonly: scope.readonly
+                        };
 
-            function setupSelector(paths) {
-                pathSelect = KT.path_select(
-                    'environment_path_selector',
-                    'system_details_path_selector',
-                    paths,
-                    options
-                );
+                    pathSelect = KT.path_select(
+                        'environment_path_selector',
+                        'system_details_path_selector',
+                        paths,
+                        options
+                    );
 
-                $document.bind(pathSelect.get_select_event(), function(){
-                    var environments = pathSelect.get_selected();
+                    $document.bind(pathSelect.get_select_event(), function(){
+                        var environments = pathSelect.get_selected();
 
-                    scope.pathSelector = Object.keys(environments)[0];
-                    scope.onChange({ environment_id: scope.pathSelector });
+                        scope.pathSelector = Object.keys(environments)[0];
+                        scope.onChange({ environment_id: scope.pathSelector });
+                    });
+
+                    scope.$parent.pathSelector = pathSelect;
                 });
-
-                scope.$parent.pathSelector = pathSelect;
-            }
+            };
         },
     };
 }]);

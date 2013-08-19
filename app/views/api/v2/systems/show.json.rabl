@@ -18,4 +18,8 @@ child :environment => :environment do
   extends 'api/v2/environments/show'
 end
 
+node :readonly do |sys|
+  !sys.editable?
+end
+
 extends 'api/v2/common/timestamps'

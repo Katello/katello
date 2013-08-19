@@ -40,7 +40,7 @@
 //= require "bastion/incubator/alch-table.directive"
 //= require "bastion/incubator/alch-container-scroll.directive"
 //= require "bastion/incubator/alch-infinite-scroll.directive"
-//= require "bastion/incubator/inline-edit.directive"
+//= require "bastion/incubator/alch-edit.directive"
 
 //= require "bastion/i18n/i18n.module"
 //= require "bastion/i18n/i18n-dictionary.factory"

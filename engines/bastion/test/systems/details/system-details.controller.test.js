@@ -12,17 +12,27 @@
  **/
 
 describe('Controller: SystemDetailsController', function() {
-    var $scope, $controller, System, mockSystem;
+    var $scope,
+        $controller,
+        System,
+        mockSystem;
 
-    // load the systems module and template
     beforeEach(module('Bastion.systems', 'systems/views/systems.html'));
 
-    // Initialize controller
-    beforeEach(inject(function(_$controller_, $rootScope) {
+    beforeEach(module(function($stateProvider) {
+        $stateProvider.state('systems.fake', {});
+    }));
+
+    beforeEach(inject(function(_$controller_, $rootScope, $state) {
         $controller = _$controller_;
         $scope = $rootScope.$new();
-        // Mocks
+
+        state = {
+            transitionTo: function(){}
+        };
+
         mockSystem = {
+            uuid: 2,
             facts: {
                 cpu: "Itanium",
                 "lscpu.architecture": "Intel Itanium architecture",
@@ -31,21 +41,27 @@ describe('Controller: SystemDetailsController', function() {
             }
         };
         System = {
-            get: function() {
+            get: function(params, callback) {
+                callback(mockSystem);
                 return mockSystem;
-            },
-            releaseVersions: function() {}
+            }
         };
+
         spyOn(System, 'get').andCallThrough();
 
         $scope.$stateParams = {systemId: 2};
 
-        $controller('SystemDetailsController', {$scope: $scope, System: System});
+        $controller('SystemDetailsController', {$scope: $scope, $state: $state, System: System});
     }));
 
     it("gets the system using the System service and puts it on the $scope.", function() {
         expect(System.get).toHaveBeenCalledWith({id: 2}, jasmine.any(Function));
         expect($scope.system).toBe(mockSystem);
     });
+
+    it('provides a method to transition states when a system is present', function() {
+        expect($scope.transitionTo('systems.fake')).toBeTruthy();
+    });
+
 });
 

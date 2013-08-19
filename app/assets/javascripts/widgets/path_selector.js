@@ -53,6 +53,7 @@ KT.path_select = function(div_id, name, environments, options_in){
             options.link_first = default_opt(options_in.link_first, true);
             options.expand = default_opt(options_in.expand, true);
             options.footer = default_opt(options_in.footer, false);
+            options.readonly = default_opt(options_in.readonly, false);
 
             options.selected = default_opt(options_in.selected, undefined);
 
@@ -103,6 +104,10 @@ KT.path_select = function(div_id, name, environments, options_in){
 
             if (options.selected) {
                 select(options.selected);
+            }
+
+            if (options.readonly) {
+                disable_all();
             }
 
             $(document).mouseup(function(e){
@@ -218,12 +223,24 @@ KT.path_select = function(div_id, name, environments, options_in){
 
         },
         select_nodes = function(checkbox_list){
-            checkbox_list.prop('checked', true).attr('checked', 'checked').show();
+            var checkbox;
+
+            checkbox = checkbox_list.prop('checked', true).attr('checked', 'checked').show();
             checkbox_list.parents('label').addClass('active');
+
+            if (options.select_mode === 'single') {
+                checkbox.attr('disabled', 'disabled');
+            }
         },
         unselect_nodes = function(checkbox_list){
-            checkbox_list.removeAttr('checked');
+            checkbox_list.removeAttr('checked').removeAttr('disabled');
             checkbox_list.parents('label').removeClass('active');
+        },
+        disable_all = function() {
+            path_selector.find('input:checkbox').attr('disabled', 'disabled');
+        },
+        set_paths = function() {
+
         },
         get_selected = function(){
             var selected = path_selector.find('input:checked'),
@@ -313,6 +330,7 @@ KT.path_select = function(div_id, name, environments, options_in){
         set_selected: set_selected,
         reposition_left: reposition_left,
         paths_id: paths_id,
+        disable_all: disable_all,
         hide: function() {path_selector.hide();}
     };
 };
