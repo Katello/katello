@@ -44,7 +44,9 @@ KT.comparison_grid = function(){
 
                 if( in_column ){
                     cells.push({'in_column' : in_column, 'display' : cell_data[col['id']]['display'], 'span' : col['span'],
-                                'id' : col['id'], 'hover' : cell_data[col['id']]['hover'], 'comparable' : comparable, 'row_id' : id });
+                                'id' : col['id'], 'hover' : cell_data[col['id']]['hover'],
+                                'hover_details' : cell_data[col['id']]['hover_details'],
+                                'comparable' : comparable, 'row_id' : id });
                 } else {
                     cells.push({ 'in_column' : in_column, 'id' : col['id'], 'span' : col['span'], 'row_id' : id });
                 }
@@ -739,6 +741,7 @@ KT.comparison_grid.events = function(grid) {
                     }
                 }
             });
+            $('.hover_details').tipsy({ gravity : 'w', live : true, html : true });
         },
         details_view = function() {
             $('#return_to_results_btn').live('click', function() {
@@ -802,7 +805,15 @@ KT.comparison_grid.templates = (function(i18n) {
 
     var cell = function(data, row_height) {
             var display,
+
                 hover = data['hover'] ? data['hover'] : false,
+
+                hover_details = data['hover_details' ] ?
+                    $('<span/>', {
+                        'class' : 'details-icon hover_details',
+                        'original-title' : data['hover_details']
+                    }) : '',
+
                 html = $('<div/>', {
                             'data-span' : data['span'],
                             'class'     : 'grid_cell cell_' + data['id']
@@ -824,9 +835,13 @@ KT.comparison_grid.templates = (function(i18n) {
                 html.attr('data-hover', true);
 
                 if( row_height ){
-                    html.append($('<span/>', { 'class' : "hidden grid_cell_hover " + row_height, 'html' : hover }));
+                    html.append($('<span/>', { 'class' : "hidden grid_cell_hover " + row_height,
+                                               'data-span' : data['span'],
+                                               'html' : hover_details.before(hover) }));
                 } else {
-                    html.append($('<span/>', { 'class' : "hidden grid_cell_hover", 'html' : hover }));
+                    html.append($('<span/>', { 'class' : "hidden grid_cell_hover",
+                                               'data-span' : data['span'],
+                                               'html' : hover_details.before(hover) }));
                 }
             }
 

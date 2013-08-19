@@ -51,5 +51,12 @@ module Glue::ElasticSearch::ContentView
       results = ::Errata.search('', 0, 1, :repoids => repo_ids)
       results.empty? ? 0 : results.total
     end
+
+    def total_puppet_module_count(env)
+      repoids = self.repos(env).collect{|r| r.pulp_id}
+      result = ::PuppetModule.search('*', 0, 1, repoids)
+      result.length > 0 ? result.total : 0
+    end
+
   end
 end
