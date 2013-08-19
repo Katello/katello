@@ -14,8 +14,10 @@
 %if "%{?scl}" == "ruby193"
     %global scl_prefix %{scl}-
     %global scl_ruby /usr/bin/ruby193-ruby
+    %global scl_rake /usr/bin/ruby193-rake
 %else
     %global scl_ruby /usr/bin/ruby
+    %global scl_rake /usr/bin/rake
 %endif
 
 %global homedir %{_datarootdir}/%{name}
@@ -41,6 +43,8 @@ Provides:        %{name}-glue-foreman = 1.3.15
 Requires:        %{name}-glue-candlepin
 Requires:        %{name}-selinux
 Conflicts:       %{name}-headpin
+BuildRequires:   %{scl_rake}
+Requires:        %{scl_rake}
 BuildRequires:   %{scl_ruby}
 Requires:        %{scl_ruby}
 
@@ -63,6 +67,7 @@ Requires:       elasticsearch
 Requires:       wget
 Requires:       curl
 
+Requires:       %{scl_rake}
 Requires:       %{scl_ruby}
 Requires:       %{?scl_prefix}rubygems
 Requires:       %{?scl_prefix}rubygem(rails) >= 3.2.8
@@ -275,6 +280,7 @@ Requires:       %{name}-glue-candlepin
 Requires:       %{name}-glue-elasticsearch
 Requires:       katello-selinux
 Requires:       %{?scl_prefix}rubygem(bundler_ext)
+Requires:       %{scl_rake}
 Requires:       %{scl_ruby}
 
 %description headpin
@@ -451,9 +457,11 @@ rm -f config/initializers/quiet_paths.rb
     rm -rf bundler.d/assets.rb
 %endif
 
-#replace shebangs for SCL
 %if %{?scl:1}%{!?scl:0}
+    #replace shebangs for SCL
     find script/ -type f | xargs sed -ri '1sX(/usr/bin/ruby|/usr/bin/env ruby)X%{scl_ruby}X'
+    #use rake from SCL
+    sed -ri 'sX(/usr/bin/rake|/usr/bin/env rake)X%{scl_rake}Xg' script/katello-refresh-cdn
 %endif
 
 #run source code tests

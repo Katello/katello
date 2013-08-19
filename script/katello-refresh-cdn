@@ -6,6 +6,6 @@
 RAILS_DIR=/usr/share/katello
 pushd $RAILS_DIR &> /dev/null
 
-rake katello:refresh_cdn RAILS_ENV=production >/dev/null
+/usr/bin/env rake katello:refresh_cdn RAILS_ENV=production >/dev/null
 
 popd &> /dev/null
