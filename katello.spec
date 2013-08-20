@@ -686,7 +686,19 @@ usermod -a -G katello-shared tomcat
 %{homedir}/app/lib/validators
 %{homedir}/app/lib/api
 %{homedir}/app/lib/dashboard
-
+%dir %{homedir}/engines/fort
+%{homedir}/engines/fort/app
+%{homedir}/engines/fort/config
+%{homedir}/engines/fort/fort.gemspec
+%{homedir}/engines/fort/Gemfile
+%{homedir}/engines/fort/db
+%{homedir}/engines/fort/lib
+%{homedir}/engines/fort/README.rdoc
+%exclude %{homedir}/engines/fort/test
+%exclude %{homedir}/engines/fort/script
+%exclude %{homedir}/engines/fort/Rakefile
+%exclude %{homedir}/engines/fort/LICENSE.txt
+%exclude %{homedir}/engines/fort/.gitignore
 %dir %{homedir}/engines/bastion
 %{homedir}/engines/bastion/bastion.gemspec
 %{homedir}/engines/bastion/README
