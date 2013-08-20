@@ -39,6 +39,7 @@ module Authorization::Organization
           :update => _("Modify Organization and Administer Environments"),
           :read => _("Read Organization"),
           :read_systems => _("Read Systems"),
+          :manage_nodes => _("Manage Nodes"),
           :register_systems =>_("Register Systems"),
           :update_systems => _("Modify Systems"),
           :delete_systems => _("Delete Systems"),
@@ -75,7 +76,7 @@ module Authorization::Organization
     end
 
     def no_tag_verbs
-      [:create]
+      [:create, :manage_nodes]
     end
 
     def authorized_items verbs, resource = :organizations

@@ -107,7 +107,7 @@ class GluePulpConsumerBindTest < GluePulpConsumerTestBase
   end
 
   def test_enable_repos
-    processed_ids, error_ids = @@simple_server.enable_repos([RepositorySupport.repo.pulp_id])
+    processed_ids, error_ids = @@simple_server.enable_yum_repos([RepositorySupport.repo.pulp_id])
     assert_includes processed_ids, RepositorySupport.repo.pulp_id
     refute_includes error_ids, RepositorySupport.repo.pulp_id
   end
@@ -124,7 +124,7 @@ class GluePulpConsumerRequiresBoundRepoTest < GluePulpConsumerTestBase
     UserSupport.setup_hidden_user(@loaded_fixtures['users']['hidden']['id'])
     RepositorySupport.create_and_sync_repo(@loaded_fixtures['repositories']['fedora_17_x86_64']['id'])
     @@simple_server = ConsumerSupport.create_consumer(@loaded_fixtures['systems']['simple_server']['id'])
-    @@simple_server.enable_repos([RepositorySupport.repo.pulp_id])
+    @@simple_server.enable_yum_repos([RepositorySupport.repo.pulp_id])
   end
 
   def self.after_suite

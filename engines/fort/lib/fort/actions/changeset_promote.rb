@@ -1,0 +1,43 @@
+#
+# Copyright 2013 Red Hat, Inc.
+#
+# This software is licensed to you under the GNU General Public
+# License as published by the Free Software Foundation; either version
+# 2 of the License (GPLv2) or (at your option) any later version.
+# There is NO WARRANTY for this software, express or implied,
+# including the implied warranties of MERCHANTABILITY,
+# NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
+# have received a copy of GPLv2 along with this software; if not, see
+# http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
+
+module Fort
+  module Actions
+
+    class ChangesetPublishAction < Dynflow::Action
+
+      def self.subscribe
+        Katello::Actions::ChangesetPromote
+      end
+
+      def plan(changeset)
+        plan_self('id' => changeset.id)
+      end
+
+      input_format do
+        param :id, Integer
+      end
+
+      def run
+        changeset = Changeset.find(input['id'])
+        environment = changeset.environment
+        changeset.content_views.each do |view|
+          Node.with_environment(environment).each do |node|
+            node.sync(:environment=>environment, :content_view=>view)
+          end
+        end
+      end
+
+    end
+
+  end
+end

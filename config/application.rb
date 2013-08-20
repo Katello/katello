@@ -16,7 +16,7 @@ require 'katello/url_constrained_cookie_store'
 
 # bundler_ext does not support inline gem's currently so we have to mount
 # the engine through a requires instead of within the Gemfile
-require './engines/bastion/lib/bastion'
+require File.expand_path("../engines/bastion/lib/bastion", File.dirname(__FILE__))
 
 # If you have a Gemfile, require the gems listed there, including any gems
 # you've limited to :test, :development, or :production.
@@ -130,6 +130,7 @@ module Src
       require 'string_to_bool'
       #default all non-matched route to our special 404 page
       # cannot be added to routes.rb due to conflicting with engines
+      app.routes.append{match '/api*a', :to => 'api/v1/errors#render_404'}
       app.routes.append{match '*a', :to => 'errors#routing'}
     end
 
@@ -191,4 +192,8 @@ FastGettext.default_text_domain = 'katello'
 
 if defined? Dynflow
   Dir[File.join(Rails.root,'lib/{katello,headpin}/actions/*.rb')].each { |f| require f }
+end
+
+if Katello.config.use_pulp && !Object.constants.include?(:Fort)
+  require File.expand_path("../engines/fort/lib/fort", File.dirname(__FILE__))
 end

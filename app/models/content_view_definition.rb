@@ -103,6 +103,8 @@ class ContentViewDefinition < ContentViewDefinitionBase
     unassociate_contents(cloned_repos)
     view.update_cp_content(view.organization.library)
     PulpTaskStatus::wait_for_tasks(view.versions.first.generate_metadata)
+    Glue::Event.trigger(Katello::Actions::ContentViewPublish, view)
+
     if notify
       message = _("Successfully published content view '%{view_name}' from definition '%{definition_name}'.") %
           {:view_name => view.name, :definition_name => self.name}

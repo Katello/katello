@@ -154,8 +154,7 @@ describe RepositoriesController, :katello => true do
 
         Resources::Candlepin::Content.stub!(:get).and_return(content)
         Resources::Candlepin::Content.stub!(:create).and_return(content)
-        Repository.any_instance.stub(:publish_distributor)
-        Katello.pulp_server.extensions.repository.stub(:publish_all).and_return([])
+        Repository.any_instance.stub(:generate_metadata)
         @repo_name = "repo-#{rand 10 ** 8}"
         post :create, { :product_id => @product.id,
                         :provider_id => @product.provider.id,
