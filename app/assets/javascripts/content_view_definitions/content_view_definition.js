@@ -595,9 +595,14 @@ KT.content_view_definition_filters = (function(){
         $(".rule-search-tipsy").tipsy();
     },
     initialize_author_input = function(author_input) {
+        var module_name = author_input.parent().prev(".parameter_name").find("label").text(),
+            filter_id = $("#add_rule").data("filter_id");
         author_input.unbind('keypress').keypress(function() {
             var version_selector = $(this).parent('.author_name').next('td.version_selector');
             version_selector.find('.save_parameters').show();
+        });
+        author_input.autocomplete({
+            source: KT.routes.author_auto_complete_puppet_modules_path({filter_id: filter_id, module_name: $.trim(module_name)})
         });
     },
     initialize_common_rule_params = function() {
@@ -624,6 +629,10 @@ KT.content_view_definition_filters = (function(){
         } else if (rule_type === "rpm") {
             $("#rule_input").autocomplete({
                 source: KT.routes.auto_complete_packages_path({filter_id: filter_id})
+            });
+        } else if (rule_type === "puppet_module") {
+            $("#rule_input").autocomplete({
+                source: KT.routes.auto_complete_puppet_modules_path({filter_id: filter_id})
             });
         }
 

@@ -493,6 +493,11 @@ Src::Application.routes.draw do
   match '/user_session' => 'user_sessions#show', :via => :get, :as => 'show_user_session'
   match '/authenticate' => 'user_sessions#authenticate', :via => :get
 
+  get '/puppet_modules/auto_complete' => 'puppet_modules#auto_complete',
+    :as => "auto_complete_puppet_modules"
+  get '/puppet_modules/author_auto_complete' => 'puppet_modules#author_auto_complete',
+    :as => "author_auto_complete_puppet_modules"
+
   resources :password_resets, :only => [:create, :edit, :update] do
     collection do
       post :email_logins
