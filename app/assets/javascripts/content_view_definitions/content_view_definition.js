@@ -504,8 +504,8 @@ KT.content_view_definition_filters = (function(){
         initialize_common_rule_params();
         initialize_errata_rule_params();
     },
-    initialize_parameter_save = function(version_save_button) {
-        version_save_button.unbind('click').click(function(e) {
+    initialize_parameter_save = function(save_button) {
+        save_button.unbind('click').click(function(e) {
             // user clicked save to commit some changes to a pkg filter rule
             e.preventDefault();
             var parameter_name,
@@ -517,6 +517,7 @@ KT.content_view_definition_filters = (function(){
                 parameters;
 
             disable_version_selector(version_selector);
+            disable_author_input(version_selector);
 
             parameter_name = $(this).closest('tr').find('td.parameter_name').find('.parameter_checkbox').data('id');
 
@@ -562,9 +563,11 @@ KT.content_view_definition_filters = (function(){
                         version_selector.find('input.range').val('');
                     }
                     enable_version_selector(version_selector);
+                    enable_author_input(version_selector);
                 },
                 error: function() {
                     enable_version_selector(version_selector);
+                    enable_author_input(version_selector);
                 }
             });
         });
@@ -595,10 +598,11 @@ KT.content_view_definition_filters = (function(){
         $(".rule-search-tipsy").tipsy();
     },
     initialize_author_input = function(author_input) {
-        var module_name = author_input.parent().prev(".parameter_name").find("label").text(),
+        var module_name = author_input.parent(".author_name").next(".parameter_name").find("label.module_name").text(),
             filter_id = $("#add_rule").data("filter_id");
+
         author_input.unbind('keypress').keypress(function() {
-            var version_selector = $(this).parent('.author_name').next('td.version_selector');
+            var version_selector = $(this).parent('.author_name').nextAll('td.version_selector').first();
             version_selector.find('.save_parameters').show();
         });
         author_input.autocomplete({
@@ -750,6 +754,12 @@ KT.content_view_definition_filters = (function(){
         enable(selector.find('select.version_type'));
         enable(selector.find('input.input'));
         enable(selector.find('a.save_parameters'));
+    },
+    disable_author_input = function(selector) {
+        disable(selector.prevAll(".author_name").find("input.author"));
+    },
+    enable_author_input = function(selector) {
+        enable(selector.prevAll(".author_name").find("input.author"));
     },
     disable = function(button) {
         button.attr('disabled', 'disabled').addClass('disabled');

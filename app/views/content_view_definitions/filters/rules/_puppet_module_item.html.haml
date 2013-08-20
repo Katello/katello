@@ -1,19 +1,20 @@
 %tr
-  %td.parameter_name{:style => 'vertical-align: middle;'}
-    .panel_link
-      - if editable
-        = check_box_tag "units[#{unit[:name]}]", unit[:name], false,
-          {:class => :parameter_checkbox, 'data-id' => unit[:name]}
-      %label
-        = unit[:name]
-
   %td.author_name
-    = label_tag(_('Author'))
     - if editable
+      = check_box_tag "units[#{unit[:name]}]", unit[:name], false,
+        {:class => :parameter_checkbox, 'data-id' => unit[:name]}
+      = label_tag(_('Author:'))
       = text_field_tag("units[author]", unit[:author], :class => "author",
         :placeholder => _('Enter Author Name...'))
     - else
+      = label_tag(_('Author:'))
       = unit[:author]
+
+  %td.parameter_name{:style => 'vertical-align: middle;'}
+    .panel_link
+      = label_tag(_('Name:'))
+      %label.module_name
+        = unit[:name]
 
 
   %td.version_selector
