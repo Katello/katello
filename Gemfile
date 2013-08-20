@@ -53,19 +53,6 @@ gem 'ui_alchemy-rails', '1.0.11'
 gem 'gettext_i18n_rails'
 gem 'i18n_data', '>= 0.2.6', :require => 'i18n_data'
 
-# Reports - TODO this is hack that needs to be removed once ruport is officially released
-if (`rpm -q rubygem-ruport` rescue "") =~ /^rubygem-ruport-1.7.0\S+/ && ! defined?(JRUBY_VERSION)
-  gem 'ruport', '>=1.7.0'
-else
-  gem 'ruport', '>=1.7.0', :git => 'git://github.com/ruport/ruport.git'
-end
-#not an actual katello dependency, but
-#Does not pull in  hashery, matches RPM
-gem 'pdf-reader', '<= 1.1.1'
-
-gem 'prawn'
-gem 'acts_as_reportable', '>=1.1.1', :require => 'ruport/acts_as_reportable'
-
 # Documentation
 gem "apipie-rails", '>= 0.0.13'
 

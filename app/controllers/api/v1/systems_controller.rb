@@ -308,7 +308,7 @@ A hint for choosing the right value for the releaseVer param
       )
     end.flatten!
 
-    system_report = Ruport::Data::Table.new(
+    system_report = Util::ReportTable.new(
         :data         => data,
         :column_names => ["name",
                           "uuid",
@@ -321,7 +321,6 @@ A hint for choosing the right value for the releaseVer param
                           "compliant_until",
                           "custom_info"
         ],
-        :record_class => Ruport::Data::Record,
         :transforms   => lambda { |r|
           r.organization    = r.organization.name
           r.environment     = r.environment.name
@@ -332,25 +331,6 @@ A hint for choosing the right value for the releaseVer param
         }
     )
 
-    pdf_options = { :pdf_format   => {
-        :page_layout => :portrait,
-        :page_size   => "LETTER",
-        :left_margin => 5
-    },
-                    :table_format => {
-                        :width         => 585,
-                        :cell_style    => { :size => 8 },
-                        :row_colors    => ["FFFFFF", "F0F0F0"],
-                        :column_widths => {
-                            0 => 100,
-                            1 => 100,
-                            2 => 50,
-                            3 => 40,
-                            4 => 75,
-                            5 => 60,
-                            6 => 60 }
-                    }
-    }
 
     system_report.rename_column("created_at", "created")
     system_report.rename_column("updated_at", "updated")
@@ -359,16 +339,8 @@ A hint for choosing the right value for the releaseVer param
     system_report.rename_column("custom_info", "custom info")
 
     respond_to do |format|
-      format.html { render :text => system_report.as(:html), :type => :html and return }
-      format.text { render :text => system_report.as(:text, :ignore_table_width => true) }
+      format.text { render :text => system_report.as(:text) }
       format.csv { render :text => system_report.as(:csv) }
-      format.pdf do
-        send_data(
-            system_report.as(:prawn_pdf, pdf_options),
-            :filename => "%s_systems_report.pdf" % (Katello.config.katello? ? "katello" : "headpin"),
-            :type     => "application/pdf"
-        )
-      end
     end
   end
 
