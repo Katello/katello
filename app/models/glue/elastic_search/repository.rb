@@ -198,7 +198,7 @@ module Glue::ElasticSearch::Repository
     end
 
     def puppet_module_count
-      results = ::PuppetModule.search('', 0, 1, :repoids => [self.pulp_id])
+      results = ::PuppetModule.search('', :page_size => 1, :repoids => [self.pulp_id])
       results.empty? ? 0 : results.total
     end
 

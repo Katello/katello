@@ -36,6 +36,14 @@ module Glue::Pulp::PuppetModule
       params['repoids'] = params.delete(:repository_memberships) if params.has_key?(:repository_memberships)
       params.each_pair {|k,v| instance_variable_set("@#{k}", v) unless v.nil? }
     end
+
+    def sortable_version
+      Util::Package.sortable_version(self.version)
+    end
+
+    def as_json(options = nil)
+      super(options).merge(sortable_version: sortable_version)
+    end
   end
 
 end
