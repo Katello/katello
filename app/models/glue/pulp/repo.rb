@@ -155,7 +155,8 @@ module Glue::Pulp::Repo
                   {:protected=>true, :id=>yum_dist_id, :auto_publish=>true})
           clone_dist = Runcible::Models::YumCloneDistributor.new(:id=>"#{self.pulp_id}_clone",
                                                                  :destination_distributor_id => yum_dist_id )
-          [yum_dist, clone_dist]
+          node_dist = Runcible::Models::NodesHttpDistributor.new(:id=>"#{self.pulp_id}_nodes", :auto_publish=>true)
+          [yum_dist, clone_dist, node_dist]
         when Repository::FILE_TYPE
           dist = Runcible::Models::IsoDistributor.new(true, true)
           dist.auto_publish = true
@@ -601,16 +602,25 @@ module Glue::Pulp::Repo
     end
 
     def generate_metadata(force=false)
+      tasks = []
       clone = self.content_view_version.repositories.where(:library_instance_id=>self.library_instance_id).where("id != #{self.id}").first
       if self.environment.library? || force || clone.nil?
-        self.publish_distributor
+        tasks << self.publish_distributor
       else
-        self.publish_clone_distributor(clone)
+        tasks << self.publish_clone_distributor(clone)
       end
+      node_dist = find_node_distributor
+      tasks << self.publish_node_distributor if self.find_node_distributor
+      tasks
     end
 
     def publish_distributor
       dist = find_distributor
+      Katello.pulp_server.extensions.repository.publish(self.pulp_id, dist['id'])
+    end
+
+    def publish_node_distributor
+      dist = self.find_node_distributor
       Katello.pulp_server.extensions.repository.publish(self.pulp_id, dist['id'])
     end
 
@@ -643,6 +653,10 @@ module Glue::Pulp::Repo
                      end
 
       distributors.detect { |dist| dist["distributor_type_id"] == dist_type_id }
+    end
+
+    def find_node_distributor
+      self.distributors.detect{|i| i["distributor_type_id"] == Runcible::Models::NodesHttpDistributor.type_id}
     end
 
     def sort_sync_status statuses

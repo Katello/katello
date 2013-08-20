@@ -90,7 +90,8 @@ see http://stackoverflow.com/questions/10048173/why-is-it-bad-style-to-rescue-ex
           new('**/*.rb',
               %r'config/(application|boot)\.rb',
               %r'engines/bastion/test/test_helper\.rb',
-              %r'test/minitest_helper\.rb', # TODO clean up minitest_helper
+              %r'test/base_test_helper\.rb', # TODO clean up minitest_helper
+              %r'engines/fort/test/test_helper.rb',
               %r'lib/util/puppet\.rb').
           check_lines(<<-DOC) { |line| (line !~ /ENV\[[^\]]+\]/) ? true : line =~ /#\s?ok/ }
 Katello.config or Katello.early_config should be always used instead of ENV variables, Katello.config is
@@ -132,8 +133,8 @@ Multiple anonymous placeholders:
   describe 'DB schema/structure' do
     it 'should be up to date' do
       message = 'The schema is not up to date. Please run db:migrate and check in db/schema.rb or db/structure.rb'
-
-      schema_version = Dir.glob('db/migrate/*.rb').sort.last[/db\/migrate\/(\d+).*.rb/, 1]
+      schema_dirs = Dir.glob('db/migrate/*.rb') + Dir.glob('engines/*/db/migrate/*.rb')
+      schema_version = schema_dirs.sort.last[/db\/migrate\/(\d+).*.rb/, 1]
       actual_version = if File.exist? 'db/schema.rb'
                          File.read('db/schema.rb')[/^ActiveRecord::Schema.define\(\:version \=\> (\d+)\) do/, 1]
                        elsif File.exist? 'db/structure.sql'

@@ -427,7 +427,7 @@ This information is then used for computing the errata available for the system.
     end
 
     pulp_ids = repos.collect{|r| r.pulp_id}
-    processed_ids, error_ids = @system.enable_repos(pulp_ids)
+    processed_ids, error_ids = @system.enable_yum_repos(pulp_ids)
 
     result                  = {}
     result[:processed_ids]  = processed_ids

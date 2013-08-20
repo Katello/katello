@@ -41,6 +41,19 @@ module ControllerSupport
     end
   end
 
+  def assert_protected_action(action_name, allowed_perms, denied_perms, &block)
+    assert_authorized(
+              :permission => allowed_perms,
+              :action => action_name,
+              :request => block
+    )
+    refute_authorized(
+        :permission => denied_perms,
+        :action => action_name,
+        :request => block
+    )
+  end
+
   def assert_authorized(params)
     check_params = params.merge(authorized: true)
     check_permission(check_params)

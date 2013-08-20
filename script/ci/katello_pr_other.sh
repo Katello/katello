@@ -12,36 +12,25 @@ RAILS_ENV=test bundle exec rake db:create
 # bundle exec rake db:test:load > /dev/null
 RAILS_ENV=test bundle exec rake db:migrate > /dev/null
 
-bundle exec rake minitest
-if [ $? -ne 0 ]
-then
-  exit 1
-fi
+bundle exec rake minitest || exit 1
+
+echo ""
+cd engines/fort/
+RAILS_ENV='test' bundle exec rake test || exit 1
+cd ../..
+echo "Fort tests complete"
 
 echo ""
 echo "********* Source Code Lint Tests ****************"
-RAILS_ENV='build' ruby -Itest test/source_code_test.rb
-if [ $? -ne 0 ]
-then
-  exit 1
-fi
+RAILS_ENV='build' ruby -Itest test/source_code_test.rb || exit 1
 echo "Ruby code checked."
 
 echo ""
 echo "********* JSHint Javascript Check ****************"
-RAILS_ENV=development bundle exec rake jshint
-if [ $? -ne 0 ]
-then
-  exit 1
-fi
+RAILS_ENV=development bundle exec rake jshint || exit 1
 echo "Javascript code checked."
 
 echo ""
 echo "********* Testing Asset Precompile ****************"
-bundle exec rake assets:precompile
-
-if [ $? -ne 0 ]
-then
-  exit 1
-fi
+bundle exec rake assets:precompile || exit 1
 echo "Asset precompile works."

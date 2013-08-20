@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130715153703) do
+ActiveRecord::Schema.define(:version => 20130726210956) do
 
   create_table "activation_keys", :force => true do |t|
     t.string   "name"
@@ -335,6 +335,29 @@ ActiveRecord::Schema.define(:version => 20130715153703) do
 
   add_index "marketing_engineering_products", ["engineering_product_id"], :name => "index_marketing_engineering_products_on_engineering_product_id"
   add_index "marketing_engineering_products", ["marketing_product_id"], :name => "index_marketing_engineering_products_on_marketing_product_id"
+
+  create_table "node_capabilities", :force => true do |t|
+    t.integer "node_id"
+    t.text    "configuration"
+    t.string  "type"
+  end
+
+  add_index "node_capabilities", ["node_id", "type"], :name => "index_node_capabilities_on_node_id_and_type", :unique => true
+
+  create_table "nodes", :force => true do |t|
+    t.integer  "system_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "nodes", ["system_id"], :name => "index_nodes_on_system_id", :unique => true
+
+  create_table "nodes_environments", :force => true do |t|
+    t.integer "node_id"
+    t.integer "environment_id"
+  end
+
+  add_index "nodes_environments", ["node_id", "environment_id"], :name => "index_nodes_environments_on_node_id_and_environment_id", :unique => true
 
   create_table "notices", :force => true do |t|
     t.string   "text",            :limit => 1024,                    :null => false
@@ -728,6 +751,13 @@ ActiveRecord::Schema.define(:version => 20130715153703) do
 
   add_foreign_key "marketing_engineering_products", "products", :name => "marketing_engineering_products_engineering_product_id_fk", :column => "engineering_product_id"
   add_foreign_key "marketing_engineering_products", "products", :name => "marketing_engineering_products_marketing_product_id_fk", :column => "marketing_product_id"
+
+  add_foreign_key "node_capabilities", "nodes", :name => "node_capabilities_node_id_fk"
+
+  add_foreign_key "nodes", "systems", :name => "nodes_system_id_fk"
+
+  add_foreign_key "nodes_environments", "environments", :name => "nodes_environments_environment_id_fk"
+  add_foreign_key "nodes_environments", "nodes", :name => "nodes_environments_node_id_fk"
 
   add_foreign_key "notices", "organizations", :name => "notices_organization_id_fk"
 
