@@ -496,14 +496,15 @@ KT.content_view_definition_filters = (function(){
             });
         });
 
-        initialize_version_save($('.save_version'));
+        initialize_parameter_save($('.save_parameters'));
         initialize_version_select($('.version_type'));
         initialize_version_input($('.input.input'));
+        initialize_author_input($('input.author'));
 
         initialize_common_rule_params();
         initialize_errata_rule_params();
     },
-    initialize_version_save = function(version_save_button) {
+    initialize_parameter_save = function(version_save_button) {
         version_save_button.unbind('click').click(function(e) {
             // user clicked save to commit some changes to a pkg filter rule
             e.preventDefault();
@@ -512,7 +513,10 @@ KT.content_view_definition_filters = (function(){
                 version,
                 min_version,
                 max_version,
-                range_inputs;
+                range_inputs,
+                parameters;
+
+            disable_version_selector(version_selector);
 
             parameter_name = $(this).closest('tr').find('td.parameter_name').find('.parameter_checkbox').data('id');
 
@@ -529,24 +533,27 @@ KT.content_view_definition_filters = (function(){
                 max_version = range_inputs.last().val();
             }
 
-            disable_version_selector(version_selector);
+            parameters = { 'parameter':
+                             { 'unit' :
+                                 { 'name' : $(this).closest('tr').find('td.parameter_name').find('.parameter_checkbox').data('id'),
+                                   'version' : version,
+                                   'min_version' : min_version,
+                                   'max_version' : max_version
+                                 }
+                             }
+                         };
+
+            if ($("input.author")) {
+                parameters["parameter"]["unit"]["author"] = $("input.author").val();
+            }
 
             $.ajax({
                 type: 'PUT',
                 url: $(this).attr('href'),
-                data:
-                { 'parameter':
-                    { 'unit' :
-                        { 'name' : $(this).closest('tr').find('td.parameter_name').find('.parameter_checkbox').data('id'),
-                          'version' : version,
-                          'min_version' : min_version,
-                          'max_version' : max_version
-                        }
-                    }
-                },
+                data: parameters,
                 cache: false,
                 success: function(html) {
-                    version_selector.find('.save_version').hide();
+                    version_selector.find('.save_parameters').hide();
                     if (type === 'all_versions') {
                         version_selector.find('input.input').val('');
                     } else if (type === 'version_range') {
@@ -576,16 +583,22 @@ KT.content_view_definition_filters = (function(){
                 version_selector.find('.range').hide();
                 version_selector.find('.version').show();
             }
-            version_selector.find('.save_version').show();
+            version_selector.find('.save_parameters').show();
         });
     },
     initialize_version_input = function(version_input) {
         version_input.unbind('keypress').keypress(function() {
             var version_selector = $(this).parent('.version_selector');
-            version_selector.find('.save_version').show();
+            version_selector.find('.save_parameters').show();
         });
         // setup the tipsy
         $(".rule-search-tipsy").tipsy();
+    },
+    initialize_author_input = function(author_input) {
+        author_input.unbind('keypress').keypress(function() {
+            var version_selector = $(this).parent('.author_name').next('td.version_selector');
+            version_selector.find('.save_parameters').show();
+        });
     },
     initialize_common_rule_params = function() {
         var pane = $("#parameter_list"),
@@ -636,9 +649,10 @@ KT.content_view_definition_filters = (function(){
                         initialize_checkboxes($("#parameters_form"));
 
                         var new_parameter = $('.parameter_checkbox[data-id="' + rule_input + '"]').closest('tr');
-                        initialize_version_save(new_parameter.find('.save_version'));
+                        initialize_parameter_save(new_parameter.find('.save_parameters'));
                         initialize_version_select(new_parameter.find('.version_type'));
                         initialize_version_input(new_parameter.find('.input.input'));
+                        initialize_author_input(new_parameter.find('.author'));
                     }
                 });
             }
@@ -721,12 +735,12 @@ KT.content_view_definition_filters = (function(){
     disable_version_selector = function(selector) {
         disable(selector.find('select.version_type'));
         disable(selector.find('input.input'));
-        disable(selector.find('a.save_version'));
+        disable(selector.find('a.save_parameters'));
     },
     enable_version_selector = function(selector) {
         enable(selector.find('select.version_type'));
         enable(selector.find('input.input'));
-        enable(selector.find('a.save_version'));
+        enable(selector.find('a.save_parameters'));
     },
     disable = function(button) {
         button.attr('disabled', 'disabled').addClass('disabled');

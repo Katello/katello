@@ -17,8 +17,10 @@ class FilterRule < ActiveRecord::Base
   PACKAGE         = Package::CONTENT_TYPE
   PACKAGE_GROUP   = PackageGroup::CONTENT_TYPE
   ERRATA          = Errata::CONTENT_TYPE
-  CONTENT_TYPES   = [PACKAGE, PACKAGE_GROUP, ERRATA]
-  CONTENT_OPTIONS = {_('Packages') => PACKAGE, _('Package Groups') => PACKAGE_GROUP, _('Errata') => ERRATA}
+  PUPPET_MODULE   = PuppetModule::CONTENT_TYPE
+  CONTENT_TYPES   = [PACKAGE, PACKAGE_GROUP, ERRATA, PUPPET_MODULE]
+  CONTENT_OPTIONS = {_('Packages') => PACKAGE, _('Package Groups') => PACKAGE_GROUP, _('Errata') => ERRATA,
+      _('Puppet Modules') => PUPPET_MODULE}
 
   validates_with Validators::SerializedParamsValidator, :attributes => :parameters
 
@@ -34,7 +36,8 @@ class FilterRule < ActiveRecord::Base
   def content_type
     { PackageRule => PACKAGE,
       ErratumRule => ERRATA,
-      PackageGroupRule => PACKAGE_GROUP}[self.class]
+      PackageGroupRule => PACKAGE_GROUP,
+      PuppetModuleRule => PUPPET_MODULE }[self.class]
   end
 
   def self.class_for( content_type)
@@ -45,10 +48,16 @@ class FilterRule < ActiveRecord::Base
       PackageGroupRule
     when ERRATA
       ErratumRule
+    when PUPPET_MODULE
+      PuppetModuleRule
     else
       params = {:content_type => content_type, :content_types => CONTENT_TYPES.join(", ")}
       raise (_("Invalid content type '%{content_type}' provided. Content types can be one of %{content_types}") % params)
     end
+  end
+
+  def rule_type
+    CONTENT_OPTIONS.key(content_type)
   end
 
 

@@ -25,6 +25,7 @@ class FilterRuleTest < MiniTest::Rails::ActiveSupport::TestCase
     @repo = Repository.find(repositories(:fedora_17_x86_64).id)
     @product = Product.find(products(:fedora).id)
     Repository.any_instance.stubs(:package_count).returns(2)
+    Repository.any_instance.stubs(:puppet_module_count).returns(2)
   end
 
   def test_package_names
@@ -45,36 +46,31 @@ class FilterRuleTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def test_package_versions
-    search_results1 = array_to_struct([{:filename => "100"},
-                                      {:filename => "102"}])
+    search_results1 = array_to_struct([{:filename => "200"},
+                                      {:filename => "202"}])
     expected_ids1 = search_results1.collect(&:filename)
-    search_results2 = array_to_struct([{:filename => "103"},
-                                      {:filename => "104"}])
+    search_results2 = array_to_struct([{:filename => "203"},
+                                      {:filename => "204"}])
     expected_ids2 = search_results2.collect(&:filename)
-    search_results3 = array_to_struct([{:filename => "105"},
-                                      {:filename => "106"}])
-    expected_ids3 = search_results3.collect(&:filename)
-    search_results4 = array_to_struct([{:filename => "106"}])
-    expected_ids4 = search_results4.collect(&:filename)
 
     units = {:units => [{:name => "foo*", :version => "5.0"},
                         {:name => "goo*", :min_version => "0.5", :max_version => "0.7" }]}
-    expected = [{"$and" => [{"filename"=>{"$in"=> expected_ids1}}, {"filename"=>{"$in"=> expected_ids2}}]},
-                {"$and" => [{"filename"=>{"$in"=> expected_ids3}}, {"filename"=>{"$in"=> expected_ids4}}]}
+    expected = [{"filename"=>{"$in"=> expected_ids1}},
+                {"filename"=>{"$in"=> expected_ids2}}
                ]
-    Package.expects(:search).times(4).returns(search_results1, search_results2, search_results3, search_results4)
+    Package.expects(:search).twice.returns(search_results1, search_results2)
     exec_test_includes("rpm", units, expected)
 
-    Package.expects(:search).times(4).returns(search_results1, search_results2, search_results3, search_results4)
+    Package.expects(:search).twice.returns(search_results1, search_results2)
     exec_test_excludes("rpm", units, expected)
   end
 
   def test_package_group_names
-    search_results1 = array_to_struct([{:package_group_id => "100"},
-                                      {:package_group_id => "102"}])
+    search_results1 = array_to_struct([{:package_group_id => "300"},
+                                      {:package_group_id => "302"}])
     expected_ids1 = search_results1.collect(&:package_group_id)
-    search_results2 = array_to_struct([{:package_group_id => "103"},
-                                      {:package_group_id => "104"}])
+    search_results2 = array_to_struct([{:package_group_id => "303"},
+                                      {:package_group_id => "304"}])
     expected_ids2 = search_results2.collect(&:package_group_id)
     units = {:units => [{:name => "foo*"}, {:name => "goo*"}]}
     expected = [{"id"=>{"$in"=>expected_ids1 + expected_ids2}}]
@@ -84,6 +80,43 @@ class FilterRuleTest < MiniTest::Rails::ActiveSupport::TestCase
 
     PackageGroup.expects(:search).twice.returns(search_results1, search_results2)
     exec_test_excludes("package_group", units, expected)
+  end
+
+  def test_puppet_names_and_authors
+    search_results1 = array_to_struct([{:_id => "501a4"},
+                                      {:_id => "501a5"}])
+    expected_ids1 = search_results1.collect(&:_id)
+    search_results2 = array_to_struct([{:_id => "501a6"},
+                                      {:_id => "501a7"}])
+    expected_ids2 = search_results2.collect(&:_id)
+    units = {:units => [{:name => "foo*", :author => "magoo"}, {:name => "goo*"}]}
+    expected = [{"_id"=>{"$in"=>expected_ids1}}, {"_id"=>{"$in"=>expected_ids2}}]
+
+    PuppetModule.expects(:search).twice.returns(search_results1, search_results2)
+    exec_test_includes("puppet_module", units, expected)
+
+    PuppetModule.expects(:search).twice.returns(search_results1, search_results2)
+    exec_test_excludes("puppet_module", units, expected)
+  end
+
+  def test_puppet_versions
+    search_results1 = array_to_struct([{:_id => "60e56"},
+                                      {:_id => "60e57"}])
+    expected_ids1 = search_results1.collect(&:_id)
+    search_results2 = array_to_struct([{:_id => "60f58"},
+                                      {:_id => "60f59"}])
+    expected_ids2 = search_results2.collect(&:_id)
+
+    units = {:units => [{:name => "foo*", :version => "5.0", :author => "magoo"},
+                        {:name => "goo*", :min_version => "0.5", :max_version => "0.7" }]}
+    expected = [{"_id"=>{"$in"=> expected_ids1}},
+                {"_id"=>{"$in"=> expected_ids2}}
+               ]
+    PuppetModule.expects(:search).twice.returns(search_results1, search_results2)
+    exec_test_includes("puppet_module", units, expected)
+
+    PuppetModule.expects(:search).twice.returns(search_results1, search_results2)
+    exec_test_excludes("puppet_module", units, expected)
   end
 
   def test_errata_ids
@@ -149,8 +182,10 @@ class FilterRuleTest < MiniTest::Rails::ActiveSupport::TestCase
 
   def get_filter_clause(inclusion, content_type, parameter)
     content_rule_hash = { FilterRule::PACKAGE => :package_filter_rule,
-                      FilterRule::PACKAGE_GROUP => :package_group_filter_rule,
-                    FilterRule::ERRATA => :erratum_filter_rule}
+                          FilterRule::PACKAGE_GROUP => :package_group_filter_rule,
+                          FilterRule::ERRATA => :erratum_filter_rule,
+                          FilterRule::PUPPET_MODULE => :puppet_module_filter_rule
+                        }
 
     fr_build = content_rule_hash[content_type] || :filter_rule
     #FactoryGirl.build(:filter)

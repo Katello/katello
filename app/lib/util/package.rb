@@ -155,14 +155,14 @@ module Util
 
     def self.version_filter(minimum=nil, maximum=nil)
       filters = []
-      filters << PackageFilter.new(minimum, "gt").clauses if minimum
-      filters << PackageFilter.new(maximum, "lt").clauses if maximum
+      filters << PackageFilter.new(minimum, PackageFilter::GREATER_THAN).clauses if minimum
+      filters << PackageFilter.new(maximum, PackageFilter::LESS_THAN).clauses if maximum
 
       filters
     end
 
     def self.version_eq_filter(version)
-      [PackageFilter.new(version, "eq").clauses]
+      [PackageFilter.new(version, PackageFilter::EQUAL).clauses]
     end
 
     # Converts a package version to a sortable string
