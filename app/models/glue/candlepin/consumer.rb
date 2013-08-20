@@ -540,6 +540,20 @@ module Glue::Candlepin::Consumer
       return 'yellow' if self.compliance['partiallyCompliantProducts'].include? product_id
       return 'red'
     end
+
+    def import_candlepin_tasks
+      self.events.each do |event|
+        event_status = {:task_id => event[:id],
+                        :state => event[:type],
+                        :start_time => event[:timestamp],
+                        :finish_time => event[:timestamp],
+                        :progress => "100",
+                        :result => event[:messageText]}
+        unless self.task_statuses.where('task_statuses.uuid' => event_status[:task_id]).exists?
+         TaskStatus.make(self, event_status, :candlepin_event, :event => event)
+        end
+      end
+    end
   end
 
   module ClassMethods

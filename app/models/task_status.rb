@@ -178,6 +178,7 @@ class TaskStatus < ActiveRecord::Base
     # Retrieve a text message that may be rendered for a task's status.  This is used in various places,
     # such as System Event history.
     details = TaskStatus::TYPES[self.task_type]
+    return _("Non-system event") if details.nil?
     case details[:type]
       when :package
         p = self.parameters[:packages]
@@ -305,7 +306,7 @@ class TaskStatus < ActiveRecord::Base
   end
 
   def self.refresh(ids)
-    unless ids.nil? || ids.empty?
+    unless ids.blank?
       uuids = TaskStatus.where(:id=>ids).pluck(:uuid)
       ret = Katello.pulp_server.resources.task.poll_all(uuids)
       ret.each do |pulp_task|
@@ -373,27 +374,6 @@ class TaskStatus < ActiveRecord::Base
       end
     end
     ret
-  end
-
-  def self.refresh_for_candlepin_consumer(owner_type, consumer_id, consumer)
-    query = TaskStatus.select(:id).where(:task_owner_type => owner_type).where(:task_owner_id => consumer_id)
-    ids = query.where(:state => [:waiting, :running]).collect {|row| row[:id]}
-    refresh(ids)
-    statuses = TaskStatus.where("task_statuses.id in (#{query.to_sql})")
-
-    # Since Candlepin events are not recorded as tasks, fetch them for this system or distributor
-    # and add them here. The alternative to this lazy loading of Candlepin tasks would be to have
-    # each API call that Katello passes through to Candlepin record the task explicitly.
-    consumer.events.each {|event|
-      event_status = {:task_id => event[:id], :state => event[:type],
-                     :start_time => event[:timestamp], :finish_time => event[:timestamp],
-                     :progress => "100", :result => event[:messageText]}
-      # Find or create task
-      task = statuses.where("#{TaskStatus.table_name}.uuid" => event_status[:id]).first
-      task ||= TaskStatus.make(consumer, event_status, :candlepin_event, :event => event)
-    }
-
-    statuses = TaskStatus.where("task_statuses.id in (#{query.to_sql})")
   end
 
 end
