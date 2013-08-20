@@ -213,7 +213,9 @@ class System < ActiveRecord::Base
   end
 
   def tasks
-    TaskStatus.refresh_for_system(self)
+    refresh_running_tasks
+    import_candlepin_tasks
+    self.task_statuses
   end
 
   # A rollback occurred while attempting to create the system; therefore, perform necessary cleanup.
@@ -225,6 +227,12 @@ class System < ActiveRecord::Base
   end
 
   private
+
+    def refresh_running_tasks
+      ids = self.task_statuses.where(:state => [:waiting, :running]).pluck(:id)
+      TaskStatus.refresh(ids)
+    end
+
     def save_task_status pulp_task, task_type, parameters_type, parameters
       TaskStatus.make(self, pulp_task, task_type, parameters_type => parameters)
     end
