@@ -15,6 +15,12 @@ class Api::V2::SystemsController < Api::V1::SystemsController
 
   include Api::V2::Rendering
 
+  def rules
+    hash = super
+    hash[:tasks] = lambda{find_system && @system.readable?}
+    hash
+  end
+
   def_param_group :system do
     param :facts, Hash, :desc => "Key-value hash of system-specific facts", :action_aware => true
     param :installedProducts, Array, :desc => "List of products installed on the system", :action_aware => true
@@ -49,6 +55,36 @@ class Api::V2::SystemsController < Api::V1::SystemsController
     @system.system_group_ids = ids.uniq
     @system.save!
     respond_for_create
+  end
+
+  api :GET, "/systems/:id/tasks", "List async tasks for the system"
+  def tasks
+    query_string = params[:name] ? "name:#{params[:name]}" : params[:search]
+
+    filters = [{:terms => {:task_owner_id => [@system.id]}},
+               {:terms => {:task_owner_type => [System.class_name]}}]
+    options = {
+        :filters       => filters,
+        :load_records? => true,
+        :default_field => 'message'
+    }
+    options[:sort_by] = params[:sort_by] if params[:sort_by]
+    options[:sort_order]= params[:sort_order] if params[:sort_order]
+
+    if params[:paged]
+      options[:page_size] = params[:page_size] || current_user.page_size
+    end
+
+    items = Glue::ElasticSearch::Items.new(TaskStatus)
+    tasks, total_count = items.retrieve(query_string, params[:offset], options)
+
+    tasks = {
+      :records  => tasks,
+      :subtotal => total_count,
+      :total    => items.total_items
+    }
+
+    respond_for_index(:collection => tasks)
   end
 
 end

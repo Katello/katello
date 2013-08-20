@@ -34,17 +34,29 @@ angular.module('Bastion.systems').controller('SystemDetailsController',
             $scope.$broadcast('system.loaded', system);
         });
 
-        $scope.transitionTo = function(state) {
-            if ($scope.system && $scope.system.hasOwnProperty("uuid")) {
-                $state.transitionTo(state, {systemId: $scope.system["uuid"]});
-                return true;
+        $scope.transitionTo = function(state, params) {
+            var systemId = $scope.$stateParams.systemId;
+
+            if ($scope.system && $scope.system.uuid) {
+                systemId = $scope.system.uuid;
             }
 
+            if (systemId) {
+                params = params ? params : {};
+                params.systemId  = systemId;
+                $state.transitionTo(state, params);
+                return true;
+            }
             return false;
         };
 
         $scope.isState = function (stateName) {
             return $state.is(stateName);
         };
+
+        $scope.stateStartsWith = function(stateName) {
+            return $state.current.name.indexOf(stateName) === 0;
+        };
+
     }]
 );

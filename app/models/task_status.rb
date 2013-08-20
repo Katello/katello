@@ -133,6 +133,16 @@ class TaskStatus < ActiveRecord::Base
     json
   end
 
+  def human_readable_message
+    task_template = TaskStatus::TYPES[self.task_type]
+    return '' if task_template.nil?
+    if task_template[:user_message]
+      task_template[:user_message] % self.user.username
+    else
+      task_template[:english_name]
+    end
+  end
+
   # used by search  to filter tasks by systems :)
   def system_filter_clause
     system_id = task_owner_id if (task_owner_type == 'System')
@@ -273,7 +283,6 @@ class TaskStatus < ActiveRecord::Base
   def rmi_error_description
     errors, stacktrace = self.result[:errors]
     return "" unless errors
-
     # Handle not very friendly Pulp message
     if errors =~ /^\(.*\)$/
       if stacktrace.class == Array
@@ -289,7 +298,12 @@ class TaskStatus < ActiveRecord::Base
       errors
     end
   rescue
-    self.result[:errors].join(' ').to_s
+    if self.result.is_a? Hash
+      self.result[:errors].join(' ').to_s
+    else
+      self.result
+    end
+
   end
 
   def self.refresh_for_system(system_id)

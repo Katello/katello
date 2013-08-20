@@ -53,7 +53,12 @@ module Util
     def self.active_record_search_classes
       ignore_list =  ["CpConsumerUser", "Pool"]
       classes = get_subclasses(ActiveRecord::Base)
-      classes.select{ |c| !ignore_list.include?(c.name) && c.respond_to?(:index) }.sort_by(&:name)
+      classes = classes.select{ |c| !ignore_list.include?(c.name) && c.respond_to?(:index) }
+
+      #we need index base classes first (TaskStatus) before child classes (PulpTaskStatus)
+      initial_list = classes.select{|c| c.superclass == ActiveRecord::Base}
+      subclass_list = classes - initial_list
+      initial_list + subclass_list
     end
 
     def self.get_subclasses(obj_class)

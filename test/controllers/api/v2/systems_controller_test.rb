@@ -49,6 +49,13 @@ class Api::V2::SystemsControllerTest < Minitest::Rails::ActionController::TestCa
     assert_template 'api/v2/systems/show'
   end
 
+  def test_tasks
+    get :tasks, :id => @system.uuid
+
+    assert_response :success
+    assert_template 'api/v2/systems/tasks'
+  end
+
   def test_add_system_groups
     expected_ids = @system_groups.collect {|group| group.id}
     post :add_system_groups, :id => @system.uuid, :system => {
