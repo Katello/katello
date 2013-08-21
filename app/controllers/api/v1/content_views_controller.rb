@@ -44,12 +44,13 @@ class Api::V1::ContentViewsController < Api::V1::ApiController
     query_params.delete(:environment_id)
     query_params.delete(:organization_id)
 
-    search         = ContentView.where(query_params)
+    search        = ContentView.where(query_params)
     @content_views = if @environment
                        search.readable(@organization).in_environment(@environment)
                      else
                        search.readable(@organization)
                      end
+
     respond :collection => @content_views
   end
 

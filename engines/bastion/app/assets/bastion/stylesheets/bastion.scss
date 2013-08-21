@@ -5,10 +5,8 @@
   @include box-sizing(border-box);
 }
 
-
-@import "overrides";
-@import "katello_base";
-@import "bastion/stylesheets/vars";
+@import "vars";
+@import "katello_colors";
 
 $font_path: "../alchemy/";
 $FontAwesomePath: "../font-awesome/font";
@@ -20,12 +18,17 @@ $spritePath: url("../alchemy/icons/action-icons.png");
 @import "alchemy-buttons/buttons";
 @import "alchemy/components/sprites/sprites";
 @import "alchemy/components/text/text";
+@import "alchemy/components/flash_messages/flash_messages";
 
+@import "helpers";
 @import "header";
 @import "nutupane";
+@import "widgets/path_selector";
 
 @import "widgets/tipsy_custom";
 @import "jquery.tipsy";
+
+@import "overrides";
 
 body {
   width: 100%;
@@ -41,9 +44,6 @@ body {
   font-family: Overpass;
 }
 
-.fl { float: left; }
-.fr { float: right; }
-
 .logo {
   text-indent: -5555px;
   width: 100px;
@@ -58,15 +58,6 @@ body {
 
 .headpin-logo {
   background: $headpin_logo_img;
-}
-
-.hidden {
-  display: none;
-}
-
-.clickable {
-  cursor: pointer;
-  cursor: hand;
 }
 
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {

@@ -26,7 +26,9 @@ var Katello = angular.module('Katello', [
     'Katello.globals',
     'Bastion.i18n',
     'Bastion.menu',
-    'Bastion.systems'
+    'Bastion.systems',
+    'Bastion.environments',
+    'Bastion.content-views'
 ]);
 
 /**

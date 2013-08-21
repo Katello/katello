@@ -38,26 +38,78 @@ angular.module('alchemy')
         var previousValue;
 
         $scope.edit = function() {
-            $scope.editMode = true;
-            previousValue = $scope.model;
+            var options;
+
+            if ($scope.readonly !== true) {
+                $scope.editMode = true;
+                previousValue = $scope.model;
+
+                if ($scope.handleOptions !== undefined) {
+                    options = $scope.handleOptions();
+                }
+
+                if (options !== undefined) {
+                    if (options.hasOwnProperty('then')) {
+                        options.then(function(data) {
+                            $scope.options = data;
+
+                            if ($scope.options.length === 0) {
+                                $scope.disableSave = true;
+                            }
+                        });
+                    } else {
+                        $scope.options = options;
+
+                        if ($scope.options.length === 0) {
+                            $scope.disableSave = true;
+                        }
+                    }
+
+                }
+            }
         };
 
         $scope.save = function() {
+            var handleSave;
+
             $scope.editMode = false;
-            $scope.handleSave({ value: $scope.model });
+            $scope.savingMode = true;
+
+            handleSave = $scope.handleSave();
+
+            if (handleSave !== undefined && handleSave.hasOwnProperty('then')) {
+
+                handleSave.then(
+                    function() {
+                        $scope.savingMode = false;
+                    },
+                    function() {
+                        $scope.savingMode = false;
+                        $scope.editMode = true;
+                    }
+                );
+            }
         };
 
         $scope.cancel = function() {
             $scope.editMode = false;
+            $scope.disableSave = false;
             $scope.model = previousValue;
             $scope.handleCancel({ value: $scope.model });
         };
+
+        $scope.$watch('editTrigger', function(edit) {
+            if (edit) {
+                $scope.edit();
+            }
+        });
     }])
     .directive('alchEditText', function() {
         return {
             replace: true,
             scope: {
                 model: '=alchEditText',
+                readonly: '=',
                 handleSave: '&onSave',
                 handleCancel: '&onCancel'
             },
@@ -72,6 +124,7 @@ angular.module('alchemy')
             replace: true,
             scope: {
                 model: '=alchEditTextarea',
+                readonly: '=',
                 handleSave: '&onSave',
                 handleCancel: '&onCancel'
             },
@@ -86,12 +139,17 @@ angular.module('alchemy')
             replace: true,
             scope: {
                 model: '=alchEditSelect',
-                options: '=options',
+                readonly: '=',
+                selector: '=',
+                handleOptions: '&options',
                 handleSave: '&onSave',
-                handleCancel: '&onCancel'
+                handleCancel: '&onCancel',
+                editTrigger: '='
             },
             template: '<div>' +
-                        '<select ng-model="model" ng-options="option for option in options" ng-show="editMode">' +
+                        '<select ng-model="selector" ' +
+                                 'ng-options="option.id as option.name for option in options" ' +
+                                 'ng-show="editMode">' +
                         '</select>' +
                         '<div alch-edit></div>' +
                       '</div>'

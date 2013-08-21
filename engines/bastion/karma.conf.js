@@ -15,6 +15,7 @@ files = [
     '../../../vendor/assets/dev-components/angular-resource/angular-resource.js',
     '../../../vendor/assets/dev-components/ngInfiniteScroll/ng-infinite-scroll.js',
     '../../../vendor/assets/dev-components/alchemy/alchemy.js',
+    '../../../vendor/assets/dev-components/underscore/underscore.js',
     '../../../../../vendor/assets/javascripts/angular-ui-states.js',
 
     '../../../../../app/assets/javascripts/common/katello.global.js',

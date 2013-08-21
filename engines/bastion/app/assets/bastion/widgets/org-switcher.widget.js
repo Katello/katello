@@ -66,7 +66,6 @@ angular.module('Bastion.widgets').directive('orgSwitcher', ['$http', '$document'
                 var target = angular.element(event.target);
                 if (!orgSwitcherMenu.find(target).length) {
                     $scope.orgSwitcher.visible = false;
-                    $scope.$apply();
                 }
             });
         }]

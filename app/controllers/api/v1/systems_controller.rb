@@ -171,11 +171,14 @@ Schedules the consumer identity certificate regeneration
     unless User.consumer?
       slice_attrs =  slice_attrs + [:environment_id, :content_view_id]
       attrs[:content_view_id] = nil if attrs[:content_view_id] == false
+      attrs[:content_view_id] = params[:content_view][:id] if params[:content_view]
+      attrs[:environment_id] = params[:environment][:id] if params[:environment]
     end
 
     attrs[:installedProducts] = [] if attrs.has_key?(:installedProducts) && attrs[:installedProducts].nil?
 
     @system.update_attributes!(attrs.slice(*slice_attrs))
+
     respond
   end
 

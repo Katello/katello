@@ -1687,7 +1687,6 @@
   },
 // i18n_dictionary => /i18n/dictionary(.:format)
   i18n_dictionary_path: function(options) {
-  if (!options){ options = {}; }
   return Utils.build_path([], ["format"], [2,[2,[2,[2,[7,"/",false],[6,"i18n",false]],[7,"/",false]],[6,"dictionary",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
   },
 // import_manifest_api_provider => /api/providers/:id/import_manifest(.:format)
@@ -2262,6 +2261,10 @@
   refresh_subscriptions_api_system_path: function(_id, options) {
   return Utils.build_path(["id"], ["format"], [2,[2,[2,[2,[2,[2,[2,[2,[7,"/",false],[6,"api",false]],[7,"/",false]],[6,"systems",false]],[7,"/",false]],[3,"id",false]],[7,"/",false]],[6,"refresh_subscriptions",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
   },
+// registerable_paths_organization_environments => /organizations/:organization_id/environments/registerable_paths(.:format)
+  registerable_paths_organization_environments_path: function(_organization_id, options) {
+  return Utils.build_path(["organization_id"], ["format"], [2,[2,[2,[2,[2,[2,[2,[2,[7,"/",false],[6,"organizations",false]],[7,"/",false]],[3,"organization_id",false]],[7,"/",false]],[6,"environments",false]],[7,"/",false]],[6,"registerable_paths",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
+  },
 // releases_api_environment => /api/environments/:id/releases(.:format)
   releases_api_environment_path: function(_id, options) {
   return Utils.build_path(["id"], ["format"], [2,[2,[2,[2,[2,[2,[2,[2,[7,"/",false],[6,"api",false]],[7,"/",false]],[6,"environments",false]],[7,"/",false]],[3,"id",false]],[7,"/",false]],[6,"releases",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
@@ -2641,6 +2644,10 @@
 // systems_dashboard_index => /dashboard/systems(.:format)
   systems_dashboard_index_path: function(options) {
   return Utils.build_path([], ["format"], [2,[2,[2,[2,[7,"/",false],[6,"dashboard",false]],[7,"/",false]],[6,"systems",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
+  },
+// systems_registerable_api_systems => /api/systems/systems_registerable(.:format)
+  systems_registerable_api_systems_path: function(options) {
+  return Utils.build_path([], ["format"], [2,[2,[2,[2,[2,[2,[7,"/",false],[6,"api",false]],[7,"/",false]],[6,"systems",false]],[7,"/",false]],[6,"systems_registerable",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
   },
 // systems_system_group => /system_groups/:id/systems(.:format)
   systems_system_group_path: function(_id, options) {

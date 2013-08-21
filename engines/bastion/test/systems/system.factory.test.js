@@ -19,7 +19,7 @@ describe('Factory: System', function() {
         releaseVersions,
         systemsCollection;
 
-    beforeEach(module('Bastion.systems'));
+    beforeEach(module('Bastion.systems', 'Bastion.utils'));
 
     beforeEach(module(function($provide) {
         systemsCollection = {
@@ -35,7 +35,7 @@ describe('Factory: System', function() {
 
         Routes = {
             apiSystemsPath: function() { return '/api/systems';},
-            editSystemPath: function(id) { return '/system/' + id;}
+            editSystemsPath: function(id) { return '/system/' + id;}
         };
 
         $resource = function() {

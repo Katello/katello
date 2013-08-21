@@ -194,11 +194,6 @@ class System < ActiveRecord::Base
                             _("Host")
                         end
                       end
-      keys = []
-      ContentView.readable(organization).in_environment(environment).non_default.each do |view|
-        keys << { :value => view.id, :name => view.name }
-      end
-      json['available_content_views'] = keys
     end
 
     run_hook(:as_json_hook, json)
