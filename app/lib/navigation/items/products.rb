@@ -13,13 +13,13 @@
 
 module Navigation
   module Items
-    class Providers < Navigation::Item
+    class Products < Navigation::Item
 
       def initialize(organization)
-        @key           = :providers
-        @display       = _("Custom Repositories")
+        @key           = :products
+        @display       = _("Products")
         @authorization = lambda{ organization && Provider.any_readable?(organization) }
-        @url           = providers_path
+        @url           = products_path(:anchor => '/products')
       end
 
     end

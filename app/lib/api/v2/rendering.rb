@@ -4,7 +4,7 @@ module Api
 
 
       def respond_for_show(options={})
-        respond_with_template_resource(options[:template] || params[:action], controller_name, options)
+        respond_with_template_resource(options[:template] || 'show', controller_name, options)
       end
 
       def respond_for_index(options={})

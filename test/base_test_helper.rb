@@ -11,9 +11,7 @@ require 'json'
 require 'mocha/setup'
 
 
-require File.expand_path("../support/auth_support.rb",  __FILE__)
-require File.expand_path("../support/warden_support.rb",  __FILE__)
-require File.expand_path("../support/controller_support.rb",  __FILE__)
+require File.expand_path("../support.rb",  __FILE__)
 require File.expand_path("../../lib/monkeys/foreign_keys_postgresql.rb",  __FILE__)
 
 class MiniTest::Rails::ActiveSupport::TestCase
@@ -53,6 +51,7 @@ class Minitest::Rails::ActionController::TestCase
   include Warden::Test::Helpers
   include WardenSupport
   include ControllerSupport
+  include Support::SearchService
 end
 
 def configure_vcr

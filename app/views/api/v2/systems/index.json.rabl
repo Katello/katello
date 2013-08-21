@@ -1,10 +1,3 @@
-node(:total) { @collection[:total] }
-node(:subtotal) { @collection[:subtotal] }
-node(:offset) { params[:offset] }
-node(:limit) { params[:page_size] }
-node(:search) { params[:search] }
-node(:sort) { {:by => params[:sort_by], :order => params[:sort_order]} }
+object false
 
-node :results do
-  partial("api/v2/systems/show", :object => @collection[:records])
-end
+extends "api/v2/common/index"

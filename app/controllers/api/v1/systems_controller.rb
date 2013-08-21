@@ -27,8 +27,6 @@ class Api::V1::SystemsController < Api::V1::ApiController
   before_filter :find_content_view, :only => [:create, :update]
   before_filter :authorize, :except => :activate
 
-  after_filter :refresh_index, :only => [:create, :activate, :update]
-
   skip_before_filter :require_user, :only => [:activate]
 
   def organization_id_keys
@@ -202,15 +200,15 @@ Schedules the consumer identity certificate regeneration
 
     if params[:env_id]
       find_environment
-      filters << { :environment_id => [params[:env_id]] }
+      filters << {:terms => {:environment_id => [params[:env_id]] }}
     else
       filters << readable_filters
     end
 
-    filters << { :uuid => System.all_by_pool_uuid(params['pool_id']) } if params['pool_id']
+    filters << {:terms => {:uuid => System.all_by_pool_uuid(params['pool_id']) }} if params['pool_id']
 
     options = {
-        :filter        => filters,
+        :filters        => filters,
         :load_records? => true
     }
     options[:sort_by] = params[:sort_by] if params[:sort_by]
@@ -225,7 +223,7 @@ Schedules the consumer identity certificate regeneration
 
     if params[:paged]
       systems = {
-        :records  => systems,
+        :results  => systems,
         :subtotal => total_count,
         :total    => items.total_items
       }
@@ -599,7 +597,7 @@ This information is then used for computing the errata available for the system.
   end
 
   def readable_filters
-    { :environment_id => KTEnvironment.systems_readable(@organization).collect { |item| item.id } }
+    {:terms => {:environment_id => KTEnvironment.systems_readable(@organization).collect { |item| item.id } }}
   end
 
   def find_content_view

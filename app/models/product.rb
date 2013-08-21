@@ -32,11 +32,10 @@ class Product < ActiveRecord::Base
   has_many :content_view_definitions, :through => :content_view_definition_products
   has_many :repositories, :dependent => :destroy
 
-  validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
-  validates :name, :presence => true
-  validates :label, :presence => true
+  validates :provider_id, :presence => true
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name
   validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
+  validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
 
   scope :with_repos_only, lambda { |env|
     with_repos(env, false)

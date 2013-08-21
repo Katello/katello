@@ -307,7 +307,7 @@ Src::Application.routes.draw do
     end
   end
 
-  resources :products, :only => [:new, :create, :edit,:update, :destroy] do
+  resources :products, :only => [:index, :new, :create, :edit, :update, :destroy] do
     collection do
       get :auto_complete
     end

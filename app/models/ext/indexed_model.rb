@@ -15,12 +15,12 @@ module Ext::IndexedModel
   def self.included(base)
     base.class_eval do
 
+      after_save :refresh_index
 
-        cattr_accessor :class_index_options
-        def self.display_attributes
-          self.class_index_options[:display_attrs].sort{|a,b| a.to_s <=> b.to_s}
-        end
-
+      cattr_accessor :class_index_options
+      def self.display_attributes
+        self.class_index_options[:display_attrs].sort{|a,b| a.to_s <=> b.to_s}
+      end
 
       if Rails.env.development? || Rails.env.production?
         include Tire::Model::Search
@@ -44,6 +44,10 @@ module Ext::IndexedModel
         end
         def self.index_import list
         end
+      end
+
+      def refresh_index
+        self.class.index.refresh if self.class.respond_to?(:index)
       end
 
       ##

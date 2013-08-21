@@ -24,6 +24,7 @@ class ProductsController < ApplicationController
     auto_complete_test = lambda {Product.any_readable?(current_organization)}
 
     {
+      :index => lambda {Product.any_readable?(current_organization)},
       :new => edit_test,
       :create => edit_test,
       :default_label => edit_test,
@@ -38,6 +39,10 @@ class ProductsController < ApplicationController
 
   def section_id
     'contents'
+  end
+
+  def index
+    render 'bastion/layouts/application', :layout => false
   end
 
   def new

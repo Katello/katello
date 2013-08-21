@@ -110,7 +110,7 @@ Src::Application.routes.draw do
         end
       end
 
-      api_resources :providers, :except => [:index] do
+      api_resources :providers do
         api_resources :sync, :only => [:index, :create] do
           delete :index, :on => :collection, :action => :cancel
         end
@@ -236,7 +236,7 @@ Src::Application.routes.draw do
         end
       end
 
-      api_resources :products, :only => [:show, :update, :destroy] do
+      api_resources :products, :only => [:index, :show, :update, :destroy, :create] do
         post :sync_plan, :on => :member, :action => :set_sync_plan
         delete :sync_plan, :on => :member, :action => :remove_sync_plan
         api_resources :repositories, :only => [:create]
