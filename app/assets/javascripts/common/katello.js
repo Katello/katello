@@ -22,7 +22,9 @@ var KT = KT ? KT : {};
 KT.widget = {};
 
 KT.utils = _.noConflict();
-
+KT.utils.unescape = function(code) {
+    return code.replace(/\\\\/g, '\\').replace(/\\'/g, "'");
+};
 // load angular module to Katello
 var Katello = angular.module('Katello', ['alchemy', 'alch-templates', 'ngSanitize']);
 
@@ -236,7 +238,6 @@ KT.common = (function() {
           confirmFalse = false;
 
           $.extend(settings, params);
-
           var message = "<div style='margin:20px;'><span class='status_confirm_icon'/><div style='margin-left: 24px; display:table;height:1%;'>" + settings.message + "</div></div>",
               warning_message = (settings.warning_message === undefined) ? undefined : "<div style='margin:20px;'><span class='status_warning_icon'/><div style='margin-left: 24px; display:table;height:1%;color:red;'>" + settings.warning_message + "</div></div>",
               html = (warning_message === undefined) ? message : "<div>"+message+warning_message+"</div>",
