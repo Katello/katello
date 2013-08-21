@@ -16,7 +16,7 @@ class PuppetModulesController < ApplicationController
 
 
   def rules
-    auto_complete = -> { @def_filter.content_view_definition.readable? }
+    auto_complete = lambda { @def_filter.content_view_definition.readable? }
 
     {
       :auto_complete => auto_complete,
