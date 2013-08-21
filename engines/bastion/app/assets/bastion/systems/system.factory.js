@@ -44,9 +44,9 @@ angular.module('Bastion.systems').factory('System',
  */
 angular.module('Bastion.systems').factory('SystemSubscriptions',
     ['$resource', 'Routes',
-        function($resource, Routes) {
-            return $resource(Routes.apiSystemsPath() + '/:id/subscriptions', {id: '@uuid'}, {
-                query: {method: 'GET', isArray: false, params: {paged: true}}
-            });
-        }]
+    function($resource, Routes) {
+        return $resource(Routes.apiSystemsPath() + '/:id/subscriptions', {id: '@uuid'}, {
+            query: {method: 'GET', isArray: false, params: {paged: true}}
+        });
+    }]
 );

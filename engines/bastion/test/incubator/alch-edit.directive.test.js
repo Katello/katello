@@ -43,7 +43,7 @@ describe('Directive: alchEdit', function() {
         scope = _$rootScope_;
     }));
 
-    describe('alchTable controller', function() {
+    describe('alchEdit controller', function() {
         var element,
             editController;
 
@@ -152,8 +152,11 @@ describe('Directive: alchEdit', function() {
         var editableElement;
 
         beforeEach(function() {
+            scope.tacoOptions = ['Carnitas', 'Tilapia'];
+
             editableElement = angular.element(
-                '<span alch-edit-select="item.taco" options="tacoOptions"></span>');
+                '<span alch-edit-select="item.taco" options="tacoOptions" ></span>'
+            );
 
             scope.item = testItem;
 
@@ -167,6 +170,13 @@ describe('Directive: alchEdit', function() {
             element.trigger('click');
 
             expect(input.css('display')).not.toBe('none');
+        });
+
+        it("should create options", function() {
+            var element = editableElement.find('.editable'),
+                input = editableElement.find('select');
+
+            expect(input.find('option').length).not.toBe(2);
         });
 
     });

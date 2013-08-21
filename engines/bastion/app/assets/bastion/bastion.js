@@ -12,7 +12,9 @@
 
 //= require "jquery-1.7.2"
 //= require "alchemy/jquery/plugins/jquery.periodicalupdater"
-//
+
+//= require "alchemy/underscore-1.3.1"
+
 //= require "ui_alchemy/angular/angular"
 //= require "ui_alchemy/angular-resource/angular-resource"
 //= require "ui_alchemy/angular-sanitize/angular-sanitize"
@@ -23,18 +25,22 @@
 
 //= require "common/katello.global"
 
-//= require "bastion/bastion.module"
-
 //= require "common/notices"
 //= require "common/bastion-routes"
 //= require "common/routes"
+//= require "common/katello.common"
+//= require "common/env_select_scroll"
+//= require "widgets/path_selector"
 
 //= require "common/experimental/katello-globals.module"
+
+
+//= require "bastion/bastion.module"
 
 //= require "bastion/incubator/alch-table.directive"
 //= require "bastion/incubator/alch-container-scroll.directive"
 //= require "bastion/incubator/alch-infinite-scroll.directive"
-//= require "bastion/incubator/inline-edit.directive"
+//= require "bastion/incubator/alch-edit.directive"
 
 //= require "bastion/i18n/i18n.module"
 //= require "bastion/i18n/i18n-dictionary.factory"
@@ -45,19 +51,22 @@
 
 //= require "bastion/widgets/widgets.module"
 //= require "bastion/widgets/org-switcher.widget"
+//= require "bastion/widgets/path-selector.directive"
 //= require "bastion/widgets/nutupane-table.directive"
 //= require "bastion/widgets/nutupane.factory"
 
 //= require "bastion/utils/utils.module"
 //= require "bastion/utils/routes.factory"
 
+
 //= require "bastion/systems/systems.module"
-//= require "bastion/systems/system-url-router.config.temporary"
-//= require "bastion/systems/system.factory"
-//= require "bastion/systems/systems.controller"
-//= require "bastion/systems/details/system-details.controller"
-//= require "bastion/systems/details/system-details-info.controller"
-//= require "bastion/systems/details/system-subscriptions.controller"
+//= require_tree "./systems"
 
 //= require "bastion/subscriptions/subscriptions.module.js"
 //= require "bastion/subscriptions/subscriptions.factory.js"
+//
+//= require "bastion/content-views/content-views.module"
+//= require "bastion/content-views/content-view.factory"
+
+//= require "bastion/environments/environments.module"
+//= require "bastion/environments/environment.factory"

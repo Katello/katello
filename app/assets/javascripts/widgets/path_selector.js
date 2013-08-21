@@ -53,6 +53,9 @@ KT.path_select = function(div_id, name, environments, options_in){
             options.link_first = default_opt(options_in.link_first, true);
             options.expand = default_opt(options_in.expand, true);
             options.footer = default_opt(options_in.footer, false);
+            options.readonly = default_opt(options_in.readonly, false);
+
+            options.selected = default_opt(options_in.selected, undefined);
 
             $(div).append(KT.path_select_template.selector(environments, paths_id, options.submit_button_text, options.cancel_button_text, options.footer));
             path_selector = $("#" + paths_id);
@@ -98,6 +101,20 @@ KT.path_select = function(div_id, name, environments, options_in){
                     });
                 }
             }
+
+            if (options.selected) {
+                select(options.selected);
+            }
+
+            if (options.readonly) {
+                disable_all();
+            }
+
+            $(document).mouseup(function(e){
+                if(path_selector.has(e.target).length === 0 && !options.inline) {
+                    path_selector.hide();
+                }
+            });
 
             scroll_obj = KT.env_select_scroll({});
             recalc_scroll();
@@ -172,7 +189,7 @@ KT.path_select = function(div_id, name, environments, options_in){
             );
 
 
-            on_select = function(select_elem){
+            on_select = function(select_elem, fire_event){
                 select_nodes(select_elem);
                 if(options.select_mode === 'single'){
                     unselect_nodes(nodes);
@@ -181,7 +198,10 @@ KT.path_select = function(div_id, name, environments, options_in){
                 if(options.link_first && select_elem.parents('li').is(':first-child')){
                     select_nodes(first_nodes.find('input:checkbox').not(':checked'));
                 }
-                $(document).trigger(options.select_event, [true, $(this).data('node_id'), $(this).data('next_node_id')]);
+
+                if (fire_event !== false) {
+                    $(document).trigger(options.select_event, [true, $(this).data('node_id'), $(this).data('next_node_id')]);
+                }
             };
             on_deselect = function(select_elem){
                 unselect_nodes(select_elem);
@@ -194,22 +214,33 @@ KT.path_select = function(div_id, name, environments, options_in){
                 $(document).trigger(options.select_event, [false, $(this).data('node_id'), $(this).data('next_node_id')]);
             };
             nodes.change(function(){
-                    if ($(this).is(':checked')){
-                        on_select($(this));
-                    }
-                    else {
-                        on_deselect($(this));
-                    }
+                if ($(this).is(':checked')) {
+                    on_select($(this));
+                } else {
+                    on_deselect($(this));
+                }
             });
 
         },
         select_nodes = function(checkbox_list){
-            checkbox_list.attr('checked', 'checked').show();
+            var checkbox;
+
+            checkbox = checkbox_list.prop('checked', true).attr('checked', 'checked').show();
             checkbox_list.parents('label').addClass('active');
+
+            if (options.select_mode === 'single') {
+                checkbox.attr('disabled', 'disabled');
+            }
         },
         unselect_nodes = function(checkbox_list){
-            checkbox_list.removeAttr('checked');
+            checkbox_list.removeAttr('checked').removeAttr('disabled');
             checkbox_list.parents('label').removeClass('active');
+        },
+        disable_all = function() {
+            path_selector.find('input:checkbox').attr('disabled', 'disabled');
+        },
+        set_paths = function() {
+
         },
         get_selected = function(){
             var selected = path_selector.find('input:checked'),
@@ -262,14 +293,29 @@ KT.path_select = function(div_id, name, environments, options_in){
             path_selector.find('input:disabled').removeAttr('disabled');
             unselect_nodes(path_selector.find('input:checked').hide());
         },
+        set_selected = function(id) {
+            var nodes = path_selector.find('.node_select'),
+                first_nodes = path_selector.find('ul').find('li:first'),
+                selected_node = path_selector.find('input:checkbox[data-node_id=' + id + ']');
+
+            select_nodes(selected_node);
+
+            if(options.select_mode === 'single'){
+                unselect_nodes(nodes);
+                select_nodes(selected_node);
+            }
+            if(options.link_first && selected_node.parents('li').is(':first-child')){
+                select_nodes(first_nodes.find('input:checkbox').not(':checked'));
+            }
+        },
         select = function(id, next_id){
-           var nodes = path_selector.find('input:checkbox[data-node_id=' + id + ']');
-           if(nodes.length > 1 && !options.link_first){
-               nodes.and('[data-next_node_id=' + next_id + ']').not(':checked').click();
-           }
-           else{
-               nodes.first().not(':checked').click();
-           }
+            var nodes = path_selector.find('input:checkbox[data-node_id=' + id + ']');
+
+            if(nodes.length > 1 && !options.link_first){
+                nodes.and('[data-next_node_id=' + next_id + ']').not(':checked').click();
+            } else {
+                nodes.first().not(':checked').click();
+            }
         };
 
     init();
@@ -281,8 +327,10 @@ KT.path_select = function(div_id, name, environments, options_in){
         get_select_event : get_select_event,
         clear_selected: clear_selected,
         select:select,
+        set_selected: set_selected,
         reposition_left: reposition_left,
         paths_id: paths_id,
+        disable_all: disable_all,
         hide: function() {path_selector.hide();}
     };
 };
