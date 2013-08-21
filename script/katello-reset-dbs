@@ -35,7 +35,7 @@ while true; do
   esac
 done
 
-if [ "$USAGE" = "1" ]; 
+if [ "$USAGE" = "1" ];
   then
     usage
 fi
@@ -151,12 +151,11 @@ echo "Initializing Katello database"
 pushd $KATELLO_HOME >/dev/null
 
 # SCHEMA: return to schema usage after FKs fixed
-#RAKE_TASKS=( 'clear_search_indices' 'db:reset' )
-RAKE_TASKS=( 'clear_search_indices' 'db:migrate:reset' 'db:seed' )
-for i in ${RAKE_TASKS[@]};  do 
-  RAILS_ENV=$KATELLO_ENV RAILS_RELATIVE_URL_ROOT=$KATELLO_PREFIX rake $i --trace  2>&1
+RAKE_TASKS=( 'clear_search_indices' 'db:drop' 'db:create' 'db:migrate' 'db:seed' )
+for i in ${RAKE_TASKS[@]}; do
+  RAILS_ENV=$KATELLO_ENV RAILS_RELATIVE_URL_ROOT=$KATELLO_PREFIX bundle exec rake $i --trace  2>&1
 done
-popd >/dev/null
+popd > /dev/null
 
 # Only stop the services if we are in production mode
 if [ $KATELLO_ENV = "production" ]
