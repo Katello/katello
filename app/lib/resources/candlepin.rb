@@ -100,6 +100,13 @@ module Resources
 
         def create(env_id, key, name, type, facts, installed_products, autoheal=true, release_ver=nil,
                    service_level="", capabilities=nil)
+
+          # These defaults give distributors full capabilities with all types of subscriptions
+          if type == 'candlepin'
+            facts['system.certificate_version'] ||= '3.2'
+            capabilities ||= [{:name => :cores},{:name => :ram},{:name => :instance_multiplier}]
+          end
+
           url = "/candlepin/environments/#{url_encode(env_id)}/consumers/"
           attrs = {:name => name,
                    :type => type,
