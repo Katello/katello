@@ -11,16 +11,22 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class PuppetModulesController < ApplicationController
-  before_filter :find_filter
+  before_filter :find_puppet_module, only: [:show]
+  before_filter :find_filter, except: [:show]
   before_filter :authorize
 
-
   def rules
+    view = lambda do
+      !Repository.readable_in_org(current_organization).where(
+          :pulp_id=>@puppet_module.repoids).empty?
+    end if @puppet_module
+
     auto_complete = lambda { @def_filter.content_view_definition.readable? }
 
     {
       :auto_complete => auto_complete,
-      :author_auto_complete => auto_complete
+      :author_auto_complete => auto_complete,
+      :show => view
     }
   end
 
@@ -43,9 +49,18 @@ class PuppetModulesController < ApplicationController
     render :json => results
   end
 
+  def show
+    render :partial=>"show"
+  end
+
   private
 
   def find_filter
     @def_filter = Filter.find(params[:filter_id])
   end
+
+  def find_puppet_module
+    @puppet_module = PuppetModule.find(params[:id])
+  end
+
 end

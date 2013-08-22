@@ -18,19 +18,32 @@ module ContentSearchHelper
       [ _("Products"), "products"],
       [ _("Repositories"), "repos"],
       [ _("Packages"), "packages"],
-      [ _("Errata"), "errata"]
+      [ _("Errata"), "errata"],
+      [ _("Puppet Modules"), "puppet_modules"]
     ]
   end
 
-  def errata_display errata
-    {errata_type: errata[:type], id: errata.id, errata_id: errata.errata_id}
+  def errata_display(errata)
+    {
+        errata_type: errata[:type],
+        id: errata.id,
+        errata_id: errata.errata_id
+    }
   end
 
-  def package_display package
+  def package_display(package)
     {
       name: package.name,
       vel_rel_arch: package.send(:nvrea).sub(package.send(:name) + '-', ''),
       id: package.id
+    }
+  end
+
+  def puppet_module_display(puppet_module)
+    {
+        name_version: [puppet_module.name, puppet_module.version].join('-'),
+        author: puppet_module.author,
+        id: puppet_module.id
     }
   end
 

@@ -56,7 +56,7 @@ describe ContentSearchController, :katello => true do
     after do
       reset_search
     end
-    [:packages, :errata].each do |content_type|
+    [:packages, :errata, :puppet_modules].each do |content_type|
       [:all, :shared, :unique].each do |mode|
         context "#{content_type} #{mode} case" do
           before do
@@ -76,12 +76,14 @@ describe ContentSearchController, :katello => true do
           end
 
           it "should return some #{content_type}" do
-            setup_search(:filter => @expected_filters[mode], :fields =>[:id, :name, :nvrea, :repoids, :type, :errata_id], :results => [])
+            setup_search(:filter => @expected_filters[mode],
+                         :fields => [:id, :name, :nvrea, :repoids, :type, :errata_id, :author, :version],
+                         :results => [])
             params = {"mode"=>mode.to_s, "#{content_type}"=>{"search"=>""}, "content_type"=>"#{content_type}", "repos"=>{"search"=>""}}
             post "#{content_type}", params
             response.should be_success
             result = JSON.parse(response.body)
-            result["name"].should == content_type.capitalize.to_s
+            result["name"].should == content_type.to_s.split('_').map(&:capitalize).join(' ')
           end
 
           it "should return some repo_compare_#{content_type}" do

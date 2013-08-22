@@ -13,7 +13,9 @@
 module ContentSearch
 
   class ContentViewComparison < Search
-    attr_accessor :cv_env_ids, :is_package
+    attr_accessor :cv_env_ids,
+                  :unit_type, # :package, :errata, :puppet_module
+                  :offset
 
     def initialize(options)
       super
@@ -25,7 +27,7 @@ module ContentSearch
 
     def build
       self.cols = build_columns(self.cv_env_ids)
-      self.rows = build_rows(self.is_package, self.repos, self.cols)
+      self.rows = build_rows(self.repos, self.cols)
     end
 
     def build_columns(cv_envs)
@@ -44,24 +46,23 @@ module ContentSearch
       end
     end
 
-    def build_rows(is_package, repos, cols = [])
+    def build_rows(repos, cols = [])
       library_repos = repos.map{|repo| repo.library_instance || repo}.uniq
       products = library_repos.map(&:product).uniq
-      meta_rows = []
 
       # build product rows
-      content_rows = build_product_rows(products, cols)
+      rows = build_product_rows(products, cols)
 
       # build repo and package rows
-      content_rows += build_repo_rows(library_repos, cols)
+      rows += build_repo_rows(library_repos, cols)
 
       # remove the product rows if they have no repos
-      content_rows = content_rows.reject do |r|
-        child_rows = content_rows.select {|cr| cr.parent_id == r.id}
+      rows = rows.reject do |r|
+        child_rows = rows.select {|cr| cr.parent_id == r.id}
         r.data_type == "product" && child_rows.empty?
       end
 
-      content_rows
+      rows
     end
 
     def build_product_rows(products, cols = [])
@@ -75,10 +76,10 @@ module ContentSearch
 
         total = cols.inject(0) do |total, (key, col)|
           view_id, env_id = key.split("_")
-          # find the product in the view and get the # of packages
+          # find the product in the view and get the # of units
           env = KTEnvironment.find(env_id)
           version = ContentView.find(view_id).version(env)
-          field = "#{package_type}_count".to_sym
+          field = "#{unit_type.to_s}_count".to_sym
           count = version.repos(env).select{|r| r.product == product}.map(&field).inject(:+)
           count ? total + count : total
         end
@@ -103,44 +104,57 @@ module ContentSearch
           repo = repos.detect do |r|
             r.content_view.id == view_id && r.library_instance_id == library_repo.id
           end
+
           if repo
             view_repos << repo
-            display = is_package ? repo.package_count : repo.errata_count
+            display = case unit_type
+                        when :package
+                          repo.package_count
+                        when :errata
+                          repo.errata_count
+                        when :puppet_module
+                          repo.puppet_module_count
+                      end
+
             repo_row.cols[key] = Column.new(:display => display, :id => key)
           end
         end
 
-        package_search_mode = mode
+        search_mode = mode
         if view_repos.length < cv_env_ids.length
           # if the number of cv_envs is greater than the repos to compare
           # it implies that one of the cv_envs does not have this repo
           # which means that there is nothing shared between them
           # and all rows are "not shared" or "unique"
           next if mode == :shared
-          package_search_mode = :all
+          search_mode = :all
         end
 
-        # build package or errata rows
-        if is_package
-          packages = Package.search('', offset, page_size, view_repos.map(&:pulp_id),
-                                    [:nvrea_sort, "ASC"], package_search_mode)
-        else
-          packages = Errata.search('', offset, page_size,
-                                   :repoids => view_repos.map(&:pulp_id),
-                                   :search_mode => package_search_mode)
-        end
+        # build the rows
+        units = case unit_type
+                  when :package
+                    Package.search('', offset, page_size, view_repos.map(&:pulp_id),
+                                   [:nvrea_sort, "ASC"], search_mode)
+                  when :errata
+                    Errata.search('', offset, page_size,
+                                  :repoids => view_repos.map(&:pulp_id),
+                                  :search_mode => search_mode)
+                  when :puppet_module
+                    PuppetModule.search('', {:start => offset, :page_size => page_size,
+                                             :repoids => view_repos.map(&:pulp_id), :search_mode => search_mode})
+                end
 
-        next if packages.empty? # if we don't have packages/errata, don't show repo
+        next if units.empty? # if we don't have units, don't show repo
 
 
         repo_rows << repo_row
-        repo_rows += build_package_rows(packages, repo_row, cols)
+        repo_rows += build_unit_rows(units, repo_row, cols)
 
         # add metadata row for Show More link
-        total = view_repos.map(&("#{package_type}_count".to_sym)).max
+        total = view_repos.map(&("#{unit_type.to_s}_count".to_sym)).max
         if total > page_size
           meta_row =  MetadataRow.new(:total => total,
-                                      :current_count => offset + packages.length,
+                                      :current_count => offset + units.length,
                                       :data => {:repo_id=>library_repo.id},
                                       :unique_id => repo_row.id,
                                       :parent_id => repo_row.id
@@ -152,18 +166,18 @@ module ContentSearch
       repo_rows + meta_rows
     end
 
-    def build_package_rows(packages, repo_row, cols)
-      packages.inject([]) do |package_rows, package|
-        package_row = PackageRow.new(:package => package, :parent_id => repo_row.id)
+    def build_unit_rows(units, repo_row, cols)
+      units.inject([]) do |unit_rows, unit|
+        unit_row = UnitRow.new(:unit => unit, :parent_id => repo_row.id)
         cols.each do |key, col|
           view_id = key.split("_").first.to_i
           repo = repos.detect {|r| r.content_view.id == view_id && r.library_instance_id == repo_row.repo.id}
-          if package.repoids.include?(repo.pulp_id)# repo && repo.send(is_package ? :packages : :errata).map(&:id).include?(package.id)
-            package_row[:cols][key] = {:id => key}
+          if repo && unit.repoids.include?(repo.pulp_id)
+            unit_row[:cols][key] = {:id => key}
           end
         end
 
-        package_rows << package_row
+        unit_rows << unit_row
       end
     end
 
@@ -184,12 +198,8 @@ module ContentSearch
       }
     end
 
-    def package_type
-      is_package ? 'package' : 'errata'
-    end
-
-    def package_rows
-      rows.select{|row| row.data_type == package_type}
+    def unit_rows
+      rows.select{|row| row.data_type == unit_type.to_s}
     end
 
     def metadata_rows

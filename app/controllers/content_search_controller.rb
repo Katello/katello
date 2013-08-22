@@ -14,28 +14,34 @@ class ContentSearchController < ApplicationController
 
   include ContentSearchHelper
 
-  before_filter :find_repo, :only => [:repo_packages, :repo_errata]
-  before_filter :find_repos, :only => [:repo_compare_packages, :repo_compare_errata]
+  before_filter :find_repo, :only => [:repo_packages, :repo_errata, :repo_puppet_modules]
+  before_filter :find_repos, :only => [:repo_compare_packages, :repo_compare_errata, :repo_compare_puppet_modules]
   before_filter :setup_utils
 
   def rules
     contents_test = lambda{!KTEnvironment.content_readable(current_organization).empty?}
     {
         :index => contents_test,
-        :errata => contents_test,
         :products => contents_test,
         :repos => contents_test,
         :my_environments => contents_test,
         :packages => contents_test,
+        :errata => contents_test,
+        :puppet_modules => contents_test,
         :packages_items => contents_test,
         :errata_items => contents_test,
+        :puppet_modules_items => contents_test,
         :view_packages => contents_test,
+        :view_puppet_modules => contents_test,
         :repo_packages => contents_test,
         :repo_errata => contents_test,
-        :repo_compare_errata =>contents_test,
-        :repo_compare_packages =>contents_test,
-        :view_compare_errata =>contents_test,
-        :view_compare_packages =>contents_test,
+        :repo_puppet_modules => contents_test,
+        :repo_compare_errata => contents_test,
+        :repo_compare_packages => contents_test,
+        :repo_compare_puppet_modules => contents_test,
+        :view_compare_errata => contents_test,
+        :view_compare_packages => contents_test,
+        :view_compare_puppet_modules => contents_test,
         :views => contents_test
     }
   end
@@ -95,7 +101,6 @@ class ContentSearchController < ApplicationController
   def packages
     repo_ids = process_params(:repos)
     product_ids = process_params(:products)
-    package_ids = process_params(:packages)
     views = process_views(process_params(:views))
     repos = process_repos(repo_ids, product_ids)
     package_ids   = process_params(:packages)
@@ -134,10 +139,9 @@ class ContentSearchController < ApplicationController
   def errata
     repo_ids = process_params(:repos)
     product_ids = process_params(:products)
-    package_ids = process_params(:packages)
     views = process_views(process_params(:views))
     repos = process_repos(repo_ids, product_ids)
-    errata_ids   = process_params(:errata)
+    errata_ids = process_params(:errata)
 
     #construct a structure   view => { product => [repos] } for each view
     view_product_repo_map = view_product_repo_map(views, repos)
@@ -158,6 +162,32 @@ class ContentSearchController < ApplicationController
     render :json => {:rows => rows, :name => _('Errata')}
   end
 
+  def puppet_modules
+    repo_ids = process_params(:repos)
+    product_ids = process_params(:products)
+    views = process_views(process_params(:views))
+    repos = process_repos(repo_ids, product_ids)
+    puppet_module_ids = process_params(:puppet_modules)
+
+    #construct a structure   view => { product => [repos] } for each view
+    view_product_repo_map = view_product_repo_map(views, repos)
+
+    view_hash = ContentSearch::ContentViewSearch.new(:name=>_("Content View"), :views=>views).row_object_hash
+
+    rows = []
+    view_product_repo_map.each do |view, product_repo_map|
+      prod_rows = []
+      product_repo_map.each do |product, repos|
+        prod_rows.concat(spanned_product_content(view, product, repos, 'puppet_module', puppet_module_ids))
+      end
+      if !prod_rows.empty?
+        rows << view_hash[view.id]
+        rows.concat(prod_rows)
+      end
+    end
+    render :json => {:rows => rows, :name => _('Puppet Modules')}
+  end
+
   #similar to :packages, but only returns package rows with an offset for a specific repo
   def packages_items
     repo = Repository.libraries_content_readable(current_organization).where(:id=>params[:repo_id]).first
@@ -172,15 +202,29 @@ class ContentSearchController < ApplicationController
   # similar to :package_items but only returns package rows for content view grids
   def view_packages
     repo = Repository.libraries_content_readable(current_organization).where(:id=>params[:repo_id]).first
-    offset = params[:offset].try(:to_i) || 0
 
     cv_env_ids = repo.clones.map do |r|
       {:view_id => r.content_view.id, :env_id => r.environment}
     end
-    options = {:is_package => true,
-               :cv_env_ids => cv_env_ids}
+    options = {:unit_type => :package,
+               :cv_env_ids => cv_env_ids,
+               :offset => params[:offset].try(:to_i) || 0}
     comparison = ContentSearch::ContentViewComparison.new(options)
-    render :json => {:rows => comparison.package_rows + comparison.metadata_rows}
+    render :json => {:rows => comparison.unit_rows + comparison.metadata_rows}
+  end
+
+  # similar to :puppet_module_items but only returns puppet module rows for content view grids
+  def view_puppet_modules
+    repo = Repository.libraries_content_readable(current_organization).where(:id=>params[:repo_id]).first
+
+    cv_env_ids = repo.clones.map do |r|
+      {:view_id => r.content_view.id, :env_id => r.environment}
+    end
+    options = {:unit_type => :puppet_module,
+               :cv_env_ids => cv_env_ids,
+               :offset => params[:offset].try(:to_i) || 0}
+    comparison = ContentSearch::ContentViewComparison.new(options)
+    render :json => {:rows => comparison.unit_rows + comparison.metadata_rows}
   end
 
   #similar to :errata, but only returns errata rows with an offset for a specific repo
@@ -194,6 +238,21 @@ class ContentSearchController < ApplicationController
     render :json=>{:rows=>(errata[:content_rows] + [meta])}
   end
 
+  #similar to :puppet_modules, but only returns puppet modules rows with an offset for a specific repo
+  def puppet_modules_items
+    view = ContentView.readable(current_organization).where(:id=>params[:view_id]).first
+    repo = Repository.libraries_content_readable(current_organization).where(:id=>params[:repo_id]).first
+    offset = params[:offset].try(:to_i) || 0
+    puppet_modules = spanned_repo_content(view, repo, 'puppet_module',
+                                          process_params(:puppet_modules),
+                                          params[:offset], process_search_mode, process_env_ids) || {:content_rows=>[]}
+
+    meta = metadata_row(puppet_modules[:total], offset + puppet_modules[:content_rows].length,
+                        {:repo_id=>repo.id, :view_id=>view.id},
+                        "#{view.id}_#{repo.id}", ContentSearch::RepoSearch.id(view, repo))
+
+    render :json=>{:rows=>(puppet_modules[:content_rows] + [meta])}
+  end
 
   def repo_packages
     offset = params[:offset] || 0
@@ -226,61 +285,103 @@ class ContentSearchController < ApplicationController
     render :json => { :rows => rows, :name => @repo.name }
   end
 
-  def repo_compare_packages
-    repo_compare_content true, params[:offset] || 0
+  def repo_puppet_modules
+    offset = params[:offset] || 0
+    puppet_modules = PuppetModule.search('', offset, current_user.page_size, [@repo.pulp_id])
+
+    rows = puppet_modules.collect do |puppet_module|
+      {:name => display = puppet_module_display(puppet_module),
+       :id => puppet_module.id,
+       :cols => {:description => {:display => puppet_module.description}},
+       :data_type => "puppet_module",
+       :value => puppet_module.name
+      }
+    end
+
+    if puppet_modules.total > current_user.page_size
+      rows += [metadata_row(puppet_modules.total, offset.to_i + rows.length, {:repo_id=>@repo.id}, @repo.id)]
+    end
+    render :json => { :rows => rows, :name => @repo.name }
   end
 
+  def repo_compare_packages
+    repo_compare_content(:package, params[:offset] || 0)
+  end
 
   def repo_compare_errata
-    repo_compare_content false, params[:offset] || 0
+    repo_compare_content(:errata, params[:offset] || 0)
+  end
+
+  def repo_compare_puppet_modules
+    repo_compare_content(:puppet_module, params[:offset] || 0)
   end
 
   def view_compare_packages
-    options = {:is_package => true,
-               :cv_env_ids => params[:views].values}
+    options = {:unit_type => :package,
+               :cv_env_ids => params[:views].values,
+               :offset => params[:offset].try(:to_i) || 0}
     render :json => ContentSearch::ContentViewComparison.new(options)
   end
 
   def view_compare_errata
-    options = {:is_package => false,
-               :cv_env_ids => params[:views].values}
+    options = {:unit_type => :errata,
+               :cv_env_ids => params[:views].values,
+               :offset => params[:offset].try(:to_i) || 0}
+    render :json => ContentSearch::ContentViewComparison.new(options)
+  end
+
+  def view_compare_puppet_modules
+    options = {:unit_type => :puppet_module,
+               :cv_env_ids => params[:views].values,
+               :offset => params[:offset].try(:to_i) || 0}
     render :json => ContentSearch::ContentViewComparison.new(options)
   end
 
   private
 
-  def repo_compare_content is_package, offset
-    repo_map = {}
-    @repos.each do |r|
-      repo_map[r.pulp_id] = r
+  def repo_compare_content(unit_type, offset)
+    repo_map = @repos.inject({}) do |map, repo|
+      map[repo.pulp_id] = repo
+      map
     end
-    if is_package
-      packages = Package.search('', params[:offset], current_user.page_size, repo_map.keys, [:nvrea_sort, "ASC"],
-                                process_search_mode())
-    else
-      packages = Errata.search('', params[:offset], current_user.page_size, :repoids =>  repo_map.keys,
-                               :search_mode => process_search_mode)
+
+    units = case unit_type
+      when :package
+        Package.search('', offset, current_user.page_size,
+                       repo_map.keys, [:nvrea_sort, "ASC"], process_search_mode)
+      when :errata
+        Errata.search('', offset, current_user.page_size,
+                      :repoids =>  repo_map.keys, :search_mode => process_search_mode)
+      when :puppet_module
+        PuppetModule.search('', {:start => offset, :page_size => current_user.page_size,
+                                 :repoids => repo_map.keys, :search_mode => process_search_mode})
     end
-    rows = packages.collect do |pack|
+
+    rows = units.collect do |unit|
       cols = {}
-      (pack.repoids & repo_map.keys).each do |r|
+      (unit.repoids & repo_map.keys).each do |r|
         cols[repo_map[r].id] = {}
       end
 
-      if is_package
-        name = package_display(pack)
-        data_type = "package"
-      else
-        name = errata_display(pack)
-        data_type = "errata"
+      case unit_type
+        when :package
+          name = package_display(unit)
+          data_type = "package"
+        when :errata
+          name = errata_display(unit)
+          data_type = "errata"
+        when :puppet_module
+          name = puppet_module_display(unit)
+          data_type = "puppet_module"
       end
-      {:name => name, :id => pack.id, :cols => cols, :data_type => data_type}
+
+      {:name => name, :id => unit.id, :cols => cols, :data_type => data_type}
     end
 
     cols = {}
     sort_repos(@repos).each{|r| cols[r.id] = {:id=>r.id, :content => repo_compare_name_display(r)}}
-    if !packages.empty? && packages.total > current_user.page_size
-      rows += [metadata_row(packages.total, offset.to_i + rows.length,
+    if !units.empty? && units.total > current_user.page_size
+      rows += [metadata_row(units.total, offset.to_i + rows.length,
                             {:mode=>process_search_mode, :repos=>params[:repos]}, 'compare')]
     end
     render :json => {:rows=>rows, :cols=>cols, :name=>_("Repository Comparison")}
@@ -457,8 +558,7 @@ class ContentSearchController < ApplicationController
       end
     end
     to_ret = {}
-    content_attribute = content_type.to_sym == :package ? 'nvrea' : 'errata_id'
-    content_class = content_type.to_sym == :package ? Package : Errata
+    content_class, content_attribute = get_search_info(content_type)
     content = multi_repo_content_search(content_class, content_search_obj, spanning_repos, offset, content_attribute, search_mode)
 
     return nil if content.total == 0
@@ -472,6 +572,15 @@ class ContentSearchController < ApplicationController
      :repo_cols=>to_ret, :total=>content.total}
   end
 
+  def get_search_info(content_type)
+    if content_type.to_sym == :package
+      return Package, 'nvrea'
+    elsif content_type.to_sym == :errata
+      return Errata, 'errata_id'
+    else
+      return PuppetModule, 'name'
+    end
+  end
 
   # perform a content search (errata or package)
   #
@@ -492,7 +601,7 @@ class ContentSearchController < ApplicationController
         end
       end
       sort { by "#{default_field}_sort", 'asc'}
-      fields [:id, :name, :nvrea, :repoids, :type, :errata_id]
+      fields [:id, :name, :nvrea, :repoids, :type, :errata_id, :author, :version]
       size user.page_size
       from offset
       if  search_obj.is_a? Array
@@ -524,9 +633,12 @@ class ContentSearchController < ApplicationController
       if id_prefix == 'package'
         display = package_display(item)
         value = item.nvrea
-      else
+      elsif id_prefix == 'errata'
         display = errata_display(item)
         value = item.id
+      else
+        display = puppet_module_display(item)
+        value = item.name
       end
       parent_id = "view_#{view.id}_product_#{parent_repo.product.id}_repo_#{parent_repo.id}"
       row = {:id=>"#{parent_id}_#{id_prefix}_#{item.id}", :parent_id=>parent_id, :cols=>{},

@@ -17,6 +17,7 @@ module Glue::ElasticSearch::PuppetModule
       def index_options
         {
           "_type"             => :puppet_module,
+          "name_sort"         => name.downcase,
           "name_autocomplete" => name,
           "author_autocomplete" => author,
           "sortable_version"  => sortable_version

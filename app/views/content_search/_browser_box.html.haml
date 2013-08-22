@@ -122,6 +122,20 @@
                     .example
                       title:*kernel*
 
-
+      %fieldset.primary#puppet_modules_selector
+        = label_tag :puppet_modules, _("Puppet Modules")
+        #puppet_modules_search
+          = radio_button_tag :puppet_modules, :search, true
+          = text_field_tag :search, '', :size=>19, :placeholder=>_('Search modules')
+          %span.browse_tipsy.details_icon-grey
+            %span.hidden-text.hidden
+              .la.content-tipsy
+                = _('Example Searches:')
+                %div
+                %ul
+                  %li
+                    =_('Searching for an exact puppet modules:')
+                    .example
+                      id:"RHSA-2010:0858"
 
       %input#browse_button.fr.button{:type=>'submit', :value=>_('Go')}
