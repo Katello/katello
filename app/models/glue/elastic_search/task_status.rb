@@ -16,7 +16,7 @@ module Glue::ElasticSearch::TaskStatus
     base.send :include, Ext::IndexedModel
 
     base.class_eval do
-      index_options :json => { :only => [:parameters, :result, :organization_id, :start_time, :finish_time, :task_owner_id, :task_owner_type ] },
+      index_options :json => { :only => [:parameters, :organization_id, :start_time, :finish_time, :task_owner_id, :task_owner_type ] },
                     :extended_json => :extended_index_attrs
 
       mapping do
@@ -32,7 +32,6 @@ module Glue::ElasticSearch::TaskStatus
   def extended_index_attrs
      ret = {}
      ret[:username] = user.username if user
-
      ret[:status] = state.to_s
      ret[:status] += " pending" if pending?
      if state.to_s == "error" || state.to_s == "timed_out"

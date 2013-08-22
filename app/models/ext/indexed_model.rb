@@ -40,9 +40,11 @@ module Ext::IndexedModel
 
       else
         #stub mapping
-        def self.mapping *args
+        def self.mapping(*args)
         end
-        def self.index_import list
+        def self.index_import(list)
+        end
+        def self.index_name(name)
         end
       end
 
