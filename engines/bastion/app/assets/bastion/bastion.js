@@ -58,6 +58,8 @@
 //= require "bastion/utils/utils.module"
 //= require "bastion/utils/routes.factory"
 
+//= require "bastion/system-groups/system-groups.module.js"
+//= require "bastion/system-groups/system-group.factory.js"
 
 //= require "bastion/systems/systems.module"
 //= require_tree "./systems"

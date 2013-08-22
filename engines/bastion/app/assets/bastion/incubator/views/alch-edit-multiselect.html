@@ -1,0 +1,12 @@
+<div class="alch-multiselect" ng-class="{open: editMode}">
+  <form class="form" ng-show="editMode">
+    <input type="text" ng-model="searchTerm" type="text" placeholder="{{ 'Filter' | i18n }}">
+    <ul>
+      <li class="clickable" ng-repeat="option in options | filter:searchTerm">
+        <input type="checkbox" ng-model="option.selected" ng-change="toggleOption(option)"/>
+        <span ng-click="toggleOption(option)">{{ option.name }}</span>
+      </li>
+    </ul>
+  </form>
+  <div alch-edit></div>
+</div>

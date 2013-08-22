@@ -42,9 +42,9 @@ angular.module('alchemy')
 
             if ($scope.readonly !== true) {
                 $scope.editMode = true;
-                previousValue = $scope.model;
+                previousValue = $scope.displayValue;
 
-                if ($scope.handleOptions !== undefined) {
+                if ($scope.handleOptions !== undefined && !$scope.options) {
                     options = $scope.handleOptions();
                 }
 
@@ -75,7 +75,7 @@ angular.module('alchemy')
             $scope.editMode = false;
             $scope.savingMode = true;
 
-            handleSave = $scope.handleSave();
+            handleSave = $scope.handleSave({ value: $scope.model });
 
             if (handleSave !== undefined && handleSave.hasOwnProperty('then')) {
 
@@ -94,7 +94,7 @@ angular.module('alchemy')
         $scope.cancel = function() {
             $scope.editMode = false;
             $scope.disableSave = false;
-            $scope.model = previousValue;
+            $scope.displayValue = previousValue;
             $scope.handleCancel({ value: $scope.model });
         };
 
@@ -110,6 +110,7 @@ angular.module('alchemy')
             scope: {
                 model: '=alchEditText',
                 readonly: '=',
+                displayValue: '=alchEditText',
                 handleSave: '&onSave',
                 handleCancel: '&onCancel'
             },
@@ -125,6 +126,7 @@ angular.module('alchemy')
             scope: {
                 model: '=alchEditTextarea',
                 readonly: '=',
+                displayValue: '=alchEditTextarea',
                 handleSave: '&onSave',
                 handleCancel: '&onCancel'
             },
@@ -142,6 +144,7 @@ angular.module('alchemy')
                 readonly: '=',
                 selector: '=',
                 handleOptions: '&options',
+                displayValue: '=alchEditSelect',
                 handleSave: '&onSave',
                 handleCancel: '&onCancel',
                 editTrigger: '='
@@ -154,4 +157,71 @@ angular.module('alchemy')
                         '<div alch-edit></div>' +
                       '</div>'
         };
-    });
+    })
+    .directive('alchEditMultiselect', function() {
+        return {
+            replace: true,
+            templateUrl: 'incubator/views/alch-edit-multiselect.html',
+            scope: {
+                model: '=alchEditMultiselect',
+                handleOptions: '&options',
+                handleSave: '&onSave',
+                handleCancel: '&onCancel'
+            },
+            controller: 'AlchEditMultiselectController'
+        };
+    })
+    .controller('AlchEditMultiselectController', ['$scope', function($scope) {
+        var unbindWatcher, checkPrevious, formatDisplay, getIds;
+
+        formatDisplay = function(toFormat) {
+            toFormat = toFormat || [];
+            return _.pluck(toFormat, 'name').join(', ');
+        };
+
+        getIds = function(models) {
+            models = models || [];
+            return _.pluck(models, "id");
+        };
+
+        checkPrevious = function() {
+            _.each($scope.options, function(tag) {
+                var appliedIds = getIds($scope.model);
+                if (_.contains(appliedIds, tag.id, 0)) {
+                    tag.selected = true;
+                } else {
+                    tag.selected = false;
+                }
+            });
+        };
+
+        $scope.toggleOption = function(option) {
+            var appliedIds = getIds($scope.model),
+                position = _.indexOf(appliedIds, option.id, 0);
+
+            if (position >= 0) {
+                option.selected = false;
+                $scope.model.splice(position, 1);
+            } else {
+                option.selected = true;
+                $scope.model.push(option);
+            }
+            $scope.displayValue = formatDisplay($scope.model);
+        };
+
+        $scope.$watch("model", function(modelValue) {
+            if (!modelValue) {
+                return;
+            }
+            $scope.displayValue = formatDisplay(modelValue);
+        });
+
+        // Set the checkboxes for already selected items and then unbind.
+        unbindWatcher = $scope.$watch("model + options", function() {
+            if (!$scope.model || !$scope.options) {
+                return;
+            }
+            checkPrevious();
+            unbindWatcher();
+        });
+    }]);
