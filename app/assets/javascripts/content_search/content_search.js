@@ -66,7 +66,7 @@ KT.content_search_templates = (function(i18n) {
             display["url"] = KT.routes.puppet_module_path(KT.utils.escape(display["id"]));
 
             return KT.utils.template("<span data-url='<%= url %>' class='tipsify-package'><%- name_version %></span> \
-                                      <span class='one-line-ellipsis'>" + i18n.author + ": <%- author %></span>", display);
+                                      <span>" + i18n.author + ": <%- author %></span>", display);
         },
         row_header_content = function(name, type) {
             if(type === "package") {
@@ -85,7 +85,7 @@ KT.content_search_templates = (function(i18n) {
             return html;
         },
         row_header = function(id, name, type, row_level, has_children, parent_id) {
-            var title = (type === "package" || type === "errata") ? "" : name,
+            var title = (type === "package" || type === "errata" || type === "puppet_module") ? "" : name,
                 html = $('<li/>', {
                             'data-id'   : id,
                             'id'        : 'row_header_' + id,
