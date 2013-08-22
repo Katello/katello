@@ -35,25 +35,26 @@ module Katello
       end
 
       # get configuration for `key`
-      # @param [Symbol] key
+      # @param [Symbol, String] key
       # @raise [NoKye] when key is missing
       def [](key)
-        raise ArgumentError, "#{key.inspect} should be a Symbol" unless Symbol === key
+        key = key.to_s
+
         if has_key? key
           @data[key].is_a?(Proc) ? @data[key].call : @data[key]
         else
-          raise NoKey, key.to_s
+          raise NoKey, key
         end
       end
 
       # converts `value` to Config
       # @see #convert
       def []=(key, value)
-        @data[key.to_sym] = convert value
+        @data[key.to_s] = convert value
       end
 
       def has_key?(key)
-        @data.has_key? key
+        @data.has_key? key.to_s
       end
 
       # @example does node contain value at `node[:key1][:key2]`
@@ -85,8 +86,8 @@ module Katello
       end
 
       # respond to implementation according to method missing
-      def respond_to?(symbol, include_private=false)
-        has_key?(symbol) || super
+      def respond_to?(method, include_private = false)
+        has_key?(method) || super
       end
 
 
@@ -134,12 +135,9 @@ module Katello
         raise ArgumentError, "#{hash.inspect} is not a Hash" unless Hash === hash
 
         hash.keys.each do |key|
-          hash[(key.to_sym rescue key) || key] = convert hash.delete(key)
+          hash[key.to_s] = convert hash.delete(key)
         end
 
-        hash.keys.all? do |k|
-          Symbol === k or raise ArgumentError, "keys must be Symbols, #{k.inspect} is not"
-        end
         hash
       end
     end
