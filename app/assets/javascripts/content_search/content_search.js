@@ -76,7 +76,7 @@ KT.content_search_templates = (function(i18n) {
                 html = errata_header(name);
             }
             else if(type === "puppet_module") {
-                html = puppet_module_header(name)
+                html = puppet_module_header(name);
             }
             else {
                 html = KT.utils.escape(name);
