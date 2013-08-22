@@ -621,7 +621,7 @@ class SystemsController < ApplicationController
   end
 
   def add_system_groups
-    if params[:group_ids].nil? or params[:group_ids].blank?
+    if params[:group_ids].nil? || params[:group_ids].blank?
       notify.error _('One or more system groups must be provided.')
       render :nothing=>true, :status=>500
     else

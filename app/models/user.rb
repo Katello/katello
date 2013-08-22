@@ -226,7 +226,7 @@ class User < ActiveRecord::Base
   end
 
   def create_or_update_default_system_registration_permission
-    return if default_environment.nil? or (not default_environment.changed?)
+    return if default_environment.nil? || (not default_environment.changed?)
     own_role.create_or_update_default_system_registration_permission(default_environment.organization, default_environment)
   end
 
@@ -360,7 +360,7 @@ class User < ActiveRecord::Base
   end
 
   def create_or_update_search_history(path, search_params)
-    unless search_params.nil? or search_params.blank? or empty_display_attributes?(search_params)
+    unless search_params.nil? || search_params.blank? || empty_display_attributes?(search_params)
       if history = search_histories.find_or_create_by_path_and_params(path, search_params)
         history.update_attributes(:updated_at => Time.now)
       end

@@ -138,7 +138,7 @@ module Katello
         end
 
         hash.keys.all? do |k|
-          Symbol === k or raise ArgumentError, "keys must be Symbols, #{k.inspect} is not"
+          raise ArgumentError, "keys must be Symbols, #{k.inspect} is not" unless Symbol === k
         end
         hash
       end

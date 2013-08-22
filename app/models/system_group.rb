@@ -60,7 +60,7 @@ class SystemGroup < ActiveRecord::Base
   validate :validate_max_systems
 
   def validate_max_systems
-    if new_record? or max_systems_changed?
+    if new_record? || max_systems_changed?
       if (max_systems != UNLIMITED_SYSTEMS) and (systems.length > 0 and (systems.length > max_systems))
         errors.add :system_limit, _("may not be less than the number of systems associated with the system group.")
       elsif (max_systems == 0)

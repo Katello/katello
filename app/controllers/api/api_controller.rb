@@ -87,11 +87,15 @@ class Api::ApiController < ActionController::Base
   end
 
   def get_resource
-    instance_variable_get :"@#{resource_name}" or raise 'no resource loaded'
+    resource = instance_variable_get(:"@#{resource_name}")
+    raise 'no resource loaded' if resource.nil?
+    resource
   end
 
   def get_resource_collection
-    instance_variable_get :"@#{resource_collection_name}" or raise 'no resource collection loaded'
+    resource = instance_variable_get(:"@#{resource_collection_name}")
+    raise 'no resource collection loaded' if resource.nil?
+    resource
   end
 
   def resource_collection_name

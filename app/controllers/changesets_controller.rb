@@ -88,7 +88,7 @@ class ChangesetsController < ApplicationController
   end
 
   def create
-    if params[:changeset][:action_type].blank? or
+    if params[:changeset][:action_type].blank? ||
        params[:changeset][:action_type] == Changeset::PROMOTION
 
       if @next_environment.blank?

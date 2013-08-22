@@ -95,7 +95,7 @@ Warden::Strategies.add(:database) do
 
   # relevant only when username and password params are set
   def valid?
-    (params[:username] && params[:password]) or (params[:auth_username] && params[:auth_password])
+    (params[:username] && params[:password]) || (params[:auth_username] && params[:auth_password])
   end
 
   def authenticate!
@@ -117,7 +117,7 @@ Warden::Strategies.add(:ldap) do
 
   # relevant only when username and password params are set
   def valid?
-    (params[:username] && params[:password]) or (params[:auth_username] && params[:auth_password])
+    (params[:username] && params[:password]) || (params[:auth_username] && params[:auth_password])
   end
 
   def authenticate!

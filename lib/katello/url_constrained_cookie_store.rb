@@ -74,7 +74,7 @@ class Katello::UrlConstrainedCookieStore < ActionDispatch::Session::CookieStore
   DEFAULT_OPTIONS.merge!(:expiration_exceptions => nil)
 
   def expiration_exceptions(options)
-    exceptions = options[:expiration_exceptions] or []
+    exceptions = options[:expiration_exceptions] || []
     exceptions.instance_of?(Array) ? exceptions : [exceptions]
   end
 

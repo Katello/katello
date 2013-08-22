@@ -87,8 +87,8 @@ class OrganizationsController < ApplicationController
 
   def create
     org_label_assigned = ""
-    org_params = params[:organization] or
-        return render_bad_parameters
+    org_params = params[:organization]
+    return render_bad_parameters if org_params.nil?
     org_params[:label], org_label_assigned = generate_label(org_params[:name], 'organization') if org_params[:label].blank?
     @organization = Organization.new(:name => org_params[:name], :label => org_params[:label], :description => org_params[:description])
     @organization.save!

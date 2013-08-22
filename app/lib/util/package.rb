@@ -83,9 +83,9 @@ module Util
         next if pack.nil?
 
         pack = pack.with_indifferent_access
-        if (latest_pack.nil?) or
-           (pack[:epoch] > latest_pack[:epoch]) or
-           (pack[:epoch] == latest_pack[:epoch] and pack[:release] > latest_pack[:release]) or
+        if (latest_pack.nil?) ||
+           (pack[:epoch] > latest_pack[:epoch]) ||
+           (pack[:epoch] == latest_pack[:epoch] and pack[:release] > latest_pack[:release]) ||
            (pack[:epoch] == latest_pack[:epoch] and pack[:release] == latest_pack[:release] and pack[:version] > latest_pack[:version])
           latest_pack = pack
           selected_packs = [pack]

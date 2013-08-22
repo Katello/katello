@@ -170,10 +170,10 @@ class ApplicationController < ActionController::Base
   end
 
   def flash_to_headers
-    return if @_response.nil? or @_response.response_code == 302
+    return if @_response.nil? || @_response.response_code == 302
     return if flash.blank?
     [:error, :warning, :success, :message].each do |type|
-      unless flash[type].nil? or flash[type].blank?
+      unless flash[type].nil? || flash[type].blank?
         @enc = CGI::escape(flash[type].gsub("\n","<br \\>"))
         response.headers['X-Message'] = @enc.gsub("%2B","&#43;")
         response.headers['X-Message-Type'] = type.to_s
@@ -414,7 +414,7 @@ class ApplicationController < ActionController::Base
   end
 
   def requested_action
-    unless controller_name.nil? or action_name.nil?
+    unless controller_name.nil? || action_name.nil?
       controller_name + '___' + action_name
     end
   end

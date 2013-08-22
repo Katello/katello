@@ -14,7 +14,7 @@ class OperationsController < ApplicationController
   skip_before_filter :require_org
   def rules
     {
-      :index => lambda{ User.any_readable? or Role.any_readable?}
+      :index => lambda{ User.any_readable? || Role.any_readable?}
     }
   end
 

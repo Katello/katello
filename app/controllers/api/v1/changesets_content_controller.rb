@@ -40,8 +40,9 @@ class Api::V1::ChangesetsContentController < Api::V1::ApiController
   private
 
   def find_changeset!
-    @changeset = Changeset.find_by_id(params[:changeset_id]) or
-        raise HttpErrors::NotFound, _("Couldn't find changeset '%s'") % params[:changeset_id]
+    @changeset = Changeset.find_by_id(params[:changeset_id])
+    raise HttpErrors::NotFound, _("Couldn't find changeset '%s'") % params[:changeset_id] if @changeset.nil?
+    @changeset
   end
 
   def find_content_view!
@@ -51,11 +52,13 @@ class Api::V1::ChangesetsContentController < Api::V1::ApiController
   end
 
   def render_after_removal(removed_objects, options = {})
-    render(unless removed_objects.blank?
-             { :text => (options[:success] or raise ArgumentError), :status => 200 }
-           else
-             { :text => (options[:not_found] or raise ArgumentError), :status => 404 }
-           end)
+    unless removed_objects.blank?
+      rend = { :text => options[:success], :status => 200 }
+    else
+      rend = { :text => options[:not_found], :status => 404 }
+    end
+    raise ArgumentError if rend[:text].nil?
+    render(rend)
   end
 
 end

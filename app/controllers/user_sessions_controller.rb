@@ -58,7 +58,7 @@ class UserSessionsController < ApplicationController
   def set_org
     orgs = current_user.allowed_organizations
     org = Organization.find(params[:org_id])
-    if org.nil? or !orgs.include?(org)
+    if org.nil? || !orgs.include?(org)
       notify.error _("Invalid organization")
       render :nothing => true
       return
