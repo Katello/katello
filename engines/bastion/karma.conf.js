@@ -22,7 +22,6 @@ files = [
     '../../../../../app/assets/javascripts/common/katello.module.js',
     '../../../../../app/assets/javascripts/common/notices.js',
     '../../../../../app/assets/javascripts/common/experimental/katello-globals.module.js',
-    '../../../../../app/assets/javascripts/system_groups/system-groups.module.js',
 
     // Must load modules first
     '**/*.module.js',

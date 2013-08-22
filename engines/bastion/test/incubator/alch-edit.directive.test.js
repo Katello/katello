@@ -17,7 +17,7 @@ describe('Directive: alchEdit', function() {
         compile,
         testItem;
 
-    beforeEach(module('alchemy', 'incubator/views/alch-edit.html'));
+    beforeEach(module('alchemy', 'incubator/views/alch-edit.html', 'incubator/views/alch-edit-multiselect.html'));
 
     beforeEach(module(function($provide) {
         testItem = {
@@ -152,7 +152,7 @@ describe('Directive: alchEdit', function() {
         var editableElement;
 
         beforeEach(function() {
-            scope.tacoOptions = ['Carnitas', 'Tilapia'];
+            scope.tacoOptions = [{id: 1, name: 'Carnitas'}, {id: 2, name: 'Tilapia'}];
 
             editableElement = angular.element(
                 '<span alch-edit-select="item.taco" options="tacoOptions" ></span>'
@@ -175,8 +175,56 @@ describe('Directive: alchEdit', function() {
         it("should create options", function() {
             var element = editableElement.find('.editable'),
                 input = editableElement.find('select');
-
             expect(input.find('option').length).not.toBe(2);
+        });
+
+    });
+
+    describe('alchEditMultiselect directive', function() {
+        var editableElement,
+            directiveScope,
+            multiSelectController;
+
+        beforeEach(function() {
+            editableElement = angular.element(
+                '<span alch-edit-multiselect="tacos" options="tacoOptions"></span>');
+
+            scope.tacos = [{id: 2, name: 'barbacoa'}, {id: 3, name: 'carnitas'}];
+            scope.tacoOptions = [{id: 1, name: 'baja shrimp'}, {id: 2, name: 'barbacoa'},
+                {id: 3, name: 'carnitas'}, {id: 4, name: 'spicy tinga chicken'}];
+
+            compile(editableElement)(scope);
+            scope.$digest();
+            directiveScope = editableElement.scope();
+        });
+
+        beforeEach(inject(function($controller) {
+            multiSelectController = $controller('AlchEditMultiselectController', {$scope: directiveScope});
+        }));
+
+        it("should display a multi select on editable click", function() {
+            var element = editableElement.find('.editable'),
+                input = editableElement.find('div');
+            element.trigger('click');
+            expect(input.css('display')).not.toBe('none');
+        });
+
+        it("automatically selects the previously selected items.", function() {
+            directiveScope.edit();
+            directiveScope.$digest();
+
+            expect(directiveScope.options[0].selected).toBe(false);
+            expect(directiveScope.options[1].selected).toBe(true);
+            expect(directiveScope.options[2].selected).toBe(true);
+            expect(directiveScope.options[3].selected).toBe(false);
+        });
+
+        it("allows a way to toggle options", function() {
+            directiveScope.toggleOption(scope.tacoOptions[0]);
+            expect(scope.tacoOptions[0].selected).toBe(true);
+
+            directiveScope.toggleOption(scope.tacoOptions[0]);
+            expect(scope.tacoOptions[0].selected).toBe(false);
         });
 
     });
