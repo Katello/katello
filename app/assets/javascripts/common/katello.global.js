@@ -20,6 +20,10 @@ var i18n = {};
 //Setup underscorejs
 KT.utils = _.noConflict();
 
+KT.utils.unescape = function(code) {
+    return code.replace(/\\\\/g, '\\').replace(/\\'/g, "'");
+};
+
 function localize(data) {
     for (var key in data) {
         if(data.hasOwnProperty(key)) {
