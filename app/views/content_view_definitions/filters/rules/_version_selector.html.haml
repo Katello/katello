@@ -1,0 +1,32 @@
+- package_fields ||= false
+- col_size = package_fields ? 14 : 6
+
+%td.version_selector
+  - if editable
+    - version_selected = version_selected(unit)
+    - value1, value2 = version_values(unit)
+
+    = select_tag("units[version_type]", options_for_select(version_options, version_selected(unit)),
+      :class => 'version_type')
+
+    = text_field_tag("units[version_value]", value1, :size => col_size,
+      :class => 'version input' + (['version', 'min_version', 'max_version'].include?(version_selected) ? '' : ' hidden'))
+
+    = text_field_tag("units[version_value1]", value1, :size => col_size,
+      :class => 'range input' + (['version_range'].include?(version_selected) ? '' : ' hidden'))
+
+    = label_tag(' - ', nil,
+      :class => 'range input' + (['version_range'].include?(version_selected) ? '' : ' hidden'))
+
+    = text_field_tag("units[version_value2]", value2, :size => col_size,
+      :class => 'range input' + (['version_range'].include?(version_selected) ? '' : ' hidden'))
+
+    - if package_fields
+      %span.rule-search-tipsy.details_icon-grey{title: _('The format for package versions is E:V-R where E represents epoch, V represents version, and R represents release; epoch and release are optional (e.g. 1:1.2.3, 2.2.2-1.4, 2:0.9-1el6, 1.2.3beta)')}
+
+    = link_to(_("Save"),
+      update_parameter_content_view_definition_filter_rule_path(rule.filter.content_view_definition.id,
+      rule.filter.id, rule.id), :class => 'save_parameters hidden')
+
+  - else
+    = version_selector_readonly(rule, unit)

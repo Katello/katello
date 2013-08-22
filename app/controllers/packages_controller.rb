@@ -43,9 +43,8 @@ class PackagesController < ApplicationController
 
   def auto_complete
     if @def_filter
-      repos = @def_filter.products.map { |prod| prod.repos(current_organization.library) }.flatten
-      repos += @def_filter.repositories
-      results = Package.autocomplete_name("#{params[:term]}*", repos.map(&:pulp_id))
+      repoids = @def_filter.repos(current_organization.library).map(&:pulp_id)
+      results = Package.autocomplete_name("#{params[:term]}*", repoids)
     end
 
     render :json => results

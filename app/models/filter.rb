@@ -60,6 +60,11 @@ class Filter < ActiveRecord::Base
     filter
   end
 
+  def repos(env)
+    repos = self.products.map { |prod| prod.repos(env) }.flatten
+    repos += repositories
+  end
+
   protected
 
   def validate_products_and_repos
