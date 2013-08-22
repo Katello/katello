@@ -11,9 +11,9 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 
-require 'minitest_helper'
+require 'test_helper'
 
-class NavigationItemTest < MiniTest::Rails::ActiveSupport::TestCase
+class NavigationItemTest < ActiveSupport::TestCase
 
   def setup
     @item = Navigation::Item.new('test_item', 'Test Item', true, '/katello/test/item')

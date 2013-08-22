@@ -12,7 +12,7 @@
 
 require 'support/fake_node_capability'
 
-class NodeCapabilityTestBase < MiniTest::Rails::ActiveSupport::TestCase
+class NodeCapabilityTestBase < ActiveSupport::TestCase
   extend ActiveRecord::TestFixtures
   fixtures :all
 

@@ -6,6 +6,7 @@ require File.expand_path('../../config/environment', __FILE__)
 
 require 'rails'
 require 'minitest/autorun'
+require "rails/test_help"
 require 'minitest/rails'
 require 'json'
 require 'mocha/setup'
@@ -16,7 +17,7 @@ require File.expand_path("../support/warden_support.rb",  __FILE__)
 require File.expand_path("../support/controller_support.rb",  __FILE__)
 require File.expand_path("../../lib/monkeys/foreign_keys_postgresql.rb",  __FILE__)
 
-class MiniTest::Rails::ActiveSupport::TestCase
+class ActiveSupport::TestCase
   include FactoryGirl::Syntax::Methods
 
   self.use_transactional_fixtures = true
@@ -35,7 +36,7 @@ class MiniTest::Rails::ActiveSupport::TestCase
   end
 end
 
-class MiniTest::Rails::Spec
+class Rails::Spec
   include ActiveSupport::Testing::Assertions
   include Warden::Test::Helpers
   include WardenSupport
@@ -49,7 +50,7 @@ class MiniTest::Rails::Spec
   end
 end
 
-class Minitest::Rails::ActionController::TestCase
+class ActionController::TestCase
   include Warden::Test::Helpers
   include WardenSupport
   include ControllerSupport

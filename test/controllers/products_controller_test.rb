@@ -11,9 +11,9 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require "minitest_helper"
+require "test_helper"
 
-class ProductsControllerTest < MiniTest::Rails::ActionController::TestCase
+class ProductsControllerTest < ActionController::TestCase
   fixtures :all
 
   def setup
@@ -56,7 +56,7 @@ class ProductsControllerTest < MiniTest::Rails::ActionController::TestCase
   end
 
 
-  test "disabling a reposet should call disable_content" do
+  test "disabling a reposet should call disable_content2" do
     Product.stubs(:find).returns(@custom_product)
     @redhat_product.stubs(:disable_content).with('3').returns(@pc)
 

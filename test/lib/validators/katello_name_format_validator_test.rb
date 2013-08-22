@@ -12,9 +12,9 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 
-require 'minitest_helper'
+require 'test_helper'
 
-class KatelloNameFormatValidatorTest < MiniTest::Rails::ActiveSupport::TestCase
+class KatelloNameFormatValidatorTest < ActiveSupport::TestCase
 
   def setup
     @validator = Validators::KatelloNameFormatValidator.new({:attributes => [:name]})

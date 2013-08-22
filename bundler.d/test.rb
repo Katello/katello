@@ -7,7 +7,7 @@ group :test do
 
   gem 'vcr'
   gem 'webmock'
-  gem 'minitest', '<=4.5.0', :require => "hoe/minitest"
+  gem 'minitest',  :require => "hoe/minitest"
   gem 'minitest-rails'
 
   gem 'mocha', '~> 0.13.1', :require=>false

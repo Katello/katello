@@ -13,7 +13,7 @@
 # encoding: UTF-8
 
 unless ENV['RAILS_ENV'] == 'build' # ok
-  require_relative 'minitest_helper'
+  require_relative 'test_helper'
 else
   # if we are in build environment of RPM we have only the bare minimum
   warn 'loading minimal test environment'
@@ -22,7 +22,7 @@ else
   require 'minitest/rails'
 end
 
-class SourceCodeTest < MiniTest::Rails::ActiveSupport::TestCase
+class SourceCodeTest < ActiveSupport::TestCase
 
   class SourceCode
     include MiniTest::Assertions
@@ -90,7 +90,7 @@ see http://stackoverflow.com/questions/10048173/why-is-it-bad-style-to-rescue-ex
           new('**/*.rb',
               %r'config/(application|boot)\.rb',
               %r'engines/bastion/test/test_helper\.rb',
-              %r'test/base_test_helper\.rb', # TODO clean up minitest_helper
+              %r'test/base_test_helper\.rb', # TODO clean up test_helper
               %r'engines/fort/test/test_helper.rb',
               %r'lib/util/puppet\.rb').
           check_lines(<<-DOC) { |line| (line !~ /ENV\[[^\]]+\]/) ? true : line =~ /#\s?ok/ }

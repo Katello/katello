@@ -12,10 +12,10 @@
 
 
 
-require 'minitest_helper'
+require 'test_helper'
 
 
-class FileRepoDiscoveryTest < MiniTest::Rails::ActiveSupport::TestCase
+class FileRepoDiscoveryTest < ActiveSupport::TestCase
 
   def test_run
     base_url = "file://#{File.expand_path(File.dirname(__FILE__))}".gsub("lib", "fixtures/")

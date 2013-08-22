@@ -11,9 +11,9 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 
-require 'minitest_helper'
+require 'test_helper'
 
-class UsernameValidatorTest < MiniTest::Rails::ActiveSupport::TestCase
+class UsernameValidatorTest < ActiveSupport::TestCase
 
   def setup
     @validator = Validators::UsernameValidator.new({:attributes => [:name]})

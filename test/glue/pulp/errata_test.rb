@@ -10,10 +10,10 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'minitest_helper'
+require 'test_helper'
 require './test/support/repository_support'
 
-class GluePulpErrataTestBase < MiniTest::Rails::ActiveSupport::TestCase
+class GluePulpErrataTestBase < ActiveSupport::TestCase
   extend  ActiveRecord::TestFixtures
   include RepositorySupport
 

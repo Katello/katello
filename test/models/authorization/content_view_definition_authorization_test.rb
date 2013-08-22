@@ -10,7 +10,7 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'minitest_helper'
+require 'test_helper'
 require 'support/auth_support'
 
 module ContentViewDefinitionAuthBase
@@ -41,7 +41,7 @@ module ContentViewDefinitionAuthBase
   end
 end
 
-class ContentViewDefinitionAuthorizationAdminTest < MiniTest::Rails::ActiveSupport::TestCase
+class ContentViewDefinitionAuthorizationAdminTest < ActiveSupport::TestCase
   include ContentViewDefinitionAuthBase
 
   def setup
@@ -78,7 +78,7 @@ class ContentViewDefinitionAuthorizationAdminTest < MiniTest::Rails::ActiveSuppo
 end
 
 
-class ContentViewDefinitionAuthorizationNoPermTest < MiniTest::Rails::ActiveSupport::TestCase
+class ContentViewDefinitionAuthorizationNoPermTest < ActiveSupport::TestCase
   include ContentViewDefinitionAuthBase
 
   def setup
@@ -107,7 +107,7 @@ class ContentViewDefinitionAuthorizationNoPermTest < MiniTest::Rails::ActiveSupp
   end
 end
 
-class ContentViewDefinitionAuthorizationReadonlyTest < MiniTest::Rails::ActiveSupport::TestCase
+class ContentViewDefinitionAuthorizationReadonlyTest < ActiveSupport::TestCase
   include ContentViewDefinitionAuthBase, AuthorizationSupportMethods
 
   def setup
@@ -137,7 +137,7 @@ class ContentViewDefinitionAuthorizationReadonlyTest < MiniTest::Rails::ActiveSu
 end
 
 # random permission
-class ContentViewDefinitionAuthorizationTest < MiniTest::Rails::ActiveSupport::TestCase
+class ContentViewDefinitionAuthorizationTest < ActiveSupport::TestCase
   include ContentViewDefinitionAuthBase, AuthorizationSupportMethods
 
   def setup

@@ -10,7 +10,7 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'minitest_helper'
+require 'test_helper'
 require 'support/auth_support'
 
 module ContentViewAuthBase
@@ -44,7 +44,7 @@ module ContentViewAuthBase
   end
 end
 
-class ContentViewAuthorizationAdminTest < MiniTest::Rails::ActiveSupport::TestCase
+class ContentViewAuthorizationAdminTest < ActiveSupport::TestCase
   include ContentViewAuthBase
 
   def setup
@@ -71,7 +71,7 @@ class ContentViewAuthorizationAdminTest < MiniTest::Rails::ActiveSupport::TestCa
 
 end
 
-class ContentViewAuthorizationNoAuthTest < MiniTest::Rails::ActiveSupport::TestCase
+class ContentViewAuthorizationNoAuthTest < ActiveSupport::TestCase
   include ContentViewAuthBase
 
   def setup
@@ -94,7 +94,7 @@ class ContentViewAuthorizationNoAuthTest < MiniTest::Rails::ActiveSupport::TestC
   end
 end
 
-class ContentViewAuthorizationSinglePermTest < MiniTest::Rails::ActiveSupport::TestCase
+class ContentViewAuthorizationSinglePermTest < ActiveSupport::TestCase
   include ContentViewAuthBase
 
   def setup
