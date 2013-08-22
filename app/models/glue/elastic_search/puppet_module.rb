@@ -18,6 +18,7 @@ module Glue::ElasticSearch::PuppetModule
         {
           "_type"             => :puppet_module,
           "name_autocomplete" => name,
+          "author_autocomplete" => author,
           "sortable_version"  => sortable_version
         }
       end
@@ -49,6 +50,24 @@ module Glue::ElasticSearch::PuppetModule
 
       def self.index
         "#{Katello.config.elastic_index}_puppet_module"
+      end
+
+      def self.autocomplete_name(query, repoids = nil, page_size = 15)
+        return [] if !Tire.index(self.index).exists?
+
+        query = autocomplete_field_query("name", query)
+        field_search(query, :name, repoids, page_size)
+      end
+
+      def self.autocomplete_author(query, repoids = nil, page_size = 15, name = nil)
+        return [] if !Tire.index(self.index).exists?
+
+        query = autocomplete_field_query("author", query)
+        if name.present?
+          query += " AND #{autocomplete_field_query("name", name)}"
+        end
+
+        field_search(query, :author, repoids, page_size)
       end
 
       def self.id_search(ids)
@@ -125,6 +144,29 @@ module Glue::ElasticSearch::PuppetModule
             import puppet_modules
           end
         end
+      end
+
+      private
+
+      def self.field_search(query, field, repoids=nil, page_size=15)
+        search = Tire.search(self.index) do
+          fields [field]
+          query do
+            string query
+          end
+
+          if repoids
+            filter :terms, :repoids => repoids
+          end
+        end
+
+        return search.results.map(&field).uniq[0, page_size.to_i]
+      end
+
+      def self.autocomplete_field_query(field, value)
+        value = "*" if value.blank?
+        value = Util::Search.filter_input(value)
+        "#{field}_autocomplete:(#{value})"
       end
 
     end
