@@ -24,7 +24,8 @@ angular.module('Bastion.systems', [
     'alch-templates',
     'ui.compat',
     'Bastion.widgets',
-    'Bastion.subscriptions'
+    'Bastion.subscriptions',
+    'Bastion.system-groups',
 ]);
 
 /**

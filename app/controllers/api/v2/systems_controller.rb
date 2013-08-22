@@ -33,4 +33,22 @@ class Api::V2::SystemsController < Api::V1::SystemsController
     super
   end
 
+  api :GET, "/systems/:id", "Show a system"
+  param :id, String, :desc => "UUID of the system", :required => true
+  def show
+    @system_groups = @system.system_groups
+    respond
+  end
+
+  api :POST, "/systems/:id/system_groups", "Replace existing list of system groups"
+  param :system, Hash, :required => true do
+    param :system_group_ids, Array, :desc => "List of group ids the system belongs to", :required => true
+  end
+  def add_system_groups
+    ids = params[:system][:system_group_ids] || []
+    @system.system_group_ids = ids.uniq
+    @system.save!
+    respond_for_create
+  end
+
 end

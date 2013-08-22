@@ -13,7 +13,7 @@
 
 /**
  * @ngdoc factory
- * @name  Katello.system-groups.factory:SystemGroups
+ * @name  Katello.system-groups.factory:SystemGroup
  *
  * @requires $resource
  * @requires Routes
@@ -22,10 +22,8 @@
  * @description
  *   Provides a $resource for system groups.
  */
-angular.module('Katello.system-groups').factory('SystemGroups',
+angular.module('Bastion.system-groups').factory('SystemGroup',
     ['$resource', 'Routes', 'CurrentOrganization', function($resource, Routes, CurrentOrganization) {
-        var SystemGroups = $resource(Routes.api_organization_system_groups_path(CurrentOrganization) + '/:systemGroupId',
-                            {systemGroupId: '@systemGroupId'});
-
-        return SystemGroups;
+        return $resource(Routes.apiOrganizationSystemGroupsPath(CurrentOrganization) + '/:systemGroupId',
+            {systemGroupId: '@systemGroupId'});
 }]);

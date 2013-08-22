@@ -18,4 +18,4 @@
  * @description
  *   Module for system groups related functionality.
  */
-angular.module('Katello.system-groups', ['ngResource']);
+angular.module('Bastion.system-groups', ['ngResource', 'Bastion.utils']);

@@ -14,6 +14,10 @@ node :releaseVer do |sys|
   sys.releaseVer.is_a?(Hash) ? sys.releaseVer[:releaseVer] : sys.releaseVer
 end
 
+child :system_groups => :systemGroups do
+  attributes :id, :name
+end
+
 child :environment => :environment do
   extends 'api/v2/environments/show'
 end

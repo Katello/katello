@@ -18,14 +18,15 @@
  * @requires $scope
  * @requires $q
  * @requires System
+ * @requires SystemGroup
  * @requires ContentView
  *
  * @description
  *   Provides the functionality for the system details action pane.
  */
 angular.module('Bastion.systems').controller('SystemDetailsInfoController',
-    ['$scope', '$q', 'System', 'ContentView',
-    function($scope, $q, System, ContentView) {
+    ['$scope', '$q', 'System', 'SystemGroup', 'ContentView',
+    function($scope, $q, System, SystemGroup, ContentView) {
 
         $scope.editContentView = false;
         $scope.saveSuccess = false;
@@ -70,10 +71,32 @@ angular.module('Bastion.systems').controller('SystemDetailsInfoController',
             }
         };
 
+        $scope.updateSystemGroups = function(systemGroups) {
+            var data, success, error, deferred = $q.defer();
+
+            data = {
+                system: {
+                    "system_group_ids": _.pluck(systemGroups, "id")
+                }
+            };
+
+            success = function(data) {
+                deferred.resolve(data);
+            };
+            error = function(error) {
+                deferred.reject(error.data["errors"]);
+                $scope.saveError = true;
+                $scope.errors = error.data["errors"];
+            };
+
+            System.saveSystemGroups({id: $scope.system.uuid}, data, success, error);
+            return deferred.promise;
+        };
+
         $scope.releaseVersions = function() {
             var deferred = $q.defer();
 
-            System.releaseVersions({ id: $scope.$stateParams.systemId }, function(response) {
+            System.releaseVersions({ id: $scope.system.uuid }, function(response) {
                 deferred.resolve(response);
             });
 
@@ -89,6 +112,17 @@ angular.module('Bastion.systems').controller('SystemDetailsInfoController',
 
             return deferred.promise;
         };
+
+        $scope.systemGroups = function() {
+            var deferred = $q.defer();
+
+            SystemGroup.query(function(systemGroups) {
+                deferred.resolve(systemGroups);
+            });
+
+            return deferred.promise;
+        };
+
 
         // TODO upgrade to Angular 1.1.4 so we can move this into a directive
         // and use dynamic templates (http://code.angularjs.org/1.1.4/docs/partials/guide/directive.html)

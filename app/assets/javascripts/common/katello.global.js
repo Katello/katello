@@ -20,6 +20,8 @@ var i18n = {};
 //Setup underscorejs
 KT.utils = _.noConflict();
 
+_ = KT.utils;
+
 function localize(data) {
     for (var key in data) {
         if(data.hasOwnProperty(key)) {

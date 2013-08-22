@@ -98,10 +98,16 @@
       </div>
 
       <div class="detail">
+        <span class="info-label">{{ "System Groups" | i18n }}</span>
+        <span class="info-value" alch-edit-multiselect="system.systemGroups"
+              options="systemGroups()" on-save="updateSystemGroups(value)"></span>
+      </div>
+      
+      <div class="detail">
         <span class="info-label">{{ "Arch" | i18n }}</span>
         <span class="info-value">{{ system.arch }}</span>
-      </div>
-
+      </div>     
+      
       <div class="detail">
         <span class="info-label">{{ "Number of CPUs" | i18n }}</span>
         <span class="info-value">{{ systemFacts.cpu["cpu(s)"] }}</span>
