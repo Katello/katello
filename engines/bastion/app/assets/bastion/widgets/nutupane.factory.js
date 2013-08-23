@@ -42,11 +42,12 @@
  */
 angular.module('Bastion.widgets').factory('Nutupane',
     ['$location', '$q', '$timeout', function($location, $q, $timeout) {
-        var Nutupane = function(resource, params) {
+        var Nutupane = function(resource, params, action) {
             var self = this;
             params = params || {};
 
             self.table = {
+                action: action || 'query',
                 params: params,
                 resource: resource,
                 rows: [],
@@ -64,7 +65,7 @@ angular.module('Bastion.widgets').factory('Nutupane',
                 table.working = true;
                 params.offset = table.rows.length;
                 params.search = table.searchTerm || "";
-                resource.query(params, function(response) {
+                resource[table.action](params, function(response) {
                     table.rows = table.rows.concat(response.results);
                     // This $timeout is necessary to cause a digest cycle
                     // in order to prevent loading two sets of results.

@@ -28,6 +28,7 @@ describe('Factory: Nutupane', function() {
                 }
                 return result;
             },
+            customAction: function(){},
             total: 10,
             subtotal: 8,
             offset: 5,
@@ -44,7 +45,7 @@ describe('Factory: Nutupane', function() {
         Nutupane = _Nutupane_;
     }));
 
-    describe("adds addiontional functionality to the Nutupane table by", function() {
+    describe("adds additional functionality to the Nutupane table by", function() {
         var nutupane;
 
         beforeEach(function() {
@@ -159,6 +160,20 @@ describe('Factory: Nutupane', function() {
                 nutupane.table.sortBy({id: "name"});
                 expect(nutupane.query).toHaveBeenCalled();
             });
+        });
+    });
+
+    describe("recognizes custom actions by", function() {
+        beforeEach(function() {
+            nutupane = new Nutupane(Resource, {}, 'customAction');
+            nutupane.table.working = false;
+        });
+
+        it("providing a method to fetch records for the table", function() {
+            spyOn(Resource, 'customAction');
+            nutupane.query();
+
+            expect(Resource.customAction).toHaveBeenCalled();
         });
     });
 
