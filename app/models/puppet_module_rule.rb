@@ -30,7 +30,7 @@ class PuppetModuleRule < FilterRule
       filters = []
       filters << version_filter(unit)
       filters << author_filter(unit)
-      filters.compact
+      filters.compact!
 
       results = PuppetModule.search(unit[:name], :page_size => repo.puppet_module_count, :repoids => [repo.pulp_id],
                                     :filters => filters).map(&:_id).compact
