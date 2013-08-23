@@ -85,7 +85,7 @@ class SyncPlansController < ApplicationController
     updated_plan.save!
     notify.success N_("Sync Plan '%s' was updated.") % updated_plan.name
 
-    if not search_validate(SyncPlan, updated_plan.id, params[:search])
+    if !search_validate(SyncPlan, updated_plan.id, params[:search])
       notify.message _("'%s' no longer matches the current search criteria.") % updated_plan["name"]
     end
 

@@ -302,7 +302,7 @@ class ChangesetsController < ApplicationController
   def update_artifacts_valid?
     if params.has_key?(:data)
       params[:data].each do |item|
-        return false if not update_item_valid?(item["type"], item["item_id"])
+        return false if !update_item_valid?(item["type"], item["item_id"])
       end
     end
     true

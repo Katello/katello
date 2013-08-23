@@ -168,7 +168,7 @@ class UsersController < ApplicationController
     attr = params[:user].first.last if params[:user].first
     attr ||= ""
 
-    if not search_validate(User, user.id, params[:search], :username)
+    if !search_validate(User, user.id, params[:search], :username)
       notify.message _("'%s' no longer matches the current search criteria.") % @user.username
     end
 
@@ -277,7 +277,7 @@ class UsersController < ApplicationController
     if  @user.update_attributes(params[:user])
       notify.success _("User updated successfully.")
 
-      if not search_validate(User, @user.id, params[:search], :username)
+      if !search_validate(User, @user.id, params[:search], :username)
         notify.message _("'%s' no longer matches the current search criteria.") % @user.username
       end
 

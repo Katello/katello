@@ -32,17 +32,16 @@ module Glue::Pulp::Errata
 
       def self.find(id)
         erratum_attrs = Katello.pulp_server.extensions.errata.find_by_unit_id(id)
-        ::Errata.new(erratum_attrs) if not erratum_attrs.nil?
+        ::Errata.new(erratum_attrs) if !erratum_attrs.nil?
       end
 
       def self.find_by_errata_id(id)
         erratum_attrs = Katello.pulp_server.extensions.errata.find(id)
-        ::Errata.new(erratum_attrs) if not erratum_attrs.nil?
+        ::Errata.new(erratum_attrs) if !erratum_attrs.nil?
       end
 
       def self.list_by_filter_clauses(clauses)
-        errata = Katello.pulp_server.extensions.errata.search(::Errata::CONTENT_TYPE,
-                                :filters => clauses)
+        errata = Katello.pulp_server.extensions.errata.search(::Errata::CONTENT_TYPE, :filters => clauses)
         if errata
           errata.collect do |attrs|
             ::Errata.new(attrs) if attrs

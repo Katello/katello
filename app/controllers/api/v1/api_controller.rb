@@ -79,7 +79,7 @@ class Api::V1::ApiController < Api::ApiController
   end
 
   def organization_id
-    key = organization_id_keys.find { |k| not params[k].nil? }
+    key = organization_id_keys.find { |k| !params[k].nil? }
     return params[key]
   end
 

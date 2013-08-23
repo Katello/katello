@@ -151,7 +151,7 @@ class ProvidersController < ApplicationController
     updated_provider.save!
     notify.success _("Provider '%s' was updated.") % updated_provider.name
 
-    if not search_validate(Provider, updated_provider.id, params[:search])
+    if !search_validate(Provider, updated_provider.id, params[:search])
       notify.message _("'%s' no longer matches the current search criteria.") % updated_provider["name"]
     end
 

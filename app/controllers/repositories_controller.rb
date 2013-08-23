@@ -49,7 +49,7 @@ class RepositoriesController < ApplicationController
   def edit
     render :partial => "edit",
            :locals=>{
-               :editable=> (@product.editable? and not @repository.promoted?),
+               :editable=> (@product.editable? and !@repository.promoted?),
                :cloned_in_environments => @repository.product.environments.select {|env| @repository.is_cloned_in?(env)}.map(&:name)
            }
   end

@@ -27,7 +27,7 @@ class Pool < ActiveRecord::Base
   # prior to this call the pool was already fetched.
   def self.find_pool(cp_id, pool_json=nil)
     pool_json = Resources::Candlepin::Pool.find(cp_id) if !pool_json
-    ::Pool.new(pool_json) if not pool_json.nil?
+    ::Pool.new(pool_json) if !pool_json.nil?
   end
 
   # Some fields are are not native to the Candlepin object but are useful for searching

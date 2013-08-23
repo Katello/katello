@@ -136,7 +136,7 @@ class ContentViewDefinitionsController < ApplicationController
 
     notify.success _("Content view definition '%s' was updated.") % @view_definition["name"]
 
-    if not search_validate(ContentViewDefinition, @view_definition.id, params[:search])
+    if !search_validate(ContentViewDefinition, @view_definition.id, params[:search])
       notify.message _("'%s' no longer matches the current search criteria.") % @view_definition["name"]
     end
 

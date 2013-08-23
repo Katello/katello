@@ -168,7 +168,7 @@ class User < ActiveRecord::Base
 
   def disable_helptip(key)
     return if !self.helptips_enabled? #don't update helptips if user has it disabled
-    return if not HelpTip.where(:key => key, :user_id => self.id).empty?
+    return if !HelpTip.where(:key => key, :user_id => self.id).empty?
     help      = HelpTip.new
     help.key  = key
     help.user = self
@@ -226,7 +226,7 @@ class User < ActiveRecord::Base
   end
 
   def create_or_update_default_system_registration_permission
-    return if default_environment.nil? || (not default_environment.changed?)
+    return if default_environment.nil? || !default_environment.changed?
     own_role.create_or_update_default_system_registration_permission(default_environment.organization, default_environment)
   end
 

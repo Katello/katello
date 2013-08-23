@@ -19,7 +19,7 @@ module Authorization::Enforcement
       # on the current logged user. The class attribute User.current must be set!
       def self.allowed_all_tags?(verb, resource_type = nil, org = nil)
         u = User.current
-        raise Errors::UserNotSet, "current user is not set" if u.nil? || (not u.is_a?(User))
+        raise Errors::UserNotSet, "current user is not set" if u.nil? || !u.is_a?(User)
         u.allowed_all_tags?(verb, resource_type, org)
       end
 
@@ -28,7 +28,7 @@ module Authorization::Enforcement
       def self.allowed_tags_sql(verb, resource_type = nil, org = nil)
         ResourceType.check resource_type, verb
         u = User.current
-        raise Errors::UserNotSet, "current user is not set" if u.nil? || (not u.is_a?(User))
+        raise Errors::UserNotSet, "current user is not set" if u.nil? || !u.is_a?(User)
         u.allowed_tags_sql(verb, resource_type, org)
       end
 
@@ -36,7 +36,7 @@ module Authorization::Enforcement
       # on the current logged user. The class attribute User.current must be set!
       def self.allowed_to?(verb, resource_type, tags = nil, org = nil, any_tags = false)
         u = User.current
-        raise Errors::UserNotSet, "current user is not set" if u.nil? || (not u.is_a?(User))
+        raise Errors::UserNotSet, "current user is not set" if u.nil? || !u.is_a?(User)
         u.allowed_to?(verb, resource_type, tags, org, any_tags)
       end
 
@@ -44,7 +44,7 @@ module Authorization::Enforcement
       # SecurityViolation exception leading to the denial page.
       def self.allowed_to_or_error?(verb, resource_type, tags = nil, org = nil, any_tags = false)
         u = User.current
-        raise Errors::UserNotSet, "current user is not set" if u.nil? || (not u.is_a?(User))
+        raise Errors::UserNotSet, "current user is not set" if u.nil? || !u.is_a?(User)
         unless u.allowed_to?(verb, resource_type, tags, org, any_tags)
           msg = "User #{u.username} is not allowed to #{verb} in #{resource_type} using #{tags}"
           Rails.logger.error msg

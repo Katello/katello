@@ -281,7 +281,7 @@ class DistributorsController < ApplicationController
     @distributor.update_attributes!(params[:distributor])
     notify.success _("Distributor '%s' was updated.") % @distributor["name"]
 
-    if not search_validate(Distributor, @distributor.id, params[:search])
+    if !search_validate(Distributor, @distributor.id, params[:search])
       notify.message _("'%s' no longer matches the current search criteria.") % @distributor["name"],
                      :asynchronous => false
     end

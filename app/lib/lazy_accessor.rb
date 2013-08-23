@@ -70,7 +70,7 @@ module LazyAccessor
           attr = symbol.to_s
 
           excepted = options.has_key?(:unless) ? self.instance_eval(&options[:unless]) : new_record?
-          if !instance_variable_defined?("@#{attr}") && (not excepted)
+          if !instance_variable_defined?("@#{attr}") && !excepted
             remote_values = run_initializer(args.size > 1, initializer)
             if args.size > 1
               prepopulate(remote_values)

@@ -93,7 +93,7 @@ class Api::V1::RepositoriesController < Api::V1::ApiController
     #
     # TODO: these should really be done as validations, but the orchestration engine currently converts them into OrchestrationExceptions
     #
-    raise HttpErrors::BadRequest, _("Repositories can be deleted only in the '%s' environment.") % "Library" if not @repository.environment.library?
+    raise HttpErrors::BadRequest, _("Repositories can be deleted only in the '%s' environment.") % "Library" if !@repository.environment.library?
     raise HttpErrors::BadRequest, _("Repository cannot be deleted since it has already been promoted. Using a changeset, please delete the repository from existing environments before deleting it.") if @repository.promoted?
 
     @repository.destroy
@@ -105,7 +105,7 @@ class Api::V1::RepositoriesController < Api::V1::ApiController
   param :enable, :bool, :required => true, :desc => "flag that enables/disables the repository"
   api_version "v1"
   def enable
-    raise HttpErrors::NotFound, _("Disable/enable is not supported for custom repositories.") if not @repository.redhat?
+    raise HttpErrors::NotFound, _("Disable/enable is not supported for custom repositories.") if !@repository.redhat?
 
     @repository.enabled = query_params[:enable]
     @repository.save!
@@ -152,7 +152,7 @@ Pulp doesn't send correct headers."
   def package_groups
     #translate group_id to id in search params (conflict with repo id used for routing)
     search_attrs = params.slice(:name)
-    search_attrs[:id] = params[:group_id] if not params[:group_id].nil?
+    search_attrs[:id] = params[:group_id] if !params[:group_id].nil?
 
     respond_for_index :collection => @repository.package_groups_search(search_attrs)
   end
@@ -162,7 +162,7 @@ Pulp doesn't send correct headers."
   def package_group_categories
     #translate category_id to id in search params (conflict with repo id used for routing)
     search_attrs = params.slice(:name)
-    search_attrs[:id] = params[:category_id] if not params[:category_id].nil?
+    search_attrs[:id] = params[:category_id] if !params[:category_id].nil?
 
     respond_for_index :collection => @repository.package_group_categories(search_attrs)
   end

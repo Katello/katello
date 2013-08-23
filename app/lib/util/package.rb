@@ -66,9 +66,9 @@ module Util
 
     def self.build_nvrea(package, include_zero_epoch=true)
       nvrea = package[:name] +'-'+ package[:version] +'-'+ package[:release]
-      nvrea = nvrea +'.'+ package[:arch] if not package[:arch].nil?
-      nvrea = nvrea +'.'+ package[:suffix] if not package[:suffix].nil?
-      if not package[:epoch].nil?
+      nvrea = nvrea +'.'+ package[:arch] if !package[:arch].nil?
+      nvrea = nvrea +'.'+ package[:suffix] if !package[:suffix].nil?
+      if !package[:epoch].nil?
         nvrea = package[:epoch] +':'+ nvrea if package[:epoch].to_i != 0 || include_zero_epoch
       end
       nvrea
@@ -122,7 +122,7 @@ module Util
       packages = packages.split(/ *, */ )
 
       packages.each{ |package_name|
-        if not valid_package_name_format(package_name).nil?
+        if !valid_package_name_format(package_name).nil?
           return false
         end
       }

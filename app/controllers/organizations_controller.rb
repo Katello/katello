@@ -162,7 +162,7 @@ class OrganizationsController < ApplicationController
     @organization.save!
     notify.success _("Organization '%s' was updated.") % @organization["name"]
 
-    if not search_validate(Organization, @organization.id, params[:search])
+    if !search_validate(Organization, @organization.id, params[:search])
       notify.message _("'%s' no longer matches the current search criteria.") % @organization["name"],
                      :asynchronous => false
     end

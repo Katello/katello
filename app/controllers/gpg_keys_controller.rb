@@ -129,7 +129,7 @@ class GpgKeysController < ApplicationController
 
     notify.success _("GPG Key '%s' was updated.") % @gpg_key["name"], :asynchronous => file_uploaded
 
-    if not search_validate(GpgKey, @gpg_key.id, params[:search])
+    if !search_validate(GpgKey, @gpg_key.id, params[:search])
       notify.message _("'%s' no longer matches the current search criteria.") % @gpg_key["name"], :asynchronous => false
     end
 

@@ -146,7 +146,7 @@ class RolesController < ApplicationController
       @role.update_attributes!(params[:role])
       notify.success _("Role '%s' was updated.") % @role.name
 
-      if not search_validate(Role, @role.id, params[:search])
+      if !search_validate(Role, @role.id, params[:search])
         notify.message _("'%s' no longer matches the current search criteria.") % @role["name"],
                        :asynchronous => false
       end
