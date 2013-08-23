@@ -519,7 +519,7 @@ KT.content_view_definition_filters = (function(){
             disable_version_selector(version_selector);
             disable_author_input(version_selector);
 
-            parameter_name = $(this).closest('tr').find('td.parameter_name').find('.parameter_checkbox').data('id');
+            parameter_name = $(this).closest('tr').find('.parameter_checkbox').data('id');
 
             type = version_selector.find('.version_type').val();
             if (type === 'version') {
@@ -536,7 +536,7 @@ KT.content_view_definition_filters = (function(){
 
             parameters = { 'parameter':
                              { 'unit' :
-                                 { 'name' : $(this).closest('tr').find('td.parameter_name').find('.parameter_checkbox').data('id'),
+                                 { 'name' : parameter_name,
                                    'version' : version,
                                    'min_version' : min_version,
                                    'max_version' : max_version
