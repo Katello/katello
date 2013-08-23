@@ -264,7 +264,7 @@ module Glue::Candlepin::Product
 
     def set_unlimited_subscription
       # we create unlimited subscriptions only for generic yum providers
-      if self.provider and self.provider.yum_repo?
+      if self.provider && self.provider.yum_repo?
         Rails.logger.debug "Creating unlimited subscription for product #{name} in candlepin"
         Resources::Candlepin::Product.create_unlimited_subscription self.organization.label, self.cp_id
       end
@@ -276,7 +276,7 @@ module Glue::Candlepin::Product
 
     def del_unlimited_subscription
       # we create unlimited subscriptions only for generic yum providers
-      if self.provider and self.provider.yum_repo?
+      if self.provider && self.provider.yum_repo?
         self.del_subscriptions
       end
     end

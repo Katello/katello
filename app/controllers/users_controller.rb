@@ -248,7 +248,9 @@ class UsersController < ApplicationController
     if @user.default_environment.try(:id) == default_environment_id
       err_msg = N_("The system registration default you supplied was the same as the old system registration default.")
       notify.error err_msg
-      render(:text => err_msg, :status => 400) and return
+      if render(:text => err_msg, :status => 400)
+        return
+      end
     end
 
     raise no_env_available_msg if default_environment_id.nil? && params['org_id'].present?
@@ -281,7 +283,9 @@ class UsersController < ApplicationController
         notify.message _("'%s' no longer matches the current search criteria.") % @user.username
       end
 
-      render :nothing => true and return
+      if render :nothing => true
+        return
+      end
     end
     notify.invalid_record @user
     render :text => @user.errors, :status => :ok
@@ -337,7 +341,9 @@ class UsersController < ApplicationController
       current_user.save!
       notify.success _("Default Organization no longer selected.")
     end
-    render :text => :ok and return
+    if render :text => :ok
+      return
+    end
   end
 
   private

@@ -314,7 +314,9 @@ class DistributorsController < ApplicationController
     if distributor.destroyed?
       notify.success _("%s Removed Successfully") % distributor.name
       #render and do the removal in one swoop!
-      render :partial => "common/list_remove", :locals => {:id => id, :name=>controller_display_name} and return
+      if render :partial => "common/list_remove", :locals => {:id => id, :name=>controller_display_name}
+        return
+      end
     end
     notify.invalid_record distributor
     render :text => @distributor.errors, :status=>:ok

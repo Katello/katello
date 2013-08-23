@@ -41,7 +41,7 @@ class ActivationKey < ActiveRecord::Base
   validate :environment_key_conflict
   validates :content_view, :presence => true, :allow_blank => false
   validates_each :usage_limit do |record, attr, value|
-    if !value.nil? and (value < -1 || value == 0 || (value != -1 and value < record.usage_count))
+    if !value.nil? && (value < -1 || value == 0 || (value != -1 && value < record.usage_count))
       # we don't let users to set usage limit lower than current usage
       record.errors[attr] << _("must be higher than current usage (%s) or unlimited" % record.usage_count)
     end
@@ -70,7 +70,7 @@ class ActivationKey < ActiveRecord::Base
 
   # sets up system when registering with this activation key - must be executed in a transaction
   def apply_to_system(system)
-    if !usage_limit.nil? and usage_limit != -1 and usage_count >= usage_limit
+    if !usage_limit.nil? && usage_limit != -1 && usage_count >= usage_limit
       raise Errors::UsageLimitExhaustedException, _("Usage limit (%{limit}) exhausted for activation key '%{name}'") % {:limit => usage_limit, :name => name}
     end
     system.environment_id = self.environment_id if self.environment_id

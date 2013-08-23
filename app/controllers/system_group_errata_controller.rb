@@ -67,7 +67,9 @@ class SystemGroupErrataController < ApplicationController
   rescue Errors::SystemGroupEmptyException => e
     notify.error _("Install of Errata '%{errata}' scheduled for System Group '%{group}' failed.  Reason: %{message}") % {:errata => params[:errata_ids], :group => @group.name, :message => e.message}
 
-    render :text => '' and return
+    if render :text => ''
+      return
+    end
   end
 
   def errata_status

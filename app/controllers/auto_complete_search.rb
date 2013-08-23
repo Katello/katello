@@ -30,7 +30,7 @@ module AutoCompleteSearch
 
     # search provides the ability to pass a filter parameter in the request... on pages that have the
     # environment selector, we use this filter to communicate which environment the results should be provided for...
-    if !params[:filter].nil? and eval(controller_name.singularize.camelize).respond_to?('by_env')
+    if !params[:filter].nil? && eval(controller_name.singularize.camelize).respond_to?('by_env')
       @items = eval(controller_name.singularize.camelize).readable(@readable_by).by_env(params[:filter]).complete_for(params[:search], @filter)
     else
       @items = eval(controller_name.singularize.camelize).readable(@readable_by).complete_for(params[:search], @filter)

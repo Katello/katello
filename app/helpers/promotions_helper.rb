@@ -20,9 +20,9 @@ module PromotionsHelper
 
   #returns a proc to generate a url for the env_selector
   def breadcrumb_url_proc
-    lambda{|args|
+    lambda { |args|
       promotion_path(args[:environment].name,
-            :next_env_id=>(args[:next_environment].id if args[:next_environment] and args[:environment].library?))
+        :next_env_id => (args[:next_environment].id if args[:next_environment] && args[:environment].library?))
     }
   end
 

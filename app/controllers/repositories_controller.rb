@@ -49,7 +49,7 @@ class RepositoriesController < ApplicationController
   def edit
     render :partial => "edit",
            :locals=>{
-               :editable=> (@product.editable? and !@repository.promoted?),
+               :editable=> (@product.editable? && !@repository.promoted?),
                :cloned_in_environments => @repository.product.environments.select {|env| @repository.is_cloned_in?(env)}.map(&:name)
            }
   end
@@ -60,7 +60,7 @@ class RepositoriesController < ApplicationController
 
     raise HttpErrors::BadRequest, _("Repository can be only created for custom provider.") unless @product.custom?
 
-    gpg = GpgKey.readable(current_organization).find(repo_params[:gpg_key]) if repo_params[:gpg_key] and repo_params[:gpg_key] != ""
+    gpg = GpgKey.readable(current_organization).find(repo_params[:gpg_key]) if repo_params[:gpg_key] && repo_params[:gpg_key] != ""
     # Bundle these into one call, perhaps move to Provider
 
     repo_params[:unprotected] ||= false

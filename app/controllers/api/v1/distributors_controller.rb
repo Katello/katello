@@ -210,7 +210,11 @@ class Api::V1::DistributorsController < Api::V1::ApiController
     distributor_report.rename_column("custom_info", "custom info")
 
     respond_to do |format|
-      format.html { render :text => distributor_report.as(:html), :type => :html and return }
+      format.html do
+        if render :text => distributor_report.as(:html), :type => :html
+          return
+        end
+      end
       format.text { render :text => distributor_report.as(:text, :ignore_table_width => true) }
       format.csv { render :text => distributor_report.as(:csv) }
       format.pdf do
@@ -269,7 +273,9 @@ class Api::V1::DistributorsController < Api::V1::ApiController
           raise HttpErrors::BadRequest, _("Organization %s has more than one environment. Please specify target environment for distributor registration.") % @organization.name
         end
       else
-        @environment = @organization.environments.first and return
+        if @environment = @organization.environments.first
+          return
+        end
       end
     end
   end

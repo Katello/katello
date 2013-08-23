@@ -13,7 +13,11 @@
 module Validators
   class OwnRolePresenceValidator < ActiveModel::Validator
     def validate(record)
-      record.errors[:roles] << _("Own Role must be included in roles '%s'") % record.roles and return unless record.roles.any? {|r| r.type == 'UserOwnRole'}
+      unless record.roles.any? {|r| r.type == 'UserOwnRole'}
+        if record.errors[:roles] << _("Own Role must be included in roles '%s'") % record.roles
+          return
+        end
+      end
     end
   end
 end

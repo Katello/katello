@@ -36,7 +36,7 @@ end
 
 class Warden::SessionSerializer
   def serialize(user)
-    raise ArgumentError, "Cannot serialize invalid user object: #{user}" if !(user.is_a?(User) and user.id.is_a?(Integer))
+    raise ArgumentError, "Cannot serialize invalid user object: #{user}" if !(user.is_a?(User) && user.id.is_a?(Integer))
     user.id
   end
 

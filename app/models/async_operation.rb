@@ -52,7 +52,7 @@ AsyncOperation = Struct.new(:status_id, :username, :object, :method_name, :args)
     # deliver; otherwise, invoke the method exactly as provided by the user.  Although this seems a bit odd, this is
     # essentially how the delayed job gem would also send mail, if we were using it directly.
 
-    if object.class == Class and object.superclass == ActionMailer::Base
+    if object.class == Class && object.superclass == ActionMailer::Base
       @result = object.send(method_name, *args).deliver.to_s
     elsif object
       @result = object.send(method_name, *args)

@@ -20,7 +20,7 @@ class UserNotice < ActiveRecord::Base
     return true if operation == :create
     # only notice owner can update or destroy
     if operation == :update || operation == :destroy
-      return true if user.id and User.current and user.id == User.current.id
+      return true if user.id && User.current && user.id == User.current.id
     end
     false
   end

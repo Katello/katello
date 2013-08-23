@@ -44,7 +44,9 @@ class SystemPackagesController < ApplicationController
                            { :s => @system['name'], :p => params[:packages] }
       else
         notify.error _("One or more errors found in Package names '%s'.") % params[:packages]
-        render :text => '' and return
+        if render :text => ''
+          return
+        end
       end
 
     elsif !params[:groups].blank?
@@ -56,7 +58,9 @@ class SystemPackagesController < ApplicationController
     else
       notify.error _("Empty request received to install Packages or Package Groups for System '%s'.") %
                        @system['name']
-      render :text => '' and return
+      if render :text => ''
+        return
+      end
     end
 
     render :text => task.id
@@ -80,7 +84,9 @@ class SystemPackagesController < ApplicationController
                            { :s => @system['name'], :p => params[:packages] }
       else
         notify.error _("One or more errors found in Package names '%s'.") % params[:packages]
-        render :text => '' and return
+        if render :text => ''
+          return
+        end
       end
 
     elsif !params[:groups].blank?
@@ -92,7 +98,9 @@ class SystemPackagesController < ApplicationController
     else
       notify.error _("Empty request received to uninstall Packages or Package Groups for System '%s'.") %
                        @system['name']
-      render :text => '' and return
+      if render :text => ''
+        return
+      end
     end
 
     render :text => task.id

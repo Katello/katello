@@ -56,7 +56,7 @@ module Katello::UrlConstrainedCookieStoreV32X
 
     if !data = set_session(env, session_id, session, options)
       env["rack.errors"].puts("Warning! #{self.class.name} failed to save session. Content dropped.")
-    elsif options[:defer] and !options[:renew]
+    elsif options[:defer] && !options[:renew]
       env["rack.errors"].puts("Defering cookie for #{session_id}") if $VERBOSE
     else
       cookie = create_cookie(ActionDispatch::Request.new(env), data, options)

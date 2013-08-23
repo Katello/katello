@@ -13,12 +13,14 @@
 module Validators
   class ChangesetPackageValidator < ActiveModel::Validator
     def validate(record)
-      record.errors[:base] << _("Package '%s' doesn't belong to the specified product!") %
-          record.package_id and return if record.repositories.empty?
+      if record.repositories.empty?
+        if record.errors[:base] << _("Package '%s' doesn't belong to the specified product!") % record.package_id
+          return
+        end
+      end
 
-      if record.changeset.action_type == Changeset::PROMOTION
-        record.errors[:base] << _("Repository of the package '%s' has not been promoted into the target environment!") %
-            record.package_id if record.promotable_repositories.empty?
+      if record.changeset.action_type == Changeset::PROMOTION && record.promotable_repositories.empty?
+        record.errors[:base] << _("Repository of the package '%s' has not been promoted into the target environment!") % record.package_id
       end
     end
   end

@@ -381,7 +381,9 @@ class SystemsController < ApplicationController
     if system.destroyed?
       notify.success _("%s Removed Successfully") % system.name
       #render and do the removal in one swoop!
-      render :partial => "common/list_remove", :locals => {:id => id, :name=>controller_display_name} and return
+      if render :partial => "common/list_remove", :locals => {:id => id, :name=>controller_display_name}
+        return
+      end
     end
     notify.invalid_record system
     render :text => @system.errors, :status=>:ok
@@ -409,7 +411,7 @@ class SystemsController < ApplicationController
       @system_groups.each do |system_group|
         if !system_group.editable?
           invalid_perms.push(system_group.name)
-        elsif (system_group.max_systems != SystemGroup::UNLIMITED_SYSTEMS) and ((system_group.systems.length + @systems.length) > system_group.max_systems)
+        elsif (system_group.max_systems != SystemGroup::UNLIMITED_SYSTEMS) && ((system_group.systems.length + @systems.length) > system_group.max_systems)
           max_systems_exceeded.push(system_group.name)
         end
       end
@@ -486,9 +488,11 @@ class SystemsController < ApplicationController
     successful_systems = []
     failed_systems = []
 
-    if params[:packages].blank? and params[:groups].blank?
+    if params[:packages].blank? && params[:groups].blank?
       notify.error _("Systems Bulk Action: No package or package group names have been provided.")
-      render :nothing => true and return
+      if render :nothing => true
+        return
+      end
     end
 
     if !params[:packages].blank?
@@ -554,9 +558,11 @@ class SystemsController < ApplicationController
     successful_systems = []
     failed_systems = []
 
-    if params[:packages].blank? and params[:groups].blank?
+    if params[:packages].blank? && params[:groups].blank?
       notify.error _("Systems Bulk Action: No package or package group names have been provided.")
-      render :nothing => true and return
+      if render :nothing => true
+        return
+      end
     end
 
     if !params[:packages].blank?
@@ -591,7 +597,9 @@ class SystemsController < ApplicationController
 
     if params[:errata].blank?
       notify.error _("Systems Bulk Action: No errata IDs have been provided.")
-      render :nothing => true and return
+      if render :nothing => true
+        return
+      end
     else
       @systems.each do |system|
         begin
@@ -631,7 +639,9 @@ class SystemsController < ApplicationController
       @system.save!
 
       notify.success _("System '%s' was updated.") % @system["name"]
-      render :partial =>'system_group_items', :locals=>{:system_groups=>@system_groups} and return
+      if render :partial =>'system_group_items', :locals=>{:system_groups=>@system_groups}
+        return
+      end
     end
   end
 

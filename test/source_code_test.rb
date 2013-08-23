@@ -188,7 +188,7 @@ Multiple anonymous placeholders:
           check_lines doc do |line|
         line.scan(/_\((".*?"|'.*?')\)/).all? do |match|
           gettext_str = match.first
-          gettext_str !~ /#\{.*?\}/ and gettext_str.scan(/%[a-z]/).size <= 1
+          gettext_str !~ /#\{.*?\}/ && gettext_str.scan(/%[a-z]/).size <= 1
         end
       end
     end

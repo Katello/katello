@@ -430,16 +430,20 @@ class ApplicationController < ActionController::Base
 
     @paths = [[org.library]] if @paths.empty?
 
-    if @environment and !@environment.library?
+    if @environment && !@environment.library?
       @paths.each{|path|
         path.each{|env|
-          @path = path and return if env.id == @environment.id
+          if @path = path
+            return if env.id == @environment.id
+          end
         }
       }
     elsif next_env
       @paths.each{|path|
         path.each{|env|
-          @path = path and return if env.id == next_env.id
+          if @path = path
+            return if env.id == next_env.id
+          end
         }
       }
     else
@@ -674,7 +678,9 @@ class ApplicationController < ActionController::Base
     else
       notify.warning _("You must be logged in to access that page.")
       execute_after_filters
-      redirect_to new_user_session_url and return false
+      if redirect_to new_user_session_url
+        return false
+      end
     end
   end
 
@@ -683,7 +689,9 @@ class ApplicationController < ActionController::Base
     logout
     message = _("Your current organization is no longer valid. It is possible that either the organization has been deleted or your permissions revoked, please log back in to continue.")
     notify.warning message
-    redirect_to new_user_session_url and return false
+    if redirect_to new_user_session_url
+      return false
+    end
   end
 
 

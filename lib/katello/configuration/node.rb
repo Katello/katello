@@ -61,7 +61,7 @@ module Katello
       def present?(*keys)
         key, rest = keys.first, keys[1..-1]
         raise ArgumentError, 'supply at least one key' unless key
-        has_key? key and self[key] and if rest.empty?
+        has_key?(key) && self[key] && if rest.empty?
                                          true
                                        elsif Node === self[key]
                                          self[key].present?(*rest)

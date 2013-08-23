@@ -53,7 +53,9 @@ class Api::ApiController < ActionController::Base
 
   rescue => e
     logger.error "failed to authenticate API request: " << pp_exception(e)
-    head :status => HttpErrors::INTERNAL_ERROR and return false
+    if head :status => HttpErrors::INTERNAL_ERROR
+      return false
+    end
   end
 
   def request_from_katello_cli?

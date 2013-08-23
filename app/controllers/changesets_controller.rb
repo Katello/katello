@@ -93,7 +93,9 @@ class ChangesetsController < ApplicationController
 
       if @next_environment.blank?
         notify.error _("Please create at least one environment.")
-        render :nothing => true, :status => :not_acceptable and return
+        if render :nothing => true, :status => :not_acceptable
+          return
+        end
       else
         env_id = @next_environment.id
         type = Changeset::PROMOTION
@@ -124,14 +126,18 @@ class ChangesetsController < ApplicationController
       @changeset.name = params[:name]
       @changeset.save!
 
-      render :json=>{:name=> params[:name], :timestamp => @changeset.updated_at.to_i.to_s} and return
+      if render :json => {:name=> params[:name], :timestamp => @changeset.updated_at.to_i.to_s}
+        return
+      end
     end
 
     if params[:description]
       @changeset.description = params[:description]
       @changeset.save!
 
-      render :json=>{:description=> params[:description], :timestamp => @changeset.updated_at.to_i.to_s} and return
+      if render :json => {:description=> params[:description], :timestamp => @changeset.updated_at.to_i.to_s}
+        return
+      end
     end
 
     if params[:state]
@@ -139,12 +145,16 @@ class ChangesetsController < ApplicationController
       if send_changeset
         to_ret = {}
         to_ret[:changeset] = simplify_changeset(@changeset) if send_changeset
-        render :json=>to_ret, :status=>:bad_request and return
+        if render :json => to_ret, :status => :bad_request
+          return
+        end
       end
       @changeset.state = Changeset::REVIEW if params[:state] == "review"
       @changeset.state = Changeset::NEW if params[:state] == "new"
       @changeset.save!
-      render :json=>{:timestamp=>@changeset.updated_at.to_i.to_s} and return
+      if render :json => {:timestamp => @changeset.updated_at.to_i.to_s}
+        return
+      end
     end
 
     render :text => "The promotion changeset is currently under review, no modifications can occur during this phase.",

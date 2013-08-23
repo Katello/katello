@@ -92,7 +92,7 @@ class Api::V1::SyncPlansController < Api::V1::ApiController
   def update
     sync_date = params[:sync_plan][:sync_date].to_time
 
-    if !sync_date.nil? and !sync_date.kind_of?(Time)
+    if !sync_date.nil? && !sync_date.kind_of?(Time)
       raise _("Date format is incorrect.")
     end
 

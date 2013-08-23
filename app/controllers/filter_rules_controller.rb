@@ -156,7 +156,9 @@ class FilterRulesController < ApplicationController
                            {:type => FilterRule::CONTENT_OPTIONS.key(@rule.content_type),
                             :filter => @filter.name})
 
-        render :text => escape_html(result.to_s) and return
+        if render :text => escape_html(result.to_s)
+          return
+        end
       end
     end
     render :nothing => true

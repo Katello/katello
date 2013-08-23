@@ -43,7 +43,7 @@ module Glue::Candlepin::Pool
   module InstanceMethods
 
     def initialize(attrs=nil, options={})
-      if !attrs.nil? and attrs.member?('id')
+      if !attrs.nil? && attrs.member?('id')
         # initializing from cadlepin json
         load_remote_data(attrs)
         super({:cp_id => attrs['id']}, options)
