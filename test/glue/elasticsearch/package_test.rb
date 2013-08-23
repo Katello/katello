@@ -10,9 +10,9 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'minitest_helper'
+require 'test_helper'
 
-class PackageTest < MiniTest::Rails::ActiveSupport::TestCase
+class PackageTest < ActiveSupport::TestCase
   i_suck_and_my_tests_are_order_dependent!
 
   FIXTURES_FILE = File.join(Rails.root, "test", "fixtures", "elasticsearch", "packages.yml")

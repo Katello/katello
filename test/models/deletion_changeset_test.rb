@@ -12,9 +12,9 @@
 
 
 
-require 'minitest_helper'
+require 'test_helper'
 
-class DeletionChangesetTest < MiniTest::Rails::ActiveSupport::TestCase
+class DeletionChangesetTest < ActiveSupport::TestCase
   fixtures :all
 
   def self.before_suite

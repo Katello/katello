@@ -11,9 +11,9 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require "minitest_helper"
+require "test_helper"
 
-class Api::V1::ContentViewsControllerTest < MiniTest::Rails::ActionController::TestCase
+class Api::V1::ContentViewsControllerTest < ActionController::TestCase
   fixtures :all
 
   def before_suite
@@ -112,7 +112,7 @@ class Api::V1::ContentViewsControllerTest < MiniTest::Rails::ActionController::T
     assert_response :success
     content_view = assigns(:view)
     refute_nil content_view
-    assert_equal @content_view, content_view
+    assert_equal @content_view.id, content_view.id
   end
 
   test "should create a new changeset" do

@@ -13,7 +13,7 @@
 
 require "test_helper"
 
-class Api::V1::NodesControllerTest < MiniTest::Rails::ActionController::TestCase
+class Api::V1::NodesControllerTest < ActionController::TestCase
   fixtures :all
 
   def setup

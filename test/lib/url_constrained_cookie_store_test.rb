@@ -12,7 +12,7 @@
 
 require 'securerandom'
 require 'time'
-require 'minitest_helper'
+require 'test_helper'
 require File.expand_path('../../../lib/katello/url_constrained_cookie_store', __FILE__)
 
 class UrlConstrainedCookieStoreTest < ActionController::IntegrationTest

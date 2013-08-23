@@ -10,9 +10,9 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'minitest_helper'
+require 'test_helper'
 
-class AControllerTest < MiniTest::Rails::ActionController::TestCase
+class AControllerTest < ActionController::TestCase
   ERROR_MESSAGE = 'user should not see this'
 
   class AController < ApplicationController

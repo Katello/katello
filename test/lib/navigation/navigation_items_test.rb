@@ -11,9 +11,9 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 
-require 'minitest_helper'
+require 'test_helper'
 
-class NavigationItemsTest < MiniTest::Rails::ActiveSupport::TestCase
+class NavigationItemsTest < ActiveSupport::TestCase
   include Rails.application.routes.url_helpers
 
   fixtures :all

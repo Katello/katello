@@ -10,9 +10,9 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'minitest_helper'
+require 'test_helper'
 
-class Util::PackageTest < MiniTest::Rails::ActiveSupport::TestCase
+class Util::PackageTest < ActiveSupport::TestCase
 
   def test_sortable_version
     # Examples pulled from Pulp documentation

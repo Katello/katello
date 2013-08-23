@@ -15,7 +15,7 @@ require "test_helper"
 
 require 'support/fake_node_capability'
 
-class Api::V1::NodeCapabilitiesControllerTest < MiniTest::Rails::ActionController::TestCase
+class Api::V1::NodeCapabilitiesControllerTest < ActionController::TestCase
   fixtures :all
 
   def setup

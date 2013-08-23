@@ -10,12 +10,12 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'minitest_helper'
+require 'test_helper'
 require './test/support/candlepin/owner_support'
 require './test/support/user_support'
 
 
-class GlueCandlepinOwnerTestBase < MiniTest::Rails::ActiveSupport::TestCase
+class GlueCandlepinOwnerTestBase < ActiveSupport::TestCase
   extend  ActiveRecord::TestFixtures
 
   fixtures :all

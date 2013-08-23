@@ -11,9 +11,9 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 
-require 'minitest_helper'
+require 'test_helper'
 
-class NavigationMenuTest < MiniTest::Rails::ActiveSupport::TestCase
+class NavigationMenuTest < ActiveSupport::TestCase
 
   class TestMenu < Navigation::Menu
     def initialize
@@ -63,7 +63,7 @@ class NavigationMenuTest < MiniTest::Rails::ActiveSupport::TestCase
 end
 
 
-class NavigationAdditionsMenuTest < MiniTest::Rails::ActiveSupport::TestCase
+class NavigationAdditionsMenuTest < ActiveSupport::TestCase
 
 
   class TestMenu < Navigation::Menu
