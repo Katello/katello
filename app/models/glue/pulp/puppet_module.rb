@@ -24,7 +24,7 @@ module Glue::Pulp::PuppetModule
       alias_method 'id', '_id'
 
       def self.find(id)
-        attrs = Runcible::Extensions::PuppetModule.find_by_unit_id(id)
+        attrs = Katello.pulp_server.extensions.puppet_module.find_by_unit_id(id)
         ::PuppetModule.new(attrs) if not attrs.nil?
       end
     end
