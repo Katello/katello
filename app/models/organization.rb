@@ -189,24 +189,21 @@ class Organization < ActiveRecord::Base
     return task
   end
 
-  def monitor_owner_auto_attach(jobs, options = {})
-    options = { :pause => 5 }.merge(options)
-    complete = false
-    consumer_ids = []
-    while !complete
-      complete = true
+  def monitor_owner_auto_attach(jobs)
+    finished_jobs = []
+    until jobs.empty?
       jobs.each do |job|
-        if Resources::Candlepin::Job.not_finished?(Resources::Candlepin::Job.get(job["id"]))
-          complete = false
-          consumer_ids = []
-          sleep options[:pause]
-          break
-        else
-          consumer_ids << job["targetId"]
+        begin
+          unless Resources::Candlepin::Job.not_finished?(Resources::Candlepin::Job.get(job["id"]))
+            finished_jobs << job
+            jobs.delete(job)
+          end
+        rescue TimeoutError => e
+          # swallow it and keep going
         end
       end
     end
-    return consumer_ids
+    return finished_jobs.collect { |j| j["targetId"] }
   end
 
 end
