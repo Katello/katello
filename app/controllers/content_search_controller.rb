@@ -51,7 +51,8 @@ class ContentSearchController < ApplicationController
   end
 
   def index
-    render :index, :locals=>{:environments=>environment_paths(library_path_element("contents_readable?"), environment_path_element("contents_readable?"))}
+    render :index, :locals => { :environments => environment_paths(library_path_element("contents_readable?"),
+                                                                   environment_path_element("contents_readable?")) }
   end
 
   def products
@@ -65,7 +66,7 @@ class ContentSearchController < ApplicationController
                                                       :views => views,
                                                       :mode => @mode
                                                      )
-    render :json => {:rows=>(view_search.rows + product_search.rows), :name=>_("Products")}
+    render :json => { :rows => (view_search.rows + product_search.rows), :name => _("Products") }
   end
 
   def views
@@ -85,17 +86,18 @@ class ContentSearchController < ApplicationController
 
     products = repos.collect(&:product).uniq
     product_search = ContentSearch::ProductSearch.new(:products => products,
-                                                      :views=>views)
+                                                      :views => views)
     view_search = ContentSearch::ContentViewSearch.new(:name => _("Content View"),
                                                        :views => views)
     rows = view_search.rows + product_search.rows
+
     view_search.views.each do |view|
-      repo_search = ContentSearch::RepoSearch.new(:name=>_('Repositories'), :view=>view, :repos=>repos,
-                                                  :comparable => true, :mode=>@mode)
+      repo_search = ContentSearch::RepoSearch.new(:name => _('Repositories'), :view => view, :repos => repos,
+                                                  :comparable => true, :mode => @mode)
       rows.concat(repo_search.rows)
     end
 
-    render :json=>{:rows=>rows, :name=>_('Repositories')}
+    render :json => { :rows => rows, :name => _('Repositories') }
   end
 
   def packages
@@ -103,15 +105,16 @@ class ContentSearchController < ApplicationController
     product_ids = process_params(:products)
     views = process_views(process_params(:views))
     repos = process_repos(repo_ids, product_ids)
-    package_ids   = process_params(:packages)
+    package_ids = process_params(:packages)
 
     #construct a structure   view => { product => [repos] } for each view
     view_product_repo_map = view_product_repo_map(views, repos)
 
-    view_hash = ContentSearch::ContentViewSearch.new(:name=>_("Content View"), :views=>views).row_object_hash
+    view_hash = ContentSearch::ContentViewSearch.new(:name => _("Content View"), :views => views).row_object_hash
 
     rows = []
     view_product_repo_map.each do |view, product_repo_map|
+
       prod_rows = product_repo_map.collect do |product, repos|
         spanned_product_content(view, product, repos, 'package', package_ids)
       end.flatten
@@ -121,7 +124,7 @@ class ContentSearchController < ApplicationController
         rows.concat(prod_rows)
       end
     end
-    render :json => {:rows => rows, :name => _('Packages')}
+    render :json => { :rows => rows, :name => _('Packages') }
   end
 
   def view_product_repo_map(views, library_repos)
@@ -146,20 +149,22 @@ class ContentSearchController < ApplicationController
     #construct a structure   view => { product => [repos] } for each view
     view_product_repo_map = view_product_repo_map(views, repos)
 
-    view_hash = ContentSearch::ContentViewSearch.new(:name=>_("Content View"), :views=>views).row_object_hash
+    view_hash = ContentSearch::ContentViewSearch.new(:name => _("Content View"), :views => views).row_object_hash
 
     rows = []
     view_product_repo_map.each do |view, product_repo_map|
+
       prod_rows = []
       product_repo_map.each do |product, repos|
         prod_rows.concat(spanned_product_content(view, product, repos, 'errata', errata_ids))
       end
+
       if !prod_rows.empty?
         rows << view_hash[view.id]
         rows.concat(prod_rows)
       end
     end
-    render :json => {:rows => rows, :name => _('Errata')}
+    render :json => { :rows => rows, :name => _('Errata') }
   end
 
   def puppet_modules
@@ -172,135 +177,166 @@ class ContentSearchController < ApplicationController
     #construct a structure   view => { product => [repos] } for each view
     view_product_repo_map = view_product_repo_map(views, repos)
 
-    view_hash = ContentSearch::ContentViewSearch.new(:name=>_("Content View"), :views=>views).row_object_hash
+    view_hash = ContentSearch::ContentViewSearch.new(:name => _("Content View"), :views => views).row_object_hash
 
     rows = []
     view_product_repo_map.each do |view, product_repo_map|
+
       prod_rows = []
       product_repo_map.each do |product, repos|
         prod_rows.concat(spanned_product_content(view, product, repos, 'puppet_module', puppet_module_ids))
       end
+
       if !prod_rows.empty?
         rows << view_hash[view.id]
         rows.concat(prod_rows)
       end
     end
-    render :json => {:rows => rows, :name => _('Puppet Modules')}
+    render :json => { :rows => rows, :name => _('Puppet Modules') }
   end
 
   #similar to :packages, but only returns package rows with an offset for a specific repo
   def packages_items
-    repo = Repository.libraries_content_readable(current_organization).where(:id=>params[:repo_id]).first
-    view = ContentView.readable(current_organization).where(:id=>params[:view_id]).first
+    repo = Repository.libraries_content_readable(current_organization).where(:id => params[:repo_id]).first
+    view = ContentView.readable(current_organization).where(:id => params[:view_id]).first
     offset = params[:offset].try(:to_i) || 0
-    pkgs = spanned_repo_content(view, repo, 'package', process_params(:packages), params[:offset], process_search_mode, process_env_ids) || {:content_rows=>[]}
+
+    pkgs = spanned_repo_content(view, repo, 'package', process_params(:packages),
+                                params[:offset], process_search_mode, process_env_ids)
+    pkgs = { :content_rows => [] } unless pkgs
+
     meta = metadata_row(pkgs[:total], offset + pkgs[:content_rows].length,
-                        {:repo_id=>repo.id, :view_id=>view.id}, "#{view.id}_#{repo.id}", ContentSearch::RepoSearch.id(view, repo))
-    render :json=>{:rows=>(pkgs[:content_rows] + [meta])}
+                        { :repo_id => repo.id, :view_id => view.id },
+                        "#{view.id}_#{repo.id}", ContentSearch::RepoSearch.id(view, repo))
+
+    render :json => { :rows => (pkgs[:content_rows] + [meta]) }
   end
 
   # similar to :package_items but only returns package rows for content view grids
   def view_packages
-    repo = Repository.libraries_content_readable(current_organization).where(:id=>params[:repo_id]).first
+    repo = Repository.libraries_content_readable(current_organization).where(:id => params[:repo_id]).first
 
     cv_env_ids = repo.clones.map do |r|
-      {:view_id => r.content_view.id, :env_id => r.environment}
+      { :view_id => r.content_view.id, :env_id => r.environment }
     end
-    options = {:unit_type => :package,
-               :cv_env_ids => cv_env_ids,
-               :offset => params[:offset].try(:to_i) || 0}
+
+    options = { :unit_type => :package,
+                :cv_env_ids => cv_env_ids,
+                :offset => params[:offset].try(:to_i) || 0 }
+
     comparison = ContentSearch::ContentViewComparison.new(options)
-    render :json => {:rows => comparison.unit_rows + comparison.metadata_rows}
+
+    render :json => { :rows => comparison.unit_rows + comparison.metadata_rows }
   end
 
   # similar to :puppet_module_items but only returns puppet module rows for content view grids
   def view_puppet_modules
-    repo = Repository.libraries_content_readable(current_organization).where(:id=>params[:repo_id]).first
+    repo = Repository.libraries_content_readable(current_organization).where(:id => params[:repo_id]).first
 
     cv_env_ids = repo.clones.map do |r|
-      {:view_id => r.content_view.id, :env_id => r.environment}
+      { :view_id => r.content_view.id, :env_id => r.environment }
     end
-    options = {:unit_type => :puppet_module,
-               :cv_env_ids => cv_env_ids,
-               :offset => params[:offset].try(:to_i) || 0}
+
+    options = { :unit_type => :puppet_module,
+                :cv_env_ids => cv_env_ids,
+                :offset => params[:offset].try(:to_i) || 0 }
+
     comparison = ContentSearch::ContentViewComparison.new(options)
-    render :json => {:rows => comparison.unit_rows + comparison.metadata_rows}
+
+    render :json => { :rows => comparison.unit_rows + comparison.metadata_rows }
   end
 
   #similar to :errata, but only returns errata rows with an offset for a specific repo
   def errata_items
-    view = ContentView.readable(current_organization).where(:id=>params[:view_id]).first
-    repo = Repository.libraries_content_readable(current_organization).where(:id=>params[:repo_id]).first
+    view = ContentView.readable(current_organization).where(:id => params[:view_id]).first
+    repo = Repository.libraries_content_readable(current_organization).where(:id => params[:repo_id]).first
     offset = params[:offset].try(:to_i) || 0
-    errata = spanned_repo_content(view, repo, 'errata', process_params(:errata), params[:offset], process_search_mode, process_env_ids) || {:content_rows=>[]}
+
+    errata = spanned_repo_content(view, repo, 'errata', process_params(:errata),
+                                  params[:offset], process_search_mode, process_env_ids)
+    errata = { :content_rows => [] } unless errata
+
     meta = metadata_row(errata[:total], offset + errata[:content_rows].length,
-                         {:repo_id=>repo.id, :view_id=>view.id}, "#{view.id}_#{repo.id}", ContentSearch::RepoSearch.id(view, repo))
-    render :json=>{:rows=>(errata[:content_rows] + [meta])}
+                        { :repo_id => repo.id, :view_id => view.id },
+                          "#{view.id}_#{repo.id}", ContentSearch::RepoSearch.id(view, repo))
+
+    render :json => { :rows => (errata[:content_rows] + [meta]) }
   end
 
   #similar to :puppet_modules, but only returns puppet modules rows with an offset for a specific repo
   def puppet_modules_items
-    view = ContentView.readable(current_organization).where(:id=>params[:view_id]).first
-    repo = Repository.libraries_content_readable(current_organization).where(:id=>params[:repo_id]).first
+    view = ContentView.readable(current_organization).where(:id => params[:view_id]).first
+    repo = Repository.libraries_content_readable(current_organization).where(:id => params[:repo_id]).first
     offset = params[:offset].try(:to_i) || 0
+
     puppet_modules = spanned_repo_content(view, repo, 'puppet_module',
                                           process_params(:puppet_modules),
-                                          params[:offset], process_search_mode, process_env_ids) || {:content_rows=>[]}
+                                          params[:offset], process_search_mode, process_env_ids)
+
+    puppet_modules = { :content_rows => [] } unless puppet_modules
 
     meta = metadata_row(puppet_modules[:total], offset + puppet_modules[:content_rows].length,
-                        {:repo_id=>repo.id, :view_id=>view.id},
+                        { :repo_id => repo.id, :view_id => view.id },
                         "#{view.id}_#{repo.id}", ContentSearch::RepoSearch.id(view, repo))
 
-    render :json=>{:rows=>(puppet_modules[:content_rows] + [meta])}
+    render :json => { :rows => (puppet_modules[:content_rows] + [meta]) }
   end
 
   def repo_packages
     offset = params[:offset] || 0
     packages = Package.search('', offset, current_user.page_size, [@repo.pulp_id])
+
     rows = packages.collect do |pack|
-      {:name => display = package_display(pack),
-        :id => pack.id, :cols => {:description => {:display => pack.description}}, :data_type => "package", :value => pack.nvrea}
+      { :name => display = package_display(pack),
+        :id => pack.id, :cols => { :description => { :display => pack.description } },
+        :data_type => "package", :value => pack.nvrea }
     end
 
     if packages.total > current_user.page_size
-      rows += [metadata_row(packages.total, offset.to_i + rows.length, {:repo_id=>@repo.id}, @repo.id)]
+      rows += [metadata_row(packages.total, offset.to_i + rows.length, { :repo_id => @repo.id }, @repo.id)]
     end
+
     render :json => { :rows => rows, :name => @repo.name }
   end
 
   def repo_errata
     offset = params[:offset] || 0
     errata = Errata.search('', offset, current_user.page_size, :repoids => [@repo.pulp_id])
+
     rows = errata.collect do |e|
-      {:name => errata_display(e), :id => e.id, :data_type => "errata", :value => e.id,
-          :cols => {:title => {:display => e[:title]},
-                    :type => {:display => e[:type]},
-                    :severity => {:display => e[:severity]}
-          }
+      { :name => errata_display(e), :id => e.id, :data_type => "errata", :value => e.id,
+        :cols => { :title => { :display => e[:title] },
+                   :type => { :display => e[:type] },
+                   :severity => { :display => e[:severity] }
+                 }
       }
     end
+
     if errata.total > current_user.page_size
-      rows += [metadata_row(errata.total, offset.to_i + rows.length, {:repo_id=>@repo.id}, @repo.id)]
+      rows += [metadata_row(errata.total, offset.to_i + rows.length, { :repo_id => @repo.id }, @repo.id)]
     end
+
     render :json => { :rows => rows, :name => @repo.name }
   end
 
   def repo_puppet_modules
     offset = params[:offset] || 0
-    puppet_modules = PuppetModule.search('', offset, current_user.page_size, [@repo.pulp_id])
+    puppet_modules = PuppetModule.search('',{ :start => offset, :page_size => current_user.page_size,
+                                              :repoids => [@repo.pulp_id] })
 
     rows = puppet_modules.collect do |puppet_module|
-      {:name => display = puppet_module_display(puppet_module),
-       :id => puppet_module.id,
-       :cols => {:description => {:display => puppet_module.description}},
-       :data_type => "puppet_module",
-       :value => puppet_module.name
+      { :name => display = puppet_module_display(puppet_module),
+        :id => puppet_module.id,
+        :cols => { :description => { :display => puppet_module.description } },
+        :data_type => "puppet_module",
+        :value => puppet_module.name
       }
     end
 
     if puppet_modules.total > current_user.page_size
-      rows += [metadata_row(puppet_modules.total, offset.to_i + rows.length, {:repo_id=>@repo.id}, @repo.id)]
+      rows += [metadata_row(puppet_modules.total, offset.to_i + rows.length, { :repo_id => @repo.id }, @repo.id)]
     end
+
     render :json => { :rows => rows, :name => @repo.name }
   end
 
@@ -317,23 +353,26 @@ class ContentSearchController < ApplicationController
   end
 
   def view_compare_packages
-    options = {:unit_type => :package,
-               :cv_env_ids => params[:views].values,
-               :offset => params[:offset].try(:to_i) || 0}
+    options = { :unit_type => :package,
+                :cv_env_ids => params[:views].values,
+                :offset => params[:offset].try(:to_i) || 0 }
+
     render :json => ContentSearch::ContentViewComparison.new(options)
   end
 
   def view_compare_errata
-    options = {:unit_type => :errata,
-               :cv_env_ids => params[:views].values,
-               :offset => params[:offset].try(:to_i) || 0}
+    options = { :unit_type => :errata,
+                :cv_env_ids => params[:views].values,
+                :offset => params[:offset].try(:to_i) || 0 }
+
     render :json => ContentSearch::ContentViewComparison.new(options)
   end
 
   def view_compare_puppet_modules
-    options = {:unit_type => :puppet_module,
-               :cv_env_ids => params[:views].values,
-               :offset => params[:offset].try(:to_i) || 0}
+    options = { :unit_type => :puppet_module,
+                :cv_env_ids => params[:views].values,
+                :offset => params[:offset].try(:to_i) || 0 }
+
     render :json => ContentSearch::ContentViewComparison.new(options)
   end
 
@@ -346,16 +385,16 @@ class ContentSearchController < ApplicationController
     end
 
     units = case unit_type
-      when :package
-        Package.search('', offset, current_user.page_size,
-                       repo_map.keys, [:nvrea_sort, "ASC"], process_search_mode)
-      when :errata
-        Errata.search('', offset, current_user.page_size,
-                      :repoids =>  repo_map.keys, :search_mode => process_search_mode)
-      when :puppet_module
-        PuppetModule.search('', {:start => offset, :page_size => current_user.page_size,
-                                 :repoids => repo_map.keys, :search_mode => process_search_mode})
-    end
+            when :package
+              Package.search('', offset, current_user.page_size,
+                             repo_map.keys, [:nvrea_sort, "ASC"], process_search_mode)
+            when :errata
+              Errata.search('', offset, current_user.page_size,
+                            :repoids =>  repo_map.keys, :search_mode => process_search_mode)
+            when :puppet_module
+              PuppetModule.search('', { :start => offset, :page_size => current_user.page_size,
+                                        :repoids => repo_map.keys, :search_mode => process_search_mode })
+            end
 
     rows = units.collect do |unit|
       cols = {}
@@ -364,27 +403,30 @@ class ContentSearchController < ApplicationController
       end
 
       case unit_type
-        when :package
-          name = package_display(unit)
-          data_type = "package"
-        when :errata
-          name = errata_display(unit)
-          data_type = "errata"
-        when :puppet_module
-          name = puppet_module_display(unit)
-          data_type = "puppet_module"
+      when :package
+        name = package_display(unit)
+        data_type = "package"
+      when :errata
+        name = errata_display(unit)
+        data_type = "errata"
+      when :puppet_module
+        name = puppet_module_display(unit)
+        data_type = "puppet_module"
       end
 
-      {:name => name, :id => unit.id, :cols => cols, :data_type => data_type}
+      { :name => name, :id => unit.id, :cols => cols, :data_type => data_type }
     end
 
     cols = {}
-    sort_repos(@repos).each{|r| cols[r.id] = {:id=>r.id, :content => repo_compare_name_display(r)}}
+
+    sort_repos(@repos).each{ |r| cols[r.id] = { :id => r.id, :content => repo_compare_name_display(r) } }
+
     if !units.empty? && units.total > current_user.page_size
       rows += [metadata_row(units.total, offset.to_i + rows.length,
-                            {:mode=>process_search_mode, :repos=>params[:repos]}, 'compare')]
+                            { :mode => process_search_mode, :repos => params[:repos] }, 'compare')]
     end
-    render :json => {:rows=>rows, :cols=>cols, :name=>_("Repository Comparison")}
+
+    render :json => { :rows => rows, :cols => cols, :name => _("Repository Comparison") }
   end
 
   #take in a set of repos and sort based on environment
@@ -394,20 +436,19 @@ class ContentSearchController < ApplicationController
       env_to_repo[r.environment.id] ||= []
       env_to_repo[r.environment.id] << r
     end
+
     envs = [current_organization.library] + current_organization.promotion_paths.flatten
     to_ret = []
-    envs.each{|e|  to_ret += (env_to_repo[e.id] || [])}
+    envs.each{ |e|  to_ret += (env_to_repo[e.id] || []) }
     to_ret
   end
 
-
   def find_repos
-
     @repos = []
     params[:repos].values.each do |item|
-      view = ContentView.readable(current_organization).where(:id=>item[:view_id]).first
+      view = ContentView.readable(current_organization).where(:id => item[:view_id]).first
       library_instance = Repository.find(item[:repo_id])
-      @repos += library_instance.environmental_instances(view).select{|r| r.environment_id.to_s == item[:env_id]}
+      @repos += library_instance.environmental_instances(view).select{ |r| r.environment_id.to_s == item[:env_id] }
     end
   end
 
@@ -416,17 +457,17 @@ class ContentSearchController < ApplicationController
   end
 
   def repo_hover_html repo
-    render_to_string :partial=>'repo_hover', :locals=>{:repo=>repo}
+    render_to_string :partial => 'repo_hover', :locals => { :repo => repo }
   end
 
   def process_search_mode
     case params[:mode]
-      when "shared"
-        :shared
-      when "unique"
-        :unique
-      else
-        :all
+    when "shared"
+      :shared
+    when "unique"
+      :unique
+    else
+      :all
     end
   end
 
@@ -442,30 +483,31 @@ class ContentSearchController < ApplicationController
   #  this could either be a search string, or array of ids
 
   def process_params(type)
-    ids = params[type][:autocomplete].collect{|p|p["id"]} if params[type] && params[type][:autocomplete]
+    ids = params[type][:autocomplete].collect{ |p| p["id"] } if params[type] && params[type][:autocomplete]
     search = params[type][:search] if params[type] && params[type][:search]
     if search && !search.empty?
-        return search
+      return search
     elsif ids && !ids.empty?
-        return ids
+      return ids
     else
-        return nil
+      return nil
     end
   end
 
   def repo_search(term, readable_list, product_ids = nil)
-    conditions = [{:terms => {:id => readable_list}},
-                  {:terms => {:enabled => [true]}}]
-    conditions << {:terms => {:product_id => product_ids}} unless product_ids.blank?
+    conditions = [{ :terms => { :id => readable_list } },
+                  { :terms => { :enabled => [true] } }]
+    conditions << { :terms => { :product_id => product_ids } } unless product_ids.blank?
 
     #get total repos
     found = Repository.search(:load => true) do
-      query {string term, {:default_field => 'name'}} unless term.blank?
+      query { string term, { :default_field => 'name' } } unless term.blank?
       filter "and", conditions
       size 1
     end
+
     Repository.search(:load => true) do
-      query {string term, {:default_field => 'name'}} unless term.blank?
+      query { string term, { :default_field => 'name' } } unless term.blank?
       filter "and", conditions
       size found.total
     end
@@ -473,7 +515,7 @@ class ContentSearchController < ApplicationController
 
   def collect_views(view_ids)
     views = ContentView.readable(current_organization)
-    views = views.where(:id=>view_ids) if view_ids.blank?
+    views = views.where(:id => view_ids) if view_ids.blank?
     views
   end
 
@@ -487,11 +529,11 @@ class ContentSearchController < ApplicationController
     end
   end
 
-  def metadata_row(total_count, current_count, data, unique_id, parent_id=nil)
-    to_ret = {:total=>total_count,  :current_count=>current_count, :page_size=>current_user.page_size,
-       :data=>data, :id=>"repo_metadata_#{unique_id}",
-       :metadata=>true
-    }
+  def metadata_row(total_count, current_count, data, unique_id, parent_id = nil)
+    to_ret = { :total => total_count, :current_count => current_count,
+               :page_size => current_user.page_size, :data => data,
+               :id => "repo_metadata_#{unique_id}", :metadata => true
+             }
 
     to_ret[:parent_id] = parent_id if parent_id
     to_ret
@@ -506,22 +548,24 @@ class ContentSearchController < ApplicationController
     search_mode ||= process_search_mode
     environments ||= process_env_ids
 
-    repo_row_hash = ContentSearch::RepoSearch.new(:view=>view, :repos=>repos).row_object_hash
+    repo_row_hash = ContentSearch::RepoSearch.new(:view => view, :repos => repos).row_object_hash
+
     repos.each do |repo|
 
       repo_span = spanned_repo_content(view, repo, content_type,  search_obj, 0, search_mode, environments)
       if repo_span
-        #rows << {:name=>repo.name, :cols=>repo_span[:repo_cols], :id=>"repo_#{repo.id}",
-        #         :parent_id=>"product_#{product_id}", :data_type => "repo", :value => repo.name}
         rows << repo_row_hash[repo.id]
 
         repo_span[:repo_cols].values.each do |span|
           product_envs[span[:id]] += span[:display]
         end
+
         content_rows += repo_span[:content_rows]
+
         if repo_span[:total] > current_user.page_size
-          content_rows <<  metadata_row(repo_span[:total], current_user.page_size, {:repo_id=>repo.id, :view_id=>view.id},
-                                        "#{view.id}_#{repo.id}", repo_row_hash[repo.id].id)
+          content_rows << metadata_row(repo_span[:total], current_user.page_size,
+                                       { :repo_id => repo.id, :view_id => view.id },
+                                       "#{view.id}_#{repo.id}", repo_row_hash[repo.id].id)
         end
       end
     end
@@ -530,9 +574,9 @@ class ContentSearchController < ApplicationController
       []
     else
       cols = {}
-      product_envs.each{|env_id, count| cols[env_id] = {:id=>env_id, :display=>count} if accessible_env_ids.include?(env_id)}
-      [{:name=>product.name, :id=>"view_#{view.id}_product_#{product.id}", :parent_id=>"view_#{view.id}",
-        :cols=>cols, :data_type => "product", :value => product.name }] + rows + content_rows
+      product_envs.each{ |env_id, count| cols[env_id] = { :id => env_id, :display => count } if accessible_env_ids.include?(env_id) }
+      [{ :name => product.name, :id => "view_#{view.id}_product_#{product.id}", :parent_id => "view_#{view.id}",
+         :cols => cols, :data_type => "product", :value => product.name }] + rows + content_rows
     end
   end
 
@@ -540,7 +584,7 @@ class ContentSearchController < ApplicationController
   #  return a array of {:id=>env_id, :display=>search.total}
   #
   #
-  def spanned_repo_content(view, library_repo, content_type, content_search_obj, offset=0, search_mode = :all, environments = [])
+  def spanned_repo_content(view, library_repo, content_type, content_search_obj, offset = 0, search_mode = :all, environments = [])
     spanning_repos = library_repo.environmental_instances(view)
     accessible_env_ids = KTEnvironment.content_readable(current_organization).pluck("environments.id")
 
@@ -565,11 +609,11 @@ class ContentSearchController < ApplicationController
 
     spanning_repos.each do |repo|
       results = multi_repo_content_search(content_class, content_search_obj, spanning_repos, offset, content_attribute, search_mode,repo)
-      to_ret[repo.environment_id] = {:id=>repo.environment_id, :display=>results.total} if accessible_env_ids.include?(repo.environment_id)
+      to_ret[repo.environment_id] = { :id => repo.environment_id, :display => results.total } if accessible_env_ids.include?(repo.environment_id)
     end
 
-    {:content_rows=>spanning_content_rows(view, content, content_type, library_repo, spanning_repos),
-     :repo_cols=>to_ret, :total=>content.total}
+    { :content_rows => spanning_content_rows(view, content, content_type, library_repo, spanning_repos),
+      :repo_cols => to_ret, :total => content.total }
   end
 
   def get_search_info(content_type)
@@ -597,23 +641,28 @@ class ContentSearchController < ApplicationController
         if search_obj.is_a?(Array) || search_obj.nil?
           all
         else
-          string search_obj, {:default_field=>default_field}
+          string search_obj, { :default_field => default_field }
         end
       end
-      sort { by "#{default_field}_sort", 'asc'}
+
+      sort { by "#{default_field}_sort", 'asc' }
       fields [:id, :name, :nvrea, :repoids, :type, :errata_id, :author, :version]
       size user.page_size
       from offset
+
       if  search_obj.is_a? Array
         filter :terms, :id => search_obj
       end
+
       if in_repo
         filter :terms, :repoids => [in_repo.pulp_id]
       end
     end
-    repoids = repos.collect{|r| r.pulp_id}
+
+    repoids = repos.collect{ |r| r.pulp_id }
     Util::Package.setup_shared_unique_filter(repoids, search_mode, search)
     search.perform.results
+
   rescue Tire::Search::SearchRequestFailed => e
     Util::Support.array_with_total
   end
@@ -630,6 +679,7 @@ class ContentSearchController < ApplicationController
     env_ids = KTEnvironment.content_readable(current_organization).pluck(:id)
     to_ret = []
     content_list.each do |item|
+
       if id_prefix == 'package'
         display = package_display(item)
         value = item.nvrea
@@ -640,14 +690,17 @@ class ContentSearchController < ApplicationController
         display = puppet_module_display(item)
         value = item.name
       end
+
       parent_id = "view_#{view.id}_product_#{parent_repo.product.id}_repo_#{parent_repo.id}"
-      row = {:id=>"#{parent_id}_#{id_prefix}_#{item.id}", :parent_id=>parent_id, :cols=>{},
-             :name=>display, :data_type => id_prefix, :value => value}
+      row = { :id => "#{parent_id}_#{id_prefix}_#{item.id}", :parent_id => parent_id, :cols => {},
+              :name => display, :data_type => id_prefix, :value => value }
+
       spanned_repos.each do |repo|
         if item.repoids.include? repo.pulp_id
-            row[:cols][repo.environment_id] = {:id=>repo.environment_id} if env_ids.include?(repo.environment_id)
+            row[:cols][repo.environment_id] = { :id => repo.environment_id } if env_ids.include?(repo.environment_id)
         end
       end
+
       to_ret << row
     end
     to_ret
@@ -673,7 +726,7 @@ class ContentSearchController < ApplicationController
     if product_ids.blank?
       current_organization.products.readable(current_organization).engineering
     else
-      current_organization.products.readable(current_organization).engineering.where(:id=>product_ids)
+      current_organization.products.readable(current_organization).engineering.where(:id => product_ids)
     end
   end
 

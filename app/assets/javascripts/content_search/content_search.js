@@ -64,9 +64,10 @@ KT.content_search_templates = (function(i18n) {
         },
         puppet_module_header = function(display) {
             display["url"] = KT.routes.puppet_module_path(KT.utils.escape(display["id"]));
+            display["author_label"] = i18n.author;
 
             return KT.utils.template("<span data-url='<%= url %>' class='tipsify-package'><%- name_version %></span> \
-                                      <span>" + i18n.author + ": <%- author %></span>", display);
+                                      <span><%- author_label %>: <%- author %></span>", display);
         },
         row_header_content = function(name, type) {
             if(type === "package") {

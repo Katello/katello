@@ -27,15 +27,15 @@ module ContentSearch
       self.id ||= build_id
 
       case unit.class.name.underscore
-        when "package"
-          self.name ||= package_display(unit)
-          self.value ||= unit.nvrea
-        when "errata"
-          self.name ||= errata_display(unit)
-          self.value ||= unit.id
-        when "puppet_module"
-          self.name ||= puppet_module_display(unit)
-          self.value ||= unit.name
+      when "package"
+        self.name ||= package_display(unit)
+        self.value ||= unit.nvrea
+      when "errata"
+        self.name ||= errata_display(unit)
+        self.value ||= unit.id
+      when "puppet_module"
+        self.name ||= puppet_module_display(unit)
+        self.value ||= unit.name
       end
     end
 

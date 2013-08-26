@@ -50,7 +50,7 @@ class PuppetModulesController < ApplicationController
   end
 
   def show
-    render :partial=>"show"
+    render :partial => "show"
   end
 
   private
