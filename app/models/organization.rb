@@ -182,31 +182,19 @@ class Organization < ActiveRecord::Base
   end
 
   def auto_attach_all_systems
-    jobs = self.owner_auto_attach
-    task = self.async(:organization => self, :task_type => "monitor owner all_systems auto_attach").monitor_owner_auto_attach(jobs)
+    job = self.owner_auto_attach
+    task = self.async(:organization => self, :task_type => "monitor owner all_systems auto_attach").monitor_owner_auto_attach(job)
     self.owner_auto_attach_all_systems_task_id = task.id
     self.save!
     return task
   end
 
-  def monitor_owner_auto_attach(jobs, options = {})
+  def monitor_owner_auto_attach(job, options = {})
     options = { :pause => 5 }.merge(options)
-    complete = false
-    consumer_ids = []
-    while !complete
-      complete = true
-      jobs.each do |job|
-        if Resources::Candlepin::Job.not_finished?(Resources::Candlepin::Job.get(job["id"]))
-          complete = false
-          consumer_ids = []
-          sleep options[:pause]
-          break
-        else
-          consumer_ids << job["targetId"]
-        end
-      end
-    end
-    return consumer_ids
+    begin
+      not_finished = Resources::Candlepin::Job.not_finished?(Resources::Candlepin::Job.get(job["id"]))
+      sleep options[:pause]
+    end while not_finished
   end
 
 end
