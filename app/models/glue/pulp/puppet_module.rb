@@ -42,7 +42,13 @@ module Glue::Pulp::PuppetModule
     end
 
     def as_json(options = nil)
-      super(options).merge(sortable_version: sortable_version)
+      super(options).merge(:sortable_version => sortable_version,
+                           :puppet_name => puppet_name
+                          )
+    end
+
+    def puppet_name
+      File.basename(@_storage_path, ".tar.gz")
     end
   end
 

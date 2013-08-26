@@ -91,6 +91,7 @@ module Glue::ElasticSearch::PuppetModule
                    :search_mode => :all,
                    :default_field => 'name',
                    :filters => nil}.merge(options)
+        options[:repoids] = Array(options[:repoids])
 
         if !Tire.index(self.index).exists? || (options[:repoids] && options[:repoids].empty?)
           return Util::Support.array_with_total
