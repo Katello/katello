@@ -86,7 +86,7 @@ class GpgKeysController < ApplicationController
   end
 
   def create
-    (gpg_key_params = params[:gpg_key])
+    gpg_key_params = params[:gpg_key]
     return render_bad_parameters if gpg_key_params.nil?
     file_uploaded = gpg_key_params.has_key?("content_upload") && !gpg_key_params.has_key?("content")
 

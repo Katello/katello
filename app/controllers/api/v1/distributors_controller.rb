@@ -211,9 +211,8 @@ class Api::V1::DistributorsController < Api::V1::ApiController
 
     respond_to do |format|
       format.html do
-        if render :text => distributor_report.as(:html), :type => :html
-          return
-        end
+        render :text => distributor_report.as(:html), :type => :html
+        return
       end
       format.text { render :text => distributor_report.as(:text, :ignore_table_width => true) }
       format.csv { render :text => distributor_report.as(:csv) }

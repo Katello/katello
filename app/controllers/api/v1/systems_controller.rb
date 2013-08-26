@@ -363,9 +363,8 @@ A hint for choosing the right value for the releaseVer param
 
     respond_to do |format|
       format.html do
-        if render :text => system_report.as(:html), :type => :html
-          return
-        end
+        render :text => system_report.as(:html), :type => :html
+        return
       end
       format.text { render :text => system_report.as(:text, :ignore_table_width => true) }
       format.csv { render :text => system_report.as(:csv) }

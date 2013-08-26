@@ -381,9 +381,8 @@ class SystemsController < ApplicationController
     if system.destroyed?
       notify.success _("%s Removed Successfully") % system.name
       #render and do the removal in one swoop!
-      if render :partial => "common/list_remove", :locals => {:id => id, :name=>controller_display_name}
-        return
-      end
+      render :partial => "common/list_remove", :locals => {:id => id, :name=>controller_display_name}
+      return
     end
     notify.invalid_record system
     render :text => @system.errors, :status=>:ok
@@ -490,9 +489,8 @@ class SystemsController < ApplicationController
 
     if params[:packages].blank? && params[:groups].blank?
       notify.error _("Systems Bulk Action: No package or package group names have been provided.")
-      if render :nothing => true
-        return
-      end
+      render :nothing => true
+      return
     end
 
     if !params[:packages].blank?
@@ -560,9 +558,8 @@ class SystemsController < ApplicationController
 
     if params[:packages].blank? && params[:groups].blank?
       notify.error _("Systems Bulk Action: No package or package group names have been provided.")
-      if render :nothing => true
-        return
-      end
+      render :nothing => true
+      return
     end
 
     if !params[:packages].blank?
@@ -597,9 +594,8 @@ class SystemsController < ApplicationController
 
     if params[:errata].blank?
       notify.error _("Systems Bulk Action: No errata IDs have been provided.")
-      if render :nothing => true
-        return
-      end
+      render :nothing => true
+      return
     else
       @systems.each do |system|
         begin
@@ -639,9 +635,8 @@ class SystemsController < ApplicationController
       @system.save!
 
       notify.success _("System '%s' was updated.") % @system["name"]
-      if render :partial =>'system_group_items', :locals=>{:system_groups=>@system_groups}
-        return
-      end
+      render :partial =>'system_group_items', :locals=>{:system_groups=>@system_groups}
+      return
     end
   end
 

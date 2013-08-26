@@ -93,9 +93,8 @@ class ChangesetsController < ApplicationController
 
       if @next_environment.blank?
         notify.error _("Please create at least one environment.")
-        if render :nothing => true, :status => :not_acceptable
-          return
-        end
+        render :nothing => true, :status => :not_acceptable
+        return
       else
         env_id = @next_environment.id
         type = Changeset::PROMOTION
@@ -126,18 +125,16 @@ class ChangesetsController < ApplicationController
       @changeset.name = params[:name]
       @changeset.save!
 
-      if render :json => {:name=> params[:name], :timestamp => @changeset.updated_at.to_i.to_s}
-        return
-      end
+      render :json => {:name=> params[:name], :timestamp => @changeset.updated_at.to_i.to_s}
+      return
     end
 
     if params[:description]
       @changeset.description = params[:description]
       @changeset.save!
 
-      if render :json => {:description=> params[:description], :timestamp => @changeset.updated_at.to_i.to_s}
-        return
-      end
+      render :json => {:description=> params[:description], :timestamp => @changeset.updated_at.to_i.to_s}
+      return
     end
 
     if params[:state]
@@ -145,16 +142,14 @@ class ChangesetsController < ApplicationController
       if send_changeset
         to_ret = {}
         to_ret[:changeset] = simplify_changeset(@changeset) if send_changeset
-        if render :json => to_ret, :status => :bad_request
-          return
-        end
+        render :json => to_ret, :status => :bad_request
+        return
       end
       @changeset.state = Changeset::REVIEW if params[:state] == "review"
       @changeset.state = Changeset::NEW if params[:state] == "new"
       @changeset.save!
-      if render :json => {:timestamp => @changeset.updated_at.to_i.to_s}
-        return
-      end
+      render :json => {:timestamp => @changeset.updated_at.to_i.to_s}
+      return
     end
 
     render :text => "The promotion changeset is currently under review, no modifications can occur during this phase.",

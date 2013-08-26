@@ -40,8 +40,7 @@ class Api::V1::ChangesetsContentController < Api::V1::ApiController
   private
 
   def find_changeset!
-    @changeset = Changeset.find_by_id(params[:changeset_id])
-    raise HttpErrors::NotFound, _("Couldn't find changeset '%s'") % params[:changeset_id] if @changeset.nil?
+    @changeset = Changeset.find(params[:changeset_id])
     @changeset
   end
 

@@ -56,9 +56,8 @@ class SystemGroupPackagesController < ApplicationController
         notify.success _("Install of Packages '%{packages}' scheduled for System Group '%{name}'.") % {:packages => params[:packages], :name => @group.name}
       else
         notify.error _("One or more errors found in Package names '%s'.") % params[:packages]
-        if render :text => ''
-          return
-        end
+        render :text => ''
+        return
       end
 
     elsif !params[:groups].blank?
@@ -69,9 +68,8 @@ class SystemGroupPackagesController < ApplicationController
     else
       notify.error _("Empty request received to install Packages or Package Groups for System Group '%s'.") %
                        @group['name']
-      if render :text => ''
-        return
-      end
+      render :text => ''
+      return
     end
 
     render :partial => 'system_groups/packages/items',
@@ -85,9 +83,8 @@ class SystemGroupPackagesController < ApplicationController
     elsif !params[:groups].blank?
       notify.error _("Install of Package Groups '%{groups}' scheduled for System Group '%{name}' failed.  Reason: %{message}") % {:groups => params[:groups], :name => @group.name, :message => e.message}
     end
-    if render :text => ''
-      return
-    end
+    render :text => ''
+    return
   end
 
   def remove
@@ -100,9 +97,8 @@ class SystemGroupPackagesController < ApplicationController
         notify.success _("Uninstall of Packages '%{packages}' scheduled for System Group '%{name}'.") % {:packages => params[:packages], :name => @group.name}
       else
         notify.error _("One or more errors found in Package names '%s'.") % params[:packages]
-        if render :text => ''
-          return
-        end
+        render :text => ''
+        return
       end
 
     elsif !params[:groups].blank?
@@ -114,9 +110,8 @@ class SystemGroupPackagesController < ApplicationController
     else
       notify.error _("Empty request received to uninstall Packages or Package Groups for System Group '%s'.") %
                        @group['name']
-      if render :text => ''
-        return
-      end
+      render :text => ''
+      return
     end
 
     render :partial => 'system_groups/packages/items', :locals => {:editable => @group.systems_editable?,
@@ -128,9 +123,8 @@ class SystemGroupPackagesController < ApplicationController
     elsif !params[:groups].blank?
       notify.error _("Uninstall of Package Groups '%{groups}' scheduled for System Group '%{name}' failed.  Reason: %{message}") % {:groups => params[:groups], :name => @group.name, :message => e.message}
     end
-    if render :text => ''
-      return
-    end
+    render :text => ''
+    return
   end
 
   def update
@@ -152,9 +146,8 @@ class SystemGroupPackagesController < ApplicationController
                              {:packages => params[:packages], :name => @group.name}
         else
           notify.error _("One or more errors found in Package names '%s'.") % params[:packages]
-          if render :text => ''
-            return
-          end
+          render :text => ''
+          return
         end
 
       else
@@ -166,9 +159,8 @@ class SystemGroupPackagesController < ApplicationController
     else
       notify.error _("Invalid request received to update Packages or Package Groups for System Group '%s'.") %
                        @group['name']
-      if render :text => ''
-        return
-      end
+      render :text => ''
+      return
     end
 
     render :partial => 'system_groups/packages/items',
@@ -183,9 +175,8 @@ class SystemGroupPackagesController < ApplicationController
     elsif !params[:groups].blank?
       notify.error _("Update of Package Groups '%{groups}' scheduled for System Group '%{name}' failed.  Reason: %{message}") % {:groups => params[:groups], :name => @group.name, :message => e.message}
     end
-    if render :text => ''
-      return
-    end
+    render :text => ''
+    return
   end
 
   def package_status

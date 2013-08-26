@@ -158,9 +158,8 @@ class Api::V1::UsersController < Api::V1::ApiController
 
     respond_to do |format|
       format.html do
-        if render :text => users_report.as(:html), :type => :html
-          return
-        end
+        render :text => users_report.as(:html), :type => :html
+        return
       end
       format.text { render :text => users_report.as(:text, :ignore_table_width => true) }
       format.csv { render :text => users_report.as(:csv) }

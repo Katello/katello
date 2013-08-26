@@ -174,9 +174,8 @@ class OrganizationsController < ApplicationController
     found_errors= @organization.validate_destroy(current_organization)
     if found_errors
       notify.error found_errors
-      if render :text=>found_errors[1], :status=>:bad_request
-        return
-      end
+      render :text => found_errors[1], :status => :bad_request
+      return
     end
 
     # log off all users for this organization
@@ -241,9 +240,8 @@ class OrganizationsController < ApplicationController
       message = _("Couldn't find organization with ID %s") % params[:id]
       notify.error message
       execute_after_filters
-      if render :text => message, :status => :not_found
-        return false
-      end
+      render :text => message, :status => :not_found
+      return false
     end
   end
 
