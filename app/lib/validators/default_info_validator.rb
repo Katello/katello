@@ -18,8 +18,16 @@ module Validators
     def validate_each(record, attribute, value)
       value.each_key do |type|
         value[type].each do |key|
-          record.errors[attribute] << _("cannot contain blank keynames") and return if key.blank?
-          record.errors[attribute] << _("must be less than %d characters") % MAX_SIZE and return if key.size >= MAX_SIZE
+          if key.blank?
+            if record.errors[attribute] << _("cannot contain blank keynames")
+              return
+            end
+          end
+          if key.size >= MAX_SIZE
+            if record.errors[attribute] << _("must be less than %d characters") % MAX_SIZE
+              return
+            end
+          end
         end
       end
     end

@@ -528,7 +528,7 @@ module Glue::Pulp::Repo
     def sync_start
       status = self.sync_status
       retval = nil
-      if status.nil? or status['progress']['start_time'].nil?
+      if status.nil? || status['progress']['start_time'].nil?
         retval = nil
       else
         retval = status['progress']['start_time']
@@ -574,7 +574,7 @@ module Glue::Pulp::Repo
     def sync_finish
       status = self.sync_status
       retval = nil
-      if status.nil? or status['progress']['finish_time'].nil?
+      if status.nil? || status['progress']['finish_time'].nil?
         retval = nil
       else
         retval = status['progress']['finish_time']
@@ -694,14 +694,14 @@ module Glue::Pulp::Repo
       begin
         history = Katello.pulp_server.extensions.repository.sync_status(pulp_id)
 
-        if history.nil? or history.empty?
+        if history.nil? || history.empty?
           history = PulpSyncStatus.convert_history(Katello.pulp_server.extensions.repository.sync_history(pulp_id))
         end
       rescue => e
           history = PulpSyncStatus.convert_history(Katello.pulp_server.extensions.repository.sync_history(pulp_id))
       end
 
-      if history.nil? or history.empty?
+      if history.nil? || history.empty?
         return ::PulpSyncStatus.new(:state => ::PulpSyncStatus::Status::NOT_SYNCED)
       else
         history = sort_sync_status(history)

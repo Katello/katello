@@ -46,14 +46,14 @@ class SearchController < ApplicationController
   def create_favorite
 
     # save in the user's search favorites
-    unless params[:favorite].nil? or params[:favorite].blank?
+    unless params[:favorite].nil? || params[:favorite].blank?
       search_string = String.new(params[:favorite])
       path = retrieve_path
 
       # is the search string valid?  if not, don't save it...
       if is_valid? path, search_string
         favorites = current_user.search_favorites.where(:path => path, :params => params[:favorite])
-        if favorites.nil? or favorites.empty?
+        if favorites.nil? || favorites.empty?
           # user doesn't have this favorite stored, so save it
           favorite = current_user.search_favorites.create!(:path => path, :params => params[:favorite])
         end

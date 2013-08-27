@@ -39,7 +39,7 @@ describe Api::V1::ContentViewsController, :katello => true do
       subject { req }
       it { should be_success }
 
-      specify { subject and assigns[:content_views].map(&:id).should
+      specify { subject && assigns[:content_views].map(&:id).should
       eql(org_view_ids) }
     end
 
@@ -70,7 +70,7 @@ describe Api::V1::ContentViewsController, :katello => true do
         subject { req }
 
         it { should be_success }
-        specify { subject and assigns[:content_views].map(&:id).should eql([view.id]) }
+        specify { subject && (assigns[:content_views].map(&:id).should eql([view.id])) }
       end
 
     end

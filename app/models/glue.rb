@@ -93,7 +93,7 @@ module Glue
     end
 
     def proxy_error e
-      (e.respond_to?(:response) and !e.response.nil?) ? e.response : e
+      (e.respond_to?(:response) && !e.response.nil?) ? e.response : e
     end
 
     protected

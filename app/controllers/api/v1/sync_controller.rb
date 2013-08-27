@@ -107,7 +107,7 @@ class Api::V1::SyncController < Api::V1::ApiController
 
   def ensure_library
     unless @repository.nil?
-      raise HttpErrors::NotFound, _("You can synchronize repositories only in library environment'") if not @repository.environment.library?
+      raise HttpErrors::NotFound, _("You can synchronize repositories only in library environment'") if !@repository.environment.library?
     end
   end
 

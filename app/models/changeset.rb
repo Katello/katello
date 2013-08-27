@@ -165,7 +165,7 @@ class Changeset < ActiveRecord::Base
   protected
 
   def validate_content! elements
-    elements.each { |e| raise ActiveRecord::RecordInvalid.new(e) if not e.valid? }
+    elements.each { |e| raise ActiveRecord::RecordInvalid.new(e) if !e.valid? }
   end
 
   def validate_content_view_tasks_complete!

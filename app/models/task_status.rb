@@ -343,7 +343,7 @@ class TaskStatus < ActiveRecord::Base
     if job_id
       job = Job.find(job_id)
       # is this the last task associated with the job?
-      if job and job.task_statuses.length == 0
+      if job && job.task_statuses.length == 0
         job.destroy
       end
     end

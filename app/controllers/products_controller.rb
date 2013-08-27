@@ -54,7 +54,7 @@ class ProductsController < ApplicationController
     product_params[:label], label_assigned = generate_label(product_params[:name], 'product') if product_params[:label].blank?
 
 
-    gpg = GpgKey.readable(current_organization).find(product_params[:gpg_key]) if product_params[:gpg_key] and product_params[:gpg_key] != ""
+    gpg = GpgKey.readable(current_organization).find(product_params[:gpg_key]) if product_params[:gpg_key] && product_params[:gpg_key] != ""
     product = @provider.add_custom_product(product_params[:label], product_params[:name],
                                            product_params[:description], product_params[:url], gpg)
 

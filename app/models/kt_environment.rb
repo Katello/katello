@@ -170,7 +170,7 @@ class KTEnvironment < ActiveRecord::Base
   #  and then give me that entire path
   def full_path
     p = self
-    until p.prior.nil? or p.prior.library
+    until p.prior.nil? || p.prior.library
       p = p.prior
     end
     p.prior.nil? ? p.path : [p.prior] + p.path

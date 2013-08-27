@@ -281,7 +281,7 @@ class DistributorsController < ApplicationController
     @distributor.update_attributes!(params[:distributor])
     notify.success _("Distributor '%s' was updated.") % @distributor["name"]
 
-    if not search_validate(Distributor, @distributor.id, params[:search])
+    if !search_validate(Distributor, @distributor.id, params[:search])
       notify.message _("'%s' no longer matches the current search criteria.") % @distributor["name"],
                      :asynchronous => false
     end
@@ -313,8 +313,8 @@ class DistributorsController < ApplicationController
     distributor.destroy
     if distributor.destroyed?
       notify.success _("%s Removed Successfully") % distributor.name
-      #render and do the removal in one swoop!
-      render :partial => "common/list_remove", :locals => {:id => id, :name=>controller_display_name} and return
+      render :partial => "common/list_remove", :locals => { :id => id, :name=>controller_display_name }
+      return
     end
     notify.invalid_record distributor
     render :text => @distributor.errors, :status=>:ok

@@ -72,7 +72,7 @@ class PulpTaskStatus < TaskStatus
       :progress => pulp_status,
       :result => pulp_status[:result].nil? ? {:errors => [pulp_status[:exception], pulp_status[:traceback]]} : pulp_status[:result]
     }
-    task_status.save! if not task_status.new_record?
+    task_status.save! if !task_status.new_record?
     task_status
   end
 
@@ -90,7 +90,7 @@ class PulpTaskStatus < TaskStatus
     for t in async_tasks
       t.refresh
       sleep 0.5 # do not overload backend engines
-      if not t.finished?
+      if !t.finished?
         return true
       elsif t.error?
         raise RuntimeError, t.as_json

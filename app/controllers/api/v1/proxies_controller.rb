@@ -40,25 +40,25 @@ class Api::V1::ProxiesController < Api::V1::ApiController
       when "api_proxy_owner_pools_path"
         find_optional_organization
         if params[:consumer]
-          (User.consumer? or @organization.readable?) and current_user.uuid == params[:consumer]
+          (User.consumer? || @organization.readable?) && current_user.uuid == params[:consumer]
         else
-          (User.consumer? or @organization.readable?)
+          (User.consumer? || @organization.readable?)
         end
       when "api_proxy_owner_servicelevels_path"
         find_optional_organization
-        (User.consumer? or @organization.readable?)
+        (User.consumer? || @organization.readable?)
       when "api_proxy_consumer_certificates_path", "api_proxy_consumer_releases_path", "api_proxy_certificate_serials_path",
           "api_proxy_consumer_entitlements_path", "api_proxy_consumer_entitlements_post_path", "api_proxy_consumer_entitlements_delete_path",
           "api_proxy_consumer_dryrun_path", "api_proxy_consumer_owners_path", "api_proxy_consumer_compliance_path"
-        User.consumer? and current_user.uuid == params[:id]
+        User.consumer? && current_user.uuid == params[:id]
       when "api_proxy_consumer_certificates_delete_path"
-        User.consumer? and current_user.uuid == params[:consumer_id]
+        User.consumer? && current_user.uuid == params[:consumer_id]
       when "api_proxy_pools_path"
-        User.consumer? and current_user.uuid == params[:consumer]
+        User.consumer? && current_user.uuid == params[:consumer]
       when "api_proxy_entitlements_path"
         User.consumer? # query is restricted in Candlepin
       when "api_proxy_subscriptions_post_path"
-        User.consumer? and current_user.uuid == params[:consumer_uuid]
+        User.consumer? && current_user.uuid == params[:consumer_uuid]
       when "api_proxy_deleted_consumers_path"
         current_user.has_superadmin_role?
       else

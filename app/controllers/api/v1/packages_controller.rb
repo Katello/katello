@@ -18,7 +18,7 @@ class Api::V1::PackagesController < Api::V1::ApiController
   before_filter :authorize
 
   def rules
-    readable = lambda { @repo.environment.contents_readable? and @repo.product.readable? }
+    readable = lambda { @repo.environment.contents_readable? && @repo.product.readable? }
     {
         :index  => readable,
         :search => readable,

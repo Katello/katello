@@ -176,7 +176,7 @@ class SyncManagementController < ApplicationController
 
   def format_duration(finish, start)
     retval = nil
-    if !finish.nil? and !start.nil?
+    if !finish.nil? && !start.nil?
       retval = distance_of_time_in_words(finish, start)
     end
     retval

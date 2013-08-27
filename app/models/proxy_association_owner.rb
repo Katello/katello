@@ -13,6 +13,6 @@
 module ProxyAssociationOwner
   def proxy_association_owner
     /(\d+)\.(\d+)\.(\d+)/ =~ Rails.version
-    (($1.to_i >= 4 ) or ($1.to_i == 3 and $2.to_i >= 1)) ? proxy_association.owner : proxy_owner
+    (($1.to_i >= 4 ) || ($1.to_i == 3 && $2.to_i >= 1)) ? proxy_association.owner : proxy_owner
   end
 end

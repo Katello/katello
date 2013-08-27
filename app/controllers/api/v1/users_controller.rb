@@ -157,7 +157,10 @@ class Api::V1::UsersController < Api::V1::ApiController
                                      :include => { :roles => { :only => [:name] } })
 
     respond_to do |format|
-      format.html { render :text => users_report.as(:html), :type => :html and return }
+      format.html do
+        render :text => users_report.as(:html), :type => :html
+        return
+      end
       format.text { render :text => users_report.as(:text, :ignore_table_width => true) }
       format.csv { render :text => users_report.as(:csv) }
       format.pdf { send_data(users_report.as(:prawn_pdf),

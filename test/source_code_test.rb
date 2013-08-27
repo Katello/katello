@@ -11,6 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 # encoding: UTF-8
+require 'ripper'
 
 unless ENV['RAILS_ENV'] == 'build' # ok
   require_relative 'minitest_helper'
@@ -52,11 +53,31 @@ class SourceCodeTest < MiniTest::Rails::ActiveSupport::TestCase
         [line, line_number, file_path] unless condition.call line
       end.compact
 
-      assert bad_lines.empty?,
+      assert_empty bad_lines,
              "#{message + "\n" if message}check lines:\n" + bad_lines.
                  map { |line, line_number, file_path| ' - %s:%d: %s' % [file_path, line_number, line.strip] }.
                  join("\n")
     end
+
+    def fail_on_ruby_keyword(message = nil, &condition)
+      bad_tokens = each_file.collect do |file, file_path|
+        lexed_file = Ripper.lex(file)
+        bad_tokens_in_file = []
+        lexed_file.each_with_index do |entry, index|
+          bad_tokens_in_file << [file_path, entry[0][0], entry[0][1]] if condition.call(lexed_file, index, entry)
+        end.compact
+        bad_tokens_in_file
+      end.flatten(1)
+      assert_empty bad_tokens,
+        "#{message + "\n" if message}" + bad_tokens.collect { |file_path, line_no, column_no|
+          " - %s: [%d, %d]" % [file_path, line_no, column_no]
+        }.join("\n")
+    end
+
+    def self.token_is_keyword?(str, lex, index, token)
+      token[1] == :on_kw && token[2] == str && lex[index - 1][1] != :on_symbeg
+    end
+
   end
 
   describe 'formatting' do
@@ -64,7 +85,7 @@ class SourceCodeTest < MiniTest::Rails::ActiveSupport::TestCase
       SourceCode.
           new('**/*.{rb,js,scss,haml}',
               %r'coverage|engines/bastion/node_modules|engines/bastion/vendor|(public|vendor)/assets/.*\.js').
-          check_lines { |line| line !~ / +$/ }
+          check_lines { |line| line !~ / +\z/ }
     end
 
     it 'does use soft-tabs' do
@@ -102,6 +123,49 @@ the single entry point to configuration. ENV variables are processed there.
     it 'does not use general rescue => e' do
       skip 'to be enabled'
     end
+
+    it "does not use 'and' in boolean expressions" do
+      doc = "don't use 'and' in boolean expressions https://github.com/styleguide/ruby"
+      SourceCode.new('**/*.rb').fail_on_ruby_keyword(doc) do |lex, index, token|
+        SourceCode.token_is_keyword?("and", lex, index, token)
+      end
+    end
+
+    it "does not use 'or' in boolean expressions" do
+      doc = "don't use 'or' in boolean expressions https://github.com/styleguide/ruby"
+      SourceCode.new('**/*.rb').fail_on_ruby_keyword(doc) do |lex, index, token|
+        SourceCode.token_is_keyword?("or", lex, index, token)
+      end
+    end
+
+    it "does not use 'not' in boolean expresssions" do
+      doc = "don't use 'not' in boolean expressions https://github.com/styleguide/ruby"
+      SourceCode.new("**/*.rb").fail_on_ruby_keyword(doc) do |lex, index, token|
+        SourceCode.token_is_keyword?("not", lex, index, token)
+      end
+    end
+
+    it "does not have any 'debugger' statements accidentally included in the ruby source" do
+      doc = "don't forget to remove all your 'debugger' statements"
+      SourceCode.new("**/*.rb").fail_on_ruby_keyword(doc) do |lex, index, token|
+        SourceCode.token_is_keyword?("debugger", lex, index, token)
+      end
+    end
+
+    it "does not have any 'debugger' statements accidentally left in the haml" do
+      doc = "don't forget to remove all your 'debugger' statements"
+      SourceCode.new("**/*.haml").check_lines(doc) do |line|
+        line !~ /\A\s+-\s+debugger(\s+[if|unless]\s+.+)?\z/
+      end
+    end
+
+    it "does not have any 'debugger' statements accidentally left in the JS" do
+      doc = "don't forget to remove all your 'debugger' statements"
+      SourceCode.new("**/*.js").check_lines(doc) do |line|
+        line !~ /\A\s+debugger.*;\z/
+      end
+    end
+
   end
 
   describe 'gettext' do
@@ -124,7 +188,7 @@ Multiple anonymous placeholders:
           check_lines doc do |line|
         line.scan(/_\((".*?"|'.*?')\)/).all? do |match|
           gettext_str = match.first
-          gettext_str !~ /#\{.*?\}/ and gettext_str.scan(/%[a-z]/).size <= 1
+          gettext_str !~ /#\{.*?\}/ && gettext_str.scan(/%[a-z]/).size <= 1
         end
       end
     end

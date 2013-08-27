@@ -129,7 +129,7 @@ class SystemGroupsController < ApplicationController
     @group.save!
     notify.success _("System Group %s has been updated.") % @group.name
 
-    if not search_validate(SystemGroup, @group.id, params[:search])
+    if !search_validate(SystemGroup, @group.id, params[:search])
       notify.message _("'%s' no longer matches the current search criteria.") % @group["name"],
                      :asynchronous => false
     end

@@ -69,7 +69,7 @@ class GpgKeysController < ApplicationController
 
   def edit
     render :partial => "edit", :locals => {:editable => @gpg_key.manageable?,
-                                                                       :name => controller_display_name }
+                                           :name => controller_display_name }
   end
 
   def products_repos
@@ -82,12 +82,12 @@ class GpgKeysController < ApplicationController
         each { |repo| products_repos[repo.product.name] << repo }
 
     render :partial => "products_repos",
-            :locals => {:products => products, :products_repos => products_repos}
+           :locals => {:products => products, :products_repos => products_repos}
   end
 
   def create
-    (gpg_key_params = params[:gpg_key]) or
-        return render_bad_parameters
+    gpg_key_params = params[:gpg_key]
+    return render_bad_parameters if gpg_key_params.nil?
     file_uploaded = gpg_key_params.has_key?("content_upload") && !gpg_key_params.has_key?("content")
 
     if file_uploaded
@@ -129,7 +129,7 @@ class GpgKeysController < ApplicationController
 
     notify.success _("GPG Key '%s' was updated.") % @gpg_key["name"], :asynchronous => file_uploaded
 
-    if not search_validate(GpgKey, @gpg_key.id, params[:search])
+    if !search_validate(GpgKey, @gpg_key.id, params[:search])
       notify.message _("'%s' no longer matches the current search criteria.") % @gpg_key["name"], :asynchronous => false
     end
 

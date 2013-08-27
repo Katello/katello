@@ -67,7 +67,7 @@ class HttpResource
           logger.error "Remote server status code " << resp.code.to_s
           raise RestClientException, {:message => error.to_s, :service_code => service_code, :code => status_code}, caller
         else
-          raise NetworkException, [resp.code.to_s, resp.body].reject{|s| s.nil? or s.empty?}.join(' ')
+          raise NetworkException, [resp.code.to_s, resp.body].reject{|s| s.nil? || s.empty?}.join(' ')
         end
       end
       raise RestClientException, {:message => message, :service_code => service_code, :code => status_code}, caller

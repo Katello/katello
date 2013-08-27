@@ -70,7 +70,7 @@ module LazyAccessor
           attr = symbol.to_s
 
           excepted = options.has_key?(:unless) ? self.instance_eval(&options[:unless]) : new_record?
-          if !instance_variable_defined?("@#{attr}") && (not excepted)
+          if !instance_variable_defined?("@#{attr}") && !excepted
             remote_values = run_initializer(args.size > 1, initializer)
             if args.size > 1
               prepopulate(remote_values)
@@ -145,7 +145,7 @@ module LazyAccessor
       if self.respond_to?(:load_remote_data)
         load_remote_data(remote_values)
       else
-        remote_values.each_pair {|k,v| instance_variable_set("@#{k.to_s}", v) if (attrs and attrs.include?(k.to_sym) and respond_to?("#{k.to_s}="))}
+        remote_values.each_pair {|k,v| instance_variable_set("@#{k.to_s}", v) if (attrs && attrs.include?(k.to_sym) && respond_to?("#{k.to_s}="))}
       end
     end
   end

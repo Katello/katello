@@ -17,7 +17,7 @@ module SortColumnList
     field = params[:order].split(" ").first
     if (columns.keys.include?(field))
       # sort based on column name and push any nils to end of array
-      arr.sort! { |a,b| (a.send(columns[field]) and b.send(columns[field])) ?
+      arr.sort! { |a,b| (a.send(columns[field]) && b.send(columns[field])) ?
                        (a.send(columns[field]) <=> b.send(columns[field])) : (a ? -1 : 1) }
       arr.reverse! if params[:order].split(" ").last.downcase == "desc"
     end

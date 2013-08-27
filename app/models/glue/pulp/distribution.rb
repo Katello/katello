@@ -32,7 +32,7 @@ module Glue::Pulp::Distribution
 
     def generate_instance_variables(attrs)
       attrs.each_pair do |k,v|
-        if self.class.method_defined? k and not v.nil?
+        if self.class.method_defined?(k) && !v.nil?
           instance_variable_set("@#{k}", v)
         end
       end

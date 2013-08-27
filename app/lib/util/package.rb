@@ -66,9 +66,9 @@ module Util
 
     def self.build_nvrea(package, include_zero_epoch=true)
       nvrea = package[:name] +'-'+ package[:version] +'-'+ package[:release]
-      nvrea = nvrea +'.'+ package[:arch] if not package[:arch].nil?
-      nvrea = nvrea +'.'+ package[:suffix] if not package[:suffix].nil?
-      if not package[:epoch].nil?
+      nvrea = nvrea +'.'+ package[:arch] if !package[:arch].nil?
+      nvrea = nvrea +'.'+ package[:suffix] if !package[:suffix].nil?
+      if !package[:epoch].nil?
         nvrea = package[:epoch] +':'+ nvrea if package[:epoch].to_i != 0 || include_zero_epoch
       end
       nvrea
@@ -83,14 +83,14 @@ module Util
         next if pack.nil?
 
         pack = pack.with_indifferent_access
-        if (latest_pack.nil?) or
-           (pack[:epoch] > latest_pack[:epoch]) or
-           (pack[:epoch] == latest_pack[:epoch] and pack[:release] > latest_pack[:release]) or
-           (pack[:epoch] == latest_pack[:epoch] and pack[:release] == latest_pack[:release] and pack[:version] > latest_pack[:version])
+        if (latest_pack.nil?) ||
+           (pack[:epoch] > latest_pack[:epoch]) ||
+           (pack[:epoch] == latest_pack[:epoch] && pack[:release] > latest_pack[:release]) ||
+           (pack[:epoch] == latest_pack[:epoch] && pack[:release] == latest_pack[:release] && pack[:version] > latest_pack[:version])
           latest_pack = pack
           selected_packs = [pack]
 
-        elsif (pack[:epoch] == latest_pack[:epoch] and pack[:release] == latest_pack[:release] and pack[:version] == latest_pack[:version])
+        elsif (pack[:epoch] == latest_pack[:epoch] && pack[:release] == latest_pack[:release] && pack[:version] == latest_pack[:version])
           selected_packs << pack
         end
       end
@@ -122,7 +122,7 @@ module Util
       packages = packages.split(/ *, */ )
 
       packages.each{ |package_name|
-        if not valid_package_name_format(package_name).nil?
+        if !valid_package_name_format(package_name).nil?
           return false
         end
       }

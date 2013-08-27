@@ -29,7 +29,7 @@ if File.exist?(File.expand_path('../../Gemfile.in', __FILE__))
   # Webmock rubygem have very strong default setting - it blocks all HTTP connections
   # after it is required. Therefore we want to turn off this behavior for all environments
   # except test since with bundler_ext we load ALL groups by default.
-  if defined? WebMock and Rails.env != "test"
+  if defined?(WebMock) && Rails.env != "test"
     WebMock.allow_net_connect!(:net_http_connect_on_start => true)
   end
 else

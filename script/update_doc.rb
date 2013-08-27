@@ -15,7 +15,7 @@ push_to_github = (ARGV == %w(push))
 
 def cmd(cmd)
   puts ">> #{cmd}"
-  system cmd or raise "#{cmd} failed"
+  raise "#{cmd} failed" unless system(cmd)
 end
 
 unless File.exist? "#{root}/yardoc/.git"

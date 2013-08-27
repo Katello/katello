@@ -53,7 +53,8 @@ class Api::ApiController < ActionController::Base
 
   rescue => e
     logger.error "failed to authenticate API request: " << pp_exception(e)
-    head :status => HttpErrors::INTERNAL_ERROR and return false
+    head :status => HttpErrors::INTERNAL_ERROR
+    return false
   end
 
   def request_from_katello_cli?
@@ -87,11 +88,15 @@ class Api::ApiController < ActionController::Base
   end
 
   def get_resource
-    instance_variable_get :"@#{resource_name}" or raise 'no resource loaded'
+    resource = instance_variable_get(:"@#{resource_name}")
+    raise 'no resource loaded' if resource.nil?
+    resource
   end
 
   def get_resource_collection
-    instance_variable_get :"@#{resource_collection_name}" or raise 'no resource collection loaded'
+    resource = instance_variable_get(:"@#{resource_collection_name}")
+    raise 'no resource collection loaded' if resource.nil?
+    resource
   end
 
   def resource_collection_name

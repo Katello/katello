@@ -72,7 +72,7 @@ module Util
 
       unless prefixes_without_vars
         prefixes_without_vars = {}
-        while not paths_with_vars.empty?
+        while !paths_with_vars.empty?
           substitutions, path = paths_with_vars.shift
 
           if is_substituable path

@@ -41,10 +41,10 @@ describe Api::V1::ChangesetsContentController, :katello => true do
     @library.stub(:successor).and_return(@environment)
 
     @view = @environment.content_views.first
-    ContentView.stub(:find_by_id).and_return(@view)
+    ContentView.stub(:find).and_return(@view)
 
     @cs = PromotionChangeset.create!(:name => "changeset", :environment => @environment)
-    Changeset.stub(:find_by_id).and_return(@cs)
+    Changeset.stub(:find).and_return(@cs)
 
     @request.env["HTTP_ACCEPT"] = "application/json"
     login_user_api

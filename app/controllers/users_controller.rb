@@ -168,7 +168,7 @@ class UsersController < ApplicationController
     attr = params[:user].first.last if params[:user].first
     attr ||= ""
 
-    if not search_validate(User, user.id, params[:search], :username)
+    if !search_validate(User, user.id, params[:search], :username)
       notify.message _("'%s' no longer matches the current search criteria.") % @user.username
     end
 
@@ -248,7 +248,8 @@ class UsersController < ApplicationController
     if @user.default_environment.try(:id) == default_environment_id
       err_msg = N_("The system registration default you supplied was the same as the old system registration default.")
       notify.error err_msg
-      render(:text => err_msg, :status => 400) and return
+      render(:text => err_msg, :status => 400)
+      return
     end
 
     raise no_env_available_msg if default_environment_id.nil? && params['org_id'].present?
@@ -277,11 +278,12 @@ class UsersController < ApplicationController
     if  @user.update_attributes(params[:user])
       notify.success _("User updated successfully.")
 
-      if not search_validate(User, @user.id, params[:search], :username)
+      if !search_validate(User, @user.id, params[:search], :username)
         notify.message _("'%s' no longer matches the current search criteria.") % @user.username
       end
 
-      render :nothing => true and return
+      render :nothing => true
+      return
     end
     notify.invalid_record @user
     render :text => @user.errors, :status => :ok
@@ -337,7 +339,7 @@ class UsersController < ApplicationController
       current_user.save!
       notify.success _("Default Organization no longer selected.")
     end
-    render :text => :ok and return
+    render :text => :ok
   end
 
   private
