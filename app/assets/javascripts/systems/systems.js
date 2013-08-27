@@ -578,6 +578,35 @@ KT.system_auto_attaching = (function() {
 })();
 
 KT.subs = (function() {
+    KT.panel.set_expand_cb(function() {
+        auto_attach_setup();
+    });
+
+    var auto_attach_setup = function() {
+        heal_system_button().live("click", function() {
+            heal_system();
+        });
+    };
+
+    var heal_system = function() {
+        var button = heal_system_button();
+        $.ajax({
+            url  : button.data("url"),
+            type : button.data("method"),
+            data : '',
+            success: function(data) {
+                notices.displayNotice("success", window.JSON.stringify({"notices": [i18n.runAutoAttachSuccess]}));
+            },
+            error: function(data) {
+                notices.displayNotice("error", window.JSON.stringify({"notices": [i18n.runAutoAttachFail]}));
+            }
+        });
+    };
+
+    var heal_system_button = function() {
+        return $("#heal_system_button");
+    };
+
     var unsubSetup = function(){
         var unsubform = $('#unsubscribe');
         var unsubbutton = $('#unsub_submit');
@@ -586,75 +615,54 @@ KT.subs = (function() {
         var total = unsubcheckboxes.length;
         var checked = 0;
         unsubbutton.hide();
-        unsubcheckboxes.each(function(){
-            $(this).change(function(){
-                if($(this).is(":checked")){
+        unsubcheckboxes.each(function() {
+            $(this).change(function() {
+                if ($(this).is(":checked")) {
                     checked += 1;
-                    if(!(unsubbutton.is(":visible"))){
-                        fakeunsubbutton.fadeOut("fast", function(){unsubbutton.fadeIn()});
+                    if (!(unsubbutton.is(":visible"))) {
+                        fakeunsubbutton.fadeOut("fast", function() { unsubbutton.fadeIn(); });
                     }
-                }else{
+                } else {
                     checked -= 1;
-                    if((unsubbutton.is(":visible")) && checked === 0){
-                        unsubbutton.fadeOut("fast", function(){fakeunsubbutton.fadeIn()});
+                    if ((unsubbutton.is(":visible")) && checked === 0) {
+                        unsubbutton.fadeOut("fast", function() { fakeunsubbutton.fadeIn(); });
                     }
                 }
             });
         });
-    },
-    save_selected_environment = function(env_id) {
+    };
+
+    var save_selected_environment = function(env_id) {
         // save the id of the env selected
         $("#system_environment_id").attr('value', env_id);
-    },
-    initialize_edit = function() {
-       reset_env_select();
-    },
-    reset_env_select = function() {
+    };
+
+    var initialize_edit = function() {
+        reset_env_select();
+    };
+
+    var reset_env_select = function() {
         if (window.env_select !== undefined) {
             $('#path-expanded').hide();
             env_select.reset_hover();
             env_select.recalc_scroll();
-       }
-    },
-    _checked = 0,  // scoped variable to hold number of checkboxes
-    updateSubButtons = function() {
+        }
+    };
+
+    var _checked = 0;  // scoped variable to hold number of checkboxes
+
+    var updateSubButtons = function() {
         var subbutton = $('#sub_submit'),
             fakesubbutton = $('#fake_sub_submit');
 
-        if(_checked > 0 && !subbutton.is(":visible")){
+        if (_checked > 0 && !subbutton.is(":visible")) {
             fakesubbutton.fadeOut("fast", function(){subbutton.fadeIn()});
         } else if (_checked === 0 && subbutton.is(":visible")) {
             subbutton.fadeOut("fast", function(){fakesubbutton.fadeIn()});
         }
     };
 
-    KT.panel.set_expand_cb(function() {
-        setup();
-    });
-
-    setup = function() {
-        heal_system_button().live("click", function() {
-           heal_system();
-        });
-    },
-   heal_system = function() {
-        var button = heal_system_button();
-        $.ajax({
-                url  : button.data("url"),
-                type : button.data("method"),
-                data : '',
-                success: function(data) {
-                        notices.displayNotice("success", window.JSON.stringify({"notices": [i18n.runAutoAttachSuccess]}));
-                },
-                error: function(data) {
-                        notices.displayNotice("error", window.JSON.stringify({"notices": [i18n.runAutoAttachFail]}));
-                }
-        });
-   },
-   heal_system_button = function() {
-        return $("#heal_system_button");
-   },
-    subSetup = function(){
+    var subSetup = function(){
         var subcheckboxes = $('#subscribe input[type="checkbox"]'),
             subbutton = $('#sub_submit');
 
@@ -697,8 +705,9 @@ KT.subs = (function() {
                 }
             });
         });
-    },
-    spinnerSetup = function(){
+    };
+
+    var spinnerSetup = function(){
         setTimeout(function() {
             $('.ui-spinner').spinner();
         }, 1000);
@@ -720,52 +729,54 @@ KT.subs = (function() {
                 }
             });
             $(this).keypress(function(e) {
-               if (e.which === 13) {
-                   $(this).trigger("change");
-               }
+                if (e.which === 13) {
+                    $(this).trigger("change");
+                }
             });
         });
-    },
-    autohealSetup = function(){
+    };
+
+    var autohealSetup = function(){
         var checkboxes = $('#autoheal');
         checkboxes.each(function(){
-          $(this).unbind("change");
-          $(this).change(function(){
-            $('#autoheal_form').ajaxSubmit({
-              data: { autoheal: $(this).is(":checked") },  // Checkboxes in forms aren't included when false
-              dataType: 'html',
-              success: function(data) {
-                notices.checkNotices();
-              }, error: function(e) {
-                notices.checkNotices();
-              }
+            $(this).unbind("change");
+            $(this).change(function(){
+                $('#autoheal_form').ajaxSubmit({
+                    data: { autoheal: $(this).is(":checked") },  // Checkboxes in forms aren't included when false
+                    dataType: 'html',
+                    success: function(data) {
+                        notices.checkNotices();
+                    }, error: function(e) {
+                        notices.checkNotices();
+                    }
+                });
             });
-          });
         });
-    },
+    };
 
-    matchsystemSetup = function(){
-      $('#subscription_filters').chosen().change(function(e) {
-          var children = $(this).children();
-          $('#available_section').addClass('hidden');
-          $('#available_spinner').removeClass('hidden');
-          var i = 0;
-          $.each(children, function(i, item) {
-             $.ajax({
-                 url: $('#matchsystem_form')[0].action + "?preference=" + item.value,
-                 data: { value: item.selected },
-                 type: 'PUT',
-                 success: function(data) {
-                     if (i === children.length-1) {
-                       $('#systems_subscriptions > a').click();  // Refresh page
-                     }
-                 }, error: function(e) {
-                     if (i === children.length-1) {
-                       $('#systems_subscriptions > a').click();  // Refresh page
-                     }
-                 }
-             });
-          });
+    var matchsystemSetup = function(){
+        $('#subscription_filters').chosen().change(function(e) {
+            var children = $(this).children();
+            $('#available_section').addClass('hidden');
+            $('#available_spinner').removeClass('hidden');
+            var i = 0;
+            $.each(children, function(i, item) {
+                $.ajax({
+                    url: $('#matchsystem_form')[0].action + "?preference=" + item.value,
+                    data: { value: item.selected },
+                    type: 'PUT',
+                    success: function(data) {
+                        if (i === children.length-1) {
+                            $('#systems_subscriptions > a').click();  // Refresh page
+                        }
+                    },
+                    error: function(e) {
+                        if (i === children.length-1) {
+                            $('#systems_subscriptions > a').click();  // Refresh page
+                        }
+                    }
+                });
+            });
         });
     };
 
