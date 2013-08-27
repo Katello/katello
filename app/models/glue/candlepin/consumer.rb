@@ -469,7 +469,7 @@ module Glue::Candlepin::Consumer
     def consumed_entitlements
       consumed_entitlements = self.entitlements.collect { |entitlement|
 
-        pool = self.get_pool entitlement["pool"]["id"]
+        pool = self.get_pool(entitlement["pool"]["id"])
 
         sla = ""
         sockets = ""
@@ -478,6 +478,13 @@ module Glue::Candlepin::Consumer
             sla = attr["value"]
           elsif attr["name"] == "sockets"
             sockets = attr["value"]
+          end
+        end
+
+        type = _("physical")
+        pool["attributes"].each do |attr|
+          if attr["name"] == "virt_only" && attr["value"] == "true"
+            type = _("virtual")
           end
         end
 
@@ -511,9 +518,10 @@ module Glue::Candlepin::Consumer
                        :contractNumber => pool["contractNumber"],
                        :providedProducts => provided_products,
                        :accountNumber => pool["accountNumber"],
-                       :productId => pool["productId"])
+                       :productId => pool["productId"],
+                       :poolType => type)
       }
-      consumed_entitlements.sort! {|a,b| a.poolName <=> b.poolName}
+      consumed_entitlements.sort! { |a,b| a.poolName <=> b.poolName }
       consumed_entitlements
     end
 
