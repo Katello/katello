@@ -237,6 +237,9 @@ Src::Application.routes.draw do
         resources :packages do
           get :search, :on => :collection
         end
+        resources :puppet_modules, :only => [:index, :show] do
+          get :search, :on => :collection
+        end
         resources :errata, :only => [:index, :show], :constraints => { :id => /[0-9a-zA-Z\-\+%_.:]+/ }
         resources :distributions, :only => [:index, :show], :constraints => { :id => /[0-9a-zA-Z \-\+%_.]+/ }
         member do
