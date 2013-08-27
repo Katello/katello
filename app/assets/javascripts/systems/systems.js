@@ -644,10 +644,10 @@ KT.subs = (function() {
                 type : button.data("method"),
                 data : '',
                 success: function(data) {
-                        console.log("success");
+                        notices.displayNotice("success", window.JSON.stringify({"notices": [i18n.runAutoAttachSuccess]}));
                 },
                 error: function(data) {
-                        notices.displayNotice("error", window.JSON.stringify({"notices": ["System cannot be healed.Please contact your system administrator"]}));
+                        notices.displayNotice("error", window.JSON.stringify({"notices": [i18n.runAutoAttachFail]}));
                 }
         });
    },
