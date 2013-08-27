@@ -8,7 +8,7 @@
 = content_for(:body) do
   = render :file => "bastion/menu/menu"
   %article.maincontent
-    = yield
+    %section{'ui-view' => ''}
 
 = content_for(:javascripts_block) do
   = javascript_include_tag 'bastion'
