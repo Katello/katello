@@ -70,6 +70,17 @@ AllCops:
   Excludes:
     - script/rails
     - script/thin
+    # TODO: remove these other paths as we fix them
+    - db/**
+    - app/models/**
+    - app/lib/**
+    - app/controllers/**
+    - app/helpers/**
+    - spec/**
+    - test/**
+    - integration_spec/**
+    - config/**
+    - engines/**
 
 SpaceInsideHashLiteralBraces:
   EnforcedStyleIsWithSpaces: false
@@ -91,3 +102,12 @@ AssignmentInCondition:
 
 FavorUnlessOverNegatedIf:
   Enabled: false
+
+WhileUntilModifier:
+  Enabled: false
+
+Lambda:
+  Enabled: false # don't require -> for single line lambdas
+
+HashMethods:
+  Enabled: false # we use Configuration#has_key? which rubocop mistakes for the hash method
