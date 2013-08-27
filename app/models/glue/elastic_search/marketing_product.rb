@@ -10,10 +10,13 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-class MarketingProduct < Product
 
-  include Glue::ElasticSearch::MarketingProduct if Katello.config.use_elasticsearch
+module Glue::ElasticSearch::MarketingProduct
 
-  has_many :marketing_engineering_products, :dependent => :destroy
-  has_many :engineering_products, :through => :marketing_engineering_products
+  def self.included(base)
+    base.class_eval do
+      index_name (Katello.config.elastic_index + '_' +  'marketing_product')
+    end
+  end
+
 end
