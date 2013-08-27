@@ -92,8 +92,6 @@ Requires:       %{?scl_prefix}rubygem(delayed_job) >= 3.0.2
 Requires:       %{?scl_prefix}rubygem(delayed_job_active_record) >= 0.3.3
 Requires:       %{?scl_prefix}rubygem(delayed_job_active_record) < 0.4.0
 Requires:       %{?scl_prefix}rubygem(acts_as_reportable) >= 1.1.1
-Requires:       %{?scl_prefix}rubygem(ruport) >= 1.7.0
-Requires:       %{?scl_prefix}rubygem(prawn)
 Requires:       %{?scl_prefix}rubygem(daemons) >= 1.1.4
 Requires:       %{?scl_prefix}rubygem(uuidtools)
 Requires:       %{?scl_prefix}rubygem(hooks)
@@ -182,13 +180,11 @@ BuildRequires:       %{?scl_prefix}rubygem(maruku)
 BuildRequires:       %{?scl_prefix}rubygem(net-ldap)
 BuildRequires:       %{?scl_prefix}rubygem(oauth)
 BuildRequires:       %{?scl_prefix}rubygem(pg)
-BuildRequires:       %{?scl_prefix}rubygem(prawn)
 BuildRequires:       %{?scl_prefix}rubygem(rack-openid) >= 1.3.1
 BuildRequires:       %{?scl_prefix}rubygem(rails) >= 3.0.10
 BuildRequires:       %{?scl_prefix}rubygem(rails_warden)
 BuildRequires:       %{?scl_prefix}rubygem(rest-client)
 BuildRequires:       %{?scl_prefix}rubygem(ruby-openid) >= 2.2.3
-BuildRequires:       %{?scl_prefix}rubygem(ruport) >= 1.7.0
 BuildRequires:       %{?scl_prefix}rubygem(sass)
 BuildRequires:       %{?scl_prefix}rubygem(simple-navigation) >= 3.3.4
 BuildRequires:       %{?scl_prefix}rubygem(sqlite3)
