@@ -34,3 +34,8 @@ echo ""
 echo "********* Testing Asset Precompile ****************"
 bundle exec rake assets:precompile || exit 1
 echo "Asset precompile works."
+
+echo ""
+echo "********* Rubocop Lint Test ****************"
+bundle exec rubocop || exit 1
+echo "Ruby code passed rubocop check."
