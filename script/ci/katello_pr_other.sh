@@ -37,5 +37,6 @@ echo "Asset precompile works."
 
 echo ""
 echo "********* Rubocop Lint Test ****************"
+gem install rubocop
 bundle exec rubocop || exit 1
 echo "Ruby code passed rubocop check."
