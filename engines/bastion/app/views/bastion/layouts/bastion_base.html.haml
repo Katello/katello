@@ -1,0 +1,22 @@
+/ [if lt IE 7]
+  %p
+    You are using an unsupported browser.
+/ [if lt IE 9]
+  %script{"src"=>"components/es5-shim.js"}
+  %script{"src"=>"components/json3.min.js"}
+  %script{"src"=>"html5/excanvas.js"}
+
+= stylesheet_link_tag "stylesheets/bastion"
+= yield :stylesheets
+
+%article.maincontent{"ng-app"=>"Katello"}
+  %section{'ui-view' => ''}
+
+= javascript_include_tag 'bastion'
+%script{ :type => "text/javascript" }
+  = render :partial => 'katello/common/config'
+  = render :partial => 'katello/common/ajax_notices'
+  = render :partial => 'katello/common/notification'
+  = yield :inline_javascript
+
+= yield :javascripts
