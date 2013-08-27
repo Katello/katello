@@ -4,18 +4,18 @@
 
   -else
     %ul
-    - view_versions.each do |version|
-      %li
-        %div.row_item
-          .col_1.one-line-ellipsis{:title=>version.content_view.name}
-            %span.icon_wrap.fl
-              %span.fl{:class=>content_view_class(version)}
-            %h5
-              #{content_view_name(version)}
-          .col_2
-            #{content_view_message(version)}
-          .col_1
-          .col_2
-            #{format_time version.task_status.finish_time}
+      - view_versions.each do |version|
+        %li
+          %div.row_item
+            .col_1.one-line-ellipsis{:title=>version.content_view.name}
+              %span.icon_wrap.fl
+                %span.fl{:class=>content_view_class(version)}
+              %h5
+                #{content_view_name(version)}
+            .col_2
+              #{content_view_message(version)}
+            .col_1
+            .col_2
+              #{format_time version.task_status.finish_time}
 
 
