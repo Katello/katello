@@ -52,17 +52,21 @@ Dir.glob(File.join(dir, "**", "*")).each do |file|
   relative_file = file.sub(/^#{Regexp.escape(dir)}/, "")
   file_content = File.read(file)
   begin
-  gettext_strings = file_content.scan(/(_\(".*?"\))(.*)$/).map do |(string, suffix)|
-    if suffix.to_s.include?(".replace") # this is javascript and it uses different tool
-      next
-    end
-    if suffix = suffix.to_s[/(\s*%\s*.*$)/]
-      parts = suffix.split(/(\])/)
-      suffix = parts.reduce("") {|s, p| s << p; break s if s.count("[") == s.count("]"); s}
-    end
-    [string, suffix]
-  end.compact
-  rescue ArgumentError => e
+    gettext_strings = file_content.scan(/(_\(".*?"\))(.*)$/).map do |(string, suffix)|
+      if suffix.to_s.include?(".replace") # this is javascript and it uses different tool
+        next
+      end
+      if suffix = suffix.to_s[/(\s*%\s*.*$)/]
+        parts = suffix.split(/(\])/)
+        suffix = parts.reduce("") do |str, part|
+          str << part
+          break str if str.count("[") == str.count("]")
+          str
+        end
+      end
+      [string, suffix]
+    end.compact
+  rescue ArgumentError
     next # we can't scan binary files, skipping
   end
   if options[:interpolations]
@@ -74,7 +78,7 @@ Dir.glob(File.join(dir, "**", "*")).each do |file|
       puts "#{relative_file}: #{malformed}"
       if options[:fix]
         variables = malformed.scan(/#\{(.*?)\}/).map(&:first)
-        fixed = malformed.gsub(/#\{.*?\}/,"%s")
+        fixed = malformed.gsub(/#\{.*?\}/, "%s")
         fixed << " % "
         if variables.size == 1
           fixed << variables.first
@@ -98,6 +102,7 @@ Dir.glob(File.join(dir, "**", "*")).each do |file|
       puts "#{relative_file}: #{malformed}#{malformed_suffix}"
       if options[:fix]
         if malformed_suffix =~ /\s*%\s*\[(.*)\]/
+          # rubocop:disable AvoidPerlBackrefs
           array_vars = $1.split(",").map(&:strip)
           puts "Are this the variables used in the string?:"
           puts array_vars.inspect
