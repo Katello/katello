@@ -36,7 +36,7 @@ module Util
           next
         end
         line = line.gsub(/\s+$/, '')
-        if !line =~ /\S+/
+        if line !~ /\S+/
           next
         end
         if line =~ /^\s*(\w+)\s*=\s*(.*)/
