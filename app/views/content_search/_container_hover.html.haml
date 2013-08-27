@@ -3,9 +3,30 @@
 - env ||= nil
 - view ||= nil
 
-- if container.is_a? Product
-  = _("Packages (%s)") % container.total_package_count(env, view)
-  = _("Errata (%s)") % container.total_errata_count(env, view)
+- if !details
+
+  - if container.is_a? Product
+    = ([container.total_package_count(env, view),
+        container.total_errata_count(env, view),
+        container.total_puppet_module_count(env, view)]).join(' / ')
+
+  - else
+    = ([container.total_package_count(env),
+        container.total_errata_count(env),
+        container.total_puppet_module_count(env)]).join(' / ')
+
 - else
-  = _("Packages (%s)") % container.total_package_count(env)
-  = _("Errata (%s)") % container.total_errata_count(env)
+
+  - if container.is_a? Product
+    = _("Packages (%s)") % container.total_package_count(env, view)
+    <br/>
+    = _("Errata (%s)") % container.total_errata_count(env, view)
+    <br/>
+    = _("Puppet Modules (%s)") % container.total_puppet_module_count(env, view)
+
+  - else
+    = _("Packages (%s)") % container.total_package_count(env)
+    <br/>
+    = _("Errata (%s)") % container.total_errata_count(env)
+    <br/>
+    = _("Puppet Modules (%s)") % container.total_puppet_module_count(env)

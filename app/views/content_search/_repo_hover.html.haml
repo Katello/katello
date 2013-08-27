@@ -1,12 +1,25 @@
 -# may want to not store this as a partial for performance reasons
 - repo ||=  nil
-- if repo.package_count == 0
-= _("Packages (0)")
-- else
+
+- if !details
+
   %a.subgrid_link{:data=>{:repo_id=> repo.id, :env_id=>repo.environment_id, :type=>:repo_packages}}
-    = _("Packages (%s)") % repo.package_count
-- if repo.errata_count == 0
-= _("Errata (0)")
-- else
+    = repo.package_count
+
+  = ' / '
+
   %a.subgrid_link{:data=>{:repo_id=> repo.id, :env_id=>repo.environment_id, :type=>:repo_errata}}
-    = _("Errata (%s)") % repo.errata_count
+    = repo.errata_count
+
+  = ' / '
+
+  %a.subgrid_link{:data=>{:repo_id=> repo.id, :env_id=>repo.environment_id, :type=>:repo_puppet_modules}}
+    = repo.puppet_module_count
+
+- else
+
+  = _("Packages (%s)") % repo.package_count
+  <br/>
+  = _("Errata (%s)") % repo.errata_count
+  <br/>
+  = _("Puppet Modules (%s)") % repo.puppet_module_count
