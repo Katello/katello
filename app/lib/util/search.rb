@@ -51,7 +51,7 @@ module Util
     end
 
     def self.active_record_search_classes
-      ignore_list =  ["CpConsumerUser", "PulpSyncStatus", "PulpTaskStatus", "Hypervisor", "Pool"]
+      ignore_list =  ["CpConsumerUser", "Pool"]
       classes = get_subclasses(ActiveRecord::Base)
       classes.select{ |c| !ignore_list.include?(c.name) && c.respond_to?(:index) }.sort_by(&:name)
     end
