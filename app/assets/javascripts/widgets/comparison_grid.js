@@ -805,19 +805,19 @@ KT.comparison_grid.templates = (function(i18n) {
 
     var cell = function(data, row_height) {
             var display,
-
                 hover = data['hover'] ? data['hover'] : false,
-
-                hover_details = data['hover_details' ] ?
-                    $('<span/>', {
-                        'class' : 'details-icon hover_details',
-                        'original-title' : data['hover_details']
-                    }) : '',
-
+                hover_details =  '',
                 html = $('<div/>', {
                             'data-span' : data['span'],
                             'class'     : 'grid_cell cell_' + data['id']
                         });
+
+            if ( data['hover_details'] ) {
+                hover_details = $('<span/>', {
+                    'class' : 'details-icon hover_details',
+                    'original-title' : data['hover_details']
+                });
+            }
 
             if( data['in_column'] ){
                 if( data['display'] !== undefined ){

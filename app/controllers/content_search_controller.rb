@@ -181,7 +181,6 @@ class ContentSearchController < ApplicationController
 
     rows = []
     view_product_repo_map.each do |view, product_repo_map|
-
       prod_rows = []
       product_repo_map.each do |product, repos|
         prod_rows.concat(spanned_product_content(view, product, repos, 'puppet_module', puppet_module_ids))
@@ -192,6 +191,7 @@ class ContentSearchController < ApplicationController
         rows.concat(prod_rows)
       end
     end
+
     render :json => { :rows => rows, :name => _('Puppet Modules') }
   end
 
@@ -321,16 +321,18 @@ class ContentSearchController < ApplicationController
 
   def repo_puppet_modules
     offset = params[:offset] || 0
-    puppet_modules = PuppetModule.search('',{ :start => offset, :page_size => current_user.page_size,
-                                              :repoids => [@repo.pulp_id] })
+    puppet_modules = PuppetModule.search('', { :start => offset, :page_size => current_user.page_size,
+                                               :repoids => [@repo.pulp_id] })
 
     rows = puppet_modules.collect do |puppet_module|
-      { :name => display = puppet_module_display(puppet_module),
-        :id => puppet_module.id,
-        :cols => { :description => { :display => puppet_module.description } },
-        :data_type => "puppet_module",
-        :value => puppet_module.name
-      }
+      ContentSearch::Row.new(:id         => puppet_module.id,
+                             :name       => puppet_module_display(puppet_module),
+                             :cols       => { :description => { :display => puppet_module.description } },
+                             :data_type  => "puppet_module",
+                             :value      => puppet_module.name,
+                             :comparable => puppet_module.comparable,
+                             :object_id  => puppet_module.id
+      )
     end
 
     if puppet_modules.total > current_user.page_size
