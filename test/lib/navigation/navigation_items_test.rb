@@ -165,8 +165,16 @@ class NavigationItemsTest < MiniTest::Rails::ActiveSupport::TestCase
   def test_providers_item
     item = Navigation::Items::Providers.new(@acme_corporation)
 
-    assert_equal  _('Custom Content Repositories'), item.display
+    assert_equal  _('Custom Repositories'), item.display
     assert_equal  providers_path, item.url
+    assert        item.accessible?
+  end
+
+  def test_products_item
+    item = Navigation::Items::Products.new(@acme_corporation)
+
+    assert_equal  _('Products'), item.display
+    assert_equal  products_path(:anchor => '/products'), item.url
     assert        item.accessible?
   end
 

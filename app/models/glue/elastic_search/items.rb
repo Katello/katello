@@ -17,11 +17,15 @@ module Glue
 
       attr_accessor :obj_class, :query_string, :results, :total, :filters
 
-      def initialize(obj_class)
+      def initialize(obj_class = nil)
         @obj_class    = obj_class
         @query_string = query_string
         @results      = []
         @filters      = []
+      end
+
+      def model=(klass)
+        @obj_class = klass
       end
 
       # Retrieves items from the Elasticsearch index
@@ -48,12 +52,14 @@ module Glue
       def retrieve(query_string, start=0, search_options={})
 
         @query_string = query_string
-        @filters      = search_options[:filter] || []
+        @filters      = search_options[:filters] || []
         start         = start || 0
         all_rows      = false
-        sort_by       = search_options[:sort_by] || 'name'
+        sort_by       = search_options.fetch(:sort_by, 'name_sort')
         sort_order    = search_options[:sort_order] || 'ASC'
         total_count   = 0
+
+        sort_by + '_sort' if !sort_by.include?('_sort')
 
         # set the query default field, if one was provided.
         query_options = {}
@@ -80,7 +86,7 @@ module Glue
 
           sort {by sort_by, sort_order.to_s.downcase } if sort_by && sort_order
 
-          filters.each{ |i| filter  :terms, i } if !filters.empty?
+          filter :and, filters if filters.any?
 
           size page_size
           from start
@@ -90,6 +96,8 @@ module Glue
 
         if search_options[:load_records?]
           @results = load_records
+        else
+          @results = @results.results
         end
 
       rescue Tire::Search::SearchRequestFailed => e
@@ -132,7 +140,7 @@ module Glue
             all
           end
 
-          filters.each{ |i| filter  :terms, i } if !filters.empty?
+          filter :and, filters if filters.any?
 
           size 1
           from 0

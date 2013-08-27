@@ -1,3 +1,4 @@
+# encoding: utf-8
 #
 # Copyright 2013 Red Hat, Inc.
 #
@@ -11,17 +12,23 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 
-module Navigation
-  module Items
-    class Providers < Navigation::Item
+module Support
+  module SearchService
 
-      def initialize(organization)
-        @key           = :providers
-        @display       = _("Custom Repositories")
-        @authorization = lambda{ organization && Provider.any_readable?(organization) }
-        @url           = providers_path
+    class FakeSearchService
+
+      def model=(klass)
+      end
+
+      def retrieve(*args)
+        return [], 0
+      end
+
+      def total_items
+        0
       end
 
     end
+
   end
 end

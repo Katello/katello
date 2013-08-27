@@ -14,14 +14,53 @@ class Api::V2::ApiController < Api::ApiController
 
   include Api::Version2
   include Api::V2::Rendering
-  include Api::V1::ErrorHandling
+  include Api::V2::ErrorHandling
 
   # support for session (thread-local) variables must be the last filter in this class
   include Util::ThreadSession::Controller
   include AuthorizationRules
 
+  before_filter :load_search_service, :only => [:index]
+
   resource_description do
     api_version 'v2'
   end
+
+  def_param_group :search do
+    param :search, :string, :desc => "Search string"
+    param :offset, :number, :desc => "Starting location to retrieve data from"
+    param :limit,  :number, :desc => "Number of results to return"
+    param :sort, Hash do
+      param :by, :string, :desc => "Field to sort the results on"
+      param :order, :string, :desc => "How to order the sorted results (e.g. ASC for ascending)"
+    end
+  end
+
+  def load_search_service(service = nil)
+    if service.nil?
+      @search_service ||= Glue::ElasticSearch::Items.new
+    else
+      @search_service ||= service
+    end
+  end
+
+  protected
+
+    def labelize_params(params)
+      return params[:label] unless params.try(:[], :label).nil?
+      return Util::Model::labelize(params[:name]) unless params.try(:[], :name).nil?
+    end
+
+    def find_organization
+      organization_id = params[:organization_id]
+      @organization = Organization.without_deleting.having_name_or_label(organization_id).first
+    end
+
+    def sort_params
+      options = {}
+      options[:sort_by] = params[:sort_by] if params[:sort_by]
+      options[:sort_order]= params[:sort_order] if params[:sort_order]
+      options
+    end
 
 end

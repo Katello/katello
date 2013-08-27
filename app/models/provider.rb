@@ -24,6 +24,8 @@ class Provider < ActiveRecord::Base
   CUSTOM = 'Custom'
   TYPES = [REDHAT, CUSTOM]
 
+  attr_accessible :name, :description, :organization, :provider_type
+
   serialize :discovered_repos, Array
 
   belongs_to :organization
@@ -32,7 +34,6 @@ class Provider < ActiveRecord::Base
   has_many :products, :inverse_of => :provider
   has_many :repositories, through: :products
 
-  validates :name, :presence => true
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name
   validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
 
@@ -53,6 +54,7 @@ class Provider < ActiveRecord::Base
 
   scope :redhat, where(:provider_type => REDHAT)
   scope :custom, where(:provider_type => CUSTOM)
+
   def only_one_rhn_provider
     # validate only when new record is added (skip explicit valid? calls)
     if new_record? && provider_type == REDHAT && count_providers(REDHAT) != 0
