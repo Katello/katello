@@ -1,3 +1,6 @@
-collection @collection
+node(:total) { @collection[:total] }
+node(:subtotal) { @collection[:subtotal] }
 
-extends "api/v2/repositories/show"
+node :records do
+  partial("katello/api/v2/repositories/show", :object => @collection[:records])
+end

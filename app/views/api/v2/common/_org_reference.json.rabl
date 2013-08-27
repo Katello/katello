@@ -1,3 +1,3 @@
-node :organization_name do |r|
-  r.organization.name unless r.organization.nil?
+child :organization do |r|
+  attribute :name
 end

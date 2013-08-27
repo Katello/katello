@@ -22,6 +22,7 @@ module Glue::ElasticSearch::Provider
       mapping do
         indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
         indexes :name_sort, :type => 'string', :index => :not_analyzed
+        indexes :provider_type, :type => 'string', :index => :not_analyzed
       end
     end
   end

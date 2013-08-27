@@ -99,13 +99,6 @@ describe Api::V1::SystemsController do
         :content_view_id => @cv.id
     end
 
-    it "should refresh ES index" do
-      System.index.should_receive(:refresh)
-      System.stub(:create!).and_return({})
-      post :create, :organization_id => @organization.name, :environment_id => @environment_1.id, :name => 'test',
-        :cp_type => 'system', :installedProducts => installed_products, :content_view_id => @cv.id
-    end
-
     context "in organization with one environment" do
       it "requires either organization_id" do
         System.should_receive(:create!).with(hash_including(:environment => @environment_1, :cp_type => 'system', :facts => facts, :name => 'test')).once.and_return({})

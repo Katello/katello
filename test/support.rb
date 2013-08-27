@@ -1,3 +1,4 @@
+# encoding: utf-8
 #
 # Copyright 2013 Red Hat, Inc.
 #
@@ -10,18 +11,9 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-
-module Navigation
-  module Items
-    class Providers < Navigation::Item
-
-      def initialize(organization)
-        @key           = :providers
-        @display       = _("Custom Repositories")
-        @authorization = lambda{ organization && Provider.any_readable?(organization) }
-        @url           = providers_path
-      end
-
-    end
-  end
+module Support
+  require File.expand_path('../support/auth_support', __FILE__)
+  require File.expand_path('../support/warden_support', __FILE__)
+  require File.expand_path('../support/controller_support', __FILE__)
+  require File.expand_path('../support/search_service', __FILE__)
 end

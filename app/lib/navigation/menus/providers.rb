@@ -25,6 +25,8 @@ module Navigation
           Navigation::Items::Providers.new(organization),
           Navigation::Items::GpgKeys.new(organization)
         ]
+
+        @items << Navigation::Items::Products.new(organization) if ::User.current.experimental_ui
         super
       end
 
