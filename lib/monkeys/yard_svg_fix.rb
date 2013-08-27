@@ -5,7 +5,7 @@ module YARD
 
         # return svg images in responses
         def run
-          ppath = library.source_path
+          path = library.source_path
           filename = File.cleanpath(File.join(library.source_path, path))
           raise NotFoundError if !File.file?(filename)
           if filename =~ /\.(jpe?g|gif|png|bmp|svg)$/i

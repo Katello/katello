@@ -5,7 +5,7 @@ module MultiJson
   class<< self
     alias_method :old_aliased_load, :load
 
-    def load(string, options={})
+    def load(string, options = {})
       string = string.read if string.respond_to?(:read)
       string = "{}" if string == '""'
       old_aliased_load(string, options)

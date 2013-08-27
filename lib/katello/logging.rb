@@ -23,7 +23,8 @@ module Katello
       begin
         FileUtils.mkdir_p root_configuration.path unless File.directory?(root_configuration.path)
       rescue Errno::EACCES
-        # ignore when we have not sufficient privileges
+        # just notify insufficient privileges
+        puts "Insufficient privileges for #{root_configuration.path}"
       end
       configure_root_logger(options)
       integrate_yard_logger!
@@ -40,6 +41,8 @@ module Katello
 
     private
 
+    # TODO: clean this up
+    # rubocop:disable MethodLength, BlockAlignment
     def integrate_yard_logger!
       if defined?(::YARD)
         # redefine by YARD globally defined method #log to point to our logger
@@ -149,29 +152,37 @@ module Katello
       name = "#{options[:prefix]}joined"
       case root_configuration[:type]
         when 'syslog'
-          ::Logging.appenders.syslog(
-              name,
-              options.reverse_merge(:ident    => "#{options[:prefix]}katello",
-                                    :facility => ::Syslog::Constants::LOG_DAEMON)
-          )
+          build_syslog_appender(name, options)
         when 'file'
-          path = root_configuration.path
-          log_filename = "#{path}/#{options[:prefix]}#{root_configuration.filename}"
-          begin
-            ::Logging.appenders.rolling_file(
-              name,
-              options.reverse_merge(:filename => log_filename,
-                                    :roll_by  => 'date',
-                                    :age      => root_configuration.age,
-                                    :keep     => root_configuration.keep,
-                                    :layout   => build_layout(root_configuration.pattern, configuration.colorize))
-          )
-          rescue ArgumentError
-            # if appender cannot open output file we ignore it, STDOUT fallback will be used
-            nil
-          end
+          build_file_appender(name, options)
         else
           raise 'unsupported logger type, please choose syslog or file'
+      end
+    end
+
+    def build_syslog_appender(name, options)
+      ::Logging.appenders.syslog(
+        name,
+        options.reverse_merge(:ident    => "#{options[:prefix]}katello",
+                              :facility => ::Syslog::Constants::LOG_DAEMON)
+      )
+    end
+
+    def build_file_appender(name, options)
+      path = root_configuration.path
+      log_filename = "#{path}/#{options[:prefix]}#{root_configuration.filename}"
+      begin
+        ::Logging.appenders.rolling_file(
+          name,
+          options.reverse_merge(:filename => log_filename,
+                                :roll_by  => 'date',
+                                :age      => root_configuration.age,
+                                :keep     => root_configuration.keep,
+                                :layout   => build_layout(root_configuration.pattern, configuration.colorize))
+        )
+      rescue ArgumentError
+        # if appender cannot open output file we ignore it, STDOUT fallback will be used
+        nil
       end
     end
 

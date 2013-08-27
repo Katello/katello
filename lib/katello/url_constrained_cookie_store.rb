@@ -79,7 +79,7 @@ class Katello::UrlConstrainedCookieStore < ActionDispatch::Session::CookieStore
   end
 
   def create_cookie(request, cookie_data, options)
-    cookie = Hash.new
+    cookie = {}
     cookie[:value] = cookie_data
     if options[:expire_after]
       cookie[:value]['created_at'] ||= Time.now

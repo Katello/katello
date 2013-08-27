@@ -10,6 +10,7 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+# rubocop:disable HashMethods
 module Katello
   module Configuration
 
@@ -31,14 +32,14 @@ module Katello
       include Enumerable
 
       def each(&block)
-        @data.each &block
+        @data.each(&block)
       end
 
       # get configuration for `key`
       # @param [Symbol] key
       # @raise [NoKye] when key is missing
       def [](key)
-        raise ArgumentError, "#{key.inspect} should be a Symbol" unless Symbol === key
+        raise ArgumentError, "#{key.inspect} should be a Symbol" unless key.is_a?(Symbol)
         if has_key? key
           @data[key].is_a?(Proc) ? @data[key].call : @data[key]
         else
@@ -62,12 +63,12 @@ module Katello
         key, rest = keys.first, keys[1..-1]
         raise ArgumentError, 'supply at least one key' unless key
         has_key?(key) && self[key] && if rest.empty?
-                                         true
-                                       elsif Node === self[key]
-                                         self[key].present?(*rest)
-                                       else
-                                         false
-                                       end
+                                        true
+                                      elsif self[key].is_a?(Node)
+                                        self[key].present?(*rest)
+                                      else
+                                        false
+                                      end
       end
 
       # allows access keys by method call
@@ -78,14 +79,14 @@ module Katello
         else
           begin
             super
-          rescue NoMethodError => e
+          rescue NoMethodError
             raise NoKey, method.to_s
           end
         end
       end
 
       # respond to implementation according to method missing
-      def respond_to?(symbol, include_private=false)
+      def respond_to?(symbol, include_private = false)
         has_key?(symbol) || super
       end
 
@@ -96,9 +97,9 @@ module Katello
         other_config = convert hash_or_config
         other_config.each do |key, other_value|
           value     = has_key?(key) && self[key]
-          self[key] = if Node === value && Node === other_value
+          self[key] = if value.is_a?(Node) && other_value.is_a?(Node)
                         value.deep_merge!(other_value)
-                      elsif Node === value && other_value.nil?
+                      elsif value.is_a?(Node) && other_value.nil?
                         self[key]
                       else
                         other_value
@@ -109,7 +110,7 @@ module Katello
 
       def to_hash
         @data.inject({}) do |hash, (k, v)|
-          hash.update k => (Node === v ? v.to_hash : v)
+          hash.update k => (v.is_a?(Node) ? v.to_hash : v)
         end
       end
 
@@ -131,14 +132,14 @@ module Katello
 
       # converts Hash by symbolizing keys and allowing only symbols as keys
       def convert_hash(hash)
-        raise ArgumentError, "#{hash.inspect} is not a Hash" unless Hash === hash
+        raise ArgumentError, "#{hash.inspect} is not a Hash" unless hash.is_a?(Hash)
 
         hash.keys.each do |key|
           hash[(key.to_sym rescue key) || key] = convert hash.delete(key)
         end
 
         hash.keys.all? do |k|
-          raise ArgumentError, "keys must be Symbols, #{k.inspect} is not" unless Symbol === k
+          raise ArgumentError, "keys must be Symbols, #{k.inspect} is not" unless k.is_a?(Symbol)
         end
         hash
       end
