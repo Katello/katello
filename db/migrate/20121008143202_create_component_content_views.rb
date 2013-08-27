@@ -7,7 +7,7 @@ class CreateComponentContentViews < ActiveRecord::Migration
       t.timestamps
     end
     add_index :component_content_views, [:content_view_definition_id, :content_view_id],
-      :name => "component_content_views_index"
+              :name => "component_content_views_index"
   end
 
   def self.down

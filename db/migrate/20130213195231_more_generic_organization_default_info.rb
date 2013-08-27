@@ -10,7 +10,7 @@ class MoreGenericOrganizationDefaultInfo < ActiveRecord::Migration
     Organization.reset_column_information
     Organization.all.each do |org|
       org.default_info = Hash.new
-      org.default_info["system"] = YAML::load(org[:system_info_keys])
+      org.default_info["system"] = YAML.load(org[:system_info_keys])
       org.save!
     end
     remove_column :organizations, :system_info_keys
@@ -21,7 +21,7 @@ class MoreGenericOrganizationDefaultInfo < ActiveRecord::Migration
     add_column :organizations, :system_info_keys, :text
     Organization.reset_column_information
     Organization.all.each do |org|
-      org.system_default_info = YAML::load(org.default_info)["system"]
+      org.system_default_info = YAML.load(org.default_info)["system"]
       org.save!
     end
     remove_column :organizations, :info_keys
