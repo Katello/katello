@@ -47,17 +47,23 @@ Src::Application.routes.draw do
         post :errata
         post :products
         post :packages
+        post :puppet_modules
         post :packages_items
         post :errata_items
+        post :puppet_modules_items
         get :view_packages
+        get :view_puppet_modules
         post :repos
         post :views
         get :repo_packages
         get :repo_errata
+        get :repo_puppet_modules
         get :repo_compare_packages
         get :repo_compare_errata
+        get :repo_compare_puppet_modules
         get :view_compare_packages
         get :view_compare_errata
+        get :view_compare_puppet_modules
       end
   end
 
@@ -280,6 +286,13 @@ Src::Application.routes.draw do
     end
   end
 
+  resources :puppet_modules, :only => [:show] do
+    collection do
+      get :auto_complete
+      get :author_auto_complete
+    end
+  end
+
   resources :distributors do
     resources :events, :only => [:index, :show], :controller => "distributor_events" do
       collection do
@@ -492,11 +505,6 @@ Src::Application.routes.draw do
   match '/user_session/logout' => 'user_sessions#destroy'
   match '/user_session' => 'user_sessions#show', :via => :get, :as => 'show_user_session'
   match '/authenticate' => 'user_sessions#authenticate', :via => :get
-
-  get '/puppet_modules/auto_complete' => 'puppet_modules#auto_complete',
-    :as => "auto_complete_puppet_modules"
-  get '/puppet_modules/author_auto_complete' => 'puppet_modules#author_auto_complete',
-    :as => "author_auto_complete_puppet_modules"
 
   resources :password_resets, :only => [:create, :edit, :update] do
     collection do

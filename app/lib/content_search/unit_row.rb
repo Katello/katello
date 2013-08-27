@@ -12,9 +12,9 @@
 
 module ContentSearch
 
-  class PackageRow < Row
+  class UnitRow < Row
     include ContentSearchHelper
-    attr_accessor :package
+    attr_accessor :unit # :package, :errata, :puppet_module
 
     def initialize(options)
       super
@@ -25,24 +25,26 @@ module ContentSearch
       self.data_type ||= type
       self.cols ||= {}
       self.id ||= build_id
-      self.name ||= build_display
-      self.value ||= package.nvrea
-    end
 
-    def build_display
-      is_package? ? package_display(package) : errata_display(package)
+      case unit.class.name.underscore
+      when "package"
+        self.name ||= package_display(unit)
+        self.value ||= unit.nvrea
+      when "errata"
+        self.name ||= errata_display(unit)
+        self.value ||= unit.id
+      when "puppet_module"
+        self.name ||= puppet_module_display(unit)
+        self.value ||= unit.name
+      end
     end
 
     def build_id
-      [self.parent_id, "package", package.id].select(&:present?).join("_")
+      [self.parent_id, "package", unit.id].select(&:present?).join("_")
     end
 
     def type
-      package.class.name.underscore
-    end
-
-    def is_package?
-      type == "package"
+      unit.class.name.underscore
     end
 
     def short_details_erratum_path(*args)

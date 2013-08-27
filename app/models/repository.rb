@@ -134,7 +134,7 @@ class Repository < ActiveRecord::Base
 
   def clones
     lib_id = self.library_instance_id || self.id
-    Repository.in_environment(self.environment.successors).where(:library_instance_id=>lib_id)
+    Repository.where(:library_instance_id=>lib_id)
   end
 
   #is the repo cloned in the specified environment

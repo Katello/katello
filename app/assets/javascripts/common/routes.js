@@ -18,7 +18,6 @@
   Utils = {
     serialize: function(object, prefix) {
       var element, i, key, prop, result, s, _i, _len;
-
       if (prefix == null) {
         prefix = null;
       }
@@ -65,7 +64,6 @@
     },
     clean_path: function(path) {
       var last_index;
-
       path = path.split("://");
       last_index = path.length - 1;
       path[last_index] = path[last_index].replace(/\/+/g, "/").replace(/.\/$/m, "");
@@ -73,7 +71,6 @@
     },
     set_default_url_options: function(optional_parts, options) {
       var i, part, _i, _len, _results;
-
       _results = [];
       for (i = _i = 0, _len = optional_parts.length; _i < _len; i = ++_i) {
         part = optional_parts[i];
@@ -87,7 +84,6 @@
     },
     extract_anchor: function(options) {
       var anchor;
-
       anchor = "";
       if (options.hasOwnProperty("anchor")) {
         anchor = "#" + options.anchor;
@@ -97,7 +93,6 @@
     },
     extract_options: function(number_of_params, args) {
       var ret_value;
-
       ret_value = {};
       if (args.length > number_of_params) {
         ret_value = args.pop();
@@ -106,7 +101,6 @@
     },
     path_identifier: function(object) {
       var property;
-
       if (object === 0) {
         return "0";
       }
@@ -124,7 +118,6 @@
     },
     clone: function(obj) {
       var attr, copy, key;
-
       if ((obj == null) || "object" !== this.get_object_type(obj)) {
         return obj;
       }
@@ -138,7 +131,6 @@
     },
     prepare_parameters: function(required_parameters, actual_parameters, options) {
       var i, result, val, _i, _len;
-
       result = this.clone(options) || {};
       for (i = _i = 0, _len = required_parameters.length; _i < _len; i = ++_i) {
         val = required_parameters[i];
@@ -147,8 +139,7 @@
       return result;
     },
     build_path: function(required_parameters, optional_parts, route, args) {
-      var opts, parameters, result, url, url_params;
-
+      var anchor, opts, parameters, result, url, url_params;
       args = Array.prototype.slice.call(args);
       opts = this.extract_options(required_parameters.length, args);
       if (args.length > required_parameters.length) {
@@ -156,16 +147,17 @@
       }
       parameters = this.prepare_parameters(required_parameters, args, opts);
       this.set_default_url_options(optional_parts, parameters);
+      anchor = this.extract_anchor(parameters);
       result = "" + (this.get_prefix()) + (this.visit(route, parameters));
-      url = Utils.clean_path("" + result + (this.extract_anchor(parameters)));
+      url = Utils.clean_path("" + result);
       if ((url_params = this.serialize(parameters)).length) {
         url += "?" + url_params;
       }
+      url += anchor;
       return url;
     },
     visit: function(route, parameters, optional) {
       var left, left_part, right, right_part, type, value;
-
       if (optional == null) {
         optional = false;
       }
@@ -204,8 +196,10 @@
     },
     visit_globbing: function(route, parameters, optional) {
       var left, right, type, value;
-
       type = route[0], left = route[1], right = route[2];
+      if (left.replace(/^\*/i, "") !== left) {
+        route[1] = left = left.replace(/^\*/i, "");
+      }
       value = parameters[left];
       if (value == null) {
         return this.visit(route, parameters, optional);
@@ -222,7 +216,6 @@
     },
     get_prefix: function() {
       var prefix;
-
       prefix = defaults.prefix;
       if (prefix !== "") {
         prefix = (prefix.match("/$") ? prefix : "" + prefix + "/");
@@ -232,7 +225,6 @@
     _classToTypeCache: null,
     _classToType: function() {
       var name, _i, _len, _ref;
-
       if (this._classToTypeCache != null) {
         return this._classToTypeCache;
       }
@@ -246,7 +238,6 @@
     },
     get_object_type: function(obj) {
       var strType;
-
       if (window.jQuery && (window.jQuery.type != null)) {
         return window.jQuery.type(obj);
       }
@@ -255,7 +246,6 @@
     },
     namespace: function(root, namespaceString) {
       var current, parts;
-
       parts = (namespaceString ? namespaceString.split(".") : []);
       if (!parts.length) {
         return;
@@ -469,9 +459,9 @@
   api_custom_info_path: function(_informable_type, _informable_id, options) {
   return Utils.build_path(["informable_type","informable_id"], ["format"], [2,[2,[2,[2,[2,[2,[2,[2,[7,"/",false],[6,"api",false]],[7,"/",false]],[6,"custom_info",false]],[7,"/",false]],[3,"informable_type",false]],[7,"/",false]],[3,"informable_id",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
   },
-// api_destroy_custom_info => /api/custom_info/:informable_type/:informable_id/:keyname(.:format)
+// api_destroy_custom_info => /api/custom_info/:informable_type/:informable_id/*keyname(.:format)
   api_destroy_custom_info_path: function(_informable_type, _informable_id, _keyname, options) {
-  return Utils.build_path(["informable_type","informable_id","keyname"], ["format"], [2,[2,[2,[2,[2,[2,[2,[2,[2,[2,[7,"/",false],[6,"api",false]],[7,"/",false]],[6,"custom_info",false]],[7,"/",false]],[3,"informable_type",false]],[7,"/",false]],[3,"informable_id",false]],[7,"/",false]],[3,"keyname",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
+  return Utils.build_path(["informable_type","informable_id","keyname"], ["format"], [2,[2,[2,[2,[2,[2,[2,[2,[2,[2,[7,"/",false],[6,"api",false]],[7,"/",false]],[6,"custom_info",false]],[7,"/",false]],[3,"informable_type",false]],[7,"/",false]],[3,"informable_id",false]],[7,"/",false]],[5,[3,"keyname",false],false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
   },
 // api_distributor => /api/distributors/:id(.:format)
   api_distributor_path: function(_id, options) {
@@ -528,6 +518,22 @@
 // api_hypervisors => /api/hypervisors(.:format)
   api_hypervisors_path: function(options) {
   return Utils.build_path([], ["format"], [2,[2,[2,[2,[7,"/",false],[6,"api",false]],[7,"/",false]],[6,"hypervisors",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
+  },
+// api_node => /api/nodes/:id(.:format)
+  api_node_path: function(_id, options) {
+  return Utils.build_path(["id"], ["format"], [2,[2,[2,[2,[2,[2,[7,"/",false],[6,"api",false]],[7,"/",false]],[6,"nodes",false]],[7,"/",false]],[3,"id",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
+  },
+// api_node_capabilities => /api/nodes/:node_id/capabilities(.:format)
+  api_node_capabilities_path: function(_node_id, options) {
+  return Utils.build_path(["node_id"], ["format"], [2,[2,[2,[2,[2,[2,[2,[2,[7,"/",false],[6,"api",false]],[7,"/",false]],[6,"nodes",false]],[7,"/",false]],[3,"node_id",false]],[7,"/",false]],[6,"capabilities",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
+  },
+// api_node_capability => /api/nodes/:node_id/capabilities/:id(.:format)
+  api_node_capability_path: function(_node_id, _id, options) {
+  return Utils.build_path(["node_id","id"], ["format"], [2,[2,[2,[2,[2,[2,[2,[2,[2,[2,[7,"/",false],[6,"api",false]],[7,"/",false]],[6,"nodes",false]],[7,"/",false]],[3,"node_id",false]],[7,"/",false]],[6,"capabilities",false]],[7,"/",false]],[3,"id",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
+  },
+// api_nodes => /api/nodes(.:format)
+  api_nodes_path: function(options) {
+  return Utils.build_path([], ["format"], [2,[2,[2,[2,[7,"/",false],[6,"api",false]],[7,"/",false]],[6,"nodes",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
   },
 // api_organization => /api/organizations/:id(.:format)
   api_organization_path: function(_id, options) {
@@ -857,9 +863,9 @@
   api_roles_path: function(options) {
   return Utils.build_path([], ["format"], [2,[2,[2,[2,[7,"/",false],[6,"api",false]],[7,"/",false]],[6,"roles",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
   },
-// api_show_custom_info => /api/custom_info/:informable_type/:informable_id/:keyname(.:format)
+// api_show_custom_info => /api/custom_info/:informable_type/:informable_id/*keyname(.:format)
   api_show_custom_info_path: function(_informable_type, _informable_id, _keyname, options) {
-  return Utils.build_path(["informable_type","informable_id","keyname"], ["format"], [2,[2,[2,[2,[2,[2,[2,[2,[2,[2,[7,"/",false],[6,"api",false]],[7,"/",false]],[6,"custom_info",false]],[7,"/",false]],[3,"informable_type",false]],[7,"/",false]],[3,"informable_id",false]],[7,"/",false]],[3,"keyname",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
+  return Utils.build_path(["informable_type","informable_id","keyname"], ["format"], [2,[2,[2,[2,[2,[2,[2,[2,[2,[2,[7,"/",false],[6,"api",false]],[7,"/",false]],[6,"custom_info",false]],[7,"/",false]],[3,"informable_type",false]],[7,"/",false]],[3,"informable_id",false]],[7,"/",false]],[5,[3,"keyname",false],false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
   },
 // api_status => /api/status(.:format)
   api_status_path: function(options) {
@@ -917,9 +923,9 @@
   api_task_path: function(_id, options) {
   return Utils.build_path(["id"], ["format"], [2,[2,[2,[2,[2,[2,[7,"/",false],[6,"api",false]],[7,"/",false]],[6,"tasks",false]],[7,"/",false]],[3,"id",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
   },
-// api_update_custom_info => /api/custom_info/:informable_type/:informable_id/:keyname(.:format)
+// api_update_custom_info => /api/custom_info/:informable_type/:informable_id/*keyname(.:format)
   api_update_custom_info_path: function(_informable_type, _informable_id, _keyname, options) {
-  return Utils.build_path(["informable_type","informable_id","keyname"], ["format"], [2,[2,[2,[2,[2,[2,[2,[2,[2,[2,[7,"/",false],[6,"api",false]],[7,"/",false]],[6,"custom_info",false]],[7,"/",false]],[3,"informable_type",false]],[7,"/",false]],[3,"informable_id",false]],[7,"/",false]],[3,"keyname",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
+  return Utils.build_path(["informable_type","informable_id","keyname"], ["format"], [2,[2,[2,[2,[2,[2,[2,[2,[2,[2,[7,"/",false],[6,"api",false]],[7,"/",false]],[6,"custom_info",false]],[7,"/",false]],[3,"informable_type",false]],[7,"/",false]],[3,"informable_id",false]],[7,"/",false]],[5,[3,"keyname",false],false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
   },
 // api_user => /api/users/:id(.:format)
   api_user_path: function(_id, options) {
@@ -1397,6 +1403,14 @@
   edit_api_consumer_path: function(_id, options) {
   return Utils.build_path(["id"], ["format"], [2,[2,[2,[2,[2,[2,[2,[2,[7,"/",false],[6,"api",false]],[7,"/",false]],[6,"consumers",false]],[7,"/",false]],[3,"id",false]],[7,"/",false]],[6,"edit",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
   },
+// edit_api_node => /api/nodes/:id/edit(.:format)
+  edit_api_node_path: function(_id, options) {
+  return Utils.build_path(["id"], ["format"], [2,[2,[2,[2,[2,[2,[2,[2,[7,"/",false],[6,"api",false]],[7,"/",false]],[6,"nodes",false]],[7,"/",false]],[3,"id",false]],[7,"/",false]],[6,"edit",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
+  },
+// edit_api_node_capability => /api/nodes/:node_id/capabilities/:id/edit(.:format)
+  edit_api_node_capability_path: function(_node_id, _id, options) {
+  return Utils.build_path(["node_id","id"], ["format"], [2,[2,[2,[2,[2,[2,[2,[2,[2,[2,[2,[2,[7,"/",false],[6,"api",false]],[7,"/",false]],[6,"nodes",false]],[7,"/",false]],[3,"node_id",false]],[7,"/",false]],[6,"capabilities",false]],[7,"/",false]],[3,"id",false]],[7,"/",false]],[6,"edit",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
+  },
 // edit_api_organization => /api/organizations/:id/edit(.:format)
   edit_api_organization_path: function(_id, options) {
   return Utils.build_path(["id"], ["format"], [2,[2,[2,[2,[2,[2,[2,[2,[7,"/",false],[6,"api",false]],[7,"/",false]],[6,"organizations",false]],[7,"/",false]],[3,"id",false]],[7,"/",false]],[6,"edit",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
@@ -1861,6 +1875,14 @@
   new_api_consumer_path: function(options) {
   return Utils.build_path([], ["format"], [2,[2,[2,[2,[2,[2,[7,"/",false],[6,"api",false]],[7,"/",false]],[6,"consumers",false]],[7,"/",false]],[6,"new",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
   },
+// new_api_node => /api/nodes/new(.:format)
+  new_api_node_path: function(options) {
+  return Utils.build_path([], ["format"], [2,[2,[2,[2,[2,[2,[7,"/",false],[6,"api",false]],[7,"/",false]],[6,"nodes",false]],[7,"/",false]],[6,"new",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
+  },
+// new_api_node_capability => /api/nodes/:node_id/capabilities/new(.:format)
+  new_api_node_capability_path: function(_node_id, options) {
+  return Utils.build_path(["node_id"], ["format"], [2,[2,[2,[2,[2,[2,[2,[2,[2,[2,[7,"/",false],[6,"api",false]],[7,"/",false]],[6,"nodes",false]],[7,"/",false]],[3,"node_id",false]],[7,"/",false]],[6,"capabilities",false]],[7,"/",false]],[6,"new",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
+  },
 // new_api_organization => /api/organizations/new(.:format)
   new_api_organization_path: function(options) {
   return Utils.build_path([], ["format"], [2,[2,[2,[2,[2,[2,[7,"/",false],[6,"api",false]],[7,"/",false]],[6,"organizations",false]],[7,"/",false]],[6,"new",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
@@ -2217,6 +2239,18 @@
   publish_setup_content_view_definition_path: function(_id, options) {
   return Utils.build_path(["id"], ["format"], [2,[2,[2,[2,[2,[2,[7,"/",false],[6,"content_view_definitions",false]],[7,"/",false]],[3,"id",false]],[7,"/",false]],[6,"publish_setup",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
   },
+// puppet_module => /puppet_modules/:id(.:format)
+  puppet_module_path: function(_id, options) {
+  return Utils.build_path(["id"], ["format"], [2,[2,[2,[2,[7,"/",false],[6,"puppet_modules",false]],[7,"/",false]],[3,"id",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
+  },
+// puppet_modules_content_search_index => /content_search/puppet_modules(.:format)
+  puppet_modules_content_search_index_path: function(options) {
+  return Utils.build_path([], ["format"], [2,[2,[2,[2,[7,"/",false],[6,"content_search",false]],[7,"/",false]],[6,"puppet_modules",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
+  },
+// puppet_modules_items_content_search_index => /content_search/puppet_modules_items(.:format)
+  puppet_modules_items_content_search_index_path: function(options) {
+  return Utils.build_path([], ["format"], [2,[2,[2,[2,[7,"/",false],[6,"content_search",false]],[7,"/",false]],[6,"puppet_modules_items",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
+  },
 // rails_info_properties => /rails/info/properties(.:format)
   rails_info_properties_path: function(options) {
   return Utils.build_path([], ["format"], [2,[2,[2,[2,[2,[2,[7,"/",false],[6,"rails",false]],[7,"/",false]],[6,"info",false]],[7,"/",false]],[6,"properties",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
@@ -2313,6 +2347,10 @@
   repo_compare_packages_content_search_index_path: function(options) {
   return Utils.build_path([], ["format"], [2,[2,[2,[2,[7,"/",false],[6,"content_search",false]],[7,"/",false]],[6,"repo_compare_packages",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
   },
+// repo_compare_puppet_modules_content_search_index => /content_search/repo_compare_puppet_modules(.:format)
+  repo_compare_puppet_modules_content_search_index_path: function(options) {
+  return Utils.build_path([], ["format"], [2,[2,[2,[2,[7,"/",false],[6,"content_search",false]],[7,"/",false]],[6,"repo_compare_puppet_modules",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
+  },
 // repo_discovery_provider => /providers/:id/repo_discovery(.:format)
   repo_discovery_provider_path: function(_id, options) {
   return Utils.build_path(["id"], ["format"], [2,[2,[2,[2,[2,[2,[7,"/",false],[6,"providers",false]],[7,"/",false]],[3,"id",false]],[7,"/",false]],[6,"repo_discovery",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
@@ -2324,6 +2362,10 @@
 // repo_packages_content_search_index => /content_search/repo_packages(.:format)
   repo_packages_content_search_index_path: function(options) {
   return Utils.build_path([], ["format"], [2,[2,[2,[2,[7,"/",false],[6,"content_search",false]],[7,"/",false]],[6,"repo_packages",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
+  },
+// repo_puppet_modules_content_search_index => /content_search/repo_puppet_modules(.:format)
+  repo_puppet_modules_content_search_index_path: function(options) {
+  return Utils.build_path([], ["format"], [2,[2,[2,[2,[7,"/",false],[6,"content_search",false]],[7,"/",false]],[6,"repo_puppet_modules",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
   },
 // report_api_environment_systems => /api/environments/:environment_id/systems/report(.:format)
   report_api_environment_systems_path: function(_environment_id, options) {
@@ -2489,6 +2531,10 @@
   subscriptions_system_path: function(_id, options) {
   return Utils.build_path(["id"], ["format"], [2,[2,[2,[2,[2,[2,[7,"/",false],[6,"systems",false]],[7,"/",false]],[3,"id",false]],[7,"/",false]],[6,"subscriptions",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
   },
+// sync_api_node => /api/nodes/:id/sync(.:format)
+  sync_api_node_path: function(_id, options) {
+  return Utils.build_path(["id"], ["format"], [2,[2,[2,[2,[2,[2,[2,[2,[7,"/",false],[6,"api",false]],[7,"/",false]],[6,"nodes",false]],[7,"/",false]],[3,"id",false]],[7,"/",false]],[6,"sync",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
+  },
 // sync_complete_api_repositories => /api/repositories/sync_complete(.:format)
   sync_complete_api_repositories_path: function(options) {
   return Utils.build_path([], ["format"], [2,[2,[2,[2,[2,[2,[7,"/",false],[6,"api",false]],[7,"/",false]],[6,"repositories",false]],[7,"/",false]],[6,"sync_complete",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
@@ -2637,10 +2683,6 @@
   systems_dashboard_index_path: function(options) {
   return Utils.build_path([], ["format"], [2,[2,[2,[2,[7,"/",false],[6,"dashboard",false]],[7,"/",false]],[6,"systems",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
   },
-// systems_registerable_api_systems => /api/systems/systems_registerable(.:format)
-  systems_registerable_api_systems_path: function(options) {
-  return Utils.build_path([], ["format"], [2,[2,[2,[2,[2,[2,[7,"/",false],[6,"api",false]],[7,"/",false]],[6,"systems",false]],[7,"/",false]],[6,"systems_registerable",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
-  },
 // systems_system_group => /system_groups/:id/systems(.:format)
   systems_system_group_path: function(_id, options) {
   return Utils.build_path(["id"], ["format"], [2,[2,[2,[2,[2,[2,[7,"/",false],[6,"system_groups",false]],[7,"/",false]],[3,"id",false]],[7,"/",false]],[6,"systems",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
@@ -2737,9 +2779,17 @@
   view_compare_packages_content_search_index_path: function(options) {
   return Utils.build_path([], ["format"], [2,[2,[2,[2,[7,"/",false],[6,"content_search",false]],[7,"/",false]],[6,"view_compare_packages",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
   },
+// view_compare_puppet_modules_content_search_index => /content_search/view_compare_puppet_modules(.:format)
+  view_compare_puppet_modules_content_search_index_path: function(options) {
+  return Utils.build_path([], ["format"], [2,[2,[2,[2,[7,"/",false],[6,"content_search",false]],[7,"/",false]],[6,"view_compare_puppet_modules",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
+  },
 // view_packages_content_search_index => /content_search/view_packages(.:format)
   view_packages_content_search_index_path: function(options) {
   return Utils.build_path([], ["format"], [2,[2,[2,[2,[7,"/",false],[6,"content_search",false]],[7,"/",false]],[6,"view_packages",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
+  },
+// view_puppet_modules_content_search_index => /content_search/view_puppet_modules(.:format)
+  view_puppet_modules_content_search_index_path: function(options) {
+  return Utils.build_path([], ["format"], [2,[2,[2,[2,[7,"/",false],[6,"content_search",false]],[7,"/",false]],[6,"view_puppet_modules",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
   },
 // views_content_search_index => /content_search/views(.:format)
   views_content_search_index_path: function(options) {

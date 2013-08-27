@@ -94,6 +94,7 @@
                     = _('Search for all packages with a specific requires:')
                     .example
                       requires:sendmail
+
       %fieldset.primary#errata_selector
         = label_tag :errata, _("Errata")
         #errata_search
@@ -122,6 +123,37 @@
                     .example
                       title:*kernel*
 
+      %fieldset.primary#puppet_modules_selector
+        = label_tag :puppet_modules, _("Puppet Modules")
+        #puppet_modules_search
+          = radio_button_tag :puppet_modules, :search, true
+          = text_field_tag :search, '', :size=>19, :placeholder=>_('Search modules')
+          %span.browse_tipsy.details_icon-grey
+            %span.hidden-text.hidden
+              .la.content-tipsy
+                = _('Example Searches:')
+                %div
+                %ul
+                  %li
+                    =_('Searching by exact name:')
+                    .example
+                      name:activemq
+
+                  %li
+                    =_('Searching by exact name and author:')
+                    .example
+                      name:activemq AND author:puppetlabs
+
+                  %li
+                    =_('Searching for name starting with lib:')
+                    .example
+                      name:lib*
+
+                %div
+                  = _('Available search fields:')
+                  %ul
+                    %li.example
+                      name, author, version, summary, description, license, project_page, source, checksums, tag_list
 
 
       %input#browse_button.fr.button{:type=>'submit', :value=>_('Go')}
