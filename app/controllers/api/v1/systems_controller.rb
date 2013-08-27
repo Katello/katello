@@ -362,7 +362,10 @@ A hint for choosing the right value for the releaseVer param
     system_report.rename_column("custom_info", "custom info")
 
     respond_to do |format|
-      format.html { render :text => system_report.as(:html), :type => :html and return }
+      format.html do
+        render :text => system_report.as(:html), :type => :html
+        return
+      end
       format.text { render :text => system_report.as(:text, :ignore_table_width => true) }
       format.csv { render :text => system_report.as(:csv) }
       format.pdf do
@@ -492,7 +495,9 @@ This information is then used for computing the errata available for the system.
           raise HttpErrors::BadRequest, _("Organization %s has more than one environment. Please specify target environment for system registration.") % @organization.name
         end
       else
-        @environment = @organization.environments.first and return
+        if @environment = @organization.environments.first
+          return
+        end
       end
     end
   end

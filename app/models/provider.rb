@@ -55,7 +55,7 @@ class Provider < ActiveRecord::Base
   scope :custom, where(:provider_type => CUSTOM)
   def only_one_rhn_provider
     # validate only when new record is added (skip explicit valid? calls)
-    if new_record? and provider_type == REDHAT and count_providers(REDHAT) != 0
+    if new_record? && provider_type == REDHAT && count_providers(REDHAT) != 0
       errors.add(:base, _("Only one Red Hat provider permitted for an Organization"))
     end
   end

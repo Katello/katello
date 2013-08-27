@@ -19,8 +19,8 @@ class UserNotice < ActiveRecord::Base
     # anybody can create user_notice relationships
     return true if operation == :create
     # only notice owner can update or destroy
-    if operation == :update or operation == :destroy
-      return true if user.id and User.current and user.id == User.current.id
+    if operation == :update || operation == :destroy
+      return true if user.id && User.current && user.id == User.current.id
     end
     false
   end

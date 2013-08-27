@@ -27,7 +27,7 @@ class Api::V1::ErrataController < Api::V1::ApiController
 
   def rules
     env_readable = lambda { @environment.contents_readable? }
-    readable     = lambda { @repo.environment.contents_readable? and @repo.product.readable? }
+    readable     = lambda { @repo.environment.contents_readable? && @repo.product.readable? }
     {
         :index => env_readable,
         :show  => readable,
@@ -45,7 +45,7 @@ class Api::V1::ErrataController < Api::V1::ApiController
   param :type, String, :desc => "Type of errata. Usually one of: security, bugfix, enhancement. Case insensitive."
   def index
     filter = params.symbolize_keys.slice(:repoid, :repository_id, :product_id, :environment_id, :type, :severity)
-    unless filter[:repoid] or filter[:repository_id] or filter[:environment_id]
+    unless filter[:repoid] || filter[:repository_id] || filter[:environment_id]
       raise HttpErrors::BadRequest.new(_("Repo ID or environment must be provided"))
     end
     render :json => Errata.filter(filter)

@@ -36,12 +36,12 @@ end
 
 class Warden::SessionSerializer
   def serialize(user)
-    raise ArgumentError, "Cannot serialize invalid user object: #{user}" if not user.is_a? User and user.id.is_a? Integer
+    raise ArgumentError, "Cannot serialize invalid user object: #{user}" if !(user.is_a?(User) && user.id.is_a?(Integer))
     user.id
   end
 
   def deserialize(id)
-    raise ArgumentError, "Cannot deserialize non-integer id: #{id}" unless id.is_a? Integer
+    raise ArgumentError, "Cannot deserialize non-integer id: #{id}" unless id.is_a?(Integer)
     User.find(id) rescue nil
   end
 end
@@ -95,7 +95,7 @@ Warden::Strategies.add(:database) do
 
   # relevant only when username and password params are set
   def valid?
-    (params[:username] && params[:password]) or (params[:auth_username] && params[:auth_password])
+    (params[:username] && params[:password]) || (params[:auth_username] && params[:auth_password])
   end
 
   def authenticate!
@@ -117,7 +117,7 @@ Warden::Strategies.add(:ldap) do
 
   # relevant only when username and password params are set
   def valid?
-    (params[:username] && params[:password]) or (params[:auth_username] && params[:auth_password])
+    (params[:username] && params[:password]) || (params[:auth_username] && params[:auth_password])
   end
 
   def authenticate!

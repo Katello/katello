@@ -25,7 +25,7 @@ module Glue::Pulp::PuppetModule
 
       def self.find(id)
         attrs = Katello.pulp_server.extensions.puppet_module.find_by_unit_id(id)
-        ::PuppetModule.new(attrs) if not attrs.nil?
+        ::PuppetModule.new(attrs) if !attrs.nil?
       end
     end
 

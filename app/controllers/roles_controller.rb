@@ -146,7 +146,7 @@ class RolesController < ApplicationController
       @role.update_attributes!(params[:role])
       notify.success _("Role '%s' was updated.") % @role.name
 
-      if not search_validate(Role, @role.id, params[:search])
+      if !search_validate(Role, @role.id, params[:search])
         notify.message _("'%s' no longer matches the current search criteria.") % @role["name"],
                        :asynchronous => false
       end
@@ -184,11 +184,11 @@ class RolesController < ApplicationController
     attributes = params[:permission]
     @permission = Permission.find(params[:permission_id])
 
-    if attributes.has_key?(:tag_names) and @permission.all_tags
+    if attributes.has_key?(:tag_names) && @permission.all_tags
       @permission.all_tags = false
     end
 
-    if attributes.has_key?(:verb_values) and @permission.all_verbs
+    if attributes.has_key?(:verb_values) && @permission.all_verbs
       @permission.all_verbs = false
     end
 

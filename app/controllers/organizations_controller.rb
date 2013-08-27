@@ -87,8 +87,8 @@ class OrganizationsController < ApplicationController
 
   def create
     org_label_assigned = ""
-    org_params = params[:organization] or
-        return render_bad_parameters
+    org_params = params[:organization]
+    return render_bad_parameters if org_params.nil?
     org_params[:label], org_label_assigned = generate_label(org_params[:name], 'organization') if org_params[:label].blank?
     @organization = Organization.new(:name => org_params[:name], :label => org_params[:label], :description => org_params[:description])
     @organization.save!
@@ -162,7 +162,7 @@ class OrganizationsController < ApplicationController
     @organization.save!
     notify.success _("Organization '%s' was updated.") % @organization["name"]
 
-    if not search_validate(Organization, @organization.id, params[:search])
+    if !search_validate(Organization, @organization.id, params[:search])
       notify.message _("'%s' no longer matches the current search criteria.") % @organization["name"],
                      :asynchronous => false
     end
@@ -174,7 +174,8 @@ class OrganizationsController < ApplicationController
     found_errors= @organization.validate_destroy(current_organization)
     if found_errors
       notify.error found_errors
-      render :text=>found_errors[1], :status=>:bad_request and return
+      render :text => found_errors[1], :status => :bad_request
+      return
     end
 
     # log off all users for this organization
@@ -239,7 +240,8 @@ class OrganizationsController < ApplicationController
       message = _("Couldn't find organization with ID %s") % params[:id]
       notify.error message
       execute_after_filters
-      render :text => message, :status => :not_found and return false
+      render :text => message, :status => :not_found
+      return false
     end
   end
 

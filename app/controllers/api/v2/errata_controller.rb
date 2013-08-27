@@ -27,7 +27,7 @@ class Api::V2::ErrataController < Api::V2::ApiController
 
   def rules
     env_readable = lambda { @environment.contents_readable? }
-    readable     = lambda { @repo.environment.contents_readable? and @repo.product.readable? }
+    readable     = lambda { @repo.environment.contents_readable? && @repo.product.readable? }
     {
         :index => env_readable,
         :show  => readable,

@@ -166,7 +166,7 @@ class Api::V1::ActivationKeysController < Api::V1::ApiController
   end
 
   def verify_presence_of_organization_or_environment
-    return if params.has_key?(:organization_id) or params.has_key?(:environment_id)
+    return if params.has_key?(:organization_id) || params.has_key?(:environment_id)
     raise HttpErrors::BadRequest, _("Either organization ID or environment ID needs to be specified")
   end
 end

@@ -26,7 +26,7 @@ class Api::V1::SystemPackagesController < Api::V1::ApiController
   before_filter :require_packages_only, :only => [:update]
 
   def rules
-    edit_system = lambda { @system.editable? or User.consumer? }
+    edit_system = lambda { @system.editable? || User.consumer? }
 
     {
         :create  => edit_system,
@@ -99,7 +99,7 @@ class Api::V1::SystemPackagesController < Api::V1::ApiController
 
   def validate_package_list_format(packages)
     packages.each do |package_name|
-      if not valid_package_name?(package_name)
+      if !valid_package_name?(package_name)
         raise HttpErrors::BadRequest.new(_("%s is not a valid package name") % package_name)
       end
     end

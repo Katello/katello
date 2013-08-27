@@ -88,12 +88,13 @@ class ChangesetsController < ApplicationController
   end
 
   def create
-    if params[:changeset][:action_type].blank? or
+    if params[:changeset][:action_type].blank? ||
        params[:changeset][:action_type] == Changeset::PROMOTION
 
       if @next_environment.blank?
         notify.error _("Please create at least one environment.")
-        render :nothing => true, :status => :not_acceptable and return
+        render :nothing => true, :status => :not_acceptable
+        return
       else
         env_id = @next_environment.id
         type = Changeset::PROMOTION
@@ -124,14 +125,16 @@ class ChangesetsController < ApplicationController
       @changeset.name = params[:name]
       @changeset.save!
 
-      render :json=>{:name=> params[:name], :timestamp => @changeset.updated_at.to_i.to_s} and return
+      render :json => {:name=> params[:name], :timestamp => @changeset.updated_at.to_i.to_s}
+      return
     end
 
     if params[:description]
       @changeset.description = params[:description]
       @changeset.save!
 
-      render :json=>{:description=> params[:description], :timestamp => @changeset.updated_at.to_i.to_s} and return
+      render :json => {:description=> params[:description], :timestamp => @changeset.updated_at.to_i.to_s}
+      return
     end
 
     if params[:state]
@@ -139,12 +142,14 @@ class ChangesetsController < ApplicationController
       if send_changeset
         to_ret = {}
         to_ret[:changeset] = simplify_changeset(@changeset) if send_changeset
-        render :json=>to_ret, :status=>:bad_request and return
+        render :json => to_ret, :status => :bad_request
+        return
       end
       @changeset.state = Changeset::REVIEW if params[:state] == "review"
       @changeset.state = Changeset::NEW if params[:state] == "new"
       @changeset.save!
-      render :json=>{:timestamp=>@changeset.updated_at.to_i.to_s} and return
+      render :json => {:timestamp => @changeset.updated_at.to_i.to_s}
+      return
     end
 
     render :text => "The promotion changeset is currently under review, no modifications can occur during this phase.",
@@ -302,7 +307,7 @@ class ChangesetsController < ApplicationController
   def update_artifacts_valid?
     if params.has_key?(:data)
       params[:data].each do |item|
-        return false if not update_item_valid?(item["type"], item["item_id"])
+        return false if !update_item_valid?(item["type"], item["item_id"])
       end
     end
     true

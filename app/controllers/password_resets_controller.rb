@@ -51,7 +51,9 @@ class PasswordResetsController < ApplicationController
   def update
     if @user.password_reset_sent_at < password_reset_expiration.minutes.ago
       notify.warning _("Password reset token has expired for user '%s'.") % @user.username
-      redirect_to new_password_reset_path and return
+      if redirect_to new_password_reset_path
+        return
+      end
     end
 
     # update the password and reset the 'password reset token' so that it cannot be reused

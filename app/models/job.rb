@@ -152,7 +152,7 @@ class Job < ActiveRecord::Base
     running = 0
     error = 0
     self.task_statuses.each do |task|
-      if task.state == TaskStatus::Status::WAITING.to_s or task.state == TaskStatus::Status::RUNNING.to_s
+      if task.state == TaskStatus::Status::WAITING.to_s || task.state == TaskStatus::Status::RUNNING.to_s
         running += 1
       elsif task.state == TaskStatus::Status::ERROR.to_s
         error += 1

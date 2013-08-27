@@ -134,11 +134,11 @@ class FilterRulesController < ApplicationController
         if params[:parameter][:date_range]
           @rule.parameters[:date_range] ||= {}
           if params[:parameter][:date_range][:start]
-            (@rule.start_date = parse_calendar_date params[:parameter][:date_range][:start]) or
-                return render_bad_parameters(_('Invalid date or time format'))
+            @rule.start_date = parse_calendar_date params[:parameter][:date_range][:start]
+            return render_bad_parameters(_('Invalid date or time format')) unless @rule.start_date
           elsif params[:parameter][:date_range][:end]
-            (@rule.end_date = parse_calendar_date params[:parameter][:date_range][:end]) or
-                return render_bad_parameters(_('Invalid date or time format'))
+            @rule.end_date = parse_calendar_date params[:parameter][:date_range][:end]
+            return render_bad_parameters(_('Invalid date or time format')) unless @rule.end_date
           end
         elsif params[:parameter][:errata_type]
           @rule.parameters[:errata_type] ||= []
@@ -156,7 +156,8 @@ class FilterRulesController < ApplicationController
                            {:type => FilterRule::CONTENT_OPTIONS.key(@rule.content_type),
                             :filter => @filter.name})
 
-        render :text => escape_html(result.to_s) and return
+        render :text => escape_html(result.to_s)
+        return
       end
     end
     render :nothing => true

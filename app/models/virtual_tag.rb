@@ -18,8 +18,8 @@ class VirtualTag
   attr_accessor :name, :display_name
 
   def initialize(name, display_name)
-    raise ArgumentError, "Name cannot be nil or empty" if name.nil? or name == ''
-    raise ArgumentError, "Display name cannot be nil or empty" if display_name.nil? or display_name == ''
+    raise ArgumentError, "Name cannot be nil or empty" if name.nil? || name == ''
+    raise ArgumentError, "Display name cannot be nil or empty" if display_name.nil? || display_name == ''
     self.name = name
     self.display_name = display_name
   end

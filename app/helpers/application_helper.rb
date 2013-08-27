@@ -38,7 +38,7 @@ module ApplicationHelper
         ctrl   = options[:controller]
         action = options[:action] || 'index'
 
-        if current_user and current_user.allowed_to?({:controller => ctrl, :action => action})
+        if current_user && current_user.allowed_to?({:controller => ctrl, :action => action})
           link_to(name, options, html_options)
         end
       end
@@ -161,7 +161,7 @@ module ApplicationHelper
 
   def env_select_class curr_env, selected_env, curr_path, selected_path, accessible_envs, library_clickable
     classes = []
-    if (library_clickable or !curr_env.library?) and accessible_envs.member?(curr_env)
+    if (library_clickable || !curr_env.library?) && accessible_envs.member?(curr_env)
       classes << "path_link"
     else
       # if library isn't clickable, disable the hover effect

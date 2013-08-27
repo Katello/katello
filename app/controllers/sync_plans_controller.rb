@@ -73,19 +73,19 @@ class SyncPlansController < ApplicationController
     end
 
     if params[:sync_plan][:time]
-      (updated_plan.sync_date = convert_date_time(updated_plan.plan_date, params[:sync_plan][:time].strip)) or
-          return render_bad_parameters(_('Invalid date or time format'))
+      updated_plan.sync_date = convert_date_time(updated_plan.plan_date, params[:sync_plan][:time].strip)
+      return render_bad_parameters(_('Invalid date or time format')) unless updated_plan.sync_date
     end
 
     if params[:sync_plan][:date]
-      (updated_plan.sync_date = convert_date_time(params[:sync_plan][:date].strip, updated_plan.plan_time)) or
-          return render_bad_parameters(_('Invalid date or time format'))
+      updated_plan.sync_date = convert_date_time(params[:sync_plan][:date].strip, updated_plan.plan_time)
+      return render_bad_parameters(_('Invalid date or time format')) unless updated_plan.sync_date
     end
 
     updated_plan.save!
     notify.success N_("Sync Plan '%s' was updated.") % updated_plan.name
 
-    if not search_validate(SyncPlan, updated_plan.id, params[:search])
+    if !search_validate(SyncPlan, updated_plan.id, params[:search])
       notify.message _("'%s' no longer matches the current search criteria.") % updated_plan["name"]
     end
 
@@ -126,8 +126,8 @@ class SyncPlansController < ApplicationController
   def create
     sdate = params[:sync_plan].delete :plan_date
     stime = params[:sync_plan].delete :plan_time
-    (params[:sync_plan][:sync_date] = convert_date_time(sdate, stime)) or
-        return render_bad_parameters(_('Invalid date or time format'))
+    params[:sync_plan][:sync_date] = convert_date_time(sdate, stime)
+    return render_bad_parameters(_('Invalid date or time format')) unless params[:sync_plan][:sync_date]
 
     @plan = SyncPlan.create! params[:sync_plan].merge({:organization => current_organization})
     notify.success N_("Sync Plan '%s' was created.") % @plan['name']
