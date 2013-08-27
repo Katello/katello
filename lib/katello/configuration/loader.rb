@@ -91,7 +91,7 @@ module Katello
       end
 
       def load_yml_file(file_path)
-        raw_parsed_yml  = YAML::load(ERB.new(File.read(file_path)).result(Object.new.send(:binding)))
+        raw_parsed_yml  = YAML.load(ERB.new(File.read(file_path)).result(Object.new.send(:binding)))
         hash_parsed_yml = case raw_parsed_yml
                           when Hash
                             raw_parsed_yml

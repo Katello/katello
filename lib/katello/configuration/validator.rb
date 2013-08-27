@@ -10,6 +10,7 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+# rubocop:disable CaseEquality, HashMethods
 module Katello
   module Configuration
 
@@ -22,7 +23,7 @@ module Katello
       # @yield block with validations
       def initialize(config, environment, path = [], &validations)
         @config, @environment, @path = config, environment, path
-        instance_eval &validations
+        instance_eval(&validations)
       end
 
       private
