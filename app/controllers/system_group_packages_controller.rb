@@ -84,7 +84,6 @@ class SystemGroupPackagesController < ApplicationController
       notify.error _("Install of Package Groups '%{groups}' scheduled for System Group '%{name}' failed.  Reason: %{message}") % {:groups => params[:groups], :name => @group.name, :message => e.message}
     end
     render :text => ''
-    return
   end
 
   def remove
@@ -124,7 +123,6 @@ class SystemGroupPackagesController < ApplicationController
       notify.error _("Uninstall of Package Groups '%{groups}' scheduled for System Group '%{name}' failed.  Reason: %{message}") % {:groups => params[:groups], :name => @group.name, :message => e.message}
     end
     render :text => ''
-    return
   end
 
   def update
@@ -176,7 +174,6 @@ class SystemGroupPackagesController < ApplicationController
       notify.error _("Update of Package Groups '%{groups}' scheduled for System Group '%{name}' failed.  Reason: %{message}") % {:groups => params[:groups], :name => @group.name, :message => e.message}
     end
     render :text => ''
-    return
   end
 
   def package_status

@@ -627,7 +627,7 @@ class SystemsController < ApplicationController
   def add_system_groups
     if params[:group_ids].nil? || params[:group_ids].blank?
       notify.error _('One or more system groups must be provided.')
-      render :nothing=>true, :status=>500
+      render :nothing => true, :status => 500
     else
       ids = params[:group_ids].collect{|g| g.to_i} - @system.system_group_ids #ignore dups
       @system_groups = SystemGroup.where(:id=>ids)
@@ -635,8 +635,7 @@ class SystemsController < ApplicationController
       @system.save!
 
       notify.success _("System '%s' was updated.") % @system["name"]
-      render :partial =>'system_group_items', :locals=>{:system_groups=>@system_groups}
-      return
+      render :partial =>'system_group_items', :locals => { :system_groups=>@system_groups }
     end
   end
 

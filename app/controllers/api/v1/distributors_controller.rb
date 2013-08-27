@@ -210,10 +210,7 @@ class Api::V1::DistributorsController < Api::V1::ApiController
     distributor_report.rename_column("custom_info", "custom info")
 
     respond_to do |format|
-      format.html do
-        render :text => distributor_report.as(:html), :type => :html
-        return
-      end
+      format.html { render :text => distributor_report.as(:html), :type => :html }
       format.text { render :text => distributor_report.as(:text, :ignore_table_width => true) }
       format.csv { render :text => distributor_report.as(:csv) }
       format.pdf do

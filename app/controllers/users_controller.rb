@@ -340,7 +340,6 @@ class UsersController < ApplicationController
       notify.success _("Default Organization no longer selected.")
     end
     render :text => :ok
-    return
   end
 
   private
