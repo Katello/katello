@@ -3,5 +3,4 @@ $LOAD_PATH << path unless $LOAD_PATH.include? path
 
 require 'katello/load_configuration'
 
-project_type = :rails
 require 'ninesixty'

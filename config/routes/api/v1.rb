@@ -53,7 +53,7 @@ Src::Application.routes.draw do
         end
         resources :sync_plans
         resources :tasks, :only => [:index]
-        resources :providers, :only => [:index], :constraints => { :organization_id => /[^\/]*/ }
+        resources :providers, :only => [:index], :constraints => {:organization_id => /[^\/]*/}
 
         scope :constraints => RegisterWithActivationKeyContraint.new do
           match '/systems' => 'systems#activate', :via => :post
@@ -205,7 +205,7 @@ Src::Application.routes.draw do
           post :index, :on => :collection, :action => :add_product
           delete :destroy, :on => :member, :action => :remove_product
         end
-        resources :packages, :controller => :changesets_content, :constraints => { :id => /[0-9a-zA-Z\-_.]+/ } do
+        resources :packages, :controller => :changesets_content, :constraints => {:id => /[0-9a-zA-Z\-_.]+/} do
           post :index, :on => :collection, :action => :add_package
           delete :destroy, :on => :member, :action => :remove_package
         end
@@ -230,15 +230,15 @@ Src::Application.routes.draw do
 
       resources :ping, :only => [:index]
 
-      resources :repositories, :only => [:show, :create, :update, :destroy], :constraints => { :id => /[0-9a-zA-Z\-_.]*/ } do
+      resources :repositories, :only => [:show, :create, :update, :destroy], :constraints => {:id => /[0-9a-zA-Z\-_.]*/} do
         resources :sync, :only => [:index, :create] do
           delete :index, :on => :collection, :action => :cancel
         end
         resources :packages do
           get :search, :on => :collection
         end
-        resources :errata, :only => [:index, :show], :constraints => { :id => /[0-9a-zA-Z\-\+%_.:]+/ }
-        resources :distributions, :only => [:index, :show], :constraints => { :id => /[0-9a-zA-Z \-\+%_.]+/ }
+        resources :errata, :only => [:index, :show], :constraints => {:id => /[0-9a-zA-Z\-\+%_.:]+/}
+        resources :distributions, :only => [:index, :show], :constraints => {:id => /[0-9a-zA-Z \-\+%_.]+/}
         member do
           get :package_groups
           get :package_group_categories

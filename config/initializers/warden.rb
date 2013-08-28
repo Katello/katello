@@ -46,9 +46,8 @@ class Warden::SessionSerializer
   end
 end
 
-Warden::Manager.after_authentication do |user,auth,opts|
+Warden::Manager.after_authentication do |user, auth, opts|
   user = user.username if user.respond_to? :username
-  message = auth.winning_strategy.message
   Rails.logger.debug "User #{user} authenticated: #{auth.winning_strategy.message}"
 end
 
@@ -59,6 +58,8 @@ Warden::Strategies.add(:openid) do
     Katello.config.sso.enable && params[:password].blank?
   end
 
+  # TODO: clean up this method
+  # rubocop:disable MethodLength
   def authenticate!
     if (response = env[Rack::OpenID::RESPONSE])
       # we have response from OpenID provider so we try to login user
@@ -69,19 +70,19 @@ Warden::Strategies.add(:openid) do
           else
             message = 'User not found'
             Rails.logger.warn(message) && fail(message)
-            throw(:warden, :openid => { :response => response }) unless params[:sso_tried].present?
+            throw(:warden, :openid => {:response => response}) unless params[:sso_tried].present?
           end
         else
           # :missing status means that request was not made, probably wrong certificate on Signo side
           message = response.respond_to?(:message) ? response.message : "OpenID authentication failed: #{response.status}"
           Rails.logger.error(message) && fail(message)
-          throw(:warden, :openid => { :response => response }) unless params[:sso_tried].present?
+          throw(:warden, :openid => {:response => response}) unless params[:sso_tried].present?
       end
     elsif (username = cookies[:username] || params[:username])
       # we already have cookie
       identifier = "#{Katello.config.sso.provider_url}/user/#{username}"
       custom!([401,
-               { 'WWW-Authenticate' => Rack::OpenID.build_header({:identifier => identifier}) },
+               {'WWW-Authenticate' => Rack::OpenID.build_header({:identifier => identifier})},
                ''])
     else
       # we have no cookie yet so we plain redirect to OpenID provider to login
@@ -154,8 +155,8 @@ Warden::Strategies.add(:certificate) do
     return nil if cert.blank? || cert == "(null)"
     # apache does not preserve new lines in cert file - work-around:
     if cert.include?("-----BEGIN CERTIFICATE----- ")
-      cert = cert.to_s.gsub("-----BEGIN CERTIFICATE----- ","").gsub(" -----END CERTIFICATE-----","")
-      cert.gsub!(" ","\n")
+      cert = cert.to_s.gsub("-----BEGIN CERTIFICATE----- ", "").gsub(" -----END CERTIFICATE-----", "")
+      cert.gsub!(" ", "\n")
       cert = "-----BEGIN CERTIFICATE-----\n#{cert}-----END CERTIFICATE-----\n"
     end
     return cert

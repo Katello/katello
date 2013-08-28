@@ -43,28 +43,28 @@ Src::Application.routes.draw do
   end
 
   resources :content_search do
-      collection do
-        post :errata
-        post :products
-        post :packages
-        post :puppet_modules
-        post :packages_items
-        post :errata_items
-        post :puppet_modules_items
-        get :view_packages
-        get :view_puppet_modules
-        post :repos
-        post :views
-        get :repo_packages
-        get :repo_errata
-        get :repo_puppet_modules
-        get :repo_compare_packages
-        get :repo_compare_errata
-        get :repo_compare_puppet_modules
-        get :view_compare_packages
-        get :view_compare_errata
-        get :view_compare_puppet_modules
-      end
+    collection do
+      post :errata
+      post :products
+      post :packages
+      post :puppet_modules
+      post :packages_items
+      post :errata_items
+      post :puppet_modules_items
+      get :view_packages
+      get :view_puppet_modules
+      post :repos
+      post :views
+      get :repo_packages
+      get :repo_errata
+      get :repo_puppet_modules
+      get :repo_compare_packages
+      get :repo_compare_errata
+      get :repo_compare_puppet_modules
+      get :view_compare_packages
+      get :view_compare_errata
+      get :view_compare_puppet_modules
+    end
   end
 
   resources :content_view_definitions do
@@ -114,7 +114,7 @@ Src::Application.routes.draw do
 
   resources :content_views do
     collection do
-       get :auto_complete
+      get :auto_complete
     end
   end
 
