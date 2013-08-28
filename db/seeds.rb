@@ -14,7 +14,7 @@ first_user_email= (em = Util::Puppet.config_value("user_email")).blank? ? 'root@
 first_org_name = (org = Util::Puppet.config_value("org_name")).blank? ? 'ACME_Corporation' : org
 first_org_label = (lbl = Util::Puppet.config_value("org_label")).blank? ? 'ACME_Corporation' : lbl
 
-def format_errors model=nil
+def format_errors(model = nil)
   return '(nil found)' if model.nil?
   model.errors.full_messages.join(';')
 end
@@ -61,7 +61,7 @@ raise "Are you sure you cleared candlepin?! Unable to create first org!" if firs
 
 #create a provider
 if Provider.count == 0
-  porkchop = Provider.create!({
+  Provider.create!({
       :name => 'Custom Provider 1',
       :organization => first_org,
       :repository_url => 'http://download.fedoraproject.org/pub/fedora/linux/releases/',

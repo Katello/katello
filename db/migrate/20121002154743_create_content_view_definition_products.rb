@@ -6,8 +6,8 @@ class CreateContentViewDefinitionProducts < ActiveRecord::Migration
 
       t.timestamps
     end
-    add_index :content_view_definition_products, [:content_view_definition_id,
-      :product_id], :name => "content_view_def_product_index"
+    add_index :content_view_definition_products, [:content_view_definition_id, :product_id],
+              :name => "content_view_def_product_index"
   end
 
   def self.down

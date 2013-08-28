@@ -6,8 +6,8 @@ class CreateContentViewDefinitionRepositories < ActiveRecord::Migration
 
       t.timestamps
     end
-    add_index :content_view_definition_repositories, [:content_view_definition_id,
-      :repository_id], :name => :cvd_repo_index
+    add_index :content_view_definition_repositories, [:content_view_definition_id, :repository_id],
+              :name => :cvd_repo_index
   end
 
   def self.down
