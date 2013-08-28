@@ -306,19 +306,6 @@ class TaskStatus < ActiveRecord::Base
 
   end
 
-  def self.refresh_for_system(system_id)
-    system = System.find(system_id)
-
-    return self.refresh_for_candlepin_consumer('System', system_id, system)
-  end
-
-  def self.refresh_for_distributor(distributor_id)
-    distributor = System.find(distributor_id)
-
-    return self.refresh_for_candlepin_consumer('Distributor', distributor_id, distributor)
-
-  end
-
   def self.refresh(ids)
     unless ids.blank?
       uuids = TaskStatus.where(:id=>ids).pluck(:uuid)
