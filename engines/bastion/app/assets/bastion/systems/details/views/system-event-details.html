@@ -1,0 +1,39 @@
+<h3 class="nutupane-title">
+  <i class="icon-backward" ng-click="transitionToIndex()"/>
+  {{ "Event Details" | i18n }}
+</h3>
+
+
+<div class="nutupane-sub-section">
+
+  <div class="details">
+    <section>
+      <div class="detail">
+        <span class="info-label">{{ "Summary" | i18n }}</span>
+        <span class="info-value">{{ event.human_readable_message }}</span>
+      </div>
+
+      <div class="detail">
+        <span class="info-label">{{ "Started At" | i18n }}</span>
+        <span class="info-value">{{ event.start_time | date:"short"  }}</span>
+      </div>
+
+      <div class="detail">
+        <span class="info-label">{{ "Request" | i18n }}</span>
+        <span class="info-value">{{ event.message | date:"short"  }}</span>
+      </div>
+      <div class="divider" />
+    </section>
+
+    <section>
+      <div class="detail">
+          <span class="info-label">{{ "Parameters" | i18n }}</span>
+          <span class="info-value">{{ event.human_readable_parameters }}</span>
+      </div>
+      <div class="detail">
+          <span class="info-label">{{ "Result" | i18n }}</span>
+          <span class="info-value">{{ event.human_readable_result }}</span>
+      </div>
+    </section>
+  </div>
+</div>

@@ -28,7 +28,8 @@ angular.module('Bastion.systems').factory('System',
             update: {method: 'PUT'},
             query: {method: 'GET', isArray: false},
             releaseVersions: {method: 'GET', params: {action: 'releases'}},
-            saveSystemGroups: {method: 'POST', params: {action: 'system_groups'}}
+            saveSystemGroups: {method: 'POST', params: {action: 'system_groups'}},
+            tasks: {method: 'GET', params: {action: 'tasks', paged: true}}
         });
     }]
 );

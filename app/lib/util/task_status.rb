@@ -26,8 +26,8 @@ module Util
             :event_messages => {
                 :running => [N_('Installing Package...'), N_('installing package...'), N_('installing packages...')],
                 :waiting => [N_('Installing Package...'), N_('installing package...'), N_('installing packages...')],
-                :finished => [N_('Package Install Complete'), N_('%{package} package installed'), N_('%{package} (%{total} other packages) installed')],
-                :error=> [N_('Package Install Failed'), N_('%{package} package install failed'), N_('%{package} (%{total} other packages) install failed')],
+                :finished => [N_('Package Install Complete'), N_('Package installation: "%{package}" '), N_('%{package} (%{total} other packages) installed')],
+                :error=> [N_('Package Install Failed'), N_('Package install failed: "%{package}"'), N_('%{package} (%{total} other packages) install failed')],
                 :cancelled => [N_('Package Install Canceled'), N_('%{package} package install canceled'), N_('%{package} (%{total} other packages) install canceled')],
                 :timed_out =>[N_('Package Install Timed Out'), N_('%{package} package install timed out'), N_('%{package} (%{total} other packages) install timed out')],
             },

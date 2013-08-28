@@ -1,0 +1,45 @@
+<section class="nutupane-sub-section">
+  <div class="nutupane-titlebar">
+    <h1 class="nutupane-title">{{ "System Events" | i18n }}</h1>
+  </div>
+  <div class="nutupane-actionbar">
+    <div class="form">
+        <input type="text"
+               class="input input-search"
+               placeholder="{{ 'Search...' | i18n }}"
+               ng-model="eventsTable.searchTerm"
+               on-enter="eventsTable.search(eventsTable.searchTerm)">
+      <span class="result-count">{{ "Showing %size of %subTotal (%total Total) Events" |
+          i18n: {subTotal: eventsTable.resource.subtotal, total: eventsTable.resource.total, size:eventsTable.rows.length} }}
+      </span>
+    </div>
+  </div>
+
+  <div alch-table="eventsTable">
+    <div alch-container-scroll control-width="table" alch-infinite-scroll="table.nextPage()">
+      <table ng-class="{'table-mask': table.working}" class="table table-full table-striped">
+        <thead>
+        <tr alch-table-head>
+          <th alch-table-column="Status" style="width: 10%">{{ "Status" | i18n }}</th>
+          <th alch-table-column="Event">{{ "Event" | i18n }}</th>
+          <th alch-table-column="User" style="width: 15%">{{ "User" | i18n }}</th>
+          <th alch-table-column="Date">{{ "Date" | i18n }}</th>
+        </tr>
+        </thead>
+
+        <tbody>
+          <tr alch-table-row ng-repeat="event in table.rows">
+            <td alch-table-cell>
+                <span title="{{ 'Running' | i18n }}" class="table-icon icon-time" ng-show="event.pending"/>
+                <span title="{{ 'Failed' | i18n }}" class="table-icon icon-circle red" ng-show="event.failed" />
+                <span title="{{ 'Success' | i18n }}" class="table-icon icon-circle green" ng-show="!event.pending && !event.failed" />
+            </td>
+            <td alch-table-cell><a class="clickable active" ng-click="table.openEventInfo(event)">{{ event.message }}</a></td>
+            <td alch-table-cell>{{ event.username }}</td>
+            <td alch-table-cell>{{ event.created_at | date:"short" }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
