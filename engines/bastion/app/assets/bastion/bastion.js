@@ -13,7 +13,7 @@
 //= require "jquery-1.7.2"
 //= require "alchemy/jquery/plugins/jquery.periodicalupdater"
 
-//= require "alchemy/underscore-1.3.1"
+//= require "alchemy/underscore"
 
 //= require "ui_alchemy/angular/angular"
 //= require "ui_alchemy/angular-resource/angular-resource"
