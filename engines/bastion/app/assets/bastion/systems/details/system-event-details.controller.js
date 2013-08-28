@@ -16,38 +16,40 @@
  * @name  Bastion.systems.controller:SystemEventDetailsController
  *
  * @requires $scope
+ * @requires SystemTask
  *
  * @description
  *   Provides the functionality for the details of a system event.
  */
 angular.module('Bastion.systems').controller('SystemEventDetailsController',
-    ['$scope',
-    function($scope) {
+    ['$scope', 'SystemTask',
+    function($scope, SystemTask) {
+        var eventId, setEvent, fromState, fromParams;
 
-        var eventId = $scope.$stateParams.eventId;
+        fromState = 'systems.details.events.index';
+        fromParams = {};
 
-        $scope.$watch("eventsTable", function(table) {
-            var found = false;
-            angular.forEach(table.rows, function(value) {
-                if(value.id.toString() === eventId.toString()) {
-                    found = true;
-                    $scope.event = value;
-                }
-            });
+        eventId = $scope.$stateParams.eventId;
+        setEvent = function(event) {
+            $scope.event = event;
+        };
 
-            if (!found) {
-                $scope.event = undefined;
+        //Record our from state, so we can transition back there
+        $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromStateIn, fromParamsIn) {
+            if (!fromStateIn.abstract) {
+                fromState = fromStateIn;
+                fromParams = fromParamsIn;
             }
         });
 
-        $scope.$watch('event', function(event) {
-            if (!event) {
-                $scope.transitionTo('systems.details.events.index');
+        $scope.event = SystemTask.get({id: eventId}, function(data) {
+            if (data.pending) {
+                SystemTask.poll(data, setEvent);
             }
         });
 
-        $scope.transitionToIndex = function() {
-            $scope.transitionTo('systems.details.events.index');
+        $scope.transitionBack = function() {
+            $scope.transitionTo(fromState, fromParams);
         };
     }
 ]);

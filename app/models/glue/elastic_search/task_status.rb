@@ -38,6 +38,8 @@ module Glue::ElasticSearch::TaskStatus
     ret[:username] = user.username if user
     ret[:status] = state.to_s
     ret[:status] += " pending" if pending?
+    ret[:start_time] = self.start_time || self.created_at
+
     if state.to_s == "error" || state.to_s == "timed_out"
       ret[:status] += " fail failure"
     end

@@ -1,0 +1,65 @@
+
+<a href="" ng-click="transitionToIndex()">
+  <i class="icon-backward"></i>
+  {{ "Back To Errata List" | i18n }}
+</a>
+
+<h3>{{ erratum.errata_id }} </h3>
+
+<div class="nutupane-sub-section">
+  <div class="details details-full">
+    <section>
+
+      <div class="detail">
+        <span class="info-label">{{ "Type" | i18n }}</span>
+        <span class="info-value">{{ erratum.type }}</span>
+      </div>
+      <div class="detail">
+        <span class="info-label">{{ "Title" | i18n }}</span>
+        <span class="info-value">{{ erratum.title }}</span>
+      </div>
+      <div class="detail">
+        <span class="info-label">{{ "Issued" | i18n }}</span>
+        <span class="info-value">{{ erratum.issued }}</span>
+      </div>
+      <div class="detail">
+        <span class="info-label">{{ "Updated" | i18n }}</span>
+        <span class="info-value">{{ erratum.updated }}</span>
+      </div>
+      <div class="detail">
+        <span class="info-label">{{ "Reboot Suggested" | i18n }}</span>
+        <span class="info-value">{{ erratum.reboot_suggested }}</span>
+      </div>
+
+      <div class="detail">
+        <span class="info-label">{{ "Description" | i18n }}</span>
+        <span class="info-value">
+          <p ng-repeat="paragraph in erratum.description.split('\n\n')">
+            {{ paragraph }}
+          </p>
+        </span>
+      </div>
+
+      <div class="detail">
+        <span class="info-label">{{ "Solution" | i18n }}</span>
+        <span class="info-value">
+          <p ng-repeat="paragraph in erratum.solution.split('\n\n')">
+            {{ paragraph }}
+          </p>
+        </span>
+      </div>
+
+      <div class="detail">
+        <span class="info-label">{{ "Packages" | i18n }}</span>
+        <span class="info-value">
+          <ul>
+            <li ng-repeat="package in erratum.packages">
+              {{ package }}
+            </li>
+          </ul>
+        </span>
+      </div>
+
+    </section>
+  </div>
+</div>

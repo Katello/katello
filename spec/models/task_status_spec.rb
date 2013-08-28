@@ -43,7 +43,7 @@ describe TaskStatus do
 
     context "No packages installed" do
       let(:result) { { :details => {:rpm => { :succeeded => true, :details => { :deps => [], :resolved => []} } } } }
-      its(:result_description) { should == "No new packages installed" }
+      its(:result_description) { should == ["No new packages installed"] }
     end
 
     context "Packages installed" do
@@ -73,10 +73,7 @@ describe TaskStatus do
           }
         }.with_indifferent_access
       end
-      its(:result_description) { should == <<-EXPECTED_MESSAGE.chomp }
-cheetah-1.26.3-5.noarch
-elephant-8.8-1.noarch
-      EXPECTED_MESSAGE
+      its(:result_description) { should == ['cheetah-1.26.3-5.noarch', 'elephant-8.8-1.noarch'] }
     end
   end
 
@@ -89,7 +86,7 @@ elephant-8.8-1.noarch
 
     context "No packages installed" do
       let(:result) { { :details => {:package_group => { :succeeded => true, :details => { :deps => [], :resolved => []} } } } }
-      its(:result_description) { should == "No new packages installed" }
+      its(:result_description) { should == ["No new packages installed"] }
     end
 
     context "Packages installed" do
@@ -119,10 +116,7 @@ elephant-8.8-1.noarch
           }
         }.with_indifferent_access
       end
-      its(:result_description) { should == <<-EXPECTED_MESSAGE.chomp }
-cheetah-1.26.3-5.noarch
-elephant-8.8-1.noarch
-      EXPECTED_MESSAGE
+      its(:result_description) { should == ['cheetah-1.26.3-5.noarch', 'elephant-8.8-1.noarch'] }
     end
   end
 
@@ -135,7 +129,7 @@ elephant-8.8-1.noarch
 
     context "No packages removed" do
       let(:result) { { :details => {:rpm => { :succeeded => true, :details => { :deps => [], :resolved => []} } } } }
-      its(:result_description) { should == "No packages removed" }
+      its(:result_description) { should == ["No packages removed"] }
     end
 
     context "Packages removed" do
@@ -166,10 +160,7 @@ elephant-8.8-1.noarch
         }.with_indifferent_access
       end
 
-      its(:result_description) { should == <<-EXPECTED_MESSAGE.chomp }
-elephant-8.8-1.noarch
-cheetah-1.26.3-5.noarch
-      EXPECTED_MESSAGE
+      its(:result_description) { should == ['cheetah-1.26.3-5.noarch', 'elephant-8.8-1.noarch'] }
     end
   end
 
@@ -182,7 +173,7 @@ cheetah-1.26.3-5.noarch
 
     context "No packages removed" do
       let(:result) { { :details => {:package_group => { :succeeded => true, :details => { :deps => [], :resolved => []} } } } }
-      its(:result_description) { should == "No packages removed" }
+      its(:result_description) { should == ["No packages removed"] }
     end
 
     context "Packages removed" do
@@ -213,10 +204,7 @@ cheetah-1.26.3-5.noarch
         }.with_indifferent_access
       end
 
-      its(:result_description) { should == <<-EXPECTED_MESSAGE.chomp }
-cheetah-1.26.3-5.noarch
-elephant-8.8-1.noarch
-      EXPECTED_MESSAGE
+      its(:result_description) { should == ['cheetah-1.26.3-5.noarch', 'elephant-8.8-1.noarch']}
     end
   end
 
@@ -229,7 +217,7 @@ elephant-8.8-1.noarch
 
     context "No packages updated" do
       let(:result) { { :details => {:rpm => { :succeeded => true, :details => { :deps => [], :resolved => []} } } } }
-      its(:result_description) { should == "No packages updated" }
+      its(:result_description) { should == ["No packages updated"] }
     end
 
     context "Packages updated" do
@@ -260,10 +248,7 @@ elephant-8.8-1.noarch
         }.with_indifferent_access
       end
 
-      its(:result_description) { should == <<-EXPECTED_MESSAGE.chomp }
-cheetah-1.26.3-5.noarch
-elephant-8.8-1.noarch
-      EXPECTED_MESSAGE
+      its(:result_description) { ['cheetah-1.26.3-5.noarch', 'elephant-8.8-1.noarch'] }
     end
   end
 
@@ -306,9 +291,7 @@ katello-all-0.1.149-1.fc16.noarch: failure: katello-all-0.1.149-1.fc16.noarch.rp
     end
     let(:state) { "error" }
 
-    its(:result_description) { should == <<-EXPECTED_MESSAGE.chomp }
-RequestTimeout
-    EXPECTED_MESSAGE
+    its(:result_description) { should == 'RequestTimeout' }
   end
 
 end

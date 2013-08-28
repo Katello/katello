@@ -26,6 +26,14 @@ class Api::ApiController < ActionController::Base
     user(:api) || user
   end
 
+  def load_search_service(service = nil)
+    if service.nil?
+      @search_service ||= Glue::ElasticSearch::Items.new
+    else
+      @search_service ||= service
+    end
+  end
+
   protected
 
   def add_candlepin_version_header
