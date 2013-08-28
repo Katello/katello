@@ -1,10 +1,10 @@
 class ChangesetErrata < ActiveRecord::Migration
   def self.up
     create_table :changeset_errata do |t|
-       t.integer :changeset_id
-       t.string :errata_id
-       t.string :display_name
-       t.references :product, :null=>false
+      t.integer :changeset_id
+      t.string :errata_id
+      t.string :display_name
+      t.references :product, :null=>false
     end
   end
 

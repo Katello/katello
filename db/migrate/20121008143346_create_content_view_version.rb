@@ -6,7 +6,7 @@ class CreateContentViewVersion < ActiveRecord::Migration
       t.timestamps
     end
     add_index :content_view_versions, [:id, :content_view_id],
-      :name => "cvv_cv_index"
+              :name => "cvv_cv_index"
   end
 
   def self.down

@@ -13,10 +13,9 @@
 class ChangesetsSystemTemplate < ActiveRecord::Migration
   def self.up
     create_table :changesets_system_templates, :id => false do |t|
-       t.references :changeset, :null=>false
-       t.references :system_template, :null=>false
+      t.references :changeset, :null=>false
+      t.references :system_template, :null=>false
     end
-
   end
 
   def self.down

@@ -7,7 +7,7 @@ if defined?(Delayed)
 
   class Delayed::Worker
     def handle_failed_job_with_loggin(job, error)
-      handle_failed_job_without_loggin(job,error)
+      handle_failed_job_without_loggin(job, error)
       Delayed::Worker.logger.error(error.message)
       Delayed::Worker.logger.error(error.backtrace.join("\n"))
     end

@@ -56,6 +56,7 @@ Use this as a template for your description. Please keep paragraph width max. 79
 characters. Inform user how to fix error.
 EOS
 
+# rubocop:disable AvoidGlobalVars
 $errors = {}
 def err(type, msg)
   $stderr.puts "#{type.to_s}: #{msg}"

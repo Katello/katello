@@ -41,7 +41,7 @@ end
 
 # Get the deployment type
 deployment = File.read("/etc/katello/client.conf").split("\n").grep(/^path.+/).first.split("/").last
-if (deployment == "headpin" || deployment == "sam")
+if deployment == "headpin" || deployment == "sam"
   deployment = "headpin"
 else
   deployment = "katello"
@@ -144,7 +144,7 @@ end
 FileUtils.mkdir_p(target_dir)
 puts("created directory #{target_dir}")
 
-missing_files = Array.new
+missing_files = []
 sources.each do |source|
   if File.exists?(source)
     complete_target = File.join(target_dir, File.dirname(source))
@@ -158,7 +158,7 @@ sources.each do |source|
 end
 
 # Store missing filenames to archive if there are any
-if not missing_files.empty?
+if missing_files.any?
   missing_target = File.join(target_dir, 'missing_files')
   File.open(missing_target, 'w') do |missing|
     missing.puts missing_files.join("\n")
@@ -179,7 +179,7 @@ if deployment == 'katello'
   `sed -i -e 's/^\\(default_password:\\)\\(.*\\)$/\\1 **********************/' #{File.join(target_dir, '/etc/pulp/server.conf')}`
   `sed -i -e 's/^\\(oauth_secret:\\)\\(.*\\)$/\\1 **********************/' #{File.join(target_dir, '/etc/pulp/server.conf')}`
   if use_foreman
-  `sed -i -e 's/^\\(.*password\\).*$/\\1: **********************/' #{File.join(target_dir, '/etc/foreman/database.yml')}`
+    `sed -i -e 's/^\\(.*password\\).*$/\\1: **********************/' #{File.join(target_dir, '/etc/foreman/database.yml')}`
   end
 end
 `sed -i -e 's/^\\(.*secret\\).*$/\\1 = **********************/' #{File.join(target_dir, '/etc/candlepin/candlepin.conf')}`
@@ -211,20 +211,20 @@ end
 # Also show firewall settings
 `iptables -L > #{File.join(target_dir, "iptables")}`
 
-if (options[:archive])
-    # Tar the output and log it
-    tarfile = target_dir + ".tar.gz"
-    pwd = Dir.pwd()
-    Dir.chdir(options[:basedir])
-    `tar -czf #{tarfile} #{timename}`
-    Dir.chdir(pwd)
+if options[:archive]
+  # Tar the output and log it
+  tarfile = target_dir + ".tar.gz"
+  pwd = Dir.pwd
+  Dir.chdir(options[:basedir])
+  `tar -czf #{tarfile} #{timename}`
+  Dir.chdir(pwd)
 
-    puts "A debug file has been created at #{tarfile}."
-    puts "Make sure it contains no security sensitive data before making it public!"
+  puts "A debug file has been created at #{tarfile}."
+  puts "Make sure it contains no security sensitive data before making it public!"
 
-    # Clean up
-    FileUtils.rm_r(target_dir)
+  # Clean up
+  FileUtils.rm_r(target_dir)
 else
-    puts "Debug files have been created at #{target_dir}"
-    puts "Make sure it contains no security sensitive data before making it public!"
+  puts "Debug files have been created at #{target_dir}"
+  puts "Make sure it contains no security sensitive data before making it public!"
 end

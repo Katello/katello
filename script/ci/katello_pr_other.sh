@@ -26,6 +26,11 @@ RAILS_ENV='build' ruby -Itest test/source_code_test.rb || exit 1
 echo "Ruby code checked."
 
 echo ""
+echo "********* Rubocop Lint Test ****************"
+bundle exec rubocop || exit 1
+echo "Ruby code passed rubocop check."
+
+echo ""
 echo "********* JSHint Javascript Check ****************"
 RAILS_ENV=development bundle exec rake jshint || exit 1
 echo "Javascript code checked."

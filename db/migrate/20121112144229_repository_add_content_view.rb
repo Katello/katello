@@ -38,15 +38,15 @@ class RepositoryAddContentView < ActiveRecord::Migration
 
     User.current = User.hidden.first
     KTEnvironment.all.each do |env|
-     view = ContentView.create!(:name=>"Default View for #{env.name}",
-                         :organization_id=>env.organization_id, :default=>true)
-     env.default_content_view_id = view.id
-     env.save!
-     version = ContentViewVersion.create!(:version=>1, :content_view=>view)
-     env.repositories.each do |repo|
-       repo.content_view_version = version
-       repo.save!
-     end
+      view = ContentView.create!(:name=>"Default View for #{env.name}",
+                                 :organization_id=>env.organization_id, :default=>true)
+      env.default_content_view_id = view.id
+      env.save!
+      version = ContentViewVersion.create!(:version=>1, :content_view=>view)
+      env.repositories.each do |repo|
+        repo.content_view_version = version
+        repo.save!
+      end
     end
 
     null_repos = Repository.where(:content_view_version_id=>nil)

@@ -8,6 +8,6 @@ ActiveSupport::Inflector.inflections do |inflect|
 #   inflect.irregular 'person', 'people'
 #   inflect.uncountable %w( fish sheep )
 
-    inflect.irregular 'custom_info', 'custom_info'
-    inflect.singular 'bases', 'base'
+  inflect.irregular 'custom_info', 'custom_info'
+  inflect.singular 'bases', 'base'
 end

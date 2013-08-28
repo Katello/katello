@@ -1,7 +1,7 @@
 group :development do
   # <test gems> that are here to make things (rake) easier
-    gem 'rspec-rails', '~> 2.13.2'
-    gem "parallel_tests"
+  gem 'rspec-rails', '~> 2.13.2'
+  gem "parallel_tests"
   # </test gems>
 
   # code documentation
@@ -25,4 +25,5 @@ group :development do
   gem 'minitest-rails'
 
   gem 'factory_girl_rails', "~> 1.4.0"
+  gem 'rubocop'
 end

@@ -18,21 +18,23 @@ module RolesPermissions::UserOwnRole
   end
 
   def find_or_create_own_role(auser)
-    return (r = find_own_role) unless r.nil?
+    role = find_own_role
+    return role if role
 
     begin
       role_name = "#{auser.username}_#{Password.generate_random_string(20)}"
     end while ::UserOwnRole.exists?(:name => role_name)
 
-    proxy_association_owner.roles << (r = ::UserOwnRole.new(:name => role_name))
-    r
+    proxy_association_owner.roles << (role = ::UserOwnRole.new(:name => role_name))
+    role
   end
 
   def destroy_own_role
-    return unless (r = find_own_role)
-    r.destroy
+    role = find_own_role
+    return unless role
+    role.destroy
 
-    unless r.destroyed?
+    unless role.destroyed?
       Rails.logger.error error.to_s
     end
   end
