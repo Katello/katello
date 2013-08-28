@@ -709,7 +709,7 @@ usermod -a -G katello-shared tomcat
 %exclude %{homedir}/engines/fort/.gitignore
 %dir %{homedir}/engines/bastion
 %{homedir}/engines/bastion/bastion.gemspec
-%{homedir}/engines/bastion/README
+%{homedir}/engines/bastion/README.md
 %{homedir}/engines/bastion/app
 %{homedir}/engines/bastion/lib
 %{homedir}/engines/bastion/vendor/assets/components

@@ -422,7 +422,7 @@ module Resources
           unless response.empty?
             JSON.parse(response)
           else
-            return []
+            return nil
           end
         end
 
