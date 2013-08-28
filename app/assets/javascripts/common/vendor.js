@@ -11,7 +11,7 @@
 */
 
 //= require "jquery-1.7.2"
-//= require "alchemy/underscore-1.3.1"
+//= require "alchemy/underscore"
 //= require "alchemy/jquery-ui-1.8.11.custom/js/jquery-ui-1.8.11.custom.min"
 //= require "alchemy/jquery/plugins/jquery.hoverIntent"
 //= require "alchemy/jquery/plugins/jquery.ui.totop"
