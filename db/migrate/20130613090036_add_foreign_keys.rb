@@ -1,6 +1,6 @@
 class AddForeignKeys < ActiveRecord::Migration
 
-  # TODO remove after FK problems are fixed
+  # TODO: remove after FK problems are fixed
   def self.add_foreign_key_deferred(from_table, to_table, options = {})
     add_foreign_key from_table, to_table, options.update(:options => 'INITIALLY DEFERRED')
   end

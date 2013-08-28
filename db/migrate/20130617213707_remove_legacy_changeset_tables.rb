@@ -27,7 +27,7 @@ class RemoveLegacyChangesetTables < ActiveRecord::Migration
       t.integer "product_id",      :null => false
     end
     add_index "changeset_distributions", ["changeset_id"], :name => "index_changeset_distributions_on_changeset_id"
-    add_index "changeset_distributions", ["distribution_id", "changeset_id", "product_id"], :name => "index_cs_distro_distro_id_cs_id_p_id", :unique => true
+    add_index "changeset_distributions", %w(distribution_id changeset_id product_id), :name => "index_cs_distro_distro_id_cs_id_p_id", :unique => true
     add_index "changeset_distributions", ["distribution_id"], :name => "index_changeset_distributions_on_distribution_id"
     add_index "changeset_distributions", ["product_id"], :name => "index_changeset_distributions_on_product_id"
 
@@ -38,7 +38,7 @@ class RemoveLegacyChangesetTables < ActiveRecord::Migration
       t.integer "product_id",   :null => false
     end
     add_index "changeset_errata", ["changeset_id"], :name => "index_changeset_errata_on_changeset_id"
-    add_index "changeset_errata", ["errata_id", "changeset_id"], :name => "index_changeset_errata_on_errata_id_and_changeset_id", :unique => true
+    add_index "changeset_errata", %w(errata_id changeset_id), :name => "index_changeset_errata_on_errata_id_and_changeset_id", :unique => true
     add_index "changeset_errata", ["errata_id"], :name => "index_changeset_errata_on_errata_id"
     add_index "changeset_errata", ["product_id"], :name => "index_changeset_errata_on_product_id"
 
@@ -50,7 +50,7 @@ class RemoveLegacyChangesetTables < ActiveRecord::Migration
       t.string  "nvrea"
     end
     add_index "changeset_packages", ["changeset_id"], :name => "index_changeset_packages_on_changeset_id"
-    add_index "changeset_packages", ["nvrea", "changeset_id"], :name => "index_changeset_packages_on_nvrea_and_changeset_id", :unique => true
+    add_index "changeset_packages", %w(nvrea changeset_id), :name => "index_changeset_packages_on_nvrea_and_changeset_id", :unique => true
     add_index "changeset_packages", ["package_id"], :name => "index_changeset_packages_on_package_id"
     add_index "changeset_packages", ["product_id"], :name => "index_changeset_packages_on_product_id"
 

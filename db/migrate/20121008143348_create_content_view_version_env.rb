@@ -6,7 +6,7 @@ class CreateContentViewVersionEnv < ActiveRecord::Migration
       t.timestamps
     end
     add_index :content_view_version_environments, [:content_view_version_id, :environment_id],
-      :name => "cvv_env_index"
+              :name => "cvv_env_index"
   end
 
   def self.down

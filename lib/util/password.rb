@@ -41,12 +41,15 @@ module Password
 
   # Generates random string like for length = 10 => "iCi5MxiTDn"
   def self.generate_random_string(length)
-    length.to_i.times.collect { (i = Kernel.rand(62); i += ((i < 10) ? 48 : ((i < 36) ? 55 : 61 ))).chr }.join
+    chars = ('A'..'Z').to_a + ('a'..'z').to_a + (0..9).to_a
+    result = []
+    length.to_i.times { result += chars.sample(1) }
+    result.join
   end
 
   def self.encrypt(text, passphrase = nil)
     passphrase = File.open('/etc/katello/secure/passphrase', 'rb') { |f| f.read }.chomp if passphrase.nil?
-    '$1$' + [ aes_encrypt(text, passphrase) ].pack('m0').gsub("\n", '') # for Ruby 1.8
+    '$1$' + [aes_encrypt(text, passphrase)].pack('m0').gsub("\n", '') # for Ruby 1.8
   rescue => e
     if defined?(Rails) && Rails.logger
       Rails.logger.warn "Unable to encrypt password: #{e}"
@@ -97,6 +100,7 @@ module Password
   # of hashin (such as faster passowrd hashing when running tests)
   # should be used with caution (setting to 1 in testing environment
   # is probably the only reasonable usage)
+  # rubocop:disable TrivialAccessors
   def self.password_rounds=(value)
     @password_rounds = value
   end

@@ -21,8 +21,8 @@ class DbUniqueIndices < ActiveRecord::Migration
     add_index(:system_templates, [:name, :environment_id], :unique => true)
     add_index(:system_template_distributions, [:distribution_pulp_id, :system_template_id], :name => "index_sys_template_distro_on_pulp_id_template_id", :unique => true)
     add_index(:system_template_packages, [:system_template_id, :package_name, :version, :release, :epoch, :arch], :unique => true, :name =>"index_sys_template_packages_on_nvrea_template_id")
-    add_index(:system_template_pack_groups, [:name, :system_template_id],:name => "index_sys_template_packs_on_name_template_id",  :unique => true)
-    add_index(:system_template_pg_categories, [:name, :system_template_id],:name => "index_sys_template_pg_categories_on_name_template_id", :unique => true)
+    add_index(:system_template_pack_groups, [:name, :system_template_id], :name => "index_sys_template_packs_on_name_template_id",  :unique => true)
+    add_index(:system_template_pg_categories, [:name, :system_template_id], :name => "index_sys_template_pg_categories_on_name_template_id", :unique => true)
 
     add_index(:users, :username, :unique => true)
   end
@@ -46,7 +46,7 @@ class DbUniqueIndices < ActiveRecord::Migration
     remove_index(:sync_plans, :column => [:name, :organization_id])
     remove_index(:system_groups, :column => [:name, :organization_id])
     remove_index(:system_templates, :column => [:name, :environment_id])
-    remove_index(:system_template_distributions,:name => "index_sys_template_distro_on_pulp_id_template_id")
+    remove_index(:system_template_distributions, :name => "index_sys_template_distro_on_pulp_id_template_id")
     remove_index(:system_template_packages, :name =>"index_sys_template_packages_on_nvrea_template_id")
     remove_index(:system_template_pack_groups, :name => "index_sys_template_packs_on_name_template_id")
     remove_index(:system_template_pg_categories, :name => "index_sys_template_pg_categories_on_name_template_id")
