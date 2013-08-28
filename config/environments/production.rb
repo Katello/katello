@@ -61,7 +61,8 @@ Src::Application.configure do
 
   # Be sure to restart your server when you modify this setting.
   config.session_store ::Katello::UrlConstrainedCookieStore,
-    :key => '_katello_session', :expire_after => 1.hour, :expiration_exceptions => "/notices"
+                       :key => '_katello_session', :expire_after => 1.hour,
+                       :expiration_exceptions => "/notices"
 
   # Do not update compass SASS files in production (we precompile them)
   Sass::Plugin.options[:never_update] = true
