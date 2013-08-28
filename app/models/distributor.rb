@@ -92,7 +92,8 @@ class Distributor < ActiveRecord::Base
   end
 
   def tasks
-    TaskStatus.refresh_for_distributor(self)
+    import_candlepin_tasks
+    self.task_statuses
   end
 
   # A rollback occurred while attempting to create the distributor; therefore, perform necessary cleanup.
@@ -104,6 +105,7 @@ class Distributor < ActiveRecord::Base
   end
 
   private
+
     def save_task_status pulp_task, task_type, parameters_type, parameters
       # TODO: remove entirely from distributor model, or need to keep as stub?
     end
