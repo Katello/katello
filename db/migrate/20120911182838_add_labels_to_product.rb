@@ -3,7 +3,7 @@ class AddLabelsToProduct < ActiveRecord::Migration
     change_table(:products) do |t|
       t.column :label, :string, :bulk => true
       Product.all.each do |prod|
-        execute "update products set label = '#{Util::Model::labelize(prod.name)}' where id= #{prod.id}"
+        execute "update products set label = '#{Util::Model.labelize(prod.name)}' where id= #{prod.id}"
       end
       t.change(:label, :string, :null => false)
     end

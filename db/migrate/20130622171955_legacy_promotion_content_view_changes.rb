@@ -25,14 +25,14 @@ class LegacyPromotionContentViewChanges < ActiveRecord::Migration
 
       # Publish a "Legacy View"
       name = "Legacy View"
-      label = Util::Model::labelize(name)
+      label = Util::Model.labelize(name)
       if ContentView.where(:label => label, :organization_id => org).count > 0
         name =  name + "-#{SecureRandom.hex(4)}"
-        label = Util::Model::labelize(name)
+        label = Util::Model.labelize(name)
       end
 
-      default_cvd.publish( name, "View containing the Library Environment's content for #{org.name}",
-                             label, :async => false, :notify => false)
+      default_cvd.publish(name, "View containing the Library Environment's content for #{org.name}",
+                          label, :async => false, :notify => false)
 
       # For each Non Library env -> change the env's default CVV to point to the Legacy View"
       legacy_view = ContentView.where(:name => name, :content_view_definition_id => default_cvd).first
@@ -59,7 +59,7 @@ class LegacyPromotionContentViewChanges < ActiveRecord::Migration
                     default_cvv.id,
                   default_cvv.class.name]
 
-        task_status_id = insert(clause, nil, nil, nil, nil, params.collect{|item| [nil, item]})
+        insert(clause, nil, nil, nil, nil, params.collect{|item| [nil, item]})
         execute("update content_view_versions set content_view_id = #{legacy_view.id} where id = #{default_cvv.id}")
         version = env_ids.index(env.id.to_s)
         if version
@@ -123,11 +123,11 @@ class LegacyPromotionContentViewChanges < ActiveRecord::Migration
           Runcible::Extensions::Repository.delete_distributor(pulp_id, distro_id)
 
           yum_distro =  Runcible::Extensions::YumDistributor.new(relative_path, (unprotected || false), true,
-                                                         {:protected=>true})
+                                                                 {:protected => true})
           Runcible::Extensions::Repository.associate_distributor(pulp_id,
-                               "yum_distributor", yum_distro.config,
-                                "auto_publish" => true,
-                                "distributor_id" => distro_id)
+                                                                 "yum_distributor", yum_distro.config,
+                                                                 "auto_publish" => true,
+                                                                 "distributor_id" => distro_id)
         end
       end
 

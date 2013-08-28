@@ -4,6 +4,6 @@ class AddSystemGroupLocked < ActiveRecord::Migration
   end
 
   def self.down
-   remove_column :system_groups, :locked
+    remove_column :system_groups, :locked
   end
 end
