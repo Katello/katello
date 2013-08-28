@@ -113,7 +113,6 @@ Requires:       %{?scl_prefix}rubygem(rack-openid) >= 1.3.1
 Requires:       %{?scl_prefix}rubygem(ruby-openid) >= 2.2.3
 Requires:       %{?scl_prefix}rubygem(rabl)
 Requires:       %{?scl_prefix}rubygem(dynflow)
-Requires:       %{?scl_prefix}rubygem(minitest)
 Requires:       %{?scl_prefix}rubygem(foreigner)
 Requires:       %{?scl_prefix}rubygem(justified)
 Requires:       signo >= 0.0.5
@@ -154,8 +153,6 @@ BuildRequires:  %{?scl_prefix}rubygem(compass-960-plugin) >= 0.10.4
 BuildRequires:  %{?scl_prefix}rubygem(bundler_ext)
 BuildRequires:  %{?scl_prefix}rubygem(logging) >= 1.8.0
 BuildRequires:  %{?scl_prefix}rubygem(ui_alchemy-rails) >= 1.0.0
-BuildRequires:  %{?scl_prefix}rubygem(minitest)
-BuildRequires:  %{?scl_prefix}rubygem(minitest-rails)
 BuildRequires:  %{?scl_prefix}rubygem(rabl)
 BuildRequires:  %{?scl_prefix}rubygem(hooks)
 BuildRequires:  asciidoc
@@ -421,13 +418,8 @@ Requires:        rubygem(webrat) >= 0.7.3
 Requires:        rubygem(nokogiri) >= 0.9.9
 Requires:        rubygem(vcr)
 Requires:        rubygem(webmock)
-Requires:        rubygem(minitest) <= 4.5.0
-Requires:        rubygem(minitest-rails)
-Requires:        rubygem(minitest_tu_shim)
 Requires:        rubygem(parallel_tests)
 
-BuildRequires:        rubygem(minitest)
-BuildRequires:        rubygem(minitest-rails)
 BuildRequires:        rubygem(rspec-rails)
 
 %description devel-test
@@ -445,6 +437,10 @@ export RAILS_ENV=build
 
 #don't distribute quiet_paths
 rm -f config/initializers/quiet_paths.rb
+rm -f lib/tasks/test.rake
+rm -f bundler.d/test.rb
+rm -f db/.rubocop.yml
+rm -f .rubocop.yml
 
 # when running in SCL we do not distribute any devel packages yet
 %if %{?scl:1}%{!?scl:0}
@@ -454,7 +450,6 @@ rm -f config/initializers/quiet_paths.rb
     rm -f bundler.d/development.rb
     rm -f bundler.d/development_boost.rb
     rm -f bundler.d/optional.rb
-    rm -f bundler.d/test.rb
     rm -rf bundler.d/assets.rb
 %endif
 
@@ -465,12 +460,8 @@ rm -f config/initializers/quiet_paths.rb
     sed -ri 'sX(/usr/bin/rake|/usr/bin/env rake)X%{scl_rake}Xg' script/katello-refresh-cdn
 %endif
 
-#run source code tests
-%{?scl:scl enable %scl "}
-    touch config/katello.yml
-    ruby -Itest test/source_code_test.rb
-%{?scl:"}
-
+# touch the katello yml for bundler ext stuff
+touch config/katello.yml
 
 #check and generate gettext MO files
 make -C locale check all-mo %{?_smp_mflags}
@@ -729,7 +720,6 @@ usermod -a -G katello-shared tomcat
 %exclude %{homedir}/lib/tasks/hudson.rake
 %exclude %{homedir}/lib/tasks/jsroutes.rake
 %exclude %{homedir}/lib/tasks/jshint.rake
-%exclude %{homedir}/lib/tasks/test.rake
 %exclude %{homedir}/lib/tasks/simplecov.rake
 %exclude %{homedir}/script/pulp_integration_tests
 %{homedir}/locale
@@ -816,7 +806,6 @@ usermod -a -G katello-shared tomcat
 %{homedir}/app/mailers
 %{homedir}/app/models
 %exclude %{homedir}/app/models/glue/*
-%exclude %{homedir}/lib/tasks/test.rake
 %exclude %{homedir}/lib/tasks/simplecov.rake
 %{homedir}/app/assets/
 %{homedir}/vendor
@@ -891,7 +880,6 @@ usermod -a -G katello-shared tomcat
 
 %files devel-test
 %{homedir}/bundler.d/test.rb
-%{homedir}/lib/tasks/test.rake
 %{homedir}/lib/tasks/simplecov.rake
 %{homedir}/script/pulp_integration_tests
 
