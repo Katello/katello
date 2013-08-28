@@ -3,7 +3,7 @@ require 'securerandom'
 begin
   # Read token string from the file.
   token = IO.read('/etc/katello/secret_token')
-  raise RuntimeError, 'Size is too small' if token.length < 9
+  fail RuntimeError, 'Size is too small' if token.length < 9
   Src::Application.config.secret_token = token.chomp
 rescue => e
   # If anything is wrong make sure the token is random. This is safe even when

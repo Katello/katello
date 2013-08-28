@@ -27,7 +27,7 @@ Src::Application.routes.draw do
         api_resources :environments
         api_resources :sync_plans, :only => [:index, :create]
         api_resources :tasks, :only => [:index]
-        api_resources :providers, :only => [:index], :constraints => { :organization_id => /[^\/]*/ }
+        api_resources :providers, :only => [:index], :constraints => {:organization_id => /[^\/]*/}
         scope :constraints => RegisterWithActivationKeyContraint.new do
           match '/systems' => 'systems#activate', :via => :post
         end
@@ -174,7 +174,7 @@ Src::Application.routes.draw do
         #get :dependencies, :on => :member, :action => :dependencies
 
         api_attachable_resources :products, :controller => :changesets_content
-        api_attachable_resources :packages, :controller => :changesets_content, :constraints => { :id => /[0-9a-zA-Z\-_.]+/ }
+        api_attachable_resources :packages, :controller => :changesets_content, :constraints => {:id => /[0-9a-zA-Z\-_.]+/}
         api_attachable_resources :errata, :controller => :changesets_content
         api_attachable_resources :repositories, :controller => :changesets_content, :resource_name => :repo
         api_attachable_resources :distributions, :controller => :changesets_content
@@ -184,15 +184,15 @@ Src::Application.routes.draw do
 
       api_resources :ping, :only => [:index]
 
-      api_resources :repositories, :only => [:show, :update, :destroy], :constraints => { :id => /[0-9a-zA-Z\-_.]*/ } do
+      api_resources :repositories, :only => [:show, :update, :destroy], :constraints => {:id => /[0-9a-zA-Z\-_.]*/} do
         api_resources :sync, :only => [:index, :create] do
           delete :index, :on => :collection, :action => :cancel
         end
         api_resources :packages, :only => [:index, :show] do
           get :search, :on => :collection
         end
-        api_resources :errata, :only => [:index, :show], :constraints => { :id => /[0-9a-zA-Z\-\+%_.:]+/ }
-        api_resources :distributions, :only => [:index, :show], :constraints => { :id => /[0-9a-zA-Z \-\+%_.]+/ }
+        api_resources :errata, :only => [:index, :show], :constraints => {:id => /[0-9a-zA-Z\-\+%_.:]+/}
+        api_resources :distributions, :only => [:index, :show], :constraints => {:id => /[0-9a-zA-Z \-\+%_.]+/}
         member do
           get :package_groups
           get :package_group_categories
