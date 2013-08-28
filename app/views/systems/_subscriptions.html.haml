@@ -1,7 +1,9 @@
 = javascript do
   :plain
     localize({
-        "systemSelectAutoheal": '#{escape_javascript(_("Select Auto-attach Level..."))}'
+        "systemSelectAutoheal": '#{escape_javascript(_("Select Auto-attach Level..."))}',
+        "runAutoAttachSuccess": '#{escape_javascript(_("Successfully auto-attached system"))}',
+        "runAutoAttachFail": '#{escape_javascript(_("Failed to auto-attach system"))}'
     });
 = javascript 'widgets/jquery.jeditable.helpers', 'systems/system_subscriptions'
 
@@ -15,12 +17,12 @@
       .subs_text.fl.panel_link
         = system_status_message(@system)
         = link_to(_('Details'), edit_system_path(@system))
-    %input.fr.button#heal_system_button{:type=>"button",:value=>_("Run Auto-Attach"),'data-url'=>refresh_subscriptions_api_system_path(@system.uuid), 'data-method' => "post"}
+      %input.fr.button#heal_system_button{:type => "button", :value => _("Run Auto-Attach"), :data => { :url => refresh_subscriptions_api_system_path(@system.uuid), :method => "post" }}
     .subs_servicelevel{'name' => 'system[serviceLevel]', 'class' => ("editable edit_select_system_servicelevel" if editable), 'data-url' => system_path(system.id), 'data-options' => system_servicelevel_edit(system)}
       = system_servicelevel(system)
     .clear
   #subs_data
-    = render :partial=>"subs", :locals=>{:system=>@system, :avail_subs => avail_subs, :consumed_entitlements => consumed_entitlements, :editable=>editable, :subscription_filters=>subscription_filters}
+    = render :partial => "subs", :locals => {:system => @system, :avail_subs => avail_subs, :consumed_entitlements => consumed_entitlements, :editable => editable, :subscription_filters => subscription_filters}
   %br.clear
 
 = render :template => "layouts/tupane_layout"
