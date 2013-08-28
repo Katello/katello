@@ -104,7 +104,6 @@ KT.default_info = (function() {
                 start_updater(data['task']['uuid']);
             },
             error  : function(data) {
-                // task didn't start correctly
                 notices.displayNotice("error", window.JSON.stringify({ "notices": [i18n.default_info_apply_error] }));
             }
         });
@@ -123,7 +122,8 @@ KT.default_info = (function() {
                 notices.displayNotice("success", window.JSON.stringify({ "notices": [i18n.default_info_create_success] }));
             },
             error   : function(data) {
-                notices.displayNotice("error", window.JSON.stringify({ "notices": [$.parseJSON(data.responseText)["displayMessage"]] }));
+                message = KT.utils.escape($.parseJSON(data.responseText)["displayMessage"]);
+                notices.displayNotice("error", window.JSON.stringify({ "notices": [message] }));
             }
         });
     };
@@ -174,7 +174,7 @@ KT.default_info = (function() {
         });
 
         $("#new_default_info_row").after(new_row);
-        setTimeout(function() {$("tr[data-id='default_info_" + _keyname + "']").addClass("row_fade_in"); }, 1); // hax
+        setTimeout(function() { $("tr[data-id='default_info_" + _keyname + "']").addClass("row_fade_in"); }, 1); // hax
         $("#new_default_info_keyname").val("");
         check_for_empty($("#new_default_info_keyname"));
         check_for_apply_button_enable();
