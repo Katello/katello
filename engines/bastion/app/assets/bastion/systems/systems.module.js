@@ -75,6 +75,27 @@ angular.module('Bastion.systems').config(['$stateProvider', function($stateProvi
         templateUrl: 'systems/details/views/system-info.html'
     });
 
+
+    $stateProvider.state('systems.details.events', {
+        abstract: true,
+        collapsed: true,
+        controller: 'SystemEventsController',
+        template: '<div ui-view></div>'
+    });
+
+    $stateProvider.state('systems.details.events.index', {
+        url: '/events',
+        collapsed: true,
+        templateUrl: 'systems/details/views/system-events.html'
+    });
+
+    $stateProvider.state('systems.details.events.details', {
+        url: '/events/:eventId',
+        collapsed: true,
+        controller: 'SystemEventDetailsController',
+        templateUrl: 'systems/details/views/system-event-details.html'
+    });
+
     $stateProvider.state('systems.details.subscriptions', {
         url: '/subscriptions',
         collapsed: true,

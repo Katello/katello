@@ -33,10 +33,6 @@ Src::Application.routes.draw do
         end
         api_resources :systems, :only => [:index, :create] do
           get :report, :on => :collection
-
-          collection do
-            get :tasks
-          end
         end
         api_resources :distributors, :only => [:index, :create]
         resource :uebercert, :only => [:show]
@@ -76,6 +72,7 @@ Src::Application.routes.draw do
           get :errata
           get :pools
           get :releases
+          get :tasks
           put :enabled_repos
           post :system_groups, :action => :add_system_groups
           delete :system_groups, :action => :remove_system_groups
