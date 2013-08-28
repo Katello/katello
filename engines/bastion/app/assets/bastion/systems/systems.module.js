@@ -75,21 +75,18 @@ angular.module('Bastion.systems').config(['$stateProvider', function($stateProvi
         templateUrl: 'systems/details/views/system-info.html'
     });
 
-
     $stateProvider.state('systems.details.events', {
         abstract: true,
         collapsed: true,
         controller: 'SystemEventsController',
         template: '<div ui-view></div>'
-    });
-
-    $stateProvider.state('systems.details.events.index', {
+    })
+    .state('systems.details.events.index', {
         url: '/events',
         collapsed: true,
         templateUrl: 'systems/details/views/system-events.html'
-    });
-
-    $stateProvider.state('systems.details.events.details', {
+    })
+    .state('systems.details.events.details', {
         url: '/events/:eventId',
         collapsed: true,
         controller: 'SystemEventDetailsController',
@@ -129,4 +126,30 @@ angular.module('Bastion.systems').config(['$stateProvider', function($stateProvi
             }
         }
     });
+
+    $stateProvider.state('systems.details.packages', {
+        url: '/packages/',
+        collapsed: true,
+        controller: 'SystemPackagesController',
+        templateUrl: 'systems/content/views/system-packages.html'
+    });
+
+
+    $stateProvider.state('systems.details.errata', {
+         abstract: true,
+         collapsed: true,
+         controller: 'SystemErrataController',
+         template: '<div ui-view></div>'
+     })
+    .state('systems.details.errata.index', {
+        url: '/errata/',
+        collapsed: true,
+        templateUrl: 'systems/content/views/system-errata.html'
+    })
+    .state('systems.details.errata.details', {
+        url: '/errata/:errataId/',
+        collapsed: true,
+        templateUrl: 'systems/content/views/errata-details.html'
+    });
+
 }]);

@@ -89,7 +89,6 @@ class ResourceType < ActiveRecord::Base
     verbs.each do |verb|
       fail VerbNotFound.new(resource_type, verb, possible_verbs) unless possible_verbs.include? verb.to_s
     end
-
   end
 
   def self.check_type(resource_type)

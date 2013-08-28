@@ -432,7 +432,7 @@ module Glue::Provider
 
         # Limit subscriptions to just those from Red Hat provider
         subscriptions = pools.collect do |pool|
-          product = Product.where(:cp_id => pool.product_id, :provider_id => self.organization.redhat_provider.id).first
+          product = Product.where(:cp_id => pool.product_id).first
           next if product.nil?
           pool.provider_id = product.provider_id   # Set so it is saved into elastic search
           pool

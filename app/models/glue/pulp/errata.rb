@@ -23,7 +23,7 @@ module Glue::Pulp::Errata
     base.class_eval do
 
       attr_accessor :id, :errata_id, :title, :description, :version, :release, :type, :status, :updated,  :issued, :from_str,
-                    :reboot_suggested, :references, :pkglist, :severity, :repoids
+                    :reboot_suggested, :references, :pkglist, :severity, :repoids, :solution
 
       def self.errata_by_consumer(repos)
         errata = Katello.pulp_server.extensions.consumer.applicable_errata([], repos.map(&:pulp_id), false)

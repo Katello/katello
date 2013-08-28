@@ -12,11 +12,12 @@
  **/
 
 describe('Controller: SystemEventsController', function() {
-    var $scope, Nutupane;
+    var $scope, Nutupane, SystemTask, mockTask;
 
     beforeEach(module('Bastion.systems', 'Bastion.test-mocks'));
 
     beforeEach(function() {
+        mockTask = {id: 4, pending: true};
         Nutupane = function() {
             this.table = {
                 showColumns: function() {}
@@ -26,11 +27,18 @@ describe('Controller: SystemEventsController', function() {
         System = {
             tasks: function() {return []}
         };
+        SystemTask = {
+            get: function(task, success){success(task)},
+            poll: function(task, success){success(task)}
+        };
     });
 
     beforeEach(inject(function($controller, $rootScope) {
         $scope = $rootScope.$new();
-        $controller('SystemEventsController', {$scope: $scope, System: System, Nutupane: Nutupane});
+        $controller('SystemEventsController', {$scope: $scope,
+                                               System: System,
+                                               SystemTask: SystemTask,
+                                               Nutupane: Nutupane});
     }));
 
     it("Sets a table.", function() {

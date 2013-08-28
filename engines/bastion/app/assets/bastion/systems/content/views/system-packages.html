@@ -1,0 +1,83 @@
+<section>
+
+  <div ng-hide="system.readonly">
+    <h5>{{ "Package Actions" | i18n }}</h5>
+    <section>
+      <form class="form" ng-submit="performPackageAction()">
+        <select ng-model="packageAction.actionType" required>
+          <option value="packageInstall">{{ "Package Install" | i18n }}</option>
+          <option value="packageUpdate">{{ "Package Update" | i18n }}</option>
+          <option value="packageRemove">{{ "Package Remove" | i18n }}</option>
+          <option value="groupInstall">{{ "Group Install" | i18n }}</option>
+          <option value="groupRemove">{{ "Group Remove" | i18n }}</option>
+        </select>
+        <input type="text" placeholder="{{ 'Package/Group Name' | i18n}}" ng-model="packageAction.term"/>
+        <input type="submit" name="Perform" value="Perform"/>
+      </form>
+    </section>
+  </div>
+
+  <h5>{{ "Installed Packages" | i18n }}</h5>
+
+  <div class="nutupane-actionbar">
+    <div class="form">
+      <input type="text"
+             class="input input-search"
+             placeholder="{{ 'Filter' | i18n }}"
+             ng-model="currentPackagesTable.filter">
+      <span class="result-count">{{ "Showing %total Packages" | i18n: {total: currentPackagesTable.resource.total} }}</span>
+    </div>
+
+    <div class="nutupane-actions fr" ng-hide="system.readonly">
+       <button class="btn btn-primary" ng-click="updateAll()">
+         {{ "Update All" | i18n }}
+       </button>
+    </div>
+  </div>
+
+  <div alch-table="currentPackagesTable">
+    <div alch-container-scroll control-width="table" alch-infinite-scroll="table.nextPage()">
+      <table ng-class="{'table-mask': table.working}" class="table table-full table-striped">
+        <thead>
+          <tr alch-table-head>
+            <th alch-table-column="name">{{ "Installed Package" | i18n }}</th>
+            <th alch-table-column="remove" ng-hide="table.system.readonly">{{ "Remove" | i18n }} </th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr alch-table-row ng-repeat="package in table.rows | filter:table.filter" >
+            <td alch-table-cell>{{ package.nvrea }}</td>
+            <td alch-table-cell ng-hide="table.system.readonly">
+
+                <i class="clickable active icon-remove-sign" ng-hide="package.removeTask" title="{{ 'Remove' | i18n }}"
+                   ng-click="table.removePackage(package)"></i>
+
+                <i class="icon-spinner icon-spin" ng-show="package.removeTask.pending"></i>
+                <span ng-show="package.removeTask && !package.removeTask.pending">
+
+                  <i ng-show="table.taskFailed(package.removeTask)" class="icon-exclamation-sign" title="{{ 'Failed' | i18n }}"></i>
+                  <i ng-hide="table.taskFailed(package.removeTask)" class="icon-check-sign" title="{{ 'Success' | i18n }}"></i>
+
+                  <a ng-click="table.openEventInfo(package.removeTask)" >
+                    <span ng-show="package.removeTask.affected_units == 1">
+                      {{ package.removeTask.affected_units }} {{ "package removed"  | i18n }}
+                    </span>
+
+                    <span ng-show="!package.removeTask.failed && package.removeTask.affected_units != 1">
+                      {{ package.removeTask.affected_units }} {{ "packages removed"  | i18n }}
+                    </span>
+
+                    <span ng-show="package.removeTask.failed">
+                        {{ "Package removal failed"  | i18n }}
+                    </span>
+                  </a>
+                </span>
+            </td>
+
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>

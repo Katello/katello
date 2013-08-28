@@ -81,7 +81,7 @@ Src::Application.routes.draw do
           delete :system_groups, :action => :remove_system_groups
         end
         collection do
-          match "/tasks/:id" => "tasks#show", :via => :get
+          match "/tasks/:task_id" => "systems#task", :via => :get
         end
         api_resources :subscriptions, :only => [:create, :index, :destroy] do
           collection do
@@ -89,7 +89,20 @@ Src::Application.routes.draw do
             match '/serials/:serial_id' => 'subscriptions#destroy_by_serial', :via => :delete
           end
         end
-        resource :packages, :action => [:create, :update, :destroy], :controller => :system_packages
+        resource :packages, :only => [], :controller => :system_packages do
+          collection do
+            put :remove
+            put :install
+            put :upgrade
+            put :upgrade_all
+          end
+        end
+        resource :errata, :action => [], :controller => :system_errata do
+          collection do
+            put :apply
+          end
+        end
+
       end
 
       api_resources :distributors, :only => [:show, :destroy, :create, :index, :update] do

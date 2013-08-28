@@ -36,14 +36,6 @@ class Api::V2::ApiController < Api::ApiController
     end
   end
 
-  def load_search_service(service = nil)
-    if service.nil?
-      @search_service ||= Glue::ElasticSearch::Items.new
-    else
-      @search_service ||= service
-    end
-  end
-
   protected
 
     def labelize_params(params)

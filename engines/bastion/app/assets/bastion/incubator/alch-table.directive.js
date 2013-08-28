@@ -26,6 +26,16 @@ angular.module('alchemy')
         $scope.table.numSelected = 0;
         $scope.table.allSelected = false;
 
+        $scope.table.getSelected = function() {
+            var selectedRows = [];
+            angular.forEach(rows, function(row, rowIndex) {
+                if (row.selected === true) {
+                    selectedRows.push($scope.table.rows[rowIndex]);
+                }
+            });
+            return selectedRows;
+        };
+
         this.addRow = function(row) {
             rows.push(row);
 

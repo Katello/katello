@@ -21,6 +21,10 @@ class PulpTaskStatus < TaskStatus
     #potentially used by child class, see PulpSyncStatus for example
   end
 
+  def affected_units
+    self.result['num_changes']
+  end
+
   def error
     self.result[:errors][0] if self.error? && self.result[:errors]
   end
