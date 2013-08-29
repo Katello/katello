@@ -1,0 +1,26 @@
+- title ||= _("Select a repository")
+- field ||= "repository_id"
+- record ||= nil
+
+
+#repo_selector
+  %table
+    %thead
+      %tr
+        %th #{title}
+
+    -if editable
+      %tr
+        %td
+          %form#add_repository_form
+            %div #{_('Choose a repository:')}
+
+            #select_container
+              .spinner
+              = repo_selector(repositories, save_url, field, record)
+
+    - else
+      %tr
+        %td
+          = record.puppet_repository.try(:name) || _('No puppet repository selected.')
+

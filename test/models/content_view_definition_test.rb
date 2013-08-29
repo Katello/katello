@@ -187,4 +187,19 @@ class ContentViewDefinitionTest < MiniTest::Rails::ActiveSupport::TestCase
     assert_empty content_view_def.component_content_views
   end
 
+  def test_puppet_repository_id
+    content_view_def = ContentViewDefinition.find(content_view_definition_bases(:simple_cvd))
+    repo = Repository.find(repositories(:p_forge))
+    dev_repo = Repository.find(repositories(:dev_p_forge))
+
+    content_view_def.puppet_repository_id = repo.id
+    content_view_def.save!
+    assert_equal repo.id, content_view_def.puppet_repository_id
+    assert_includes content_view_def.repository_ids, repo.id
+
+    assert_raises(Errors::ContentViewRepositoryOverlap) do
+      content_view_def.repositories << dev_repo
+    end
+  end
+
 end

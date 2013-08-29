@@ -22,6 +22,7 @@ class Notifications::Notifier
     @default_options = { :level        => :success,
                          :asynchronous => !controller,
                          :persist      => true,
+                         :persist_only => false,
                          :global       => false,
                          :details      => nil,
                          :request_type => (controller.send :requested_action if controller),
@@ -119,6 +120,9 @@ class Notifications::Notifier
   #
   # @option options [User] :user the user to send the notification to.  If not set, User.current is used
   #
+  # @option options [true, false] :persist_only
+  #   If set to true, the notice is stored in the database but not sent to the
+  #   user. Thus, it is only for auditing only.
   def notice(notices, options = { })
     options = process_options options
     notices = [*notices].compact
@@ -141,7 +145,7 @@ class Notifications::Notifier
             link = NoticesController.helpers.link_to('Click here', controller.notices_url)
             notices << _("%s for more details.") % link
           end
-          controller.flash[options[:level]] = { options[:send_as] => notices }.to_json
+          controller.flash[options[:level]] = { options[:send_as] => notices }.to_json unless options[:persist_only]
         end
       end
     end
