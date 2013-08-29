@@ -34,7 +34,7 @@ module ProvidersHelper
           key = :debug
         elsif name.include?("(ISOs)") || name.include?("Source ISOs")
           key = :isos
-        elsif name.include?("(RPMs)")
+        elsif name.include?("(RPMs)" || name.include?("(Kickstart)")
           key = :rpms
         else
           key = :other
