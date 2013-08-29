@@ -47,7 +47,7 @@ class ContentNodeCapability < NodeCapability
 
   private
 
-  def repo_ids(repository=nil, view=nil, environment=nil)
+  def repo_ids(repository = nil, view = nil, environment = nil)
     if repository
       [repository.pulp_id]
     elsif environment.nil? && view.nil?
