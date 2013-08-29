@@ -82,7 +82,7 @@ class Api::V1::SubscriptionsController < Api::V1::ApiController
 
     if params[:paged]
       subscriptions = {
-        :subscriptions => subscriptions.results,
+        :subscriptions => subscriptions,
         :subtotal => total_count,
         :total => items.total_items
       }
