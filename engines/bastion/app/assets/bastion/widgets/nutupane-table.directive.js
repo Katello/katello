@@ -14,7 +14,7 @@ angular.module('alchemy').directive('nutupaneTable', ['$compile', function($comp
         restrict: 'A',
 
         link: function(scope, element) {
-            var originalTable, clonedTable, clonedThs;
+            var originalTable, clonedTable;
 
             scope.$on("$stateChangeSuccess", function(event, newState, newParams, oldState) {
                 // Only clone the table if the collapsed value changed or it's the first time.
@@ -38,13 +38,6 @@ angular.module('alchemy').directive('nutupaneTable', ['$compile', function($comp
                     if (rowSelect) {
                         angular.element(rowSelect).remove();
                     }
-
-                    // Compile each cloned th individually with original th scope
-                    // so sort will work.
-                    clonedThs = element.find('.cloned-nutupane-table th');
-                    angular.forEach(originalTable.find('th'), function(th, index) {
-                        $compile(clonedThs[index])(angular.element(th).scope());
-                    });
                 } else {
                     element.find("table:not(.cloned-nutupane-table)").find('thead').hide();
                 }

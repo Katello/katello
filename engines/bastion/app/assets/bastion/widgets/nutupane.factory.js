@@ -107,6 +107,10 @@ angular.module('Bastion.widgets').factory('Nutupane',
                 }
             };
 
+            self.table.addRow = function(row) {
+                self.table.rows.unshift(row);
+            };
+
             self.table.nextPage = function() {
                 var table = self.table;
                 if (table.working || !table.hasMore()) {

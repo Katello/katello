@@ -24,6 +24,7 @@ table.details-visible {
 
 .table {
   font-size: 110%;
+  margin-bottom: 0 !important;
 
   tr:hover td,
   tr.focus td {
@@ -192,6 +193,11 @@ table.details-visible {
   }
 }
 
+.nutupane-actions {
+  display: inline-block;
+  margin-left: 10px;
+}
+
 .selected-action-container {
   vertical-align: middle;
 }
@@ -217,6 +223,10 @@ table.details-visible {
     padding: 10px 0;
   }
 
+  .icon-backward {
+    margin-right: 5px;
+  }
+
   h2 {
     margin: 0;
   }
@@ -233,15 +243,19 @@ table.details-visible {
   .details-header {
     height: 40px;
     position: relative;
+    margin-bottom: 10px;
   }
 
   .details-actions {
     display: inline-block;
-
   }
 
   button {
     margin: 0;
+  }
+
+  .new-header {
+    border-bottom: 3px solid #e3e5e7;
   }
 
   .details-navigation {
@@ -315,6 +329,10 @@ table.details-visible {
       margin: 5px 15px 0;
     }
   }
+
+  .details-full {
+    width: 100%;
+  }
 }
 
 .advanced-header {
@@ -338,7 +356,7 @@ table.details-visible {
 }
 
 .select-action {
-  margin-top: 8px;
+  margin-top: 6px;
 }
 
 .inline-icon {

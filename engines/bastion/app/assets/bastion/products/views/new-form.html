@@ -1,0 +1,79 @@
+<form name="productForm" class="form" novalidate>
+
+  <div class="flash_hud" ng-show="false">
+    <a class="control" title="Close"></a>
+    <ul class="flash_messages error">
+      <li>{{ "Errors" | i18n }}</li>
+    </ul>
+  </div>
+
+  <div class="control-group required" ng-class="{ 'error' : productForm.name.$invalid }">
+    <div class="label">
+      <label for="name">{{ "Name" | i18n }}</label>
+    </div>
+    <div class="input">
+      <input ng-model="product.name"
+             name="name"
+             type="text"
+             tabindex=1
+             required>
+      <span class="note error" ng-show="productForm.name.$invalid">
+        <ul><li ng-repeat="message in productForm.name.$error.messages">{{ message }}</li></ul>
+      </span>
+    </div>
+  </div>
+
+  <div class="control-group required" ng-class="{ 'error' : productForm.label.$invalid }">
+    <div class="label">
+      <label class="required" for="label">{{ "Label" | i18n }}</label>
+    </div>
+    <div class="input">
+      <input ng-model="product.label" name="label" type="text" tabindex=2 required>
+      <span class="note error" ng-show="productForm.label.$invalid">
+        <ul><li ng-repeat="message in productForm.label.$error.messages">{{ message }}</li></ul>
+      </span>
+    </div>
+  </div>
+
+  <div class="control-group required" ng-class="{ 'error' : productForm.provider.$invalid }">
+    <div class="label">
+      <label class="required" for="provider_id">{{ "Provider" | i18n }}</label>
+    </div>
+    <div class="input">
+      <select required
+              tabindex=3
+              name="provider_id"
+              ng-model="product.provider_id"
+              ng-options="provider.id as provider.name for provider in providers">
+      </select>
+      <a href="" ng-click="transitionTo('products.new.provider')">+ New Provider</a>
+      <span class="note error" ng-show="productForm.provider_id.$invalid">
+        <ul>
+          <li ng-repeat="message in productForm.provider_id.$error.messages">{{ message }}</li>
+        </ul>
+      </span>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <div class="label">
+      <label class="required" for="description">{{ "Description" | i18n }}</label>
+    </div>
+    <div class="input">
+      <textarea name="description" ng-model="product.description" tabindex=4 rows=10 columns=40></textarea>
+      <span class="note error" ng-show="productForm.description.$invalid">
+        <ul>
+          <li ng-repeat="message in productForm.description.$error.messages">{{ message }}</li>
+        </ul>
+      </span>
+    </div>
+  </div>
+
+  <div class="control-group buttons">
+    <div class="input">
+      <button ng-click="table.closeItem()">{{ "Cancel" | i18n }}</button>
+      <button ng-click="save(product)" class="btn-primary" ng-disabled="productForm.$invalid">{{ "Create" | i18n }}</button>
+    </div>
+  </div>
+
+</form>
