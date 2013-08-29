@@ -28,6 +28,7 @@ files = [
     '**/*.js',
     '**/views/*.html',
 
+    '../../../test/test-mocks.module.js',
     '../../../test/**/*test.js'
 ];
 

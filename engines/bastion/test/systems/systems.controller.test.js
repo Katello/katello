@@ -12,16 +12,13 @@
  **/
 
 describe('Controller: SystemsController', function() {
-    var $scope, $state, Nutupane, Routes;
+    var $scope, Nutupane, Routes;
 
     // load the systems module and template
-    beforeEach(module('Bastion.systems'));
+    beforeEach(module('Bastion.systems', 'Bastion.test-mocks'));
 
     // Set up mocks
     beforeEach(function() {
-        $state = {
-            transitionTo: function() {}
-        };
         Nutupane = function() {
             this.table = {
                 showColumns: function() {}
@@ -36,10 +33,16 @@ describe('Controller: SystemsController', function() {
     });
 
     // Initialize controller
-    beforeEach(inject(function($controller, $rootScope) {
+    beforeEach(inject(function($controller, $rootScope, $state) {
         $scope = $rootScope.$new();
-        $controller('SystemsController', {$scope: $scope, $state: $state, Nutupane: Nutupane,
-            System: System, CurrentOrganization: 'CurrentOrganization'});
+
+        $controller('SystemsController', {
+            $scope: $scope,
+            $state: $state,
+            Nutupane: Nutupane,
+            System: System,
+            CurrentOrganization: 'CurrentOrganization'
+        });
     }));
 
     it("provides a way to get the status color for the system.", function() {
@@ -49,15 +52,15 @@ describe('Controller: SystemsController', function() {
     });
 
     it("provides a way to open the details panel.", function() {
-        spyOn($state, "transitionTo");
+        spyOn($scope, "transitionTo");
         $scope.table.openDetails({ uuid: 2 });
-        expect($state.transitionTo).toHaveBeenCalledWith('systems.details.info', {systemId: 2});
+        expect($scope.transitionTo).toHaveBeenCalledWith('systems.details.info', {systemId: 2});
     });
 
     it("provides a way to close the details panel.", function() {
-        spyOn($state, "transitionTo");
+        spyOn($scope, "transitionTo");
         $scope.table.closeItem();
-        expect($state.transitionTo).toHaveBeenCalledWith('systems.index');
+        expect($scope.transitionTo).toHaveBeenCalledWith('systems.index');
     });
 });
 

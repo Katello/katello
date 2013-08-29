@@ -130,10 +130,3 @@ angular.module('Bastion.systems').config(['$stateProvider', function($stateProvi
         }
     });
 }]);
-
-angular.module('Bastion.systems').run(['$rootScope', '$state', '$stateParams',
-    function ($rootScope, $state, $stateParams) {
-        $rootScope.$state = $state;
-        $rootScope.$stateParams = $stateParams;
-    }
-]);
