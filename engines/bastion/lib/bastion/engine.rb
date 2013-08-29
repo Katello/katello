@@ -15,7 +15,7 @@ module Bastion
 
       app.middleware.use ::ActionDispatch::Static, "#{root}/app/assets/bastion"
 
-      app.config.assets.precompile << Proc.new do |path|
+      app.config.assets.precompile << proc do |path|
         full_path = Rails.application.assets.resolve(path).to_path
         if path =~ /\.(css|js)\z/
           if full_path.include?("bastion.js")
