@@ -22,7 +22,7 @@ describe Api::V1::OrganizationDefaultInfoController do
   let(:facts) { { "distribution.name" => "Fedora" } }
   let(:uuid) { '1234' }
 
-  before (:each) do
+  before(:each) do
     login_user
     set_default_locale
     disable_org_orchestration
@@ -47,6 +47,13 @@ describe Api::V1::OrganizationDefaultInfoController do
       post :create, :organization_id => @org.label, :keyname => "test_key", :informable_type => "system"
       response.code.should == "200"
       Organization.find(@org.id).default_info["system"].include?("test_key").should == true
+    end
+
+    it "should be successful with html characters in the keyname" do
+      Organization.find(@org.id).default_info["system"].empty?.should == true
+      post :create, :organization_id => @org.label, :keyname => "<blink>fookey</blink>", :informable_type => "system"
+      response.code.should == "200"
+      Organization.find(@org.id).default_info["system"].include?("<blink>fookey</blink>").should == true
     end
 
     it "should fail without keyname" do
@@ -85,23 +92,31 @@ describe Api::V1::OrganizationDefaultInfoController do
 
   describe "remove default custom info to an org" do
 
-    before (:each) do
+    before(:each) do
       @org.default_info["system"] << "test_key"
+      @org.default_info["system"] << "<blink>fookey</blink>"
       @org.save!
     end
 
     it "should be successful" do
-      Organization.find(@org.id).default_info["system"].size.should == 1
+      Organization.find(@org.id).default_info["system"].size.should == 2
       post :destroy, :organization_id => @org.label, :keyname => "test_key", :informable_type => "system"
       response.code.should == "200"
-      Organization.find(@org.id).default_info["system"].empty?.should == true
+      Organization.find(@org.id).default_info["system"].size.should == 1
+    end
+
+    it "should be successful with html characters in the keyname" do
+      Organization.find(@org.id).default_info["system"].size.should == 2
+      post :destroy, :organization_id => @org.label, :keyname => "<blink>fookey</blink>", :informable_type => "system"
+      response.code.should == "200"
+      Organization.find(@org.id).default_info["system"].size.should == 1
     end
 
     it "should fail with wrong org id" do
-      Organization.find(@org.id).default_info["system"].size.should == 1
+      Organization.find(@org.id).default_info["system"].size.should == 2
       post :destroy, :organization_id => "bad org label", :keyname => "test_key", :informable_type => "system"
       response.code.should == "404"
-      Organization.find(@org.id).default_info["system"].size.should == 1
+      Organization.find(@org.id).default_info["system"].size.should == 2
     end
 
     it "should raise error with a bad keyname" do
