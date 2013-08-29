@@ -18,6 +18,10 @@ child :system_groups => :systemGroups do
   attributes :id, :name
 end
 
+child :custom_info => :customInfo do
+  attributes :id, :keyname, :value
+end
+
 child :environment => :environment do
   extends 'api/v2/environments/show'
 end

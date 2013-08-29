@@ -99,8 +99,11 @@
 
       <div class="detail">
         <span class="info-label">{{ "System Groups" | i18n }}</span>
-        <span class="info-value" alch-edit-multiselect="system.systemGroups"
-              options="systemGroups()" on-save="updateSystemGroups(value)"></span>
+        <span class="info-value"
+              alch-edit-multiselect="system.systemGroups"
+              formatter="arrayToString"
+              options="systemGroups()"
+              on-save="updateSystemGroups(value)"></span>
       </div>
       
       <div class="detail">
@@ -128,9 +131,10 @@
         <span class="info-value">{{ system.memory }}</span>
       </div>
 
-      <div class="divider"></div>
     </section>
   </div>
+
+
 
   <div class="fr details">
     <section>
@@ -220,6 +224,33 @@
                 <span class="info-sub-value">{{ value }}</span>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+    </section>
+
+    <section class="custom-information">
+      <h4>{{ "Custom Information" | i18n }}</h4>
+    <span alch-edit-add-item="system.customInfo"
+          on-add="addCustomInfo(value)">
+    </span>
+      <p ng-show="system.customInfo.length == 0">
+        {{ "You don't have any custom information, add some above" | i18n }}
+      </p>
+      <div class="existing-items" ng-show="system.customInfo.length > 0">
+        <h5>{{ "Exsting Items" | i18n }}</h5>
+        <input type="text" ng-model="searchTerm" placeholder="{{ 'Filter' | i18n }}"/>
+        <div class="details-container">
+          <div class="detail" ng-repeat="customInfo in system.customInfo | filter:searchTerm">
+            <span class="info-label">{{ customInfo.keyname }}</span>
+          <span class="info-value"
+                alch-edit-text="customInfo.value"
+                on-save="saveCustomInfo(customInfo)"
+                deletable="true"
+                on-delete="deleteCustomInfo(customInfo)">
+          </span>
           </div>
         </div>
       </div>
