@@ -64,19 +64,19 @@ Warden::Strategies.add(:openid) do
     if (response = env[Rack::OpenID::RESPONSE])
       # we have response from OpenID provider so we try to login user
       case response.status
-        when :success
-          if (user = User.find_by_username(response.identity_url.split('/').last))
-            success!(user)
-          else
-            message = 'User not found'
-            Rails.logger.warn(message) && fail(message)
-            throw(:warden, :openid => {:response => response}) unless params[:sso_tried].present?
-          end
+      when :success
+        if (user = User.find_by_username(response.identity_url.split('/').last))
+          success!(user)
         else
-          # :missing status means that request was not made, probably wrong certificate on Signo side
-          message = response.respond_to?(:message) ? response.message : "OpenID authentication failed: #{response.status}"
-          Rails.logger.error(message) && fail(message)
+          message = 'User not found'
+          Rails.logger.warn(message) && fail(message)
           throw(:warden, :openid => {:response => response}) unless params[:sso_tried].present?
+        end
+      else
+        # :missing status means that request was not made, probably wrong certificate on Signo side
+        message = response.respond_to?(:message) ? response.message : "OpenID authentication failed: #{response.status}"
+        Rails.logger.error(message) && fail(message)
+        throw(:warden, :openid => {:response => response}) unless params[:sso_tried].present?
       end
     elsif (username = cookies[:username] || params[:username])
       # we already have cookie
