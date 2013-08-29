@@ -100,6 +100,11 @@ class Candlepin::ProductContent
                                           pulp_id: product.repo_id(repo_name)
                                          )
         unless existing_repos.any?
+          content_type = case self.content.type.downcase
+	                 when 'kickstart' then 'yum'
+                         else self.content.type
+                         end
+          Rails.logger.error("Content type: '#{content_type}'")
           repo = Repository.create!(:environment => product.organization.library,
                                     :product => product,
                                     :pulp_id => product.repo_id(repo_name),
@@ -115,7 +120,7 @@ class Candlepin::ProductContent
                                     :feed_ca => ca,
                                     :feed_cert => self.product.certificate,
                                     :feed_key => self.product.key,
-                                    :content_type => self.content.type,
+                                    :content_type => content_type,
                                     :preserve_metadata => true, #preserve repo metadata when importing from cp
                                     :enabled =>false,
                                     :unprotected => true,
