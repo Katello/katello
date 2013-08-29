@@ -55,6 +55,13 @@ Katello.config(['$httpProvider', function($httpProvider) {
  * @description
  *   Prime the i18n dictionary to avoid delay in translation replacement.
  */
-angular.module('Katello').run(['i18nDictionary', function(i18nDictionary) {
-    i18nDictionary.get();
-}]);
+angular.module('Katello').run(['i18nDictionary', '$rootScope', '$state', '$stateParams',
+    function(i18nDictionary, $rootScope, $state, $stateParams) {
+
+        i18nDictionary.get();
+
+        $rootScope.$state = $state;
+        $rootScope.$stateParams = $stateParams;
+        $rootScope.transitionTo = $state.transitionTo;
+    }
+]);
