@@ -34,7 +34,7 @@ angular.module('alchemy')
             templateUrl: 'incubator/views/alch-edit.html'
         };
     })
-    .controller('AlchEditController', ['$scope', function($scope) {
+    .controller('AlchEditController', ['$scope', '$filter', function($scope, $filter) {
         var previousValue;
 
         $scope.edit = function() {
@@ -42,7 +42,7 @@ angular.module('alchemy')
 
             if ($scope.readonly !== true) {
                 $scope.editMode = true;
-                previousValue = $scope.displayValue;
+                previousValue = $scope.model;
 
                 if ($scope.handleOptions !== undefined && !$scope.options) {
                     options = $scope.handleOptions();
@@ -73,7 +73,7 @@ angular.module('alchemy')
             var handleSave;
 
             $scope.editMode = false;
-            $scope.savingMode = true;
+            $scope.workingMode = true;
 
             handleSave = $scope.handleSave({ value: $scope.model });
 
@@ -81,26 +81,73 @@ angular.module('alchemy')
 
                 handleSave.then(
                     function() {
-                        $scope.savingMode = false;
+                        $scope.updateDisplay($scope.model);
+                        $scope.workingMode = false;
                     },
                     function() {
-                        $scope.savingMode = false;
+                        $scope.workingMode = false;
                         $scope.editMode = true;
                     }
                 );
+            } else {
+                $scope.workingMode = false;
             }
         };
 
         $scope.cancel = function() {
             $scope.editMode = false;
             $scope.disableSave = false;
-            $scope.displayValue = previousValue;
+            $scope.model = previousValue;
             $scope.handleCancel({ value: $scope.model });
+        };
+
+        $scope.delete = function($event) {
+            var handleDelete;
+
+            // Need to prevent click $event from propagating to edit handler
+            $event.stopPropagation();
+
+            $scope.editMode = false;
+            $scope.workingMode = true;
+
+            handleDelete = $scope.handleDelete({ value: $scope.model });
+
+            if (handleDelete !== undefined && handleDelete.hasOwnProperty('then')) {
+
+                handleDelete.then(
+                    function() {
+                        $scope.updateDisplay($scope.model);
+                        $scope.workingMode = false;
+                    },
+                    function() {
+                        $scope.workingMode = false;
+                        $scope.editMode = true;
+                    }
+                );
+            } else {
+                $scope.workingMode = false;
+            }
         };
 
         $scope.$watch('editTrigger', function(edit) {
             if (edit) {
                 $scope.edit();
+            }
+        });
+
+        $scope.updateDisplay = function (newValue) {
+            if ($scope.formatter) {
+                $scope.displayValue = $filter($scope.formatter)(newValue, $scope.formatterOptions);
+            } else {
+                $scope.displayValue = $scope.model;
+            }
+        };
+
+        // Watch the model and displayed values for changes
+        // and update the displayed value accordingly.
+        $scope.$watch('model + displayValue', function(newValue) {
+            if (newValue) {
+                $scope.updateDisplay($scope.model);
             }
         });
     }])
@@ -110,12 +157,13 @@ angular.module('alchemy')
             scope: {
                 model: '=alchEditText',
                 readonly: '=',
-                displayValue: '=alchEditText',
                 handleSave: '&onSave',
-                handleCancel: '&onCancel'
+                handleCancel: '&onCancel',
+                deletable: '@deletable',
+                handleDelete: '&onDelete'
             },
             template: '<div>' +
-                        '<input ng-model="model" ng-show="editMode">' +
+                        '<input ng-model="model" ng-show="editMode"/>' +
                         '<div alch-edit></div>' +
                       '</div>'
         };
@@ -126,7 +174,6 @@ angular.module('alchemy')
             scope: {
                 model: '=alchEditTextarea',
                 readonly: '=',
-                displayValue: '=alchEditTextarea',
                 handleSave: '&onSave',
                 handleCancel: '&onCancel'
             },
@@ -144,7 +191,6 @@ angular.module('alchemy')
                 readonly: '=',
                 selector: '=',
                 handleOptions: '&options',
-                displayValue: '=alchEditSelect',
                 handleSave: '&onSave',
                 handleCancel: '&onCancel',
                 editTrigger: '='
@@ -164,6 +210,8 @@ angular.module('alchemy')
             templateUrl: 'incubator/views/alch-edit-multiselect.html',
             scope: {
                 model: '=alchEditMultiselect',
+                formatter: '@formatter',
+                formatterOptions: '@formatterOptions',
                 handleOptions: '&options',
                 handleSave: '&onSave',
                 handleCancel: '&onCancel'
@@ -172,12 +220,7 @@ angular.module('alchemy')
         };
     })
     .controller('AlchEditMultiselectController', ['$scope', function($scope) {
-        var unbindWatcher, checkPrevious, formatDisplay, getIds;
-
-        formatDisplay = function(toFormat) {
-            toFormat = toFormat || [];
-            return _.pluck(toFormat, 'name').join(', ');
-        };
+        var unbindWatcher, checkPrevious, getIds;
 
         getIds = function(models) {
             models = models || [];
@@ -206,15 +249,7 @@ angular.module('alchemy')
                 option.selected = true;
                 $scope.model.push(option);
             }
-            $scope.displayValue = formatDisplay($scope.model);
         };
-
-        $scope.$watch("model", function(modelValue) {
-            if (!modelValue) {
-                return;
-            }
-            $scope.displayValue = formatDisplay(modelValue);
-        });
 
         // Set the checkboxes for already selected items and then unbind.
         unbindWatcher = $scope.$watch("model + options", function() {
@@ -224,4 +259,41 @@ angular.module('alchemy')
             checkPrevious();
             unbindWatcher();
         });
+    }])
+    .directive('alchEditAddItem', function() {
+        return {
+            templateUrl: 'incubator/views/alch-edit-add-item.html',
+            scope: {
+                model: '=alchEditAddItem',
+                handleAdd: '&onAdd',
+            },
+            controller: 'AlchEditAddItemController'
+        };
+    })
+    .controller('AlchEditAddItemController', ['$scope', function($scope) {
+        $scope.add = function(value) {
+            var handleAdd;
+
+            $scope.workingMode = true;
+
+            handleAdd = $scope.handleAdd(value);
+
+            if (handleAdd !== undefined && handleAdd.hasOwnProperty('then')) {
+
+                handleAdd.then(
+                    function() {
+                        $scope.workingMode = false;
+                        $scope.newKey = null;
+                        $scope.newValue = null;
+                    },
+                    function() {
+                        $scope.workingMode = false;
+                    }
+                );
+            } else {
+                $scope.workingMode = false;
+                $scope.newKey = null;
+                $scope.newValue = null;
+            }
+        };
     }]);

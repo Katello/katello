@@ -1,5 +1,7 @@
-<div class="alch-multiselect" ng-class="{open: editMode}">
+<div class="alch-dialog alch-multiselect" ng-class="{open: editMode}">
+  <i class="icon-remove clickable fr" ng-click="editMode = false" ng-show="editMode"></i>
   <form class="form" ng-show="editMode">
+    <h5>{{ "Existing Items" | i18n}}</h5>
     <input type="text" ng-model="searchTerm" type="text" placeholder="{{ 'Filter' | i18n }}">
     <ul>
       <li class="clickable" ng-repeat="option in options | filter:searchTerm">

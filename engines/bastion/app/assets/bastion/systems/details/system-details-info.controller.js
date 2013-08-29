@@ -17,6 +17,8 @@
  *
  * @requires $scope
  * @requires $q
+ * @requires $http
+ * @requires Routes
  * @requires System
  * @requires SystemGroup
  * @requires ContentView
@@ -25,8 +27,12 @@
  *   Provides the functionality for the system details action pane.
  */
 angular.module('Bastion.systems').controller('SystemDetailsInfoController',
-    ['$scope', '$q', 'System', 'SystemGroup', 'ContentView',
-    function($scope, $q, System, SystemGroup, ContentView) {
+    ['$scope', '$q', '$http', 'Routes', 'System', 'SystemGroup', 'ContentView',
+    function($scope, $q, $http, Routes, System, SystemGroup, ContentView) {
+        var customInfoErrorHandler = function(error) {
+            $scope.saveError = true;
+            $scope.errors = error["errors"];
+        };
 
         $scope.editContentView = false;
         $scope.saveSuccess = false;
@@ -123,6 +129,34 @@ angular.module('Bastion.systems').controller('SystemDetailsInfoController',
             return deferred.promise;
         };
 
+        $scope.saveCustomInfo = function(info) {
+            var url = [Routes.apiCustomInfoPath("system", $scope.system.id), info.keyname].join('/');
+            return $http.put(url, {'custom_info': info}).error(customInfoErrorHandler);
+        };
+
+        $scope.addCustomInfo = function(info) {
+            var url, success;
+            url = Routes.apiCustomInfoPath("system", $scope.system.id);
+
+            success = function() {
+                $scope.system.customInfo.push(info);
+            };
+
+            return $http.post(url, {'custom_info': info}).success(success).error(customInfoErrorHandler);
+        };
+
+        $scope.deleteCustomInfo = function(info) {
+            var url, success;
+            url = [Routes.apiCustomInfoPath("system", $scope.system.id), info.keyname].join('/');
+
+            success = function() {
+                $scope.system.customInfo = _.filter($scope.system.customInfo, function(keyValue) {
+                    return keyValue !== info;
+                }, this);
+            };
+
+            return $http.delete(url).success(success).error(customInfoErrorHandler);
+        };
 
         // TODO upgrade to Angular 1.1.4 so we can move this into a directive
         // and use dynamic templates (http://code.angularjs.org/1.1.4/docs/partials/guide/directive.html)

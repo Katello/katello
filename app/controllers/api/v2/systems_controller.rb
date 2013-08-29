@@ -43,6 +43,7 @@ class Api::V2::SystemsController < Api::V1::SystemsController
   param :id, String, :desc => "UUID of the system", :required => true
   def show
     @system_groups = @system.system_groups
+    @custom_info = @system.custom_info
     respond
   end
 

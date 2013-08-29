@@ -17,14 +17,19 @@ describe('Directive: alchEdit', function() {
         compile,
         testItem;
 
-    beforeEach(module('alchemy', 'incubator/views/alch-edit.html', 'incubator/views/alch-edit-multiselect.html'));
+    beforeEach(module('alchemy',
+        'incubator/views/alch-edit.html',
+        'incubator/views/alch-edit-add-item.html',
+        'incubator/views/alch-edit-multiselect.html'));
 
     beforeEach(module(function($provide) {
         testItem = {
             name: 'Test Name',
             taco: 'carnitas',
+            add: function () {},
             save: function() {},
-            revert: function() {}
+            revert: function() {},
+            delete: function() {}
         };
 
         i18nFilter = function() {
@@ -58,7 +63,8 @@ describe('Directive: alchEdit', function() {
 
         beforeEach(function() {
             editableElement = angular.element(
-                '<span alch-edit-text="item.name" on-save="item.save()" on-cancel="item.revert()"></span>');
+                '<span alch-edit-text="item.name" on-save="item.save()" on-delete="item.delete()" ' +
+                    'on-cancel="item.revert()"></span>');
 
             scope.item = testItem;
 
@@ -90,6 +96,15 @@ describe('Directive: alchEdit', function() {
             expect(testItem.save).toHaveBeenCalled();
         });
 
+        it("should call the method set to on-delete when clicking delete button", function() {
+            var element = editableElement.find('.icon-remove');
+            spyOn(testItem, 'delete');
+
+            element.trigger('click');
+
+            expect(testItem.delete).toHaveBeenCalled();
+        });
+
         it("should call the method set to on-cancel when clicking cancel button", function() {
             var element = editableElement.find('[ng-click="cancel()"]');
             spyOn(testItem, 'revert');
@@ -99,6 +114,25 @@ describe('Directive: alchEdit', function() {
             expect(testItem.revert).toHaveBeenCalled();
         });
 
+        describe("formats displayed values", function() {
+            var $filter, elementScope;
+            beforeEach(inject(function(_$filter_) {
+                $filter = _$filter_;
+                elementScope = editableElement.scope();
+            }));
+
+            it("by executing the provided filter on the model", function() {
+                elementScope.formatter = 'uppercase';
+
+                elementScope.model = 'new name';
+                elementScope.$digest();
+                expect(elementScope.displayValue).toBe('NEW NAME');
+            });
+
+            it("by defaulting to model value if no filter is provided", function() {
+                expect(elementScope.displayValue).toBe(elementScope.model);
+            });
+        });
     });
 
     describe('alchEditText directive', function() {
@@ -228,4 +262,28 @@ describe('Directive: alchEdit', function() {
         });
 
     });
+
+    describe('alchEditAddItem directive', function() {
+        var editableElement;
+
+        beforeEach(function() {
+            editableElement = angular.element(
+                '<span alch-edit-add-item="item.name" on-add="item.add()"></span>');
+
+            scope.item = testItem;
+
+            compile(editableElement)(scope);
+            scope.$digest();
+        });
+
+        it("should call the method set to on-save when clicking save button", function() {
+            var element = editableElement.find('button');
+            spyOn(testItem, 'add');
+
+            element.trigger('click');
+
+            expect(testItem.add).toHaveBeenCalled();
+        });
+    });
+
 });

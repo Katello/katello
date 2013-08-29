@@ -42,6 +42,10 @@
 //= require "bastion/incubator/alch-infinite-scroll.directive"
 //= require "bastion/incubator/alch-edit.directive"
 
+//= require "bastion/incubator/format/alch-format.module.js"
+//= require "bastion/incubator/format/array-to-string.filter.js"
+//= require "bastion/incubator/format/key-value-to-string.filter.js"
+
 //= require "bastion/i18n/i18n.module"
 //= require "bastion/i18n/i18n-dictionary.factory"
 //= require "bastion/i18n/i18n.filter"

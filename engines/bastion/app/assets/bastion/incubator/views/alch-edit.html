@@ -1,18 +1,25 @@
-<div>
-  <div class="value" ng-class="{ 'editable clickable' : !readonly }" ng-click="edit()" ng-hide="editMode || savingMode">
+<div class="alch-edit">
+  <div class="value" ng-class="{ 'editable clickable' : !readonly }" ng-click="edit()" ng-hide="editMode || workingMode">
     <span class="editable-value">{{ displayValue }}</span>
-    <i class="icon-edit inline-icon fr" ng-hide="editMode || readonly"></i>
+    <span class="fr">
+      <i class="icon-edit inline-icon" ng-hide="editMode || readonly"></i>
+      <i class="icon-remove inline-icon" ng-click="delete($event)" ng-show="deletable"></i>
+    </span>
   </div>
-  <div ng-show="savingMode"><i class="icon-spinner inline-icon icon-spin"></i><span>Saving...</span></div>
-  <button class="btn primary small fl"
-          ng-click="save()" 
-          ng-disabled="disableSave" 
-          ng-show="editMode">
+
+  <div ng-show="workingMode">
+    <i class="icon-spinner inline-icon icon-spin"></i>
+    <span>{{ "Working" | i18n }}</span>
+  </div>
+  <button class="btn primary small"
+          ng-click="save()"
+          ng-disabled="disableSave"
+          ng-show="editMode && !workingMode">
     {{ "Save" | i18n }}
   </button>
-  <button class="btn small fl"
+  <button class="btn small"
           ng-click="cancel()"
-          ng-show="editMode"
+          ng-show="editMode && !workingMode"
           ng-disabled="disableCancel">
     {{ "Cancel" | i18n }}
   </button>
