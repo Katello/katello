@@ -53,7 +53,7 @@ class Api::V1::NodeCapabilitiesControllerTest < MiniTest::Rails::ActionControlle
     assert_response :success
 
     assert_protected_action(:create, [@edit_perm], [@read_perm, NO_PERMISSION]) do
-     post :create, :node_id=>@node.id, :capability=>{:type=>FakeNodeCapability::TYPE}
+      post :create, :node_id=>@node.id, :capability=>{:type=>FakeNodeCapability::TYPE}
     end
 
   end
@@ -70,7 +70,7 @@ class Api::V1::NodeCapabilitiesControllerTest < MiniTest::Rails::ActionControlle
     FakeNodeCapability.create!(:node=>@node)
 
     assert_protected_action(:destroy, [@edit_perm], [@read_perm, NO_PERMISSION]) do
-       delete :destroy, :node_id=>@node.id, :id=>FakeNodeCapability::TYPE
+      delete :destroy, :node_id=>@node.id, :id=>FakeNodeCapability::TYPE
     end
   end
 

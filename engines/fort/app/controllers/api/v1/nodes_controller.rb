@@ -54,7 +54,6 @@ class Api::V1::NodesController < Api::V1::ApiController
   def create
     #currently look up System by its id, might need to change to systemid,
     #  or by its cert
-    system = System.find(params[:node][:system_id])
     @node = Node.new(params[:node].slice(:system_id, :environment_ids))
     @node.save!
     respond

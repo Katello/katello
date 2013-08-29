@@ -18,7 +18,7 @@ module Fort
     end
 
     initializer "fort.load_app_instance_data" do |app|
-        app.config.paths['db/migrate'] += Fort::Engine.paths['db/migrate'].existent
+      app.config.paths['db/migrate'] += Fort::Engine.paths['db/migrate'].existent
     end
 
     config.after_initialize do
