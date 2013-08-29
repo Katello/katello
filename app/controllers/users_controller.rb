@@ -27,6 +27,8 @@ class UsersController < ApplicationController
   before_filter :authorize
   skip_before_filter :require_org
 
+  # TODO: break up method
+  # rubocop:disable MethodLength
   def rules
     index_test  = lambda { true }
     create_test = lambda { User.creatable? }
@@ -116,6 +118,8 @@ class UsersController < ApplicationController
     render :partial => "new", :locals => { :user => @user, :accessible_envs => nil }
   end
 
+  # TODO: break up method
+  # rubocop:disable MethodLength
   def create
     if Katello.config.katello?
       # Pulp quietly ignored unkonwn attributes; Headpin needs to remove
@@ -136,7 +140,7 @@ class UsersController < ApplicationController
       @user.save!
     else
       # user selected an org that has no environments defined
-      raise no_env_available_msg unless params['org_id']['org_id'].blank?
+      fail no_env_available_msg unless params['org_id']['org_id'].blank?
 
       # user selected 'No Default Organization'
       @environment  = nil
@@ -361,7 +365,7 @@ class UsersController < ApplicationController
                        :create_label => _('+ New User'),
                        :name          => controller_display_name,
                        :ajax_load     => true,
-                       :ajax_scroll   => items_users_path(),
+                       :ajax_scroll   => items_users_path,
                        :enable_create => User.creatable?,
                        :search_class  => User }
   end

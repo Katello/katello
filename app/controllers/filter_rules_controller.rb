@@ -111,6 +111,8 @@ class FilterRulesController < ApplicationController
     render :text => escape_html(result)
   end
 
+  # TODO: break up this method
+  # rubocop:disable MethodLength
   def add_parameter
     if params[:parameter]
       if params[:parameter][:unit]

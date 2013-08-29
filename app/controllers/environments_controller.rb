@@ -60,7 +60,7 @@ class EnvironmentsController < ApplicationController
     # Create a hash of the available environments and convert to json to be included
     # the edit view
     prior_envs = envs_no_successors - [@environment] - @environment.path
-    env_labels = Hash[ *prior_envs.collect { |p| [ p.id, p.display_name ] }.flatten]
+    env_labels = Hash[*prior_envs.collect { |p| [p.id, p.display_name] }.flatten]
     @env_labels_json = ActiveSupport::JSON.encode(env_labels)
 
     @selected = @environment.prior.nil? ? env_labels[""] : env_labels[@environment.prior.id]
@@ -92,7 +92,7 @@ class EnvironmentsController < ApplicationController
     prior_updated = !params[:kt_environment][:prior].nil?
 
     unless params[:kt_environment][:description].nil?
-      params[:kt_environment][:description] = params[:kt_environment][:description].gsub("\n",'')
+      params[:kt_environment][:description] = params[:kt_environment][:description].gsub("\n", '')
     end
 
     @environment.update_attributes(params[:kt_environment])
@@ -125,11 +125,11 @@ class EnvironmentsController < ApplicationController
   # GET /environments/1/products
   def products
     @products = if params[:content_view_id]
-      view = ContentView.find(params[:content_view_id])
-      view.try(:products, @environment) || []
-    else
-      @environment.library? ? current_organization.products : @environment.products
-    end
+                  view = ContentView.find(params[:content_view_id])
+                  view.try(:products, @environment) || []
+                else
+                  @environment.library? ? current_organization.products : @environment.products
+                end
 
     respond_to do |format|
       format.html {render :partial => "products", :locals => {:products => @products}, :content_type => 'text/html'}
@@ -140,10 +140,10 @@ class EnvironmentsController < ApplicationController
   # GET /environments/1/content_views
   def content_views
     content_views = if params[:include_default]
-      @environment.content_views.readable(current_organization)
-    else
-      ContentView.readable(current_organization).in_environment(@environment)
-    end
+                      @environment.content_views.readable(current_organization)
+                    else
+                      ContentView.readable(current_organization).in_environment(@environment)
+                    end
     respond_to do |format|
       format.json {render :json => content_views}
     end
@@ -171,7 +171,7 @@ class EnvironmentsController < ApplicationController
   end
 
   def setup_new_edit_screen
-    @env_labels = (envs_no_successors - [@environment]).collect {|p| [ p.display_name, p.id ]}
+    @env_labels = (envs_no_successors - [@environment]).collect {|p| [p.display_name, p.id]}
     @selected = @environment.prior.nil? ? "" : @environment.prior.id
   end
 

@@ -56,7 +56,7 @@ class ProductsController < ApplicationController
   def create
     product_params = params[:product]
     requested_label = String.new(product_params[:label]) unless product_params[:label].blank?
-    product_params[:label], label_assigned = generate_label(product_params[:name], 'product') if product_params[:label].blank?
+    product_params[:label], _ = generate_label(product_params[:name], 'product') if product_params[:label].blank?
 
 
     gpg = GpgKey.readable(current_organization).find(product_params[:gpg_key]) if product_params[:gpg_key] && product_params[:gpg_key] != ""
@@ -133,7 +133,7 @@ class ProductsController < ApplicationController
       filter :term, {:organization_id => org.id}
     end
     render :json=>products.collect{|s| {:label=>s.name, :value=>s.name, :id=>s.id}}
-  rescue Tire::Search::SearchRequestFailed => e
+  rescue Tire::Search::SearchRequestFailed
     render :json=>Util::Support.array_with_total
   end
 

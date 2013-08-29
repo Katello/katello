@@ -23,7 +23,7 @@ class FailedAuthenticationController < ActionController::Base
     message = _("You have entered an incorrect username/password combination, or your account may currently be disabled. Please try again or contact your administrator.")
 
     respond_to do |format|
-      format.json { render :json => { :notices => [ message ] }, :status => 401 }
+      format.json { render :json => { :notices => [message] }, :status => 401 }
       format.all do
         if request.env['HTTP_X_FORWARDED_USER'].blank?
           path = new_user_session_url(:sso_tried => true)
@@ -32,7 +32,7 @@ class FailedAuthenticationController < ActionController::Base
           path = show_user_session_url
         end
 
-        flash[:error] = {'notices' => [ message ] }.to_json
+        flash[:error] = {'notices' => [message] }.to_json
         redirect_to path
       end
     end
@@ -45,6 +45,7 @@ class FailedAuthenticationController < ActionController::Base
     Rails.logger.warn "Request is unauthenticated_api for #{request.remote_ip}"
     m = "Invalid credentials"
     respond_to do |format|
+      # rubocop:disable SymbolName
       format.json { render :json => {:displayMessage => m, :errors => [m] }, :status => 401 }
       format.all  { render :text => m, :status => 401 }
     end

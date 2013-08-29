@@ -117,6 +117,8 @@ class ChangesetsController < ApplicationController
       'changeset' => simplify_changeset(@changeset)    }
   end
 
+  # TODO: break up this method
+  # rubocop:disable MethodLength
   def update
     send_changeset = params[:timestamp] && params[:timestamp] != @changeset.updated_at.to_i.to_s
 
@@ -138,7 +140,7 @@ class ChangesetsController < ApplicationController
     end
 
     if params[:state]
-      raise _('Invalid state') if !["review", "new"].index(params[:state])
+      raise _('Invalid state') if !%w(review new).index(params[:state])
       if send_changeset
         to_ret = {}
         to_ret[:changeset] = simplify_changeset(@changeset) if send_changeset
@@ -202,10 +204,9 @@ class ChangesetsController < ApplicationController
   def apply
     messages = {}
     if !params[:confirm] && @environment.prior.library?
-      syncing = []
-      errors = []
-
       # TODO: CONTENT VIEW IN PROGRESS - to check if refresh is in progress... this will be done in separate commit
+      # syncing = []
+      # errors = []
       #@changeset.involved_products.each{|prod|
       #  prod.repos(current_organization.library).each{ |repo|
       #    status = repo.sync_status
@@ -280,7 +281,7 @@ class ChangesetsController < ApplicationController
                  :name => controller_display_name,
                  :accessor => :id,
                  :ajax_load => true,
-                 :ajax_scroll => items_changesets_path(),
+                 :ajax_scroll => items_changesets_path,
                  :search_class=>Changeset}
   end
 
@@ -292,7 +293,7 @@ class ChangesetsController < ApplicationController
   private
 
   #produce a simple datastructure of a changeset for the browser
-  def simplify_changeset cs
+  def simplify_changeset(cs)
     to_ret = {:id => cs.id.to_s, :name => cs.name, :type => cs.action_type, :description => cs.description,
               :timestamp => cs.updated_at.to_i.to_s, :content_views => {},
               :is_new => cs.state == Changeset::NEW, :state => cs.state}

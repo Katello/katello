@@ -65,7 +65,7 @@ class ActivationKeysController < ApplicationController
       :create => {:activation_key => [:name, :description, :environment_id,
                                       :usage_limit, :content_view_id]
         },
-      :update => {:activation_key  => [:name, :description,:environment_id,
+      :update => {:activation_key  => [:name, :description, :environment_id,
                                        :usage_limit, :content_view_id]
         },
       :update_system_groups => {:activation_key => [:system_group_ids]}
@@ -132,8 +132,6 @@ class ActivationKeysController < ApplicationController
         if kt_pool.nil?
           ::Pool.create!(:cp_id => pool, :key_pools => [KeyPool.create!(:activation_key => @activation_key)])
         else
-          key_sub = KeyPool.where(:activation_key_id => @activation_key.id, :pool_id => kt_pool.id)[0]
-
           KeyPool.create!(:activation_key_id => @activation_key.id, :pool_id => kt_pool.id)
         end
       end
@@ -244,7 +242,7 @@ class ActivationKeysController < ApplicationController
     result = params[:activation_key].nil? ? "" : params[:activation_key].values.first
 
     unless params[:activation_key][:description].nil?
-      result = params[:activation_key][:description] = params[:activation_key][:description].gsub("\n",'')
+      result = params[:activation_key][:description] = params[:activation_key][:description].gsub("\n", '')
     end
 
     @activation_key.update_attributes!(params[:activation_key])
@@ -286,7 +284,7 @@ class ActivationKeysController < ApplicationController
       :name => controller_display_name,
       :list_partial => 'activation_keys/list_activation_keys',
       :ajax_load  => true,
-      :ajax_scroll => items_activation_keys_path(),
+      :ajax_scroll => items_activation_keys_path,
       :enable_create => ActivationKey.manageable?(current_organization),
       :search_class=>ActivationKey,
       :initial_action => :edit}
@@ -299,7 +297,7 @@ class ActivationKeysController < ApplicationController
   # Using the list of pools provided, create a list of the ones that are 'available' (i.e. not already consumed/applied).
   # The result will be a hash where the key is the product name and the value is an array of hashes where each entry
   # in the array is for a pool and the elements of the hash are details for that pool
-  def retrieve_available_pools all_pools
+  def retrieve_available_pools(all_pools)
     available_pools = all_pools.clone
 
     # remove pools that have been consumed from the list
@@ -314,7 +312,7 @@ class ActivationKeysController < ApplicationController
   # Using the list of pools provided, create a list of the ones that have been applied.
   # The result will be a hash where the key is the product name and the value is an array of hashes where each entry
   # in the array is for a pool and the elements of the hash are details for that pool
-  def retrieve_applied_pools all_pools
+  def retrieve_applied_pools(all_pools)
     applied_pools = {}
     @activation_key.pools.each do |pool|
       applied_pools[pool.product_name] ||= []
@@ -325,7 +323,7 @@ class ActivationKeysController < ApplicationController
 
   # Iterate the pools provided creating a hash where the key is the product name and the value is an array
   # of pool entries.
-  def pools_hash pools
+  def pools_hash(pools)
     pools_return = {}
     pools.each do |poolId, pool|
       pools_return[pool.product_name] ||= []

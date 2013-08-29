@@ -18,10 +18,10 @@ class PackagesController < ApplicationController
 
   def rules
 
-    view = lambda{
+    view = lambda do
       !Repository.readable_in_org(current_organization).where(
           :pulp_id=>@package.repoids).empty?
-    }
+    end
 
     auto_complete = lambda do
       if @def_filter

@@ -148,7 +148,7 @@ class ProvidersController < ApplicationController
     updated_provider.name = params[:provider][:name] unless params[:provider][:name].nil?
 
     unless params[:provider][:description].nil?
-      result = updated_provider.description = params[:provider][:description].gsub("\n",'')
+      result = updated_provider.description = params[:provider][:description].gsub("\n", '')
     end
 
     updated_provider.repository_url = params[:provider][:repository_url] unless params[:provider][:repository_url].nil?
@@ -232,7 +232,7 @@ class ProvidersController < ApplicationController
              :create_label => _('+ New Provider'),
              :name => controller_display_name,
              :ajax_load => true,
-             :ajax_scroll=>items_providers_path(),
+             :ajax_scroll=>items_providers_path,
              :initial_action => :products_repos,
              :search_class => Provider,
              :enable_create => Provider.creatable?(current_organization)}

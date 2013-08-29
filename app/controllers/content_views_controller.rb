@@ -71,7 +71,7 @@ class ContentViewsController < ApplicationController
       filter :term, {:organization_id => org.id}
     end
     render :json=>content_views.collect{|s| {:label=>s.name, :value=>s.name, :id=>s.id}}
-  rescue Tire::Search::SearchRequestFailed => e
+  rescue Tire::Search::SearchRequestFailed
     render :json=>Support.array_with_total
   end
 

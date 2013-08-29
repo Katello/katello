@@ -61,8 +61,8 @@ class FiltersController < ApplicationController
   end
 
   def create
-    filter = Filter.create!(params[:filter]) do |filter|
-      filter.content_view_definition = @view_definition
+    filter = Filter.create!(params[:filter]) do |f|
+      f.content_view_definition = @view_definition
     end
 
     notify.success(_("Filter '%{filter}' successfully created for content view definition '%{definition}'.") %

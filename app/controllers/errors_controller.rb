@@ -23,6 +23,7 @@ class ErrorsController < ApplicationController
       # custom message which will render in JSON
       logger.error ex.message
       respond_to do |format|
+        # rubocop:disable SymbolName
         format.json { render :json => {:displayMessage => ex.message, :errors => [ex.message]}, :status => 404}
         format.all { render :text => "#{ex.message}", :status => 404}
       end
