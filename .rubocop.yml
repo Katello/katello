@@ -8,17 +8,13 @@ ParameterLists:
   Max: 20 # remove once fixed
 
 CollectionMethods:
-  PreferredMethods:
-    # remove this once we pick either map or collect, inject or reduce, etc
-    detect: 'find'
+  # remove this once we pick either map or collect, inject or reduce, etc
+  PreferredMethods: {}
 
 StringLiterals:
   Enabled: false # consider turning this one back on
 
 SpaceAroundBraces:
-  Enabled: false # remove me
-
-DotPosition:
   Enabled: false # remove me
 
 RedundantSelf:
@@ -57,10 +53,6 @@ AvoidPerlBackrefs:
 Documentation:
   Enabled: false # remove me
 
-MethodLength:
-  Description: 'Avoid methods longer than 20 lines of code.'
-  Max: 20 # remove me to use the default of 10 lines
-
 Semicolon:
   Enabled: false # remove me
 
@@ -81,11 +73,18 @@ AllCops:
     - integration_spec/**
     - engines/**
 
+MethodLength:
+  Description: 'Avoid methods longer than 30 lines of code.'
+  Max: 30 # default is 10
+
 SpaceInsideHashLiteralBraces:
   EnforcedStyleIsWithSpaces: false
 
 HashSyntax:
-  Enabled: false
+  Enabled: false # don't force 1.9 hash syntax
+
+SpaceInsideHashLiteralBraces:
+  Enabled: false # allow spaces (eg { :a => 1 })
 
 LeadingCommentSpace:
   Enabled: false
@@ -103,6 +102,15 @@ FavorUnlessOverNegatedIf:
   Enabled: false
 
 WhileUntilModifier:
+  Enabled: false
+
+AlignParameters:
+  Enabled: false # don't care if parameters are not aligned
+
+ParenthesesAroundCondition:
+  Enabled: false
+
+DotPosition:
   Enabled: false
 
 Lambda:
