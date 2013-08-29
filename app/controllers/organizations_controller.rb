@@ -85,6 +85,8 @@ class OrganizationsController < ApplicationController
     end
   end
 
+  # TODO: break up method
+  # rubocop:disable MethodLength
   def create
     org_label_assigned = ""
     org_params = params[:organization]
@@ -141,7 +143,7 @@ class OrganizationsController < ApplicationController
     else
       @org_label = _("Make this my default organization.")
     end
-    @env_choices =  @organization.environments.collect {|p| [ p.name, p.name ]}
+    @env_choices =  @organization.environments.collect {|p| [p.name, p.name]}
     render :partial=>"edit", :locals=>{:organization=>@organization, :editable=>@organization.editable?, :name => controller_display_name, :org_label=>@org_label}
   end
 
@@ -152,7 +154,7 @@ class OrganizationsController < ApplicationController
     @organization.name = params[:organization][:name] unless params[:organization][:name].nil?
 
     unless params[:organization][:description].nil?
-      result = @organization.description = params[:organization][:description].gsub("\n",'')
+      result = @organization.description = params[:organization][:description].gsub("\n", '')
     end
 
     unless params[:organization][:service_level].nil?
@@ -179,7 +181,7 @@ class OrganizationsController < ApplicationController
     end
 
     # log off all users for this organization
-    # TODO - since we use cookie-based session this is not possible (need to switch over to db-based sessions first)
+    # TODO: since we use cookie-based session this is not possible (need to switch over to db-based sessions first)
 
     # schedule background deletion
     id = @organization.label
@@ -203,12 +205,12 @@ class OrganizationsController < ApplicationController
   end
 
   def events
-    entries = @organization.events.collect {|e|
+    entries = @organization.events.collect do |e|
       entry = {}
       entry['timestamp'] = Date.parse(e['timestamp'])
       entry['message'] = e['messageText']
       entry
-    }
+    end
     #entries.compact!  # To remove the nils inserted for rejected entries
 
     # TODO: add more/paging to these results instead of truncating at 250
@@ -258,7 +260,7 @@ class OrganizationsController < ApplicationController
                :name => controller_display_name,
                :accessor => :label,
                :ajax_load  => true,
-               :ajax_scroll => items_organizations_path(),
+               :ajax_scroll => items_organizations_path,
                :enable_create => Organization.creatable?,
                :search_class=>Organization}
   end

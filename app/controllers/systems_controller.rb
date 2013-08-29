@@ -11,6 +11,7 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+# rubocop:disable SymbolName
 class SystemsController < ApplicationController
   include SystemsHelper
   include ConsumersControllerLogic
@@ -31,6 +32,8 @@ class SystemsController < ApplicationController
   # two pane columns and mapping for sortable fields
   COLUMNS = {'name' => 'name_sort', 'lastCheckin' => 'lastCheckin'}
 
+  # TODO: break up method
+  # rubocop:disable MethodLength
   def rules
     read_system = lambda{System.find(params[:id]).readable?}
     env_system = lambda{@environment && @environment.systems_readable?}
@@ -41,11 +44,11 @@ class SystemsController < ApplicationController
     register_system = lambda do
       if current_organization
         if params.has_key?(:system) && !params[:system][:content_view_id].blank?
-            content_view = ContentView.readable(current_organization).
-                              find_by_id(params[:system][:content_view_id])
-            System.registerable?(@environment, current_organization, content_view) if content_view
+          content_view = ContentView.readable(current_organization).
+            find_by_id(params[:system][:content_view_id])
+          System.registerable?(@environment, current_organization, content_view) if content_view
         else
-            System.registerable?(@environment, current_organization)
+          System.registerable?(@environment, current_organization)
         end
       end
     end
@@ -62,9 +65,9 @@ class SystemsController < ApplicationController
     edit_system = lambda do
       subscribable = true
       if params.has_key?(:system) && !params[:system][:content_view_id].blank?
-          content_view = ContentView.readable(current_organization).
-                          find_by_id(params[:system][:content_view_id])
-          subscribable = content_view ? content_view.subscribable? : false
+        content_view = ContentView.readable(current_organization).
+          find_by_id(params[:system][:content_view_id])
+        subscribable = content_view ? content_view.subscribable? : false
       end
       subscribable && System.find(params[:id]).editable?
     end
@@ -103,17 +106,17 @@ class SystemsController < ApplicationController
   def param_rules
     update_check = lambda do
       if params[:system]
-        sys_rules = {:system => [:name, :description, :location, :releaseVer, :serviceLevel, :environment_id, :content_view_id] }
+        sys_rules = {:system => [:name, :description, :location, :releaseVer, :serviceLevel, :environment_id, :content_view_id]}
         check_hash_params(sys_rules, params)
       else
         check_array_params([:id], params)
       end
     end
-    {   :create => {:arch => [:arch_id],
-                    :system=>[:sockets, :name, :environment_id, :content_view_id, :memory],
-                    :system_type =>[:virtualized]
-                   },
-        :update => update_check
+    {:create => {:arch => [:arch_id],
+                 :system=>[:sockets, :name, :environment_id, :content_view_id, :memory],
+                 :system_type =>[:virtualized]
+                },
+     :update => update_check
     }
   end
 
@@ -170,10 +173,8 @@ class SystemsController < ApplicationController
   end
 
   def auto_complete
-    query = Util::Search::filter_input query
+    query = Util::Search.filter_input query
     query = "name_autocomplete:#{params[:term]}"
-    org = current_organization
-    env_ids = KTEnvironment.systems_readable(org).collect{|item| item.id}
     filters = readable_filters
     systems = System.search do
       query do
@@ -181,12 +182,12 @@ class SystemsController < ApplicationController
       end
       filter :terms, filters
     end
-    render :json=>systems.map{|s|
+    render :json=>systems.map do |s|
       label = _("%{name} (Registered: %{time})") % {:name => s.name, :time => convert_time(format_time(Time.parse(s.created_at)))}
       {:label=>label, :value=>s.name, :id=>s.id}
-    }
-  rescue Tire::Search::SearchRequestFailed => e
-    render :json=>Util::Support.array_with_total
+    end
+  rescue Tire::Search::SearchRequestFailed
+    render :json => Util::Support.array_with_total
   end
 
 
@@ -201,18 +202,22 @@ class SystemsController < ApplicationController
 
   def subscriptions
     consumed = consumed_subscriptions(@system)
-    available = available_subscriptions(@system.filtered_pools(current_user.subscriptions_match_system_preference,
-                                      current_user.subscriptions_match_installed_preference,
-                                      current_user.subscriptions_no_overlap_preference))
+    available = available_subscriptions(@system.filtered_pools(
+      current_user.subscriptions_match_system_preference,
+      current_user.subscriptions_match_installed_preference,
+      current_user.subscriptions_no_overlap_preference))
 
     # Set up the subscription filters based upon the user prefs
-    subscription_filters = "
-        <option value='subscriptions_match_system' %s>%s</option>
-        <option value='subscriptions_match_installed' %s>%s</option>
-        <option value='subscriptions_no_overlap' %s>%s</option>
-        " % [ current_user.subscriptions_match_system_preference ? "selected='selected'" : '', _("Match System"),
-              current_user.subscriptions_match_installed_preference ? "selected='selected'" : '', _("Match Installed Software"),
-              current_user.subscriptions_no_overlap_preference ? "selected='selected'" : '', _("No Overlap with Current")]
+    options = [
+        (current_user.subscriptions_match_system_preference ? "selected='selected'" : ''), _("Match System"),
+        (current_user.subscriptions_match_installed_preference ? "selected='selected'" : ''), _("Match Installed Software"),
+        (current_user.subscriptions_no_overlap_preference ? "selected='selected'" : ''), _("No Overlap with Current")
+    ]
+    subscription_filters = format(<<-EOS, *options)
+          <option value='subscriptions_match_system' %s>%s</option>
+          <option value='subscriptions_match_installed' %s>%s</option>
+          <option value='subscriptions_no_overlap' %s>%s</option>
+    EOS
 
     @organization = current_organization
     render :partial=>"subscriptions", :locals=>{:system=>@system, :avail_subs => available,
@@ -230,10 +235,10 @@ class SystemsController < ApplicationController
     consumed_entitlements = @system.consumed_entitlements
     avail_pools = @system.available_pools_full
     render :partial => "subs_update",
-           :locals => { :system => @system,
-                        :avail_subs => avail_pools,
-                        :consumed_subs => consumed_entitlements,
-                        :editable => @system.editable? }
+           :locals => {:system => @system,
+                       :avail_subs => avail_pools,
+                       :consumed_subs => consumed_entitlements,
+                       :editable => @system.editable?}
     notify.success _("System subscriptions updated.")
   rescue RestClient::Exception => e
     notify.error(JSON.parse(e.response)["displayMessage"])
@@ -249,14 +254,14 @@ class SystemsController < ApplicationController
     end
 
     @products_count = @system.installedProducts.size
-    @products, @offset = first_objects @system.installedProducts.sort {|a,b| a['productName'].downcase <=> b['productName'].downcase}
+    @products, @offset = first_objects @system.installedProducts.sort {|a, b| a['productName'].downcase <=> b['productName'].downcase}
     render :partial=>"products",
-           :locals=>{:system=>@system, :products=>@products,:offset=>@offset, :products_count=>@products_count}
+           :locals=>{:system=>@system, :products=>@products, :offset=>@offset, :products_count=>@products_count}
   end
 
   def more_products
     # offset is computed in javascript but this one is used in tests
-    @products, @offset = more_objects @system.installedProducts.sort {|a,b| a['productName'].downcase <=> b['productName'].downcase}
+    @products, @offset = more_objects @system.installedProducts.sort {|a, b| a['productName'].downcase <=> b['productName'].downcase}
     render :partial=>"more_products", :locals=>{:system=>@system, :products=>@products}
   end
 
@@ -284,13 +289,15 @@ class SystemsController < ApplicationController
     end
 
     # Stuff into var for use in spec tests
-    @locals_hash = { :system => @system, :editable => @system.editable?,
+    @locals_hash = {:system => @system, :editable => @system.editable?,
                     :releases => releases, :releases_error => releases_error, :name => controller_display_name,
                     :environments => environment_paths(library_path_element("systems_readable?"),
-                                                       environment_path_element("systems_readable?")) }
+                                                       environment_path_element("systems_readable?"))}
     render :partial => "edit", :locals => @locals_hash
   end
 
+  # TODO: break up method
+  # rubocop:disable MethodLength
   def update
     # The 'autoheal' flag is not an ActiveRecord attribute so update it explicitly if present
     # The 'serviceLevel' comes in as a string 0/1 + level (eg. 0STANDARD = auto off, STANDARD))
@@ -321,14 +328,14 @@ class SystemsController < ApplicationController
     end
 
     respond_to do |format|
-      format.html {
+      format.html do
         # Use the systems_helper method when returning service level so the UI reflects proper text
         if params[:system] && params[:system][:serviceLevel]
           render :text=>system_servicelevel(@system)
         else
           render :text=>(params[:system] ? params[:system].first[1] : "")
         end
-      }
+      end
       format.js
     end
   end
@@ -337,6 +344,8 @@ class SystemsController < ApplicationController
     render :partial => "edit_custom_info"
   end
 
+  # TODO: break up method
+  # rubocop:disable MethodLength
   def show
     system = System.find(params[:id])
 
@@ -351,7 +360,7 @@ class SystemsController < ApplicationController
       releases_error ||= nil
 
       # Stuff into var for use in spec tests
-      @locals_hash = { :system => @system, :editable => @system.editable?,
+      @locals_hash = {:system => @system, :editable => @system.editable?,
                       :releases => releases, :releases_error => releases_error, :name => controller_display_name,
                       :environments => environment_paths(library_path_element("systems_readable?"),
                                                          environment_path_element("systems_readable?"))}
@@ -389,13 +398,13 @@ class SystemsController < ApplicationController
   end
 
   def bulk_destroy
-    @systems.each{|sys|
-      sys.destroy
-    }
+    @systems.each { |sys| sys.destroy }
     notify.success _("%s Systems Removed Successfully") % @systems.length
     render :text=>""
   end
 
+  # TODO: break up method
+  # rubocop:disable MethodLength
   def bulk_add_system_group
     successful_systems = []
     failed_systems = []
@@ -425,7 +434,7 @@ class SystemsController < ApplicationController
           system.system_group_ids = (system.system_group_ids + @system_groups.collect{|g| g.id}).uniq
           system.save!
           successful_systems.push(system.name)
-        rescue => error
+        rescue
           failed_systems.push(system.name)
         end
       end
@@ -436,6 +445,8 @@ class SystemsController < ApplicationController
     render :nothing => true
   end
 
+  # TODO: break up method
+  # rubocop:disable MethodLength
   def bulk_remove_system_group
     successful_systems = []
     failed_systems = []
@@ -465,7 +476,7 @@ class SystemsController < ApplicationController
 
           systems_summary[system] = groups_removed.collect{|g| groups_info[g]}
           successful_systems.push(system.name)
-        rescue => error
+        rescue
           failed_systems.push(system.name)
         end
       end
@@ -483,6 +494,8 @@ class SystemsController < ApplicationController
     render :nothing => true
   end
 
+  # TODO: break up method
+  # rubocop:disable MethodLength
   def bulk_content_install
     successful_systems = []
     failed_systems = []
@@ -498,7 +511,7 @@ class SystemsController < ApplicationController
         begin
           system.install_packages params[:packages]
           successful_systems.push(system.name)
-        rescue => error
+        rescue
           failed_systems.push(system.name)
         end
       end
@@ -509,7 +522,7 @@ class SystemsController < ApplicationController
         begin
           system.install_package_groups params[:groups]
           successful_systems.push(system.name)
-        rescue => error
+        rescue
           failed_systems.push(system.name)
         end
       end
@@ -520,6 +533,8 @@ class SystemsController < ApplicationController
     render :nothing => true
   end
 
+  # TODO: break up method
+  # rubocop:disable MethodLength
   def bulk_content_update
     successful_systems = []
     failed_systems = []
@@ -529,7 +544,7 @@ class SystemsController < ApplicationController
         begin
           system.install_package_groups params[:groups]
           successful_systems.push(system.name)
-        rescue => error
+        rescue
           failed_systems.push(system.name)
         end
       end
@@ -539,19 +554,23 @@ class SystemsController < ApplicationController
         begin
           system.update_packages params[:packages]
           successful_systems.push(system.name)
-        rescue => error
+        rescue
           failed_systems.push(system.name)
         end
       end
-      params[:packages].blank? ?
-        action_text = _("Systems Bulk Action: Schedule update of all packages") :
+      if params[:packages].blank?
+        action_text = _("Systems Bulk Action: Schedule update of all packages")
+      else
         action_text = _("Systems Bulk Action: Schedule update of package(s): %s") % params[:packages].join(', ')
+      end
     end
 
     notify_bulk_action(action_text, successful_systems, failed_systems)
     render :nothing => true
   end
 
+  # TODO: break up method
+  # rubocop:disable MethodLength
   def bulk_content_remove
     successful_systems = []
     failed_systems = []
@@ -567,7 +586,7 @@ class SystemsController < ApplicationController
         begin
           system.uninstall_packages params[:packages]
           successful_systems.push(system.name)
-        rescue => error
+        rescue
           failed_systems.push(system.name)
         end
       end
@@ -577,7 +596,7 @@ class SystemsController < ApplicationController
         begin
           system.uninstall_package_groups params[:groups]
           successful_systems.push(system.name)
-        rescue => error
+        rescue
           failed_systems.push(system.name)
         end
       end
@@ -601,7 +620,7 @@ class SystemsController < ApplicationController
         begin
           system.install_errata params[:errata]
           successful_systems.push(system.name)
-        rescue => error
+        rescue
           failed_systems.push(system.name)
         end
       end
@@ -614,14 +633,14 @@ class SystemsController < ApplicationController
 
   def system_groups
     # retrieve the available groups that aren't currently assigned to the system and that haven't reached their max
-    # TODO move the sql to the model
+    # TODO: move the sql to the model
     @system_groups = SystemGroup.where(:organization_id=>current_organization).
         select("system_groups.id, system_groups.name").
         joins("LEFT OUTER JOIN system_system_groups ON system_system_groups.system_group_id = system_groups.id").
         group("system_groups.id, system_groups.name, system_groups.max_systems having count(system_system_groups.system_id) < system_groups.max_systems or system_groups.max_systems = -1").
         order(:name) - @system.system_groups
 
-    render :partial=>"system_groups", :locals=>{:editable=>@system.editable?}
+    render :partial=>"system_groups", :locals=>{:editable => @system.editable?}
   end
 
   def add_system_groups
@@ -635,7 +654,7 @@ class SystemsController < ApplicationController
       @system.save!
 
       notify.success _("System '%s' was updated.") % @system["name"]
-      render :partial =>'system_group_items', :locals => { :system_groups=>@system_groups }
+      render :partial =>'system_group_items', :locals => {:system_groups => @system_groups}
     end
   end
 
@@ -666,7 +685,8 @@ class SystemsController < ApplicationController
         notify.error action + newline + failure_msg + failed_systems.join(', ')
       else
         notify.error(action + newline + success_msg + successful_systems.join(',') +
-                     newline + failure_msg + failed_systems.join(','), {:details => details})
+                     newline + failure_msg + failed_systems.join(','),
+                     {:details => details})
       end
     end
   end
@@ -699,7 +719,7 @@ class SystemsController < ApplicationController
   def setup_options
     @panel_options = {
       :title => _('Systems'),
-      :col => ["name_sort", "lastCheckin"],
+      :col => %w(name_sort lastCheckin),
       :titles => [_("Name"), _("Registered / Last Checked In")],
       :custom_rows => true,
       :enable_create => System.registerable?(@environment, current_organization),
@@ -709,7 +729,7 @@ class SystemsController < ApplicationController
       :name => controller_display_name,
       :list_partial => 'systems/list_systems',
       :ajax_load  => true,
-      :ajax_scroll => items_systems_path(),
+      :ajax_scroll => items_systems_path,
       :actions => System.any_deletable?(@environment, current_organization) ? 'actions' : nil,
       :initial_action => :subscriptions,
       :search_class => System,
@@ -717,25 +737,31 @@ class SystemsController < ApplicationController
     }
   end
 
+  # rubocop:disable SymbolName
   def sys_consumed_pools
-    consumed_pools = @system.pools.collect {|pool| OpenStruct.new(:poolId => pool["id"],
-                            :poolName => pool["productName"],
-                            :startDate => format_time(Date.parse(pool["startDate"])),
-                            :endDate => format_time(Date.parse(pool["endDate"])),
-                            :consumed => pool["consumed"],
-                            :quantity => pool["quantity"])}
-    consumed_pools.sort! {|a,b| a.poolName <=> b.poolName}
+    consumed_pools = @system.pools.collect do |pool|
+      OpenStruct.new(:poolId => pool["id"],
+                     :poolName => pool["productName"],
+                     :startDate => format_time(Date.parse(pool["startDate"])),
+                     :endDate => format_time(Date.parse(pool["endDate"])),
+                     :consumed => pool["consumed"],
+                     :quantity => pool["quantity"])
+    end
+    consumed_pools.sort! {|a, b| a.poolName <=> b.poolName}
     consumed_pools
   end
 
+  # rubocop:disable SymbolName
   def sys_available_pools
-    avail_pools = @system.available_pools.collect {|pool| OpenStruct.new(:poolId => pool["id"],
-                            :poolName => pool["productName"],
-                            :startDate => format_time(Date.parse(pool["startDate"])),
-                            :endDate => format_time(Date.parse(pool["endDate"])),
-                            :consumed => pool["consumed"],
-                            :quantity => pool["quantity"])}
-    avail_pools.sort! {|a,b| a.poolName <=> b.poolName}
+    avail_pools = @system.available_pools.collect do |pool|
+      OpenStruct.new(:poolId => pool["id"],
+                     :poolName => pool["productName"],
+                     :startDate => format_time(Date.parse(pool["startDate"])),
+                     :endDate => format_time(Date.parse(pool["endDate"])),
+                     :consumed => pool["consumed"],
+                     :quantity => pool["quantity"])
+    end
+    avail_pools.sort! {|a, b| a.poolName <=> b.poolName}
     avail_pools
   end
 
@@ -754,7 +780,7 @@ class SystemsController < ApplicationController
     @filter = {:organization_id => current_organization}
   end
 
-  def sort_order_limit systems
+  def sort_order_limit(systems)
     sort_columns(COLUMNS, systems) if params[:order]
     offset = params[:offset].to_i if params[:offset]
     offset ||= 0
@@ -763,7 +789,7 @@ class SystemsController < ApplicationController
     systems[offset...last]
   end
 
-  def first_objects objects
+  def first_objects(objects)
     offset = current_user.page_size
     if objects.length > 0
       if params.has_key? :order
@@ -778,7 +804,9 @@ class SystemsController < ApplicationController
     return objects, offset
   end
 
-  def more_objects objects
+  # TODO: break up this method
+  # rubocop:disable MethodLength
+  def more_objects(objects)
     #grab the current user setting for page size
     size = current_user.page_size
     if objects.length > 0

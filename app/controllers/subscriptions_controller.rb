@@ -73,7 +73,6 @@ class SubscriptionsController < ApplicationController
 
   # TODO: remove this method and route since nutupane (experimental mode) uses the api method subscriptions_controller#organization_index
   def items
-    order = split_order(params[:order])
     query_string = params[:search]
     offset = params[:offset].to_i || 0
     filters = []
@@ -99,7 +98,7 @@ class SubscriptionsController < ApplicationController
     end
 
     items = Glue::ElasticSearch::Items.new(Pool)
-    subscriptions, total_count = items.retrieve(query_string, offset, options)
+    subscriptions, _ = items.retrieve(query_string, offset, options)
 
     render_panel_results(subscriptions, items.total_items, @panel_options)
   end
@@ -122,7 +121,12 @@ class SubscriptionsController < ApplicationController
     distributors = current_organization.distributors.readable(current_organization)
     distributors = distributors.all_by_pool(@subscription.cp_id)
 
-    render :partial=>"consumers", :locals=>{:subscription=>@subscription, :systems=>systems, :activation_keys=>activation_keys, :distributors=>distributors, :editable => false, :name => controller_display_name}
+    render :partial=>"consumers", :locals=>{:subscription=>@subscription,
+                                            :systems=>systems,
+                                            :activation_keys=>activation_keys,
+                                            :distributors=>distributors,
+                                            :editable => false,
+                                            :name => controller_display_name}
   end
 
   def new
@@ -140,7 +144,7 @@ class SubscriptionsController < ApplicationController
   def history
     begin
       @statuses = @provider.owner_imports
-    rescue => error
+    rescue # rubocop:disable HandleExceptions
       # quietly ignore
     end
     render :template => "subscriptions/_history", :locals=>{:provider=>@provider, :statuses=>@statuses, :name => controller_display_name}
@@ -185,7 +189,6 @@ class SubscriptionsController < ApplicationController
 
   def upload
     if !params[:provider].blank? && params[:provider].has_key?(:contents)
-      temp_file = nil
       begin
         temp_file_path = create_temp_file('import') {|tmp| tmp.write params[:provider][:contents].read }
         # force must be a string value
@@ -272,7 +275,7 @@ class SubscriptionsController < ApplicationController
     f.close unless f.nil?
   end
 
-  def split_order order
+  def split_order(order)
     if order
       order.split
     else
@@ -295,7 +298,7 @@ class SubscriptionsController < ApplicationController
                       :name => controller_display_name,
                       :list_partial => 'subscriptions/list_subscriptions',
                       :ajax_load  => true,
-                      :ajax_scroll => items_subscriptions_path(),
+                      :ajax_scroll => items_subscriptions_path,
                       :actions => nil,
                       :search_class => ::Pool,
                       :accessor => 'unused'
@@ -307,7 +310,7 @@ class SubscriptionsController < ApplicationController
   end
 
   def find_provider
-      @provider = current_organization.redhat_provider
+    @provider = current_organization.redhat_provider
   end
 
 end

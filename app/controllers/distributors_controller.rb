@@ -28,21 +28,22 @@ class DistributorsController < ApplicationController
   # two pane columns and mapping for sortable fields
   COLUMNS = {'name' => 'name_sort', 'lastCheckin' => 'lastCheckin'}
 
+  # TODO: break up this method
+  # rubocop:disable MethodLength
   def rules
     read_distributor = lambda{Distributor.find(params[:id]).readable?}
     env_distributor = lambda{@environment && @environment.distributors_readable?}
     any_readable = lambda{current_organization && Distributor.any_readable?(current_organization)}
     delete_distributors = lambda{@distributor.deletable?}
     bulk_delete_distributors = lambda{@distributors.collect{|s| false unless s.deletable?}.compact.empty?}
-    bulk_edit_distributors = lambda{@distributors.collect{|s| false unless s.editable?}.compact.empty?}
     register_distributor = lambda do
       if current_organization
         if params.has_key?(:distributor) && !params[:distributor][:content_view_id].blank?
-            content_view = ContentView.readable(current_organization).
-                              find_by_id(params[:distributor][:content_view_id])
-            Distributor.registerable?(@environment, current_organization, content_view) if content_view
+          content_view = ContentView.readable(current_organization).
+            find_by_id(params[:distributor][:content_view_id])
+          Distributor.registerable?(@environment, current_organization, content_view) if content_view
         else
-            Distributor.registerable?(@environment, current_organization)
+          Distributor.registerable?(@environment, current_organization)
         end
       end
     end
@@ -59,9 +60,9 @@ class DistributorsController < ApplicationController
     edit_distributor = lambda do
       subscribable = true
       if params.has_key?(:distributor) && !params[:distributor][:content_view_id].blank?
-          content_view = ContentView.readable(current_organization).
-                          find_by_id(params[:distributor][:content_view_id])
-          subscribable = content_view ? content_view.subscribable? : false
+        content_view = ContentView.readable(current_organization).
+          find_by_id(params[:distributor][:content_view_id])
+        subscribable = content_view ? content_view.subscribable? : false
       end
       subscribable && Distributor.find(params[:id]).editable?
     end
@@ -136,7 +137,7 @@ class DistributorsController < ApplicationController
 
       if search_validate(Distributor, @distributor.id, params[:search])
         render :partial=>"distributors/list_distributors",
-          :locals=>{:accessor=>"id", :columns=>['name', 'lastCheckin','created' ], :collection=>[@distributor], :name=> controller_display_name}
+          :locals=>{:accessor=>"id", :columns=>%w(name lastCheckin created), :collection=>[@distributor], :name=> controller_display_name}
       else
         notify.message _("'%s' did not meet the current search criteria and is not being shown.") % @distributor["name"]
         render :json => { :no_match => true }
@@ -147,9 +148,9 @@ class DistributorsController < ApplicationController
     raise error # handle error by ApplicationController's rescue_from
   rescue => error
     display_message = if error.respond_to?('response') && error.response.include?('displayMessage')
-                         JSON.parse(error.response)['displayMessage']
+                        JSON.parse(error.response)['displayMessage']
                       end
-    notify.exception *[display_message, error].compact
+    notify.exception(*[display_message, error].compact)
     Rails.logger.error error.backtrace.join("\n")
     render :text => error, :status => :bad_request
   end
@@ -187,10 +188,8 @@ class DistributorsController < ApplicationController
   end
 
   def auto_complete
-    query = Util::Search::filter_input query
+    query = Util::Search.filter_input query
     query = "name_autocomplete:#{params[:term]}"
-    org = current_organization
-    env_ids = KTEnvironment.distributors_readable(org).collect{|item| item.id}
     filters = readable_filters
     distributors = Distributor.search do
       query do
@@ -198,11 +197,11 @@ class DistributorsController < ApplicationController
       end
       filter :terms, filters
     end
-    render :json=>distributors.map{|s|
+    render :json=>distributors.map do |s|
       label = _("%{name} (Registered: %{time})") % {:name => s.name, :time => convert_time(format_time(Time.parse(s.created_at)))}
       {:label=>label, :value=>s.name, :id=>s.id}
-    }
-  rescue Tire::Search::SearchRequestFailed => e
+    end
+  rescue Tire::Search::SearchRequestFailed
     render :json=>Util::Support.array_with_total
   end
 
@@ -250,14 +249,14 @@ class DistributorsController < ApplicationController
     end
 
     @products_count = @distributor.installedProducts.size
-    @products, @offset = first_objects @distributor.installedProducts.sort {|a,b| a['productName'].downcase <=> b['productName'].downcase}
+    @products, @offset = first_objects @distributor.installedProducts.sort {|a, b| a['productName'].downcase <=> b['productName'].downcase}
     render :partial=>"products",
-           :locals=>{:distributor=>@distributor, :products=>@products,:offset=>@offset, :products_count=>@products_count}
+           :locals=>{:distributor=>@distributor, :products=>@products, :offset=>@offset, :products_count=>@products_count}
   end
 
   def more_products
     # offset is computed in javascript but this one is used in tests
-    @products, @offset = more_objects @distributor.installedProducts.sort {|a,b| a['productName'].downcase <=> b['productName'].downcase}
+    @products, @offset = more_objects @distributor.installedProducts.sort {|a, b| a['productName'].downcase <=> b['productName'].downcase}
     render :partial=>"more_products", :locals=>{:distributor=>@distributor, :products=>@products}
   end
 
@@ -282,9 +281,9 @@ class DistributorsController < ApplicationController
     end
 
     respond_to do |format|
-      format.html {
+      format.html do
         render :text=>(params[:distributor] ? params[:distributor].first[1] : "")
-      }
+      end
       format.js
     end
   end
@@ -316,9 +315,7 @@ class DistributorsController < ApplicationController
   end
 
   def bulk_destroy
-    @distributors.each{|sys|
-      sys.destroy
-    }
+    @distributors.each { |sys| sys.destroy }
     notify.success _("%s Distributors Removed Successfully") % @distributors.length
     render :text=>""
   end
@@ -383,7 +380,7 @@ class DistributorsController < ApplicationController
   def setup_options
     @panel_options = {
       :title => _('Distributors'),
-      :col => ["name_sort", "lastCheckin"],
+      :col => %w(name_sort lastCheckin),
       :titles => [_("Name"), _("Created / Last Checked In")],
       :custom_rows => true,
       :enable_create => Distributor.registerable?(@environment, current_organization),
@@ -393,7 +390,7 @@ class DistributorsController < ApplicationController
       :name => controller_display_name,
       :list_partial => 'distributors/list_distributors',
       :ajax_load  => true,
-      :ajax_scroll => items_distributors_path(),
+      :ajax_scroll => items_distributors_path,
       :actions => Distributor.any_deletable?(@environment, current_organization) ? 'actions' : nil,
       :initial_action => :subscriptions,
       :search_class=>Distributor,
@@ -401,25 +398,31 @@ class DistributorsController < ApplicationController
     }
   end
 
+  # rubocop:disable SymbolName
   def sys_consumed_pools
-    consumed_pools = @distributor.pools.collect {|pool| OpenStruct.new(:poolId => pool["id"],
-                            :poolName => pool["productName"],
-                            :startDate => format_time(Date.parse(pool["startDate"])),
-                            :endDate => format_time(Date.parse(pool["endDate"])),
-                            :consumed => pool["consumed"],
-                            :quantity => pool["quantity"])}
-    consumed_pools.sort! {|a,b| a.poolName <=> b.poolName}
+    consumed_pools = @distributor.pools.collect do |pool|
+      OpenStruct.new(:poolId => pool["id"],
+                     :poolName => pool["productName"],
+                     :startDate => format_time(Date.parse(pool["startDate"])),
+                     :endDate => format_time(Date.parse(pool["endDate"])),
+                     :consumed => pool["consumed"],
+                     :quantity => pool["quantity"])
+    end
+    consumed_pools.sort! {|a, b| a.poolName <=> b.poolName}
     consumed_pools
   end
 
+  # rubocop:disable SymbolName
   def sys_available_pools
-    avail_pools = @distributor.available_pools.collect {|pool| OpenStruct.new(:poolId => pool["id"],
-                            :poolName => pool["productName"],
-                            :startDate => format_time(Date.parse(pool["startDate"])),
-                            :endDate => format_time(Date.parse(pool["endDate"])),
-                            :consumed => pool["consumed"],
-                            :quantity => pool["quantity"])}
-    avail_pools.sort! {|a,b| a.poolName <=> b.poolName}
+    avail_pools = @distributor.available_pools.collect do |pool|
+      OpenStruct.new(:poolId => pool["id"],
+                     :poolName => pool["productName"],
+                     :startDate => format_time(Date.parse(pool["startDate"])),
+                     :endDate => format_time(Date.parse(pool["endDate"])),
+                     :consumed => pool["consumed"],
+                     :quantity => pool["quantity"])
+    end
+    avail_pools.sort! {|a, b| a.poolName <=> b.poolName}
     avail_pools
   end
 
@@ -438,7 +441,7 @@ class DistributorsController < ApplicationController
     @filter = {:organization_id => current_organization}
   end
 
-  def sort_order_limit distributors
+  def sort_order_limit(distributors)
     sort_columns(COLUMNS, distributors) if params[:order]
     offset = params[:offset].to_i if params[:offset]
     offset ||= 0
@@ -447,7 +450,7 @@ class DistributorsController < ApplicationController
     distributors[offset...last]
   end
 
-  def first_objects objects
+  def first_objects(objects)
     offset = current_user.page_size
     if objects.length > 0
       if params.has_key? :order
@@ -462,7 +465,7 @@ class DistributorsController < ApplicationController
     return objects, offset
   end
 
-  def more_objects objects
+  def more_objects(objects)
     #grab the current user setting for page size
     size = current_user.page_size
     if objects.length > 0

@@ -58,13 +58,13 @@ class RepositoriesController < ApplicationController
     repo_params = params[:repo]
     repo_params[:label], label_assigned = generate_label(repo_params[:name], 'repository') if repo_params[:label].blank?
 
-    raise HttpErrors::BadRequest, _("Repository can be only created for custom provider.") unless @product.custom?
+    fail HttpErrors::BadRequest, _("Repository can be only created for custom provider.") unless @product.custom?
 
     gpg = GpgKey.readable(current_organization).find(repo_params[:gpg_key]) if repo_params[:gpg_key] && repo_params[:gpg_key] != ""
     # Bundle these into one call, perhaps move to Provider
 
     repo_params[:unprotected] ||= false
-    @product.add_repo(repo_params[:label],repo_params[:name], repo_params[:feed],
+    @product.add_repo(repo_params[:label], repo_params[:name], repo_params[:feed],
                       repo_params[:content_type], repo_params[:unprotected], gpg)
     @product.save!
 
@@ -113,7 +113,7 @@ class RepositoriesController < ApplicationController
 
   def auto_complete_library
     # retrieve and return a list (array) of repo names in library that contain the 'term' that was passed in
-    term = Util::Search::filter_input params[:term]
+    term = Util::Search.filter_input params[:term]
     name = 'name:' + term
     name_query = name + ' OR ' + name + '*'
     ids = Repository.readable(current_organization.library).collect{|r| r.id}
@@ -125,10 +125,10 @@ class RepositoriesController < ApplicationController
       ]
     end
 
-    render :json => repos.map{|repo|
+    render :json => repos.map do |repo|
       label = _("%{repo} (Product: %{product})") % {:repo => repo.name, :product => repo.product}
       {:id => repo.id, :label => label, :value => repo.name}
-    }
+    end
   end
 
   protected

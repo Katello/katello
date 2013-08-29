@@ -12,16 +12,16 @@
 
 class OperationsController < ApplicationController
   skip_before_filter :require_org
+
   def rules
     {
       :index => lambda{ User.any_readable? || Role.any_readable?}
     }
   end
 
-
-
   def index
   end
+
   def section_id
     'operations'
   end

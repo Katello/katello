@@ -10,6 +10,7 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+# rubocop:disable AvoidClassVars
 class SyncManagementController < ApplicationController
   include TranslationHelper
   include ActionView::Helpers::DateHelper
@@ -46,12 +47,10 @@ class SyncManagementController < ApplicationController
   def rules
 
     list_test = lambda{current_organization && Provider.any_readable?(current_organization) }
-    sync_read_test = lambda{
-      @providers.each{|prov|
-        return false if !prov.readable?
-      }
+    sync_read_test = lambda do
+      @providers.each { |prov| return false if !prov.readable? }
       return true
-    }
+    end
     sync_test = lambda {current_organization && current_organization.syncable?}
 
     { :index => list_test,
@@ -71,19 +70,19 @@ class SyncManagementController < ApplicationController
     custom_products.sort_by { |p| p.name.downcase }
 
     @products = redhat_products + custom_products
-    @product_size = Hash.new
-    @repo_status = Hash.new
+    @product_size = {}
+    @repo_status = {}
     @product_map = collect_repos(@products, org.library)
 
     @products.each { |product| get_product_info(product) }
   end
 
   def manage
-    @products     = Array.new
-    @sproducts    = Array.new
-    @product_map  = Array.new
-    @product_size = Hash.new
-    @repo_status  = Hash.new
+    @products     = []
+    @sproducts    = []
+    @product_map  = []
+    @product_size = {}
+    @repo_status  = {}
     @show_org     = true
 
     User.current.allowed_organizations.each do |org|
@@ -100,7 +99,7 @@ class SyncManagementController < ApplicationController
 
   def sync
     ids = sync_repos(params[:repoids]) || {}
-    respond_with (ids) do |format|
+    respond_with(ids) do |format|
       format.js { render :json => ids.to_json, :status => :ok }
     end
   end
@@ -118,13 +117,13 @@ class SyncManagementController < ApplicationController
       end
     end
 
-    respond_with (collected) do |format|
+    respond_with(collected) do |format|
       format.js { render :json => collected.to_json, :status => :ok }
     end
   end
 
   def destroy
-    retval = Repository.find(params[:id]).cancel_sync
+    Repository.find(params[:id]).cancel_sync
     render :text=>""
   end
 
@@ -138,10 +137,10 @@ class SyncManagementController < ApplicationController
     ids = params[:repoids]
     ids = [params[:repoids]] if !params[:repoids].is_a? Array
     @providers = []
-    ids.each{|id|
+    ids.each do |id|
       repo = Repository.find(id)
       @providers << repo.product.provider
-    }
+    end
   end
 
   def format_sync_progress(sync_status, repo)
@@ -199,7 +198,7 @@ class SyncManagementController < ApplicationController
       begin
         resp = repo.sync(:notify => true).first
         collected.push({:id => id, :product_id=>repo.product.id, :state => resp[:state]})
-      rescue RestClient::Conflict => e
+      rescue RestClient::Conflict
         notify.error N_("There is already an active sync process for the '%s' repository. Please try again later") %
                         repo.name
       end
@@ -214,10 +213,11 @@ class SyncManagementController < ApplicationController
                elsif val.progress.total_size == 0 then 0
                else completed.to_f / val.progress.total_size.to_f * 100
                end
-    retval = {:count => val.progress.total_count,
-              :left => val.progress.items_left,
-              :progress => progress
-             }
+
+    {:count => val.progress.total_count,
+     :left => val.progress.items_left,
+     :progress => progress
+    }
   end
 
   def get_product_info(product)

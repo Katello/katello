@@ -24,7 +24,7 @@ class ApplicationController < ActionController::Base
   helper UIAlchemy::TranslationHelper
   helper_method :current_organization
   helper_method :render_correct_nav
-  before_filter :require_user,:require_org
+  before_filter :require_user, :require_org
   before_filter :check_deleted_org
 
   protect_from_forgery # See ActionController::RequestForgeryProtection for details
@@ -39,23 +39,23 @@ class ApplicationController < ActionController::Base
     hide     = Katello.config.hide_exceptions
 
     to_do = case exception
-              when StandardError
+            when StandardError
               hide ? :handle : :raise
-              when ScriptError
-                paranoia ? :handle : :raise
-              when SignalException, SystemExit, NoMemoryError
-                :raise
-              else
+            when ScriptError
+              paranoia ? :handle : :raise
+            when SignalException, SystemExit, NoMemoryError
+              :raise
+            else
               Rails.logger.error 'Unknown child of Exception instead of StandardError detected: ' +
-                                       "#{exception.message} (#{exception.class})"
-                paranoia ? :handle : :raise
+                "#{exception.message} (#{exception.class})"
+              paranoia ? :handle : :raise
             end
 
     case to_do
-      when :handle
-      execute_rescue(exception) { |exception| render_error(exception) }
-      when :raise
-        raise exception
+    when :handle
+      execute_rescue(exception) { |ex| render_error(ex) }
+    when :raise
+      raise exception
     end
   end
 
@@ -66,8 +66,8 @@ class ApplicationController < ActionController::Base
 
     execute_after_filters
     respond_to do |f|
-      f.html { render :text => e.to_s, :layout => !request.xhr?, :status => :unprocessable_entity }
-      f.json { render :json => e.record.errors, :status => :unprocessable_entity }
+      f.html { render :text => e.to_s, :layout => !request.xhr?, :status => :unprocessable_entity}
+      f.json { render :json => e.record.errors, :status => :unprocessable_entity}
     end
     User.current = nil
   end
@@ -82,16 +82,16 @@ class ApplicationController < ActionController::Base
     rescue_from ActionController::RoutingError,
                 ActionController::UnknownController,
                 AbstractController::ActionNotFound do |exception|
-      execute_rescue(exception) { |exception| render_404 }
-  end
+      execute_rescue(exception) { |ex| render_404 }
+    end
   end
 
   rescue_from Errors::SecurityViolation do |exception|
-    execute_rescue(exception) { |exception| render_403 }
+    execute_rescue(exception) { |ex| render_403 }
   end
 
   rescue_from HttpErrors::UnprocessableEntity do |exception|
-    execute_rescue(exception) { |exception| render_bad_parameters(exception) }
+    execute_rescue(exception) { |ex| render_bad_parameters(ex) }
   end
   # support for session (thread-local) variables must be the last filter (except authorize)in this class
   include Util::ThreadSession::Controller
@@ -111,7 +111,7 @@ class ApplicationController < ActionController::Base
   # permissions required by that controller.
   def default_label
     if params[:name]
-      render :text => Util::Model::labelize(params[:name])
+      render :text => Util::Model.labelize(params[:name])
     else
       render :nothing => true
     end
@@ -137,9 +137,9 @@ class ApplicationController < ActionController::Base
 
   # Generate a label using the name provided, returning the label and a string with text that may be
   # sent to the user (e.g. via a notice).
-  def generate_label object_name, object_type
+  def generate_label(object_name, object_type)
     # user didn't provide a label, so generate one using the name
-    label = Util::Model::labelize(object_name)
+    label = Util::Model.labelize(object_name)
     # if you modify this string you have to modify it in n_gettext_for_generate_label as well
     label_assigned_text = "A label was not provided during #{object_type} creation; therefore, a label of '%{label}' was " +
       "automatically assigned. If you would like a different label, please delete the " +
@@ -150,7 +150,7 @@ class ApplicationController < ActionController::Base
 
   # Generate a message that may be sent to the user (e.g. via a notice) to inform them that
   # a label was automatically assigned to the object.
-  def default_label_assigned new_object
+  def default_label_assigned(new_object)
     object_type = new_object.class.name.downcase
     # if you modify this string you have to modify it in n_gettext_for_generate_label as well
     msg = "A label was not provided during #{object_type} creation; therefore, a label of '%{label}' was " +
@@ -161,7 +161,7 @@ class ApplicationController < ActionController::Base
 
   # Generate a message that may be sent to the user (e.g. via a notice) to inform them that
   # the label that they provided has been overriden to ensure uniqueness.
-  def label_overridden new_object, requested_label
+  def label_overridden(new_object, requested_label)
     object_type = new_object.class.name.downcase
     _("The label requested is already used by another %s; therefore, a unique label was " +
       "assigned.  If you would like a different label, please delete the %s and recreate " +
@@ -174,8 +174,8 @@ class ApplicationController < ActionController::Base
     return if flash.blank?
     [:error, :warning, :success, :message].each do |type|
       unless flash[type].nil? || flash[type].blank?
-        @enc = CGI::escape(flash[type].gsub("\n","<br \\>"))
-        response.headers['X-Message'] = @enc.gsub("%2B","&#43;")
+        @enc = CGI.escape(flash[type].gsub("\n", "<br \\>"))
+        response.headers['X-Message'] = @enc.gsub("%2B", "&#43;")
         response.headers['X-Message-Type'] = type.to_s
         response.headers['X-Message-Request-Type'] = requested_action
         flash.delete(type)  # clear the flash
@@ -194,7 +194,7 @@ class ApplicationController < ActionController::Base
         if current_user.allowed_organizations.include?(o)
           @current_org = o
         else
-          raise ActiveRecord::RecordNotFound.new _("Permission Denied. User '%{user}' does not have permissions to access organization '%{org}'.") % {:user => User.current.username, :org => o.name}
+          fail ActiveRecord::RecordNotFound.new _("Permission Denied. User '%{user}' does not have permissions to access organization '%{org}'.") % {:user => User.current.username, :org => o.name}
         end
       end
       return @current_org
@@ -209,17 +209,16 @@ class ApplicationController < ActionController::Base
     session[:current_organization_id] = org.try(:id)
   end
 
-  def escape_html input
-    CGI::escapeHTML(input)
+  def escape_html(input)
+    CGI.escapeHTML(input)
   end
 
   helper_method :format_time
   #formats the date time if the dat is not nil
-  def format_time  date, options = {}
+  def format_time(date, options = {})
     return I18n.l(date, options) if date
     ""
   end
-
 
   #convert date, time from UI to object
   helper_method :parse_calendar_date
@@ -265,9 +264,9 @@ class ApplicationController < ActionController::Base
 
   private # why bother? methods below are not testable/tested
 
-   def verify_ldap
+  def verify_ldap
     u = current_user
-    u.verify_ldap_roles if (Katello.config.ldap_roles && u != nil)
+    u.verify_ldap_roles if Katello.config.ldap_roles && u.nil?
   end
 
   def require_org
@@ -277,7 +276,7 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  # TODO this check can be removed once we start deleting sessions during org deletion
+  # TODO: this check can be removed once we start deleting sessions during org deletion
   def check_deleted_org
     if current_organization && current_organization.being_deleted?
       raise Errors::SecurityViolation, _("Current organization is being deleted, switch to a different one.")
@@ -338,7 +337,7 @@ class ApplicationController < ActionController::Base
   # render a 404 page
   def render_404(exception = nil)
     if exception
-        logger.error _("Rendering 404:") + " #{exception.message}"
+      logger.error _("Rendering 404:") + " #{exception.message}"
     end
     respond_to do |format|
       format.html { render :template => "common/404", :layout => !request.xhr?, :status => 404 }
@@ -348,6 +347,9 @@ class ApplicationController < ActionController::Base
     end
     User.current = nil
   end
+
+  # TODO: break up method
+  # rubocop:disable MethodLength
 
   # render bad params to user
   # @overload render_bad_parameters()
@@ -387,15 +389,16 @@ class ApplicationController < ActionController::Base
     end
 
     respond_to do |format|
-      format.html { render :template => 'common/400', :layout => !request.xhr?, :status => status,
-                           :locals   => { :message => message } }
+      format.html do
+        render :template => 'common/400', :layout => !request.xhr?, :status => status,
+               :locals   => {:message => message}
+      end
       format.atom { head exception.status_code }
       format.xml  { head exception.status_code }
       format.json { head exception.status_code }
     end
     User.current = nil
   end
-
 
   # take care of 500 pages too
   def render_error(exception = nil)
@@ -404,8 +407,10 @@ class ApplicationController < ActionController::Base
       notify.exception exception
     end
     respond_to do |format|
-      format.html { render :template => "common/500", :layout => "katello", :status => 500,
-                                :locals=>{:error=>exception} }
+      format.html do
+        render :template => "common/500", :layout => "katello", :status => 500,
+               :locals => {:error => exception}
+      end
       format.atom { head 500 }
       format.xml  { head 500 }
       format.json { head 500 }
@@ -419,7 +424,9 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def setup_environment_selector org, accessible
+  # TODO: break up method
+  # rubocop:disable MethodLength
+  def setup_environment_selector(org, accessible)
     next_env = KTEnvironment.find(params[:next_env_id]) if params[:next_env_id]
 
     @paths = []
@@ -431,36 +438,36 @@ class ApplicationController < ActionController::Base
     @paths = [[org.library]] if @paths.empty?
 
     if @environment && !@environment.library?
-      @paths.each{|path|
-        path.each{|env|
+      @paths.each do |path|
+        path.each do |env|
           if @path = path
             return if env.id == @environment.id
           end
-        }
-      }
+        end
+      end
     elsif next_env
-      @paths.each{|path|
-        path.each{|env|
+      @paths.each do |path|
+        path.each do |env|
           if @path = path
             return if env.id == next_env.id
           end
-        }
-      }
+        end
+      end
     else
       @path = @paths.first
       @environment = @path.first
     end
   end
 
-  def environment_path_element(perms_method=nil)
+  def environment_path_element(perms_method = nil)
     lambda do |a_path|
-      { :id     => a_path.id,
+      {:id     => a_path.id,
         :name   => a_path.name,
-        :select => perms_method.nil? ? false : a_path.send(perms_method) }
+        :select => perms_method.nil? ? false : a_path.send(perms_method)}
     end
   end
 
-  def library_path_element(perms=nil)
+  def library_path_element(perms = nil)
     environment_path_element(perms).call(current_organization.library)
   end
 
@@ -479,12 +486,11 @@ class ApplicationController < ActionController::Base
     to_ret
   end
 
-
   #verify if the specific object with the given id, matches a given search string
-  def search_validate(obj_class, id, search, default=:name)
+  def search_validate(obj_class, id, search, default = :name)
     obj_class.index.refresh
     search = '*' if search.nil? || search == ''
-    search = Util::Search::filter_input search
+    search = Util::Search.filter_input search
     query_options = {}
     query_options[:default_field] = default if default
 
@@ -495,6 +501,9 @@ class ApplicationController < ActionController::Base
     results.total > 0
   end
 
+  # TODO: break up method
+  # rubocop:disable MethodLength
+
   # @param [Hash] search_options
   # @option search_options :default_field
   #   The field that should be used by the search engine when a user performs
@@ -503,7 +512,7 @@ class ApplicationController < ActionController::Base
   #   Filter to apply to search. Array of hashes.  Each key/value within the hash
   #   is OR'd, whereas each HASH itself is AND'd together
   # @option search_options [true, false] :load whether or not to load the active record object (defaults to false)
-  def render_panel_direct(obj_class, panel_options, search, start, sort, search_options={})
+  def render_panel_direct(obj_class, panel_options, search, start, sort, search_options = {})
 
     filters = search_options[:filter] || []
     load = search_options[:load] || false
@@ -531,7 +540,7 @@ class ApplicationController < ActionController::Base
     @items = []
 
     begin
-      results = obj_class.search :load=>false do
+      results = obj_class.search(:load => false) do
         query do
           if all_rows
             all
@@ -540,12 +549,10 @@ class ApplicationController < ActionController::Base
           end
         end
 
-        sort {by sort[0], sort[1].to_s.downcase } unless !all_rows
+        sort { by sort[0], sort[1].to_s.downcase } unless !all_rows
 
-        filters = [filters] if !filters.is_a? Array
-        filters.each{|i|
-          filter  :terms, i
-        } if !filters.empty?
+        filters = Array(filters)
+        filters.each { |i| filter :terms, i } if !filters.empty?
 
         size page_size if page_size > 0
         from start
@@ -568,9 +575,7 @@ class ApplicationController < ActionController::Base
         query do
           all
         end
-        filters.each{|i|
-          filter  :terms, i
-        } if !filters.empty?
+        filters.each { |i| filter :terms, i } if !filters.empty?
         size 1
         from 0
       end
@@ -606,12 +611,14 @@ class ApplicationController < ActionController::Base
     render :json => {:html => rendered_html,
                       :results_count => options[:total_count],
                       :total_items => options[:total_results],
-                      :current_items => options[:collection].length }
+                      :current_items => options[:collection].length}
 
     retain_search_history unless options[:no_search_history]
 
   end
 
+  # TODO: break up method
+  # rubocop:disable MethodLength
   def render_panel_items(items, options, search, start)
     @items = items
 
@@ -646,7 +653,7 @@ class ApplicationController < ActionController::Base
     render :json => {:html => rendered_html,
                       :results_count => options[:total_count],
                       :total_items => options[:total_results],
-                      :current_items => options[:collection].length }
+                      :current_items => options[:collection].length}
 
     retain_search_history
   end
@@ -655,15 +662,15 @@ class ApplicationController < ActionController::Base
     flash_to_headers
   end
 
-  def first_env_in_path(accessible_envs, include_library=false, organization=current_organization)
+  def first_env_in_path(accessible_envs, include_library = false, organization = current_organization)
     return organization.library if include_library && accessible_envs.member?(organization.library)
-    organization.promotion_paths.each{|path|
-      path.each{|env|
+    organization.promotion_paths.each do |path|
+      path.each do |env|
         if accessible_envs.member?(env)
           return env
         end
-      }
-    }
+      end
+    end
     nil
   end
 
@@ -695,7 +702,7 @@ class ApplicationController < ActionController::Base
   end
 
 
-  def log_exception exception, level = :error
+  def log_exception(exception, level = :error)
     logger.send level, "#{exception} (#{exception.class})\n#{exception.backtrace.join("\n")}" if exception
   end
 
@@ -703,7 +710,7 @@ class ApplicationController < ActionController::Base
   # (Note: this can be used to pull the displayMessage from a Candlepin exception.)
   # This assumes that the input follows a syntax similar to:
   #   "{\"displayMessage\":\"Import is older than existing data\"}"
-  def self.parse_display_message input
+  def self.parse_display_message(input)
     unless input.nil?
       if input.include? 'displayMessage'
         return JSON.parse(input)['displayMessage']
@@ -713,7 +720,7 @@ class ApplicationController < ActionController::Base
   end
 
   def default_notify_options
-    { :organization => current_organization }
+    {:organization => current_organization}
   end
 
 end

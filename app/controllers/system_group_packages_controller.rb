@@ -46,6 +46,8 @@ class SystemGroupPackagesController < ApplicationController
            :locals=>{:jobs => jobs, :editable => @group.systems_editable?}
   end
 
+  # TODO: break up this method
+  # rubocop:disable MethodLength
   def add
     if !params[:packages].blank?
       # user entered one or more package names (as comma-separated list) in the content box
@@ -79,13 +81,17 @@ class SystemGroupPackagesController < ApplicationController
                         :include_tr_shading => false }
   rescue Errors::SystemGroupEmptyException => e
     if !params[:packages].blank?
-      notify.error _("Install of Packages '%{packages}' scheduled for System Group '%{name}' failed.  Reason: %{message}") % {:packages => params[:packages], :name => @group.name, :message => e.message}
+      notify.error _("Install of Packages '%{packages}' scheduled for System Group '%{name}' failed.  Reason: %{message}") %
+        {:packages => params[:packages], :name => @group.name, :message => e.message}
     elsif !params[:groups].blank?
-      notify.error _("Install of Package Groups '%{groups}' scheduled for System Group '%{name}' failed.  Reason: %{message}") % {:groups => params[:groups], :name => @group.name, :message => e.message}
+      notify.error _("Install of Package Groups '%{groups}' scheduled for System Group '%{name}' failed.  Reason: %{message}") %
+        {:groups => params[:groups], :name => @group.name, :message => e.message}
     end
     render :text => ''
   end
 
+  # TODO: break up this method
+  # rubocop:disable MethodLength
   def remove
     if !params[:packages].blank?
       # user entered one or more package names (as comma-separated list) in the content box
@@ -118,13 +124,17 @@ class SystemGroupPackagesController < ApplicationController
                                                                    :include_tr_shading => false}
   rescue Errors::SystemGroupEmptyException => e
     if !params[:packages].blank?
-      notify.error _("Uninstall of Packages '%{packages}' scheduled for System Group '%{name}' failed.  Reason: %{message}") % {:packages => params[:packages], :name => @group.name, :message => e.message}
+      notify.error _("Uninstall of Packages '%{packages}' scheduled for System Group '%{name}' failed.  Reason: %{message}") %
+        {:packages => params[:packages], :name => @group.name, :message => e.message}
     elsif !params[:groups].blank?
-      notify.error _("Uninstall of Package Groups '%{groups}' scheduled for System Group '%{name}' failed.  Reason: %{message}") % {:groups => params[:groups], :name => @group.name, :message => e.message}
+      notify.error _("Uninstall of Package Groups '%{groups}' scheduled for System Group '%{name}' failed.  Reason: %{message}") %
+        {:groups => params[:groups], :name => @group.name, :message => e.message}
     end
     render :text => ''
   end
 
+  # TODO: break up this method
+  # rubocop:disable MethodLength
   def update
     if !params[:groups].blank?
       # user entered one or more package group names (as comma-separated list) in the content box
@@ -169,9 +179,11 @@ class SystemGroupPackagesController < ApplicationController
 
   rescue Errors::SystemGroupEmptyException => e
     if !params[:packages].blank?
-      notify.error _("Update of Packages '%{packages}' scheduled for System Group '%{group}' failed.  Reason: %{message}") % {:packages => params[:packages], :group => @group.name, :message => e.message}
+      notify.error _("Update of Packages '%{packages}' scheduled for System Group '%{group}' failed.  Reason: %{message}") %
+        {:packages => params[:packages], :group => @group.name, :message => e.message}
     elsif !params[:groups].blank?
-      notify.error _("Update of Package Groups '%{groups}' scheduled for System Group '%{name}' failed.  Reason: %{message}") % {:groups => params[:groups], :name => @group.name, :message => e.message}
+      notify.error _("Update of Package Groups '%{groups}' scheduled for System Group '%{name}' failed.  Reason: %{message}") %
+        {:groups => params[:groups], :name => @group.name, :message => e.message}
     end
     render :text => ''
   end

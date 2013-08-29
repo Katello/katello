@@ -115,8 +115,8 @@ class ContentSearchController < ApplicationController
     rows = []
     view_product_repo_map.each do |view, product_repo_map|
 
-      prod_rows = product_repo_map.collect do |product, repos|
-        spanned_product_content(view, product, repos, 'package', package_ids)
+      prod_rows = product_repo_map.collect do |product, reps|
+        spanned_product_content(view, product, reps, 'package', package_ids)
       end.flatten
 
       if !prod_rows.empty?
@@ -155,8 +155,8 @@ class ContentSearchController < ApplicationController
     view_product_repo_map.each do |view, product_repo_map|
 
       prod_rows = []
-      product_repo_map.each do |product, repos|
-        prod_rows.concat(spanned_product_content(view, product, repos, 'errata', errata_ids))
+      product_repo_map.each do |product, reps|
+        prod_rows.concat(spanned_product_content(view, product, reps, 'errata', errata_ids))
       end
 
       if !prod_rows.empty?
@@ -182,8 +182,8 @@ class ContentSearchController < ApplicationController
     rows = []
     view_product_repo_map.each do |view, product_repo_map|
       prod_rows = []
-      product_repo_map.each do |product, repos|
-        prod_rows.concat(spanned_product_content(view, product, repos, 'puppet_module', puppet_module_ids))
+      product_repo_map.each do |product, reps|
+        prod_rows.concat(spanned_product_content(view, product, reps, 'puppet_module', puppet_module_ids))
       end
 
       if !prod_rows.empty?
@@ -287,7 +287,7 @@ class ContentSearchController < ApplicationController
     packages = Package.search('', offset, current_user.page_size, [@repo.pulp_id])
 
     rows = packages.collect do |pack|
-      { :name => display = package_display(pack),
+      { :name => package_display(pack),
         :id => pack.id, :cols => { :description => { :display => pack.description } },
         :data_type => "package", :value => pack.nvrea }
     end
@@ -380,6 +380,8 @@ class ContentSearchController < ApplicationController
 
   private
 
+  # TODO: break up this method
+  # rubocop:disable MethodLength
   def repo_compare_content(unit_type, offset)
     repo_map = @repos.inject({}) do |map, repo|
       map[repo.pulp_id] = repo
@@ -432,7 +434,7 @@ class ContentSearchController < ApplicationController
   end
 
   #take in a set of repos and sort based on environment
-  def sort_repos repos
+  def sort_repos(repos)
     env_to_repo = {}
     repos.each do |r|
       env_to_repo[r.environment.id] ||= []
@@ -458,7 +460,7 @@ class ContentSearchController < ApplicationController
     @repo = Repository.readable_in_org(current_organization).find(params[:repo_id])
   end
 
-  def repo_hover_html repo
+  def repo_hover_html(repo)
     render_to_string :partial => 'repo_hover', :locals => { :repo => repo }
   end
 
@@ -541,6 +543,8 @@ class ContentSearchController < ApplicationController
     to_ret
   end
 
+  # TODO: break up method
+  # rubocop:disable MethodLength
   def spanned_product_content(view, product, repos, content_type, search_obj, search_mode = nil, environments = nil)
     rows = []
     content_rows = []
@@ -610,7 +614,7 @@ class ContentSearchController < ApplicationController
     return nil if content.total == 0
 
     spanning_repos.each do |repo|
-      results = multi_repo_content_search(content_class, content_search_obj, spanning_repos, offset, content_attribute, search_mode,repo)
+      results = multi_repo_content_search(content_class, content_search_obj, spanning_repos, offset, content_attribute, search_mode, repo)
       to_ret[repo.environment_id] = { :id => repo.environment_id, :display => results.total } if accessible_env_ids.include?(repo.environment_id)
     end
 
@@ -665,7 +669,7 @@ class ContentSearchController < ApplicationController
     Util::Package.setup_shared_unique_filter(repoids, search_mode, search)
     search.perform.results
 
-  rescue Tire::Search::SearchRequestFailed => e
+  rescue Tire::Search::SearchRequestFailed
     Util::Support.array_with_total
   end
 
@@ -699,7 +703,7 @@ class ContentSearchController < ApplicationController
 
       spanned_repos.each do |repo|
         if item.repoids.include? repo.pulp_id
-            row[:cols][repo.environment_id] = { :id => repo.environment_id } if env_ids.include?(repo.environment_id)
+          row[:cols][repo.environment_id] = { :id => repo.environment_id } if env_ids.include?(repo.environment_id)
         end
       end
 
