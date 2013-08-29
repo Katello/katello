@@ -52,11 +52,11 @@ angular.module('Bastion.systems').controller('SystemsController',
         };
 
         $scope.table.openDetails = function (system) {
-            $state.transitionTo('systems.details.info', {systemId: system.uuid});
+            $scope.transitionTo('systems.details.info', {systemId: system.uuid});
         };
 
         $scope.table.closeItem = function() {
-            $state.transitionTo('systems.index');
+            $scope.transitionTo('systems.index');
         };
     }]
 );

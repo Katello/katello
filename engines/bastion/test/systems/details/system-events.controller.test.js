@@ -14,7 +14,7 @@
 describe('Controller: SystemEventsController', function() {
     var $scope, Nutupane;
 
-    beforeEach(module('Bastion.systems'));
+    beforeEach(module('Bastion.systems', 'Bastion.test-mocks'));
 
     beforeEach(function() {
         Nutupane = function() {
@@ -30,7 +30,6 @@ describe('Controller: SystemEventsController', function() {
 
     beforeEach(inject(function($controller, $rootScope) {
         $scope = $rootScope.$new();
-        $scope.transitionTo = function(){};
         $controller('SystemEventsController', {$scope: $scope, System: System, Nutupane: Nutupane});
     }));
 

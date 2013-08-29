@@ -14,12 +14,11 @@
 describe('Controller: SystemsEventsController', function() {
     var $scope, Nutupane;
 
-    beforeEach(module('Bastion.systems'));
+    beforeEach(module('Bastion.systems', 'Bastion.test-mocks'));
 
     beforeEach(inject(function($controller, $rootScope) {
         $scope = $rootScope.$new();
-        $scope.transitionTo = function(){};
-        $scope.$stateParams.eventId = '3'
+        $scope.$stateParams.eventId = '3';
         $scope.$parent.eventsTable = { rows : [{id:3}]}
         spyOn($scope, "transitionTo");
 
@@ -31,7 +30,6 @@ describe('Controller: SystemsEventsController', function() {
         $scope.$digest();
 
         expect($scope.transitionTo).toHaveBeenCalledWith('systems.details.events.index');
-
     });
 
     it("provides a way to go back to event list.", function() {
