@@ -98,10 +98,17 @@ class Candlepin::ProductContent
                                           pulp_id: product.repo_id(repo_name)
                                          )
         unless existing_repos.any?
-          content_type = case self.content.type.downcase
-	                 when 'kickstart' then 'yum'
-                         else self.content.type
-                         end
+          content_type = nil
+          unprotected = false
+          if self.content.type.downcase == 'kickstart'
+            content_type = 'yum'
+            # Keep the kickstart repos open and available
+            unprotected = true
+          else
+            content_type = self.content.type
+            # Keep the regular updates repos protected
+            unprotected = false
+          end
           Rails.logger.error("Content type: '#{content_type}'")
           Repository.create!(:environment => product.organization.library,
                              :product => product,
@@ -121,7 +128,7 @@ class Candlepin::ProductContent
                              :content_type => content_type,
                              :preserve_metadata => true, #preserve repo metadata when importing from cp
                              :enabled =>false,
-                             :unprotected => true,
+                             :unprotected => unprotected,
                              :content_view_version=>product.organization.library.default_content_view_version
                             )
         end
