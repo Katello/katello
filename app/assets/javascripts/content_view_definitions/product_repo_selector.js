@@ -10,28 +10,6 @@
  have received a copy of GPLv2 along with this software; if not, see
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
-$(document).ready(function() {
-    $(".toggle").live('click', function(){
-       var btn = $(this);
-       var parent = btn.parents(".product_entry");
-       if(parent.hasClass("disabled")){
-           return;
-       }
-
-       if (btn.hasClass("collapsed")){
-        btn.addClass("expanded").removeClass("collapsed");
-       }
-       else {
-        btn.removeClass("expanded").addClass("collapsed");
-       }
-       btn.parent().find(".options").toggle();
-
-    });
-
-    KT.panel.set_expand_cb(function(){
-        KT.product_input.register();
-    });
-});
 
 KT.product_input = (function(){
 
@@ -88,15 +66,6 @@ KT.product_input = (function(){
             }
         });
 
-        $("#update_products").click(function(){
-            var btn = $(this);
-            if(btn.hasClass("disabled")){
-                return;
-            }
-            btn.addClass("disabled");
-            KT.filters.update_product_repos();
-        });
-
         $("#revert_products").click(function(){
             KT.filters.revert_products();
         });
@@ -121,12 +90,17 @@ KT.product_input = (function(){
                 if (KT.utils.indexOf(filter.products, prod_id) === -1){
                     filter.products.push(prod_id); //add product to filter
                 }
+
+                //clear the repo list since all was selected
+                radio.parent().nextAll(".repos_list").first().html("");
+
                 //remove product from repos and cache it
                 repos = filter.repos[prod_id];
                 delete filter.repos[prod_id];
                 if (repos){
                     KT.filters.get_repo_cache()[prod_id] = repos;
                 }
+                KT.filters.update_product_repos();
             }
             else { //else 'select repos' was selected
                 list.show(); //show list and rerender message
@@ -165,7 +139,7 @@ KT.product_input = (function(){
             repo.remove();
             KT.filter_renderer.rerender_repo_select(prod_id);
             KT.filter_renderer.render_product_message(prod_id, false, filter.repos[prod_id]);
-
+            KT.filters.update_product_repos();
         });
 
         $(".remove_product").unbind().click(function(){
@@ -176,6 +150,7 @@ KT.product_input = (function(){
             delete filter.repos[prod_id];
             parent.remove();
             KT.filter_renderer.empty_check();
+            KT.filters.update_product_repos();
         });
     };
 
@@ -467,28 +442,31 @@ KT.filters = (function(){
     },
     update_product_repos = function() {
         var repos = [];
+
+        $("#product_select").prev(".spinner").show();
+
         $.ajax({
             type: "PUT",
             contentType: "application/json",
-            url: $("#update_products").data("url"),
+            url: $("#product_select").data("url"),
             data: JSON.stringify({products:current_filter.products, repos:current_filter.repos}),
             cache: false,
             success: function(){
                 repo_cache = []; //clear repo cache
-                $("#update_products").removeClass("disabled");
-                KT.filter_renderer.render_products_repos();
                 saved_filter = $.parseJSON(JSON.stringify(current_filter));
+                $("#product_select").prev(".spinner").hide();
             }
         });
     },
     add_product = function(prod_id){
         prod_id = parseInt(prod_id, 10);
         if ($.inArray( prod_id, current_filter.products) === -1 &&
-             current_filter.repos[prod_id] === undefined){
+             current_filter.repos[prod_id] === undefined) {
             repo_cache[prod_id] = [];
             current_filter.products.push(prod_id);
             KT.filter_renderer.render_single_product(prod_id);
             expand_product(prod_id);
+            KT.filters.update_product_repos();
         }
     },
     pop_product = function(prod_id){
@@ -534,6 +512,7 @@ KT.filters = (function(){
             }
         }
         expand_product(prod_id);
+        KT.filters.update_product_repos();
     },
     lookup_repo_product = function(repo_id){
       var found;

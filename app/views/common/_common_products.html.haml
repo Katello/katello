@@ -12,7 +12,7 @@
                                                                           :editable_products => editable_products}).
                                                                         reject{|key,val|!val[:editable]}.to_json)}');
 
-    KT.filters.set_current_filter($.parseJSON('#{escape_javascript(objectify(record).to_json)}'));
+    KT.filters.set_current_filter($.parseJSON('#{escape_javascript(objectify(record, content_types).to_json)}'));
 
     localize({
       "no_products_repos"  : '#{escape_javascript(_("No products or repositories are currently associated."))}',

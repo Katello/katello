@@ -73,6 +73,7 @@ class Repository < ActiveRecord::Base
   scope :yum_type, where(:content_type=>YUM_TYPE)
   scope :file_type, where(:content_type=>FILE_TYPE)
   scope :puppet_type, where(:content_type=>PUPPET_TYPE)
+  scope :non_puppet, where("content_type != ?", PUPPET_TYPE)
 
   def organization
     self.environment.organization
@@ -92,6 +93,10 @@ class Repository < ActiveRecord::Base
 
   def self.in_content_views(views)
     joins(:content_view_version).where('content_view_versions.content_view_id' => views.map(&:id))
+  end
+
+  def puppet?
+    content_type == PUPPET_TYPE
   end
 
   def in_default_view?

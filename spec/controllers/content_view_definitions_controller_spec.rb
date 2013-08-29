@@ -342,6 +342,25 @@ describe ContentViewDefinitionsController, :katello => true do
         ContentViewDefinition.where(:id=>@definition.id).first.repositories.first.should ==
                                     @product.repos(@organization.library).first
       end
+
+      it "should successfully update the puppet repository" do
+        assert @definition.repositories.size == 0
+        Repository.any_instance.stub(:create_pulp_repo).and_return([])
+        repo = create(:repository, :puppet, :product => @product,
+                      :environment => @organization.library,
+                      :content_view_version => @organization.library.default_content_view_version)
+
+        post :update_content, :id=>@definition.id, :puppet_repository_id => repo.id
+
+        response.should be_success
+        @definition.repositories.reload.should eql([repo])
+        @definition.puppet_repository.should eql(repo)
+
+        post :update_content, :id=>@definition.id, :puppet_repository_id => ""
+
+        response.should be_success
+        @definition.repositories.reload.length.should eql(0)
+      end
     end
 
     describe "GET views" do
