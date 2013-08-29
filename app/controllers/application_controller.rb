@@ -587,7 +587,7 @@ class ApplicationController < ActionController::Base
   end
 
   def render_panel_results(results, total, options)
-    options[:total_count] ||= results.empty? ? 0 : results.total
+    options[:total_count] ||= results.empty? ? 0 : results.size
     options[:total_results] = total
     options[:collection] = results
     options[:columns] = options[:col]
