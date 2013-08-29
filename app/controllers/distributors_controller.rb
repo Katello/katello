@@ -124,9 +124,9 @@ class DistributorsController < ApplicationController
 
   def create
     @distributor = Distributor.new
-    @distributor.facts = {'system.certificate_version' => '3.2'}  # TODO: Currently forcing distributor to latest version
     @distributor.name= params["distributor"]["name"]
     @distributor.cp_type = "candlepin"  # The 'candlepin' type is allowed to export a manifest
+    @distributor.facts = {'distributor_version' => 'sam-1.3'}  # TODO: forcing to full capabilities
     @distributor.environment = KTEnvironment.find(params["distributor"]["environment_id"])
     @distributor.content_view = ContentView.find_by_id(params["distributor"].try(:[], "content_view_id"))
     #create it in candlepin, parse the JSON and create a new ruby object to pass to the view
@@ -272,11 +272,6 @@ class DistributorsController < ApplicationController
 
   def update
     params[:distributor][:content_view_id] = nil if params[:distributor].has_key? :environment_id
-
-    # TODO: Currently forcing distributor to latest version
-    facts = @distributor.facts
-    facts['system.certificate_version'] ||= '3.2'
-    params[:distributor][:facts] = facts
 
     @distributor.update_attributes!(params[:distributor])
     notify.success _("Distributor '%s' was updated.") % @distributor["name"]
