@@ -410,7 +410,6 @@ Summary:         Katello devel support (testing)
 BuildArch:       noarch
 Requires:        %{name} = %{version}-%{release}
 Requires:        %{name}-devel = %{version}-%{release}
-# dependencies from bundler.d/test.rb
 Requires:        rubygem(ZenTest) >= 4.4.0
 Requires:        rubygem(autotest-rails) >= 4.1.0
 Requires:        rubygem(rspec-rails) >= 2.0.0
@@ -418,9 +417,6 @@ Requires:        rubygem(webrat) >= 0.7.3
 Requires:        rubygem(nokogiri) >= 0.9.9
 Requires:        rubygem(vcr)
 Requires:        rubygem(webmock)
-Requires:        rubygem(parallel_tests)
-
-BuildRequires:        rubygem(rspec-rails)
 
 %description devel-test
 Rake tasks and dependecies for Katello developers, which enables
@@ -879,7 +875,6 @@ usermod -a -G katello-shared tomcat
 %{homedir}/bundler.d/optional.rb
 
 %files devel-test
-%{homedir}/bundler.d/test.rb
 %{homedir}/lib/tasks/simplecov.rake
 %{homedir}/script/pulp_integration_tests
 
