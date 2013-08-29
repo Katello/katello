@@ -15,14 +15,14 @@
 
 class NoticesController < ApplicationController
 
-  skip_before_filter :authorize,:require_org
+  skip_before_filter :authorize, :require_org
   before_filter :notices_authorize
   before_filter :readable_by, :only => [:auto_complete_search]
 
   helper_method :sort_column, :sort_direction
 
   def section_id
-     'notifications'
+    'notifications'
   end
 
   def menu_definition
@@ -30,12 +30,11 @@ class NoticesController < ApplicationController
   end
 
   def notices_authorize
-    user = current_user
     true
   end
 
   def show
-    # TODO search by organization
+    # TODO: search by organization
     # currently doesn't handle pagination
     @notices = render_panel_direct(Notice, { }, params[:search], 0, [sort_column, sort_direction],
                                    { :filter      => { :user_ids => [current_user.id] },
@@ -50,9 +49,12 @@ class NoticesController < ApplicationController
       new_notices = current_user.pop_notices current_organization
 
       respond_to do |format|
-        format.json { render :json => { :new_notices  => new_notices,
-                                        :unread_count => Notice.for_user(current_user).
-                                            for_org(current_organization).count } }
+        format.json do
+          render :json => { :new_notices  => new_notices,
+                            :unread_count => Notice.for_user(current_user).
+                              for_org(current_organization).count
+          }
+        end
       end
     else
       respond_to do |format|

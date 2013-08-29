@@ -130,7 +130,7 @@ class SystemPackagesController < ApplicationController
     end
 
     offset = current_user.page_size
-    packages = @system.simple_packages.sort {|a,b| a.nvrea.downcase <=> b.nvrea.downcase}
+    packages = @system.simple_packages.sort {|a, b| a.nvrea.downcase <=> b.nvrea.downcase}
     total_packages = packages.length
     if total_packages > 0
       if params.has_key? :pkg_order
@@ -155,7 +155,7 @@ class SystemPackagesController < ApplicationController
   end
 
   def more_packages
-    packages = @system.simple_packages.sort {|a,b| a.nvrea.downcase <=> b.nvrea.downcase}
+    packages = @system.simple_packages.sort {|a, b| a.nvrea.downcase <=> b.nvrea.downcase}
 
     if params.has_key? :pkg_order
       if params[:pkg_order].downcase == "desc"
@@ -188,12 +188,12 @@ class SystemPackagesController < ApplicationController
     return 'system'
   end
 
-  def sort_order_limit systems
-      sort_columns(COLUMNS, systems) if params[:order]
-      offset = params[:offset].to_i if params[:offset]
-      offset ||= 0
-      last = offset + current_user.page_size
-      last = systems.length if last > systems.length
-      systems[offset...last]
+  def sort_order_limit(systems)
+    sort_columns(COLUMNS, systems) if params[:order]
+    offset = params[:offset].to_i if params[:offset]
+    offset ||= 0
+    last = offset + current_user.page_size
+    last = systems.length if last > systems.length
+    systems[offset...last]
   end
 end

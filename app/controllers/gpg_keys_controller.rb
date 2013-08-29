@@ -56,7 +56,9 @@ class GpgKeysController < ApplicationController
 
   def items
     render_panel_direct(GpgKey, @panel_options, params[:search], params[:offset], [:name_sort, :asc],
-      {:default_field => :name, :filter=>{:organization_id=>[current_organization.id]}})
+                        {:default_field => :name,
+                         :filter=>{:organization_id=>[current_organization.id]}}
+                       )
   end
 
   def show
@@ -69,7 +71,7 @@ class GpgKeysController < ApplicationController
 
   def edit
     render :partial => "edit", :locals => {:editable => @gpg_key.manageable?,
-                                           :name => controller_display_name }
+                                           :name => controller_display_name}
   end
 
   def products_repos
@@ -85,6 +87,8 @@ class GpgKeysController < ApplicationController
            :locals => {:products => products, :products_repos => products_repos}
   end
 
+  # TODO: break up this method
+  # rubocop:disable MethodLength
   def create
     gpg_key_params = params[:gpg_key]
     return render_bad_parameters if gpg_key_params.nil?
@@ -95,7 +99,7 @@ class GpgKeysController < ApplicationController
       gpg_key_params.delete('content_upload')
     end
 
-    @gpg_key = GpgKey.create!( gpg_key_params.merge({ :organization => current_organization }) )
+    @gpg_key = GpgKey.create!( gpg_key_params.merge({:organization => current_organization}) )
 
     notify.success _("GPG Key '%s' was created.") % @gpg_key['name'], :asynchronous => file_uploaded
 
@@ -103,13 +107,13 @@ class GpgKeysController < ApplicationController
       render :partial=>"common/list_item", :locals=>{:item=>@gpg_key, :accessor=>"id", :columns=>['name'], :name=>controller_display_name}
     else
       notify.message _("'%s' did not meet the current search criteria and is not being shown.") % @gpg_key["name"]
-      render :json => { :no_match => true }
+      render :json => {:no_match => true}
     end
   rescue ActiveRecord::RecordInvalid => error
     # this is needed because of the upload file though iframe
     # (we need to send json although the request says it wants HTML)
-    unless request.xhr?
-      render :json => { :validation_errors => error.record.errors.full_messages.to_a }, :status => :bad_request
+    if !request.xhr?
+      render :json => {:validation_errors => error.record.errors.full_messages.to_a}, :status => :bad_request
     else
       # otherwise we use the default error handing in ApplicationController
       raise error
@@ -137,8 +141,8 @@ class GpgKeysController < ApplicationController
   rescue ActiveRecord::RecordInvalid => error
     # this is needed because of the upload file though iframe
     # (we need to send json although the request says it wants HTML)
-    unless request.xhr?
-      render :json => { :validation_errors => error.record.errors.full_messages.to_a }, :status => :bad_request
+    if !request.xhr?
+      render :json => {:validation_errors => error.record.errors.full_messages.to_a}, :status => :bad_request
     else
       # otherwise we use the default error handing in ApplicationController
       raise error
@@ -167,7 +171,7 @@ class GpgKeysController < ApplicationController
       :create_label => _('+ New GPG Key'),
       :name => controller_display_name,
       :ajax_load  => true,
-      :ajax_scroll => items_gpg_keys_path(),
+      :ajax_scroll => items_gpg_keys_path,
       :initial_action=> :products_repos,
       :enable_create => GpgKey.createable?(current_organization),
       :search_class=>GpgKey

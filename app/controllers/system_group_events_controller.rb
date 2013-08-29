@@ -96,7 +96,7 @@ class SystemGroupEventsController < ApplicationController
       end
     end
     search = params[:search]
-    render_panel_direct(Job, {:no_search_history => true,:render_list_proc => render_proc},
+    render_panel_direct(Job, {:no_search_history => true, :render_list_proc => render_proc},
                         search, params[:offset], [:id, 'desc'],
                         :filter => {:job_owner_id => [@group.id], :task_owner_type => SystemGroup.class.name},
                         :load => true,
@@ -104,6 +104,7 @@ class SystemGroupEventsController < ApplicationController
   end
 
   protected
+
   def find_group
     @group = SystemGroup.find(params[:system_group_id])
   end
@@ -114,7 +115,7 @@ class SystemGroupEventsController < ApplicationController
   end
 
   helper_method :total_events_length
-  def total_events_length()
+  def total_events_length
     @group.jobs.length
   end
 end

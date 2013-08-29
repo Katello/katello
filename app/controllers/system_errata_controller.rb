@@ -83,8 +83,7 @@ class SystemErrataController < ApplicationController
   include SortColumnList
   include Util::Errata
 
-  def get_errata start, finish, filter_type="All", errata_state="outstanding"
-    types = [Errata::SECURITY, Errata::ENHANCEMENT, Errata::BUGZILLA]
+  def get_errata(start, finish, filter_type = "All", errata_state = "outstanding")
     errata_state = errata_state || "outstanding"
     filter_type = filter_type || "All"
 

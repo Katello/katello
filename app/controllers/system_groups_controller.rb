@@ -48,13 +48,13 @@ class SystemGroupsController < ApplicationController
   end
 
   def param_rules
-     {
+    {
        :create => {:system_group => [:name, :description, :max_systems]},
        :update => {:system_group => [:name, :description, :max_systems]},
        :add_systems => [:system_ids, :id],
        :remove_systems => [:system_ids, :id],
        :update_systems => {:system_group => [:environment_id, :content_view_id]}
-     }
+    }
   end
 
   def section_id
@@ -78,8 +78,10 @@ class SystemGroupsController < ApplicationController
       render :json => { :no_match => true }
     else
       respond_to do |format|
-        format.html {render :partial => "system_groups/list_group", :locals => {:item => @group, :accessor => "id",
-                                                                               :name => controller_display_name}}
+        format.html do
+          render :partial => "system_groups/list_group", :locals => {:item => @group, :accessor => "id",
+                                                                     :name => controller_display_name}
+        end
         format.json {render :json => @group}
       end
     end
@@ -173,7 +175,7 @@ class SystemGroupsController < ApplicationController
         :titles => [_('Name')],
         :create => _('System Group'),
         :name => controller_display_name,
-        :ajax_scroll => items_system_groups_path(),
+        :ajax_scroll => items_system_groups_path,
         :enable_create => SystemGroup.creatable?(current_organization),
         :initial_action =>:systems,
         :list_partial => 'system_groups/list_groups',
@@ -257,7 +259,7 @@ class SystemGroupsController < ApplicationController
       filter :terms, {:id => SystemGroup.editable(org).collect{|g| g.id}}
     end
     render :json => groups.map{|s| {:label => s.name, :value => s.name, :id => s.id}}
-  rescue Tire::Search::SearchRequestFailed => e
+  rescue Tire::Search::SearchRequestFailed
     render :json => Util::Support.array_with_total
   end
 

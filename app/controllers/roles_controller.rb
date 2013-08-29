@@ -65,7 +65,7 @@ class RolesController < ApplicationController
 
      {
        :create => {:role => [:name, :description]},
-       :update => {:role => [:name, :description], :update_users => [:user_id,:adding]},
+       :update => {:role => [:name, :description], :update_users => [:user_id, :adding]},
        :create_permission => perm_check,
        :update_permission => perm_check,
        :create_ldap_group => [:group, :role_id],
@@ -75,7 +75,7 @@ class RolesController < ApplicationController
 
 
   def section_id
-     'operations'
+    'operations'
   end
 
   def menu_definition
@@ -96,7 +96,7 @@ class RolesController < ApplicationController
                  :name => controller_display_name,
                  :ajax_load  => true,
                  :list_partial => 'roles/list_roles',
-                 :ajax_scroll => items_roles_path(),
+                 :ajax_scroll => items_roles_path,
                  :enable_create=> Role.creatable?,
                  :search_class=>Role}
   end
@@ -170,7 +170,7 @@ class RolesController < ApplicationController
       if !value["global"]
         details[type] = {}
         details[type][:verbs] = Verb.verbs_for(type, false).collect {|name, display_name| VirtualTag.new(name, display_name)}
-        details[type][:verbs].sort! {|a,b| a.display_name <=> b.display_name}
+        details[type][:verbs].sort! {|a, b| a.display_name <=> b.display_name}
         details[type][:tags] = Tag.tags_for(type, params[:organization_id]).collect { |t| VirtualTag.new(t.name, t.display_name) }
         details[type][:no_tag_verbs] = Verb.no_tag_verbs(type)
         details[type][:global] = value["global"]

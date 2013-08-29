@@ -45,13 +45,13 @@ class SyncPlansController < ApplicationController
 
   def setup_options
     @panel_options = { :title => _('Sync Plans'),
-                 :col =>  ['name', 'interval'],
-                  :titles => [_('Name'), _("Interval") ],
+                 :col =>  %w(name interval),
+                  :titles => [_('Name'), _("Interval")],
                  :create => _('Plan'),
                  :create_label => _('+ New Plan'),
                  :name => controller_display_name,
                  :ajax_load => true,
-                 :ajax_scroll => items_sync_plans_path(),
+                 :ajax_scroll => items_sync_plans_path,
                  :enable_create => current_organization.syncable?,
                  :search_class=>SyncPlan}
   end
@@ -69,7 +69,7 @@ class SyncPlansController < ApplicationController
     updated_plan.interval = params[:sync_plan][:interval] unless params[:sync_plan][:interval].nil?
 
     unless params[:sync_plan][:description].nil?
-      result = updated_plan.description = params[:sync_plan][:description].gsub("\n",'')
+      result = updated_plan.description = params[:sync_plan][:description].gsub("\n", '')
     end
 
     if params[:sync_plan][:time]
@@ -107,7 +107,7 @@ class SyncPlansController < ApplicationController
   end
 
   def show
-    render :partial => "common/list_update", :locals=>{:item=>@plan, :accessor=>"id", :columns=>['name', 'interval']}
+    render :partial => "common/list_update", :locals=>{:item=>@plan, :accessor=>"id", :columns=>%w(name interval)}
   end
 
   def new
@@ -133,7 +133,7 @@ class SyncPlansController < ApplicationController
     notify.success N_("Sync Plan '%s' was created.") % @plan['name']
 
     if search_validate(SyncPlan, @plan.id, params[:search])
-      render :partial=>"common/list_item", :locals=>{:item=>@plan, :accessor=>"id", :columns=>['name', 'interval'], :name=>controller_display_name}
+      render :partial=>"common/list_item", :locals=>{:item=>@plan, :accessor=>"id", :columns=>%w(name interval), :name=>controller_display_name}
     else
       notify.message _("'%s' did not meet the current search criteria and is not being shown.") % @plan["name"]
       render :json => { :no_match => true }

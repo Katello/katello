@@ -129,7 +129,7 @@ class ContentViewDefinitionsController < ApplicationController
     result = params[:view_definition].nil? ? "" : params[:view_definition].values.first
 
     unless params[:view_definition][:description].nil?
-      result = params[:view_definition][:description] = params[:view_definition][:description].gsub("\n",'')
+      result = params[:view_definition][:description] = params[:view_definition][:description].gsub("\n", '')
     end
 
     @view_definition.update_attributes!(params[:view_definition])
@@ -274,7 +274,7 @@ class ContentViewDefinitionsController < ApplicationController
       :create_label => _('+ New View Definition'),
       :name => controller_display_name,
       :ajax_load  => true,
-      :ajax_scroll => items_content_view_definitions_path(),
+      :ajax_scroll => items_content_view_definitions_path,
       :enable_create => ContentViewDefinition.creatable?(current_organization),
       :initial_action => :views,
       :search_class => ContentViewDefinition}

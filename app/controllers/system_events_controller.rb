@@ -83,7 +83,7 @@ class SystemEventsController < ApplicationController
       end
     end
     search = params[:search]
-    render_panel_direct(TaskStatus, {:no_search_history => true,:render_list_proc => render_proc},
+    render_panel_direct(TaskStatus, {:no_search_history => true, :render_list_proc => render_proc},
                         search, params[:offset], [:finish_time, 'desc'],
                         :filter => {:task_owner_id => [@system.id], :task_owner_type => [System.class_name]},
                         :load => true,
@@ -91,6 +91,7 @@ class SystemEventsController < ApplicationController
   end
 
   protected
+
   def find_system
     @system = System.find(params[:system_id])
   end
@@ -101,7 +102,7 @@ class SystemEventsController < ApplicationController
   end
 
   helper_method :total_events_length
-  def total_events_length()
+  def total_events_length
     @system.tasks.length
   end
 end
