@@ -13,11 +13,10 @@
 
 describe('Controller: ProductsController', function() {
     var $scope,
-        $state,
         Nutupane,
         Routes;
 
-    beforeEach(module('Bastion.products'));
+    beforeEach(module('Bastion.products', 'Bastion.test-mocks'));
 
     beforeEach(function() {
         Nutupane = function() {
@@ -29,15 +28,12 @@ describe('Controller: ProductsController', function() {
         Product = {};
     });
 
-    beforeEach(inject(function($controller, $rootScope, _$state_) {
+    beforeEach(inject(function($controller, $rootScope, $location) {
         $scope = $rootScope.$new();
-
-        $state = _$state_;
-        spyOn($state, 'transitionTo');
 
         $controller('ProductsController', {
             $scope: $scope,
-            $state: $state,
+            $location: $location,
             Nutupane: Nutupane,
             Product: Product,
             CurrentOrganization: 'CurrentOrganization'
@@ -48,22 +44,18 @@ describe('Controller: ProductsController', function() {
         expect($scope.table).toBeDefined();
     });
 
-    it('provides a method to transition states', function() {
-        $scope.transitionTo('products.index');
-
-        expect($state.transitionTo).toHaveBeenCalledWith('products.index');
-    });
-
     it('sets the closeItem function to transition to the index page', function() {
+        spyOn($scope, "transitionTo");
         $scope.table.closeItem();
 
-        expect($state.transitionTo).toHaveBeenCalledWith('products.index');
+        expect($scope.transitionTo).toHaveBeenCalledWith('products.index');
     });
 
     it('sets the openDetails function to transition to a details page', function() {
+        spyOn($scope, "transitionTo");
         $scope.table.openDetails({ id: 1 });
 
-        expect($state.transitionTo).toHaveBeenCalledWith('products.details.info', { productId: 1 });
+        expect($scope.transitionTo).toHaveBeenCalledWith('products.details.info', { productId: 1 });
     });
 });
 

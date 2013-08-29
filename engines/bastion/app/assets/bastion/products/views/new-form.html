@@ -1,12 +1,5 @@
 <form name="productForm" class="form" novalidate>
 
-  <div class="flash_hud" ng-show="false">
-    <a class="control" title="Close"></a>
-    <ul class="flash_messages error">
-      <li>{{ "Errors" | i18n }}</li>
-    </ul>
-  </div>
-
   <div class="control-group required" ng-class="{ 'error' : productForm.name.$invalid }">
     <div class="label">
       <label for="name">{{ "Name" | i18n }}</label>
@@ -35,7 +28,7 @@
     </div>
   </div>
 
-  <div class="control-group required" ng-class="{ 'error' : productForm.provider.$invalid }">
+  <div class="control-group required" ng-class="{ 'error' : productForm.provider_id.$invalid }">
     <div class="label">
       <label class="required" for="provider_id">{{ "Provider" | i18n }}</label>
     </div>
@@ -46,7 +39,7 @@
               ng-model="product.provider_id"
               ng-options="provider.id as provider.name for provider in providers">
       </select>
-      <a href="" ng-click="transitionTo('products.new.provider')">+ New Provider</a>
+      <a href="" ng-click="transitionTo('products.new.provider')">{{ "+ New Provider" | i18n }}</a>
       <span class="note error" ng-show="productForm.provider_id.$invalid">
         <ul>
           <li ng-repeat="message in productForm.provider_id.$error.messages">{{ message }}</li>

@@ -16,8 +16,6 @@
  * @name  Katello.providers.factory:Provider
  *
  * @requires $resource
- * @requires $q
- * @requires Routes
  *
  * @description
  *   Provides a $resource for product or list of providers.

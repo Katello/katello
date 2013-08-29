@@ -16,9 +16,10 @@
  * @name  Bastion.products.controller:ProductsController
  *
  * @requires $scope
- * @requires $state
+ * @requires $location
  * @requires Nutupane
- * @requires Routes
+ * @requires Product
+ * @requires CurrentOrganization
  *
  * @description
  *   Provides the functionality specific to Products for use with the Nutupane UI pattern.
@@ -26,8 +27,8 @@
  *   within the table.
  */
 angular.module('Bastion.products').controller('ProductsController',
-    ['$scope', '$state', 'Nutupane', 'Product', 'CurrentOrganization', '$location',
-    function($scope, $state, Nutupane, Product, CurrentOrganization, $location) {
+    ['$scope', '$location', 'Nutupane', 'Product', 'CurrentOrganization',
+    function($scope, $location, Nutupane, Product, CurrentOrganization) {
 
         var params = {
             'organization_id':  CurrentOrganization,
@@ -42,15 +43,11 @@ angular.module('Bastion.products').controller('ProductsController',
         $scope.table = nutupane.table;
 
         $scope.table.openDetails = function (product) {
-            $state.transitionTo('products.details.info', {productId: product.id});
-        };
-
-        $scope.transitionTo = function(state) {
-            $state.transitionTo(state);
+            $scope.transitionTo('products.details.info', {productId: product.id});
         };
 
         $scope.table.closeItem = function() {
-            $state.transitionTo('products.index');
+            $scope.transitionTo('products.index');
         };
 
     }]

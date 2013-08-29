@@ -117,25 +117,6 @@ describe('Directive: alchTable', function() {
             expect(row.selected).toEqual(false);
         });
 
-        it("should set the visible columns to the first", function() {
-            var col1 = { show: true },
-                col2 = { show: true },
-                row = {
-                    selected: true,
-                    cells: [{ show: true }, { show: true }]
-                },
-                tableHead = { columns: [col1, col2] };
-
-            tableController.addRow(row);
-            tableController.addHeader(tableHead);
-            scope.table.reduceColumns(0);
-
-            expect(col1.show).toEqual(true);
-            expect(col2.show).toEqual(false);
-            expect(row.cells[0].show).toEqual(true);
-            expect(row.cells[1].show).toEqual(false);
-        });
-
     });
 
     describe('alchTable directive', function() {

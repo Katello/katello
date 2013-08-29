@@ -16,7 +16,7 @@
  * @name  Bastion.repositories
  *
  * @description
- *   Module for product related functionality.
+ *   Module for repository related functionality.
  */
 angular.module('Bastion.repositories', [
     'ngResource',

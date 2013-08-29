@@ -24,32 +24,22 @@
  *   Defines the columns to display and the transform function for how to generate each row
  *   within the table.
  */
-angular.module('Bastion.products').controller('NewProviderController',
-    ['$scope', '$state', 'Provider', 'CurrentOrganization',
-    function($scope, $state, Provider, CurrentOrganization) {
+angular.module('Bastion.providers').controller('NewProviderController',
+    ['$scope', 'Provider', 'CurrentOrganization',
+    function($scope, Provider, CurrentOrganization) {
 
         $scope.provider = new Provider({'organization_id': CurrentOrganization});
 
         $scope.save = function(provider) {
-            resetForm();
             provider.$save(success, error);
         };
 
-        function resetForm() {
-            angular.forEach($scope.provider, function(value, key) {
-                if ($scope.providerForm.hasOwnProperty(key)) {
-                    $scope.providerForm[key].$setValidity('', true);
-                }
-            });
-        }
-
         function success() {
-            $state.transitionTo('products.new.form');
+            $scope.product['provider_id'] = $scope.provider.id;
+            $scope.transitionTo('products.new.form');
         }
 
         function error(response) {
-            $scope.providerForm.$setDirty();
-
             angular.forEach(response.data.errors, function(errors, field) {
                 $scope.providerForm[field].$setValidity('', false);
                 $scope.providerForm[field].$error.messages = errors;

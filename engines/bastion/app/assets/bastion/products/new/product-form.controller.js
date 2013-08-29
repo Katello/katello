@@ -30,7 +30,7 @@ angular.module('Bastion.products').controller('ProductFormController',
     ['$scope', '$state', '$http', 'Product', 'Provider', 'CurrentOrganization',
     function($scope, $state, $http, Product, Provider, CurrentOrganization) {
 
-        $scope.product = $scope.$parent.product || new Product();
+        $scope.product = $scope.product || new Product();
 
         $scope.$on('$stateChangeSuccess', function(event, toState) {
             if (toState.name === 'products.new.form') {
@@ -50,6 +50,10 @@ angular.module('Bastion.products').controller('ProductFormController',
             })
             .success(function(response) {
                 $scope.product.label = response;
+            })
+            .error(function(response) {
+                $scope.productForm.label.$setValidity('', false);
+                $scope.productForm.label.$error.messages = response.errors;
             });
         });
 

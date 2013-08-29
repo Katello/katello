@@ -1,4 +1,4 @@
-object @provider
+object @resource
 
 attributes :id
 attributes :name

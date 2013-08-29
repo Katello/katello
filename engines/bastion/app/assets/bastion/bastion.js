@@ -78,7 +78,7 @@
 //= require_tree "./products"
 
 //= require "bastion/providers/providers.module.js"
-//= require "bastion/providers/provider.factory.js"
+//= require_tree "./providers"
 
 //= require "bastion/repositories/repositories.module.js"
 //= require_tree "./repositories"

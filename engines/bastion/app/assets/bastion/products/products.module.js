@@ -23,7 +23,8 @@ angular.module('Bastion.products', [
     'alchemy',
     'alch-templates',
     'ui.compat',
-    'Bastion.widgets'
+    'Bastion.widgets',
+    'Bastion.providers'
 ]);
 
 /**
@@ -73,7 +74,7 @@ angular.module('Bastion.products').config(['$stateProvider', function($stateProv
         url: '/products/new/provider',
         collapsed: true,
         controller: 'NewProviderController',
-        templateUrl: 'products/views/new-provider.html'
+        templateUrl: 'providers/views/new.html'
     })
 
     .state("products.details", {
@@ -110,10 +111,3 @@ angular.module('Bastion.products').config(['$stateProvider', function($stateProv
     });
 
 }]);
-
-angular.module('Bastion.products').run(['$rootScope', '$state', '$stateParams',
-    function ($rootScope, $state, $stateParams) {
-        $rootScope.$state = $state;
-        $rootScope.$stateParams = $stateParams;
-    }
-]);

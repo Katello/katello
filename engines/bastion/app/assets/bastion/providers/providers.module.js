@@ -16,7 +16,7 @@
  * @name  Bastion.providers
  *
  * @description
- *   Module for product related functionality.
+ *   Module for provider related functionality.
  */
 angular.module('Bastion.providers', [
     'ngResource',

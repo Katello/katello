@@ -1,4 +1,5 @@
-<div>
+<section>
+
   <header>
     <h5>
       <i class="icon-backward clickable" ng-click="transitionTo('products.new.form')"></i>
@@ -6,16 +7,22 @@
     </h5>
   </header>
 
-  <form name="providerForm" class="form">
+  <form name="providerForm" class="form" novalidate>
 
-    <div class="control-group" ng-class="{ 'error' : providerForm.name.$invalid }">
+    <div class="control-group required" ng-class="{ 'error' : providerForm.name.$invalid }">
       <div class="label">
         <label class="required" for="name">{{ "Name" | i18n }}</label>
       </div>
       <div class="input">
-        <input ng-model="provider.name" name="name" type="text" tabindex=1>
+        <input ng-model="provider.name"
+               name="name"
+               type="text"
+               tabindex="1"
+               required>
         <span class="note error" ng-show="providerForm.name.$invalid">
-          <ul<li ng-repeat="message in providerForm.name.$error.messages">{{ message }}</li></ul>
+          <ul>
+            <li ng-repeat="message in providerForm.name.$error.messages">{{ message }}</li>
+          </ul>
         </span>
       </div>
     </div>
@@ -28,4 +35,5 @@
     </div>
 
   </form>
-</div>
+
+</section>
