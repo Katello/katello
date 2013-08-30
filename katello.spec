@@ -25,7 +25,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        1.4.3
+Version:        1.4.4
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -910,6 +910,488 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Fri Aug 30 2013 Partha Aji <paji@redhat.com> 1.4.4-1
+- Merge pull request #2856 from daviddavis/temp/20130830095521
+  (daviddavis@redhat.com)
+- ElasticSearch: Fixing conversion of filters into array
+  (daviddavis@redhat.com)
+- Merge pull request #2853 from iNecas/apipie-fix-params (inecas@redhat.com)
+- Merge pull request #2846 from Katello/bkearney/998001
+  (bryan.kearney@gmail.com)
+- Merge pull request #2855 from ehelms/subscriptions-fix (ericdhelms@gmail.com)
+- Merge pull request #2851 from daviddavis/temp/20130829190519
+  (daviddavis@redhat.com)
+- Subscriptions: Passing the total_count directly from the ES search to the
+  panel render function. (ericdhelms@gmail.com)
+- Merge pull request #2849 from waldenraines/fix-subscriptions
+  (walden@redhat.com)
+- Fix apidoc generation (inecas@redhat.com)
+- Quick fix to get katello building on F19 (paji@redhat.com)
+- Merge pull request #2848 from daviddavis/temp/20130829161430
+  (daviddavis@redhat.com)
+- Rubocop: Fixing a couple rules and turning them on (daviddavis@redhat.com)
+- Merge pull request #2847 from daviddavis/rubocop-controllers
+  (daviddavis@redhat.com)
+- Merge pull request #2850 from parthaa/spec-fc18 (parthaa@gmail.com)
+- Removed remanants of test.rb from katello spec (paji@redhat.com)
+- Nutupane: fix 500 on organization subscription controller results.
+  (walden@redhat.com)
+- Travis: Running lint test first so it can fail fast (daviddavis@redhat.com)
+- Rubocop: fixed controllers except for API controllers (daviddavis@redhat.com)
+- Merge pull request #2832 from komidore64/default-info-html-characters
+  (komidore64@gmail.com)
+- 998001: Put the help message back in (bkearney@redhat.com)
+- Merge pull request #2844 from thomasmckay/1002547-dist-cap
+  (thomasmckay@redhat.com)
+- Merge pull request #2843 from ehelms/bastion-transition-to
+  (ericdhelms@gmail.com)
+- 1002547-dist-cap - updated capabilities for candlepin-0.8.23
+  (thomasmckay@redhat.com)
+- Bastion: Attaching $state transitionTo to the rootScope.
+  (ericdhelms@gmail.com)
+- Merge pull request #2841 from daviddavis/temp/20130829091952
+  (daviddavis@redhat.com)
+- adding some tests for html characters in the keyname for default_info
+  (komidore64@gmail.com)
+- Merge pull request #2828 from waldenraines/nutupane-custom-info
+  (walden@redhat.com)
+- Rubocop: Checking engines directory (daviddavis@redhat.com)
+- fixing fort style (jsherril@redhat.com)
+- Bastion: adding CRUD operations for custom info to systems page.
+  (walden@redhat.com)
+- Merge pull request #2839 from daviddavis/temp/20130829075020
+  (daviddavis@redhat.com)
+- Merge pull request #2836 from komidore64/html-notifications-default-info
+  (komidore64@gmail.com)
+- Rubocop: Relaxing checks (daviddavis@redhat.com)
+- Merge pull request #2833 from thomasmckay/999075-dist-events
+  (thomasmckay@redhat.com)
+- 1001173 - User notification message should escape html characters from custom
+  info (komidore64@gmail.com)
+- 999075-dist-events - fix bug and update method for updating distributor tasks
+  (thomasmckay@redhat.com)
+- Removing minitest from the katello rpm spec (paji@redhat.com)
+- 1001199 - Default Custom Info: System and Distributor default custom info
+  does not delete if the custom info has html characters (komidore64@gmail.com)
+- Merge remote-tracking branch 'upstream/master' into rubocop
+  (daviddavis@redhat.com)
+- Bastion: Fixing reference to underscore 1.3.1 (daviddavis@redhat.com)
+- Merge remote-tracking branch 'upstream/master' into rubocop
+  (daviddavis@redhat.com)
+- Merge pull request #2827 from waldenraines/source-test-fixes
+  (walden@redhat.com)
+- Merge remote-tracking branch 'upstream/master' into rubocop
+  (daviddavis@redhat.com)
+- Merge pull request #2799 from jlsherrill/system-events-pane
+  (jlsherrill@gmail.com)
+- Merge pull request #2814 from ehelms/underscore-update (ericdhelms@gmail.com)
+- Rubocop: Fixing config directory (daviddavis@redhat.com)
+- Rubocop: Fixing db directory problems (daviddavis@redhat.com)
+- Merge pull request #2819 from ehelms/spec-fix (ericdhelms@gmail.com)
+- db:seed - i messed up the regex matching (komidore64@gmail.com)
+- Merge pull request #2822 from komidore64/auto-attach-single-system-
+  notification (komidore64@gmail.com)
+- Fixing some source code test failures. (walden@redhat.com)
+- Fixing 'and' in puppet module controller (daviddavis@redhat.com)
+- Rubocop: Moving rubocop to development gem group (daviddavis@redhat.com)
+- adding system events nutupane (jsherril@redhat.com)
+- Rubocop: Fixing problems in the lib directory (daviddavis@redhat.com)
+- Rubocop: Reformatting rubocop call in Travis script (daviddavis@redhat.com)
+- source cleanup - looks like i missed an 'and' (komidore64@gmail.com)
+- formatting and indentation cleanup (komidore64@gmail.com)
+- 995623 - User notification not displayed after running auto attach system
+  (komidore64@gmail.com)
+- Merge pull request #2818 from ehelms/systems-fix (ericdhelms@gmail.com)
+- Rubocop: Updating config to exclude files we haven't fixed yet
+  (daviddavis@redhat.com)
+- Spec: Fixing filename change in spec. (ericdhelms@gmail.com)
+- System: Fixes for broken nutupane page. (ericdhelms@gmail.com)
+- Installing rubocop manually (daviddavis@redhat.com)
+- Merge pull request #2817 from parthaa/comps (parthaa@gmail.com)
+- Added a missing comps dependency (paji@redhat.com)
+- Merge pull request #2809 from daviddavis/temp/20130826093024
+  (daviddavis@redhat.com)
+- Temporarily turning off more rules in rubocop (daviddavis@redhat.com)
+- Fixing style problems in script directory (daviddavis@redhat.com)
+- Fixing some code that causes rubocop to error out (daviddavis@redhat.com)
+- Adding rubocop gem for code checking (daviddavis@redhat.com)
+- Alchemy: Updating version of Alchemy and resulting underscorejs upgrade.
+  (ehelms@redhat.com)
+- Merge pull request #2813 from komidore64/org-auto-attach-one-job
+  (komidore64@gmail.com)
+- Merge pull request #2791 from ehelms/product-api-v2 (ericdhelms@gmail.com)
+- Merge pull request #2795 from bbuckingham/puppet-content-search
+  (bbuckingham@redhat.com)
+- Merge pull request #2802 from komidore64/machine-type (komidore64@gmail.com)
+- Merge pull request #2748 from komidore64/source-code-tester-er
+  (komidore64@gmail.com)
+- content search: address several PR comments (bbuckingham@redhat.com)
+- puppet: update the routes for puppet modules controller
+  (bbuckingham@redhat.com)
+- content search: several cleanups based on PR comments
+  (bbuckingham@redhat.com)
+- content search: update helptip for puppet modules on browser box
+  (bbuckingham@redhat.com)
+- content search: fix [object object] error during hover on module
+  (bbuckingham@redhat.com)
+- content search - fix jshint error (bbuckingham@redhat.com)
+- puppet - content search updates to support puppet modules
+  (bbuckingham@redhat.com)
+- puppet - update content search to include puppet module counts
+  (bbuckingham@redhat.com)
+- Merge pull request #2803 from ehelms/bastion-readme (ericdhelms@gmail.com)
+- source cleanup - removing uneeded return statements (komidore64@gmail.com)
+- Merge pull request #2810 from jlsherrill/fix_product_indexing
+  (jlsherrill@gmail.com)
+- Puppet Modules: Creating API controller (daviddavis@redhat.com)
+- Bastion: Adding basic documentation for the Bastion engine.
+  (ericdhelms@gmail.com)
+- Products: Adding index and create V2 API for products and providers.
+  (ericdhelms@gmail.com)
+- Merge pull request #2808 from AdamSaleh/dash-haml (ericdhelms@gmail.com)
+- fixing product Elastic Search indexing (jsherril@redhat.com)
+- org auto-attach-all-systems - candlepin doesn't return a list anymore
+  (komidore64@gmail.com)
+- source cleanup - making tests happy (komidore64@gmail.com)
+- source cleanup - addressing PR comments (komidore64@gmail.com)
+- source cleanup - changing 'and' to '&&' (komidore64@gmail.com)
+- source cleanup - changing 'not' to '!' (komidore64@gmail.com)
+- source cleanup - changing 'or' to '||' (komidore64@gmail.com)
+- source_code_test - was getting false positives on :and and :or
+  (komidore64@gmail.com)
+- source_code_test - adding another check for the 'not' keyword
+  (komidore64@gmail.com)
+- source_code_test - forgot the semi-colon for JS (komidore64@gmail.com)
+- source_code_test - using `assert_empty` instead of `assert obj.empty?`
+  (komidore64@gmail.com)
+- source_code_test - searching the code for 'debugger' statements
+  (komidore64@gmail.com)
+- source_code_test - adding checks for 'and' and 'or' in boolean expressions
+  (komidore64@gmail.com)
+- source_code_test - want to use \z in regex instead of $
+  (komidore64@gmail.com)
+- 987954-distrib-capabilities - set proper capabilities
+  (thomasmckay@redhat.com)
+- broken indent on dashboard haml files (asaleh@localhost.localdomain)
+- Puppet Filtering: Fixing bug where nil filters not compacted
+  (daviddavis@redhat.com)
+- Puppet Filtering: Fixed bug where rules not getting saved
+  (daviddavis@redhat.com)
+- Puppet: Fixing find method (daviddavis@redhat.com)
+- Merge pull request #2805 from jlsherrill/nutupane_action
+  (jlsherrill@gmail.com)
+- allowing nutupane to call custom actions (jsherril@redhat.com)
+- Merge pull request #2798 from daviddavis/temp/20130822112800
+  (daviddavis@redhat.com)
+- Merge pull request #2796 from daviddavis/temp/20130822102823
+  (daviddavis@redhat.com)
+- Repository: Adding puppet_module_count json (daviddavis@redhat.com)
+- 879241 - [RFE] [cli] missing "Machine Type" in return of `system
+  subscriptions (komidore64@gmail.com)
+- Nutupane: adding read/write system groups to details page.
+  (walden@redhat.com)
+- Merge pull request #2778 from iNecas/bz/998541 (inecas@redhat.com)
+- Puppet Module: Fixing search for nil repoids (daviddavis@redhat.com)
+- Puppet Filtering: Created partial for version selector
+  (daviddavis@redhat.com)
+- Puppet Filtering: Changing field order to match puppet module naming
+  convention (daviddavis@redhat.com)
+- Puppet Filtering: Added autocomplete to name and author
+  (daviddavis@redhat.com)
+- Merge pull request #2794 from waldenraines/ff-fix (walden@redhat.com)
+- Nutupane: set application/json header for v2 api, fixes #2793.
+  (walden@redhat.com)
+- katello-reset-dbs - db:migrate:reset is acting unexpectedly
+  (komidore64@gmail.com)
+- Merge pull request #2776 from ehelms/bastion (walden@redhat.com)
+- Bastion: Adding readonly mode for systems info view. (ericdhelms@gmail.com)
+- Merge pull request #2787 from jlsherrill/node_spec (jlsherrill@gmail.com)
+- adding fort to the spec file (jsherril@redhat.com)
+- Merge pull request #2785 from komidore64/headpin-about-widgets
+  (komidore64@gmail.com)
+- Merge pull request #2769 from jlsherrill/multi-nodes (jlsherrill@gmail.com)
+- 999079 - layout of about page widgets broken (komidore64@gmail.com)
+- Bastion: Adding success and error handling for inline edit.
+  (ericdhelms@gmail.com)
+- Bastion: Adding new resources, re-factoring and updating inline edits.
+  (ehelms@redhat.com)
+- Merge pull request #2781 from komidore64/custom-info-html-still
+  (komidore64@gmail.com)
+- Merge pull request #2784 from jlsherrill/system_tasks (jlsherrill@gmail.com)
+- Merge pull request #2780 from daviddavis/puppet-filtering
+  (daviddavis@redhat.com)
+- cassette update (jsherril@redhat.com)
+- Adding model, api, cli for nodes (jsherril@redhat.com)
+- System task checking caused duplicate task (jsherril@redhat.com)
+- Content Views: Worked on filtering (daviddavis@redhat.com)
+- 997634-migrate-roles - set 'type' value appropriately
+  (thomasmckay@redhat.com)
+- 951231 - Systems Custom Information - Keyname and value should not accept
+  html characters < > / (komidore64@gmail.com)
+- Merge pull request #2772 from thomasmckay/proxy-compliance
+  (thomasmckay@redhat.com)
+- 998541 - use scl version of rake for cdn refresh (inecas@redhat.com)
+- comps - get gofer into comps (inecas@redhat.com)
+- Merge pull request #2775 from mccun934/add-signo-kt-debug (mmccune@gmail.com)
+- 998034 - include signo in the debug (mmccune@redhat.com)
+- Merge pull request #2767 from komidore64/api-version (komidore64@gmail.com)
+- Merge pull request #2773 from jlsherrill/spec_fix (jlsherrill@gmail.com)
+- allowing admin permission to be recreated (jsherril@redhat.com)
+- proxy-compliance - don't break on first entry (thomasmckay@redhat.com)
+- Upgrading tire to 0.6.0 to fix elastic search serialization issue.
+  (walden@redhat.com)
+- Merge pull request #2766 from daviddavis/temp/1376585973
+  (daviddavis@redhat.com)
+- Merge pull request #2771 from daviddavis/temp/1376599722
+  (daviddavis@redhat.com)
+- Fixing test stubs for publish_distributor (daviddavis@redhat.com)
+- Commenting out test for runcible 1.0.4 (daviddavis@redhat.com)
+- Puppet: Added check for puppet distributor (daviddavis@redhat.com)
+- Puppet: Making the distributor plugin code handle puppet
+  (daviddavis@redhat.com)
+- Removing empty files (daviddavis@redhat.com)
+- 906873 - /api/version says "Headpin" (komidore64@gmail.com)
+- Merge pull request #2764 from thomasmckay/996360-esx (thomasmckay@redhat.com)
+- Merge pull request #2768 from daviddavis/temp/1376593782
+  (daviddavis@redhat.com)
+- Merge pull request #2741 from waldenraines/refactor-nutupane
+  (walden@redhat.com)
+- 996360-esx - fixes for virt-who hypervisor w/ esx (thomasmckay@redhat.com)
+- Content Views: Fixing index_content typo (daviddavis@redhat.com)
+- Merge pull request #2762 from jlsherrill/new_runcible (jlsherrill@gmail.com)
+- Bastion: make nutupane use $resource and convert system subscriptions.
+  (walden@redhat.com)
+- Merge pull request #2760 from thomasmckay/995968 (thomasmckay@redhat.com)
+- Puppet: Adding in pulp-puppet-plugins package to comps
+  (daviddavis@redhat.com)
+- requiring specific runcible to prevent using new version
+  (jsherril@redhat.com)
+- Merge pull request #2761 from daviddavis/temp/20130814112859
+  (daviddavis@redhat.com)
+- Puppet: Adding dependencies for pulp puppet rpms (daviddavis@redhat.com)
+- 995968 - proper checking for system.guest bool value'
+  (thomasmckay@redhat.com)
+- Merge remote-tracking branch 'upstream/master' into puppet
+  (daviddavis@redhat.com)
+- Puppet: Added check for puppet_module.copy call (daviddavis@redhat.com)
+- Fixing pulp test failure (daviddavis@redhat.com)
+- Merge pull request #2755 from daviddavis/temp/20130813130056
+  (daviddavis@redhat.com)
+- Travis: Removing duplicate javascript job (daviddavis@redhat.com)
+- Puppet: Addressing more feedback from #2751 (daviddavis@redhat.com)
+- Merge pull request #2719 from jlsherrill/faster_publish
+  (jlsherrill@gmail.com)
+- fixing comps (jsherril@redhat.com)
+- styling fixes (jsherril@redhat.com)
+- spec test fix (jsherril@redhat.com)
+- Puppet: Addressing feedback from ehelms in #2751 (daviddavis@redhat.com)
+- Puppet: Adding tests and bringing puppet code up to date
+  (daviddavis@redhat.com)
+- 996247: copy po files into rpm for now (cduryee@redhat.com)
+- Merge pull request #2744 from ehelms/user-link (ericdhelms@gmail.com)
+- Navigation: Fixing broken link to the user's profile page.
+  (ehelms@redhat.com)
+- removing debugger statement (komidore64@gmail.com)
+- Merge pull request #2742 from komidore64/or-or (komidore64@gmail.com)
+- systems_controller - changing or to || (komidore64@gmail.com)
+- Nutupane: $compile cloned table to fix sort order, fixes #2738.
+  (walden@redhat.com)
+- Merge pull request #2724 from Katello/bastion (ericdhelms@gmail.com)
+- Merge remote-tracking branch 'upstream/master' into puppet
+  (daviddavis@redhat.com)
+- cassette update (jsherril@redhat.com)
+- small formatting fix (jsherril@redhat.com)
+- fixing test looking for distributors (jsherril@redhat.com)
+- updating spec for katello-pulp-plugins (jsherril@redhat.com)
+- Supporting yum_clone_distributor in pulp (jsherril@redhat.com)
+- Merge pull request #2734 from thomasmckay/release-version-cache
+  (thomasmckay@redhat.com)
+- release-version-cache - ajax fetch of release versions in headpin mode
+  (thomasmckay@redhat.com)
+- comps updates for upcoming changes (jsherril@redhat.com)
+- Merge pull request #2735 from ehelms/bastion-fix (walden@redhat.com)
+- Bastion: Fixing the use of rootURL after the removal of KT.config.
+  (ehelms@redhat.com)
+- Bastion: first pass at display of system subscription information.
+  (walden@redhat.com)
+- Merge pull request #2730 from daviddavis/fix-headpin-migration
+  (thomasmckay@redhat.com)
+- actkey-multiple - allow multiple of same sub to be added to activation key
+  (thomasmckay@redhat.com)
+- Fixing headpin migration (daviddavis@redhat.com)
+- Merge branch 'master' of https://github.com/Katello/katello into bastion-
+  merge (walden@redhat.com)
+- Bastion: Setting the version of karma. (ehelms@redhat.com)
+- fixing pulp auth for non-admin users (jsherril@redhat.com)
+- Merge pull request #2725 from jlsherrill/runcible_fix (jlsherrill@gmail.com)
+- fix for spec tests (jsherril@redhat.com)
+- Bunch of migration fixes (paji@redhat.com)
+- fixing pulp connection on Webrick (jsherril@redhat.com)
+- Merge pull request #2722 from iNecas/apipie-fix (inecas@redhat.com)
+- Merge branch 'master' of github.com:Katello/katello into bastion
+  (ehelms@redhat.com)
+- 977748 - fixed permission and empty installed products
+  (thomasmckay@redhat.com)
+- Fix apipie static generation on RPM build time (inecas@redhat.com)
+- Merging master pre-runcible-1.0.0 into puppet (daviddavis@redhat.com)
+- Merge pull request #2711 from daviddavis/temp/1375380575
+  (daviddavis@redhat.com)
+- cassette update (jsherril@redhat.com)
+- updating katello to use new runcible structure (jsherril@redhat.com)
+- Merge pull request #2718 from daviddavis/fix-repos-cv-migration
+  (daviddavis@redhat.com)
+- Merge pull request #2716 from komidore64/stupidly-long-default-info
+  (komidore64@gmail.com)
+- Fixing 20121112144229_repository_add_content_view.rb (daviddavis@redhat.com)
+- 977925 - default_info allows any length of text for keyname
+  (komidore64@gmail.com)
+- 915510 - Two validations for system name field (pgodhani@redhat.com)
+- Merge pull request #2707 from daviddavis/less-jobs-more-faster
+  (daviddavis@redhat.com)
+- Merge pull request #2713 from thomasmckay/headpin-envcv
+  (thomasmckay@redhat.com)
+- Merge pull request #2714 from daviddavis/temp/1375452448
+  (daviddavis@redhat.com)
+- Travis: Decreasing jobs from 4 to 2 (daviddavis@redhat.com)
+- headpin-envcv - always allow cv access in headpin mode
+  (thomasmckay@redhat.com)
+- Package Filtering: Fixing some javascript bugs (daviddavis@redhat.com)
+- Merge pull request #2692 from pgodhani/disable_button (pgodhani@redhat.com)
+- Merge pull request #2697 from komidore64/default-info-blank
+  (komidore64@gmail.com)
+- Merge pull request #2704 from komidore64/indentationo (komidore64@gmail.com)
+- Package Filters: Increasing the version field size (daviddavis@redhat.com)
+- Merge pull request #2710 from jlsherrill/sys_reg_fix (jlsherrill@gmail.com)
+- Merge pull request #2708 from thomasmckay/headpin-env
+  (thomasmckay@redhat.com)
+- headpin-env - removes checking env permissions in headpin
+  (thomasmckay@redhat.com)
+- fixing system registration (jsherril@redhat.com)
+- Merge pull request #2709 from thomasmckay/headpin-helptips
+  (thomasmckay@redhat.com)
+- jquery.jeditable.helpers.js - fixing indentation / multiple statements
+  (komidore64@gmail.com)
+- headpin-helptips - remove mention of env in headpin mode
+  (thomasmckay@redhat.com)
+- Content Views: Generating cassette for package filtering test
+  (daviddavis@redhat.com)
+- Package filtering: added a tooltip for version formats
+  (daviddavis@redhat.com)
+- Content Views: Worked on package version filtering (daviddavis@redhat.com)
+- Merge branch 'master' of https://github.com/Katello/katello into bastion-
+  merge (walden@redhat.com)
+- 965727 - Default system custom info page becomes blank after deleting a long
+  keyname (komidore64@gmail.com)
+- Bastion: allow switching system detail sub pages without reloading.
+  (walden@redhat.com)
+- 881623 - Visually Disable Button acting as if it is enabled and showing
+  messages (pgodhani@redhat.com)
+- Puppet: Exposing repo content_type in API (daviddavis@redhat.com)
+- Bastion: allow directives to work with ui-router, fixes #2638 and #2686.
+  (walden@redhat.com)
+- Merge branch 'master' of https://github.com/Katello/katello into bastion
+  (walden@redhat.com)
+- Fixed broken repo controller test (daviddavis@redhat.com)
+- Merge remote-tracking branch 'upstream/master' into puppet
+  (daviddavis@redhat.com)
+- Bastion: prevent autoloading too many results, fixes #2636.
+  (walden@redhat.com)
+- Bastion: Updating spec file to include bastion files. (ehelms@redhat.com)
+- Merge branch 'master' of github.com:Katello/katello into bastion
+  (ehelms@redhat.com)
+- puppet: gpg key is not needed/used for puppet repo, so hide it
+  (bbuckingham@redhat.com)
+- Bastion: preventing body scroll, fixes #2643. (walden@redhat.com)
+- Merge pull request #2630 from ehelms/bastion (ericdhelms@gmail.com)
+- Bastion: display system facts on system details page. (walden@redhat.com)
+- Bastion: Clean-up and re-organization to get assets precompile to work.
+  (ericdhelms@gmail.com)
+- Bastion: Minor CSS clean-up to fix older tupane pages. (ericdhelms@gmail.com)
+- puppet: initial suppport for new repo type (bbuckingham@redhat.com)
+- Load more rows if scroll height is equal to element height, fixes #2627.
+  (walden@redhat.com)
+- Bastion: load more results if there aren't enough to scroll, fixes #2613
+  (walden@redhat.com)
+- Bastion: Allowing the details container to scroll with a short window or long
+  content. (ericdhelms@gmail.com)
+- Merge pull request #2581 from ehelms/bastion (ericdhelms@gmail.com)
+- Merge pull request #2602 from waldenraines/bastion (walden@redhat.com)
+- Bastion: Adding release version fetching and setting for inline system edit.
+  (ehelms@redhat.com)
+- Bastion: Adding base inline edit directives and adding them to system
+  details. (ericdhelms@gmail.com)
+- Merge branch 'master' of https://github.com/Katello/katello into bastion
+  (walden@redhat.com)
+- Bastion: adding in table infinite scrolling directive. (walden@redhat.com)
+- Bastion - adding table sort to nutupane. (walden@redhat.com)
+- Merge pull request #2572 from ehelms/bastion (ericdhelms@gmail.com)
+- Bastion: Making System resource more robust to include a persistent
+  collection. (ericdhelms@gmail.com)
+- Bastion: improving the i18n filter and translate details page.
+  (walden@redhat.com)
+- Bastion: Moving bower assets, adding es5-shim and json3 persistently.
+  (ericdhelms@gmail.com)
+- Bastion: using a different view for collapsed table. (walden@redhat.com)
+- Bastion: Style updates and some code clean-up to handle items appearing
+  collapsed in the table. (ericdhelms@gmail.com)
+- Bastion: Updated available data and styling for systems details pane.
+  (ericdhelms@gmail.com)
+- Merge pull request #2554 from waldenraines/bastion-search (walden@redhat.com)
+- Bastion: closing details when search is performed. (walden@redhat.com)
+- Bastion: only append #/index to URL on the systems page. (walden@redhat.com)
+- Merge pull request #2553 from waldenraines/bastion (walden@redhat.com)
+- Merge pull request #2555 from ehelms/bastion (ericdhelms@gmail.com)
+- Bastion: Updates for font pathing from merging in master.
+  (ericdhelms@gmail.com)
+- Merge branch 'master' of github.com:Katello/katello into bastion
+  (ericdhelms@gmail.com)
+- Bastion: splitting out systems sub header (toolbar) into it's own view.
+  (walden@redhat.com)
+- Bastion: position panel contents instead of panel to fix scrolling.
+  (walden@redhat.com)
+- Bastion: first pass at system details display. (walden@redhat.com)
+- Bastion: removing unused template (ericdhelms@gmail.com)
+- Bastion: Adding table tests and re-factoring to account for testability.
+  (ericdhelms@gmail.com)
+- Merge pull request #2540 from waldenraines/bastion (walden@redhat.com)
+- Merge pull request #2541 from waldenraines/bastion-systems-tests
+  (walden@redhat.com)
+- Bastion: adding some systems controller tests. (walden@redhat.com)
+- Bastion: wiring up ui state machine for nutupane. (walden@redhat.com)
+- Bastion: Adding data structures for table entities to support show/hide and
+  collapse. (ericdhelms@gmail.com)
+- Bastion: Updating module names to Bastion. (ericdhelms@gmail.com)
+- Bastion: Adding docular documentation generator. (ehelms@redhat.com)
+- Bastion: Moving JS tests to be test/feature. (ehelms@redhat.com)
+- Bastion: Adding sticky headers and table body scrolling.
+  (ericdhelms@gmail.com)
+- Bastion: moving katello constants/global variables into single module.
+  (walden@redhat.com)
+- Bastion: adding user-sessions controller and tests. (walden@redhat.com)
+- Merge branch 'master' of https://github.com/Katello/katello into bastion
+  (walden@redhat.com)
+- Bastion: moving i18n filter and adding tests. (walden@redhat.com)
+- Bastion: moving over menu and writing tests. (walden@redhat.com)
+- Bastion: moving over org switcher and adding tests. (walden@redhat.com)
+- Bastion: re-enable jshint and fix jshint errors. (walden@redhat.com)
+- Bastion: Removing moved files leftover from merge. (ericdhelms@gmail.com)
+- Merge branch 'nutupane-bulk-actions' of github.com:Katello/katello into
+  bastion (ericdhelms@gmail.com)
+- Merge pull request #2455 from ehelms/bastion (ericdhelms@gmail.com)
+- Bastion: Adding HTML5 boilerplate based base template. (ericdhelms@gmail.com)
+- Bastion: Adding old tupane values as display columns. (ericdhelms@gmail.com)
+- Bastion: adding jshint to bastion and fixing non-nutupane files.
+  (walden@redhat.com)
+- Bastion: Removing alchemy-tables for stripped down approach to be re-factored
+  later. (ericdhelms@gmail.com)
+- Bastion: adding Gruntfile with karma unit testing. (walden@redhat.com)
+- Bastion - Moving assets to be organized by feature. (ehelms@redhat.com)
+- Bastion - Adding travis configuration script. (ehelms@redhat.com)
+- Bastion - Adding test infrastructure for engine JavaScript via Karma.
+  (ehelms@redhat.com)
+- Bastion - Initial work creating engine to hold new UI assets.
+  (ehelms@redhat.com)
+
 * Wed Jul 31 2013 Bryan Kearney <bkearney@redhat.com> 1.4.3-1
 - Merge pull request #2702 from thomasmckay/elasticsearch-doc
   (thomasmckay@redhat.com)
