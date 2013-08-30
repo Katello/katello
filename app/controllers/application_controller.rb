@@ -551,7 +551,7 @@ class ApplicationController < ActionController::Base
 
         sort { by sort[0], sort[1].to_s.downcase } unless !all_rows
 
-        filters = Array(filters)
+        filters = [filters] unless filters.is_a?(Array)
         filters.each { |i| filter :terms, i } if !filters.empty?
 
         size page_size if page_size > 0
