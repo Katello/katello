@@ -25,7 +25,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        1.4.4
+Version:        1.4.5
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -915,6 +915,11 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Fri Aug 30 2013 Partha Aji <paji@redhat.com> 1.4.5-1
+- Changed katello to use ruby-release  instead of ruby-abi for f19
+  (paji@redhat.com)
+- Added fedora 19 build target (paji@redhat.com)
+
 * Fri Aug 30 2013 Partha Aji <paji@redhat.com> 1.4.4-1
 - Merge pull request #2856 from daviddavis/temp/20130830095521
   (daviddavis@redhat.com)
