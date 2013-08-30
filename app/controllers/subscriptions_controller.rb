@@ -98,7 +98,8 @@ class SubscriptionsController < ApplicationController
     end
 
     items = Glue::ElasticSearch::Items.new(Pool)
-    subscriptions, _ = items.retrieve(query_string, offset, options)
+    subscriptions, total_count = items.retrieve(query_string, offset, options)
+    @panel_options[:total_count] = total_count
 
     render_panel_results(subscriptions, items.total_items, @panel_options)
   end
