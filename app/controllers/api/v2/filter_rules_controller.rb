@@ -41,7 +41,7 @@ class Api::V2::FilterRulesController < Api::V1::FilterRulesController
       "Delete a filter rule"
   param :content_view_definition_id, String, :desc => "id of the content view definition", :required => true
   param :filter_id, String, :desc => "name of the filter", :required => true
-  param :id, :String, :desc => "Id of the filter rule", :required => true
+  param :id, String, :desc => "Id of the filter rule", :required => true
   def destroy
     super
   end

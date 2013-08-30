@@ -27,12 +27,12 @@ class Api::V2::ApiController < Api::ApiController
   end
 
   def_param_group :search do
-    param :search, :string, :desc => "Search string"
+    param :search, String, :desc => "Search string"
     param :offset, :number, :desc => "Starting location to retrieve data from"
     param :limit,  :number, :desc => "Number of results to return"
     param :sort, Hash do
-      param :by, :string, :desc => "Field to sort the results on"
-      param :order, :string, :desc => "How to order the sorted results (e.g. ASC for ascending)"
+      param :by, String, :desc => "Field to sort the results on"
+      param :order, String, :desc => "How to order the sorted results (e.g. ASC for ascending)"
     end
   end
 
