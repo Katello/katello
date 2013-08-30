@@ -1,9 +1,5 @@
 %tr{:class=> [cycle("", "alt"), 'parent']}
-  %td
-    - if system.readable?
-      = link_to system.name, systems_url(:anchor => "/!=&panel=system_#{system.id}")
-    - else
-      = system.name
+  %td= system_link_helper(system.uuid)
   %td= system.distribution_name
   %td= format_time(system.created_time)
   %td= format_time(system.checkin_time)

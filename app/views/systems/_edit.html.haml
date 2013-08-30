@@ -185,10 +185,7 @@
                   %table#details_table
                     %tr
                       %td
-                        - if ActivationKey.readable? key.organization
-                          = link_to key.name, activation_keys_path(:anchor => "/!=&panel=activation_key_#{key.id}")
-                        - else
-                          = key[:name]
+                        = activation_key_link_helper(key)
 
         %h5 #{_("Host & Guest Info")}
         .control-group
