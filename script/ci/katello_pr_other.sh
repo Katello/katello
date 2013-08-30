@@ -39,3 +39,8 @@ echo ""
 echo "********* Testing Asset Precompile ****************"
 bundle exec rake assets:precompile || exit 1
 echo "Asset precompile works."
+
+echo ""
+echo "********* Testing Apipie Documentation ****************"
+RAILS_ENV=build bundle exec rake apipie:static apipie:cache --trace || exit 1
+echo "Apipie documentation works."
