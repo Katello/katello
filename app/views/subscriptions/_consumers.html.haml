@@ -16,7 +16,7 @@
             - cycle_class = cycle("", "alt")
             %tr{:class => cycle_class}
               %td
-                = subscriptions_system_link_helper system.uuid
+                = system_link_helper system.uuid
 
     - reset_cycle
     %table#actkeys_table
@@ -32,7 +32,7 @@
             - cycle_class = cycle("", "alt")
             %tr{:class => cycle_class}
               %td
-                = subscriptions_activation_key_link_helper key
+                = activation_key_link_helper key
 
     - reset_cycle
     %table#distributors_table
@@ -48,6 +48,6 @@
             - cycle_class = cycle("", "alt")
             %tr{:class => cycle_class}
               %td
-                = subscriptions_distributor_link_helper distributor
+                = distributor_link_helper distributor
 
 = render :template => "layouts/tupane_layout"
