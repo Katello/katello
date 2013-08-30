@@ -123,7 +123,12 @@ Requires:       lsof
 Requires:       redhat-logos >= 60.0.14
 %endif
 
+%if 0%{?fedora} > 18
+Requires:       %{?scl_prefix}ruby(release)
+%else
 Requires: %{?scl_prefix}ruby(abi) = 1.9.1
+%endif
+
 Requires: %{?scl_prefix}ruby
 
 # <workaround> for 714167 - undeclared dependencies (regin & multimap)
