@@ -19,7 +19,7 @@ angular.module('alchemy')
             controller: 'AlchTableController'
         };
     }])
-    .controller('AlchTableController', ['$scope', '$element', function($scope, $element) {
+    .controller('AlchTableController', ['$scope', function($scope) {
         var rows = $scope.rows = [],
             headers = $scope.headers = [];
 
@@ -62,52 +62,6 @@ angular.module('alchemy')
             });
         };
 
-        $scope.table.reduceColumns = function(index) {
-            angular.forEach(rows, function(row) {
-                angular.forEach(row.cells, function(cell, cellIndex) {
-                    if (index !== cellIndex) {
-                        cell.show = false;
-                    }
-                });
-            });
-
-            angular.forEach(headers, function(header) {
-                angular.forEach(header.columns, function(column, columnIndex) {
-                    if (columnIndex !== index) {
-                        column.show = false;
-                    }
-                });
-            });
-
-            $scope.shrinkTable(true);
-        };
-
-        $scope.table.showColumns = function() {
-            angular.forEach(rows, function(row) {
-                angular.forEach(row.cells, function(cell) {
-                    cell.show = true;
-                });
-            });
-            angular.forEach(headers, function(header) {
-                angular.forEach(header.columns, function(column) {
-                    column.show = true;
-                });
-            });
-
-            $scope.shrinkTable(false);
-        };
-
-        $scope.shrinkTable = function(shrink) {
-            if (shrink) {
-                //$element.addClass('table-reduced');
-                //angular.element($element.find('table')[1]).addClass('table-full');
-                $element.find('[alch-container-scroll]').addClass('table-full');
-            } else {
-                $element.removeClass('table-reduced');
-                angular.element($element.find('table')[1]).removeClass('table-full');
-                $element.find('[alch-table-scroll]').removeClass('table-reduced');
-            }
-        };
     }])
     .directive('alchTableHead', [function() {
         var rowSelectTemplate = '<th class="row-select">' +

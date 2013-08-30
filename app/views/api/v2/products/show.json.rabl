@@ -1,4 +1,4 @@
-object @product
+object @resource
 
 attributes :cp_id => :id
 attributes :name, :label, :description
