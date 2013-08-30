@@ -1,0 +1,39 @@
+<div>
+  <div class="nutupane-titlebar">
+    <h1 class="nutupane-title">{{ "Products" }}</h1>
+  </div>
+  <div class="nutupane-actionbar">
+    <div class="form">
+      <input type="text"
+             class="input input-search"
+             placeholder="{{ 'Search...' | i18n }}"
+             ng-model="table.searchTerm"
+             on-enter="table.search(table.searchTerm)">
+      <span class="result-count">
+        {{ "Showing %offset of %subtotal (%total Total) Products" | i18n:{offset: table.resource.offset, subtotal: table.resource.subtotal, total: table.resource.total} }}
+      </span>
+    </div>
+    <div class="nutupane-actions fr">
+      <button class="btn btn-primary" ng-click="transitionTo('products.new.form')">
+        <i class="icon-plus"></i>
+        {{ "New Product" | i18n }}
+      </button>
+    </div>
+    <div class="fr select-action">
+      <span>{{ "%selected Selected" | i18n:{selected: table.numSelected} }}</span>
+      <span>|</span>
+      <a class="deselect-action"
+         ng-class="{ 'disabled-link' : table.numSelected == 0 }"
+         ng-click="table.selectAll(false)">
+        {{ "Deselect All" | i18n }}
+      </a>
+    </div>
+  </div>
+
+  <div nutupane-table ng-class="{'table-reduced': $root.$state.current.collapsed}">
+    <div alch-container-scroll control-width="table" alch-infinite-scroll="table.nextPage()">
+      <div ui-view="table"></div>
+    </div>
+  </div>
+  <span class="action-panel" ui-view="action-panel"></span>
+</div>

@@ -37,10 +37,7 @@
 
 //= require "bastion/bastion.module"
 
-//= require "bastion/incubator/alch-table.directive"
-//= require "bastion/incubator/alch-container-scroll.directive"
-//= require "bastion/incubator/alch-infinite-scroll.directive"
-//= require "bastion/incubator/alch-edit.directive"
+//= require_tree "./incubator"
 
 //= require "bastion/incubator/format/alch-format.module.js"
 //= require "bastion/incubator/format/array-to-string.filter.js"
@@ -76,3 +73,12 @@
 
 //= require "bastion/environments/environments.module"
 //= require "bastion/environments/environment.factory"
+
+//= require "bastion/products/products.module.js"
+//= require_tree "./products"
+
+//= require "bastion/providers/providers.module.js"
+//= require_tree "./providers"
+
+//= require "bastion/repositories/repositories.module.js"
+//= require_tree "./repositories"

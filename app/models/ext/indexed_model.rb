@@ -15,8 +15,6 @@ module Ext::IndexedModel
   def self.included(base)
     base.class_eval do
 
-      after_save :refresh_index
-
       cattr_accessor :class_index_options
       def self.display_attributes
         self.class_index_options[:display_attrs].sort{|a,b| a.to_s <=> b.to_s}
@@ -37,6 +35,8 @@ module Ext::IndexedModel
         def self.index_import list
           self.index.import(list)
         end
+
+        after_save :refresh_index
 
       else
         #stub mapping

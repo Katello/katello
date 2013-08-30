@@ -1,0 +1,20 @@
+<table alch-table="table" class="table table-striped" ng-class="{'table-mask': table.working}">
+  <thead>
+    <tr alch-table-head row-select>
+      <th alch-table-column="name" sortable>{{ "Name" | i18n }}</th>
+      <th alch-table-column="provider" sortable>{{ "Provider" | i18n }}</th>
+      <th alch-table-column="organization" sortable>{{ "Organization" | i18n }}</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr alch-table-row ng-repeat="product in table.rows" row-select>
+      <td alch-table-cell>
+        <a>{{ product.name }}</a>
+        <i class="icon-chevron-right selected-icon" ng-show="product.selected"></i>
+      </td>
+      <td alch-table-cell>{{ product.provider.name }}</td>
+      <td alch-table-cell>{{ product.organization.name }}</td>
+    </tr>
+  </tbody>
+</table>

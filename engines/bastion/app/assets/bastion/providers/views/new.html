@@ -1,0 +1,39 @@
+<section>
+
+  <header>
+    <h5>
+      <i class="icon-backward clickable" ng-click="transitionTo('products.new.form')"></i>
+      {{ "Add New Provider" }}
+    </h5>
+  </header>
+
+  <form name="providerForm" class="form" novalidate>
+
+    <div class="control-group required" ng-class="{ 'error' : providerForm.name.$invalid }">
+      <div class="label">
+        <label class="required" for="name">{{ "Name" | i18n }}</label>
+      </div>
+      <div class="input">
+        <input ng-model="provider.name"
+               name="name"
+               type="text"
+               tabindex="1"
+               required>
+        <span class="note error" ng-show="providerForm.name.$invalid">
+          <ul>
+            <li ng-repeat="message in providerForm.name.$error.messages">{{ message }}</li>
+          </ul>
+        </span>
+      </div>
+    </div>
+
+    <div class="control-group buttons">
+      <div class="input">
+        <button ng-click="transitionTo('products.new.form')">{{ "Cancel" | i18n }}</button>
+        <button ng-click="save(provider)" class="btn-primary">{{ "Create" | i18n }}</button>
+      </div>
+    </div>
+
+  </form>
+
+</section>
