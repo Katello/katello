@@ -151,12 +151,12 @@ module Katello
     def build_root_appender(options)
       name = "#{options[:prefix]}joined"
       case root_configuration[:type]
-        when 'syslog'
-          build_syslog_appender(name, options)
-        when 'file'
-          build_file_appender(name, options)
-        else
-          raise 'unsupported logger type, please choose syslog or file'
+      when 'syslog'
+        build_syslog_appender(name, options)
+      when 'file'
+        build_file_appender(name, options)
+      else
+        raise 'unsupported logger type, please choose syslog or file'
       end
     end
 
