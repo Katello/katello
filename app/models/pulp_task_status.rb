@@ -27,23 +27,23 @@ class PulpTaskStatus < TaskStatus
     self.result[:errors][0] if self.error? && self.result[:errors]
   end
 
-  def self.wait_for_tasks async_tasks
+  def self.wait_for_tasks(async_tasks)
     async_tasks = async_tasks.collect do |t|
       PulpTaskStatus.using_pulp_task(t)
     end
 
     timeout_count = 0
-    while true
-       begin
-          break  if !any_task_running(async_tasks)
-          timeout_count = 0
-       rescue RestClient::RequestTimeout => e
-          timeout_count += 1
-          Rails.logger.error "Timeout in pulp occurred: #{timeout_count}"
-          raise e if timeout_count >= 10 #10 timeouts in a row, lets bail
-          sleep 50 #if we got a timeout, lets backoff and let it catchup
-       end
-       sleep 15
+    loop do
+      begin
+        break if !any_task_running(async_tasks)
+        timeout_count = 0
+      rescue RestClient::RequestTimeout => e
+        timeout_count += 1
+        Rails.logger.error "Timeout in pulp occurred: #{timeout_count}"
+        raise e if timeout_count >= 10 #10 timeouts in a row, lets bail
+        sleep 50 #if we got a timeout, lets backoff and let it catchup
+      end
+      sleep 15
     end
     async_tasks
   end
@@ -76,7 +76,7 @@ class PulpTaskStatus < TaskStatus
     task_status
   end
 
-  def self.refresh task_status
+  def self.refresh(task_status)
     pulp_task = Katello.pulp_server.resources.task.poll(task_status.uuid)
 
     self.dump_state(pulp_task, task_status)
@@ -87,7 +87,7 @@ class PulpTaskStatus < TaskStatus
   protected
 
   def self.any_task_running(async_tasks)
-    for t in async_tasks
+    async_tasks.each do |t|
       t.refresh
       sleep 0.5 # do not overload backend engines
       if !t.finished?

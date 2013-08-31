@@ -75,8 +75,8 @@ class CustomInfo < ActiveRecord::Base
     "#{self.keyname}: #{self.value.nil? ? _("NOT-SPECIFIED") : self.value}"
   end
 
-  def <=>(obj)
-    return self.keyname <=> obj.keyname
+  def <=>(other)
+    return self.keyname <=> other.keyname
   end
 
   private

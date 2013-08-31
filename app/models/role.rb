@@ -78,7 +78,7 @@ class Role < ActiveRecord::Base
     nil
   end
 
-  def self.make_readonly_role name, organization = nil
+  def self.make_readonly_role(name, organization = nil)
     #nil for organization implies all orgs
     role = Role.find_or_create_by_name(
             :name => name, :description => 'Read only role.')
@@ -147,12 +147,12 @@ class Role < ActiveRecord::Base
   def i18n_name
     if locked
       case name
-        when "Administrator"
-          _("Administrator")
-        when "Read Everything"
-          _("Read Everything")
-        else
-          name
+      when "Administrator"
+        _("Administrator")
+      when "Read Everything"
+        _("Read Everything")
+      else
+        name
       end
     else
       name
@@ -162,12 +162,12 @@ class Role < ActiveRecord::Base
   def i18n_description
     if locked
       case description
-        when "Super administrator with all access."
-          _("Super administrator with all access.")
-        when "Read only role."
-          _("Read only role.")
-        else
-          description
+      when "Super administrator with all access."
+        _("Super administrator with all access.")
+      when "Read only role."
+        _("Read only role.")
+      else
+        description
       end
     else
       description
@@ -176,7 +176,7 @@ class Role < ActiveRecord::Base
 
   private
 
-  def super_admin_check user
+  def super_admin_check(user)
     if superadmin? && users.length == 1
       message = _("Cannot dissociate user '%{user}' from '%{role}' role. Need at least one user in the '%{role}' role.") % {:user => user.username, :role => name}
       errors[:base] << message

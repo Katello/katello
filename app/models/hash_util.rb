@@ -18,7 +18,7 @@ class HashUtil
       begin
         # If we got back null lets assign the default
         return hash[params[0]] || default
-      rescue => e
+      rescue
         # If we errored out trying to fetch the value we return
         # default value.
         return default

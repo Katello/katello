@@ -15,7 +15,7 @@ class UserNotice < ActiveRecord::Base
   belongs_to :user
   belongs_to :notice
 
-  def check_permissions operation
+  def check_permissions(operation)
     # anybody can create user_notice relationships
     return true if operation == :create
     # only notice owner can update or destroy

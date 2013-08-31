@@ -29,7 +29,7 @@ class Distributor < ActiveRecord::Base
 
   has_many :task_statuses, :as => :task_owner, :dependent => :destroy
   has_many :custom_info, :as => :informable, :dependent => :destroy
-  belongs_to :content_view # TODO may be dead relation
+  belongs_to :content_view # TODO: may be dead relation
 
   validates :environment, :presence => true
   # multiple distributors with a single name are supported
@@ -61,7 +61,7 @@ class Distributor < ActiveRecord::Base
     self.environment.available_releases
   end
 
-  def consumed_pool_ids=attributes
+  def consumed_pool_ids=(attributes)
     attribs_to_unsub = consumed_pool_ids - attributes
     attribs_to_unsub.each do |id|
       self.unsubscribe id
@@ -106,7 +106,7 @@ class Distributor < ActiveRecord::Base
 
   private
 
-    def save_task_status pulp_task, task_type, parameters_type, parameters
+    def save_task_status(pulp_task, task_type, parameters_type, parameters)
       # TODO: remove entirely from distributor model, or need to keep as stub?
     end
 

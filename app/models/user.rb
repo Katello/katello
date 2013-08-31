@@ -18,9 +18,11 @@ class User < ActiveRecord::Base
   include Glue if Katello.config.use_cp || Katello.config.use_pulp
 
   include Glue::Event
+
   def create_event
     Headpin::Actions::UserCreate
   end
+
   def destroy_event
     Headpin::Actions::UserDestroy
   end
@@ -78,7 +80,7 @@ class User < ActiveRecord::Base
   # hash the password before creating or updateing the record
   def hash_password
     if Katello.config.warden != 'ldap'
-      self.password = Password::update(self.password) if self.password && self.password.length != 192
+      self.password = Password.update(self.password) if self.password && self.password.length != 192
     end
   end
 
@@ -160,7 +162,7 @@ class User < ActiveRecord::Base
   def allowed_organizations
     #test for all orgs
     perms = Permission.joins(:role).joins("INNER JOIN roles_users ON roles_users.role_id = roles.id").
-        where("roles_users.user_id = ?", self.id).where(:organization_id => nil).count()
+        where("roles_users.user_id = ?", self.id).where(:organization_id => nil).count
     return Organization.without_deleting.all if perms > 0
 
     Organization.without_deleting.joins(:permissions => {:role => :users}).where(:users => {:id => self.id}).uniq
@@ -180,9 +182,10 @@ class User < ActiveRecord::Base
     notices = Notice.for_user(self).for_org(organization).unread.limit(count == :all ? nil : count)
     notices.each { |notice| notice.user_notices.each(&:read!) }
 
-    return notices.map do |notice|
-      { :text => notice.text, :level => notice.level, :request_type => notice.request_type }
+    notices = notices.map do |notice|
+      {:text => notice.text, :level => notice.level, :request_type => notice.request_type}
     end
+    return notices
   end
 
   def enable_helptip(key)
@@ -391,21 +394,22 @@ class User < ActiveRecord::Base
 
   # generate a random token, that is unique within the User table for the column provided
   def generate_token(column)
-    begin
+    loop do
       self[column] = SecureRandom.hex(32)
-    end while User.exists?(column => self[column])
+      break unless User.exists?(column => self[column])
+    end
   end
 
-  def log_roles verbs, resource_type, tags, org, any_tags = false
-      verbs_str = verbs ? verbs.join(',') :"perform any verb"
-      tags_str  = "any tags"
-      if tags
-        tag_str = any_tags ? "any tag in #{tags.join(',')}" : "all the tags in #{tags.join(',')}"
-      end
+  def log_roles(verbs, resource_type, tags, org, any_tags = false)
+    verbs_str = verbs ? verbs.join(',') : "perform any verb"
+    tags_str  = "any tags"
+    if tags
+      tags_str = any_tags ? "any tag in #{tags.join(',')}" : "all the tags in #{tags.join(',')}"
+    end
 
-      org_str = org ? "organization #{org.name} (#{org.name})" :" any organization"
-      logger.debug "Checking if user #{username} is allowed to #{verbs_str} in #{resource_type.inspect} " +
-                       "scoped for #{tags_str} in #{org_str}"
+    org_str = org ? "organization #{org.name} (#{org.name})" : " any organization"
+    logger.debug "Checking if user #{username} is allowed to #{verbs_str} in #{resource_type.inspect} " +
+      "scoped for #{tags_str} in #{org_str}"
   end
 
   def create_own_role
@@ -417,7 +421,7 @@ class User < ActiveRecord::Base
     roles.destroy_own_role
   end
 
-  def super_admin_check role
+  def super_admin_check(role)
     if role.superadmin? && role.users.length == 1
       message = _("Cannot dissociate user '%{username}' from '%{role}' role. Need at least one user in the '%{role}' role.") % {:username => username, :role => role.name}
       errors[:base] << message
@@ -436,9 +440,9 @@ class User < ActiveRecord::Base
 
   def generate_remote_id
     if self.username.ascii_only?
-      "#{Util::Model::labelize(self.username)}-#{SecureRandom.hex(4)}"
+      "#{Util::Model.labelize(self.username)}-#{SecureRandom.hex(4)}"
     else
-      Util::Model::uuid
+      Util::Model.uuid
     end
   end
 

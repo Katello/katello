@@ -58,7 +58,10 @@ AllCops:
     - script/thin
     - db/schema.rb
     # TODO: remove these other paths as we fix them
-    - app/models/**
+    - app/models/glue/**
+    - app/models/authorization/**
+    - app/models/candlepin/**
+    - app/models/ext/**
     - app/lib/**
     - app/controllers/api/**
     - app/helpers/**
@@ -114,3 +117,6 @@ HashMethods:
 
 FavorSprintf:
   Enabled: false # we use % for i18n
+
+ReduceArguments:
+  Enabled: false # good rule of thumb but not worth enforcing

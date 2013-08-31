@@ -15,7 +15,7 @@ class VerbNotFound < StandardError
   attr_reader  :possible_verbs
   attr_reader :resource_type
 
-  def initialize resource_type, verb, possible_verbs
+  def initialize(resource_type, verb, possible_verbs)
     @verb = verb
     @possible_verbs = possible_verbs
     @resource_type = resource_type
@@ -31,7 +31,7 @@ class ResourceTypeNotFound < StandardError
   attr_reader :resource_type
   attr_reader  :possible_types
 
-  def initialize resource_type, possible_types
+  def initialize(resource_type, possible_types)
     @resource_type = resource_type
     @possible_types = possible_types
   end
@@ -44,12 +44,10 @@ end
 
 class DefaultModel
   class << self
-    def list_tags(global=false); []; end
-    def tags_for(global=false); []; end
-    def tags(global=false); []; end
-    def no_tag_verbs(global=false); []; end
-    def list_verbs(global=false); {}; end
-    def tags_for(global=false); []; end
+    %w(list_tags tags no_tag_verbs tags_for).each do |method|
+      define_method(method) { |global = false| [] }
+    end
+    define_method(:list_verbs) { |global = false| {} }
   end
 end
 
@@ -76,12 +74,12 @@ class ResourceType < ActiveRecord::Base
     TYPES.collect{|key, value| key if value[:global]}.compact
   end
 
-  def self.model_for resource_type
+  def self.model_for(resource_type)
     check_type resource_type
     TYPES[resource_type][:model]
   end
 
-  def self.check resource_type, verbs = []
+  def self.check(resource_type, verbs = [])
     check_type resource_type
 
     model = model_for resource_type
@@ -89,14 +87,14 @@ class ResourceType < ActiveRecord::Base
 
     possible_verbs = (model.list_verbs(true).keys + model.list_verbs(false).keys).uniq
     verbs = [] if verbs.nil?
-    verbs = [verbs] unless Array === verbs
-    verbs.each { |verb|
-      raise VerbNotFound.new(resource_type,verb, possible_verbs) unless possible_verbs.include? verb.to_s
-    }
+    verbs = [verbs] unless verbs.is_a?(Array)
+    verbs.each do |verb|
+      fail VerbNotFound.new(resource_type, verb, possible_verbs) unless possible_verbs.include? verb.to_s
+    end
 
   end
 
-  def self.check_type resource_type
+  def self.check_type(resource_type)
     raise ResourceTypeNotFound.new(resource_type, TYPES.keys) unless TYPES.has_key? resource_type
   end
 

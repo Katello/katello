@@ -40,12 +40,12 @@ class ErratumRule < FilterRule
     end
   end
 
-  def errata_types= etypes
-    unless etypes.blank?
+  def errata_types=(etypes)
+    if etypes.blank?
+      parameters.delete(:errata_type)
+    else
       parameters[:errata_type] ||= {}
       parameters[:errata_type] = etypes
-    else
-      parameters.delete(:errata_type)
     end
   end
 
@@ -87,12 +87,12 @@ class ErratumRule < FilterRule
       end
 
       case rule_clauses.size
-        when 0
-          return
-        when 1
-          return rule_clauses.first
-        else
-          return {'$and' => rule_clauses}
+      when 0
+        return
+      when 1
+        return rule_clauses.first
+      else
+        return {'$and' => rule_clauses}
       end
     end
   end

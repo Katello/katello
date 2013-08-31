@@ -16,20 +16,15 @@ class Ping
   class << self
 
     OK_RETURN_CODE = 'ok'
-    PACKAGES = ["katello",
-                "candlepin",
-                "pulp",
-                "thumbslug",
-                "qpid",
-                "ldap_fluff",
-                "elasticsearch"
-                ]
+    PACKAGES = %w(katello candlepin pulp thumbslug qpid ldap_fluff elasticsearch)
 
     #
     # Calls "status" services in all backend engines.
     #
     # This should be called as 'admin' user otherwise the oauth will fail.
     #
+    # TODO: break up this method
+    # rubocop:disable MethodLength
     def ping
       if Katello.config.katello?
         result = { :result => OK_RETURN_CODE, :status => {
@@ -75,6 +70,7 @@ class Ping
         exception_watch(result[:status][:thumbslug]) do
           begin
             RestClient.get "#{url}/ping"
+          # rubocop:disable HandleExceptions
           rescue OpenSSL::SSL::SSLError
             # We want to see this error, because it means that Thumbslug
             # is running and refused our (non-existent) ssl cert.
@@ -106,16 +102,14 @@ class Ping
 
     # check for exception - set the result code properly
     def exception_watch(result, &block)
-      begin
-        start = Time.new
-        yield
-        result[:result] = OK_RETURN_CODE
-        result[:duration_ms] = ((Time.new - start) * 1000).round.to_s
-      rescue => e
-        Rails.logger.warn(e.backtrace ? [e.message, e.backtrace].join("\n") : e.message)
-        result[:result] = 'FAIL'
-        result[:message] = e.message
-      end
+      start = Time.new
+      yield
+      result[:result] = OK_RETURN_CODE
+      result[:duration_ms] = ((Time.new - start) * 1000).round.to_s
+    rescue => e
+      Rails.logger.warn(e.backtrace ? [e.message, e.backtrace].join("\n") : e.message)
+      result[:result] = 'FAIL'
+      result[:message] = e.message
     end
 
     # get package information for katello and its components
