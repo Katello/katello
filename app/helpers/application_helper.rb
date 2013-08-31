@@ -18,7 +18,7 @@ module ApplicationHelper
   include BrandingHelper
   include NavigationHelper
 
-  def current_url(extra_params={})
+  def current_url(extra_params = {})
     url_for params.merge(extra_params)
   end
 
@@ -46,18 +46,18 @@ module ApplicationHelper
 
   end
 
-  def help_tip(text, key=nil)
+  def help_tip(text, key = nil)
     key ||= params[:controller] + "-" + params[:action]
     render :partial => "common/helptip", :locals=>{:key=>key, :text=>text}
   end
 
-  def help_tip_button(key=nil)
+  def help_tip_button(key = nil)
     key ||= params[:controller] + "-" + params[:action]
     render :partial => "common/helptip_button", :locals=>{:key=>key}
   end
 
   # Headpin inclusion
-  def stats_line(stats, options ={})
+  def stats_line(stats, options = {})
     render :partial => "common/stats_line",
       :locals => {:stats => stats}
   end
@@ -129,11 +129,11 @@ module ApplicationHelper
 
   def notification_polling_time
     time  = Katello.config.notification && Katello.config.notification.polling_seconds
-    return time.to_i  * 1000 if time
-    return 120000
+    return time.to_i  * 1_000 if time
+    return 120_000
   end
 
-  def environment_selector options = {}
+  def environment_selector(options = {})
     options[:library_clickable] = true if options[:library_clickable].nil? # ||= doesn't work if false
     options[:url_proc] = nil if options[:url_proc].nil? #explicitly set url_method to nil if not provided
 
@@ -159,7 +159,7 @@ module ApplicationHelper
     "https:///secure.gravatar.com/avatar/#{Digest::MD5.hexdigest(email)}?d=mm&s=25"
   end
 
-  def env_select_class curr_env, selected_env, curr_path, selected_path, accessible_envs, library_clickable
+  def env_select_class(curr_env, selected_env, curr_path, selected_path, accessible_envs, library_clickable)
     classes = []
     if (library_clickable || !curr_env.library?) && accessible_envs.member?(curr_env)
       classes << "path_link"
@@ -179,7 +179,7 @@ module ApplicationHelper
     classes.join(' ')
   end
 
-  def env_select_url proc, env, next_env, org
+  def env_select_url(proc, env, next_env, org)
     return nil if proc.nil?
     proc.call(:environment=> env, :next_environment=>next_env, :organization=>org)
   end
@@ -191,7 +191,7 @@ module ApplicationHelper
   end
 
   #formats the date time if the dat is not nil
-  def format_time  date, options = {}
+  def format_time(date, options = {})
     return I18n.l(date, options) if date
     ""
   end
@@ -209,9 +209,9 @@ module ApplicationHelper
 
   #returns a proc to generate a url for the env_selector
   def url_products_proc
-    lambda{|args|
+    lambda do |args|
       products_organization_environment_path(args[:organization].label, args[:environment].id)
-    }
+    end
   end
 
   def url_content_views_proc
@@ -262,7 +262,7 @@ module ApplicationHelper
 
     options[:as] = raw(options[:as]) if defined?(RailsXss)
 
-    a_link(options[:as], html_escape(url_for(url_options)),html_options)
+    a_link(options[:as], html_escape(url_for(url_options)), html_options)
   end
 
   def a_link(name, href, html_options)
@@ -274,7 +274,7 @@ module ApplicationHelper
   # If no provider_id is specified, it is assumed to be a Red Hat subscription and the link returned
   # goes to the subscriptions page. Alternatively, if the distinction between the Red Hat provider and
   # a custom provider is important, pass in the provider_id and the current org.
-  def subscriptions_pool_link_helper pool_name, pool_id, provider_id, org
+  def subscriptions_pool_link_helper(pool_name, pool_id, provider_id, org)
     if provider_id == org.redhat_provider.id
       link_to pool_name, subscriptions_path(:anchor => "/!=&panel=subscription_#{pool_id}")
     elsif !provider_id.nil?

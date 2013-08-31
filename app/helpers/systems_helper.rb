@@ -62,40 +62,41 @@ module SystemsHelper
   end
 
   def virtual_buttons
-    raw [radio_button("system_type","virtualized", "physical", :checked=>true, :tabindex => 5 ),
+    raw [radio_button("system_type", "virtualized", "physical", :checked=>true, :tabindex => 5 ),
     content_tag(:label, _("Physical"), :for => 'system_type_virtualized_physical'),
-    radio_button("system_type","virtualized", "virtual", :tabindex => 6 ),
+    radio_button("system_type", "virtualized", "virtual", :tabindex => 6 ),
     content_tag(:label, _("Virtual"), :for => 'system_type_virtualized_virtual')].join(' ')
   end
 
-  def errata_type_class errata
+  def errata_type_class(errata)
     case errata.e_type
-      when  Errata::SECURITY
-        return "security_icon"
-      when  Errata::ENHANCEMENT
-        return "enhancement_icon"
-      when  Errata::BUGZILLA
-        return "bugzilla_icon"
+    when  Errata::SECURITY
+      return "security_icon"
+    when  Errata::ENHANCEMENT
+      return "enhancement_icon"
+    when  Errata::BUGZILLA
+      return "bugzilla_icon"
     end
   end
 
-  def system_type system
+  def system_type(system)
 
     return _("Guest") if system.guest
 
     case system.type
-      when "Hypervisor"
-        _("Hypervisor")
-      else
-        _("Host")
+    when "Hypervisor"
+      _("Hypervisor")
+    else
+      _("Host")
     end
   end
 
-  def system_releasevers_edit system, releases
+  # rubocop:disable SymbolName
+  def system_releasevers_edit(system, releases)
     vers = {}
-    releases.each { |ver|
+    releases.each do |ver|
       vers[ver] = ver
-    }
+    end
 
     vers[""] = ""
     vers["selected"] = system[:releaseVer]
@@ -103,7 +104,7 @@ module SystemsHelper
     return vers.to_json
   end
 
-  def system_servicelevel system
+  def system_servicelevel(system)
     if system.serviceLevel.blank?
       org_sla = system.organization.service_level
       sla = org_sla.blank? ? _("No Service Level Preference") : (_("Organization Service Level %s") % org_sla)
@@ -114,12 +115,12 @@ module SystemsHelper
     _("Auto-attach %{val}, %{sla}") % {:val => system.autoheal ? _("On") : _("Off"), :sla => sla}
   end
 
-  def system_servicelevel_edit system
+  def system_servicelevel_edit(system)
     levels = {}
-    system.organization.service_levels.each { |level|
+    system.organization.service_levels.each do |level|
       levels["1#{level}"] = _("Auto-attach On, Service Level %s") % level
       levels["0#{level}"] = _("Auto-attach Off, Service Level %s") % level
-    }
+    end
 
     levels['1'] = _("Auto-attach On, Use Organization Service Level")
     levels['0'] = _("Auto-attach Off, Use Organization Service Level")
@@ -129,11 +130,11 @@ module SystemsHelper
     return levels.to_json
   end
 
-  def system_environment_name system
+  def system_environment_name(system)
     system.environment.name
   end
 
-  def system_status_message system
+  def system_status_message(system)
 
     if system.compliant?
       until_time = @system.compliant_until
@@ -158,7 +159,7 @@ module SystemsHelper
     message
   end
 
-  def system_subscription_status_message system, product
+  def system_subscription_status_message(system, product)
     messages = []
     system.compliance['reasons'].each do |reason|
       if reason['attributes']['product_id'] == product['productId']

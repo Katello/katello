@@ -58,6 +58,7 @@ class KatelloFormBuilder < ActionView::Helpers::FormBuilder
 
     tag_options = {}
     tag_options[:name] = "%s[%s]" % [@object_name, name.to_s]
+    # rubocop:disable SymbolName
     tag_options[:'data-url'] = options[:'data-url'] || options[:data_url] || @options[:data_url]
     tag_options.update(options[:tag]) if options.key? :tag
 

@@ -39,12 +39,12 @@ module DistributorsHelper
     format_time(Time.parse(item))
   end
 
-  def distributor_environment_name distributor
+  def distributor_environment_name(distributor)
     distributor.environment.name
   end
 
-  def distributor_labelize name
-    name.ascii_only? ? name.gsub(/[^a-z0-9\-_]/i,"_") : 'manifest'
+  def distributor_labelize(name)
+    name.ascii_only? ? name.gsub(/[^a-z0-9\-_]/i, "_") : 'manifest'
   end
 
   def content_view_select(org, env)

@@ -24,7 +24,7 @@ module RolesHelper
   end
 
   def perm_id(f)
-    f = f.object unless Permission === f
+    f = f.object unless f.is_a?(Permission)
     return f.object_id if f.new_record?
     f.id
   end
@@ -38,7 +38,7 @@ module RolesHelper
     if f.object.new_record?
       verbs =  Verb.verbs_for(resource_types.first[0]) || {}
       verbs = verbs.collect {|name, display| [name, display]}
-      verbs.sort! {|a,b| a[1] <=> b[1]}
+      verbs.sort! {|a, b| a[1] <=> b[1]}
       return verbs
     end
     Verb.verbs_for(f.object.resource_type.name) || []
