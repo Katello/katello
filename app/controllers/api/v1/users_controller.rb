@@ -24,7 +24,6 @@ class Api::V1::UsersController < Api::V1::ApiController
     read_test        = lambda { @user.readable? }
     edit_test        = lambda { @user.editable? }
     delete_test      = lambda { @user.deletable? }
-    user_helptip     = lambda { true }                        #everyone can enable disable a helptip
     list_owners_test = lambda { @user.id == User.current.id } #user can see only his/her owners
 
     { :index           => index_test,
@@ -163,8 +162,10 @@ class Api::V1::UsersController < Api::V1::ApiController
       end
       format.text { render :text => users_report.as(:text, :ignore_table_width => true) }
       format.csv { render :text => users_report.as(:csv) }
-      format.pdf { send_data(users_report.as(:prawn_pdf),
-                             :filename => "katello_users_report.pdf", :type => "application/pdf") }
+      format.pdf do
+        send_data(users_report.as(:prawn_pdf), :filename => "katello_users_report.pdf",
+                  :type => "application/pdf")
+      end
     end
   end
 
@@ -172,6 +173,7 @@ class Api::V1::UsersController < Api::V1::ApiController
   def list_owners
     orgs = @user.allowed_organizations
     # rhsm expects owner (Candlepin format)
+    # rubocop:disable SymbolName
     respond_for_index :collection => orgs.map { |o| { :key => o.label, :displayName => o.name } }
   end
 

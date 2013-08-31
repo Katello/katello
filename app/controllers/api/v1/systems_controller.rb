@@ -10,6 +10,7 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+# rubocop:disable SymbolName
 class Api::V1::SystemsController < Api::V1::ApiController
   respond_to :json
 
@@ -33,6 +34,8 @@ class Api::V1::SystemsController < Api::V1::ApiController
     [:organization_id, :owner]
   end
 
+  # TODO: break up this method
+  # rubocop:disable MethodLength
   def rules
     index_systems          = lambda { System.any_readable?(@organization) }
     register_system        = lambda { System.registerable?(@environment, @organization, @content_view) }
@@ -110,9 +113,9 @@ Takes a hash representing the mapping: host system having geust systems, e.g.:
 
 See virt-who tool for more details.
 DESC
-  # TODO refactor render
+  # TODO: refactor render
   def hypervisors_update
-    cp_response, hypervisors = System.register_hypervisors(@environment, @content_view, params.except(:controller, :action))
+    cp_response, _ = System.register_hypervisors(@environment, @content_view, params.except(:controller, :action))
     render :json => cp_response
   end
 
@@ -297,9 +300,10 @@ A hint for choosing the right value for the releaseVer param
     respond_for_update
   end
 
+  # TODO: break this mehtod up
   api :GET, "/environments/:environment_id/systems/report", "Get system reports for the environment"
   api :GET, "/organizations/:organization_id/systems/report", "Get system reports for the organization"
-  def report
+  def report # rubocop:disable MethodLength
     data = @environment.nil? ? @organization.systems.readable(@organization) : @environment.systems.readable(@organization)
 
     data = data.flatten.map do |r|
@@ -309,28 +313,21 @@ A hint for choosing the right value for the releaseVer param
       )
     end.flatten!
 
+    transforms = lambda do |r|
+      r.organization    = r.organization.name
+      r.environment     = r.environment.name
+      r.created_at      = r.created_at.to_s
+      r.updated_at      = r.updated_at.to_s
+      r.compliant_until = r.compliant_until.to_s
+      r.custom_info     = r.custom_info.collect { |info| info.to_s }.join(", ")
+    end
+
     system_report = Ruport::Data::Table.new(
         :data         => data,
-        :column_names => ["name",
-                          "uuid",
-                          "location",
-                          "organization",
-                          "environment",
-                          "created_at",
-                          "updated_at",
-                          "compliance_color",
-                          "compliant_until",
-                          "custom_info"
-        ],
+        :column_names => %w(name uuid location organization environment created_at updated_at compliance_color
+                            compliant_until custom_info),
         :record_class => Ruport::Data::Record,
-        :transforms   => lambda { |r|
-          r.organization    = r.organization.name
-          r.environment     = r.environment.name
-          r.created_at      = r.created_at.to_s
-          r.updated_at      = r.updated_at.to_s
-          r.compliant_until = r.compliant_until.to_s
-          r.custom_info     = r.custom_info.collect { |info| info.to_s }.join(", ")
-        }
+        :transforms   => transforms
     )
 
     pdf_options = { :pdf_format   => {
@@ -341,7 +338,7 @@ A hint for choosing the right value for the releaseVer param
                     :table_format => {
                         :width         => 585,
                         :cell_style    => { :size => 8 },
-                        :row_colors    => ["FFFFFF", "F0F0F0"],
+                        :row_colors    => %w(FFFFFF F0F0F0),
                         :column_widths => {
                             0 => 100,
                             1 => 100,
@@ -385,9 +382,9 @@ A hint for choosing the right value for the releaseVer param
       query = query.where(:"systems.environment_id" => @environment.id)
     end
     if params[:system_name]
-      query = query.where(:"systems.name" => params[:system_name])
+      query = query.where("systems.name" => params[:system_name])
     elsif params[:system_uuid]
-      query = query.where(:"systems.uuid" => params[:system_uuid])
+      query = query.where("systems.uuid" => params[:system_uuid])
     end
 
     task_ids = query.select('task_statuses.id')
@@ -479,7 +476,10 @@ This information is then used for computing the errata available for the system.
 
   def find_only_environment
     if !@environment && @organization && !params.has_key?(:environment_id)
-      raise HttpErrors::BadRequest, _("Organization %{org} has the '%{env}' environment only. Please create an environment for system registration.") % { :org => @organization.name, :env => "Library" } if @organization.environments.empty?
+      if @organization.environments.empty?
+        raise HttpErrors::BadRequest, _("Organization %{org} has the '%{env}' environment only. Please create an environment for system registration.") %
+          { :org => @organization.name, :env => "Library" }
+      end
 
       # Some subscription-managers will call /users/$user/owners to retrieve the orgs that a user belongs to.
       # Then, If there is just one org, that will be passed to the POST /api/consumers as the owner. To handle
@@ -606,7 +606,7 @@ This information is then used for computing the errata available for the system.
   end
 
   def find_content_view
-    if(content_view_id = (params[:content_view_id] || params[:system].try(:[], :content_view_id)))
+    if (content_view_id = (params[:content_view_id] || params[:system].try(:[], :content_view_id)))
       setup_content_view(content_view_id)
     end
   end

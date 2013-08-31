@@ -10,6 +10,7 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+# rubocop:disable SymbolName
 class Api::V1::DistributorsController < Api::V1::ApiController
   respond_to :json
 
@@ -147,9 +148,10 @@ class Api::V1::DistributorsController < Api::V1::ApiController
     respond_for_index :collection => { :pools => cp_pools }
   end
 
+  # TODO: break up this method
   api :GET, "/environments/:environment_id/distributors/report", "Get distributor reports for the environment"
   api :GET, "/organizations/:organization_id/distributors/report", "Get distributor reports for the organization"
-  def report
+  def report # rubocop:disable MethodLength
     data = @environment.nil? ? @organization.distributors.readable(@organization) : @environment.distributors.readable(@organization)
 
     data = data.flatten.map do |r|
@@ -159,28 +161,21 @@ class Api::V1::DistributorsController < Api::V1::ApiController
       )
     end.flatten!
 
+    transforms = lambda do |r|
+      r.organization    = r.organization.name
+      r.environment     = r.environment.name
+      r.created_at      = r.created_at.to_s
+      r.updated_at      = r.updated_at.to_s
+      r.compliant_until = r.compliant_until.to_s
+      r.custom_info     = r.custom_info.collect { |info| info.to_s }.join(", ")
+    end
+
     distributor_report = Ruport::Data::Table.new(
         :data         => data,
-        :column_names => ["name",
-                          "uuid",
-                          "location",
-                          "organization",
-                          "environment",
-                          "created_at",
-                          "updated_at",
-                          "compliance_color",
-                          "compliant_until",
-                          "custom_info"
-        ],
+        :column_names => %w(name uuid location organization environment
+          created_at updated_at compliance_color compliant_until custom_info),
         :record_class => Ruport::Data::Record,
-        :transforms   => lambda { |r|
-          r.organization    = r.organization.name
-          r.environment     = r.environment.name
-          r.created_at      = r.created_at.to_s
-          r.updated_at      = r.updated_at.to_s
-          r.compliant_until = r.compliant_until.to_s
-          r.custom_info     = r.custom_info.collect { |info| info.to_s }.join(", ")
-        }
+        :transforms   => transforms
     )
 
     pdf_options = { :pdf_format   => {
@@ -191,7 +186,7 @@ class Api::V1::DistributorsController < Api::V1::ApiController
                     :table_format => {
                         :width         => 585,
                         :cell_style    => { :size => 8 },
-                        :row_colors    => ["FFFFFF", "F0F0F0"],
+                        :row_colors    => %w(FFFFFF F0F0F0),
                         :column_widths => {
                             0 => 100,
                             1 => 100,
@@ -255,7 +250,10 @@ class Api::V1::DistributorsController < Api::V1::ApiController
 
   def find_only_environment
     if !@environment && @organization && !params.has_key?(:environment_id)
-      raise HttpErrors::BadRequest, _("Organization %{org} has the '%{env}' environment only. Please create an environment for distributor registration.") % { :org => @organization.name, :env => "Library" } if @organization.environments.empty?
+      if @organization.environments.empty?
+        raise HttpErrors::BadRequest, _("Organization %{org} has the '%{env}' environment only. Please create an environment for distributor registration.") %
+          { :org => @organization.name, :env => "Library" }
+      end
 
       # Some subscription-managers will call /users/$user/owners to retrieve the orgs that a user belongs to.
       # Then, If there is just one org, that will be passed to the POST /api/consumers as the owner. To handle

@@ -73,7 +73,7 @@ class Api::V1::ApiController < Api::ApiController
 
   private
 
-  def get_organization org_id
+  def get_organization(org_id)
     # name/label is always unique
     return Organization.without_deleting.having_name_or_label(org_id).first
   end
@@ -107,12 +107,12 @@ class Api::V1::ApiController < Api::ApiController
   # otherwise use the :name value and convert to ASCII
   def labelize_params(params)
     return params[:label] unless params.try(:[], :label).nil?
-    return Util::Model::labelize(params[:name]) unless params.try(:[], :name).nil?
+    return Util::Model.labelize(params[:name]) unless params.try(:[], :name).nil?
   end
 
   protected
 
-  def respond_for_index(options={})
+  def respond_for_index(options = {})
     collection = options[:collection] || get_resource_collection
     status     = options[:status] || :ok
     format     = options[:format] || :json
@@ -120,7 +120,7 @@ class Api::V1::ApiController < Api::ApiController
     render format => collection, :status => status
   end
 
-  def respond_for_show(options={})
+  def respond_for_show(options = {})
     resource = options[:resource] || get_resource
     status   = options[:status] || :ok
     format   = options[:format] || :json
@@ -128,19 +128,19 @@ class Api::V1::ApiController < Api::ApiController
     render format => resource, :status => status
   end
 
-  def respond_for_create(options={})
+  def respond_for_create(options = {})
     respond_for_show(options)
   end
 
-  def respond_for_update(options={})
+  def respond_for_update(options = {})
     respond_for_show(options)
   end
 
-  def respond_for_destroy(options={})
+  def respond_for_destroy(options = {})
     respond_for_status(options)
   end
 
-  def respond_for_status(options={})
+  def respond_for_status(options = {})
     message = options[:message] || nil
     status  = options[:status] || :ok
     format  = options[:format] || :text
@@ -148,7 +148,7 @@ class Api::V1::ApiController < Api::ApiController
     render format => message, :status => status
   end
 
-  def respond_for_async(options={})
+  def respond_for_async(options = {})
     resource = options[:resource] || get_resource
     status   = options[:status] || :ok
     format   = options[:format] || :json

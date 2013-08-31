@@ -36,6 +36,7 @@ class Api::V1::OrganizationsController < Api::V1::ApiController
       :auto_attach_all_systems => edit_test
     }
   end
+
   def param_rules
     {
       :create => [:name, :label, :description],

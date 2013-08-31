@@ -51,7 +51,7 @@ class Api::V1::ChangesetsContentController < Api::V1::ApiController
   end
 
   def render_after_removal(removed_objects, options = {})
-    unless removed_objects.blank?
+    if removed_objects.present?
       rend = { :text => options[:success], :status => 200 }
     else
       rend = { :text => options[:not_found], :status => 404 }

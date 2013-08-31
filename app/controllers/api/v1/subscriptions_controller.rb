@@ -50,7 +50,6 @@ class Api::V1::SubscriptionsController < Api::V1::ApiController
   #params :search, String, :desc => "Filter subscriptions by advanced search query"
   def organization_index
 
-    order = split_order(params[:order])
     query_string = params[:search]
     offset = params[:offset].to_i || 0
     filters = []

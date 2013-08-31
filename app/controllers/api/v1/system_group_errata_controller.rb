@@ -39,8 +39,8 @@ class Api::V1::SystemGroupErrataController < Api::V1::ApiController
   end
 
   api :GET, "/organizations/:organization_id/system_groups/:system_group_id/errata", "Get list of errata associated with the group"
-  param :type, ['bugfix', 'enhancement', 'security'], :desc => "Filter errata by type", :required => false
-  # TODO when errata are enabled there has to be created rabl template for errata
+  param :type, %w(bugfix enhancement security), :desc => "Filter errata by type", :required => false
+  # TODO: when errata are enabled there has to be created rabl template for errata
   def index
     errata = get_errata(params[:type])
     respond :collection => errata
@@ -71,7 +71,7 @@ class Api::V1::SystemGroupErrataController < Api::V1::ApiController
 
   include Util::Errata
 
-  def get_errata filter_type="All"
+  def get_errata(filter_type = "All")
     filter_type = filter_type || "All"
 
     errata_hash = {} # {id => erratum}
@@ -96,9 +96,9 @@ class Api::V1::SystemGroupErrataController < Api::V1::ApiController
     errata_list = errata_hash.values
     errata_list = filter_by_type(errata_list, filter_type)
 
-    errata_list = errata_list.sort { |a, b|
+    errata_list = errata_list.sort do |a, b|
       a[:id].downcase <=> b[:id].downcase
-    }
+    end
 
     return errata_list
   end
