@@ -20,7 +20,7 @@ class HttpResource
 
   class RestClientException < StandardError
     attr_reader :service_code, :code
-    def initialize params
+    def initialize(params)
       super params[:message]
       @service_code = params[:service_code]
       @code = params[:code]
@@ -31,7 +31,7 @@ class HttpResource
 
   attr_reader :json
 
-  def initialize(json={})
+  def initialize(json = {})
     @json = json
   end
 
@@ -63,7 +63,7 @@ class HttpResource
         service_code = parsed["code"] if parsed["code"]
       rescue => error
         logger.error "Error parsing the body: " << error.backtrace.join("\n")
-        if ["404", "500", "502", "503", "504"].member? resp.code.to_s
+        if %w(404 500 502 503 504).member? resp.code.to_s
           logger.error "Remote server status code " << resp.code.to_s
           raise RestClientException, {:message => error.to_s, :service_code => service_code, :code => status_code}, caller
         else
@@ -73,22 +73,22 @@ class HttpResource
       raise RestClientException, {:message => message, :service_code => service_code, :code => status_code}, caller
     end
 
-    def print_debug_info(a_path, headers={}, payload={})
+    def print_debug_info(a_path, headers = {}, payload = {})
       logger.debug "Headers: #{headers.to_json}"
       # calling to_json on file has side-effects breaking manifest import.
       # this fix prevents this problem
-      payload_to_print = payload.reduce({}) do |h, (k,v)|
+      payload_to_print = payload.reduce({}) do |h, (k, v)|
         h[k] = case v
                when File then "{{file}}"
                else v
                end
       end
       logger.debug "Body: #{payload_to_print.to_json}"
-    rescue => e
+    rescue
       logger.debug "Unable to print debug information"
     end
 
-    def get(a_path, headers={})
+    def get(a_path, headers = {})
       logger.debug "Resource GET request: #{a_path}"
       print_debug_info(a_path, headers)
       a_path = URI.encode(a_path)
@@ -102,7 +102,7 @@ class HttpResource
       raise Errors::ConnectionRefusedException, _("A backend service [ %s ] is unreachable") % service.capitalize
     end
 
-    def post(a_path, payload={}, headers={})
+    def post(a_path, payload = {}, headers = {})
       logger.debug "Resource POST request: #{a_path}, #{payload}"
       print_debug_info(a_path, headers, payload)
       a_path = URI.encode(a_path)
@@ -116,7 +116,7 @@ class HttpResource
       raise Errors::ConnectionRefusedException, _("A backend service [ %s ] is unreachable") % service.capitalize
     end
 
-    def put(a_path, payload={}, headers={})
+    def put(a_path, payload = {}, headers = {})
       logger.debug "Resource PUT request: #{a_path}, #{payload}"
       print_debug_info(a_path, headers, payload)
       a_path = URI.encode(a_path)
@@ -130,7 +130,7 @@ class HttpResource
       raise Errors::ConnectionRefusedException, _("A backend service [ %s ] is unreachable") % service.capitalize
     end
 
-    def delete(a_path=nil, headers={})
+    def delete(a_path = nil, headers = {})
       logger.debug "Resource DELETE request: #{a_path}"
       print_debug_info(a_path, headers)
       a_path = URI.encode(a_path)
@@ -145,12 +145,12 @@ class HttpResource
     end
 
     # re-raise the same exception with nicer error message
-    def raise_rest_client_exception e, a_path, http_method
+    def raise_rest_client_exception(e, a_path, http_method)
       # message method in rest-client is hardcoded - we need to override it
       msg = "#{name}: #{e.message} #{e.http_body} (#{http_method} #{a_path})"
       (class << e; self; end).instance_eval do
         define_method(:message) do
-           msg
+          msg
         end
       end
       raise e
@@ -164,7 +164,7 @@ class HttpResource
     end
 
     def create_thing(request_type)
-      request_type.new()
+      request_type.new
     end
 
     # Creates a RestClient::Resource class with a signed OAuth style
@@ -203,7 +203,7 @@ class HttpResource
     # @param [String] element to encode
     # @return [String] encoded element or nil
     def url_encode(element)
-      CGI::escape element.to_s unless element.nil?
+      CGI.escape element.to_s unless element.nil?
     end
 
     def hash_to_query(query_parameters)

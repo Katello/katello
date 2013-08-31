@@ -14,7 +14,7 @@ module Katello
       end
 
 
-      def api_attachable_resources(resource_plural_name, options={})
+      def api_attachable_resources(resource_plural_name, options = {})
         resource_singular_name = options.try(:delete, :resource_name)
         resource_singular_name ||= resource_plural_name.to_s.singularize
 

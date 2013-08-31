@@ -15,22 +15,24 @@ module Util
   module Model
 
     # hardcoded model names (uses kp_ prefix)
-    @@table_to_model_hash = {
-      "kt_environment" => "KTEnvironment"
-    }
+    def self.table_to_model_hash
+      {
+        "kt_environment" => "KTEnvironment"
+      }
+    end
 
     # convert Rails Model name to Class or nil when no such table name exists
-    def self.table_to_class name
-      class_name = @@table_to_model_hash[name] || name.classify
+    def self.table_to_class(name)
+      class_name = table_to_model_hash[name] || name.classify
       class_name.constantize
-    rescue NameError => e
+    rescue NameError
       # constantize throws NameError
       return nil
     end
 
     def self.labelize(name)
       if name
-        (name.ascii_only? && name.length <= 128)?name.gsub(/[^a-z0-9\-_]/i,"_") : uuid
+        (name.ascii_only? && name.length <= 128)?name.gsub(/[^a-z0-9\-_]/i, "_") : uuid
       end
     end
 

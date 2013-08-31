@@ -25,41 +25,44 @@ module AuthorizationRules
 
     allowed = false
     rule_set = rules.with_indifferent_access
-    allowed = rule_set[action].call if Proc === rule_set[action]
-    allowed = user.allowed_to? *rule_set[action] if Array === rule_set[action]
+    allowed = rule_set[action].call if rule_set[action].is_a?(Proc)
+    allowed = user.allowed_to?(*rule_set[action]) if rule_set[action].is_a?(Array)
     return true if allowed
     raise Errors::SecurityViolation, "User #{current_user.username} is not allowed to access #{params[:controller]}/#{params[:action]}"
   end
 
   def rules
-    raise Errors::SecurityViolation,"Rules not defined for  #{current_user.username} for #{params[:controller]}/#{params[:action]}"
+    raise Errors::SecurityViolation, "Rules not defined for  #{current_user.username} for #{params[:controller]}/#{params[:action]}"
   end
 
   # TODO: should be moved out of authorization module
   def params_match(ctrl = params[:controller], action = self.action_name)
     logger.debug "Checking  params  for #{ctrl}/#{action}"
 
-    allowed = false
     rule_set = param_rules.with_indifferent_access
 
     return true unless rule_set[action]
     rule = rule_set[action]
-    if Proc === rule
+
+    case rule
+    when Proc
       bad_params = rule.call
-    elsif Array === rule
+    when Array
       bad_params = check_array_params(rule, params)
-    elsif Hash === rule
+    when Hash
       bad_params = check_hash_params(rule, params)
     end
+
     return true if bad_params.empty?
     raise HttpErrors::UnprocessableEntity.new(build_bad_params_error_msg(bad_params, params))
   end
 
   def build_bad_params_error_msg(bad_params, params)
     scrubbed_params = Util::Support.scrub(Util::Support.deep_copy(params)) do |key, value|
-      String === value && key.to_s.downcase =~ /password|authenticity_token/
+      value.is_a?(String) && key.to_s.downcase =~ /password|authenticity_token/
     end
-    _("Wrong/Invalid parameters sent for %{controller}/%{action}.\n Wrong Parameters: \n%{params}\n Parameters Received:\n %{all_params} ") % {:controller => params[:controller], :action => params[:action], :params => bad_params.inspect, :all_params => scrubbed_params.inspect}
+    _("Wrong/Invalid parameters sent for %{controller}/%{action}.\n Wrong Parameters: \n%{params}\n Parameters Received:\n %{all_params} ") %
+      {:controller => params[:controller], :action => params[:action], :params => bad_params.inspect, :all_params => scrubbed_params.inspect}
   end
 
   def check_hash_params(rule, params)
@@ -78,7 +81,7 @@ module AuthorizationRules
   end
 
   def check_array_params(rule, params)
-    (params.keys - ["_method", "controller", "action", "commit", "authenticity_token", "utf8", "search"] - rule.collect { |r| r.to_s })
+    (params.keys - %w(_method controller action commit authenticity_token utf8 search) - rule.collect { |r| r.to_s })
   end
 
   def param_rules

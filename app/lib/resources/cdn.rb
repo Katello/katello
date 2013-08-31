@@ -37,7 +37,7 @@ module Resources
         Util::CdnVarSubstitutor.new(self)
       end
 
-      def initialize url, options = {}
+      def initialize(url, options = {})
         options.reverse_merge!(:verify_ssl => 9)
         options.assert_valid_keys(:ssl_client_key, :ssl_client_cert, :ssl_ca_file, :verify_ssl,
                                   :product)
@@ -70,8 +70,8 @@ module Resources
         end
       end
 
-      def get(path, headers={})
-        path = File.join(@uri.request_uri,path)
+      def get(path, headers = {})
+        path = File.join(@uri.request_uri, path)
         used_url = File.join("#{@uri.scheme}://#{@uri.host}:#{@uri.port}", path)
         Rails.logger.debug "CDN: Requesting path #{used_url}"
         req = Net::HTTP::Get.new(path)
@@ -89,7 +89,7 @@ module Resources
               # But RestClient exceptions are really nice and can be handled in
               # the same way
               exception_class = RestClient::Exceptions::EXCEPTIONS_MAP[code] || RestClient::RequestFailed
-              raise exception_class.new(nil, code)
+              fail exception_class.new(nil, code)
             end
           end
         rescue EOFError

@@ -29,6 +29,11 @@ module Navigation
     end
 
     def content_view_definition_navigation
+      definition_filter_check = lambda do
+        !@view_definition.nil? && @view_definition.readable? && !@view_definition.new_record? &&
+          !@view_definition.composite
+      end
+
       [
         { :key => :view_definition_views,
           :name =>_("Views"),
@@ -45,8 +50,7 @@ module Navigation
         { :key => :view_definition_filter,
           :name =>_("Filters"),
           :url => (@view_definition.nil? || @view_definition.new_record?) ? "" : content_view_definition_filters_path(@view_definition.id),
-          :if => lambda{!@view_definition.nil? && @view_definition.readable? && !@view_definition.new_record? &&
-              !@view_definition.composite},
+          :if => definition_filter_check,
           :options => {:class=>"panel_link"}
         },
         { :key => :view_definition_details,
@@ -59,19 +63,21 @@ module Navigation
     end
 
     def custom_provider_navigation
+      product_repo_check = lambda do
+        !@provider.nil? && @provider.readable? && !@provider.new_record? && !@provider.has_subscriptions?
+      end
+
       [
         { :key => :products_repos,
           :name =>_("Products & Repositories"),
           :url => (@provider.nil? || @provider.new_record?) ? "" : products_repos_provider_path(@provider.id),
-          :if => lambda{!@provider.nil? && @provider.readable? &&
-                        !@provider.new_record? && !@provider.has_subscriptions?},
+          :if => product_repo_check,
           :options => {:class=>"panel_link"}
         },
         { :key => :repo_discovery,
           :name =>_("Repository Discovery"),
           :url => (@provider.nil? || @provider.new_record?) ? "" : repo_discovery_provider_path(@provider.id),
-          :if => lambda{!@provider.nil? && @provider.editable? &&
-                        !@provider.new_record?},
+          :if => lambda{!@provider.nil? && @provider.editable? && !@provider.new_record?},
           :options => {:class=>"panel_link"}
         },
         { :key => :edit_custom_providers,
@@ -116,7 +122,7 @@ module Navigation
         :key => :activation_keys,
         :name => _("Activation Keys"),
         :url => activation_keys_path,
-        :if => lambda {current_organization && ActivationKey.readable?(current_organization())},
+        :if => lambda {current_organization && ActivationKey.readable?(current_organization)},
         :options => {:class=>'content third_level', "data-menu"=>"subscriptions", "data-dropdown"=>"subscriptions"}
       }
     end
@@ -132,15 +138,15 @@ module Navigation
     end
 
     def menu_contents
+      katello_content_menu = [menu_subscriptions, menu_providers, menu_sync_management, menu_content_search,
+             menu_content_view_definitions, menu_changeset_management]
+
       {:key => :content,
        :name => _("Content"),
         :url => :sub_level,
         :options => {:class=>'content top_level', "data-menu"=>"content"},
         :if => lambda{current_organization},
-          :items=> Katello.config.katello? ?
-            [menu_subscriptions, menu_providers, menu_sync_management, menu_content_search,
-             menu_content_view_definitions, menu_changeset_management] :
-            [menu_subscriptions]
+        :items=> Katello.config.katello? ? katello_content_menu : [menu_subscriptions]
       }
     end
 
@@ -167,7 +173,7 @@ module Navigation
       {:key => :custom_providers,
         :name =>_("Custom Content Repositories"),
         :url => providers_path,
-        :if => lambda{Katello.config.katello? && current_organization && Provider.any_readable?(current_organization())},
+        :if => lambda{Katello.config.katello? && current_organization && Provider.any_readable?(current_organization)},
         :options => {:class=>"third_level", "data-dropdown"=>"repositories"}
       }
     end
@@ -202,7 +208,7 @@ module Navigation
     def menu_sync_status
       {:key => :sync_status,
         :name =>_("Sync Status"),
-        :url => sync_management_index_path(),
+        :url => sync_management_index_path,
         :options => {:class=>"third_level", "data-dropdown"=>"sync"}
       }
     end
@@ -210,7 +216,7 @@ module Navigation
     def menu_sync_plan
       {:key => :sync_plans,
         :name =>_("Sync Plans"),
-        :url => sync_plans_path(),
+        :url => sync_plans_path,
         :options => {:class=>"third_level", "data-dropdown"=>"sync"}
       }
     end
@@ -218,46 +224,46 @@ module Navigation
     def menu_sync_schedule
       {:key => :sync_schedule,
         :name =>_("Sync Schedule"),
-        :url => sync_schedules_index_path(),
+        :url => sync_schedules_index_path,
         :options => {:class=>"third_level", "data-dropdown"=>"sync"}
       }
     end
 
     def menu_changeset_management
-       {:key => :changeset_management,
-        :name => _("Changeset Management"),
-        :url => promotions_path,
-        :items => lambda{[menu_changeset, menu_changeset_history]},
-        :if => lambda {Katello.config.katello? && KTEnvironment.any_viewable_for_promotions?(current_organization)},
-        :options => {:highlights_on =>/\/promotions.*/ , :class=>'menu_parent content second_level', "data-menu"=>"content", "data-dropdown"=>"changesets"}
-       }
+      {:key => :changeset_management,
+       :name => _("Changeset Management"),
+       :url => promotions_path,
+       :items => lambda{[menu_changeset, menu_changeset_history]},
+       :if => lambda {Katello.config.katello? && KTEnvironment.any_viewable_for_promotions?(current_organization)},
+       :options => {:highlights_on =>/\/promotions.*/ , :class=>'menu_parent content second_level', "data-menu"=>"content", "data-dropdown"=>"changesets"}
+      }
     end
 
     def menu_changeset
-       {:key => :changesets,
-        :name => _("Changesets"),
-        :url => promotions_path,
-        :if => lambda {Katello.config.katello? && KTEnvironment.any_viewable_for_promotions?(current_organization)},
-        :options => {:highlights_on =>/\/promotions.*/ , :class=>'content third_level', "data-dropdown"=>"changesets"}
-       }
+      {:key => :changesets,
+       :name => _("Changesets"),
+       :url => promotions_path,
+       :if => lambda {Katello.config.katello? && KTEnvironment.any_viewable_for_promotions?(current_organization)},
+       :options => {:highlights_on =>/\/promotions.*/ , :class=>'content third_level', "data-dropdown"=>"changesets"}
+      }
     end
 
     def menu_changeset_history
-       {:key => :changeset,
-        :name => _("Changesets History"),
-        :url => changesets_path,
-        :if => lambda {Katello.config.katello? && KTEnvironment.any_viewable_for_promotions?(current_organization)},
-        :options => {:class=>'content third_level', "data-dropdown"=>"changesets"}
-       }
+      {:key => :changeset,
+       :name => _("Changesets History"),
+       :url => changesets_path,
+       :if => lambda {Katello.config.katello? && KTEnvironment.any_viewable_for_promotions?(current_organization)},
+       :options => {:class=>'content third_level', "data-dropdown"=>"changesets"}
+      }
     end
 
     def menu_gpg
-       {:key => :gpg,
-        :name => _("GPG Keys"),
-        :url => gpg_keys_path,
-        :if => lambda {GpgKey.any_readable?(current_organization)},
-        :options => {:class=>"third_level", "data-dropdown"=>"repositories"}
-       }
+      {:key => :gpg,
+       :name => _("GPG Keys"),
+       :url => gpg_keys_path,
+       :if => lambda {GpgKey.any_readable?(current_organization)},
+       :options => {:class=>"third_level", "data-dropdown"=>"repositories"}
+      }
     end
 
     def promotion_packages_navigation
@@ -298,13 +304,13 @@ module Navigation
       [
         { :key => :filelist,
           :name =>_("Filelist"),
-          :url => lambda{filelist_repository_distribution_path(@repo.id, URI::escape(@distribution.id))},
+          :url => lambda{filelist_repository_distribution_path(@repo.id, URI.escape(@distribution.id))},
           :if => lambda{@distribution},
           :options => {:class=>"panel_link"}
         },
         { :key => :distribution_details,
           :name =>_("Details"),
-          :url => lambda{repository_distribution_path(@repo.id, URI::escape(@distribution.id))},
+          :url => lambda{repository_distribution_path(@repo.id, URI.escape(@distribution.id))},
           :if => lambda{@distribution},
           :options => {:class=>"panel_link"}
         }

@@ -24,7 +24,7 @@ module Util
 
     attr_accessor :operator, :version, :epoch, :release
 
-    def initialize(evr, operator=nil)
+    def initialize(evr, operator = nil)
       extract_epoch_version_release(evr)
       self.operator = operator
     end
