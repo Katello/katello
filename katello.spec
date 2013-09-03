@@ -210,7 +210,13 @@ Requires:       %{name}-configure
 Requires:       %{name}-cli
 Requires:       postgresql-server
 Requires:       postgresql
+
+%if 0%{?fedora} > 18
+Requires(post): candlepin-tomcat
+%else
 Requires(post): candlepin-tomcat6
+%endif
+
 Requires:       candlepin-selinux
 # the following backend engine deps are required by <katello-configure>
 Requires:       mongodb
