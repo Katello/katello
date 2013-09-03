@@ -12,9 +12,9 @@
 
 
 class Candlepin::ProductContent
-  attr_accessor :content, :enabled
+  attr_accessor :content, :enabled, :product
 
-  def initialize(params = {}, product_id=nil)
+  def initialize(params = {}, product_id = nil)
     params = params.with_indifferent_access
     #controls whether repo is enabled in yum repo file on client
     #  unrelated to enable/disable from katello
@@ -34,10 +34,6 @@ class Candlepin::ProductContent
   def product
     @product ||= Product.find(@product_id) if @product_id
     @product
-  end
-
-  def product=(prod)
-    @product = prod
   end
 
   def repositories
@@ -64,6 +60,8 @@ class Candlepin::ProductContent
     @repos = nil #reset repo cache
   end
 
+  # TODO: break up method
+  # rubocop:disable MethodLength
   def refresh_repositories
     product = self.product
 
@@ -91,7 +89,7 @@ class Candlepin::ProductContent
     cdn_var_substitutor.substitute_vars(self.content.contentUrl).each do |(substitutions, path)|
       feed_url = product.repo_url(path)
       arch = substitutions["basearch"] || "noarch"
-      repo_name = [self.content.name, substitutions.sort_by {|k,_| k.to_s}.map(&:last)].flatten.compact.join(" ").gsub(/[^a-z0-9\-\._ ]/i,"")
+      repo_name = [self.content.name, substitutions.sort_by {|k, _| k.to_s}.map(&:last)].flatten.compact.join(" ").gsub(/[^a-z0-9\-\._ ]/i, "")
       version = Resources::CDN::Utils.parse_version(substitutions["releasever"])
 
       begin
@@ -100,27 +98,27 @@ class Candlepin::ProductContent
                                           pulp_id: product.repo_id(repo_name)
                                          )
         unless existing_repos.any?
-          repo = Repository.create!(:environment => product.organization.library,
-                                    :product => product,
-                                    :pulp_id => product.repo_id(repo_name),
-                                    :cp_label => self.content.label,
-                                    :content_id=>self.content.id,
-                                    :arch => arch,
-                                    :major => version[:major],
-                                    :minor => version[:minor],
-                                    :relative_path => Glue::Pulp::Repos.repo_path_from_content_path(product.organization.library, path),
-                                    :name => repo_name,
-                                    :label => Util::Model::labelize(repo_name),
-                                    :feed => feed_url,
-                                    :feed_ca => ca,
-                                    :feed_cert => self.product.certificate,
-                                    :feed_key => self.product.key,
-                                    :content_type => self.content.type,
-                                    :preserve_metadata => true, #preserve repo metadata when importing from cp
-                                    :enabled =>false,
-                                    :unprotected => true,
-                                    :content_view_version=>product.organization.library.default_content_view_version
-                                   )
+          Repository.create!(:environment => product.organization.library,
+                             :product => product,
+                             :pulp_id => product.repo_id(repo_name),
+                             :cp_label => self.content.label,
+                             :content_id=>self.content.id,
+                             :arch => arch,
+                             :major => version[:major],
+                             :minor => version[:minor],
+                             :relative_path => Glue::Pulp::Repos.repo_path_from_content_path(product.organization.library, path),
+                             :name => repo_name,
+                             :label => Util::Model.labelize(repo_name),
+                             :feed => feed_url,
+                             :feed_ca => ca,
+                             :feed_cert => self.product.certificate,
+                             :feed_key => self.product.key,
+                             :content_type => self.content.type,
+                             :preserve_metadata => true, #preserve repo metadata when importing from cp
+                             :enabled =>false,
+                             :unprotected => true,
+                             :content_view_version=>product.organization.library.default_content_view_version
+                            )
         end
         product.repositories_cdn_import_passed! unless product.cdn_import_success?
         @repos = nil #reset repo cache
