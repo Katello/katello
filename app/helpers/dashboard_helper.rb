@@ -166,8 +166,8 @@ module DashboardHelper
     products.empty? ? "" : products.join(', ')
   end
 
-  def system_path_helper system
-    systems_path + "#panel=system_" + system.id.to_s + '&panelpage=errata'
+  def system_path_helper(system)
+    systems_path + "#list_search=id:#{system.id}&panel=system_#{system.id}&panelpage=errata"
   end
 
   def get_checkin(system)
