@@ -19,9 +19,11 @@ class Organization < ActiveRecord::Base
   include Glue if Katello.config.use_cp
 
   include Glue::Event
+
   def create_event
     Headpin::Actions::OrgCreate
   end
+
   def destroy_event
     Headpin::Actions::OrgDestroy
   end
@@ -114,7 +116,7 @@ class Organization < ActiveRecord::Base
     self.providers << ::Provider.new(:name => "Red Hat", :provider_type => ::Provider::REDHAT, :organization => self)
   end
 
-  def validate_destroy current_org
+  def validate_destroy(current_org)
     def_error = _("Could not delete organization '%s'.")  % [self.name]
     if (current_org == self)
       [def_error, _("The current organization cannot be deleted. Please switch to a different organization before deleting.")]
@@ -133,7 +135,7 @@ class Organization < ActiveRecord::Base
   end
 
   def initialize_default_info
-    self.default_info ||= Hash.new
+    self.default_info ||= {}
     ALLOWED_DEFAULT_INFO_TYPES.each do |key|
       if self.default_info[key].class != Array
         self.default_info[key] = []
@@ -191,10 +193,10 @@ class Organization < ActiveRecord::Base
 
   def monitor_owner_auto_attach(job, options = {})
     options = { :pause => 5 }.merge(options)
-    begin
-      not_finished = Resources::Candlepin::Job.not_finished?(Resources::Candlepin::Job.get(job["id"]))
+    loop do
+      break unless Resources::Candlepin::Job.not_finished?(Resources::Candlepin::Job.get(job["id"]))
       sleep options[:pause]
-    end while not_finished
+    end
   end
 
 end

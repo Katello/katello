@@ -20,9 +20,9 @@ class PulpSyncProgress
       #depending on whether this is a history item, or current sync structure may be different
       ht = HashUtil.new
 
-      details = ht.null_safe_get(progress_attrs, nil, ['progress', 'yum_importer', 'content'] ) ||
-                ht.null_safe_get(progress_attrs, nil, ['progress', 'puppet_importer', 'modules']) ||
-                ht.null_safe_get(progress_attrs, nil, ['progress', 'details','packages', 'sync_report'] )
+      details = ht.null_safe_get(progress_attrs, nil, %w(progress yum_importer content)) ||
+                ht.null_safe_get(progress_attrs, nil, %w(progress puppet_importer modules)) ||
+                ht.null_safe_get(progress_attrs, nil, %w(progress details packages sync_report))
 
       @total_size  = ht.null_safe_get(details, 0, ['size_total'])
       @size_left   = ht.null_safe_get(details, 0, ['size_left'])

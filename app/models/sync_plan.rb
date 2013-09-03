@@ -52,20 +52,20 @@ class SyncPlan < ActiveRecord::Base
   end
 
   def zone_converted
-     #convert time to local timezone
-     self.sync_date.localtime.to_datetime
+    #convert time to local timezone
+    self.sync_date.localtime.to_datetime
   end
 
   def plan_day
     WEEK_DAYS[self.sync_date.strftime('%e').to_i]
   end
 
-  def plan_date localtime=true
+  def plan_date(localtime = true)
     date_obj = localtime ? self.zone_converted : self.sync_date
     date_obj.strftime('%m/%d/%Y')
   end
 
-  def plan_time localtime=true
+  def plan_time(localtime = true)
     date_obj = localtime ? self.zone_converted : self.sync_date
     date_obj.strftime('%I:%M %p')
   end

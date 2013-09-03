@@ -20,16 +20,16 @@ class ContentView < ActiveRecord::Base
   before_destroy :confirm_not_promoted # RAILS3458: this needs to come before associations
 
   belongs_to :content_view_definition
-  alias :definition :content_view_definition
+  alias_method :definition, :content_view_definition
   belongs_to :organization, :inverse_of => :content_views
 
   has_many :content_view_environments, :dependent => :destroy
 
   has_many :content_view_versions, :dependent => :destroy
-  alias :versions :content_view_versions
+  alias_method :versions, :content_view_versions
 
   belongs_to :environment_default, :class_name => "KTEnvironment", :inverse_of => :default_content_view,
-             :foreign_key => :environment_default_id # TODO this relation seems to be broken
+             :foreign_key => :environment_default_id # TODO: this relation seems to be broken
 
   has_many :component_content_views, :dependent => :destroy
   has_many :composite_content_view_definitions,
@@ -56,7 +56,7 @@ class ContentView < ActiveRecord::Base
       where("content_view_version_environments.environment_id = ?", env.id)
   end
 
-  def self.composite(composite=true)
+  def self.composite(composite = true)
     joins(:content_view_definition).where('content_view_definition_bases.composite = ?', composite)
   end
 
@@ -211,7 +211,7 @@ class ContentView < ActiveRecord::Base
 
     repos_to_promote = get_repos_to_promote(from_env, to_env)
     if replacing_version
-      PulpTaskStatus::wait_for_tasks prepare_repos_for_promotion(replacing_version.repos(to_env), repos_to_promote)
+      PulpTaskStatus.wait_for_tasks prepare_repos_for_promotion(replacing_version.repos(to_env), repos_to_promote)
     end
     tasks = promote_repos(promote_version, to_env, repos_to_promote)
 
@@ -249,6 +249,8 @@ class ContentView < ActiveRecord::Base
   end
 
   # Refresh the content view, creating a new version in the library.  The new version will be returned.
+  # TODO: break up method
+  # rubocop:disable MethodLength
   def refresh_view(options = { })
     options = { :async => true, :notify => false }.merge options
 
@@ -315,7 +317,7 @@ class ContentView < ActiveRecord::Base
                                      :cp_id => self.generate_cp_environment_id(env),
                                      :environment_id => env.id,
                                      :content_view => self)
-      end
+    end
   end
 
   # Unassociate an environment from this content view. This can occur whenever

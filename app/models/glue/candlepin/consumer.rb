@@ -12,6 +12,8 @@
 
 module Glue::Candlepin::Consumer
 
+  # TODO: break up method
+  # rubocop:disable MethdLength
   def self.included(base)
     base.send :include, LazyAccessor
     base.send :include, InstanceMethods

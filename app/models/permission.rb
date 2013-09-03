@@ -13,7 +13,7 @@
 class Permission < ActiveRecord::Base
   include Glue::ElasticSearch::Permission if Katello.config.use_elasticsearch
   before_destroy :check_locked # RAILS3458: must be before dependent associations http://tinyurl.com/rails3458
-  belongs_to :resource_type # TODO belongs_to permission on the other side
+  belongs_to :resource_type # TODO: belongs_to permission on the other side
   belongs_to :organization
   belongs_to :role, :inverse_of => :permissions
   has_and_belongs_to_many :verbs
@@ -34,7 +34,7 @@ class Permission < ActiveRecord::Base
     self.tags.collect{|t| t.tag_id}
   end
 
-  def tag_values= attributes
+  def tag_values=(attributes)
     self.tags = attributes.collect {|tag| PermissionTag.new(:permission_id => id, :tag_id => tag)}
   end
 
@@ -43,7 +43,7 @@ class Permission < ActiveRecord::Base
     self.verbs.collect {|verb| verb.verb}
   end
 
-  def verb_values=attributes
+  def verb_values=(attributes)
     self.verbs = attributes.collect do |verb|
       Verb.find_or_create_by_verb(verb)
     end
@@ -54,7 +54,7 @@ class Permission < ActiveRecord::Base
   end
 
   def to_short_text
-    v = (all_verbs? && "any action") || (verbs.empty? && "no action") || verbs.collect { |v| v.verb }.join(',')
+    v = (all_verbs? && "any action") || (verbs.empty? && "no action") || verbs.collect { |vb| vb.verb }.join(',')
     t = (all_tags? && "on all scopes") || (tags.empty? && "") || "on scopes #{tags.join(',')}"
     name = (all_types? && "all_resources") || resource_type.name
     org_id = (organization && "in organization #{organization.id}") || " across all orgs"
@@ -66,14 +66,14 @@ class Permission < ActiveRecord::Base
   end
 
   def to_abbrev_text
-    v = (all_verbs? && "all_verbs") || "[#{verbs.collect { |v| v.verb }.join(',')}]"
+    v = (all_verbs? && "all_verbs") || "[#{verbs.collect { |vb| vb.verb }.join(',')}]"
     t = (all_tags? && "all_tags") || "[#{tags.join(',')}]"
     name = (all_types? && "all_resources") || resource_type.name
     org_id = (organization && "#{organization.id}") || "all organizations"
     "#{v}, #{name}, #{t}, #{org_id}"
   end
 
-  def display_verbs global = false
+  def display_verbs(global = false)
     return {all_verbs => true}.with_indifferent_access if all_verbs
     return {} if resource_type.nil? || verbs.nil?
     display_verbs = {}
@@ -84,10 +84,10 @@ class Permission < ActiveRecord::Base
   end
 
   def all_types?
-   (!resource_type.nil?) && :all.to_s == resource_type.name
+    (!resource_type.nil?) && :all.to_s == resource_type.name
   end
 
-  def all_types= types
+  def all_types=(types)
     if types
       self.all_tags=true
       self.all_verbs=true
@@ -100,7 +100,7 @@ class Permission < ActiveRecord::Base
   def as_json(*args)
     ret = super.as_json(*args)
     ret[:tags] = self.tags.collect do |t|
-        t[:formatted] = Tag.formatted(self.resource_type.name, t.tag_id)
+      t[:formatted] = Tag.formatted(self.resource_type.name, t.tag_id)
         t
     end
     ret[:verbs] = self.verbs
@@ -112,47 +112,48 @@ class Permission < ActiveRecord::Base
   # to insure these string make it into locale files
   def i18n_name
     case name
-      when "Read Organizations"
-        _("Read Organizations")
-      when "Read Environments"
-        _("Read Environments")
-      when "Read Providers"
-        _("Read Providers")
-      when "Read Activation_keys"
-        _("Read Activation Keys")
-      when "Read Users"
-        _("Read Users")
-      when "Read Roles"
-        _("Read Roles")
-      when "super-admin-perm"
-        _("Super Admin")
-      else
-        name
+    when "Read Organizations"
+      _("Read Organizations")
+    when "Read Environments"
+      _("Read Environments")
+    when "Read Providers"
+      _("Read Providers")
+    when "Read Activation_keys"
+      _("Read Activation Keys")
+    when "Read Users"
+      _("Read Users")
+    when "Read Roles"
+      _("Read Roles")
+    when "super-admin-perm"
+      _("Super Admin")
+    else
+      name
     end
   end
 
   def i18n_description
     case description
-      when "Read Organizations permission"
-        _("Read Organizations permission")
-      when "Read Environments permission"
-        _("Read Environments permission")
-      when "Read Providers permission"
-        _("Read Providers permission")
-      when "Read Activation_keys permission"
-        _("Read Activation Keys permission")
-      when "Read Users permission"
-        _("Read Users permission")
-      when "Read Roles permission"
-        _("Read Roles permission")
-      when "Super Admin permission"
-        _("Super Admin permission")
-      else
-        description
+    when "Read Organizations permission"
+      _("Read Organizations permission")
+    when "Read Environments permission"
+      _("Read Environments permission")
+    when "Read Providers permission"
+      _("Read Providers permission")
+    when "Read Activation_keys permission"
+      _("Read Activation Keys permission")
+    when "Read Users permission"
+      _("Read Users permission")
+    when "Read Roles permission"
+      _("Read Roles permission")
+    when "Super Admin permission"
+      _("Super Admin permission")
+    else
+      description
     end
   end
 
   private
+
   def cleanup_tags_verbs
     self.tags.clear if self.all_tags?
     self.verbs.clear if self.all_verbs?

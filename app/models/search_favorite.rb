@@ -27,8 +27,8 @@ class SearchFavorite < ActiveRecord::Base
     end
   end
 
-  def count_favorites path
-    count = ::SearchFavorite.where(:user_id => self.user_id, :path => path).count(:id)
+  def count_favorites(path)
+    ::SearchFavorite.where(:user_id => self.user_id, :path => path).count(:id)
   end
 
 end

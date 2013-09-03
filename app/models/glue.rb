@@ -75,6 +75,7 @@ module Glue
     end
 
     public
+
     # we override this method in order to include checking the
     # after validation callbacks status, as rails by default does
     # not care about their return status.
@@ -92,16 +93,17 @@ module Glue
       super
     end
 
-    def proxy_error e
+    def proxy_error(e)
       (e.respond_to?(:response) && !e.response.nil?) ? e.response : e
     end
 
     protected
+
     # Handles the actual queue
     # takes care for running the tasks in order
     # if any of them fail, it rollbacks all completed tasks
     # in order not to keep any left overs in our proxies.
-    def process q
+    def process(q)
       # queue is empty - nothing to do.
       return if q.empty?
 
@@ -127,7 +129,7 @@ module Glue
 
       # if we have no failures - we are done
       return true if (errors.empty? && q.failed.empty?)
-      raise Errors::OrchestrationException.new("Errors occurred during orchestration #{errors.inspect}\n Queue Failed - #{q.failed.inspect}" )
+      fail Errors::OrchestrationException.new("Errors occurred during orchestration #{errors.inspect}\n Queue Failed - #{q.failed.inspect}" )
     rescue => e
       logger.error "Rolling back due to a problem: #{q.failed}\n#{e.inspect} \n#{e.backtrace.join('\n')}"
       # handle errors
@@ -146,7 +148,7 @@ module Glue
       raise e
     end
 
-    def execute opts = {}
+    def execute(opts = {})
       obj, met, *args = opts[:action]
       rollback = opts[:rollback] || false
 
@@ -161,9 +163,9 @@ module Glue
           met = met.to_s
           case met
           when /set/
-            met.gsub!("set","del")
+            met.gsub!("set", "del")
           when /del/
-            met.gsub!("del","set")
+            met.gsub!("del", "set")
           else
             raise "Dont know how to rollback #{met}"
           end
@@ -180,7 +182,7 @@ module Glue
     def setup_clone
       return if new_record?
       @old = self.dup
-      for key in (changed_attributes.keys - ["updated_at"])
+      (changed_attributes.keys - ["updated_at"]).each do |key|
         @old.send "#{key}=", changed_attributes[key]
       end
     end

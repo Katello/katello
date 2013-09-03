@@ -94,18 +94,20 @@ class ActivationKey < ActiveRecord::Base
   end
 
   # subscribe to each product according the entitlements remaining
+  # TODO: break up method
+  # rubocop:disable MethodLength
   def subscribe_system(system)
     already_subscribed = []
     begin
       # sanity check before we start subscribing
       self.pools.each do |pool|
-        raise _("Pool %s has no product associated") % pool.cp_id unless pool.product_id
-        raise _("Unable to determine quantity for pool %s") % pool.cp_id unless pool.quantity
+        fail _("Pool %s has no product associated") % pool.cp_id unless pool.product_id
+        fail _("Unable to determine quantity for pool %s") % pool.cp_id unless pool.quantity
       end
 
       allocate = system.sockets.to_i
       Rails.logger.debug "Number of sockets for registration: #{allocate}"
-      raise _("Number of sockets must be higher than 0 for system %s") % system.name if allocate <= 0
+      fail _("Number of sockets must be higher than 0 for system %s") % system.name if allocate <= 0
 
       # we sort just to make the order deterministig.
       self.pools.group_by(&:product_id).sort_by(&:first).each do |product_id, pools|
@@ -128,7 +130,7 @@ class ActivationKey < ActiveRecord::Base
       already_subscribed.each do |entitlement_id|
         begin
           Rails.logger.debug "Rolling back: #{entitlement_id}"
-          entitlements_array = system.unsubscribe entitlement_id
+          system.unsubscribe(entitlement_id)
         rescue => re
           Rails.logger.fatal "Rollback failed, skipping: #{re.message}"
         end
@@ -160,7 +162,7 @@ class ActivationKey < ActiveRecord::Base
     self.pools.each do |pool|
       begin
         Resources::Candlepin::Pool.find(pool.cp_id)
-      rescue RestClient::ResourceNotFound => e
+      rescue RestClient::ResourceNotFound
         obsolete_pools << pool
       end
     end

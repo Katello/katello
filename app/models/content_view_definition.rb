@@ -19,7 +19,7 @@ class ContentViewDefinition < ContentViewDefinitionBase
 
   has_many :content_views, :dependent => :destroy
   has_many :content_view_definition_archives, :foreign_key => :source_id
-  alias :archives :content_view_definition_archives
+  alias_method :archives, :content_view_definition_archives
 
   validates :label, :uniqueness => {:scope => :organization_id},
     :presence => true
@@ -34,7 +34,9 @@ class ContentViewDefinition < ContentViewDefinitionBase
   scope :composite, where(:composite=>true)
   scope :non_composite, where(:composite=>false)
 
-  def publish(name, description, label=nil, options = { })
+  # TODO: break up method
+  # rubocop:disable MethodLength
+  def publish(name, description, label = nil, options = {})
     options = { :async => true, :notify => false }.merge options
 
     view = ContentView.create!(:name => name,
@@ -98,11 +100,11 @@ class ContentViewDefinition < ContentViewDefinitionBase
       async_tasks << repo.clone_contents(clone)
       cloned_repos << clone
     end
-    PulpTaskStatus::wait_for_tasks(async_tasks.flatten(1))
+    PulpTaskStatus.wait_for_tasks(async_tasks.flatten(1))
 
     unassociate_contents(cloned_repos)
     view.update_cp_content(view.organization.library)
-    PulpTaskStatus::wait_for_tasks(view.versions.first.generate_metadata)
+    PulpTaskStatus.wait_for_tasks(view.versions.first.generate_metadata)
     Glue::Event.trigger(Katello::Actions::ContentViewPublish, view)
 
     if notify
@@ -141,12 +143,12 @@ class ContentViewDefinition < ContentViewDefinitionBase
         filter_clauses = unassociation_clauses(repo.library_instance, content_type)
         if filter_clauses
           pulp_task = repo.unassociate_by_filter(content_type, filter_clauses)
-          PulpTaskStatus::wait_for_tasks [pulp_task]
+          PulpTaskStatus.wait_for_tasks [pulp_task]
           if content_type == FilterRule::ERRATA
             pkg_clause = errata_package_unassociate_clauses(filter_clauses)
             unless pkg_clause.empty?
               pulp_task = repo.unassociate_by_filter(FilterRule::PACKAGE, pkg_clause)
-              PulpTaskStatus::wait_for_tasks [pulp_task]
+              PulpTaskStatus.wait_for_tasks [pulp_task]
             end
           end
         end
@@ -191,7 +193,7 @@ class ContentViewDefinition < ContentViewDefinitionBase
   end
 
   def archive
-    excluded = ["type", "created_at", "updated_at"]
+    excluded = %w(type created_at updated_at)
     cvd_archive = ContentViewDefinitionArchive.new(self.attributes.except(*excluded))
 
     cvd_archive.repositories            = self.repositories

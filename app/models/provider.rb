@@ -82,7 +82,7 @@ class Provider < ActiveRecord::Base
     end
   end
 
-  def count_providers type
+  def count_providers(type)
     ::Provider.where(:organization_id => self.organization_id, :provider_type => type).count(:id)
   end
 
@@ -91,7 +91,7 @@ class Provider < ActiveRecord::Base
   end
 
   def redhat_provider=(is_rh)
-    provider_type = is_rh ? REDHAT : CUSTOM
+    is_rh ? REDHAT : CUSTOM
   end
 
   def redhat_provider?
@@ -109,8 +109,8 @@ class Provider < ActiveRecord::Base
     organization.being_deleted?
   end
 
-  def serializable_hash(options={})
-    options = {} if options == nil
+  def serializable_hash(options = {})
+    options = {} if options.nil?
     hash = super(options)
     if Katello.config.katello?
       hash = hash.merge(:sync_state => self.sync_state,
@@ -184,7 +184,7 @@ class Provider < ActiveRecord::Base
 
    def sanitize_repository_url
      if redhat_provider? && self.repository_url.blank?
-      self.repository_url = Katello.config.redhat_repository_url
+       self.repository_url = Katello.config.redhat_repository_url
      end
      if self.repository_url
        self.repository_url.strip!
@@ -220,8 +220,6 @@ class Provider < ActiveRecord::Base
   rescue => e
     Notify.exception _('Repos discovery failed.'), e if notify
     raise e
-  ensure
-    ##in case of error
   end
 end
 

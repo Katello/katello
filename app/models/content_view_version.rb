@@ -44,7 +44,7 @@ class ContentViewVersion < ActiveRecord::Base
     self.repositories.in_environment(env)
   end
 
-  def products(env=nil)
+  def products(env = nil)
     if env
       repos(env).map(&:product).uniq(&:id)
     else
@@ -80,8 +80,8 @@ class ContentViewVersion < ActiveRecord::Base
   end
 
   def refresh_version(notify = false)
-    PulpTaskStatus::wait_for_tasks self.refresh_repos
-    PulpTaskStatus::wait_for_tasks self.generate_metadata
+    PulpTaskStatus.wait_for_tasks self.refresh_repos
+    PulpTaskStatus.wait_for_tasks self.generate_metadata
     self.content_view.index_repositories(self.content_view.organization.library)
     self.content_view.update_cp_content(self.content_view.organization.library) if Katello.config.use_cp
 
@@ -108,10 +108,16 @@ class ContentViewVersion < ActiveRecord::Base
     raise e
   end
 
+  # TODO: break up method
+  # rubocop:disable MethodLength
   def refresh_repos
     # generate a hash of the repos associated with the definition, where key = repo id & value = repo
-    definition_repos_hash = has_definition? ?
-        Hash[ self.content_view.content_view_definition.repos.collect{|repo| [repo.id, repo]}] : {}
+    definition_repos_hash = if has_definition?
+                              Hash[ self.content_view.content_view_definition.
+                                    repos.collect{|repo| [repo.id, repo]}]
+                            else
+                              {}
+                            end
 
     async_tasks = []
     # prepare the repos currently in the library for the refresh
@@ -127,7 +133,7 @@ class ContentViewVersion < ActiveRecord::Base
       end
       self.reload
     end
-    PulpTaskStatus::wait_for_tasks async_tasks unless async_tasks.blank?
+    PulpTaskStatus.wait_for_tasks async_tasks unless async_tasks.blank?
 
     async_tasks = []
     repos_to_filter = []
@@ -161,9 +167,9 @@ class ContentViewVersion < ActiveRecord::Base
 
   def delete(from_env)
     unless deletable?(from_env)
-          raise Errors::ChangesetContentException.new(_("Cannot delete view %{view} from %{env}, systems are currently subscribed. " +
-                                                      "Please move subscribed systems to another content view or environment.") %
-                                                          {:env=>from_env.name, :view=>self.content_view.name})
+      raise Errors::ChangesetContentException.new(_("Cannot delete view %{view} from %{env}, systems are currently subscribed. " +
+                                                    "Please move subscribed systems to another content view or environment.") %
+                                                    {:env=>from_env.name, :view=>self.content_view.name})
     end
 
     self.environments.delete(from_env)
