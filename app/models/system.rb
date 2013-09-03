@@ -89,7 +89,7 @@ class System < ActiveRecord::Base
     self.environment.available_releases
   end
 
-  def consumed_pool_ids=attributes
+  def consumed_pool_ids=(attributes)
     attribs_to_unsub = consumed_pool_ids - attributes
     attribs_to_unsub.each do |id|
       self.unsubscribe id
@@ -101,7 +101,7 @@ class System < ActiveRecord::Base
     end
   end
 
-  def filtered_pools match_system, match_installed, no_overlap
+  def filtered_pools(match_system, match_installed, no_overlap)
     if match_system
       pools = self.available_pools
     else
@@ -135,35 +135,35 @@ class System < ActiveRecord::Base
     return pools
   end
 
-  def install_packages packages
+  def install_packages(packages)
     pulp_task = self.install_package(packages)
-    task_status = save_task_status(pulp_task, :package_install, :packages, packages)
+    save_task_status(pulp_task, :package_install, :packages, packages)
   end
 
-  def uninstall_packages packages
+  def uninstall_packages(packages)
     pulp_task = self.uninstall_package(packages)
-    task_status = save_task_status(pulp_task, :package_remove, :packages, packages)
+    save_task_status(pulp_task, :package_remove, :packages, packages)
   end
 
-  def update_packages packages=nil
+  def update_packages(packages = nil)
     # if no packages are provided, a full system update will be performed (e.g ''yum update' equivalent)
     pulp_task = self.update_package(packages)
-    task_status = save_task_status(pulp_task, :package_update, :packages, packages)
+    save_task_status(pulp_task, :package_update, :packages, packages)
   end
 
-  def install_package_groups groups
+  def install_package_groups(groups)
     pulp_task = self.install_package_group(groups)
-    task_status = save_task_status(pulp_task, :package_group_install, :groups, groups)
+    save_task_status(pulp_task, :package_group_install, :groups, groups)
   end
 
-  def uninstall_package_groups groups
+  def uninstall_package_groups(groups)
     pulp_task = self.uninstall_package_group(groups)
-    task_status = save_task_status(pulp_task, :package_group_remove, :groups, groups)
+    save_task_status(pulp_task, :package_group_remove, :groups, groups)
   end
 
-  def install_errata errata_ids
+  def install_errata(errata_ids)
     pulp_task = self.install_consumer_errata(errata_ids)
-    task_status = save_task_status(pulp_task, :errata_install, :errata_ids, errata_ids)
+    save_task_status(pulp_task, :errata_install, :errata_ids, errata_ids)
   end
 
   def as_json(options)
@@ -185,15 +185,15 @@ class System < ActiveRecord::Base
     if options[:expanded]
       json['editable'] = editable?
       json['type'] = if guest == 'true'
-                        _("Guest")
-                      else
-                        case self
-                          when Hypervisor
-                            _("Hypervisor")
-                          else
-                            _("Host")
-                        end
-                      end
+                       _("Guest")
+                     else
+                       case self
+                       when Hypervisor
+                         _("Hypervisor")
+                       else
+                         _("Host")
+                       end
+                     end
     end
 
     run_hook(:as_json_hook, json)
@@ -228,7 +228,7 @@ class System < ActiveRecord::Base
       TaskStatus.refresh(ids)
     end
 
-    def save_task_status pulp_task, task_type, parameters_type, parameters
+    def save_task_status(pulp_task, task_type, parameters_type, parameters)
       TaskStatus.make(self, pulp_task, task_type, parameters_type => parameters)
     end
 
@@ -241,6 +241,7 @@ class System < ActiveRecord::Base
       self.content_view = self.environment.try(:default_content_view) unless self.content_view
     end
 
+    # rubocop:disable SymbolName
     def collect_installed_product_names
       self.installedProducts ? self.installedProducts.map { |p| p[:productName] } : []
     end

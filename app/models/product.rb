@@ -37,13 +37,15 @@ class Product < ActiveRecord::Base
   validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
   validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
 
-  scope :with_repos_only, lambda { |env|
+  # scope
+  def self.with_repos_only(env)
     with_repos(env, false)
-  }
+  end
 
-  scope :with_enabled_repos_only, lambda { |env|
-        with_repos(env, true)
-  }
+  # scope
+  def self.with_enabled_repos_only(env)
+    with_repos(env, true)
+  end
 
   def self.find_by_cp_id(cp_id, organization)
     self.where(:cp_id=>cp_id).in_org(organization).scoped(:readonly=>false).first
@@ -57,7 +59,7 @@ class Product < ActiveRecord::Base
 
   before_save :assign_unique_label
 
-  def initialize(attrs=nil, options={})
+  def initialize(attrs = nil, options = {})
 
     unless attrs.nil?
       attrs = attrs.with_indifferent_access
@@ -115,8 +117,9 @@ class Product < ActiveRecord::Base
     N_('None')
   end
 
-  def serializable_hash(options={})
-    options = {} if options == nil
+  # rubocop:disable SymbolName
+  def serializable_hash(options = {})
+    options = {} if options.nil?
 
     hash = super(options.merge(:except => [:cp_id, :id]))
     hash = hash.merge(:productContent => self.productContent,
@@ -161,7 +164,7 @@ class Product < ActiveRecord::Base
   scope :repositories_cdn_import_failed, where(:cdn_import_success => false)
 
   def assign_unique_label
-    self.label = Util::Model::labelize(self.name) if self.label.blank?
+    self.label = Util::Model.labelize(self.name) if self.label.blank?
 
     # if the object label is already being used in this org, append the id to make it unique
     if Product.all_in_org(self.organization).where('products.label = ?', self.label).count > 0
@@ -176,11 +179,11 @@ class Product < ActiveRecord::Base
     ret
   end
 
-  def delete_repos repos
+  def delete_repos(repos)
     repos.each{|repo| repo.destroy}
   end
 
-  def delete_from_env from_env
+  def delete_from_env(from_env)
     @orchestration_for = :delete
     delete_repos(repos(from_env))
     if from_env.products.include? self
@@ -189,7 +192,7 @@ class Product < ActiveRecord::Base
     save!
   end
 
-  def environments_for_view view
+  def environments_for_view(view)
     versions = view.versions.select{|version| version.products.include?(self)}
     versions.collect{|v|v.environments}.flatten
   end

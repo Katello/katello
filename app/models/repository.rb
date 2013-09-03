@@ -138,8 +138,8 @@ class Repository < ActiveRecord::Base
   end
 
   #is the repo cloned in the specified environment
-  def is_cloned_in? env
-    self.get_clone(env) != nil
+  def is_cloned_in?(env)
+    !get_clone(env).nil?
   end
 
   def promoted?
@@ -150,7 +150,7 @@ class Repository < ActiveRecord::Base
     end
   end
 
-  def get_clone env
+  def get_clone(env)
     if self.content_view.default
       # this repo is part of a default content view
       lib_id = self.library_instance_id || self.id
@@ -170,7 +170,7 @@ class Repository < ActiveRecord::Base
     end
   end
 
-  def after_sync pulp_task_id
+  def after_sync(pulp_task_id)
     #self.handle_sync_complete_task(pulp_task_id)
     self.index_content
   end
@@ -186,14 +186,14 @@ class Repository < ActiveRecord::Base
 
   def self.clone_repo_path(repo, environment, content_view)
     repo_lib = repo.library_instance ? repo.library_instance : repo
-    org, env, content_path = repo_lib.relative_path.split("/",3)
+    org, _, content_path = repo_lib.relative_path.split("/", 3)
     cve = ContentViewEnvironment.where(:environment_id => environment,
                                       :content_view_id => content_view).first
     "#{org}/#{cve.label}/#{content_path}"
   end
 
   def self.repo_id(product_label, repo_label, env_label, organization_label, view_label)
-    [organization_label, env_label, view_label, product_label, repo_label].compact.join("-").gsub(/[^-\w]/,"_")
+    [organization_label, env_label, view_label, product_label, repo_label].compact.join("-").gsub(/[^-\w]/, "_")
   end
 
   def clone_id(env, content_view)
@@ -201,7 +201,9 @@ class Repository < ActiveRecord::Base
                              env.organization.label, content_view.label)
   end
 
-  def create_clone(to_env, content_view=nil)
+  # TODO: break up method
+  # rubocop:disable MethodLength
+  def create_clone(to_env, content_view = nil)
     content_view = to_env.default_content_view if content_view.nil?
     view_version = content_view.version(to_env)
     raise _("View %{view} has not been promoted to %{env}") %

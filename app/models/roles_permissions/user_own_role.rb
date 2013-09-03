@@ -21,9 +21,11 @@ module RolesPermissions::UserOwnRole
     role = find_own_role
     return role if role
 
-    begin
+    role_name = ""
+    loop do
       role_name = "#{auser.username}_#{Password.generate_random_string(20)}"
-    end while ::UserOwnRole.exists?(:name => role_name)
+      break unless ::UserOwnRole.exists?(:name => role_name)
+    end
 
     proxy_association_owner.roles << (role = ::UserOwnRole.new(:name => role_name))
     role

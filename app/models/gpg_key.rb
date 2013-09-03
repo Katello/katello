@@ -15,7 +15,7 @@ class GpgKey < ActiveRecord::Base
 
   include Glue::ElasticSearch::GpgKey if Katello.config.use_elasticsearch
   include Authorization::GpgKey
-  MAX_CONTENT_LENGTH = 100000
+  MAX_CONTENT_LENGTH = 100_000
 
   has_many :repositories, :inverse_of => :gpg_key
   has_many :products, :inverse_of => :gpg_key

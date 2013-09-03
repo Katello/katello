@@ -17,9 +17,11 @@ class KTEnvironment < ActiveRecord::Base
   include Glue if Katello.config.use_cp || Katello.config.use_pulp
 
   include Glue::Event
+
   def create_event
     Katello::Actions::EnvironmentCreate
   end
+
   def destroy_event
     Katello::Actions::EnvironmentDestroy
   end
@@ -43,12 +45,20 @@ class KTEnvironment < ActiveRecord::Base
   has_many :repositories, dependent: :destroy, foreign_key: :environment_id
   has_many :systems, :inverse_of => :environment, :dependent => :destroy,  :foreign_key => :environment_id
   has_many :distributors, :inverse_of => :environment, :dependent => :destroy,  :foreign_key => :environment_id
-  has_many :working_changesets, :conditions => ["state != '#{Changeset::PROMOTED}'"], :foreign_key => :environment_id, :dependent => :destroy, :class_name=>"Changeset", :dependent => :destroy, :inverse_of => :environment
+  has_many :working_changesets, :conditions => ["state != '#{Changeset::PROMOTED}'"],
+    :foreign_key => :environment_id, :dependent => :destroy, :class_name=>"Changeset",
+    :dependent => :destroy, :inverse_of => :environment
 
-  has_many :working_deletion_changesets, :conditions => ["state != '#{Changeset::DELETED}'"], :foreign_key => :environment_id, :dependent => :destroy, :class_name=>"DeletionChangeset", :dependent => :destroy, :inverse_of => :environment
-  has_many :working_promotion_changesets, :conditions => ["state != '#{Changeset::PROMOTED}'"], :foreign_key => :environment_id, :dependent => :destroy, :class_name=>"PromotionChangeset", :dependent => :destroy, :inverse_of => :environment
+  has_many :working_deletion_changesets, :conditions => ["state != '#{Changeset::DELETED}'"],
+    :foreign_key => :environment_id, :dependent => :destroy, :class_name=>"DeletionChangeset",
+    :dependent => :destroy, :inverse_of => :environment
+  has_many :working_promotion_changesets, :conditions => ["state != '#{Changeset::PROMOTED}'"],
+    :foreign_key => :environment_id, :dependent => :destroy, :class_name=>"PromotionChangeset",
+    :dependent => :destroy, :inverse_of => :environment
 
-  has_many :changeset_history, :conditions => {:state => Changeset::PROMOTED}, :foreign_key => :environment_id, :dependent => :destroy, :class_name=>"Changeset", :dependent => :destroy, :inverse_of => :environment
+  has_many :changeset_history, :conditions => {:state => Changeset::PROMOTED},
+    :foreign_key => :environment_id, :dependent => :destroy, :class_name=>"Changeset",
+    :dependent => :destroy, :inverse_of => :environment
 
   has_many :content_view_version_environments, :foreign_key=>:environment_id, :dependent=>:destroy
   has_many :content_view_versions, :through=>:content_view_version_environments, :inverse_of=>:environments
@@ -105,7 +115,7 @@ class KTEnvironment < ActiveRecord::Base
 
   def successor
     return self.successors[0] unless self.library?
-    self.organization.promotion_paths()[0][0] if !self.organization.promotion_paths().empty?
+    self.organization.promotion_paths[0][0] if !self.organization.promotion_paths.empty?
   end
 
   def display_name
@@ -145,8 +155,8 @@ class KTEnvironment < ActiveRecord::Base
 
   #list changesets promoting
   def promoting
-      Changeset.joins(:task_status).where('changesets.environment_id' => self.id,
-        'task_statuses.state' => [TaskStatus::Status::WAITING,  TaskStatus::Status::RUNNING])
+    Changeset.joins(:task_status).where('changesets.environment_id' => self.id,
+                                        'task_statuses.state' => [TaskStatus::Status::WAITING,  TaskStatus::Status::RUNNING])
   end
 
   def is_deletable?
@@ -190,7 +200,7 @@ class KTEnvironment < ActiveRecord::Base
     self.library? ? Product.in_org(self.organization) : Product.where(id: repositories.map(&:product_id))
   end
 
-  def as_json options = {}
+  def as_json(options = {})
     to_ret = self.attributes
     to_ret['prior'] = self.prior &&  self.prior.name
     to_ret['prior_id'] = self.prior &&  self.prior.id
@@ -203,7 +213,7 @@ class KTEnvironment < ActiveRecord::Base
   end
 
   # returns list of virtual permission tags for the current user
-  def self.list_tags org_id
+  def self.list_tags(org_id)
     KTEnvironment.where(:organization_id=>org_id).collect { |m| VirtualTag.new(m.id, m.name) }
   end
 
@@ -212,7 +222,7 @@ class KTEnvironment < ActiveRecord::Base
   end
 
 
-  def package_groups search_args = {}
+  def package_groups(search_args = {})
     groups = []
     self.products.each do |prod|
       groups << prod.package_groups(self, search_args)
@@ -220,7 +230,7 @@ class KTEnvironment < ActiveRecord::Base
     groups.flatten(1)
   end
 
-  def package_group_categories search_args = {}
+  def package_group_categories(search_args = {})
     categories = []
     self.products.each do |prod|
       categories << prod.package_group_categories(self, search_args)
@@ -228,7 +238,7 @@ class KTEnvironment < ActiveRecord::Base
     categories.flatten(1)
   end
 
-  def find_packages_by_name name
+  def find_packages_by_name(name)
     self.products.collect do |prod|
       prod.find_packages_by_name(self, name).collect do |p|
         p[:product_id] = prod.cp_id
@@ -237,7 +247,7 @@ class KTEnvironment < ActiveRecord::Base
     end.flatten(1)
   end
 
-  def find_packages_by_nvre name, version, release, epoch
+  def find_packages_by_nvre(name, version, release, epoch)
     self.products.collect do |prod|
       prod.find_packages_by_nvre(self, name, version, release, epoch).collect do |p|
         p[:product_id] = prod.cp_id
@@ -246,7 +256,7 @@ class KTEnvironment < ActiveRecord::Base
     end.flatten(1)
   end
 
-  def find_latest_packages_by_name name
+  def find_latest_packages_by_name(name)
 
     packs = self.products.collect do |prod|
       prod.find_latest_packages_by_name(self, name).collect do |pack|
@@ -258,7 +268,7 @@ class KTEnvironment < ActiveRecord::Base
     Util::Package.find_latest_packages packs
   end
 
-  def get_distribution id
+  def get_distribution(id)
     self.products.collect do |prod|
       prod.get_distribution(self, id)
     end.flatten(1)

@@ -50,11 +50,11 @@ class Job < ActiveRecord::Base
       Job.index_import(jobs) unless jobs.empty?
 
       # retrieve the jobs for the current owner (e.g. system group)
-      query = Job.where(:job_owner_id => owner.id, :job_owner_type => owner.class.name)
+      Job.where(:job_owner_id => owner.id, :job_owner_type => owner.class.name)
     end
   end
 
-  def create_tasks owner, pulp_tasks, task_type, parameters
+  def create_tasks(owner, pulp_tasks, task_type, parameters)
     # create an array of task status objects
     tasks = []
     pulp_tasks.each do |task|
@@ -93,17 +93,17 @@ class Job < ActiveRecord::Base
       # the type and parameters will all be the same
       #  lets not return them in each task object, but instead
       #  put them in the job
-      tasks = self.task_statuses.collect{|t|
+      tasks = self.task_statuses.collect do |t|
         {
-            :id=>t.id,
-            :result=>t.result,
-            :progress=>t.progress,
-            :state=>t.state,
-            :uuid=>t.uuid,
-            :start_time=>t.start_time,
-            :finish_time=>t.finish_time
+          :id=>t.id,
+          :result=>t.result,
+          :progress=>t.progress,
+          :state=>t.state,
+          :uuid=>t.uuid,
+          :start_time=>t.start_time,
+          :finish_time=>t.finish_time
         }
-      }
+      end
       return {
           :id=>self.id,
           :pulp_id=>self.pulp_id,
@@ -137,7 +137,7 @@ class Job < ActiveRecord::Base
   end
 
   def finish_time
-    finish_time = self.task_statuses.order('finish_time DESC').last.finish_time
+    self.task_statuses.order('finish_time DESC').last.finish_time
   end
 
   def pending?
@@ -171,7 +171,7 @@ class Job < ActiveRecord::Base
   def status_message
     first_task = self.task_statuses.first
     details = TaskStatus::TYPES[first_task.task_type]
-    message = details[:event_messages][self.state].first
+    details[:event_messages][self.state].first
   end
 
   private

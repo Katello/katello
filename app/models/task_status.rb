@@ -54,15 +54,15 @@ class TaskStatus < ActiveRecord::Base
       begin
         if status.state == TaskStatus::Status::ERROR.to_s
           Rails.logger.error "Task #{status.task_type} (#{status.id}) is in error state"
-          Rails.logger.debug "Task parameters: #{status.parameters.inspect.to_s[0,255]}, result: #{status.result.inspect.to_s[0,255]}"
+          Rails.logger.debug "Task parameters: #{status.parameters.inspect.to_s[0, 255]}, result: #{status.result.inspect.to_s[0, 255]}"
         else
           Rails.logger.debug "Task #{status.task_type} (#{status.id}) #{status.state}" if status.id
         end
-      rescue => e
+        return true
+      rescue
         Rails.logger.debug "Unable to report status change" # minor error
-      # if logger level is higher than debug logger return false that would cause rollback
-      # since this is log only callback we must be sure to return true
-      ensure
+        # if logger level is higher than debug logger return false that would cause rollback
+        # since this is log only callback we must be sure to return true
         return true
       end
     end
@@ -70,7 +70,7 @@ class TaskStatus < ActiveRecord::Base
 
   after_destroy :destroy_job
 
-  def initialize(attrs = nil, options={})
+  def initialize(attrs = nil, options = {})
     unless attrs.nil?
       # only keep keys for which we have db columns
       attrs = attrs.reject do |k, v|
@@ -154,71 +154,73 @@ class TaskStatus < ActiveRecord::Base
     # such as System Event history.
     details = TaskStatus::TYPES[self.task_type]
     case details[:type]
-      when :package
-        p = self.parameters[:packages]
-        unless p && p.length > 0
-          if "package_update" == self.task_type
-            return _("all packages")
-          end
-          return ""
+    when :package
+      p = self.parameters[:packages]
+      unless p && p.length > 0
+        if "package_update" == self.task_type
+          return _("all packages")
         end
-        if p.length == 1
-          return p.first
-        else
-          return  _("%{package} (%{total} other packages)") % {:package => p.first, :total => p.length - 1}
-        end
-      when :package_group
-        p = self.parameters[:groups]
-        if p.length == 1
-          return p.first
-        else
-          return  _("%{group} (%{total} other package groups)") % {:group => p.first, :total => p.length - 1}
-        end
-      when :errata
-        p = self.parameters[:errata_ids]
-        if p.length == 1
-          return p.first
-        else
-          return  _("%{errata} (%{total} other errata)") % {:errata => p.first, :total => p.length - 1}
-        end
+        return ""
+      end
+      if p.length == 1
+        return p.first
+      else
+        return  _("%{package} (%{total} other packages)") % {:package => p.first, :total => p.length - 1}
+      end
+    when :package_group
+      p = self.parameters[:groups]
+      if p.length == 1
+        return p.first
+      else
+        return  _("%{group} (%{total} other package groups)") % {:group => p.first, :total => p.length - 1}
+      end
+    when :errata
+      p = self.parameters[:errata_ids]
+      if p.length == 1
+        return p.first
+      else
+        return  _("%{errata} (%{total} other errata)") % {:errata => p.first, :total => p.length - 1}
+      end
     end
   end
 
+  # TODO: break up method
+  # rubocop:disable MethodLength
   def message
     # Retrieve a text message that may be rendered for a task's status.  This is used in various places,
     # such as System Event history.
     details = TaskStatus::TYPES[self.task_type]
     return _("Non-system event") if details.nil?
     case details[:type]
-      when :package
-        p = self.parameters[:packages]
-        unless p && p.length > 0
-          if "package_update" == self.task_type
-            case self.overall_status
-              when "running"
-                return "updating"
-              when "waiting"
-                return "updating"
-              when "error"
-                return _("all packages update failed")
-              else
-                return _("all packages update")
-            end
+    when :package
+      p = self.parameters[:packages]
+      unless p && p.length > 0
+        if "package_update" == self.task_type
+          case self.overall_status
+          when "running"
+            return "updating"
+          when "waiting"
+            return "updating"
+          when "error"
+            return _("all packages update failed")
+          else
+            return _("all packages update")
           end
-          return ""
         end
-        msg = details[:event_messages][self.overall_status]
-        return n_(msg[1], msg[2], p.length) % { package: p.first, total: p.length - 1 }
-      when :candlepin_event
-        return self.result
-      when :package_group
-        p = self.parameters[:groups]
-        msg = details[:event_messages][self.overall_status]
-        return n_(msg[1], msg[2], p.length) % { group: p.first, total: p.length - 1 }
-      when :errata
-        p = self.parameters[:errata_ids]
-        msg = details[:event_messages][self.overall_status]
-        return n_(msg[1], msg[2], p.length) % { errata: p.first, total: p.length - 1 }
+        return ""
+      end
+      msg = details[:event_messages][self.overall_status]
+      return n_(msg[1], msg[2], p.length) % { package: p.first, total: p.length - 1 }
+    when :candlepin_event
+      return self.result
+    when :package_group
+      p = self.parameters[:groups]
+      msg = details[:event_messages][self.overall_status]
+      return n_(msg[1], msg[2], p.length) % { group: p.first, total: p.length - 1 }
+    when :errata
+      p = self.parameters[:errata_ids]
+      msg = details[:event_messages][self.overall_status]
+      return n_(msg[1], msg[2], p.length) % { errata: p.first, total: p.length - 1 }
     end
   end
 
@@ -292,7 +294,7 @@ class TaskStatus < ActiveRecord::Base
       end
     elsif errors =~ /^\[.*,.*\]$/m
       errors.split(",").map do |error|
-        error.gsub(/^\W+|\W+$/,"")
+        error.gsub(/^\W+|\W+$/, "")
       end.join("\n")
     else
       errors
@@ -316,7 +318,7 @@ class TaskStatus < ActiveRecord::Base
     end
   end
 
-  def self.make system, pulp_task, task_type, parameters
+  def self.make(system, pulp_task, task_type, parameters)
     task_status = PulpTaskStatus.new(
        :organization => system.organization,
        :task_owner => system,
@@ -330,9 +332,10 @@ class TaskStatus < ActiveRecord::Base
   end
 
   protected
+
   def setup_task_type
     unless self.task_type
-      self.task_type = self.class().name
+      self.task_type = self.class.name
     end
   end
 
@@ -358,12 +361,12 @@ class TaskStatus < ActiveRecord::Base
         packages = data.nil? ? [] : (data[:details][:resolved] + data[:details][:deps])
         if packages.empty?
           case action
-            when :updated
-              ret << _("No packages updated")
-            when :removed
-              ret << _("No packages removed")
-            else
-              ret << _("No new packages installed")
+          when :updated
+            ret << _("No packages updated")
+          when :removed
+            ret << _("No packages removed")
+          else
+            ret << _("No new packages installed")
           end
         else
           ret << packages.map do |package_attrs|

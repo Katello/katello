@@ -17,10 +17,10 @@ class UserOwnRole < Role
   end
 
   def create_or_update_default_system_registration_permission(organization, default_environment)
-    unless permissions.find_default_system_registration_permission
-      permissions.create_default_system_registration_permission(organization, default_environment)
-    else
+    if permissions.find_default_system_registration_permission
       permissions.update_default_system_registration_permission(default_environment)
+    else
+      permissions.create_default_system_registration_permission(organization, default_environment)
     end
   end
 end

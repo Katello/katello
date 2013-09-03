@@ -54,6 +54,8 @@ class PromotionChangeset < Changeset
     end
   end
 
+  # TODO: break up method
+  # rubocop:disable MethodLength
   def promote_content(notify = false)
     update_progress! '0'
 
