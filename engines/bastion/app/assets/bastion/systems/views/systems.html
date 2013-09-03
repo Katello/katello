@@ -1,4 +1,10 @@
 <div>
+  <div class="flash_hud" ng-show="saveSuccess">
+    <a class="control" title="Close" ng-click="saveSuccess = false"></a>
+    <ul class="flash_messages success">
+      <li ng-repeat="message in successMessages">{{ message }}</li>
+    </ul>
+  </div>
   <div class="nutupane-titlebar">
     <h1 class="nutupane-title">{{ "Systems" }}</h1>
   </div>

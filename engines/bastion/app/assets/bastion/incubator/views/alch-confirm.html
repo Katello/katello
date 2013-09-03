@@ -1,0 +1,7 @@
+<div ng-show="showConfirm" class="alch-edit-confirm alch-dialog">
+  <span ng-transclude></span>
+  <div class="alch-button-container">
+    <button class="btn primary small" ng-click="action(value)">{{ "Yes" | i18n }}</button>
+    <button class="btn secondary small" ng-click="showConfirm = false">{{ "No" | i18n }}</button>
+  </div>
+</div>

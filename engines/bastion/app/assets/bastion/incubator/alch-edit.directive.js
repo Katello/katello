@@ -265,7 +265,7 @@ angular.module('alchemy')
             templateUrl: 'incubator/views/alch-edit-add-item.html',
             scope: {
                 model: '=alchEditAddItem',
-                handleAdd: '&onAdd',
+                handleAdd: '&onAdd'
             },
             controller: 'AlchEditAddItemController'
         };
