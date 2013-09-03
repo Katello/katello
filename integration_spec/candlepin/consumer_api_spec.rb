@@ -21,11 +21,11 @@ describe 'Resources::Candlepin::Consumer' do
   end
 
   it "should raise RestClient::ResourceNotFound for non-existant uuid" do
-    lambda {consumer = Resources::Candlepin::Consumer.get('12345')}.should raise_exception(RestClient::ResourceNotFound)
+    lambda { Resources::Candlepin::Consumer.get('12345') }.should raise_exception(RestClient::ResourceNotFound)
   end
 
   def random_string
-    rand(100000).to_s
+    rand(100_000).to_s
   end
 
 end
