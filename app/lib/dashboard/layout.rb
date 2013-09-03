@@ -13,15 +13,15 @@
 module Dashboard
   class Layout
 
-    AVAILABLE_WIDGETS = [
-      "subscriptions",
-      "notices",
-      "content_views",
-      "sync",
-      "promotions"
-    ]
+    AVAILABLE_WIDGETS = %w(
+      subscriptions
+      notices
+      content_views
+      sync
+      promotions
+    )
 
-    attr_accessor :widgets, :columns
+    attr_accessor :widgets, :columns, :organization, :current_user
 
     def initialize(organization, current_user)
       @widgets = []
@@ -47,7 +47,7 @@ module Dashboard
     end
 
     def setup_default_layout
-      @columns << Array.new
+      @columns << []
       @widgets.each_with_index{ |w, i| @columns[0] << w if i.even? }
       @columns << @widgets.select{ |w| !@columns[0].include?(w) }
     end
@@ -58,14 +58,6 @@ module Dashboard
 
     def get_widget(name, org)
       "Dashboard::#{name.camelcase}Widget".constantize.new(org)
-    end
-
-    def organization
-      @organization
-    end
-
-    def current_user
-      @current_user
     end
   end
 end

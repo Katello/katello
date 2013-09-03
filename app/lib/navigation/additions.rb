@@ -17,6 +17,7 @@ module Navigation
     @additions = []
     class << self
 
+      # rubocop:disable TrivialAccessors
       def list
         @additions
       end

@@ -14,7 +14,7 @@ module Glue
   class Task
     attr_reader :name, :status, :priority, :action, :action_rollback, :timestamp
 
-    def initialize opts
+    def initialize(opts)
       @name            = opts[:name]
       @status          = opts[:status]
       @priority        = opts[:priority] || 0
@@ -23,7 +23,7 @@ module Glue
       update_ts
     end
 
-    def status= s
+    def status=(s)
       if Glue::Queue::STATUS.include?(s)
         update_ts
         @status = s
@@ -41,12 +41,13 @@ module Glue
     end
 
     private
+
     def update_ts
       @timestamp = Time.now
     end
 
     # sort based on priority
-    def <=> other
+    def <=>(other)
       self.priority <=> other.priority
     end
   end

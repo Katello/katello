@@ -18,7 +18,7 @@ module Navigation
     end
 
     def admin_main
-      [ menu_administration ]
+      [menu_administration]
     end
 
     def user_navigation
@@ -48,7 +48,7 @@ module Navigation
       menu = {:key => :admin,
        :name => _("Administer"),
         :url => :sub_level,
-        :items=> [ menu_orgs, menu_sync_tasks, menu_users, menu_roles ],
+        :items=> [menu_orgs, menu_sync_tasks, menu_users, menu_roles],
         :options => {:class=>'operations header-widget fl menu_parent', "data-menu"=>"operations"},
         :if => :sub_level
       }

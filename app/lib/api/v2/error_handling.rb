@@ -10,6 +10,7 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+# rubocop:disable SymbolName
 module Api
   module V2
     module ErrorHandling
@@ -108,7 +109,7 @@ module Api
         respond_for_exception(exception, :status => :not_found, :text => text)
       end
 
-      def respond_for_exception(exception, options={})
+      def respond_for_exception(exception, options = {})
         options = options.reverse_merge(
             :with_logging    => true,
             :status          => exception.respond_to?('status_code') ? exception.status_code : :internal_server_error,

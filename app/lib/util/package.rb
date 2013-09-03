@@ -27,7 +27,7 @@ module Util
       return unless arch
 
       if nvre = parse_nvre(name)
-        nvre.merge(:suffix => suffix, :arch => arch).delete_if {|k,v| v.nil?}
+        nvre.merge(:suffix => suffix, :arch => arch).delete_if {|k, v| v.nil?}
       end
     end
 
@@ -41,7 +41,7 @@ module Util
          :epoch => match[1],
          :name => match[2],
          :version => match[3],
-         :release => match[4]}.delete_if {|k,v| v.nil?}
+         :release => match[4]}.delete_if {|k, v| v.nil?}
       end
     end
 
@@ -64,7 +64,7 @@ module Util
       return name.split(ARCH_RE)
     end
 
-    def self.build_nvrea(package, include_zero_epoch=true)
+    def self.build_nvrea(package, include_zero_epoch = true)
       nvrea = package[:name] +'-'+ package[:version] +'-'+ package[:release]
       nvrea = nvrea +'.'+ package[:arch] if !package[:arch].nil?
       nvrea = nvrea +'.'+ package[:suffix] if !package[:suffix].nil?
@@ -98,16 +98,16 @@ module Util
       selected_packs
     end
 
-    def self.divide_packages_by_name packages
+    def self.divide_packages_by_name(packages)
       pack_map = {}
       packages.each do |p|
-          pack_map[p['name']] ||= []
-          pack_map[p['name']] << p
+        pack_map[p['name']] ||= []
+        pack_map[p['name']] << p
       end
       pack_map
     end
 
-    def self.filter_latest_packages_by_name packages
+    def self.filter_latest_packages_by_name(packages)
       pack_map = divide_packages_by_name packages
 
       result = []
@@ -117,20 +117,20 @@ module Util
       result
     end
 
-    def self.validate_package_list_format packages
+    def self.validate_package_list_format(packages)
       # validate the format of the comma-separated package list provided
       packages = packages.split(/ *, */ )
 
-      packages.each{ |package_name|
+      packages.each do |package_name|
         if !valid_package_name_format(package_name).nil?
           return false
         end
-      }
+      end
 
       return packages
     end
 
-    def self.valid_package_name_format package
+    def self.valid_package_name_format(package)
       return (package =~ valid_package_characters)
     end
 
@@ -140,20 +140,20 @@ module Util
 
     def self.setup_shared_unique_filter(repoids, search_mode, search_results)
       repo_filter_ids = repoids.collect do |repo|
-            {:term => {:repoids => [repo]}}
+        {:term => {:repoids => [repo]}}
       end
       case search_mode
-        when :shared
-          search_results.filter :and, repo_filter_ids
-        when :unique
-          search_results.filter :or, repo_filter_ids
-          search_results.filter :not, :filter => {:and => repo_filter_ids}
-        else
-          search_results.filter :or, repo_filter_ids
+      when :shared
+        search_results.filter :and, repo_filter_ids
+      when :unique
+        search_results.filter :or, repo_filter_ids
+        search_results.filter :not, :filter => {:and => repo_filter_ids}
+      else
+        search_results.filter :or, repo_filter_ids
       end
     end
 
-    def self.version_filter(minimum=nil, maximum=nil)
+    def self.version_filter(minimum = nil, maximum = nil)
       filters = []
       filters << PackageFilter.new(minimum, PackageFilter::GREATER_THAN).clauses if minimum
       filters << PackageFilter.new(maximum, PackageFilter::LESS_THAN).clauses if maximum

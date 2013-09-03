@@ -14,7 +14,7 @@ class ContentSearch::Cell
   include ContentSearch::Element
   display_attributes :id, :display, :hover, :hover_details, :content
 
-  def as_json(options=nil)
+  def as_json(options = nil)
     to_ret = {
         :id => id
     }

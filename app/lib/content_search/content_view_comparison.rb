@@ -15,7 +15,8 @@ module ContentSearch
   class ContentViewComparison < Search
     attr_accessor :cv_env_ids,
                   :unit_type, # :package, :errata, :puppet_module
-                  :offset
+                  :offset,
+                  :repos
 
     def initialize(options)
       super
@@ -74,14 +75,14 @@ module ContentSearch
           result
         end
 
-        total = cols.inject(0) do |total, (key, col)|
+        total = cols.inject(0) do |sum, (key, col)|
           view_id, env_id = key.split("_")
           # find the product in the view and get the # of units
           env = KTEnvironment.find(env_id)
           version = ContentView.find(view_id).version(env)
           field = "#{unit_type.to_s}_count".to_sym
           count = version.repos(env).select{|r| r.product == product}.map(&field).inject(:+)
-          count ? total + count : total
+          count ? sum + count : sum
         end
 
         product_rows << row unless total < 1
@@ -89,6 +90,8 @@ module ContentSearch
       end
     end
 
+    # TODO: break up method
+    # rubocop:disable MethodLength
     def build_repo_rows(library_repos, cols = [])
       repo_rows = []
       meta_rows = []
@@ -108,12 +111,12 @@ module ContentSearch
           if repo
             view_repos << repo
             display = case unit_type
-                        when :package
-                          repo.package_count
-                        when :errata
-                          repo.errata_count
-                        when :puppet_module
-                          repo.puppet_module_count
+                      when :package
+                        repo.package_count
+                      when :errata
+                        repo.errata_count
+                      when :puppet_module
+                        repo.puppet_module_count
                       end
 
             repo_row.cols[key] = Column.new(:display => display, :id => key)
@@ -132,16 +135,16 @@ module ContentSearch
 
         # build the rows
         units = case unit_type
-                  when :package
-                    Package.search('', offset, page_size, view_repos.map(&:pulp_id),
-                                   [:nvrea_sort, "ASC"], search_mode)
-                  when :errata
-                    Errata.search('', offset, page_size,
-                                  :repoids => view_repos.map(&:pulp_id),
-                                  :search_mode => search_mode)
-                  when :puppet_module
-                    PuppetModule.search('', {:start => offset, :page_size => page_size,
-                                             :repoids => view_repos.map(&:pulp_id), :search_mode => search_mode})
+                when :package
+                  Package.search('', offset, page_size, view_repos.map(&:pulp_id),
+                                 [:nvrea_sort, "ASC"], search_mode)
+                when :errata
+                  Errata.search('', offset, page_size,
+                                :repoids => view_repos.map(&:pulp_id),
+                                :search_mode => search_mode)
+                when :puppet_module
+                  PuppetModule.search('', :start => offset, :page_size => page_size,
+                                      :repoids => view_repos.map(&:pulp_id), :search_mode => search_mode)
                 end
 
         next if units.empty? # if we don't have units, don't show repo
@@ -179,14 +182,6 @@ module ContentSearch
 
         unit_rows << unit_row
       end
-    end
-
-    def repos
-      @repos
-    end
-
-    def repos=(repos = [])
-      @repos = repos
     end
 
     def view_compare_name_display(view, env)

@@ -47,7 +47,7 @@ module ContentSearch::Element
 
     def display_attributes(*attrs)
       @display_attributes = attrs
-      attr_accessor *attrs
+      attr_accessor(*attrs)
     end
 
     def get_display_attributes

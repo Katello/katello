@@ -40,7 +40,7 @@ module Validators
                    _("Invalid erratum types %{invalid_types} provided. Erratum type can be any of %{valid_types}") %
                                     { :invalid_types => invalid_types.join(","),
                                       :valid_types => ErratumRule::ERRATA_TYPES.keys.join(",")})
-             end
+            end
           else
             record.errors.add(attribute, _("The erratum type must be an array. Invalid value provided"))
           end

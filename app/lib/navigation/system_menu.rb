@@ -22,7 +22,7 @@ module Navigation
        :name => _("Systems"),
         :url => :sub_level,
         :options => {:class=>'systems top_level', "data-menu"=>"systems"},
-        :items=> [ menu_systems_org_list, menu_systems_environments_list]
+        :items=> [menu_systems_org_list, menu_systems_environments_list]
       }
       menu[:items] << menu_system_groups
       menu
@@ -40,19 +40,19 @@ module Navigation
     def menu_systems_environments_list
       {:key => :env,
        :name => _("By Environments"),
-       :url => environments_systems_path(),
+       :url => environments_systems_path,
        :if => lambda{current_organization && System.any_readable?(current_organization)},
        :options => {:class=>'systems second_level', "data-menu"=>"systems"}
       }
     end
 
     def menu_system_groups
-       {:key => :system_groups,
-        :name => _("System Groups"),
-        :url => system_groups_path,
-        :if => lambda {current_organization && SystemGroup.any_readable?(current_organization())},
-        :options => {:class=>'systems second_level', "data-menu"=>"systems"}
-       }
+      {:key => :system_groups,
+       :name => _("System Groups"),
+       :url => system_groups_path,
+       :if => lambda {current_organization && SystemGroup.any_readable?(current_organization)},
+       :options => {:class=>'systems second_level', "data-menu"=>"systems"}
+      }
     end
 
     def systems_navigation

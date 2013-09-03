@@ -20,12 +20,12 @@ module Util
         "kt_name_analyzer" => {
           "type"      => "custom",
           "tokenizer" => "keyword",
-          "filter"    => ["lowercase", "asciifolding"]
+          "filter"    => %w(lowercase asciifolding)
         },
         "autcomplete_name_analyzer" => {
             "type"      => "custom",
             "tokenizer" => "keyword",
-            "filter"    => ["standard", "lowercase", "asciifolding", "ngram_filter"]
+            "filter"    => %w(standard lowercase asciifolding ngram_filter)
         }
       }
     end
@@ -42,7 +42,7 @@ module Util
     end
 
     # Filter the search input, escaping unsupported lucene syntax (e.g. usage of - operator)
-    def self.filter_input search
+    def self.filter_input(search)
       return nil if search.nil?
       DISABLED_LUCENE_SPECIAL_CHARS.each do |chr|
         search = search.gsub(chr, '\\'+chr)
@@ -51,7 +51,7 @@ module Util
     end
 
     def self.active_record_search_classes
-      ignore_list =  ["CpConsumerUser", "Pool"]
+      ignore_list =  %w(CpConsumerUser Pool)
       classes = get_subclasses(ActiveRecord::Base)
       classes = classes.select{ |c| !ignore_list.include?(c.name) && c.respond_to?(:index) }
 

@@ -12,8 +12,8 @@
 
 module Util
   module Support
-    def self.deep_copy object
-      Marshal::load(Marshal.dump(object))
+    def self.deep_copy(object)
+      Marshal.load(Marshal.dump(object))
     end
 
     def self.time
@@ -24,7 +24,7 @@ module Util
 
     def self.scrub(params, &block_to_match)
       params.keys.each do |key|
-        if Hash === params[key]
+        if params[key].is_a?(Hash)
           scrub(params[key], &block_to_match)
         elsif block_to_match.call(key, params[key])
           params[key]="[FILTERED]"
@@ -87,7 +87,7 @@ module Util
     # Basically this is a empty array with a total
     # method. We could ve user Tire::Result:Collection
     # But that class is way more involved
-    def self.array_with_total a=[]
+    def self.array_with_total(a = [])
       def a.total
         size
       end

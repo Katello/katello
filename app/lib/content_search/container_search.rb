@@ -16,12 +16,12 @@ module ContentSearch
   class ContainerSearch < Search
     attr_accessor :comparable
 
-    def container_hover_html(container, env=nil, view=nil, details=false)
+    def container_hover_html(container, env = nil, view = nil, details = false)
       render_to_string :partial=>'content_search/container_hover',
                        :locals=>{:container=>container, :env=>env, :view=>view, :details=>details}
     end
 
-    def repo_hover_html(repo, details=false)
+    def repo_hover_html(repo, details = false)
       render_to_string :partial=>'content_search/repo_hover',
                        :locals=>{:repo=>repo, :details=>details}
     end
