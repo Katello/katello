@@ -216,7 +216,7 @@ module Resources
 
         def host(uuid)
           response = Candlepin::CandlepinResource.get(join_path(path(uuid), 'host'), self.default_headers).body
-          if response.any?
+          if response.present?
             JSON.parse(response).with_indifferent_access
           else
             return nil
@@ -227,7 +227,7 @@ module Resources
 
         def compliance(uuid)
           response = Candlepin::CandlepinResource.get(join_path(path(uuid), 'compliance'), self.default_headers(uuid)).body
-          if response.any?
+          if response.present?
             json = JSON.parse(response).with_indifferent_access
             if json['reasons']
               json['reasons'].sort!{|x, y| x['attributes']['name'] <=> y['attributes']['name']}
@@ -242,7 +242,7 @@ module Resources
 
         def events(uuid)
           response = Candlepin::CandlepinResource.get(join_path(path(uuid), 'events'), self.default_headers).body
-          if response.any?
+          if response.present?
             Util::Data.array_with_indifferent_access JSON.parse(response)
           else
             return []
