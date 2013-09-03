@@ -25,7 +25,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        1.4.5
+Version:        1.4.6
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -920,6 +920,46 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Tue Sep 03 2013 Partha Aji <paji@redhat.com> 1.4.6-1
+- Updated spec to deal with renaming of cp tomcat in f19 (paji@redhat.com)
+- Merge pull request #2867 from komidore64/auto-attach-all-systems-notification
+  (komidore64@gmail.com)
+- Merge pull request #2873 from daviddavis/temp/20130903133042
+  (daviddavis@redhat.com)
+- Candlepin: Response could be a string; must use present?
+  (daviddavis@redhat.com)
+- Removing integration_spec folder references from katello.spec
+  (daviddavis@redhat.com)
+- Merge pull request #2868 from daviddavis/temp/20130903110224
+  (daviddavis@redhat.com)
+- 987936-link-helper - using search for crosslinking (thomasmckay@redhat.com)
+- Merge pull request #2835 from jlsherrill/headpin_fix (jlsherrill@gmail.com)
+- Rubocop: Cleaning up helpers (daviddavis@redhat.com)
+- Merge pull request #2861 from daviddavis/temp/20130831123621
+  (daviddavis@redhat.com)
+- Removing integration_spec folder (daviddavis@redhat.com)
+- 1002665 - User notification not displayed after running auto attach system
+  while running "Auto-attach available subscriptions to all systems"
+  (komidore64@gmail.com)
+- Merge pull request #2862 from daviddavis/temp/20130831151809
+  (daviddavis@redhat.com)
+- Rubocop: Fixing app/lib directory (daviddavis@redhat.com)
+- Merge pull request #2864 from daviddavis/temp/20130901120718
+  (daviddavis@redhat.com)
+- Merge pull request #2863 from daviddavis/temp/20130831182736
+  (daviddavis@redhat.com)
+- Rubocop: Fixing top level models directory (daviddavis@redhat.com)
+- Merge pull request #2854 from iNecas/travis-apipie (inecas@redhat.com)
+- Rubocop: Fixing the API controllers (daviddavis@redhat.com)
+- Rubocop: checking integration_spec folder (daviddavis@redhat.com)
+- Merge pull request #2831 from ehelms/product-ui (ericdhelms@gmail.com)
+- Bastion: Updates for selecting the newly created provider and cleanup.
+  (ericdhelms@gmail.com)
+- Bastion: Adding products table view and creation screen.
+  (ericdhelms@gmail.com)
+- Test ability to generate apipie doc from travis (inecas@redhat.com)
+- including engine files in katello-common for headpin (jsherril@redhat.com)
+
 * Fri Aug 30 2013 Partha Aji <paji@redhat.com> 1.4.5-1
 - Changed katello to use ruby-release  instead of ruby-abi for f19
   (paji@redhat.com)
