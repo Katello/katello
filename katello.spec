@@ -686,33 +686,6 @@ usermod -a -G katello-shared tomcat
 %{homedir}/app/lib/validators
 %{homedir}/app/lib/api
 %{homedir}/app/lib/dashboard
-%dir %{homedir}/engines/fort
-%{homedir}/engines/fort/app
-%{homedir}/engines/fort/config
-%{homedir}/engines/fort/fort.gemspec
-%{homedir}/engines/fort/Gemfile
-%{homedir}/engines/fort/db
-%{homedir}/engines/fort/lib
-%{homedir}/engines/fort/README.rdoc
-%exclude %{homedir}/engines/fort/test
-%exclude %{homedir}/engines/fort/script
-%exclude %{homedir}/engines/fort/Rakefile
-%exclude %{homedir}/engines/fort/LICENSE.txt
-%exclude %{homedir}/engines/fort/.gitignore
-%dir %{homedir}/engines/bastion
-%{homedir}/engines/bastion/bastion.gemspec
-%{homedir}/engines/bastion/README.md
-%{homedir}/engines/bastion/app
-%{homedir}/engines/bastion/lib
-%{homedir}/engines/bastion/vendor/assets/components
-%exclude %{homedir}/engines/bastion/bower.json
-%exclude %{homedir}/engines/bastion/Gruntfile.js
-%exclude %{homedir}/engines/bastion/karma.conf.js
-%exclude %{homedir}/engines/bastion/package.json
-%exclude %{homedir}/engines/bastion/.bowerrc
-%exclude %{homedir}/engines/bastion/.jshintrc
-%exclude %{homedir}/engines/bastion/.gitignore
-%exclude %{homedir}/engines/bastion/test
 
 %dir %{homedir}/app/lib/resources
 %{homedir}/app/lib/content_search
@@ -772,6 +745,34 @@ usermod -a -G katello-shared tomcat
 %attr(755, katello, katello) %{datadir}/openid-store/associations
 %attr(755, katello, katello) %{datadir}/openid-store/nonces
 %attr(755, katello, katello) %{datadir}/openid-store/temp
+#Engine files
+%dir %{homedir}/engines/fort
+%{homedir}/engines/fort/app
+%{homedir}/engines/fort/config
+%{homedir}/engines/fort/fort.gemspec
+%{homedir}/engines/fort/Gemfile
+%{homedir}/engines/fort/db
+%{homedir}/engines/fort/lib
+%{homedir}/engines/fort/README.rdoc
+%exclude %{homedir}/engines/fort/test
+%exclude %{homedir}/engines/fort/script
+%exclude %{homedir}/engines/fort/Rakefile
+%exclude %{homedir}/engines/fort/LICENSE.txt
+%exclude %{homedir}/engines/fort/.gitignore
+%dir %{homedir}/engines/bastion
+%{homedir}/engines/bastion/bastion.gemspec
+%{homedir}/engines/bastion/README.md
+%{homedir}/engines/bastion/app
+%{homedir}/engines/bastion/lib
+%{homedir}/engines/bastion/vendor/assets/components
+%exclude %{homedir}/engines/bastion/bower.json
+%exclude %{homedir}/engines/bastion/Gruntfile.js
+%exclude %{homedir}/engines/bastion/karma.conf.js
+%exclude %{homedir}/engines/bastion/package.json
+%exclude %{homedir}/engines/bastion/.bowerrc
+%exclude %{homedir}/engines/bastion/.jshintrc
+%exclude %{homedir}/engines/bastion/.gitignore
+%exclude %{homedir}/engines/bastion/test
 
 
 %defattr(-, katello, katello)
