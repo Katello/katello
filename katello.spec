@@ -542,7 +542,7 @@ rm -f bundler.d/build.rb
 # copy the application to the target directory
 # note that locale is listed here, which copies po files
 mkdir .bundle
-cp -R .bundle Gemfile.in bundler.d Rakefile app autotest ca config config.ru db integration_spec lib locale public script spec vendor engines %{buildroot}%{homedir}
+cp -R .bundle Gemfile.in bundler.d Rakefile app autotest ca config config.ru db lib locale public script spec vendor engines %{buildroot}%{homedir}
 rm -f {buildroot}%{homedir}/script/katello-reset-dbs
 
 # do not copy mo files for now, per tom
@@ -672,7 +672,6 @@ usermod -a -G katello-shared tomcat
 %{homedir}/db/migrate/
 %{homedir}/db/products.json
 %{homedir}/db/seeds.rb
-%{homedir}/integration_spec
 %{homedir}/lib/*.rb
 %{homedir}/lib/katello/
 %exclude %{homedir}/lib/README
@@ -818,7 +817,6 @@ usermod -a -G katello-shared tomcat
 %{homedir}/db/migrate/
 %{homedir}/db/products.json
 %{homedir}/db/seeds.rb
-%{homedir}/integration_spec
 %{homedir}/lib/*.rb
 %{homedir}/lib/katello/
 %exclude %{homedir}/lib/README
