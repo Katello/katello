@@ -14,8 +14,8 @@ module KatelloUrlHelper
 
   unless defined? CONSTANTS_DEFINED
     PORT = /(([:]\d{1,5})?)/
-    PROTOCOLS = /(https?|ftp):\/\//ix
-    FILEPREFIX = /(^file:\/\/)|^\//ix # is this a file based url
+    PROTOCOLS = %r{(https?|ftp)://}ix
+    FILEPREFIX = %r{(^file://)|^/}ix # is this a file based url
     # validation of hostname according to RFC952 and RFC1123
     DOMAIN = /(?:(?:(?:(?:[a-z0-9][-a-z0-9]{0,61})?[a-z0-9])[.])*(?:[a-z][-a-z0-9]{0,61}[a-z0-9]|[a-z])[.]?)/
     IPV4 = /(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)/

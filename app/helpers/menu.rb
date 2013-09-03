@@ -28,25 +28,25 @@ module Menu
     render_navigation(:items=>items, :expand_all=>true, :level => level)
   end
 
-  def render_main_menu()
+  def render_main_menu
     prune = @main_nav.nil?
     @main_nav ||= menu_main
     render_menu(1, @main_nav, prune)
   end
 
-  def render_admin_menu()
+  def render_admin_menu
     items = admin_main
     prune_menu(items)
     render_navigation(:items=>items, :expand_all=>true, :level=> 2) unless items.empty?
   end
 
-  def render_notifications_menu()
+  def render_notifications_menu
     items = notifications_menu_main
     prune_menu(items)
     render_navigation(:items=>items, :expand_all=>true) unless items.empty?
   end
 
-  def render_main_sub_menu()
+  def render_main_sub_menu
     prune = @main_nav.nil?
     @main_nav ||= menu_main
     render_sublevel_menu(@main_nav, prune)
@@ -60,9 +60,9 @@ module Menu
     end.compact.join("").html_safe
   end
 
-
   private
-  def prune_menu menu_items
+
+  def prune_menu(menu_items)
     #have a list of menu items -> example [dashboard_hash, organizations_hash]
     #we need to prune that list based on
     #1. :if block wont pass (Permission issues  -> eg: user has no org access)   OR
@@ -71,32 +71,32 @@ module Menu
       # check the :if block
       if_proc =  menu.delete(:if)
       if (!if_proc) || if_proc == :sub_level || if_proc.call
-         # :if block worked out.
-         # Checking the children
-         if menu[:items]
-           menu[:items] = menu[:items].call if Proc === menu[:items]
-           # prune the sub menus
-           prune_menu(menu[:items]) if menu[:items]
+        # :if block worked out.
+        # Checking the children
+        if menu[:items]
+          menu[:items] = menu[:items].call if menu[:items].is_a?(Proc)
+          # prune the sub menus
+          prune_menu(menu[:items]) if menu[:items]
 
-           # now that they have been pruned, set the default url.
-           # pick that from the first accessible child
-           if (!menu[:url] || menu[:url] == :sub_level) && !menu[:items].empty?
-             menu[:url] = menu[:items][0][:url]
-           end
+          # now that they have been pruned, set the default url.
+          # pick that from the first accessible child
+          if (!menu[:url] || menu[:url] == :sub_level) && !menu[:items].empty?
+            menu[:url] = menu[:items][0][:url]
+          end
 
-           menu[:url] =  menu[:url].call if Proc===menu[:url]
+          menu[:url] =  menu[:url].call if menu[:url].is_a?(Proc)
 
-           #we want this item to be pruned
-           # if there are no accessible children
+          #we want this item to be pruned
+          # if there are no accessible children
 
-           menu[:items].empty?
-         else
-           # this is a leaf node
-           # and its condition has already been evaluated to true
-           # so keep it
-           menu[:url] =  menu[:url].call if Proc===menu[:url]
-           false
-         end
+          menu[:items].empty?
+        else
+          # this is a leaf node
+          # and its condition has already been evaluated to true
+          # so keep it
+          menu[:url] =  menu[:url].call if menu[:url].is_a?(Proc)
+          false
+        end
       else
         # This node's condition has been evaluated to false
         # so prune it.

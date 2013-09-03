@@ -12,7 +12,7 @@
 
 module BreadcrumbHelper
 
-  def add_crumb_node! hash, id, url, name, trail, params={}, attributes ={}
+  def add_crumb_node!(hash, id, url, name, trail, params = {}, attributes = {})
     cache = false || params[:cache] #default to false
     hash[id] = {:name=>name, :url=>url, :trail=>trail, :cache=>cache}
     hash[id][:content] = params[:content] if params[:content]
@@ -25,18 +25,16 @@ module BreadcrumbHelper
 end
 
 module ChangesetBreadcrumbs
-  def generate_cs_breadcrumb changesets
+  def generate_cs_breadcrumb(changesets)
     bc = {}
     add_crumb_node!(bc, "changesets", "", _("Changesets"), [], {:client_render => true})
 
-    changesets.each{|cs|
-      process_cs cs, bc
-    } if changesets
+    changesets.each { |cs| process_cs cs, bc } if changesets
 
     bc.to_json
   end
 
-  def process_cs cs, bc
+  def process_cs(cs, bc)
     cs_info = {:is_new=>cs.state == Changeset::NEW, :state=>cs.state}
     if (cs.state == Changeset::PROMOTING)
       prog = cs.task_status.progress
@@ -50,7 +48,7 @@ module ChangesetBreadcrumbs
                   {:client_render => true}, cs_info)
   end
 
-  def changeset_bc_id cs
+  def changeset_bc_id(cs)
     "changeset_#{cs.id}" if cs
   end
 end
@@ -62,85 +60,90 @@ module ContentBreadcrumbs
   #                                   # a list of other :ids creating the trail leading up to it
   #
   def generate_content_breadcrumb
-   bc = {}
-   content_crumb_id = "content"
-   content_views_crumb_id = "content_views"
+    bc = {}
+    content_crumb_id = "content"
 
-   #add_crumb_node!(bc, content_crumb_id, details_promotion_path(@environment.name) ,
-   #    _("Content"), [], {:cache =>true, :content=>render(:partial=>"detail",
-   #                              :locals=>{:environment_name => @environment.name,
-   #                                        :read_contents => @environment.contents_readable?})})
-   #
-   #add_crumb_node!(bc, content_views_crumb_id, content_views_promotion_path(@environment.name), _("Content Views"),
-   #               [content_crumb_id])
+    #add_crumb_node!(bc, content_crumb_id, details_promotion_path(@environment.name) ,
+    #    _("Content"), [], {:cache =>true, :content=>render(:partial=>"detail",
+    #                              :locals=>{:environment_name => @environment.name,
+    #                                        :read_contents => @environment.contents_readable?})})
+    #
+    #add_crumb_node!(bc, content_views_crumb_id, content_views_promotion_path(@environment.name), _("Content Views"),
+    #               [content_crumb_id])
 
 
-   view_versions = @environment.content_view_versions.non_default_view || []
-   next_env_view_version_ids = @next_environment.nil? ? [].to_set :
-       @next_environment.content_view_versions.non_default_view.
-           pluck("content_view_versions.id").to_set
+    view_versions = @environment.content_view_versions.non_default_view || []
+    next_env_view_version_ids = @next_environment.nil? ? [].to_set :
+      @next_environment.content_view_versions.non_default_view.
+      pluck("content_view_versions.id").to_set
 
-   add_crumb_node!(bc, content_crumb_id, details_promotion_path(@environment.name), _("Content"), [],
-                   {:cache => true,
-                    :content => render(:partial => "content_views",
-                                       :locals => {:environment => @environment,
-                                                   :content_view_versions => view_versions,
-                                                   :next_env_view_version_ids => next_env_view_version_ids})})
+    add_crumb_node!(bc, content_crumb_id, details_promotion_path(@environment.name), _("Content"), [],
+                    {:cache => true,
+                     :content => render(:partial => "content_views",
+                                        :locals => {:environment => @environment,
+                                                    :content_view_versions => view_versions,
+                                                    :next_env_view_version_ids => next_env_view_version_ids})})
 
-   bc.to_json
+    bc.to_json
   end
 
-  def changeset_id cs
+  def changeset_id(cs)
     return cs.id if cs
   end
 end
 
 module RolesBreadcrumbs
+
+  # rubocop:disable MethodLength
   def generate_roles_breadcrumb
     bc = {}
 
     add_crumb_node!(bc, "roles", "", _(@role.name), [],
-                    {:client_render => true},{:locked => @role.locked?})
+                    {:client_render => true}, {:locked => @role.locked?})
     add_crumb_node!(bc, "role_permissions", "", _("Permissions"), ['roles'],
                     {:client_render => true})
     add_crumb_node!(bc, "role_users", "", _("Users"), ['roles'],
                     {:client_render => true})
     add_crumb_node!(bc, "role_ldap_groups", "", _("LDAP Groups"), ['roles'],
                     {:client_render => true}) if Katello.config.ldap_roles
-    add_crumb_node!(bc, "global", "", _("Global Permissions"), ['roles', "role_permissions"],
+    add_crumb_node!(bc, "global", "", _("Global Permissions"), %w(roles role_permissions),
                     {:client_render => true}, { :count => 0, :permission_details => get_global_verbs_and_tags })
 
-    @organizations.each{|org|
-      add_crumb_node!(bc, organization_bc_id(org), "", org.name, ['roles', 'role_permissions'],
-                    {:client_render => true}, { :count => 0})
-    } if @organizations
+    if @organizations
+      @organizations.each do |org|
+        add_crumb_node!(bc, organization_bc_id(org), "", org.name, %w(roles role_permissions),
+                        {:client_render => true}, { :count => 0})
+      end
+    end
 
-    User.visible.each{ |user|
-      add_crumb_node!(bc, user_bc_id(user), "", user.username, ['roles', 'role_users'],
+    User.visible.each do |user|
+      add_crumb_node!(bc, user_bc_id(user), "", user.username, %w(roles role_users),
                     {:client_render => true}, { :has_role => false })
-    }
+    end
 
     @role.ldap_group_roles.each do |group|
       add_group_to_bc(bc, group)
     end
 
-    @role.users.each{ |user|
+    @role.users.each do |user|
       bc[user_bc_id(user)][:has_role] = true
-    }
+    end
 
-    @role.permissions.each{ |perm|
+    @role.permissions.each do |perm|
       add_permission_bc(bc, perm, true)
-    }
+    end
 
     bc.to_json
   end
 
   def add_group_to_bc(bc, group)
-    add_crumb_node!(bc, "ldap_group_#{group.id}", '', group.ldap_group, ['roles', 'roles_ldap_groups'],
+    add_crumb_node!(bc, "ldap_group_#{group.id}", '', group.ldap_group, %w(roles roles_ldap_groups),
                   {:client_render => true}, { :has_role => false, :id => group.id })
   end
 
-  def add_permission_bc bc, perm, adjust_count
+  # TODO: break up method
+  # rubocop:disable MethodLength
+  def add_permission_bc(bc, perm, adjust_count)
     global = perm.resource_type.global?
 
     type = perm.resource_type
@@ -159,7 +162,7 @@ module RolesBreadcrumbs
     end
 
     if global
-      add_crumb_node!(bc, permission_global_bc_id(perm), "", perm.id, ['roles', 'role_permissions', 'global'],
+      add_crumb_node!(bc, permission_global_bc_id(perm), "", perm.id, %w(roles role_permissions global),
                   { :client_render => true },
                   { :global => global, :type => type.name, :type_name => type_name,
                     :name => _(perm.name), :description => _(perm.description),
@@ -193,7 +196,7 @@ module RolesBreadcrumbs
     resource_types.each do |type, value|
       details[type] = {}
       details[type][:verbs] = Verb.verbs_for(type, true).collect {|name, display_name| VirtualTag.new(name, display_name)}
-      details[type][:verbs].sort! {|a,b| a.display_name <=> b.display_name}
+      details[type][:verbs].sort! {|a, b| a.display_name <=> b.display_name}
       details[type][:global] = value["global"]
       details[type][:name] = value["name"]
     end
@@ -201,7 +204,7 @@ module RolesBreadcrumbs
     return details
   end
 
-  def organization_bc_id organization
+  def organization_bc_id(organization)
     if organization
       "organization_#{organization.id}"
     else
@@ -209,11 +212,11 @@ module RolesBreadcrumbs
     end
   end
 
-  def user_bc_id user
+  def user_bc_id(user)
     "user_#{user.id}"
   end
 
-  def permission_bc_id organization, permission
+  def permission_bc_id(organization, permission)
     if organization
       "permission_#{organization.id}_#{permission.id}"
     else
@@ -221,7 +224,7 @@ module RolesBreadcrumbs
     end
   end
 
-  def permission_global_bc_id permission
+  def permission_global_bc_id(permission)
     "permission_global_#{permission.id}"
   end
 end

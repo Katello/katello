@@ -12,14 +12,14 @@
 
 module SystemErrataHelper
 
-  def errata_type_class errata
+  def errata_type_class(errata)
     case errata.type
-      when Errata::SECURITY
-        return "security_icon"
-      when Errata::ENHANCEMENT
-        return "enhancement_icon"
-      when Errata::BUGZILLA
-        return "bugzilla_icon"
+    when Errata::SECURITY
+      return "security_icon"
+    when Errata::ENHANCEMENT
+      return "enhancement_icon"
+    when Errata::BUGZILLA
+      return "bugzilla_icon"
     end
   end
 

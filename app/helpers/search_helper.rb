@@ -29,7 +29,7 @@ module SearchHelper
     @search_favorites.length < max_search_favorites ? @search_favorites.length : max_search_favorites
   end
 
-  def search_string search
+  def search_string(search)
     "?search="+search.params+"#" unless search.nil? || search.params.nil?
   end
 end

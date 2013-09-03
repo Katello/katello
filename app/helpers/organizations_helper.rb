@@ -19,10 +19,10 @@ module OrganizationsHelper
 
   def organization_servicelevel_edit(org)
     levels = {}
-    org.service_levels.each { |level|
+    org.service_levels.each do |level|
       levels["#{level}"] = _("Service Level %s") % level
       levels["#{level}"] = _("Service Level %s") % level
-    }
+    end
 
     levels[''] = _("No Service Level Preference")
 

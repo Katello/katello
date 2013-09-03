@@ -13,13 +13,13 @@
 module ContentSearchHelper
 
   def content_types
-    content_types = [
-      [ _("Content Views"), "views"],
-      [ _("Products"), "products"],
-      [ _("Repositories"), "repos"],
-      [ _("Packages"), "packages"],
-      [ _("Errata"), "errata"],
-      [ _("Puppet Modules"), "puppet_modules"]
+    [
+      [_("Content Views"), "views"],
+      [_("Products"), "products"],
+      [_("Repositories"), "repos"],
+      [_("Packages"), "packages"],
+      [_("Errata"), "errata"],
+      [_("Puppet Modules"), "puppet_modules"]
     ]
   end
 
@@ -47,7 +47,7 @@ module ContentSearchHelper
     }
   end
 
-  def repo_compare_name_display repo
+  def repo_compare_name_display(repo)
     {
       :environment_name => repo.environment.name,
       :repo_name => repo.name,

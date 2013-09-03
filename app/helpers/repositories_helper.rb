@@ -14,9 +14,9 @@ module RepositoriesHelper
   def gpg_keys_edit
     keys = {}
 
-    GpgKey.readable(current_organization).each{ |key|
+    GpgKey.readable(current_organization).each do |key|
       keys[key.id] = key.name
-    }
+    end
 
     keys[""] = ""
     keys["selected"] = @repository.gpg_key_id || ""

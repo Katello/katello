@@ -40,7 +40,7 @@ module NavigationHelper
     }
 
     javascript do
-      # TODO Get rid of this ugliness
+      # TODO: Get rid of this ugliness
       (
         'angular.module("Bastion.menu").constant("Menus", {
           menu: ' + menu.to_json + ',
