@@ -197,6 +197,7 @@ class Organization < ActiveRecord::Base
       break unless Resources::Candlepin::Job.not_finished?(Resources::Candlepin::Job.get(job["id"]))
       sleep options[:pause]
     end
+    return job["id"]
   end
 
 end
