@@ -30,7 +30,7 @@ module BrandingHelper
 
   def redhat_bugzilla_link
     url = "https://bugzilla.redhat.com/enter_bug.cgi?product=Katello"
-    link_to (_("the %s Bugzilla") % release_name), url
+    link_to((_("the %s Bugzilla") % release_name), url)
   end
 
   def release_name

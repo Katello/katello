@@ -17,7 +17,7 @@ module FiltersHelper
   # the record id, list of products and list of repos. It assumes that the
   # record has 'products' and 'repositories' relationships.
   def objectify(record)
-    repos = Hash.new { |h,k| h[k] = [] }
+    repos = Hash.new { |h, k| h[k] = [] }
     record.repositories.each do |repo|
       repos[repo.product.id.to_s] <<  repo.id.to_s
     end

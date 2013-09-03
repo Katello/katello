@@ -44,7 +44,7 @@ module SyncManagementHelper
   module RepoMethods
     # returns all repos in hash representation with minors and arch children included
     def collect_repos(products, env, include_disabled = false)
-      Glue::Pulp::Repos.prepopulate! products, env,[]
+      Glue::Pulp::Repos.prepopulate! products, env, []
 
       products.map do |prod|
         minor_repos, repos_without_minor = collect_minor(prod.repos(env, include_disabled))
@@ -89,19 +89,19 @@ module SyncManagementHelper
     end
 
     #Used for debugging collect_repos output
-    def pprint_collection coll
-      coll.each{|prod|
+    def pprint_collection(coll)
+      coll.each do |prod|
         Rails.logger.error prod[:name]
-        prod[:children].each{|major|
+        prod[:children].each do |major|
           Rails.logger.error major[:name]
-          major[:children].each{|minor|
+          major[:children].each do |minor|
             Rails.logger.error minor[:name]
-            minor[:children].each{|arch|
+            minor[:children].each do |arch|
               Rails.logger.error arch[:repos].length
-            }
-          }
-        }
-      }
+            end
+          end
+        end
+      end
     end
   end
 

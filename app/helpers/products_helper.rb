@@ -14,9 +14,9 @@ module ProductsHelper
   def gpg_keys_edit
     keys = {}
 
-    GpgKey.readable(current_organization).each{ |key|
+    GpgKey.readable(current_organization).each do |key|
       keys[key.id] = key.name
-    }
+    end
 
     keys[""] = ""
     keys["selected"] = @product.gpg_key_id || ""
@@ -31,7 +31,7 @@ module ProductsHelper
   # the record id, list of products and list of repos. It assumes that the
   # record has a 'repositories' relationship.
   def objectify(record)
-    repos = Hash.new { |h,k| h[k] = [] }
+    repos = Hash.new { |h, k| h[k] = [] }
     record.repositories.each do |repo|
       repos[repo.product.id.to_s] <<  repo.id.to_s
     end
@@ -55,9 +55,8 @@ module ProductsHelper
       @product_hash = {}
       options[:readable_products].sort_by(&:name).each do |prod|
         repos = []
-        prod.repos(current_organization.library).where(:content_type=>options[:content_types]).sort{|a,b| a.name <=> b.name}.each{|repo|
-          repos << {:name=>repo.name, :id=>repo.id}
-        }
+        prod_repos = prod.repos(current_organization.library).where(:content_type=>options[:content_types]).sort{|a, b| a.name <=> b.name}
+        prod_repos.each { |repo| repos << {:name=>repo.name, :id=>repo.id} }
         @product_hash[prod.id] = {:name=>prod.name, :repos=>repos, :id=>prod.id,
                                   :editable=>options[:editable_products].include?(prod)}
       end
