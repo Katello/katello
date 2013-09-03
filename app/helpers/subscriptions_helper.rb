@@ -19,24 +19,6 @@ module SubscriptionsHelper
     product
   end
 
-  def subscriptions_system_link_helper(host_id)
-    system = System.first(:conditions => { :uuid => host_id })
-    link_to system.name, root_path + "systems#panel=system_#{system.id}"
-  rescue
-    _('System with uuid %s not found') % host_id
-  end
-
-  def subscriptions_distributor_link_helper(distributor_id)
-    distributor = Distributor.first(:conditions => { :id => distributor_id })
-    link_to distributor.name, root_path + "distributors#panel=distributor_#{distributor.id}"
-  rescue
-    _('Distributor with uuid %s not found') % distributor_id
-  end
-
-  def subscriptions_activation_key_link_helper(key)
-    link_to key.name, root_path + "activation_keys#panel=activation_key_#{key.id}"
-  end
-
   def subscriptions_manifest_link_helper(status, label = nil)
     if status['webAppPrefix']
       if !status['webAppPrefix'].start_with? 'http'
