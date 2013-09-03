@@ -35,7 +35,8 @@ module Util
     # before it causes more pain
     def precalculate(paths_with_vars)
       paths_with_vars.uniq.reduce({}) do |ret, path_with_vars|
-        ret[path_with_vars] = substitute_vars(path_with_vars); ret
+        ret[path_with_vars] = substitute_vars(path_with_vars)
+        ret
       end
     end
 
@@ -55,7 +56,8 @@ module Util
 
       prefixes_without_vars = substitute_vars_in_prefix(prefix_with_vars)
       paths_without_vars = prefixes_without_vars.reduce({}) do |h, (substitutions, prefix_without_vars)|
-        h[substitutions] = prefix_without_vars + suffix_witout_vars; h
+        h[substitutions] = prefix_without_vars + suffix_witout_vars
+        h
       end
       return paths_without_vars
     end
@@ -72,14 +74,14 @@ module Util
 
       unless prefixes_without_vars
         prefixes_without_vars = {}
-        while !paths_with_vars.empty?
+        until paths_with_vars.empty?
           substitutions, path = paths_with_vars.shift
 
           if is_substituable path
             for_each_substitute_of_next_var substitutions, path do |new_substitution, new_path|
               begin
                 paths_with_vars[new_substitution] = new_path
-              rescue Errors::SecurityViolation => e
+              rescue Errors::SecurityViolation
                 # Some paths may not be accessible
                 @resource.log :warn, "#{new_path} is not accessible, ignoring"
               end
@@ -93,7 +95,7 @@ module Util
       return prefixes_without_vars
     end
 
-    def is_substituable path
+    def is_substituable(path)
       path.include?("$")
     end
 
@@ -110,7 +112,7 @@ module Util
         get_substitutions_from(base_path).compact.each do |value|
 
           new_substitutions = substitutions.merge(var => value)
-          new_path = path.sub("$#{var}",value)
+          new_path = path.sub("$#{var}", value)
 
           yield new_substitutions, new_path
         end
@@ -118,7 +120,7 @@ module Util
     end
 
     def get_substitutions_from(base_path)
-      @resource.get(File.join(base_path,"listing")).split("\n")
+      @resource.get(File.join(base_path, "listing")).split("\n")
     rescue Errors::NotFound => e # some of listing file points to not existing content
       @resource.log :error, e.message
       @resource.product.try(:repositories_cdn_import_failed!)

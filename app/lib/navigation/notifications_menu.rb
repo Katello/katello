@@ -13,14 +13,14 @@ module Navigation
   module NotificationsMenu
 
     def notifications_menu_main
-      [ menu_notifications ]
+      [menu_notifications]
     end
 
     def menu_notifications
       {:key => :notifications,
        :name => _("Notifications"),
-        :url => notices_path,
-        :options => {:class=>'notices top_level', "data-menu"=>"notices"}
+       :url => notices_path,
+       :options => {:class=>'notices top_level', "data-menu"=>"notices"}
       }
     end
 

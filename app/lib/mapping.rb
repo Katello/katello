@@ -32,7 +32,7 @@ module Mapping
       matched_name = "#{name} #{version}"
       naming = Mapping.configuration['imagefactory_naming'] || {}
       naming.each do |key, values|
-        regexp_str = "^#{Regexp.escape(key).gsub('\*','.*')}$"
+        regexp_str = "^#{Regexp.escape(key).gsub('\*', '.*')}$"
         if Regexp.new(regexp_str) =~ matched_name
           return values.map(&:to_s)
         end

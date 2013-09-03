@@ -15,7 +15,8 @@ module Navigation
   class Item
     include Navigation::Utils
 
-    attr_reader :key, :display, :authorization, :url
+    attr_accessor :authorization # Dynamically sets the authorization rule
+    attr_reader :key, :display, :url
 
     # Initalizer for the Navigation Item object
     #
@@ -38,11 +39,6 @@ module Navigation
       else
         @authorization
       end
-    end
-
-    # Dynamically sets the authorization rule
-    def authorization=(authorization)
-      @authorization = authorization
     end
 
     # Defines the JSON structure for navigation menu items

@@ -20,7 +20,7 @@ module KTLocale
     set_locale parse_accept_locale
   end
 
-  def set_locale locales
+  def set_locale(locales)
     locales = Array(locales)
     if current_user && current_user.default_locale
       I18n.locale = current_user.default_locale
@@ -38,7 +38,7 @@ module KTLocale
   #
   # The method accept parameter = list of locales returned by parse_locale. Since the method is used
   # outside of the request context, we need to pass this data in as a parameter.
-  def pick_available_locale locales
+  def pick_available_locale(locales)
     locales = Array(locales)
 
     # Look for full match
@@ -61,10 +61,12 @@ module KTLocale
     locale_lang = (request.env['HTTP_ACCEPT_LANGUAGE'] || '').split(/\s*,\s*/).collect do |l|
       l += ';q=1.0' unless l =~ /;q=\d+\.\d+$/
       l.split(';q=')
-    end.sort do |x, y|
+    end
+    locale_lang = locale_lang.sort do |x, y|
       raise "incorrect locale format" unless x.first =~ /^[a-z\-]+$/i
       y.last.to_f <=> x.last.to_f
-    end.collect do |l|
+    end
+    locale_lang.collect do |l|
       l.first.downcase.gsub(/-[a-z]+$/i) { |x| x.upcase }
     end
   end

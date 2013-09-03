@@ -12,6 +12,8 @@
 
 class RepoDiscovery
 
+  attr_reader :found
+
   def initialize(url)
     #add a / on the end, as directories require it or else
     #  They will get double slahes on them
@@ -24,15 +26,11 @@ class RepoDiscovery
   def run(found_lambda, continue_lambda)
     if @uri.scheme == 'file'
       file_crawl(found_lambda, continue_lambda)
-    elsif ['http', 'https'].include?(@uri.scheme)
+    elsif %w(http https).include?(@uri.scheme)
       http_crawl(found_lambda, continue_lambda)
     else
       raise _("Unsupported URL protocol %s.")  % @uri.scheme
     end
-  end
-
-  def found
-    @found
   end
 
   private

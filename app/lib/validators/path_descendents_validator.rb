@@ -20,7 +20,7 @@ module Validators
       record.errors[:prior] << _(" environment cannot be set to an environment already on its path") if is_duplicate? record.prior
     end
 
-    def is_duplicate? record
+    def is_duplicate?(record)
       s = record.successor
       ret = [record.id]
       until s.nil?

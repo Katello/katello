@@ -15,17 +15,17 @@ module Navigation
     module Headpin
       class Systems < Navigation::Menu
 
-      def initialize(organization)
-        @key           = :systems_headpin
-        @display       = _("Systems")
-        @type          = 'dropdown'
-        @authorization = true
-        @items         = [
-          Navigation::Items::Systems.new(organization),
-          Navigation::Items::SystemGroups.new(organization)
-        ]
-        super
-      end
+        def initialize(organization)
+          @key           = :systems_headpin
+          @display       = _("Systems")
+          @type          = 'dropdown'
+          @authorization = true
+          @items         = [
+            Navigation::Items::Systems.new(organization),
+            Navigation::Items::SystemGroups.new(organization)
+          ]
+          super
+        end
 
       end
     end

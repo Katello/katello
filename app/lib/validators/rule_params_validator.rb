@@ -16,7 +16,7 @@ module Validators
       rule_type = record.rule_type.downcase
 
       if value && value[:units].present?
-        unless value[:units].is_a?(Array)
+        if !value[:units].is_a?(Array)
           record.errors.add(attribute, _("Invalid %s rule specified. Units must be an array.") % rule_type)
         else
           value[:units].each do |unit|

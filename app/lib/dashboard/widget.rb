@@ -35,6 +35,7 @@ class Dashboard::Widget
 
   private
 
+  # rubocop:disable TrivialAccessors
   def current_organization
     @organization
   end
