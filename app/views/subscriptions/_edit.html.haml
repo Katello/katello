@@ -107,7 +107,7 @@
               = label :host, :host, _("Required Host")
             .input
               .value
-                = subscriptions_system_link_helper @subscription.host_id
+                = system_link_helper @subscription.host_id
       - if @subscription.provided_products.length > 0
         %h5 #{_("Provided Products")}
         .control-group
