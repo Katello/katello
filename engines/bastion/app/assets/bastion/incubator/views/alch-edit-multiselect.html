@@ -1,4 +1,4 @@
-<div class="alch-dialog alch-multiselect" ng-class="{open: editMode}">
+<div class="alch-dialog alch-multiselect" ng-class="{open: editMode, closed: !editMode}">
   <i class="icon-remove clickable fr" ng-click="editMode = false" ng-show="editMode"></i>
   <form class="form" ng-show="editMode">
     <h5>{{ "Existing Items" | i18n}}</h5>

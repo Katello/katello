@@ -12,7 +12,7 @@
  **/
 
 describe('Controller: SystemsController', function() {
-    var $scope, Nutupane, Routes;
+    var $scope, i18nFilter, System, Nutupane, Routes;
 
     // load the systems module and template
     beforeEach(module('Bastion.systems', 'Bastion.test-mocks'));
@@ -23,11 +23,15 @@ describe('Controller: SystemsController', function() {
             this.table = {
                 showColumns: function() {}
             };
+            this.removeRow = function() {};
             this.get = function() {};
         };
         Routes = {
             apiSystemsPath: function() { return '/api/systems';},
             editSystemPath: function(id) { return '/system/' + id;}
+        };
+        i18nFilter = function(message) {
+            return message;
         };
         System = {};
     });
@@ -39,6 +43,7 @@ describe('Controller: SystemsController', function() {
         $controller('SystemsController', {
             $scope: $scope,
             $state: $state,
+            i18nFilter: i18nFilter,
             Nutupane: Nutupane,
             System: System,
             CurrentOrganization: 'CurrentOrganization'
@@ -61,6 +66,25 @@ describe('Controller: SystemsController', function() {
         spyOn($scope, "transitionTo");
         $scope.table.closeItem();
         expect($scope.transitionTo).toHaveBeenCalledWith('systems.index');
+    });
+
+    it("provides a way to delete systems.", function() {
+        var testSystem = {
+            uuid: 'abcde',
+            name: 'test',
+            $remove: function(callback) {
+                callback();
+            }
+        };
+
+        spyOn($scope, "transitionTo");
+
+        $scope.removeSystem(testSystem);
+
+        expect($scope.transitionTo).toHaveBeenCalledWith('systems.index');
+        expect($scope.saveSuccess).toBe(true);
+        expect($scope.successMessages[0]).toBe('System test has been deleted.');
+
     });
 });
 

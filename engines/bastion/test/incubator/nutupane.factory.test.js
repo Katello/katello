@@ -100,6 +100,14 @@ describe('Factory: Nutupane', function() {
             expect(nutupane.table.rows[0]).toBe(newRow);
         });
 
+        it("removes a single occurrence of a row within the list of rows.", function() {
+            var row = {id:2, value: "value2"};
+            nutupane.query();
+            nutupane.removeRow(row);
+            expect(nutupane.table.rows.length).toBe(1);
+            expect(nutupane.table.rows).not.toContain(row);
+        });
+
         it("providing a method that fetches more data", function() {
             spyOn(Resource, 'query');
             nutupane.table.nextPage();
