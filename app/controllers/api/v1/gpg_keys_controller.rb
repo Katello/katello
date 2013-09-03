@@ -99,7 +99,7 @@ might not always be 100% bullet proof, and its more important that yum can fetch
 
   def find_gpg_key
     @gpg_key = GpgKey.find(params[:id])
-  rescue ActiveRecord::RecordNotFound => e
+  rescue ActiveRecord::RecordNotFound
     raise HttpErrors::NotFound, _("Couldn't find GPG key '%s'") % params[:id]
   end
 

@@ -14,10 +14,12 @@ class Api::V1::ProxiesController < Api::V1::ApiController
   before_filter :proxy_request_path, :proxy_request_body
   before_filter :authorize
 
+  # TODO: break up method
+  # rubocop:disable MethodLength
   def rules
-    proxy_test = lambda {
-      route, match, params = Rails.application.routes.router.recognize(request) do |route, match, params|
-        break route, match, params if route.name
+    proxy_test = lambda do
+      route, _, params = Rails.application.routes.router.recognize(request) do |rte, match, parameters|
+        break rte, match, parameters if rte.name
       end
 
       # route names are defined in routes.rb (:as => :name)
@@ -35,7 +37,6 @@ class Api::V1::ProxiesController < Api::V1::ApiController
             consumer_gone = true
           end
         end
-        system = System.find_by_uuid params[:id]
         consumer_gone && (User.consumer? || Organization.all_editable?)
       when "api_proxy_owner_pools_path"
         find_optional_organization
@@ -66,7 +67,7 @@ class Api::V1::ProxiesController < Api::V1::ApiController
         # give the proxy route name using :as parameter and implement rule check here
         false
       end
-    }
+    end
     {
         :get    => proxy_test,
         :post   => proxy_test,

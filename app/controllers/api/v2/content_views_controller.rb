@@ -33,10 +33,10 @@ class Api::V2::ContentViewsController < Api::V1::ContentViewsController
 
     search        = ContentView.where(query_params)
     content_views = if @environment
-                       search.readable(@organization).in_environment(@environment)
-                     else
-                       search.readable(@organization)
-                     end
+                      search.readable(@organization).in_environment(@environment)
+                    else
+                      search.readable(@organization)
+                    end
 
     content_views = {
       :results  => content_views,

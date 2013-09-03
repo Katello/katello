@@ -23,10 +23,14 @@ class Api::V1::ActivationKeysController < Api::V1::ApiController
   before_filter :authorize
 
   def rules
-    read_test   = lambda { ActivationKey.readable?(@organization) ||
-        (ActivationKey.readable?(@environment.organization) unless @environment.nil?) }
-    manage_test = lambda { ActivationKey.manageable?(@organization) ||
-        (ActivationKey.manageable?(@environment.organization) unless @environment.nil?) }
+    read_test   = lambda do
+      ActivationKey.readable?(@organization) ||
+        (ActivationKey.readable?(@environment.organization) unless @environment.nil?)
+    end
+    manage_test = lambda do
+      ActivationKey.manageable?(@organization) ||
+        (ActivationKey.manageable?(@environment.organization) unless @environment.nil?)
+    end
     {
         :index                => read_test,
         :show                 => read_test,
@@ -157,7 +161,7 @@ class Api::V1::ActivationKeysController < Api::V1::ApiController
     ids = params[:activation_key][:system_group_ids] if params[:activation_key]
     @system_groups = []
     if ids
-      for group_id in ids
+      ids.each do |group_id|
         group = SystemGroup.find(group_id)
         raise HttpErrors::NotFound, _("Couldn't find system group '%s'") % group_id if group.nil?
         @system_groups << group

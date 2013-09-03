@@ -28,7 +28,6 @@ class Api::V1::RepositoriesController < Api::V1::ApiController
     edit_product_test = lambda { @product.editable? }
     read_test         = lambda { @repository.product.readable? }
     edit_test         = lambda { @repository.product.editable? }
-    org_edit          = lambda { @organization.editable? }
 
     {
         :create                   => edit_product_test,
@@ -94,7 +93,9 @@ class Api::V1::RepositoriesController < Api::V1::ApiController
     # TODO: these should really be done as validations, but the orchestration engine currently converts them into OrchestrationExceptions
     #
     raise HttpErrors::BadRequest, _("Repositories can be deleted only in the '%s' environment.") % "Library" if !@repository.environment.library?
-    raise HttpErrors::BadRequest, _("Repository cannot be deleted since it has already been promoted. Using a changeset, please delete the repository from existing environments before deleting it.") if @repository.promoted?
+    if @repository.promoted?
+      raise HttpErrors::BadRequest, _("Repository cannot be deleted since it has already been promoted. Using a changeset, please delete the repository from existing environments before deleting it.")
+    end
 
     @repository.destroy
     respond :message => _("Deleted repository '%s'") % params[:id]
@@ -129,7 +130,6 @@ talk back to pulp within it.  Save that for the delayed job.
 Pulp doesn't send correct headers."
   EOS
   def sync_complete
-    remote_ip = request.remote_ip
     forwarded = request.env["HTTP_X_FORWARDED_FOR"]
 
     if forwarded && !['127.0.0.1', '::1'].include?(forwarded)

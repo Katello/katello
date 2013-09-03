@@ -72,8 +72,8 @@ class Api::V1::EnvironmentsController < Api::V1::ApiController
 
   def param_rules
     {
-        :create     => { :environment => ["name", "label", "description", "prior"] },
-        :update     => { :environment => ["name", "description", "prior"] },
+        :create     => { :environment => %w(name label description prior) },
+        :update     => { :environment => %w(name description prior) },
         :index      => [:name, :library, :id, :organization_id],
         :rhsm_index => [:name, :library, :id, :organization_id]
     }
@@ -119,11 +119,12 @@ class Api::V1::EnvironmentsController < Api::V1::ApiController
   api :GET, "/owners/:organization_id/environments", "List environments for RHSM"
   param_group :search_params
   def rhsm_index
-    @all_environments = get_content_view_environments(query_params[:name]).
-        collect { |env| { :id  => env.cp_id,
-                          :name => env.label,
-                          :display_name => env.name,
-                          :description => env.content_view.description } }
+    @all_environments = get_content_view_environments(query_params[:name]).collect do |env|
+      { :id  => env.cp_id,
+        :name => env.label,
+        :display_name => env.name,
+        :description => env.content_view.description }
+    end
 
     respond_for_index :collection => @all_environments
   end
@@ -203,7 +204,7 @@ class Api::V1::EnvironmentsController < Api::V1::ApiController
     @environment
   end
 
-  def get_content_view_environments(name=nil)
+  def get_content_view_environments(name = nil)
     environments = ContentViewEnvironment.joins(:content_view => :organization).
         where("organizations.id = ?", @organization.id)
     environments = environments.where("content_view_environments.name = ?", name) if name

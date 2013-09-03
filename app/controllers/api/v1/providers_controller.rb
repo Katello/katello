@@ -106,7 +106,7 @@ class Api::V1::ProvidersController < Api::V1::ApiController
   def destroy
     #
     # TODO: these should really be done as validations, but the orchestration engine currently converts them into OrchestrationExceptions
-    #
+    # rubocop:disable LineLength
     raise HttpErrors::BadRequest, _("Provider cannot be deleted since one of its products or repositories has already been promoted. Using a changeset, please delete the repository from existing environments before deleting it.") if @provider.repositories.any? { |r| r.promoted? }
 
     @provider.destroy

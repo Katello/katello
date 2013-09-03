@@ -271,7 +271,7 @@ class Api::V1::SystemGroupsController < Api::V1::ApiController
     raise HttpErrors::NotFound, _("Couldn't find system group '%s'") % params[:id] if @system_group.nil?
   end
 
-  def system_uuids_to_ids ids
+  def system_uuids_to_ids(ids)
     system_ids = System.where(:uuid => ids).collect { |s| s.id }
     raise Errors::NotFound.new(_("Systems [%s] not found.") % ids.join(',')) if system_ids.blank?
     system_ids

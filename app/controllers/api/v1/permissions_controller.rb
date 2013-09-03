@@ -32,6 +32,7 @@ class Api::V1::PermissionsController < Api::V1::ApiController
         :available_verbs => read_test
     }
   end
+
   def param_rules
     {
         :create => [:name, :description, :role_id, :organization_id, :verbs, :tags,
@@ -86,7 +87,7 @@ class Api::V1::PermissionsController < Api::V1::ApiController
     new_params[:resource_type] = ResourceType.find_or_create_by_name(params[:type])
 
     @permission = Permission.create! new_params
-    render :json => @permission.to_json()
+    render :json => @permission.to_json
   end
 
 
