@@ -48,7 +48,7 @@ class Api::V2::ApiController < Api::ApiController
 
     def labelize_params(params)
       return params[:label] unless params.try(:[], :label).nil?
-      return Util::Model::labelize(params[:name]) unless params.try(:[], :name).nil?
+      return Util::Model.labelize(params[:name]) unless params.try(:[], :name).nil?
     end
 
     def find_organization

@@ -12,6 +12,6 @@
 
 class Api::V2::AboutController < Api::V1::AboutController
 
-    include Api::V2::Rendering
+  include Api::V2::Rendering
 
 end

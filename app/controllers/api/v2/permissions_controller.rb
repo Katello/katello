@@ -39,7 +39,7 @@ class Api::V2::PermissionsController < Api::V1::PermissionsController
   end
   def create
     perm_attrs = params[:permission]
-    perm_attrs.merge! ({
+    perm_attrs.merge!({
         :role          => @role,
         :organization  => @organization,
         :all_tags      => (params[:all_tags].to_bool if params[:all_tags]),

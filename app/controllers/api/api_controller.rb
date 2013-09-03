@@ -36,7 +36,7 @@ class Api::ApiController < ActionController::Base
   def verify_ldap
     if !request.authorization.blank?
       u = current_user
-      u.verify_ldap_roles if (Katello.config.ldap_roles && u != nil)
+      u.verify_ldap_roles if (Katello.config.ldap_roles && !u.nil?)
     end
   end
 
@@ -107,7 +107,7 @@ class Api::ApiController < ActionController::Base
     controller_name.singularize
   end
 
-  def respond(options={})
+  def respond(options = {})
     method_name = ('respond_for_'+params[:action].to_s).to_sym
     raise "automatic response method '%s' not defined" % method_name unless respond_to?(method_name, true)
     return send(method_name, options)

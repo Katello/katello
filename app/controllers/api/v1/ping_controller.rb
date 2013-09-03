@@ -18,17 +18,17 @@ class Api::V1::PingController < Api::V1::ApiController
   api :GET, "/ping", "Shows status of system and it's subcomponents"
   description "This service is only available for authenticated users"
   def index
-    respond_for_show :resource => Ping.ping()
+    respond_for_show :resource => Ping.ping
   end
 
   api :GET, "/system_status", "Shows version information"
   description "This service is also available for unauthenticated users"
   def server_status
-
+    # rubocop:disable SymbolName
     status = { :release    => Katello.config.app_name,
                :version    => Katello.config.katello_version,
                :standalone => true,
-               :timeUTC    => Time.now().getutc(),
+               :timeUTC    => Time.now.getutc,
                :result     => true }
     respond_for_show :resource => status
   end

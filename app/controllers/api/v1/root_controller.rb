@@ -21,7 +21,8 @@ class Api::V1::RootController < Api::V1::ApiController
 
     api_root_routes = all_routes.select do |path|
       path =~ %r{^/api/[^/]+/:id\(\.:format\)$}
-    end.collect { |path| path[0..-(":id(.:format)".length+1)] }.uniq
+    end
+    api_root_routes = api_root_routes.collect { |path| path[0..-(":id(.:format)".length+1)] }.uniq
 
     api_root_routes.collect! { |r| { :rel => r["/api/".size..-2], :href => r } }
 
