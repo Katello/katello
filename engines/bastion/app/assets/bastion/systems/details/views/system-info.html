@@ -131,6 +131,23 @@
         <span class="info-value">{{ system.memory }}</span>
       </div>
 
+      <div class="divider"></div>
+    </section>
+
+    <section>
+      <h4>{{ "Installed Products" | i18n }}</h4>
+
+      <p ng-show="!system.installedProducts || system.installedProducts.length == 0">
+        {{ "You do not have any Installed Products" | i18n }}
+      </p>
+
+      <div ng-show="system.installedProducts.length > 0">
+        <div ng-repeat="product in system.installedProducts" class="detail">
+          <span class="info-label">{{ "Product" | i18n }} </span>
+          <span class="info-value">{{ product.productName }}</span>
+        </div>
+      </div>
+
     </section>
   </div>
 
