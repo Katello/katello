@@ -99,6 +99,7 @@ KT.editable = (function(){
 
     var initialize_textfield = function() {
         $('.edit_textfield').each(function() {
+            var element = $(this);
             $(this).editable('destroy');
             var settings = {
                 type        :  'text',
