@@ -20,7 +20,7 @@ class Api::V1::NodeCapabilitiesController < Api::V1::ApiController
   def_param_group :capability do
     param :capability, Hash, :required => true, :action_aware => true do
       param :type, String, :required => true, :desc => "Type of capability"
-      param :configuration, :Hash, :required => true, :desc => "Capability configuration"
+      param :configuration, Hash, :required => true, :desc => "Capability configuration"
     end
   end
 

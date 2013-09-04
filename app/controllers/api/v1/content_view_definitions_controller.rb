@@ -94,12 +94,9 @@ class Api::V1::ContentViewDefinitionsController < Api::V1::ApiController
   end
 
   api :PUT, "/organizations/:org/content_view_definitions/:id", "Update a definition"
-  param :id, :number, :desc => "Definition identifer", :required => true
+  param :id, :number, :desc => "Definition identifier", :required => true
   param :org, String, :desc => "Organization name", :required => true
   param_group :content_view_definition
-  param :content_view_definition, Hash do
-    param :name, :required => false
-  end
   def update
     @definition.update_attributes!(params[:content_view_definition])
     respond :resource => @definition
@@ -134,7 +131,7 @@ class Api::V1::ContentViewDefinitionsController < Api::V1::ApiController
   end
 
   api :POST, "/organizations/:org/content_view_definitions/:id/clone", "Clone a definition"
-  param :id, :identifier, :desc => "Definition identifer", :required => true
+  param :id, :identifier, :desc => "Definition identifier", :required => true
   param :org, String, :desc => "Organization name", :required => true
   param_group :content_view_definition do
     param :label, String, :desc => "New definition label", :required => true
@@ -166,7 +163,7 @@ class Api::V1::ContentViewDefinitionsController < Api::V1::ApiController
   api :GET, "/organizations/:organization_id/content_view_definitions/:id/repositories",
       "List all the repositories for a content view definition"
   param :organization_id, :identifier, :desc => "organization identifier", :required => true
-  param :id, :identifer, :required => true, :desc => "Definition id"
+  param :id, :identifier, :required => true, :desc => "Definition id"
   def list_repositories
     respond_for_index :collection => @definition.repositories
   end
