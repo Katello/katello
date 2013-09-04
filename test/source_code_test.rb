@@ -101,8 +101,9 @@ class SourceCodeTest < MiniTest::Rails::ActiveSupport::TestCase
       SourceCode.
           new('**/*.rb').
           check_lines(<<-DOC) { |line| (line !~ /rescue +Exception/) ? true : line =~ /#\s?ok/ }
-always rescue specific exception or at least `rescue => e` which equals to `rescue StandardError => e`
+always rescue a specific exception or at least `rescue` which evaluates to `rescue StandardError`
 see http://stackoverflow.com/questions/10048173/why-is-it-bad-style-to-rescue-exception-e-in-ruby
+for more info.
       DOC
     end
 
