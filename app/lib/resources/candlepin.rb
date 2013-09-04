@@ -142,6 +142,8 @@ module Resources
                   }.delete_if { |k, v| v.nil? }
           if attrs.empty?
             return true
+          else
+            self.put(path(uuid), attrs.to_json, self.default_headers).body
           end
           # consumer update doesn't return any data atm
           # JSON.parse(response).with_indifferent_access
