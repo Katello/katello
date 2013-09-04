@@ -3,11 +3,14 @@
     <h2 class="fl">{{ "System \"%systemName\"" | i18n: {systemName: system.name} }}</h2>
 
     <div class="details-actions fr">
-      <button class="btn-mini btn-danger" ng-click="removeSystem()">{{ "Remove System" | i18n }}</button>
+      <button class="btn-mini btn-danger" ng-disabled="system.readonly" ng-click="showConfirm = true">{{ "Remove System" | i18n }}</button>
       <button class="btn-mini" ng-click="table.closeItem()">
         <i class="icon-remove"></i>
         {{ "Close" | i18n }}
       </button>
+      <div alch-confirm="removeSystem(system)" show-confirm="showConfirm">
+        {{ "Are you sure you want to remove system \"%system\"?" | i18n: {system: system.name} }}
+      </div>
     </div>
   </header>
 
