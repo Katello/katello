@@ -13,6 +13,9 @@ Rails.application.routes.draw do
         member do
           post :sync
         end
+        collection do
+          get '/by_uuid/:uuid' => "nodes#show_by_uuid"
+        end
         resources :capabilities, :controller=>'node_capabilities'
       end
     end
@@ -22,6 +25,9 @@ Rails.application.routes.draw do
       api_resources :nodes do
         member do
           :sync
+        end
+        collection do
+          get '/by_uuid/:uuid' => "nodes#show_by_uuid"
         end
         api_resources :capabilities, :controller=>'node_capabilities'
       end

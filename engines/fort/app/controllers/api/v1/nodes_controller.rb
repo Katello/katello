@@ -19,12 +19,25 @@ class Api::V1::NodesController < Api::V1::ApiController
   before_filter :find_environment, :only => [:sync]
 
   def rules
-    read_test   = lambda{ Node.readable? }
-    edit_test = lambda{ Node.editable? }
+    read_test = lambda { Node.readable? }
+    edit_test = lambda { Node.editable? }
+
+    show_by_uuid_test = lambda do
+      Node.readable? || User.consumer? && params[:uuid] == current_user.uuid
+    end
+
+    create_test = lambda do
+      Node.editable? ||
+          User.consumer? &&
+          params[:node] &&
+          params[:node][:system_uuid] == current_user.uuid
+    end
+
     {
       :index                => read_test,
       :show                 => read_test,
-      :create               => edit_test,
+      :show_by_uuid         => show_by_uuid_test,
+      :create               => create_test,
       :update               => edit_test,
       :destroy              => edit_test,
       :sync                 => edit_test
@@ -48,14 +61,38 @@ class Api::V1::NodesController < Api::V1::ApiController
     respond
   end
 
+  api :GET, "/nodes/by_uuid/:uuid", "Get details about a node on a registered system"
+  def show_by_uuid
+    system = System.find_by_uuid!(params[:uuid])
+    @node = Node.find_by_system_id(system.id)
+    unless @node
+      raise HttpErrors::NotFound, _("System %s is not a registered node") % params[:uuid]
+    end
+    respond_for_show
+  end
+
   api :POST, "/nodes", "Activate a system as a node"
-  param :system_id, :identifier, :required => true, :desc=>"Associated system id"
-  param :environment_ids, Array, :desc => "List of environment ids the node should be associated with"
+  param :node, Hash do
+    param :system_uuid, String, :required => true, :desc => "Associated system uuid"
+    param :environment_ids, Array, :desc => "List of environment ids the node should be associated with"
+    param :capabilities, Array, :desc => "List of capabilities" do
+      param :type, String, :required => true, :desc => "Type of capability"
+      param :configuration, Hash, :desc => "Capability configuration"
+    end
+  end
   def create
-    #currently look up System by its id, might need to change to systemid,
-    #  or by its cert
-    @node = Node.new(params[:node].slice(:system_id, :environment_ids))
+    system = System.find_by_uuid!(params[:node][:system_uuid])
+    node_params = { :system_id => system.id }.merge(params[:node].slice(:environment_ids))
+    @node = Node.new(node_params)
     @node.save!
+    if params[:node][:capabilities]
+      params[:node][:capabilities].each do |capability_data|
+        cap_class = NodeCapability.class_for(capability_data[:type])
+        capability = cap_class.new(capability_data.slice(:configuration))
+        capability.node = @node
+        capability.save!
+      end
+    end
     respond
   end
 
