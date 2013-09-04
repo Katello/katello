@@ -114,9 +114,14 @@ class ContentViewDefinitionBase < ActiveRecord::Base
   def validate_component_views(view)
     if type == "ContentViewDefinition"
       # check for repo overlap
-      library_repo_ids = component_content_views.map(&:library_repo_ids).flatten + view.library_repo_ids
+      library_repos = component_content_views.map(&:library_repos).flatten + view.library_repos
+      library_repo_ids = library_repos.map(&:id)
       if library_repo_ids.length != library_repo_ids.uniq.length
         raise Errors::ContentViewRepositoryOverlap.new(_("Definition cannot contain views with the same repositories."))
+      end
+
+      if library_repos.select(&:puppet?).length > 1
+        raise Errors::ContentViewDefinitionBadContent.new(_("Definition cannot more than one view with a puppet repository."))
       end
 
       if !self.composite?

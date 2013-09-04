@@ -6,7 +6,7 @@
 = javascript do
   :plain
     localize({
-      "repos_in_common" : "#{escape_javascript(_('This content view has one or more repositories in common with a view that is currently selected.'))}",
+      "repos_in_common" : "#{escape_javascript(_('This view cannot be selected as another view is currently selected that either contains the same repository or a puppet repository.'))}",
       "view_conflicts" : function(x){ return '#{escape_javascript(_("ERROR: This content view has one or more repositories in common with the following views: %X.<br/>Please unselect views that should no longer be included in this definition."))}'.replace("%X", x);},
       "environments" : function(e){ return '#{escape_javascript(_("Environment(s): %E"))}'.replace("%E", e); }
     });
