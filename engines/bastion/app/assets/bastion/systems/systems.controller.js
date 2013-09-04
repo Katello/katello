@@ -26,8 +26,8 @@
  *   within the table.
  */
 angular.module('Bastion.systems').controller('SystemsController',
-    ['$scope', '$state', '$location', 'Nutupane', 'System', 'CurrentOrganization',
-    function($scope, $state, $location, Nutupane, System, CurrentOrganization) {
+    ['$scope', '$state', '$location', 'i18nFilter', 'Nutupane', 'System', 'CurrentOrganization',
+    function($scope, $state, $location, i18nFilter, Nutupane, System, CurrentOrganization) {
 
         var params = {
             'organization_id':  CurrentOrganization,
@@ -57,6 +57,15 @@ angular.module('Bastion.systems').controller('SystemsController',
 
         $scope.table.closeItem = function() {
             $scope.transitionTo('systems.index');
+        };
+
+        $scope.removeSystem = function (system) {
+            system.$remove(function() {
+                nutupane.removeRow(system);
+                $scope.saveSuccess = true;
+                $scope.successMessages = [i18nFilter('System %s has been deleted.'.replace('%s', system.name))];
+                $scope.transitionTo('systems.index');
+            });
         };
     }]
 );
