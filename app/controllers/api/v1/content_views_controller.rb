@@ -70,14 +70,14 @@ class Api::V1::ContentViewsController < Api::V1::ApiController
   end
 
   api :POST, "/content_views/:id/refresh", "Refresh a content view"
-  param :id, :identifer, :desc => "content view id"
+  param :id, :identifier, :desc => "content view id"
   def refresh
     version = @view.refresh_view(:async => true)
     respond_for_async :resource => version.task_status, :status => 202
   end
 
   api :DELETE, "/content_views/:id"
-  param :id, :identifer, :desc => "content view id"
+  param :id, :identifier, :desc => "content view id"
   def destroy
     @view.destroy
     if @view.destroyed?
