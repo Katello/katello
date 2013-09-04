@@ -40,7 +40,7 @@ class Api::V2::ContentViewDefinitionsController < Api::V1::ContentViewDefinition
   end
 
   api :PUT, "/content_view_definitions/:id", "Update a definition"
-  param :id, :number, :desc => "Definition identifer", :required => true
+  param :id, :number, :desc => "Definition identifier", :required => true
   param :org, String, :desc => "Organization name", :required => true
   param_group :content_view_definition
   def update
@@ -58,7 +58,7 @@ class Api::V2::ContentViewDefinitionsController < Api::V1::ContentViewDefinition
   end
 
   api :POST, "/content_view_definitions/:id/clone", "Clone a definition"
-  param :id, :identifier, :desc => "Definition identifer", :required => true
+  param :id, :identifier, :desc => "Definition identifier", :required => true
   param_group :content_view_definition
   param :content_view_definition, Hash do
     param :label, String, :desc => "Content view identifier"
@@ -78,7 +78,7 @@ class Api::V2::ContentViewDefinitionsController < Api::V1::ContentViewDefinition
 
   api :GET, "/content_view_definitions/:content_view_definition_id/repositories",
       "List all the repositories for a content view definition"
-  param :content_view_definition_id, :identifer, :required => true, :desc => "Definition id"
+  param :content_view_definition_id, :identifier, :required => true, :desc => "Definition id"
   def list_repositories
     super
   end
