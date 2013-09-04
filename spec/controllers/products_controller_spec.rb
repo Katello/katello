@@ -92,7 +92,8 @@ describe ProductsController, :katello => true do
       @organization = new_test_org
       @provider = Provider.create!(:provider_type=>Provider::CUSTOM, :name=>"foo1", :organization=>@organization)
       Provider.stub!(:find).and_return(@provider)
-      @gpg = GpgKey.create!(:name =>"GPG", :organization=>@organization, :content=>"bar")
+      @test_gpg_content = File.open("#{Rails.root}/spec/assets/gpg_test_key").read
+      @gpg = GpgKey.create!(:name =>"GPG", :organization=>@organization, :content=>@test_gpg_content)
     end
     context "when creating a product" do
       before do

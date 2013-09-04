@@ -118,7 +118,8 @@ describe RepositoriesController, :katello => true do
 
       @org = new_test_org
       @product = new_test_product(@org, @org.library)
-      @gpg = GpgKey.create!(:name => "foo", :organization => @organization, :content => "222")
+      @test_gpg_content = File.open("#{Rails.root}/spec/assets/gpg_test_key").read
+      @gpg = GpgKey.create!(:name => "foo", :organization => @organization, :content => @test_gpg_content)
       controller.stub!(:current_organization).and_return(@org)
       Resources::Candlepin::Content.stub(:create => {:id => "123"})
     end
