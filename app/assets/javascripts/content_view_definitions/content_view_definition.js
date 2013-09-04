@@ -52,6 +52,7 @@ KT.panel.set_expand_cb(function() {
 KT.content_view_definition = (function(){
     var status_updater,
         view_repos,
+        repos,
         view_conflicts = [],
 
     initialize = function() {
@@ -271,13 +272,24 @@ KT.content_view_definition = (function(){
     },
     repo_in_common = function(view_id_1, view_id_2) {
         // Does view 1 have any repos in common with view 2?
+        // Or do view 1 and view 2 both have puppet repos?
         var in_common = false,
-            view_1_repos = view_repos[view_id_1]['repos'],
-            view_2_repos = view_repos[view_id_2]['repos'];
+            view_1_repos = view_repos[view_id_1].repos,
+            view_2_repos = view_repos[view_id_2].repos;
 
         KT.utils.each(view_1_repos, function(view_1_repo) {
             if (KT.utils.contains(view_2_repos, view_1_repo)) {
-                in_common = true;
+                in_common = "repos_in_common";
+            }
+        });
+
+        KT.utils.each(view_1_repos, function(view_1_repo) {
+            if(repos[view_1_repo].content_type === "puppet") {
+                KT.utils.each(view_2_repos, function(view_2_repo) {
+                    if(repos[view_2_repo].content_type === "puppet") {
+                        in_common = "has_puppet_repo";
+                    }
+                });
             }
         });
         return in_common;
@@ -462,7 +474,8 @@ KT.content_view_definition = (function(){
         initialize_composite_content : initialize_composite_content,
         initialize_create            : initialize_create,
         initialize_views             : initialize_views,
-        set_view_repos               : function(vp) {view_repos = vp;}
+        set_view_repos               : function(vp) {view_repos = vp;},
+        set_repos                    : function(rs) {repos = rs;}
     };
 }());
 
