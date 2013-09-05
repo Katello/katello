@@ -117,7 +117,7 @@ class NavigationMenusTest < MiniTest::Rails::ActiveSupport::TestCase
   def test_gravatar
     menu = Navigation::Menus::User.new(@admin)
 
-    Katello.config[:gravatar] ? assert_equal("<img src=\"https:///secure.gravatar.com/avatar/985b643b38ac0b1589b212197e27a143?d=mm&s=25\" class=\"gravatar\"><span class=\"gravatar-span\">admin", menu.display) : assert_equal(@admin.user, menu.display)
+    Katello.config[:gravatar] ? assert_equal("<img src=\"https:///secure.gravatar.com/avatar/985b643b38ac0b1589b212197e27a143?d=mm&s=25\" class=\"gravatar\"><span class=\"gravatar-span\"> admin", menu.display) : assert_equal(@admin.user, menu.display)
     assert        menu.accessible?
   end
 
