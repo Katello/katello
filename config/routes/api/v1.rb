@@ -242,16 +242,24 @@ Src::Application.routes.draw do
         resources :puppet_modules, :only => [:index, :show] do
           get :search, :on => :collection
         end
+        resources :content_uploads, :controller => :content_uploads, :only => [:create, :destroy, :upload_bits] do
+          member do
+            put :upload_bits
+          end
+        end
         member do
           get :package_groups
           get :package_group_categories
           get :gpg_key_content
           post :enable
+          post :import_into_repo
         end
         collection do
           post :sync_complete
         end
       end
+
+      match '/content_uploads' => 'content_uploads#index'
 
       resources :environments, :only => [:show, :update, :destroy] do
         scope :constraints => RegisterWithActivationKeyContraint.new do
