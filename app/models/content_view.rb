@@ -148,6 +148,10 @@ class ContentView < ActiveRecord::Base
     end
   end
 
+  def library_repos
+    Repository.where(:id => library_repo_ids)
+  end
+
   def library_repo_ids
     repos(self.organization.library).map { |r| r.library_instance_id }
   end

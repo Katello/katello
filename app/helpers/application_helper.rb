@@ -364,6 +364,31 @@ module ApplicationHelper
   def default_description_limit
     return Validators::KatelloDescriptionFormatValidator::MAX_LENGTH
   end
+
+  def repo_selector(repositories, url, field = :repository_id, record = nil)
+    products = repositories.map(&:product).uniq.sort(&:name)
+    repo_ids = repositories.map(&:id)
+
+    content_tag "select", :id => "repo_select", :name => field, "data-url" => url do
+      html = ""
+      html << content_tag("option", :value => "") { "None" }
+
+      groups = products.map do |prod|
+        content_tag("optgroup", :label => "#{h(prod.name)}") do
+          options = prod.repositories.select { |repo| repo_ids.include?(repo.id)}.map do |repo|
+            selected = record && record.send(field) == repo.id
+
+            content_tag("option", :value => repo.id, :selected => selected) do
+              h(repo.name)
+            end
+          end
+          options.join.html_safe
+        end
+      end
+
+      (html + groups.join).html_safe
+    end
+  end
 end
 
 

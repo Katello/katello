@@ -136,6 +136,22 @@ class FiltersControllerTest < MiniTest::Rails::ActionController::TestCase
     assert_empty @filter.reload.repositories
   end
 
+  test "PUT update - add a puppet repository" do
+    puppet_repo = repositories(:p_forge)
+    @filter.content_view_definition.puppet_repository_id = puppet_repo.id
+
+    # success notice created
+    notify = Notifications::Notifier.new
+    notify.expects(:success).at_least_once
+    @controller.expects(:notify).at_least_once.returns(notify)
+
+    put :update, :content_view_definition_id => @filter.content_view_definition.id,
+      :id => @filter.id, :puppet_repository_id => puppet_repo.id
+
+    assert_response :success
+    assert_includes @filter.repositories.reload.map(&:id), puppet_repo.id
+  end
+
   test "DELETE destroy_filters should be successful" do
     # success notice created
     notify = Notifications::Notifier.new

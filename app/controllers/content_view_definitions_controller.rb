@@ -69,7 +69,7 @@ class ContentViewDefinitionsController < ApplicationController
     {
       :create => {:view_definition => [:name, :label, :description]},
       :update => {:view_definition => [:name, :description]},
-      :update_content => [:id, :products, :repos]
+      :update_content => [:id, :products, :repos, :puppet_repository_id]
     }
   end
 
@@ -236,9 +236,19 @@ class ContentViewDefinitionsController < ApplicationController
       @view_definition.repository_ids = repo_ids
     end
 
+    if params[:puppet_repository_id]
+      if params[:puppet_repository_id].blank?
+        @view_definition.puppet_repository_id = ""
+      else
+        repo = Repository.libraries_content_readable(current_organization)
+          .find(params[:puppet_repository_id])
+        @view_definition.puppet_repository_id = repo.id
+      end
+    end
+
     @view_definition.save!
 
-    notify.success _("Successfully updated content for content view definition '%s'.") % @view_definition.name
+    notify.success((_("Successfully updated content for content view definition '%s'.") % @view_definition.name), :persist_only => true)
     render :nothing => true
   end
 

@@ -13,6 +13,7 @@
 
 //= require "content_view_definitions/content_view_definition"
 //= require "content_view_definitions/product_repo_selector"
+//= require "content_view_definitions/repo_selector"
 //= require "alchemy/jquery/plugins/jquery.sortElements"
 //= require "alchemy/jquery/plugins/jquery.treeTable"
 //= require "widgets/auto_complete"

@@ -181,6 +181,17 @@ class ContentViewDefinition < ContentViewDefinitionBase
     false
   end
 
+  def has_puppet_repo_conflicts?
+    # Check to see if there is a puppet conflict in the component views
+    # associated with the definition.  A conflict exists if more than one view
+    # has a puppet repo
+    if self.composite?
+      repos = component_content_views.map { |view| view.repos(organization.library) }.flatten
+      return repos.select(&:puppet?).length > 1
+    end
+    false
+  end
+
   #NOTE: this function will most likely become obsolete once we drop api v1
   def as_json(options = {})
     result = self.attributes

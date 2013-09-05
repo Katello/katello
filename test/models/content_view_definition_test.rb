@@ -166,7 +166,7 @@ class ContentViewDefinitionTest < MiniTest::Rails::ActiveSupport::TestCase
 
   def test_validate_component_views
     content_view_def = FactoryGirl.create(:content_view_definition, :composite)
-    ContentView.any_instance.stubs(:library_repo_ids).returns([1])
+    ContentView.any_instance.stubs(:library_repos).returns([@repo])
     content_views = FactoryGirl.create_list(:content_view, 2)
 
     content_view_def.component_content_views << content_views.first
@@ -178,13 +178,28 @@ class ContentViewDefinitionTest < MiniTest::Rails::ActiveSupport::TestCase
 
   def test_validate_component_views_before_add
     content_view_def = content_view_definition_bases(:simple_cvd)
-    ContentView.any_instance.stubs(:library_repo_ids).returns([1])
+    ContentView.any_instance.stubs(:library_repos).returns([@repo])
     content_view = content_views(:library_dev_view)
 
     assert_raises(Errors::ContentViewDefinitionBadContent) do
       content_view_def.component_content_views << content_view
     end
     assert_empty content_view_def.component_content_views
+  end
+
+  def test_puppet_repository_id
+    content_view_def = ContentViewDefinition.find(content_view_definition_bases(:simple_cvd))
+    repo = Repository.find(repositories(:p_forge))
+    dev_repo = Repository.find(repositories(:dev_p_forge))
+
+    content_view_def.puppet_repository_id = repo.id
+    content_view_def.save!
+    assert_equal repo.id, content_view_def.puppet_repository_id
+    assert_includes content_view_def.repository_ids, repo.id
+
+    assert_raises(Errors::ContentViewRepositoryOverlap) do
+      content_view_def.repositories << dev_repo
+    end
   end
 
 end
