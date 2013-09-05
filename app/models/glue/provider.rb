@@ -10,6 +10,7 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+# rubocop:disable SymbolName
 module Glue::Provider
 
   def self.included(base)
@@ -71,43 +72,43 @@ module Glue::Provider
     #get last sync status of all repositories in this provider
     def latest_sync_statuses
       self.products.collect do |p|
-        p.latest_sync_statuses()
+        p.latest_sync_statuses
       end.flatten
     end
 
     # Get the most relavant status for all the repos in this Provider
     def sync_status
-      statuses = self.products.reject{|r| r.empty?}.map{|r| r.sync_status()}
+      statuses = self.products.reject{|r| r.empty?}.map{|r| r.sync_status}
       return ::PulpSyncStatus.new(:state => ::PulpSyncStatus::Status::NOT_SYNCED) if statuses.empty?
 
       #if any of repos sync still running -> provider sync running
-      idx = statuses.index do |r| r.state.to_s == ::PulpSyncStatus::Status::RUNNING.to_s end
-      return statuses[idx] if idx != nil
+      idx = statuses.index { |r| r.state.to_s == ::PulpSyncStatus::Status::RUNNING.to_s }
+      return statuses[idx] unless idx.nil?
 
       #else if any of repos not synced -> provider not synced
-      idx = statuses.index do |r| r.state.to_s == ::PulpSyncStatus::Status::NOT_SYNCED.to_s end
-      return statuses[idx] if idx != nil
+      idx = statuses.index { |r| r.state.to_s == ::PulpSyncStatus::Status::NOT_SYNCED.to_s }
+      return statuses[idx] unless idx.nil?
 
       #else if any of repos sync cancelled -> provider sync cancelled
-      idx = statuses.index do |r| r.state.to_s == ::PulpSyncStatus::Status::CANCELED.to_s end
-      return statuses[idx] if idx != nil
+      idx = statuses.index { |r| r.state.to_s == ::PulpSyncStatus::Status::CANCELED.to_s }
+      return statuses[idx] unless idx.nil?
 
       #else if any of repos sync finished with error -> provider sync finished with error
-      idx = statuses.index do |r| r.state.to_s == ::PulpSyncStatus::Status::ERROR.to_s end
-      return statuses[idx] if idx != nil
+      idx = statuses.index { |r| r.state.to_s == ::PulpSyncStatus::Status::ERROR.to_s }
+      return statuses[idx] unless idx.nil?
 
       #else -> all finished
       return statuses[0]
     end
 
     def sync_state
-      self.sync_status().state
+      self.sync_status.state
     end
 
     def sync_start
-      start_times = Array.new
-      for p in self.products
-        start = p.sync_start
+      start_times = []
+      self.products.each do |prod|
+        start = prod.sync_start
         start_times << start unless start.nil?
       end
       start_times.sort!
@@ -115,8 +116,8 @@ module Glue::Provider
     end
 
     def sync_finish
-      finish_times = Array.new
-      for r in self.products
+      finish_times = []
+      self.products.each do |r|
         finish = r.sync_finish
         finish_times << finish unless finish.nil?
       end
@@ -125,13 +126,13 @@ module Glue::Provider
     end
 
     def sync_size
-      size = self.products.inject(0) { |sum,v| sum + v.sync_status.progress.total_size }
+      self.products.inject(0) { |sum, v| sum + v.sync_status.progress.total_size }
     end
 
     def last_sync
-      sync_times = Array.new
-      for p in self.products
-        sync = p.last_sync
+      sync_times = []
+      self.products.each do |prod|
+        sync = prod.last_sync
         sync_times << sync unless sync.nil?
       end
       sync_times.sort!
@@ -147,23 +148,21 @@ module Glue::Provider
 
     def add_custom_product(label, name, description, url, gpg = nil)
       # URL isn't used yet until we can do custom repo discovery in pulp
-      begin
-        Rails.logger.debug "Creating custom product #{name} for provider: #{self.name}"
-        product = Product.new({
-            :name => name,
-            :label => label,
-            :description => description,
-            :multiplier => 1
-        })
-        self.products << product
-        product.provider = self
-        product.gpg_key = gpg
-        product.save!
-        product
-      rescue => e
-        Rails.logger.error "Failed to create custom product #{name} for provider #{self.name}: #{e}, #{e.backtrace.join("\n")}"
-        raise e
-      end
+      Rails.logger.debug "Creating custom product #{name} for provider: #{self.name}"
+      product = Product.new({
+          :name => name,
+          :label => label,
+          :description => description,
+          :multiplier => 1
+      })
+      self.products << product
+      product.provider = self
+      product.gpg_key = gpg
+      product.save!
+      product
+    rescue => e
+      Rails.logger.error "Failed to create custom product #{name} for provider #{self.name}: #{e}, #{e.backtrace.join("\n")}"
+      raise e
     end
 
     def url_to_host_and_path(url = "")
@@ -184,11 +183,11 @@ module Glue::Provider
       raise e
     end
 
-    def owner_import zip_file_path, options
+    def owner_import(zip_file_path, options)
       Resources::Candlepin::Owner.import self.organization.label, zip_file_path, options
     end
 
-    def owner_upstream_update upstream, options
+    def owner_upstream_update(upstream, options)
 
       if !upstream['idCert'] || !upstream['idCert']['cert'] || !upstream['idCert']['key']
         Rails.logger.error "Upstream identity certificate not available"
@@ -211,7 +210,7 @@ module Glue::Provider
 
     end
 
-    def owner_upstream_export upstream, zip_file_path, options
+    def owner_upstream_export(upstream, zip_file_path, options)
 
       if !upstream['idCert'] || !upstream['idCert']['cert'] || !upstream['idCert']['key']
         Rails.logger.error "Upstream identity certificate not available"
@@ -265,7 +264,8 @@ module Glue::Provider
       (s = failed_products.size) > 0 ? (_('%d products may have missing repositories') % s): _('OK')
     end
 
-
+    # TODO: break up method
+    # rubocop:disable MethodLength
     def queue_import_manifest(options)
       options = options.with_indifferent_access
       raise "zip_file_path or upstream must be specified" if options[:zip_file_path].nil? && options[:upstream].nil?
@@ -342,7 +342,9 @@ module Glue::Provider
       self.products.each{|p| p.update_repositories}
     end
 
-    def import_products_from_cp(options={ })
+    # TODO: break up method
+    # rubocop:disable MethodLength
+    def import_products_from_cp(options = {})
 
       import_logger = options[:import_logger]
       product_in_katello_ids = self.organization.providers.redhat.first.products.pluck("cp_id")
@@ -401,7 +403,7 @@ module Glue::Provider
       pre_queue.create(:name => "delete products for provider: #{self.name}", :priority => 1, :action => [self, :del_products])
     end
 
-    def import_error_message display_message
+    def import_error_message(display_message)
       error_texts = [
           _("Subscription manifest upload for provider '%s' failed.") % self.name,
           (_("Reason: %s") % display_message unless display_message.blank?)
@@ -409,7 +411,7 @@ module Glue::Provider
       error_texts.join('<br />')
     end
 
-    def refresh_error_message display_message
+    def refresh_error_message(display_message)
       error_texts = [
           _("Subscription manifest refresh for provider '%s' failed.") % self.name,
           (_("Reason: %s") % display_message unless display_message.blank?)
@@ -452,7 +454,7 @@ module Glue::Provider
       # Nothing to be done until implemented in katello where possible pulp recovery actions should be done(?)
     end
 
-    def queue_delete_manifest options
+    def queue_delete_manifest(options)
       output        = StringIO.new
       import_logger = Logger.new(output)
       options.merge!(:import_logger => import_logger)
@@ -483,6 +485,8 @@ module Glue::Provider
     protected
 
     # Display appropriate messages when manifest import or delete fails
+    # TODO: break up this method
+    # rubocop:disable MethodLength
     def display_manifest_message(type, error, options)
 
       # Clean up response from candlepin
