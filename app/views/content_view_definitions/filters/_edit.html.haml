@@ -1,4 +1,5 @@
 = javascript 'widgets/tabs'
+- save_url = content_view_definition_filter_path(view_definition.id, filter.id)
 
 = render :partial => "content_view_definitions/tupane_header"
 
@@ -32,6 +33,12 @@
                              :record => filter,
                              :readable_products => nil,
                              :editable_products => nil,
-                             :save_url => content_view_definition_filter_path(view_definition.id, filter.id)}
+                             :content_types => Repository::TYPES - [Repository::PUPPET_TYPE],
+                             :save_url => save_url,
+                             :title => "Yum Products and Repositories"}
+
+        = render "common/repo_selector", :repositories => [view_definition.puppet_repository].compact,
+          :title => "Puppet Repository", :editable => editable, :save_url => save_url,
+          :field => :puppet_repository_id, :record => filter
 
 = render :template => "layouts/tupane_layout"

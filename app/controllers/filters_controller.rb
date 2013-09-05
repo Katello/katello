@@ -47,7 +47,7 @@ class FiltersController < ApplicationController
   def param_rules
     {
       :create => {:view_definition => [:name, :label, :description]},
-      :update => [:content_view_definition_id, :id, :products, :repos]
+      :update => [:content_view_definition_id, :id, :products, :repos, :puppet_repository_id]
     }
   end
 
@@ -93,9 +93,20 @@ class FiltersController < ApplicationController
       @filter.repository_ids = repo_ids
     end
 
+    if params[:puppet_repository_id]
+      if puppet_repo = @filter.repositories.puppet_type.first
+        @filter.repositories.delete(puppet_repo)
+      end
+
+      unless params[:puppet_repository_id].blank?
+        new_repo = Repository.libraries_content_readable(current_organization).find(params[:puppet_repository_id])
+        @filter.repositories << new_repo
+      end
+    end
+
     @filter.save!
 
-    notify.success _("Successfully updated products and repositories for filter '%s'.") % @filter.name
+    notify.success((_("Successfully updated products and repositories for filter '%s'.") % @filter.name), :persist_only => true)
     render :nothing => true
   end
 

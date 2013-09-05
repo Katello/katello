@@ -2,6 +2,7 @@
 = javascript do
   :plain
     KT.content_view_definition.set_view_repos($.parseJSON('#{escape_javascript(view_repos(view_definitions).to_json)}'));
+    KT.content_view_definition.set_repos($.parseJSON('#{escape_javascript(view_full_repos(view_definitions).to_json)}'));
 
 = render :partial => "content_view_definitions/tupane_header"
 

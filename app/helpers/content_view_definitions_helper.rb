@@ -49,7 +49,16 @@ module ContentViewDefinitionsHelper
                                         "share the same repository; therefore, it cannot be "\
                                         "published.  Please visit the Content pane to "\
                                         "resolve this issue."))
-
+    elsif definition.has_puppet_repo_conflicts?
+      content_tag(:td,
+                  tag(:input, {:type => 'button', :class => 'fr button',
+                               :value => _('Publish'), :disabled => true}),
+                  :class => 'repo_conflict',
+                  'original-title' => _(<<-eos))
+          The definition consists of more than one component content view that
+          has a puppet repo and therefore cannot be published. Please visit the
+          Content pane to resolve this issue.
+        eos
     else
       content_tag(:td,
                   tag(:input, {:type => 'button', :class => 'fr button subpanel_element publish',
@@ -92,6 +101,22 @@ module ContentViewDefinitionsHelper
             :name => view.name,
             :repos => view.repos(current_organization.library).collect{|repo| repo.library_instance_id}
         }
+      end
+    end
+    view_repos
+  end
+
+  # Find the repos for various definitions and return a hash with repository id as key
+  #
+  # @param [Array] array of content view definitions
+  # @return [Hash] hash of repos with id as key
+  def view_full_repos(definitions)
+    view_repos = {}
+    definitions.each do |definition|
+      definition.content_views.each do |view|
+        view.repos(current_organization.library).map { |repo| repo.library_instance }.each do |repo|
+          view_repos[repo.id] = repo
+        end
       end
     end
     view_repos
