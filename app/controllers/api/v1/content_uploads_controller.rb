@@ -12,7 +12,7 @@
 
 class Api::V1::ContentUploadsController < Api::V1::ApiController
   respond_to :json
-  before_filter :find_repository, :only => [:create, :upload_bits, :destroy]
+  before_filter :find_repository, :except => [:index]
   before_filter :authorize
 
   def rules
@@ -22,6 +22,7 @@ class Api::V1::ContentUploadsController < Api::V1::ApiController
       :create => upload_test,
       :upload_bits => upload_test,
       :destroy => upload_test,
+      :import_into_repo => upload_test,
       :index => lambda { true } # TODO: set a permission here
     }
   end
@@ -54,6 +55,17 @@ class Api::V1::ContentUploadsController < Api::V1::ApiController
   def index
     request_list = Katello.pulp_server.resources.content.list_all_requests
     respond :collection => request_list
+  end
+
+  api :POST, "/repositories/:repo_id/content_uploads/:id/import_into_repo", "Import into a repository"
+  param :repo_id, :identifier, :required => true, :desc => "repository id"
+  param :id, :identifier, :required => true, :desc => "upload request id"
+  param :unit_key, Hash, :required => true, :desc => "unique identifier for the new unit"
+  param :unit_metadata, Hash, :required => false, :desc => "extra metadata describing the unit"
+  def import_into_repo
+    Katello.pulp_server.resources.content.import_into_repo(@repo.pulp_id, "rpm",
+      params[:id], params[:unit_key], {:unit_metadata => params[:unit_metadata]})
+    render :nothing => true
   end
 
   private

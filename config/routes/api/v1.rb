@@ -245,6 +245,7 @@ Src::Application.routes.draw do
         resources :content_uploads, :controller => :content_uploads, :only => [:create, :destroy, :upload_bits] do
           member do
             put :upload_bits
+            post :import_into_repo
           end
         end
         member do
