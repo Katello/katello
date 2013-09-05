@@ -13,7 +13,7 @@
 class UserNotice < ActiveRecord::Base
 
   belongs_to :user
-  belongs_to :notice
+  belongs_to :notice, :dependent => :destroy
 
   def check_permissions(operation)
     # anybody can create user_notice relationships

@@ -50,6 +50,7 @@ class User < ActiveRecord::Base
   has_many :help_tips
   has_many :user_notices
   has_many :notices, :through => :user_notices
+  has_many :task_statuses, :dependent => :destroy
   has_many :search_favorites, :dependent => :destroy
   has_many :search_histories, :dependent => :destroy
   belongs_to :default_environment, :class_name => "KTEnvironment"

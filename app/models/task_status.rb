@@ -35,6 +35,9 @@ class TaskStatus < ActiveRecord::Base
   # adding belongs_to :system allows us to perform joins with the owning system, if there is one
   belongs_to :system, :foreign_key => :task_owner_id, :class_name => "System"
 
+  # needed to delete providers w/ task status
+  has_one :provider, :dependent => :nullify
+
   # a task may be optionally associated with a job, but it is not required
   # an example scenario would be a job that is created by performing an action on a system group
   has_one :job_task, :dependent => :destroy
