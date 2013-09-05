@@ -12,6 +12,9 @@
 
 
 module Glue::ElasticSearch::Pool
+
+  # TODO: break this up into modules
+  # rubocop:disable MethodLength
   def self.included(base)
 
     base.class_eval do
@@ -19,7 +22,7 @@ module Glue::ElasticSearch::Pool
       # objects are persisted, this could lead to confusion and unnecessary overhead. (Only Pools referenced by
       # ActivationKeys are stored.) The methods below are the infrastructure for indexing the Pool objects.
       def self.display_attributes
-        ['name', 'sla', 'start', 'end', 'consumed', 'product', 'account', 'contract', 'virtual']
+        %w(name sla start end consumed product account contract virtual)
       end
 
       def index_options
@@ -76,7 +79,7 @@ module Glue::ElasticSearch::Pool
         }
       end
 
-      def self.index_pools(pools, clear_filters=nil)
+      def self.index_pools(pools, clear_filters = nil)
         # Clear previous pools index
         if !clear_filters.nil?
           items = Glue::ElasticSearch::Items.new(Pool)
@@ -84,7 +87,7 @@ module Glue::ElasticSearch::Pool
               :filter => clear_filters,
               :load_records? => false
           }
-          results, total_count = items.retrieve('', 0, options)
+          results, _ = items.retrieve('', 0, options)
           Tire.index self.index do
             results.each do |result|
               remove :pool, result.id
@@ -92,9 +95,7 @@ module Glue::ElasticSearch::Pool
           end
         end
 
-        json_pools = pools.collect{ |pool|
-          pool.as_json.merge(pool.index_options)
-        }
+        json_pools = pools.collect { |pool| pool.as_json.merge(pool.index_options) }
 
         unless json_pools.empty?
           Tire.index self.index do
@@ -120,8 +121,8 @@ module Glue::ElasticSearch::Pool
         {
             "index" => {
                 "analysis" => {
-                    "filter" => Util::Search::custom_filters,
-                    "analyzer" => Util::Search::custom_analyzers
+                    "filter" => Util::Search.custom_filters,
+                    "analyzer" => Util::Search.custom_analyzers
                 }
             }
         }

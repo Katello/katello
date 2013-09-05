@@ -12,6 +12,9 @@
 
 
 module Glue::ElasticSearch::Repository
+
+  # TODO: break this up into modules
+  # rubocop:disable MethodLength
   def self.included(base)
     base.send :include, Ext::IndexedModel
 
@@ -137,7 +140,6 @@ module Glue::ElasticSearch::Repository
 
     def update_package_group_index
       # for each of the package_groups in the repo, unassociate the repo from the package_group
-      pgs = self.package_groups.collect{|pg| pg.as_json.merge(pg.index_options)}
       pulp_id = self.pulp_id
 
       # now, for any package group that only had this repo asscociated with it,

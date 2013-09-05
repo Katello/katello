@@ -16,16 +16,13 @@ module Glue
     class Items
 
       attr_accessor :obj_class, :query_string, :results, :total, :filters
+      alias_method :model=, :obj_class=
 
       def initialize(obj_class = nil)
         @obj_class    = obj_class
         @query_string = query_string
         @results      = []
         @filters      = []
-      end
-
-      def model=(klass)
-        @obj_class = klass
       end
 
       # Retrieves items from the Elasticsearch index
@@ -49,7 +46,9 @@ module Glue
       #   is OR'd, whereas each HASH itself is AND'd together
       # @option search_options [true, false] :load_records?
       #   whether or not to load the active record object (defaults to false)
-      def retrieve(query_string, start=0, search_options={})
+      # TODO: break up method
+      # rubocop:disable MethodLength
+      def retrieve(query_string, start = 0, search_options = {})
 
         @query_string = query_string
         @filters      = search_options[:filters] || []
@@ -100,11 +99,11 @@ module Glue
           @results = @results.results
         end
 
+        return @results, total_count
       rescue Tire::Search::SearchRequestFailed => e
         Rails.logger.error(e.class)
 
         @results = []
-      ensure
         return @results, total_count
       end
 
@@ -148,11 +147,12 @@ module Glue
 
         @total = results.total
 
+        return @total
       rescue Tire::Search::SearchRequestFailed => e
         Rails.logger.error(e.class)
+        return @total
       rescue => e
         puts e
-      ensure
         return @total
       end
 
