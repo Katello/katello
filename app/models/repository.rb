@@ -99,6 +99,10 @@ class Repository < ActiveRecord::Base
     content_type == PUPPET_TYPE
   end
 
+  def yum?
+    content_type == YUM_TYPE
+  end
+
   def in_default_view?
     content_view_version && content_view_version.has_default_content_view?
   end

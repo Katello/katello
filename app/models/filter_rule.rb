@@ -19,8 +19,9 @@ class FilterRule < ActiveRecord::Base
   ERRATA          = Errata::CONTENT_TYPE
   PUPPET_MODULE   = PuppetModule::CONTENT_TYPE
   CONTENT_TYPES   = [PACKAGE, PACKAGE_GROUP, ERRATA, PUPPET_MODULE]
-  CONTENT_OPTIONS = {_('Packages') => PACKAGE, _('Package Groups') => PACKAGE_GROUP, _('Errata') => ERRATA,
-      _('Puppet Modules') => PUPPET_MODULE}
+  YUM_CONTENT_OPTIONS = {_('Packages') => PACKAGE, _('Package Groups') => PACKAGE_GROUP, _('Errata') => ERRATA}
+  PUPPET_CONTENT_OPTIONS = {_('Puppet Modules') => PUPPET_MODULE}
+  CONTENT_OPTIONS = YUM_CONTENT_OPTIONS.merge(PUPPET_CONTENT_OPTIONS)
 
   validates_with Validators::SerializedParamsValidator, :attributes => :parameters
 
