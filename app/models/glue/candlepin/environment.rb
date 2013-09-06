@@ -59,10 +59,10 @@ module Glue::Candlepin::Environment
 
     def save_environment_orchestration
       case self.orchestration_for
-        when :create
-          post_queue.create(:name => "candlepin environment for content view: #{self.content_view.label}",
-                            :priority => 3,
-                            :action => [self, :set_environment])
+      when :create
+        post_queue.create(:name => "candlepin environment for content view: #{self.content_view.label}",
+                          :priority => 3,
+                          :action => [self, :set_environment])
       end
     end
 

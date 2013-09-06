@@ -122,8 +122,8 @@ module Glue::Candlepin::Content
     end
 
     def should_update_content?
-      (self.gpg_key_id_was == nil && self.gpg_key_id != nil && self.content.gpgUrl == '') ||
-          (self.gpg_key_id_was != nil && self.gpg_key_id == nil && self.content.gpgUrl != '')
+      (self.gpg_key_id_was.nil? && !self.gpg_key_id.nil? && self.content.gpgUrl == '') ||
+          (!self.gpg_key_id_was.nil? && self.gpg_key_id.nil? && self.content.gpgUrl != '')
     end
 
     def yum_gpg_key_url
@@ -136,7 +136,7 @@ module Glue::Candlepin::Content
     end
 
     def custom_content_label
-      "#{organization.label} #{product.label} #{label}".gsub(/\s/,"_")
+      "#{organization.label} #{product.label} #{label}".gsub(/\s/, "_")
     end
   end
 
