@@ -36,14 +36,14 @@ module Glue::Candlepin::Product
   end
 
   def self.validate_name(name)
-    name.gsub(/[^a-z0-9\-_ ]/i,"")
+    name.gsub(/[^a-z0-9\-_ ]/i, "")
   end
 
-  def self.import_from_cp(attrs=nil, &block)
+  def self.import_from_cp(attrs = nil, &block)
     product_content_attrs = attrs.delete(:productContent) || []
     import_logger        = attrs[:import_logger]
 
-    attrs = attrs.merge('name' => validate_name(attrs['name']), 'label' => Util::Model::labelize(attrs['name']))
+    attrs = attrs.merge('name' => validate_name(attrs['name']), 'label' => Util::Model.labelize(attrs['name']))
 
     product = Product.new(attrs, &block)
     product.orchestration_for = :import_from_cp_ar_setup
@@ -61,7 +61,7 @@ module Glue::Candlepin::Product
   end
 
   def self.import_marketing_from_cp(attrs, engineering_product_ids, &block)
-    attrs = attrs.merge('name' => validate_name(attrs['name']), 'label' => Util::Model::labelize(attrs['name']))
+    attrs = attrs.merge('name' => validate_name(attrs['name']), 'label' => Util::Model.labelize(attrs['name']))
 
     product = MarketingProduct.new(attrs, &block)
     product.orchestration_for = :import_from_cp_ar_setup
@@ -77,7 +77,7 @@ module Glue::Candlepin::Product
 
   module InstanceMethods
 
-    def initialize(attribs=nil, options={})
+    def initialize(attribs = nil, options = {})
       unless attribs.nil?
         attributes_key = attribs.has_key?(:attributes) ? :attributes : 'attributes'
         if attribs.has_key?(attributes_key)
@@ -148,12 +148,12 @@ module Glue::Candlepin::Product
       elements.collect{ |e| e.except(:id, :created, :updated)}
     end
 
-    def add_content content
+    def add_content(content)
       Resources::Candlepin::Product.add_content self.cp_id, content.content.id, true
       self.productContent << content
     end
 
-    def remove_content_by_id content_id
+    def remove_content_by_id(content_id)
       Resources::Candlepin::Product.remove_content cp_id, content_id
     end
 
@@ -313,18 +313,18 @@ module Glue::Candlepin::Product
 
     def save_product_orchestration
       case self.orchestration_for
-        when :create
-          pre_queue.create(:name => "candlepin product: #{self.name}",                          :priority => 1, :action => [self, :set_product])
-          pre_queue.create(:name => "create unlimited subscription in candlepin: #{self.name}", :priority => 2, :action => [self, :set_unlimited_subscription])
-        when :import_from_cp
-          # we leave it as it is - to not break re-import logic
-        when :import_from_cp_ar_setup
-          # skip creating product in candlepin as its already there
-        when :update
-          #called when sync schedule changed, repo added, repo deleted
-          pre_queue.create(:name => "update content in candlein: #{self.name}", :priority => 1, :action => [self, :update_content])
-        when :promote
-          #queue.create(:name => "update candlepin product: #{self.name}", :priority =>3, :action => [self, :update_content])
+      when :create
+        pre_queue.create(:name => "candlepin product: #{self.name}",                          :priority => 1, :action => [self, :set_product])
+        pre_queue.create(:name => "create unlimited subscription in candlepin: #{self.name}", :priority => 2, :action => [self, :set_unlimited_subscription])
+      when :import_from_cp
+        # we leave it as it is - to not break re-import logic
+      when :import_from_cp_ar_setup
+        # skip creating product in candlepin as its already there
+      when :update
+        #called when sync schedule changed, repo added, repo deleted
+        pre_queue.create(:name => "update content in candlein: #{self.name}", :priority => 1, :action => [self, :update_content])
+      when :promote
+        #queue.create(:name => "update candlepin product: #{self.name}", :priority =>3, :action => [self, :update_content])
       end
     end
 
@@ -336,6 +336,7 @@ module Glue::Candlepin::Product
     end
 
     protected
+
     def added_content
       old_content_ids = productContent_change[0].nil? ? [] : productContent_change[0].map {|pc| pc.content.label}
       new_content_ids = productContent_change[1].map {|pc| pc.content.label}
