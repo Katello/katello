@@ -63,7 +63,6 @@ class Api::V2::ProductsControllerTest < Minitest::Rails::ActionController::TestC
                   :provider_id => @provider.id,
                   :description => 'This is my cool new product.'
 
-
     assert_response :success
     assert_template 'api/v2/products/show'
   end

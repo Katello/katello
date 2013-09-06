@@ -22,7 +22,6 @@ class ProvidersControllerTest < MiniTest::Rails::ActionController::TestCase
     @custom_product = providers(:fedora_hosted)
     login_user(User.find(users(:admin)), @org)
 
-
     models = ["Organization", "KTEnvironment", "Provider", "Product"]
     services = ["Candlepin", "Pulp", "ElasticSearch", "Foreman"]
     disable_glue_layers(services, models)
@@ -33,6 +32,5 @@ class ProvidersControllerTest < MiniTest::Rails::ActionController::TestCase
     get :index
     assert_response :success
   end
-
 
 end

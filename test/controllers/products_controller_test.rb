@@ -38,7 +38,6 @@ class ProductsControllerTest < MiniTest::Rails::ActionController::TestCase
     assert_response :success
   end
 
-
   test "disabling a reposet should call disable_content" do
     Product.stubs(:find).returns(@redhat_product)
     @redhat_product.expects(:disable_content).with('3').returns(@pc)
@@ -55,7 +54,6 @@ class ProductsControllerTest < MiniTest::Rails::ActionController::TestCase
     assert_response :bad_request
   end
 
-
   test "disabling a reposet should call disable_content" do
     Product.stubs(:find).returns(@custom_product)
     @redhat_product.stubs(:disable_content).with('3').returns(@pc)
@@ -63,6 +61,5 @@ class ProductsControllerTest < MiniTest::Rails::ActionController::TestCase
     put :disable_content, {:id => @custom_product.id,  :content_id=>'3'}
     assert_response :bad_request
   end
-
 
 end

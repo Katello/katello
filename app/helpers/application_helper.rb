@@ -10,8 +10,6 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-
-
 module ApplicationHelper
 
   include LayoutHelper
@@ -32,7 +30,6 @@ module ApplicationHelper
       name         = args[0]
       options      = args[1] || {}
       html_options = args[2]
-
 
       if options.key? :controller
         ctrl   = options[:controller]
@@ -390,5 +387,4 @@ module ApplicationHelper
     end
   end
 end
-
 

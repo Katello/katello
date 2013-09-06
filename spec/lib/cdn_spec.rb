@@ -76,7 +76,6 @@ describe Resources::CDN::CdnResource do
     end
   end
 
-
   it "should handle error codes from Resources::CDN" do
     stub_forbidden_cdn_requests
     lambda { subject.substitute_vars(path_with_variables) }.should raise_error Errors::SecurityViolation
@@ -101,7 +100,6 @@ describe Resources::CDN::CdnResource do
     end
     Resources::CDN::CdnResource.new(provider_url, connect_options).substitutor.substitute_vars(path_with_variables)
   end
-
 
   # all requests for listing releasevers and basearchs reeturn the values in
   # arguments.

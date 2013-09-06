@@ -10,8 +10,6 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-
-
 module Authorization::GpgKey
   extend ActiveSupport::Concern
 
@@ -40,7 +38,6 @@ module Authorization::GpgKey
       organization.readable? || organization.gpg_keys_manageable? || ::Provider.any_readable?(organization)
     end
   end
-
 
   included do
     def readable?

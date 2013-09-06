@@ -221,7 +221,6 @@ class KTEnvironment < ActiveRecord::Base
     KTEnvironment.where(:id => ids).collect { |m| VirtualTag.new(m.id, m.name) }
   end
 
-
   def package_groups(search_args = {})
     groups = []
     self.products.each do |prod|

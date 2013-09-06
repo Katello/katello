@@ -15,7 +15,6 @@ require './test/support/repository_support'
 require './test/support/consumer_support'
 require './test/support/user_support'
 
-
 class GluePulpConsumerTestBase < MiniTest::Rails::ActiveSupport::TestCase
   extend  ActiveRecord::TestFixtures
   include RepositorySupport
@@ -40,7 +39,6 @@ class GluePulpConsumerTestBase < MiniTest::Rails::ActiveSupport::TestCase
   end
 
 end
-
 
 class GluePulpConsumerTestCreateDestroy < GluePulpConsumerTestBase
 
@@ -113,7 +111,6 @@ class GluePulpConsumerBindTest < GluePulpConsumerTestBase
   end
 
 end
-
 
 class GluePulpConsumerRequiresBoundRepoTest < GluePulpConsumerTestBase
 

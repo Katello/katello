@@ -106,5 +106,4 @@ describe Api::V1::PingController do
 
   end
 
-
 end

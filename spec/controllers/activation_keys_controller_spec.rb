@@ -46,7 +46,6 @@ describe ActivationKeysController do
                                         :environment_id => @organization.library.id}} unless Katello.config.katello?
   end
 
-
   describe "rules" do
     let(:action) {:items }
     let(:req) { get :items }

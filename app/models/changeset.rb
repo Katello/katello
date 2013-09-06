@@ -24,7 +24,6 @@ class Changeset < ActiveRecord::Base
   FAILED    = 'failed'
   STATES    = [NEW, REVIEW, PROMOTING, PROMOTED, FAILED, DELETING, DELETED]
 
-
   PROMOTION = 'promotion'
   DELETION  = 'deletion'
   TYPES     = [PROMOTION, DELETION]
@@ -80,7 +79,6 @@ class Changeset < ActiveRecord::Base
       raise _("Unknown changeset type. Choose one of: %s") % TYPES.join(", ")
     end
   end
-
 
   def key_for(item)
     "changeset_#{id}_#{item}"

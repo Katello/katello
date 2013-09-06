@@ -51,7 +51,6 @@ class DefaultModel
   end
 end
 
-
 class ResourceType < ActiveRecord::Base
   belongs_to :permission
   validates :name, :length => { :maximum => 255 }
@@ -83,7 +82,6 @@ class ResourceType < ActiveRecord::Base
     check_type resource_type
 
     model = model_for resource_type
-
 
     possible_verbs = (model.list_verbs(true).keys + model.list_verbs(false).keys).uniq
     verbs = [] if verbs.nil?

@@ -19,7 +19,6 @@ module Glue::ElasticSearch::Distributor
     base.class_eval do
       include Ext::IndexedModel
 
-
       index_options :extended_json=>:extended_index_attrs,
                     :json=>{:only=> [:name, :description, :id, :uuid, :created_at, :lastCheckin, :environment_id]},
                     :display_attrs => [:name,

@@ -50,7 +50,6 @@ class UsersController < ApplicationController
       end
     end
 
-
     user_helptip = lambda { true } #everyone can enable disable a helptip
 
     { :index                => index_test,
@@ -80,7 +79,6 @@ class UsersController < ApplicationController
       :update_roles => { :user => [:role_ids] }
     }
   end
-
 
   # Render list of users. Note that if the current user does not have permission
   # to view all users, the results are restricted to just themselves.
@@ -248,7 +246,6 @@ class UsersController < ApplicationController
       end
     end
 
-
     if @user.default_environment.try(:id) == default_environment_id
       err_msg = N_("The system registration default you supplied was the same as the old system registration default.")
       notify.error err_msg
@@ -356,7 +353,6 @@ class UsersController < ApplicationController
     end
   end
 
-
   def setup_options
     @panel_options = { :title         => _('Users'),
                        :col           => ['username'],
@@ -377,6 +373,5 @@ class UsersController < ApplicationController
   def default_notify_options
     super.merge :organization => nil
   end
-
 
 end

@@ -40,7 +40,6 @@ class Api::V1::PermissionsController < Api::V1::ApiController
     }
   end
 
-
   api :GET, "/roles/:role_id/permissions", "List permissions for a role"
   param :name, String, :desc => "filter by name"
   param :description, String, :desc => "filter by description"
@@ -55,7 +54,6 @@ class Api::V1::PermissionsController < Api::V1::ApiController
   def show
     respond
   end
-
 
   api :POST, "/roles/:role_id/permissions", "Create a roles permission"
   param :description, String, :allow_nil => true
@@ -89,7 +87,6 @@ class Api::V1::PermissionsController < Api::V1::ApiController
     @permission = Permission.create! new_params
     render :json => @permission.to_json
   end
-
 
   api :DELETE, "/roles/:role_id/permissions/:id", "Destroy a roles permission"
   def destroy

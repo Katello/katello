@@ -34,7 +34,6 @@ module Katello
   end
 end
 
-
 module Util
   module ThreadSession
 
@@ -55,7 +54,6 @@ module Util
             username = o.is_a?(User) ? o.username : 'nil'
             Rails.logger.debug "Setting current user thread-local variable to " + username
             Thread.current[:user] = o
-
 
             if Katello.config.use_pulp && o
               uri = URI.parse(Katello.config.pulp.url)

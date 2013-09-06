@@ -10,7 +10,6 @@ require 'minitest/rails'
 require 'json'
 require 'mocha/setup'
 
-
 require File.expand_path("../support.rb",  __FILE__)
 require File.expand_path("../../lib/monkeys/foreign_keys_postgresql.rb",  __FILE__)
 
@@ -148,7 +147,6 @@ def disable_glue_layers(services=[], models=[], force_reload=false)
   end
 end
 
-
 class ResourceTypeBackup
   @@types_backup = ResourceType::TYPES.clone
 
@@ -157,7 +155,6 @@ class ResourceTypeBackup
     ResourceType::TYPES.merge!(@@types_backup)
   end
 end
-
 
 class CustomMiniTestRunner
   class Unit < MiniTest::Unit

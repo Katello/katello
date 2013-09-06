@@ -10,7 +10,6 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-
 class Organization < ActiveRecord::Base
 
   ALLOWED_DEFAULT_INFO_TYPES = %w( system distributor )
@@ -70,7 +69,6 @@ class Organization < ActiveRecord::Base
   validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
   validate :unique_name_and_label
   validates_with Validators::DefaultInfoValidator, :attributes => :default_info
-
 
   # Ensure that the name and label namespaces do not overlap
   def unique_name_and_label

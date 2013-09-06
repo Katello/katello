@@ -285,7 +285,6 @@ class ChangesetsController < ApplicationController
                  :search_class=>Changeset}
   end
 
-
   def controller_display_name
     return 'changeset'
   end

@@ -13,7 +13,6 @@
 class SearchController < ApplicationController
   include SearchHelper
 
-
   def rules
     pass = lambda{true}
     {
@@ -22,7 +21,6 @@ class SearchController < ApplicationController
      :destroy_favorite => pass
     }
   end
-
 
   def show
     # retrieve the search history and favorites for the user...

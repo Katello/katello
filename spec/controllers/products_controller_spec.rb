@@ -53,7 +53,6 @@ describe ProductsController, :katello => true do
       it_should_behave_like "protected action"
     end
 
-
     describe "post create" do
       let(:action) {:create}
       let(:req) { post :create, :provider_id => @provider.id}
@@ -81,7 +80,6 @@ describe ProductsController, :katello => true do
     end
   end
 
-
   describe "gpg" do
     before do
       disable_product_orchestration
@@ -105,8 +103,6 @@ describe ProductsController, :katello => true do
       its(:name){should == @prod_name}
       its(:gpg_key){should == @gpg}
     end
-
-
 
     context "when updating a product" do
       before do

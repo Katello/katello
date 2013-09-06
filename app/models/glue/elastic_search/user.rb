@@ -10,7 +10,6 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-
 module Glue::ElasticSearch::User
   def self.included(base)
     base.send :include, Ext::IndexedModel
@@ -32,6 +31,5 @@ module Glue::ElasticSearch::User
   def extended_index_attrs
     { :username_sort => username.downcase }
   end
-
 
 end

@@ -23,8 +23,6 @@ module ProductTestData
 
   PRODUCT_NAME = "Load_Balancing"
 
-
-
   SIMPLE_PRODUCT = {
     :name => ProductTestData::PRODUCT_NAME,
     :label => "product-foo",
@@ -98,7 +96,6 @@ module ProductTestData
     :attributes => []
   })
 
-
   PRODUCT_WITH_CP_CONTENT = HashWithIndifferentAccess.new({
     :name => ProductTestData::PRODUCT_NAME,
     :label =>"dreamer",
@@ -122,7 +119,6 @@ module ProductTestData
     ],
     :attributes => []
   })
-
 
   POOLS = HashWithIndifferentAccess.new({
     "id" => "ff808081311ad38001311ae11f4e0010",
@@ -354,6 +350,5 @@ module ProductTestData
 #   }
 #
 #
-
 
 end

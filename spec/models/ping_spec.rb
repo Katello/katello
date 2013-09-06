@@ -15,7 +15,6 @@ require 'webmock'
 include WebMock::API
 require 'helpers/config_helper_spec'
 
-
 describe Ping do
 
   describe "#ping" do

@@ -12,7 +12,6 @@
 
 require './test/models/authorization/authorization_base'
 
-
 class SystemAuthorizationAdminTest < AuthorizationTestBase
 
   def setup
@@ -52,7 +51,6 @@ class SystemAuthorizationAdminTest < AuthorizationTestBase
   end
 
 end
-
 
 class SystemAuthorizationNoPermsTest < AuthorizationTestBase
 

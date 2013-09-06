@@ -15,7 +15,6 @@ require 'ostruct'
 # TODO: start / end dates in left subscriptions list
 # TODO: start date range not working?  start:2012-01-31 fails but start:"2012-01-31" works
 
-
 class SubscriptionsController < ApplicationController
 
   before_filter :find_provider

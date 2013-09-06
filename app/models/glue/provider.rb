@@ -391,7 +391,6 @@ module Glue::Provider
         end
       end
 
-
       product_to_remove_ids = (product_in_katello_ids - products_in_candlepin_ids).uniq
       product_to_remove_ids.each { |cp_id| Product.find_by_cp_id(cp_id, self.organization).destroy }
 
@@ -562,6 +561,5 @@ module Glue::Provider
       ids
     end
   end
-
 
 end

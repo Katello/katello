@@ -10,7 +10,6 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-
 class ContentViewDefinition < ContentViewDefinitionBase
   include Glue::ElasticSearch::ContentViewDefinition if Katello.config.use_elasticsearch
   include Ext::LabelFromName
@@ -121,7 +120,6 @@ class ContentViewDefinition < ContentViewDefinitionBase
     if notify
       message = _("Failed to publish content view '%{view_name}' from definition '%{definition_name}'.") %
           {:view_name => view.name, :definition_name => self.name}
-
 
       Notify.exception(message, e, :request_type => "content_view_definitions___publish",
                        :organization => self.organization)
@@ -255,7 +253,6 @@ class ContentViewDefinition < ContentViewDefinitionBase
     #   If there is no include/exclude filters  -  Everything is included. - so do not delete anything
     return if inclusion_rules.count == 0 && exclusion_rules.count == 0
 
-
     #  If there are only exclude filters (aka blacklist filters),
     #  then unassociate them from the repo
     #  If there are only include filters (aka whitelist) then only the packages/errata included will get included.
@@ -293,7 +290,6 @@ class ContentViewDefinition < ContentViewDefinitionBase
       break if errors.any?
     end
   end
-
 
   def generate_clauses(repo, rules, inclusion = true)
     join_clause = "$nor"

@@ -87,5 +87,4 @@ describe SyncSchedulesController, :katello => true do
     end
   end
 
-
 end
