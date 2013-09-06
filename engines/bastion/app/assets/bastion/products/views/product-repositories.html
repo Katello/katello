@@ -1,0 +1,51 @@
+<section class="details details-full">
+
+  <div class="form">
+    <input type="text"
+           class="input input-search"
+           placeholder="{{ 'Filter' | i18n }}"
+           ng-model="repositorySearch">
+    <button class="btn btn-primary fr" ng-click="openCreateRepository(product)">{{ 'Create Repository' | i18n }}</button>
+  </div>
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>{{ "Name" | i18n }}</th>
+        <th>{{ "Type" | i18n }}</th>
+        <th>{{ "Last Sync" | i18n }}</th>
+        <th>{{ "Sync State" | i18n }}</th>
+        <th class="align-center">{{ "Packages" | i18n }}</th>
+        <th class="align-center">{{ "Errata" | i18n }}</th>
+        <th class="align-center">{{ "Puppet Modules" | i18n }}</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr ng-repeat="repository in repositories.results | filter:repositorySearch" row-select>
+        <td>
+          <a class="clickable" ng-href="#/products/{{ product.id }}/repositories/{{ repository.id }}">{{ repository.name }}</a>
+        </td>
+        <td>{{ repository.content_type }}</td>
+        <td>{{ repository.last_sync | date:"short" }}</td>
+        <td>{{ repository.sync_state }}</td>
+        <td class="align-center">
+          <a ng-href="/katello/content_search#/!=&search[subgrid][repo_id]={{ repository.id }}&search[subgrid][type]=repo_packages">
+            {{ repository.content_counts.rpm || 0 }}
+          </a>
+        </td>
+        <td class="align-center">
+          <a ng-href="/katello/content_search#/!=&search[subgrid][repo_id]={{ repository.id }}&search[subgrid][type]=repo_errata">
+          {{ repository.content_counts.erratum || 0 }}
+          </a>
+        </td>
+        <td class="align-center">
+          <a ng-href="/katello/content_search#/!=&search[subgrid][repo_id]={{ repository.id }}&search[subgrid][type]=repo_puppet_modules">
+          {{ repository.content_counts.puppet_module || 0 }}
+          </a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+</section>

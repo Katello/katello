@@ -1,18 +1,23 @@
 <section>
 
   <header>
-    <h5>
-      <i class="icon-backward clickable" ng-click="transitionTo('products.new.form')"></i>
+    <a ng-click="transitionTo('products.new.form')" class="clickable">
+      <i class="icon-backward"></i>
+      {{ "Back to Product Creation" | i18n }}
+    </a>
+    <h4>
       {{ "Add New Provider" }}
-    </h5>
+    </h4>
   </header>
 
   <form name="providerForm" class="form" novalidate>
 
     <div class="control-group required" ng-class="{ 'error' : providerForm.name.$invalid }">
+
       <div class="label">
         <label class="required" for="name">{{ "Name" | i18n }}</label>
       </div>
+
       <div class="input">
         <input ng-model="provider.name"
                name="name"
@@ -25,6 +30,7 @@
           </ul>
         </span>
       </div>
+
     </div>
 
     <div class="control-group buttons">

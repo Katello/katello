@@ -131,6 +131,20 @@ describe('Factory: Nutupane', function() {
             expect(Resource.query).not.toHaveBeenCalled();
         });
 
+        it("provides a way to add an individual row", function() {
+            nutupane.table.rows = new Array(8);
+            nutupane.table.addRow('');
+
+            expect(nutupane.table.rows.length).toBe(9);
+        });
+
+        it("provides a way to add an individual row", function() {
+            nutupane.table.rows = [{id: 1}, {id: 2}];
+            nutupane.table.removeRow(1);
+
+            expect(nutupane.table.rows.length).toBe(1);
+        });
+
         describe("provides a way to sort the table", function(){
             it ("defaults the sort to ascending if the previous sort does not match the new sort.", function() {
                 var expectedParams = {sort_by: 'name', sort_order: 'ASC', offset: 0, search: ''};

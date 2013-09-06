@@ -203,7 +203,7 @@ Src::Application.routes.draw do
 
       api_resources :ping, :only => [:index]
 
-      api_resources :repositories, :only => [:show, :update, :destroy], :constraints => {:id => /[0-9a-zA-Z\-_.]*/} do
+      api_resources :repositories, :only => [:index, :create, :show, :update, :destroy], :constraints => { :id => /[0-9a-zA-Z\-_.]*/ } do
         api_resources :sync, :only => [:index, :create] do
           delete :index, :on => :collection, :action => :cancel
         end
@@ -247,7 +247,7 @@ Src::Application.routes.draw do
         end
       end
 
-      api_resources :gpg_keys, :only => [:show, :update, :destroy] do
+      api_resources :gpg_keys, :only => [:index, :show, :update, :destroy] do
         get :content, :on => :member
       end
 
@@ -261,7 +261,7 @@ Src::Application.routes.draw do
       api_resources :products, :only => [:index, :show, :update, :destroy, :create] do
         post :sync_plan, :on => :member, :action => :set_sync_plan
         delete :sync_plan, :on => :member, :action => :remove_sync_plan
-        api_resources :repositories, :only => [:create]
+        api_resources :repositories, :only => [:create, :index]
         get :repositories, :on => :member
         api_resources :sync, :only => [:index, :create] do
           delete :index, :on => :collection, :action => :cancel

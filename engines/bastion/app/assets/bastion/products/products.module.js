@@ -24,7 +24,8 @@ angular.module('Bastion.products', [
     'alch-templates',
     'ui.compat',
     'Bastion.widgets',
-    'Bastion.providers'
+    'Bastion.providers',
+    'Bastion.gpg-keys'
 ]);
 
 /**
@@ -97,17 +98,28 @@ angular.module('Bastion.products').config(['$stateProvider', function($stateProv
         controller: 'ProductDetailsInfoController',
         templateUrl: 'products/views/product-info.html'
     })
+
     .state('products.details.repositories', {
-        url: '/repositories',
-        collapsed: true,
+        abstract: true,
         controller: 'ProductRepositoriesController',
+        template: '<div ui-view></div>'
+    })
+    .state('products.details.repositories.index', {
+        collapsed: true,
+        url: '/repositories',
         templateUrl: 'products/views/product-repositories.html'
     })
-    .state('products.details.repositories.info', {
-        url: '/repositories/:id',
+    .state('products.details.repositories.new', {
+        url: '/repositories/new',
         collapsed: true,
-        controller: 'ProductRepositoriesController',
-        templateUrl: 'products/views/repository.html'
+        controller: 'NewRepositoryController',
+        templateUrl: 'repositories/views/new.html'
+    })
+    .state('products.details.repositories.info', {
+        url: '/repositories/:repositoryId',
+        collapsed: true,
+        controller: 'RepositoryDetailsInfoController',
+        templateUrl: 'repositories/views/repository-info.html'
     });
 
 }]);

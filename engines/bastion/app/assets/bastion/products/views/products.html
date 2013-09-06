@@ -1,4 +1,4 @@
-<div>
+<section>
 
   <div class="nutupane-titlebar">
     <h1 class="nutupane-title">{{ "Products" }}</h1>
@@ -17,7 +17,7 @@
     </div>
 
     <div class="nutupane-actions fr">
-      <button class="btn btn-primary" ng-click="transitionTo('products.new.form')">
+      <button class="btn btn-primary" ng-click="openNewPanel()">
         <i class="icon-plus"></i>
         {{ "New Product" | i18n }}
       </button>
@@ -40,6 +40,11 @@
     </div>
   </div>
 
+  <div class="loading-mask icon-3x" ng-show="panel.loading">
+    <i class="icon-spinner icon-spin"></i>
+    {{ "Loading..." | i18n }}
+  </div>
+
   <span class="action-panel" ui-view="action-panel"></span>
 
-</div>
+</section>

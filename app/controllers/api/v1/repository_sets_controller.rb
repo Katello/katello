@@ -19,8 +19,9 @@ class Api::V1::RepositorySetsController < Api::V1::ApiController
   before_filter :authorize
 
   def rules
-    edit_product_test = lambda { @product.editable? }
+    edit_product_test = lambda { @organization.redhat_manageable? }
     read_test         = lambda { @product.readable? }
+
     {
         :enable  => edit_product_test,
         :disable => edit_product_test,

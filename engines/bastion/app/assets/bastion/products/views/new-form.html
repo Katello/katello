@@ -50,6 +50,19 @@
 
   <div class="control-group">
     <div class="label">
+      <label for="gpg_key_id">{{ "GPG Key" | i18n }}</label>
+    </div>
+    <div class="input">
+      <select tabindex="4"
+              name="gpg_key_id"
+              ng-model="product.gpg_key_id"
+              ng-options="gpg_key.id as gpg_key.name for gpg_key in gpgKeys">
+      </select>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <div class="label">
       <label class="required" for="description">{{ "Description" | i18n }}</label>
     </div>
     <div class="input">

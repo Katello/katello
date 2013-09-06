@@ -13,21 +13,24 @@
 
 /**
  * @ngdoc service
- * @name  Katello.providers.factory:Provider
+ * @name  Katello.gpg-keys.factory:GPGKey
  *
  * @requires $resource
  *
  * @description
- *   Provides a $resource for product or list of providers.
+ *   Provides a $resource for GPG keys.
  */
-angular.module('Bastion.providers').factory('Provider',
-    ['$resource', 'CurrentOrganization', function($resource, CurrentOrganization) {
+angular.module('Bastion.gpg-keys').factory('GPGKey',
+    ['$resource', 'CurrentOrganization',
+    function($resource, CurrentOrganization) {
 
-        return $resource('/katello/api/providers/:id/:action',
+        return $resource('/katello/api/gpg_keys/:id/:action',
             {id: '@id', 'organization_id': CurrentOrganization},
             {
-                query:  {method: 'GET'}
+                update: { method: 'PUT' },
+                query: { method: 'GET' }
             }
         );
+
     }]
 );

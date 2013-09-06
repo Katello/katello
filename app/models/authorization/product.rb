@@ -18,7 +18,7 @@ module Authorization::Product
   included do
     scope :all_readable, lambda {|org| ::Provider.readable(org).joins(:provider)}
     scope :readable, lambda{|org| all_readable(org).with_enabled_repos_only(org.library)}
-    scope :all_editable, lambda {|org| ::Provider.editable(org).joins(:provider)}
+    scope :all_editable, lambda {|org| ::Provider.editable(org).where(:provider_type => ::Provider::CUSTOM).joins(:provider)}
     scope :editable, lambda {|org| all_editable(org).with_enabled_repos_only(org.library)}
     scope :syncable, lambda {|org| sync_items(org).with_enabled_repos_only(org.library)}
 
@@ -33,6 +33,12 @@ module Authorization::Product
     def editable?
       Product.all_editable(self.organization).where(:id => id).count > 0
     end
+
+    def deletable?
+      promoted_repos = repositories.select { |repo| repo.promoted? }
+      editable? && promoted_repos.empty?
+    end
+
   end
 
   module ClassMethods

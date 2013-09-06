@@ -1,0 +1,122 @@
+<section>
+
+  <header>
+    <h5>
+      <i class="icon-backward clickable" ng-click="transitionTo('products.details.repositories.index')"></i>
+      {{ "Add New Repository" }}
+    </h5>
+  </header>
+
+  <form name="repositoryForm" class="form">
+
+    <div class="flash_hud" ng-show="false">
+      <a class="control" title="Close"></a>
+      <ul class="flash_messages error">
+        <li>{{ "Errors" | i18n }}</li>
+      </ul>
+    </div>
+
+    <div class="control-group required" ng-class="{ 'error' : repositoryForm.name.$invalid }">
+      <div class="label">
+        <label class="required" for="name">{{ "Name" | i18n }}</label>
+      </div>
+      <div class="input">
+        <input ng-model="repository.name"
+               name="name"
+               type="text"
+               tabindex=1
+               required>
+        <span class="note error" ng-show="repositoryForm.name.$invalid">
+          <ul><li ng-repeat="message in repositoryForm.name.$error.messages">{{ message }}</li></ul>
+        </span>
+      </div>
+    </div>
+
+    <div class="control-group required" ng-class="{ 'error' : repositoryForm.label.$invalid }">
+      <div class="label">
+        <label class="required" for="label">{{ "Label" | i18n }}</label>
+      </div>
+      <div class="input">
+        <input ng-model="repository.label"
+               name="label"
+               type="text"
+               tabindex=2
+               required>
+        <span class="note error" ng-show="repositoryForm.label.$invalid">
+          <ul><li ng-repeat="message in repositoryForm.label.$error.messages">{{ message }}</li></ul>
+        </span>
+      </div>
+    </div>
+
+    <div class="control-group required" ng-class="{ 'error' : repositoryForm.content_type.$invalid }">
+      <div class="label">
+        <label class="required" for="content_type">{{ "Type" | i18n }}</label>
+      </div>
+      <div class="input">
+        <select required
+                tabindex=3
+                name="content_type"
+                ng-model="repository.content_type"
+                ng-options="type.name as type.name for type in repositoryTypes">
+        </select>
+        <span class="note error" ng-show="repositoryForm.content_type.$invalid">
+          <ul>
+            <li ng-repeat="message in repositoryForm.content_type.$error.messages">{{ message }}</li>
+          </ul>
+        </span>
+      </div>
+    </div>
+
+    <div class="control-group required" ng-class="{ 'error' : repositoryForm.url.$invalid }">
+      <div class="label">
+        <label class="required" for="url">{{ "URL" | i18n }}</label>
+      </div>
+      <div class="input">
+        <input ng-model="repository.url"
+               name="url"
+               type="text"
+               tabindex=4
+               required>
+        <span class="note error" ng-show="repositoryForm.url.$invalid">
+          <ul><li ng-repeat="message in repositoryForm.url.$error.messages">{{ message }}</li></ul>
+        </span>
+      </div>
+    </div>
+
+    <div class="control-group" ng-class="{ 'error' : repositoryForm.unprotected.$invalid }">
+      <div class="label">
+        <label class="required" for="unprotected">{{ "Publish via HTTP" | i18n }}</label>
+      </div>
+      <div class="input">
+        <input ng-model="repository.unprotected"
+               name="unprotected"
+               type="checkbox"
+               tabindex=5>
+        <span class="note error" ng-show="repositoryForm.unprotected.$invalid">
+          <ul><li ng-repeat="message in repositoryForm.unprotected.$error.messages">{{ message }}</li></ul>
+        </span>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <div class="label">
+        <label for="gpg_key_id">{{ "GPG Key" | i18n }}</label>
+      </div>
+      <div class="input">
+        <select tabindex="4"
+                name="gpg_key_id"
+                ng-model="repository.gpg_key_id"
+                ng-options="gpg_key.id as gpg_key.name for gpg_key in gpg_keys">
+        </select>
+      </div>
+    </div>
+
+    <div class="control-group buttons">
+      <div class="input">
+        <button ng-click="table.closeItem()">{{ "Cancel" | i18n }}</button>
+        <button ng-click="save(repository)" class="btn-primary" ng-disabled="repositoryForm.$invalid">{{ "Create" | i18n }}</button>
+      </div>
+    </div>
+
+  </form>
+</section>

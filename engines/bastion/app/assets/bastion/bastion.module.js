@@ -35,6 +35,7 @@ var Katello = angular.module('Katello', [
     'Bastion.providers',
     'Bastion.repositories',
     'Bastion.tasks'
+    'Bastion.gpg-keys'
 ]);
 
 /**

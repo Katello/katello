@@ -12,6 +12,8 @@
 
 class Repository < ActiveRecord::Base
 
+  before_destroy :assert_deletable
+
   include Glue::Candlepin::Content if (Katello.config.use_cp && Katello.config.use_pulp)
   include Glue::Pulp::Repo if Katello.config.use_pulp
   include Glue::ElasticSearch::Repository if Katello.config.use_elasticsearch
@@ -52,9 +54,7 @@ class Repository < ActiveRecord::Base
   validates :product_id, :presence => true
   validates :environment_id, :presence => true
   validates :pulp_id, :presence => true, :uniqueness => true
-  validates :name, :presence => true
   #validates :content_id, :presence => true #add back after fixing add_repo orchestration
-  validates :label, :presence => true
   validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
   validates_with Validators::RepoDisablementValidator, :attributes => :enabled, :on => :update
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name
@@ -64,9 +64,6 @@ class Repository < ActiveRecord::Base
       :allow_blank => false,
       :message => (_("Please select content type from one of the following: %s") % TYPES.join(', '))
   }
-
-  belongs_to :gpg_key, :inverse_of => :repositories
-  belongs_to :library_instance, :class_name => "Repository"
 
   default_scope order('repositories.name ASC')
   scope :enabled, where(:enabled => true)
@@ -262,6 +259,27 @@ class Repository < ActiveRecord::Base
     repo = self.library_instance || self
     search = Repository.where("library_instance_id=%s or repositories.id=%s"  % [repo.id, repo.id])
     search.in_content_views([view])
+  end
+
+  protected
+
+  def full_path
+    pulp_uri = URI.parse(Katello.config.pulp.url)
+    scheme   = (self.unprotected ? 'http' : 'https')
+    "#{scheme}://#{pulp_uri.host.downcase}/pulp/repos/#{relative_path}"
+  end
+
+  def assert_deletable
+    if self.environment.library? && self.content_view.default?
+      if self.deletable?
+        return true
+      else
+        errors.add(_("Repository cannot be deleted since it has already been promoted. Using a changeset, please delete the repository from existing environments before deleting it."))
+        return false
+      end
+    end
+
+    return true
   end
 
 end

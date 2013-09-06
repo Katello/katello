@@ -22,6 +22,9 @@ class Product < ActiveRecord::Base
 
   include Ext::LabelFromName
 
+  attr_accessible :name, :label, :description, :provider_id, :gpg_key_id,
+                  :cp_id, :multiplier, :attrs, :productContent
+
   has_many :marketing_engineering_products, :foreign_key => :engineering_product_id
   has_many :marketing_products, :through => :marketing_engineering_products
 
@@ -47,8 +50,10 @@ class Product < ActiveRecord::Base
     with_repos(env, true)
   end
 
-  def self.find_by_cp_id(cp_id, organization)
-    self.where(:cp_id => cp_id).in_org(organization).scoped(:readonly => false).first
+  def self.find_by_cp_id(cp_id, organization = nil)
+    query = self.where(:cp_id => cp_id).scoped(:readonly => false).engineering
+    query = query.in_org(organization) if organization
+    query.first
   end
 
   def self.in_org(organization)

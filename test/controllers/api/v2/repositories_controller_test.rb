@@ -1,4 +1,3 @@
-# encoding: utf-8
 #
 # Copyright 2013 Red Hat, Inc.
 #
@@ -11,20 +10,21 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+
 require "minitest_helper"
 
-class Api::V2::ProductsControllerTest < Minitest::Rails::ActionController::TestCase
+class Api::V2::RepositoriesControllerTest < Minitest::Rails::ActionController::TestCase
 
   fixtures :all
 
   def self.before_suite
-    models = ["Product"]
+    models = ["Repository", "Product"]
     disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
   end
 
   def models
     @organization = organizations(:acme_corporation)
-    @provider = providers(:fedora_hosted)
+    @product = Product.find(products(:fedora).id)
   end
 
   def permissions
@@ -36,6 +36,7 @@ class Api::V2::ProductsControllerTest < Minitest::Rails::ActionController::TestC
 
   def setup
     login_user(User.find(users(:admin)))
+    User.current = User.find(users(:admin))
     @request.env['HTTP_ACCEPT'] = 'application/json'
     @fake_search_service = @controller.load_search_service(FakeSearchService.new)
     models
@@ -46,7 +47,7 @@ class Api::V2::ProductsControllerTest < Minitest::Rails::ActionController::TestC
     get :index, :organization_id => @organization.label
 
     assert_response :success
-    assert_template 'api/v2/products/index'
+    assert_template 'api/v2/common/index'
   end
 
   def test_index_protected
@@ -59,18 +60,27 @@ class Api::V2::ProductsControllerTest < Minitest::Rails::ActionController::TestC
   end
 
   def test_create
-    post :create, :name => 'Fedora Product',
-                  :provider_id => @provider.cp_id,
-                  :description => 'This is my cool new product.'
+    product = MiniTest::Mock.new
+    product.expect(:add_repo, {}, [
+      'Fedora_Repository',
+      'Fedora Repository',
+      'http://www.google.com',
+      'yum',
+      nil,
+      nil
+    ])
+    product.expect(:editable?, @product.editable?)
 
-    assert_response :success
-    assert_template 'api/v2/products/show'
-  end
+    Product.stub(:find_by_cp_id, product) do
+      post :create, :name => 'Fedora Repository',
+                    :product_id => @product.cp_id,
+                    :url => 'http://www.google.com',
+                    :content_type => 'yum'
 
-  def test_create_fail
-    post :create, :description => 'This is my cool new product.'
 
-    assert_response :unprocessable_entity
+      assert_response :success
+      assert_template 'api/v2/repositories/show'
+    end
   end
 
   def test_create_protected
@@ -78,7 +88,7 @@ class Api::V2::ProductsControllerTest < Minitest::Rails::ActionController::TestC
     denied_perms = [@read_permission, @no_permission]
 
     assert_protected_action(:create, allowed_perms, denied_perms) do
-      post :create, :provider_id => @provider.id
+      post :create, :product_id => @product.cp_id
     end
   end
 

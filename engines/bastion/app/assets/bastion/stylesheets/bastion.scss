@@ -25,6 +25,7 @@ $spritePath: url("../alchemy/icons/action-icons.png");
 @import "header";
 @import "nutupane";
 @import "systems";
+@import "typography";
 @import "widgets/path_selector";
 @import "widgets/org-switcher";
 
@@ -37,6 +38,15 @@ body {
   width: 100%;
   height: 100%;
   overflow: hidden;
+}
+
+a, a:visited, a:link, a:active {
+  text-decoration: none;
+  color: $linkfg_color;
+}
+
+a:hover {
+  text-decoration: underline;
 }
 
 #experimental_indicator {
@@ -106,6 +116,7 @@ body {
   padding: 15px;
   margin: 4px auto;
   width: 85%;
+
   .actions {
     float: right;
   }
@@ -149,4 +160,21 @@ pre {
   padding: 6px 10px;
   border-radius: 3px;
   margin: 15px 5px;
+}
+
+input[type="checkbox"] {
+  vertical-align: text-bottom;
+}
+
+.loading-mask {
+  left: 21%;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: 1;
+  background: white;
+
+  .icon-spinner {
+    margin: 20% 0  0 30%;
+  }
 }

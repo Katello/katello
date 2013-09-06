@@ -125,6 +125,18 @@ angular.module('Bastion.widgets').factory('Nutupane',
                 self.table.resource.total += 1;
             };
 
+            self.table.removeRow = function(id) {
+                var index;
+
+                angular.forEach(self.table.rows, function(row, rowIndex) {
+                    if (row.id === id) {
+                        index = rowIndex;
+                    }
+                });
+
+                self.table.rows.splice(index, 1);
+            };
+
             self.table.nextPage = function() {
                 var table = self.table;
                 if (table.working || !table.hasMore()) {

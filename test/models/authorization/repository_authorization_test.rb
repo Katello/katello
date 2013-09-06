@@ -19,6 +19,15 @@ class RepositoryAuthorizationAdminTest < AuthorizationTestBase
     User.current = User.find(users(:admin))
   end
 
+  def test_readable?
+    assert @fedora_17_x86_64.readable?
+  end
+
+  def test_deletable?
+    repository = Repository.find(repositories(:fedora_17_x86_64_library_view))
+    assert repository.deletable?
+  end
+
   def test_readable
     refute_empty Repository.readable(@library)
   end
@@ -54,6 +63,14 @@ class RepositoryAuthorizationNonAuthUserTest < AuthorizationTestBase
   def setup
     super
     User.current = User.find(users(:no_perms_user))
+  end
+
+  def test_readable?
+    refute @fedora_17_x86_64.readable?
+  end
+
+  def test_deletable?
+    refute @fedora_17_x86_64.deletable?
   end
 
   def test_readable
