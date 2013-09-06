@@ -36,7 +36,8 @@ class Api::V1::RepositoriesController < Api::V1::ApiController
         :destroy                  => edit_test,
         :enable                   => edit_test,
         :package_groups           => read_test,
-        :package_group_categories => read_test
+        :package_group_categories => read_test,
+        :import_into_repo         => edit_test
     }
   end
 
@@ -116,6 +117,17 @@ class Api::V1::RepositoriesController < Api::V1::ApiController
     else
       render :text => _("Repository '%s' disabled.") % @repository.name, :status => 200
     end
+  end
+
+  api :POST, "/repositories/:id/import_into_repo", "Import into a repository"
+  param :id, :identifier, :required => true, :desc => "repository id"
+  param :unit_type_id, :identifier, :required => true, :desc => "identifies the type of unit the upload represents"
+  param :upload_id, :identifier, :required => true, :desc => "upload request id"
+  param :unit_key, Hash, :required => true, :desc => "unique identifier for the new unit"
+  param :unit_metadata, Hash, :required => false, :desc => "extra metadata describing the unit"
+  def import_into_repo
+    result = Katello.pulp_server.resources.content.import_into_repo(params[:id], params[:unit_type_id], params[:upload_id], params[:unit_key], params[:unit_metadata])
+    respond :resource => result
   end
 
   api :POST, "/repositories/:id/sync_complete"
