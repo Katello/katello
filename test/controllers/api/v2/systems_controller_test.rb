@@ -50,6 +50,10 @@ class Api::V2::SystemsControllerTest < Minitest::Rails::ActionController::TestCa
   end
 
   def test_tasks
+    items = mock()
+    items.stubs(:retrieve).returns([], 0)
+    items.stubs(:total_items).returns([])
+    Glue::ElasticSearch::Items.stubs(:new).returns(items)
     get :tasks, :id => @system.uuid
 
     assert_response :success
