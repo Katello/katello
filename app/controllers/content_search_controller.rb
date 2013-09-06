@@ -639,7 +639,7 @@ class ContentSearchController < ApplicationController
   # repo            repo to search in
   # offset          offset of the search
   # default_field   default field to search if none specifiec
-  def  multi_repo_content_search( content_class, search_obj, repos, offset, default_field, search_mode = :all, in_repo = nil)
+  def  multi_repo_content_search(content_class, search_obj, repos, offset, default_field, search_mode = :all, in_repo = nil)
     user = current_user
     search = Tire::Search::Search.new(content_class.index)
     search.instance_eval do

@@ -50,7 +50,7 @@ class SystemPackagesController < ApplicationController
 
     elsif !params[:groups].blank?
       # user entered one or more package group names (as comma-separated list) in the content box
-      groups = params[:groups].split(/ *, */ )
+      groups = params[:groups].split(/ *, */)
       task = @system.install_package_groups groups
       notify.success _("Install of Package Groups '%{g}' scheduled for System '%{s}'.") %
                          { :s => @system['name'], :g => params[:groups] }
@@ -88,7 +88,7 @@ class SystemPackagesController < ApplicationController
 
     elsif !params[:groups].blank?
       # user entered one or more package group names (as comma-separated list) in the content box
-      groups = params[:groups].split(/ *, */ )
+      groups = params[:groups].split(/ *, */)
       task = @system.uninstall_package_groups groups
       notify.success _("Uninstall of Package Groups '%{p}' scheduled for System '%{s}'.") %
                          { :s => @system['name'], :p => groups.join(',') }

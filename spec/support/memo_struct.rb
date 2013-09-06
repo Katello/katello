@@ -12,7 +12,7 @@
 
 # Implementation of OpenStruct without obj.id deprectaion warning
 class MemoStruct
-  def initialize( hash = {})
+  def initialize(hash = {})
     @hash = hash
   end
 

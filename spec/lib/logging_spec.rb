@@ -20,7 +20,7 @@ describe Katello::LoggingImpl do
 
       I was trying to remove a deprecation warning. Working on it I've noticed that those tests were messing
       with the Logging setting which lead to logging not working at all. I was trying to find a solution but it took
-      too much time. The logging gem is not written flexible enough, it has single global state :( and there is no way
+      too much time. The logging gem is not written flexible enough, it has single global state :(and there is no way
       around it without some serious stubbing.
     TXT
   }

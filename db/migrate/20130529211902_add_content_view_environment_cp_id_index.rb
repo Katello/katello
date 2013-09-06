@@ -1,7 +1,7 @@
 class AddContentViewEnvironmentCpIdIndex < ActiveRecord::Migration
   def up
     cves = {}
-    data = ActiveRecord::Base.connection.select_all( "SELECT id, cp_id, environment_id, content_view_id FROM content_view_environments")
+    data = ActiveRecord::Base.connection.select_all("SELECT id, cp_id, environment_id, content_view_id FROM content_view_environments")
 
     data.each do |cve|
       cves[cve['cp_id']] ||= []
@@ -21,6 +21,6 @@ class AddContentViewEnvironmentCpIdIndex < ActiveRecord::Migration
 
   def down
     remove_index(:content_view_environments, :name=>:index_cve_eid_cv_id)
-    remove_index( :content_view_environments, :name=>:index_cve_cp_id)
+    remove_index(:content_view_environments, :name=>:index_cve_cp_id)
   end
 end

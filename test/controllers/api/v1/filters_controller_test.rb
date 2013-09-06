@@ -212,7 +212,7 @@ describe Api::V1::FiltersController do
 
       body = JSON.parse(response.body)
       assert_kind_of Array, body
-      assert_includes((body.collect{|item| item['id']}), @product.cp_id )
+      assert_includes((body.collect{|item| item['id']}), @product.cp_id)
     end
 
   end
