@@ -11,7 +11,6 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 #
 
-
 # This class is a "fake" model Tag. It is returned by model objects to the
 # view layer to present possible tags which can be assigned to permissions.
 class VirtualTag

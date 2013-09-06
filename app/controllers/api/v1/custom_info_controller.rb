@@ -17,7 +17,6 @@ class Api::V1::CustomInfoController < Api::V1::ApiController
   before_filter :find_custom_info, :only => [:show, :update, :destroy]
   before_filter :authorize
 
-
   def rules
     edit_custom_info = lambda { @informable.editable? }
     view_custom_info = lambda { @informable.readable? }

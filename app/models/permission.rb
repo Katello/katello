@@ -22,7 +22,6 @@ class Permission < ActiveRecord::Base
   before_save :cleanup_tags_verbs
   before_save :check_global
 
-
   validates :name, :presence => true
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name
   validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
@@ -37,7 +36,6 @@ class Permission < ActiveRecord::Base
   def tag_values=(attributes)
     self.tags = attributes.collect {|tag| PermissionTag.new(:permission_id => id, :tag_id => tag)}
   end
-
 
   def verb_values
     self.verbs.collect {|verb| verb.verb}
@@ -165,8 +163,6 @@ class Permission < ActiveRecord::Base
     end
   end
 
-
-
   def check_locked
     if self.role.locked?
       raise ActiveRecord::ReadOnlyRecord, _("Cannot add/remove or change permissions related to a locked role.")
@@ -174,5 +170,4 @@ class Permission < ActiveRecord::Base
   end
 
 end
-
 

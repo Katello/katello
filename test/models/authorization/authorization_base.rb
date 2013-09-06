@@ -12,7 +12,6 @@
 
 require 'minitest_helper'
 
-
 class AuthorizationTestBase < MiniTest::Rails::ActiveSupport::TestCase
   extend ActiveRecord::TestFixtures
 

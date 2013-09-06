@@ -13,7 +13,6 @@
 require './test/models/authorization/authorization_base'
 require './test/support/auth_support'
 
-
 class UserAuthorizationAdminTest < AuthorizationTestBase
 
   def setup
@@ -48,7 +47,6 @@ class UserAuthorizationAdminTest < AuthorizationTestBase
 
 end
 
-
 class UserAuthorizationNoPermsTest < AuthorizationTestBase
 
   def setup
@@ -76,7 +74,6 @@ class UserAuthorizationNoPermsTest < AuthorizationTestBase
   def test_deletable?
     refute @user.deletable?
   end
-
 
 end
 

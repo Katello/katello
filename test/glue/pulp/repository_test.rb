@@ -12,7 +12,6 @@
 
 require 'minitest_helper'
 
-
 class GluePulpRepoTestBase < MiniTest::Rails::ActiveSupport::TestCase
   extend ActiveRecord::TestFixtures
 
@@ -61,7 +60,6 @@ class GluePulpRepoTestBase < MiniTest::Rails::ActiveSupport::TestCase
 
 end
 
-
 class GluePulpRepoTestCreateDestroy < GluePulpRepoTestBase
 
   def setup
@@ -82,7 +80,6 @@ class GluePulpRepoTestCreateDestroy < GluePulpRepoTestBase
   end
 
 end
-
 
 class GluePulpRepoTest < GluePulpRepoTestBase
 
@@ -361,7 +358,6 @@ class GluePulpRepoRequiresSyncTest < GluePulpRepoTestBase
 
 end
 
-
 class GluePulpRepoRequiresEmptyPromoteTest < GluePulpRepoTestBase
 
   @@fedora_17_x86_64  = nil
@@ -391,7 +387,6 @@ class GluePulpRepoRequiresEmptyPromoteTest < GluePulpRepoTestBase
       task = @@fedora_17_x86_64.sync.first
       wait_on_task(task)
 
-
       clone_id = @@fedora_17_x86_64.clone_id(@@staging, @@staging.default_content_view)
       @@cloned_repo = Repository.where(:pulp_id => clone_id).first
     end
@@ -419,7 +414,6 @@ class GluePulpRepoRequiresEmptyPromoteTest < GluePulpRepoTestBase
   end
 
 end
-
 
 class GluePulpRepoRequiresSyncAndPromoteTest < GluePulpRepoTestBase
 

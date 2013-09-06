@@ -20,7 +20,6 @@ class Api::ApiController < ActionController::Base
   before_filter :verify_ldap
   before_filter :add_candlepin_version_header
 
-
   # override warden current_user (returns nil because there is no user in that scope)
   def current_user
     # get the logged user from the correct scope

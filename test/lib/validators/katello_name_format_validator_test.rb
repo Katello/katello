@@ -11,7 +11,6 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-
 require 'minitest_helper'
 
 class KatelloNameFormatValidatorTest < MiniTest::Rails::ActiveSupport::TestCase
@@ -49,7 +48,6 @@ class KatelloNameFormatValidatorTest < MiniTest::Rails::ActiveSupport::TestCase
     assert_empty @model.errors[:name]
   end
 
-
   test "succeeds with special characters" do
     @validator.validate_each(@model, :name, '@!#$%^&*()')
 
@@ -61,7 +59,6 @@ class KatelloNameFormatValidatorTest < MiniTest::Rails::ActiveSupport::TestCase
 
     assert_empty @model.errors[:name]
   end
-
 
   test "fails if blank" do
     @validator.validate_each(@model, :name, '')

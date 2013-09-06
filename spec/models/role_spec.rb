@@ -232,5 +232,4 @@ describe Role do
 
  end
 
-
 end

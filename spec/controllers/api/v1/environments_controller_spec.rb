@@ -47,7 +47,6 @@ describe Api::V1::EnvironmentsController do
     user_without_permissions
   end
 
-
   describe "create an environment" do
     before(:each) do
       KTEnvironment.should_receive(:new).once.and_return(@environment)
@@ -112,7 +111,6 @@ describe Api::V1::EnvironmentsController do
 
   end
 
-
   describe "show a environment" do
 
     before(:each) do
@@ -142,7 +140,6 @@ describe Api::V1::EnvironmentsController do
     let(:unauthorized_user) { user_without_manage_permissions }
     it_should_behave_like "protected action"
 
-
     it 'should call katello environment find api' do
       @environment.should_receive(:destroy).once
       req
@@ -163,7 +160,6 @@ describe Api::V1::EnvironmentsController do
       end
     end
   end
-
 
   describe "update an environment" do
 

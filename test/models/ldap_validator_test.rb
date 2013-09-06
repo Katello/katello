@@ -13,7 +13,6 @@
 
 require 'minitest_helper'
 
-
 class LdapValidatorTest < MiniTest::Rails::ActiveSupport::TestCase
   extend ActiveRecord::TestFixtures
 

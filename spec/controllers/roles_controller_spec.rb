@@ -162,7 +162,6 @@ describe RolesController do
 
   end
 
-
   describe "rules" do
     before (:each) do
       @organization = new_test_org

@@ -36,7 +36,6 @@ class KTEnvironmentTestBase < MiniTest::Rails::ActiveSupport::TestCase
 
 end
 
-
 class KTEnvironmentTest < KTEnvironmentTestBase
 
   def test_create_and_validate_default_content_view

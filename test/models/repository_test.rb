@@ -48,7 +48,6 @@ class RepositoryCreateTest < RepositoryTestBase
   end
 end
 
-
 class RepositoryInstanceTest < RepositoryTestBase
 
   def setup

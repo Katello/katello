@@ -12,12 +12,9 @@
 
 class Glue::Candlepin::OwnerInfo
 
-
-
   def initialize(organization)
-      @info = Resources::Candlepin::OwnerInfo.find(organization.label)
+    @info = Resources::Candlepin::OwnerInfo.find(organization.label)
   end
-
 
   def total_consumers
     @info['consumerCounts']['system']
@@ -44,15 +41,13 @@ class Glue::Candlepin::OwnerInfo
 
   private
 
-  def find_value set_key, value_type, entry_type
-    @info[set_key].each{|hash|
+  def find_value(set_key, value_type, entry_type)
+    @info[set_key].each do |hash|
       if hash['valueType'] == value_type && hash['entryType'] == entry_type
         return hash['value']
       end
-    }
+    end
     nil
   end
-
-
 
 end

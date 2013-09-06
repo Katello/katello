@@ -43,7 +43,6 @@ class Node < ActiveRecord::Base
      :environments => envs}
   end
 
-
   def update_environments
     self.capabilities.each do |capability|
       capability.update_environments

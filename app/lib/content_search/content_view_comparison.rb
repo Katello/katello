@@ -149,7 +149,6 @@ module ContentSearch
 
         next if units.empty? # if we don't have units, don't show repo
 
-
         repo_rows << repo_row
         repo_rows += build_unit_rows(units, repo_row, cols)
 

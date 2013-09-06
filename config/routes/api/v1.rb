@@ -196,7 +196,6 @@ Src::Application.routes.draw do
         end
       end
 
-
       resources :changesets, :only => [:show, :update, :destroy] do
         post :promote, :on => :member, :action => :promote
         post :apply, :on => :member, :action => :apply
@@ -303,7 +302,6 @@ Src::Application.routes.draw do
       resources :crls, :only => [:index]
 
       resources :about, :only => [:index]
-
 
       match "/status" => "ping#server_status", :via => :get
       match "/version" => "ping#version", :via => :get

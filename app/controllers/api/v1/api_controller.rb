@@ -19,7 +19,6 @@ class Api::V1::ApiController < Api::ApiController
   include Util::ThreadSession::Controller
   include AuthorizationRules
 
-
   resource_description do
     api_version 'v1'
     api_version 'v2'
@@ -101,7 +100,6 @@ class Api::V1::ApiController < Api::ApiController
   def find_optional_environment
     @environment = KTEnvironment.find_by_id(params[:environment_id]) if params[:environment_id]
   end
-
 
   # Get the :label value from the params hash if it exists
   # otherwise use the :name value and convert to ASCII

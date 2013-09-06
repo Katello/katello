@@ -285,7 +285,6 @@ Src::Application.routes.draw do
 
     end # module v2
 
-
     # routes that didn't change in v2 and point to v1
     scope :module => :v1, :constraints => ApiVersionConstraint.new(:version => 2) do
 
@@ -326,7 +325,6 @@ Src::Application.routes.draw do
       end
 
     end # module v1
-
 
   end # '/api' namespace
 

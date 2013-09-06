@@ -34,7 +34,6 @@ class Api::V2::ErrataController < Api::V2::ApiController
     }
   end
 
-
   api :GET, "/repositories/:repository_id/errata", "List errata"
   api :GET, "/environments/:environment_id/errata", "List errata"
   param :environment_id, :number, :desc => "The environment containing the errata."

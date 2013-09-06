@@ -12,7 +12,6 @@
 
 require 'minitest_helper'
 
-
 module ConsumerSupport
 
   @consumer = nil

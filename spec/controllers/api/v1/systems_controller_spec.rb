@@ -273,7 +273,6 @@ describe Api::V1::SystemsController do
     end
   end
 
-
   describe "list systems" do
 
     let(:uuid_1) { "abc" }

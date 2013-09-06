@@ -143,7 +143,6 @@ describe Api::V1::FiltersController do
       assert_nil Filter.find_by_name(@filter.name)
     end
 
-
   end
 
   describe "create" do
@@ -177,8 +176,6 @@ describe Api::V1::FiltersController do
       refute_nil Filter.find_by_name(@name)
     end
   end
-
-
 
   describe "list_products" do
     before do
@@ -220,7 +217,6 @@ describe Api::V1::FiltersController do
 
   end
 
-
   describe "update_products" do
     before do
       @filter = filters(:populated_filter)
@@ -250,7 +246,6 @@ describe Api::V1::FiltersController do
                         :request => @req,
       )
     end
-
 
     it "should add product to the filter" do
       @req.call

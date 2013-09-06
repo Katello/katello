@@ -103,7 +103,6 @@ class User < ActiveRecord::Base
     return true
   end
 
-
   def not_ldap_mode?
     return Katello.config.warden != 'ldap'
   end

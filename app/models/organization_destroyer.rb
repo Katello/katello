@@ -49,6 +49,5 @@ class OrganizationDestroyer
     raise
   end
 
-
 end
 

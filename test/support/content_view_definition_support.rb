@@ -12,7 +12,6 @@
 
 require 'minitest_helper'
 
-
 module ContentViewDefinitionSupport
 
   def self.generate_permissions(cvd, org)

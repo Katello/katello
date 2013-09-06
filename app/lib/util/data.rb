@@ -48,6 +48,5 @@ module Util
       return obj
     end
 
-
   end
 end

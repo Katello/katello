@@ -97,7 +97,6 @@ describe PasswordResetsController do
       end
     end
 
-
   end
 
   describe "GET edit" do

@@ -40,7 +40,6 @@ class GluePulpConsumerGroupTestBase < MiniTest::Rails::ActiveSupport::TestCase
 
 end
 
-
 class GluePulpConsumerGroupTestCreate < GluePulpConsumerGroupTestBase
 
   def setup
@@ -60,7 +59,6 @@ class GluePulpConsumerGroupTestCreate < GluePulpConsumerGroupTestBase
   end
 
 end
-
 
 class GluePulpConsumerGroupTest < GluePulpConsumerGroupTestBase
 
@@ -103,7 +101,6 @@ class GluePulpConsumerGroupTest < GluePulpConsumerGroupTestBase
   end
 
 end
-
 
 class GluePulpConsumerGroupRequiresBoundRepoTest < GluePulpConsumerGroupTestBase
 

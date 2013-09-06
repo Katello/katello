@@ -248,7 +248,6 @@ describe Provider do
 
   end
 
-
   context "sync provider" do
     before(:each) do
       @provider = Provider.create(to_create_custom) do |p|

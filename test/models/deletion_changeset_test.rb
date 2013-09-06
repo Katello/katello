@@ -10,8 +10,6 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-
-
 require 'minitest_helper'
 
 class DeletionChangesetTest < MiniTest::Rails::ActiveSupport::TestCase
@@ -37,7 +35,6 @@ class DeletionChangesetTest < MiniTest::Rails::ActiveSupport::TestCase
     DeletionChangeset.any_instance.stubs(:index_repo_content)
     ContentViewEnvironment.any_instance.stubs(:update_cp_content)
   end
-
 
   def test_creation
     cs = DeletionChangeset.create!(:name =>'TestDeleteCS',
@@ -72,6 +69,5 @@ class DeletionChangesetTest < MiniTest::Rails::ActiveSupport::TestCase
 
     refute_includes ContentView.find(@library_dev_view).environments, @dev
   end
-
 
 end

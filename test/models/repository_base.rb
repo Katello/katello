@@ -12,7 +12,6 @@
 
 require 'minitest_helper'
 
-
 class RepositoryTestBase < MiniTest::Rails::ActiveSupport::TestCase
   extend ActiveRecord::TestFixtures
 

@@ -12,7 +12,6 @@
 
 require 'spec_helper'
 
-
 describe RepositoriesController, :katello => true do
   include LoginHelperMethods
   include LocaleHelperMethods

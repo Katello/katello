@@ -64,5 +64,4 @@ class ContentNodeCapability < NodeCapability
     env_list.collect{|env| Repository.in_environment(env).enabled.pluck(:pulp_id)}.flatten
   end
 
-
 end

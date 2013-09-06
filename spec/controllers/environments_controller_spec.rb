@@ -81,7 +81,6 @@ describe EnvironmentsController do
     end
   end
 
-
   describe "other-tests" do
     before (:each) do
       login_user
@@ -129,7 +128,6 @@ describe EnvironmentsController do
           @new_env.stub!(:save!).and_return(true)
           Util::Support.stub!(:deep_copy) {|p| p}
         end
-
 
         it "should create new environment", :katello => true do #TODO headpin
           KTEnvironment.should_receive(:new).with({:name => 'production',:label=>"boo",

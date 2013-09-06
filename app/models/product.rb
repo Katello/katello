@@ -204,7 +204,6 @@ class Product < ActiveRecord::Base
 
   protected
 
-
   def self.with_repos(env, enabled_only)
     query = Repository.in_environment(env.id).select(:product_id)
     query = query.enabled if enabled_only

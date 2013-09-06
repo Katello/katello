@@ -16,7 +16,6 @@ class ErratumRule < FilterRule
                     'enhancement' => _('Enhancement'),
                     'security' => _('Security')}.with_indifferent_access
 
-
   validates_with Validators::ErratumRuleParamsValidator, :attributes => :parameters
 
   def params_format
