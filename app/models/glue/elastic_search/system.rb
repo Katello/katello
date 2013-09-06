@@ -13,8 +13,10 @@
 # Comments below are meant to describe in detail how to use elasticsearch (ES) properly. Systems
 # are most commonly used as a reference for adding other model/view/controllers to katello.
 
+# rubocop:disable SymbolName
 module Glue::ElasticSearch::System
 
+  # rubocop:disable MethodLength
   def self.included(base)
     base.class_eval do
       include Ext::IndexedModel
