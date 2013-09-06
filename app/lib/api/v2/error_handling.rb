@@ -116,7 +116,6 @@ module Api
             :text            => exception.message,
             :display_message => exception.message)
 
-
         options[:errors] = exception.respond_to?(:record) ? exception.record.errors : exception.message
 
         logger.error pp_exception(exception) if options[:with_logging]

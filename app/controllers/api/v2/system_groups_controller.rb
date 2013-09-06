@@ -10,7 +10,6 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-
 class Api::V2::SystemGroupsController < Api::V1::SystemGroupsController
 
   include Api::V2::Rendering
@@ -100,6 +99,5 @@ class Api::V2::SystemGroupsController < Api::V1::SystemGroupsController
   def destroy_systems
     super
   end
-
 
 end

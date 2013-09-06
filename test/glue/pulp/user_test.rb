@@ -12,7 +12,6 @@
 
 require 'minitest_helper'
 
-
 class GluePulpUserTestBase < MiniTest::Rails::ActiveSupport::TestCase
   extend ActiveRecord::TestFixtures
 
@@ -41,7 +40,6 @@ class GluePulpUserTestBase < MiniTest::Rails::ActiveSupport::TestCase
 
 end
 
-
 class GluePulpUserCreateTest < GluePulpUserTestBase
 
   def test_set_pulp_user
@@ -57,7 +55,6 @@ class GluePulpUserCreateTest < GluePulpUserTestBase
   end
 
 end
-
 
 class GluePulpUserTest < GluePulpUserTestBase
 

@@ -40,7 +40,6 @@ class GluePulpDistributionTestBase < MiniTest::Rails::ActiveSupport::TestCase
 
 end
 
-
 class GluePulpDistributionTest < GluePulpDistributionTestBase
 
   def test_find

@@ -23,7 +23,6 @@ class Api::V1::RepositoriesController < Api::V1::ApiController
   skip_before_filter :require_org, :only => [:sync_complete]
   skip_before_filter :require_user, :only => [:sync_complete]
 
-
   def rules
     edit_product_test = lambda { @product.editable? }
     read_test         = lambda { @repository.product.readable? }

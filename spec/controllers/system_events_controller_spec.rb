@@ -67,6 +67,5 @@ describe SystemEventsController do
 
     end
 
-
   end
 end

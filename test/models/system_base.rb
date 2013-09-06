@@ -12,7 +12,6 @@
 
 require 'minitest_helper'
 
-
 class SystemTestBase < MiniTest::Rails::ActiveSupport::TestCase
   extend ActiveRecord::TestFixtures
 

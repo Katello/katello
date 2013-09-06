@@ -243,7 +243,6 @@ describe Api::V1::SyncController, :katello => true do
 
     end
 
-
     describe "get status of last sync" do
       before(:each) do
         @organization = Organization.create!(:name => "organization", :label => "123")

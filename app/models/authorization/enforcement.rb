@@ -10,7 +10,6 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-
 module Authorization::Enforcement
 
   def self.included(base)
@@ -69,7 +68,6 @@ module Authorization::Enforcement
     org_permissions = org_permissions_query(org, resource_type == :organizations)
     org_permissions = org_permissions.where(:organization_id => nil) if resource_type == :organizations
 
-
     no_tag_verbs = ResourceType::TYPES[resource_type][:model].no_tag_verbs.clone rescue []
     no_tag_verbs ||= []
     no_tag_verbs.delete_if { |verb| !verbs.member? verb }
@@ -93,8 +91,6 @@ module Authorization::Enforcement
                           { :no_tag_verbs => no_tag_verbs }.merge(clause_params)).count > 0
   end
 
-
-
   # Return the sql that shows all the allowed tags for a given verb, resource_type, org
   # combination .
   # Note: one needs generally check for "allowed_all_tags?" before executing this
@@ -107,10 +103,6 @@ module Authorization::Enforcement
 
     allowed_tags_query(verbs, resource_type, org, false).select(select_on).to_sql
   end
-
-
-
-
 
   # Return true if the user is allowed to do the specified action for a resource type
   # verb/action can be:
@@ -130,7 +122,6 @@ module Authorization::Enforcement
     log_roles(verbs, resource_type, tags, org, any_tags)
 
     return true if allowed_all_tags?(verbs, resource_type, org)
-
 
     tags_query = allowed_tags_query(verbs, resource_type, org)
 

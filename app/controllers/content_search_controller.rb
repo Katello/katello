@@ -673,7 +673,6 @@ class ContentSearchController < ApplicationController
     Util::Support.array_with_total
   end
 
-
   # creates rows out of a list of content (Errata or package) for a particular
   #     library repo and its spanning clones across environments
   #

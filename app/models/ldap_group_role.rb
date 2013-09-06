@@ -15,5 +15,4 @@ class LdapGroupRole < ActiveRecord::Base
   validates_with Validators::LdapGroupValidator, :attributes => :ldap_group
   belongs_to :role
 
-
 end

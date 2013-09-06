@@ -27,7 +27,6 @@ AsyncOperation = Struct.new(:status_id, :username, :object, :method_name, :args)
     Thread.current['current_delayed_job_task']
   end
 
-
   def display_name
     "#{object.class}##{method_name}"
   end

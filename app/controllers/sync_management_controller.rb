@@ -31,7 +31,6 @@ class SyncManagementController < ApplicationController
     @@status_values = {}
   end
 
-
   before_filter :find_provider, :except => [:index, :sync, :sync_status, :manage]
   before_filter :find_providers, :only => [:sync, :sync_status]
   before_filter :authorize

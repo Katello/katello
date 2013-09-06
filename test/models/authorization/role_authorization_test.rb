@@ -46,7 +46,6 @@ class RoleAuthorizationAdminTest < AuthorizationTestBase
 
 end
 
-
 class RoleAuthorizationNoPermsTest < AuthorizationTestBase
 
   def setup

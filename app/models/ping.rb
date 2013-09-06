@@ -119,7 +119,6 @@ class Ping
       packages.split("\n").sort
     end
 
-
     # this checks Pulp is running and responding without need
     # for authentication. We don't use RestClient.options here
     # because it returns empty string, which is not enough to say

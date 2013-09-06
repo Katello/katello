@@ -223,7 +223,6 @@ class ProvidersController < ApplicationController
     @provider = current_organization.redhat_provider
   end
 
-
   def panel_options
     @panel_options = { :title => _('Providers'),
              :col => ['name'],

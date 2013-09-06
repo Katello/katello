@@ -30,8 +30,6 @@ describe Permission do
 
   end
 
-
-
   before(:each) do
     disable_user_orchestration
 
@@ -42,7 +40,6 @@ describe Permission do
     @magic_perm = Permission.create!(:role => @super_admin, :name => 'test1000',
                                 :resource_type=> ResourceType.find_or_create_by_name(:all),
                                 :all_tags => true, :all_verbs => true, :organization => nil)
-
 
     @god = User.find_or_create_by_username(
       :username => 'god',
@@ -60,7 +57,6 @@ describe Permission do
       :password => "password",
       :email => 'bob@somewhere.com',
       :roles => [ @repo_admin ])
-
 
     allow @some_role, [:create], :organizations
     allow @some_role, [:new], :organizations
@@ -163,7 +159,6 @@ describe Permission do
       specify{@admin.allowed_to?(@verb_name + "_foo", @res_type_name,@foo_tag, @organization).should be_false}
     end
 
-
     describe "regular perms" do
       before do
         @tag_name = 100
@@ -197,7 +192,6 @@ describe Permission do
       #global implies all tags = true
       specify{@admin.allowed_to?(@verb_name, @res_type_name,["1000"]).should be_true}
     end
-
 
   end
 
@@ -252,7 +246,6 @@ describe Permission do
       specify{@admin.allowed_to?(@verb_name + "_foo", @res_type_name,@foo_tag, @organization).should be_false}
     end
 
-
     describe "no_tag_verbs", :katello => true do
       before do
         @foo_tag = 0022
@@ -272,7 +265,6 @@ describe Permission do
     end
 
   end
-
 
   context "org_id_create" do
     before do

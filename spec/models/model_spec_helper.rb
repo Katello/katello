@@ -81,7 +81,6 @@ rKH9OkgKEvwkf8zQjO/XSvuoac83uBEFgKXJwYLHPA3U20JrchKU7klLwzSsmrXA
 -----END RSA PRIVATE KEY-----
 EOKEY
 
-
   def disable_product_orchestration
     Resources::Candlepin::Product.stub!(:get).and_return do
       [{ :productContent => [] }] #return a fresh hash, as add_repo modified it
@@ -139,7 +138,6 @@ EOKEY
     end
 
   end
-
 
   def disable_consumer_group_orchestration
     if Katello.config.katello?

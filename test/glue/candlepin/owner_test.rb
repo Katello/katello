@@ -14,7 +14,6 @@ require 'minitest_helper'
 require './test/support/candlepin/owner_support'
 require './test/support/user_support'
 
-
 class GlueCandlepinOwnerTestBase < MiniTest::Rails::ActiveSupport::TestCase
   extend  ActiveRecord::TestFixtures
 

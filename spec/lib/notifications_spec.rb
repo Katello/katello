@@ -12,7 +12,6 @@
 
 require 'spec_helper'
 
-
 describe Notifications do
 
   before (:each) do

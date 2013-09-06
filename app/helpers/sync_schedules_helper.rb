@@ -12,7 +12,6 @@
 
 module SyncSchedulesHelper
 
-
   def hover_format(item)
     case item.interval
     when 'daily'

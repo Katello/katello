@@ -13,7 +13,6 @@
 require 'minitest_helper'
 require './test/support/repository_support'
 
-
 class GluePulpPackageTestBase < MiniTest::Rails::ActiveSupport::TestCase
   extend  ActiveRecord::TestFixtures
   include RepositorySupport
@@ -43,7 +42,6 @@ class GluePulpPackageTestBase < MiniTest::Rails::ActiveSupport::TestCase
   end
 
 end
-
 
 class GluePulpPackageTest < GluePulpPackageTestBase
 

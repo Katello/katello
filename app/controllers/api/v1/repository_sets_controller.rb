@@ -18,7 +18,6 @@ class Api::V1::RepositorySetsController < Api::V1::ApiController
   before_filter :find_product_content, :only => [:enable, :disable]
   before_filter :authorize
 
-
   def rules
     edit_product_test = lambda { @product.editable? }
     read_test         = lambda { @product.readable? }
@@ -28,7 +27,6 @@ class Api::V1::RepositorySetsController < Api::V1::ApiController
         :index   => read_test,
     }
   end
-
 
   api :POST, "/organizations/:organization_id/product/:product_id/repository_sets/:id/enable", "Enable a repository set for a product."
   param :organization_id, :identifier, :required => true, :desc => "id of an organization the repository will be contained in"

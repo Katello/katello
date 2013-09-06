@@ -23,7 +23,6 @@ class NodeCapabilityTestBase < MiniTest::Rails::ActiveSupport::TestCase
   end
 end
 
-
 class NodeCapabilityCreateTest < NodeCapabilityTestBase
 
   def test_create
@@ -32,7 +31,6 @@ class NodeCapabilityCreateTest < NodeCapabilityTestBase
   end
 
 end
-
 
 class NodeCapabilityExistingTest < NodeCapabilityTestBase
 

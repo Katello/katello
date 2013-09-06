@@ -161,5 +161,4 @@ describe ProvidersController do
 
   end
 
-
 end

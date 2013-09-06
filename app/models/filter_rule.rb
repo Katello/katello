@@ -61,7 +61,6 @@ class FilterRule < ActiveRecord::Base
     CONTENT_OPTIONS.key(content_type)
   end
 
-
   def self.create_for( content_type, options)
     clazz = class_for(content_type)
     clazz.create!(options)

@@ -91,7 +91,6 @@ class PackageTest < MiniTest::Rails::ActiveSupport::TestCase
     assert_equal expected, results.map(&:id).sort
   end
 
-
   # helper methods
 
   def search_version_range(min=nil, max=nil)

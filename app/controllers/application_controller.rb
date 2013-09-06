@@ -13,7 +13,6 @@
 require 'cgi'
 require 'base64'
 
-
 class ApplicationController < ActionController::Base
   layout 'katello'
   include Notifications::ControllerHelper
@@ -232,12 +231,10 @@ class ApplicationController < ActionController::Base
     DateTime.strptime(datetime_str, '%m/%d/%Y %I:%M %P %:z') rescue false
   end
 
-
   helper_method :no_env_available_msg
   def no_env_available_msg
     _("No environments are currently available in this organization.  Please either add some to the organization or select an organization that has an environment to set user default.")
   end
-
 
   def retain_search_history
     current_user.create_or_update_search_history(URI(@_request.env['HTTP_REFERER']).path, params[:search])
@@ -606,8 +603,6 @@ class ApplicationController < ActionController::Base
       rendered_html = render_to_string(:partial=>"common/list_items", :locals=>options)
     end
 
-
-
     render :json => {:html => rendered_html,
                       :results_count => options[:total_count],
                       :total_items => options[:total_results],
@@ -700,7 +695,6 @@ class ApplicationController < ActionController::Base
       return false
     end
   end
-
 
   def log_exception(exception, level = :error)
     logger.send level, "#{exception} (#{exception.class})\n#{exception.backtrace.join("\n")}" if exception

@@ -38,16 +38,16 @@ module Glue::Candlepin::Consumer
       lazy_accessor :pools, :initializer => lambda {|s| entitlements.collect { |ent| Resources::Candlepin::Pool.find ent["pool"]["id"]} }
       lazy_accessor :available_pools, :initializer => lambda {|s| Resources::Candlepin::Consumer.available_pools(uuid, false) }
       lazy_accessor :all_available_pools, :initializer => lambda {|s| Resources::Candlepin::Consumer.available_pools(uuid, true) }
-      lazy_accessor :host, :initializer => lambda do |s|
-        host_attributes = Resources::Candlepin::Consumer.host(self.uuid)
-        (System.find_by_uuid(host_attributes['uuid']) || System.new(host_attributes)) if host_attributes
-      end
-      lazy_accessor :guests, :initializer => lambda do |s|
-        guests_attributes = Resources::Candlepin::Consumer.guests(self.uuid)
-        guests_attributes.map do |attr|
-          System.find_by_uuid(attr['uuid']) || System.new(attr)
-        end
-      end
+      lazy_accessor :host, :initializer => (lambda do |s|
+                                              host_attributes = Resources::Candlepin::Consumer.host(self.uuid)
+                                              (System.find_by_uuid(host_attributes['uuid']) || System.new(host_attributes)) if host_attributes
+                                            end)
+      lazy_accessor :guests, :initializer => (lambda do |s|
+                                                guests_attributes = Resources::Candlepin::Consumer.guests(self.uuid)
+                                                guests_attributes.map do |attr|
+                                                  System.find_by_uuid(attr['uuid']) || System.new(attr)
+                                                end
+                                              end)
       lazy_accessor :compliance, :initializer => lambda {|s| Resources::Candlepin::Consumer.compliance(uuid) }
       lazy_accessor :events, :initializer => lambda {|s| Resources::Candlepin::Consumer.events(uuid) }
 

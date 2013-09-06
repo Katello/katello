@@ -10,8 +10,6 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-
-
 module Authorization::Environment
   extend ActiveSupport::Concern
 
@@ -19,7 +17,6 @@ module Authorization::Environment
   CONTENTS_READABLE = [:read_contents]
   SYSTEMS_READABLE = [:read_systems, :register_systems, :update_systems, :delete_systems]
   DISTRIBUTORS_READABLE = [:read_distributors, :register_distributors, :update_distributors, :delete_distributors]
-
 
   module ClassMethods
     def changesets_readable(org)
@@ -122,7 +119,6 @@ module Authorization::Environment
       end
     end
   end
-
 
   included do
     def viewable_for_promotions?

@@ -25,7 +25,6 @@ class NodeTestBase < MiniTest::Rails::ActiveSupport::TestCase
   end
 end
 
-
 class NodeTest < NodeTestBase
 
   def setup
@@ -64,7 +63,6 @@ class NodeTest < NodeTestBase
   end
 
 end
-
 
 class NodeSystemDeleteTest < NodeTestBase
 

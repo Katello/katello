@@ -10,8 +10,6 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-
-
 class PulpTaskStatus < TaskStatus
   use_index_of TaskStatus if Katello.config.use_elasticsearch
 
@@ -98,6 +96,5 @@ class PulpTaskStatus < TaskStatus
     end
     return false
   end
-
 
 end

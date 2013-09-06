@@ -90,7 +90,6 @@ describe GpgKeysController, :katello => true do
     end
   end
 
-
   describe "GET new" do
     it "renders a new partial for 2pane" do
       get :new

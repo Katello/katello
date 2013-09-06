@@ -86,5 +86,4 @@ class Api::V1::NodeCapabilitiesControllerTest < MiniTest::Rails::ActionControlle
 
   end
 
-
 end

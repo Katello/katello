@@ -163,7 +163,6 @@ describe Api::V1::ProvidersController, :katello => true do
     let(:unauthorized_user) { user_without_write_permissions }
     it_should_behave_like "protected action"
 
-
     it "should remove the specified provider" do
       Provider.should_receive(:find).with(@provider.id.to_s.to_s).and_return(@provider)
       @provider.should_receive(:add_custom_product).once

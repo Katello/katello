@@ -119,7 +119,6 @@ EXCLUDES = [
 "/etc/katello/oauth_token-file"
 ]
 
-
 # sources list for katello or headpin deployment
 sources = []
 sources += MISC
@@ -130,7 +129,6 @@ sources += PULP if deployment == 'katello'
 sources += SIGNO if deployment == 'katello'
 sources += FOREMAN if use_foreman
 sources += THUMBSLUG if deployment == 'headpin'
-
 
 # Collect the files
 timename =  "katello-debug-#{Time.now.strftime("%Y%m%d%H%M%S")}"

@@ -28,7 +28,6 @@ module Glue::Pulp::Repos
     "#{path_prefix}/#{content_path}"
   end
 
-
   # repo path for custom product repos (RH repo paths are derived from
   # content url)
   def self.custom_repo_path(environment, product, repo_label)
@@ -334,7 +333,6 @@ module Glue::Pulp::Repos
       self.repositories.destroy_all
       true
     end
-
 
     def custom_repos_create_orchestration
       pre_queue.create(:name => "create pulp repositories for product: #{self.label}",      :priority => 1, :action => [self, :set_repos])

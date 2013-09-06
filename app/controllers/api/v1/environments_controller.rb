@@ -69,7 +69,6 @@ class Api::V1::EnvironmentsController < Api::V1::ApiController
     }
   end
 
-
   def param_rules
     {
         :create     => { :environment => %w(name label description prior) },
@@ -193,7 +192,6 @@ class Api::V1::EnvironmentsController < Api::V1::ApiController
   def releases
     respond_for_index :collection => { :releases => @environment.available_releases }
   end
-
 
   protected
 

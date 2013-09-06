@@ -10,7 +10,6 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-
 class ContentViewDefinitionBase < ActiveRecord::Base
   belongs_to :organization, :inverse_of => :content_view_definitions
   has_many :content_view_definition_products, :foreign_key => "content_view_definition_id", :dependent => :destroy
