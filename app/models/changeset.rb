@@ -119,7 +119,7 @@ class Changeset < ActiveRecord::Base
     end
   end
 
-  def self.create_for( acct_type, options)
+  def self.create_for(acct_type, options)
     if PROMOTION == acct_type
       PromotionChangeset.create!(options)
     else

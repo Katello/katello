@@ -14,16 +14,16 @@ optparse = OptionParser.new do|opts|
   opts.banner = "Usage: #{NAME} [options] command"
 
   options[:basedir] = '/tmp'
-  opts.on( '--dir [DIRECTORY]', 'Directory to place the tarball. Defaults to /tmp' ) do |opt|
+  opts.on('--dir [DIRECTORY]', 'Directory to place the tarball. Defaults to /tmp') do |opt|
     options[:basedir] = opt
   end
 
   options[:archive] = true
-  opts.on( '--notar', 'Do not generate a tar file, just copy the files to target dir' ) do
+  opts.on('--notar', 'Do not generate a tar file, just copy the files to target dir') do
     options[:archive] = false
   end
 
-  opts.on( '--help', 'Display help and exit' ) do
+  opts.on('--help', 'Display help and exit') do
     puts opts
     exit
   end

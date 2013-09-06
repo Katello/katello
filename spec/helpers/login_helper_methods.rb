@@ -21,7 +21,7 @@ module LoginHelperMethods
       else
         disable_user_orchestration
 
-        @user = User.create( :username => "foo-user", :password => "password", :email => "foo-user@somewhere.com", :page_size=>25 )
+        @user = User.create(:username => "foo-user", :password => "password", :email => "foo-user@somewhere.com", :page_size=>25)
         @permission = Permission.create!(:role =>@user.roles.first, :all_types => true, :name => "superadmin")
       end
 

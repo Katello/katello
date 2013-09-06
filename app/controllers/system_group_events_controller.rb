@@ -100,7 +100,7 @@ class SystemGroupEventsController < ApplicationController
                         search, params[:offset], [:id, 'desc'],
                         :filter => {:job_owner_id => [@group.id], :task_owner_type => SystemGroup.class.name},
                         :load => true,
-                        :simple_query => "#{search}" )
+                        :simple_query => "#{search}")
   end
 
   protected

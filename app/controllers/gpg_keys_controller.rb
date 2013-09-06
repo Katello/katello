@@ -99,7 +99,7 @@ class GpgKeysController < ApplicationController
       gpg_key_params.delete('content_upload')
     end
 
-    @gpg_key = GpgKey.create!( gpg_key_params.merge({:organization => current_organization}) )
+    @gpg_key = GpgKey.create!(gpg_key_params.merge({:organization => current_organization}))
 
     notify.success _("GPG Key '%s' was created.") % @gpg_key['name'], :asynchronous => file_uploaded
 
