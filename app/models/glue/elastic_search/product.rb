@@ -39,7 +39,7 @@ module Glue::ElasticSearch::Product
   end
 
   def update_related_index
-      self.provider.update_index if self.provider.respond_to? :update_index
+    self.provider.update_index if self.provider.respond_to? :update_index
   end
 
   def total_package_count(env, view)

@@ -12,6 +12,9 @@
 
 
 module Glue::ElasticSearch::Package
+
+  # TODO: break up into modules
+  # rubocop:disable MethodLength
   def self.included(base)
     base.class_eval do
 
@@ -31,8 +34,8 @@ module Glue::ElasticSearch::Package
         {
             "index" => {
                 "analysis" => {
-                    "filter" => Util::Search::custom_filters,
-                    "analyzer" =>Util::Search::custom_analyzers
+                    "filter" => Util::Search.custom_filters,
+                    "analyzer" =>Util::Search.custom_analyzers
                 }
             }
         }
@@ -60,10 +63,10 @@ module Glue::ElasticSearch::Package
         "#{Katello.config.elastic_index}_package"
       end
 
-      def self.autocomplete_name query, repoids=nil, page_size=15
+      def self.autocomplete_name(query, repoids = nil, page_size = 15)
         return [] if !Tire.index(self.index).exists?
 
-        query = Util::Search::filter_input query
+        query = Util::Search.filter_input query
         query = "*" if query == ""
         query = "name_autocomplete:(#{query})"
 
@@ -79,17 +82,17 @@ module Glue::ElasticSearch::Package
         end
 
         to_ret = []
-        search.results.each{|pkg|
-           to_ret << pkg.name if !to_ret.include?(pkg.name)
-           break if to_ret.size == page_size
-        }
+        search.results.each do |pkg|
+          to_ret << pkg.name if !to_ret.include?(pkg.name)
+          break if to_ret.size == page_size
+        end
         return to_ret
       end
 
-      def self.autocomplete_nvrea query, repoids=nil, page_size=15
+      def self.autocomplete_nvrea(query, repoids = nil, page_size = 15)
         return Util::Support.array_with_total if !Tire.index(self.index).exists?
 
-        query = Util::Search::filter_input query
+        query = Util::Search.filter_input query
         query = "*" if query == ""
         query = "name_autocomplete:(#{query})"
 
@@ -108,7 +111,7 @@ module Glue::ElasticSearch::Package
         search.results
       end
 
-      def self.id_search ids
+      def self.id_search(ids)
         return Util::Support.array_with_total unless Tire.index(self.index).exists?
         search = Tire.search self.index do
           fields [:id, :name, :nvrea, :repoids, :type, :filename, :checksum]
@@ -121,8 +124,10 @@ module Glue::ElasticSearch::Package
         search.results
       end
 
-      def self.search(query, start=0, page_size=15, repoids=nil, sort=[:nvrea_sort, "ASC"],
-                      search_mode = :all, default_field = 'nvrea', filters=[])
+      # TODO: break up method
+      # rubocop:disable MethodLength
+      def self.search(query, start = 0, page_size = 15, repoids = nil, sort = [:nvrea_sort, "ASC"],
+                      search_mode = :all, default_field = 'nvrea', filters = [])
         if !Tire.index(self.index).exists? || (repoids && repoids.empty?)
           return Util::Support.array_with_total
         end
@@ -143,8 +148,8 @@ module Glue::ElasticSearch::Package
           end
 
           if page_size > 0
-           size page_size
-           from start
+            size page_size
+            from start
           end
           sort { by sort[0], sort[1] } unless !all_rows
         end
@@ -160,15 +165,15 @@ module Glue::ElasticSearch::Package
         end
 
         return search.perform.results
-      rescue Tire::Search::SearchRequestFailed => e
+      rescue Tire::Search::SearchRequestFailed
         Util::Support.array_with_total
       end
 
-      def self.index_packages pkg_ids
-        pkgs = pkg_ids.collect{ |pkg_id|
+      def self.index_packages(pkg_ids)
+        pkgs = pkg_ids.collect do |pkg_id|
           pkg = self.find(pkg_id)
           pkg.as_json.except('changelog', 'files', 'filelist').merge(pkg.index_options)
-        }
+        end
 
         unless pkgs.empty?
           Tire.index ::Package.index do

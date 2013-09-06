@@ -29,13 +29,11 @@ module Glue::ElasticSearch::Provider
 
   def extended_index_attrs
     if Katello.config.katello?
-      products = self.products.map{|prod|
+      products = self.products.map do |prod|
         {:product=>prod.name, :repo=>prod.repos(self.organization.library).collect{|repo| repo.name}}
-      }
+      end
     else
-      products = self.products.map{|prod|
-        {:product=>prod.name}
-      }
+      products = self.products.map{|prod| {:product => prod.name} }
     end
     {
       :products=>products,

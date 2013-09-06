@@ -10,15 +10,18 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-
+# rubocop:disable SymbolName
 module Glue::ElasticSearch::Distributor
+
+  # TODO: break this up into modules
+  # rubocop:disable MethodLength
   def self.included(base)
     base.class_eval do
       include Ext::IndexedModel
 
 
       index_options :extended_json=>:extended_index_attrs,
-                    :json=>{:only=> [:name, :description, :id, :uuid, :created_at, :lastCheckin, :environment_id,]},
+                    :json=>{:only=> [:name, :description, :id, :uuid, :created_at, :lastCheckin, :environment_id]},
                     :display_attrs => [:name,
                                        :description,
                                        :id,

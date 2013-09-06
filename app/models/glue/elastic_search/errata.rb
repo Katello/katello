@@ -12,29 +12,32 @@
 
 
 module Glue::ElasticSearch::Errata
+
+  # TODO: break this up into modules
+  # rubocop:disable MethodLength
   def self.included(base)
     base.class_eval do
 
       def self.index_settings
         {
-            "index" => {
-                "analysis" => {
-                    "filter" => {
-                        "ngram_filter"  => {
-                            "type"      => "nGram",
-                            "min_gram"  => 3,
-                            "max_gram"  => 40
-                        }
-                    }.merge(Util::Search::custom_filters),
-                    "analyzer" => {
-                        "title_analyzer" => {
-                            "type"      => "custom",
-                            "tokenizer" => "keyword",
-                            "filter"    => ["standard", "lowercase", "asciifolding", "ngram_filter"]
-                        }
-                    }.merge(Util::Search::custom_analyzers)
+          "index" => {
+            "analysis" => {
+              "filter" => {
+                "ngram_filter"  => {
+                  "type"      => "nGram",
+                  "min_gram"  => 3,
+                  "max_gram"  => 40
                 }
+              }.merge(Util::Search.custom_filters),
+              "analyzer" => {
+                "title_analyzer" => {
+                  "type"      => "custom",
+                  "tokenizer" => "keyword",
+                  filter    => %w(standard lowercase asciifolding ngram_filter)
+                }
+              }.merge(Util::Search.custom_analyzers)
             }
+          }
         }
       end
 
@@ -100,8 +103,8 @@ module Glue::ElasticSearch::Errata
         end
       end
 
-      def self.search query, start, page_size, filters={}, sort=[:errata_id_sort, "DESC"],
-                                                        default_field = 'id_title'
+      def self.search(query, start, page_size, filters = {}, sort = [:errata_id_sort, "DESC"],
+                      default_field = 'id_title')
 
         repoids = filters[:repoids]
         if !Tire.index(self.index).exists? || (repoids && repoids.empty?)
@@ -120,8 +123,8 @@ module Glue::ElasticSearch::Errata
           end
 
           if page_size > 0
-           size page_size
-           from start
+            size page_size
+            from start
           end
           if filters.has_key?(:type)
             filter :term, :type => filters[:type]
@@ -140,15 +143,15 @@ module Glue::ElasticSearch::Errata
         end
 
         return search.perform.results
-      rescue Tire::Search::SearchRequestFailed => e
+      rescue Tire::Search::SearchRequestFailed
         Util::Support.array_with_total
       end
 
-      def self.index_errata errata_ids
-        errata = errata_ids.collect{ |errata_id|
+      def self.index_errata(errata_ids)
+        errata = errata_ids.collect do |errata_id|
           erratum = self.find(errata_id)
           erratum.as_json.merge(erratum.index_options)
-        }
+        end
 
         unless errata.empty?
           Tire.index Errata.index do
@@ -161,13 +164,13 @@ module Glue::ElasticSearch::Errata
         end
       end
 
-      def self.autocomplete_search(text, repoids=nil, page_size=15)
+      def self.autocomplete_search(text, repoids = nil, page_size = 15)
         return [] if !Tire.index(self.index).exists?
 
         if text.blank?
           query = "id_title:(*)"
         else
-          text = Util::Search::filter_input(text.downcase)
+          text = Util::Search.filter_input(text.downcase)
           query = "id_title:(*#{text}*)"
         end
 
