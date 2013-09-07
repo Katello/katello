@@ -22,7 +22,7 @@ module Authorization::System
     def readable(org)
       raise "scope requires an organization" if org.nil?
       if org.systems_readable?
-         where(:environment_id => org.environment_ids) #list all systems in an org
+        where(:environment_id => org.environment_ids) #list all systems in an org
       else #just list for environments the user can access
         where_clause = "systems.environment_id in (#{::KTEnvironment.systems_readable(org).select(:id).to_sql})"
         where_clause += " or "
@@ -36,9 +36,9 @@ module Authorization::System
       org.systems_readable? ||
         ::KTEnvironment.systems_readable(org).count > 0 ||
         ::SystemGroup.systems_readable(org).count > 0
-     end
+    end
 
-    #TODO these two functions are somewhat poorly written and need to be redone
+    # TODO: these two functions are somewhat poorly written and need to be redone
     def any_deletable?(env, org)
       if env
         env.systems_deletable? || org.system_groups.any?{|g| g.systems_deletable?}

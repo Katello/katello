@@ -14,15 +14,10 @@ module Authorization::Repository
   extend ActiveSupport::Concern
 
   included do
-    # only repositories in a given environment
-    scope :in_environment, lambda { |env|
-      where(environment_id: env.id)
-    }
   end
 
   module ClassMethods
     def readable(env)
-      prod_ids = ::Product.readable(env.organization).collect{|p| p.id}
       if env.contents_readable?
         where(environment_id: env.id)
       else

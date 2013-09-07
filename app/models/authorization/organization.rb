@@ -31,7 +31,9 @@ module Authorization::Organization
       User.allowed_to?([:update, :create], :organizations, nil, nil)
     end
 
-    def list_verbs global = false
+    # TODO: break up method
+    # rubocop:disable MethodLength
+    def list_verbs(global = false)
       if Katello.config.katello?
         org_verbs = {
           :update => _("Modify Organization and Administer Environments"),
@@ -77,7 +79,7 @@ module Authorization::Organization
       [:create, :manage_nodes]
     end
 
-    def authorized_items verbs, resource = :organizations
+    def authorized_items(verbs, resource = :organizations)
       if !User.allowed_all_tags?(verbs, resource)
         where("organizations.id in (#{User.allowed_tags_sql(verbs, resource)})")
       end
@@ -89,7 +91,7 @@ module Authorization::Organization
     scope :readable, lambda {authorized_items(READ_PERM_VERBS)}
 
     def editable?
-        User.allowed_to?([:update, :create], :organizations, nil, self)
+      User.allowed_to?([:update, :create], :organizations, nil, self)
     end
 
     def deletable?
@@ -97,7 +99,7 @@ module Authorization::Organization
     end
 
     def readable?
-      User.allowed_to?(READ_PERM_VERBS, :organizations,nil, self)
+      User.allowed_to?(READ_PERM_VERBS, :organizations, nil, self)
     end
 
     def environments_manageable?
