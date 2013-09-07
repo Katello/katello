@@ -69,6 +69,7 @@ class Repository < ActiveRecord::Base
   scope :enabled, where(:enabled => true)
   scope :in_default_view, joins(:content_view_version => :content_view).
     where("content_views.default" => true)
+  scope :in_environment, lambda { |env| where(environment_id: env.id) }
 
   scope :yum_type, where(:content_type=>YUM_TYPE)
   scope :file_type, where(:content_type=>FILE_TYPE)

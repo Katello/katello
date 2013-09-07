@@ -61,7 +61,7 @@ module Authorization::Enforcement
     ResourceType.check resource_type, verbs
     verbs = [] if verbs.nil?
     verbs = verbs.is_a?(Array) ? verbs.clone : [verbs]
-    org = Organization.find(org) if Numeric === org
+    org = Organization.find(org) if org.is_a?(Numeric)
 
     log_roles(verbs, resource_type, nil, org)
 
@@ -97,7 +97,7 @@ module Authorization::Enforcement
   # Note: This returns the SQL not result of the query
   #
   # This method is called by every Model's list method
-  def allowed_tags_sql(verbs=nil, resource_type = nil, org = nil)
+  def allowed_tags_sql(verbs = nil, resource_type  =  nil, org  =  nil)
     select_on = "DISTINCT(permission_tags.tag_id)"
     select_on = "DISTINCT(permissions.organization_id)" if resource_type == :organizations
 
@@ -113,7 +113,7 @@ module Authorization::Enforcement
   def allowed_to?(verbs, resource_type, tags = nil, org = nil, any_tags = false)
     tags = [] if tags.nil?
     tags = tags.is_a?(Array) ? tags.clone : [tags]
-    if tags.detect { |tag| !(Numeric === tag ||(String === tag && /^\d+$/=== tag.to_s)) }
+    if tags.detect { |tag| !(tag.is_a?(Numeric) ||(tag.is_a?(String) && tag.to_s =~ /^\d+$/)) }
       raise ArgumentError, "Tags need to be integers - #{tags} are not."
     end
     ResourceType.check resource_type, verbs
@@ -142,18 +142,20 @@ module Authorization::Enforcement
 
   private
 
+  # TODO: break up method
+  # rubocop:disable MethodLength
   def allowed_tags_query(verbs, resource_type, org = nil, allowed_to_check = true)
     ResourceType.check resource_type, verbs
     verbs = [] if verbs.nil?
     verbs = verbs.is_a?(Array) ? verbs.clone : [verbs]
     log_roles(verbs, resource_type, nil, org)
-    org = Organization.find(org) if Numeric === org
+    org = Organization.find(org) if org.is_a?(Numeric)
     org_permissions = org_permissions_query(org, resource_type == :organizations)
 
     clause        = ""
     clause_params = { :all => "all", :true => true, :resource_type => resource_type, :verbs => verbs }
 
-    unless resource_type == :organizations
+    if resource_type != :organizations
       clause = <<-SQL.split.join(" ")
                 permissions.resource_type_id =
                   (select id from resource_types where resource_types.name = :resource_type) AND

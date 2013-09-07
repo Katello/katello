@@ -15,19 +15,19 @@ module Authorization::GpgKey
 
   module ClassMethods
     def readable(org)
-       if org.readable? || org.gpg_keys_manageable? || ::Provider.any_readable?(org)
-          where(:organization_id => org.id)
-       else
-         where("0 = 1")
-       end
+      if org.readable? || org.gpg_keys_manageable? || ::Provider.any_readable?(org)
+        where(:organization_id => org.id)
+      else
+        where("0 = 1")
+      end
     end
 
     def manageable(org)
-       if org.gpg_keys_manageable?
-          where(:organization_id => org.id)
-       else
-         where("0 = 1")
-       end
+      if org.gpg_keys_manageable?
+        where(:organization_id => org.id)
+      else
+        where("0 = 1")
+      end
     end
 
     def createable?(organization)
@@ -41,11 +41,11 @@ module Authorization::GpgKey
 
   included do
     def readable?
-       GpgKey.any_readable?(organization)
+      GpgKey.any_readable?(organization)
     end
 
     def manageable?
-       organization.gpg_keys_manageable?
+      organization.gpg_keys_manageable?
     end
   end
 
