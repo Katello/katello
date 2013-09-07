@@ -94,7 +94,7 @@ module Glue::Candlepin::Consumer
 
     def validate_cp_consumer
       if new_record?
-        validates_inclusion_of :cp_type, :in => %w( system hypervisor candlepin )
+        validates_inclusion_of :cp_type, :in => %w(system hypervisor candlepin)
         validates_presence_of :facts
       end
     end

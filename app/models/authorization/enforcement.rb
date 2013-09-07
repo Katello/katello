@@ -84,7 +84,7 @@ module Authorization::Enforcement
           (permissions.resource_type_id =
             (select id from resource_types where resource_types.name = :resource_type) AND
             (verbs.verb in (:no_tag_verbs) OR
-              (permissions.all_verbs=:true OR verbs.verb in (:verbs) #{all_tags_clause} )))
+              (permissions.all_verbs=:true OR verbs.verb in (:verbs) #{all_tags_clause})))
     SQL
     clause_params = { :true => true, :all => "all", :resource_type => resource_type, :verbs => verbs }
     org_permissions.where(clause_all_resources_or_tags,

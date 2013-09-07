@@ -137,7 +137,7 @@ class KatelloFormBuilder < ActionView::Helpers::FormBuilder
     tag_options = options[:input_wrapper][:tag_options] || {}
     tag_options.merge!({:class => options[:input_wrapper][:class]})
 
-    content_tag(:div, tag_options ) { yield } +
+    content_tag(:div, tag_options) { yield } +
     (content_tag(:i, '', :class => 'details-icon', 'data-help' => options[:help]) if options[:help])
   end
 

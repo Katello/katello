@@ -119,7 +119,7 @@ module Util
 
     def self.validate_package_list_format(packages)
       # validate the format of the comma-separated package list provided
-      packages = packages.split(/ *, */ )
+      packages = packages.split(/ *, */)
 
       packages.each do |package_name|
         if !valid_package_name_format(package_name).nil?

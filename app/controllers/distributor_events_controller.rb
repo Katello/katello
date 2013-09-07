@@ -87,7 +87,7 @@ class DistributorEventsController < ApplicationController
                         search, params[:offset], [:finish_time, 'desc'],
                         :filter => {:task_owner_id => [@distributor.id], :task_owner_type => Distributor.class.name},
                         :load => true,
-                        :simple_query => "status:#{search} OR #{search}" )
+                        :simple_query => "status:#{search} OR #{search}")
   end
 
   protected

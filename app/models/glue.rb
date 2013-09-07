@@ -129,7 +129,7 @@ module Glue
 
       # if we have no failures - we are done
       return true if (errors.empty? && q.failed.empty?)
-      fail Errors::OrchestrationException.new("Errors occurred during orchestration #{errors.inspect}\n Queue Failed - #{q.failed.inspect}" )
+      fail Errors::OrchestrationException.new("Errors occurred during orchestration #{errors.inspect}\n Queue Failed - #{q.failed.inspect}")
     rescue => e
       logger.error "Rolling back due to a problem: #{q.failed}\n#{e.inspect} \n#{e.backtrace.join('\n')}"
       # handle errors

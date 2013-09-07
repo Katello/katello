@@ -41,7 +41,7 @@ class FilterRule < ActiveRecord::Base
       PuppetModuleRule => PUPPET_MODULE }[self.class]
   end
 
-  def self.class_for( content_type)
+  def self.class_for(content_type)
     case content_type
     when PACKAGE
       PackageRule
@@ -61,7 +61,7 @@ class FilterRule < ActiveRecord::Base
     CONTENT_OPTIONS.key(content_type)
   end
 
-  def self.create_for( content_type, options)
+  def self.create_for(content_type, options)
     clazz = class_for(content_type)
     clazz.create!(options)
   end
