@@ -35,7 +35,7 @@ describe GpgKeysController, :katello => true do
     @file = Rack::Test::UploadedFile.new(test_document, "text/plain")
 
     @organization = new_test_org
-    @gpg_key = GpgKey.create!( :name => "Another Test Key", :content => "This is the key data string", :organization => @organization )
+    @gpg_key = GpgKey.create!(:name => "Another Test Key", :content => "This is the key data string", :organization => @organization)
     @gpg_key_params_pasted = { :gpg_key => { :name => "Test Key", :content => "This is the pasted key data string" } }
     @gpg_key_params_uploaded = { :gpg_key => { :name => "Test Key", :content_upload => @file } }
   end

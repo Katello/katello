@@ -263,7 +263,7 @@ class ChangesetsController < ApplicationController
   end
 
   def update_editors
-    usernames = @changeset.users.collect { |c| User.where(:id => c.user_id ).order("updated_at desc")[0].username }
+    usernames = @changeset.users.collect { |c| User.where(:id => c.user_id).order("updated_at desc")[0].username }
     usernames.delete(current_user.username)
     response.headers['X-ChangesetUsers'] = usernames.to_json
   end

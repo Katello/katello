@@ -52,7 +52,7 @@ module AuthorizationSupportMethods
       @user = user
     end
 
-    def can(verb, resource_type, tags = nil, org = nil, options = {} )
+    def can(verb, resource_type, tags = nil, org = nil, options = {})
       AuthorizationSupportMethods.allow(@user.own_role, verb, resource_type, tags, org, options)
     end
 

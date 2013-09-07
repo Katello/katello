@@ -87,7 +87,7 @@ class SystemEventsController < ApplicationController
                         search, params[:offset], [:finish_time, 'desc'],
                         :filter => {:task_owner_id => [@system.id], :task_owner_type => [System.class_name]},
                         :load => true,
-                        :simple_query => "status:#{search} OR #{search}" )
+                        :simple_query => "status:#{search} OR #{search}")
   end
 
   protected

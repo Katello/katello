@@ -55,8 +55,8 @@ describe Role do
      specify{user.allowed_to?(:read, :organizations).should be_false }
      specify{global_user.allowed_to?(:read, :organizations).should be_true }
 
-     specify{user.allowed_to?(:read, :organizations, nil, organization ).should be_true}
-     specify{global_user.allowed_to?(:read, :organizations, nil, organization ).should be_true}
+     specify{user.allowed_to?(:read, :organizations, nil, organization).should be_true}
+     specify{global_user.allowed_to?(:read, :organizations, nil, organization).should be_true}
 
      specify{user.allowed_to?(:create, :organizations).should be_false}
      specify{global_user.allowed_to?(:create, :organizations).should be_false}
