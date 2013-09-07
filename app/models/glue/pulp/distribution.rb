@@ -25,12 +25,12 @@ module Glue::Pulp::Distribution
 
   module InstanceMethods
 
-    def initialize(attrs = {}, options={})
+    def initialize(attrs = {}, options = {})
       generate_instance_variables(attrs)
     end
 
     def generate_instance_variables(attrs)
-      attrs.each_pair do |k,v|
+      attrs.each_pair do |k, v|
         if self.class.method_defined?(k) && !v.nil?
           instance_variable_set("@#{k}", v)
         end

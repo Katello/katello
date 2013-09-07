@@ -31,7 +31,7 @@ module Glue::Pulp::Repos
   # repo path for custom product repos (RH repo paths are derived from
   # content url)
   def self.custom_repo_path(environment, product, repo_label)
-    prefix = [environment.organization.label,environment.label].map{|x| x.gsub(/[^-\w]/,"_") }.join("/")
+    prefix = [environment.organization.label, environment.label].map{|x| x.gsub(/[^-\w]/, "_") }.join("/")
     prefix + custom_content_path(product, repo_label)
   end
 
@@ -43,7 +43,7 @@ module Glue::Pulp::Repos
     # There we prefix custom content/repo url with "/custom/..."
     parts << "custom"
     parts += [product.label, repo_label]
-    "/" + parts.map{|x| x.gsub(/[^-\w]/,"_") }.join("/")
+    "/" + parts.map{|x| x.gsub(/[^-\w]/, "_") }.join("/")
   end
 
   def self.prepopulate!(products, environment, repos = [], content_view = nil)
@@ -73,7 +73,7 @@ module Glue::Pulp::Repos
       return self.repos(library).empty?
     end
 
-    def promote from_env, to_env
+    def promote(from_env, to_env)
       @orchestration_for = :promote
 
       async_tasks = promote_repos repos(from_env), from_env, to_env
@@ -85,7 +85,7 @@ module Glue::Pulp::Repos
       async_tasks
     end
 
-    def package_groups env, search_args = {}
+    def package_groups(env, search_args = {})
       groups = []
       self.repos(env).each do |repo|
         groups << repo.package_groups(search_args)
@@ -93,7 +93,7 @@ module Glue::Pulp::Repos
       groups.flatten(1)
     end
 
-    def package_group_categories env, search_args = {}
+    def package_group_categories(env, search_args = {})
       categories = []
       self.repos(env).each do |repo|
         categories << repo.package_group_categories(search_args)
@@ -101,14 +101,14 @@ module Glue::Pulp::Repos
       categories.flatten(1)
     end
 
-    def has_package? id
+    def has_package?(id)
       self.repos(env).each do |repo|
         return true if repo.has_package? id
       end
       false
     end
 
-    def find_packages_by_name env, name
+    def find_packages_by_name(env, name)
       self.repos(env).collect do |repo|
         repo.find_packages_by_name(name).collect do |p|
           p[:repo_id] = repo.id
@@ -117,7 +117,7 @@ module Glue::Pulp::Repos
       end.flatten(1)
     end
 
-    def find_packages_by_nvre env, name, version, release, epoch
+    def find_packages_by_nvre(env, name, version, release, epoch)
       self.repos(env).collect do |repo|
         repo.find_packages_by_nvre(name, version, release, epoch).collect do |p|
           p[:repo_id] = repo.id
@@ -126,22 +126,22 @@ module Glue::Pulp::Repos
       end.flatten(1)
     end
 
-    def distributions env
+    def distributions(env)
       to_ret = []
-      self.repos(env).each{|repo|
+      self.repos(env).each do |repo|
         distros = repo.distributions
         to_ret = to_ret +  distros if !distros.empty?
-      }
+      end
       to_ret
     end
 
-    def get_distribution env, id
+    def get_distribution(env, id)
       self.repos(env).map do |repo|
         repo.distributions.find_all {|d| d.id == id }
       end.flatten(1)
     end
 
-    def find_latest_packages_by_name env, name
+    def find_latest_packages_by_name(env, name)
 
       packs = self.repos(env).collect do |repo|
         repo.find_latest_packages_by_name(name).collect do |pack|
@@ -153,14 +153,14 @@ module Glue::Pulp::Repos
       Util::Package.find_latest_packages packs
     end
 
-    def has_erratum? env, id
+    def has_erratum?(env, id)
       self.repos(env).each do |repo|
         return true if repo.has_erratum? id
       end
       false
     end
 
-    def promoted_to? target_env
+    def promoted_to?(target_env)
       target_env.products.include? self
     end
 
@@ -178,7 +178,7 @@ module Glue::Pulp::Repos
     #get last sync status of all repositories in this product
     def latest_sync_statuses
       self.repos(library).collect do |r|
-        r._get_most_recent_sync_status()
+        r._get_most_recent_sync_status
       end
     end
 
@@ -186,36 +186,36 @@ module Glue::Pulp::Repos
     def sync_status
       return @status if @status
 
-      statuses = repos(self.library).map {|r| r.sync_status()}
+      statuses = repos(self.library).map {|r| r.sync_status}
       return ::PulpSyncStatus.new(:state => ::PulpSyncStatus::Status::NOT_SYNCED) if statuses.empty?
 
       #if any of repos sync still running -> product sync running
-      idx = statuses.index do |r| r.state.to_s == ::PulpSyncStatus::Status::RUNNING.to_s end
-      return statuses[idx] if idx != nil
+      idx = statuses.index { |r| r.state.to_s == ::PulpSyncStatus::Status::RUNNING.to_s }
+      return statuses[idx] if !idx.nil?
 
       #else if any of repos not synced -> product not synced
-      idx = statuses.index do |r| r.state.to_s == ::PulpSyncStatus::Status::NOT_SYNCED.to_s end
-      return statuses[idx] if idx != nil
+      idx = statuses.index { |r| r.state.to_s == ::PulpSyncStatus::Status::NOT_SYNCED.to_s }
+      return statuses[idx] if !idx.nil?
 
       #else if any of repos sync cancelled -> product sync cancelled
-      idx = statuses.index do |r| r.state.to_s == ::PulpSyncStatus::Status::CANCELED.to_s end
-      return statuses[idx] if idx != nil
+      idx = statuses.index { |r| r.state.to_s == ::PulpSyncStatus::Status::CANCELED.to_s }
+      return statuses[idx] if !idx.nil?
 
       #else if any of repos sync finished with error -> product sync finished with error
-      idx = statuses.index do |r| r.state.to_s == ::PulpSyncStatus::Status::ERROR.to_s end
-      return statuses[idx] if idx != nil
+      idx = statuses.index { |r| r.state.to_s == ::PulpSyncStatus::Status::ERROR.to_s }
+      return statuses[idx] if !idx.nil?
 
       #else -> all finished
       @status = statuses[0]
     end
 
     def sync_state
-      self.sync_status().state
+      self.sync_status.state
     end
 
     def sync_start
-      start_times = Array.new
-      for r in repos(library)
+      start_times = []
+      repos(library).each do |r|
         start = r.sync_start
         start_times << start unless start.nil?
       end
@@ -224,8 +224,8 @@ module Glue::Pulp::Repos
     end
 
     def sync_finish
-      finish_times = Array.new
-      for r in repos(library)
+      finish_times = []
+      repos(library).each do |r|
         finish = r.sync_finish
         finish_times << finish unless finish.nil?
       end
@@ -234,14 +234,14 @@ module Glue::Pulp::Repos
     end
 
     def sync_size
-      self.repos(library).inject(0) { |sum, v|
+      self.repos(library).inject(0) do |sum, v|
         sum + v.sync_status.progress.total_size
-      }
+      end
     end
 
     def last_sync
-      sync_times = Array.new
-      for r in repos(library)
+      sync_times = []
+      repos(library).each do |r|
         sync = r.last_sync
         sync_times << sync unless sync.nil?
       end
@@ -251,7 +251,7 @@ module Glue::Pulp::Repos
 
     def cancel_sync
       Rails.logger.info "Canceling synchronization of product #{self.label}"
-      for r in repos(library)
+      repos(library).each do |r|
         r.cancel_sync
       end
     end
@@ -286,7 +286,7 @@ module Glue::Pulp::Repos
       end
     end
 
-    def add_repo(label, name, url, repo_type, unprotected=false, gpg = nil)
+    def add_repo(label, name, url, repo_type, unprotected = false, gpg = nil)
       check_for_repo_conflicts(name, label)
       repo = Repository.create!(:environment => self.organization.library,
           :product => self,
@@ -340,13 +340,13 @@ module Glue::Pulp::Repos
 
     def save_repos_orchestration
       case orchestration_for
-        when :create
-          # no repositories are added when a product is created
-        when :update
-          #called when sync schedule changed, repo added, repo deleted
-          pre_queue.create(:name => "setting up pulp sync schedule for product: #{self.label}", :priority => 2, :action => [self, :setup_sync_schedule])
-        when :promote
-          # do nothing, as repos have already been promoted (see promote_repos method)
+      when :create
+        # no repositories are added when a product is created
+      when :update
+        #called when sync schedule changed, repo added, repo deleted
+        pre_queue.create(:name => "setting up pulp sync schedule for product: #{self.label}", :priority => 2, :action => [self, :setup_sync_schedule])
+      when :promote
+        # do nothing, as repos have already been promoted (see promote_repos method)
       end
     end
 
@@ -356,7 +356,7 @@ module Glue::Pulp::Repos
 
     protected
 
-    def promote_repos repos, from_env, to_env
+    def promote_repos(repos, from_env, to_env)
       async_tasks = []
       repos.each do |repo|
         async_tasks << repo.promote(from_env, to_env)

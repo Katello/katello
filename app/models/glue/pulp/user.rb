@@ -23,7 +23,7 @@ module Glue::Pulp::User
 
   module InstanceMethods
 
-    def initialize(attrs = nil, options={})
+    def initialize(attrs = nil, options = {})
       attrs = prune_pulp_only_attributes(attrs)
       super
     end
@@ -72,9 +72,9 @@ module Glue::Pulp::User
 
     def save_pulp_orchestration
       case self.orchestration_for
-        when :create
-          pre_queue.create(:name => "create pulp user: #{self.remote_id}", :priority => 3, :action => [self, :set_pulp_user])
-          pre_queue.create(:name => "add 'super-user' to: #{self.remote_id}", :priority => 4, :action => [self, :set_super_user_role])
+      when :create
+        pre_queue.create(:name => "create pulp user: #{self.remote_id}", :priority => 3, :action => [self, :set_pulp_user])
+        pre_queue.create(:name => "add 'super-user' to: #{self.remote_id}", :priority => 4, :action => [self, :set_super_user_role])
       end
     end
 
