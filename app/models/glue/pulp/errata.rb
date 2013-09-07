@@ -56,11 +56,11 @@ module Glue::Pulp::Errata
 
   module InstanceMethods
 
-    def initialize(params = {}, options={})
+    def initialize(params = {}, options = {})
       params['repoids'] = params.delete(:repository_memberships)
       params['errata_id'] = params['id']
       params['id'] = params.delete('_id')
-      params.each_pair {|k,v| instance_variable_set("@#{k}", v) unless v.nil? }
+      params.each_pair {|k, v| instance_variable_set("@#{k}", v) unless v.nil? }
     end
 
     def package_filenames

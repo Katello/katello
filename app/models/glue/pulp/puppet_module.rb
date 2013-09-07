@@ -32,9 +32,9 @@ module Glue::Pulp::PuppetModule
   end
 
   module InstanceMethods
-    def initialize(params = {}, options={})
+    def initialize(params = {}, options = {})
       params['repoids'] = params.delete(:repository_memberships) if params.has_key?(:repository_memberships)
-      params.each_pair {|k,v| instance_variable_set("@#{k}", v) unless v.nil? }
+      params.each_pair {|k, v| instance_variable_set("@#{k}", v) unless v.nil? }
     end
 
     def sortable_version
