@@ -52,7 +52,7 @@ module Authorization::Product
       ::Provider.any_readable?(org)
     end
 
-    def sync_items org
+    def sync_items(org)
       org.syncable? ? (joins(:provider).where('providers.organization_id' => org)) : where("0=1")
     end
   end

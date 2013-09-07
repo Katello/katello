@@ -72,7 +72,7 @@ module Authorization::Provider
       raise "scope requires an organization" if org.nil?
       resource = :providers
       if (Katello.config.katello? && verbs.include?(:read) && org.syncable?) ||  User.allowed_all_tags?(verbs, resource, org)
-         where(:organization_id => org)
+        where(:organization_id => org)
       else
         where("providers.id in (#{User.allowed_tags_sql(verbs, resource, org)})")
       end
