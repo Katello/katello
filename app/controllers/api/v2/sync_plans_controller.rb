@@ -10,7 +10,6 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-
 class Api::V2::SyncPlansController < Api::V1::SyncPlansController
 
   include Api::V2::Rendering
@@ -34,7 +33,6 @@ class Api::V2::SyncPlansController < Api::V1::SyncPlansController
     super
   end
 
-
   api :PUT, "/sync_plans/:id", "Update a sync plan"
   param :id, :number, :desc => "sync plan numeric identifier", :required => true
   param_group :sync_plan
@@ -47,6 +45,5 @@ class Api::V2::SyncPlansController < Api::V1::SyncPlansController
   def destroy
     super
   end
-
 
 end

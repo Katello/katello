@@ -158,7 +158,6 @@ describe OrganizationsController do
     end
   end
 
-
   describe "delete an organization" do
 
     describe "with no exceptions thrown" do

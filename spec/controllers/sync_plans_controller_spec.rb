@@ -12,7 +12,6 @@
 
 require 'spec_helper'
 
-
 describe SyncPlansController, :katello => true do
   include LoginHelperMethods
   include LocaleHelperMethods
@@ -210,7 +209,6 @@ describe SyncPlansController, :katello => true do
           post :create, bad_params
         end
       end
-
 
     end
   end

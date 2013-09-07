@@ -34,7 +34,6 @@ class Role < ActiveRecord::Base
   #validates_associated :permissions
   accepts_nested_attributes_for :permissions, :allow_destroy => true
 
-
   def add_ldap_group(group_name)
     self.ldap_group_roles.create!(:ldap_group => group_name)
     User.all.each { |user| user.set_ldap_roles }
@@ -47,7 +46,6 @@ class Role < ActiveRecord::Base
     ldap_group.destroy
     self.users.each { |user| user.set_ldap_roles }
   end
-
 
   def self.search_by_verb(key, operator, value)
     permissions = Permission.all(:conditions => "verbs.verb #{operator} '#{value_to_sql(operator, value)}'", :include => :verbs)
@@ -104,7 +102,6 @@ class Role < ActiveRecord::Base
 
   end
 
-
   ADMINISTRATOR = 'Administrator'
 
   def superadmin?
@@ -130,8 +127,6 @@ class Role < ActiveRecord::Base
     superadmin_role.update_attributes(:locked => true)
     superadmin_role
   end
-
-
 
   # returns the candlepin role (for RHSM)
   def self.candlepin_role

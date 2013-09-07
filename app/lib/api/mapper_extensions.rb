@@ -1,7 +1,6 @@
 module Katello
   module Routing
 
-
     module MapperExtensions
 
       def api_resources(*args, &block)
@@ -12,7 +11,6 @@ module Katello
         args << options
         resources(*args, &block)
       end
-
 
       def api_attachable_resources(resource_plural_name, options = {})
         resource_singular_name = options.try(:delete, :resource_name)

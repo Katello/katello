@@ -28,7 +28,6 @@ describe Changeset, :katello => true do
       @changeset    = PromotionChangeset.create!(:environment => @environment, :name => "foo-changeset")
     end
 
-
     it "changeset should not be null" do
       @environment.should_not be_nil
       @environment.working_changesets.should_not be_nil

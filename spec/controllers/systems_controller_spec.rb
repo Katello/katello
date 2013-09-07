@@ -109,7 +109,6 @@ describe SystemsController do
           it_should_behave_like "protected action"
         end if perm == :update_systems
 
-
         describe "show manageable environments with #{perm} on #{resource} " do
           let(:action) {:environments}
           let(:req) { get :environments, :id => @system.id}
@@ -309,7 +308,6 @@ describe SystemsController do
       end
 
     end
-
 
     describe 'bulk deleting a system' do
       before (:each) do

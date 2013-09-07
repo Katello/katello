@@ -10,7 +10,6 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-
 class PuppetModule
   include Glue::Pulp::PuppetModule if Katello.config.use_pulp
   include Glue::ElasticSearch::PuppetModule if Katello.config.use_elasticsearch

@@ -85,7 +85,6 @@ describe Api::V1::PermissionsController do
     let(:unauthorized_user) { user_without_create_permissions }
     it_should_behave_like "protected action"
 
-
     it 'should find the role' do
       Role.should_receive(:find).with(role_id)
       req

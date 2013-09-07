@@ -13,7 +13,6 @@
 require 'minitest_helper'
 require './test/support/repository_support'
 
-
 class GluePulpPuppetModuleTest < MiniTest::Rails::ActiveSupport::TestCase
   fixtures :all
 

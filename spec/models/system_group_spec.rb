@@ -12,7 +12,6 @@
 
 require 'spec_helper'
 
-
 describe SystemGroup do
 
   include OrganizationHelperMethods
@@ -115,7 +114,6 @@ describe SystemGroup do
       grp.save!
     end
   end
-
 
   context "changing environments" do
     before :each do

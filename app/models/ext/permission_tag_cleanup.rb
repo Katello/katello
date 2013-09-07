@@ -28,7 +28,6 @@ module Ext::PermissionTagCleanup
     ).where(:tag_id => id).delete_all
   end
 
-
   def delete_associated_permission_tags
     PermissionTag.where(
         :permission_id =>

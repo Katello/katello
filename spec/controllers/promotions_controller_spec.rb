@@ -106,7 +106,6 @@ describe "rules" do
       it_should_behave_like "protected action"
     end
 
-
     describe 'examining locals' do
       describe "apply" do
         shared_examples_for "promotion page perm checks" do
@@ -173,8 +172,6 @@ describe "rules" do
       end
     end
 
-
 end
-
 
 end

@@ -347,7 +347,6 @@ describe System do
     end
   end
 
-
   describe "find system by a pool id" do
     let(:pool_id_1) {"POOL_ID_123"}
     let(:pool_id_2) {"POOL_ID_456"}
@@ -416,7 +415,6 @@ describe System do
 
   end
 
-
   describe "a user with no permissions" do
     before :each do
       #give access to the org
@@ -435,7 +433,6 @@ describe System do
       @system.deletable?.should == false
     end
   end
-
 
   describe "a user with environment system perms" do
     before :each do
@@ -493,7 +490,6 @@ describe System do
       @system.editable?.should == false
       @system.deletable?.should == true
     end
-
 
   end
 

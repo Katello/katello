@@ -12,7 +12,6 @@
 
 require './test/models/authorization/authorization_base'
 
-
 class ActivationKeyAuthorizationAdminTest < AuthorizationTestBase
 
   def setup
@@ -33,7 +32,6 @@ class ActivationKeyAuthorizationAdminTest < AuthorizationTestBase
   end
 
 end
-
 
 class ActivationKeyAuthorizationNoPermsTest  < AuthorizationTestBase
 

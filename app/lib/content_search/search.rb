@@ -29,7 +29,6 @@ module ContentSearch
       av.render(*args)
     end
 
-
     def mode
       @mode || :all
     end

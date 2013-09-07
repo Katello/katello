@@ -28,7 +28,6 @@ module Navigation
       }
     end
 
-
     def menu_org_list
       {:key => :org_list,
        :name => _("List"),
@@ -36,7 +35,6 @@ module Navigation
        :options => {:class=>'organizations second_level', "data-menu"=>"organizations"}
       }
     end
-
 
     def organization_navigation
       [

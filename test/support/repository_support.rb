@@ -13,7 +13,6 @@
 require 'minitest_helper'
 require './test/support/task_support'
 
-
 module RepositorySupport
   include TaskSupport
 

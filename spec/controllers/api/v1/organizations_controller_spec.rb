@@ -28,14 +28,12 @@ describe Api::V1::OrganizationsController do
   let(:user_with_destroy_permissions) { user_with_permissions { |u| u.can([:delete], :organizations) } }
   let(:user_without_destroy_permissions) { user_with_permissions { |u| u.can([:update], :organizations) } }
 
-
   before(:each) do
     @org = new_test_org
     @controller.stub(:get_organization => @org)
     @request.env["HTTP_ACCEPT"] = "application/json"
     login_user_api
   end
-
 
   describe "create" do
 

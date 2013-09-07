@@ -10,7 +10,6 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-
 shared_examples_for "valid tdl" do
 
   let(:xsd_schema_file) { File.expand_path("../TDL.xsd",__FILE__) }
@@ -20,5 +19,4 @@ shared_examples_for "valid tdl" do
     xsd_schema.validate(subject).should == []
   end
 end
-
 

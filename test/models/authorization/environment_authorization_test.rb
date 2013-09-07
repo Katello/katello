@@ -12,7 +12,6 @@
 
 require './test/models/authorization/authorization_base'
 
-
 class EnvironmentAuthorizationAdminTest < AuthorizationTestBase
 
   def setup
@@ -91,7 +90,6 @@ class EnvironmentAuthorizationAdminTest < AuthorizationTestBase
     assert @env.systems_registerable?
   end
 end
-
 
 class EnvironmentAuthorizationNoPermsTest < AuthorizationTestBase
 

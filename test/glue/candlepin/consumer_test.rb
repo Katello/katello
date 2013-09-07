@@ -14,7 +14,6 @@ require 'minitest_helper'
 require './test/support/candlepin/consumer_support'
 require './test/support/user_support'
 
-
 class GlueCandlepinConsumerTestBase < MiniTest::Rails::ActiveSupport::TestCase
   extend  ActiveRecord::TestFixtures
 

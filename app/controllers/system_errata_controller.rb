@@ -77,7 +77,6 @@ class SystemErrataController < ApplicationController
     render :json => statuses
   end
 
-
   private
 
   include SortColumnList

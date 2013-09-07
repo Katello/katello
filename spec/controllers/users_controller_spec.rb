@@ -108,7 +108,6 @@ describe UsersController do
       end
     end
 
-
     it "should not change the username", :katello => true do #TODO headpin
        put 'update', {:id => @user.id, :user => {:username=>"FOO"}}
        response.should_not be_success

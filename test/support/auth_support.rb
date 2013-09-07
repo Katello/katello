@@ -10,9 +10,7 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-
 module AuthorizationSupportMethods
-
 
   def allow(*args)
     AuthorizationSupportMethods.allow(*args)
@@ -25,7 +23,6 @@ module AuthorizationSupportMethods
     verbs = [] if verbs.nil?
     verbs = [verbs] unless Array === verbs
     verbs = verbs.collect {|verb| Verb.find_or_create_by_verb(verb)}
-
 
     rt =  ResourceType::TYPES[resource_type]
     if rt.nil?

@@ -46,7 +46,6 @@ module ProvidersHelper
     tabs.values.sort_by { |h| h[:order] }
   end
 
-
   def product_map
     @product_map ||= normalize(collect_repos(
                                    @provider.products.engineering,

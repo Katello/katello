@@ -151,7 +151,6 @@ describe Api::V1::SystemPackagesController do
 
   end
 
-
   def stub_task_status(task_type, parameters, status = "running", result = { :errors => [] })
     return TaskStatus.create(:organization_id => @organization.id,
                              :task_type       => task_type,

@@ -190,7 +190,6 @@ class SystemsController < ApplicationController
     render :json => Util::Support.array_with_total
   end
 
-
   def split_order(order)
     if order
       order.split("|")

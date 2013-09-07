@@ -10,8 +10,6 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-
-
 module Authorization::Provider
   extend ActiveSupport::Concern
 
@@ -20,7 +18,6 @@ module Authorization::Provider
 
   READ_PERM_VERBS = [:read, :update] if !Katello.config.katello?
   EDIT_PERM_VERBS = [:update] if !Katello.config.katello?
-
 
   module ClassMethods
     def readable(org)

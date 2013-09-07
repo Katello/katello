@@ -18,7 +18,6 @@ describe Api::V1::SystemGroupsController, :katello => true do
   include OrchestrationHelper
   include SystemHelperMethods
 
-
   let(:uuid) { '1234' }
 
   before(:each) do
@@ -43,7 +42,6 @@ describe Api::V1::SystemGroupsController, :katello => true do
     login_user_api
   end
 
-
   describe "Controller tests " do
     before(:each) do
       SystemGroup.stub!(:search).and_return(stub.as_null_object)
@@ -67,7 +65,6 @@ describe Api::V1::SystemGroupsController, :katello => true do
       end
     end
 
-
     describe "GET show" do
       let(:action) { :show }
       let(:req) { get :show, :id => @group.id, :organization_id => @org.label }
@@ -78,7 +75,6 @@ describe Api::V1::SystemGroupsController, :katello => true do
         user_without_permissions
       end
       it_should_behave_like "protected action"
-
 
       it "should return successfully" do
         get :show, :id => @group.id, :organization_id => @org.label
@@ -98,14 +94,12 @@ describe Api::V1::SystemGroupsController, :katello => true do
       end
       it_should_behave_like "protected action"
 
-
       it "should return successfully" do
         get :history, :id => @group.id, :organization_id => @org.label
         response.should be_success
         assigns(:system_group).id.should == @group.id
       end
     end
-
 
     describe "POST create" do
       let(:action) { :create }
@@ -181,7 +175,6 @@ describe Api::V1::SystemGroupsController, :katello => true do
         first.should_not be_nil
         first[:max_systems].should == 1234
       end
-
 
       it "should not create 2 groups with the same name" do
         post :copy, :organization_id => @org.label, :id => @group.id, :system_group => { :new_name => "foo2", :description => "describe" }
@@ -296,7 +289,6 @@ describe Api::V1::SystemGroupsController, :katello => true do
       end
       it_should_behave_like "protected action"
 
-
       it "should complete successfully" do
         controller.stub(:render)
         delete :destroy, :organization_id => @org.label, :id => @group.id
@@ -315,7 +307,6 @@ describe Api::V1::SystemGroupsController, :katello => true do
         user_without_permissions
       end
       it_should_behave_like "protected action"
-
 
       it "should complete successfully" do
         @group.systems = [@system]
@@ -354,6 +345,5 @@ describe Api::V1::SystemGroupsController, :katello => true do
       end
     end
   end
-
 
 end

@@ -12,7 +12,6 @@
 
 require './test/models/authorization/authorization_base'
 
-
 class RepositoryAuthorizationAdminTest < AuthorizationTestBase
 
   def setup
@@ -49,7 +48,6 @@ class RepositoryAuthorizationAdminTest < AuthorizationTestBase
   end
 
 end
-
 
 class RepositoryAuthorizationNonAuthUserTest < AuthorizationTestBase
 

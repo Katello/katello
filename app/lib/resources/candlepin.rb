@@ -164,7 +164,6 @@ module Resources
           JSON.parse(response)
         end
 
-
         def regenerate_identity_certificates(uuid)
           response = self.post(path(uuid), {}, self.default_headers).body
           JSON.parse(response).with_indifferent_access
@@ -302,7 +301,6 @@ module Resources
       end
     end
 
-
     class Owner < CandlepinResource
       class << self
         # Set the contentPrefix at creation time so that the client will get
@@ -436,7 +434,6 @@ module Resources
           JSON.parse(self.get(path, self.default_headers).body).collect{|a| a.with_indifferent_access}
         end
 
-
         def create(owner_id, id, name, description)
           attrs = {:id => id, :name => name, :description => description}
           path = "/candlepin/owners/#{owner_id}/environments"
@@ -500,7 +497,6 @@ module Resources
           pools_json = self.get(path, self.default_headers).body
           JSON.parse(pools_json)
         end
-
 
         def path(id = nil)
           "/candlepin/pools/#{id}"
@@ -612,7 +608,6 @@ module Resources
           products = [products] unless id.nil?
           Util::Data.array_with_indifferent_access products
         end
-
 
         def _certificate_and_key(id, owner)
           subscriptions_json = Candlepin::CandlepinResource.get("/candlepin/owners/#{owner}/subscriptions", self.default_headers).body

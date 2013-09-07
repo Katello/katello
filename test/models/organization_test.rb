@@ -31,7 +31,6 @@ class OrganizationTestBase < MiniTest::Rails::ActiveSupport::TestCase
 
 end
 
-
 class OrganizationTestCreate < OrganizationTestBase
 
   def test_create_validate_view

@@ -27,7 +27,6 @@ class NodeCapability < ActiveRecord::Base
     nil
   end
 
-
   def update_environments
     raise "update_environments not implemented"
   end

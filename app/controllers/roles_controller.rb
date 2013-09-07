@@ -73,7 +73,6 @@ class RolesController < ApplicationController
      }
   end
 
-
   def section_id
     'operations'
   end
@@ -280,6 +279,5 @@ class RolesController < ApplicationController
   def default_notify_options
     super.merge :organization => nil
   end
-
 
 end

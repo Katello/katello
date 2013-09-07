@@ -11,7 +11,6 @@
 
 require 'minitest_helper'
 
-
 class UserTestBase < MiniTest::Rails::ActiveSupport::TestCase
   extend ActiveRecord::TestFixtures
 

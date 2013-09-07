@@ -124,8 +124,6 @@ describe ActivationKey do
     end
   end
 
-
-
   describe "pools in a activation key" do
     before(:each) do
       disable_pools_orchestration

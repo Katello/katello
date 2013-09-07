@@ -14,7 +14,6 @@ require 'spec_helper'
 require 'helpers/system_test_data'
 include OrchestrationHelper
 
-
 describe Glue::Candlepin::Consumer do
   let(:facts) {
     {

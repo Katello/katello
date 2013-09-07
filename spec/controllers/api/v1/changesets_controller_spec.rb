@@ -88,7 +88,6 @@ describe Api::V1::ChangesetsController, :katello => true do
     end
   end
 
-
   describe "show" do
 
     let(:action) { :show }
@@ -102,7 +101,6 @@ describe Api::V1::ChangesetsController, :katello => true do
       req
     end
   end
-
 
   describe "create" do
 
@@ -148,7 +146,6 @@ describe Api::V1::ChangesetsController, :katello => true do
       req
     end
   end
-
 
   describe "delete cs" do
     before do

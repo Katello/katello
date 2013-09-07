@@ -127,7 +127,6 @@ module Glue::Pulp::Repo
       raise PulpErrors::ServiceUnavailable.new(message, e)
     end
 
-
     def generate_importer
       case self.content_type
         when Repository::YUM_TYPE
@@ -728,7 +727,6 @@ module Glue::Pulp::Repo
       {:names=> names.to_set,
        :filenames => filenames.to_set}
     end
-
 
   end
 

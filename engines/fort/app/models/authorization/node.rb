@@ -13,7 +13,6 @@
 module Authorization::Node
   extend ActiveSupport::Concern
 
-
   module ClassMethods
     def editable?
       User.allowed_to?([:manage_nodes], :organizations, nil, nil)

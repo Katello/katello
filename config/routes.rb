@@ -497,7 +497,6 @@ Src::Application.routes.draw do
     get 'allowed_orgs'
   end
 
-
   root :to => "user_sessions#new"
 
   match '/login' => 'user_sessions#new', :as => 'login'

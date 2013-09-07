@@ -10,8 +10,6 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-
-
 class ContentView < ActiveRecord::Base
   include Ext::LabelFromName
   include Authorization::ContentView
@@ -46,7 +44,6 @@ class ContentView < ActiveRecord::Base
 
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name
   validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
-
 
   scope :default, where(:default=>true)
   scope :non_default, where(:default=>false)

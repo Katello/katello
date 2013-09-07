@@ -12,7 +12,6 @@
 
 require 'spec_helper.rb'
 
-
 #def self.it_should_require_admin_for_actions(*actions)
 #  actions.each do |action|
 #    it "#{action} action should require admin" do
@@ -22,7 +21,6 @@ require 'spec_helper.rb'
 #    end
 #  end
 #end
-
 
 describe Api::V1::ChangesetsContentController, :katello => true do
   include LoginHelperMethods

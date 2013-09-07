@@ -79,7 +79,6 @@ module SystemHelperMethods
     }.with_indifferent_access
   end
 
-
   def stub_consumer_packages_install(expected_response, refresh_response = nil)
     if Katello.config.katello?
       refresh_response ||= expected_response

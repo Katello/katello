@@ -150,7 +150,6 @@ describe Organization do
       KTEnvironment.where(:name => env_name).all.should be_empty
     end
 
-
     it "can delete the org and env of a different org exist" do
       env_name = "prod"
 

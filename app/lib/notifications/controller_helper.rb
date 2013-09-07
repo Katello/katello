@@ -10,7 +10,6 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-
 module Notifications::ControllerHelper
   # defines helper to access notifications from controller
   # @example how to send notification from controller

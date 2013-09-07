@@ -41,7 +41,6 @@ class GluePulpErrataTestBase < MiniTest::Rails::ActiveSupport::TestCase
 
 end
 
-
 class GluePulpErrataTest < GluePulpErrataTestBase
 
   def test_find

@@ -30,7 +30,6 @@ class Verb < ActiveRecord::Base
     verbs[verb]
   end
 
-
   def self.verbs_for(resource_type_name, global = false)
     res_type = ResourceType::TYPES[resource_type_name]
     return res_type[:model].list_verbs(global) if res_type && res_type[:model]

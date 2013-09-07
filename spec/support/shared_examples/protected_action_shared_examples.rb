@@ -10,7 +10,6 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-
 def login_user_by_described_class(user)
   if described_class.name =~ /^Api::/
     login_user_api(user)
@@ -42,7 +41,6 @@ shared_examples_for "protected action" do
       req
       on_success if defined?(on_success)
 
-
       response.should be_success
 
       if respond_to? :authorized_user
@@ -72,7 +70,6 @@ shared_examples_for "protected action" do
     end
   end
 end
-
 
 shared_examples_for "bad request" do
   context "action" do

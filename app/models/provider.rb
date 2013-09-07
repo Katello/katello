@@ -51,7 +51,6 @@ class Provider < ActiveRecord::Base
   validates_with Validators::KatelloUrlFormatValidator, :if => :redhat_provider?,
                  :attributes => :repository_url
 
-
   scope :redhat, where(:provider_type => REDHAT)
   scope :custom, where(:provider_type => CUSTOM)
 

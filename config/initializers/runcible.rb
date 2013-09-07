@@ -11,5 +11,4 @@ if Katello.config.use_pulp
     end
   end
 
-
 end

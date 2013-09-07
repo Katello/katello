@@ -56,7 +56,6 @@ module Navigation
       return menu
     end
 
-
     def menu_users
       {:key => :users,
        :name => _("Users"),
