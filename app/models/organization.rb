@@ -35,8 +35,6 @@ class Organization < ActiveRecord::Base
 
   include Ext::LabelFromName
 
-  belongs_to :task_status
-
   has_many :activation_keys, :dependent => :destroy
   has_many :providers, :dependent => :destroy
   has_many :products, :through => :providers
@@ -48,7 +46,11 @@ class Organization < ActiveRecord::Base
   has_many :system_groups, :dependent => :destroy, :inverse_of => :organization
   has_many :content_view_definitions, :class_name => "ContentViewDefinitionBase", :dependent=> :destroy
   has_many :content_views, :dependent=> :destroy
-  has_many :task_statuses, :dependent => :destroy, :inverse_of => :organization
+  has_many :task_statuses, :dependent => :destroy, :as => :task_owner
+
+  #older association
+  has_many :org_tasks, :dependent => :destroy, :class_name => "TaskStatus", :inverse_of => :organization
+
   serialize :default_info, Hash
 
   attr_accessor :statistics
@@ -106,6 +108,10 @@ class Organization < ActiveRecord::Base
     self.providers.redhat.first
   end
 
+  def repo_discovery_task
+    self.task_statuses.where(:task_type => :repo_discovery).order('created_at DESC').first
+  end
+
   def create_library
     self.library = KTEnvironment.new(:name => "Library", :label => "Library", :library => true, :organization => self)
   end
@@ -121,6 +127,15 @@ class Organization < ActiveRecord::Base
     elsif (Organization.count == 1)
       [def_error, _("At least one organization must exist.")]
     end
+  end
+
+  def discover_repos(url, notify = false)
+    raise _("Repository Discovery already in progress") if self.repo_discovery_task && !self.repo_discovery_task.finished?
+    raise _("Discovery URL not set.") if url.blank?
+    task = self.async(:organization=>self, :task_type=>:repo_discovery).start_discovery_task(url, notify)
+    self.task_statuses << task
+    self.save!
+    task
   end
 
   def being_deleted?
@@ -196,6 +211,37 @@ class Organization < ActiveRecord::Base
       sleep options[:pause]
     end
     return job["id"]
+  end
+
+  private
+
+  def start_discovery_task(url, notify = false)
+    task_id = AsyncOperation.current_task_id
+    task = TaskStatus.find(task_id)
+    task.parameters = {:url => url}
+    task.result ||= []
+    task.save!
+
+    #Lambda to continually update the task
+    found_func = lambda do |found_url|
+      task = ::TaskStatus.find(task_id)
+      task.result << found_url
+      task.save!
+    end
+
+    #Lambda to decide to continue or not
+    #  Using the saved task_id to compare current providers
+    #  task id
+    continue_func = lambda do
+      task = ::TaskStatus.find(task_id)
+      !task.canceled?
+    end
+
+    discover = RepoDiscovery.new(url)
+    discover.run(found_func, continue_func)
+  rescue => e
+    Notify.exception _('Repos discovery failed.'), e if notify
+    raise e
   end
 
 end

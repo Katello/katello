@@ -126,6 +126,19 @@ describe Api::V1::OrganizationsController do
     end
   end
 
+  describe "repo discovery" do
+    let(:action) { :discovery }
+    let(:req) { post :repo_discover, { :id => @org.name, :url => 'http://testurl.com/path/' } }
+    let(:authorized_user) { user_with_update_permissions }
+    let(:unauthorized_user) { user_without_update_permissions }
+    it_should_behave_like "protected action"
+
+    it "should call into Repo discovery" do
+      @org.should_receive(:discover_repos).and_return(TaskStatus.new)
+      req
+    end
+  end
+
   describe "update" do
 
     let(:action) { :update }
