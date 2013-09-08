@@ -42,8 +42,8 @@ class SystemGroupPackagesController < ApplicationController
     jobs = @group.refreshed_jobs.joins(:task_statuses).where(
         'task_statuses.task_type' => actions, 'task_statuses.state' => [:waiting, :running])
 
-    render :partial=>"system_groups/packages/index",
-           :locals=>{:jobs => jobs, :editable => @group.systems_editable?}
+    render :partial => "system_groups/packages/index",
+           :locals => {:jobs => jobs, :editable => @group.systems_editable?}
   end
 
   # TODO: break up this method

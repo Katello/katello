@@ -16,7 +16,7 @@ EOS
 
        ActiveRecord::Base.connection.raw_connection.exec_prepared('insert_cvve', [version.id, env.id, DateTime.now, DateTime.now])
 
-        ContentViewEnvironment.create!(:content_view=>view,
+        ContentViewEnvironment.create!(:content_view => view,
                                        :name => env.name,
                                        :label => view.send(:generate_cp_environment_label, env),
                                        :cp_id => view.send(:generate_cp_environment_id, env))

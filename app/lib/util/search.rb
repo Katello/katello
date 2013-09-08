@@ -45,7 +45,7 @@ module Util
     def self.filter_input(search)
       return nil if search.nil?
       DISABLED_LUCENE_SPECIAL_CHARS.each do |chr|
-        search = search.gsub(chr, '\\'+chr)
+        search = search.gsub(chr, '\\' + chr)
       end
       return search
     end

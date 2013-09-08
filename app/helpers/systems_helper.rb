@@ -13,8 +13,8 @@
 module SystemsHelper
 
   def render_rows(options)
-    render :partial=>"systems/list_systems",
-            :locals=>{:accessor=>options[:accessor], :columns=>options[:columns], :collection=>options[:collection], :name=>options[:name]}
+    render :partial => "systems/list_systems",
+            :locals => {:accessor => options[:accessor], :columns => options[:columns], :collection => options[:collection], :name => options[:name]}
   end
 
   def get_checkin(system)
@@ -62,10 +62,10 @@ module SystemsHelper
   end
 
   def virtual_buttons
-    raw [radio_button("system_type", "virtualized", "physical", :checked=>true, :tabindex => 5),
-    content_tag(:label, _("Physical"), :for => 'system_type_virtualized_physical'),
-    radio_button("system_type", "virtualized", "virtual", :tabindex => 6),
-    content_tag(:label, _("Virtual"), :for => 'system_type_virtualized_virtual')].join(' ')
+    raw [radio_button("system_type", "virtualized", "physical", :checked => true, :tabindex => 5),
+         content_tag(:label, _("Physical"), :for => 'system_type_virtualized_physical'),
+         radio_button("system_type", "virtualized", "virtual", :tabindex => 6),
+         content_tag(:label, _("Virtual"), :for => 'system_type_virtualized_virtual')].join(' ')
   end
 
   def errata_type_class(errata)

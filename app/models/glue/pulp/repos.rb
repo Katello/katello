@@ -299,7 +299,7 @@ module Glue::Pulp::Repos
           :gpg_key => gpg,
           :unprotected => unprotected,
           :content_type => repo_type,
-          :content_view_version=>self.organization.library.default_content_view_version
+          :content_view_version => self.organization.library.default_content_view_version
       )
       self.organization.default_content_view.update_cp_content(self.organization.library)
       repo.generate_metadata

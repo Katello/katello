@@ -65,11 +65,11 @@ module Util
     end
 
     def self.build_nvrea(package, include_zero_epoch = true)
-      nvrea = package[:name] +'-'+ package[:version] +'-'+ package[:release]
-      nvrea = nvrea +'.'+ package[:arch] if !package[:arch].nil?
-      nvrea = nvrea +'.'+ package[:suffix] if !package[:suffix].nil?
+      nvrea = package[:name] + '-' + package[:version] + '-' + package[:release]
+      nvrea = nvrea + '.' + package[:arch] if !package[:arch].nil?
+      nvrea = nvrea + '.' + package[:suffix] if !package[:suffix].nil?
       if !package[:epoch].nil?
-        nvrea = package[:epoch] +':'+ nvrea if package[:epoch].to_i != 0 || include_zero_epoch
+        nvrea = package[:epoch] + ':' + nvrea if package[:epoch].to_i != 0 || include_zero_epoch
       end
       nvrea
     end

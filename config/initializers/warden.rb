@@ -146,7 +146,7 @@ Warden::Strategies.add(:certificate) do
     return fail('No ssl client certificate, skipping ssl-certificate authentication') if ssl_client_cert.blank?
     consumer_cert = OpenSSL::X509::Certificate.new(ssl_client_cert)
     uuid = uuid(consumer_cert)
-    u = CpConsumerUser.new(:uuid =>uuid, :username =>uuid, :remote_id=> uuid)
+    u = CpConsumerUser.new(:uuid => uuid, :username => uuid, :remote_id => uuid)
     success!(u, "certificate")
   end
 
@@ -181,7 +181,7 @@ Warden::Strategies.add(:oauth) do
 
     rack_request = Rack::Request.new(request.env)
     consumer_key = OAuth::RequestProxy.proxy(rack_request).oauth_consumer_key
-    signature=OAuth::Signature.build(rack_request) do
+    signature = OAuth::Signature.build(rack_request) do
       [nil, consumer(consumer_key).secret]
     end
 
@@ -190,11 +190,11 @@ Warden::Strategies.add(:oauth) do
     u = User.where(:username => request.headers['HTTP_KATELLO_USER']).first
     u ? success!(u, "OAuth") : fail!("Username is not correct - could not log in")
   rescue OAuth::Signature::UnknownSignatureMethod => e
-    Rails.logger.error "Unknown oauth signature method"+ e.to_s
-    fail!("Unknown oauth signature method"+ e.to_s)
+    Rails.logger.error "Unknown oauth signature method" + e.to_s
+    fail!("Unknown oauth signature method" + e.to_s)
   rescue => e
-    Rails.logger.error "exception occurred while authenticating via oauth "+ e.to_s
-    fail!("exception occurred while authenticating via oauth "+ e.to_s)
+    Rails.logger.error "exception occurred while authenticating via oauth " + e.to_s
+    fail!("exception occurred while authenticating via oauth " + e.to_s)
   end
 
   def consumer(consumer_key)

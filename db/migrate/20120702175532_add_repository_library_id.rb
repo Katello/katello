@@ -2,7 +2,7 @@
 class AddRepositoryLibraryId < ActiveRecord::Migration
   def self.up
     change_table :repositories do |t|
-      t.integer :library_instance_id, :null=>true
+      t.integer :library_instance_id, :null => true
     end
     Repository.reset_column_information
     User.current = User.hidden.first

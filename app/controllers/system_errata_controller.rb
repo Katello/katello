@@ -12,7 +12,7 @@
 
 class SystemErrataController < ApplicationController
 
-  before_filter :find_system, :only =>[:install, :index, :items, :errata_status]
+  before_filter :find_system, :only => [:install, :index, :items, :errata_status]
   before_filter :authorize
 
   def section_id
@@ -33,16 +33,16 @@ class SystemErrataController < ApplicationController
 
   def index
     if @system.class == Hypervisor
-      render :partial=>"systems/hypervisor",
-             :locals=>{:system=>@system,
-                       :message=>_("Hypervisors do not have errata")}
+      render :partial => "systems/hypervisor",
+             :locals => {:system => @system,
+                       :message => _("Hypervisors do not have errata")}
       return
     end
 
     offset = current_user.page_size
 
-    render :partial=>"systems/errata/index",
-           :locals=>{:system=>@system, :editable => @system.editable?, :offset => offset}
+    render :partial => "systems/errata/index",
+           :locals => {:system => @system, :editable => @system.editable?, :offset => offset}
   end
 
   def items
@@ -50,11 +50,11 @@ class SystemErrataController < ApplicationController
     filter_type = params[:filter_type] if params[:filter_type]
     errata_state = params[:errata_state] if params[:errata_state]
     chunk_size = current_user.page_size
-    errata, total_count, results_count = get_errata(offset.to_i, offset.to_i+chunk_size, filter_type, errata_state)
+    errata, total_count, results_count = get_errata(offset.to_i, offset.to_i + chunk_size, filter_type, errata_state)
 
     return render_bad_parameters unless errata
 
-    rendered_html = render_to_string(:partial=>"systems/errata/items", :locals => { :errata => errata, :editable => @system.editable? })
+    rendered_html = render_to_string(:partial => "systems/errata/items", :locals => { :errata => errata, :editable => @system.editable? })
     render :json => {:html => rendered_html,
                       :results_count => results_count,
                       :total_count => total_count,

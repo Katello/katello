@@ -23,65 +23,65 @@ class Api::V1::NodeCapabilitiesControllerTest < MiniTest::Rails::ActionControlle
     login_user(User.find(users(:admin)), @org)
 
     @system = System.find(systems(:simple_server))
-    @node = Node.create(:system=>@system)
+    @node = Node.create(:system => @system)
 
     @read_perm = UserPermission.new(:read, :organizations, nil, nil)
     @edit_perm = UserPermission.new(:manage_nodes, :organizations, nil, nil)
   end
 
   test 'test index should be successful' do
-    get :index, :node_id=>@node.id
+    get :index, :node_id => @node.id
     assert_response :success
     assert_protected_action(:index, [@read_perm, @edit_perm], [NO_PERMISSION]) do
-      get :index, :node_id=>@node.id
+      get :index, :node_id => @node.id
     end
   end
 
   test "test_show_should_be_successful" do
-    FakeNodeCapability.create!(:node=>@node)
+    FakeNodeCapability.create!(:node => @node)
 
-    get :show, :node_id=>@node.id, :id =>FakeNodeCapability::TYPE
+    get :show, :node_id => @node.id, :id => FakeNodeCapability::TYPE
     assert_response :success
 
     assert_protected_action(:show, [@read_perm, @edit_perm], [NO_PERMISSION]) do
-      get :show, :node_id=>@node.id, :id=>FakeNodeCapability::TYPE
+      get :show, :node_id => @node.id, :id => FakeNodeCapability::TYPE
     end
   end
 
   test "test create should be successful" do
-    post :create, :node_id=>@node.id, :capability=>{:type=>FakeNodeCapability::TYPE}
+    post :create, :node_id => @node.id, :capability => {:type => FakeNodeCapability::TYPE}
     assert_response :success
 
     assert_protected_action(:create, [@edit_perm], [@read_perm, NO_PERMISSION]) do
-      post :create, :node_id=>@node.id, :capability=>{:type=>FakeNodeCapability::TYPE}
+      post :create, :node_id => @node.id, :capability => {:type => FakeNodeCapability::TYPE}
     end
 
   end
 
   test "test destroy should be successful" do
-    FakeNodeCapability.create!(:node=>@node)
+    FakeNodeCapability.create!(:node => @node)
 
-    delete :destroy, :node_id=>@node.id, :id=>FakeNodeCapability::TYPE
+    delete :destroy, :node_id => @node.id, :id => FakeNodeCapability::TYPE
     assert_response :success
     assert_empty Node.find(@node.id).capabilities
   end
 
   test "test_destroy permission" do
-    FakeNodeCapability.create!(:node=>@node)
+    FakeNodeCapability.create!(:node => @node)
 
     assert_protected_action(:destroy, [@edit_perm], [@read_perm, NO_PERMISSION]) do
-      delete :destroy, :node_id=>@node.id, :id=>FakeNodeCapability::TYPE
+      delete :destroy, :node_id => @node.id, :id => FakeNodeCapability::TYPE
     end
   end
 
   test "test update should be successful" do
-    FakeNodeCapability.create!(:node=>@node)
+    FakeNodeCapability.create!(:node => @node)
 
-    post :update, :node_id=>@node.id, :id=>FakeNodeCapability::TYPE, :capability=>{:configuration=>{:foo=>'bar'}}
+    post :update, :node_id => @node.id, :id => FakeNodeCapability::TYPE, :capability => {:configuration => {:foo => 'bar'}}
     assert_response :success
 
     assert_protected_action(:update, [@edit_perm], [@read_perm, NO_PERMISSION]) do
-      post :update, :node_id=>@node.id, :id=>FakeNodeCapability::TYPE, :capability=>{:configuration=>{:foo=>'bar'}}
+      post :update, :node_id => @node.id, :id => FakeNodeCapability::TYPE, :capability => {:configuration => {:foo => 'bar'}}
     end
 
   end

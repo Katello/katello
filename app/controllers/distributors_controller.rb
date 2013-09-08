@@ -15,9 +15,9 @@ class DistributorsController < ApplicationController
   include DistributorsHelper
   include ConsumersControllerLogic
 
-  before_filter :find_distributor, :except =>[:index, :items, :environments, :new, :create, :bulk_destroy,
+  before_filter :find_distributor, :except => [:index, :items, :environments, :new, :create, :bulk_destroy,
                                          :auto_complete]
-  before_filter :find_distributors, :only=>[:bulk_destroy]
+  before_filter :find_distributors, :only => [:bulk_destroy]
 
   before_filter :find_environment, :only => [:environments, :new]
   before_filter :find_environment_in_distributor, :only => [:create, :update]
@@ -83,7 +83,7 @@ class DistributorsController < ApplicationController
       :show => read_distributor,
       :facts => read_distributor,
       :auto_complete => any_readable,
-      :destroy=> delete_distributors,
+      :destroy => delete_distributors,
       :bulk_destroy => bulk_delete_distributors,
       :custom_info => read_distributor
     }
@@ -100,8 +100,8 @@ class DistributorsController < ApplicationController
     end
     {
       :create => {:arch => [:arch_id],
-                  :distributor=>[:name, :environment_id, :content_view_id],
-                  :distributor_type =>[:katello, :headpin]
+                  :distributor => [:name, :environment_id, :content_view_id],
+                  :distributor_type => [:katello, :headpin]
                  },
       :update => update_check,
       :download => [:id, :filename]
@@ -120,12 +120,12 @@ class DistributorsController < ApplicationController
     # Environments page is displayed.
     envsys = !params[:env_id].nil?
 
-    render :partial=>"new", :locals=>{:distributor=>@distributor, :accessible_envs => accessible_envs, :envsys => envsys}
+    render :partial => "new", :locals => {:distributor => @distributor, :accessible_envs => accessible_envs, :envsys => envsys}
   end
 
   def create
     @distributor = Distributor.new
-    @distributor.name= params["distributor"]["name"]
+    @distributor.name = params["distributor"]["name"]
     @distributor.cp_type = "candlepin"  # The 'candlepin' type is allowed to export a manifest
     @distributor.facts = {'distributor_version' => 'sam-1.3'}  # TODO: forcing to full capabilities
     @distributor.environment = KTEnvironment.find(params["distributor"]["environment_id"])
@@ -136,8 +136,8 @@ class DistributorsController < ApplicationController
       notify.success _("Distributor '%s' was created.") % @distributor['name']
 
       if search_validate(Distributor, @distributor.id, params[:search])
-        render :partial=>"distributors/list_distributors",
-          :locals=>{:accessor=>"id", :columns=>%w(name lastCheckin created), :collection=>[@distributor], :name=> controller_display_name}
+        render :partial => "distributors/list_distributors",
+          :locals => {:accessor => "id", :columns => %w(name lastCheckin created), :collection => [@distributor], :name => controller_display_name}
       else
         notify.message _("'%s' did not meet the current search criteria and is not being shown.") % @distributor["name"]
         render :json => { :no_match => true }
@@ -170,7 +170,7 @@ class DistributorsController < ApplicationController
       @panel_options[:search_env] = @environment.id
     end
 
-    render :index, :locals=>{:envsys => true, :accessible_envs=> accesible_envs}
+    render :index, :locals => {:envsys => true, :accessible_envs => accesible_envs}
   end
 
   def items
@@ -178,12 +178,12 @@ class DistributorsController < ApplicationController
     search = params[:search]
     if params[:env_id]
       find_environment
-      filters = {:environment_id=>[params[:env_id]]}
+      filters = {:environment_id => [params[:env_id]]}
     else
       filters = readable_filters
     end
     render_panel_direct(Distributor, @panel_options, search, params[:offset], order,
-                        {:default_field => :name, :filter=>filters, :load=>true})
+                        {:default_field => :name, :filter => filters, :load => true})
 
   end
 
@@ -197,12 +197,12 @@ class DistributorsController < ApplicationController
       end
       filter :terms, filters
     end
-    render :json=>distributors.map do |s|
+    render :json => distributors.map do |s|
       label = _("%{name} (Registered: %{time})") % {:name => s.name, :time => convert_time(format_time(Time.parse(s.created_at)))}
-      {:label=>label, :value=>s.name, :id=>s.id}
+      {:label => label, :value => s.name, :id => s.id}
     end
   rescue Tire::Search::SearchRequestFailed
-    render :json=>Util::Support.array_with_total
+    render :json => Util::Support.array_with_total
   end
 
   def split_order(order)
@@ -219,9 +219,9 @@ class DistributorsController < ApplicationController
     available = available_subscriptions(@distributor.filtered_pools)
 
     @organization = current_organization
-    render :partial=>"subscriptions", :locals=>{:distributor=>@distributor, :avail_subs => available,
+    render :partial => "subscriptions", :locals => {:distributor => @distributor, :avail_subs => available,
                                                 :consumed_entitlements => consumed,
-                                                :editable=>@distributor.editable?}
+                                                :editable => @distributor.editable?}
   end
 
   def update_subscriptions
@@ -233,30 +233,30 @@ class DistributorsController < ApplicationController
     end
     consumed_entitlements = @distributor.consumed_entitlements
     avail_pools = @distributor.available_pools_full
-    render :partial=>"subs_update", :locals=>{:distributor=>@distributor, :avail_subs => avail_pools,
+    render :partial => "subs_update", :locals => {:distributor => @distributor, :avail_subs => avail_pools,
                                               :consumed_subs => consumed_entitlements,
-                                              :editable=>@distributor.editable?}
+                                              :editable => @distributor.editable?}
     notify.success _("Distributor subscriptions updated.")
   end
 
   def products
     if @distributor.class == Hypervisor
-      render :partial=>"hypervisor",
-             :locals=>{:distributor=>@distributor,
-                       :message=>_("Hypervisors do not have software products")}
+      render :partial => "hypervisor",
+             :locals => {:distributor => @distributor,
+                       :message => _("Hypervisors do not have software products")}
       return
     end
 
     @products_count = @distributor.installedProducts.size
     @products, @offset = first_objects @distributor.installedProducts.sort {|a, b| a['productName'].downcase <=> b['productName'].downcase}
-    render :partial=>"products",
-           :locals=>{:distributor=>@distributor, :products=>@products, :offset=>@offset, :products_count=>@products_count}
+    render :partial => "products",
+           :locals => {:distributor => @distributor, :products => @products, :offset => @offset, :products_count => @products_count}
   end
 
   def more_products
     # offset is computed in javascript but this one is used in tests
     @products, @offset = more_objects @distributor.installedProducts.sort {|a, b| a['productName'].downcase <=> b['productName'].downcase}
-    render :partial=>"more_products", :locals=>{:distributor=>@distributor, :products=>@products}
+    render :partial => "more_products", :locals => {:distributor => @distributor, :products => @products}
   end
 
   def edit
@@ -281,7 +281,7 @@ class DistributorsController < ApplicationController
 
     respond_to do |format|
       format.html do
-        render :text=>(params[:distributor] ? params[:distributor].first[1] : "")
+        render :text => (params[:distributor] ? params[:distributor].first[1] : "")
       end
       format.js
     end
@@ -289,7 +289,7 @@ class DistributorsController < ApplicationController
 
   def show
     distributor = Distributor.find(params[:id])
-    render :partial=>"distributors/list_distributor_show", :locals=>{:item=>distributor, :accessor=>"id", :columns=> COLUMNS.keys, :noblock => 1}
+    render :partial => "distributors/list_distributor_show", :locals => {:item => distributor, :accessor => "id", :columns => COLUMNS.keys, :noblock => 1}
   end
 
   def custom_info
@@ -306,17 +306,17 @@ class DistributorsController < ApplicationController
     distributor.destroy
     if distributor.destroyed?
       notify.success _("%s Removed Successfully") % distributor.name
-      render :partial => "common/list_remove", :locals => { :id => id, :name=>controller_display_name }
+      render :partial => "common/list_remove", :locals => { :id => id, :name => controller_display_name }
       return
     end
     notify.invalid_record distributor
-    render :text => @distributor.errors, :status=>:ok
+    render :text => @distributor.errors, :status => :ok
   end
 
   def bulk_destroy
     @distributors.each { |sys| sys.destroy }
     notify.success _("%s Distributors Removed Successfully") % @distributors.length
-    render :text=>""
+    render :text => ""
   end
 
   def download
@@ -392,8 +392,8 @@ class DistributorsController < ApplicationController
       :ajax_scroll => items_distributors_path,
       :actions => Distributor.any_deletable?(@environment, current_organization) ? 'actions' : nil,
       :initial_action => :subscriptions,
-      :search_class=>Distributor,
-      :disable_create=> current_organization.environments.length == 0 ? _("At least one environment is required to create or register distributors in your current organization.") : false
+      :search_class => Distributor,
+      :disable_create => current_organization.environments.length == 0 ? _("At least one environment is required to create or register distributors in your current organization.") : false
     }
   end
 
@@ -433,7 +433,7 @@ class DistributorsController < ApplicationController
   # to filter readable distributors that can be
   # passed to search
   def readable_filters
-    {:environment_id=>KTEnvironment.distributors_readable(current_organization).collect{|item| item.id}}
+    {:environment_id => KTEnvironment.distributors_readable(current_organization).collect{|item| item.id}}
   end
 
   def search_filter
@@ -483,14 +483,14 @@ class DistributorsController < ApplicationController
       if params.has_key? :reverse
         next_objects = objects[0...params[:reverse].to_i]
       else
-        next_objects = objects[offset...offset+size]
+        next_objects = objects[offset...offset + size]
       end
       next_objects ||= [] # fence for case when offset extended beyond range, etc.
     else
       next_objects = []
     end
 
-    return next_objects, offset+size
+    return next_objects, offset + size
   end
 
 end

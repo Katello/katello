@@ -13,8 +13,8 @@
 module DistributorsHelper
 
   def render_rows(options)
-    render :partial=>"distributors/list_distributors",
-            :locals=>{:accessor=>options[:accessor], :columns=>options[:columns], :collection=>options[:collection], :name=>options[:name]}
+    render :partial => "distributors/list_distributors",
+            :locals => {:accessor => options[:accessor], :columns => options[:columns], :collection => options[:collection], :name => options[:name]}
   end
 
   def get_checkin(distributor)
@@ -51,7 +51,7 @@ module DistributorsHelper
     views = ContentView.readable(org).non_default.in_environment(env)
     choices = views.map {|v| [v.name, v.id]}
     select(:distributor, "content_view_id", choices,
-             {:id=>"content_view_field"},
+             {:id => "content_view_field"},
              {:tabindex => 2})
   end
 

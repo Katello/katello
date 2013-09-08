@@ -493,7 +493,7 @@ class ApplicationController < ActionController::Base
 
     results = obj_class.search do
       query { string search, query_options}
-      filter :terms, :id=>[id]
+      filter :terms, :id => [id]
     end
     results.total > 0
   end
@@ -519,7 +519,7 @@ class ApplicationController < ActionController::Base
 
     start ||= 0
 
-    if search.nil? || search== ''
+    if search.nil? || search == ''
       all_rows = true
     elsif search_options[:simple_query] && !Katello.config.simple_search_tokens.any?{|s| search.downcase.match(s)}
       search = search_options[:simple_query]
@@ -556,7 +556,7 @@ class ApplicationController < ActionController::Base
       end
 
       if load
-        @items = obj_class.where(:id=>results.collect{|r| r.id})
+        @items = obj_class.where(:id => results.collect{|r| r.id})
         #set total since @items will be just an array
         panel_options[:total_count] = results.empty? ? 0 : results.total
         if @items.length != results.length
@@ -596,11 +596,11 @@ class ApplicationController < ActionController::Base
     @items = results
 
     if options[:list_partial]
-      rendered_html = render_to_string(:partial=>options[:list_partial], :locals=>options)
+      rendered_html = render_to_string(:partial => options[:list_partial], :locals => options)
     elsif options[:render_list_proc]
       rendered_html = options[:render_list_proc].call(@items, options)
     else
-      rendered_html = render_to_string(:partial=>"common/list_items", :locals=>options)
+      rendered_html = render_to_string(:partial => "common/list_items", :locals => options)
     end
 
     render :json => {:html => rendered_html,
@@ -633,16 +633,16 @@ class ApplicationController < ActionController::Base
       items_offset = items_searched.limit(current_user.page_size).offset(start)
     else
       items_searched = @items
-      items_offset = items_searched[start.to_i...start.to_i+current_user.page_size]
+      items_offset = items_searched[start.to_i...start.to_i + current_user.page_size]
     end
 
     options[:total_results] = items_searched.count
     options[:collection] ||= items_offset
 
     if options[:list_partial]
-      rendered_html = render_to_string(:partial=>options[:list_partial], :locals=>options)
+      rendered_html = render_to_string(:partial => options[:list_partial], :locals => options)
     else
-      rendered_html = render_to_string(:partial=>"common/list_items", :locals=>options)
+      rendered_html = render_to_string(:partial => "common/list_items", :locals => options)
     end
 
     render :json => {:html => rendered_html,

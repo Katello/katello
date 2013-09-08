@@ -6,7 +6,7 @@ class CreateContentViews < ActiveRecord::Migration
       t.text :description
       t.references :content_view_definition
       t.references :organization
-      t.boolean :default, :default=>false, :null=>false
+      t.boolean :default, :default => false, :null => false
       t.timestamps
     end
 

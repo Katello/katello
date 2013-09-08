@@ -25,11 +25,11 @@ class ContentViewVersionsController < ApplicationController
   end
 
   def show
-    render :partial=>"show"
+    render :partial => "show"
   end
 
   def content
-    render :partial=>"content",
+    render :partial => "content",
            :locals => {:view_repos => @view_version.repos_ordered_by_product(@environment)}
   end
 

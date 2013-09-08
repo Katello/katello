@@ -25,7 +25,7 @@ module AsyncOrchestration
 
     # under 1.9.3 ActiveSupport::BasicObject inherits from ::BasicObject, which is outside of standard library namespace.
     def method_missing(method, *args)
-      t = ::TaskStatus.create!(:uuid => ::UUIDTools::UUID.random_create.to_s, :user_id=>::User.current.id,
+      t = ::TaskStatus.create!(:uuid => ::UUIDTools::UUID.random_create.to_s, :user_id => ::User.current.id,
                                :organization => @organization, :state => ::TaskStatus::Status::WAITING, :task_type => @task_type)
       ::Delayed::Job.enqueue({:payload_object => ::AsyncOperation.new(t.id, ::User.current.username, @target, method.to_sym, args)}.merge(@options))
       t

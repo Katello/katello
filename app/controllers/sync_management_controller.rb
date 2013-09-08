@@ -123,7 +123,7 @@ class SyncManagementController < ApplicationController
 
   def destroy
     Repository.find(params[:id]).cancel_sync
-    render :text=>""
+    render :text => ""
   end
 
   private
@@ -196,7 +196,7 @@ class SyncManagementController < ApplicationController
       repo = Repository.find(id)
       begin
         resp = repo.sync(:notify => true).first
-        collected.push({:id => id, :product_id=>repo.product.id, :state => resp[:state]})
+        collected.push({:id => id, :product_id => repo.product.id, :state => resp[:state]})
       rescue RestClient::Conflict
         notify.error N_("There is already an active sync process for the '%s' repository. Please try again later") %
                         repo.name

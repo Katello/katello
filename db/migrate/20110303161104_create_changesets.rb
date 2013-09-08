@@ -3,7 +3,7 @@ class CreateChangesets < ActiveRecord::Migration
     create_table :changesets do |t|
       t.references :environment
       t.string :name
-      t.boolean :published, :default=>false
+      t.boolean :published, :default => false
       t.timestamps
     end
   end

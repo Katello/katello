@@ -17,7 +17,7 @@ class Permission < ActiveRecord::Base
   belongs_to :organization
   belongs_to :role, :inverse_of => :permissions
   has_and_belongs_to_many :verbs
-  has_many :tags, :class_name=>"PermissionTag", :dependent => :destroy, :inverse_of=>:permission
+  has_many :tags, :class_name => "PermissionTag", :dependent => :destroy, :inverse_of => :permission
 
   before_save :cleanup_tags_verbs
   before_save :check_global
@@ -48,7 +48,7 @@ class Permission < ActiveRecord::Base
   end
 
   def resource_type_attributes=(attributes)
-    self.resource_type= ResourceType.find_or_create_by_name(attributes[:name])
+    self.resource_type = ResourceType.find_or_create_by_name(attributes[:name])
   end
 
   def to_short_text
@@ -87,8 +87,8 @@ class Permission < ActiveRecord::Base
 
   def all_types=(types)
     if types
-      self.all_tags=true
-      self.all_verbs=true
+      self.all_tags = true
+      self.all_verbs = true
       self.verbs.clear
       self.tags.clear
       self.resource_type = ResourceType.find_or_create_by_name(:all)

@@ -15,8 +15,8 @@ module Glue::ElasticSearch::Job
     base.send :include, Ext::IndexedModel
 
     base.class_eval do
-      index_options :json=>{:only=> [:job_owner_id, :job_owner_type]},
-                    :extended_json=>:extended_index_attrs
+      index_options :json => {:only => [:job_owner_id, :job_owner_type]},
+                    :extended_json => :extended_index_attrs
     end
   end
 
