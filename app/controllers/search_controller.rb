@@ -35,7 +35,7 @@ class SearchController < ApplicationController
     # clean up the histories... we will only store the last N entries in the
     # search history, so delete any past N
     if @search_histories.length > max_search_history
-      (max_search_history..@search_histories.length-1).each do |i|
+      (max_search_history..@search_histories.length - 1).each do |i|
         @search_histories[i].delete unless @search_histories[i].nil?
       end
     end

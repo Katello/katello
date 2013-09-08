@@ -59,7 +59,7 @@ class Api::V2::ApiController < Api::ApiController
     def sort_params
       options = {}
       options[:sort_by] = params[:sort_by] if params[:sort_by]
-      options[:sort_order]= params[:sort_order] if params[:sort_order]
+      options[:sort_order] = params[:sort_order] if params[:sort_order]
       options
     end
 

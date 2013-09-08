@@ -37,60 +37,60 @@ class Api::V1::NodesControllerTest < MiniTest::Rails::ActionController::TestCase
   end
 
   test "test_show_should_be_successful" do
-    node = Node.create(:system=>@system)
+    node = Node.create(:system => @system)
 
-    get :show, :id=>node.id
+    get :show, :id => node.id
     assert_response :success
 
     assert_protected_action(:show, [@read_perm, @edit_perm], [NO_PERMISSION]) do
-      get :show, :id=>node.id
+      get :show, :id => node.id
     end
   end
 
   test "test create should be successful" do
-    post :create, :node=>{:system_id=>@system.id}
+    post :create, :node => {:system_id => @system.id}
     assert_response :success
 
     assert_protected_action(:create, [@edit_perm], [@read_perm, NO_PERMISSION]) do
-      post :create, :node=>{:system_id=>@system.id}
+      post :create, :node => {:system_id => @system.id}
     end
   end
 
   test "test destroy should be successful" do
-    node = Node.create(:system=>@system)
+    node = Node.create(:system => @system)
 
-    delete :destroy, :id=>node.id
+    delete :destroy, :id => node.id
     assert_response :success
-    assert_empty Node.where(:id=>node.id)
+    assert_empty Node.where(:id => node.id)
   end
 
   test "test_destroy permission" do
-    node = Node.create(:system=>@system)
+    node = Node.create(:system => @system)
     assert_protected_action(:destroy, [@edit_perm], [@read_perm, NO_PERMISSION]) do
-      delete :destroy, :id=>node.id
+      delete :destroy, :id => node.id
     end
   end
 
   test "test system should be successful" do
-    node = Node.create(:system=>@system)
+    node = Node.create(:system => @system)
 
-    post :sync, :id=>node.id
+    post :sync, :id => node.id
     assert_response :success
 
     assert_protected_action(:sync, [@edit_perm], [@read_perm, NO_PERMISSION]) do
-      post :sync, :id=>node.id
+      post :sync, :id => node.id
     end
   end
 
   test "test update should be successful" do
-    node = Node.create(:system=>@system)
+    node = Node.create(:system => @system)
 
-    put :update, {:id=>node.id, :node=>{:environment_ids=>[@library.id]}}
+    put :update, {:id => node.id, :node => {:environment_ids => [@library.id]}}
     assert_response :success
     assert_includes Node.find(node.id).environments, @library
 
     assert_protected_action(:update, [@edit_perm], [@read_perm, NO_PERMISSION]) do
-      put :update, {:id=>node.id}
+      put :update, {:id => node.id}
     end
   end
 

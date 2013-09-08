@@ -13,7 +13,7 @@ class AddProductsToFilter < ActiveRecord::Migration
   def self.down
     remove_index :filters_products, :column => :filter_id
     remove_index :filters_products, :column => :product_id
-    remove_index(:filters_products, :column =>[:filter_id, :product_id])
+    remove_index(:filters_products, :column => [:filter_id, :product_id])
 
     drop_table :filters_products
   end

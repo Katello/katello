@@ -105,12 +105,12 @@ class Api::V1::NodesController < Api::V1::ApiController
   api :POST, "/nodes/:id/sync", "Syncronize a Katello node"
   param :environment_id, :identifier, :desc => "Limit sync to a single environment"
   def sync
-    task = @node.sync(:environment=>@environment)
+    task = @node.sync(:environment => @environment)
     respond_for_async :resource => task
   end
 
   api :PUT, "/nodes/:id", "Update a Katello Node"
-  param :system_id, :identifier, :required => true, :desc=>"Associated system id"
+  param :system_id, :identifier, :required => true, :desc => "Associated system id"
   param :environment_ids, Array, :desc => "List of environment ids the node should be associated with"
   def update
     attrs = params[:node].clone

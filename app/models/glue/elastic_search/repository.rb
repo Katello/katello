@@ -18,8 +18,8 @@ module Glue::ElasticSearch::Repository
     base.send :include, Ext::IndexedModel
 
     base.class_eval do
-      index_options :extended_json=>:extended_index_attrs,
-                    :json=>{:except=>[:pulp_repo_facts, :feed_cert]}
+      index_options :extended_json => :extended_index_attrs,
+                    :json => {:except => [:pulp_repo_facts, :feed_cert]}
 
       mapping do
         indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
@@ -32,10 +32,10 @@ module Glue::ElasticSearch::Repository
     end
 
     def extended_index_attrs
-      {:environment=>self.environment.name, :environment_id=>self.environment.id, :clone_ids=>self.clones.pluck(:pulp_id),
-       :product=>self.product.name, :product_id=> self.product.id,
-       :default_content_view=>self.content_view_version.has_default_content_view?,
-       :name_sort=>self.name }
+      {:environment => self.environment.name, :environment_id => self.environment.id, :clone_ids => self.clones.pluck(:pulp_id),
+       :product => self.product.name, :product_id => self.product.id,
+       :default_content_view => self.content_view_version.has_default_content_view?,
+       :name_sort => self.name }
     end
 
     def update_related_index

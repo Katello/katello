@@ -30,7 +30,7 @@ class Provider < ActiveRecord::Base
 
   belongs_to :organization
   belongs_to :task_status
-  belongs_to :discovery_task, :class_name=>'TaskStatus'
+  belongs_to :discovery_task, :class_name => 'TaskStatus'
   has_many :products, :inverse_of => :provider
   has_many :repositories, through: :products
 
@@ -166,7 +166,7 @@ class Provider < ActiveRecord::Base
     raise _("Repository Discovery already in progress") if self.discovery_task && !self.discovery_task.finished?
     raise _("Discovery URL not set.") if self.discovery_url.blank?
     self.discovered_repos = []
-    self.discovery_task = self.async(:organization=>self.organization).start_discovery_task(notify)
+    self.discovery_task = self.async(:organization => self.organization).start_discovery_task(notify)
     self.save!
   end
 

@@ -70,7 +70,7 @@ class Api::V2::SystemsController < Api::V1::SystemsController
         :default_field => 'message'
     }
     options[:sort_by] = params[:sort_by] if params[:sort_by]
-    options[:sort_order]= params[:sort_order] if params[:sort_order]
+    options[:sort_order] = params[:sort_order] if params[:sort_order]
 
     if params[:paged]
       options[:page_size] = params[:page_size] || current_user.page_size

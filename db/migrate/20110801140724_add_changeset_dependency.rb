@@ -4,7 +4,7 @@ class AddChangesetDependency < ActiveRecord::Migration
       t.integer :changeset_id
       t.string :package_id
       t.string :display_name
-      t.references :product, :null=>false
+      t.references :product, :null => false
     end
   end
 

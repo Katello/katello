@@ -32,7 +32,7 @@ module Glue::Pulp::ConsumerGroup
     def set_pulp_consumer_group
       consumer_ids = self.systems.collect { |system| system.uuid }
       Rails.logger.debug "creating pulp consumer group '#{self.pulp_id}'"
-      Katello.pulp_server.extensions.consumer_group.create(self.pulp_id, :description=>self.description, :consumer_ids=>(consumer_ids || []))
+      Katello.pulp_server.extensions.consumer_group.create(self.pulp_id, :description => self.description, :consumer_ids => (consumer_ids || []))
     rescue => e
       Rails.logger.error "Failed to create pulp consumer group #{self.pulp_id}: #{e}, #{e.backtrace.join("\n")}"
       raise e

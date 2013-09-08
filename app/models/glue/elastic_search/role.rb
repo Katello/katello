@@ -15,8 +15,8 @@ module Glue::ElasticSearch::Role
     base.send :include, Ext::IndexedModel
 
     base.class_eval do
-      index_options :extended_json=>:extended_index_attrs,
-                    :display_attrs=>[:name, :permissions, :description]
+      index_options :extended_json => :extended_index_attrs,
+                    :display_attrs => [:name, :permissions, :description]
 
       mapping do
         indexes :name, :type => 'string', :analyzer => :kt_name_analyzer

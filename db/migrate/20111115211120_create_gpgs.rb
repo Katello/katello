@@ -6,7 +6,7 @@ class CreateGpgs < ActiveRecord::Migration
       t.text :content, :null => false
       t.timestamps
     end
-    add_index(:gpg_keys, [:organization_id, :name], :unique=>true)
+    add_index(:gpg_keys, [:organization_id, :name], :unique => true)
   end
 
   def self.down

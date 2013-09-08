@@ -10,7 +10,7 @@ class AddContentFilters < ActiveRecord::Migration
       t.string :type
       t.text :parameters
       t.references :filter, :null => false
-      t.boolean :inclusion, :default=> true
+      t.boolean :inclusion, :default => true
       t.timestamps
     end
 
@@ -38,7 +38,7 @@ class AddContentFilters < ActiveRecord::Migration
 
     remove_index :filters_repositories, :column => :filter_id
     remove_index :filters_repositories, :column => :repository_id
-    remove_index(:filters_repositories, :column =>[:filter_id, :repository_id])
+    remove_index(:filters_repositories, :column => [:filter_id, :repository_id])
 
     drop_table :filters_repositories
     drop_table :filter_rules

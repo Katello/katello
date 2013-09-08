@@ -159,7 +159,7 @@ module Glue::Candlepin::Product
 
     def set_product
       Rails.logger.debug "Creating a product in candlepin: #{name}"
-      self.attrs ||=  [{:name=>"arch", :value=>"ALL"}]
+      self.attrs ||=  [{:name => "arch", :value => "ALL"}]
       json = Resources::Candlepin::Product.create({
         :name => self.name,
         :multiplier => self.multiplier || 1,
@@ -324,7 +324,7 @@ module Glue::Candlepin::Product
         #called when sync schedule changed, repo added, repo deleted
         pre_queue.create(:name => "update content in candlein: #{self.name}", :priority => 1, :action => [self, :update_content])
       when :promote
-        #queue.create(:name => "update candlepin product: #{self.name}", :priority =>3, :action => [self, :update_content])
+        #queue.create(:name => "update candlepin product: #{self.name}", :priority => 3, :action => [self, :update_content])
       end
     end
 

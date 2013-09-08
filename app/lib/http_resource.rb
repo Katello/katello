@@ -158,7 +158,7 @@ class HttpResource
 
     def join_path(*args)
       args.inject("") do |so_far, current|
-        so_far << '/' if (!so_far.empty? && so_far[so_far.length-1].chr != '/') || current[0].chr != '/'
+        so_far << '/' if (!so_far.empty? && so_far[so_far.length - 1].chr != '/') || current[0].chr != '/'
         so_far << current.strip
       end
     end

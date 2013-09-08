@@ -95,7 +95,7 @@ class PulpSyncStatus < PulpTaskStatus
       result = FINISHED if result == HISTORY_SUCCESS
       {
           :state =>  result,
-          :progress => {:details=> history["details"]},
+          :progress => {:details => history["details"]},
           :finish_time => history['completed'],
           :start_time => history['started']
       }.with_indifferent_access

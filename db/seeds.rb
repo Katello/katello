@@ -10,7 +10,7 @@ require 'util/puppet'
 # variables which are taken from Puppet
 first_user_name = (un = Util::Puppet.config_value("user_name")).blank? ? 'admin' : un
 first_user_password = (pw = Util::Puppet.config_value("user_pass")).blank? ? 'admin' : pw
-first_user_email= (em = Util::Puppet.config_value("user_email")).blank? ? 'root@localhost' : em
+first_user_email = (em = Util::Puppet.config_value("user_email")).blank? ? 'root@localhost' : em
 first_org_name = (org = Util::Puppet.config_value("org_name")).blank? ? 'ACME_Corporation' : org
 first_org_label = (lbl = Util::Puppet.config_value("org_label")).blank? ? 'ACME_Corporation' : lbl
 
@@ -47,7 +47,7 @@ unless hidden_user = User.hidden.first
     :username => "hidden-#{Password.generate_random_string(6)}",
     :password => Password.generate_random_string(25),
     :email => "#{Password.generate_random_string(10)}@localhost",
-    :hidden=>true)
+    :hidden => true)
   hidden_user.save!
 end
 raise "Unable to create hidden user: #{format_errors hidden_user}" if hidden_user.nil? || hidden_user.errors.size > 0

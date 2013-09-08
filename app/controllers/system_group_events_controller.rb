@@ -33,7 +33,7 @@ class SystemGroupEventsController < ApplicationController
   end
 
   def index
-    render :partial=>'system_groups/events/index', :locals=>{:group => @group, :jobs => jobs}
+    render :partial => 'system_groups/events/index', :locals => {:group => @group, :jobs => jobs}
   end
 
   def show
@@ -41,8 +41,8 @@ class SystemGroupEventsController < ApplicationController
     if job.nil?
       render :nothing => true
     else
-      render :partial=>'system_groups/events/show',
-             :locals=>{:group => @group, :job =>job}
+      render :partial => 'system_groups/events/show',
+             :locals => {:group => @group, :job => job}
     end
   end
 
@@ -90,7 +90,7 @@ class SystemGroupEventsController < ApplicationController
   def items
     render_proc = lambda do |items, options|
       if items && !items.empty?
-        render_to_string(:partial => 'system_groups/events/more_items', :locals => {:cycle_extra => false, :group => @group, :jobs=> items})
+        render_to_string(:partial => 'system_groups/events/more_items', :locals => {:cycle_extra => false, :group => @group, :jobs => items})
       else
         "<tr><td>" + _("No events matching your search criteria.") + "</td></tr>"
       end

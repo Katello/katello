@@ -100,7 +100,7 @@ class SystemGroupsController < ApplicationController
 
     notify.success _("System Group %{new_group} created successfully as a copy of system group %{group}.") % {:new_group => new_group.name, :group => @group.name}
 
-    render :partial => "system_groups/list_group", :locals=> {:item => new_group, :accessor => "id",
+    render :partial => "system_groups/list_group", :locals => {:item => new_group, :accessor => "id",
                                                               :name => controller_display_name}
   end
 
@@ -177,7 +177,7 @@ class SystemGroupsController < ApplicationController
         :name => controller_display_name,
         :ajax_scroll => items_system_groups_path,
         :enable_create => SystemGroup.creatable?(current_organization),
-        :initial_action =>:systems,
+        :initial_action => :systems,
         :list_partial => 'system_groups/list_groups',
         :ajax_load => true,
         :search_class => SystemGroup

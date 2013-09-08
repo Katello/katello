@@ -27,7 +27,7 @@ module Util
         if params[key].is_a?(Hash)
           scrub(params[key], &block_to_match)
         elsif block_to_match.call(key, params[key])
-          params[key]="[FILTERED]"
+          params[key] = "[FILTERED]"
         end
       end
       params

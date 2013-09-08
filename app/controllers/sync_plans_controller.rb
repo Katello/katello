@@ -39,7 +39,7 @@ class SyncPlansController < ApplicationController
 
   def items
     render_panel_direct(SyncPlan, @panel_options, params[:search], params[:offset], [:name_sort, :asc],
-                        {:default_field => :name, :filter=>{:organization_id=>[current_organization.id]}})
+                        {:default_field => :name, :filter => {:organization_id => [current_organization.id]}})
 
   end
 
@@ -53,12 +53,12 @@ class SyncPlansController < ApplicationController
                  :ajax_load => true,
                  :ajax_scroll => items_sync_plans_path,
                  :enable_create => current_organization.syncable?,
-                 :search_class=>SyncPlan}
+                 :search_class => SyncPlan}
   end
 
   def edit
     render :partial => "edit",
-           :locals => {:plan=>@plan, :editable=> current_organization.syncable?, :name=>controller_display_name }
+           :locals => {:plan => @plan, :editable => current_organization.syncable?, :name => controller_display_name }
   end
 
   def update
@@ -103,11 +103,11 @@ class SyncPlansController < ApplicationController
       notify.success N_("Sync plan '%s' was deleted.") % @plan[:name]
     end
 
-    render :partial => "common/list_remove", :locals => {:id=>params[:id], :name=>controller_display_name}
+    render :partial => "common/list_remove", :locals => {:id => params[:id], :name => controller_display_name}
   end
 
   def show
-    render :partial => "common/list_update", :locals=>{:item=>@plan, :accessor=>"id", :columns=>%w(name interval)}
+    render :partial => "common/list_update", :locals => {:item => @plan, :accessor => "id", :columns => %w(name interval)}
   end
 
   def new
@@ -133,7 +133,7 @@ class SyncPlansController < ApplicationController
     notify.success N_("Sync Plan '%s' was created.") % @plan['name']
 
     if search_validate(SyncPlan, @plan.id, params[:search])
-      render :partial=>"common/list_item", :locals=>{:item=>@plan, :accessor=>"id", :columns=>%w(name interval), :name=>controller_display_name}
+      render :partial => "common/list_item", :locals => {:item => @plan, :accessor => "id", :columns => %w(name interval), :name => controller_display_name}
     else
       notify.message _("'%s' did not meet the current search criteria and is not being shown.") % @plan["name"]
       render :json => { :no_match => true }

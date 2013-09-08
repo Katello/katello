@@ -2,7 +2,7 @@ class CreateJobs < ActiveRecord::Migration
   def self.up
     create_table :jobs do |t|
       t.references :job_owner, :polymorphic => true
-      t.string :pulp_id, :null=>false
+      t.string :pulp_id, :null => false
     end
 
     create_table :job_tasks do |t|

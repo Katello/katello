@@ -35,7 +35,7 @@ class DashboardController < ApplicationController
   end
 
   def sync
-    render :partial=>"sync", :locals=>{:quantity=> quantity}
+    render :partial => "sync", :locals => {:quantity => quantity}
   end
 
   def errata
@@ -71,27 +71,27 @@ class DashboardController < ApplicationController
   end
 
   def content_views
-    render :partial=>"content_views", :locals=>{:quantity=>quantity}
+    render :partial => "content_views", :locals => {:quantity => quantity}
   end
 
   def promotions
-    render :partial=>"promotions", :locals=>{:quantity=>quantity}
+    render :partial => "promotions", :locals => {:quantity => quantity}
   end
 
   def systems
-    render :partial=>"systems", :locals=>{:quantity=>quantity}
+    render :partial => "systems", :locals => {:quantity => quantity}
   end
 
   def system_groups
-    render :partial=>"system_groups", :locals=>{:quantity=>quantity}
+    render :partial => "system_groups", :locals => {:quantity => quantity}
   end
 
   def subscriptions
-    render :partial=>"subscriptions", :locals=>{:quantity=>quantity}
+    render :partial => "subscriptions", :locals => {:quantity => quantity}
   end
 
   def notices
-    render :partial=>"notices", :locals=>{:quantity=>quantity}
+    render :partial => "notices", :locals => {:quantity => quantity}
   end
 
   private

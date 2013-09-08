@@ -38,6 +38,6 @@ module SubscriptionsHelper
   def subscriptions_candlepin_status
     Resources::Candlepin::CandlepinPing.ping
   rescue
-    {'rulesVersion'=>'', 'rulesSource'=>''}
+    {'rulesVersion' => '', 'rulesSource' => ''}
   end
 end
