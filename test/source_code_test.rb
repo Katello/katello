@@ -202,7 +202,7 @@ Multiple anonymous placeholders:
     it 'should be up to date' do
       message = 'The schema is not up to date. Please run db:migrate and check in db/schema.rb or db/structure.rb'
       schema_dirs = Dir.glob('db/migrate/*.rb') + Dir.glob('engines/*/db/migrate/*.rb')
-      schema_version = schema_dirs.sort.last[/db\/migrate\/(\d+).*.rb/, 1]
+      schema_version = schema_dirs.collect{ |f| File.basename(f) }.sort.last[/(\d+).*.rb/, 1]
       actual_version = if File.exist? 'db/schema.rb'
                          File.read('db/schema.rb')[/^ActiveRecord::Schema.define\(\:version \=\> (\d+)\) do/, 1]
                        elsif File.exist? 'db/structure.sql'
