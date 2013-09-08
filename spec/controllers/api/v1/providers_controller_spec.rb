@@ -192,20 +192,6 @@ describe Api::V1::ProvidersController, :katello => true do
 
   end
 
-  describe "repo discovery" do
-    let(:action) { :discovery }
-    let(:req) { post :discovery, { :id => @provider.id.to_s, :url => 'http://testurl.com/path/' } }
-    let(:authorized_user) { user_with_write_permissions }
-    let(:unauthorized_user) { user_without_write_permissions }
-    it_should_behave_like "protected action"
-
-    it "should call into Repo discovery" do
-      @provider.should_receive(:discover_repos)
-      @provider.should_receive(:discovery_url=).with('http://testurl.com/path/')
-      req
-    end
-  end
-
   describe "refresh products" do
 
     let(:action) { :refresh_products }

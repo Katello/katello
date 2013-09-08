@@ -104,6 +104,10 @@ class TaskStatus < ActiveRecord::Base
     ((self.state != TaskStatus::Status::WAITING.to_s) && (self.state != TaskStatus::Status::RUNNING.to_s))
   end
 
+  def canceled?
+    self.state == TaskStatus::Status::CANCELED.to_s
+  end
+
   def error?
     (self.state == TaskStatus::Status::ERROR.to_s)
   end
