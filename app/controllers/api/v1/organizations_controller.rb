@@ -12,7 +12,8 @@
 
 class Api::V1::OrganizationsController < Api::V1::ApiController
 
-  before_filter :find_organization, :only => [:show, :update, :destroy, :auto_attach_all_systems]
+  before_filter :find_organization, :only => [:show, :update, :destroy, :repo_discover,
+                                              :auto_attach_all_systems]
 
   respond_to :json
   before_filter :authorize
@@ -33,7 +34,8 @@ class Api::V1::OrganizationsController < Api::V1::ApiController
       :create  => create_test,
       :update  => edit_test,
       :destroy => delete_test,
-      :auto_attach_all_systems => edit_test
+      :auto_attach_all_systems => edit_test,
+      :repo_discover => edit_test
     }
   end
 
@@ -76,6 +78,14 @@ class Api::V1::OrganizationsController < Api::V1::ApiController
   def update
     @organization.update_attributes!(params[:organization])
     respond
+  end
+
+  api :PUT, "/organizations/:id/repo_discover", "Discover Repositories"
+  param :url, String, :desc => "base url to perform repo discovery on"
+  def repo_discover
+    fail _("url not defined.") if params[:url].blank?
+    task = @organization.discover_repos(params[:url])
+    respond_for_async :resource => task
   end
 
   api :DELETE, "/organizations/:id", "Destroy an organization. Asynchronous operation."
