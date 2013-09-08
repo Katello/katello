@@ -52,3 +52,27 @@ angular.module('Bastion.systems').factory('SystemSubscriptions',
         });
     }]
 );
+
+/**
+ * @ngdoc service
+ * @name  Katello.systems.factory:BulkAction
+ *
+ * @requires $resource
+ * @requires Routes
+ *
+ * @description
+ *   Provides a $resource for bulk actions on systems.
+ */
+angular.module('Bastion.systems').factory('BulkAction',
+    ['$resource', 'Routes',
+    function($resource, Routes) {
+        return $resource(Routes.apiSystemsPath() + '/:action', {}, {
+            addSystemGroups: {method: 'PUT', params: {action: 'add_system_groups'}},
+            removeSystemGroups: {method: 'PUT', params: {action: 'remove_system_groups'}},
+            installContent: {method: 'PUT', params: {action: 'install_content'}},
+            updateContent: {method: 'PUT', params: {action: 'update_content'}},
+            removeContent: {method: 'PUT', params: {action: 'remove_content'}},
+            removeSystems: {method: 'PUT', params: {action: 'destroy'}}
+        });
+    }]
+);

@@ -61,11 +61,15 @@ angular.module('Bastion.systems').controller('SystemsController',
 
         $scope.removeSystem = function (system) {
             system.$remove(function() {
-                nutupane.removeRow(system);
+                $scope.removeRow(system);
                 $scope.saveSuccess = true;
                 $scope.successMessages = [i18nFilter('System %s has been deleted.'.replace('%s', system.name))];
                 $scope.transitionTo('systems.index');
             });
+        };
+
+        $scope.removeRow = function(system) {
+            nutupane.removeRow(system);
         };
     }]
 );

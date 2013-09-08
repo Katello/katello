@@ -82,6 +82,12 @@ Src::Application.routes.draw do
         end
         collection do
           match "/tasks/:task_id" => "systems#task", :via => :get
+          match '/add_system_groups' => 'systems_bulk_actions#bulk_add_system_groups', :via => :put
+          match '/remove_system_groups' => 'systems_bulk_actions#bulk_remove_system_groups', :via => :put
+          match '/install_content' => 'systems_bulk_actions#install_content', :via => :put
+          match '/update_content' => 'systems_bulk_actions#update_content', :via => :put
+          match '/remove_content' => 'systems_bulk_actions#remove_content', :via => :put
+          match '/destroy' => 'systems_bulk_actions#destroy_systems', :via => :put
         end
         api_resources :subscriptions, :only => [:create, :index, :destroy] do
           collection do

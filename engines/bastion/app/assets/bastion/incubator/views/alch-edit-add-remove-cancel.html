@@ -1,0 +1,25 @@
+<div ng-show="workingMode">
+  <i class="icon-spinner inline-icon icon-spin"></i>
+  <span>{{ "Working" | i18n }}</span>
+</div>
+
+<button class="btn small"
+        ng-click="add()"
+        ng-disabled="disableSave"
+        ng-show="editMode && !workingMode">
+  {{ "Add" | i18n }}
+</button>
+
+<button class="btn small"
+        ng-click="remove()"
+        ng-disabled="disableSave"
+        ng-show="editMode && !workingMode">
+  {{ "Remove" | i18n }}
+</button>
+
+<button class="btn small"
+        ng-click="cancel()"
+        ng-show="editMode && !workingMode"
+        ng-disabled="disableCancel">
+  {{ "Cancel" | i18n }}
+</button>
