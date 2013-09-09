@@ -51,6 +51,8 @@ class Organization < ActiveRecord::Base
   #older association
   has_many :org_tasks, :dependent => :destroy, :class_name => "TaskStatus", :inverse_of => :organization
 
+  has_many :notices, :dependent => :destroy
+
   serialize :default_info, Hash
 
   attr_accessor :statistics

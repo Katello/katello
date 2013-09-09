@@ -29,8 +29,8 @@ class Provider < ActiveRecord::Base
   serialize :discovered_repos, Array
 
   belongs_to :organization
-  belongs_to :task_status
-  belongs_to :discovery_task, :class_name => 'TaskStatus'
+  belongs_to :task_status, :dependent => :destroy
+  belongs_to :discovery_task, :class_name => 'TaskStatus', :dependent => :destroy
   has_many :products, :inverse_of => :provider
   has_many :repositories, through: :products
 
