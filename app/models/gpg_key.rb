@@ -25,6 +25,7 @@ class GpgKey < ActiveRecord::Base
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name
   validates :content, :presence => true
   validates_with Validators::ContentValidator, :attributes => :content
+  validates_with Validators::GpgKeyContentValidator, :attributes => :content
   validates_length_of :content, :maximum => MAX_CONTENT_LENGTH
   validates_presence_of :organization
   validates_uniqueness_of :name, :scope => :organization_id, :message => N_("Label has already been taken")
