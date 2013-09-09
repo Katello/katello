@@ -29,7 +29,7 @@ Src::Application.routes.draw do
         api_resources :products, :only => [:index]
         api_resources :environments
         api_resources :sync_plans, :only => [:index, :create]
-        api_resources :tasks, :only => [:index]
+        api_resources :tasks, :only => [:index, :show]
         api_resources :providers, :only => [:index], :constraints => {:organization_id => /[^\/]*/}
         scope :constraints => RegisterWithActivationKeyContraint.new do
           match '/systems' => 'systems#activate', :via => :post

@@ -40,7 +40,7 @@
       <div class="confirmation_text" ng-show="systemGroups.action == 'remove'">
         {{ "Are you sure you want to remove the %systemCount systems(s) selected from the system group(s) chosen?" | i18n: {systemCount: getSelectedSystemIds().length} }}
       </div>
-      <button class="btn small" ng-click="systemGroups.confirm=false">{{ "No" | i18n }}</button>
+      <button class="btn small" ng-click="systemGroups.confirm = false">{{ "No" | i18n }}</button>
       <button class="btn small" ng-click="performSystemGroupAction()">{{ "Yes" | i18n }}</button>
     </div>
 
@@ -130,5 +130,30 @@
 
     </form>
 
+    <div class="divider"></div>
+  </section>
+</div>
+
+<div class="details">
+  <section>
+    <h4>{{ "System Subscriptions" | i18n }}</h4>
+    <button class="btn"
+            ng-click="subscription.confirm = true"
+            ng-disabled="subscription.workingMode">
+      {{ "Auto-attach available subscriptions to all systems" | i18n }}
+    </button>
+
+    <span ng-show="subscription.workingMode">
+      <i class="icon-spinner inline-icon icon-spin"></i>
+      <span>{{ "Working" | i18n }}</span>
+    </span>
+
+    <div class="inline-confirmation" ng-show="subscription.confirm">
+      <div class="confirmation_text">
+        {{ "Are you sure you want to auto-attach available subscriptions to all %systemCount systems?" | i18n: {systemCount: table.resource.total} }}
+      </div>
+      <button class="btn small" ng-click="subscription.confirm = false">{{ "No" | i18n }}</button>
+      <button class="btn small" ng-click="performAutoAttachSubscriptions()">{{ "Yes" | i18n }}</button>
+    </div>
   </section>
 </div>

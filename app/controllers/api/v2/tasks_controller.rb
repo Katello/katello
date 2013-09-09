@@ -14,4 +14,11 @@ class Api::V2::TasksController < Api::V1::TasksController
 
   include Api::V2::Rendering
 
+  private
+
+  def find_task
+    @task = TaskStatus.find_by_id!(params[:id])
+    @organization = @task.organization
+  end
+
 end

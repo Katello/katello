@@ -19,6 +19,8 @@
  * @requires $q
  * @requires BulkAction
  * @requires SystemGroup
+ * @requires Organization
+ * @requires Task
  * @requires i18nFilter
  *
  * @description
@@ -26,7 +28,9 @@
  */
 angular.module('Bastion.systems').controller('SystemsBulkActionController',
     ['$scope', '$q', 'BulkAction', 'SystemGroup', 'i18nFilter',
-    function($scope, $q, BulkAction, SystemGroup, i18nFilter) {
+     'Organization', 'Task',
+    function($scope, $q, BulkAction, SystemGroup, i18nFilter,
+        Organization, Task) {
 
         $scope.actionResource = new BulkAction();
 
@@ -52,6 +56,11 @@ angular.module('Bastion.systems').controller('SystemsBulkActionController',
             workingMode: false,
             placeholder: i18nFilter('Enter Package Name(s)...'),
             contentType: 'package'
+        };
+
+        $scope.subscription = {
+            confirm: false,
+            workingMode: false
         };
 
         $scope.removeSystems = function() {
@@ -173,6 +182,31 @@ angular.module('Bastion.systems').controller('SystemsBulkActionController',
             return _.pluck(filteredRows, 'id');
         };
 
+        $scope.performAutoAttachSubscriptions = function() {
+            var success, error, deferred = $q.defer();
+
+            $scope.subscription.confirm = false;
+            $scope.subscription.workingMode = true;
+
+            success = function(scheduledTask) {
+                deferred.resolve(scheduledTask);
+                $scope.subscription.autoAttachTask = scheduledTask;
+                Task.poll(scheduledTask, function(polledTask) {
+                    $scope.subscription.autoAttachTask = polledTask;
+                    $scope.subscription.workingMode = false;
+                });
+            };
+
+            error = function(error) {
+                deferred.reject(error.data["errors"]);
+                $scope.subscription.workingMode = false;
+            };
+
+            Organization.autoAttach({}, success, error);
+
+            return deferred.promise;
+        };
+
         function installContent(content) {
             var success, error, deferred = $q.defer();
 
@@ -257,5 +291,26 @@ angular.module('Bastion.systems').controller('SystemsBulkActionController',
             $scope.actionResource['ids'] = $scope.getSelectedSystemIds();
         }
 
+        function autoAttachSubscriptionsInProgress() {
+            // Check to see if an 'auto attach subscriptions' action is currently in progress.
+            // If it is, poll on the associated task, until it is completed.
+            Organization.query(function(organization) {
+                if (organization['owner_auto_attach_all_systems_task_id'] !== null) {
+
+                    Task.query({'id' : organization['owner_auto_attach_all_systems_task_id']}, function(task) {
+                        $scope.subscription.autoAttachTask = task;
+
+                        if (task['pending?']) {
+                            $scope.subscription.workingMode = true;
+                            Task.poll(task, function(polledTask) {
+                                $scope.subscription.autoAttachTask = polledTask;
+                                $scope.subscription.workingMode = false;
+                            });
+                        }
+                    });
+                }
+            });
+        }
+        autoAttachSubscriptionsInProgress();
     }]
 );
