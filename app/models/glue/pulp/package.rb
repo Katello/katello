@@ -13,7 +13,7 @@
 module Glue::Pulp::Package
 
   #fields we use to trim down our unit association calls to pulp
-  PULP_SELECT_FIELDS = ['name', 'epoch', 'version', 'release', 'arch', 'checksumtype', 'checksum']
+  PULP_SELECT_FIELDS = %w(name epoch version release arch checksumtype checksum)
 
   def self.included(base)
     base.send :include, InstanceMethods
@@ -43,11 +43,11 @@ module Glue::Pulp::Package
     def initialize(params = {})
       params.delete(:repodata)
       params[:repoids] =  params.delete(:repository_memberships) if params.has_key?(:repository_memberships)
-      params.each_pair {|k,v| instance_variable_set("@#{k}", v) unless v.nil? }
+      params.each_pair {|k, v| instance_variable_set("@#{k}", v) unless v.nil? }
     end
 
     def nvrea
-      Util::Package::build_nvrea(self.as_json.with_indifferent_access, false)
+      Util::Package.build_nvrea(self.as_json.with_indifferent_access, false)
     end
 
     def sortable_version
