@@ -17,7 +17,8 @@ describe('Controller: SystemDetailsController', function() {
         System,
         mockSystem;
 
-    beforeEach(module('Bastion.systems', 'systems/views/systems.html'));
+    beforeEach(module('Bastion.systems',
+                       'systems/views/systems.html'));
 
     beforeEach(module(function($stateProvider) {
         $stateProvider.state('systems.fake', {});

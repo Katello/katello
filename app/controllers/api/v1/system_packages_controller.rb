@@ -98,9 +98,9 @@ class Api::V1::SystemPackagesController < Api::V1::ApiController
   end
 
   def validate_package_list_format(packages)
-    packages.each do |package_name|
-      if !valid_package_name?(package_name)
-        raise HttpErrors::BadRequest.new(_("%s is not a valid package name") % package_name)
+    packages.each do |package|
+      if !valid_package_name?(package) && !package.is_a?(Hash)
+        raise HttpErrors::BadRequest.new(_("%s is not a valid package name") % package)
       end
     end
 

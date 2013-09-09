@@ -198,9 +198,11 @@ class TaskStatus < ActiveRecord::Base
     # such as System Event history.
     details = TaskStatus::TYPES[self.task_type]
     return _("Non-system event") if details.nil?
+
     case details[:type]
     when :package
       p = self.parameters[:packages]
+      first_package = p.first.is_a?(Hash) ? p.first[:name] : p.first
       unless p && p.length > 0
         if "package_update" == self.task_type
           case self.overall_status
@@ -214,10 +216,10 @@ class TaskStatus < ActiveRecord::Base
             return _("all packages update")
           end
         end
-        return ""
       end
+
       msg = details[:event_messages][self.overall_status]
-      return n_(msg[1], msg[2], p.length) % { package: p.first, total: p.length - 1 }
+      return n_(msg[1], msg[2], p.length) % { package: first_package, total: p.length - 1 }
     when :candlepin_event
       return self.result
     when :package_group
@@ -273,18 +275,18 @@ class TaskStatus < ActiveRecord::Base
   end
 
   def generate_description
-    ret = ""
+    ret = []
     task_type = self.task_type.to_s
 
     if task_type =~ /^package_group/
       action = task_type.include?("remove") ? :removed : :installed
-      ret << packages_change_description(result[:details][:package_group], action)
+      ret = packages_change_description(result[:details][:package_group], action)
     elsif task_type == "package_install" || task_type == "errata_install"
-      ret << packages_change_description(result[:details][:rpm], :installed)
+      ret = packages_change_description(result[:details][:rpm], :installed)
     elsif task_type == "package_update"
-      ret << packages_change_description(result[:details][:rpm], :updated)
+      ret = packages_change_description(result[:details][:rpm], :updated)
     elsif task_type == "package_remove"
-      ret << packages_change_description(result[:details][:rpm], :removed)
+      ret = packages_change_description(result[:details][:rpm], :removed)
     end
     ret
   end
@@ -361,30 +363,33 @@ class TaskStatus < ActiveRecord::Base
   end
 
   def packages_change_description(data, action)
-    ret = ""
+    ret = []
 
-    unless data.nil?
+    data ||= {}
+    data[:details] ||= {}
+    data[:details][:resolved] ||= []
+    data[:details][:deps] ||= []
+
+    packages = data[:details][:resolved] + data[:details][:deps]
+    if packages.empty?
+      case action
+      when :updated
+        ret << _("No packages updated")
+      when :removed
+        ret << _("No packages removed")
+      else
+        ret << _("No new packages installed")
+      end
+    else
       if data[:succeeded]
-        packages = data.nil? ? [] : (data[:details][:resolved] + data[:details][:deps])
-        if packages.empty?
-          case action
-          when :updated
-            ret << _("No packages updated")
-          when :removed
-            ret << _("No packages removed")
-          else
-            ret << _("No new packages installed")
-          end
-        else
-          ret << packages.map do |package_attrs|
-            package_attrs[:qname]
-          end.join("\n")
+        ret = packages.map do |package_attrs|
+          package_attrs[:qname]
         end
       else
         ret << data[:details][:message]
       end
     end
-    ret
+    ret.sort
   end
 
 end

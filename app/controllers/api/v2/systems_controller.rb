@@ -18,6 +18,7 @@ class Api::V2::SystemsController < Api::V1::SystemsController
   def rules
     hash = super
     hash[:tasks] = lambda{find_system && @system.readable?}
+    hash[:task] = lambda{true}
     hash
   end
 
@@ -58,6 +59,31 @@ class Api::V2::SystemsController < Api::V1::SystemsController
     respond_for_create
   end
 
+  api :GET, "/systems/:id/packages", "List packages installed on the system"
+  param :id, String, :desc => "UUID of the system", :required => true
+  def package_profile
+    packages = @system.simple_packages.sort { |a, b| a.name.downcase <=> b.name.downcase }
+    response = {
+      :records  => packages,
+      :subtotal => packages.size,
+      :total    => packages.size
+    }
+    respond_for_index :collection => response
+  end
+
+  api :GET, "/systems/:id/errata", "List errata available for the system"
+  param :id, String, :desc => "UUID of the system", :required => true
+  def errata
+    errata = @system.errata
+    response = {
+      :records  => errata.sort_by{ |e| e.issued }.reverse,
+      :subtotal => errata.size,
+      :total    => errata.size
+    }
+
+    respond_for_index :collection => response
+  end
+
   api :GET, "/systems/:id/tasks", "List async tasks for the system"
   def tasks
     query_string = params[:name] ? "name:#{params[:name]}" : params[:search]
@@ -86,6 +112,13 @@ class Api::V2::SystemsController < Api::V1::SystemsController
     }
 
     respond_for_index(:collection => tasks)
+  end
+
+  api :GET, "/systems/task/:task_id", "Grab a single system task"
+  param :task_id, String, :desc => "Id of the task", :required => true
+  def task
+    task = TaskStatus.find(params[:task_id]).refresh
+    respond_for_show(:resource => task, :template => :task)
   end
 
 end
