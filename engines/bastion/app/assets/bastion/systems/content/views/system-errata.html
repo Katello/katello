@@ -1,0 +1,58 @@
+<div><h3>{{ "Applicable Errata" | i18n }}</h3></div>
+
+<section class="nutupane-sub-section" >
+
+  <div class="nutupane-actionbar">
+    <div class="form">
+      <input type="text"
+             class="input input-search"
+             placeholder="{{ 'Filter' | i18n }}"
+             ng-model="errataTable.errataFilterTerm">
+      <span class="result-count">{{ "Showing %total Errata" | i18n: {total: errataTable.resource.total} }}</span>
+    </div>
+
+    <div ng-hide="system.readonly" class="nutupane-actions fr">
+       <button class="btn btn-primary" ng-disabled="errataTable.getSelected().length == 0" ng-click="applySelected()">
+         {{ "Apply Selected" | i18n }}
+       </button>
+    </div>
+
+    <div class="fr select-action">
+      <span>{{ "%total Selected" | i18n: {total: errataTable.numSelected} }}</span>
+      <span>|</span>
+      <a class="deselect-action"
+         ng-class="{ 'disabled-link' : errataTable.numSelected == 0 }"
+         ng-click="errataTable.selectAll(false)">
+        {{ "Deselect All" | i18n }}
+      </a>
+    </div>
+  </div>
+
+  <div alch-table="errataTable">
+    <div alch-container-scroll control-width="table" alch-infinite-scroll="table.nextPage()">
+      <table ng-class="{'table-mask': table.working}" class="table table-full table-striped">
+        <thead>
+          <tr alch-table-head row-select>
+            <th alch-table-column="type" >{{ "Type" | i18n }} </th>
+            <th alch-table-column="errata_id" >{{ "Id" | i18n }}</th>
+            <th alch-table-column="title" >{{ "Title" | i18n }} </th>
+            <th alch-table-column="issued" >{{ "Issued" | i18n }} </th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr alch-table-row ng-repeat="erratum in table.rows | filter:table.errataCompare" row-select>
+            <td alch-table-cell >{{ erratum.type }}</td>
+            <td alch-table-cell >
+              <a ng-click="table.transitionToErratum(erratum)">
+                {{ erratum.errata_id }}
+              </a>
+            </td>
+            <td alch-table-cell >{{ erratum.title }}</td>
+            <td alch-table-cell >{{ erratum.issued }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>

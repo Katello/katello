@@ -31,7 +31,7 @@ module Glue::Pulp::Consumer
                                                        end)
       lazy_accessor :errata, :initializer => (lambda do |s|
                                                 Katello.pulp_server.extensions.consumer.applicable_errata(uuid).
-                                                  map{|k, v| v.values}.flatten.map{|e| Errata.new(e[:details])}
+                                                  map{|k, v| v.values}.flatten.map{|e| ::Errata.new(e[:details])}
                                               end)
     end
   end

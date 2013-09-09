@@ -11,29 +11,53 @@
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
  **/
 
-describe('Controller: SystemsEventsController', function() {
-    var $scope, Nutupane;
+describe('Controller: SystemEventDetailsController', function() {
+    var $scope, SystemTask, mockEvent;
 
     beforeEach(module('Bastion.systems', 'Bastion.test-mocks'));
 
     beforeEach(inject(function($controller, $rootScope) {
+        mockEvent = {id: 3, pending: true};
+
+        SystemTask = {
+            get: function(eventId, success) {
+                success(mockEvent);
+                return mockEvent
+            },
+            poll: function(eventId, success) {
+                success(mockEvent);
+            }
+        };
+
         $scope = $rootScope.$new();
         $scope.$stateParams.eventId = '3';
-        $scope.$parent.eventsTable = { rows : [{id:3}]}
-        spyOn($scope, "transitionTo");
 
-        $controller('SystemEventDetailsController', {$scope: $scope});
+        spyOn($scope, "transitionTo");
+        spyOn(SystemTask, "get").andCallThrough();
+        spyOn(SystemTask, "poll").andCallThrough();
+
+        $controller('SystemEventDetailsController', {$scope: $scope, SystemTask: SystemTask});
     }));
 
-    it("redirects back to event list if event is not found", function(){
-        $scope.$parent.eventsTable = { rows : [{id:4}]}
-        $scope.$digest();
-
-        expect($scope.transitionTo).toHaveBeenCalledWith('systems.details.events.index');
+    it("provides a way to go back to event list by default", function() {
+        $scope.transitionBack();
+        expect($scope.transitionTo).toHaveBeenCalledWith('systems.details.events.index', {});
     });
 
-    it("provides a way to go back to event list.", function() {
-        $scope.transitionToIndex();
-        expect($scope.transitionTo).toHaveBeenCalledWith('systems.details.events.index');
+    it("provides a way to go back to any page", function(){
+        var fromParams = {foo:1};
+        $scope.$broadcast('$stateChangeSuccess', '', '', 'blah.blah', fromParams);
+        $scope.transitionBack();
+        expect($scope.transitionTo).toHaveBeenCalledWith('blah.blah', fromParams);
     });
+
+    it("sets event", function() {
+        expect(SystemTask.get).toHaveBeenCalledWith({id: '3'}, jasmine.any(Function));
+        expect($scope.event).toBe(mockEvent);
+    });
+
+    it("polls if needed", function() {
+        expect(SystemTask.poll).toHaveBeenCalledWith(mockEvent, jasmine.any(Function));
+    });
+
 });

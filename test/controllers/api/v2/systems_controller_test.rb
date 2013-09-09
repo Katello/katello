@@ -28,9 +28,9 @@ class Api::V2::SystemsControllerTest < Minitest::Rails::ActionController::TestCa
   end
 
   def permissions
-    @read_permission = UserPermission.new(:read, :systems)
-    @create_permission = UserPermission.new(:create, :systems)
-    @update_permission = UserPermission.new(:update, :systems)
+    @read_permission = UserPermission.new(:read_systems, :organizations, nil, @system.organization)
+    @create_permission = UserPermission.new(:register_systems, :organizations, nil, @system.organization)
+    @update_permission = UserPermission.new(:update_systems, :organizations, nil, @system.organization)
     @no_permission = NO_PERMISSION
   end
 
@@ -38,6 +38,8 @@ class Api::V2::SystemsControllerTest < Minitest::Rails::ActionController::TestCa
     login_user(User.find(users(:admin)))
     @request.env['HTTP_ACCEPT'] = 'application/json'
     System.any_instance.stubs(:releaseVer).returns(1)
+    @fake_search_service = @controller.load_search_service(FakeSearchService.new)
+
     models
     permissions
   end
@@ -90,6 +92,16 @@ class Api::V2::SystemsControllerTest < Minitest::Rails::ActionController::TestCa
     assert_response :success
     assert_template 'api/v2/systems/add_system_groups'
     assert_equal @system.system_group_ids, []
+  end
+
+  def test_task
+    task = TaskStatus.new
+    task.expects(:refresh).returns(task)
+    TaskStatus.stubs(:find).with("blah").returns(task)
+    get :task, :task_id=>"blah"
+
+    assert_template 'api/v2/systems/task'
+    assert_response :success
   end
 
 end
