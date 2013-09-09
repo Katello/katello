@@ -28,14 +28,15 @@ class Changeset < ActiveRecord::Base
   DELETION  = 'deletion'
   TYPES     = [PROMOTION, DELETION]
 
-  validates_inclusion_of :state,
-                         :in          => STATES,
-                         :allow_blank => false,
-                         :message     => "A changeset must have one of the following states: #{STATES.join(', ')}."
-
-  validates :name, :presence => true, :allow_blank => false
-  validates_uniqueness_of :name, :scope => :environment_id, :message => N_("Label has already been taken")
+  validates :name, :presence => true, :allow_blank => true,
+                   :uniqueness => {:scope => :environment_id,
+                                  :message => N_("Label has already been taken")}
   validates :environment, :presence => true
+  validates :state, :inclusion => {:in          => STATES,
+                                   :allow_blank => false,
+                                   :message     => <<-EOS}
+        A changeset must have one of the following states: #{STATES.join(', ')}
+      EOS
   validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
   validates_with Validators::NotInLibraryValidator
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name

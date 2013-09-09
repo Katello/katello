@@ -26,13 +26,10 @@ class SyncPlan < ActiveRecord::Base
   belongs_to :organization
   has_many :products
 
-  validates :name, :presence => true
-  validates_with Validators::KatelloNameFormatValidator, :attributes => :name
-  validates_uniqueness_of :name, :scope => :organization_id
+  validates :name, :presence => true, :uniqueness => {:scope => :organization_id}
+  validates :interval, :inclusion => {:in => TYPES}, :allow_blank => false
   validate :validate_sync_date
-  validates_inclusion_of :interval,
-    :in => TYPES,
-    :allow_blank => false
+  validates_with Validators::KatelloNameFormatValidator, :attributes => :name
   validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
 
   scope :readable, lambda { |org| ::Provider.any_readable?(org) ? where(:organization_id => org.id) : where("0 = 1") }

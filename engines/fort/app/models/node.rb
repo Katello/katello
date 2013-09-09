@@ -17,12 +17,14 @@ class Node < ActiveRecord::Base
 
   belongs_to :system
   has_many :capabilities, :class_name => 'NodeCapability', :dependent => :destroy
+  # rubocop:disable HasAndBelongsToMany
+  # TODO: change this into has_many :through association
   has_and_belongs_to_many :environments, :class_name => KTEnvironment, :join_table => 'nodes_environments',
                                           :association_foreign_key => 'environment_id'
 
   after_save :update_environments
 
-  validates_presence_of :system_id
+  validates :system_id, :presence => true
 
   def self.with_environment(env)
     joins(:environments).where(:environments => {:id => env})

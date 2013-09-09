@@ -2,7 +2,7 @@
 
 echo ""
 echo "********* Rubocop Lint Test ****************"
-bundle exec rubocop || exit 1
+bundle exec rubocop -R || exit 1
 echo "Ruby code passed rubocop check."
 echo ""
 

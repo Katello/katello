@@ -44,6 +44,8 @@ class Repository < ActiveRecord::Base
   belongs_to :library_instance, :class_name => "Repository"
   has_many :content_view_definition_repositories, :dependent => :destroy
   has_many :content_view_definitions, :through => :content_view_definition_repositories
+  # rubocop:disable HasAndBelongsToMany
+  # TODO: change this into has_many :through association
   has_and_belongs_to_many :filters
   belongs_to :content_view_version, :inverse_of => :repositories
 
@@ -57,10 +59,11 @@ class Repository < ActiveRecord::Base
   validates_with Validators::RepoDisablementValidator, :attributes => :enabled, :on => :update
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name
 
-  validates_inclusion_of :content_type,
+  validates :content_type, :inclusion => {
       :in => TYPES,
       :allow_blank => false,
       :message => (_("Please select content type from one of the following: %s") % TYPES.join(', '))
+  }
 
   belongs_to :gpg_key, :inverse_of => :repositories
   belongs_to :library_instance, :class_name => "Repository"
