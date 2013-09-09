@@ -13,12 +13,12 @@
 module DashboardHelper
 
   def dashboard_entry(name, partial, dropbutton)
-    render :partial=>"entry", :locals=>{:name=>name, :partial=>partial, :dropbutton=>dropbutton}
+    render :partial => "entry", :locals => {:name => name, :partial => partial, :dropbutton => dropbutton}
   end
 
   def dashboard_ajax_entry(name, identifier, url, class_wrapper, dropbutton, quantity = 5)
     url = Katello.config[:url_prefix] + url if !url.match(Katello.config[:url_prefix])
-    render :partial=>"ajax_entry", :locals=>{:name=>name, :url=>url, :class_wrap=>class_wrapper, :identifier=>identifier, :dropbutton=>dropbutton, :quantity=>quantity}
+    render :partial => "ajax_entry", :locals => {:name => name, :url => url, :class_wrap => class_wrapper, :identifier => identifier, :dropbutton => dropbutton, :quantity => quantity}
   end
 
   def user_notices(num = quantity, options = {})
@@ -73,7 +73,7 @@ module DashboardHelper
 
   def promotions(num = quantity)
     return  Changeset.joins(:task_status).
-        where("changesets.environment_id"=>KTEnvironment.changesets_readable(current_organization)).
+        where("changesets.environment_id" => KTEnvironment.changesets_readable(current_organization)).
         order("task_statuses.updated_at DESC").limit(num)
   end
 
@@ -132,9 +132,9 @@ module DashboardHelper
   end
 
   def sync_percentage(product)
-    stat =product.sync_status.progress
+    stat = product.sync_status.progress
     return 0 if stat.total_size == 0
-    "%.0f" % ((stat.total_size - stat.size_left)*100/stat.total_size).to_s
+    "%.0f" % ((stat.total_size - stat.size_left) * 100 / stat.total_size).to_s
   end
 
   def subscription_counts

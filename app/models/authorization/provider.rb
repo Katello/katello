@@ -45,7 +45,7 @@ module Authorization::Provider
     end
 
     def list_tags(org_id)
-      custom.select('id,name').where(:organization_id=>org_id).collect { |m| VirtualTag.new(m.id, m.name) }
+      custom.select('id,name').where(:organization_id => org_id).collect { |m| VirtualTag.new(m.id, m.name) }
     end
 
     def tags(ids)

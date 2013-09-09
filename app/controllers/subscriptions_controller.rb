@@ -18,9 +18,9 @@ require 'ostruct'
 class SubscriptionsController < ApplicationController
 
   before_filter :find_provider
-  before_filter :find_subscription, :except=>[:index, :items, :new, :upload, :delete_manifest, :history, :history_items, :edit_manifest, :refresh_manifest]
+  before_filter :find_subscription, :except => [:index, :items, :new, :upload, :delete_manifest, :history, :history_items, :edit_manifest, :refresh_manifest]
   before_filter :authorize
-  before_filter :setup_options, :only=>[:index, :items]
+  before_filter :setup_options, :only => [:index, :items]
 
   # two pane columns and mapping for sortable fields
   COLUMNS = {'name' => 'name_sort'}
@@ -35,7 +35,7 @@ class SubscriptionsController < ApplicationController
       :products => read_provider_test,
       :consumers => read_provider_test,
       :history => read_provider_test,
-      :history_items=> read_provider_test,
+      :history_items => read_provider_test,
       :new => read_provider_test,
       :upload => edit_provider_test,
       :refresh_manifest => edit_provider_test,
@@ -77,8 +77,8 @@ class SubscriptionsController < ApplicationController
     filters = []
 
     # Limit subscriptions to current org and Red Hat provider
-    filters << {:org=>[current_organization.label]}
-    filters << {:provider_id=>[current_organization.redhat_provider.id]}
+    filters << {:org => [current_organization.label]}
+    filters << {:provider_id => [current_organization.redhat_provider.id]}
 
     options = {
         :filter => filters,
@@ -108,23 +108,23 @@ class SubscriptionsController < ApplicationController
   end
 
   def products
-    render :partial=>"products", :locals=>{:subscription=>@subscription, :editable => false, :name => controller_display_name}
+    render :partial => "products", :locals => {:subscription => @subscription, :editable => false, :name => controller_display_name}
   end
 
   def consumers
     systems = current_organization.systems.readable(current_organization)
     systems = systems.all_by_pool(@subscription.cp_id)
 
-    activation_keys = ActivationKey.joins(:pools).where('pools.cp_id'=>@subscription.cp_id).readable(current_organization)
+    activation_keys = ActivationKey.joins(:pools).where('pools.cp_id' => @subscription.cp_id).readable(current_organization)
     activation_keys = [] if !activation_keys
 
     distributors = current_organization.distributors.readable(current_organization)
     distributors = distributors.all_by_pool(@subscription.cp_id)
 
-    render :partial=>"consumers", :locals=>{:subscription=>@subscription,
-                                            :systems=>systems,
-                                            :activation_keys=>activation_keys,
-                                            :distributors=>distributors,
+    render :partial => "consumers", :locals => {:subscription => @subscription,
+                                            :systems => systems,
+                                            :activation_keys => activation_keys,
+                                            :distributors => distributors,
                                             :editable => false,
                                             :name => controller_display_name}
   end
@@ -132,13 +132,13 @@ class SubscriptionsController < ApplicationController
   def new
     get_manifest_details
     can_refresh = @upstream['idCert'] && @upstream['idCert']['cert']
-    render :partial=>"new", :locals=>{:provider=>@provider, :statuses=>@statuses, :details=>@details, :upstream=>@upstream,
-                                      :name => controller_display_name, :can_refresh=>can_refresh}
+    render :partial => "new", :locals => {:provider => @provider, :statuses => @statuses, :details => @details, :upstream => @upstream,
+                                      :name => controller_display_name, :can_refresh => can_refresh}
   end
 
   def edit_manifest
     get_manifest_details
-    render :partial=>"edit_manifest", :locals=>{:provider=>@provider, :statuses=>@statuses, :details=>@details, :upstream=>@upstream, :name => controller_display_name}
+    render :partial => "edit_manifest", :locals => {:provider => @provider, :statuses => @statuses, :details => @details, :upstream => @upstream, :name => controller_display_name}
   end
 
   def history
@@ -147,7 +147,7 @@ class SubscriptionsController < ApplicationController
     rescue # rubocop:disable HandleExceptions
       # quietly ignore
     end
-    render :template => "subscriptions/_history", :locals=>{:provider=>@provider, :statuses=>@statuses, :name => controller_display_name}
+    render :template => "subscriptions/_history", :locals => {:provider => @provider, :statuses => @statuses, :name => controller_display_name}
   end
 
   def history_items
@@ -162,11 +162,11 @@ class SubscriptionsController < ApplicationController
       Rails.logger.error "Error fetching subscription history from Candlepin"
       Rails.logger.error error
       Rails.logger.error error.backtrace.join("\n")
-      render :partial=>"history_items", :status => :bad_request, :locals=>{:provider=>@provider, :name => controller_display_name, :statuses=>@statuses}
+      render :partial => "history_items", :status => :bad_request, :locals => {:provider => @provider, :name => controller_display_name, :statuses => @statuses}
       return
     end
 
-    render :partial=>"history_items", :locals=>{:provider=>@provider, :name => controller_display_name, :statuses=>@statuses}
+    render :partial => "history_items", :locals => {:provider => @provider, :name => controller_display_name, :statuses => @statuses}
   end
 
   def delete_manifest
@@ -184,7 +184,7 @@ class SubscriptionsController < ApplicationController
       notify.exception @provider.delete_error_message(display_message), error
     end
 
-    render :json=>{'state' => 'running'}
+    render :json => {'state' => 'running'}
   end
 
   def upload
@@ -216,7 +216,7 @@ class SubscriptionsController < ApplicationController
       notify.error _("Subscription manifest must be specified on upload.")
     end
 
-    render :json=>{'state' => 'running'}
+    render :json => {'state' => 'running'}
   end
 
   def refresh_manifest
@@ -235,7 +235,7 @@ class SubscriptionsController < ApplicationController
       notify.exception @provider.refresh_error_message(display_message), error
     end
 
-    render :json=>{'state' => 'running'}
+    render :json => {'state' => 'running'}
   end
 
   def section_id

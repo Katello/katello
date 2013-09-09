@@ -25,7 +25,7 @@ module Menu
   def render_menu(level, items = nil, prune = true)
     items ||= menu_main
     prune_menu(items) if prune
-    render_navigation(:items=>items, :expand_all=>true, :level => level)
+    render_navigation(:items => items, :expand_all => true, :level => level)
   end
 
   def render_main_menu
@@ -37,13 +37,13 @@ module Menu
   def render_admin_menu
     items = admin_main
     prune_menu(items)
-    render_navigation(:items=>items, :expand_all=>true, :level=> 2) unless items.empty?
+    render_navigation(:items => items, :expand_all => true, :level => 2) unless items.empty?
   end
 
   def render_notifications_menu
     items = notifications_menu_main
     prune_menu(items)
-    render_navigation(:items=>items, :expand_all=>true) unless items.empty?
+    render_navigation(:items => items, :expand_all => true) unless items.empty?
   end
 
   def render_main_sub_menu
@@ -56,7 +56,7 @@ module Menu
     items ||= menu_main
     prune_menu(items) if prune
     items.collect do |top_level|
-      render_navigation(:items => top_level[:items], :expand_all=>true) if top_level[:items]
+      render_navigation(:items => top_level[:items], :expand_all => true) if top_level[:items]
     end.compact.join("").html_safe
   end
 

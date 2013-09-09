@@ -73,7 +73,7 @@ module Glue
         filters = @filters
         filters = [filters] if !filters.is_a? Array
 
-        @results = @obj_class.search :load=>false do
+        @results = @obj_class.search :load => false do
           query do
             if all_rows
               all

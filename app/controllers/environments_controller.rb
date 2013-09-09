@@ -50,7 +50,7 @@ class EnvironmentsController < ApplicationController
   def new
     @environment = KTEnvironment.new(:organization => @organization)
     setup_new_edit_screen
-    render :partial=>"new"
+    render :partial => "new"
   end
 
   # GET /environments/1/edit
@@ -62,7 +62,7 @@ class EnvironmentsController < ApplicationController
     @env_labels_json = ActiveSupport::JSON.encode(env_labels)
 
     @selected = @environment.prior.nil? ? env_labels[""] : env_labels[@environment.prior.id]
-    render :partial=>"edit", :locals=>{:editable=> @organization.environments_manageable?}
+    render :partial => "edit", :locals => {:editable => @organization.environments_manageable?}
   end
 
   # POST /environments
@@ -104,7 +104,7 @@ class EnvironmentsController < ApplicationController
 
     notify.success _("Environment '%s' was updated.") % @environment.name
 
-    render :text =>escape_html(result)
+    render :text => escape_html(result)
   end
 
   # DELETE /environments/1
@@ -112,7 +112,7 @@ class EnvironmentsController < ApplicationController
     @environment.destroy
     if @environment.destroyed?
       notify.success _("Environment '%s' was deleted.") % @environment.name
-      render :partial => "common/post_delete_close_subpanel", :locals => {:path=>edit_organization_path(@organization.label)}
+      render :partial => "common/post_delete_close_subpanel", :locals => {:path => edit_organization_path(@organization.label)}
     else
       err_msg = N_("Removal of the environment failed. If you continue having trouble with this, please contact an Administrator.")
       notify.error err_msg

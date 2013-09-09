@@ -16,7 +16,7 @@ Rails.application.routes.draw do
         collection do
           get '/by_uuid/:uuid' => "nodes#show_by_uuid"
         end
-        resources :capabilities, :controller=>'node_capabilities'
+        resources :capabilities, :controller => 'node_capabilities'
       end
     end
 
@@ -29,7 +29,7 @@ Rails.application.routes.draw do
         collection do
           get '/by_uuid/:uuid' => "nodes#show_by_uuid"
         end
-        api_resources :capabilities, :controller=>'node_capabilities'
+        api_resources :capabilities, :controller => 'node_capabilities'
       end
 
     end

@@ -22,9 +22,9 @@ module Navigation
       {:key => :organizations,
        :name => _("Organizations"),
         :url => :sub_level,
-        :options => {:class=>'organizations top_level', "data-menu"=>"organizations"},
+        :options => {:class => 'organizations top_level', "data-menu" => "organizations"},
         :if => lambda{current_organization && Organization.any_readable?},
-        :items=> [menu_org_list]
+        :items => [menu_org_list]
       }
     end
 
@@ -32,30 +32,30 @@ module Navigation
       {:key => :org_list,
        :name => _("List"),
        :url => organizations_path,
-       :options => {:class=>'organizations second_level', "data-menu"=>"organizations"}
+       :options => {:class => 'organizations second_level', "data-menu" => "organizations"}
       }
     end
 
     def organization_navigation
       [
         { :key => :organization_details,
-          :name =>_("Details"),
+          :name => _("Details"),
           :url => lambda{edit_organization_path(@organization.label)},
           :if => lambda{@organization},
-          :options => {:class=>"panel_link"}
+          :options => {:class => "panel_link"}
         },
         {:key => :organization_default_info,
          :name => _("Default Custom Info"),
          :url => lambda{organization_default_info_path(@organization.label, "system")},
          :if => lambda{@organization},
-         :options => {:class=>"panel_link menu_parent"},
+         :options => {:class => "panel_link menu_parent"},
          :items => default_info_subnav
         },
         { :key => :organization_history,
-          :name =>_("History"),
+          :name => _("History"),
           :url => lambda{events_organization_path(@organization.label)},
           :if => lambda{@organization},
-          :options => {:class=>"panel_link"}
+          :options => {:class => "panel_link"}
         }
       ]
     end
@@ -66,13 +66,13 @@ module Navigation
           :name => _("System Default Info"),
           :url => lambda{organization_default_info_path(@organization.label, "system")},
           :if => lambda{@organization},
-          :options => {:class=>"third_level panel_link"}
+          :options => {:class => "third_level panel_link"}
         },
         { :key => :org_distributor_default_info,
           :name => _("Distributor Default Info"),
           :url => lambda{organization_default_info_path(@organization.label, "distributor")},
           :if => lambda{@organization},
-          :options => {:class=>"third_level panel_link"}
+          :options => {:class => "third_level panel_link"}
         }
       ]
     end

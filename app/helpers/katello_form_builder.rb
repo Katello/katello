@@ -113,7 +113,7 @@ class KatelloFormBuilder < ActionView::Helpers::FormBuilder
       unless options[wrapper][:class].is_a?(Array)
         options[wrapper][:class] = (options[wrapper][:class] || '').split
       end
-      options[wrapper][:class] |= ["grid_#{options[:grid][i]}", (i==0 ? "ra" : "la")]
+      options[wrapper][:class] |= ["grid_#{options[:grid][i]}", (i == 0 ? "ra" : "la")]
     end
     options[:tabindex] ||= tabindex
     options[:wrapper] ||= {}

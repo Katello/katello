@@ -5,8 +5,8 @@ class Node < ActiveRecord::Migration
       t.timestamps
     end
 
-    add_index "nodes", ["system_id"], :unique=>true
-    add_foreign_key :nodes, :systems, {:name=>'nodes_system_id_fk'}
+    add_index "nodes", ["system_id"], :unique => true
+    add_foreign_key :nodes, :systems, {:name => 'nodes_system_id_fk'}
   end
 
   def down

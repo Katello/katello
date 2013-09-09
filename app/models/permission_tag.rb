@@ -12,7 +12,7 @@
 
 class PermissionTag < ActiveRecord::Base
 
-  belongs_to :permission, :inverse_of=>:tags
+  belongs_to :permission, :inverse_of => :tags
 
   def to_s
     tag_id.to_s

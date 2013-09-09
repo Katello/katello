@@ -11,7 +11,7 @@ class AddLabelsToRepository < ActiveRecord::Migration
   end
 
   def self.down
-    remove_index(:repositories, :column =>[:label, :environment_product_id])
+    remove_index(:repositories, :column => [:label, :environment_product_id])
     change_table(:repositories) { |t| t.remove :label}
   end
 end

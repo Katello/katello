@@ -57,19 +57,19 @@ module Authorization::System
   included do
     def readable?
       sg_readable = false
-      sg_readable = !::SystemGroup.systems_readable(self.organization).where(:id=>self.system_group_ids).empty?
+      sg_readable = !::SystemGroup.systems_readable(self.organization).where(:id => self.system_group_ids).empty?
       environment.systems_readable? || sg_readable
     end
 
     def editable?
       sg_editable = false
-      sg_editable = !::SystemGroup.systems_editable(self.organization).where(:id=>self.system_group_ids).empty?
+      sg_editable = !::SystemGroup.systems_editable(self.organization).where(:id => self.system_group_ids).empty?
       environment.systems_editable? || sg_editable
     end
 
     def deletable?
       sg_deletable = false
-      sg_deletable = !::SystemGroup.systems_deletable(self.organization).where(:id=>self.system_group_ids).empty?
+      sg_deletable = !::SystemGroup.systems_deletable(self.organization).where(:id => self.system_group_ids).empty?
       environment.systems_deletable? || sg_deletable
     end
   end

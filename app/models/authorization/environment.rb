@@ -84,11 +84,11 @@ module Authorization::Environment
         {
         :read_contents => _("Read Environment Contents"),
         :read_systems => _("Read Systems in Environment"),
-        :register_systems =>_("Register Systems in Environment"),
+        :register_systems => _("Register Systems in Environment"),
         :update_systems => _("Modify Systems in Environment"),
         :delete_systems => _("Remove Systems in Environment"),
         :read_distributors => _("Read Distributors in Environment"),
-        :register_distributors =>_("Register Distributors in Environment"),
+        :register_distributors => _("Register Distributors in Environment"),
         :update_distributors => _("Modify Distributors in Environment"),
         :delete_distributors => _("Remove Distributors in Environment"),
         :read_changesets => _("Read Changesets in Environment"),
@@ -100,11 +100,11 @@ module Authorization::Environment
         {
         :read_contents => _("Read Environment Contents"),
         :read_systems => _("Read Systems in Environment"),
-        :register_systems =>_("Register Systems in Environment"),
+        :register_systems => _("Register Systems in Environment"),
         :update_systems => _("Modify Systems in Environment"),
         :delete_systems => _("Remove Systems in Environment"),
         :read_distributors => _("Read Distributors in Environment"),
-        :register_distributors =>_("Register Distributors in Environment"),
+        :register_distributors => _("Register Distributors in Environment"),
         :update_distributors => _("Modify Distributors in Environment"),
         :delete_distributors => _("Remove Distributors in Environment"),
         }.with_indifferent_access

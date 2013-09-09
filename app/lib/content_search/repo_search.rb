@@ -32,7 +32,7 @@ module ContentSearch
         all_repos = repo.environmental_instances(view).pluck(:pulp_id)
 
         cols = {}
-        Repository.where(:pulp_id=>all_repos).each do |r|
+        Repository.where(:pulp_id => all_repos).each do |r|
           cols[r.environment.id] = if env_ids.include?(r.environment_id)
                                      Cell.new(:hover => lambda{repo_hover_html(r)},
                                               :hover_details => lambda{repo_hover_html(r, true)})
@@ -46,7 +46,7 @@ module ContentSearch
                         :value      => repo.name,
                         :parent_id  => "view_#{view.id}_product_#{repo.product.id}",
                         :comparable => self.comparable,
-                        :object_id  =>repo.id
+                        :object_id  => repo.id
                        )
       end
       rows

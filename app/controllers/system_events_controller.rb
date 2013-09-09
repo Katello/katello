@@ -31,7 +31,7 @@ class SystemEventsController < ApplicationController
   end
 
   def index
-    render :partial=>"events", :locals=>{:system => @system, :tasks => tasks}
+    render :partial => "events", :locals => {:system => @system, :tasks => tasks}
   end
 
   def show
@@ -44,8 +44,8 @@ class SystemEventsController < ApplicationController
     else
       user_message = task_template[:english_name]
     end
-    render :partial=>"details", :locals=>{:type => type, :user_message => user_message,
-                                          :system => @system, :task =>task}
+    render :partial => "details", :locals => {:type => type, :user_message => user_message,
+                                          :system => @system, :task => task}
   end
 
   # retrieve the status for the actions initiated by the client
@@ -68,7 +68,7 @@ class SystemEventsController < ApplicationController
     statuses = tasks(current_user.page_size + offset)
     statuses = statuses[offset..statuses.length]
     if statuses
-      render(:partial => 'more_events', :locals => {:cycle_extra => offset.odd?, :system => @system, :tasks=> statuses})
+      render(:partial => 'more_events', :locals => {:cycle_extra => offset.odd?, :system => @system, :tasks => statuses})
     else
       render :nothing => true
     end
@@ -77,7 +77,7 @@ class SystemEventsController < ApplicationController
   def items
     render_proc = lambda do |items, options|
       if items && !items.empty?
-        render_to_string(:partial => 'more_events', :locals => {:cycle_extra => false, :system => @system, :tasks=> items})
+        render_to_string(:partial => 'more_events', :locals => {:cycle_extra => false, :system => @system, :tasks => items})
       else
         "<tr><td>" + _("No events matching your search criteria.") + "</td></tr>"
       end

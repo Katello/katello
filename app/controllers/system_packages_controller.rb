@@ -123,9 +123,9 @@ class SystemPackagesController < ApplicationController
 
   def packages
     if @system.class == Hypervisor
-      render :partial=>"systems/hypervisor",
-             :locals=>{:system=>@system,
-                       :message=>_("Hypervisors do not have packages")}
+      render :partial => "systems/hypervisor",
+             :locals => {:system => @system,
+                       :message => _("Hypervisors do not have packages")}
       return
     end
 
@@ -147,7 +147,7 @@ class SystemPackagesController < ApplicationController
     group_tasks = @system.tasks.where(:task_type => [:package_group_install, :package_group_remove],
                                       :state => [:waiting, :running])
 
-    render :partial=>"packages", :locals=>{:system => @system, :packages => packages,
+    render :partial => "packages", :locals => {:system => @system, :packages => packages,
                                            :total_packages => total_packages,
                                                                        :package_tasks => package_tasks,
                                                                        :group_tasks => group_tasks,
@@ -163,8 +163,8 @@ class SystemPackagesController < ApplicationController
       end
     end
 
-    render :partial=>"package_items", :locals=>{:packages => packages, :package_tasks => nil,
-                                                :group_tasks => nil, :offset=> 0,
+    render :partial => "package_items", :locals => {:packages => packages, :package_tasks => nil,
+                                                :group_tasks => nil, :offset => 0,
                                                 :editable => @system.editable?}
   end
 

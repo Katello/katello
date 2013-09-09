@@ -86,7 +86,7 @@ module Katello
           config[:email_reply_address] = if config[:email_reply_address]
                                            config[:email_reply_address]
                                          else
-                                           "no-reply@"+config[:host]
+                                           "no-reply@" + config[:host]
                                          end
 
           root = config.logging.loggers.root

@@ -392,9 +392,9 @@ Src::Application.routes.draw do
     end
   end
 
-  resources :promotions, :only =>[] do
+  resources :promotions, :only => [] do
     collection do
-      get :index, :action =>:show
+      get :index, :action => :show
     end
     member do
       get :show
@@ -458,7 +458,7 @@ Src::Application.routes.draw do
     end
   end
 
-  match '/roles/show_permission' => 'roles#show_permission', :via=>:get
+  match '/roles/show_permission' => 'roles#show_permission', :via => :get
   resources :roles do
     put "create_permission" => "roles#create_permission"
 
@@ -479,7 +479,7 @@ Src::Application.routes.draw do
       end
     end
   end
-  match '/roles/:organization_id/resource_type/verbs_and_scopes' => 'roles#verbs_and_scopes', :via=>:get, :as=>'verbs_and_scopes'
+  match '/roles/:organization_id/resource_type/verbs_and_scopes' => 'roles#verbs_and_scopes', :via => :get, :as => 'verbs_and_scopes'
 
   resources :search, :only => {} do
     get 'show', :on => :collection
@@ -513,5 +513,5 @@ Src::Application.routes.draw do
 
   match 'about', :to => "application_info#about", :as => "about"
 
-  match '/i18n/dictionary' => 'i18n#show', :via=>:get
+  match '/i18n/dictionary' => 'i18n#show', :via => :get
 end

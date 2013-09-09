@@ -12,7 +12,7 @@ class AddRemoteIdToUsers < ActiveRecord::Migration
   end
 
   def self.down
-    remove_index(:users, :column =>:remote_id)
+    remove_index(:users, :column => :remote_id)
     change_table(:users) { |t| t.remove :remote_id}
     User.reset_column_information
   end

@@ -55,7 +55,7 @@ module Glue::Pulp::Consumer
 
     def enable_node_repos(repo_ids)
       enable_repos(Runcible::Models::NodesHttpDistributor.type_id, bound_node_repos, repo_ids,
-                   {:notify_agent => false, :binding_config => {:strategy=>'mirror'}})
+                   {:notify_agent => false, :binding_config => {:strategy => 'mirror'}})
     end
 
     #Binds and unbinds distributors of a certain type across repos
@@ -243,8 +243,8 @@ module Glue::Pulp::Consumer
 
     def fetch_package_profile
       Katello.pulp_server.extensions.consumer.retrieve_profile(uuid, 'rpm')
-    rescue RestClient::ResourceNotFound =>e
-      {:profile=>[]}.with_indifferent_access
+    rescue RestClient::ResourceNotFound => e
+      {:profile => []}.with_indifferent_access
     end
 
   end

@@ -44,16 +44,16 @@ module Glue::ElasticSearch::Errata
         {
           :errata => {
             :properties => {
-              :repoids      => { :type => 'string', :index =>:not_analyzed},
+              :repoids      => { :type => 'string', :index => :not_analyzed},
               :id_sort      => { :type => 'string', :index => :not_analyzed},
               :errata_id_sort => { :type => 'string', :index => :not_analyzed},
-              :id_title     => { :type => 'string', :analyzer =>:title_analyzer},
-              :id           => { :type => 'string', :index =>:not_analyzed},
-              :errata_id    => { :type => 'string', :analyzer =>:snowball},
-              :errata_id_exact => { :type => 'string', :index =>:not_analyzed},
-              :product_ids  => { :type => 'integer', :analyzer =>:kt_name_analyzer},
-              :severity     => { :type => 'string', :analyzer =>:kt_name_analyzer},
-              :type         => { :type => 'string', :analyzer =>:kt_name_analyzer},
+              :id_title     => { :type => 'string', :analyzer => :title_analyzer},
+              :id           => { :type => 'string', :index => :not_analyzed},
+              :errata_id    => { :type => 'string', :analyzer => :snowball},
+              :errata_id_exact => { :type => 'string', :index => :not_analyzed},
+              :product_ids  => { :type => 'integer', :analyzer => :kt_name_analyzer},
+              :severity     => { :type => 'string', :analyzer => :kt_name_analyzer},
+              :type         => { :type => 'string', :analyzer => :kt_name_analyzer},
               :title        => { :type => 'string', :analyzer => :title_analyzer},
             }
           }
@@ -70,7 +70,7 @@ module Glue::ElasticSearch::Errata
           :errata_id_exact => self.errata_id,
           :errata_id_sort => self.errata_id,
           :id_title => self.errata_id + ' : ' + self.title,
-          :product_ids=>self.product_ids,
+          :product_ids => self.product_ids,
         }
       end
 
@@ -117,7 +117,7 @@ module Glue::ElasticSearch::Errata
             if all_rows
               all
             else
-              string query, {:default_field=>default_field}
+              string query, {:default_field => default_field}
             end
           end
 

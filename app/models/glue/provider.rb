@@ -23,7 +23,7 @@ module Glue::Provider
   module InstanceMethods
 
     def import_manifest(zip_file_path, options = {})
-      options = { :async => false, :notify => false , :zip_file_path=>zip_file_path}.merge(options)
+      options = { :async => false, :notify => false , :zip_file_path => zip_file_path}.merge(options)
       options.assert_valid_keys(:force, :async, :notify, :zip_file_path)
 
       if options[:async]
@@ -47,7 +47,7 @@ module Glue::Provider
     end
 
     def refresh_manifest(upstream, options = {})
-      options = { :async => true, :notify => false, :upstream=>upstream }.merge(options)
+      options = { :async => true, :notify => false, :upstream => upstream }.merge(options)
       options.assert_valid_keys(:async, :notify, :upstream)
 
       if options[:async]
@@ -261,7 +261,7 @@ module Glue::Provider
 
     # Returns text representation of failed products status
     def failed_products_status
-      (s = failed_products.size) > 0 ? (_('%d products may have missing repositories') % s): _('OK')
+      (s = failed_products.size) > 0 ? (_('%d products may have missing repositories') % s) : _('OK')
     end
 
     # TODO: break up method
@@ -444,7 +444,7 @@ module Glue::Provider
 
       # Index pools
       # Note: Only the Red Hat provider subscriptions are being indexed.
-      ::Pool.index_pools(subscriptions, [{:org=>[self.organization.label]}, {:provider_id=>[self.organization.redhat_provider.id]}])
+      ::Pool.index_pools(subscriptions, [{:org => [self.organization.label]}, {:provider_id => [self.organization.redhat_provider.id]}])
 
       subscriptions
     end

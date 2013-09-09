@@ -1,6 +1,6 @@
 class RepositoryAddRelativePath < ActiveRecord::Migration
   def self.up
-    add_column :repositories, :relative_path, :string, :null=>true
+    add_column :repositories, :relative_path, :string, :null => true
     Repository.reset_column_information
     User.current = User.hidden.first
     Repository.all.each do |repo|

@@ -6,8 +6,8 @@ class AddNodeCapability < ActiveRecord::Migration
       t.string :type
     end
 
-   add_index "node_capabilities", %w(node_id type), :unique=>true
-   add_foreign_key :node_capabilities, :nodes, {:name=>'node_capabilities_node_id_fk'}
+   add_index "node_capabilities", %w(node_id type), :unique => true
+   add_foreign_key :node_capabilities, :nodes, {:name => 'node_capabilities_node_id_fk'}
   end
 
   def down

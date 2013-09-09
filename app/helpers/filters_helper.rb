@@ -25,8 +25,8 @@ module FiltersHelper
 
     {
         :id => record.id,
-        :products=>record.product_ids,  # :id
-        :repos=>repos
+        :products => record.product_ids,  # :id
+        :repos => repos
     }
   end
 

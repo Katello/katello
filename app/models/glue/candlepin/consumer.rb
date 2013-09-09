@@ -119,7 +119,7 @@ module Glue::Candlepin::Consumer
 
     def load_from_cp(consumer_json)
       self.uuid = consumer_json[:uuid]
-      consumer_json[:facts] ||= {'sockets'=>0}
+      consumer_json[:facts] ||= {'sockets' => 0}
       convert_from_cp_fields(consumer_json).each do |k, v|
         instance_variable_set("@#{k}", v) if respond_to?("#{k}=")
       end
@@ -417,7 +417,7 @@ module Glue::Candlepin::Consumer
       when 'GB' then total_mem *= 1
       when 'TB' then total_mem *= 1024
         # default memtotal is in kB
-      else total_mem = (total_mem / (1024*1024))
+      else total_mem = (total_mem / (1024 * 1024))
       end
       total_mem.round(2)
     end

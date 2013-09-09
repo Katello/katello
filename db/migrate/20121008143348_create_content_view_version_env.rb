@@ -1,6 +1,6 @@
 class CreateContentViewVersionEnv < ActiveRecord::Migration
   def self.up
-    create_table :content_view_version_environments, :id=>false do |t|
+    create_table :content_view_version_environments, :id => false do |t|
       t.references :content_view_version
       t.references :environment
       t.timestamps

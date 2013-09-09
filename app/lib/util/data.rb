@@ -28,12 +28,12 @@ module Util
         obj.each do |key, value|
 
           if options[:prefix_keys].include? key
-            new_key = (options[:prefix].to_s+key.to_s).to_sym
+            new_key = (options[:prefix].to_s + key.to_s).to_sym
           else
             new_key = key
           end
 
-          raise RuntimeError.new("Error occured while converting Hash to OpenStruct. "+
+          raise RuntimeError.new("Error occured while converting Hash to OpenStruct. " +
                                      "Key '%s' conflicts with method OpenStruct#%s." % [new_key, new_key]) if Object.respond_to? new_key
 
           ostructized_hash[new_key] = ostructize(value, options)

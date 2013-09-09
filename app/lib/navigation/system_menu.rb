@@ -21,8 +21,8 @@ module Navigation
       menu = {:key => :systems,
        :name => _("Systems"),
         :url => :sub_level,
-        :options => {:class=>'systems top_level', "data-menu"=>"systems"},
-        :items=> [menu_systems_org_list, menu_systems_environments_list]
+        :options => {:class => 'systems top_level', "data-menu" => "systems"},
+        :items => [menu_systems_org_list, menu_systems_environments_list]
       }
       menu[:items] << menu_system_groups
       menu
@@ -33,7 +33,7 @@ module Navigation
        :name => _("All"),
        :url => systems_path,
        :if => lambda{current_organization && System.any_readable?(current_organization)},
-       :options => {:class=>'systems second_level', "data-menu"=>"systems"}
+       :options => {:class => 'systems second_level', "data-menu" => "systems"}
       }
     end
 
@@ -42,7 +42,7 @@ module Navigation
        :name => _("By Environments"),
        :url => environments_systems_path,
        :if => lambda{current_organization && System.any_readable?(current_organization)},
-       :options => {:class=>'systems second_level', "data-menu"=>"systems"}
+       :options => {:class => 'systems second_level', "data-menu" => "systems"}
       }
     end
 
@@ -51,37 +51,37 @@ module Navigation
        :name => _("System Groups"),
        :url => system_groups_path,
        :if => lambda {current_organization && SystemGroup.any_readable?(current_organization)},
-       :options => {:class=>'systems second_level', "data-menu"=>"systems"}
+       :options => {:class => 'systems second_level', "data-menu" => "systems"}
       }
     end
 
     def systems_navigation
       menu = [
         { :key => :general,
-          :name =>_("Details"),
+          :name => _("Details"),
           :url => lambda{edit_system_path(@system.id)},
           :if => lambda{@system},
-          :options => {:class=>"panel_link menu_parent"},
+          :options => {:class => "panel_link menu_parent"},
           :items => systems_subnav
         },
         { :key => :systems_subscriptions,
-          :name =>_("Subscriptions"),
+          :name => _("Subscriptions"),
           :url => lambda{subscriptions_system_path(@system.id)},
           :if => lambda{@system},
-          :options => {:class=>"panel_link"}
+          :options => {:class => "panel_link"}
         },
         { :key => :system_content,
-          :name =>_("Content"),
+          :name => _("Content"),
           :url => lambda{products_system_path(@system.id)},
           :if => lambda{@system},
-          :options => {:class=>"panel_link menu_parent"},
+          :options => {:class => "panel_link menu_parent"},
           :items => systems_content_subnav
         },
         { :key => :systems_system_groups,
-          :name =>_("System Groups"),
+          :name => _("System Groups"),
           :url => lambda{system_groups_system_path(@system.id)},
           :if => lambda{@system},
-          :options => {:class=>"panel_link"}
+          :options => {:class => "panel_link"}
         }
       ]
       menu
@@ -90,22 +90,22 @@ module Navigation
     def systems_subnav
       [
         { :key => :system_info,
-          :name =>_("System Info"),
+          :name => _("System Info"),
           :url => lambda{edit_system_path(@system.id)},
           :if => lambda{@system},
-          :options => {:class=>"third_level panel_link"},
+          :options => {:class => "third_level panel_link"},
         },
         { :key => :events,
-          :name =>_("Events History"),
+          :name => _("Events History"),
           :url => lambda{system_events_path(@system.id)},
           :if => lambda{@system},
-          :options => {:class=>"third_level panel_link"},
+          :options => {:class => "third_level panel_link"},
         },
         { :key => :facts,
-          :name =>_("Facts"),
+          :name => _("Facts"),
           :url => lambda{facts_system_path(@system.id)},
           :if => lambda{@system},
-          :options => {:class=>"third_level panel_link"},
+          :options => {:class => "third_level panel_link"},
         },
         { :key => :custom_info,
           :name => _("Custom Information"),
@@ -119,23 +119,23 @@ module Navigation
     def systems_content_subnav
       menu = [
         { :key => :systems_products,
-          :name =>_("Software"),
+          :name => _("Software"),
           :url => lambda{products_system_path(@system.id)},
           :if => lambda{@system},
-          :options => {:class=>"third_level panel_link"}
+          :options => {:class => "third_level panel_link"}
         }
       ]
       menu << { :key => :systems_packages,
-          :name =>_("Packages"),
+          :name => _("Packages"),
           :url => lambda{packages_system_system_packages_path(@system.id)},
           :if => lambda{@system},
-          :options => {:class=>"third_level panel_link"}
+          :options => {:class => "third_level panel_link"}
         } if Katello.config.katello?
       menu << { :key => :errata,
-          :name =>_("Errata"),
+          :name => _("Errata"),
           :url => lambda{system_errata_path(@system.id)},
           :if => lambda{@system},
-          :options => {:class=>"third_level panel_link"},
+          :options => {:class => "third_level panel_link"},
         } if Katello.config.katello?
       menu
     end
@@ -143,10 +143,10 @@ module Navigation
     def system_groups_navigation
       menu = [
        { :key => :system_group_details,
-         :name =>_("Details"),
+         :name => _("Details"),
          :url => lambda{edit_system_group_path(@group.id)},
          :if => lambda{@group},
-         :options => {:class=>"panel_link menu_parent"},
+         :options => {:class => "panel_link menu_parent"},
          :items => system_groups_subnav
         },
         {
@@ -154,14 +154,14 @@ module Navigation
           :name => _('Systems'),
           :url => lambda{systems_system_group_path(@group.id)},
           :if => lambda{@group},
-          :options => {:class=>"panel_link"}
+          :options => {:class => "panel_link"}
         }
       ]
       menu << { :key => :system_group_content,
-          :name =>_("Content"),
+          :name => _("Content"),
           :url => lambda{system_group_packages_path(@group.id)},
           :if => lambda{@group},
-          :options => {:class=>"panel_link menu_parent"},
+          :options => {:class => "panel_link menu_parent"},
           :items => system_groups_content_subnav
         } if Katello.config.katello?
       menu
@@ -170,17 +170,17 @@ module Navigation
     def system_groups_subnav
       menu = [
         { :key => :system_group_info,
-          :name =>_("System Group Info"),
+          :name => _("System Group Info"),
           :url => lambda{edit_system_group_path(@group.id)},
           :if => lambda{@group},
-          :options => {:class=>"third_level panel_link"},
+          :options => {:class => "third_level panel_link"},
         }
       ]
       menu << { :key => :system_group_events,
-          :name =>_("Events History"),
+          :name => _("Events History"),
           :url => lambda{system_group_events_path(@group.id)},
           :if => lambda{@group},
-          :options => {:class=>"third_level panel_link"}
+          :options => {:class => "third_level panel_link"}
         } if Katello.config.katello?
       menu
     end
@@ -188,16 +188,16 @@ module Navigation
     def system_groups_content_subnav
       [
         { :key => :system_groups_packages,
-          :name =>_("Packages"),
+          :name => _("Packages"),
           :url => lambda{system_group_packages_path(@group.id)},
           :if => lambda{@group},
-          :options => {:class=>"third_level panel_link"},
+          :options => {:class => "third_level panel_link"},
         },
         { :key => :system_group_errata,
-          :name =>_("Errata"),
+          :name => _("Errata"),
           :url => lambda{system_group_errata_path(@group.id)},
           :if => lambda{@group},
-          :options => {:class=>"third_level panel_link"},
+          :options => {:class => "third_level panel_link"},
         }
       ]
     end

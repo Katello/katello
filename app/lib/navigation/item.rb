@@ -46,7 +46,7 @@ module Navigation
     def as_json(*args)
       {
         :key    => @key,
-        :display=> @display,
+        :display => @display,
         :url    => @url
       }
     end

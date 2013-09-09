@@ -74,7 +74,7 @@ class ActivationKeysController < ApplicationController
 
   def items
     render_panel_direct(ActivationKey, @panel_options, params[:search], params[:offset], [:name_sort, 'asc'],
-        {:default_field => :name, :filter=>{:organization_id=>[current_organization.id]}})
+        {:default_field => :name, :filter => {:organization_id => [current_organization.id]}})
   end
 
   def show
@@ -110,7 +110,7 @@ class ActivationKeysController < ApplicationController
     end
     @available_pools = pools_hash(matching_pools)
 
-    render :partial=>"available_subscriptions",
+    render :partial => "available_subscriptions",
            :locals => {:akey => @activation_key, :editable => ActivationKey.manageable?(current_organization),
                        :available_subs => @available_pools}
   end
@@ -119,7 +119,7 @@ class ActivationKeysController < ApplicationController
     all_pools = retrieve_all_pools
     applied_pools = retrieve_applied_pools(all_pools).sort
 
-    render :partial=>"applied_subscriptions",
+    render :partial => "applied_subscriptions",
            :locals => {:akey => @activation_key, :editable => ActivationKey.manageable?(current_organization),
                        :applied_subs => applied_pools}
   end
@@ -160,13 +160,13 @@ class ActivationKeysController < ApplicationController
 
   def system_groups
     # retrieve the available groups that aren't currently assigned to the key
-    @system_groups = SystemGroup.where(:organization_id=>current_organization).order(:name) - @activation_key.system_groups
-    render :partial=>"system_groups", :locals=>{:editable=>ActivationKey.manageable?(current_organization)}
+    @system_groups = SystemGroup.where(:organization_id => current_organization).order(:name) - @activation_key.system_groups
+    render :partial => "system_groups", :locals => {:editable => ActivationKey.manageable?(current_organization)}
   end
 
   def systems
     @systems = @activation_key.systems
-    render :partial=>"systems", :locals=>{:editable=>ActivationKey.manageable?(current_organization)}
+    render :partial => "systems", :locals => {:editable => ActivationKey.manageable?(current_organization)}
   end
 
   def add_system_groups
@@ -181,9 +181,9 @@ class ActivationKeysController < ApplicationController
       @activation_key.save!
 
       notify.success _("Activation key '%s' was updated.") % @activation_key["name"]
-      render :partial =>'system_group_items',
-             :locals=>{:system_groups=>@system_groups,
-             :editable=>ActivationKey.manageable?(current_organization)}
+      render :partial => 'system_group_items',
+             :locals => {:system_groups => @system_groups,
+             :editable => ActivationKey.manageable?(current_organization)}
     end
   end
 
@@ -260,7 +260,7 @@ class ActivationKeysController < ApplicationController
     if @activation_key.destroy
       notify.success _("Activation key '%s' was deleted.") % @activation_key[:name]
       #render and do the removal in one swoop!
-      render :partial => "common/list_remove", :locals => {:id=>params[:id], :name=>controller_display_name}
+      render :partial => "common/list_remove", :locals => {:id => params[:id], :name => controller_display_name}
     end
   end
 
@@ -286,7 +286,7 @@ class ActivationKeysController < ApplicationController
       :ajax_load  => true,
       :ajax_scroll => items_activation_keys_path,
       :enable_create => ActivationKey.manageable?(current_organization),
-      :search_class=>ActivationKey,
+      :search_class => ActivationKey,
       :initial_action => :edit}
   end
 
