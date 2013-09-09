@@ -76,6 +76,6 @@ class NodeSystemDeleteTest < NodeTestBase
   def test_system_destroy
     node = Node.create!(:system => @system)
     assert @system.destroy
-    assert_empty Node.where(:id=>node.id)
+    assert_empty Node.where(:id => node.id)
   end
 end

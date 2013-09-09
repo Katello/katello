@@ -25,7 +25,7 @@ class PasswordResetsController < ApplicationController
 
   def param_rules
     {
-      :create =>[:username, :email],
+      :create => [:username, :email],
       :update => {:user  => [:password]}
     }
   end
@@ -36,7 +36,7 @@ class PasswordResetsController < ApplicationController
     # note: we provide a success notice regardless of whether or not there are any users associated with the email
     # address provided... this is done on purpose for security
     flash[:success] = _("Email sent to '%s' with password reset instructions.") % params[:email]
-    render :partial=>"password_refresh"
+    render :partial => "password_refresh"
   end
 
   def edit

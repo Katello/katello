@@ -35,14 +35,14 @@ module UsersHelper
       selected = org_id || current_organization.id
       prompt = _('Select Organization')
     end
-    select(:org_id, "org_id", choices, {:prompt => prompt, :id=>"org_field", :selected => selected}, {:class=>"one-line-ellipsis", :style=>"width: 300px; max-width: 300px"})
+    select(:org_id, "org_id", choices, {:prompt => prompt, :id => "org_field", :selected => selected}, {:class => "one-line-ellipsis", :style => "width: 300px; max-width: 300px"})
   end
 
   def locale_select(locale = nil)
     choices = [_('Use Browser Locale')].concat(Katello.config.available_locales)
     selected = locale.nil? ? _('Use Browser Locale') : locale
     select(:locale, "locale", choices,
-           {:prompt => nil, :id=>"locale_field",
+           {:prompt => nil, :id => "locale_field",
            :selected => selected})
   end
 end

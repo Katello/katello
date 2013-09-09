@@ -16,12 +16,12 @@ module ProvidersHelper
 
   def redhat_repo_tabs(provider)
     tabs = {
-        :rpms => {:id=>:rpms, :name=>_('RPMs'), :products=>{}, :order=>1},
-        :srpms => {:id=>:srpms, :name=>_('Source RPMs'), :products=>{}, :order=>2},
-        :debug => {:id=>:debug, :name=>_('Debug RPMs'), :products=>{}, :order=>3},
-        :beta => {:id=>:beta, :name=>_('Beta'), :products=>{}, :order=>4},
-        :isos => {:id=>:isos, :name=>_('ISOs'), :products=>{}, :order=>5},
-        :other => {:id=>:other, :name=>_('Other'), :products=>{}, :order=>6}
+        :rpms => {:id => :rpms, :name => _('RPMs'), :products => {}, :order => 1},
+        :srpms => {:id => :srpms, :name => _('Source RPMs'), :products => {}, :order => 2},
+        :debug => {:id => :debug, :name => _('Debug RPMs'), :products => {}, :order => 3},
+        :beta => {:id => :beta, :name => _('Beta'), :products => {}, :order => 4},
+        :isos => {:id => :isos, :name => _('ISOs'), :products => {}, :order => 5},
+        :other => {:id => :other, :name => _('Other'), :products => {}, :order => 6}
     }
     provider.products.engineering.each do |product|
       product.productContent.each do |prod_content|

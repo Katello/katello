@@ -15,17 +15,17 @@ module Glue::ElasticSearch::SyncPlan
     base.send :include, Ext::IndexedModel
 
     base.class_eval do
-      index_options :extended_json=>:extended_index_attrs,
-                    :display_attrs=>[:name, :sync_date, :description, :interval]
+      index_options :extended_json => :extended_index_attrs,
+                    :display_attrs => [:name, :sync_date, :description, :interval]
       mapping do
         indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
         indexes :name_sort, :type => 'string', :index => :not_analyzed
-        indexes :sync_date, :type=>'date'
+        indexes :sync_date, :type => 'date'
       end
     end
   end
 
   def extended_index_attrs
-    {:name_sort=>name.downcase}
+    {:name_sort => name.downcase}
   end
 end

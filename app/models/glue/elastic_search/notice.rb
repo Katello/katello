@@ -22,7 +22,7 @@ module Glue::ElasticSearch::Notice
 
       mapping do
         indexes :level_sort, :type => 'string', :index => :not_analyzed
-        indexes :created_at, :type=>'date'
+        indexes :created_at, :type => 'date'
       end
 
     end

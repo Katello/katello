@@ -39,8 +39,8 @@ module ProductsHelper
 
     {
         :id => record.id,
-        :products=>record.product_ids,  # :id
-        :repos=>repos
+        :products => record.product_ids,  # :id
+        :repos => repos
     }
   end
 
@@ -55,12 +55,12 @@ module ProductsHelper
     if @product_hash.nil?
       @product_hash = {}
       options[:readable_products].sort_by(&:name).each do |prod|
-        repos = prod.repos(current_organization.library).where(:content_type=>options[:content_types])
+        repos = prod.repos(current_organization.library).where(:content_type => options[:content_types])
           .sort{|a, b| a.name <=> b.name}
-        repos = repos.map { |repo| {:name=>repo.name, :id=>repo.id} }
+        repos = repos.map { |repo| {:name => repo.name, :id => repo.id} }
         if repos.any?
-          @product_hash[prod.id] = {:name=>prod.name, :repos=>repos, :id=>prod.id,
-                                    :editable=>options[:editable_products].include?(prod)}
+          @product_hash[prod.id] = {:name => prod.name, :repos => repos, :id => prod.id,
+                                    :editable => options[:editable_products].include?(prod)}
         end
       end
     end

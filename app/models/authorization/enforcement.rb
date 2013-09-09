@@ -113,7 +113,7 @@ module Authorization::Enforcement
   def allowed_to?(verbs, resource_type, tags = nil, org = nil, any_tags = false)
     tags = [] if tags.nil?
     tags = tags.is_a?(Array) ? tags.clone : [tags]
-    if tags.detect { |tag| !(tag.is_a?(Numeric) ||(tag.is_a?(String) && tag.to_s =~ /^\d+$/)) }
+    if tags.detect { |tag| !(tag.is_a?(Numeric) || (tag.is_a?(String) && tag.to_s =~ /^\d+$/)) }
       raise ArgumentError, "Tags need to be integers - #{tags} are not."
     end
     ResourceType.check resource_type, verbs

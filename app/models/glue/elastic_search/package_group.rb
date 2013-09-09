@@ -29,7 +29,7 @@ module Glue::ElasticSearch::PackageGroup
             "index" => {
                 "analysis" => {
                     "filter" => Util::Search.custom_filters,
-                    "analyzer" =>Util::Search.custom_analyzers
+                    "analyzer" => Util::Search.custom_analyzers
                 }
             }
         }
@@ -39,11 +39,11 @@ module Glue::ElasticSearch::PackageGroup
         {
           :package_group => {
             :properties => {
-              :id            => {:type=>'string', :index=>:not_analyzed},
-              :package_group_id => {:type=>'string', :index=>:not_analyzed},
-              :name          => { :type=> 'string', :analyzer=>:kt_name_analyzer},
-              :name_sort    => { :type => 'string', :index=> :not_analyzed },
-              :repo_id       => { :type=> 'string', :index=>:not_analyzed},
+              :id            => {:type => 'string', :index => :not_analyzed},
+              :package_group_id => {:type => 'string', :index => :not_analyzed},
+              :name          => { :type => 'string', :analyzer => :kt_name_analyzer},
+              :name_sort    => { :type => 'string', :index => :not_analyzed },
+              :repo_id       => { :type => 'string', :index => :not_analyzed},
             }
           }
         }
@@ -77,7 +77,7 @@ module Glue::ElasticSearch::PackageGroup
             if all_rows
               all
             else
-              string query, {:default_field=>default_field}
+              string query, {:default_field => default_field}
             end
           end
 

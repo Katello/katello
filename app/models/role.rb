@@ -17,8 +17,8 @@ class Role < ActiveRecord::Base
   acts_as_reportable
 
   has_many :roles_users, :dependent => :destroy
-  has_many :users, :through => :roles_users, :before_remove =>:super_admin_check
-  has_many :permissions, :dependent => :destroy, :inverse_of =>:role, :class_name=>"Permission", :extend => RolesPermissions::DefaultSystemRegistrationPermission
+  has_many :users, :through => :roles_users, :before_remove => :super_admin_check
+  has_many :permissions, :dependent => :destroy, :inverse_of => :role, :class_name => "Permission", :extend => RolesPermissions::DefaultSystemRegistrationPermission
   has_many :ldap_group_roles, :dependent => :destroy, :inverse_of => :role
   has_many :resource_types, :through => :permissions
 
@@ -93,7 +93,7 @@ class Role < ActiveRecord::Base
                      :all_tags => true,
                      :verbs => verbs.collect{|verb| Verb.find_or_create_by_verb(verb)},
                      :name => perm_name,
-                     :organization=> organization,
+                     :organization => organization,
                      :description => "Read #{key.to_s.capitalize} permission")
       end
     end
@@ -119,7 +119,7 @@ class Role < ActiveRecord::Base
     superadmin_role.update_attributes(:locked => false)
 
     superadmin_role_perm = Permission.find_or_create_by_name(
-      :name=> "super-admin-perm",
+      :name => "super-admin-perm",
       :description => 'Super Admin permission',
       :role => superadmin_role, :all_types => true)
     raise "Unable to create super-admin role permission: #{superadmin_role_perm}" if superadmin_role_perm.nil? || superadmin_role_perm.errors.size > 0

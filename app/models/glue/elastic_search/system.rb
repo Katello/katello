@@ -28,8 +28,8 @@ module Glue::ElasticSearch::System
       #  :json  - normal to_json options,  :only or :except allowed
       #  :extended_json  - function to call to return a hash to merge into document
       #  :display_attrs  - list of attributes to display as searchable
-      index_options :extended_json=>:extended_index_attrs,
-                    :json=>{:only=> [:name,
+      index_options :extended_json => :extended_index_attrs,
+                    :json => {:only => [:name,
                                      :description,
                                      :id,
                                      :uuid,
@@ -93,13 +93,13 @@ module Glue::ElasticSearch::System
         indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
         indexes :description, :type => 'string'
         indexes :content_view, :type => 'string', :analyzer => :kt_name_analyzer
-        indexes :lastCheckin, :type=>'date'
-        indexes :name_autocomplete, :type=>'string', :analyzer=>'autcomplete_name_analyzer'
-        indexes :installed_products, :type=>'string', :analyzer=>:kt_name_analyzer
+        indexes :lastCheckin, :type => 'date'
+        indexes :name_autocomplete, :type => 'string', :analyzer => 'autcomplete_name_analyzer'
+        indexes :installed_products, :type => 'string', :analyzer => :kt_name_analyzer
         indexes :memory, :type => 'integer'
         indexes :sockets, :type => 'integer'
         indexes :uuid, :type => 'string', :analyzer => :kt_name_analyzer
-        indexes :facts, :path=>"just_name" do
+        indexes :facts, :path => "just_name" do
         end
         indexes :custom_info, :path => "just_name" do
         end
@@ -110,8 +110,8 @@ module Glue::ElasticSearch::System
         indexes :environment_sort, :type => 'string', :index => :not_analyzed
         indexes :content_view_sort, :type => 'string', :index => :not_analyzed
 
-        indexes :host, :type=>'string', :analyzer=>:kt_name_analyzer
-        indexes :guests, :type=>'string', :analyzer=>:kt_name_analyzer
+        indexes :host, :type => 'string', :analyzer => :kt_name_analyzer
+        indexes :guests, :type => 'string', :analyzer => :kt_name_analyzer
       end
 
       # Whenever a system's 'name' field changes, the objects returned by system.system_groups
@@ -122,19 +122,19 @@ module Glue::ElasticSearch::System
 
   # Additional values to index that are not available in a normal to_json call
   def extended_index_attrs
-    attrs= {
-      :facts=>self.facts,
-      :organization_id=>self.organization.id,
-      :system_group=>self.system_groups.collect{|g| g.name},
-      :system_group_ids=>self.system_group_ids,
-      :installed_products=>collect_installed_product_names,
+    attrs = {
+      :facts => self.facts,
+      :organization_id => self.organization.id,
+      :system_group => self.system_groups.collect{|g| g.name},
+      :system_group_ids => self.system_group_ids,
+      :installed_products => collect_installed_product_names,
       :sockets => self.sockets,
-      :custom_info=>collect_custom_info,
+      :custom_info => collect_custom_info,
       :content_view => self.content_view.try(:name),
       :status => self.compliance_color,
 
       # Sortable attributes
-      :name_sort=>name.downcase, :name_autocomplete=>self.name,
+      :name_sort => name.downcase, :name_autocomplete => self.name,
       :content_view_sort => self.content_view.try(:name),
       :environment_sort => self.environment.try(:name)
     }

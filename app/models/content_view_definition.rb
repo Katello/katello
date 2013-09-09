@@ -30,8 +30,8 @@ class ContentViewDefinition < ContentViewDefinitionBase
   validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
   validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
 
-  scope :composite, where(:composite=>true)
-  scope :non_composite, where(:composite=>false)
+  scope :composite, where(:composite => true)
+  scope :non_composite, where(:composite => false)
 
   # TODO: break up method
   # rubocop:disable MethodLength
@@ -39,13 +39,13 @@ class ContentViewDefinition < ContentViewDefinitionBase
     options = { :async => true, :notify => false }.merge options
 
     view = ContentView.create!(:name => name,
-                        :label=>label,
+                        :label => label,
                         :description => description,
                         :content_view_definition => self,
                         :organization => organization
                        )
 
-    version = ContentViewVersion.new(:version=>1, :content_view=>view)
+    version = ContentViewVersion.new(:version => 1, :content_view => view)
     version.environments << organization.library
     version.save!
 

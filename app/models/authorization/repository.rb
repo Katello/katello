@@ -30,7 +30,7 @@ module Authorization::Repository
       repos = Repository.enabled.content_readable(org)
       lib_ids = []
       repos.each{|r|  lib_ids << (r.library_instance_id || r.id)}
-      where(:id=>lib_ids)
+      where(:id => lib_ids)
     end
 
     def content_readable(org)

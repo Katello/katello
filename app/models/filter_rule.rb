@@ -69,7 +69,7 @@ class FilterRule < ActiveRecord::Base
   def as_json(options = {})
     json_val = super(options).update("id" => id,
                                      "content" => content_type,
-                                     "type" =>  inclusion ? _("includes"): _("excludes"),
+                                     "type" =>  inclusion ? _("includes") : _("excludes"),
                                      "rule" => parameters)
     json_val.delete("parameters")
     json_val

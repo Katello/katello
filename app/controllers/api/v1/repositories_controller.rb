@@ -189,7 +189,7 @@ Pulp doesn't send correct headers."
 
   def find_product
     #since this is only used for create, it isn't supported for rhel products, so cp_id is unique
-    @product = Product.where(:cp_id=>params[:product_id]).first
+    @product = Product.where(:cp_id => params[:product_id]).first
     raise HttpErrors::NotFound, _("Couldn't find product with id '%s'") % params[:product_id] if @product.nil?
     @organization ||= @product.organization
   end

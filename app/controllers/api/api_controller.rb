@@ -107,7 +107,7 @@ class Api::ApiController < ActionController::Base
   end
 
   def respond(options = {})
-    method_name = ('respond_for_'+params[:action].to_s).to_sym
+    method_name = ('respond_for_' + params[:action].to_s).to_sym
     raise "automatic response method '%s' not defined" % method_name unless respond_to?(method_name, true)
     return send(method_name, options)
   end

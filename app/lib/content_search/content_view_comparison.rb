@@ -157,7 +157,7 @@ module ContentSearch
         if total > page_size
           meta_row =  MetadataRow.new(:total => total,
                                       :current_count => offset + units.length,
-                                      :data => {:repo_id=>library_repo.id},
+                                      :data => {:repo_id => library_repo.id},
                                       :unique_id => repo_row.id,
                                       :parent_id => repo_row.id
                                      )

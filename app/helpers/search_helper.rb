@@ -30,6 +30,6 @@ module SearchHelper
   end
 
   def search_string(search)
-    "?search="+search.params+"#" unless search.nil? || search.params.nil?
+    "?search=#{search.params}#" unless search.nil? || search.params.nil?
   end
 end

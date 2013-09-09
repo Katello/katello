@@ -55,8 +55,8 @@ class Api::V1::SubscriptionsController < Api::V1::ApiController
     filters = []
 
     # Limit subscriptions to current org and Red Hat provider
-    filters << {:org=>[@organization.label]}
-    filters << {:provider_id=>[@organization.redhat_provider.id]}
+    filters << {:org => [@organization.label]}
+    filters << {:provider_id => [@organization.redhat_provider.id]}
 
     options = {
         :filter => filters,

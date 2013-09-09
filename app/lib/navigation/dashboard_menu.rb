@@ -16,7 +16,7 @@ module Navigation
       {:key => :dashboard,
        :name => _("Dashboard"),
         :url => dashboard_index_path,
-        :options => {:class=>'dashboard top_level', "data-menu"=>"dashboard"}
+        :options => {:class => 'dashboard top_level', "data-menu" => "dashboard"}
       }
     end
 

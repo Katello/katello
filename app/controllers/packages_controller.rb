@@ -20,7 +20,7 @@ class PackagesController < ApplicationController
 
     view = lambda do
       !Repository.readable_in_org(current_organization).where(
-          :pulp_id=>@package.repoids).empty?
+          :pulp_id => @package.repoids).empty?
     end
 
     auto_complete = lambda do
@@ -51,23 +51,23 @@ class PackagesController < ApplicationController
   end
 
   def show
-    render :partial=>"show"
+    render :partial => "show"
   end
 
   def filelist
-    render :partial=>"filelist"
+    render :partial => "filelist"
   end
 
   def changelog
-    render :partial=>"changelog"
+    render :partial => "changelog"
   end
 
   def dependencies
-    render :partial=>"dependencies"
+    render :partial => "dependencies"
   end
 
   def details
-    render :partial=>"details"
+    render :partial => "details"
   end
 
   private
@@ -75,7 +75,7 @@ class PackagesController < ApplicationController
   def lookup_package
     @package_id = params[:id]
     @package = Package.find @package_id
-    raise _("Unable to find package %s")% @package_id if @package.nil?
+    raise _("Unable to find package %s") % @package_id if @package.nil?
   end
 
   def find_filter

@@ -39,13 +39,13 @@ class Organization < ActiveRecord::Base
   has_many :providers, :dependent => :destroy
   has_many :products, :through => :providers
   has_many :environments, :class_name => "KTEnvironment", :dependent => :destroy, :inverse_of => :organization
-  has_one :library, :class_name =>"KTEnvironment", :conditions => {:library => true}, :dependent => :destroy
+  has_one :library, :class_name => "KTEnvironment", :conditions => {:library => true}, :dependent => :destroy
   has_many :gpg_keys, :dependent => :destroy, :inverse_of => :organization
   has_many :permissions, :dependent => :destroy, :inverse_of => :organization
   has_many :sync_plans, :dependent => :destroy, :inverse_of => :organization
   has_many :system_groups, :dependent => :destroy, :inverse_of => :organization
-  has_many :content_view_definitions, :class_name => "ContentViewDefinitionBase", :dependent=> :destroy
-  has_many :content_views, :dependent=> :destroy
+  has_many :content_view_definitions, :class_name => "ContentViewDefinitionBase", :dependent => :destroy
+  has_many :content_views, :dependent => :destroy
   has_many :task_statuses, :dependent => :destroy, :as => :task_owner
 
   #older association
@@ -57,7 +57,7 @@ class Organization < ActiveRecord::Base
 
   # Organizations which are being deleted (or deletion failed) can be filtered out with this scope.
   scope :without_deleting, where(:deletion_task_id => nil)
-  scope :having_name_or_label, lambda { |name_or_label| { :conditions => ["name = :id or label = :id", {:id=>name_or_label}] } }
+  scope :having_name_or_label, lambda { |name_or_label| { :conditions => ["name = :id or label = :id", {:id => name_or_label}] } }
 
   before_create :create_library
   before_create :create_redhat_provider
@@ -86,7 +86,7 @@ class Organization < ActiveRecord::Base
   end
 
   def default_content_view
-    ContentView.default.where(:organization_id=>self.id).first
+    ContentView.default.where(:organization_id => self.id).first
   end
 
   def systems
@@ -132,7 +132,7 @@ class Organization < ActiveRecord::Base
   def discover_repos(url, notify = false)
     raise _("Repository Discovery already in progress") if self.repo_discovery_task && !self.repo_discovery_task.finished?
     raise _("Discovery URL not set.") if url.blank?
-    task = self.async(:organization=>self, :task_type=>:repo_discovery).start_discovery_task(url, notify)
+    task = self.async(:organization => self, :task_type => :repo_discovery).start_discovery_task(url, notify)
     self.task_statuses << task
     self.save!
     task

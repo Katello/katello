@@ -10,7 +10,7 @@ group :test do
   gem 'minitest', '<=4.5.0', :require => "hoe/minitest"
   gem 'minitest-rails'
 
-  gem 'mocha', '~> 0.13.1', :require=>false
+  gem 'mocha', '~> 0.13.1', :require => false
   # make our specs go faster (also appears in development group)
   gem "parallel_tests"
 end

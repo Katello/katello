@@ -130,7 +130,7 @@ class TaskStatus < ActiveRecord::Base
 
     if ('System' == task_owner_type)
       methods = [:description, :result_description, :overall_status]
-      json.merge!(super(:only=>methods, :methods => methods))
+      json.merge!(super(:only => methods, :methods => methods))
       json[:system_name] = task_owner.name
     end
 
@@ -314,7 +314,7 @@ class TaskStatus < ActiveRecord::Base
 
   def self.refresh(ids)
     unless ids.blank?
-      uuids = TaskStatus.where(:id=>ids).pluck(:uuid)
+      uuids = TaskStatus.where(:id => ids).pluck(:uuid)
       ret = Katello.pulp_server.resources.task.poll_all(uuids)
       ret.each do |pulp_task|
         PulpTaskStatus.dump_state(pulp_task, TaskStatus.find_by_uuid(pulp_task[:task_id]))

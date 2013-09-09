@@ -587,7 +587,7 @@ class ContentSearchController < ApplicationController
   end
 
   #Given a repo and a pkg_search (id array or hash),
-  #  return a array of {:id=>env_id, :display=>search.total}
+  #  return a array of {:id => env_id, :display => search.total}
   #
   #
   def spanned_repo_content(view, library_repo, content_type, content_search_obj, offset = 0, search_mode = :all, environments = [])

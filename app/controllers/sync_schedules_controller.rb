@@ -75,7 +75,7 @@ class SyncSchedulesController < ApplicationController
     else
       notify.error _("There must be at least one plan selected")
     end
-    redirect_to(:controller => :sync_schedules, :action =>:index)
+    redirect_to(:controller => :sync_schedules, :action => :index)
   end
 
   private
@@ -86,7 +86,7 @@ class SyncSchedulesController < ApplicationController
   rescue ActiveRecord::RecordNotFound
     execute_after_filters
     notify.error _("There must be at least one product selected")
-    redirect_to(:controller => :sync_schedules, :action =>:index)
+    redirect_to(:controller => :sync_schedules, :action => :index)
   end
 
 end

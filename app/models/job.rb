@@ -87,7 +87,7 @@ class Job < ActiveRecord::Base
     first_task = self.task_statuses.first
     #check for first task
     if first_task.nil?
-      return {:id=>self.id, :state=>'error', :status_message=>'No tasks in job.'}
+      return {:id => self.id, :state => 'error', :status_message => 'No tasks in job.'}
     else
       #since this is a collection of tasks, where
       # the type and parameters will all be the same
@@ -95,26 +95,26 @@ class Job < ActiveRecord::Base
       #  put them in the job
       tasks = self.task_statuses.collect do |t|
         {
-          :id=>t.id,
-          :result=>t.result,
-          :progress=>t.progress,
-          :state=>t.state,
-          :uuid=>t.uuid,
-          :start_time=>t.start_time,
-          :finish_time=>t.finish_time
+          :id => t.id,
+          :result => t.result,
+          :progress => t.progress,
+          :state => t.state,
+          :uuid => t.uuid,
+          :start_time => t.start_time,
+          :finish_time => t.finish_time
         }
       end
       return {
-          :id=>self.id,
-          :pulp_id=>self.pulp_id,
-          :created_at=>first_task.created_at,
-          :task_type=>first_task.task_type,
-          :parameters=>first_task.parameters,
-          :tasks=>tasks,
+          :id => self.id,
+          :pulp_id => self.pulp_id,
+          :created_at => first_task.created_at,
+          :task_type => first_task.task_type,
+          :parameters => first_task.parameters,
+          :tasks => tasks,
 
-          :state=>self.state,
-          :finish_time=>self.finish_time,
-          :status_message=>self.status_message
+          :state => self.state,
+          :finish_time => self.finish_time,
+          :status_message => self.status_message
       }
     end
   end
@@ -124,14 +124,14 @@ class Job < ActiveRecord::Base
     first_task = self.task_statuses.first
     #check for first task
     if first_task.nil?
-      return {:id=>self.id}
+      return {:id => self.id}
     else
       return {
-          :task_type=>TaskStatus::TYPES[first_task.task_type][:english_name],
-          :summary_message=>summary_message(first_task),
-          :requested_action_message=>requested_action_message(first_task),
-          :pending_action_message=>(pending_action_message(first_task) if state == :running),
-          :parameters_message=>parameters_message(first_task)
+          :task_type => TaskStatus::TYPES[first_task.task_type][:english_name],
+          :summary_message => summary_message(first_task),
+          :requested_action_message => requested_action_message(first_task),
+          :pending_action_message => (pending_action_message(first_task) if state == :running),
+          :parameters_message => parameters_message(first_task)
       }
     end
   end

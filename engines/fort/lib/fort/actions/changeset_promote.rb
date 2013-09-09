@@ -32,7 +32,7 @@ module Fort
         environment = changeset.environment
         changeset.content_views.each do |view|
           Node.with_environment(environment).each do |node|
-            node.sync(:environment=>environment, :content_view=>view)
+            node.sync(:environment => environment, :content_view => view)
           end
         end
       end
