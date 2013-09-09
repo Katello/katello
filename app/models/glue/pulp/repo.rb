@@ -11,6 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Glue::Pulp::Repo
+  CONTENT_UPLOAD_LIMIT = 500 * 1024
 
   def self.included(base)
     base.send :include, LazyAccessor
@@ -686,6 +687,42 @@ module Glue::Pulp::Repo
         end
       }
       return statuses
+    end
+
+    def upload_content(filepath)
+      case content_type
+      when "puppet"
+        unit_metadata = PuppetModule.parse_metadata(filepath)
+        unit_key = unit_metadata.slice(:author, :name, :version)
+      else
+        fail _("Uploads not supported for content type '%s'.") % content_type
+      end
+
+      upload_id = Katello.pulp_server.resources.content.create_upload_request["upload_id"]
+
+      File.open(filepath, "rb") do |file|
+        offset = 0
+        while (chunk = file.read(CONTENT_UPLOAD_LIMIT))
+          Katello.pulp_server.resources.content.upload_bits(upload_id, offset, chunk)
+          offset += CONTENT_UPLOAD_LIMIT
+        end
+      end
+
+      Katello.pulp_server.resources.content.import_into_repo(self.pulp_id, unit_type_id,
+                                                             upload_id, unit_key,
+                                                             {:unit_metadata => unit_metadata}
+                                                            )
+
+      Katello.pulp_server.resources.content.delete_upload_request(upload_id)
+    end
+
+    def unit_type_id
+      case content_type
+      when ::Repository::YUM_TYPE
+        "rpm"
+      when ::Repository::PUPPET_TYPE
+        "puppet_module"
+      end
     end
 
     protected

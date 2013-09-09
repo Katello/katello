@@ -61,4 +61,18 @@
         .grid_5.la
           #{_("None defined for this Organization.")}
 
+  - else
+    %h3
+      = _("Upload Content")
+
+    %fieldset
+      .grid_2.ra
+        %label
+          = @repository.content_type == Repository::PUPPET_TYPE ?  _("Puppet Module:") : _("Package:")
+      .grid_5.la
+        = form_for @repository, :url => upload_content_provider_product_repository_path(@repository.product.provider_id, @repository.product.id, @repository.id),
+          :method => "post", :multipart => true do |f|
+          = f.file_field :content
+          = f.submit "Upload", :class => "upload_button"
+
 = render :template => "layouts/tupane_layout"

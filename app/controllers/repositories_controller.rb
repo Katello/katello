@@ -17,9 +17,11 @@ class RepositoriesController < ApplicationController
   respond_to :html, :js
 
   before_filter :find_provider, :only => [:new, :create, :edit, :destroy, :update_gpg_key]
-  before_filter :find_product, :only => [:new, :create, :edit, :destroy, :update_gpg_key]
+  before_filter :find_product, :only => [:new, :create, :edit, :destroy, :update_gpg_key,
+    :upload_content]
   before_filter :authorize
-  before_filter :find_repository, :only => [:edit, :destroy, :enable_repo, :update_gpg_key]
+  before_filter :find_repository, :only => [:edit, :destroy, :enable_repo, :update_gpg_key,
+    :upload_content]
 
   def rules
     read_any_test = lambda{Provider.any_readable?(current_organization)}
@@ -34,7 +36,8 @@ class RepositoriesController < ApplicationController
       :update_gpg_key => edit_test,
       :destroy => edit_test,
       :enable_repo => org_edit,
-      :auto_complete_library => read_any_test
+      :auto_complete_library => read_any_test,
+      :upload_content => edit_test
     }
   end
 
@@ -129,6 +132,12 @@ class RepositoriesController < ApplicationController
       label = _("%{repo} (Product: %{product})") % {:repo => repo.name, :product => repo.product}
       {:id => repo.id, :label => label, :value => repo.name}
     end
+  end
+
+  def upload_content
+    filepath = params[:repository][:content].tempfile.path
+    @repository.upload_content(filepath)
+    render :nothing => true
   end
 
   protected

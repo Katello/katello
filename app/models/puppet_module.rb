@@ -10,9 +10,23 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+require 'rubygems/package'
+require 'zlib'
 
 class PuppetModule
   include Glue::Pulp::PuppetModule if Katello.config.use_pulp
   include Glue::ElasticSearch::PuppetModule if Katello.config.use_elasticsearch
   CONTENT_TYPE = "puppet_module"
+
+  def self.parse_metadata(filepath)
+    metadata = nil
+    tar_extract = Gem::Package::TarReader.new(Zlib::GzipReader.open(filepath))
+    tar_extract.rewind # The extract has to be rewinded after every iteration
+    tar_extract.each do |entry|
+      next unless entry.file? && entry.full_name =~ %r{\A[^/]+/metadata.json\z}
+      metadata = entry.read
+    end
+    tar_extract.close
+    return JSON.parse(metadata)
+  end
 end

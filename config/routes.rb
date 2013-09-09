@@ -361,6 +361,7 @@ Src::Application.routes.draw do
         get :default_label, :on => :collection
         member do
           put :update_gpg_key, :as => :update_repo_gpg_key
+          post :upload_content
         end
       end
     end
