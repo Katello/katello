@@ -34,7 +34,7 @@ class ActivationKey < ActiveRecord::Base
   before_validation :set_default_content_view, :unless => :persisted?
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name
   validates :name, :presence => true
-  validates_uniqueness_of :name, :scope => :organization_id
+  validates :name, :uniqueness => {:scope => :organization_id}
   validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
   validates :environment, :presence => true
   validate :environment_exists

@@ -21,13 +21,12 @@ class GpgKey < ActiveRecord::Base
 
   belongs_to :organization, :inverse_of => :gpg_keys
 
-  validates :name, :presence => true
+  validates :name, :presence => true, :uniqueness => {:scope => :organization_id,
+      :message => N_("Label has already been taken")}
+  validates :content, :presence => true, :length => {:maximum => MAX_CONTENT_LENGTH}
+  validates :organization, :presence => true
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name
-  validates :content, :presence => true
   validates_with Validators::ContentValidator, :attributes => :content
-  validates_length_of :content, :maximum => MAX_CONTENT_LENGTH
-  validates_presence_of :organization
-  validates_uniqueness_of :name, :scope => :organization_id, :message => N_("Label has already been taken")
 
   def as_json(options = {})
     options ||= {}

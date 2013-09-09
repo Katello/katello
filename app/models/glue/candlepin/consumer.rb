@@ -51,7 +51,9 @@ module Glue::Candlepin::Consumer
       lazy_accessor :compliance, :initializer => lambda {|s| Resources::Candlepin::Consumer.compliance(uuid) }
       lazy_accessor :events, :initializer => lambda {|s| Resources::Candlepin::Consumer.events(uuid) }
 
-      validate :validate_cp_consumer
+      validates :cp_type, :inclusion => {:in => %w(system hypervisor candlepin)},
+        :if => :new_record?
+      validates :facts, :presence => true, :if => :new_record?
     end
   end
 
@@ -90,13 +92,6 @@ module Glue::Candlepin::Consumer
       json['checkin_time'] = self.checkin_time
       json['distribution'] = self.distribution
       json
-    end
-
-    def validate_cp_consumer
-      if new_record?
-        validates_inclusion_of :cp_type, :in => %w(system hypervisor candlepin)
-        validates_presence_of :facts
-      end
     end
 
     def set_candlepin_consumer

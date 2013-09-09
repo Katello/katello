@@ -11,8 +11,10 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class Verb < ActiveRecord::Base
+  # rubocop:disable HasAndBelongsToMany
+  # TODO: change this into has_many :through association
   has_and_belongs_to_many :permission
-  validates_length_of :verb, :maximum => 255
+  validates :verb, :length => {:maximum => 255}
 
   # alias for verb attribute
   def name

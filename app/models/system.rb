@@ -47,7 +47,7 @@ class System < ActiveRecord::Base
   validates :name, :presence => true
   validates_with Validators::NoTrailingSpaceValidator, :attributes => :name
   validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
-  validates_length_of :location, :maximum => 255
+  validates :location, :length => {:maximum => 255}
   validates_with Validators::ContentViewEnvironmentValidator
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name
 
