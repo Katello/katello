@@ -23,6 +23,9 @@ Src::Application.routes.draw do
       end
 
       api_resources :organizations do
+        member do
+          post :repo_discover
+        end
         api_resources :products, :only => [:index]
         api_resources :environments
         api_resources :sync_plans, :only => [:index, :create]
