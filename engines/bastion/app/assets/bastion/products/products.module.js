@@ -25,7 +25,8 @@ angular.module('Bastion.products', [
     'ui.compat',
     'Bastion.widgets',
     'Bastion.providers',
-    'Bastion.gpg-keys'
+    'Bastion.gpg-keys',
+    'Bastion.tasks'
 ]);
 
 /**
@@ -76,6 +77,20 @@ angular.module('Bastion.products').config(['$stateProvider', function($stateProv
         collapsed: true,
         controller: 'NewProviderController',
         templateUrl: 'providers/views/new.html'
+    })
+
+    .state("products.discovery", {
+        url: '/products/discovery',
+        collapsed: true,
+        views: {
+            'table': {
+                templateUrl: 'products/views/products-table-collapsed.html'
+            },
+            'action-panel': {
+                controller: 'DiscoveryController',
+                templateUrl: 'products/views/discovery.html'
+            }
+        }
     })
 
     .state("products.details", {

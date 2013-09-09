@@ -25,6 +25,7 @@ class Api::V2::ProductsControllerTest < Minitest::Rails::ActionController::TestC
   def models
     @organization = organizations(:acme_corporation)
     @provider = providers(:fedora_hosted)
+    @product = products(:empty_product)
   end
 
   def permissions
@@ -60,7 +61,7 @@ class Api::V2::ProductsControllerTest < Minitest::Rails::ActionController::TestC
 
   def test_create
     post :create, :name => 'Fedora Product',
-                  :provider_id => @provider.cp_id,
+                  :provider_id => @provider.id,
                   :description => 'This is my cool new product.'
 
     assert_response :success
@@ -79,6 +80,54 @@ class Api::V2::ProductsControllerTest < Minitest::Rails::ActionController::TestC
 
     assert_protected_action(:create, allowed_perms, denied_perms) do
       post :create, :provider_id => @provider.id
+    end
+  end
+
+  def test_show
+    get :show, :id => @product.cp_id
+
+    assert_response :success
+    assert_template 'api/v2/products/show'
+  end
+
+  def test_show_protected
+    allowed_perms = [@read_permission, @update_permission, @create_permission]
+    denied_perms = [@no_permission]
+
+    assert_protected_action(:show, allowed_perms, denied_perms) do
+      get :show, :id => @product.cp_id
+    end
+  end
+
+  def test_update
+    get :update, :id => @product.cp_id, :name => 'New Name'
+
+    assert_response :success
+    assert_template 'api/v2/products/show'
+    assert_equal assigns[:product].name, 'New Name'
+  end
+
+  def test_update_protected
+    allowed_perms = [@update_permission, @create_permission]
+    denied_perms = [@no_permission, @read_permission]
+
+    assert_protected_action(:destroy, allowed_perms, denied_perms) do
+      get :destroy, :id => @product.cp_id, :name => 'New Name'
+    end
+  end
+
+  def test_destroy
+    get :destroy, :id => @product.cp_id
+
+    assert_response :success
+  end
+
+  def test_destroy_protected
+    allowed_perms = [@update_permission, @create_permission]
+    denied_perms = [@no_permission, @read_permission]
+
+    assert_protected_action(:destroy, allowed_perms, denied_perms) do
+      get :destroy, :id => @product.cp_id
     end
   end
 

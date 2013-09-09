@@ -13,7 +13,7 @@
 
 /**
  * @ngdoc service
- * @name  Katello.repositories.factory:Repository
+ * @name  Bastion.repositories.factory:Repository
  *
  * @requires $resource
  *

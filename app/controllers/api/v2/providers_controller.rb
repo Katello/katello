@@ -12,6 +12,7 @@
 
 class Api::V2::ProvidersController < Api::V2::ApiController
 
+  before_filter :find_provider, :only => [:discovery]
   before_filter :find_organization, :only => [:index, :create]
   before_filter :authorize
 
@@ -22,10 +23,12 @@ class Api::V2::ProvidersController < Api::V2::ApiController
   def rules
     index_test  = lambda { Provider.any_readable?(@organization) }
     create_test = lambda { @organization.nil? ? true : Provider.creatable?(@organization) }
+    edit_test   = lambda { @provider.editable? }
 
     {
       :index                    => index_test,
-      :create                   => create_test
+      :create                   => create_test,
+      :discovery                => edit_test
     }
   end
 
@@ -88,10 +91,14 @@ class Api::V2::ProvidersController < Api::V2::ApiController
     respond
   end
 
-  api :PUT, "/providers/:id/refresh_products", "Refresh products for Red Hat provider"
-  param :id, :number, :desc => "Provider numeric identifier", :required => true
-  def refresh_products
-    super
+  api :POST, "/providers/:id/discovery", "Discover repository urls with metadata and find candidate repos. Supports http, https and file based urls. Async task, returns the delayed job."
+  param :url, String, :required => true, :desc => "remote url to perform discovery"
+  def discovery
+    @provider.discovery_url = params[:url]
+    @provider.save
+    @provider.discover_repos
+    task = @provider.discovery_task
+    respond_for_async :resource => task
   end
 
   private

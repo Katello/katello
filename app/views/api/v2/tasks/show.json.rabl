@@ -8,6 +8,7 @@ attributes :id, :task_owner_type, :progress, :pending?, :uuid, :state, :user_id,
 
 @result = (@task || @object).result
 @result = Util::Data::ostructize(@result)
-child @result => :result do
-  attributes :errors
+
+node :result do
+  @result
 end

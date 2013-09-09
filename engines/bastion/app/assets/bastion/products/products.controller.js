@@ -57,6 +57,11 @@ angular.module('Bastion.products').controller('ProductsController',
             $scope.transitionTo('products.new.form');
         }
 
+        $scope.openDiscoveryPanel = function() {
+            $scope.panel.loading = true;
+            $scope.transitionTo('products.discovery');
+        }
+
         $scope.table.closeItem = function() {
             $scope.transitionTo('products.index');
         };
