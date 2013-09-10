@@ -32,7 +32,7 @@ module Glue::ElasticSearch::Errata
                 "title_analyzer" => {
                   "type"      => "custom",
                   "tokenizer" => "keyword",
-                  filter    => %w(standard lowercase asciifolding ngram_filter)
+                  "filter"    => %w(standard lowercase asciifolding ngram_filter)
                 }
               }.merge(Util::Search.custom_analyzers)
             }
