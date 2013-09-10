@@ -11,21 +11,21 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Glue::ElasticSearch::PuppetModule
-  def self.included(base)
-    base.send :extend, ClassMethods
-  end
+  extend ActiveSupport::Concern
 
-  module ClassMethods
-    def index_options
-      {
-        "_type"             => :puppet_module,
-        "name_sort"         => name.downcase,
-        "name_autocomplete" => name,
-        "author_autocomplete" => author,
-        "sortable_version"  => sortable_version
-      }
+    included do
+      def index_options
+        {
+          "_type"             => :puppet_module,
+          "name_sort"         => name.downcase,
+          "name_autocomplete" => name,
+          "author_autocomplete" => author,
+          "sortable_version"  => sortable_version
+        }
+      end
     end
 
+  module ClassMethods
     def index_settings
       {
         "index" => {
