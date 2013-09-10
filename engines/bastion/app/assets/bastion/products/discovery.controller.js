@@ -22,33 +22,82 @@
  *   Provides the functionality for the product details action pane.
  */
 angular.module('Bastion.products').controller('DiscoveryController',
-    ['$scope', '$timeout', 'Task', 'Provider', function($scope, $timeout, Task, Provider) {
+    ['$scope', '$q', '$timeout', '$http', 'Task', 'Organization', 'CurrentOrganization',
+    function($scope, $q, $timeout, $http, Task, Organization, CurrentOrganization) {
+        var transformRows, setDiscoveryDetails;
 
+        //Start discovery Stuff
         $scope.discovery = {url: ''};
         $scope.panel.loading = false;
         $scope.discoveryTable = {rows: []};
 
-        $scope.discover = function() {
-            $scope.discovering = true;
+        setDiscoveryDetails = function(task) {
+            $scope.discovery.url = task.parameters.url;
+            $scope.discoveryTable.rows = transformRows(task.result);
+            $scope.discovery.pending = task.pending;
+        };
 
-            Provider.discover($scope.discovery, function(response) {
+        $scope.setupSelected = function() {
+            $scope.discovery.selected = $scope.discoveryTable.getSelected();
+            $scope.transitionTo('products.discovery.create');
+        };
+
+        $scope.defaultName = function(basePath){
+            //Remove trailing slash and replace rest with space
+            return basePath.replace(/\/$/, "").replace(/\//g, ' ');
+        };
+
+        $scope.cancelDiscovery = function(){
+            Organization.cancelRepoDiscover({id: CurrentOrganization});
+        };
+
+        transformRows = function(urls) {
+            var baseUrl, toRet = [];
+            baseUrl = $scope.discovery.url;
+            angular.forEach(urls, function(url){
+                var path = url.replace(baseUrl, "");
+                toRet.push({
+                        url: url,
+                        path: path,
+                        name: $scope.defaultName(path),
+                        label: ''
+                });
+            });
+            return _.sortBy(toRet, function(item){
+                return item.url;
+            });
+        };
+
+        Organization.get({id: CurrentOrganization}, function(org){
+            if (org['discovery_task_id']) {
+                Task.get({id: org['discovery_task_id']}, function(task){
+                    setDiscoveryDetails(task);
+                });
+            }
+        });
+
+        $scope.discover = function() {
+            $scope.discovery.pending = true;
+            $scope.discoveryTable.rows = [];
+            $scope.discoveryTable.selectAll(false);
+            Organization.repoDiscover({id: CurrentOrganization, url: $scope.discovery.url}, function(response) {
                 pollTask(response);
             });
         };
 
         function pollTask(task) {
-            if (task.state !== "finished") {
+            if (task.pending) {
                 $timeout(function() {
-                    checkTask(task.uuid);
+                    checkTask(task);
                 }, 1000);
             } else {
-                $scope.discovering = false;
-                $scope.discoveryTable.rows = task.result;
+                setDiscoveryDetails(task);
             }
         }
 
-        function checkTask(id) {
-            Task.get({id: id}, function(response) {
+        function checkTask(task) {
+            Task.get({id: task.id}, function(response) {
+                setDiscoveryDetails(response);
                 pollTask(response);
             });
         }

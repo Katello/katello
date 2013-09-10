@@ -62,7 +62,7 @@ describe('Controller: ProductsController', function() {
         spyOn($scope, "transitionTo");
         $scope.transitionToDiscovery();
 
-        expect($scope.transitionTo).toHaveBeenCalledWith('products.discovery');
+        expect($scope.transitionTo).toHaveBeenCalledWith('products.discovery.scan');
     });
 
     it('sets the openDetails function to transition to a details page', function() {

@@ -52,7 +52,7 @@ class Api::V2::ProductsController < Api::V2::ApiController
     options = sort_params
     options[:load_records?] = true
 
-    ids = Product.all_readable(@organization).pluck(:id)
+    ids = Product.all_readable(@organization).pluck('products.id')
 
     options[:filters] = [
       {:terms => {:id => ids}}

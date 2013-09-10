@@ -5,13 +5,13 @@ attributes :name, :label, :description
 
 extends 'api/v2/common/org_reference'
 
-attributes :multiplier, :marketing_product
+attributes :marketing_product
 attributes :provider_id
 attributes :sync_plan_id, :sync_plan_name
 attributes :gpg_key_id
 
 node :repository_count do |product|
-  product.repositories.length
+  product.repositories.count
 end
 
 child :gpg_key do

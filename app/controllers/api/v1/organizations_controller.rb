@@ -80,7 +80,7 @@ class Api::V1::OrganizationsController < Api::V1::ApiController
     respond
   end
 
-  api :PUT, "/organizations/:id/repo_discover", "Discover Repositories"
+  api :POST, "/organizations/:id/repo_discover", "Discover Repositories"
   param :url, String, :desc => "base url to perform repo discovery on"
   def repo_discover
     fail _("url not defined.") if params[:url].blank?

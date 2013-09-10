@@ -1,67 +1,50 @@
-<section class="nutupane-details" ng-cloak alch-container-scroll>
 
-  <header class="new-header details-header">
-    <h2 class="fl">{{ "Repo Discovery" | i18n }}</h2>
-
-    <div class="details-actions fr">
-      <button class="btn" ng-click="table.closeItem()">
-        <i class="icon-remove"></i>
-        {{ "Close" | i18n }}
-      </button>
-    </div>
-  </header>
-
-  <div class="form">
+<div class="form">
+  <form ng-disabled="!discovery.url || discovery.pending" ng-submit="discover()">
     <input type="url"
            class="input input-search input-xxlarge"
            placeholder="{{ 'URL to discover' | i18n }}"
            ng-model="discovery.url"
-           ng-disabled="discovering">
-    <button class="btn btn-primary"
-            ng-disabled="!discovery.url || discovering"
-            ng-click="discover()">
-      <span ng-show="!discovering">{{ "Discover" | i18n }}</span>
-      <span ng-show="discovering"><i class="icon-spinner icon-spin"></i>{{ "Discovering..." | i18n }}</span>
-    </button>
+           ng-disabled="discovery.pending">
+    <input ng-show="!discovery.pending" ng-disabled="!discovery.url" type="submit" class="btn btn-primary" value="{{ 'Discover' | i18n }}"/>
+    <input ng-show="discovery.pending" type="button" ng-click="cancelDiscovery()" class="btn btn-primary" value="{{ 'Cancel' | i18n }}"/>
+    <i class="icon-spinner icon-spin" ng-show="discovery.pending"></i>
+  </form>
+</div>
+
+<div class="form">
+  <input type="text"
+         class="input input-search"
+         placeholder="{{ 'Filter' | i18n }}"
+         ng-model="discoveryTable.filterTerm">
+
+  <div ng-hide="system.readonly" class="fr nutupane-actions">
+     <button class="btn btn-primary" ng-disabled="discoveryTable.getSelected().length == 0" ng-click="setupSelected()">
+       {{ "Create Selected" | i18n }}
+     </button>
   </div>
 
-  <div class="form">
-    <input type="text"
-           class="input input-search"
-           placeholder="{{ 'Filter' | i18n }}"
-           ng-model="errataTable.errataFilterTerm">
-
-    <div ng-hide="system.readonly" class="fr">
-       <button class="btn btn-primary" ng-disabled="errataTable.getSelected().length == 0" ng-click="applySelected()">
-         {{ "Apply Selected" | i18n }}
-       </button>
-    </div>
-
-    <div class="fr select-action">
-      <span>{{ "%total Selected" | i18n: {total: discoveryTable.numSelected} }}</span>
-      <span>|</span>
-      <a class="deselect-action"
-         ng-class="{ 'disabled-link' : discoveryTable.numSelected == 0 }"
-         ng-click="discoveryTable.selectAll(false)">
-        {{ "Deselect All" | i18n }}
-      </a>
-    </div>
+  <div class="fr select-action">
+    <span>{{ "%total Selected" | i18n: {total: discoveryTable.numSelected} }}</span>
+    <span>|</span>
+    <a class="deselect-action"
+       ng-class="{ 'disabled-link' : discoveryTable.numSelected == 0 }"
+       ng-click="discoveryTable.selectAll(false)">
+      {{ "Deselect All" | i18n }}
+    </a>
   </div>
+</div>
 
-  <table alch-table="discoveryTable" class="table table-full table-striped">
-    <thead>
-      <tr alch-table-head row-select>
-        <th alch-table-column>{{ "Discovered URLs" | i18n }}</th>
-        <th alch-table-column>{{ "Created Previously" | i18n }}</th>
-      </tr>
-    </thead>
+<table alch-table="discoveryTable" class="table table-full table-striped">
+  <thead>
+    <tr alch-table-head row-select>
+      <th alch-table-column>{{ "Discovered URLs" | i18n }}</th>
+    </tr>
+  </thead>
 
-    <tbody>
-      <tr alch-table-row ng-repeat="url in discoveryTable.rows" row-select>
-        <td alch-table-cell>{{ urls.url }}</td>
-        <td alch-table-cell>{{ urls.existing }}</td>
-      </tr>
-    </tbody>
-  </table>
-
-</section>
+  <tbody>
+    <tr alch-table-row ng-repeat="url_row in table.rows | filter:table.filterTerm" row-select>
+      <td alch-table-cell>{{ url_row.path }}</td>
+    </tr>
+  </tbody>
+</table>

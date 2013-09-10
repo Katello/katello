@@ -80,17 +80,31 @@ angular.module('Bastion.products').config(['$stateProvider', function($stateProv
     })
 
     .state("products.discovery", {
-        url: '/products/discovery',
         collapsed: true,
+        abstract: true,
         views: {
             'table': {
                 templateUrl: 'products/views/products-table-collapsed.html'
             },
             'action-panel': {
-                controller: 'DiscoveryController',
-                templateUrl: 'products/views/discovery.html'
+                templateUrl: 'products/views/discovery_base.html',
+                controller: 'DiscoveryController'
             }
         }
+    })
+    .state("products.discovery.scan", {
+        collapsed: true,
+        url: '/products/discovery/scan',
+        templateUrl: 'products/views/discovery.html'
+
+    })
+
+    .state("products.discovery.create", {
+        collapsed: true,
+        url: '/products/discovery/scan/create',
+        templateUrl: 'products/views/discovery_create.html',
+        controller: 'DiscoveryFormController'
+
     })
 
     .state("products.details", {

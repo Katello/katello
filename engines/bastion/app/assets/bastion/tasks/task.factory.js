@@ -24,11 +24,15 @@
  *   Provides a $resource for task(s).
  */
 angular.module('Bastion.tasks').factory('Task',
-    ['$resource', '$timeout', 'Routes', 'CurrentOrganization',
-    function($resource, $timeout, Routes, CurrentOrganization) {
-        var resource = $resource(Routes.apiOrganizationTasksPath(CurrentOrganization) + '/:id/:action', {}, {
-            query: {method: 'GET', isArray: false}
-        });
+    ['$resource', '$timeout', 'CurrentOrganization',
+    function($resource, $timeout, CurrentOrganization) {
+
+        var resource = $resource('/katello/api/tasks/:id/:action',
+            {id: '@uuid', 'organization_id': CurrentOrganization},
+            {
+                query: {method: 'GET', isArray: false}
+            }
+        );
 
         resource.poll = function(task, returnFunction) {
             resource.get({id: task.id}, function(data) {

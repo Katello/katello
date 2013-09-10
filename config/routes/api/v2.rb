@@ -25,6 +25,7 @@ Src::Application.routes.draw do
       api_resources :organizations do
         member do
           post :repo_discover
+          post :cancel_repo_discover
         end
         api_resources :products, :only => [:index]
         api_resources :environments
