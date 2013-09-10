@@ -34,22 +34,19 @@ class Provider < ActiveRecord::Base
   has_many :products, :inverse_of => :provider
   has_many :repositories, through: :products
 
+  validates :name, :uniqueness => {:scope => :organization_id}
+  validates :provider_type, :inclusion => {:in => TYPES,
+      :allow_blank => false, :message => "Please select provider type from one of the following: #{TYPES.join(', ')}."}
+  validates :repository_url, :length => {:maximum => 255}, :if => :redhat_provider?
+  validate :constraint_redhat_update
+  validate :only_one_rhn_provider
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name
   validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
-
-  validates_uniqueness_of :name, :scope => :organization_id
-  validates_inclusion_of :provider_type,
-    :in => TYPES,
-    :allow_blank => false,
-    :message => "Please select provider type from one of the following: #{TYPES.join(', ')}."
-  validate :constraint_redhat_update
-  before_destroy :prevent_redhat_deletion
-  before_validation :sanitize_repository_url
-
-  validate :only_one_rhn_provider
-  validates :repository_url, :length => {:maximum => 255}, :if => :redhat_provider?
   validates_with Validators::KatelloUrlFormatValidator, :if => :redhat_provider?,
                  :attributes => :repository_url
+
+  before_destroy :prevent_redhat_deletion
+  before_validation :sanitize_repository_url
 
   scope :redhat, where(:provider_type => REDHAT)
   scope :custom, where(:provider_type => CUSTOM)

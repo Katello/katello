@@ -47,16 +47,17 @@ class SystemGroup < ActiveRecord::Base
   validates :pulp_id, :presence => true
   validates :name, :presence => true
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name
-  validates_presence_of :organization_id, :message => N_("Organization cannot be blank.")
-  validates_uniqueness_of :name, :scope => :organization_id, :message => N_("must be unique within one organization")
-  validates_uniqueness_of :pulp_id, :message => N_("must be unique.")
   validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
+  validates :organization_id, :presence => {:message => N_("Organization cannot be blank.")}
+  validates :name, :uniqueness => {:scope => :organization_id, :message => N_("must be unique within one organization")}
+  validates :pulp_id, :uniqueness => {:message => N_("must be unique.")}
+  validates :system_limit, :numericality => {:only_integer => true,
+                                             :greater_than_or_equal_to => -1,
+                                             :less_than_or_equal_to => 2_147_483_647,
+                                             :message => N_("must be a positive integer value.")}
 
   alias_attribute :system_limit, :max_systems
   UNLIMITED_SYSTEMS = -1
-  validates_numericality_of :system_limit, :only_integer => true, :greater_than_or_equal_to => -1,
-                            :less_than_or_equal_to => 2_147_483_647,
-                            :message => N_("must be a positive integer value.")
   validate :validate_max_systems
 
   def validate_max_systems

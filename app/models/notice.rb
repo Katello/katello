@@ -19,12 +19,11 @@ class Notice < ActiveRecord::Base
 
   TYPES = [:message, :warning, :success, :error]
 
-  validates_inclusion_of :level, :in => TYPES + TYPES.collect{|type| type.to_s}
-  validates_presence_of :text
-  validates_length_of :text, :maximum => 1024
-  validates_length_of :user_notices, :minimum => 1
-  validates_length_of :level, :maximum => 255
-  validates_length_of :request_type, :maximum => 255
+  validates :level, :inclusion => {:in => TYPES + TYPES.collect{|type| type.to_s}}
+  validates :text, :presence => true, :length => {:maximum => 1024}
+  validates :user_notices, :length => {:minimum => 1}
+  validates :level, :length => {:maximum => 255}
+  validates :request_type, :length => {:maximum => 255}
 
   before_validation :set_default_notice_level
   before_validation :trim_text

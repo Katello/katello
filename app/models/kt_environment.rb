@@ -37,6 +37,8 @@ class KTEnvironment < ActiveRecord::Base
 
   belongs_to :organization, :inverse_of => :environments
   has_many :activation_keys, :dependent => :destroy, :foreign_key => :environment_id
+  # rubocop:disable HasAndBelongsToMany
+  # TODO: change these into has_many associations
   has_and_belongs_to_many :priors, {:class_name => "KTEnvironment", :foreign_key => :environment_id,
     :join_table => "environment_priors", :association_foreign_key => "prior_id", :uniq => true}
   has_and_belongs_to_many :successors, {:class_name => "KTEnvironment", :foreign_key => "prior_id",
@@ -70,13 +72,13 @@ class KTEnvironment < ActiveRecord::Base
   scope :non_library, where(library: false)
   scope :library, where(library: true)
 
-  validates :name, :exclusion => { :in => ["Library"], :message => N_(": '%s' is a built-in environment") % "Library" }, :unless => :library?
-  validates :label, :exclusion => { :in => ["Library"], :message => N_(": '%s' is a built-in environment") % "Library" }, :unless => :library?
-  validates_uniqueness_of :name, :scope => :organization_id, :message => N_("of environment must be unique within one organization")
-  validates_uniqueness_of :label, :scope => :organization_id, :message => N_("of environment must be unique within one organization")
-  validates_presence_of :organization
-  validates :name, :presence => true
-  validates :label, :presence => true
+  validates :organization, :presence => true
+  validates :name, :presence => true, :uniqueness => {:scope => :organization_id,
+      :message => N_("of environment must be unique within one organization")},
+      :exclusion => { :in => ["Library"], :message => N_(": '%s' is a built-in environment") % "Library", :unless => :library? }
+  validates :label, :presence => true, :uniqueness => {:scope => :organization_id,
+      :message => N_("of environment must be unique within one organization")},
+      :exclusion => { :in => ["Library"], :message => N_(": '%s' is a built-in environment") % "Library", :unless => :library?}
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name
   validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
   validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description

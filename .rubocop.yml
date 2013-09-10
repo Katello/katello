@@ -2,43 +2,25 @@
 # TODO: Fix these problems in our code and remove/edit the rules below
 
 LineLength:
-  Max: 200 # set to something more reasonable when fixed
+  Max: 200 # set to 100
 
 ParameterLists:
-  Max: 20 # remove once fixed
+  Max: 10 # set to 4
 
 CollectionMethods:
   # remove this once we pick either map or collect, inject or reduce, etc
   PreferredMethods: {}
 
 StringLiterals:
-  Enabled: false # consider turning this one back on
+  Enabled: false # remove me
 
 SpaceAroundBraces:
   Enabled: false # remove me
 
-RedundantSelf:
-  Enabled: false # remove me
-
-Encoding:
-  Enabled: false # remove me?
-
-RedundantReturn:
-  Enabled: false # remove me
-
-SpaceInsideHashLiteralBraces:
-  Enabled: false # remove me
-
-Void:
-  Enabled: false # remove me
-
 BlockNesting:
-  Enabled: false # remove me
+  Enabled: false # change to 4
 
 AvoidPerlBackrefs:
-  Enabled: false # remove me
-
-Documentation:
   Enabled: false # remove me
 
 # end TODO
@@ -103,3 +85,18 @@ FavorSprintf:
 
 ReduceArguments:
   Enabled: false # good rule of thumb but not worth enforcing
+
+RedundantSelf:
+  Enabled: false
+
+RedundantReturn:
+  Enabled: false
+
+SpaceInsideHashLiteralBraces:
+  Enabled: false # we allow spaces inside hash brackets
+
+Documentation:
+  Enabled: false # don't require documentation
+
+Encoding:
+  Enabled: false # don't require utf-8 encoding on every file

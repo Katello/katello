@@ -16,18 +16,20 @@ class Permission < ActiveRecord::Base
   belongs_to :resource_type # TODO: belongs_to permission on the other side
   belongs_to :organization
   belongs_to :role, :inverse_of => :permissions
+  # rubocop:disable HasAndBelongsToMany
+  # TODO: change this into has_many :through association
   has_and_belongs_to_many :verbs
   has_many :tags, :class_name => "PermissionTag", :dependent => :destroy, :inverse_of => :permission
 
   before_save :cleanup_tags_verbs
   before_save :check_global
 
-  validates :name, :presence => true
+  validates :name, :presence => true, :uniqueness => {:scope => [:organization_id, :role_id],
+      :message => N_("Label has already been taken")}
+  validates :resource_type, :presence => true
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name
   validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
-  validates_uniqueness_of :name, :scope => [:organization_id, :role_id], :message => N_("Label has already been taken")
   validates_with Validators::PermissionValidator
-  validates_presence_of :resource_type
 
   def tag_values
     self.tags.collect{|t| t.tag_id}

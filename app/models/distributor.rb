@@ -33,12 +33,11 @@ class Distributor < ActiveRecord::Base
 
   validates :environment, :presence => true
   # multiple distributors with a single name are supported
-  validates :name, :presence => true
-  validates_length_of :name, :maximum => 250
+  validates :name, :presence => true, :length => {:maximum => 250}
+  validates :location, :length => {:maximum => 255}
   validates_with Validators::UniqueFieldInOrg, :attributes => :name
   validates_with Validators::NoTrailingSpaceValidator, :attributes => :name
   validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
-  validates_length_of :location, :maximum => 255
   validates_with Validators::ContentViewEnvironmentValidator
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name
 

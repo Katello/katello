@@ -13,6 +13,9 @@
 class Filter < ActiveRecord::Base
   belongs_to :content_view_definition, :class_name => "ContentViewDefinitionBase"
   has_many  :rules, :class_name => "FilterRule", :dependent => :destroy
+
+  # rubocop:disable HasAndBelongsToMany
+  # TODO: change these into has_many :through associations
   has_and_belongs_to_many :repositories, :class_name => "Repository", :uniq => true
   has_and_belongs_to_many :products, :uniq => true
 
