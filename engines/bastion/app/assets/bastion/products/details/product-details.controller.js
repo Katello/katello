@@ -37,10 +37,6 @@ angular.module('Bastion.products').controller('ProductDetailsController',
             $scope.transitionTo('products.details.repositories.index', {productId: product.id});
         };
 
-        $scope.isState = function(stateName) {
-            return $scope.$state.includes(stateName);
-        };
-
         $scope.removeProduct = function(product) {
             var id = product.id;
 

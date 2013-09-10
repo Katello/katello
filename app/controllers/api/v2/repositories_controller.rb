@@ -54,8 +54,8 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
   param :organization_id, :number, :required => true, :desc => "id of an organization to show repositories in"
   param :product_id, :number, :required => false, :desc => "id of a product to show repositories of"
   param :environment_id, :number, :required => false, :desc => "id of an environment to show repositories in"
-  param :library, :boolean, :required => false, :desc => "show repositories in Library and the default content view"
-  param :enabled, :boolean, :required => false, :desc => "limit to only enabled repositories"
+  param :library, :bool, :required => false, :desc => "show repositories in Library and the default content view"
+  param :enabled, :bool, :required => false, :desc => "limit to only enabled repositories"
   param_group :search, Api::V2::ApiController
   def index
     options = sort_params
