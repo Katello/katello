@@ -18,7 +18,7 @@ class NodeCapability < ActiveRecord::Base
 
   serialize :configuration, Hash
 
-  validates_presence_of :node_id
+  validates :node_id, :presence => true
 
   def self.class_for(type)
     self.subclasses.each do |subclass|

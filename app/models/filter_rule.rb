@@ -30,8 +30,8 @@ class FilterRule < ActiveRecord::Base
   end
 
   def parameters
-    write_attribute(:parameters, HashWithIndifferentAccess.new) unless read_attribute(:parameters)
-    read_attribute(:parameters)
+    write_attribute(:parameters, HashWithIndifferentAccess.new) unless self[:parameters]
+    self[:parameters]
   end
 
   def content_type
