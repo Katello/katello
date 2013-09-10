@@ -5,7 +5,7 @@
            class="input input-search"
            placeholder="{{ 'Filter' | i18n }}"
            ng-model="repositorySearch">
-    <button class="btn btn-primary fr" ng-click="openCreateRepository(product)">{{ 'Create Repository' | i18n }}</button>
+    <button class="btn btn-primary fr" ng-click="openCreateRepository(product.id)">{{ 'Create Repository' | i18n }}</button>
   </div>
 
   <table class="table table-striped">
@@ -22,7 +22,7 @@
     </thead>
 
     <tbody>
-      <tr ng-repeat="repository in repositories.results | filter:repositorySearch" row-select>
+      <tr ng-repeat="repository in repositories | filter:repositorySearch" row-select>
         <td>
           <a class="clickable" ng-href="#/products/{{ product.id }}/repositories/{{ repository.id }}">{{ repository.name }}</a>
         </td>

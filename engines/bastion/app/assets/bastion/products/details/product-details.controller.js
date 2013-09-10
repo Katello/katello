@@ -29,14 +29,16 @@ angular.module('Bastion.products').controller('ProductDetailsController',
             $scope.panel.loading = false;
         });
 
-        $scope.transitionTo = function(state) {
-            if ($scope.product && $scope.product.hasOwnProperty("id")) {
-                $state.transitionTo(state, {productId: $scope.product["id"]});
-            }
+        $scope.transitionToInfo = function(product) {
+            $scope.transitionTo('products.details.info', {productId: product.id});
         };
 
-        $scope.isState = function (stateName) {
-            return $state.includes(stateName);
+        $scope.transitionToRepositories = function(product) {
+            $scope.transitionTo('products.details.repositories.index', {productId: product.id});
+        };
+
+        $scope.isState = function(stateName) {
+            return $scope.$state.includes(stateName);
         };
 
         $scope.removeProduct = function(product) {
@@ -44,7 +46,7 @@ angular.module('Bastion.products').controller('ProductDetailsController',
 
             product.$delete(function() {
                 $scope.table.removeRow(id);
-                $state.transitionTo('products.index');
+                $scope.transitionTo('products.index');
             });
         };
     }]

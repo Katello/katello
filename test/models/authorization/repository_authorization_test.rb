@@ -19,6 +19,10 @@ class RepositoryAuthorizationAdminTest < AuthorizationTestBase
     User.current = User.find(users(:admin))
   end
 
+  def test_editable
+    assert @fedora_17_x86_64.editable?
+  end
+
   def test_readable?
     assert @fedora_17_x86_64.readable?
   end
@@ -30,6 +34,14 @@ class RepositoryAuthorizationAdminTest < AuthorizationTestBase
 
   def test_readable
     refute_empty Repository.readable(@library)
+  end
+
+  def test_creatable?
+    assert Repository.creatable?(@fedora)
+  end
+
+  def test_any_readable?
+    assert Repository.any_readable?(@acme_corporation)
   end
 
   def test_libraries_content_readable
@@ -52,8 +64,8 @@ class RepositoryAuthorizationAdminTest < AuthorizationTestBase
     refute_empty Repository.readable_in_org(@acme_corporation)
   end
 
-  def test_any_readable_in_org?
-    assert Repository.any_readable_in_org?(@acme_corporation)
+  def test_any_contents_readable_in_org?
+    assert Repository.any_contents_readable_in_org?(@acme_corporation)
   end
 
 end
@@ -63,6 +75,10 @@ class RepositoryAuthorizationNonAuthUserTest < AuthorizationTestBase
   def setup
     super
     User.current = User.find(users(:no_perms_user))
+  end
+
+  def test_editable
+    refute @fedora_17_x86_64.editable?
   end
 
   def test_readable?
@@ -75,6 +91,14 @@ class RepositoryAuthorizationNonAuthUserTest < AuthorizationTestBase
 
   def test_readable
     assert_empty Repository.readable(@library)
+  end
+
+  def test_creatable?
+    refute Repository.creatable?(@fedora)
+  end
+
+  def test_any_readable?
+    refute Repository.any_readable?(@acme_corporation)
   end
 
   def test_libraries_content_readable
@@ -97,8 +121,8 @@ class RepositoryAuthorizationNonAuthUserTest < AuthorizationTestBase
     assert_empty Repository.readable_in_org(@acme_corporation)
   end
 
-  def test_any_readable_in_org?
-    refute Repository.any_readable_in_org?(@acme_corporation)
+  def test_any_contents_readable_in_org?
+    refute Repository.any_contents_readable_in_org?(@acme_corporation)
   end
 
 end

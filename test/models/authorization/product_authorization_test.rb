@@ -62,6 +62,10 @@ class ProductAuthorizationAdminTest < AuthorizationTestBase
     assert product.deletable?
   end
 
+  def test_creatable?
+    assert Product.creatable?(@fedora_hosted)
+  end
+
 end
 
 class ProductAuthorizationNoPermsTest < AuthorizationTestBase
@@ -111,6 +115,10 @@ class ProductAuthorizationNoPermsTest < AuthorizationTestBase
 
   def test_deletable?
     refute @prod.deletable?
+  end
+
+  def test_creatable?
+    refute Product.creatable?(@fedora_hosted)
   end
 
 end

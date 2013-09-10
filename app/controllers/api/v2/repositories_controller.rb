@@ -28,10 +28,10 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
   end
 
   def rules
-    index_test        = lambda { Product.any_readable?(@organization) }
-    create_test       = lambda { @product.editable? }
-    read_test         = lambda { @repository.product.readable? }
-    edit_test         = lambda { @repository.product.editable? }
+    index_test        = lambda { Repository.any_readable?(@organization) }
+    create_test       = lambda { Repository.creatable?(@product) }
+    read_test         = lambda { @repository.readable? }
+    edit_test         = lambda { @repository.editable? }
 
     {
       :index    => index_test,
@@ -126,7 +126,6 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
 
   def find_repository
     @repository = Repository.find(params[:id]) if params[:id]
-    raise Errors::SecurityViolation if !@repository.readable?
   end
 
 end

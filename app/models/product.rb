@@ -22,8 +22,8 @@ class Product < ActiveRecord::Base
 
   include Ext::LabelFromName
 
-  attr_accessible :name, :label, :description, :provider_id, :gpg_key_id,
-                  :cp_id, :multiplier, :attrs, :productContent
+  attr_accessible :name, :label, :description, :provider_id, :provider, :gpg_key_id, :gpg_key,
+                  :cp_id
 
   has_many :marketing_engineering_products, :foreign_key => :engineering_product_id
   has_many :marketing_products, :through => :marketing_engineering_products

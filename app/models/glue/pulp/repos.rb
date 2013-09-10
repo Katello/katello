@@ -287,9 +287,10 @@ module Glue::Pulp::Repos
       end
     end
 
-    def add_repo(label, name, url, repo_type, unprotected=false, gpg = nil)
+    def add_repo(label, name, url, repo_type, unprotected = false, gpg = nil)
       unprotected = unprotected.nil? ? false : unprotected
       check_for_repo_conflicts(name, label)
+
       repo = Repository.create!(:environment => self.organization.library,
           :product => self,
           :pulp_id => repo_id(label),

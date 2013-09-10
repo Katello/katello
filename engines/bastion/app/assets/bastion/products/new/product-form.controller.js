@@ -27,8 +27,8 @@
  *   within the table.
  */
 angular.module('Bastion.products').controller('ProductFormController',
-    ['$scope', '$http', '$q', 'Product', 'Provider', 'GPGKey', 'CurrentOrganization',
-    function($scope, $http, $q, Product, Provider, GPGKey, CurrentOrganization) {
+    ['$scope', '$http', '$q', 'Product', 'Provider', 'GPGKey',
+    function($scope, $http, $q, Product, Provider, GPGKey) {
 
         $scope.product = $scope.product || new Product();
 
@@ -38,7 +38,6 @@ angular.module('Bastion.products').controller('ProductFormController',
                 $scope.gpgKeys = fetchGPGKeys();
 
                 $q.all([$scope.gpgKeys, $scope.providers]).then(function() {
-                    console.log($scope.gpgKeys);
                     $scope.panel.loading = false;
                 });
             }
@@ -49,9 +48,8 @@ angular.module('Bastion.products').controller('ProductFormController',
         };
 
         $scope.$watch('product.name', function() {
-            $http({
-                method: 'GET',
-                url: '/katello/organizations/default_label',
+            $http.get(
+                '/katello/organizations/default_label', {
                 params: {'name': $scope.product.name}
             })
             .success(function(response) {
@@ -64,7 +62,7 @@ angular.module('Bastion.products').controller('ProductFormController',
         });
 
         function fetchProviders() {
-            var deferred = $q.defer()
+            var deferred = $q.defer();
 
             Provider.query(function(providers) {
                 deferred.resolve(providers.results);
@@ -74,7 +72,7 @@ angular.module('Bastion.products').controller('ProductFormController',
         }
 
         function fetchGPGKeys() {
-            var deferred = $q.defer()
+            var deferred = $q.defer();
 
             GPGKey.query(function(gpgKeys) {
                 deferred.resolve(gpgKeys.results);

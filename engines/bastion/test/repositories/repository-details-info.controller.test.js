@@ -11,61 +11,72 @@
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
  **/
 
-describe('Controller: ProductDetailsInfoController', function() {
+describe('Controller: RepositoryDetailsInfoController', function() {
     var $scope,
-        $controller,
-        $q,
-        GPGKey,
-        Product;
+        $q;
 
     beforeEach(module(
-        'Bastion.products',
+        'Bastion.repositories',
         'Bastion.test-mocks'
     ));
 
     beforeEach(inject(function($injector) {
-        $controller = $injector.get('$controller');
-        $scope = $injector.get('$rootScope').$new();
-        $q = $injector.get('$q');
-        Product = $injector.get('Product');
-        GPGKey = $injector.get('GPGKey');
+        var $controller = $injector.get('$controller'),
+            $q = $injector.get('$q'),
+            GPGKey = $injector.get('MockResource'),
+            Repository = $injector.get('MockResource');
 
-        $controller('ProductDetailsInfoController', {
+        $scope = $injector.get('$rootScope').$new();
+        $scope.$stateParams = {
+            productId: 1,
+            repositoryId: 1
+        };
+
+        $controller('RepositoryDetailsInfoController', {
             $scope: $scope,
             $q: $q,
-            Product: Product,
+            Repository: Repository,
             GPGKey: GPGKey
         });
-
-        $scope.product = Product.mockProduct;
     }));
+
+    it('retrieves and puts a repository on the scope', function() {
+        expect($scope.repository).toBeDefined();
+    });
 
     it('provides a method to retrieve available gpg keys', function() {
         var promise = $scope.gpgKeys();
 
-        promise.then(function(gpgKeys) {
-            expect(gpgKeys).toEqual(GPGKey.mockGPGKeys);
+        promise.then(function() {
+            expect(gpgKeys).toBeDefined();
         });
     });
 
     it('should save the product and return a promise', function() {
-        var promise = $scope.save(Product.mockProduct);
+        var promise = $scope.save($scope.repository);
 
         expect(promise.then).toBeDefined();
     });
 
-    it('should save the product successfully', function() {
-        $scope.save(Product.mockProduct);
+    it('should save the system successfully', function() {
+        $scope.save($scope.repository);
 
         expect($scope.saveSuccess).toBe(true);
     });
 
     it('should fail to save the system', function() {
-        Product.mockProduct.failed = true;
-        $scope.save(Product.mockProduct);
+        $scope.repository.failed = true;
+        $scope.save($scope.repository);
 
         expect($scope.saveSuccess).toBe(false);
         expect($scope.saveError).toBe(true);
+    });
+
+    it('should provide a way to remove a repository', function() {
+        spyOn($scope, 'transitionTo');
+        $scope.removeRepository($scope.repository);
+
+        expect($scope.transitionTo).toHaveBeenCalled();
     });
 
 });

@@ -13,7 +13,7 @@
 
 /**
  * @ngdoc object
- * @name  Bastion.products.controller:ProductDetailsController
+ * @name  Bastion.products.controller:ProductDetailsInfoController
  *
  * @requires $scope
  * @requires $q
@@ -26,11 +26,14 @@
 angular.module('Bastion.products').controller('ProductDetailsInfoController',
     ['$scope', '$q', 'Product', 'GPGKey', function($scope, $q, Product, GPGKey) {
 
-        $scope.gpgKeys = function() {
-            var deferred = $q.defer()
+        $scope.saveSuccess = false;
+        $scope.saveError = false;
 
-            GPGKey.query({}, function(gpg_keys) {
-                deferred.resolve(gpg_keys.results);
+        $scope.gpgKeys = function() {
+            var deferred = $q.defer();
+
+            GPGKey.query(function(gpgKeys) {
+                deferred.resolve(gpgKeys.results);
             });
 
             return deferred.promise;

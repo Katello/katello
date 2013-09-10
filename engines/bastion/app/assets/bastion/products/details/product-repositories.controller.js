@@ -17,7 +17,6 @@
  *
  * @requires $scope
  * @requires Repository
- * @requires $stateParams
  * @requires CurrentOrganization
  *
  *
@@ -25,24 +24,29 @@
  *   Provides the functionality for manipulating repositories attached to a product.
  */
 angular.module('Bastion.products').controller('ProductRepositoriesController',
-    ['$scope', 'Repository', '$stateParams', 'CurrentOrganization',
-    function($scope, Repository, $stateParams, CurrentOrganization) {
+    ['$scope', 'Repository', 'CurrentOrganization',
+    function($scope, Repository, CurrentOrganization) {
 
-        if ($stateParams.productId && !$stateParams.repositoryId) {
-            $scope.repositories = Repository.query({
-                'product_id': $stateParams.productId,
+        if ($scope.$stateParams.productId && !$scope.$stateParams.repositoryId) {
+            Repository.query({
+                'product_id': $scope.$stateParams.productId,
                 'library': true,
                 'organization_id': CurrentOrganization,
                 'enabled': true
+            }, function(response) {
+                $scope.repositories = response.results;
             });
         }
 
         $scope.showRepository = function(repository) {
-            $scope.transitionTo('products.details.repositories.info', {productId: $stateParams.productId, repositoryId: repository.id});
+            $scope.transitionTo('products.details.repositories.info', {
+                productId: $scope.$stateParams.productId,
+                repositoryId: repository.id
+            });
         };
 
-        $scope.openCreateRepository = function(product) {
-            $scope.transitionTo('products.details.repositories.new', {productId: product.id});
+        $scope.openCreateRepository = function(productId) {
+            $scope.transitionTo('products.details.repositories.new', {productId: productId});
         };
 
     }]

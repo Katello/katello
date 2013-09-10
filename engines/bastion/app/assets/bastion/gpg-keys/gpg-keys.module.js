@@ -19,9 +19,5 @@
  *   Module for GPG key related functionality.
  */
 angular.module('Bastion.gpg-keys', [
-    'ngResource',
-    'alchemy',
-    'alch-templates',
-    'ui.compat',
-    'Bastion.widgets'
+    'ngResource'
 ]);

@@ -21,14 +21,14 @@
     <ul>
       <li>
         <a class="clickable"
-           ng-click="transitionTo('products.details.info')"
+           ng-click="transitionToInfo(product)"
            ng-class="{active: isState('products.details.info')}">
           {{ "Details" | i18n }}
         </a>
       </li>
       <li>
         <a class="clickable"
-           ng-click="transitionTo('products.details.repositories.index')"
+           ng-click="transitionToRepositories(product)"
            ng-class="{active: isState('products.details.repositories')}">
           {{ "Repositories" | i18n }}
         </a>

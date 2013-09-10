@@ -16,11 +16,15 @@ module Authorization::Repository
   included do
     # only repositories in a given environment
     scope :in_environment, lambda { |env|
-      where(environment_id: env.id)
-    }
+                             where(environment_id: env.id)
+                           }
 
     def readable?
-      product.provider.readable? && environment.contents_readable?
+      product.readable?
+    end
+
+    def editable?
+      product.editable?
     end
 
     def deletable?
@@ -29,13 +33,18 @@ module Authorization::Repository
   end
 
   module ClassMethods
+
+    def creatable?(product)
+      product.editable?
+    end
+
     def readable(env)
-      if env.contents_readable?
-        where(environment_id: env.id)
-      else
-        #none readable
-        where("1=0")
-      end
+      prod_ids = ::Product.readable(env.organization).collect { |p| p.id }
+      where(product_id: prod_ids, :environment_id => env.id)
+    end
+
+    def any_readable?(organization)
+      Product.any_readable?(organization)
     end
 
     def libraries_content_readable(org)
@@ -73,7 +82,7 @@ module Authorization::Repository
       end
     end
 
-    def any_readable_in_org?(org, skip_library = false)
+    def any_contents_readable_in_org?(org, skip_library = false)
       KTEnvironment.any_contents_readable?(org, skip_library)
     end
   end

@@ -24,13 +24,15 @@ class Api::V2::RepositoriesControllerTest < Minitest::Rails::ActionController::T
 
   def models
     @organization = organizations(:acme_corporation)
-    @product = Product.find(products(:fedora).id)
+    @repository = repositories(:fedora_17_unpublished)
+    @product = products(:fedora)
   end
 
   def permissions
     @read_permission = UserPermission.new(:read, :providers)
     @create_permission = UserPermission.new(:create, :providers)
     @update_permission = UserPermission.new(:update, :providers)
+    @delete_permission = UserPermission.new(:delete, :providers)
     @no_permission = NO_PERMISSION
   end
 
@@ -51,7 +53,7 @@ class Api::V2::RepositoriesControllerTest < Minitest::Rails::ActionController::T
   end
 
   def test_index_protected
-    allowed_perms = [@read_permission, @update_permission]
+    allowed_perms = [@read_permission, @create_permission, @update_permission, @delete_permission]
     denied_perms = [@no_permission]
 
     assert_protected_action(:index, allowed_perms, denied_perms) do
@@ -89,6 +91,54 @@ class Api::V2::RepositoriesControllerTest < Minitest::Rails::ActionController::T
 
     assert_protected_action(:create, allowed_perms, denied_perms) do
       post :create, :product_id => @product.cp_id
+    end
+  end
+
+  def test_show
+    get :show, :id => @repository.id
+
+    assert_response :success
+    assert_template 'api/v2/repositories/show'
+  end
+
+  def test_show_protected
+    allowed_perms = [@read_permission, @create_permission, @update_permission, @delete_permission]
+    denied_perms = [@no_permission]
+
+    assert_protected_action(:show, allowed_perms, denied_perms) do
+       Rails.logger.error "FOOO\n\n\n"
+      get :show, :id => @repository.id
+    end
+  end
+
+  def test_update
+    put :update, :id => @repository.id, :gpg_key_id => 1
+
+    assert_response :success
+    assert_template 'api/v2/repositories/show'
+  end
+
+  def test_update_protected
+    allowed_perms = [@create_permission, @update_permission]
+    denied_perms = [@no_permission, @delete_permission]
+
+    assert_protected_action(:update, allowed_perms, denied_perms) do
+      put :update, :id => @repository.id
+    end
+  end
+
+  def test_destroy
+    delete :destroy, :id => @repository.id
+
+    assert_response :success
+  end
+
+  def test_destroy_protected
+    allowed_perms = [@create_permission, @update_permission]
+    denied_perms = [@read_permission, @no_permission]
+
+    assert_protected_action(:destroy, allowed_perms, denied_perms) do
+      delete :destroy, :id => @repository.id
     end
   end
 

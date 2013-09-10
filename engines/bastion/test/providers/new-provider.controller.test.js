@@ -13,24 +13,22 @@
 
 describe('Controller: NewProviderController', function() {
     var $scope,
-        $state,
         Provider;
 
-    beforeEach(module('Bastion.products', 'Bastion.providers'));
+    beforeEach(module('Bastion.providers', 'Bastion.test-mocks'));
 
     beforeEach(inject(function($injector) {
-        $scope = $injector.get('$rootScope').$new();
-        Provider = $injector.get('Provider');
         $controller = $injector.get('$controller');
-        $state = $injector.get('$state');
+        $scope = $injector.get('$rootScope').$new();
+        Provider = $injector.get('MockResource');
 
-        CurrentOrganization = 'ACME';
-        $scope.providerForm = {};
+        $scope.providerForm = $injector.get('MockForm');
+        $scope.product = {};
 
         $controller('NewProviderController', {
             $scope: $scope,
             Provider: Provider,
-            CurrentOrganization: CurrentOrganization
+            CurrentOrganization: 'ACME'
         });
     }));
 
@@ -41,20 +39,25 @@ describe('Controller: NewProviderController', function() {
     it('should save a new provider resource', function() {
         var provider = $scope.provider;
 
-        spyOn(provider, '$save');
+        spyOn($scope, 'transitionTo');
+        spyOn(provider, '$save').andCallThrough();
         $scope.save(provider);
 
         expect(provider.$save).toHaveBeenCalled();
+        expect($scope.product['provider_id']).toBe($scope.provider.id)
+        expect($scope.transitionTo).toHaveBeenCalledWith('products.new.form');
     });
 
-    it('should reset the new provider form', function() {
+    it('should fail to save a new provider resource', function() {
         var provider = $scope.provider;
 
-        spyOn(provider, '$save');
+        provider.failed = true;
+        spyOn(provider, '$save').andCallThrough();
         $scope.save(provider);
 
         expect(provider.$save).toHaveBeenCalled();
+        expect($scope.providerForm['name'].$invalid).toBe(true);
+        expect($scope.providerForm['name'].$error.messages).toBeDefined();
     });
 
 });
-

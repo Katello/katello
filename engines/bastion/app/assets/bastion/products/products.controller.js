@@ -52,15 +52,15 @@ angular.module('Bastion.products').controller('ProductsController',
             $scope.transitionTo('products.details.info', {productId: product.id});
         };
 
-        $scope.openNewPanel = function() {
+        $scope.transitionToNewProduct = function() {
             $scope.panel.loading = true;
             $scope.transitionTo('products.new.form');
-        }
+        };
 
-        $scope.openDiscoveryPanel = function() {
+        $scope.transitionToDiscovery = function() {
             $scope.panel.loading = true;
             $scope.transitionTo('products.discovery');
-        }
+        };
 
         $scope.table.closeItem = function() {
             $scope.transitionTo('products.index');

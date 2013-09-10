@@ -26,16 +26,19 @@
 angular.module('Bastion.repositories').controller('RepositoryDetailsInfoController',
     ['$scope', '$q', 'Repository', 'GPGKey', function($scope, $q, Repository, GPGKey) {
 
+        $scope.saveSuccess = false;
+        $scope.saveError = false;
+
         $scope.repository = Repository.get({
             'product_id': $scope.$stateParams.productId,
             'id': $scope.$stateParams.repositoryId
         });
 
         $scope.gpgKeys = function() {
-            var deferred = $q.defer()
+            var deferred = $q.defer();
 
-            GPGKey.query({}, function(gpg_keys) {
-                deferred.resolve(gpg_keys.results);
+            GPGKey.query({}, function(gpgKeys) {
+                deferred.resolve(gpgKeys.results);
             });
 
             return deferred.promise;

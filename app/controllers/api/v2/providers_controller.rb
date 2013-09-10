@@ -23,19 +23,16 @@ class Api::V2::ProvidersController < Api::V2::ApiController
   def rules
     index_test  = lambda { Provider.any_readable?(@organization) }
     create_test = lambda { @organization.nil? ? true : Provider.creatable?(@organization) }
-    edit_test   = lambda { @provider.editable? }
 
     {
       :index                    => index_test,
-      :create                   => create_test,
-      :discovery                => edit_test
+      :create                   => create_test
     }
   end
 
   def param_rules
     {
-      :create => [:name, :organization_id],
-      :update => [:name]
+      :create => [:name, :organization_id]
     }
   end
 
@@ -73,32 +70,6 @@ class Api::V2::ProvidersController < Api::V2::ApiController
       p.provider_type ||= Provider::CUSTOM
     end
     respond_for_show(:resource => provider)
-  end
-
-  api :DELETE, "/providers/:id", "Destroy a provider"
-  param :id, :number, :desc => "Provider numeric identifier", :required => true
-  def destroy
-    #
-    # TODO: these should really be done as validations, but the orchestration engine currently converts them into OrchestrationExceptions
-    #
-    if @provider.repositories.any? { |r| r.promoted? }
-      raise HttpErrors::BadRequest, _(<<-eos)
-        Provider cannot be deleted since one of its products or repositories has already been promoted. Using a changeset, please delete the repository from existing environments before deleting it.
-      eos
-    end
-
-    @provider.destroy
-    respond
-  end
-
-  api :POST, "/providers/:id/discovery", "Discover repository urls with metadata and find candidate repos. Supports http, https and file based urls. Async task, returns the delayed job."
-  param :url, String, :required => true, :desc => "remote url to perform discovery"
-  def discovery
-    @provider.discovery_url = params[:url]
-    @provider.save
-    @provider.discover_repos
-    task = @provider.discovery_task
-    respond_for_async :resource => task
   end
 
   private

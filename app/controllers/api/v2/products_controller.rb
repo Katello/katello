@@ -27,7 +27,7 @@ class Api::V2::ProductsController < Api::V2::ApiController
 
   def rules
     index_test = lambda { Product.any_readable?(@organization) }
-    create_test = lambda { @provider.nil? ? true : @provider.editable? }
+    create_test = lambda { @provider.nil? ? true : Product.creatable?(@provider) }
     read_test  = lambda { @product.readable? }
     edit_test  = lambda { @product.editable? }
 
@@ -104,22 +104,6 @@ class Api::V2::ProductsController < Api::V2::ApiController
     @product.destroy
 
     respond_for_destroy
-  end
-
-  api :POST, "/products/:id/sync_plan", "Assign sync plan to product"
-  param :organization_id, :identifier, :desc => "organization identifier"
-  param :id, :number, :desc => "product numeric identifier"
-  param :plan_id, :number, :desc => "Plan numeric identifier"
-  def set_sync_plan
-    super
-  end
-
-  api :DELETE, "/products/:id/sync_plan", "Delete assignment sync plan and product"
-  param :organization_id, :identifier, :desc => "organization identifier"
-  param :id, :number, :desc => "product numeric identifier"
-  param :plan_id, :number, :desc => "Plan numeric identifier"
-  def remove_sync_plan
-    super
   end
 
   protected

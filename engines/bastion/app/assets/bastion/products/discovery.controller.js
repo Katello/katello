@@ -23,7 +23,6 @@
  */
 angular.module('Bastion.products').controller('DiscoveryController',
     ['$scope', '$timeout', 'Task', 'Provider', function($scope, $timeout, Task, Provider) {
-        var params, nutupane;
 
         $scope.discovery = {url: ''};
         $scope.panel.loading = false;

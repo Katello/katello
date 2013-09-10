@@ -13,7 +13,7 @@
 
 /**
  * @ngdoc object
- * @name  Bastion.repositorys.controller:NewProductController
+ * @name  Bastion.repositories.controller:NewRepositoryController
  *
  * @requires $scope
  * @requires $http
@@ -31,12 +31,11 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
 
         $scope.repositoryTypes = [{name: 'yum'}, {name: 'puppet'}];
 
-        GPGKey.query({}, function(gpg_keys) {
-            $scope.gpg_keys = gpg_keys.results;
+        GPGKey.query(function(gpgKeys) {
+            $scope.gpgKeys = gpgKeys.results;
         });
 
         $scope.save = function(repository) {
-            resetForm();
             repository.$save(success, error);
         };
 
@@ -48,25 +47,19 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
             })
             .success(function(response) {
                 $scope.repository.label = response;
+            })
+            .error(function(response) {
+                $scope.repositoryForm.label.$setValidity('', false);
+                $scope.repositoryForm.label.$error.messages = response.errors;
             });
         });
 
-        function resetForm() {
-            angular.forEach($scope.repository, function(value, key) {
-                if ($scope.repositoryForm.hasOwnProperty(key)) {
-                    $scope.repositoryForm[key].$setValidity('', true);
-                }
-            });
-        }
-
         function success(response) {
-            $scope.table.addRow(response);
+            $scope.repositories.push(response);
             $scope.transitionTo('products.details.repositories.index', {productId: $scope.$stateParams.productId});
         }
 
         function error(response) {
-            $scope.repositoryForm.$setDirty();
-
             angular.forEach(response.data.errors, function(errors, field) {
                 $scope.repositoryForm[field].$setValidity('', false);
                 $scope.repositoryForm[field].$error.messages = errors;

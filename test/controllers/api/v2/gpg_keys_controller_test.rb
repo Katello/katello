@@ -28,7 +28,7 @@ class Api::V2::GpgKeysControllerTest < Minitest::Rails::ActionController::TestCa
   end
 
   def permissions
-    @adminster_permission = UserPermission.new(:gpg, :organizations, @organization, @organization)
+    @administer_permission = UserPermission.new(:gpg, :organizations, nil, @organization)
     @no_permission = NO_PERMISSION
   end
 
