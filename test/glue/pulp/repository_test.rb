@@ -468,3 +468,27 @@ class GluePulpRepoRequiresSyncAndPromoteTest < GluePulpRepoTestBase
   end
 
 end
+
+class GluePulpRepoUploadContentTest < GluePulpRepoTestBase
+
+  def setup
+    @filepath = File.join(Rails.root, "test/fixtures/puppet/puppetlabs-ntp-2.0.1.tar.gz")
+  end
+
+  def test_upload_puppet_content
+    content = mock(:create_upload_request => {"upload_id" => 1},
+                   :upload_bits => true,
+                   :import_into_repo => true,
+                   :delete_upload_request => true)
+    mock_resources = Class.new do
+      define_method(:content) { content }
+    end
+    mock_server = Class.new do
+      define_method(:resources) { mock_resources.new }
+    end
+    Katello.pulp_server = mock_server.new
+
+    @pforge = Repository.find(repositories(:p_forge))
+    @pforge.upload_content(@filepath)
+  end
+end

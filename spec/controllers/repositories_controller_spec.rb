@@ -208,5 +208,25 @@ describe RepositoriesController, :katello => true do
       it{should_not be_nil}
       its(:gpg_key){should == @gpg}
     end
+
+    context "upload_content" do
+      before do
+        disable_product_orchestration
+        filepath = File.join(Rails.root, "test/fixtures/puppet/puppetlabs-ntp-2.0.1.tar.gz")
+        @upload = fixture_file_upload("/../puppet/puppetlabs-ntp-2.0.1.tar.gz", "application/gzip", true)
+
+        @repo = new_test_repo(@organization.library, @product, "newname#{rand 10**6}", "http://fedorahosted org")
+        Repository.stub(:find).and_return(@repo)
+      end
+
+      it "should successful call upload_content" do
+        @repo.should_receive(:upload_content).with(@upload.path).and_return(true)
+        controller.should notify.success
+
+        post :upload_content, :id => @repo.id, :provider_id => @repo.product.provider.id,
+          :product_id => @repo.product.id, :repository => {:content => @upload}
+        response.should be_success
+      end
+    end
   end
 end

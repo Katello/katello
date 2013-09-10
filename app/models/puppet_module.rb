@@ -27,6 +27,6 @@ class PuppetModule
       metadata = entry.read
     end
     tar_extract.close
-    return JSON.parse(metadata)
+    return JSON.parse(metadata).with_indifferent_access
   end
 end

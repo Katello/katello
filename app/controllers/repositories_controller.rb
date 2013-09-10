@@ -135,8 +135,15 @@ class RepositoriesController < ApplicationController
   end
 
   def upload_content
-    filepath = params[:repository][:content].tempfile.path
-    @repository.upload_content(filepath)
+    filepath = params[:repository].try(:[], :content).try(:path)
+    if filepath
+      @repository.upload_content(filepath)
+      filename = params[:repository][:content].original_filename
+      notify.success _("File '%{file}' successfully imported into '%{repo}'") %
+        {:repo => @repository.name, :file => filename}
+    else
+      notify.error _("File not uploaded.")
+    end
     render :nothing => true
   end
 

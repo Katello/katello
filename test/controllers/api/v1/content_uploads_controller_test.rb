@@ -13,7 +13,7 @@
 
 require "minitest_helper"
 
-class Api::V1::ContentUploadsControllerTest < MiniTest::Rails::ActionController::TestCase
+describe Api::V1::ContentUploadsController do
   fixtures :all
 
   def before_suite
