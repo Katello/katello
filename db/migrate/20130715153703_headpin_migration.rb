@@ -46,6 +46,12 @@ class HeadpinMigration < ActiveRecord::Migration
           end
         end
       end
+
+      # Delete environment permissions
+      execute("delete from permission_tags where permission_id in (select id from permissions where resource_type_id=(select id from resource_types where name='environments'))")
+      execute("delete from permissions_verbs where permission_id in (select id from permissions where resource_type_id=(select id from resource_types where name='environments'))")
+      execute("delete from permissions where resource_type_id=(select id from resource_types where name='environments')")
+      execute("delete from resource_types where name='environments'")
     end
   end
 
