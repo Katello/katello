@@ -32,12 +32,15 @@ angular.module('Bastion.systems').controller('SystemsBulkActionController',
     function($scope, $q, BulkAction, SystemGroup, i18nFilter,
         Organization, Task) {
 
-        $scope.actionResource = new BulkAction();
+        $scope.actionParams = {
+            ids: []
+        };
 
         $scope.status = {
-            success: false,
-            error: false,
-            displayMessage: ''
+            showSuccess: false,
+            showError: false,
+            success: '',
+            errors: []
         };
 
         $scope.removeSystems = {
@@ -69,7 +72,7 @@ angular.module('Bastion.systems').controller('SystemsBulkActionController',
             $scope.removeSystems.confirm = false;
             $scope.removeSystems.workingMode = true;
 
-            $scope.actionResource.ids = $scope.getSelectedSystemIds();
+            $scope.actionParams.ids = $scope.getSelectedSystemIds();
 
             success = function(data) {
                 deferred.resolve(data);
@@ -78,18 +81,18 @@ angular.module('Bastion.systems').controller('SystemsBulkActionController',
                 });
 
                 $scope.removeSystems.workingMode = false;
-                $scope.status.displayMessage = data["displayMessage"];
-                $scope.status.success = true;
+                $scope.status.success = data["displayMessage"];
+                $scope.status.showSuccess = true;
             };
 
             error = function(error) {
                 deferred.reject(error.data["errors"]);
                 $scope.removeSystems.workingMode = false;
-                $scope.status.error = true;
-                $scope.status.displayMessage = error.data["displayMessage"];
+                $scope.status.showError = true;
+                $scope.status.errors = error.data["errors"];
             };
 
-            $scope.actionResource.$removeSystems({}, success, error);
+            BulkAction.removeSystems($scope.actionParams, success, error);
 
             return deferred.promise;
         };
@@ -116,29 +119,29 @@ angular.module('Bastion.systems').controller('SystemsBulkActionController',
             $scope.systemGroups.workingMode = true;
             $scope.editMode = false;
 
-            $scope.actionResource['ids'] = $scope.getSelectedSystemIds();
-            $scope.actionResource['system_group_ids'] = _.pluck($scope.systemGroups.groups, "id");
+            $scope.actionParams['ids'] = $scope.getSelectedSystemIds();
+            $scope.actionParams['system_group_ids'] = _.pluck($scope.systemGroups.groups, "id");
 
             success = function(data) {
                 deferred.resolve(data);
                 $scope.systemGroups.workingMode = false;
                 $scope.editMode = true;
-                $scope.status.displayMessage = data["displayMessage"];
-                $scope.status.success = true;
+                $scope.status.success = data["displayMessage"];
+                $scope.status.showSuccess = true;
             };
 
             error = function(error) {
                 deferred.reject(error.data["errors"]);
                 $scope.systemGroups.workingMode = false;
                 $scope.editMode = true;
-                $scope.status.error = true;
-                $scope.status.displayMessage = error.data["displayMessage"];
+                $scope.status.showError = true;
+                $scope.status.errors = error.data["errors"];
             };
 
             if ($scope.systemGroups.action === 'add') {
-                $scope.actionResource.$addSystemGroups({}, success, error);
+                BulkAction.addSystemGroups($scope.actionParams, success, error);
             } else if ($scope.systemGroups.action === 'remove') {
-                $scope.actionResource.$removeSystemGroups({}, success, error);
+                BulkAction.removeSystemGroups($scope.actionParams, success, error);
             }
 
             return deferred.promise;
@@ -161,25 +164,41 @@ angular.module('Bastion.systems').controller('SystemsBulkActionController',
         };
 
         $scope.performContentAction = function() {
+            var success, error, deferred = $q.defer();
+
+            $scope.content.confirm = false;
+            $scope.content.workingMode = true;
+
+            success = function(data) {
+                deferred.resolve(data);
+                $scope.content.workingMode = false;
+                $scope.status.success = data["displayMessage"];
+                $scope.status.showSuccess = true;
+            };
+
+            error = function(error) {
+                deferred.reject(error.data["errors"]);
+                $scope.content.workingMode = false;
+                $scope.status.showError = true;
+                $scope.status.errors = error.data["errors"];
+            };
+
+            initContentAction($scope.content);
+
             if ($scope.content.action === "install") {
-                installContent($scope.content);
+                BulkAction.installContent($scope.actionParams, success, error);
             } else if ($scope.content.action === "update") {
-                updateContent($scope.content);
+                BulkAction.updateContent($scope.actionParams, success, error);
             } else if ($scope.content.action === "remove") {
-                removeContent($scope.content);
+                BulkAction.removeContent($scope.actionParams, success, error);
             }
+
+            return deferred.promise;
         };
 
         $scope.getSelectedSystemIds = function() {
-            var rows = $scope.table.getSelected(), filteredRows;
-
-            filteredRows = _.filter(rows, function(row) {
-                if (row !== undefined) {
-                    return row;
-                }
-            });
-
-            return _.pluck(filteredRows, 'id');
+            var rows = $scope.table.getSelected();
+            return _.pluck(rows, 'id');
         };
 
         $scope.performAutoAttachSubscriptions = function() {
@@ -207,88 +226,13 @@ angular.module('Bastion.systems').controller('SystemsBulkActionController',
             return deferred.promise;
         };
 
-        function installContent(content) {
-            var success, error, deferred = $q.defer();
-
-            $scope.content.confirm = false;
-            $scope.content.workingMode = true;
-
-            success = function(data) {
-                deferred.resolve(data);
-                $scope.content.workingMode = false;
-                $scope.status.displayMessage = data["displayMessage"];
-                $scope.status.success = true;
-            };
-
-            error = function(error) {
-                deferred.reject(error.data["errors"]);
-                $scope.content.workingMode = false;
-                $scope.status.error = true;
-                $scope.status.displayMessage = error.data["displayMessage"];
-            };
-
-            initContentAction(content);
-            $scope.actionResource.$installContent({}, success, error);
-
-            return deferred.promise;
-        }
-
-        function updateContent(content) {
-            var success, error, deferred = $q.defer();
-
-            $scope.content.confirm = false;
-            $scope.content.workingMode = true;
-
-            success = function(data) {
-                deferred.resolve(data);
-                $scope.content.workingMode = false;
-                $scope.status.displayMessage = data["displayMessage"];
-                $scope.status.success = true;
-            };
-
-            error = function(error) {
-                deferred.reject(error.data["errors"]);
-                $scope.content.workingMode = false;
-                $scope.status.error = true;
-                $scope.status.displayMessage = error.data["displayMessage"];
-            };
-
-            initContentAction(content);
-            $scope.actionResource.$updateContent({}, success, error);
-
-            return deferred.promise;
-        }
-
-        function removeContent(content) {
-            var success, error, deferred = $q.defer();
-
-            $scope.content.confirm = false;
-            $scope.content.workingMode = true;
-
-            success = function(data) {
-                deferred.resolve(data);
-                $scope.content.workingMode = false;
-                $scope.status.displayMessage = data["displayMessage"];
-                $scope.status.success = true;
-            };
-
-            error = function(error) {
-                deferred.reject(error.data["errors"]);
-                $scope.content.workingMode = false;
-                $scope.status.error = true;
-                $scope.status.displayMessage = error.data["displayMessage"];
-            };
-
-            initContentAction(content);
-            $scope.actionResource.$removeContent({}, success, error);
-
-            return deferred.promise;
-        }
-
         function initContentAction(content) {
-            $scope.actionResource['content_type'] = content.contentType;
-            $scope.actionResource['content'] = content.content.split(/ *, */);
-            $scope.actionResource['ids'] = $scope.getSelectedSystemIds();
+            $scope.actionParams['content_type'] = content.contentType;
+            $scope.actionParams['content'] = content.content.split(/ *, */);
+            $scope.actionParams['ids'] = $scope.getSelectedSystemIds();
+        }
+
+        function performContentAction(action, content) {
         }
 
         function autoAttachSubscriptionsInProgress() {

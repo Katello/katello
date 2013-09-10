@@ -40,6 +40,7 @@ angular.module('Bastion.systems').controller('SystemsController',
 
         var nutupane = new Nutupane(System, params);
         $scope.table = nutupane.table;
+        $scope.removeRow = nutupane.removeRow;
 
         $scope.getStatusColor = function(status) {
             var colors = {
@@ -66,10 +67,6 @@ angular.module('Bastion.systems').controller('SystemsController',
                 $scope.successMessages = [i18nFilter('System %s has been deleted.'.replace('%s', system.name))];
                 $scope.transitionTo('systems.index');
             });
-        };
-
-        $scope.removeRow = function(system) {
-            nutupane.removeRow(system);
         };
     }]
 );

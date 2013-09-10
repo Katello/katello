@@ -1,16 +1,16 @@
-<div class="flash_hud" ng-show="status.success">
-  <a class="control" title="Close" ng-click="status.success = false"></a>
+<div class="flash_hud" ng-show="status.showSuccess">
+  <a class="control" title="Close" ng-click="status.showSuccess = false"></a>
   <ul class="flash_messages success">
-    <li>{{ status.displayMessage }}</li>
+    <li>{{ status.success }}</li>
   </ul>
 </div>
 
-<div class="flash_hud" ng-show="status.error">
-  <a class="control" title="Close" ng-click="status.error = false"></a>
+<div class="flash_hud" ng-show="status.showError">
+  <a class="control" title="Close" ng-click="status.showError = false"></a>
   <ul class="flash_messages error">
     <li>{{ "Error occurred:" | i18n }}</li>
     <ul>
-      <li>{{ status.displayMessage }}</li>
+      <li ng-repeat="error in status.errors">{{ error }}</li>
     </ul>
   </ul>
 </div>
