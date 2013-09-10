@@ -1,4 +1,6 @@
 # Fixed in later versions of 3.2 (like 3.2.13 or 3.2.14 maybe)
+# Rails doesn't handle multipart json correctly
+# See http://stackoverflow.com/a/14269110
 
 module ActiveSupport::JSON::Encoding
   def self.escape(string)
