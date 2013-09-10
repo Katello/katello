@@ -12,7 +12,7 @@
 
 class Api::V1::ContentUploadsController < Api::V1::ApiController
   respond_to :json
-  before_filter :find_repository, :except => [:index]
+  before_filter :find_repository
   before_filter :authorize
 
   def rules
@@ -22,8 +22,7 @@ class Api::V1::ContentUploadsController < Api::V1::ApiController
       :create => upload_test,
       :upload_bits => upload_test,
       :destroy => upload_test,
-      :import_into_repo => upload_test,
-      :index => lambda { true } # TODO: set a permission here
+      :import_into_repo => upload_test
     }
   end
 
@@ -49,12 +48,6 @@ class Api::V1::ContentUploadsController < Api::V1::ApiController
   def destroy
     Katello.pulp_server.resources.content.delete_upload_request(params[:id])
     render :nothing => true
-  end
-
-  api :GET, "/content_uploads", "List all upload requests"
-  def index
-    request_list = Katello.pulp_server.resources.content.list_all_requests
-    respond :collection => request_list
   end
 
   api :POST, "/repositories/:repo_id/content_uploads/:id/import_into_repo", "Import into a repository"

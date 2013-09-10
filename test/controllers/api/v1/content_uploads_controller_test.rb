@@ -33,7 +33,7 @@ class Api::V1::ContentUploadsControllerTest < MiniTest::Rails::ActionController:
   end
 
   describe "create" do
-    let (:action) { :create }
+    let(:action) { :create }
 
     it "should be protected" do
       req = lambda { post action, :repository_id => @repo.id }
@@ -49,7 +49,7 @@ class Api::V1::ContentUploadsControllerTest < MiniTest::Rails::ActionController:
   end
 
   describe "upload_bits" do
-    let (:action) { :upload_bits }
+    let(:action) { :upload_bits }
 
     it "should be protected" do
       req = lambda { put action, :id => "1" , :offset => "0", :content => "/tmp/my_file.rpm",
@@ -67,7 +67,7 @@ class Api::V1::ContentUploadsControllerTest < MiniTest::Rails::ActionController:
   end
 
   describe "import_into_repo" do
-    let (:action) { :import_into_repo }
+    let(:action) { :import_into_repo }
 
     it "should be protected" do
       req = lambda { post action, :id => "1" , :unit_type_id => "rpm", :unit_key => {}, :unit_metadata => {},
@@ -85,7 +85,7 @@ class Api::V1::ContentUploadsControllerTest < MiniTest::Rails::ActionController:
   end
 
   describe "destroy" do
-    let (:action) { :destroy }
+    let(:action) { :destroy }
 
     it "should be protected" do
       req = lambda { delete action, :id => "1", :repository_id => @repo.id }
@@ -98,12 +98,6 @@ class Api::V1::ContentUploadsControllerTest < MiniTest::Rails::ActionController:
       delete action, :id => "1", :repository_id => @repo.id
       assert_response :success
     end
-  end
-
-  def test_index
-    mock_pulp_server(:list_all_requests => [])
-    get :index
-    assert_response :success
   end
 
   private
