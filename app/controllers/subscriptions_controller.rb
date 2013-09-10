@@ -63,11 +63,7 @@ class SubscriptionsController < ApplicationController
       end
     end
 
-    if current_user.experimental_ui
-      render :index_nutupane, :locals => { :experimental_ui => true }
-    else
-      render :index
-    end
+    render :index
   end
 
   # TODO: remove this method and route since nutupane (experimental mode) uses the api method subscriptions_controller#organization_index
