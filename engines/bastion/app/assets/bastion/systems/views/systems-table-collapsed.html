@@ -6,7 +6,7 @@
   </thead>
 
   <tbody>
-    <tr alch-table-row ng-repeat="system in table.rows" row-select>
+    <tr alch-table-row ng-repeat="system in table.rows" row-select="system">
       <td alch-table-cell>
         <a class="clickable" ng-click="table.openDetails(system)">{{ system.name }}</a>
         <i class="icon-chevron-right selected-icon" ng-show="system.selected"></i>

@@ -28,7 +28,7 @@ angular.module('alchemy')
 
         $scope.table.getSelected = function() {
             var selectedRows = [];
-            angular.forEach(rows, function(row, rowIndex) {
+            angular.forEach($scope.table.rows, function(row, rowIndex) {
                 if (row.selected === true) {
                     selectedRows.push($scope.table.rows[rowIndex]);
                 }
@@ -62,25 +62,23 @@ angular.module('alchemy')
 
             table.allSelected = selected;
 
-            $scope.table.numSelected = table.allSelected ? rows.length : 0;
+            $scope.table.numSelected = table.allSelected ? table.rows.length : 0;
 
-            angular.forEach(rows, function(row) {
+            angular.forEach(table.rows, function(row) {
                 row.selected = table.allSelected;
-            });
-            angular.forEach(headers, function(columns) {
-                columns.selected = table.allSelected;
             });
         };
 
     }])
     .directive('alchTableHead', [function() {
-        var rowSelectTemplate = '<th class="row-select">' +
-                                  '<input type="checkbox"' +
-                                          'name="{{ row.id }}"' +
-                                          'value="{{ row.id }}"' +
-                                          'ng-model="row.selected"' +
-                                          'ng-change="itemSelected(row)">' +
-                                '</th>';
+        var rowSelectTemplate = function() {
+                return '<th class="row-select">' +
+                          '<input type="checkbox"' +
+                                  'ng-model="table.allSelected"' +
+                                  'ng-change="allSelected(table)">' +
+                        '</th>';
+            };
+
         return {
             require: '^alchTable',
             restrict: 'A',
@@ -88,26 +86,26 @@ angular.module('alchemy')
             controller: 'AlchTableHeadController',
             compile: function(tElement, tAttrs) {
                 if (tAttrs.rowSelect !== undefined) {
-                    tElement.prepend(rowSelectTemplate);
+                    tElement.prepend(rowSelectTemplate());
                 }
 
                 return function (scope, element, attrs, alchTableController) {
-                    alchTableController.addHeader(scope.row);
+                    alchTableController.addHeader(scope.header);
 
-                    scope.itemSelected = function(row) {
-                        alchTableController.selectAll(row.selected);
+                    scope.allSelected = function(table) {
+                        alchTableController.selectAll(table.allSelected);
                     };
                 };
             }
         };
     }])
     .controller('AlchTableHeadController', ['$scope', function($scope) {
-        $scope.row = {
+        $scope.header = {
             columns: []
         };
 
         this.addColumn = function(column) {
-            $scope.row.columns.push(column);
+            $scope.header.columns.push(column);
         };
     }])
     .directive('alchTableColumn', ['$compile', function($compile) {
@@ -143,14 +141,15 @@ angular.module('alchemy')
             }
         };
     }])
-    .directive('alchTableRow', [function() {
-        var rowSelectTemplate = '<td class="row-select">' +
-                                  '<input type="checkbox"' +
-                                          'name="{{ row.id }}"' +
-                                          'value="{{ row.id }}"' +
-                                          'ng-model="row.selected"' +
-                                          'ng-change="itemSelected(row)">' +
-                                '</td>';
+    .directive('alchTableRow', ['$parse', function($parse) {
+        var rowSelectTemplate = function(model) {
+                return '<td class="row-select">' +
+                          '<input type="checkbox"' +
+                                  'ng-model="' + model + '.selected"' +
+                                  'ng-change="itemSelected(' + model + ')">' +
+                        '</td>';
+            };
+
         return {
             require: '^alchTable',
             restrict: 'A',
@@ -158,25 +157,27 @@ angular.module('alchemy')
             controller: 'AlchTableRowController',
             compile: function(tElement, tAttrs) {
                 if (tAttrs.rowSelect !== undefined) {
-                    tElement.prepend(rowSelectTemplate);
+                    tElement.prepend(rowSelectTemplate(tAttrs.rowSelect));
                 }
 
                 return function(scope, element, attrs, alchTableController) {
                     alchTableController.addRow(scope.row);
 
-                    if (attrs.rowSelect !== undefined) {
-                        scope.$watch('row.selected', function(selected) {
+                    if (attrs.rowSelect) {
+                        scope.model = $parse(attrs.rowSelect)(scope);
+
+                        scope.$watch('model.selected', function(selected) {
                             if (selected) {
                                 element.addClass('active-row');
                             } else {
                                 element.removeClass('active-row');
                             }
                         });
-
-                        scope.itemSelected = function(row) {
-                            alchTableController.itemSelected(row);
-                        };
                     }
+
+                    scope.itemSelected = function(row) {
+                        alchTableController.itemSelected(row);
+                    };
                 };
             }
         };
