@@ -28,27 +28,76 @@ class Api::V1::ContentUploadsControllerTest < MiniTest::Rails::ActionController:
     @environment = environments(:library)
     login_user(User.find(users(:admin)))
 
-    @edit_permission = UserPermission.new(:edit, :products)
-    @read_permission = UserPermission.new(:read, :products)
+    @edit_permission = UserPermission.new(:update, :providers)
+    @read_permission = UserPermission.new(:read, :providers)
   end
 
-  def test_create
-    mock_pulp_server(:create_upload_request => [])
-    post :create, :repository_id => @repo.id
-    assert_response :success
+  describe "create" do
+    let (:action) { :create }
+
+    it "should be protected" do
+      req = lambda { post action, :repository_id => @repo.id }
+      assert_authorized(permission: @edit_permission, request: req, action: action)
+      refute_authorized(permission: [@read_permission, NO_PERMISSION], request: req, action: action)
+    end
+
+    it "should create an upload request" do
+      mock_pulp_server(:create_upload_request => [])
+      post action, :repository_id => @repo.id
+      assert_response :success
+    end
   end
 
-  def test_upload_bits
-    mock_pulp_server(:upload_bits => true)
-    put :upload_bits, :id => "1" , :offset => "0", :content => "/tmp/my_file.rpm",
-      :repository_id => @repo.id
-    assert_response :success
+  describe "upload_bits" do
+    let (:action) { :upload_bits }
+
+    it "should be protected" do
+      req = lambda { put action, :id => "1" , :offset => "0", :content => "/tmp/my_file.rpm",
+                         :repository_id => @repo.id }
+      assert_authorized(permission: @edit_permission, request: req, action: action)
+      refute_authorized(permission: [@read_permission, NO_PERMISSION], request: req, action: action)
+    end
+
+    it "should upload bits" do
+      mock_pulp_server(:upload_bits => true)
+      put action, :id => "1" , :offset => "0", :content => "/tmp/my_file.rpm",
+          :repository_id => @repo.id
+      assert_response :success
+    end
   end
 
-  def test_destroy
-    mock_pulp_server(:delete_upload_request => true)
-    delete :destroy, :id => "1", :repository_id => @repo.id
-    assert_response :success
+  describe "import_into_repo" do
+    let (:action) { :import_into_repo }
+
+    it "should be protected" do
+      req = lambda { post action, :id => "1" , :unit_type_id => "rpm", :unit_key => {}, :unit_metadata => {},
+                          :repository_id => @repo.id }
+      assert_authorized(permission: @edit_permission, request: req, action: action)
+      refute_authorized(permission: [@read_permission, NO_PERMISSION], request: req, action: action)
+    end
+
+    it "should import into repository" do
+      mock_pulp_server(:import_into_repo => true)
+      post action, :id => "1", :unit_type_id => "rpm", :unit_key => {}, :unit_metadata => {},
+           :repository_id => @repo.id
+      assert_response :success
+    end
+  end
+
+  describe "destroy" do
+    let (:action) { :destroy }
+
+    it "should be protected" do
+      req = lambda { delete action, :id => "1", :repository_id => @repo.id }
+      assert_authorized(permission: @edit_permission, request: req, action: action)
+      refute_authorized(permission: [@read_permission, NO_PERMISSION], request: req, action: action)
+    end
+
+    it "should delete the request" do
+      mock_pulp_server(:delete_upload_request  => true)
+      delete action, :id => "1", :repository_id => @repo.id
+      assert_response :success
+    end
   end
 
   def test_index
