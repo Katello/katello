@@ -11,21 +11,21 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Glue::ElasticSearch::PuppetModule
-  def self.included(base)
-    base.send :extend, ClassMethods
-  end
+  extend ActiveSupport::Concern
 
-  module ClassMethods
-    def index_options
-      {
-        "_type"             => :puppet_module,
-        "name_sort"         => name.downcase,
-        "name_autocomplete" => name,
-        "author_autocomplete" => author,
-        "sortable_version"  => sortable_version
-      }
+    included do
+      def index_options
+        {
+          "_type"             => :puppet_module,
+          "name_sort"         => name.downcase,
+          "name_autocomplete" => name,
+          "author_autocomplete" => author,
+          "sortable_version"  => sortable_version
+        }
+      end
     end
 
+  module ClassMethods
     def index_settings
       {
         "index" => {
@@ -152,7 +152,7 @@ module Glue::ElasticSearch::PuppetModule
       end
     end
 
-    def self.field_search(query, field, repoids = nil, page_size = 15)
+    def field_search(query, field, repoids = nil, page_size = 15)
       search = Tire.search(self.index) do
         fields [field]
         query do
@@ -167,7 +167,7 @@ module Glue::ElasticSearch::PuppetModule
       return search.results.map(&field).uniq[0, page_size.to_i]
     end
 
-    def self.autocomplete_field_query(field, value)
+    def autocomplete_field_query(field, value)
       value = "*" if value.blank?
       value = Util::Search.filter_input(value)
       "#{field}_autocomplete:(#{value})"
