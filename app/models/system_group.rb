@@ -39,9 +39,9 @@ class SystemGroup < ActiveRecord::Base
   #  we do this as we need to maintain the integrity of systems
   #  and environments associated with a group, and none of the other solutions
   #  allow us to do this.
-  has_many :environment_system_groups, :dependent =>:destroy
-  has_many :db_environments, {:through=>:environment_system_groups, :source=>:environment,
-                    :class_name => 'KTEnvironment', :foreign_key=>:environment_id}
+  has_many :environment_system_groups, :dependent => :destroy
+  has_many :db_environments, {:through => :environment_system_groups, :source => :environment,
+                    :class_name => 'KTEnvironment', :foreign_key => :environment_id}
   before_save :save_system_environments
 
   validates :pulp_id, :presence => true
@@ -49,7 +49,7 @@ class SystemGroup < ActiveRecord::Base
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name
   validates_presence_of :organization_id, :message => N_("Organization cannot be blank.")
   validates_uniqueness_of :name, :scope => :organization_id, :message => N_("must be unique within one organization")
-  validates_uniqueness_of :pulp_id, :message=> N_("must be unique.")
+  validates_uniqueness_of :pulp_id, :message => N_("must be unique.")
   validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
 
   alias_attribute :system_limit, :max_systems
@@ -71,7 +71,7 @@ class SystemGroup < ActiveRecord::Base
 
   belongs_to :organization
 
-  before_validation(:on=>:create) do
+  before_validation(:on => :create) do
     self.pulp_id ||= "#{self.organization.label}-#{Util::Model.labelize(self.name)}-#{SecureRandom.hex(4)}"
   end
 

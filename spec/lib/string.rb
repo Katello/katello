@@ -12,7 +12,6 @@
 
 require 'spec_helper'
 
-
 describe String do
   it "should translate true strings" do
     %w(True T t true Yes yes Y y 1).all? { |v| v.to_bool.should be_true }

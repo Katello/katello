@@ -10,7 +10,6 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-
 class Candlepin::ProductContent
   attr_accessor :content, :enabled, :product
 
@@ -37,7 +36,7 @@ class Candlepin::ProductContent
   end
 
   def repositories
-    @repos ||= self.product.repos(self.product.organization.library, true).where(:content_id=>self.content.id)
+    @repos ||= self.product.repos(self.product.organization.library, true).where(:content_id => self.content.id)
     @repos
   end
 
@@ -48,12 +47,12 @@ class Candlepin::ProductContent
 
   def can_disable?
     #are all repos disabled?
-    self.product.repos(self.product.organization.library, false).where(:content_id=>self.content.id).empty?
+    self.product.repos(self.product.organization.library, false).where(:content_id => self.content.id).empty?
   end
 
   def disable
     raise _("One or more repositories are still enabled for this content set.") unless self.can_disable?
-    repos = self.product.repos(self.product.organization.library, true).where(:content_id=>self.content.id)
+    repos = self.product.repos(self.product.organization.library, true).where(:content_id => self.content.id)
     repos.each do |repo|
       repo.destroy
     end
@@ -98,11 +97,23 @@ class Candlepin::ProductContent
                                           pulp_id: product.repo_id(repo_name)
                                          )
         unless existing_repos.any?
+          content_type = nil
+          unprotected = false
+          if self.content.type.downcase == 'kickstart'
+            content_type = 'yum'
+            # Keep the kickstart repos open and available
+            unprotected = true
+          else
+            content_type = self.content.type
+            # Keep the regular updates repos protected
+            unprotected = false
+          end
+          Rails.logger.error("Content type: '#{content_type}'")
           Repository.create!(:environment => product.organization.library,
                              :product => product,
                              :pulp_id => product.repo_id(repo_name),
                              :cp_label => self.content.label,
-                             :content_id=>self.content.id,
+                             :content_id => self.content.id,
                              :arch => arch,
                              :major => version[:major],
                              :minor => version[:minor],
@@ -113,11 +124,11 @@ class Candlepin::ProductContent
                              :feed_ca => ca,
                              :feed_cert => self.product.certificate,
                              :feed_key => self.product.key,
-                             :content_type => self.content.type,
+                             :content_type => content_type,
                              :preserve_metadata => true, #preserve repo metadata when importing from cp
-                             :enabled =>false,
-                             :unprotected => true,
-                             :content_view_version=>product.organization.library.default_content_view_version
+                             :enabled => false,
+                             :unprotected => unprotected,
+                             :content_view_version => product.organization.library.default_content_view_version
                             )
         end
         product.repositories_cdn_import_passed! unless product.cdn_import_success?
@@ -132,7 +143,6 @@ class Candlepin::ProductContent
     end
 
   end
-
 
 end
 

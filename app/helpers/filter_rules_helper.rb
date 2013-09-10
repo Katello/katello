@@ -72,4 +72,16 @@ module FilterRulesHelper
     return value1, value2
   end
 
+  def content_options(filter)
+    repos = filter.repos(current_organization.library)
+    options = {}
+    if repos.select(&:yum?).length > 0
+      options.merge!(FilterRule::YUM_CONTENT_OPTIONS)
+    end
+    if repos.select(&:puppet?).length > 0
+      options.merge!(FilterRule::PUPPET_CONTENT_OPTIONS)
+    end
+    options_for_select(options)
+  end
+
 end

@@ -10,8 +10,6 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-
-
 class ContentView < ActiveRecord::Base
   include Ext::LabelFromName
   include Authorization::ContentView
@@ -47,9 +45,8 @@ class ContentView < ActiveRecord::Base
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name
   validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
 
-
-  scope :default, where(:default=>true)
-  scope :non_default, where(:default=>false)
+  scope :default, where(:default => true)
+  scope :non_default, where(:default => false)
 
   def self.in_environment(env)
     joins(:content_view_versions => :content_view_version_environments).
@@ -130,7 +127,7 @@ class ContentView < ActiveRecord::Base
   end
 
   def version(env)
-    self.versions.in_environment(env).order('content_view_versions.id ASC').scoped(:readonly=>false).last
+    self.versions.in_environment(env).order('content_view_versions.id ASC').scoped(:readonly => false).last
   end
 
   def version_environment(env)
@@ -146,6 +143,10 @@ class ContentView < ActiveRecord::Base
     else
       []
     end
+  end
+
+  def library_repos
+    Repository.where(:id => library_repo_ids)
   end
 
   def library_repo_ids
@@ -172,13 +173,13 @@ class ContentView < ActiveRecord::Base
 
   #list all products associated to this view across all versions
   def all_version_products
-    Product.joins(:repositories).where('repositories.id'=>self.all_version_repos).uniq
+    Product.joins(:repositories).where('repositories.id' => self.all_version_repos).uniq
   end
 
   #get the library instances of all repos within this view
   def all_version_library_instances
-    all_repos = all_version_repos.where(:library_instance_id=>nil).pluck('repositories.id') + all_version_repos.pluck(:library_instance_id)
-    Repository.where(:id=>all_repos)
+    all_repos = all_version_repos.where(:library_instance_id => nil).pluck('repositories.id') + all_version_repos.pluck(:library_instance_id)
+    Repository.where(:id => all_repos)
   end
 
   def get_repo_clone(env, repo)
@@ -303,7 +304,7 @@ class ContentView < ActiveRecord::Base
 
   def update_cp_content(env)
     # retrieve the environment and then update cp content
-    view_env = self.content_view_environments.where(:environment_id=>env.id).first
+    view_env = self.content_view_environments.where(:environment_id => env.id).first
     view_env.update_cp_content if view_env
   end
 
@@ -311,7 +312,7 @@ class ContentView < ActiveRecord::Base
   # a version of the view is promoted to an environment.  It is necessary for
   # candlepin to become aware that the view is available for consumers.
   def add_environment(env)
-    if self.content_view_environments.where(:environment_id => env.id ).empty?
+    if self.content_view_environments.where(:environment_id => env.id).empty?
       ContentViewEnvironment.create!(:name => env.name,
                                      :label => self.generate_cp_environment_label(env),
                                      :cp_id => self.generate_cp_environment_id(env),
@@ -327,7 +328,7 @@ class ContentView < ActiveRecord::Base
     # Do not remove the content view environment, if there is still a view
     # version in the environment.
     if self.versions.in_environment(env).blank?
-      view_env = self.content_view_environments.where(:environment_id=>env.id)
+      view_env = self.content_view_environments.where(:environment_id => env.id)
       view_env.first.destroy unless view_env.blank?
     end
   end

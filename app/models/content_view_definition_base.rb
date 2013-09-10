@@ -10,13 +10,13 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-
 class ContentViewDefinitionBase < ActiveRecord::Base
   belongs_to :organization, :inverse_of => :content_view_definitions
   has_many :content_view_definition_products, :foreign_key => "content_view_definition_id", :dependent => :destroy
   has_many :products, :through => :content_view_definition_products, :after_remove => :remove_product
   has_many :content_view_definition_repositories, :foreign_key => "content_view_definition_id", :dependent => :destroy
-  has_many :repositories, :through => :content_view_definition_repositories, :after_remove => :remove_repository
+  has_many :repositories, :through => :content_view_definition_repositories, :after_remove => :remove_repository,
+    :before_add => :validate_repos
   has_many :components, :class_name => "ComponentContentView",
     :foreign_key => "content_view_definition_id"
   has_many :component_content_views, :through => :components,
@@ -41,7 +41,7 @@ class ContentViewDefinitionBase < ActiveRecord::Base
       end
     else
       self.products.each do |prod|
-        repos += prod.repos(organization.library).enabled.select(&:in_default_view?)
+        repos += prod.repos(organization.library).non_puppet.enabled.select(&:in_default_view?)
       end
       repos.concat(self.repositories)
       repos.uniq!
@@ -59,6 +59,22 @@ class ContentViewDefinitionBase < ActiveRecord::Base
 
   def has_component_views?
     component_content_views.any?
+  end
+
+  def puppet_repository
+    repositories.detect(&:puppet?)
+  end
+
+  def puppet_repository_id
+    puppet_repository.try(:id)
+  end
+
+  def puppet_repository_id=(id)
+    return if repository_ids.include?(id)
+    if repo = repositories.detect(&:puppet?)
+      repositories.delete(repo)
+    end
+    repositories << Repository.puppet_type.find(id) unless id.blank?
   end
 
   protected
@@ -97,13 +113,27 @@ class ContentViewDefinitionBase < ActiveRecord::Base
   def validate_component_views(view)
     if type == "ContentViewDefinition"
       # check for repo overlap
-      library_repo_ids = component_content_views.map(&:library_repo_ids).flatten + view.library_repo_ids
+      library_repos = component_content_views.map(&:library_repos).flatten + view.library_repos
+      library_repo_ids = library_repos.map(&:id)
       if library_repo_ids.length != library_repo_ids.uniq.length
         raise Errors::ContentViewRepositoryOverlap.new(_("Definition cannot contain views with the same repositories."))
       end
 
+      if library_repos.select(&:puppet?).length > 1
+        raise Errors::ContentViewDefinitionBadContent.new(_("Definition cannot more than one view with a puppet repository."))
+      end
+
       if !self.composite?
         raise Errors::ContentViewDefinitionBadContent.new(_("Definition cannot contain views if not composite definition"))
+      end
+    end
+  end
+
+  def validate_repos(repo)
+    if type == "ContentViewDefinition"
+      # TODO: check composite views
+      if repositories.select(&:puppet?).length > 0 && repo.puppet?
+        raise Errors::ContentViewRepositoryOverlap.new(_("Definition cannot contain more than one Puppet repository."))
       end
     end
   end

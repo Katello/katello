@@ -13,7 +13,7 @@
 module Glue::Candlepin::Consumer
 
   # TODO: break up method
-  # rubocop:disable MethdLength
+  # rubocop:disable MethodLength
   def self.included(base)
     base.send :include, LazyAccessor
     base.send :include, InstanceMethods
@@ -28,26 +28,26 @@ module Glue::Candlepin::Consumer
 
       lazy_accessor :href, :facts, :cp_type, :href, :idCert, :owner, :lastCheckin, :created, :guestIds,
                     :installedProducts, :autoheal, :releaseVer, :serviceLevel, :capabilities,
-        :initializer => lambda {|s|
-                          if uuid
-                            consumer_json = Resources::Candlepin::Consumer.get(uuid)
-                            convert_from_cp_fields(consumer_json)
-                          end
-                        }
+                    :initializer => (lambda do |s|
+                                       if uuid
+                                         consumer_json = Resources::Candlepin::Consumer.get(uuid)
+                                         convert_from_cp_fields(consumer_json)
+                                       end
+                                     end)
       lazy_accessor :entitlements, :initializer => lambda {|s| Resources::Candlepin::Consumer.entitlements(uuid) }
       lazy_accessor :pools, :initializer => lambda {|s| entitlements.collect { |ent| Resources::Candlepin::Pool.find ent["pool"]["id"]} }
       lazy_accessor :available_pools, :initializer => lambda {|s| Resources::Candlepin::Consumer.available_pools(uuid, false) }
       lazy_accessor :all_available_pools, :initializer => lambda {|s| Resources::Candlepin::Consumer.available_pools(uuid, true) }
-      lazy_accessor :host, :initializer => lambda { |s|
-        host_attributes = Resources::Candlepin::Consumer.host(self.uuid)
-        (System.find_by_uuid(host_attributes['uuid']) || System.new(host_attributes)) if host_attributes
-      }
-      lazy_accessor :guests, :initializer => lambda { |s|
-        guests_attributes = Resources::Candlepin::Consumer.guests(self.uuid)
-        guests_attributes.map do |attr|
-          System.find_by_uuid(attr['uuid']) || System.new(attr)
-        end
-      }
+      lazy_accessor :host, :initializer => (lambda do |s|
+                                              host_attributes = Resources::Candlepin::Consumer.host(self.uuid)
+                                              (System.find_by_uuid(host_attributes['uuid']) || System.new(host_attributes)) if host_attributes
+                                            end)
+      lazy_accessor :guests, :initializer => (lambda do |s|
+                                                guests_attributes = Resources::Candlepin::Consumer.guests(self.uuid)
+                                                guests_attributes.map do |attr|
+                                                  System.find_by_uuid(attr['uuid']) || System.new(attr)
+                                                end
+                                              end)
       lazy_accessor :compliance, :initializer => lambda {|s| Resources::Candlepin::Consumer.compliance(uuid) }
       lazy_accessor :events, :initializer => lambda {|s| Resources::Candlepin::Consumer.events(uuid) }
 
@@ -57,7 +57,7 @@ module Glue::Candlepin::Consumer
 
   module InstanceMethods
 
-    def initialize(attrs=nil, options={})
+    def initialize(attrs = nil, options = {})
       if attrs.nil?
         super
       elsif
@@ -78,13 +78,13 @@ module Glue::Candlepin::Consumer
       end
     end
 
-    def serializable_hash(options={})
+    def serializable_hash(options = {})
       hash = super(options)
       hash = hash.merge(:serviceLevel => self.serviceLevel)
       hash
     end
 
-    def consumer_as_json(json={})
+    def consumer_as_json(json = {})
       json['compliance'] = self.compliance
       json['registered'] = self.created
       json['checkin_time'] = self.checkin_time
@@ -94,7 +94,7 @@ module Glue::Candlepin::Consumer
 
     def validate_cp_consumer
       if new_record?
-        validates_inclusion_of :cp_type, :in => %w( system hypervisor candlepin )
+        validates_inclusion_of :cp_type, :in => %w(system hypervisor candlepin)
         validates_presence_of :facts
       end
     end
@@ -119,8 +119,8 @@ module Glue::Candlepin::Consumer
 
     def load_from_cp(consumer_json)
       self.uuid = consumer_json[:uuid]
-      consumer_json[:facts] ||= {'sockets'=>0}
-      convert_from_cp_fields(consumer_json).each do |k,v|
+      consumer_json[:facts] ||= {'sockets' => 0}
+      convert_from_cp_fields(consumer_json).each do |k, v|
         instance_variable_set("@#{k}", v) if respond_to?("#{k}=")
       end
     end
@@ -169,14 +169,14 @@ module Glue::Candlepin::Consumer
       raise e
     end
 
-    def get_pool id
+    def get_pool(id)
       Resources::Candlepin::Pool.find id
     rescue => e
       Rails.logger.debug e.backtrace.join("\n\t")
       raise e
     end
 
-    def subscribe pool, quantity = nil
+    def subscribe(pool, quantity = nil)
       Rails.logger.debug "Subscribing to pool '#{pool}' for : #{name}"
       Resources::Candlepin::Consumer.consume_entitlement self.uuid, pool, quantity
     rescue => e
@@ -192,7 +192,7 @@ module Glue::Candlepin::Consumer
       raise e
     end
 
-    def unsubscribe entitlement
+    def unsubscribe(entitlement)
       Rails.logger.debug "Unsubscribing from entitlement '#{entitlement}' for : #{name}"
       Resources::Candlepin::Consumer.remove_entitlement self.uuid, entitlement
       #ents = self.entitlements.collect {|ent| ent["id"] if ent["pool"]["id"] == pool}.compact
@@ -205,7 +205,7 @@ module Glue::Candlepin::Consumer
       raise e
     end
 
-    def unsubscribe_by_serial serial
+    def unsubscribe_by_serial(serial)
       Rails.logger.debug "Unsubscribing from certificate '#{serial}' for : #{name}"
       Resources::Candlepin::Consumer.remove_certificate self.uuid, serial
     rescue => e
@@ -221,7 +221,7 @@ module Glue::Candlepin::Consumer
       raise e
     end
 
-    def to_json(options={})
+    def to_json(options = {})
       super(options.merge(:methods => [:href, :facts, :idCert, :owner, :autoheal, :release, :releaseVer, :checkin_time,
                                        :installedProducts, :capabilities]))
     end
@@ -244,17 +244,17 @@ module Glue::Candlepin::Consumer
     end
 
     def reject_db_columns(cp_json)
-      cp_json.reject {|k,v| self.class.column_defaults.keys.member?(k.to_s) }
+      cp_json.reject {|k, v| self.class.column_defaults.keys.member?(k.to_s) }
     end
 
     def save_candlepin_orchestration
       case orchestration_for
-        when :hypervisor
-          # it's already saved = do nothing
-        when :create
-          pre_queue.create(:name => "create candlepin consumer: #{self.name}", :priority => 2, :action => [self, :set_candlepin_consumer])
-        when :update
-          pre_queue.create(:name => "update candlepin consumer: #{self.name}", :priority => 3, :action => [self, :update_candlepin_consumer])
+      when :hypervisor
+        # it's already saved = do nothing
+      when :create
+        pre_queue.create(:name => "create candlepin consumer: #{self.name}", :priority => 2, :action => [self, :set_candlepin_consumer])
+      when :update
+        pre_queue.create(:name => "update candlepin consumer: #{self.name}", :priority => 3, :action => [self, :update_candlepin_consumer])
       end
     end
 
@@ -299,7 +299,7 @@ module Glue::Candlepin::Consumer
         addr = facts["net.interface.#{interface}.ipv4_address"]
         # older subman versions report .ipaddr
         addr ||= facts["net.interface.#{interface}.ipaddr"]
-        interface_set << { :name => interface, :addr => addr } if addr != nil
+        interface_set << { :name => interface, :addr => addr } if !addr.nil?
       end
       interface_set
     end
@@ -323,7 +323,7 @@ module Glue::Candlepin::Consumer
     # Sockets are required to have a value in katello for searching as well as for checking subscription limits
     # Force always to an integer value for consistency
     def sockets
-      s = @facts ? Integer(facts["cpu.cpu_socket(s)"]) : 0
+      @facts ? Integer(facts["cpu.cpu_socket(s)"]) : 0
     rescue
       0
     end
@@ -399,7 +399,7 @@ module Glue::Candlepin::Consumer
 
     def release
       if self.releaseVer.is_a? Hash
-         self.releaseVer["releaseVer"]
+        self.releaseVer["releaseVer"]
       else
         self.releaseVer
       end
@@ -408,21 +408,23 @@ module Glue::Candlepin::Consumer
     def memory_in_gigabytes(mem_str)
       # convert total memory into gigabytes
       return 0 if mem_str.nil?
-      mem,unit = mem_str.split
+      mem, unit = mem_str.split
       total_mem = mem.to_f
       case unit
-        when 'B'  then total_mem = 0
-        when 'kB' then total_mem = 0
-        when 'MB' then total_mem /= 1024
-        when 'GB' then total_mem *= 1
-        when 'TB' then total_mem *= 1024
+      when 'B'  then total_mem = 0
+      when 'kB' then total_mem = 0
+      when 'MB' then total_mem /= 1024
+      when 'GB' then total_mem *= 1
+      when 'TB' then total_mem *= 1024
         # default memtotal is in kB
-        else total_mem = (total_mem / (1024*1024))
+      else total_mem = (total_mem / (1024 * 1024))
       end
       total_mem.round(2)
     end
 
-    def available_pools_full listall=false
+    # TODO: break up method
+    # rubocop:disable MethodLength
+    def available_pools_full(listall = false)
 
       # The available pools can be constrained to match the system (number of sockets, etc.), or
       # all of the pools that could be applied to the system, even if not a perfect match.
@@ -431,7 +433,7 @@ module Glue::Candlepin::Consumer
       else
         pools = self.available_pools
       end
-      avail_pools = pools.collect {|pool|
+      avail_pools = pools.collect do |pool|
         sockets = ""
         multi_entitlement = false
         support_level = ""
@@ -463,13 +465,15 @@ module Glue::Candlepin::Consumer
                        :supportLevel => support_level,
                        :multiEntitlement => multi_entitlement,
                        :providedProducts => provided_products)
-      }
-      avail_pools.sort! {|a,b| a.poolName <=> b.poolName}
+      end
+      avail_pools.sort! {|a, b| a.poolName <=> b.poolName}
       avail_pools
     end
 
+    # TODO: break up method
+    # rubocop:disable MethodLength
     def consumed_entitlements
-      consumed_entitlements = self.entitlements.collect { |entitlement|
+      consumed_entitlements = self.entitlements.collect do |entitlement|
 
         pool = self.get_pool(entitlement["pool"]["id"])
 
@@ -498,7 +502,7 @@ module Glue::Candlepin::Consumer
           end
         end
 
-        quantity = entitlement["quantity"] != nil ? entitlement["quantity"] : pool["quantity"]
+        quantity = !entitlement["quantity"].nil? ? entitlement["quantity"] : pool["quantity"]
 
         serials = []
         entitlement['certificates'].each do |certificate|
@@ -522,8 +526,8 @@ module Glue::Candlepin::Consumer
                        :accountNumber => pool["accountNumber"],
                        :productId => pool["productId"],
                        :poolType => type)
-      }
-      consumed_entitlements.sort! { |a,b| a.poolName <=> b.poolName }
+      end
+      consumed_entitlements.sort! { |a, b| a.poolName <=> b.poolName }
       consumed_entitlements
     end
 
@@ -545,7 +549,7 @@ module Glue::Candlepin::Consumer
       end
     end
 
-    def product_compliance_color product_id
+    def product_compliance_color(product_id)
       return 'green' if self.compliance['compliantProducts'].include? product_id
       return 'yellow' if self.compliance['partiallyCompliantProducts'].include? product_id
       return 'red'
@@ -560,7 +564,7 @@ module Glue::Candlepin::Consumer
                         :progress => "100",
                         :result => event[:messageText]}
         unless self.task_statuses.where('task_statuses.uuid' => event_status[:task_id]).exists?
-         TaskStatus.make(self, event_status, :candlepin_event, :event => event)
+          TaskStatus.make(self, event_status, :candlepin_event, :event => event)
         end
       end
     end
@@ -595,12 +599,12 @@ module Glue::Candlepin::Consumer
       created = consumers_attrs[:created].map do |hypervisor_attrs|
         System.create_hypervisor(environment.id, content_view.id, hypervisor_attrs)
       end if consumers_attrs[:created]
-      updated = consumers_attrs[:updated].each do |hypervisor_attrs|
+      consumers_attrs[:updated].each do |hypervisor_attrs|
         if !System.find_by_uuid(hypervisor[:uuid])
           created << System.create_hypervisor(environment.id, content_view.id, hypervisor)
         end
       end if consumers_attrs[:updated]
-      unchanged = consumers_attrs[:unchanged].each do |hypervisor|
+      consumers_attrs[:unchanged].each do |hypervisor|
         if !System.find_by_uuid(hypervisor[:uuid])
           created << System.create_hypervisor(environment.id, content_view.id, hypervisor)
         end

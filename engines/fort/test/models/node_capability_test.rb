@@ -23,22 +23,20 @@ class NodeCapabilityTestBase < MiniTest::Rails::ActiveSupport::TestCase
   end
 end
 
-
 class NodeCapabilityCreateTest < NodeCapabilityTestBase
 
   def test_create
-    capability = FakeNodeCapability.create!(:node=>@node, :configuration=>{:foo=>:bar})
+    capability = FakeNodeCapability.create!(:node => @node, :configuration => {:foo => :bar})
     assert capability
   end
 
 end
 
-
 class NodeCapabilityExistingTest < NodeCapabilityTestBase
 
   def setup
     super
-    @capability = FakeNodeCapability.create!(:node=>@node)
+    @capability = FakeNodeCapability.create!(:node => @node)
     @node.reload #reload to pickup capability
   end
 
@@ -47,7 +45,7 @@ class NodeCapabilityExistingTest < NodeCapabilityTestBase
   end
 
   def test_update
-    @capability.update_attributes!(:configuration=>{"foo"=>"baz"})
+    @capability.update_attributes!(:configuration => {"foo" => "baz"})
     assert_equal "baz", NodeCapability.find(@capability.id).configuration["foo"]
   end
 

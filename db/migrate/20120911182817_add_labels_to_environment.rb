@@ -11,7 +11,7 @@ class AddLabelsToEnvironment < ActiveRecord::Migration
   end
 
   def self.down
-    remove_index(:environments, :column =>[:label, :organization_id])
+    remove_index(:environments, :column => [:label, :organization_id])
     change_table(:environments) { |t| t.remove :label}
   end
 end

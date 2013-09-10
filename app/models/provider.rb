@@ -29,8 +29,8 @@ class Provider < ActiveRecord::Base
   serialize :discovered_repos, Array
 
   belongs_to :organization
-  belongs_to :task_status
-  belongs_to :discovery_task, :class_name=>'TaskStatus'
+  belongs_to :task_status, :dependent => :destroy
+  belongs_to :discovery_task, :class_name => 'TaskStatus', :dependent => :destroy
   has_many :products, :inverse_of => :provider
   has_many :repositories, through: :products
 
@@ -50,7 +50,6 @@ class Provider < ActiveRecord::Base
   validates :repository_url, :length => {:maximum => 255}, :if => :redhat_provider?
   validates_with Validators::KatelloUrlFormatValidator, :if => :redhat_provider?,
                  :attributes => :repository_url
-
 
   scope :redhat, where(:provider_type => REDHAT)
   scope :custom, where(:provider_type => CUSTOM)
@@ -167,7 +166,7 @@ class Provider < ActiveRecord::Base
     raise _("Repository Discovery already in progress") if self.discovery_task && !self.discovery_task.finished?
     raise _("Discovery URL not set.") if self.discovery_url.blank?
     self.discovered_repos = []
-    self.discovery_task = self.async(:organization=>self.organization).start_discovery_task(notify)
+    self.discovery_task = self.async(:organization => self.organization).start_discovery_task(notify)
     self.save!
   end
 

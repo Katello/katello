@@ -10,14 +10,13 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-
 module Glue::ElasticSearch::Role
   def self.included(base)
     base.send :include, Ext::IndexedModel
 
     base.class_eval do
-      index_options :extended_json=>:extended_index_attrs,
-                    :display_attrs=>[:name, :permissions, :description]
+      index_options :extended_json => :extended_index_attrs,
+                    :display_attrs => [:name, :permissions, :description]
 
       mapping do
         indexes :name, :type => 'string', :analyzer => :kt_name_analyzer

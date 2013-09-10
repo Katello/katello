@@ -16,11 +16,11 @@ class SystemsController < ApplicationController
   include SystemsHelper
   include ConsumersControllerLogic
 
-  before_filter :find_system, :except =>[:index, :items, :environments, :new, :create, :bulk_destroy,
+  before_filter :find_system, :except => [:index, :items, :environments, :new, :create, :bulk_destroy,
                                          :bulk_content_install, :bulk_content_update, :bulk_content_remove,
                                          :bulk_errata_install, :bulk_add_system_group, :bulk_remove_system_group,
                                          :auto_complete]
-  before_filter :find_systems, :only=>[:bulk_destroy, :bulk_content_install, :bulk_content_update, :bulk_content_remove,
+  before_filter :find_systems, :only => [:bulk_destroy, :bulk_content_install, :bulk_content_update, :bulk_content_remove,
                                        :bulk_errata_install, :bulk_add_system_group, :bulk_remove_system_group]
 
   before_filter :find_environment, :only => [:environments, :new]
@@ -87,7 +87,7 @@ class SystemsController < ApplicationController
       :show => read_system,
       :facts => read_system,
       :auto_complete => any_readable,
-      :destroy=> delete_systems,
+      :destroy => delete_systems,
       :bulk_destroy => bulk_delete_systems,
       :bulk_add_system_group => bulk_edit_systems,
       :bulk_remove_system_group => bulk_edit_systems,
@@ -113,8 +113,8 @@ class SystemsController < ApplicationController
       end
     end
     {:create => {:arch => [:arch_id],
-                 :system=>[:sockets, :name, :environment_id, :content_view_id, :memory],
-                 :system_type =>[:virtualized]
+                 :system => [:sockets, :name, :environment_id, :content_view_id, :memory],
+                 :system_type => [:virtualized]
                 },
      :update => update_check
     }
@@ -124,7 +124,7 @@ class SystemsController < ApplicationController
     install_cert_command = "rpm -Uvh http://#{request.host}/pub/candlepin-cert-consumer-latest.noarch.rpm"
     register_command = "subscription-manager register --org=\"#{@environment.organization.name}\""
 
-    render :partial=>"new",
+    render :partial => "new",
       :locals => {
         :install_cert_command => install_cert_command,
         :register_command => register_command
@@ -155,7 +155,7 @@ class SystemsController < ApplicationController
       @panel_options[:search_env] = @environment.id
     end
 
-    render :index, :locals=>{:envsys => true, :accessible_envs=> accesible_envs}
+    render :index, :locals => {:envsys => true, :accessible_envs => accesible_envs}
   end
 
   def items
@@ -163,12 +163,12 @@ class SystemsController < ApplicationController
     search = params[:search]
     if params[:env_id]
       find_environment
-      filters = {:environment_id=>[params[:env_id]]}
+      filters = {:environment_id => [params[:env_id]]}
     else
       filters = readable_filters
     end
     render_panel_direct(System, @panel_options, search, params[:offset], order,
-                        {:default_field => :name, :filter=>filters, :load=>true})
+                        {:default_field => :name, :filter => filters, :load => true})
 
   end
 
@@ -182,14 +182,13 @@ class SystemsController < ApplicationController
       end
       filter :terms, filters
     end
-    render :json=>systems.map do |s|
+    render :json => systems.map do |s|
       label = _("%{name} (Registered: %{time})") % {:name => s.name, :time => convert_time(format_time(Time.parse(s.created_at)))}
-      {:label=>label, :value=>s.name, :id=>s.id}
+      {:label => label, :value => s.name, :id => s.id}
     end
   rescue Tire::Search::SearchRequestFailed
     render :json => Util::Support.array_with_total
   end
-
 
   def split_order(order)
     if order
@@ -220,9 +219,9 @@ class SystemsController < ApplicationController
     EOS
 
     @organization = current_organization
-    render :partial=>"subscriptions", :locals=>{:system=>@system, :avail_subs => available,
+    render :partial => "subscriptions", :locals => {:system => @system, :avail_subs => available,
                                                 :consumed_entitlements => consumed,
-                                                :editable=>@system.editable?, :subscription_filters=>subscription_filters}
+                                                :editable => @system.editable?, :subscription_filters => subscription_filters}
   end
 
   def update_subscriptions
@@ -247,22 +246,22 @@ class SystemsController < ApplicationController
 
   def products
     if @system.class == Hypervisor
-      render :partial=>"hypervisor",
-             :locals=>{:system=>@system,
-                       :message=>_("Hypervisors do not have software products")}
+      render :partial => "hypervisor",
+             :locals => {:system => @system,
+                       :message => _("Hypervisors do not have software products")}
       return
     end
 
     @products_count = @system.installedProducts.size
     @products, @offset = first_objects @system.installedProducts.sort {|a, b| a['productName'].downcase <=> b['productName'].downcase}
-    render :partial=>"products",
-           :locals=>{:system=>@system, :products=>@products, :offset=>@offset, :products_count=>@products_count}
+    render :partial => "products",
+           :locals => {:system => @system, :products => @products, :offset => @offset, :products_count => @products_count}
   end
 
   def more_products
     # offset is computed in javascript but this one is used in tests
     @products, @offset = more_objects @system.installedProducts.sort {|a, b| a['productName'].downcase <=> b['productName'].downcase}
-    render :partial=>"more_products", :locals=>{:system=>@system, :products=>@products}
+    render :partial => "more_products", :locals => {:system => @system, :products => @products}
   end
 
   def releases
@@ -331,9 +330,9 @@ class SystemsController < ApplicationController
       format.html do
         # Use the systems_helper method when returning service level so the UI reflects proper text
         if params[:system] && params[:system][:serviceLevel]
-          render :text=>system_servicelevel(@system)
+          render :text => system_servicelevel(@system)
         else
-          render :text=>(params[:system] ? params[:system].first[1] : "")
+          render :text => (params[:system] ? params[:system].first[1] : "")
         end
       end
       format.js
@@ -371,7 +370,7 @@ class SystemsController < ApplicationController
         render :show_nutupane, :locals => @locals_hash
       end
     else
-      render :partial=>"systems/list_system_show", :locals=>{:item=>system, :accessor=>"id", :columns=> COLUMNS.keys, :noblock => 1}
+      render :partial => "systems/list_system_show", :locals => {:item => system, :accessor => "id", :columns => COLUMNS.keys, :noblock => 1}
     end
   end
 
@@ -390,17 +389,17 @@ class SystemsController < ApplicationController
     if system.destroyed?
       notify.success _("%s Removed Successfully") % system.name
       #render and do the removal in one swoop!
-      render :partial => "common/list_remove", :locals => {:id => id, :name=>controller_display_name}
+      render :partial => "common/list_remove", :locals => {:id => id, :name => controller_display_name}
       return
     end
     notify.invalid_record system
-    render :text => @system.errors, :status=>:ok
+    render :text => @system.errors, :status => :ok
   end
 
   def bulk_destroy
     @systems.each { |sys| sys.destroy }
     notify.success _("%s Systems Removed Successfully") % @systems.length
-    render :text=>""
+    render :text => ""
   end
 
   # TODO: break up method
@@ -410,7 +409,7 @@ class SystemsController < ApplicationController
     failed_systems = []
 
     unless params[:group_ids].blank?
-      @system_groups = SystemGroup.where(:id=>params[:group_ids])
+      @system_groups = SystemGroup.where(:id => params[:group_ids])
 
       # perform some pre-validation of the request
       # e.g. are any of the groups not editable or will their membership be exceeded by the request?
@@ -454,7 +453,7 @@ class SystemsController < ApplicationController
     systems_summary = {} # hash to store system to system group mapping, for groups removed from the system
 
     unless params[:group_ids].blank?
-      @system_groups = SystemGroup.where(:id=>params[:group_ids])
+      @system_groups = SystemGroup.where(:id => params[:group_ids])
 
       # does the user have permission to modify the requested system groups?
       invalid_perms = []
@@ -634,13 +633,13 @@ class SystemsController < ApplicationController
   def system_groups
     # retrieve the available groups that aren't currently assigned to the system and that haven't reached their max
     # TODO: move the sql to the model
-    @system_groups = SystemGroup.where(:organization_id=>current_organization).
+    @system_groups = SystemGroup.where(:organization_id => current_organization).
         select("system_groups.id, system_groups.name").
         joins("LEFT OUTER JOIN system_system_groups ON system_system_groups.system_group_id = system_groups.id").
         group("system_groups.id, system_groups.name, system_groups.max_systems having count(system_system_groups.system_id) < system_groups.max_systems or system_groups.max_systems = -1").
         order(:name) - @system.system_groups
 
-    render :partial=>"system_groups", :locals=>{:editable => @system.editable?}
+    render :partial => "system_groups", :locals => {:editable => @system.editable?}
   end
 
   def add_system_groups
@@ -649,17 +648,17 @@ class SystemsController < ApplicationController
       render :nothing => true, :status => 500
     else
       ids = params[:group_ids].collect{|g| g.to_i} - @system.system_group_ids #ignore dups
-      @system_groups = SystemGroup.where(:id=>ids)
+      @system_groups = SystemGroup.where(:id => ids)
       @system.system_group_ids = (@system.system_group_ids + @system_groups.collect{|g| g.id}).uniq
       @system.save!
 
       notify.success _("System '%s' was updated.") % @system["name"]
-      render :partial =>'system_group_items', :locals => {:system_groups => @system_groups}
+      render :partial => 'system_group_items', :locals => {:system_groups => @system_groups}
     end
   end
 
   def remove_system_groups
-    system_groups = SystemGroup.where(:id=>params[:group_ids]).collect{|g| g.id}
+    system_groups = SystemGroup.where(:id => params[:group_ids]).collect{|g| g.id}
     @system.system_group_ids = (@system.system_group_ids - system_groups).uniq
     @system.save!
 
@@ -773,7 +772,7 @@ class SystemsController < ApplicationController
   # to filter readable systems that can be
   # passed to search
   def readable_filters
-    {:environment_id=>KTEnvironment.systems_readable(current_organization).collect{|item| item.id}}
+    {:environment_id => KTEnvironment.systems_readable(current_organization).collect{|item| item.id}}
   end
 
   def search_filter
@@ -825,14 +824,14 @@ class SystemsController < ApplicationController
       if params.has_key? :reverse
         next_objects = objects[0...params[:reverse].to_i]
       else
-        next_objects = objects[offset...offset+size]
+        next_objects = objects[offset...(offset + size)]
       end
       next_objects ||= [] # fence for case when offset extended beyond range, etc.
     else
       next_objects = []
     end
 
-    return next_objects, offset+size
+    return next_objects, (offset + size)
   end
 
 end

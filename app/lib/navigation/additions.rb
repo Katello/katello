@@ -41,7 +41,7 @@ module Navigation
       private
 
       def new_addition(type, key, node)
-        @additions << {:type=>type, :key=>key, :node=>node}
+        @additions << {:type => type, :key => key, :node => node}
       end
 
     end

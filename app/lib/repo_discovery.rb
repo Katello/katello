@@ -84,5 +84,4 @@ class RepoDiscovery
          path.ends_with?('/') && !path.ends_with?('/Packages/')
   end
 
-
 end

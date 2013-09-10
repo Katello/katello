@@ -20,11 +20,18 @@ class Api::ApiController < ActionController::Base
   before_filter :verify_ldap
   before_filter :add_candlepin_version_header
 
-
   # override warden current_user (returns nil because there is no user in that scope)
   def current_user
     # get the logged user from the correct scope
     user(:api) || user
+  end
+
+  def load_search_service(service = nil)
+    if service.nil?
+      @search_service ||= Glue::ElasticSearch::Items.new
+    else
+      @search_service ||= service
+    end
   end
 
   protected
@@ -108,7 +115,7 @@ class Api::ApiController < ActionController::Base
   end
 
   def respond(options = {})
-    method_name = ('respond_for_'+params[:action].to_s).to_sym
+    method_name = ('respond_for_' + params[:action].to_s).to_sym
     raise "automatic response method '%s' not defined" % method_name unless respond_to?(method_name, true)
     return send(method_name, options)
   end

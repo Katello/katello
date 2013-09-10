@@ -29,7 +29,7 @@ class PackageRule < FilterRule
 
       filter = version_filter(unit)
       results = Package.search(unit[:name], 0, repo.package_count, [repo.pulp_id],
-                      [:nvrea_sort, "ASC"], :all, 'name', filter ).collect(&:filename).compact
+                      [:nvrea_sort, "ASC"], :all, 'name', filter).collect(&:filename).compact
       next if results.empty?
 
       {'filename' => {"$in" => results}}

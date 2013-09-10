@@ -25,12 +25,14 @@ module Glue::Pulp::Consumer
 
       lazy_accessor :pulp_facts, :initializer => lambda {|s| Katello.pulp_server.extensions.consumer.retrieve(uuid) }
       lazy_accessor :package_profile, :initializer => lambda{|s| fetch_package_profile}
-      lazy_accessor :simple_packages, :initializer => lambda {|s| fetch_package_profile["profile"].
-                                                              collect{|package| Glue::Pulp::SimplePackage.new(package)} }
-      lazy_accessor :errata, :initializer => lambda {|s| Katello.pulp_server.extensions.consumer.applicable_errata(uuid).
-                                                          map{|k,v| v.values}.flatten.
-                                                          map{|e| Errata.new(e[:details])}
-                                                    }
+      lazy_accessor :simple_packages, :initializer => (lambda do |s|
+                                                         fetch_package_profile["profile"].
+                                                           collect{|package| Glue::Pulp::SimplePackage.new(package)}
+                                                       end)
+      lazy_accessor :errata, :initializer => (lambda do |s|
+                                                Katello.pulp_server.extensions.consumer.applicable_errata(uuid).
+                                                  map{|k, v| v.values}.flatten.map{|e| ::Errata.new(e[:details])}
+                                              end)
     end
   end
 
@@ -55,11 +57,13 @@ module Glue::Pulp::Consumer
 
     def enable_node_repos(repo_ids)
       enable_repos(Runcible::Models::NodesHttpDistributor.type_id, bound_node_repos, repo_ids,
-                   {:notify_agent => false, :binding_config => {:strategy=>'mirror'}})
+                   {:notify_agent => false, :binding_config => {:strategy => 'mirror'}})
     end
 
-    #Binds and unbinds distributors of a certain type across repos
-    def enable_repos(distributor_type, existing_ids, update_ids, bind_options={})
+    # Binds and unbinds distributors of a certain type across repos
+    # TODO: break up method
+    # rubocop:disable MethodLength
+    def enable_repos(distributor_type, existing_ids, update_ids, bind_options = {})
       # calculate repoids to bind/unbind
       bound_ids     = existing_ids
       intersection  = update_ids & bound_ids
@@ -101,9 +105,11 @@ module Glue::Pulp::Consumer
         previous_user = ::User.current
         ::User.current = ::User.hidden.first
         #reject agent bind events, and wait for others
-        events.reject!{|event| !(event['tags'] & ['pulp:action:agent_bind', 'pulp:action:agent_unbind',
-                                                  'pulp:action:delete_binding']).empty? }
-        tasks = PulpTaskStatus::wait_for_tasks(events)
+        events.reject! do |event|
+          all_events = %w(pulp:action:agent_bind pulp:action:agent_unbind pulp:action:delete_binding)
+          !(event['tags'] & all_events).empty?
+        end
+        tasks = PulpTaskStatus.wait_for_tasks(events)
         tasks.each{|task| Rails.logger.error(task.error) if task.error?}
         return [processed_ids, error_ids]
       rescue => e
@@ -150,7 +156,7 @@ module Glue::Pulp::Consumer
       raise e
     end
 
-    def upload_package_profile profile
+    def upload_package_profile(profile)
       Rails.logger.debug "Uploading package profile for consumer #{self.name}"
       Katello.pulp_server.extensions.consumer.upload_profile(self.uuid, 'rpm', profile)
     rescue => e
@@ -158,33 +164,33 @@ module Glue::Pulp::Consumer
       raise e
     end
 
-    def install_package packages
+    def install_package(packages)
       Rails.logger.debug "Scheduling package install for consumer #{self.name}"
-      pulp_task = Katello.pulp_server.extensions.consumer.install_content(self.uuid, 'rpm', packages, {"importkeys" => true})
+      Katello.pulp_server.extensions.consumer.install_content(self.uuid, 'rpm', packages, {"importkeys" => true})
     rescue => e
       Rails.logger.error "Failed to schedule package install for pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
     end
 
-    def uninstall_package packages
+    def uninstall_package(packages)
       Rails.logger.debug "Scheduling package uninstall for consumer #{self.name}"
-      pulp_task = Katello.pulp_server.extensions.consumer.uninstall_content(self.uuid, 'rpm', packages)
+      Katello.pulp_server.extensions.consumer.uninstall_content(self.uuid, 'rpm', packages)
     rescue => e
       Rails.logger.error "Failed to schedule package uninstall for pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
     end
 
-    def update_package packages
+    def update_package(packages)
       Rails.logger.debug "Scheduling package update for consumer #{self.name}"
       options = {"importkeys" => true}
       options[:all] = true if packages.blank?
-      pulp_task = Katello.pulp_server.extensions.consumer.update_content(self.uuid, 'rpm', packages, options)
+      Katello.pulp_server.extensions.consumer.update_content(self.uuid, 'rpm', packages, options)
     rescue => e
       Rails.logger.error "Failed to schedule package update for pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
     end
 
-    def sync_pulp_node(repoids=nil)
+    def sync_pulp_node(repoids = nil)
       if repoids.nil?
         Rails.logger.debug "Scheduling full node update for consumer #{self.name}"
         Katello.pulp_server.extensions.consumer.update_content(self.uuid, 'node',  nil, {})
@@ -197,25 +203,25 @@ module Glue::Pulp::Consumer
       raise e
     end
 
-    def install_package_group groups
+    def install_package_group(groups)
       Rails.logger.debug "Scheduling package group install for consumer #{self.name}"
-      pulp_task = Katello.pulp_server.extensions.consumer.install_content(self.uuid, 'package_group', groups, {"importkeys" => true})
+      Katello.pulp_server.extensions.consumer.install_content(self.uuid, 'package_group', groups, {"importkeys" => true})
     rescue => e
       Rails.logger.error "Failed to schedule package group install for pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
     end
 
-    def uninstall_package_group groups
+    def uninstall_package_group(groups)
       Rails.logger.debug "Scheduling package group uninstall for consumer #{self.name}"
-      pulp_task = Katello.pulp_server.extensions.consumer.uninstall_content(self.uuid, 'package_group', groups)
+      Katello.pulp_server.extensions.consumer.uninstall_content(self.uuid, 'package_group', groups)
     rescue => e
       Rails.logger.error "Failed to schedule package group uninstall for pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
     end
 
-    def install_consumer_errata errata_ids
+    def install_consumer_errata(errata_ids)
       Rails.logger.debug "Scheduling errata install for consumer #{self.name}"
-      pulp_task = Katello.pulp_server.extensions.consumer.install_content(self.uuid, 'erratum', errata_ids, {"importkeys" => true})
+      Katello.pulp_server.extensions.consumer.install_content(self.uuid, 'erratum', errata_ids, {"importkeys" => true})
     rescue => e
       Rails.logger.error "Failed to schedule errata install for pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -232,10 +238,10 @@ module Glue::Pulp::Consumer
     def save_pulp_orchestration
       return true if self.is_a? Hypervisor
       case orchestration_for
-        when :create
-          pre_queue.create(:name => "create pulp consumer: #{self.name}", :priority => 3, :action => [self, :set_pulp_consumer])
-        when :update
-          pre_queue.create(:name => "update pulp consumer: #{self.name}", :priority => 3, :action => [self, :update_pulp_consumer])
+      when :create
+        pre_queue.create(:name => "create pulp consumer: #{self.name}", :priority => 3, :action => [self, :set_pulp_consumer])
+      when :update
+        pre_queue.create(:name => "update pulp consumer: #{self.name}", :priority => 3, :action => [self, :update_pulp_consumer])
       end
     end
 
@@ -243,8 +249,9 @@ module Glue::Pulp::Consumer
 
     def fetch_package_profile
       Katello.pulp_server.extensions.consumer.retrieve_profile(uuid, 'rpm')
-    rescue RestClient::ResourceNotFound =>e
-      {:profile=>[]}.with_indifferent_access
+    rescue RestClient::ResourceNotFound => e
+      Rails.logger.error "Failed to find profile for #{uuid}: #{e}, #{e.backtrace.join("\n")}"
+      {:profile => []}.with_indifferent_access
     end
 
   end

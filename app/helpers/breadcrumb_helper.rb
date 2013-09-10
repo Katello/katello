@@ -14,7 +14,7 @@ module BreadcrumbHelper
 
   def add_crumb_node!(hash, id, url, name, trail, params = {}, attributes = {})
     cache = false || params[:cache] #default to false
-    hash[id] = {:name=>name, :url=>url, :trail=>trail, :cache=>cache}
+    hash[id] = {:name => name, :url => url, :trail => trail, :cache => cache}
     hash[id][:content] = params[:content] if params[:content]
     hash[id][:scrollable] = params[:scrollable] ? true : false
     hash[id][:client_render] = true if params[:client_render]
@@ -35,7 +35,7 @@ module ChangesetBreadcrumbs
   end
 
   def process_cs(cs, bc)
-    cs_info = {:is_new=>cs.state == Changeset::NEW, :state=>cs.state}
+    cs_info = {:is_new => cs.state == Changeset::NEW, :state => cs.state}
     if (cs.state == Changeset::PROMOTING)
       prog = cs.task_status.progress
       if prog
@@ -64,13 +64,12 @@ module ContentBreadcrumbs
     content_crumb_id = "content"
 
     #add_crumb_node!(bc, content_crumb_id, details_promotion_path(@environment.name) ,
-    #    _("Content"), [], {:cache =>true, :content=>render(:partial=>"detail",
-    #                              :locals=>{:environment_name => @environment.name,
+    #    _("Content"), [], {:cache => true, :content => render(:partial => "detail",
+    #                              :locals => {:environment_name => @environment.name,
     #                                        :read_contents => @environment.contents_readable?})})
     #
     #add_crumb_node!(bc, content_views_crumb_id, content_views_promotion_path(@environment.name), _("Content Views"),
     #               [content_crumb_id])
-
 
     view_versions = @environment.content_view_versions.non_default_view || []
     next_env_view_version_ids = @next_environment.nil? ? [].to_set :

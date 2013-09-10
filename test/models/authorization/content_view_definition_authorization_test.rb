@@ -77,7 +77,6 @@ class ContentViewDefinitionAuthorizationAdminTest < MiniTest::Rails::ActiveSuppo
 
 end
 
-
 class ContentViewDefinitionAuthorizationNoPermTest < MiniTest::Rails::ActiveSupport::TestCase
   include ContentViewDefinitionAuthBase
 

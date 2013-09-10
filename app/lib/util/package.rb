@@ -65,11 +65,11 @@ module Util
     end
 
     def self.build_nvrea(package, include_zero_epoch = true)
-      nvrea = package[:name] +'-'+ package[:version] +'-'+ package[:release]
-      nvrea = nvrea +'.'+ package[:arch] if !package[:arch].nil?
-      nvrea = nvrea +'.'+ package[:suffix] if !package[:suffix].nil?
+      nvrea = package[:name] + '-' + package[:version] + '-' + package[:release]
+      nvrea = nvrea + '.' + package[:arch] if !package[:arch].nil?
+      nvrea = nvrea + '.' + package[:suffix] if !package[:suffix].nil?
       if !package[:epoch].nil?
-        nvrea = package[:epoch] +':'+ nvrea if package[:epoch].to_i != 0 || include_zero_epoch
+        nvrea = package[:epoch] + ':' + nvrea if package[:epoch].to_i != 0 || include_zero_epoch
       end
       nvrea
     end
@@ -119,7 +119,7 @@ module Util
 
     def self.validate_package_list_format(packages)
       # validate the format of the comma-separated package list provided
-      packages = packages.split(/ *, */ )
+      packages = packages.split(/ *, */)
 
       packages.each do |package_name|
         if !valid_package_name_format(package_name).nil?

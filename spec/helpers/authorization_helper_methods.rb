@@ -49,7 +49,6 @@ module AuthorizationHelperMethods
     verbs = [verbs] unless Array === verbs
     verbs = verbs.collect {|verb| Verb.find_or_create_by_verb(verb)}
 
-
     rt =  ResourceType::TYPES[resource_type]
     if rt.nil?
       verbs_hash = {}.with_indifferent_access
@@ -83,7 +82,7 @@ module AuthorizationHelperMethods
       @user = user
     end
 
-    def can(verb, resource_type, tags = nil, org = nil, options = {} )
+    def can(verb, resource_type, tags = nil, org = nil, options = {})
       AuthorizationHelperMethods.allow(@user.own_role, verb, resource_type, tags, org, options)
     end
 
@@ -111,5 +110,4 @@ module AuthorizationHelperMethods
   end
 
 end
-
 

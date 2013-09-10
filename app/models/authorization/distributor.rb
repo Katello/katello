@@ -10,8 +10,6 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-
-
 module Authorization::Distributor
   extend ActiveSupport::Concern
 
@@ -24,7 +22,7 @@ module Authorization::Distributor
     def readable(org)
       raise "scope requires an organization" if org.nil?
       if org.distributors_readable?
-         where(:environment_id => org.environment_ids) #list all distributors in an org
+        where(:environment_id => org.environment_ids) #list all distributors in an org
       else #just list for environments the user can access
         where("distributors.environment_id in (#{::KTEnvironment.distributors_readable(org).select(:id).to_sql})")
       end
@@ -35,7 +33,7 @@ module Authorization::Distributor
            ::KTEnvironment.distributors_readable(org).count > 0
     end
 
-    #TODO these two functions are somewhat poorly written and need to be redone
+    # TODO: these two functions are somewhat poorly written and need to be redone
     def any_deletable?(env, org)
       if env
         env.distributors_deletable?
@@ -44,7 +42,7 @@ module Authorization::Distributor
       end
     end
 
-    def registerable?(env, org, content_view=nil)
+    def registerable?(env, org, content_view = nil)
       subscribable = content_view ? content_view.subscribable? : true
       registerable = (env || org).distributors_registerable?
       subscribable && registerable

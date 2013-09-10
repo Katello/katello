@@ -51,8 +51,8 @@ class RepositoriesController < ApplicationController
 
   def edit
     render :partial => "edit",
-           :locals=>{
-               :editable=> (@product.editable? && !@repository.promoted?),
+           :locals => {
+               :editable => (@product.editable? && !@repository.promoted?),
                :cloned_in_environments => @repository.product.environments.select {|env| @repository.is_cloned_in?(env)}.map(&:name)
            }
   end
@@ -99,14 +99,14 @@ class RepositoriesController < ApplicationController
     @repository.enabled = params[:repo] == "1"
     @repository.save!
     product_content = @repository.product.product_content_by_id(@repository.content_id)
-    render :json => {:id=>@repository.id, :can_disable_repo_set=>product_content.can_disable?}
+    render :json => {:id => @repository.id, :can_disable_repo_set => product_content.can_disable?}
   end
 
   def destroy
     @repository.destroy
     if @repository.destroyed?
       notify.success _("Repository '%s' removed.") % @repository.name
-      render :partial => "common/post_delete_close_subpanel", :locals => {:path=>products_repos_provider_path(@provider.id)}
+      render :partial => "common/post_delete_close_subpanel", :locals => {:path => products_repos_provider_path(@provider.id)}
     else
       err_msg = N_("Removal of the repository failed. If you continue having trouble with this, please contact an Administrator.")
       notify.error err_msg

@@ -10,10 +10,9 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-
 class PermissionTag < ActiveRecord::Base
 
-  belongs_to :permission, :inverse_of=>:tags
+  belongs_to :permission, :inverse_of => :tags
 
   def to_s
     tag_id.to_s

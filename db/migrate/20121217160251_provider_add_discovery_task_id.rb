@@ -1,6 +1,6 @@
 class ProviderAddDiscoveryTaskId < ActiveRecord::Migration
   def self.up
-    add_column :providers, :discovery_task_id, :integer, :default=>nil
+    add_column :providers, :discovery_task_id, :integer, :default => nil
   end
 
   def self.down

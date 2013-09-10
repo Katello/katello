@@ -44,7 +44,6 @@ describe ChangesetsController, :katello => true do
     CSControllerTest::CHANGESET["environment_id"] = @env.id
   end
 
-
   describe "viewing changesets" do
     before (:each) do
       @changeset = PromotionChangeset.create(CSControllerTest::CHANGESET)
@@ -69,7 +68,6 @@ describe ChangesetsController, :katello => true do
       get :items, :env_id=>@env.id
       response.should be_success
     end
-
 
     it "should be able to show the edit partial" do
       get :edit, :id=>@changeset.id
@@ -193,7 +191,6 @@ describe ChangesetsController, :katello => true do
     end
   end
 
-
   describe "rules" do
     before (:each) do
       @organization = new_test_org
@@ -259,7 +256,6 @@ describe ChangesetsController, :katello => true do
 
       it_should_behave_like "protected action"
     end
-
 
     describe "POST Deletion apply" do
       before do

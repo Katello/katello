@@ -28,14 +28,12 @@ describe Api::V1::OrganizationsController do
   let(:user_with_destroy_permissions) { user_with_permissions { |u| u.can([:delete], :organizations) } }
   let(:user_without_destroy_permissions) { user_with_permissions { |u| u.can([:update], :organizations) } }
 
-
   before(:each) do
     @org = new_test_org
     @controller.stub(:get_organization => @org)
     @request.env["HTTP_ACCEPT"] = "application/json"
     login_user_api
   end
-
 
   describe "create" do
 
@@ -124,6 +122,19 @@ describe Api::V1::OrganizationsController do
 
     it 'should call organization destroyer' do
       OrganizationDestroyer.should_receive(:destroy).with(@org).once
+      req
+    end
+  end
+
+  describe "repo discovery" do
+    let(:action) { :discovery }
+    let(:req) { post :repo_discover, { :id => @org.name, :url => 'http://testurl.com/path/' } }
+    let(:authorized_user) { user_with_update_permissions }
+    let(:unauthorized_user) { user_without_update_permissions }
+    it_should_behave_like "protected action"
+
+    it "should call into Repo discovery" do
+      @org.should_receive(:discover_repos).and_return(TaskStatus.new)
       req
     end
   end

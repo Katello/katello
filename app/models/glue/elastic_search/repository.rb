@@ -10,14 +10,16 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-
 module Glue::ElasticSearch::Repository
+
+  # TODO: break this up into modules
+  # rubocop:disable MethodLength
   def self.included(base)
     base.send :include, Ext::IndexedModel
 
     base.class_eval do
-      index_options :extended_json=>:extended_index_attrs,
-                    :json=>{:except=>[:pulp_repo_facts, :feed_cert]}
+      index_options :extended_json => :extended_index_attrs,
+                    :json => {:except => [:pulp_repo_facts, :feed_cert]}
 
       mapping do
         indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
@@ -30,10 +32,10 @@ module Glue::ElasticSearch::Repository
     end
 
     def extended_index_attrs
-      {:environment=>self.environment.name, :environment_id=>self.environment.id, :clone_ids=>self.clones.pluck(:pulp_id),
-       :product=>self.product.name, :product_id=> self.product.id,
-       :default_content_view=>self.content_view_version.has_default_content_view?,
-       :name_sort=>self.name }
+      {:environment => self.environment.name, :environment_id => self.environment.id, :clone_ids => self.clones.pluck(:pulp_id),
+       :product => self.product.name, :product_id => self.product.id,
+       :default_content_view => self.content_view_version.has_default_content_view?,
+       :name_sort => self.name }
     end
 
     def update_related_index
@@ -137,7 +139,6 @@ module Glue::ElasticSearch::Repository
 
     def update_package_group_index
       # for each of the package_groups in the repo, unassociate the repo from the package_group
-      pgs = self.package_groups.collect{|pg| pg.as_json.merge(pg.index_options)}
       pulp_id = self.pulp_id
 
       # now, for any package group that only had this repo asscociated with it,

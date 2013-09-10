@@ -10,7 +10,6 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-
 module Glue::ElasticSearch::Notice
   def self.included(base)
     base.send :include, Ext::IndexedModel
@@ -23,7 +22,7 @@ module Glue::ElasticSearch::Notice
 
       mapping do
         indexes :level_sort, :type => 'string', :index => :not_analyzed
-        indexes :created_at, :type=>'date'
+        indexes :created_at, :type => 'date'
       end
 
     end

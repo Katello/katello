@@ -113,7 +113,7 @@ class KatelloFormBuilder < ActionView::Helpers::FormBuilder
       unless options[wrapper][:class].is_a?(Array)
         options[wrapper][:class] = (options[wrapper][:class] || '').split
       end
-      options[wrapper][:class] |= ["grid_#{options[:grid][i]}", (i==0 ? "ra" : "la")]
+      options[wrapper][:class] |= ["grid_#{options[:grid][i]}", (i == 0 ? "ra" : "la")]
     end
     options[:tabindex] ||= tabindex
     options[:wrapper] ||= {}
@@ -137,7 +137,7 @@ class KatelloFormBuilder < ActionView::Helpers::FormBuilder
     tag_options = options[:input_wrapper][:tag_options] || {}
     tag_options.merge!({:class => options[:input_wrapper][:class]})
 
-    content_tag(:div, tag_options ) { yield } +
+    content_tag(:div, tag_options) { yield } +
     (content_tag(:i, '', :class => 'details-icon', 'data-help' => options[:help]) if options[:help])
   end
 

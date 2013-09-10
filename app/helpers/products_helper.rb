@@ -30,16 +30,17 @@ module ProductsHelper
   # Objectify the record provided. This will generate a hash containing
   # the record id, list of products and list of repos. It assumes that the
   # record has a 'repositories' relationship.
-  def objectify(record)
+  def objectify(record, content_types = nil)
     repos = Hash.new { |h, k| h[k] = [] }
     record.repositories.each do |repo|
+      next if content_types && !content_types.include?(repo.content_type)
       repos[repo.product.id.to_s] <<  repo.id.to_s
     end
 
     {
         :id => record.id,
-        :products=>record.product_ids,  # :id
-        :repos=>repos
+        :products => record.product_ids,  # :id
+        :repos => repos
     }
   end
 
@@ -54,11 +55,13 @@ module ProductsHelper
     if @product_hash.nil?
       @product_hash = {}
       options[:readable_products].sort_by(&:name).each do |prod|
-        repos = []
-        prod_repos = prod.repos(current_organization.library).where(:content_type=>options[:content_types]).sort{|a, b| a.name <=> b.name}
-        prod_repos.each { |repo| repos << {:name=>repo.name, :id=>repo.id} }
-        @product_hash[prod.id] = {:name=>prod.name, :repos=>repos, :id=>prod.id,
-                                  :editable=>options[:editable_products].include?(prod)}
+        repos = prod.repos(current_organization.library).where(:content_type => options[:content_types])
+          .sort{|a, b| a.name <=> b.name}
+        repos = repos.map { |repo| {:name => repo.name, :id => repo.id} }
+        if repos.any?
+          @product_hash[prod.id] = {:name => prod.name, :repos => repos, :id => prod.id,
+                                    :editable => options[:editable_products].include?(prod)}
+        end
       end
     end
     @product_hash

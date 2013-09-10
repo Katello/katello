@@ -32,7 +32,7 @@ module Glue::Candlepin::Owner
 
   module InstanceMethods
 
-    def serializable_hash(options={})
+    def serializable_hash(options = {})
       hash = super(options)
       hash = hash.merge(:service_levels => self.service_levels)
       hash = hash.merge(:service_level => self.service_level)
@@ -58,11 +58,11 @@ module Glue::Candlepin::Owner
     def del_environments
       Rails.logger.debug _("All environments for owner %s in candlepin") % name
       #need to destroy environments in the proper order to not leave orphans
-      self.promotion_paths.each{|path|
-        path.reverse.each{|env|
+      self.promotion_paths.each do |path|
+        path.reverse.each do |env|
           env.reload.destroy #if we do not reload, the environment may think its successor still exists
-        }
-      }
+        end
+      end
       self.library.destroy
       self.library = nil
       return true
@@ -83,7 +83,7 @@ module Glue::Candlepin::Owner
     #  candlepin will be deleted before destroy is called on the Organization object
     def del_systems
       Rails.logger.debug _("All Systems for owner %s in candlepin") % name
-      System.joins(:environment).where("environments.organization_id = :org_id", :org_id=>self.id).each do |sys|
+      System.joins(:environment).where("environments.organization_id = :org_id", :org_id => self.id).each do |sys|
         sys.destroy
       end
     rescue => e
@@ -93,8 +93,8 @@ module Glue::Candlepin::Owner
 
     def save_owner_orchestration
       case self.orchestration_for
-        when :create
-          pre_queue.create(:name => "candlepin owner for organization: #{self.name}", :priority => 3, :action => [self, :set_owner])
+      when :create
+        pre_queue.create(:name => "candlepin owner for organization: #{self.name}", :priority => 3, :action => [self, :set_owner])
       end
     end
 
@@ -118,10 +118,10 @@ module Glue::Candlepin::Owner
     end
 
     def service_level=(level)
-      Resources::Candlepin::Owner.update(self.label, {:defaultServiceLevel=>level})
+      Resources::Candlepin::Owner.update(self.label, {:defaultServiceLevel => level})
     end
 
-    def pools consumer_uuid = nil
+    def pools(consumer_uuid = nil)
       if consumer_uuid
         pools = Resources::Candlepin::Owner.pools self.label, { :consumer => consumer_uuid }
       else
@@ -135,11 +135,9 @@ module Glue::Candlepin::Owner
     end
 
     def load_debug_cert
-      begin
-        return Resources::Candlepin::Owner.get_ueber_cert(label)
-      rescue RestClient::ResourceNotFound =>  e
-        return generate_debug_cert
-      end
+      return Resources::Candlepin::Owner.get_ueber_cert(label)
+    rescue RestClient::ResourceNotFound
+      return generate_debug_cert
     end
 
     def owner_auto_attach

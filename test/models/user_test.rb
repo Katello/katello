@@ -13,7 +13,6 @@
 
 require './test/models/user_base'
 
-
 class UserClassTest < UserTestBase
 
   def test_authenticate
@@ -51,7 +50,6 @@ class UserClassTest < UserTestBase
   end
 
 end
-
 
 class UserCreateTest < UserTestBase
 
@@ -117,7 +115,6 @@ class UserCreateTest < UserTestBase
   end
 
 end
-
 
 class UserTest < UserTestBase
 
@@ -269,7 +266,6 @@ class UserTest < UserTestBase
 
 end
 
-
 class UserProtectedMethodTest < UserTestBase
 
   def setup
@@ -287,7 +283,6 @@ class UserProtectedMethodTest < UserTestBase
     refute @admin.valid?
   end
 end
-
 
 class UserInstancePrivateMethodTest < UserTestBase
 
@@ -320,7 +315,6 @@ class UserInstancePrivateMethodTest < UserTestBase
   end
 
 end
-
 
 class UserLdapTest < UserTestBase
 
@@ -391,7 +385,6 @@ class UserLdapTest < UserTestBase
   end
 
 end
-
 
 class UserDefaultEnvTest < UserTestBase
 

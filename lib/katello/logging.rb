@@ -96,7 +96,6 @@ module Katello
       configuration.loggers.root
     end
 
-
     # sets all children loggers according to configuration
     #
     # we use +additive+ feature of logging gem to enable or disable logger output, by default

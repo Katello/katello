@@ -36,7 +36,7 @@ class ChangesetsController < ApplicationController
       :create => manage_perm,
       :edit => read_perm,
       :update => update_perm,
-      :destroy =>manage_perm,
+      :destroy => manage_perm,
       :object => read_perm,
       :auto_complete_search => read_perm,
       :apply => apply_perm,
@@ -52,22 +52,22 @@ class ChangesetsController < ApplicationController
   def index
     accessible_envs = KTEnvironment.changesets_readable(current_organization)
     setup_environment_selector(current_organization, accessible_envs)
-    render :index, :locals=>{:accessible_envs => accessible_envs}
+    render :index, :locals => {:accessible_envs => accessible_envs}
   end
 
   #extended scroll for changeset_history
   def items
     render_panel_direct(Changeset, @panel_options, params[:search], params[:offset], [:name_sort, 'asc'],
-        {:default_field => :name, :filter=>[{:environment_id=>[@environment.id]}, {:state=>[Changeset::PROMOTED, Changeset::DELETED]}]})
+        {:default_field => :name, :filter => [{:environment_id => [@environment.id]}, {:state => [Changeset::PROMOTED, Changeset::DELETED]}]})
   end
 
   def edit
-    render :partial=>"edit", :locals=>{:editable=>@environment.changesets_manageable?, :name=>controller_display_name}
+    render :partial => "edit", :locals => {:editable => @environment.changesets_manageable?, :name => controller_display_name}
   end
 
   #list item
   def show
-    render :partial=>"common/list_update", :locals=>{:item=>@changeset, :accessor=>"id", :columns=>['name']}
+    render :partial => "common/list_update", :locals => {:item => @changeset, :accessor => "id", :columns => ['name']}
   end
 
   def section_id
@@ -84,7 +84,7 @@ class ChangesetsController < ApplicationController
 
   def new
     @changeset = Changeset.new
-    render :partial=>"new", :locals => {:changeset_type => params[:changeset_type]}
+    render :partial => "new", :locals => {:changeset_type => params[:changeset_type]}
   end
 
   def create
@@ -110,7 +110,7 @@ class ChangesetsController < ApplicationController
     notify.success _("Promotion Changeset '%s' was created.") % @changeset["name"]
     bc = {}
     add_crumb_node!(bc, changeset_bc_id(@changeset), '', @changeset.name, ['changesets'],
-                    {:client_render => true}, {:is_new=>true})
+                    {:client_render => true}, {:is_new => true})
     render :json => {
       'breadcrumb' => bc,
       'id' => @changeset.id,
@@ -127,7 +127,7 @@ class ChangesetsController < ApplicationController
       @changeset.name = params[:name]
       @changeset.save!
 
-      render :json => {:name=> params[:name], :timestamp => @changeset.updated_at.to_i.to_s}
+      render :json => {:name => params[:name], :timestamp => @changeset.updated_at.to_i.to_s}
       return
     end
 
@@ -135,7 +135,7 @@ class ChangesetsController < ApplicationController
       @changeset.description = params[:description]
       @changeset.save!
 
-      render :json => {:description=> params[:description], :timestamp => @changeset.updated_at.to_i.to_s}
+      render :json => {:description => params[:description], :timestamp => @changeset.updated_at.to_i.to_s}
       return
     end
 
@@ -189,16 +189,16 @@ class ChangesetsController < ApplicationController
       csu.save!
     end
 
-    to_ret = {:timestamp=>@changeset.updated_at.to_i.to_s}
+    to_ret = {:timestamp => @changeset.updated_at.to_i.to_s}
     to_ret[:changeset] = simplify_changeset(@changeset) if send_changeset
-    render :json=>to_ret
+    render :json => to_ret
   end
 
   def destroy
     name = @changeset.name
     @changeset.destroy
     notify.success _("Promotion Changeset '%s' was deleted.") % name
-    render :text=>""
+    render :text => ""
   end
 
   def apply
@@ -220,7 +220,7 @@ class ChangesetsController < ApplicationController
 
     to_ret = {}
     if !messages.empty?
-      to_ret[:warnings] = render_to_string(:partial=>'warning', :locals=>messages)
+      to_ret[:warnings] = render_to_string(:partial => 'warning', :locals => messages)
     else
       @changeset.apply :notify => true, :async => true
       if @changeset.promotion?
@@ -231,17 +231,17 @@ class ChangesetsController < ApplicationController
       # remove user edit tracking for this changeset
       ChangesetUser.destroy_all(:changeset_id => @changeset.id)
     end
-    render :json=>to_ret
+    render :json => to_ret
   rescue => e
     notify.exception _("Failed to apply changeset."), e
-    render :text=>e.to_s, :status=>500
+    render :text => e.to_s, :status => 500
   end
 
   def changeset_status
     progress = @changeset.task_status.progress
     state = @changeset.state
     to_ret = {'id' => 'changeset_' + @changeset.id.to_s, 'state' => state, 'progress' => progress.to_i}
-    render :json=>to_ret
+    render :json => to_ret
   end
 
   private
@@ -253,7 +253,7 @@ class ChangesetsController < ApplicationController
       @environment = KTEnvironment.find(params[:env_id])
     else
       #didnt' find an environment, just do the first the user has access to
-      list = KTEnvironment.changesets_readable(current_organization).where(:library=>false).order(:name)
+      list = KTEnvironment.changesets_readable(current_organization).where(:library => false).order(:name)
       @environment ||= list.first || current_organization.library
     end
 
@@ -263,7 +263,7 @@ class ChangesetsController < ApplicationController
   end
 
   def update_editors
-    usernames = @changeset.users.collect { |c| User.where(:id => c.user_id ).order("updated_at desc")[0].username }
+    usernames = @changeset.users.collect { |c| User.where(:id => c.user_id).order("updated_at desc")[0].username }
     usernames.delete(current_user.username)
     response.headers['X-ChangesetUsers'] = usernames.to_json
   end
@@ -282,9 +282,8 @@ class ChangesetsController < ApplicationController
                  :accessor => :id,
                  :ajax_load => true,
                  :ajax_scroll => items_changesets_path,
-                 :search_class=>Changeset}
+                 :search_class => Changeset}
   end
-
 
   def controller_display_name
     return 'changeset'

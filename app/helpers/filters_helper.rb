@@ -16,16 +16,17 @@ module FiltersHelper
   # Objectify the record provided. This will generate a hash containing
   # the record id, list of products and list of repos. It assumes that the
   # record has 'products' and 'repositories' relationships.
-  def objectify(record)
+  def objectify(record, content_types = nil)
     repos = Hash.new { |h, k| h[k] = [] }
     record.repositories.each do |repo|
+      next if content_types && !content_types.include?(repo.content_type)
       repos[repo.product.id.to_s] <<  repo.id.to_s
     end
 
     {
         :id => record.id,
-        :products=>record.product_ids,  # :id
-        :repos=>repos
+        :products => record.product_ids,  # :id
+        :repos => repos
     }
   end
 
@@ -38,8 +39,10 @@ module FiltersHelper
         @product_hash[prod.id] = {:id => prod.id, :name => prod.name, :editable => true, :repos => []}
       end
       options[:record].content_view_definition.repos.sort_by(&:name).each do |repo|
+        next if options[:content_types] && !options[:content_types].include?(repo.content_type)
         @product_hash[repo.product_id][:repos].push({:id => repo.id, :name => repo.name})
       end
+      @product_hash.keep_if { |id, prod| prod[:repos].length > 0 }
     end
     @product_hash
   end

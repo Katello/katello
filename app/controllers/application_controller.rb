@@ -13,7 +13,6 @@
 require 'cgi'
 require 'base64'
 
-
 class ApplicationController < ActionController::Base
   layout 'katello'
   include Notifications::ControllerHelper
@@ -232,12 +231,10 @@ class ApplicationController < ActionController::Base
     DateTime.strptime(datetime_str, '%m/%d/%Y %I:%M %P %:z') rescue false
   end
 
-
   helper_method :no_env_available_msg
   def no_env_available_msg
     _("No environments are currently available in this organization.  Please either add some to the organization or select an organization that has an environment to set user default.")
   end
-
 
   def retain_search_history
     current_user.create_or_update_search_history(URI(@_request.env['HTTP_REFERER']).path, params[:search])
@@ -496,7 +493,7 @@ class ApplicationController < ActionController::Base
 
     results = obj_class.search do
       query { string search, query_options}
-      filter :terms, :id=>[id]
+      filter :terms, :id => [id]
     end
     results.total > 0
   end
@@ -522,7 +519,7 @@ class ApplicationController < ActionController::Base
 
     start ||= 0
 
-    if search.nil? || search== ''
+    if search.nil? || search == ''
       all_rows = true
     elsif search_options[:simple_query] && !Katello.config.simple_search_tokens.any?{|s| search.downcase.match(s)}
       search = search_options[:simple_query]
@@ -559,7 +556,7 @@ class ApplicationController < ActionController::Base
       end
 
       if load
-        @items = obj_class.where(:id=>results.collect{|r| r.id})
+        @items = obj_class.where(:id => results.collect{|r| r.id})
         #set total since @items will be just an array
         panel_options[:total_count] = results.empty? ? 0 : results.total
         if @items.length != results.length
@@ -599,14 +596,12 @@ class ApplicationController < ActionController::Base
     @items = results
 
     if options[:list_partial]
-      rendered_html = render_to_string(:partial=>options[:list_partial], :locals=>options)
+      rendered_html = render_to_string(:partial => options[:list_partial], :locals => options)
     elsif options[:render_list_proc]
       rendered_html = options[:render_list_proc].call(@items, options)
     else
-      rendered_html = render_to_string(:partial=>"common/list_items", :locals=>options)
+      rendered_html = render_to_string(:partial => "common/list_items", :locals => options)
     end
-
-
 
     render :json => {:html => rendered_html,
                       :results_count => options[:total_count],
@@ -638,16 +633,16 @@ class ApplicationController < ActionController::Base
       items_offset = items_searched.limit(current_user.page_size).offset(start)
     else
       items_searched = @items
-      items_offset = items_searched[start.to_i...start.to_i+current_user.page_size]
+      items_offset = items_searched[start.to_i...start.to_i + current_user.page_size]
     end
 
     options[:total_results] = items_searched.count
     options[:collection] ||= items_offset
 
     if options[:list_partial]
-      rendered_html = render_to_string(:partial=>options[:list_partial], :locals=>options)
+      rendered_html = render_to_string(:partial => options[:list_partial], :locals => options)
     else
-      rendered_html = render_to_string(:partial=>"common/list_items", :locals=>options)
+      rendered_html = render_to_string(:partial => "common/list_items", :locals => options)
     end
 
     render :json => {:html => rendered_html,
@@ -700,7 +695,6 @@ class ApplicationController < ActionController::Base
       return false
     end
   end
-
 
   def log_exception(exception, level = :error)
     logger.send level, "#{exception} (#{exception.class})\n#{exception.backtrace.join("\n")}" if exception

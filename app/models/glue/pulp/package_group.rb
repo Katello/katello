@@ -23,16 +23,16 @@ module Glue::Pulp::PackageGroup
 
   module InstanceMethods
 
-    def initialize(params = {}, options={})
+    def initialize(params = {}, options = {})
       params['package_group_id'] = params['id']
       params['id'] = params.delete('_id')
-      params.each_pair {|k,v| instance_variable_set("@#{k}", v) unless v.nil? }
+      params.each_pair {|k, v| instance_variable_set("@#{k}", v) unless v.nil? }
 
-      [:default_package_names,:conditional_package_names,
-        :optional_package_names,:mandatory_package_names].each do |attr|
+      [:default_package_names, :conditional_package_names,
+        :optional_package_names, :mandatory_package_names].each do |attr|
         values = send(attr)
         values = values.collect do |v|
-          v.split(",")
+          v.split(", ")
         end.flatten
         send("#{attr}=", values)
       end

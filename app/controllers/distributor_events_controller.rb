@@ -31,7 +31,7 @@ class DistributorEventsController < ApplicationController
   end
 
   def index
-    render :partial=>"events", :locals=>{:distributor => @distributor, :tasks => tasks}
+    render :partial => "events", :locals => {:distributor => @distributor, :tasks => tasks}
   end
 
   def show
@@ -44,8 +44,8 @@ class DistributorEventsController < ApplicationController
     else
       user_message = task_template[:english_name]
     end
-    render :partial=>"details", :locals=>{:type => type, :user_message => user_message,
-                                                                      :distributor => @distributor, :task =>task}
+    render :partial => "details", :locals => {:type => type, :user_message => user_message,
+                                                                      :distributor => @distributor, :task => task}
   end
 
   # retrieve the status for the actions initiated by the client
@@ -68,7 +68,7 @@ class DistributorEventsController < ApplicationController
     statuses = tasks(current_user.page_size + offset)
     statuses = statuses[offset..statuses.length]
     if statuses
-      render(:partial => 'more_events', :locals => {:cycle_extra => offset.odd?, :distributor => @distributor, :tasks=> statuses})
+      render(:partial => 'more_events', :locals => {:cycle_extra => offset.odd?, :distributor => @distributor, :tasks => statuses})
     else
       render :nothing => true
     end
@@ -77,7 +77,7 @@ class DistributorEventsController < ApplicationController
   def items
     render_proc = lambda do |items, options|
       if items && !items.empty?
-        render_to_string(:partial => 'more_events', :locals => {:cycle_extra => false, :distributor => @distributor, :tasks=> items})
+        render_to_string(:partial => 'more_events', :locals => {:cycle_extra => false, :distributor => @distributor, :tasks => items})
       else
         "<tr><td>" + _("No events matching your search criteria.") + "</td></tr>"
       end
@@ -87,7 +87,7 @@ class DistributorEventsController < ApplicationController
                         search, params[:offset], [:finish_time, 'desc'],
                         :filter => {:task_owner_id => [@distributor.id], :task_owner_type => Distributor.class.name},
                         :load => true,
-                        :simple_query => "status:#{search} OR #{search}" )
+                        :simple_query => "status:#{search} OR #{search}")
   end
 
   protected

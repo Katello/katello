@@ -10,14 +10,13 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-
 module Glue::ElasticSearch::Provider
   def self.included(base)
     base.send :include, Ext::IndexedModel
 
     base.class_eval do
-      index_options :extended_json=>:extended_index_attrs,
-                    :display_attrs=>[:name, :product, :repo, :description]
+      index_options :extended_json => :extended_index_attrs,
+                    :display_attrs => [:name, :product, :repo, :description]
 
       mapping do
         indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
@@ -29,17 +28,15 @@ module Glue::ElasticSearch::Provider
 
   def extended_index_attrs
     if Katello.config.katello?
-      products = self.products.map{|prod|
-        {:product=>prod.name, :repo=>prod.repos(self.organization.library).collect{|repo| repo.name}}
-      }
+      products = self.products.map do |prod|
+        {:product => prod.name, :repo => prod.repos(self.organization.library).collect{|repo| repo.name}}
+      end
     else
-      products = self.products.map{|prod|
-        {:product=>prod.name}
-      }
+      products = self.products.map{|prod| {:product => prod.name} }
     end
     {
-      :products=>products,
-      :name_sort=>name.downcase
+      :products => products,
+      :name_sort => name.downcase
     }
   end
 

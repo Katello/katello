@@ -24,22 +24,22 @@ module Navigation
     def user_navigation
       [
         { :key => :environment,
-          :name =>_("Defaults"),
+          :name => _("Defaults"),
           :url => lambda{edit_environment_user_path(@user.id)},
           :if => lambda {@user},
-          :options => {:class=>"panel_link"}
+          :options => {:class => "panel_link"}
         },
         { :key => :user_roles,
-          :name =>_("Roles"),
+          :name => _("Roles"),
           :url => lambda{edit_role_path(@user.own_role.id)},
           :if => lambda{@user},
-          :options => {:class=>"panel_link"}
+          :options => {:class => "panel_link"}
         },
         { :key => :user_details,
-          :name =>_("Details"),
+          :name => _("Details"),
           :url => lambda{edit_user_path(@user.id)},
           :if => lambda{@user},
-          :options => {:class=>"panel_link"}
+          :options => {:class => "panel_link"}
         }
       ]
     end
@@ -48,21 +48,20 @@ module Navigation
       menu = {:key => :admin,
        :name => _("Administer"),
         :url => :sub_level,
-        :items=> [menu_orgs, menu_sync_tasks, menu_users, menu_roles],
-        :options => {:class=>'operations header-widget fl menu_parent', "data-menu"=>"operations"},
+        :items => [menu_orgs, menu_sync_tasks, menu_users, menu_roles],
+        :options => {:class => 'operations header-widget fl menu_parent', "data-menu" => "operations"},
         :if => :sub_level
       }
       menu[:items] << menu_about # keep the about as the last item
       return menu
     end
 
-
     def menu_users
       {:key => :users,
        :name => _("Users"),
        :url => users_path,
-       :if =>lambda {User.any_readable?},
-       :options => {:class=>'operations second_level', "data-menu"=>"operations"}
+       :if => lambda {User.any_readable?},
+       :options => {:class => 'operations second_level', "data-menu" => "operations"}
       }
     end
 
@@ -70,8 +69,8 @@ module Navigation
       {:key => :roles,
        :name => _("Roles"),
        :url => roles_path,
-       :if =>lambda {Role.any_readable?},
-       :options => {:class=>'operations second_level', "data-menu"=>"operations"}
+       :if => lambda {Role.any_readable?},
+       :options => {:class => 'operations second_level', "data-menu" => "operations"}
       }
     end
 
@@ -79,8 +78,8 @@ module Navigation
       {:key => :orgs,
        :name => _("Organizations"),
        :url => organizations_path,
-       :if =>lambda {Organization.any_readable?},
-       :options => {:class=>'operations section_level', "data-menu"=>"operations"}
+       :if => lambda {Organization.any_readable?},
+       :options => {:class => 'operations section_level', "data-menu" => "operations"}
       }
     end
 
@@ -89,7 +88,7 @@ module Navigation
        :name => _("Synchronization"),
        :url => sync_management_manage_path,
        :if => lambda {User.current.has_superadmin_role? && Katello.config.katello?},
-       :options => {:class=>'operations section_level', "data-menu"=>"operations"}
+       :options => {:class => 'operations section_level', "data-menu" => "operations"}
       }
     end
 
@@ -98,7 +97,7 @@ module Navigation
        :name => _("About"),
        :url => about_path,
        :if => lambda {Organization.any_readable?},
-       :options => {:class=>'operations section_level', "data-menu"=>"operations"}
+       :options => {:class => 'operations section_level', "data-menu" => "operations"}
       }
     end
 

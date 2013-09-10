@@ -72,7 +72,6 @@ class Api::V1::SyncPlansController < Api::V1::ApiController
     respond :resource => @plan
   end
 
-
   api :POST, "/organizations/:organization_id/sync_plans", "Create a sync plan"
   param_group :sync_plan
   def create

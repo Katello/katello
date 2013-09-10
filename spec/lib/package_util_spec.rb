@@ -78,7 +78,6 @@ describe Util::Package, :katello => true do
       it_should_behave_like "nvrea_nvre parsable string"
     end
 
-
     context "nvrea with rpm without epoch" do
       subject { "name-ver.si.on-relea.se.x86_64.rpm" }
       let(:expected) do

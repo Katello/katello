@@ -23,7 +23,7 @@ module Glue::Pulp::Errata
     base.class_eval do
 
       attr_accessor :id, :errata_id, :title, :description, :version, :release, :type, :status, :updated,  :issued, :from_str,
-                    :reboot_suggested, :references, :pkglist, :severity, :repoids
+                    :reboot_suggested, :references, :pkglist, :severity, :repoids, :solution
 
       def self.errata_by_consumer(repos)
         errata = Katello.pulp_server.extensions.consumer.applicable_errata([], repos.map(&:pulp_id), false)
@@ -56,11 +56,11 @@ module Glue::Pulp::Errata
 
   module InstanceMethods
 
-    def initialize(params = {}, options={})
+    def initialize(params = {}, options = {})
       params['repoids'] = params.delete(:repository_memberships)
       params['errata_id'] = params['id']
       params['id'] = params.delete('_id')
-      params.each_pair {|k,v| instance_variable_set("@#{k}", v) unless v.nil? }
+      params.each_pair {|k, v| instance_variable_set("@#{k}", v) unless v.nil? }
     end
 
     def package_filenames

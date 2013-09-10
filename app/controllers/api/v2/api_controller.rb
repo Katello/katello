@@ -36,14 +36,6 @@ class Api::V2::ApiController < Api::ApiController
     end
   end
 
-  def load_search_service(service = nil)
-    if service.nil?
-      @search_service ||= Glue::ElasticSearch::Items.new
-    else
-      @search_service ||= service
-    end
-  end
-
   protected
 
     def labelize_params(params)
@@ -59,7 +51,7 @@ class Api::V2::ApiController < Api::ApiController
     def sort_params
       options = {}
       options[:sort_by] = params[:sort_by] if params[:sort_by]
-      options[:sort_order]= params[:sort_order] if params[:sort_order]
+      options[:sort_order] = params[:sort_order] if params[:sort_order]
       options
     end
 

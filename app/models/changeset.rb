@@ -24,7 +24,6 @@ class Changeset < ActiveRecord::Base
   FAILED    = 'failed'
   STATES    = [NEW, REVIEW, PROMOTING, PROMOTED, FAILED, DELETING, DELETED]
 
-
   PROMOTION = 'promotion'
   DELETION  = 'deletion'
   TYPES     = [PROMOTION, DELETION]
@@ -58,7 +57,7 @@ class Changeset < ActiveRecord::Base
     start  = to.environment.prior.id
     target = to.environment.id
     joins(:environment => :priors).
-        where(['"changesets"."id" <> ? AND ('<<
+        where(['"changesets"."id" <> ? AND (' <<
                    '"environments"."id" = ? OR "environment_priors"."prior_id" = ? OR ' <<
                    '("environments"."id" = ? AND "environment_priors"."prior_id" = ?))',
                to.id, start, target, target, start])
@@ -80,7 +79,6 @@ class Changeset < ActiveRecord::Base
       raise _("Unknown changeset type. Choose one of: %s") % TYPES.join(", ")
     end
   end
-
 
   def key_for(item)
     "changeset_#{id}_#{item}"
@@ -121,7 +119,7 @@ class Changeset < ActiveRecord::Base
     end
   end
 
-  def self.create_for( acct_type, options)
+  def self.create_for(acct_type, options)
     if PROMOTION == acct_type
       PromotionChangeset.create!(options)
     else

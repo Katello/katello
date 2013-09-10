@@ -25,7 +25,6 @@ class NodeTestBase < MiniTest::Rails::ActiveSupport::TestCase
   end
 end
 
-
 class NodeTest < NodeTestBase
 
   def setup
@@ -65,7 +64,6 @@ class NodeTest < NodeTestBase
 
 end
 
-
 class NodeSystemDeleteTest < NodeTestBase
 
   def setup
@@ -78,6 +76,6 @@ class NodeSystemDeleteTest < NodeTestBase
   def test_system_destroy
     node = Node.create!(:system => @system)
     assert @system.destroy
-    assert_empty Node.where(:id=>node.id)
+    assert_empty Node.where(:id => node.id)
   end
 end

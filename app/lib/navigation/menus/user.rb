@@ -19,7 +19,7 @@ module Navigation
 
       def initialize(user)
         @key           = :user
-        @display       = Katello.config[:gravatar] ? "#{gravatar_image_tag(user.email)}#{user.username}" : user.username
+        @display       = "#{(Katello.config[:gravatar]  && user.email.present?) ? "#{gravatar_image_tag(user.email)} " : ""}#{user.username}"
         @authorization = true
         @type          = 'dropdown'
         @items         = [

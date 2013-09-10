@@ -19,8 +19,9 @@ class FilterRule < ActiveRecord::Base
   ERRATA          = Errata::CONTENT_TYPE
   PUPPET_MODULE   = PuppetModule::CONTENT_TYPE
   CONTENT_TYPES   = [PACKAGE, PACKAGE_GROUP, ERRATA, PUPPET_MODULE]
-  CONTENT_OPTIONS = {_('Packages') => PACKAGE, _('Package Groups') => PACKAGE_GROUP, _('Errata') => ERRATA,
-      _('Puppet Modules') => PUPPET_MODULE}
+  YUM_CONTENT_OPTIONS = {_('Packages') => PACKAGE, _('Package Groups') => PACKAGE_GROUP, _('Errata') => ERRATA}
+  PUPPET_CONTENT_OPTIONS = {_('Puppet Modules') => PUPPET_MODULE}
+  CONTENT_OPTIONS = YUM_CONTENT_OPTIONS.merge(PUPPET_CONTENT_OPTIONS)
 
   validates_with Validators::SerializedParamsValidator, :attributes => :parameters
 
@@ -40,7 +41,7 @@ class FilterRule < ActiveRecord::Base
       PuppetModuleRule => PUPPET_MODULE }[self.class]
   end
 
-  def self.class_for( content_type)
+  def self.class_for(content_type)
     case content_type
     when PACKAGE
       PackageRule
@@ -60,8 +61,7 @@ class FilterRule < ActiveRecord::Base
     CONTENT_OPTIONS.key(content_type)
   end
 
-
-  def self.create_for( content_type, options)
+  def self.create_for(content_type, options)
     clazz = class_for(content_type)
     clazz.create!(options)
   end
@@ -69,7 +69,7 @@ class FilterRule < ActiveRecord::Base
   def as_json(options = {})
     json_val = super(options).update("id" => id,
                                      "content" => content_type,
-                                     "type" =>  inclusion ? _("includes"): _("excludes"),
+                                     "type" =>  inclusion ? _("includes") : _("excludes"),
                                      "rule" => parameters)
     json_val.delete("parameters")
     json_val

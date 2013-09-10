@@ -10,8 +10,6 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-
-
 module ApplicationHelper
 
   include LayoutHelper
@@ -33,7 +31,6 @@ module ApplicationHelper
       options      = args[1] || {}
       html_options = args[2]
 
-
       if options.key? :controller
         ctrl   = options[:controller]
         action = options[:action] || 'index'
@@ -48,12 +45,12 @@ module ApplicationHelper
 
   def help_tip(text, key = nil)
     key ||= params[:controller] + "-" + params[:action]
-    render :partial => "common/helptip", :locals=>{:key=>key, :text=>text}
+    render :partial => "common/helptip", :locals => {:key => key, :text => text}
   end
 
   def help_tip_button(key = nil)
     key ||= params[:controller] + "-" + params[:action]
-    render :partial => "common/helptip_button", :locals=>{:key=>key}
+    render :partial => "common/helptip_button", :locals => {:key => key}
   end
 
   # Headpin inclusion
@@ -96,17 +93,17 @@ module ApplicationHelper
              :titles => options[:titles],
              :custom_rows => options[:custom_rows],
              :collection => collection,
-             :accessor=>options[:accessor],
-             :url=>options[:url],
-             :left_panel_width=>options[:left_panel_width],
+             :accessor => options[:accessor],
+             :url => options[:url],
+             :left_panel_width => options[:left_panel_width],
              :ajax_load => options[:ajax_load],
-             :ajax_scroll =>options[:ajax_scroll],
-             :search_env =>options[:search_env],
-             :initial_action=>options[:initial_action] || :edit,
-             :initial_state=>options[:initial_state] || false,
-             :actions=>options[:actions],
-             :search_class=>options[:search_class],
-             :disable_create=>options[:disable_create] || false}
+             :ajax_scroll => options[:ajax_scroll],
+             :search_env => options[:search_env],
+             :initial_action => options[:initial_action] || :edit,
+             :initial_state => options[:initial_state] || false,
+             :actions => options[:actions],
+             :search_class => options[:search_class],
+             :disable_create => options[:disable_create] || false}
   end
 
   def one_panel(panel_id, collection, options)
@@ -124,7 +121,7 @@ module ApplicationHelper
              :column_titles => options[:col_titles],
              :custom_rows => options[:custom_rows],
              :collection => collection,
-             :accessor=>options[:accessor] }
+             :accessor => options[:accessor] }
   end
 
   def notification_polling_time
@@ -147,7 +144,7 @@ module ApplicationHelper
     options[:url_products_proc] = nil if options[:url_products_proc].nil?
     options[:url_content_views_proc] = nil if options[:url_content_views_proc].nil?
 
-    render :partial=>"/common/env_select", :locals => options
+    render :partial => "/common/env_select", :locals => options
   end
 
   def gravatar_image_tag(email)
@@ -181,7 +178,7 @@ module ApplicationHelper
 
   def env_select_url(proc, env, next_env, org)
     return nil if proc.nil?
-    proc.call(:environment=> env, :next_environment=>next_env, :organization=>org)
+    proc.call(:environment => env, :next_environment => next_env, :organization => org)
   end
 
   # auto_tab_index: this method may be used to simplify adding a tabindex to UI forms.
@@ -364,6 +361,30 @@ module ApplicationHelper
   def default_description_limit
     return Validators::KatelloDescriptionFormatValidator::MAX_LENGTH
   end
-end
 
+  def repo_selector(repositories, url, field = :repository_id, record = nil)
+    products = repositories.map(&:product).uniq.sort(&:name)
+    repo_ids = repositories.map(&:id)
+
+    content_tag "select", :id => "repo_select", :name => field, "data-url" => url do
+      html = ""
+      html << content_tag("option", :value => "") { "None" }
+
+      groups = products.map do |prod|
+        content_tag("optgroup", :label => "#{h(prod.name)}") do
+          options = prod.repositories.select { |repo| repo_ids.include?(repo.id)}.map do |repo|
+            selected = record && record.send(field) == repo.id
+
+            content_tag("option", :value => repo.id, :selected => selected) do
+              h(repo.name)
+            end
+          end
+          options.join.html_safe
+        end
+      end
+
+      (html + groups.join).html_safe
+    end
+  end
+end
 

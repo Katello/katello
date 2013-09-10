@@ -143,7 +143,6 @@ describe Api::V1::FiltersController do
       assert_nil Filter.find_by_name(@filter.name)
     end
 
-
   end
 
   describe "create" do
@@ -177,8 +176,6 @@ describe Api::V1::FiltersController do
       refute_nil Filter.find_by_name(@name)
     end
   end
-
-
 
   describe "list_products" do
     before do
@@ -215,11 +212,10 @@ describe Api::V1::FiltersController do
 
       body = JSON.parse(response.body)
       assert_kind_of Array, body
-      assert_includes((body.collect{|item| item['id']}), @product.cp_id )
+      assert_includes((body.collect{|item| item['id']}), @product.cp_id)
     end
 
   end
-
 
   describe "update_products" do
     before do
@@ -250,7 +246,6 @@ describe Api::V1::FiltersController do
                         :request => @req,
       )
     end
-
 
     it "should add product to the filter" do
       @req.call

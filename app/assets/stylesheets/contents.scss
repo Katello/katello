@@ -323,7 +323,7 @@ $container_width: ($static_width/2) - 36;
   }
 
 
-  #package_filter {
+  #package_filter, #repo_selector {
     table {
       margin-bottom: 20px;
     }
@@ -399,6 +399,31 @@ $container_width: ($static_width/2) - 36;
       }
 
 
+    }
+
+    .spinner {
+      display: none;
+      float: right;
+      margin: 3px 41.5% 0 0;
+      height: 18px;
+    }
+  }
+
+  #repo_selector {
+    #repo_select {
+      width: 400px;
+    }
+    table {
+      margin-top: 30px;
+    }
+  }
+
+  #filter_tabs {
+    #repos {
+      overflow: visible;
+    }
+    .spinner {
+      margin-right: 27%;
     }
   }
 

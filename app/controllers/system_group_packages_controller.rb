@@ -42,8 +42,8 @@ class SystemGroupPackagesController < ApplicationController
     jobs = @group.refreshed_jobs.joins(:task_statuses).where(
         'task_statuses.task_type' => actions, 'task_statuses.state' => [:waiting, :running])
 
-    render :partial=>"system_groups/packages/index",
-           :locals=>{:jobs => jobs, :editable => @group.systems_editable?}
+    render :partial => "system_groups/packages/index",
+           :locals => {:jobs => jobs, :editable => @group.systems_editable?}
   end
 
   # TODO: break up this method
@@ -64,7 +64,7 @@ class SystemGroupPackagesController < ApplicationController
 
     elsif !params[:groups].blank?
       # user entered one or more package group names (as comma-separated list) in the content box
-      groups = params[:groups].split(/ *, */ )
+      groups = params[:groups].split(/ *, */)
       job = @group.install_package_groups groups
       notify.success _("Install of Package Groups '%{groups}' scheduled for System Group '%{name}'.") % {:groups => params[:groups], :name => @group.name}
     else
@@ -108,7 +108,7 @@ class SystemGroupPackagesController < ApplicationController
 
     elsif !params[:groups].blank?
       # user entered one or more package group names (as comma-separated list) in the content box
-      groups = params[:groups].split(/ *, */ )
+      groups = params[:groups].split(/ *, */)
       job = @group.uninstall_package_groups groups
       notify.success _("Uninstall of Package Groups '%{groups}' scheduled for System Group '%{name}'.") %
         {:group => groups.join(','), :name => @group.name}
@@ -138,7 +138,7 @@ class SystemGroupPackagesController < ApplicationController
   def update
     if !params[:groups].blank?
       # user entered one or more package group names (as comma-separated list) in the content box
-      groups = params[:groups].split(/ *, */ )
+      groups = params[:groups].split(/ *, */)
       job = @group.update_package_groups groups
       notify.success _("Update of Package Groups '%{groups}' scheduled for System Group '%{name}'.") %
         {:groups => groups.join(','), :name => @group.name}

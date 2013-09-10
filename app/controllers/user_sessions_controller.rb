@@ -52,7 +52,7 @@ class UserSessionsController < ApplicationController
   end
 
   def allowed_orgs
-    render :partial=>"/layouts/allowed_orgs", :locals =>{:user=>current_user}
+    render :partial => "/layouts/allowed_orgs", :locals => {:user => current_user}
   end
 
   def set_org
@@ -145,6 +145,5 @@ class UserSessionsController < ApplicationController
       root_path
     end
   end
-
 
 end

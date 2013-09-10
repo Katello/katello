@@ -10,31 +10,33 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-
 module Glue::ElasticSearch::Errata
+
+  # TODO: break this up into modules
+  # rubocop:disable MethodLength
   def self.included(base)
     base.class_eval do
 
       def self.index_settings
         {
-            "index" => {
-                "analysis" => {
-                    "filter" => {
-                        "ngram_filter"  => {
-                            "type"      => "nGram",
-                            "min_gram"  => 3,
-                            "max_gram"  => 40
-                        }
-                    }.merge(Util::Search::custom_filters),
-                    "analyzer" => {
-                        "title_analyzer" => {
-                            "type"      => "custom",
-                            "tokenizer" => "keyword",
-                            "filter"    => ["standard", "lowercase", "asciifolding", "ngram_filter"]
-                        }
-                    }.merge(Util::Search::custom_analyzers)
+          "index" => {
+            "analysis" => {
+              "filter" => {
+                "ngram_filter"  => {
+                  "type"      => "nGram",
+                  "min_gram"  => 3,
+                  "max_gram"  => 40
                 }
+              }.merge(Util::Search.custom_filters),
+              "analyzer" => {
+                "title_analyzer" => {
+                  "type"      => "custom",
+                  "tokenizer" => "keyword",
+                  "filter"    => %w(standard lowercase asciifolding ngram_filter)
+                }
+              }.merge(Util::Search.custom_analyzers)
             }
+          }
         }
       end
 
@@ -42,16 +44,16 @@ module Glue::ElasticSearch::Errata
         {
           :errata => {
             :properties => {
-              :repoids      => { :type => 'string', :index =>:not_analyzed},
+              :repoids      => { :type => 'string', :index => :not_analyzed},
               :id_sort      => { :type => 'string', :index => :not_analyzed},
               :errata_id_sort => { :type => 'string', :index => :not_analyzed},
-              :id_title     => { :type => 'string', :analyzer =>:title_analyzer},
-              :id           => { :type => 'string', :index =>:not_analyzed},
-              :errata_id    => { :type => 'string', :analyzer =>:snowball},
-              :errata_id_exact => { :type => 'string', :index =>:not_analyzed},
-              :product_ids  => { :type => 'integer', :analyzer =>:kt_name_analyzer},
-              :severity     => { :type => 'string', :analyzer =>:kt_name_analyzer},
-              :type         => { :type => 'string', :analyzer =>:kt_name_analyzer},
+              :id_title     => { :type => 'string', :analyzer => :title_analyzer},
+              :id           => { :type => 'string', :index => :not_analyzed},
+              :errata_id    => { :type => 'string', :analyzer => :snowball},
+              :errata_id_exact => { :type => 'string', :index => :not_analyzed},
+              :product_ids  => { :type => 'integer', :analyzer => :kt_name_analyzer},
+              :severity     => { :type => 'string', :analyzer => :kt_name_analyzer},
+              :type         => { :type => 'string', :analyzer => :kt_name_analyzer},
               :title        => { :type => 'string', :analyzer => :title_analyzer},
             }
           }
@@ -68,7 +70,7 @@ module Glue::ElasticSearch::Errata
           :errata_id_exact => self.errata_id,
           :errata_id_sort => self.errata_id,
           :id_title => self.errata_id + ' : ' + self.title,
-          :product_ids=>self.product_ids,
+          :product_ids => self.product_ids,
         }
       end
 
@@ -100,8 +102,8 @@ module Glue::ElasticSearch::Errata
         end
       end
 
-      def self.search query, start, page_size, filters={}, sort=[:errata_id_sort, "DESC"],
-                                                        default_field = 'id_title'
+      def self.search(query, start, page_size, filters = {}, sort = [:errata_id_sort, "DESC"],
+                      default_field = 'id_title')
 
         repoids = filters[:repoids]
         if !Tire.index(self.index).exists? || (repoids && repoids.empty?)
@@ -115,13 +117,13 @@ module Glue::ElasticSearch::Errata
             if all_rows
               all
             else
-              string query, {:default_field=>default_field}
+              string query, {:default_field => default_field}
             end
           end
 
           if page_size > 0
-           size page_size
-           from start
+            size page_size
+            from start
           end
           if filters.has_key?(:type)
             filter :term, :type => filters[:type]
@@ -140,15 +142,15 @@ module Glue::ElasticSearch::Errata
         end
 
         return search.perform.results
-      rescue Tire::Search::SearchRequestFailed => e
+      rescue Tire::Search::SearchRequestFailed
         Util::Support.array_with_total
       end
 
-      def self.index_errata errata_ids
-        errata = errata_ids.collect{ |errata_id|
+      def self.index_errata(errata_ids)
+        errata = errata_ids.collect do |errata_id|
           erratum = self.find(errata_id)
           erratum.as_json.merge(erratum.index_options)
-        }
+        end
 
         unless errata.empty?
           Tire.index Errata.index do
@@ -161,13 +163,13 @@ module Glue::ElasticSearch::Errata
         end
       end
 
-      def self.autocomplete_search(text, repoids=nil, page_size=15)
+      def self.autocomplete_search(text, repoids = nil, page_size = 15)
         return [] if !Tire.index(self.index).exists?
 
         if text.blank?
           query = "id_title:(*)"
         else
-          text = Util::Search::filter_input(text.downcase)
+          text = Util::Search.filter_input(text.downcase)
           query = "id_title:(*#{text}*)"
         end
 

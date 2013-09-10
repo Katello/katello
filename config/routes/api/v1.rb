@@ -17,6 +17,9 @@ Src::Application.routes.draw do
       end
 
       resources :organizations do
+        member do
+          post :repo_discover
+        end
         resources :products, :only => [:index, :show, :update, :destroy] do
           get :repositories, :on => :member
           post :sync_plan, :on => :member, :action => :set_sync_plan
@@ -196,7 +199,6 @@ Src::Application.routes.draw do
         end
       end
 
-
       resources :changesets, :only => [:show, :update, :destroy] do
         post :promote, :on => :member, :action => :promote
         post :apply, :on => :member, :action => :apply
@@ -312,7 +314,6 @@ Src::Application.routes.draw do
       resources :crls, :only => [:index]
 
       resources :about, :only => [:index]
-
 
       match "/status" => "ping#server_status", :via => :get
       match "/version" => "ping#version", :via => :get

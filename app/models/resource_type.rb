@@ -51,7 +51,6 @@ class DefaultModel
   end
 end
 
-
 class ResourceType < ActiveRecord::Base
   belongs_to :permission
   validates :name, :length => { :maximum => 255 }
@@ -84,14 +83,12 @@ class ResourceType < ActiveRecord::Base
 
     model = model_for resource_type
 
-
     possible_verbs = (model.list_verbs(true).keys + model.list_verbs(false).keys).uniq
     verbs = [] if verbs.nil?
     verbs = [verbs] unless verbs.is_a?(Array)
     verbs.each do |verb|
       fail VerbNotFound.new(resource_type, verb, possible_verbs) unless possible_verbs.include? verb.to_s
     end
-
   end
 
   def self.check_type(resource_type)
@@ -100,13 +97,13 @@ class ResourceType < ActiveRecord::Base
 
   if Katello.config.katello?
     TYPES = {
-        :organizations => {:model => Organization, :name => _("Organizations"), :global=>false},
-        :environments => {:model => KTEnvironment, :name => _("Environments"), :global=>false},
-        :activation_keys => { :model => ActivationKey, :name => _("Activation Keys"), :global=>false},
-        :system_groups => {:model => SystemGroup, :name=>_("System Groups"), :global=>false},
-        :providers => { :model => Provider, :name => _("Providers"), :global=>false},
-        :users => { :model => User, :name => _("Users"), :global=>true},
-        :roles => { :model => Role, :name => _("Roles"), :global=>true},
+        :organizations => {:model => Organization, :name => _("Organizations"), :global => false},
+        :environments => {:model => KTEnvironment, :name => _("Environments"), :global => false},
+        :activation_keys => { :model => ActivationKey, :name => _("Activation Keys"), :global => false},
+        :system_groups => {:model => SystemGroup, :name => _("System Groups"), :global => false},
+        :providers => { :model => Provider, :name => _("Providers"), :global => false},
+        :users => { :model => User, :name => _("Users"), :global => true},
+        :roles => { :model => Role, :name => _("Roles"), :global => true},
         :content_view_definitions => { :model => ContentViewDefinition,
           :name => _("Content View Definitions"), :global => false},
         :content_views => { :model => ContentView, :name => _("Content View"), :global => false},
@@ -114,12 +111,12 @@ class ResourceType < ActiveRecord::Base
      }.with_indifferent_access
   else
     TYPES = {
-        :organizations => {:model => Organization, :name => _("Organizations"), :global=>false},
-        :activation_keys => { :model => ActivationKey, :name => _("Activation Keys"), :global=>false},
-        :system_groups => {:model => SystemGroup, :name=>_("System Groups"), :global=>false},
-        :providers => { :model => Provider, :name => _("Providers"), :global=>false},
-        :users => { :model => User, :name => _("Users"), :global=>true},
-        :roles => { :model => Role, :name => _("Roles"), :global=>true},
+        :organizations => {:model => Organization, :name => _("Organizations"), :global => false},
+        :activation_keys => { :model => ActivationKey, :name => _("Activation Keys"), :global => false},
+        :system_groups => {:model => SystemGroup, :name => _("System Groups"), :global => false},
+        :providers => { :model => Provider, :name => _("Providers"), :global => false},
+        :users => { :model => User, :name => _("Users"), :global => true},
+        :roles => { :model => Role, :name => _("Roles"), :global => true},
         :all => { :model => DefaultModel, :name => _("All"), :global => false}
     }.with_indifferent_access
   end

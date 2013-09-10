@@ -10,8 +10,6 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-
-
 module Authorization::Environment
   extend ActiveSupport::Concern
 
@@ -19,7 +17,6 @@ module Authorization::Environment
   CONTENTS_READABLE = [:read_contents]
   SYSTEMS_READABLE = [:read_systems, :register_systems, :update_systems, :delete_systems]
   DISTRIBUTORS_READABLE = [:read_distributors, :register_distributors, :update_distributors, :delete_distributors]
-
 
   module ClassMethods
     def changesets_readable(org)
@@ -67,31 +64,31 @@ module Authorization::Environment
       User.allowed_to?(CHANGE_SETS_READABLE + CONTENTS_READABLE, :environments, org.environment_ids, org, true)
     end
 
-    def any_contents_readable? org, skip_library=false
+    def any_contents_readable?(org, skip_library = false)
       ids = org.environment_ids
       ids = ids - [org.library.id] if skip_library
       User.allowed_to?(CONTENTS_READABLE, :environments, ids, org, true)
     end
 
-    def authorized_items org, verbs, resource = :environments
+    def authorized_items(org, verbs, resource = :environments)
       raise "scope requires an organization" if org.nil?
       if User.allowed_all_tags?(verbs, resource, org)
-         where(:organization_id => org)
+        where(:organization_id => org)
       else
         where("environments.id in (#{User.allowed_tags_sql(verbs, resource, org)})")
       end
     end
 
-    def list_verbs global = false
+    def list_verbs(global = false)
       if Katello.config.katello?
         {
         :read_contents => _("Read Environment Contents"),
         :read_systems => _("Read Systems in Environment"),
-        :register_systems =>_("Register Systems in Environment"),
+        :register_systems => _("Register Systems in Environment"),
         :update_systems => _("Modify Systems in Environment"),
         :delete_systems => _("Remove Systems in Environment"),
         :read_distributors => _("Read Distributors in Environment"),
-        :register_distributors =>_("Register Distributors in Environment"),
+        :register_distributors => _("Register Distributors in Environment"),
         :update_distributors => _("Modify Distributors in Environment"),
         :delete_distributors => _("Remove Distributors in Environment"),
         :read_changesets => _("Read Changesets in Environment"),
@@ -103,11 +100,11 @@ module Authorization::Environment
         {
         :read_contents => _("Read Environment Contents"),
         :read_systems => _("Read Systems in Environment"),
-        :register_systems =>_("Register Systems in Environment"),
+        :register_systems => _("Register Systems in Environment"),
         :update_systems => _("Modify Systems in Environment"),
         :delete_systems => _("Remove Systems in Environment"),
         :read_distributors => _("Read Distributors in Environment"),
-        :register_distributors =>_("Register Distributors in Environment"),
+        :register_distributors => _("Register Distributors in Environment"),
         :update_distributors => _("Modify Distributors in Environment"),
         :delete_distributors => _("Remove Distributors in Environment"),
         }.with_indifferent_access
@@ -122,7 +119,6 @@ module Authorization::Environment
       end
     end
   end
-
 
   included do
     def viewable_for_promotions?

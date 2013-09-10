@@ -22,7 +22,7 @@ class Product < ActiveRecord::Base
 
   include Ext::LabelFromName
 
-  has_many :marketing_engineering_products, :foreign_key=>:engineering_product_id
+  has_many :marketing_engineering_products, :foreign_key => :engineering_product_id
   has_many :marketing_products, :through => :marketing_engineering_products
 
   belongs_to :provider, :inverse_of => :products
@@ -48,7 +48,7 @@ class Product < ActiveRecord::Base
   end
 
   def self.find_by_cp_id(cp_id, organization)
-    self.where(:cp_id=>cp_id).in_org(organization).scoped(:readonly=>false).first
+    self.where(:cp_id => cp_id).in_org(organization).scoped(:readonly => false).first
   end
 
   def self.in_org(organization)
@@ -204,11 +204,10 @@ class Product < ActiveRecord::Base
 
   protected
 
-
   def self.with_repos(env, enabled_only)
     query = Repository.in_environment(env.id).select(:product_id)
     query = query.enabled if enabled_only
     joins(:provider).where('providers.organization_id' => env.organization).
-        where("(providers.provider_type ='#{::Provider::CUSTOM}') OR ( providers.provider_type ='#{::Provider::REDHAT}' AND products.id in (#{query.to_sql}))")
+        where("(providers.provider_type ='#{::Provider::CUSTOM}') OR (providers.provider_type ='#{::Provider::REDHAT}' AND products.id in (#{query.to_sql}))")
   end
 end

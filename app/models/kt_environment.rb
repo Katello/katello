@@ -46,23 +46,23 @@ class KTEnvironment < ActiveRecord::Base
   has_many :systems, :inverse_of => :environment, :dependent => :destroy,  :foreign_key => :environment_id
   has_many :distributors, :inverse_of => :environment, :dependent => :destroy,  :foreign_key => :environment_id
   has_many :working_changesets, :conditions => ["state != '#{Changeset::PROMOTED}'"],
-    :foreign_key => :environment_id, :dependent => :destroy, :class_name=>"Changeset",
+    :foreign_key => :environment_id, :dependent => :destroy, :class_name => "Changeset",
     :dependent => :destroy, :inverse_of => :environment
 
   has_many :working_deletion_changesets, :conditions => ["state != '#{Changeset::DELETED}'"],
-    :foreign_key => :environment_id, :dependent => :destroy, :class_name=>"DeletionChangeset",
+    :foreign_key => :environment_id, :dependent => :destroy, :class_name => "DeletionChangeset",
     :dependent => :destroy, :inverse_of => :environment
   has_many :working_promotion_changesets, :conditions => ["state != '#{Changeset::PROMOTED}'"],
-    :foreign_key => :environment_id, :dependent => :destroy, :class_name=>"PromotionChangeset",
+    :foreign_key => :environment_id, :dependent => :destroy, :class_name => "PromotionChangeset",
     :dependent => :destroy, :inverse_of => :environment
 
   has_many :changeset_history, :conditions => {:state => Changeset::PROMOTED},
-    :foreign_key => :environment_id, :dependent => :destroy, :class_name=>"Changeset",
+    :foreign_key => :environment_id, :dependent => :destroy, :class_name => "Changeset",
     :dependent => :destroy, :inverse_of => :environment
 
-  has_many :content_view_version_environments, :foreign_key=>:environment_id, :dependent=>:destroy
-  has_many :content_view_versions, :through=>:content_view_version_environments, :inverse_of=>:environments
-  has_many :content_view_environments, :foreign_key=>:environment_id, :inverse_of=>:environment, :dependent=>:destroy
+  has_many :content_view_version_environments, :foreign_key => :environment_id, :dependent => :destroy
+  has_many :content_view_versions, :through => :content_view_version_environments, :inverse_of => :environments
+  has_many :content_view_environments, :foreign_key => :environment_id, :inverse_of => :environment, :dependent => :destroy
 
   has_many :users, :foreign_key => :default_environment_id, :inverse_of => :default_environment, :dependent => :nullify
 
@@ -104,7 +104,7 @@ class KTEnvironment < ActiveRecord::Base
 
   def content_view_environment
     return nil unless self.default_content_view
-    self.default_content_view.content_view_environments.where(:environment_id=>self.id).first
+    self.default_content_view.content_view_environments.where(:environment_id => self.id).first
   end
 
   def content_views(reload = false)
@@ -214,13 +214,12 @@ class KTEnvironment < ActiveRecord::Base
 
   # returns list of virtual permission tags for the current user
   def self.list_tags(org_id)
-    KTEnvironment.where(:organization_id=>org_id).collect { |m| VirtualTag.new(m.id, m.name) }
+    KTEnvironment.where(:organization_id => org_id).collect { |m| VirtualTag.new(m.id, m.name) }
   end
 
   def self.tags(ids)
     KTEnvironment.where(:id => ids).collect { |m| VirtualTag.new(m.id, m.name) }
   end
-
 
   def package_groups(search_args = {})
     groups = []
@@ -300,8 +299,8 @@ class KTEnvironment < ActiveRecord::Base
       #  we can't look it up via a query (org.default_content_view)
       content_view = self.organization.default_content_view
       if content_view.nil?
-        content_view = ContentView.new(:default=>true, :name=>"Default Organization View",
-                                       :organization=>self.organization)
+        content_view = ContentView.new(:default => true, :name => "Default Organization View",
+                                       :organization => self.organization)
       end
 
       if content_view.version(self).nil?

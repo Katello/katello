@@ -16,16 +16,16 @@ class Node < ActiveRecord::Base
   include Authorization::Node
 
   belongs_to :system
-  has_many :capabilities, :class_name=>'NodeCapability', :dependent => :destroy
-  has_and_belongs_to_many :environments, :class_name=>KTEnvironment, :join_table=>'nodes_environments',
-                                          :association_foreign_key=>'environment_id'
+  has_many :capabilities, :class_name => 'NodeCapability', :dependent => :destroy
+  has_and_belongs_to_many :environments, :class_name => KTEnvironment, :join_table => 'nodes_environments',
+                                          :association_foreign_key => 'environment_id'
 
   after_save :update_environments
 
   validates_presence_of :system_id
 
   def self.with_environment(env)
-    joins(:environments).where(:environments=>{:id=>env})
+    joins(:environments).where(:environments => {:id => env})
   end
 
   def as_json(params)
@@ -42,7 +42,6 @@ class Node < ActiveRecord::Base
      :environment_ids => self.environment_ids,
      :environments => envs}
   end
-
 
   def update_environments
     self.capabilities.each do |capability|

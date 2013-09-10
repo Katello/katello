@@ -149,7 +149,6 @@ module ContentSearch
 
         next if units.empty? # if we don't have units, don't show repo
 
-
         repo_rows << repo_row
         repo_rows += build_unit_rows(units, repo_row, cols)
 
@@ -158,7 +157,7 @@ module ContentSearch
         if total > page_size
           meta_row =  MetadataRow.new(:total => total,
                                       :current_count => offset + units.length,
-                                      :data => {:repo_id=>library_repo.id},
+                                      :data => {:repo_id => library_repo.id},
                                       :unique_id => repo_row.id,
                                       :parent_id => repo_row.id
                                      )

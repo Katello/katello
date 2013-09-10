@@ -10,7 +10,6 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-
 module Navigation
   class Menu
 
@@ -39,7 +38,7 @@ module Navigation
     def as_json(*args)
       {
         :key    => @key,
-        :display=> @display,
+        :display => @display,
         :type   => @type,
         :items  => @items
       }

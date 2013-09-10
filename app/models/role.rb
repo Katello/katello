@@ -17,8 +17,8 @@ class Role < ActiveRecord::Base
   acts_as_reportable
 
   has_many :roles_users, :dependent => :destroy
-  has_many :users, :through => :roles_users, :before_remove =>:super_admin_check
-  has_many :permissions, :dependent => :destroy, :inverse_of =>:role, :class_name=>"Permission", :extend => RolesPermissions::DefaultSystemRegistrationPermission
+  has_many :users, :through => :roles_users, :before_remove => :super_admin_check
+  has_many :permissions, :dependent => :destroy, :inverse_of => :role, :class_name => "Permission", :extend => RolesPermissions::DefaultSystemRegistrationPermission
   has_many :ldap_group_roles, :dependent => :destroy, :inverse_of => :role
   has_many :resource_types, :through => :permissions
 
@@ -34,7 +34,6 @@ class Role < ActiveRecord::Base
   #validates_associated :permissions
   accepts_nested_attributes_for :permissions, :allow_destroy => true
 
-
   def add_ldap_group(group_name)
     self.ldap_group_roles.create!(:ldap_group => group_name)
     User.all.each { |user| user.set_ldap_roles }
@@ -47,7 +46,6 @@ class Role < ActiveRecord::Base
     ldap_group.destroy
     self.users.each { |user| user.set_ldap_roles }
   end
-
 
   def self.search_by_verb(key, operator, value)
     permissions = Permission.all(:conditions => "verbs.verb #{operator} '#{value_to_sql(operator, value)}'", :include => :verbs)
@@ -95,7 +93,7 @@ class Role < ActiveRecord::Base
                      :all_tags => true,
                      :verbs => verbs.collect{|verb| Verb.find_or_create_by_verb(verb)},
                      :name => perm_name,
-                     :organization=> organization,
+                     :organization => organization,
                      :description => "Read #{key.to_s.capitalize} permission")
       end
     end
@@ -103,7 +101,6 @@ class Role < ActiveRecord::Base
     role
 
   end
-
 
   ADMINISTRATOR = 'Administrator'
 
@@ -122,7 +119,7 @@ class Role < ActiveRecord::Base
     superadmin_role.update_attributes(:locked => false)
 
     superadmin_role_perm = Permission.find_or_create_by_name(
-      :name=> "super-admin-perm",
+      :name => "super-admin-perm",
       :description => 'Super Admin permission',
       :role => superadmin_role, :all_types => true)
     raise "Unable to create super-admin role permission: #{superadmin_role_perm}" if superadmin_role_perm.nil? || superadmin_role_perm.errors.size > 0
@@ -130,8 +127,6 @@ class Role < ActiveRecord::Base
     superadmin_role.update_attributes(:locked => true)
     superadmin_role
   end
-
-
 
   # returns the candlepin role (for RHSM)
   def self.candlepin_role

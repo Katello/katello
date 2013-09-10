@@ -57,12 +57,12 @@ class GpgKeysController < ApplicationController
   def items
     render_panel_direct(GpgKey, @panel_options, params[:search], params[:offset], [:name_sort, :asc],
                         {:default_field => :name,
-                         :filter=>{:organization_id=>[current_organization.id]}}
+                         :filter => {:organization_id => [current_organization.id]}}
                        )
   end
 
   def show
-    render :partial=>"common/list_update", :locals=>{:item=>@gpg_key, :accessor=>"id", :columns=>['name']}
+    render :partial => "common/list_update", :locals => {:item => @gpg_key, :accessor => "id", :columns => ['name']}
   end
 
   def new
@@ -99,12 +99,12 @@ class GpgKeysController < ApplicationController
       gpg_key_params.delete('content_upload')
     end
 
-    @gpg_key = GpgKey.create!( gpg_key_params.merge({:organization => current_organization}) )
+    @gpg_key = GpgKey.create!(gpg_key_params.merge({:organization => current_organization}))
 
     notify.success _("GPG Key '%s' was created.") % @gpg_key['name'], :asynchronous => file_uploaded
 
     if search_validate(GpgKey, @gpg_key.id, params[:search])
-      render :partial=>"common/list_item", :locals=>{:item=>@gpg_key, :accessor=>"id", :columns=>['name'], :name=>controller_display_name}
+      render :partial => "common/list_item", :locals => {:item => @gpg_key, :accessor => "id", :columns => ['name'], :name => controller_display_name}
     else
       notify.message _("'%s' did not meet the current search criteria and is not being shown.") % @gpg_key["name"]
       render :json => {:no_match => true}
@@ -152,7 +152,7 @@ class GpgKeysController < ApplicationController
   def destroy
     if @gpg_key.destroy
       notify.success _("GPG Key '%s' was deleted.") % @gpg_key[:name]
-      render :partial => "common/list_remove", :locals => {:id=>params[:id], :name=>controller_display_name}
+      render :partial => "common/list_remove", :locals => {:id => params[:id], :name => controller_display_name}
     end
   end
 
@@ -172,9 +172,9 @@ class GpgKeysController < ApplicationController
       :name => controller_display_name,
       :ajax_load  => true,
       :ajax_scroll => items_gpg_keys_path,
-      :initial_action=> :products_repos,
+      :initial_action => :products_repos,
       :enable_create => GpgKey.createable?(current_organization),
-      :search_class=>GpgKey
+      :search_class => GpgKey
     }
   end
 

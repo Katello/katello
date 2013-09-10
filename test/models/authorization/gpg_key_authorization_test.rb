@@ -12,7 +12,6 @@
 
 require './test/models/authorization/authorization_base'
 
-
 class GpgKeyAuthorizationAdminTest < AuthorizationTestBase
 
   def setup
@@ -45,7 +44,6 @@ class GpgKeyAuthorizationAdminTest < AuthorizationTestBase
      assert @key.manageable?
   end
 end
-
 
 class GpgKeyAuthorizationNoPermsTest < AuthorizationTestBase
 

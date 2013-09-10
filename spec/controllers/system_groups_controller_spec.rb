@@ -41,7 +41,6 @@ describe SystemGroupsController, :katello => true do
     @system = create_system(:name=>"bar1", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""})
   end
 
-
   describe "Controller tests " do
     before(:each) do
       @group = SystemGroup.create!(:name=>"test_group", :organization=>@org)
@@ -75,7 +74,6 @@ describe SystemGroupsController, :katello => true do
         user_without_permissions
       end
       it_should_behave_like "protected action"
-
 
       it "requests filters using search criteria" do
         controller.should_receive(:render_panel_direct) { |obj_class, options, search, start, sort, search_options|
@@ -135,7 +133,6 @@ describe SystemGroupsController, :katello => true do
       end
       it_should_behave_like "protected action"
 
-
       it "should return successfully" do
         get :show, :id=>@group.id
         response.should be_success
@@ -154,7 +151,6 @@ describe SystemGroupsController, :katello => true do
         user_without_permissions
       end
       it_should_behave_like "protected action"
-
 
       it "should create a group correctly" do
         post :create, :system_group=>{:name=>"foo", :description=>"describe"}
@@ -245,7 +241,6 @@ describe SystemGroupsController, :katello => true do
       end
     end
 
-
     describe "POST add systems" do
       it "should allow adding of systems" do
         post :add_systems, :id=>@group.id, :system_ids=>[@system.id]
@@ -263,7 +258,6 @@ describe SystemGroupsController, :katello => true do
         end
         it_should_behave_like "protected action"
     end
-
 
     describe "POST remove_systems" do
       let(:action) {:remove_systems}
@@ -285,7 +279,6 @@ describe SystemGroupsController, :katello => true do
       end
     end
 
-
     describe "DELETE destroy" do
       let(:action) {:destroy}
       let(:req) { delete :destroy, :id=>@group.id}
@@ -296,7 +289,6 @@ describe SystemGroupsController, :katello => true do
         user_without_permissions
       end
       it_should_behave_like "protected action"
-
 
       it "should complete successfully" do
         controller.stub(:render)
@@ -316,7 +308,6 @@ describe SystemGroupsController, :katello => true do
         user_without_permissions
       end
       it_should_behave_like "protected action"
-
 
       it "should complete successfully" do
         @group.systems  = [@system]
@@ -368,7 +359,6 @@ describe SystemGroupsController, :katello => true do
         user_without_permissions
       end
       it_should_behave_like "protected action"
-
 
       it "should update all systems successfully" do
         controller.should notify.success

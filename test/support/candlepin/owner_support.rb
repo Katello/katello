@@ -12,7 +12,6 @@
 
 require 'minitest_helper'
 
-
 module CandlepinOwnerSupport
 
   @organization = nil

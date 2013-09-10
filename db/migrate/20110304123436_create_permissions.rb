@@ -7,8 +7,8 @@ class CreatePermissions < ActiveRecord::Migration
       t.timestamps
     end
     add_index :permissions, :role_id
-    add_index :permissions, :resource_type_id, :null =>true
-    add_index :permissions, :organization_id, :null =>true
+    add_index :permissions, :resource_type_id, :null => true
+    add_index :permissions, :organization_id, :null => true
   end
 
   def self.down

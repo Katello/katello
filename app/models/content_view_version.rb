@@ -10,7 +10,6 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-
 class ContentViewVersion < ActiveRecord::Base
   include AsyncOrchestration
   include Authorization::ContentViewVersion
@@ -75,7 +74,7 @@ class ContentViewVersion < ActiveRecord::Base
   end
 
   def self.in_environment(env)
-    joins(:content_view_version_environments).where('content_view_version_environments.environment_id'=>env).
+    joins(:content_view_version_environments).where('content_view_version_environments.environment_id' => env).
         order('content_view_version_environments.environment_id')
   end
 
@@ -161,7 +160,7 @@ class ContentViewVersion < ActiveRecord::Base
   end
 
   def deletable?(from_env)
-    !System.exists?(:environment_id=>from_env, :content_view_id=>self.content_view) ||
+    !System.exists?(:environment_id => from_env, :content_view_id => self.content_view) ||
         self.content_view.versions.in_environment(from_env).count > 1
   end
 
@@ -169,7 +168,7 @@ class ContentViewVersion < ActiveRecord::Base
     unless deletable?(from_env)
       raise Errors::ChangesetContentException.new(_("Cannot delete view %{view} from %{env}, systems are currently subscribed. " +
                                                     "Please move subscribed systems to another content view or environment.") %
-                                                    {:env=>from_env.name, :view=>self.content_view.name})
+                                                    {:env => from_env.name, :view => self.content_view.name})
     end
 
     self.environments.delete(from_env)

@@ -10,7 +10,6 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-
 class Api::V2::PermissionsController < Api::V1::PermissionsController
 
   include Api::V2::Rendering

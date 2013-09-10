@@ -10,7 +10,6 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-
 class ContentViewDefinition < ContentViewDefinitionBase
   include Glue::ElasticSearch::ContentViewDefinition if Katello.config.use_elasticsearch
   include Ext::LabelFromName
@@ -31,8 +30,8 @@ class ContentViewDefinition < ContentViewDefinitionBase
   validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
   validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
 
-  scope :composite, where(:composite=>true)
-  scope :non_composite, where(:composite=>false)
+  scope :composite, where(:composite => true)
+  scope :non_composite, where(:composite => false)
 
   # TODO: break up method
   # rubocop:disable MethodLength
@@ -40,13 +39,13 @@ class ContentViewDefinition < ContentViewDefinitionBase
     options = { :async => true, :notify => false }.merge options
 
     view = ContentView.create!(:name => name,
-                        :label=>label,
+                        :label => label,
                         :description => description,
                         :content_view_definition => self,
                         :organization => organization
                        )
 
-    version = ContentViewVersion.new(:version=>1, :content_view=>view)
+    version = ContentViewVersion.new(:version => 1, :content_view => view)
     version.environments << organization.library
     version.save!
 
@@ -122,7 +121,6 @@ class ContentViewDefinition < ContentViewDefinitionBase
       message = _("Failed to publish content view '%{view_name}' from definition '%{definition_name}'.") %
           {:view_name => view.name, :definition_name => self.name}
 
-
       Notify.exception(message, e, :request_type => "content_view_definitions___publish",
                        :organization => self.organization)
     end
@@ -177,6 +175,17 @@ class ContentViewDefinition < ContentViewDefinitionBase
           return true if (view_id != other_view_id) && !repo_ids.intersection(other_repo_ids).empty?
         end
       end
+    end
+    false
+  end
+
+  def has_puppet_repo_conflicts?
+    # Check to see if there is a puppet conflict in the component views
+    # associated with the definition.  A conflict exists if more than one view
+    # has a puppet repo
+    if self.composite?
+      repos = component_content_views.map { |view| view.repos(organization.library) }.flatten
+      return repos.select(&:puppet?).length > 1
     end
     false
   end
@@ -244,7 +253,6 @@ class ContentViewDefinition < ContentViewDefinitionBase
     #   If there is no include/exclude filters  -  Everything is included. - so do not delete anything
     return if inclusion_rules.count == 0 && exclusion_rules.count == 0
 
-
     #  If there are only exclude filters (aka blacklist filters),
     #  then unassociate them from the repo
     #  If there are only include filters (aka whitelist) then only the packages/errata included will get included.
@@ -282,7 +290,6 @@ class ContentViewDefinition < ContentViewDefinitionBase
       break if errors.any?
     end
   end
-
 
   def generate_clauses(repo, rules, inclusion = true)
     join_clause = "$nor"

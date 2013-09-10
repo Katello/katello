@@ -10,13 +10,12 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-
 module Authorization::ActivationKey
   extend ActiveSupport::Concern
 
   module ClassMethods
     def readable(org)
-      ActivationKey.readable?(org) ? where(:organization_id=>org.id) : where("0 = 1")
+      ActivationKey.readable?(org) ? where(:organization_id => org.id) : where("0 = 1")
     end
 
     # returns list of virtual permission tags for the current user

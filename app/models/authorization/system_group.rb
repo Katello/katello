@@ -10,7 +10,6 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-
 module Authorization::SystemGroup
   extend ActiveSupport::Concern
 
@@ -27,7 +26,7 @@ module Authorization::SystemGroup
     end
 
     def systems_readable(org)
-        items(org, SYSTEM_READ_PERMS)
+      items(org, SYSTEM_READ_PERMS)
     end
 
     def systems_editable(org)
@@ -38,7 +37,7 @@ module Authorization::SystemGroup
       items(org, [:delete_systems])
     end
 
-    def creatable? org
+    def creatable?(org)
       ::User.allowed_to?([:create], :system_groups, nil, org)
     end
 
@@ -47,14 +46,14 @@ module Authorization::SystemGroup
     end
 
     def list_tags(org_id)
-      ::SystemGroup.select('id,name').where(:organization_id=>org_id).collect { |m| VirtualTag.new(m.id, m.name) }
+      ::SystemGroup.select('id,name').where(:organization_id => org_id).collect { |m| VirtualTag.new(m.id, m.name) }
     end
 
     def tags(ids)
       select('id,name').where(:id => ids).collect { |m| VirtualTag.new(m.id, m.name) }
     end
 
-    def list_verbs(global=false)
+    def list_verbs(global = false)
       {
          :create => _("Administer System Groups"),
          :read => _("Read System Group"),
@@ -78,7 +77,7 @@ module Authorization::SystemGroup
       raise "scope requires an organization" if org.nil?
       resource = :system_groups
       if ::User.allowed_all_tags?(verbs, resource, org)
-         where(:organization_id => org)
+        where(:organization_id => org)
       else
         where("system_groups.id in (#{::User.allowed_tags_sql(verbs, resource, org)})")
       end

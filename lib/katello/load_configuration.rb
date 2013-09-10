@@ -29,7 +29,7 @@ module Katello
         :default_config_file_path => "#{root}/config/katello_defaults.yml",
 
         :validation               => lambda do |*_|
-          has_keys(*%w( app_name candlepin notification available_locales
+          has_keys(*%w(app_name candlepin notification available_locales
                    use_cp simple_search_tokens database headpin? host ldap_roles validate_ldap
                    cloud_forms use_pulp cdn_proxy use_ssl warden katello? url_prefix foreman
                    search use_foreman password_reset_expiration redhat_repository_url port
@@ -86,7 +86,7 @@ module Katello
           config[:email_reply_address] = if config[:email_reply_address]
                                            config[:email_reply_address]
                                          else
-                                           "no-reply@"+config[:host]
+                                           "no-reply@" + config[:host]
                                          end
 
           root = config.logging.loggers.root
@@ -143,5 +143,4 @@ module Katello
     end
   end
 end
-
 

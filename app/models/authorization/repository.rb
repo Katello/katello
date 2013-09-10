@@ -10,20 +10,14 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-
 module Authorization::Repository
   extend ActiveSupport::Concern
 
   included do
-    # only repositories in a given environment
-    scope :in_environment, lambda { |env|
-      where(environment_id: env.id)
-    }
   end
 
   module ClassMethods
     def readable(env)
-      prod_ids = ::Product.readable(env.organization).collect{|p| p.id}
       if env.contents_readable?
         where(environment_id: env.id)
       else
@@ -36,7 +30,7 @@ module Authorization::Repository
       repos = Repository.enabled.content_readable(org)
       lib_ids = []
       repos.each{|r|  lib_ids << (r.library_instance_id || r.id)}
-      where(:id=>lib_ids)
+      where(:id => lib_ids)
     end
 
     def content_readable(org)

@@ -587,7 +587,7 @@ class ContentSearchController < ApplicationController
   end
 
   #Given a repo and a pkg_search (id array or hash),
-  #  return a array of {:id=>env_id, :display=>search.total}
+  #  return a array of {:id => env_id, :display => search.total}
   #
   #
   def spanned_repo_content(view, library_repo, content_type, content_search_obj, offset = 0, search_mode = :all, environments = [])
@@ -639,7 +639,7 @@ class ContentSearchController < ApplicationController
   # repo            repo to search in
   # offset          offset of the search
   # default_field   default field to search if none specifiec
-  def  multi_repo_content_search( content_class, search_obj, repos, offset, default_field, search_mode = :all, in_repo = nil)
+  def  multi_repo_content_search(content_class, search_obj, repos, offset, default_field, search_mode = :all, in_repo = nil)
     user = current_user
     search = Tire::Search::Search.new(content_class.index)
     search.instance_eval do
@@ -672,7 +672,6 @@ class ContentSearchController < ApplicationController
   rescue Tire::Search::SearchRequestFailed
     Util::Support.array_with_total
   end
-
 
   # creates rows out of a list of content (Errata or package) for a particular
   #     library repo and its spanning clones across environments

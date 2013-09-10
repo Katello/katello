@@ -10,8 +10,6 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-
-
 module Authorization::Provider
   extend ActiveSupport::Concern
 
@@ -20,7 +18,6 @@ module Authorization::Provider
 
   READ_PERM_VERBS = [:read, :update] if !Katello.config.katello?
   EDIT_PERM_VERBS = [:update] if !Katello.config.katello?
-
 
   module ClassMethods
     def readable(org)
@@ -52,7 +49,7 @@ module Authorization::Provider
     end
 
     def list_tags(org_id)
-      custom.select('id,name').where(:organization_id=>org_id).collect { |m| VirtualTag.new(m.id, m.name) }
+      custom.select('id,name').where(:organization_id => org_id).collect { |m| VirtualTag.new(m.id, m.name) }
     end
 
     def tags(ids)
@@ -79,7 +76,7 @@ module Authorization::Provider
       raise "scope requires an organization" if org.nil?
       resource = :providers
       if (Katello.config.katello? && verbs.include?(:read) && org.syncable?) ||  User.allowed_all_tags?(verbs, resource, org)
-         where(:organization_id => org)
+        where(:organization_id => org)
       else
         where("providers.id in (#{User.allowed_tags_sql(verbs, resource, org)})")
       end

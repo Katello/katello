@@ -14,7 +14,7 @@ class Api::V1::NodeCapabilitiesController < Api::V1::ApiController
 
   before_filter :authorize
   before_filter :find_node
-  before_filter :find_capability, :only=>[:show, :update, :destroy]
+  before_filter :find_capability, :only => [:show, :update, :destroy]
   respond_to :json
 
   def_param_group :capability do

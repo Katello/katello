@@ -12,7 +12,6 @@
 
 require 'minitest_helper'
 
-
 module TaskSupport
 
   def self.wait_on_tasks(task_list)

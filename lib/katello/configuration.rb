@@ -10,7 +10,6 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-
 module Katello
 
   # Katello::Configuration module contains all necessary code for Katello configuration.
@@ -37,29 +36,29 @@ module Katello
   #     !!!txt
   #     # create by a Hash which is converted to Node instance
   #     irb> n = Katello::Configuration::Node.new 'a' => nil
-  #     => #<Katello::Configuration::Node:0x10e27b618 @data={:a=>nil}>
+  #     => #<Katello::Configuration::Node:0x10e27b618 @data={:a => nil}>
   #
   #     # assign a value, also converted
   #     irb> n[:a] = {'a' => 12}
-  #     => {:a=>12}
+  #     => {:a => 12}
   #     irb> n
   #     => #<Katello::Configuration::Node:0x10e2cd2b0 @data=
-  #         {:a=>#<Katello::Configuration::Node:0x10e2bcb40 @data={:a=>12}>}>
+  #         {:a => #<Katello::Configuration::Node:0x10e2bcb40 @data={:a => 12}>}>
   #
   #     # accessing a key
   #     irb> n['a']
   #     ArgumentError: "a" should be a Symbol
   #     irb> n[:a]
-  #     => #<Katello::Configuration::Node:0x10e2bcb40 @data={:a=>12}>
+  #     => #<Katello::Configuration::Node:0x10e2bcb40 @data={:a => 12}>
   #     irb> n[:not]
   #     Katello::Configuration::Node::NoKey:  missing key 'not' in configuration
   #
   #     # supports deep_merge and #to_hash
   #     irb> n.deep_merge!('a' => {:b => 34})
   #     => #<Katello::Configuration::Node:0x10e2cd2b0 @data=
-  #         {:a=>#<Katello::Configuration::Node:0x10e2a64d0 @data={:a=>12, :b=>34}>}>
+  #         {:a => #<Katello::Configuration::Node:0x10e2a64d0 @data={:a => 12, :b => 34}>}>
   #     irb> n.to_hash
-  #     => {:a=>{:a=>12, :b=>34}}
+  #     => {:a => {:a => 12, :b => 34}}
   #
   module Configuration
     path = File.expand_path(File.join(File.dirname(__FILE__), '..'))

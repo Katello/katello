@@ -215,7 +215,7 @@ Schedules the consumer identity certificate regeneration
         :load_records? => true
     }
     options[:sort_by] = params[:sort_by] if params[:sort_by]
-    options[:sort_order]= params[:sort_order] if params[:sort_order]
+    options[:sort_order] = params[:sort_order] if params[:sort_order]
 
     if params[:paged]
       options[:page_size] = params[:page_size] || current_user.page_size
@@ -401,7 +401,7 @@ This information is then used for computing the errata available for the system.
   DESC
   param :enabled_repos, Hash, :required => true do
     param :repos, Array, :required => true do
-      params :baseurl, Array, :description=> "List of enabled repo urls for the repo (Only first is used.)", :required => false
+      params :baseurl, Array, :description => "List of enabled repo urls for the repo (Only first is used.)", :required => false
     end
   end
   def enabled_repos

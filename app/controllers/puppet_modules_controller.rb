@@ -18,7 +18,7 @@ class PuppetModulesController < ApplicationController
   def rules
     view = lambda do
       !Repository.readable_in_org(current_organization).where(
-          :pulp_id=>@puppet_module.repoids).empty?
+          :pulp_id => @puppet_module.repoids).empty?
     end if @puppet_module
 
     auto_complete = lambda { @def_filter.content_view_definition.readable? }

@@ -17,7 +17,7 @@ class OrganizationsController < ApplicationController
   before_filter :find_organization, :only => [:edit, :update, :destroy, :events, :default_info]
   before_filter :find_organization_by_id, :only => [:environments_partial, :download_debug_certificate]
   before_filter :authorize #call authorize after find_organization so we call auth based on the id instead of cp_id
-  before_filter :setup_options, :only=>[:index, :items]
+  before_filter :setup_options, :only => [:index, :items]
   before_filter :search_filter, :only => [:auto_complete_search]
   skip_before_filter :require_org
 
@@ -73,15 +73,15 @@ class OrganizationsController < ApplicationController
   def items
     ids = Organization.without_deleting.readable.collect(&:id)
     render_panel_direct(Organization, @panel_options, params[:search], params[:offset], [:name_sort, 'asc'],
-                        {:default_field => :name, :filter=>[{"id"=>ids}]})
+                        {:default_field => :name, :filter => [{"id" => ids}]})
   end
 
   def show
     if params[:id] == 'new'
-      render :partial=>"new"
+      render :partial => "new"
     else
       find_organization
-      render :partial=>"common/list_update", :locals => {:item => @organization, :accessor => 'label', :columns => ['name']}
+      render :partial => "common/list_update", :locals => {:item => @organization, :accessor => 'label', :columns => ['name']}
     end
   end
 
@@ -119,7 +119,7 @@ class OrganizationsController < ApplicationController
       else
         notify.message env_label_assigned unless env_label_assigned.blank?
       end
-      render :partial=>"common/list_item", :locals=>{:item=>@organization, :accessor=>"label", :columns=>['name'], :name=>controller_display_name}
+      render :partial => "common/list_item", :locals => {:item => @organization, :accessor => "label", :columns => ['name'], :name => controller_display_name}
     else
       notify.message _("'%s' did not meet the current search criteria and is not being shown.") % @organization["name"]
       render :json => { :no_match => true }
@@ -144,7 +144,7 @@ class OrganizationsController < ApplicationController
       @org_label = _("Make this my default organization.")
     end
     @env_choices =  @organization.environments.collect {|p| [p.name, p.name]}
-    render :partial=>"edit", :locals=>{:organization=>@organization, :editable=>@organization.editable?, :name => controller_display_name, :org_label=>@org_label}
+    render :partial => "edit", :locals => {:organization => @organization, :editable => @organization.editable?, :name => controller_display_name, :org_label => @org_label}
   end
 
   def update
@@ -173,7 +173,7 @@ class OrganizationsController < ApplicationController
   end
 
   def destroy
-    found_errors= @organization.validate_destroy(current_organization)
+    found_errors = @organization.validate_destroy(current_organization)
     if found_errors
       notify.error found_errors
       render :text => found_errors[1], :status => :bad_request
@@ -187,12 +187,12 @@ class OrganizationsController < ApplicationController
     id = @organization.label
     OrganizationDestroyer.destroy @organization, :notify => true
     notify.success _("Organization '%s' has been scheduled for background deletion.") % @organization.name
-    render :partial => "common/list_remove", :locals => {:id=> id, :name=> controller_display_name}
+    render :partial => "common/list_remove", :locals => {:id => id, :name => controller_display_name}
   end
 
   def environments_partial
     @organization = Organization.find(params[:id])
-    env_user_id = params[:user_id]?params[:user_id].to_s : nil
+    env_user_id = params[:user_id] ? params[:user_id].to_s : nil
     if env_user_id == current_user.id.to_s && (!current_user.editable?)
       accessible_envs = KTEnvironment.systems_registerable(@organization)
     else
@@ -201,7 +201,7 @@ class OrganizationsController < ApplicationController
 
     setup_environment_selector(@organization, accessible_envs)
     @environment = first_env_in_path(accessible_envs, true, @organization)
-    render :partial=>"environments", :locals=>{:accessible_envs => accessible_envs}
+    render :partial => "environments", :locals => {:accessible_envs => accessible_envs}
   end
 
   def events
@@ -262,7 +262,7 @@ class OrganizationsController < ApplicationController
                :ajax_load  => true,
                :ajax_scroll => items_organizations_path,
                :enable_create => Organization.creatable?,
-               :search_class=>Organization}
+               :search_class => Organization}
   end
 
   def search_filter

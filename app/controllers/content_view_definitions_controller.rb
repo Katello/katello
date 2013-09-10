@@ -69,17 +69,17 @@ class ContentViewDefinitionsController < ApplicationController
     {
       :create => {:view_definition => [:name, :label, :description]},
       :update => {:view_definition => [:name, :description]},
-      :update_content => [:id, :products, :repos]
+      :update_content => [:id, :products, :repos, :puppet_repository_id]
     }
   end
 
   def items
     render_panel_direct(ContentViewDefinition, @panel_options, params[:search], params[:offset], [:name_sort, 'asc'],
-        {:default_field => :name, :filter=>{:organization_id=>[current_organization.id]}})
+        {:default_field => :name, :filter => {:organization_id => [current_organization.id]}})
   end
 
   def show
-    render :partial=>"common/list_update", :locals=>{:item=>@view_definition, :accessor=>"id", :columns=>['name']}
+    render :partial => "common/list_update", :locals => {:item => @view_definition, :accessor => "id", :columns => ['name']}
   end
 
   def new
@@ -100,8 +100,8 @@ class ContentViewDefinitionsController < ApplicationController
     notify.success _("Content view definition '%s' was created.") % @view_definition['name']
 
     if search_validate(ContentViewDefinition, @view_definition.id, params[:search])
-      render :partial=>"common/list_item", :locals=>{:item=>@view_definition, :initial_action=>:views, :accessor=>"id",
-                                                     :columns=>['name'], :name=>controller_display_name}
+      render :partial => "common/list_item", :locals => {:item => @view_definition, :initial_action => :views, :accessor => "id",
+                                                     :columns => ['name'], :name => controller_display_name}
     else
       notify.message _("'%s' did not meet the current search criteria and is not being shown.") % @view_definition["name"]
       render :json => { :no_match => true }
@@ -146,15 +146,15 @@ class ContentViewDefinitionsController < ApplicationController
   def destroy
     if @view_definition.destroy
       notify.success _("Content view definition '%s' was deleted.") % @view_definition[:name]
-      render :partial => "common/list_remove", :locals => {:id=>params[:id], :name=>controller_display_name}
+      render :partial => "common/list_remove", :locals => {:id => params[:id], :name => controller_display_name}
     end
   end
 
   def publish_setup
     # retrieve the form to enable the user to request a publish
     render :partial => "publish",
-           :locals => {:view_definition => @view_definition, :editable=>@view_definition.editable?,
-                       :name=>controller_display_name}
+           :locals => {:view_definition => @view_definition, :editable => @view_definition.editable?,
+                       :name => controller_display_name}
   end
 
   def publish
@@ -212,12 +212,12 @@ class ContentViewDefinitionsController < ApplicationController
              :locals => {:view_definition => @view_definition,
                          :view_definitions => ContentViewDefinition.readable(current_organization).non_composite,
                          :views => component_views,
-                         :editable=>@view_definition.editable?,
-                         :name=>controller_display_name}
+                         :editable => @view_definition.editable?,
+                         :name => controller_display_name}
     else
       render :partial => "single_definition_content",
-             :locals => {:view_definition => @view_definition, :editable=>@view_definition.editable?,
-                         :name=>controller_display_name}
+             :locals => {:view_definition => @view_definition, :editable => @view_definition.editable?,
+                         :name => controller_display_name}
     end
   end
 
@@ -236,9 +236,19 @@ class ContentViewDefinitionsController < ApplicationController
       @view_definition.repository_ids = repo_ids
     end
 
+    if params[:puppet_repository_id]
+      if params[:puppet_repository_id].blank?
+        @view_definition.puppet_repository_id = ""
+      else
+        repo = Repository.libraries_content_readable(current_organization)
+          .find(params[:puppet_repository_id])
+        @view_definition.puppet_repository_id = repo.id
+      end
+    end
+
     @view_definition.save!
 
-    notify.success _("Successfully updated content for content view definition '%s'.") % @view_definition.name
+    notify.success((_("Successfully updated content for content view definition '%s'.") % @view_definition.name), :persist_only => true)
     render :nothing => true
   end
 

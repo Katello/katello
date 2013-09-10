@@ -1,13 +1,13 @@
 class MigrateEnvironmentDefaultContentViewToVersion < ActiveRecord::Migration
   def self.up
-    change_column :content_views, :environment_default_id, :integer, :null=>true
+    change_column :content_views, :environment_default_id, :integer, :null => true
     if Katello.config.katello?
       Organization.all.each do |org|
-        default_view = ContentView.create!(:name=>"Default Organization View",
-                        :organization=>org,
-                        :default=>true)
+        default_view = ContentView.create!(:name => "Default Organization View",
+                        :organization => org,
+                        :default => true)
         (org.environments + [org.library]).each do |env|
-          old_view = ContentView.where(:environment_default_id=>env.id).first
+          old_view = ContentView.where(:environment_default_id => env.id).first
           cve = old_view.content_view_environments.first
           version = ContentViewVersion.find(old_view.version(env))
 
@@ -25,13 +25,13 @@ class MigrateEnvironmentDefaultContentViewToVersion < ActiveRecord::Migration
   end
 
   def self.down
-    add_column :content_views, :environment_default_id, :integer, :null=>true
+    add_column :content_views, :environment_default_id, :integer, :null => true
     Organization.all.each do |org|
       org_default_view = org.default_content_view
       (org.environments + [org.library]).each do |env|
-        cv = ContentView.create!(:organization=>org, :name=>"Default View for #{env.name}",
-                             :default=>true, :environment_default_id=>env.id)
-        cve = org_default_view.content_view_environments.where(:environment_id=>env.id).first
+        cv = ContentView.create!(:organization => org, :name => "Default View for #{env.name}",
+                             :default => true, :environment_default_id => env.id)
+        cve = org_default_view.content_view_environments.where(:environment_id => env.id).first
 
         cve.content_view = cv
         cve.save!

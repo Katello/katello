@@ -2,7 +2,6 @@ module Api
   module V2
     module Rendering
 
-
       def respond_for_show(options = {})
         respond_with_template_resource(options[:template] || 'show', controller_name, options)
       end
@@ -68,5 +67,4 @@ module Api
     end
   end
 end
-
 

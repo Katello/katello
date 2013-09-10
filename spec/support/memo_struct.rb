@@ -10,10 +10,9 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-
 # Implementation of OpenStruct without obj.id deprectaion warning
 class MemoStruct
-  def initialize( hash = {})
+  def initialize(hash = {})
     @hash = hash
   end
 

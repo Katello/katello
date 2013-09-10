@@ -73,12 +73,10 @@ class LegacyPromotionContentViewChanges < ActiveRecord::Migration
         execute("update content_view_versions set version = #{version + 1} where id = #{legacy_cvv.id}")
       end
 
-
-
       # Update every system whose cv is null and make em point to "Legacy View"
       clause = %{
         update systems set content_view_id = #{legacy_view.id} where
-               (content_view_id is null) and id in ( select s.id from systems as s
+               (content_view_id is null) and id in (select s.id from systems as s
                     inner join environments as env  on env.id = s.environment_id
                     where env.organization_id = #{org.id})
       }
