@@ -37,7 +37,7 @@ class Api::V1::ContentUploadsController < Api::V1::ApiController
   param :repo_id, :identifier, :required => true, :desc => "repository id"
   param :id, :identifier, :required => true, :desc => "upload request id"
   param :offset, :number, :required => true, :desc => "the offset at which Pulp will store the file contents"
-  param :content, :required => true, :desc => "file contents"
+  param :content, File, :required => true, :desc => "file contents"
   def upload_bits
     Katello.pulp_server.resources.content.upload_bits(params[:id], params[:offset], params[:content])
     render :nothing => true
