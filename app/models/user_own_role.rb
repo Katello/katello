@@ -12,6 +12,8 @@
 
 class UserOwnRole < Role
 
+  use_index_of Role  if Katello.config.use_elasticsearch
+
   def self_role_for_user
     users.first
   end
