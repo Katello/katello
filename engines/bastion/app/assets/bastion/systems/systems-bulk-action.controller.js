@@ -66,7 +66,7 @@ angular.module('Bastion.systems').controller('SystemsBulkActionController',
             workingMode: false
         };
 
-        $scope.removeSystems = function() {
+        $scope.performRemoveSystems = function() {
             var success, error, deferred = $q.defer();
 
             $scope.removeSystems.confirm = false;
@@ -230,9 +230,6 @@ angular.module('Bastion.systems').controller('SystemsBulkActionController',
             $scope.actionParams['content_type'] = content.contentType;
             $scope.actionParams['content'] = content.content.split(/ *, */);
             $scope.actionParams['ids'] = $scope.getSelectedSystemIds();
-        }
-
-        function performContentAction(action, content) {
         }
 
         function autoAttachSubscriptionsInProgress() {
