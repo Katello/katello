@@ -14,8 +14,8 @@ attributes :major, :minor
 attributes :gpg_key_id
 attributes :content_id, :content_view_version_id, :library_instance_id
 
-if @resource.respond_to?(:pulp_repo_facts)
-  node :content_counts do |repo|
+node :content_counts do |repo|
+  if repo.respond_to?(:pulp_repo_facts)
     repo.pulp_repo_facts['content_unit_counts']
   end
 end

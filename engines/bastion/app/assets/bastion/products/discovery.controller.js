@@ -31,7 +31,6 @@ angular.module('Bastion.products').controller('DiscoveryController',
     function($scope, $q, $timeout, $http, Task, Organization, CurrentOrganization) {
         var transformRows, setDiscoveryDetails;
 
-        //Start discovery Stuff
         $scope.discovery = {url: ''};
         $scope.panel.loading = false;
         $scope.discoveryTable = {rows: []};
@@ -40,9 +39,14 @@ angular.module('Bastion.products').controller('DiscoveryController',
             $scope.discovery.url = task.parameters.url;
             $scope.discoveryTable.rows = transformRows(task.result);
             $scope.discovery.pending = task.pending;
+
+            if (!task.pending) {
+                $scope.discovery.working = false;
+            }
         };
 
         $scope.setupSelected = function() {
+            $scope.panel.loading = true;
             $scope.discovery.selected = $scope.discoveryTable.getSelected();
             $scope.transitionTo('products.discovery.create');
         };
@@ -53,6 +57,7 @@ angular.module('Bastion.products').controller('DiscoveryController',
         };
 
         $scope.cancelDiscovery = function() {
+            $scope.discovery.working = true;
             Organization.cancelRepoDiscover({id: CurrentOrganization});
         };
 
@@ -78,7 +83,7 @@ angular.module('Bastion.products').controller('DiscoveryController',
         Organization.get({id: CurrentOrganization}, function(org) {
             if (org['discovery_task_id']) {
                 Task.get({id: org['discovery_task_id']}, function(task){
-                    setDiscoveryDetails(task);
+                    pollTask(task);
                 });
             }
         });

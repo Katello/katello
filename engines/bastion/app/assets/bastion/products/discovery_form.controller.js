@@ -53,6 +53,7 @@ angular.module('Bastion.products').controller('DiscoveryFormController',
             })
             .success(function(response) {
                 $scope.createRepoChoices.product.label = response;
+                $scope.panel.loading = false;
             })
             .error(function(response) {
                 $scope.productForm.label.$setValidity('', false);
