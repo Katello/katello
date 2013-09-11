@@ -1,0 +1,159 @@
+<div class="flash_hud" ng-show="status.showSuccess">
+  <a class="control" title="Close" ng-click="status.showSuccess = false"></a>
+  <ul class="flash_messages success">
+    <li>{{ status.success }}</li>
+  </ul>
+</div>
+
+<div class="flash_hud" ng-show="status.showError">
+  <a class="control" title="Close" ng-click="status.showError = false"></a>
+  <ul class="flash_messages error">
+    <li>{{ "Error occurred:" | i18n }}</li>
+    <ul>
+      <li ng-repeat="error in status.errors">{{ error }}</li>
+    </ul>
+  </ul>
+</div>
+
+<div class="details">
+  <section>
+    <h4>{{ "System Properties" | i18n }}</h4>
+
+    <div class="detail">
+      <span class="info-label">{{ "System Groups" | i18n }}</span>
+      <span class="info-value"
+            alch-edit-multiselect="systemGroups.groups"
+            formatter="arrayToString"
+            options="getSystemGroups()"
+            button-config="addRemove"
+            on-add="confirmSystemGroupAction('add')"
+            on-remove="confirmSystemGroupAction('remove')"
+            display-value-default='{{ "Click to select..." | i18n }}'
+            forced-working-mode="systemGroups.workingMode">
+      </span>
+    </div>
+
+    <div class="inline-confirmation" ng-show="systemGroups.confirm">
+      <div class="confirmation_text" ng-show="systemGroups.action == 'add'">
+        {{ "Are you sure you want to add the %systemCount systems(s) selected to the system group(s) chosen?" | i18n: {systemCount: getSelectedSystemIds().length} }}
+      </div>
+      <div class="confirmation_text" ng-show="systemGroups.action == 'remove'">
+        {{ "Are you sure you want to remove the %systemCount systems(s) selected from the system group(s) chosen?" | i18n: {systemCount: getSelectedSystemIds().length} }}
+      </div>
+      <button class="btn small" ng-click="systemGroups.confirm = false">{{ "No" | i18n }}</button>
+      <button class="btn small" ng-click="performSystemGroupAction()">{{ "Yes" | i18n }}</button>
+    </div>
+
+    <div class="divider"></div>
+  </section>
+</div>
+
+<div class="details">
+  <section>
+    <h4>{{ "System Content Management" | i18n }}</h4>
+
+    <span ng-show="content.workingMode">
+      <i class="icon-spinner inline-icon icon-spin"></i>
+      <span>{{ "Working" | i18n }}</span>
+    </span>
+
+    <form name="systemContentForm" class="form" ng-hide="content.workingMode">
+
+      <div>
+        <input type="radio"
+               ng-model="content.contentType"
+               ng-change="updatePlaceholder(content.contentType)"
+               ng-disabled="content.confirm"
+               value="package">
+        <label for="package">{{ "Package" | i18n }}</label>
+
+        <input type="radio"
+               ng-model="content.contentType"
+               ng-change="updatePlaceholder(content.contentType)"
+               ng-disabled="content.confirm"
+               value="package_group">
+        <label for="package_group">{{ "Package Group" | i18n }}</label>
+
+        <input type="radio"
+               ng-model="content.contentType"
+               ng-change="updatePlaceholder(content.contentType)"
+               ng-disabled="content.confirm"
+               value="errata">
+        <label for="errata">{{ "Errata" | i18n }}</label>
+      </div>
+
+      <div>
+        <input name="label"
+               type="text"
+               placeholder="{{ content.placeholder }}"
+               ng-model="content.content"
+               ng-disabled="content.confirm"
+               required>
+      </div>
+
+      <div>
+        <button class="btn small"
+                ng-click="confirmContentAction('install', content)"
+                ng-disabled="!systemContentForm.$valid || content.confirm">
+          {{ "Install" | i18n }}
+        </button>
+
+        <button class="btn small"
+                ng-click="confirmContentAction('update', content)"
+                ng-disabled="!systemContentForm.$valid || content.confirm"
+                ng-hide="content.contentType == 'errata'">
+          {{ "Update" | i18n }}
+        </button>
+
+        <button class="btn small"
+                ng-click="confirmContentAction('remove', content)"
+                ng-disabled="!systemContentForm.$valid || content.confirm"
+                ng-hide="content.contentType == 'errata'">
+          {{ "Remove" | i18n }}
+        </button>
+      </div>
+
+      <div class="inline-confirmation" ng-show="content.confirm">
+        <div class="confirmation_text" ng-show="content.action == 'install'">
+          {{ "Are you sure you want to install %content on the %systemCount system(s) selected?" | i18n: {content: content.content, systemCount: getSelectedSystemIds().length} }}
+        </div>
+        <div class="confirmation_text" ng-show="content.action == 'update'">
+          {{ "Are you sure you want to update %content on the %systemCount system(s) selected?" | i18n: {content: content.content, systemCount: getSelectedSystemIds().length} }}
+        </div>
+        <div class="confirmation_text" ng-show="content.action == 'remove'">
+          {{ "Are you sure you want to remove %content from the %systemCount system(s) selected?" | i18n: {content: content.content, systemCount: getSelectedSystemIds().length} }}
+        </div>
+
+        <button class="btn small" ng-click="content.confirm = false">{{ "No" | i18n }}</button>
+        <button class="btn small" ng-click="performContentAction()">{{ "Yes" | i18n }}</button>
+      </div>
+
+    </form>
+
+    <div class="divider"></div>
+  </section>
+</div>
+
+<div class="details">
+  <section>
+    <h4>{{ "System Subscriptions" | i18n }}</h4>
+    <button class="btn"
+            ng-click="subscription.confirm = true"
+            ng-disabled="subscription.workingMode">
+      {{ "Auto-attach available subscriptions to all systems" | i18n }}
+    </button>
+
+    <span ng-show="subscription.workingMode">
+      <i class="icon-spinner inline-icon icon-spin"></i>
+      <span>{{ "Working" | i18n }}</span>
+    </span>
+
+    <div class="inline-confirmation" ng-show="subscription.confirm">
+      <div class="confirmation_text">
+        {{ "Are you sure you want to auto-attach available subscriptions to all %systemCount systems?" | i18n: {systemCount: table.resource.total} }}
+      </div>
+      <button class="btn small" ng-click="subscription.confirm = false">{{ "No" | i18n }}</button>
+      <button class="btn small" ng-click="performAutoAttachSubscriptions()">{{ "Yes" | i18n }}</button>
+    </div>
+  </section>
+</div>

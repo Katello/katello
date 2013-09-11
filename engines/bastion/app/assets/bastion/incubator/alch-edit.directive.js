@@ -70,16 +70,26 @@ angular.module('alchemy')
         };
 
         $scope.save = function() {
-            var handleSave;
+            var action = $scope.handleSave({ value: $scope.model });
+            handleAction(action);
+        };
 
+        $scope.add = function() {
+            var action = $scope.handleAdd({ value: $scope.model });
+            handleAction(action);
+        };
+
+        $scope.remove = function() {
+            var action = $scope.handleRemove({ value: $scope.model });
+            handleAction(action);
+        };
+
+        function handleAction(action) {
             $scope.editMode = false;
             $scope.workingMode = true;
 
-            handleSave = $scope.handleSave({ value: $scope.model });
-
-            if (handleSave !== undefined && handleSave.hasOwnProperty('then')) {
-
-                handleSave.then(
+            if (action !== undefined && action.hasOwnProperty('then')) {
+                action.then(
                     function() {
                         $scope.updateDisplay($scope.model);
                         $scope.workingMode = false;
@@ -89,10 +99,11 @@ angular.module('alchemy')
                         $scope.editMode = true;
                     }
                 );
+
             } else {
                 $scope.workingMode = false;
             }
-        };
+        }
 
         $scope.cancel = function() {
             $scope.editMode = false;
@@ -141,6 +152,10 @@ angular.module('alchemy')
             } else {
                 $scope.displayValue = $scope.model;
             }
+            if ((($scope.displayValue === undefined) || ($scope.displayValue.length === 0)) &&
+                $scope.displayValueDefault) {
+                $scope.displayValue = $scope.displayValueDefault;
+            }
         };
 
         // Watch the model and displayed values for changes
@@ -149,6 +164,12 @@ angular.module('alchemy')
             if (newValue) {
                 $scope.updateDisplay($scope.model);
             }
+        });
+
+        // Watch forcedWorkingMode and update the working mode
+        // accordingly.  This allows a user to set working mode.
+        $scope.$watch('forcedWorkingMode', function(newValue) {
+            $scope.workingMode = newValue;
         });
     }])
     .directive('alchEditText', function() {
@@ -214,7 +235,12 @@ angular.module('alchemy')
                 formatterOptions: '@formatterOptions',
                 handleOptions: '&options',
                 handleSave: '&onSave',
-                handleCancel: '&onCancel'
+                handleAdd: '&onAdd',
+                handleRemove: '&onRemove',
+                handleCancel: '&onCancel',
+                buttonConfig: '@buttonConfig',
+                forcedWorkingMode: '=',
+                displayValueDefault: '@displayValueDefault'
             },
             controller: 'AlchEditMultiselectController'
         };

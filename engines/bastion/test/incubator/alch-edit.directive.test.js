@@ -20,7 +20,9 @@ describe('Directive: alchEdit', function() {
     beforeEach(module('alchemy',
         'incubator/views/alch-edit.html',
         'incubator/views/alch-edit-add-item.html',
-        'incubator/views/alch-edit-multiselect.html'));
+        'incubator/views/alch-edit-add-remove-cancel.html',
+        'incubator/views/alch-edit-multiselect.html',
+        'incubator/views/alch-edit-save-cancel.html'));
 
     beforeEach(module(function($provide) {
         testItem = {

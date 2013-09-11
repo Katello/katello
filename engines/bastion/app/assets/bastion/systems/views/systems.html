@@ -17,6 +17,11 @@
              on-enter="table.search(table.searchTerm)">
       <span class="result-count">Showing {{ table.rows.length }} of {{ table.resource.subtotal }} ({{ table.resource.total }} Total) Systems</span>
     </div>
+    <div class="nutupane-actions fr">
+      <button class="btn btn-primary" ng-click="transitionTo('systems.bulk-actions.list')">
+        {{ "Bulk Actions" | i18n }}
+      </button>
+    </div>
     <div class="fr select-action">
       <span>{{ table.numSelected }} Selected</span>
       <span>|</span>
