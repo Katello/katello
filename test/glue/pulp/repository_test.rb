@@ -152,40 +152,44 @@ class GluePulpRepoTest < GluePulpRepoTestBase
 
 end
 
-# TODO: uncomment this once runcible 1.0.4 or greater is out
-#class GluePulpPuppetRepoTest < GluePulpRepoTestBase
+class GluePulpPuppetRepoTest < GluePulpRepoTestBase
 
-  #@@p_forge = nil
+  @@p_forge = nil
 
-  #def self.before_suite
-    #super
-    #@@p_forge = Repository.find(@loaded_fixtures['repositories']['p_forge']['id'])
-    #@@p_forge.relative_path = '/test_path/'
-    #@@p_forge.feed = "http://davidd.fedorapeople.org/repos/random_puppet/"
+  def self.before_suite
+    super
+    @@p_forge = Repository.find(@loaded_fixtures['repositories']['p_forge']['id'])
+    @@p_forge.relative_path = '/test_path/'
+    @@p_forge.feed = "http://davidd.fedorapeople.org/repos/random_puppet/"
 
-    #VCR.use_cassette('glue_pulp_repo_helper') do
-      #@@p_forge.create_pulp_repo
-    #end
-  #end
+    VCR.use_cassette('glue_pulp_repo_helper') do
+      @@p_forge.create_pulp_repo
+    end
+  end
 
-  #def self.after_suite
-    #VCR.use_cassette('glue_pulp_repo_helper') do
-      #@@p_forge.destroy_repo
-    #end
-  #end
+  def self.after_suite
+    VCR.use_cassette('glue_pulp_repo_helper') do
+      @@p_forge.destroy_repo
+    end
+  end
 
-  #def setup
-    #super
-    #User.current = @@admin
-    #@p_forge = @@p_forge
-    #@p_forge.relative_path = '/test_path/'
-  #end
+  def setup
+    super
+    User.current = @@admin
+    @p_forge = @@p_forge
+    @p_forge.relative_path = '/test_path/'
+  end
 
-  #def test_generate_distributors
-    #refute_nil @@p_forge.find_distributor
-  #end
+  def test_generate_distributors
+    refute_nil @@p_forge.find_distributor
+  end
 
-#end
+  def test_upload_puppet_module
+    @filepath = File.join(Rails.root, "test/fixtures/puppet/puppetlabs-ntp-2.0.1.tar.gz")
+    assert @p_forge.upload_content(@filepath)
+    assert_includes @p_forge.puppet_modules.map(&:name), "puppetlabs-ntp"
+  end
+end
 
 class GluePulpRepoRequiresSyncTest < GluePulpRepoTestBase
 
@@ -467,28 +471,4 @@ class GluePulpRepoRequiresSyncAndPromoteTest < GluePulpRepoTestBase
     assert @@cloned_repo.delete_distribution("ks-Test Family-TestVariant-16-x86_64")
   end
 
-end
-
-class GluePulpRepoUploadContentTest < GluePulpRepoTestBase
-
-  def setup
-    @filepath = File.join(Rails.root, "test/fixtures/puppet/puppetlabs-ntp-2.0.1.tar.gz")
-  end
-
-  def test_upload_puppet_content
-    content = mock(:create_upload_request => {"upload_id" => 1},
-                   :upload_bits => true,
-                   :import_into_repo => true,
-                   :delete_upload_request => true)
-    mock_resources = Class.new do
-      define_method(:content) { content }
-    end
-    mock_server = Class.new do
-      define_method(:resources) { mock_resources.new }
-    end
-    Katello.pulp_server = mock_server.new
-
-    @pforge = Repository.find(repositories(:p_forge))
-    @pforge.upload_content(@filepath)
-  end
 end
