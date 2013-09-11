@@ -17,11 +17,9 @@ class RepositoriesController < ApplicationController
   respond_to :html, :js
 
   before_filter :find_provider, :only => [:new, :create, :edit, :destroy, :update_gpg_key]
-  before_filter :find_product, :only => [:new, :create, :edit, :destroy, :update_gpg_key,
-    :upload_content]
+  before_filter :find_product, :only => [:new, :create, :edit, :destroy, :update_gpg_key]
   before_filter :authorize
-  before_filter :find_repository, :only => [:edit, :destroy, :enable_repo, :update_gpg_key,
-    :upload_content]
+  before_filter :find_repository, :only => [:edit, :destroy, :enable_repo, :update_gpg_key]
 
   def rules
     read_any_test = lambda{Provider.any_readable?(current_organization)}
@@ -36,8 +34,7 @@ class RepositoriesController < ApplicationController
       :update_gpg_key => edit_test,
       :destroy => edit_test,
       :enable_repo => org_edit,
-      :auto_complete_library => read_any_test,
-      :upload_content => edit_test
+      :auto_complete_library => read_any_test
     }
   end
 
@@ -132,19 +129,6 @@ class RepositoriesController < ApplicationController
       label = _("%{repo} (Product: %{product})") % {:repo => repo.name, :product => repo.product}
       {:id => repo.id, :label => label, :value => repo.name}
     end
-  end
-
-  def upload_content
-    filepath = params[:repository].try(:[], :content).try(:path)
-    if filepath
-      @repository.upload_content(filepath)
-      filename = params[:repository][:content].original_filename
-      notify.success _("File '%{file}' successfully imported into '%{repo}'") %
-        {:repo => @repository.name, :file => filename}
-    else
-      notify.error _("File not uploaded.")
-    end
-    render :nothing => true
   end
 
   protected

@@ -11,7 +11,6 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Glue::Pulp::Repo
-  CONTENT_UPLOAD_LIMIT = 500 * 1024
 
   # TODO: move into submodules
   # rubocop:disable MethodLength
@@ -697,9 +696,9 @@ module Glue::Pulp::Repo
 
       File.open(filepath, "rb") do |file|
         offset = 0
-        while (chunk = file.read(CONTENT_UPLOAD_LIMIT))
+        while (chunk = file.read(Katello.config.pulp.upload_chunk_size))
           Katello.pulp_server.resources.content.upload_bits(upload_id, offset, chunk)
-          offset += CONTENT_UPLOAD_LIMIT
+          offset += Katello.config.pulp.upload_chunk_size
         end
       end
 
