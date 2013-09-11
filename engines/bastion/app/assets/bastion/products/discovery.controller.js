@@ -43,8 +43,8 @@ angular.module('Bastion.products').controller('DiscoveryController',
         };
 
         $scope.defaultName = function(basePath){
-            //Remove trailing slash and replace rest with space
-            return basePath.replace(/\/$/, "").replace(/\//g, ' ');
+            //Remove leading/trailing slash and replace rest with space
+            return basePath.replace(/^\//, "").replace(/\/$/, "").replace(/\//g, ' ');
         };
 
         $scope.cancelDiscovery = function(){
