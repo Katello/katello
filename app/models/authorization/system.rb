@@ -52,6 +52,14 @@ module Authorization::System
       registerable = (env || org).systems_registerable?
       subscribable && registerable
     end
+
+    def any_systems_editable?(systems)
+      systems.collect{ |s| false unless s.editable? }.compact.empty?
+    end
+
+    def any_systems_deletable?(systems)
+      systems.collect{ |s| false unless s.deletable? }.compact.empty?
+    end
   end
 
   included do

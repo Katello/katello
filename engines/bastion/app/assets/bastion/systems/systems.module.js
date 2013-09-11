@@ -25,7 +25,7 @@ angular.module('Bastion.systems', [
     'ui.compat',
     'Bastion.widgets',
     'Bastion.subscriptions',
-    'Bastion.system-groups',
+    'Bastion.system-groups'
 ]);
 
 /**
@@ -100,31 +100,25 @@ angular.module('Bastion.systems').config(['$stateProvider', function($stateProvi
         templateUrl: 'systems/details/views/system-subscriptions.html'
     });
 
-    $stateProvider.state('systems.alter-content', {
+    $stateProvider.state("systems.bulk-actions", {
+        abstract: true,
+        collapsed: true,
         views: {
+            'table': {
+                templateUrl: 'systems/views/systems-table-collapsed.html'
+            },
             'action-panel': {
                 controller: 'SystemsBulkActionController',
-                templateUrl: 'systems/views/alter-content-bulk.html'
+                templateUrl: 'systems/views/bulk-actions.html'
             }
         }
     });
 
-    $stateProvider.state('systems.alter-system-groups', {
-        views: {
-            'action-panel': {
-                controller: 'SystemsBulkActionController',
-                templateUrl: 'systems/views/alter-systems-group-bulk.html'
-            }
-        }
-    });
-
-    $stateProvider.state('systems.bulk-delete', {
-        views: {
-            'action-panel': {
-                controller: 'SystemsBulkActionController',
-                templateUrl: 'systems/views/systems-delete-bulk.html'
-            }
-        }
+    $stateProvider.state('systems.bulk-actions.list', {
+        url: '/systems/bulk-actions',
+        collapsed: true,
+        controller: 'SystemsBulkActionController',
+        templateUrl: 'systems/views/bulk-actions-list.html'
     });
 
     $stateProvider.state('systems.details.packages', {

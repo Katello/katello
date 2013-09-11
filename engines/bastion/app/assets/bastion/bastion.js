@@ -74,6 +74,9 @@
 //= require "bastion/environments/environments.module"
 //= require "bastion/environments/environment.factory"
 
+//= require "bastion/organizations/organizations.module.js"
+//= require_tree "./organizations"
+
 //= require "bastion/products/products.module.js"
 //= require_tree "./products"
 
@@ -82,3 +85,6 @@
 
 //= require "bastion/repositories/repositories.module.js"
 //= require_tree "./repositories"
+
+//= require "bastion/tasks/tasks.module.js"
+//= require_tree "./tasks"
