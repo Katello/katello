@@ -26,7 +26,7 @@ describe('Directive: alchTable', function() {
 
     beforeEach(function() {
         scope.table = {};
-        scope.table.items = [{
+        scope.table.rows = [{
             name: 'Spring Bock',
             style: 'ale'
         },{
@@ -45,7 +45,7 @@ describe('Directive: alchTable', function() {
                   '</tr>' +
                 '</thead>' +
                 '<tbody>' +
-                  '<tr alch-table-row ng-repeat="item in table.items" row-select>' +
+                  '<tr alch-table-row ng-repeat="item in table.rows" row-select="item">' +
                     '<td alch-table-cell>{{ item.name }}</td>' +
                     '<td alch-table-cell>{{ item.style }}</td>' +
                  '</tr>' +
@@ -96,25 +96,19 @@ describe('Directive: alchTable', function() {
         });
 
         it("should select all rows", function() {
-            var row = { selected: false };
-
-            tableController.addRow(row);
             tableController.selectAll(true);
 
-            expect(scope.table.numSelected).toEqual(1);
+            expect(scope.table.numSelected).toEqual(2);
             expect(scope.table.allSelected).toEqual(true);
-            expect(row.selected).toEqual(true);
+            expect(scope.table.rows[0].selected).toEqual(true);
         });
 
         it("should unselect all rows", function() {
-            var row = { selected: true };
-
-            tableController.addRow(row);
             tableController.selectAll(false);
 
             expect(scope.table.numSelected).toEqual(0);
             expect(scope.table.allSelected).toEqual(false);
-            expect(row.selected).toEqual(false);
+            expect(scope.table.rows[0].selected).toEqual(false);
         });
 
     });
@@ -129,7 +123,7 @@ describe('Directive: alchTable', function() {
         it('should have two rows', function() {
             var rows = tableElement.find('tbody').find('tr');
 
-            expect(rows.length).toBe(scope.table.items.length);
+            expect(rows.length).toBe(scope.table.rows.length);
         });
     });
 
@@ -161,10 +155,10 @@ describe('Directive: alchTable', function() {
             it("should append a column", function() {
                 var col1 = {};
 
-                expect(scope.row.columns).toEqual([]);
+                expect(scope.header.columns).toEqual([]);
 
                 tableController.addColumn(col1);
-                expect(scope.row.columns).toEqual([col1]);
+                expect(scope.header.columns).toEqual([col1]);
             });
         });
     });
