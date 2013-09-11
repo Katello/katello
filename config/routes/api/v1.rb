@@ -244,6 +244,12 @@ Src::Application.routes.draw do
         resources :puppet_modules, :only => [:index, :show] do
           get :search, :on => :collection
         end
+        resources :content_uploads, :controller => :content_uploads, :only => [:create, :destroy] do
+          member do
+            put :upload_bits
+            post :import_into_repo
+          end
+        end
         member do
           get :package_groups
           get :package_group_categories
