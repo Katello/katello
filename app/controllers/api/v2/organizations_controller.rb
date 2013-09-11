@@ -52,6 +52,7 @@ class Api::V2::OrganizationsController < Api::V1::OrganizationsController
   end
 
   api :PUT, "/organizations/:label/repo_discover", "Discover Repositories"
+  param :label, String, :desc => "Organization label"
   param :url, String, :desc => "base url to perform repo discovery on"
   def repo_discover
     fail _("url not defined.") if params[:url].blank?
@@ -59,6 +60,9 @@ class Api::V2::OrganizationsController < Api::V1::OrganizationsController
     respond_for_async :resource => task
   end
 
+  api :PUT, "/organizations/:label/cancel_repo_discover", "Cancel repository discovery"
+  param :label, String, :desc => "Organization label"
+  param :url, String, :desc => "base url to perform repo discovery on"
   def cancel_repo_discover
     task = @organization.repo_discovery_task
     if task.pending?

@@ -16,15 +16,21 @@
  * @name  Bastion.products.controller:DiscoveryFormController
  *
  * @requires $scope
+ * @requires $q
+ * @requires $http
+ * @requires CurrentOrganization
+ * @requires Provider
  * @requires Product
+ * @requires Repository
  *
  * @description
- *   Provides the functionality for the product details action pane.
+ *   Provides the functionality for the repo creation as part of
+ *      repository discovery.
  */
 angular.module('Bastion.products').controller('DiscoveryFormController',
     ['$scope', '$q', '$http', 'CurrentOrganization', 'Provider', 'Product', 'Repository',
     function($scope, $q, $http, CurrentOrganization, Provider, Product, Repository) {
-        var fetchProviders, fetchProducts, filterEditable;
+        var filterEditable;
 
         angular.forEach($scope.discovery.selected, function(repo) {
             //Add a fake form to keep track of validations
@@ -35,33 +41,10 @@ angular.module('Bastion.products').controller('DiscoveryFormController',
             fetchRepoLabel(repo);
         });
 
-        fetchProviders = function() {
-            var deferred = $q.defer();
-            Provider.query({paged: false}, function(providers) {
-                deferred.resolve(providers.results);
-            });
-            return deferred.promise;
+        filterEditable = function(items) {
+            return _.where(items.results, {readonly: false});
         };
 
-        fetchProducts = function() {
-            var deferred = $q.defer();
-            Product.query({paged: false, 'organization_id': CurrentOrganization}, function(products) {
-                deferred.resolve(products.results);
-            });
-            return deferred.promise;
-        };
-
-        filterEditable = function(items){
-            var toRet = [];
-            angular.forEach(items, function(value){
-               if (!value.readonly) {
-                toRet.push(value);
-               }
-            });
-            return toRet;
-        };
-
-        //Start new repo stuff
         $scope.$watch('createRepoChoices.product.name', function() {
             $http({
                 method: 'GET',
@@ -84,17 +67,6 @@ angular.module('Bastion.products').controller('DiscoveryFormController',
         $scope.creating = function(){
             return $scope.createRepoChoices.creating;
         };
-
-        function fetchRepoLabel(repo) {
-            $http({
-                method: 'GET',
-                url: '/katello/organizations/default_label',
-                params: {'name': repo.name}
-            })
-            .success(function(response) {
-                repo.label = response;
-            });
-        }
 
         $scope.$watch('discovery.selected', function(newList, oldList) {
             if (newList) {
@@ -122,14 +94,14 @@ angular.module('Bastion.products').controller('DiscoveryFormController',
           creating: false
         };
 
-        fetchProviders().then(function(values){
+        Provider.query(function(values){
             $scope.providers = filterEditable(values);
             if ($scope.providers[0]) {
                 $scope.createRepoChoices.product['provider_id'] = $scope.providers[0].id;
             }
         });
 
-        fetchProducts().then(function(values) {
+        Product.query({'organization_id': CurrentOrganization}, function(values) {
             $scope.products = filterEditable(values);
             if ($scope.products[0]) {
                 $scope.createRepoChoices.existingProductId = $scope.products[0].id;
@@ -140,23 +112,48 @@ angular.module('Bastion.products').controller('DiscoveryFormController',
             $scope.createRepoChoices.creating = true;
 
             if ($scope.createRepoChoices.newProduct === "true") {
-                new Product($scope.createRepoChoices.product).$save(function(data){
-                    $scope.createRepoChoices.existingProductId = data.id;
-                    $scope.createRepoChoices.newProduct = 'false';
-                    $scope.products.unshift(data);
-                    //add it to the main products table
-                    $scope.table.addRow(data);
-                    createNextRepo();
-                }, productCreateError);
-            }
-            else {
+                Product.save($scope.createRepoChoices.product, productCreateSuccess, productCreateError);
+            } else {
                 createNextRepo();
             }
         };
 
+        function productCreateSuccess(response) {
+            $scope.createRepoChoices.existingProductId = response.id;
+            $scope.createRepoChoices.newProduct = 'false';
+            $scope.products.unshift(response);
+            //add it to the main products table
+            $scope.table.addRow(response);
+            createNextRepo();
+        }
+
+        function productCreateError(response) {
+            $scope.createRepoChoices.creating = false;
+            $scope.productForm.$setDirty();
+            angular.forEach(response.data.errors, function(errors, field) {
+                $scope.productForm[field].$setValidity('', false);
+                $scope.productForm[field].messages = errors;
+            });
+        }
+
+        function fetchRepoLabel(repo) {
+            $http({
+                method: 'GET',
+                url: '/katello/organizations/default_label',
+                params: {'name': repo.name}
+            })
+            .success(function(response) {
+                repo.label = response;
+            }).error(function(response){
+                repo.form.$invalid = true;
+                repo.form.messages = response.errors;
+            });
+        }
+
         function createNextRepo(){
             var toCreate, repoObject;
             toCreate = getNextRepoToCreate();
+
             if (toCreate) {
                 $scope.currentlyCreating = toCreate;
                 repoObject = convertToResource(toCreate);
@@ -168,8 +165,7 @@ angular.module('Bastion.products').controller('DiscoveryFormController',
                     toCreate.created = true;
                     createNextRepo();
                 }, repoCreateError);
-            }
-            else {
+            } else {
                 $scope.transitionTo('products.details.repositories.index',
                     {productId: $scope.createRepoChoices.existingProductId});
             }
@@ -203,15 +199,6 @@ angular.module('Bastion.products').controller('DiscoveryFormController',
 
             currentlyCreating.form.$invalid = true;
             currentlyCreating.form.messages = response.data.errors;
-        }
-
-        function productCreateError(response) {
-            $scope.createRepoChoices.creating = false;
-            $scope.productForm.$setDirty();
-            angular.forEach(response.data.errors, function(errors, field) {
-                $scope.productForm[field].$setValidity('', false);
-                $scope.productForm[field].messages = errors;
-            });
         }
 
     }]

@@ -16,10 +16,15 @@
  * @name  Bastion.products.controller:DisocveryController
  *
  * @requires $scope
- * @requires Product
+ * @requires $q
+ * @requires $timeout
+ * @requires $http
+ * @requires Task
+ * @requires Organization
+ * @requiares CurrentOrganization
  *
  * @description
- *   Provides the functionality for the product details action pane.
+ *   Provides the functionality for the repo discovery action pane.
  */
 angular.module('Bastion.products').controller('DiscoveryController',
     ['$scope', '$q', '$timeout', '$http', 'Task', 'Organization', 'CurrentOrganization',
@@ -42,33 +47,35 @@ angular.module('Bastion.products').controller('DiscoveryController',
             $scope.transitionTo('products.discovery.create');
         };
 
-        $scope.defaultName = function(basePath){
+        $scope.defaultName = function(basePath) {
             //Remove leading/trailing slash and replace rest with space
             return basePath.replace(/^\//, "").replace(/\/$/, "").replace(/\//g, ' ');
         };
 
-        $scope.cancelDiscovery = function(){
+        $scope.cancelDiscovery = function() {
             Organization.cancelRepoDiscover({id: CurrentOrganization});
         };
 
         transformRows = function(urls) {
-            var baseUrl, toRet = [];
+            var baseUrl, toRet;
             baseUrl = $scope.discovery.url;
-            angular.forEach(urls, function(url){
+
+            toRet = _.map(urls, function(url){
                 var path = url.replace(baseUrl, "");
-                toRet.push({
-                        url: url,
-                        path: path,
-                        name: $scope.defaultName(path),
-                        label: ''
-                });
+                return {
+                    url: url,
+                    path: path,
+                    name: $scope.defaultName(path),
+                    label: ''
+                };
             });
+
             return _.sortBy(toRet, function(item){
                 return item.url;
             });
         };
 
-        Organization.get({id: CurrentOrganization}, function(org){
+        Organization.get({id: CurrentOrganization}, function(org) {
             if (org['discovery_task_id']) {
                 Task.get({id: org['discovery_task_id']}, function(task){
                     setDiscoveryDetails(task);
