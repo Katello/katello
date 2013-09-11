@@ -16,7 +16,6 @@
  * @name  Bastion.products.controller:DiscoveryFormController
  *
  * @requires $scope
- * @requires $q
  * @requires $http
  * @requires CurrentOrganization
  * @requires Provider
@@ -28,8 +27,8 @@
  *      repository discovery.
  */
 angular.module('Bastion.products').controller('DiscoveryFormController',
-    ['$scope', '$q', '$http', 'CurrentOrganization', 'Provider', 'Product', 'Repository',
-    function($scope, $q, $http, CurrentOrganization, Provider, Product, Repository) {
+    ['$scope', '$http', 'CurrentOrganization', 'Provider', 'Product', 'Repository',
+    function($scope, $http, CurrentOrganization, Provider, Product, Repository) {
         var filterEditable;
 
         angular.forEach($scope.discovery.selected, function(repo) {

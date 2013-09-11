@@ -30,8 +30,8 @@ class Api::V2::TasksController < Api::V2::ApiController
       end
     end
     {
-        :index => test,
-        :show  => test,
+      :index => test,
+      :show  => test,
     }
   end
 

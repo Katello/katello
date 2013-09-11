@@ -21,7 +21,7 @@
  * @requires $http
  * @requires Task
  * @requires Organization
- * @requiares CurrentOrganization
+ * @requires CurrentOrganization
  *
  * @description
  *   Provides the functionality for the repo discovery action pane.
