@@ -471,6 +471,31 @@ module Glue::Pulp::Repo
       end
     end
 
+    def clone_contents_by_filter(to_repo, content_type, filter_clauses, override_config = {})
+      content_classes = {
+          Package::CONTENT_TYPE => :rpm,
+          PackageGroup::CONTENT_TYPE => :package_group,
+          Errata::CONTENT_TYPE => :errata,
+          PuppetModule::CONTENT_TYPE => :puppet_module
+      }
+      raise "Invalid content type #{content_type} sent. It needs to be one of #{content_classes.keys}"\
+                                                                     unless content_classes[content_type]
+      criteria = {}
+      if content_type == Runcible::Extensions::Rpm.content_type
+        criteria[:fields] = Package::PULP_SELECT_FIELDS
+      end
+
+      if filter_clauses && !filter_clauses.empty?
+        if content_type == Runcible::Extensions::PuppetModule.content_type
+          criteria[:filters] = {:association => filter_clauses}
+        else
+          criteria[:filters] = {:unit => filter_clauses}
+        end
+      end
+      criteria[:override_config] = override_config unless override_config.empty?
+      Katello.pulp_server.extensions.send(content_classes[content_type]).copy(self.pulp_id, to_repo.pulp_id, criteria)
+    end
+
     def clone_contents(to_repo)
       events = []
 

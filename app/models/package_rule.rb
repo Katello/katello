@@ -24,16 +24,17 @@ class PackageRule < FilterRule
   # @param repo [Repository] a repository containing packages to filter
   # @return [Array] an array of hashes with MongoDB conditions
   def generate_clauses(repo)
-    parameters[:units].map do |unit|
+    pkg_filenames = parameters[:units].map do |unit|
       next if unit[:name].blank?
 
       filter = version_filter(unit)
-      results = Package.search(unit[:name], 0, repo.package_count, [repo.pulp_id],
+      Package.search(unit[:name], 0, repo.package_count, [repo.pulp_id],
                       [:nvrea_sort, "ASC"], :all, 'name', filter).collect(&:filename).compact
-      next if results.empty?
-
-      {'filename' => {"$in" => results}}
     end
+    pkg_filenames.flatten!
+    pkg_filenames.compact!
+
+    {'filename' => {"$in" => pkg_filenames}} unless pkg_filenames.empty?
   end
 
   protected

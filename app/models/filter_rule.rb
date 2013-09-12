@@ -25,6 +25,11 @@ class FilterRule < ActiveRecord::Base
 
   validates_with Validators::SerializedParamsValidator, :attributes => :parameters
 
+  scope :whitelist, where(:inclusion => true)
+  scope :blacklist, where(:inclusion => false)
+
+  scope :yum_types, where(:type => [:PackageGroupRule, :ErratumRule, :PackageRule])
+
   def params_format
     {}
   end
