@@ -24,78 +24,98 @@ angular.module('Bastion.test-mocks').run(['$state', '$stateParams', '$rootScope'
 ]);
 
 angular.module('Bastion.test-mocks').factory('MockResource', function() {
-    var Resource, mockResource, errorResponse;
+    function resourceGenerator() {
+        var Resource, mockResource, errorResponse;
 
-    errorResponse = {
-        data: {
-            errors: {
-                name: 'Invalid name'
+        errorResponse = {
+            data: {
+                errors: {
+                    name: 'Invalid name'
+                }
             }
-        }
-    };
+        };
 
-    mockResource = {
-        id: 1,
-        name: 'Test Resource',
-        label: '',
-        failed: false,
-        readonly: false,
-        $save: function(success, error) {
-            if (!mockResource.failed) {
-                success();
-            } else {
-                error(errorResponse);
+        mockResource = {
+            id: 1,
+            name: 'Test Resource',
+            label: '',
+            failed: false,
+            readonly: false,
+            $save: function(success, error) {
+                if (!this.failed) {
+                    success();
+                } else {
+                    error(errorResponse);
+                }
+            },
+            $update: function(success, error) {
+                if (this.failed) {
+                    error({ data: {errors: {}}});
+                } else {
+                    success(this);
+                }
+            },
+            $delete: function(callback) {
+                callback();
             }
-        },
-        $update: function(success, error) {
-            if (mockResource.failed) {
-                error({ data: {errors: {}}});
-            } else {
-                success(mockResource);
+        };
+
+        Resource = function(parameters) {
+            var copy = angular.copy(mockResource);
+            if(parameters) {
+                angular.extend(copy, parameters);
             }
-        },
-        $delete: function(callback) {
-            callback();
-        }
+            Resource.mockResources.results.push(copy);
+            Resource.mockResources.total += 1;
+            Resource.mockResources.subtotal += 1;
+            return copy;
+        };
+
+        Resource.mockResources = {
+            results: [
+                mockResource
+            ],
+            total: 2,
+            subtotal: 1
+        };
+
+        Resource.get = function(params, callback) {
+            var item;
+            angular.forEach(Resource.mockResources.results, function(value) {
+                if (value.id === params.id) {
+                    item = value;
+                }
+            });
+
+            if (callback) {
+                callback(item);
+            }
+
+            return item;
+        };
+
+        Resource.query = function(params, callback) {
+            if (typeof(params) === "function") {
+                params(Resource.mockResources);
+            } else {
+                callback(Resource.mockResources);
+            }
+            return Resource.mockResources;
+        };
+
+        Resource.save = function(params, success, error) {
+            success(params);
+            return new Resource(params);
+        };
+
+        Resource.$new = function() {
+            return resourceGenerator();
+        };
+
+        return Resource;
     }
 
-    Resource = function() {
-        return mockResource;
-    };
-
-    Resource.mockResources = {
-        results: [
-            mockResource
-        ],
-        total: 2,
-        subtotal: 1
-    };
-
-    Resource.get = function(params, callback) {
-        var item = Resource.mockResources.results[params.id - 1];
-
-        if (callback) {
-            callback(item);
-        }
-
-        return item;
-    };
-
-    Resource.query = function(params, callback) {
-        if (typeof(params) === "function") {
-            params(Resource.mockResources);
-        } else {
-            callback(Resource.mockResources);
-        }
-        return Resource.mockResources;
-    };
-
-    Resource.save = function(params, success, error) {
-        success(params);
-        return new Resource(params);
-    };
-
-    return Resource;
+    return resourceGenerator();
 });
 
 angular.module('Bastion.test-mocks').factory('MockForm', function() {
@@ -111,3 +131,37 @@ angular.module('Bastion.test-mocks').factory('MockForm', function() {
         }
     };
 });
+
+
+angular.module('Bastion.test-mocks').factory('MockTask',  ['MockResource',
+    function(MockResource){
+        var myMock = MockResource.$new();
+
+        myMock.poll = function(task, finishedCallBack) {
+            myMock.get(task, finishedCallBack);
+        };
+        return myMock;
+    }
+]);
+
+angular.module('Bastion.test-mocks').factory('MockOrganization',  ['MockResource',
+    function(MockResource){
+        var myMock = MockResource.$new();
+
+        myMock.mockDiscoveryTask = {
+            id: 'discovery_task',
+            pending: false,
+            parameters: {url: 'http://fake/'},
+            result: ['http://fake/foo']
+        };
+
+        myMock.cancelRepoDiscover = function(params, success){
+            success(myMock.mockDiscoveryTask);
+        };
+        myMock.repoDiscover = function(params, success){
+            success(myMock.mockDiscoveryTask);
+        };
+
+        return myMock;
+    }
+]);

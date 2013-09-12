@@ -20,8 +20,8 @@ describe('Controller: NewRepositoryController', function() {
     beforeEach(inject(function($injector) {
         var $controller = $injector.get('$controller'),
             $http = $injector.get('$http'),
-            Repository = $injector.get('MockResource'),
-            GPGKey = $injector.get('MockResource');
+            Repository = $injector.get('MockResource').$new(),
+            GPGKey = $injector.get('MockResource').$new();
 
         $scope = $injector.get('$rootScope').$new();
         $httpBackend = $injector.get('$httpBackend');

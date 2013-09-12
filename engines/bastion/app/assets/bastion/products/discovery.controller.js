@@ -33,11 +33,15 @@ angular.module('Bastion.products').controller('DiscoveryController',
 
         $scope.discovery = {url: ''};
         $scope.panel.loading = false;
-        $scope.discoveryTable = {rows: []};
+
+        if (!$scope.discoveryTable) {
+            $scope.discoveryTable = {rows: []};
+        }
 
         setDiscoveryDetails = function(task) {
             $scope.discovery.url = task.parameters.url;
             $scope.discoveryTable.rows = transformRows(task.result);
+
             $scope.discovery.pending = task.pending;
 
             if (!task.pending) {
@@ -99,19 +103,13 @@ angular.module('Bastion.products').controller('DiscoveryController',
 
         function pollTask(task) {
             if (task.pending) {
-                $timeout(function() {
-                    checkTask(task);
-                }, 1000);
-            } else {
+                Task.poll(task, function(response){
+                    setDiscoveryDetails(response);
+                });
+            }
+            else {
                 setDiscoveryDetails(task);
             }
-        }
-
-        function checkTask(task) {
-            Task.get({id: task.id}, function(response) {
-                setDiscoveryDetails(response);
-                pollTask(response);
-            });
         }
     }]
 );
