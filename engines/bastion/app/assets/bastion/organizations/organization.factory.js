@@ -16,7 +16,6 @@
  * @name  Bastion.organizations.factory:Organization
  *
  * @requires $resource
- * @requires CurrentOrganization
  *
  * @description
  *   Provides a $resource for organization(s).
