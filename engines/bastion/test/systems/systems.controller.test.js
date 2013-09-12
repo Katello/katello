@@ -68,6 +68,13 @@ describe('Controller: SystemsController', function() {
         expect($scope.transitionTo).toHaveBeenCalledWith('systems.index');
     });
 
+    it('should provide a way to transition to the register page', function() {
+        spyOn($scope, 'transitionTo');
+        $scope.transitionToRegisterSystem();
+
+        expect($scope.transitionTo).toHaveBeenCalledWith('systems.register');
+    });
+
     it("provides a way to delete systems.", function() {
         var testSystem = {
             uuid: 'abcde',

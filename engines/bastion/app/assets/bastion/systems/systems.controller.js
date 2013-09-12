@@ -60,6 +60,10 @@ angular.module('Bastion.systems').controller('SystemsController',
             $scope.transitionTo('systems.index');
         };
 
+        $scope.transitionToRegisterSystem = function() {
+            $scope.transitionTo('systems.register');
+        };
+
         $scope.removeSystem = function (system) {
             system.$remove(function() {
                 $scope.removeRow(system);
