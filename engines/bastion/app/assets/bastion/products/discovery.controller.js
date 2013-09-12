@@ -69,7 +69,7 @@ angular.module('Bastion.products').controller('DiscoveryController',
             var baseUrl, toRet;
             baseUrl = $scope.discovery.url;
 
-            toRet = _.map(urls, function(url){
+            toRet = _.map(urls, function(url) {
                 var path = url.replace(baseUrl, "");
                 return {
                     url: url,
@@ -79,14 +79,14 @@ angular.module('Bastion.products').controller('DiscoveryController',
                 };
             });
 
-            return _.sortBy(toRet, function(item){
+            return _.sortBy(toRet, function(item) {
                 return item.url;
             });
         };
 
         Organization.get({id: CurrentOrganization}, function(org) {
             if (org['discovery_task_id']) {
-                Task.get({id: org['discovery_task_id']}, function(task){
+                Task.get({id: org['discovery_task_id']}, function(task) {
                     pollTask(task);
                 });
             }
@@ -103,7 +103,7 @@ angular.module('Bastion.products').controller('DiscoveryController',
 
         function pollTask(task) {
             if (task.pending) {
-                Task.poll(task, function(response){
+                Task.poll(task, function(response) {
                     setDiscoveryDetails(response);
                 });
             }

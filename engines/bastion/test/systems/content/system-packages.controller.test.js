@@ -28,18 +28,18 @@ describe('Controller: SystemPackagesController', function() {
             tasks: function() {return []}
         };
         SystemTask = {
-            get: function(){},
-            poll: function(task, returnFunction){}
+            get: function() {},
+            poll: function(task, returnFunction) {}
         };
         SystemPackage = {
-            get: function(){return []},
-            remove: function(params, success){
+            get: function() {return []},
+            remove: function(params, success) {
                 success(mockTask);
                 return mockTask
             },
-            install: function(){return mockTask},
-            update: function(){return mockTask},
-            updateAll: function(){return mockTask}
+            install: function() {return mockTask},
+            update: function() {return mockTask},
+            updateAll: function() {return mockTask}
         };
         mockSystem = {
             uuid: 5
@@ -48,7 +48,7 @@ describe('Controller: SystemPackagesController', function() {
             pending: true,
             id: 7
         };
-        i18nFilter = function(){};
+        i18nFilter = function() {};
 
     });
 
@@ -73,11 +73,11 @@ describe('Controller: SystemPackagesController', function() {
         expect($scope.transitionTo).toHaveBeenCalledWith('systems.details.events.details', {eventId: 2});
     });
 
-    it("defaults to package install", function(){
+    it("defaults to package install", function() {
         expect($scope.packageAction.actionType).toBe('packageInstall');
     });
 
-    it("properly recognizes a failed package remove task", function(){
+    it("properly recognizes a failed package remove task", function() {
         expect($scope.currentPackagesTable.taskFailed({failed: true})).toBe(true);
         expect($scope.currentPackagesTable.taskFailed({failed: false})).toBe(false);
         expect($scope.currentPackagesTable.taskFailed({failed: false, affected_units: 0})).toBe(true);
@@ -85,7 +85,7 @@ describe('Controller: SystemPackagesController', function() {
 
     });
 
-    it("performs a package update", function(){
+    it("performs a package update", function() {
         spyOn(SystemPackage, 'update');
         $scope.packageAction.actionType = "packageUpdate";
         $scope.packageAction.term = "foo";
@@ -94,7 +94,7 @@ describe('Controller: SystemPackagesController', function() {
                                                           jasmine.any(Function));
     });
 
-    it("performs a package update with multiple packages", function(){
+    it("performs a package update with multiple packages", function() {
         spyOn(SystemPackage, 'update');
         $scope.packageAction.actionType = "packageUpdate";
         $scope.packageAction.term = "foo, bar";
@@ -103,7 +103,7 @@ describe('Controller: SystemPackagesController', function() {
                                                           jasmine.any(Function));
     });
 
-    it("performs a package group install", function(){
+    it("performs a package group install", function() {
         spyOn(SystemPackage, 'install');
         $scope.packageAction.actionType = "groupInstall";
         $scope.packageAction.term = "bigGroup";
@@ -112,7 +112,7 @@ describe('Controller: SystemPackagesController', function() {
                                                           jasmine.any(Function));
     });
 
-    it("performs a selected package removal", function(){
+    it("performs a selected package removal", function() {
         var mockPackage, mockPackageClone
         mockPackage = {name: 'foo', version: '3', release: '14', arch: 'noarch'};
         mockPackageClone = {name: 'foo', version: '3', release: '14', arch: 'noarch'};

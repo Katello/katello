@@ -31,7 +31,7 @@ angular.module('Bastion.systems').factory('SystemTask',
         resource.poll = function(task, returnFunction) {
             resource.get({id: task.id}, function(data) {
                 if (data.pending) {
-                    $timeout(function(){resource.poll(data, returnFunction)}, 1000);
+                    $timeout(function() {resource.poll(data, returnFunction)}, 1000);
                 }
                 else{
                     returnFunction(data);

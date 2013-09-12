@@ -109,7 +109,7 @@ describe('Controller: SystemDetailsInfoController', function() {
             ContentView: ContentView
         });
 
-        $scope.system = System.get(function(){});
+        $scope.system = System.get(function() {});
         $scope.$broadcast('system.loaded');
     }));
 

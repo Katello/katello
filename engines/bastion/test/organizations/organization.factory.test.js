@@ -55,12 +55,12 @@ describe('Factory: Organization', function() {
         });
     });
 
-    it('provides a way to get repo discover', function(){
+    it('provides a way to get repo discover', function() {
         $httpBackend.expectPOST('/katello/api/organizations/ACME/repo_discover').respond(task);
         Organization.repoDiscover({ id: 'ACME' , url: '/foo'});
     });
 
-    it('provides a way to cancel repo discover', function(){
+    it('provides a way to cancel repo discover', function() {
         $httpBackend.expectPOST('/katello/api/organizations/ACME/repo_discover').respond(task);
         Organization.repoDiscover({ id: 'ACME' , url: '/foo'});
     });

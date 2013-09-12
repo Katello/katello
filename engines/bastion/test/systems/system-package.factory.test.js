@@ -32,7 +32,7 @@ describe('Factory: SystemPackage', function() {
         };
         task = {id: 'task_id'};
         routes = {
-            apiSystemsPath: function(){return '/katello/api/systems'}
+            apiSystemsPath: function() {return '/katello/api/systems'}
         };
         $provide.value('Routes', routes);
     }));

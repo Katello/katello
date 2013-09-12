@@ -28,7 +28,7 @@ describe('Factory: Nutupane', function() {
                 }
                 return result;
             },
-            customAction: function(){},
+            customAction: function() {},
             total: 10,
             subtotal: 8,
             offset: 5,
@@ -145,7 +145,7 @@ describe('Factory: Nutupane', function() {
             expect(nutupane.table.rows.length).toBe(1);
         });
 
-        describe("provides a way to sort the table", function(){
+        describe("provides a way to sort the table", function() {
             it ("defaults the sort to ascending if the previous sort does not match the new sort.", function() {
                 var expectedParams = {sort_by: 'name', sort_order: 'ASC', offset: 0, search: ''};
                 nutupane.table.resource.sort = {};

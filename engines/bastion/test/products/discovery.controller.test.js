@@ -47,8 +47,8 @@ describe('Controller: DiscoveryController', function() {
         $scope = $rootScope.$new();
         $scope.panel = {};
         $scope.discoveryTable = {
-            getSelected: function(){},
-            selectAll: function(){},
+            getSelected: function() {},
+            selectAll: function() {},
             rows: []
         };
 
@@ -78,18 +78,18 @@ describe('Controller: DiscoveryController', function() {
     });
 
 
-    it('default name should handle leading and trailing slashes', function(){
+    it('default name should handle leading and trailing slashes', function() {
         spyOn($scope, 'defaultName').andCallThrough();
         expect($scope.defaultName("/foo/")).toBe("foo");
     });
 
-    it('default name should convert / to space', function(){
+    it('default name should convert / to space', function() {
         spyOn($scope, 'defaultName').andCallThrough();
         expect($scope.defaultName("/foo/bar")).toBe("foo bar");
     });
 
 
-    it('should cancel discovery', function(){
+    it('should cancel discovery', function() {
         spyOn(Organization, 'cancelRepoDiscover');
         $scope.cancelDiscovery();
         expect(Organization.cancelRepoDiscover).toHaveBeenCalled();
@@ -97,13 +97,13 @@ describe('Controller: DiscoveryController', function() {
     });
 
 
-    it('should fetch discovery task through org and set details', function(){
+    it('should fetch discovery task through org and set details', function() {
         expect($scope.discovery.url).toBe(mockTask.parameters.url);
         expect($scope.discovery.pending).toBe(mockTask.pending);
         expect($scope.discoveryTable.rows[0].url).toBe(mockTask.result[0]);
     });
 
-    it('should initiate discovery', function(){
+    it('should initiate discovery', function() {
         $scope.discovery.url = 'http://fake/';
         spyOn(Organization, 'repoDiscover').andCallThrough();
 
@@ -113,7 +113,7 @@ describe('Controller: DiscoveryController', function() {
                                                                jasmine.any(Function));
     });
 
-    it('should set discovery table upon completed discovery', function(){
+    it('should set discovery table upon completed discovery', function() {
         $scope.discovery.url = 'http://fake/';
         spyOn(Task, 'get');
         $scope.discover();
@@ -123,7 +123,7 @@ describe('Controller: DiscoveryController', function() {
         expect($scope.discoveryTable.rows[0].path).toBe('foo');
     });
 
-    it('discovery should poll if task is pending', function(){
+    it('discovery should poll if task is pending', function() {
         Organization.mockDiscoveryTask.pending = true;
         spyOn(Task, 'poll');
 

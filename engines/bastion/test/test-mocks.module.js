@@ -133,7 +133,7 @@ angular.module('Bastion.test-mocks').factory('MockForm', function() {
 
 
 angular.module('Bastion.test-mocks').factory('MockTask',  ['MockResource',
-    function(MockResource){
+    function(MockResource) {
         var myMock = MockResource.$new();
 
         myMock.poll = function(task, finishedCallBack) {
@@ -144,7 +144,7 @@ angular.module('Bastion.test-mocks').factory('MockTask',  ['MockResource',
 ]);
 
 angular.module('Bastion.test-mocks').factory('MockOrganization',  ['MockResource',
-    function(MockResource){
+    function(MockResource) {
         var myMock = MockResource.$new();
 
         myMock.mockDiscoveryTask = {
@@ -154,10 +154,10 @@ angular.module('Bastion.test-mocks').factory('MockOrganization',  ['MockResource
             result: ['http://fake/foo']
         };
 
-        myMock.cancelRepoDiscover = function(params, success){
+        myMock.cancelRepoDiscover = function(params, success) {
             success(myMock.mockDiscoveryTask);
         };
-        myMock.repoDiscover = function(params, success){
+        myMock.repoDiscover = function(params, success) {
             success(myMock.mockDiscoveryTask);
         };
 
