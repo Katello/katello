@@ -12,17 +12,15 @@
  **/
 
 describe('Controller: ProductRepositoriesController', function() {
-    var $scope,
-        $controller,
-        $Repository;
+    var $scope;
 
     beforeEach(module('Bastion.products', 'Bastion.test-mocks'))
 
     beforeEach(inject(function($injector) {
-        $controller = $injector.get('$controller');
-        $scope = $injector.get('$rootScope').$new();
-        Repository = $injector.get('Repository');
+        var $controller = $injector.get('$controller'),
+            Repository = $injector.get('MockResource');
 
+        $scope = $injector.get('$rootScope').$new();
         $scope.$stateParams = {productId: 1};
 
         $controller('ProductRepositoriesController', {
@@ -33,7 +31,7 @@ describe('Controller: ProductRepositoriesController', function() {
     }));
 
     it("puts a list of repositories on the scope", function() {
-        expect($scope.repositories).toBe(Repository.mockRepositories.results);
+        expect($scope.repositories).toBeDefined();
     });
 
     it('provides a method to transition to repository details', function() {

@@ -13,7 +13,7 @@
 
 /**
  * @ngdoc object
- * @name  Bastion.repositories.controller:RepositoryDetailsController
+ * @name  Bastion.repositories.controller:RepositoryDetailsInfoController
  *
  * @requires $scope
  * @requires $q

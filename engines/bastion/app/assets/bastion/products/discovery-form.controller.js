@@ -29,7 +29,17 @@
 angular.module('Bastion.products').controller('DiscoveryFormController',
     ['$scope', '$http', 'CurrentOrganization', 'Provider', 'Product', 'Repository',
     function($scope, $http, CurrentOrganization, Provider, Product, Repository) {
-        var filterEditable;
+
+        $scope.discovery = $scope.discovery || {selected: []};
+        $scope.panel = $scope.panel || {loading: false};
+
+        $scope.createRepoChoices = {
+          existingProductId: undefined,
+          newProduct: 'false',
+          product : new Product(),
+          unprotected: true,
+          creating: false
+        };
 
         angular.forEach($scope.discovery.selected, function(repo) {
             //Add a fake form to keep track of validations
@@ -40,9 +50,21 @@ angular.module('Bastion.products').controller('DiscoveryFormController',
             fetchRepoLabel(repo);
         });
 
-        filterEditable = function(items) {
-            return _.where(items.results, {readonly: false});
-        };
+        Provider.query(function(values) {
+            $scope.providers = filterEditable(values.results);
+
+            if ($scope.providers.length > 0) {
+                $scope.createRepoChoices.product['provider_id'] = $scope.providers[0].id;
+            }
+        });
+
+        Product.query({'organization_id': CurrentOrganization}, function(values) {
+            $scope.products = filterEditable(values.results);
+
+            if ($scope.products.length > 0) {
+                $scope.createRepoChoices.existingProductId = $scope.products[0].id;
+            }
+        });
 
         $scope.$watch('createRepoChoices.product.name', function() {
             $http({
@@ -84,28 +106,6 @@ angular.module('Bastion.products').controller('DiscoveryFormController',
                 }
             });
             return isEqual;
-        });
-
-        $scope.createRepoChoices = {
-          existingProductId: undefined,
-          newProduct: 'false',
-          product : new Product(),
-          unprotected: true,
-          creating: false
-        };
-
-        Provider.query(function(values){
-            $scope.providers = filterEditable(values);
-            if ($scope.providers[0]) {
-                $scope.createRepoChoices.product['provider_id'] = $scope.providers[0].id;
-            }
-        });
-
-        Product.query({'organization_id': CurrentOrganization}, function(values) {
-            $scope.products = filterEditable(values);
-            if ($scope.products[0]) {
-                $scope.createRepoChoices.existingProductId = $scope.products[0].id;
-            }
         });
 
         $scope.createRepos = function(){
@@ -150,7 +150,7 @@ angular.module('Bastion.products').controller('DiscoveryFormController',
             });
         }
 
-        function createNextRepo(){
+        function createNextRepo() {
             var toCreate, repoObject;
             toCreate = getNextRepoToCreate();
 
@@ -199,6 +199,10 @@ angular.module('Bastion.products').controller('DiscoveryFormController',
 
             currentlyCreating.form.$invalid = true;
             currentlyCreating.form.messages = response.data.errors;
+        }
+
+        function filterEditable(items) {
+            return _.where(items, {readonly: false});
         }
 
     }]

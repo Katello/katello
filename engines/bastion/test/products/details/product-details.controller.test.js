@@ -12,18 +12,16 @@
  **/
 
 describe('Controller: ProductDetailsController', function() {
-    var $scope,
-        $controller,
-        $state,
-        Product;
+    var $scope;
 
     beforeEach(module('Bastion.products', 'Bastion.test-mocks'))
 
     beforeEach(inject(function($injector) {
-        $controller = $injector.get('$controller');
+        var $controller = $injector.get('$controller'),
+            $state = $injector.get('$state'),
+            Product = $injector.get('MockResource');
+
         $scope = $injector.get('$rootScope').$new();
-        $state = $injector.get('$state');
-        Product = $injector.get('Product');
 
         $scope.$stateParams = {productId: 1};
         $scope.table = {
@@ -38,7 +36,7 @@ describe('Controller: ProductDetailsController', function() {
     }));
 
     it("gets the system using the Product service and puts it on the $scope.", function() {
-        expect($scope.product).toBe(Product.mockProduct);
+        expect($scope.product).toBeDefined();
     });
 
     it('provides a method to transition to repositories index for a product', function() {
@@ -68,7 +66,7 @@ describe('Controller: ProductDetailsController', function() {
         $scope.removeProduct($scope.product);
 
         expect($scope.transitionTo).toHaveBeenCalledWith('products.index');
-        expect($scope.table.removeRow).toHaveBeenCalledWith(Product.mockProduct.id);
+        expect($scope.table.removeRow).toHaveBeenCalledWith($scope.product.id);
     });
 
 });

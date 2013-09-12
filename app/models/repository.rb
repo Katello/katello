@@ -263,12 +263,6 @@ class Repository < ActiveRecord::Base
 
   protected
 
-  def full_path
-    pulp_uri = URI.parse(Katello.config.pulp.url)
-    scheme   = (self.unprotected ? 'http' : 'https')
-    "#{scheme}://#{pulp_uri.host.downcase}/pulp/repos/#{relative_path}"
-  end
-
   def assert_deletable
     if self.environment.library? && self.content_view.default?
       if self.deletable?

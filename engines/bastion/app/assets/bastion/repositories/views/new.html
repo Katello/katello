@@ -3,18 +3,11 @@
   <header>
     <h5>
       <i class="icon-backward clickable" ng-click="transitionTo('products.details.repositories.index')"></i>
-      {{ "Add New Repository" }}
+      {{ "Add New Repository" | i18n }}
     </h5>
   </header>
 
   <form name="repositoryForm" class="form">
-
-    <div class="flash_hud" ng-show="false">
-      <a class="control" title="Close"></a>
-      <ul class="flash_messages error">
-        <li>{{ "Errors" | i18n }}</li>
-      </ul>
-    </div>
 
     <div class="control-group required" ng-class="{ 'error' : repositoryForm.name.$invalid }">
       <div class="label">
@@ -103,7 +96,7 @@
         <label for="gpg_key_id">{{ "GPG Key" | i18n }}</label>
       </div>
       <div class="input">
-        <select tabindex="4"
+        <select tabindex="6"
                 name="gpg_key_id"
                 ng-model="repository.gpg_key_id"
                 ng-options="gpg_key.id as gpg_key.name for gpg_key in gpgKeys">

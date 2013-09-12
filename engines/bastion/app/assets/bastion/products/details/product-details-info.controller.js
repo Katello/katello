@@ -28,6 +28,11 @@ angular.module('Bastion.products').controller('ProductDetailsInfoController',
 
         $scope.saveSuccess = false;
         $scope.saveError = false;
+        $scope.panel = $scope.panel || {loading: false};
+
+        $scope.product = $scope.product || Product.get({id: $scope.$stateParams.productId}, function() {
+            $scope.panel.loading = false;
+        });
 
         $scope.gpgKeys = function() {
             var deferred = $q.defer();

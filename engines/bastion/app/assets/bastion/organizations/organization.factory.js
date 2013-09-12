@@ -16,24 +16,23 @@
  * @name  Bastion.organizations.factory:Organization
  *
  * @requires $resource
- * @requires Routes
  * @requires CurrentOrganization
  *
  * @description
  *   Provides a $resource for organization(s).
  */
 angular.module('Bastion.organizations').factory('Organization',
-    ['$resource', 'CurrentOrganization', function($resource, CurrentOrganization) {
+    ['$resource', function($resource) {
 
         return $resource('/katello/api/organizations/:id/:action',
-            {id: CurrentOrganization},
+            {id: '@id'},
             {
                 query:  {method: 'GET', isArray: false},
                 repoDiscover: { method: 'POST', params: {action: 'repo_discover'}},
                 cancelRepoDiscover: {method: 'POST', params: {action: 'cancel_repo_discover'}},
-                autoAttach: {method: 'POST', params: {action: 'auto_attach'}
+                autoAttach: {method: 'POST', params: {action: 'auto_attach'}}
             }
-        });
+        );
 
     }]
 );

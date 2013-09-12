@@ -98,7 +98,6 @@ angular.module('Bastion.products').config(['$stateProvider', function($stateProv
         templateUrl: 'products/views/discovery.html'
 
     })
-
     .state("products.discovery.create", {
         collapsed: true,
         url: '/products/discovery/scan/create',

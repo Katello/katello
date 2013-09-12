@@ -23,88 +23,6 @@ angular.module('Bastion.test-mocks').run(['$state', '$stateParams', '$rootScope'
     }
 ]);
 
-angular.module('Bastion.test-mocks').factory('GPGKey', function() {
-    var GPGKey = {
-        mockGPGKeys: {
-            results: [
-                { name: 'GPGKey1', id: 1 }
-            ],
-            total: 2,
-            subtotal: 1
-        },
-        query: function() {
-            return GPGKey.mockGPGKeys;
-        }
-    };
-
-    return GPGKey;
-});
-
-angular.module('Bastion.test-mocks').factory('Product', function() {
-    var Product = {
-            mockProduct: {
-                id: 1,
-                failed: false,
-                $update: function(success, error) {
-                    if (Product.mockProduct.failed) {
-                        error({ data: {errors: {}}});
-                    } else {
-                        success(Product.mockProduct);
-                    }
-                },
-                $delete: function(callback) {
-                    callback();
-                }
-            },
-            get: function() {
-                return Product.mockProduct;
-            },
-            query: function() {
-                return [];
-            }
-        };
-
-    return Product;
-});
-
-angular.module('Bastion.test-mocks').factory('Repository', function() {
-    var Repository, mockRepository;
-
-    mockRepository = {
-        id: 1,
-        failed: false,
-        $update: function(success, error) {
-            if (self.failed) {
-                error({ data: {errors: {}}});
-            } else {
-                success(self);
-            }
-        },
-        $delete: function(callback) {
-            callback();
-        }
-    }
-
-    Repository = {
-        mockRepositories: {
-            results: [
-                mockRepository
-            ],
-            total: 2,
-            subtotal: 1
-        },
-        get: function(id) {
-            return Repository.mockRepositories[id];
-        },
-        query: function(params, callback) {
-            callback(Repository.mockRepositories);
-            return Repository.mockRepositories;
-        }
-    };
-
-    return Repository;
-});
-
 angular.module('Bastion.test-mocks').factory('MockResource', function() {
     var Resource, mockResource, errorResponse;
 
@@ -121,6 +39,7 @@ angular.module('Bastion.test-mocks').factory('MockResource', function() {
         name: 'Test Resource',
         label: '',
         failed: false,
+        readonly: false,
         $save: function(success, error) {
             if (!mockResource.failed) {
                 success();
@@ -152,8 +71,14 @@ angular.module('Bastion.test-mocks').factory('MockResource', function() {
         subtotal: 1
     };
 
-    Resource.get = function(params) {
-        return Resource.mockResources.results[params.id - 1];
+    Resource.get = function(params, callback) {
+        var item = Resource.mockResources.results[params.id - 1];
+
+        if (callback) {
+            callback(item);
+        }
+
+        return item;
     };
 
     Resource.query = function(params, callback) {
@@ -163,7 +88,12 @@ angular.module('Bastion.test-mocks').factory('MockResource', function() {
             callback(Resource.mockResources);
         }
         return Resource.mockResources;
-    }
+    };
+
+    Resource.save = function(params, success, error) {
+        success(params);
+        return new Resource(params);
+    };
 
     return Resource;
 });

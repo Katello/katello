@@ -12,11 +12,7 @@
  **/
 
 describe('Controller: ProductDetailsInfoController', function() {
-    var $scope,
-        $controller,
-        $q,
-        GPGKey,
-        Product;
+    var $scope;
 
     beforeEach(module(
         'Bastion.products',
@@ -24,11 +20,13 @@ describe('Controller: ProductDetailsInfoController', function() {
     ));
 
     beforeEach(inject(function($injector) {
-        $controller = $injector.get('$controller');
+        var $controller = $injector.get('$controller'),
+            $q = $injector.get('$q'),
+            Product = $injector.get('MockResource'),
+            GPGKey = $injector.get('MockResource');
+
         $scope = $injector.get('$rootScope').$new();
-        $q = $injector.get('$q');
-        Product = $injector.get('Product');
-        GPGKey = $injector.get('GPGKey');
+        $scope.$stateParams = {productId: 1};
 
         $controller('ProductDetailsInfoController', {
             $scope: $scope,
@@ -36,33 +34,31 @@ describe('Controller: ProductDetailsInfoController', function() {
             Product: Product,
             GPGKey: GPGKey
         });
-
-        $scope.product = Product.mockProduct;
     }));
 
     it('provides a method to retrieve available gpg keys', function() {
         var promise = $scope.gpgKeys();
 
         promise.then(function(gpgKeys) {
-            expect(gpgKeys).toEqual(GPGKey.mockGPGKeys);
+            expect(gpgKeys).toEqual($scope.gpgKeys);
         });
     });
 
     it('should save the product and return a promise', function() {
-        var promise = $scope.save(Product.mockProduct);
+        var promise = $scope.save($scope.product);
 
         expect(promise.then).toBeDefined();
     });
 
     it('should save the product successfully', function() {
-        $scope.save(Product.mockProduct);
+        $scope.save($scope.product);
 
         expect($scope.saveSuccess).toBe(true);
     });
 
-    it('should fail to save the system', function() {
-        Product.mockProduct.failed = true;
-        $scope.save(Product.mockProduct);
+    it('should fail to save the product', function() {
+        $scope.product.failed = true;
+        $scope.save($scope.product);
 
         expect($scope.saveSuccess).toBe(false);
         expect($scope.saveError).toBe(true);

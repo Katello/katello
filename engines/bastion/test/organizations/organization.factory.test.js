@@ -20,8 +20,6 @@ describe('Factory: Organization', function() {
     beforeEach(module('Bastion.organizations'));
 
     beforeEach(module(function($provide) {
-        var routes;
-
         organizations = {
             records: [
                 { name: 'ACME', id: 1,
@@ -32,13 +30,6 @@ describe('Factory: Organization', function() {
         };
 
         task = {id: 'task_id'};
-
-        routes = {
-            apiOrganizationsPath: function() {return '/katello/api/organizations'}
-        };
-
-        $provide.value('CurrentOrganization', 'ACME');
-        $provide.value('Routes', routes);
     }));
 
     beforeEach(inject(function($injector) {
@@ -51,7 +42,7 @@ describe('Factory: Organization', function() {
     });
 
     it('provides a way retrieve an organization', function() {
-        $httpBackend.expectGET('/katello/api/organizations/ACME').respond(organizations);
+        $httpBackend.expectGET('/katello/api/organizations').respond(organizations);
         Organization.query(function(organizations) {
             expect(organizations.records.length).toBe(1);
         });
@@ -59,7 +50,7 @@ describe('Factory: Organization', function() {
 
     it('provides a way to auto attach available subscriptions to systems', function() {
         $httpBackend.expectPOST('/katello/api/organizations/ACME/auto_attach').respond(task);
-        Organization.autoAttach(function(results) {
+        Organization.autoAttach({id: 'ACME'}, function(results) {
             expect(results.id).toBe(task.id);
         });
     });
