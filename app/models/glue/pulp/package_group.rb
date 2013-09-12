@@ -17,6 +17,19 @@ module Glue::Pulp::PackageGroup
     base.class_eval do
       attr_accessor :name, :package_group_id, :default_package_names, :id, :repoid, :conditional_package_names,
                       :mandatory_package_names, :description, :optional_package_names
+
+      def self.list_by_filter_clauses(clauses)
+        package_groups = Katello.pulp_server.extensions.package_group.search(::PackageGroup::CONTENT_TYPE,
+                                :filters => clauses)
+        if package_groups
+          groups = package_groups.collect do |attrs|
+            ::PackageGroup.new(attrs) if attrs
+          end
+          groups.compact
+        else
+          []
+        end
+      end
     end
 
   end

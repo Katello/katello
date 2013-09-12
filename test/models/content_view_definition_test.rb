@@ -202,4 +202,68 @@ class ContentViewDefinitionTest < MiniTest::Rails::ActiveSupport::TestCase
     end
   end
 
+  def test_associate_yum_types
+    cloned = Repository.find(repositories(:fedora_17_x86_64_dev).id)
+    repo = Repository.find(repositories(:fedora_17_x86_64).id)
+    cloned.stubs(:library_instance_id).returns(repo.id)
+    cloned.stubs(:library_instance).returns(repo)
+
+    dev_repo = Repository.find(repositories(:dev_p_forge))
+
+    package_rule1 = FactoryGirl.build(:package_filter_rule)
+    filter = package_rule1.filter
+    package_rule1.inclusion = true
+    package_rule1.parameters = HashWithIndifferentAccess.new()
+    package_rule1.save!
+
+    package_rule2 = PackageRule.create!(:filter => package_rule1.filter, :inclusion => false)
+    package_rule2.parameters = HashWithIndifferentAccess.new()
+    package_rule2.save!
+
+    cvd =  filter.content_view_definition
+    cvd.repositories << repo
+    filter.repositories << repo
+    dumb_copy = [1,2,3]
+    dumb_remove = [5,6,7]
+    Util::PackageClauseGenerator.any_instance.expects(:generate).once.returns("")
+    Util::PackageClauseGenerator.any_instance.expects(:copy_clause).once.returns(dumb_copy)
+    Util::PackageClauseGenerator.any_instance.expects(:remove_clause).once.returns(dumb_remove)
+
+    PulpTaskStatus.stubs(:wait_for_tasks).returns("")
+
+    repo.expects(:clone_contents_by_filter).once.with(cloned, FilterRule::PACKAGE, dumb_copy, {:recursive => true}).returns(100)
+    repo.expects(:clone_contents_by_filter).once.with(cloned, FilterRule::ERRATA, nil).returns(200)
+    repo.expects(:clone_contents_by_filter).once.with(cloned, FilterRule::PACKAGE_GROUP, nil).returns(300)
+
+    cloned.expects(:unassociate_by_filter).once.with(FilterRule::PACKAGE, dumb_remove).returns("100")
+    cloned.expects(:purge_empty_groups_errata).once.returns(500)
+
+    cvd.associate_contents(cloned)
+  end
+
+ def test_associate_puppet
+    cloned = Repository.find(repositories(:dev_p_forge).id)
+    repo = Repository.find(repositories(:p_forge))
+    cloned.stubs(:library_instance_id).returns(repo.id)
+    cloned.stubs(:library_instance).returns(repo)
+
+    puppet_module_rule = FactoryGirl.build(:puppet_module_filter_rule)
+    filter = puppet_module_rule.filter
+    puppet_module_rule.inclusion = true
+    puppet_module_rule.parameters = HashWithIndifferentAccess.new()
+    puppet_module_rule.save!
+
+    cvd =  filter.content_view_definition
+    cvd.repositories << repo
+    filter.repositories << repo
+    dumb_copy = [1,2,3]
+    Util::PuppetClauseGenerator.any_instance.expects(:generate).returns("")
+    Util::PuppetClauseGenerator.any_instance.expects(:copy_clause).returns(dumb_copy)
+
+    PulpTaskStatus.stubs(:wait_for_tasks).returns("")
+
+    repo.expects(:clone_contents_by_filter).once.with(cloned, FilterRule::PUPPET_MODULE, dumb_copy).returns(300)
+    cvd.associate_contents(cloned)
+  end
+
 end

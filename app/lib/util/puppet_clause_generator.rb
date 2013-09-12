@@ -10,21 +10,28 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-class PackageGroupRule < FilterRule
-  validates_with Validators::PackageGroupRuleParamsValidator, :attributes => :parameters
-  def params_format
-    {:units => [[:name]]}
-  end
+module Util
+  class PuppetClauseGenerator
+    include  Util::FilterRuleClauseGenerator
 
-  def generate_clauses(repo)
-    ids = parameters[:units].collect do |unit|
-      #{'name' => {"$regex" => unit[:name]}}
-      unless unit[:name].blank?
-        PackageGroup.search(unit[:name], 0, 0, [repo.pulp_id]).collect(&:package_group_id)
+    protected
+
+    def fetch_rules
+      PuppetModuleRule
+    end
+
+    def collect_clauses(repo, rules)
+      rules.collect do |rule|
+        rule.generate_clauses(repo)
       end
     end
-    ids.flatten!
-    ids.compact!
-    {"id" => {"$in" => ids}} unless ids.empty?
+
+    def whitelist_non_matcher_clause
+      {"unit_id" => {"$not" => {"$exists" => true}}}
+    end
+
+    def whitelist_all_matcher_clause
+      {"unit_id" => {"$exists" => true}}
+    end
   end
 end
