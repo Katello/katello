@@ -45,6 +45,10 @@ class UserAuthorizationAdminTest < AuthorizationTestBase
     refute User.current.deletable?
   end
 
+  def test_readable
+    assert_includes User.readable, @user
+  end
+
 end
 
 class UserAuthorizationNoPermsTest < AuthorizationTestBase
