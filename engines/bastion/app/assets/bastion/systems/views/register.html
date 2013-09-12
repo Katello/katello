@@ -1,0 +1,24 @@
+<section class="nutupane-details" ng-cloak alch-container-scroll>
+
+  <header class="details-header new-header">
+    <h2 class="fl">{{ "System Registration" | i18n }}</h2>
+
+    <div class="details-actions fr">
+      <button class="btn-mini" ng-click="table.closeItem()">
+        <i class="icon-remove"></i>
+        {{ "Close" | i18n }}
+      </button>
+    </div>
+  </header>
+
+  <p>{{ "To register a system to this server, run the following commands within a console on the client system." | i18n }}</p>
+
+  <p>{{ "Install the pre-built bootstrap RPM. This will configure the system to use this server." | i18n }}</p>
+
+  <pre>rpm -Uvh {{ baseURL }}/pub/candlepin-cert-consumer-latest.noarch.rpm</pre>
+
+  <p>{{ "Use Subscription Manager to register." | i18n }}</p>
+
+  <pre><code>subscription-manager register --org="{{ organization }}"</pre></code>
+
+</section>
