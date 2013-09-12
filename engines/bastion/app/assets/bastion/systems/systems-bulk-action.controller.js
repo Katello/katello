@@ -241,7 +241,7 @@ angular.module('Bastion.systems').controller('SystemsBulkActionController',
                     Task.query({'id' : organization['owner_auto_attach_all_systems_task_id']}, function(task) {
                         $scope.subscription.autoAttachTask = task;
 
-                        if (task['pending?']) {
+                        if (task.pending) {
                             $scope.subscription.workingMode = true;
                             Task.poll(task, function(polledTask) {
                                 $scope.subscription.autoAttachTask = polledTask;
