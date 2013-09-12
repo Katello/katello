@@ -18,7 +18,7 @@ describe('Controller: NewProductController', function() {
 
     beforeEach(inject(function($injector) {
         var $controller = $injector.get('$controller'),
-            Product = $injector.get('MockResource');
+            Product = $injector.get('MockResource').$new;
 
         $scope = $injector.get('$rootScope').$new();
 

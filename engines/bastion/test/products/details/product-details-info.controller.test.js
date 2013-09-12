@@ -22,8 +22,8 @@ describe('Controller: ProductDetailsInfoController', function() {
     beforeEach(inject(function($injector) {
         var $controller = $injector.get('$controller'),
             $q = $injector.get('$q'),
-            Product = $injector.get('MockResource'),
-            GPGKey = $injector.get('MockResource');
+            Product = $injector.get('MockResource').$new(),
+            GPGKey = $injector.get('MockResource').$new();
 
         $scope = $injector.get('$rootScope').$new();
         $scope.$stateParams = {productId: 1};

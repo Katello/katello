@@ -23,8 +23,8 @@ describe('Controller: RepositoryDetailsInfoController', function() {
     beforeEach(inject(function($injector) {
         var $controller = $injector.get('$controller'),
             $q = $injector.get('$q'),
-            GPGKey = $injector.get('MockResource'),
-            Repository = $injector.get('MockResource');
+            GPGKey = $injector.get('MockResource').$new(),
+            Repository = $injector.get('MockResource').$new();
 
         $scope = $injector.get('$rootScope').$new();
         $scope.$stateParams = {

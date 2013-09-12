@@ -108,14 +108,13 @@ angular.module('Bastion.test-mocks').factory('MockResource', function() {
             return new Resource(params);
         };
 
-        Resource.$new = function() {
-            return resourceGenerator();
-        };
-
         return Resource;
     }
 
-    return resourceGenerator();
+    return { $new: function() {
+                    return resourceGenerator();
+                   }
+           }
 });
 
 angular.module('Bastion.test-mocks').factory('MockForm', function() {

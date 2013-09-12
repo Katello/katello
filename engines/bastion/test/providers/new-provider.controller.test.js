@@ -20,7 +20,7 @@ describe('Controller: NewProviderController', function() {
     beforeEach(inject(function($injector) {
         $controller = $injector.get('$controller');
         $scope = $injector.get('$rootScope').$new();
-        Provider = $injector.get('MockResource');
+        Provider = $injector.get('MockResource').$new();
 
         $scope.providerForm = $injector.get('MockForm');
         $scope.product = {};

@@ -36,7 +36,7 @@ describe('Controller: DiscoveryController', function() {
     beforeEach(inject(function($controller, $rootScope, $injector) {
         var $http = $injector.get('$http'),
             $q = $injector.get('$q'),
-            $timeout = $injector.get('MockResource');
+            $timeout = $injector.get('MockResource').$new();
 
         Task = $injector.get('MockTask');
         new Task(mockTask);

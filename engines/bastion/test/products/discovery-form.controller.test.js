@@ -21,12 +21,12 @@ describe('Controller: DiscoveryFormController', function() {
     beforeEach(inject(function($injector) {
         var $controller = $injector.get('$controller'),
             $http = $injector.get('$http'),
-            Provider = $injector.get('MockResource'),
-            Repository = $injector.get('MockResource');
+            Provider = $injector.get('MockResource').$new(),
+            Repository = $injector.get('MockResource').$new();
 
         $scope = $injector.get('$rootScope').$new();
         $httpBackend = $injector.get('$httpBackend');
-        Product = $injector.get('MockResource'),
+        Product = $injector.get('MockResource').$new();
 
         $controller('DiscoveryFormController', {
             $scope: $scope,

@@ -18,7 +18,7 @@ describe('Controller: ProductRepositoriesController', function() {
 
     beforeEach(inject(function($injector) {
         var $controller = $injector.get('$controller'),
-            Repository = $injector.get('MockResource');
+            Repository = $injector.get('MockResource').$new();
 
         $scope = $injector.get('$rootScope').$new();
         $scope.$stateParams = {productId: 1};
