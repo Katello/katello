@@ -15,7 +15,9 @@
  * @ngdoc directive
  * @name Bastion.widgets.directive:orgSwitcher
  *
+ * @requires $compile
  * @requires $http
+ * @requires $window
  * @requires $document
  * @requires Routes
  *
@@ -29,7 +31,10 @@
  *  <span class="spinner"></span>
  *  <ul org-switcher></ul>
  */
-angular.module('Bastion.widgets').directive('orgSwitcher', ['$http', '$document', 'Routes', function($http, $document, Routes) {
+angular.module('Bastion.widgets').directive('orgSwitcher',
+    ['$compile', '$http', '$window', '$document', 'Routes',
+    function($compile, $http, $window, $document, Routes) {
+
     return {
         restrict: 'A',
         transclude: true,
@@ -50,6 +55,15 @@ angular.module('Bastion.widgets').directive('orgSwitcher', ['$http', '$document'
                 $http.get(Routes.allowedOrgsUserSessionPath()).then(function(response) {
                     $spinner.fadeOut();
                     $element.html(response.data);
+                    $compile($element.find('li'))($scope);
+                });
+            };
+
+            $scope.orgSwitcher.selectOrg = function(event, organizationId) {
+                event.preventDefault();
+
+                $http.post(Routes.setOrgUserSessionPath({'org_id': organizationId})).success(function() {
+                    $window.location = Routes.dashboardIndexPath();
                 });
             };
 

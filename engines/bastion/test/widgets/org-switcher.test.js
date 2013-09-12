@@ -26,6 +26,9 @@ describe('Directive:orgSwitcher', function() {
             var Routes = {
                 allowedOrgsUserSessionPath: function() {
                     return "orgs/";
+                },
+                setOrgUserSessionPath: function(organizationId) {
+                    return "set_org/";
                 }
             };
             $provide.value('Routes', Routes);
@@ -48,7 +51,7 @@ describe('Directive:orgSwitcher', function() {
         var orgListHtml;
 
         beforeEach(function() {
-            orgListHtml = '<li style="height: 10px;">1</li><li style="height: 10px;">2</li><li style="height: 10px;">3</li>';
+            orgListHtml = '<li style="height: 10px;" class="ng-scope">1</li><li style="height: 10px;" class="ng-scope">2</li><li style="height: 10px;" class="ng-scope">3</li>';
             $httpBackend.expectGET('orgs/').respond(200, orgListHtml);
         });
 
@@ -94,5 +97,13 @@ describe('Directive:orgSwitcher', function() {
             $('<div id="#organizationSwitcher"></div>').trigger('click');
             expect($scope.orgSwitcher.visible).toBe(true);
         });
+    });
+
+    it("provides a way to select an org", function() {
+        // mock the event argument
+        event = { preventDefault: function() {}};
+
+        $httpBackend.expectPOST('set_org/').respond();
+        $scope.orgSwitcher.selectOrg(event, 3);
     });
 });

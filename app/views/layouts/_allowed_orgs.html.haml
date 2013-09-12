@@ -1,6 +1,7 @@
 - for org in user.allowed_organizations
   %li.dropdown-item
     %div.dropdown-item-link
-      = render :partial=>"common/fav", :locals => {:org=>org, :current_user=>current_user}
-      %a.org-link{ "href"=>set_org_user_session_path(:org_id=>org.id), 'data-method'=>"POST", :rel=>"nofollow" }
+      = render :partial => "common/fav", :locals => { :org => org, :current_user => current_user }
+      %a.org-link{ "href" => set_org_user_session_path(:org_id => org.id), 'data-method' => "POST", :rel => "nofollow",
+        "ng-click" => "orgSwitcher.selectOrg($event, #{org.id})" }
         = org.name
