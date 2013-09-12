@@ -16,6 +16,11 @@ module Authorization::User
   READ_PERM_VERBS = [:read, :update, :create, :delete]
 
   module ClassMethods
+    # scope
+    def readable
+      User.allowed_all_tags?(READ_PERM_VERBS, :users) ? where(:hidden => false) : where("0 = 1")
+    end
+
     def creatable?
       User.allowed_to?([:create], :users, nil)
     end
@@ -42,11 +47,6 @@ module Authorization::User
   end
 
   included do
-
-    # scope
-    def readable
-      User.allowed_all_tags?(READ_PERM_VERBS, :users) ? where(:hidden => false) : where("0 = 1")
-    end
 
     def readable?
       User.any_readable? && !hidden
