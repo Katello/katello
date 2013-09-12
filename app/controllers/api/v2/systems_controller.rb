@@ -71,6 +71,13 @@ class Api::V2::SystemsController < Api::V1::SystemsController
     respond_for_index :collection => response
   end
 
+  api :PUT, "/systems/:id/refresh_subscriptions", "Trigger a refresh of subscriptions, auto-attaching if enabled"
+  param :id, String, :desc => "UUID of the system", :required => true
+  def refresh_subscriptions
+    @system.refresh_subscriptions
+    respond_for_show
+  end
+
   api :GET, "/systems/:id/errata", "List errata available for the system"
   param :id, String, :desc => "UUID of the system", :required => true
   def errata

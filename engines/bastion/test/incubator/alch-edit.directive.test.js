@@ -160,6 +160,29 @@ describe('Directive: alchEdit', function() {
 
     });
 
+    describe('alchEditCheckbox directive', function() {
+        var editableElement;
+
+        beforeEach(function() {
+            editableElement = angular.element(
+                '<span alch-edit-checkbox="item.name"></span>');
+
+            scope.item = testItem;
+
+            compile(editableElement)(scope);
+            scope.$digest();
+        });
+
+        it("should display an checkbox on editable click", function() {
+            var element = editableElement.find('.editable'),
+                input = editableElement.find('input[type=checkbox]');
+            element.trigger('click');
+
+            expect(input.css('display')).not.toBe('none');
+        });
+
+    });
+
     describe('alchEditTextarea directive', function() {
         var editableElement;
 

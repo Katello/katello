@@ -46,13 +46,6 @@ describe('Controller: SystemDetailsInfoController', function() {
             },
             environment: {
                 id: 1
-            },
-            $update: function(success, error) {
-                if (mockSystem.failed) {
-                    error({ data: {errors: {}}});
-                } else {
-                    success(mockSystem);
-                }
             }
         };
         System = {
@@ -173,26 +166,6 @@ describe('Controller: SystemDetailsInfoController', function() {
 
             expect($scope.system.environment.id).toBe(2);
             expect($scope.editContentView).toBe(false);
-        });
-
-        it('should save the system and return a promise', function() {
-            var promise = $scope.save(mockSystem);
-
-            expect(promise.then).toBeDefined();
-        });
-
-        it('should save the system successfully', function() {
-            $scope.save(mockSystem);
-
-            expect($scope.saveSuccess).toBe(true);
-        });
-
-        it('should fail to save the system', function() {
-            mockSystem.failed = true;
-            $scope.save(mockSystem);
-
-            expect($scope.saveSuccess).toBe(false);
-            expect($scope.saveError).toBe(true);
         });
     });
 

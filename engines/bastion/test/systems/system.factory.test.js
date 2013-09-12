@@ -17,6 +17,7 @@ describe('Factory: System', function() {
         System,
         Routes,
         releaseVersions,
+        availableSubscriptions,
         systemsCollection;
 
     beforeEach(module('Bastion.systems', 'Bastion.utils'));
@@ -32,6 +33,8 @@ describe('Factory: System', function() {
         };
 
         releaseVersions = ['RHEL 6', 'Burrito'];
+
+        availableSubscriptions = ['subscription1', 'subscription2'];
 
         Routes = {
             apiSystemsPath: function() { return '/api/systems';},
@@ -57,6 +60,13 @@ describe('Factory: System', function() {
                 return deferred.promise;
             };
 
+            this.availableSubscriptions = function() {
+                var deferred = $q.defer();
+
+                deferred.resolve(availableSubscriptions);
+
+                return deferred.promise;
+            };
             return this;
         };
 
@@ -81,6 +91,14 @@ describe('Factory: System', function() {
 
         releasePromise.then(function(data) {
             expect(data).toEqual(releaseVersions);
+        });
+    });
+
+    it("provides a way to get the available subscriptions for a system via a promise", function() {
+        var subscriptionPromise = System.availableSubscriptions({ id: systemsCollection.records[0].id });
+
+        subscriptionPromise.then(function(data) {
+            expect(data).toEqual(availableSubscriptions);
         });
     });
 });
