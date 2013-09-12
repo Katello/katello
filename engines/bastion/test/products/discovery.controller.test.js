@@ -125,10 +125,10 @@ describe('Controller: DiscoveryController', function() {
 
     it('discovery should poll if task is pending', function(){
         Organization.mockDiscoveryTask.pending = true;
-        spyOn(Task, 'get').andCallThrough();
+        spyOn(Task, 'poll');
 
         $scope.discover();
-        expect(Task.get).toHaveBeenCalled();
+        expect(Task.poll).toHaveBeenCalled();
     });
 
 });
