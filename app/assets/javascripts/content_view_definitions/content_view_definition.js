@@ -445,6 +445,7 @@ KT.content_view_definition = (function(){
             event.preventDefault();
             var view_id = $(this).closest('tr.view_version').prev('tr.view').attr('id');
             disable_remove_view(view_id);
+            $(this).tipsy().hide();
 
             $.ajax({
                 type: 'POST',
