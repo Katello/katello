@@ -465,6 +465,7 @@ rm -f .rubocop.yml
     find script/ -type f | xargs sed -ri '1sX(/usr/bin/ruby|/usr/bin/env ruby)X%{scl_ruby}X'
     #use rake from SCL
     sed -ri 'sX(/usr/bin/rake|/usr/bin/env rake)X%{scl_rake}Xg' script/katello-refresh-cdn
+    sed -ri 'sX(/usr/bin/rake|/usr/bin/env rake)X%{scl_rake}Xg' script/katello-remove-orphans
 %endif
 
 # touch the katello yml for bundler ext stuff
@@ -567,9 +568,11 @@ touch %{buildroot}%{_sysconfdir}/%{name}/%{name}.yml
 chmod 600 %{buildroot}%{_sysconfdir}/%{name}/%{name}.yml
 install -m 644 config/environments/production.rb %{buildroot}%{_sysconfdir}/%{name}/environment.rb
 
-#copy cron scripts to be scheduled daily
+#copy cron scripts to be scheduled
 install -d -m0755 %{buildroot}%{_sysconfdir}/cron.daily
+install -d -m0755 %{buildroot}%{_sysconfdir}/cron.weekly
 install -m 755 script/katello-refresh-cdn %{buildroot}%{_sysconfdir}/cron.daily/katello-refresh-cdn
+install -m 755 script/katello-remove-orphans %{buildroot}%{_sysconfdir}/cron.weekly/katello-remove-orphans
 
 #create apache config templates
 mkdir -p %{buildroot}%{_sysconfdir}/httpd/conf.d/%{name}.d
@@ -794,6 +797,7 @@ usermod -a -G katello-shared tomcat
 %{homedir}/bundler.d/pulp.rb
 %{homedir}/app/models/glue/pulp
 %config(missingok) %{_sysconfdir}/cron.daily/katello-refresh-cdn
+%config(missingok) %{_sysconfdir}/cron.weekly/katello-remove-orphans
 
 %files glue-candlepin
 %{homedir}/app/models/glue/candlepin
