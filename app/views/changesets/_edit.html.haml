@@ -39,7 +39,7 @@
     #changeset_history_tabs
       .grid_10
         %h2 #{_("Contents:")}
-        -if @changeset.involved_products.empty? && @changeset.content_views.empty?
+        -if @changeset.content_views.empty?
           .grid_7.prefix_1
             #{_("This changeset contains no content.")}
         -else
