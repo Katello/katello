@@ -6,8 +6,9 @@
       %a.fl.katello-logo.logo{ 'href' => 'dashboard' }
     - else
       %a.fl.headpin-logo.logo{ 'href' => 'dashboard' }
-    %span#experimental_indicator
-      = "experimental"
+    - if User.current.legacy_mode
+      %span#legacy_indicator
+        = _("legacy mode")
     %nav{ 'alch-menu' => "userMenu" }
   %header.header.nav-header
     = render :file => 'bastion/widgets/org_switcher'

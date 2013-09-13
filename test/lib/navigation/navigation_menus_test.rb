@@ -55,7 +55,7 @@ class NavigationMenusTest < MiniTest::Rails::ActiveSupport::TestCase
     @systems_menu = Navigation::Menus::Systems.new(@acme_corporation)
 
     assert_equal  _('Systems'), @systems_menu.display
-    assert_equal  3, @systems_menu.items.length
+    assert_equal  2, @systems_menu.items.length
     assert_equal  'dropdown', @systems_menu.type
     assert        @systems_menu.accessible?
   end

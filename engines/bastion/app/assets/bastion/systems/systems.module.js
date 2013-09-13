@@ -45,7 +45,7 @@ angular.module('Bastion.systems').config(['$stateProvider', function($stateProvi
     });
 
     $stateProvider.state('systems.index', {
-        url: '/index',
+        url: '/systems',
         views: {
             'table': {
                 templateUrl: 'systems/views/systems-table-full.html'
@@ -69,7 +69,7 @@ angular.module('Bastion.systems').config(['$stateProvider', function($stateProvi
 
     $stateProvider.state("systems.details", {
         abstract: true,
-        url: '/system/:systemId',
+        url: '/systems/:systemId',
         collapsed: true,
         views: {
             'table': {

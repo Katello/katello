@@ -13,7 +13,7 @@
 
 /**
  * @ngdoc factory
- * @name  Katello.system-groups.factory:SystemGroup
+ * @name  Bastion.system-groups.factory:SystemGroup
  *
  * @requires $resource
  * @requires Routes

@@ -13,7 +13,7 @@
 
 /**
  * @ngdoc service
- * @name  Katello.systems.factory:SystemTask
+ * @name  Bastion.systems.factory:SystemTask
  *
  * @requires $resource
  * @requires $timeout

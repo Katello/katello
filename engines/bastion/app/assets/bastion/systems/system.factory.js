@@ -13,7 +13,7 @@
 
 /**
  * @ngdoc service
- * @name  Katello.systems.factory:System
+ * @name  Bastion.systems.factory:System
  *
  * @requires $resource
  * @requires Routes
@@ -38,7 +38,7 @@ angular.module('Bastion.systems').factory('System',
 
 /**
  * @ngdoc service
- * @name  Katello.systems.factory:BulkAction
+ * @name  Bastion.systems.factory:BulkAction
  *
  * @requires $resource
  * @requires Routes
