@@ -16,6 +16,7 @@
  * @name  Bastion.repositories.factory:Repository
  *
  * @requires $resource
+ * @requires CurrentOrganization
  *
  * @description
  *   Provides a $resource for product or list of repositories.

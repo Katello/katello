@@ -17,7 +17,6 @@
  *
  * @requires $resource
  * @requires $timeout
- * @requires Routes
  * @requires CurrentOrganization
  *
  * @description

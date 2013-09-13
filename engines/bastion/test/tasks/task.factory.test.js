@@ -36,6 +36,8 @@ describe('Factory: Task', function() {
 
     afterEach(function() {
         $httpBackend.flush();
+        $httpBackend.verifyNoOutstandingExpectation();
+        $httpBackend.verifyNoOutstandingRequest();
     });
 
     it('provides a way to get a list of tasks', function() {

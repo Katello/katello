@@ -17,6 +17,7 @@
  *
  * @requires $scope
  * @requires $http
+ * @requires $q
  * @requires Product
  * @requires Provider
  * @requires CurrentOrganization

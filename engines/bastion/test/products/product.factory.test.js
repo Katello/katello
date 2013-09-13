@@ -37,6 +37,8 @@ describe('Factory: Product', function() {
 
     afterEach(function() {
         $httpBackend.flush();
+        $httpBackend.verifyNoOutstandingExpectation();
+        $httpBackend.verifyNoOutstandingRequest();
     });
 
     it('provides a way to get a list of products', function() {

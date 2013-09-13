@@ -42,6 +42,7 @@ angular.module('Bastion.products').controller('ProductsController',
         var nutupane = new Nutupane(Product, params);
         $scope.table = nutupane.table;
         $scope.panel = {loading: false};
+        $scope.removeRow = nutupane.removeRow;
 
         if ($scope.$state.current.collapsed) {
             $scope.panel.loading = true;

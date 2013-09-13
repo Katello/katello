@@ -24,9 +24,7 @@ describe('Controller: ProductDetailsController', function() {
         $scope = $injector.get('$rootScope').$new();
 
         $scope.$stateParams = {productId: 1};
-        $scope.table = {
-            removeRow: function(id) {}
-        };
+        $scope.removeRow = function() {};
 
         $controller('ProductDetailsController', {
             $scope: $scope,
@@ -61,12 +59,12 @@ describe('Controller: ProductDetailsController', function() {
 
     it('provides a method to remove a product', function() {
         spyOn($scope, 'transitionTo');
-        spyOn($scope.table, 'removeRow');
+        spyOn($scope, 'removeRow');
 
         $scope.removeProduct($scope.product);
 
         expect($scope.transitionTo).toHaveBeenCalledWith('products.index');
-        expect($scope.table.removeRow).toHaveBeenCalledWith($scope.product.id);
+        expect($scope.removeRow).toHaveBeenCalledWith($scope.product.id);
     });
 
 });

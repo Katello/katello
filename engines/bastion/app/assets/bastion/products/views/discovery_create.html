@@ -1,4 +1,3 @@
-
 <a href="" ng-click="transitionToDiscovery()">
   <i class="icon-backward"></i>
   {{ "Back To Repository Selection" | i18n }}
@@ -12,12 +11,12 @@
 
 <div class="form">
   <div class="control-group">
-    <label for="existing_product_radio" >{{ "Existing Product:" | i18n }}</label>
+    <label for="newProduct" >{{ "Existing Product:" | i18n }}</label>
     <input type="radio"
-           id="existing_product_radio"
-           ng-model="createRepoChoices.newProduct"
+           name="newProduct"
            value="false"
-           ng-disabled="creating()" />
+           ng-model="createRepoChoices.newProduct"
+           ng-disabled="creating()">
     <select ng-hide="createRepoChoices.newProduct"
             ng-disabled="creating()"
             ng-model="createRepoChoices.existingProductId"
@@ -26,9 +25,12 @@
   </div>
 
   <div class="control-group">
-    <label for="new_product_radio" >{{ "New Product:" | i18n }}</label>
-    <input type="radio" id="new_product_radio" ng-model="createRepoChoices.newProduct"
-           value="true" ng-disabled="creating()"/>
+    <label for="newProduct" >{{ "New Product:" | i18n }}</label>
+    <input type="radio"
+           name="newProduct"
+           value="true"
+           ng-model="createRepoChoices.newProduct"
+           ng-disabled="creating()">
   </div>
 </div>
 
@@ -89,14 +91,16 @@
   </div>
 </div>
 
-<h3>{{ "Selected URLs" | i18n }}</h3>
+<section class="form">
+  
+  <h3>{{ "Selected URLs" | i18n }}</h3>
+
   <div ng-repeat="repo in discovery.selected">
-    <form class="form" novalidate>
+    <form novalidate>
 
       <i class="icon-circle"></i>
       {{  repo.url }}
       <i class="icon-check" ng-show="repo.created"></i>
-
 
       <div class="control-group error required" ng-show="repo.form.$invalid">
         <div class="label" >
@@ -137,4 +141,15 @@
 
     </form>
   </div>
-<button ng-click="createRepos()" ng-disabled="creating()" class="button">{{ "Create" | i18n }}</button>
+
+  <div class="control-group buttons">
+    <div class="input">
+      <button ng-click="createRepos()"
+              ng-disabled="creating()"
+              class="btn btn-primary btn-large">
+        {{ "Create" | i18n }}
+      </button>
+    </div>
+  </div>
+
+</section>

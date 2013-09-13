@@ -1,28 +1,40 @@
+<form class="form" ng-submit="discover()">
 
-<div class="form">
-  <form ng-submit="discover()">
-    <input type="url"
-           class="input input-search input-xxlarge"
-           placeholder="{{ 'URL to discover' | i18n }}"
-           ng-model="discovery.url"
-           ng-disabled="discovery.pending">
-    <input ng-show="!discovery.pending" ng-disabled="!discovery.url" type="submit" class="btn btn-primary" value="{{ 'Discover' | i18n }}"/>
-    <button ng-disabled="discovery.working" ng-show="discovery.pending" ng-click="cancelDiscovery()" class="btn btn-primary">
-      <i class="icon-spinner icon-spin" ng-show="discovery.pending"></i>
-      {{ 'Cancel' | i18n }}
-    </button>
-  </form>
-</div>
+  <input type="url"
+         class="input input-search input-xxlarge"
+         placeholder="{{ 'URL to discover' | i18n }}"
+         ng-model="discovery.url"
+         ng-disabled="discovery.pending">
+
+  <button ng-show="!discovery.pending"
+         ng-disabled="!discovery.url"
+         type="submit"
+         class="btn btn-primary">
+    {{ "Discover" | i18n }}
+  </button>
+
+  <button ng-disabled="discovery.working"
+          ng-show="discovery.pending"
+          ng-click="cancelDiscovery()"
+          class="btn btn-primary">
+    <i class="icon-spinner icon-spin" ng-show="discovery.pending"></i>
+    {{ "Cancel" | i18n }}
+  </button>
+
+</form>
 
 <section class="details details-full">
   <div class="form">
+
     <input type="text"
            class="input input-search"
            placeholder="{{ 'Filter' | i18n }}"
            ng-model="discoveryTable.filterTerm">
 
     <div ng-hide="system.readonly" class="fr nutupane-actions">
-       <button class="btn btn-primary" ng-disabled="discoveryTable.getSelected().length == 0" ng-click="setupSelected()">
+       <button class="btn btn-primary"
+               ng-disabled="discoveryTable.getSelected().length == 0"
+               ng-click="setupSelected()">
          {{ "Create Selected" | i18n }}
        </button>
     </div>
@@ -38,6 +50,7 @@
         </a>
       </span>
     </div>
+
   </div>
 
   <table alch-table="discoveryTable" class="table table-full table-striped">
@@ -48,9 +61,10 @@
     </thead>
 
     <tbody>
-      <tr alch-table-row ng-repeat="url_row in table.rows | filter:table.filterTerm" row-select="url_row">
-        <td alch-table-cell>{{ url_row.path }}</td>
+      <tr alch-table-row ng-repeat="urlRow in table.rows | filter:table.filterTerm" row-select="urlRow">
+        <td alch-table-cell>{{ urlRow.path }}</td>
       </tr>
     </tbody>
   </table>
+
 </section>

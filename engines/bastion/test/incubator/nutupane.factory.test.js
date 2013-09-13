@@ -22,7 +22,7 @@ describe('Factory: Nutupane', function() {
     beforeEach(module(function() {
         Resource = {
             query: function(params, callback) {
-                var result = {results: [{id: 1, value: "value"}, {id:2, value: "value2"}]};
+                var result = {results: [{id: 1, value: "value"}, {id: 2, value: "value2"}]};
                 if (callback) {
                     callback(result);
                 }
@@ -101,9 +101,9 @@ describe('Factory: Nutupane', function() {
         });
 
         it("removes a single occurrence of a row within the list of rows.", function() {
-            var row = {id:2, value: "value2"};
+            var row = {id: 2, value: "value2"};
             nutupane.query();
-            nutupane.removeRow(row);
+            nutupane.removeRow(row.id);
             expect(nutupane.table.rows.length).toBe(1);
             expect(nutupane.table.rows).not.toContain(row);
         });
@@ -136,13 +136,6 @@ describe('Factory: Nutupane', function() {
             nutupane.table.addRow('');
 
             expect(nutupane.table.rows.length).toBe(9);
-        });
-
-        it("provides a way to add an individual row", function() {
-            nutupane.table.rows = [{id: 1}, {id: 2}];
-            nutupane.table.removeRow(1);
-
-            expect(nutupane.table.rows.length).toBe(1);
         });
 
         describe("provides a way to sort the table", function() {

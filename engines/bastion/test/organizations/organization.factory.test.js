@@ -39,6 +39,8 @@ describe('Factory: Organization', function() {
 
     afterEach(function() {
         $httpBackend.flush();
+        $httpBackend.verifyNoOutstandingExpectation();
+        $httpBackend.verifyNoOutstandingRequest();
     });
 
     it('provides a way retrieve an organization', function() {
