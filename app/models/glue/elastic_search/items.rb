@@ -40,7 +40,7 @@ module Glue
       #   The model field on which to sort
       # @option       search_options :sort_order
       #   The order to sort on, one of DESC or ASC
-      # @option       search_options :filter
+      # @option       search_options :filters
       #   Filter to apply to search. Array of hashes.  Each key/value within the hash
       #   is OR'd, whereas each HASH itself is AND'd together
       # @option search_options [true, false] :load_records?
