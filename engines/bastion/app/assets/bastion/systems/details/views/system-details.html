@@ -23,7 +23,7 @@
         <a class="clickable" ng-click="transitionTo('systems.details.subscriptions')" ng-class="{active: isState('systems.details.subscriptions')}">{{ "Subscriptions" | i18n }}</a>
       </li>
       <li>
-        <a class="clickable" ng-click="transitionTo('systems.details.events.index')" ng-class="{active: stateStartsWith('systems.details.events')}">{{ "Events" | i18n }}</a>
+        <a class="clickable" ng-click="transitionTo('systems.details.events.index')" ng-class="{active: stateIncludes('systems.details.events')}">{{ "Events" | i18n }}</a>
       </li>
       <li>
         <a class="clickable" ng-click="transitionTo('systems.details.packages')" ng-class="{active: isState('systems.details.packages')}">{{ "Packages" | i18n }}</a>

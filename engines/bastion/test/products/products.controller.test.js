@@ -65,11 +65,11 @@ describe('Controller: ProductsController', function() {
         expect($scope.transitionTo).toHaveBeenCalledWith('products.discovery.scan');
     });
 
-    it('sets the openDetails function to transition to a details page', function() {
+    it('sets the openProduct function to transition to a repository page', function() {
         spyOn($scope, "transitionTo");
-        $scope.table.openDetails({ id: 1 });
+        $scope.table.openProduct({ id: 1 });
 
-        expect($scope.transitionTo).toHaveBeenCalledWith('products.details.info', { productId: 1 });
+        expect($scope.transitionTo).toHaveBeenCalledWith('products.details.repositories.index', { productId: 1 });
     });
 
 });
