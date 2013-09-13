@@ -41,6 +41,10 @@ module SyncManagementHelper
     current_organization.syncable?
   end
 
+  def error_state?(status)
+    status[:raw_state] == PulpSyncStatus::ERROR && !status[:error_details].blank?
+  end
+
   module RepoMethods
     # returns all repos in hash representation with minors and arch children included
     def collect_repos(products, env, include_disabled = false)
