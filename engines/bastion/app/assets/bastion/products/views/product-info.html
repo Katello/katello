@@ -1,0 +1,45 @@
+<div class="details fl">
+  <section>
+    <h4>{{ "Basic Information" | i18n }}</h4>
+
+    <div class="detail">
+      <span class="info-label">{{ "Name" | i18n }}</span>
+      <span class="info-value"
+            alch-edit-text="product.name"
+            on-save="save(product)"
+            readonly="product.readonly">
+      </span>
+    </div>
+
+    <div class="detail">
+      <span class="info-label">{{ "Label" | i18n }}</span>
+      <span class="info-value">{{ product.label }}</span>
+    </div>
+
+    <div class="detail">
+      <span class="info-label">{{ "Provider" | i18n }}</span>
+      <span class="info-value">{{ product.provider.name }}</span>
+    </div>
+
+    <div class="detail">
+      <span class="info-label">{{ "GPG Key" | i18n }}</span>
+      <span class="info-value"
+            alch-edit-select="product.gpg_key.name"
+            readonly="product.readonly"
+            selector="product.gpg_key_id"
+            options="gpgKeys()"
+            on-save="save(product)">
+      </span>
+    </div>
+
+    <div class="detail">
+      <span class="info-label">{{ "Description" | i18n }}</span>
+      <span class="info-value"
+            alch-edit-textarea="product.description"
+            on-save="save(product)"
+            readonly="product.readonly">
+      </span>
+    </div>
+
+  </section>
+</div>

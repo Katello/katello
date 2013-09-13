@@ -10,13 +10,42 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-class Api::V2::GpgKeysController < Api::V1::GpgKeysController
+class Api::V2::GpgKeysController < Api::V2::ApiController
 
-  include Api::V2::Rendering
+  before_filter :find_organization, :only => [:index]
+  before_filter :authorize
 
-  # apipie docs are defined in v1 controller - they remain the same
+  def rules
+    index_test  = lambda { GpgKey.any_readable?(@organization) }
+
+    {
+      :index   => index_test
+    }
+  end
+
+  api :GET, "/gpg_keys", "List gpg keys"
+  param :organization_id, :identifier, :desc => "organization identifier"
+  param_group :search, Api::V2::ApiController
   def index
-    respond :collection => @organization.gpg_keys.where(params.slice(:name))
+    options = sort_params
+    options[:load_records?] = true
+
+    ids = GpgKey.readable(@organization).pluck(:id)
+
+    options[:filters] = [
+      {:terms => {:id => ids}}
+    ]
+
+    @search_service.model = GpgKey
+    gpg_keys, total_count = @search_service.retrieve(params[:search], params[:offset], options)
+
+    collection = {
+      :results  => gpg_keys,
+      :subtotal => total_count,
+      :total    => @search_service.total_items
+    }
+
+    respond_for_index(:collection => collection)
   end
 
   # apipie docs are defined in v1 controller - they remain the same

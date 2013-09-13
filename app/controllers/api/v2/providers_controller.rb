@@ -12,6 +12,7 @@
 
 class Api::V2::ProvidersController < Api::V2::ApiController
 
+  before_filter :find_provider, :only => [:discovery]
   before_filter :find_organization, :only => [:index, :create]
   before_filter :authorize
 
@@ -31,8 +32,7 @@ class Api::V2::ProvidersController < Api::V2::ApiController
 
   def param_rules
     {
-      :create => [:name, :organization_id],
-      :update => [:name]
+      :create => [:name, :organization_id]
     }
   end
 
@@ -70,28 +70,6 @@ class Api::V2::ProvidersController < Api::V2::ApiController
       p.provider_type ||= Provider::CUSTOM
     end
     respond_for_show(:resource => provider)
-  end
-
-  api :DELETE, "/providers/:id", "Destroy a provider"
-  param :id, :number, :desc => "Provider numeric identifier", :required => true
-  def destroy
-    #
-    # TODO: these should really be done as validations, but the orchestration engine currently converts them into OrchestrationExceptions
-    #
-    if @provider.repositories.any? { |r| r.promoted? }
-      raise HttpErrors::BadRequest, _(<<-eos)
-        Provider cannot be deleted since one of its products or repositories has already been promoted. Using a changeset, please delete the repository from existing environments before deleting it.
-      eos
-    end
-
-    @provider.destroy
-    respond
-  end
-
-  api :PUT, "/providers/:id/refresh_products", "Refresh products for Red Hat provider"
-  param :id, :number, :desc => "Provider numeric identifier", :required => true
-  def refresh_products
-    super
   end
 
   private

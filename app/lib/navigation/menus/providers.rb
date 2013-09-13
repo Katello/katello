@@ -21,11 +21,11 @@ module Navigation
         @type          = 'flyout'
         @items         = [
           Navigation::Items::RedhatProvider.new(organization),
-          Navigation::Items::Providers.new(organization),
+          Navigation::Items::Products.new(organization),
           Navigation::Items::GpgKeys.new(organization)
         ]
 
-        @items << Navigation::Items::Products.new(organization) if ::User.current.experimental_ui
+        @items << Navigation::Items::Providers.new(organization) if ::User.current.experimental_ui
         super
       end
 

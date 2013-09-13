@@ -34,6 +34,7 @@ var Katello = angular.module('Katello', [
     'Bastion.products',
     'Bastion.providers',
     'Bastion.repositories',
+    'Bastion.gpg-keys',
     'Bastion.tasks'
 ]);
 
@@ -68,5 +69,9 @@ angular.module('Katello').run(['i18nDictionary', '$rootScope', '$state', '$state
         $rootScope.$state = $state;
         $rootScope.$stateParams = $stateParams;
         $rootScope.transitionTo = $state.transitionTo;
+
+        $rootScope.isState = function (stateName) {
+            return $state.is(stateName);
+        };
     }
 ]);

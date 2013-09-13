@@ -50,10 +50,6 @@ angular.module('Bastion.systems').controller('SystemDetailsController',
             return false;
         };
 
-        $scope.isState = function (stateName) {
-            return $state.is(stateName);
-        };
-
         $scope.stateStartsWith = function(stateName) {
             return $state.current.name.indexOf(stateName) === 0;
         };

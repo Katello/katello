@@ -44,7 +44,7 @@ describe('Controller: SystemEventDetailsController', function() {
         expect($scope.transitionTo).toHaveBeenCalledWith('systems.details.events.index', {});
     });
 
-    it("provides a way to go back to any page", function(){
+    it("provides a way to go back to any page", function() {
         var fromParams = {foo:1};
         $scope.$broadcast('$stateChangeSuccess', '', '', 'blah.blah', fromParams);
         $scope.transitionBack();

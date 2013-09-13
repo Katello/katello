@@ -41,9 +41,25 @@ angular.module('Bastion.products').controller('ProductsController',
 
         var nutupane = new Nutupane(Product, params);
         $scope.table = nutupane.table;
+        $scope.panel = {loading: false};
+        $scope.removeRow = nutupane.removeRow;
 
-        $scope.table.openDetails = function (product) {
+        if ($scope.$state.current.collapsed) {
+            $scope.panel.loading = true;
+        }
+
+        $scope.table.openDetails = function(product) {
+            $scope.panel.loading = true;
             $scope.transitionTo('products.details.info', {productId: product.id});
+        };
+
+        $scope.transitionToNewProduct = function() {
+            $scope.panel.loading = true;
+            $scope.transitionTo('products.new.form');
+        };
+
+        $scope.transitionToDiscovery = function() {
+            $scope.transitionTo('products.discovery.scan');
         };
 
         $scope.table.closeItem = function() {

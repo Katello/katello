@@ -32,7 +32,7 @@ describe('Factory: SystemErratum', function($provide) {
         };
         task = {id: 'task_id'};
         routes = {
-            apiSystemsPath: function(){return '/katello/api/systems'}
+            apiSystemsPath: function() {return '/katello/api/systems'}
         };
         $provide.value('Routes', routes);
     }));

@@ -18,4 +18,6 @@
  * @description
  *   Module for organization related functionality.
  */
-angular.module('Bastion.organizations', ['ngResource']);
+angular.module('Bastion.organizations', [
+    'ngResource'
+]);

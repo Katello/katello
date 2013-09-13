@@ -19,9 +19,5 @@
  *   Module for provider related functionality.
  */
 angular.module('Bastion.providers', [
-    'ngResource',
-    'alchemy',
-    'alch-templates',
-    'ui.compat',
-    'Bastion.widgets'
+    'ngResource'
 ]);

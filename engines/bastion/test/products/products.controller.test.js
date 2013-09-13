@@ -51,11 +51,26 @@ describe('Controller: ProductsController', function() {
         expect($scope.transitionTo).toHaveBeenCalledWith('products.index');
     });
 
+    it('provides a method to transition to the new product page', function() {
+        spyOn($scope, "transitionTo");
+        $scope.transitionToNewProduct();
+
+        expect($scope.transitionTo).toHaveBeenCalledWith('products.new.form');
+    });
+
+    it('provides a method to transition to the repo discovery page', function() {
+        spyOn($scope, "transitionTo");
+        $scope.transitionToDiscovery();
+
+        expect($scope.transitionTo).toHaveBeenCalledWith('products.discovery.scan');
+    });
+
     it('sets the openDetails function to transition to a details page', function() {
         spyOn($scope, "transitionTo");
         $scope.table.openDetails({ id: 1 });
 
         expect($scope.transitionTo).toHaveBeenCalledWith('products.details.info', { productId: 1 });
     });
+
 });
 

@@ -787,4 +787,10 @@ module Glue::Pulp::Repo
 
   end
 
+  def full_path
+    pulp_uri = URI.parse(Katello.config.pulp.url)
+    scheme   = (self.unprotected ? 'http' : 'https')
+    "#{scheme}://#{pulp_uri.host.downcase}/pulp/repos/#{relative_path}"
+  end
+
 end

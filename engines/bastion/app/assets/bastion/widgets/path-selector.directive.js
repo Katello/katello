@@ -59,7 +59,7 @@ angular.module('Bastion.widgets').directive('pathSelector',
                         options
                     );
 
-                    $document.bind(pathSelect.get_select_event(), function(){
+                    $document.bind(pathSelect.get_select_event(), function() {
                         var environments = pathSelect.get_selected();
 
                         scope.pathSelector = Object.keys(environments)[0];

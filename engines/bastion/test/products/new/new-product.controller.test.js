@@ -12,15 +12,15 @@
  **/
 
 describe('Controller: NewProductController', function() {
-    var $scope,
-        Product;
+    var $scope;
 
-    beforeEach(module('Bastion.products'));
+    beforeEach(module('Bastion.products', 'Bastion.test-mocks'));
 
     beforeEach(inject(function($injector) {
+        var $controller = $injector.get('$controller'),
+            Product = $injector.get('MockResource').$new;
+
         $scope = $injector.get('$rootScope').$new();
-        Product = $injector.get('Product');
-        $controller = $injector.get('$controller');
 
         $controller('NewProductController', {
             $scope: $scope,

@@ -24,7 +24,9 @@ angular.module('Bastion.products', [
     'alch-templates',
     'ui.compat',
     'Bastion.widgets',
-    'Bastion.providers'
+    'Bastion.providers',
+    'Bastion.gpg-keys',
+    'Bastion.tasks'
 ]);
 
 /**
@@ -77,6 +79,33 @@ angular.module('Bastion.products').config(['$stateProvider', function($stateProv
         templateUrl: 'providers/views/new.html'
     })
 
+    .state("products.discovery", {
+        collapsed: true,
+        abstract: true,
+        views: {
+            'table': {
+                templateUrl: 'products/views/products-table-collapsed.html'
+            },
+            'action-panel': {
+                templateUrl: 'products/views/discovery_base.html',
+                controller: 'DiscoveryController'
+            }
+        }
+    })
+    .state("products.discovery.scan", {
+        collapsed: true,
+        url: '/products/discovery/scan',
+        templateUrl: 'products/views/discovery.html'
+
+    })
+    .state("products.discovery.create", {
+        collapsed: true,
+        url: '/products/discovery/scan/create',
+        templateUrl: 'products/views/discovery_create.html',
+        controller: 'DiscoveryFormController'
+
+    })
+
     .state("products.details", {
         abstract: true,
         url: '/products/:productId',
@@ -97,17 +126,28 @@ angular.module('Bastion.products').config(['$stateProvider', function($stateProv
         controller: 'ProductDetailsInfoController',
         templateUrl: 'products/views/product-info.html'
     })
+
     .state('products.details.repositories', {
-        url: '/repositories',
-        collapsed: true,
+        abstract: true,
         controller: 'ProductRepositoriesController',
+        template: '<div ui-view></div>'
+    })
+    .state('products.details.repositories.index', {
+        collapsed: true,
+        url: '/repositories',
         templateUrl: 'products/views/product-repositories.html'
     })
-    .state('products.details.repositories.info', {
-        url: '/repositories/:id',
+    .state('products.details.repositories.new', {
+        url: '/repositories/new',
         collapsed: true,
-        controller: 'ProductRepositoriesController',
-        templateUrl: 'products/views/repository.html'
+        controller: 'NewRepositoryController',
+        templateUrl: 'repositories/views/new.html'
+    })
+    .state('products.details.repositories.info', {
+        url: '/repositories/:repositoryId',
+        collapsed: true,
+        controller: 'RepositoryDetailsInfoController',
+        templateUrl: 'repositories/views/repository-info.html'
     });
 
 }]);

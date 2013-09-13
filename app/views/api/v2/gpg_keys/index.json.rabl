@@ -1,6 +1,3 @@
-collection @collection
+object false
 
-extends 'api/v2/common/identifier'
-extends 'api/v2/common/org_reference'
-extends 'api/v2/common/timestamps'
-
+extends "api/v2/common/index"
