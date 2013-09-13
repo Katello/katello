@@ -6,6 +6,20 @@ class AddForeignKeys < ActiveRecord::Migration
   end
 
   def self.up
+    # Some older versions left providers and other models around after an organization or user was deleted
+    execute("delete from providers where organization_id not in (select id from organizations)")
+    execute("delete from task_statuses where organization_id not in (select id from organizations)")
+    execute("delete from notices where organization_id not in (select id from organizations)")
+    execute("delete from user_notices where user_id not in (select id from users)")
+    execute("delete from user_notices where user_id is null")
+    execute("delete from user_notices where notice_id not in (select id from notices)")
+    execute("delete from pools where id in (select pool_id from key_pools where activation_key_id not in (select id from activation_keys))")
+    execute("delete from key_pools where activation_key_id not in (select id from activation_keys)")
+    execute("delete from key_system_groups where activation_key_id not in (select id from activation_keys)")
+    execute("delete from marketing_engineering_products where engineering_product_id not in (select id from products)")
+    execute("delete from roles_users where role_id not in (select id from roles)")
+    execute("delete from roles_users where user_id not in (select id from users)")
+
     add_foreign_key_deferred 'activation_keys', 'content_views',
                              :name => 'activation_keys_content_view_id_fk'
     add_foreign_key_deferred 'activation_keys', 'environments',
