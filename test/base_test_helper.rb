@@ -53,6 +53,12 @@ class Minitest::Rails::ActionController::TestCase
   include Support::SearchService
 end
 
+module VCR
+  def self.live?
+    VCR.configuration.default_cassette_options[:record] != :none
+  end
+end
+
 def configure_vcr
   require "vcr"
 
@@ -73,7 +79,7 @@ def configure_vcr
 
     c.default_cassette_options = {
       :record => mode,
-      :match_requests_on => [:method, :path, :params],
+      :match_requests_on => [:method, :path, :params, :body_json],
       :serialize_with => :syck
     }
 

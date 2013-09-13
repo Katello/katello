@@ -11,14 +11,13 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require 'minitest_helper'
-require './test/support/repository_support'
-require './test/support/consumer_support'
-require './test/support/user_support'
+require './test/support/pulp/repository_support'
+require './test/support/pulp/user_support'
+
 
 class GluePulpConsumerGroupTestBase < MiniTest::Rails::ActiveSupport::TestCase
   extend  ActiveRecord::TestFixtures
   include RepositorySupport
-  include ConsumerSupport
 
   fixtures :all
 
@@ -31,27 +30,21 @@ class GluePulpConsumerGroupTestBase < MiniTest::Rails::ActiveSupport::TestCase
     disable_glue_layers(services, models)
 
     User.current = User.find(@loaded_fixtures['users']['admin']['id'])
-    VCR.insert_cassette('glue_pulp_consumer_group', :match_requests_on => [:path, :params, :method, :body_json])
-  end
-
-  def self.after_suite
-    VCR.eject_cassette
   end
 
 end
 
-class GluePulpConsumerGroupTestCreate < GluePulpConsumerGroupTestBase
+
+class GluePulpConsumerGroupCreateTest < GluePulpConsumerGroupTestBase
 
   def setup
-    @simple_server  = ConsumerSupport.create_consumer(systems(:simple_server).id)
-    @simple_group   = SystemGroup.find(system_groups(:simple_group).id)
+    VCR.insert_cassette('pulp/consumer_group/create')
+    @simple_group = SystemGroup.find(system_groups(:simple_group).id)
   end
 
   def teardown
-    ConsumerSupport.destroy_consumer(@simple_server.id)
     @simple_group.del_pulp_consumer_group
-  rescue RestClient::ResourceNotFound => e
-    #ignore if not found
+    VCR.eject_cassette
   end
 
   def test_set_pulp_consumer_group
@@ -60,24 +53,48 @@ class GluePulpConsumerGroupTestCreate < GluePulpConsumerGroupTestBase
 
 end
 
-class GluePulpConsumerGroupTest < GluePulpConsumerGroupTestBase
+
+class GluePulpConsumerGroupDeleteTest < GluePulpConsumerGroupTestBase
 
   def setup
-    @simple_server  = ConsumerSupport.create_consumer(systems(:simple_server).id)
+    VCR.insert_cassette('pulp/consumer_group/delete')
     @simple_group   = SystemGroup.find(system_groups(:simple_group).id)
     @simple_group.set_pulp_consumer_group
   end
 
   def teardown
-    ConsumerSupport.destroy_consumer(@simple_server.id)
     Katello.pulp_server.resources.consumer_group.retrieve(@simple_group.pulp_id)
     @simple_group.del_pulp_consumer_group
   rescue RestClient::ResourceNotFound => e
     #do nothing
+  ensure
+    VCR.eject_cassette
   end
 
   def test_del_pulp_consumer_group
     assert @simple_group.del_pulp_consumer_group
+  end
+
+end
+
+
+class GluePulpConsumerGroupTest < GluePulpConsumerGroupTestBase
+
+  def setup
+    VCR.insert_cassette('pulp/consumer_group/delete')
+
+    @simple_server  = System.find(systems(:simple_server).id)
+    @simple_server.set_pulp_consumer
+
+    @simple_group   = SystemGroup.find(system_groups(:simple_group).id)
+    @simple_group.set_pulp_consumer_group
+  end
+
+  def teardown
+    @simple_server.del_pulp_consumer
+    @simple_group.del_pulp_consumer_group
+  ensure
+    VCR.eject_cassette
   end
 
   def test_add_consumer
@@ -104,33 +121,24 @@ end
 
 class GluePulpConsumerGroupRequiresBoundRepoTest < GluePulpConsumerGroupTestBase
 
-  #@@simple_server = nil
-  #@@simple_group = nil
-
   def setup
-    super
-    UserSupport.setup_hidden_user(@loaded_fixtures['users']['hidden']['id'])
+    VCR.insert_cassette('pulp/consumer_group/content')
     RepositorySupport.create_and_sync_repo(@loaded_fixtures['repositories']['fedora_17_x86_64']['id'])
 
-    @simple_server = ConsumerSupport.create_consumer(@loaded_fixtures['systems']['simple_server']['id'])
-    @simple_group = SystemGroup.find(@loaded_fixtures['system_groups']['simple_group']['id'])
+    @simple_group   = SystemGroup.find(system_groups(:simple_group).id)
     @simple_group.set_pulp_consumer_group
   end
 
   def teardown
-    UserSupport.delete_hidden_user(@loaded_fixtures['users']['hidden']['id'])
-    @simple_group.try(:del_pulp_consumer_group)
-    ConsumerSupport.destroy_consumer
     RepositorySupport.destroy_repo
-    super
-  rescue RestClient::ResourceNotFound => e
-    #do nothing
+    @simple_group.del_pulp_consumer_group
+    VCR.eject_cassette
   end
 
   def test_install_package
     job = @simple_group.install_package(['elephant'])
     task = job.first
-    TaskSupport.wait_on_task(task)
+    TaskSupport.wait_on_tasks(task, :ignore_exception => true)
 
     assert_includes task['tags'], 'pulp:action:unit_install'
   end
@@ -138,7 +146,7 @@ class GluePulpConsumerGroupRequiresBoundRepoTest < GluePulpConsumerGroupTestBase
   def test_uninstall_package
     job = @simple_group.uninstall_package(['cheetah'])
     task = job.first
-    TaskSupport.wait_on_task(task)
+    TaskSupport.wait_on_tasks(task, :ignore_exception => true)
 
     assert_includes task['tags'], 'pulp:action:unit_uninstall'
   end
@@ -146,7 +154,7 @@ class GluePulpConsumerGroupRequiresBoundRepoTest < GluePulpConsumerGroupTestBase
   def test_update_package
     job = @simple_group.update_package(['cheetah'])
     task = job.first
-    TaskSupport.wait_on_task(task)
+    TaskSupport.wait_on_tasks(task, :ignore_exception => true)
 
     assert_includes task['tags'], 'pulp:action:unit_update'
   end
@@ -154,7 +162,7 @@ class GluePulpConsumerGroupRequiresBoundRepoTest < GluePulpConsumerGroupTestBase
   def test_update_all_packages
     job = @simple_group.update_package([])
     task = job.first
-    TaskSupport.wait_on_task(task)
+    TaskSupport.wait_on_tasks(task, :ignore_exception => true)
 
     assert_includes task['tags'], 'pulp:action:unit_update'
   end
@@ -162,7 +170,7 @@ class GluePulpConsumerGroupRequiresBoundRepoTest < GluePulpConsumerGroupTestBase
   def test_install_package_group
     job = @simple_group.install_package_group(['mammals'])
     task = job.first
-    TaskSupport.wait_on_task(task)
+    TaskSupport.wait_on_tasks(task, :ignore_exception => true)
 
     assert_includes task['tags'], 'pulp:action:unit_install'
   end
@@ -170,7 +178,7 @@ class GluePulpConsumerGroupRequiresBoundRepoTest < GluePulpConsumerGroupTestBase
   def test_uninstall_package_group
     job = @simple_group.uninstall_package_group(['mammals'])
     task = job.first
-    TaskSupport.wait_on_task(task)
+    TaskSupport.wait_on_tasks(task, :ignore_exception => true)
 
     assert_includes task['tags'], 'pulp:action:unit_uninstall'
   end
@@ -179,7 +187,7 @@ class GluePulpConsumerGroupRequiresBoundRepoTest < GluePulpConsumerGroupTestBase
     erratum_id = RepositorySupport.repo.errata.select{ |errata| errata.errata_id == 'RHEA-2010:0002' }.first.id
     job = @simple_group.install_consumer_errata([erratum_id])
     task = job.first
-    TaskSupport.wait_on_task(task)
+    TaskSupport.wait_on_tasks(task, :ignore_exception => true)
 
     assert_includes task['tags'], 'pulp:action:unit_install'
   end
