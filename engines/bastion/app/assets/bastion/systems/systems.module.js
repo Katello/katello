@@ -53,6 +53,20 @@ angular.module('Bastion.systems').config(['$stateProvider', function($stateProvi
         }
     });
 
+    $stateProvider.state('systems.register', {
+        url: '/system/register',
+        collapsed: true,
+        views: {
+            'table': {
+                templateUrl: 'systems/views/systems-table-collapsed.html'
+            },
+            'action-panel': {
+                controller: 'SystemRegisterController',
+                templateUrl: 'systems/views/register.html'
+            }
+        }
+    });
+
     $stateProvider.state("systems.details", {
         abstract: true,
         url: '/system/:systemId',
@@ -66,9 +80,8 @@ angular.module('Bastion.systems').config(['$stateProvider', function($stateProvi
                 templateUrl: 'systems/details/views/system-details.html'
             }
         }
-    });
-
-    $stateProvider.state('systems.details.info', {
+    })
+    .state('systems.details.info', {
         url: '/info',
         collapsed: true,
         controller: 'SystemDetailsInfoController',
