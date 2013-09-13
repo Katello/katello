@@ -32,6 +32,8 @@ module Glue::Candlepin::Product
       # we must store custom logger object during product importing so we can log status
       # from various places like callbacks
       attr_accessor :import_logger
+
+      attr_accessible :multiplier, :attrs, :productContent
     end
   end
 

@@ -22,13 +22,13 @@ describe('Factory: Nutupane', function() {
     beforeEach(module(function() {
         Resource = {
             query: function(params, callback) {
-                var result = {results: [{id: 1, value: "value"}, {id:2, value: "value2"}]};
+                var result = {results: [{id: 1, value: "value"}, {id: 2, value: "value2"}]};
                 if (callback) {
                     callback(result);
                 }
                 return result;
             },
-            customAction: function(){},
+            customAction: function() {},
             total: 10,
             subtotal: 8,
             offset: 5,
@@ -101,9 +101,9 @@ describe('Factory: Nutupane', function() {
         });
 
         it("removes a single occurrence of a row within the list of rows.", function() {
-            var row = {id:2, value: "value2"};
+            var row = {id: 2, value: "value2"};
             nutupane.query();
-            nutupane.removeRow(row);
+            nutupane.removeRow(row.id);
             expect(nutupane.table.rows.length).toBe(1);
             expect(nutupane.table.rows).not.toContain(row);
         });
@@ -131,7 +131,14 @@ describe('Factory: Nutupane', function() {
             expect(Resource.query).not.toHaveBeenCalled();
         });
 
-        describe("provides a way to sort the table", function(){
+        it("provides a way to add an individual row", function() {
+            nutupane.table.rows = new Array(8);
+            nutupane.table.addRow('');
+
+            expect(nutupane.table.rows.length).toBe(9);
+        });
+
+        describe("provides a way to sort the table", function() {
             it ("defaults the sort to ascending if the previous sort does not match the new sort.", function() {
                 var expectedParams = {sort_by: 'name', sort_order: 'ASC', offset: 0, search: ''};
                 nutupane.table.resource.sort = {};

@@ -37,6 +37,8 @@ describe('Factory: Provider', function() {
 
     afterEach(function() {
         $httpBackend.flush();
+        $httpBackend.verifyNoOutstandingExpectation();
+        $httpBackend.verifyNoOutstandingRequest();
     });
 
     it('provides a way to get a list of providers', function() {

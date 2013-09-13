@@ -18,4 +18,6 @@
  * @description
  *   Module for task related functionality.
  */
-angular.module('Bastion.tasks', ['ngResource']);
+angular.module('Bastion.tasks', [
+    'ngResource'
+]);

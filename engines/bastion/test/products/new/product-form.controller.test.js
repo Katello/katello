@@ -13,30 +13,34 @@
 
 describe('Controller: ProductFormController', function() {
     var $scope,
-        $state,
-        Provider,
-        Product,
-        CurrentOrganization;
+        $httpBackend;
 
-    beforeEach(module('Bastion.products', 'Bastion.providers'));
+    beforeEach(module('Bastion.products', 'Bastion.test-mocks'));
 
     beforeEach(inject(function($injector) {
+        var $controller = $injector.get('$controller'),
+            $http = $injector.get('$http'),
+            $q = $injector.get('$q'),
+            Product = $injector.get('MockResource').$new(),
+            Provider = $injector.get('MockResource').$new(),
+            GPGKey = $injector.get('MockResource').$new();
+
         $scope = $injector.get('$rootScope').$new();
-        $state = $injector.get('$state');
-        $controller = $injector.get('$controller');
+        $httpBackend = $injector.get('$httpBackend');
 
-        Provider = $injector.get('Provider');
-        Product = $injector.get('Product');
-        CurrentOrganization = 'ACME';
-
-        $scope.productForm = {};
+        $scope.productForm = $injector.get('MockForm');
+        $scope.table = {
+            addRow: function() {},
+            closeItem: function() {}
+        }
 
         $controller('ProductFormController', {
             $scope: $scope,
-            $state: $state,
+            $http: $http,
+            $q: $q,
             Product: Product,
             Provider: Provider,
-            CurrentOrganization: CurrentOrganization
+            GPGKey: GPGKey
         });
     }));
 
@@ -47,10 +51,36 @@ describe('Controller: ProductFormController', function() {
     it('should save a new product resource', function() {
         var product = $scope.product;
 
-        spyOn(product, '$save');
+        spyOn($scope.table, 'addRow');
+        spyOn($scope.table, 'closeItem');
+        spyOn(product, '$save').andCallThrough();
         $scope.save(product);
 
         expect(product.$save).toHaveBeenCalled();
+        expect($scope.table.addRow).toHaveBeenCalled();
+        expect($scope.table.closeItem).toHaveBeenCalled();
+    });
+
+    it('should fail to save a new product resource', function() {
+        var product = $scope.product;
+
+        product.failed = true;
+        spyOn(product, '$save').andCallThrough();
+        $scope.save(product);
+
+        expect(product.$save).toHaveBeenCalled();
+        expect($scope.productForm['name'].$invalid).toBe(true);
+        expect($scope.productForm['name'].$error.messages).toBeDefined();
+    });
+
+    it('should fetch a label whenever the name changes', function() {
+        $httpBackend.expectGET('/katello/organizations/default_label?name=ChangedName').respond('changed_name');
+
+        $scope.product.name = 'ChangedName';
+        $scope.$apply();
+        $httpBackend.flush();
+
+        expect($scope.product.label).toBe('changed_name');
     });
 
 });

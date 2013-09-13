@@ -31,18 +31,18 @@ describe('Controller: SystemErrataController', function() {
         Nutupane = function() {
             this.table = {
                 showColumns: function() {},
-                getSelected: function(){return [mockErratum];},
-                selectAll: function(){}
+                getSelected: function() {return [mockErratum];},
+                selectAll: function() {}
             };
             this.get = function() {};
         };
         SystemTask = {
-            get: function(){},
-            poll: function(task, returnFunction){}
+            get: function() {},
+            poll: function(task, returnFunction) {}
         };
         SystemErratum = {
-            get: function(){return []},
-            apply: function(errata, success){
+            get: function() {return []},
+            apply: function(errata, success) {
                 success(mockTask);
                 return mockTask
             }
@@ -78,7 +78,7 @@ describe('Controller: SystemErrataController', function() {
                                                          {eventId: mockTask.id});
     });
 
-    it("provide a way to apply errata", function(){
+    it("provide a way to apply errata", function() {
         spyOn(SystemErratum, "apply").andCallThrough();
         spyOn($scope.errataTable, "selectAll");
         spyOn($scope, "openEventInfo");

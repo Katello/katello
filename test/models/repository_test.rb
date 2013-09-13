@@ -26,7 +26,7 @@ class RepositoryCreateTest < RepositoryTestBase
   end
 
   def teardown
-    @repo.destroy
+    @repo.destroy if @repo.id
   end
 
   def test_create

@@ -36,12 +36,15 @@ describe('Factory: Repository', function() {
 
     afterEach(function() {
         $httpBackend.flush();
+        $httpBackend.verifyNoOutstandingExpectation();
+        $httpBackend.verifyNoOutstandingRequest();
     });
 
-    it('provides a way to get a list of repositorys', function() {
-        $httpBackend.expectGET('/katello/api/products/1/repositories').respond(repositories);
+    it('provides a way to get a list of repositories', function() {
+        $httpBackend.expectGET('/katello/api/repositories?organization_id=ACME&product_id=1')
+                    .respond(repositories);
 
-        Repository.query({ productId: 1 }, function(repositories) {
+        Repository.query({'product_id': 1}, function(repositories) {
             expect(repositories.records.length).toBe(1);
         });
     });
@@ -50,9 +53,9 @@ describe('Factory: Repository', function() {
         var updatedRepository = repositories.records[0];
 
         updatedRepository.name = 'NewRepositoryName';
-        $httpBackend.expectPUT('/katello/api/products/repositories/1').respond(updatedRepository);
+        $httpBackend.expectPUT('/katello/api/repositories/1?organization_id=ACME').respond(updatedRepository);
 
-        Repository.update({ productId: 1, id: 1 }, function(repository) {
+        Repository.update({name: 'NewRepositoryName', id: 1}, function(repository) {
             expect(repository).toBeDefined();
             expect(repository.name).toBe('NewRepositoryName');
         });

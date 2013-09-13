@@ -29,6 +29,7 @@ class AuthorizationTestBase < MiniTest::Rails::ActiveSupport::TestCase
     @admin              = User.find(users(:admin))
     @disabled_user      = User.find(users(:disabled_user))
 
+    @fedora_hosted        = Provider.find(providers(:fedora_hosted))
     @fedora_17_x86_64     = Repository.find(repositories(:fedora_17_x86_64).id)
     @fedora_17_x86_64_dev = Repository.find(repositories(:fedora_17_x86_64_dev).id)
     @fedora               = Product.find(products(:fedora).id)

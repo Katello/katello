@@ -34,11 +34,11 @@ angular.module('Bastion.systems').controller('SystemPackagesController',
 
         $scope.packageAction = {actionType: 'packageInstall'}; //default to packageInstall
 
-        $scope.updateAll = function(){
+        $scope.updateAll = function() {
             SystemPackage.updateAll({uuid: $scope.system.uuid}, openEventInfo);
         };
 
-        $scope.performPackageAction = function(){
+        $scope.performPackageAction = function() {
             var action, terms;
             action = $scope.packageAction.actionType;
             terms = $scope.packageAction.term.split(/ *, */);
@@ -68,7 +68,7 @@ angular.module('Bastion.systems').controller('SystemPackagesController',
         $scope.currentPackagesTable.openEventInfo = openEventInfo;
         $scope.currentPackagesTable.system = $scope.system;
 
-        $scope.currentPackagesTable.taskFailed = function(task){
+        $scope.currentPackagesTable.taskFailed = function(task) {
           return task === undefined || task.failed || task['affected_units'] === 0;
         };
 
@@ -77,13 +77,13 @@ angular.module('Bastion.systems').controller('SystemPackagesController',
                 uuid: $scope.system.uuid,
                 packages:[{name: pkg.name, version: pkg.version,
                            arch: pkg.arch, release: pkg.release}]},
-                function(scheduledTask){
+                function(scheduledTask) {
                     pkg.removeTask = scheduledTask;
-                    SystemTask.poll(scheduledTask, function(polledTask){
+                    SystemTask.poll(scheduledTask, function(polledTask) {
                         pkg.removeTask = polledTask;
                     });
                 },
-                function(data){
+                function(data) {
                     var message = i18nFilter("Error starting task ");
                     if (data.data.displayMessage) {
                         message += ":" + data.data.displayMessage;

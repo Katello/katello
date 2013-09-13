@@ -16,7 +16,8 @@
  * @name  Bastion.products.controller:ProducFormController
  *
  * @requires $scope
- * @requires $state
+ * @requires $http
+ * @requires $q
  * @requires Product
  * @requires Provider
  * @requires CurrentOrganization
@@ -27,14 +28,19 @@
  *   within the table.
  */
 angular.module('Bastion.products').controller('ProductFormController',
-    ['$scope', '$state', '$http', 'Product', 'Provider', 'CurrentOrganization',
-    function($scope, $state, $http, Product, Provider, CurrentOrganization) {
+    ['$scope', '$http', '$q', 'Product', 'Provider', 'GPGKey',
+    function($scope, $http, $q, Product, Provider, GPGKey) {
 
         $scope.product = $scope.product || new Product();
 
         $scope.$on('$stateChangeSuccess', function(event, toState) {
             if (toState.name === 'products.new.form') {
-                fetchProviders();
+                $scope.providers = fetchProviders();
+                $scope.gpgKeys = fetchGPGKeys();
+
+                $q.all([$scope.gpgKeys, $scope.providers]).then(function() {
+                    $scope.panel.loading = false;
+                });
             }
         });
 
@@ -43,9 +49,8 @@ angular.module('Bastion.products').controller('ProductFormController',
         };
 
         $scope.$watch('product.name', function() {
-            $http({
-                method: 'GET',
-                url: '/katello/organizations/default_label',
+            $http.get(
+                '/katello/organizations/default_label', {
                 params: {'name': $scope.product.name}
             })
             .success(function(response) {
@@ -58,9 +63,23 @@ angular.module('Bastion.products').controller('ProductFormController',
         });
 
         function fetchProviders() {
-            Provider.query({'organization_id': CurrentOrganization}, function(providers) {
-                $scope.providers = providers.results;
+            var deferred = $q.defer();
+
+            Provider.query(function(providers) {
+                deferred.resolve(providers.results);
             });
+
+            return deferred.promise;
+        }
+
+        function fetchGPGKeys() {
+            var deferred = $q.defer();
+
+            GPGKey.query(function(gpgKeys) {
+                deferred.resolve(gpgKeys.results);
+            });
+
+            return deferred.promise;
         }
 
         function success(response) {

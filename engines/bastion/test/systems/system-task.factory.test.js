@@ -23,7 +23,7 @@ describe('Factory: SystemTask', function() {
         task = {id: 'TASK_ID', pending: false};
         pendingTask = {id: 'PENDING_TASK_ID', pending: true};
         routes = {
-            apiSystemsPath: function(){return '/katello/api/systems/'}
+            apiSystemsPath: function() {return '/katello/api/systems/'}
         };
         $provide.value('Routes', routes);
     }));

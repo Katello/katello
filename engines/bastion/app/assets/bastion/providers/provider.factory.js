@@ -16,15 +16,16 @@
  * @name  Katello.providers.factory:Provider
  *
  * @requires $resource
+ * @requires CurrentOrganization
  *
  * @description
  *   Provides a $resource for product or list of providers.
  */
 angular.module('Bastion.providers').factory('Provider',
-    ['$resource', function($resource) {
+    ['$resource', 'CurrentOrganization', function($resource, CurrentOrganization) {
 
         return $resource('/katello/api/providers/:id/:action',
-            {id: '@id', 'organization_id': '@organization_id'},
+            {id: '@id', 'organization_id': CurrentOrganization},
             {
                 query:  {method: 'GET'}
             }

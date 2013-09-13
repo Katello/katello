@@ -48,7 +48,8 @@ module Authorization::Organization
           :update_distributors => _("Modify Distributors"),
           :delete_distributors => _("Delete Distributors"),
           :sync => _("Sync Products"),
-          :gpg => _("Administer GPG Keys")
+          :gpg => _("Administer GPG Keys"),
+          :redhat_products => _("Administer Red Hat Products")
        }
       else
         org_verbs = {
@@ -62,6 +63,7 @@ module Authorization::Organization
           :register_distributors => _("Register Distributors"),
           :update_distributors => _("Modify Distributors"),
           :delete_distributors => _("Delete Distributors"),
+          :redhat_products => _("Administer Red Hat Products")
        }
       end
       org_verbs.merge!({
@@ -144,6 +146,10 @@ module Authorization::Organization
 
     def syncable?
       ::User.allowed_to?(SYNC_PERM_VERBS, :organizations, nil, self)
+    end
+
+    def redhat_manageable?
+      ::User.allowed_to?([:redhat_products], :organizations, nil, self)
     end
   end
 

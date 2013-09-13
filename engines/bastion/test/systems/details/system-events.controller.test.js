@@ -28,8 +28,8 @@ describe('Controller: SystemEventsController', function() {
             tasks: function() {return []}
         };
         SystemTask = {
-            get: function(task, success){success(task)},
-            poll: function(task, success){success(task)}
+            get: function(task, success) {success(task)},
+            poll: function(task, success) {success(task)}
         };
     });
 

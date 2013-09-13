@@ -135,6 +135,7 @@ class Organization < ActiveRecord::Base
     raise _("Repository Discovery already in progress") if self.repo_discovery_task && !self.repo_discovery_task.finished?
     raise _("Discovery URL not set.") if url.blank?
     task = self.async(:organization => self, :task_type => :repo_discovery).start_discovery_task(url, notify)
+    task.parameters = {:url => url}
     self.task_statuses << task
     self.save!
     task

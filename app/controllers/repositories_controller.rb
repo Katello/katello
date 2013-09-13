@@ -25,7 +25,8 @@ class RepositoriesController < ApplicationController
     read_any_test = lambda{Provider.any_readable?(current_organization)}
     read_test = lambda{@product.readable?}
     edit_test = lambda{@product.editable?}
-    org_edit = lambda{current_organization.editable?}
+    org_edit = lambda{current_organization.redhat_manageable?}
+
     {
       :new => edit_test,
       :create => edit_test,

@@ -71,7 +71,7 @@ describe Product, :katello => true do
         it "should create product in katello" do
 
           expected_product = {
-              :attributes => ProductTestData::PRODUCT_WITH_ATTRS[:attributes],
+              :attributes => ProductTestData::PRODUCT_WITH_ATTRS[:attrs],
               :multiplier => ProductTestData::PRODUCT_WITH_ATTRS[:multiplier],
               :name => ProductTestData::PRODUCT_WITH_ATTRS[:name]
           }
@@ -311,21 +311,19 @@ describe Product, :katello => true do
       @repo.stub(:promoted?).and_return(false)
       @repo.stub(:update_content).and_return(Candlepin::Content.new)
     end
+
     context "Test list enabled repos should show redhat repos" do
       before do
         @repo.enabled = false
         @repo.save!
       end
+
       specify {Product.readable(@organization).should be_empty}
       subject {Product.all_readable(@organization)}
       it {should_not be_empty}
       it {should == [@product]}
       specify {Product.editable(@organization).should be_empty}
       specify {Product.syncable(@organization).should be_empty}
-
-      subject {Product.all_editable(@organization)}
-      it {should_not be_empty}
-      it {should == [@product]}
     end
 
     context "Test list enabled repos should show redhat repos" do
@@ -333,9 +331,9 @@ describe Product, :katello => true do
         @repo.enabled = true
         @repo.save!
       end
+
       specify {Product.readable(@organization).should == [@product]}
       specify {Product.syncable(@organization).should == [@product]}
-      specify {Product.editable(@organization).should == [@product]}
     end
   end
 

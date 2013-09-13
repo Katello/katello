@@ -29,7 +29,7 @@ describe('Controller: SystemDetailsController', function() {
         $scope = $rootScope.$new();
 
         state = {
-            transitionTo: function(){}
+            transitionTo: function() {}
         };
 
         mockSystem = {

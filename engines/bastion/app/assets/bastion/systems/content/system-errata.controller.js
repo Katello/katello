@@ -37,7 +37,7 @@ angular.module('Bastion.systems').controller('SystemErrataController',
         errataNutupane = new Nutupane(SystemErratum, {'id': $scope.$stateParams.systemId}, 'get');
         $scope.errataTable = errataNutupane.table;
         $scope.errataTable.errataFilterTerm = "";
-        $scope.errataTable.errataCompare = function(item){
+        $scope.errataTable.errataCompare = function(item) {
             var searchText = $scope.errataTable.errataFilterTerm;
             return item.type.indexOf(searchText)  >= 0 ||
                 item.errata_id.indexOf(searchText) >= 0 ||
@@ -57,7 +57,7 @@ angular.module('Bastion.systems').controller('SystemErrataController',
             var selected, errataIds = [];
             selected = $scope.errataTable.getSelected();
             if(selected.length > 0){
-                angular.forEach(selected, function(value){
+                angular.forEach(selected, function(value) {
                     errataIds.push(value.errata_id);
                 });
                 SystemErratum.apply({uuid: $scope.system.uuid, errata_ids: errataIds},

@@ -79,13 +79,16 @@ angular.module('Bastion.widgets').factory('Nutupane',
                 return deferred.promise;
             };
 
-            self.removeRow = function(row) {
+            self.removeRow = function(id) {
                 var table = self.table;
+
                 table.rows = _.reject(table.rows, function(item) {
-                    return item.id === row.id;
+                    return item.id === id;
                 }, this);
+
                 table.resource.total = table.resource.total - 1;
                 table.resource.subtotal = table.resource.subtotal - 1;
+
                 return self.table.rows;
             };
 

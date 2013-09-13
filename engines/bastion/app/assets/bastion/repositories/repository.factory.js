@@ -13,22 +13,23 @@
 
 /**
  * @ngdoc service
- * @name  Katello.repositories.factory:Repository
+ * @name  Bastion.repositories.factory:Repository
  *
  * @requires $resource
+ * @requires CurrentOrganization
  *
  * @description
  *   Provides a $resource for product or list of repositories.
  */
 angular.module('Bastion.repositories').factory('Repository',
-    ['$resource',
-    function($resource) {
+    ['$resource', 'CurrentOrganization',
+    function($resource, CurrentOrganization) {
 
-        return $resource('/katello/api/products/:productId/repositories/:id/:action',
-            {id: '@id', productId: '@product_id'},
+        return $resource('/katello/api/repositories/:id/:action',
+            {id: '@id', 'organization_id': CurrentOrganization},
             {
-                update: { method: 'PUT'},
-                query: { method: 'GET'}
+                update: { method: 'PUT' },
+                query: { method: 'GET' }
             }
         );
 

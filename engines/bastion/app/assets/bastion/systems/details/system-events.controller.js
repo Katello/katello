@@ -24,7 +24,6 @@
  */
 angular.module('Bastion.systems').controller('SystemEventsController',
     ['$scope', 'System', 'Nutupane',
-
     function($scope, System, Nutupane) {
         var params,eventsNutupane;
 
