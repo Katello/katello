@@ -48,7 +48,7 @@
       &nbsp;
     - @package.requires.each do |item|
       %p
-        = item
+        = format_package_details(item)
 
   .item-container
     %label.fl.ra
@@ -57,7 +57,7 @@
       &nbsp;
     - @package.provides.each do |item|
       %p
-        = item
+        = format_package_details(item)
 
   .details-link-container
     %a{class: "package-filelist-link", data: {id: "#{@package.id}"}}View package files
@@ -66,8 +66,8 @@
     %a{class: "package-changelog-link", data: {id: "#{@package.id}"}}View package changelog
 
 .package-filelist{id: "package-filelist-#{@package.id}", title: (_("Files for %s") % @package.name)}
-  - if @package.filelist.length > 0
-    - @package.filelist.each do |file|
+  - if @package.files[:file].length > 0
+    - @package.files[:file].each do |file|
       %p
         = file
   - else
