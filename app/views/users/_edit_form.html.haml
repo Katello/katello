@@ -34,12 +34,12 @@
 
     %fieldset
       .grid_3.ra
-        = label :user, :experimental_ui, _("Experimental UI:")
+        = label :user, :legacy_mode, _("Legacy Mode:")
       .grid_5.la
         - if editable
-          = check_box("user", "experimental_ui", :id=>"experimental_ui", 'data-url'=>user_path(@user.id), :checked=>@user.experimental_ui ? "checked": "")
+          = check_box("user", "legacy_mode", :id=>"legacy_mode", 'data-url'=>user_path(@user.id), :checked=>@user.legacy_mode ? "checked": "")
         - else
-          = @user.experimental_ui ? _("Yes") : _("No")
+          = @user.legacy_mode ? _("Yes") : _("No")
 
     - if editable
       %fieldset.fl.clear

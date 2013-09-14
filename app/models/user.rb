@@ -242,13 +242,13 @@ class User < ActiveRecord::Base
     self.preferences[:user][:locale] = locale
   end
 
-  def experimental_ui
-    self.preferences[:user][:experimental_ui] rescue nil
+  def legacy_mode
+    self.preferences[:user][:legacy_mode] rescue nil
   end
 
-  def experimental_ui=(use_experimental_ui)
+  def legacy_mode=(use_legacy_mode)
     self.preferences[:user] = { } unless self.preferences.has_key? :user
-    self.preferences[:user][:experimental_ui] = use_experimental_ui.to_bool
+    self.preferences[:user][:legacy_mode] = use_legacy_mode.to_bool
   end
 
   def default_org
