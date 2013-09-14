@@ -45,21 +45,6 @@ angular.module('Bastion.systems').controller('SystemDetailsInfoController',
             populateExcludedFacts();
         });
 
-        $scope.save = function(system) {
-            var deferred = $q.defer();
-
-            system.$update(function(response) {
-                deferred.resolve(response);
-                $scope.saveSuccess = true;
-            }, function(response) {
-                deferred.reject(response);
-                $scope.saveError = true;
-                $scope.errors = response.data.errors;
-            });
-
-            return deferred.promise;
-        };
-
         $scope.setEnvironment = function(environmentId) {
             if ($scope.previousEnvironment !== $scope.system.environment.id) {
                 $scope.previousEnvironment = $scope.system.environment.id;

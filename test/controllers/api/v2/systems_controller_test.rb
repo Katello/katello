@@ -38,6 +38,7 @@ class Api::V2::SystemsControllerTest < Minitest::Rails::ActionController::TestCa
     login_user(User.find(users(:admin)))
     @request.env['HTTP_ACCEPT'] = 'application/json'
     System.any_instance.stubs(:releaseVer).returns(1)
+    System.any_instance.stubs(:refresh_subscriptions).returns(true)
     @fake_search_service = @controller.load_search_service(FakeSearchService.new)
 
     models
@@ -46,6 +47,13 @@ class Api::V2::SystemsControllerTest < Minitest::Rails::ActionController::TestCa
 
   def test_show
     get :show, :id => @system.uuid
+
+    assert_response :success
+    assert_template 'api/v2/systems/show'
+  end
+
+  def test_refresh_subscriptions
+    put :refresh_subscriptions, :id => @system.uuid
 
     assert_response :success
     assert_template 'api/v2/systems/show'

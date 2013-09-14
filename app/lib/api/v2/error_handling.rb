@@ -61,7 +61,7 @@ module Api
           # TODO: why not use http_code from the exception???
           render :json => format_subsys_exception_hash(exception), :status => :bad_request
         else
-          render :text => exception.response, :status => exception.http_code
+          respond_for_exception(exception, { :status => :bad_request })
         end
       end
 
@@ -116,7 +116,7 @@ module Api
             :text            => exception.message,
             :display_message => exception.message)
 
-        options[:errors] = exception.respond_to?(:record) ? exception.record.errors : exception.message
+        options[:errors] = exception.respond_to?(:record) ? exception.record.errors : [exception.message]
 
         logger.error pp_exception(exception) if options[:with_logging]
 

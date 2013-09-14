@@ -80,6 +80,7 @@ Src::Application.routes.draw do
           put :enabled_repos
           post :system_groups, :action => :add_system_groups
           delete :system_groups, :action => :remove_system_groups
+          put :refresh_subscriptions
         end
         collection do
           match "/tasks/:task_id" => "systems#task", :via => :get
@@ -94,6 +95,7 @@ Src::Application.routes.draw do
           collection do
             match '/' => 'subscriptions#destroy_all', :via => :delete
             match '/serials/:serial_id' => 'subscriptions#destroy_by_serial', :via => :delete
+            match '/available' => 'subscriptions#available', :via => :get
           end
         end
         resource :packages, :only => [], :controller => :system_packages do

@@ -29,26 +29,9 @@ angular.module('Bastion.systems').factory('System',
             query: {method: 'GET', isArray: false},
             releaseVersions: {method: 'GET', params: {action: 'releases'}},
             saveSystemGroups: {method: 'POST', params: {action: 'system_groups'}},
+            refreshSubscriptions: {method: 'PUT', params: {action: 'refresh_subscriptions'}},
+            availableSubscriptions: {method: 'GET', params: {action: 'subscriptions/available'}},
             tasks: {method: 'GET', params: {action: 'tasks', paged: true}}
-        });
-    }]
-);
-
-/**
- * @ngdoc service
- * @name  Katello.systems.factory:SystemSubscriptions
- *
- * @requires $resource
- * @requires Routes
- *
- * @description
- *   Provides a $resource for system subscriptions.
- */
-angular.module('Bastion.systems').factory('SystemSubscriptions',
-    ['$resource', 'Routes',
-    function($resource, Routes) {
-        return $resource(Routes.apiSystemsPath() + '/:id/subscriptions', {id: '@uuid'}, {
-            query: {method: 'GET', isArray: false, params: {paged: true}}
         });
     }]
 );
