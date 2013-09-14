@@ -1,4 +1,69 @@
-<section class="nutupane-sub-section">
+<div class="flash_hud" ng-show="saveSuccess">
+  <a class="control" title="Close" ng-click="saveSuccess = false"></a>
+  <ul class="flash_messages success">
+    <li>
+      {{ "Update successful" | i18n }}
+    </li>
+  </ul>
+</div>
+
+<div class="flash_hud" ng-show="saveError">
+  <a class="control" title="Close" ng-click="saveError = false"></a>
+  <ul class="flash_messages error">
+    <li>
+      {{ "Error occurred saving:" | i18n }}
+    </li>
+    <ul>
+      <li ng-repeat="error in errors">{{ error }}</li>
+    </ul>
+  </ul>
+</div>
+
+<button class="fr btn btn-primary" ng-click="autoAttach()">{{ "Run Auto-Attach" | i18n }}</button>
+<div class="details">
+  <section>
+    <h4>{{ "Subscription Status Details" | i18n }}</h4>
+
+    <div class="detail">
+      <span class="info-label">{{ "Subscription Status" | i18n }}</span>
+        <span class="info-value">
+          <i class="icon-circle" ng-class="getStatusColor(system.compliance.status)"></i>
+          {{ system.compliance.status }}
+        </span>
+    </div>
+
+    <div ng-show="system.compliance.reasons.length > 0" class="detail">
+      <span class="info-label">{{ "Details" | i18n }}</span>
+      <div class="info-value">
+        <ul class="compliance-reasons">
+          <li ng-repeat="reason in system.compliance.reasons">{{ reason.attributes.name}} - {{ reason.message }}</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="detail">
+      <span class="info-label">{{ "Auto-Attach" | i18n }}</span>
+      <span class="info-value"
+            alch-edit-checkbox="system.autoheal"
+            on-save="save(system)">
+      </span>
+    </div>
+    <div class="detail">
+      <span class="info-label">{{ "Service Level" | i18n }}</span>
+          <span class="info-value"
+                alch-edit-select="system.serviceLevel"
+                readonly="system.readonly"
+                selector="system.serviceLevel"
+                options="serviceLevels()"
+                options-format="option for option in options"
+                on-save="save(system)">
+          </span>
+    </div>
+  </section>
+</div>
+
+<section class="system-subscriptions">
+
   <div class="nutupane-titlebar">
     <h1 class="nutupane-title">{{ "Current Subscription(s)" | i18n }}</h1>
   </div>
@@ -8,9 +73,10 @@
              class="input input-search"
              placeholder="{{ 'Filter' | i18n }}"
              ng-model="currentSubscriptionsTable.filter">
-      <span class="result-count">Showing {{ currentSubscriptionsTable.rows.length }} of {{ currentSubscriptionsTable.resource.subtotal }} ({{ currentSubscriptionsTable.resource.total }} Total) Subscriptions</span>
     </div>
     <div class="fr select-action">
+      <button class="btn-mini" ng-disabled="currentSubscriptionsTable.numSelected == 0"
+              ng-click="removeSubscriptions()">{{ "Remove Subscriptions" | i18n }}</button>
       <span>{{ currentSubscriptionsTable.numSelected }} Selected</span>
       <span>|</span>
       <a class="deselect-action"
@@ -22,59 +88,10 @@
   </div>
 
   <div alch-table="currentSubscriptionsTable">
-    <div alch-container-scroll control-width="table" alch-infinite-scroll="table.nextPage()">
-      <table ng-class="{'table-mask': table.working}" class="table table-full table-striped">
-        <thead>
-        <tr alch-table-head row-select>
-          <th alch-table-column="name">{{ "Name" | i18n }}</th>
-          <th alch-table-column="sla">{{ "SLA" | i18n }}</th>
-          <th alch-table-column="contract">{{ "Contract" | i18n }}</th>
-          <th alch-table-column="quantity">{{ "Quantity" | i18n }}</th>
-          <th alch-table-column="startDate">{{ "Start Date" | i18n }}</th>
-          <th alch-table-column="endDate">{{ "End Date" | i18n }}</th>
-        </tr>
-        </thead>
-
-        <tbody>
-          <tr alch-table-row ng-repeat="subscription in table.rows | filter:table.filter" row-select>
-            <td alch-table-cell>{{ subscription.poolName }}</td>
-            <td alch-table-cell>{{ subscription.sla }}</td>
-            <td alch-table-cell>{{ subscription.contractNumber }}</td>
-            <td alch-table-cell>{{ subscription.quantity }}</td>
-            <td alch-table-cell>{{ subscription.startDate | date:"short" }}</td>
-            <td alch-table-cell>{{ subscription.endDate | date:"short"}}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</section>
-
-<section class="nutupane-sub-section">
-  <div class="nutupane-titlebar">
-    <h1 class="nutupane-title">{{ "Available Subscription(s)" | i18n }}</h1>
-  </div>
-  <div class="nutupane-actionbar">
-    <div class="form">
-      <input type="text"
-             class="input input-search"
-             placeholder="{{ 'Filter' | i18n }}"
-             ng-model="availableSubscriptionsTable.filter">
-      <span class="result-count">Showing {{ availableSubscriptionsTable.rows.length }} of {{ availableSubscriptionsTable.resource.subtotal }} ({{ availableSubscriptionsTable.resource.total }} Total) Subscriptions</span>
-    </div>
-    <div class="fr select-action">
-      <span>{{ availableSubscriptionsTable.numSelected }} Selected</span>
-      <span>|</span>
-      <a class="deselect-action"
-         ng-class="{ 'disabled-link' : availableSubscriptionsTable.numSelected == 0 }"
-         ng-click="availableSubscriptionsTable.selectAll(false)">
-        Deselect All
-      </a>
-    </div>
-  </div>
-
-  <div alch-table="availableSubscriptionsTable">
-    <div alch-container-scroll control-width="table" alch-infinite-scroll="table.nextPage()">
+    <p ng-show="table.rows.length == 0">
+      {{ "This system does not have any current subscriptions" | i18n }}
+    </p>
+    <div ng-show="table.rows.length > 0">
       <table ng-class="{'table-mask': table.working}" class="table table-full table-striped">
         <thead>
           <tr alch-table-head row-select>
@@ -88,13 +105,79 @@
         </thead>
 
         <tbody>
-          <tr alch-table-row ng-repeat="subscription in table.rows | filter:table.filter" row-select>
-            <td alch-table-cell>{{ subscription.name }}</td>
+          <tr alch-table-row ng-repeat="subscription in table.rows | filter:table.filter" row-select="subscription">
+            <td alch-table-cell>{{ subscription.poolName }}</td>
             <td alch-table-cell>{{ subscription.sla }}</td>
             <td alch-table-cell>{{ subscription.contractNumber }}</td>
             <td alch-table-cell>{{ subscription.quantity }}</td>
             <td alch-table-cell>{{ subscription.startDate | date:"short" }}</td>
             <td alch-table-cell>{{ subscription.endDate | date:"short"}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="system-subscriptions">
+  <div class="nutupane-titlebar">
+    <h1 class="nutupane-title">{{ "Available Subscription(s)" | i18n }}</h1>
+  </div>
+  <div class="nutupane-actionbar">
+    <div class="form">
+      <input type="text"
+             class="input input-search"
+             placeholder="{{ 'Filter' | i18n }}"
+             ng-model="availableSubscriptionsTable.filter">
+    </div>
+    <div class="fr select-action">
+      <button class="btn-mini" ng-disabled="availableSubscriptionsTable.numSelected == 0"
+              ng-click="attachSubscriptions()">{{ "Attach Subscriptions" | i18n }}</button>
+      <span>{{ availableSubscriptionsTable.numSelected }} Selected</span>
+      <span>|</span>
+      <a class="deselect-action"
+         ng-class="{ 'disabled-link' : availableSubscriptionsTable.numSelected == 0 }"
+         ng-click="availableSubscriptionsTable.selectAll(false)">
+        Deselect All
+      </a>
+    </div>
+  </div>
+
+  <div alch-table="availableSubscriptionsTable">
+    <p ng-show="table.rows.length == 0">
+      {{ "There are no available subscriptions" | i18n }}
+    </p>
+    <div ng-show="table.rows.length > 0">
+      <table ng-class="{'table-mask': table.working}" class="table table-full table-striped">
+        <thead>
+          <tr alch-table-head row-select>
+            <th alch-table-column="name">{{ "Name" | i18n }}</th>
+            <th alch-table-column="sla">{{ "SLA" | i18n }}</th>
+            <th alch-table-column="contract">{{ "Contract" | i18n }}</th>
+            <th alch-table-column="quantity">{{ "Available" | i18n }}</th>
+            <th alch-table-column="startDate">{{ "Start Date" | i18n }}</th>
+            <th alch-table-column="endDate">{{ "End Date" | i18n }}</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr alch-table-row row-select="subscription"
+              ng-repeat="subscription in table.rows | filter:table.formatAvailableDisplay | filter:table.filter">
+            <td alch-table-cell>{{ subscription.product_name }}</td>
+            <td alch-table-cell>{{ subscription.support_level }}</td>
+            <td alch-table-cell>{{ subscription.contract_number }}</td>
+            <td alch-table-cell>
+              <span ng-show="table.showSelector(subscription)">
+                <select ng-show="subscription.selected" ng-model="subscription.amount"
+                        ng-options="value for value in table.range(1, subscription.available + 1)">
+                </select>
+              </span>
+              <span ng-hide="table.showSelector(subscription)">
+                {{ subscription.availableDisplay }}
+              </span>
+            </td>
+            <td alch-table-cell>{{ subscription.start_date | date:"short" }}</td>
+            <td alch-table-cell>{{ subscription.end_date | date:"short"}}</td>
           </tr>
         </tbody>
       </table>

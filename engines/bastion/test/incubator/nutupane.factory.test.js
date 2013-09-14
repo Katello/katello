@@ -15,14 +15,16 @@ describe('Factory: Nutupane', function() {
     var $timeout,
         $location,
         Resource,
+        expectedResult,
         Nutupane;
 
     beforeEach(module('Bastion.widgets'));
 
     beforeEach(module(function() {
+        expectedResult = [{id: 2, value: "value2"}, {id:3, value: "value3"}];
         Resource = {
             query: function(params, callback) {
-                var result = {results: [{id: 1, value: "value"}, {id: 2, value: "value2"}]};
+                var result = {results: expectedResult};
                 if (callback) {
                     callback(result);
                 }
@@ -51,13 +53,28 @@ describe('Factory: Nutupane', function() {
         beforeEach(function() {
             nutupane = new Nutupane(Resource);
             nutupane.table.working = false;
+            nutupane.table.rows = [{id: 0, value: "value0"}, {id:1, value: "value1"}];
         });
 
         it("providing a method to fetch records for the table", function() {
-            spyOn(Resource, 'query');
+            var expected = nutupane.table.rows.concat(expectedResult);
+
+            spyOn(Resource, 'query').andCallThrough();
             nutupane.query();
 
             expect(Resource.query).toHaveBeenCalled();
+            expect(nutupane.table.rows.length).toBe(4);
+            angular.forEach(nutupane.table.rows, function(value, index) {
+                expect(value).toBe(expected[index]);
+            });
+        });
+
+        it("providing a method to refresh the table", function() {
+            spyOn(Resource, 'query').andCallThrough();
+            nutupane.refresh();
+
+            expect(Resource.query).toHaveBeenCalled();
+            expect(nutupane.table.rows).toBe(expectedResult);
         });
 
         it("providing a method to perform a search", function() {
@@ -94,22 +111,23 @@ describe('Factory: Nutupane', function() {
         });
 
         it("updates a single occurrence of a row within the list of rows.", function() {
-            var newRow = {id:1, value:"new value", anotherValue: "value"};
+            var newRow = {id:0, value:"new value", anotherValue: "value"};
             nutupane.query();
             nutupane.table.replaceRow(newRow);
             expect(nutupane.table.rows[0]).toBe(newRow);
         });
 
         it("removes a single occurrence of a row within the list of rows.", function() {
-            var row = {id: 2, value: "value2"};
-            nutupane.query();
+            var row = {id:0, value: "value2"};
             nutupane.removeRow(row.id);
             expect(nutupane.table.rows.length).toBe(1);
             expect(nutupane.table.rows).not.toContain(row);
         });
 
         it("providing a method that fetches more data", function() {
+            nutupane.table.rows = [];
             spyOn(Resource, 'query');
+
             nutupane.table.nextPage();
 
             expect(Resource.query).toHaveBeenCalled();

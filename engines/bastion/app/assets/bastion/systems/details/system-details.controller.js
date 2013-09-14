@@ -17,14 +17,16 @@
  *
  * @requires $scope
  * @requires $state
+ * @requires $q
  * @requires System
+ * @requires Organization
  *
  * @description
  *   Provides the functionality for the system details action pane.
  */
 angular.module('Bastion.systems').controller('SystemDetailsController',
-    ['$scope', '$state', 'System',
-    function($scope, $state, System) {
+    ['$scope', '$state', '$q', 'System', 'Organization',
+    function($scope, $state, $q, System, Organization) {
 
         $scope.system = System.get({id: $scope.$stateParams.systemId}, function(system) {
             $scope.$watch("table.rows.length > 0", function() {
@@ -33,6 +35,21 @@ angular.module('Bastion.systems').controller('SystemDetailsController',
 
             $scope.$broadcast('system.loaded', system);
         });
+
+        $scope.save = function(system) {
+            var deferred = $q.defer();
+
+            system.$update(function(response) {
+                deferred.resolve(response);
+                $scope.saveSuccess = true;
+            }, function(response) {
+                deferred.reject(response);
+                $scope.saveError = true;
+                $scope.errors = response.data.errors;
+            });
+
+            return deferred.promise;
+        };
 
         $scope.transitionTo = function(state, params) {
             var systemId = $scope.$stateParams.systemId;
@@ -54,5 +71,14 @@ angular.module('Bastion.systems').controller('SystemDetailsController',
             return $state.current.name.indexOf(stateName) === 0;
         };
 
+        $scope.serviceLevels = function() {
+            var deferred = $q.defer();
+
+            Organization.get(function(organization) {
+                deferred.resolve(organization['service_levels']);
+            });
+
+            return deferred.promise;
+        };
     }]
 );

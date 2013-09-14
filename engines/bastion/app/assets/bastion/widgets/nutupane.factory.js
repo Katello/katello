@@ -60,13 +60,20 @@ angular.module('Bastion.widgets').factory('Nutupane',
             resource.total = "0";
             resource.results = [];
 
-            self.query = function() {
-                var deferred = $q.defer(), table = self.table;
+            function load(replace) {
+                var deferred = $q.defer(),
+                    table = self.table;
+
+                replace = replace || false;
                 table.working = true;
-                params.offset = table.rows.length;
-                params.search = table.searchTerm || "";
-                resource[table.action](params, function(response) {
-                    table.rows = table.rows.concat(response.results);
+
+                resource[table.action](params, function (response) {
+                    if (replace) {
+                        table.rows = response.results;
+                    } else {
+                        table.rows = table.rows.concat(response.results);
+                    }
+
                     // This $timeout is necessary to cause a digest cycle
                     // in order to prevent loading two sets of results.
                     $timeout(function() {
@@ -77,6 +84,17 @@ angular.module('Bastion.widgets').factory('Nutupane',
                     table.working = false;
                 });
                 return deferred.promise;
+            }
+
+            self.query = function() {
+                var table = self.table;
+                params.offset = table.rows.length;
+                params.search = table.searchTerm || "";
+                return load();
+            };
+
+            self.refresh = function() {
+                return load(true);
             };
 
             self.removeRow = function(id) {

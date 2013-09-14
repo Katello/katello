@@ -18,7 +18,7 @@ module Glue::Candlepin::Pool
     base.send :extend, ClassMethods
 
     base.class_eval do
-      lazy_accessor :remote_data, :pool_derived, :product_name, :consumed, :quantity, :support_level, :support_type,
+      lazy_accessor :remote_data, :pool_derived, :product_name, :consumed, :quantity, :available, :support_level, :support_type,
         :start_date, :end_date, :attrs, :owner, :product_id, :account_number, :contract_number,
         :source_pool_id, :host_id, :virt_only, :virt_limit, :multi_entitlement, :stacking_id,
         :arch, :sockets, :cores, :ram, :description, :product_family, :variant, :provided_products, :instance_multiplier, :suggested_quantity,
@@ -67,6 +67,11 @@ module Glue::Candlepin::Pool
       @end_date = Date.parse(attrs["endDate"]) if attrs["endDate"]
       @consumed = attrs["consumed"]
       @quantity = attrs["quantity"]
+      if attrs["quantity"].is_a?(Integer) && attrs["consumed"].is_a?(Integer)
+        @available = attrs["quantity"] - attrs["consumed"]
+      else
+        @available = 0
+      end
       @attrs = attrs["attributes"]
       @owner = attrs["owner"]
       @product_id = attrs["productId"]

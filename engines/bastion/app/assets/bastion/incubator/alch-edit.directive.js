@@ -204,6 +204,21 @@ angular.module('alchemy')
                       '</div>'
         };
     })
+    .directive('alchEditCheckbox', function() {
+        return {
+            replace: true,
+            scope: {
+                model: '=alchEditCheckbox',
+                readonly: '=',
+                handleSave: '&onSave',
+                handleCancel: '&onCancel'
+            },
+            template: '<div>' +
+                        '<input type="checkbox" ng-model="model" ng-show="editMode"/>' +
+                        '<div alch-edit></div>' +
+                      '</div>'
+        };
+    })
     .directive('alchEditSelect', function() {
         return {
             replace: true,
@@ -222,7 +237,13 @@ angular.module('alchemy')
                                  'ng-show="editMode">' +
                         '</select>' +
                         '<div alch-edit></div>' +
-                      '</div>'
+                      '</div>',
+            compile: function(element, attrs) {
+                var optionsFormat = attrs['optionsFormat'];
+                if (optionsFormat) {
+                    element.find('select').attr('ng-options', optionsFormat);
+                }
+            }
         };
     })
     .directive('alchEditMultiselect', function() {
