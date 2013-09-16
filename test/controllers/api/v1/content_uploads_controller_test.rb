@@ -78,6 +78,7 @@ describe Api::V1::ContentUploadsController do
 
     it "should import into repository" do
       mock_pulp_server(:import_into_repo => true)
+      Repository.any_instance.expects(:generate_metadata).returns(true)
       post action, :id => "1", :unit_type_id => "rpm", :unit_key => {}, :unit_metadata => {},
            :repository_id => @repo.id
       assert_response :success
