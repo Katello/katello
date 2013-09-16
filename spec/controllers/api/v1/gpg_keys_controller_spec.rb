@@ -24,7 +24,8 @@ describe Api::V1::GpgKeysController, :katello => true do
     disable_org_orchestration
 
     @organization = new_test_org
-    @gpg_key      = GpgKey.create!(:name => "Another Test Key", :content => "This is the key data string", :organization => @organization)
+    @test_gpg_content = File.open("#{Rails.root}/spec/assets/gpg_test_key").read
+    @gpg_key      = GpgKey.create!(:name => "Another Test Key", :content => @test_gpg_content, :organization => @organization)
   end
 
   describe "GET content" do
@@ -78,7 +79,7 @@ describe Api::V1::GpgKeysController, :katello => true do
       let(:req) { post :create, req_params }
       let(:action) { :create }
       let(:req_params) do
-        { :organization_id => @organization.name, :gpg_key => { :name => "Gpg Key", :content => "This is the key string" } }.with_indifferent_access
+        { :organization_id => @organization.name, :gpg_key => { :name => "Gpg Key", :content => @test_gpg_content } }.with_indifferent_access
       end
       it_should_behave_like "protected action"
 
@@ -102,7 +103,7 @@ describe Api::V1::GpgKeysController, :katello => true do
   end
 
   describe "update gpg key" do
-    let(:req_params) { { :id => @gpg_key.id.to_s, :gpg_key => { :name => "Gpg Key", :content => "This is the key string" } }.with_indifferent_access }
+    let(:req_params) { { :id => @gpg_key.id.to_s, :gpg_key => { :name => "Gpg Key", :content => @test_gpg_content } }.with_indifferent_access }
     let(:req) { put :update, req_params }
     let(:action) { :update }
     it_should_behave_like "protected action"

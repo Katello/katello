@@ -343,7 +343,8 @@ describe Product, :katello => true do
       disable_repo_orchestration
 
       suffix = (rand 10 **6).to_s
-      @gpg = GpgKey.create!(:name =>"GPG", :organization=>@organization, :content=>"bar")
+      test_gpg_content = File.open("#{Rails.root}/spec/assets/gpg_test_key").read
+      @gpg = GpgKey.create!(:name =>"GPG", :organization=>@organization, :content=>test_gpg_content)
       @provider = Provider.create!({:organization =>@organization, :name => 'provider' + suffix,
                               :repository_url => "https://something.url", :provider_type => Provider::CUSTOM})
       @product = Product.new({:name=>"prod#{suffix}", :label=> "prod#{suffix}"})
