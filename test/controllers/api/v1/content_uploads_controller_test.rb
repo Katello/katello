@@ -17,7 +17,7 @@ describe Api::V1::ContentUploadsController do
   fixtures :all
 
   def before_suite
-    models = ["Organization", "KTEnvironment", "Repository", "Product", "Provider"]
+    models = ["Organization", "KTEnvironment", "Repository", "Product", "Provider", "Package"]
     services = ["Candlepin", "Pulp", "ElasticSearch"]
     disable_glue_layers(services, models)
   end
@@ -79,6 +79,10 @@ describe Api::V1::ContentUploadsController do
     it "should import into repository" do
       mock_pulp_server(:import_into_repo => true)
       Repository.any_instance.expects(:generate_metadata).returns(true)
+      Repository.any_instance.expects(:unit_search).returns([])
+      Repository.any_instance.expects(:unit_type_id).twice.returns("rpm")
+      Package.expects(:index_packages).returns(true)
+
       post action, :id => "1", :unit_type_id => "rpm", :unit_key => {}, :unit_metadata => {},
            :repository_id => @repo.id
       assert_response :success
