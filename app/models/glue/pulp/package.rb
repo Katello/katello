@@ -22,7 +22,7 @@ module Glue::Pulp::Package
 
       attr_accessor :_id, :download_url, :checksum, :license, :group, :filename, :requires,  :provides, :description,
                     :size, :buildhost, :repoids, :name, :arch, :version, :_content_type_id, :epoch, :vendor, :relativepath,
-                    :children, :release, :checksumtype, :filelist, :changelog
+                    :children, :release, :checksumtype, :files, :changelog
 
       alias_method 'id=', '_id='
       alias_method 'id', '_id'
