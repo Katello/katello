@@ -25,7 +25,7 @@ module Navigation
           Navigation::Items::GpgKeys.new(organization)
         ]
 
-        @items << Navigation::Items::Providers.new(organization) if ::User.current.experimental_ui
+        @items << Navigation::Items::Providers.new(organization) if ::User.current.legacy_mode
         super
       end
 

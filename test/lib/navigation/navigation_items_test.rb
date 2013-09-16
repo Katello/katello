@@ -53,7 +53,7 @@ class NavigationItemsTest < MiniTest::Rails::ActiveSupport::TestCase
     item = Navigation::Items::Systems.new(@acme_corporation)
 
     assert_equal  _('All'), item.display
-    assert_equal  systems_path, item.url
+    assert_equal  systems_path(:anchor => '/systems'), item.url
     assert        item.accessible?
   end
 

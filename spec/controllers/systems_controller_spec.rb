@@ -151,12 +151,6 @@ describe SystemsController do
         @systems = System.select(:id).where(:environment_id => @environment.id).all.collect{|s| s.id}
       end
 
-      it "should show the system 2 pane list" do
-        get :index
-        response.should be_success
-        response.should render_template("index")
-      end
-
       it "should render the first 25 systems" do
         controller.should_receive(:render_panel_direct) { |obj_class, options, search, start, sort, filters|
           options[:list_partial].should == "systems/list_systems"

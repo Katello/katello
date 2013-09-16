@@ -13,7 +13,7 @@
 
 /**
  * @ngdoc service
- * @name  Katello.systems.factory:SystemErratum
+ * @name  Bastion.systems.factory:SystemErratum
  *
  * @requires $resource
  * @requires Routes

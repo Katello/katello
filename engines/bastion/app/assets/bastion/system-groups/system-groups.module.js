@@ -13,7 +13,7 @@
 
 /**
  * @ngdoc module
- * @name  Katello.system-groups
+ * @name  Bastion.system-groups
  *
  * @description
  *   Module for system groups related functionality.

@@ -134,11 +134,11 @@ class SystemsController < ApplicationController
   def index
     @system_groups = SystemGroup.where(:organization_id => current_organization).order(:name)
 
-    if current_user.experimental_ui
-      render 'bastion/layouts/application', :layout => false
-    else
+    if current_user.legacy_mode
       @auto_attach_task = TaskStatus.find_by_id(current_organization.owner_auto_attach_all_systems_task_id)
       render :index
+    else
+      render 'bastion/layouts/application', :layout => false
     end
   end
 
@@ -348,7 +348,7 @@ class SystemsController < ApplicationController
   def show
     system = System.find(params[:id])
 
-    if current_user.experimental_ui
+    if current_user.legacy_mode
       begin
         releases = @system.available_releases
       rescue => e

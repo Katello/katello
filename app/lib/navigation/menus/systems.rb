@@ -21,9 +21,10 @@ module Navigation
         @authorization = true
         @items         = [
           Navigation::Items::Systems.new(organization),
-          Navigation::Items::SystemsByEnvironment.new(organization),
           Navigation::Items::SystemGroups.new(organization)
         ]
+
+        @items << Navigation::Items::SystemsByEnvironment.new(organization) if ::User.current.legacy_mode
         super
       end
 

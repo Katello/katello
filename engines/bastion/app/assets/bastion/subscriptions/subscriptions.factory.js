@@ -13,7 +13,7 @@
 
 /**
  * @ngdoc service
- * @name  Katello.subscriptions.factory:Subscription
+ * @name  Bastion.subscriptions.factory:Subscription
  *
  * @requires $resource
  * @requires Routes
