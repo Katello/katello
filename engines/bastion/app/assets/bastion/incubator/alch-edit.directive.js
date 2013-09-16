@@ -152,8 +152,7 @@ angular.module('alchemy')
             } else {
                 $scope.displayValue = $scope.model;
             }
-            if ((($scope.displayValue === undefined) || ($scope.displayValue.length === 0)) &&
-                $scope.displayValueDefault) {
+            if ($scope.displayValue && $scope.displayValueDefault) {
                 $scope.displayValue = $scope.displayValueDefault;
             }
         };
@@ -235,6 +234,7 @@ angular.module('alchemy')
                         '<select ng-model="selector" ' +
                                  'ng-options="option.id as option.name for option in options" ' +
                                  'ng-show="editMode">' +
+                                 '<option ng-show="false" value=""></option>' +
                         '</select>' +
                         '<div alch-edit></div>' +
                       '</div>',
