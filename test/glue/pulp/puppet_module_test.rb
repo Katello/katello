@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require 'minitest_helper'
-require './test/support/repository_support'
+require './test/support/pulp/repository_support'
 
 class GluePulpPuppetModuleTest < MiniTest::Rails::ActiveSupport::TestCase
   fixtures :all
@@ -23,13 +23,14 @@ class GluePulpPuppetModuleTest < MiniTest::Rails::ActiveSupport::TestCase
     models    = ['Repository', 'PuppetModule']
     disable_glue_layers(services, models)
 
+    VCR.insert_cassette('glue_pulp_puppet_module')
+
     User.current = User.find(users(:admin))
     @repository = Repository.find(repositories(:p_forge))
     RepositorySupport.create_and_sync_repo(@repository)
 
     @names = ["cron", "httpd", "pureftpd", "samba"]
 
-    VCR.insert_cassette('glue_pulp_puppet_module', :match_requests_on => [:path, :params, :method, :body_json])
   end
 
   def teardown
