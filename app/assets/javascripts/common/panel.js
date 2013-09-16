@@ -306,7 +306,7 @@ KT.panel = (function ($) {
                         opacity: 1
                     }, 200, function () {
                         $(this).css({
-                            "z-index": "0"
+                            "z-index": "2"
                         });
                     }).removeClass('closed').addClass('opened').attr('data-id', activeBlockId);
                     activeBlock.addClass('active');
@@ -507,10 +507,10 @@ KT.panel = (function ($) {
                 opacity: 1
             }, 200, function () {
                 $(this).css({
-                    "z-index": "0"
+                    "z-index": "3"
                 });
                 $(this).parent().css({
-                    "z-index": "0"
+                    "z-index": "3"
                 });
                 $(this).removeClass('closed').addClass('opened');
             });
