@@ -29,7 +29,7 @@
       <li>
         <a class="clickable"
            ng-click="transitionToRepositories(product)"
-           ng-class="{active: isState('products.details.repositories')}">
+           ng-class="{active: stateIncludes('products.details.repositories')}">
           {{ "Repositories" | i18n }}
         </a>
       </li>

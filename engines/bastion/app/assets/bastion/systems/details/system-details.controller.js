@@ -67,10 +67,6 @@ angular.module('Bastion.systems').controller('SystemDetailsController',
             return false;
         };
 
-        $scope.stateStartsWith = function(stateName) {
-            return $state.current.name.indexOf(stateName) === 0;
-        };
-
         $scope.serviceLevels = function() {
             var deferred = $q.defer();
 
