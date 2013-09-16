@@ -143,4 +143,3 @@ module Katello
     end
   end
 end
-

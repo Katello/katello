@@ -21,4 +21,3 @@ Rabl.configure do |config|
   # config.view_paths = []
   # config.raise_on_missing_attribute = true # Defaults to false
 end
-

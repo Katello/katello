@@ -28,4 +28,3 @@ class Api::V2::RoleLdapGroupsController < Api::V1::RoleLdapGroupsController
   end
 
 end
-

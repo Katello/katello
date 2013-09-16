@@ -36,4 +36,3 @@ end
 
 # test running optimization
 Password.password_rounds = 1
-

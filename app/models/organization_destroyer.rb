@@ -50,4 +50,3 @@ class OrganizationDestroyer
   end
 
 end
-

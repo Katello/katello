@@ -35,4 +35,3 @@ module PromotionsHelper
   end
 
 end
-

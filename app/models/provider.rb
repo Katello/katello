@@ -218,4 +218,3 @@ class Provider < ActiveRecord::Base
     raise e
   end
 end
-
