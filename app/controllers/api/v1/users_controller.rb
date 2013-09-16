@@ -96,11 +96,14 @@ class Api::V1::UsersController < Api::V1::ApiController
     user_params = params[:user].reject { |k, _| k == 'default_environment_id' }
 
     @user.update_attributes!(user_params)
-    @user.default_environment = if params[:user][:default_environment_id]
-                                  KTEnvironment.find(params[:user][:default_environment_id])
-                                else
-                                  nil
-                                end
+
+    if params[:user].key?(:default_environment_id)
+      if !params[:user][:default_environment_id].blank?
+        @user.default_environment = KTEnvironment.find(params[:user][:default_environment_id])
+      else
+        @user.default_environment = nil
+      end
+    end
 
     if !params[:default_locale].blank?
       #TODO: this should be placed in model validations
