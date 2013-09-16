@@ -30,6 +30,8 @@ if defined?(MiniTest)
     Rake::Task["minitest"].clear
     Rake::Task["minitest:models"].clear
     Rake::Task["minitest:controllers"].clear
+    Rake::Task["db:test:prepare"].clear
+
     if ENV['method']
       if not ENV['method'].starts_with?('test_')
         ENV['method'] = "test_#{ENV['method']}"
@@ -42,9 +44,8 @@ if defined?(MiniTest)
       end
     end
 
-    MINITEST_TASKS  = %w(models helpers controllers glue lib)
+    MINITEST_TASKS  = %w(models helpers controllers glue scenarios lib)
     GLUE_LAYERS     = %w(pulp candlepin elasticsearch)
-
     Rake::Task["db:test:prepare"].clear
 
     namespace :default do
@@ -57,7 +58,6 @@ if defined?(MiniTest)
           end
         else
           desc "Runs the #{task} tests"
-
           MiniTest::Rails::Tasks::SubTestTask.new(task => 'test:prepare') do |t|
             t.libs.push 'test'
             t.pattern = "test/#{task}/**/*_test.rb"
@@ -105,8 +105,12 @@ if defined?(MiniTest)
 
   desc 'Runs all minitest tests'
   MiniTest::Rails::Tasks::SubTestTask.new(:minitest) do |t|
+    if ENV["test"]
+      t.pattern = ENV["test"]
+    else
+      t.pattern = "test/#{task}/**/*_test.rb"
+    end
     t.libs.push 'test'
-    t.pattern = "test/#{task}/**/*_test.rb"
   end
 
 end

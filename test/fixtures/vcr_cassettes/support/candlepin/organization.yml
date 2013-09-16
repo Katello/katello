@@ -12,7 +12,7 @@ http_interactions:
       Accept-Encoding: 
       - gzip, deflate
       Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="YSt45XU3L52EaweSWiPqQktcfyrV76ClgbOqVOPqxUg", oauth_signature="cKL%2FdeKMa9baReE3uzMaMzqmdlo%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1377791592", oauth_version="1.0"
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="WhoMBHPaUGXLUtFK9xNtkvIkLBagmum4Lt9GXEDhC2c", oauth_signature="RRt5mRcJJTtBmmihk%2FFZBo8QljU%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1379081284", oauth_version="1.0"
       Accept-Language: 
       - en
       Content-Type: 
@@ -31,30 +31,18 @@ http_interactions:
       Server: 
       - Apache-Coyote/1.1
       X-Candlepin-Version: 
-      - 0.8.23-1
+      - 0.8.13-1
       Content-Type: 
       - application/json
-      Content-Length: 
-      - "433"
+      Transfer-Encoding: 
+      - chunked
       Date: 
-      - Thu, 29 Aug 2013 15:53:11 GMT
+      - Fri, 13 Sep 2013 14:08:03 GMT
     body: 
       encoding: US-ASCII
-      string: |-
-        {
-          "created" : "2013-08-29T15:53:12.594+0000",
-          "updated" : "2013-08-29T15:53:12.594+0000",
-          "parentOwner" : null,
-          "id" : "ff80808140ca15330140cac748920083",
-          "key" : "GlueCandlepinOwnerTestSystem_1",
-          "displayName" : "GlueCandlepinOwnerTestSystem_1",
-          "contentPrefix" : "/GlueCandlepinOwnerTestSystem_1/$env",
-          "defaultServiceLevel" : null,
-          "upstreamConsumer" : null,
-          "href" : "/owners/GlueCandlepinOwnerTestSystem_1"
-        }
+      string: "{\"created\":\"2013-09-13T14:08:04.819+0000\",\"updated\":\"2013-09-13T14:08:04.819+0000\",\"parentOwner\":null,\"id\":\"8a8d012a405a1f8d014117a66cd316b3\",\"key\":\"GlueCandlepinOwnerTestSystem_1\",\"displayName\":\"GlueCandlepinOwnerTestSystem_1\",\"contentPrefix\":\"/GlueCandlepinOwnerTestSystem_1/$env\",\"defaultServiceLevel\":null,\"upstreamConsumer\":null,\"href\":\"/owners/GlueCandlepinOwnerTestSystem_1\"}"
     http_version: 
-  recorded_at: Thu, 29 Aug 2013 15:53:12 GMT
+  recorded_at: Fri, 13 Sep 2013 14:08:04 GMT
 - request: 
     method: delete
     uri: https://localhost:8443/candlepin/owners/GlueCandlepinOwnerTestSystem_1
@@ -67,7 +55,7 @@ http_interactions:
       Accept-Encoding: 
       - gzip, deflate
       Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="90pejWRZ0WKdp2cZcq1lhX9V5nneT2CNqnQN4CMiw", oauth_signature="C9L%2B5z9TAZFlawufZ%2F13EKMX%2BGQ%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1377791593", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="KINUB0NJKvtLLpLrF3PtjRViHOAr3pACE0wkLdVKY", oauth_signature="2i6OJNCgLDSVFC%2Bdb8KNLfM8Y3g%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1379081285", oauth_version="1.0"
       Cp-User: 
       - admin
       User-Agent: 
@@ -80,12 +68,12 @@ http_interactions:
       Server: 
       - Apache-Coyote/1.1
       X-Candlepin-Version: 
-      - 0.8.23-1
+      - 0.8.13-1
       Date: 
-      - Thu, 29 Aug 2013 15:53:12 GMT
+      - Fri, 13 Sep 2013 14:08:04 GMT
     body: 
       encoding: US-ASCII
       string: ""
     http_version: 
-  recorded_at: Thu, 29 Aug 2013 15:53:13 GMT
-recorded_with: VCR 2.4.0
+  recorded_at: Fri, 13 Sep 2013 14:08:05 GMT
+recorded_with: VCR 2.5.0

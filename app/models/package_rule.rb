@@ -48,5 +48,4 @@ class PackageRule < FilterRule
       nil
     end
   end
-
 end

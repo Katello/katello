@@ -12,7 +12,6 @@
 
 require 'minitest_helper'
 require './test/support/candlepin/owner_support'
-require './test/support/user_support'
 
 class GlueCandlepinOwnerTestBase < MiniTest::Rails::ActiveSupport::TestCase
   extend  ActiveRecord::TestFixtures
@@ -57,7 +56,7 @@ class GlueCandlepinOwnerTestSLA < GlueCandlepinOwnerTestBase
     e = assert_raises(RestClient::BadRequest) do
       @@org.service_level = 'Premium'
     end
-    expected = "{\n  \"displayMessage\" : \"Service level 'Premium' is not available to units of organization GlueCandlepinOwnerTestSystem_1.\"\n}"
+    expected = "{\n  \"displayMessage\" : \"Service level 'Premium' is not available to consumers of organization GlueCandlepinOwnerTestSystem_1.\"\n}"
     assert_equal JSON.parse(expected), JSON.parse(e.response)
     assert_equal nil, @@org.service_level
 
