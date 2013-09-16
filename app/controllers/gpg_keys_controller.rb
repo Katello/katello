@@ -79,8 +79,7 @@ class GpgKeysController < ApplicationController
 
     products_repos = Hash.new { |h, k| h[k] = [] }
     @gpg_key.repositories.
-        in_environment(@gpg_key.organization.library).
-        order('products.name ASC').
+        in_environment(@gpg_key.organization.library).sort_by{ |r| r.product.name }.
         each { |repo| products_repos[repo.product.name] << repo }
 
     render :partial => "products_repos",

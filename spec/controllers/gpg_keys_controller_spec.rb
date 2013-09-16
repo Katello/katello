@@ -230,6 +230,15 @@ describe GpgKeysController, :katello => true do
     end
   end
 
+  describe "GET products and repos" do
+
+    it "should be successful" do
+      get :products_repos, :id => @gpg_key.id
+      response.should be_success
+    end
+
+  end
+
   describe "PUT update" do
     before :each do
       controller.stub(:search_validate).and_return(true)
