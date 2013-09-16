@@ -75,6 +75,8 @@ angular.module('Bastion').run(['i18nDictionary', '$rootScope', '$state', '$state
         $rootScope.isState = function (stateName) {
             return $state.is(stateName);
         };
+
+        $rootScope.stateIncludes = $state.includes;
     }
 ]);
 

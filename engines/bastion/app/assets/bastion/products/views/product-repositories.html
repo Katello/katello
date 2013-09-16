@@ -5,7 +5,11 @@
            class="input input-search"
            placeholder="{{ 'Filter' | i18n }}"
            ng-model="repositorySearch">
-    <button class="btn btn-primary fr" ng-click="openCreateRepository(product.id)">{{ 'Create Repository' | i18n }}</button>
+    <button class="btn btn-primary fr"
+            ng-disabled="product.readonly"
+            ng-click="openCreateRepository(product.id)">
+      {{ 'Create Repository' | i18n }}
+    </button>
   </div>
 
   <table class="table table-striped">

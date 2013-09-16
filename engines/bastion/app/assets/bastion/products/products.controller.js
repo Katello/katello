@@ -48,9 +48,9 @@ angular.module('Bastion.products').controller('ProductsController',
             $scope.panel.loading = true;
         }
 
-        $scope.table.openDetails = function(product) {
+        $scope.table.openProduct = function(product) {
             $scope.panel.loading = true;
-            $scope.transitionTo('products.details.info', {productId: product.id});
+            $scope.transitionTo('products.details.repositories.index', {productId: product.id});
         };
 
         $scope.transitionToNewProduct = function() {

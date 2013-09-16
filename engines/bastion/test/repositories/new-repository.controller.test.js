@@ -83,4 +83,12 @@ describe('Controller: NewRepositoryController', function() {
         expect($scope.repository.label).toBe('changed_name');
     });
 
+    it('should be able to transition back to repo list', function(){
+        $scope.product = {id: 541};
+        spyOn($scope, 'transitionTo');
+        $scope.returnToProduct();
+        expect($scope.transitionTo).toHaveBeenCalledWith('products.details.repositories.index',
+                                                         {productId: 541})
+    });
+
 });
