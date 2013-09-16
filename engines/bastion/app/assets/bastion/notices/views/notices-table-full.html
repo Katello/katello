@@ -1,0 +1,21 @@
+<table class="table table-striped" ng-class="{'table-mask': table.working}">
+  <thead>
+    <tr alch-table-head row-select>
+      <th alch-table-column="created_at" sortable>{{ "Created" | i18n }}</th>
+      <th alch-table-column="level" sortable>{{ "Level" | i18n }}</th>
+      <th alch-table-column="organization" sortable>{{ "Organization" | i18n }}</th>
+      <th alch-table-column="text" sortable>{{ "Description" | i18n }}</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr alch-table-row ng-repeat="notice in table.rows" row-select="notice">
+      <td alch-table-cell>
+        <a class="clickable" ng-click="table.openDetails(notice)">{{ notice.created_at | date:'medium' }}</a>
+      </td>
+      <td alch-table-cell>{{ notice.level | i18n }}</td>
+      <td alch-table-cell>{{ notice.organization.name }}</td>
+      <td alch-table-cell>{{ notice.text }}</td>
+    </tr>
+  </tbody>
+</table>

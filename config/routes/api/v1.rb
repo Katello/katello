@@ -308,6 +308,8 @@ Src::Application.routes.draw do
         resources :ldap_groups, :controller => :role_ldap_groups, :only => [:create, :destroy, :index]
       end
 
+      resources :notices, :only => [:index, :show, :update, :destroy]
+
       resources :tasks, :only => [:show]
 
       resources :crls, :only => [:index]

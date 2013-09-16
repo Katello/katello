@@ -64,11 +64,15 @@ angular.module('Bastion.systems').controller('SystemsController',
             $scope.transitionTo('systems.register');
         };
 
+        // TODO: move to system-details.controller.js
         $scope.removeSystem = function (system) {
+            var systemName = system.name,
+                systemId = system.id;
+
             system.$remove(function() {
-                $scope.removeRow(system.id);
+                $scope.removeRow(systemId);
                 $scope.saveSuccess = true;
-                $scope.successMessages = [i18nFilter('System %s has been deleted.'.replace('%s', system.name))];
+                $scope.successMessages = [i18nFilter('System %s has been deleted.'.replace('%s', systemName))];
                 $scope.transitionTo('systems.index');
             });
         };

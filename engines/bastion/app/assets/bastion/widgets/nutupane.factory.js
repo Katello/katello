@@ -101,7 +101,7 @@ angular.module('Bastion.widgets').factory('Nutupane',
                 var table = self.table;
 
                 table.rows = _.reject(table.rows, function(item) {
-                    return item.id === id;
+                    return item.id.toString() === id.toString();
                 }, this);
 
                 table.resource.total = table.resource.total - 1;

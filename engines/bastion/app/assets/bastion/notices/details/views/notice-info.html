@@ -1,0 +1,51 @@
+<div class="nutupane-sub-section">
+
+  <div class="flash_hud" ng-show="saveSuccess">
+    <a class="control" title="Close" ng-click="saveSuccess = false"></a>
+    <ul class="flash_messages success">
+      <li>
+        {{ "Save successful" | i18n }}
+      </li>
+    </ul>
+  </div>
+
+  <div class="flash_hud" ng-show="saveError">
+    <a class="control" title="Close" ng-click="saveError = false"></a>
+    <ul class="flash_messages error">
+      <li>
+        {{ "Error occurred saving:" | i18n }}
+      </li>
+      <ul>
+        <li ng-repeat="error in errors">{{ error }}</li>
+      </ul>
+    </ul>
+  </div>
+
+  <div class="details fl">
+    <section>
+      <h4>{{ "Basic Information" | i18n }}</h4>
+
+        <div class="detail">
+          <span class="info-label">{{ "Description" | i18n }}</span>
+          <span class="info-value">{{ notice.text }}</span>
+        </div>
+
+        <div class="detail">
+          <span class="info-label">{{ "Level" | i18n }}</span>
+          <span class="info-value">{{ notice.level }}</span>
+        </div>
+
+        <div class="detail">
+          <span class="info-label">{{ "Created" | i18n }}</span>
+          <span class="info-value">{{ notice.created_at | date:'medium' }}</span>
+        </div>
+
+        <div class="detail">
+          <span class="info-label">{{ "Details" | i18n }}</span>
+          <span class="info-value">{{ notice.details }}</span>
+        </div>
+
+      <div class="divider"></div>
+    </section>
+  </div>
+</div>

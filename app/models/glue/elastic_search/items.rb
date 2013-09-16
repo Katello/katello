@@ -61,7 +61,7 @@ module Glue
 
         # set the query default field, if one was provided.
         query_options = {}
-        query_options[:default_field] = search_options[:default_field] || 'name'
+        query_options[:default_field] = search_options[:default_field] if search_options[:default_field]
 
         if @query_string.nil? || @query_string == ''
           all_rows = true

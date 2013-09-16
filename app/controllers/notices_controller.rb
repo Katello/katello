@@ -21,6 +21,10 @@ class NoticesController < ApplicationController
 
   helper_method :sort_column, :sort_direction
 
+  def index
+    render 'bastion/layouts/application', :layout => false
+  end
+
   def section_id
     'notifications'
   end
@@ -31,17 +35,6 @@ class NoticesController < ApplicationController
 
   def notices_authorize
     true
-  end
-
-  def show
-    # TODO: search by organization
-    # currently doesn't handle pagination
-    @notices = render_panel_direct(Notice, { }, params[:search], 0, [sort_column, sort_direction],
-                                   { :filter      => { :user_ids => [current_user.id] },
-                                     #:organization_id => [current_organization.id] },
-                                     :skip_render => true,
-                                     :page_size   => 100 })
-    retain_search_history
   end
 
   def get_new

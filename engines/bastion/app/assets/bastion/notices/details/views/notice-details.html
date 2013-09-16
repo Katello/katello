@@ -1,0 +1,26 @@
+<section class="nutupane-details" ng-cloak alch-container-scroll>
+  <header class="details-header">
+    <h2 class="fl">{{ "%noticeLevel \"%noticeName\"" | i18n: {noticeLevel: notice.level, noticeName: notice.text} }}</h2>
+
+    <div class="details-actions fr">
+      <button class="btn-mini btn-danger" ng-disabled="notice.readonly" ng-click="showConfirm = true">{{ "Remove Notice" | i18n }}</button>
+      <button class="btn-mini" ng-click="table.closeItem()">
+        <i class="icon-remove"></i>
+        {{ "Close" | i18n }}
+      </button>
+      <div alch-confirm="removeNotice(notice)" show-confirm="showConfirm">
+        {{ "Are you sure you want to remove notice \"%notice\"?" | i18n: {notice: notice.text} }}
+      </div>
+    </div>
+  </header>
+
+  <nav class="details-navigation">
+    <ul>
+      <li>
+        <a class="clickable" ng-click="transitionTo('notices.details.info')" ng-class="{active: isState('notices.details.info')}">{{ "Details" | i18n }}</a>
+      </li>
+    </ul>
+  </nav>
+
+  <div ui-view></div>
+</section>
