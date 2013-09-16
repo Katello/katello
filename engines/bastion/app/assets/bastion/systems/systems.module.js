@@ -25,6 +25,7 @@ angular.module('Bastion.systems', [
     'ui.compat',
     'Bastion.widgets',
     'Bastion.subscriptions',
+    'Bastion.nodes',
     'Bastion.system-groups'
 ]);
 

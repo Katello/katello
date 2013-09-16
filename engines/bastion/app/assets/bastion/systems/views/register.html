@@ -19,6 +19,17 @@
 
   <p>{{ "Use Subscription Manager to register." | i18n }}</p>
 
-  <pre><code>subscription-manager register --org="{{ organization }}"</pre></code>
+  <pre><code>subscription-manager register --org="{{ organization }}"</code></pre>
 
+  <div ng-show="nodes.results.length > 0">
+    <p>
+      <h5>Consuming Content From a Node</h5>
+      {{ "Selected Node:" | i18n }}
+      <select ng-model="selectedNode"
+              ng-options="node.hostname for node in nodes.results">
+      </select>
+
+      <pre><code>subscription-manager register --org="{{ organization }}" --baseurl="https://{{  selectedNode.hostname }}/pulp/repos"</code></pre>
+    </p>
+  </div>
 </section>
