@@ -1,4 +1,4 @@
-- for org in user.allowed_organizations
+- user.allowed_organizations.each do |org|
   %li.dropdown-item
     %div.dropdown-item-link
       = render :partial => "common/fav", :locals => { :org => org, :current_user => current_user }
