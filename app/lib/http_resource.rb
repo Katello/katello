@@ -97,7 +97,7 @@ class HttpResource
       result
     rescue RestClient::Exception => e
       raise_rest_client_exception e, a_path, "GET"
-    rescue Errno::ECONNREFUSED => e
+    rescue Errno::ECONNREFUSED
       service = a_path.split("/").second
       raise Errors::ConnectionRefusedException, _("A backend service [ %s ] is unreachable") % service.capitalize
     end
@@ -111,7 +111,7 @@ class HttpResource
       result
     rescue RestClient::Exception => e
       raise_rest_client_exception e, a_path, "POST"
-    rescue Errno::ECONNREFUSED => e
+    rescue Errno::ECONNREFUSED
       service = a_path.split("/").second
       raise Errors::ConnectionRefusedException, _("A backend service [ %s ] is unreachable") % service.capitalize
     end
@@ -125,7 +125,7 @@ class HttpResource
       result
     rescue RestClient::Exception => e
       raise_rest_client_exception e, a_path, "PUT"
-    rescue Errno::ECONNREFUSED => e
+    rescue Errno::ECONNREFUSED
       service = a_path.split("/").second
       raise Errors::ConnectionRefusedException, _("A backend service [ %s ] is unreachable") % service.capitalize
     end
@@ -139,7 +139,7 @@ class HttpResource
       result
     rescue RestClient::Exception => e
       raise_rest_client_exception e, a_path, "DELETE"
-    rescue Errno::ECONNREFUSED => e
+    rescue Errno::ECONNREFUSED
       service = a_path.split("/").second
       raise Errors::ConnectionRefusedException, _("A backend service [ %s ] is unreachable") % service.capitalize
     end

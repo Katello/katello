@@ -65,7 +65,7 @@ class Filter < ActiveRecord::Base
 
   def repos(env)
     repos = self.products.map { |prod| prod.repos(env) }.flatten.reject(&:puppet?)
-    repos += repositories
+    repos + repositories
   end
 
   def puppet_repository

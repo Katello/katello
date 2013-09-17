@@ -48,4 +48,3 @@ class Candlepin::Content
     params.each_pair {|k, v| instance_variable_set("@#{k}", v) unless v.nil? }
   end
 end
-

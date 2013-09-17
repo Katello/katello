@@ -20,7 +20,13 @@ SpaceAroundBraces:
 BlockNesting:
   Enabled: false # change to 4
 
-AvoidPerlBackrefs:
+PerlBackrefs:
+  Enabled: false # remove me
+
+AlignHash:
+  Enabled: false # remove me
+
+AlignArray:
   Enabled: false # remove me
 
 # end TODO
@@ -34,6 +40,7 @@ AllCops:
     # TODO: remove these other paths as we fix them
     - spec/**
     - test/**
+    - config/navigation.rb
 
 MethodLength:
   Description: 'Avoid methods longer than 30 lines of code.'

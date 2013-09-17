@@ -15,4 +15,3 @@ class AddLabelsToEnvironment < ActiveRecord::Migration
     change_table(:environments) { |t| t.remove :label}
   end
 end
-

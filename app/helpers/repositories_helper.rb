@@ -27,4 +27,3 @@ module RepositoriesHelper
     GpgKey.readable(current_organization)
   end
 end
-

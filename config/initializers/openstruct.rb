@@ -10,4 +10,3 @@ class OpenStruct
   end
 
 end
-

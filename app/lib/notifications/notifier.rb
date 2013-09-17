@@ -186,4 +186,3 @@ class Notifications::Notifier
     return options
   end
 end
-

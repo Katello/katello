@@ -647,7 +647,7 @@ module Resources
         def create_unlimited_subscription(owner_key, product_id)
           start_date ||= Date.today
           # End it 100 years from now
-          end_date ||= start_date + 10950
+          end_date ||= start_date + 10_950
 
           subscription = {
             'startDate' => start_date,
