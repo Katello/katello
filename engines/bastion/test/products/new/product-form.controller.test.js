@@ -32,7 +32,7 @@ describe('Controller: ProductFormController', function() {
         $scope.table = {
             addRow: function() {},
             closeItem: function() {}
-        }
+        };
 
         $controller('ProductFormController', {
             $scope: $scope,
@@ -52,13 +52,14 @@ describe('Controller: ProductFormController', function() {
         var product = $scope.product;
 
         spyOn($scope.table, 'addRow');
-        spyOn($scope.table, 'closeItem');
+        spyOn($scope, 'transitionTo');
         spyOn(product, '$save').andCallThrough();
         $scope.save(product);
 
         expect(product.$save).toHaveBeenCalled();
         expect($scope.table.addRow).toHaveBeenCalled();
-        expect($scope.table.closeItem).toHaveBeenCalled();
+        expect($scope.transitionTo).toHaveBeenCalledWith('products.details.repositories.index',
+                                                         {productId: $scope.product.id})
     });
 
     it('should fail to save a new product resource', function() {
