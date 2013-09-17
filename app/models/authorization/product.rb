@@ -46,18 +46,6 @@ module Authorization::Product
       provider.editable?
     end
 
-    def readable(org)
-      all_readable(org).with_enabled_repos_only(org.library)
-    end
-
-    def editable(org)
-      all_editable(org).with_enabled_repos_only(org.library)
-    end
-
-    def syncable(org)
-      sync_items(org).with_enabled_repos_only(org.library)
-    end
-
     def any_readable?(org)
       ::Provider.any_readable?(org)
     end
