@@ -202,7 +202,6 @@ Src::Application.routes.draw do
       resources :changesets, :only => [:show, :update, :destroy] do
         post :promote, :on => :member, :action => :promote
         post :apply, :on => :member, :action => :apply
-        get :dependencies, :on => :member, :action => :dependencies
         resources :products, :controller => :changesets_content do
           post :index, :on => :collection, :action => :add_product
           delete :destroy, :on => :member, :action => :remove_product
