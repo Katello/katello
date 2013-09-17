@@ -71,7 +71,7 @@ class PasswordResetsController < ApplicationController
 
   def email_logins
     # request to have the usernames associated with the email address provided, sent (in email) to that address
-    UserMailer.send_logins(@users) if !@users.empty?
+    UserMailer.send_logins(@users) unless @users.empty?
 
     # note: we provide a success notice regardless of whether or not there are any users associated with the email
     # address provided... this is done on purpose for security

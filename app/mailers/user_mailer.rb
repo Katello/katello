@@ -22,7 +22,7 @@ class UserMailer < ActionMailer::Base
   end
 
   def send_logins(users)
-    org = user.default_org
+    org = users.collect { |u| u.default_org }.first || Organization.first
     UserMailer.async(:organization => org).logins(users, I18n.locale)
   end
 
