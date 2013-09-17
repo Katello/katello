@@ -401,11 +401,14 @@ $container_width: ($static_width/2) - 36;
 
     }
 
-    .spinner {
+    .spinner, .success {
       display: none;
       float: right;
-      margin: 3px 41.5% 0 0;
+      margin: 3px 39% 0 0;
       height: 18px;
+    }
+    .success {
+      color: green;
     }
   }
 
@@ -416,13 +419,18 @@ $container_width: ($static_width/2) - 36;
     table {
       margin-top: 30px;
     }
+    #select_container {
+      .spinner, .success {
+        margin-right: 44%;
+      }
+    }
   }
 
   #filter_tabs {
     #repos {
       overflow: visible;
     }
-    .spinner {
+    .spinner, .success {
       margin-right: 27%;
     }
   }

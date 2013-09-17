@@ -23,7 +23,8 @@ KT.repo_input = (function() {
             var select = $(this),
                 data = {};
 
-            select.prev(".spinner").show();
+            select.prevAll(".spinner").first().show();
+            select.prev(".success").hide();
 
             data[select.attr("name")] = select.val();
             $.ajax({
@@ -33,7 +34,8 @@ KT.repo_input = (function() {
                 data: JSON.stringify(data),
                 cache: false,
                 success: function(){
-                    select.prev(".spinner").hide();
+                    select.prevAll(".spinner").first().hide();
+                    select.prev(".success").show().delay(3000).fadeOut();
                 }
             });
         });
