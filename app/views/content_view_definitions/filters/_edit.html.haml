@@ -14,7 +14,7 @@
     %br
     %h4 #{_("Filter: %{name}") % {:name => filter.name}}
 
-    #filter_tabs.hidden
+    #filter_tabs.hidden{'data-active_tab' => active_tab(filter)}
       %ul
         %li
           %a{:href=>"##rules"} #{_("Rules")}

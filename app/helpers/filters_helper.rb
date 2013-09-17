@@ -113,4 +113,10 @@ module FiltersHelper
          :errata_types => errata_types,
          :date_summary => date_summary}
   end
+
+  # determine which tab should be active when editing the filter
+  def active_tab(filter)
+    # if there aren't any products/repos defined for the filter
+    filter.products.empty? && filter.repositories.empty? ? 1 : 0
+  end
 end
