@@ -68,5 +68,31 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
             });
         };
 
+        $scope.uploadContent = function(content, completed) {
+            var returnData;
+
+            if (content !== "Please wait...") {
+                try {
+                    returnData = JSON.parse(angular.element(content).html());
+                } catch(err) {
+                    returnData = content;
+                }
+
+                if (!returnData) {
+                    returnData = content;
+                }
+
+                if (completed && returnData !== null && returnData['status'] === 'success') {
+                    $scope.uploadStatus = 'success';
+                    $scope.repository.$get();
+                } else {
+                    $scope.errorMessage = returnData;
+                    $scope.uploadStatus = 'error';
+                }
+
+                $scope.uploading = false;
+            }
+        };
+
     }]
 );

@@ -41,6 +41,7 @@ angular.module('Bastion.test-mocks').factory('MockResource', function() {
             label: '',
             failed: false,
             readonly: false,
+            $get: function() {},
             $save: function(success, error) {
                 if (!this.failed) {
                     success();

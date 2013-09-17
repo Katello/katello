@@ -741,8 +741,9 @@ module Glue::Pulp::Repo
     end
 
     def update_data_after_upload(unit_key)
-      ids = unit_search(:type_ids => [unit_type_id],
-                        :filters => {:unit => unit_key})
+      results = unit_search(:type_ids => [unit_type_id],
+                            :filters => {:unit => unit_key})
+      ids = results.map { |result| result[:unit_id] }
       puppet? ? PuppetModule.index_puppet_modules(ids) : Package.index_packages(ids)
       generate_metadata
     end

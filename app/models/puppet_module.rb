@@ -36,7 +36,7 @@ class PuppetModule
     else
       fail InvalidPuppetModuleError, _("Could not parse metadata. Make sure the puppet module is valid.")
     end
-  rescue Zlib::GzipFile::Error
+  rescue Zlib::GzipFile::Error, Gem::Package::TarInvalidError
     raise InvalidPuppetModuleError, _("Could not parse metadata. Make sure the puppet module is valid.")
   ensure
     tar_extract.close if tar_extract
