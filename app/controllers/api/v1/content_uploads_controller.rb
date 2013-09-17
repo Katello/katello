@@ -56,8 +56,9 @@ class Api::V1::ContentUploadsController < Api::V1::ApiController
   param :unit_key, Hash, :required => true, :desc => "unique identifier for the new unit"
   param :unit_metadata, Hash, :required => false, :desc => "extra metadata describing the unit"
   def import_into_repo
-    Katello.pulp_server.resources.content.import_into_repo(@repo.pulp_id, "rpm",
+    Katello.pulp_server.resources.content.import_into_repo(@repo.pulp_id, @repo.unit_type_id,
       params[:id], params[:unit_key], {:unit_metadata => params[:unit_metadata]})
+    index_content(params[:unit_key])
     @repo.generate_metadata
     render :nothing => true
   end
@@ -66,5 +67,16 @@ class Api::V1::ContentUploadsController < Api::V1::ApiController
 
   def find_repository
     @repo = Repository.find(params[:repository_id])
+  end
+
+  def index_content(criteria)
+    # TODO: move this code out of the controller
+    search = {
+      :type_ids => [@repo.unit_type_id],
+      :filters  => {:unit => criteria}
+    }
+
+    ids = @repo.unit_search(search).map { |res| res[:unit_id] }
+    @repo.puppet? ? PuppetModule.index_puppet_modules(ids) : Package.index_packages(ids)
   end
 end

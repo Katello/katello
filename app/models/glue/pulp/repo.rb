@@ -743,6 +743,10 @@ module Glue::Pulp::Repo
       end
     end
 
+    def unit_search(options = {})
+      Katello.pulp_server.extensions.repository.unit_search(self.pulp_id, options)
+    end
+
     protected
 
     def _get_most_recent_sync_status
