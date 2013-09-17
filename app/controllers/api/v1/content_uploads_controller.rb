@@ -58,6 +58,7 @@ class Api::V1::ContentUploadsController < Api::V1::ApiController
   def import_into_repo
     Katello.pulp_server.resources.content.import_into_repo(@repo.pulp_id, "rpm",
       params[:id], params[:unit_key], {:unit_metadata => params[:unit_metadata]})
+    @repo.generate_metadata
     render :nothing => true
   end
 
