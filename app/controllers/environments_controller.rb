@@ -68,10 +68,10 @@ class EnvironmentsController < ApplicationController
   # POST /environments
   def create
     env_params = {:name => params[:kt_environment][:name],
-              :description => params[:kt_environment][:description],
-              :prior => params[:kt_environment][:prior],
-              :label => params[:kt_environment][:label],
-              :organization_id => @organization.id}
+                  :description => params[:kt_environment][:description],
+                  :prior => params[:kt_environment][:prior],
+                  :label => params[:kt_environment][:label],
+                  :organization_id => @organization.id}
 
     env_params[:label], label_assigned = generate_label(env_params[:name], 'environment') if env_params[:label].blank?
 

@@ -32,12 +32,12 @@ module ContentSearch
                            end
           end
           rows << Row.new(:id => "view_#{view.id}_product_#{prod.id}",
-                                 :name => prod.name,
-                                 :cols => cols,
-                                 :data_type => "product",
-                                 :value => prod.name,
-                                 :parent_id => "view_#{view.id}",
-                                 :object_id => view.id
+                          :name => prod.name,
+                          :cols => cols,
+                          :data_type => "product",
+                          :value => prod.name,
+                          :parent_id => "view_#{view.id}",
+                          :object_id => view.id
                                 )
         end
       end

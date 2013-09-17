@@ -41,7 +41,7 @@ class SystemGroup < ActiveRecord::Base
   #  allow us to do this.
   has_many :environment_system_groups, :dependent => :destroy
   has_many :db_environments, {:through => :environment_system_groups, :source => :environment,
-                    :class_name => 'KTEnvironment', :foreign_key => :environment_id}
+                              :class_name => 'KTEnvironment', :foreign_key => :environment_id}
   before_save :save_system_environments
 
   validates :pulp_id, :presence => true

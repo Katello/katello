@@ -42,7 +42,7 @@ module Glue::Pulp::PackageGroup
       params.each_pair {|k, v| instance_variable_set("@#{k}", v) unless v.nil? }
 
       [:default_package_names, :conditional_package_names,
-        :optional_package_names, :mandatory_package_names].each do |attr|
+       :optional_package_names, :mandatory_package_names].each do |attr|
         values = send(attr)
         values = values.collect do |v|
           v.split(", ")

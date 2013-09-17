@@ -21,7 +21,7 @@ class Filter < ActiveRecord::Base
 
   validate :validate_products_and_repos
   validates :name, :presence => true, :allow_blank => false,
-              :uniqueness => {:scope => :content_view_definition_id}
+                   :uniqueness => {:scope => :content_view_definition_id}
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name
 
   def self.applicable(repo)

@@ -101,7 +101,7 @@ class SystemGroupsController < ApplicationController
     notify.success _("System Group %{new_group} created successfully as a copy of system group %{group}.") % {:new_group => new_group.name, :group => @group.name}
 
     render :partial => "system_groups/list_group", :locals => {:item => new_group, :accessor => "id",
-                                                              :name => controller_display_name}
+                                                               :name => controller_display_name}
   end
 
   def edit

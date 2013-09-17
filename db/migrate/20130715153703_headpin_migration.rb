@@ -9,7 +9,7 @@ class HeadpinMigration < ActiveRecord::Migration
       non_library_envs.each do |env|
         # create a system group with the same name as env
         group = SystemGroup.create!(:name => env.name, :description => "Group systems in #{env.name}",
-                              :organization => env.organization)
+                                    :organization => env.organization)
         system_ids = env.system_ids
         system_ids.each do |system_id|
           s = System.find(system_id)

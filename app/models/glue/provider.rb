@@ -465,7 +465,7 @@ module Glue::Provider
                          :action_rollback => [self, :rollback_delete_manifest])
         if Katello.config.use_pulp
           pre_queue.create(:name => "refresh product repos for deletion",
-                       :priority => 6, :action => [self, :refresh_existing_products])
+                           :priority => 6, :action => [self, :refresh_existing_products])
         end
         self.save!
 
@@ -514,7 +514,7 @@ module Glue::Provider
               ]
           error_texts.join('<br />')
           Notify.message(error_texts, :request_type => 'providers__update_redhat_provider',
-                         :organization => self.organization)
+                                      :organization => self.organization)
         else
           error_texts = []
 
@@ -523,7 +523,7 @@ module Glue::Provider
           error_texts.join('<br />')
 
           Notify.error(error_texts, :request_type => 'providers__update_redhat_provider',
-                       :organization => self.organization)
+                                    :organization => self.organization)
         end
       end
     end

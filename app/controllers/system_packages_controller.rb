@@ -125,7 +125,7 @@ class SystemPackagesController < ApplicationController
     if @system.class == Hypervisor
       render :partial => "systems/hypervisor",
              :locals => {:system => @system,
-                       :message => _("Hypervisors do not have packages")}
+                         :message => _("Hypervisors do not have packages")}
       return
     end
 
@@ -148,10 +148,10 @@ class SystemPackagesController < ApplicationController
                                       :state => [:waiting, :running])
 
     render :partial => "packages", :locals => {:system => @system, :packages => packages,
-                                           :total_packages => total_packages,
-                                                                       :package_tasks => package_tasks,
-                                                                       :group_tasks => group_tasks,
-                                                                       :offset => offset, :editable => @system.editable?}
+                                               :total_packages => total_packages,
+                                               :package_tasks => package_tasks,
+                                               :group_tasks => group_tasks,
+                                               :offset => offset, :editable => @system.editable?}
   end
 
   def more_packages
@@ -164,8 +164,8 @@ class SystemPackagesController < ApplicationController
     end
 
     render :partial => "package_items", :locals => {:packages => packages, :package_tasks => nil,
-                                                :group_tasks => nil, :offset => 0,
-                                                :editable => @system.editable?}
+                                                    :group_tasks => nil, :offset => 0,
+                                                    :editable => @system.editable?}
   end
 
   def package_status

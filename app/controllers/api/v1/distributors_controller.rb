@@ -173,7 +173,7 @@ class Api::V1::DistributorsController < Api::V1::ApiController
     distributor_report = Ruport::Data::Table.new(
         :data         => data,
         :column_names => %w(name uuid location organization environment
-          created_at updated_at compliance_color compliant_until custom_info),
+                            created_at updated_at compliance_color compliant_until custom_info),
         :record_class => Ruport::Data::Record,
         :transforms   => transforms
     )

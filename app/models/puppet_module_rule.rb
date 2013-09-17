@@ -33,7 +33,7 @@ class PuppetModuleRule < FilterRule
       filters.compact!
 
       PuppetModule.search(unit[:name], :page_size => repo.puppet_module_count, :repoids => [repo.pulp_id],
-                                    :filters => filters).map(&:_id).compact
+                                       :filters => filters).map(&:_id).compact
     end
     ids.flatten!
     ids.compact!

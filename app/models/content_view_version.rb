@@ -26,7 +26,7 @@ class ContentViewVersion < ActiveRecord::Base
   has_many :repositories, :dependent => :destroy
   has_one :task_status, :as => :task_owner, :dependent => :destroy
   belongs_to :definition_archive, :class_name => "ContentViewDefinitionArchive",
-    :inverse_of => :content_view_versions
+                                  :inverse_of => :content_view_versions
 
   validates :definition_archive_id, :presence => true, :if => :has_definition?
 
@@ -89,7 +89,7 @@ class ContentViewVersion < ActiveRecord::Base
           {:view_name => self.content_view.name, :view_version => self.version}
 
       Notify.success(message, :request_type => "content_view_definitions___refresh",
-                     :organization => self.content_view.organization)
+                              :organization => self.content_view.organization)
     end
 
   rescue => e
@@ -101,7 +101,7 @@ class ContentViewVersion < ActiveRecord::Base
           {:view_name => self.content_view.name, :view_version => self.version}
 
       Notify.exception(message, e, :request_type => "content_view_definitions___refresh",
-                       :organization => self.content_view.organization)
+                                   :organization => self.content_view.organization)
     end
 
     raise e

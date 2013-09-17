@@ -118,18 +118,18 @@ class SubscriptionsController < ApplicationController
     distributors = distributors.all_by_pool(@subscription.cp_id)
 
     render :partial => "consumers", :locals => {:subscription => @subscription,
-                                            :systems => systems,
-                                            :activation_keys => activation_keys,
-                                            :distributors => distributors,
-                                            :editable => false,
-                                            :name => controller_display_name}
+                                                :systems => systems,
+                                                :activation_keys => activation_keys,
+                                                :distributors => distributors,
+                                                :editable => false,
+                                                :name => controller_display_name}
   end
 
   def new
     get_manifest_details
     can_refresh = @upstream['idCert'] && @upstream['idCert']['cert']
     render :partial => "new", :locals => {:provider => @provider, :statuses => @statuses, :details => @details, :upstream => @upstream,
-                                      :name => controller_display_name, :can_refresh => can_refresh}
+                                          :name => controller_display_name, :can_refresh => can_refresh}
   end
 
   def edit_manifest
@@ -190,7 +190,7 @@ class SubscriptionsController < ApplicationController
         # force must be a string value
         force_update = params[:force_import] == "1" ? "true" : "false"
         @provider.import_manifest File.expand_path(temp_file_path), :force => force_update,
-                                  :async => true, :notify => true
+                                                                    :async => true, :notify => true
       rescue => error
         if error.respond_to?(:response)
           display_message = ApplicationController.parse_display_message(error.response)
@@ -285,19 +285,19 @@ class SubscriptionsController < ApplicationController
 
   def setup_options
     @panel_options = { :title => _('Subscriptions'),
-                      :col => ["name"],
-                      :titles => [_("Name")],
-                      :custom_rows => true,
-                      :enable_create => @provider.editable?,
-                      :create_label => _("+ Import Manifest"),
-                      :enable_sort => true,
-                      :name => controller_display_name,
-                      :list_partial => 'subscriptions/list_subscriptions',
-                      :ajax_load  => true,
-                      :ajax_scroll => items_subscriptions_path,
-                      :actions => nil,
-                      :search_class => ::Pool,
-                      :accessor => 'unused'
+                       :col => ["name"],
+                       :titles => [_("Name")],
+                       :custom_rows => true,
+                       :enable_create => @provider.editable?,
+                       :create_label => _("+ Import Manifest"),
+                       :enable_sort => true,
+                       :name => controller_display_name,
+                       :list_partial => 'subscriptions/list_subscriptions',
+                       :ajax_load  => true,
+                       :ajax_scroll => items_subscriptions_path,
+                       :actions => nil,
+                       :search_class => ::Pool,
+                       :accessor => 'unused'
                       }
   end
 

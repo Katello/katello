@@ -198,7 +198,7 @@ class Repository < ActiveRecord::Base
     repo_lib = repo.library_instance ? repo.library_instance : repo
     org, _, content_path = repo_lib.relative_path.split("/", 3)
     cve = ContentViewEnvironment.where(:environment_id => environment,
-                                      :content_view_id => content_view).first
+                                       :content_view_id => content_view).first
     "#{org}/#{cve.label}/#{content_path}"
   end
 

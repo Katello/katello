@@ -21,8 +21,7 @@ class Api::V2::ContentViewsController < Api::V1::ContentViewsController
 
   api :GET, "/organizations/:organization_id/content_views", "List content views"
   param :organization_id, :identifier, :desc => "organization identifier"
-  param :environment_id, :identifier, :desc => "environment identifier",
-        :required                           => false
+  param :environment_id, :identifier, :desc => "environment identifier", :required => false
   param :label, String, :desc => "content view label", :required => false
   param :name, String, :desc => "content view name", :required => false
   param :id, :identifier, :desc => "content view id", :required => false

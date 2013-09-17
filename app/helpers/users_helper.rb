@@ -43,6 +43,6 @@ module UsersHelper
     selected = locale.nil? ? _('Use Browser Locale') : locale
     select(:locale, "locale", choices,
            {:prompt => nil, :id => "locale_field",
-           :selected => selected})
+            :selected => selected})
   end
 end

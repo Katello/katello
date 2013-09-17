@@ -21,10 +21,10 @@ module Navigation
     def menu_organization
       {:key => :organizations,
        :name => _("Organizations"),
-        :url => :sub_level,
-        :options => {:class => 'organizations top_level', "data-menu" => "organizations"},
-        :if => lambda{current_organization && Organization.any_readable?},
-        :items => [menu_org_list]
+       :url => :sub_level,
+       :options => {:class => 'organizations top_level', "data-menu" => "organizations"},
+       :if => lambda{current_organization && Organization.any_readable?},
+       :items => [menu_org_list]
       }
     end
 

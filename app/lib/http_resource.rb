@@ -173,10 +173,10 @@ class HttpResource
       # Need full path to properly generate the signature
       url = self.site + path
       params = { :site => self.site,
-            :http_method => method,
-            :request_token_path => "",
-            :authorize_path => "",
-            :access_token_path => ""}
+                 :http_method => method,
+                 :request_token_path => "",
+                 :authorize_path => "",
+                 :access_token_path => ""}
 
       params[:ca_file] = self.ca_cert_file unless self.ca_cert_file.nil?
       # New OAuth consumer to setup signing the request

@@ -56,7 +56,7 @@ module ApplicationHelper
   # Headpin inclusion
   def stats_line(stats, options = {})
     render :partial => "common/stats_line",
-      :locals => {:stats => stats}
+           :locals => {:stats => stats}
   end
 
   # Headpin inclusion
