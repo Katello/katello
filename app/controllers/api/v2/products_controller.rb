@@ -92,10 +92,9 @@ class Api::V2::ProductsController < Api::V2::ApiController
   def update
     reset_gpg_keys = (params[:gpg_key_id] != @product.gpg_key_id)
 
-    @product.update_attributes!(params)
+    @product.update_attributes!(params.except(:provider, :provider_id, :provider_type, :gpg_key))
     @product.reset_repo_gpgs! if reset_gpg_keys
-
-    respond_for_show(:resource => @product)
+    respond_for_show(:resource => @product.reload)
   end
 
   api :DELETE, "/products/:id", "Destroy a product"
