@@ -72,6 +72,14 @@ $(document).ready(function() {
         $("#sync_toggle_cont").find("img").remove();
     });
 
+    $('.info-tipsy').tipsy({
+        html: true,
+        gravity: 's',
+        className: 'error-tipsy',
+        title: function() {
+            return $(this).find('.hidden-text').html();
+        }
+    });
 
 });
 
@@ -139,7 +147,7 @@ KT.content_actions = (function(){
                    // Only stop when we reach 100% and the finish_time is done sometimes they are not both complete
                    if (!repo.is_running && (repo.raw_state !== 'waiting')) {
                         removeSyncing(repo.id);
-                        KT.content.finishRepo(repo.id, repo.state, repo.duration);
+                        KT.content.finishRepo(repo.id, repo.state, repo.duration, repo.raw_state);
                         KT.content.updateRepo(repo.id, repo.start_time, repo.duration, repo.progress.progress, repo.display_size, repo.packages, repo.size);
                         KT.content.updateProduct(repo.product_id, false, false, true);
                         notices.checkNotices();
@@ -183,20 +191,26 @@ KT.content = (function(){
             progressBar.progressbar({
                 value: progress
             });
-            element.html("");
-            element.append(progressBar);
+            element.find('.result-info').html("");
+            element.find('.result-info').append(progressBar);
+            element.find('.info-tipsy').addClass('hidden');
+
             if( KT.permissions.syncable ){
-                element.append(cancelButton);
+                element.find('.result-info').append(cancelButton);
             }
         },
         updateRepo = function(repo_id, starttime, duration, progress, display_size, packages, size){
             var repo = $("#repo-" + repo_id);
             update_item(repo, starttime, duration, progress, display_size, packages, size );
         },
-        finishRepo = function(repo_id, state, duration){
+        finishRepo = function(repo_id, state, duration, raw_state){
             var element = $("#repo-" + repo_id);
-            element.find(".result").html(state);
+            element.find(".result .result-info").html(state);
             fadeUpdate(element.find(".duration"), duration);
+
+            if (raw_state === 'error') {
+                element.find('.result .info-tipsy').removeClass('hidden');
+            }
         },
         update_item = function(element, starttime, duration, progress, display_size, packages, size) {
             var pg = element.find(".progress"),

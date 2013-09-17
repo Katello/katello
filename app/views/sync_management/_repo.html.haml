@@ -13,6 +13,14 @@
     #{@repo_status[repo.id][:display_size]}
     (#{@repo_status[repo.id][:packages]})
   %td.result
-    #{@repo_status[repo.id][:state]}
+    %span.result-info
+      #{@repo_status[repo.id][:state]}
+    %span.info-tipsy.details_icon-grey{ "class" => "#{"hidden" if !error_state?(@repo_status[repo.id])}" }
+      %span.hidden-text.hidden
+        .la.error-tipsy
+          %ul
+            - if !@repo_status[repo.id][:error_details].is_a?(String)
+              - @repo_status[repo.id][:error_details].each do |error|
+                %li #{error}
   - if @show_org
     %td
