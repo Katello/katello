@@ -97,7 +97,7 @@ angular.module('Bastion.test-mocks').factory('MockResource', function() {
         Resource.query = function(params, callback) {
             if (typeof(params) === "function") {
                 params(Resource.mockResources);
-            } else {
+            } else if (callback) {
                 callback(Resource.mockResources);
             }
             return Resource.mockResources;
