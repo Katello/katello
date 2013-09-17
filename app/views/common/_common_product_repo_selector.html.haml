@@ -20,6 +20,8 @@
             %div #{_('Add Products and Repositories:')}
             #select_container
               .spinner
+              .success
+                = _("Saved")
               %select#product_select{:style => 'width:400px;', 'data-placeholder' => _("Choose a product.."),
                 'data-url' => save_url}
               .centered
