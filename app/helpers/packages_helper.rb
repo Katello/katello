@@ -72,7 +72,7 @@ module PackagesHelper
       more_lines = number_with_delimiter(lines.length - 10)
       link_to((_("Show %s more line(s)") % more_lines), "", class: "show-more-changelog")
     end
-    html += content_tag "div", :class => "more-changelog" do
+    html + content_tag("div", :class => "more-changelog") do
       format_changelog_changes(lines[10..-1].join("\n"))
     end
   end

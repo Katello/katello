@@ -26,12 +26,11 @@ class Api::V1::ProxiesController < Api::V1::ApiController
       case route.name
       when "api_proxy_consumer_deletionrecord_delete_path"
         if !User.consumer?
-          consumer_gone, consumer_live = false
+          consumer_gone = false
           begin
             Resources::Candlepin::Consumer.get params[:id] # check with candlepin if system is Gone, raises RestClient::Gone
                                                            # a 200 means the system exists. the deletion record wont exist, but its
                                                            # not a permissions error
-            consumer_live = true
           rescue RestClient::Gone
             # the correct response is a 410, since the system has been deleted
             consumer_gone = true

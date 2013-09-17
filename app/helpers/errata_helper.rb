@@ -15,7 +15,7 @@ module ErrataHelper
     # Provide the errata title in the format of Advisory: Title. (E.g. "RHSA_2011:1230 : Package X security update").
     # Remove from the title the severity, if included.
     title = errata.errata_id  # the id contains the advisory
-    title += " : " + errata.title.sub(/Critical: |Important: |Moderate: |Low: /, "")
+    title + (" : " + errata.title.sub(/Critical: |Important: |Moderate: |Low: /, ""))
   end
 
   def errata_human_type(type)

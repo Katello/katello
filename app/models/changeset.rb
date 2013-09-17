@@ -212,4 +212,3 @@ class Changeset < ActiveRecord::Base
   end
 
 end
-

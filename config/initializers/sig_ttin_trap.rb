@@ -15,4 +15,3 @@ trap('TTIN') do
     puts ""
   end
 end
-

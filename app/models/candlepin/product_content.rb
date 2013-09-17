@@ -145,4 +145,3 @@ class Candlepin::ProductContent
   end
 
 end
-

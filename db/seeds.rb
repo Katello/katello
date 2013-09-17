@@ -12,7 +12,6 @@ first_user_name = (un = Util::Puppet.config_value("user_name")).blank? ? 'admin'
 first_user_password = (pw = Util::Puppet.config_value("user_pass")).blank? ? 'admin' : pw
 first_user_email = (em = Util::Puppet.config_value("user_email")).blank? ? 'root@localhost' : em
 first_org_name = (org = Util::Puppet.config_value("org_name")).blank? ? 'ACME_Corporation' : org
-first_org_label = (lbl = Util::Puppet.config_value("org_label")).blank? ? 'ACME_Corporation' : lbl
 
 def format_errors(model = nil)
   return '(nil found)' if model.nil?

@@ -29,7 +29,7 @@ module Glue::Candlepin::Environment
       Resources::Candlepin::Environment.find(self.cp_id)
       Rails.logger.info _("Candlepin environment already exists: %s") % self.cp_id
       true
-    rescue RestClient::ResourceNotFound => e
+    rescue RestClient::ResourceNotFound
       Rails.logger.info _("Creating environment in candlepin: %s") % self.label
       Resources::Candlepin::Environment.create(self.content_view.organization.label, self.cp_id, self.label,
                                                self.content_view.description)
@@ -52,7 +52,7 @@ module Glue::Candlepin::Environment
       Rails.logger.info _("Deleting environment in candlepin: %s") % self.label
       Resources::Candlepin::Environment.destroy(self.cp_id)
       true
-    rescue RestClient::ResourceNotFound => e
+    rescue RestClient::ResourceNotFound
       Rails.logger.info _("Candlepin environment doesn't exist: %s") % self.label
       true
     rescue => e

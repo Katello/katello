@@ -11,4 +11,3 @@ class AddTaskStatusIdToProvider < ActiveRecord::Migration
     end
   end
 end
-
