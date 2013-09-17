@@ -12,6 +12,12 @@
 
 require 'minitest_helper'
 
+class PulpTaskStatus
+  def self.any_task_running(async_tasks)
+    return false
+  end
+end
+
 module ConsumerSupport
 
   @consumer = nil
