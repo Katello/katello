@@ -241,7 +241,7 @@ class ContentViewDefinitionTest < MiniTest::Rails::ActiveSupport::TestCase
     cvd.associate_contents(cloned)
   end
 
- def test_associate_puppet
+  def test_associate_puppet
     cloned = Repository.find(repositories(:dev_p_forge).id)
     repo = Repository.find(repositories(:p_forge))
     cloned.stubs(:library_instance_id).returns(repo.id)
@@ -266,4 +266,13 @@ class ContentViewDefinitionTest < MiniTest::Rails::ActiveSupport::TestCase
     cvd.associate_contents(cloned)
   end
 
+  def test_destroy
+    @content_view_def.filters.create
+    @content_view_def.content_views << content_views(:library_view)
+    refute_empty @content_view_def.filters.reload
+    refute_empty @content_view_def.content_views.reload
+
+    assert @content_view_def.destroy
+    refute ContentViewDefinition.exists?(@content_view_def.id)
+  end
 end
