@@ -587,7 +587,7 @@ module Glue::Pulp::Repo
     def cancel_sync
       Rails.logger.info "Cancelling synchronization of repository #{self.pulp_id}"
       history = self.sync_status
-      return if history.nil? || history.state == ::PulpSyncStatus::Status::NOT_SYNCED
+      return if history.nil? || !history.pending?
       Katello.pulp_server.resources.task.cancel(history.uuid)
     end
 
