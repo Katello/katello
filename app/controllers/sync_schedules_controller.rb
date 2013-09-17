@@ -43,7 +43,7 @@ class SyncSchedulesController < ApplicationController
                  :enable_create => false}
 
     @plans_options = { :title => _('Select Plans to apply to selected Products'),
-                 :col => %(name interval),
+                 :col => %w(name interval),
                  :col_titles => [_('Name'), _('Interval')],
                  :create => _('Plan'),
                  :create_label => _('+ New Plan'),
