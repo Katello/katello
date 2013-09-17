@@ -443,7 +443,8 @@ KT.filters = (function(){
     update_product_repos = function() {
         var repos = [];
 
-        $("#product_select").prev(".spinner").show();
+        $("#product_select").prevAll(".spinner").first().show();
+        $("#product_select").prev(".success").hide();
 
         $.ajax({
             type: "PUT",
@@ -454,7 +455,8 @@ KT.filters = (function(){
             success: function(){
                 repo_cache = []; //clear repo cache
                 saved_filter = $.parseJSON(JSON.stringify(current_filter));
-                $("#product_select").prev(".spinner").hide();
+                $("#product_select").prevAll(".spinner").first().hide();
+                $("#product_select").prev(".success").show().delay(3000).fadeOut();
             }
         });
     },

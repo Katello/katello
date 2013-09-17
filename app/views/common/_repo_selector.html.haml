@@ -17,6 +17,8 @@
 
             #select_container
               .spinner
+              .success
+                = _("Saved")
               = repo_selector(repositories, save_url, field, record)
 
     - else
