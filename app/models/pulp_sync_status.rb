@@ -28,10 +28,50 @@ class PulpSyncProgress
       @size_left   = ht.null_safe_get(details, 0, ['size_left'])
       @total_count = ht.null_safe_get(details, 0, ['items_total'] || ['total_count'])
       @items_left  = ht.null_safe_get(details, 0, ['items_left'] || ['total_count'] - ['finished_count'])
-      @error_details = ht.null_safe_get(progress_attrs, [], ['error_details'])
+      @error_details = errors(progress_attrs['progress'])
       @step = ht.null_safe_get(progress_attrs, 0, ['step'])
     end
   end
+
+  private
+
+  def errors(progress)
+    if progress[:yum_importer]
+      details = progress[:yum_importer]
+    elsif progress[:details]
+      details = progress[:details]
+    end
+
+    format_errors(details)
+  end
+
+  # Possible formats coming from pulp
+  #
+  # We ignore this case:
+  #   {'finished_count' => {}}
+  #
+  # We extract from this case:
+  #   {'content' => {'error' => ''},
+  #    'errata' => {'error' => ''},
+  #    'packages' => {'error' => ''},
+  #    'metadata' => {'error_details => ''}
+  #   }
+  def format_errors(details)
+    errors_array = []
+
+    if details && !details.has_key?(:finished_count)
+      errors_array = details.each_with_object([]) do |(step, report), list|
+        if !report[:error].blank?
+          list << report[:error]
+        elsif !report[:error_details].blank?
+          list << report[:error_details]
+        end
+      end
+    end
+
+    errors_array
+  end
+
 end
 
 class PulpSyncStatus < PulpTaskStatus
