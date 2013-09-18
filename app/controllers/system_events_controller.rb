@@ -45,7 +45,7 @@ class SystemEventsController < ApplicationController
       user_message = task_template[:english_name]
     end
     render :partial => "details", :locals => {:type => type, :user_message => user_message,
-                                          :system => @system, :task => task}
+                                              :system => @system, :task => task}
   end
 
   # retrieve the status for the actions initiated by the client

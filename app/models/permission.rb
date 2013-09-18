@@ -25,7 +25,7 @@ class Permission < ActiveRecord::Base
   before_save :check_global
 
   validates :name, :presence => true, :uniqueness => {:scope => [:organization_id, :role_id],
-      :message => N_("Label has already been taken")}
+                                                      :message => N_("Label has already been taken")}
   validates :resource_type, :presence => true
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name
   validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description

@@ -85,7 +85,7 @@ class Api::V2::ContentViewDefinitionsController < Api::V1::ContentViewDefinition
   api :PUT, "/content_view_definitions/:content_view_definition_id/repositories",
       "Update repositories for content view definition"
   param :content_view_definition_id, :identifier, :required => true,
-        :desc                                               => "content view definition identifier"
+                                                  :desc => "content view definition identifier"
   param :repos, Array, :desc => "Updated list of repo ids", :required => true
   def update_repositories
     _update_repositories! params
@@ -96,7 +96,7 @@ class Api::V2::ContentViewDefinitionsController < Api::V1::ContentViewDefinition
       "Get products for content view definition"
   param :organization_id, :identifier, :desc => "organization identifier", :required => true
   param :content_view_definition_id, :identifier, :required => true,
-        :desc                                               => "content view definition identifier"
+                                                  :desc => "content view definition identifier"
   def list_products
     super
   end
@@ -104,7 +104,7 @@ class Api::V2::ContentViewDefinitionsController < Api::V1::ContentViewDefinition
   api :PUT, "/content_view_definitions/:content_view_definition_id/products",
       "Update products for content view definition"
   param :content_view_definition_id, :identifier, :required => true,
-        :desc                                               => "content view definition identifier"
+                                                  :desc => "content view definition identifier"
   param :products, Array, :desc => "Updated list of products", :required => true
   def update_products
     _update_products! params
@@ -115,7 +115,7 @@ class Api::V2::ContentViewDefinitionsController < Api::V1::ContentViewDefinition
       "Get a list of products belonging to the content view definition, even if one its repositories have been" +
           " associated to this definition. Mainly used by filter api  "
   param :content_view_definition_id, :identifier, :required => true,
-        :desc                                               => "content view definition identifier"
+                                                  :desc => "content view definition identifier"
   def list_all_products
     super
   end

@@ -65,7 +65,7 @@ class PromotionsController < ApplicationController
                                 pluck("content_view_versions.id").to_set
 
     render :partial => "content_views", :locals => {:environment => @environment, :content_view_versions => view_versions,
-                                                  :next_env_view_version_ids => next_env_view_version_ids}
+                                                    :next_env_view_version_ids => next_env_view_version_ids}
   end
 
   private

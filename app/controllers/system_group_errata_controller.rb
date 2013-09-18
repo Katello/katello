@@ -48,13 +48,13 @@ class SystemGroupErrataController < ApplicationController
     return render_bad_parameters unless errata
 
     rendered_html = render_to_string(:partial => "systems/errata/items", :locals => { :errata => errata,
-                                                                                    :errata_systems => errata_systems,
-                                                                                    :editable => @group.systems_editable? })
+                                                                                      :errata_systems => errata_systems,
+                                                                                      :editable => @group.systems_editable? })
 
     render :json => {:html => rendered_html,
-                      :results_count => results_count,
-                      :total_count => total_count,
-                      :current_count => errata.length + offset.to_i }
+                     :results_count => results_count,
+                     :total_count => total_count,
+                     :current_count => errata.length + offset.to_i }
   end
 
   def install

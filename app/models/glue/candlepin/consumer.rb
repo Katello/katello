@@ -52,7 +52,7 @@ module Glue::Candlepin::Consumer
       lazy_accessor :events, :initializer => lambda {|s| Resources::Candlepin::Consumer.events(uuid) }
 
       validates :cp_type, :inclusion => {:in => %w(system hypervisor candlepin)},
-        :if => :new_record?
+                          :if => :new_record?
       validates :facts, :presence => true, :if => :new_record?
     end
   end

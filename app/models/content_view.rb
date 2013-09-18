@@ -27,7 +27,7 @@ class ContentView < ActiveRecord::Base
   alias_method :versions, :content_view_versions
 
   belongs_to :environment_default, :class_name => "KTEnvironment", :inverse_of => :default_content_view,
-             :foreign_key => :environment_default_id # TODO: this relation seems to be broken
+                                   :foreign_key => :environment_default_id # TODO: this relation seems to be broken
 
   has_many :component_content_views, :dependent => :destroy
   has_many :composite_content_view_definitions,
@@ -38,7 +38,7 @@ class ContentView < ActiveRecord::Base
   has_many :activation_keys
 
   validates :label, :uniqueness => {:scope => :organization_id},
-    :presence => true
+                    :presence => true
   validates :name, :presence => true, :uniqueness => {:scope => :organization_id}
   validates :organization_id, :presence => true
 
@@ -69,8 +69,9 @@ class ContentView < ActiveRecord::Base
       content_view_definition.component_content_views.select("distinct content_views.*").
               joins(:content_view_versions => :content_view_version_environments).
               where(["content_view_version_environments.content_view_version_id "\
-                 "NOT IN (SELECT content_view_version_id FROM "\
-                 "content_view_version_environments WHERE environment_id = ?)", env])
+                     "NOT IN (SELECT content_view_version_id FROM "\
+                     "content_view_version_environments WHERE environment_id = ?)",
+                     env])
     end
   end
 

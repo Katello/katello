@@ -46,11 +46,11 @@ module Navigation
 
     def menu_administration
       menu = {:key => :admin,
-       :name => _("Administer"),
-        :url => :sub_level,
-        :items => [menu_orgs, menu_sync_tasks, menu_users, menu_roles],
-        :options => {:class => 'operations header-widget fl menu_parent', "data-menu" => "operations"},
-        :if => :sub_level
+              :name => _("Administer"),
+              :url => :sub_level,
+              :items => [menu_orgs, menu_sync_tasks, menu_users, menu_roles],
+              :options => {:class => 'operations header-widget fl menu_parent', "data-menu" => "operations"},
+              :if => :sub_level
       }
       menu[:items] << menu_about # keep the about as the last item
       return menu

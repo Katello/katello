@@ -30,7 +30,7 @@ class Changeset < ActiveRecord::Base
 
   validates :name, :presence => true, :allow_blank => true,
                    :uniqueness => {:scope => :environment_id,
-                                  :message => N_("Label has already been taken")}
+                                   :message => N_("Label has already been taken")}
   validates :environment, :presence => true
   validates :state, :inclusion => {:in          => STATES,
                                    :allow_blank => false,

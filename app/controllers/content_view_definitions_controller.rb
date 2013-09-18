@@ -101,7 +101,7 @@ class ContentViewDefinitionsController < ApplicationController
 
     if search_validate(ContentViewDefinition, @view_definition.id, params[:search])
       render :partial => "common/list_item", :locals => {:item => @view_definition, :initial_action => :views, :accessor => "id",
-                                                     :columns => ['name'], :name => controller_display_name}
+                                                         :columns => ['name'], :name => controller_display_name}
     else
       notify.message _("'%s' did not meet the current search criteria and is not being shown.") % @view_definition["name"]
       render :json => { :no_match => true }

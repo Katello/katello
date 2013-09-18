@@ -68,8 +68,8 @@ class System < ActiveRecord::Base
   class << self
     def architectures
       { 'i386' => 'x86', 'ia64' => 'Itanium', 'x86_64' => 'x86_64', 'ppc' => 'PowerPC',
-      's390' => 'IBM S/390', 's390x' => 'IBM System z', 'sparc64' => 'SPARC Solaris',
-      'i686' => 'i686'}
+        's390' => 'IBM S/390', 's390x' => 'IBM System z', 'sparc64' => 'SPARC Solaris',
+        'i686' => 'i686'}
     end
 
     def virtualized

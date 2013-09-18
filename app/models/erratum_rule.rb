@@ -13,8 +13,8 @@
 class ErratumRule < FilterRule
 
   ERRATA_TYPES = {'bugfix' => _('Bug Fix'),
-                    'enhancement' => _('Enhancement'),
-                    'security' => _('Security')}.with_indifferent_access
+                  'enhancement' => _('Enhancement'),
+                  'security' => _('Security')}.with_indifferent_access
 
   validates_with Validators::ErratumRuleParamsValidator, :attributes => :parameters
 

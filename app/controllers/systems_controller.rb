@@ -17,11 +17,11 @@ class SystemsController < ApplicationController
   include ConsumersControllerLogic
 
   before_filter :find_system, :except => [:index, :items, :environments, :new, :create, :bulk_destroy,
-                                         :bulk_content_install, :bulk_content_update, :bulk_content_remove,
-                                         :bulk_errata_install, :bulk_add_system_group, :bulk_remove_system_group,
-                                         :auto_complete]
+                                          :bulk_content_install, :bulk_content_update, :bulk_content_remove,
+                                          :bulk_errata_install, :bulk_add_system_group, :bulk_remove_system_group,
+                                          :auto_complete]
   before_filter :find_systems, :only => [:bulk_destroy, :bulk_content_install, :bulk_content_update, :bulk_content_remove,
-                                       :bulk_errata_install, :bulk_add_system_group, :bulk_remove_system_group]
+                                         :bulk_errata_install, :bulk_add_system_group, :bulk_remove_system_group]
 
   before_filter :find_environment, :only => [:environments, :new]
   before_filter :find_environment_in_system, :only => [:create, :update]
@@ -125,7 +125,7 @@ class SystemsController < ApplicationController
     register_command = "subscription-manager register --org=\"#{@environment.organization.name}\""
 
     render :partial => "new",
-      :locals => {
+           :locals => {
         :install_cert_command => install_cert_command,
         :register_command => register_command
       }
@@ -220,8 +220,8 @@ class SystemsController < ApplicationController
 
     @organization = current_organization
     render :partial => "subscriptions", :locals => {:system => @system, :avail_subs => available,
-                                                :consumed_entitlements => consumed,
-                                                :editable => @system.editable?, :subscription_filters => subscription_filters}
+                                                    :consumed_entitlements => consumed,
+                                                    :editable => @system.editable?, :subscription_filters => subscription_filters}
   end
 
   def update_subscriptions
@@ -248,7 +248,7 @@ class SystemsController < ApplicationController
     if @system.class == Hypervisor
       render :partial => "hypervisor",
              :locals => {:system => @system,
-                       :message => _("Hypervisors do not have software products")}
+                         :message => _("Hypervisors do not have software products")}
       return
     end
 

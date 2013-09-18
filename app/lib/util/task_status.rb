@@ -31,10 +31,10 @@ module Util
                 :cancelled => [N_('Package Install Canceled'), N_('%{package} package install canceled'), N_('%{package} (%{total} other packages) install canceled')],
                 :timed_out => [N_('Package Install Timed Out'), N_('%{package} package install timed out'), N_('%{package} (%{total} other packages) install timed out')],
             },
-           :user_message => _('Package Install scheduled by %s')
+            :user_message => _('Package Install scheduled by %s')
 
         },
-        :package_update => {
+       :package_update => {
             :english_name => N_("Package Update"),
             :type => :package,
             :event_messages => {
@@ -47,7 +47,7 @@ module Util
             },
             :user_message => _('Package Update scheduled by %s')
         },
-        :package_remove => {
+       :package_remove => {
             :english_name => N_("Package Remove"),
             :type => :package,
             :event_messages => {
@@ -61,7 +61,7 @@ module Util
             :user_message => _('Package Remove scheduled by %s')
         },
         #package group tasks
-        :package_group_install => {
+       :package_group_install => {
             :english_name => N_("Package Group Install"),
             :type => :package_group,
             :event_messages => {
@@ -74,7 +74,7 @@ module Util
             },
             :user_message => _('Package Group Install scheduled by %s')
         },
-        :package_group_update => {
+       :package_group_update => {
             :english_name => N_("Package Group Update"),
             :type => :package_group,
             :event_messages => {
@@ -88,7 +88,7 @@ module Util
             },
             :user_message => _('Package Group Update scheduled by %s')
         },
-        :package_group_remove => {
+       :package_group_remove => {
             :english_name => N_("Package Group Remove"),
             :type => :package_group,
             :event_messages => {
@@ -102,7 +102,7 @@ module Util
             },
             :user_message => _('Package Group Remove scheduled by %s')
         },
-        :errata_install => {
+       :errata_install => {
             :english_name => N_("Errata Install"),
             :type => :errata,
             :event_messages => {
@@ -113,20 +113,20 @@ module Util
                 :cancelled => [N_('Erratum Install Canceled'), N_('%{errata} erratum install canceled'), N_('%{errata} (%{total} other errata) install canceled')],
                 :timed_out => [N_('Erratum Install Timed Out'), N_('%{errata} erratum install timed out'), N_('%{errata} (%{total} other errata) install timed out')],
             },
-           :user_message => _('Errata Install scheduled by %s')
+            :user_message => _('Errata Install scheduled by %s')
         },
-        :candlepin_event => {
+       :candlepin_event => {
             :english_name => N_("Candlepin Event"),
             :type => :candlepin_event,
             :event_messages => {
             },
             :user_message => nil
         },
-        :content_view_publish => {
+       :content_view_publish => {
             :english_name => N_("content view publish"),
             :type => :content_view_publish
         },
-        :content_view_refresh => {
+       :content_view_refresh => {
             :english_name => N_("content view refresh"),
             :type => :content_view_refresh
         }

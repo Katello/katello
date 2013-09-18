@@ -20,7 +20,7 @@ class Node < ActiveRecord::Base
   # rubocop:disable HasAndBelongsToMany
   # TODO: change this into has_many :through association
   has_and_belongs_to_many :environments, :class_name => KTEnvironment, :join_table => 'nodes_environments',
-                                          :association_foreign_key => 'environment_id'
+                                         :association_foreign_key => 'environment_id'
 
   after_save :update_environments
 

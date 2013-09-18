@@ -43,7 +43,7 @@ module ContentViewDefinitionsHelper
     if definition.has_repo_conflicts?
       content_tag(:td,
                   tag(:input, {:type => 'button', :class => 'fr button',
-                                :value => _('Publish'), :disabled => true}),
+                               :value => _('Publish'), :disabled => true}),
                   :class => 'repo_conflict',
                   'original-title' => _("The definition consists of component content views that "\
                                         "share the same repository; therefore, it cannot be "\
@@ -62,8 +62,8 @@ module ContentViewDefinitionsHelper
     else
       content_tag(:td,
                   tag(:input, {:type => 'button', :class => 'fr button subpanel_element publish',
-                                :value => _('Publish'),
-                                'data-url' => publish_setup_content_view_definition_path(definition.id)}))
+                               :value => _('Publish'),
+                               'data-url' => publish_setup_content_view_definition_path(definition.id)}))
     end
   end
 

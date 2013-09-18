@@ -21,7 +21,7 @@ class ContentViewDefinition < ContentViewDefinitionBase
   alias_method :archives, :content_view_definition_archives
 
   validates :label, :uniqueness => {:scope => :organization_id},
-    :presence => true
+                    :presence => true
   validates :name, :presence => true, :uniqueness => {:scope => :organization_id}
   validate :validate_content
   validate :validate_filters
@@ -39,10 +39,10 @@ class ContentViewDefinition < ContentViewDefinitionBase
     options = { :async => true, :notify => false }.merge options
 
     view = ContentView.create!(:name => name,
-                        :label => label,
-                        :description => description,
-                        :content_view_definition => self,
-                        :organization => organization
+                               :label => label,
+                               :description => description,
+                               :content_view_definition => self,
+                               :organization => organization
                        )
 
     version = ContentViewVersion.new(:version => 1, :content_view => view)
@@ -94,7 +94,7 @@ class ContentViewDefinition < ContentViewDefinitionBase
           {:view_name => view.name, :definition_name => self.name}
 
       Notify.success(message, :request_type => "content_view_definitions___publish",
-                     :organization => self.organization)
+                              :organization => self.organization)
     end
   rescue => e
     Rails.logger.error(e)
@@ -105,7 +105,7 @@ class ContentViewDefinition < ContentViewDefinitionBase
           {:view_name => view.name, :definition_name => self.name}
 
       Notify.exception(message, e, :request_type => "content_view_definitions___publish",
-                       :organization => self.organization)
+                                   :organization => self.organization)
     end
 
     raise e

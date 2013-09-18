@@ -292,17 +292,17 @@ module Glue::Pulp::Repos
       check_for_repo_conflicts(name, label)
 
       repo = Repository.create!(:environment => self.organization.library,
-          :product => self,
-          :pulp_id => repo_id(label),
-          :relative_path => Glue::Pulp::Repos.custom_repo_path(self.library, self, label),
-          :arch => arch,
-          :name => name,
-          :label => label,
-          :feed => url,
-          :gpg_key => gpg,
-          :unprotected => unprotected,
-          :content_type => repo_type,
-          :content_view_version => self.organization.library.default_content_view_version
+                                :product => self,
+                                :pulp_id => repo_id(label),
+                                :relative_path => Glue::Pulp::Repos.custom_repo_path(self.library, self, label),
+                                :arch => arch,
+                                :name => name,
+                                :label => label,
+                                :feed => url,
+                                :gpg_key => gpg,
+                                :unprotected => unprotected,
+                                :content_type => repo_type,
+                                :content_view_version => self.organization.library.default_content_view_version
       )
       self.organization.default_content_view.update_cp_content(self.organization.library)
       repo.generate_metadata

@@ -459,8 +459,8 @@ class ApplicationController < ActionController::Base
   def environment_path_element(perms_method = nil)
     lambda do |a_path|
       {:id     => a_path.id,
-        :name   => a_path.name,
-        :select => perms_method.nil? ? false : a_path.send(perms_method)}
+       :name   => a_path.name,
+       :select => perms_method.nil? ? false : a_path.send(perms_method)}
     end
   end
 
@@ -604,9 +604,9 @@ class ApplicationController < ActionController::Base
     end
 
     render :json => {:html => rendered_html,
-                      :results_count => options[:total_count],
-                      :total_items => options[:total_results],
-                      :current_items => options[:collection].length}
+                     :results_count => options[:total_count],
+                     :total_items => options[:total_results],
+                     :current_items => options[:collection].length}
 
     retain_search_history unless options[:no_search_history]
 
@@ -646,9 +646,9 @@ class ApplicationController < ActionController::Base
     end
 
     render :json => {:html => rendered_html,
-                      :results_count => options[:total_count],
-                      :total_items => options[:total_results],
-                      :current_items => options[:collection].length}
+                     :results_count => options[:total_count],
+                     :total_items => options[:total_results],
+                     :current_items => options[:collection].length}
 
     retain_search_history
   end
