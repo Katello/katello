@@ -35,8 +35,10 @@
 
     <div class="detail">
       <span class="info-label">{{ "URL" | i18n }}</span>
-      <span class="info-value">
-        <a ng-href="{{ repository.feed }}">{{ repository.feed }}</a>
+      <span class="info-value"
+            alch-edit-text="repository.feed"
+            on-save="save(repository)"
+            readonly="repository.readonly">
       </span>
     </div>
 
