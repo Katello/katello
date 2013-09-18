@@ -495,13 +495,32 @@ KT.content_view_definition_filters = (function(){
         initialize_checkboxes($("#filters_form"));
     },
     initialize_filter = function() {
-        var pane = $("#filter");
+        var pane = $("#filter"),
+            filter_tabs = $("#filter_tabs");
+
         if (pane.length === 0) {
             return;
         }
-        $("#filter_tabs").tabs().show();
+
+        filter_tabs.tabs().tabs('select', filter_tabs.data('active_tab')).show();
+        $('a[href="##rules"]').click(function(){
+            initialize_rules();
+        });
+
         register_remove($("#rules_form"));
         initialize_checkboxes($("#rules_form"));
+        initialize_rules();
+    },
+    initialize_rules = function() {
+        if (($('table#product_list ').find('.product_entry').length > 0) ||
+            ($('select[name=puppet_repository_id]').val() !== '')) {
+            // The user hasn't selected any products/repos for the filter
+            $('#rules_list').show();
+            $('#rules_list_warning').hide();
+        } else {
+            $('#rules_list').hide();
+            $('#rules_list_warning').show();
+        }
     },
     initialize_rule = function() {
         var pane = $("#rule");
