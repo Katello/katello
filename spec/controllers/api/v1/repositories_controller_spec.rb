@@ -52,6 +52,7 @@ describe Api::V1::RepositoriesController, :katello => true do
       PulpSyncStatus.stub(:using_pulp_task).and_return(task_stub)
       Katello.pulp_server.extensions.package_group.stub(:all => {})
       Katello.pulp_server.extensions.package_category.stub(:all => {})
+      @test_gpg_content = File.open("#{Rails.root}/spec/assets/gpg_test_key").read
     end
 
     describe "for create" do
@@ -155,6 +156,8 @@ describe Api::V1::RepositoriesController, :katello => true do
       @request.env["HTTP_ACCEPT"] = "application/json"
       login_user_api
 
+      @test_gpg_content = File.open("#{Rails.root}/spec/assets/gpg_test_key").read
+
       disable_authorization_rules
     end
 
@@ -228,8 +231,8 @@ describe Api::V1::RepositoriesController, :katello => true do
       end
 
       context 'some gpg key is assigned to the product' do
-        let(:product_gpg) { GpgKey.create!(:name => "Product GPG", :content => "100", :organization => @organization) }
-        let(:repo_gpg) { GpgKey.create!(:name => "Repo GPG", :content => "200", :organization => @organization) }
+        let(:product_gpg) { GpgKey.create!(:name => "Product GPG", :content => @test_gpg_content, :organization => @organization) }
+        let(:repo_gpg) { GpgKey.create!(:name => "Repo GPG", :content => @test_gpg_content, :organization => @organization) }
 
         before do
           @product.update_attributes!(:gpg_key => product_gpg)
