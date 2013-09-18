@@ -67,6 +67,11 @@ module Glue::Pulp::Repo
       case orchestration_for
       when :create
         pre_queue.create(:name => "create pulp repo: #{self.name}", :priority => 2, :action => [self, :create_pulp_repo])
+      when :update
+        if self.feed_changed? && !self.product.provider.redhat_provider?
+          pre_queue.create(:name => "update pulp repo: #{self.name}", :priority => 2,
+                           :action => [self, :refresh_pulp_repo, nil, nil, nil])
+        end
       end
     end
 
