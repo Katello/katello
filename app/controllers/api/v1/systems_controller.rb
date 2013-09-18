@@ -176,7 +176,7 @@ Schedules the consumer identity certificate regeneration
       attrs[:environment_id] = params[:environment][:id] if params[:environment]
     end
 
-    attrs[:installedProducts] = [] if attrs.has_key?(:installedProducts) && attrs[:installedProducts].nil?
+    attrs[:installedProducts] = [] if attrs.key?(:installedProducts) && attrs[:installedProducts].nil?
 
     @system.update_attributes!(attrs.slice(*slice_attrs))
 
@@ -259,9 +259,9 @@ Schedules the consumer identity certificate regeneration
   api :GET, "/systems/:id/pools", "List pools a system is subscribed to"
   param :id, String, :desc => "UUID of the system", :required => true
   def pools
-    match_system    = params.has_key?(:match_system) ? params[:match_system].to_bool : false
-    match_installed = params.has_key?(:match_installed) ? params[:match_installed].to_bool : false
-    no_overlap      = params.has_key?(:no_overlap) ? params[:no_overlap].to_bool : false
+    match_system    = params.key?(:match_system) ? params[:match_system].to_bool : false
+    match_installed = params.key?(:match_installed) ? params[:match_installed].to_bool : false
+    no_overlap      = params.key?(:no_overlap) ? params[:no_overlap].to_bool : false
 
     cp_pools = @system.filtered_pools(match_system, match_installed, no_overlap)
 
@@ -294,7 +294,7 @@ A hint for choosing the right value for the releaseVer param
   param :id, String, :desc => "UUID of the system", :required => true
   def upload_package_profile
     if Katello.config.katello?
-      raise HttpErrors::BadRequest, _("No package profile received for %s") % @system.name unless params.has_key?(:_json)
+      raise HttpErrors::BadRequest, _("No package profile received for %s") % @system.name unless params.key?(:_json)
       @system.upload_package_profile(params[:_json])
     end
     respond_for_update
@@ -475,7 +475,7 @@ This information is then used for computing the errata available for the system.
   protected
 
   def find_only_environment
-    if !@environment && @organization && !params.has_key?(:environment_id)
+    if !@environment && @organization && !params.key?(:environment_id)
       if @organization.environments.empty?
         raise HttpErrors::BadRequest, _("Organization %{org} has the '%{env}' environment only. Please create an environment for system registration.") %
           { :org => @organization.name, :env => "Library" }
@@ -529,7 +529,7 @@ This information is then used for computing the errata available for the system.
   end
 
   def find_environment
-    return unless params.has_key?(:environment_id)
+    return unless params.key?(:environment_id)
 
     @environment = KTEnvironment.find(params[:environment_id])
     raise HttpErrors::NotFound, _("Couldn't find environment '%s'") % params[:environment_id] if @environment.nil?
@@ -541,10 +541,10 @@ This information is then used for computing the errata available for the system.
     # There are some scenarios (primarily create) where a system may be
     # created using the content_view_environment.cp_id which is the
     # equivalent of "environment_id"-"content_view_id".
-    return unless params.has_key?(:environment_id)
+    return unless params.key?(:environment_id)
 
     if params[:environment_id].is_a? String
-      if !params.has_key?(:content_view_id)
+      if !params.key?(:content_view_id)
         cve = get_content_view_environment_by_cp_id(params[:environment_id])
         @environment = cve.environment
         @organization = @environment.organization
@@ -564,7 +564,7 @@ This information is then used for computing the errata available for the system.
   def verify_presence_of_organization_or_environment
     # This has to grab the first default org associated with this user AND
     # the environment that goes with him.
-    return if params.has_key?(:organization_id) || params.has_key?(:owner) || params.has_key?(:environment_id)
+    return if params.key?(:organization_id) || params.key?(:owner) || params.key?(:environment_id)
 
     #At this point we know that they didn't supply an org or environment, so we can look up the default
     @environment = current_user.default_environment

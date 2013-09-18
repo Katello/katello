@@ -25,12 +25,12 @@ module SearchHelperMethods
       define_method(:perform) do
         unless block_given?
           data = to_hash
-          (data[:fields].should == options[:fields]) if options.has_key?(:fields)
-          (data[:query].should == options[:query]) if options.has_key?(:query)
-          (SearchHelperMethods.compare_filter_params(options[:filter], data[:filter]).should == true) if options.has_key?:filter
-          (data[:size].should == options[:size]) if options.has_key?(:size)
-          (data[:sort].should == options[:sort])if options.has_key?(:sort)
-          (data[:from].should == options[:from])if options.has_key?(:from)
+          (data[:fields].should == options[:fields]) if options.key?(:fields)
+          (data[:query].should == options[:query]) if options.key?(:query)
+          (SearchHelperMethods.compare_filter_params(options[:filter], data[:filter]).should == true) if options.key?(:filter)
+          (data[:size].should == options[:size]) if options.key?(:size)
+          (data[:sort].should == options[:sort])if options.key?(:sort)
+          (data[:from].should == options[:from])if options.key?(:from)
 
           #http://www.fngtps.com/2007/using-openstruct-as-mock-for-activerecord/
           OpenStruct.instance_eval do

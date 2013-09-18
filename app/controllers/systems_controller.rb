@@ -43,7 +43,7 @@ class SystemsController < ApplicationController
     bulk_edit_systems = lambda{@systems.collect{|s| false unless s.editable?}.compact.empty?}
     register_system = lambda do
       if current_organization
-        if params.has_key?(:system) && !params[:system][:content_view_id].blank?
+        if params.key?(:system) && !params[:system][:content_view_id].blank?
           content_view = ContentView.readable(current_organization).
             find_by_id(params[:system][:content_view_id])
           System.registerable?(@environment, current_organization, content_view) if content_view
@@ -64,7 +64,7 @@ class SystemsController < ApplicationController
 
     edit_system = lambda do
       subscribable = true
-      if params.has_key?(:system) && !params[:system][:content_view_id].blank?
+      if params.key?(:system) && !params[:system][:content_view_id].blank?
         content_view = ContentView.readable(current_organization).
           find_by_id(params[:system][:content_view_id])
         subscribable = content_view ? content_view.subscribable? : false
@@ -225,7 +225,7 @@ class SystemsController < ApplicationController
   end
 
   def update_subscriptions
-    if params.has_key? :subscription
+    if params.key? :subscription
       params[:subscription].keys.each do |pool|
         @system.subscribe pool, params[:spinner][pool] if params[:subscribe_action].downcase == "subscribe"
         @system.unsubscribe pool if params[:subscribe_action].downcase == "unsubscribe"
@@ -700,7 +700,7 @@ class SystemsController < ApplicationController
   end
 
   def find_environment_in_system
-    if params.has_key?(:system) && params[:system].has_key?(:environment_id)
+    if params.key?(:system) && params[:system].key?(:environment_id)
       @environment = KTEnvironment.systems_readable(current_organization).
                       where(:id => params[:system][:environment_id]).first
     end
@@ -791,7 +791,7 @@ class SystemsController < ApplicationController
   def first_objects(objects)
     offset = current_user.page_size
     if objects.length > 0
-      if params.has_key? :order
+      if params.key? :order
         if params[:order].downcase == "desc"
           objects.reverse!
         end
@@ -810,18 +810,18 @@ class SystemsController < ApplicationController
     size = current_user.page_size
     if objects.length > 0
       #check for the params offset (start of array chunk)
-      if params.has_key? :offset
+      if params.key? :offset
         offset = params[:offset].to_i
       else
         offset = current_user.page_size
       end
-      if params.has_key? :order
+      if params.key? :order
         if params[:order].downcase == "desc"
           #reverse if order is desc
           objects.reverse!
         end
       end
-      if params.has_key? :reverse
+      if params.key? :reverse
         next_objects = objects[0...params[:reverse].to_i]
       else
         next_objects = objects[offset...(offset + size)]

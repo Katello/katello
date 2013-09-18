@@ -15,7 +15,7 @@ module Validators
     def validate_each(record, attribute, value)
       if value && value[:units].present? && value[:units].is_a?(Array)
         value[:units].each do |unit|
-          if unit.has_key?(:version) && (unit.has_key?(:min_version) || unit.has_key?(:max_version))
+          if unit.key?(:version) && (unit.key?(:min_version) || unit.key?(:max_version))
             ver_msg = _("Invalid rule combination specified, 'version'" +
                         " and 'min_version' or 'max_version' cannot be specified in the same tuple")
 

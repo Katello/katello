@@ -388,7 +388,7 @@ class ContentView < ActiveRecord::Base
 
   def prepare_repos_for_promotion(repos_to_replace, repos_to_promote)
     tasks = repos_to_replace.inject([]) do |result, repo|
-      if repos_to_promote.has_key?(repo.library_instance_id)
+      if repos_to_promote.key?(repo.library_instance_id)
         # a version of this repo is being promoted, so clear it and later
         # we'll regenerate the content... this is more efficient than
         # destroying the repo and recreating it...

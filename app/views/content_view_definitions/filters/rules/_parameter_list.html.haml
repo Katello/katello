@@ -26,7 +26,7 @@
           %td{:colspan => 2}
             = _("This rule does not currently have any parameters defined.")
 
-        - if rule.parameters.has_key?(:units)
+        - if rule.parameters.key?(:units)
           - rule.parameters[:units].each do |unit|
             = render :partial => item_partial, :locals => {:rule => rule, :editable => editable, :unit => unit}
 

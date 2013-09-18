@@ -107,7 +107,7 @@ class DashboardController < ApplicationController
 
   def update_user_preference(key, value)
     current_user.preferences = HashWithIndifferentAccess.new  unless current_user.preferences
-    current_user.preferences[:dashboard] = {} unless current_user.preferences.has_key? :dashboard
+    current_user.preferences[:dashboard] = {} unless current_user.preferences.key? :dashboard
     current_user.preferences[:dashboard][key] = value
     current_user.save!
   end

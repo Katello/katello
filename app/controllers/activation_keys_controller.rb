@@ -125,7 +125,7 @@ class ActivationKeysController < ApplicationController
   end
 
   def add_subscriptions
-    if params.has_key? :subscription_id
+    if params.key? :subscription_id
       params[:subscription_id].keys.each do |pool|
         kt_pool = ::Pool.where(:cp_id => pool)[0]
 
@@ -141,7 +141,7 @@ class ActivationKeysController < ApplicationController
   end
 
   def remove_subscriptions
-    if params.has_key? :subscription_id
+    if params.key? :subscription_id
       params[:subscription_id].keys.each do |pool|
         kt_pool = Pool.where(:cp_id => pool)[0]
 

@@ -90,7 +90,7 @@ module Katello
                                          end
 
           root = config.logging.loggers.root
-          root[:path] = "#{Rails.root}/log" unless root.has_key?(:path) if environment
+          root[:path] = "#{Rails.root}/log" unless root.key?(:path) if environment
           root[:type] ||= 'file'
 
           config[:katello_version] = begin

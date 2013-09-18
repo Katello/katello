@@ -94,7 +94,7 @@ class ProductsController < ApplicationController
     @product.name = params[:product][:name] if params[:product][:name]
     @product.description = params[:product][:description] if params[:product][:description]
 
-    if params[:product].has_key?(:gpg_key)
+    if params[:product].key?(:gpg_key)
       if params[:product][:gpg_key] != ""
         @product.gpg_key = GpgKey.readable(current_organization).find(params[:product][:gpg_key])
         result = @product.gpg_key.id.to_s

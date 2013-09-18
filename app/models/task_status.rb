@@ -88,10 +88,10 @@ class TaskStatus < ActiveRecord::Base
     # the overall status of tasks (e.g. associated with a system) are determined by a
     # combination of the task state and the status of the unit within the task.
     unit_status = true
-    if (self.result.is_a? Hash) && (self.result.has_key? :details)
-      if self.result[:details].has_key? :rpm
+    if (self.result.is_a? Hash) && (self.result.key? :details)
+      if self.result[:details].key? :rpm
         unit_status = self.result[:details][:rpm][:succeeded]
-      elsif self.result[:details].has_key? :package_group
+      elsif self.result[:details].key? :package_group
         unit_status = self.result[:details][:package_group][:succeeded]
       end
     end

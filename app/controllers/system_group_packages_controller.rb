@@ -143,7 +143,7 @@ class SystemGroupPackagesController < ApplicationController
       notify.success _("Update of Package Groups '%{groups}' scheduled for System Group '%{name}'.") %
         {:groups => groups.join(','), :name => @group.name}
 
-    elsif params.has_key?(:packages)
+    elsif params.key?(:packages)
       if !params[:packages].empty?
         # user entered one or more package names (as comma-separated list) in the content box
         packages = Util::Package.validate_package_list_format(params[:packages])
