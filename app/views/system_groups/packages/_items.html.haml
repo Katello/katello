@@ -8,7 +8,7 @@
 
 - job.task_statuses.each do |task|
 
-  - if task.parameters.has_key?(:packages)
+  - if task.parameters.key?(:packages)
     - if task.parameters[:packages].empty?
       %tr.package{:class => "#{shading}"}
         %td{'data-name' => "update_all_packages"}

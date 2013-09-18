@@ -238,7 +238,7 @@ class User < ActiveRecord::Base
   end
 
   def default_locale=(locale)
-    self.preferences[:user] = { } unless self.preferences.has_key? :user
+    self.preferences[:user] = { } unless self.preferences.key? :user
     self.preferences[:user][:locale] = locale
   end
 
@@ -247,7 +247,7 @@ class User < ActiveRecord::Base
   end
 
   def legacy_mode=(use_legacy_mode)
-    self.preferences[:user] = { } unless self.preferences.has_key? :user
+    self.preferences[:user] = { } unless self.preferences.key? :user
     self.preferences[:user][:legacy_mode] = use_legacy_mode.to_bool
   end
 
@@ -263,7 +263,7 @@ class User < ActiveRecord::Base
 
   #set the default org if it's an actual org_id
   def default_org=(org_id)
-    self.preferences[:user] = { } unless self.preferences.has_key? :user
+    self.preferences[:user] = { } unless self.preferences.key? :user
     if !org_id.nil? && org_id != "nil"
       organization = Organization.find_by_id(org_id)
       self.preferences[:user][:default_org] = organization.id
@@ -277,7 +277,7 @@ class User < ActiveRecord::Base
   end
 
   def subscriptions_match_system_preference=(flag)
-    self.preferences[:user] = { } unless self.preferences.has_key? :user
+    self.preferences[:user] = { } unless self.preferences.key? :user
     self.preferences[:user][:subscriptions_match_system] = flag
   end
 
@@ -286,7 +286,7 @@ class User < ActiveRecord::Base
   end
 
   def subscriptions_match_installed_preference=(flag)
-    self.preferences[:user] = { } unless self.preferences.has_key? :user
+    self.preferences[:user] = { } unless self.preferences.key? :user
     self.preferences[:user][:subscriptions_match_installed] = flag
   end
 
@@ -295,7 +295,7 @@ class User < ActiveRecord::Base
   end
 
   def subscriptions_no_overlap_preference=(flag)
-    self.preferences[:user] = { } unless self.preferences.has_key? :user
+    self.preferences[:user] = { } unless self.preferences.key? :user
     self.preferences[:user][:subscriptions_no_overlap] = flag
   end
 

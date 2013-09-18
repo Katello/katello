@@ -43,9 +43,9 @@ class PuppetModuleRule < FilterRule
   protected
 
   def version_filter(unit)
-    if unit.has_key?(:version)
+    if unit.key?(:version)
       {:term => {:version => unit[:version]}}
-    elsif unit.has_key?(:min_version) || unit.has_key?(:max_version)
+    elsif unit.key?(:min_version) || unit.key?(:max_version)
       range = {}
       range[:gt] = sortable_version(unit[:min_version]) if unit[:min_version]
       range[:lt] = sortable_version(unit[:max_version]) if unit[:max_version]
@@ -56,7 +56,7 @@ class PuppetModuleRule < FilterRule
   end
 
   def author_filter(unit)
-    if unit.has_key?(:author) && unit[:author].present?
+    if unit.key?(:author) && unit[:author].present?
       {:term => {:author => unit[:author]}}
     else
       nil

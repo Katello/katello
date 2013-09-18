@@ -63,7 +63,7 @@ module Katello
       end
 
       def has_key(key)
-        unless config.has_key? key.to_sym
+        unless config.key? key.to_sym
           raise error_format(key.to_sym, 'is required')
         end
       end

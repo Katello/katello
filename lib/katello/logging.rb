@@ -107,9 +107,9 @@ module Katello
       loggers_hash.keys.tap { |a| a.delete(:root) }.each do |logger_name|
         logger_config = configuration.loggers[logger_name]
         logger        = ::Logging.logger[logger_name]
-        logger.level = logger_config.level if logger_config.has_key?(:level)
-        logger.additive = logger_config.enabled if logger_config.has_key?(:enabled)
-        enable_tailing logger, logger_config if logger_config.has_key?(:tail_command)
+        logger.level = logger_config.level if logger_config.key?(:level)
+        logger.additive = logger_config.enabled if logger_config.key?(:enabled)
+        enable_tailing logger, logger_config if logger_config.key?(:tail_command)
         logger.trace = configuration.log_trace
       end
     end

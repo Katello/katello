@@ -184,7 +184,7 @@ class SubscriptionsController < ApplicationController
   end
 
   def upload
-    if !params[:provider].blank? && params[:provider].has_key?(:contents)
+    if !params[:provider].blank? && params[:provider].key?(:contents)
       begin
         temp_file_path = create_temp_file('import') {|tmp| tmp.write params[:provider][:contents].read }
         # force must be a string value

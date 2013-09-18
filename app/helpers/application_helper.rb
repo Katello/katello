@@ -194,7 +194,7 @@ module ApplicationHelper
   end
 
   def generate_url(path, options, entity)
-    panel_page = options.has_key?(:panel_page) ? ("&panelpage=" + options[:panel_page]) : ""
+    panel_page = options.key?(:panel_page) ? ("&panelpage=" + options[:panel_page]) : ""
     path + "?list_search=id%3D#{options[:id]}#panel=#{entity}_#{options[:id]}" + panel_page
   end
 

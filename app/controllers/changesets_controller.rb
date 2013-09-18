@@ -159,7 +159,7 @@ class ChangesetsController < ApplicationController
     render :text => "This promotion changeset is already promoted, no content modifications can be made.",
            :status => :bad_request if @changeset.state == Changeset::PROMOTED
 
-    if params.has_key? :data
+    if params.key? :data
       params[:data].each do |item|
         adding = item["adding"]
         type   = item["type"]
@@ -305,7 +305,7 @@ class ChangesetsController < ApplicationController
   end
 
   def update_artifacts_valid?
-    if params.has_key?(:data)
+    if params.key?(:data)
       params[:data].each do |item|
         return false if !update_item_valid?(item["type"], item["item_id"])
       end

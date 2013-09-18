@@ -133,7 +133,7 @@ class SystemPackagesController < ApplicationController
     packages = @system.simple_packages.sort {|a, b| a.nvrea.downcase <=> b.nvrea.downcase}
     total_packages = packages.length
     if total_packages > 0
-      if params.has_key? :pkg_order
+      if params.key? :pkg_order
         if params[:pkg_order].downcase == "desc"
           packages.reverse!
         end
@@ -157,7 +157,7 @@ class SystemPackagesController < ApplicationController
   def more_packages
     packages = @system.simple_packages.sort {|a, b| a.nvrea.downcase <=> b.nvrea.downcase}
 
-    if params.has_key? :pkg_order
+    if params.key? :pkg_order
       if params[:pkg_order].downcase == "desc"
         packages.reverse!
       end

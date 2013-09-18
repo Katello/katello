@@ -81,13 +81,13 @@ module Glue::Candlepin::Product
 
     def initialize(attribs = nil, options = {})
       unless attribs.nil?
-        attributes_key = attribs.has_key?(:attributes) ? :attributes : 'attributes'
-        if attribs.has_key?(attributes_key)
+        attributes_key = attribs.key?(:attributes) ? :attributes : 'attributes'
+        if attribs.key?(attributes_key)
           attribs[:attrs] = attribs[attributes_key]
           attribs.delete(attributes_key)
         end
 
-        @productContent = [] unless attribs.has_key?(:productContent)
+        @productContent = [] unless attribs.key?(:productContent)
 
         # ugh. hack-ish. otherwise we have to modify code every time things change on cp side
         attribs = attribs.reject do |k, v|
@@ -136,9 +136,9 @@ module Glue::Candlepin::Product
     end
 
     def convert_from_cp_fields(cp_json)
-      ar_safe_json = cp_json.has_key?(:attributes) ? cp_json.merge(:attrs => cp_json.delete(:attributes)) : cp_json
+      ar_safe_json = cp_json.key?(:attributes) ? cp_json.merge(:attrs => cp_json.delete(:attributes)) : cp_json
       ar_safe_json[:productContent] = ar_safe_json[:productContent].collect { |pc| ::Candlepin::ProductContent.new(pc, self.id) }
-      ar_safe_json[:attrs] = remove_hibernate_fields(cp_json[:attrs]) if ar_safe_json.has_key?(:attrs)
+      ar_safe_json[:attrs] = remove_hibernate_fields(cp_json[:attrs]) if ar_safe_json.key?(:attrs)
       ar_safe_json[:attrs] ||= []
       ar_safe_json.except('id')
     end

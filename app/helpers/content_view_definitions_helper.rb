@@ -90,7 +90,7 @@ module ContentViewDefinitionsHelper
 
   def view_checked?(view_id, views_hash = nil)
     return false if views_hash.nil?
-    return views_hash.has_key?(view_id)
+    return views_hash.key?(view_id)
   end
 
   def view_repos(definitions)

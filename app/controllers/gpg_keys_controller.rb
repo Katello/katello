@@ -91,7 +91,7 @@ class GpgKeysController < ApplicationController
   def create
     gpg_key_params = params[:gpg_key]
     return render_bad_parameters if gpg_key_params.nil?
-    file_uploaded = gpg_key_params.has_key?("content_upload") && !gpg_key_params.has_key?("content")
+    file_uploaded = gpg_key_params.key?("content_upload") && !gpg_key_params.key?("content")
 
     if file_uploaded
       gpg_key_params['content'] = params[:gpg_key][:content_upload].read
@@ -122,7 +122,7 @@ class GpgKeysController < ApplicationController
   def update
     gpg_key_params = params[:gpg_key]
 
-    file_uploaded = gpg_key_params.has_key?("content_upload") && !gpg_key_params.has_key?("content")
+    file_uploaded = gpg_key_params.key?("content_upload") && !gpg_key_params.key?("content")
     if file_uploaded
       gpg_key_params['content'] = params[:gpg_key][:content_upload].read
       gpg_key_params.delete('content_upload')

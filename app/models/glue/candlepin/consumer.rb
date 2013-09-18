@@ -63,9 +63,9 @@ module Glue::Candlepin::Consumer
       if attrs.nil?
         super
       elsif
-        type_key = attrs.has_key?('type') ? 'type' : :type
+        type_key = attrs.key?('type') ? 'type' : :type
         #rename "type" to "cp_type" (activerecord and candlepin variable name conflict)
-        if attrs.has_key?(type_key) && !(attrs.has_key?(:cp_type) || attrs.has_key?('cp_type'))
+        if attrs.key?(type_key) && !(attrs.key?(:cp_type) || attrs.key?('cp_type'))
           attrs[:cp_type] = attrs[type_key]
         end
 
@@ -222,11 +222,11 @@ module Glue::Candlepin::Consumer
     end
 
     def convert_from_cp_fields(cp_json)
-      cp_json.merge(:cp_type => cp_json.delete(:type)) if cp_json.has_key?(:type)
+      cp_json.merge(:cp_type => cp_json.delete(:type)) if cp_json.key?(:type)
       cp_json = reject_db_columns(cp_json)
 
-      cp_json[:guestIds] = remove_hibernate_fields(cp_json[:guestIds]) if cp_json.has_key?(:guestIds)
-      cp_json[:installedProducts] = remove_hibernate_fields(cp_json[:installedProducts]) if cp_json.has_key?(:installedProducts)
+      cp_json[:guestIds] = remove_hibernate_fields(cp_json[:guestIds]) if cp_json.key?(:guestIds)
+      cp_json[:installedProducts] = remove_hibernate_fields(cp_json[:installedProducts]) if cp_json.key?(:installedProducts)
 
       cp_json
     end
@@ -501,7 +501,7 @@ module Glue::Candlepin::Consumer
 
         serials = []
         entitlement['certificates'].each do |certificate|
-          if certificate.has_key?('serial')
+          if certificate.key?('serial')
             serials << certificate['serial']
           end
         end

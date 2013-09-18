@@ -125,17 +125,17 @@ module Glue::ElasticSearch::Errata
             size page_size
             from start
           end
-          if filters.has_key?(:type)
+          if filters.key?(:type)
             filter :term, :type => filters[:type]
           end
-          if filters.has_key?(:severity)
+          if filters.key?(:severity)
             filter :term, :severity => filters[:severity]
           end
 
           sort { by sort[0], sort[1] } unless !all_rows
         end
 
-        if filters.has_key?(:repoids)
+        if filters.key?(:repoids)
           search_mode = filters[:search_mode] || :all
           repoids = filters[:repoids]
           Util::Package.setup_shared_unique_filter(repoids, search_mode, search)

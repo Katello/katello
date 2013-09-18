@@ -193,7 +193,7 @@ class UsersController < ApplicationController
   def update_preference
     preference = params[:preference]
     if preference
-      @user.preferences[:user] = { } unless @user.preferences.has_key? :user
+      @user.preferences[:user] = { } unless @user.preferences.key? :user
       if params[:value] == "true"
         value = true
       elsif  params[:value] == "false"
@@ -271,7 +271,7 @@ class UsersController < ApplicationController
   end
 
   def update_roles
-    params[:user] = { "role_ids" => [] } unless params.has_key? :user
+    params[:user] = { "role_ids" => [] } unless params.key? :user
 
     #Add in the own role if updating roles, cause the user shouldn't see his own role
     params[:user][:role_ids] << @user.own_role.id

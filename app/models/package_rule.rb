@@ -40,9 +40,9 @@ class PackageRule < FilterRule
   protected
 
   def version_filter(unit)
-    if unit.has_key?(:version)
+    if unit.key?(:version)
       Util::Package.version_eq_filter(unit[:version])
-    elsif unit.has_key?(:min_version) || unit.has_key?(:max_version)
+    elsif unit.key?(:min_version) || unit.key?(:max_version)
       Util::Package.version_filter(unit[:min_version], unit[:max_version])
     else
       nil

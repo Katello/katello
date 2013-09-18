@@ -80,7 +80,7 @@ class Api::V1::SystemGroupErrataController < Api::V1::ApiController
     @group.systems.each do |system|
       errata = system.errata
       errata.each do |erratum|
-        if errata_hash.has_key?(erratum.id)
+        if errata_hash.key?(erratum.id)
           # add the system to the existing erratum entry
           errata_hash[erratum.id][:systems].push(system.name)
         else

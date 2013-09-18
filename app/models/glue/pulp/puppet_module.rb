@@ -33,7 +33,7 @@ module Glue::Pulp::PuppetModule
 
   module InstanceMethods
     def initialize(params = {}, options = {})
-      params['repoids'] = params.delete(:repository_memberships) if params.has_key?(:repository_memberships)
+      params['repoids'] = params.delete(:repository_memberships) if params.key?(:repository_memberships)
       params.each_pair {|k, v| instance_variable_set("@#{k}", v) unless v.nil? }
     end
 

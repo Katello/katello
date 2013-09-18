@@ -72,7 +72,7 @@ class SystemGroupEventsController < ApplicationController
   end
 
   def more_items
-    if params.has_key?(:offset)
+    if params.key?(:offset)
       offset = params[:offset].to_i
     else
       offset = current_user.page_size

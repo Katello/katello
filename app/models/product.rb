@@ -70,8 +70,8 @@ class Product < ActiveRecord::Base
       attrs = attrs.with_indifferent_access
 
       #rename "id" to "cp_id" (activerecord and candlepin variable name conflict)
-      if attrs.has_key?(:id)
-        if !attrs.has_key?(:cp_id)
+      if attrs.key?(:id)
+        if !attrs.key?(:cp_id)
           attrs[:cp_id] = attrs[:id]
         end
         attrs.delete(:id)

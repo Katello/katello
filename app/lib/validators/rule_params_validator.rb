@@ -20,7 +20,7 @@ module Validators
           record.errors.add(attribute, _("Invalid %s rule specified. Units must be an array.") % rule_type)
         else
           value[:units].each do |unit|
-            unless unit.has_key?(:name)
+            unless unit.key?(:name)
               record.errors.add(attribute, _("Invalid %s rule specified. Missing 'name'.") % rule_type)
               break
             end
