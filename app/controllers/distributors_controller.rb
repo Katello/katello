@@ -38,7 +38,7 @@ class DistributorsController < ApplicationController
     bulk_delete_distributors = lambda{@distributors.collect{|s| false unless s.deletable?}.compact.empty?}
     register_distributor = lambda do
       if current_organization
-        if params.has_key?(:distributor) && !params[:distributor][:content_view_id].blank?
+        if params.key?(:distributor) && !params[:distributor][:content_view_id].blank?
           content_view = ContentView.readable(current_organization).
             find_by_id(params[:distributor][:content_view_id])
           Distributor.registerable?(@environment, current_organization, content_view) if content_view
@@ -59,7 +59,7 @@ class DistributorsController < ApplicationController
 
     edit_distributor = lambda do
       subscribable = true
-      if params.has_key?(:distributor) && !params[:distributor][:content_view_id].blank?
+      if params.key?(:distributor) && !params[:distributor][:content_view_id].blank?
         content_view = ContentView.readable(current_organization).
           find_by_id(params[:distributor][:content_view_id])
         subscribable = content_view ? content_view.subscribable? : false
@@ -225,7 +225,7 @@ class DistributorsController < ApplicationController
   end
 
   def update_subscriptions
-    if params.has_key? :subscription
+    if params.key? :subscription
       params[:subscription].keys.each do |pool|
         @distributor.subscribe pool, params[:spinner][pool] if params[:subscribe_action].downcase == "subscribe"
         @distributor.unsubscribe pool if params[:subscribe_action].downcase == "unsubscribe"
@@ -269,7 +269,7 @@ class DistributorsController < ApplicationController
   end
 
   def update
-    params[:distributor][:content_view_id] = nil if params[:distributor].has_key? :environment_id
+    params[:distributor][:content_view_id] = nil if params[:distributor].key? :environment_id
 
     @distributor.update_attributes!(params[:distributor])
     notify.success _("Distributor '%s' was updated.") % @distributor["name"]
@@ -362,7 +362,7 @@ class DistributorsController < ApplicationController
   end
 
   def find_environment_in_distributor
-    if params.has_key?(:distributor) && params[:distributor].has_key?(:environment_id)
+    if params.key?(:distributor) && params[:distributor].key?(:environment_id)
       @environment = KTEnvironment.distributors_readable(current_organization).
                       where(:id => params[:distributor][:environment_id]).first
     end
@@ -452,7 +452,7 @@ class DistributorsController < ApplicationController
   def first_objects(objects)
     offset = current_user.page_size
     if objects.length > 0
-      if params.has_key? :order
+      if params.key? :order
         if params[:order].downcase == "desc"
           objects.reverse!
         end
@@ -469,18 +469,18 @@ class DistributorsController < ApplicationController
     size = current_user.page_size
     if objects.length > 0
       #check for the params offset (start of array chunk)
-      if params.has_key? :offset
+      if params.key? :offset
         offset = params[:offset].to_i
       else
         offset = current_user.page_size
       end
-      if params.has_key? :order
+      if params.key? :order
         if params[:order].downcase == "desc"
           #reverse if order is desc
           objects.reverse!
         end
       end
-      if params.has_key? :reverse
+      if params.key? :reverse
         next_objects = objects[0...params[:reverse].to_i]
       else
         next_objects = objects[offset...offset + size]

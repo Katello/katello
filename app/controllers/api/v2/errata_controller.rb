@@ -54,7 +54,7 @@ class Api::V2::ErrataController < Api::V2::ApiController
   private
 
   def find_environment
-    if params.has_key?(:environment_id)
+    if params.key?(:environment_id)
       @environment = KTEnvironment.find(params[:environment_id])
       raise HttpErrors::NotFound, _("Couldn't find environment '%s'") % params[:environment_id] if @environment.nil?
       @environment
@@ -62,7 +62,7 @@ class Api::V2::ErrataController < Api::V2::ApiController
   end
 
   def find_repository
-    if params.has_key?(:repository_id)
+    if params.key?(:repository_id)
       @repo = Repository.find(params[:repository_id])
       raise HttpErrors::NotFound, _("Couldn't find repository '%s'") % params[:repository_id] if @repo.nil?
       @environment ||= @repo.environment

@@ -54,7 +54,7 @@ class ErratumRule < FilterRule
 
   def generate_clauses(repo)
     rule_clauses = []
-    if parameters.has_key? :units
+    if parameters.key? :units
       # TODO: WIll add this when we have a proper analyzer for
       # errata_id..
       # ids = parameters[:units].collect do |unit|
@@ -69,7 +69,7 @@ class ErratumRule < FilterRule
 
       {"id" => {"$in" => ids}}  unless ids.empty?
     else
-      if parameters.has_key? :date_range
+      if parameters.key? :date_range
         dr = {}
         dr["$gte"] = start_date.as_json if start_date
         dr["$lte"] = end_date.as_json if end_date
@@ -80,7 +80,7 @@ class ErratumRule < FilterRule
         rule_clauses << {"type" => {"$in" => errata_types}}
       end
 
-      if parameters.has_key?(:severity) && !parameters[:severity].empty?
+      if parameters.key?(:severity) && !parameters[:severity].empty?
           # {"severity": {"$in": ["low", "moderate", "important", "critical"]}
         rule_clauses << {"severity" => {"$in" => parameters[:severity]}}
       end

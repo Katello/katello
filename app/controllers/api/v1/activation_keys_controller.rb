@@ -140,7 +140,7 @@ class Api::V1::ActivationKeysController < Api::V1::ApiController
   private
 
   def find_environment
-    return unless params.has_key?(:environment_id)
+    return unless params.key?(:environment_id)
 
     @environment = KTEnvironment.find(params[:environment_id])
     raise HttpErrors::NotFound, _("Couldn't find environment '%s'") % params[:environment_id] if @environment.nil?
@@ -170,7 +170,7 @@ class Api::V1::ActivationKeysController < Api::V1::ApiController
   end
 
   def verify_presence_of_organization_or_environment
-    return if params.has_key?(:organization_id) || params.has_key?(:environment_id)
+    return if params.key?(:organization_id) || params.key?(:environment_id)
     raise HttpErrors::BadRequest, _("Either organization ID or environment ID needs to be specified")
   end
 end

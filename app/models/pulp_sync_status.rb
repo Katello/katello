@@ -59,7 +59,7 @@ class PulpSyncProgress
   def format_errors(details)
     errors_array = []
 
-    if details && !details.has_key?(:finished_count)
+    if details && !details.key?(:finished_count)
       errors_array = details.each_with_object([]) do |(step, report), list|
         if !report[:error].blank?
           list << report[:error]

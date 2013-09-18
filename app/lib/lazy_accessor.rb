@@ -71,7 +71,7 @@ module LazyAccessor
         send :define_method, symbol do
           attr = symbol.to_s
 
-          excepted = options.has_key?(:unless) ? self.instance_eval(&options[:unless]) : new_record?
+          excepted = options.key?(:unless) ? self.instance_eval(&options[:unless]) : new_record?
           if !instance_variable_defined?("@#{attr}") && !excepted
             remote_values = run_initializer(args.size > 1, initializer)
             if args.size > 1
@@ -97,7 +97,7 @@ module LazyAccessor
     end
 
     def remote_attribute_changed?(attr)
-      changed_remote_attributes.has_key?(attr)
+      changed_remote_attributes.key?(attr)
     end
 
     def save(*)

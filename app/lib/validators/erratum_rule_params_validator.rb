@@ -14,7 +14,7 @@ module Validators
   class ErratumRuleParamsValidator < ActiveModel::EachValidator
     def validate_each(record, attribute, value)
       if value
-        if value.has_key?(:date_range)
+        if value.key?(:date_range)
           date_range = value[:date_range]
           start_date_int = date_range[:start]
           end_date_int = date_range[:end]
@@ -31,7 +31,7 @@ module Validators
           end
         end
 
-        if value.has_key?(:errata_type)
+        if value.key?(:errata_type)
           errata_type = value[:errata_type]
           if errata_type.is_a?(Array)
             invalid_types = errata_type.collect(&:to_s) - ErratumRule::ERRATA_TYPES.keys

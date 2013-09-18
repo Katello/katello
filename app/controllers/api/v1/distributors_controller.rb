@@ -139,9 +139,9 @@ class Api::V1::DistributorsController < Api::V1::ApiController
   api :GET, "/distributors/:id/pools", "List pools a distributor is subscribed to"
   param :id, String, :desc => "UUID of the distributor", :required => true
   def pools
-    match_distributor = params.has_key?(:match_distributor) ? params[:match_distributor].to_bool : false
-    match_installed   = params.has_key?(:match_installed) ? params[:match_installed].to_bool : false
-    no_overlap        = params.has_key?(:no_overlap) ? params[:no_overlap].to_bool : false
+    match_distributor = params.key?(:match_distributor) ? params[:match_distributor].to_bool : false
+    match_installed   = params.key?(:match_installed) ? params[:match_installed].to_bool : false
+    no_overlap        = params.key?(:no_overlap) ? params[:no_overlap].to_bool : false
 
     cp_pools = @distributor.filtered_pools(match_distributor, match_installed, no_overlap)
 
@@ -249,7 +249,7 @@ class Api::V1::DistributorsController < Api::V1::ApiController
   protected
 
   def find_only_environment
-    if !@environment && @organization && !params.has_key?(:environment_id)
+    if !@environment && @organization && !params.key?(:environment_id)
       if @organization.environments.empty?
         raise HttpErrors::BadRequest, _("Organization %{org} has the '%{env}' environment only. Please create an environment for distributor registration.") %
           { :org => @organization.name, :env => "Library" }
@@ -279,7 +279,7 @@ class Api::V1::DistributorsController < Api::V1::ApiController
   end
 
   def find_environment
-    return unless params.has_key?(:environment_id)
+    return unless params.key?(:environment_id)
 
     @environment = KTEnvironment.find(params[:environment_id])
     raise HttpErrors::NotFound, _("Couldn't find environment '%s'") % params[:environment_id] if @environment.nil?
@@ -290,7 +290,7 @@ class Api::V1::DistributorsController < Api::V1::ApiController
   def verify_presence_of_organization_or_environment
     # This has to grab the first default org associated with this user AND
     # the environment that goes with him.
-    return if params.has_key?(:organization_id) || params.has_key?(:owner) || params.has_key?(:environment_id)
+    return if params.key?(:organization_id) || params.key?(:owner) || params.key?(:environment_id)
 
     #At this point we know that they didn't supply an org or environment, so we can look up the default
     @environment = current_user.default_environment

@@ -40,7 +40,7 @@ module Katello
       # @raise [NoKye] when key is missing
       def [](key)
         raise ArgumentError, "#{key.inspect} should be a Symbol" unless key.is_a?(Symbol)
-        if has_key? key
+        if key? key
           @data[key].is_a?(Proc) ? @data[key].call : @data[key]
         else
           raise NoKey, key.to_s
@@ -53,28 +53,29 @@ module Katello
         @data[key.to_sym] = convert value
       end
 
-      def has_key?(key)
-        @data.has_key? key
+      def key?(key)
+        @data.key? key
       end
+      alias_method :has_key?, :key?
 
       # @example does node contain value at `node[:key1][:key2]`
       #    node.present? :key1, :key2
       def present?(*keys)
         key, rest = keys.first, keys[1..-1]
         raise ArgumentError, 'supply at least one key' unless key
-        has_key?(key) && self[key] && if rest.empty?
-                                        true
-                                      elsif self[key].is_a?(Node)
-                                        self[key].present?(*rest)
-                                      else
-                                        false
-                                      end
+        key?(key) && self[key] && if rest.empty?
+                                    true
+                                  elsif self[key].is_a?(Node)
+                                    self[key].present?(*rest)
+                                  else
+                                    false
+                                  end
       end
 
       # allows access keys by method call
       # @raise [NoKye] when `key` is missing
       def method_missing(method, *args, &block)
-        if has_key?(method)
+        if key?(method)
           self[method]
         else
           begin
@@ -87,7 +88,7 @@ module Katello
 
       # respond to implementation according to method missing
       def respond_to?(symbol, include_private = false)
-        has_key?(symbol) || super
+        key?(symbol) || super
       end
 
       # does not supports Hashes in Arrays
@@ -95,7 +96,7 @@ module Katello
         return self if hash_or_config.nil?
         other_config = convert hash_or_config
         other_config.each do |key, other_value|
-          value     = has_key?(key) && self[key]
+          value     = key?(key) && self[key]
           self[key] = if value.is_a?(Node) && other_value.is_a?(Node)
                         value.deep_merge!(other_value)
                       elsif value.is_a?(Node) && other_value.nil?

@@ -183,21 +183,21 @@ class RolesController < ApplicationController
     attributes = params[:permission]
     @permission = Permission.find(params[:permission_id])
 
-    if attributes.has_key?(:tag_names) && @permission.all_tags
+    if attributes.key?(:tag_names) && @permission.all_tags
       @permission.all_tags = false
     end
 
-    if attributes.has_key?(:verb_values) && @permission.all_verbs
+    if attributes.key?(:verb_values) && @permission.all_verbs
       @permission.all_verbs = false
     end
 
-    if attributes.has_key?(:all_verbs)
+    if attributes.key?(:all_verbs)
       @permission.verbs.each do |verb|
         @permission.verbs.delete(Verb.find_or_create_by_verb(verb.name))
       end
     end
 
-    if attributes.has_key?(:all_tags)
+    if attributes.key?(:all_tags)
       @permission.tags.each do |tag|
         @permission.tags.delete(tag)
       end
