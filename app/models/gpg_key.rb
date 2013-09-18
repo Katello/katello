@@ -22,7 +22,7 @@ class GpgKey < ActiveRecord::Base
   belongs_to :organization, :inverse_of => :gpg_keys
 
   validates :name, :presence => true, :uniqueness => {:scope => :organization_id,
-      :message => N_("Label has already been taken")}
+                                                      :message => N_("Label has already been taken")}
   validates :content, :presence => true, :length => {:maximum => MAX_CONTENT_LENGTH}
   validates :organization, :presence => true
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name

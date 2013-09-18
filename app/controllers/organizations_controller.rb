@@ -231,7 +231,7 @@ class OrganizationsController < ApplicationController
     task_state = (task.blank? ? nil : task.state)
     task_uuid = (task.blank? ? nil : task.uuid)
     render :partial => "default_info",
-      :locals => { :org => @organization, :informable_type => params[:informable_type], :task_state => task_state, :task_uuid => task_uuid }
+           :locals => { :org => @organization, :informable_type => params[:informable_type], :task_state => task_state, :task_uuid => task_uuid }
   end
 
   protected
@@ -253,16 +253,16 @@ class OrganizationsController < ApplicationController
 
   def setup_options
     @panel_options = { :title => _('Organizations'),
-               :col => ['name'],
-               :titles => [_('Name')],
-               :create => _('Organization'),
-               :create_label => _('+ New Organization'),
-               :name => controller_display_name,
-               :accessor => :label,
-               :ajax_load  => true,
-               :ajax_scroll => items_organizations_path,
-               :enable_create => Organization.creatable?,
-               :search_class => Organization}
+                       :col => ['name'],
+                       :titles => [_('Name')],
+                       :create => _('Organization'),
+                       :create_label => _('+ New Organization'),
+                       :name => controller_display_name,
+                       :accessor => :label,
+                       :ajax_load  => true,
+                       :ajax_scroll => items_organizations_path,
+                       :enable_create => Organization.creatable?,
+                       :search_class => Organization}
   end
 
   def search_filter

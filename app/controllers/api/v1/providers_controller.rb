@@ -140,7 +140,8 @@ class Api::V1::ProvidersController < Api::V1::ApiController
     end
 
     @provider.import_manifest File.expand_path(temp_file.path), :force => params[:force],
-                              :async                                   => true, :notify => false
+                                                                :async => true,
+                                                                :notify => false
     respond_for_async :resource => @provider.manifest_task
   end
 

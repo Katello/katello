@@ -40,27 +40,27 @@ class KTEnvironment < ActiveRecord::Base
   # rubocop:disable HasAndBelongsToMany
   # TODO: change these into has_many associations
   has_and_belongs_to_many :priors, {:class_name => "KTEnvironment", :foreign_key => :environment_id,
-    :join_table => "environment_priors", :association_foreign_key => "prior_id", :uniq => true}
+                                    :join_table => "environment_priors", :association_foreign_key => "prior_id", :uniq => true}
   has_and_belongs_to_many :successors, {:class_name => "KTEnvironment", :foreign_key => "prior_id",
-    :join_table => "environment_priors", :association_foreign_key => :environment_id, :readonly => true}
+                                        :join_table => "environment_priors", :association_foreign_key => :environment_id, :readonly => true}
 
   has_many :repositories, dependent: :destroy, foreign_key: :environment_id
   has_many :systems, :inverse_of => :environment, :dependent => :destroy,  :foreign_key => :environment_id
   has_many :distributors, :inverse_of => :environment, :dependent => :destroy,  :foreign_key => :environment_id
   has_many :working_changesets, :conditions => ["state != '#{Changeset::PROMOTED}'"],
-    :foreign_key => :environment_id, :dependent => :destroy, :class_name => "Changeset",
-    :dependent => :destroy, :inverse_of => :environment
+                                :foreign_key => :environment_id, :dependent => :destroy, :class_name => "Changeset",
+                                :dependent => :destroy, :inverse_of => :environment
 
   has_many :working_deletion_changesets, :conditions => ["state != '#{Changeset::DELETED}'"],
-    :foreign_key => :environment_id, :dependent => :destroy, :class_name => "DeletionChangeset",
-    :dependent => :destroy, :inverse_of => :environment
+                                         :foreign_key => :environment_id, :dependent => :destroy, :class_name => "DeletionChangeset",
+                                         :dependent => :destroy, :inverse_of => :environment
   has_many :working_promotion_changesets, :conditions => ["state != '#{Changeset::PROMOTED}'"],
-    :foreign_key => :environment_id, :dependent => :destroy, :class_name => "PromotionChangeset",
-    :dependent => :destroy, :inverse_of => :environment
+                                          :foreign_key => :environment_id, :dependent => :destroy, :class_name => "PromotionChangeset",
+                                          :dependent => :destroy, :inverse_of => :environment
 
   has_many :changeset_history, :conditions => {:state => Changeset::PROMOTED},
-    :foreign_key => :environment_id, :dependent => :destroy, :class_name => "Changeset",
-    :dependent => :destroy, :inverse_of => :environment
+                               :foreign_key => :environment_id, :dependent => :destroy, :class_name => "Changeset",
+                               :dependent => :destroy, :inverse_of => :environment
 
   has_many :content_view_version_environments, :foreign_key => :environment_id, :dependent => :destroy
   has_many :content_view_versions, :through => :content_view_version_environments, :inverse_of => :environments
@@ -74,11 +74,11 @@ class KTEnvironment < ActiveRecord::Base
 
   validates :organization, :presence => true
   validates :name, :presence => true, :uniqueness => {:scope => :organization_id,
-      :message => N_("of environment must be unique within one organization")},
-      :exclusion => { :in => ["Library"], :message => N_(": '%s' is a built-in environment") % "Library", :unless => :library? }
+                                                      :message => N_("of environment must be unique within one organization")},
+                   :exclusion => { :in => ["Library"], :message => N_(": '%s' is a built-in environment") % "Library", :unless => :library? }
   validates :label, :presence => true, :uniqueness => {:scope => :organization_id,
-      :message => N_("of environment must be unique within one organization")},
-      :exclusion => { :in => ["Library"], :message => N_(": '%s' is a built-in environment") % "Library", :unless => :library?}
+                                                       :message => N_("of environment must be unique within one organization")},
+                    :exclusion => { :in => ["Library"], :message => N_(": '%s' is a built-in environment") % "Library", :unless => :library?}
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name
   validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
   validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description

@@ -61,7 +61,7 @@ class Api::V2::FiltersController < Api::V1::FiltersController
   api :PUT, "/content_view_definitions/:content_view_definition_id/filters/:id/products",
       "Update products for a content view definition filter"
   param :content_view_definition_id, :identifier, :required => true,
-        :desc                                               => "content view definition identifier"
+                                                  :desc => "content view definition identifier"
   param :id, String, :desc => "name of the filter", :required => true
   param :products, Array, :desc => "Updated list of product ids", :required => true
   def update_products

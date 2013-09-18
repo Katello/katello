@@ -68,7 +68,7 @@ class Organization < ActiveRecord::Base
   validates :name, :uniqueness => true, :presence => true
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name
   validates :label, :uniqueness => { :message => _("already exists (including organizations being deleted)") },
-            :presence => true
+                    :presence => true
   validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
   validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
   validate :unique_name_and_label

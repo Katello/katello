@@ -104,8 +104,8 @@ class ChangesetsController < ApplicationController
       type = Changeset::DELETION
     end
     @changeset = Changeset.create_for(type, :name => params[:changeset][:name],
-                                      :description => params[:changeset][:description],
-                                      :environment_id => env_id)
+                                            :description => params[:changeset][:description],
+                                            :environment_id => env_id)
 
     notify.success _("Promotion Changeset '%s' was created.") % @changeset["name"]
     bc = {}
@@ -157,7 +157,7 @@ class ChangesetsController < ApplicationController
     render :text => "The promotion changeset is currently under review, no modifications can occur during this phase.",
            :status => :bad_request if @changeset.state == Changeset::REVIEW
     render :text => "This promotion changeset is already promoted, no content modifications can be made.",
-               :status => :bad_request if @changeset.state == Changeset::PROMOTED
+           :status => :bad_request if @changeset.state == Changeset::PROMOTED
 
     if params.has_key? :data
       params[:data].each do |item|
@@ -274,15 +274,15 @@ class ChangesetsController < ApplicationController
 
   def setup_options
     @panel_options = { :title => _('Changesets'),
-                 :col => ['name'],
-                 :titles => [_('Name')],
-                 :enable_create => false,
-                 :create_label => _('+ New Changeset'),
-                 :name => controller_display_name,
-                 :accessor => :id,
-                 :ajax_load => true,
-                 :ajax_scroll => items_changesets_path,
-                 :search_class => Changeset}
+                       :col => ['name'],
+                       :titles => [_('Name')],
+                       :enable_create => false,
+                       :create_label => _('+ New Changeset'),
+                       :name => controller_display_name,
+                       :accessor => :id,
+                       :ajax_load => true,
+                       :ajax_scroll => items_changesets_path,
+                       :search_class => Changeset}
   end
 
   def controller_display_name

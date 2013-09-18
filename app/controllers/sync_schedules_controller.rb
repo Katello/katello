@@ -35,22 +35,22 @@ class SyncSchedulesController < ApplicationController
     @plans = SyncPlan.where(:organization_id => current_organization.id)
 
     @products_options = { :title => _('Select Products to schedule'),
-                 :col => %w(name plan_name),
-                 :col_titles => [_('Name'), _('Plan Name')],
-                 :create => _('Plan'),
-                 :create_label => _('+ New Plan'),
-                 :name => _('product'),
-                 :enable_create => false}
+                          :col => %w(name plan_name),
+                          :col_titles => [_('Name'), _('Plan Name')],
+                          :create => _('Plan'),
+                          :create_label => _('+ New Plan'),
+                          :name => _('product'),
+                          :enable_create => false}
 
     @plans_options = { :title => _('Select Plans to apply to selected Products'),
-                 :col => %w(name interval),
-                 :col_titles => [_('Name'), _('Interval')],
-                 :create => _('Plan'),
-                 :create_label => _('+ New Plan'),
-                 :name => _('plan'),
-                 :hover_text_cb => :hover_format,
-                 :enable_create => false,
-                 :single_select => true}
+                       :col => %w(name interval),
+                       :col_titles => [_('Name'), _('Interval')],
+                       :create => _('Plan'),
+                       :create_label => _('+ New Plan'),
+                       :name => _('plan'),
+                       :hover_text_cb => :hover_format,
+                       :enable_create => false,
+                       :single_select => true}
   end
 
   def apply

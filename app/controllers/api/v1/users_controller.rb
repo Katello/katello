@@ -164,7 +164,7 @@ class Api::V1::UsersController < Api::V1::ApiController
       format.csv { render :text => users_report.as(:csv) }
       format.pdf do
         send_data(users_report.as(:prawn_pdf), :filename => "katello_users_report.pdf",
-                  :type => "application/pdf")
+                                               :type => "application/pdf")
       end
     end
   end

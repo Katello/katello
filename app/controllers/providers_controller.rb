@@ -65,8 +65,8 @@ class ProvidersController < ApplicationController
   def products_repos
     @products = @provider.products
     render :partial => "products_repos", :locals => {:provider => @provider,
-                                         :providers => @providers, :products => @products, :editable => @provider.editable?,
-                                         :repositories_cloned_in_envrs => repositories_cloned_in_envrs}
+                                                     :providers => @providers, :products => @products, :editable => @provider.editable?,
+                                                     :repositories_cloned_in_envrs => repositories_cloned_in_envrs}
   end
 
   def manifest_progress
@@ -111,8 +111,8 @@ class ProvidersController < ApplicationController
 
   def edit
     render :partial => "edit", :locals => {:provider => @provider, :editable => @provider.editable?,
-                                                                       :repositories_cloned_in_envrs => repositories_cloned_in_envrs,
-                                                                       :name => controller_display_name}
+                                           :repositories_cloned_in_envrs => repositories_cloned_in_envrs,
+                                           :name => controller_display_name}
   end
 
   def new
@@ -122,7 +122,7 @@ class ProvidersController < ApplicationController
 
   def create
     @provider = Provider.create! params[:provider].merge({:provider_type => Provider::CUSTOM,
-                                                                  :organization => current_organization})
+                                                          :organization => current_organization})
     notify.success _("Provider '%s' was created.") % @provider['name']
 
     if search_validate(Provider, @provider.id, params[:search])
@@ -168,8 +168,8 @@ class ProvidersController < ApplicationController
     running = @provider.discovery_task.nil? ? false : !@provider.discovery_task.finished?
     render :partial => 'repo_discovery',
            :locals => {:provider => @provider, :discovered => get_discovered_urls,
-              :running => running,
-              :repositories_cloned_in_envrs => repositories_cloned_in_envrs}
+                       :running => running,
+                       :repositories_cloned_in_envrs => repositories_cloned_in_envrs}
   end
 
   def discovered_repos
@@ -225,16 +225,16 @@ class ProvidersController < ApplicationController
 
   def panel_options
     @panel_options = { :title => _('Providers'),
-             :col => ['name'],
-             :titles => [_('Name')],
-             :create => _('Provider'),
-             :create_label => _('+ New Provider'),
-             :name => controller_display_name,
-             :ajax_load => true,
-             :ajax_scroll => items_providers_path,
-             :initial_action => :products_repos,
-             :search_class => Provider,
-             :enable_create => Provider.creatable?(current_organization)}
+                       :col => ['name'],
+                       :titles => [_('Name')],
+                       :create => _('Provider'),
+                       :create_label => _('+ New Provider'),
+                       :name => controller_display_name,
+                       :ajax_load => true,
+                       :ajax_scroll => items_providers_path,
+                       :initial_action => :products_repos,
+                       :search_class => Provider,
+                       :enable_create => Provider.creatable?(current_organization)}
   end
 
   def controller_display_name

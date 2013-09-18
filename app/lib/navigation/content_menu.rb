@@ -139,14 +139,14 @@ module Navigation
 
     def menu_contents
       katello_content_menu = [menu_subscriptions, menu_providers, menu_sync_management, menu_content_search,
-             menu_content_view_definitions, menu_changeset_management]
+                              menu_content_view_definitions, menu_changeset_management]
 
       {:key => :content,
        :name => _("Content"),
-        :url => :sub_level,
-        :options => {:class => 'content top_level', "data-menu" => "content"},
-        :if => lambda{current_organization},
-        :items => Katello.config.katello? ? katello_content_menu : [menu_subscriptions]
+       :url => :sub_level,
+       :options => {:class => 'content top_level', "data-menu" => "content"},
+       :if => lambda{current_organization},
+       :items => Katello.config.katello? ? katello_content_menu : [menu_subscriptions]
       }
     end
 
@@ -162,19 +162,19 @@ module Navigation
 
     def menu_redhat_providers
       {:key => :redhat_providers,
-        :name => _("Red Hat Repositories"),
-        :url => redhat_provider_providers_path,
-        :if => lambda{current_organization && current_organization.readable?},
-        :options => {:class => "third_level", "data-dropdown" => "repositories"}
+       :name => _("Red Hat Repositories"),
+       :url => redhat_provider_providers_path,
+       :if => lambda{current_organization && current_organization.readable?},
+       :options => {:class => "third_level", "data-dropdown" => "repositories"}
       }
     end
 
     def menu_custom_providers
       {:key => :custom_providers,
-        :name => _("Custom Content Repositories"),
-        :url => providers_path,
-        :if => lambda{Katello.config.katello? && current_organization && Provider.any_readable?(current_organization)},
-        :options => {:class => "third_level", "data-dropdown" => "repositories"}
+       :name => _("Custom Content Repositories"),
+       :url => providers_path,
+       :if => lambda{Katello.config.katello? && current_organization && Provider.any_readable?(current_organization)},
+       :options => {:class => "third_level", "data-dropdown" => "repositories"}
       }
     end
 
@@ -207,25 +207,25 @@ module Navigation
 
     def menu_sync_status
       {:key => :sync_status,
-        :name => _("Sync Status"),
-        :url => sync_management_index_path,
-        :options => {:class => "third_level", "data-dropdown" => "sync"}
+       :name => _("Sync Status"),
+       :url => sync_management_index_path,
+       :options => {:class => "third_level", "data-dropdown" => "sync"}
       }
     end
 
     def menu_sync_plan
       {:key => :sync_plans,
-        :name => _("Sync Plans"),
-        :url => sync_plans_path,
-        :options => {:class => "third_level", "data-dropdown" => "sync"}
+       :name => _("Sync Plans"),
+       :url => sync_plans_path,
+       :options => {:class => "third_level", "data-dropdown" => "sync"}
       }
     end
 
     def menu_sync_schedule
       {:key => :sync_schedule,
-        :name => _("Sync Schedule"),
-        :url => sync_schedules_index_path,
-        :options => {:class => "third_level", "data-dropdown" => "sync"}
+       :name => _("Sync Schedule"),
+       :url => sync_schedules_index_path,
+       :options => {:class => "third_level", "data-dropdown" => "sync"}
       }
     end
 

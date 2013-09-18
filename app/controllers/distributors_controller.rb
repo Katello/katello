@@ -16,7 +16,7 @@ class DistributorsController < ApplicationController
   include ConsumersControllerLogic
 
   before_filter :find_distributor, :except => [:index, :items, :environments, :new, :create, :bulk_destroy,
-                                         :auto_complete]
+                                               :auto_complete]
   before_filter :find_distributors, :only => [:bulk_destroy]
 
   before_filter :find_environment, :only => [:environments, :new]
@@ -137,7 +137,7 @@ class DistributorsController < ApplicationController
 
       if search_validate(Distributor, @distributor.id, params[:search])
         render :partial => "distributors/list_distributors",
-          :locals => {:accessor => "id", :columns => %w(name lastCheckin created), :collection => [@distributor], :name => controller_display_name}
+               :locals => {:accessor => "id", :columns => %w(name lastCheckin created), :collection => [@distributor], :name => controller_display_name}
       else
         notify.message _("'%s' did not meet the current search criteria and is not being shown.") % @distributor["name"]
         render :json => { :no_match => true }
@@ -220,8 +220,8 @@ class DistributorsController < ApplicationController
 
     @organization = current_organization
     render :partial => "subscriptions", :locals => {:distributor => @distributor, :avail_subs => available,
-                                                :consumed_entitlements => consumed,
-                                                :editable => @distributor.editable?}
+                                                    :consumed_entitlements => consumed,
+                                                    :editable => @distributor.editable?}
   end
 
   def update_subscriptions
@@ -234,8 +234,8 @@ class DistributorsController < ApplicationController
     consumed_entitlements = @distributor.consumed_entitlements
     avail_pools = @distributor.available_pools_full
     render :partial => "subs_update", :locals => {:distributor => @distributor, :avail_subs => avail_pools,
-                                              :consumed_subs => consumed_entitlements,
-                                              :editable => @distributor.editable?}
+                                                  :consumed_subs => consumed_entitlements,
+                                                  :editable => @distributor.editable?}
     notify.success _("Distributor subscriptions updated.")
   end
 
@@ -243,7 +243,7 @@ class DistributorsController < ApplicationController
     if @distributor.class == Hypervisor
       render :partial => "hypervisor",
              :locals => {:distributor => @distributor,
-                       :message => _("Hypervisors do not have software products")}
+                         :message => _("Hypervisors do not have software products")}
       return
     end
 
@@ -262,8 +262,8 @@ class DistributorsController < ApplicationController
   def edit
     # Stuff into var for use in spec tests
     @locals_hash = { :distributor => @distributor, :editable => @distributor.editable?,
-                    :name => controller_display_name,
-                    :environments => environment_paths(library_path_element("distributors_readable?"),
+                     :name => controller_display_name,
+                     :environments => environment_paths(library_path_element("distributors_readable?"),
                                                        environment_path_element("distributors_readable?")) }
     render :partial => "edit", :locals => @locals_hash
   end

@@ -22,11 +22,11 @@ class SyncManagementController < ApplicationController
   # building RPMs
   if Katello.config.use_pulp
     @@status_values = { PulpSyncStatus::Status::WAITING => _("Queued."),
-                     PulpSyncStatus::Status::FINISHED => _("Sync complete."),
-                     PulpSyncStatus::Status::ERROR => _("Error syncing!"),
-                     PulpSyncStatus::Status::RUNNING => _("Running."),
-                     PulpSyncStatus::Status::CANCELED => _("Canceled."),
-                     PulpSyncStatus::Status::NOT_SYNCED => ""}
+                        PulpSyncStatus::Status::FINISHED => _("Sync complete."),
+                        PulpSyncStatus::Status::ERROR => _("Error syncing!"),
+                        PulpSyncStatus::Status::RUNNING => _("Running."),
+                        PulpSyncStatus::Status::CANCELED => _("Canceled."),
+                        PulpSyncStatus::Status::NOT_SYNCED => ""}
   else
     @@status_values = {}
   end

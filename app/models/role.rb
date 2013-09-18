@@ -89,12 +89,12 @@ class Role < ActiveRecord::Base
       perm_name =  "Read #{key.to_s.capitalize}"
       unless Permission.where(:role_id => role, :name => perm_name).count > 0
         Permission.create!(:role => role,
-                     :resource_type => ResourceType.find_or_create_by_name(key),
-                     :all_tags => true,
-                     :verbs => verbs.collect{|verb| Verb.find_or_create_by_verb(verb)},
-                     :name => perm_name,
-                     :organization => organization,
-                     :description => "Read #{key.to_s.capitalize} permission")
+                           :resource_type => ResourceType.find_or_create_by_name(key),
+                           :all_tags => true,
+                           :verbs => verbs.collect{|verb| Verb.find_or_create_by_verb(verb)},
+                           :name => perm_name,
+                           :organization => organization,
+                           :description => "Read #{key.to_s.capitalize} permission")
       end
     end
 

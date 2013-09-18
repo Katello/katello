@@ -17,7 +17,7 @@ module Glue::ElasticSearch::TaskStatus
     base.class_eval do
       index_options :json => { :only => [:parameters, :organization_id, :start_time,
                                          :finish_time, :task_owner_id, :task_owner_type] },
-                                         :extended_json => :extended_index_attrs
+                    :extended_json => :extended_index_attrs
 
       mapping do
         indexes :start_time, :type => 'date'

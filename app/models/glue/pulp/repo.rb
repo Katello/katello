@@ -651,7 +651,7 @@ module Glue::Pulp::Repo
       raise "Could not find #{self.content_type} distributor for #{source_repo.pulp_id}" if source_dist.nil?
       Katello.pulp_server.extensions.repository.publish(self.pulp_id, dist['id'],
                                :override_config => {:source_repo_id => source_repo.pulp_id,
-                                                  :source_distributor_id => source_dist['id']})
+                                                    :source_distributor_id => source_dist['id']})
     end
 
     def find_distributor(use_clone_distributor = false)

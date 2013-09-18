@@ -171,8 +171,7 @@ class Api::V1::ContentViewDefinitionsController < Api::V1::ApiController
   api :PUT, "/organizations/:organization_id/content_view_definitions/:id/repositories",
       "Update repositories for content view definition"
   param :organization_id, :identifier, :desc => "organization identifier", :required => true
-  param :id, :identifier, :required => true,
-        :desc                       => "content view definition identifier"
+  param :id, :identifier, :required => true, :desc => "content view definition identifier"
   param :repos, Array, :desc => "Updated list of repo ids", :required => true
   def update_repositories
     _update_repositories! params
@@ -182,8 +181,7 @@ class Api::V1::ContentViewDefinitionsController < Api::V1::ApiController
   api :GET, "/organizations/:organization_id/content_view_definitions/:id/products",
       "Get products for content view definition"
   param :organization_id, :identifier, :desc => "organization identifier", :required => true
-  param :id, :identifier, :required => true,
-        :desc                       => "content view definition identifier"
+  param :id, :identifier, :required => true, :desc => "content view definition identifier"
   def list_products
     respond_for_index :collection => @definition.products
   end
@@ -191,8 +189,7 @@ class Api::V1::ContentViewDefinitionsController < Api::V1::ApiController
   api :PUT, "/organizations/:organization_id/content_view_definitions/:id/products",
       "Update products for content view definition"
   param :organization_id, :identifier, :desc => "organization identifier", :required => true
-  param :id, :identifier, :required => true,
-        :desc                       => "content view definition identifier"
+  param :id, :identifier, :required => true, :desc => "content view definition identifier"
   param :products, Array, :desc => "Updated list of products", :required => true
   def update_products
     _update_products! params
@@ -203,8 +200,7 @@ class Api::V1::ContentViewDefinitionsController < Api::V1::ApiController
       "Get a list of products belonging to the content view definition, even if one its repositories have been" +
           " associated to this definition. Mainly used by filter api  "
   param :organization_id, :identifier, :desc => "organization identifier", :required => true
-  param :id, :identifier, :required => true,
-        :desc                       => "content view definition identifier"
+  param :id, :identifier, :required => true, :desc => "content view definition identifier"
   def list_all_products
     respond_for_index :collection => @definition.resulting_products
   end

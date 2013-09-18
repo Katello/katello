@@ -183,7 +183,7 @@ class ActivationKeysController < ApplicationController
       notify.success _("Activation key '%s' was updated.") % @activation_key["name"]
       render :partial => 'system_group_items',
              :locals => {:system_groups => @system_groups,
-             :editable => ActivationKey.manageable?(current_organization)}
+                         :editable => ActivationKey.manageable?(current_organization)}
     end
   end
 

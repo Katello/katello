@@ -18,8 +18,8 @@ module Glue::ElasticSearch::Product
       after_save :update_related_index
 
       index_options :extended_json => :extended_index_attrs,
-                      :json => { :only => [:name, :description, :id] },
-                      :display_attrs => [:name, :description]
+                    :json => { :only => [:name, :description, :id] },
+                    :display_attrs => [:name, :description]
 
       mapping do
         indexes :name, :type => 'string', :analyzer => :kt_name_analyzer

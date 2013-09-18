@@ -50,14 +50,14 @@ class LegacyPromotionContentViewChanges < ActiveRecord::Migration
         }
 
         params =  [org.id,
-                    "now",
-                     ::TaskStatus::Status::FINISHED,
-                    TaskStatus::TYPES[:content_view_publish][:type],
-                     "now",
-                    User.current.id,
-                    ::UUIDTools::UUID.random_create.to_s,
-                    default_cvv.id,
-                  default_cvv.class.name]
+                   "now",
+                   ::TaskStatus::Status::FINISHED,
+                   TaskStatus::TYPES[:content_view_publish][:type],
+                   "now",
+                   User.current.id,
+                   ::UUIDTools::UUID.random_create.to_s,
+                   default_cvv.id,
+                   default_cvv.class.name]
 
         insert(clause, nil, nil, nil, nil, params.collect{|item| [nil, item]})
         execute("update content_view_versions set content_view_id = #{legacy_view.id} where id = #{default_cvv.id}")

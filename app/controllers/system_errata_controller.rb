@@ -35,7 +35,7 @@ class SystemErrataController < ApplicationController
     if @system.class == Hypervisor
       render :partial => "systems/hypervisor",
              :locals => {:system => @system,
-                       :message => _("Hypervisors do not have errata")}
+                         :message => _("Hypervisors do not have errata")}
       return
     end
 
@@ -56,9 +56,9 @@ class SystemErrataController < ApplicationController
 
     rendered_html = render_to_string(:partial => "systems/errata/items", :locals => { :errata => errata, :editable => @system.editable? })
     render :json => {:html => rendered_html,
-                      :results_count => results_count,
-                      :total_count => total_count,
-                      :current_count => errata.length + offset.to_i }
+                     :results_count => results_count,
+                     :total_count => total_count,
+                     :current_count => errata.length + offset.to_i }
   end
 
   def install

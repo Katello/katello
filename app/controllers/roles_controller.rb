@@ -51,7 +51,7 @@ class RolesController < ApplicationController
     perm_check = lambda do
       if params[:permission]
         perm_attrs = {:permission => [:organization_id, :verb_values, :tag_values, :name, :resource_type_attributes,
-                                                        :all_tags, :all_verbs, :description]}
+                                      :all_tags, :all_verbs, :description]}
 
         diff = check_hash_params(perm_attrs, params)
         return diff unless diff.empty?
@@ -88,16 +88,16 @@ class RolesController < ApplicationController
 
   def setup_options
     @panel_options = { :title => _('Roles'),
-                 :col => ['name'],
-                 :titles => [_('Name')],
-                 :create => _('Role'),
-                 :create_label => _('+ New Role'),
-                 :name => controller_display_name,
-                 :ajax_load  => true,
-                 :list_partial => 'roles/list_roles',
-                 :ajax_scroll => items_roles_path,
-                 :enable_create => Role.creatable?,
-                 :search_class => Role}
+                       :col => ['name'],
+                       :titles => [_('Name')],
+                       :create => _('Role'),
+                       :create_label => _('+ New Role'),
+                       :name => controller_display_name,
+                       :ajax_load  => true,
+                       :list_partial => 'roles/list_roles',
+                       :ajax_scroll => items_roles_path,
+                       :enable_create => Role.creatable?,
+                       :search_class => Role}
   end
 
   def new
