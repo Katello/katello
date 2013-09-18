@@ -30,6 +30,7 @@ angular.module('Bastion', [
     'Bastion.systems',
     'Bastion.environments',
     'Bastion.content-views',
+    'Bastion.nodes',
     'Bastion.organizations',
     'Bastion.products',
     'Bastion.providers',

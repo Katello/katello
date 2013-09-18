@@ -18,13 +18,14 @@ describe('Controller: SystemRegisterController', function() {
 
     beforeEach(inject(function($injector) {
         var $controller = $injector.get('$controller'),
-            $location = $injector.get('$location');
+            $location = $injector.get('$location'),
+            Node = $injector.get('MockResource').$new();
 
         $scope = $injector.get('$rootScope').$new();
-
         $controller('SystemRegisterController', {
             $scope: $scope,
             $location: $location,
+            Node: Node,
             CurrentOrganization: 'ACME'
         });
     }));
@@ -35,6 +36,11 @@ describe('Controller: SystemRegisterController', function() {
 
     it('puts the current domain on the scope', function() {
         expect($scope.baseURL).toBeDefined();
+    });
+
+    it('should fetch a list of nodes', function(){
+        expect($scope.nodes).toBeDefined();
+        expect($scope.selectedNode).toBeDefined();
     });
 
 });
