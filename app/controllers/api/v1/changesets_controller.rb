@@ -12,7 +12,7 @@
 
 class Api::V1::ChangesetsController < Api::V1::ApiController
 
-  before_filter :find_changeset, :only => [:show, :update, :destroy, :promote, :apply, :dependencies]
+  before_filter :find_changeset, :only => [:show, :update, :destroy, :promote, :apply]
   before_filter :find_environment, :only => [:create, :index]
   before_filter :authorize
 
@@ -25,7 +25,6 @@ class Api::V1::ChangesetsController < Api::V1::ApiController
 
     { :index        => read_perm,
       :show         => read_perm,
-      :dependencies => read_perm,
       :create       => manage_perm,
       :update       => manage_perm,
       :promote      => promote_perm,
@@ -63,12 +62,6 @@ class Api::V1::ChangesetsController < Api::V1::ApiController
     @changeset.save!
 
     respond
-  end
-
-  api :GET, "/changesets/:id/dependencies", "List the Depenencies for a changeset"
-  def dependencies
-    #TODO: fix dependency resolution
-    respond_for_index :collection => @changeset.calc_dependencies
   end
 
   api :POST, "/organizations/:organization_id/environments/:environment_id/changesets", "Create a changeset"
