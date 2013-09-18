@@ -7,7 +7,7 @@
       %a.pane_action.separator.copy-tipsy{'data-url' => clone_content_view_definition_path(@view_definition.id)}
         = _('Clone')
 
-    - if @view_definition.editable?
+    - if @view_definition.deletable?
       - if @view_definition.has_promoted_views?
         %a.pane_action.remove.disabled
           = _('Remove')

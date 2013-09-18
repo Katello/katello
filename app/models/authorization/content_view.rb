@@ -26,6 +26,12 @@ module Authorization::ContentView
     User.allowed_to?(READ_PERM_VERBS, :content_views, self.id, self.organization)
   end
 
+  def deletable?
+    return true if !Katello.config.katello?
+    return false if self.content_view_definition.nil?
+    self.content_view_definition.deletable? || self.content_view_definition.publishable?
+  end
+
   def promotable?
     User.allowed_to?([:promote], :content_views, self.id, self.organization)
   end

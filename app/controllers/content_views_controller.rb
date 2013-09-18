@@ -15,14 +15,15 @@ class ContentViewsController < ApplicationController
   helper ContentViewDefinitionsHelper
 
   before_filter :find_content_view_definition, :except => [:auto_complete]
-  before_filter :authorize #after find_content_view_definition, since the definition is required for authorization
   before_filter :find_content_view, :only => [:destroy, :refresh]
+  before_filter :authorize #after find_content_view_definition, since the definition is required for authorization
 
   def rules
+    delete_rule = lambda { @view.deletable? }
     manage_view_rule = lambda { @view_definition.publishable? }
     auto_complete_rule = lambda { ContentView.any_readable?(current_organization) }
     {
-      :destroy => manage_view_rule,
+      :destroy => delete_rule,
       :refresh => manage_view_rule,
       :auto_complete => auto_complete_rule
     }

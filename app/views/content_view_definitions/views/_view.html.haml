@@ -6,7 +6,7 @@
               'original-title' => _("Browse the content view details using Content Search"),
               :class => 'tipsify separator')
 
-    - if view_definition.publishable?
+    - if view.deletable?
       - if view.promoted?
         %a.disabled.tipsify{'original-title' => unable_to_remove_view} #{_('Remove')}
       - else
