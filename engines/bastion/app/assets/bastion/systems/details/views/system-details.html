@@ -8,7 +8,7 @@
         <i class="icon-remove"></i>
         {{ "Close" | i18n }}
       </button>
-      <div alch-confirm="removeSystem(system)" show-confirm="showConfirm">
+      <div alch-confirm-modal="removeSystem(system)" show-confirm="showConfirm">
         {{ "Are you sure you want to remove system \"%system\"?" | i18n: {system: system.name} }}
       </div>
     </div>

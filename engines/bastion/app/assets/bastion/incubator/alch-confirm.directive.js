@@ -26,14 +26,43 @@
  *
  * @example
  */
-angular.module('alchemy').directive('alchConfirm', function() {
-    return {
-        templateUrl: 'incubator/views/alch-confirm.html',
-        replace: true,
-        transclude: true,
-        scope: {
-            action: '&alchConfirm',
-            showConfirm: '=showConfirm'
-        }
-    };
-});
+angular.module('alchemy')
+    .directive('alchConfirm', function() {
+        return {
+            templateUrl: 'incubator/views/alch-confirm.html',
+            replace: true,
+            transclude: true,
+            scope: {
+                action: '&alchConfirm',
+                showConfirm: '=showConfirm'
+            }
+        };
+    })
+    .directive('alchConfirmModal', ['$document', function($document) {
+        return {
+            templateUrl: 'incubator/views/alch-confirm-modal.html',
+            replace: true,
+            transclude: true,
+            scope: {
+                action: '&alchConfirmModal',
+                showConfirm: '=showConfirm'
+            },
+            link: function(scope) {
+                scope.$watch('showConfirm', function(confirm) {
+                    if (confirm) {
+                        $document.on('keydown', function(event) {
+                            if (event.which === 13) {
+                                scope.action();
+                            } else {
+                                scope.showConfirm = false;
+                                scope.$apply();
+                            }
+                        });
+                    } else {
+                        $document.off('keypress');
+                    }
+                });
+            }
+        };
+    }])
+;
