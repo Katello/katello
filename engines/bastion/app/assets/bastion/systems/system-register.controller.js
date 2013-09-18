@@ -17,17 +17,22 @@
  *
  * @requires $scope
  * @requires $location
+ * @requires Node
  * @requires CurrentOrganization
  *
  * @description
  *     Provides values to populate the code commands for registering a system.
  */
 angular.module('Bastion.systems').controller('SystemRegisterController',
-    ['$scope', '$location', 'CurrentOrganization',
-    function($scope, $location, CurrentOrganization) {
+    ['$scope', '$location', 'Node', 'CurrentOrganization',
+    function($scope, $location, Node, CurrentOrganization) {
 
         $scope.organization = CurrentOrganization;
         $scope.baseURL = $location.protocol() + '://' + $location.host();
+
+        $scope.nodes = Node.query(function(data) {
+            $scope.selectedNode = data.results[0];
+        });
 
     }]
 );
