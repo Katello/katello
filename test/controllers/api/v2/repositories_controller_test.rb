@@ -72,6 +72,7 @@ class Api::V2::RepositoriesControllerTest < Minitest::Rails::ActionController::T
       nil
     ])
     product.expect(:editable?, @product.editable?)
+    product.expect(:gpg_key, nil)
 
     Product.stub(:find_by_cp_id, product) do
       post :create, :name => 'Fedora Repository',
@@ -79,6 +80,32 @@ class Api::V2::RepositoriesControllerTest < Minitest::Rails::ActionController::T
                     :url => 'http://www.google.com',
                     :content_type => 'yum'
 
+      assert_response :success
+      assert_template 'api/v2/repositories/show'
+    end
+  end
+
+  def test_create_with_gpg_key
+    key = GpgKey.find(gpg_keys('fedora_gpg_key'))
+
+    product = MiniTest::Mock.new
+    product.expect(:gpg_key, key)
+    product.expect(:editable?, @product.editable?)
+
+    product.expect(:add_repo, {}, [
+      'Fedora_Repository',
+      'Fedora Repository',
+      'http://www.google.com',
+      'yum',
+      nil,
+      key
+    ])
+
+    Product.stub(:find_by_cp_id, product) do
+      post :create, :name => 'Fedora Repository',
+                    :product_id => @product.cp_id,
+                    :url => 'http://www.google.com',
+                    :content_type => 'yum'
 
       assert_response :success
       assert_template 'api/v2/repositories/show'
