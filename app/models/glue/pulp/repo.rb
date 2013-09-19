@@ -737,6 +737,14 @@ module Glue::Pulp::Repo
                                                             )
 
       Katello.pulp_server.resources.content.delete_upload_request(upload_id)
+      update_data_after_upload(unit_key)
+    end
+
+    def update_data_after_upload(unit_key)
+      ids = unit_search(:type_ids => [unit_type_id],
+                        :filters => {:unit => unit_key})
+      puppet? ? PuppetModule.index_puppet_modules(ids) : Package.index_packages(ids)
+      generate_metadata
     end
 
     def unit_type_id
@@ -800,5 +808,4 @@ module Glue::Pulp::Repo
     scheme   = (self.unprotected ? 'http' : 'https')
     "#{scheme}://#{pulp_uri.host.downcase}/pulp/repos/#{relative_path}"
   end
-
 end
