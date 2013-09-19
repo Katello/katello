@@ -89,8 +89,13 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
   param_group :repo
   def create
     params[:label] = labelize_params(params)
+    gpg_key = @product.gpg_key
+    unless params[:gpg_key_id].blank?
+      gpg_key = GpgKey.find(params[:gpg_key_id])
+    end
 
-    repository = @product.add_repo(params[:label], params[:name], params[:url], params[:content_type], params[:unprotected], nil)
+    repository = @product.add_repo(params[:label], params[:name], params[:url],
+                                   params[:content_type], params[:unprotected], gpg_key)
 
     respond_for_show(:resource => repository)
   end
