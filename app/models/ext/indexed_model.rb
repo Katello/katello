@@ -44,6 +44,7 @@ module Ext::IndexedModel
       else
         #stub mapping
         def self.mapping(*args)
+          {}
         end
         def self.index_import(list)
         end

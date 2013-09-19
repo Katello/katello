@@ -29,12 +29,13 @@ describe Api::V1::TasksController do
     @provider = Provider.create!(:provider_type => Provider::CUSTOM, :name => "foo1", :organization => @organization)
     Provider.stub!(:find).and_return(@provider)
 
+    Organization.stub!(:find_by_label).and_return(@organization)
+
     @task = mock(TaskStatus)
     @task.stub(:organization).and_return(@organization)
     @task.stub(:to_json).and_return({})
     @task.stub(:refresh).and_return({})
     @task.stub(:user).and_return({})
-    TaskStatus.stub(:where).and_return(@task)
     TaskStatus.stub!(:find_by_uuid!).and_return(@task)
   end
 
@@ -50,7 +51,7 @@ describe Api::V1::TasksController do
     it_should_behave_like "protected action"
 
     it "should retrieve all async tasks in the organization" do
-      TaskStatus.should_receive(:where).once.with(:organization_id => @organization.id).and_return([])
+      Glue::ElasticSearch::Items.any_instance.should_receive(:retrieve).and_return([[@task], 1])
       req
     end
   end
