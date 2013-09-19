@@ -96,9 +96,9 @@ angular.module('Bastion.test-mocks').factory('MockResource', function() {
 
         Resource.query = function(params, callback) {
             if (typeof(params) === "function") {
-                params(Resource.mockResources);
+                params.call(this, Resource.mockResources);
             } else if (callback) {
-                callback(Resource.mockResources);
+                callback.call(this, Resource.mockResources);
             }
             return Resource.mockResources;
         };
@@ -109,12 +109,13 @@ angular.module('Bastion.test-mocks').factory('MockResource', function() {
         };
 
         return Resource;
-    }
+    };
 
-    return { $new: function() {
-                    return resourceGenerator();
-                   }
-           }
+    return {
+        $new: function() {
+                return resourceGenerator();
+            }
+    };
 });
 
 angular.module('Bastion.test-mocks').factory('MockForm', function() {

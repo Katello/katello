@@ -37,11 +37,18 @@ describe('Controller: ProductDetailsInfoController', function() {
     }));
 
     it('provides a method to retrieve available gpg keys', function() {
-        var promise = $scope.gpgKeys();
+        var promise = $scope.gpgKeys(),
+            promiseCalled = false;
 
+        expect(promise.then).toBeDefined();
         promise.then(function(gpgKeys) {
-            expect(gpgKeys).toEqual($scope.gpgKeys);
+            expect(gpgKeys).toBeDefined();
+            expect(gpgKeys).toContain({id: null});
+            promiseCalled = true;
         });
+
+        $scope.$apply();
+        expect(promiseCalled).toBe(true);
     });
 
     it('should save the product and return a promise', function() {

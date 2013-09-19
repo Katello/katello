@@ -94,6 +94,7 @@ class Api::V2::ProductsController < Api::V2::ApiController
 
     @product.update_attributes!(params.except(:provider, :provider_id, :provider_type, :gpg_key))
     @product.reset_repo_gpgs! if reset_gpg_keys
+
     respond_for_show(:resource => @product.reload)
   end
 
