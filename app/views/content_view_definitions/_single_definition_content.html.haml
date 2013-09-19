@@ -8,7 +8,7 @@
            :editable => editable,
            :record => view_definition,
            :readable_products => Product.readable(current_organization),
-           :editable_products => Product.editable(current_organization),
+           :editable_products => Product.readable(current_organization),
            :content_types => Repository::TYPES - [Repository::PUPPET_TYPE],
            :save_url => update_content_content_view_definition_path(view_definition.id),
            :title => "Yum Products and Repositories"
