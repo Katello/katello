@@ -57,7 +57,7 @@ module Glue
         sort_order    = search_options[:sort_order] || 'ASC'
         total_count   = 0
 
-        sort_by + '_sort' if !sort_by.include?('_sort')
+        sort_by = format_sort(sort_by)
 
         # set the query default field, if one was provided.
         query_options = {}
@@ -153,6 +153,14 @@ module Glue
       rescue => e
         puts e
         return @total
+      end
+
+      private
+
+      def format_sort(sort_by)
+        unless @obj_class.mapping[sort_by.to_sym] && @obj_class.mapping[sort_by.to_sym][:type] == 'date'
+          sort_by + '_sort' if !sort_by.include?('_sort')
+        end
       end
 
     end

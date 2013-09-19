@@ -21,6 +21,10 @@ class GlueElasticSearchTest < MiniTest::Rails::ActiveSupport::TestCase
 
       def self.where(*args)
       end
+
+      def self.mapping(*args)
+        {}
+      end
     end
 
     @results = MiniTest::Mock.new

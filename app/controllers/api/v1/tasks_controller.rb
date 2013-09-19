@@ -38,8 +38,34 @@ class Api::V1::TasksController < Api::V1::ApiController
 
   api :GET, "/organizations/:organization_id/tasks", "List tasks of given organization"
   param :organization_id, :identifier, :desc => "organization identifier", :required => true
+  param :status, String, :desc => "Filter tasks by status"
   def index
-    respond :collection => TaskStatus.where(:organization_id => @organization.id)
+    query_string = params[:status] ? "status:#{params[:status]}" : ''
+
+    organization = Organization.find_by_label(params[:organization_id])
+    options = {
+      :filters => [{ :term => {:organization_id => organization.id} }],
+      :load_records? => true,
+      :sort_by => params[:sort_by] || 'start_time'
+    }
+    options[:sort_order] = params[:sort_order] if params[:sort_order]
+
+    if params[:paged]
+      options[:page_size] = params[:page_size] || current_user.page_size
+    end
+
+    items = Glue::ElasticSearch::Items.new(TaskStatus)
+    tasks, total_count = items.retrieve(query_string, params[:offset], options)
+
+    if params[:paged]
+      tasks = {
+        :results  => tasks,
+        :subtotal => total_count,
+        :total    => items.total_items
+      }
+    end
+
+    respond({ :collection => tasks})
   end
 
   api :GET, "/tasks/:id", "Show a task info"
