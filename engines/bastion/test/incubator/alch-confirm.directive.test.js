@@ -91,3 +91,118 @@ describe('Directive: alchConfirm', function() {
         expect(editableElement.css('display')).toBe('none');
     });
 });
+
+describe('Directive: alchConfirmModal', function() {
+    var scope,
+        compile,
+        $document,
+        testItem,
+        editableElement,
+        elementScope;
+
+    beforeEach(module('alchemy', 'incubator/views/alch-confirm-modal.html'));
+
+    beforeEach(module(function($provide) {
+        testItem = {
+            name: 'Test Name',
+            taco: 'carnitas',
+            delete: function() {}
+        };
+
+        i18nFilter = function() {
+            this.$get = function() {
+                return function() {};
+            };
+
+            return this;
+        };
+
+        $provide.provider('i18nFilter', i18nFilter);
+    }));
+
+    beforeEach(inject(function(_$compile_, _$rootScope_, _$document_) {
+        compile = _$compile_;
+        scope = _$rootScope_;
+        $document = _$document_;
+    }));
+
+    beforeEach(function() {
+        editableElement = angular.element(
+            '<span alch-confirm-modal="item.delete(item)" show-confirm="showConfirm">' +
+                '<p>Hello!</p></span>');
+
+        scope.item = testItem;
+
+        compile(editableElement)(scope);
+        scope.$digest();
+
+        elementScope = editableElement.scope();
+    });
+
+    it("should display confirmation buttons when showConfirm is true", function() {
+        scope.showConfirm = true;
+        scope.$digest();
+
+        expect(editableElement.css('display')).not.toBe('none');
+    });
+
+    it("should not display confirmation buttons when showConfirm is false", function() {
+        scope.showConfirm = false;
+        scope.$digest();
+
+        expect(editableElement.css('display')).toBe('none');
+    });
+
+    it("calls the provided function when the 'Yes' confirmation button is clicked", function() {
+        spyOn(testItem, 'delete');
+
+        editableElement.find('button.primary').click();
+
+        expect(testItem.delete).toHaveBeenCalledWith(testItem);
+    });
+
+    it("closes the dialog when the 'No' confirmation button is clicked", function() {
+        spyOn(testItem, 'delete');
+
+        scope.showConfirm = true;
+        scope.$digest();
+        editableElement.find('button.secondary').click();
+
+        expect(testItem.delete).not.toHaveBeenCalled();
+        expect(scope.showConfirm).toBe(false);
+        expect(editableElement.css('display')).toBe('none');
+    });
+
+    describe("responds to keypress", function() {
+        var event;
+
+        beforeEach(function() {
+            event = jQuery.Event("keydown");
+        });
+
+        it("calls the provided function when enter is pressed", function() {
+            spyOn(testItem, 'delete');
+            event.which  = 13;
+
+            scope.showConfirm = true;
+            scope.$digest();
+            $document.trigger(event);
+
+            expect(testItem.delete).toHaveBeenCalledWith(testItem);
+        });
+
+        it("closes the dialog when any other key is pressed", function() {
+            spyOn(testItem, 'delete');
+            event.which  = 37;
+
+            scope.showConfirm = true;
+            scope.$digest();
+            $document.trigger(event);
+
+            expect(testItem.delete).not.toHaveBeenCalled();
+            expect(scope.showConfirm).toBe(false);
+            expect(editableElement.css('display')).toBe('none');
+        });
+
+    });
+});

@@ -20,7 +20,7 @@
         {{ "Close" | i18n }}
       </button>
 
-      <div alch-confirm="performRemoveSystems()" show-confirm="removeSystems.confirm">
+      <div alch-confirm-modal="performRemoveSystems()" show-confirm="removeSystems.confirm">
         {{ "Are you sure you want to remove the %systemCount systems(s) selected?" | i18n: {systemCount: getSelectedSystemIds().length} }}
       </div>
     </div>
