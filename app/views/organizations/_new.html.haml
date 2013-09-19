@@ -12,10 +12,10 @@
       = text_field_tag 'organization[label]', nil, :tabindex => form.tabindex, :size => 30, :class => :label_input, 'data-url' => default_label_organizations_path()
       = image_tag "icons/spinner.gif", :class => 'label_spinner hidden'
 
-      = form.text_area :description, :label => _("Description"), :size => "40x5", :maxlength => default_description_limit
+    = form.text_area :description, :label => _("Description"), :size => "40x5", :maxlength => default_description_limit
 
     - if Katello.config.katello?
-      %label #{_("Initial Application Life Cycle Management Environment")}:
+      %h5 #{_("Initial Application Life Cycle Management Environment")}:
 
       = form.field :envname, :label => _("Name") do
         = text_field_tag 'environment[name]', nil, :tabindex => form.tabindex, :size => 30, :class => :name_input
@@ -27,7 +27,10 @@
       = form.field :envdescription, :label => _("Description") do
         = text_area_tag 'environment[description]', nil, :tabindex => form.tabindex, :size => "40x5"
 
-      %label= _("Note: This will be set as your initial default environment.")
+      %fieldset
+        %div.prefix_2
+          %label= _("Note: This will be set as your initial default environment.")
+
     - else
       = hidden_field_tag 'environment[label]', 'Library'
 
