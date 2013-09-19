@@ -79,7 +79,7 @@ class FiltersController < ApplicationController
   end
 
   def update
-    if params.has_key?(:products)
+    if params.key?(:products)
       products_ids = params[:products].blank? ? [] : Product.readable(current_organization).
           where(:id => params[:products]).pluck("products.id")
 
