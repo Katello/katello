@@ -22,8 +22,8 @@ class Product < ActiveRecord::Base
 
   include Ext::LabelFromName
 
-  attr_accessible :name, :label, :description, :provider_id, :provider, :gpg_key_id, :gpg_key,
-                  :cp_id
+  attr_accessible :name, :label, :description, :provider_id, :provider,
+                  :gpg_key_id, :gpg_key, :cp_id
 
   has_many :marketing_engineering_products, :foreign_key => :engineering_product_id
   has_many :marketing_products, :through => :marketing_engineering_products
@@ -62,7 +62,7 @@ class Product < ActiveRecord::Base
 
   scope :engineering, where(:type => "Product")
 
-  before_save :assign_unique_label
+  before_create :assign_unique_label
 
   def initialize(attrs = nil, options = {})
 
@@ -173,7 +173,7 @@ class Product < ActiveRecord::Base
 
     # if the object label is already being used in this org, append the id to make it unique
     if Product.all_in_org(self.organization).where('products.label = ?', self.label).count > 0
-      self.label.concat("_" + self.cp_id) unless self.cp_id.blank?
+      self.label = self.label + "_" + self.cp_id unless self.cp_id.blank?
     end
   end
 

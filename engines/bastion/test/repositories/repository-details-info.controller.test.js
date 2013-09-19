@@ -12,8 +12,7 @@
  **/
 
 describe('Controller: RepositoryDetailsInfoController', function() {
-    var $scope,
-        $q;
+    var $scope;
 
     beforeEach(module(
         'Bastion.repositories',
@@ -47,9 +46,13 @@ describe('Controller: RepositoryDetailsInfoController', function() {
     it('provides a method to retrieve available gpg keys', function() {
         var promise = $scope.gpgKeys();
 
-        promise.then(function() {
+        expect(promise.then).toBeDefined();
+        promise.then(function(gpgKeys) {
             expect(gpgKeys).toBeDefined();
+            expect(gpgKeys).toContain({id: null});
         });
+
+        $scope.$apply();
     });
 
     it('should save the product and return a promise', function() {

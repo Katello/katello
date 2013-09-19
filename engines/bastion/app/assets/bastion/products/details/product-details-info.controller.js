@@ -38,7 +38,10 @@ angular.module('Bastion.products').controller('ProductDetailsInfoController',
             var deferred = $q.defer();
 
             GPGKey.query(function(gpgKeys) {
-                deferred.resolve(gpgKeys.results);
+                var results = gpgKeys.results;
+
+                results.unshift({id: null});
+                deferred.resolve(results);
             });
 
             return deferred.promise;

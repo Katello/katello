@@ -14,8 +14,13 @@ node :repository_count do |product|
   product.repositories.count
 end
 
-child :gpg_key do
-  attributes :id, :name
+node :gpg_key do |product|
+  if !product.gpg_key.nil?
+    {
+      id: product.gpg_key.id,
+      name: product.gpg_key.name
+    }
+  end
 end
 
 child :provider do
