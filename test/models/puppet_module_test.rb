@@ -23,4 +23,11 @@ class PuppetModuleTest < MiniTest::Rails::ActiveSupport::TestCase
     assert_equal "2.0.1", metadata[:version]
     assert_equal "NTP Module", metadata[:summary]
   end
+
+  def test_parse_metadata_with_bad_file
+    filepath = File.join(Rails.root, "test/models/puppet_module_test.rb")
+    assert_raises(InvalidPuppetModuleError) do
+      PuppetModule.parse_metadata(filepath)
+    end
+  end
 end

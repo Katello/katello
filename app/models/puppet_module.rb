@@ -13,6 +13,9 @@
 require 'rubygems/package'
 require 'zlib'
 
+class InvalidPuppetModuleError < Exception
+end
+
 class PuppetModule
   include Glue::Pulp::PuppetModule if Katello.config.use_pulp
   include Glue::ElasticSearch::PuppetModule if Katello.config.use_elasticsearch
@@ -20,13 +23,22 @@ class PuppetModule
 
   def self.parse_metadata(filepath)
     metadata = nil
+
     tar_extract = Gem::Package::TarReader.new(Zlib::GzipReader.open(filepath))
     tar_extract.rewind # The extract has to be rewinded after every iteration
     tar_extract.each do |entry|
       next unless entry.file? && entry.full_name =~ %r{\A[^/]+/metadata.json\z}
       metadata = entry.read
     end
-    tar_extract.close
-    return JSON.parse(metadata).with_indifferent_access
+
+    if metadata
+      return JSON.parse(metadata).with_indifferent_access
+    else
+      fail InvalidPuppetModuleError, _("Could not parse metadata. Make sure the puppet module is valid.")
+    end
+  rescue Zlib::GzipFile::Error
+    raise InvalidPuppetModuleError, _("Could not parse metadata. Make sure the puppet module is valid.")
+  ensure
+    tar_extract.close if tar_extract
   end
 end
