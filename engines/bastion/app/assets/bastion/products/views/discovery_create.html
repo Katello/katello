@@ -52,7 +52,6 @@
     </div>
   </div>
 
-
   <div class="control-group required" ng-class="{ 'error' : productForm.label.$invalid }">
     <div class="label">
       <label class="required" for="label">{{ "Label" | i18n }}</label>
@@ -65,7 +64,6 @@
     </div>
   </div>
 
-
   <div class="control-group" >
     <div class="label">
       <label for="provider">{{ "Provider" | i18n }}</label>
@@ -75,6 +73,17 @@
       ng-options="provider.id as provider.name for provider in providers">
     </select>
   </div>
+
+  <div class="control-group" >
+    <div class="label">
+      <label for="gpgkey">{{ "GPG Key:" | i18n }}</label>
+    </div>
+    <select
+      ng-model="createRepoChoices.product.gpg_key_id"
+      ng-options="gpg_key.id as gpg_key.name for gpg_key in gpgKeys">
+    </select>
+  </div>
+
 </form>
 
 

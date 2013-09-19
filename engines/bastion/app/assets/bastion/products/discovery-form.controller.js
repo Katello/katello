@@ -17,6 +17,7 @@
  *
  * @requires $scope
  * @requires $http
+ * @requires $q
  * @requires CurrentOrganization
  * @requires Provider
  * @requires Product
@@ -27,8 +28,8 @@
  *      repository discovery.
  */
 angular.module('Bastion.products').controller('DiscoveryFormController',
-    ['$scope', '$http', 'CurrentOrganization', 'Provider', 'Product', 'Repository',
-    function($scope, $http, CurrentOrganization, Provider, Product, Repository) {
+    ['$scope', '$http', '$q', 'CurrentOrganization', 'Provider', 'Product', 'Repository', 'GPGKey',
+    function($scope, $http, $q, CurrentOrganization, Provider, Product, Repository, GPGKey) {
 
         $scope.discovery = $scope.discovery || {selected: []};
         $scope.panel = $scope.panel || {loading: false};
@@ -89,6 +90,8 @@ angular.module('Bastion.products').controller('DiscoveryFormController',
         $scope.creating = function() {
             return $scope.createRepoChoices.creating;
         };
+        
+        $scope.gpgKeys = GPGKey.query();
 
         $scope.$watch('discovery.selected', function(newList, oldList) {
             if (newList) {

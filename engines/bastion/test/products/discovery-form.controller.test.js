@@ -21,8 +21,10 @@ describe('Controller: DiscoveryFormController', function() {
     beforeEach(inject(function($injector) {
         var $controller = $injector.get('$controller'),
             $http = $injector.get('$http'),
+            $q = $injector.get('$q'),
             Provider = $injector.get('MockResource').$new(),
-            Repository = $injector.get('MockResource').$new();
+            Repository = $injector.get('MockResource').$new(),
+            GPGKey = $injector.get('MockResource').$new();
 
         $scope = $injector.get('$rootScope').$new();
         $httpBackend = $injector.get('$httpBackend');
@@ -31,10 +33,12 @@ describe('Controller: DiscoveryFormController', function() {
         $controller('DiscoveryFormController', {
             $scope: $scope,
             $http: $http,
+            $q: $q,
             CurrentOrganization: 'ACME',
             Provider: Provider,
             Product: Product,
-            Repository: Repository
+            Repository: Repository,
+            GPGKey: GPGKey
         });
     }));
 
@@ -67,6 +71,10 @@ describe('Controller: DiscoveryFormController', function() {
 
     it('should set the repository choices existingProductId', function() {
         expect($scope.createRepoChoices.existingProductId).toBeDefined();
+    });
+
+    it('should set gpgkeys', function(){
+        expect($scope.gpgKeys).toBeDefined();
     });
 
     it('should fetch a label whenever the name changes', function() {
