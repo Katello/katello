@@ -276,7 +276,8 @@ module Glue::Pulp::Repo
       package_fields = %w(name version release arch suffix epoch
                           download_url checksum checksumtype license group
                           children vendor filename relativepath description
-                          size buildhost _id _content_type_id _href _storage_path _type)
+                          size buildhost _id _content_type_id _href
+                          _storage_path _type _last_updated)
 
       self.package_ids.each_slice(Katello.config.pulp.bulk_load_size) do |sub_list|
         tmp_packages.concat(Katello.pulp_server.extensions.rpm.find_all_by_unit_ids(sub_list, package_fields))

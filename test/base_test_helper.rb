@@ -69,6 +69,10 @@ def configure_vcr
     raise "Record flag is not applicable for mode 'none', please use with 'mode=all'"
   end
 
+  if mode != :none
+    system("sudo cp -rf #{File.expand_path('../', __FILE__)}/fixtures/test_repos /var/www/")
+  end
+
   VCR.configure do |c|
     c.cassette_library_dir = 'test/fixtures/vcr_cassettes'
     c.hook_into :webmock

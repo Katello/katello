@@ -11,8 +11,12 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class PulpTaskStatus
-  def self.any_task_running(async_tasks)
-    return false
+  def self.any_task_running_with_vcr(async_tasks)
+    VCR.live? ? any_task_running_without_vcr(async_tasks) : false
+  end
+
+  class << self
+    alias_method_chain :any_task_running, :vcr
   end
 end
 

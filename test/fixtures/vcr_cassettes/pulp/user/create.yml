@@ -2,7 +2,7 @@
 http_interactions: 
 - request: 
     method: post
-    uri: https://abed.usersys.redhat.com/pulp/api/v2/users/
+    uri: https://localhost/pulp/api/v2/users/
     body: 
       encoding: US-ASCII
       string: "{\"login\":\"batman\",\"name\":\"batman\",\"password\":\"ihaveaterriblepassword\"}"
@@ -14,7 +14,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="oxCFANco0UVEwpb5cCSyuyC3uNm10mnkOvI0TgfK370", oauth_signature="i2OKHlOLlvvOxxqmVOn7ThAoOzk%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1379081896", oauth_version="1.0"
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="6v00z3cwLiOVrPmqwoFckxR36alSi0vSA1crDtAFYjM", oauth_signature="3c%2F85y2h4zNZ4PnhNgUHV%2Bfml5c%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1379703437", oauth_version="1.0"
       Pulp-User: 
       - admin
       Content-Length: 
@@ -27,9 +27,9 @@ http_interactions:
       message: Created
     headers: 
       Date: 
-      - Fri, 13 Sep 2013 14:18:16 GMT
+      - Fri, 20 Sep 2013 18:57:17 GMT
       Server: 
-      - Apache/2.2.15 (Red Hat)
+      - Apache/2.4.4 (Fedora) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.3
       Location: 
       - batman
       Content-Length: 
@@ -38,12 +38,12 @@ http_interactions:
       - application/json
     body: 
       encoding: US-ASCII
-      string: "{\"_id\": {\"$oid\": \"52331ea85ca01344d0c710e9\"}, \"name\": \"batman\", \"roles\": [], \"_ns\": \"users\", \"login\": \"batman\", \"id\": \"52331ea85ca01344d0c710e9\", \"_href\": \"/pulp/api/v2/users/batman/\"}"
+      string: "{\"_id\": {\"$oid\": \"523c9a8dd60ea336491b0913\"}, \"name\": \"batman\", \"roles\": [], \"_ns\": \"users\", \"login\": \"batman\", \"id\": \"523c9a8dd60ea336491b0913\", \"_href\": \"/pulp/api/v2/users/batman/\"}"
     http_version: 
-  recorded_at: Fri, 13 Sep 2013 14:18:16 GMT
+  recorded_at: Fri, 20 Sep 2013 18:57:17 GMT
 - request: 
     method: delete
-    uri: https://abed.usersys.redhat.com/pulp/api/v2/users/batman/
+    uri: https://localhost/pulp/api/v2/users/batman/
     body: 
       encoding: US-ASCII
       string: ""
@@ -55,7 +55,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="hiNezhsR14SmsgEFq1OYtJflERU4Sy4Yw1lFjx1Ik7I", oauth_signature="ejQKjV16%2F1GF%2F%2BCVepUh09oQ%2B5Q%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1379081896", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="hu0QPngzMysKF87Si171ekumaaXgwKGBElzXFBrx4lw", oauth_signature="9Utz1%2F6EDGAJQF1wZ9rdnFPUMPU%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1379703437", oauth_version="1.0"
       Pulp-User: 
       - admin
       User-Agent: 
@@ -66,9 +66,9 @@ http_interactions:
       message: OK
     headers: 
       Date: 
-      - Fri, 13 Sep 2013 14:18:16 GMT
+      - Fri, 20 Sep 2013 18:57:18 GMT
       Server: 
-      - Apache/2.2.15 (Red Hat)
+      - Apache/2.4.4 (Fedora) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.3
       Content-Length: 
       - "4"
       Content-Type: 
@@ -77,10 +77,10 @@ http_interactions:
       encoding: US-ASCII
       string: "null"
     http_version: 
-  recorded_at: Fri, 13 Sep 2013 14:18:16 GMT
+  recorded_at: Fri, 20 Sep 2013 18:57:18 GMT
 - request: 
     method: post
-    uri: https://abed.usersys.redhat.com/pulp/api/v2/users/
+    uri: https://localhost/pulp/api/v2/users/
     body: 
       encoding: US-ASCII
       string: "{\"name\":null,\"password\":\"ihaveaterriblepassword_bad\"}"
@@ -92,7 +92,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="9vT13ukiKjViqUhk2U5Aag4VhgPnFVlvJZzb9l9G0", oauth_signature="J8MNFpDfayRjLqeq67LXOaWoqkw%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1379081896", oauth_version="1.0"
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="EN5gg4iUpHsGG2ujThs0jFBV3YPnSuRRM8q2qNFlwk", oauth_signature="4%2FUr28b6tUzRDOXeIfacVlxgBVs%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1379703438", oauth_version="1.0"
       Pulp-User: 
       - admin
       Content-Length: 
@@ -105,9 +105,9 @@ http_interactions:
       message: Internal Server Error
     headers: 
       Date: 
-      - Fri, 13 Sep 2013 14:18:16 GMT
+      - Fri, 20 Sep 2013 18:57:18 GMT
       Server: 
-      - Apache/2.2.15 (Red Hat)
+      - Apache/2.4.4 (Fedora) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.3
       Content-Encoding: 
       - utf-8
       Content-Length: 
@@ -118,7 +118,7 @@ http_interactions:
       - application/json
     body: 
       encoding: US-ASCII
-      string: "{\"http_request_method\": \"POST\", \"exception\": [\"TypeError: sequence item 2: expected string, NoneType found\\n\"], \"error_message\": \"Unhandled Exception\", \"_href\": \"/pulp/api/v2/users/\", \"http_status\": 500, \"traceback\": [\"  File \\\"/usr/lib/python2.6/site-packages/pulp/server/webservices/middleware/exception.py\\\", line 44, in __call__\\n    return self.app(environ, start_response)\\n\", \"  File \\\"/usr/lib/python2.6/site-packages/pulp/server/webservices/middleware/postponed.py\\\", line 39, in __call__\\n    return self.app(environ, start_response)\\n\", \"  File \\\"/usr/lib/python2.6/site-packages/web/application.py\\\", line 279, in wsgi\\n    result = self.handle_with_processors()\\n\", \"  File \\\"/usr/lib/python2.6/site-packages/pulp/server/webservices/application.py\\\", line 26, in _handle_with_processors\\n    return process(self.processors)\\n\", \"  File \\\"/usr/lib/python2.6/site-packages/pulp/server/webservices/application.py\\\", line 23, in process\\n    return p(lambda : process(processors))\\n\", \"  File \\\"/usr/lib/python2.6/site-packages/web/application.py\\\", line 566, in processor\\n    return handler()\\n\", \"  File \\\"/usr/lib/python2.6/site-packages/pulp/server/webservices/application.py\\\", line 23, in <lambda>\\n    return p(lambda : process(processors))\\n\", \"  File \\\"/usr/lib/python2.6/site-packages/pulp/server/webservices/application.py\\\", line 23, in process\\n    return p(lambda : process(processors))\\n\", \"  File \\\"/usr/lib/python2.6/site-packages/web/application.py\\\", line 581, in processor\\n    result = handler()\\n\", \"  File \\\"/usr/lib/python2.6/site-packages/pulp/server/webservices/application.py\\\", line 23, in <lambda>\\n    return p(lambda : process(processors))\\n\", \"  File \\\"/usr/lib/python2.6/site-packages/pulp/server/webservices/application.py\\\", line 25, in process\\n    return self.handle()\\n\", \"  File \\\"/usr/lib/python2.6/site-packages/web/application.py\\\", line 230, in handle\\n    return self._delegate(fn, self.fvars, args)\\n\", \"  File \\\"/usr/lib/python2.6/site-packages/web/application.py\\\", line 422, in _delegate\\n    return f()\\n\", \"  File \\\"/usr/lib/python2.6/site-packages/web/application.py\\\", line 430, in <lambda>\\n    f = lambda: self._delegate_sub_application(pat, what)\\n\", \"  File \\\"/usr/lib/python2.6/site-packages/web/application.py\\\", line 455, in _delegate_sub_application\\n    return app.handle_with_processors()\\n\", \"  File \\\"/usr/lib/python2.6/site-packages/pulp/server/webservices/application.py\\\", line 26, in _handle_with_processors\\n    return process(self.processors)\\n\", \"  File \\\"/usr/lib/python2.6/site-packages/pulp/server/webservices/application.py\\\", line 23, in process\\n    return p(lambda : process(processors))\\n\", \"  File \\\"/usr/lib/python2.6/site-packages/web/application.py\\\", line 566, in processor\\n    return handler()\\n\", \"  File \\\"/usr/lib/python2.6/site-packages/pulp/server/webservices/application.py\\\", line 23, in <lambda>\\n    return p(lambda : process(processors))\\n\", \"  File \\\"/usr/lib/python2.6/site-packages/pulp/server/webservices/application.py\\\", line 23, in process\\n    return p(lambda : process(processors))\\n\", \"  File \\\"/usr/lib/python2.6/site-packages/web/application.py\\\", line 581, in processor\\n    result = handler()\\n\", \"  File \\\"/usr/lib/python2.6/site-packages/pulp/server/webservices/application.py\\\", line 23, in <lambda>\\n    return p(lambda : process(processors))\\n\", \"  File \\\"/usr/lib/python2.6/site-packages/pulp/server/webservices/application.py\\\", line 25, in process\\n    return self.handle()\\n\", \"  File \\\"/usr/lib/python2.6/site-packages/web/application.py\\\", line 230, in handle\\n    return self._delegate(fn, self.fvars, args)\\n\", \"  File \\\"/usr/lib/python2.6/site-packages/web/application.py\\\", line 420, in _delegate\\n    return handle_class(cls)\\n\", \"  File \\\"/usr/lib/python2.6/site-packages/web/application.py\\\", line 396, in handle_class\\n    return tocall(*args)\\n\", \"  File \\\"/usr/lib/python2.6/site-packages/pulp/server/webservices/controllers/decorators.py\\\", line 227, in _auth_decorator\\n    value = method(self, *args, **kwargs)\\n\", \"  File \\\"/usr/lib/python2.6/site-packages/pulp/server/webservices/controllers/users.py\\\", line 92, in POST\\n    tags = [resource_tag(dispatch_constants.RESOURCE_USER_TYPE, login),\\n\", \"  File \\\"/usr/lib/python2.6/site-packages/pulp/common/tags.py\\\", line 76, in resource_tag\\n    return _NAMESPACE_DELIMITER.join((_PULP_NAMESPACE, resource_type, resource_id))\\n\"]}"
+      string: "{\"http_request_method\": \"POST\", \"exception\": [\"TypeError: sequence item 2: expected string, NoneType found\\n\"], \"error_message\": \"Unhandled Exception\", \"_href\": \"/pulp/api/v2/users/\", \"http_status\": 500, \"traceback\": [\"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/webservices/middleware/exception.py\\\", line 44, in __call__\\n    return self.app(environ, start_response)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/webservices/middleware/postponed.py\\\", line 39, in __call__\\n    return self.app(environ, start_response)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/web/application.py\\\", line 279, in wsgi\\n    result = self.handle_with_processors()\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/webservices/application.py\\\", line 26, in _handle_with_processors\\n    return process(self.processors)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/webservices/application.py\\\", line 23, in process\\n    return p(lambda : process(processors))\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/web/application.py\\\", line 566, in processor\\n    return handler()\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/webservices/application.py\\\", line 23, in <lambda>\\n    return p(lambda : process(processors))\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/webservices/application.py\\\", line 23, in process\\n    return p(lambda : process(processors))\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/web/application.py\\\", line 581, in processor\\n    result = handler()\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/webservices/application.py\\\", line 23, in <lambda>\\n    return p(lambda : process(processors))\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/webservices/application.py\\\", line 25, in process\\n    return self.handle()\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/web/application.py\\\", line 230, in handle\\n    return self._delegate(fn, self.fvars, args)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/web/application.py\\\", line 422, in _delegate\\n    return f()\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/web/application.py\\\", line 430, in <lambda>\\n    f = lambda: self._delegate_sub_application(pat, what)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/web/application.py\\\", line 455, in _delegate_sub_application\\n    return app.handle_with_processors()\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/webservices/application.py\\\", line 26, in _handle_with_processors\\n    return process(self.processors)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/webservices/application.py\\\", line 23, in process\\n    return p(lambda : process(processors))\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/web/application.py\\\", line 566, in processor\\n    return handler()\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/webservices/application.py\\\", line 23, in <lambda>\\n    return p(lambda : process(processors))\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/webservices/application.py\\\", line 23, in process\\n    return p(lambda : process(processors))\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/web/application.py\\\", line 581, in processor\\n    result = handler()\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/webservices/application.py\\\", line 23, in <lambda>\\n    return p(lambda : process(processors))\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/webservices/application.py\\\", line 25, in process\\n    return self.handle()\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/web/application.py\\\", line 230, in handle\\n    return self._delegate(fn, self.fvars, args)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/web/application.py\\\", line 420, in _delegate\\n    return handle_class(cls)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/web/application.py\\\", line 396, in handle_class\\n    return tocall(*args)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/webservices/controllers/decorators.py\\\", line 227, in _auth_decorator\\n    value = method(self, *args, **kwargs)\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/server/webservices/controllers/users.py\\\", line 92, in POST\\n    tags = [resource_tag(dispatch_constants.RESOURCE_USER_TYPE, login),\\n\", \"  File \\\"/usr/lib/python2.7/site-packages/pulp/common/tags.py\\\", line 76, in resource_tag\\n    return _NAMESPACE_DELIMITER.join((_PULP_NAMESPACE, resource_type, resource_id))\\n\"]}"
     http_version: 
-  recorded_at: Fri, 13 Sep 2013 14:18:16 GMT
+  recorded_at: Fri, 20 Sep 2013 18:57:18 GMT
 recorded_with: VCR 2.5.0
