@@ -381,4 +381,28 @@ module ApplicationHelper
       (html + groups.join).html_safe
     end
   end
+
+  # Using the record provided, return a hash where the
+  # keys are the products associated with the record and the
+  # values are arrays listing the repositories associated
+  # with the given product.
+  # For example: {product1 => [repo1, repo2]}
+  def get_product_and_repos(record, content_types)
+
+    products_hash = record.resulting_products.inject({}) do |hash, product|
+      if record.repositories.empty?
+        hash[product] = []
+      else
+        repos = product.repos(current_organization.library).where(:content_type => content_types)
+        repos.each do |repo|
+          hash[product] ||= []
+          hash[product] << repo
+        end
+      end
+      hash
+    end
+
+    products_hash
+  end
+
 end

@@ -30,16 +30,17 @@ class FilterRulesController < ApplicationController
   end
 
   def rules
+    show_rule    = lambda { @view_definition.readable? }
     manage_rule  = lambda { @view_definition.editable? }
 
     {
       :new => manage_rule,
       :create => manage_rule,
 
-      :edit => manage_rule,
-      :edit_inclusion => manage_rule,
-      :edit_parameter_list => manage_rule,
-      :edit_date_type_parameters => manage_rule,
+      :edit => show_rule,
+      :edit_inclusion => show_rule,
+      :edit_parameter_list => show_rule,
+      :edit_date_type_parameters => show_rule,
       :update => manage_rule,
 
       :add_parameter => manage_rule,
