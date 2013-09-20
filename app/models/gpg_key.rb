@@ -15,6 +15,7 @@ class GpgKey < ActiveRecord::Base
   include Glue::ElasticSearch::GpgKey if Katello.config.use_elasticsearch
   include Authorization::GpgKey
   MAX_CONTENT_LENGTH = 100_000
+  MAX_CONTENT_LINE_LENGTH = 65
 
   has_many :repositories, :inverse_of => :gpg_key
   has_many :products, :inverse_of => :gpg_key
@@ -27,6 +28,7 @@ class GpgKey < ActiveRecord::Base
   validates :organization, :presence => true
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name
   validates_with Validators::ContentValidator, :attributes => :content
+  validates_with Validators::GpgKeyContentValidator, :attributes => :content, :if => proc { Katello.config.gpg_strict_validation }
 
   def as_json(options = {})
     options ||= {}

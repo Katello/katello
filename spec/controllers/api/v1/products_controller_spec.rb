@@ -32,6 +32,8 @@ describe Api::V1::ProductsController, :katello => true do
 
     @organization = new_test_org
 
+    @test_gpg_content = File.open("#{Rails.root}/spec/assets/gpg_test_key").read
+
     @environment = create_environment(:name => "foo123", :label => "foo123", :organization => @organization, :prior => @organization.library)
     @provider    = Provider.create!(:name         => "provider", :provider_type => Provider::CUSTOM,
                                     :organization => @organization, :repository_url => "https://something.url/stuff")
@@ -77,7 +79,7 @@ describe Api::V1::ProductsController, :katello => true do
   end
 
   describe "update product" do
-    let(:gpg_key) { GpgKey.create!(:name => "Gpg key", :content => "100", :organization => @organization) }
+    let(:gpg_key) { GpgKey.create!(:name => "Gpg key", :content => @test_gpg_content, :organization => @organization) }
 
     before do
       Katello.pulp_server.extensions.repository.stub(:retrieve).and_return(RepoTestData::REPO_PROPERTIES)
