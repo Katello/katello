@@ -103,6 +103,26 @@ describe Api::V1::ContentUploadsController do
     end
   end
 
+  describe "upload file" do
+    let(:action) { :upload_file }
+
+    it "should be protected" do
+      req = lambda { post action, :repository_id => @repo.id }
+      assert_authorized(permission: @edit_permission, request: req, action: action)
+      refute_authorized(permission: [@read_permission, NO_PERMISSION], request: req, action: action)
+    end
+
+    it "should upload a file" do
+      test_document = "#{Rails.root}/test/fixtures/files/puppet_module.tar.gz"
+      puppet_module = Rack::Test::UploadedFile.new(test_document, '')
+      Repository.any_instance.stubs(:upload_content)
+
+      post action, :id => "1", :repository_id => @repo.id, :content => puppet_module
+
+      assert_response :success
+    end
+  end
+
   private
 
   def mock_pulp_server(content_hash)

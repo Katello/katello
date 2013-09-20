@@ -248,6 +248,9 @@ Src::Application.routes.draw do
             put :upload_bits
             post :import_into_repo
           end
+          collection do
+            post :file, :to => 'content_uploads#upload_file'
+          end
         end
         member do
           get :package_groups
