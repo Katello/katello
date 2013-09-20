@@ -22,7 +22,8 @@ class Api::V1::ContentUploadsController < Api::V1::ApiController
       :create => upload_test,
       :upload_bits => upload_test,
       :destroy => upload_test,
-      :import_into_repo => upload_test
+      :import_into_repo => upload_test,
+      :upload_file => upload_test
     }
   end
 
@@ -60,6 +61,29 @@ class Api::V1::ContentUploadsController < Api::V1::ApiController
       params[:id], params[:unit_key], {:unit_metadata => params[:unit_metadata]})
     @repo.update_data_after_upload(params[:unit_key])
     render :nothing => true
+  end
+
+  api :POST, "/repositories/:id/content_uploads/file", "Upload content into the repository"
+  param :id, :identifier, :required => true
+  param :content, File, :required => true, :desc => "file contents"
+  def upload_file
+    filepath = params.try(:[], :content).try(:path)
+
+    if filepath
+      @repo.upload_content(filepath)
+      render :json => {:status => "success"}
+    else
+      fail HttpErrors::BadRequest, _("No file uploaded")
+    end
+
+  rescue InvalidPuppetModuleError => error
+    respond_for_exception(
+      error,
+      :status => :unprocessable_entity,
+      :text => error.message,
+      :errors => [error.message],
+      :with_logging => true
+    )
   end
 
   private

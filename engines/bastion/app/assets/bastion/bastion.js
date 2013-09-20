@@ -19,6 +19,7 @@
 //= require "ui_alchemy/angular-resource/angular-resource"
 //= require "ui_alchemy/angular-sanitize/angular-sanitize"
 //= require "angular-ui-states"
+//= require "ng-upload"
 
 //= require "ui_alchemy/alchemy/alchemy"
 //= require "ui_alchemy/alchemy-header/alchemy-header"

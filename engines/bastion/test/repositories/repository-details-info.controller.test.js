@@ -82,4 +82,18 @@ describe('Controller: RepositoryDetailsInfoController', function() {
         expect($scope.transitionTo).toHaveBeenCalled();
     });
 
+    it('should set an error message if a file upload status is not success', function() {
+        $scope.uploadContent('<pre>"There was an error"</pre>', true);
+
+        expect($scope.uploadStatus).toBe('error');
+        expect($scope.errorMessage).toBe('There was an error');
+    });
+
+    it('should set the upload status to success and refresh the repositoriy if a file upload status is success', function() {
+        spyOn($scope.repository, '$get');
+        $scope.uploadContent('<pre>{"status": "success"}</pre>', true);
+
+        expect($scope.uploadStatus).toBe('success');
+        expect($scope.repository.$get).toHaveBeenCalled();
+    });
 });

@@ -129,4 +129,46 @@
     </table>
   </section>
 
+  <section class="well" ng-show="repository.content_type == 'puppet'">
+    <h5>{{ "Upload Puppet Module" | i18n }}</h5>
+
+    <div class="flash_hud" ng-show="uploadStatus">
+      <a class="control" title="Close" ng-click="uploadStatus = null"></a>
+      <ul class="flash_messages success" ng-show="uploadStatus == 'success'">
+        <li>{{ "Puppet module successfully uploaded." | i18n }}</li>
+      </ul>
+      <ul class="flash_messages error" ng-show="uploadStatus == 'error'">
+        <li>
+          {{ "There was an error during module upload:" | i18n }}
+          <ul>
+            <li>{{ errorMessage }}</li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+    <form class="form labels_top"
+          action="/katello/api/repositories/{{ repository.id }}/content_uploads/file"
+          ng-upload
+          upload-options-enable-controls>
+
+      <div class="control-group">
+        <div class="input">
+          <input type="file" name="content" ng-disabled="uploading">
+        </div>
+      </div>
+
+      <div class="control-group">
+        <div class="control-button">
+          <button class="primary" upload-submit="uploadContent(content, completed)" ng-click="uploading = true">
+            <i class="icon-spinner icon-spin" ng-show="uploading"></i>
+            <span ng-show="uploading">{{ "Uploading..." | i18n }}</span>
+            <span ng-hide="uploading">{{ "Upload" | i18n }}</span>
+          </button>
+        </div>
+      </div>
+
+    </form>
+  </section>
+
 </div>
