@@ -307,7 +307,7 @@ class ContentSearchController < ApplicationController
       { :name => errata_display(e), :id => e.id, :data_type => "errata", :value => e.id,
         :cols => { :title => { :display => e[:title] },
                    :type => { :display => e[:type] },
-                   :severity => { :display => e[:severity] }
+                   :severity => { :display => e[:severity] || '' }
                  }
       }
     end
