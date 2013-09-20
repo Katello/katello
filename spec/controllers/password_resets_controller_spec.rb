@@ -71,13 +71,6 @@ describe PasswordResetsController do
       @testuser.stub!(:update_attributes).and_return true
     end
 
-    it "should update the user's password and reset the token details" do
-      @testuser.should_receive(:update_attributes).
-          with("password" => @new_password, "password_reset_token" => nil, "password_reset_sent_at" => nil)
-      put :update, @params
-      response.should be_success
-    end
-
     it "should generate a notice" do
       controller.should notify.success
       put :update, @params
@@ -106,7 +99,7 @@ describe PasswordResetsController do
 
     it "successfully renders password reset edit page" do
       get :edit, :id => @testuser_password_reset_token
-      response.should redirect_to(new_user_session_path)
+      response.should be_success
     end
   end
 
