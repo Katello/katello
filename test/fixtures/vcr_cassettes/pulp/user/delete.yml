@@ -1,45 +1,6 @@
 --- 
 http_interactions: 
 - request: 
-    method: delete
-    uri: https://localhost/pulp/api/v2/users/fake/
-    body: 
-      encoding: US-ASCII
-      string: ""
-    headers: 
-      Accept: 
-      - application/json
-      Accept-Encoding: 
-      - gzip, deflate
-      Content-Type: 
-      - application/json
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="uKGFcA7Nu8zSdRmfIx2ddnnmKCzv2gD6tdBNL2SGM", oauth_signature="TEEnNSItEjX0w7RahCQqMLTyknQ%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1379703438", oauth_version="1.0"
-      Pulp-User: 
-      - admin
-      User-Agent: 
-      - Ruby
-  response: 
-    status: 
-      code: 404
-      message: Not Found
-    headers: 
-      Date: 
-      - Fri, 20 Sep 2013 18:57:18 GMT
-      Server: 
-      - Apache/2.4.4 (Fedora) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.3
-      Content-Encoding: 
-      - utf-8
-      Content-Length: 
-      - "224"
-      Content-Type: 
-      - application/json
-    body: 
-      encoding: US-ASCII
-      string: "{\"http_request_method\": \"DELETE\", \"exception\": null, \"error_message\": \"Missing resource(s): resource_id=fake\", \"_href\": \"/pulp/api/v2/users/fake/\", \"http_status\": 404, \"traceback\": null, \"resources\": {\"resource_id\": \"fake\"}}"
-    http_version: 
-  recorded_at: Fri, 20 Sep 2013 18:57:18 GMT
-- request: 
     method: post
     uri: https://localhost/pulp/api/v2/users/
     body: 
@@ -53,7 +14,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="nfMjK8RynVu0WiMuQo9vitk98BHhnnauIgz1ayvUWM", oauth_signature="1zRVnI2Wy586agIxpC9Q%2FU6JuLo%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1379703438", oauth_version="1.0"
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="XBrOIEi0IJPZNE7u9jgJitlu5ZocmFFhCOKuCOOnoc8", oauth_signature="rhTmfCWTjPHulADmKBSJX52RdpA%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1379710897", oauth_version="1.0"
       Pulp-User: 
       - admin
       Content-Length: 
@@ -66,7 +27,7 @@ http_interactions:
       message: Created
     headers: 
       Date: 
-      - Fri, 20 Sep 2013 18:57:18 GMT
+      - Fri, 20 Sep 2013 21:01:37 GMT
       Server: 
       - Apache/2.4.4 (Fedora) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.3
       Location: 
@@ -77,9 +38,9 @@ http_interactions:
       - application/json
     body: 
       encoding: US-ASCII
-      string: "{\"_id\": {\"$oid\": \"523c9a8ed60ea336491b0930\"}, \"name\": \"batman\", \"roles\": [], \"_ns\": \"users\", \"login\": \"batman\", \"id\": \"523c9a8ed60ea336491b0930\", \"_href\": \"/pulp/api/v2/users/batman/\"}"
+      string: "{\"_id\": {\"$oid\": \"523cb7b1d60ea34df4d65a60\"}, \"name\": \"batman\", \"roles\": [], \"_ns\": \"users\", \"login\": \"batman\", \"id\": \"523cb7b1d60ea34df4d65a60\", \"_href\": \"/pulp/api/v2/users/batman/\"}"
     http_version: 
-  recorded_at: Fri, 20 Sep 2013 18:57:18 GMT
+  recorded_at: Fri, 20 Sep 2013 21:01:37 GMT
 - request: 
     method: delete
     uri: https://localhost/pulp/api/v2/users/batman/
@@ -94,7 +55,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="G6c7ms6JIZM7Sl8fnKakIfVb3IUEvfE4ID50aiuw", oauth_signature="fpzlx02ekiDOIgqHYcW3MBGfYSA%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1379703438", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="yfb1stbFXsxYD6gPYrs1jrwqoKez0PAR1h5kBdJDi7c", oauth_signature="QtE4jGTKo3lljzl156ZWE7RS%2BvY%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1379710897", oauth_version="1.0"
       Pulp-User: 
       - admin
       User-Agent: 
@@ -105,7 +66,7 @@ http_interactions:
       message: OK
     headers: 
       Date: 
-      - Fri, 20 Sep 2013 18:57:18 GMT
+      - Fri, 20 Sep 2013 21:01:37 GMT
       Server: 
       - Apache/2.4.4 (Fedora) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.3
       Content-Length: 
@@ -116,5 +77,44 @@ http_interactions:
       encoding: US-ASCII
       string: "null"
     http_version: 
-  recorded_at: Fri, 20 Sep 2013 18:57:18 GMT
+  recorded_at: Fri, 20 Sep 2013 21:01:37 GMT
+- request: 
+    method: delete
+    uri: https://localhost/pulp/api/v2/users/fake/
+    body: 
+      encoding: US-ASCII
+      string: ""
+    headers: 
+      Accept: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Content-Type: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="LSNflwWHKchfzsDXe1GaLioFqGKSqBf6npo8NRwIeY", oauth_signature="n%2F%2BUb6j1JY2W7GEZknNeMg5oqbQ%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1379710897", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      User-Agent: 
+      - Ruby
+  response: 
+    status: 
+      code: 404
+      message: Not Found
+    headers: 
+      Date: 
+      - Fri, 20 Sep 2013 21:01:37 GMT
+      Server: 
+      - Apache/2.4.4 (Fedora) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.3
+      Content-Encoding: 
+      - utf-8
+      Content-Length: 
+      - "224"
+      Content-Type: 
+      - application/json
+    body: 
+      encoding: US-ASCII
+      string: "{\"http_request_method\": \"DELETE\", \"exception\": null, \"error_message\": \"Missing resource(s): resource_id=fake\", \"_href\": \"/pulp/api/v2/users/fake/\", \"http_status\": 404, \"traceback\": null, \"resources\": {\"resource_id\": \"fake\"}}"
+    http_version: 
+  recorded_at: Fri, 20 Sep 2013 21:01:37 GMT
 recorded_with: VCR 2.5.0
