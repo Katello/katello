@@ -158,7 +158,8 @@ module Glue
       private
 
       def format_sort(sort_by)
-        unless @obj_class.mapping[sort_by.to_sym] && @obj_class.mapping[sort_by.to_sym][:type] == 'date'
+        mapping = @obj_class.mapping || {}
+        unless mapping[sort_by.to_sym] && mapping[sort_by.to_sym][:type] == 'date'
           sort_by + '_sort' if !sort_by.include?('_sort')
         end
       end
