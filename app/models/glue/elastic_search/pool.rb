@@ -78,6 +78,10 @@ module Glue::ElasticSearch::Pool
         }
       end
 
+      def self.mapping
+        Tire.index(self.index).mapping
+      end
+
       def self.index_pools(pools, clear_filters = nil)
         # Clear previous pools index
         if !clear_filters.nil?
