@@ -184,7 +184,17 @@ class ContentViewDefinition < ContentViewDefinitionBase
     new_definition.products = self.products
     new_definition.repositories = self.repositories
     new_definition.component_content_views = self.component_content_views
-    # TODO: copy filters
+    new_definition.save!
+
+    self.filters.each do |filter|
+      new_filter = filter.dup
+      new_filter.products = filter.products
+      new_filter.repositories = filter.repositories
+      filter.rules.each do |rule|
+        new_filter.rules << rule.dup
+      end
+      new_definition.filters << new_filter
+    end
     new_definition.save!
 
     new_definition
