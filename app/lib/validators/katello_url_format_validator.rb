@@ -15,6 +15,14 @@ module Validators
     include KatelloUrlHelper
 
     def validate_each(record, attribute, value)
+      if options[:blank_allowed]
+        if options[:blank_allowed].respond_to?(:call)
+          return if value.blank? && options[:blank_allowed].call(record)
+        else
+          return if value.blank?
+        end
+      end
+
       attribute_name = options[:field_name] || attribute
       record.errors[attribute_name] << N_("is invalid") unless kurl_valid?(value)
     end

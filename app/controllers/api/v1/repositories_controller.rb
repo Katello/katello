@@ -41,7 +41,7 @@ class Api::V1::RepositoriesController < Api::V1::ApiController
 
   def param_rules
     {
-        :update => { :repository => [:gpg_key_name] }
+        :update => { :repository => [:gpg_key_name, :url] }
     }
   end
 
@@ -78,10 +78,13 @@ class Api::V1::RepositoriesController < Api::V1::ApiController
   param :repository, Hash, :required => true do
     param :gpg_key_name, String, :desc => "name of a gpg key that will be assigned to the repository"
     param :enabled, :bool, :desc => "flag that enables/disables the repository"
+    param :url, String, :desc => "repository source url"
   end
   def update
     raise HttpErrors::BadRequest, _("A Red Hat repository cannot be updated.") if @repository.redhat?
-    @repository.update_attributes!(params[:repository].slice(:gpg_key_name, :enabled))
+    attrs = params[:repository].slice(:gpg_key_name, :enabled)
+    attrs[:feed] = params[:repository][:url] if params[:repository] && params[:repository][:url]
+    @repository.update_attributes!(attrs)
     respond
   end
 
