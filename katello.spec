@@ -25,7 +25,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        1.4.6
+Version:        1.4.7
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -920,6 +920,335 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Mon Sep 23 2013 Partha Aji <paji@redhat.com> 1.4.7-1
+- Merge pull request #3020 from thomasmckay/1007117-actkey-fk
+  (thomasmckay@redhat.com)
+- 1007117-actkey-fk - dependent destroy (thomasmckay@redhat.com)
+- adding new pulp dep (jsherril@redhat.com)
+- Merge pull request #3007 from ehelms/bug-977024 (ericdhelms@gmail.com)
+- Pulp 2.3: Updating spec file for new runcible version (daviddavis@redhat.com)
+- Fixing repositories api controller test (daviddavis@redhat.com)
+- Pulp 2.3: Updating cassettes (daviddavis@redhat.com)
+- Pulp 2.3: Updating code and tests for pulp 2.3 support
+  (daviddavis@redhat.com)
+- Merge pull request #3002 from ehelms/repo-upload-ui (ericdhelms@gmail.com)
+- Bug #1010299 - define missing mapping method on Pool, fixes #3011.
+  (walden@redhat.com)
+- Merge pull request #2962 from komidore64/password-reset-email
+  (komidore64@gmail.com)
+- Merge pull request #2988 from ehelms/bug-993588 (ericdhelms@gmail.com)
+- 1007113 - Password reset email does not work (komidore64@gmail.com)
+- Merge pull request #2956 from jhadvig/gpg_validation (j.hadvig@gmail.com)
+- 867435 - Importing GPG file with some random text shouldn't be allowed
+  (j.hadvig@gmail.com)
+- Merge pull request #3001 from bbuckingham/bz991447 (bbuckingham@redhat.com)
+- Merge pull request #3006 from bbuckingham/bz994917 (bbuckingham@redhat.com)
+- Merge pull request #3008 from bbuckingham/bz981613 (bbuckingham@redhat.com)
+- 981613: Filter names: add one-line-ellipsis to filter list
+  (bbuckingham@redhat.com)
+- Content Uploads: Adding indexing and error checking (daviddavis@redhat.com)
+- Merge pull request #3005 from daviddavis/temp/20130919132420
+  (daviddavis@redhat.com)
+- Merge pull request #2999 from daviddavis/temp/20130919084419
+  (daviddavis@redhat.com)
+- Merge pull request #2987 from ehelms/bug-1009092 (ericdhelms@gmail.com)
+- Merge pull request #2996 from waldenraines/delete-modal (walden@redhat.com)
+- 994917: Content Search: Errata: show null severity as ''
+  (bbuckingham@redhat.com)
+- Travis: Dropping ruby 2.0 checks for now (daviddavis@redhat.com)
+- Merge pull request #2975 from jlsherrill/927335 (jlsherrill@gmail.com)
+- Merge pull request #2993 from thomasmckay/1001609-notice-fk
+  (thomasmckay@redhat.com)
+- 991447: Update content view definition clone to include cloning filters
+  (bbuckingham@redhat.com)
+- Rubocop: Upgrading to 0.13.1 (daviddavis@redhat.com)
+- Rubocop: New version breaks everything! (daviddavis@redhat.com)
+- Merge pull request #2992 from bbuckingham/new_org_format
+  (bbuckingham@redhat.com)
+- 1001609-notice-fk - another dependent destroy (thomasmckay@redhat.com)
+- Merge pull request #2981 from daviddavis/temp/20130917170215
+  (daviddavis@redhat.com)
+- Let configuration use string keys (mhulan@redhat.com)
+- Bug 1010023: Adds puppet module upload to repository details view.
+  (ericdhelms@gmail.com)
+- Merge pull request #2976 from waldenraines/task-states (walden@redhat.com)
+- Merge pull request #2997 from waldenraines/fix-rubocop (walden@redhat.com)
+- Merge pull request #2983 from jlsherrill/953971 (jlsherrill@gmail.com)
+- Fix rubocop issues preventing successful builds in master.
+  (walden@redhat.com)
+- Bug #1009594 - use modal dialog instead of dropdown, fixes #2892.
+  (walden@redhat.com)
+- Bug #970600 - tasks: allow filtering tasks by state/status.
+  (walden@redhat.com)
+- Merge pull request #2989 from daviddavis/temp/20130918102113
+  (daviddavis@redhat.com)
+- Rubocop: Fix deprecated hash methods (daviddavis@redhat.com)
+- Merge pull request #2980 from daviddavis/temp/20130917165625
+  (daviddavis@redhat.com)
+- organization: fix format of new org pane (bbuckingham@redhat.com)
+- Merge pull request #2969 from jlsherrill/remove_deps (jlsherrill@gmail.com)
+- 953971 - adding gpg option to new product on discovery page
+  (jsherril@redhat.com)
+- Merge pull request #2964 from jlsherrill/register_nodes
+  (jlsherrill@gmail.com)
+- Merge pull request #2971 from bbuckingham/974712 (bbuckingham@redhat.com)
+- Merge pull request #2977 from jlsherrill/985889 (jlsherrill@gmail.com)
+- Merge pull request #2978 from jlsherrill/repo_feed (jlsherrill@gmail.com)
+- 1009127: Change scope for editable_products (daviddavis@redhat.com)
+- Rubocop: Aligning multi-line arrays and hashes (daviddavis@redhat.com)
+- Merge pull request #2973 from daviddavis/temp/20130917122354
+  (daviddavis@redhat.com)
+- Bug 993588: Previously, if no default_environment_id was specified as a
+  parameter, the attribute was set to nil. This has been removed.
+  (ericdhelms@gmail.com)
+- Bug 977024: Allowing right sliding tree to grow to the max-height to prevent
+  hiding of the scrollbar for long lists. (ericdhelms@gmail.com)
+- fixing fort tests (jsherril@redhat.com)
+- Bug 1009092: Adding blank GPG Key option to product and repository edit.
+  (ericdhelms@gmail.com)
+- Merge pull request #2939 from ehelms/bug-965230 (ericdhelms@gmail.com)
+- Products: Removing duplicate scopes (daviddavis@redhat.com)
+- Merge pull request #2979 from jlsherrill/test_speed (jlsherrill@gmail.com)
+- Merge pull request #2974 from jlsherrill/product_fixes (jlsherrill@gmail.com)
+- Merge pull request #2960 from waldenraines/org-switcher-fix
+  (walden@redhat.com)
+- Merge pull request #2970 from daviddavis/rubocop-0.13 (daviddavis@redhat.com)
+- treat all tasks as complete in testing (jsherril@redhat.com)
+- removing old changeset dependency code (jsherril@redhat.com)
+- adding support for repo feed changes (jsherril@redhat.com)
+- Merge pull request #2968 from komidore64/forgot-username
+  (komidore64@gmail.com)
+- 985889 - do not attempt to cancel non-running sync task (jsherril@redhat.com)
+- providing node registration information (jsherril@redhat.com)
+- Merge pull request #2967 from jlsherrill/broken_schedule
+  (jlsherrill@gmail.com)
+- 927335 - set newly created repos to automatically use products gpg key
+  (jsherril@redhat.com)
+- transition to new product repos after creation (jsherril@redhat.com)
+- 1006693: Fixing PG error on definition destroy (daviddavis@redhat.com)
+- 1007110 - Forgot Username functionality failed (komidore64@gmail.com)
+- 1007290: Add success notification for definition content selection
+  (daviddavis@redhat.com)
+- 974712: Content View Filter: improve behavior for repo section
+  (bbuckingham@redhat.com)
+- Rubocop: Upgrade to 0.13 by disabling some (but not all) new cops
+  (daviddavis@redhat.com)
+- Content View Definition Filter: fix product removal (bbuckingham@redhat.com)
+- Org Switcher: set max width on orgs, fixes #2756. (walden@redhat.com)
+- Merge pull request #2965 from daviddavis/temp/20130916200557
+  (daviddavis@redhat.com)
+- fixing broken sync schedule page (jsherril@redhat.com)
+- Merge pull request #2961 from daviddavis/upload-index-content
+  (daviddavis@redhat.com)
+- Merge pull request #2959 from waldenraines/system-subscription-fix
+  (walden@redhat.com)
+- Merge pull request #2963 from waldenraines/fix-menu-gap (walden@redhat.com)
+- Content Uploads: Index content after it's uploaded (daviddavis@redhat.com)
+- Removing empty test file (daviddavis@redhat.com)
+- Merge pull request #2954 from daviddavis/iNecas-
+  package_upload_generate_metadata (inecas@redhat.com)
+- Merge pull request #2958 from ehelms/bug-1003087 (ericdhelms@gmail.com)
+- Merge pull request #2950 from jlsherrill/product_fixes (jlsherrill@gmail.com)
+- Menu: remove gap in dropdown if scrolling, fixes #2858 and #1003110.
+  (walden@redhat.com)
+- Merge pull request #2670 from jlsherrill/glue-test-refactor
+  (jlsherrill@gmail.com)
+- products - various ui fixes (jsherril@redhat.com)
+- Merge pull request #2957 from jlsherrill/999426 (jlsherrill@gmail.com)
+- Add padding to system subscriptions compliance reasons, fixes #2887.
+  (walden@redhat.com)
+- Tests: Refactor pulp glue tests to be more independent of one another.
+  (jsherril@redhat.com)
+- Bug 1003087: Setting the z-index higher on the oldpane panel to prevent blank
+  panel on FF17. (ehelms@redhat.com)
+- Merge pull request #2944 from bbuckingham/bz1002624 (bbuckingham@redhat.com)
+- 999426 - fixing bad query for gpg key products/repos (jsherril@redhat.com)
+- Generate meta data after package uploaded to repo (inecas@redhat.com)
+- Bug 965230: Adding formatting for Pulp V2 sync errors, and UI display of
+  those errors in a tipsy. (ericdhelms@gmail.com)
+- Systems: Enabling nutupane view outside of experimental and legacy view from
+  within experimental. (ericdhelms@gmail.com)
+- Merge pull request #2924 from waldenraines/system-subscriptions
+  (walden@redhat.com)
+- Merge pull request #2949 from bbuckingham/bz994987 (bbuckingham@redhat.com)
+- Merge pull request #2945 from daviddavis/temp/20130913160318
+  (daviddavis@redhat.com)
+- Bastion: adding, removing, and auto-attach system subscriptions.
+  (walden@redhat.com)
+- 994987: destroy content view definition archives when a definition is
+  destroyed (bbuckingham@redhat.com)
+- Changesets: Fixing edit page since involved_products no longer exists
+  (daviddavis@redhat.com)
+- 1002624: Content Search: fix display of package details, fixes #2801
+  (bbuckingham@redhat.com)
+- Merge pull request #2916 from Katello/repository-ui (ericdhelms@gmail.com)
+- Merge pull request #2941 from thomasmckay/1001609-more-fkey
+  (thomasmckay@redhat.com)
+- Merge pull request #2942 from parthaa/1007285 (parthaa@gmail.com)
+- Merge pull request #2940 from bbuckingham/issue-2190 (bbuckingham@redhat.com)
+- Products: HTML clean-up. (ericdhelms@gmail.com)
+- 1007285 - Fix system groups cli issue (paji@redhat.com)
+- 1001609-more-fkey - more clean up prior to creatingforeign keys
+  (thomasmckay@redhat.com)
+- Content Views: Hide refresh tipsy when refresh is clicked, fixes #2190
+  (bbuckingham@redhat.com)
+- Add foreman-selinux to comps (inecas@redhat.com)
+- fixing some styling across the app (jsherril@redhat.com)
+- addressing comments and reconciling org factory tests (jsherril@redhat.com)
+- test for poll instead of get (jsherril@redhat.com)
+- making mock resource require instantiation (jsherril@redhat.com)
+- fixing pending? attribute (jsherril@redhat.com)
+- Adding discovery controller test (jsherril@redhat.com)
+- Products: Enabling Products link outside of experimental mode and hiding old
+  Providers page unless in experimental mode. Removing experimental forms
+  builder. (ericdhelms@gmail.com)
+- Products: Testing and addressing PR comments. (ericdhelms@gmail.com)
+- addressing PR comments (jsherril@redhat.com)
+- adding organization factory test (jsherril@redhat.com)
+- Products: Clean-up and style updates. (ericdhelms@gmail.com)
+- addressing comments (jsherril@redhat.com)
+- fixing broken row selects and adding leading slash removal
+  (jsherril@redhat.com)
+- Migrating repo discovery to nutupane (jsherril@redhat.com)
+- Products: Fixing invalid types for apipie documentation.
+  (ericdhelms@gmail.com)
+- Products: Adding a bunch of tests and updating some permission calls.
+  (ericdhelms@gmail.com)
+- Products: Initial discovery work and adding some tests.
+  (ericdhelms@gmail.com)
+- Products: Adding products details, repository listing and details.
+  (ericdhelms@gmail.com)
+- Merge pull request #2931 from ehelms/system-register-nutupane
+  (ericdhelms@gmail.com)
+- Merge pull request #2933 from jlsherrill/rubocop-ignore
+  (jlsherrill@gmail.com)
+- ignore node_modules folder for devs (jsherril@redhat.com)
+- Systems: Adding system register panel to systems page for nutupane.
+  (ericdhelms@gmail.com)
+- Merge pull request #2932 from bbuckingham/issue-2928 (bbuckingham@redhat.com)
+- issue 2928: Bastion: fix org selector on nutupane (bbuckingham@redhat.com)
+- Merge pull request #2926 from komidore64/ldap-cred-fix (komidore64@gmail.com)
+- Merge pull request #2929 from daviddavis/temp/20130912103156
+  (weissj.github@jweiss.com)
+- Merge pull request #2927 from daviddavis/temp/20130911161614
+  (daviddavis@redhat.com)
+- Fixing User.readable by moving scope to class methods (daviddavis@redhat.com)
+- Updated the publish algorithm to deal with deps (paji@redhat.com)
+- Merge pull request #2925 from daviddavis/puppet-upload-test
+  (daviddavis@redhat.com)
+- Rubocop: Locking version to prevent breakages (daviddavis@redhat.com)
+- 1004990 - When using LDAP auth don't show me option to recover credentials
+  (komidore64@gmail.com)
+- Puppet Uploads: Adding test for uploads (daviddavis@redhat.com)
+- Merge pull request #2904 from bbuckingham/bastion-system-bulk-actions
+  (bbuckingham@redhat.com)
+- Bastion: System Bulk Actions: adding tests (bbuckingham@redhat.com)
+- Merge pull request #2923 from daviddavis/temp/20130911111621
+  (daviddavis@redhat.com)
+- Merge pull request #2914 from Katello/package-uploads (daviddavis@redhat.com)
+- Runcible: bumping runcible version to 1.0.6 (daviddavis@redhat.com)
+- Content Uploads: V2 controller and feedback from PR (daviddavis@redhat.com)
+- Merge pull request #2917 from thomasmckay/1001327-headpin-perms
+  (thomasmckay@redhat.com)
+- Bastion: System Bulk Actions: PR 2904 address comments
+  (bbuckingham@redhat.com)
+- Bastion: System Bulk Actions: support auto-attach available subscriptions
+  (bbuckingham@redhat.com)
+- Bastion: System Bulk Actions: initial support for system group, content and
+  remove actions (bbuckingham@redhat.com)
+- Merge pull request #2918 from ehelms/clean-up-oldnutupane
+  (ericdhelms@gmail.com)
+- Merge pull request #2919 from ehelms/alch-table-fixes (ericdhelms@gmail.com)
+- Fixed a search indexing with puppet modules (paji@redhat.com)
+- Fixes #2891: Re-factoring how selected rows is handled in the alch-table
+  directive. (ericdhelms@gmail.com)
+- 1001327-headpin-perms - remove environment related permissions during upgrade
+  (thomasmckay@redhat.com)
+- Nutupane: Remove loading of broken old nutupane subscriptions in experimental
+  mode. (ericdhelms@gmail.com)
+- Content Uploads: Removing old non-existing route (daviddavis@redhat.com)
+- Provider: Removed unused auth method (daviddavis@redhat.com)
+- Content Uploads: Added tests for non-API code (daviddavis@redhat.com)
+- Multipart JSON: Added some more comments to fix (daviddavis@redhat.com)
+- Content Uploads: Removing unused index action (daviddavis@redhat.com)
+- Content Uploads: Moved test file (daviddavis@redhat.com)
+- Merge pull request #2888 from waldenraines/delete-system (walden@redhat.com)
+- Merge pull request #2910 from daviddavis/temp/20130909192603
+  (daviddavis@redhat.com)
+- Package uploads: fixing some bugs (daviddavis@redhat.com)
+- Merge pull request #2911 from iNecas/tag-kafo-to-katello (inecas@redhat.com)
+- Merge remote-tracking branch 'upstream/master' into package-uploads
+  (daviddavis@redhat.com)
+- Package uploads: Removing old controller action (daviddavis@redhat.com)
+- Fixing runcible version in bundler (daviddavis@redhat.com)
+- Fix API tests for package uploads (mtapaswi@redhat.com)
+- Content Upload: Got puppet module uploads working in API/UI
+  (daviddavis@redhat.com)
+- Rubocop: Fixing config based on feedback (daviddavis@redhat.com)
+- Add foreman-compute to foreman-thirdparty comps (inecas@redhat.com)
+- Fix errata indexing (inecas@redhat.com)
+- Add foreman-installer and foreman-proxy deps into comps (inecas@redhat.com)
+- Script for taggint kafo deps into katello-thirdparty (inecas@redhat.com)
+- fixing style issue for rubocop (mmccune@redhat.com)
+- include the Kickstart as another type of RPM repo to sync
+  (mmccune@redhat.com)
+- converting system packages and errata to nutupane (jsherril@redhat.com)
+- Merge pull request #2895 from thomasmckay/1001609-org-delete
+  (thomasmckay@redhat.com)
+- Rubocop: Fixing and checking models/glue/pulp code (daviddavis@redhat.com)
+- 1001609-org-delete - destroy dependent notices and task_statuses
+  (thomasmckay@redhat.com)
+- Rubocop: Checking spacing around operators (daviddavis@redhat.com)
+- fixing schema version check to properly take into account engines
+  (jsherril@redhat.com)
+- migrating repo discover to org (jsherril@redhat.com)
+- Merge pull request #2899 from daviddavis/rubocop-parens
+  (daviddavis@redhat.com)
+- Rubocop: Fixing and checking authorization directory (daviddavis@redhat.com)
+- Rubocop: Fixing whitespace inside parentheses (daviddavis@redhat.com)
+- Rubocop: Enabling blank line detection (daviddavis@redhat.com)
+- Rubocop: Worked on Candlepin glue directory (daviddavis@redhat.com)
+- Merge pull request #2890 from daviddavis/temp/20130905093404
+  (daviddavis@redhat.com)
+- Fixing broken elasticsearch tests (daviddavis@redhat.com)
+- Adding a patch to fix json multipart bug (daviddavis@redhat.com)
+- Rubocop: checking elasticsearch glue model code (daviddavis@redhat.com)
+- Merge pull request #2896 from komidore64/ldap-no-login-dump
+  (komidore64@gmail.com)
+- Merge pull request #2886 from iNecas/node-installer-comps (inecas@redhat.com)
+- 994785 - Unable to log in with the new user created in ldap mode
+  (komidore64@gmail.com)
+- Package upload: made changes to get package upload working
+  (daviddavis@redhat.com)
+- Adding package upload API (mtapaswi@redhat.com)
+- Merge pull request #2870 from daviddavis/puppet-repo-selector
+  (daviddavis@redhat.com)
+- Rubocop: Fixing/adding glue provider (daviddavis@redhat.com)
+- Filters: Limiting rules to filter's content types (daviddavis@redhat.com)
+- Puppet: Checking composite definitions for one puppet repo
+  (daviddavis@redhat.com)
+- Bastion: fixing slight styling issues with delete dialog. (walden@redhat.com)
+- Merge pull request #2876 from waldenraines/delete-system (walden@redhat.com)
+- Puppet: Limiting definitions to one puppet repo (daviddavis@redhat.com)
+- comps for node-installer (inecas@redhat.com)
+- Bastion: adding ability to remove systems. (walden@redhat.com)
+- Merge pull request #2885 from daviddavis/temp/20130904123156
+  (daviddavis@redhat.com)
+- Merge pull request #2883 from komidore64/js-typeerror (komidore64@gmail.com)
+- Source code test: Fixing source code error (daviddavis@redhat.com)
+- Candlepin: Fixed missing code in update (daviddavis@redhat.com)
+- 994946 - Unable to run katello-gui and headpin-gui automation due to
+  TypeError and Reference Error (komidore64@gmail.com)
+- nodes API updates allowing nodes self-registration (inecas@redhat.com)
+- Fix apidoc generation with new version of apipie-doc (inecas@redhat.com)
+- Merge pull request #2869 from waldenraines/system-products
+  (walden@redhat.com)
+- Merge pull request #2875 from daviddavis/temp/20130903164356
+  (daviddavis@redhat.com)
+- Rubocop: Checking ext and candlepin folders (daviddavis@redhat.com)
+- Bastion: adding the system's installed products to details page.
+  (walden@redhat.com)
+
 * Tue Sep 03 2013 Partha Aji <paji@redhat.com> 1.4.6-1
 - Updated spec to deal with renaming of cp tomcat in f19 (paji@redhat.com)
 - Merge pull request #2867 from komidore64/auto-attach-all-systems-notification
