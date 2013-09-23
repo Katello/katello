@@ -133,6 +133,7 @@ class GluePulpChangeFeedTest < GluePulpRepoTestBase
   end
 
   def teardown
+    @@fedora_17_x86_64.destroy_repo
     VCR.eject_cassette
   end
 end
