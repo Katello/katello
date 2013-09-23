@@ -20,7 +20,7 @@ class ActivationKey < ActiveRecord::Base
   belongs_to :user
   belongs_to :content_view, :inverse_of => :activation_keys
 
-  has_many :key_pools
+  has_many :key_pools, :dependent => :destroy
   has_many :pools, :class_name => "::Pool", :through => :key_pools
 
   has_many :key_system_groups, :dependent => :destroy
