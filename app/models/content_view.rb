@@ -300,7 +300,6 @@ class ContentView < ActiveRecord::Base
         raise e
       end
     end
-    Glue::Event.trigger(Katello::Actions::ContentViewRefresh, self)
     version
   end
 
