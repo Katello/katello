@@ -307,5 +307,8 @@ class ContentViewDefinition < ContentViewDefinitionBase
 
       cloned.purge_empty_groups_errata
     end
+
+    PulpTaskStatus.wait_for_tasks([repo.clone_distribution(cloned)])
+    PulpTaskStatus.wait_for_tasks([repo.clone_file_metadata(cloned)])
   end
 end
