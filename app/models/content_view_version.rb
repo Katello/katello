@@ -92,6 +92,8 @@ class ContentViewVersion < ActiveRecord::Base
                               :organization => self.content_view.organization)
     end
 
+    Glue::Event.trigger(Katello::Actions::ContentViewRefresh, self.content_view)
+
   rescue => e
     Rails.logger.error(e)
     Rails.logger.error(e.backtrace.join("\n"))
