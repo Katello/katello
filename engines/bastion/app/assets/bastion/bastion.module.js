@@ -61,13 +61,17 @@ angular.module('Bastion').config(['$httpProvider', '$urlRouterProvider', functio
  * @ngdoc run
  * @name Bastion.run
  *
+ * @requires $rootScope
+ * @requires $state
+ * @requires $stateParams
+ * @requires gettextCatalog
+ * @requires currentLocale
+ *
  * @description
- *   Prime the i18n dictionary to avoid delay in translation replacement.
+ *   Set up some common state related functionality and set the current language.
  */
-angular.module('Bastion').run(['i18nDictionary', '$rootScope', '$state', '$stateParams',
-    function(i18nDictionary, $rootScope, $state, $stateParams) {
-
-        i18nDictionary.get();
+angular.module('Bastion').run(['$rootScope', '$state', '$stateParams', 'gettextCatalog', 'currentLocale',
+    function($rootScope, $state, $stateParams, gettextCatalog, currentLocale) {
 
         $rootScope.$state = $state;
         $rootScope.$stateParams = $stateParams;
@@ -78,6 +82,9 @@ angular.module('Bastion').run(['i18nDictionary', '$rootScope', '$state', '$state
         };
 
         $rootScope.stateIncludes = $state.includes;
+
+        // Set the current language
+        gettextCatalog.currentLanguage = currentLocale;
     }
 ]);
 

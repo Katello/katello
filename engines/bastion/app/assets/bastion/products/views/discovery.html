@@ -2,15 +2,16 @@
 
   <input type="url"
          class="input input-search input-xxlarge"
-         placeholder="{{ 'URL to discover' | i18n }}"
+         placeholder="{{ 'URL to discover' | translate }}"
          ng-model="discovery.url"
          ng-disabled="discovery.pending">
 
   <button ng-show="!discovery.pending"
          ng-disabled="!discovery.url"
+         translate
          type="submit"
          class="btn btn-primary">
-    {{ "Discover" | i18n }}
+    Discover
   </button>
 
   <button ng-disabled="discovery.working"
@@ -18,7 +19,7 @@
           ng-click="cancelDiscovery()"
           class="btn btn-primary">
     <i class="icon-spinner icon-spin" ng-show="discovery.pending"></i>
-    {{ "Cancel" | i18n }}
+    {{ 'Cancel' | translate }}
   </button>
 
 </form>
@@ -28,25 +29,27 @@
 
     <input type="text"
            class="input input-search"
-           placeholder="{{ 'Filter' | i18n }}"
+           placeholder="{{ 'Filter' | translate }}"
            ng-model="discoveryTable.filterTerm">
 
     <div ng-hide="system.readonly" class="fr nutupane-actions">
        <button class="btn btn-primary"
+               translate
                ng-disabled="discoveryTable.getSelected().length == 0"
                ng-click="setupSelected()">
-         {{ "Create Selected" | i18n }}
+         Create Selected
        </button>
     </div>
 
     <div class="fr select-action">
-      <span>{{ "%total Selected" | i18n: {total: discoveryTable.numSelected} }}</span>
+      <span translate>{{ discoveryTable.numSelected }} Selected</span>
       <span>|</span>
       <span>
         <a class="deselect-action"
+           translate
            ng-class="{ 'disabled-link' : discoveryTable.numSelected == 0 }"
            ng-click="discoveryTable.selectAll(false)">
-          {{ "Deselect All" | i18n }}
+          Deselect All
         </a>
       </span>
     </div>
@@ -56,7 +59,7 @@
   <table alch-table="discoveryTable" class="table table-full table-striped">
     <thead>
       <tr alch-table-head row-select>
-        <th alch-table-column>{{ "Discovered URLs" | i18n }}</th>
+        <th alch-table-column translate>Discovered URLs</th>
       </tr>
     </thead>
 

@@ -21,15 +21,15 @@
  * @requires SystemGroup
  * @requires Organization
  * @requires Task
- * @requires i18nFilter
+ * @requires gettext
  *
  * @description
  *   A controller for providing bulk action functionality to the systems page.
  */
 angular.module('Bastion.systems').controller('SystemsBulkActionController',
-    ['$scope', '$q', 'BulkAction', 'SystemGroup', 'i18nFilter',
+    ['$scope', '$q', 'BulkAction', 'SystemGroup', 'gettext',
      'Organization', 'Task',
-    function($scope, $q, BulkAction, SystemGroup, i18nFilter,
+    function($scope, $q, BulkAction, SystemGroup, gettext,
         Organization, Task) {
 
         $scope.actionParams = {
@@ -57,7 +57,7 @@ angular.module('Bastion.systems').controller('SystemsBulkActionController',
         $scope.content = {
             confirm: false,
             workingMode: false,
-            placeholder: i18nFilter('Enter Package Name(s)...'),
+            placeholder: gettext('Enter Package Name(s)...'),
             contentType: 'package'
         };
 
@@ -149,11 +149,11 @@ angular.module('Bastion.systems').controller('SystemsBulkActionController',
 
         $scope.updatePlaceholder = function(contentType) {
             if (contentType === "package") {
-                $scope.content.placeholder = i18nFilter('Enter Package Name(s)...');
+                $scope.content.placeholder = gettext('Enter Package Name(s)...');
             } else if (contentType === "package_group") {
-                $scope.content.placeholder = i18nFilter('Enter Package Group Name(s)...');
+                $scope.content.placeholder = gettext('Enter Package Group Name(s)...');
             } else {
-                $scope.content.placeholder = i18nFilter('Enter Errata ID(s)...');
+                $scope.content.placeholder = gettext('Enter Errata ID(s)...');
             }
         };
 

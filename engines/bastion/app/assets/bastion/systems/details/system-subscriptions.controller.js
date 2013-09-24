@@ -16,7 +16,7 @@
  * @name  Bastion.subscriptions.controller:SystemSubscriptionsController
  *
  * @requires $scope
- * @requires i18nFilter
+ * @requires gettext
  * @requires System
  * @requires Subscriptions
  * @requires Nutupane
@@ -25,8 +25,8 @@
  *   Provides the functionality for the system details action pane.
  */
 angular.module('Bastion.systems').controller('SystemSubscriptionsController',
-    ['$scope', 'i18nFilter', 'SystemSubscription', 'System', 'Nutupane',
-    function($scope, i18nFilter, SystemSubscription, System, Nutupane) {
+    ['$scope', 'gettext', 'SystemSubscription', 'System', 'Nutupane',
+    function($scope, gettext, SystemSubscription, System, Nutupane) {
         var currentSubscriptionsNutupane,
             availableSubscriptionsNutupane,
             successHandler,
@@ -125,7 +125,7 @@ angular.module('Bastion.systems').controller('SystemSubscriptionsController',
 
         $scope.availableSubscriptionsTable.formatAvailableDisplay = function(subscription) {
             var available = subscription.available;
-            available = available < 0 ? i18nFilter('Unlimited') : available;
+            available = available < 0 ? gettext('Unlimited') : available;
             subscription.availableDisplay = available;
             return subscription;
         };

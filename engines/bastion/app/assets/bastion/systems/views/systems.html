@@ -8,37 +8,38 @@
   </div>
 
   <div class="nutupane-titlebar">
-    <h1 class="nutupane-title">{{ "Systems" }}</h1>
+    <h1 class="nutupane-title" translate>Systems</h1>
   </div>
 
   <div class="nutupane-actionbar">
     <div class="form">
       <input type="text"
              class="input input-search"
-             placeholder="Search..."
+             placeholder="'Search...' | translate"
              ng-model="table.searchTerm"
              on-enter="table.search(table.searchTerm)">
-      <span class="result-count">Showing {{ table.rows.length }} of {{ table.resource.subtotal }} ({{ table.resource.total }} Total) Systems</span>
+      <span class="result-count" translate>Showing {{ table.rows.length }} of {{ table.resource.subtotal }} ({{ table.resource.total }} Total) Systems</span>
     </div>
 
     <div class="nutupane-actions fr">
       <button class="btn btn-primary" ng-click="transitionToRegisterSystem()">
         <i class="icon-signin leading-icon"></i>
-        {{ "Register System" | i18n }}
+        {{ "Register System" | translate }}
       </button>
     </div>
 
     <div class="nutupane-actions fr">
       <button class="btn btn-primary" ng-click="transitionTo('systems.bulk-actions.list')">
         <i class="icon-group leading-icon"></i>
-        {{ "Bulk Actions" | i18n }}
+        {{ "Bulk Actions" | translate }}
       </button>
     </div>
 
     <div class="fr select-action">
-      <span>{{ table.numSelected }} Selected</span>
+      <span translate>{{ table.numSelected }} Selected</span>
       <span>|</span>
       <a class="deselect-action"
+         translate
          ng-class="{ 'disabled-link' : table.numSelected == 0 }"
          ng-click="table.selectAll(false)">
         Deselect All

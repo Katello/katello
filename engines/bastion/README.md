@@ -107,19 +107,29 @@ Linting is controlled by the JSHint library. The configuration being used by the
 
 ## i18n ##
 
-Internationalization is handled through the use of an angular filter and a service side API call that retrieves a hash containing the translations based on the user's language preference. The dictionary hash takes advantage of the Ruby gettext translation service. To declare a string for i18n within an angular template:
+Internationalization is handled through the use of an angular-gettext (https://github.com/rubenv/angular-gettext).  Strings are marked for translation, extracted into a .pot file, translated, and then compiled into an angular object from the resulting .po files.  To mark a string for translation within an angular template:
 
-    <h1>{{ "My Header" | i18n }}</h1>
+    <h1 translate>My Header</h1>
 
-To denote a string with replacement:
+Full interpolation support is available so the following will work:
 
-    <h1>{{ "My %type Header" | i18n:{'type': 'New'} }}</h1>
+    <h1 translate>My {{type}} Header</h1>
 
-In order for a string to be included in the translation dictionary, the string must be manually entered into the internalization dictionary using the english translation as the key. This dictionary can be found at `app/views/i18n/_dictionary.haml`. To add the example entries above, we would append to the list:
+Plurals are also supported:
 
-    "My Header": "#{_("My Header"_)}",
-    "My %type Header": "#{_("My %type Header")}"
+    <span translate translate-n="count" translate-plural="There are {{count}} messages">There is {{count}} message</a>
 
+There is also a filter available.  Use this only when you cannot use the above version.  Some times you may need to use the filter version include when translating HTML attributes and when other directives conflict with the translate directive.  Syntax follows:
+
+    <input type="text" placeholder="{{ 'Username' | translate }}" />
+
+To extract strings into a .pot file for translation run:
+
+    grunt i18n:extract
+
+To create an angular object from translated .po files run:
+
+    grunt i18n:compile
 
 ## Basics of Adding a New Entity ##
 

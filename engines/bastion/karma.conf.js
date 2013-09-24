@@ -18,6 +18,7 @@ files = [
     '../../../vendor/assets/dev-components/underscore/underscore.js',
     '../../../../../vendor/assets/javascripts/angular-ui-states.js',
     '../../../vendor/assets/components/ng-upload.js',
+    '../../../../../vendor/assets/javascripts/angular-gettext.js',
 
     '../../../../../app/assets/javascripts/common/katello.global.js',
     '../../../../../app/assets/javascripts/common/katello.module.js',
