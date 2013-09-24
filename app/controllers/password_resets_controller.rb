@@ -36,7 +36,7 @@ class PasswordResetsController < ApplicationController
     # note: we provide a success notice regardless of whether or not there are any users associated with the email
     # address provided... this is done on purpose for security
     flash[:success] = _("Email sent to '%s' with password reset instructions.") % params[:email]
-    render :partial => "password_refresh"
+    render :partial => "password_resets/password_refresh.js"
   end
 
   def edit
@@ -54,16 +54,22 @@ class PasswordResetsController < ApplicationController
       redirect_to new_password_reset_path
     end
 
+    unless params[:user][:password] == params[:user][:password_confirmation]
+      flash[:error] = _("Password and Password Confirmation do not match.")
+      render :partial => "password_resets/password_refresh.js"
+      return
+    end
+
     # update the password and reset the 'password reset token' so that it cannot be reused
     params[:user][:password_reset_token]   = nil
     params[:user][:password_reset_sent_at] = nil
     params[:user].delete('password_confirmation')
 
     if @user.update_attributes(params[:user])
-      notify.success _("Password has been reset for user '%s'.") % @user.username
-      render :nothing => true
+      flash[:success] = _("Password has been reset for user '%s'.") % @user.username
+      render :partial => "password_resets/password_refresh.js"
     else
-      notify.invalid_record @user
+      flash[:error] = _("Failed to update password for user '%s'.") % @user.username
       render :nothing => true
     end
   end
