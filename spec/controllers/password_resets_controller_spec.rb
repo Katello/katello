@@ -71,17 +71,11 @@ describe PasswordResetsController do
       @testuser.stub!(:update_attributes).and_return true
     end
 
-    it "should generate a notice" do
-      controller.should notify.success
+    it "should be successful" do
       put :update, @params
       response.should be_success
     end
 
-    it "should generate an error notice, if exception raised" do
-      @testuser.stub!(:update_attributes).and_return(false)
-      controller.should notify.invalid_record
-      put :update, @params
-    end
     it_should_behave_like "bad request"  do
       let(:req) do
         bad_req = @params
