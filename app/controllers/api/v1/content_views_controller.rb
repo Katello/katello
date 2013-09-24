@@ -22,7 +22,7 @@ class Api::V1::ContentViewsController < Api::V1::ApiController
     show_test    = lambda { @view.readable? }
     promote_test = lambda { @view.promotable? && @environment.changesets_promotable? }
     refresh_test = lambda { @view.content_view_definition.publishable? }
-    delete_test  = lambda { @view.content_view_definition.publishable? }
+    delete_test  = lambda { @view.deletable? }
 
     {
         :index   => index_test,

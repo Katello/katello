@@ -33,6 +33,9 @@ class Api::V1::ContentViewsControllerTest < MiniTest::Rails::ActionController::T
     @read_permission = UserPermission.new(:read, :content_views)
     @env_promote_permission = UserPermission.new(:promote_changesets, :environments, @environment.id)
     @promote_permission = UserPermission.new(:promote, :content_views) + @env_promote_permission
+    @delete_permission = UserPermission.new(:delete, :content_view_definitions)
+    @publish_permission = UserPermission.new(:publish, :content_view_definitions)
+
   end
 
   describe "permissions" do
@@ -76,7 +79,21 @@ class Api::V1::ContentViewsControllerTest < MiniTest::Rails::ActionController::T
     test "refresh" do
       action = :refresh
       request = lambda { post action, :id => @content_view.id }
-      assert_authorized(permission: lambda {|user| user.can(:publish, :content_view_definitions) },
+      assert_authorized(permission: [@publish_permission],
+                        action: action,
+                        request: request
+                       )
+      refute_authorized(permission: [@read_permission, @promote_permission],
+                        action: action,
+                        request: request
+                       )
+    end
+
+
+    test "delete" do
+      action = :destroy
+      request = lambda { delete action, :id => @content_view.id, :organization_id => @content_view.organization.id}
+      assert_authorized(permission: [@publish_permission, @delete_permission],
                         action: action,
                         request: request
                        )
@@ -125,8 +142,7 @@ class Api::V1::ContentViewsControllerTest < MiniTest::Rails::ActionController::T
 
   test "should not delete promoted view" do
     login_user(User.find(users(:admin).id))
-    definition = Class.new { define_method(:publishable?) { true } }.new
-    ContentView.any_instance.stubs(:content_view_definition).returns(definition)
+    ContentView.any_instance.stubs(:deletable?).returns(true)
     delete :destroy, organization_id: @organization.name, id: @content_view.id
     assert response.body =~ /\AError while deleting.*promoted.*\z/
     assert ContentView.exists?(@content_view.id)

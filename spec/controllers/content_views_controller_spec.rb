@@ -80,4 +80,16 @@ describe ContentViewsController do
     it_should_behave_like "protected action"
   end
 
+  describe "DELETE destroy with delete" do
+    let(:action) { :destroy }
+    let(:req) { delete :destroy, :content_view_definition_id => @definition.id, :id => @view.id }
+    let(:authorized_user) do
+      user_with_permissions { |u| u.can(:delete, :content_view_definitions, @definition.id, @organization) }
+    end
+    let(:unauthorized_user) do
+      user_without_permissions
+    end
+    it_should_behave_like "protected action"
+  end
+
 end
