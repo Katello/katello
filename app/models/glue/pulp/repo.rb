@@ -513,16 +513,24 @@ module Glue::Pulp::Repo
         # (e.g. changelog, filelist...etc).
         events << Katello.pulp_server.extensions.rpm.copy(self.pulp_id, to_repo.pulp_id,
                                                  { :fields => Package::PULP_SELECT_FIELDS })
-        events << Katello.pulp_server.extensions.distribution.copy(self.pulp_id, to_repo.pulp_id)
+        events << clone_distribution(to_repo)
 
         # Since the rpms will be copied above, during the copy of errata and package groups,
         # include the copy_children flag to request that pulp skip copying them again.
         events << Katello.pulp_server.extensions.errata.copy(self.pulp_id, to_repo.pulp_id, { :copy_children => false })
         events << Katello.pulp_server.extensions.package_group.copy(self.pulp_id, to_repo.pulp_id, { :copy_children => false })
-        events << Katello.pulp_server.extensions.yum_repo_metadata_file.copy(self.pulp_id, to_repo.pulp_id)
+        events << clone_file_metadata(to_repo)
       end
 
       events
+    end
+
+    def clone_file_metadata(to_repo)
+      Katello.pulp_server.extensions.yum_repo_metadata_file.copy(self.pulp_id, to_repo.pulp_id)
+    end
+
+    def clone_distribution(to_repo)
+      Katello.pulp_server.extensions.distribution.copy(self.pulp_id, to_repo.pulp_id)
     end
 
     def unassociate_by_filter(content_type, filter_clauses)

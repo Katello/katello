@@ -234,6 +234,8 @@ class ContentViewDefinitionTest < MiniTest::Rails::ActiveSupport::TestCase
     repo.expects(:clone_contents_by_filter).once.with(cloned, FilterRule::PACKAGE, dumb_copy, {:recursive => true}).returns(100)
     repo.expects(:clone_contents_by_filter).once.with(cloned, FilterRule::ERRATA, nil).returns(200)
     repo.expects(:clone_contents_by_filter).once.with(cloned, FilterRule::PACKAGE_GROUP, nil).returns(300)
+    repo.expects(:clone_distribution).once.with(cloned)
+    repo.expects(:clone_file_metadata).once.with(cloned)
 
     cloned.expects(:unassociate_by_filter).once.with(FilterRule::PACKAGE, dumb_remove).returns("100")
     cloned.expects(:purge_empty_groups_errata).once.returns(500)
