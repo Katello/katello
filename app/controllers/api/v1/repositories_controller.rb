@@ -24,9 +24,17 @@ class Api::V1::RepositoriesController < Api::V1::ApiController
   skip_before_filter :require_user, :only => [:sync_complete]
 
   def rules
-    edit_product_test = lambda { @product.editable? }
+    edit_product_test = lambda do
+      @product.custom? ? @product.editable? : @organization.redhat_manageable?
+    end
     read_test         = lambda { @repository.product.readable? }
-    edit_test         = lambda { @repository.product.editable? }
+    edit_test         = lambda do
+      if @repository.custom?
+        @repository.product.editable?
+      else
+        @repository.organization.redhat_manageable?
+      end
+    end
 
     {
         :create                   => edit_product_test,
@@ -92,12 +100,12 @@ class Api::V1::RepositoriesController < Api::V1::ApiController
     # TODO: these should really be done as validations, but the orchestration engine currently converts them into OrchestrationExceptions
     #
     raise HttpErrors::BadRequest, _("Repositories can be deleted only in the '%s' environment.") % "Library" if !@repository.environment.library?
-    if @repository.promoted?
-      raise HttpErrors::BadRequest, _("Repository cannot be deleted since it has already been promoted. Using a changeset, please delete the repository from existing environments before deleting it.")
-    end
 
-    @repository.destroy
-    respond :message => _("Deleted repository '%s'") % params[:id]
+    if @repository.destroy
+      respond :message => _("Deleted repository '%s'") % params[:id]
+    else
+      raise HttpErrors::BadRequest, @repository.errors.full_messages.join(" ")
+    end
   end
 
   api :POST, "/repositories/:id/enable", "Enable or disable a repository"
