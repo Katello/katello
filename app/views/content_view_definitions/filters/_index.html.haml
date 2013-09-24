@@ -27,13 +27,10 @@
             - view_definition.filters.each do |filter|
               %tr
                 %td
-                  - if editable
-                    .panel_link.grid_11.one-line-ellipsis
+                  .panel_link.grid_11.one-line-ellipsis
+                    - if editable
                       = check_box_tag "filters[#{filter.id}]", filter.name, false, {'data-id' => filter.id}
-                      = link_to(filter.name, edit_content_view_definition_filter_path(view_definition.id, filter.id))
-                  - else
-                    %span.grid_11.one-line-ellipsis
-                      = filter.name
+                    = link_to(filter.name, edit_content_view_definition_filter_path(view_definition.id, filter.id))
 
         - if editable
           %input.button.fr.disabled{:type=>"button", :id=>"remove_button", :value=>_("Remove")}

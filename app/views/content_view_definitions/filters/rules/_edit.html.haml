@@ -20,8 +20,9 @@
 
         #inclusion{'data-initial_value' => included_text(rule)}
           = _("Specifying %{rule_type} to %{include}") % {:include => included_text(rule), :rule_type => rule_type}
-          %a.subpanel_element{"data-url" => edit_inclusion_content_view_definition_filter_rule_path(view_definition, filter, rule)}
-            = _("(Edit)")
+          - if editable
+            %a.subpanel_element{"data-url" => edit_inclusion_content_view_definition_filter_rule_path(view_definition, filter, rule)}
+              = _("(Edit)")
 
         - if rule.content_type == FilterRule::ERRATA
           %br
