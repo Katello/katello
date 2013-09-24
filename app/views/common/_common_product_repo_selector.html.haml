@@ -25,7 +25,8 @@
               %select#product_select{:style => 'width:400px;', 'data-placeholder' => _("Choose a product.."),
                 'data-url' => save_url}
               .centered
-                %a#add_product #{_('+ Add')}
+                -if editable_products && editable_products.count > 0
+                  %a#add_product #{_('+ Add')}
 
     %tr
       %td.no_padding
