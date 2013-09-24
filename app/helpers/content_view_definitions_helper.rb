@@ -93,6 +93,15 @@ module ContentViewDefinitionsHelper
     return views_hash.key?(view_id)
   end
 
+  # Does the definition provided have one or more of it's views
+  # defined as a component view in the views hash provided?
+  def has_a_component_view?(definition, views_hash = nil)
+    definition.content_views.each do |view|
+      return true if view_checked?(view.id, views_hash)
+    end
+    return false
+  end
+
   def view_repos(definitions)
     view_repos = {}
     definitions.each do |definition|

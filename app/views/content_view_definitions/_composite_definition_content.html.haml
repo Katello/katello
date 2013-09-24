@@ -11,11 +11,13 @@
   #composite_definition_content
     = kt_form_for(view_definition, :html => {:id => "component_views_form"}) do |form|
 
-      = render :partial => "view_definitions", :locals => {:form => form,
+      = render :partial => "view_definitions", :locals => {:editable => editable,
+                                                           :form => form,
                                                            :view_definitions => view_definitions,
                                                            :views => views}
 
-      %input.fr.button{:id=>'update_component_views', :type=>'button', :value=>_("Save"),
-                       'data-url'=>update_component_views_content_view_definition_path(view_definition.id)}
+      -if editable
+        %input.fr.button{:id=>'update_component_views', :type=>'button', :value=>_("Save"),
+                         'data-url'=>update_component_views_content_view_definition_path(view_definition.id)}
 
 = render :template => "layouts/tupane_layout"

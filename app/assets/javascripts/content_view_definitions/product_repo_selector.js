@@ -15,8 +15,19 @@ KT.product_input = (function(){
 
     var register = function() {
 
-        var select = $('#product_select');
-        if (select.length === 0){
+        var select = $('#product_select'),
+            readonly = $('#readonly_products');
+
+        if (readonly.length > 0) {
+            readonly.treeTable({
+                expandable: true,
+                initialState: "expanded",
+                clickableNodeNames: true,
+                onNodeShow: function(){$.sparkline_display_visible();}
+            });
+            return;
+
+        } else if (select.length === 0) {
             return;
         }
 

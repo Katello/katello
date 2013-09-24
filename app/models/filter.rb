@@ -63,6 +63,10 @@ class Filter < ActiveRecord::Base
     filter
   end
 
+  def resulting_products
+    (self.products + self.repositories.collect{|r| r.product}).uniq
+  end
+
   def repos(env)
     repos = self.products.map { |prod| prod.repos(env) }.flatten.reject(&:puppet?)
     repos + repositories
