@@ -268,7 +268,11 @@ class Repository < ActiveRecord::Base
       if self.deletable?
         return true
       else
-        errors.add(_("Repository cannot be deleted since it has already been promoted. Using a changeset, please delete the repository from existing environments before deleting it."))
+        if self.custom?
+          errors.add(:base, _("Repository cannot be deleted since it has already been promoted. Using a changeset, please delete the repository from existing environments before deleting it."))
+        else
+          errors.add(:base, _("Red Hat repositories cannot be destroyed. Try disabling them instead."))
+        end
         return false
       end
     end
