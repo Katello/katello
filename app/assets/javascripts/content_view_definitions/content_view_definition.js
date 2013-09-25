@@ -28,11 +28,6 @@ $(document).ready(function() {
 
         btn.parent().find(".options").toggle();
     });
-
-    KT.panel.set_expand_cb(function(){
-        KT.product_input.register();
-        KT.repo_input.register();
-    });
 });
 
 KT.panel.list.registerPage('content_view_definitions', { create : 'new_content_view_definition' });
@@ -40,6 +35,9 @@ KT.panel.list.registerPage('content_view_definitions', { create : 'new_content_v
 KT.panel.set_expand_cb(function() {
     $('a.remove.disabled').tipsy({ fade:true, gravity:'s', delayIn:500, html:true, className:'content_definition-tipsy',
         title:function() { return $('.hidden-text.hidden').html();} });
+
+    KT.product_input.register();
+    KT.repo_input.register();
 
     KT.object.label.initialize();
     KT.content_view_definition.initialize();
@@ -503,6 +501,7 @@ KT.content_view_definition_filters = (function(){
         }
 
         filter_tabs.tabs().tabs('select', filter_tabs.data('active_tab')).show();
+
         $('a[href="##rules"]').click(function(){
             initialize_rules();
         });
