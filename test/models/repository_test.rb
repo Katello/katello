@@ -165,4 +165,22 @@ class RepositoryInstanceTest < RepositoryTestBase
     relative_path = Repository.clone_repo_path(@fedora_17_x86_64, dev, cv)
     assert_equal "/#{cve.label}/library/fedora_17_label", relative_path
   end
+
+  def test_blank_feed_url
+    new_custom_repo = @fedora_17_x86_64.clone
+    new_custom_repo.name = "new_custom_repo"
+    new_custom_repo.label = "new_custom_repo"
+    new_custom_repo.pulp_id = "new_custom_repo"
+    new_custom_repo.feed = ""
+    assert new_custom_repo.save
+    assert new_custom_repo.persisted?
+    assert_equal "", new_custom_repo.reload.feed
+    refute new_custom_repo.syncable?
+
+    rhel = Repository.find(repositories(:rhel_6_x86_64))
+    rhel.feed = ""
+    refute rhel.valid?
+    refute rhel.save
+    refute_empty rhel.errors
+  end
 end

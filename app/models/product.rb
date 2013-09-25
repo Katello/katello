@@ -207,6 +207,10 @@ class Product < ActiveRecord::Base
       where("library = ? OR id IN (?)", true, repositories.map(&:environment_id))
   end
 
+  def syncable_content?
+    repositories.any?(&:syncable?)
+  end
+
   protected
 
   def self.with_repos(env, enabled_only)

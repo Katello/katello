@@ -95,7 +95,7 @@ describe Api::V1::RepositoriesController, :katello => true do
 
     describe "for update" do
       let(:action) { :update }
-      let(:req) { put :update, :id => 1, :repository => { :gpg_key_name => "test" } }
+      let(:req) { put :update, :id => 1, :repository => { :gpg_key_name => "test", :url => "" } }
       let(:authorized_user) do
         user_with_permissions { |u| u.can(:update, :providers, @provider.id, @organization) }
       end
@@ -284,10 +284,16 @@ describe Api::V1::RepositoriesController, :katello => true do
         end
 
         context "the url is empty" do
-          let(:req) do
-            post 'create', :name => 'repo_1', :label => 'repo_1', :url => '', :product_id => 'product_1', :organization_id => @organization.label, :gpg_key_name => ""
+          it "should succesfully call Repository.create!" do
+            disable_repo_orchestration
+            repo = {}
+            repo.should_receive(:generate_metadata).and_return(true)
+            Repository.should_receive(:create!).and_return(repo)
+            post 'create', :name => 'repo_1', :label => 'repo_1', :url => '',
+              :product_id => 'product_1', :gpg_key_name => "",
+              :organization_id => @organization.label
+            response.should be_success
           end
-          it_should_behave_like "bad request"
         end
       end
     end

@@ -58,7 +58,9 @@ class Repository < ActiveRecord::Base
   validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
   validates_with Validators::RepoDisablementValidator, :attributes => :enabled, :on => :update
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name
-
+  validates_with Validators::KatelloUrlFormatValidator,
+    :attributes => :feed, :blank_allowed => proc { |o| o.custom? }, :field_name => :url,
+    :if => proc { |o| o.environment.library? && o.in_default_view? }
   validates :content_type, :inclusion => {
       :in => TYPES,
       :allow_blank => false,
@@ -259,6 +261,10 @@ class Repository < ActiveRecord::Base
     repo = self.library_instance || self
     search = Repository.where("library_instance_id=%s or repositories.id=%s"  % [repo.id, repo.id])
     search.in_content_views([view])
+  end
+
+  def syncable?
+    feed.present?
   end
 
   protected
