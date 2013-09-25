@@ -162,7 +162,9 @@ module Glue::Pulp::Repo
         dist.auto_publish = true
         [dist]
       when Repository::PUPPET_TYPE
-        [Runcible::Models::PuppetDistributor.new(self.relative_path, (self.unprotected || false), true,
+        repo_path =  Katello.config.puppet_repo_root + "/" + self.pulp_id
+        repo_path = repo_path.gsub(/-/,'_')
+        [Runcible::Models::PuppetInstallDistributor.new(repo_path,
                                                  {:id => self.pulp_id, :auto_publish => true})]
       else
         raise _("Unexpected repo type %s") % self.content_type
@@ -673,14 +675,14 @@ module Glue::Pulp::Repo
                        when Repository::YUM_TYPE
                          Runcible::Models::YumCloneDistributor.type_id
                        when Repository::PUPPET_TYPE
-                         Runcible::Models::PuppetDistributor.type_id
+                         Runcible::Models::PuppetInstallDistributor.type_id
                        end
                      else
                        case self.content_type
                        when Repository::YUM_TYPE
                          Runcible::Models::YumDistributor.type_id
                        when Repository::PUPPET_TYPE
-                         Runcible::Models::PuppetDistributor.type_id
+                         Runcible::Models::PuppetInstallDistributor.type_id
                        end
                      end
 
