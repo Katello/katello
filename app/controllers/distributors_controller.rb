@@ -197,10 +197,10 @@ class DistributorsController < ApplicationController
       end
       filter :terms, filters
     end
-    render :json => distributors.map do |s|
+    render :json => (distributors.map do |s|
       label = _("%{name} (Registered: %{time})") % {:name => s.name, :time => convert_time(format_time(Time.parse(s.created_at)))}
       {:label => label, :value => s.name, :id => s.id}
-    end
+    end)
   rescue Tire::Search::SearchRequestFailed
     render :json => Util::Support.array_with_total
   end

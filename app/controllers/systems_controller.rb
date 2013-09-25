@@ -173,7 +173,6 @@ class SystemsController < ApplicationController
   end
 
   def auto_complete
-    query = Util::Search.filter_input query
     query = "name_autocomplete:#{params[:term]}"
     filters = readable_filters
     systems = System.search do
@@ -182,10 +181,11 @@ class SystemsController < ApplicationController
       end
       filter :terms, filters
     end
-    render :json => systems.map do |s|
+
+    render :json => (systems.map do |s|
       label = _("%{name} (Registered: %{time})") % {:name => s.name, :time => convert_time(format_time(Time.parse(s.created_at)))}
       {:label => label, :value => s.name, :id => s.id}
-    end
+    end)
   rescue Tire::Search::SearchRequestFailed
     render :json => Util::Support.array_with_total
   end
