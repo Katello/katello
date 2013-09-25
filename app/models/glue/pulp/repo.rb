@@ -163,7 +163,6 @@ module Glue::Pulp::Repo
         [dist]
       when Repository::PUPPET_TYPE
         repo_path =  Katello.config.puppet_repo_root + "/" + self.pulp_id
-        repo_path = repo_path.gsub(/-/,'_')
         [Runcible::Models::PuppetInstallDistributor.new(repo_path,
                                                  {:id => self.pulp_id, :auto_publish => true})]
       else
