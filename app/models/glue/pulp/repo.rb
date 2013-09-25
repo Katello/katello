@@ -20,11 +20,6 @@ module Glue::Pulp::Repo
 
     base.class_eval do
 
-      validates_with Validators::KatelloUrlFormatValidator,
-                     :attributes => :feed,
-                     :field_name => :url, :on => :create,
-                     :if => proc { |o| o.environment.library? && o.in_default_view?  }
-
       before_save :save_repo_orchestration
       before_destroy :destroy_repo_orchestration
 

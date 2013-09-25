@@ -216,6 +216,10 @@ class Organization < ActiveRecord::Base
     return job["id"]
   end
 
+  def syncable_content?
+    products.any?(&:syncable_content?)
+  end
+
   private
 
   def start_discovery_task(url, notify = false)
