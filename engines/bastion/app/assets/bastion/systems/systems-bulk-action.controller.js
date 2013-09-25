@@ -77,7 +77,7 @@ angular.module('Bastion.systems').controller('SystemsBulkActionController',
             success = function(data) {
                 deferred.resolve(data);
                 angular.forEach($scope.table.getSelected(), function(row) {
-                    $scope.removeRow(row);
+                    $scope.removeRow(row.id);
                 });
 
                 $scope.removeSystems.workingMode = false;
