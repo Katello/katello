@@ -4,6 +4,7 @@ task :reindex=>["environment", "clear_search_indices"]  do
   Dir.glob(Rails.root.to_s + '/app/models/*.rb').each { |file| require file }
 
   Util::Search.active_record_search_classes.each do |model|
+    print "Re-indexing #{model.name}\n"
     model.create_elasticsearch_index
     sub_classes = model.subclasses
 
@@ -14,7 +15,7 @@ task :reindex=>["environment", "clear_search_indices"]  do
       objects = model.where(:type => ([nil, model.name]))
     end
 
-    model.index.import(objects) if model.count > 0
+    model.index.import(objects) if objects.count > 0
   end
 
   print "Re-indexing Repositories\n"

@@ -108,7 +108,7 @@ class LegacyPromotionContentViewChanges < ActiveRecord::Migration
         pulp_id = repo_data["pulp_id"]
         relative_path = repo_data["relative_path"]
         unprotected = repo_data["unprotected"] == "t"
-        pulp_repo = Runcible::Extensions::Repository.retrieve_with_details(pulp_id)
+        pulp_repo = Katello.pulp_server.extensions.repository.retrieve_with_details(pulp_id)
         distro_items = pulp_repo[:distributors].select do |dis|
           dis["distributor_type_id"] == "yum_distributor"
         end
@@ -118,11 +118,11 @@ class LegacyPromotionContentViewChanges < ActiveRecord::Migration
         end
 
         distro_ids.each do |distro_id|
-          Runcible::Extensions::Repository.delete_distributor(pulp_id, distro_id)
+          Katello.pulp_server.extensions.repository.delete_distributor(pulp_id, distro_id)
 
-          yum_distro =  Runcible::Extensions::YumDistributor.new(relative_path, (unprotected || false), true,
+          yum_distro =  Runcible::Models::YumDistributor.new(relative_path, (unprotected || false), true,
                                                                  {:protected => true})
-          Runcible::Extensions::Repository.associate_distributor(pulp_id,
+          Katello.pulp_server.extensions.repository.associate_distributor(pulp_id,
                                                                  "yum_distributor", yum_distro.config,
                                                                  "auto_publish" => true,
                                                                  "distributor_id" => distro_id)
