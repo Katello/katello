@@ -10,7 +10,7 @@
     });
 
     KT.repo_status = $.parseJSON('#{escape_javascript(@repo_status.to_json)}');
-    KT.permissions = { "syncable" : #{syncable?} };
+    KT.permissions = { "syncable" : #{any_syncable?} };
 
 .grid_4
   %h2= _("Sync Status")
