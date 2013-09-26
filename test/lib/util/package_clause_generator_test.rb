@@ -133,12 +133,6 @@ class Util::PackageClauseGeneratorTest < MiniTest::Rails::ActiveSupport::TestCas
     assert_errata_rules(units, expected)
   end
 
-  def test_errata_severity
-    units = {:severity => [:low, :critical]}
-    expected = [{"severity"=>{"$in"=>[:low, :critical]}}]
-    assert_errata_rules(units, expected)
-  end
-
   def test_errata_both
     from = DateTime.now
     to = DateTime.now
