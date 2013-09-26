@@ -82,6 +82,10 @@ class GluePulpRepoTest < GluePulpRepoTestBase
     @fedora_17_x86_64.relative_path = '/test_path/'
   end
 
+  def test_delete_orphaned_content
+    assert Repository.delete_orphaned_content.is_a?(Hash)
+  end
+
   def test_relative_path
     assert_equal '/test_path/', @fedora_17_x86_64.relative_path
   end
