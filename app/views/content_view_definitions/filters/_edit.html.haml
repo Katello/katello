@@ -35,6 +35,7 @@
                              :editable_products => nil,
                              :content_types => Repository::TYPES - [Repository::PUPPET_TYPE],
                              :save_url => save_url,
+                             :always_show_add => true,
                              :title => "Yum Products and Repositories"}
 
         = render "common/repo_selector", :repositories => [view_definition.puppet_repository].compact,
