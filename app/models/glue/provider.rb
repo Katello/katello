@@ -330,7 +330,7 @@ module Glue::Provider
           Notify.success message % values,
                          :request_type => 'providers__update_redhat_provider',
                          :organization => self.organization,
-                         :details      => output.read
+                         :details      => output.read.dup
         end
       rescue => error
         display_manifest_message(manifest_refresh ? 'refresh' : 'import', error, options)
