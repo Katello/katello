@@ -160,4 +160,13 @@ class ChangesetTest < MiniTest::Rails::ActiveSupport::TestCase
     end
   end
 
+  def test_destroy
+    content_view = ContentView.find(content_views(:library_view))
+
+    changeset = FactoryGirl.create(:promotion_changeset,
+                                   :environment => @dev)
+    changeset.add_content_view!(content_view)
+
+    assert changeset.destroy
+  end
 end
