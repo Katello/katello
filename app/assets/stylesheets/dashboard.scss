@@ -549,7 +549,10 @@ $col_width: (($static_width) * 0.5);
   // about page css
 
   .dash {
-
+    height: auto;
+    .widget {
+      height: auto;
+    }
   }
 
   .column {
@@ -564,6 +567,7 @@ $col_width: (($static_width) * 0.5);
   .about-info {
     border: 1px solid #aaa;
     border-collapse: collapse;
+    margin-bottom: 2em;
 
     th, td {
       border: 1px solid #aaa;
@@ -581,9 +585,11 @@ $col_width: (($static_width) * 0.5);
 
   .support {
     height: 30px;
+    padding-bottom: 1.5em;
   }
-  .packages {
-    height: 320px;
+  .dash.packages .widget {
+    height: 340px;
+    padding-bottom: 1em;
   }
 }
 

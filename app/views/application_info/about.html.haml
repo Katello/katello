@@ -9,7 +9,7 @@
       .dash
         .dashhead
           %h4= _("System Status")
-        .widget.scroll-pane
+        .widget
           %table.about-info
             %tr.header
               %th
@@ -25,7 +25,7 @@
     .dash
       .dashhead
         %h4= _("System Information")
-      .widget.scroll-pane
+      .widget
         %table.about-info
           %tr.header
             %th= _("Parameter")
@@ -50,7 +50,7 @@
 
 
     - if can_read_system_info?
-      .dash
+      .dash.packages
         .dashhead
           %h4= _("Installed Packages")
         .widget.scroll-pane
