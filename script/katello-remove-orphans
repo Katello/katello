@@ -1,0 +1,10 @@
+#!/bin/env bash
+# Script for intiating removal of orphaned content
+#
+# running the script from rails root
+RAILS_DIR=/usr/share/katello
+pushd $RAILS_DIR &> /dev/null
+
+/usr/bin/env rake katello:delete_orphaned_content RAILS_ENV=production >/dev/null
+
+popd &> /dev/null

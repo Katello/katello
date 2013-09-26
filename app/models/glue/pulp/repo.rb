@@ -54,6 +54,10 @@ module Glue::Pulp::Repo
         resource.create(Runcible::Resources::EventNotifier::NotifierTypes::REST_API, {:url => url}, [type]) if exists.empty?
       end
 
+      def self.delete_orphaned_content
+        Katello.pulp_server.resources.content.remove_orphans
+      end
+
     end
   end
 
