@@ -19,7 +19,7 @@ class ErratumRule < FilterRule
   validates_with Validators::ErratumRuleParamsValidator, :attributes => :parameters
 
   def params_format
-    {:units => [[:id]], :date_range => [:start, :end], :errata_type => {}, :severity => {}}
+    {:units => [[:id]], :date_range => [:start, :end], :errata_type => {}}
   end
 
   [:start, :end].each do |date_type|
@@ -78,11 +78,6 @@ class ErratumRule < FilterRule
       if errata_types
           # {"type": {"$in": ["security", "enhancement", "bugfix"]}
         rule_clauses << {"type" => {"$in" => errata_types}}
-      end
-
-      if parameters.key?(:severity) && !parameters[:severity].empty?
-          # {"severity": {"$in": ["low", "moderate", "important", "critical"]}
-        rule_clauses << {"severity" => {"$in" => parameters[:severity]}}
       end
 
       case rule_clauses.size

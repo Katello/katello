@@ -43,6 +43,7 @@ class ErratumRuleTest < MiniTest::Rails::ActiveSupport::TestCase
     assert_bad_params(:errata_type => ['bugfix', 'secure'])
     #id based params
     assert_bad_params(:units => {:id_val => '100'})
+    assert_bad_params(:severity => ["low"])
   end
 
   def test_good_params
@@ -50,10 +51,8 @@ class ErratumRuleTest < MiniTest::Rails::ActiveSupport::TestCase
     assert_good_params(:date_range => {:start => @start_date.to_i, :end => @end_date.to_i})
     assert_good_params(:errata_type => ['bugfix', 'security', 'enhancement'])
     assert_good_params(:units => [{:id => "foo"}, {:id => "bar"}])
-    assert_good_params(:severity => ["low"])
     assert_good_params({:date_range => {:start => @start_date.to_i, :end => @end_date.to_i},
-                        :errata_type => ['bugfix', 'security', 'enhancement'],
-                        :severity => ["low"]})
+                        :errata_type => ['bugfix', 'security', 'enhancement']})
   end
 
   def test_date_params
@@ -117,6 +116,11 @@ class ErratumRuleTest < MiniTest::Rails::ActiveSupport::TestCase
 
   def assert_bad_params(params)
     @filter_rule.parameters = params.with_indifferent_access
+    assert_raises(ActiveRecord::RecordInvalid) do
+      @filter_rule.save!
+    end
+
+    @filter_rule.parameters = {:unit => "", :errata_type => ""}.with_indifferent_access
     assert_raises(ActiveRecord::RecordInvalid) do
       @filter_rule.save!
     end
