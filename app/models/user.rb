@@ -333,24 +333,24 @@ class User < ActiveRecord::Base
   # flush existing ldap roles + load & save new ones
   def set_ldap_roles
     # first, delete existing ldap roles
-    clear_existing_ldap_roles
+    clear_existing_ldap_roles!
     # load groups from ldap
     groups = Ldap.ldap_groups(self.username)
     groups.each do |group|
       # find corresponding
       group_roles = LdapGroupRole.find_all_by_ldap_group(group)
       group_roles.each do |group_role|
-        if group_role
-          role_user = RolesUser.new(:role => group_role.role, :user => self, :ldap => true)
-          self.roles_users << role_user unless self.roles.include?(group_role.role)
+        if group_role && !self.roles.reload.include?(group_role.role)
+          self.roles_users << RolesUser.new(:role => group_role.role, :user => self, :ldap => true)
         end
       end
     end
     self.save
   end
 
-  def clear_existing_ldap_roles
+  def clear_existing_ldap_roles!
     self.roles = self.roles_users.select { |r| !r.ldap }.map { |r| r.role }
+    self.save!
   end
 
   def ldap_roles
