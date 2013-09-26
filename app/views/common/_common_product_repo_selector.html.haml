@@ -1,5 +1,6 @@
 - content_types ||= nil
 - title ||= _("Product")
+- always_show_add ||= false
 
 -if editable
 
@@ -26,7 +27,7 @@
               %select#product_select{:style => 'width:400px;', 'data-placeholder' => _("Choose a product.."),
                 'data-url' => save_url}
               .centered
-                -if editable_products && editable_products.count > 0
+                -if always_show_add || (editable_products && editable_products.count > 0)
                   %a#add_product #{_('+ Add')}
 
       %tr
