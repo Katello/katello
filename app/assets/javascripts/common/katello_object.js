@@ -32,7 +32,7 @@ KT.object.label = (function(){
 
             $('.create_button').mousedown(function() {retrieve_label = false;});
 
-            $('.name_input').focusout(function(event){
+            $('.name_input').blur(function(event){
                 var name_input = $(this),
                     name = name_input.val(),
                     label = $(this).closest('fieldset').next('fieldset'),
