@@ -358,7 +358,7 @@ module ApplicationHelper
   end
 
   def repo_selector(repositories, url, field = :repository_id, record = nil)
-    products = repositories.map(&:product).uniq.sort(&:name)
+    products = repositories.map(&:product).uniq.sort_by{ |product| product[:name] }
     repo_ids = repositories.map(&:id)
 
     content_tag "select", :id => "repo_select", :name => field, "data-url" => url do
