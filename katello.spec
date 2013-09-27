@@ -25,7 +25,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        1.4.7
+Version:        1.4.8
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -924,6 +924,69 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Fri Sep 27 2013 Partha Aji <paji@redhat.com> 1.4.8-1
+- Merge pull request #3050 from parthaa/upgrade-fixes (parthaa@gmail.com)
+- Merge pull request #3049 from daviddavis/temp/20130926190223
+  (daviddavis@redhat.com)
+- 960618 & 961954: Remove the scroll bars on the system panes
+  (daviddavis@redhat.com)
+- Code to help with katello-upgrade and reindexing (paji@redhat.com)
+- Merge pull request #3045 from bbuckingham/1012547 (bbuckingham@redhat.com)
+- Merge pull request #3046 from bbuckingham/katello_object
+  (bbuckingham@redhat.com)
+- Merge pull request #3043 from waldenraines/bug-3032 (walden@redhat.com)
+- label generation: generate label on blur vs focusout (bbuckingham@redhat.com)
+- Merge pull request #3041 from waldenraines/bug-1012104 (walden@redhat.com)
+- Merge pull request #3044 from bbuckingham/989932 (bbuckingham@redhat.com)
+- Bug #1012318 - ensure add button apppears for filters, fixes #3032.
+  (walden@redhat.com)
+- 1012547: system groups: fix system crosslink to point to systems nutupane
+  (bbuckingham@redhat.com)
+- Merge pull request #3035 from daviddavis/temp/20130925144217
+  (daviddavis@redhat.com)
+- 989932: changeset: destroy changet_user when destroying changset
+  (bbuckingham@redhat.com)
+- Bug #1012104 - set width of container panel to 0px to avoid overlap.
+  (walden@redhat.com)
+- 956616: Prevent users from filtering by id and date/type
+  (daviddavis@redhat.com)
+- Merge pull request #2946 from jlsherrill/orphans (jlsherrill@gmail.com)
+- Merge pull request #3037 from bbuckingham/1011854 (bbuckingham@redhat.com)
+- Merge pull request #3036 from waldenraines/bug-1012105 (walden@redhat.com)
+- 1011854: Filter: initialize product/repo selector before the filter rules
+  list (bbuckingham@redhat.com)
+- Bugs #1012105 and #1010022: ensure menu is on top of panel.
+  (walden@redhat.com)
+- Bug #1011246 - fix precedence on autocomplete mappings. (walden@redhat.com)
+- new cassette (jsherril@redhat.com)
+- Merge pull request #3030 from bbuckingham/1011171 (bbuckingham@redhat.com)
+- 1011171: Bulk System Remove: remove rows on system deletion
+  (bbuckingham@redhat.com)
+- Merge pull request #3022 from daviddavis/repo-url (daviddavis@redhat.com)
+- 1011092: No longer requiring feed url for repo (daviddavis@redhat.com)
+- Merge pull request #3028 from daviddavis/temp/20130924111504
+  (daviddavis@redhat.com)
+- Merge pull request #3014 from bbuckingham/1010034 (bbuckingham@redhat.com)
+- 1010034: Content View Definitions: fix UI issues for readonly users
+  (bbuckingham@redhat.com)
+- Merge pull request #3009 from parthaa/971140 (parthaa@gmail.com)
+- 1011557: Change permission check for RH product repos (daviddavis@redhat.com)
+- Autobuild f19 packages (inecas@redhat.com)
+- Merge pull request #3019 from waldenraines/bug-953663 (walden@redhat.com)
+- Merge pull request #3018 from komidore64/validate-password
+  (komidore64@gmail.com)
+- Merge pull request #3024 from iNecas/bz1011483 (inecas@redhat.com)
+- 1011457 - ensure distributions and yum file metadata are cloned during cv
+  publish (jsherril@redhat.com)
+- 1011483 - trigger the refresh event after everything done (inecas@redhat.com)
+- fixing tests for password confirmation validation (komidore64@gmail.com)
+- 1009616 - Password reset screen does not validate the Confirm Password field
+  (komidore64@gmail.com)
+- 971140 - Fixed issue with CVD vs CV permissions (paji@redhat.com)
+- Bug #953663 - only show 'add' button if there are products to add.
+  (walden@redhat.com)
+- 831276 - adding weekly job to delete orphaned content (jsherril@redhat.com)
+
 * Mon Sep 23 2013 Partha Aji <paji@redhat.com> 1.4.7-1
 - Merge pull request #3020 from thomasmckay/1007117-actkey-fk
   (thomasmckay@redhat.com)
