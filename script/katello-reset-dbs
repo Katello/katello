@@ -9,6 +9,17 @@ if [ -f /etc/sysconfig/katello ]; then
   . /etc/sysconfig/katello
 fi
 
+TOMCAT=''
+if [ -x '/usr/sbin/tomcat6' ]; then
+  TOMCAT='tomcat6'
+elif [ -x '/usr/sbin/tomcat' ]; then
+  TOMCAT='tomcat'
+else 
+  echo "** ERROR **"
+  echo "Check that the path to tomcat is correct and that the file is executable." 1>&2
+  exit 1
+fi
+
 # default configuration values (should be the same as in our sysv init script)
 KATELLO_HOME=${KATELLO_HOME:-/usr/share/katello}
 KATELLO_ENV=${KATELLO_ENV:-production}
@@ -113,7 +124,7 @@ if [ $DEPLOYMENT = "katello" ] ; then
 fi
 
 echo "Stopping Candlepin instance"
-stop_if_running tomcat6
+stop_if_running $TOMCAT
 
 if [ $DEPLOYMENT = "katello" ] ; then
     echo "Dropping Pulp database"
@@ -134,7 +145,7 @@ sudo /usr/share/candlepin/cpsetup -s -k `sudo cat /etc/katello/keystore_password
 
 
 # cpsetup alters tomcat configuration, use the original
-sudo cp /etc/tomcat6/server.xml.original /etc/tomcat6/server.xml
+sudo cp /etc/$TOMCAT/server.xml.original /etc/$TOMCAT/server.xml
 
 if [ $DEPLOYMENT = "katello" ] ; then
     echo "Starting Pulp instance"
@@ -144,7 +155,7 @@ if [ $DEPLOYMENT = "katello" ] ; then
 fi
 
 echo "Starting Candlepin instance"
-$SRV tomcat6 restart
+$SRV $TOMCAT restart
 
 echo "Initializing Katello database"
 # cannot use initdb for this (BZ 745542)
