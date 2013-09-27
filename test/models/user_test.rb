@@ -355,16 +355,22 @@ class UserLdapTest < UserTestBase
   end
 
   def test_clear_existing_ldap_roles
+    options = { :warden => "ldap" }
+    override_config(options)
+
     LdapFluff.stub(:new, @ldap) do
       @@user.set_ldap_roles
       refute_empty @@user.roles
 
-      @@user.clear_existing_ldap_roles
+      @@user.clear_existing_ldap_roles!
       assert_empty @@user.ldap_roles
     end
   end
 
   def test_set_ldap_roles
+    options = { :warden => "ldap" }
+    override_config(options)
+    
     LdapFluff.stub(:new, @ldap) do
       @@user.set_ldap_roles
 
@@ -373,6 +379,9 @@ class UserLdapTest < UserTestBase
   end
 
   def test_verify_ldap_roles
+    options = { :warden => "ldap" }
+    override_config(options)
+
     LdapFluff.stub(:new, @ldap) do
       @@user.set_ldap_roles
 
