@@ -108,6 +108,21 @@ angular.module('Bastion.systems').controller('SystemSubscriptionsController',
             return range;
         };
 
+        $scope.availableSubscriptionsTable.matchSystem = false;
+        $scope.availableSubscriptionsTable.matchInstalled = false;
+        $scope.availableSubscriptionsTable.noOverlap = false;
+
+        $scope.availableSubscriptionsTable.filterSubscriptions = function() {
+            var params = availableSubscriptionsNutupane.getParams();
+
+            params['match_system'] = $scope.availableSubscriptionsTable.matchSystem;
+            params['match_installed'] = $scope.availableSubscriptionsTable.matchInstalled;
+            params['no_overlap'] = $scope.availableSubscriptionsTable.noOverlap;
+
+            availableSubscriptionsNutupane.setParams(params);
+            availableSubscriptionsNutupane.refresh();
+        };
+
         $scope.availableSubscriptionsTable.formatAvailableDisplay = function(subscription) {
             var available = subscription.available;
             available = available < 0 ? i18nFilter('Unlimited') : available;
