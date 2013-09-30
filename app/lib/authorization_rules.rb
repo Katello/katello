@@ -68,7 +68,7 @@ module AuthorizationRules
   def check_hash_params(rule, params)
     rule = rule.with_indifferent_access
     params = params.with_indifferent_access
-    rule.keys.collect do |k|
+    result = rule.keys.collect do |k|
       if params[k]
         keys = params[k].keys - rule[k].collect { |r| r.to_s }
         if keys.empty?
@@ -77,7 +77,8 @@ module AuthorizationRules
           {k => keys}
         end
       end
-    end.compact
+    end
+    result.compact
   end
 
   def check_array_params(rule, params)

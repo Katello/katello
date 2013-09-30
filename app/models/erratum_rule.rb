@@ -65,7 +65,8 @@ class ErratumRule < FilterRule
       # end.compact.flatten
       ids = parameters[:units].collect do |unit|
         unit[:id]
-      end.compact
+      end
+      ids.compact!
 
       {"id" => {"$in" => ids}}  unless ids.empty?
     else

@@ -65,7 +65,8 @@ Dir.glob(File.join(dir, "**", "*")).each do |file|
         end
       end
       [string, suffix]
-    end.compact
+    end
+    gettext_strings.compact!
   rescue ArgumentError
     next # we can't scan binary files, skipping
   end

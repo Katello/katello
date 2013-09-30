@@ -346,7 +346,8 @@ class ActivationKeysController < ApplicationController
         next if product.nil?
         pool.provider_id = product.provider_id
         pool
-      end.compact
+      end
+      subscriptions.compact!
       subscriptions = [] if subscriptions.nil?
     else
       subscriptions = []
