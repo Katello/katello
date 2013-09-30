@@ -814,7 +814,9 @@ KT.panel.copy = (function () {
 
         var copy_link = $('.pane_action.copy-tipsy');
         if(copy_link) {
-            var cancel_button = $('#cancel_copy_button'), copy_form = $('#copy_form');
+            var cancel_button = $('#cancel_copy_button'),
+                copy_form = $('#copy_form'),
+                name_input = $('#name_input');
 
             KT.tipsy.custom.copy_tooltip(copy_link);
 
@@ -826,6 +828,8 @@ KT.panel.copy = (function () {
 
             copy_form.die();
             copy_form.live('submit', perform_copy);
+
+            name_input.live('keyup', check_for_copy);
         }
     },
     show_form = function() {
@@ -835,6 +839,14 @@ KT.panel.copy = (function () {
     hide_form = function() {
         $('.pane_action.copy-tipsy').tipsy('hide');
         $('#copy_form').find('#name_input').blur();
+    },
+    check_for_copy = function() {
+        var copy_button = $('#copy_button');
+        if ($(this).val().length > 0) {
+            copy_button.removeAttr('disabled', 'disabled');
+        } else {
+            copy_button.attr('disabled', 'disabled');
+        }
     },
     perform_copy = function(event) {
         event.preventDefault();
