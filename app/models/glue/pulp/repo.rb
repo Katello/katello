@@ -162,12 +162,21 @@ module Glue::Pulp::Repo
         dist.auto_publish = true
         [dist]
       when Repository::PUPPET_TYPE
-        repo_path =  Katello.config.puppet_repo_root + "/" + self.pulp_id
+        repo_path =  File.join(Katello.config.puppet_repo_root, self.puppet_environment_name)
         [Runcible::Models::PuppetInstallDistributor.new(repo_path,
                                                  {:id => self.pulp_id, :auto_publish => true})]
       else
         raise _("Unexpected repo type %s") % self.content_type
       end
+    end
+
+    def puppet_environment_name
+      name = ["KT",
+               self.environment.organization.label,
+	       self.environment.label,
+	       self.content_view.label,
+	       self.content_view.id.to_s].reject(&:blank?).join('_')
+      return name.gsub('-','_')
     end
 
     def importer_type
