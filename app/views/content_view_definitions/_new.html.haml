@@ -27,7 +27,8 @@
       #select_views.hidden
         %label
           = _('Choose Existing Views')
-        = render :partial => "view_definitions", :locals => {:form => form,
+        = render :partial => "view_definitions", :locals => {:editable => true,
+                                                             :form => form,
                                                              :view_definitions => view_definitions,
                                                              :views => nil}
 

@@ -8,7 +8,7 @@
   %tbody
     - view_definitions.each do |definition|
 
-      - if definition.content_views.length > 0 && has_a_component_view?(definition, views)
+      - if definition.content_views.length > 0 && (editable || has_a_component_view?(definition, views))
         %tr.definition{:id => "definition_#{definition.id}"}
           %td{:colspan => 2}
             %label #{_('Definition')}:
