@@ -112,7 +112,8 @@ describe Api::V1::ProductsController, :katello => true do
       it { should be_success }
 
       it "should change allowed attributes" do
-        @product.should_receive(:update_attributes!).with("gpg_key_name" => gpg_key.name, "description" => "another description")
+        @product.should_receive(:gpg_key_name=)
+        @product.should_receive(:update_attributes!).with("description" => "another description")
         req
       end
 
