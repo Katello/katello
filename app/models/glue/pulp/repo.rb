@@ -173,11 +173,11 @@ module Glue::Pulp::Repo
 
     def puppet_environment_name
       name = ["KT",
-               self.environment.organization.label,
-	       self.environment.label,
-	       self.content_view.label,
-	       self.content_view.id.to_s].reject(&:blank?).join('_')
-      return name.gsub('-','_')
+              self.environment.organization.label,
+              self.environment.label,
+              self.content_view.label,
+              self.content_view.id.to_s].reject(&:blank?).join('_')
+      return name.gsub('-', '_')
     end
 
     def nodes_distributor
