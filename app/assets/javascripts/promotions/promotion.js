@@ -1111,15 +1111,14 @@ var changesetStatusActions = (function($){
                 } else if ((data.state === 'promoted') || (data.state === 'deleted')){
                     delete promotion_page.get_current_changeset_breadcrumb()['changeset_' + id];
 
-                    // TODO: update logic to remove content view from the list. This will be done in separate commit.
-                    // if the user deleted one or more products with the changeset, remove those products
-                    // from the content tree
-//                    if (data.state === 'deleted' && data.product_ids) {
-//                        $.each(data.product_ids, function(index, product_id) {
-//                            delete content_breadcrumb['details_' + product_id];
-//                        });
-//                        promotion_page.get_content_tree().rerender_content('content');
-//                    }
+                    // If the user deleted one or more content views with the changeset
+                    // remove those products from the content tree
+                    if (data.state === 'deleted' && data.content_view_ids) {
+                        $.each(data.content_view_ids, function(index, content_view_id) {
+                            var selector = '[data-content-view-id="%s"]'.replace("%s", content_view_id);
+                            $(selector).remove();
+                        });
+                    }
 
                     finish(data.id);
                     updater.stop();
