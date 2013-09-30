@@ -866,37 +866,21 @@ KT.comparison_grid.templates = (function(i18n) {
             if( parent_id !== undefined ){
                 html.attr('data-parent_id', parent_id);
             }
-            if( row_level === 2 ){
-                if( name.length > 30 && name.length < 60 ){
-                    html.addClass('row_height_2');
-                    for(i = 0; i < num_columns; i += 1){
-                        html.append(cell(cell_data[i], 'row_height_2'));
-                    }
 
-                } else if( name.length >= 60 ){
-                    html.addClass('row_height_3');
-                    for(i = 0; i < num_columns; i += 1){
-                        html.append(cell(cell_data[i], 'row_height_3'));
-                    }
-                } else {
-                    for(i = 0; i < num_columns; i += 1){
-                        html.append(cell(cell_data[i]));
-                    }
-                }
-            } else if( row_level >= 3 ){
-                if( name.length > 30 ){
-                    html.addClass('row_height_2');
-                    for(i = 0; i < num_columns; i += 1){
-                        html.append(cell(cell_data[i], 'row_height'));
-                    }
-                } else {
-                    for(i = 0; i < num_columns; i += 1){
-                        html.append(cell(cell_data[i]));
-                    }
-                }
-            } else {
+            if( name.length <= 30 ) {
                 for(i = 0; i < num_columns; i += 1){
                     html.append(cell(cell_data[i]));
+                }
+            } else if( name.length > 30 && name.length < 51 ) {
+                html.addClass('row_height_2');
+                for(i = 0; i < num_columns; i += 1){
+                    html.append(cell(cell_data[i], 'row_height_2'));
+                }
+
+            } else if( name.length >= 51 ){
+                html.addClass('row_height_3');
+                for(i = 0; i < num_columns; i += 1){
+                    html.append(cell(cell_data[i], 'row_height_3'));
                 }
             }
 
@@ -935,10 +919,10 @@ KT.comparison_grid.templates = (function(i18n) {
             name = this.row_header_content(name, type);
 
             if( row_level === 2 ){
-                if( name.length > 30 && name.length < 60 ){
+                if( name.length > 30 && name.length < 51 ){
                     html.addClass('row_height_2');
                     html.append($('<span/>', { 'class': 'one-line-ellipsis'}).html(name));
-                } else if( name.length >= 60 && name.length <= 94 ){
+                } else if( name.length >= 51 && name.length <= 94 ){
                     html.addClass('row_height_3');
                     html.append($('<span/>', { 'class': 'one-line-ellipsis'}).html(name));
                 } else if( name.length > 94 ) {
