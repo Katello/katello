@@ -99,30 +99,17 @@ KT.content_search_templates = (function(i18n) {
                 html.attr('data-parent_id', parent_id);
             }
 
-            if( row_level === 2 ){
-                if( name.length > 30 && name.length < 60 ){
-                    html.addClass('row_height_2');
-                    html.append($('<span/>', { 'class': 'one-line-ellipsis', 'title': title }).html(name));
-                } else if( name.length >= 60 && name.length <= 94 ){
-                    html.addClass('row_height_3');
-                    html.append($('<span/>', { 'class': 'one-line-ellipsis', 'title': title }).html(name));
-                } else if( name.length > 94 ) {
-                    html.addClass('row_height_3');
-                    html.append($('<span/>', { 'class' : 'three-line-ellipsis tipsify', 'title' : name }).html(name));
-                } else {
-                    html.append($('<span/>', { 'class': 'one-line-ellipsis', 'title' : title }).html(name));
-                }
-            } else if( row_level >= 3 ){
-                if( name.length > 30 ){
-                    html.addClass('row_height_2');
-                }
-                html.append($('<span/>', { 'class': 'one-line-ellipsis', 'title': title }).html(name));
-            } else {
-                if( (has_children && name.length > 26) || (parent_id && name.length > 28) || name.length > 28 ){
-                    html.append($('<span/>', { 'class' : 'one-line-ellipsis tipsify', 'title' : name }).html(name));
-                } else {
-                    html.append($('<span/>').html(name));
-                }
+            if( name.length <= 30 ) {
+                html.append($('<span/>', { 'title': title }).html(name));
+            } else if( name.length > 30 && name.length < 51 ){
+                html.addClass('row_height_2');
+                html.append($('<span/>', { 'title': title }).html(name));
+            } else if( name.length >= 51 && name.length <= 94 ){
+                html.addClass('row_height_3');
+                html.append($('<span/>', { 'title': title }).html(name));
+            } else if( name.length > 94 ) {
+                html.addClass('row_height_3');
+                html.append($('<span/>', { 'class' : 'three-line-ellipsis tipsify', 'title' : name }).html(name));
             }
 
             var temp_html = $('<div/>');
