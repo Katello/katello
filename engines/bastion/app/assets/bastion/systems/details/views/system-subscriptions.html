@@ -72,8 +72,9 @@
       <input type="text"
              class="input input-search"
              placeholder="{{ 'Filter' | i18n }}"
-             ng-model="currentSubscriptionsTable.filter">
+             ng-model="currentSubscriptionsTable.filter"/>
     </div>
+
     <div class="fr select-action">
       <button class="btn-mini" ng-disabled="currentSubscriptionsTable.numSelected == 0"
               ng-click="removeSubscriptions()">{{ "Remove Subscriptions" | i18n }}</button>
@@ -140,6 +141,33 @@
          ng-click="availableSubscriptionsTable.selectAll(false)">
         Deselect All
       </a>
+    </div>
+    <div class="filter-options">
+      <span class="filter-option">
+        <input type="checkbox"
+               id="subscriptions-match"
+               class="input"
+               ng-model="availableSubscriptionsTable.matchSystem"
+               ng-change="availableSubscriptionsTable.filterSubscriptions()"/>
+        <label for="subscriptions-match">{{ "Subscriptions match system" | i18n }}</label>
+      </span>
+      <span class="filter-option">
+        <input type="checkbox"
+               id="subscriptions-match-installed"
+               class="input"
+               ng-model="availableSubscriptionsTable.matchInstalled"
+               ng-change="availableSubscriptionsTable.filterSubscriptions()"/>
+        <label for="subscriptions-match-installed">{{ "Subscriptions match installed software" | i18n }}</label>
+      </span>
+
+      <span class="filter-option">
+        <input type="checkbox"
+               id="subscriptions-no-overlap"
+               class="input"
+               ng-model="availableSubscriptionsTable.noOverlap"
+               ng-change="availableSubscriptionsTable.filterSubscriptions()"/>
+        <label for="subscriptions-no-overlap">{{ "No overlap with current" | i18n }}</label>
+        </span>
     </div>
   </div>
 
