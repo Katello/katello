@@ -51,11 +51,16 @@ class Api::V2::SubscriptionsController < Api::V2::ApiController
 
   api :GET, "/systems/:system_id/subscriptions/available", "List available subscriptions"
   param :system_id, String, :desc => "UUID of the system", :required => true
+  param :match_system, :bool, :desc => "Return subscriptions that match system"
+  param :match_installed, :bool, :desc => "Return subscriptions that match installed"
+  param :no_overlap, :bool, :desc => "Return subscriptions that don't overlap"
   def available
-    pools = @system.filtered_pools(current_user.subscriptions_match_system_preference,
-      current_user.subscriptions_match_installed_preference,
-      current_user.subscriptions_no_overlap_preference)
+    params[:match_system] = params[:match_system].to_bool if params[:match_system]
+    params[:match_installed] = params[:match_installed].to_bool if params[:match_installed]
+    params[:no_overlap] = params[:no_overlap].to_bool if params[:no_overlap]
 
+    pools = @system.filtered_pools(params[:match_system], params[:match_installed],
+      params[:no_overlap])
     available = available_subscriptions(pools, @system.organization)
 
     collection = {

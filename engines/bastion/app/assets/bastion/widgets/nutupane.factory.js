@@ -86,6 +86,14 @@ angular.module('Bastion.widgets').factory('Nutupane',
                 return deferred.promise;
             }
 
+            self.getParams = function() {
+                return params;
+            };
+
+            self.setParams = function(newParams) {
+               params = newParams;
+            };
+
             self.query = function() {
                 var table = self.table;
                 params.offset = table.rows.length;
