@@ -65,7 +65,8 @@ class Api::V1::ProductsController < Api::V1::ApiController
   end
   def update
     raise HttpErrors::BadRequest, _("Red Hat products cannot be updated.") if @product.redhat?
-    @product.update_attributes!(params[:product].slice(:description, :gpg_key_name))
+    @product.gpg_key_name = params[:product][:gpg_key_name] unless params[:product][:gpg_key_name].nil? # not .blank?
+    @product.update_attributes!(params[:product].slice(:description))
     if params[:product][:recursive]
       @product.reset_repo_gpgs!
     end
