@@ -155,16 +155,17 @@ module Glue::Pulp::Repo
                                                         {:protected => true, :id => yum_dist_id, :auto_publish => true})
         clone_dist = Runcible::Models::YumCloneDistributor.new(:id => "#{self.pulp_id}_clone",
                                                                :destination_distributor_id => yum_dist_id)
-        node_dist = Runcible::Models::NodesHttpDistributor.new(:id => "#{self.pulp_id}_nodes", :auto_publish => true)
-        [yum_dist, clone_dist, node_dist]
+        [yum_dist, clone_dist, nodes_distributor]
       when Repository::FILE_TYPE
         dist = Runcible::Models::IsoDistributor.new(true, true)
         dist.auto_publish = true
         [dist]
       when Repository::PUPPET_TYPE
         repo_path =  File.join(Katello.config.puppet_repo_root, self.puppet_environment_name)
-        [Runcible::Models::PuppetInstallDistributor.new(repo_path,
-                                                 {:id => self.pulp_id, :auto_publish => true})]
+        puppet_install_dist =
+            Runcible::Models::PuppetInstallDistributor.new(repo_path,
+                                                           {:id => self.pulp_id, :auto_publish => true})
+        [puppet_install_dist, nodes_distributor]
       else
         raise _("Unexpected repo type %s") % self.content_type
       end
@@ -177,6 +178,10 @@ module Glue::Pulp::Repo
 	       self.content_view.label,
 	       self.content_view.id.to_s].reject(&:blank?).join('_')
       return name.gsub('-','_')
+    end
+
+    def nodes_distributor
+      Runcible::Models::NodesHttpDistributor.new(:id => "#{self.pulp_id}_nodes", :auto_publish => true)
     end
 
     def importer_type
