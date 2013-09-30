@@ -159,7 +159,8 @@ class Api::V1::DistributorsController < Api::V1::ApiController
           :only    => [:uuid, :name, :location, :created_at, :updated_at],
           :methods => [:environment, :organization, :compliance_color, :compliant_until, :custom_info]
       )
-    end.flatten!
+    end
+    data.flatten!
 
     transforms = lambda do |r|
       r.organization    = r.organization.name

@@ -25,5 +25,5 @@ group :development do
   gem 'minitest-rails'
 
   gem 'factory_girl_rails', "~> 1.4.0"
-  gem 'rubocop', "0.13.1"
+  gem 'rubocop', :github => "bbatsov/rubocop", :ref => "70f0e9b02c0c41baf2488d6983791ce7d2216863"
 end

@@ -46,7 +46,8 @@ module Glue::Pulp::PackageGroup
         values = send(attr)
         values = values.collect do |v|
           v.split(", ")
-        end.flatten
+        end
+        values.flatten!
         send("#{attr}=", values)
       end
 

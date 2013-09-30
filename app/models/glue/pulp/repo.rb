@@ -251,7 +251,8 @@ module Glue::Pulp::Repo
       # Remove all errata with no packages
       errata_to_delete = errata.collect do |erratum|
         erratum.errata_id if filenames.intersection(erratum.package_filenames).empty?
-      end.compact
+      end
+      errata_to_delete.compact!
 
       #do the errata remove call
       unless errata_to_delete.empty?
@@ -261,7 +262,8 @@ module Glue::Pulp::Repo
       # Remove all  package groups with no packages
       package_groups_to_delete = package_groups.collect do |group|
         group.package_group_id if rpm_names.intersection(group.package_names).empty?
-      end.compact
+      end
+      package_groups_to_delete.compact!
 
       unless package_groups_to_delete.empty?
         unassociate_by_filter(FilterRule::PACKAGE_GROUP, {"id" => {"$in" => package_groups_to_delete}})

@@ -43,7 +43,8 @@ module ConsumersControllerLogic
 
         pool.provider_id = product[0].provider_id
         pool
-      end.compact
+      end
+      subscriptions.compact!
       subscriptions = [] if subscriptions.nil?
     else
       subscriptions = []

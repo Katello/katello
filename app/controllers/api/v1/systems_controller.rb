@@ -311,7 +311,8 @@ A hint for choosing the right value for the releaseVer param
           :only    => [:uuid, :name, :location, :created_at, :updated_at],
           :methods => [:environment, :organization, :compliance_color, :compliant_until, :custom_info]
       )
-    end.flatten!
+    end
+    data.flatten!
 
     transforms = lambda do |r|
       r.organization    = r.organization.name

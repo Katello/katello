@@ -60,9 +60,10 @@ module Glue::Provider
 
     def sync
       Rails.logger.debug "Syncing provider #{name}"
-      self.products.collect do |p|
+      psync = self.products.collect do |p|
         p.sync
-      end.flatten
+      end
+      psync.flatten
     end
 
     def synced?
@@ -71,9 +72,10 @@ module Glue::Provider
 
     #get last sync status of all repositories in this provider
     def latest_sync_statuses
-      self.products.collect do |p|
+      statuses = self.products.collect do |p|
         p.latest_sync_statuses
-      end.flatten
+      end
+      statuses.flatten
     end
 
     # Get the most relavant status for all the repos in this Provider
@@ -436,7 +438,8 @@ module Glue::Provider
           next if product.nil?
           pool.provider_id = product.provider_id   # Set so it is saved into elastic search
           pool
-        end.compact
+        end
+        subscriptions.compact!
         subscriptions = [] if subscriptions.nil?
       else
         subscriptions = []

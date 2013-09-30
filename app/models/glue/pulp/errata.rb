@@ -43,9 +43,7 @@ module Glue::Pulp::Errata
       def self.list_by_filter_clauses(clauses)
         errata = Katello.pulp_server.extensions.errata.search(::Errata::CONTENT_TYPE, :filters => clauses)
         if errata
-          errata.collect do |attrs|
-            ::Errata.new(attrs) if attrs
-          end.compact
+          errata.each_with_object([]) { |attrs, arr| arr << ::Errata.new(attrs) if attrs }
         else
           []
         end
@@ -64,11 +62,12 @@ module Glue::Pulp::Errata
     end
 
     def package_filenames
-      self.pkglist.collect do |pkgs|
+      filenames = self.pkglist.collect do |pkgs|
         pkgs['packages'].collect do |pk|
           pk["filename"]
         end
-      end.flatten
+      end
+      filenames.flatten
     end
 
     def included_packages
