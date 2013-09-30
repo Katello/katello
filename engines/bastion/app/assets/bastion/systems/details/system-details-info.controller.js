@@ -37,7 +37,6 @@ angular.module('Bastion.systems').controller('SystemDetailsInfoController',
         $scope.editContentView = false;
         $scope.saveSuccess = false;
         $scope.saveError = false;
-        $scope.previousEnvironment = null;
 
         $scope.$on('system.loaded', function() {
             $scope.setupSelector();
@@ -46,11 +45,16 @@ angular.module('Bastion.systems').controller('SystemDetailsInfoController',
         });
 
         $scope.setEnvironment = function(environmentId) {
-            if ($scope.previousEnvironment !== $scope.system.environment.id) {
+            environmentId = parseInt(environmentId, 10);
+
+            if ($scope.previousEnvironment !== environmentId) {
                 $scope.previousEnvironment = $scope.system.environment.id;
                 $scope.system.environment.id = environmentId;
                 $scope.editContentView = true;
                 $scope.$apply();
+
+                /*jshint camelcase:false*/
+                $scope.pathSelector.disable_all();
             }
         };
 
@@ -58,8 +62,19 @@ angular.module('Bastion.systems').controller('SystemDetailsInfoController',
             if ($scope.editContentView) {
                 $scope.editContentView = false;
                 $scope.system.environment.id = $scope.previousEnvironment;
+
+                /*jshint camelcase:false*/
+                $scope.pathSelector.enable_all();
                 $scope.pathSelector.select($scope.previousEnvironment);
             }
+        };
+
+        $scope.saveContentView = function(system) {
+            $scope.previousEnvironment = undefined;
+            $scope.save(system);
+
+            /*jshint camelcase:false*/
+            $scope.pathSelector.enable_all();
         };
 
         $scope.updateSystemGroups = function(systemGroups) {
