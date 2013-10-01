@@ -130,7 +130,12 @@ class Changeset < ActiveRecord::Base
 
   def add_content_view!(view, include_components = false)
     unless env_to_verify_on_add_content.content_views.include?(view)
-      raise Errors::ChangesetContentException.new("Content view not found within environment you want to promote from.")
+      raise Errors::ChangesetContentException.new(_("Content view not found within environment you want to promote from."))
+    end
+    if promotion? && content_view_in_environment?(view)
+      raise Errors::ChangesetContentException.new(
+        _("Cannot add content view '%{view}' to changeset. View version already in environment '%{env}'.") %
+        {:view => view.name, :env => environment.name})
     end
 
     self.content_views << view
@@ -202,6 +207,12 @@ class Changeset < ActiveRecord::Base
     else
       self.environment
     end
+  end
+
+  def content_view_in_environment?(view)
+    (cvv = environment.content_view_versions.find_by_content_view_id(view)) &&
+      (prior_cvv = environment.prior.content_view_versions.find_by_content_view_id(view)) &&
+      cvv == prior_cvv
   end
 
   def update_progress!(percent)
