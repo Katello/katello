@@ -119,8 +119,12 @@ class Api::V1::ProvidersController < Api::V1::ApiController
 
   api :GET, "/providers/:id/products", "List of provider's products"
   param :id, :number, :desc => "Provider numeric identifier", :required => true
+  param :include_marketing, :bool, :desc => "Include marketing products in results"
   def products
-    respond_for_index :collection => @provider.products.all_readable(@provider.organization).select("products.*, providers.name AS provider_name").joins(:provider)
+    products = params[:include_marketing] ? @provider.products : @provider.products.engineering
+
+    respond_for_index :collection => products.all_readable(@provider.organization).
+      select("products.*, providers.name AS provider_name").joins(:provider)
   end
 
   api :POST, "/providers/:id/import_manifest", "Import manifest for Red Hat provider"
