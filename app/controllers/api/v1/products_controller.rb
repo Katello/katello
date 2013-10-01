@@ -78,9 +78,11 @@ class Api::V1::ProductsController < Api::V1::ApiController
   param :organization_id, :identifier, :desc => "organization identifier"
   param :environment_id, :identifier, :desc => "environment identifier"
   param :name, :identifier, :desc => "product identifier"
+  param :include_marketing, :bool, :desc => "include marketing products in results"
   def index
     query_params.delete(:organization_id)
     query_params.delete(:environment_id)
+    query_params[:type] = "Product" unless query_params.delete(:include_marketing)
 
     if @environment.nil? || @environment.library?
       products = Product.all_readable(@organization)
