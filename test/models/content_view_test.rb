@@ -183,4 +183,16 @@ class ContentViewTest < MiniTest::Rails::ActiveSupport::TestCase
     assert_equal composite_view.content_view_definition.component_content_views.sort,
       composite_view.components_not_in_env(@dev).sort
   end
+
+  def test_refresh
+    composite_view = content_views(:composite_view)
+
+    mock_definition = mock(:ready_to_publish? => false)
+    composite_view.stubs(:content_view_definition).returns(mock_definition)
+
+    assert_raises(RuntimeError) do
+      composite_view.refresh_view
+    end
+  end
+
 end
