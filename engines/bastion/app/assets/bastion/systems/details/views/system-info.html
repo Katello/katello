@@ -185,7 +185,7 @@
               selector="system.content_view.id"
               options="contentViews()"
               on-cancel="cancelContentViewUpdate()"
-              on-save="save(system)"
+              on-save="saveContentView(system)"
               edit-trigger="editContentView">
         </span>
       </div>
@@ -195,8 +195,8 @@
         <span id="environment_path_selector" 
               readonly="system.readonly"
               path-selector="system.environment.id"
-              organization="system.environment.organization_name"
-              on-change="setEnvironment(environment_id)">
+              organization="system.environment.organization.name"
+              on-change="setEnvironment(environmentId)">
         </span>
       </div>
 
