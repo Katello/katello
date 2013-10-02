@@ -57,19 +57,41 @@ class PulpSyncProgress
   #    'metadata' => {'error_details => ''}
   #   }
   def format_errors(details)
-    errors_array = []
+    errors = {messages: [], details: []}
 
     if details && !details.key?(:finished_count)
-      errors_array = details.each_with_object([]) do |(step, report), list|
-        if !report[:error].blank?
-          list << report[:error]
-        elsif !report[:error_details].blank?
-          list << report[:error_details]
+      details.each do |step, report|
+        if step == "content"
+          parse_content(report, errors)
+        else
+          parse_generic(report, errors)
         end
       end
     end
 
-    errors_array
+    errors
+  end
+
+  def parse_content(details, errors)
+    timeout = false
+
+    details['error_details'].each do |error|
+      if error['error_code'] == 37
+        timeout = true
+      end
+    end
+
+    if timeout
+      errors[:messages] << _('One or more packages failed to sync properly.')
+      errors[:details].concat(details[:error_details]) if details[:error_details].present?
+    else
+      parse_generic(details, errors)
+    end
+  end
+
+  def parse_generic(details, errors)
+    errors[:messages] << details[:error] if details[:error].present?
+    errors[:details].concat(details[:error_details]) if details[:error_details].present?
   end
 
 end
@@ -110,7 +132,7 @@ class PulpSyncStatus < PulpTaskStatus
   end
 
   def correct_state
-    if [FINISHED].include?(self.state) && !self.progress.error_details.blank?
+    if [FINISHED].include?(self.state) && self.progress.error_details[:messages].present?
       self.state = ERROR
       self.save! if !self.new_record?
     end

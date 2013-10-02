@@ -440,37 +440,43 @@ module Glue::Pulp::Repo
       return [task]
     end
 
-    def handle_sync_complete_task(task_id)
-      #pulp_task =  Katello.pulp_server.resources.task.poll(pulp_task_id)
+    def handle_sync_complete_task(pulp_task_id, notifier_service = Notify)
+      pulp_task =  Katello.pulp_server.resources.task.poll(pulp_task_id)
 
-      #if pulp_task.nil?
-      #  Rails.logger.error("Sync_complete called for #{pulp_task_id}, but no task found.")
-      #  return
-      #end
-      #
-      #task = PulpTaskStatus.using_pulp_task(pulp_task)
-      #task.user ||= User.current
-      #task.organization ||= self.environment.organization
-      #task.save!
+      if pulp_task.nil?
+        Rails.logger.error("Sync_complete called for #{pulp_task_id}, but no task found.")
+        return
+      end
+
+      task = PulpTaskStatus.using_pulp_task(pulp_task)
+      task.user ||= User.current
+      task.organization ||= self.environment.organization
+      task.save!
 
       notify = task.parameters.try(:[], :options).try(:[], :notify)
       user = task.user
-      if task.state == TaskStatus::Status::FINISHED
+      if task.state == TaskStatus::Status::FINISHED && task.progress.error_details[:messages].blank?
         if user && notify
-          Notify.success _("Repository '%s' finished syncing successfully.") % [self.name],
+          notifier_service.success _("Repository '%s' finished syncing successfully.") % [self.name],
                          :user => user, :organization => self.organization
         end
-      elsif task.state == 'error'
-        details = if task.progress.error_details.present?
-                    task.progress.error_details.map { |error| error[:error].to_s }
-                  else
-                    task.result[:errors].flatten.map(&:chomp)
-                  end.join("\n")
+      else
+        details = []
+
+        if task.progress.error_details.present?
+          details = task.progress.error_details[:details].map do |error|
+            error[:error_message].to_s
+          end
+        else
+          details = task.result[:errors].flatten.map(&:chomp)
+        end
+
+        details = details.join("\n")
 
         Rails.logger.error("*** Sync error: " +  details)
         if user && notify
-          Notify.error _("There were errors syncing repository '%s'. See notices page for more details.") % self.name,
-                       details => details, :user => user, :organization => self.organization
+          notifier_service.error _("There were errors syncing repository '%s'. See notices page for more details.") % self.name,
+                       :details => details, :user => user, :organization => self.organization
         end
       end
     end

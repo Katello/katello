@@ -383,7 +383,7 @@ describe Api::V1::RepositoriesController, :katello => true do
       it "should call async task correctly with no forwarded header" do
         @repo.should_receive(:async).and_return(@fake_async)
         @fake_async.should_receive(:after_sync)
-        params = { :task_id => "123", :payload => { :repo_id => "123" } }
+        params = { :call_report => {:task_id => "123"}, :payload => { :repo_id => "123" } }
         post :sync_complete, params
         response.should be_success
       end
@@ -392,7 +392,7 @@ describe Api::V1::RepositoriesController, :katello => true do
         request.env["HTTP_X_FORWARDED_FOR"] = '127.0.0.1'
         @repo.should_receive(:async).and_return(@fake_async)
         @fake_async.should_receive(:after_sync)
-        params = { :task_id => "123", :payload => { :repo_id => "123" } }
+        params = { :call_report => {:task_id => "123"}, :payload => { :repo_id => "123" } }
         post :sync_complete, params
         response.should be_success
       end
@@ -401,7 +401,7 @@ describe Api::V1::RepositoriesController, :katello => true do
         request.env["HTTP_X_FORWARDED_FOR"] = '::1'
         @repo.should_receive(:async).and_return(@fake_async)
         @fake_async.should_receive(:after_sync)
-        params = { :task_id => "123", :payload => { :repo_id => "123" } }
+        params = { :call_report => {:task_id => "123"}, :payload => { :repo_id => "123" } }
         post :sync_complete, params
         response.should be_success
       end
