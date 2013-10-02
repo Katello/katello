@@ -161,7 +161,7 @@ module Glue::Pulp::Repo
         dist.auto_publish = true
         [dist]
       when Repository::PUPPET_TYPE
-        repo_path =  File.join(Katello.config.puppet_repo_root, self.puppet_environment_name)
+        repo_path =  File.join(Katello.config.puppet_repo_root, self.puppet_environment_name, 'modules')
         puppet_install_dist =
             Runcible::Models::PuppetInstallDistributor.new(repo_path,
                                                            {:id => self.pulp_id, :auto_publish => true})
