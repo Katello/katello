@@ -131,6 +131,15 @@ To create an angular object from translated .po files run:
 
     grunt i18n:compile
 
+### i18n workflow ###
+
+1. Developers write a bunch of code, being sure to use the translate directive to mark strings for translation.
+1. We have a string freeze close to our release.
+1. A developer runs grunt i18n:extract to generate the application's .pot file and checks it into source control.
+1. Either we point our translators at our github repository or provide them the .pot file.
+1. The translators create .po files for each language and either send them back or open a PR with them.
+1. Once the .po files are checked into source control a developer runs grunt i18n:compile which creates a javascript file that angular will use to populate the translations based on the user's locale.
+
 ## Basics of Adding a New Entity ##
 
 When adding functionality that introduces a new entity that maps to an external resource, there are a few common steps that a developer will need to take.
