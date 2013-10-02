@@ -1,18 +1,20 @@
 <div ng-show="workingMode">
   <i class="icon-spinner inline-icon icon-spin"></i>
-  <span>{{ "Working" | i18n }}</span>
+  <span translate>Working</span>
 </div>
 
 <button class="btn primary small"
+        translate
         ng-click="save()"
         ng-disabled="disableSave"
         ng-show="editMode && !workingMode">
-  {{ "Save" | i18n }}
+  Save
 </button>
 
 <button class="btn small"
+        translate
         ng-click="cancel()"
         ng-show="editMode && !workingMode"
         ng-disabled="disableCancel">
-  {{ "Cancel" | i18n }}
+  Cancel
 </button>

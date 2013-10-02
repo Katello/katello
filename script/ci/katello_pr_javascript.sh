@@ -14,5 +14,6 @@ sh -e /etc/init.d/xvfb start
 
 npm install -g bower grunt-cli
 npm install
-bower install --dev
+bower cache clean
+bower install 
 grunt ci

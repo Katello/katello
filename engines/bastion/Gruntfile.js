@@ -66,7 +66,8 @@ module.exports = function (grunt) {
             },
             all: [
                 'Gruntfile.js',
-                '<%= bastion.src %>/**/*.js'
+                '<%= bastion.src %>/**/*.js',
+                '!<%= bastion.src %>/i18n/translations.js'
             ]
         },
         karma: {
@@ -105,11 +106,34 @@ module.exports = function (grunt) {
             }],
             showDocularDocs: false,
             showAngularDocs: false
+        },
+        'nggettext_extract': {
+            bastion: {
+                src: ['<%= bastion.src %>/**/*.html', '<%= bastion.src %>/**/*.js'],
+                dest: '<%= bastion.src %>/i18n/katello.pot'
+            }
+        },
+        'nggettext_compile': {
+            options: {
+                module: 'Bastion'
+            },
+            bastion: {
+                src: ['<%= bastion.src %>/i18n/locale/**/*.po'],
+                dest: '<%= bastion.src %>/i18n/translations.js'
+            }
         }
     });
 
     grunt.registerTask('docs', [
         'docular'
+    ]);
+
+    grunt.registerTask('i18n:extract', [
+        'nggettext_extract'
+    ]);
+
+    grunt.registerTask('i18n:compile', [
+        'nggettext_compile'
     ]);
 
     grunt.registerTask('test', [

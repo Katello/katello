@@ -34,7 +34,7 @@ describe('Directive: alchEdit', function() {
             delete: function() {}
         };
 
-        i18nFilter = function() {
+        gettext = function() {
             this.$get = function() {
                 return function() {};
             };
@@ -42,7 +42,8 @@ describe('Directive: alchEdit', function() {
             return this;
         };
 
-        $provide.provider('i18nFilter', i18nFilter);
+        $provide.provider('gettext', gettext);
+        $provide.provider('translateFilter', gettext);
     }));
 
     beforeEach(inject(function(_$compile_, _$rootScope_) {

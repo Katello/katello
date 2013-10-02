@@ -3,25 +3,26 @@
   <div class="form">
     <input type="text"
            class="input input-search"
-           placeholder="{{ 'Filter' | i18n }}"
+           placeholder="{{ 'Filter' | translate }}"
            ng-model="repositorySearch">
     <button class="btn btn-primary fr"
+            translate
             ng-disabled="product.readonly"
             ng-click="openCreateRepository(product.id)">
-      {{ 'Create Repository' | i18n }}
+      Create Repository
     </button>
   </div>
 
   <table class="table table-striped">
     <thead>
       <tr>
-        <th>{{ "Name" | i18n }}</th>
-        <th>{{ "Type" | i18n }}</th>
-        <th>{{ "Last Sync" | i18n }}</th>
-        <th>{{ "Sync State" | i18n }}</th>
-        <th class="align-center">{{ "Packages" | i18n }}</th>
-        <th class="align-center">{{ "Errata" | i18n }}</th>
-        <th class="align-center">{{ "Puppet Modules" | i18n }}</th>
+        <th translate>Name</th>
+        <th translate>Type</th>
+        <th translate>Last Sync</th>
+        <th translate>Sync State</th>
+        <th class="align-center" translate>Packages</th>
+        <th class="align-center" translate>Errata</th>
+        <th class="align-center" translate>Puppet Modules</th>
       </tr>
     </thead>
 
