@@ -20,21 +20,21 @@
           %span
             .icon.red_icon.fl
             %h5
-              #{_("Invalid Subscriptions")}
+              #{systems_search_status_link(_("Invalid Subscriptions"), "red")}
           .sub_count.fr
             #{owner_info.total_invalid_compliance_consumers}
         %li
           %span
             .icon.yellow_icon.fl
             %h5
-              #{_("Insufficient Subscriptions")}
+              #{systems_search_status_link(_("Insufficient Subscriptions"), "yellow")}
           .sub_count.fr
             #{owner_info.total_partial_compliance_consumers}
         %li
           %span
             .icon.green_icon.fl
             %h5
-              #{_("Current Subscriptions")}
+              #{systems_search_status_link(_("Current Subscriptions"), "green")}
           .sub_count.fr
             #{owner_info.total_valid_compliance_consumers}
       %hr
@@ -42,4 +42,4 @@
           #{owner_info.total_consumers}
 
         %h4.fr
-          #{_("Total Systems")}
+          #{link_to(_("Total Systems"), "#{systems_path}#/systems")}

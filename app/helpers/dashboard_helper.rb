@@ -21,6 +21,12 @@ module DashboardHelper
     render :partial => "ajax_entry", :locals => {:name => name, :url => url, :class_wrap => class_wrapper, :identifier => identifier, :dropbutton => dropbutton, :quantity => quantity}
   end
 
+  def systems_search_status_link(anchor_text, status)
+    href_params = {:systems_path => systems_path, :status => status}
+    href_format = "%{systems_path}#/systems?search=status:%{status}"
+    link_to(anchor_text, href_format % href_params)
+  end
+
   def user_notices(num = quantity, options = {})
     truncate = options[:truncate] || 45
 
