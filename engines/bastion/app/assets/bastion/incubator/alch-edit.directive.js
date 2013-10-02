@@ -44,7 +44,7 @@ angular.module('alchemy')
                 $scope.editMode = true;
                 previousValue = $scope.model;
 
-                if ($scope.handleOptions !== undefined && !$scope.options) {
+                if ($scope.handleOptions !== undefined) {
                     options = $scope.handleOptions();
                 }
 
@@ -71,6 +71,7 @@ angular.module('alchemy')
 
         $scope.save = function() {
             var action = $scope.handleSave({ value: $scope.model });
+            $scope.editTrigger = false;
             handleAction(action);
         };
 

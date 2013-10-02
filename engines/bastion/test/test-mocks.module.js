@@ -82,8 +82,9 @@ angular.module('Bastion.test-mocks').factory('MockResource', function() {
 
         Resource.get = function(params, callback) {
             var item;
+
             angular.forEach(Resource.mockResources.results, function(value) {
-                if (value.id === params.id) {
+                if (value.id.toString() === params.id.toString()) {
                     item = value;
                 }
             });

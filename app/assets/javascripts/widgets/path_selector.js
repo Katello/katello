@@ -239,8 +239,8 @@ KT.path_select = function(div_id, name, environments, options_in){
         disable_all = function() {
             path_selector.find('input:checkbox').attr('disabled', 'disabled');
         },
-        set_paths = function() {
-
+        enable_all = function() {
+            path_selector.find('input:checkbox').removeAttr('disabled');
         },
         get_selected = function(){
             var selected = path_selector.find('input:checked'),
@@ -331,6 +331,7 @@ KT.path_select = function(div_id, name, environments, options_in){
         reposition_left: reposition_left,
         paths_id: paths_id,
         disable_all: disable_all,
+        enable_all: enable_all,
         hide: function() {path_selector.hide();}
     };
 };

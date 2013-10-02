@@ -14,72 +14,37 @@
 describe('Controller: SystemDetailsInfoController', function() {
     var $scope,
         $controller,
-        $http,
         Routes,
         System,
         SystemGroup,
-        ContentView,
         mockSystem,
         mockContentViews;
 
     beforeEach(module(
         'Bastion.systems',
         'Bastion.system-groups',
+        'Bastion.test-mocks',
         'systems/details/views/system-info.html',
         'systems/views/systems.html',
         'systems/views/systems-table-full.html'
     ));
 
-    beforeEach(inject(function(_$controller_, $rootScope, $q, _$http_) {
-        $controller = _$controller_;
-        $scope = $rootScope.$new();
-        $http = _$http_;
+    beforeEach(inject(function($injector) {
+        var $controller = $injector.get('$controller'),
+            $q = $injector.get('$q'),
+            $http = $injector.get('$http'),
+            ContentView = $injector.get('MockResource').$new();
 
-        mockSystem = {
-            failed: false,
-            uuid: 2,
-            facts: {
-                cpu: "Itanium",
-                "lscpu.architecture": "Intel Itanium architecture",
-                "lscpu.instructionsPerCycle": "6",
-                anotherFact: "yes"
-            },
-            environment: {
-                id: 1
-            }
-        };
-        System = {
-            get: function(params, callback) {
-                if (callback) {
-                    callback(mockSystem);
-                }
-                return mockSystem;
-            },
-            releaseVersions: function(params, callback) {
-                callback.apply(this, [['RHEL6']]);
-            },
-            saveSystemGroups: function() {}
-        };
+        System = $injector.get('MockResource').$new();
+        SystemGroup = $injector.get('MockResource').$new();
+        $scope = $injector.get('$rootScope').$new();
 
-        SystemGroup = {
-            query: function() {}
+        System.releaseVersions = function(params, callback) {
+            callback.apply(this, [['RHEL6']]);
         };
+        System.saveSystemGroups = function() {};
 
-        spyOn(System, 'get').andCallThrough();
         spyOn(System, 'releaseVersions').andReturn(['RHEL6']);
-
-        mockContentViews = {
-            results: [
-                {id: 1, name: 'ContentView1'},
-                {id: 2, name: 'ContentView2'}
-            ]
-        };
-
-        ContentView = {
-            query: function(params, callback) {
-                callback(mockContentViews);
-            }
-        };
 
         Routes = {
             apiCustomInfoPath: function(informable, id) {
@@ -89,8 +54,11 @@ describe('Controller: SystemDetailsInfoController', function() {
 
         $scope.setupSelector = function() {};
         $scope.pathSelector = {
-            select: function() {}
+            select: function() {},
+            enable_all: function() {},
+            disable_all: function() {}
         };
+        $scope.save = function() {};
 
         $controller('SystemDetailsInfoController', {
             $scope: $scope,
@@ -102,7 +70,18 @@ describe('Controller: SystemDetailsInfoController', function() {
             ContentView: ContentView
         });
 
-        $scope.system = System.get(function() {});
+        $scope.system = new System({
+            uuid: 2,
+            facts: {
+                cpu: "Itanium",
+                "lscpu.architecture": "Intel Itanium architecture",
+                "lscpu.instructionsPerCycle": "6",
+                anotherFact: "yes"
+            },
+            environment: {
+                id: 1
+            }
+        });
         $scope.$broadcast('system.loaded');
     }));
 
@@ -123,6 +102,12 @@ describe('Controller: SystemDetailsInfoController', function() {
         spyOn(System, 'saveSystemGroups');
         $scope.updateSystemGroups([{id: 1, name: "lalala"}, {id: 2, name: "hello!"}])
         expect(System.saveSystemGroups).toHaveBeenCalledWith({id: 2}, expected, jasmine.any(Function), jasmine.any(Function));
+    });
+
+    it("sets edit mode to false when saving a content view", function() {
+        $scope.saveContentView($scope.system);
+
+        expect($scope.editContentView).toBe(false);
     });
 
     describe("populates advanced system information", function () {

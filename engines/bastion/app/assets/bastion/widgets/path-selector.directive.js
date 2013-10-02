@@ -42,7 +42,7 @@ angular.module('Bastion.widgets').directive('pathSelector',
             });
 
             scope.$parent.setupSelector = function() {
-                $http.get(Routes.organizationEnvironmentsPath(scope.organization) + '/registerable_paths')
+                $http.get(Routes.organizationEnvironmentsPath(scope.organization()) + '/registerable_paths')
                 .success(function(paths) {
                     var options = {
                             inline: true,
@@ -63,7 +63,7 @@ angular.module('Bastion.widgets').directive('pathSelector',
                         var environments = pathSelect.get_selected();
 
                         scope.pathSelector = Object.keys(environments)[0];
-                        scope.onChange({ environment_id: scope.pathSelector });
+                        scope.onChange({ environmentId: scope.pathSelector });
                     });
 
                     scope.$parent.pathSelector = pathSelect;
