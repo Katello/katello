@@ -227,6 +227,10 @@ describe Api::V1::ProductsController, :katello => true do
     end
 
     it "should return json of product repositories" do
+      Package.stub!(:search).and_return({})
+      PuppetModule.stub!(:search).and_return({})
+      Repository.any_instance.stub(:last_sync).and_return(nil)
+
       @product.stub!(:readable?).and_return(true)
       @repositories.stub!(:where).and_return(@repositories)
       get 'repositories', :organization_id => @organization.label, :environment_id => @environment.id, :id => @product.id
