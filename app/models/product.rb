@@ -86,7 +86,7 @@ class Product < ActiveRecord::Base
     super
   end
 
-  def repos(env, include_disabled = false, content_view = nil)
+  def repos(env, include_disabled = false, content_view = nil, include_feedless = true)
     if content_view.nil?
       if !env.library?
         raise "No content view specified for the repos call in a " +
@@ -100,13 +100,10 @@ class Product < ActiveRecord::Base
     @repo_cache ||= {}
     @repo_cache[env.id] ||= content_view.repos_in_product(env, self)
 
-    if @repo_cache[env.id].blank? || include_disabled
-      @repo_cache[env.id]
-    else
-      # we only want the enabled repos to be visible
-      # This serves as a white list for redhat repos
-      @repo_cache[env.id].where(:enabled => true)
-    end
+    repositories = @repo_cache[env.id]
+    repositories = repositories.enabled if !include_disabled
+    repositories = repositories.has_feed if !include_feedless
+    repositories
   end
 
   def organization
