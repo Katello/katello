@@ -5,10 +5,14 @@
 
     <div class="details-actions fr">
       <button class="btn btn-danger"
-              ng-click="removeProduct(product)"
+              ng-hide="product.readonly"
+              ng-click="showConfirm = true"
               ng-disabled="!product.permissions.deletable">
         {{ "Remove Product" | i18n }}
       </button>
+      <div alch-confirm-modal="removeProduct(product)" show-confirm="showConfirm">
+        {{ "Are you sure you want to remove product \"%product\"?" | i18n: {product: product.name} }}
+      </div>
 
       <button class="btn" ng-click="table.closeItem()">
         <i class="icon-remove"></i>
