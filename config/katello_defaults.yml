@@ -30,6 +30,9 @@ common:
 
   url_prefix: "/katello"
 
+  # Puppet publishing location
+  puppet_repo_root: '/etc/puppet/environments/'
+
   # detect system locale or fallback to English
   system_lang: <%= ENV['LC_ALL'] || ENV['LC_MESSAGES'] || ENV['LANG'] || 'en' %>
 
