@@ -43,6 +43,23 @@ class ChangesetTest < MiniTest::Rails::ActiveSupport::TestCase
     end
   end
 
+  def test_add_content_view_check_promotion_exception
+    changeset = FactoryGirl.build_stubbed(:promotion_changeset)
+    library   = FactoryGirl.build_stubbed(:library)
+    env       = FactoryGirl.build_stubbed(:environment)
+    view      = FactoryGirl.build_stubbed(:content_view)
+    version   = FactoryGirl.build_stubbed(:content_view_version)
+    library.stubs(:content_view_versions).returns(mock(:find_by_content_view_id => version))
+    library.stubs(:content_views).returns([view])
+    env.stubs(:content_view_versions).returns(mock(:find_by_content_view_id => version))
+    env.stubs(:prior).returns(library)
+    changeset.environment = env
+
+    assert_raises(Errors::ChangesetContentException) do
+      changeset.add_content_view!(view)
+    end
+  end
+
   def test_content_view_changeset_promotion
     skip 'skipped temporarily to get travis tests working'
     Repository.any_instance.stubs(:clone_contents).returns([])
