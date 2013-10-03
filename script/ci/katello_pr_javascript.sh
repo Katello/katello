@@ -13,6 +13,9 @@ export DISPLAY=:99.0
 sh -e /etc/init.d/xvfb start
 
 npm install -g bower grunt-cli
+npm install grunt
+
 npm install
-bower install --dev
+bower install
+
 grunt ci
