@@ -88,6 +88,7 @@ angular.module('Bastion.products').controller('ProductFormController',
         }
 
         function error(response) {
+            $scope.working = false;
             angular.forEach(response.data.errors, function(errors, field) {
                 $scope.productForm[field].$setValidity('', false);
                 $scope.productForm[field].$error.messages = errors;
