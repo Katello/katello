@@ -114,3 +114,19 @@ if defined?(MiniTest)
   end
 
 end
+
+namespace :db do
+  namespace :test do
+    task :setup do
+      Rails.env = "test"
+      Rake::Task["db:create"].invoke
+      system("RAILS_ENV=test rake db:migrate") # must call shell command to run engine migrations
+    end
+
+    task :reset do
+      Rails.env = "test"
+      Rake::Task["db:drop"].invoke
+      Rake::Task["db:test:setup"].invoke
+    end
+  end
+end
