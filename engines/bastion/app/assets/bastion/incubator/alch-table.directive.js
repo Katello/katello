@@ -124,6 +124,7 @@ angular.module('alchemy')
                     var newElement = angular.element(sortIconTemplate);
                     newElement.find('.sort-icon').before(element.html());
                     newElement.addClass('sortable');
+                    newElement.addClass(element.attr('class'));
                     element.replaceWith(newElement);
                 }
                 return function(scope, element, attributes, alchTableHeadController) {
