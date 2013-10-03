@@ -5,10 +5,13 @@
   </a>
 
   <button class="btn btn-danger fr"
-          ng-click="removeRepository(repository)"
+          ng-click="showConfirm = true"
           ng-disabled="!repository.permissions.deletable">
     {{ "Remove Repository" | i18n }}
   </button>
+  <div alch-confirm-modal="removeRepository(repository)" show-confirm="showConfirm">
+    {{ "Are you sure you want to remove repository \"%repository\"?" | i18n: {repository: repository.name} }}
+  </div>
 </div>
 
 <div class="details fl">
