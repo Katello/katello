@@ -2,7 +2,7 @@
   <thead>
     <tr alch-table-head row-select>
       <th alch-table-column="name" sortable>{{ "Name" | i18n }}</th>
-      <th alch-table-column="status" sortable>{{ "Status" | i18n }}</th>
+      <th alch-table-column="status" sortable class="align-center">{{ "Subscription Status" | i18n }}</th>
       <th alch-table-column="os" sortable>{{ "OS" | i18n }}</th>
       <th alch-table-column="environment" sortable>{{ "Environment" | i18n }}</th>
       <th alch-table-column="contentView" sortable>{{ "Content View" | i18n }}</th>
@@ -16,8 +16,8 @@
       <td alch-table-cell>
         <a class="clickable" ng-click="table.openDetails(system)">{{ system.name }}</a>
       </td>
-      <td alch-table-cell>
-        <span class="status_icon" ng-class="getStatusColor(system.compliance.status)"></span>
+      <td alch-table-cell class="align-center">
+        <span class="icon-circle" ng-class="table.getStatusColor(system.compliance.status)"></span>
       </td>
       <td alch-table-cell>{{ system.distribution }}</td>
       <td alch-table-cell>{{ system.environment.name }}</td>

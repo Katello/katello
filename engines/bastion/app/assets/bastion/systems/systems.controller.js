@@ -42,7 +42,7 @@ angular.module('Bastion.systems').controller('SystemsController',
         $scope.table = nutupane.table;
         $scope.removeRow = nutupane.removeRow;
 
-        $scope.getStatusColor = function(status) {
+        $scope.table.getStatusColor = function(status) {
             var colors = {
                     'valid': 'green',
                     'partial': 'yellow',
