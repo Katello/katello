@@ -191,6 +191,13 @@
       </div>
 
       <div class="detail">
+        <div class="flash_hud" ng-show="editContentView">
+          <ul class="flash_messages warning">
+            <li>
+              {{ "You must select a new content view before your change of environment can be saved. Use the cancel button on content view selection to revert your environment selection." | i18n }}
+            </li>
+          </ul>
+        </div>
         <span class="info-label">{{ "Environment" | i18n }}</span>
         <span id="environment_path_selector" 
               readonly="system.readonly"
