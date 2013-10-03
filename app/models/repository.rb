@@ -183,7 +183,7 @@ class Repository < ActiveRecord::Base
   end
 
   def after_sync(pulp_task_id)
-    #self.handle_sync_complete_task(pulp_task_id)
+    self.handle_sync_complete_task(pulp_task_id)
     self.index_content
   end
 
