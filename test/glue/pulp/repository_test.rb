@@ -121,6 +121,41 @@ class GluePulpRepoTest < GluePulpRepoTestBase
 
 end
 
+
+class GluePulpRepoAfterSyncTest < GluePulpRepoTestBase
+
+  def self.before_suite
+    super
+    VCR.insert_cassette('pulp/repository/after_sync')
+    @@fedora_17_x86_64.create_pulp_repo
+  end
+
+  def self.after_suite
+    @@fedora_17_x86_64.destroy_repo
+    VCR.eject_cassette
+  end
+
+  def setup
+    super
+    @fedora_17_x86_64 = @@fedora_17_x86_64
+    @fedora_17_x86_64.relative_path = '/test_path/'
+  end
+
+  def test_handle_sync_complete_task
+    mock_notifier = Minitest::Mock.new
+    mock_notifier.expect(:success, nil)
+
+    task_list = @fedora_17_x86_64.sync
+    TaskSupport.wait_on_tasks(task_list)
+
+    @fedora_17_x86_64.handle_sync_complete_task(task_list.first.uuid, mock_notifier)
+
+    assert PulpTaskStatus.where(:uuid => task_list.first.uuid).length > 0
+  end
+
+end
+
+
 class GluePulpChangeFeedTest < GluePulpRepoTestBase
 
   def setup

@@ -13,14 +13,14 @@
     #{@repo_status[repo.id][:display_size]}
     (#{@repo_status[repo.id][:packages]})
   %td.result
-    %span.result-info
-      #{@repo_status[repo.id][:state]}
-    %span.info-tipsy.details_icon-grey{ "class" => "#{"hidden" if !error_state?(@repo_status[repo.id])}" }
+    %a.info-tipsy.clickable.icon-warning-sign{ "class" => "#{"hidden" if !error_state?(@repo_status[repo.id])}", :href => notices_path }
       %span.hidden-text.hidden
         .la.error-tipsy
           %ul
-            - if !@repo_status[repo.id][:error_details].is_a?(String)
-              - @repo_status[repo.id][:error_details].each do |error|
+            - if @repo_status[repo.id][:error_details]
+              - @repo_status[repo.id][:error_details][:messages].each do |error|
                 %li #{error}
+    %span.result-info
+      #{@repo_status[repo.id][:state]}
   - if @show_org
     %td
