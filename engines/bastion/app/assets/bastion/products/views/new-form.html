@@ -78,7 +78,13 @@
   <div class="control-group buttons">
     <div class="input">
       <button ng-click="table.closeItem()">{{ "Cancel" | i18n }}</button>
-      <button ng-click="save(product)" class="btn-primary" ng-disabled="productForm.$invalid">{{ "Create" | i18n }}</button>
+      <button class="btn-primary"
+              ng-click="save(product); working = true"
+              ng-disabled="productForm.$invalid || working">
+        <i class="icon-spinner icon-spin" ng-show="working"></i>
+        <span ng-show="working">{{ "Creating..." | i18n }}</span>
+        <span ng-hide="working">{{ "Create" | i18n }}</span>
+      </button>
     </div>
   </div>
 
