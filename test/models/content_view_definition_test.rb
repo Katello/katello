@@ -146,6 +146,16 @@ class ContentViewDefinitionTest < MiniTest::Rails::ActiveSupport::TestCase
     content_view.versions.each { |v| refute_nil v.definition_archive }
   end
 
+  def test_publish_composite_with_conflicts
+    content_view_def = FactoryGirl.create(:content_view_definition)
+    content_view_def.composite = true
+    content_view_def.save!
+    content_view_def.stubs(:has_puppet_repo_conflicts?).returns(true)
+    assert_raises(RuntimeError) do
+      content_view_def.publish('test_name', 'test_description', 'test_label')
+    end
+  end
+
   def test_archive
     content_view_def = FactoryGirl.create(:content_view_definition)
     assert content_view_def.archive

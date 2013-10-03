@@ -254,6 +254,9 @@ class ContentView < ActiveRecord::Base
   # TODO: break up method
   # rubocop:disable MethodLength
   def refresh_view(options = { })
+    if !content_view_definition.ready_to_publish?
+      fail _("Cannot refresh view. Check definition for repository conflicts.")
+    end
     options = { :async => true, :notify => false }.merge options
 
     # retrieve the 'next' version id to use
