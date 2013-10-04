@@ -186,6 +186,7 @@ class Repository < ActiveRecord::Base
   def after_sync(pulp_task_id)
     self.handle_sync_complete_task(pulp_task_id)
     self.index_content
+    Glue::Event.trigger(Katello::Actions::RepositorySync, self)
   end
 
   def as_json(*args)
