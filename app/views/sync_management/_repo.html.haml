@@ -17,7 +17,7 @@
       %span.hidden-text.hidden
         .la.error-tipsy
           %ul
-            - if @repo_status[repo.id][:error_details]
+            - if @repo_status[repo.id][:error_details].present? && error_state?(@repo_status[repo.id])
               - @repo_status[repo.id][:error_details][:messages].each do |error|
                 %li #{error}
     %span.result-info
