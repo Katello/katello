@@ -31,8 +31,14 @@
           <a class="clickable" ng-href="#/products/{{ product.id }}/repositories/{{ repository.id }}">{{ repository.name }}</a>
         </td>
         <td>{{ repository.content_type }}</td>
-        <td>{{ repository.last_sync | date:"short" }}</td>
-        <td>{{ repository.sync_state }}</td>
+        <td>
+          <span ng-show="repository.feed">{{ repository.last_sync | date:"short" }}</span>
+          <span ng-hide="repository.feed">{{ "N/A" | i18n }}</span>
+        </td>
+        <td>
+          <span ng-show="repository.feed">{{ repository.sync_state }}</span>
+          <span ng-hide="repository.feed">{{ "N/A" | i18n }}</span>
+        </td>
         <td class="align-center">
           <a ng-href="/katello/content_search#/!=&search[subgrid][repo_id]={{ repository.id }}&search[subgrid][type]=repo_packages">
             {{ repository.content_counts.rpm || 0 }}

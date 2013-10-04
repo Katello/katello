@@ -47,11 +47,11 @@ module SyncManagementHelper
 
   module RepoMethods
     # returns all repos in hash representation with minors and arch children included
-    def collect_repos(products, env, include_disabled = false)
+    def collect_repos(products, env, include_disabled = false, include_feedless = true)
       Glue::Pulp::Repos.prepopulate! products, env, []
 
       products.map do |prod|
-        minor_repos, repos_without_minor = collect_minor(prod.repos(env, include_disabled))
+        minor_repos, repos_without_minor = collect_minor(prod.repos(env, include_disabled, nil, include_feedless))
         { :name     => prod.name, :object => prod, :id => prod.id, :type => "product", :repos => repos_without_minor,
           :children => minors(minor_repos), :organization => prod.organization.name }
       end
@@ -106,6 +106,16 @@ module SyncManagementHelper
           end
         end
       end
+    end
+  end
+
+  def has_repos?(product)
+    if product[:children].present?
+      product[:children].collect do |child|
+        has_repos?(child)
+      end
+    else
+      product[:repos].length > 0
     end
   end
 

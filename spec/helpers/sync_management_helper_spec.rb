@@ -44,9 +44,17 @@ describe SyncManagementHelper do
   let(:environment) { organization.library }
   let(:object) { DummyObject.new }
   let(:product_1) { Product.create!(ProductTestData::PRODUCT_WITH_ATTRS) }
+
   describe "#collect_repos", :katello => true do #TODO headpin
     subject { object.collect_repos([product_1], environment).first }
     its(:keys) { should include(:name, :id, :type, :repos, :children, :organization) }
+  end
+
+  describe "#has_repos?", :katello => true do #TODO headpin
+    subject { object.has_repos?(object.collect_repos([product_1], environment).first) }
+    it "should return false for a product without repos" do 
+      subject.should eql(false)
+    end
   end
 
   describe "#collect_minor" do

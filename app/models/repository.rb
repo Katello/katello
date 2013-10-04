@@ -69,6 +69,7 @@ class Repository < ActiveRecord::Base
 
   default_scope order('repositories.name ASC')
   scope :enabled, where(:enabled => true)
+  scope :has_feed, where('feed IS NOT NULL')
   scope :in_default_view, joins(:content_view_version => :content_view).
     where("content_views.default" => true)
   scope :in_environment, lambda { |env| where(environment_id: env.id) }
