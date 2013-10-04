@@ -147,13 +147,18 @@ Pulp doesn't send correct headers."
       raise Errors::SecurityViolation
     end
 
-    User.current = User.hidden.first
-
     repo_id = params['payload']['repo_id']
+    task_id = params['call_report']['task_id']
+    if (task = TaskStatus.find_by_uuid(task_id)) && task.user
+      User.current = task.user # we act on behalf of the user that triggered the sync
+    else
+      User.current = User.hidden.first
+    end
+
     repo    = Repository.where(:pulp_id => repo_id).first
     raise _("Couldn't find repository '%s'") % repo.name if repo.nil?
     Rails.logger.info("Sync_complete called for #{repo.name}, running after_sync.")
-    repo.async(:organization => repo.environment.organization).after_sync(params[:call_report][:task_id])
+    repo.async(:organization => repo.environment.organization).after_sync(task_id)
     respond_for_status
   end
 
