@@ -5,7 +5,7 @@ attributes :environment, :description
 attributes :name, :release, :ipv4_address
 attributes :distribution_name, :kernel, :arch, :memory
 attributes :compliance, :serviceLevel, :autoheal
-attributes :activation_key, :href, :system_template_id
+attributes :href, :system_template_id
 attributes :created, :checkin_time
 # TODO needs investigation whether it is safe to remove
 attributes :facts
@@ -24,6 +24,10 @@ end
 
 child :environment => :environment do
   extends 'api/v2/environments/show'
+end
+
+child :activation_keys => :activation_keys do
+    attributes :id, :name, :description
 end
 
 extends 'api/v2/common/timestamps'
