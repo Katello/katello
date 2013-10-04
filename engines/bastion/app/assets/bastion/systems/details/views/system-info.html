@@ -52,7 +52,7 @@
     </section>
 
     <section>
-      <h4>{{ "Subscription Status Details" | i18n }}</h4>
+      <h4>{{ "Subscriptions" | i18n }}</h4>
 
       <div class="detail">
         <span class="info-label">{{ "Subscription Status" | i18n }}</span>
@@ -88,6 +88,23 @@
                 options-format="option for option in options"
                 on-save="save(system)">
           </span>
+      </div>
+
+      <div class="detail">
+        <span class="info-label">{{ "Activation Key(s)" | i18n }}</span>
+        <span class="info-value">
+          <span ng-show="system.activation_keys.length == 0">
+            {{ "None" | i18n }}
+          </span>
+          <ul ng-show="system.activation_keys.length > 0">
+            <li ng-repeat="ak in system.activation_keys">
+              <span>
+                <a ng-href="{{ getActivationKeyLink(ak) }}">{{ ak.name }}</a>
+              </span>
+              <span ng-show="ak.description"> - {{ ak.description }}</span>
+            </li>
+          </ul>
+        </span>
       </div>
 
       <div class="divider"></div>
