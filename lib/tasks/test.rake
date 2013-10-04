@@ -113,6 +113,17 @@ if defined?(MiniTest)
     t.libs.push 'test'
   end
 
+  namespace :db do
+    namespace :test do
+      task :setup do
+        Rails.env = 'test'
+        Rake::Task["db:drop"].invoke
+        Rake::Task["db:create"].invoke
+        Rake::Task["db:migrate"].invoke
+      end
+    end
+  end
+
 end
 
 namespace :db do
