@@ -158,6 +158,11 @@ angular.module('Bastion.systems').controller('SystemDetailsInfoController',
             return $http.delete(url).success(success).error(customInfoErrorHandler);
         };
 
+        $scope.getActivationKeyLink = function(activationKey) {
+            var panel = '/!=&panel=activation_key_%s&panelpage=edit'.replace('%s', activationKey.id);
+            return Routes.activationKeysPath({anchor: panel});
+        };
+
         // TODO upgrade to Angular 1.1.4 so we can move this into a directive
         // and use dynamic templates (http://code.angularjs.org/1.1.4/docs/partials/guide/directive.html)
         $scope.getTemplateForType = function(value) {
