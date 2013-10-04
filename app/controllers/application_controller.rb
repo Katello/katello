@@ -200,7 +200,7 @@ class ApplicationController < ActionController::Base
     rescue ActiveRecord::RecordNotFound => error
       log_exception error
       session.delete(:current_organization_id)
-      org_not_found_error(error)
+      org_not_found_error
     end
   end
 
