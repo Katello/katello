@@ -12,6 +12,8 @@
 
 class PulpTaskStatus < TaskStatus
   use_index_of TaskStatus if Katello.config.use_elasticsearch
+  WAIT_TIMES = [0.5, 1, 2, 4, 8, 16]
+  WAIT_TIME_STEP = 5
 
   def refresh
     PulpTaskStatus.refresh(self)
@@ -35,17 +37,19 @@ class PulpTaskStatus < TaskStatus
     end
 
     timeout_count = 0
+    attempts = 0
     loop do
       begin
         break if !any_task_running(async_tasks)
         timeout_count = 0
+        attempts += 1
       rescue RestClient::RequestTimeout => e
         timeout_count += 1
         Rails.logger.error "Timeout in pulp occurred: #{timeout_count}"
         raise e if timeout_count >= 10 #10 timeouts in a row, lets bail
         sleep 50 #if we got a timeout, lets backoff and let it catchup
       end
-      sleep 15
+      sleep poll_wait_time(attempts)
     end
     async_tasks
   end
@@ -101,4 +105,11 @@ class PulpTaskStatus < TaskStatus
     return false
   end
 
+  def self.poll_wait_time(attempts)
+    if attempts >= WAIT_TIMES.length * WAIT_TIME_STEP
+      WAIT_TIMES.last
+    else
+      WAIT_TIMES[(attempts.to_i / WAIT_TIME_STEP)]
+    end
+  end
 end
