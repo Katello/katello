@@ -64,6 +64,8 @@ angular.module('Bastion.products').controller('DiscoveryFormController',
 
             if ($scope.products.length > 0) {
                 $scope.createRepoChoices.existingProductId = $scope.products[0].id;
+            } else {
+                $scope.createRepoChoices.newProduct = "true";
             }
         });
 
@@ -90,7 +92,7 @@ angular.module('Bastion.products').controller('DiscoveryFormController',
         $scope.creating = function() {
             return $scope.createRepoChoices.creating;
         };
-        
+
         $scope.gpgKeys = GPGKey.query();
 
         $scope.$watch('discovery.selected', function(newList, oldList) {
