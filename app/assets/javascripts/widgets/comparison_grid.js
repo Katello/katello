@@ -264,7 +264,7 @@ KT.comparison_grid = function(){
             } else {
                 controls.horizontal_scroll.reset();
                 controls.horizontal_scroll.hide();
-                $('#column_headers_window').width(num_columns_shown * 100 + 1);
+                $('#column_headers_window').width(num_columns_shown * 100);
             }
         },
         set_loading = function(show){
@@ -821,7 +821,7 @@ KT.comparison_grid.templates = (function(i18n) {
 
             if( data['in_column'] ){
                 if( data['display'] !== undefined ){
-                    display = '<div class="grid_cell_data one-line-ellipsis">' + data['display'] + '</div>';
+                    display = '<div class="grid_cell_data">' + data['display'] + '</div>';
                 } else {
                     display = $('<i/>', { 'class' : "dot_icon-black" });
                 }
