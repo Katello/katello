@@ -306,10 +306,10 @@ class ContentViewDefinition < ContentViewDefinitionBase
     end
 
     if process_errata_and_groups
-      [FilterRule::ERRATA, FilterRule::PACKAGE_GROUP].each do |content_type|
+      group_tasks = [FilterRule::ERRATA, FilterRule::PACKAGE_GROUP].collect do |content_type|
         repo.clone_contents_by_filter(cloned, content_type, nil)
       end
-
+      PulpTaskStatus.wait_for_tasks(group_tasks)
       cloned.purge_empty_groups_errata
     end
 
