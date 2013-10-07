@@ -27,7 +27,7 @@ module Glue::Candlepin::Consumer
       as_json_hook :consumer_as_json
 
       lazy_accessor :href, :facts, :cp_type, :href, :idCert, :owner, :lastCheckin, :created, :guestIds,
-                    :installedProducts, :autoheal, :releaseVer, :serviceLevel, :capabilities,
+                    :installedProducts, :autoheal, :releaseVer, :serviceLevel, :capabilities, :entitlementStatus,
                     :initializer => (lambda do |s|
                                        if uuid
                                          consumer_json = Resources::Candlepin::Consumer.get(uuid)
@@ -563,9 +563,22 @@ module Glue::Candlepin::Consumer
         end
       end
     end
+
+    def populate_from(candlepin_systems)
+      found = candlepin_systems.find { |system| system['uuid'] == self.uuid }
+      prepopulate(found.with_indifferent_access) if found
+      !found.nil?
+    end
+
   end
 
   module ClassMethods
+
+    def prepopulate!(systems)
+      uuids = systems.collect { |system| [:uuid, system.uuid] }
+      items = Resources::Candlepin::Consumer.get(uuids)
+      systems.each { |system| system.populate_from(items) }
+    end
 
     def all_by_pool(pool_id)
       entitlements = Resources::Candlepin::Entitlement.get

@@ -211,7 +211,7 @@ Schedules the consumer identity certificate regeneration
     filters << {:terms => {:uuid => System.all_by_pool_uuid(params['pool_id']) }} if params['pool_id']
 
     options = {
-        :filters        => filters,
+        :filters       => filters,
         :load_records? => true
     }
     options[:sort_by] = params[:sort_by] if params[:sort_by]
@@ -223,6 +223,7 @@ Schedules the consumer identity certificate regeneration
 
     items = Glue::ElasticSearch::Items.new(System)
     systems, total_count = items.retrieve(query_string, params[:offset], options)
+    System.prepopulate!(systems)
 
     if params[:paged]
       systems = {
