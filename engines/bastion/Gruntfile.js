@@ -83,6 +83,19 @@ module.exports = function (grunt) {
             singleRun: {
                 configFile: 'karma.conf.js',
                 singleRun: true
+            },
+            coverage: {
+                configFile: 'karma.conf.js',
+                reporters: ['progress', 'coverage'],
+                preprocessors: {
+                    'app/assets/bastion/**/*.html': ['ng-html2js'],
+                    'app/assets/bastion/**/*.js': ['coverage']
+                },
+                coverageReporter: {
+                    type: 'cobertura',
+                    dir: 'coverage/'
+                },
+                singleRun: true
             }
         },
         docular: {
@@ -125,7 +138,8 @@ module.exports = function (grunt) {
     grunt.registerTask('ci', [
         'connect:test',
         'jshint',
-        'karma:ci'
+        'karma:ci',
+        'karma:coverage'
     ]);
 
     grunt.registerTask('build', [
