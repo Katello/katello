@@ -23,6 +23,7 @@
                name="name"
                type="text"
                tabindex="1"
+               autofocus
                required>
         <span class="note error" ng-show="providerForm.name.$invalid">
           <ul>
@@ -35,8 +36,8 @@
 
     <div class="control-group buttons">
       <div class="input">
-        <button ng-click="transitionTo('products.new.form')">{{ "Cancel" | i18n }}</button>
-        <button ng-click="save(provider)" class="btn-primary">{{ "Create" | i18n }}</button>
+        <button type="button" ng-click="transitionTo('products.new.form')">{{ "Cancel" | i18n }}</button>
+        <button tabindex="2" class="btn-primary" ng-click="save(provider)">{{ "Create" | i18n }}</button>
       </div>
     </div>
 
