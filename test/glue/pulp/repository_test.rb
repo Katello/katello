@@ -212,7 +212,7 @@ class GluePulpPuppetRepoTest < GluePulpRepoTestBase
     Repository.any_instance.expects(:unit_search).returns([])
     @filepath = File.join(Rails.root, "test/fixtures/puppet/puppetlabs-ntp-2.0.1.tar.gz")
     @p_forge.upload_content(@filepath)
-    assert_includes @p_forge.puppet_modules.map(&:name), "puppetlabs-ntp"
+    assert_includes @p_forge.puppet_modules.map(&:name), "ntp"
   end
 end
 

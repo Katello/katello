@@ -27,8 +27,22 @@ module Glue::Pulp::PuppetModule
         attrs = Katello.pulp_server.extensions.puppet_module.find_by_unit_id(id)
         ::PuppetModule.new(attrs) if !attrs.nil?
       end
-    end
 
+      def self.generate_unit_data(filepath)
+        data = parse_metadata(filepath)
+
+        unit_key = {}.with_indifferent_access
+        unit_metadata = {}.with_indifferent_access
+        unit_key[:name] = data[:name][/\A.*-(.*)\z/, 1]
+        unit_key[:author] = data[:name][/\A(.*)-.*\z/, 1]
+        unit_key.merge!(data.slice(:version))
+
+        unit_metadata.merge!(data.slice(:dependences, :description, :license, :project_page, :source, :summary, :tag_list))
+        unit_metadata[:tag_list] ||= []
+
+        return unit_key, unit_metadata
+      end
+    end
   end
 
   module InstanceMethods
