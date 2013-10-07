@@ -85,19 +85,10 @@
     </div>
   </div>
 
-  <div class="control-group buttons">
-    <div class="input">
-      <button type="button" ng-click="table.closeItem()" translate>Cancel</button>
-      <button class="btn-primary"
-              tabindex="6"
-              type="submit"
-              ng-click="save(product); working = true"
-              ng-disabled="productForm.$invalid || working">
-        <i class="icon-spinner icon-spin" ng-show="working"></i>
-        <span ng-show="working" translate>Creating...</span>
-        <span ng-hide="working" translate>Create</span>
-      </button>
-    </div>
+  <div alch-save-control
+       on-cancel="table.closeItem()"
+       on-save="save(product)"
+       invalid="productForm.$invalid">
   </div>
 
 </form>
