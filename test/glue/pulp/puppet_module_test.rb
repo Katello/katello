@@ -65,4 +65,16 @@ class GluePulpPuppetModuleTest < MiniTest::Rails::ActiveSupport::TestCase
   ensure
     @dev_repo.destroy
   end
+
+  def test_generate_unit_data
+    path = File.join(Rails.root, "test/fixtures/puppet/puppetlabs-ntp-2.0.1.tar.gz")
+    unit_key, unit_metadata = PuppetModule.generate_unit_data(path)
+
+    assert_equal "puppetlabs", unit_key["author"]
+    assert_equal "ntp", unit_key[:name]
+
+    assert_equal [], unit_metadata[:tag_list]
+    assert_nil unit_metadata[:name]
+    assert_nil unit_metadata[:author]
+  end
 end
