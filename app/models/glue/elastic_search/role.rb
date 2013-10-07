@@ -21,6 +21,8 @@ module Glue::ElasticSearch::Role
       mapping do
         indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
         indexes :name_sort, :type => 'string', :index => :not_analyzed
+        indexes :self_role, :type => 'boolean'
+        indexes :locked, :type => 'boolean'
       end
     end
   end
