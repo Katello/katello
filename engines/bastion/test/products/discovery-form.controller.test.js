@@ -14,6 +14,7 @@
 describe('Controller: DiscoveryFormController', function() {
     var $scope,
         Product,
+        FormUtils,
         $httpBackend;
 
     beforeEach(module('Bastion.products', 'Bastion.test-mocks'));
@@ -29,6 +30,7 @@ describe('Controller: DiscoveryFormController', function() {
         $scope = $injector.get('$rootScope').$new();
         $httpBackend = $injector.get('$httpBackend');
         Product = $injector.get('MockResource').$new();
+        FormUtils = $injector.get('FormUtils');
 
         $controller('DiscoveryFormController', {
             $scope: $scope,
@@ -38,7 +40,8 @@ describe('Controller: DiscoveryFormController', function() {
             Provider: Provider,
             Product: Product,
             Repository: Repository,
-            GPGKey: GPGKey
+            GPGKey: GPGKey,
+            FormUtils: FormUtils
         });
     }));
 
@@ -78,13 +81,12 @@ describe('Controller: DiscoveryFormController', function() {
     });
 
     it('should fetch a label whenever the name changes', function() {
-        $httpBackend.expectGET('/katello/organizations/default_label?name=ChangedName').respond('changed_name');
+        spyOn(FormUtils, 'labelize');
 
         $scope.createRepoChoices.product.name = 'ChangedName';
         $scope.$apply();
-        $httpBackend.flush();
 
-        expect($scope.createRepoChoices.product.label).toBe('changed_name');
+        expect(FormUtils.labelize).toHaveBeenCalled();
     });
 
     it('should save a product if creating repos on a new product', function() {

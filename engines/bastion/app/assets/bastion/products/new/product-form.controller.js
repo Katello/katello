@@ -16,11 +16,11 @@
  * @name  Bastion.products.controller:ProducFormController
  *
  * @requires $scope
- * @requires $http
  * @requires $q
  * @requires Product
  * @requires Provider
  * @requires CurrentOrganization
+ * @requires FormUtils
  *
  * @description
  *   Provides the functionality specific to Products for use with the Nutupane UI pattern.
@@ -28,10 +28,14 @@
  *   within the table.
  */
 angular.module('Bastion.products').controller('ProductFormController',
-    ['$scope', '$http', '$q', 'Product', 'Provider', 'GPGKey',
-    function($scope, $http, $q, Product, Provider, GPGKey) {
+    ['$scope', '$q', 'Product', 'Provider', 'GPGKey', 'FormUtils',
+    function($scope, $q, Product, Provider, GPGKey, FormUtils) {
 
         $scope.product = $scope.product || new Product();
+
+        $scope.$watch('product.name', function() {
+            FormUtils.labelize($scope.product, $scope.productForm);
+        });
 
         $scope.$on('$stateChangeSuccess', function(event, toState) {
             if (toState.name === 'products.new.form') {
@@ -47,20 +51,6 @@ angular.module('Bastion.products').controller('ProductFormController',
         $scope.save = function(product) {
             product.$save(success, error);
         };
-
-        $scope.$watch('product.name', function() {
-            $http.get(
-                '/katello/organizations/default_label', {
-                params: {'name': $scope.product.name}
-            })
-            .success(function(response) {
-                $scope.product.label = response;
-            })
-            .error(function(response) {
-                $scope.productForm.label.$setValidity('', false);
-                $scope.productForm.label.$error.messages = response.errors;
-            });
-        });
 
         function fetchProviders() {
             var deferred = $q.defer();
