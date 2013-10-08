@@ -7,6 +7,7 @@ attributes :distribution_name, :kernel, :arch, :memory
 attributes :compliance, :serviceLevel, :autoheal
 attributes :href, :system_template_id
 attributes :created, :checkin_time
+attributes :installedProducts
 # TODO needs investigation whether it is safe to remove
 attributes :facts
 
