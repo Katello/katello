@@ -437,7 +437,7 @@ This information is then used for computing the errata available for the system.
     result[:processed_ids]  = processed_ids
     result[:error_ids]      = error_ids
     result[:unknown_labels] = unknown_paths
-    if error_ids.count > 0 || unknown_paths.count > 0
+    if error_ids.present? || unknown_paths.present?
       result[:result] = "error"
     else
       result[:result] = "ok"

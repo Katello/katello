@@ -59,7 +59,7 @@ describe Api::V1::SystemsController do
 
     if Katello.config.katello?
       Katello.pulp_server.extensions.consumer.stub!(:create).and_return({ :id => uuid })
-      Katello.pulp_server.extensions.consumer.stub!(:update).and_return(true)
+      Katello.pulp_server.extensions.consumer.stub!(:regenerate_applicability).and_return(TaskStatus.new)
     end
 
     System.any_instance.stub(:consumer_as_json).and_return({})
@@ -497,8 +497,10 @@ describe Api::V1::SystemsController do
       @sys.facts = {}
       System.any_instance.stub(:guest).and_return('false')
       System.any_instance.stub(:guests).and_return([])
+      System.any_instance.stub(:regenerate_applicability).and_return(TaskStatus.new)
       Resources::Candlepin::Consumer.should_receive(:update).once.with(uuid, {}, nil, nil, nil, nil, nil,
                                                             "#{@environment_2.id}-#{@sys.content_view.id}", nil, nil).and_return(true)
+      System.any_instance.should_receive(:update_pulp_consumer).and_return(true)
       put :update, :id => uuid, :environment_id => @environment_2.id
       response.body.should == @sys.to_json
       response.should be_success
@@ -520,6 +522,8 @@ describe Api::V1::SystemsController do
       @sys.capabilities = {:name => 'cores'}
       System.any_instance.stub(:guest).and_return('false')
       Resources::Candlepin::Consumer.should_receive(:update).once.with(uuid, {"sockets" => 0}, nil, nil, nil, nil, nil, anything, {:name => "cores"}, nil).and_return(true)
+      System.any_instance.should_receive(:update_pulp_consumer).and_return(true)
+
       put :update, :id => uuid, :environment_id => @environment_2.id
       response.body.should == @sys.to_json
       response.should be_success
@@ -591,7 +595,7 @@ describe Api::V1::SystemsController do
     end
 
     it "should retrieve Consumer's errata from pulp" do
-      Katello.pulp_server.extensions.consumer.should_receive(:applicable_errata).with(@system.uuid)
+      Katello.pulp_server.extensions.consumer.should_receive(:applicable_errata).with([@system.uuid]).and_return([])
       get :errata, :id => @system.uuid
     end
   end

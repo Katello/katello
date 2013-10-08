@@ -130,6 +130,11 @@ module Glue::Pulp::ConsumerGroup
       raise e
     end
 
+    def errata(type = nil)
+      uuids = self.systems.pluck(:uuid)
+      ::Errata.applicable_for_consumers(uuids, type)
+    end
+
     def install_consumer_errata(errata_ids)
       Rails.logger.debug "Scheduling errata install for consumer group #{self.pulp_id}"
 
