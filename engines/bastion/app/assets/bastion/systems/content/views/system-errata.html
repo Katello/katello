@@ -41,7 +41,7 @@
         </thead>
 
         <tbody>
-          <tr alch-table-row ng-repeat="erratum in table.rows | filter:table.errataCompare" row-select>
+          <tr alch-table-row ng-repeat="erratum in table.rows | filter:table.errataCompare" row-select="erratum">
             <td alch-table-cell >{{ erratum.type }}</td>
             <td alch-table-cell >
               <a ng-click="table.transitionToErratum(erratum)">

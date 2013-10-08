@@ -301,7 +301,8 @@ class ContentSearchController < ApplicationController
 
   def repo_errata
     offset = params[:offset] || 0
-    errata = Errata.search('', offset, current_user.page_size, :repoids => [@repo.pulp_id])
+    errata = Errata.search('', :start => offset, :page_size => current_user.page_size,
+                               :filters => {:repoids => [@repo.pulp_id]})
 
     rows = errata.collect do |e|
       { :name => errata_display(e), :id => e.id, :data_type => "errata", :value => e.id,
@@ -393,8 +394,8 @@ class ContentSearchController < ApplicationController
               Package.search('', offset, current_user.page_size,
                              repo_map.keys, [:nvrea_sort, "ASC"], process_search_mode)
             when :errata
-              Errata.search('', offset, current_user.page_size,
-                            :repoids =>  repo_map.keys, :search_mode => process_search_mode)
+              Errata.search('', :start => offset, :page_size => current_user.page_size,
+                                :filters => {:repoids =>  repo_map.keys}, :search_mode => process_search_mode)
             when :puppet_module
               PuppetModule.search('', { :start => offset, :page_size => current_user.page_size,
                                         :repoids => repo_map.keys, :search_mode => process_search_mode })

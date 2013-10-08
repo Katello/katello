@@ -207,9 +207,10 @@ class GluePulpPuppetRepoTest < GluePulpRepoTestBase
   end
 
   def test_upload_puppet_module
-    PuppetModule.expects(:index_puppet_modules).returns(true)
-    Repository.any_instance.expects(:generate_metadata)
-    Repository.any_instance.expects(:unit_search).returns([])
+    Repository.any_instance.expects(:trigger_contents_changed).with() do |options|
+      options[:wait] == false && options[:reindex] == false && options[:index_units].size > 0
+    end
+
     @filepath = File.join(Rails.root, "test/fixtures/puppet/puppetlabs-ntp-2.0.1.tar.gz")
     @p_forge.upload_content(@filepath)
     assert_includes @p_forge.puppet_modules.map(&:name), "ntp"

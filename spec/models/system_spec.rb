@@ -297,6 +297,7 @@ describe System do
   context "pulp attributes", :katello => true do
     it "should update package-profile" do
       Katello.pulp_server.extensions.consumer.should_receive(:upload_profile).once.with(uuid, 'rpm', package_profile).and_return(true)
+      System.any_instance.should_receive(:generate_applicability).once
       @system.upload_package_profile(package_profile)
     end
   end
