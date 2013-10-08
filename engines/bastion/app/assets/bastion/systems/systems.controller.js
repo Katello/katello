@@ -17,8 +17,11 @@
  *
  * @requires $scope
  * @requires $state
+ * @requires $location
+ * @requires gettext
  * @requires Nutupane
- * @requires Routes
+ * @requires System
+ * @requires CurrentOrganization
  *
  * @description
  *   Provides the functionality specific to Systems for use with the Nutupane UI pattern.
@@ -26,8 +29,8 @@
  *   within the table.
  */
 angular.module('Bastion.systems').controller('SystemsController',
-    ['$scope', '$state', '$location', 'i18nFilter', 'Nutupane', 'System', 'CurrentOrganization',
-    function($scope, $state, $location, i18nFilter, Nutupane, System, CurrentOrganization) {
+    ['$scope', '$state', '$location', 'gettext', 'Nutupane', 'System', 'CurrentOrganization',
+    function($scope, $state, $location, gettext, Nutupane, System, CurrentOrganization) {
 
         var params = {
             'organization_id':  CurrentOrganization,
@@ -68,7 +71,7 @@ angular.module('Bastion.systems').controller('SystemsController',
             system.$remove(function() {
                 $scope.removeRow(system.id);
                 $scope.saveSuccess = true;
-                $scope.successMessages = [i18nFilter('System %s has been deleted.'.replace('%s', system.name))];
+                $scope.successMessages = [gettext('System %s has been deleted.').replace('%s', system.name)];
                 $scope.transitionTo('systems.index');
             });
         };

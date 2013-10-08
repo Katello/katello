@@ -20,6 +20,7 @@
 //= require "ui_alchemy/angular-sanitize/angular-sanitize"
 //= require "angular-ui-states"
 //= require "ng-upload"
+//= require "angular-gettext"
 
 //= require "ui_alchemy/alchemy/alchemy"
 //= require "ui_alchemy/alchemy-header/alchemy-header"
@@ -45,8 +46,7 @@
 //= require "bastion/incubator/format/key-value-to-string.filter.js"
 
 //= require "bastion/i18n/i18n.module"
-//= require "bastion/i18n/i18n-dictionary.factory"
-//= require "bastion/i18n/i18n.filter"
+//= require "bastion/i18n/translations"
 
 //= require "bastion/menu/menu.module"
 //= require_tree "./menu"

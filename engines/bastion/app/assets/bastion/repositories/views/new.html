@@ -3,7 +3,7 @@
   <header>
     <h5>
       <i class="icon-backward clickable" ng-click="returnToProduct()"></i>
-      {{ "Add New Repository" | i18n }}
+      {{ "Add New Repository" | translate }}
     </h5>
   </header>
 
@@ -11,7 +11,7 @@
 
     <div class="control-group required" ng-class="{ 'error' : repositoryForm.name.$invalid }">
       <div class="label">
-        <label class="required" for="name">{{ "Name" | i18n }}</label>
+        <label class="required" for="name" translate>Name</label>
       </div>
       <div class="input">
         <input ng-model="repository.name"
@@ -27,7 +27,7 @@
 
     <div class="control-group required" ng-class="{ 'error' : repositoryForm.label.$invalid }">
       <div class="label">
-        <label class="required" for="label">{{ "Label" | i18n }}</label>
+        <label class="required" for="label" translate>Label</label>
       </div>
       <div class="input">
         <input ng-model="repository.label"
@@ -43,7 +43,7 @@
 
     <div class="control-group required" ng-class="{ 'error' : repositoryForm.content_type.$invalid }">
       <div class="label">
-        <label class="required" for="content_type">{{ "Type" | i18n }}</label>
+        <label class="required" for="content_type" translate>Type</label>
       </div>
       <div class="input">
         <select required
@@ -62,7 +62,7 @@
 
     <div class="control-group" ng-class="{ 'error' : repositoryForm.url.$invalid }">
       <div class="label">
-        <label for="url">{{ "URL" | i18n }}</label>
+        <label for="url" translate>URL</label>
       </div>
       <div class="input">
         <input ng-model="repository.url"
@@ -77,7 +77,7 @@
 
     <div class="control-group" ng-class="{ 'error' : repositoryForm.unprotected.$invalid }">
       <div class="label">
-        <label class="required" for="unprotected">{{ "Publish via HTTP" | i18n }}</label>
+        <label class="required" for="unprotected" translate>Publish via HTTP</label>
       </div>
       <div class="input">
         <input ng-model="repository.unprotected"
@@ -92,7 +92,7 @@
 
     <div class="control-group">
       <div class="label">
-        <label for="gpg_key_id">{{ "GPG Key" | i18n }}</label>
+        <label for="gpg_key_id" translate>GPG Key</label>
       </div>
       <div class="input">
         <select tabindex="6"
@@ -105,13 +105,13 @@
 
     <div class="control-group buttons">
       <div class="input">
-        <button ng-click="table.closeItem()">{{ "Cancel" | i18n }}</button>
+        <button ng-click="table.closeItem()" translate>Cancel</button>
         <button class="btn-primary"
                 ng-click="save(repository); working = true"
                 ng-disabled="repositoryForm.$invalid || working">
           <i class="icon-spinner icon-spin" ng-show="working"></i>
-          <span ng-show="working">{{ "Creating..." | i18n }}</span>
-          <span ng-hide="working">{{ "Create" | i18n }}</span>
+          <span ng-show="working" translate>Creating...</span>
+          <span ng-hide="working" translate>Create</span>
         </button>
       </div>
     </div>

@@ -12,7 +12,7 @@
  **/
 
 describe('Controller: SystemSubscriptionsController', function() {
-    var $scope, SystemSubscription, Routes, i18nFilter, Nutupane, subscription, expectedTable, expectedRows;
+    var $scope, SystemSubscription, Routes, gettext, Nutupane, subscription, expectedTable, expectedRows;
 
     // load the systems module and template
     beforeEach(module('Bastion.systems', 'Bastion.test-mocks'));
@@ -39,7 +39,7 @@ describe('Controller: SystemSubscriptionsController', function() {
         Routes = {
             apiSystemsPath: function() { return '/api/systems';},
         };
-        i18nFilter = function(message) {
+        gettext = function(message) {
             return message;
         };
         SystemSubscription = {
@@ -60,7 +60,7 @@ describe('Controller: SystemSubscriptionsController', function() {
 
         $controller('SystemSubscriptionsController', {
             $scope: $scope,
-            i18nFilter: i18nFilter,
+            gettext: gettext,
             SystemSubscription: SystemSubscription,
             System: {},
             Nutupane: Nutupane
