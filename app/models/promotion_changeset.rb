@@ -99,9 +99,10 @@ class PromotionChangeset < Changeset
   end
 
   def promote_views(from_env, to_env, views)
-    views.collect do |view|
+    views = views.collect do |view|
       view.promote(from_env, to_env)
-    end.flatten
+    end
+    views.flatten
   end
 
   def update_view_cp_content(to_env)

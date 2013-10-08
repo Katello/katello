@@ -240,21 +240,23 @@ class KTEnvironment < ActiveRecord::Base
   end
 
   def find_packages_by_name(name)
-    self.products.collect do |prod|
+    products = self.products.collect do |prod|
       prod.find_packages_by_name(self, name).collect do |p|
         p[:product_id] = prod.cp_id
         p
       end
-    end.flatten(1)
+    end
+    products.flatten(1)
   end
 
   def find_packages_by_nvre(name, version, release, epoch)
-    self.products.collect do |prod|
+    products = self.products.collect do |prod|
       prod.find_packages_by_nvre(self, name, version, release, epoch).collect do |p|
         p[:product_id] = prod.cp_id
         p
       end
-    end.flatten(1)
+    end
+    products.flatten(1)
   end
 
   def find_latest_packages_by_name(name)
@@ -264,15 +266,17 @@ class KTEnvironment < ActiveRecord::Base
         pack[:product_id] = prod.cp_id
         pack
       end
-    end.flatten(1)
+    end
+    packs.flatten!(1)
 
     Util::Package.find_latest_packages packs
   end
 
   def get_distribution(id)
-    self.products.collect do |prod|
+    distribution = self.products.collect do |prod|
       prod.get_distribution(self, id)
-    end.flatten(1)
+    end
+    distribution.flatten(1)
   end
 
   def unset_users_with_default

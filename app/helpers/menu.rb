@@ -55,9 +55,10 @@ module Menu
   def render_sublevel_menu(items = nil, prune = true)
     items ||= menu_main
     prune_menu(items) if prune
-    items.collect do |top_level|
+    result = items.collect do |top_level|
       render_navigation(:items => top_level[:items], :expand_all => true) if top_level[:items]
-    end.compact.join("").html_safe
+    end
+    result.compact.join("").html_safe
   end
 
   private
