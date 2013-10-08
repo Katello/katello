@@ -39,13 +39,13 @@ describe('Controller: NewProviderController', function() {
     it('should save a new provider resource', function() {
         var provider = $scope.provider;
 
-        spyOn($scope, 'transitionTo');
+        spyOn($scope, 'transitionBack');
         spyOn(provider, '$save').andCallThrough();
         $scope.save(provider);
 
         expect(provider.$save).toHaveBeenCalled();
         expect($scope.product['provider_id']).toBe($scope.provider.id)
-        expect($scope.transitionTo).toHaveBeenCalledWith('products.new.form');
+        expect($scope.transitionBack).toHaveBeenCalled();
     });
 
     it('should fail to save a new provider resource', function() {
