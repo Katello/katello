@@ -1,27 +1,28 @@
 <section class="nutupane-details" ng-cloak alch-container-scroll>
   <header class="new-header details-header">
-    <h2 class="fl">{{ "Bulk Actions" | i18n }}</h2>
+    <h2 class="fl" translate>Bulk Actions</h2>
 
     <div class="details-actions fr">
       <button class="btn-danger"
+              translate
               ng-disabled="system.readonly || removeSystems.workingMode"
               ng-click="showConfirm = true; removeSystems.confirm = true"
               ng-hide="removeSystems.workingMode">
-        {{ "Remove Systems" | i18n }}
+        Remove Systems
       </button>
 
       <span ng-show="removeSystems.workingMode">
         <i class="icon-spinner inline-icon icon-spin"></i>
-        <span>{{ "Removing Systems" | i18n }}</span>
+        <span>{{ "Removing Systems" | translate }}</span>
       </span>
 
       <button class="btn-mini" ng-click="table.closeItem()">
         <i class="icon-remove"></i>
-        {{ "Close" | i18n }}
+        {{ "Close" | translate }}
       </button>
 
-      <div alch-confirm-modal="performRemoveSystems()" show-confirm="removeSystems.confirm">
-        {{ "Are you sure you want to remove the %systemCount systems(s) selected?" | i18n: {systemCount: getSelectedSystemIds().length} }}
+      <div alch-confirm-modal="performRemoveSystems()" show-confirm="removeSystems.confirm" translate>
+        Are you sure you want to remove the {{ getSelectedSystemIds().length }} systems(s) selected?
       </div>
     </div>
   </header>
@@ -36,7 +37,7 @@
   <div class="flash_hud" ng-show="status.showError">
     <a class="control" title="Close" ng-click="status.showError = false"></a>
     <ul class="flash_messages error">
-      <li>{{ "Error occurred:" | i18n }}</li>
+      <li translate>Error occurred:</li>
       <ul>
         <li ng-repeat="error in status.errors">{{ error }}</li>
       </ul>

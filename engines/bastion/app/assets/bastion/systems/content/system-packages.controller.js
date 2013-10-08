@@ -18,14 +18,15 @@
  * @requires $scope
  * @requires SystemPackage
  * @requires SystemTask
+ * @requires gettext
  * @requires Nutupane
  *
  * @description
  *   Provides the functionality for the system packages list and actions.
  */
 angular.module('Bastion.systems').controller('SystemPackagesController',
-    ['$scope', 'SystemPackage', 'SystemTask', 'i18nFilter', 'Nutupane',
-    function($scope, SystemPackage, SystemTask, i18nFilter, Nutupane) {
+    ['$scope', 'SystemPackage', 'SystemTask', 'gettext', 'Nutupane',
+    function($scope, SystemPackage, SystemTask, gettext, Nutupane) {
         var packagesNutupane, packageActions, openEventInfo;
 
         openEventInfo = function(event) {
@@ -84,7 +85,7 @@ angular.module('Bastion.systems').controller('SystemPackagesController',
                     });
                 },
                 function(data) {
-                    var message = i18nFilter("Error starting task ");
+                    var message = gettext("Error starting task ");
                     if (data.data.displayMessage) {
                         message += ":" + data.data.displayMessage;
                     }

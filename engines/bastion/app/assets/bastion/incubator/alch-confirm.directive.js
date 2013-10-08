@@ -42,7 +42,10 @@ angular.module('alchemy')
         return {
             templateUrl: 'incubator/views/alch-confirm-modal.html',
             replace: true,
-            transclude: true,
+            // Note that this causes an error in angular-gettext but that should be fixed when
+            // this commit https://github.com/angular/angular.js/commit/bf79bd4194eca2118ae1c492c08dbd217f5ae810
+            // makes it into a release.
+            transclude: 'element',
             scope: {
                 action: '&alchConfirmModal',
                 showConfirm: '=showConfirm'
