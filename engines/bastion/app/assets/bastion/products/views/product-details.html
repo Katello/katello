@@ -11,14 +11,13 @@
               ng-disabled="!product.permissions.deletable">
         Remove Product
       </button>
-      <div translate alch-confirm-modal="removeProduct(product)" show-confirm="showConfirm">
-        Are you sure you want to remove product "{{ product.name }}"?
-      </div>
-
       <button class="btn" ng-click="table.closeItem()">
         <i class="icon-remove"></i>
         {{ "Close" | translate }}
       </button>
+      <div translate alch-confirm-modal="removeProduct(product)" show-confirm="showConfirm">
+        Are you sure you want to remove product "{{ product.name }}"?
+      </div>
     </div>
   </header>
 

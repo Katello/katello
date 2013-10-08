@@ -51,9 +51,9 @@ class Product < ActiveRecord::Base
   end
 
   def self.find_by_cp_id(cp_id, organization = nil)
-    query = self.where(:cp_id => cp_id).scoped(:readonly => false).engineering
+    query = self.where(:cp_id => cp_id).scoped(:readonly => false)
     query = query.in_org(organization) if organization
-    query.first
+    query.engineering.first || query.marketing.first
   end
 
   def self.in_org(organization)
@@ -61,6 +61,7 @@ class Product < ActiveRecord::Base
   end
 
   scope :engineering, where(:type => "Product")
+  scope :marketing, where(:type => "MarketingProduct")
 
   before_create :assign_unique_label
 

@@ -744,8 +744,7 @@ module Glue::Pulp::Repo
     def upload_content(filepath)
       case content_type
       when "puppet"
-        unit_metadata = PuppetModule.parse_metadata(filepath)
-        unit_key = unit_metadata.slice(:author, :name, :version)
+        unit_key, unit_metadata = PuppetModule.generate_unit_data(filepath)
       else
         fail _("Uploads not supported for content type '%s'.") % content_type
       end
