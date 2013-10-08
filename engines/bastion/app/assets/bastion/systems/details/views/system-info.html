@@ -1,4 +1,4 @@
-<div class="nutupane-sub-section">
+<section>
 
   <div class="flash_hud" ng-show="saveSuccess">
     <a class="control" title="Close" ng-click="saveSuccess = false"></a>
@@ -46,6 +46,29 @@
               readonly="system.readonly"
               on-save="save(system)">
         </span>
+      </div>
+
+      <div class="detail">
+        <span class="info-label">{{ "Type" | i18n }}</span>
+        <span class="info-value">{{ system.type }}</span>
+      </div>
+
+      <div ng-show="system.guests" class="detail">
+        <span class="info-label">{{ "Guests" | i18n }}</span>
+        <div class="info-value">
+          <ul>
+            <li ng-repeat="guest in system.guests">
+              <a href="#/systems/{{ guest.uuid }}/info">{{ guest.name }}</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div ng-show="system.host" class="detail">
+        <span class="info-label">{{ "Host" | i18n }}</span>
+        <div class="info-value">
+          <a href="#/systems/{{ system.host.uuid }}/info">{{ system.host.name }}</a>
+        </div>
       </div>
 
       <div class="divider"></div>
@@ -333,4 +356,4 @@
       </section>
     </div>
   </div>
-</div>
+</section>

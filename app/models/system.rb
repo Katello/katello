@@ -173,32 +173,36 @@ class System < ActiveRecord::Base
 
     json['content_view'] = content_view.as_json if content_view
     json['ipv4_address'] = facts.try(:[], 'network.ipv4_address') if respond_to?(:facts)
+
     if respond_to?(:guest)
       if self.guest == 'true'
         json['host'] = self.host.attributes if self.host
       else
-
         json['guests'] = self.guests.map(&:attributes)
       end
     end
 
     if options[:expanded]
       json['editable'] = editable?
-      json['type'] = if guest == 'true'
-                       _("Guest")
-                     else
-                       case self
-                       when Hypervisor
-                         _("Hypervisor")
-                       else
-                         _("Host")
-                       end
-                     end
+      json['type'] = type
     end
 
     run_hook(:as_json_hook, json)
 
     json
+  end
+
+  def type
+    if respond_to?(:guest) && guest == 'true'
+      _("Guest")
+    else
+      case self
+      when Hypervisor
+        _("Hypervisor")
+      else
+        _("Host")
+      end
+    end
   end
 
   def init_default_custom_info
