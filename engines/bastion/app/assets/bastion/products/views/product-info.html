@@ -1,9 +1,9 @@
 <div class="details fl">
   <section>
-    <h4>{{ "Basic Information" | i18n }}</h4>
+    <h4 translate>Basic Information</h4>
 
     <div class="detail">
-      <span class="info-label">{{ "Name" | i18n }}</span>
+      <span class="info-label" translate>Name</span>
       <span class="info-value"
             alch-edit-text="product.name"
             on-save="save(product)"
@@ -12,17 +12,17 @@
     </div>
 
     <div class="detail">
-      <span class="info-label">{{ "Label" | i18n }}</span>
+      <span class="info-label" translate>Label</span>
       <span class="info-value">{{ product.label }}</span>
     </div>
 
     <div class="detail">
-      <span class="info-label">{{ "Provider" | i18n }}</span>
+      <span class="info-label" translate>Provider</span>
       <span class="info-value">{{ product.provider.name }}</span>
     </div>
 
     <div class="detail">
-      <span class="info-label">{{ "GPG Key" | i18n }}</span>
+      <span class="info-label" translate>GPG Key</span>
       <span class="info-value"
             alch-edit-select="product.gpg_key.name"
             readonly="product.readonly"
@@ -33,7 +33,7 @@
     </div>
 
     <div class="detail">
-      <span class="info-label">{{ "Description" | i18n }}</span>
+      <span class="info-label" translate>Description</span>
       <span class="info-value"
             alch-edit-textarea="product.description"
             on-save="save(product)"

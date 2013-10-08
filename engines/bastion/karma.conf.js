@@ -21,6 +21,7 @@ module.exports = function(config) {
             'vendor/assets/dev-components/alchemy/alchemy.js',
             'vendor/assets/dev-components/underscore/underscore.js',
             '../../vendor/assets/javascripts/angular-ui-states.js',
+            '../../vendor/assets/javascripts/angular-gettext.js',
             'vendor/assets/components/ng-upload.js',
 
             '../../app/assets/javascripts/common/katello.global.js',

@@ -31,9 +31,8 @@
 
 //= require "common/katello.module"
 
+//= require "angular-gettext"
 //= require "bastion/i18n/i18n.module"
-//= require "bastion/i18n/i18n-dictionary.factory"
-//= require "bastion/i18n/i18n.filter"
 
 //= require "bastion/widgets/widgets.module.js"
 //= require "bastion/widgets/org-switcher.widget.js"

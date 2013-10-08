@@ -28,7 +28,7 @@ describe('Directive: alchConfirm', function() {
             delete: function() {}
         };
 
-        i18nFilter = function() {
+        gettext = function() {
             this.$get = function() {
                 return function() {};
             };
@@ -36,7 +36,7 @@ describe('Directive: alchConfirm', function() {
             return this;
         };
 
-        $provide.provider('i18nFilter', i18nFilter);
+        $provide.provider('gettext', gettext);
     }));
 
     beforeEach(inject(function(_$compile_, _$rootScope_) {
@@ -109,7 +109,7 @@ describe('Directive: alchConfirmModal', function() {
             delete: function() {}
         };
 
-        i18nFilter = function() {
+        gettext = function() {
             this.$get = function() {
                 return function() {};
             };
@@ -117,7 +117,7 @@ describe('Directive: alchConfirmModal', function() {
             return this;
         };
 
-        $provide.provider('i18nFilter', i18nFilter);
+        $provide.provider('gettext', gettext);
     }));
 
     beforeEach(inject(function(_$compile_, _$rootScope_, _$document_) {

@@ -16,6 +16,7 @@ npm install -g bower grunt-cli
 npm install grunt
 
 npm install
-bower install
+bower cache clean
+bower install 
 
 grunt ci
