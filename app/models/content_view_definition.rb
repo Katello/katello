@@ -294,7 +294,7 @@ class ContentViewDefinition < ContentViewDefinitionBase
     # This implies that there are no packages to copy over.
 
     if applicable_rules_count == 0 || copy_clauses
-      pulp_task = repo.clone_contents_by_filter(cloned, FilterRule::PACKAGE, copy_clauses, :recursive => true)
+      pulp_task = repo.clone_contents_by_filter(cloned, FilterRule::PACKAGE, copy_clauses)
       PulpTaskStatus.wait_for_tasks([pulp_task])
       process_errata_and_groups = true
     end
