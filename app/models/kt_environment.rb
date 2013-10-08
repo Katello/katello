@@ -143,7 +143,7 @@ class KTEnvironment < ActiveRecord::Base
     s = self.successor
     ret = [self]
     until s.nil?
-      raise "Environment path has duplicates!!. #{self}. Duplicate => #{ret}. Path => #{s}" if ret.include? s
+      fail "Environment path has duplicates!!. #{self}. Duplicate => #{ret}. Path => #{s}" if ret.include? s
       ret << s
       s = s.successor
     end

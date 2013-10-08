@@ -102,14 +102,14 @@ class Api::V1::ChangesetsController < Api::V1::ApiController
 
   def find_changeset
     @changeset = Changeset.find(params[:id])
-    raise HttpErrors::NotFound, _("Couldn't find changeset '%s'") % params[:id] if @changeset.nil?
+    fail HttpErrors::NotFound, _("Couldn't find changeset '%s'") % params[:id] if @changeset.nil?
     @environment = @changeset.environment
     @changeset
   end
 
   def find_environment
     @environment = KTEnvironment.find(params[:environment_id])
-    raise HttpErrors::NotFound, _("Couldn't find environment '%s'") % params[:environment_id] if @environment.nil?
+    fail HttpErrors::NotFound, _("Couldn't find environment '%s'") % params[:environment_id] if @environment.nil?
     @environment
   end
 

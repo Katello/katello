@@ -80,7 +80,7 @@ class Api::V2::SubscriptionsController < Api::V2::ApiController
   end
   def create
     expected_params = params.slice(:pool, :quantity)
-    raise HttpErrors::BadRequest, _("Please provide pool and quantity") if expected_params.count != 2
+    fail HttpErrors::BadRequest, _("Please provide pool and quantity") if expected_params.count != 2
     @system.subscribe(expected_params[:pool], expected_params[:quantity])
     respond :resource => @system
   end
@@ -90,7 +90,7 @@ class Api::V2::SubscriptionsController < Api::V2::ApiController
   param :system_id, String, :desc => "UUID of the system", :required => true
   def destroy
     expected_params = params.slice(:id)
-    raise HttpErrors::BadRequest, _("Please provide subscription ID") if expected_params.count != 1
+    fail HttpErrors::BadRequest, _("Please provide subscription ID") if expected_params.count != 1
     @system.unsubscribe(expected_params[:id])
     respond_for_show :resource => @system
   end
@@ -106,7 +106,7 @@ class Api::V2::SubscriptionsController < Api::V2::ApiController
 
   def find_system
     @system = System.first(:conditions => { :uuid => params[:system_id] })
-    raise HttpErrors::NotFound, _("Couldn't find system '%s'") % params[:system_id] if @system.nil?
+    fail HttpErrors::NotFound, _("Couldn't find system '%s'") % params[:system_id] if @system.nil?
     @system
   end
 end

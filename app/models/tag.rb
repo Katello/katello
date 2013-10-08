@@ -18,7 +18,7 @@ class Tag
       tags = model_klass.tags(tag_id) rescue []
       return tags[0] if tags && !tags.empty?
     else
-      raise "Unrecognized model #{model_klass}"
+      fail "Unrecognized model #{model_klass}"
     end
 
     tag_id
@@ -32,7 +32,7 @@ class Tag
       tag_list ||= []
       return tag_list
     else
-      raise "Unrecognized model #{model_klass}"
+      fail "Unrecognized model #{model_klass}"
     end
 
   end

@@ -62,7 +62,7 @@ class Api::V1::RepositoriesController < Api::V1::ApiController
   param :content_type, String, :desc => "type of repo (either 'yum' or 'puppet', defaults to 'yum')"
   see "v1#gpg_keys#index"
   def create
-    raise HttpErrors::BadRequest, _("Repository can be only created for custom provider.") unless @product.custom?
+    fail HttpErrors::BadRequest, _("Repository can be only created for custom provider.") unless @product.custom?
 
     if params[:gpg_key_name].present?
       gpg = GpgKey.readable(@product.organization).find_by_name!(params[:gpg_key_name])
@@ -89,7 +89,7 @@ class Api::V1::RepositoriesController < Api::V1::ApiController
     param :url, String, :desc => "repository source url"
   end
   def update
-    raise HttpErrors::BadRequest, _("A Red Hat repository cannot be updated.") if @repository.redhat?
+    fail HttpErrors::BadRequest, _("A Red Hat repository cannot be updated.") if @repository.redhat?
     attrs = params[:repository].slice(:gpg_key_name, :enabled)
     attrs[:feed] = params[:repository][:url] if params[:repository] && params[:repository][:url]
     @repository.update_attributes!(attrs)
@@ -102,12 +102,12 @@ class Api::V1::RepositoriesController < Api::V1::ApiController
     #
     # TODO: these should really be done as validations, but the orchestration engine currently converts them into OrchestrationExceptions
     #
-    raise HttpErrors::BadRequest, _("Repositories can be deleted only in the '%s' environment.") % "Library" if !@repository.environment.library?
+    fail HttpErrors::BadRequest, _("Repositories can be deleted only in the '%s' environment.") % "Library" if !@repository.environment.library?
 
     if @repository.destroy
       respond :message => _("Deleted repository '%s'") % params[:id]
     else
-      raise HttpErrors::BadRequest, @repository.errors.full_messages.join(" ")
+      fail HttpErrors::BadRequest, @repository.errors.full_messages.join(" ")
     end
   end
 
@@ -116,7 +116,7 @@ class Api::V1::RepositoriesController < Api::V1::ApiController
   param :enable, :bool, :required => true, :desc => "flag that enables/disables the repository"
   api_version "v1"
   def enable
-    raise HttpErrors::NotFound, _("Disable/enable is not supported for custom repositories.") if !@repository.redhat?
+    fail HttpErrors::NotFound, _("Disable/enable is not supported for custom repositories.") if !@repository.redhat?
 
     @repository.enabled = query_params[:enable]
     @repository.save!
@@ -144,7 +144,7 @@ Pulp doesn't send correct headers."
 
     if forwarded && !['127.0.0.1', '::1'].include?(forwarded)
       Rails.logger.error("Attempt to access sync_complete from forwarded address #{forwarded}")
-      raise Errors::SecurityViolation
+      fail Errors::SecurityViolation
     end
 
     repo_id = params['payload']['repo_id']
@@ -156,7 +156,7 @@ Pulp doesn't send correct headers."
     end
 
     repo    = Repository.where(:pulp_id => repo_id).first
-    raise _("Couldn't find repository '%s'") % repo.name if repo.nil?
+    fail _("Couldn't find repository '%s'") % repo.name if repo.nil?
     Rails.logger.info("Sync_complete called for #{repo.name}, running after_sync.")
     repo.async(:organization => repo.environment.organization).after_sync(task_id)
     respond_for_status
@@ -199,14 +199,14 @@ Pulp doesn't send correct headers."
 
   def find_repository
     @repository = Repository.find(params[:id])
-    raise HttpErrors::NotFound, _("Couldn't find repository '%s'") % params[:id] if @repository.nil?
+    fail HttpErrors::NotFound, _("Couldn't find repository '%s'") % params[:id] if @repository.nil?
     @repository
   end
 
   def find_product
     #since this is only used for create, it isn't supported for rhel products, so cp_id is unique
     @product = Product.where(:cp_id => params[:product_id]).first
-    raise HttpErrors::NotFound, _("Couldn't find product with id '%s'") % params[:product_id] if @product.nil?
+    fail HttpErrors::NotFound, _("Couldn't find product with id '%s'") % params[:product_id] if @product.nil?
     @organization ||= @product.organization
   end
 end

@@ -51,7 +51,7 @@ class Candlepin::ProductContent
   end
 
   def disable
-    raise _("One or more repositories are still enabled for this content set.") unless self.can_disable?
+    fail _("One or more repositories are still enabled for this content set.") unless self.can_disable?
     repos = self.product.repos(self.product.organization.library, true).where(:content_id => self.content.id)
     repos.each do |repo|
       repo.destroy

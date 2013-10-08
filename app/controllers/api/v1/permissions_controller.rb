@@ -98,13 +98,13 @@ class Api::V1::PermissionsController < Api::V1::ApiController
 
   def find_role
     @role = Role.find(params[:role_id])
-    raise HttpErrors::NotFound, _("Couldn't find user role '%s'") % params[:role_id] if @role.nil?
+    fail HttpErrors::NotFound, _("Couldn't find user role '%s'") % params[:role_id] if @role.nil?
     @role
   end
 
   def find_permission
     @permission = Permission.find(params[:id])
-    raise HttpErrors::NotFound, _("Couldn't find permissions '%s'") % params[:id] if @permission.nil?
+    fail HttpErrors::NotFound, _("Couldn't find permissions '%s'") % params[:id] if @permission.nil?
     @permission
   end
 end

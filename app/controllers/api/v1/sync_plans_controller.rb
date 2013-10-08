@@ -78,7 +78,7 @@ class Api::V1::SyncPlansController < Api::V1::ApiController
     sync_date = params[:sync_plan][:sync_date].to_time
 
     if !sync_date.kind_of?(Time)
-      raise _("Date format is incorrect.")
+      fail _("Date format is incorrect.")
     end
 
     params[:sync_plan][:organization] = @organization
@@ -92,7 +92,7 @@ class Api::V1::SyncPlansController < Api::V1::ApiController
     sync_date = params[:sync_plan][:sync_date].to_time
 
     if !sync_date.nil? && !sync_date.kind_of?(Time)
-      raise _("Date format is incorrect.")
+      fail _("Date format is incorrect.")
     end
 
     @plan.update_attributes!(params[:sync_plan])
@@ -110,7 +110,7 @@ class Api::V1::SyncPlansController < Api::V1::ApiController
 
   def find_plan
     @plan = SyncPlan.find(params[:id])
-    raise HttpErrors::NotFound, _("Couldn't find sync plan '%{plan}' in organization '%{org}'") % { :plan => params[:id], :org => params[:organization_id] } if @plan.nil?
+    fail HttpErrors::NotFound, _("Couldn't find sync plan '%{plan}' in organization '%{org}'") % { :plan => params[:id], :org => params[:organization_id] } if @plan.nil?
     @organization ||= @plan.organization
     @plan
   end

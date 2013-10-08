@@ -29,12 +29,12 @@ module LazyAccessor
       options = args.extract_options!
       @lazy_attributes = [] if @lazy_attributes.nil?
       @lazy_attributes = @lazy_attributes.concat args
-      raise ArgumentError, "Attribute names must be symbols" if args.any?{ |attribute| !attribute.is_a?(Symbol) }
+      fail ArgumentError, "Attribute names must be symbols" if args.any?{ |attribute| !attribute.is_a?(Symbol) }
       redefined_attr = args.find{ |attribute| instance_methods.include?(attribute.to_s) }
       Rails.logger.warn "Remote attribute '#{redefined_attr}' has already been defined" if redefined_attr
 
       initializer = options[:initializer]
-      raise ArgumentError, "Please provide an initializer" if initializer.nil?
+      fail ArgumentError, "Please provide an initializer" if initializer.nil?
 
       args.each do |symbol|
         send :define_method, "#{symbol.to_s}_will_change!" do
@@ -137,7 +137,7 @@ module LazyAccessor
     def run_initializer(in_group, initializer)
       remote_values = self.instance_eval(&initializer)
       if in_group && !remote_values.is_a?(Hash)
-        raise RuntimeError.new("Expect initializer to return hash if a group of attributes is defined by lazy_accessor")
+        fail RuntimeError.new("Expect initializer to return hash if a group of attributes is defined by lazy_accessor")
       end
       remote_values
     end

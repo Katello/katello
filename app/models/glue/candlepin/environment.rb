@@ -37,7 +37,7 @@ module Glue::Candlepin::Environment
     rescue => e
       Rails.logger.error _("Failed to create candlepin environment %s") %
                            "#{self.label}: #{e}, #{e.backtrace.join("\n")}"
-      raise e
+      fail e
     end
 
     def candlepin_info
@@ -58,7 +58,7 @@ module Glue::Candlepin::Environment
     rescue => e
       Rails.logger.error _("Failed to delete candlepin environment %s") %
                            "#{self.label}: #{e}, #{e.backtrace.join("\n")}"
-      raise e
+      fail e
     end
 
     def save_environment_orchestration

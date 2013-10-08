@@ -63,7 +63,7 @@ module Glue
       Glue.logger.warning "Rollback initiated"
       Glue.logger.warning "Before rollback pre-queue: #{pre_queue.to_log}"
       Glue.logger.warning "Before rollback post-queue: #{post_queue.to_log}"
-      raise ActiveRecord::Rollback
+      fail ActiveRecord::Rollback
     end
 
     def pre_queue
@@ -167,7 +167,7 @@ module Glue
           when /del/
             met.gsub!("del", "set")
           else
-            raise "Dont know how to rollback #{met}"
+            fail "Dont know how to rollback #{met}"
           end
           met = met.to_sym
         end
@@ -175,7 +175,7 @@ module Glue
       if obj.respond_to?(met)
         return args.empty? ? obj.send(met) : obj.send(met, *args)
       else
-        raise Errors::OrchestrationException.new("invalid method #{met}")
+        fail Errors::OrchestrationException.new("invalid method #{met}")
       end
     end
 

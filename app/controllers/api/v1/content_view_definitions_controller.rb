@@ -122,7 +122,7 @@ class Api::V1::ContentViewDefinitionsController < Api::V1::ApiController
   api :DELETE, "/content_view_definitions/:id", "Delete a cv definition"
   param :id, :identifier, :desc => "Definition identifier", :required => true
   def destroy
-    raise HttpErrors::BadRequest, _("Definition cannot be deleted since one of its views has already been promoted. "\
+    fail HttpErrors::BadRequest, _("Definition cannot be deleted since one of its views has already been promoted. "\
                                     "Using a changeset, please delete the views from existing environments before deleting the "\
                                     "definition.") if @definition.has_promoted_views?
 

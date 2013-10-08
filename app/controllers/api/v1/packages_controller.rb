@@ -51,15 +51,15 @@ class Api::V1::PackagesController < Api::V1::ApiController
 
   def find_repository
     @repo = Repository.find(params[:repository_id])
-    raise HttpErrors::NotFound, _("Couldn't find repository '%s'") % params[:repository_id] if @repo.nil?
+    fail HttpErrors::NotFound, _("Couldn't find repository '%s'") % params[:repository_id] if @repo.nil?
     @repo
   end
 
   def find_package
     @package = Package.find(params[:id])
-    raise HttpErrors::NotFound, _("Package with id '%s' not found") % params[:id] if @package.nil?
+    fail HttpErrors::NotFound, _("Package with id '%s' not found") % params[:id] if @package.nil?
     # and check ownership of it
-    raise HttpErrors::NotFound, _("Package '%s' not found within the repository") % params[:id] unless @package.repoids.include? @repo.pulp_id
+    fail HttpErrors::NotFound, _("Package '%s' not found within the repository") % params[:id] unless @package.repoids.include? @repo.pulp_id
     @package
   end
 end

@@ -191,7 +191,7 @@ module Glue::Provider
 
       if !upstream['idCert'] || !upstream['idCert']['cert'] || !upstream['idCert']['key']
         Rails.logger.error "Upstream identity certificate not available"
-        raise _("Upstream identity certificate not available")
+        fail _("Upstream identity certificate not available")
       end
 
       # Default to Red Hat
@@ -214,7 +214,7 @@ module Glue::Provider
 
       if !upstream['idCert'] || !upstream['idCert']['cert'] || !upstream['idCert']['key']
         Rails.logger.error "Upstream identity certificate not available"
-        raise _("Upstream identity certificate not available")
+        fail _("Upstream identity certificate not available")
       end
 
       # Default to Red Hat
@@ -268,7 +268,7 @@ module Glue::Provider
     # rubocop:disable MethodLength
     def queue_import_manifest(options)
       options = options.with_indifferent_access
-      raise "zip_file_path or upstream must be specified" if options[:zip_file_path].nil? && options[:upstream].nil?
+      fail "zip_file_path or upstream must be specified" if options[:zip_file_path].nil? && options[:upstream].nil?
 
       #if a manifest has already been imported, we need to update the products
       manifest_update = self.products.any?

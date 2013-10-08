@@ -51,7 +51,7 @@ module Glue::Pulp::Repos
       if environment.library?
         content_view = environment.default_content_view
       else
-        raise "No content view specified for a Non library environment #{environment.inspect}"
+        fail "No content view specified for a Non library environment #{environment.inspect}"
       end
     end
 
@@ -373,7 +373,7 @@ module Glue::Pulp::Repos
                                   :environment_id => self.library.id
                                  ).count > 0
       if is_dupe
-        raise Errors::ConflictException.new(_("Label has already been taken"))
+        fail Errors::ConflictException.new(_("Label has already been taken"))
       end
       unless repo_label.blank?
         is_dupe =  Repository.where(:label => repo_label,
@@ -381,7 +381,7 @@ module Glue::Pulp::Repos
                                     :environment_id => self.library.id
                                    ).count > 0
         if is_dupe
-          raise Errors::ConflictException.new(_("Label has already been taken"))
+          fail Errors::ConflictException.new(_("Label has already been taken"))
         end
       end
     end

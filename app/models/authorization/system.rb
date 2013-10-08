@@ -20,7 +20,7 @@ module Authorization::System
     end
 
     def readable(org)
-      raise "scope requires an organization" if org.nil?
+      fail "scope requires an organization" if org.nil?
       if org.systems_readable?
         where(:environment_id => org.environment_ids) #list all systems in an org
       else #just list for environments the user can access

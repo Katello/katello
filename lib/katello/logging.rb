@@ -16,7 +16,7 @@ module Katello
     private_class_method :new
 
     def configure(options = {})
-      raise 'logging can be configured only once' if @configured
+      fail 'logging can be configured only once' if @configured
       @configured = true
 
       configure_color_scheme
@@ -155,7 +155,7 @@ module Katello
       when 'file'
         build_file_appender(name, options)
       else
-        raise 'unsupported logger type, please choose syslog or file'
+        fail 'unsupported logger type, please choose syslog or file'
       end
     end
 

@@ -89,7 +89,7 @@ class Product < ActiveRecord::Base
   def repos(env, include_disabled = false, content_view = nil, include_feedless = true)
     if content_view.nil?
       if !env.library?
-        raise "No content view specified for the repos call in a " +
+        fail "No content view specified for the repos call in a " +
                         "Non library environment #{env.inspect}"
       else
         content_view = env.default_content_view

@@ -42,7 +42,7 @@ class Api::V1::OrganizationDefaultInfoController < Api::V1::ApiController
   def create
     inf_type = params[:informable_type]
     if @organization.default_info[inf_type].include?(params[:keyname])
-      raise HttpErrors::BadRequest,
+      fail HttpErrors::BadRequest,
             _("Organization [ %{org} ] already contains default info [ %{info} ] for [ %{object} ]") %
                 { :org => @organization.name, :info => params[:keyname], :object => inf_type.capitalize.pluralize }
     end
@@ -105,7 +105,7 @@ class Api::V1::OrganizationDefaultInfoController < Api::V1::ApiController
 
   def check_apply_default_info
     if @organization.applying_default_info?
-      raise HttpErrors::BadRequest,
+      fail HttpErrors::BadRequest,
         _("Organization [ %{org} ] is currently applying default custom info. Please try again later.") %
           { :org => @organization.name }
     end
@@ -113,7 +113,7 @@ class Api::V1::OrganizationDefaultInfoController < Api::V1::ApiController
 
   def find_default_info
     unless @organization.default_info[params[:informable_type]].include?(params[:keyname])
-      raise HttpErrors::NotFound, _("Couldn't find default_info with keyname [ %{keyname} ]") %
+      fail HttpErrors::NotFound, _("Couldn't find default_info with keyname [ %{keyname} ]") %
         { :keyname => params[:keyname] }
     end
   end

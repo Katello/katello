@@ -153,7 +153,7 @@ module Glue::Candlepin::Consumer
       true
     rescue => e
       Rails.logger.error "Failed to delete candlepin consumer #{name}: #{e}, #{e.backtrace.join("\n")}"
-      raise e
+      fail e
     end
 
     def regenerate_identity_certificates

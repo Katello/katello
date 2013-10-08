@@ -106,14 +106,14 @@ class Api::V1::ProvidersController < Api::V1::ApiController
     #
     # TODO: these should really be done as validations, but the orchestration engine currently converts them into OrchestrationExceptions
     # rubocop:disable LineLength
-    raise HttpErrors::BadRequest, _("Provider cannot be deleted since one of its products or repositories has already been promoted. Using a changeset, please delete the repository from existing environments before deleting it.") if @provider.repositories.any? { |r| r.promoted? }
+    fail HttpErrors::BadRequest, _("Provider cannot be deleted since one of its products or repositories has already been promoted. Using a changeset, please delete the repository from existing environments before deleting it.") if @provider.repositories.any? { |r| r.promoted? }
 
     @provider.destroy
     if @provider.destroyed?
       respond :message => _("Deleted provider [ %s ]") % @provider.name
     else
       # TOOO: should probably be more specific?
-      raise HttpErrors::InternalError, _("Error while deleting provider [ %{name} ]: %{error}") % { :name => @provider.name, :error => @provider.errors.full_messages }
+      fail HttpErrors::InternalError, _("Error while deleting provider [ %{name} ]: %{error}") % { :name => @provider.name, :error => @provider.errors.full_messages }
     end
   end
 
@@ -133,7 +133,7 @@ class Api::V1::ProvidersController < Api::V1::ApiController
   param :force, :bool, :desc => "Force import"
   def import_manifest
     if @provider.yum_repo?
-      raise HttpErrors::BadRequest, _("Manifests cannot be imported for a custom provider.")
+      fail HttpErrors::BadRequest, _("Manifests cannot be imported for a custom provider.")
     end
 
     begin
@@ -153,7 +153,7 @@ class Api::V1::ProvidersController < Api::V1::ApiController
   param :id, :number, :desc => "Provider numeric identifier", :required => true
   def refresh_manifest
     if @provider.yum_repo?
-      raise HttpErrors::BadRequest, _("Manifests cannot be imported for a custom provider.")
+      fail HttpErrors::BadRequest, _("Manifests cannot be imported for a custom provider.")
     end
 
     details  = @provider.organization.owner_details
@@ -166,7 +166,7 @@ class Api::V1::ProvidersController < Api::V1::ApiController
   param :id, :number, :desc => "Provider numeric identifier", :required => true
   def delete_manifest
     if @provider.yum_repo?
-      raise HttpErrors::BadRequest, _("Manifests cannot be deleted for a custom provider.")
+      fail HttpErrors::BadRequest, _("Manifests cannot be deleted for a custom provider.")
     end
 
     @provider.delete_manifest
@@ -176,7 +176,7 @@ class Api::V1::ProvidersController < Api::V1::ApiController
   api :POST, "/providers/:id/refresh_products", "Refresh products for Red Hat provider"
   param :id, :number, :desc => "Provider numeric identifier", :required => true
   def refresh_products
-    raise HttpErrors::BadRequest, _("Products cannot be refreshed for custom provider.") unless @provider.redhat_provider?
+    fail HttpErrors::BadRequest, _("Products cannot be refreshed for custom provider.") unless @provider.redhat_provider?
 
     @provider.refresh_products
     respond_for_status :message => _("Products refreshed from CDN")
@@ -206,7 +206,7 @@ class Api::V1::ProvidersController < Api::V1::ApiController
   end
   api_version "v1"
   def product_create
-    raise HttpErrors::BadRequest, _("Products cannot be created for the Red Hat provider.") if @provider.redhat_provider?
+    fail HttpErrors::BadRequest, _("Products cannot be created for the Red Hat provider.") if @provider.redhat_provider?
 
     product_params = params[:product]
 
@@ -216,7 +216,7 @@ class Api::V1::ProvidersController < Api::V1::ApiController
     # in the ui could be the result of an initial query to retrieve a default label)
     if !product_params[:label].blank? &&
         (Product.all_in_org(@provider.organization).where('products.label = ?', product_params[:label]).count > 0)
-      raise HttpErrors::BadRequest, _("Validation failed: Label has already been taken")
+      fail HttpErrors::BadRequest, _("Validation failed: Label has already been taken")
     end
 
     gpg = GpgKey.readable(@provider.organization).find_by_name!(product_params[:gpg_key_name]) unless product_params[:gpg_key_name].blank?
@@ -229,7 +229,7 @@ class Api::V1::ProvidersController < Api::V1::ApiController
   def find_provider
     @provider     = Provider.find(params[:id])
     @organization ||= @provider.organization
-    raise HttpErrors::NotFound, _("Couldn't find provider '%s'") % params[:id] if @provider.nil?
+    fail HttpErrors::NotFound, _("Couldn't find provider '%s'") % params[:id] if @provider.nil?
   end
 
 end

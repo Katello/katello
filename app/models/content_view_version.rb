@@ -168,7 +168,7 @@ class ContentViewVersion < ActiveRecord::Base
 
   def delete(from_env)
     unless deletable?(from_env)
-      raise Errors::ChangesetContentException.new(_("Cannot delete view %{view} from %{env}, systems are currently subscribed. " +
+      fail Errors::ChangesetContentException.new(_("Cannot delete view %{view} from %{env}, systems are currently subscribed. " +
                                                     "Please move subscribed systems to another content view or environment.") %
                                                     {:env => from_env.name, :view => self.content_view.name})
     end

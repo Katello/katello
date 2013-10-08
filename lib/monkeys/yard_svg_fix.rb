@@ -7,7 +7,7 @@ module YARD
         def run
           path = library.source_path
           filename = File.cleanpath(File.join(library.source_path, path))
-          raise NotFoundError if !File.file?(filename)
+          fail NotFoundError if !File.file?(filename)
           if filename =~ /\.(jpe?g|gif|png|bmp|svg)$/i
             headers['Content-Type'] = StaticFileCommand::DefaultMimeTypes[$1.downcase] ||
                 ("image/svg+xml" if $1.downcase == 'svg') || 'text/html'

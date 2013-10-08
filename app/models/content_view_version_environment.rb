@@ -18,7 +18,7 @@ class ContentViewVersionEnvironment < ActiveRecord::Base
 
   def verify_not_exists
     if self.content_view_version.environments.include?(self.environment)
-      raise _("Content View %{view} is already in environment %{env}") % {:view => self.content_view_version.content_view.name, :env => self.environment.name}
+      fail _("Content View %{view} is already in environment %{env}") % {:view => self.content_view_version.content_view.name, :env => self.environment.name}
     end
   end
 

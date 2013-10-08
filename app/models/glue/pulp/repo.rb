@@ -143,7 +143,7 @@ module Glue::Pulp::Repo
       when Repository::PUPPET_TYPE
         Runcible::Models::PuppetImporter.new(:feed => self.feed)
       else
-        raise _("Unexpected repo type %s") % self.content_type
+        fail _("Unexpected repo type %s") % self.content_type
       end
     end
 
@@ -167,7 +167,7 @@ module Glue::Pulp::Repo
                                                            {:id => self.pulp_id, :auto_publish => true})
         [puppet_install_dist, nodes_distributor]
       else
-        raise _("Unexpected repo type %s") % self.content_type
+        fail _("Unexpected repo type %s") % self.content_type
       end
     end
 
@@ -193,7 +193,7 @@ module Glue::Pulp::Repo
       when Repository::PUPPET_TYPE
         Runcible::Models::PuppetImporter::ID
       else
-        raise _("Unexpected repo type %s") % self.content_type
+        fail _("Unexpected repo type %s") % self.content_type
       end
     end
 
@@ -503,7 +503,7 @@ module Glue::Pulp::Repo
           Errata::CONTENT_TYPE => :errata,
           PuppetModule::CONTENT_TYPE => :puppet_module
       }
-      raise "Invalid content type #{content_type} sent. It needs to be one of #{content_classes.keys}"\
+      fail "Invalid content type #{content_type} sent. It needs to be one of #{content_classes.keys}"\
                                                                      unless content_classes[content_type]
       criteria = {}
       if content_type == Runcible::Extensions::Rpm.content_type
@@ -681,8 +681,8 @@ module Glue::Pulp::Repo
       dist = find_distributor(true)
       source_dist = source_repo.find_distributor
 
-      raise "Could not find #{self.content_type} clone distributor for #{self.pulp_id}" if dist.nil?
-      raise "Could not find #{self.content_type} distributor for #{source_repo.pulp_id}" if source_dist.nil?
+      fail "Could not find #{self.content_type} clone distributor for #{self.pulp_id}" if dist.nil?
+      fail "Could not find #{self.content_type} distributor for #{source_repo.pulp_id}" if source_dist.nil?
       Katello.pulp_server.extensions.repository.publish(self.pulp_id, dist['id'],
                                :override_config => {:source_repo_id => source_repo.pulp_id,
                                                     :source_distributor_id => source_dist['id']})

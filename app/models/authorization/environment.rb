@@ -71,7 +71,7 @@ module Authorization::Environment
     end
 
     def authorized_items(org, verbs, resource = :environments)
-      raise "scope requires an organization" if org.nil?
+      fail "scope requires an organization" if org.nil?
       if User.allowed_all_tags?(verbs, resource, org)
         where(:organization_id => org)
       else

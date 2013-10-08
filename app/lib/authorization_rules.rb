@@ -20,7 +20,7 @@ module AuthorizationRules
   # authorize the user for the requested action
   def authorize(ctrl = params[:controller], action = self.action_name)
     user = current_user
-    raise StandardError, "Current user not set" unless user
+    fail StandardError, "Current user not set" unless user
     logger.debug "Authorizing #{current_user.username} for #{ctrl}/#{action}"
 
     allowed = false
@@ -28,11 +28,11 @@ module AuthorizationRules
     allowed = rule_set[action].call if rule_set[action].is_a?(Proc)
     allowed = user.allowed_to?(*rule_set[action]) if rule_set[action].is_a?(Array)
     return true if allowed
-    raise Errors::SecurityViolation, "User #{current_user.username} is not allowed to access #{params[:controller]}/#{params[:action]}"
+    fail Errors::SecurityViolation, "User #{current_user.username} is not allowed to access #{params[:controller]}/#{params[:action]}"
   end
 
   def rules
-    raise Errors::SecurityViolation, "Rules not defined for  #{current_user.username} for #{params[:controller]}/#{params[:action]}"
+    fail Errors::SecurityViolation, "Rules not defined for  #{current_user.username} for #{params[:controller]}/#{params[:action]}"
   end
 
   # TODO: should be moved out of authorization module
@@ -54,7 +54,7 @@ module AuthorizationRules
     end
 
     return true if bad_params.empty?
-    raise HttpErrors::UnprocessableEntity.new(build_bad_params_error_msg(bad_params, params))
+    fail HttpErrors::UnprocessableEntity.new(build_bad_params_error_msg(bad_params, params))
   end
 
   def build_bad_params_error_msg(bad_params, params)

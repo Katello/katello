@@ -51,7 +51,7 @@ else
                # TODO: replace ENV['TRAVIS'] with configuration
                basic_groups + [:development, :test, (:debugging if ENV['TRAVIS'] != 'true')]
              else
-               raise "unknown environment #{Rails.env.to_sym}"
+               fail "unknown environment #{Rails.env.to_sym}"
              end.compact
     Bundler.require(*groups)
   end

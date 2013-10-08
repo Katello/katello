@@ -14,7 +14,7 @@ AsyncOperation = Struct.new(:status_id, :username, :object, :method_name, :args)
   #delegate :method, :to => :object
 
   def initialize(status_id, username, object, method_name, args)
-    raise NoMethodError, "undefined method `#{method_name}' for #{object.inspect}" unless object.respond_to?(method_name, true)
+    fail NoMethodError, "undefined method `#{method_name}' for #{object.inspect}" unless object.respond_to?(method_name, true)
 
     self.status_id    = status_id
     self.username     = username
