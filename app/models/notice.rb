@@ -13,6 +13,8 @@
 class Notice < ActiveRecord::Base
   include Glue::ElasticSearch::Notice if Katello.config.use_elasticsearch
 
+  include Authorization::Notice
+
   has_many :user_notices, :dependent => :destroy
   has_many :users, :through => :user_notices
   belongs_to :organization

@@ -36,7 +36,8 @@ angular.module('Bastion', [
     'Bastion.providers',
     'Bastion.repositories',
     'Bastion.gpg-keys',
-    'Bastion.tasks'
+    'Bastion.tasks',
+    'Bastion.notices'
 ]);
 
 /**

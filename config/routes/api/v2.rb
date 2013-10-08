@@ -291,6 +291,8 @@ Src::Application.routes.draw do
         api_resources :ldap_groups, :controller => :role_ldap_groups, :only => [:create, :destroy, :index]
       end
 
+      api_resources :notices, :only => [:index, :show, :update, :destroy]
+
       api_resources :sync_plans, :only => [:show, :update, :destroy]
       api_resources :tasks, :only => [:show]
       api_resources :about, :only => [:index]

@@ -1,0 +1,62 @@
+<div>
+
+  <div class="flash_hud" ng-show="saveSuccess">
+    <a class="control" title="Close" ng-click="saveSuccess = false"></a>
+    <ul class="flash_messages success">
+      <li ng-repeat="message in successMessages">{{ message }}</li>
+    </ul>
+  </div>
+
+  <div class="nutupane-titlebar">
+    <h1 class="nutupane-title">{{ "Notices" }}</h1>
+  </div>
+
+  <div class="nutupane-actionbar">
+    <div class="form">
+      <input type="text"
+             class="input input-search"
+             placeholder="Search..."
+             ng-model="table.searchTerm"
+             on-enter="table.search(table.searchTerm)">
+      <span class="result-count">Showing {{ table.rows.length }} of {{ table.resource.subtotal }} ({{ table.resource.total }} Total) Notices</span>
+    </div>
+
+    <div class="nutupane-actions fr">
+      <button class="btn-danger"
+              ng-disabled="removeNotices.disabled()"
+              ng-click="showConfirm = true; removeNotices.confirm = true"
+              ng-hide="removeNotices.workingMode">
+        <i class="icon-group leading-icon"></i>
+        {{ "Remove Notices" | i18n }}
+      </button>
+
+      <span ng-show="removeNotices.workingMode">
+        <i class="icon-spinner inline-icon icon-spin"></i>
+        <span>{{ "Removing Notices" | i18n }}</span>
+      </span>
+
+      <div alch-confirm="performRemoveNotices()" show-confirm="removeNotices.confirm">
+        {{ "Are you sure you want to remove the %noticeCount notices(s) selected?" | i18n: {noticeCount: getSelectedNoticeIds().length} }}
+      </div>
+    </div>
+
+    <div class="fr select-action">
+      <span>{{ table.numSelected }} Selected</span>
+      <span>|</span>
+      <a class="deselect-action"
+         ng-class="{ 'disabled-link' : table.numSelected == 0 }"
+         ng-click="table.selectAll(false)">
+        Deselect All
+      </a>
+    </div>
+  </div>
+
+  <div alch-table="table" nutupane-table ng-class="{'table-reduced': $root.$state.current.collapsed}">
+    <div alch-container-scroll control-width="table" alch-infinite-scroll="table.nextPage()">
+      <div ui-view="table"></div>
+    </div>
+  </div>
+
+  <span class="action-panel" ui-view="action-panel"></span>
+
+</div>

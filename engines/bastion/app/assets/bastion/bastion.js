@@ -98,3 +98,6 @@
 
 //= require "bastion/tasks/tasks.module.js"
 //= require_tree "./tasks"
+
+//= require "bastion/notices/notices.module.js"
+//= require_tree "./notices"
