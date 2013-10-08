@@ -945,7 +945,7 @@ var templateLibrary = (function($){
                 html += '<li class="slide_link"><div class="simple_link link_details" id="' + id + '">';
             }
 
-            html += '<span class="sort_attr">'+ name;
+            html += '<span class="sort_attr">'+ KT.utils.escape(name);
 
             if( notation !== undefined && notation !== null && notation !== false ){
                 html += ' (' + notation + ') ';
@@ -1012,7 +1012,7 @@ var templateLibrary = (function($){
                     'data-type="group" data-id="' + group_id + '">';
                 anchor += i18n.remove + "</a>";
             }
-            return '<li >' + anchor + '<div class="simple_link" id="' + group_id + '"><span class="sort_attr">'  + name + '</span></div></li>';
+            return '<li >' + anchor + '<div class="simple_link" id="' + group_id + '"><span class="sort_attr">'  + KT.utils.escape(name) + '</span></div></li>';
         },
         permissionsList = function(permissions, organization_id, options){
             var html = '<ul class="filterable">',
@@ -1040,15 +1040,15 @@ var templateLibrary = (function($){
                 anchor += i18n.remove + "</a>";
             }
 
-            return '<li class="slide_link">' + anchor + '<div class="simple_link link_details" id="' + permission_id + '"><span class="sort_attr">'  + name + '</span></div></li>';
+            return '<li class="slide_link">' + anchor + '<div class="simple_link link_details" id="' + permission_id + '"><span class="sort_attr">'  + KT.utils.escape(name) + '</span></div></li>';
         },
         permissionItem = function(permission){
             var i = 0, length = 0,
                 html = '<div class="permission_detail">';
 
-            html += '<div class="permission_detail_container"><label class="grid_3 ra">' + i18n.name_colon + '</label><span>' + permission.name + '</span></div>';
-            html += '<div class="permission_detail_container"><label class="grid_3 raf">' + i18n.description_colon + '</label><span>' + permission.description + '</span></div>';
-            html += '<div class="permission_detail_container"><label class="grid_3 ra">' + i18n.permission_for_colon + '</label><span>' + permission.type_name + '</span></div>';
+            html += '<div class="permission_detail_container"><label class="grid_3 ra">' + i18n.name_colon + '</label><span>' + KT.utils.escape(permission.name) + '</span></div>';
+            html += '<div class="permission_detail_container"><label class="grid_3 raf">' + i18n.description_colon + '</label><span>' + KT.utils.escape(permission.description) + '</span></div>';
+            html += '<div class="permission_detail_container"><label class="grid_3 ra">' + i18n.permission_for_colon + '</label><span>' + KT.utils.escape(permission.type_name) + '</span></div>';
 
             html += '<div class="permission_detail_container"><label class="grid_3 ra">' + i18n.verbs_colon + '</label><ul>';
 
@@ -1057,7 +1057,7 @@ var templateLibrary = (function($){
             } else {
                 length = permission.verbs.length;
                 for( i=0; i < length; i += 1){
-                    html += '<li>' + permission.verbs[i].display_name + '</li>';
+                    html += '<li>' + KT.utils.escape(permission.verbs[i].display_name) + '</li>';
                 }
             }
             html += '</ul></div>';
@@ -1068,7 +1068,7 @@ var templateLibrary = (function($){
             } else {
                 length = permission.tags.length;
                 for( i=0; i < length; i += 1){
-                    html += '<li>' + permission.tags[i].display_name + '</li>';
+                    html += '<li>' + KT.utils.escape(permission.tags[i].display_name) + '</li>';
                 }
             }
             html += '</ul></div></div>';
@@ -1091,7 +1091,7 @@ var templateLibrary = (function($){
 
             html += anchor + '<div class="simple_link ';
             html += no_slide ? "" : "link_details";
-            html += '"><span class="sort_attr">'  + name + '</span></div></li>';
+            html += '"><span class="sort_attr">'  + KT.utils.escape(name) + '</span></div></li>';
 
             return html;
         },

@@ -24,13 +24,13 @@
 angular.module('Bastion.systems').factory('System',
     ['$resource', 'Routes',
     function($resource, Routes) {
-        return $resource(Routes.apiSystemsPath() + '/:id/:action', {id: '@uuid'}, {
+        return $resource(Routes.apiSystemsPath() + '/:id/:action/:action2', {id: '@uuid'}, {
             update: {method: 'PUT'},
             query: {method: 'GET', isArray: false},
             releaseVersions: {method: 'GET', params: {action: 'releases'}},
             saveSystemGroups: {method: 'POST', params: {action: 'system_groups'}},
             refreshSubscriptions: {method: 'PUT', params: {action: 'refresh_subscriptions'}},
-            availableSubscriptions: {method: 'GET', params: {action: 'subscriptions/available'}},
+            availableSubscriptions: {method: 'GET', params: {action: 'subscriptions', action2:'available'}},
             tasks: {method: 'GET', params: {action: 'tasks', paged: true}}
         });
     }]

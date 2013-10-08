@@ -917,7 +917,7 @@ var templateLibrary = (function(){
     var changesetsListItem = function(id, name){
             var html ='<li class="slide_link">' + '<div class="simple_link link_details" id="' + id + '">';
 
-            html += '<span class="sort_attr">'+ name + '</span></div></li>';
+            html += '<span class="sort_attr">'+ KT.utils.escape(name) + '</span></div></li>';
             return html;
         },
         changesetsList = function(changesets){
@@ -957,13 +957,13 @@ var templateLibrary = (function(){
                 html = '';
             if ( showButton ){
                 anchor = '<a class="st_button content_add_remove fr remove_content_view" data-display_name="' +
-                    name +'" data-id="' + id + '" data-type="content_view" id="add_remove_content_view_' + id +
+                    KT.utils.escape(name) +'" data-id="' + id + '" data-type="content_view" id="add_remove_content_view_' + id +
                     '" data-content_view_id="' + id +
                     '">' + i18n.remove + '</a>';
             }
             html += '<li class="clear">' + anchor;
             html += '<div id="simple_link content_view-cs_' + changeset_id + '_' + id + '">' +
-                '<span class="content_view-icon sort_attr" >' + name + '</span>' +
+                '<span class="content_view-icon sort_attr" >' + KT.utils.escape(name) + '</span>' +
                 '</div></li>';
 
             return html;

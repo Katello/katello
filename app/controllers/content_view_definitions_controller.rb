@@ -229,9 +229,12 @@ class ContentViewDefinitionsController < ApplicationController
       @view_definition.product_ids = products_ids
     end
 
-    if params[:repos]
+    if params[:repos] # yum repos
       repo_ids = params[:repos].empty? ? [] : Repository.libraries_content_readable(current_organization).
           where(:id => params[:repos].values.flatten).pluck("repositories.id")
+
+      # don't unset the puppet repo
+      repo_ids += @view_definition.puppet_repository_id if @view_definition.puppet_repository_id
 
       @view_definition.repository_ids = repo_ids
     end
