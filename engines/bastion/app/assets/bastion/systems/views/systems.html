@@ -15,7 +15,7 @@
     <div class="form">
       <input type="text"
              class="input input-search"
-             placeholder="'Search...' | translate"
+             placeholder="{{ 'Search...' | translate }}"
              ng-model="table.searchTerm"
              on-enter="table.search(table.searchTerm)">
       <span class="result-count" translate>Showing {{ table.rows.length }} of {{ table.resource.subtotal }} ({{ table.resource.total }} Total) Systems</span>
