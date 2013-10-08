@@ -46,6 +46,7 @@ KT.system_groups_pane = (function() {
                 $("tr#add_groups").after(data);
 
                 enable_inputs();
+                update_remove();
             },
             error: function() {
                 enable_inputs();
@@ -86,6 +87,7 @@ KT.system_groups_pane = (function() {
                     $("tr#empty_row").show();
                 }
                 enable_inputs();
+                update_remove();
             },
             error: function() {
                 enable_inputs();
@@ -94,15 +96,28 @@ KT.system_groups_pane = (function() {
     },
     disable_inputs = function(){
         $("input#add_groups").attr("disabled", true);
-        $("input#remove_groups").attr("disabled", true);
+        disable_remove();
         $("input.group_select").attr("disabled", true);
         $("#system_group").multiselect('disable');
     },
     enable_inputs = function(){
         $("input#add_groups").removeAttr("disabled");
-        $("input#remove_groups").removeAttr("disabled");
+        enable_remove();
         $("input.group_select").removeAttr("disabled");
         $("#system_group").multiselect('enable');
+    },
+    disable_remove = function() {
+        $("input#remove_groups").attr("disabled", true);
+    },
+    enable_remove = function() {
+        $("input#remove_groups").removeAttr("disabled");
+    },
+    update_remove = function() {
+        if ($('.group_select[type="checkbox"]:checked').length > 0) {
+            enable_remove();
+        } else {
+            disable_remove();
+        }
     },
     register_events = function() {
         $("input#add_groups").live('click', add_groups);
@@ -113,6 +128,9 @@ KT.system_groups_pane = (function() {
             noneSelectedText: i18n.select_system_groups,
             selectedList: 4
         }).multiselectfilter();
+
+        disable_remove();
+        $('.group_select[type="checkbox"]').live('change', update_remove);
     };
     return {
         add_groups: add_groups,
