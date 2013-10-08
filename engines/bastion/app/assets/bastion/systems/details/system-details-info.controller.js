@@ -103,7 +103,7 @@ angular.module('Bastion.systems').controller('SystemDetailsInfoController',
             var deferred = $q.defer();
 
             System.releaseVersions({ id: $scope.system.uuid }, function(response) {
-                deferred.resolve(response);
+                deferred.resolve(response.results);
             });
 
             return deferred.promise;

@@ -186,10 +186,11 @@
       <div class="detail">
         <span class="info-label">{{ "Release Version" | i18n }}</span>
         <span class="info-value"
-              alch-edit-select="system.releaseVer.releaseVer"
+              alch-edit-select="system.releaseVer"
               readonly="system.readonly"
-              selector="system.releaseVer.releaseVer"
+              selector="system.releaseVer"
               options="releaseVersions()"
+              options-format="option for option in options"
               on-save="save(system)">
         </span>
       </div>
