@@ -45,12 +45,12 @@
       </div>
 
       <div class="detail">
-        <span class="info-label">{{ "Type" | i18n }}</span>
+        <span class="info-label" translate>Type</span>
         <span class="info-value">{{ system.type }}</span>
       </div>
 
       <div ng-show="system.guests" class="detail">
-        <span class="info-label">{{ "Guests" | i18n }}</span>
+        <span class="info-label" translate>Guests</span>
         <div class="info-value">
           <ul>
             <li ng-repeat="guest in system.guests">
@@ -61,7 +61,7 @@
       </div>
 
       <div ng-show="system.host" class="detail">
-        <span class="info-label">{{ "Host" | i18n }}</span>
+        <span class="info-label" translate>Host</span>
         <div class="info-value">
           <a href="#/systems/{{ system.host.uuid }}/info">{{ system.host.name }}</a>
         </div>
