@@ -8,7 +8,7 @@ class AddEnvironmentDefaultIdToContentView < ActiveRecord::Migration
       cv.environment_default_id = env.id
       cv.save!
     end
-    raise "All environments not properly migrated" if KTEnvironment.count != ContentView.where("environment_default_id is not null").count
+    fail "All environments not properly migrated" if KTEnvironment.count != ContentView.where("environment_default_id is not null").count
 
     remove_column :environments, :default_content_view_id
     add_index :content_views, [:environment_default_id]

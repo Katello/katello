@@ -56,7 +56,8 @@ module Glue
           message << step.error['backtrace'].join("\n")
         end
           message
-      end.join("\n")
+      end
+      log_message = log_message.join("\n")
 
       if execution_plan.failed_steps.any?
         ::Logging.logger['glue'].error(log_message)

@@ -220,18 +220,18 @@ class Repository < ActiveRecord::Base
   def create_clone(to_env, content_view = nil)
     content_view = to_env.default_content_view if content_view.nil?
     view_version = content_view.version(to_env)
-    raise _("View %{view} has not been promoted to %{env}") %
+    fail _("View %{view} has not been promoted to %{env}") %
               {:view => content_view.name, :env => to_env.name} if view_version.nil?
 
     library = self.library_instance ? self.library_instance : self
 
     if content_view.default?
-      raise _("Cannot clone repository from %{from_env} to %{to_env}.  They are not sequential.") %
+      fail _("Cannot clone repository from %{from_env} to %{to_env}.  They are not sequential.") %
                 {:from_env => self.environment.name, :to_env => to_env.name} if to_env.prior != self.environment
-      raise _("Repository has already been promoted to %{to_env}") %
+      fail _("Repository has already been promoted to %{to_env}") %
               {:to_env => to_env} if self.is_cloned_in?(to_env)
     else
-      raise _("Repository has already been cloned to %{cv_name} in environment %{to_env}") %
+      fail _("Repository has already been cloned to %{cv_name} in environment %{to_env}") %
                 {:to_env => to_env, :cv_name => content_view.name} if
           content_view.repos(to_env).where(:library_instance_id => library.id).count > 0
     end

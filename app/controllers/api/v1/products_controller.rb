@@ -64,7 +64,7 @@ class Api::V1::ProductsController < Api::V1::ApiController
     param :recursive, :bool, :desc => "set to true to recursive update gpg key"
   end
   def update
-    raise HttpErrors::BadRequest, _("Red Hat products cannot be updated.") if @product.redhat?
+    fail HttpErrors::BadRequest, _("Red Hat products cannot be updated.") if @product.redhat?
     @product.gpg_key_name = params[:product][:gpg_key_name] unless params[:product][:gpg_key_name].nil? # not .blank?
     @product.update_attributes!(params[:product].slice(:description))
     if params[:product][:recursive]
@@ -138,9 +138,9 @@ class Api::V1::ProductsController < Api::V1::ApiController
   private
 
   def find_product
-    raise _("Neither organization nor environment has been provided.") if @organization.nil?
+    fail _("Neither organization nor environment has been provided.") if @organization.nil?
     @product = Product.find_by_cp_id(params[:id], @organization)
-    raise HttpErrors::NotFound, _("Couldn't find product with id '%s'") % params[:id] if @product.nil?
+    fail HttpErrors::NotFound, _("Couldn't find product with id '%s'") % params[:id] if @product.nil?
   end
 
   def find_environment
@@ -149,7 +149,7 @@ class Api::V1::ProductsController < Api::V1::ApiController
       @environment = @product.organization.library unless @product.nil?
     else
       @environment = KTEnvironment.find_by_id(params[:environment_id])
-      raise HttpErrors::NotFound, _("Couldn't find environment '%s'") % params[:environment_id] if @environment.nil?
+      fail HttpErrors::NotFound, _("Couldn't find environment '%s'") % params[:environment_id] if @environment.nil?
     end
     @organization ||= @environment.organization if @environment
   end
@@ -163,7 +163,7 @@ class Api::V1::ProductsController < Api::V1::ApiController
 
   def verify_presence_of_organization_or_environment
     return if @organization || @environment
-    raise HttpErrors::BadRequest, _("Either organization ID or environment ID needs to be specified")
+    fail HttpErrors::BadRequest, _("Either organization ID or environment ID needs to be specified")
   end
 
 end

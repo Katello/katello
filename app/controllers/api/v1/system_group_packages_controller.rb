@@ -90,7 +90,7 @@ class Api::V1::SystemGroupPackagesController < Api::V1::ApiController
 
   def find_group
     @group = SystemGroup.find(params[:system_group_id])
-    raise HttpErrors::NotFound, _("Couldn't find system group '%s'") % params[:system_group_id] if @group.nil?
+    fail HttpErrors::NotFound, _("Couldn't find system group '%s'") % params[:system_group_id] if @group.nil?
     @group
   end
 
@@ -101,7 +101,7 @@ class Api::V1::SystemGroupPackagesController < Api::V1::ApiController
   def validate_package_list_format(packages)
     packages.each do |package_name|
       if !valid_package_name?(package_name)
-        raise HttpErrors::BadRequest.new(_("%s is not a valid package name") % package_name)
+        fail HttpErrors::BadRequest.new(_("%s is not a valid package name") % package_name)
       end
     end
 
@@ -110,7 +110,7 @@ class Api::V1::SystemGroupPackagesController < Api::V1::ApiController
 
   def require_packages_or_groups
     if params.slice(:packages, :groups).values.size != 1
-      raise HttpErrors::BadRequest.new(_("Either packages or groups must be provided"))
+      fail HttpErrors::BadRequest.new(_("Either packages or groups must be provided"))
     end
   end
 

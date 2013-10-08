@@ -60,9 +60,10 @@ module Glue::Provider
 
     def sync
       Rails.logger.debug "Syncing provider #{name}"
-      self.products.collect do |p|
+      syncs = self.products.collect do |p|
         p.sync
-      end.flatten
+      end
+      syncs.flatten
     end
 
     def synced?
@@ -71,9 +72,10 @@ module Glue::Provider
 
     #get last sync status of all repositories in this provider
     def latest_sync_statuses
-      self.products.collect do |p|
+      statuses = self.products.collect do |p|
         p.latest_sync_statuses
-      end.flatten
+      end
+      statuses.flatten
     end
 
     # Get the most relavant status for all the repos in this Provider
@@ -191,7 +193,7 @@ module Glue::Provider
 
       if !upstream['idCert'] || !upstream['idCert']['cert'] || !upstream['idCert']['key']
         Rails.logger.error "Upstream identity certificate not available"
-        raise _("Upstream identity certificate not available")
+        fail _("Upstream identity certificate not available")
       end
 
       # Default to Red Hat
@@ -214,7 +216,7 @@ module Glue::Provider
 
       if !upstream['idCert'] || !upstream['idCert']['cert'] || !upstream['idCert']['key']
         Rails.logger.error "Upstream identity certificate not available"
-        raise _("Upstream identity certificate not available")
+        fail _("Upstream identity certificate not available")
       end
 
       # Default to Red Hat
@@ -268,7 +270,7 @@ module Glue::Provider
     # rubocop:disable MethodLength
     def queue_import_manifest(options)
       options = options.with_indifferent_access
-      raise "zip_file_path or upstream must be specified" if options[:zip_file_path].nil? && options[:upstream].nil?
+      fail "zip_file_path or upstream must be specified" if options[:zip_file_path].nil? && options[:upstream].nil?
 
       #if a manifest has already been imported, we need to update the products
       manifest_update = self.products.any?
@@ -436,8 +438,8 @@ module Glue::Provider
           next if product.nil?
           pool.provider_id = product.provider_id   # Set so it is saved into elastic search
           pool
-        end.compact
-        subscriptions = [] if subscriptions.nil?
+        end
+        subscriptions.compact!
       else
         subscriptions = []
       end

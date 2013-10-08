@@ -92,7 +92,7 @@ class Ping
 
       # katello jobs - TODO we should not spawn processes
       exception_watch(result[:status][:katello_jobs]) do
-        raise _("katello-jobs service not running") unless system("/sbin/service katello-jobs status")
+        fail _("katello-jobs service not running") unless system("/sbin/service katello-jobs status")
       end
 
       # set overall status result code
@@ -132,7 +132,7 @@ class Ping
         http.verify_mode = OpenSSL::SSL::VERIFY_NONE
       end
       unless http.options(uri.path).content_length > 0
-        raise _("Pulp not running")
+        fail _("Pulp not running")
       end
     end
   end

@@ -49,7 +49,7 @@ module Util
 
           def self.current=(o)
             unless (o.nil? || o.is_a?(self) || o.class.name == 'RSpec::Mocks::Mock')
-              raise(ArgumentError, "Unable to set current User, expected class '#{self}', got #{o.inspect}")
+              fail(ArgumentError, "Unable to set current User, expected class '#{self}', got #{o.inspect}")
             end
             username = o.is_a?(User) ? o.username : 'nil'
             Rails.logger.debug "Setting current user thread-local variable to " + username
@@ -88,7 +88,7 @@ module Util
           def self.as(username, &do_block)
             old_user = current
             self.current = User.find_by_username(username)
-            raise(ArgumentError, "Cannot find user '%s'" % username) if self.current.nil?
+            fail(ArgumentError, "Cannot find user '%s'" % username) if self.current.nil?
             do_block.call
           ensure
             self.current = old_user

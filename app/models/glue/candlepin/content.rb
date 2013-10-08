@@ -102,7 +102,7 @@ module Glue::Candlepin::Content
 
     def create_content
       #only used for custom content
-      raise 'Can only create content for custom providers' if self.product.provider.redhat_provider?
+      fail 'Can only create content for custom providers' if self.product.provider.redhat_provider?
       new_content = ::Candlepin::ProductContent.new({
         :content => {
           :name => self.name,

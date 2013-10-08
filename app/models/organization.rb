@@ -132,8 +132,8 @@ class Organization < ActiveRecord::Base
   end
 
   def discover_repos(url, notify = false)
-    raise _("Repository Discovery already in progress") if self.repo_discovery_task && !self.repo_discovery_task.finished?
-    raise _("Discovery URL not set.") if url.blank?
+    fail _("Repository Discovery already in progress") if self.repo_discovery_task && !self.repo_discovery_task.finished?
+    fail _("Discovery URL not set.") if url.blank?
     task = self.async(:organization => self, :task_type => :repo_discovery).start_discovery_task(url, notify)
     task.parameters = {:url => url}
     self.task_statuses << task
@@ -168,7 +168,7 @@ class Organization < ActiveRecord::Base
     options = defaults.merge(options)
 
     unless ALLOWED_DEFAULT_INFO_TYPES.include?(informable_type)
-      raise options[:error], options[:message]
+      fail options[:error], options[:message]
     end
   end
 

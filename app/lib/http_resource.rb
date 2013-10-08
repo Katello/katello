@@ -46,7 +46,7 @@ class HttpResource
   class << self
     # children must redefine
     def logger
-      raise NotImplementedError
+      fail NotImplementedError
     end
 
     def process_response(resp)
@@ -70,7 +70,7 @@ class HttpResource
           raise NetworkException, [resp.code.to_s, resp.body].reject{|s| s.nil? || s.empty?}.join(' ')
         end
       end
-      raise RestClientException, {:message => message, :service_code => service_code, :code => status_code}, caller
+      fail RestClientException, {:message => message, :service_code => service_code, :code => status_code}, caller
     end
 
     def print_debug_info(a_path, headers = {}, payload = {})
@@ -99,7 +99,7 @@ class HttpResource
       raise_rest_client_exception e, a_path, "GET"
     rescue Errno::ECONNREFUSED
       service = a_path.split("/").second
-      raise Errors::ConnectionRefusedException, _("A backend service [ %s ] is unreachable") % service.capitalize
+      fail Errors::ConnectionRefusedException, _("A backend service [ %s ] is unreachable") % service.capitalize
     end
 
     def post(a_path, payload = {}, headers = {})
@@ -113,7 +113,7 @@ class HttpResource
       raise_rest_client_exception e, a_path, "POST"
     rescue Errno::ECONNREFUSED
       service = a_path.split("/").second
-      raise Errors::ConnectionRefusedException, _("A backend service [ %s ] is unreachable") % service.capitalize
+      fail Errors::ConnectionRefusedException, _("A backend service [ %s ] is unreachable") % service.capitalize
     end
 
     def put(a_path, payload = {}, headers = {})
@@ -127,7 +127,7 @@ class HttpResource
       raise_rest_client_exception e, a_path, "PUT"
     rescue Errno::ECONNREFUSED
       service = a_path.split("/").second
-      raise Errors::ConnectionRefusedException, _("A backend service [ %s ] is unreachable") % service.capitalize
+      fail Errors::ConnectionRefusedException, _("A backend service [ %s ] is unreachable") % service.capitalize
     end
 
     def delete(a_path = nil, headers = {})
@@ -141,7 +141,7 @@ class HttpResource
       raise_rest_client_exception e, a_path, "DELETE"
     rescue Errno::ECONNREFUSED
       service = a_path.split("/").second
-      raise Errors::ConnectionRefusedException, _("A backend service [ %s ] is unreachable") % service.capitalize
+      fail Errors::ConnectionRefusedException, _("A backend service [ %s ] is unreachable") % service.capitalize
     end
 
     # re-raise the same exception with nicer error message
@@ -153,7 +153,7 @@ class HttpResource
           msg
         end
       end
-      raise e
+      fail e
     end
 
     def join_path(*args)

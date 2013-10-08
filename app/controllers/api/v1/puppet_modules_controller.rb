@@ -62,7 +62,7 @@ class Api::V1::PuppetModulesController < Api::V1::ApiController
     @puppet_module = PuppetModule.find(params[:id])
 
     unless @puppet_module.repoids.include?(@repo.pulp_id)
-      raise HttpErrors::NotFound, _("Puppet module '%{id}' not found within repository '%{repo}'") %
+      fail HttpErrors::NotFound, _("Puppet module '%{id}' not found within repository '%{repo}'") %
         {:id => params[:id], :repo => @repo.name}
     end
   end

@@ -58,7 +58,7 @@ class FilterRule < ActiveRecord::Base
       PuppetModuleRule
     else
       params = {:content_type => content_type, :content_types => CONTENT_TYPES.join(", ")}
-      raise _("Invalid content type '%{content_type}' provided. Content types can be one of %{content_types}") % params
+      fail _("Invalid content type '%{content_type}' provided. Content types can be one of %{content_types}") % params
     end
   end
 

@@ -96,7 +96,7 @@ class Api::V1::SubscriptionsController < Api::V1::ApiController
   param :quantity, :number, :desc => "Number of subscription to use", :required => true
   def create
     expected_params = params.with_indifferent_access.slice(:pool, :quantity)
-    raise HttpErrors::BadRequest, _("Please provide pool and quantity") if expected_params.count != 2
+    fail HttpErrors::BadRequest, _("Please provide pool and quantity") if expected_params.count != 2
     @system.subscribe(expected_params[:pool], expected_params[:quantity])
     respond :resource => @system
   end
@@ -106,7 +106,7 @@ class Api::V1::SubscriptionsController < Api::V1::ApiController
   param_group :system
   def destroy
     expected_params = params.with_indifferent_access.slice(:id)
-    raise HttpErrors::BadRequest, _("Please provide subscription ID") if expected_params.count != 1
+    fail HttpErrors::BadRequest, _("Please provide subscription ID") if expected_params.count != 1
     @system.unsubscribe(expected_params[:id])
     respond_for_show :resource => @system
   end
@@ -123,7 +123,7 @@ class Api::V1::SubscriptionsController < Api::V1::ApiController
   param_group :system
   def destroy_by_serial
     expected_params = params.with_indifferent_access.slice(:serial_id)
-    raise HttpErrors::BadRequest, _("Please provide serial ID") if expected_params.count != 1
+    fail HttpErrors::BadRequest, _("Please provide serial ID") if expected_params.count != 1
     @system.unsubscribe_by_serial(expected_params[:serial_id])
     respond_for_show :resource => @system
   end
@@ -132,7 +132,7 @@ class Api::V1::SubscriptionsController < Api::V1::ApiController
 
   def find_system
     @system = System.first(:conditions => { :uuid => params[:system_id] })
-    raise HttpErrors::NotFound, _("Couldn't find system '%s'") % params[:system_id] if @system.nil?
+    fail HttpErrors::NotFound, _("Couldn't find system '%s'") % params[:system_id] if @system.nil?
     @system
   end
 

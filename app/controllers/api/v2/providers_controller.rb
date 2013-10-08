@@ -77,7 +77,7 @@ class Api::V2::ProvidersController < Api::V2::ApiController
     def find_provider
       @provider = Provider.find(params[:id])
       @organization ||= @provider.organization
-      raise HttpErrors::NotFound, _("Couldn't find provider '%s'") % params[:id] if @provider.nil?
+      fail HttpErrors::NotFound, _("Couldn't find provider '%s'") % params[:id] if @provider.nil?
     end
 
 end

@@ -28,15 +28,15 @@ class NodeCapability < ActiveRecord::Base
   end
 
   def update_environments
-    raise "update_environments not implemented"
+    fail "update_environments not implemented"
   end
 
   def sync(options = {})
-    raise "Sync Not implemented"
+    fail "Sync Not implemented"
   end
 
   def validate_configuration
-    raise "Empty capability not supported"
+    fail "Empty capability not supported"
   end
 
 end

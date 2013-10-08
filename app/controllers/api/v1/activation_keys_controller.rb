@@ -115,7 +115,7 @@ class Api::V1::ActivationKeysController < Api::V1::ApiController
   api :DELETE, "/activation_keys/:id/pools/:poolid", "Delete an entitlement pool within an activation key"
   def remove_pool
     unless @activation_key.pools.include?(@pool)
-      raise HttpErrors::NotFound, _("Couldn't find pool '%{pool}' in activation_key '%{ak}'") % { :pool => @pool.cp_id, :ak => @activation_key.name }
+      fail HttpErrors::NotFound, _("Couldn't find pool '%{pool}' in activation_key '%{ak}'") % { :pool => @pool.cp_id, :ak => @activation_key.name }
     end
     @activation_key.pools.delete(@pool)
     respond_for_show
@@ -143,13 +143,13 @@ class Api::V1::ActivationKeysController < Api::V1::ApiController
     return unless params.key?(:environment_id)
 
     @environment = KTEnvironment.find(params[:environment_id])
-    raise HttpErrors::NotFound, _("Couldn't find environment '%s'") % params[:environment_id] if @environment.nil?
+    fail HttpErrors::NotFound, _("Couldn't find environment '%s'") % params[:environment_id] if @environment.nil?
     @environment
   end
 
   def find_activation_key
     @activation_key = ActivationKey.find(params[:id])
-    raise HttpErrors::NotFound, _("Couldn't find activation key '%s'") % params[:id] if @activation_key.nil?
+    fail HttpErrors::NotFound, _("Couldn't find activation key '%s'") % params[:id] if @activation_key.nil?
     @activation_key
   end
 
@@ -163,7 +163,7 @@ class Api::V1::ActivationKeysController < Api::V1::ApiController
     if ids
       ids.each do |group_id|
         group = SystemGroup.find(group_id)
-        raise HttpErrors::NotFound, _("Couldn't find system group '%s'") % group_id if group.nil?
+        fail HttpErrors::NotFound, _("Couldn't find system group '%s'") % group_id if group.nil?
         @system_groups << group
       end
     end
@@ -171,6 +171,6 @@ class Api::V1::ActivationKeysController < Api::V1::ApiController
 
   def verify_presence_of_organization_or_environment
     return if params.key?(:organization_id) || params.key?(:environment_id)
-    raise HttpErrors::BadRequest, _("Either organization ID or environment ID needs to be specified")
+    fail HttpErrors::BadRequest, _("Either organization ID or environment ID needs to be specified")
   end
 end

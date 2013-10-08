@@ -41,12 +41,12 @@ class Api::V1::DistributionsController < Api::V1::ApiController
 
   def find_repository
     @repo = Repository.find(params[:repository_id])
-    raise HttpErrors::NotFound, _("Couldn't find repository '%s'") % params[:repository_id] if @repo.nil?
+    fail HttpErrors::NotFound, _("Couldn't find repository '%s'") % params[:repository_id] if @repo.nil?
     @repo
   end
 
   def check_distribution
-    raise HttpErrors::NotFound, _("Distribution '%s' not found within the repository") % params[:id] unless @repo.has_distribution? params[:id]
+    fail HttpErrors::NotFound, _("Distribution '%s' not found within the repository") % params[:id] unless @repo.has_distribution? params[:id]
   end
 
 end

@@ -169,19 +169,19 @@ class Notifications::Notifier
 
     options.assert_valid_keys(*default_options.keys)
 
-    raise ArgumentError, "unknown notice level #{options[:level].inspect}" unless LEVELS.include? options[:level]
+    fail ArgumentError, "unknown notice level #{options[:level].inspect}" unless LEVELS.include? options[:level]
 
     unless SEND_AS_OPTIONS.include? options[:send_as]
-      raise ArgumentError, "unknown send as #{options[:send_as].inspect}"
+      fail ArgumentError, "unknown send as #{options[:send_as].inspect}"
     end
 
     [:asynchronous, :persist, :global].each do |flag|
-      raise ArgumentError,
+      fail ArgumentError,
             "#{flag} has to be true || false, but is #{options[flag].inspect}" unless FLAGS.include? options[flag]
     end
 
-    raise ArgumentError, "cannot be asynchronous without persist" if options[:asynchronous] && !options[:persist]
-    raise ArgumentError, "cannot use details without persist" if options[:details] && !options[:persist]
+    fail ArgumentError, "cannot be asynchronous without persist" if options[:asynchronous] && !options[:persist]
+    fail ArgumentError, "cannot use details without persist" if options[:details] && !options[:persist]
 
     return options
   end

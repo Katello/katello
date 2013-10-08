@@ -479,7 +479,7 @@ module Resources
       class << self
         def find(pool_id)
           pool_json = self.get(path(pool_id), self.default_headers).body
-          raise ArgumentError, "pool id cannot contain ?" if pool_id["?"]
+          fail ArgumentError, "pool id cannot contain ?" if pool_id["?"]
           JSON.parse(pool_json).with_indifferent_access
         end
 
@@ -489,7 +489,7 @@ module Resources
         end
 
         def destroy(id)
-          raise ArgumentError, "pool id has to be specified" unless id
+          fail ArgumentError, "pool id has to be specified" unless id
           self.delete(path(id), self.default_headers).code.to_i
         end
 
@@ -521,7 +521,7 @@ module Resources
         end
 
         def destroy(id)
-          raise ArgumentError, "content id has to be specified" unless id
+          fail ArgumentError, "content id has to be specified" unless id
           self.delete(path(id), self.default_headers).code.to_i
         end
 
@@ -539,7 +539,7 @@ module Resources
       class << self
 
         def destroy(subscription_id)
-          raise ArgumentError, "subscription id has to be specified" unless subscription_id
+          fail ArgumentError, "subscription id has to be specified" unless subscription_id
           self.delete(path(subscription_id), self.default_headers).code.to_i
         end
 
@@ -632,7 +632,7 @@ module Resources
         end
 
         def destroy(product_id)
-          raise ArgumentError, "product id has to be specified" unless product_id
+          fail ArgumentError, "product id has to be specified" unless product_id
           self.delete(path(product_id), self.default_headers).code.to_i
         end
 

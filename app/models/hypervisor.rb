@@ -19,7 +19,7 @@ class Hypervisor < System
 
   UNSUPPORTED_ACTIONS.each do |unsupported_action|
     define_method(unsupported_action) do
-      raise Errors::UnsupportedActionException.new(unsupported_action, self, _("Hypervisor does not support this action"))
+      fail Errors::UnsupportedActionException.new(unsupported_action, self, _("Hypervisor does not support this action"))
     end
   end
 end

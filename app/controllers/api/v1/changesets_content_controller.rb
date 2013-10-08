@@ -47,7 +47,7 @@ class Api::V1::ChangesetsContentController < Api::V1::ApiController
   def find_content_view!
     id    = params[:action] == "add_content_view" ? params[:content_view_id] : params[:id]
     @view = ContentView.find_by_id(id)
-    raise HttpErrors::NotFound, _("Couldn't find content view '%s'") % id if @view.nil?
+    fail HttpErrors::NotFound, _("Couldn't find content view '%s'") % id if @view.nil?
   end
 
   def render_after_removal(removed_objects, options = {})
@@ -56,7 +56,7 @@ class Api::V1::ChangesetsContentController < Api::V1::ApiController
     else
       rend = { :text => options[:not_found], :status => 404 }
     end
-    raise ArgumentError if rend[:text].nil?
+    fail ArgumentError if rend[:text].nil?
     render(rend)
   end
 

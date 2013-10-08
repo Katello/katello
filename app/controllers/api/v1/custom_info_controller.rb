@@ -89,7 +89,7 @@ class Api::V1::CustomInfoController < Api::V1::ApiController
   def find_custom_info
     @single_custom_info = CustomInfo.find_by_informable_keyname(@informable, params[:keyname].strip)
     if @single_custom_info.nil?
-      raise HttpErrors::NotFound, _("Couldn't find custom info with keyname '%s'") % params[:keyname]
+      fail HttpErrors::NotFound, _("Couldn't find custom info with keyname '%s'") % params[:keyname]
     end
   end
 

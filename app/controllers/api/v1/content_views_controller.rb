@@ -82,7 +82,7 @@ class Api::V1::ContentViewsController < Api::V1::ApiController
     if @view.destroyed?
       render :text => _("Deleted content view [ %s ]") % @view.name, :status => 200
     else
-      raise HttpErrors::InternalError, _("Error while deleting content view [ %{name} ]: %{error}") %
+      fail HttpErrors::InternalError, _("Error while deleting content view [ %{name} ]: %{error}") %
           { :name => @view.name, :error => @view.errors.full_messages }
     end
   end
@@ -92,24 +92,24 @@ class Api::V1::ContentViewsController < Api::V1::ApiController
   def find_content_view
     @view = ContentView.find(params[:id])
     if params[:action] != "show" && @view.default?
-      raise HttpErrors::BadRequest, _("The default content view cannot be edited, promoted, refreshed, or destroyed.")
+      fail HttpErrors::BadRequest, _("The default content view cannot be edited, promoted, refreshed, or destroyed.")
     end
   end
 
   def find_environment
     @environment = KTEnvironment.find_by_id(params[:environment_id])
-    raise HttpErrors::NotFound, _("Couldn't find environment '%s'") % params[:environment_id] if @environment.nil?
+    fail HttpErrors::NotFound, _("Couldn't find environment '%s'") % params[:environment_id] if @environment.nil?
     @organization ||= @environment.organization
   end
 
   def find_environment_or_organization
     if params[:environment_id]
       @environment = KTEnvironment.find_by_id(params[:environment_id])
-      raise HttpErrors::NotFound, _("Couldn't find environment '%s'") % params[:environment_id] if @environment.nil?
+      fail HttpErrors::NotFound, _("Couldn't find environment '%s'") % params[:environment_id] if @environment.nil?
       @organization ||= @environment.organization
     else
       @organization = get_organization params[:organization_id]
-      raise HttpErrors::NotFound, _("Couldn't find organization '%s'") % params[:organization_id] if @organization.nil?
+      fail HttpErrors::NotFound, _("Couldn't find organization '%s'") % params[:organization_id] if @organization.nil?
     end
   end
 

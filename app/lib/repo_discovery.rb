@@ -29,7 +29,7 @@ class RepoDiscovery
     elsif %w(http https).include?(@uri.scheme)
       http_crawl(found_lambda, continue_lambda)
     else
-      raise _("Unsupported URL protocol %s.")  % @uri.scheme
+      fail _("Unsupported URL protocol %s.")  % @uri.scheme
     end
   end
 

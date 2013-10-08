@@ -79,7 +79,7 @@ module ApplicationHelper
     enable_create = true if enable_create.nil?
     enable_sort = options[:enable_sort] ? options[:enable_sort] : false
 
-    raise ":titles option not provided" unless options[:titles]
+    fail ":titles option not provided" unless options[:titles]
 
     render :partial => "common/panel",
            :locals => {

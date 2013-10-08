@@ -294,7 +294,7 @@ A hint for choosing the right value for the releaseVer param
   param :id, String, :desc => "UUID of the system", :required => true
   def upload_package_profile
     if Katello.config.katello?
-      raise HttpErrors::BadRequest, _("No package profile received for %s") % @system.name unless params.key?(:_json)
+      fail HttpErrors::BadRequest, _("No package profile received for %s") % @system.name unless params.key?(:_json)
       @system.upload_package_profile(params[:_json])
     end
     respond_for_update
@@ -311,7 +311,8 @@ A hint for choosing the right value for the releaseVer param
           :only    => [:uuid, :name, :location, :created_at, :updated_at],
           :methods => [:environment, :organization, :compliance_color, :compliant_until, :custom_info]
       )
-    end.flatten!
+    end
+    data.flatten!
 
     transforms = lambda do |r|
       r.organization    = r.organization.name
@@ -477,7 +478,7 @@ This information is then used for computing the errata available for the system.
   def find_only_environment
     if !@environment && @organization && !params.key?(:environment_id)
       if @organization.environments.empty?
-        raise HttpErrors::BadRequest, _("Organization %{org} has the '%{env}' environment only. Please create an environment for system registration.") %
+        fail HttpErrors::BadRequest, _("Organization %{org} has the '%{env}' environment only. Please create an environment for system registration.") %
           { :org => @organization.name, :env => "Library" }
       end
 
@@ -490,7 +491,7 @@ This information is then used for computing the errata available for the system.
         if current_user.default_environment && current_user.default_environment.organization == @organization
           @environment = current_user.default_environment
         else
-          raise HttpErrors::BadRequest, _("Organization %s has more than one environment. Please specify target environment for system registration.") % @organization.name
+          fail HttpErrors::BadRequest, _("Organization %s has more than one environment. Please specify target environment for system registration.") % @organization.name
         end
       else
         if @environment = @organization.environments.first
@@ -514,10 +515,10 @@ This information is then used for computing the errata available for the system.
     cve = nil
     if value
       cve = ContentViewEnvironment.where(key => value).first
-      raise HttpErrors::NotFound, _("Couldn't find environment '%s'") % value unless cve
+      fail HttpErrors::NotFound, _("Couldn't find environment '%s'") % value unless cve
       if @organization.nil? || !@organization.readable?
         unless cve.content_view.readable? || User.consumer?
-          raise Errors::SecurityViolation, _("Could not access content view in environment '%s'") % value
+          fail Errors::SecurityViolation, _("Could not access content view in environment '%s'") % value
         end
       end
     end
@@ -532,7 +533,7 @@ This information is then used for computing the errata available for the system.
     return unless params.key?(:environment_id)
 
     @environment = KTEnvironment.find(params[:environment_id])
-    raise HttpErrors::NotFound, _("Couldn't find environment '%s'") % params[:environment_id] if @environment.nil?
+    fail HttpErrors::NotFound, _("Couldn't find environment '%s'") % params[:environment_id] if @environment.nil?
     @organization = @environment.organization
     @environment
   end
@@ -553,7 +554,7 @@ This information is then used for computing the errata available for the system.
         # assumption here is :content_view_id is passed as a separate attrib
         @environment = KTEnvironment.find(params[:environment_id])
         @organization = @environment.organization
-        raise HttpErrors::NotFound, _("Couldn't find environment '%s'") % params[:environment_id] if @environment.nil?
+        fail HttpErrors::NotFound, _("Couldn't find environment '%s'") % params[:environment_id] if @environment.nil?
       end
       return @environment, @content_view
     else
@@ -571,7 +572,7 @@ This information is then used for computing the errata available for the system.
     if @environment
       @organization = @environment.organization
     else
-      raise HttpErrors::NotFound, _("You have not set a default organization and environment on the user %s.") % current_user.username
+      fail HttpErrors::NotFound, _("You have not set a default organization and environment on the user %s.") % current_user.username
     end
   end
 
@@ -579,7 +580,7 @@ This information is then used for computing the errata available for the system.
     @system = System.first(:conditions => { :uuid => params[:id] })
     if @system.nil?
       Resources::Candlepin::Consumer.get params[:id] # check with candlepin if system is Gone, raises RestClient::Gone
-      raise HttpErrors::NotFound, _("Couldn't find system '%s'") % params[:id]
+      fail HttpErrors::NotFound, _("Couldn't find system '%s'") % params[:id]
     end
     @system
   end
@@ -589,14 +590,14 @@ This information is then used for computing the errata available for the system.
       ak_names        = ak_names.split(",")
       activation_keys = ak_names.map do |ak_name|
         activation_key = @organization.activation_keys.find_by_name(ak_name)
-        raise HttpErrors::NotFound, _("Couldn't find activation key '%s'") % ak_name unless activation_key
+        fail HttpErrors::NotFound, _("Couldn't find activation key '%s'") % ak_name unless activation_key
         activation_key
       end
     else
       activation_keys = []
     end
     if activation_keys.empty?
-      raise HttpErrors::BadRequest, _("At least one activation key must be provided")
+      fail HttpErrors::BadRequest, _("At least one activation key must be provided")
     end
     activation_keys
   end
@@ -618,7 +619,7 @@ This information is then used for computing the errata available for the system.
     organization ||= @environment.organization if @environment
     if cv_id && organization
       @content_view = ContentView.readable(organization).find_by_id(cv_id)
-      raise HttpErrors::NotFound, _("Couldn't find content view '%s'") % cv_id if @content_view.nil?
+      fail HttpErrors::NotFound, _("Couldn't find content view '%s'") % cv_id if @content_view.nil?
     else
       @content_view = nil
     end

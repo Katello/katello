@@ -42,7 +42,7 @@ class Role < ActiveRecord::Base
 
   def remove_ldap_group(group_name)
     ldap_group = self.ldap_group_roles.where(:ldap_group => group_name).first
-    raise Errors::NotFound.new(_("LDAP group '%{group}' associated to role '%{role}' was not found.") % {:group => group_name, :role => self.name}) unless ldap_group
+    fail Errors::NotFound.new(_("LDAP group '%{group}' associated to role '%{role}' was not found.") % {:group => group_name, :role => self.name}) unless ldap_group
     ldap_group.destroy
     self.users.each { |user| user.set_ldap_roles }
   end
@@ -113,7 +113,7 @@ class Role < ActiveRecord::Base
     superadmin_role = Role.find_or_create_by_name(
       :name => ADMINISTRATOR,
       :description => 'Super administrator with all access.')
-    raise "Unable to create super-admin role: #{superadmin_role}" if superadmin_role.nil? || superadmin_role.errors.size > 0
+    fail "Unable to create super-admin role: #{superadmin_role}" if superadmin_role.nil? || superadmin_role.errors.size > 0
 
     #unlock role in case permission needs to be created
     superadmin_role.update_attributes(:locked => false)
@@ -122,7 +122,7 @@ class Role < ActiveRecord::Base
       :name => "super-admin-perm",
       :description => 'Super Admin permission',
       :role => superadmin_role, :all_types => true)
-    raise "Unable to create super-admin role permission: #{superadmin_role_perm}" if superadmin_role_perm.nil? || superadmin_role_perm.errors.size > 0
+    fail "Unable to create super-admin role permission: #{superadmin_role_perm}" if superadmin_role_perm.nil? || superadmin_role_perm.errors.size > 0
 
     superadmin_role.update_attributes(:locked => true)
     superadmin_role
@@ -175,7 +175,7 @@ class Role < ActiveRecord::Base
     if superadmin? && users.length == 1
       message = _("Cannot dissociate user '%{user}' from '%{role}' role. Need at least one user in the '%{role}' role.") % {:user => user.username, :role => name}
       errors[:base] << message
-      raise  ActiveRecord::RecordInvalid, self
+      fail  ActiveRecord::RecordInvalid, self
     end
   end
 end
