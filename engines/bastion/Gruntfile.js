@@ -71,12 +71,6 @@ module.exports = function (grunt) {
             ]
         },
         karma: {
-            //continuous integration mode
-            ci: {
-                browsers: ['PhantomJS'],
-                configFile: 'karma.conf.js',
-                singleRun: true
-            },
             server: {
                 configFile: 'karma.conf.js',
                 autoWatch: true
@@ -85,7 +79,8 @@ module.exports = function (grunt) {
                 configFile: 'karma.conf.js',
                 singleRun: true
             },
-            coverage: {
+            //continuous integration mode
+            ci: {
                 configFile: 'karma.conf.js',
                 reporters: ['progress', 'coverage'],
                 preprocessors: {
@@ -162,8 +157,7 @@ module.exports = function (grunt) {
     grunt.registerTask('ci', [
         'connect:test',
         'jshint',
-        'karma:ci',
-        'karma:coverage'
+        'karma:ci'
     ]);
 
     grunt.registerTask('build', [
