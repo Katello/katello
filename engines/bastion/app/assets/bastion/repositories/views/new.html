@@ -17,7 +17,8 @@
         <input ng-model="repository.name"
                name="name"
                type="text"
-               tabindex=1
+               tabindex="1"
+               autofocus
                required>
         <span class="note error" ng-show="repositoryForm.name.$invalid">
           <ul><li ng-repeat="message in repositoryForm.name.$error.messages">{{ message }}</li></ul>
@@ -33,7 +34,7 @@
         <input ng-model="repository.label"
                name="label"
                type="text"
-               tabindex=2
+               tabindex="2"
                required>
         <span class="note error" ng-show="repositoryForm.label.$invalid">
           <ul><li ng-repeat="message in repositoryForm.label.$error.messages">{{ message }}</li></ul>
@@ -47,7 +48,7 @@
       </div>
       <div class="input">
         <select required
-                tabindex=3
+                tabindex="3"
                 name="content_type"
                 ng-model="repository.content_type"
                 ng-options="type.name as type.name for type in repositoryTypes">
@@ -68,7 +69,7 @@
         <input ng-model="repository.url"
                name="url"
                type="text"
-               tabindex=4>
+               tabindex="4">
         <span class="note error" ng-show="repositoryForm.url.$invalid">
           <ul><li ng-repeat="message in repositoryForm.url.$error.messages">{{ message }}</li></ul>
         </span>
@@ -83,7 +84,7 @@
         <input ng-model="repository.unprotected"
                name="unprotected"
                type="checkbox"
-               tabindex=5>
+               tabindex="5">
         <span class="note error" ng-show="repositoryForm.unprotected.$invalid">
           <ul><li ng-repeat="message in repositoryForm.unprotected.$error.messages">{{ message }}</li></ul>
         </span>
@@ -105,8 +106,10 @@
 
     <div class="control-group buttons">
       <div class="input">
-        <button ng-click="table.closeItem()" translate>Cancel</button>
+        <button type="button" ng-click="table.closeItem()" translate>Cancel</button>
         <button class="btn-primary"
+                type="submit"
+                tabindex="7"
                 ng-click="save(repository); working = true"
                 ng-disabled="repositoryForm.$invalid || working">
           <i class="icon-spinner icon-spin" ng-show="working"></i>

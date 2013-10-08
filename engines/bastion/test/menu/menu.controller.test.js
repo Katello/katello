@@ -45,7 +45,7 @@ describe('Controller:MenuController', function() {
                     }
                 ]
             },
-            userMenu: {items: []},
+            bannerMenu: {items: []},
             adminMenu: {items: []},
             notices: []
         };

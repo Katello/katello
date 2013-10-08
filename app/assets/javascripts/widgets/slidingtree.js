@@ -204,8 +204,8 @@ var sliding_tree = function(tree_id, options) {
                 crumbs = trail.slice(1, trail.length);
             } else {
                 if( trail.length === 0 ){
-                    html += '<li class="fl"><span title="' + name + '" id="' + id +
-                        '" class="currentCrumb one-line-ellipsis">' + name + '</span></li>';
+                    html += '<li class="fl"><span title="' + KT.utils.escape(name) + '" id="' + id +
+                        '" class="currentCrumb one-line-ellipsis">' + KT.utils.escape(name) + '</span></li>';
                 }
             }
 
@@ -213,8 +213,8 @@ var sliding_tree = function(tree_id, options) {
                 for(var i = 0; i < crumbs.length; i += 1) {
                     html += create_crumb(crumbs[i]);
                 }
-                html += '<li class="fl"><span title="' + name + '" id="' + id +
-                    '" class="currentCrumb one-line-ellipsis">' + name + '</span></li>';
+                html += '<li class="fl"><span title="' + KT.utils.escape(name) + '" id="' + id +
+                    '" class="currentCrumb one-line-ellipsis">' + KT.utils.escape(name) + '</span></li>';
             }
 
             breadcrumb.append(html);
@@ -228,16 +228,16 @@ var sliding_tree = function(tree_id, options) {
 
             if( icon ){
                 if( currentCrumb ){
-                    html += '<span title="' + name + '" class="crumb ' + icon + '">' + id + '</span>';
+                    html += '<span title="' + KT.utils.escape(name) + '" class="crumb ' + icon + '">' + id + '</span>';
                 } else {
-                    html += '<span title="' + name + '" class="crumb ' + icon + '_inactive">' + id + '</span>';
+                    html += '<span title="' + KT.utils.escape(name) + '" class="crumb ' + icon + '_inactive">' + id + '</span>';
                 }
             }
 
-            html += '<span title="' + name + '" class="one-line-ellipsis crumb link_details slide_left" id= "' + id + '">';
+            html += '<span title="' + KT.utils.escape(name) + '" class="one-line-ellipsis crumb link_details slide_left" id= "' + id + '">';
 
             if( !icon ){
-                html += name;
+                html += KT.utils.escape(name);
 
             }
 

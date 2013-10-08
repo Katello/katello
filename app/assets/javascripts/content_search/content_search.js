@@ -189,7 +189,7 @@ KT.content_search = function(paths_in){
         repo_packages:{id:'repo_packages',
                        name:i18n.packages,
                        url:KT.routes.repo_packages_content_search_index_path(),
-                       cols:{description:{id:'description', name:i18n.description, span : "5"}},
+                       cols:{description:{id:'description', name:i18n.description, span : "7"}},
                        selector:['repo_packages', 'repo_errata', 'repo_puppet_modules']
 
         },
@@ -206,7 +206,7 @@ KT.content_search = function(paths_in){
         repo_puppet_modules:{id:'repo_puppet_modules',
                         name:i18n.puppet_modules,
                         url:KT.routes.repo_puppet_modules_content_search_index_path(),
-                        cols:{description:{id:'description', name:i18n.description, span : "5"}},
+                        cols:{description:{id:'description', name:i18n.description, span : "7"}},
                         selector:['repo_packages', 'repo_errata', 'repo_puppet_modules']
         },
         repo_compare_packages:{id:'repo_compare_packages',

@@ -216,6 +216,8 @@ KT.content = (function(){
             var pg = element.find(".progress"),
                 value = pg.find(".ui-progressbar-value");
 
+            starttime = starttime === null ? i18n.no_start_time : starttime;
+
             fadeUpdate(element.find(".start_time"), starttime);
             // clear duration during active sync
             fadeUpdate(element.find(".duration"), '');
