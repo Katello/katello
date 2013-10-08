@@ -6,7 +6,8 @@
       "cancel": '#{escape_javascript(_('Cancel'))}',
       "cancelled": '#{escape_javascript(_("Sync Canceled"))}',
       "error": '#{escape_javascript(_('Error'))}',
-      "complete": '#{escape_javascript(_('Sync complete.'))}'
+      "complete": '#{escape_javascript(_('Sync complete.'))}',
+      "no_start_time": '#{escape_javascript(_('No start time currently available.'))}',
     });
 
     KT.repo_status = $.parseJSON('#{escape_javascript(@repo_status.to_json)}');
