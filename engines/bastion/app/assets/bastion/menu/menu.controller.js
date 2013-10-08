@@ -27,7 +27,7 @@
      */
     angular.module('Bastion.menu').controller('MenuController', ['$scope', '$location', 'Menus', function($scope, $location, Menus) {
         $scope.menu       = Menus.menu;
-        $scope.userMenu  = Menus.userMenu;
+        $scope.bannerMenu  = Menus.bannerMenu;
         $scope.adminMenu = Menus.adminMenu;
         $scope.notices    = Menus.notices;
 
@@ -39,8 +39,10 @@
             if (menuItem) {
                 $scope.menu.activeItem = menuItem;
                 $scope.adminMenu.activeItem = menuItem;
+                $scope.bannerMenu.activeItem = menuItem;
                 $scope.menu.activeItem.active = true;
                 $scope.adminMenu.activeItem.active = true;
+                $scope.bannerMenu.activeItem.active = true;
             }
         };
 
@@ -67,7 +69,7 @@
         };
 
         // Combine all menu items and figure out which one ought to be active.
-        var allMenus = $scope.menu.items.concat($scope.userMenu.items).
+        var allMenus = $scope.menu.items.concat($scope.bannerMenu.items).
             concat($scope.adminMenu.items).concat($scope.notices);
         $scope.setActiveMenuItem($scope.getActiveMenuItem(allMenus));
     }]);
