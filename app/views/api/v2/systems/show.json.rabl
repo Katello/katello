@@ -37,7 +37,7 @@ end
 if @resource.respond_to?(:guest) || @resource.respond_to?(:host)
   if @resource.guest
     node :host do |system|
-      system.host.attributes
+      system.host.attributes if system.host
     end
   else
     node :guests do |system|
