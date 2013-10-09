@@ -16,23 +16,27 @@
  * @name  Bastion.products.controller:DiscoveryFormController
  *
  * @requires $scope
- * @requires $http
  * @requires $q
  * @requires CurrentOrganization
  * @requires Provider
  * @requires Product
  * @requires Repository
+ * @requires FormUtils
  *
  * @description
  *   Provides the functionality for the repo creation as part of
  *      repository discovery.
  */
 angular.module('Bastion.products').controller('DiscoveryFormController',
-    ['$scope', '$http', '$q', 'CurrentOrganization', 'Provider', 'Product', 'Repository', 'GPGKey',
-    function($scope, $http, $q, CurrentOrganization, Provider, Product, Repository, GPGKey) {
+    ['$scope', '$q', 'CurrentOrganization', 'Provider', 'Product', 'Repository', 'GPGKey', 'FormUtils',
+    function($scope, $q, CurrentOrganization, Provider, Product, Repository, GPGKey, FormUtils) {
 
         $scope.discovery = $scope.discovery || {selected: []};
         $scope.panel = $scope.panel || {loading: false};
+
+        $scope.$watch('createRepoChoices.product.name', function() {
+            FormUtils.labelize($scope.createRepoChoices.product, $scope.productForm);
+        });
 
         $scope.createRepoChoices = {
           existingProductId: undefined,
@@ -48,7 +52,7 @@ angular.module('Bastion.products').controller('DiscoveryFormController',
                     messages: '',
                     $invalid: false
             };
-            fetchRepoLabel(repo);
+            FormUtils.labelize(repo, repo.form);
         });
 
         Provider.query(function(values) {
@@ -67,22 +71,7 @@ angular.module('Bastion.products').controller('DiscoveryFormController',
             } else {
                 $scope.createRepoChoices.newProduct = "true";
             }
-        });
-
-        $scope.$watch('createRepoChoices.product.name', function() {
-            $http({
-                method: 'GET',
-                url: '/katello/organizations/default_label',
-                params: {'name': $scope.createRepoChoices.product.name}
-            })
-            .success(function(response) {
-                $scope.createRepoChoices.product.label = response;
-                $scope.panel.loading = false;
-            })
-            .error(function(response) {
-                $scope.productForm.label.$setValidity('', false);
-                $scope.productForm.label.$error.messages = response.errors;
-            });
+            $scope.panel.loading = false;
         });
 
         $scope.transitionToDiscovery = function() {
@@ -99,7 +88,7 @@ angular.module('Bastion.products').controller('DiscoveryFormController',
             if (newList) {
                 angular.forEach(newList, function(newItem, position) {
                     if (oldList === undefined || newItem.name !== oldList[position].name) {
-                        fetchRepoLabel(newItem);
+                        FormUtils.labelize(newItem, newItem.form);
                     }
                 });
             }
@@ -138,20 +127,6 @@ angular.module('Bastion.products').controller('DiscoveryFormController',
             angular.forEach(response.data.errors, function(errors, field) {
                 $scope.productForm[field].$setValidity('', false);
                 $scope.productForm[field].messages = errors;
-            });
-        }
-
-        function fetchRepoLabel(repo) {
-            $http({
-                method: 'GET',
-                url: '/katello/organizations/default_label',
-                params: {'name': repo.name}
-            })
-            .success(function(response) {
-                repo.label = response;
-            }).error(function(response) {
-                repo.form.$invalid = true;
-                repo.form.messages = response.errors;
             });
         }
 

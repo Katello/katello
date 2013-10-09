@@ -13,6 +13,7 @@
 
 describe('Controller: ProductFormController', function() {
     var $scope,
+        FormUtils,
         $httpBackend;
 
     beforeEach(module('Bastion.products', 'Bastion.test-mocks'));
@@ -27,6 +28,7 @@ describe('Controller: ProductFormController', function() {
 
         $scope = $injector.get('$rootScope').$new();
         $httpBackend = $injector.get('$httpBackend');
+        FormUtils = $injector.get('FormUtils');
 
         $scope.productForm = $injector.get('MockForm');
         $scope.table = {
@@ -40,7 +42,8 @@ describe('Controller: ProductFormController', function() {
             $q: $q,
             Product: Product,
             Provider: Provider,
-            GPGKey: GPGKey
+            GPGKey: GPGKey,
+            FormUtils: FormUtils
         });
     }));
 
@@ -75,13 +78,12 @@ describe('Controller: ProductFormController', function() {
     });
 
     it('should fetch a label whenever the name changes', function() {
-        $httpBackend.expectGET('/katello/organizations/default_label?name=ChangedName').respond('changed_name');
+        spyOn(FormUtils, 'labelize');
 
         $scope.product.name = 'ChangedName';
         $scope.$apply();
-        $httpBackend.flush();
 
-        expect($scope.product.label).toBe('changed_name');
+        expect(FormUtils.labelize).toHaveBeenCalled();
     });
 
 });

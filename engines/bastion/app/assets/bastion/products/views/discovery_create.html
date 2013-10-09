@@ -55,7 +55,11 @@
       <label class="required" for="label" translate>Label</label>
     </div>
     <div class="input">
-      <input ng-model="createRepoChoices.product.label" name="label" type="text" tabindex=2 required>
+      <input ng-model="createRepoChoices.product.label"
+             name="label"
+             type="text"
+             tabindex=2
+             required>
       <span class="note error" ng-show="productForm.label.$invalid">
         <ul><li ng-repeat="message in productForm.label.$error.messages">{{ message }}</li></ul>
       </span>
@@ -139,10 +143,13 @@
         </div>
 
         <div class="input">
-          <input ng-model="repo.label" name="label" type="text"
+          <input ng-model="repo.label"
                  ng-class="{ 'error' : repo.form.$invalid }"
-                 tabindex=2 required
-                 ng-disabled="creating() || repo.created"/>
+                 ng-disabled="creating() || repo.created"
+                 name="label"
+                 type="text"
+                 tabindex=2
+                 required/>
         </div>
 
       </div>
