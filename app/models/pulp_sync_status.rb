@@ -22,12 +22,21 @@ class PulpSyncProgress
 
       details = ht.null_safe_get(progress_attrs, nil, %w(progress yum_importer content)) ||
                 ht.null_safe_get(progress_attrs, nil, %w(progress puppet_importer modules)) ||
-                ht.null_safe_get(progress_attrs, nil, %w(progress details packages sync_report))
+                ht.null_safe_get(progress_attrs, nil, %w(progress details packages sync_report)) ||
+                ht.null_safe_get(progress_attrs, nil, %w(progress iso_importer))
 
-      @total_size  = ht.null_safe_get(details, 0, ['size_total'])
-      @size_left   = ht.null_safe_get(details, 0, ['size_left'])
-      @total_count = ht.null_safe_get(details, 0, ['items_total'] || ['total_count'])
-      @items_left  = ht.null_safe_get(details, 0, ['items_left'] || ['total_count'] - ['finished_count'])
+      if progress_attrs['progress']['iso_importer']
+        @total_size  = ht.null_safe_get(details, 0, ['total_bytes'])
+        @size_left   = @total_size - ht.null_safe_get(details, 0, ['finished_bytes'])
+        @total_count = ht.null_safe_get(details, 0, ['num_isos'])
+        @items_left  = @total_count - ht.null_safe_get(details, 0, ['num_isos_finished'])
+      else
+        @total_size  = ht.null_safe_get(details, 0, ['size_total'])
+        @size_left   = ht.null_safe_get(details, 0, ['size_left'])
+        @total_count = ht.null_safe_get(details, 0, ['items_total'] || ['total_count'])
+        @items_left  = ht.null_safe_get(details, 0, ['items_left'] || ['total_count'] - ['finished_count'])
+      end
+
       @error_details = errors(progress_attrs['progress'])
       @step = ht.null_safe_get(progress_attrs, 0, ['step'])
     end
