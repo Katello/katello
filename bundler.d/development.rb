@@ -26,4 +26,5 @@ group :development do
 
   gem 'factory_girl_rails', "~> 1.4.0"
   gem 'rubocop', "0.13.1"
+  gem 'pry'
 end

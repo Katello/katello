@@ -32,4 +32,13 @@ Src::Application.configure do
   config.assets.debug     = true
 
   Bundler.require(:debugging, Rails.env)
+
+  silence_warnings do
+    begin
+      require 'pry'
+      IRB = Pry
+    rescue LoadError
+    end
+  end
+
 end
