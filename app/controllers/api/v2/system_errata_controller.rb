@@ -30,7 +30,7 @@ class Api::V2::SystemErrataController < Api::V2::ApiController
 
   def find_system
     @system = System.first(:conditions => { :uuid => params[:system_id] })
-    raise HttpErrors::NotFound, _("Couldn't find system '%s'") % params[:system_id] if @system.nil?
+    fail HttpErrors::NotFound, _("Couldn't find system '%s'") % params[:system_id] if @system.nil?
     @system
   end
 end

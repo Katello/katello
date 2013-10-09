@@ -143,7 +143,7 @@ module Glue::Pulp::Repo
       when Repository::PUPPET_TYPE
         Runcible::Models::PuppetImporter.new(:feed => self.feed)
       else
-        raise _("Unexpected repo type %s") % self.content_type
+        fail _("Unexpected repo type %s") % self.content_type
       end
     end
 
@@ -167,7 +167,7 @@ module Glue::Pulp::Repo
                                                            {:id => self.pulp_id, :auto_publish => true})
         [puppet_install_dist, nodes_distributor]
       else
-        raise _("Unexpected repo type %s") % self.content_type
+        fail _("Unexpected repo type %s") % self.content_type
       end
     end
 
@@ -193,7 +193,7 @@ module Glue::Pulp::Repo
       when Repository::PUPPET_TYPE
         Runcible::Models::PuppetImporter::ID
       else
-        raise _("Unexpected repo type %s") % self.content_type
+        fail _("Unexpected repo type %s") % self.content_type
       end
     end
 
@@ -266,7 +266,8 @@ module Glue::Pulp::Repo
       # Remove all errata with no packages
       errata_to_delete = errata.collect do |erratum|
         erratum.errata_id if filenames.intersection(erratum.package_filenames).empty?
-      end.compact
+      end
+      errata_to_delete.compact!
 
       #do the errata remove call
       unless errata_to_delete.empty?
@@ -276,7 +277,8 @@ module Glue::Pulp::Repo
       # Remove all  package groups with no packages
       package_groups_to_delete = package_groups.collect do |group|
         group.package_group_id if rpm_names.intersection(group.package_names).empty?
-      end.compact
+      end
+      package_groups_to_delete.compact!
 
       unless package_groups_to_delete.empty?
         unassociate_by_filter(FilterRule::PACKAGE_GROUP, {"id" => {"$in" => package_groups_to_delete}})
@@ -503,7 +505,7 @@ module Glue::Pulp::Repo
           Errata::CONTENT_TYPE => :errata,
           PuppetModule::CONTENT_TYPE => :puppet_module
       }
-      raise "Invalid content type #{content_type} sent. It needs to be one of #{content_classes.keys}"\
+      fail "Invalid content type #{content_type} sent. It needs to be one of #{content_classes.keys}"\
                                                                      unless content_classes[content_type]
       criteria = {}
       if content_type == Runcible::Extensions::Rpm.content_type
@@ -681,8 +683,8 @@ module Glue::Pulp::Repo
       dist = find_distributor(true)
       source_dist = source_repo.find_distributor
 
-      raise "Could not find #{self.content_type} clone distributor for #{self.pulp_id}" if dist.nil?
-      raise "Could not find #{self.content_type} distributor for #{source_repo.pulp_id}" if source_dist.nil?
+      fail "Could not find #{self.content_type} clone distributor for #{self.pulp_id}" if dist.nil?
+      fail "Could not find #{self.content_type} distributor for #{source_repo.pulp_id}" if source_dist.nil?
       Katello.pulp_server.extensions.repository.publish(self.pulp_id, dist['id'],
                                :override_config => {:source_repo_id => source_repo.pulp_id,
                                                     :source_distributor_id => source_dist['id']})

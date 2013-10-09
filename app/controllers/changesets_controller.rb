@@ -140,7 +140,7 @@ class ChangesetsController < ApplicationController
     end
 
     if params[:state]
-      raise _('Invalid state') if !%w(review new).index(params[:state])
+      fail _('Invalid state') if !%w(review new).index(params[:state])
       if send_changeset
         to_ret = {}
         to_ret[:changeset] = simplify_changeset(@changeset) if send_changeset

@@ -44,9 +44,7 @@ module Glue::Pulp::PackageGroup
       [:default_package_names, :conditional_package_names,
        :optional_package_names, :mandatory_package_names].each do |attr|
         values = send(attr)
-        values = values.collect do |v|
-          v.split(", ")
-        end.flatten
+        values = values.collect { |v| v.split(", ") }.flatten
         send("#{attr}=", values)
       end
 

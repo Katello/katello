@@ -66,7 +66,7 @@ class Api::V1::NodesController < Api::V1::ApiController
     system = System.find_by_uuid!(params[:uuid])
     @node = Node.find_by_system_id(system.id)
     unless @node
-      raise HttpErrors::NotFound, _("System %s is not a registered node") % params[:uuid]
+      fail HttpErrors::NotFound, _("System %s is not a registered node") % params[:uuid]
     end
     respond_for_show
   end

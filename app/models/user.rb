@@ -150,7 +150,7 @@ class User < ActiveRecord::Base
   end
 
   def self.cp_oauth_header
-    raise Errors::UserNotSet, "unauthenticated to call a backend engine" if User.current.nil?
+    fail Errors::UserNotSet, "unauthenticated to call a backend engine" if User.current.nil?
     User.current.cp_oauth_header
   end
 
@@ -425,7 +425,7 @@ class User < ActiveRecord::Base
     if role.superadmin? && role.users.length == 1
       message = _("Cannot dissociate user '%{username}' from '%{role}' role. Need at least one user in the '%{role}' role.") % {:username => username, :role => role.name}
       errors[:base] << message
-      raise ActiveRecord::RecordInvalid, self
+      fail ActiveRecord::RecordInvalid, self
     end
   end
 

@@ -88,7 +88,7 @@ module Authorization::ContentView
     end
 
     def items(org, verbs)
-      raise "scope requires an organization" if org.nil?
+      fail "scope requires an organization" if org.nil?
       resource = :content_views
 
       if Katello.config.katello?

@@ -105,7 +105,7 @@ class KatelloFormBuilder < ActionView::Helpers::FormBuilder
     options.symbolize_keys!
     options[:grid] ||= [2, 5]
     unless options[:grid].is_a?(Array) && options[:grid].size == 2
-      raise ArgumentError, "#{name}[grid]: expecting array of size 2"
+      fail ArgumentError, "#{name}[grid]: expecting array of size 2"
     end
     # check if user added some class for wrappers and add grid and align classes
     [:label_wrapper, :input_wrapper].each_with_index do |wrapper, i|

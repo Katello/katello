@@ -253,7 +253,7 @@ class UsersController < ApplicationController
       return
     end
 
-    raise no_env_available_msg if default_environment_id.nil? && params['org_id'].present?
+    fail no_env_available_msg if default_environment_id.nil? && params['org_id'].present?
 
     @environment              = default_environment_id.nil? ? nil : KTEnvironment.find(default_environment_id)
     @user.default_environment = @environment

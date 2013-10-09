@@ -24,7 +24,7 @@ module Authorization::ContentViewVersion
     end
 
     def items(org, verbs)
-      raise "scope requires an organization" if org.nil?
+      fail "scope requires an organization" if org.nil?
       resource = :content_views
 
       if User.allowed_all_tags?(verbs, resource, org)

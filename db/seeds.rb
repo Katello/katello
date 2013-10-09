@@ -23,7 +23,7 @@ superadmin_role = Role.make_super_admin_role
 
 # create read *everything* role and assign permissions to it
 reader_role = Role.make_readonly_role('Read Everything')
-raise "Unable to create reader role: #{format_errors reader_role}" if reader_role.nil? || reader_role.errors.size > 0
+fail "Unable to create reader role: #{format_errors reader_role}" if reader_role.nil? || reader_role.errors.size > 0
 reader_role.update_attributes(:locked => true)
 
 # create the super admin if none exist - it must be created before any statement in the seed.rb script
@@ -38,7 +38,7 @@ unless user_admin
   User.current = user_admin
   user_admin.save!
 end
-raise "Unable to create admin user: #{format_errors user_admin}" if user_admin.nil? || user_admin.errors.size > 0
+fail "Unable to create admin user: #{format_errors user_admin}" if user_admin.nil? || user_admin.errors.size > 0
 
 unless hidden_user = User.hidden.first
   hidden_user = User.new(
@@ -49,14 +49,14 @@ unless hidden_user = User.hidden.first
     :hidden => true)
   hidden_user.save!
 end
-raise "Unable to create hidden user: #{format_errors hidden_user}" if hidden_user.nil? || hidden_user.errors.size > 0
+fail "Unable to create hidden user: #{format_errors hidden_user}" if hidden_user.nil? || hidden_user.errors.size > 0
 
 first_org_desc = first_org_name + " Organization"
 first_org_label = first_org_name.gsub(' ', '_')
 # create the default org = "admin" if none exist
 first_org = Organization.find_or_create_by_name(:name => first_org_name, :label => first_org_label, :description => first_org_desc, :label => first_org_label)
-raise "Unable to create first org: #{format_errors first_org}" if first_org && first_org.errors.size > 0
-raise "Are you sure you cleared candlepin?! Unable to create first org!" if first_org.environments.nil?
+fail "Unable to create first org: #{format_errors first_org}" if first_org && first_org.errors.size > 0
+fail "Are you sure you cleared candlepin?! Unable to create first org!" if first_org.environments.nil?
 
 #create a provider
 if Provider.count == 0

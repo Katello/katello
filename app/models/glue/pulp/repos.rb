@@ -51,7 +51,7 @@ module Glue::Pulp::Repos
       if environment.library?
         content_view = environment.default_content_view
       else
-        raise "No content view specified for a Non library environment #{environment.inspect}"
+        fail "No content view specified for a Non library environment #{environment.inspect}"
       end
     end
 
@@ -109,21 +109,23 @@ module Glue::Pulp::Repos
     end
 
     def find_packages_by_name(env, name)
-      self.repos(env).collect do |repo|
+      packages = self.repos(env).collect do |repo|
         repo.find_packages_by_name(name).collect do |p|
           p[:repo_id] = repo.id
           p
         end
-      end.flatten(1)
+      end
+      packages.flatten(1)
     end
 
     def find_packages_by_nvre(env, name, version, release, epoch)
-      self.repos(env).collect do |repo|
+      packages = self.repos(env).collect do |repo|
         repo.find_packages_by_nvre(name, version, release, epoch).collect do |p|
           p[:repo_id] = repo.id
           p
         end
-      end.flatten(1)
+      end
+      packages.flatten(1)
     end
 
     def distributions(env)
@@ -136,9 +138,10 @@ module Glue::Pulp::Repos
     end
 
     def get_distribution(env, id)
-      self.repos(env).map do |repo|
+      distribution = self.repos(env).map do |repo|
         repo.distributions.find_all {|d| d.id == id }
-      end.flatten(1)
+      end
+      distribution.flatten(1)
     end
 
     def find_latest_packages_by_name(env, name)
@@ -148,7 +151,8 @@ module Glue::Pulp::Repos
           pack[:repo_id] = repo.id
           pack
         end
-      end.flatten(1)
+      end
+      packs.flatten!(1)
 
       Util::Package.find_latest_packages packs
     end
@@ -166,9 +170,10 @@ module Glue::Pulp::Repos
 
     def sync
       Rails.logger.debug "Syncing product #{self.label}"
-      self.repos(library).collect do |r|
+      repos = self.repos(library).collect do |r|
         r.sync
-      end.flatten
+      end
+      repos.flatten
     end
 
     def synced?
@@ -373,7 +378,7 @@ module Glue::Pulp::Repos
                                   :environment_id => self.library.id
                                  ).count > 0
       if is_dupe
-        raise Errors::ConflictException.new(_("Label has already been taken"))
+        fail Errors::ConflictException.new(_("Label has already been taken"))
       end
       unless repo_label.blank?
         is_dupe =  Repository.where(:label => repo_label,
@@ -381,7 +386,7 @@ module Glue::Pulp::Repos
                                     :environment_id => self.library.id
                                    ).count > 0
         if is_dupe
-          raise Errors::ConflictException.new(_("Label has already been taken"))
+          fail Errors::ConflictException.new(_("Label has already been taken"))
         end
       end
     end

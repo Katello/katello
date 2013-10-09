@@ -150,7 +150,7 @@ class Api::V1::EnvironmentsController < Api::V1::ApiController
     environment_params[:label] = labelize_params(environment_params)
     @environment               = KTEnvironment.new(environment_params)
     @organization.environments << @environment
-    raise ActiveRecord::RecordInvalid.new(@environment) unless @environment.valid?
+    fail ActiveRecord::RecordInvalid.new(@environment) unless @environment.valid?
     @organization.save!
     respond
   end
@@ -159,7 +159,7 @@ class Api::V1::EnvironmentsController < Api::V1::ApiController
   api :PUT, "/organizations/:organization_id/environments/:id", "Update an environment in an organization"
   param_group :environment
   def update
-    raise HttpErrors::BadRequest, _("Can't update the '%s' environment") % "Library" if @environment.library?
+    fail HttpErrors::BadRequest, _("Can't update the '%s' environment") % "Library" if @environment.library?
     @environment.update_attributes!(params[:environment])
     respond
   end
@@ -173,7 +173,7 @@ class Api::V1::EnvironmentsController < Api::V1::ApiController
       @environment.destroy
       respond :message => _("Deleted environment '%s'") % params[:id]
     else
-      raise HttpErrors::BadRequest,
+      fail HttpErrors::BadRequest,
             _("Environment %s has a successor. Only the last environment on a path can be deleted.") % @environment.name
     end
   end
@@ -197,7 +197,7 @@ class Api::V1::EnvironmentsController < Api::V1::ApiController
 
   def find_environment
     @environment = KTEnvironment.find(params[:id])
-    raise HttpErrors::NotFound, _("Couldn't find environment '%s'") % params[:id] if @environment.nil?
+    fail HttpErrors::NotFound, _("Couldn't find environment '%s'") % params[:id] if @environment.nil?
     @organization = @environment.organization
     @environment
   end

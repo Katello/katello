@@ -46,7 +46,7 @@ class Api::V1::ErrataController < Api::V1::ApiController
   def index
     filter = params.symbolize_keys.slice(:repoid, :repository_id, :product_id, :environment_id, :type, :severity)
     unless filter[:repoid] || filter[:repository_id] || filter[:environment_id]
-      raise HttpErrors::BadRequest.new(_("Repo ID or environment must be provided"))
+      fail HttpErrors::BadRequest.new(_("Repo ID or environment must be provided"))
     end
     render :json => Errata.filter(filter)
   end
@@ -61,10 +61,10 @@ class Api::V1::ErrataController < Api::V1::ApiController
   def find_environment
     if params.key?(:environment_id)
       @environment = KTEnvironment.find(params[:environment_id])
-      raise HttpErrors::NotFound, _("Couldn't find environment '%s'") % params[:environment_id] if @environment.nil?
+      fail HttpErrors::NotFound, _("Couldn't find environment '%s'") % params[:environment_id] if @environment.nil?
     elsif params.key?(:repoid)
       @repo = Repository.find(params[:repoid])
-      raise HttpErrors::NotFound, _("Couldn't find repository '%s'") % params[:repoid] if @repo.nil?
+      fail HttpErrors::NotFound, _("Couldn't find repository '%s'") % params[:repoid] if @repo.nil?
       @environment = @repo.environment
     end
     @environment
@@ -73,7 +73,7 @@ class Api::V1::ErrataController < Api::V1::ApiController
   def find_repository
     if params.key?(:repository_id)
       @repo = Repository.find(params[:repository_id])
-      raise HttpErrors::NotFound, _("Couldn't find repository '%s'") % params[:repository_id] if @repo.nil?
+      fail HttpErrors::NotFound, _("Couldn't find repository '%s'") % params[:repository_id] if @repo.nil?
       @environment ||= @repo.environment
     end
     @repo
@@ -81,9 +81,9 @@ class Api::V1::ErrataController < Api::V1::ApiController
 
   def find_erratum
     @erratum = Errata.find_by_errata_id(params[:id])
-    raise HttpErrors::NotFound, _("Erratum with id '%s' not found") % params[:id] if @erratum.nil?
+    fail HttpErrors::NotFound, _("Erratum with id '%s' not found") % params[:id] if @erratum.nil?
     # and check ownership of it
-    raise HttpErrors::NotFound, _("Erratum '%s' not found within the repository") % params[:id] unless @erratum.repoids.include? @repo.pulp_id
+    fail HttpErrors::NotFound, _("Erratum '%s' not found within the repository") % params[:id] unless @erratum.repoids.include? @repo.pulp_id
     @erratum
   end
 end

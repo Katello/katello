@@ -71,7 +71,7 @@ class ActivationKey < ActiveRecord::Base
   # sets up system when registering with this activation key - must be executed in a transaction
   def apply_to_system(system)
     if !usage_limit.nil? && usage_limit != -1 && usage_count >= usage_limit
-      raise Errors::UsageLimitExhaustedException, _("Usage limit (%{limit}) exhausted for activation key '%{name}'") % {:limit => usage_limit, :name => name}
+      fail Errors::UsageLimitExhaustedException, _("Usage limit (%{limit}) exhausted for activation key '%{name}'") % {:limit => usage_limit, :name => name}
     end
     system.environment_id = self.environment_id if self.environment_id
     system.content_view_id = self.content_view_id if self.content_view_id

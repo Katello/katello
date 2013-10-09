@@ -26,7 +26,7 @@ class OrganizationDestroyer
   end
 
   def setup(organization)
-    raise NotImplementedError unless options[:async]
+    fail NotImplementedError unless options[:async]
 
     task = self.async.run
     organization.deletion_task_id = task.id

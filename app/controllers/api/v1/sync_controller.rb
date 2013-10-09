@@ -81,33 +81,33 @@ class Api::V1::SyncController < Api::V1::ApiController
     elsif params.key?(:repository_id)
       @obj = find_repository
     else
-      raise HttpErrors::NotFound, N_("Couldn't find subject of synchronization") if @obj.nil?
+      fail HttpErrors::NotFound, N_("Couldn't find subject of synchronization") if @obj.nil?
     end
     @obj
   end
 
   def find_provider
     @provider = Provider.find(params[:provider_id])
-    raise HttpErrors::BadRequest, N_("Couldn't find provider '%s'") % params[:provider_id] if @provider.nil?
+    fail HttpErrors::BadRequest, N_("Couldn't find provider '%s'") % params[:provider_id] if @provider.nil?
     @provider
   end
 
   def find_product
-    raise _("Organization required") if @organization.nil?
+    fail _("Organization required") if @organization.nil?
     @product = Product.find_by_cp_id(params[:product_id], @organization)
-    raise HttpErrors::NotFound, _("Couldn't find product with id '%s'") % params[:product_id] if @product.nil?
+    fail HttpErrors::NotFound, _("Couldn't find product with id '%s'") % params[:product_id] if @product.nil?
     @product
   end
 
   def find_repository
     @repository = Repository.find(params[:repository_id])
-    raise HttpErrors::NotFound, _("Couldn't find repository '%s'") % params[:repository_id] if @repository.nil?
+    fail HttpErrors::NotFound, _("Couldn't find repository '%s'") % params[:repository_id] if @repository.nil?
     @repository
   end
 
   def ensure_library
     unless @repository.nil?
-      raise HttpErrors::NotFound, _("You can synchronize repositories only in library environment'") if !@repository.environment.library?
+      fail HttpErrors::NotFound, _("You can synchronize repositories only in library environment'") if !@repository.environment.library?
     end
   end
 

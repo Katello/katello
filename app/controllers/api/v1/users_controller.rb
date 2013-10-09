@@ -184,13 +184,13 @@ class Api::V1::UsersController < Api::V1::ApiController
 
   def find_user
     @user = User.find(params[:user_id] || params[:id])
-    raise HttpErrors::NotFound, _("Couldn't find user '%s'") % params[:id] if @user.nil?
+    fail HttpErrors::NotFound, _("Couldn't find user '%s'") % params[:id] if @user.nil?
     @user
   end
 
   def find_user_by_username
     @user = User.find_by_username(params[:username])
-    raise HttpErrors::NotFound, _("Couldn't find user '%s'") % params[:username] if @user.nil?
+    fail HttpErrors::NotFound, _("Couldn't find user '%s'") % params[:username] if @user.nil?
     @user
   end
 

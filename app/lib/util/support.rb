@@ -76,7 +76,8 @@ module Util
             end
           end
         end
-      end.compact.flatten
+      end
+      diff_data = diff_data.compact.flatten
 
       return diff_data unless diff_data.nil? || diff_data.empty?
       stringify(params.keys) - stringify(rule.keys)

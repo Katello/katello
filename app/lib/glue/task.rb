@@ -28,7 +28,7 @@ module Glue
         update_ts
         @status = s
       else
-        raise "invalid STATE #{s}"
+        fail "invalid STATE #{s}"
       end
     end
 

@@ -51,7 +51,7 @@ class Api::V2::ChangesetsContentController < Api::V2::ApiController
   def find_content_view
     content_view_id = params.try(:[], :content_view).try(:[], :id) || params.try(:[], :id)
     @view           = ContentView.find_by_id(content_view_id)
-    raise HttpErrors::NotFound, _("Couldn't find content view '%s'") % content_view_id if @view.nil?
+    fail HttpErrors::NotFound, _("Couldn't find content view '%s'") % content_view_id if @view.nil?
   end
 
 end

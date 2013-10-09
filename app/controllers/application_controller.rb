@@ -54,7 +54,7 @@ class ApplicationController < ActionController::Base
     when :handle
       execute_rescue(exception) { |ex| render_error(ex) }
     when :raise
-      raise exception
+      fail exception
     end
   end
 
@@ -269,14 +269,14 @@ class ApplicationController < ActionController::Base
   def require_org
     unless session && current_organization
       execute_after_filters
-      raise Errors::SecurityViolation, _("User does not belong to an organization.")
+      fail Errors::SecurityViolation, _("User does not belong to an organization.")
     end
   end
 
   # TODO: this check can be removed once we start deleting sessions during org deletion
   def check_deleted_org
     if current_organization && current_organization.being_deleted?
-      raise Errors::SecurityViolation, _("Current organization is being deleted, switch to a different one.")
+      fail Errors::SecurityViolation, _("Current organization is being deleted, switch to a different one.")
     end
   end
 

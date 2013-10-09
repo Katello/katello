@@ -110,7 +110,7 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
   param :id, :identifier, :required => true, :desc => "repository id"
   param :gpg_key_id, :number, :desc => "id of a gpg key that will be assigned to this repository"
   def update
-    raise HttpErrors::BadRequest, _("A Red Hat repository cannot be updated.") if @repository.redhat?
+    fail HttpErrors::BadRequest, _("A Red Hat repository cannot be updated.") if @repository.redhat?
     @repository.update_attributes!(params.slice(:gpg_key_id, :feed))
     respond_for_show(:resource => @repository)
   end

@@ -34,7 +34,7 @@ class Api::V1::RepositorySetsController < Api::V1::ApiController
   param :product_id, :number, :required => true, :desc => "id of a product the repository will be contained in"
   param :id, :number, :required => true, :desc => "id or name of the repository set to enable"
   def enable
-    raise _('Repository sets are enabled by default for custom products..') if @product.custom?
+    fail _('Repository sets are enabled by default for custom products..') if @product.custom?
     respond_for_async :resource => @product.async(:organization => @organization).refresh_content(@product_content.content.id)
   end
 
@@ -43,14 +43,14 @@ class Api::V1::RepositorySetsController < Api::V1::ApiController
   param :product_id, :number, :required => true, :desc => "id of a product the repository will be contained in"
   param :id, :number, :required => true, :desc => "id of the repository set to disable"
   def disable
-    raise _('Repository sets are not applicable for custom products..') if @product.custom?
+    fail _('Repository sets are not applicable for custom products..') if @product.custom?
     respond_for_async :resource => @product.async(:organization => @organization).disable_content(@product_content.content.id)
   end
 
   api :GET, "/organizations/:organization_id/product/:product_id/repository_sets/", "List repository sets for a product."
   param :product_id, :number, :required => true, :desc => "id of a product to list repository sets for"
   def index
-    raise _('Repository sets are not available for custom products.') if @product.custom?
+    fail _('Repository sets are not available for custom products.') if @product.custom?
     content = @product.productContent.collect do |pc|
       content                   = pc.content.as_json.symbolize_keys
       content[:katello_enabled] = pc.katello_enabled?
@@ -64,12 +64,12 @@ class Api::V1::RepositorySetsController < Api::V1::ApiController
   def find_product_content
     @product_content = @product.product_content_by_id(params[:id])
     @product_content ||= @product.product_content_by_name(params[:id])
-    raise HttpErrors::NotFound, _("Couldn't find repository set with id '%s'.") % params[:id] if @product_content.nil?
+    fail HttpErrors::NotFound, _("Couldn't find repository set with id '%s'.") % params[:id] if @product_content.nil?
   end
 
   def find_product
     @product = Product.find_by_cp_id(params[:product_id], @organization)
-    raise HttpErrors::NotFound, _("Couldn't find product with id '%s'") % params[:product_id] if @product.nil?
+    fail HttpErrors::NotFound, _("Couldn't find product with id '%s'") % params[:product_id] if @product.nil?
     @organization = @product.organization
   end
 end

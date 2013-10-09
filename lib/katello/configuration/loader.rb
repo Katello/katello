@@ -33,9 +33,9 @@ module Katello
       # @option options [Proc] :load_yml_post_process called on each configuration loaded from yaml file
       #   e.g. to decrypt db password
       def initialize(options = {})
-        @config_file_paths        = options[:config_file_paths] || raise(ArgumentError)
-        @default_config_file_path = options[:default_config_file_path] || raise(ArgumentError)
-        @validation               = options[:validation] || raise(ArgumentError)
+        @config_file_paths        = options[:config_file_paths] || fail(ArgumentError)
+        @default_config_file_path = options[:default_config_file_path] || fail(ArgumentError)
+        @validation               = options[:validation] || fail(ArgumentError)
         @config_post_process      = options[:config_post_process]
         @load_yml_post_process    = options[:load_yml_post_process]
       end
@@ -98,7 +98,7 @@ module Katello
                           when nil, false, ''
                             {}
                           else
-                            raise "malformed yml file '#{file_path}'"
+                            fail "malformed yml file '#{file_path}'"
                           end
 
         Node.new(hash_parsed_yml).tap do |config|
@@ -121,7 +121,7 @@ module Katello
 
       def config_file_path
         @config_file_path ||= config_file_paths.find { |path| File.exist? path }
-        raise "no config file found, candidates: #{config_file_paths.join ' '}" unless @config_file_path
+        fail "no config file found, candidates: #{config_file_paths.join ' '}" unless @config_file_path
         @config_file_path
       end
     end

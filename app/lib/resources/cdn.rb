@@ -63,7 +63,7 @@ module Resources
           @net.verify_callback = lambda do |preverify_ok, ssl_context|
             if (!preverify_ok) || ssl_context.error != 0
               err_msg = "SSL Verification failed -- Preverify: #{preverify_ok}, Error: #{ssl_context.error_string} (#{ssl_context.error})"
-              raise RestClient::SSLCertificateNotVerified.new(err_msg)
+              fail RestClient::SSLCertificateNotVerified.new(err_msg)
             end
             true
           end
@@ -95,13 +95,13 @@ module Resources
         rescue EOFError
           raise RestClient::ServerBrokeConnection
         rescue Timeout::Error
-          raise RestClient::RequestTimeout
+          fail RestClient::RequestTimeout
         rescue RestClient::ResourceNotFound
-          raise Errors::NotFound.new(_("CDN loading error: %s not found") % used_url)
+          fail Errors::NotFound.new(_("CDN loading error: %s not found") % used_url)
         rescue RestClient::Unauthorized
-          raise Errors::SecurityViolation.new(_("CDN loading error: access denied to %s") % used_url)
+          fail Errors::SecurityViolation.new(_("CDN loading error: access denied to %s") % used_url)
         rescue RestClient::Forbidden
-          raise Errors::SecurityViolation.new(_("CDN loading error: access forbidden to %s") % used_url)
+          fail Errors::SecurityViolation.new(_("CDN loading error: access forbidden to %s") % used_url)
         end
       end
 

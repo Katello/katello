@@ -75,7 +75,7 @@ class PackagesController < ApplicationController
   def lookup_package
     @package_id = params[:id]
     @package = Package.find @package_id
-    raise _("Unable to find package %s") % @package_id if @package.nil?
+    fail _("Unable to find package %s") % @package_id if @package.nil?
   end
 
   def find_filter

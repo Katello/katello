@@ -36,7 +36,7 @@ class CustomInfo < ActiveRecord::Base
   def self.find_informable(informable_type, informable_id)
     class_name = informable_type.classify
     informable = class_name.constantize.find(informable_id)
-    raise _("Resource %s does not support custom information") % class_name unless informable.respond_to? :custom_info
+    fail _("Resource %s does not support custom information") % class_name unless informable.respond_to? :custom_info
     return informable
   end
 
