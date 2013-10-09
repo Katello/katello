@@ -208,7 +208,7 @@ Src::Application.routes.draw do
       api_resources :ping, :only => [:index]
 
       api_resources :repositories, :only => [:index, :create, :show, :update, :destroy], :constraints => { :id => /[0-9a-zA-Z\-_.]*/ } do
-        api_resources :sync, :only => [:index, :create] do
+        api_resources :sync, :only => [:index] do
           delete :index, :on => :collection, :action => :cancel
         end
         api_resources :packages, :only => [:index, :show] do
@@ -223,6 +223,7 @@ Src::Application.routes.draw do
           get :package_groups
           get :package_group_categories
           get :gpg_key_content
+          post :sync
         end
         collection do
           post :sync_complete

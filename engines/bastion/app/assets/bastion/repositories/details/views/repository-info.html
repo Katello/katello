@@ -4,13 +4,21 @@
     {{ "Back to Repository List" | translate }}
   </a>
 
-  <button class="btn btn-danger fr"
-          ng-click="showConfirm = true"
-          ng-disabled="!repository.permissions.deletable">
-    {{ "Remove Repository" | translate }}
-  </button>
-  <div translate alch-confirm-modal="removeRepository(repository)" show-confirm="showConfirm">
-    Are you sure you want to remove repository "{{repository.name}}"?
+  <div class="details-action-group fr">
+    <button class="btn details-action"
+            ng-click="syncRepository(repository); working = true"
+            ng-disabled="syncInProgress(repository.sync_state)">
+      <i class="icon-refresh"></i>
+      <span translate>Sync Now</span>
+    </button>
+    <button class="btn btn-danger details-action"
+            ng-click="showConfirm = true"
+            ng-disabled="!repository.permissions.deletable">
+      {{ "Remove Repository" | translate }}
+    </button>
+    <div alch-confirm-modal="removeRepository(repository)" show-confirm="showConfirm">
+      <span translate>Are you sure you want to remove repository "{{repository.name}}"?</span>
+    </div>
   </div>
 </div>
 
@@ -79,7 +87,9 @@
 
     <div class="detail">
       <span class="info-label" translate>Sync State</span>
-      <span class="info-value">{{ repository.sync_state }}</span>
+      <span class="info-value">
+        <a href="sync_management/index">{{ repository.sync_state }}</a>
+      </span>
     </div>
   </section>
 

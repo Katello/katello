@@ -296,7 +296,7 @@ class Repository < ActiveRecord::Base
     search.in_content_views([view])
   end
 
-  def syncable?
+  def feed?
     feed.present?
   end
 

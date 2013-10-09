@@ -33,11 +33,15 @@
         </td>
         <td>{{ repository.content_type }}</td>
         <td>
-          <span ng-show="repository.feed">{{ repository.last_sync | date:"short" }}</span>
+          <span ng-show="repository.feed">
+            {{ repository.last_sync | date:"short" }}
+          </span>
           <span ng-hide="repository.feed" translate>N/A</span>
         </td>
         <td>
-          <span ng-show="repository.feed">{{ repository.sync_state }}</span>
+          <span ng-show="repository.feed">
+            <a href="sync_management/index">{{ repository.sync_state }}</a>
+          </span>
           <span ng-hide="repository.feed" translate>N/A</span>
         </td>
         <td class="align-center">

@@ -27,6 +27,10 @@ class RepositoryAuthorizationAdminTest < AuthorizationTestBase
     assert @fedora_17_x86_64.readable?
   end
 
+  def test_syncable?
+    assert @fedora_17_x86_64.syncable?
+  end
+
   def test_deletable?
     repository = Repository.find(repositories(:fedora_17_x86_64_library_view))
     assert repository.deletable?
@@ -87,6 +91,10 @@ class RepositoryAuthorizationNonAuthUserTest < AuthorizationTestBase
 
   def test_deletable?
     refute @fedora_17_x86_64.deletable?
+  end
+
+  def test_syncable?
+    refute @fedora_17_x86_64.syncable?
   end
 
   def test_readable

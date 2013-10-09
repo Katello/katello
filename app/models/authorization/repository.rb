@@ -30,6 +30,11 @@ module Authorization::Repository
     def deletable?
       product.editable? && !promoted?
     end
+
+    def syncable?
+      organization.syncable?
+    end
+
   end
 
   module ClassMethods

@@ -31,6 +31,14 @@ describe('Controller: RepositoryDetailsInfoController', function() {
             repositoryId: 1
         };
 
+        new Repository({
+            'sync_state': 'finished'
+        });
+
+        Repository.sync = function(params, callback) {
+            callback.call(this, {'state': 'running'});
+        };
+
         $controller('RepositoryDetailsInfoController', {
             $scope: $scope,
             $q: $q,
@@ -95,5 +103,19 @@ describe('Controller: RepositoryDetailsInfoController', function() {
 
         expect($scope.uploadStatus).toBe('success');
         expect($scope.repository.$get).toHaveBeenCalled();
+    });
+
+    it('should provide a method to determine if a repository is currently being syncd', function() {
+        expect($scope.syncInProgress($scope.repository['sync_state'])).toBe(false);
+    });
+
+    it('should provide a method to determine if a repository is currently being syncd', function() {
+        expect($scope.syncInProgress('running')).toBe(true);
+    });
+
+    it('should provide a method to sync a repository', function() {
+        $scope.syncRepository($scope.repository);
+
+        expect($scope.repository['sync_state']).toBe('running');
     });
 });

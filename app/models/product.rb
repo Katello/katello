@@ -211,7 +211,7 @@ class Product < ActiveRecord::Base
   end
 
   def syncable_content?
-    repositories.any?(&:syncable?)
+    repositories.any?(&:feed?)
   end
 
   protected

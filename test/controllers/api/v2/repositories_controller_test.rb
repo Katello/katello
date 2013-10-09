@@ -23,7 +23,7 @@ class Api::V2::RepositoriesControllerTest < Minitest::Rails::ActionController::T
   end
 
   def models
-    @organization = organizations(:acme_corporation)
+    @organization = Organization.find(organizations(:acme_corporation))
     @repository = repositories(:fedora_17_unpublished)
     @product = products(:fedora)
   end
@@ -33,6 +33,7 @@ class Api::V2::RepositoriesControllerTest < Minitest::Rails::ActionController::T
     @create_permission = UserPermission.new(:create, :providers)
     @update_permission = UserPermission.new(:update, :providers)
     @delete_permission = UserPermission.new(:delete, :providers)
+    @sync_permission = UserPermission.new(:sync, :organizations, nil, @organization)
     @no_permission = NO_PERMISSION
   end
 
@@ -166,6 +167,24 @@ class Api::V2::RepositoriesControllerTest < Minitest::Rails::ActionController::T
 
     assert_protected_action(:destroy, allowed_perms, denied_perms) do
       delete :destroy, :id => @repository.id
+    end
+  end
+
+  def test_sync
+    Repository.any_instance.expects(:sync).returns([{}])
+    post :sync, :id => @repository.id
+
+    assert_response :success
+  end
+
+  def test_sync_protected
+    allowed_perms = [@sync_permission]
+    denied_perms = [@create_permission, @read_permission,
+                    @no_permission, @delete_permission,
+                    @update_permission]
+
+    assert_protected_action(:sync, allowed_perms, denied_perms) do
+      post :sync, :id => @repository.id
     end
   end
 

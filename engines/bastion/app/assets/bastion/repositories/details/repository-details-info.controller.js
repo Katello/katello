@@ -94,5 +94,15 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
             }
         };
 
+        $scope.syncInProgress = function(state) {
+            return (state === 'running' || state === 'waiting');
+        };
+
+        $scope.syncRepository = function(repository) {
+            Repository.sync({id: repository.id}, function(task) {
+                repository['sync_state'] = task.state;
+            });
+        };
+
     }]
 );

@@ -87,7 +87,7 @@ class SyncManagementController < ApplicationController
     User.current.allowed_organizations.each do |org|
       products = org.library.products.readable(org)
       next if products.blank?
-      @sproducts.concat products.select(&:syncable?)
+      @sproducts.concat products.select(&:feed?)
       @product_map.concat collect_repos(products, org.library)
       products.each { |product| get_product_info(product) }
       @products.concat products
