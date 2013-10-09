@@ -16,20 +16,23 @@
  * @name  Bastion.repositories.controller:NewRepositoryController
  *
  * @requires $scope
- * @requires $http
  * @requires Repository
  * @requires GPGKey
+ * @requires FormUtils
  *
  * @description
  *   Controls the creation of an empty Repository object for use by sub-controllers.
  */
 angular.module('Bastion.repositories').controller('NewRepositoryController',
-    ['$scope', '$http', 'Repository', 'GPGKey',
-    function($scope, $http, Repository, GPGKey) {
+    ['$scope', 'Repository', 'GPGKey', 'FormUtils',
+    function($scope, Repository, GPGKey, FormUtils) {
 
         $scope.repository = new Repository({'product_id': $scope.$stateParams.productId});
-
         $scope.repositoryTypes = [{name: 'yum'}, {name: 'puppet'}];
+
+        $scope.$watch('repository.name', function() {
+            FormUtils.labelize($scope.repository, $scope.repositoryForm);
+        });
 
         GPGKey.query(function(gpgKeys) {
             $scope.gpgKeys = gpgKeys.results;
@@ -42,21 +45,6 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
         $scope.returnToProduct = function(){
             $scope.transitionTo('products.details.repositories.index', {productId: $scope.product.id});
         };
-
-        $scope.$watch('repository.name', function() {
-            $http({
-                method: 'GET',
-                url: '/katello/organizations/default_label',
-                params: {'name': $scope.repository.name}
-            })
-            .success(function(response) {
-                $scope.repository.label = response;
-            })
-            .error(function(response) {
-                $scope.repositoryForm.label.$setValidity('', false);
-                $scope.repositoryForm.label.$error.messages = response.errors;
-            });
-        });
 
         function success(response) {
             $scope.repositories.push(response);
