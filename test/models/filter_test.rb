@@ -37,6 +37,14 @@ class FilterTest < MiniTest::Rails::ActiveSupport::TestCase
      assert @filter.save
   end
 
+  def test_composite_definition
+    # filter should not get created for a composite content view definition
+    content_view_def = FactoryGirl.create(:content_view_definition, :composite)
+    filter = FactoryGirl.build(:filter, :content_view_definition_id => content_view_def.id)
+    assert_nil Filter.find_by_id(filter.id)
+    refute Filter.exists?(filter.id)
+  end
+
   def test_bad_name
     filter = FactoryGirl.build(:filter, :name => "")
     assert filter.invalid?
