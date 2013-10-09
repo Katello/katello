@@ -92,42 +92,40 @@ class OrganizationsController < ApplicationController
     org_params = params[:organization]
     return render_bad_parameters if org_params.nil?
     org_params[:label], org_label_assigned = generate_label(org_params[:name], 'organization') if org_params[:label].blank?
-    @organization = Organization.new(:name => org_params[:name], :label => org_params[:label], :description => org_params[:description])
-    @organization.save!
 
-    env_label_assigned = ""
-    env_params = params[:environment]
-    if env_params[:name].present?
-      if env_params[:label].blank?
-        env_params[:label], env_label_assigned = generate_label(env_params[:name], 'environment') if env_params[:label].blank?
+    ActiveRecord::Base.transaction do
+      @organization = Organization.new(:name => org_params[:name], :label => org_params[:label], :description => org_params[:description])
+      @organization.save!
+
+      env_label_assigned = ""
+      env_params = params[:environment]
+      if env_params[:name].present?
+        if env_params[:label].blank?
+          env_params[:label], env_label_assigned = generate_label(env_params[:name], 'environment') if env_params[:label].blank?
+        end
+
+        @new_env = KTEnvironment.new(:name => env_params[:name], :label => env_params[:label], :description => env_params[:description])
+        @new_env.organization = @organization
+        @new_env.prior = @organization.library
+        @new_env.save!
+      elsif env_params[:label].present?
+        @new_env = @organization.library
       end
 
-      @new_env = KTEnvironment.new(:name => env_params[:name], :label => env_params[:label], :description => env_params[:description])
-      @new_env.organization = @organization
-      @new_env.prior = @organization.library
-      @new_env.save!
-    elsif env_params[:label].present?
-      @new_env = @organization.library
-    end
+      notify.success _("Organization '%s' was created.") % @organization["name"]
+      notify.message org_label_assigned unless org_label_assigned.blank?
 
-    notify.success _("Organization '%s' was created.") % @organization["name"]
-    notify.message org_label_assigned unless org_label_assigned.blank?
-
-    if search_validate(Organization, @organization.id, params[:search])
-      if @new_env.nil?
-        notify.message _("Click on 'Add Environment' to create the first environment")
+      if search_validate(Organization, @organization.id, params[:search])
+        if @new_env.nil?
+          notify.message _("Click on 'Add Environment' to create the first environment")
+        else
+          notify.message env_label_assigned unless env_label_assigned.blank?
+        end
+        render :partial => "common/list_item", :locals => {:item => @organization, :accessor => "label", :columns => ['name'], :name => controller_display_name}
       else
-        notify.message env_label_assigned unless env_label_assigned.blank?
+        notify.message _("'%s' did not meet the current search criteria and is not being shown.") % @organization["name"]
+        render :json => { :no_match => true }
       end
-      render :partial => "common/list_item", :locals => {:item => @organization, :accessor => "label", :columns => ['name'], :name => controller_display_name}
-    else
-      notify.message _("'%s' did not meet the current search criteria and is not being shown.") % @organization["name"]
-      render :json => { :no_match => true }
-    end
-
-  ensure
-    if @organization && @organization.persisted? && @new_env && @new_env.new_record?
-      @organization.destroy
     end
   end
 
