@@ -165,11 +165,11 @@ The module defines a namespace that all functionality dedicated to this entity w
         'ngResource',
         'alchemy',
         'alch-templates',
-        'ui.compat',
+        'ui.state',
         'Bastion.widgets'
      ]);
 
-The module definition defines the 'Bastion.systems' namespace and tells Angular to make available the libraries `ngResource`, `alchemy`, `alch-templates`, `ui.compat` and `Bastion.widgets`. These libraries are other similarly defined Angular modules.
+The module definition defines the 'Bastion.systems' namespace and tells Angular to make available the libraries `ngResource`, `alchemy`, `alch-templates`, `ui.state` and `Bastion.widgets`. These libraries are other similarly defined Angular modules.
 
 ##### Resource #####
 

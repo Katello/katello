@@ -20,6 +20,6 @@
  */
 angular.module('Bastion.environments', [
     'ngResource',
-    'ui.compat',
+    'ui.state',
     'Bastion.widgets'
 ]);
