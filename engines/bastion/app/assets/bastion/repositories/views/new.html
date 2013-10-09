@@ -104,19 +104,10 @@
       </div>
     </div>
 
-    <div class="control-group buttons">
-      <div class="input">
-        <button type="button" ng-click="table.closeItem()" translate>Cancel</button>
-        <button class="btn-primary"
-                type="submit"
-                tabindex="7"
-                ng-click="save(repository); working = true"
-                ng-disabled="repositoryForm.$invalid || working">
-          <i class="icon-spinner icon-spin" ng-show="working"></i>
-          <span ng-show="working" translate>Creating...</span>
-          <span ng-hide="working" translate>Create</span>
-        </button>
-      </div>
+    <div alch-save-control
+         on-cancel="table.closeItem()"
+         on-save="save(repository)"
+         invalid="repositoryForm.$invalid">
     </div>
 
   </form>
