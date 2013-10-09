@@ -1024,6 +1024,7 @@ KT.panel.list = (function () {
                             data: data,
                             success: createSuccess,
                             error: function (e) {
+                                button.val(i18n.create);
                                 button.removeAttr('disabled');
                                 notices.checkNotices();
                             }
