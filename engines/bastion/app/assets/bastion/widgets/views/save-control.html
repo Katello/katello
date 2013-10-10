@@ -1,0 +1,20 @@
+<div class="control-group buttons">
+  <div class="input">
+
+    <button ng-click="handleCancel()"
+            ng-disabled="working"
+            translate>
+      Cancel
+    </button>
+
+    <button class="btn-primary"
+            ng-click="handleSave(); working = true"
+            ng-disabled="invalid || working">
+
+      <i class="icon-spinner icon-spin" ng-show="working"></i>
+      <span ng-show="working" translate>Creating...</span>
+      <span ng-hide="working" translate>Create</span>
+    </button>
+
+  </div>
+</div>
