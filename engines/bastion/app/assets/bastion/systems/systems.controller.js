@@ -16,9 +16,9 @@
  * @name  Bastion.systems.controller:SystemsController
  *
  * @requires $scope
- * @requires $state
  * @requires Nutupane
  * @requires Routes
+ * @requires SystemsHelper
  *
  * @description
  *   Provides the functionality specific to Systems for use with the Nutupane UI pattern.
@@ -26,8 +26,8 @@
  *   within the table.
  */
 angular.module('Bastion.systems').controller('SystemsController',
-    ['$scope', '$state', '$location', 'i18nFilter', 'Nutupane', 'System', 'CurrentOrganization',
-    function($scope, $state, $location, i18nFilter, Nutupane, System, CurrentOrganization) {
+    ['$scope', '$location', 'i18nFilter', 'Nutupane', 'System', 'CurrentOrganization', 'SystemsHelper',
+    function($scope, $location, i18nFilter, Nutupane, System, CurrentOrganization, SystemsHelper) {
 
         var params = {
             'organization_id':  CurrentOrganization,
@@ -42,15 +42,7 @@ angular.module('Bastion.systems').controller('SystemsController',
         $scope.table = nutupane.table;
         $scope.removeRow = nutupane.removeRow;
 
-        $scope.table.getStatusColor = function(status) {
-            var colors = {
-                    'valid': 'green',
-                    'partial': 'yellow',
-                    'invalid': 'red'
-                };
-
-            return colors[status] ? colors[status] : 'red';
-        };
+        $scope.table.getStatusColor = SystemsHelper.getStatusColor;
 
         $scope.table.openDetails = function (system) {
             $scope.transitionTo('systems.details.info', {systemId: system.uuid});
