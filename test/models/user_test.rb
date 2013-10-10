@@ -129,6 +129,8 @@ class UserTest < UserTestBase
   end
 
   def test_destroy
+    # Add helptip which could prevent destruction
+    assert @no_perms_user.disable_helptip('repositories-index')
     @no_perms_user.destroy
 
     assert @no_perms_user.destroyed?

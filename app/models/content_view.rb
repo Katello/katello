@@ -35,7 +35,7 @@ class ContentView < ActiveRecord::Base
 
   has_many :changeset_content_views, :dependent => :destroy
   has_many :changesets, :through => :changeset_content_views
-  has_many :activation_keys
+  has_many :activation_keys, :dependent => :destroy
 
   validates :label, :uniqueness => {:scope => :organization_id},
                     :presence => true
