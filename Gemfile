@@ -13,7 +13,7 @@ else
   gem 'rails', '= 3.2.13'
 end
 gem 'json'
-gem 'rabl'
+gem 'rabl', '= 0.7.6'
 gem 'rest-client', :require => 'rest_client'
 gem 'rails_warden', '>= 0.5.2'
 gem 'rack-openid'
