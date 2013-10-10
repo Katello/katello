@@ -18,7 +18,7 @@ module Navigation
         @key           = :systems
         @display       = _("All")
         @authorization = lambda{ organization && System.any_readable?(organization) }
-        @url           = ::User.current.legacy_mode ? systems_path : systems_path(:anchor => '/systems')
+        @url           = ::User.current.legacy_mode ? systems_path : systems_path + '/all'
       end
 
     end
