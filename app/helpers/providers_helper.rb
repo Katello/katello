@@ -14,15 +14,21 @@ module ProvidersHelper
   include SyncManagementHelper
   include SyncManagementHelper::RepoMethods
 
-  def redhat_repo_tabs(provider)
-    tabs = {
-        :rpms => {:id => :rpms, :name => _('RPMs'), :products => {}, :order => 1},
-        :srpms => {:id => :srpms, :name => _('Source RPMs'), :products => {}, :order => 2},
-        :debug => {:id => :debug, :name => _('Debug RPMs'), :products => {}, :order => 3},
-        :beta => {:id => :beta, :name => _('Beta'), :products => {}, :order => 4},
-        :isos => {:id => :isos, :name => _('ISOs'), :products => {}, :order => 5},
-        :other => {:id => :other, :name => _('Other'), :products => {}, :order => 6}
-    }
+  def redhat_repo_tabs
+    [
+      {:id => :rpms, :name => _('RPMs'), :products => {}},
+      {:id => :srpms, :name => _('Source RPMs'), :products => {}},
+      {:id => :debug, :name => _('Debug RPMs'), :products => {}},
+      {:id => :beta, :name => _('Beta'), :products => {}},
+      {:id => :isos, :name => _('ISOs'), :products => {}},
+      {:id => :other, :name => _('Other'), :products => {}}
+    ]
+  end
+
+  def redhat_repo_tab(provider, tab_id)
+    tabs = {}.with_indifferent_access
+    redhat_repo_tabs.each{|tab| tabs[tab[:id]] = tab}
+
     provider.products.engineering.each do |product|
       product.productContent.each do |prod_content|
         name = prod_content.content.name
@@ -43,7 +49,7 @@ module ProvidersHelper
         tabs[key][:products][product.id] << prod_content
       end
     end
-    tabs.values.sort_by { |h| h[:order] }
+    tabs[tab_id]
   end
 
   def product_map
