@@ -11,14 +11,19 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Navigation
-  module Items
-    class Changesets < Navigation::Item
+  module Menus
+    class Changesets < Navigation::Menu
 
       def initialize(organization)
-        @key           = :changesets
+        @key           = :changeset_management
         @display       = _("Changesets")
         @authorization = lambda{ organization && KTEnvironment.any_viewable_for_promotions?(organization) }
-        @url           = promotions_path
+        @type          = 'flyout'
+        @items         = [
+          Navigation::Items::ChangesetManagement.new(organization),
+          Navigation::Items::ChangesetHistory.new(organization)
+        ]
+        super
       end
 
     end
