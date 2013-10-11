@@ -25,7 +25,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        1.5.0
+Version:        1.5.1
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -922,6 +922,14 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Fri Oct 11 2013 Partha Aji <paji@redhat.com> 1.5.1-1
+- Bumping package versions for 1.5.0 (paji@redhat.com)
+- 1017233: Adding table loading spinners for full and collapsed states.
+  (ericdhelms@gmail.com)
+- 1015240 - switch "changeset management" and "changeset" menus.
+  (walden@redhat.com)
+- 976275 - speeding up redhat repos page (jsherril@redhat.com)
+
 * Fri Oct 11 2013 Partha Aji <paji@redhat.com> 1.4.9-1
 - Fix foreign key issues (git@pitr.ch)
   (daviddavis@redhat.com)
