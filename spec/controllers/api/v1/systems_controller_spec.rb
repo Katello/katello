@@ -51,6 +51,7 @@ describe Api::V1::SystemsController do
     disable_system_orchestration
 
     System.stub(:index).and_return(stub.as_null_object)
+    System.stub(:prepopulate!).and_return(true)
 
     Resources::Candlepin::Consumer.stub!(:create).and_return({ :uuid => uuid, :owner => { :key => uuid } })
     Resources::Candlepin::Consumer.stub!(:update).and_return(true)

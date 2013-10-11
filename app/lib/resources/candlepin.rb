@@ -95,8 +95,13 @@ module Resources
           "/candlepin/consumers/#{id}"
         end
 
-        def get(uuid)
-          JSON.parse(super(path(uuid), self.default_headers).body).with_indifferent_access
+        def get(params)
+          if params.is_a?(String)
+            JSON.parse(super(path(params), self.default_headers).body).with_indifferent_access
+          else
+            response = super(path + hash_to_query(params), self.default_headers).body
+            JSON.parse(response)
+          end
         end
 
         def create(env_id, key, name, type, facts, installed_products, autoheal = true, release_ver = nil,
