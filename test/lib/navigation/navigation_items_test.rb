@@ -114,9 +114,9 @@ class NavigationItemsTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def test_changesets_item
-    item = Navigation::Items::Changesets.new(@acme_corporation)
+    item = Navigation::Items::ChangesetManagement.new(@acme_corporation)
 
-    assert_equal  _('Changesets'), item.display
+    assert_equal  _('Changeset Management'), item.display
     assert_equal  promotions_path, item.url
     assert        item.accessible?
   end
