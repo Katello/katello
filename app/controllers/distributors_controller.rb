@@ -100,7 +100,7 @@ class DistributorsController < ApplicationController
     end
     {
       :create => {:arch => [:arch_id],
-                  :distributor => [:name, :environment_id, :content_view_id],
+                  :distributor => [:name, :environment_id, :content_view_id, :version],
                   :distributor_type => [:katello, :headpin]
                  },
       :update => update_check,
@@ -120,14 +120,19 @@ class DistributorsController < ApplicationController
     # Environments page is displayed.
     envsys = !params[:env_id].nil?
 
-    render :partial => "new", :locals => {:distributor => @distributor, :accessible_envs => accessible_envs, :envsys => envsys}
+    render :partial => "new",
+           :locals => { :distributor => @distributor,
+                        :accessible_envs => accessible_envs,
+                        :envsys => envsys,
+                        :distributor_versions => Distributor.available_versions,
+                        :selected_dist_version => Distributor.latest_version }
   end
 
   def create
     @distributor = Distributor.new
     @distributor.name = params["distributor"]["name"]
     @distributor.cp_type = "candlepin"  # The 'candlepin' type is allowed to export a manifest
-    @distributor.facts = {'distributor_version' => 'sam-1.3'}  # TODO: forcing to full capabilities
+    @distributor.facts = {'distributor_version' => params[:distributor][:version]}
     @distributor.environment = KTEnvironment.find(params["distributor"]["environment_id"])
     @distributor.content_view = ContentView.find_by_id(params["distributor"].try(:[], "content_view_id"))
     #create it in candlepin, parse the JSON and create a new ruby object to pass to the view
