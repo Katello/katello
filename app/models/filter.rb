@@ -19,6 +19,7 @@ class Filter < ActiveRecord::Base
   has_and_belongs_to_many :repositories, :class_name => "Repository", :uniq => true
   has_and_belongs_to_many :products, :uniq => true
 
+  validate :validate_content_definition
   validate :validate_products_and_repos
   validates :name, :presence => true, :allow_blank => false,
                    :uniqueness => {:scope => :content_view_definition_id}
@@ -36,6 +37,12 @@ class Filter < ActiveRecord::Base
                           "products" =>  products.collect(&:name),
                           "repos" => repositories.collect(&:name),
                           "rules" => rules)
+  end
+
+  def validate_content_definition
+    if self.content_view_definition.composite?
+      errors.add(:base, _("cannot contain filters if composite definition"))
+    end
   end
 
   def validate_filter_products_and_repos(errors, cvd)

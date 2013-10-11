@@ -31,7 +31,7 @@ class Provider < ActiveRecord::Base
   belongs_to :organization
   belongs_to :task_status, :dependent => :destroy
   belongs_to :discovery_task, :class_name => 'TaskStatus', :dependent => :destroy
-  has_many :products, :inverse_of => :provider
+  has_many :products, :inverse_of => :provider, :dependent => :destroy
   has_many :repositories, through: :products
 
   validates :name, :uniqueness => {:scope => :organization_id}

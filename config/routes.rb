@@ -249,6 +249,7 @@ Src::Application.routes.draw do
       get :items
       get :env_items
       get :environments
+      get :all
       delete :bulk_destroy
       post :bulk_add_system_group
       post :bulk_remove_system_group
@@ -323,6 +324,7 @@ Src::Application.routes.draw do
   resources :products, :only => [:index, :new, :create, :edit, :update, :destroy] do
     collection do
       get :auto_complete
+      get :all
     end
     member do
       put :refresh_content

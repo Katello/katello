@@ -31,7 +31,7 @@ class SystemGroup < ActiveRecord::Base
                       :after_remove => :remove_system
                      }
 
-  has_many :jobs, :as => :job_owner
+  has_many :jobs, :as => :job_owner, :dependent => :nullify
 
   # we use db_environments to host the data, but all input, output
   #  should go through 'environments' accessor and getter (defined below)

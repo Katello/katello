@@ -1,4 +1,4 @@
-collection false
+collection @collection
 
 extends "api/v2/common/metadata"
 

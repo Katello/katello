@@ -12,6 +12,7 @@ first_user_name = (un = Util::Puppet.config_value("user_name")).blank? ? 'admin'
 first_user_password = (pw = Util::Puppet.config_value("user_pass")).blank? ? 'admin' : pw
 first_user_email = (em = Util::Puppet.config_value("user_email")).blank? ? 'root@localhost' : em
 first_org_name = (org = Util::Puppet.config_value("org_name")).blank? ? 'ACME_Corporation' : org
+first_remote_id = first_user_name.gsub(/[^A-Za-z0-9_-]/, "_")
 
 def format_errors(model = nil)
   return '(nil found)' if model.nil?
@@ -34,7 +35,7 @@ unless user_admin
       :username => first_user_name,
       :password => first_user_password,
       :email    => first_user_email,
-      :remote_id => first_user_name)
+      :remote_id => first_remote_id)
   User.current = user_admin
   user_admin.save!
 end
