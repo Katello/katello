@@ -183,7 +183,6 @@ input[type="checkbox"] {
 }
 
 .loading-mask {
-  left: 21%;
   width: 100%;
   height: 100%;
   position: absolute;
@@ -191,7 +190,19 @@ input[type="checkbox"] {
   background: white;
 
   .icon-spinner {
-    margin: 20% 0  0 30%;
+    margin: 20% 0  0 40%;
+  }
+
+  &.loading-mask-panel {
+    left: 20.1%;
+
+    .icon-spinner {
+      margin: 20% 0  0 33%;
+    }
+  }
+
+  &.loading-mask-collapsed {
+    width: 20%;
   }
 }
 
