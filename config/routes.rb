@@ -369,6 +369,7 @@ Src::Application.routes.draw do
     collection do
       get :items
       get :redhat_provider
+      get :redhat_provider_tab
       post :redhat_provider, :action => :update_redhat_provider
     end
     member do
