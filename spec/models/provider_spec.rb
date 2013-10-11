@@ -470,4 +470,11 @@ describe Provider do
       @provider.failed_products
     end
   end
+
+  it 'should be destroyable' do
+    disable_product_orchestration
+    provider = create(:provider, organization: @organization)
+    create(:product, :fedora, provider: provider)
+    assert provider.destroy
+  end
 end

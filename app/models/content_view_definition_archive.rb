@@ -12,5 +12,8 @@
 
 class ContentViewDefinitionArchive < ContentViewDefinitionBase
   belongs_to :source, :class_name => "ContentViewDefinition"
-  has_many :content_view_versions, :inverse_of => :definition_archive
+  has_many :content_view_versions,
+           inverse_of:  :definition_archive,
+           dependent:   :destroy,
+           foreign_key: 'definition_archive_id'
 end
