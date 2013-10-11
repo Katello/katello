@@ -25,7 +25,7 @@ class Product < ActiveRecord::Base
   attr_accessible :name, :label, :description, :provider_id, :provider,
                   :gpg_key_id, :gpg_key, :cp_id
 
-  has_many :marketing_engineering_products, :foreign_key => :engineering_product_id
+  has_many :marketing_engineering_products, :foreign_key => :engineering_product_id, :dependent => :destroy
   has_many :marketing_products, :through => :marketing_engineering_products
 
   belongs_to :provider, :inverse_of => :products

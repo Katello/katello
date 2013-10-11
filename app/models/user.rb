@@ -47,8 +47,8 @@ class User < ActiveRecord::Base
   has_many :roles_users, :dependent => :destroy
   has_many :roles, :through => :roles_users, :before_remove => :super_admin_check, :uniq => true, :extend => RolesPermissions::UserOwnRole
   validates_with Validators::OwnRolePresenceValidator, :attributes => :roles
-  has_many :help_tips
-  has_many :user_notices
+  has_many :help_tips, :dependent => :destroy
+  has_many :user_notices, :dependent => :destroy
   has_many :notices, :through => :user_notices
   has_many :task_statuses, :dependent => :destroy
   has_many :search_favorites, :dependent => :destroy
@@ -169,11 +169,10 @@ class User < ActiveRecord::Base
   end
 
   def disable_helptip(key)
-    return if !self.helptips_enabled? #don't update helptips if user has it disabled
-    return if !HelpTip.where(:key => key, :user_id => self.id).empty?
-    help      = HelpTip.new
-    help.key  = key
-    help.user = self
+    return false unless self.helptips_enabled? #don't update helptips if user has it disabled
+    return true if HelpTip.where(key: key, user_id: self.id).first
+
+    help = HelpTip.new key: key, user: self
     help.save
   end
 
