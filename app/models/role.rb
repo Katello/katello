@@ -36,7 +36,7 @@ class Role < ActiveRecord::Base
 
   def add_ldap_group(group_name)
     self.ldap_group_roles.create!(:ldap_group => group_name)
-    User.all.each { |user| user.set_ldap_roles }
+    User.visible.each { |user| user.set_ldap_roles }
     self.save
   end
 

@@ -2,7 +2,7 @@
 
 # PURPOSE:
 # This script MUST be run from katello.git/rel-eng/ directory
-# It take latest builds from foreman-nightly-* tag and re-tag them
+# It take latest builds from foreman and re-tag them
 # into katello-thirdparty-foreman-* tag.
 # It does that for ever package listed in comps-katello-foreman-server-*.xml
 # and for every build, which is newer in foreman-nightly-* compared to equivalent
@@ -13,6 +13,8 @@
 #   koji
 #  and config for katello koji in ~/.koji/katello-config
 
+RELEASE=1.3
+
 for COMPS_FILE in comps/comps-katello-foreman-server-*.xml; do
     # e.g. fedora18 or rhel6
     PLATFORM=$(echo $COMPS_FILE | sed 's/comps\/comps-katello-foreman-server-\(.*\)\.xml/\1/')
@@ -20,7 +22,7 @@ for COMPS_FILE in comps/comps-katello-foreman-server-*.xml; do
     for PACKAGE in $(
         cat $COMPS_FILE | awk '/packagereq/ { print $2 }' | sed  's/.*>\(.*\)<.*/\1/g'
         ); do
-        LATEST_BUILD=$( koji -c ~/.koji/katello-config latest-build --quiet foreman-nightly-$PLATFORM $PACKAGE | awk '{ print $1 }')
+        LATEST_BUILD=$( koji -c ~/.koji/katello-config latest-build --quiet foreman-$RELEASE-$PLATFORM $PACKAGE | awk '{ print $1 }')
         # if there is no build then it is probably subpackage, just skip it, otherwise do:
         if [ -n "$LATEST_BUILD" ]; then
             KATELLO_LATEST_BUILD=$( koji -c ~/.koji/katello-config latest-build --quiet katello-thirdparty-foreman-$PLATFORM $PACKAGE | awk '{ print $1 }')

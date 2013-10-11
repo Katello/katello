@@ -430,4 +430,15 @@ describe Product, :katello => true do
       product.environments.map(&:id).should eql([@organization.library.id])
     end
   end
+
+  it 'should be destroyable' do
+    disable_repo_orchestration
+    product = create(:product, :fedora, provider: create(:provider, organization: @organization))
+    2.times do
+      create(:repository, product: product, environment: @organization.library,
+             content_view_version: @organization.library.default_content_view_version,
+             feed: "http://something")
+    end
+    assert product.destroy
+  end
 end

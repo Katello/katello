@@ -59,7 +59,7 @@ KT.content_search_templates = (function(i18n) {
             }
             display["url"] = KT.routes.short_details_erratum_path(KT.utils.escape(display["id"]));
 
-            return KT.utils.template("<i class=\"errata-icon <%= icon_class %>\"  /><span class=\"tipsify-errata\" data-url=\"<%= url %>\"><%- errata_id %></span>",
+            return KT.utils.template("<i class=\"errata-icon <%= icon_class %>\"></i><span class=\"tipsify-errata\" data-url=\"<%= url %>\"><%- errata_id %></span>",
                     display);
         },
         puppet_module_header = function(display) {
@@ -95,6 +95,7 @@ KT.content_search_templates = (function(i18n) {
 
 
             name = row_header_content(name, type);
+
             if( parent_id !== undefined ){
                 html.attr('data-parent_id', parent_id);
             }
@@ -109,7 +110,7 @@ KT.content_search_templates = (function(i18n) {
                 html.append($('<span/>', { 'title': title }).html(name));
             } else if( name.length > 94 ) {
                 html.addClass('row_height_3');
-                html.append($('<span/>', { 'class' : 'three-line-ellipsis tipsify', 'title' : name }).html(name));
+                html.append($('<span/>').html(name));
             }
 
             var temp_html = $('<div/>');

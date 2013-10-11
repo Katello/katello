@@ -68,9 +68,11 @@ class Api::V1::SystemGroupsController < Api::V1::ApiController
   param :organization_id, :identifier, :desc => "organization identifier", :required => true
   param :name, String, :desc => "System group name to filter by"
   def index
-    query_string = params[:name] ? "name:#{params[:name]}" : params[:search]
+    query_string = params[:search]
 
-    filters = [:terms => { :id => SystemGroup.readable(@organization).pluck(:id)}]
+    filters = [:terms => {:id => SystemGroup.readable(@organization).pluck(:id)}]
+    filters << {:term => {:name => params[:name]}} if params[:name]
+
     options = {
         :filters => filters
     }

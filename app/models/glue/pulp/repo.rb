@@ -472,7 +472,7 @@ module Glue::Pulp::Repo
 
       notify = task.parameters.try(:[], :options).try(:[], :notify)
       user = task.user
-      if task.state == TaskStatus::Status::FINISHED && task.progress.error_details[:messages].blank?
+      if task.state == TaskStatus::Status::FINISHED.to_s && task.progress.error_details[:messages].blank?
         if user && notify
           notifier_service.success _("Repository '%s' finished syncing successfully.") % [self.name],
                          :user => user, :organization => self.organization

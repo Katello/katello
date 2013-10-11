@@ -241,7 +241,7 @@ class ContentViewDefinitionTest < MiniTest::Rails::ActiveSupport::TestCase
 
     PulpTaskStatus.stubs(:wait_for_tasks).returns("")
 
-    repo.expects(:clone_contents_by_filter).once.with(cloned, FilterRule::PACKAGE, dumb_copy, {:recursive => true}).returns(100)
+    repo.expects(:clone_contents_by_filter).once.with(cloned, FilterRule::PACKAGE, dumb_copy).returns(100)
     repo.expects(:clone_contents_by_filter).once.with(cloned, FilterRule::ERRATA, nil).returns(200)
     repo.expects(:clone_contents_by_filter).once.with(cloned, FilterRule::PACKAGE_GROUP, nil).returns(300)
     repo.expects(:clone_distribution).once.with(cloned)
