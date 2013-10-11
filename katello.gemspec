@@ -28,7 +28,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency "foreigner", "~> 1.4.2"
   gem.add_dependency "daemons", ">= 1.1.4"
   gem.add_dependency "uuidtools"
-  gem.add_dependency "rabl", "= 0.7.6"
+  gem.add_dependency "rabl"
   gem.add_dependency "tire", "~> 0.6.0"
   gem.add_dependency "logging", ">= 1.8.0"
   gem.add_dependency "hooks"
