@@ -12,6 +12,8 @@
 
 module Glue::ElasticSearch::Errata
 
+  SHORT_FIELDS =  [:id, :errata_id, :type, :summary, :severity, :title, :issued]
+
   # TODO: break this up into modules
   # rubocop:disable MethodLength
   def self.included(base)
@@ -55,6 +57,7 @@ module Glue::ElasticSearch::Errata
               :severity     => { :type => 'string', :analyzer => :kt_name_analyzer},
               :type         => { :type => 'string', :analyzer => :kt_name_analyzer},
               :title        => { :type => 'string', :analyzer => :title_analyzer},
+              :issued       => { :type => 'date'}
             }
           }
         }
@@ -71,6 +74,7 @@ module Glue::ElasticSearch::Errata
           :errata_id_sort => self.errata_id,
           :id_title => self.errata_id + ' : ' + self.title,
           :product_ids => self.product_ids,
+          :issued => self.issued.split[0]
         }
       end
 
@@ -102,8 +106,15 @@ module Glue::ElasticSearch::Errata
         end
       end
 
-      def self.search(query, start, page_size, filters = {}, sort = [:errata_id_sort, "DESC"],
-                      default_field = 'id_title')
+      def self.search(query, options)
+        options = options.with_indifferent_access
+        start = options.fetch(:start, 0)
+        page_size = options.fetch(:page_size, User.current.page_size)
+        filters = options.fetch(:filters, {})
+        sort = options.fetch(:sort, [:issued, "desc"])
+        default_field = options.fetch(:default_field, 'id_title')
+        fields = options.fetch(:fields, [])
+        search_mode = options.fetch(:search_mode, :all)
 
         repoids = filters[:repoids]
         if !Tire.index(self.index).exists? || (repoids && repoids.empty?)
@@ -121,6 +132,8 @@ module Glue::ElasticSearch::Errata
             end
           end
 
+          fields fields unless fields.blank?
+
           if page_size > 0
             size page_size
             from start
@@ -131,12 +144,14 @@ module Glue::ElasticSearch::Errata
           if filters.key?(:severity)
             filter :term, :severity => filters[:severity]
           end
+          if filters.key?(:id)
+            filter :terms, :id => filters[:id]
+          end
 
-          sort { by sort[0], sort[1] } unless !all_rows
+          sort { by sort[0], sort[1].downcase }
         end
 
         if filters.key?(:repoids)
-          search_mode = filters[:search_mode] || :all
           repoids = filters[:repoids]
           Util::Package.setup_shared_unique_filter(repoids, search_mode, search)
         end
