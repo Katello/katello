@@ -17,11 +17,12 @@ describe GpgKey, :katello => true do
   include OrganizationHelperMethods
   include AuthorizationHelperMethods
 
+  let(:organization) do
+    disable_org_orchestration
+    Organization.create!(:name => "Duh", :label => "ahaha")
+  end
+
   describe "permission checks" do
-    let(:organization) do
-        disable_org_orchestration
-        Organization.create!(:name=>"Duh", :label => "ahaha")
-    end
 
     let(:gpg) {GpgKey.create!(:name => "Gpg key", :organization => organization, :content => File.open("#{Rails.root}/spec/assets/gpg_test_key").read )}
 
@@ -66,6 +67,16 @@ describe GpgKey, :katello => true do
     it "should be successful with valid parameters" do
       gpg_key = GpgKey.new(:name => "Gpg Key 1", :content => @test_gpg_content, :organization => @organization)
       gpg_key.should be_valid
+    end
+
+    it 'should be destroyable' do
+      gpg_key = GpgKey.create!(:name => "Gpg Key 1", :content => @test_gpg_content, :organization => @organization)
+      disable_product_orchestration
+      create(:product, :fedora, provider: create(:provider, organization: organization)).tap do |product|
+        product.gpg_key = gpg_key
+        product.save!
+      end
+      gpg_key.destroy.should be_true
     end
 
     it "should be unsuccessful without content" do

@@ -5,5 +5,5 @@ extends 'api/v2/common/timestamps'
 
 
 node :discovery_task_id do |org|
-  org.repo_discovery_task.id
+  org.repo_discovery_task.try(:id)
 end

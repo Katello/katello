@@ -19,7 +19,7 @@ for COMPS_FILE in comps/comps-katello-server-*.xml; do
 
     for PACKAGE in $(
         cat $COMPS_FILE | awk '/packagereq/ { print $2 }' | sed  's/.*>\(.*\)<.*/\1/g'\
-        | grep 'rubygem-\(clamp\|kafo\|little-plugger\|logging\|multi_json\|rdoc\)'); do
+        | grep 'rubygem-\(clamp\|kafo\|little-plugger\|logging\|multi_json\|rdoc\|hashie\|ansi\|powerbar\)'); do
         LATEST_BUILD=$( koji -c ~/.koji/katello-config latest-build --quiet foreman-nightly-$PLATFORM $PACKAGE | awk '{ print $1 }')
         # if there is no build then it is probably subpackage, just skip it, otherwise do:
         if [ -n "$LATEST_BUILD" ]; then

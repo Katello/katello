@@ -24,7 +24,7 @@ class SyncPlan < ActiveRecord::Base
   WEEK_DAYS = (%W(Sunday Monday Tuesday Wednesday Thursday Friday)).collect{|d| N_(d)}
 
   belongs_to :organization
-  has_many :products
+  has_many :products, :dependent => :nullify
 
   validates :name, :presence => true, :uniqueness => {:scope => :organization_id}
   validates :interval, :inclusion => {:in => TYPES}, :allow_blank => false

@@ -46,7 +46,7 @@ describe Api::V1::RepositoriesController, :katello => true do
       @product.stub(:arch).and_return('noarch')
       @product.save!
       Product.stub!(:find).and_return(@product)
-      Product.stub!(:where).and_return([@product])
+      Product.stub(:find_by_cp_id => @product)
       @repo = new_test_repo(@organization.library, @product, "repo_1", "#{@organization.name}/Library/prod/repo")
       Repository.stub(:find).and_return(@repo)
       PulpSyncStatus.stub(:using_pulp_task).and_return(task_stub)
@@ -172,12 +172,12 @@ describe Api::V1::RepositoriesController, :katello => true do
 
     describe "create a repository" do
       before do
-        Product.stub(:where => [@product])
+        Product.stub(:find_by_cp_id => @product)
         @product.stub!(:custom?).and_return(true)
       end
 
       it 'should call pulp and candlepin layer' do
-        Product.should_receive(:where).with(:cp_id=>'product_1').and_return([@product])
+        Product.should_receive(:find_by_cp_id).with('product_1').and_return(@product)
         @product.should_receive(:add_repo).and_return({})
 
         post 'create', :name => 'repo_1', :label => 'repo_1', :url => 'http://www.repo.org', :product_id => 'product_1', :organization_id => @organization.label
@@ -351,7 +351,7 @@ describe Api::V1::RepositoriesController, :katello => true do
 
       context 'there is already a repo for the product with the same name' do
         before do
-          Product.stub(:where => [@product])
+          Product.stub(:find_by_cp_id => @product)
           @product.stub(:add_repo).and_return { raise Errors::ConflictException }
           @product.stub!(:custom?).and_return(true)
         end

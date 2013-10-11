@@ -49,7 +49,7 @@ class Api::V2::RepositoriesControllerTest < Minitest::Rails::ActionController::T
     get :index, :organization_id => @organization.label
 
     assert_response :success
-    assert_template 'api/v2/common/index'
+    assert_template 'api/v2/repositories/index'
   end
 
   def test_index_protected

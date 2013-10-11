@@ -25,6 +25,7 @@ class ProductsController < ApplicationController
 
     {
       :index => lambda {Product.any_readable?(current_organization)},
+      :all => lambda {Product.any_readable?(current_organization)},
       :new => edit_test,
       :create => edit_test,
       :default_label => edit_test,
@@ -43,6 +44,10 @@ class ProductsController < ApplicationController
 
   def index
     render 'bastion/layouts/application', :layout => false
+  end
+
+  def all
+    redirect_to action: 'index', :anchor => '/products'
   end
 
   def new

@@ -20,7 +20,7 @@ module Util
         "kt_name_analyzer" => {
           "type"      => "custom",
           "tokenizer" => "keyword",
-          "filter"    => %w(standard lowercase asciifolding ngram_filter)
+          "filter"    => %w(lowercase asciifolding)
         },
         "autcomplete_name_analyzer" => {
             "type"      => "custom",

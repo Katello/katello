@@ -197,6 +197,7 @@ Schedules the consumer identity certificate regeneration
   param :name, String, :desc => "Filter systems by name"
   param :pool_id, String, :desc => "Filter systems by subscribed pool"
   param :search, String, :desc => "Filter systems by advanced search query"
+  param :uuid, String, :desc => "Filter systems by uuid"
   def index
     query_string = params[:name] ? "name:#{params[:name]}" : params[:search]
     filters      = []
@@ -209,9 +210,10 @@ Schedules the consumer identity certificate regeneration
     end
 
     filters << {:terms => {:uuid => System.all_by_pool_uuid(params['pool_id']) }} if params['pool_id']
+    filters << {:terms => {:uuid => [params['uuid']] }} if params['uuid']
 
     options = {
-        :filters        => filters,
+        :filters       => filters,
         :load_records? => true
     }
     options[:sort_by] = params[:sort_by] if params[:sort_by]
@@ -223,6 +225,7 @@ Schedules the consumer identity certificate regeneration
 
     items = Glue::ElasticSearch::Items.new(System)
     systems, total_count = items.retrieve(query_string, params[:offset], options)
+    System.prepopulate!(systems)
 
     if params[:paged]
       systems = {
