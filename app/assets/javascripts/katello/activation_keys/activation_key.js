@@ -331,4 +331,3 @@ KT.activation_key = (function($) {
         refresh_list_item: refresh_list_item
     };
 }(jQuery));
-

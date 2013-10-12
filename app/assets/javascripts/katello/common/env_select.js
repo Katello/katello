@@ -141,4 +141,3 @@ var env_select =   {
 $(document).ready(function() {
     env_select.init();
 });
-
