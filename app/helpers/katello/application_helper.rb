@@ -148,15 +148,6 @@ module ApplicationHelper
     render :partial => "/common/env_select", :locals => options
   end
 
-  def gravatar_image_tag(email)
-    image_url = gravatar_url(email)
-    return "<img src=\"#{image_url}\" class=\"gravatar\"><span class=\"gravatar-span\">"
-  end
-
-  def gravatar_url(email)
-    "https:///secure.gravatar.com/avatar/#{Digest::MD5.hexdigest(email)}?d=mm&s=25"
-  end
-
   def env_select_class(curr_env, selected_env, curr_path, selected_path, accessible_envs, library_clickable)
     classes = []
     if (library_clickable || !curr_env.library?) && accessible_envs.member?(curr_env)
