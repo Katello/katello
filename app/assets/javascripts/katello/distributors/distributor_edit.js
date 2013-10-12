@@ -11,22 +11,6 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
 
-//Katello global object namespace that all others should be attached to
-var KT = {};
+$(document).ready(function() {
 
-//i18n global variable
-var i18n = {};
-
-//Setup underscorejs
-KT.utils = _.noConflict();
-
-_ = KT.utils;
-
-function localize(data) {
-    for (var key in data) {
-        if(data.hasOwnProperty(key)) {
-            i18n[key] = data[key];
-        }
-    }
-}
-
+});

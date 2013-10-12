@@ -314,4 +314,3 @@ KT.package_actions = (function() {
         updateContent: updateContent
     };
 })();
-

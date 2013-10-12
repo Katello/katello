@@ -395,4 +395,3 @@ KT.path_select_template = {
         return html;
     }
 };
-
