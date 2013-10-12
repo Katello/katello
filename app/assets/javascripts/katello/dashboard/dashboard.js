@@ -128,14 +128,14 @@ KT.dashboard = (function(){
         $("#dashboard_errata").delegate(".collapsed", "click", function() {
             var btn = $(this);
             btn.parents(".errata_item").siblings().show();
-            KT.common.jscroll_init($("#dashboard_errata").find('.scroll-pane'));
+            $("#dashboard_errata").find(".jspPane").resize();
             btn.removeClass("collapsed").addClass("expanded");
         });
 
         $("#dashboard_errata").delegate(".expanded", "click", function() {
             var btn = $(this);
             btn.parents(".errata_item").siblings().hide();
-            KT.common.jscroll_init($("#dashboard_errata").find('.scroll-pane'));
+            $("#dashboard_errata").find(".jspPane").resize();
             btn.removeClass("expanded").addClass("collapsed");
         });
     },

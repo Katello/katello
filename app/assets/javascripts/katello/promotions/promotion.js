@@ -762,10 +762,10 @@ var changesetEdit = (function(){
         var after_function;
         if (opened) {
             $('#edit_changeset').attr('original-title', i18n.close_edit_title);
-            name_box.html(KT.utils.escape(changeset.getName()));
+            name_box.html(changeset.getName());
             edit_button.html(i18n.close_details);
-            description.html(KT.utils.escape(changeset.getDescription()));
-            type.html(KT.utils.escape(changeset.type()));
+            description.html(changeset.getDescription());
+            type.html(changeset.type());
             edit_button.parent().addClass("highlighted");
             after_function = setup_edit;
         }
