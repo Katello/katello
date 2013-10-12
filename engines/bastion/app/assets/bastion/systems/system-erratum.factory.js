@@ -24,7 +24,7 @@
 angular.module('Bastion.systems').factory('SystemErratum',
     ['$resource', 'Routes',
     function($resource, Routes) {
-        return $resource(Routes.apiSystemsPath() + '/:id/errata/:action', {id: '@uuid'}, {
+        return $resource(Routes.apiSystemsPath() + '/:id/errata/:errata_id/:action', {id: '@uuid'}, {
             get: {method: 'GET', isArray: false},
             apply: {method: 'PUT', params: {action: 'apply'}}
         });

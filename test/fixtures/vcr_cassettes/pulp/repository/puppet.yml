@@ -6686,4 +6686,45 @@ http_interactions:
       string: "[{\"task_group_id\": \"7ec87061-9fb6-45b7-885b-d9e3b4b48fbf\", \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/task_groups/7ec87061-9fb6-45b7-885b-d9e3b4b48fbf/\", \"task_id\": \"729866c3-b5f7-43dc-96df-d914142ec82a\", \"call_request_tags\": [\"pulp:repository:4\", \"pulp:action:delete\"], \"reasons\": [], \"start_time\": null, \"tags\": [\"pulp:repository:4\", \"pulp:action:delete\"], \"state\": \"waiting\", \"finish_time\": null, \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {}, \"call_request_group_id\": \"7ec87061-9fb6-45b7-885b-d9e3b4b48fbf\", \"call_request_id\": \"729866c3-b5f7-43dc-96df-d914142ec82a\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}]"
     http_version: 
   recorded_at: Fri, 04 Oct 2013 18:51:02 GMT
-recorded_with: VCR 2.5.0
+- request: 
+    method: post
+    uri: https://abed.usersys.redhat.com/pulp/api/v2/repositories/actions/content/regenerate_applicability//
+    body: 
+      encoding: US-ASCII
+      string: "{\"repo_criteria\":{\"filters\":{\"id\":{\"$in\":[\"4\"]}}}}"
+    headers: 
+      Accept: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Content-Type: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="qJhxYVilQnURKyIKgTpxFnq6Y0lTexTYdcJAjypgw", oauth_signature="jNF0P1XBpWI%2BRo%2BH1rIgnAqD7A0%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1381246550", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      Content-Length: 
+      - "50"
+      User-Agent: 
+      - Ruby
+  response: 
+    status: 
+      code: 202
+      message: Accepted
+    headers: 
+      Date: 
+      - Tue, 08 Oct 2013 15:35:50 GMT
+      Server: 
+      - Apache/2.2.15 (Red Hat)
+      Content-Encoding: 
+      - utf-8
+      Content-Length: 
+      - "596"
+      Content-Type: 
+      - application/json
+    body: 
+      encoding: US-ASCII
+      string: "{\"task_group_id\": null, \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/7352d4b9-c19a-4586-8451-44c566bd248e/\", \"task_id\": \"7352d4b9-c19a-4586-8451-44c566bd248e\", \"call_request_tags\": [\"pulp:action:applicability_regeneration\"], \"reasons\": [], \"start_time\": null, \"tags\": [\"pulp:action:applicability_regeneration\"], \"state\": \"waiting\", \"finish_time\": null, \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {}, \"call_request_group_id\": null, \"call_request_id\": \"7352d4b9-c19a-4586-8451-44c566bd248e\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
+    http_version: 
+  recorded_at: Tue, 08 Oct 2013 15:35:51 GMT
+recorded_with: VCR 2.6.0

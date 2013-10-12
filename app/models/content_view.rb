@@ -337,10 +337,6 @@ class ContentView < ActiveRecord::Base
     end
   end
 
-  def index_repositories(env)
-    repos(env).each(&:index_content)
-  end
-
   def cp_environment_label(env)
     ContentViewEnvironment.where(:content_view_id => self, :environment_id => env).first.label
   end

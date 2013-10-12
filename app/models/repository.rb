@@ -185,7 +185,8 @@ class Repository < ActiveRecord::Base
 
   def after_sync(pulp_task_id)
     self.handle_sync_complete_task(pulp_task_id)
-    self.index_content
+    #don't publish as auto_publish should be enabled
+    self.trigger_contents_changed(:wait => false, :publish => false, :reindex => true)
     Glue::Event.trigger(Katello::Actions::RepositorySync, self)
   end
 
@@ -213,6 +214,31 @@ class Repository < ActiveRecord::Base
   def clone_id(env, content_view)
     Repository.repo_id(self.product.label, self.label, env.label,
                              env.organization.label, content_view.label)
+  end
+
+  def trigger_contents_changed(options)
+    Repository.trigger_contents_changed([self], options)
+  end
+
+  def self.trigger_contents_changed(repos, options)
+    wait = options.fetch(:wait, false)
+    reindex = options.fetch(:reindex, true) && Katello.config.use_elasticsearch
+    index_units = options.fetch(:index_units, nil) && Katello.config.use_elasticsearch
+    publish = options.fetch(:publish, true) && Katello.config.use_pulp
+
+    tasks = []
+    tasks += repos.flat_map{|repo| repo.generate_metadata} if publish
+    repos.each{|repo| repo.generate_applicability } #don't wait on applicability
+    repos.each{|repo| repo.index_content } if reindex
+
+    if index_units
+      results = unit_search(:type_ids => [unit_type_id],
+                            :filters => {:unit => index_units})
+      ids = results.map { |result| result[:unit_id] }
+      puppet? ? PuppetModule.index_puppet_modules(ids) : Package.index_packages(ids)
+    end
+
+    PulpTaskStatus.wait_for_tasks(tasks) if wait
   end
 
   # TODO: break up method

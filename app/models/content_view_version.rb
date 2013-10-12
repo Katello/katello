@@ -80,8 +80,8 @@ class ContentViewVersion < ActiveRecord::Base
 
   def refresh_version(notify = false)
     PulpTaskStatus.wait_for_tasks self.refresh_repos
-    PulpTaskStatus.wait_for_tasks self.generate_metadata
-    self.content_view.index_repositories(self.content_view.organization.library)
+    self.trigger_repository_changes
+
     self.content_view.update_cp_content(self.content_view.organization.library) if Katello.config.use_cp
 
     if notify
@@ -182,8 +182,8 @@ class ContentViewVersion < ActiveRecord::Base
     end
   end
 
-  def generate_metadata
-    self.repositories.collect{|repo| repo.generate_metadata}.flatten(1)
+  def trigger_repository_changes
+    Repository.trigger_contents_changed(self.repositories, :wait => true, :reindex => true)
   end
 
   private

@@ -42,7 +42,26 @@ class Api::V1::SystemGroupErrataController < Api::V1::ApiController
   param :type, %w(bugfix enhancement security), :desc => "Filter errata by type", :required => false
   # TODO: when errata are enabled there has to be created rabl template for errata
   def index
-    errata = get_errata(params[:type])
+    filter_type = params[:filter_type]
+
+    if filter_type && filter_type != 'All'
+      filter_type.downcase!
+    else
+      filter_type = nil
+    end
+
+    errata = @group.errata(filter_type)
+
+    system_uuids = errata.flat_map{|e| e.applicable_consumers}.uniq
+    system_hash = {}
+    System.where(:uuid => system_uuids).select([:uuid, :name]).each do |sys|
+      system_hash[sys.uuid] = sys
+    end
+
+    errata.each do |erratum|
+      erratum.applicable_consumers = erratum.applicable_consumers.map{|uuid| {:name => system_hash[uuid].name, :uuid => uuid }}
+    end
+
     respond :collection => errata
   end
 
@@ -67,40 +86,6 @@ class Api::V1::SystemGroupErrataController < Api::V1::ApiController
     if params.slice(:errata_ids).values.size != 1
       raise HttpErrors::BadRequest.new(_("One or more errata must be provided"))
     end
-  end
-
-  include Util::Errata
-
-  def get_errata(filter_type = "All")
-    filter_type = filter_type || "All"
-
-    errata_hash = {} # {id => erratum}
-
-    # build a hash of all errata across all systems in the group
-    @group.systems.each do |system|
-      errata = system.errata
-      errata.each do |erratum|
-        if errata_hash.key?(erratum.id)
-          # add the system to the existing erratum entry
-          errata_hash[erratum.id][:systems].push(system.name)
-        else
-          # convert the erratum to a hash, add a systems array to the hash and add this system to it
-          erratum_hash           = erratum.as_json
-          erratum_hash[:systems] ||= []
-          erratum_hash[:systems] << system.name
-
-          errata_hash[erratum.id] = erratum_hash
-        end
-      end
-    end
-    errata_list = errata_hash.values
-    errata_list = filter_by_type(errata_list, filter_type)
-
-    errata_list = errata_list.sort do |a, b|
-      a[:id].downcase <=> b[:id].downcase
-    end
-
-    return errata_list
   end
 
 end

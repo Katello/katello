@@ -87,7 +87,7 @@ class ContentViewDefinition < ContentViewDefinitionBase
       associate_contents(cloned)
     end
     view.update_cp_content(view.organization.library)
-    PulpTaskStatus.wait_for_tasks(view.versions.first.generate_metadata)
+    view.versions.first.trigger_repository_changes
     Glue::Event.trigger(Katello::Actions::ContentViewPublish, view)
 
     if notify
@@ -118,8 +118,6 @@ class ContentViewDefinition < ContentViewDefinitionBase
     else
       associate_yum_types(cloned)
     end
-    # update search indices for package and errata
-    cloned.index_content if Katello.config.use_elasticsearch
   end
 
   def has_promoted_views?

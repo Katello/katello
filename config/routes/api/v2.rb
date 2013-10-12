@@ -106,7 +106,7 @@ Src::Application.routes.draw do
             put :upgrade_all
           end
         end
-        resource :errata, :action => [], :controller => :system_errata do
+        api_resources :errata, :only => [:show], :controller => :system_errata do
           collection do
             put :apply
           end
