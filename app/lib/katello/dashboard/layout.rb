@@ -20,8 +20,6 @@ module Dashboard
       content_views
       sync
       promotions
-      system_groups
-      errata
     )
 
     attr_accessor :widgets, :columns, :organization, :current_user
@@ -42,14 +40,7 @@ module Dashboard
     def setup_layout
       if (user_layout = current_user.try(:preferences).try(:[], :dashboard).try(:[], :layout))
         user_layout.each do |col|
-          @columns << col.each_with_object([]) do |name, column|
-            begin
-              widget = get_widget(name, organization)
-              column << widget if widget.accessible?
-            rescue NameError
-              Rails.logger.info("Could not load dashboard widget #{name}")
-            end
-          end
+          @columns << col.map{ |name| get_widget(name, organization) }
         end
       else
         setup_default_layout

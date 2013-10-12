@@ -26,7 +26,7 @@ module Navigation
           Navigation::Menus::SyncManagement.new(organization),
           Navigation::Items::ContentViewDefinitions.new(organization),
           Navigation::Items::ContentSearch.new(organization),
-          Navigation::Menus::Changesets.new(organization)
+          Navigation::Menus::ChangesetManagement.new(organization)
         ]
         super
       end

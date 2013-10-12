@@ -12,14 +12,19 @@
 
 module Katello
 module Navigation
-  module Items
-    class Systems < Navigation::Item
+  module Menus
+    class ChangesetManagement < Navigation::Menu
 
       def initialize(organization)
-        @key           = :systems
-        @display       = _("All")
-        @authorization = lambda{ organization && System.any_readable?(organization) }
-        @url           = ::User.current.legacy_mode ? systems_path : systems_path(:anchor => '/systems')
+        @key           = :changeset_management
+        @display       = _("Changeset Management")
+        @authorization = lambda{ organization && KTEnvironment.any_viewable_for_promotions?(organization) }
+        @type          = 'flyout'
+        @items         = [
+          Navigation::Items::Changesets.new(organization),
+          Navigation::Items::ChangesetHistory.new(organization)
+        ]
+        super
       end
 
     end

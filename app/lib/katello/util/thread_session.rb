@@ -25,6 +25,7 @@
 #
 
 module Katello
+module Katello
   def self.pulp_server=(server)
     Thread.current[:pulp_server] = server
   end
@@ -32,6 +33,7 @@ module Katello
   def self.pulp_server
     Thread.current[:pulp_server]
   end
+end
 end
 
 module Katello
