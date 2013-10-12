@@ -32,7 +32,7 @@ class SystemGroup < ActiveRecord::Base
                       :after_remove => :remove_system
                      }
 
-  has_many :jobs, :as => :job_owner, :dependent => :nullify
+  has_many :jobs, :as => :job_owner
 
   # we use db_environments to host the data, but all input, output
   #  should go through 'environments' accessor and getter (defined below)
@@ -167,8 +167,9 @@ class SystemGroup < ActiveRecord::Base
     # determine the state (critical/warning/ok) for each system group
     groups.each do |group|
       group_state = :ok
-      unless group.systems.empty?
-        group.errata.each do |erratum|
+
+      group.systems.each do |system|
+        system.errata.each do |erratum|
           case erratum.type
           when Errata::SECURITY
             # there is a critical errata, so stop searching...
@@ -180,8 +181,8 @@ class SystemGroup < ActiveRecord::Base
             # set state to warning, but continue searching...
             group_state = :warning
           end
-
         end
+        break if group_state == :critical
       end
 
       groups_hash[group_state] ||= []

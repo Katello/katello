@@ -88,7 +88,7 @@ class ContentViewDefinition < ContentViewDefinitionBase
       associate_contents(cloned)
     end
     view.update_cp_content(view.organization.library)
-    view.versions.first.trigger_repository_changes
+    PulpTaskStatus.wait_for_tasks(view.versions.first.generate_metadata)
     Glue::Event.trigger(Katello::Actions::ContentViewPublish, view)
 
     if notify
@@ -119,6 +119,8 @@ class ContentViewDefinition < ContentViewDefinitionBase
     else
       associate_yum_types(cloned)
     end
+    # update search indices for package and errata
+    cloned.index_content if Katello.config.use_elasticsearch
   end
 
   def has_promoted_views?
@@ -293,7 +295,7 @@ class ContentViewDefinition < ContentViewDefinitionBase
     # This implies that there are no packages to copy over.
 
     if applicable_rules_count == 0 || copy_clauses
-      pulp_task = repo.clone_contents_by_filter(cloned, FilterRule::PACKAGE, copy_clauses)
+      pulp_task = repo.clone_contents_by_filter(cloned, FilterRule::PACKAGE, copy_clauses, :recursive => true)
       PulpTaskStatus.wait_for_tasks([pulp_task])
       process_errata_and_groups = true
     end

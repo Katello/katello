@@ -18,8 +18,8 @@ class GpgKey < ActiveRecord::Base
   MAX_CONTENT_LENGTH = 100_000
   MAX_CONTENT_LINE_LENGTH = 65
 
-  has_many :repositories, :inverse_of => :gpg_key, :dependent => :nullify
-  has_many :products, :inverse_of => :gpg_key, :dependent => :nullify
+  has_many :repositories, :inverse_of => :gpg_key
+  has_many :products, :inverse_of => :gpg_key
 
   belongs_to :organization, :inverse_of => :gpg_keys
 

@@ -16,12 +16,6 @@ class ContentView < ActiveRecord::Base
   include Authorization::ContentView
   include Glue::ElasticSearch::ContentView if Katello.config.use_elasticsearch
 
-  include Glue::Event
-
-  def create_event
-    Katello::Actions::ContentViewCreate
-  end
-
   before_destroy :confirm_not_promoted # RAILS3458: this needs to come before associations
 
   belongs_to :content_view_definition
@@ -42,7 +36,7 @@ class ContentView < ActiveRecord::Base
 
   has_many :changeset_content_views, :dependent => :destroy
   has_many :changesets, :through => :changeset_content_views
-  has_many :activation_keys, :dependent => :destroy
+  has_many :activation_keys
 
   validates :label, :uniqueness => {:scope => :organization_id},
                     :presence => true
@@ -342,6 +336,10 @@ class ContentView < ActiveRecord::Base
       view_env = self.content_view_environments.where(:environment_id => env.id)
       view_env.first.destroy unless view_env.blank?
     end
+  end
+
+  def index_repositories(env)
+    repos(env).each(&:index_content)
   end
 
   def cp_environment_label(env)

@@ -31,19 +31,11 @@ class PulpSyncProgress
         @size_left   = @total_size - ht.null_safe_get(details, 0, ['finished_bytes'])
         @total_count = ht.null_safe_get(details, 0, ['num_isos'])
         @items_left  = @total_count - ht.null_safe_get(details, 0, ['num_isos_finished'])
-
       else
         @total_size  = ht.null_safe_get(details, 0, ['size_total'])
         @size_left   = ht.null_safe_get(details, 0, ['size_left'])
-
-        if progress_attrs['progress']['puppet_importer']
-          @total_count   = ht.null_safe_get(details, 0, ['total_count'])
-          finished_count = ht.null_safe_get(details, 0, ['finished_count'])
-          @items_left    = @total_count - finished_count
-        else
-          @total_count = ht.null_safe_get(details, 0, ['items_total'])
-          @items_left  = ht.null_safe_get(details, 0, ['items_left'])
-        end
+        @total_count = ht.null_safe_get(details, 0, ['items_total'] || ['total_count'])
+        @items_left  = ht.null_safe_get(details, 0, ['items_left'] || ['total_count'] - ['finished_count'])
       end
 
       @error_details = errors(progress_attrs['progress'])

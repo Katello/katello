@@ -194,7 +194,7 @@ class System < ActiveRecord::Base
   end
 
   def type
-    if respond_to?(:guest) && guest
+    if respond_to?(:guest) && guest == 'true'
       _("Guest")
     else
       case self
@@ -212,13 +212,9 @@ class System < ActiveRecord::Base
     end
   end
 
-  def refresh_tasks
+  def tasks
     refresh_running_tasks
     import_candlepin_tasks
-  end
-
-  def tasks
-    refresh_tasks
     self.task_statuses
   end
 

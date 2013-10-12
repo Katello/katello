@@ -88,7 +88,7 @@ module Glue::ElasticSearch::Pool
         if !clear_filters.nil?
           items = Glue::ElasticSearch::Items.new(Pool)
           options = {
-              :filters => clear_filters,
+              :filter => clear_filters,
               :load_records? => false
           }
           results, _ = items.retrieve('', 0, options)

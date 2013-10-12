@@ -65,14 +65,21 @@ class PromotionChangeset < Changeset
     update_progress! '50'
     PulpTaskStatus.wait_for_tasks(promote_views(from_env, to_env, self.content_views.composite(true)))
     update_progress! '60'
+    self.content_views.composite(false).each{|cv| cv.index_repositories(to_env)}
+    update_progress! '80'
+    self.content_views.composite(true).each{|cv| cv.index_repositories(to_env)}
+    update_progress! '90'
+
     update_view_cp_content(to_env)
-    update_progress! '70'
-    trigger_repository_change(to_env)
     update_progress! '100'
+
+    PulpTaskStatus.wait_for_tasks(generate_metadata(from_env, to_env))
 
     self.promotion_date = Time.now
     self.state          = Changeset::PROMOTED
+
     Glue::Event.trigger(Katello::Actions::ChangesetPromote, self)
+
     self.save!
 
     if notify
@@ -104,11 +111,11 @@ class PromotionChangeset < Changeset
     end
   end
 
-  def trigger_repository_change(to_env)
-    repos = affected_repos.collect do |repo|
-      repo.get_clone(to_env)
+  def generate_metadata(from_env, to_env)
+    async_tasks = affected_repos.collect do |repo|
+      repo.get_clone(to_env).generate_metadata
     end
-    Repository.trigger_contents_changed(repos, :wait => true, :reindex => true)
+    async_tasks.flatten(1)
   end
 
   def affected_repos

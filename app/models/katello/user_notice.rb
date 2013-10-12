@@ -14,7 +14,6 @@ module Katello
 class UserNotice < ActiveRecord::Base
 
   belongs_to :user
-  # FIXME, this will delete notice also for other users
   belongs_to :notice, :dependent => :destroy
 
   def check_permissions(operation)

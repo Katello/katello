@@ -433,7 +433,7 @@ module Glue::Provider
 
         # Limit subscriptions to just those from Red Hat provider
         subscriptions = pools.collect do |pool|
-          product = Product.in_org(self.organization).where(:cp_id => pool.product_id).first
+          product = Product.where(:cp_id => pool.product_id).first
           next if product.nil?
           pool.provider_id = product.provider_id   # Set so it is saved into elastic search
           pool
@@ -445,8 +445,7 @@ module Glue::Provider
 
       # Index pools
       # Note: Only the Red Hat provider subscriptions are being indexed.
-      ::Pool.index_pools(subscriptions, [{:term => {:org => self.organization.label}},
-                                         {:term => {:provider_id => self.organization.redhat_provider.id}}])
+      ::Pool.index_pools(subscriptions, [{:org => [self.organization.label]}, {:provider_id => [self.organization.redhat_provider.id]}])
 
       subscriptions
     end

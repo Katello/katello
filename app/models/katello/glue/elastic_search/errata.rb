@@ -13,8 +13,6 @@
 module Katello
 module Glue::ElasticSearch::Errata
 
-  SHORT_FIELDS =  [:id, :errata_id, :type, :summary, :severity, :title, :issued]
-
   # TODO: break this up into modules
   # rubocop:disable MethodLength
   def self.included(base)
@@ -58,7 +56,6 @@ module Glue::ElasticSearch::Errata
               :severity     => { :type => 'string', :analyzer => :kt_name_analyzer},
               :type         => { :type => 'string', :analyzer => :kt_name_analyzer},
               :title        => { :type => 'string', :analyzer => :title_analyzer},
-              :issued       => { :type => 'date'}
             }
           }
         }
@@ -75,7 +72,6 @@ module Glue::ElasticSearch::Errata
           :errata_id_sort => self.errata_id,
           :id_title => self.errata_id + ' : ' + self.title,
           :product_ids => self.product_ids,
-          :issued => self.issued.split[0]
         }
       end
 
@@ -86,10 +82,8 @@ module Glue::ElasticSearch::Errata
         repos = repos_for_filter(filter_for_repo)
         filter_for_errata[:repoids] = repos.collect{|r| r.pulp_id} if !repos.empty?
 
-        options = { :start => 0, :page_size => 1, :filters => filter_for_errata }
-        first = self.search('', options)
-        options[:page_size] = first.total
-        self.search('', options).collect{ |e| Errata.new(e.as_json) }
+        first = self.search('', 0, 1, filter_for_errata)
+        self.search('', 0, first.total, filter_for_errata).collect{|e| Errata.new(e.as_json)}
       end
 
       def self.repos_for_filter(filter)
@@ -109,15 +103,8 @@ module Glue::ElasticSearch::Errata
         end
       end
 
-      def self.search(query, options)
-        options = options.with_indifferent_access
-        start = options.fetch(:start, 0)
-        page_size = options.fetch(:page_size, User.current.page_size)
-        filters = options.fetch(:filters, {})
-        sort = options.fetch(:sort, [:issued, "desc"])
-        default_field = options.fetch(:default_field, 'id_title')
-        fields = options.fetch(:fields, [])
-        search_mode = options.fetch(:search_mode, :all)
+      def self.search(query, start, page_size, filters = {}, sort = [:errata_id_sort, "DESC"],
+                      default_field = 'id_title')
 
         repoids = filters[:repoids]
         if !Tire.index(self.index).exists? || (repoids && repoids.empty?)
@@ -135,8 +122,6 @@ module Glue::ElasticSearch::Errata
             end
           end
 
-          fields fields unless fields.blank?
-
           if page_size > 0
             size page_size
             from start
@@ -147,14 +132,12 @@ module Glue::ElasticSearch::Errata
           if filters.key?(:severity)
             filter :term, :severity => filters[:severity]
           end
-          if filters.key?(:id)
-            filter :terms, :id => filters[:id]
-          end
 
-          sort { by sort[0], sort[1].downcase }
+          sort { by sort[0], sort[1] } unless !all_rows
         end
 
         if filters.key?(:repoids)
+          search_mode = filters[:search_mode] || :all
           repoids = filters[:repoids]
           Util::Package.setup_shared_unique_filter(repoids, search_mode, search)
         end

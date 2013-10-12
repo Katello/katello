@@ -48,7 +48,7 @@ module Glue::ElasticSearch::ContentView
 
     def total_errata_count(env)
       repo_ids = self.repos(env).collect{|r| r.pulp_id}
-      results = ::Errata.search('', :page_size => 1, :filters => {:repoids => repo_ids})
+      results = ::Errata.search('', 0, 1, :repoids => repo_ids)
       results.empty? ? 0 : results.total
     end
 

@@ -28,15 +28,13 @@ module Glue::ElasticSearch::Product
         indexes :label, :type => 'string', :index => :not_analyzed
         indexes :description, :type => 'string', :analyzer => :kt_name_analyzer
         indexes :name_autocomplete, :type => 'string', :analyzer => 'autcomplete_name_analyzer'
-        indexes :enabled, :type => 'boolean'
       end
     end
   end
 
   def extended_index_attrs
     { :name_sort => name.downcase, :name_autocomplete => self.name,
-      :organization_id => organization.id,
-      :enabled => self.enabled?
+      :organization_id => organization.id
     }
   end
 
@@ -52,7 +50,7 @@ module Glue::ElasticSearch::Product
 
   def total_errata_count(env, view)
     repo_ids = view.repos(env).in_product(self).collect{ |r| r.pulp_id }
-    results = ::Errata.search('', :page_size => 1, :filters => {:repoids => repo_ids})
+    results = ::Errata.search('', 0, 1, :repoids => repo_ids)
     results.empty? ? 0 : results.total
   end
 

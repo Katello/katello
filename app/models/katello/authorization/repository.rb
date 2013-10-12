@@ -31,11 +31,6 @@ module Authorization::Repository
     def deletable?
       product.editable? && !promoted?
     end
-
-    def redhat_deletable?
-      !self.enabled? && !self.promoted? && self.product.provider.editable?
-    end
-
   end
 
   module ClassMethods

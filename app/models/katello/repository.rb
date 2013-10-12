@@ -186,8 +186,7 @@ class Repository < ActiveRecord::Base
 
   def after_sync(pulp_task_id)
     self.handle_sync_complete_task(pulp_task_id)
-    #don't publish as auto_publish should be enabled
-    self.trigger_contents_changed(:wait => false, :publish => false, :reindex => true)
+    self.index_content
     Glue::Event.trigger(Katello::Actions::RepositorySync, self)
   end
 
@@ -215,36 +214,6 @@ class Repository < ActiveRecord::Base
   def clone_id(env, content_view)
     Repository.repo_id(self.product.label, self.label, env.label,
                              env.organization.label, content_view.label)
-  end
-
-  def trigger_contents_changed(options)
-    Repository.trigger_contents_changed([self], options)
-    index_units = options.fetch(:index_units, nil) if Katello.config.use_elasticsearch
-
-    if index_units
-      ids = index_units.collect do |unit|
-        found = unit_search(:type_ids => [unit_type_id],
-                            :filters => {:unit => unit})
-        found[0].try(:[], :unit_id)
-      end
-
-      ids.compact!
-      puppet? ? PuppetModule.index_puppet_modules(ids) : Package.index_packages(ids)
-    end
-
-  end
-
-  def self.trigger_contents_changed(repos, options)
-    wait = options.fetch(:wait, false)
-    reindex = options.fetch(:reindex, true) && Katello.config.use_elasticsearch
-    publish = options.fetch(:publish, true) && Katello.config.use_pulp
-
-    tasks = []
-    tasks += repos.flat_map{|repo| repo.generate_metadata} if publish
-    repos.each{|repo| repo.generate_applicability } #don't wait on applicability
-    repos.each{|repo| repo.index_content } if reindex
-
-    PulpTaskStatus.wait_for_tasks(tasks) if wait
   end
 
   # TODO: break up method
@@ -305,16 +274,19 @@ class Repository < ActiveRecord::Base
 
   def assert_deletable
     if self.environment.library? && self.content_view.default?
-      if self.custom? && self.deletable?
-        return true
-      elsif !self.custom? && self.redhat_deletable?
+      if self.deletable?
         return true
       else
-        errors.add(:base, _("Repository cannot be deleted since it has already been promoted. Using a changeset, " +
-                            "please delete the repository from existing environments before deleting it."))
+        if self.custom?
+          errors.add(:base, _("Repository cannot be deleted since it has already been promoted. Using a changeset, please delete the repository from existing environments before deleting it."))
+        else
+          errors.add(:base, _("Red Hat repositories cannot be destroyed. Try disabling them instead."))
+        end
         return false
       end
     end
+
+    return true
   end
 
 end
