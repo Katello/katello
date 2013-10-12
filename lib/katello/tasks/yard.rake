@@ -7,5 +7,3 @@ begin
 rescue LoadError
   # yard not present, skipping this definition
 end
-
-
