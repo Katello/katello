@@ -1,4 +1,4 @@
-require 'util/thread_session'
+require 'katello/util/thread_session'
 
 if Katello.config.use_pulp
 

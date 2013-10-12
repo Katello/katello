@@ -1,19 +1,19 @@
-require 'api/constraints/activation_key_constraint'
-require 'api/constraints/api_version_constraint'
-require 'api/mapper_extensions'
+require 'katello/api/constraints/activation_key_constraint'
+require 'katello/api/constraints/api_version_constraint'
+require 'katello/api/mapper_extensions'
 
 class ActionDispatch::Routing::Mapper
   include Katello::Routing::MapperExtensions
 end
 
-Src::Application.routes.draw do
+Katello.application.routes.draw do
 
   scope :katello, :as => :katello do
     scope :module => :katello do
       namespace :api do
 
         # new v2 routes that point to v2
-        scope :module => :v2, :constraints => ApiVersionConstraint.new(:version => 2) do
+        scope :module => :v2, :constraints => Katello::ApiVersionConstraint.new(:version => 2) do
 
           match '/' => 'root#resource_list'
 
@@ -34,7 +34,7 @@ Src::Application.routes.draw do
             api_resources :sync_plans, :only => [:index, :create]
             api_resources :tasks, :only => [:index, :show]
             api_resources :providers, :only => [:index], :constraints => {:organization_id => /[^\/]*/}
-            scope :constraints => RegisterWithActivationKeyContraint.new do
+            scope :constraints => Katello::RegisterWithActivationKeyContraint.new do
               match '/systems' => 'systems#activate', :via => :post
             end
             api_resources :systems, :only => [:index, :create] do
@@ -233,7 +233,7 @@ Src::Application.routes.draw do
           end
 
           api_resources :environments, :only => [:show, :update, :destroy] do
-            scope :constraints => RegisterWithActivationKeyContraint.new do
+            scope :constraints => Katello::RegisterWithActivationKeyContraint.new do
               match '/systems' => 'systems#activate', :via => :post
             end
             api_resources :systems, :only => [:create, :index] do
@@ -315,12 +315,12 @@ Src::Application.routes.draw do
         end # module v2
 
         # routes that didn't change in v2 and point to v1
-        scope :module => :v1, :constraints => ApiVersionConstraint.new(:version => 2) do
+        scope :module => :v1, :constraints => Katello::ApiVersionConstraint.new(:version => 2) do
 
           api_resources :crls, :only => [:index]
 
           # subscription-manager support
-          scope :constraints => RegisterWithActivationKeyContraint.new do
+          scope :constraints => Katello::RegisterWithActivationKeyContraint.new do
             match '/consumers' => 'systems#activate', :via => :post
           end
           match '/hypervisors' => 'systems#hypervisors_update', :via => :post

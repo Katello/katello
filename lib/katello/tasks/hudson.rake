@@ -16,4 +16,3 @@ begin
 rescue LoadError
   # ci/reporter/rake/rspec not present, skipping this definition
 end
-
