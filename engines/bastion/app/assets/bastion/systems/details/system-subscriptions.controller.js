@@ -25,8 +25,8 @@
  *   Provides the functionality for the system details action pane.
  */
 angular.module('Bastion.systems').controller('SystemSubscriptionsController',
-    ['$scope', 'i18nFilter', 'SystemSubscription', 'System', 'Nutupane',
-    function($scope, i18nFilter, SystemSubscription, System, Nutupane) {
+    ['$scope', 'i18nFilter', 'SystemSubscription', 'System', 'Nutupane', 'SystemsHelper',
+    function($scope, i18nFilter, SystemSubscription, System, Nutupane, SystemsHelper) {
         var currentSubscriptionsNutupane,
             availableSubscriptionsNutupane,
             successHandler,
@@ -134,5 +134,7 @@ angular.module('Bastion.systems').controller('SystemSubscriptionsController',
             return subscription['multi_entitlement'] &&
                 subscription.available > 1 && subscription.selected;
         };
+
+        $scope.getStatusColor = SystemsHelper.getStatusColor;
     }
 ]);
