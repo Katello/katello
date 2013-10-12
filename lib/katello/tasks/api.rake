@@ -6,17 +6,17 @@ task :api => :environment do
   all_routes.each do |route|
     reqs = route.requirements.empty? ? "" : route.requirements[:controller] + '#' + route.requirements[:action]
     if route.path.starts_with?("/api")
-        routes << {:name => route.name, 
-          :verb => route.verb == nil ? "GET" : route.verb, 
-          :path => route.path.sub("(.:format)",""), 
+        routes << {:name => route.name,
+          :verb => route.verb == nil ? "GET" : route.verb,
+          :path => route.path.sub("(.:format)",""),
           :controller => route.requirements[:controller]}
     end
   end
-  
+
   routes.sort! do |r1, r2|
     r1[:path] <=> r2[:path]
   end
-  
+
   if ENV['TEXT']
     filename = 'api.txt'
     puts "Generating #{filename}"
@@ -48,7 +48,7 @@ task :api => :environment do
     puts "Generating #{filename}"
     File.open(File.join(Rails.root, filename), "w") do |f|
       f.puts "<html><head><title>Katello API</title></head><body>"
-      f.puts "<h2>Katello API</h2>"      
+      f.puts "<h2>Katello API</h2>"
       f.puts "<h4>generated on #{Time.new()}</h4>"
       f.puts "<table border=1><tr><th>Verb</th><th>Path</th><th>Controller</th></tr>"
       routes.each do |r|

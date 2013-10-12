@@ -1,9 +1,10 @@
+require File.expand_path('../routes/api/v1', __FILE__)
 
 Rails.application.routes.draw do
 
   apipie
 
-  scope :katello, :as => :katello do
+  scope 'katello', :as => 'katello' do
     scope :module => :katello do
 
       resources :system_groups do

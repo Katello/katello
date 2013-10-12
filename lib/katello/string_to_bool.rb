@@ -10,11 +10,12 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-class AppConfigDeprecate
-  def method_missing(method, *args, &block)
-    warn "AppConfig is deprecated use Katello.config, called from: #{caller.first}"
-    Katello.config.__send__ method, *args, &block
+module Katello
+class String
+  def to_bool
+    return true if self == true || self =~ (/(true|t|yes|y|1)$/i)
+    return false if self == false || self.blank? || self =~ (/(false|f|no|n|0)$/i)
+    fail ArgumentError.new("invalid value for Boolean: \"#{self}\"")
   end
 end
-
-AppConfig = AppConfigDeprecate.new
+end
