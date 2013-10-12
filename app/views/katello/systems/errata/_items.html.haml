@@ -6,8 +6,7 @@
     %td
       %div{:class=>errata_type_class(e)}
     %td.one-line-ellipsis
-      %a{:href => content_search_errata_link(e.errata_id)}
-        = e.errata_id
+      = e.errata_id
     %td
       %span.one-line-ellipsis.grid_4{ "title" => e.title }
         = e.title
@@ -15,7 +14,9 @@
         = image_tag("icons/spinner.gif")
         %span.errata_status_text
           #{_('Installing')}
-    - if e.applicable_consumers.present?
+    %td
+      %span.tipsy-icon.info.errata-info{ "data-title" => e.title, "data-issued" => e.issued, "data-description" => e.description, "data-id" => e.errata_id, "data-packages" => e.pkglist.to_json, "data-reference_url" => (e.references[0] ? e.references[0]["href"] : "") }
+    -if defined?(errata_systems) and !errata_systems.blank?
       %td{:style => "text-align:center;"}
-        %span.tipsy-icon.systems{"data-list" => e.applicable_consumers.collect{|i| i[:name]}.to_json}
-          = e.applicable_consumers.length
+        %span.tipsy-icon.systems{"data-list" => errata_systems[e.errata_id].to_json}
+          = errata_systems[e.errata_id].length

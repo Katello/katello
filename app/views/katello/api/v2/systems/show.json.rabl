@@ -2,11 +2,21 @@ object @resource
 
 @resource ||= @object
 
-attributes :id, :uuid
-attributes :name, :description
-attributes :location
-attributes :content_view, :content_view_id
+attributes :id, :uuid, :location, :servicelevel, :content_view
+attributes :environment, :description
+attributes :name, :release, :ipv4_address
+attributes :distribution_name, :kernel, :arch, :memory
+attributes :compliance, :serviceLevel, :autoheal
+attributes :href, :system_template_id
+attributes :created, :checkin_time
+attributes :installedProducts
+# TODO needs investigation whether it is safe to remove
+attributes :facts
 attributes :type
+
+node :releaseVer do |sys|
+  sys.releaseVer.is_a?(Hash) ? sys.releaseVer[:releaseVer] : sys.releaseVer
+end
 
 child :system_groups => :systemGroups do
   attributes :id, :name
@@ -24,13 +34,6 @@ child :activation_keys => :activation_keys do
   attributes :id, :name, :description
 end
 
-# Candlepin attributes
-attributes :entitlementStatus
-attributes :servicelevel, :autoheal
-attributes :href, :release, :ipv4_address
-attributes :checkin_time, :created
-attributes :installedProducts
-
 if @resource.respond_to?(:guest) || @resource.respond_to?(:host)
   if @resource.guest
     node :host do |system|
@@ -43,12 +46,5 @@ if @resource.respond_to?(:guest) || @resource.respond_to?(:host)
   end
 end
 
-node :releaseVer do |sys|
-  sys.releaseVer.is_a?(Hash) ? sys.releaseVer[:releaseVer] : sys.releaseVer
-end
-
-# Requires another API call to fetch from Candlepin
-if params[:fields] == "full"
-  attributes :compliance
-  attributes :facts
-end
+extends 'api/v2/common/timestamps'
+extends 'api/v2/common/readonly'

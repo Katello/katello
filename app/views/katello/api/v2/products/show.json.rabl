@@ -11,7 +11,7 @@ attributes :sync_plan_id, :sync_plan_name
 attributes :gpg_key_id
 
 node :repository_count do |product|
-  product.repositories.enabled.count
+  product.repositories.count
 end
 
 node :gpg_key do |product|

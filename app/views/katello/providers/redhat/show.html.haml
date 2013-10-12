@@ -22,10 +22,18 @@
   - if @provider.products.empty?
     = (_("No Red Hat products currently exist, please import a manifest <a href='%s'>here</a> to receive Red Hat content.") % subscriptions_path).html_safe
   - else
-    - tabs = redhat_repo_tabs
+    - tabs = redhat_repo_tabs(@provider)
     #content_tabs.grid_16
+
       %ul
         - for tab in tabs
           %li
-            %a{:href=>redhat_provider_tab_providers_path({:tab => tab[:id]})}
+            %a{:href=>"##{tab[:id]}"}
               = tab[:name]
+      - for tab in tabs
+        %div{:id=>tab[:id]}
+          - if tab[:products].empty?
+            = _("No products are available containing this content type.")
+          - else
+            - reset_cycle
+            = render :partial=>"providers/redhat/repo_sets", :locals=>{:tab_id=>tab[:id], :provider=>@provider, :product_map=>tab[:products]}

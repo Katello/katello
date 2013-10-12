@@ -3,7 +3,7 @@
     %th #{_("Product")}
   %tbody
     - for product in provider.products.engineering.order(:name)
-      - orphaned = orphaned_product_ids.include?(product.id)
+      - orphaned = product.orphaned?
       - if product_map[product.id]
         - contents = product_map[product.id].sort{|p1, p2| p1.content.name <=> p2.content.name}
         %tr.product{:id=>"#{tab_id}_prod_#{product.id}", :class=>cycle(nil, 'alt')}
