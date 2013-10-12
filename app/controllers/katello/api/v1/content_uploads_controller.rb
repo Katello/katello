@@ -52,17 +52,15 @@ class Api::V1::ContentUploadsController < Api::V1::ApiController
     render :nothing => true
   end
 
-  api :POST, "/repositories/:repo_id/content_uploads/import_into_repo", "Import into a repository"
+  api :POST, "/repositories/:repo_id/content_uploads/:id/import_into_repo", "Import into a repository"
   param :repo_id, :identifier, :required => true, :desc => "repository id"
-  param :uploads, Array, :required => true, :desc => "array of uploads to import"
+  param :id, :identifier, :required => true, :desc => "upload request id"
+  param :unit_key, Hash, :required => true, :desc => "unique identifier for the new unit"
+  param :unit_metadata, Hash, :required => false, :desc => "extra metadata describing the unit"
   def import_into_repo
-    params[:uploads].each do |upload|
-      Katello.pulp_server.resources.content.import_into_repo(@repo.pulp_id, @repo.unit_type_id,
-        upload[:id], upload[:unit_key], {:unit_metadata => upload[:metadata]})
-    end
-
-    unit_keys = params[:uploads].map { |upload| upload[:unit_key] }
-    @repo.trigger_contents_changed(:wait => false, :index_units => unit_keys, :reindex => false)
+    Katello.pulp_server.resources.content.import_into_repo(@repo.pulp_id, @repo.unit_type_id,
+      params[:id], params[:unit_key], {:unit_metadata => params[:unit_metadata]})
+    @repo.update_data_after_upload(params[:unit_key])
     render :nothing => true
   end
 

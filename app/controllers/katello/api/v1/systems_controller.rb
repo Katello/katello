@@ -27,9 +27,9 @@ class Api::V1::SystemsController < Api::V1::ApiController
                                         :add_system_groups, :remove_system_groups, :refresh_subscriptions, :checkin,
                                         :subscription_status]
   before_filter :find_content_view, :only => [:create, :update]
+  before_filter :authorize, :except => :activate
 
-  before_filter :authorize, :except => [:activate, :upload_package_profile]
-  skip_before_filter :require_user, :only => [:activate, :upload_package_profile]
+  skip_before_filter :require_user, :only => [:activate]
 
   def organization_id_keys
     [:organization_id, :owner]
@@ -214,7 +214,7 @@ Schedules the consumer identity certificate regeneration
     filters << {:terms => {:uuid => [params['uuid']] }} if params['uuid']
 
     options = {
-        :filters       => filters,
+        :filters        => filters,
         :load_records? => true
     }
     options[:sort_by] = params[:sort_by] if params[:sort_by]
@@ -226,7 +226,6 @@ Schedules the consumer identity certificate regeneration
 
     items = Glue::ElasticSearch::Items.new(System)
     systems, total_count = items.retrieve(query_string, params[:offset], options)
-    System.prepopulate!(systems)
 
     if params[:paged]
       systems = {
@@ -297,24 +296,11 @@ A hint for choosing the right value for the releaseVer param
   api :PUT, "/consumers/:id/profile", "Update installed packages"
   param :id, String, :desc => "UUID of the system", :required => true
   def upload_package_profile
-    #BZ 1020550
-    # Subscription manager will not send the client cert and will exit with non-zero exit code
-    # if we return a 401, so manually try to auth, and return nothing if auth fails
-    allowed = false
-    catch(:warden) do
-      require_user
-      User.current = current_user
-      allowed = rules[:upload_package_profile].call
-    end
-
-    if allowed && Katello.config.katello?
+    if Katello.config.katello?
       raise HttpErrors::BadRequest, _("No package profile received for %s") % @system.name unless params.key?(:_json)
       @system.upload_package_profile(params[:_json])
-      respond_for_update
-    else
-      Rails.logger.warn(_("System %s not allowed to upload package profile.") % params[:id])
-      respond_for_update :resource => {}
     end
+    respond_for_update
   end
 
   # TODO: break this mehtod up
@@ -394,12 +380,20 @@ A hint for choosing the right value for the releaseVer param
   param :system_name, String, :desc => "Name of the system"
   param :system_uuid, String, :desc => "UUID of the system"
   def tasks
+    query = TaskStatus.joins(:system).where(:"task_statuses.organization_id" => @organization.id)
+    if @environment
+      query = query.where(:"systems.environment_id" => @environment.id)
+    end
     if params[:system_name]
-      @tasks = System.where(:name => params[:system_name]).first.tasks
+      query = query.where("systems.name" => params[:system_name])
     elsif params[:system_uuid]
-      @tasks = System.where(:uuid => params[:system_uuid]).first.tasks
+      query = query.where("systems.uuid" => params[:system_uuid])
     end
 
+    task_ids = query.select('task_statuses.id')
+    TaskStatus.refresh(task_ids)
+
+    @tasks = TaskStatus.where(:id => task_ids)
     respond_for_index :collection => @tasks
   end
 
@@ -443,7 +437,7 @@ This information is then used for computing the errata available for the system.
     result[:processed_ids]  = processed_ids
     result[:error_ids]      = error_ids
     result[:unknown_labels] = unknown_paths
-    if error_ids.present? || unknown_paths.present?
+    if error_ids.count > 0 || unknown_paths.count > 0
       result[:result] = "error"
     else
       result[:result] = "ok"

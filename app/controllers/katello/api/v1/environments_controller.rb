@@ -46,17 +46,11 @@ class Api::V1::EnvironmentsController < Api::V1::ApiController
   respond_to :json
   before_filter :find_organization, :only => [:index, :rhsm_index, :create]
   before_filter :find_environment, :only => [:show, :update, :destroy, :repositories, :releases]
-  before_filter :find_content_view, :only => [:repositories]
   before_filter :authorize
 
   def rules
     manage_rule = lambda { @organization.environments_manageable? }
     view_rule   = lambda { @organization.readable? }
-
-    repositories_rule = lambda do
-      view_readable = @content_view ? @content_view.readable? : true
-      @organization.readable? && view_readable
-    end
 
     index_rule = lambda { true }
     # Note: index_rule is always true.
@@ -71,7 +65,7 @@ class Api::V1::EnvironmentsController < Api::V1::ApiController
         :create       => manage_rule,
         :update       => manage_rule,
         :destroy      => manage_rule,
-        :repositories => repositories_rule,
+        :repositories => view_rule,
         :releases     => view_rule
     }
   end
@@ -189,16 +183,8 @@ class Api::V1::EnvironmentsController < Api::V1::ApiController
   param :id, :identifier, :desc => "environment identifier"
   param :organization_id, :identifier, :desc => "organization identifier"
   param :include_disabled, :bool, :desc => "set to true if you want to see also disabled repositories"
-  param :content_view_id, :identifier, :desc => "content view identifier", :required => false
   def repositories
-    if !@environment.library? && @content_view.nil?
-      raise HttpErrors::BadRequest,
-            _("Cannot retrieve repos from non-library environment '%s' without a content view.") % @environment.name
-    end
-
-    @repositories = @environment.products.all_readable(@organization).flat_map do |p|
-      p.repos(@environment, query_params[:include_disabled], @content_view)
-    end
+    @repositories = @environment.products.all_readable(@organization).collect { |p| p.repos(@environment, query_params[:include_disabled]) }.flatten
     respond_for_index :collection => @repositories
   end
 
@@ -235,10 +221,6 @@ class Api::V1::EnvironmentsController < Api::V1::ApiController
       end
     end
     environments
-  end
-
-  def find_content_view
-    @content_view = ContentView.find_by_id(params[:content_view_id])
   end
 
 end

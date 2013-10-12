@@ -17,7 +17,7 @@ class SystemsController < ApplicationController
   include SystemsHelper
   include ConsumersControllerLogic
 
-  before_filter :find_system, :except => [:index, :all, :items, :environments, :new, :create, :bulk_destroy,
+  before_filter :find_system, :except => [:index, :items, :environments, :new, :create, :bulk_destroy,
                                           :bulk_content_install, :bulk_content_update, :bulk_content_remove,
                                           :bulk_errata_install, :bulk_add_system_group, :bulk_remove_system_group,
                                           :auto_complete]
@@ -28,7 +28,7 @@ class SystemsController < ApplicationController
   before_filter :find_environment_in_system, :only => [:create, :update]
   before_filter :authorize
 
-  before_filter :setup_options, :only => [:index, :all, :items, :create, :environments]
+  before_filter :setup_options, :only => [:index, :items, :create, :environments]
 
   # two pane columns and mapping for sortable fields
   COLUMNS = {'name' => 'name_sort', 'lastCheckin' => 'lastCheckin'}
@@ -75,7 +75,6 @@ class SystemsController < ApplicationController
 
     {
       :index => any_readable,
-      :all => any_readable,
       :create => register_system,
       :new => register_system,
       :items => items_test,
@@ -142,10 +141,6 @@ class SystemsController < ApplicationController
     else
       render 'bastion/layouts/application', :layout => false
     end
-  end
-
-  def all
-    redirect_to action: 'index', :anchor => '/systems'
   end
 
   def environments

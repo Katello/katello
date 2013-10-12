@@ -58,7 +58,6 @@ class Api::V2::ProductsController < Api::V2::ApiController
     options[:filters] = [
       {:terms => {:id => ids}}
     ]
-    options[:filters] << {:term => {:enabled => params[:enabled]}} if params.key?(:enabled)
 
     @search_service.model = Product
     products, total_count = @search_service.retrieve(params[:search], params[:offset], options)

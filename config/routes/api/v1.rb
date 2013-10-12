@@ -1,5 +1,5 @@
-require 'katello/api/constraints/activation_key_constraint'
-require 'katello/api/constraints/api_version_constraint'
+require 'api/constraints/activation_key_constraint'
+require 'api/constraints/api_version_constraint'
 
 Rails.application.routes.draw do
 
@@ -7,7 +7,7 @@ Rails.application.routes.draw do
     scope :module => :katello do
       namespace :api do
 
-        scope :module => :v1, :constraints => Katello::ApiVersionConstraint.new(:version => 1, :default => true) do
+        scope :module => :v1, :constraints => ApiVersionConstraint.new(:version => 1, :default => true) do
 
           match '/' => 'root#resource_list'
 
@@ -60,7 +60,7 @@ Rails.application.routes.draw do
             resources :tasks, :only => [:index]
             resources :providers, :only => [:index], :constraints => {:organization_id => /[^\/]*/}
 
-            scope :constraints => Katello::RegisterWithActivationKeyContraint.new do
+            scope :constraints => RegisterWithActivationKeyContraint.new do
               match '/systems' => 'systems#activate', :via => :post
             end
             resources :systems, :only => [:index, :create] do

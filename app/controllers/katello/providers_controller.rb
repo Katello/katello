@@ -15,7 +15,7 @@ module Katello
 class ProvidersController < ApplicationController
   include AutoCompleteSearch
 
-  before_filter :find_rh_provider, :only => [:redhat_provider, :redhat_provider_tab]
+  before_filter :find_rh_provider, :only => [:redhat_provider]
 
   before_filter :find_provider, :only => [:products_repos, :show, :edit, :update, :destroy, :manifest_progress,
                                           :repo_discovery, :discovered_repos, :discover, :cancel_discovery,
@@ -49,7 +49,6 @@ class ProvidersController < ApplicationController
       :products_repos => read_test,
       :manifest_progress => edit_test,
       :redhat_provider => read_test,
-      :redhat_provider_tab => read_test,
       :repo_discovery => edit_test,
       :new_discovered_repos => edit_test,
       :cancel_discovery => edit_test,
@@ -91,24 +90,7 @@ class ProvidersController < ApplicationController
   end
 
   def redhat_provider
-
     render :template => "providers/redhat/show"
-  end
-
-  def redhat_provider_tab
-    #preload orphaned product information, as it is very slow per product
-    subscription_product_ids = []
-
-    subscriptions = Resources::Candlepin::Subscription.get_for_owner(current_organization.label)
-    subscriptions.each do |sub|
-      subscription_product_ids << sub["product"]["id"] if sub["product"]["id"]
-      subscription_product_ids += sub["providedProducts"].map{|p| p["id"]}
-    end
-
-    orphaned_product_ids = current_organization.redhat_provider.products.engineering.
-        where("cp_id not in (?)", subscription_product_ids).pluck(:id)
-
-    render :partial => "providers/redhat/tab", :locals => {:tab_id => params[:tab], :orphaned_product_ids => orphaned_product_ids}
   end
 
   def items

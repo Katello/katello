@@ -63,7 +63,6 @@ class Api::V1::SystemPackagesController < Api::V1::ApiController
   param :packages, Array, :desc => "list of packages names"
   def update
     if params[:packages]
-      params[:packages] = [] if params[:packages] == 'all'
       packages = validate_package_list_format(params[:packages])
       task     = @system.update_packages(packages)
       respond_for_async :resource => task

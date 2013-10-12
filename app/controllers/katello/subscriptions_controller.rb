@@ -74,11 +74,11 @@ class SubscriptionsController < ApplicationController
     filters = []
 
     # Limit subscriptions to current org and Red Hat provider
-    filters << {:term => {:org => current_organization.label}}
-    filters << {:term => {:provider_id => current_organization.redhat_provider.id}}
+    filters << {:org => [current_organization.label]}
+    filters << {:provider_id => [current_organization.redhat_provider.id]}
 
     options = {
-        :filters => filters,
+        :filter => filters,
         :load_records? => false,
         :default_field => :name
     }
