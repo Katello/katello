@@ -902,6 +902,3 @@ KT.widget.browse_box = function(selector_id, widgets, mapping, initial_values){
         get_event: function(){return event_name;}
     };
 };
-
-
-

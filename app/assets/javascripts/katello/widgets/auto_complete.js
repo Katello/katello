@@ -193,5 +193,3 @@ KT.auto_complete_box = function(params) {
         reset_input: reset_input
     };
 };
-
-
