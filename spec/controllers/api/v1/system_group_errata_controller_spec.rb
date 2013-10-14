@@ -53,9 +53,10 @@ describe Api::V1::SystemGroupErrataController, :katello => true do
         errata.errata_id = "RHSA-2011-01-#{num}"
         errata.type      = types[rand(3)]
         errata.release   = "Red Hat Enterprise Linux 6.0"
+        errata.applicable_consumers = []
         to_ret << errata
       }
-      System.any_instance.stub(:errata).and_return(to_ret)
+      SystemGroup.any_instance.stub(:errata).and_return(to_ret)
     end
 
     let(:action) { :index }

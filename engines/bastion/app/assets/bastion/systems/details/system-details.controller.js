@@ -28,12 +28,19 @@ angular.module('Bastion.systems').controller('SystemDetailsController',
     ['$scope', '$state', '$q', 'System', 'Organization',
     function($scope, $state, $q, System, Organization) {
 
+        if ($scope.system) {
+            $scope.panel = {loading: false};
+        } else {
+            $scope.panel = {loading: true};
+        }
+
         $scope.system = System.get({id: $scope.$stateParams.systemId}, function(system) {
             $scope.$watch("table.rows.length > 0", function() {
                 $scope.table.replaceRow(system);
             });
 
             $scope.$broadcast('system.loaded', system);
+            $scope.panel.loading = false;
         });
 
         $scope.save = function(system) {

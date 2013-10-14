@@ -59,7 +59,7 @@ class Api::V1::ContentUploadsController < Api::V1::ApiController
   def import_into_repo
     Katello.pulp_server.resources.content.import_into_repo(@repo.pulp_id, @repo.unit_type_id,
       params[:id], params[:unit_key], {:unit_metadata => params[:unit_metadata]})
-    @repo.update_data_after_upload(params[:unit_key])
+    @repo.trigger_contents_changed(:wait => false, :index_units => [params[:unit_key]], :reindex => false)
     render :nothing => true
   end
 

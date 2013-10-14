@@ -53,10 +53,11 @@ describe SystemGroupErrataController, :katello => true do
             errata.id        = "8a604f44-6877-4c81-b6f9-#{num}"
             errata.errata_id = "RHSA-2011-01-#{num}"
             errata.type      = types[rand(3)]
+            errata.applicable_consumers = []
             errata.release   = "Red Hat Enterprise Linux 6.0"
             to_ret << errata
           }
-          System.any_instance.stub(:errata).and_return(to_ret)
+          Errata.stub(:applicable_for_consumers).and_return(to_ret)
         end
 
         describe 'on initial load' do
@@ -95,14 +96,7 @@ describe SystemGroupErrataController, :katello => true do
           end
         end
 
-        describe 'with a bad filter type' do
-          it "should be unsuccessful" do
-            get :items, :system_group_id => @group.id, :offset => 5, :filter_type => 'Fake Type'
-            response.should_not be_success
-          end
-        end
       end
-
     end
   end
 end

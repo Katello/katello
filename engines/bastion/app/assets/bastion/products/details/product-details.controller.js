@@ -25,7 +25,11 @@
 angular.module('Bastion.products').controller('ProductDetailsController',
     ['$scope', '$state', 'Product', function($scope, $state, Product) {
 
-        $scope.panel = $scope.panel || {loading: false};
+        if ($scope.product) {
+            $scope.panel = {loading: false};
+        } else {
+            $scope.panel = {loading: true};
+        }
 
         $scope.product = Product.get({id: $scope.$stateParams.productId}, function() {
             $scope.panel.loading = false;
