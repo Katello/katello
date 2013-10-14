@@ -1,0 +1,20 @@
+@import "katello/katello_base";
+
+
+#generic {
+  #content {
+    background-position: top center;
+  }
+  .details {
+    cursor: pointer;
+    cursor: hand;
+    @include border-radius(5px);
+
+    &:hover { background: #F2F2F2; }
+
+    .details-icon {
+      background: $info_icon;
+      &:hover { background: $info_hover_icon; }
+    }
+  }
+}

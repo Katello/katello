@@ -1,0 +1,45 @@
+@import "compass";
+@import "katello/katello_base";
+
+
+.errata_icon {
+  margin-left: 6px;
+  float: left;
+  width: 16px;
+  height: 16px;
+  margin-top: 0px;
+}
+.security_icon {
+  background: $shield_icon_black;
+  @extend .errata_icon;
+}
+.enhancement_icon {
+  background: $plus_icon_black;
+  @extend .errata_icon;
+}
+.bugzilla_icon {
+  background: $bug_icon_black;
+  @extend .errata_icon;
+}
+.details-icon {
+  background: $details_icon_grey;
+  @extend .errata_icon;
+  float: right;
+  &:hover { background: $details_icon_black; }
+}
+.details-icon-hover {
+  background: $details_icon_black;
+  @extend .errata_icon;
+}
+.details-icon-nohover {
+  background: $details_icon_grey;
+  @extend .errata_icon;
+}
+
+.gears_icon {
+  background: $gears_icon_grey;
+  @extend .errata_icon;
+  &:hover{
+    background: $gears_icon_black;
+  }
+}
