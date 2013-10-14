@@ -12,18 +12,28 @@
 
 class Api::V2::SystemErrataController < Api::V2::ApiController
 
-  before_filter :find_system, :only => [:apply]
+  before_filter :find_system
   before_filter :authorize
 
   def rules
     {
-      :apply => lambda { @system.editable? || User.consumer? }
+      :apply => lambda { @system.editable? || User.consumer? },
+      :show => lambda { @system.readable? }
     }
   end
 
+  api :PUT, "/systems/:system_id/errata/", "Schedule errata for installation"
+  param :errata_ids, Array,  :desc => "List of Errata ids to install"
   def apply
     task = @system.install_errata(params[:errata_ids])
     respond_for_show :template => 'system_task', :resource => task
+  end
+
+  api :GET, "/systems/:system_id/errata/:id", "Retrieve a single errata for a system"
+  param :id, String, :desc => "Errata id of the erratum (RHSA-2012:108)", :required => true
+  def show
+    errata = Errata.find_by_errata_id(params[:id])
+    respond_for_show :resource => errata
   end
 
   private

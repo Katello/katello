@@ -97,9 +97,9 @@ class NavigationMenusTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def test_changeset_management_menu
-    menu = Navigation::Menus::ChangesetManagement.new(@acme_corporation)
+    menu = Navigation::Menus::Changesets.new(@acme_corporation)
 
-    assert_equal  _('Changeset Management'), menu.display
+    assert_equal  _('Changesets'), menu.display
     assert_equal  2, menu.items.length
     assert_equal  'flyout', menu.type
     assert        menu.accessible?

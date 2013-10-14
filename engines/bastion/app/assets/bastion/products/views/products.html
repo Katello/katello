@@ -43,16 +43,16 @@
   </div>
 
   <div nutupane-table ng-class="{'table-reduced': $root.$state.current.collapsed}">
+    <div class="loading-mask icon-3x" ng-show="table.working" ng-class="{ 'loading-mask-collapsed icon-2x': $root.$state.current.collapsed }">
+      <i class="icon-spinner icon-spin"></i>
+      <span ng-hide="$root.$state.current.collapsed" translate>Loading...</span>
+    </div>
+
     <div alch-container-scroll control-width="table" alch-infinite-scroll="table.nextPage()">
       <div ui-view="table"></div>
     </div>
   </div>
-
-  <div class="loading-mask icon-3x" ng-show="panel.loading">
-    <i class="icon-spinner icon-spin"></i>
-    {{ "Loading..." | translate }}
-  </div>
-
+  
   <span class="action-panel" ui-view="action-panel"></span>
 
 </section>

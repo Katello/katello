@@ -29,10 +29,6 @@ module Glue::Pulp::Consumer
                                                          fetch_package_profile["profile"].
                                                            collect{|package| Glue::Pulp::SimplePackage.new(package)}
                                                        end)
-      lazy_accessor :errata, :initializer => (lambda do |s|
-                                                Katello.pulp_server.extensions.consumer.applicable_errata(uuid).
-                                                  map{|k, v| v.values}.flatten.map{|e| ::Errata.new(e[:details])}
-                                              end)
     end
   end
 
@@ -52,7 +48,9 @@ module Glue::Pulp::Consumer
     end
 
     def enable_yum_repos(repo_ids)
-      enable_repos(Runcible::Models::YumDistributor.type_id, bound_yum_repos, repo_ids, {:notify_agent => false})
+      to_return = enable_repos(Runcible::Models::YumDistributor.type_id, bound_yum_repos, repo_ids, {:notify_agent => false})
+      self.generate_applicability
+      to_return
     end
 
     def enable_node_repos(repo_ids)
@@ -120,6 +118,34 @@ module Glue::Pulp::Consumer
       end
     end
 
+    def errata
+      ids = errata_ids
+      if ids.empty?
+        []
+      else
+        errata = ::Errata.search("", :start => 0, :page_size => errata_ids.size,
+                                     :filters => {:id => ids}, :fields => ::Errata::SHORT_FIELDS)
+        errata.collect{|e| ::Errata.new_from_search(e.as_json)}
+      end
+    end
+
+    def errata_ids
+      response = Katello.pulp_server.extensions.consumer.applicable_errata([self.uuid])
+      return [] if response.empty?
+      response[0]['applicability']['erratum'] || []
+    end
+
+    def generate_applicability
+      #can't use consumer users until https://bugzilla.redhat.com/show_bug.cgi?id=1015583 is resolved
+      original_user = User.current
+      User.current = User.hidden.first if original_user.is_a?(CpConsumerUser)
+      Rails.logger.debug "Regenerating applicability for consumer #{self.name}"
+      task = Katello.pulp_server.extensions.consumer.regenerate_applicability_by_ids([self.uuid])
+      PulpTaskStatus.using_pulp_task(task)
+    ensure
+      User.current = original_user
+    end
+
     def del_pulp_consumer
       Rails.logger.debug "Deleting consumer in pulp: #{self.name}"
       Katello.pulp_server.extensions.consumer.delete(self.uuid)
@@ -159,6 +185,7 @@ module Glue::Pulp::Consumer
     def upload_package_profile(profile)
       Rails.logger.debug "Uploading package profile for consumer #{self.name}"
       Katello.pulp_server.extensions.consumer.upload_profile(self.uuid, 'rpm', profile)
+      self.generate_applicability
     rescue => e
       Rails.logger.error "Failed to upload package profile to pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
       raise e

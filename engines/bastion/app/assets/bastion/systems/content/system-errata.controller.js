@@ -45,7 +45,7 @@ angular.module('Bastion.systems').controller('SystemErrataController',
         };
 
         $scope.errataTable.transitionToErratum = function(erratum) {
-            $scope.erratum = erratum;
+            $scope.erratum = SystemErratum.get({'id': $scope.$stateParams.systemId, 'errata_id': erratum.errata_id});
             $scope.transitionTo('systems.details.errata.details', {errataId: erratum.errata_id});
         };
 

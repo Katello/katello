@@ -9,24 +9,20 @@
  * NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
  * have received a copy of GPLv2 along with this software; if not, see
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
-*/
+ **/
 
-/**
- * @ngdoc object
- * @name  Bastion.products.controller:NewProductController
- *
- * @requires $scope
- * @requires Product
- *
- * @description
- *   Controls the creation of an empty Product object for use by sub-controllers.
- */
-angular.module('Bastion.products').controller('NewProductController',
-    ['$scope', 'Product',
-    function($scope, Product) {
+describe('Controller: SystemsController', function() {
+    var SystemsHelper;
 
-        $scope.product = new Product();
-        $scope.panel = {loading: true};
+    beforeEach(module('Bastion.systems'));
 
-    }]
-);
+    beforeEach(inject(function($injector) {
+        SystemsHelper = $injector.get('SystemsHelper');
+    }));
+
+    it("provides a way to get the status color for the system.", function() {
+        expect(SystemsHelper.getStatusColor("valid")).toBe("green");
+        expect(SystemsHelper.getStatusColor("partial")).toBe("yellow");
+        expect(SystemsHelper.getStatusColor("error")).toBe("red");
+    });
+});

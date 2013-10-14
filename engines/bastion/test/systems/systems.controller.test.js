@@ -50,12 +50,6 @@ describe('Controller: SystemsController', function() {
         });
     }));
 
-    it("provides a way to get the status color for the system.", function() {
-        expect($scope.table.getStatusColor("valid")).toBe("green");
-        expect($scope.table.getStatusColor("partial")).toBe("yellow");
-        expect($scope.table.getStatusColor("error")).toBe("red");
-    });
-
     it("provides a way to open the details panel.", function() {
         spyOn($scope, "transitionTo");
         $scope.table.openDetails({ uuid: 2 });

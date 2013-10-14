@@ -12,21 +12,24 @@
 */
 
 /**
- * @ngdoc object
- * @name  Bastion.products.controller:NewProductController
- *
- * @requires $scope
- * @requires Product
+ * @ngdoc service
+ * @name  Bastion.systems.service:SystemsHelper
  *
  * @description
- *   Controls the creation of an empty Product object for use by sub-controllers.
+ *   Helper service that contains functionality common amongst systems.
  */
-angular.module('Bastion.products').controller('NewProductController',
-    ['$scope', 'Product',
-    function($scope, Product) {
+angular.module('Bastion.systems').service('SystemsHelper',
+    function() {
 
-        $scope.product = new Product();
-        $scope.panel = {loading: true};
+        this.getStatusColor = function(status) {
+            var colors = {
+                    'valid': 'green',
+                    'partial': 'yellow',
+                    'invalid': 'red'
+                };
 
-    }]
+            return colors[status] ? colors[status] : 'red';
+        };
+
+    }
 );

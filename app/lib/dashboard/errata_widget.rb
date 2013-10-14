@@ -10,17 +10,19 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-module Navigation
-  module Items
-    class Changesets < Navigation::Item
+class Dashboard::ErrataWidget < Dashboard::Widget
 
-      def initialize(organization)
-        @key           = :changesets
-        @display       = _("Changesets")
-        @authorization = lambda{ organization && KTEnvironment.any_viewable_for_promotions?(organization) }
-        @url           = promotions_path
-      end
-
-    end
+  def accessible?
+    Katello.config.katello? && current_organization &&
+        System.any_readable?(current_organization)
   end
+
+  def title
+    _("Errata Overview")
+  end
+
+  def content_path
+    errata_dashboard_index_path
+  end
+
 end
