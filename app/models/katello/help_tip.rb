@@ -12,7 +12,7 @@
 
 module Katello
 class HelpTip < ActiveRecord::Base
-  belongs_to :user, :inverse_of => :help_tips
+  belongs_to :user, :inverse_of => :help_tips, :class_name => "::User"
   validates :key, :length => { :maximum => 255 }
 end
 end

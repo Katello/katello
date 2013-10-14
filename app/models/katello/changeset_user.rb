@@ -14,7 +14,7 @@ module Katello
 class ChangesetUser < ActiveRecord::Base
 
   belongs_to :changeset, :inverse_of => :users
-  belongs_to :user, :inverse_of => :changeset_users
+  belongs_to :user, :inverse_of => :changeset_users, :class_name => "::User"
 
 end
 end

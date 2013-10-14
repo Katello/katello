@@ -13,7 +13,7 @@
 module Katello
 class UserNotice < ActiveRecord::Base
 
-  belongs_to :user, :inverse_of => :user_notices
+  belongs_to :user, :inverse_of => :user_notices, :class_name => "::User"
   # FIXME, this will delete notice also for other users
   belongs_to :notice, :dependent => :destroy, :inverse_of => :user_notices
 

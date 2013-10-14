@@ -14,7 +14,7 @@ module Katello
 class SearchFavorite < ActiveRecord::Base
   include SearchHelper
 
-  belongs_to :user, :inverse_of => :search_favorites
+  belongs_to :user, :inverse_of => :search_favorites, :class_name => "::User"
   validate :max_favorites
   validates :params, :length => { :maximum => 255 }
   validates :path, :length => { :maximum => 255 }

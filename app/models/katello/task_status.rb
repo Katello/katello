@@ -30,7 +30,7 @@ class TaskStatus < ActiveRecord::Base
   include Glue::ElasticSearch::TaskStatus if Katello.config.use_elasticsearch
 
   belongs_to :organization, :inverse_of => :task_statuses
-  belongs_to :user, :inverse_of => :task_statuses
+  belongs_to :user, :inverse_of => :task_statuses, :class_name => "::User"
 
   belongs_to :task_owner, :polymorphic => true
   # adding belongs_to :system allows us to perform joins with the owning system, if there is one

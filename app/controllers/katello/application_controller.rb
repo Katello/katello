@@ -14,7 +14,7 @@ require 'cgi'
 require 'base64'
 
 module Katello
-class ApplicationController < ActionController::Base
+class ApplicationController < ::ApplicationController
   layout 'katello'
   include Notifications::ControllerHelper
   include Profiling
@@ -93,8 +93,7 @@ class ApplicationController < ActionController::Base
   rescue_from HttpErrors::UnprocessableEntity do |exception|
     execute_rescue(exception) { |ex| render_bad_parameters(ex) }
   end
-  # support for session (thread-local) variables must be the last filter (except authorize)in this class
-  include Util::ThreadSession::Controller
+
   include AuthorizationRules
   include Menu
 
@@ -315,10 +314,6 @@ class ApplicationController < ActionController::Base
       redirect_to dashboard_index_url
       return false
     end
-  end
-
-  def current_user
-    user
   end
 
   # render 403 page

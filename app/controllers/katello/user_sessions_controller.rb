@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class UserSessionsController < ApplicationController
+class UserSessionsController < Katello::ApplicationController
   before_filter :require_no_user, :only => [:new, :create]
   before_filter :require_user, :only => [:destroy, :set_org]
   skip_before_filter :require_org
