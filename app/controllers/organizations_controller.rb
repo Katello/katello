@@ -127,7 +127,7 @@ class OrganizationsController < ApplicationController
 
   ensure
     if @organization && @organization.persisted? && @new_env && @new_env.new_record?
-      @organization.destroy
+      OrganizationDestroyer.destroy(@organization, :async => false, :notify => false, :user => User.hidden.first)
     end
   end
 
