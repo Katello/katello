@@ -8,7 +8,7 @@ module Katello
     end
 
     initializer "katello.load_app_instance_data" do |app|
-      #app.config.paths['db/migrate'] += Katello::Engine.paths['db/migrate'].existent
+      app.config.paths['db/migrate'] += Katello::Engine.paths['db/migrate'].existent
       app.config.autoload_paths += Dir["#{config.root}/app/lib)"]
     end
 
