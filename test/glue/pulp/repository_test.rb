@@ -319,6 +319,16 @@ class GluePulpRepoContentsTest < GluePulpRepoTestBase
     refute_empty categories.select { |category| category['name'] == 'all' }
   end
 
+  def test_trigger_contents_changed_index_units
+    Katello.config.stubs(:use_elasticsearch).returns(:true)
+    pkg = @@fedora_17_x86_64.find_packages_by_nvre('elephant', '0.3', '0.8', '0')[0]
+    @@fedora_17_x86_64.expects(:generate_metadata).returns([])
+    Package.expects(:index_packages).with([pkg['_id']])
+
+    unit = {:checksumtype => pkg['checksumtype'], :checksum => pkg['checksum'] }
+    @@fedora_17_x86_64.trigger_contents_changed(:publish => true, :reindex => false, :index_units => [unit])
+  end
+
 end
 
 
