@@ -13,6 +13,6 @@
 module Katello
 class RolesUser < ActiveRecord::Base
   belongs_to :role
-  belongs_to :user
+  belongs_to :user, :class_name => "::User"
 end
 end
