@@ -12,7 +12,7 @@
 #
 module Katello
 class SearchHistory < ActiveRecord::Base
-  belongs_to :user
+  belongs_to :user, :class_name => "::User"
   validates :params, :length => { :maximum => 255 }
   validates :path, :length => { :maximum => 255 }
 end

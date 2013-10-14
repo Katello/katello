@@ -15,7 +15,7 @@ class Notice < ActiveRecord::Base
   include Glue::ElasticSearch::Notice if Katello.config.use_elasticsearch
 
   has_many :user_notices, :dependent => :destroy
-  has_many :users, :through => :user_notices
+  has_many :users, :through => :user_notices, :class_name => "::User"
   belongs_to :organization
 
   TYPES = [:message, :warning, :success, :error]

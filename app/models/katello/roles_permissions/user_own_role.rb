@@ -12,7 +12,7 @@
 
 module Katello
 module RolesPermissions::UserOwnRole
-  include  ::ProxyAssociationOwner
+  include ProxyAssociationOwner
 
   def find_own_role
     where(:type => 'UserOwnRole').first
@@ -25,10 +25,10 @@ module RolesPermissions::UserOwnRole
     role_name = ""
     loop do
       role_name = "#{auser.username}_#{Password.generate_random_string(20)}"
-      break unless ::UserOwnRole.exists?(:name => role_name)
+      break unless Katello::UserOwnRole.exists?(:name => role_name)
     end
 
-    proxy_association_owner.roles << (role = ::UserOwnRole.new(:name => role_name))
+    proxy_association_owner.roles << (role = Katello::UserOwnRole.new(:name => role_name))
     role
   end
 
