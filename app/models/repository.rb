@@ -218,25 +218,30 @@ class Repository < ActiveRecord::Base
 
   def trigger_contents_changed(options)
     Repository.trigger_contents_changed([self], options)
+    index_units = options.fetch(:index_units, nil) if Katello.config.use_elasticsearch
+
+    if index_units
+      ids = index_units.collect do |unit|
+        found = unit_search(:type_ids => [unit_type_id],
+                            :filters => {:unit => unit})
+        found[0].try(:[], :unit_id)
+      end
+
+      ids.compact!
+      puppet? ? PuppetModule.index_puppet_modules(ids) : Package.index_packages(ids)
+    end
+
   end
 
   def self.trigger_contents_changed(repos, options)
     wait = options.fetch(:wait, false)
     reindex = options.fetch(:reindex, true) && Katello.config.use_elasticsearch
-    index_units = options.fetch(:index_units, nil) && Katello.config.use_elasticsearch
     publish = options.fetch(:publish, true) && Katello.config.use_pulp
 
     tasks = []
     tasks += repos.flat_map{|repo| repo.generate_metadata} if publish
     repos.each{|repo| repo.generate_applicability } #don't wait on applicability
     repos.each{|repo| repo.index_content } if reindex
-
-    if index_units
-      results = unit_search(:type_ids => [unit_type_id],
-                            :filters => {:unit => index_units})
-      ids = results.map { |result| result[:unit_id] }
-      puppet? ? PuppetModule.index_puppet_modules(ids) : Package.index_packages(ids)
-    end
 
     PulpTaskStatus.wait_for_tasks(tasks) if wait
   end
