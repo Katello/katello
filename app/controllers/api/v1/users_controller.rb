@@ -41,8 +41,8 @@ class Api::V1::UsersController < Api::V1::ApiController
   end
 
   def param_rules
-    { :create => [:username, :password, :email, :disabled, :default_environment_id, :default_locale],
-      :update => { :user => [:password, :email, :disabled, :default_environment_id, :default_locale] }
+    { :create => [:username, :password, :email, :disabled, :default_organization_id, :default_locale],
+      :update => { :user => [:password, :email, :disabled, :default_organization_id, :default_locale] }
     }
   end
 
@@ -76,8 +76,10 @@ class Api::V1::UsersController < Api::V1::ApiController
                          :email    => params[:email],
                          :disabled => params[:disabled])
 
-    if params[:default_environment_id]
-      @user.default_environment = KTEnvironment.find(params[:default_environment_id])
+    if params[:default_organization_id]
+      @organization = Organization.where(:label => params[:default_organization_id]).first
+      @user.default_environment = @organization.library
+      @user.default_org = @organization.id
       @user.save!
     end
 
@@ -93,13 +95,15 @@ class Api::V1::UsersController < Api::V1::ApiController
   api :PUT, "/users/:id", "Update an user"
   param_group :user
   def update
-    user_params = params[:user].reject { |k, _| k == 'default_environment_id' }
+    user_params = params[:user].reject { |k, _| k == 'default_organization_id' }
 
     @user.update_attributes!(user_params)
 
-    if params[:user].key?(:default_environment_id)
-      if !params[:user][:default_environment_id].blank?
-        @user.default_environment = KTEnvironment.find(params[:user][:default_environment_id])
+    if params[:user].key?(:default_organization_id)
+      if params[:user][:default_organization_id].present?
+        @organization = Organization.where(:label => params[:user][:default_organization_id]).first
+        @user.default_environment = @organization.library
+        @user.default_org = @organization.id
       else
         @user.default_environment = nil
       end
