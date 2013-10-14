@@ -35,6 +35,11 @@ module Katello
       app.config.active_record.logger = ::Logging.logger['sql']
     end
 
+    config.to_prepare do
+      # Model extensions
+      ::User.send :include, Katello::Concerns::UserExtensions
+    end
+
   end
 
   def table_name_prefix

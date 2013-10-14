@@ -13,7 +13,7 @@
 module Katello
 class UserNotice < ActiveRecord::Base
 
-  belongs_to :user
+  belongs_to :user, :class_name => "::User"
   belongs_to :notice, :dependent => :destroy
 
   def check_permissions(operation)
