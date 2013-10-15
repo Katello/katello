@@ -11,5 +11,5 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
 
-//= require "widgets/filtertable"
-//= require "system_events/system_events"
+//= require "katello/widgets/filtertable"
+//= require "katello/system_events/system_events"

@@ -12,6 +12,6 @@
 */
 
 //= require "alchemy/jquery/plugins/jquery.sortElements"
-//= require "widgets/slidingtree"
-//= require "roles/role_sliding_tree"
-//= require "roles/role"
+//= require "katello/widgets/slidingtree"
+//= require "katello/roles/role_sliding_tree"
+//= require "katello/roles/role"
