@@ -380,20 +380,12 @@ A hint for choosing the right value for the releaseVer param
   param :system_name, String, :desc => "Name of the system"
   param :system_uuid, String, :desc => "UUID of the system"
   def tasks
-    query = TaskStatus.joins(:system).where(:"task_statuses.organization_id" => @organization.id)
-    if @environment
-      query = query.where(:"systems.environment_id" => @environment.id)
-    end
     if params[:system_name]
-      query = query.where("systems.name" => params[:system_name])
+      @tasks = System.where(:name => params[:system_name]).first.tasks
     elsif params[:system_uuid]
-      query = query.where("systems.uuid" => params[:system_uuid])
+      @tasks = System.where(:uuid => params[:system_uuid]).first.tasks
     end
 
-    task_ids = query.select('task_statuses.id')
-    TaskStatus.refresh(task_ids)
-
-    @tasks = TaskStatus.where(:id => task_ids)
     respond_for_index :collection => @tasks
   end
 
