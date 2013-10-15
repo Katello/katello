@@ -17,7 +17,7 @@
 # PLEASE DO NOT REMOVE WITHOUT TESTING WITH
 # config.cache_classes = true
 #
-require "glue"
+require "katello/glue"
 
 # represents tasks queue for glue
 module Katello
