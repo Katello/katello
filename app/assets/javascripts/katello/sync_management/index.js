@@ -12,4 +12,4 @@
 */
 
 //= require "alchemy/jquery/plugins/jquery.treeTable"
-//= require "sync_management/sync_management"
+//= require "katello/sync_management/sync_management"
