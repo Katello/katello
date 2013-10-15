@@ -15,6 +15,12 @@ class ContentView < ActiveRecord::Base
   include Authorization::ContentView
   include Glue::ElasticSearch::ContentView if Katello.config.use_elasticsearch
 
+  include Glue::Event
+
+  def create_event
+    Katello::Actions::ContentViewCreate
+  end
+
   before_destroy :confirm_not_promoted # RAILS3458: this needs to come before associations
 
   belongs_to :content_view_definition
