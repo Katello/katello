@@ -25,16 +25,16 @@
 //= require "ui_alchemy/alchemy/alchemy"
 //= require "ui_alchemy/alchemy-header/alchemy-header"
 
-//= require "common/katello.global"
+//= require "katello/common/katello.global"
 
-//= require "common/notices"
-//= require "common/bastion-routes"
-//= require "common/routes"
-//= require "common/katello.common"
-//= require "common/env_select_scroll"
-//= require "widgets/path_selector"
+//= require "katello/common/notices"
+//= require "katello/common/bastion-routes"
+//= require "katello/common/routes"
+//= require "katello/common/katello.common"
+//= require "katello/common/env_select_scroll"
+//= require "katello/widgets/path_selector"
 
-//= require "common/experimental/katello-globals.module"
+//= require "katello/common/experimental/katello-globals.module"
 
 
 //= require "bastion/bastion.module"
