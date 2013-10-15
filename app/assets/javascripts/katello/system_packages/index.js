@@ -12,5 +12,5 @@
 */
 
 //= require "alchemy/jquery/plugins/jquery.uitablefilter"
-//= require "system_packages/packages_filtertable"
-//= require "system_packages/system_packages"
+//= require "katello/system_packages/packages_filtertable"
+//= require "katello/system_packages/system_packages"
