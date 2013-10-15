@@ -52,8 +52,10 @@ module Util
             unless (o.nil? || o.is_a?(self) || o.class.name == 'RSpec::Mocks::Mock')
               raise(ArgumentError, "Unable to set current User, expected class '#{self}', got #{o.inspect}")
             end
-            username = o.is_a?(User) ? o.username : 'nil'
-            Rails.logger.debug "Setting current user thread-local variable to " + username
+            if o.is_a?(::User)
+              debug = ["Setting current user thread-local variable to", o.firstname, o.lastname]
+              Rails.logger.debug debug.join(" ")
+            end
             Thread.current[:user] = o
 
             if Katello.config.use_pulp && o
@@ -74,45 +76,10 @@ module Util
             end
 
           end
-
-          # Executes given block on behalf of a different user. Mostly for debuggin purposes since
-          # the username is hardcoded in the codebase! Example:
-          #
-          # User.as :admin do
-          #   ...
-          # end
-          #
-          # Use with care!
-          #
-          # @param [String] username to find from the database
-          # @param [block] block to execute
-          def self.as(username, &do_block)
-            old_user = current
-            self.current = User.find_by_username(username)
-            raise(ArgumentError, "Cannot find user '%s'" % username) if self.current.nil?
-            do_block.call
-          ensure
-            self.current = old_user
-          end
         end
       end
     end
 
-    # include this in the application controller
-    module Controller
-      def self.included(base)
-        base.class_eval do
-          around_filter :thread_locals
-        end
-      end
-
-      def thread_locals
-        User.current = current_user
-        yield
-      ensure
-        User.current = nil
-      end
-    end
   end
 end
 end
