@@ -11,4 +11,4 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
 
-//= require "changesets/changeset"
+//= require "katello/changesets/changeset"
