@@ -25,7 +25,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        1.4.9
+Version:        1.4.10
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -922,6 +922,12 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Tue Oct 15 2013 Partha Aji <paji@redhat.com> 1.4.10-1
+- Bug 1018132: Fixing broken JavaScript declaration that broken Disocvery page
+  rendering.
+- 1018801 - fixing package upload error around "unit_type_id"
+- Adapting to new errata applicability
+
 * Fri Oct 11 2013 Partha Aji <paji@redhat.com> 1.4.9-1
 - Fix foreign key issues (git@pitr.ch)
   (daviddavis@redhat.com)
