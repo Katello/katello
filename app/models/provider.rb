@@ -24,7 +24,7 @@ class Provider < ActiveRecord::Base
   CUSTOM = 'Custom'
   TYPES = [REDHAT, CUSTOM]
 
-  attr_accessible :name, :description, :organization, :provider_type
+  attr_accessible :name, :description, :organization, :provider_type, :repository_url
 
   serialize :discovered_repos, Array
 
