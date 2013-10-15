@@ -11,5 +11,5 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
 
-//= require "widgets/one_panel"
-//= require "sync_schedules/sync_schedule"
+//= require "katello/widgets/one_panel"
+//= require "katello/sync_schedules/sync_schedule"

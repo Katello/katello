@@ -10,5 +10,5 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
 
-//= require "html5/html5"
-//= require "html5/excanvas"
+//= require "katello/html5/html5"
+//= require "katello/html5/excanvas"

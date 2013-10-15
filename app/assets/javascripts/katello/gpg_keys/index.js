@@ -11,4 +11,4 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
 
-//= require "gpg_keys/gpg_key"
+//= require "katello/gpg_keys/gpg_key"

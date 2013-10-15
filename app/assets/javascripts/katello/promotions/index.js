@@ -12,5 +12,5 @@
 */
 
 //= require "alchemy/jquery/plugins/jquery.sortElements"
-//= require "widgets/slidingtree"
-//= require "promotions/promotion"
+//= require "katello/widgets/slidingtree"
+//= require "katello/promotions/promotion"
