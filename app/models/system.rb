@@ -211,9 +211,13 @@ class System < ActiveRecord::Base
     end
   end
 
-  def tasks
+  def refresh_tasks
     refresh_running_tasks
     import_candlepin_tasks
+  end
+
+  def tasks
+    refresh_tasks
     self.task_statuses
   end
 
