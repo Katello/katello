@@ -235,6 +235,11 @@ module Glue::Pulp::Repo
       !found.nil?
     end
 
+    def generate_applicability
+      task = Katello.pulp_server.extensions.repository.regenerate_applicability_by_ids([self.pulp_id])
+      PulpTaskStatus.using_pulp_task(task)
+    end
+
     def destroy_repo
       Katello.pulp_server.extensions.repository.delete(self.pulp_id)
       true
@@ -767,15 +772,7 @@ module Glue::Pulp::Repo
                                                             )
 
       Katello.pulp_server.resources.content.delete_upload_request(upload_id)
-      update_data_after_upload(unit_key)
-    end
-
-    def update_data_after_upload(unit_key)
-      results = unit_search(:type_ids => [unit_type_id],
-                            :filters => {:unit => unit_key})
-      ids = results.map { |result| result[:unit_id] }
-      puppet? ? PuppetModule.index_puppet_modules(ids) : Package.index_packages(ids)
-      generate_metadata
+      self.trigger_contents_changed(:index_units => [unit_key], :wait => false, :reindex => false)
     end
 
     def unit_type_id

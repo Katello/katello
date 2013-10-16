@@ -148,7 +148,7 @@ module DashboardHelper
   end
 
   def errata_type_class(errata)
-    case errata[:type]
+    case errata.type
     when Errata::SECURITY
       return "security_icon"
     when Errata::ENHANCEMENT

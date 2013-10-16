@@ -25,7 +25,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        1.4.8
+Version:        1.5.1
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -922,6 +922,171 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Fri Oct 11 2013 Partha Aji <paji@redhat.com> 1.5.1-1
+- Bumping package versions for 1.5.0 (paji@redhat.com)
+- 1017233: Adding table loading spinners for full and collapsed states.
+  (ericdhelms@gmail.com)
+- 1015240 - switch "changeset management" and "changeset" menus.
+  (walden@redhat.com)
+- 976275 - speeding up redhat repos page (jsherril@redhat.com)
+
+* Fri Oct 11 2013 Partha Aji <paji@redhat.com> 1.4.9-1
+- Fix foreign key issues (git@pitr.ch)
+  (daviddavis@redhat.com)
+- Update rubygem-kafo (including the deps for progress bar) (inecas@redhat.com)
+- Bug #1012583 - redirecting nutupane pages in order to force reload.
+  (walden@redhat.com)
+- Bug 1016114: Adds a prepopulation of systems from Candlepin to make use of
+  their bulk fetching API to improve API/UI rendering times.
+  (ericdhelms@gmail.com)
+- Bug 1017783: Fixing broken html tag and removing the duel tipsy on content
+  headers in content search that results in two tooltips.
+  (ericdhelms@gmail.com)
+- 1013113 - fixing traceback on repo discovery page (jsherril@redhat.com)
+- 956650: Escape the remote_id for pulp (daviddavis@redhat.com)
+  (komidore64@gmail.com)
+- 1017420 - fixing false error notification on sync completion
+  (jsherril@redhat.com)
+- 1014390 -  Fixed a performance issue related to cv publish (paji@redhat.com)
+- Added how-to doc for using optional gems (daviddavis@redhat.com)
+- 1017399 - fixing rabl rendering error on systems page (jsherril@redhat.com)
+- Bug 1015425: Switching the registered field to pull from the proper data
+  value. (ericdhelms@gmail.com)
+- Bug 1014791: Switching to use the find_by_cp_id method which will look for
+  engineering products first. (ericdhelms@gmail.com)
+- 1007731 - CLI - Ldap Groups error for 'posix'. (komidore64@gmail.com)
+- Bug 971072: Adding logic to handle the special case of generating ISO sync
+  progress details. (ericdhelms@gmail.com)
+- Bug 1017238: Adds a filter for allowing uuid specification when hitting the
+  System index. (ericdhelms@gmail.com)
+- Use foreman-1.3 for katello integration (inecas@redhat.com)
+- Bug 1016926: Adds index rabl file to prevent repositories index from
+  rendering inside an array. (ericdhelms@gmail.com)
+- Fixing link to dashboard. Fixes #3116 (daviddavis@redhat.com)
+  (thomasmckay@redhat.com)
+- Bug 1016862: Fixes issue with trying to access nil attribute.
+  (ericdhelms@gmail.com)
+- 1008911 - Disallow adding filters to composite definitions
+  (mtapaswi@redhat.com)
+- Bug 980158: Adding escaping of permission values on the Roles UI page.
+  (ericdhelms@gmail.com)
+- Fixing infinite scroll test so it will pass on jenkins. (walden@redhat.com)
+- Bug 978331: Adds escaping of displayed names on the changeset page.
+  (ericdhelms@gmail.com)
+- Bug #1015167 - fixing display of installed products. (walden@redhat.com)
+- Bug 1015168: Adds display of host and guest information with cross-links to
+  system info. (ehelms@redhat.com)
+- Bug 1010095: Adds display of default start time message when syncing if the
+  start time is null. (ericdhelms@gmail.com)
+- Add missing comps: rubygem-ansi (inecas@redhat.com)
+- Fix deps specification for tire (inecas@redhat.com)
+- Updating rpm spec for new version of tire. (walden@redhat.com)
+- Bastion: setting alch-menu size to 41px, fixes #3081. (walden@redhat.com)
+- 1014673: Fix problem where puppet repo gets unset (daviddavis@redhat.com)
+- banner-menu - allow engines to add to banner menu (thomasmckay@redhat.com)
+- Bug #1009398 - fix %%2f (/) in available subscriptions url, fixes #3029.
+  (walden@redhat.com)
+- Bug #1016257 - fix ordering of modal dialog div, fixes #3077.
+  (walden@redhat.com)
+- Bug #1016198 - update release versions to use API v2 and fix API.
+  (walden@redhat.com)
+- Fixed a cvd publish issue (paji@redhat.com)
+- Bug 994248: Update name analyzer to handle searches based on a name that
+  contains a space in the name. (ericdhelms@gmail.com)
+- Bug 1011473: Adds new provider link to repo discovery product creation form.
+  (ericdhelms@gmail.com)
+- Bug 1013590: Adds selection of new product by default when there are no
+  existing products. (ericdhelms@gmail.com)
+- admin-role - static type for Role self_role and locked
+  (thomasmckay@redhat.com)
+- 989992: activation keys: disable system group remove, if none selected
+  (bbuckingham@redhat.com)
+- 1015944 - make sure we search for marketing products by cp_id
+  (inecas@redhat.com)
+- Gemfile - setting a specific version for foreigner (komidore64@gmail.com)
+- i don't think the schema can decide whether it likes `:` or `=>`
+  (komidore64@gmail.com)
+- 1014827: Fixing unit_key and unit_metadata (daviddavis@redhat.com)
+- 1011954 - publish after-sync action (inecas@redhat.com)
+- Bug #1015249 - adding activation key info/link to system details page.
+  (walden@redhat.com)
+- Bug 1014807: The sync management page will now no longer show feedless
+  repositories or products without any syncable repositories.
+  (ehelms@redhat.com)
+- 1015520: Fixing org not found error (daviddavis@redhat.com)
+- 1014390: Speed up pulp actions by using a variable wait time
+  (daviddavis@redhat.com)
+- Bug 1015286: Updates to allow enter to submit product, provider and
+  repository creation forms. (ericdhelms@gmail.com)
+- Fixing broken test caused by new releases of test libraries.
+  (ehelms@redhat.com)
+- Bug 1015202: Fixing missing subscription status icon on systems table view.
+  (ericdhelms@gmail.com)
+- 1011015: Check if definitions are publishable server side
+  (daviddavis@redhat.com)
+- Fix intermittent javascript failures in PR script. (walden@redhat.com)
+- Bug 1015047: Adds intermediate button state during product and repository
+  creation to indicate work in progress and disable the button while working.
+  (ericdhelms@gmail.com)
+- Bug 1013681: Re-enables after sync notifications when Pulp sends a sync
+  completed notification and updates the tooltip rendering on the sync
+  management page. (ehelms@redhat.com)
+- Bug 1014808: Adds confirmation dialog to product and repository delete.
+  (ericdhelms@gmail.com)
+- Bug 1012606: Updates to handle larger content search display area when
+  viewing the details of a repository and prevent description run over.
+  (ericdhelms@gmail.com)
+- updated cassette for most recent logic change (mmccune@redhat.com)
+- Bug 1011180: Adds warning message for user when changing environment.
+  (ericdhelms@gmail.com)
+- updating based on comments from Ivan in PR (mmccune@redhat.com)
+- updating casettes for latest pulp repo changes (mmccune@redhat.com)
+- 1005115 - gravatar icon might be exposing underlying technology
+  (komidore64@gmail.com)
+- Created db test rake tasks (daviddavis@redhat.com)
+- 875184 - give some sort of link to the Systems view from the Subscriptions
+  widget in the dashboard. (michauxkelley@gmail.com)
+- 989471: Preventing users from adding invalid views to changesets
+  (daviddavis@redhat.com)
+- fixing spelling error (mmccune@redhat.com)
+- update only the puppet_module casset (mmccune@redhat.com)
+- 990478: Add query param to filter out marketing products
+  (daviddavis@redhat.com)
+- Bug 973774: Updates to ensure content view and environment selection are
+  properly in sync with one another. (ericdhelms@gmail.com)
+- Bug 1014150: move maincontent section of bastion out from under menu.
+  (walden@redhat.com)
+- fixing style issues from rubocop (mmccune@redhat.com)
+- Nodes distributor for puppet repo (inecas@redhat.com)
+- Fix path of the puppet environment (inecas@redhat.com)
+- no gsub necessary (mmccune@redhat.com)
+- switch to the puppet_install_distributor (mmccune@redhat.com)
+- Bug #968462 - remove content view from UI after deletion. (walden@redhat.com)
+- 1013757: Showing all views for composite defs in edit mode
+  (daviddavis@redhat.com)
+- 1012159: Removing ng-disable to fix module upload in Firefox
+  (daviddavis@redhat.com)
+- Bug #1009398 - allow checkboxes for subscription filters, fixes #3029.
+  (walden@redhat.com)
+- Bug 1007935: Changes to support viewing full repository names without the
+  need for ellipsis in content search. (ericdhelms@gmail.com)
+- Bastion: adding logo and ensuring it shows up, fixes #3054.
+  (walden@redhat.com)
+- 953672: panel copy: update to disable copy button when name is empty
+  (bbuckingham@redhat.com)
+- Update tomcat references in reset-db script (mkelley@redhat.com)
+- 1012806: repo_selector: fix the sort performed on product names
+  (bbuckingham@redhat.com)
+- 1012609-ldap-roles - properly remove and reload roles from ldap user
+  (thomasmckay@redhat.com)
+- tests bro (komidore64@gmail.com)
+- 1009428 - updating product's gpgkey does not work (komidore64@gmail.com)
+- 1010100: manifest import: output from logger cleared before notice generated
+  (bbuckingham@redhat.com)
+- 1010099: Administer->Sync: check for any_syncable vs syncable
+  (bbuckingham@redhat.com)
+- 953656 - Removed all 'disable_with' references (paji@redhat.com)
+
 * Fri Sep 27 2013 Partha Aji <paji@redhat.com> 1.4.8-1
 - Merge pull request #3050 from parthaa/upgrade-fixes (parthaa@gmail.com)
 - Merge pull request #3049 from daviddavis/temp/20130926190223

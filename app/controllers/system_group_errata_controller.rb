@@ -39,22 +39,32 @@ class SystemGroupErrataController < ApplicationController
   end
 
   def items
-    offset = params[:offset]
-    filter_type = params[:filter_type] if params[:filter_type]
-    errata_state = params[:errata_state] if params[:errata_state]
-    chunk_size = current_user.page_size
-    errata, errata_systems, total_count, results_count = get_errata(offset.to_i, (offset.to_i + chunk_size), filter_type, errata_state)
+    filter_type = params[:filter_type]
 
-    return render_bad_parameters unless errata
+    if filter_type && filter_type != 'All'
+      filter_type.downcase!
+    else
+      filter_type = nil
+    end
+
+    errata = @group.errata(filter_type)
+
+    system_uuids = errata.flat_map{|e| e.applicable_consumers}.uniq
+    system_hash = {}
+    System.where(:uuid => system_uuids).select([:uuid, :name]).each do |sys|
+      system_hash[sys.uuid] = sys
+    end
+
+    errata.each do |erratum|
+      erratum.applicable_consumers = erratum.applicable_consumers.map{|uuid| {:name => system_hash[uuid].name, :uuid => uuid }}
+    end
 
     rendered_html = render_to_string(:partial => "systems/errata/items", :locals => { :errata => errata,
-                                                                                      :errata_systems => errata_systems,
                                                                                       :editable => @group.systems_editable? })
-
     render :json => {:html => rendered_html,
-                     :results_count => results_count,
-                     :total_count => total_count,
-                     :current_count => errata.length + offset.to_i }
+                     :results_count => errata.length,
+                     :total_count => errata.length,
+                     :current_count => errata.length  }
   end
 
   def install
@@ -82,39 +92,6 @@ class SystemGroupErrataController < ApplicationController
   end
 
   private
-
-  include SortColumnList
-  include Util::Errata
-
-  def get_errata(start, finish, filter_type = "All", errata_state = "outstanding")
-    errata_state = errata_state || "outstanding"
-    filter_type = filter_type || "All"
-
-    errata_hash = {} # {id => erratum}
-    errata_system_hash = {} # {id => [system_name]}
-
-    # build a hash of all errata across all systems in the group
-    @group.systems.each do |system|
-      errata = system.errata
-      errata.each do |erratum|
-        errata_hash[erratum.errata_id] = erratum
-        errata_system_hash[erratum.errata_id] ||= []
-        errata_system_hash[erratum.errata_id] << system.name
-      end
-    end
-    errata_list = errata_hash.values
-    total_errata_count = errata_list.length
-
-    errata_list = filter_by_type(errata_list, filter_type)
-    errata_list = filter_by_state(errata_list, errata_state)
-
-    filtered_errata_count = errata_list.length
-
-    errata_list = errata_list.sort_by{ |a| a.errata_id.downcase}
-    errata_list = errata_list[start...finish]
-
-    return errata_list, errata_system_hash, total_errata_count, filtered_errata_count
-  end
 
   def find_group
     @group = SystemGroup.find(params[:system_group_id])

@@ -189,7 +189,7 @@ module Glue::ElasticSearch::Repository
     end
 
     def errata_count
-      results = ::Errata.search('', 0, 1, :repoids => [self.pulp_id])
+      results = ::Errata.search('', :page_size => 1, :filters => {:repoids => [self.pulp_id]})
       results.empty? ? 0 : results.total
     end
 

@@ -10,11 +10,19 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-class Errata
-  include Glue::Pulp::Errata if Katello.config.use_pulp
-  include Glue::ElasticSearch::Errata if Katello.config.use_elasticsearch
-  CONTENT_TYPE = "erratum"
+class Dashboard::SystemGroupsWidget < Dashboard::Widget
 
-  attr_accessor :applicable_consumers
+  def accessible?
+    Katello.config.katello? && current_organization &&
+        SystemGroup.any_readable?(current_organization)
+  end
+
+  def title
+    _("System Groups")
+  end
+
+  def content_path
+    system_groups_dashboard_index_path
+  end
 
 end

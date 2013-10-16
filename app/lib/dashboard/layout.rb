@@ -19,6 +19,8 @@ module Dashboard
       content_views
       sync
       promotions
+      system_groups
+      errata
     )
 
     attr_accessor :widgets, :columns, :organization, :current_user

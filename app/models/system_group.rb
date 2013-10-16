@@ -166,9 +166,8 @@ class SystemGroup < ActiveRecord::Base
     # determine the state (critical/warning/ok) for each system group
     groups.each do |group|
       group_state = :ok
-
-      group.systems.each do |system|
-        system.errata.each do |erratum|
+      unless group.systems.empty?
+        group.errata.each do |erratum|
           case erratum.type
           when Errata::SECURITY
             # there is a critical errata, so stop searching...
@@ -180,8 +179,8 @@ class SystemGroup < ActiveRecord::Base
             # set state to warning, but continue searching...
             group_state = :warning
           end
+
         end
-        break if group_state == :critical
       end
 
       groups_hash[group_state] ||= []

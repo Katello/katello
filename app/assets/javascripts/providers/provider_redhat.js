@@ -12,37 +12,27 @@
 */
 
 $(document).ready(function() {
-
+    var spinner = '<i class="icon-spinner inline-icon icon-spin"></i>';
 
     KT.common.jscroll_init($('.scroll-pane'));
     KT.common.jscroll_resize($('.jspPane'));
 
-    $("#content_tabs").tabs();
 
-    $(".tree_table").treeTable({
-        expandable: true,
-        initialState: "collapsed",
-        clickableNodeNames: true,
-        onNodeShow: KT.redhat_provider_page.on_node_show
-    });
 
-    $(".content_table").delegate('.expander_area', 'click', function(){
-        var area = $(this),
-            row = area.parents('tr').first();
-        if(row.hasClass("disable")){
-            return;
-        }
-        if(row.hasClass("collapsed")){
-            area.parent().find('table').show();
-            row.removeClass("collapsed").addClass('expanded');
-        }
-        else {
-            area.parent().find('table').hide();
-            row.addClass("collapsed").removeClass('expanded');
+    $("#content_tabs").tabs({
+        cache: true,
+        select: function(event, ui) {
+          var panel = $(ui.panel);
+          if (panel.is(":empty")) {
+            panel.append(spinner);
+          }
+        },
+        load: function(event, ui) {
+            KT.redhat_provider_page.init_tab($(ui.panel));
         }
     });
 
-
+    $("#ui-tabs-1").append(spinner);
     $("#content_tabs").delegate('.repo_set_enable', 'change', function(){
         KT.redhat_provider_page.repoSetChange($(this), false);
     });
@@ -62,7 +52,6 @@ $(document).ready(function() {
             KT.redhat_provider_page.repoSetChange(checkbox, true);
         }
     });
-
 });
 
 
@@ -193,6 +182,30 @@ KT.redhat_provider_page = (function($) {
         if(row.hasClass('collapsed')){
             row.find('.expander_area').click();
         }
+    },
+    init_tab = function(panel) {
+        panel.find(".tree_table").treeTable({
+            expandable: true,
+            initialState: "collapsed",
+            clickableNodeNames: true,
+            onNodeShow: KT.redhat_provider_page.on_node_show
+        });
+
+        panel.find(".content_table").delegate('.expander_area', 'click', function(){
+            var area = $(this),
+                row = area.parents('tr').first();
+            if(row.hasClass("disable")){
+                return;
+            }
+            if(row.hasClass("collapsed")){
+                area.parent().find('table').show();
+                row.removeClass("collapsed").addClass('expanded');
+            } else {
+                area.parent().find('table').hide();
+                row.addClass("collapsed").removeClass('expanded');
+            }
+        });
+
     };
 
     return {
@@ -200,6 +213,7 @@ KT.redhat_provider_page = (function($) {
         checkboxHighlightRow: checkboxHighlightRow,
         on_node_show: on_node_show,
         repoSetChange: repoSetChange,
-        hide_repos: hide_repos
+        hide_repos: hide_repos,
+        init_tab: init_tab
     };
 }(jQuery));
