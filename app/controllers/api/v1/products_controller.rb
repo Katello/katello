@@ -111,6 +111,11 @@ class Api::V1::ProductsController < Api::V1::ApiController
   param :name, :identifier, :desc => "repository identifier"
   param :content_view_id, :identifier, :desc => "find repos in content view instead of default content view"
   def repositories
+    if !@environment.library? && @content_view.nil?
+      raise HttpErrors::BadRequest,
+            _("Cannot retrieve repos from non-library environment '%s' without a content view.") % @environment.name
+    end
+
     respond_for_index :collection => @product.repos(@environment, query_params[:include_disabled], @content_view).
         where(query_params.slice(:name))
   end
