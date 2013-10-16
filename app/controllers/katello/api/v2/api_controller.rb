@@ -18,7 +18,7 @@ class Api::V2::ApiController < Api::ApiController
   include Api::V2::ErrorHandling
 
   # support for session (thread-local) variables must be the last filter in this class
-  include Util::ThreadSession::Controller
+  include Foreman::ThreadSession::Cleaner
   include AuthorizationRules
 
   before_filter :load_search_service, :only => [:index]
@@ -46,7 +46,7 @@ class Api::V2::ApiController < Api::ApiController
 
     def find_organization
       organization_id = params[:organization_id]
-      @organization = Organization.without_deleting.having_name_or_label(organization_id).first
+      @organization = Katello::Organization.without_deleting.having_name_or_label(organization_id).first
     end
 
     def sort_params

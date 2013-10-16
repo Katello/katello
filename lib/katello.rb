@@ -1,3 +1,5 @@
+require "rails"
+
 require "apipie-rails"
 
 require "rabl"
@@ -27,6 +29,7 @@ require "uuidtools"
 require "delayed_job"
 
 require File.expand_path("../engines/bastion/lib/bastion", File.dirname(__FILE__))
+require "headpin/headpin"
 
 # ENGINE: Re-enable after fixing migrations in Katello proper
 #require File.expand_path("../engines/fort/lib/fort", File.dirname(__FILE__))
@@ -38,5 +41,6 @@ module Katello
   require "katello/engine"
   require "katello/load_configuration"
   require "katello/logging"
+  require "katello/actions/actions"
 
 end
