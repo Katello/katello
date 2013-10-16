@@ -6,9 +6,9 @@ class ActionDispatch::Routing::Mapper
   include Katello::Routing::MapperExtensions
 end
 
-Katello.application.routes.draw do
+Rails.application.routes.draw do
 
-  scope :katello, :as => :katello do
+  scope 'katello', :as => 'katello' do
     scope :module => :katello do
       namespace :api do
 
