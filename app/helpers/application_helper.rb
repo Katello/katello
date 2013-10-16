@@ -35,7 +35,7 @@ module ApplicationHelper
         ctrl   = options[:controller]
         action = options[:action] || 'index'
 
-        if current_user && current_user.allowed_to?({:controller => ctrl, :action => action})
+        if current_user && current_user.allowed_to?(:controller => ctrl, :action => action)
           link_to(name, options, html_options)
         end
       end

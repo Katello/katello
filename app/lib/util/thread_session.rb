@@ -58,7 +58,7 @@ module Util
             if Katello.config.use_pulp && o
               uri = URI.parse(Katello.config.pulp.url)
 
-              Katello.pulp_server = Runcible::Instance.new({
+              Katello.pulp_server = Runcible::Instance.new(
                 :url      => "#{uri.scheme}://#{uri.host.downcase}",
                 :api_path => uri.path,
                 :user     => o.remote_id,
@@ -69,7 +69,7 @@ module Util
                 :logging  => {:logger     => ::Logging.logger['pulp_rest'],
                               :exception  => true,
                               :debug      => true }
-              })
+              )
             end
 
           end

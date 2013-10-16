@@ -319,7 +319,7 @@ module Resources
         # create the first user for owner
         def create_user(key, username, password)
           # create user with superadmin flag (no role, permissions etc)
-          CPUser.create({:username => name_to_key(username), :password => name_to_key(password), :superAdmin => true})
+          CPUser.create(:username => name_to_key(username), :password => name_to_key(password), :superAdmin => true)
         end
 
         def destroy(key)

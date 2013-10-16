@@ -117,7 +117,7 @@ class User < ActiveRecord::Base
   end
 
   def self.authenticate!(username, password)
-    u = User.where({ :username => username }).first
+    u = User.where(:username => username).first
     # check if user exists
     return nil unless u
     # check if not disabled
@@ -132,7 +132,7 @@ class User < ActiveRecord::Base
   # if the user authenticates with LDAP, log them in
   def self.authenticate_using_ldap!(username, password)
     if Ldap.valid_ldap_authentication? username, password
-      User.where({ :username => username }).first || create_ldap_user!(username)
+      User.where(:username => username).first || create_ldap_user!(username)
     else
       nil
     end

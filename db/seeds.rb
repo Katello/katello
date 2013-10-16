@@ -61,19 +61,19 @@ fail "Are you sure you cleared candlepin?! Unable to create first org!" if first
 
 #create a provider
 if Provider.count == 0
-  Provider.create!({
+  Provider.create!(
       :name => 'Custom Provider 1',
       :organization => first_org,
       :repository_url => 'http://download.fedoraproject.org/pub/fedora/linux/releases/',
       :provider_type => Provider::CUSTOM
-  })
+  )
 
-  Provider.create!({
+  Provider.create!(
       :name => 'Red Hat',
       :organization => first_org,
       :repository_url => 'https://somehost.example.com/content/',
       :provider_type => Provider::REDHAT
-  })
+  )
 end
 
 if Katello.config.use_pulp

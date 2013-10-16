@@ -123,7 +123,7 @@ module Glue
 
         # execute the task
         task.status = "running"
-        task.status = execute({:action => task.action}) ? "completed" : "failed"
+        task.status = execute(:action => task.action) ? "completed" : "failed"
         q_active += 1
       end
 
@@ -137,7 +137,7 @@ module Glue
       (q.completed + q.running).sort.reverse_each do |task|
         begin
           task.status = "rollbacked"
-          execute({:action => task.action, :action_rollback => task.action_rollback, :rollback => true})
+          execute(:action => task.action, :action_rollback => task.action_rollback, :rollback => true)
         rescue => rollback_exception
           # if the operation failed, we can just report upon it
           logger.error "Failed to perform rollback on #{task.name} - #{rollback_exception.inspect}\n  #{rollback_exception.backtrace.join('\n')}"

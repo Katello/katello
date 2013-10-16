@@ -65,7 +65,7 @@ class Api::V1::TasksController < Api::V1::ApiController
       }
     end
 
-    respond({ :collection => tasks})
+    respond(:collection => tasks)
   end
 
   api :GET, "/tasks/:id", "Show a task info"

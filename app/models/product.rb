@@ -130,11 +130,11 @@ class Product < ActiveRecord::Base
                       :attributes => self.attrs,
                       :id => self.cp_id)
     if Katello.config.katello?
-      hash = hash.merge({
+      hash = hash.merge(
         :sync_plan_name => self.sync_plan ? self.sync_plan.name : nil,
         :sync_state => self.sync_state,
         :last_sync => self.last_sync
-      })
+      )
     end
     hash
   end

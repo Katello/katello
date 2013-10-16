@@ -78,9 +78,9 @@ class Api::V1::DistributorsController < Api::V1::ApiController
     distributor_params           = params[:distributor]
     distributor_params[:facts]   ||= { 'sockets' => 0 } # facts not used for distributors
     distributor_params[:cp_type] = "candlepin"          # The 'candlepin' type is allowed to export a manifest
-    @distributor                 = Distributor.create!(distributor_params.merge({ :environment  => @environment,
-                                                                                  :content_view => @content_view,
-                                                                                  :serviceLevel => distributor_params[:service_level] }))
+    @distributor                 = Distributor.create!(distributor_params.merge(:environment  => @environment,
+                                                                                :content_view => @content_view,
+                                                                                :serviceLevel => distributor_params[:service_level]))
     respond
   end
 

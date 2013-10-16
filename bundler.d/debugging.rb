@@ -1,5 +1,5 @@
 group :debugging do
-  if ! defined? JRUBY_VERSION
+  if !defined? JRUBY_VERSION
     gem 'debugger'
   else
     gem 'ruby-debug'
