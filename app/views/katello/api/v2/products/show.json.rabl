@@ -3,7 +3,7 @@ object @resource
 attributes :cp_id => :id
 attributes :name, :label, :description
 
-extends 'api/v2/common/org_reference'
+extends 'katello/api/v2/common/org_reference'
 
 attributes :marketing_product
 attributes :provider_id
@@ -33,5 +33,5 @@ node :permissions do |product|
   }
 end
 
-extends 'api/v2/common/timestamps'
-extends 'api/v2/common/readonly'
+extends 'katello/api/v2/common/timestamps'
+extends 'katello/api/v2/common/readonly'

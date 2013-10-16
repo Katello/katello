@@ -3,9 +3,9 @@
 %section#navigation{ "ng-controller"=>"MenuController" }
   %header.header.logo-header
     - if Katello.config.katello?
-      = link_to "", dashboard_index_path, :class => "fl katello-logo logo"
+      = link_to "", katello_dashboard_index_path, :class => "fl katello-logo logo"
     - else
-      = link_to "", dashboard_index_path, :class => "fl headpin-logo logo"
+      = link_to "", katello_dashboard_index_path, :class => "fl headpin-logo logo"
     - if User.current.legacy_mode
       %span#legacy_indicator
         = _("legacy mode")
