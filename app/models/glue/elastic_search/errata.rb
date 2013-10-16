@@ -85,8 +85,10 @@ module Glue::ElasticSearch::Errata
         repos = repos_for_filter(filter_for_repo)
         filter_for_errata[:repoids] = repos.collect{|r| r.pulp_id} if !repos.empty?
 
-        first = self.search('', 0, 1, filter_for_errata)
-        self.search('', 0, first.total, filter_for_errata).collect{|e| Errata.new(e.as_json)}
+        options = { :start => 0, :page_size => 1, :filters => filter_for_errata }
+        first = self.search('', options)
+        options[:page_size] = first.total
+        self.search('', options).collect{ |e| Errata.new(e.as_json) }
       end
 
       def self.repos_for_filter(filter)
