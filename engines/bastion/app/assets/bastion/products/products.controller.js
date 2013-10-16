@@ -36,6 +36,7 @@ angular.module('Bastion.products').controller('ProductsController',
             'offset':           0,
             'sort_by':          'name',
             'sort_order':       'ASC',
+            'enabled' :         true,
             'paged':            true
         };
 

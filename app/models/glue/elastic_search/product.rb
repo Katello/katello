@@ -27,13 +27,15 @@ module Glue::ElasticSearch::Product
         indexes :label, :type => 'string', :index => :not_analyzed
         indexes :description, :type => 'string', :analyzer => :kt_name_analyzer
         indexes :name_autocomplete, :type => 'string', :analyzer => 'autcomplete_name_analyzer'
+        indexes :enabled, :type => 'boolean'
       end
     end
   end
 
   def extended_index_attrs
     { :name_sort => name.downcase, :name_autocomplete => self.name,
-      :organization_id => organization.id
+      :organization_id => organization.id,
+      :enabled => self.enabled?
     }
   end
 
