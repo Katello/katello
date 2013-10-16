@@ -19,7 +19,7 @@ module Navigation
         @key           = :content_view_definitions
         @display       = _("Content View Definitions")
         @authorization = lambda{ ContentViewDefinition.any_readable?(organization) }
-        @url           = content_view_definitions_path
+        @url           = katello_content_view_definitions_path
       end
 
     end
