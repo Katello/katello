@@ -153,7 +153,7 @@ class User < ActiveRecord::Base
 
   def self.cp_oauth_header
     fail Errors::UserNotSet, "unauthenticated to call a backend engine" if User.current.nil?
-    User.current.cp_oauth_header
+    Thread.current[:cp_oauth_header]
   end
 
   # is the current user consumer? (rhsm)

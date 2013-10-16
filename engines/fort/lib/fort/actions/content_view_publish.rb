@@ -15,6 +15,8 @@ module Fort
 
     class ContentViewPublish < Dynflow::Action
 
+      include RemoteAction
+
       def self.subscribe
         Katello::Actions::ContentViewPublish
       end

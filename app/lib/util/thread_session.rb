@@ -55,23 +55,41 @@ module Util
             Rails.logger.debug "Setting current user thread-local variable to " + username
             Thread.current[:user] = o
 
-            if Katello.config.use_pulp && o
-              uri = URI.parse(Katello.config.pulp.url)
-
-              Katello.pulp_server = Runcible::Instance.new(
-                :url      => "#{uri.scheme}://#{uri.host.downcase}",
-                :api_path => uri.path,
-                :user     => o.remote_id,
-                :timeout      => Katello.config.rest_client_timeout,
-                :open_timeout => Katello.config.rest_client_timeout,
-                :oauth    => {:oauth_secret => Katello.config.pulp.oauth_secret,
-                              :oauth_key    => Katello.config.pulp.oauth_key },
-                :logging  => {:logger     => ::Logging.logger['pulp_rest'],
-                              :exception  => true,
-                              :debug      => true }
-              )
+            if Katello.config.use_cp && o.respond_to?(:cp_oauth_header)
+              self.set_cp_config(o.cp_oauth_header)
             end
 
+            if Katello.config.use_pulp && o.respond_to?(:remote_id)
+              self.set_pulp_config(o.remote_id)
+            end
+
+          end
+
+          def self.set_pulp_config(user_remote_id, &block)
+            uri = URI.parse(Katello.config.pulp.url)
+
+            Katello.pulp_server = Runcible::Instance.new(
+              :url      => "#{uri.scheme}://#{uri.host.downcase}",
+              :api_path => uri.path,
+              :user     => user_remote_id,
+              :timeout      => Katello.config.rest_client_timeout,
+              :open_timeout => Katello.config.rest_client_timeout,
+              :oauth    => {:oauth_secret => Katello.config.pulp.oauth_secret,
+                            :oauth_key    => Katello.config.pulp.oauth_key },
+              :logging  => {:logger     => ::Logging.logger['pulp_rest'],
+                            :exception  => true,
+                            :debug      => true }
+            )
+            yield if block_given?
+          ensure
+            Katello.pulp_server = nil if block_given?
+          end
+
+          def self.set_cp_config(cp_oauth_header)
+            Thread.current[:cp_oauth_header] = cp_oauth_header
+            yield if block_given?
+          ensure
+            Thread.current[:cp_oauth_header] = nil if block_given?
           end
 
           # Executes given block on behalf of a different user. Mostly for debuggin purposes since
