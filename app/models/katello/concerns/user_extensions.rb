@@ -53,9 +53,11 @@ module Katello
         # PROCEED DEPENDENT ASSOCIATIONS tinyurl.com/rails3458
         before_destroy :not_last_super_user?, :destroy_own_role
 
-        has_many :roles_users, :dependent => :destroy, :class_name => Katello::RolesUser
-        has_many :roles, :through => :roles_users, :before_remove => :super_admin_check, :uniq => true, :extend => RolesPermissions::UserOwnRole
-        validates_with Validators::OwnRolePresenceValidator, :attributes => :roles
+        has_many :roles_users, :dependent => :destroy, :class_name => "Katello::RolesUser"
+        has_many :katello_roles, :through => :roles_users, :before_remove => :super_admin_check,
+                  :uniq => true, :extend => RolesPermissions::UserOwnRole,
+                  :source => :role
+        validates_with Validators::OwnRolePresenceValidator, :attributes => :katello_roles
         has_many :help_tips
         has_many :user_notices
         has_many :notices, :through => :user_notices
@@ -63,7 +65,7 @@ module Katello
         has_many :search_favorites, :dependent => :destroy
         has_many :search_histories, :dependent => :destroy
         belongs_to :default_environment, :class_name => "KTEnvironment"
-        serialize :preferences, HashWithIndifferentAccess
+        serialize :preferences, Hash
 
         validates :username, :uniqueness => true, :presence => true
         validates_with Validators::UsernameValidator, :attributes => :username
@@ -95,7 +97,7 @@ module Katello
         end
 
         def setup_preferences
-          self.preferences = HashWithIndifferentAccess.new unless self.preferences
+          self.preferences = Hash.new unless self.preferences
         end
 
         def not_last_super_user?
@@ -122,7 +124,7 @@ module Katello
         end
 
         def own_role
-          roles.find_own_role
+          katello_roles.find_own_role
         end
 
         def self.authenticate!(username, password)
@@ -213,7 +215,7 @@ module Katello
         end
 
         def defined_roles
-          self.roles - [self.own_role]
+          self.katello_roles - [self.own_role]
         end
 
         def defined_role_ids
@@ -314,7 +316,7 @@ module Katello
         end
 
         def has_superadmin_role?
-          roles.any? { |r| r.superadmin? }
+          katello_roles.any? { |r| r.superadmin? }
         end
 
         # verify the user is in the groups we are think they are in
@@ -358,7 +360,7 @@ module Katello
         end
 
         def clear_existing_ldap_roles!
-          self.roles = self.roles_users.select { |r| !r.ldap }.map { |r| r.role }
+          self.katello_roles = self.roles_users.select { |r| !r.ldap }.map { |r| r.role }
           self.save!
         end
 
@@ -423,11 +425,11 @@ module Katello
 
         def create_own_role
           return unless new_record?
-          roles.find_or_create_own_role(self)
+          katello_roles.find_or_create_own_role(self)
         end
 
         def destroy_own_role
-          roles.destroy_own_role
+          katello_roles.destroy_own_role
         end
 
         def super_admin_check(role)

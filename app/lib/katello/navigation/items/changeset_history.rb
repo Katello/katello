@@ -19,7 +19,7 @@ module Navigation
         @key           = :changeset_history
         @display       = _("Changesets History")
         @authorization = lambda{ organization && KTEnvironment.any_viewable_for_promotions?(organization) }
-        @url           = changesets_path
+        @url           = katello_changesets_path
       end
 
     end

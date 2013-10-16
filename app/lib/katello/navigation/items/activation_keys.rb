@@ -19,7 +19,7 @@ module Navigation
         @key           = :activation_keys
         @display       = _("Activation Keys")
         @authorization = lambda{ organization && ActivationKey.readable?(organization) }
-        @url           = activation_keys_path
+        @url           = katello_activation_keys_path
       end
 
     end

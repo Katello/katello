@@ -19,7 +19,7 @@ module Navigation
         @key           = :system_groups
         @display       = _("System Groups")
         @authorization = lambda{ organization && SystemGroup.any_readable?(organization) }
-        @url           = system_groups_path
+        @url           = katello_system_groups_path
       end
 
     end
