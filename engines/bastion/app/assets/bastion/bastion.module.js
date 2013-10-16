@@ -52,7 +52,7 @@ angular.module('Bastion', [
  */
 angular.module('Bastion').config(['$httpProvider', '$urlRouterProvider', function($httpProvider, $urlRouterProvider) {
     $httpProvider.defaults.headers.common['X-CSRF-TOKEN'] = $('meta[name=csrf-token]').attr('content');
-    $httpProvider.defaults.headers.common['ACCEPT'] = 'version=2,application/json';
+    $httpProvider.defaults.headers.common['ACCEPT'] = 'application/json, text/plain, */*, version=2';
     $urlRouterProvider.otherwise("/");
 }]);
 
