@@ -1,5 +1,3 @@
-require File.expand_path('../routes/api/v1', __FILE__)
-
 Rails.application.routes.draw do
 
   apipie
