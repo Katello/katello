@@ -19,7 +19,7 @@ module Navigation
         @key           = :redhat_provider
         @display       = _("Red Hat Repositories")
         @authorization = lambda{ organization && organization.readable? }
-        @url           = redhat_provider_providers_path
+        @url           = redhat_provider_katello_providers_path
       end
 
     end

@@ -19,7 +19,7 @@ module Navigation
         @key           = :roles
         @display       = _("Roles")
         @authorization = lambda{ Role.any_readable? }
-        @url           = roles_path
+        @url           = katello_roles_path
       end
 
     end

@@ -19,7 +19,7 @@ module Navigation
         @key           = :synchronization
         @display       = _("Synchronization")
         @authorization = lambda{ User.current.has_superadmin_role? }
-        @url           = sync_management_manage_path
+        @url           = katello_sync_management_manage_path
       end
 
     end
