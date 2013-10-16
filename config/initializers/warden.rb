@@ -65,7 +65,7 @@ Warden::Strategies.add(:openid) do
       # we have response from OpenID provider so we try to login user
       case response.status
       when :success
-        if (user = User.find_by_username(response.identity_url.split('/').last))
+        if (user = User.find_by_username(CGI.unescape(response.identity_url.split('/').last)))
           success!(user)
         else
           message = 'User not found'
@@ -80,7 +80,7 @@ Warden::Strategies.add(:openid) do
       end
     elsif (username = cookies[:username] || params[:username])
       # we already have cookie
-      identifier = "#{Katello.config.sso.provider_url}/user/#{username}"
+      identifier = "#{Katello.config.sso.provider_url}/user/#{CGI.escape(username)}"
       custom!([401,
                {'WWW-Authenticate' => Rack::OpenID.build_header({:identifier => identifier})},
                ''])
