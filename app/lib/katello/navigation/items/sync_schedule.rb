@@ -19,7 +19,7 @@ module Navigation
         @key           = :sync_schedule
         @display       = _("Sync Schedule")
         @authorization = true
-        @url           = sync_schedules_index_path
+        @url           = katello_sync_schedules_index_path
       end
 
     end

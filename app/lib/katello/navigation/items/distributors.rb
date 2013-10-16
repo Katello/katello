@@ -19,7 +19,7 @@ module Navigation
         @key           = :distributors
         @display       =  _("Subscription Manager Applications")
         @authorization = lambda{ organization && organization.readable? }
-        @url           = distributors_path
+        @url           = katello_distributors_path
       end
 
     end
