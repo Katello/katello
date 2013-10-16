@@ -76,7 +76,6 @@ class Api::V1::ProductsController < Api::V1::ApiController
   api :GET, "/environments/:environment_id/products", "List products in an environment"
   api :GET, "/organizations/:organization_id/products", "List all products in an organization"
   param :organization_id, :identifier, :desc => "organization identifier"
-  param :environment_id, :identifier, :desc => "environment identifier"
   param :name, :identifier, :desc => "product identifier"
   param :include_marketing, :bool, :desc => "include marketing products in results"
   def index
@@ -84,12 +83,7 @@ class Api::V1::ProductsController < Api::V1::ApiController
     query_params.delete(:environment_id)
     query_params[:type] = "Product" unless query_params.delete(:include_marketing)
 
-    if @environment.nil? || @environment.library?
-      products = Product.all_readable(@organization)
-    else
-      products = @environment.products.all_readable(@organization)
-    end
-
+    products = Product.all_readable(@organization)
     respond :collection => products.select("products.*, providers.name AS provider_name").joins(:provider).where(query_params).all
   end
 
