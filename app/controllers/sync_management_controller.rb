@@ -153,7 +153,7 @@ class SyncManagementController < ApplicationController
                           PulpSyncStatus::Status::NOT_SYNCED]
     {   :id             => repo.id,
         :product_id     => repo.product.id,
-        :progress       => calc_progress(sync_status),
+        :progress       => calc_progress(sync_status, repo.content_type),
         :sync_id        => sync_status.uuid,
         :state          => format_state(sync_status.state),
         :raw_state      => sync_status.state,
@@ -206,12 +206,21 @@ class SyncManagementController < ApplicationController
   end
 
   # calculate the % complete of ongoing sync from pulp
-  def calc_progress(val)
-    completed = val.progress.total_size - val.progress.size_left
-    progress = if val.state =~ /error/i then -1
-               elsif val.progress.total_size == 0 then 0
-               else completed.to_f / val.progress.total_size.to_f * 100
-               end
+  def calc_progress(val, content_type)
+
+    if content_type == Repository::PUPPET_TYPE
+      completed = val.progress.total_count - val.progress.items_left
+      progress = if val.state =~ /error/i then -1
+                 elsif val.progress.total_count == 0 then 0
+                 else completed.to_f / val.progress.total_count.to_f * 100
+                 end
+    else
+      completed = val.progress.total_size - val.progress.size_left
+      progress = if val.state =~ /error/i then -1
+                 elsif val.progress.total_size == 0 then 0
+                 else completed.to_f / val.progress.total_size.to_f * 100
+                 end
+    end
 
     {:count => val.progress.total_count,
      :left => val.progress.items_left,
