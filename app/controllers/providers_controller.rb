@@ -139,8 +139,8 @@ class ProvidersController < ApplicationController
   end
 
   def create
-    @provider = Provider.create! params[:provider].merge({:provider_type => Provider::CUSTOM,
-                                                          :organization => current_organization})
+    @provider = Provider.create! params[:provider].merge(:provider_type => Provider::CUSTOM,
+                                                         :organization => current_organization)
     notify.success _("Provider '%s' was created.") % @provider['name']
 
     if search_validate(Provider, @provider.id, params[:search])

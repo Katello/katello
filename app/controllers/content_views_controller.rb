@@ -39,7 +39,7 @@ class ContentViewsController < ApplicationController
   def refresh
     initial_version = @view.version(current_organization.library).try(:version)
 
-    new_version = @view.refresh_view({:notify => true})
+    new_version = @view.refresh_view(:notify => true)
 
     notify.success(_("Started generating version %{view_version} of content view '%{view_name}'.") %
                        {:view_name => @view.name, :view_version => new_version.version})

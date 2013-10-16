@@ -137,14 +137,14 @@ module Experimental
 
     def label_wrapper(options)
       tag_options = options[:label_wrapper][:tag_options] || {}
-      tag_options.merge!({:class => options[:label_wrapper][:class]})
+      tag_options.merge!(:class => options[:label_wrapper][:class])
 
       content_tag(:div, tag_options) { yield }
     end
 
     def input_wrapper(options)
       tag_options = options[:input_wrapper][:tag_options] || {}
-      tag_options.merge!({:class => options[:input_wrapper][:class]})
+      tag_options.merge!(:class => options[:input_wrapper][:class])
 
       if options[:help]
         content_tag(:div, tag_options) do

@@ -82,7 +82,7 @@ Warden::Strategies.add(:openid) do
       # we already have cookie
       identifier = "#{Katello.config.sso.provider_url}/user/#{username}"
       custom!([401,
-               {'WWW-Authenticate' => Rack::OpenID.build_header({:identifier => identifier})},
+               {'WWW-Authenticate' => Rack::OpenID.build_header(:identifier => identifier)},
                ''])
     else
       # we have no cookie yet so we plain redirect to OpenID provider to login

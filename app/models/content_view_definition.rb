@@ -121,7 +121,7 @@ class ContentViewDefinition < ContentViewDefinitionBase
   end
 
   def has_promoted_views?
-    !! self.content_views.promoted.first
+    !!self.content_views.promoted.first
   end
 
   def has_repo_conflicts?

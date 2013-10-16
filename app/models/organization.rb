@@ -142,12 +142,12 @@ class Organization < ActiveRecord::Base
   end
 
   def being_deleted?
-    ! self.deletion_task_id.nil?
+    !self.deletion_task_id.nil?
   end
 
   def applying_default_info?
     return false if self.apply_info_task_id.nil?
-    ! TaskStatus.find_by_id(self.apply_info_task_id).finished?
+    !TaskStatus.find_by_id(self.apply_info_task_id).finished?
   end
 
   def initialize_default_info
@@ -196,7 +196,7 @@ class Organization < ActiveRecord::Base
 
   def auto_attaching_all_systems?
     return false if self.owner_auto_attach_all_systems_task_id.nil?
-    ! TaskStatus.find_by_id(self.owner_auto_attach_all_systems_task_id).finished?
+    !TaskStatus.find_by_id(self.owner_auto_attach_all_systems_task_id).finished?
   end
 
   def auto_attach_all_systems

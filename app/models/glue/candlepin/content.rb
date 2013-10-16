@@ -90,20 +90,20 @@ module Glue::Candlepin::Content
       #this means we don't recreate the environment for the same repo in
       #each environment.   We do the same for it being disabled, we check
       #to make sure it is not enabled in the contnet before refreshing
-      self.content.update({
+      self.content.update(
         :name => self.name,
         :contentUrl => Glue::Pulp::Repos.custom_content_path(self.product, label),
         :gpgUrl => yum_gpg_key_url,
         :label => custom_content_label,
         :type => self.content_type,
         :vendor => Provider::CUSTOM
-      })
+      )
     end
 
     def create_content
       #only used for custom content
       fail 'Can only create content for custom providers' if self.product.provider.redhat_provider?
-      new_content = ::Candlepin::ProductContent.new({
+      new_content = ::Candlepin::ProductContent.new(
         :content => {
           :name => self.name,
           :contentUrl => Glue::Pulp::Repos.custom_content_path(self.product, self.label),
@@ -112,7 +112,7 @@ module Glue::Candlepin::Content
           :vendor => Provider::CUSTOM
         },
         :enabled => true
-      })
+      )
       new_content.create
       self.product.add_content new_content
       self.content_id = new_content.content.id

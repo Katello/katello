@@ -194,7 +194,7 @@ module Authorization::Enforcement
     query = Permission.joins(:role).joins(
         "INNER JOIN roles_users ON roles_users.role_id = roles.id").joins(
         "left outer join permissions_verbs on permissions.id = permissions_verbs.permission_id").joins(
-        "left outer join verbs on verbs.id = permissions_verbs.verb_id").where({ "roles_users.user_id" => id })
+        "left outer join verbs on verbs.id = permissions_verbs.verb_id").where("roles_users.user_id" => id)
     return query.where(org_clause, org_hash) unless exclude_orgs_clause
     query
   end

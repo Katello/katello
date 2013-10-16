@@ -161,9 +161,9 @@ class Changeset < ActiveRecord::Base
 
   def as_json(options = nil)
     options ||= {}
-    super(options.merge({
+    super(options.merge(
           :methods => [:action_type]
-          })
+          )
        )
   end
 

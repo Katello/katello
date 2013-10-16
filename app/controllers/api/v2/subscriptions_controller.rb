@@ -46,7 +46,7 @@ class Api::V2::SubscriptionsController < Api::V2::ApiController
         :total => @system.consumed_entitlements.count
     }
 
-    respond({ :collection => subscriptions })
+    respond(:collection => subscriptions)
   end
 
   api :GET, "/systems/:system_id/subscriptions/available", "List available subscriptions"
@@ -69,7 +69,7 @@ class Api::V2::SubscriptionsController < Api::V2::ApiController
         :total => available.count
     }
 
-    respond_for_index({ :collection => collection, :template => :index })
+    respond_for_index(:collection => collection, :template => :index)
   end
 
   api :POST, "/systems/:system_id/subscriptions", "Create a subscription"
