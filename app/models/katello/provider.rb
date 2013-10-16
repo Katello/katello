@@ -80,7 +80,7 @@ class Provider < ActiveRecord::Base
   end
 
   def count_providers(type)
-    ::Provider.where(:organization_id => self.organization_id, :provider_type => type).count(:id)
+    Provider.where(:organization_id => self.organization_id, :provider_type => type).count(:id)
   end
 
   def yum_repo?

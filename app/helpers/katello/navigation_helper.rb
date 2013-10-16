@@ -30,9 +30,9 @@ module NavigationHelper
 
   def add_notices
     return {
-      :count          => Notice.for_user(current_user).for_org(current_organization).count.to_s,
-      :url            => notices_path,
-      :new_notices_url   => notices_get_new_path
+      :count          => Notice.for_user(User.current).for_org(current_organization).count.to_s,
+      :url            => katello_notices_path,
+      :new_notices_url   => katello_notices_get_new_path
     }
   end
 

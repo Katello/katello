@@ -11,8 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class Api::ApiController < ActionController::Base
-  include ActionController::HttpAuthentication::Basic
+class Api::ApiController < ::Api::BaseController
   include Profiling
   include KTLocale
 
@@ -24,7 +23,7 @@ class Api::ApiController < ActionController::Base
   # override warden current_user (returns nil because there is no user in that scope)
   def current_user
     # get the logged user from the correct scope
-    user(:api) || user
+    User.current
   end
 
   def load_search_service(service = nil)
@@ -49,16 +48,9 @@ class Api::ApiController < ActionController::Base
   end
 
   def require_user
-
-    if !request.authorization && current_user
-      return true
-    else
-      params[:auth_username], params[:auth_password] = user_name_and_password(request) if request.authorization
-      authenticate! :scope => :api
-      params.delete('auth_username')
-      params.delete('auth_password')
+    if authenticate && session[:user]
+      User.current = User.find(session[:user])
     end
-
   rescue => e
     logger.error "failed to authenticate API request: " << pp_exception(e)
     head :status => HttpErrors::INTERNAL_ERROR

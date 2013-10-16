@@ -17,7 +17,7 @@ class Api::V1::ApiController < Api::ApiController
   include Api::V1::ErrorHandling
 
   # support for session (thread-local) variables must be the last filter in this class
-  include Util::ThreadSession::Controller
+  include Foreman::ThreadSession::Cleaner
   include AuthorizationRules
 
   resource_description do

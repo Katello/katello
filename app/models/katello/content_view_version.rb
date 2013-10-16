@@ -18,7 +18,7 @@ class ContentViewVersion < ActiveRecord::Base
   belongs_to :content_view, :inverse_of => :content_view_versions
   has_many :content_view_version_environments, :dependent => :destroy
   has_many :environments, {:through      => :content_view_version_environments,
-                           :class_name   => "KTEnvironment",
+                           :class_name   => "Katello::KTEnvironment",
                            :inverse_of   => :content_view_versions,
                            :before_add    => :add_environment,
                            :after_remove => :remove_environment
@@ -26,7 +26,7 @@ class ContentViewVersion < ActiveRecord::Base
 
   has_many :repositories, :dependent => :destroy
   has_one :task_status, :as => :task_owner, :dependent => :destroy
-  belongs_to :definition_archive, :class_name => "ContentViewDefinitionArchive",
+  belongs_to :definition_archive, :class_name => "Katello::ContentViewDefinitionArchive",
                                   :inverse_of => :content_view_versions
 
   validates :definition_archive_id, :presence => true, :if => :has_definition?
@@ -75,8 +75,8 @@ class ContentViewVersion < ActiveRecord::Base
   end
 
   def self.in_environment(env)
-    joins(:content_view_version_environments).where('content_view_version_environments.environment_id' => env).
-        order('content_view_version_environments.environment_id')
+    joins(:content_view_version_environments).where("#{Katello::ContentViewVersionEnvironment.table_name}.environment_id" => env).
+        order("#{Katello::ContentViewVersionEnvironment.table_name}.environment_id")
   end
 
   def refresh_version(notify = false)

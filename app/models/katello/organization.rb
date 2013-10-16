@@ -15,7 +15,7 @@ class Organization < ActiveRecord::Base
 
   ALLOWED_DEFAULT_INFO_TYPES = %w(system distributor)
 
-  include Glue::Candlepin::Owner if Katello.config.use_cp
+  #include Glue::Candlepin::Owner if Katello.config.use_cp
   include Glue if Katello.config.use_cp
 
   include Glue::Event
@@ -120,7 +120,7 @@ class Organization < ActiveRecord::Base
   end
 
   def create_redhat_provider
-    self.providers << ::Provider.new(:name => "Red Hat", :provider_type => ::Provider::REDHAT, :organization => self)
+    self.providers << Provider.new(:name => "Red Hat", :provider_type => Provider::REDHAT, :organization => self)
   end
 
   def validate_destroy(current_org)
