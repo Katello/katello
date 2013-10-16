@@ -36,7 +36,7 @@ module Api
         yield if block_given?
         status = options[:status] || 200
 
-        render :template => "/api/v2/%s/%s" % [resource_name, action], :status => status
+        render :template => "katello/api/v2/%s/%s" % [resource_name, action], :status => status
       end
 
       def respond_with_template_resource(action, resource_name, options = {})
