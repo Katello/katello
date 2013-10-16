@@ -37,7 +37,7 @@ module Authorization::Enforcement
       def self.allowed_to?(verb, resource_type, tags = nil, org = nil, any_tags = false)
         u = User.current
         fail Errors::UserNotSet, "current user is not set" if u.nil? || !u.is_a?(User)
-        u.allowed_to?(verb, resource_type, tags, org, any_tags)
+        u.allowed_to_in_katello?(verb, resource_type, tags, org, any_tags)
       end
 
       # Class method with the very same functionality as allowed_to? but throws
@@ -76,16 +76,16 @@ module Authorization::Enforcement
 
     all_tags_clause = ""
     unless resource_type == :organizations || ResourceType.global_types.include?(resource_type.to_s)
-      all_tags_clause = " AND (permissions.all_tags = :true)"
+      all_tags_clause = " AND (#{Katello::Permission.table_name}.all_tags = :true)"
     end
 
     clause_all_resources_or_tags = <<-SQL.split.join(" ")
-        permissions.resource_type_id =
-          (select id from resource_types where resource_types.name = :all) OR
-          (permissions.resource_type_id =
-            (select id from resource_types where resource_types.name = :resource_type) AND
-            (verbs.verb in (:no_tag_verbs) OR
-              (permissions.all_verbs=:true OR verbs.verb in (:verbs) #{all_tags_clause})))
+        #{Katello::Permission.table_name}.resource_type_id =
+          (select id from #{Katello::ResourceType.table_name} where #{Katello::ResourceType.table_name}.name = :all) OR
+          (#{Katello::Permission.table_name}.resource_type_id =
+            (select id from #{Katello::ResourceType.table_name} where #{Katello::ResourceType.table_name}.name = :resource_type) AND
+            (#{Katello::Verb.table_name}.verb in (:no_tag_verbs) OR
+              (#{Katello::Permission.table_name}.all_verbs=:true OR #{Katello::Verb.table_name}.verb in (:verbs) #{all_tags_clause})))
     SQL
     clause_params = { :true => true, :all => "all", :resource_type => resource_type, :verbs => verbs }
     org_permissions.where(clause_all_resources_or_tags,
@@ -99,8 +99,8 @@ module Authorization::Enforcement
   #
   # This method is called by every Model's list method
   def allowed_tags_sql(verbs = nil, resource_type  =  nil, org  =  nil)
-    select_on = "DISTINCT(permission_tags.tag_id)"
-    select_on = "DISTINCT(permissions.organization_id)" if resource_type == :organizations
+    select_on = "DISTINCT(#{Katello::PermissionTag.table_name}.tag_id)"
+    select_on = "DISTINCT(#{Katello::Permission.table_name}.organization_id)" if resource_type == :organizations
 
     allowed_tags_query(verbs, resource_type, org, false).select(select_on).to_sql
   end
@@ -111,7 +111,7 @@ module Authorization::Enforcement
   # * a permission Symbol (eg. :edit_project)
   #
   # This method is called by every protected controller.
-  def allowed_to?(verbs, resource_type, tags = nil, org = nil, any_tags = false)
+  def allowed_to_in_katello?(verbs, resource_type, tags = nil, org = nil, any_tags = false)
     tags = [] if tags.nil?
     tags = tags.is_a?(Array) ? tags.clone : [tags]
     if tags.detect { |tag| !(tag.is_a?(Numeric) || (tag.is_a?(String) && tag.to_s =~ /^\d+$/)) }
@@ -127,12 +127,12 @@ module Authorization::Enforcement
     tags_query = allowed_tags_query(verbs, resource_type, org)
 
     if tags.empty? || resource_type == :organizations
-      to_count = "permissions.id"
+      to_count = "#{Katello::Permission.table_name}.id"
     else
-      to_count = "permission_tags.tag_id"
+      to_count = "#{Katello::PermissionTag.table_name}.tag_id"
     end
 
-    tags_query = tags_query.where("permission_tags.tag_id in (:tags)", :tags => tags) unless tags.empty?
+    tags_query = tags_query.where("#{Katello::PermissionTag.table_name}.tag_id in (:tags)", :tags => tags) unless tags.empty?
     count = tags_query.count(to_count, :distinct => true)
     if tags.empty? || any_tags
       count > 0
@@ -158,44 +158,44 @@ module Authorization::Enforcement
 
     if resource_type != :organizations
       clause = <<-SQL.split.join(" ")
-                permissions.resource_type_id =
-                  (select id from resource_types where resource_types.name = :resource_type) AND
-                  (permissions.all_verbs=:true OR verbs.verb in (:verbs))
+                #{Katello::Permission.table_name}.resource_type_id =
+                  (select id from #{Katello::ResourceType.table_name} where #{Katello::ResourceType.table_name}.name = :resource_type) AND
+                  (#{Katello::Permission.table_name}.all_verbs=:true OR #{Katello::Verb.table_name}.verb in (:verbs))
       SQL
 
       org_permissions = org_permissions.joins(
-          "left outer join permission_tags on permissions.id = permission_tags.permission_id")
+          "left outer join #{Katello::PermissionTag.table_name} on #{Katello::Permission.table_name}.id = #{Katello::PermissionTag.table_name}.permission_id")
     else
       if allowed_to_check
-        org_clause = "permissions.organization_id is null"
-        org_clause = org_clause + " OR permissions.organization_id = :organization_id " if org
+        org_clause = "#{Katello::Permission.table_name}.organization_id is null"
+        org_clause = org_clause + " OR #{Katello::Permission.table_name}.organization_id = :organization_id " if org
         org_hash = { }
         org_hash = { :organization_id => org.id } if org
         org_permissions = org_permissions.where(org_clause, org_hash)
       else
-        org_permissions = org_permissions.where("permissions.organization_id is not null")
+        org_permissions = org_permissions.where("#{Katello::Permission.table_name}.organization_id is not null")
       end
 
       clause = <<-SQL.split.join(" ")
-                permissions.resource_type_id =
-                  (select id from resource_types where resource_types.name = :all) OR
-                  (permissions.resource_type_id =
-                    (select id from resource_types where resource_types.name = :resource_type) AND
-                    (permissions.all_verbs=:true OR verbs.verb in (:verbs)))
+                #{Katello::Permission.table_name}.resource_type_id =
+                  (select id from #{Katello::ResourceType.table_name} where #{Katello::ResourceType.table_name}.name = :all) OR
+                  (#{Katello::Permission.table_name}.resource_type_id =
+                    (select id from #{Katello::ResourceType.table_name} where #{Katello::ResourceType.table_name}.name = :resource_type) AND
+                    (#{Katello::Permission.table_name}.all_verbs=:true OR #{Katello::Verb.table_name}.verb in (:verbs)))
       SQL
     end
     org_permissions.where(clause, clause_params)
   end
 
   def org_permissions_query(org, exclude_orgs_clause = false)
-    org_clause = "permissions.organization_id is null"
-    org_clause = org_clause + " OR permissions.organization_id = :organization_id " if org
+    org_clause = "#{Katello::Permission.table_name}.organization_id is null"
+    org_clause = org_clause + " OR #{Katello::Permission.table_name}.organization_id = :organization_id " if org
     org_hash = { }
     org_hash = { :organization_id => org.id } if org
     query = Permission.joins(:role).joins(
-        "INNER JOIN roles_users ON roles_users.role_id = roles.id").joins(
-        "left outer join permissions_verbs on permissions.id = permissions_verbs.permission_id").joins(
-        "left outer join verbs on verbs.id = permissions_verbs.verb_id").where("roles_users.user_id" => id)
+        "INNER JOIN #{Katello::RolesUser.table_name} ON #{Katello::RolesUser.table_name}.role_id = #{Katello::Role.table_name}.id").joins(
+        "left outer join katello_permissions_verbs on #{Katello::Permission.table_name}.id = katello_permissions_verbs.permission_id").joins(
+        "left outer join #{Katello::Verb.table_name} on #{Katello::Verb.table_name}.id = katello_permissions_verbs.verb_id").where("#{Katello::RolesUser.table_name}.user_id" => id)
     return query.where(org_clause, org_hash) unless exclude_orgs_clause
     query
   end

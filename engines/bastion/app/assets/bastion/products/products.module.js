@@ -39,16 +39,18 @@ angular.module('Bastion.products', [
  *   Used for systems level configuration such as setting up the ui state machine.
  */
 angular.module('Bastion.products').config(['$stateProvider', function($stateProvider) {
+    var templatePrefix = '../';
+
     $stateProvider.state('products', {
         abstract: true,
         controller: 'ProductsController',
-        templateUrl: 'products/views/products.html'
+        templateUrl: templatePrefix + 'products/views/products.html'
     })
     .state('products.index', {
         url: '/products',
         views: {
             'table': {
-                templateUrl: 'products/views/products-table-full.html'
+                templateUrl: templatePrefix + 'products/views/products-table-full.html'
             }
         }
     })
@@ -58,11 +60,11 @@ angular.module('Bastion.products').config(['$stateProvider', function($stateProv
         collapsed: true,
         views: {
             'table': {
-                templateUrl: 'products/views/products-table-collapsed.html'
+                templateUrl: templatePrefix + 'products/views/products-table-collapsed.html'
             },
             'action-panel': {
                 controller: 'NewProductController',
-                templateUrl: 'products/new/views/product-new.html'
+                templateUrl: templatePrefix + 'products/new/views/product-new.html'
             }
         }
     })
@@ -70,13 +72,13 @@ angular.module('Bastion.products').config(['$stateProvider', function($stateProv
         url: '/products/new',
         collapsed: true,
         controller: 'ProductFormController',
-        templateUrl: 'products/new/views/product-new-form.html'
+        templateUrl: templatePrefix + 'products/new/views/product-new-form.html'
     })
     .state('products.new.provider', {
         url: '/products/new/provider',
         collapsed: true,
         controller: 'NewProviderController',
-        templateUrl: 'providers/new/views/provider-new.html'
+        templateUrl: templatePrefix + 'providers/new/views/provider-new.html'
     })
 
     .state("products.discovery", {
@@ -84,10 +86,10 @@ angular.module('Bastion.products').config(['$stateProvider', function($stateProv
         abstract: true,
         views: {
             'table': {
-                templateUrl: 'products/views/products-table-collapsed.html'
+                templateUrl: templatePrefix + 'products/views/products-table-collapsed.html'
             },
             'action-panel': {
-                templateUrl: 'products/discovery/views/discovery-base.html',
+                templateUrl: templatePrefix + 'products/discovery/views/discovery-base.html',
                 controller: 'DiscoveryController'
             }
         }
@@ -95,13 +97,13 @@ angular.module('Bastion.products').config(['$stateProvider', function($stateProv
     .state("products.discovery.scan", {
         collapsed: true,
         url: '/products/discovery/scan',
-        templateUrl: 'products/discovery/views/discovery.html'
+        templateUrl: templatePrefix + 'products/discovery/views/discovery.html'
 
     })
     .state("products.discovery.create", {
         collapsed: true,
         url: '/products/discovery/scan/create',
-        templateUrl: 'products/discovery/views/discovery-create.html',
+        templateUrl: templatePrefix + 'products/discovery/views/discovery-create.html',
         controller: 'DiscoveryFormController'
 
     })
@@ -112,11 +114,11 @@ angular.module('Bastion.products').config(['$stateProvider', function($stateProv
         collapsed: true,
         views: {
             'table': {
-                templateUrl: 'products/views/products-table-collapsed.html'
+                templateUrl: templatePrefix + 'products/views/products-table-collapsed.html'
             },
             'action-panel': {
                 controller: 'ProductDetailsController',
-                templateUrl: 'products/details/views/product-details.html'
+                templateUrl: templatePrefix + 'products/details/views/product-details.html'
             }
         }
     })
@@ -124,7 +126,7 @@ angular.module('Bastion.products').config(['$stateProvider', function($stateProv
         url: '/info',
         collapsed: true,
         controller: 'ProductDetailsInfoController',
-        templateUrl: 'products/details/views/product-info.html'
+        templateUrl: templatePrefix + 'products/details/views/product-info.html'
     })
 
     .state('products.details.repositories', {
@@ -135,19 +137,19 @@ angular.module('Bastion.products').config(['$stateProvider', function($stateProv
     .state('products.details.repositories.index', {
         collapsed: true,
         url: '/repositories',
-        templateUrl: 'products/details/views/product-repositories.html'
+        templateUrl: templatePrefix + 'products/details/views/product-repositories.html'
     })
     .state('products.details.repositories.new', {
         url: '/repositories/new',
         collapsed: true,
         controller: 'NewRepositoryController',
-        templateUrl: 'repositories/new/views/repository-new.html'
+        templateUrl: templatePrefix + 'repositories/new/views/repository-new.html'
     })
     .state('products.details.repositories.info', {
         url: '/repositories/:repositoryId',
         collapsed: true,
         controller: 'RepositoryDetailsInfoController',
-        templateUrl: 'repositories/details/views/repository-info.html'
+        templateUrl: templatePrefix + 'repositories/details/views/repository-info.html'
     });
 
 }]);

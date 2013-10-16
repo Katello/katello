@@ -127,7 +127,7 @@ class PulpSyncStatus < PulpTaskStatus
   WAITING   = "waiting"
   CANCELED  = "canceled"
 
-  class Status < ::TaskStatus::Status
+  class Status < TaskStatus::Status
     NOT_SYNCED = :not_synced
   end
 

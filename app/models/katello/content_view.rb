@@ -33,7 +33,7 @@ class ContentView < ActiveRecord::Base
   has_many :content_view_versions, :dependent => :destroy
   alias_method :versions, :content_view_versions
 
-  belongs_to :environment_default, :class_name => "KTEnvironment", :inverse_of => :default_content_view,
+  belongs_to :environment_default, :class_name => "Katello::KTEnvironment", :inverse_of => :default_content_view,
                                    :foreign_key => :environment_default_id # TODO: this relation seems to be broken
 
   has_many :component_content_views, :dependent => :destroy
@@ -57,7 +57,7 @@ class ContentView < ActiveRecord::Base
 
   def self.in_environment(env)
     joins(:content_view_versions => :content_view_version_environments).
-      where("content_view_version_environments.environment_id = ?", env.id)
+      where("#{Katello::ContentViewVersionEnvironments.table_name}.environment_id = ?", env.id)
   end
 
   def self.composite(composite = true)
@@ -127,7 +127,7 @@ class ContentView < ActiveRecord::Base
   end
 
   def environments
-    KTEnvironment.joins(:content_view_versions).where('content_view_versions.content_view_id' => self.id)
+    KTEnvironment.joins(Katello::ContentViewVersion.table_name).where("#{Katello::ContentViewVersion.table_name}.content_view_id" => self.id)
   end
 
   def in_environment?(env)
@@ -135,7 +135,7 @@ class ContentView < ActiveRecord::Base
   end
 
   def version(env)
-    self.versions.in_environment(env).order('content_view_versions.id ASC').scoped(:readonly => false).last
+    self.versions.in_environment(env).order("#{Katello::ContentViewVersion.table_name}.id ASC").scoped(:readonly => false).last
   end
 
   def version_environment(env)
