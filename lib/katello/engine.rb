@@ -19,7 +19,8 @@ module Katello
     end
 
     initializer "katello.paths" do |app|
-      app.config.paths["config/routes"] += Dir[::Katello::Engine.root.join("config/routes/**/*.rb")]
+      app.routes_reloader.paths << "#{Katello::Engine.root}/config/routes/api/v1.rb"
+      app.routes_reloader.paths << "#{Katello::Engine.root}/config/routes/api/v2.rb"
     end
 
     initializer "logging" do |app|

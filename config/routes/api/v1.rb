@@ -3,7 +3,7 @@ require 'katello/api/constraints/api_version_constraint'
 
 Rails.application.routes.draw do
 
-  scope :katello, :as => :katello do
+  scope 'katello', :as => 'katello' do
     scope :module => :katello do
       namespace :api do
 
