@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class ActivationKeysController < ApplicationController
+class ActivationKeysController < Katello::ApplicationController
   include AutoCompleteSearch
   include ActivationKeysHelper
 
@@ -285,7 +285,7 @@ class ActivationKeysController < ApplicationController
       :name => controller_display_name,
       :list_partial => 'activation_keys/list_activation_keys',
       :ajax_load  => true,
-      :ajax_scroll => items_activation_keys_path,
+      :ajax_scroll => items_katello_activation_keys_path,
       :enable_create => ActivationKey.manageable?(current_organization),
       :search_class => ActivationKey,
       :initial_action => :edit}
