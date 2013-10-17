@@ -93,6 +93,7 @@ class Api::V2::SystemsController < Api::V1::SystemsController
 
   api :GET, "/systems/:id/tasks", "List async tasks for the system"
   def tasks
+    @system.refresh_tasks
     query_string = params[:name] ? "name:#{params[:name]}" : params[:search]
 
     filters = [{:terms => {:task_owner_id => [@system.id]}},

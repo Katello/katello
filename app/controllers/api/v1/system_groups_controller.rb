@@ -71,7 +71,8 @@ class Api::V1::SystemGroupsController < Api::V1::ApiController
     query_string = params[:search]
 
     filters = [:terms => {:id => SystemGroup.readable(@organization).pluck(:id)}]
-    filters << {:term => {:name => params[:name]}} if params[:name]
+    #downcase filtered analyzed field
+    filters << {:term => {:name => params[:name].downcase}} if params[:name]
 
     options = {
         :filters => filters

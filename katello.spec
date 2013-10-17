@@ -206,6 +206,7 @@ Summary:        A meta-package to pull in all components for Katello
 Requires:       %{name}
 Requires:       %{name}-configure
 Requires:       %{name}-cli
+Requires:       node-installer
 Requires:       postgresql-server
 Requires:       postgresql
 
@@ -237,7 +238,6 @@ BuildArch:      noarch
 Summary:        A meta-package to pull in all components for Katello and Foreman
 Requires:       %{name}-all
 Requires:       %{name}-configure-foreman
-Requires:       %{name}-configure-foreman-proxy
 
 %description foreman-all
 
