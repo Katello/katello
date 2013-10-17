@@ -47,7 +47,7 @@ module Resources
 
     end
 
-    class CandlepinResource < Katello::HttpResource
+    class CandlepinResource < HttpResource
       cfg = Katello.config.candlepin
       url = cfg.url
       self.prefix = URI.parse(url).path
@@ -253,7 +253,7 @@ module Resources
       end
     end
 
-    class UpstreamConsumer < Katello::HttpResource
+    class UpstreamConsumer < HttpResource
 
       def self.logger
         ::Logging.logger['cp_rest']
