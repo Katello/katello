@@ -7,7 +7,7 @@
 
 = content_for :content do
   #system_group_new
-    = form_for @group, :html => {:method => :post}, :url => system_groups_path do |form|
+    = form_for @group, :html => {:method => :post}, :url => katello_system_groups_path do |form|
 
       %fieldset.fl.clear
         .grid_2.ra
@@ -47,4 +47,4 @@
       .grid_4.la.prefix_2
         = button_to _("Save"), {:action => "create", :controller => "system_groups"}, :method => :post, :id => :group_save
 
-= render :template => "layouts/tupane_layout"
+= render :template => "katello/layouts/tupane_layout"
