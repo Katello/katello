@@ -10,7 +10,7 @@
         KT.system_groups.systems_setup(false);
       });
 
-= render :partial => "system_groups/tupane_header"
+= render :partial => "katello/system_groups/tupane_header"
 
 = content_for :content do
   #system_group_systems.full{'data-id'=>@group.id}
@@ -37,10 +37,10 @@
           %tr
             %td
               %a.view_systems.subpanel_element
-                = link_to _('View in Systems List'), systems_path(:anchor => "/systems?search=system_group:\"#{@group.name}\"")
+                = link_to _('View in Systems List'), katello_systems_path(:anchor => "/systems?search=system_group:\"#{@group.name}\"")
             %td{:colspan => 3}
               - if Katello.config.katello?
-                %a.edit_systems.subpanel_element{"data-url" => edit_systems_system_group_path(@group.id)}
+                %a.edit_systems.subpanel_element{"data-url" => edit_systems_katello_system_group_path(@group.id)}
                   = _("Edit Details for All Systems")
           %tr
             %th
@@ -57,11 +57,11 @@
             %td
               = _("No systems currently exist in this system group.")
             %td
-          = render :partial=>'system_item', :collection=>@system_joins, :as=>:system
+          = render :partial=>'katello/system_groups/system_item', :collection=>@system_joins, :as=>:system
 
 
 = content_for :footer do
   .full
     %input#remove_systems.fr.button{:type=>:button, :value=>_("Remove Selected")}
 
-= render :template => "layouts/tupane_layout"
+= render :template => "katello/layouts/tupane_layout"
