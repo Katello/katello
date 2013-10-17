@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class Api::ApiController < ::Api::BaseController
+class Api::ApiController < Katello::Api::BaseController
   include Profiling
   include KTLocale
 
