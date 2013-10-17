@@ -16,7 +16,7 @@ module Navigation
 
     class User < Navigation::Menu
 
-      include ApplicationHelper
+      include Katello::ApplicationHelper
 
       def initialize(user)
         @key           = :user
