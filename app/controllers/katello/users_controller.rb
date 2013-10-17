@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class UsersController < ApplicationController
+class UsersController < Katello::ApplicationController
   include AutoCompleteSearch
 
   def section_id
@@ -362,7 +362,7 @@ class UsersController < ApplicationController
                        :create_label => _('+ New User'),
                        :name          => controller_display_name,
                        :ajax_load     => true,
-                       :ajax_scroll   => items_users_path,
+                       :ajax_scroll   => items_katello_users_path,
                        :enable_create => User.creatable?,
                        :search_class  => User }
   end

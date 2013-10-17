@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class Api::V2::UsersController < Api::V1::UsersController
+class Api::V2::UsersController < Katello::Api::V1::UsersController
 
   include Api::V2::Rendering
 

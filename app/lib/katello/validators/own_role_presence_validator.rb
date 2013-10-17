@@ -14,8 +14,8 @@ module Katello
 module Validators
   class OwnRolePresenceValidator < ActiveModel::Validator
     def validate(record)
-      unless record.roles.any? {|r| r.type == 'UserOwnRole'}
-        if record.errors[:roles] << _("Own Role must be included in roles '%s'") % record.roles
+      unless record.katello_roles.any? {|r| r.type == 'UserOwnRole'}
+        if record.errors[:roles] << _("Own Role must be included in roles '%s'") % record.katello_roles
           return
         end
       end

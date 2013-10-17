@@ -57,7 +57,8 @@ module Katello
         has_many :katello_roles, :through => :roles_users, :before_remove => :super_admin_check,
                   :uniq => true, :extend => RolesPermissions::UserOwnRole,
                   :source => :role
-        validates_with Validators::OwnRolePresenceValidator, :attributes => :katello_roles
+        # TODO: ENGINE own role is not present
+        # validates_with Validators::OwnRolePresenceValidator, :attributes => :katello_roles
         has_many :help_tips
         has_many :user_notices
         has_many :notices, :through => :user_notices
@@ -67,20 +68,21 @@ module Katello
         belongs_to :default_environment, :class_name => "KTEnvironment"
         serialize :preferences, Hash
 
-        validates :username, :uniqueness => true, :presence => true
-        validates_with Validators::UsernameValidator, :attributes => :username
-        validates_with Validators::NoTrailingSpaceValidator, :attributes => :username
-        validates_with Validators::LdapUsernameValidator, :attributes => :username
+        validates :login, :uniqueness => true, :presence => true
+        validates_with Validators::UsernameValidator, :attributes => :login
+        validates_with Validators::NoTrailingSpaceValidator, :attributes => :login
+        validates_with Validators::LdapUsernameValidator, :attributes => :login
 
-        validates :email, :presence => true, :if => :not_ldap_mode?
+        validates :mail, :presence => true, :if => :not_ldap_mode?
         validates :default_locale, :inclusion => {:in => Katello.config.available_locales, :allow_nil => true, :message => _("must be one of %s") % Katello.config.available_locales.join(', ')}
 
         # validate the password length before hashing
         validates_each :password do |model, attr, value|
           if Katello.config.warden != 'ldap'
-            if model.password_changed? || model.new_record?
-              model.errors.add(attr, _('must be at least 5 characters.')) if value.nil? || value.length < 5
-            end
+            # TODO: ENGINE model here does not have password_changed?
+            #if model.password_changed? || model.new_record?
+            #  model.errors.add(attr, _('must be at least 5 characters.')) if value.nil? || value.length < 5
+            #end
           end
         end
 
@@ -128,7 +130,7 @@ module Katello
         end
 
         def self.authenticate!(username, password)
-          u = User.where({ :username => username }).first
+          u = User.where({ :login => username }).first
           # check if user exists
           return nil unless u
           # check if not disabled
@@ -143,7 +145,7 @@ module Katello
         # if the user authenticates with LDAP, log them in
         def self.authenticate_using_ldap!(username, password)
           if Ldap.valid_ldap_authentication? username, password
-            User.where({ :username => username }).first || create_ldap_user!(username)
+            User.where({ :login => username }).first || create_ldap_user!(username)
           else
             nil
           end
@@ -155,7 +157,7 @@ module Katello
           # will never be called in that way
           User.current ||= User.first
           # user gets a dummy password and email
-          u = User.create!(:username => username)
+          u = User.create!(:login => username)
           User.current = u
           u
         end
@@ -223,7 +225,7 @@ module Katello
         end
 
         def cp_oauth_header
-          { 'cp-user' => self.username }
+          { 'cp-user' => self.login }
         end
 
         def send_password_reset
@@ -332,7 +334,7 @@ module Katello
 
           # make sure the user is still in those groups
           # this operation is inexpensive compared to getting a new group list
-          if !Ldap.is_in_groups(self.username, ldap_groups)
+          if !Ldap.is_in_groups(self.login, ldap_groups)
             # if user is not in these groups, flush their roles
             # this is expensive
             set_ldap_roles
@@ -346,7 +348,7 @@ module Katello
           # first, delete existing ldap roles
           clear_existing_ldap_roles!
           # load groups from ldap
-          groups = Ldap.ldap_groups(self.username)
+          groups = Ldap.ldap_groups(self.login)
           groups.each do |group|
             # find corresponding
             group_roles = LdapGroupRole.find_all_by_ldap_group(group)
@@ -419,7 +421,7 @@ module Katello
           end
 
           org_str = org ? "organization #{org.name} (#{org.name})" : " any organization"
-          logger.debug "Checking if user #{username} is allowed to #{verbs_str} in #{resource_type.inspect} " +
+          logger.debug "Checking if user #{login} is allowed to #{verbs_str} in #{resource_type.inspect} " +
             "scoped for #{tags_str} in #{org_str}"
         end
 
@@ -434,7 +436,7 @@ module Katello
 
         def super_admin_check(role)
           if role.superadmin? && role.users.length == 1
-            message = _("Cannot dissociate user '%{username}' from '%{role}' role. Need at least one user in the '%{role}' role.") % {:username => username, :role => role.name}
+            message = _("Cannot dissociate user '%{login}' from '%{role}' role. Need at least one user in the '%{role}' role.") % {:login => login, :role => role.name}
             errors[:base] << message
             raise ActiveRecord::RecordInvalid, self
           end
@@ -450,8 +452,8 @@ module Katello
         end
 
         def generate_remote_id
-          if self.username.ascii_only?
-            "#{Util::Model.labelize(self.username)}-#{SecureRandom.hex(4)}"
+          if self.login.ascii_only?
+            "#{Util::Model.labelize(self.login)}-#{SecureRandom.hex(4)}"
           else
             Util::Model.uuid
           end
