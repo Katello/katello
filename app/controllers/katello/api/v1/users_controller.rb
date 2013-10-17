@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class Api::V1::UsersController < Api::V1::ApiController
+class Api::V1::UsersController < Katello::Api::V1::ApiController
 
   before_filter :find_user, :only => [:show, :update, :destroy, :add_role, :remove_role, :list_roles]
   before_filter :find_user_by_username, :only => [:list_owners]
