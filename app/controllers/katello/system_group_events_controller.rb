@@ -34,7 +34,7 @@ class SystemGroupEventsController < ApplicationController
   end
 
   def index
-    render :partial => 'system_groups/events/index', :locals => {:group => @group, :jobs => jobs}
+    render :partial => 'katello/system_groups/events/index', :locals => {:group => @group, :jobs => jobs}
   end
 
   def show
@@ -42,7 +42,7 @@ class SystemGroupEventsController < ApplicationController
     if job.nil?
       render :nothing => true
     else
-      render :partial => 'system_groups/events/show',
+      render :partial => 'katello/system_groups/events/show',
              :locals => {:group => @group, :job => job}
     end
   end
@@ -55,7 +55,7 @@ class SystemGroupEventsController < ApplicationController
       statuses[:jobs] << {
         :id => status.id,
         :pending? => status.pending?,
-        :status_html => render_to_string(:template => 'system_groups/events/_items', :layout => false,
+        :status_html => render_to_string(:template => 'katello/system_groups/events/_items', :layout => false,
                                          :locals => {:include_tr => false, :group => @group, :job => status})
       }
     end
@@ -64,7 +64,7 @@ class SystemGroupEventsController < ApplicationController
       statuses[:tasks] << {
         :id => status.id,
         :pending? => status.pending?,
-        :status_html => render_to_string(:template => 'system_groups/events/_system_items', :layout => false,
+        :status_html => render_to_string(:template => 'katello/system_groups/events/_system_items', :layout => false,
                                          :locals => {:include_tr => false, :t => status})
       }
     end
@@ -82,7 +82,7 @@ class SystemGroupEventsController < ApplicationController
     statuses = jobs(current_user.page_size + offset)
     statuses = statuses[offset..statuses.length]
     if statuses
-      render(:partial => 'system_groups/events/more_items', :locals => {:cycle_extra => offset.odd?, :group => @group, :jobs => statuses})
+      render(:partial => 'katello/system_groups/events/more_items', :locals => {:cycle_extra => offset.odd?, :group => @group, :jobs => statuses})
     else
       render :nothing => true
     end
@@ -91,7 +91,7 @@ class SystemGroupEventsController < ApplicationController
   def items
     render_proc = lambda do |items, options|
       if items && !items.empty?
-        render_to_string(:partial => 'system_groups/events/more_items', :locals => {:cycle_extra => false, :group => @group, :jobs => items})
+        render_to_string(:partial => 'katello/system_groups/events/more_items', :locals => {:cycle_extra => false, :group => @group, :jobs => items})
       else
         "<tr><td>" + _("No events matching your search criteria.") + "</td></tr>"
       end

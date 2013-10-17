@@ -3,7 +3,7 @@
 
 = content_for :subcontent do
 
-  = form_tag update_systems_system_group_path(@group.id), :id => 'update_form',
+  = form_tag update_systems_katello_system_group_path(@group.id), :id => 'update_form',
     :method => :put, :class => 'env_content_view_selector' do
 
     = hidden_field_tag 'update_fields[environment_id]', @environment.id, :id => :environment_id
@@ -29,4 +29,4 @@
 
     = submit_tag _('Save'), :class => 'submit dialogbutton', :id=>"save_button"
 
-= render :template => "layouts/tupane_layout"
+= render :template => "katello/layouts/tupane_layout"
