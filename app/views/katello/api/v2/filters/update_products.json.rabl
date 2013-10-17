@@ -1,3 +1,3 @@
 object @resource
 
-extends "api/v2/filters/show"
+extends "katello/api/v2/filters/show"

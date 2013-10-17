@@ -5,9 +5,9 @@ attributes :name
 attributes :label
 attributes :description
 
-extends 'api/v2/common/org_reference'
+extends 'katello/api/v2/common/org_reference'
 
 attributes :provider_type
 
-extends 'api/v2/common/readonly'
-extends 'api/v2/common/timestamps'
+extends 'katello/api/v2/common/readonly'
+extends 'katello/api/v2/common/timestamps'

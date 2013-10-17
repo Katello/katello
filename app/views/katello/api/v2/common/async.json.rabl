@@ -1,3 +1,3 @@
 object @resource => :status
 
-extends 'api/v2/tasks/show'
+extends 'katello/api/v2/tasks/show'
