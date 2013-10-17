@@ -3,8 +3,8 @@
 
 = content_for :remove_item do
   .pane_actions
-    - if SystemGroup.creatable?(current_organization)
-      %a.pane_action.separator.copy-tipsy{'data-url' => copy_system_group_path(@group.id)}
+    - if Katello::SystemGroup.creatable?(current_organization)
+      %a.pane_action.separator.copy-tipsy{'data-url' => copy_katello_system_group_path(@group.id)}
         = _('Copy')
 
     - if @group.deletable?
