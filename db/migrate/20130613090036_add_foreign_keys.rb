@@ -7,6 +7,10 @@ class AddForeignKeys < ActiveRecord::Migration
 
   def self.up
     # Some older versions left providers and other models around after an organization or user was deleted
+    execute("delete from help_tips where user_id not in (select id from users)")
+    execute("delete from marketing_engineering_products where marketing_product_id not in (select id from products)")
+    execute("delete from search_favorites where user_id not in (select id from users)")
+    execute("delete from search_histories where user_id not in (select id from users)")
     execute("delete from providers where organization_id not in (select id from organizations)")
     execute("delete from task_statuses where organization_id not in (select id from organizations)")
     execute("delete from notices where organization_id not in (select id from organizations)")

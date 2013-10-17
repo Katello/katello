@@ -64,6 +64,8 @@ class Api::V2::SystemsControllerTest < Minitest::Rails::ActionController::TestCa
     items.stubs(:retrieve).returns([], 0)
     items.stubs(:total_items).returns([])
     Glue::ElasticSearch::Items.stubs(:new).returns(items)
+    System.any_instance.expects(:import_candlepin_tasks)
+
     get :tasks, :id => @system.uuid
 
     assert_response :success

@@ -246,10 +246,10 @@ Src::Application.routes.draw do
         resources :content_uploads, :controller => :content_uploads, :only => [:create, :destroy] do
           member do
             put :upload_bits
-            post :import_into_repo
           end
           collection do
             post :file, :to => 'content_uploads#upload_file'
+            post :import_into_repo
           end
         end
         member do

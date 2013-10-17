@@ -59,5 +59,9 @@ class Api::V1::PuppetModulesControllerTest < MiniTest::Rails::ActionController::
     PuppetModule.expects(:find).once.returns(mock({:repoids => ['uh-oh']}))
     get :show, :repository_id => @repo.id, :id => "abc-123"
     assert_response 404
+
+    PuppetModule.expects(:find).once.returns(nil)
+    get :show, :repository_id => @repo.id, :id => "abc-123"
+    assert_response 404
   end
 end

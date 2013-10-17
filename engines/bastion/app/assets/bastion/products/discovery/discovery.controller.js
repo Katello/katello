@@ -32,7 +32,7 @@ angular.module('Bastion.products').controller('DiscoveryController',
         var transformRows, setDiscoveryDetails;
 
         $scope.discovery = {url: ''};
-        $scope.panel.loading = false;
+        $scope.panel = {loading: false};
 
         if (!$scope.discoveryTable) {
             $scope.discoveryTable = {rows: []};
