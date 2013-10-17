@@ -49,6 +49,8 @@ angular.module('Bastion.products').controller('ProductFormController',
         };
 
         $scope.$watch('product.name', function() {
+            $scope.productForm.name.$setValidity('', true);
+
             $http.get(
                 '/katello/organizations/default_label', {
                 params: {'name': $scope.product.name}

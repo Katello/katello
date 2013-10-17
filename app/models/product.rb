@@ -39,6 +39,7 @@ class Product < ActiveRecord::Base
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name
   validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
   validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
+  validate  :validate_unique_name
 
   # scope
   def self.with_repos_only(env)
@@ -217,4 +218,13 @@ class Product < ActiveRecord::Base
     joins(:provider).where('providers.organization_id' => env.organization).
         where("(providers.provider_type ='#{::Provider::CUSTOM}') OR (providers.provider_type ='#{::Provider::REDHAT}' AND products.id in (#{query.to_sql}))")
   end
+
+  def validate_unique_name
+    if self.provider && !self.provider.redhat_provider? && self.name_changed?
+      if Product.in_org(self.provider.organization).where(:name => self.name).exists?
+        self.errors[:name] << _("Product with name %s already exists in this organization.") % self.name
+      end
+    end
+  end
+
 end
