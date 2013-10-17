@@ -1,3 +1,3 @@
 collection @collection
 
-extends "api/v2/repositories/show"
+extends "katello/api/v2/repositories/show"

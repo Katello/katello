@@ -7,4 +7,4 @@ attributes :inclusion
 node :type do |res|
   res.inclusion ? _("includes") : _("excludes")
 end
-extends 'api/v2/common/timestamps'
+extends 'katello/api/v2/common/timestamps'
