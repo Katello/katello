@@ -107,6 +107,10 @@ class Product < ActiveRecord::Base
     repositories
   end
 
+  def enabled?
+    !self.provider.redhat_provider? || self.repositories.enabled.present?
+  end
+
   def organization
     provider.organization
   end
