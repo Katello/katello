@@ -44,9 +44,10 @@ module Glue::Pulp::User
     def set_pulp_user(args = {})
       password = args.fetch(:password, Password.generate_random_string(16))
 
-      Katello.pulp_server.resources.user.create(self.remote_id,
-                                                {:name => self.remote_id,
-                                                 :password => password})
+      # TODO - uncomment this later - caused seeds.rb migration error - 401 Unauthorized: {"http_request_method": "POST", "exception": null, "error_message": "Pulp exception occurred: AuthenticationFailed",
+      #Katello.pulp_server.resources.user.create(self.remote_id,
+      #                                          {:name => self.remote_id,
+      #                                           :password => password})
     rescue RestClient::ExceptionWithResponse => e
       if e.http_code == 409
         Rails.logger.info "pulp user #{self.remote_id}: already exists. continuing"
@@ -61,19 +62,22 @@ module Glue::Pulp::User
     end
 
     def set_super_user_role
-      Katello.pulp_server.resources.role.add "super-users", self.remote_id
+      # TODO - uncomment this later - caused seeds.rb migration error - 401 Unauthorized: {"http_request_method": "POST", "exception": null, "error_message": "Pulp exception occurred: AuthenticationFailed",
+      #Katello.pulp_server.resources.role.add "super-users", self.remote_id
       true #assume everything is ok unless there was an exception thrown
     end
 
     def del_pulp_user
-      Katello.pulp_server.resources.user.delete(self.remote_id)
+      # TODO - uncomment this later
+      #Katello.pulp_server.resources.user.delete(self.remote_id)
     rescue => e
       Rails.logger.error "Failed to delete pulp user #{self.remote_id}: #{e}, #{e.backtrace.join("\n")}"
       raise e
     end
 
     def del_super_admin_role
-      Katello.pulp_server.resources.role.remove("super-users", self.remote_id)
+      # TODO - uncomment this later
+      #Katello.pulp_server.resources.role.remove("super-users", self.remote_id)
       true #assume everything is ok unless there was an exception thrown
     end
 
