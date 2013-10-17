@@ -1,3 +1,4 @@
 object @changeset => :changeset
 
-extends 'api/v2/changesets/show'
+extends 'katello/api/v2/changesets/show'
+

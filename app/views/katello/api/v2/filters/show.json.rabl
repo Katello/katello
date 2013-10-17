@@ -11,7 +11,7 @@ node :organization do |res|
 end
 
 child :rules do
-  extends 'api/v2/filter_rules/show'
+  extends 'katello/api/v2/filter_rules/show'
 end
 
 child :repositories do
@@ -21,4 +21,4 @@ child :products do
   attributes :id, :name
 end
 
-extends 'api/v2/common/timestamps'
+extends 'katello/api/v2/common/timestamps'

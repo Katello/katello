@@ -1,7 +1,7 @@
 object @activation_key
 
-extends 'api/v2/common/identifier'
-extends 'api/v2/common/org_reference'
+extends 'katello/api/v2/common/identifier'
+extends 'katello/api/v2/common/org_reference'
 
 attributes :all_tags, :role_id, :tags, :verbs, :all_verbs
 
@@ -10,4 +10,4 @@ node :resource_type_name do |permission|
   permission.resource_type.name
 end
 
-extends 'api/v2/common/timestamps'
+extends 'katello/api/v2/common/timestamps'
