@@ -1,7 +1,7 @@
 = javascript :system_events
 
 = javascript do
-  = render :partial => 'common/package_actions_i18n'
+  = render :partial => 'katello/common/package_actions_i18n'
 
 = javascript do
   -if editable
@@ -15,7 +15,7 @@
         KT.package_actions.init(false, 'system_group');
       });
 
-= render :partial => "system_groups/tupane_header"
+= render :partial => "katello/system_groups/tupane_header"
 
 = content_for :content do
   %input.events{:type => "hidden", 'data-url' => status_system_group_events_path(@group.id)}
@@ -65,6 +65,6 @@
             %a
               #{_("Name")}
         %tbody
-          = render :partial => 'system_groups/packages/items', :locals => {:editable => editable, :include_tr_shading => true, :group_id => @group.id}, :collection => jobs, :as => :job
+          = render :partial => 'katello/system_groups/packages/items', :locals => {:editable => editable, :include_tr_shading => true, :group_id => @group.id}, :collection => jobs, :as => :job
 
-= render :template => "layouts/tupane_layout"
+= render :template => "katello/layouts/tupane_layout"
