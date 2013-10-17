@@ -1,6 +1,6 @@
 object @resource
 
-extends 'api/v2/errata/_attributes'
+extends 'katello/api/v2/errata/_attributes'
 
 child Util::Data::ostructize(@object.pkglist) => :pkglist do
   attributes :short, :name

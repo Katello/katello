@@ -1,7 +1,7 @@
 object @changeset => :changeset
 
-extends 'api/v2/common/identifier'
-extends 'api/v2/common/timestamps'
+extends 'katello/api/v2/common/identifier'
+extends 'katello/api/v2/common/timestamps'
 
 attributes :environment_id, :state, :task_status_id
 attributes :promotion_date => :promoted_at

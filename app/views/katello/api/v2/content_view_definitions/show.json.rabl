@@ -1,7 +1,7 @@
 object @resource
 
-extends 'api/v2/common/identifier'
-extends 'api/v2/common/org_reference'
+extends 'katello/api/v2/common/identifier'
+extends 'katello/api/v2/common/org_reference'
 
 attributes :components, :composite
 
@@ -15,4 +15,4 @@ child :products => :products do
   attributes :id, :name
 end
 
-extends 'api/v2/common/timestamps'
+extends 'katello/api/v2/common/timestamps'

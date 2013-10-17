@@ -1,3 +1,3 @@
 collection @collection
 
-extends 'api/v2/errata/_attributes'
+extends 'katello/api/v2/errata/_attributes'
