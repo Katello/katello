@@ -1,9 +1,9 @@
 object @resource
 
-extends 'api/v2/common/identifier'
-extends 'api/v2/common/org_reference'
-extends 'api/v2/common/timestamps'
-extends 'api/v2/common/syncable'
+extends 'katello/api/v2/common/identifier'
+extends 'katello/api/v2/common/org_reference'
+extends 'katello/api/v2/common/timestamps'
+extends 'katello/api/v2/common/syncable'
 
 attributes :content_type
 attributes :unprotected, :full_path

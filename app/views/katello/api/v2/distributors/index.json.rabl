@@ -3,7 +3,7 @@ collection @distributors
 attributes :id, :name, :description, :uuid, :location
 attributes :environment_id, :serviceLevel
 child :environment => :environment do
-  extends 'api/v2/environments/show'
+  extends 'katello/api/v2/environments/show'
 end
 
-extends 'api/v2/common/timestamps'
+extends 'katello/api/v2/common/timestamps'

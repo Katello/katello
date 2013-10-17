@@ -1,3 +1,3 @@
 object false
 
-extends "api/v2/common/index"
+extends "katello/api/v2/common/index"
