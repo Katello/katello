@@ -17,6 +17,10 @@ module ApplicationHelper
   include BrandingHelper
   include NavigationHelper
 
+  def current_user
+    User.current
+  end
+
   def current_url(extra_params = {})
     url_for params.merge(extra_params)
   end
@@ -46,17 +50,17 @@ module ApplicationHelper
 
   def help_tip(text, key = nil)
     key ||= params[:controller] + "-" + params[:action]
-    render :partial => "common/helptip", :locals => {:key => key, :text => text}
+    render :partial => "katello/common/helptip", :locals => {:key => key, :text => text}
   end
 
   def help_tip_button(key = nil)
     key ||= params[:controller] + "-" + params[:action]
-    render :partial => "common/helptip_button", :locals => {:key => key}
+    render :partial => "katello/common/helptip_button", :locals => {:key => key}
   end
 
   # Headpin inclusion
   def stats_line(stats, options = {})
-    render :partial => "common/stats_line",
+    render :partial => "katello/commonstats_line",
            :locals => {:stats => stats}
   end
 
@@ -82,7 +86,7 @@ module ApplicationHelper
 
     raise ":titles option not provided" unless options[:titles]
 
-    render :partial => "common/panel",
+    render :partial => "katello/common/panel",
            :locals => {
              :title => options[:title],
              :name => options[:name],
@@ -111,7 +115,7 @@ module ApplicationHelper
     options[:accessor] ||= "id"
     panel_id ||= "panel"
 
-    render :partial => "common/one_panel",
+    render :partial => "katello/commonone_panel",
            :locals => {
              :single_select => options[:single_select] || false,
              :hover_text_cb => options[:hover_text_cb],
@@ -145,7 +149,7 @@ module ApplicationHelper
     options[:url_products_proc] = nil if options[:url_products_proc].nil?
     options[:url_content_views_proc] = nil if options[:url_content_views_proc].nil?
 
-    render :partial => "/common/env_select", :locals => options
+    render :partial => "/katello/common/env_select", :locals => options
   end
 
   def env_select_class(curr_env, selected_env, curr_path, selected_path, accessible_envs, library_clickable)
