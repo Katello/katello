@@ -60,8 +60,8 @@ class Changeset < ActiveRecord::Base
     target = to.environment.id
     joins(:environment => :priors).
         where(['"changesets"."id" <> ? AND (' <<
-                   '"environments"."id" = ? OR "environment_priors"."prior_id" = ? OR ' <<
-                   '("environments"."id" = ? AND "environment_priors"."prior_id" = ?))',
+                   '"environments"."id" = ? OR "katello_environment_priors"."prior_id" = ? OR ' <<
+                   '("environments"."id" = ? AND "katello_environment_priors"."prior_id" = ?))',
                to.id, start, target, target, start])
   end
 

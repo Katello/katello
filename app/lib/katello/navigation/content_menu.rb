@@ -356,19 +356,19 @@ module Navigation
       menu = [
         { :key => :applied_subscriptions,
           :name => _("Attached Subscriptions"),
-          :url => lambda{applied_subscriptions_activation_key_path(@activation_key.id)},
+          :url => lambda{applied_subscriptions_katello_activation_key_path(@activation_key.id)},
           :if => lambda{@activation_key},
           :options => {:class => "panel_link"}
         },
         { :key => :available_subscriptions,
           :name => _("Available Subscriptions"),
-          :url => lambda{available_subscriptions_activation_key_path(@activation_key.id)},
+          :url => lambda{available_subscriptions_katello_activation_key_path(@activation_key.id)},
           :if => lambda{@activation_key},
           :options => {:class => "panel_link"}
         },
         { :key => :activation_key_details,
           :name => _("Details"),
-          :url => lambda{edit_activation_key_path(@activation_key.id)},
+          :url => lambda{edit_katello_activation_key_path(@activation_key.id)},
           :if => lambda{@activation_key},
           :options => {:class => "panel_link"}
         },
@@ -376,7 +376,7 @@ module Navigation
           :name => _("System Groups"),
           :items => lambda{ak_systems_subnav},
           :if => lambda{@activation_key},
-          :url => lambda{system_groups_activation_key_path(@activation_key.id)},
+          :url => lambda{system_groups_katello_activation_key_path(@activation_key.id)},
           :options => {:class => 'panel_link menu_parent'}
         }
       ]
@@ -387,13 +387,13 @@ module Navigation
       [
         { :key => :activation_keys_menu_system_groups,
           :name => _("System Groups"),
-          :url => lambda{system_groups_activation_key_path(@activation_key.id)},
+          :url => lambda{system_groups_katello_activation_key_path(@activation_key.id)},
           :if => lambda{@activation_key},
           :options => {:class => "third_level panel_link"}
         },
         { :key => :activation_keys_menu_systems,
           :name => _("Systems"),
-          :url => lambda{systems_activation_key_path(@activation_key.id)},
+          :url => lambda{systems_katello_activation_key_path(@activation_key.id)},
           :if => lambda{@activation_key},
           :options => {:class => "third_level panel_link"}
         }

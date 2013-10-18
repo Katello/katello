@@ -68,7 +68,7 @@ class Repository < ActiveRecord::Base
       :message => (_("Please select content type from one of the following: %s") % TYPES.join(', '))
   }
 
-  default_scope order('repositories.name ASC')
+  default_scope order("#{Katello::Repository.table_name}.name ASC")
   scope :enabled, where(:enabled => true)
   scope :has_feed, where('feed IS NOT NULL')
   scope :in_default_view, joins(:content_view_version => :content_view).

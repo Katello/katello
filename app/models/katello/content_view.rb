@@ -57,7 +57,7 @@ class ContentView < ActiveRecord::Base
 
   def self.in_environment(env)
     joins(:content_view_versions => :content_view_version_environments).
-      where("#{Katello::ContentViewVersionEnvironments.table_name}.environment_id = ?", env.id)
+      where("#{Katello::ContentViewVersionEnvironment.table_name}.environment_id = ?", env.id)
   end
 
   def self.composite(composite = true)
@@ -127,7 +127,7 @@ class ContentView < ActiveRecord::Base
   end
 
   def environments
-    KTEnvironment.joins(Katello::ContentViewVersion.table_name).where("#{Katello::ContentViewVersion.table_name}.content_view_id" => self.id)
+    KTEnvironment.joins(:content_view_versions).where("#{Katello::ContentViewVersion.table_name}.content_view_id" => self.id)
   end
 
   def in_environment?(env)
@@ -176,7 +176,7 @@ class ContentView < ActiveRecord::Base
 
   def products(env)
     repos = repos(env)
-    Product.joins(:repositories).where(:repositories => {:id => repos.map(&:id)}).uniq
+    Product.joins(:repositories).where("#{Katello::Repository.table_name}.id" => repos.map(&:id)).uniq
   end
 
   #list all products associated to this view across all versions
