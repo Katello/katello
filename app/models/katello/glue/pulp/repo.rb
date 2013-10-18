@@ -321,7 +321,7 @@ module Glue::Pulp::Repo
 
     def packages=(attrs)
       @repo_packages = attrs.collect do |package|
-        ::Package.new(package)
+        Package.new(package)
       end
       @repo_packages
     end
@@ -342,7 +342,7 @@ module Glue::Pulp::Repo
 
     def errata=(attrs)
       @repo_errata = attrs.collect do |erratum|
-        ::Errata.new(erratum)
+        Errata.new(erratum)
       end
       @repo_errata
     end
@@ -356,7 +356,7 @@ module Glue::Pulp::Repo
 
     def distributions=(attrs)
       @repo_distributions = attrs.collect do |dist|
-        ::Distribution.new(dist)
+        Distribution.new(dist)
       end
       @repo_distributions
     end
@@ -371,7 +371,7 @@ module Glue::Pulp::Repo
 
     def package_groups=(attrs)
       @repo_package_groups = attrs.collect do |group|
-        ::PackageGroup.new(group)
+        PackageGroup.new(group)
       end
       @repo_package_groups
     end
@@ -413,7 +413,7 @@ module Glue::Pulp::Repo
 
     def puppet_modules=(attrs)
       @repo_puppet_modules = attrs.collect do |puppet_module|
-        ::PuppetModule.new(puppet_module)
+        PuppetModule.new(puppet_module)
       end
       @repo_puppet_modules
     end
@@ -660,7 +660,7 @@ module Glue::Pulp::Repo
 
     def sync_state
       status = sync_status
-      return ::PulpSyncStatus::Status::NOT_SYNCED if status.nil?
+      return PulpSyncStatus::Status::NOT_SYNCED if status.nil?
       status.state
     end
 
@@ -670,7 +670,7 @@ module Glue::Pulp::Repo
     end
 
     def successful_sync?(sync_history_item)
-      sync_history_item['state'] == ::PulpTaskStatus::Status::FINISHED.to_s
+      sync_history_item['state'] == PulpTaskStatus::Status::FINISHED.to_s
     end
 
     def generate_metadata(force = false)
@@ -788,9 +788,9 @@ module Glue::Pulp::Repo
 
     def unit_type_id
       case content_type
-      when ::Repository::YUM_TYPE
+      when Repository::YUM_TYPE
         "rpm"
-      when ::Repository::PUPPET_TYPE
+      when Repository::PUPPET_TYPE
         "puppet_module"
       end
     end
@@ -813,7 +813,7 @@ module Glue::Pulp::Repo
       end
 
       if history.nil? || history.empty?
-        return ::PulpSyncStatus.new(:state => ::PulpSyncStatus::Status::NOT_SYNCED)
+        return PulpSyncStatus.new(:state => PulpSyncStatus::Status::NOT_SYNCED)
       else
         history = sort_sync_status(history)
         return PulpSyncStatus.pulp_task(history.first.with_indifferent_access)

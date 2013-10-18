@@ -33,7 +33,7 @@ class Api::V2::ProvidersController < Api::V2::ApiController
 
   def param_rules
     {
-      :create => [:name, :organization_id]
+      :create => [:name, :organization_id, :provider]
     }
   end
 
@@ -66,7 +66,7 @@ class Api::V2::ProvidersController < Api::V2::ApiController
   api :POST, "/providers", "Create a provider"
   param_group :provider
   def create
-    provider = Provider.create!(params) do |p|
+    provider = Provider.create!(provider_params) do |p|
       p.organization  = @organization
       p.provider_type ||= Provider::CUSTOM
     end
@@ -79,6 +79,10 @@ class Api::V2::ProvidersController < Api::V2::ApiController
       @provider = Provider.find(params[:id])
       @organization ||= @provider.organization
       fail HttpErrors::NotFound, _("Couldn't find provider '%s'") % params[:id] if @provider.nil?
+    end
+
+    def provider_params
+      params.slice(:name)
     end
 
 end

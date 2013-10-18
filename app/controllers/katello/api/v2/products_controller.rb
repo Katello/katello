@@ -43,7 +43,7 @@ class Api::V2::ProductsController < Api::V2::ApiController
 
   def param_rules
     {
-      :create => [:name, :label, :description, :provider_id, :gpg_key_id]
+      :create => [:name, :label, :description, :provider_id, :gpg_key_id, :product]
     }
   end
 
@@ -53,7 +53,7 @@ class Api::V2::ProductsController < Api::V2::ApiController
     options = sort_params
     options[:load_records?] = true
 
-    ids = Product.all_readable(@organization)
+    ids = Product.all_readable(@organization).pluck(:id)
 
     options[:filters] = [
       {:terms => {:id => ids}}
@@ -77,7 +77,7 @@ class Api::V2::ProductsController < Api::V2::ApiController
   def create
     params[:label] = labelize_params(params)
 
-    product = Product.create!(params)
+    product = Product.create!(product_params)
 
     respond_for_show(:resource => product)
   end
@@ -94,7 +94,7 @@ class Api::V2::ProductsController < Api::V2::ApiController
   def update
     reset_gpg_keys = (params[:gpg_key_id] != @product.gpg_key_id)
 
-    @product.update_attributes!(params.except(:provider, :provider_id, :provider_type, :gpg_key))
+    @product.update_attributes!(product_params)
     @product.reset_repo_gpgs! if reset_gpg_keys
 
     respond_for_show(:resource => @product.reload)
@@ -116,6 +116,10 @@ class Api::V2::ProductsController < Api::V2::ApiController
 
   def find_product
     @product = Product.find_by_cp_id(params[:id], params[:organization_id]) if params[:id]
+  end
+
+  def product_params
+    params.slice(:name, :label, :provider_id, :gpg_key_id, :description)
   end
 
 end

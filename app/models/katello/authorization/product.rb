@@ -18,7 +18,6 @@ module Authorization::Product
 
   included do
     scope :readable, lambda{|org| all_readable(org).with_enabled_repos_only(org.library)}
-    scope :all_editable, lambda {|org| Provider.editable(org).where(:provider_type => Provider::CUSTOM).joins(:provider) }
     scope :editable, lambda {|org| all_editable(org).with_enabled_repos_only(org.library)}
     scope :syncable, lambda {|org| sync_items(org).with_enabled_repos_only(org.library)}
 
@@ -44,9 +43,11 @@ module Authorization::Product
   module ClassMethods
 
     def all_readable(org)
-      query = Provider.readable(org)
-      query = query.joins(Katello::Provider.table_name)
-      query
+      Product.where(:provider_id => Provider.readable(org).pluck(:id))
+    end
+
+    def all_editable(org)
+      Product.where(:provider_id => Provider.editable(org).where(:provider_type => Provider::CUSTOM).pluck(:id))
     end
 
     def creatable?(provider)

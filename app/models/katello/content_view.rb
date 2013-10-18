@@ -60,7 +60,7 @@ class ContentView < ActiveRecord::Base
   end
 
   def self.composite(composite = true)
-    joins(:content_view_definition).where('content_view_definition_bases.composite = ?', composite)
+    joins(:content_view_definition).where("#{Katello::ContentViewDefinitionBase.table_name}.composite = ?", composite)
   end
 
   def composite
