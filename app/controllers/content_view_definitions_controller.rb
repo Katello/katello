@@ -234,7 +234,7 @@ class ContentViewDefinitionsController < ApplicationController
           where(:id => params[:repos].values.flatten).pluck("repositories.id")
 
       # don't unset the puppet repo
-      repo_ids += @view_definition.puppet_repository_id if @view_definition.puppet_repository_id
+      repo_ids << @view_definition.puppet_repository_id if @view_definition.puppet_repository_id
 
       @view_definition.repository_ids = repo_ids
     end
