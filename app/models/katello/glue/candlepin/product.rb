@@ -104,7 +104,7 @@ module Glue::Candlepin::Product
     end
 
     def build_product_content(attrs)
-      @productContent = attrs.collect { |pc| ::Candlepin::ProductContent.new pc }
+      @productContent = attrs.collect { |pc| Candlepin::ProductContent.new pc }
     end
 
     def support_level
@@ -138,7 +138,7 @@ module Glue::Candlepin::Product
 
     def convert_from_cp_fields(cp_json)
       ar_safe_json = cp_json.key?(:attributes) ? cp_json.merge(:attrs => cp_json.delete(:attributes)) : cp_json
-      ar_safe_json[:productContent] = ar_safe_json[:productContent].collect { |pc| ::Candlepin::ProductContent.new(pc, self.id) }
+      ar_safe_json[:productContent] = ar_safe_json[:productContent].collect { |pc| Candlepin::ProductContent.new(pc, self.id) }
       ar_safe_json[:attrs] = remove_hibernate_fields(cp_json[:attrs]) if ar_safe_json.key?(:attrs)
       ar_safe_json[:attrs] ||= []
       ar_safe_json.except('id')
@@ -243,7 +243,7 @@ module Glue::Candlepin::Product
     end
 
     def no_other_assignment?
-      ::Product.where(["cp_id = ? AND id != ?", self.cp_id, self.id]).empty?
+      Product.where(["cp_id = ? AND id != ?", self.cp_id, self.id]).empty?
     end
 
     def update_content
@@ -287,7 +287,7 @@ module Glue::Candlepin::Product
     def del_pools
       Rails.logger.debug "Deleting pools for product #{name} in candlepin"
       Resources::Candlepin::Product.pools(organization.label, self.cp_id).each do |pool|
-        ::Pool.find_all_by_cp_id(pool['id']).each(&:destroy)
+        Katello::Pool.find_all_by_cp_id(pool['id']).each(&:destroy)
         Resources::Candlepin::Pool.destroy(pool['id'])
       end
       true
