@@ -12,7 +12,6 @@
 
 module Katello
 class ActivationKeysController < Katello::ApplicationController
-  include AutoCompleteSearch
   include ActivationKeysHelper
 
   before_filter :require_user
@@ -74,7 +73,7 @@ class ActivationKeysController < Katello::ApplicationController
   end
 
   def items
-    render_panel_direct(ActivationKey, @panel_options, params[:search], params[:offset], [:name_sort, 'asc'],
+    render_panel_direct(ActivationKey, @panel_options, params[:search], params[:offset] || 0, [:name_sort, 'asc'],
         {:default_field => :name, :filter => {:organization_id => [current_organization.id]}})
   end
 
@@ -225,7 +224,7 @@ class ActivationKeysController < Katello::ApplicationController
   end
 
   def create
-    @activation_key = ActivationKey.create!(params[:activation_key]) do |key|
+    @activation_key = ActivationKey.create!(params[:katello_activation_key]) do |key|
       key.organization = current_organization
       key.user = current_user
     end
@@ -261,7 +260,7 @@ class ActivationKeysController < Katello::ApplicationController
     if @activation_key.destroy
       notify.success _("Activation key '%s' was deleted.") % @activation_key[:name]
       #render and do the removal in one swoop!
-      render :partial => "common/list_remove", :locals => {:id => params[:id], :name => controller_display_name}
+      render :partial => "katello/common/list_remove", :locals => {:id => params[:id], :name => controller_display_name}
     end
   end
 
@@ -283,7 +282,7 @@ class ActivationKeysController < Katello::ApplicationController
       :create => _('Key'),
       :create_label => _('+ New Key'),
       :name => controller_display_name,
-      :list_partial => 'activation_keys/list_activation_keys',
+      :list_partial => 'katello/activation_keys/list_activation_keys',
       :ajax_load  => true,
       :ajax_scroll => items_katello_activation_keys_path,
       :enable_create => ActivationKey.manageable?(current_organization),

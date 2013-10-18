@@ -14,6 +14,6 @@
 module Katello
 class KeyPool < ActiveRecord::Base
   belongs_to :activation_key, :inverse_of => :key_pools
-  belongs_to :pool, :class_name => "::Pool", :inverse_of => :key_pools
+  belongs_to :pool, :class_name => "Katello::Pool", :inverse_of => :key_pools
 end
 end
