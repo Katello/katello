@@ -60,7 +60,8 @@ class Api::V1::ContentUploadsController < Api::V1::ApiController
         upload[:id], upload[:unit_key], {:unit_metadata => upload[:metadata]})
     end
 
-    @repo.trigger_contents_changed(:wait => false, :index_units => params[:uploads], :reindex => false)
+    unit_keys = params[:uploads].map { |upload| upload[:unit_key] }
+    @repo.trigger_contents_changed(:wait => false, :index_units => unit_keys, :reindex => false)
     render :nothing => true
   end
 
