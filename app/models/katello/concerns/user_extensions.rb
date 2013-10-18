@@ -65,22 +65,7 @@ module Katello
         belongs_to :default_environment, :class_name => "KTEnvironment"
         serialize :preferences, Hash
 
-        validates :username, :uniqueness => true, :presence => true
-        validates_with Validators::UsernameValidator, :attributes => :username
-        validates_with Validators::NoTrailingSpaceValidator, :attributes => :username
-        validates_with Validators::LdapUsernameValidator, :attributes => :username
-
-        validates :email, :presence => true, :if => :not_ldap_mode?
         validates :default_locale, :inclusion => {:in => Katello.config.available_locales, :allow_nil => true, :message => _("must be one of %s") % Katello.config.available_locales.join(', ')}
-
-        # validate the password length before hashing
-        validates_each :password do |model, attr, value|
-          if Katello.config.warden != 'ldap'
-            if model.password_changed? || model.new_record?
-              model.errors.add(attr, _('must be at least 5 characters.')) if value.nil? || value.length < 5
-            end
-          end
-        end
 
         before_validation :create_own_role
         after_validation :setup_remote_id
@@ -422,7 +407,8 @@ module Katello
         end
 
         def create_own_role
-          return unless new_record?
+          # ENGINE: Handle this more cleanly after user's are more stable
+          #return unless new_record?
           katello_roles.find_or_create_own_role(self)
         end
 
