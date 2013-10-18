@@ -28,7 +28,7 @@ module RolesPermissions::UserOwnRole
       break unless Katello::UserOwnRole.exists?(:name => role_name)
     end
 
-    proxy_association_owner.roles << (role = Katello::UserOwnRole.new(:name => role_name))
+    proxy_association_owner.katello_roles << (role = Katello::UserOwnRole.new(:name => role_name))
     role
   end
 
