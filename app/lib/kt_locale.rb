@@ -63,7 +63,7 @@ module KTLocale
       l.split(';q=')
     end
     locale_lang = locale_lang.sort do |x, y|
-      raise "incorrect locale format" unless x.first =~ /^[a-z\-]+$/i
+      fail "incorrect locale format" unless x.first =~ /^[a-z\-]+$/i
       y.last.to_f <=> x.last.to_f
     end
     locale_lang.collect do |l|

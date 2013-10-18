@@ -52,7 +52,7 @@ class Api::V1::ApiController < Api::ApiController
 
   def find_organization
     @organization = find_optional_organization
-    raise HttpErrors::NotFound, _("One of parameters [%s] required but not specified.") %
+    fail HttpErrors::NotFound, _("One of parameters [%s] required but not specified.") %
         organization_id_keys.join(", ") if @organization.nil?
     @organization
   end
@@ -62,7 +62,7 @@ class Api::V1::ApiController < Api::ApiController
     return if org_id.nil?
 
     @organization = get_organization(org_id)
-    raise HttpErrors::NotFound, _("Couldn't find organization '%s'") % org_id if @organization.nil?
+    fail HttpErrors::NotFound, _("Couldn't find organization '%s'") % org_id if @organization.nil?
     @organization
   end
 
@@ -86,14 +86,14 @@ class Api::V1::ApiController < Api::ApiController
     cvd_id      = params[:content_view_definition_id]
     @definition = ContentViewDefinition.find_by_id(cvd_id)
     if @definition.nil?
-      raise HttpErrors::NotFound, _("Couildn't find content view with id '%s'") % cvd_id
+      fail HttpErrors::NotFound, _("Couildn't find content view with id '%s'") % cvd_id
     end
   end
 
   def find_content_filter_by_name
     filter_id = params[:filter_id]
     @filter   = Filter.where(:name => filter_id, :content_view_definition_id => @definition).first
-    raise HttpErrors::NotFound, _("Couldn't find filter '%s'") % params[:id] if @filter.nil?
+    fail HttpErrors::NotFound, _("Couldn't find filter '%s'") % params[:id] if @filter.nil?
     @filter
   end
 

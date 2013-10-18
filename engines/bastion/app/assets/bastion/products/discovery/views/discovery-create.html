@@ -1,17 +1,15 @@
 <a href="" ng-click="transitionToDiscovery()">
   <i class="icon-backward"></i>
-  {{ "Back To Repository Selection" | i18n }}
+  {{ "Back To Repository Selection" | translate }}
 </a>
 
-<h3>{{ "Product Selection" | i18n }}</h3>
+<h3 translate>Product Selection</h3>
 
-<span>
-  {{ "Create Repositories within:" | i18n }}
-</span>
+<span translate>Create Repositories within:</span>
 
 <div class="form">
   <div class="control-group">
-    <label for="newProduct" >{{ "Existing Product:" | i18n }}</label>
+    <label for="newProduct" translate>Existing Product:</label>
     <input type="radio"
            name="newProduct"
            value="false"
@@ -25,7 +23,7 @@
   </div>
 
   <div class="control-group">
-    <label for="newProduct" >{{ "New Product:" | i18n }}</label>
+    <label for="newProduct" translate>New Product:</label>
     <input type="radio"
            name="newProduct"
            value="true"
@@ -38,7 +36,7 @@
 
   <div class="control-group required" ng-class="{ 'error' : productForm.name.$invalid }">
     <div class="label">
-      <label for="name">{{ "Name" | i18n }}</label>
+      <label for="name" translate>Name</label>
     </div>
     <div class="input">
       <input ng-model="createRepoChoices.product.name"
@@ -54,10 +52,14 @@
 
   <div class="control-group required" ng-class="{ 'error' : productForm.label.$invalid }">
     <div class="label">
-      <label class="required" for="label">{{ "Label" | i18n }}</label>
+      <label class="required" for="label" translate>Label</label>
     </div>
     <div class="input">
-      <input ng-model="createRepoChoices.product.label" name="label" type="text" tabindex=2 required>
+      <input ng-model="createRepoChoices.product.label"
+             name="label"
+             type="text"
+             tabindex=2
+             required>
       <span class="note error" ng-show="productForm.label.$invalid">
         <ul><li ng-repeat="message in productForm.label.$error.messages">{{ message }}</li></ul>
       </span>
@@ -66,18 +68,18 @@
 
   <div class="control-group" >
     <div class="label">
-      <label for="provider">{{ "Provider" | i18n }}</label>
+      <label for="provider" translate>Provider</label>
     </div>
     <select
       ng-model="createRepoChoices.product.provider_id"
       ng-options="provider.id as provider.name for provider in providers">
     </select>
-    <a href="" ng-click="transitionTo('products.new.provider')">{{ "+ New Provider" | i18n }}</a>
+    <a href="" ng-click="transitionTo('products.new.provider')" translate>+ New Provider</a>
   </div>
 
   <div class="control-group" >
     <div class="label">
-      <label for="gpgkey">{{ "GPG Key:" | i18n }}</label>
+      <label for="gpgkey" translate>GPG Key:</label>
     </div>
     <select
       ng-model="createRepoChoices.product.gpg_key_id"
@@ -89,11 +91,11 @@
 
 
 <div class="form">
-  <h3>{{ "Options" | i18n }}</h3>
+  <h3 translate>Options</h3>
 
   <div class="control-group" >
     <div class="label">
-      <label for="unprotected">{{ "Serve via HTTP" | i18n }}</label>
+      <label for="unprotected" translate>Serve via HTTP</label>
     </div>
     <div class="input">
       <input type="checkbox" id="unprotected" ng-model="createRepoChoices.unprotected" ng-disabled="creating()">
@@ -103,7 +105,7 @@
 
 <section class="form">
   
-  <h3>{{ "Selected URLs" | i18n }}</h3>
+  <h3 translate>Selected URLs</h3>
 
   <div ng-repeat="repo in discovery.selected">
     <form novalidate>
@@ -121,7 +123,7 @@
 
       <div class="control-group required" ng-class="{ 'error' : repo.form.$invalid }">
         <div class="label">
-           <label>{{ "Name" | i18n }}</label>
+           <label translate>Name</label>
         </div>
 
         <div class="input">
@@ -137,14 +139,17 @@
       <div class="control-group required" ng-class="{ 'error' : repo.form.$invalid }">
 
         <div class="label">
-          <label>{{ "Label" | i18n }}</label>
+          <label translate>Label</label>
         </div>
 
         <div class="input">
-          <input ng-model="repo.label" name="label" type="text"
+          <input ng-model="repo.label"
                  ng-class="{ 'error' : repo.form.$invalid }"
-                 tabindex=2 required
-                 ng-disabled="creating() || repo.created"/>
+                 ng-disabled="creating() || repo.created"
+                 name="label"
+                 type="text"
+                 tabindex=2
+                 required/>
         </div>
 
       </div>
@@ -156,8 +161,9 @@
     <div class="input">
       <button ng-click="createRepos()"
               ng-disabled="creating()"
+              translate
               class="btn btn-primary btn-large">
-        {{ "Create" | i18n }}
+        Create
       </button>
     </div>
   </div>

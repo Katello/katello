@@ -118,7 +118,7 @@ class Provider < ActiveRecord::Base
   # refreshes products' repositories from CDS. If new versions are released on
   # the CDN, this method will provide loading this new versions.
   def refresh_products
-    raise _("Products cannot be refreshed for custom provider.") unless self.redhat_provider?
+    fail _("Products cannot be refreshed for custom provider.") unless self.redhat_provider?
     self.products.engineering.each do |product|
       product.productContent.each do |pc|
         product.refresh_content(pc.content.id) if pc.katello_enabled? #only refresh PCs that are already enabled
@@ -159,9 +159,9 @@ class Provider < ActiveRecord::Base
   end
 
   def discover_repos(notify = false)
-    raise _("Cannot discover repos for the Red Hat Provider") if self.redhat_provider?
-    raise _("Repository Discovery already in progress") if self.discovery_task && !self.discovery_task.finished?
-    raise _("Discovery URL not set.") if self.discovery_url.blank?
+    fail _("Cannot discover repos for the Red Hat Provider") if self.redhat_provider?
+    fail _("Repository Discovery already in progress") if self.discovery_task && !self.discovery_task.finished?
+    fail _("Discovery URL not set.") if self.discovery_url.blank?
     self.discovered_repos = []
     self.discovery_task = self.async(:organization => self.organization).start_discovery_task(notify)
     self.save!

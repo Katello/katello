@@ -18,7 +18,7 @@ module Authorization::Enforcement
       # on the current logged user. The class attribute User.current must be set!
       def self.allowed_all_tags?(verb, resource_type = nil, org = nil)
         u = User.current
-        raise Errors::UserNotSet, "current user is not set" if u.nil? || !u.is_a?(User)
+        fail Errors::UserNotSet, "current user is not set" if u.nil? || !u.is_a?(User)
         u.allowed_all_tags?(verb, resource_type, org)
       end
 
@@ -27,7 +27,7 @@ module Authorization::Enforcement
       def self.allowed_tags_sql(verb, resource_type = nil, org = nil)
         ResourceType.check resource_type, verb
         u = User.current
-        raise Errors::UserNotSet, "current user is not set" if u.nil? || !u.is_a?(User)
+        fail Errors::UserNotSet, "current user is not set" if u.nil? || !u.is_a?(User)
         u.allowed_tags_sql(verb, resource_type, org)
       end
 
@@ -35,7 +35,7 @@ module Authorization::Enforcement
       # on the current logged user. The class attribute User.current must be set!
       def self.allowed_to?(verb, resource_type, tags = nil, org = nil, any_tags = false)
         u = User.current
-        raise Errors::UserNotSet, "current user is not set" if u.nil? || !u.is_a?(User)
+        fail Errors::UserNotSet, "current user is not set" if u.nil? || !u.is_a?(User)
         u.allowed_to?(verb, resource_type, tags, org, any_tags)
       end
 
@@ -43,11 +43,11 @@ module Authorization::Enforcement
       # SecurityViolation exception leading to the denial page.
       def self.allowed_to_or_error?(verb, resource_type, tags = nil, org = nil, any_tags = false)
         u = User.current
-        raise Errors::UserNotSet, "current user is not set" if u.nil? || !u.is_a?(User)
+        fail Errors::UserNotSet, "current user is not set" if u.nil? || !u.is_a?(User)
         unless u.allowed_to?(verb, resource_type, tags, org, any_tags)
           msg = "User #{u.username} is not allowed to #{verb} in #{resource_type} using #{tags}"
           Rails.logger.error msg
-          raise Errors::SecurityViolation, msg
+          fail Errors::SecurityViolation, msg
         end
       end
 
@@ -114,7 +114,7 @@ module Authorization::Enforcement
     tags = [] if tags.nil?
     tags = tags.is_a?(Array) ? tags.clone : [tags]
     if tags.detect { |tag| !(tag.is_a?(Numeric) || (tag.is_a?(String) && tag.to_s =~ /^\d+$/)) }
-      raise ArgumentError, "Tags need to be integers - #{tags} are not."
+      fail ArgumentError, "Tags need to be integers - #{tags} are not."
     end
     ResourceType.check resource_type, verbs
     verbs = [] if verbs.nil?
@@ -194,7 +194,7 @@ module Authorization::Enforcement
     query = Permission.joins(:role).joins(
         "INNER JOIN roles_users ON roles_users.role_id = roles.id").joins(
         "left outer join permissions_verbs on permissions.id = permissions_verbs.permission_id").joins(
-        "left outer join verbs on verbs.id = permissions_verbs.verb_id").where({ "roles_users.user_id" => id })
+        "left outer join verbs on verbs.id = permissions_verbs.verb_id").where("roles_users.user_id" => id)
     return query.where(org_clause, org_hash) unless exclude_orgs_clause
     query
   end

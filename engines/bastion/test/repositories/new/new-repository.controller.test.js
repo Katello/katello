@@ -13,6 +13,7 @@
 
 describe('Controller: NewRepositoryController', function() {
     var $scope,
+        FormUtils,
         $httpBackend;
 
     beforeEach(module('Bastion.repositories', 'Bastion.test-mocks'));
@@ -25,6 +26,7 @@ describe('Controller: NewRepositoryController', function() {
 
         $scope = $injector.get('$rootScope').$new();
         $httpBackend = $injector.get('$httpBackend');
+        FormUtils = $injector.get('FormUtils');
 
         $scope.repositories = [];
         $scope.$stateParams = {productId: 1};
@@ -74,13 +76,12 @@ describe('Controller: NewRepositoryController', function() {
     });
 
     it('should fetch a label whenever the name changes', function() {
-        $httpBackend.expectGET('/katello/organizations/default_label?name=ChangedName').respond('changed_name');
+        spyOn(FormUtils, 'labelize');
 
         $scope.repository.name = 'ChangedName';
         $scope.$apply();
-        $httpBackend.flush();
 
-        expect($scope.repository.label).toBe('changed_name');
+        expect(FormUtils.labelize).toHaveBeenCalled();
     });
 
     it('should be able to transition back to repo list', function(){

@@ -69,7 +69,7 @@ class Changeset < ActiveRecord::Base
   end
 
   def self.changeset_class(args)
-    raise "Must provide a changeset type." unless type = args.try(:[], :type)
+    fail "Must provide a changeset type." unless type = args.try(:[], :type)
     type.downcase!
 
     if type == PROMOTION
@@ -77,7 +77,7 @@ class Changeset < ActiveRecord::Base
     elsif type == DELETION
       return DeletionChangeset
     else
-      raise _("Unknown changeset type. Choose one of: %s") % TYPES.join(", ")
+      fail _("Unknown changeset type. Choose one of: %s") % TYPES.join(", ")
     end
   end
 
@@ -109,13 +109,13 @@ class Changeset < ActiveRecord::Base
 
   def check_review_state!
     if !in_review?
-      raise _("Cannot apply the changeset '%s' because it is not in the review phase.") % self.name
+      fail _("Cannot apply the changeset '%s' because it is not in the review phase.") % self.name
     end
   end
 
   def check_collisions!
     if (collision = Changeset.started.colliding(self).first)
-      raise _("Cannot apply the changeset '%{changeset}' while another colliding changeset (%{another_changeset}) is being applied.") %
+      fail _("Cannot apply the changeset '%{changeset}' while another colliding changeset (%{another_changeset}) is being applied.") %
                 { :changeset => self.name, :another_changeset => collision.name }
     end
   end
@@ -130,10 +130,10 @@ class Changeset < ActiveRecord::Base
 
   def add_content_view!(view, include_components = false)
     unless env_to_verify_on_add_content.content_views.include?(view)
-      raise Errors::ChangesetContentException.new(_("Content view not found within environment you want to promote from."))
+      fail Errors::ChangesetContentException.new(_("Content view not found within environment you want to promote from."))
     end
     if promotion? && content_view_in_environment?(view)
-      raise Errors::ChangesetContentException.new(
+      fail Errors::ChangesetContentException.new(
         _("Cannot add content view '%{view}' to changeset. View version already in environment '%{env}'.") %
         {:view => view.name, :env => environment.name})
     end
@@ -161,16 +161,16 @@ class Changeset < ActiveRecord::Base
 
   def as_json(options = nil)
     options ||= {}
-    super(options.merge({
+    super(options.merge(
           :methods => [:action_type]
-          })
+          )
        )
   end
 
   protected
 
   def validate_content!(elements)
-    elements.each { |e| raise ActiveRecord::RecordInvalid.new(e) if !e.valid? }
+    elements.each { |e| fail ActiveRecord::RecordInvalid.new(e) if !e.valid? }
   end
 
   def validate_content_view_tasks_complete!
@@ -181,7 +181,7 @@ class Changeset < ActiveRecord::Base
     self.content_views.each do |view|
       version = view.version(from_env)
       if version.try(:task_status).try(:pending?)
-        raise Errors::ContentViewTaskInProgress.new(_("A '%{type_of_action}' action is currently in progress for  "\
+        fail Errors::ContentViewTaskInProgress.new(_("A '%{type_of_action}' action is currently in progress for  "\
                                                       "content view '%{content_view}'.  Please retry the changeset "\
                                                       "after the action completes.") %
                                                       { :type_of_action => _(TaskStatus::TYPES[version.task_status.task_type][:english_name]),
@@ -190,7 +190,7 @@ class Changeset < ActiveRecord::Base
         view.content_view_definition.component_content_views.each do |component_view|
           version = component_view.version(from_env)
           if version.task_status.pending?
-            raise Errors::ContentViewTaskInProgress.new(_("A '%{type_of_action}' action is currently in progress for "\
+            fail Errors::ContentViewTaskInProgress.new(_("A '%{type_of_action}' action is currently in progress for "\
                                                           "component content view '%{content_view}'.  Please retry "\
                                                           "the changeset after the action completes.") %
                                                           { :type_of_action => _(TaskStatus::TYPES[version.task_status.task_type][:english_name]),

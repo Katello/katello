@@ -63,7 +63,7 @@ module Glue
       Glue.logger.warning "Rollback initiated"
       Glue.logger.warning "Before rollback pre-queue: #{pre_queue.to_log}"
       Glue.logger.warning "Before rollback post-queue: #{post_queue.to_log}"
-      raise ActiveRecord::Rollback
+      fail ActiveRecord::Rollback
     end
 
     def pre_queue
@@ -123,7 +123,7 @@ module Glue
 
         # execute the task
         task.status = "running"
-        task.status = execute({:action => task.action}) ? "completed" : "failed"
+        task.status = execute(:action => task.action) ? "completed" : "failed"
         q_active += 1
       end
 
@@ -137,7 +137,7 @@ module Glue
       (q.completed + q.running).sort.reverse_each do |task|
         begin
           task.status = "rollbacked"
-          execute({:action => task.action, :action_rollback => task.action_rollback, :rollback => true})
+          execute(:action => task.action, :action_rollback => task.action_rollback, :rollback => true)
         rescue => rollback_exception
           # if the operation failed, we can just report upon it
           logger.error "Failed to perform rollback on #{task.name} - #{rollback_exception.inspect}\n  #{rollback_exception.backtrace.join('\n')}"
@@ -167,7 +167,7 @@ module Glue
           when /del/
             met.gsub!("del", "set")
           else
-            raise "Dont know how to rollback #{met}"
+            fail "Dont know how to rollback #{met}"
           end
           met = met.to_sym
         end
@@ -175,7 +175,7 @@ module Glue
       if obj.respond_to?(met)
         return args.empty? ? obj.send(met) : obj.send(met, *args)
       else
-        raise Errors::OrchestrationException.new("invalid method #{met}")
+        fail Errors::OrchestrationException.new("invalid method #{met}")
       end
     end
 

@@ -167,7 +167,7 @@ class Permission < ActiveRecord::Base
 
   def check_locked
     if self.role.locked?
-      raise ActiveRecord::ReadOnlyRecord, _("Cannot add/remove or change permissions related to a locked role.")
+      fail ActiveRecord::ReadOnlyRecord, _("Cannot add/remove or change permissions related to a locked role.")
     end
   end
 

@@ -20,6 +20,7 @@
 //= require "ui_alchemy/angular-sanitize/angular-sanitize"
 //= require "angular-ui-states"
 //= require "ng-upload"
+//= require "angular-gettext"
 
 //= require "ui_alchemy/alchemy/alchemy"
 //= require "ui_alchemy/alchemy-header/alchemy-header"
@@ -45,35 +46,31 @@
 //= require "bastion/incubator/format/key-value-to-string.filter.js"
 
 //= require "bastion/i18n/i18n.module"
-//= require "bastion/i18n/i18n-dictionary.factory"
-//= require "bastion/i18n/i18n.filter"
+//= require "bastion/i18n/translations"
 
 //= require "bastion/menu/menu.module"
-//= require "bastion/menu/menu.controller"
+//= require_tree "./menu"
 
 //= require "bastion/widgets/widgets.module"
-//= require "bastion/widgets/org-switcher.widget"
-//= require "bastion/widgets/path-selector.directive"
-//= require "bastion/widgets/nutupane-table.directive"
-//= require "bastion/widgets/nutupane.factory"
+//= require_tree "./widgets"
 
 //= require "bastion/utils/utils.module"
-//= require "bastion/utils/routes.factory"
+//= require_tree "./utils"
 
 //= require "bastion/system-groups/system-groups.module.js"
-//= require "bastion/system-groups/system-group.factory.js"
+//= require_tree "./system-groups"
 
 //= require "bastion/systems/systems.module"
 //= require_tree "./systems"
 
 //= require "bastion/subscriptions/subscriptions.module.js"
-//= require "bastion/subscriptions/subscriptions.factory.js"
-//
+//= require_tree "./subscriptions"
+
 //= require "bastion/content-views/content-views.module"
-//= require "bastion/content-views/content-view.factory"
+//= require_tree "./content-views"
 
 //= require "bastion/environments/environments.module"
-//= require "bastion/environments/environment.factory"
+//= require_tree "./environments"
 
 //= require "bastion/nodes/nodes.module.js"
 //= require_tree "./nodes"

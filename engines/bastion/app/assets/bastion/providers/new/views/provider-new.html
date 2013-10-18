@@ -3,11 +3,9 @@
   <header>
     <a ng-click="transitionBack()" class="clickable">
       <i class="icon-backward"></i>
-      {{ "Back to Product Creation" | i18n }}
+      {{ "Back to Product Creation" | translate }}
     </a>
-    <h4>
-      {{ "Add New Provider" | i18n }}
-    </h4>
+    <h4 translate>Add New Provider</h4>
   </header>
 
   <form name="providerForm" class="form" novalidate>
@@ -15,7 +13,7 @@
     <div class="control-group required" ng-class="{ 'error' : providerForm.name.$invalid }">
 
       <div class="label">
-        <label class="required" for="name">{{ "Name" | i18n }}</label>
+        <label class="required" for="name" translate>Name</label>
       </div>
 
       <div class="input">
@@ -36,9 +34,8 @@
 
     <div class="control-group buttons">
       <div class="input">
-        <button type="button" ng-click="transitionTo('products.new.form')">{{ "Cancel" | i18n }}</button>
-        <button tabindex="2" class="btn-primary" ng-click="save(provider)">{{ "Create" | i18n }}</button>
-      </div>
+        <button type="button" ng-click="transitionTo('products.new.form')" translate>Cancel</button>
+        <button tabindex="2" class="btn-primary" ng-click="save(provider)" translate>Create</button>
     </div>
 
   </form>

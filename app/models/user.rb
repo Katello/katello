@@ -117,7 +117,7 @@ class User < ActiveRecord::Base
   end
 
   def self.authenticate!(username, password)
-    u = User.where({ :username => username }).first
+    u = User.where(:username => username).first
     # check if user exists
     return nil unless u
     # check if not disabled
@@ -132,7 +132,7 @@ class User < ActiveRecord::Base
   # if the user authenticates with LDAP, log them in
   def self.authenticate_using_ldap!(username, password)
     if Ldap.valid_ldap_authentication? username, password
-      User.where({ :username => username }).first || create_ldap_user!(username)
+      User.where(:username => username).first || create_ldap_user!(username)
     else
       nil
     end
@@ -150,7 +150,7 @@ class User < ActiveRecord::Base
   end
 
   def self.cp_oauth_header
-    raise Errors::UserNotSet, "unauthenticated to call a backend engine" if User.current.nil?
+    fail Errors::UserNotSet, "unauthenticated to call a backend engine" if User.current.nil?
     User.current.cp_oauth_header
   end
 
@@ -424,7 +424,7 @@ class User < ActiveRecord::Base
     if role.superadmin? && role.users.length == 1
       message = _("Cannot dissociate user '%{username}' from '%{role}' role. Need at least one user in the '%{role}' role.") % {:username => username, :role => role.name}
       errors[:base] << message
-      raise ActiveRecord::RecordInvalid, self
+      fail ActiveRecord::RecordInvalid, self
     end
   end
 

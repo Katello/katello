@@ -2,7 +2,7 @@
 
   <div class="control-group required" ng-class="{ 'error' : productForm.name.$invalid }">
     <div class="label">
-      <label for="name">{{ "Name" | i18n }}</label>
+      <label for="name" translate>Name</label>
     </div>
     <div class="input">
       <input ng-model="product.name"
@@ -19,7 +19,7 @@
 
   <div class="control-group required" ng-class="{ 'error' : productForm.label.$invalid }">
     <div class="label">
-      <label class="required" for="label">{{ "Label" | i18n }}</label>
+      <label class="required" for="label" translate>Label</label>
     </div>
     <div class="input">
       <input ng-model="product.label"
@@ -35,7 +35,7 @@
 
   <div class="control-group required" ng-class="{ 'error' : productForm.provider_id.$invalid }">
     <div class="label">
-      <label class="required" for="provider_id">{{ "Provider" | i18n }}</label>
+      <label class="required" for="provider_id" translate>Provider</label>
     </div>
     <div class="input">
       <select required
@@ -44,7 +44,7 @@
               ng-model="product.provider_id"
               ng-options="provider.id as provider.name for provider in providers">
       </select>
-      <a href="" ng-click="transitionTo('products.new.provider')">{{ "+ New Provider" | i18n }}</a>
+      <a href="" ng-click="transitionTo('products.new.provider')" translate>+ New Provider</a>
       <span class="note error" ng-show="productForm.provider_id.$invalid">
         <ul>
           <li ng-repeat="message in productForm.provider_id.$error.messages">{{ message }}</li>
@@ -55,7 +55,7 @@
 
   <div class="control-group">
     <div class="label">
-      <label for="gpg_key_id">{{ "GPG Key" | i18n }}</label>
+      <label for="gpg_key_id" translate>GPG Key</label>
     </div>
     <div class="input">
       <select tabindex="4"
@@ -68,7 +68,7 @@
 
   <div class="control-group">
     <div class="label">
-      <label class="required" for="description">{{ "Description" | i18n }}</label>
+      <label class="required" for="description" translate>Description</label>
     </div>
     <div class="input">
       <textarea ng-model="product.description"
@@ -85,19 +85,10 @@
     </div>
   </div>
 
-  <div class="control-group buttons">
-    <div class="input">
-      <button type="button" ng-click="table.closeItem()">{{ "Cancel" | i18n }}</button>
-      <button class="btn-primary"
-              tabindex="6"
-              type="submit"
-              ng-click="save(product); working = true"
-              ng-disabled="productForm.$invalid || working">
-        <i class="icon-spinner icon-spin" ng-show="working"></i>
-        <span ng-show="working">{{ "Creating..." | i18n }}</span>
-        <span ng-hide="working">{{ "Create" | i18n }}</span>
-      </button>
-    </div>
+  <div alch-save-control
+       on-cancel="table.closeItem()"
+       on-save="save(product)"
+       invalid="productForm.$invalid">
   </div>
 
 </form>

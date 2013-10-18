@@ -66,10 +66,10 @@ module Authorization::Organization
           :redhat_products => _("Administer Red Hat Products")
        }
       end
-      org_verbs.merge!({
+      org_verbs.merge!(
       :create => _("Administer Organization"),
       :delete => _("Delete Organization")
-      }) if global
+      ) if global
       org_verbs.with_indifferent_access
     end
 

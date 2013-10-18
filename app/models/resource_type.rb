@@ -92,7 +92,7 @@ class ResourceType < ActiveRecord::Base
   end
 
   def self.check_type(resource_type)
-    raise ResourceTypeNotFound.new(resource_type, TYPES.keys) unless TYPES.key? resource_type
+    fail ResourceTypeNotFound.new(resource_type, TYPES.keys) unless TYPES.key? resource_type
   end
 
   if Katello.config.katello?

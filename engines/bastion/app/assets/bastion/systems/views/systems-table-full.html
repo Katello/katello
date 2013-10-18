@@ -1,13 +1,13 @@
 <table class="table table-striped" ng-class="{'table-mask': table.working}">
   <thead>
     <tr alch-table-head row-select>
-      <th alch-table-column="name" sortable>{{ "Name" | i18n }}</th>
-      <th alch-table-column="status" sortable class="align-center">{{ "Subscription Status" | i18n }}</th>
-      <th alch-table-column="os" sortable>{{ "OS" | i18n }}</th>
-      <th alch-table-column="environment" sortable>{{ "Environment" | i18n }}</th>
-      <th alch-table-column="contentView" sortable>{{ "Content View" | i18n }}</th>
-      <th alch-table-column="registered" sortable>{{ "Registered" | i18n }}</th>
-      <th alch-table-column="lastCheckin" sortable>{{ "Last Checkin" | i18n }}</th>
+      <th alch-table-column="name" sortable>{{ "Name" | translate }}</th>
+      <th alch-table-column="status" sortable class="align-center">{{ "Subscription Status" | translate }}</th>
+      <th alch-table-column="os" sortable>{{ "OS" | translate }}</th>
+      <th alch-table-column="environment" sortable>{{ "Environment" | translate }}</th>
+      <th alch-table-column="contentView" sortable>{{ "Content View" | translate }}</th>
+      <th alch-table-column="registered" sortable>{{ "Registered" | translate }}</th>
+      <th alch-table-column="lastCheckin" sortable>{{ "Last Checkin" | translate }}</th>
     </tr>
   </thead>
 
@@ -23,7 +23,7 @@
       <td alch-table-cell>{{ system.environment.name }}</td>
       <td alch-table-cell>{{ system.content_view.name || "" }}</td>
       <td alch-table-cell>{{ system.created | date:'short' }}</td>
-      <td alch-table-cell>{{ system.checkin_time || 'Never checked in' | date:'short' }}</td>
+      <td alch-table-cell>{{ (system.checkin_time | date:'short') || ("Never checked in" | translate) }}</td>
     </tr>
   </tbody>
 </table>

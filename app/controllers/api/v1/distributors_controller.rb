@@ -78,9 +78,9 @@ class Api::V1::DistributorsController < Api::V1::ApiController
     distributor_params           = params[:distributor]
     distributor_params[:facts]   ||= { 'sockets' => 0 } # facts not used for distributors
     distributor_params[:cp_type] = "candlepin"          # The 'candlepin' type is allowed to export a manifest
-    @distributor                 = Distributor.create!(distributor_params.merge({ :environment  => @environment,
-                                                                                  :content_view => @content_view,
-                                                                                  :serviceLevel => distributor_params[:service_level] }))
+    @distributor                 = Distributor.create!(distributor_params.merge(:environment  => @environment,
+                                                                                :content_view => @content_view,
+                                                                                :serviceLevel => distributor_params[:service_level]))
     respond
   end
 
@@ -159,7 +159,8 @@ class Api::V1::DistributorsController < Api::V1::ApiController
           :only    => [:uuid, :name, :location, :created_at, :updated_at],
           :methods => [:environment, :organization, :compliance_color, :compliant_until, :custom_info]
       )
-    end.flatten!
+    end
+    data.flatten!
 
     transforms = lambda do |r|
       r.organization    = r.organization.name
@@ -251,7 +252,7 @@ class Api::V1::DistributorsController < Api::V1::ApiController
   def find_only_environment
     if !@environment && @organization && !params.key?(:environment_id)
       if @organization.environments.empty?
-        raise HttpErrors::BadRequest, _("Organization %{org} has the '%{env}' environment only. Please create an environment for distributor registration.") %
+        fail HttpErrors::BadRequest, _("Organization %{org} has the '%{env}' environment only. Please create an environment for distributor registration.") %
           { :org => @organization.name, :env => "Library" }
       end
 
@@ -264,7 +265,7 @@ class Api::V1::DistributorsController < Api::V1::ApiController
         if current_user.default_environment && current_user.default_environment.organization == @organization
           @environment = current_user.default_environment
         else
-          raise HttpErrors::BadRequest, _("Organization %s has more than one environment. Please specify target environment for distributor registration.") % @organization.name
+          fail HttpErrors::BadRequest, _("Organization %s has more than one environment. Please specify target environment for distributor registration.") % @organization.name
         end
       else
         if @environment = @organization.environments.first
@@ -282,7 +283,7 @@ class Api::V1::DistributorsController < Api::V1::ApiController
     return unless params.key?(:environment_id)
 
     @environment = KTEnvironment.find(params[:environment_id])
-    raise HttpErrors::NotFound, _("Couldn't find environment '%s'") % params[:environment_id] if @environment.nil?
+    fail HttpErrors::NotFound, _("Couldn't find environment '%s'") % params[:environment_id] if @environment.nil?
     @organization = @environment.organization
     @environment
   end
@@ -297,7 +298,7 @@ class Api::V1::DistributorsController < Api::V1::ApiController
     if @environment
       @organization = @environment.organization
     else
-      raise HttpErrors::NotFound, _("You have not set a default organization and environment on the user %s.") % current_user.username
+      fail HttpErrors::NotFound, _("You have not set a default organization and environment on the user %s.") % current_user.username
     end
   end
 
@@ -305,7 +306,7 @@ class Api::V1::DistributorsController < Api::V1::ApiController
     @distributor = Distributor.first(:conditions => { :uuid => params[:id] })
     if @distributor.nil?
       Resources::Candlepin::Consumer.get params[:id] # check with candlepin if distributor is Gone, raises RestClient::Gone
-      raise HttpErrors::NotFound, _("Couldn't find distributor '%s'") % params[:id]
+      fail HttpErrors::NotFound, _("Couldn't find distributor '%s'") % params[:id]
     end
     @distributor
   end
@@ -315,21 +316,21 @@ class Api::V1::DistributorsController < Api::V1::ApiController
       ak_names        = ak_names.split(",")
       activation_keys = ak_names.map do |ak_name|
         activation_key = @organization.activation_keys.find_by_name(ak_name)
-        raise HttpErrors::NotFound, _("Couldn't find activation key '%s'") % ak_name unless activation_key
+        fail HttpErrors::NotFound, _("Couldn't find activation key '%s'") % ak_name unless activation_key
         activation_key
       end
     else
       activation_keys = []
     end
     if activation_keys.empty?
-      raise HttpErrors::BadRequest, _("At least one activation key must be provided")
+      fail HttpErrors::BadRequest, _("At least one activation key must be provided")
     end
     activation_keys
   end
 
   def find_task
     @task = TaskStatus.where(:uuid => params[:id]).first
-    raise ActiveRecord::RecordNotFound.new unless @task
+    fail ActiveRecord::RecordNotFound.new unless @task
     @distributor = @task.task_owner
   end
 

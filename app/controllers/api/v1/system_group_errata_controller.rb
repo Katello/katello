@@ -78,13 +78,13 @@ class Api::V1::SystemGroupErrataController < Api::V1::ApiController
 
   def find_group
     @group = SystemGroup.find(params[:system_group_id])
-    raise HttpErrors::NotFound, _("Couldn't find system group '%s'") % params[:system_group_id] if @group.nil?
+    fail HttpErrors::NotFound, _("Couldn't find system group '%s'") % params[:system_group_id] if @group.nil?
     @group
   end
 
   def require_errata
     if params.slice(:errata_ids).values.size != 1
-      raise HttpErrors::BadRequest.new(_("One or more errata must be provided"))
+      fail HttpErrors::BadRequest.new(_("One or more errata must be provided"))
     end
   end
 

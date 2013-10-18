@@ -78,14 +78,14 @@ class Api::V1::FilterRulesController < Api::V1::ApiController
   def find_filter
     id      = params[:filter_id]
     @filter = Filter.where(:id => id, :content_view_definition_id => @definition).first
-    raise HttpErrors::NotFound, _("Couldn't find filter '%s'") % params[:id] if @filter.nil?
+    fail HttpErrors::NotFound, _("Couldn't find filter '%s'") % params[:id] if @filter.nil?
     @filter
   end
 
   def find_filter_rule
     id           = params[:id]
     @filter_rule = FilterRule.where(:filter_id => @filter.id, :id => id).first
-    raise HttpErrors::NotFound, _("Couldn't find filter rule '%s'") % params[:id] if @filter_rule.nil?
+    fail HttpErrors::NotFound, _("Couldn't find filter rule '%s'") % params[:id] if @filter_rule.nil?
     @filter_rule
   end
 

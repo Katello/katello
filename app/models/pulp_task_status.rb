@@ -99,7 +99,7 @@ class PulpTaskStatus < TaskStatus
       if !t.finished?
         return true
       elsif t.error?
-        raise RuntimeError, t.as_json
+        fail t.as_json
       end
     end
     return false

@@ -1,26 +1,27 @@
 <div class="loading-mask loading-mask-panel icon-3x" ng-show="panel.loading">
   <i class="icon-spinner icon-spin"></i>
-  {{ "Loading..." | i18n }}
+  {{ "Loading..." | translate }}
 </div>
 
 <section class="nutupane-details" ng-cloak alch-container-scroll>
 
   <header class="details-header">
-    <h2 class="fl">{{ "Product \"%productName\"" | i18n: {productName: product.name} }}</h2>
+    <h2 class="fl" translate>Product {{ product.name }}</h2>
 
     <div class="details-actions fr">
       <button class="btn btn-danger"
+              translate
               ng-hide="product.readonly"
               ng-click="showConfirm = true"
               ng-disabled="!product.permissions.deletable">
-        {{ "Remove Product" | i18n }}
+        Remove Product
       </button>
       <button class="btn" ng-click="table.closeItem()">
         <i class="icon-remove"></i>
-        {{ "Close" | i18n }}
+        {{ "Close" | translate }}
       </button>
-      <div alch-confirm-modal="removeProduct(product)" show-confirm="showConfirm">
-        {{ "Are you sure you want to remove product \"%product\"?" | i18n: {product: product.name} }}
+      <div translate alch-confirm-modal="removeProduct(product)" show-confirm="showConfirm">
+        Are you sure you want to remove product "{{ product.name }}"?
       </div>
     </div>
   </header>
@@ -29,16 +30,18 @@
     <ul>
       <li>
         <a class="clickable"
+           translate
            ng-click="transitionToInfo(product)"
            ng-class="{active: isState('products.details.info')}">
-          {{ "Details" | i18n }}
+          Details
         </a>
       </li>
       <li>
         <a class="clickable"
+           translate
            ng-click="transitionToRepositories(product)"
            ng-class="{active: stateIncludes('products.details.repositories')}">
-          {{ "Repositories" | i18n }}
+          Repositories
         </a>
       </li>
     </ul>

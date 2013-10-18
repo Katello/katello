@@ -129,7 +129,7 @@ class SyncPlansController < ApplicationController
     params[:sync_plan][:sync_date] = convert_date_time(sdate, stime)
     return render_bad_parameters(_('Invalid date or time format')) unless params[:sync_plan][:sync_date]
 
-    @plan = SyncPlan.create! params[:sync_plan].merge({:organization => current_organization})
+    @plan = SyncPlan.create! params[:sync_plan].merge(:organization => current_organization)
     notify.success N_("Sync Plan '%s' was created.") % @plan['name']
 
     if search_validate(SyncPlan, @plan.id, params[:search])

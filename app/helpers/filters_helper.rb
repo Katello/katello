@@ -40,7 +40,7 @@ module FiltersHelper
       end
       options[:record].content_view_definition.repos.sort_by(&:name).each do |repo|
         next if options[:content_types] && !options[:content_types].include?(repo.content_type)
-        @product_hash[repo.product_id][:repos].push({:id => repo.id, :name => repo.name})
+        @product_hash[repo.product_id][:repos].push(:id => repo.id, :name => repo.name)
       end
       @product_hash.keep_if { |id, prod| prod[:repos].length > 0 }
     end

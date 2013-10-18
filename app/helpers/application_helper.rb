@@ -35,7 +35,7 @@ module ApplicationHelper
         ctrl   = options[:controller]
         action = options[:action] || 'index'
 
-        if current_user && current_user.allowed_to?({:controller => ctrl, :action => action})
+        if current_user && current_user.allowed_to?(:controller => ctrl, :action => action)
           link_to(name, options, html_options)
         end
       end
@@ -79,7 +79,7 @@ module ApplicationHelper
     enable_create = true if enable_create.nil?
     enable_sort = options[:enable_sort] ? options[:enable_sort] : false
 
-    raise ":titles option not provided" unless options[:titles]
+    fail ":titles option not provided" unless options[:titles]
 
     render :partial => "common/panel",
            :locals => {

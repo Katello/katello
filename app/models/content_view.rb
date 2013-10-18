@@ -208,7 +208,7 @@ class ContentView < ActiveRecord::Base
   end
 
   def promote(from_env, to_env)
-    raise "Cannot promote from #{from_env.name}, view does not exist there." if !self.environments.include?(from_env)
+    fail "Cannot promote from #{from_env.name}, view does not exist there." if !self.environments.include?(from_env)
 
     replacing_version = self.version(to_env)
 
@@ -240,11 +240,11 @@ class ContentView < ActiveRecord::Base
 
   def delete(from_env)
     if from_env.library? && in_non_library_environment?
-      raise Errors::ChangesetContentException.new(_("Cannot delete view while it exits in environments"))
+      fail Errors::ChangesetContentException.new(_("Cannot delete view while it exits in environments"))
     end
     version = self.version(from_env)
     if version.nil?
-      raise Errors::ChangesetContentException.new(_("Cannot delete from %s, view does not exist there.") % from_env.name)
+      fail Errors::ChangesetContentException.new(_("Cannot delete from %s, view does not exist there.") % from_env.name)
     end
     version = ContentViewVersion.find(version.id)
     Glue::Event.trigger(Katello::Actions::ContentViewDemote, self, from_env)

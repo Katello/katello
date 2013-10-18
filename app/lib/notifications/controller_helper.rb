@@ -36,6 +36,6 @@ module Notifications::ControllerHelper
   #       { :organization => nil }
   #     end
   def default_notify_options
-    raise NotImplementedError
+    fail NotImplementedError
   end
 end

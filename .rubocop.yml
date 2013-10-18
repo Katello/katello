@@ -23,9 +23,16 @@ BlockNesting:
 PerlBackrefs:
   Enabled: false # remove me
 
+RaiseArgs:
+  Enabled: false # should we turn this on?
+
+ClassLength:
+  Enabled: false # agree on a limit and enable
+
 # end TODO
 
 AllCops:
+  RunRailsCops: true # automatically run rails cops
   Excludes:
     - script/rails
     - script/thin
@@ -99,3 +106,6 @@ Documentation:
 
 Encoding:
   Enabled: false # don't require utf-8 encoding on every file
+
+MethodCalledOnDoEndBlock:
+  Enabled: true

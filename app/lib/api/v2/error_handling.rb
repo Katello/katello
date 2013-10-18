@@ -93,7 +93,7 @@ module Api
                  when ActiveRecord::RecordInvalid
                    exception.record.errors
                  else
-                   raise ArgumentError.new("ActiveRecord::RecordInvalid exception.")
+                   fail ArgumentError.new("ActiveRecord::RecordInvalid exception.")
                  end
 
         errors.messages.each_pair do |c, e|

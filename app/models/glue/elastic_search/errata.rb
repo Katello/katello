@@ -104,7 +104,7 @@ module Glue::ElasticSearch::Errata
           end
           return products.map {|p| p.repos(env) }.flatten
         else
-          raise "Not enough arguments for finding repos"
+          fail "Not enough arguments for finding repos"
         end
       end
 

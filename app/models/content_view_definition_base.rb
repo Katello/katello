@@ -117,15 +117,15 @@ class ContentViewDefinitionBase < ActiveRecord::Base
       library_repos = component_content_views.map(&:library_repos).flatten + view.library_repos
       library_repo_ids = library_repos.map(&:id)
       if library_repo_ids.length != library_repo_ids.uniq.length
-        raise Errors::ContentViewRepositoryOverlap.new(_("Definition cannot contain views with the same repositories."))
+        fail Errors::ContentViewRepositoryOverlap.new(_("Definition cannot contain views with the same repositories."))
       end
 
       if library_repos.select(&:puppet?).length > 1
-        raise Errors::ContentViewDefinitionBadContent.new(_("Definition cannot more than one view with a puppet repository."))
+        fail Errors::ContentViewDefinitionBadContent.new(_("Definition cannot more than one view with a puppet repository."))
       end
 
       if !self.composite?
-        raise Errors::ContentViewDefinitionBadContent.new(_("Definition cannot contain views if not composite definition"))
+        fail Errors::ContentViewDefinitionBadContent.new(_("Definition cannot contain views if not composite definition"))
       end
     end
   end
@@ -134,7 +134,7 @@ class ContentViewDefinitionBase < ActiveRecord::Base
     if type == "ContentViewDefinition"
       # TODO: check composite views
       if repositories.select(&:puppet?).length > 0 && repo.puppet?
-        raise Errors::ContentViewRepositoryOverlap.new(_("Definition cannot contain more than one Puppet repository."))
+        fail Errors::ContentViewRepositoryOverlap.new(_("Definition cannot contain more than one Puppet repository."))
       end
     end
   end

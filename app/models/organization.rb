@@ -132,8 +132,8 @@ class Organization < ActiveRecord::Base
   end
 
   def discover_repos(url, notify = false)
-    raise _("Repository Discovery already in progress") if self.repo_discovery_task && !self.repo_discovery_task.finished?
-    raise _("Discovery URL not set.") if url.blank?
+    fail _("Repository Discovery already in progress") if self.repo_discovery_task && !self.repo_discovery_task.finished?
+    fail _("Discovery URL not set.") if url.blank?
     task = self.async(:organization => self, :task_type => :repo_discovery).start_discovery_task(url, notify)
     task.parameters = {:url => url}
     self.task_statuses << task
@@ -142,12 +142,12 @@ class Organization < ActiveRecord::Base
   end
 
   def being_deleted?
-    ! self.deletion_task_id.nil?
+    !self.deletion_task_id.nil?
   end
 
   def applying_default_info?
     return false if self.apply_info_task_id.nil?
-    ! TaskStatus.find_by_id(self.apply_info_task_id).finished?
+    !TaskStatus.find_by_id(self.apply_info_task_id).finished?
   end
 
   def initialize_default_info
@@ -168,7 +168,7 @@ class Organization < ActiveRecord::Base
     options = defaults.merge(options)
 
     unless ALLOWED_DEFAULT_INFO_TYPES.include?(informable_type)
-      raise options[:error], options[:message]
+      fail options[:error], options[:message]
     end
   end
 
@@ -196,7 +196,7 @@ class Organization < ActiveRecord::Base
 
   def auto_attaching_all_systems?
     return false if self.owner_auto_attach_all_systems_task_id.nil?
-    ! TaskStatus.find_by_id(self.owner_auto_attach_all_systems_task_id).finished?
+    !TaskStatus.find_by_id(self.owner_auto_attach_all_systems_task_id).finished?
   end
 
   def auto_attach_all_systems

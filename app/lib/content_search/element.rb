@@ -28,7 +28,7 @@ module ContentSearch::Element
 
   def as_json(options = {})
     json = {}
-    raise "Display attributes not defined for #{self.class.name}" if display_attributes.nil? || display_attributes.empty?
+    fail "Display attributes not defined for #{self.class.name}" if display_attributes.nil? || display_attributes.empty?
     display_attributes.each do |attr|
       json[attr] = self.send(attr) if self.send(attr)
     end

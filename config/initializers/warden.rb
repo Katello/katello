@@ -36,12 +36,12 @@ end
 
 class Warden::SessionSerializer
   def serialize(user)
-    raise ArgumentError, "Cannot serialize invalid user object: #{user}" if !(user.is_a?(User) && user.id.is_a?(Integer))
+    fail ArgumentError, "Cannot serialize invalid user object: #{user}" if !(user.is_a?(User) && user.id.is_a?(Integer))
     user.id
   end
 
   def deserialize(id)
-    raise ArgumentError, "Cannot deserialize non-integer id: #{id}" unless id.is_a?(Integer)
+    fail ArgumentError, "Cannot deserialize non-integer id: #{id}" unless id.is_a?(Integer)
     User.find(id) rescue nil
   end
 end
@@ -82,7 +82,7 @@ Warden::Strategies.add(:openid) do
       # we already have cookie
       identifier = "#{Katello.config.sso.provider_url}/user/#{CGI.escape(username)}"
       custom!([401,
-               {'WWW-Authenticate' => Rack::OpenID.build_header({:identifier => identifier})},
+               {'WWW-Authenticate' => Rack::OpenID.build_header(:identifier => identifier)},
                ''])
     else
       # we have no cookie yet so we plain redirect to OpenID provider to login

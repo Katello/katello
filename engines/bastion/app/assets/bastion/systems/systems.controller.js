@@ -16,8 +16,11 @@
  * @name  Bastion.systems.controller:SystemsController
  *
  * @requires $scope
+ * @requires $location
+ * @requires gettext
  * @requires Nutupane
- * @requires Routes
+ * @requires System
+ * @requires CurrentOrganization
  * @requires SystemsHelper
  *
  * @description
@@ -26,8 +29,8 @@
  *   within the table.
  */
 angular.module('Bastion.systems').controller('SystemsController',
-    ['$scope', '$location', 'i18nFilter', 'Nutupane', 'System', 'CurrentOrganization', 'SystemsHelper',
-    function($scope, $location, i18nFilter, Nutupane, System, CurrentOrganization, SystemsHelper) {
+    ['$scope', '$location', 'gettext', 'Nutupane', 'System', 'CurrentOrganization', 'SystemsHelper',
+    function($scope, $location, gettext, Nutupane, System, CurrentOrganization, SystemsHelper) {
 
         var params = {
             'organization_id':  CurrentOrganization,
@@ -60,7 +63,7 @@ angular.module('Bastion.systems').controller('SystemsController',
             system.$remove(function() {
                 $scope.removeRow(system.id);
                 $scope.saveSuccess = true;
-                $scope.successMessages = [i18nFilter('System %s has been deleted.'.replace('%s', system.name))];
+                $scope.successMessages = [gettext('System %s has been deleted.').replace('%s', system.name)];
                 $scope.transitionTo('systems.index');
             });
         };

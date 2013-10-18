@@ -54,9 +54,9 @@ class Api::V2::SystemsBulkActionsController < Api::V2::SystemsController
       end
 
       if !invalid_perms.empty?
-        raise HttpErrors::BadRequest, _("Group membership modification is not allowed for system group(s): %s") % invalid_perms.join(', ')
+        fail HttpErrors::BadRequest, _("Group membership modification is not allowed for system group(s): %s") % invalid_perms.join(', ')
       elsif !max_systems_exceeded.empty?
-        raise HttpErrors::BadRequest, _("Maximum number of systems exceeded for system group(s): %s") % max_systems_exceeded.join(', ')
+        fail HttpErrors::BadRequest, _("Maximum number of systems exceeded for system group(s): %s") % max_systems_exceeded.join(', ')
       end
 
       @systems.each do |system|
@@ -98,7 +98,7 @@ class Api::V2::SystemsBulkActionsController < Api::V2::SystemsController
       end
 
       if !invalid_perms.empty?
-        raise HttpErrors::BadRequest, _("Group membership modification is not allowed for system group(s): %s") % invalid_perms.join(', ')
+        fail HttpErrors::BadRequest, _("Group membership modification is not allowed for system group(s): %s") % invalid_perms.join(', ')
       end
 
       @systems.each do |system|
@@ -128,11 +128,11 @@ class Api::V2::SystemsBulkActionsController < Api::V2::SystemsController
   param :content, Array, :desc => "List of content (e.g. package names, package group names or errata ids)", :required => true
   def install_content
     if params[:content_type].blank?
-      raise HttpErrors::BadRequest, _("A content_type must be provided.")
+      fail HttpErrors::BadRequest, _("A content_type must be provided.")
     end
 
     if params[:content].blank?
-      raise HttpErrors::BadRequest, _("No content has been provided.")
+      fail HttpErrors::BadRequest, _("No content has been provided.")
 
     else
       if params[:content_type].to_sym == :package
@@ -160,11 +160,11 @@ class Api::V2::SystemsBulkActionsController < Api::V2::SystemsController
   param :content, Array, :desc => "List of content (e.g. package or package group names)", :required => true
   def update_content
     if params[:content_type].blank?
-      raise HttpErrors::BadRequest, _("A content_type must be provided.")
+      fail HttpErrors::BadRequest, _("A content_type must be provided.")
     end
 
     if params[:content].blank?
-      raise HttpErrors::BadRequest, _("No content has been provided.")
+      fail HttpErrors::BadRequest, _("No content has been provided.")
 
     else
       if params[:content_type].to_sym == :package
@@ -195,11 +195,11 @@ class Api::V2::SystemsBulkActionsController < Api::V2::SystemsController
   param :content, Array, :desc => "List of content (e.g. package or package group names)", :required => true
   def remove_content
     if params[:content_type].blank?
-      raise HttpErrors::BadRequest, _("A content_type must be provided.")
+      fail HttpErrors::BadRequest, _("A content_type must be provided.")
     end
 
     if params[:content].blank?
-      raise HttpErrors::BadRequest, _("No content has been provided.")
+      fail HttpErrors::BadRequest, _("No content has been provided.")
 
     else
       if params[:content_type].to_sym == :package

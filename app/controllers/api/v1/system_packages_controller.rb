@@ -90,7 +90,7 @@ class Api::V1::SystemPackagesController < Api::V1::ApiController
 
   def find_system
     @system = System.first(:conditions => { :uuid => params[:system_id] })
-    raise HttpErrors::NotFound, _("Couldn't find system '%s'") % params[:system_id] if @system.nil?
+    fail HttpErrors::NotFound, _("Couldn't find system '%s'") % params[:system_id] if @system.nil?
     @system
   end
 
@@ -101,7 +101,7 @@ class Api::V1::SystemPackagesController < Api::V1::ApiController
   def validate_package_list_format(packages)
     packages.each do |package|
       if !valid_package_name?(package) && !package.is_a?(Hash)
-        raise HttpErrors::BadRequest.new(_("%s is not a valid package name") % package)
+        fail HttpErrors::BadRequest.new(_("%s is not a valid package name") % package)
       end
     end
 
@@ -110,17 +110,17 @@ class Api::V1::SystemPackagesController < Api::V1::ApiController
 
   def require_packages_or_groups
     if params.slice(:packages, :groups).values.size != 1
-      raise HttpErrors::BadRequest.new(_("Either packages or groups  must be provided"))
+      fail HttpErrors::BadRequest.new(_("Either packages or groups  must be provided"))
     end
   end
 
   def require_packages_only
     if params[:groups]
-      raise HttpErrors::BadRequest.new(_("This action doesn't support pacakge groups"))
+      fail HttpErrors::BadRequest.new(_("This action doesn't support pacakge groups"))
     end
 
     unless params[:packages]
-      raise HttpErrors::BadRequest.new(_("Packages must be provided"))
+      fail HttpErrors::BadRequest.new(_("Packages must be provided"))
     end
   end
 

@@ -96,13 +96,13 @@ class Api::ApiController < ActionController::Base
 
   def get_resource
     resource = instance_variable_get(:"@#{resource_name}")
-    raise 'no resource loaded' if resource.nil?
+    fail 'no resource loaded' if resource.nil?
     resource
   end
 
   def get_resource_collection
     resource = instance_variable_get(:"@#{resource_collection_name}")
-    raise 'no resource collection loaded' if resource.nil?
+    fail 'no resource collection loaded' if resource.nil?
     resource
   end
 
@@ -116,7 +116,7 @@ class Api::ApiController < ActionController::Base
 
   def respond(options = {})
     method_name = ('respond_for_' + params[:action].to_s).to_sym
-    raise "automatic response method '%s' not defined" % method_name unless respond_to?(method_name, true)
+    fail "automatic response method '%s' not defined" % method_name unless respond_to?(method_name, true)
     return send(method_name, options)
   end
 end

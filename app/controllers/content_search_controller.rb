@@ -117,7 +117,8 @@ class ContentSearchController < ApplicationController
 
       prod_rows = product_repo_map.collect do |product, reps|
         spanned_product_content(view, product, reps, 'package', package_ids)
-      end.flatten
+      end
+      prod_rows.flatten!
 
       if !prod_rows.empty?
         rows << view_hash[view.id]

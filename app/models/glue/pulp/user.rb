@@ -54,7 +54,7 @@ module Glue::Pulp::User
       end
     rescue => e
       Rails.logger.error "Failed to create pulp user #{self.remote_id}: #{e}, #{e.backtrace.join("\n")}"
-      raise e
+      fail e
     end
 
     def set_super_user_role

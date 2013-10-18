@@ -26,7 +26,7 @@ class PromotionChangeset < Changeset
     self.content_views.composite.each do |view|
       components = view.components_not_in_env(self.environment) - self.content_views
       unless components.blank?
-        raise _("Please add '%{component_content_views}' to the changeset '%{changeset}' "\
+        fail _("Please add '%{component_content_views}' to the changeset '%{changeset}' "\
                 "if you wish to promote the composite view '%{composite_view}' with it.") %
                 { :component_content_views => components.map(&:name).join(', '),
                   :changeset => self.name, :composite_view => view.name}
@@ -92,9 +92,10 @@ class PromotionChangeset < Changeset
   end
 
   def promote_views(from_env, to_env, views)
-    views.collect do |view|
+    views = views.collect do |view|
       view.promote(from_env, to_env)
-    end.flatten
+    end
+    views.flatten
   end
 
   def update_view_cp_content(to_env)

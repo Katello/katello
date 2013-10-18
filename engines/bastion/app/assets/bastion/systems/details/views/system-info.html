@@ -3,18 +3,14 @@
   <div class="flash_hud" ng-show="saveSuccess">
     <a class="control" title="Close" ng-click="saveSuccess = false"></a>
     <ul class="flash_messages success">
-      <li>
-        {{ "Save successful" | i18n }}
-      </li>
+      <li translate>Save successful</li>
     </ul>
   </div>
 
   <div class="flash_hud" ng-show="saveError">
     <a class="control" title="Close" ng-click="saveError = false"></a>
     <ul class="flash_messages error">
-      <li>
-        {{ "Error occurred saving:" | i18n }}
-      </li>
+      <li translate>Error occurred saving:</li>
       <ul>
         <li ng-repeat="error in errors">{{ error }}</li>
       </ul>
@@ -23,10 +19,10 @@
 
   <div class="details fl">
     <section>
-      <h4>{{ "Basic Information" | i18n }}</h4>
+      <h4 translate>Basic Information</h4>
 
       <div class="detail">
-        <span class="info-label">{{ "Name" | i18n }}</span>
+        <span class="info-label" translate>Name</span>
         <span class="info-value"
               alch-edit-text="system.name"
               readonly="system.readonly"
@@ -35,12 +31,12 @@
       </div>
 
       <div class="detail">
-        <span class="info-label">{{ "UUID" | i18n }}</span>
+        <span class="info-label" translate>UUID</span>
         <span class="info-value">{{ system.uuid }}</span>
       </div>
 
       <div class="detail">
-        <span class="info-label">{{ "Description" | i18n }}</span>
+        <span class="info-label" translate>Description</span>
         <span class="info-value"
               alch-edit-textarea="system.description"
               readonly="system.readonly"
@@ -49,12 +45,12 @@
       </div>
 
       <div class="detail">
-        <span class="info-label">{{ "Type" | i18n }}</span>
+        <span class="info-label" translate>Type</span>
         <span class="info-value">{{ system.type }}</span>
       </div>
 
       <div ng-show="system.guests" class="detail">
-        <span class="info-label">{{ "Guests" | i18n }}</span>
+        <span class="info-label" translate>Guests</span>
         <div class="info-value">
           <ul>
             <li ng-repeat="guest in system.guests">
@@ -65,7 +61,7 @@
       </div>
 
       <div ng-show="system.host" class="detail">
-        <span class="info-label">{{ "Host" | i18n }}</span>
+        <span class="info-label" translate>Host</span>
         <div class="info-value">
           <a href="#/systems/{{ system.host.uuid }}/info">{{ system.host.name }}</a>
         </div>
@@ -75,10 +71,10 @@
     </section>
 
     <section>
-      <h4>{{ "Subscriptions" | i18n }}</h4>
+      <h4 translate>Subscriptions</h4>
 
       <div class="detail">
-        <span class="info-label">{{ "Subscription Status" | i18n }}</span>
+        <span class="info-label" translate>Subscription Status</span>
         <span class="info-value">
           <i class="icon-circle" ng-class="table.getStatusColor(system.compliance.status)"></i>
           {{ system.compliance.status }}
@@ -86,7 +82,7 @@
       </div>
 
       <div ng-show="system.compliance.reasons.length > 0" class="detail">
-        <span class="info-label">{{ "Details" | i18n }}</span>
+        <span class="info-label" translate>Details</span>
         <div class="info-value">
           <ul class="compliance-reasons">
             <li ng-repeat="reason in system.compliance.reasons">{{ reason.attributes.name}} - {{ reason.message }}</li>
@@ -95,14 +91,14 @@
       </div>
 
       <div class="detail">
-        <span class="info-label">{{ "Auto-Attach" | i18n }}</span>
+        <span class="info-label" translate>Auto-Attach</span>
       <span class="info-value"
             alch-edit-checkbox="system.autoheal"
             on-save="save(system)">
       </span>
       </div>
       <div class="detail">
-        <span class="info-label">{{ "Service Level" | i18n }}</span>
+        <span class="info-label" translate>Service Level</span>
           <span class="info-value"
                 alch-edit-select="system.serviceLevel"
                 readonly="system.readonly"
@@ -114,10 +110,15 @@
       </div>
 
       <div class="detail">
-        <span class="info-label">{{ "Activation Key(s)" | i18n }}</span>
+        <span class="info-label" 
+              translate
+              translate-n="system.activation_keys.length"
+              translate-plural="Activation Keys">
+          Activation Key
+        </span>
         <span class="info-value">
-          <span ng-show="system.activation_keys.length == 0">
-            {{ "None" | i18n }}
+          <span translate ng-show="system.activation_keys.length == 0">
+            None
           </span>
           <ul ng-show="system.activation_keys.length > 0">
             <li ng-repeat="ak in system.activation_keys">
@@ -134,20 +135,20 @@
     </section>
 
     <section>
-      <h4>{{ "System Properties" | i18n }}</h4>
+      <h4 translate>System Properties</h4>
 
       <div class="detail">
-        <span class="info-label">{{ "OS" | i18n }} </span>
+        <span class="info-label" translate>OS</span>
         <span class="info-value">{{ system.distribution_name }}</span>
       </div>
 
       <div class="detail">
-        <span class="info-label">{{ "Release" | i18n }}</span>
+        <span class="info-label" translate>Release</span>
         <span class="info-value">{{ system.kernel  }}</span>
       </div>
 
       <div class="detail">
-        <span class="info-label">{{ "System Groups" | i18n }}</span>
+        <span class="info-label" translate>System Groups</span>
         <span class="info-value"
               alch-edit-multiselect="system.systemGroups"
               formatter="arrayToString"
@@ -156,27 +157,27 @@
       </div>
       
       <div class="detail">
-        <span class="info-label">{{ "Arch" | i18n }}</span>
+        <span class="info-label" translate>Arch</span>
         <span class="info-value">{{ system.arch }}</span>
       </div>     
       
       <div class="detail">
-        <span class="info-label">{{ "Number of CPUs" | i18n }}</span>
+        <span class="info-label" translate>Number of CPUs</span>
         <span class="info-value">{{ systemFacts.cpu["cpu(s)"] }}</span>
       </div>
 
       <div class="detail">
-        <span class="info-label">{{ "Sockets" | i18n }}</span>
+        <span class="info-label" translate>Sockets</span>
         <span class="info-value">{{ systemFacts.cpu["cpu_socket(s)"] }}</span>
       </div>
 
       <div class="detail">
-        <span class="info-label">{{ "Cores per Socket" | i18n }}</span>
+        <span class="info-label" translate>Cores per Socket</span>
         <span class="info-value">{{ systemFacts.cpu["core(s)_per_socket"] }}</span>
       </div>
 
       <div class="detail">
-        <span class="info-label">{{ "RAM" | i18n }}</span>
+        <span class="info-label" translate>RAM</span>
         <span class="info-value">{{ system.memory }}</span>
       </div>
 
@@ -184,15 +185,15 @@
     </section>
 
     <section>
-      <h4>{{ "Installed Products" | i18n }}</h4>
+      <h4 translate>Installed Products</h4>
 
-      <p ng-show="!system.installedProducts || system.installedProducts.length == 0">
-        {{ "You do not have any Installed Products" | i18n }}
+      <p translate ng-show="!system.installedProducts || system.installedProducts.length == 0">
+        You do not have any Installed Products
       </p>
 
       <div ng-show="system.installedProducts.length > 0">
         <div ng-repeat="product in system.installedProducts" class="detail">
-          <span class="info-label">{{ "Product" | i18n }} </span>
+          <span class="info-label" translate>Product</span>
           <span class="info-value">{{ product.productName }}</span>
         </div>
       </div>
@@ -204,10 +205,10 @@
 
   <div class="fr details">
     <section>
-      <h4>{{ "System Content" | i18n }}</h4>
+      <h4 translate>System Content</h4>
 
       <div class="detail">
-        <span class="info-label">{{ "Release Version" | i18n }}</span>
+        <span class="info-label" translate>Release Version</span>
         <span class="info-value"
               alch-edit-select="system.releaseVer"
               readonly="system.readonly"
@@ -219,7 +220,7 @@
       </div>
 
       <div class="detail">
-        <span class="info-label">{{ "Content View" | i18n }}</span>
+        <span class="info-label" translate>Content View</span>
         <span class="info-value"
               alch-edit-select="system.content_view.name"
               readonly="system.readonly"
@@ -234,12 +235,12 @@
       <div class="detail">
         <div class="flash_hud" ng-show="editContentView">
           <ul class="flash_messages warning">
-            <li>
-              {{ "You must select a new content view before your change of environment can be saved. Use the cancel button on content view selection to revert your environment selection." | i18n }}
+            <li translate>
+              You must select a new content view before your change of environment can be saved. Use the cancel button on content view selection to revert your environment selection.
             </li>
           </ul>
         </div>
-        <span class="info-label">{{ "Environment" | i18n }}</span>
+        <span class="info-label" translate>Environment</span>
         <span id="environment_path_selector" 
               readonly="system.readonly"
               path-selector="system.environment.id"
@@ -252,41 +253,41 @@
     </section>
 
     <section>
-      <h4>{{ "System Status" | i18n }}</h4>
+      <h4 translate>System Status</h4>
 
       <div class="detail">
-        <span class="info-label">{{ "Registered" | i18n }}</span>
+        <span class="info-label" translate>Registered</span>
         <span class="info-value">{{ system.created | date:'short' }}</span>
       </div>
 
       <div class="detail">
-        <span class="info-label">{{ "Checkin" | i18n }}</span>
-        <span class="info-value">{{ (system.checkin_time | date:'short') || ("Never checked in" | i18n) }}</span>
+        <span class="info-label" translate>Checkin</span>
+        <span class="info-value">{{ (system.checkin_time | date:'short') || ("Never checked in" | translate) }}</span>
       </div>
 
       <div class="divider"></div>
     </section>
 
     <section>
-      <h4>{{ "Networking" | i18n }}</h4>
+      <h4 translate>Networking</h4>
 
       <div class="detail">
-        <span class="info-label">{{ "Hostname" | i18n }}</span>
+        <span class="info-label" translate>Hostname</span>
         <span class="info-value">{{ systemFacts.network.hostname }}</span>
       </div>
 
       <div class="detail">
-        <span class="info-label">{{ "IPv4 Address" | i18n }}</span>
+        <span class="info-label" translate>IPv4 Address</span>
         <span class="info-value">{{ systemFacts.network.ipv4_address }}</span>
       </div>
 
       <div class="detail">
-        <span class="info-label">{{ "IPv6 Address" | i18n }}</span>
+        <span class="info-label" translate>IPv6 Address</span>
         <span class="info-value">{{ systemFacts.network.ipv6_address }}</span>
       </div>
 
       <div class="detail">
-        <span class="info-label">{{ "Interfaces" | i18n }}</span>
+        <span class="info-label" translate>Interfaces</span>
         <div class="info-value">
           <div ng-repeat="(interfaceName, interface) in systemFacts.net.interface" >
             <i ng-class="{'icon-plus': !expanded, 'icon-minus': expanded}" class="expand-icon clickable"
@@ -306,16 +307,16 @@
     </section>
 
     <section class="custom-information">
-      <h4>{{ "Custom Information" | i18n }}</h4>
+      <h4 translate>Custom Information</h4>
     <span alch-edit-add-item="system.customInfo"
           on-add="addCustomInfo(value)">
     </span>
-      <p ng-show="system.customInfo.length == 0">
-        {{ "You don't have any custom information, add some above" | i18n }}
+      <p translate ng-show="system.customInfo.length == 0">
+        You don't have any custom information, add some above
       </p>
       <div class="existing-items" ng-show="system.customInfo.length > 0">
-        <h5>{{ "Exsting Items" | i18n }}</h5>
-        <input type="text" ng-model="searchTerm" placeholder="{{ 'Filter' | i18n }}"/>
+        <h5 translate>Exsting Items</h5>
+        <input type="text" ng-model="searchTerm" placeholder="{{ 'Filter' | translate }}"/>
         <div class="details-container">
           <div class="detail" ng-repeat="customInfo in system.customInfo | filter:searchTerm">
             <span class="info-label">{{ customInfo.keyname }}</span>
@@ -335,7 +336,7 @@
     <header class="details-sub-header advanced-header">
       <i class="expand-icon clickable" ng-class="{'icon-plus': !showAdvanced, 'icon-minus': showAdvanced}"
          ng-click="showAdvanced = !showAdvanced"></i>
-      <h3>{{ "Advanced Information" | i18n }}</h3>
+      <h3 translate>Advanced Information</h3>
     </header>
     <div ng-show="showAdvanced" class="details fl">
       <section ng-show="showAdvanced" ng-repeat="(sectionName, subSection) in advancedInfoLeft">

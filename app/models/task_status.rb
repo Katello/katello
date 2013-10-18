@@ -302,9 +302,10 @@ class TaskStatus < ActiveRecord::Base
         stacktrace.split("(").first
       end
     elsif errors =~ /^\[.*,.*\]$/m
-      errors.split(",").map do |error|
+      result = errors.split(",").map do |error|
         error.gsub(/^\W+|\W+$/, "")
-      end.join("\n")
+      end
+      result.join("\n")
     else
       errors
     end

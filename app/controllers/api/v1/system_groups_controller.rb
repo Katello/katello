@@ -195,7 +195,7 @@ class Api::V1::SystemGroupsController < Api::V1::ApiController
   end
   def copy
     if @organization.id != @system_group.organization.id
-      raise HttpErrors::BadRequest,
+      fail HttpErrors::BadRequest,
             _("Can't copy System Groups to a different org: '%{org1}' != '%{org2}'") % { :org1 => @organization.id, :org2 => @system_group.organization.id }
     end
     grp_param              = params[:system_group]
@@ -270,12 +270,12 @@ class Api::V1::SystemGroupsController < Api::V1::ApiController
 
   def find_group
     @system_group = SystemGroup.where(:id => params[:id]).first
-    raise HttpErrors::NotFound, _("Couldn't find system group '%s'") % params[:id] if @system_group.nil?
+    fail HttpErrors::NotFound, _("Couldn't find system group '%s'") % params[:id] if @system_group.nil?
   end
 
   def system_uuids_to_ids(ids)
     system_ids = System.where(:uuid => ids).collect { |s| s.id }
-    raise Errors::NotFound.new(_("Systems [%s] not found.") % ids.join(',')) if system_ids.blank?
+    fail Errors::NotFound.new(_("Systems [%s] not found.") % ids.join(',')) if system_ids.blank?
     system_ids
   end
 

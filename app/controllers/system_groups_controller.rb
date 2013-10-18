@@ -71,7 +71,7 @@ class SystemGroupsController < ApplicationController
   end
 
   def create
-    @group = SystemGroup.create!(params[:system_group].merge({:organization_id => current_organization.id}))
+    @group = SystemGroup.create!(params[:system_group].merge(:organization_id => current_organization.id))
     notify.success _("System Group %s created successfully.") % @group.name
     if !search_validate(SystemGroup, @group.id, params[:search])
       notify.message _("'%s' did not meet the current search criteria and is not being shown.") % @group.name

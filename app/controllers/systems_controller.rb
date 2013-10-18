@@ -469,7 +469,7 @@ class SystemsController < ApplicationController
         groups_info[system_group.id] = system_group.name
       end
       if !invalid_perms.empty?
-        raise _("System Group membership modification not allowed for group(s): %s") % invalid_perms.join(', ')
+        fail _("System Group membership modification not allowed for group(s): %s") % invalid_perms.join(', ')
       end
 
       @systems.each do |system|

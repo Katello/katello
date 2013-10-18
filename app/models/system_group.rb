@@ -87,44 +87,44 @@ class SystemGroup < ActiveRecord::Base
   end
 
   def install_packages(packages)
-    raise Errors::SystemGroupEmptyException if self.systems.empty?
+    fail Errors::SystemGroupEmptyException if self.systems.empty?
     pulp_job = self.install_package(packages)
     save_job(pulp_job, :package_install, :packages, packages)
   end
 
   def uninstall_packages(packages)
-    raise Errors::SystemGroupEmptyException if self.systems.empty?
+    fail Errors::SystemGroupEmptyException if self.systems.empty?
     pulp_job = self.uninstall_package(packages)
     save_job(pulp_job, :package_remove, :packages, packages)
   end
 
   def update_packages(packages = nil)
     # if no packages are provided, a full system update will be performed (e.g ''yum update' equivalent)
-    raise Errors::SystemGroupEmptyException if self.systems.empty?
+    fail Errors::SystemGroupEmptyException if self.systems.empty?
     pulp_job = self.update_package(packages)
     save_job(pulp_job, :package_update, :packages, packages)
   end
 
   def install_package_groups(groups)
-    raise Errors::SystemGroupEmptyException if self.systems.empty?
+    fail Errors::SystemGroupEmptyException if self.systems.empty?
     pulp_job = self.install_package_group(groups)
     save_job(pulp_job, :package_group_install, :groups, groups)
   end
 
   def update_package_groups(groups)
-    raise Errors::SystemGroupEmptyException if self.systems.empty?
+    fail Errors::SystemGroupEmptyException if self.systems.empty?
     pulp_job = self.install_package_group(groups)
     save_job(pulp_job, :package_group_update, :groups, groups)
   end
 
   def uninstall_package_groups(groups)
-    raise Errors::SystemGroupEmptyException if self.systems.empty?
+    fail Errors::SystemGroupEmptyException if self.systems.empty?
     pulp_job = self.uninstall_package_group(groups)
     save_job(pulp_job, :package_group_remove, :groups, groups)
   end
 
   def install_errata(errata_ids)
-    raise Errors::SystemGroupEmptyException if self.systems.empty?
+    fail Errors::SystemGroupEmptyException if self.systems.empty?
     pulp_job = self.install_consumer_errata(errata_ids)
     save_job(pulp_job, :errata_install, :errata_ids, errata_ids)
   end
@@ -202,13 +202,13 @@ class SystemGroup < ActiveRecord::Base
         sys_envs = self.systems.collect{|s| s.environment_id}.uniq
         group_envs = @cached_environments.collect{|e| e.id}
         if (sys_envs  - group_envs).length > 0
-          raise _("Could not modify environments. System group membership does not match new environment association.")
+          fail _("Could not modify environments. System group membership does not match new environment association.")
         end
 
         #verify that keys match modified environments
         keys = self.environment_key_conflicts
         if !keys.empty?
-          raise _("Could not modify environments.  One or more associated activation keys (%s) would become invalid.") % keys.collect{|k| k.name}.join(',')
+          fail _("Could not modify environments.  One or more associated activation keys (%s) would become invalid.") % keys.collect{|k| k.name}.join(',')
         end
       end
       self.db_environments = self.environments

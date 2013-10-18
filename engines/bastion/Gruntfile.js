@@ -66,22 +66,31 @@ module.exports = function (grunt) {
             },
             all: [
                 'Gruntfile.js',
-                '<%= bastion.src %>/**/*.js'
+                '<%= bastion.src %>/**/*.js',
+                '!<%= bastion.src %>/i18n/translations.js'
             ]
         },
         karma: {
-            //continuous integration mode
-            ci: {
-                browsers: ['PhantomJS'],
-                configFile: 'karma.conf.js',
-                singleRun: true
-            },
             server: {
                 configFile: 'karma.conf.js',
                 autoWatch: true
             },
             singleRun: {
                 configFile: 'karma.conf.js',
+                singleRun: true
+            },
+            //continuous integration mode
+            ci: {
+                configFile: 'karma.conf.js',
+                reporters: ['progress', 'coverage'],
+                preprocessors: {
+                    'app/assets/bastion/**/*.html': ['ng-html2js'],
+                    'app/assets/bastion/**/*.js': ['coverage']
+                },
+                coverageReporter: {
+                    type: 'cobertura',
+                    dir: 'coverage/'
+                },
                 singleRun: true
             }
         },
@@ -105,11 +114,34 @@ module.exports = function (grunt) {
             }],
             showDocularDocs: false,
             showAngularDocs: false
+        },
+        'nggettext_extract': {
+            bastion: {
+                src: ['<%= bastion.src %>/**/*.html', '<%= bastion.src %>/**/*.js'],
+                dest: '<%= bastion.src %>/i18n/katello.pot'
+            }
+        },
+        'nggettext_compile': {
+            options: {
+                module: 'Bastion'
+            },
+            bastion: {
+                src: ['<%= bastion.src %>/i18n/locale/**/*.po'],
+                dest: '<%= bastion.src %>/i18n/translations.js'
+            }
         }
     });
 
     grunt.registerTask('docs', [
         'docular'
+    ]);
+
+    grunt.registerTask('i18n:extract', [
+        'nggettext_extract'
+    ]);
+
+    grunt.registerTask('i18n:compile', [
+        'nggettext_compile'
     ]);
 
     grunt.registerTask('test', [

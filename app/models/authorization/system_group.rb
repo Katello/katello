@@ -74,7 +74,7 @@ module Authorization::SystemGroup
     end
 
     def items(org, verbs)
-      raise "scope requires an organization" if org.nil?
+      fail "scope requires an organization" if org.nil?
       resource = :system_groups
       if ::User.allowed_all_tags?(verbs, resource, org)
         where(:organization_id => org)
