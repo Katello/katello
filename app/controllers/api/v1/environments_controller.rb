@@ -191,7 +191,7 @@ class Api::V1::EnvironmentsController < Api::V1::ApiController
   param :content_view_id, :identifier, :desc => "content view identifier", :required => false
   def repositories
     if !@environment.library? && @content_view.nil?
-      raise HttpErrors::BadRequest,
+      fail HttpErrors::BadRequest,
             _("Cannot retrieve repos from non-library environment '%s' without a content view.") % @environment.name
     end
 
