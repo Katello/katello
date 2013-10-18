@@ -319,9 +319,13 @@
   allApiOrganizationContentViewDefinitionProductsPath: function(_organization_id, _content_view_definition_id, options) {
   return Utils.build_path(["organization_id","content_view_definition_id"], ["format"], [2,[2,[2,[2,[2,[2,[2,[2,[2,[2,[2,[2,[2,[2,[7,"/",false],[6,"api",false]],[7,"/",false]],[6,"organizations",false]],[7,"/",false]],[3,"organization_id",false]],[7,"/",false]],[6,"content_view_definitions",false]],[7,"/",false]],[3,"content_view_definition_id",false]],[7,"/",false]],[6,"products",false]],[7,"/",false]],[6,"all",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
   },
-// allowed_orgs_user_session => /user_session/allowed_orgs(.:format)
-  allowedOrgsUserSessionPath: function(options) {
-  return Utils.build_path([], ["format"], [2,[2,[2,[2,[7,"/",false],[6,"user_session",false]],[7,"/",false]],[6,"allowed_orgs",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
+// all_products => /products/all(.:format)
+  allProductsPath: function(options) {
+  return Utils.build_path([], ["format"], [2,[2,[2,[2,[7,"/",false],[6,"products",false]],[7,"/",false]],[6,"all",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
+  },
+// all_systems => /systems/all(.:format)
+  allSystemsPath: function(options) {
+  return Utils.build_path([], ["format"], [2,[2,[2,[2,[7,"/",false],[6,"systems",false]],[7,"/",false]],[6,"all",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
   },
 // api => /api(.:format)
   apiPath: function(options) {
@@ -519,6 +523,10 @@
   apiGpgKeyPath: function(_id, options) {
   return Utils.build_path(["id"], ["format"], [2,[2,[2,[2,[2,[2,[7,"/",false],[6,"api",false]],[7,"/",false]],[6,"gpg_keys",false]],[7,"/",false]],[3,"id",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
   },
+// api_gpg_keys => /api/gpg_keys(.:format)
+  apiGpgKeysPath: function(options) {
+  return Utils.build_path([], ["format"], [2,[2,[2,[2,[7,"/",false],[6,"api",false]],[7,"/",false]],[6,"gpg_keys",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
+  },
 // api_hypervisors => /api/hypervisors(.:format)
   apiHypervisorsPath: function(options) {
   return Utils.build_path([], ["format"], [2,[2,[2,[2,[7,"/",false],[6,"api",false]],[7,"/",false]],[6,"hypervisors",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
@@ -683,6 +691,10 @@
   apiOrganizationSystemsPath: function(_organization_id, options) {
   return Utils.build_path(["organization_id"], ["format"], [2,[2,[2,[2,[2,[2,[2,[2,[7,"/",false],[6,"api",false]],[7,"/",false]],[6,"organizations",false]],[7,"/",false]],[3,"organization_id",false]],[7,"/",false]],[6,"systems",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
   },
+// api_organization_task => /api/organizations/:organization_id/tasks/:id(.:format)
+  apiOrganizationTaskPath: function(_organization_id, _id, options) {
+  return Utils.build_path(["organization_id","id"], ["format"], [2,[2,[2,[2,[2,[2,[2,[2,[2,[2,[7,"/",false],[6,"api",false]],[7,"/",false]],[6,"organizations",false]],[7,"/",false]],[3,"organization_id",false]],[7,"/",false]],[6,"tasks",false]],[7,"/",false]],[3,"id",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
+  },
 // api_organization_tasks => /api/organizations/:organization_id/tasks(.:format)
   apiOrganizationTasksPath: function(_organization_id, options) {
   return Utils.build_path(["organization_id"], ["format"], [2,[2,[2,[2,[2,[2,[2,[2,[7,"/",false],[6,"api",false]],[7,"/",false]],[6,"organizations",false]],[7,"/",false]],[3,"organization_id",false]],[7,"/",false]],[6,"tasks",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
@@ -819,6 +831,14 @@
   apiRepositoryPath: function(_id, options) {
   return Utils.build_path(["id"], ["format"], [2,[2,[2,[2,[2,[2,[7,"/",false],[6,"api",false]],[7,"/",false]],[6,"repositories",false]],[7,"/",false]],[3,"id",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
   },
+// api_repository_content_upload => /api/repositories/:repository_id/content_uploads/:id(.:format)
+  apiRepositoryContentUploadPath: function(_repository_id, _id, options) {
+  return Utils.build_path(["repository_id","id"], ["format"], [2,[2,[2,[2,[2,[2,[2,[2,[2,[2,[7,"/",false],[6,"api",false]],[7,"/",false]],[6,"repositories",false]],[7,"/",false]],[3,"repository_id",false]],[7,"/",false]],[6,"content_uploads",false]],[7,"/",false]],[3,"id",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
+  },
+// api_repository_content_uploads => /api/repositories/:repository_id/content_uploads(.:format)
+  apiRepositoryContentUploadsPath: function(_repository_id, options) {
+  return Utils.build_path(["repository_id"], ["format"], [2,[2,[2,[2,[2,[2,[2,[2,[7,"/",false],[6,"api",false]],[7,"/",false]],[6,"repositories",false]],[7,"/",false]],[3,"repository_id",false]],[7,"/",false]],[6,"content_uploads",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
+  },
 // api_repository_distribution => /api/repositories/:repository_id/distributions/:id(.:format)
   apiRepositoryDistributionPath: function(_repository_id, _id, options) {
   return Utils.build_path(["repository_id","id"], ["format"], [2,[2,[2,[2,[2,[2,[2,[2,[2,[2,[7,"/",false],[6,"api",false]],[7,"/",false]],[6,"repositories",false]],[7,"/",false]],[3,"repository_id",false]],[7,"/",false]],[6,"distributions",false]],[7,"/",false]],[3,"id",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
@@ -903,6 +923,10 @@
   apiSystemPath: function(_id, options) {
   return Utils.build_path(["id"], ["format"], [2,[2,[2,[2,[2,[2,[7,"/",false],[6,"api",false]],[7,"/",false]],[6,"systems",false]],[7,"/",false]],[3,"id",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
   },
+// api_system_erratum => /api/systems/:system_id/errata/:id(.:format)
+  apiSystemErratumPath: function(_system_id, _id, options) {
+  return Utils.build_path(["system_id","id"], ["format"], [2,[2,[2,[2,[2,[2,[2,[2,[2,[2,[7,"/",false],[6,"api",false]],[7,"/",false]],[6,"systems",false]],[7,"/",false]],[3,"system_id",false]],[7,"/",false]],[6,"errata",false]],[7,"/",false]],[3,"id",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
+  },
 // api_system_group => /api/system_groups/:id(.:format)
   apiSystemGroupPath: function(_id, options) {
   return Utils.build_path(["id"], ["format"], [2,[2,[2,[2,[2,[2,[7,"/",false],[6,"api",false]],[7,"/",false]],[6,"system_groups",false]],[7,"/",false]],[3,"id",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
@@ -974,6 +998,10 @@
 // apply_api_changeset => /api/changesets/:id/apply(.:format)
   applyApiChangesetPath: function(_id, options) {
   return Utils.build_path(["id"], ["format"], [2,[2,[2,[2,[2,[2,[2,[2,[7,"/",false],[6,"api",false]],[7,"/",false]],[6,"changesets",false]],[7,"/",false]],[3,"id",false]],[7,"/",false]],[6,"apply",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
+  },
+// apply_api_system_errata => /api/systems/:system_id/errata/apply(.:format)
+  applyApiSystemErrataPath: function(_system_id, options) {
+  return Utils.build_path(["system_id"], ["format"], [2,[2,[2,[2,[2,[2,[2,[2,[2,[2,[7,"/",false],[6,"api",false]],[7,"/",false]],[6,"systems",false]],[7,"/",false]],[3,"system_id",false]],[7,"/",false]],[6,"errata",false]],[7,"/",false]],[6,"apply",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
   },
 // apply_changeset => /changesets/:id/apply(.:format)
   applyChangesetPath: function(_id, options) {
@@ -1067,6 +1095,10 @@
   autoCompleteSystemsPath: function(options) {
   return Utils.build_path([], ["format"], [2,[2,[2,[2,[7,"/",false],[6,"systems",false]],[7,"/",false]],[6,"auto_complete",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
   },
+// available_api_system_subscriptions => /api/systems/:system_id/subscriptions/available(.:format)
+  availableApiSystemSubscriptionsPath: function(_system_id, options) {
+  return Utils.build_path(["system_id"], ["format"], [2,[2,[2,[2,[2,[2,[2,[2,[2,[2,[7,"/",false],[6,"api",false]],[7,"/",false]],[6,"systems",false]],[7,"/",false]],[3,"system_id",false]],[7,"/",false]],[6,"subscriptions",false]],[7,"/",false]],[6,"available",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
+  },
 // available_subscriptions_activation_key => /activation_keys/:id/available_subscriptions(.:format)
   availableSubscriptionsActivationKeyPath: function(_id, options) {
   return Utils.build_path(["id"], ["format"], [2,[2,[2,[2,[2,[2,[7,"/",false],[6,"activation_keys",false]],[7,"/",false]],[3,"id",false]],[7,"/",false]],[6,"available_subscriptions",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
@@ -1110,6 +1142,10 @@
 // cancel_discovery_provider => /providers/:id/cancel_discovery(.:format)
   cancelDiscoveryProviderPath: function(_id, options) {
   return Utils.build_path(["id"], ["format"], [2,[2,[2,[2,[2,[2,[7,"/",false],[6,"providers",false]],[7,"/",false]],[3,"id",false]],[7,"/",false]],[6,"cancel_discovery",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
+  },
+// cancel_repo_discover_api_organization => /api/organizations/:id/cancel_repo_discover(.:format)
+  cancelRepoDiscoverApiOrganizationPath: function(_id, options) {
+  return Utils.build_path(["id"], ["format"], [2,[2,[2,[2,[2,[2,[2,[2,[7,"/",false],[6,"api",false]],[7,"/",false]],[6,"organizations",false]],[7,"/",false]],[3,"id",false]],[7,"/",false]],[6,"cancel_repo_discover",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
   },
 // changelog_package => /packages/:id/changelog(.:format)
   changelogPackagePath: function(_id, options) {
@@ -1278,10 +1314,6 @@
 // delete_manifest_subscriptions => /subscriptions/delete_manifest(.:format)
   deleteManifestSubscriptionsPath: function(options) {
   return Utils.build_path([], ["format"], [2,[2,[2,[2,[7,"/",false],[6,"subscriptions",false]],[7,"/",false]],[6,"delete_manifest",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
-  },
-// dependencies_api_changeset => /api/changesets/:id/dependencies(.:format)
-  dependenciesApiChangesetPath: function(_id, options) {
-  return Utils.build_path(["id"], ["format"], [2,[2,[2,[2,[2,[2,[2,[2,[7,"/",false],[6,"api",false]],[7,"/",false]],[6,"changesets",false]],[7,"/",false]],[3,"id",false]],[7,"/",false]],[6,"dependencies",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
   },
 // dependencies_changeset => /changesets/:id/dependencies(.:format)
   dependenciesChangesetPath: function(_id, options) {
@@ -1687,6 +1719,10 @@
   favoriteSearchIndexPath: function(options) {
   return Utils.build_path([], ["format"], [2,[2,[2,[2,[7,"/",false],[6,"search",false]],[7,"/",false]],[6,"favorite",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
   },
+// file_api_repository_content_uploads => /api/repositories/:repository_id/content_uploads/file(.:format)
+  fileApiRepositoryContentUploadsPath: function(_repository_id, options) {
+  return Utils.build_path(["repository_id"], ["format"], [2,[2,[2,[2,[2,[2,[2,[2,[2,[2,[7,"/",false],[6,"api",false]],[7,"/",false]],[6,"repositories",false]],[7,"/",false]],[3,"repository_id",false]],[7,"/",false]],[6,"content_uploads",false]],[7,"/",false]],[6,"file",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
+  },
 // filelist_package => /packages/:id/filelist(.:format)
   filelistPackagePath: function(_id, options) {
   return Utils.build_path(["id"], ["format"], [2,[2,[2,[2,[2,[2,[7,"/",false],[6,"packages",false]],[7,"/",false]],[3,"id",false]],[7,"/",false]],[6,"filelist",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
@@ -1723,9 +1759,9 @@
   historySubscriptionsPath: function(options) {
   return Utils.build_path([], ["format"], [2,[2,[2,[2,[7,"/",false],[6,"subscriptions",false]],[7,"/",false]],[6,"history",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
   },
-// i18n_dictionary => /i18n/dictionary(.:format)
-  i18nDictionaryPath: function(options) {
-  return Utils.build_path([], ["format"], [2,[2,[2,[2,[7,"/",false],[6,"i18n",false]],[7,"/",false]],[6,"dictionary",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
+// import_into_repo_api_repository_content_uploads => /api/repositories/:repository_id/content_uploads/import_into_repo(.:format)
+  importIntoRepoApiRepositoryContentUploadsPath: function(_repository_id, options) {
+  return Utils.build_path(["repository_id"], ["format"], [2,[2,[2,[2,[2,[2,[2,[2,[2,[2,[7,"/",false],[6,"api",false]],[7,"/",false]],[6,"repositories",false]],[7,"/",false]],[3,"repository_id",false]],[7,"/",false]],[6,"content_uploads",false]],[7,"/",false]],[6,"import_into_repo",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
   },
 // import_manifest_api_provider => /api/providers/:id/import_manifest(.:format)
   importManifestApiProviderPath: function(_id, options) {
@@ -1734,6 +1770,10 @@
 // import_products_api_provider => /api/providers/:id/import_products(.:format)
   importProductsApiProviderPath: function(_id, options) {
   return Utils.build_path(["id"], ["format"], [2,[2,[2,[2,[2,[2,[2,[2,[7,"/",false],[6,"api",false]],[7,"/",false]],[6,"providers",false]],[7,"/",false]],[3,"id",false]],[7,"/",false]],[6,"import_products",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
+  },
+// install_api_system_packages => /api/systems/:system_id/packages/install(.:format)
+  installApiSystemPackagesPath: function(_system_id, options) {
+  return Utils.build_path(["system_id"], ["format"], [2,[2,[2,[2,[2,[2,[2,[2,[2,[2,[7,"/",false],[6,"api",false]],[7,"/",false]],[6,"systems",false]],[7,"/",false]],[3,"system_id",false]],[7,"/",false]],[6,"packages",false]],[7,"/",false]],[6,"install",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
   },
 // install_content_api_systems => /api/systems/install_content(.:format)
   installContentApiSystemsPath: function(options) {
@@ -2283,6 +2323,10 @@
   redhatProviderProvidersPath: function(options) {
   return Utils.build_path([], ["format"], [2,[2,[2,[2,[7,"/",false],[6,"providers",false]],[7,"/",false]],[6,"redhat_provider",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
   },
+// redhat_provider_tab_providers => /providers/redhat_provider_tab(.:format)
+  redhatProviderTabProvidersPath: function(options) {
+  return Utils.build_path([], ["format"], [2,[2,[2,[2,[7,"/",false],[6,"providers",false]],[7,"/",false]],[6,"redhat_provider_tab",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
+  },
 // refresh_api_content_view => /api/content_views/:id/refresh(.:format)
   refreshApiContentViewPath: function(_id, options) {
   return Utils.build_path(["id"], ["format"], [2,[2,[2,[2,[2,[2,[2,[2,[7,"/",false],[6,"api",false]],[7,"/",false]],[6,"content_views",false]],[7,"/",false]],[3,"id",false]],[7,"/",false]],[6,"refresh",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
@@ -2330,6 +2374,10 @@
 // releases_system => /systems/:id/releases(.:format)
   releasesSystemPath: function(_id, options) {
   return Utils.build_path(["id"], ["format"], [2,[2,[2,[2,[2,[2,[7,"/",false],[6,"systems",false]],[7,"/",false]],[3,"id",false]],[7,"/",false]],[6,"releases",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
+  },
+// remove_api_system_packages => /api/systems/:system_id/packages/remove(.:format)
+  removeApiSystemPackagesPath: function(_system_id, options) {
+  return Utils.build_path(["system_id"], ["format"], [2,[2,[2,[2,[2,[2,[2,[2,[2,[2,[7,"/",false],[6,"api",false]],[7,"/",false]],[6,"systems",false]],[7,"/",false]],[3,"system_id",false]],[7,"/",false]],[6,"packages",false]],[7,"/",false]],[6,"remove",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
   },
 // remove_content_api_systems => /api/systems/remove_content(.:format)
   removeContentApiSystemsPath: function(options) {
@@ -2382,6 +2430,10 @@
 // repo_compare_puppet_modules_content_search_index => /content_search/repo_compare_puppet_modules(.:format)
   repoComparePuppetModulesContentSearchIndexPath: function(options) {
   return Utils.build_path([], ["format"], [2,[2,[2,[2,[7,"/",false],[6,"content_search",false]],[7,"/",false]],[6,"repo_compare_puppet_modules",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
+  },
+// repo_discover_api_organization => /api/organizations/:id/repo_discover(.:format)
+  repoDiscoverApiOrganizationPath: function(_id, options) {
+  return Utils.build_path(["id"], ["format"], [2,[2,[2,[2,[2,[2,[2,[2,[7,"/",false],[6,"api",false]],[7,"/",false]],[6,"organizations",false]],[7,"/",false]],[3,"id",false]],[7,"/",false]],[6,"repo_discover",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
   },
 // repo_discovery_provider => /providers/:id/repo_discovery(.:format)
   repoDiscoveryProviderPath: function(_id, options) {
@@ -2782,6 +2834,18 @@
 // update_systems_system_group => /system_groups/:id/update_systems(.:format)
   updateSystemsSystemGroupPath: function(_id, options) {
   return Utils.build_path(["id"], ["format"], [2,[2,[2,[2,[2,[2,[7,"/",false],[6,"system_groups",false]],[7,"/",false]],[3,"id",false]],[7,"/",false]],[6,"update_systems",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
+  },
+// upgrade_all_api_system_packages => /api/systems/:system_id/packages/upgrade_all(.:format)
+  upgradeAllApiSystemPackagesPath: function(_system_id, options) {
+  return Utils.build_path(["system_id"], ["format"], [2,[2,[2,[2,[2,[2,[2,[2,[2,[2,[7,"/",false],[6,"api",false]],[7,"/",false]],[6,"systems",false]],[7,"/",false]],[3,"system_id",false]],[7,"/",false]],[6,"packages",false]],[7,"/",false]],[6,"upgrade_all",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
+  },
+// upgrade_api_system_packages => /api/systems/:system_id/packages/upgrade(.:format)
+  upgradeApiSystemPackagesPath: function(_system_id, options) {
+  return Utils.build_path(["system_id"], ["format"], [2,[2,[2,[2,[2,[2,[2,[2,[2,[2,[7,"/",false],[6,"api",false]],[7,"/",false]],[6,"systems",false]],[7,"/",false]],[3,"system_id",false]],[7,"/",false]],[6,"packages",false]],[7,"/",false]],[6,"upgrade",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
+  },
+// upload_bits_api_repository_content_upload => /api/repositories/:repository_id/content_uploads/:id/upload_bits(.:format)
+  uploadBitsApiRepositoryContentUploadPath: function(_repository_id, _id, options) {
+  return Utils.build_path(["repository_id","id"], ["format"], [2,[2,[2,[2,[2,[2,[2,[2,[2,[2,[2,[2,[7,"/",false],[6,"api",false]],[7,"/",false]],[6,"repositories",false]],[7,"/",false]],[3,"repository_id",false]],[7,"/",false]],[6,"content_uploads",false]],[7,"/",false]],[3,"id",false]],[7,"/",false]],[6,"upload_bits",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
   },
 // upload_subscriptions => /subscriptions/upload(.:format)
   uploadSubscriptionsPath: function(options) {

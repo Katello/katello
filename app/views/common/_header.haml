@@ -25,5 +25,3 @@
 = content_for(:extra_header) do
   - if (Organization.any_readable? && session[:menu_back]) or session[:notifications]
     = link_to _("&laquo; Back"), dashboard_index_path, :class => "fl navlink"
-  - elsif current_user
-    = render :partial => '/layouts/org'

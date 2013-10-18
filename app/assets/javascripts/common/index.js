@@ -40,5 +40,11 @@
 //= require "bastion/menu/menu.module.js"
 //= require "bastion/menu/menu.controller.js"
 
+//= require "bastion/organizations/organizations.module.js"
+//= require "bastion/organizations/organization.factory.js"
+
+//= require "bastion/users/users.module.js"
+//= require "bastion/users/user.factory.js"
+
 //= require "bastion/utils/utils.module"
 //= require "bastion/utils/routes.factory"
