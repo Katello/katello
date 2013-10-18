@@ -41,10 +41,13 @@ module Dashboard
     def setup_layout
       if (user_layout = current_user.try(:preferences).try(:[], :dashboard).try(:[], :layout))
         user_layout.each do |col|
-          begin
-            @columns << col.map{ |name| get_widget(name, organization) }
-          rescue NameError
-            Rails.logger.info("Could not load dashboard widget #{name}")
+          @columns << col.each_with_object([]) do |name, column|
+            begin
+              widget = get_widget(name, organization)
+              column << widget if widget.accessible?
+            rescue NameError
+              Rails.logger.info("Could not load dashboard widget #{name}")
+            end
           end
         end
       else
