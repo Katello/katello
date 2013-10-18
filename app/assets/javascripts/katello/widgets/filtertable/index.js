@@ -12,4 +12,4 @@
 */
 
 //= require "alchemy/jquery/plugins/jquery.uitablefilter"
-//= require "widgets/filtertable/filtertable"
+//= require "katello/widgets/filtertable/filtertable"
