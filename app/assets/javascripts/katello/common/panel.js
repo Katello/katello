@@ -1020,7 +1020,7 @@ KT.panel.list = (function () {
                         button.attr("disabled", "disabled");
 
                         $(this).ajaxSubmit({
-                            url: KT.routes[resource_type + '_path'](),
+                            url: $(this).attr('action'),
                             data: data,
                             success: createSuccess,
                             error: function (e) {
