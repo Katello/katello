@@ -14,6 +14,6 @@
 module Katello
 class KeyPool < ActiveRecord::Base
   belongs_to :activation_key
-  belongs_to :pool, :class_name => "::Pool"
+  belongs_to :pool
 end
 end

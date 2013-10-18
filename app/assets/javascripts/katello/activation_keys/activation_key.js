@@ -11,7 +11,7 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
 
-KT.panel.list.registerPage('activation_keys', { create : 'new_activation_key' });
+KT.panel.list.registerPage('activation_keys', { create : 'new_katello_activation_key' });
 KT.panel.set_expand_cb(function() {
     var children = $('#panel .menu_parent');
     $.each(children, function(i, item) {
