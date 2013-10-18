@@ -58,11 +58,11 @@ class Product < ActiveRecord::Base
   end
 
   def self.in_org(organization)
-    self.joins(:provider).where('providers.organization_id' => organization.id)
+    self.joins(:provider).where("#{Katello::Provider.table_name}.organization_id" => organization.id)
   end
 
-  scope :engineering, where(:type => "Product")
-  scope :marketing, where(:type => "MarketingProduct")
+  scope :engineering, where(:type => "Katello::Product")
+  scope :marketing, where(:type => "Katello::MarketingProduct")
 
   before_create :assign_unique_label
 
@@ -163,7 +163,7 @@ class Product < ActiveRecord::Base
     end
   end
 
-  scope :all_in_org, lambda{|org| ::Product.joins(:provider).where('providers.organization_id = ?', org.id)}
+  scope :all_in_org, lambda{|org| Product.joins(:provider).where("#{Katello::Provider.table_name}.organization_id = ?", org.id)}
 
   scope :repositories_cdn_import_failed, where(:cdn_import_success => false)
 
@@ -171,7 +171,7 @@ class Product < ActiveRecord::Base
     self.label = Util::Model.labelize(self.name) if self.label.blank?
 
     # if the object label is already being used in this org, append the id to make it unique
-    if Product.all_in_org(self.organization).where('products.label = ?', self.label).count > 0
+    if Product.all_in_org(self.organization).where("#{Katello::Product.table_name}.label = ?", self.label).count > 0
       self.label = self.label + "_" + self.cp_id unless self.cp_id.blank?
     end
   end
@@ -215,8 +215,8 @@ class Product < ActiveRecord::Base
   def self.with_repos(env, enabled_only)
     query = Repository.in_environment(env.id).select(:product_id)
     query = query.enabled if enabled_only
-    joins(:provider).where('providers.organization_id' => env.organization).
-        where("(providers.provider_type ='#{::Provider::CUSTOM}') OR (providers.provider_type ='#{::Provider::REDHAT}' AND products.id in (#{query.to_sql}))")
+    joins(:provider).where("#{Katello::Providers.table_name}.organization_id" => env.organization).
+        where("(#{Katello::Provider.table_name}.provider_type ='#{Provider::CUSTOM}') OR (#{Katello::Provider.table_name}.provider_type ='#{Provider::REDHAT}' AND #{Katello::Product.table_name}.id in (#{query.to_sql}))")
   end
 end
 end

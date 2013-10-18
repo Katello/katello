@@ -46,8 +46,7 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
   def param_rules
     {
       :create => [:name, :label, :product_id, :unprotected, :content_type,
-                  :url, :gpg_key_id, :organization_id],
-      :update => { :repository => [:gpg_key_name] }
+                  :url, :gpg_key_id, :organization_id, :repository],
     }
   end
 
@@ -112,7 +111,7 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
   param :gpg_key_id, :number, :desc => "id of a gpg key that will be assigned to this repository"
   def update
     raise HttpErrors::BadRequest, _("A Red Hat repository cannot be updated.") if @repository.redhat?
-    @repository.update_attributes!(params.slice(:gpg_key_id, :feed))
+    @repository.update_attributes!(repository_params)
     respond_for_show(:resource => @repository)
   end
 
@@ -132,6 +131,10 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
 
   def find_repository
     @repository = Repository.find(params[:id]) if params[:id]
+  end
+
+  def repository_params
+    params.slice(:gpg_key_id, :feed)
   end
 
 end
