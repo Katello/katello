@@ -7,7 +7,7 @@ extends 'katello/api/v2/common/org_reference'
 
 attributes :marketing_product
 attributes :provider_id
-attributes :sync_plan_id, :sync_plan_name
+attributes :sync_plan_id
 attributes :gpg_key_id
 
 node :repository_count do |product|

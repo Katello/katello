@@ -31,7 +31,7 @@ angular.module('alchemy')
         return {
             replace: true,
             controller: 'AlchEditController',
-            templateUrl: 'incubator/views/alch-edit.html'
+            templateUrl: '../incubator/views/alch-edit.html'
         };
     })
     .controller('AlchEditController', ['$scope', '$filter', function($scope, $filter) {
@@ -310,7 +310,7 @@ angular.module('alchemy')
     }])
     .directive('alchEditAddItem', function() {
         return {
-            templateUrl: 'incubator/views/alch-edit-add-item.html',
+            templateUrl: '../incubator/views/alch-edit-add-item.html',
             scope: {
                 model: '=alchEditAddItem',
                 handleAdd: '&onAdd'
