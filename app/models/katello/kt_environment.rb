@@ -40,10 +40,10 @@ class KTEnvironment < ActiveRecord::Base
   has_many :activation_keys, :dependent => :destroy, :foreign_key => :environment_id
   # rubocop:disable HasAndBelongsToMany
   # TODO: change these into has_many associations
-  has_and_belongs_to_many :priors, { :class_name => "KTEnvironment", :foreign_key => :environment_id,
+  has_and_belongs_to_many :priors, { :class_name => "Katello::KTEnvironment", :foreign_key => :environment_id,
                                      :join_table => "katello_environment_priors",
                                      :association_foreign_key => "prior_id", :uniq => true }
-  has_and_belongs_to_many :successors, { :class_name => "KTEnvironment", :foreign_key => "prior_id",
+  has_and_belongs_to_many :successors, { :class_name => "Katello::KTEnvironment", :foreign_key => "prior_id",
                                          :join_table => "katello_environment_priors",
                                          :association_foreign_key => :environment_id, :readonly => true }
 
