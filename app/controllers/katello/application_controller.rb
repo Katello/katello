@@ -614,7 +614,7 @@ class ApplicationController < ::ApplicationController
     elsif options[:render_list_proc]
       rendered_html = options[:render_list_proc].call(@items, options)
     else
-      rendered_html = render_to_string(:partial => "common/list_items", :locals => options)
+      rendered_html = render_to_string(:partial => "katello/common/list_items", :locals => options)
     end
 
     render :json => {:html => rendered_html,
@@ -656,7 +656,7 @@ class ApplicationController < ::ApplicationController
     if options[:list_partial]
       rendered_html = render_to_string(:partial => options[:list_partial], :locals => options)
     else
-      rendered_html = render_to_string(:partial => "common/list_items", :locals => options)
+      rendered_html = render_to_string(:partial => "katello/common/list_items", :locals => options)
     end
 
     render :json => {:html => rendered_html,
