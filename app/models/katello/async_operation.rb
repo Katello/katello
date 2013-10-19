@@ -10,6 +10,7 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 #
+module Katello
 AsyncOperation = Struct.new(:status_id, :username, :object, :method_name, :args) do
   #delegate :method, :to => :object
 

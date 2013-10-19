@@ -10,11 +10,12 @@
   have received a copy of GPLv2 along with this software; if not, see
   http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-= check_box_tag "org_#{org.id}", org.id, current_user.default_org == org, {:class=>"default_org", "data-url"=>setup_default_org_katello_user_path(current_user.id)}
+= check_box_tag "org_#{org.id}", org.id, current_user.default_org == org,
+  { :class => "default_org", "data-url" => setup_default_org_katello_user_path(current_user.id) }
 
 - if current_user.default_org == org
-  %i.fl.favorite.icon-star.tipsify{:title=>_("This is your default organization."), :id=>"favorite_#{org.id}"}
+  %i.fl.favorite.icon-star.tipsify{ :title => _("This is your default organization."), :id => "favorite_#{org.id}" }
 - else
-  %i.fl.favorite.icon-star-empty.tipsify{:title=>_("Make this your default organization."), :id=>"favorite_#{org.id}"}
+  %i.fl.favorite.icon-star-empty.tipsify{ :title => _("Make this your default organization."), :id => "favorite_#{org.id}" }
 
-= image_tag( "icons/spinner.gif", :class=>"hidden fl fav_spinner")
+= image_tag( "katello/icons/spinner.gif", :class => "hidden fl fav_spinner")

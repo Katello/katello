@@ -32,7 +32,7 @@ module Navigation
     def menu_org_list
       {:key => :org_list,
        :name => _("List"),
-       :url => organizations_path,
+       :url => katello_organizations_path,
        :options => {:class => 'organizations second_level', "data-menu" => "organizations"}
       }
     end
@@ -41,20 +41,20 @@ module Navigation
       [
         { :key => :organization_details,
           :name => _("Details"),
-          :url => lambda{edit_organization_path(@organization.label)},
+          :url => lambda{edit_katello_organization_path(@organization.label)},
           :if => lambda{@organization},
           :options => {:class => "panel_link"}
         },
         {:key => :organization_default_info,
          :name => _("Default Custom Info"),
-         :url => lambda{organization_default_info_path(@organization.label, "system")},
+         :url => lambda{katello_organization_default_info_path(@organization.label, "system")},
          :if => lambda{@organization},
          :options => {:class => "panel_link menu_parent"},
          :items => default_info_subnav
         },
         { :key => :organization_history,
           :name => _("History"),
-          :url => lambda{events_organization_path(@organization.label)},
+          :url => lambda{events_katello_organization_path(@organization.label)},
           :if => lambda{@organization},
           :options => {:class => "panel_link"}
         }
@@ -65,13 +65,13 @@ module Navigation
       [
         { :key => :org_system_default_info,
           :name => _("System Default Info"),
-          :url => lambda{organization_default_info_path(@organization.label, "system")},
+          :url => lambda{katello_organization_default_info_path(@organization.label, "system")},
           :if => lambda{@organization},
           :options => {:class => "third_level panel_link"}
         },
         { :key => :org_distributor_default_info,
           :name => _("Distributor Default Info"),
-          :url => lambda{organization_default_info_path(@organization.label, "distributor")},
+          :url => lambda{katello_organization_default_info_path(@organization.label, "distributor")},
           :if => lambda{@organization},
           :options => {:class => "third_level panel_link"}
         }
