@@ -23,7 +23,7 @@ class Dashboard::ContentViewsWidget < Dashboard::Widget
   end
 
   def content_path
-    content_views_dashboard_index_path
+    content_views_katello_dashboard_index_path
   end
 
 end
