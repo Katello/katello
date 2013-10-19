@@ -155,11 +155,11 @@ module Katello
 
         def allowed_organizations
           #test for all orgs
-          perms = Permission.joins(:role).joins("INNER JOIN roles_users ON roles_users.role_id = roles.id").
-              where("roles_users.user_id = ?", self.id).where(:organization_id => nil).count
-          return Organization.without_deleting.all if perms > 0
+          perms = Permission.joins(:role).joins("INNER JOIN #{Katello::RolesUser.table_name} ON #{Katello::RolesUser.table_name}.role_id = #{Katello::Role.table_name}.id").
+              where("#{Katello::RolesUser.table_name}.user_id = ?", self.id).where(:organization_id => nil).count
+          return Katello::Organization.without_deleting.all if perms > 0
 
-          Organization.without_deleting.joins(:permissions => {:role => :users}).where(:users => {:id => self.id}).uniq
+          Katello::Organization.without_deleting.joins(:permissions => {:role => :users}).where(:users => {:id => self.id}).uniq
         end
 
         def disable_helptip(key)
