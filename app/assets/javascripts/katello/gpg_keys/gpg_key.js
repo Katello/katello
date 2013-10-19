@@ -14,7 +14,7 @@
 KT.panel.list.registerPage('gpg_keys', {
     create              : 'new_gpg_key',
     extra_create_data   : function(){
-        return { 'gpg_key[name]' : $('#gpg_key_name').val() };
+        return { 'katello_gpg_key[name]' : $('#katello_gpg_key_name').val() };
     }
 
 });

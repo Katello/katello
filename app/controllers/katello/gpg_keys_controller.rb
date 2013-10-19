@@ -90,12 +90,12 @@ class GpgKeysController < ApplicationController
   # TODO: break up this method
   # rubocop:disable MethodLength
   def create
-    gpg_key_params = params[:gpg_key]
+    gpg_key_params = params[:katello_gpg_key]
     return render_bad_parameters if gpg_key_params.nil?
     file_uploaded = gpg_key_params.key?("content_upload") && !gpg_key_params.key?("content")
 
     if file_uploaded
-      gpg_key_params['content'] = params[:gpg_key][:content_upload].read
+      gpg_key_params['content'] = params[:katello_gpg_key][:content_upload].read
       gpg_key_params.delete('content_upload')
     end
 
@@ -104,7 +104,7 @@ class GpgKeysController < ApplicationController
     notify.success _("GPG Key '%s' was created.") % @gpg_key['name'], :asynchronous => file_uploaded
 
     if search_validate(GpgKey, @gpg_key.id, params[:search])
-      render :partial => "common/list_item", :locals => {:item => @gpg_key, :accessor => "id", :columns => ['name'], :name => controller_display_name}
+      render :partial => "katello/common/list_item", :locals => {:item => @gpg_key, :accessor => "id", :columns => ['name'], :name => controller_display_name}
     else
       notify.message _("'%s' did not meet the current search criteria and is not being shown.") % @gpg_key["name"]
       render :json => {:no_match => true}
@@ -121,11 +121,11 @@ class GpgKeysController < ApplicationController
   end
 
   def update
-    gpg_key_params = params[:gpg_key]
+    gpg_key_params = params[:katello_gpg_key]
 
     file_uploaded = gpg_key_params.key?("content_upload") && !gpg_key_params.key?("content")
     if file_uploaded
-      gpg_key_params['content'] = params[:gpg_key][:content_upload].read
+      gpg_key_params['content'] = params[:katello_gpg_key][:content_upload].read
       gpg_key_params.delete('content_upload')
     end
 
@@ -152,7 +152,7 @@ class GpgKeysController < ApplicationController
   def destroy
     if @gpg_key.destroy
       notify.success _("GPG Key '%s' was deleted.") % @gpg_key[:name]
-      render :partial => "common/list_remove", :locals => {:id => params[:id], :name => controller_display_name}
+      render :partial => "katello/common/list_remove", :locals => {:id => params[:id], :name => controller_display_name}
     end
   end
 
@@ -171,7 +171,7 @@ class GpgKeysController < ApplicationController
       :create_label => _('+ New GPG Key'),
       :name => controller_display_name,
       :ajax_load  => true,
-      :ajax_scroll => items_gpg_keys_path,
+      :ajax_scroll => items_katello_gpg_keys_path,
       :initial_action => :products_repos,
       :enable_create => GpgKey.createable?(current_organization),
       :search_class => GpgKey
