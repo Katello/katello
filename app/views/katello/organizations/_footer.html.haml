@@ -12,4 +12,4 @@
 
 %label{:for=>"org_#{@organization.id}", :class=>"label_default_org clickable", :id=>"label_org_#{@organization.id}"}
   #{@org_label}
-= render :partial=>"common/fav", :locals => {:org=>@organization, :current_user=>current_user}
+= render :partial=>"katello/common/fav", :locals => {:org=>@organization, :current_user=>current_user}
