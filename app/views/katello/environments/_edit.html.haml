@@ -1,4 +1,4 @@
-= javascript 'widgets/jquery.jeditable.helpers', 'environments/environment_edit'
+= javascript 'katello/widgets/jquery.jeditable.helpers', 'katello/environments/environment_edit'
 
 = content_for :title do
   = _("Environment") + ": " + @environment.name
@@ -7,7 +7,7 @@
   -# editable on the org means CRUD on the environments
   -if editable
     - if @environment.successor.nil?
-      = link_to _("Remove Environment"), {:controller=>"environments", :action=>"destroy"}, :confirm => _('Are you sure? If any users have this environment set as their default, it will unset it.'), :method => :delete, :class=>"remove_item", :remote=>true, "data-forward"=>edit_organization_path(@organization.label)
+      = link_to _("Remove Environment"), {:controller=>"environments", :action=>"destroy"}, :confirm => _('Are you sure? If any users have this environment set as their default, it will unset it.'), :method => :delete, :class=>"remove_item", :remote=>true, "data-forward"=>edit_katello_organization_path(@organization.label)
     - else
       %span{ :class => "remove_item disabled tipsify", :title => _("The selected environment is not the last environment in its promotion path.  Only the last environment can be deleted.") }
         = _("Remove Environment")
@@ -19,7 +19,7 @@
     %fieldset.clearfix
       .grid_2.ra
         %label #{_("Name")}:
-      .grid_5.la{'name' => 'kt_environment[name]', :class=>("editable edit_env_name" if editable), "data-url"=>organization_environment_path(@organization.label, @environment.id),  "data-forward"=>edit_organization_path(@organization.label)}<> #{@environment.name}
+      .grid_5.la{'name' => 'kt_environment[name]', :class=>("editable edit_env_name" if editable), "data-url"=>katello_organization_environment_path(@organization.label, @environment.id),  "data-forward"=>edit_katello_organization_path(@organization.label)}<> #{@environment.name}
 
     %fieldset
       .grid_2.ra
@@ -29,7 +29,7 @@
     %fieldset.clearfix
       .grid_2.ra
         %label #{_("Description")}:
-      .grid_5.la{:style => "word-wrap: break-word;", :class=>("editable edit_textarea" if editable), 'data-maxlength' => default_description_limit, "data-url"=>organization_environment_path(@organization.label, @environment.id), 'name' => 'kt_environment[description]'}<> #{@environment.description}
+      .grid_5.la{:style => "word-wrap: break-word;", :class=>("editable edit_textarea" if editable), 'data-maxlength' => default_description_limit, "data-url"=>katello_organization_environment_path(@organization.label, @environment.id), 'name' => 'kt_environment[description]'}<> #{@environment.description}
 
     %fieldset.clearfix
       %input{ :type => "hidden", :name => "prior_envs", :value => @env_labels_json }
@@ -37,4 +37,4 @@
         %label #{_("Prior Environment")}:
       .grid_5.la #{@environment.prior.name}
 
-= render :template => "layouts/tupane_layout"
+= render :template => "katello/layouts/tupane_layout"
