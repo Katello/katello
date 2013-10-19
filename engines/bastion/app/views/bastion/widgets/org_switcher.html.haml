@@ -17,6 +17,6 @@
         %ul#allowed-orgs{"org-switcher" => ""}
         - if Katello::Organization.any_readable?
           %div#manage_orgs.menu-item
-            %a.menu-item{:href=>organizations_path()}
+            %a.menu-item{:href=>katello_organizations_path()}
               %span{:class=>"fl clearfix"}
                 #{_("Manage Organizations")}
