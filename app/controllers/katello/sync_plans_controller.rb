@@ -52,7 +52,7 @@ class SyncPlansController < ApplicationController
                        :create_label => _('+ New Plan'),
                        :name => controller_display_name,
                        :ajax_load => true,
-                       :ajax_scroll => items_sync_plans_path,
+                       :ajax_scroll => items_katello_sync_plans_path,
                        :enable_create => current_organization.syncable?,
                        :search_class => SyncPlan}
   end
@@ -64,22 +64,22 @@ class SyncPlansController < ApplicationController
 
   def update
     updated_plan = SyncPlan.find(params[:id])
-    result = params[:sync_plan].values.first
+    result = params[:katello_sync_plan].values.first
 
-    updated_plan.name = params[:sync_plan][:name] unless params[:sync_plan][:name].nil?
-    updated_plan.interval = params[:sync_plan][:interval] unless params[:sync_plan][:interval].nil?
+    updated_plan.name = params[:katello_sync_plan][:name] unless params[:katello_sync_plan][:name].nil?
+    updated_plan.interval = params[:katello_sync_plan][:interval] unless params[:katello_sync_plan][:interval].nil?
 
-    unless params[:sync_plan][:description].nil?
-      result = updated_plan.description = params[:sync_plan][:description].gsub("\n", '')
+    unless params[:katello_sync_plan][:description].nil?
+      result = updated_plan.description = params[:katello_sync_plan][:description].gsub("\n", '')
     end
 
-    if params[:sync_plan][:time]
-      updated_plan.sync_date = convert_date_time(updated_plan.plan_date, params[:sync_plan][:time].strip)
+    if params[:katello_sync_plan][:time]
+      updated_plan.sync_date = convert_date_time(updated_plan.plan_date, params[:katello_sync_plan][:time].strip)
       return render_bad_parameters(_('Invalid date or time format')) unless updated_plan.sync_date
     end
 
-    if params[:sync_plan][:date]
-      updated_plan.sync_date = convert_date_time(params[:sync_plan][:date].strip, updated_plan.plan_time)
+    if params[:katello_sync_plan][:date]
+      updated_plan.sync_date = convert_date_time(params[:katello_sync_plan][:date].strip, updated_plan.plan_time)
       return render_bad_parameters(_('Invalid date or time format')) unless updated_plan.sync_date
     end
 
@@ -104,11 +104,11 @@ class SyncPlansController < ApplicationController
       notify.success N_("Sync plan '%s' was deleted.") % @plan[:name]
     end
 
-    render :partial => "common/list_remove", :locals => {:id => params[:id], :name => controller_display_name}
+    render :partial => "katello/common/list_remove", :locals => {:id => params[:id], :name => controller_display_name}
   end
 
   def show
-    render :partial => "common/list_update", :locals => {:item => @plan, :accessor => "id", :columns => %w(name interval)}
+    render :partial => "katello/common/list_update", :locals => {:item => @plan, :accessor => "id", :columns => %w(name interval)}
   end
 
   def new
@@ -125,16 +125,16 @@ class SyncPlansController < ApplicationController
   end
 
   def create
-    sdate = params[:sync_plan].delete :plan_date
-    stime = params[:sync_plan].delete :plan_time
-    params[:sync_plan][:sync_date] = convert_date_time(sdate, stime)
-    return render_bad_parameters(_('Invalid date or time format')) unless params[:sync_plan][:sync_date]
+    sdate = params[:katello_sync_plan].delete :plan_date
+    stime = params[:katello_sync_plan].delete :plan_time
+    params[:katello_sync_plan][:sync_date] = convert_date_time(sdate, stime)
+    return render_bad_parameters(_('Invalid date or time format')) unless params[:katello_sync_plan][:sync_date]
 
-    @plan = SyncPlan.create! params[:sync_plan].merge({:organization => current_organization})
+    @plan = SyncPlan.create! params[:katello_sync_plan].merge({:organization => current_organization})
     notify.success N_("Sync Plan '%s' was created.") % @plan['name']
 
     if search_validate(SyncPlan, @plan.id, params[:search])
-      render :partial => "common/list_item", :locals => {:item => @plan, :accessor => "id", :columns => %w(name interval), :name => controller_display_name}
+      render :partial => "katello/common/list_item", :locals => {:item => @plan, :accessor => "id", :columns => %w(name interval), :name => controller_display_name}
     else
       notify.message _("'%s' did not meet the current search criteria and is not being shown.") % @plan["name"]
       render :json => { :no_match => true }
