@@ -7,8 +7,8 @@
         %li
           .col_1
             %h5
-              = link_to product.name, sync_management_index_path
-          - if product.sync_status.state == PulpSyncStatus::RUNNING
+              = link_to product.name, katello_sync_management_index_path
+          - if product.sync_status.state == Katello::PulpSyncStatus::RUNNING
             .col_progress{:title=>product.sync_status.progress.step}
               %span
                 .progressbar{:percentage=>sync_percentage(product)}
@@ -17,19 +17,19 @@
                 #{sync_percentage(product)}%
           - else
             .col_2
-              - if product.sync_status.state == PulpSyncStatus::ERROR
+              - if product.sync_status.state == Katello::PulpSyncStatus::ERROR
                 .error_icon.fl
                   &nbsp;
                 #{_("Error")}
-              - elsif product.sync_status.state == PulpSyncStatus::FINISHED
+              - elsif product.sync_status.state == Katello::PulpSyncStatus::FINISHED
                 .check_icon.fl
                   &nbsp;
                 #{_("Success")}
-              - elsif product.sync_status.state == PulpSyncStatus::CANCELED
+              - elsif product.sync_status.state == Katello::PulpSyncStatus::CANCELED
                 #{_("Cancelled")}
-              - elsif product.sync_status.state == PulpSyncStatus::WAITING
+              - elsif product.sync_status.state == Katello::PulpSyncStatus::WAITING
                 #{_("Waiting")}
-              - elsif product.sync_status.state == PulpSyncStatus::RUNNING
+              - elsif product.sync_status.state == Katello::PulpSyncStatus::RUNNING
                 #{_("Running")}
               - else
                 #{product.sync_status.state}

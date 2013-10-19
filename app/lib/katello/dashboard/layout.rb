@@ -58,7 +58,7 @@ module Dashboard
     end
 
     def get_widget(name, org)
-      "Dashboard::#{name.camelcase}Widget".constantize.new(org)
+      "Katello::Dashboard::#{name.camelcase}Widget".constantize.new(org)
     end
   end
 end
