@@ -18,4 +18,8 @@
  * @description
  *   Module for menu related functionality.
  */
-angular.module('Bastion.menu', ['alchemy', 'alch-templates', 'Bastion.widgets']);
+angular.module('Bastion.menu', [
+    'alchemy',
+    'alch-templates',
+    'Bastion.widgets'
+]);
