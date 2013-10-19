@@ -12,8 +12,8 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class OrganizationsController < ApplicationController
-  include AutoCompleteSearch
+class OrganizationsController < Katello::ApplicationController
+
   respond_to :html, :js
   before_filter :find_organization, :only => [:edit, :update, :destroy, :events, :default_info]
   before_filter :find_organization_by_id, :only => [:environments_partial, :download_debug_certificate]
@@ -73,8 +73,8 @@ class OrganizationsController < ApplicationController
 
   def items
     ids = Organization.without_deleting.readable.collect(&:id)
-    render_panel_direct(Organization, @panel_options, params[:search], params[:offset], [:name_sort, 'asc'],
-                        {:default_field => :name, :filter => [{"id" => ids}]})
+    render_panel_direct(Organization, @panel_options, params[:search], params[:offset] || 0, [:name_sort, 'asc'],
+                        { :default_field => :name, :filter => [{ "id" => ids }] })
   end
 
   def show
@@ -82,7 +82,8 @@ class OrganizationsController < ApplicationController
       render :partial => "new"
     else
       find_organization
-      render :partial => "common/list_update", :locals => {:item => @organization, :accessor => 'label', :columns => ['name']}
+      render :partial => "katello/common/list_update",
+             :locals => { :item => @organization, :accessor => 'label', :columns => ['name'] }
     end
   end
 
@@ -90,14 +91,14 @@ class OrganizationsController < ApplicationController
   # rubocop:disable MethodLength
   def create
     org_label_assigned = ""
-    org_params = params[:organization]
+    org_params = params[:katello_organization]
     return render_bad_parameters if org_params.nil?
     org_params[:label], org_label_assigned = generate_label(org_params[:name], 'organization') if org_params[:label].blank?
     @organization = Organization.new(:name => org_params[:name], :label => org_params[:label], :description => org_params[:description])
     @organization.save!
 
     env_label_assigned = ""
-    env_params = params[:environment]
+    env_params = params[:katello_environment]
     if env_params[:name].present?
       if env_params[:label].blank?
         env_params[:label], env_label_assigned = generate_label(env_params[:name], 'environment') if env_params[:label].blank?
@@ -120,7 +121,9 @@ class OrganizationsController < ApplicationController
       else
         notify.message env_label_assigned unless env_label_assigned.blank?
       end
-      render :partial => "common/list_item", :locals => {:item => @organization, :accessor => "label", :columns => ['name'], :name => controller_display_name}
+      render :partial => "katello/common/list_item",
+             :locals => { :item => @organization, :accessor => "label",
+                          :columns => ['name'], :name => controller_display_name }
     else
       notify.message _("'%s' did not meet the current search criteria and is not being shown.") % @organization["name"]
       render :json => { :no_match => true }
@@ -188,7 +191,8 @@ class OrganizationsController < ApplicationController
     id = @organization.label
     OrganizationDestroyer.destroy @organization, :notify => true
     notify.success _("Organization '%s' has been scheduled for background deletion.") % @organization.name
-    render :partial => "common/list_remove", :locals => {:id => id, :name => controller_display_name}
+    render :partial => "katello/common/list_remove",
+           :locals => { :id => id, :name => controller_display_name }
   end
 
   def environments_partial
@@ -261,7 +265,7 @@ class OrganizationsController < ApplicationController
                        :name => controller_display_name,
                        :accessor => :label,
                        :ajax_load  => true,
-                       :ajax_scroll => items_organizations_path,
+                       :ajax_scroll => items_katello_organizations_path,
                        :enable_create => Organization.creatable?,
                        :search_class => Organization}
   end
