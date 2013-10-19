@@ -5,7 +5,7 @@
 
 = form.text_field :description, :label => _("Description"), :maxlength => default_description_limit
 
-= form.select :interval, options_for_select(SyncPlan::TYPES, @plan.interval), :label => _("Interval")
+= form.select :interval, options_for_select(Katello::SyncPlan::TYPES, @plan.interval), :label => _("Interval")
 
 = form.text_field :plan_date, :id => 'datepicker', :label => _("Start Date")
 
