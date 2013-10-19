@@ -52,7 +52,7 @@ angular.module('Bastion.widgets').directive('orgSwitcher',
 
             $spinner.fadeIn();
             $scope.orgSwitcher.refresh = function() {
-                $http.get(Routes.allowedOrgsUserSessionPath()).then(function(response) {
+                $http.get("user_session/allowed_orgs").then(function(response) {
                     $spinner.fadeOut();
                     $element.html(response.data);
                     $compile($element.find('li'))($scope);
@@ -62,7 +62,7 @@ angular.module('Bastion.widgets').directive('orgSwitcher',
             $scope.orgSwitcher.selectOrg = function(event, organizationId) {
                 event.preventDefault();
 
-                $http.post(Routes.setOrgUserSessionPath({'org_id': organizationId})).success(function() {
+                $http.post("user_session/set_org?org_id=" + organizationId).success(function() {
                     $window.location = Routes.dashboardIndexPath();
                 });
             };
