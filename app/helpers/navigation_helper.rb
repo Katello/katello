@@ -13,31 +13,6 @@
 module NavigationHelper
 
   def generate_menu
-    if !Katello.config.katello?
-      main_menu   = Navigation::Menus::Headpin::Main.new(current_organization)
-      site_menu   = Navigation::Menus::Headpin::Site.new
-    else
-      main_menu   = Navigation::Menus::Main.new(current_organization)
-      site_menu   = Navigation::Menus::Site.new
-    end
-
-    banner_menu   = Navigation::Menus::Banner.new(current_user)
-
-    menu = {
-      :location => 'left',
-      :items => main_menu.items
-    }
-
-    site_menu = {
-      :location => 'right',
-      :items    => site_menu.items
-    }
-
-    banner_menu = {
-      :location => 'right',
-      :items    => banner_menu.items
-    }
-
     javascript do
       # TODO: Get rid of this ugliness
       (
@@ -45,7 +20,8 @@ module NavigationHelper
           menu: ' + menu.to_json + ',
           adminMenu: ' + site_menu.to_json + ',
           bannerMenu: ' + banner_menu.to_json + ',
-          notices: ' + add_notices.to_json + '
+          notices: ' + add_notices.to_json + ',
+          foremanMenu: ' + foreman_menu.to_json + '
         });'
       ).html_safe
     end
@@ -57,6 +33,42 @@ module NavigationHelper
       :url            => notices_path,
       :new_notices_url   => notices_get_new_path
     }
+  end
+
+  def menu
+    if !Katello.config.katello?
+      items = Navigation::Menus::Headpin::Main.new(current_organization).items
+    else
+      items = Navigation::Menus::Main.new(current_organization).items
+    end
+
+    {:location => 'left', :items => items}
+  end
+
+  def foreman_menu
+    menu = {}
+
+    if defined?(KatelloForemanEngine)
+      menu[:url] = Katello.config.foreman.url
+    end
+
+    menu
+  end
+
+  def banner_menu
+    items = Navigation::Menus::Banner.new(current_user).items
+
+    {:location => 'right', :items => items}
+  end
+
+  def site_menu
+    if !Katello.config.katello?
+      items = Navigation::Menus::Headpin::Site.new.items
+    else
+      items = Navigation::Menus::Site.new.items
+    end
+
+    {:location => 'right', :items => items}
   end
 
 end

@@ -16,8 +16,9 @@
     = stylesheet_link_tag :ie
 
 = content_for(:body) do
+  = generate_menu
   %article{ 'ng-app' => 'Katello' }
-    = render :file => "bastion/menu/menu"
+    = render :file => '../../app/assets/bastion/menu/views/menu.html'
   #wrapper
     %article#maincontent
       %section.maincontent.container_16
