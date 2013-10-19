@@ -339,13 +339,13 @@ module Navigation
       [
         { :key => :products_repositories,
           :name => _("Products and Repositories"),
-          :url => lambda{products_repos_gpg_key_path(@gpg_key.id)},
+          :url => lambda{products_repos_katello_gpg_key_path(@gpg_key.id)},
           :if => lambda{@gpg_key},
           :options => {:class => "panel_link"}
         },
         { :key => :gpg_key_details,
           :name => _("Details"),
-          :url => lambda{edit_gpg_key_path(@gpg_key.id)},
+          :url => lambda{edit_katello_gpg_key_path(@gpg_key.id)},
           :if => lambda{@gpg_key},
           :options => {:class => "panel_link"}
         }

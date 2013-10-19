@@ -3,7 +3,7 @@
 
 = content_for :content do
   .grid_10
-    = kt_form_for GpgKey.new, :html => {:id => "upload_new_gpg_key"} do |form|
+    = kt_form_for Katello::GpgKey.new, :html => {:id => "upload_new_gpg_key"} do |form|
 
       = form.text_field :name, :label => _("Name"), :class => "grid_6"
 
@@ -17,7 +17,7 @@
 
       = form.field :or, :label => _("or")
 
-    = kt_form_for GpgKey.new, :html => {:id => "new_gpg_key"}, :tabindex => 5 do |form|
+    = kt_form_for Katello::GpgKey.new, :html => {:id => "new_gpg_key"}, :tabindex => 5 do |form|
 
       = form.text_area :content, :id=> "gpg_key_content", :size => "40x15", :label => _("Paste GPG Key"), :class => "grid_6", :maxlength => gpg_content_limit
 
@@ -27,4 +27,4 @@
         .grid_1.push_5
           = submit_tag _("Clear"), :id => :clear_gpg_key, :disabled => "disabled", :tabindex => form.tabindex, :type => 'button', :class => 'button'
 
-= render :template => "layouts/tupane_layout"
+= render :template => "katello/layouts/tupane_layout"
