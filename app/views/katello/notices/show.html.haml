@@ -10,7 +10,7 @@
 
 .top_bar
   = link_to _("Delete All"), {:action => "destroy_all", :controller => "notices"}, :method => :delete, :confirm => _('Are you sure?'), :class=>'deletable', :remote => true
-  %form.fr#search_form.search{"data-url" => search_index_path()}
+  %form.fr#search_form.search{"data-url" => katello_search_index_path()}
     = text_field_tag(:search, params[:search], {:type => "text", :placeholder => "Filter..."})
     %button.action{:form => "search_form"} #{_("Search")}
 
@@ -35,7 +35,7 @@
             %td
               = "#{notice.text}".html_safe
         - else
-          %tr.details{:id => "#{notice.id}", :class => "#{notice.level}", 'data-url' => notices_details_path(notice.id)}
+          %tr.details{:id => "#{notice.id}", :class => "#{notice.level}", 'data-url' => katello_notices_details_path(notice.id)}
             %td #{format_time(DateTime.parse(notice.created_at))}
             %td #{notice.level}
             %td #{notice.organization}
@@ -43,4 +43,4 @@
               %div.details-icon.fr
               = "#{notice.text}".html_safe
 
-= javascript :notices
+= javascript 'katello/notices'

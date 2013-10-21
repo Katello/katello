@@ -45,7 +45,7 @@ class Notice < ActiveRecord::Base
   end
 
   def self.viewed(viewed)
-    includes(:user_notices).where(:user_notices => { :viewed => viewed })
+    includes(:user_notices).where(:katello_user_notices => { :viewed => viewed })
   end
 
   scope :read, lambda { viewed true }
