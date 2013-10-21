@@ -21,6 +21,7 @@ class Api::V1::DistributorsController < Api::V1::ApiController
   before_filter :find_distributor, :only => [:destroy, :show, :update,
                                              :subscribe, :unsubscribe, :subscriptions, :pools, :export]
   before_filter :find_task, :only => [:task_show]
+  before_filter :verify_valid_distributor_version, :only => [:create]
   before_filter :authorize, :except => :activate
 
   skip_before_filter :require_user, :only => [:activate]
@@ -51,7 +52,8 @@ class Api::V1::DistributorsController < Api::V1::ApiController
         :activate      => register_distributor,
         :tasks         => index_distributors,
         :task_show     => read_distributor,
-        :export        => read_distributor
+        :export        => read_distributor,
+        :versions      => lambda { true }
     }
   end
 
@@ -73,14 +75,16 @@ class Api::V1::DistributorsController < Api::V1::ApiController
   param_group :distributors
   param :distributor, Hash, :required => true, :action_aware => true do
     param :type, String, :desc => "Type of the distributor, it should always be 'distributor'", :required => true
+    param :version, String, :desc => "Version of the distributor. Defaults to the latest if not given."
   end
   def create
-    distributor_params           = params[:distributor]
-    distributor_params[:facts]   ||= { 'sockets' => 0 } # facts not used for distributors
-    distributor_params[:cp_type] = "candlepin"          # The 'candlepin' type is allowed to export a manifest
-    @distributor                 = Distributor.create!(distributor_params.merge({ :environment  => @environment,
-                                                                                  :content_view => @content_view,
-                                                                                  :serviceLevel => distributor_params[:service_level] }))
+    distributor_params = params[:distributor]
+
+    distributor_params[:facts]   ||= { 'sockets' => 0, 'version' => (distributor_params[:version] || Distributor.latest_version) }
+    distributor_params[:cp_type]   = "candlepin"          # The 'candlepin' type is allowed to export a manifest
+    @distributor                   = Distributor.create!(distributor_params.merge({ :environment  => @environment,
+                                                                                    :content_view => @content_view,
+                                                                                    :serviceLevel => distributor_params[:service_level] }))
     respond
   end
 
@@ -246,6 +250,11 @@ class Api::V1::DistributorsController < Api::V1::ApiController
     respond_for_show :resource => @task
   end
 
+  api :GET, "/distributor_versions", "Show the list of available distributor versions"
+  def versions
+    respond_for_index :collection => Distributor.available_versions
+  end
+
   protected
 
   def find_only_environment
@@ -312,8 +321,8 @@ class Api::V1::DistributorsController < Api::V1::ApiController
 
   def find_activation_keys
     if ak_names = params[:activation_keys]
-      ak_names        = ak_names.split(",")
-      activation_keys = ak_names.map do |ak_name|
+      ak_names         = ak_names.split(",")
+      activation_keys  = ak_names.map do |ak_name|
         activation_key = @organization.activation_keys.find_by_name(ak_name)
         raise HttpErrors::NotFound, _("Couldn't find activation key '%s'") % ak_name unless activation_key
         activation_key
@@ -331,6 +340,15 @@ class Api::V1::DistributorsController < Api::V1::ApiController
     @task = TaskStatus.where(:uuid => params[:id]).first
     raise ActiveRecord::RecordNotFound.new unless @task
     @distributor = @task.task_owner
+  end
+
+  def verify_valid_distributor_version
+    if params[:distributor][:version].present?
+      dist_versions = Distributor.available_versions.collect { |v| v["name"] }
+      unless dist_versions.include?(params[:distributor][:version])
+        raise HttpErrors::BadRequest, _("Must specify a valid distributor version [ %s ].") % dist_versions.join(", ")
+      end
+    end
   end
 
 end

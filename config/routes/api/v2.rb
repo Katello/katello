@@ -125,6 +125,7 @@ Src::Application.routes.draw do
           end
         end
       end
+      match "/distributor_versions" => "distributors#versions", :via => :get, :as => :distributor_versions
 
       api_resources :subscriptions, :only => [] do
         collection do
