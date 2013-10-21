@@ -5,7 +5,7 @@
 
 - if !details
 
-  - if container.is_a? Product
+  - if container.is_a? Katello::Product
     = ([container.total_package_count(env, view),
         container.total_errata_count(env, view),
         container.total_puppet_module_count(env, view)]).join(' / ')
@@ -17,7 +17,7 @@
 
 - else
 
-  - if container.is_a? Product
+  - if container.is_a? Katello::Product
     = _("Packages (%s)") % container.total_package_count(env, view)
     <br/>
     = _("Errata (%s)") % container.total_errata_count(env, view)
