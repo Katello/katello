@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class SyncSchedulesController < ApplicationController
+class SyncSchedulesController < Katello::ApplicationController
 
   before_filter :find_products, :only => [:apply]
   before_filter :authorize
