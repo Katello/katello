@@ -12,7 +12,7 @@
 
 module Katello
 module RolesPermissions::DefaultSystemRegistrationPermission
-  include ProxyAssociationOwner
+  include Katello::ProxyAssociationOwner
 
   NAME = "default systems reg permission"
 
