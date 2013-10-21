@@ -191,17 +191,17 @@ module Glue::ElasticSearch::Repository
     end
 
     def errata_count
-      results = Errata.search('', :page_size => 1, :filters => {:repoids => [self.pulp_id]})
+      results = Katello::Errata.search('', :page_size => 1, :filters => {:repoids => [self.pulp_id]})
       results.empty? ? 0 : results.total
     end
 
     def package_count
-      results = Package.search('', 0, 1, :repoids => [self.pulp_id])
+      results = Katello::Package.search('', 0, 1, :repoids => [self.pulp_id])
       results.empty? ? 0 : results.total
     end
 
     def puppet_module_count
-      results = PuppetModule.search('', :page_size => 1, :repoids => [self.pulp_id])
+      results = Katello::PuppetModule.search('', :page_size => 1, :repoids => [self.pulp_id])
       results.empty? ? 0 : results.total
     end
 
