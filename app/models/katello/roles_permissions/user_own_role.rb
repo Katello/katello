@@ -12,7 +12,7 @@
 
 module Katello
 module RolesPermissions::UserOwnRole
-  include ProxyAssociationOwner
+  include  Katello::ProxyAssociationOwner
 
   def find_own_role
     where(:type => 'UserOwnRole').first
