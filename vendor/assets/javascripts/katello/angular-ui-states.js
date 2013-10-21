@@ -59,7 +59,7 @@ $TemplateFactory.$inject = ['$http', '$templateCache', '$injector'];
 function $TemplateFactory(  $http,   $templateCache,   $injector) {
 
   /**
-   * Creates a template from a configuration object. 
+   * Creates a template from a configuration object.
    * @function
    * @name $templateFactory#fromConfig
    * @methodOf $templateFactory
@@ -141,7 +141,7 @@ angular.module('ui.util').service('$templateFactory', $TemplateFactory);
  * of search parameters. Multiple search parameter names are separated by '&'. Search parameters
  * do not influence whether or not a URL is matched, but their values are passed through into
  * the matched parameters returned by {@link UrlMatcher#exec exec}.
- * 
+ *
  * Path parameter placeholders can be specified using simple colon/catch-all syntax or curly brace
  * syntax, which optionally allows a regular expression for the parameter to be specified:
  *
@@ -152,13 +152,13 @@ angular.module('ui.util').service('$templateFactory', $TemplateFactory);
  *   curly braces, they must be in matched pairs or escaped with a backslash.
  *
  * Parameter names may contain only word characters (latin letters, digits, and underscore) and
- * must be unique within the pattern (across both path and search parameters). For colon 
+ * must be unique within the pattern (across both path and search parameters). For colon
  * placeholders or curly placeholders without an explicit regexp, a path parameter matches any
  * number of characters other than '/'. For catch-all placeholders the path parameter matches
  * any number of characters.
- * 
+ *
  * ### Examples
- * 
+ *
  * * '/hello/' - Matches only if the path is exactly '/hello/'. There is no special treatment for
  *   trailing slashes, and patterns have to match the entire path, not just a prefix.
  * * '/user/:id' - Matches '/user/bob' or '/user/1234!!!' or even '/user/' but not '/user' or
@@ -195,7 +195,7 @@ function UrlMatcher(pattern) {
   //    \{(?:[^{}\\]+|\\.)*\}     - a matched set of curly braces containing other atoms
   var placeholder = /([:*])(\w+)|\{(\w+)(?:\:((?:[^{}\\]+|\\.|\{(?:[^{}\\]+|\\.)*\})+))?\}/g,
       names = {}, compiled = '^', last = 0, m,
-      segments = this.segments = [], 
+      segments = this.segments = [],
       params = this.params = [];
 
   function addParameter(id) {
@@ -393,7 +393,7 @@ angular.module('ui.util').provider('$urlMatcherFactory', $UrlMatcherFactory);
 
 $UrlRouterProvider.$inject = ['$urlMatcherFactoryProvider'];
 function $UrlRouterProvider(  $urlMatcherFactory) {
-  var rules = [], 
+  var rules = [],
       otherwise = null;
 
   // Returns a string that is a prefix of all strings matching the RegExp
@@ -501,7 +501,7 @@ function $StateProvider(   $urlRouterProvider,   $urlMatcherFactory) {
       if (!state) throw new Error("No such state '" + stateOrName + "'");
     } else {
       state = states[stateOrName.name];
-      if (!state || state !== stateOrName && state.self !== stateOrName) 
+      if (!state || state !== stateOrName && state.self !== stateOrName)
         throw new Error("Invalid or unregistered state");
     }
     return state;
@@ -560,7 +560,7 @@ function $StateProvider(   $urlRouterProvider,   $urlMatcherFactory) {
     } else {
       params = state.params = url ? url.parameters() : state.parent.params;
     }
-    
+
     var paramNames = {}; forEach(params, function (p) { paramNames[p] = true; });
     if (parent) {
       forEach(parent.params, function (p) {
@@ -713,7 +713,7 @@ function $StateProvider(   $urlRouterProvider,   $urlMatcherFactory) {
           exiting = fromPath[l];
           if (exiting.self.onExit) {
             $injector.invoke(exiting.self.onExit, exiting.self, exiting.locals.globals);
-          } 
+          }
           exiting.locals = null;
         }
 
@@ -740,7 +740,7 @@ function $StateProvider(   $urlRouterProvider,   $urlMatcherFactory) {
         }
 
         $rootScope.$broadcast('$stateChangeSuccess', to.self, toParams, from.self, fromParams);
-        
+
         return $state.current;
       }, function (error) {
         if ($state.transition !== transition) return TransitionSuperseded;
@@ -866,7 +866,7 @@ function $ViewDirective(   $state,   $compile,   $controller,   $injector,   $an
         name = attr[directive.name] || attr.name || '',
         onloadExp = attr.onload || '',
         animate = $animator && $animator(scope, attr);
-      
+
       // Find the details of the parent view directive (if any) and use it
       // to derive our own qualified view name, then hang our own details
       // off the DOM so child directives can find it.
