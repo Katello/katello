@@ -115,7 +115,7 @@ module ApplicationHelper
     options[:accessor] ||= "id"
     panel_id ||= "panel"
 
-    render :partial => "katello/commonone_panel",
+    render :partial => "katello/common/one_panel",
            :locals => {
              :single_select => options[:single_select] || false,
              :hover_text_cb => options[:hover_text_cb],
