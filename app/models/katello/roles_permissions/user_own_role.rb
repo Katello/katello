@@ -15,7 +15,7 @@ module RolesPermissions::UserOwnRole
   include  Katello::ProxyAssociationOwner
 
   def find_own_role
-    where(:type => 'UserOwnRole').first
+    where(:type => 'Katello::UserOwnRole').first
   end
 
   def find_or_create_own_role(auser)
