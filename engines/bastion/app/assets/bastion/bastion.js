@@ -10,7 +10,7 @@
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
  */
 
-//= require "jquery-1.7.2"
+//= require "katello/jquery-1.7.2"
 //= require "alchemy/jquery/plugins/jquery.periodicalupdater"
 
 //= require "alchemy/underscore"
@@ -18,7 +18,7 @@
 //= require "ui_alchemy/angular/angular"
 //= require "ui_alchemy/angular-resource/angular-resource"
 //= require "ui_alchemy/angular-sanitize/angular-sanitize"
-//= require "angular-ui-router.js"
+//= require "katello/angular-ui-router.js"
 //= require "ng-upload"
 //= require "angular-gettext"
 
