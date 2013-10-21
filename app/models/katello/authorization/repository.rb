@@ -65,7 +65,7 @@ module Authorization::Repository
     end
 
     def content_readable(org)
-      prod_ids = Product.readable(org).collect{|p| p.id}
+      prod_ids = Katello::Product.readable(org).collect{|p| p.id}
       env_ids = KTEnvironment.content_readable(org)
       where(environment_id: env_ids, product_id: prod_ids)
     end

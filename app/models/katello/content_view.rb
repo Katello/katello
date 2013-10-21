@@ -163,7 +163,8 @@ class ContentView < ActiveRecord::Base
   end
 
   def all_version_repos
-    Repository.joins(:content_view_version).where("#{Katello::ContentViewVersion.table_name}.content_view_id" => self.id)
+    Repository.joins(:content_view_version).
+      where("#{Katello::ContentViewVersion.table_name}.content_view_id" => self.id)
   end
 
   def repos_in_product(env, product)
@@ -187,14 +188,16 @@ class ContentView < ActiveRecord::Base
 
   #get the library instances of all repos within this view
   def all_version_library_instances
-    all_repos = all_version_repos.where(:library_instance_id => nil).pluck("#{Katello::Repository.table_name}.id") + all_version_repos.pluck(:library_instance_id)
+    all_repos = all_version_repos.where(:library_instance_id => nil).pluck("#{Katello::Repository.table_name}.id")
+    all_repos += all_version_repos.pluck(:library_instance_id)
     Repository.where(:id => all_repos)
   end
 
   def get_repo_clone(env, repo)
     lib_id = repo.library_instance_id || repo.id
     Repository.in_environment(env).where(:library_instance_id => lib_id).
-        joins(:content_view_version).where("#{Katello::ContentViewVersion.table_name}.content_view_id" => self.id)
+        joins(:content_view_version).
+        where("#{Katello::ContentViewVersion.table_name}.content_view_id" => self.id)
   end
 
   def promote_via_changeset(env, apply_options = {:async => true},
