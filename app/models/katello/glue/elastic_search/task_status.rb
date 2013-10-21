@@ -54,7 +54,7 @@ module Glue::ElasticSearch::TaskStatus
 
     if task_type
       tt = task_type
-      if (::System.class.name == task_owner_type)
+      if (System.class.name == task_owner_type)
         tt = TaskStatus::TYPES[task_type][:english_name]
       end
       ret[:status] += " #{tt}"

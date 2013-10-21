@@ -1,4 +1,4 @@
-= javascript 'widgets/subpanel_new'
+= javascript 'katello/widgets/subpanel_new'
 
 = content_for :title do
   #{_("Create Application Life Cycle Management Environment")}
@@ -9,13 +9,13 @@
 = content_for :subcontent do
   .clear
     &nbsp;
-  = kt_form_for KTEnvironment.new, :url => organization_environments_path(@organization.label), :remote=>true, :html => {:id=>"new_subpanel"} do |form|
+  = kt_form_for Katello::KTEnvironment.new, :url => katello_organization_environments_path(@organization.label), :remote=>true, :html => {:id=>"new_subpanel"} do |form|
 
     = form.text_field :name, :label => _("Name"), :class => :name_input
 
     = form.field :label, :label => _("Label") do
-      = text_field_tag 'kt_environment[label]', nil, :tabindex => form.tabindex, :size => 30, :class => :label_input, 'data-url' => default_label_organization_environments_path(@organization.label)
-      = image_tag "icons/spinner.gif", :class => 'label_spinner hidden'
+      = text_field_tag 'katello_kt_environment[label]', nil, :tabindex => form.tabindex, :size => 30, :class => :label_input, 'data-url' => default_label_katello_organization_environments_path(@organization.label)
+      = image_tag "katello/icons/spinner.gif", :class => 'label_spinner hidden'
 
     = form.text_area :description, :size => "40x5", :label => _("Description"), :maxlength => default_description_limit
 
@@ -23,4 +23,4 @@
 
     = form.submit _("Create"), :class => 'subpanel_create create_button'
 
-= render :template => "layouts/tupane_layout"
+= render :template => "katello/layouts/tupane_layout"

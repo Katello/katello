@@ -232,7 +232,7 @@ class Organization < ActiveRecord::Base
 
     #Lambda to continually update the task
     found_func = lambda do |found_url|
-      task = ::TaskStatus.find(task_id)
+      task = TaskStatus.find(task_id)
       task.result << found_url
       task.save!
     end
@@ -241,7 +241,7 @@ class Organization < ActiveRecord::Base
     #  Using the saved task_id to compare current providers
     #  task id
     continue_func = lambda do
-      task = ::TaskStatus.find(task_id)
+      task = TaskStatus.find(task_id)
       !task.canceled?
     end
 

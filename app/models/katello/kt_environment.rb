@@ -115,7 +115,7 @@ class KTEnvironment < ActiveRecord::Base
   def content_views(reload = false)
     @content_views = nil if reload
     @content_views ||= ContentView.joins(:content_view_versions => :content_view_version_environments).
-        where("content_view_version_environments.environment_id" => self.id)
+        where("#{Katello::ContentViewVersionEnvironment.table_name}.environment_id" => self.id)
   end
 
   def successor
@@ -160,8 +160,9 @@ class KTEnvironment < ActiveRecord::Base
 
   #list changesets promoting
   def promoting
-    Changeset.joins(:task_status).where('changesets.environment_id' => self.id,
-                                        'task_statuses.state' => [TaskStatus::Status::WAITING,  TaskStatus::Status::RUNNING])
+    Changeset.joins(:task_status).where('#{Katello::Changeset.table_name}.environment_id' => self.id,
+                                        '#{Katello::TaskStatus.table_name}.state' => [TaskStatus::Status::WAITING,
+                                                                                      TaskStatus::Status::RUNNING])
   end
 
   def is_deletable?
