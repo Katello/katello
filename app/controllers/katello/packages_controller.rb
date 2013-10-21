@@ -15,7 +15,6 @@ class PackagesController < ApplicationController
   before_filter :lookup_package, except: [:auto_complete]
   before_filter :find_filter, only: [:auto_complete]
   before_filter :authorize
-  helper :packages
 
   def rules
 

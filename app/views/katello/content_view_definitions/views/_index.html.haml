@@ -1,9 +1,9 @@
-= render :partial => "content_view_definitions/tupane_header"
+= render :partial => "katello/content_view_definitions/tupane_header"
 
 = content_for :content do
 
-  #content_view_definition_views{'data-views_url' => views_content_view_definition_path(view_definition.id),
-    'data-status_url' => status_content_view_definition_path(view_definition.id)}
+  #content_view_definition_views{'data-views_url' => views_katello_content_view_definition_path(view_definition.id),
+    'data-status_url' => status_katello_content_view_definition_path(view_definition.id)}
 
     %table#content_views
       %thead
@@ -22,7 +22,7 @@
       %tbody.views
         - cssclass = cycle("", "alt")
         - view_definition.content_views.each do |view|
-          = render :partial => 'content_view_definitions/views/view',
+          = render :partial => 'katello/content_view_definitions/views/view',
             :locals => {:view_definition => view_definition, :view => view, :cssclass => cssclass}
 
-= render :template => "layouts/tupane_layout"
+= render :template => "katello/layouts/tupane_layout"

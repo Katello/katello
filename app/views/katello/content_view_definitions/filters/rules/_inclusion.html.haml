@@ -6,7 +6,7 @@
 
   %br
   = kt_form_for(rule,
-    :url => content_view_definition_filter_rule_path(view_definition.id, filter.id, rule.id),
+    :url => katello_content_view_definition_filter_rule_path(view_definition.id, filter.id, rule.id),
     :html => {:id => "update_form"}) do |form|
 
     = radio_button_tag("filter_rule[inclusion]", true, rule.inclusion ? true : false,
@@ -17,4 +17,4 @@
                        {:class => :inclusion, :tabindex => auto_tab_index})
     = label_tag(_('Specify %{type} to exclude') % {:type => rule_type.downcase})
 
-= render :template => "layouts/tupane_layout"
+= render :template => "katello/layouts/tupane_layout"
