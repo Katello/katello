@@ -40,7 +40,7 @@ module Authorization::Repository
     end
 
     def readable(env)
-      prod_ids = ::Product.readable(env.organization).collect { |p| p.id }
+      prod_ids = Product.readable(env.organization).collect { |p| p.id }
       where(product_id: prod_ids, :environment_id => env.id)
     end
 
@@ -56,7 +56,7 @@ module Authorization::Repository
     end
 
     def content_readable(org)
-      prod_ids = ::Product.readable(org).collect{|p| p.id}
+      prod_ids = Product.readable(org).collect{|p| p.id}
       env_ids = KTEnvironment.content_readable(org)
       where(environment_id: env_ids, product_id: prod_ids)
     end

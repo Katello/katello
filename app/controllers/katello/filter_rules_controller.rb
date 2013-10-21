@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class FilterRulesController < ApplicationController
+class FilterRulesController < Katello::ApplicationController
 
   helper FiltersHelper
   helper ContentViewDefinitionsHelper
@@ -60,22 +60,22 @@ class FilterRulesController < ApplicationController
   end
 
   def new
-    render :partial => "content_view_definitions/filters/rules/new",
+    render :partial => "katello/content_view_definitions/filters/rules/new",
            :locals => {:view_definition => @view_definition, :filter => @filter}
   end
 
   def create
-    content_type = params[:filter_rule].delete(:content_type)
-    rule = FilterRule.create_for(content_type, params[:filter_rule].merge(:filter => @filter))
+    content_type = params[:katello_filter_rule].delete(:content_type)
+    rule = FilterRule.create_for(content_type, params[:katello_filter_rule].merge(:filter => @filter))
     notify.success(_("'%{type}' rule successfully created for filter '%{filter}'.") %
-                   {:type => params[:filter_rule][:content_type], :filter => @filter.name})
+                   {:type => params[:katello_filter_rule][:content_type], :filter => @filter.name})
 
-    render :partial => "common/post_action_close_subpanel",
-           :locals => {:path => edit_content_view_definition_filter_rule_path(@view_definition, @filter, rule)}
+    render :partial => "katello/common/post_action_close_subpanel",
+           :locals => {:path => edit_katello_content_view_definition_filter_rule_path(@view_definition, @filter, rule)}
   end
 
   def edit
-    render :partial => "content_view_definitions/filters/rules/edit",
+    render :partial => "katello/content_view_definitions/filters/rules/edit",
            :locals => {:view_definition => @view_definition, :filter => @filter, :rule => @rule,
                        :editable => @view_definition.editable?, :name => controller_display_name,
                        :rule_type => FilterRule::CONTENT_OPTIONS.key(@rule.content_type),
@@ -83,20 +83,20 @@ class FilterRulesController < ApplicationController
   end
 
   def edit_inclusion
-    render :partial => "content_view_definitions/filters/rules/inclusion",
+    render :partial => "katello/content_view_definitions/filters/rules/inclusion",
            :locals => {:view_definition => @view_definition, :filter => @filter, :rule => @rule,
                        :rule_type => FilterRule::CONTENT_OPTIONS.key(@rule.content_type)}
   end
 
   def edit_parameter_list
-    render :partial => "content_view_definitions/filters/rules/parameter_list",
+    render :partial => "katello/content_view_definitions/filters/rules/parameter_list",
            :locals => {:view_definition => @view_definition, :filter => @filter,
                        :rule => @rule, :rule_type => FilterRule::CONTENT_OPTIONS.key(@rule.content_type),
                        :editable => @view_definition.editable?, :item_partial => item_partial(@rule)}
   end
 
   def edit_date_type_parameters
-    render :partial => "content_view_definitions/filters/rules/edit_errata_parameters",
+    render :partial => "katello/content_view_definitions/filters/rules/edit_errata_parameters",
            :locals => {:view_definition => @view_definition, :filter => @filter,
                        :rule => @rule, :rule_type => FilterRule::CONTENT_OPTIONS.key(@rule.content_type),
                        :editable => @view_definition.editable?}
@@ -228,13 +228,13 @@ class FilterRulesController < ApplicationController
   def item_partial(rule)
     case @rule.content_type
     when FilterRule::PACKAGE
-      'content_view_definitions/filters/rules/package_item'
+      'katello/content_view_definitions/filters/rules/package_item'
     when FilterRule::PACKAGE_GROUP
-      'content_view_definitions/filters/rules/package_group_item'
+      'katello/content_view_definitions/filters/rules/package_group_item'
     when FilterRule::ERRATA
-      'content_view_definitions/filters/rules/errata_item'
+      'katello/content_view_definitions/filters/rules/errata_item'
     when FilterRule::PUPPET_MODULE
-      'content_view_definitions/filters/rules/puppet_module_item'
+      'katello/content_view_definitions/filters/rules/puppet_module_item'
     end
   end
 

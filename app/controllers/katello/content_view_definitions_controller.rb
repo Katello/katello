@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class ContentViewDefinitionsController < ApplicationController
+class ContentViewDefinitionsController < Katello::ApplicationController
 
   helper ProductsHelper
 
@@ -70,17 +70,18 @@ class ContentViewDefinitionsController < ApplicationController
     {
       :create => {:view_definition => [:name, :label, :description]},
       :update => {:view_definition => [:name, :description]},
-      :update_content => [:id, :products, :repos, :puppet_repository_id]
+      :update_content => [:id, :products, :repos, :puppet_repository_id, :content_view_definition, :locale]
     }
   end
 
   def items
-    render_panel_direct(ContentViewDefinition, @panel_options, params[:search], params[:offset], [:name_sort, 'asc'],
+    render_panel_direct(ContentViewDefinition, @panel_options, params[:search], params[:offset] || 0, [:name_sort, 'asc'],
         {:default_field => :name, :filter => {:organization_id => [current_organization.id]}})
   end
 
   def show
-    render :partial => "common/list_update", :locals => {:item => @view_definition, :accessor => "id", :columns => ['name']}
+    render :partial => "katello/common/list_update",
+           :locals => { :item => @view_definition, :accessor => "id", :columns => ['name'] }
   end
 
   def new
@@ -89,7 +90,7 @@ class ContentViewDefinitionsController < ApplicationController
   end
 
   def create
-    @view_definition = ContentViewDefinition.create!(params[:content_view_definition]) do |cv|
+    @view_definition = ContentViewDefinition.create!(params[:katello_content_view_definition]) do |cv|
       cv.organization = current_organization
     end
     if @view_definition.composite? && params[:content_views]
@@ -101,8 +102,9 @@ class ContentViewDefinitionsController < ApplicationController
     notify.success _("Content view definition '%s' was created.") % @view_definition['name']
 
     if search_validate(ContentViewDefinition, @view_definition.id, params[:search])
-      render :partial => "common/list_item", :locals => {:item => @view_definition, :initial_action => :views, :accessor => "id",
-                                                         :columns => ['name'], :name => controller_display_name}
+      render :partial => "katello/common/list_item",
+             :locals => { :item => @view_definition, :initial_action => :views, :accessor => "id",
+                          :columns => ['name'], :name => controller_display_name }
     else
       notify.message _("'%s' did not meet the current search criteria and is not being shown.") % @view_definition["name"]
       render :json => { :no_match => true }
@@ -115,9 +117,10 @@ class ContentViewDefinitionsController < ApplicationController
     notify.success(_("Content view definition '%{new_definition_name}' created successfully as a clone of '%{definition_name}'.") %
                        {:new_definition_name => new_definition.name, :definition_name => @view_definition.name})
 
-    render :partial => "common/list_item", :locals  => { :item => new_definition, :initial_action => :views,
-                                                         :accessor => "id", :columns => ["name"],
-                                                         :name => controller_display_name }
+    render :partial => "katello/common/list_item",
+           :locals  => { :item => new_definition, :initial_action => :views,
+                         :accessor => "id", :columns => ["name"],
+                         :name => controller_display_name }
   end
 
   def edit
@@ -147,7 +150,7 @@ class ContentViewDefinitionsController < ApplicationController
   def destroy
     if @view_definition.destroy
       notify.success _("Content view definition '%s' was deleted.") % @view_definition[:name]
-      render :partial => "common/list_remove", :locals => {:id => params[:id], :name => controller_display_name}
+      render :partial => "katello/common/list_remove", :locals => {:id => params[:id], :name => controller_display_name}
     end
   end
 
@@ -160,11 +163,11 @@ class ContentViewDefinitionsController < ApplicationController
 
   def publish
     # perform the publish
-    if params.key?(:content_view)
-      @view_definition.publish(params[:content_view][:name], params[:content_view][:description],
-                               params[:content_view][:label], {:notify => true})
+    if params.key?(:katello_content_view)
+      @view_definition.publish(params[:katello_content_view][:name], params[:katello_content_view][:description],
+                               params[:katello_content_view][:label], {:notify => true})
       notify.success(_("Started publish of content view '%{view_name}' from definition '%{definition_name}'.") %
-                         {:view_name => params[:content_view][:name], :definition_name => @view_definition.name})
+                         {:view_name => params[:katello_content_view][:name], :definition_name => @view_definition.name})
 
       render :nothing => true
     else
@@ -172,14 +175,14 @@ class ContentViewDefinitionsController < ApplicationController
     end
   rescue => e
     notify.exception(_("Failed to publish content view '%{view_name}' from definition '%{definition_name}'.") %
-                         {:view_name => params[:content_view][:name], :definition_name => @view_definition.name}, e)
+                         {:view_name => params[:katello_content_view][:name], :definition_name => @view_definition.name}, e)
     log_exception(e)
 
     render :text => e.to_s, :status => 500
   end
 
   def views
-    render :partial => "content_view_definitions/views/index",
+    render :partial => "katello/content_view_definitions/views/index",
            :locals => {:view_definition => @view_definition, :editable => @view_definition.editable?,
                        :name => controller_display_name}
   end
@@ -192,7 +195,7 @@ class ContentViewDefinitionsController < ApplicationController
       statuses[:task_statuses] << {
           :id => status.id,
           :pending? => status.pending?,
-          :status_html => render_to_string(:template => 'content_view_definitions/views/_version',
+          :status_html => render_to_string(:template => 'katello/content_view_definitions/views/_version',
                                            :layout => false, :locals => {:version => status.task_owner,
                                                                          :task => status, :view_definition => @view_definition})
       }
@@ -225,14 +228,14 @@ class ContentViewDefinitionsController < ApplicationController
   def update_content
     if params.key?(:products)
       products_ids = params[:products].blank? ? [] : Product.readable(current_organization).
-          where(:id => params[:products]).pluck("products.id")
+          where(:id => params[:products]).pluck("#{Katello::Product.table_name}.id")
 
       @view_definition.product_ids = products_ids
     end
 
     if params[:repos] # yum repos
       repo_ids = params[:repos].empty? ? [] : Repository.libraries_content_readable(current_organization).
-          where(:id => params[:repos].values.flatten).pluck("repositories.id")
+          where(:id => params[:repos].values.flatten).pluck("#{Katello::Repository.table_name}.id")
 
       # don't unset the puppet repo
       repo_ids += @view_definition.puppet_repository_id if @view_definition.puppet_repository_id
@@ -288,7 +291,7 @@ class ContentViewDefinitionsController < ApplicationController
       :create_label => _('+ New View Definition'),
       :name => controller_display_name,
       :ajax_load  => true,
-      :ajax_scroll => items_content_view_definitions_path,
+      :ajax_scroll => items_katello_content_view_definitions_path,
       :enable_create => ContentViewDefinition.creatable?(current_organization),
       :initial_action => :views,
       :search_class => ContentViewDefinition}
