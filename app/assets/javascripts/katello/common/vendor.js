@@ -10,7 +10,7 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
 
-//= require "jquery-1.7.2"
+//= require "katello/jquery-1.7.2"
 //= require "alchemy/underscore"
 //= require "alchemy/jquery-ui-1.8.11.custom/js/jquery-ui-1.8.11.custom.min"
 //= require "alchemy/jquery/plugins/jquery.hoverIntent"
@@ -36,4 +36,4 @@
 //= require "ui_alchemy/angular-sanitize/angular-sanitize"
 //= require "ui_alchemy/ngInfiniteScroll/ng-infinite-scroll"
 //= require "ui_alchemy/alchemy/alchemy"
-//= require "angular-ui-router.js"
+//= require "katello/angular-ui-router.js"
