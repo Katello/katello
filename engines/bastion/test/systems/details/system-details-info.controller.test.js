@@ -110,6 +110,13 @@ describe('Controller: SystemDetailsInfoController', function() {
         expect($scope.editContentView).toBe(false);
     });
 
+    it("pulls and converts memory from system facts.", function() {
+        var facts = {memory: {memtotal: "6857687"}, dmi: {memory: {size: "1 TB"}}};
+        expect($scope.memory(facts)).toEqual(6.54);
+        facts = {dmi: {memory: {size: "1 TB"}}};
+        expect($scope.memory(facts)).toEqual(1024);
+    });
+
     describe("populates advanced system information", function () {
         it("creates the system facts object by converting dot notation response to an object.", function() {
             expect(typeof $scope.systemFacts).toBe("object");

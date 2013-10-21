@@ -206,5 +206,64 @@ angular.module('Bastion.systems').controller('SystemDetailsInfoController',
                 Object.keys($scope.advancedInfoRight).length > 0;
 
         }
+
+        $scope.memory = function(facts) {
+            var mem;
+            if (facts !== undefined) {
+                if (facts.memory !== undefined) {
+                    mem = facts.memory["memtotal"];
+                }
+                if (mem === undefined && facts.dmi !== undefined &&
+                   facts.dmi.memory !== undefined) {
+                    mem = facts.dmi.memory["size"];
+                }
+                return memoryInGigabytes(mem);
+            } else {
+                return "0";
+            }
+        };
+
+        function memoryInGigabytes(memStr) {
+            var mems,
+                memory,
+                unit;
+
+            if (memStr === undefined || memStr === "") {
+                return "0";
+            }
+
+            mems = memStr.split(/\s+/);
+            memory = parseFloat(mems[0]);
+            unit = mems[1];
+
+            switch(unit) {
+                case 'B':
+                memory = 0;
+                break;
+
+                case 'kB':
+                memory = 0;
+                break;
+
+                case 'MB':
+                memory /= 1024;
+                break;
+
+                case 'GB':
+                break;
+
+                case 'TB':
+                memory *= 1024;
+                break;
+
+                default:
+                // by default memory is in kB
+                memory /= (1024 * 1024);
+                break;
+            }
+
+            memory = Math.round(memory * 100) / 100;
+            return memory;
+        }
     }]
 );
