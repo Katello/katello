@@ -20,8 +20,7 @@ module Katello
       included do
 
         include Glue::Pulp::User if Katello.config.use_pulp
-        # TODO: ENGINE: temporarily disabling elastic for user's
-        #include Glue::ElasticSearch::User if Katello.config.use_elasticsearch
+        include Glue::ElasticSearch::User if Katello.config.use_elasticsearch
         include Glue if Katello.config.use_cp || Katello.config.use_pulp
 
         include Glue::Event
@@ -36,8 +35,7 @@ module Katello
 
         include AsyncOrchestration
 
-        # TODO: ENGINE: temporarily disabling indexing
-        #include Ext::IndexedModel
+        include Ext::IndexedModel
 
         include AsyncOrchestration
         include Katello::Authorization::User
