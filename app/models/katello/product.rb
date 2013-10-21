@@ -215,7 +215,7 @@ class Product < ActiveRecord::Base
   def self.with_repos(env, enabled_only)
     query = Repository.in_environment(env.id).select(:product_id)
     query = query.enabled if enabled_only
-    joins(:provider).where("#{Katello::Providers.table_name}.organization_id" => env.organization).
+    joins(:provider).where("#{Katello::Provider.table_name}.organization_id" => env.organization).
         where("(#{Katello::Provider.table_name}.provider_type ='#{Provider::CUSTOM}') OR (#{Katello::Provider.table_name}.provider_type ='#{Provider::REDHAT}' AND #{Katello::Product.table_name}.id in (#{query.to_sql}))")
   end
 end

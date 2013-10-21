@@ -11,5 +11,5 @@
               %div{:class => 'column_' + column_titles.length.to_s}
                 = cname
         - for item in collection
-          = render :partial=>"common/one_panel_list_item", :locals=>{:item=>item, :accessor=>accessor, :columns=>columns,
+          = render :partial=>"katello/common/one_panel_list_item", :locals=>{:item=>item, :accessor=>accessor, :columns=>columns,
             :panel_id => panel_id, :hover_text => (send(hover_text_cb, item) if hover_text_cb)}
