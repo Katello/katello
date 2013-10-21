@@ -69,17 +69,19 @@ class ContentView < ActiveRecord::Base
     if composite
       content_view_definition.component_content_views.select("distinct content_views.*").
               joins(:content_view_versions => :content_view_version_environments).
-              where(["content_view_version_environments.content_view_version_id "\
+              where(["#{Katello.ContentViewVersionEnvironment.table_name}.content_view_version_id "\
                      "NOT IN (SELECT content_view_version_id FROM "\
-                     "content_view_version_environments WHERE environment_id = ?)",
+                     "#{Katello.ContentViewVersionEnvironment.table_name} WHERE environment_id = ?)",
                      env])
     end
   end
 
   def self.promoted(safe = false)
     # retrieve the view, if it has been promoted (i.e. exists in more than 1 environment)
-    relation = select("distinct content_views.*").joins(:content_view_versions => :environments).
-               where("environments.library IS NOT true AND content_views.default IS NOT true")
+    relation = select("distinct #{Katello::ContentView.table_name}.*").
+               joins(:content_view_versions => :environments).
+               where("#{Katello::KTEnvironment.table_name}.library" => false).
+               where("#{Katello::ContentView.table_name}.default" => false)
 
     if safe
       # do not include group and having in returned relation
@@ -156,7 +158,7 @@ class ContentView < ActiveRecord::Base
   end
 
   def all_version_repos
-    Repository.joins(:content_view_version).where("content_view_versions.content_view_id" => self.id)
+    Repository.joins(:content_view_version).where("#{Katello::ContentViewVersion.table_name}.content_view_id" => self.id)
   end
 
   def repos_in_product(env, product)
@@ -175,19 +177,19 @@ class ContentView < ActiveRecord::Base
 
   #list all products associated to this view across all versions
   def all_version_products
-    Product.joins(:repositories).where('repositories.id' => self.all_version_repos).uniq
+    Product.joins(:repositories).where("#{Katello::Repository.table_name}.id" => self.all_version_repos).uniq
   end
 
   #get the library instances of all repos within this view
   def all_version_library_instances
-    all_repos = all_version_repos.where(:library_instance_id => nil).pluck('repositories.id') + all_version_repos.pluck(:library_instance_id)
+    all_repos = all_version_repos.where(:library_instance_id => nil).pluck("#{Katello::Repository.table_name}.id") + all_version_repos.pluck(:library_instance_id)
     Repository.where(:id => all_repos)
   end
 
   def get_repo_clone(env, repo)
     lib_id = repo.library_instance_id || repo.id
     Repository.in_environment(env).where(:library_instance_id => lib_id).
-        joins(:content_view_version).where('content_view_versions.content_view_id' => self.id)
+        joins(:content_view_version).where("#{Katello::ContentViewVersion.table_name}.content_view_id" => self.id)
   end
 
   def promote_via_changeset(env, apply_options = {:async => true},

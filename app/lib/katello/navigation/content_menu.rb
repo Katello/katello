@@ -38,25 +38,25 @@ module Navigation
       [
         { :key => :view_definition_views,
           :name => _("Views"),
-          :url => (@view_definition.nil? || @view_definition.new_record?) ? "" : views_content_view_definition_path(@view_definition.id),
+          :url => (@view_definition.nil? || @view_definition.new_record?) ? "" : views_katello_content_view_definition_path(@view_definition.id),
           :if => lambda{!@view_definition.nil? && @view_definition.readable? && !@view_definition.new_record?},
           :options => {:class => "panel_link"}
         },
         { :key => :view_definition_content,
           :name => _("Content"),
-          :url => (@view_definition.nil? || @view_definition.new_record?) ? "" : content_content_view_definition_path(@view_definition.id),
+          :url => (@view_definition.nil? || @view_definition.new_record?) ? "" : content_katello_content_view_definition_path(@view_definition.id),
           :if => lambda{!@view_definition.nil? && @view_definition.readable? && !@view_definition.new_record?},
           :options => {:class => "panel_link"}
         },
         { :key => :view_definition_filter,
           :name => _("Filters"),
-          :url => (@view_definition.nil? || @view_definition.new_record?) ? "" : content_view_definition_filters_path(@view_definition.id),
+          :url => (@view_definition.nil? || @view_definition.new_record?) ? "" : katello_content_view_definition_filters_path(@view_definition.id),
           :if => definition_filter_check,
           :options => {:class => "panel_link"}
         },
         { :key => :view_definition_details,
           :name => _("Details"),
-          :url => (@view_definition.nil? || @view_definition.new_record?) ? "" : edit_content_view_definition_path(@view_definition.id),
+          :url => (@view_definition.nil? || @view_definition.new_record?) ? "" : edit_katello_content_view_definition_path(@view_definition.id),
           :if => lambda{!@view_definition.nil? && @view_definition.readable? && !@view_definition.new_record?},
           :options => {:class => "panel_link"}
         }
@@ -202,7 +202,7 @@ module Navigation
        :name => _("Content View Definitions"),
        :if => lambda{Katello.config.katello? && ContentViewDefinition.any_readable?(current_organization)},
        :options => {:class => 'content second_level', "data-menu" => "content"},
-       :url => content_view_definitions_path,
+       :url => katello_content_view_definitions_path,
       }
     end
 

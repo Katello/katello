@@ -4,7 +4,7 @@
     KT.content_view_definition.set_view_repos($.parseJSON('#{escape_javascript(view_repos(view_definitions).to_json)}'));
     KT.content_view_definition.set_repos($.parseJSON('#{escape_javascript(view_full_repos(view_definitions).to_json)}'));
 
-= render :partial => "content_view_definitions/tupane_header"
+= render :partial => "katello/content_view_definitions/tupane_header"
 
 = content_for :content do
 
@@ -18,6 +18,6 @@
 
       -if editable
         %input.fr.button{:id=>'update_component_views', :type=>'button', :value=>_("Save"),
-                         'data-url'=>update_component_views_content_view_definition_path(view_definition.id)}
+                         'data-url'=>update_component_views_katello_content_view_definition_path(view_definition.id)}
 
-= render :template => "layouts/tupane_layout"
+= render :template => "katello/layouts/tupane_layout"

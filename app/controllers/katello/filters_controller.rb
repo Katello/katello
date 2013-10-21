@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class FiltersController < ApplicationController
+class FiltersController < Katello::ApplicationController
 
   helper ContentViewDefinitionsHelper
 
@@ -48,33 +48,33 @@ class FiltersController < ApplicationController
   def param_rules
     {
       :create => {:view_definition => [:name, :label, :description]},
-      :update => [:content_view_definition_id, :id, :products, :repos, :puppet_repository_id]
+      :update => [:content_view_definition_id, :id, :products, :repos, :puppet_repository_id, :filter, :locale]
     }
   end
 
   def index
-    render :partial => "content_view_definitions/filters/index",
+    render :partial => "katello/content_view_definitions/filters/index",
            :locals => {:view_definition => @view_definition, :editable => @view_definition.editable?}
   end
 
   def new
-    render :partial => "content_view_definitions/filters/new", :locals => {:view_definition => @view_definition}
+    render :partial => "katello/content_view_definitions/filters/new", :locals => {:view_definition => @view_definition}
   end
 
   def create
-    filter = Filter.create!(params[:filter]) do |f|
+    filter = Filter.create!(params[:katello_filter]) do |f|
       f.content_view_definition = @view_definition
     end
 
     notify.success(_("Filter '%{filter}' successfully created for content view definition '%{definition}'.") %
-                    {:filter => params[:filter][:name], :definition => @view_definition.name})
+                    {:filter => params[:katello_filter][:name], :definition => @view_definition.name})
 
-    render :partial => "common/post_action_close_subpanel",
-           :locals => {:path => edit_content_view_definition_filter_path(@view_definition, filter)}
+    render :partial => "katello/common/post_action_close_subpanel",
+           :locals => {:path => edit_katello_content_view_definition_filter_path(@view_definition, filter)}
   end
 
   def edit
-    render :partial => "content_view_definitions/filters/edit",
+    render :partial => "katello/content_view_definitions/filters/edit",
            :locals => {:view_definition => @view_definition, :filter => @filter,
                        :editable => @view_definition.editable?, :name => controller_display_name}
   end
@@ -82,14 +82,14 @@ class FiltersController < ApplicationController
   def update
     if params.key?(:products)
       products_ids = params[:products].blank? ? [] : Product.readable(current_organization).
-          where(:id => params[:products]).pluck("products.id")
+          where(:id => params[:products]).pluck("#{Katello::Product.table_name}.id")
 
       @filter.product_ids = products_ids
     end
 
     if params[:repos]
       repo_ids = params[:repos].empty? ? [] : Repository.libraries_content_readable(current_organization).
-          where(:id => params[:repos].values.flatten).pluck("repositories.id")
+          where(:id => params[:repos].values.flatten).pluck("#{Katello::Repository.table_name}.id")
 
       @filter.repository_ids = repo_ids
     end
