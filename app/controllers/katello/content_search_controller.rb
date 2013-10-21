@@ -551,7 +551,7 @@ class ContentSearchController < ApplicationController
     content_rows = []
     product_envs = {}
     product_envs.default = 0
-    accessible_env_ids = KTEnvironment.content_readable(current_organization).pluck("environments.id")
+    accessible_env_ids = KTEnvironment.content_readable(current_organization).pluck("#{Katello::KTEnvironment.table_name}.id")
     search_mode ||= process_search_mode
     environments ||= process_env_ids
 
@@ -593,7 +593,7 @@ class ContentSearchController < ApplicationController
   #
   def spanned_repo_content(view, library_repo, content_type, content_search_obj, offset = 0, search_mode = :all, environments = [])
     spanning_repos = library_repo.environmental_instances(view)
-    accessible_env_ids = KTEnvironment.content_readable(current_organization).pluck("environments.id")
+    accessible_env_ids = KTEnvironment.content_readable(current_organization).pluck("#{Katello::KTEnvironment.table_name}.id")
 
     unless environments.nil? || environments.empty?
       spanning_repos.delete_if do |repo|
@@ -739,13 +739,13 @@ class ContentSearchController < ApplicationController
   def process_repos(repo_ids, product_ids)
     # is this neccessary?
     unless product_ids.blank?
-      product_ids = Product.readable(current_organization).where(:id => product_ids).pluck("products.id")
+      product_ids = Product.readable(current_organization).where(:id => product_ids).pluck("#{Katello::Product.table_name}.id")
     end
 
     # repos were searched by string
     unless repo_ids.is_a? Array
       search_string = repo_ids
-      repo_ids      = Repository.enabled.libraries_content_readable(current_organization).pluck("repositories.id")
+      repo_ids      = Repository.enabled.libraries_content_readable(current_organization).pluck("#{Katello::Repository.table_name}.id")
     end
 
     repo_search(search_string, repo_ids, product_ids)
