@@ -59,7 +59,7 @@ class NoticesController < ApplicationController
       end
     else
       respond_to do |format|
-        format.json { render :js => "window.location = '#{logout_path.to_json}'" }
+        format.json { render :js => "window.location = '#{katello_logout_path.to_json}'" }
       end
     end
   end
@@ -73,11 +73,11 @@ class NoticesController < ApplicationController
 
   def destroy_all
     # destroy all notices for the user
-    Notice.for_user(current_user).for_org(current_organization).read.each do |notice|
+    Katello::Notice.for_user(current_user).for_org(current_organization).read.each do |notice|
       notice.users.delete(current_user)
       notice.destroy unless notice.users.any?
     end
-    render :partial => "delete_all"
+    render :partial => "katello/notices/delete_all"
   end
 
   private
