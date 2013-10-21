@@ -55,13 +55,12 @@ module Katello
 
         has_many :roles_users, :dependent => :destroy, :class_name => Katello::RolesUser
         has_many :katello_roles, :through => :roles_users, :before_remove => :super_admin_check, :uniq => true, :extend => RolesPermissions::UserOwnRole, :source => :role
-        validates_with Validators::OwnRolePresenceValidator, :attributes => :katello_roles
         has_many :help_tips, :dependent => :destroy
         has_many :user_notices, :dependent => :destroy
         has_many :notices, :through => :user_notices
-        has_many :task_statuses, :dependent => :destroy
-        has_many :search_favorites, :dependent => :destroy
-        has_many :search_histories, :dependent => :destroy
+        has_many :task_statuses, :dependent => :destroy, :class_name => "Katello::TaskStatus"
+        has_many :search_favorites, :dependent => :destroy, :class_name => "Katello::SearchFavorite"
+        has_many :search_histories, :dependent => :destroy, :class_name => "Katello::SearchHistory"
         belongs_to :default_environment, :class_name => "KTEnvironment"
         serialize :preferences, Hash
 
@@ -110,8 +109,8 @@ module Katello
           katello_roles.find_own_role
         end
 
-        def self.authenticate!(username, password)
-          u = User.where(:username => username).first
+        def self.authenticate!(login, password)
+          u = User.where({ :login => login }).first
           # check if user exists
           return nil unless u
           # check if not disabled
@@ -124,21 +123,21 @@ module Katello
         end
 
         # if the user authenticates with LDAP, log them in
-        def self.authenticate_using_ldap!(username, password)
-          if Ldap.valid_ldap_authentication? username, password
-            User.where(:username => username).first || create_ldap_user!(username)
+        def self.authenticate_using_ldap!(login, password)
+          if Ldap.valid_ldap_authentication? login, password
+            User.where(:login => login).first || create_ldap_user!(login)
           else
             nil
           end
         end
 
         # an ldap user still needs a katello model
-        def self.create_ldap_user!(username)
+        def self.create_ldap_user!(login)
           # Some parts of user creation require a current user, but this method
           # will never be called in that way
           User.current ||= User.first
           # user gets a dummy password and email
-          u = User.create!(:username => username)
+          u = User.create!(:login => login)
           User.current = u
           u
         end
@@ -206,7 +205,7 @@ module Katello
         end
 
         def cp_oauth_header
-          { 'cp-user' => self.username }
+          { 'cp-user' => self.login }
         end
 
         def send_password_reset
@@ -315,7 +314,7 @@ module Katello
 
           # make sure the user is still in those groups
           # this operation is inexpensive compared to getting a new group list
-          if !Ldap.is_in_groups(self.username, ldap_groups)
+          if !Ldap.is_in_groups(self.login, ldap_groups)
             # if user is not in these groups, flush their roles
             # this is expensive
             set_ldap_roles
@@ -329,7 +328,7 @@ module Katello
           # first, delete existing ldap roles
           clear_existing_ldap_roles!
           # load groups from ldap
-          groups = Ldap.ldap_groups(self.username)
+          groups = Ldap.ldap_groups(self.login)
           groups.each do |group|
             # find corresponding
             group_roles = LdapGroupRole.find_all_by_ldap_group(group)
@@ -375,10 +374,10 @@ module Katello
         protected
 
         def can_be_deleted?
-          query         = Permission.joins(:resource_type, :role).
-              joins("INNER JOIN roles_users ON roles_users.role_id = roles.id").
-              where(:resource_types => { :name => :all }, :organization_id => nil)
-          is_superadmin = query.where("roles_users.user_id" => id).count > 0
+          query         = Katello::Permission.joins(:resource_type, :role).
+              joins("INNER JOIN #{Katello::RolesUser.table_name} ON #{Katello::RolesUser.table_name}.role_id = #{Katello::Role.table_name}.id").
+              where(:katello_resource_types => { :name => :all }, :organization_id => nil)
+          is_superadmin = query.where("#{Katello::RolesUser.table_name}.user_id" => id).count > 0
           return true unless is_superadmin
           more_than_one_supers = query.count > 1
           more_than_one_supers
@@ -402,7 +401,7 @@ module Katello
           end
 
           org_str = org ? "organization #{org.name} (#{org.name})" : " any organization"
-          logger.debug "Checking if user #{username} is allowed to #{verbs_str} in #{resource_type.inspect} " +
+          logger.debug "Checking if user #{login} is allowed to #{verbs_str} in #{resource_type.inspect} " +
             "scoped for #{tags_str} in #{org_str}"
         end
 
@@ -418,7 +417,7 @@ module Katello
 
         def super_admin_check(role)
           if role.superadmin? && role.users.length == 1
-            message = _("Cannot dissociate user '%{username}' from '%{role}' role. Need at least one user in the '%{role}' role.") % {:username => username, :role => role.name}
+            message = _("Cannot dissociate user '%{login}' from '%{role}' role. Need at least one user in the '%{role}' role.") % {:login => login, :role => role.name}
             errors[:base] << message
             raise ActiveRecord::RecordInvalid, self
           end
@@ -434,8 +433,8 @@ module Katello
         end
 
         def generate_remote_id
-          if self.username.ascii_only?
-            "#{Util::Model.labelize(self.username)}-#{SecureRandom.hex(4)}"
+          if self.login.ascii_only?
+            "#{Util::Model.labelize(self.login)}-#{SecureRandom.hex(4)}"
           else
             Util::Model.uuid
           end
