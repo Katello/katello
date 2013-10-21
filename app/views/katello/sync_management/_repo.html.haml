@@ -13,7 +13,7 @@
     #{@repo_status[repo.id][:display_size]}
     (#{@repo_status[repo.id][:packages]})
   %td.result
-    %a.info-tipsy.clickable.icon-warning-sign{ "class" => "#{"hidden" if !error_state?(@repo_status[repo.id])}", :href => notices_path }
+    %a.info-tipsy.clickable.icon-warning-sign{ "class" => "#{"hidden" if !error_state?(@repo_status[repo.id])}", :href => katello_notices_path }
       %span.hidden-text.hidden
         .la.error-tipsy
           %ul
