@@ -75,8 +75,8 @@ class UsersController < ApplicationController
   end
 
   def param_rules
-    { :create       => { :user => [:password, :login, :env_id, :email] },
-      :update       => { :user => [:password, :env_id, :email, :helptips_enabled, :legacy_mode] },
+    { :create       => { :user => [:password, :login, :env_id, :mail] },
+      :update       => { :user => [:password, :env_id, :mail, :helptips_enabled, :legacy_mode] },
       :update_roles => { :user => [:role_ids] }
     }
   end
@@ -149,7 +149,7 @@ class UsersController < ApplicationController
 
     notify.success @user.login + _(" created successfully.")
     if search_validate(User, @user.id, params[:search], :login)
-      render :partial => "common/list_item",
+      render :partial => "katello/common/list_item",
              :locals  => { :item => @user, :accessor => "id", :columns => ["login"], :name => controller_display_name }
     else
       notify.message _("'%s' did not meet the current search criteria and is not being shown.") % @user.login
@@ -188,7 +188,7 @@ class UsersController < ApplicationController
     end
     @user.save!
     notify.success _("User updated successfully.")
-    redirect_to "#{users_path(:id => @user)}#panel=user_#{@user.id}"
+    redirect_to "#{katello_users_path(:id => @user)}#panel=user_#{@user.id}"
   end
 
   def update_preference
@@ -277,7 +277,7 @@ class UsersController < ApplicationController
     if @user.destroyed?
       notify.success _("User '%s' was deleted.") % @user[:login]
       #render and do the removal in one swoop!
-      render :partial => "common/list_remove", :locals => { :id => params[:id], :name => controller_display_name }
+      render :partial => "katello/common/list_remove", :locals => { :id => params[:id], :name => controller_display_name }
     else
       err_msg = N_("Removal of the user failed. If you continue having trouble with this, please contact an Administrator.")
       notify.error err_msg
@@ -338,13 +338,13 @@ class UsersController < ApplicationController
   def setup_options
     @panel_options = { :title         => _('Users'),
                        :col           => ['login'],
-                       :titles        => [_('Username')],
+                       :titles        => [_('Login')],
                        :create        => _('User'),
                        :create_label => _('+ New User'),
                        :name          => controller_display_name,
                        :ajax_load     => true,
-                       :ajax_scroll   => items_users_path,
-                       :enable_create => User.creatable?,
+                       :ajax_scroll   => items_katello_users_path,
+                       :enable_create => false, # TODO: ENGINE disable until nutupane http://projects.theforeman.org/issues/3436
                        :search_class  => User }
   end
 
