@@ -210,7 +210,7 @@ class ApplicationController < ::ApplicationController
           if current_user.allowed_organizations.include?(o)
             @current_org = o
           else
-            fail ActiveRecord::RecordNotFound.new _("Permission Denied. User '%{user}' does not have permissions to access organization '%{org}'.") % {:user => User.current.username, :org => o.name}
+            fail ActiveRecord::RecordNotFound.new _("Permission Denied. User '%{user}' does not have permissions to access organization '%{org}'.") % {:user => User.current.login, :org => o.name}
           end
         end
         return @current_org
@@ -327,7 +327,7 @@ class ApplicationController < ::ApplicationController
 
   def require_no_user
     if current_user
-      notify.success _("Welcome Back") + ", " + current_user.username, :persist => false
+      notify.success _("Welcome Back") + ", " + current_user.login, :persist => false
       execute_after_filters
       redirect_to dashboard_index_url
       return false

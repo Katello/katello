@@ -30,7 +30,7 @@ class UserMailer < ActionMailer::Base
   def password_reset(user, locale)
     I18n.locale = locale
     @user = user
-    mail :to => user.email, :subject => _("Katello User '%s' Password Reset") % user.username
+    mail :to => user.email, :subject => _("Katello User '%s' Password Reset") % user.login
   end
 
   def logins(users, locale)

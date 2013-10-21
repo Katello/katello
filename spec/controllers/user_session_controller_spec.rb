@@ -30,7 +30,7 @@ describe UserSessionsController do
       disable_user_orchestration
 
       @user = User.new
-      @user.username = "shaggy"
+      @user.login = "shaggy"
       @user.password = "norville"
       @user.email = 'shaggy@somewhere.com'
       @user.save

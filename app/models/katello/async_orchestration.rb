@@ -28,7 +28,7 @@ module AsyncOrchestration
     def method_missing(method, *args)
       t = ::TaskStatus.create!(:uuid => ::UUIDTools::UUID.random_create.to_s, :user_id => ::User.current.id,
                                :organization => @organization, :state => ::TaskStatus::Status::WAITING, :task_type => @task_type)
-      ::Delayed::Job.enqueue({:payload_object => ::AsyncOperation.new(t.id, ::User.current.username, @target, method.to_sym, args)}.merge(@options))
+      ::Delayed::Job.enqueue({:payload_object => ::AsyncOperation.new(t.id, ::User.current.login, @target, method.to_sym, args)}.merge(@options))
       t
     end
   end

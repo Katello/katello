@@ -24,7 +24,7 @@ module RolesPermissions::UserOwnRole
 
     role_name = ""
     loop do
-      role_name = "#{auser.username}_#{Password.generate_random_string(20)}"
+      role_name = "#{auser.login}_#{Password.generate_random_string(20)}"
       break unless Katello::UserOwnRole.exists?(:name => role_name)
     end
 

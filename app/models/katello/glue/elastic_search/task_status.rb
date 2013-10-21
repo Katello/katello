@@ -36,7 +36,7 @@ module Glue::ElasticSearch::TaskStatus
     ret = {}
     ret[:result] = self.result.to_s
     ret[:message] = self.message
-    ret[:username] = user.username if user
+    ret[:login] = user.login if user
     ret[:status] = state.to_s
     ret[:status] += " pending" if pending?
     ret[:start_time] = self.start_time || self.created_at

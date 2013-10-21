@@ -175,7 +175,7 @@ class Role < ActiveRecord::Base
 
   def super_admin_check(user)
     if superadmin? && users.length == 1
-      message = _("Cannot dissociate user '%{user}' from '%{role}' role. Need at least one user in the '%{role}' role.") % {:user => user.username, :role => name}
+      message = _("Cannot dissociate user '%{user}' from '%{role}' role. Need at least one user in the '%{role}' role.") % {:user => user.login, :role => name}
       errors[:base] << message
       raise  ActiveRecord::RecordInvalid, self
     end

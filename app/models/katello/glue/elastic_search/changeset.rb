@@ -31,7 +31,7 @@ module Glue::ElasticSearch::Changeset
     type      = self.type == "PromotionChangeset" ? Changeset::PROMOTION : Changeset::DELETION
     { :name_sort       => self.name.downcase,
       :type            => type,
-      :user            => (self.task_status.nil? || self.task_status.user.nil?) ? "" : self.task_status.user.username
+      :user            => (self.task_status.nil? || self.task_status.user.nil?) ? "" : self.task_status.user.login
     }
   end
 end
