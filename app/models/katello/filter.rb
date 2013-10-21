@@ -19,8 +19,8 @@ class Filter < ActiveRecord::Base
 
   # rubocop:disable HasAndBelongsToMany
   # TODO: change these into has_many :through associations
-  has_and_belongs_to_many :repositories, :class_name => "Katello::Repository", :uniq => true, :join_table => :katello_filters_repositories
-  has_and_belongs_to_many :products, :uniq => true
+  has_and_belongs_to_many :repositories, :uniq => true, :class_name => "Katello::Repository", :join_table => :katello_filters_repositories
+  has_and_belongs_to_many :products, :uniq => true, :class_name => "Katello::Product", :join_table => :katello_filters_products
 
   validate :validate_content_definition
   validate :validate_products_and_repos

@@ -1,7 +1,7 @@
-= javascript 'widgets/tabs'
-- save_url = content_view_definition_filter_path(view_definition.id, filter.id)
+= javascript 'katello/widgets/tabs'
+- save_url = katello_content_view_definition_filter_path(view_definition.id, filter.id)
 
-= render :partial => "content_view_definitions/tupane_header"
+= render :partial => "katello/content_view_definitions/tupane_header"
 
 = content_for :content do
 
@@ -9,7 +9,7 @@
 
     .panel_link
       = link_to(_("◀ Back to Filter List"),
-        content_view_definition_filters_path(view_definition.id))
+        katello_content_view_definition_filters_path(view_definition.id))
 
     %br
     %h4 #{_("Filter: %{name}") % {:name => filter.name}}
@@ -22,24 +22,25 @@
           %a{:href=>"##repos"} #{_("Repositories")}
 
       %div#rules
-        = render :partial => "content_view_definitions/filters/list_rules",
+        = render :partial => "katello/content_view_definitions/filters/list_rules",
                  :locals => {:editable => editable,
                              :view_definition => view_definition,
                              :filter => filter}
 
       %div#repos
-        = render :partial => "common/common_product_repo_selector",
+        = render :partial => "katello/common/common_product_repo_selector",
                  :locals => {:editable => editable,
                              :record => filter,
                              :readable_products => nil,
                              :editable_products => nil,
-                             :content_types => Repository::TYPES - [Repository::PUPPET_TYPE],
+                             :content_types => Katello::Repository::TYPES - [Katello::Repository::PUPPET_TYPE],
                              :save_url => save_url,
                              :always_show_add => true,
                              :title => "Yum Products and Repositories"}
 
-        = render "common/repo_selector", :repositories => [view_definition.puppet_repository].compact,
-          :title => "Puppet Repository", :editable => editable, :save_url => save_url,
-          :field => :puppet_repository_id, :record => filter
+        = render "katello/common/repo_selector",
+                 :repositories => [view_definition.puppet_repository].compact,
+                 :title => "Puppet Repository", :editable => editable, :save_url => save_url,
+                 :field => :puppet_repository_id, :record => filter
 
-= render :template => "layouts/tupane_layout"
+= render :template => "katello/layouts/tupane_layout"

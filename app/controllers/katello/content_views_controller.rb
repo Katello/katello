@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class ContentViewsController < ApplicationController
+class ContentViewsController < Katello::ApplicationController
 
   helper ContentViewDefinitionsHelper
 
@@ -45,7 +45,7 @@ class ContentViewsController < ApplicationController
     notify.success(_("Started generating version %{view_version} of content view '%{view_name}'.") %
                        {:view_name => @view.name, :view_version => new_version.version})
 
-    render :partial => 'content_view_definitions/views/view',
+    render :partial => 'katello/content_view_definitions/views/view',
            :locals => { :view_definition => @view.content_view_definition, :view => @view,
                         :task => new_version.task_status }
   rescue Errors::PuppetConflictException => e

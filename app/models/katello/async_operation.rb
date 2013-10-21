@@ -11,17 +11,16 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 #
 module Katello
-AsyncOperation = Struct.new(:status_id, :username, :object, :method_name, :args) do
-  #delegate :method, :to => :object
+class AsyncOperation
 
-  def initialize(status_id, username, object, method_name, args)
+  def initialize(status_id, login, object, method_name, args)
     fail NoMethodError, "undefined method `#{method_name}' for #{object.inspect}" unless object.respond_to?(method_name, true)
 
-    self.status_id    = status_id
-    self.username     = username
-    self.object       = object
-    self.args         = args
-    self.method_name  = method_name.to_sym
+    @status_id    = status_id
+    @login        = login
+    @object       = object
+    @args         = args
+    @method_name  = method_name.to_sym
   end
 
   def self.current_task_id
@@ -29,14 +28,14 @@ AsyncOperation = Struct.new(:status_id, :username, :object, :method_name, :args)
   end
 
   def display_name
-    "#{object.class}##{method_name}"
+    "#{@object.class}##{@method_name}"
   end
 
   def perform
-    User.current = User.find_by_username(username)
+    User.current = User.find_by_login(@login)
 
     #Set task id so a job can reference it, currently no better way to do this :/
-    Thread.current['current_delayed_job_task'] = self.status_id
+    Thread.current['current_delayed_job_task'] = @status_id
 
     # Set the locale for this action
     if User.current && User.current.default_locale
@@ -52,10 +51,10 @@ AsyncOperation = Struct.new(:status_id, :username, :object, :method_name, :args)
     # deliver; otherwise, invoke the method exactly as provided by the user.  Although this seems a bit odd, this is
     # essentially how the delayed job gem would also send mail, if we were using it directly.
 
-    if object.class == Class && object.superclass == ActionMailer::Base
-      @result = object.send(method_name, *args).deliver.to_s
-    elsif object
-      @result = object.send(method_name, *args)
+    if @object.class == Class && @object.superclass == ActionMailer::Base
+      @result = @object.send(@method_name, *@args).deliver.to_s
+    elsif @object
+      @result = @object.send(@method_name, *@args)
     end
   ensure
     Thread.current['current_delayed_job_task'] = nil
@@ -68,12 +67,12 @@ AsyncOperation = Struct.new(:status_id, :username, :object, :method_name, :args)
 
   #callbacks
   def before
-    s = TaskStatus.find(status_id)
+    s = TaskStatus.find(@status_id)
     s.update_attributes!(:state => TaskStatus::Status::RUNNING, :start_time => current_time)
   end
 
   def error(job, exception)
-    s = TaskStatus.find(status_id)
+    s = TaskStatus.find(@status_id)
     s.update_attributes!(
         :state => TaskStatus::Status::ERROR,
         :finish_time => current_time,
@@ -81,7 +80,7 @@ AsyncOperation = Struct.new(:status_id, :username, :object, :method_name, :args)
   end
 
   def success
-    s = TaskStatus.find(status_id)
+    s = TaskStatus.find(@status_id)
     s.update_attributes!(
         :state => TaskStatus::Status::FINISHED,
         :finish_time => current_time,

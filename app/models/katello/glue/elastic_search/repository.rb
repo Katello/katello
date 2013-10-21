@@ -45,12 +45,12 @@ module Glue::ElasticSearch::Repository
     end
 
     def index_packages
-      Tire.index ::Package.index do
+      Tire.index Package.index do
         create :settings => Package.index_settings, :mappings => Package.index_mapping
       end
       pkgs = self.packages.collect{|pkg| pkg.as_json.merge(pkg.index_options)}
       pkgs.each_slice(Katello.config.pulp.bulk_load_size) do |sublist|
-        Tire.index ::Package.index do
+        Tire.index Package.index do
           import sublist
         end if !sublist.empty?
       end
@@ -151,12 +151,12 @@ module Glue::ElasticSearch::Repository
     end
 
     def index_puppet_modules
-      Tire.index ::PuppetModule.index do
+      Tire.index PuppetModule.index do
         create :settings => PuppetModule.index_settings, :mappings => PuppetModule.index_mapping
       end
       puppet_modules = self.puppet_modules.collect{|puppet_module| puppet_module.as_json.merge(puppet_module.index_options)}
       puppet_modules.each_slice(Katello.config.pulp.bulk_load_size) do |sublist|
-        Tire.index ::PuppetModule.index do
+        Tire.index PuppetModule.index do
           import sublist
         end if !sublist.empty?
       end
@@ -191,17 +191,17 @@ module Glue::ElasticSearch::Repository
     end
 
     def errata_count
-      results = ::Errata.search('', :page_size => 1, :filters => {:repoids => [self.pulp_id]})
+      results = Errata.search('', :page_size => 1, :filters => {:repoids => [self.pulp_id]})
       results.empty? ? 0 : results.total
     end
 
     def package_count
-      results = ::Package.search('', 0, 1, :repoids => [self.pulp_id])
+      results = Package.search('', 0, 1, :repoids => [self.pulp_id])
       results.empty? ? 0 : results.total
     end
 
     def puppet_module_count
-      results = ::PuppetModule.search('', :page_size => 1, :repoids => [self.pulp_id])
+      results = PuppetModule.search('', :page_size => 1, :repoids => [self.pulp_id])
       results.empty? ? 0 : results.total
     end
 

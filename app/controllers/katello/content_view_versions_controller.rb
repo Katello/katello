@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class ContentViewVersionsController < ApplicationController
+class ContentViewVersionsController < Katello::ApplicationController
 
   before_filter :find_environment
   before_filter :find_content_view_version

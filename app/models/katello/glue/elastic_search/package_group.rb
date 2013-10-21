@@ -105,11 +105,11 @@ module Glue::ElasticSearch::PackageGroup
         end
 
         unless pkg_grps.empty?
-          Tire.index ::PackageGroup.index do
+          Tire.index PackageGroup.index do
             create :settings => PackageGroup.index_settings, :mappings => PackageGroup.index_mapping
-          end unless Tire.index(::PackageGroup.index).exists?
+          end unless Tire.index(PackageGroup.index).exists?
 
-          Tire.index ::PackageGroup.index do
+          Tire.index PackageGroup.index do
             import pkg_grps
           end
         end
