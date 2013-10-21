@@ -41,19 +41,19 @@ describe Permission do
                                 :resource_type=> ResourceType.find_or_create_by_name(:all),
                                 :all_tags => true, :all_verbs => true, :organization => nil)
 
-    @god = User.find_or_create_by_username(
-      :username => 'god',
+    @god = User.find_or_create_by_login(
+      :login => 'god',
       :password => "password",
       :email => 'god@somewhere.com',
       :roles => [ @super_admin ])
 
-    @admin = User.find_or_create_by_username(
-      :username => 'admin-custom',
+    @admin = User.find_or_create_by_login(
+      :login => 'admin-custom',
       :password => "password",
       :email => 'admin@somewhere.com',
       :roles => [ @some_role ])
-    @user_bob = User.find_or_create_by_username(
-      :username => 'bob',
+    @user_bob = User.find_or_create_by_login(
+      :login => 'bob',
       :password => "password",
       :email => 'bob@somewhere.com',
       :roles => [ @repo_admin ])

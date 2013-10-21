@@ -123,7 +123,7 @@ module RolesBreadcrumbs
     end
 
     User.visible.each do |user|
-      add_crumb_node!(bc, user_bc_id(user), "", user.username, %w(roles role_users),
+      add_crumb_node!(bc, user_bc_id(user), "", user.login, %w(roles role_users),
                     {:client_render => true}, { :has_role => false })
     end
 

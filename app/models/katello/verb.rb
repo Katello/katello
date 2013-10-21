@@ -14,7 +14,7 @@ module Katello
 class Verb < ActiveRecord::Base
   # rubocop:disable HasAndBelongsToMany
   # TODO: change this into has_many :through association
-  has_and_belongs_to_many :permission
+  has_and_belongs_to_many :permission, :join_table => 'katello_permissions_verbs'
   validates :verb, :length => {:maximum => 255}
 
   # alias for verb attribute

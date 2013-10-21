@@ -10,14 +10,14 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 #
-AsyncOperation = Struct.new(:status_id, :username, :object, :method_name, :args) do
+AsyncOperation = Struct.new(:status_id, :login, :object, :method_name, :args) do
   #delegate :method, :to => :object
 
-  def initialize(status_id, username, object, method_name, args)
+  def initialize(status_id, login, object, method_name, args)
     raise NoMethodError, "undefined method `#{method_name}' for #{object.inspect}" unless object.respond_to?(method_name, true)
 
     self.status_id    = status_id
-    self.username     = username
+    self.login     = login
     self.object       = object
     self.args         = args
     self.method_name  = method_name.to_sym
@@ -32,7 +32,7 @@ AsyncOperation = Struct.new(:status_id, :username, :object, :method_name, :args)
   end
 
   def perform
-    User.current = User.find_by_username(username)
+    User.current = User.find_by_login(login)
 
     #Set task id so a job can reference it, currently no better way to do this :/
     Thread.current['current_delayed_job_task'] = self.status_id
