@@ -29,7 +29,7 @@
 angular.module('alchemy')
     .directive('alchConfirm', function() {
         return {
-            templateUrl: 'incubator/views/alch-confirm.html',
+            templateUrl: '../incubator/views/alch-confirm.html',
             replace: true,
             transclude: true,
             scope: {
@@ -40,7 +40,7 @@ angular.module('alchemy')
     })
     .directive('alchConfirmModal', ['$document', function($document) {
         return {
-            templateUrl: 'incubator/views/alch-confirm-modal.html',
+            templateUrl: '../incubator/views/alch-confirm-modal.html',
             replace: true,
             transclude: true,
             scope: {
