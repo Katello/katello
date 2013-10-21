@@ -18,9 +18,7 @@ module Glue::ElasticSearch::User
     base.class_eval do
       index_options :extended_json => :extended_index_attrs,
                     :display_attrs => [:login, :mail],
-                    :json          => { :except => [:password, :password_reset_token,
-                                                    :password_reset_sent_at, :helptips_enabled,
-                                                    :disabled, :login] }
+                    :json          => { :only => [:login, :mail, :hidden] }
 
       mapping do
         indexes :login, :type => 'string', :analyzer => :kt_name_analyzer
