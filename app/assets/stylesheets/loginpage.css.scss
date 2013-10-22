@@ -6,36 +6,12 @@ $login_background_bottom-color: darken($primary_color, 10%) !default;
 $switcherformwidth: 300px;
 
 @import "alchemy/composites/login";
-@import "bastion/stylesheets/widgets/org-switcher";
 @import "widgets/search";
 @import "widgets/scrollpane";
 @import "katello_base";
 
 @import "jquery.jscrollpane";
 @import "jquery.jnotify";
-
-//interstitial container
-#interstitial {
-  h2 {
-    padding-bottom: 10px;
-  }
-  left: 360px;
-  padding: 20px;
-}
-
-#allowed-orgs {
-  height: 200px;
-  line-height: 2em;
-  overflow: auto;
-  width: 100%;
-
-  input.default_org {
-    display: none;
-  }
-  span.favorite {
-    display: none;
-  }
-}
 
 //card/form spinner
 .spinner {

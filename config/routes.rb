@@ -497,7 +497,6 @@ Src::Application.routes.draw do
 
   resource :user_session do
     post 'set_org'
-    get 'allowed_orgs'
   end
 
   root :to => "user_sessions#new"

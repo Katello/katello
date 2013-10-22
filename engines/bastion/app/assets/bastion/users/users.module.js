@@ -13,9 +13,9 @@
 
 /**
  * @ngdoc module
- * @name  Bastion.widgets
+ * @name  Bastion.users
  *
  * @description
- *   Module for common Bastion widgets.
+ *   Module for common user related functionality.
  */
-angular.module('Bastion.widgets', ['Bastion.utils', 'Bastion.users', 'Bastion.organizations']);
+angular.module('Bastion.users', ['Bastion.utils']);

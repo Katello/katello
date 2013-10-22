@@ -51,10 +51,6 @@ class UserSessionsController < ApplicationController
     redirect_to final_logout_path
   end
 
-  def allowed_orgs
-    render :partial => "/layouts/allowed_orgs", :locals => {:user => current_user}
-  end
-
   def set_org
     orgs = current_user.allowed_organizations
     org = Organization.find(params[:org_id])
@@ -108,23 +104,19 @@ class UserSessionsController < ApplicationController
         elsif !user_default_org.nil? && orgs.include?(user_default_org)
           params[:org_id] = user_default_org.id
           set_org
-        elsif (num = orgs.length) < 1
-          redirect_to_dashboard(num)
+        elsif orgs.length < 1
+          redirect_to_dashboard
         else
-          redirect_to_dashboard(num)
+          redirect_to_dashboard
         end
       else
-        redirect_to_dashboard(num)
+        redirect_to_dashboard
       end
     end
   end
 
-  def redirect_to_dashboard(num)
-    if request.xhr?
-      render :partial => "/user_sessions/interstitial.js", :locals => { :num_orgs => num, :redir_path => dashboard_index_path }
-    else
-      redirect_to dashboard_index_path
-    end
+  def redirect_to_dashboard
+    render :js => "CUI.Login.Actions.redirecter('#{dashboard_index_url}')"
   end
 
   # return simple 401 page (for API authentication errors)
