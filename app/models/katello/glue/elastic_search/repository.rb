@@ -45,12 +45,12 @@ module Glue::ElasticSearch::Repository
     end
 
     def index_packages
-      Tire.index Package.index do
-        create :settings => Package.index_settings, :mappings => Package.index_mapping
+      Tire.index Katello::Package.index do
+        create :settings => Katello::Package.index_settings, :mappings => Katello::Package.index_mapping
       end
       pkgs = self.packages.collect{|pkg| pkg.as_json.merge(pkg.index_options)}
       pkgs.each_slice(Katello.config.pulp.bulk_load_size) do |sublist|
-        Tire.index Package.index do
+        Tire.index Katello::Package.index do
           import sublist
         end if !sublist.empty?
       end
@@ -62,11 +62,11 @@ module Glue::ElasticSearch::Repository
       pulp_id = self.pulp_id
 
       unless pkgs.empty?
-        Tire.index Package.index do
-          create :settings => Package.index_settings, :mappings => Package.index_mapping
-        end unless Tire.index(Package.index).exists?
+        Tire.index Katello::Package.index do
+          create :settings => Katello::Package.index_settings, :mappings => Katello::Package.index_mapping
+        end unless Tire.index(Katello::Package.index).exists?
 
-        Tire.index Package.index do
+        Tire.index Katello::Package.index do
           import pkgs do |documents|
             documents.each do |document|
               if !document["repoids"].nil? && document["repoids"].length > 1
@@ -129,11 +129,11 @@ module Glue::ElasticSearch::Repository
       package_groups_map = self.package_groups.collect{|pg| pg.as_json.merge(pg.index_options)}
 
       unless package_groups_map.empty?
-        Tire.index PackageGroup.index do
-          create :settings => PackageGroup.index_settings, :mappings => PackageGroup.index_mapping
-        end unless Tire.index(PackageGroup.index).exists?
+        Tire.index Katello::PackageGroup.index do
+          create :settings => Katello::PackageGroup.index_settings, :mappings => Katello::PackageGroup.index_mapping
+        end unless Tire.index(Katello::PackageGroup.index).exists?
 
-        Tire.index PackageGroup.index do
+        Tire.index Katello::PackageGroup.index do
           import package_groups_map
         end
       end
@@ -151,12 +151,12 @@ module Glue::ElasticSearch::Repository
     end
 
     def index_puppet_modules
-      Tire.index PuppetModule.index do
-        create :settings => PuppetModule.index_settings, :mappings => PuppetModule.index_mapping
+      Tire.index Katello::PuppetModule.index do
+        create :settings => Katello::PuppetModule.index_settings, :mappings => Katello::PuppetModule.index_mapping
       end
       puppet_modules = self.puppet_modules.collect{|puppet_module| puppet_module.as_json.merge(puppet_module.index_options)}
       puppet_modules.each_slice(Katello.config.pulp.bulk_load_size) do |sublist|
-        Tire.index PuppetModule.index do
+        Tire.index Katello::PuppetModule.index do
           import sublist
         end if !sublist.empty?
       end
@@ -168,11 +168,11 @@ module Glue::ElasticSearch::Repository
       pulp_id = self.pulp_id
 
       unless puppet_modules.empty?
-        Tire.index PuppetModule.index do
-          create :settings => PuppetModule.index_settings, :mappings => PuppetModule.index_mapping
-        end unless Tire.index(PuppetModule.index).exists?
+        Tire.index Katello::PuppetModule.index do
+          create :settings => Katello::PuppetModule.index_settings, :mappings => Katello::PuppetModule.index_mapping
+        end unless Tire.index(Katello::PuppetModule.index).exists?
 
-        Tire.index PuppetModule.index do
+        Tire.index Katello::PuppetModule.index do
           import puppet_modules do |documents|
             documents.each do |document|
               if !document["repoids"].nil? && document["repoids"].length > 1

@@ -1,2 +1,3 @@
 - for item in @changesets
-  = render :partial=>"common/list_item", :locals=>{:item=>item, :accessor=>:id, :columns=>@columns, :name=>name}
+  = render :partial => "katello/common/list_item",
+           :locals => { :item => item, :accessor => :id, :columns => @columns, :name => name }

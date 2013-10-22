@@ -72,11 +72,11 @@ class ContentView < ActiveRecord::Base
     # list of component content views, if any, that do not exist in the environment
     # provided.
     if composite
-      content_view_definition.component_content_views.select("distinct content_views.*").
+      content_view_definition.component_content_views.select("distinct #{Katello::ContentView.table_name}.*").
               joins(:content_view_versions => :content_view_version_environments).
-              where(["#{Katello.ContentViewVersionEnvironment.table_name}.content_view_version_id "\
+              where(["#{Katello::ContentViewVersionEnvironment.table_name}.content_view_version_id "\
                      "NOT IN (SELECT content_view_version_id FROM "\
-                     "#{Katello.ContentViewVersionEnvironment.table_name} WHERE environment_id = ?)",
+                     "#{Katello::ContentViewVersionEnvironment.table_name} WHERE environment_id = ?)",
                      env])
     end
   end
