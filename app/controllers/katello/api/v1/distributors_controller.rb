@@ -308,7 +308,7 @@ class Api::V1::DistributorsController < Api::V1::ApiController
     if @environment
       @organization = @environment.organization
     else
-      fail HttpErrors::NotFound, _("You have not set a default organization and environment on the user %s.") % current_user.username
+      fail HttpErrors::NotFound, _("You have not set a default organization and environment on the user %s.") % current_user.login
     end
   end
 

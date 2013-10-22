@@ -18,7 +18,7 @@
   .grid_10
     = kt_form_for User.new, :id => "new_user" do |form|
 
-      = form.text_field :username, :label => _("Username:")
+      = form.text_field :login, :label => _("Login:")
 
       - if !@ldap
         = form.text_field :email, :label => _("Email Address:"), :type => :email

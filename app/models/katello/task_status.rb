@@ -147,7 +147,7 @@ class TaskStatus < ActiveRecord::Base
     task_template = TaskStatus::TYPES[self.task_type]
     return '' if task_template.nil?
     if task_template[:user_message]
-      task_template[:user_message] % self.user.username
+      task_template[:user_message] % self.user.login
     else
       task_template[:english_name]
     end

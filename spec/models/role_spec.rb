@@ -30,24 +30,24 @@ describe Role do
    let(:global_role) { Role.make_readonly_role("global-name")}
    let(:admin_role) { Role.make_super_admin_role}
    let(:user) {
-     User.find_or_create_by_username(
-         :username => 'fooo100',
+     User.find_or_create_by_login(
+         :login => 'fooo100',
          :password => "password",
-         :email => 'fooo@somewhere.com',
+         :mail => 'fooo@somewhere.com',
          :roles => [ role ])
    }
    let(:global_user) {
-     User.find_or_create_by_username(
-         :username => 'global_user',
+     User.find_or_create_by_login(
+         :login => 'global_user',
          :password => "password",
-         :email => 'global_user@somewhere.com',
+         :mail => 'global_user@somewhere.com',
          :roles => [ global_role ])
    }
    let(:admin_user) {
-     User.find_or_create_by_username(
-         :username => 'admin_user',
+     User.find_or_create_by_login(
+         :login => 'admin_user',
          :password => "password",
-         :email => 'admin_user@somewhere.com',
+         :mail => 'admin_user@somewhere.com',
          :roles => [ admin_role ])
    }
 
@@ -120,10 +120,10 @@ describe Role do
    let(:ldap_role) { Role.make_readonly_role("ldap_role", organization)}
    context "setting roles on login" do
      specify {
-       user = User.find_or_create_by_username(
-           :username => 'ldapman5000',
+       user = User.find_or_create_by_login(
+           :login => 'ldapman5000',
            :password => "password",
-           :email => 'fooo@somewhere.com',
+           :mail => 'fooo@somewhere.com',
            :roles => [ role ])
        LdapGroupRole.create!(:ldap_group => "ldap_group", :role => ldap_role)
        # make ldap groups return the correct thing
@@ -131,10 +131,10 @@ describe Role do
        user.roles.include?(ldap_role).should be_false
        user.set_ldap_roles
        # reload the user object from the db
-       user = User.find_by_username("ldapman5000")
+       user = User.find_by_login("ldapman5000")
        # ensure the user got the correct ldap role
        user.roles.include?(ldap_role).should be_true
-       # ensure the user still has his original roles, role + username
+       # ensure the user still has his original roles, role + login
        user.roles.include?(role).should be_true
        (user.roles.size == 3).should be_true
      }
@@ -142,17 +142,17 @@ describe Role do
 
    context "verify ldap roles for a normal user" do
      specify {
-       user = User.find_or_create_by_username(
-           :username => 'ldapman5000',
+       user = User.find_or_create_by_login(
+           :login => 'ldapman5000',
            :password => "password",
-           :email => 'fooo@somewhere.com',
+           :mail => 'fooo@somewhere.com',
            :roles => [ role ])
        LdapGroupRole.create!(:ldap_group => "ldap_group", :role => ldap_role)
        # make ldap groups return the correct thing
        Ldap.stub(:ldap_groups).and_return(['ldap_group'])
        user.set_ldap_roles
        # not sure if reloading the user like this is necessary
-       user = User.find_by_username('ldapman5000')
+       user = User.find_by_login('ldapman5000')
        user.roles.include?(ldap_role).should be_true
        (user.roles.size == 3).should be_true
        # ldap server hax
@@ -160,7 +160,7 @@ describe Role do
        Ldap.stub(:ldap_groups).and_return(['ldap_group'])
        user.verify_ldap_roles
        # make sure we didnt survive the hax
-       user = User.find_by_username('ldapman5000')
+       user = User.find_by_login('ldapman5000')
        user.roles.include?(ldap_role).should be_true
        (user.roles.size == 3).should be_true
      }
@@ -168,24 +168,24 @@ describe Role do
 
    context "verify ldap roles for a changed user" do
      specify {
-       user = User.find_or_create_by_username(
-           :username => 'ldapman5000',
+       user = User.find_or_create_by_login(
+           :login => 'ldapman5000',
            :password => "password",
-           :email => 'fooo@somewhere.com',
+           :mail => 'fooo@somewhere.com',
            :roles => [ role ])
        LdapGroupRole.create!(:ldap_group => "ldap_group", :role => ldap_role)
        # make ldap groups return the correct thing
        Ldap.stub(:ldap_groups).and_return(['ldap_group'])
        user.set_ldap_roles
        # not sure if reloading the user like this is necessary
-       user = User.find_by_username('ldapman5000')
+       user = User.find_by_login('ldapman5000')
        user.roles.include?(ldap_role).should be_true
        # ldap server hax
        Ldap.stub(:is_in_groups).and_return(false)
        Ldap.stub(:ldap_groups).and_return(['ldapppp_group'])
        user.verify_ldap_roles
        # make sure we didnt survive the hax
-       user = User.find_by_username('ldapman5000')
+       user = User.find_by_login('ldapman5000')
        user.roles.include?(ldap_role).should be_false
      }
    end
@@ -207,10 +207,10 @@ describe Role do
         r
      end
      let(:user) do
-       User.find_or_create_by_username(
-           :username => 'fooo100',
+       User.find_or_create_by_login(
+           :login => 'fooo100',
            :password => "password",
-           :email => 'fooo@somewhere.com'
+           :mail => 'fooo@somewhere.com'
            )
      end
      specify do

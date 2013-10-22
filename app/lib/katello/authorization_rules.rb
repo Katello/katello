@@ -22,18 +22,18 @@ module AuthorizationRules
   def authorize(ctrl = params[:controller], action = self.action_name)
     user = current_user
     fail StandardError, "Current user not set" unless user
-    logger.debug "Authorizing #{current_user.username} for #{ctrl}/#{action}"
+    logger.debug "Authorizing #{current_user.login} for #{ctrl}/#{action}"
 
     allowed = false
     rule_set = rules.with_indifferent_access
     allowed = rule_set[action].call if rule_set[action].is_a?(Proc)
     allowed = user.allowed_to?(*rule_set[action]) if rule_set[action].is_a?(Array)
     return true if allowed
-    fail Errors::SecurityViolation, "User #{current_user.username} is not allowed to access #{params[:controller]}/#{params[:action]}"
+    fail Errors::SecurityViolation, "User #{current_user.login} is not allowed to access #{params[:controller]}/#{params[:action]}"
   end
 
   def rules
-    fail Errors::SecurityViolation, "Rules not defined for  #{current_user.username} for #{params[:controller]}/#{params[:action]}"
+    fail Errors::SecurityViolation, "Rules not defined for  #{current_user.login} for #{params[:controller]}/#{params[:action]}"
   end
 
   # TODO: should be moved out of authorization module

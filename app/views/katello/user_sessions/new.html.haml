@@ -13,9 +13,9 @@
 = content_for(:content) do
   = render "alchemy/layouts/login_layout",
       :login_form_path_string => user_session_path,
-      :recovery_strings => (Katello.config.warden == 'ldap' ? "" : (_("Forgot %{username} or %{password}?") % { :username => link_to(_("Username"),
-        login_path(:card => :username_recovery), :id => "username_link"), :password  => link_to(_("Password"),
+      :recovery_strings => (Katello.config.warden == 'ldap' ? "" : (_("Forgot %{login} or %{password}?") % { :login => link_to(_("Login"),
+        login_path(:card => :login_recovery), :id => "login_link"), :password  => link_to(_("Password"),
         login_path(:card => :password_reset), :id => "password_link") } ).html_safe),
       :login_path_string => login_path,
-      :new_username_recoveries_form_path_string => email_logins_password_resets_path,
+      :new_login_recoveries_form_path_string => email_logins_password_resets_path,
       :new_password_resets_form_path_string => password_resets_path

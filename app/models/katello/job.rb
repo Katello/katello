@@ -196,7 +196,7 @@ class Job < ActiveRecord::Base
     unless first_task.nil?
       job_template = TaskStatus::TYPES[first_task.task_type]
       if job_template[:user_message]
-        summary = job_template[:user_message] % first_task.user.username
+        summary = job_template[:user_message] % first_task.user.login
       else
         summary = job_template[:english_name]
       end

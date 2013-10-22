@@ -14,7 +14,7 @@ module Katello
 class Api::V1::UsersController < Api::V1::ApiController
 
   before_filter :find_user, :only => [:show, :update, :destroy, :add_role, :remove_role, :list_roles]
-  before_filter :find_user_by_username, :only => [:list_owners]
+  before_filter :find_user_by_login, :only => [:list_owners]
   before_filter :authorize
   respond_to :json
 
@@ -42,7 +42,7 @@ class Api::V1::UsersController < Api::V1::ApiController
   end
 
   def param_rules
-    { :create => [:username, :password, :email, :disabled, :default_organization_id, :default_locale],
+    { :create => [:login, :password, :email, :disabled, :default_organization_id, :default_locale],
       :update => { :user => [:password, :email, :disabled, :default_organization_id, :default_locale] }
     }
   end
@@ -57,7 +57,7 @@ class Api::V1::UsersController < Api::V1::ApiController
   api :GET, "/users", "List users"
   param :email, String, :desc => "filter by email"
   param :disabled, :bool, :desc => "filter by disabled flag"
-  param :username, String, :desc => "filter by username"
+  param :login, String, :desc => "filter by login"
   def index
     respond :collection => User.readable.where(query_params)
   end
@@ -70,11 +70,11 @@ class Api::V1::UsersController < Api::V1::ApiController
   end
 
   api :POST, "/users", "Create an user"
-  param :username, String, :required => true
+  param :login, String, :required => true
   param_group :user
   def create
-    # warning - request already contains "username" and "password" (logged user)
-    @user = User.create!(:username => params[:username],
+    # warning - request already contains "login" and "password" (logged user)
+    @user = User.create!(:login => params[:login],
                          :password => params[:password],
                          :email    => params[:email],
                          :disabled => params[:disabled]) do |user|
@@ -143,7 +143,7 @@ class Api::V1::UsersController < Api::V1::ApiController
     role = Role.find(params[:role_id])
     @user.roles << role
     @user.save!
-    respond_for_status :message => _("User '%{username}' assigned to role '%{rolename}'") % { :username => @user.username, :rolename => role.name }
+    respond_for_status :message => _("User '%{login}' assigned to role '%{rolename}'") % { :login => @user.login, :rolename => role.name }
   end
 
   api :DELETE, "/users/:user_id/roles/:id", "Remove user's role"
@@ -151,14 +151,14 @@ class Api::V1::UsersController < Api::V1::ApiController
     role = Role.find(params[:id])
     @user.roles.delete(role)
     @user.save!
-    respond_for_status :message => _("User '%{username}' unassigned from role '%{rolename}'") % { :username => @user.username, :rolename => role.name }
+    respond_for_status :message => _("User '%{login}' unassigned from role '%{rolename}'") % { :login => @user.login, :rolename => role.name }
   end
 
   api :GET, "/users/report", "Reports all users in the system in a format according to 'Accept' headers.
   Supported formats are plain text, html, csv, pdf"
   def report
     users_report = User.report_table(:all,
-                                     :only    => [:username, :created_at, :updated_at],
+                                     :only    => [:login, :created_at, :updated_at],
                                      :include => { :roles => { :only => [:name] } })
 
     respond_to do |format|
@@ -191,9 +191,9 @@ class Api::V1::UsersController < Api::V1::ApiController
     @user
   end
 
-  def find_user_by_username
-    @user = User.find_by_username(params[:username])
-    fail HttpErrors::NotFound, _("Couldn't find user '%s'") % params[:username] if @user.nil?
+  def find_user_by_login
+    @user = User.find_by_login(params[:login])
+    fail HttpErrors::NotFound, _("Couldn't find user '%s'") % params[:login] if @user.nil?
     @user
   end
 

@@ -75,7 +75,7 @@ class UsersController < ApplicationController
   end
 
   def param_rules
-    { :create       => { :user => [:password, :username, :env_id, :email] },
+    { :create       => { :user => [:password, :login, :env_id, :email] },
       :update       => { :user => [:password, :env_id, :email, :helptips_enabled, :legacy_mode] },
       :update_roles => { :user => [:role_ids] }
     }
@@ -85,8 +85,8 @@ class UsersController < ApplicationController
   # to view all users, the results are restricted to just themselves.
   def items
     if !params[:only] && User.any_readable?
-      render_panel_direct(User, @panel_options, params[:search], params[:offset], [:username_sort, 'asc'],
-                          { :default_field => :username,
+      render_panel_direct(User, @panel_options, params[:search], params[:offset], [:login_sort, 'asc'],
+                          { :default_field => :login,
                             :filter        => [{ :hidden => [false] }] })
     else
       users = [@user]
@@ -147,12 +147,12 @@ class UsersController < ApplicationController
       @user.save!
     end
 
-    notify.success @user.username + _(" created successfully.")
-    if search_validate(User, @user.id, params[:search], :username)
+    notify.success @user.login + _(" created successfully.")
+    if search_validate(User, @user.id, params[:search], :login)
       render :partial => "common/list_item",
-             :locals  => { :item => @user, :accessor => "id", :columns => ["username"], :name => controller_display_name }
+             :locals  => { :item => @user, :accessor => "id", :columns => ["login"], :name => controller_display_name }
     else
-      notify.message _("'%s' did not meet the current search criteria and is not being shown.") % @user.username
+      notify.message _("'%s' did not meet the current search criteria and is not being shown.") % @user.login
       render :json => { :no_match => true }
     end
   rescue ActiveRecord::RecordNotSaved, ActiveRecord::RecordInvalid => error
@@ -163,7 +163,7 @@ class UsersController < ApplicationController
   end
 
   def update
-    params[:user].delete :username
+    params[:user].delete :login
 
     @user.update_attributes!(params[:user])
 
@@ -171,8 +171,8 @@ class UsersController < ApplicationController
     attr = params[:user].first.last if params[:user].first
     attr ||= ""
 
-    if !search_validate(User, user.id, params[:search], :username)
-      notify.message _("'%s' no longer matches the current search criteria.") % @user.username
+    if !search_validate(User, user.id, params[:search], :login)
+      notify.message _("'%s' no longer matches the current search criteria.") % @user.login
     end
 
     render :text => attr
@@ -261,8 +261,8 @@ class UsersController < ApplicationController
     if  @user.update_attributes(params[:user])
       notify.success _("User updated successfully.")
 
-      if !search_validate(User, @user.id, params[:search], :username)
-        notify.message _("'%s' no longer matches the current search criteria.") % @user.username
+      if !search_validate(User, @user.id, params[:search], :login)
+        notify.message _("'%s' no longer matches the current search criteria.") % @user.login
       end
 
       render :nothing => true
@@ -275,7 +275,7 @@ class UsersController < ApplicationController
   def destroy
     @user.destroy
     if @user.destroyed?
-      notify.success _("User '%s' was deleted.") % @user[:username]
+      notify.success _("User '%s' was deleted.") % @user[:login]
       #render and do the removal in one swoop!
       render :partial => "common/list_remove", :locals => { :id => params[:id], :name => controller_display_name }
     else
@@ -337,7 +337,7 @@ class UsersController < ApplicationController
 
   def setup_options
     @panel_options = { :title         => _('Users'),
-                       :col           => ['username'],
+                       :col           => ['login'],
                        :titles        => [_('Username')],
                        :create        => _('User'),
                        :create_label => _('+ New User'),

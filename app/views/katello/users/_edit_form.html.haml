@@ -9,7 +9,7 @@
       "good": '#{escape_javascript(_("Good"))}',
       "strong": '#{escape_javascript(_("Strong"))}',
       "meterText": '#{escape_javascript(_("Password Strength"))}',
-      "usernameMatch": '#{escape_javascript(_("The password should not contain the username."))}'
+      "loginMatch": '#{escape_javascript(_("The password should not contain the login."))}'
     });
 
 = javascript 'widgets/jquery.jeditable.helpers'
@@ -19,9 +19,9 @@
 
     %fieldset
       .grid_3.ra
-        = label :user, :name, _("Username:")
-      #username.grid_5.la
-        #{@user.username}
+        = label :user, :name, _("login:")
+      #login.grid_5.la
+        #{@user.login}
 
     %fieldset
       .grid_3.ra
@@ -44,7 +44,7 @@
     - if editable
       %fieldset.fl.clear
         .grid_3.ra
-          = label :user, :username, _("Clear Disabled Helptips:")
+          = label :user, :login, _("Clear Disabled Helptips:")
         .grid_5.la
           #clear_helptips{:class=>"button", "data-url"=>clear_helptips_user_path(@user.id)}
             = _("Clear")
@@ -58,9 +58,9 @@
 
         %fieldset.fl.clear
           .grid_3.ra
-            = label :user, :username, _("Confirm:")
+            = label :user, :login, _("Confirm:")
           .grid_5.la
-            = text_field :user, :username, :id=>"confirm_field", :value=>"", :type=>"password"
+            = text_field :user, :login, :id=>"confirm_field", :value=>"", :type=>"password"
         %fieldset.fl.clear
           .grid_5.la.prefix_2
             #password_conflict

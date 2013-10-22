@@ -28,7 +28,7 @@ module SystemTestData
       "autoheal"=>true,
       "uuid"=>"fcba65f1-5fe4-42e0-8f7b-6c719ec2bc42",
       "guestIds"=>[],
-      "username"=>"admin",
+      "login"=>"admin",
       "canActivate"=>false,
       "id"=>"4028fa81338751be0133875709ab0007",
       "type"=>
@@ -62,7 +62,7 @@ module SystemTestData
         "guestId"=>"9715d70d-933a-0035-0e7f-9bb9370196ea",
         "updated"=>"2011-11-09T08:17:33.181+0000",
         "created"=>"2011-11-09T08:17:33.181+0000"}],
-        "username"=>"admin",
+        "login"=>"admin",
         "canActivate"=>false,
         "id"=>"4028fa81338751be01338755dba10003",
         "type"=>
@@ -118,7 +118,7 @@ RSA PRIVATE KEY-----\n",
    "guestId"=>"GUEST4",
    "updated"=>"2011-12-22T10:19:24.327+0000",
    "created"=>"2011-12-22T10:19:24.327+0000"}],
-   "username"=>nil,
+   "login"=>nil,
    "canActivate"=>false,
    "id"=>"4028fa81346539d60134654849590008",
    "type"=>

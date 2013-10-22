@@ -32,7 +32,7 @@ describe Api::V1::UsersController do
     let(:user_without_destroy_permissions) { user_with_permissions { |u| u.can(:update, :users) } }
 
     before (:each) do
-      @user = User.new(:username => "test_user", :password => "123")
+      @user = User.new(:login => "test_user", :password => "123")
       User.stub(:find).with("123").and_return(@user)
     end
 
@@ -54,7 +54,7 @@ describe Api::V1::UsersController do
 
     describe "create user" do
       let(:action) { :create }
-      let(:req) { post :create, { :username => "eric", :password => "redhat", :email => "foo@redhat.com" } }
+      let(:req) { post :create, { :login => "eric", :password => "redhat", :mail => "foo@redhat.com" } }
       let(:authorized_user) { user_with_create_permissions }
       let(:unauthorized_user) { user_without_create_permissions }
       it_should_behave_like "protected action"
@@ -83,9 +83,9 @@ describe Api::V1::UsersController do
       @request.env["HTTP_ACCEPT"] = "application/json"
     end
     let(:request_params) do
-      { :username => "arnold",
+      { :login => "arnold",
         :password => "terminator",
-        :email    => "arnold@redhat.com",
+        :mail    => "arnold@redhat.com",
         :disabled => true
       }.with_indifferent_access
     end
@@ -102,7 +102,7 @@ describe Api::V1::UsersController do
       post :create, request_params
       response.should be_success
       User.last.should_not be_nil
-      User.last.username.should == request_params[:username]
+      User.last.login.should == request_params[:login]
       User.last.disabled?.should == request_params[:disabled]
     end
   end
@@ -113,8 +113,8 @@ describe Api::V1::UsersController do
       @request.env["HTTP_ACCEPT"] = "application/json"
     end
 
-    let(:user) { User.create!(:username => "foo", :password => "redhat123",
-                              :email    => "jomara@redhat.com", :disabled => false) }
+    let(:user) { User.create!(:login => "foo", :password => "redhat123",
+                              :mail    => "jomara@redhat.com", :disabled => false) }
     let(:request_params) {
       { :id   => user.id,
         :user =>

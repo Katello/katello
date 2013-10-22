@@ -8,7 +8,7 @@
     env_select.ajax_params["user_id"] = '#{@user.id}';
 
 = content_for :title do
-  #{@user.username}
+  #{@user.login}
 
 = content_for :remove_item do
   -if @user.deletable?
