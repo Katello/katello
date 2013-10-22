@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class ProductsController < ApplicationController
+class ProductsController < Katello::ApplicationController
   respond_to :html, :js
 
   before_filter :find_product, :only => [:edit, :update, :destroy, :refresh_content, :disable_content]
@@ -60,7 +60,7 @@ class ProductsController < ApplicationController
   end
 
   def create
-    product_params = params[:product]
+    product_params = params[:katello_product]
     requested_label = String.new(product_params[:label]) unless product_params[:label].blank?
     product_params[:label], _ = generate_label(product_params[:name], 'product') if product_params[:label].blank?
 
@@ -83,7 +83,7 @@ class ProductsController < ApplicationController
       render_bad_parameters _('Repository sets are enabled by default for custom products.')
     else
       pc = @product.refresh_content(params[:content_id])
-      render :partial => 'providers/redhat/repos', :locals => { :product_content => pc }
+      render :partial => 'katello/providers/redhat/repos', :locals => { :product_content => pc }
     end
   end
 
@@ -125,7 +125,8 @@ class ProductsController < ApplicationController
   def destroy
     @product.destroy
     notify.success _("Product '%s' removed.") % @product[:name]
-    render :partial => "common/post_delete_close_subpanel", :locals => {:path => products_repos_provider_path(@product.provider_id)}
+    render :partial => "katello/common/post_delete_close_subpanel",
+           :locals => { :path => products_repos_katello_provider_path(@product.provider_id) }
   end
 
   def auto_complete
