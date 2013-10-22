@@ -231,7 +231,7 @@ var promotion_page = (function($){
             $("#tree_loading").css("z-index", 300);
             $.ajax({
                 type: "GET",
-                url: KT.common.rootURL() + "changesets/" + changeset_id + "/object/",
+                url: KT.routes.object_changeset_path(changeset_id),
                 cache: false,
                 success: function(data) {
                     $("#tree_loading").css("z-index", -1);
@@ -477,7 +477,7 @@ var changeset_obj = function(data_struct) {
           $.ajax({
             contentType:"application/json",
             type: "PUT",
-            url: KT.common.rootURL() + "changesets/" + id,
+            url: KT.routes.changeset_path(id),
             data: JSON.stringify({timestamp:timestamp, state:new_state}),
             cache: false,
             success: function(data) {
@@ -604,7 +604,7 @@ var changeset_obj = function(data_struct) {
           $.ajax({
             contentType:"application/json",
             type: "PUT",
-            url: KT.common.rootURL() + "changesets/" + id,
+            url: KT.routes.changeset_path(id),
             data: JSON.stringify({data:data, timestamp:timestamp}),
             cache: false,
             success: on_success,
@@ -634,7 +634,7 @@ var registerEvents = function(){
         $.ajax({
           type: "POST",
           url: button.attr('data-url'),
-          data: $('#new_changeset').serialize(),
+          data: $('#new_katello_changeset').serialize(),
           cache: false,
           success: function(data){
               promotion_page.activate_changeset_tree(data.changeset.type);
@@ -780,7 +780,7 @@ var changesetEdit = (function(){
     setup_edit = function() {
 
         var changeset = promotion_page.get_changeset(),
-        url = KT.common.rootURL() + "changesets/" + changeset.id,
+        url = KT.routes.changeset_path(changeset.id),
         name_box = $('.edit_name_text'),
         description = $('.edit_description');
 
@@ -1205,7 +1205,7 @@ $(document).ready(function() {
     //when loading the new panel item, if its new, we need to add a form submit handler
     KT.panel.set_expand_cb(function(id) {
         if (id === 'new') {
-          $('#new_changeset').submit(function(e) {
+          $('#new_katello_changeset').submit(function(e) {
               e.preventDefault();
               $('#save_changeset_button').trigger('click');
           });
