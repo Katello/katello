@@ -22,14 +22,17 @@
                 = @environment.name
               - else
                 = environment_selector(:path_widget_class => "grid_10",
-                    :path_entries_class => "grid_10", :library_clickable => true,
-                    :accessible_envs => accessible_envs,
-                    :url_products_proc => url_products_proc,
-                    :url_content_views_proc => url_content_views_proc)
+                  :path_entries_class => "grid_10", :library_clickable => true,
+                  :accessible_envs => accessible_envs,
+                  :url_products_proc => url_products_proc,
+                  :url_content_views_proc => url_content_views_proc)
 
             = form.field :content_view_id, :label => _("Content View:") do
               = content_view_select(current_organization, @environment)
-
+          = form.field :version, :label => _("Version:") do
+            %select{:id => "distributor_version", :name => "distributor[version]"}
+              - distributor_versions.each do |v|
+                %option{:value => v["name"], :selected => (v["name"] == selected_dist_version)} #{v["displayName"]}
 
           = form.submit _("Save")
 - else

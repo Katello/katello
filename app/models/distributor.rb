@@ -103,6 +103,17 @@ class Distributor < ActiveRecord::Base
     Tire.index('katello_distributor').refresh
   end
 
+  def self.available_versions(options = {})
+    options = {:all => false}.merge(options)
+    versions = Resources::Candlepin::CandlepinPing.distributor_versions.sort { |i, j| i["displayName"] <=> j["displayName"] }
+    versions = versions.collect { |v| v.slice("name", "displayName") } unless options[:all]
+    versions
+  end
+
+  def self.latest_version
+    available_versions.collect { |v| v["name"] }.select { |n| n =~ (Katello.config.katello? ? /\Asat/ : /\Asam/) }.last
+  end
+
   private
 
     def save_task_status(pulp_task, task_type, parameters_type, parameters)

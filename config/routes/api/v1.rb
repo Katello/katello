@@ -164,6 +164,7 @@ Src::Application.routes.draw do
           end
         end
       end
+      match "/distributor_versions" => "distributors#versions", :via => :get, :as => :distributors_versions
 
       resources :providers, :except => [:index] do
         resources :sync, :only => [:index, :create] do
