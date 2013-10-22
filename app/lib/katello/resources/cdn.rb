@@ -107,7 +107,7 @@ module Resources
       end
 
       def self.ca_file
-        "#{Rails.root}/ca/redhat-uep.pem"
+        "#{Katello::Engine.root}/ca/redhat-uep.pem"
       end
 
       def net_http_class

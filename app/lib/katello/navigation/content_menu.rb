@@ -93,7 +93,7 @@ module Navigation
     def menu_subscriptions
       {:key => :subscriptions,
        :name => _("Subscriptions"),
-       :url => subscriptions_path,
+       :url => katello_subscriptions_path,
        :items => lambda{[menu_subscriptions_list, menu_distributors_list, menu_activation_keys, menu_import_history]},
        :if => lambda{current_organization},
        :options => {:class => 'content second_level menu_parent', "data-menu" => "content", "data-dropdown" => "subscriptions"}
@@ -103,7 +103,7 @@ module Navigation
     def menu_subscriptions_list
       {:key => :red_hat_subscriptions,
        :name => _("Red Hat Subscriptions"),
-       :url => subscriptions_path,
+       :url => katello_subscriptions_path,
        :if => lambda{current_organization.redhat_provider.readable?},
        :options => {:class => 'content third_level', "data-menu" => "subscriptions", "data-dropdown" => "subscriptions"}
       }
@@ -404,19 +404,19 @@ module Navigation
       [
         { :key => :subscription_details,
           :name => _("Details"),
-          :url => lambda{edit_subscription_path(@subscription.cp_id)},
+          :url => lambda{edit_katello_subscription_path(@subscription.cp_id)},
           :if => lambda{@subscription},
           :options => {:class => "panel_link"},
         },
         { :key => :subscription_products,
           :name => _("Products"),
-          :url => lambda{products_subscription_path(@subscription.cp_id)},
+          :url => lambda{products_katello_subscription_path(@subscription.cp_id)},
           :if => lambda{@subscription},
           :options => {:class => "panel_link"}
         },
         { :key => :consumers,
           :name => _("Units"),
-          :url => lambda{consumers_subscription_path(@subscription.cp_id)},
+          :url => lambda{consumers_katello_subscription_path(@subscription.cp_id)},
           :if => lambda{@subscription},
           :options => {:class => "panel_link"}
         }
@@ -427,19 +427,19 @@ module Navigation
       [
         { :key => :manifest_details,
           :name => _("Details"),
-          :url => edit_manifest_subscriptions_path,
+          :url => edit_manifest_katello_subscriptions_path,
           :if => lambda{current_organization && current_organization.readable?},
           :options => {:class => "panel_link"},
         },
         { :key => :upload,
           :name => _("Import"),
-          :url => new_subscription_path,
+          :url => new_katello_subscription_path,
           :if => lambda{current_organization && current_organization.readable?},
           :options => {:class => "panel_link"},
         },
         { :key => :subscription_history,
           :name => _("History"),
-          :url => history_items_subscriptions_path,
+          :url => history_items_katello_subscriptions_path,
           :if => lambda{current_organization && current_organization.readable?},
           :options => {:class => "panel_link"}
         }
