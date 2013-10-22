@@ -15,12 +15,12 @@ module Headpin
     class UserDestroy < Dynflow::Action
 
       def plan(user)
-        plan_self('id' => user.id, 'username' => user.username)
+        plan_self('id' => user.id, 'login' => user.login)
       end
 
       input_format do
         param :id, String
-        param :username, String
+        param :login, String
       end
 
     end

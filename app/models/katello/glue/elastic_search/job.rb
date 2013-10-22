@@ -26,7 +26,7 @@ module Glue::ElasticSearch::Job
 
     first_task = self.task_statuses.first
     unless first_task.nil?
-      ret[:username] = first_task.user.username
+      ret[:username] = first_task.user.login
       ret[:parameters] = first_task.parameters
     end
     ret

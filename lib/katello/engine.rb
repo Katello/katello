@@ -41,6 +41,12 @@ module Katello
       ::User.send :include, Katello::Concerns::UserExtensions
     end
 
+    rake_tasks do
+      Rake::Task['db:seed'].enhance do
+        Katello::Engine.load_seed
+      end
+    end
+
   end
 
   def table_name_prefix

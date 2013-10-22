@@ -37,41 +37,41 @@ describe UsersController do
     it "should create a user correctly", :katello => true do #TODO headpin
       name = "foo-user-1"
       controller.should_receive(:search_validate).once.and_return(:true)
-      post 'create', {:user => {:username=>name, :password=>"password1234", :email=>"#{name}@somewhere.com", :env_id => @environment.id}}
+      post 'create', {:user => {:login=>name, :password=>"password1234", :mail=>"#{name}@somewhere.com", :env_id => @environment.id}}
       response.should be_success
-      User.where(:username=>name).should_not be_empty
+      User.where(:login=>name).should_not be_empty
     end
 
-    it "should error if no username", :katello => true do #TODO headpin
-      post 'create', {:user => {:username=>"", :password=>"password1234", :email=> "user@somewhere.com", :env_id => @environment.id}}
+    it "should error if no login", :katello => true do #TODO headpin
+      post 'create', {:user => {:login=>"", :password=>"password1234", :mail=> "user@somewhere.com", :env_id => @environment.id}}
       response.should_not be_success
 
-      post 'create', {:user => { :password=>"password1234", :email=> "user@somewhere.com", :env_id => @environment.id}}
+      post 'create', {:user => { :password=>"password1234", :mail=> "user@somewhere.com", :env_id => @environment.id}}
       response.should_not be_success
     end
 
     it 'should error if blank password', :katello => true do #TODO headpin
-      post 'create', {:user => {:username=>"testuser", :password=>"", :email=> "user@somewhere.com", :env_id => @environment.id}}
+      post 'create', {:user => {:login=>"testuser", :password=>"", :mail=> "user@somewhere.com", :env_id => @environment.id}}
       response.should_not be_success
     end
 
     it 'should error if no password', :katello => true do #TODO headpin
-      post 'create', {:user => {:username=>"testuser", :email=> "user@somewhere.com", :env_id => @environment.id}}
+      post 'create', {:user => {:login=>"testuser", :mail=> "user@somewhere.com", :env_id => @environment.id}}
       response.should_not be_success
     end
 
-    it "should error if no email address", :katello => true do #TODO headpin
-      post 'create', {:user => {:username=>"testuser", :password=>"password1234", :email=>"", :env_id => @environment.id}}
+    it "should error if no mail address", :katello => true do #TODO headpin
+      post 'create', {:user => {:login=>"testuser", :password=>"password1234", :mail=>"", :env_id => @environment.id}}
       response.should_not be_success
 
-      post 'create', {:user => {:username=>"testuser", :password=>"password1234", :env_id => @environment.id}}
+      post 'create', {:user => {:login=>"testuser", :password=>"password1234", :env_id => @environment.id}}
       response.should_not be_success
     end
 
     it_should_behave_like "bad request"  do
       let(:req) do
         name = "foo-user"
-        bad_req = {:user => {:username=>name, :password=>"password1234", :email=>"#{name}@somewhere.com", :env_id => @environment.id}}
+        bad_req = {:user => {:login=>name, :password=>"password1234", :mail=>"#{name}@somewhere.com", :env_id => @environment.id}}
         bad_req[:user][:bad_foo] = "hahaha"
         post 'create', bad_req
       end
@@ -89,31 +89,31 @@ describe UsersController do
     it "should be allowed to change the password", :katello => true do #TODO headpin
        put 'update', {:id => @user.id, :user => {:password=>"password1234"}}
        response.should be_success
-       User.authenticate!(@user.username, "password1234").should be_true
+       User.authenticate!(@user.login, "password1234").should be_true
     end
 
-    it "should be allowed to change the email address", :katello => true do #TODO headpin
-       new_email = "foo-user@somewhere-new.com"
-       put 'update', {:id => @user.id, :user => {:email=>new_email}}
+    it "should be allowed to change the mail address", :katello => true do #TODO headpin
+       new_mail = "foo-user@somewhere-new.com"
+       put 'update', {:id => @user.id, :user => {:mail=>new_mail}}
        response.should be_success
-       assert !User.where(:id => @user.id, :email => new_email).empty?
+       assert !User.where(:id => @user.id, :mail => new_mail).empty?
     end
 
     it_should_behave_like "bad request"  do
       let(:req) do
-        new_email = "foo-user@somewhere-new.com"
-        bad_req = {:id => @user.id, :user => {:email=>new_email}}
+        new_mail = "foo-user@somewhere-new.com"
+        bad_req = {:id => @user.id, :user => {:mail=>new_mail}}
         bad_req[:user][:bad_foo] = "hahaha"
         put 'update', bad_req
       end
     end
 
-    it "should not change the username", :katello => true do #TODO headpin
-       put 'update', {:id => @user.id, :user => {:username=>"FOO"}}
+    it "should not change the login", :katello => true do #TODO headpin
+       put 'update', {:id => @user.id, :user => {:login=>"FOO"}}
        response.should_not be_success
        response.status.should == HttpErrors::UNPROCESSABLE_ENTITY
-       assert User.where(:username=>"FOO").empty?
-       assert !User.where(:username=>@user.username).empty?
+       assert User.where(:login=>"FOO").empty?
+       assert !User.where(:login=>@user.login).empty?
     end
 
     it "should allow roles to be changed", :katello => true do #TODO headpin
@@ -141,7 +141,7 @@ describe UsersController do
     before(:each) do
       User.any_instance.stub(:deletable?).and_return(true)
 
-      @to_delete = mock_model(User, :username=>"deleted", :password=>"deleted", :email=>"delete@test").as_null_object
+      @to_delete = mock_model(User, :login=>"deleted", :password=>"deleted", :mail=>"delete@test").as_null_object
       User.stub(:find).and_return(@to_delete)
       @to_delete.stub(:destroy)
     end
@@ -217,7 +217,7 @@ describe UsersController do
   describe "rules" do
     before (:each) do
       @organization = new_test_org
-      @testuser = User.create!(:username=>"TestUser", :password=>"foobar", :email=>"TestUser@somewhere.com")
+      @testuser = User.create!(:login=>"TestUser", :password=>"foobar", :mail=>"TestUser@somewhere.com")
     end
     describe "GET index" do
       let(:action) {:items}

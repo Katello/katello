@@ -19,62 +19,40 @@ def format_errors(model = nil)
 end
 
 # create basic roles
-superadmin_role = Role.make_super_admin_role
+superadmin_role = Katello::Role.make_super_admin_role
 
 # create read *everything* role and assign permissions to it
-reader_role = Role.make_readonly_role('Read Everything')
+reader_role = Katello::Role.make_readonly_role('Read Everything')
 raise "Unable to create reader role: #{format_errors reader_role}" if reader_role.nil? || reader_role.errors.size > 0
 reader_role.update_attributes(:locked => true)
 
-# create the super admin if none exist - it must be created before any statement in the seed.rb script
-User.current = user_admin = User.find_by_username(first_user_name)
-unless user_admin
-  user_admin   = User.new(
-      :roles    => [superadmin_role],
-      :username => first_user_name,
-      :password => first_user_password,
-      :email    => first_user_email,
-      :remote_id => first_user_name)
-  User.current = user_admin
-  user_admin.save!
-end
-raise "Unable to create admin user: #{format_errors user_admin}" if user_admin.nil? || user_admin.errors.size > 0
+# update the Foreman 'admin' to be Katello super admin
+::User.current = user_admin = ::User.admin
+raise "Foreman admin does not exist" unless user_admin
+user_admin.update_attributes(:katello_roles => [superadmin_role],:remote_id => first_user_name)
+raise "Unable to update admin user: #{format_errors(user_admin)}" if user_admin.errors.size > 0
 
-unless hidden_user = User.hidden.first
-  hidden_user = User.new(
-    :roles => [],
-    :username => "hidden-#{Password.generate_random_string(6)}",
-    :password => Password.generate_random_string(25),
-    :email => "#{Password.generate_random_string(10)}@localhost",
-    :hidden => true)
+unless hidden_user = ::User.hidden.first
+  ::User.current = ::User.admin
+  login = "hidden-#{Password.generate_random_string(6)}"
+  hidden_user = ::User.new(:auth_source_id => AuthSourceInternal.first.id,
+                       :login => login,
+                       :password => Password.generate_random_string(25),
+                       :mail => "#{Password.generate_random_string(10)}@localhost",
+                       :remote_id => login,
+                       :hidden => true,
+                       :katello_roles => [])
   hidden_user.save!
+  raise "Unable to create hidden user: #{format_errors hidden_user}" if hidden_user.nil? || hidden_user.errors.size > 0
 end
-raise "Unable to create hidden user: #{format_errors hidden_user}" if hidden_user.nil? || hidden_user.errors.size > 0
 
 first_org_desc = first_org_name + " Organization"
 first_org_label = first_org_name.gsub(' ', '_')
 # create the default org = "admin" if none exist
-first_org = Organization.find_or_create_by_name(:name => first_org_name, :label => first_org_label, :description => first_org_desc, :label => first_org_label)
+first_org = Katello::Organization.find_or_create_by_name(:name => first_org_name, :label => first_org_label, :description => first_org_desc)
 raise "Unable to create first org: #{format_errors first_org}" if first_org && first_org.errors.size > 0
 raise "Are you sure you cleared candlepin?! Unable to create first org!" if first_org.environments.nil?
 
-#create a provider
-if Provider.count == 0
-  Provider.create!({
-      :name => 'Custom Provider 1',
-      :organization => first_org,
-      :repository_url => 'http://download.fedoraproject.org/pub/fedora/linux/releases/',
-      :provider_type => Provider::CUSTOM
-  })
-
-  Provider.create!({
-      :name => 'Red Hat',
-      :organization => first_org,
-      :repository_url => 'https://somehost.example.com/content/',
-      :provider_type => Provider::REDHAT
-  })
-end
-
 if Katello.config.use_pulp
-  Repository.ensure_sync_notification
+  Katello::Repository.ensure_sync_notification
 end

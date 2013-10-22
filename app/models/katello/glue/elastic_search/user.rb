@@ -17,20 +17,20 @@ module Glue::ElasticSearch::User
 
     base.class_eval do
       index_options :extended_json => :extended_index_attrs,
-                    :display_attrs => [:username, :email],
+                    :display_attrs => [:login, :mail],
                     :json          => { :except => [:password, :password_reset_token,
                                                     :password_reset_sent_at, :helptips_enabled,
                                                     :disabled, :login] }
 
       mapping do
-        indexes :username, :type => 'string', :analyzer => :kt_name_analyzer
-        indexes :username_sort, :type => 'string', :index => :not_analyzed
+        indexes :login, :type => 'string', :analyzer => :kt_name_analyzer
+        indexes :login_sort, :type => 'string', :index => :not_analyzed
       end
     end
   end
 
   def extended_index_attrs
-    { :username_sort => username.downcase }
+    { :login_sort => login.downcase }
   end
 
 end

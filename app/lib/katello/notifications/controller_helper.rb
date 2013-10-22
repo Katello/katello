@@ -14,7 +14,7 @@ module Katello
 module Notifications::ControllerHelper
   # defines helper to access notifications from controller
   # @example how to send notification from controller
-  #   notify.success _("Welcome Back") + ", " + current_user.username, :persist => false
+  #   notify.success _("Welcome Back") + ", " + current_user.login, :persist => false
   #   notify.message _("'%s' no longer matches the current search criteria.") % @gpg_key["name"], :asynchronous => false
   #   notify.invalid_record @an_user
   #   notify.warning _("You must be logged in to access that page.")

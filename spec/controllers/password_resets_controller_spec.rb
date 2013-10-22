@@ -20,12 +20,12 @@ describe PasswordResetsController do
     set_default_locale
     login_user
 
-    @testuser_username = "TestUser"
+    @testuser_login = "TestUser"
     @testuser_password = "foobar"
     @testuser_email = "TestUser@somewhere.com"
     @testuser_password_reset_token = "random_token_asdklfjasdlfkjadf"
     @testuser_password_reset_sent_at = Time.zone.now
-    @testuser = mock_model(User, :username => @testuser_username, :password => @testuser_password,
+    @testuser = mock_model(User, :login => @testuser_login, :password => @testuser_password,
                            :email => @testuser_email, :password_reset_token => @testuser_password_reset_token,
                            :password_reset_sent_at => @testuser_password_reset_sent_at)
 
@@ -33,9 +33,9 @@ describe PasswordResetsController do
 
   describe "POST create" do
     before (:each) do
-      @params = {:username => @testuser_username, :email => @testuser_email}
+      @params = {:login => @testuser_login, :email => @testuser_email}
 
-      User.stub!(:find_by_username_and_email).and_return(@testuser)
+      User.stub!(:find_by_login_and_email).and_return(@testuser)
       @testuser.stub!(:send_password_reset)
     end
 
@@ -48,7 +48,7 @@ describe PasswordResetsController do
 
     it "should be successful even if user does not exist" do
       controller.stub!(:render).and_return("") #ignore missing js partial
-      User.stub!(:find_by_username_and_email).and_return(nil)
+      User.stub!(:find_by_login_and_email).and_return(nil)
       post :create, @params
       response.should be_success
     end
