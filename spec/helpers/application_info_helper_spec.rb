@@ -33,8 +33,8 @@ describe ApplicationInfoHelper do
       @org = Organization.create!(:name => "Haskell_Curry_Inc",
                                   :label => "haskell_curry_inc"
                                  )
-      @user = User.create!(:username => "haskell",
-                           :email => "hcurry@lambda.com"
+      @user = User.create!(:login => "haskell",
+                           :mail => "hcurry@lambda.com"
                           )
     end
 
