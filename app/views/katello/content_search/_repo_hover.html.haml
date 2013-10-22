@@ -3,17 +3,17 @@
 
 - if !details
 
-  %a.subgrid_link{:data=>{:repo_id=> repo.id, :env_id=>repo.environment_id, :type=>:repo_packages}}
+  %a.subgrid_link{'data-repo_id'=> repo.id, 'data-env_id'=>repo.environment_id, 'data-type'=>:repo_packages}
     = repo.package_count
 
   = ' / '
 
-  %a.subgrid_link{:data=>{:repo_id=> repo.id, :env_id=>repo.environment_id, :type=>:repo_errata}}
+  %a.subgrid_link{'data-repo_id' => repo.id, 'data-env_id' =>repo.environment_id, 'data-type'=>:repo_errata}
     = repo.errata_count
 
   = ' / '
 
-  %a.subgrid_link{:data=>{:repo_id=> repo.id, :env_id=>repo.environment_id, :type=>:repo_puppet_modules}}
+  %a.subgrid_link{'data-repo_id' => repo.id, 'data-env_id' => repo.environment_id, 'data-type'=>:repo_puppet_modules}
     = repo.puppet_module_count
 
 - else

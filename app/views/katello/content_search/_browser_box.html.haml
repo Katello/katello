@@ -11,7 +11,7 @@
           = select_tag :content, options_for_select(content_types)
       %fieldset.primary#views_selector
         = label_tag :views, _("Content Views")
-        #view_autocomplete_list{'data-url'=>auto_complete_content_views_path}
+        #view_autocomplete_list{'data-url'=>auto_complete_katello_content_views_path}
           %input.hidden_selection{:type=>:hidden}
           = text_field_tag :view_auto_complete, "", :class => "auto_complete_input", :placeholder=>_('Auto-complete View')
           %a.button{ :id => "add_view" }
@@ -21,7 +21,7 @@
               = _("All Content Views")
       %fieldset.primary#products_selector
         = label_tag :products, _("Products")
-        #product_autocomplete_list{'data-url'=>auto_complete_products_path}
+        #product_autocomplete_list{'data-url'=>auto_complete_katello_products_path}
           %input.hidden_selection{:type=>:hidden}
           = text_field_tag :product_auto_complete, "", :class => "auto_complete_input", :placeholder=>_('Auto-complete Product')
           %a.button{ :id => "add_product" }
@@ -55,7 +55,7 @@
 
 
 
-        %div#repo_autocomplete_list{'data-url'=>auto_complete_library_repositories_path}
+        %div#repo_autocomplete_list{'data-url'=>auto_complete_library_katello_repositories_path}
           = radio_button_tag :repos, :auto_complete_radio, true
           %input.hidden_selection{:type=>:hidden}
           = text_field_tag :repo_auto_complete, nil, :class => "auto_complete_input", :placeholder=>_('Auto-complete repository')
