@@ -12,6 +12,6 @@
 */
 
 //= require "alchemy/jquery/plugins/jquery.treeTable"
-//= require "widgets/jquery.jeditable.helpers"
-//= require "widgets/tabs"
-//= require "providers/provider_redhat"
+//= require "katello/widgets/jquery.jeditable.helpers"
+//= require "katello/widgets/tabs"
+//= require "katello/providers/provider_redhat"

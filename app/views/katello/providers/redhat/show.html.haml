@@ -1,5 +1,5 @@
-= javascript 'providers/redhat'
-= stylesheet 'widgets/tabs', :dashboard
+= javascript 'katello/providers/redhat'
+= stylesheet 'katello/widgets/tabs', 'katello/dashboard'
 
 #redhat_provider
   .grid_16
@@ -20,7 +20,7 @@
     -#= _("You can encounter missing repositories because of errors during manifest import or new content was uploaded to CDN.")
     -#= _("Note that this action can take some time to complete.")
   - if @provider.products.empty?
-    = (_("No Red Hat products currently exist, please import a manifest <a href='%s'>here</a> to receive Red Hat content.") % subscriptions_path).html_safe
+    = (_("No Red Hat products currently exist, please import a manifest <a href='%s'>here</a> to receive Red Hat content.") % katello_subscriptions_path).html_safe
   - else
     - tabs = redhat_repo_tabs(@provider)
     #content_tabs.grid_16
@@ -36,6 +36,7 @@
             = _("No products are available containing this content type.")
           - else
             - reset_cycle
-            = render :partial=>"providers/redhat/repo_sets", :locals=>{:tab_id=>tab[:id], :provider=>@provider, :product_map=>tab[:products]}
+            = render :partial => "katello/providers/redhat/repo_sets",
+                     :locals => { :tab_id => tab[:id], :provider => @provider, :product_map => tab[:products] }
 
 
