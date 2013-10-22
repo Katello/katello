@@ -68,20 +68,12 @@ module ContentBreadcrumbs
     bc = {}
     content_crumb_id = "content"
 
-    #add_crumb_node!(bc, content_crumb_id, details_promotion_path(@environment.name) ,
-    #    _("Content"), [], {:cache => true, :content => render(:partial => "detail",
-    #                              :locals => {:environment_name => @environment.name,
-    #                                        :read_contents => @environment.contents_readable?})})
-    #
-    #add_crumb_node!(bc, content_views_crumb_id, content_views_promotion_path(@environment.name), _("Content Views"),
-    #               [content_crumb_id])
-
     view_versions = @environment.content_view_versions.non_default_view || []
     next_env_view_version_ids = @next_environment.nil? ? [].to_set :
       @next_environment.content_view_versions.non_default_view.
-      pluck("content_view_versions.id").to_set
+      pluck("#{Katello::ContentViewVersion.table_name}.id").to_set
 
-    add_crumb_node!(bc, content_crumb_id, details_promotion_path(@environment.name), _("Content"), [],
+    add_crumb_node!(bc, content_crumb_id, details_katello_promotion_path(@environment.name), _("Content"), [],
                     {:cache => true,
                      :content => render(:partial => "content_views",
                                         :locals => {:environment => @environment,

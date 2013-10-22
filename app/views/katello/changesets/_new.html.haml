@@ -4,7 +4,7 @@
 = content_for :content do
   .grid_7#new_changeset123
 
-    = kt_form_for Changeset.new do |form|
+    = kt_form_for Katello::Changeset.new do |form|
 
       %input{ :type => "hidden", :name => "env_id", :value => @environment.id }
       - if !@next_environment.nil?
@@ -22,14 +22,14 @@
           %label #{_("Type")}
         .grid_4.la
           - if @environment.library
-            %input{:type => "hidden", :name => "changeset[action_type]", :value => Changeset::PROMOTION} #{Changeset::PROMOTION}
+            %input{:type => "hidden", :name => "changeset[action_type]", :value => Katello::Changeset::PROMOTION} #{Katello::Changeset::PROMOTION}
           - elsif @next_environment.nil?
-            %input{:type => "hidden", :name => "changeset[action_type]", :value => Changeset::DELETION} #{Changeset::DELETION}
+            %input{:type => "hidden", :name => "changeset[action_type]", :value => Katello::Changeset::DELETION} #{Katello::Changeset::DELETION}
           - else
             = select_tag "changeset[action_type]",
-              options_for_select(Changeset::TYPES, :selected => (changeset_type == 'deletion' ? Changeset::DELETION : Changeset::PROMOTION)),
+              options_for_select(Katello::Changeset::TYPES, :selected => (changeset_type == 'deletion' ? Katello::Changeset::DELETION : Katello::Changeset::PROMOTION)),
               :label => _("Type"), :style => "padding-right:5px;"
 
-      = form.submit _("Save Changeset"), :id => 'save_changeset_button', 'data-url' => changesets_path
+      = form.submit _("Save Changeset"), :id => 'save_changeset_button', 'data-url' => katello_changesets_path
 
-= render :template => "layouts/tupane_layout"
+= render :template => "katello/layouts/tupane_layout"
