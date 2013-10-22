@@ -581,7 +581,7 @@ This information is then used for computing the errata available for the system.
     if @environment
       @organization = @environment.organization
     else
-      fail HttpErrors::NotFound, _("You have not set a default organization and environment on the user %s.") % current_user.username
+      fail HttpErrors::NotFound, _("You have not set a default organization and environment on the user %s.") % current_user.login
     end
   end
 

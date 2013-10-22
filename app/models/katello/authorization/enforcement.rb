@@ -46,7 +46,7 @@ module Authorization::Enforcement
         u = User.current
         fail Errors::UserNotSet, "current user is not set" if u.nil? || !u.is_a?(User)
         unless u.allowed_to?(verb, resource_type, tags, org, any_tags)
-          msg = "User #{u.username} is not allowed to #{verb} in #{resource_type} using #{tags}"
+          msg = "User #{u.login} is not allowed to #{verb} in #{resource_type} using #{tags}"
           Rails.logger.error msg
           fail Errors::SecurityViolation, msg
         end

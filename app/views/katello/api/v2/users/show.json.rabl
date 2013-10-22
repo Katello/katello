@@ -1,6 +1,6 @@
 object @user
 
-attributes :id, :email, :username, :disabled
+attributes :id, :mail, :login, :disabled
 attributes :default_organization, :default_environment, :own_role_id
 attributes :allowed_organizations
 attributes :preferences

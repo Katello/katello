@@ -41,7 +41,7 @@ class SystemEventsController < Katello::ApplicationController
     task_template = TaskStatus::TYPES[task.task_type]
     type = task_template[:name]
     if task_template[:user_message]
-      user_message = task_template[:user_message] % task.user.username
+      user_message = task_template[:user_message] % task.user.login
     else
       user_message = task_template[:english_name]
     end

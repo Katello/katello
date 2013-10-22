@@ -29,7 +29,7 @@ class Api::V2::UsersController < Api::V1::UsersController
   end
 
   def param_rules
-    { :create => { :user => [:username, :password, :email, :disabled, :default_environment_id, :default_locale] },
+    { :create => { :user => [:login, :password, :email, :disabled, :default_environment_id, :default_locale] },
       :update => { :user => [:password, :email, :disabled, :default_environment_id, :default_locale] }
     }
   end
@@ -37,7 +37,7 @@ class Api::V2::UsersController < Api::V1::UsersController
   api :POST, "/users", "Create an user"
   param_group :user
   param :user, Hash, :required => true do
-    param :username, String, :required => true
+    param :login, String, :required => true
   end
   def create
     user_attrs = params[:user]

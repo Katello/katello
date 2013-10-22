@@ -310,7 +310,7 @@ Rails.application.routes.draw do
           match '/custom_info/:informable_type/:informable_id/*keyname' => 'custom_info#destroy', :via => :delete, :as => :destroy_custom_info
 
           # subscription-manager support
-          match '/users/:username/owners' => 'users#list_owners', :via => :get
+          match '/users/:login/owners' => 'users#list_owners', :via => :get
 
         end # module v2
 
