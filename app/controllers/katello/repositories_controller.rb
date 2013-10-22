@@ -11,8 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class RepositoriesController < ApplicationController
-  include AutoCompleteSearch
+class RepositoriesController < Katello::ApplicationController
   include KatelloUrlHelper
 
   respond_to :html, :js
@@ -105,7 +104,8 @@ class RepositoriesController < ApplicationController
     @repository.destroy
     if @repository.destroyed?
       notify.success _("Repository '%s' removed.") % @repository.name
-      render :partial => "common/post_delete_close_subpanel", :locals => {:path => products_repos_provider_path(@provider.id)}
+      render :partial => "katello/common/post_delete_close_subpanel",
+             :locals => { :path => products_repos_katello_provider_path(@provider.id) }
     else
       err_msg = N_("Removal of the repository failed. If you continue having trouble with this, please contact an Administrator.")
       notify.error err_msg

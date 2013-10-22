@@ -12,8 +12,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class ProvidersController < ApplicationController
-  include AutoCompleteSearch
+class ProvidersController < Katello::ApplicationController
 
   before_filter :find_rh_provider, :only => [:redhat_provider]
 
@@ -90,7 +89,7 @@ class ProvidersController < ApplicationController
   end
 
   def redhat_provider
-    render :template => "providers/redhat/show"
+    render :template => "katello/providers/redhat/show"
   end
 
   def items
@@ -99,7 +98,7 @@ class ProvidersController < ApplicationController
       Provider,
       @panel_options,
       params[:search],
-      params[:offset],
+      params[:offset] || 0,
       [:name_sort, 'asc'],
       {:default_field => :name, :filter => [{ "id" => ids }, { :provider_type => [Provider::CUSTOM] }]}
     )
@@ -107,7 +106,8 @@ class ProvidersController < ApplicationController
 
   def show
     provider = Provider.find(params[:id])
-    render :partial => "common/list_update", :locals => {:item => provider, :accessor => "id", :columns => ['name']}
+    render :partial => "katello/common/list_update",
+           :locals => { :item => provider, :accessor => "id", :columns => ['name'] }
   end
 
   def edit
@@ -122,12 +122,14 @@ class ProvidersController < ApplicationController
   end
 
   def create
-    @provider = Provider.create! params[:provider].merge({:provider_type => Provider::CUSTOM,
-                                                          :organization => current_organization})
+    @provider = Provider.create! params[:katello_provider].merge({ :provider_type => Provider::CUSTOM,
+                                                                   :organization => current_organization })
     notify.success _("Provider '%s' was created.") % @provider['name']
 
     if search_validate(Provider, @provider.id, params[:search])
-      render :partial => "common/list_item", :locals => {:item => @provider, :initial_action => :products_repos, :accessor => "id", :columns => ['name'], :name => controller_display_name}
+      render :partial => "katello/common/list_item",
+             :locals => { :item => @provider, :initial_action => :products_repos,
+                          :accessor => "id", :columns => ['name'], :name => controller_display_name }
     else
       notify.message _("'%s' did not meet the current search criteria and is not being shown.") % @provider["name"]
       render :json => { :no_match => true }
@@ -138,7 +140,7 @@ class ProvidersController < ApplicationController
     if @provider.destroy
       notify.success _("Provider '%s' was deleted.") % @provider[:name]
       #render and do the removal in one swoop!
-      render :partial => "common/list_remove", :locals => {:id => params[:id], :name => controller_display_name}
+      render :partial => "katello/common/list_remove", :locals => {:id => params[:id], :name => controller_display_name}
     end
   end
 
@@ -232,7 +234,7 @@ class ProvidersController < ApplicationController
                        :create_label => _('+ New Provider'),
                        :name => controller_display_name,
                        :ajax_load => true,
-                       :ajax_scroll => items_providers_path,
+                       :ajax_scroll => items_katello_providers_path,
                        :initial_action => :products_repos,
                        :search_class => Provider,
                        :enable_create => Provider.creatable?(current_organization)}

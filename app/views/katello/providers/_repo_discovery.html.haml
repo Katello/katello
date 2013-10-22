@@ -21,7 +21,7 @@
 
 = content_for :content do
   .grid_10
-    %form#repo_discovery_form{:data=>{:url=>discover_provider_path(@provider.id)}}
+    %form#repo_discovery_form{:data=>{:url=>discover_katello_provider_path(@provider.id)}}
       .grid_1.ra
         = _("URL:")
       .grid_6.la
@@ -30,12 +30,12 @@
         %input{:type=>:submit, :value=>_("Discover")}
       .grid_2.la{:style=>'display: none;'}
         %input#cancel_discover.button{:type=>:button, :name=>:cancel, :value=>_('Cancel'),
-                              :data=>{:url=>cancel_discovery_provider_path(@provider.id)}}
-        = image_tag("icons/spinner.gif")
+                              :data=>{:url=>cancel_discovery_katello_provider_path(@provider.id)}}
+        = image_tag("katello/icons/spinner.gif")
 
   %br
   .grid_10
-    %table#discovered_repos{:data=>{:url=>discovered_repos_provider_path(@provider.id)}}
+    %table#discovered_repos{:data=>{:url=>discovered_repos_katello_provider_path(@provider.id)}}
       %thead
         %tr.underline
           %td
@@ -43,7 +43,7 @@
               %input#url_filter{:type=>'search', :name=>'search', :placeholder=>_('Filter paths...')}
           %td
             .grid_3
-              %button.button#new_repos{:data=>{:url=>new_discovered_repos_provider_path(@provider.id)}}
+              %button.button#new_repos{:data=>{:url=>new_discovered_repos_katello_provider_path(@provider.id)}}
                 = _("Create Within Product")
         %tr
           %th
@@ -54,4 +54,4 @@
         %td
         %td
 
-= render :template => "layouts/tupane_layout"
+= render :template => "katello/layouts/tupane_layout"
