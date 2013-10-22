@@ -9,7 +9,9 @@
 
     - if options.length > 0
 
-      = kt_form_for([view_definition, FilterRule.new], :remote => true, :html => {:id => "filter_rule_form"}) do |form|
+      = kt_form_for(Katello::FilterRule.new,
+        :url => katello_content_view_definition_filter_rules_path(view_definition, filter),
+        :remote => true, :html => {:id => "filter_rule_form"}) do |form|
 
         = form.select :content_type, options, {},
           {:label => _("Filter on"), :size=>1, :tabindex => form.tabindex}
@@ -21,4 +23,4 @@
       %p
         = _("Please associate some content with this filter before creating a rule.")
 
-= render :template => "layouts/tupane_layout"
+= render :template => "katello/layouts/tupane_layout"

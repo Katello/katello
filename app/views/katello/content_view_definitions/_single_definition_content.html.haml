@@ -1,20 +1,21 @@
 -# Partial for the 'Content' pane of a 'single' content view definitio
-- save_url = update_content_content_view_definition_path(view_definition.id)
+- save_url = update_content_katello_content_view_definition_path(view_definition.id)
 
-= render :partial => "content_view_definitions/tupane_header"
+= render :partial => "katello/content_view_definitions/tupane_header"
 
 = content_for :content do
-  = render "common/common_product_repo_selector",
+  = render "katello/common/common_product_repo_selector",
            :editable => editable,
            :record => view_definition,
-           :readable_products => Product.readable(current_organization),
-           :editable_products => Product.readable(current_organization),
-           :content_types => Repository::TYPES - [Repository::PUPPET_TYPE],
-           :save_url => update_content_content_view_definition_path(view_definition.id),
+           :readable_products => Katello::Product.readable(current_organization),
+           :editable_products => Katello::Product.readable(current_organization),
+           :content_types => Katello::Repository::TYPES - [Katello::Repository::PUPPET_TYPE],
+           :save_url => update_content_katello_content_view_definition_path(view_definition.id),
            :title => "Yum Products and Repositories"
 
-  = render "common/repo_selector", :title => "Puppet Repository", :editable => editable,
-    :save_url => save_url, :field => :puppet_repository_id, :record => view_definition,
-    :repositories => Repository.in_default_view.puppet_type.readable(current_organization.library)
+  = render "katello/common/repo_selector", 
+           :title => "Puppet Repository", :editable => editable,
+           :save_url => save_url, :field => :puppet_repository_id, :record => view_definition,
+           :repositories => Katello::Repository.in_default_view.puppet_type.readable(current_organization.library)
 
-= render :template => "layouts/tupane_layout"
+= render :template => "katello/layouts/tupane_layout"
