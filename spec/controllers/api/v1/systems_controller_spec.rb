@@ -38,7 +38,7 @@ describe Api::V1::SystemsController do
   let(:user_with_create_permissions) { user_with_permissions { |u| u.can([:register_systems], :environments, @environment_1.id, @organization) } }
   let(:user_without_create_permissions) { user_with_permissions { |u| u.can(:read_systems, :organizations, nil, @organization) } }
   let(:user_with_update_permissions) { user_with_permissions { |u| u.can([:read_systems, :update_systems], :organizations, nil, @organization) } }
-  let(:user_without_update_permissions) { user_without_permissions }
+  let(:user_without_update_permissions) {  user_without_permissions }
   let(:user_with_destroy_permissions) { user_with_permissions { |u| u.can([:delete_systems], :organizations, nil, @organization) } }
   let(:user_without_destroy_permissions) { user_with_permissions { |u| u.can([:read_systems], :organizations, nil, @organization) } }
   let(:user_with_register_permissions) { user_with_permissions { |u| u.can([:register_systems], :organizations, nil, @organization) } }
@@ -365,7 +365,6 @@ describe Api::V1::SystemsController do
 
     context "update permissions" do
       let(:authorized_user) { user_with_update_permissions }
-      let(:unauthorized_user) { user_without_update_permissions }
       it_should_behave_like "protected action"
 
       it "successfully with update permissions" do
@@ -375,9 +374,22 @@ describe Api::V1::SystemsController do
       end
     end
 
+    context "update permissions ignored on users without permission" do
+      let(:authorized_user) { user_without_update_permissions }
+      let(:action) {:upload_package_profile}
+      it_should_behave_like "protected action"
+
+      it "Don't successfully with update permissions" do
+        login_user_api(user_without_update_permissions)
+        #unauthorized user, shouldn't talk to pulp and should return nothing
+        Katello.pulp_server.extensions.consumer.should_not_receive(:upload_profile)
+        put :upload_package_profile, :id => uuid, :_json => package_profile[:profile], :format => :json
+        response.body.should == {}.to_json
+      end
+    end
+
     context "update permissions" do
       let(:authorized_user) { user_with_register_permissions }
-      let(:unauthorized_user) { user_without_register_permissions }
       it_should_behave_like "protected action"
 
       it "successfully with register permissions" do
