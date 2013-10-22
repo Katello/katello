@@ -13,7 +13,7 @@
 class Api::V2::SystemPackagesController < Api::V2::ApiController
 
   before_filter :require_packages_or_groups, :only => [:install, :remove]
-  before_filter :require_packages_only, :only => [:upgrade, :upgrade_all]
+  before_filter :require_packages_only, :only => [:upgrade]
   before_filter :find_system
   before_filter :authorize
 
