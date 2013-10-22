@@ -93,7 +93,7 @@ module AuthorizationHelperMethods
 
     @users_count ||= 0
     @users_count += 1
-    user = User.create!(:username => "tmp#{@users_count}", :password => "tmp_password", :email => "tmp#{@users_count}@someserver.com")
+    user = User.create!(:login => "tmp#{@users_count}", :password => "tmp_password", :mail => "tmp#{@users_count}@someserver.com")
     yield UserPermissionsGenerator.new(user) if block_given?
     user
   end

@@ -21,7 +21,7 @@ describe Changeset, :katello => true do
       disable_product_orchestration
       disable_user_orchestration
 
-      User.current  = User.find_or_create_by_username(:username => 'admin', :password => 'admin12345')
+      User.current  = User.find_or_create_by_login(:login => 'admin', :password => 'admin12345')
       @organization = Organization.create!(:name=>'candyroom', :label => 'test_organization')
       @environment  = create_environment(:name=>'julia', :label=> 'julia', :prior => @organization.library,
                                             :organization => @organization)

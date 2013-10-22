@@ -219,7 +219,7 @@ module ApplicationHelper
   # Creates a link that alternates between ascending and descending.
   #
   # @example
-  #   sort @search, :by => :username
+  #   sort @search, :by => :login
   #   sort @search, :by => :created_at, :as => "Created"
   #
   # @param [Hash] options This helper accepts the following options:

@@ -28,7 +28,7 @@
       .grid_3.ra
         %label #{_("Promoted By:")}
       .grid_5.la
-        #{@changeset.task_status_id.nil? ? _("Unknown") : @changeset.task_status.user.username }
+        #{@changeset.task_status_id.nil? ? _("Unknown") : @changeset.task_status.user.login }
     .fieldset
       .grid_3.ra
         %label #{_("Promotion Date:")}
