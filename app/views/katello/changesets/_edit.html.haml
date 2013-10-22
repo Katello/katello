@@ -1,23 +1,23 @@
 //Edit/view page as seen on the 2 pane changeset history list
-= javascript 'widgets/jquery.jeditable.helpers', 'changesets/changeset_edit'
+= javascript 'katello/widgets/jquery.jeditable.helpers', 'katello/changesets/changeset_edit'
 
 = content_for :title do
   = _("Details")
 
 = content_for :content do
   .grid_10
-    %input#changeset{:type => "hidden", 'data-ajax_url'=>changeset_path(@changeset.id)}
+    %input#changeset{:type => "hidden", 'data-ajax_url' => katello_changeset_path(@changeset.id)}
 
     .fieldset
       .grid_3.ra
         %label #{_("Name:")}
-      .grid_5.la{:name=>"name", :class=>("editable edit_textfield" if editable),
-          "data-id"=>@changeset.id,"data-url"=>changeset_path(@changeset.id)} #{@changeset.name}
+      .grid_5.la{ :name => "name", :class => ("editable edit_textfield" if editable),
+          "data-id" => @changeset.id, "data-url" => katello_changeset_path(@changeset.id)} #{@changeset.name }
     .fieldset
       .grid_3.ra
         %label #{_("Description:")}
-      .grid_5.la{:name=>"description", :class=>("editable edit_description" if editable),
-          "data-id"=>@changeset.id,'data-maxlength'=>default_description_limit,"data-url"=>changeset_path(@changeset.id)}<
+      .grid_5.la{ :name => "description", :class => ("editable edit_description" if editable),
+          "data-id" => @changeset.id, 'data-maxlength' => default_description_limit, "data-url" => katello_changeset_path(@changeset.id) }<
         = @changeset.description.blank? ? _("None") : @changeset.description
     .fieldset
       .grid_3.ra
@@ -35,7 +35,6 @@
       .grid_5.la
         = format_time(@changeset.promotion_date, :format=>:long)
 
-
     #changeset_history_tabs
       .grid_10
         %h2 #{_("Contents:")}
@@ -52,4 +51,4 @@
                   -for view in @changeset.content_views
                     %li #{view.name}
 
-= render :template => "layouts/tupane_layout"
+= render :template => "katello/layouts/tupane_layout"

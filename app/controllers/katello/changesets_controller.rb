@@ -11,8 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class ChangesetsController < ApplicationController
-  include AutoCompleteSearch
+class ChangesetsController < Katello::ApplicationController
   include BreadcrumbHelper
   include ChangesetBreadcrumbs
 
@@ -58,7 +57,7 @@ class ChangesetsController < ApplicationController
 
   #extended scroll for changeset_history
   def items
-    render_panel_direct(Changeset, @panel_options, params[:search], params[:offset], [:name_sort, 'asc'],
+    render_panel_direct(Changeset, @panel_options, params[:search], params[:offset] || 0, [:name_sort, 'asc'],
         {:default_field => :name, :filter => [{:environment_id => [@environment.id]}, {:state => [Changeset::PROMOTED, Changeset::DELETED]}]})
   end
 
@@ -68,7 +67,7 @@ class ChangesetsController < ApplicationController
 
   #list item
   def show
-    render :partial => "common/list_update", :locals => {:item => @changeset, :accessor => "id", :columns => ['name']}
+    render :partial => "katello/common/list_update", :locals => {:item => @changeset, :accessor => "id", :columns => ['name']}
   end
 
   def section_id
@@ -89,8 +88,8 @@ class ChangesetsController < ApplicationController
   end
 
   def create
-    if params[:changeset][:action_type].blank? ||
-       params[:changeset][:action_type] == Changeset::PROMOTION
+    if params[:katello_changeset][:action_type].blank? ||
+       params[:katello_changeset][:action_type] == Changeset::PROMOTION
 
       if @next_environment.blank?
         notify.error _("Please create at least one environment.")
@@ -104,8 +103,8 @@ class ChangesetsController < ApplicationController
       env_id = @environment.id
       type = Changeset::DELETION
     end
-    @changeset = Changeset.create_for(type, :name => params[:changeset][:name],
-                                            :description => params[:changeset][:description],
+    @changeset = Changeset.create_for(type, :name => params[:katello_changeset][:name],
+                                            :description => params[:katello_changeset][:description],
                                             :environment_id => env_id)
 
     notify.success _("Promotion Changeset '%s' was created.") % @changeset["name"]
@@ -283,7 +282,7 @@ class ChangesetsController < ApplicationController
                        :name => controller_display_name,
                        :accessor => :id,
                        :ajax_load => true,
-                       :ajax_scroll => items_changesets_path,
+                       :ajax_scroll => items_katello_changesets_path,
                        :search_class => Changeset}
   end
 
