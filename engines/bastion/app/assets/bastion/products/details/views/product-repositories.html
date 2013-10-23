@@ -8,7 +8,7 @@
     <button class="btn btn-primary fr"
             translate
             ng-disabled="product.readonly"
-            ng-click="openCreateRepository(product.id)">
+            ui-sref="products.details.repositories.new({productId: product.id})">
       Create Repository
     </button>
   </div>

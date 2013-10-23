@@ -2,7 +2,7 @@
 
   <header>
     <h5>
-      <i class="icon-backward clickable" ng-click="returnToProduct()"></i>
+      <i class="icon-backward clickable" ui-sref="products.details.repositories.index({productId: $scope.product.id})"></i>
       {{ "Add New Repository" | translate }}
     </h5>
   </header>
@@ -105,7 +105,7 @@
     </div>
 
     <div alch-save-control
-         on-cancel="table.closeItem()"
+         on-cancel="transitionTo('products.index')"
          on-save="save(repository)"
          invalid="repositoryForm.$invalid">
     </div>

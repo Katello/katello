@@ -44,21 +44,8 @@ angular.module('Bastion.products').controller('ProductsController',
         $scope.table = nutupane.table;
         $scope.removeRow = nutupane.removeRow;
 
-        $scope.table.openProduct = function(product) {
-            $scope.transitionTo('products.details.repositories.index', {productId: product.id});
-        };
-
-        $scope.transitionToNewProduct = function() {
-            $scope.transitionTo('products.new.form');
-        };
-
-        $scope.transitionToDiscovery = function() {
-            $scope.transitionTo('products.discovery.scan');
-        };
-
         $scope.table.closeItem = function() {
             $scope.transitionTo('products.index');
         };
-
     }]
 );

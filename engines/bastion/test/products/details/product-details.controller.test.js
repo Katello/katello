@@ -37,26 +37,6 @@ describe('Controller: ProductDetailsController', function() {
         expect($scope.product).toBeDefined();
     });
 
-    it('provides a method to transition to repositories index for a product', function() {
-        spyOn($scope, 'transitionTo');
-        $scope.transitionToRepositories($scope.product);
-
-        expect($scope.transitionTo).toHaveBeenCalledWith(
-            'products.details.repositories.index',
-            {productId: $scope.product.id}
-        );
-    });
-
-    it('provides a method to transition to product details', function() {
-        spyOn($scope, 'transitionTo');
-        $scope.transitionToInfo($scope.product);
-
-        expect($scope.transitionTo).toHaveBeenCalledWith(
-            'products.details.info',
-            {productId: $scope.product.id}
-        );
-    });
-
     it('provides a method to remove a product', function() {
         spyOn($scope, 'transitionTo');
         spyOn($scope, 'removeRow');

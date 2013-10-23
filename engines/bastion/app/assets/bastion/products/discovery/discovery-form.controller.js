@@ -74,10 +74,6 @@ angular.module('Bastion.products').controller('DiscoveryFormController',
             $scope.panel.loading = false;
         });
 
-        $scope.transitionToDiscovery = function() {
-            $scope.transitionTo('products.discovery.scan');
-        };
-
         $scope.creating = function() {
             return $scope.createRepoChoices.creating;
         };

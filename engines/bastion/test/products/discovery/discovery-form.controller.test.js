@@ -45,13 +45,6 @@ describe('Controller: DiscoveryFormController', function() {
         });
     }));
 
-    it('should provide a way to transition to the discovery page', function() {
-        spyOn($scope, 'transitionTo');
-        $scope.transitionToDiscovery();
-
-        expect($scope.transitionTo).toHaveBeenCalledWith('products.discovery.scan');
-    });
-
     it('should provide a way to determine if a repository is currently being created', function() {
         expect($scope.creating()).toEqual($scope.createRepoChoices.creating);
     });
