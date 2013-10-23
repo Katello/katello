@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class SystemGroupErrataController < ApplicationController
+class SystemGroupErrataController < Katello::ApplicationController
 
   helper SystemErrataHelper
 
@@ -35,7 +35,7 @@ class SystemGroupErrataController < ApplicationController
 
   def index
     offset = current_user.page_size
-    render :partial => "system_groups/errata/index",
+    render :partial => "katello/system_groups/errata/index",
            :locals => {:system => @group, :editable => @group.systems_editable?, :offset => offset}
   end
 
@@ -60,8 +60,10 @@ class SystemGroupErrataController < ApplicationController
       erratum.applicable_consumers = erratum.applicable_consumers.map{|uuid| {:name => system_hash[uuid].name, :uuid => uuid }}
     end
 
-    rendered_html = render_to_string(:partial => "systems/errata/items", :locals => { :errata => errata,
-                                                                                      :editable => @group.systems_editable? })
+    rendered_html = render_to_string(:partial => "katello/systems/errata/items",
+                                     :locals => { :errata => errata,
+                                                  :editable => @group.systems_editable? })
+
     render :json => {:html => rendered_html,
                      :results_count => errata.length,
                      :total_count => errata.length,
@@ -84,10 +86,12 @@ class SystemGroupErrataController < ApplicationController
   def errata_status
     if params[:id]
       jobs = @group.refreshed_jobs.joins(:task_statuses).where(
-          'jobs.id' => params[:id], 'task_statuses.task_type' => [:errata_install])
+          "#{Katello::Job.table_name}.id" => params[:id],
+          "#{Katello::TaskStatus.table_name}.task_type" => [:errata_install])
     else
       jobs = @group.refreshed_jobs.joins(:task_statuses).where(
-          'task_statuses.task_type' => [:errata_install], 'task_statuses.state' => [:waiting, :running])
+          "#{Katello::TaskStatus.table_name}.task_type" => [:errata_install],
+          "#{Katello::TaskStatus.table_name}.state" => [:waiting, :running])
     end
     render :json => jobs
   end

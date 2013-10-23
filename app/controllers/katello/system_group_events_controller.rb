@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class SystemGroupEventsController < ApplicationController
+class SystemGroupEventsController < Katello::ApplicationController
   before_filter :find_group
   before_filter :authorize
 
@@ -98,7 +98,7 @@ class SystemGroupEventsController < ApplicationController
     end
     search = params[:search]
     render_panel_direct(Job, {:no_search_history => true, :render_list_proc => render_proc},
-                        search, params[:offset], [:id, 'desc'],
+                        search, params[:offset] || 0, [:id, 'desc'],
                         :filter => {:job_owner_id => [@group.id], :task_owner_type => SystemGroup.class.name},
                         :load => true,
                         :simple_query => "#{search}")

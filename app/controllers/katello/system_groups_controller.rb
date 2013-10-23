@@ -89,8 +89,8 @@ class SystemGroupsController < Katello::ApplicationController
     else
       respond_to do |format|
         format.html do
-          render :partial => "katello/system_groups/list_group", :locals => {:item => @group, :accessor => "id",
-                                                                     :name => controller_display_name}
+          render :partial => "katello/system_groups/list_group",
+                 :locals => {:item => @group, :accessor => "id", :name => controller_display_name}
         end
         format.json {render :json => @group}
       end
@@ -110,8 +110,8 @@ class SystemGroupsController < Katello::ApplicationController
 
     notify.success _("System Group %{new_group} created successfully as a copy of system group %{group}.") % {:new_group => new_group.name, :group => @group.name}
 
-    render :partial => "system_groups/list_group", :locals => {:item => new_group, :accessor => "id",
-                                                               :name => controller_display_name}
+    render :partial => "katello/system_groups/list_group",
+           :locals => { :item => new_group, :accessor => "id", :name => controller_display_name }
   end
 
   def edit
@@ -121,11 +121,12 @@ class SystemGroupsController < Katello::ApplicationController
   end
 
   def show
-    render :partial => "system_groups/list_group", :locals => {:item => @group, :accessor => "id", :name => controller_display_name}
+    render :partial => "katello/system_groups/list_group",
+           :locals => { :item => @group, :accessor => "id", :name => controller_display_name }
   end
 
   def update
-    options = params[:katello_system_group]
+    options = params[:system_group]
     to_ret = ""
     if options[:name]
       @group.name = options[:name]
@@ -152,7 +153,8 @@ class SystemGroupsController < Katello::ApplicationController
   def destroy
     @group.destroy
     notify.success _("System Group %s deleted.") % @group.name
-    render :partial => "common/list_remove", :locals => {:id => params[:id], :name => controller_display_name}
+    render :partial => "katello/common/list_remove",
+           :locals => { :id => params[:id], :name => controller_display_name }
   end
 
   def destroy_systems
@@ -167,7 +169,8 @@ class SystemGroupsController < Katello::ApplicationController
     notify.success _("Deleted System Group %{group} and it's %{count} systems.") % {:group => @group.name, :count => system_names.length.to_s},
                    :details => system_names.join("\n")
 
-    render :js => "common/list_remove", :locals => {:id => params[:id], :name => controller_display_name}
+    render :js => "katello/common/list_remove",
+           :locals => { :id => params[:id], :name => controller_display_name }
   end
 
   def items
