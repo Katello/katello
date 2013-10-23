@@ -18,4 +18,5 @@ Gem::Specification.new do |s|
 
   s.add_dependency "rails", "~> 3.2.8"
   s.add_dependency "ui_alchemy-rails"
+  s.add_dependency "twitter-bootstrap-rails", '2.2.6'
 end
