@@ -188,22 +188,22 @@ module Glue::Pulp::Repos
       return @status if @status
 
       statuses = repos(self.library).map {|r| r.sync_status}
-      return ::PulpSyncStatus.new(:state => ::PulpSyncStatus::Status::NOT_SYNCED) if statuses.empty?
+      return PulpSyncStatus.new(:state => PulpSyncStatus::Status::NOT_SYNCED) if statuses.empty?
 
       #if any of repos sync still running -> product sync running
-      idx = statuses.index { |r| r.state.to_s == ::PulpSyncStatus::Status::RUNNING.to_s }
+      idx = statuses.index { |r| r.state.to_s == PulpSyncStatus::Status::RUNNING.to_s }
       return statuses[idx] if !idx.nil?
 
       #else if any of repos not synced -> product not synced
-      idx = statuses.index { |r| r.state.to_s == ::PulpSyncStatus::Status::NOT_SYNCED.to_s }
+      idx = statuses.index { |r| r.state.to_s == PulpSyncStatus::Status::NOT_SYNCED.to_s }
       return statuses[idx] if !idx.nil?
 
       #else if any of repos sync cancelled -> product sync cancelled
-      idx = statuses.index { |r| r.state.to_s == ::PulpSyncStatus::Status::CANCELED.to_s }
+      idx = statuses.index { |r| r.state.to_s == PulpSyncStatus::Status::CANCELED.to_s }
       return statuses[idx] if !idx.nil?
 
       #else if any of repos sync finished with error -> product sync finished with error
-      idx = statuses.index { |r| r.state.to_s == ::PulpSyncStatus::Status::ERROR.to_s }
+      idx = statuses.index { |r| r.state.to_s == PulpSyncStatus::Status::ERROR.to_s }
       return statuses[idx] if !idx.nil?
 
       #else -> all finished

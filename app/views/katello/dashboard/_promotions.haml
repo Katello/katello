@@ -11,7 +11,7 @@
                 %span.fl{:class=>changeset_class(changeset)}
 
               %h5
-                = link_to changeset.name, katello_changeset_path_helper(changeset)
+                = link_to changeset.name, changeset_path_helper(changeset)
             .col_2
               #{changeset_message(changeset)}
             .col_1.environment
