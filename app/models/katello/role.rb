@@ -81,6 +81,8 @@ class Role < ActiveRecord::Base
     #nil for organization implies all orgs
     role = Katello::Role.find_or_create_by_name(
             :name => name, :description => 'Read only role.')
+    # Setting to unlocked temporarily in case permissions need to be created
+    role.locked = false
 
     resource_perms = {}
     Katello::ResourceType::TYPES.keys.each do |key|
