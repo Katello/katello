@@ -24,19 +24,19 @@ module Authorization::ContentViewDefinition
   end
 
   def readable?
-    User.allowed_to?(READ_PERM_VERBS, :content_view_definitions, self.id, self.organization)
+    ::User.allowed_to?(READ_PERM_VERBS, :content_view_definitions, self.id, self.organization)
   end
 
   def editable?
-    User.allowed_to?(EDIT_PERM_VERBS, :content_view_definitions, self.id, self.organization)
+    ::User.allowed_to?(EDIT_PERM_VERBS, :content_view_definitions, self.id, self.organization)
   end
 
   def deletable?
-    User.allowed_to?([:delete, :create], :content_view_definitions, self.id, self.organization)
+    ::User.allowed_to?([:delete, :create], :content_view_definitions, self.id, self.organization)
   end
 
   def publishable?
-    User.allowed_to?([:publish], :content_view_definitions, self.id, self.organization)
+    ::User.allowed_to?([:publish], :content_view_definitions, self.id, self.organization)
   end
 
   module ClassMethods
@@ -72,7 +72,7 @@ module Authorization::ContentViewDefinition
     end
 
     def any_readable?(org)
-      User.allowed_to?(READ_PERM_VERBS, :content_view_definitions, nil, org)
+      ::User.allowed_to?(READ_PERM_VERBS, :content_view_definitions, nil, org)
     end
 
     def readable(org)
@@ -84,16 +84,16 @@ module Authorization::ContentViewDefinition
     end
 
     def creatable?(org)
-      User.allowed_to?([:create], :content_view_definitions, nil, org)
+      ::User.allowed_to?([:create], :content_view_definitions, nil, org)
     end
 
     def items(org, verbs)
       raise "scope requires an organization" if org.nil?
       resource = :content_view_definitions
-      if User.allowed_all_tags?(verbs, resource, org)
+      if ::User.allowed_all_tags?(verbs, resource, org)
         where(:organization_id => org.id)
       else
-        where("content_view_definition_bases.id in (#{User.allowed_tags_sql(verbs, resource, org)})")
+        where("#{Katello::ContentViewDefinitionBase.table_name}.id in (#{::User.allowed_tags_sql(verbs, resource, org)})")
       end
     end
 

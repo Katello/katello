@@ -36,15 +36,15 @@ module Authorization::ActivationKey
     end
 
     def no_tag_verbs
-      ::ActivationKey.list_verbs.keys
+      ActivationKey.list_verbs.keys
     end
 
     def readable?(org)
-      User.allowed_to?([:read_all, :manage_all], :activation_keys, nil, org)
+      ::User.allowed_to?([:read_all, :manage_all], :activation_keys, nil, org)
     end
 
     def manageable?(org)
-      User.allowed_to?([:manage_all], :activation_keys, nil, org)
+      ::User.allowed_to?([:manage_all], :activation_keys, nil, org)
     end
   end
 

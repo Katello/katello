@@ -19,15 +19,15 @@ module Authorization::User
   module ClassMethods
     # scope
     def readable
-      User.allowed_all_tags?(READ_PERM_VERBS, :users) ? where(:hidden => false) : where("0 = 1")
+      ::User.allowed_all_tags?(READ_PERM_VERBS, :users) ? where(:hidden => false) : where("0 = 1")
     end
 
     def creatable?
-      User.allowed_to?([:create], :users, nil)
+      ::User.allowed_to?([:create], :users, nil)
     end
 
     def any_readable?
-      User.allowed_to?(READ_PERM_VERBS, :users, nil)
+      ::User.allowed_to?(READ_PERM_VERBS, :users, nil)
     end
 
     def list_verbs(global = false)
@@ -50,25 +50,27 @@ module Authorization::User
   included do
 
     def readable?
-      User.any_readable? && !hidden
+      ::User.any_readable? && !hidden
     end
 
     def editable?
-      User.allowed_to?([:create, :update], :users, nil) && !hidden
+      ::User.allowed_to?([:create, :update], :users, nil) && !hidden
     end
 
     def deletable?
-      self.id != User.current.id && User.allowed_to?([:delete], :users, nil)
+      self.id != ::User.current.id && ::User.allowed_to?([:delete], :users, nil)
     end
 
     def allowed_organizations
       #test for all orgs
-      perms = ::Permission.joins(:role).joins("INNER JOIN roles_users ON roles_users.role_id = roles.id").
-          where("roles_users.user_id = ?", self.id).where(:organization_id => nil).count
-      return ::Organization.all if perms > 0
+      roles_users_table_name = Katello::RolesUser.table_name
 
-      perms = ::Permission.joins(:role).joins("INNER JOIN roles_users ON roles_users.role_id = roles.id").
-          where("roles_users.user_id = ?", self.id).where("organization_id is NOT null")
+      perms = Permission.joins(:role).joins("INNER JOIN #{roles_user_table_name} ON #{roles_user_table_name}.role_id = roles.id").
+          where("#{roles_user_table_name}.user_id = ?", self.id).where(:organization_id => nil).count
+      return Organization.all if perms > 0
+
+      perms = Permission.joins(:role).joins("INNER JOIN #{roles_user_table_name} ON #{roles_user_table_name}.role_id = roles.id").
+          where("#{roles_user_table_name}.user_id = ?", self.id).where("organization_id is NOT null")
       #return the individual organizations
       perms.collect { |perm| perm.organization }.uniq
     end

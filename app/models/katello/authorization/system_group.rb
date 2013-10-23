@@ -47,7 +47,7 @@ module Authorization::SystemGroup
     end
 
     def list_tags(org_id)
-      ::SystemGroup.select('id,name').where(:organization_id => org_id).collect { |m| VirtualTag.new(m.id, m.name) }
+      SystemGroup.select('id,name').where(:organization_id => org_id).collect { |m| VirtualTag.new(m.id, m.name) }
     end
 
     def tags(ids)
@@ -103,7 +103,7 @@ module Authorization::SystemGroup
     end
 
     def editable?
-      User.allowed_to?([:update, :create], :system_groups, self.id, self.organization)
+      ::User.allowed_to?([:update, :create], :system_groups, self.id, self.organization)
     end
 
     def deletable?

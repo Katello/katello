@@ -17,24 +17,24 @@ module Authorization::Role
   READ_PERM_VERBS = [:read, :update, :create, :delete]
 
   included do
-    scope :readable, lambda {where("0 = 1")  unless User.allowed_all_tags?(READ_PERM_VERBS, :roles)}
+    scope :readable, lambda {where("0 = 1")  unless ::User.allowed_all_tags?(READ_PERM_VERBS, :roles)}
   end
 
   module ClassMethods
     def creatable?
-      User.allowed_to?([:create], :roles, nil)
+      ::User.allowed_to?([:create], :roles, nil)
     end
 
     def editable?
-      User.allowed_to?([:update, :create], :roles, nil)
+      ::User.allowed_to?([:update, :create], :roles, nil)
     end
 
     def deletable?
-      User.allowed_to?([:delete, :create], :roles, nil)
+      ::User.allowed_to?([:delete, :create], :roles, nil)
     end
 
     def any_readable?
-      User.allowed_to?(READ_PERM_VERBS, :roles, nil)
+      ::User.allowed_to?(READ_PERM_VERBS, :roles, nil)
     end
 
     def readable?

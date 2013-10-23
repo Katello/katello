@@ -1,7 +1,7 @@
 .grid_16
   = two_panel(@roles, @panel_options)
 
-= javascript :roles
+= javascript 'katello/roles'
 
 = javascript do
   :plain
@@ -48,8 +48,8 @@
     });
 
     var permissions = {
-      create_roles: #{Role.creatable?},
-      read_roles: #{Role.any_readable?},
-      update_roles: #{Role.editable?},
-      delete_roles: #{Role.deletable?}
+      create_roles: #{Katello::Role.creatable?},
+      read_roles: #{Katello::Role.any_readable?},
+      update_roles: #{Katello::Role.editable?},
+      delete_roles: #{Katello::Role.deletable?}
     };

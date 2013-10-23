@@ -28,10 +28,10 @@ module Authorization::ContentViewVersion
       raise "scope requires an organization" if org.nil?
       resource = :content_views
 
-      if User.allowed_all_tags?(verbs, resource, org)
+      if ::User.allowed_all_tags?(verbs, resource, org)
         joins(:content_view).where("#{Katello::ContentView.table_name}.organization_id" => org.id)
       else
-        joins(:content_view).where("#{Katello::ContentView.table_name}.id in (#{User.allowed_tags_sql(verbs, resource, org)})")
+        joins(:content_view).where("#{Katello::ContentView.table_name}.id in (#{::User.allowed_tags_sql(verbs, resource, org)})")
       end
     end
   end

@@ -13,6 +13,7 @@
 
 # This class is a "fake" model Tag. It is returned by model objects to the
 # view layer to present possible tags which can be assigned to permissions.
+module Katello
 class VirtualTag
   attr_accessor :name, :display_name
 
@@ -22,4 +23,5 @@ class VirtualTag
     self.name = name
     self.display_name = display_name
   end
+end
 end
