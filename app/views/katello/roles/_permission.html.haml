@@ -1,11 +1,11 @@
 %div{:class=>"permission", :id=>"permission_#{perm_id(perm)}"}
-  = form_for perm,:url => perm.new_record? ? role_create_permission_path(role) : role_permission_update_path(role, perm), :html => {:data_type => "forms"} do |f|
+  = form_for perm,:url => perm.new_record? ? katello_role_create_permission_path(role) : katello_role_permission_update_path(role, perm), :html => {:data_type => "forms"} do |f|
     .grid_6.la
       %h6 #{_("Permission")}
     .grid_1.la
       - if !perm.new_record?
         #delete_permission{:data_role_id=>role.id, :data_perm_id=>perm.id}
-          = image_tag("/images/icons/close.png")
+          = image_tag("katello/images/icons/close.png")
     %div{:id=>opened_id(f), :style=> (f.object.new_record? ? "" : "display: none;")}
       .clear
       = f.fields_for :resource_type do |res|
@@ -38,7 +38,7 @@
         #save_permission{:class=>[perm.new_record? ? "new_permission_save" : "", "button"]}
           = _("Save")
       .grid_1.ra.suffix_1
-        %div{:id=>"cancel_button_#{perm_id(f)}", :class=>"button", :data_is_new=>perm.new_record?.to_s, :data_role_id=>role.id, :data_perm_id=>perm.id, :data_url=>roles_show_permission_path()}
+        %div{:id=>"cancel_button_#{perm_id(f)}", :class=>"button", :data_is_new=>perm.new_record?.to_s, :data_role_id=>role.id, :data_perm_id=>perm.id, :data_url=>katello_roles_show_permission_path()}
           = _("Cancel")
     - unless f.object.new_record?
       %div{:id=>closed_id(f), :style=> (f.object.new_record? ? "display: none;" : "") }

@@ -36,7 +36,7 @@ module Authorization::ActivationKey
     end
 
     def no_tag_verbs
-      ::ActivationKey.list_verbs.keys
+      ActivationKey.list_verbs.keys
     end
 
     def readable?(org)

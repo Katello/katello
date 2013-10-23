@@ -701,7 +701,7 @@ var roleActions = (function($){
                 $('#add_permission').addClass('disabled');
                 $.ajax({
                     type    : "GET",
-                    url     : KT.common.rootURL() + 'roles/' + id + '/resource_type/verbs_and_scopes',
+                    url     : KT.common.rootURL() + '/roles/' + id + '/resource_type/verbs_and_scopes',
                     cache   : false,
                     dataType: 'json',
                     success : function(data){
@@ -766,7 +766,7 @@ var roleActions = (function($){
             } else if( mode === 'update' ){
                 $.ajax({
                    type     : "POST",
-                   url      : KT.common.rootURL() + "roles/" + $('#role_id').val() + "/permission/" + current_crumb.split('_')[2] + "/update_permission/",
+                   url      : KT.common.rootURL() + "/roles/" + $('#role_id').val() + "/permission/" + current_crumb.split('_')[2] + "/update_permission/",
                    cache    : false,
                    data     : to_submit,
                    dataType : 'json',
@@ -795,7 +795,7 @@ var roleActions = (function($){
 
             $.ajax({
                type     : "DELETE",
-               url      : KT.common.rootURL() + "roles/" + $('#role_id').val() + "/permission/" + id.split('_')[2] + "/destroy_permission/",
+               url      : KT.common.rootURL() + "/roles/" + $('#role_id').val() + "/permission/" + id.split('_')[2] + "/destroy_permission/",
                cache    : false,
                dataType : 'json',
                success  : function(data){
@@ -829,7 +829,7 @@ var roleActions = (function($){
             }
             $.ajax({
                type     : "PUT",
-               url      : KT.common.rootURL() + "roles/" + $('#role_id').val(),
+               url      : KT.common.rootURL() + "/roles/" + $('#role_id').val(),
                cache    : false,
                data     : $.param(submit_data),
                dataType : 'json',
