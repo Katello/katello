@@ -34,7 +34,7 @@ module Glue::Candlepin::Product
       # from various places like callbacks
       attr_accessor :import_logger
 
-      attr_accessible :multiplier, :attrs, :productContent
+      attr_accessible :multiplier, :attrs, :productContent, :href, :import_logger
     end
   end
 

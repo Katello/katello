@@ -16,7 +16,7 @@ require 'ostruct'
 # TODO: start date range not working?  start:2012-01-31 fails but start:"2012-01-31" works
 
 module Katello
-class SubscriptionsController < ApplicationController
+class SubscriptionsController < Katello::ApplicationController
 
   before_filter :find_provider
   before_filter :find_subscription, :except => [:index, :items, :new, :upload, :delete_manifest, :history, :history_items, :edit_manifest, :refresh_manifest]
@@ -112,7 +112,7 @@ class SubscriptionsController < ApplicationController
     systems = current_organization.systems.readable(current_organization)
     systems = systems.all_by_pool(@subscription.cp_id)
 
-    activation_keys = ActivationKey.joins(:pools).where('pools.cp_id' => @subscription.cp_id).readable(current_organization)
+    activation_keys = ActivationKey.joins(:pools).where("#{Katello::Pool.table_name}.cp_id" => @subscription.cp_id).readable(current_organization)
     activation_keys = [] if !activation_keys
 
     distributors = current_organization.distributors.readable(current_organization)
@@ -144,7 +144,7 @@ class SubscriptionsController < ApplicationController
     rescue # rubocop:disable HandleExceptions
       # quietly ignore
     end
-    render :template => "subscriptions/_history", :locals => {:provider => @provider, :statuses => @statuses, :name => controller_display_name}
+    render :template => "katello/subscriptions/_history", :locals => {:provider => @provider, :statuses => @statuses, :name => controller_display_name}
   end
 
   def history_items
@@ -185,9 +185,9 @@ class SubscriptionsController < ApplicationController
   end
 
   def upload
-    if !params[:provider].blank? && params[:provider].key?(:contents)
+    if !params[:katello_provider].blank? && params[:katello_provider].key?(:contents)
       begin
-        temp_file_path = create_temp_file('import') {|tmp| tmp.write params[:provider][:contents].read }
+        temp_file_path = create_temp_file('import') {|tmp| tmp.write params[:katello_provider][:contents].read }
         # force must be a string value
         force_update = params[:force_import] == "1" ? "true" : "false"
         @provider.import_manifest File.expand_path(temp_file_path), :force => force_update,
@@ -281,7 +281,7 @@ class SubscriptionsController < ApplicationController
   end
 
   def find_subscription
-    @subscription = ::Pool.find_pool(params[:id])
+    @subscription = Pool.find_pool(params[:id])
   end
 
   def setup_options
@@ -293,11 +293,11 @@ class SubscriptionsController < ApplicationController
                        :create_label => _("+ Import Manifest"),
                        :enable_sort => true,
                        :name => controller_display_name,
-                       :list_partial => 'subscriptions/list_subscriptions',
+                       :list_partial => 'katello/subscriptions/list_subscriptions',
                        :ajax_load  => true,
-                       :ajax_scroll => items_subscriptions_path,
+                       :ajax_scroll => items_katello_subscriptions_path,
                        :actions => nil,
-                       :search_class => ::Pool,
+                       :search_class => Pool,
                        :accessor => 'unused'
                       }
   end

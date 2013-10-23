@@ -276,8 +276,8 @@ module Glue::Provider
       #are we refreshing from upstream?
       manifest_refresh = options['zip_file_path'].nil?
 
-      output = Logging.appenders.string_io.new('manifest_import_appender')
-      import_logger = Logging.logger['manifest_import_logger']
+      output = ::Logging.appenders.string_io.new('manifest_import_appender')
+      import_logger = ::Logging.logger['manifest_import_logger']
       import_logger.additive = false
       import_logger.add_appenders(output)
 
@@ -384,7 +384,7 @@ module Glue::Provider
 
         unless product_in_katello_ids.include?(marketing_product_id)
           engineering_product_in_katello_ids = Product.in_org(self.organization).
-            where(:cp_id => engineering_product_ids).pluck("products.id")
+            where(:cp_id => engineering_product_ids).pluck("#{Katello::Product.table_name}.id")
           Glue::Candlepin::Product.import_marketing_from_cp(Resources::Candlepin::Product.get(marketing_product_id)[0], engineering_product_in_katello_ids) do |p|
             p.provider = self
           end
@@ -429,7 +429,7 @@ module Glue::Provider
       cp_pools = Resources::Candlepin::Owner.pools(self.organization.label)
       if cp_pools
         # Pool objects
-        pools = cp_pools.collect{|cp_pool| ::Pool.find_pool(cp_pool['id'], cp_pool)}
+        pools = cp_pools.collect{|cp_pool| Pool.find_pool(cp_pool['id'], cp_pool)}
 
         # Limit subscriptions to just those from Red Hat provider
         subscriptions = pools.collect do |pool|
@@ -445,7 +445,7 @@ module Glue::Provider
 
       # Index pools
       # Note: Only the Red Hat provider subscriptions are being indexed.
-      ::Pool.index_pools(subscriptions, [{:org => [self.organization.label]}, {:provider_id => [self.organization.redhat_provider.id]}])
+      Pool.index_pools(subscriptions, [{:org => [self.organization.label]}, {:provider_id => [self.organization.redhat_provider.id]}])
 
       subscriptions
     end

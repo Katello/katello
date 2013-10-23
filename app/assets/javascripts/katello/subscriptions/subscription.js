@@ -42,7 +42,7 @@ KT.subscription = (function() {
         // When the manifest progress element is present, start the polling for success
         provider_id = $('.manifest_progress').attr("provider_id");
         if (provider_id) {
-            manifest_updater = $.PeriodicalUpdater(KT.common.rootURL()+'providers/'+provider_id+'/manifest_progress/', {
+            manifest_updater = $.PeriodicalUpdater(KT.common.rootURL() + '/providers/' + provider_id + '/manifest_progress/', {
                 method: 'get',
                 type: 'json',
                 cache: false,
@@ -67,7 +67,7 @@ KT.subscription = (function() {
 $(document).ready(function() {
 
     var options = { };
-    KT.panel.list.registerPage('subscriptions', options);
+    KT.panel.list.registerPage('katello_subscriptions', options);
 
     $('#upload_manifest').live('submit', function(e) {
         var ajax_handler;

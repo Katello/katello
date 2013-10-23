@@ -1,9 +1,9 @@
-= javascript "widgets/jquery.jeditable.helpers"
+= javascript "katello/widgets/jquery.jeditable.helpers"
 
 = content_for :title do
   #{_("Subscription Manifest")}
 
-= render :partial=>"subscriptions_tupane_header_new_nav"
+= render :partial => "subscriptions_tupane_header_new_nav"
 
 = content_for :content do
   #subscription
@@ -19,7 +19,7 @@
       %fieldset
         .grid_3.ra.fieldset
           = label :red_hat_provider, :url, _("Repository Url")
-        .grid_9.la.fl#repo_url{'name' => 'provider[repository_url]',:class=>("editable edit_textfield" if @provider.editable?),  'data-url' => provider_path(@provider.id)} #{@provider[:repository_url]}
+        .grid_9.la.fl#repo_url{'name' => 'provider[repository_url]',:class=>("editable edit_textfield" if @provider.editable?),  'data-url' => katello_provider_path(@provider.id)} #{@provider[:repository_url]}
     .clear
     - if @upstream['uuid']
       .full
@@ -36,13 +36,13 @@
             .grid_3.ra.fieldset
               &nbsp;
             - if can_refresh
-              = form_for @provider, :html => {:method => :post, :id => :refresh_manifest}, :remote => true, :url => refresh_manifest_subscriptions_path do |f|
+              = form_for @provider, :html => {:method => :post, :id => :refresh_manifest}, :remote => true, :url => refresh_manifest_katello_subscriptions_path do |f|
                 .grid_2.la#refresh_button
                   = f.submit _("Refresh Manifest"), :id => :refresh_form_button
             -else
               .grid_6.la
                 = _("Refreshing manifest not supported by this manifest.")
-            = form_for @provider, :html => {:method => :post, :id => :delete_manifest}, :remote => true, :url => delete_manifest_subscriptions_path do |f|
+            = form_for @provider, :html => {:method => :post, :id => :delete_manifest}, :remote => true, :url => delete_manifest_katello_subscriptions_path do |f|
               .grid_4.la#delete_button
                 = f.submit _("Delete Manifest"), :id => :delete_form_button, :confirm => _("Deleting a manifest " + |
                           "will permanently remove all current subscriptions. All systems consuming these subscriptions " + |
@@ -55,7 +55,7 @@
                 .grid_6.la
                   .fl
                     %div.manifest_progress{:provider_id=>@provider.id}
-                      = image_tag("icons/spinner.gif", {:class=>"fl"})
+                      = image_tag("katello/icons/spinner.gif", { :class => "fl" })
                       .fl.manifest_progress_message
                         - if @provider.manifest_task.task_type == "delete manifest"
                           = _("Delete in progress (%s)") % @provider.manifest_task.state
@@ -74,13 +74,13 @@
               .grid_8.la
                 .fl
                   %div.manifest_progress{:provider_id=>@provider.id}
-                    = image_tag("icons/spinner.gif", {:class=>"fl"})
+                    = image_tag("katello/icons/spinner.gif", { :class => "fl" })
                     .fl.manifest_progress_message
                       = _("Import in progress (%s)") % @provider.manifest_task.state
       - else
         .full
           %h5 #{_("Upload New Manifest")}
-          = form_for @provider, :html => {:multipart => true, :method => :post, :id => :upload_manifest}, :remote => true, :url => upload_subscriptions_path do |f|
+          = form_for @provider, :html => {:multipart => true, :method => :post, :id => :upload_manifest}, :remote => true, :url => upload_katello_subscriptions_path do |f|
             .full
               %fieldset
                 .grid_3.ra.fieldset
@@ -120,7 +120,7 @@
           - if @statuses.length > 3
             %tr{:class => cycle(nil, 'alt')}
               %td.panel_link{:style => "width: 100%;"}
-                = link_to(_("More..."), subscriptions_path + "/history_items")
+                = link_to(_("More..."), katello_subscriptions_path + "/history_items")
               %td
                 &nbsp;
 
@@ -131,4 +131,4 @@
         KT.subscription.startUpdater();
       });
 
-= render :template => "layouts/tupane_layout"
+= render :template => "katello/layouts/tupane_layout"
