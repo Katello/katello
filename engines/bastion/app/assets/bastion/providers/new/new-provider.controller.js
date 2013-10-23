@@ -30,7 +30,7 @@ angular.module('Bastion.providers').controller('NewProviderController',
         var fromState, fromParams;
 
         $scope.provider = new Provider({'organization_id': CurrentOrganization});
-        $scope.panel = {loading: false};
+        $scope.panel.loading = false;
 
         $scope.save = function(provider) {
             provider.$save(success, error);

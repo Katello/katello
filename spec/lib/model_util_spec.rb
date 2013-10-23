@@ -45,6 +45,7 @@ describe Util::Model do
       disable_org_orchestration
       @product = Product.new(:name => "AOL4")
       @product.stub(:provider).and_return(mock_model("Provider"))
+      @product.provider.stub(:redhat_provider?).and_return(true)
       @product.stub(:provider_id).and_return(1)
       lib = mock_model("KTEnvironment", :library => true)
       @product.stub(:environments).and_return([lib])
