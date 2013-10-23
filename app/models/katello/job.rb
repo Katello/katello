@@ -34,15 +34,19 @@ class Job < ActiveRecord::Base
 
     def refresh_for_owner(owner)
       # retrieve any 'in progress' tasks associated with the owner (e.g. system group)
-      tasks = TaskStatus.where('task_statuses.state' => [:waiting, :running]).where(
-          'jobs.job_owner_id' => owner.id, 'jobs.job_owner_type' => owner.class.name).joins(
-          'INNER JOIN job_tasks ON job_tasks.task_status_id = task_statuses.id').joins(
-          'INNER JOIN jobs ON jobs.id = job_tasks.job_id')
+      task_status_table = Katello::TaskStatus.table_name
+      job_table = Katello::Job.table_name
+      job_task_table = Katello::JobTask.table_name
 
-      ids = tasks.select('task_statuses.id').collect{|row| row[:id]}
+      tasks = TaskStatus.where("#{task_status_table}.state" => [:waiting, :running]).where(
+          "#{job_table}.job_owner_id" => owner.id, "#{job_table}.job_owner_type" => owner.class.name).joins(
+          "INNER JOIN #{job_task_table} ON #{job_task_table}.task_status_id = #{task_status_table}.id").joins(
+          "INNER JOIN #{job_table} ON #{job_table}.id = #{job_task_table}.job_id")
+
+      ids = tasks.select("#{task_status_table}.id").collect{|row| row[:id]}
 
       # retrieve the jobs associated with those tasks
-      jobs = Job.where('task_statuses.id' => ids).joins(:task_statuses)
+      jobs = Job.where("#{task_status_table}.id" => ids).joins(:task_statuses)
 
       # refresh the tasks via pulp
       refresh_tasks(ids) unless ids.empty?

@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class SystemGroupErrataController < ApplicationController
+class SystemGroupErrataController < Katello::ApplicationController
 
   helper SystemErrataHelper
 
@@ -35,12 +35,12 @@ class SystemGroupErrataController < ApplicationController
 
   def index
     offset = current_user.page_size
-    render :partial => "system_groups/errata/index",
+    render :partial => "katello/system_groups/errata/index",
            :locals => {:system => @group, :editable => @group.systems_editable?, :offset => offset}
   end
 
   def items
-    offset = params[:offset]
+    offset = params[:offset] || 0
     filter_type = params[:filter_type] if params[:filter_type]
     errata_state = params[:errata_state] if params[:errata_state]
     chunk_size = current_user.page_size
@@ -48,9 +48,9 @@ class SystemGroupErrataController < ApplicationController
 
     return render_bad_parameters unless errata
 
-    rendered_html = render_to_string(:partial => "systems/errata/items", :locals => { :errata => errata,
-                                                                                      :errata_systems => errata_systems,
-                                                                                      :editable => @group.systems_editable? })
+    rendered_html = render_to_string(:partial => "katello/systems/errata/items",
+                                     :locals => { :errata => errata, :errata_systems => errata_systems,
+                                                  :editable => @group.systems_editable? })
 
     render :json => {:html => rendered_html,
                      :results_count => results_count,
@@ -74,10 +74,12 @@ class SystemGroupErrataController < ApplicationController
   def errata_status
     if params[:id]
       jobs = @group.refreshed_jobs.joins(:task_statuses).where(
-          'jobs.id' => params[:id], 'task_statuses.task_type' => [:errata_install])
+          "#{Katello::Job.table_name}.id" => params[:id],
+          "#{Katello::TaskStatus.table_name}.task_type" => [:errata_install])
     else
       jobs = @group.refreshed_jobs.joins(:task_statuses).where(
-          'task_statuses.task_type' => [:errata_install], 'task_statuses.state' => [:waiting, :running])
+          "#{Katello::TaskStatus.table_name}.task_type" => [:errata_install],
+          "#{Katello::TaskStatus.table_name}.state" => [:waiting, :running])
     end
     render :json => jobs
   end
