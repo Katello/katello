@@ -24,7 +24,7 @@ class Role < ActiveRecord::Base
   has_many :resource_types, :through => :permissions
 
   # scope to facilitate retrieving roles that are 'non-self' roles... group() so that unique roles are returned
-  scope :non_self, where("type <> 'UserOwnRole' or type is NULL").order('roles.name')
+  scope :non_self, where("type <> 'Katello::UserOwnRole' or type is NULL").order("#{Katello::Role.table_name}.name")
   validates :name, :uniqueness => true, :presence => true
   validates_with Validators::NoTrailingSpaceValidator, :attributes => :name
   validates_with Validators::RolenameValidator, :attributes => :name

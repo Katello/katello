@@ -9,6 +9,6 @@
   = render_menu(1..2, user_navigation)
 
 = content_for :content do
-  = render :partial => "edit_form", :locals=>{:editable=>editable, :accessible_envs => accessible_envs, :ldap => ldap}
+  = render :partial => "katello/users/edit_form", :locals=>{:editable=>editable, :accessible_envs => accessible_envs, :ldap => ldap}
 
-= render :template => "layouts/tupane_layout"
+= render :template => "katello/layouts/tupane_layout"
