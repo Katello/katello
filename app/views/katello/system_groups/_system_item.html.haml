@@ -4,7 +4,7 @@
     %input.system_checkbox{:type => :checkbox, :name => "systems[#{system.system.id}]", 'data-id' => system.system.id,
                            :disabled => ('disabled' if !@group.editable?)}
     - if System.readable(system.system.organization)
-      = link_to system.system.name, systems_path(:anchor => "/systems/#{system.system.uuid}/info")
+      = link_to system.system.name, katello_systems_path(:anchor => "/systems/#{system.system.uuid}/info")
     - else
       = system.system.name
   %td
