@@ -21,6 +21,7 @@
  */
 angular.module('Bastion', [
     'alchemy',
+    'ui.bootstrap',
     'alchemy.format',
     'alch-templates',
     'ngSanitize',
