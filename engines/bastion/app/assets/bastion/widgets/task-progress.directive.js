@@ -11,26 +11,12 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
  **/
 
-/**
- * @ngdoc module
- * @name  Bastion.repositories
- *
- * @description
- *   Module for repository related functionality.
- */
-angular.module('Bastion.repositories', [
-    'ngResource',
-    'alchemy',
-    'alch-templates',
-    'ui.router',
-    'ui.bootstrap',
-    'ngUpload',
-    'Bastion.widgets'
-]);
-
-angular.module('Bastion.repositories').run(['$rootScope', '$state', '$stateParams',
-    function ($rootScope, $state, $stateParams) {
-        $rootScope.$state = $state;
-        $rootScope.$stateParams = $stateParams;
-    }
-]);
+angular.module('Bastion.widgets').directive('taskprogress', [function() {
+    return {
+        restrict: 'E',
+        templateUrl: 'widgets/views/task-progress.html',
+        scope: {
+            uuid: '@',
+        }
+    };
+}]);

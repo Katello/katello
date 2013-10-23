@@ -22,6 +22,9 @@
 //= require "ng-upload"
 //= require "angular-gettext"
 
+//= require "ui-bootstrap"
+
+
 //= require "ui_alchemy/alchemy/alchemy"
 
 //= require "common/katello.global"
