@@ -12,7 +12,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class SystemGroupPackagesController < ApplicationController
+class SystemGroupPackagesController < Katello::ApplicationController
 
   helper SystemPackagesHelper
 
@@ -41,9 +41,10 @@ class SystemGroupPackagesController < ApplicationController
                :package_group_install, :package_group_remove,
                :package_group_update]
     jobs = @group.refreshed_jobs.joins(:task_statuses).where(
-        'task_statuses.task_type' => actions, 'task_statuses.state' => [:waiting, :running])
+        "#{Katello::TaskStatus.table_name}.task_type" => actions,
+        "#{Katello::TaskStatus.table_name}.state" => [:waiting, :running])
 
-    render :partial => "system_groups/packages/index",
+    render :partial => "katello/system_groups/packages/index",
            :locals => {:jobs => jobs, :editable => @group.systems_editable?}
   end
 
@@ -75,7 +76,7 @@ class SystemGroupPackagesController < ApplicationController
       return
     end
 
-    render :partial => 'system_groups/packages/items',
+    render :partial => 'katello/system_groups/packages/items',
            :locals => { :editable           => @group.systems_editable?,
                         :group_id           => @group.id,
                         :job                => job,
@@ -120,9 +121,10 @@ class SystemGroupPackagesController < ApplicationController
       return
     end
 
-    render :partial => 'system_groups/packages/items', :locals => {:editable => @group.systems_editable?,
-                                                                   :group_id => @group.id, :job => job,
-                                                                   :include_tr_shading => false}
+    render :partial => 'katello/system_groups/packages/items',
+           :locals => { :editable => @group.systems_editable?, :group_id => @group.id, :job => job,
+                        :include_tr_shading => false }
+
   rescue Errors::SystemGroupEmptyException => e
     if !params[:packages].blank?
       notify.error _("Uninstall of Packages '%{packages}' scheduled for System Group '%{name}' failed.  Reason: %{message}") %
@@ -172,7 +174,7 @@ class SystemGroupPackagesController < ApplicationController
       return
     end
 
-    render :partial => 'system_groups/packages/items',
+    render :partial => 'katello/system_groups/packages/items',
            :locals  => { :editable           => @group.systems_editable?,
                          :group_id           => @group.id,
                          :job                => job,
@@ -194,7 +196,7 @@ class SystemGroupPackagesController < ApplicationController
     response = []
     jobs = @group.refreshed_jobs.where('jobs.id' => params[:id])
     jobs.each do |job|
-      status_html = render_to_string(:template => 'system_groups/packages/_status', :layout => false,
+      status_html = render_to_string(:template => 'katello/system_groups/packages/_status', :layout => false,
                                      :locals => {:group_id => @group.id, :id => job.id, :state => job.state,
                                                  :status_message => job.status_message})
 
