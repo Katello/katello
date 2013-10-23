@@ -22,7 +22,7 @@ angular.module('Bastion.products', [
     'ngResource',
     'alchemy',
     'alch-templates',
-    'ui.state',
+    'ui.router',
     'Bastion.widgets',
     'Bastion.providers',
     'Bastion.gpg-keys',

@@ -37,4 +37,4 @@
 //= require "ui_alchemy/ngInfiniteScroll/ng-infinite-scroll"
 //= require "ui_alchemy/alchemy/alchemy"
 //= require "ui_alchemy/alchemy-header/alchemy-header"
-//= require "angular-ui-states"
+//= require "angular-ui-router.js"

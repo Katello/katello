@@ -18,7 +18,7 @@
 //= require "ui_alchemy/angular/angular"
 //= require "ui_alchemy/angular-resource/angular-resource"
 //= require "ui_alchemy/angular-sanitize/angular-sanitize"
-//= require "angular-ui-states"
+//= require "angular-ui-router.js"
 //= require "ng-upload"
 //= require "angular-gettext"
 
