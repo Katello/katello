@@ -11,7 +11,7 @@
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
  **/
 
-angular.module('Bastion.test-mocks', ['ui.state']);
+angular.module('Bastion.test-mocks', ['ui.router']);
 
 angular.module('Bastion.test-mocks').run(['$state', '$stateParams', '$rootScope',
     function($state, $stateParams, $rootScope) {

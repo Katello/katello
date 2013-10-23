@@ -20,6 +20,6 @@
  */
 angular.module('Bastion.content-views', [
     'ngResource',
-    'ui.state',
+    'ui.router',
     'Bastion.widgets'
 ]);

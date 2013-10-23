@@ -22,7 +22,7 @@ angular.module('Bastion.repositories', [
     'ngResource',
     'alchemy',
     'alch-templates',
-    'ui.state',
+    'ui.router',
     'ngUpload',
     'Bastion.widgets'
 ]);
