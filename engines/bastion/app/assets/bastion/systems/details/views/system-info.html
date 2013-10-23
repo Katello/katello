@@ -138,12 +138,12 @@
 
       <div class="detail">
         <span class="info-label">{{ "OS" | i18n }} </span>
-        <span class="info-value">{{ system.distribution_name }}</span>
+        <span class="info-value">{{ systemFacts.distribution["name"] }}</span>
       </div>
 
       <div class="detail">
         <span class="info-label">{{ "Release" | i18n }}</span>
-        <span class="info-value">{{ system.kernel  }}</span>
+        <span class="info-value">{{ systemFacts.uname["release"] }}</span>
       </div>
 
       <div class="detail">
@@ -157,7 +157,7 @@
       
       <div class="detail">
         <span class="info-label">{{ "Arch" | i18n }}</span>
-        <span class="info-value">{{ system.arch }}</span>
+        <span class="info-value">{{ systemFacts.uname["machine"] }}</span>
       </div>     
       
       <div class="detail">
@@ -176,8 +176,8 @@
       </div>
 
       <div class="detail">
-        <span class="info-label">{{ "RAM" | i18n }}</span>
-        <span class="info-value">{{ system.memory }}</span>
+        <span class="info-label">{{ "RAM (GB)" | i18n }}</span>
+        <span class="info-value">{{ memory(systemFacts) }}</span>
       </div>
 
       <div class="divider"></div>
