@@ -12,6 +12,9 @@
       <button class="btn btn-danger"
               ng-hide="product.readonly"
               ng-click="showConfirm = true"
+              title="{{ (!product.permissions.deletable &&
+                     'You cannot remove this product because it was published to a content view or because you do not have permission.' | i18n)
+                     || '' }}"
               ng-disabled="!product.permissions.deletable">
         {{ "Remove Product" | i18n }}
       </button>
