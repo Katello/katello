@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class RolesController < ApplicationController
+class RolesController < Katello::ApplicationController
 
   before_filter :find_role, :except => [:index, :items, :new, :create, :verbs_and_scopes, :auto_complete_search, :create_ldap_group, :destroy_ldap_group]
   before_filter :authorize #call authorize after find_role so we call auth based on the id instead of cp_id
@@ -19,7 +19,6 @@ class RolesController < ApplicationController
   before_filter :setup_options, :only => [:index, :items]
   helper_method :resource_types
 
-  include AutoCompleteSearch
   include BreadcrumbHelper
   include RolesBreadcrumbs
 
@@ -83,7 +82,7 @@ class RolesController < ApplicationController
   end
 
   def items
-    render_panel_direct(Role, @panel_options,  params[:search], params[:offset], [:name_sort, :asc],
+    render_panel_direct(Role, @panel_options,  params[:search], params[:offset] || 0, [:name_sort, :asc],
                         {:default_field => :name, :filter => [{:self_role => [false]}], :load => true})
   end
 
@@ -95,8 +94,8 @@ class RolesController < ApplicationController
                        :create_label => _('+ New Role'),
                        :name => controller_display_name,
                        :ajax_load  => true,
-                       :list_partial => 'roles/list_roles',
-                       :ajax_scroll => items_roles_path,
+                       :list_partial => 'katello/roles/list_roles',
+                       :ajax_scroll => items_katello_roles_path,
                        :enable_create => Role.creatable?,
                        :search_class => Role}
   end
@@ -119,11 +118,13 @@ class RolesController < ApplicationController
   end
 
   def create
-    @role = Role.create!(params[:role])
+    @role = Role.create!(params[:katello_role])
     notify.success _("Role '%s' was created.") % @role.name
 
     if search_validate(Role, @role.id, params[:search])
-      render :partial => "common/list_item", :locals => {:item => @role, :accessor => "id", :columns => ["name"], :name => controller_display_name}
+      render :partial => "katello/common/list_item",
+             :locals => { :item => @role, :accessor => "id", :columns => ["name"],
+                          :name => controller_display_name }
     else
       notify.message _("'%s' did not meet the current search criteria and is not being shown.") % @role["name"]
       render :json => { :no_match => true }
@@ -159,7 +160,8 @@ class RolesController < ApplicationController
     if @role.destroy
       notify.success _("Role '%s' was deleted.") % @role[:name]
       #render and do the removal in one swoop!
-      render :partial => "common/list_remove", :locals => {:id => params[:id], :name => controller_display_name}
+      render :partial => "katello/common/list_remove",
+             :locals => { :id => params[:id], :name => controller_display_name }
     end
   end
 

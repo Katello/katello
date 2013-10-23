@@ -102,6 +102,7 @@ class ResourceType < ActiveRecord::Base
     raise ResourceTypeNotFound.new(resource_type, TYPES.keys) unless TYPES.key? resource_type
   end
 
+
   if Katello.config.katello?
     TYPES = {
         :organizations => {:model => Katello::Organization, :name => _("Organizations"), :global => false},
@@ -115,7 +116,7 @@ class ResourceType < ActiveRecord::Base
                                        :name => _("Content View Definitions"), :global => false},
         :content_views => { :model => Katello::ContentView, :name => _("Content View"), :global => false},
         :all => { :model => Katello::DefaultModel, :name => _("All"), :global => false}
-     }.with_indifferent_access
+    }.with_indifferent_access
   else
     TYPES = {
         :organizations => {:model => Katello::Organization, :name => _("Organizations"), :global => false},

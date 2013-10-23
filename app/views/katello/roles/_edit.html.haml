@@ -2,7 +2,7 @@
   :plain
     var roles_breadcrumb = $.parseJSON('#{escape_javascript(generate_roles_breadcrumb())}');
 
-= javascript 'roles/role_edit'
+= javascript 'katello/roles/role_edit'
 
 = content_for :custom do
   #role
@@ -33,7 +33,7 @@
         .fieldset
           .grid_2.ra
             %label #{_("Name:")}
-          - if Role.editable?
+          - if Katello::Role.editable?
             .grid_7.la.multiline.editable.edit_name_text{'name' => 'role[name]'} #{@role.i18n_name}
           - else
             .grid_7.la.multiline #{@role.i18n_name}
@@ -41,7 +41,7 @@
           %br
           .grid_2.ra
             %label #{_("Description:")}
-          - if Role.editable?
+          - if Katello::Role.editable?
             .grid_7.la.multiline.editable.edit_description{'data-maxlength'=>default_description_limit, 'name' => 'role[description]'} #{@role.i18n_description}
           - else
             .grid_7.la.multiline #{@role.i18n_description}
@@ -85,13 +85,13 @@
               #{_("<< Previous")}
             .button.fr#next_button
               #{_("Next >>")}
-            .button.fr#save_permission_button{'data-url' => role_create_permission_path(@role.id), :tabindex => 6}
+            .button.fr#save_permission_button{'data-url' => katello_role_create_permission_path(@role.id), :tabindex => 6}
               #{_("Done")}
 
       #roles_status
       #sliding_tree_actionbar.clickable
         - unless @role.locked?
-          - if Role.editable?
+          - if Katello::Role.editable?
             #add_permission.disabled.cs_action{"title" => "#{_('You must select an organization above before you can add a permission.')}", :tabindex => 7 }
               %span#add_permission_icon.sprite
                 SPRITE
@@ -107,11 +107,11 @@
                 SPRITE
               %span.text
                 = _("Edit Role")
-          - if Role.deletable?
-            #remove_role.cs_action{ "data-confirm-text" => "#{_('Are you sure you want to remove this role?')}", "data-url" => role_path(@role), :tabindex => 10 }
+          - if Katello::Role.deletable?
+            #remove_role.cs_action{ "data-confirm-text" => "#{_('Are you sure you want to remove this role?')}", "data-url" => katello_role_path(@role), :tabindex => 10 }
               %span#remove_role_icon.sprite
                 SPRITE
               %span.text
                 = _("Remove Role")
 
-= render :template => "layouts/tupane_layout"
+= render :template => "katello/layouts/tupane_layout"

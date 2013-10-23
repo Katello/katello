@@ -11,4 +11,4 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
 
-KT.panel.list.registerPage('roles', { create : 'new_role' });
+KT.panel.list.registerPage('roles', { create : 'new_katello_role' });
