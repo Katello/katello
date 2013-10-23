@@ -143,14 +143,14 @@ describe Product, :katello => true do
     specify { Product.new(:label=>"boo", :name => 'contains #', :provider => @provider).should be_valid }
     specify { Product.new(:label=> "shoo", :name => 'contains space', :provider => @provider).should be_valid }
     specify { Product.new(:label => "bar foo", :name=> "foo", :provider => @provider).should_not be_valid}
-    it "should be successful when creating a product with a duplicate name in one organization" do
+    it "should not be successful when creating a product with a duplicate name in one organization" do
       @p = Product.create!(ProductTestData::SIMPLE_PRODUCT)
 
       Product.new({:name=>@p.name, :label=> @p.name,
         :id => @p.cp_id,
         :productContent => @p.productContent,
         :provider => @p.provider
-      }).should be_valid
+      }).should_not be_valid
     end
   end
 

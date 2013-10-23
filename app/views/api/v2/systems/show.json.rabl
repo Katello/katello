@@ -28,7 +28,7 @@ end
 attributes :entitlementStatus
 attributes :servicelevel, :autoheal
 attributes :href, :release, :ipv4_address
-attributes :checkin_time
+attributes :checkin_time, :created
 attributes :installedProducts
 
 if @resource.respond_to?(:guest) || @resource.respond_to?(:host)
