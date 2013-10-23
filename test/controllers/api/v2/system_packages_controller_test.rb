@@ -71,15 +71,9 @@ class Api::V2::SystemPackagesControllerTest < Minitest::Rails::ActionController:
 
   def test_upgrade_all
     System.any_instance.expects(:update_packages).with([]).returns(TaskStatus.new)
-    put :upgrade_all, :system_id => @system.uuid, :packages => ["foo", "bar"]
+    put :upgrade_all, :system_id => @system.uuid
 
     assert_response :success
-  end
-
-  def test_upgrade_all_group_fail
-    put :upgrade_all, :system_id => @system.uuid, :groups => ["foo", "bar"]
-
-    assert_response 400
   end
 
   def test_remove
