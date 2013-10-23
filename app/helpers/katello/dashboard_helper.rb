@@ -43,7 +43,7 @@ module DashboardHelper
 
   def content_view_name(version)
     if version.content_view.content_view_definition.readable?
-      link_to(version.content_view.name, katello_content_view_path_helper(version))
+      link_to(version.content_view.name, content_view_path_helper(version))
     else
       version.content_view.name
     end
