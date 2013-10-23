@@ -103,7 +103,7 @@ module Authorization::SystemGroup
     end
 
     def editable?
-      User.allowed_to?([:update, :create], :system_groups, self.id, self.organization)
+      ::User.allowed_to?([:update, :create], :system_groups, self.id, self.organization)
     end
 
     def deletable?

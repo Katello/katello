@@ -24,7 +24,7 @@ module Authorization::ContentView
 
   def readable?
     return true if !Katello.config.katello?
-    User.allowed_to?(READ_PERM_VERBS, :content_views, self.id, self.organization)
+    ::User.allowed_to?(READ_PERM_VERBS, :content_views, self.id, self.organization)
   end
 
   def deletable?
@@ -34,12 +34,12 @@ module Authorization::ContentView
   end
 
   def promotable?
-    User.allowed_to?([:promote], :content_views, self.id, self.organization)
+    ::User.allowed_to?([:promote], :content_views, self.id, self.organization)
   end
 
   def subscribable?
     return true if !Katello.config.katello?
-    User.allowed_to?([:subscribe], :content_views, self.id, self.organization)
+    ::User.allowed_to?([:subscribe], :content_views, self.id, self.organization)
   end
 
   module ClassMethods
@@ -73,7 +73,7 @@ module Authorization::ContentView
     end
 
     def any_readable?(org)
-      User.allowed_to?(READ_PERM_VERBS, :content_views, nil, org)
+      ::User.allowed_to?(READ_PERM_VERBS, :content_views, nil, org)
     end
 
     def readable(org)
@@ -93,10 +93,10 @@ module Authorization::ContentView
       resource = :content_views
 
       if Katello.config.katello?
-        if User.allowed_all_tags?(verbs, resource, org)
+        if ::User.allowed_all_tags?(verbs, resource, org)
           where(:organization_id => org.id)
         else
-          where("content_views.id in (#{User.allowed_tags_sql(verbs, resource, org)})")
+          where("content_views.id in (#{::User.allowed_tags_sql(verbs, resource, org)})")
         end
       else
         where("0 = 1")
