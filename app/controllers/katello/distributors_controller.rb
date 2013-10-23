@@ -12,7 +12,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class DistributorsController < ApplicationController
+class DistributorsController < Katello::ApplicationController
   include DistributorsHelper
   include ConsumersControllerLogic
 
@@ -131,7 +131,7 @@ class DistributorsController < ApplicationController
 
   def create
     @distributor = Distributor.new
-    @distributor.name = params["distributor"]["name"]
+    @distributor.name = params["katello_distributor"]["name"]
     @distributor.cp_type = "candlepin"  # The 'candlepin' type is allowed to export a manifest
     @distributor.facts = {'distributor_version' => params[:distributor][:version]}
     @distributor.environment = KTEnvironment.find(params["distributor"]["environment_id"])
@@ -142,7 +142,7 @@ class DistributorsController < ApplicationController
       notify.success _("Distributor '%s' was created.") % @distributor['name']
 
       if search_validate(Distributor, @distributor.id, params[:search])
-        render :partial => "distributors/list_distributors",
+        render :partial => "list_distributors",
                :locals => {:accessor => "id", :columns => %w(name lastCheckin created), :collection => [@distributor], :name => controller_display_name}
       else
         notify.message _("'%s' did not meet the current search criteria and is not being shown.") % @distributor["name"]
@@ -295,7 +295,7 @@ class DistributorsController < ApplicationController
 
   def show
     distributor = Distributor.find(params[:id])
-    render :partial => "distributors/list_distributor_show", :locals => {:item => distributor, :accessor => "id", :columns => COLUMNS.keys, :noblock => 1}
+    render :partial => "list_distributor_show", :locals => {:item => distributor, :accessor => "id", :columns => COLUMNS.keys, :noblock => 1}
   end
 
   def custom_info
@@ -312,7 +312,7 @@ class DistributorsController < ApplicationController
     distributor.destroy
     if distributor.destroyed?
       notify.success _("%s Removed Successfully") % distributor.name
-      render :partial => "common/list_remove", :locals => { :id => id, :name => controller_display_name }
+      render :partial => "katello/common/list_remove", :locals => { :id => id, :name => controller_display_name }
       return
     end
     notify.invalid_record distributor
@@ -393,9 +393,9 @@ class DistributorsController < ApplicationController
       :create_label => _('+ New Distributor'),
       :enable_sort => true,
       :name => controller_display_name,
-      :list_partial => 'distributors/list_distributors',
+      :list_partial => 'list_distributors',
       :ajax_load  => true,
-      :ajax_scroll => items_distributors_path,
+      :ajax_scroll => items_katello_distributors_path,
       :actions => Distributor.any_deletable?(@environment, current_organization) ? 'actions' : nil,
       :initial_action => :subscriptions,
       :search_class => Distributor,

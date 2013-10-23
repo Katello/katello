@@ -450,14 +450,14 @@ module Navigation
       menu = [
         { :key => :distributor_details,
           :name => _("Details"),
-          :url => lambda{edit_distributor_path(@distributor.id)},
+          :url => lambda{edit_katello_distributor_path(@distributor.id)},
           :if => lambda{@distributor},
           :options => {:class => "panel_link menu_parent"},
           :items => distributors_subnav
         },
         { :key => :distributor_subscriptions,
           :name => _("Subscriptions"),
-          :url => lambda{subscriptions_distributor_path(@distributor.id)},
+          :url => lambda{subscriptions_katello_distributor_path(@distributor.id)},
           :if => lambda{@distributor},
           :options => {:class => "panel_link"}
         }
@@ -469,19 +469,19 @@ module Navigation
       [
         { :key => :distributor_info,
           :name => _("Distributor Info"),
-          :url => lambda{edit_distributor_path(@distributor.id)},
+          :url => lambda{edit_katello_distributor_path(@distributor.id)},
           :if => lambda{@distributor},
           :options => {:class => "third_level panel_link"},
         },
         { :key => :distributor_events,
           :name => _("Events History"),
-          :url => lambda{distributor_events_path(@distributor.id)},
+          :url => lambda{katello_distributor_events_path(@distributor.id)},
           :if => lambda{@distributor},
           :options => {:class => "third_level panel_link"},
         },
         { :key => :custom_info,
           :name => _("Custom Information"),
-          :url => lambda{custom_info_distributor_path(@distributor.id)},
+          :url => lambda{custom_info_katello_distributor_path(@distributor.id)},
           :if => lambda{@distributor},
           :options => {:class => "third_level panel_link"}
         }

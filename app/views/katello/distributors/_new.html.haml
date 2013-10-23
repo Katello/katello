@@ -11,7 +11,7 @@
     #{_("New distributor")}
   = content_for :content do
     .full
-      = kt_form_for(Distributor.new, :action => "create", :id => "new_distributor") do |form|
+      = kt_form_for(Katello::Distributor.new, :action => "create", :id => "new_distributor") do |form|
         = hidden_field_tag 'distributor[environment_id]', @environment.id
         .grid_8#new_distributor
           = form.text_field :name, :label => _("Name of Your Distributor:")
@@ -41,4 +41,4 @@
     = content_for :content do
       #{_("You need to create an environment for this org before you can create a distributor.")}
 
-= render :template => "layouts/tupane_layout"
+= render :template => "katello/layouts/tupane_layout"

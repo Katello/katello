@@ -1,9 +1,9 @@
-= javascript_include_tag 'widgets/treetable'
+= javascript_include_tag 'katello/widgets/treetable'
 
 %div
   %h5
     #{_("Attached Subscriptions")}
-  = form_tag update_subscriptions_distributor_path, :id=>"unsubscribe", :method=>"post", :remote=>true do
+  = form_tag update_subscriptions_katello_distributor_path, :id=>"unsubscribe", :method=>"post", :remote=>true do
     = hidden_field_tag "subscribe_action", "unsubscribe"
     .tree
       %table#unsubscribeTable
@@ -59,7 +59,7 @@
 %div
   %h5
     #{_("Available Subscriptions")}
-  = form_tag update_subscriptions_distributor_path, :id=>"subscribe", :method=>"post", :remote=>true do
+  = form_tag update_subscriptions_katello_distributor_path, :id=>"subscribe", :method=>"post", :remote=>true do
     = hidden_field_tag "subscribe_action", "subscribe"
     %div.hidden#available_spinner
       %table
