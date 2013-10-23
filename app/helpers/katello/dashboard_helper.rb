@@ -38,7 +38,7 @@ module DashboardHelper
 
   def content_view_versions(num = quantity)
     return ContentViewVersion.readable(current_organization).non_default_view.joins(:task_status).
-        order("task_statuses.updated_at DESC").limit(num)
+        order("#{Katello::TaskStatus.table_name}.updated_at DESC").limit(num)
   end
 
   def content_view_name(version)
@@ -74,14 +74,14 @@ module DashboardHelper
   end
 
   def content_view_path_helper(version)
-    content_view_definitions_path +
+    katello_content_view_definitions_path +
         "#panel=content_view_definition_#{version.content_view.content_view_definition.id}&panelpage=views"
   end
 
   def promotions(num = quantity)
     return  Changeset.joins(:task_status).
-        where("changesets.environment_id" => KTEnvironment.changesets_readable(current_organization)).
-        order("task_statuses.updated_at DESC").limit(num)
+        where("#{Katello::Changeset.table_name}.environment_id" => KTEnvironment.changesets_readable(current_organization)).
+        order("#{Katello::TaskStatus.table_name}.updated_at DESC").limit(num)
   end
 
   def changeset_class(cs)
@@ -112,9 +112,9 @@ module DashboardHelper
 
   def changeset_path_helper(cs)
     if cs.state == Changeset::PROMOTED
-      changesets_path + "#panel=changeset_#{cs.id}&env_id=#{cs.environment_id}"
+      katello_changesets_path + "#panel=changeset_#{cs.id}&env_id=#{cs.environment_id}"
     else
-      promotion_path(cs.environment.prior.name)
+      katello_promotion_path(cs.environment.prior.name)
     end
   end
 
@@ -174,7 +174,7 @@ module DashboardHelper
   end
 
   def system_path_helper(system)
-    systems_path + "#list_search=id:#{system.id}&panel=system_#{system.id}&panelpage=errata"
+    katello_systems_path + "#list_search=id:#{system.id}&panel=system_#{system.id}&panelpage=errata"
   end
 
   def get_checkin(system)
