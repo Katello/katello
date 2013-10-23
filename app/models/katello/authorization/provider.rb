@@ -30,11 +30,11 @@ module Authorization::Provider
     end
 
     def creatable?(org)
-      User.allowed_to?([:create], :providers, nil, org)
+      ::User.allowed_to?([:create], :providers, nil, org)
     end
 
     def any_readable?(org)
-      (Katello.config.katello? && org.syncable?) || User.allowed_to?(READ_PERM_VERBS, :providers, nil, org)
+      (Katello.config.katello? && org.syncable?) || ::User.allowed_to?(READ_PERM_VERBS, :providers, nil, org)
     end
 
     def read_verbs
@@ -72,10 +72,10 @@ module Authorization::Provider
     def items(org, verbs)
       fail "scope requires an organization" if org.nil?
       resource = :providers
-      if (Katello.config.katello? && verbs.include?(:read) && org.syncable?) ||  User.allowed_all_tags?(verbs, resource, org)
+      if (Katello.config.katello? && verbs.include?(:read) && org.syncable?) ||  ::User.allowed_all_tags?(verbs, resource, org)
         where(:organization_id => org)
       else
-        where("providers.id in (#{User.allowed_tags_sql(verbs, resource, org)})")
+        where("providers.id in (#{::User.allowed_tags_sql(verbs, resource, org)})")
       end
     end
   end
@@ -83,17 +83,17 @@ module Authorization::Provider
   included do
     def readable?
       return organization.readable? if redhat_provider?
-      User.allowed_to?(READ_PERM_VERBS, :providers, self.id, self.organization) || (Katello.config.katello? && self.organization.syncable?)
+      ::User.allowed_to?(READ_PERM_VERBS, :providers, self.id, self.organization) || (Katello.config.katello? && self.organization.syncable?)
     end
 
     def editable?
       return organization.editable? if redhat_provider?
-      User.allowed_to?([:update, :create], :providers, self.id, self.organization)
+      ::User.allowed_to?([:update, :create], :providers, self.id, self.organization)
     end
 
     def deletable?
       return false if redhat_provider?
-      User.allowed_to?([:delete, :create], :providers, self.id, self.organization)
+      ::User.allowed_to?([:delete, :create], :providers, self.id, self.organization)
     end
   end
 
