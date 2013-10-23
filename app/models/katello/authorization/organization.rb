@@ -21,7 +21,7 @@ module Authorization::Organization
 
   module ClassMethods
     def creatable?
-      User.allowed_to?([:create], :organizations)
+      ::User.allowed_to?([:create], :organizations)
     end
 
     def any_readable?
@@ -29,7 +29,7 @@ module Authorization::Organization
     end
 
     def all_editable?
-      User.allowed_to?([:update, :create], :organizations, nil, nil)
+      ::User.allowed_to?([:update, :create], :organizations, nil, nil)
     end
 
     # TODO: break up method
@@ -83,8 +83,8 @@ module Authorization::Organization
     end
 
     def authorized_items(verbs, resource = :organizations)
-      if !User.allowed_all_tags?(verbs, resource)
-        where("organizations.id in (#{User.allowed_tags_sql(verbs, resource)})")
+      if !::User.allowed_all_tags?(verbs, resource)
+        where("organizations.id in (#{::User.allowed_tags_sql(verbs, resource)})")
       end
     end
   end
@@ -94,51 +94,51 @@ module Authorization::Organization
     scope :readable, lambda {authorized_items(READ_PERM_VERBS)}
 
     def editable?
-      User.allowed_to?([:update, :create], :organizations, nil, self)
+      ::User.allowed_to?([:update, :create], :organizations, nil, self)
     end
 
     def deletable?
-      User.allowed_to?([:delete, :create], :organizations)
+      ::User.allowed_to?([:delete, :create], :organizations)
     end
 
     def readable?
-      User.allowed_to?(READ_PERM_VERBS, :organizations, nil, self)
+      ::User.allowed_to?(READ_PERM_VERBS, :organizations, nil, self)
     end
 
     def environments_manageable?
-      User.allowed_to?([:update, :create], :organizations, nil, self)
+      ::User.allowed_to?([:update, :create], :organizations, nil, self)
     end
 
     def systems_readable?
-      User.allowed_to?(SYSTEMS_READABLE, :organizations, nil, self)
+      ::User.allowed_to?(SYSTEMS_READABLE, :organizations, nil, self)
     end
 
     def systems_deletable?
-      User.allowed_to?([:delete_systems], :organizations, nil, self)
+      ::User.allowed_to?([:delete_systems], :organizations, nil, self)
     end
 
     def systems_registerable?
-      User.allowed_to?([:register_systems], :organizations, nil, self)
+      ::User.allowed_to?([:register_systems], :organizations, nil, self)
     end
 
     def any_systems_registerable?
-      systems_registerable? || User.allowed_to?([:register_systems], :environments, environment_ids, self, true)
+      systems_registerable? || ::User.allowed_to?([:register_systems], :environments, environment_ids, self, true)
     end
 
     def distributors_readable?
-      User.allowed_to?(DISTRIBUTORS_READABLE, :organizations, nil, self)
+      ::User.allowed_to?(DISTRIBUTORS_READABLE, :organizations, nil, self)
     end
 
     def distributors_deletable?
-      User.allowed_to?([:delete_distributors], :organizations, nil, self)
+      ::User.allowed_to?([:delete_distributors], :organizations, nil, self)
     end
 
     def distributors_registerable?
-      User.allowed_to?([:register_distributors], :organizations, nil, self)
+      ::User.allowed_to?([:register_distributors], :organizations, nil, self)
     end
 
     def any_distributors_registerable?
-      distributors_registerable? || User.allowed_to?([:register_distributors], :environments, environment_ids, self, true)
+      distributors_registerable? || ::User.allowed_to?([:register_distributors], :environments, environment_ids, self, true)
     end
 
     def gpg_keys_manageable?

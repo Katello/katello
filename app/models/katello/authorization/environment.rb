@@ -62,21 +62,21 @@ module Authorization::Environment
 
     def any_viewable_for_promotions?(org)
       return false if !Katello.config.katello?
-      User.allowed_to?(CHANGE_SETS_READABLE + CONTENTS_READABLE, :environments, org.environment_ids, org, true)
+      ::User.allowed_to?(CHANGE_SETS_READABLE + CONTENTS_READABLE, :environments, org.environment_ids, org, true)
     end
 
     def any_contents_readable?(org, skip_library = false)
       ids = org.environment_ids
       ids = ids - [org.library.id] if skip_library
-      User.allowed_to?(CONTENTS_READABLE, :environments, ids, org, true)
+      ::User.allowed_to?(CONTENTS_READABLE, :environments, ids, org, true)
     end
 
     def authorized_items(org, verbs, resource = :environments)
       fail "scope requires an organization" if org.nil?
-      if User.allowed_all_tags?(verbs, resource, org)
+      if ::User.allowed_all_tags?(verbs, resource, org)
         where(:organization_id => org)
       else
-        where("environments.id in (#{User.allowed_tags_sql(verbs, resource, org)})")
+        where("environments.id in (#{::User.allowed_tags_sql(verbs, resource, org)})")
       end
     end
 
@@ -124,12 +124,12 @@ module Authorization::Environment
   included do
     def viewable_for_promotions?
       return false if !Katello.config.katello?
-      User.allowed_to?(CHANGE_SETS_READABLE + CONTENTS_READABLE, :environments, self.id, self.organization)
+      ::User.allowed_to?(CHANGE_SETS_READABLE + CONTENTS_READABLE, :environments, self.id, self.organization)
     end
 
     def any_operation_readable?
       return false if !Katello.config.katello?
-      User.allowed_to?(self.class.list_verbs.keys, :environments, self.id, self.organization) ||
+      ::User.allowed_to?(self.class.list_verbs.keys, :environments, self.id, self.organization) ||
           self.organization.systems_readable? || self.organization.any_systems_registerable? ||
           self.organization.distributors_readable? || self.organization.any_distributors_registerable? ||
           ActivationKey.readable?(self.organization)
@@ -137,80 +137,80 @@ module Authorization::Environment
 
     def changesets_promotable?
       return false if !Katello.config.katello?
-      User.allowed_to?([:promote_changesets], :environments, self.id,
+      ::User.allowed_to?([:promote_changesets], :environments, self.id,
                                 self.organization)
     end
 
     def changesets_deletable?
       return false if !Katello.config.katello?
-      User.allowed_to?([:delete_changesets], :environments, self.id,
+      ::User.allowed_to?([:delete_changesets], :environments, self.id,
                                 self.organization)
     end
 
     def changesets_readable?
       return false if !Katello.config.katello?
-      User.allowed_to?(CHANGE_SETS_READABLE, :environments,
+      ::User.allowed_to?(CHANGE_SETS_READABLE, :environments,
                                 self.id, self.organization)
     end
 
     def changesets_manageable?
       return false if !Katello.config.katello?
-      User.allowed_to?([:manage_changesets], :environments, self.id,
+      ::User.allowed_to?([:manage_changesets], :environments, self.id,
                                 self.organization)
     end
 
     def contents_readable?
       return false if !Katello.config.katello?
-      User.allowed_to?(CONTENTS_READABLE, :environments, self.id,
+      ::User.allowed_to?(CONTENTS_READABLE, :environments, self.id,
                                 self.organization)
     end
 
     def systems_readable?
       self.organization.systems_readable? ||
           (Katello.config.katello? &&
-              User.allowed_to?(SYSTEMS_READABLE, :environments, self.id, self.organization))
+              ::User.allowed_to?(SYSTEMS_READABLE, :environments, self.id, self.organization))
     end
 
     def systems_editable?
-      User.allowed_to?([:update_systems], :organizations, nil, self.organization) ||
+      ::User.allowed_to?([:update_systems], :organizations, nil, self.organization) ||
           (Katello.config.katello? &&
-              User.allowed_to?([:update_systems], :environments, self.id, self.organization))
+              ::User.allowed_to?([:update_systems], :environments, self.id, self.organization))
     end
 
     def systems_deletable?
-      User.allowed_to?([:delete_systems], :organizations, nil, self.organization) ||
+      ::User.allowed_to?([:delete_systems], :organizations, nil, self.organization) ||
           (Katello.config.katello? &&
-              User.allowed_to?([:delete_systems], :environments, self.id, self.organization))
+              ::User.allowed_to?([:delete_systems], :environments, self.id, self.organization))
     end
 
     def systems_registerable?
       self.organization.systems_registerable? ||
           (Katello.config.katello? &&
-              User.allowed_to?([:register_systems], :environments, self.id, self.organization))
+              ::User.allowed_to?([:register_systems], :environments, self.id, self.organization))
     end
 
     def distributors_readable?
       self.organization.distributors_readable? ||
           (Katello.config.katello? &&
-              User.allowed_to?(DISTRIBUTORS_READABLE, :environments, self.id, self.organization))
+              ::User.allowed_to?(DISTRIBUTORS_READABLE, :environments, self.id, self.organization))
     end
 
     def distributors_editable?
-      User.allowed_to?([:update_distributors], :organizations, nil, self.organization) ||
+      ::User.allowed_to?([:update_distributors], :organizations, nil, self.organization) ||
           (Katello.config.katello? &&
-              User.allowed_to?([:update_distributors], :environments, self.id, self.organization))
+              ::User.allowed_to?([:update_distributors], :environments, self.id, self.organization))
     end
 
     def distributors_deletable?
-      User.allowed_to?([:delete_distributors], :organizations, nil, self.organization) ||
+      ::User.allowed_to?([:delete_distributors], :organizations, nil, self.organization) ||
           (Katello.config.katello? &&
-              User.allowed_to?([:delete_distributors], :environments, self.id, self.organization))
+              ::User.allowed_to?([:delete_distributors], :environments, self.id, self.organization))
     end
 
     def distributors_registerable?
       self.organization.distributors_registerable? ||
           (Katello.config.katello? &&
-              User.allowed_to?([:register_distributors], :environments, self.id, self.organization))
+              ::User.allowed_to?([:register_distributors], :environments, self.id, self.organization))
     end
   end
 

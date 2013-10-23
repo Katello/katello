@@ -19,15 +19,15 @@ module Authorization::User
   module ClassMethods
     # scope
     def readable
-      User.allowed_all_tags?(READ_PERM_VERBS, :users) ? where(:hidden => false) : where("0 = 1")
+      ::User.allowed_all_tags?(READ_PERM_VERBS, :users) ? where(:hidden => false) : where("0 = 1")
     end
 
     def creatable?
-      User.allowed_to?([:create], :users, nil)
+      ::User.allowed_to?([:create], :users, nil)
     end
 
     def any_readable?
-      User.allowed_to?(READ_PERM_VERBS, :users, nil)
+      ::User.allowed_to?(READ_PERM_VERBS, :users, nil)
     end
 
     def list_verbs(global = false)
@@ -50,15 +50,15 @@ module Authorization::User
   included do
 
     def readable?
-      User.any_readable? && !hidden
+      ::User.any_readable? && !hidden
     end
 
     def editable?
-      User.allowed_to?([:create, :update], :users, nil) && !hidden
+      ::User.allowed_to?([:create, :update], :users, nil) && !hidden
     end
 
     def deletable?
-      self.id != User.current.id && User.allowed_to?([:delete], :users, nil)
+      self.id != ::User.current.id && ::User.allowed_to?([:delete], :users, nil)
     end
 
     def allowed_organizations

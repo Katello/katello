@@ -31,7 +31,7 @@ module Authorization::Distributor
 
     def any_readable?(org)
       org.distributors_readable? ||
-           ::KTEnvironment.distributors_readable(org).count > 0
+          ::KTEnvironment.distributors_readable(org).count > 0
     end
 
     # TODO: these two functions are somewhat poorly written and need to be redone
