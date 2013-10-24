@@ -93,15 +93,17 @@ module Katello
           root[:path] = "#{Rails.root}/log" unless root.key?(:path) if environment
           root[:type] ||= 'file'
 
-          config[:katello_version] = begin
-            rpm_command_present = system('which rpm &>/dev/null')
-            if rpm_command_present
-              package = config.katello? ? 'katello-common' : 'katello-headpin'
-              version = `rpm -q #{package} --queryformat '%{VERSION}-%{RELEASE}' 2>&1`
-              $CHILD_STATUS == 0 ? version : ""
-            else
-              hash = `git rev-parse --short HEAD 2>/dev/null`
-              $CHILD_STATUS == 0 ? "git hash (#{hash.chop})" : "Unknown"
+          unless config.key? :katello_version
+            config[:katello_version] = begin
+              rpm_command_present = system('which rpm &>/dev/null')
+              if rpm_command_present
+                package = config.katello? ? 'katello-common' : 'katello-headpin'
+                version = `rpm -q #{package} --queryformat '%{VERSION}-%{RELEASE}' 2>&1`
+                $CHILD_STATUS == 0 ? version : ""
+              else
+                hash = `git rev-parse --short HEAD 2>/dev/null`
+                $CHILD_STATUS == 0 ? "git hash (#{hash.chop})" : "Unknown"
+              end
             end
           end
         end,
