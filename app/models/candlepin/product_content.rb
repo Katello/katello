@@ -54,7 +54,9 @@ class Candlepin::ProductContent
     raise _("One or more repositories are still enabled for this content set.") unless self.can_disable?
     repos = self.product.repos(self.product.organization.library, true).where(:content_id => self.content.id)
     repos.each do |repo|
-      repo.destroy
+      if !repo.destroy
+        fail _("Could not delete repository: %{repo}.  %{error}") % {:repo => repo.name, :error => repo.errors.messages[:base]}
+      end
     end
     @repos = nil #reset repo cache
   end

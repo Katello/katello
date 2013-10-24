@@ -32,6 +32,14 @@ class RepositoryAuthorizationAdminTest < AuthorizationTestBase
     assert repository.deletable?
   end
 
+  def test_redhat_deletable?
+    repository = Repository.find(repositories(:rhel_6_x86_64))
+    refute repository.redhat_deletable?
+
+    repository.enabled = false
+    assert repository.redhat_deletable?
+  end
+
   def test_readable
     refute_empty Repository.readable(@library)
   end
