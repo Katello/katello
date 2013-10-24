@@ -1,4 +1,4 @@
-<a href="" ui-sref="products.discovery.scan">
+<a ui-sref="products.discovery.scan">
   <i class="icon-backward"></i>
   {{ "Back To Repository Selection" | translate }}
 </a>
@@ -74,7 +74,7 @@
       ng-model="createRepoChoices.product.provider_id"
       ng-options="provider.id as provider.name for provider in providers">
     </select>
-    <a href="" ui-sref="products.new.provider" translate>+ New Provider</a>
+    <a ui-sref="products.new.provider" translate>+ New Provider</a>
   </div>
 
   <div class="control-group" >
