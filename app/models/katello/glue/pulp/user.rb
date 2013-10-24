@@ -17,7 +17,7 @@ module Glue::Pulp::User
       base.send :include, InstanceMethods
       base.send :include, LazyAccessor
       base.class_eval do
-        lazy_accessor :name, :initializer => lambda {|s| Katello.pulp_server.resources.user.retrieve(self.remote_id) }
+        lazy_accessor :pulp_name, :initializer => lambda {|s| Katello.pulp_server.resources.user.retrieve(self.remote_id) }
         before_save :save_pulp_orchestration
         before_destroy :destroy_pulp_orchestration
       end
