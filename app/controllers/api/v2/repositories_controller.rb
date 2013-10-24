@@ -13,7 +13,9 @@
 class Api::V2::RepositoriesController < Api::V2::ApiController
 
   before_filter :find_organization, :only => [:index, :show]
-  before_filter :find_product, :only => [:index, :create]
+  before_filter :find_product, :only => [:index]
+  before_filter :find_product_for_create, :only => [:create]
+
   before_filter :find_repository, :only => [:show, :update, :destroy]
   before_filter :authorize
 
@@ -71,7 +73,7 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
 
     options[:filters] << {:term => {:enabled => params[:enabled]}} if params[:enabled]
     options[:filters] << {:term => {:environment_id => params[:environment_id]}} if params[:environment_id]
-    options[:filters] << {:term => {:content_view_version_id => @organization.default_content_view.id}} if params[:library]
+    options[:filters] << {:term => {:content_view_version_id => @organization.default_content_view.versions.first.id}} if params[:library]
 
     @search_service.model = Repository
     repositories, total_count = @search_service.retrieve(params[:search], params[:offset], options)
@@ -126,6 +128,11 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
   protected
 
   def find_product
+    @product = Product.find_by_cp_id(params[:product_id], @organization) if params[:product_id]
+  end
+
+  def find_product_for_create
+    #Since we're using cp_id, product happens to be unique per org
     @product = Product.find_by_cp_id(params[:product_id]) if params[:product_id]
   end
 
