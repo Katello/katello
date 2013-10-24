@@ -16,7 +16,7 @@
               ng-disabled="!product.permissions.deletable">
         Remove Product
       </button>
-      <button class="btn" ng-click="table.closeItem()">
+      <button class="btn" ui-sref="products.index">
         <i class="icon-remove"></i>
         {{ "Close" | translate }}
       </button>
@@ -31,7 +31,7 @@
       <li>
         <a class="clickable"
            translate
-           ng-click="transitionToInfo(product)"
+           ui-sref="products.details.info({productId: product.id})"
            ng-class="{active: isState('products.details.info')}">
           Details
         </a>
@@ -39,7 +39,7 @@
       <li>
         <a class="clickable"
            translate
-           ng-click="transitionToRepositories(product)"
+           ui-sref="products.details.repositories.index({productId: product.id})"
            ng-class="{active: stateIncludes('products.details.repositories')}">
           Repositories
         </a>

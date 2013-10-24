@@ -44,10 +44,4 @@ describe('Controller: SystemEventsController', function() {
     it("Sets a table.", function() {
         expect($scope.eventsTable).toBeTruthy();
     });
-
-    it("provides a way to open the details panel.", function() {
-        spyOn($scope, "transitionTo");
-        $scope.eventsTable.openEventInfo({ id: 2 });
-        expect($scope.transitionTo).toHaveBeenCalledWith('systems.details.events.details', {eventId: 2});
-    });
 });

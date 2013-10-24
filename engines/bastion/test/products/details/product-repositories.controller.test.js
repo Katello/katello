@@ -33,28 +33,4 @@ describe('Controller: ProductRepositoriesController', function() {
     it("puts a list of repositories on the scope", function() {
         expect($scope.repositories).toBeDefined();
     });
-
-    it('provides a method to transition to repository details', function() {
-        spyOn($scope, 'transitionTo');
-        $scope.showRepository($scope.repositories[0]);
-
-        expect($scope.transitionTo).toHaveBeenCalledWith(
-            'products.details.repositories.info',
-            {
-                productId: $scope.$stateParams.productId,
-                repositoryId: $scope.repositories[0].id
-            }
-        );
-    });
-
-    it('provides a method to transition to repository creation', function() {
-        spyOn($scope, 'transitionTo');
-        $scope.openCreateRepository(1);
-
-        expect($scope.transitionTo).toHaveBeenCalledWith(
-            'products.details.repositories.new',
-            {productId: 1}
-        );
-    });
-
 });

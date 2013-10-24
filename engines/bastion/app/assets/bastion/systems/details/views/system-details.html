@@ -10,7 +10,7 @@
 
     <div class="details-actions fr">
       <button class="btn-mini btn-danger" ng-disabled="system.readonly" ng-click="showConfirm = true" translate>Remove System</button>
-      <button class="btn-mini" ng-click="table.closeItem()">
+      <button class="btn-mini" ui-sref="systems.index">
         <i class="icon-remove"></i>
         {{ "Close" | translate }}
       </button>
@@ -25,35 +25,35 @@
       <li>
         <a class="clickable"
            translate
-           ng-click="transitionTo('systems.details.info')"
+           ui-sref="systems.details.info"
            ng-class="{active: isState('systems.details.info')}">
           Details
         </a>
       </li>
       <li>
         <a class="clickable" translate
-           ng-click="transitionTo('systems.details.subscriptions')"
+           ui-sref="systems.details.subscriptions"
            ng-class="{active: isState('systems.details.subscriptions')}">
           Subscriptions
         </a>
       </li>
       <li>
         <a class="clickable" translate
-           ng-click="transitionTo('systems.details.events.index')"
+           ui-sref="systems.details.events.index"
            ng-class="{active: stateIncludes('systems.details.events')}">
           Events
         </a>
       </li>
       <li>
         <a class="clickable" translate
-           ng-click="transitionTo('systems.details.packages')"
+           ui-sref="systems.details.packages"
            ng-class="{active: isState('systems.details.packages')}">
           Packages
         </a>
       </li>
       <li>
         <a class="clickable" translate
-           ng-click="transitionTo('systems.details.errata.index')"
+           ui-sref="systems.details.errata.index"
            ng-class="{active: isState('systems.details.errata.index')}">
           Errata
         </a>

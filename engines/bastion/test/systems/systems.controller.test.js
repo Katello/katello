@@ -50,23 +50,10 @@ describe('Controller: SystemsController', function() {
         });
     }));
 
-    it("provides a way to open the details panel.", function() {
-        spyOn($scope, "transitionTo");
-        $scope.table.openDetails({ uuid: 2 });
-        expect($scope.transitionTo).toHaveBeenCalledWith('systems.details.info', {systemId: 2});
-    });
-
     it("provides a way to close the details panel.", function() {
         spyOn($scope, "transitionTo");
         $scope.table.closeItem();
         expect($scope.transitionTo).toHaveBeenCalledWith('systems.index');
-    });
-
-    it('should provide a way to transition to the register page', function() {
-        spyOn($scope, 'transitionTo');
-        $scope.transitionToRegisterSystem();
-
-        expect($scope.transitionTo).toHaveBeenCalledWith('systems.register');
     });
 
     it("provides a way to delete systems.", function() {

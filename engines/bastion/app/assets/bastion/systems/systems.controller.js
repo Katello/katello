@@ -47,16 +47,8 @@ angular.module('Bastion.systems').controller('SystemsController',
 
         $scope.table.getStatusColor = SystemsHelper.getStatusColor;
 
-        $scope.table.openDetails = function (system) {
-            $scope.transitionTo('systems.details.info', {systemId: system.uuid});
-        };
-
         $scope.table.closeItem = function() {
             $scope.transitionTo('systems.index');
-        };
-
-        $scope.transitionToRegisterSystem = function() {
-            $scope.transitionTo('systems.register');
         };
 
         $scope.removeSystem = function (system) {

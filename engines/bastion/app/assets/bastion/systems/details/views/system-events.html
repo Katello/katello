@@ -34,7 +34,11 @@
                 <span title="{{ 'Failed' | translate }}" class="table-icon icon-circle red" ng-show="event.failed" />
                 <span title="{{ 'Success' | translate }}" class="table-icon icon-circle green" ng-show="!event.pending && !event.failed" />
             </td>
-            <td alch-table-cell><a class="clickable active" ng-click="table.openEventInfo(event)">{{ event.message }}</a></td>
+            <td alch-table-cell>
+              <a class="clickable active" ui-sref="systems.details.events.details({eventId: event.id})">
+                {{ event.message }}
+              </a>
+            </td>
             <td alch-table-cell>{{ event.username }}</td>
             <td alch-table-cell>{{ event.created_at | date:"short" }}</td>
           </tr>

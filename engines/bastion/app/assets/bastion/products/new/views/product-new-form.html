@@ -44,7 +44,7 @@
               ng-model="product.provider_id"
               ng-options="provider.id as provider.name for provider in providers">
       </select>
-      <a href="" ng-click="transitionTo('products.new.provider')" translate>+ New Provider</a>
+      <a ui-sref="products.new.provider" translate>+ New Provider</a>
       <span class="note error" ng-show="productForm.provider_id.$invalid">
         <ul>
           <li ng-repeat="message in productForm.provider_id.$error.messages">{{ message }}</li>
@@ -86,7 +86,7 @@
   </div>
 
   <div alch-save-control
-       on-cancel="table.closeItem()"
+       on-cancel="transitionTo('products.index')"
        on-save="save(product)"
        invalid="productForm.$invalid">
   </div>

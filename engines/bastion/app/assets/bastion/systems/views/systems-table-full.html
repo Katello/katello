@@ -14,7 +14,9 @@
   <tbody>
     <tr alch-table-row ng-repeat="system in table.rows" row-select="system">
       <td alch-table-cell>
-        <a class="clickable" ng-click="table.openDetails(system)">{{ system.name }}</a>
+        <a class="clickable" ui-sref="systems.details.info({systemId: system.uuid})">
+          {{ system.name }}
+        </a>
       </td>
       <td alch-table-cell class="align-center">
         <span class="icon-circle" ng-class="table.getStatusColor(system.entitlementStatus)"></span>
