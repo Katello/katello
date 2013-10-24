@@ -34,6 +34,7 @@ angular.module('Bastion.systems').controller('SystemSubscriptionsController',
             refresh;
 
         successHandler = function() {
+            refresh();
             $scope.saveSuccess = true;
         };
 
@@ -73,10 +74,6 @@ angular.module('Bastion.systems').controller('SystemSubscriptionsController',
                         successHandler, errorHandler);
                 });
             }
-
-            if (selectedRows.length > 0) {
-                refresh();
-            }
         };
 
         $scope.attachSubscriptions = function() {
@@ -87,9 +84,6 @@ angular.module('Bastion.systems').controller('SystemSubscriptionsController',
                 SystemSubscription.save({systemId: $scope.system.uuid, pool: row['cp_id'], quantity: quantity}, successHandler, errorHandler);
             });
 
-            if (selectedRows.length > 0) {
-                refresh();
-            }
         };
 
         $scope.autoAttach = function () {
