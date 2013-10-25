@@ -22,6 +22,8 @@ Src::Application.routes.draw do
         onlies = [:show, :destroy, :index, :update]
       end
 
+      api_resources :dyntasks, :only => [:index]
+
       api_resources :organizations do
         member do
           post :repo_discover
