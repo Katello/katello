@@ -52,9 +52,11 @@ module Util
     private
 
     def equality_clauses
-      [:version, :epoch, :release].each_with_object([]) do |field, clauses|
-        clauses << {:term => {field => self.send(field)}} unless self.send(field).blank?
-      end
+      clauses = []
+      clauses << {:term => {:sortable_version => self.version}} unless self.version.blank?
+      clauses << {:term => {:sortable_release => self.release}} unless self.release.blank?
+      clauses << {:term => {:epoch => self.epoch}} unless self.epoch.blank?
+      {:and => clauses}
     end
 
     def range_clauses
