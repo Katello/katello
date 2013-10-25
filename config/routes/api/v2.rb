@@ -86,6 +86,8 @@ Katello::Engine.routes.draw do
       ##############################
       ##############################
 
+      api_resources :dyntasks, :only => [:index]
+
       api_resources :organizations do
         api_resources :products, :only => [:index]
         api_resources :environments do
