@@ -12,9 +12,9 @@
 
 module Katello
 class SyncPlan < ActiveRecord::Base
-  include Glue
+  include Katello::Glue
 
-  include Glue::ElasticSearch::SyncPlan if Katello.config.use_elasticsearch
+  include Katello::Glue::ElasticSearch::SyncPlan if Katello.config.use_elasticsearch
 
   NONE = _('none')
   HOURLY = _('hourly')

@@ -12,9 +12,9 @@
 
 module Katello
 class ContentView < ActiveRecord::Base
-  include Ext::LabelFromName
-  include Authorization::ContentView
-  include Glue::ElasticSearch::ContentView if Katello.config.use_elasticsearch
+  include Katello::Ext::LabelFromName
+  include Katello::Authorization::ContentView
+  include Katello::Glue::ElasticSearch::ContentView if Katello.config.use_elasticsearch
 
   before_destroy :confirm_not_promoted # RAILS3458: this needs to come before associations
 
@@ -123,7 +123,7 @@ class ContentView < ActiveRecord::Base
   end
 
   def environments
-    KTEnvironment.joins(:content_view_versions).where("#{Katello::ContentViewVersion.table_name}.content_view_id" => self.id)
+    Katello::KTEnvironment.joins(:content_view_versions).where("#{Katello::ContentViewVersion.table_name}.content_view_id" => self.id)
   end
 
   def in_environment?(env)
@@ -150,7 +150,7 @@ class ContentView < ActiveRecord::Base
   end
 
   def library_repos
-    Repository.where(:id => library_repo_ids)
+    Katello::Repository.where(:id => library_repo_ids)
   end
 
   def library_repo_ids
@@ -173,24 +173,24 @@ class ContentView < ActiveRecord::Base
 
   def products(env)
     repos = repos(env)
-    Product.joins(:repositories).where("#{Katello::Repository.table_name}.id" => repos.map(&:id)).uniq
+    Katello::Product.joins(:repositories).where("#{Katello::Repository.table_name}.id" => repos.map(&:id)).uniq
   end
 
   #list all products associated to this view across all versions
   def all_version_products
-    Product.joins(:repositories).where("#{Katello::Repository.table_name}.id" => self.all_version_repos).uniq
+    Katello::Product.joins(:repositories).where("#{Katello::Repository.table_name}.id" => self.all_version_repos).uniq
   end
 
   #get the library instances of all repos within this view
   def all_version_library_instances
     all_repos = all_version_repos.where(:library_instance_id => nil).pluck("#{Katello::Repository.table_name}.id")
     all_repos += all_version_repos.pluck(:library_instance_id)
-    Repository.where(:id => all_repos)
+    Katello::Repository.where(:id => all_repos)
   end
 
   def get_repo_clone(env, repo)
     lib_id = repo.library_instance_id || repo.id
-    Repository.in_environment(env).where(:library_instance_id => lib_id).
+    Katello::Repository.in_environment(env).where(:library_instance_id => lib_id).
         joins(:content_view_version).
         where("#{Katello::ContentViewVersion.table_name}.content_view_id" => self.id)
   end
@@ -198,9 +198,9 @@ class ContentView < ActiveRecord::Base
   def promote_via_changeset(env, apply_options = {:async => true},
                             cs_name = "#{self.name}_#{env.name}_#{Time.now.to_i}")
     ActiveRecord::Base.transaction do
-      cs = PromotionChangeset.create!(:name => cs_name,
+      cs = Katello::PromotionChangeset.create!(:name => cs_name,
                                       :environment => env,
-                                      :state => Changeset::REVIEW
+                                      :state => Katello::Changeset::REVIEW
                                      )
       cs.add_content_view!(self)
       return cs.apply(apply_options)
@@ -213,18 +213,18 @@ class ContentView < ActiveRecord::Base
     replacing_version = self.version(to_env)
 
     promote_version = self.version(from_env)
-    promote_version = ContentViewVersion.find(promote_version.id)
+    promote_version = Katello::ContentViewVersion.find(promote_version.id)
     promote_version.environments << to_env unless promote_version.environments.include?(to_env)
     promote_version.save!
 
     repos_to_promote = get_repos_to_promote(from_env, to_env)
     if replacing_version
-      PulpTaskStatus.wait_for_tasks prepare_repos_for_promotion(replacing_version.repos(to_env), repos_to_promote)
+      Katello::PulpTaskStatus.wait_for_tasks prepare_repos_for_promotion(replacing_version.repos(to_env), repos_to_promote)
     end
     tasks = promote_repos(promote_version, to_env, repos_to_promote)
 
     if replacing_version
-      replacing_version = ContentViewVersion.find(replacing_version.id) if replacing_version.readonly?
+      replacing_version = Katello::ContentViewVersion.find(replacing_version.id) if replacing_version.readonly?
       if replacing_version.environments.length == 1
         replacing_version.destroy
       else
@@ -233,7 +233,7 @@ class ContentView < ActiveRecord::Base
       end
     end
 
-    Glue::Event.trigger(Katello::Actions::ContentViewPromote, self, from_env, to_env)
+    Katello::Glue::Event.trigger(Katello::Actions::ContentViewPromote, self, from_env, to_env)
 
     tasks
   end
@@ -246,8 +246,8 @@ class ContentView < ActiveRecord::Base
     if version.nil?
       raise Errors::ChangesetContentException.new(_("Cannot delete from %s, view does not exist there.") % from_env.name)
     end
-    version = ContentViewVersion.find(version.id)
-    Glue::Event.trigger(Katello::Actions::ContentViewDemote, self, from_env)
+    version = Katello::ContentViewVersion.find(version.id)
+    Katello::Glue::Event.trigger(Katello::Actions::ContentViewDemote, self, from_env)
     version.delete(from_env)
     self.destroy if self.versions.empty?
   end
@@ -274,7 +274,7 @@ class ContentView < ActiveRecord::Base
     library_version = self.version(self.organization.library)
 
     # create a new version
-    version = ContentViewVersion.new(:version => next_version_id, :content_view => self)
+    version = Katello::ContentViewVersion.new(:version => next_version_id, :content_view => self)
     version.environments << organization.library
     version.save!
 
@@ -288,24 +288,24 @@ class ContentView < ActiveRecord::Base
 
     if options[:async]
       task  = version.async(:organization => self.organization,
-                            :task_type => TaskStatus::TYPES[:content_view_refresh][:type]).
+                            :task_type => Katello::TaskStatus::TYPES[:content_view_refresh][:type]).
                       refresh_version(options[:notify])
 
       version.task_status = task
       version.save!
     else
-      version.task_status = ::TaskStatus.create!(
+      version.task_status = Katello::TaskStatus.create!(
                                :uuid => ::UUIDTools::UUID.random_create.to_s,
                                :user_id => ::User.current.id,
                                :organization => self.organization,
-                               :state => ::TaskStatus::Status::WAITING,
-                               :task_type => TaskStatus::TYPES[:content_view_refresh][:type])
+                               :state => Katello::TaskStatus::Status::WAITING,
+                               :task_type => Katello::TaskStatus::TYPES[:content_view_refresh][:type])
       version.save!
       begin
         version.refresh_version(options[:notify])
-        version.task_status.update_attributes!(:state => ::TaskStatus::Status::FINISHED)
+        version.task_status.update_attributes!(:state => Katello::TaskStatus::Status::FINISHED)
       rescue => e
-        version.task_status.update_attributes!(:state => ::TaskStatus::Status::ERROR)
+        version.task_status.update_attributes!(:state => Katello::TaskStatus::Status::ERROR)
         raise e
       end
     end
@@ -323,7 +323,7 @@ class ContentView < ActiveRecord::Base
   # candlepin to become aware that the view is available for consumers.
   def add_environment(env)
     if self.content_view_environments.where(:environment_id => env.id).empty?
-      ContentViewEnvironment.create!(:name => env.name,
+      Katello::ContentViewEnvironment.create!(:name => env.name,
                                      :label => self.generate_cp_environment_label(env),
                                      :cp_id => self.generate_cp_environment_id(env),
                                      :environment_id => env.id,
@@ -348,11 +348,11 @@ class ContentView < ActiveRecord::Base
   end
 
   def cp_environment_label(env)
-    ContentViewEnvironment.where(:content_view_id => self, :environment_id => env).first.label
+    Katello::ContentViewEnvironment.where(:content_view_id => self, :environment_id => env).first.label
   end
 
   def cp_environment_id(env)
-    ContentViewEnvironment.where(:content_view_id => self, :environment_id => env).first.cp_id
+    Katello::ContentViewEnvironment.where(:content_view_id => self, :environment_id => env).first.cp_id
   end
 
   protected
@@ -379,7 +379,7 @@ class ContentView < ActiveRecord::Base
     if self.content_view_definition.try(:composite?)
       # For a composite view, the repos are based upon the component_content_views
       # currently in the to_env
-      promoting_repos = Repository.in_environment(to_env).
+      promoting_repos = Katello::Repository.in_environment(to_env).
           in_content_views(self.content_view_definition.component_content_views).
           inject({}) do |result, repo|
         result.update repo.library_instance_id => repo

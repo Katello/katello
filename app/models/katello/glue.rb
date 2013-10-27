@@ -32,10 +32,10 @@ module Glue
   module InstanceMethods
 
     def on_save
-      Glue.logger.debug "Processing on save pre-queue: #{pre_queue.to_log}" if pre_queue.count > 0
+      Katello::Glue.logger.debug "Processing on save pre-queue: #{pre_queue.to_log}" if pre_queue.count > 0
       process pre_queue
       yield if block_given?
-      Glue.logger.debug "Processing on save post-queue: #{post_queue.to_log}" if post_queue.count > 0
+      Katello::Glue.logger.debug "Processing on save post-queue: #{post_queue.to_log}" if post_queue.count > 0
       process post_queue
       @orchestration_for = nil
     end
@@ -43,10 +43,10 @@ module Glue
     def on_destroy
       return false unless errors.empty?
 
-      Glue.logger.debug "Processing on destroy pre-queue: #{pre_queue.to_log}" if pre_queue.count > 0
+      Katello::Glue.logger.debug "Processing on destroy pre-queue: #{pre_queue.to_log}" if pre_queue.count > 0
       process(pre_queue)
       yield if block_given?
-      Glue.logger.debug "Processing on destroy post-queue: #{post_queue.to_log}" if post_queue.count > 0
+      Katello::Glue.logger.debug "Processing on destroy post-queue: #{post_queue.to_log}" if post_queue.count > 0
       process post_queue
       @orchestration_for = nil
     end
@@ -61,18 +61,18 @@ module Glue
     end
 
     def rollback
-      Glue.logger.warning "Rollback initiated"
-      Glue.logger.warning "Before rollback pre-queue: #{pre_queue.to_log}"
-      Glue.logger.warning "Before rollback post-queue: #{post_queue.to_log}"
+      Katello::Glue.logger.warning "Rollback initiated"
+      Katello::Glue.logger.warning "Before rollback pre-queue: #{pre_queue.to_log}"
+      Katello::Glue.logger.warning "Before rollback post-queue: #{post_queue.to_log}"
       raise ActiveRecord::Rollback
     end
 
     def pre_queue
-      @pre_queue ||= Glue::Queue.new
+      @pre_queue ||= Katello::Glue::Queue.new
     end
 
     def post_queue
-      @post_queue ||= Glue::Queue.new(pre_queue)
+      @post_queue ||= Katello::Glue::Queue.new(pre_queue)
     end
 
     public
@@ -120,7 +120,7 @@ module Glue
         args_str = args.collect { |x| x.inspect }.join(",")[0, 20]
         obj_id = ''
         obj_id = "find(#{obj.id})." if obj.respond_to?(:id) && obj.id
-        Glue.logger.info "Task #{task.name} (#{q_active}/#{q_total}) > #{obj.class.name}.#{obj_id}#{met}(#{args_str})"
+        Katello::Glue.logger.info "Task #{task.name} (#{q_active}/#{q_total}) > #{obj.class.name}.#{obj_id}#{met}(#{args_str})"
 
         # execute the task
         task.status = "running"

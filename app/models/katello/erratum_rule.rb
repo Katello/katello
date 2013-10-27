@@ -93,7 +93,7 @@ class ErratumRule < FilterRule
   end
 
   def as_json(options = {})
-    params = Util::Support.deep_copy(parameters).with_indifferent_access
+    params = Katello::Util::Support.deep_copy(parameters).with_indifferent_access
     from_date = start_date
     to_date = end_date
     params[:date_range][:start]  = from_date if from_date

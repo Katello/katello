@@ -29,7 +29,7 @@ class PackageRule < FilterRule
       next if unit[:name].blank?
 
       filter = version_filter(unit)
-      Package.search(unit[:name], 0, repo.package_count, [repo.pulp_id],
+      Katello::Package.search(unit[:name], 0, repo.package_count, [repo.pulp_id],
                       [:nvrea_sort, "ASC"], :all, 'name', filter).collect(&:filename).compact
     end
     pkg_filenames.flatten!
@@ -42,9 +42,9 @@ class PackageRule < FilterRule
 
   def version_filter(unit)
     if unit.key?(:version)
-      Util::Package.version_eq_filter(unit[:version])
+      Katello::Util::Package.version_eq_filter(unit[:version])
     elsif unit.key?(:min_version) || unit.key?(:max_version)
-      Util::Package.version_filter(unit[:min_version], unit[:max_version])
+      Katello::Util::Package.version_filter(unit[:min_version], unit[:max_version])
     else
       nil
     end

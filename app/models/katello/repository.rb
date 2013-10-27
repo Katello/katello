@@ -15,14 +15,14 @@ class Repository < ActiveRecord::Base
 
   before_destroy :assert_deletable
 
-  include Glue::Candlepin::Content if (Katello.config.use_cp && Katello.config.use_pulp)
-  include Glue::Pulp::Repo if Katello.config.use_pulp
-  include Glue::ElasticSearch::Repository if Katello.config.use_elasticsearch
+  include Katello::Glue::Candlepin::Content if (Katello.config.use_cp && Katello.config.use_pulp)
+  include Katello::Glue::Pulp::Repo if Katello.config.use_pulp
+  include Katello::Glue::ElasticSearch::Repository if Katello.config.use_elasticsearch
 
-  include Glue if (Katello.config.use_cp || Katello.config.use_pulp)
-  include Authorization::Repository
+  include Katello::Glue if (Katello.config.use_cp || Katello.config.use_pulp)
+  include Katello::Authorization::Repository
 
-  include Glue::Event
+  include Katello::Glue::Event
   def destroy_event
     Katello::Actions::RepositoryDestroy
   end
@@ -31,8 +31,8 @@ class Repository < ActiveRecord::Base
     Katello::Actions::RepositoryCreate
   end
 
-  include AsyncOrchestration
-  include Ext::LabelFromName
+  include Katello::AsyncOrchestration
+  include Katello::Ext::LabelFromName
   include Rails.application.routes.url_helpers
 
   YUM_TYPE = 'yum'
@@ -118,13 +118,13 @@ class Repository < ActiveRecord::Base
   end
 
   def other_repos_with_same_product_and_content
-    list = Repository.in_product(Product.find(self.product.id)).where(:content_id => self.content_id).all
+    list = Katello::Repository.in_product(Product.find(self.product.id)).where(:content_id => self.content_id).all
     list.delete(self)
     list
   end
 
   def other_repos_with_same_content
-    list = Repository.where(:content_id => self.content_id).all
+    list = Katello::Repository.where(:content_id => self.content_id).all
     list.delete(self)
     list
   end
@@ -149,7 +149,7 @@ class Repository < ActiveRecord::Base
 
   def clones
     lib_id = self.library_instance_id || self.id
-    Repository.where(:library_instance_id => lib_id)
+    Katello::Repository.where(:library_instance_id => lib_id)
   end
 
   #is the repo cloned in the specified environment
@@ -159,7 +159,7 @@ class Repository < ActiveRecord::Base
 
   def promoted?
     if self.environment.library?
-      Repository.where(:library_instance_id => self.id).count > 0
+      Katello::Repository.where(:library_instance_id => self.id).count > 0
     else
       true
     end
@@ -169,7 +169,7 @@ class Repository < ActiveRecord::Base
     if self.content_view.default
       # this repo is part of a default content view
       lib_id = self.library_instance_id || self.id
-      Repository.in_environment(env).where(:library_instance_id => lib_id).
+      Katello::Repository.in_environment(env).where(:library_instance_id => lib_id).
           joins(:content_view_version => :content_view).where("#{Katello::ContentView.table_name.default}" => true).first
     else
       # this repo is part of a content view that was published from a user created definition
@@ -181,14 +181,14 @@ class Repository < ActiveRecord::Base
     if name.blank?
       self.gpg_key = nil
     else
-      self.gpg_key = GpgKey.readable(organization).find_by_name!(name)
+      self.gpg_key = Katello::GpgKey.readable(organization).find_by_name!(name)
     end
   end
 
   def after_sync(pulp_task_id)
     self.handle_sync_complete_task(pulp_task_id)
     self.index_content
-    Glue::Event.trigger(Katello::Actions::RepositorySync, self)
+    Katello::Glue::Event.trigger(Katello::Actions::RepositorySync, self)
   end
 
   def as_json(*args)
@@ -203,7 +203,7 @@ class Repository < ActiveRecord::Base
   def self.clone_repo_path(repo, environment, content_view)
     repo_lib = repo.library_instance ? repo.library_instance : repo
     org, _, content_path = repo_lib.relative_path.split("/", 3)
-    cve = ContentViewEnvironment.where(:environment_id => environment,
+    cve = Katello::ContentViewEnvironment.where(:environment_id => environment,
                                        :content_view_id => content_view).first
     "#{org}/#{cve.label}/#{content_path}"
   end
@@ -213,7 +213,7 @@ class Repository < ActiveRecord::Base
   end
 
   def clone_id(env, content_view)
-    Repository.repo_id(self.product.label, self.label, env.label,
+    Katello::Repository.repo_id(self.product.label, self.label, env.label,
                              env.organization.label, content_view.label)
   end
 
@@ -238,7 +238,7 @@ class Repository < ActiveRecord::Base
           content_view.repos(to_env).where(:library_instance_id => library.id).count > 0
     end
 
-    clone = Repository.new(:environment => to_env,
+    clone = Katello::Repository.new(:environment => to_env,
                            :product => self.product,
                            :cp_label => self.cp_label,
                            :library_instance => library,
@@ -254,7 +254,7 @@ class Repository < ActiveRecord::Base
                            :unprotected => self.unprotected
                            )
     clone.pulp_id = clone.clone_id(to_env, content_view)
-    clone.relative_path = Repository.clone_repo_path(self, to_env, content_view)
+    clone.relative_path = Katello::Repository.clone_repo_path(self, to_env, content_view)
     clone.save!
     return clone
   end
@@ -263,7 +263,7 @@ class Repository < ActiveRecord::Base
   # equivalent of repo
   def environmental_instances(view)
     repo = self.library_instance || self
-    search = Repository.where("library_instance_id=%s or #{Katello::Repository.table_name}.id=%s"  % [repo.id, repo.id])
+    search = Katello::Repository.where("library_instance_id=%s or #{Katello::Repository.table_name}.id=%s"  % [repo.id, repo.id])
     search.in_content_views([view])
   end
 

@@ -13,8 +13,8 @@
 module Katello
 class Changeset < ActiveRecord::Base
 
-  include AsyncOrchestration
-  include Glue::ElasticSearch::Changeset  if Katello.config.use_elasticsearch
+  include Katello::AsyncOrchestration
+  include Katello::Glue::ElasticSearch::Changeset  if Katello.config.use_elasticsearch
 
   NEW       = 'new'
   REVIEW    = 'review'
@@ -42,8 +42,8 @@ class Changeset < ActiveRecord::Base
   validates_with Validators::NotInLibraryValidator
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name
 
-  has_many :users, :class_name => "ChangesetUser", :inverse_of => :changeset, :dependent => :destroy
-  belongs_to :environment, :class_name => "KTEnvironment"
+  has_many :users, :class_name => "Katello::ChangesetUser", :inverse_of => :changeset, :dependent => :destroy
+  belongs_to :environment, :class_name => "Katello::KTEnvironment"
   belongs_to :task_status
   has_many :changeset_content_views, :dependent => :destroy
   has_many :content_views, :through => :changeset_content_views
@@ -88,7 +88,7 @@ class Changeset < ActiveRecord::Base
 
   # returns list of virtual permission tags for the current user
   def self.list_tags
-    select('id,name').all.collect { |m| VirtualTag.new(m.id, m.name) }
+    select('id,name').all.collect { |m| Katello::VirtualTag.new(m.id, m.name) }
   end
 
   def action_type
@@ -123,9 +123,9 @@ class Changeset < ActiveRecord::Base
 
   def self.create_for(acct_type, options)
     if PROMOTION == acct_type
-      PromotionChangeset.create!(options)
+      Katello::PromotionChangeset.create!(options)
     else
-      DeletionChangeset.create!(options)
+      Katello::DeletionChangeset.create!(options)
     end
   end
 
@@ -185,7 +185,7 @@ class Changeset < ActiveRecord::Base
         raise Errors::ContentViewTaskInProgress.new(_("A '%{type_of_action}' action is currently in progress for  "\
                                                       "content view '%{content_view}'.  Please retry the changeset "\
                                                       "after the action completes.") %
-                                                      { :type_of_action => _(TaskStatus::TYPES[version.task_status.task_type][:english_name]),
+                                                      { :type_of_action => _(Katello::TaskStatus::TYPES[version.task_status.task_type][:english_name]),
                                                         :content_view => view.name })
       elsif view.composite
         view.content_view_definition.component_content_views.each do |component_view|
@@ -194,7 +194,7 @@ class Changeset < ActiveRecord::Base
             raise Errors::ContentViewTaskInProgress.new(_("A '%{type_of_action}' action is currently in progress for "\
                                                           "component content view '%{content_view}'.  Please retry "\
                                                           "the changeset after the action completes.") %
-                                                          { :type_of_action => _(TaskStatus::TYPES[version.task_status.task_type][:english_name]),
+                                                          { :type_of_action => _(Katello::TaskStatus::TYPES[version.task_status.task_type][:english_name]),
                                                             :content_view => view.name })
           end
         end

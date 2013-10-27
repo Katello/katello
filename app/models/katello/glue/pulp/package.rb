@@ -31,7 +31,7 @@ module Glue::Pulp::Package
       def self.find(id)
         package_attrs = Katello.pulp_server.extensions.rpm.find_by_unit_id(id)
         return if package_attrs.nil?
-        Package.new(package_attrs) if package_attrs
+        Katello::Package.new(package_attrs) if package_attrs
       rescue RestClient::ResourceNotFound => exception
         Rails.logger.error "Failed to find pulp package #{id}: #{exception}, #{exception.backtrace.join("\n")}"
         raise exception
@@ -48,15 +48,15 @@ module Glue::Pulp::Package
     end
 
     def nvrea
-      Util::Package.build_nvrea(self.as_json.with_indifferent_access, false)
+      Katello::Util::Package.build_nvrea(self.as_json.with_indifferent_access, false)
     end
 
     def sortable_version
-      Util::Package.sortable_version(self.version)
+      Katello::Util::Package.sortable_version(self.version)
     end
 
     def sortable_release
-      Util::Package.sortable_version(self.release)
+      Katello::Util::Package.sortable_version(self.release)
     end
 
     def as_json(options = nil)

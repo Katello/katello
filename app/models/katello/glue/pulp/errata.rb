@@ -38,14 +38,14 @@ module Glue::Pulp::Errata
 
       def self.find_by_errata_id(id)
         erratum_attrs = Katello.pulp_server.extensions.errata.find(id)
-        ::Errata.new(erratum_attrs) if !erratum_attrs.nil?
+        Katello::Errata.new(erratum_attrs) if !erratum_attrs.nil?
       end
 
       def self.list_by_filter_clauses(clauses)
-        errata = Katello.pulp_server.extensions.errata.search(::Errata::CONTENT_TYPE, :filters => clauses)
+        errata = Katello.pulp_server.extensions.errata.search(Katello::Errata::CONTENT_TYPE, :filters => clauses)
         if errata
           errata.collect do |attrs|
-            ::Errata.new(attrs) if attrs
+            Katello::Errata.new(attrs) if attrs
           end.compact
         else
           []
@@ -77,7 +77,7 @@ module Glue::Pulp::Errata
 
       self.pkglist.each do |pack_list|
         packages += pack_list['packages'].collect do |err_pack|
-          ::Package.new(err_pack)
+          Katello::Package.new(err_pack)
         end
       end
 
@@ -91,7 +91,7 @@ module Glue::Pulp::Errata
         # there is a problem, that Pulp in versino <= 0.0.265-1 doesn't remove
         # repo frmo errata when deleting repository. Therefore there might be a
         # situation that repo is not in Pulp anymore, see BZ 790356
-        if repo = Repository.where(:pulp_id => repoid)[0]
+        if repo = Katello::Repository.where(:pulp_id => repoid)[0]
           products << repo.product
         end
       end

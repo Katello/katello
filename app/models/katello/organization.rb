@@ -15,10 +15,10 @@ class Organization < ActiveRecord::Base
 
   ALLOWED_DEFAULT_INFO_TYPES = %w(system distributor)
 
-  include Glue::Candlepin::Owner if Katello.config.use_cp
-  include Glue if Katello.config.use_cp
+  include Katello::Glue::Candlepin::Owner if Katello.config.use_cp
+  include Katello::Glue if Katello.config.use_cp
 
-  include Glue::Event
+  include Katello::Glue::Event
 
   def create_event
     Headpin::Actions::OrgCreate
@@ -28,29 +28,29 @@ class Organization < ActiveRecord::Base
     Headpin::Actions::OrgDestroy
   end
 
-  include AsyncOrchestration
-  include Ext::PermissionTagCleanup
+  include Katello::AsyncOrchestration
+  include Katello::Ext::PermissionTagCleanup
 
-  include Authorization::Organization
-  include Glue::ElasticSearch::Organization if Katello.config.use_elasticsearch
+  include Katello::Authorization::Organization
+  include Katello::Glue::ElasticSearch::Organization if Katello.config.use_elasticsearch
 
-  include Ext::LabelFromName
+  include Katello::Ext::LabelFromName
 
   has_many :activation_keys, :dependent => :destroy
   has_many :providers, :dependent => :destroy
   has_many :products, :through => :providers
-  has_many :environments, :class_name => "KTEnvironment", :dependent => :destroy, :inverse_of => :organization
-  has_one :library, :class_name => "KTEnvironment", :conditions => {:library => true}, :dependent => :destroy
+  has_many :environments, :class_name => "Katello::KTEnvironment", :dependent => :destroy, :inverse_of => :organization
+  has_one :library, :class_name => "Katello::KTEnvironment", :conditions => {:library => true}, :dependent => :destroy
   has_many :gpg_keys, :dependent => :destroy, :inverse_of => :organization
   has_many :permissions, :dependent => :destroy, :inverse_of => :organization
   has_many :sync_plans, :dependent => :destroy, :inverse_of => :organization
   has_many :system_groups, :dependent => :destroy, :inverse_of => :organization
-  has_many :content_view_definitions, :class_name => "ContentViewDefinitionBase", :dependent => :destroy
+  has_many :content_view_definitions, :class_name => "Katello::ContentViewDefinitionBase", :dependent => :destroy
   has_many :content_views, :dependent => :destroy
   has_many :task_statuses, :dependent => :destroy, :as => :task_owner
 
   #older association
-  has_many :org_tasks, :dependent => :destroy, :class_name => "TaskStatus", :inverse_of => :organization
+  has_many :org_tasks, :dependent => :destroy, :class_name => "Katello::TaskStatus", :inverse_of => :organization
 
   has_many :notices, :dependent => :destroy
 
@@ -77,11 +77,11 @@ class Organization < ActiveRecord::Base
 
   # Ensure that the name and label namespaces do not overlap
   def unique_name_and_label
-    if new_record? && Organization.where("name = ? OR label = ?", label, name).any?
+    if new_record? && Katello::Organization.where("name = ? OR label = ?", label, name).any?
       errors.add(:organization, _("Names and labels must be unique across all organizations"))
-    elsif label_changed? && Organization.where("id != ? AND name = ?", id, label).any?
+    elsif label_changed? && Katello::Katello::Organization.where("id != ? AND name = ?", id, label).any?
       errors.add(:label, _("Names and labels must be unique across all organizations"))
-    elsif name_changed? && Organization.where("id != ? AND label = ?", id, name).any?
+    elsif name_changed? && Katello::Katello::Organization.where("id != ? AND label = ?", id, name).any?
       errors.add(:name, _("Names and labels must be unique across all organizations"))
     else
       true
@@ -89,15 +89,15 @@ class Organization < ActiveRecord::Base
   end
 
   def default_content_view
-    ContentView.default.where(:organization_id => self.id).first
+    Katello::ContentView.default.where(:organization_id => self.id).first
   end
 
   def systems
-    System.where(:environment_id => environments)
+    Katello::System.where(:environment_id => environments)
   end
 
   def distributors
-    Distributor.where(:environment_id => environments)
+    Katello::Distributor.where(:environment_id => environments)
   end
 
   def promotion_paths
@@ -116,18 +116,18 @@ class Organization < ActiveRecord::Base
   end
 
   def create_library
-    self.library = KTEnvironment.new(:name => "Library", :label => "Library", :library => true, :organization => self)
+    self.library = Katello::KTEnvironment.new(:name => "Library", :label => "Library", :library => true, :organization => self)
   end
 
   def create_redhat_provider
-    self.providers << Provider.new(:name => "Red Hat", :provider_type => Provider::REDHAT, :organization => self)
+    self.providers << Katello::Provider.new(:name => "Red Hat", :provider_type => Katello::Provider::REDHAT, :organization => self)
   end
 
   def validate_destroy(current_org)
     def_error = _("Could not delete organization '%s'.")  % [self.name]
     if (current_org == self)
       [def_error, _("The current organization cannot be deleted. Please switch to a different organization before deleting.")]
-    elsif (Organization.count == 1)
+    elsif (Katello::Organization.count == 1)
       [def_error, _("At least one organization must exist.")]
     end
   end
@@ -148,7 +148,7 @@ class Organization < ActiveRecord::Base
 
   def applying_default_info?
     return false if self.apply_info_task_id.nil?
-    ! TaskStatus.find_by_id(self.apply_info_task_id).finished?
+    ! Katello::TaskStatus.find_by_id(self.apply_info_task_id).finished?
   end
 
   def initialize_default_info
@@ -187,17 +187,17 @@ class Organization < ActiveRecord::Base
       self.save!
       return task
     else
-      return CustomInfo.apply_to_set(ids_and_types, custom_info)
+      return Katello::CustomInfo.apply_to_set(ids_and_types, custom_info)
     end
   end
 
   def run_apply_info(ids_and_types, custom_info)
-    CustomInfo.apply_to_set(ids_and_types, custom_info)
+    Katello::CustomInfo.apply_to_set(ids_and_types, custom_info)
   end
 
   def auto_attaching_all_systems?
     return false if self.owner_auto_attach_all_systems_task_id.nil?
-    ! TaskStatus.find_by_id(self.owner_auto_attach_all_systems_task_id).finished?
+    ! Katello::TaskStatus.find_by_id(self.owner_auto_attach_all_systems_task_id).finished?
   end
 
   def auto_attach_all_systems
@@ -211,7 +211,7 @@ class Organization < ActiveRecord::Base
   def monitor_owner_auto_attach(job, options = {})
     options = { :pause => 5 }.merge(options)
     loop do
-      break unless Resources::Candlepin::Job.not_finished?(Resources::Candlepin::Job.get(job["id"]))
+      break unless Katello::Resources::Candlepin::Job.not_finished?(Resources::Candlepin::Job.get(job["id"]))
       sleep options[:pause]
     end
     return job["id"]
@@ -224,7 +224,7 @@ class Organization < ActiveRecord::Base
   private
 
   def start_discovery_task(url, notify = false)
-    task_id = AsyncOperation.current_task_id
+    task_id = Katello::AsyncOperation.current_task_id
     task = TaskStatus.find(task_id)
     task.parameters = {:url => url}
     task.result ||= []
@@ -241,14 +241,14 @@ class Organization < ActiveRecord::Base
     #  Using the saved task_id to compare current providers
     #  task id
     continue_func = lambda do
-      task = TaskStatus.find(task_id)
+      task = Katello::TaskStatus.find(task_id)
       !task.canceled?
     end
 
     discover = RepoDiscovery.new(url)
     discover.run(found_func, continue_func)
   rescue => e
-    Notify.exception _('Repos discovery failed.'), e if notify
+    Katello::Notify.exception _('Repos discovery failed.'), e if notify
     raise e
   end
 

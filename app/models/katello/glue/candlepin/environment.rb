@@ -27,12 +27,12 @@ module Glue::Candlepin::Environment
   module InstanceMethods
 
     def set_environment
-      Resources::Candlepin::Environment.find(self.cp_id)
+      Katello::Resources::Candlepin::Environment.find(self.cp_id)
       Rails.logger.info _("Candlepin environment already exists: %s") % self.cp_id
       true
     rescue RestClient::ResourceNotFound
       Rails.logger.info _("Creating environment in candlepin: %s") % self.label
-      Resources::Candlepin::Environment.create(self.content_view.organization.label, self.cp_id, self.label,
+      Katello::Resources::Candlepin::Environment.create(self.content_view.organization.label, self.cp_id, self.label,
                                                self.content_view.description)
       true
     rescue => e
@@ -42,7 +42,7 @@ module Glue::Candlepin::Environment
     end
 
     def candlepin_info
-      Resources::Candlepin::Environment.find(self.cp_id)
+      Katello::Resources::Candlepin::Environment.find(self.cp_id)
     end
 
     def content_ids
@@ -51,7 +51,7 @@ module Glue::Candlepin::Environment
 
     def del_environment
       Rails.logger.info _("Deleting environment in candlepin: %s") % self.label
-      Resources::Candlepin::Environment.destroy(self.cp_id)
+      Katello::Resources::Candlepin::Environment.destroy(self.cp_id)
       true
     rescue RestClient::ResourceNotFound
       Rails.logger.info _("Candlepin environment doesn't exist: %s") % self.label
@@ -82,10 +82,10 @@ module Glue::Candlepin::Environment
       saved_cp_ids = saved_env_content_ids
 
       add_ids = all_env_ids - saved_cp_ids
-      Resources::Candlepin::Environment.add_content(self.cp_id, add_ids) unless add_ids.empty?
+      Katello::Resources::Candlepin::Environment.add_content(self.cp_id, add_ids) unless add_ids.empty?
 
       delete_ids = saved_cp_ids - all_env_ids.to_a
-      Resources::Candlepin::Environment.delete_content(self.cp_id, delete_ids) unless delete_ids.empty?
+      Katello::Resources::Candlepin::Environment.delete_content(self.cp_id, delete_ids) unless delete_ids.empty?
     end
 
     protected
@@ -97,7 +97,7 @@ module Glue::Candlepin::Environment
     end
 
     def saved_env_content_ids
-      Resources::Candlepin::Environment.find(self.cp_id)[:environmentContent].map do |content|
+      Katello::Resources::Candlepin::Environment.find(self.cp_id)[:environmentContent].map do |content|
         content[:contentId]
       end
     end

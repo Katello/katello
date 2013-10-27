@@ -13,7 +13,7 @@
 module Katello
 class Tag
   def self.formatted(resource_type_name, tag_id)
-    model_klass = ResourceType::TYPES[resource_type_name][:model]
+    model_klass = Katello::ResourceType::TYPES[resource_type_name][:model]
 
     if model_klass
       tags = model_klass.tags(tag_id) rescue []
@@ -26,7 +26,7 @@ class Tag
   end
 
   def self.tags_for(resource_type_name, organization_id)
-    model_klass = ResourceType::TYPES[resource_type_name][:model]
+    model_klass = Katello::ResourceType::TYPES[resource_type_name][:model]
 
     if model_klass
       tag_list = model_klass.list_tags(organization_id) if model_klass.respond_to? :list_tags

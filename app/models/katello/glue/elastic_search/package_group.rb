@@ -29,8 +29,8 @@ module Glue::ElasticSearch::PackageGroup
         {
             "index" => {
                 "analysis" => {
-                    "filter" => Util::Search.custom_filters,
-                    "analyzer" => Util::Search.custom_analyzers
+                    "filter" => Katello::Util::Search.custom_filters,
+                    "analyzer" => Katello::Util::Search.custom_analyzers
                 }
             }
         }
@@ -55,7 +55,7 @@ module Glue::ElasticSearch::PackageGroup
       end
 
       def self.id_search(ids)
-        return Util::Support.array_with_total unless Tire.index(self.index).exists?
+        return Katello::Util::Support.array_with_total unless Tire.index(self.index).exists?
         search = Tire.search self.index do
           fields [:id, :name, :repo_id]
           query do
@@ -69,7 +69,7 @@ module Glue::ElasticSearch::PackageGroup
 
       def self.search(query, start, page_size, repoid = nil, sort = [:name_sort, "ASC"],
                       default_field = 'name')
-        return Util::Support.array_with_total if !Tire.index(self.index).exists?
+        return Katello::Util::Support.array_with_total if !Tire.index(self.index).exists?
 
         all_rows = query.blank? #if blank, get all rows
 
@@ -95,7 +95,7 @@ module Glue::ElasticSearch::PackageGroup
 
         return search.results
       rescue Tire::Search::SearchRequestFailed
-        Util::Support.array_with_total
+        Katello::Util::Support.array_with_total
       end
 
       def self.index_package_groups(pkg_grp_ids)
@@ -106,10 +106,10 @@ module Glue::ElasticSearch::PackageGroup
 
         unless pkg_grps.empty?
           Tire.index PackageGroup.index do
-            create :settings => PackageGroup.index_settings, :mappings => PackageGroup.index_mapping
-          end unless Tire.index(PackageGroup.index).exists?
+            create :settings => Katello::PackageGroup.index_settings, :mappings => Katello::PackageGroup.index_mapping
+          end unless Tire.index(Katello::PackageGroup.index).exists?
 
-          Tire.index PackageGroup.index do
+          Tire.index Katello::PackageGroup.index do
             import pkg_grps
           end
         end

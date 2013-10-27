@@ -33,18 +33,18 @@ AsyncOperation = Struct.new(:status_id, :login, :object, :method_name, :args) do
   end
 
   def perform
-    User.current = User.find_by_login(login)
+    ::User.current = ::User.find_by_login(login)
 
     #Set task id so a job can reference it, currently no better way to do this :/
     Thread.current['current_delayed_job_task'] = self.status_id
 
     # Set the locale for this action
-    if User.current && User.current.default_locale
-      I18n.locale = User.current.default_locale
+    if ::User.current && ::User.current.default_locale
+      I18n.locale = ::User.current.default_locale
     else
       # if user did not set his locale we are not able to detect browser setting here and we have to
       # fall back to system language
-      I18n.locale = KTLocale.pick_available_locale Katello.config.system_lang
+      I18n.locale = Katello::KTLocale.pick_available_locale Katello.config.system_lang
     end
     Rails.logger.debug "Setting locale: #{I18n.locale}"
 
@@ -68,22 +68,22 @@ AsyncOperation = Struct.new(:status_id, :login, :object, :method_name, :args) do
 
   #callbacks
   def before
-    s = TaskStatus.find(status_id)
-    s.update_attributes!(:state => TaskStatus::Status::RUNNING, :start_time => current_time)
+    s = Katello::TaskStatus.find(status_id)
+    s.update_attributes!(:state => Katello::TaskStatus::Status::RUNNING, :start_time => current_time)
   end
 
   def error(job, exception)
-    s = TaskStatus.find(status_id)
+    s = Katello::TaskStatus.find(status_id)
     s.update_attributes!(
-        :state => TaskStatus::Status::ERROR,
+        :state => Katello::TaskStatus::Status::ERROR,
         :finish_time => current_time,
         :result => {:errors => [exception.message, exception.backtrace.join("\n")]})
   end
 
   def success
-    s = TaskStatus.find(status_id)
+    s = Katello::TaskStatus.find(status_id)
     s.update_attributes!(
-        :state => TaskStatus::Status::FINISHED,
+        :state => Katello::TaskStatus::Status::FINISHED,
         :finish_time => current_time,
         :result => @result)
   end

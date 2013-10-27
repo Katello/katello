@@ -21,25 +21,25 @@ class Candlepin::Content
   end
 
   def self.find(id)
-    found = ::Resources::Candlepin::Content.get(id)
-    ::Candlepin::Content.new(found)
+    found = Katello::Resources::Candlepin::Content.get(id)
+    Katello::Candlepin::Content.new(found)
   end
 
   def create
-    created = Resources::Candlepin::Content.create self
+    created = Katello::Resources::Candlepin::Content.create self
     load_attributes(created)
 
     self
   end
 
   def destroy
-    Resources::Candlepin::Content.destroy(@id)
+    Katello::Resources::Candlepin::Content.destroy(@id)
   end
 
   def update(params = {})
     return self if params.empty?
 
-    updated = Resources::Candlepin::Content.update(params.merge(:id => @id))
+    updated = Katello::Resources::Candlepin::Content.update(params.merge(:id => @id))
     load_attributes(updated)
 
     self

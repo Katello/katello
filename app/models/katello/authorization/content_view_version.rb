@@ -16,7 +16,7 @@ module Authorization::ContentViewVersion
 
   module ClassMethods
     def readable(org)
-      view_ids = ContentView.readable(org).collect{|v| v.id}
+      view_ids = Katello::ContentView.readable(org).collect{|v| v.id}
       joins(:content_view).where("#{Katello::ContentView.table_name}.id" => view_ids)
     end
 

@@ -56,7 +56,7 @@ module Glue::Pulp::Repos
       end
     end
 
-    items = Katello.pulp_server.extensions.repository.search_by_repository_ids(Repository.in_environment(environment).pluck(:pulp_id))
+    items = Katello.pulp_server.extensions.repository.search_by_repository_ids(Katello::Repository.in_environment(environment).pluck(:pulp_id))
     full_repos = {}
     items.each { |item| full_repos[item["id"]] = item }
 
@@ -151,7 +151,7 @@ module Glue::Pulp::Repos
         end
       end.flatten(1)
 
-      Util::Package.find_latest_packages packs
+      Katello::Util::Package.find_latest_packages packs
     end
 
     def has_erratum?(env, id)
@@ -188,22 +188,22 @@ module Glue::Pulp::Repos
       return @status if @status
 
       statuses = repos(self.library).map {|r| r.sync_status}
-      return PulpSyncStatus.new(:state => PulpSyncStatus::Status::NOT_SYNCED) if statuses.empty?
+      return Katello::PulpSyncStatus.new(:state => Katello::PulpSyncStatus::Status::NOT_SYNCED) if statuses.empty?
 
       #if any of repos sync still running -> product sync running
-      idx = statuses.index { |r| r.state.to_s == PulpSyncStatus::Status::RUNNING.to_s }
+      idx = statuses.index { |r| r.state.to_s == Katello::PulpSyncStatus::Status::RUNNING.to_s }
       return statuses[idx] if !idx.nil?
 
       #else if any of repos not synced -> product not synced
-      idx = statuses.index { |r| r.state.to_s == PulpSyncStatus::Status::NOT_SYNCED.to_s }
+      idx = statuses.index { |r| r.state.to_s == Katello::PulpSyncStatus::Status::NOT_SYNCED.to_s }
       return statuses[idx] if !idx.nil?
 
       #else if any of repos sync cancelled -> product sync cancelled
-      idx = statuses.index { |r| r.state.to_s == PulpSyncStatus::Status::CANCELED.to_s }
+      idx = statuses.index { |r| r.state.to_s == Katello::PulpSyncStatus::Status::CANCELED.to_s }
       return statuses[idx] if !idx.nil?
 
       #else if any of repos sync finished with error -> product sync finished with error
-      idx = statuses.index { |r| r.state.to_s == PulpSyncStatus::Status::ERROR.to_s }
+      idx = statuses.index { |r| r.state.to_s == Katello::PulpSyncStatus::Status::ERROR.to_s }
       return statuses[idx] if !idx.nil?
 
       #else -> all finished
@@ -260,11 +260,11 @@ module Glue::Pulp::Repos
     def repo_id(content_name, env_label = nil)
       return if content_name.nil?
       return content_name if content_name.include?(self.organization.label) && content_name.include?(self.label.to_s)
-      Repository.repo_id(self.label.to_s, content_name.to_s, env_label, self.organization.label, nil)
+      Katello::Repository.repo_id(self.label.to_s, content_name.to_s, env_label, self.organization.label, nil)
     end
 
     def repo_url(content_url)
-      if self.provider.provider_type == Provider::CUSTOM
+      if self.provider.provider_type == Katello::Provider::CUSTOM
         url = content_url.dup
       else
         url = self.provider[:repository_url] + content_url
@@ -273,8 +273,8 @@ module Glue::Pulp::Repos
     end
 
     def update_repositories
-      repos = Repository.in_product(self)
-      upstream_ca = File.read(Resources::CDN::CdnResource.ca_file)
+      repos = Katello::Repository.in_product(self)
+      upstream_ca = File.read(Katello::Resources::CDN::CdnResource.ca_file)
       repos.each do |repo|
         key = nil
         ca = nil
@@ -292,10 +292,10 @@ module Glue::Pulp::Repos
       unprotected = unprotected.nil? ? false : unprotected
       check_for_repo_conflicts(name, label)
 
-      repo = Repository.create!(:environment => self.organization.library,
+      repo = Katello::Repository.create!(:environment => self.organization.library,
                                 :product => self,
                                 :pulp_id => repo_id(label),
-                                :relative_path => Glue::Pulp::Repos.custom_repo_path(self.library, self, label),
+                                :relative_path => Katello::Glue::Pulp::Repos.custom_repo_path(self.library, self, label),
                                 :arch => arch,
                                 :name => name,
                                 :label => label,
@@ -369,7 +369,7 @@ module Glue::Pulp::Repos
     end
 
     def check_for_repo_conflicts(repo_name, repo_label)
-      is_dupe =  Repository.where(:name => repo_name,
+      is_dupe =  Katello::Repository.where(:name => repo_name,
                                   :product_id => self.id,
                                   :environment_id => self.library.id
                                  ).count > 0
@@ -377,7 +377,7 @@ module Glue::Pulp::Repos
         raise Errors::ConflictException.new(_("Label has already been taken"))
       end
       unless repo_label.blank?
-        is_dupe =  Repository.where(:label => repo_label,
+        is_dupe =  Katello::Repository.where(:label => repo_label,
                                     :product_id => self.id,
                                     :environment_id => self.library.id
                                    ).count > 0

@@ -19,13 +19,13 @@ module Glue::Candlepin::Product
 
     base.class_eval do
       lazy_accessor :productContent, :multiplier, :href, :attrs,
-        :initializer => lambda {|s| convert_from_cp_fields(Resources::Candlepin::Product.get(cp_id)[0]) }
+        :initializer => lambda {|s| convert_from_cp_fields(Katello::Resources::Candlepin::Product.get(cp_id)[0]) }
       # Entitlement Certificate for this product
       lazy_accessor :certificate,
-        :initializer => lambda {|s| Resources::Candlepin::Product.certificate(cp_id, self.organization.label) },
+        :initializer => lambda {|s| Katello::Resources::Candlepin::Product.certificate(cp_id, self.organization.label) },
         :unless => lambda {|s| cp_id.nil? }
       # Entitlement Key for this product
-      lazy_accessor :key, :initializer => lambda {|s| Resources::Candlepin::Product.key(cp_id, self.organization.label) }, :unless => lambda {|s| cp_id.nil? }
+      lazy_accessor :key, :initializer => lambda {|s| Katello::Resources::Candlepin::Product.key(cp_id, self.organization.label) }, :unless => lambda {|s| cp_id.nil? }
 
       before_save :save_product_orchestration
       before_destroy :destroy_product_orchestration
@@ -46,9 +46,9 @@ module Glue::Candlepin::Product
     product_content_attrs = attrs.delete(:productContent) || []
     import_logger        = attrs[:import_logger]
 
-    attrs = attrs.merge('name' => validate_name(attrs['name']), 'label' => Util::Model.labelize(attrs['name']))
+    attrs = attrs.merge('name' => validate_name(attrs['name']), 'label' => Katello::Util::Model.labelize(attrs['name']))
 
-    product = Product.new(attrs, &block)
+    product = Katello::Product.new(attrs, &block)
     product.orchestration_for = :import_from_cp_ar_setup
     product.save!
     product.productContent_will_change!
@@ -64,9 +64,9 @@ module Glue::Candlepin::Product
   end
 
   def self.import_marketing_from_cp(attrs, engineering_product_ids, &block)
-    attrs = attrs.merge('name' => validate_name(attrs['name']), 'label' => Util::Model.labelize(attrs['name']))
+    attrs = attrs.merge('name' => validate_name(attrs['name']), 'label' => Katello::Util::Model.labelize(attrs['name']))
 
-    product = MarketingProduct.new(attrs, &block)
+    product = Katello::MarketingProduct.new(attrs, &block)
     product.orchestration_for = :import_from_cp_ar_setup
     product.save!
     engineering_product_ids.each do |engineering_product_id|
@@ -104,7 +104,7 @@ module Glue::Candlepin::Product
     end
 
     def build_product_content(attrs)
-      @productContent = attrs.collect { |pc| Candlepin::ProductContent.new pc }
+      @productContent = attrs.collect { |pc| Katello::Candlepin::ProductContent.new pc }
     end
 
     def support_level
@@ -138,7 +138,7 @@ module Glue::Candlepin::Product
 
     def convert_from_cp_fields(cp_json)
       ar_safe_json = cp_json.key?(:attributes) ? cp_json.merge(:attrs => cp_json.delete(:attributes)) : cp_json
-      ar_safe_json[:productContent] = ar_safe_json[:productContent].collect { |pc| Candlepin::ProductContent.new(pc, self.id) }
+      ar_safe_json[:productContent] = ar_safe_json[:productContent].collect { |pc| Katello::Candlepin::ProductContent.new(pc, self.id) }
       ar_safe_json[:attrs] = remove_hibernate_fields(cp_json[:attrs]) if ar_safe_json.key?(:attrs)
       ar_safe_json[:attrs] ||= []
       ar_safe_json.except('id')
@@ -152,18 +152,18 @@ module Glue::Candlepin::Product
     end
 
     def add_content(content)
-      Resources::Candlepin::Product.add_content self.cp_id, content.content.id, true
+      Katello::Resources::Candlepin::Product.add_content self.cp_id, content.content.id, true
       self.productContent << content
     end
 
     def remove_content_by_id(content_id)
-      Resources::Candlepin::Product.remove_content cp_id, content_id
+      Katello::Resources::Candlepin::Product.remove_content cp_id, content_id
     end
 
     def set_product
       Rails.logger.debug "Creating a product in candlepin: #{name}"
       self.attrs ||=  [{:name => "arch", :value => "ALL"}]
-      json = Resources::Candlepin::Product.create({
+      json = Katello::Resources::Candlepin::Product.create({
         :name => self.name,
         :multiplier => self.multiplier || 1,
         :attributes => self.attrs # name collision with ActiveRecord
@@ -177,7 +177,7 @@ module Glue::Candlepin::Product
     def del_product
       return true unless no_other_assignment?
       Rails.logger.debug "Deleting product in candlepin: #{name}"
-      Resources::Candlepin::Product.destroy self.cp_id
+      Katello::Resources::Candlepin::Product.destroy self.cp_id
       true
     rescue => e
       Rails.logger.error "Failed to delete candlepin product #{name}: #{e}, #{e.backtrace.join("\n")}"
@@ -208,7 +208,7 @@ module Glue::Candlepin::Product
       self.productContent.each do |pc|
         Rails.logger.debug "Creating content in candlepin: #{pc.content.name}"
         #TODO: use json returned from cp to populate productContent
-        new_content = Resources::Candlepin::Content.create pc.content
+        new_content = Katello::Resources::Candlepin::Content.create pc.content
         pc.content.id = new_content[:id]
       end
     rescue => e
@@ -219,7 +219,7 @@ module Glue::Candlepin::Product
     def del_content
       self.productContent.each do |pc|
         Rails.logger.debug "Deleting content in candlepin: #{pc.content.name}"
-        Resources::Candlepin::Content.destroy(pc.content.id)
+        Katello::Resources::Candlepin::Content.destroy(pc.content.id)
       end
     rescue => e
       Rails.logger.error "Failed to delete content for product #{name} in candlepin"
@@ -251,17 +251,17 @@ module Glue::Candlepin::Product
 
       deleted_content.each do |content|
         Rails.logger.debug "deleting content #{content.id}"
-        Resources::Candlepin::Product.remove_content cp_id, content.id
-        Resources::Candlepin::Content.destroy(content.id)
+        Katello::Resources::Candlepin::Product.remove_content cp_id, content.id
+        Katello::Resources::Candlepin::Content.destroy(content.id)
       end
 
       added_content.each do |pc|
         Rails.logger.debug "creating content #{pc.content.name}"
-        new_content = Resources::Candlepin::Content.create pc.content
+        new_content = Katello::Resources::Candlepin::Content.create pc.content
         pc.content.id = new_content[:id] # candlepin generates id for new content
 
         Rails.logger.debug "adding content #{pc.content.id}"
-        Resources::Candlepin::Product.add_content cp_id, pc.content.id, pc.enabled
+        Katello::Resources::Candlepin::Product.add_content cp_id, pc.content.id, pc.enabled
       end
     end
 
@@ -269,7 +269,7 @@ module Glue::Candlepin::Product
       # we create unlimited subscriptions only for generic yum providers
       if self.provider && self.provider.yum_repo?
         Rails.logger.debug "Creating unlimited subscription for product #{name} in candlepin"
-        Resources::Candlepin::Product.create_unlimited_subscription self.organization.label, self.cp_id
+        Katello::Resources::Candlepin::Product.create_unlimited_subscription self.organization.label, self.cp_id
       end
       true
     rescue => e
@@ -286,9 +286,9 @@ module Glue::Candlepin::Product
 
     def del_pools
       Rails.logger.debug "Deleting pools for product #{name} in candlepin"
-      Resources::Candlepin::Product.pools(organization.label, self.cp_id).each do |pool|
+      Katello::Resources::Candlepin::Product.pools(organization.label, self.cp_id).each do |pool|
         Katello::Pool.find_all_by_cp_id(pool['id']).each(&:destroy)
-        Resources::Candlepin::Pool.destroy(pool['id'])
+        Katello::Resources::Candlepin::Pool.destroy(pool['id'])
       end
       true
     rescue => e
@@ -298,7 +298,7 @@ module Glue::Candlepin::Product
 
     def del_subscriptions
       Rails.logger.debug "Deleting subscriptions for product #{name} in candlepin"
-      job = Resources::Candlepin::Product.delete_subscriptions self.organization.label, self.cp_id
+      job = Katello::Resources::Candlepin::Product.delete_subscriptions self.organization.label, self.cp_id
       wait_for_job(job) if job
       true
     rescue => e
@@ -309,7 +309,7 @@ module Glue::Candlepin::Product
     # preventing of going into race-condition described in BZ_788932 by waiting
     # for each job to finish before proceeding.
     def wait_for_job(job)
-      while Resources::Candlepin::Job.not_finished?(Resources::Candlepin::Job.get(job[:id]))
+      while Katello::Resources::Candlepin::Job.not_finished?(Resources::Candlepin::Job.get(job[:id]))
         sleep 0.5
       end
     end

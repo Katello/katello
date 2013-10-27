@@ -34,8 +34,8 @@ module Glue::ElasticSearch::Package
         {
             "index" => {
                 "analysis" => {
-                    "filter" => Util::Search.custom_filters,
-                    "analyzer" => Util::Search.custom_analyzers
+                    "filter" => Katello::Util::Search.custom_filters,
+                    "analyzer" => Katello::Util::Search.custom_analyzers
                 }
             }
         }
@@ -66,7 +66,7 @@ module Glue::ElasticSearch::Package
       def self.autocomplete_name(query, repoids = nil, page_size = 15)
         return [] if !Tire.index(self.index).exists?
 
-        query = Util::Search.filter_input query
+        query = Katello::Util::Search.filter_input query
         query = "*" if query == ""
         query = "name_autocomplete:(#{query})"
 
@@ -90,9 +90,9 @@ module Glue::ElasticSearch::Package
       end
 
       def self.autocomplete_nvrea(query, repoids = nil, page_size = 15)
-        return Util::Support.array_with_total if !Tire.index(self.index).exists?
+        return Katello::Util::Support.array_with_total if !Tire.index(self.index).exists?
 
-        query = Util::Search.filter_input query
+        query = Katello::Util::Search.filter_input query
         query = "*" if query == ""
         query = "name_autocomplete:(#{query})"
 
@@ -112,7 +112,7 @@ module Glue::ElasticSearch::Package
       end
 
       def self.id_search(ids)
-        return Util::Support.array_with_total unless Tire.index(self.index).exists?
+        return Katello::Util::Support.array_with_total unless Tire.index(self.index).exists?
         search = Tire.search self.index do
           fields [:id, :name, :nvrea, :repoids, :type, :filename, :checksum]
           query do
@@ -129,7 +129,7 @@ module Glue::ElasticSearch::Package
       def self.search(query, start = 0, page_size = 15, repoids = nil, sort = [:nvrea_sort, "ASC"],
                       search_mode = :all, default_field = 'nvrea', filters = [])
         if !Tire.index(self.index).exists? || (repoids && repoids.empty?)
-          return Util::Support.array_with_total
+          return Katello::Util::Support.array_with_total
         end
 
         all_rows = query.blank? #if blank, get all rows
@@ -166,7 +166,7 @@ module Glue::ElasticSearch::Package
 
         return search.perform.results
       rescue Tire::Search::SearchRequestFailed
-        Util::Support.array_with_total
+        Katello::Util::Support.array_with_total
       end
 
       def self.index_packages(pkg_ids)
@@ -177,10 +177,10 @@ module Glue::ElasticSearch::Package
 
         unless pkgs.empty?
           Tire.index Package.index do
-            create :settings => Package.index_settings, :mappings => Package.index_mapping
+            create :settings => Katello::Package.index_settings, :mappings => Katello::Package.index_mapping
           end unless Tire.index(Package.index).exists?
 
-          Tire.index Package.index do
+          Tire.index Katello::Package.index do
             import pkgs
           end
         end

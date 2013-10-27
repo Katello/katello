@@ -17,18 +17,18 @@ class System < ActiveRecord::Base
   define_hooks :add_system_group_hook, :remove_system_group_hook,
                :as_json_hook
 
-  include Glue::Candlepin::Consumer if Katello.config.use_cp
-  include Glue::Pulp::Consumer if Katello.config.use_pulp
-  include Glue if Katello.config.use_cp || Katello.config.use_pulp
-  include Glue::ElasticSearch::System if Katello.config.use_elasticsearch
-  include Authorization::System
-  include AsyncOrchestration
+  include Katello::Glue::Candlepin::Consumer if Katello.config.use_cp
+  include Katello::Glue::Pulp::Consumer if Katello.config.use_pulp
+  include Katello::Glue if Katello.config.use_cp || Katello.config.use_pulp
+  include Katello::Glue::ElasticSearch::System if Katello.config.use_elasticsearch
+  include Katello::Authorization::System
+  include Katello::AsyncOrchestration
 
   after_rollback :rollback_on_create, :on => :create
 
   acts_as_reportable
 
-  belongs_to :environment, :class_name => "KTEnvironment", :inverse_of => :systems
+  belongs_to :environment, :class_name => "Katello::KTEnvironment", :inverse_of => :systems
 
   has_many :task_statuses, :as => :task_owner, :dependent => :destroy
   has_many :system_activation_keys, :dependent => :destroy
@@ -230,11 +230,11 @@ class System < ActiveRecord::Base
 
     def refresh_running_tasks
       ids = self.task_statuses.where(:state => [:waiting, :running]).pluck(:id)
-      TaskStatus.refresh(ids)
+      Katello::TaskStatus.refresh(ids)
     end
 
     def save_task_status(pulp_task, task_type, parameters_type, parameters)
-      TaskStatus.make(self, pulp_task, task_type, parameters_type => parameters)
+      Katello::TaskStatus.make(self, pulp_task, task_type, parameters_type => parameters)
     end
 
     def fill_defaults

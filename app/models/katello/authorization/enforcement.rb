@@ -26,7 +26,7 @@ module Authorization::Enforcement
       # Class method that has the same functionality as allowed_tags_sql method but operates
       # on the current logged user. The class attribute User.current must be set!
       def self.allowed_tags_sql(verb, resource_type = nil, org = nil)
-        ResourceType.check resource_type, verb
+        Katello::ResourceType.check resource_type, verb
         u = ::User.current
         raise Errors::UserNotSet, "current user is not set" if u.nil? || !u.is_a?(::User)
         u.allowed_tags_sql(verb, resource_type, org)

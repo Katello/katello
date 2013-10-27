@@ -28,11 +28,11 @@ module Glue::Pulp::Consumer
       lazy_accessor :package_profile, :initializer => lambda{|s| fetch_package_profile}
       lazy_accessor :simple_packages, :initializer => (lambda do |s|
                                                          fetch_package_profile["profile"].
-                                                           collect{|package| Glue::Pulp::SimplePackage.new(package)}
+                                                           collect{|package| Katello::Glue::Pulp::SimplePackage.new(package)}
                                                        end)
       lazy_accessor :errata, :initializer => (lambda do |s|
                                                 Katello.pulp_server.extensions.consumer.applicable_errata(uuid).
-                                                  map{|k, v| v.values}.flatten.map{|e| ::Errata.new(e[:details])}
+                                                  map{|k, v| v.values}.flatten.map{|e| Katello::Errata.new(e[:details])}
                                               end)
     end
   end
@@ -110,7 +110,7 @@ module Glue::Pulp::Consumer
           all_events = %w(pulp:action:agent_bind pulp:action:agent_unbind pulp:action:delete_binding)
           !(event['tags'] & all_events).empty?
         end
-        tasks = PulpTaskStatus.wait_for_tasks(events)
+        tasks = Katello::PulpTaskStatus.wait_for_tasks(events)
         tasks.each{|task| Rails.logger.error(task.error) if task.error?}
         return [processed_ids, error_ids]
       rescue => e

@@ -46,11 +46,11 @@ module Authorization::Provider
     end
 
     def list_tags(org_id)
-      custom.select('id,name').where(:organization_id => org_id).collect { |m| VirtualTag.new(m.id, m.name) }
+      custom.select('id,name').where(:organization_id => org_id).collect { |m| Katello::VirtualTag.new(m.id, m.name) }
     end
 
     def tags(ids)
-      select('id,name').where(:id => ids).collect { |m| VirtualTag.new(m.id, m.name) }
+      select('id,name').where(:id => ids).collect { |m| Katello::VirtualTag.new(m.id, m.name) }
     end
 
     def list_verbs(global = false)

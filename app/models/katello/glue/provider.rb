@@ -80,22 +80,22 @@ module Glue::Provider
     # Get the most relavant status for all the repos in this Provider
     def sync_status
       statuses = self.products.reject{|r| r.empty?}.map{|r| r.sync_status}
-      return PulpSyncStatus.new(:state => PulpSyncStatus::Status::NOT_SYNCED) if statuses.empty?
+      return Katello::PulpSyncStatus.new(:state => Katello::PulpSyncStatus::Status::NOT_SYNCED) if statuses.empty?
 
       #if any of repos sync still running -> provider sync running
-      idx = statuses.index { |r| r.state.to_s == PulpSyncStatus::Status::RUNNING.to_s }
+      idx = statuses.index { |r| r.state.to_s == Katello::PulpSyncStatus::Status::RUNNING.to_s }
       return statuses[idx] unless idx.nil?
 
       #else if any of repos not synced -> provider not synced
-      idx = statuses.index { |r| r.state.to_s == PulpSyncStatus::Status::NOT_SYNCED.to_s }
+      idx = statuses.index { |r| r.state.to_s == Katello::PulpSyncStatus::Status::NOT_SYNCED.to_s }
       return statuses[idx] unless idx.nil?
 
       #else if any of repos sync cancelled -> provider sync cancelled
-      idx = statuses.index { |r| r.state.to_s == PulpSyncStatus::Status::CANCELED.to_s }
+      idx = statuses.index { |r| r.state.to_s == Katello::PulpSyncStatus::Status::CANCELED.to_s }
       return statuses[idx] unless idx.nil?
 
       #else if any of repos sync finished with error -> provider sync finished with error
-      idx = statuses.index { |r| r.state.to_s == PulpSyncStatus::Status::ERROR.to_s }
+      idx = statuses.index { |r| r.state.to_s == Katello::PulpSyncStatus::Status::ERROR.to_s }
       return statuses[idx] unless idx.nil?
 
       #else -> all finished
@@ -185,7 +185,7 @@ module Glue::Provider
     end
 
     def owner_import(zip_file_path, options)
-      Resources::Candlepin::Owner.import self.organization.label, zip_file_path, options
+      Katello::Resources::Candlepin::Owner.import self.organization.label, zip_file_path, options
     end
 
     def owner_upstream_update(upstream, options)
@@ -203,10 +203,10 @@ module Glue::Provider
       #ca_file = '/etc/candlepin/certs/upstream/subscription.rhn.stage.redhat.com.crt'
       ca_file = nil
 
-      capabilities = Resources::Candlepin::CandlepinPing.ping['managerCapabilities'].inject([]) do |result, element|
+      capabilities = Katello::Resources::Candlepin::CandlepinPing.ping['managerCapabilities'].inject([]) do |result, element|
         result << {'name' => element}
       end
-      Resources::Candlepin::UpstreamConsumer.update("#{url}#{upstream['uuid']}", upstream['idCert']['cert'],
+      Katello::Resources::Candlepin::UpstreamConsumer.update("#{url}#{upstream['uuid']}", upstream['idCert']['cert'],
                                                     upstream['idCert']['key'], ca_file, {:capabilities => capabilities})
 
     end
@@ -226,7 +226,7 @@ module Glue::Provider
       #ca_file = '/etc/candlepin/certs/upstream/subscription.rhn.stage.redhat.com.crt'
       ca_file = nil
 
-      data = Resources::Candlepin::UpstreamConsumer.export("#{url}#{upstream['uuid']}/export", upstream['idCert']['cert'],
+      data = Katello::Resources::Candlepin::UpstreamConsumer.export("#{url}#{upstream['uuid']}/export", upstream['idCert']['cert'],
                                                            upstream['idCert']['key'], ca_file)
 
       File.open(zip_file_path, 'w') do |f|
@@ -245,14 +245,14 @@ module Glue::Provider
       imports = self.owner_imports
       if imports.length == 1
         Rails.logger.debug "Deleting import for provider: #{name}"
-        Resources::Candlepin::Owner.destroy_imports self.organization.label
+        Katello::Resources::Candlepin::Owner.destroy_imports self.organization.label
       else
         Rails.logger.debug "Unable to delete import for provider: #{name}. Reason: a successful import was previously completed."
       end
     end
 
     def owner_imports
-      Resources::Candlepin::Owner.imports self.organization.label
+      Katello::Resources::Candlepin::Owner.imports self.organization.label
     end
 
     # All products that had problem with repository creation in pulp
@@ -356,14 +356,14 @@ module Glue::Provider
         products_in_candlepin_ids << marketing_product_id
         products_in_candlepin_ids.concat(engineering_product_ids)
         added_eng_products = (engineering_product_ids - product_in_katello_ids).map do |id|
-          Resources::Candlepin::Product.get(id)[0]
+          Katello::Resources::Candlepin::Product.get(id)[0]
         end
         adjusted_eng_products = []
         added_eng_products.each do |product_attrs|
           begin
             product_attrs.merge!(:import_logger => import_logger)
 
-            Glue::Candlepin::Product.import_from_cp(product_attrs) do |p|
+            Katello::Glue::Candlepin::Product.import_from_cp(product_attrs) do |p|
               p.provider = self
             end
             adjusted_eng_products << product_attrs
@@ -385,7 +385,7 @@ module Glue::Provider
         unless product_in_katello_ids.include?(marketing_product_id)
           engineering_product_in_katello_ids = Product.in_org(self.organization).
             where(:cp_id => engineering_product_ids).pluck("#{Katello::Product.table_name}.id")
-          Glue::Candlepin::Product.import_marketing_from_cp(Resources::Candlepin::Product.get(marketing_product_id)[0], engineering_product_in_katello_ids) do |p|
+          Katello::Glue::Candlepin::Product.import_marketing_from_cp(Katello::Resources::Candlepin::Product.get(marketing_product_id)[0], engineering_product_in_katello_ids) do |p|
             p.provider = self
           end
           product_in_katello_ids << marketing_product_id
@@ -420,20 +420,20 @@ module Glue::Provider
     end
 
     def exec_delete_manifest
-      Resources::Candlepin::Owner.destroy_imports self.organization.label, true
+      Katello::Resources::Candlepin::Owner.destroy_imports self.organization.label, true
       index_subscriptions
     end
 
     def index_subscriptions
       # Raw candlepin pools
-      cp_pools = Resources::Candlepin::Owner.pools(self.organization.label)
+      cp_pools = Katello::Resources::Candlepin::Owner.pools(self.organization.label)
       if cp_pools
         # Pool objects
-        pools = cp_pools.collect{|cp_pool| Pool.find_pool(cp_pool['id'], cp_pool)}
+        pools = cp_pools.collect{|cp_pool| Katello::Pool.find_pool(cp_pool['id'], cp_pool)}
 
         # Limit subscriptions to just those from Red Hat provider
         subscriptions = pools.collect do |pool|
-          product = Product.where(:cp_id => pool.product_id).first
+          product = Katello::Product.where(:cp_id => pool.product_id).first
           next if product.nil?
           pool.provider_id = product.provider_id   # Set so it is saved into elastic search
           pool
@@ -445,7 +445,7 @@ module Glue::Provider
 
       # Index pools
       # Note: Only the Red Hat provider subscriptions are being indexed.
-      Pool.index_pools(subscriptions, [{:org => [self.organization.label]}, {:provider_id => [self.organization.redhat_provider.id]}])
+      Katello::Pool.index_pools(subscriptions, [{:org => [self.organization.label]}, {:provider_id => [self.organization.redhat_provider.id]}])
 
       subscriptions
     end
@@ -472,7 +472,7 @@ module Glue::Provider
 
         if options[:notify]
           message = _("Subscription manifest deleted successfully for provider '%s'.")
-          Notify.success message % self.name,
+          Katello::Notify.success message % self.name,
                          :request_type => 'providers__update_redhat_provider',
                          :organization => self.organization
         end
@@ -537,7 +537,7 @@ module Glue::Provider
     # model)
     def marketing_to_engineering_product_ids_mapping
       mapping = {}
-      pools = Resources::Candlepin::Owner.pools self.organization.label
+      pools = Katello::Resources::Candlepin::Owner.pools self.organization.label
       pools.each do |pool|
         mapping[pool[:productId]] ||= []
         if pool[:providedProducts]
@@ -549,16 +549,16 @@ module Glue::Provider
     end
 
     def get_all_product_ids
-      Resources::Candlepin::Product.all.map{ |p| p['id'] }
+      Katello::Resources::Candlepin::Product.all.map{ |p| p['id'] }
     end
 
     def get_assigned_content_ids
-      ids = Resources::Candlepin::Product.all.collect{ |p| p['productContent'] }.flatten(1).collect{ |content| content['content']['id'] }
+      ids = Katello::Resources::Candlepin::Product.all.collect{ |p| p['productContent'] }.flatten(1).collect{ |content| content['content']['id'] }
       ids
     end
 
     def get_all_content_ids
-      ids = Resources::Candlepin::Content.all.map{ |c| c['id'] }
+      ids = Katello::Resources::Candlepin::Content.all.map{ |c| c['id'] }
       ids
     end
   end

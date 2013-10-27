@@ -76,7 +76,7 @@ module Authorization::Environment
       if ::User.allowed_all_tags?(verbs, resource, org)
         where(:organization_id => org)
       else
-        where("environments.id in (#{::User.allowed_tags_sql(verbs, resource, org)})")
+        where("#{Katello::KTEnvironment.table_name}.id in (#{::User.allowed_tags_sql(verbs, resource, org)})")
       end
     end
 
@@ -132,7 +132,7 @@ module Authorization::Environment
       ::User.allowed_to?(self.class.list_verbs.keys, :environments, self.id, self.organization) ||
           self.organization.systems_readable? || self.organization.any_systems_registerable? ||
           self.organization.distributors_readable? || self.organization.any_distributors_registerable? ||
-          ActivationKey.readable?(self.organization)
+          Katello::ActivationKey.readable?(self.organization)
     end
 
     def changesets_promotable?

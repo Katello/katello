@@ -26,7 +26,7 @@ module Glue::Pulp::PuppetModule
 
       def self.find(id)
         attrs = Katello.pulp_server.extensions.puppet_module.find_by_unit_id(id)
-        ::PuppetModule.new(attrs) if !attrs.nil?
+        Katello::PuppetModule.new(attrs) if !attrs.nil?
       end
 
       def self.generate_unit_data(filepath)
@@ -53,7 +53,7 @@ module Glue::Pulp::PuppetModule
     end
 
     def sortable_version
-      Util::Package.sortable_version(self.version)
+      Katello::Util::Package.sortable_version(self.version)
     end
 
     def as_json(options = nil)

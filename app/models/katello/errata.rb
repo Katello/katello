@@ -12,8 +12,8 @@
 
 module Katello
 class Errata
-  include Glue::Pulp::Errata if Katello.config.use_pulp
-  include Glue::ElasticSearch::Errata if Katello.config.use_elasticsearch
+  include Katello::Glue::Pulp::Errata if Katello.config.use_pulp
+  include Katello::Glue::ElasticSearch::Errata if Katello.config.use_elasticsearch
   CONTENT_TYPE = "erratum"
 end
 end

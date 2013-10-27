@@ -13,11 +13,11 @@
 module Katello
 class KTEnvironment < ActiveRecord::Base
 
-  include Authorization::Environment
-  include Glue::ElasticSearch::Environment if Katello.config.use_elasticsearch
-  include Glue if Katello.config.use_cp || Katello.config.use_pulp
+  include Katello::Authorization::Environment
+  include Katello::Glue::ElasticSearch::Environment if Katello.config.use_elasticsearch
+  include Katello::Glue if Katello.config.use_cp || Katello.config.use_pulp
 
-  include Glue::Event
+  include Katello::Glue::Event
 
   def create_event
     Katello::Actions::EnvironmentCreate
@@ -50,19 +50,19 @@ class KTEnvironment < ActiveRecord::Base
   has_many :repositories, dependent: :destroy, foreign_key: :environment_id
   has_many :systems, :inverse_of => :environment, :dependent => :destroy,  :foreign_key => :environment_id
   has_many :distributors, :inverse_of => :environment, :dependent => :destroy,  :foreign_key => :environment_id
-  has_many :working_changesets, :conditions => ["state != '#{Changeset::PROMOTED}'"],
-                                :foreign_key => :environment_id, :dependent => :destroy, :class_name => "Changeset",
+  has_many :working_changesets, :conditions => ["state != '#{Katello::Changeset::PROMOTED}'"],
+                                :foreign_key => :environment_id, :dependent => :destroy, :class_name => "Katello::Changeset",
                                 :dependent => :destroy, :inverse_of => :environment
 
-  has_many :working_deletion_changesets, :conditions => ["state != '#{Changeset::DELETED}'"],
-                                         :foreign_key => :environment_id, :dependent => :destroy, :class_name => "DeletionChangeset",
+  has_many :working_deletion_changesets, :conditions => ["state != '#{Katello::Changeset::DELETED}'"],
+                                         :foreign_key => :environment_id, :dependent => :destroy, :class_name => "Katello::DeletionChangeset",
                                          :dependent => :destroy, :inverse_of => :environment
-  has_many :working_promotion_changesets, :conditions => ["state != '#{Changeset::PROMOTED}'"],
-                                          :foreign_key => :environment_id, :dependent => :destroy, :class_name => "PromotionChangeset",
+  has_many :working_promotion_changesets, :conditions => ["state != '#{Katello::Changeset::PROMOTED}'"],
+                                          :foreign_key => :environment_id, :dependent => :destroy, :class_name => "Katello::PromotionChangeset",
                                           :dependent => :destroy, :inverse_of => :environment
 
-  has_many :changeset_history, :conditions => {:state => Changeset::PROMOTED},
-                               :foreign_key => :environment_id, :dependent => :destroy, :class_name => "Changeset",
+  has_many :changeset_history, :conditions => {:state => Katello::Changeset::PROMOTED},
+                               :foreign_key => :environment_id, :dependent => :destroy, :class_name => "Katello::Changeset",
                                :dependent => :destroy, :inverse_of => :environment
 
   has_many :content_view_version_environments, :foreign_key => :environment_id, :dependent => :destroy
@@ -114,7 +114,7 @@ class KTEnvironment < ActiveRecord::Base
 
   def content_views(reload = false)
     @content_views = nil if reload
-    @content_views ||= ContentView.joins(:content_view_versions => :content_view_version_environments).
+    @content_views ||= Katello::ContentView.joins(:content_view_versions => :content_view_version_environments).
         where("#{Katello::ContentViewVersionEnvironment.table_name}.environment_id" => self.id)
   end
 
@@ -138,7 +138,7 @@ class KTEnvironment < ActiveRecord::Base
   def prior=(env_id)
     self.priors.clear
     return if env_id.nil? || env_id == ""
-    prior_env = KTEnvironment.find env_id
+    prior_env = Katello::KTEnvironment.find env_id
     self.priors << prior_env unless prior_env.nil?
   end
 
@@ -160,9 +160,9 @@ class KTEnvironment < ActiveRecord::Base
 
   #list changesets promoting
   def promoting
-    Changeset.joins(:task_status).where('#{Katello::Changeset.table_name}.environment_id' => self.id,
-                                        '#{Katello::TaskStatus.table_name}.state' => [TaskStatus::Status::WAITING,
-                                                                                      TaskStatus::Status::RUNNING])
+    Katello::Changeset.joins(:task_status).where('#{Katello::Changeset.table_name}.environment_id' => self.id,
+                                        '#{Katello::TaskStatus.table_name}.state' => [Katello::TaskStatus::Status::WAITING,
+                                                                                      Katello::TaskStatus::Status::RUNNING])
   end
 
   def is_deletable?
@@ -220,11 +220,11 @@ class KTEnvironment < ActiveRecord::Base
 
   # returns list of virtual permission tags for the current user
   def self.list_tags(org_id)
-    KTEnvironment.where(:organization_id => org_id).collect { |m| VirtualTag.new(m.id, m.name) }
+    Katello::KTEnvironment.where(:organization_id => org_id).collect { |m| Katello::VirtualTag.new(m.id, m.name) }
   end
 
   def self.tags(ids)
-    KTEnvironment.where(:id => ids).collect { |m| VirtualTag.new(m.id, m.name) }
+    Katello::KTEnvironment.where(:id => ids).collect { |m| Katello::VirtualTag.new(m.id, m.name) }
   end
 
   def package_groups(search_args = {})
@@ -270,7 +270,7 @@ class KTEnvironment < ActiveRecord::Base
       end
     end.flatten(1)
 
-    Util::Package.find_latest_packages packs
+    Katello::Util::Package.find_latest_packages packs
   end
 
   def get_distribution(id)
@@ -282,7 +282,7 @@ class KTEnvironment < ActiveRecord::Base
   def unset_users_with_default
     users = User.with_default_environment(self.id)
     users.each do |u|
-      Notify.message _("Your default environment has been removed. Please choose another one."),
+      Katello::Notify.message _("Your default environment has been removed. Please choose another one."),
                      :user => u, :organization => self.organization
     end
   end
@@ -305,12 +305,12 @@ class KTEnvironment < ActiveRecord::Base
       #  we can't look it up via a query (org.default_content_view)
       content_view = self.organization.default_content_view
       if content_view.nil?
-        content_view = ContentView.new(:default => true, :name => "Default Organization View",
+        content_view = Katello::ContentView.new(:default => true, :name => "Default Organization View",
                                        :organization => self.organization)
       end
 
       if content_view.version(self).nil?
-        version = ContentViewVersion.new(:content_view => content_view,
+        version = Katello::ContentViewVersion.new(:content_view => content_view,
                                          :version => 1)
         version.environments << self
         version.save!

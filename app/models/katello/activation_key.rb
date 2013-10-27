@@ -112,7 +112,7 @@ class ActivationKey < ActiveRecord::Base
 
       # we sort just to make the order deterministig.
       self.pools.group_by(&:product_id).sort_by(&:first).each do |product_id, pools|
-        product = Product.find_by_cp_id(product_id, self.organization)
+        product = Katello::Product.find_by_cp_id(product_id, self.organization)
         consumption = calculate_consumption(product, pools, allocate)
 
         Rails.logger.debug "Autosubscribing pools: #{consumption.map { |pool, amount| "#{pool.cp_id} => #{amount}"}.join(", ")}"
@@ -146,7 +146,7 @@ class ActivationKey < ActiveRecord::Base
       pool.as_json
     end
     ret[:usage_count] = usage_count
-    ret[:editable] = ActivationKey.readable?(organization)
+    ret[:editable] = Katello::ActivationKey.readable?(organization)
     ret
   end
 
@@ -162,7 +162,7 @@ class ActivationKey < ActiveRecord::Base
     obsolete_pools = []
     self.pools.each do |pool|
       begin
-        Resources::Candlepin::Pool.find(pool.cp_id)
+        Katello::Resources::Candlepin::Pool.find(pool.cp_id)
       rescue RestClient::ResourceNotFound
         obsolete_pools << pool
       end

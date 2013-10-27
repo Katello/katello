@@ -86,7 +86,7 @@ module Glue::ElasticSearch::Pool
       def self.index_pools(pools, clear_filters = nil)
         # Clear previous pools index
         if !clear_filters.nil?
-          items = Glue::ElasticSearch::Items.new(Pool)
+          items = Katello::Glue::ElasticSearch::Items.new(Pool)
           options = {
               :filter => clear_filters,
               :load_records? => false
@@ -103,7 +103,7 @@ module Glue::ElasticSearch::Pool
 
         unless json_pools.empty?
           Tire.index self.index do
-            create :settings => Pool.index_settings, :mappings => Pool.index_mapping
+            create :settings => Pool.index_settings, :mappings => Katello::Pool.index_mapping
           end unless Tire.index(self.index).exists?
 
           Tire.index self.index do
@@ -116,7 +116,7 @@ module Glue::ElasticSearch::Pool
 
       def self.search(*args, &block)
         Tire.index self.index do
-          create :settings => Pool.index_settings, :mappings => Pool.index_mapping
+          create :settings => Katello::Pool.index_settings, :mappings => Katello::Pool.index_mapping
         end unless Tire.index(self.index).exists?
         Tire.search(self.index, &block).results
       end
@@ -125,8 +125,8 @@ module Glue::ElasticSearch::Pool
         {
             "index" => {
                 "analysis" => {
-                    "filter" => Util::Search.custom_filters,
-                    "analyzer" => Util::Search.custom_analyzers
+                    "filter" => Katello::Util::Search.custom_filters,
+                    "analyzer" => Katello::Util::Search.custom_analyzers
                 }
             }
         }

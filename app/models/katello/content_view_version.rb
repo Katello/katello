@@ -64,7 +64,7 @@ class ContentViewVersion < ActiveRecord::Base
     # The repository model has a default scope that orders repositories by name;
     # however, for content views, it is desirable to order the repositories
     # based on the name of the product the repository is part of.
-    Repository.send(:with_exclusive_scope) do
+    Katello::Repository.send(:with_exclusive_scope) do
       self.repositories.joins(:product).in_environment(env).order("#{Katello::Product.table_name}.name asc")
     end
   end
@@ -80,8 +80,8 @@ class ContentViewVersion < ActiveRecord::Base
   end
 
   def refresh_version(notify = false)
-    PulpTaskStatus.wait_for_tasks self.refresh_repos
-    PulpTaskStatus.wait_for_tasks self.generate_metadata
+    Katello::PulpTaskStatus.wait_for_tasks self.refresh_repos
+    Katello::PulpTaskStatus.wait_for_tasks self.generate_metadata
     self.content_view.index_repositories(self.content_view.organization.library)
     self.content_view.update_cp_content(self.content_view.organization.library) if Katello.config.use_cp
 
@@ -89,11 +89,11 @@ class ContentViewVersion < ActiveRecord::Base
       message = _("Successfully generated content view '%{view_name}' version %{view_version}.") %
           {:view_name => self.content_view.name, :view_version => self.version}
 
-      Notify.success(message, :request_type => "content_view_definitions___refresh",
+      Katello::Notify.success(message, :request_type => "content_view_definitions___refresh",
                               :organization => self.content_view.organization)
     end
 
-    Glue::Event.trigger(Katello::Actions::ContentViewRefresh, self.content_view)
+    Katello::Glue::Event.trigger(Katello::Actions::ContentViewRefresh, self.content_view)
 
   rescue => e
     Rails.logger.error(e)
@@ -103,7 +103,7 @@ class ContentViewVersion < ActiveRecord::Base
       message = _("Failed to generate content view '%{view_name}' version %{view_version}.") %
           {:view_name => self.content_view.name, :view_version => self.version}
 
-      Notify.exception(message, e, :request_type => "content_view_definitions___refresh",
+      Katello::Notify.exception(message, e, :request_type => "content_view_definitions___refresh",
                                    :organization => self.content_view.organization)
     end
 
@@ -135,7 +135,7 @@ class ContentViewVersion < ActiveRecord::Base
       end
       self.reload
     end
-    PulpTaskStatus.wait_for_tasks async_tasks unless async_tasks.blank?
+    Katello::PulpTaskStatus.wait_for_tasks async_tasks unless async_tasks.blank?
 
     async_tasks = []
     repos_to_filter = []
@@ -149,7 +149,7 @@ class ContentViewVersion < ActiveRecord::Base
         repos_to_filter << clone
       else
         # this repo already exists in the library, so update it
-        library_clone = Repository.find(library_clone) # reload readonly obj
+        library_clone = Katello::Repository.find(library_clone) # reload readonly obj
         repos_to_filter << library_clone
       end
     end
@@ -163,7 +163,7 @@ class ContentViewVersion < ActiveRecord::Base
   end
 
   def deletable?(from_env)
-    !System.exists?(:environment_id => from_env, :content_view_id => self.content_view) ||
+    !Katello::System.exists?(:environment_id => from_env, :content_view_id => self.content_view) ||
         self.content_view.versions.in_environment(from_env).count > 1
   end
 
