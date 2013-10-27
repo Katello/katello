@@ -13,7 +13,7 @@
 module Katello
 class TaskStatus < ActiveRecord::Base
 
-  include Util::TaskStatus
+  include Katello::Util::TaskStatus
 
   serialize :result
   serialize :progress
@@ -27,14 +27,14 @@ class TaskStatus < ActiveRecord::Base
     TIMED_OUT = :timed_out
   end
 
-  include Glue::ElasticSearch::TaskStatus if Katello.config.use_elasticsearch
+  include Katello::Glue::ElasticSearch::TaskStatus if Katello.config.use_elasticsearch
 
   belongs_to :organization
   belongs_to :user, :class_name => "::User"
 
   belongs_to :task_owner, :polymorphic => true
   # adding belongs_to :system allows us to perform joins with the owning system, if there is one
-  belongs_to :system, :foreign_key => :task_owner_id, :class_name => "System"
+  belongs_to :system, :foreign_key => :task_owner_id, :class_name => "Katello::System"
 
   # needed to delete providers w/ task status
   has_one :provider, :dependent => :nullify
@@ -105,15 +105,15 @@ class TaskStatus < ActiveRecord::Base
   end
 
   def finished?
-    ((self.state != TaskStatus::Status::WAITING.to_s) && (self.state != TaskStatus::Status::RUNNING.to_s))
+    ((self.state != Katello::TaskStatus::Status::WAITING.to_s) && (self.state != Katello::TaskStatus::Status::RUNNING.to_s))
   end
 
   def canceled?
-    self.state == TaskStatus::Status::CANCELED.to_s
+    self.state == Katello::TaskStatus::Status::CANCELED.to_s
   end
 
   def error?
-    (self.state == TaskStatus::Status::ERROR.to_s)
+    (self.state == Katello::TaskStatus::Status::ERROR.to_s)
   end
 
   def refresh
@@ -121,11 +121,11 @@ class TaskStatus < ActiveRecord::Base
   end
 
   def merge_pulp_task!(pulp_task)
-    PulpTaskStatus.dump_state(pulp_task, self)
+    Katello::PulpTaskStatus.dump_state(pulp_task, self)
   end
 
   def refresh_pulp
-    PulpTaskStatus.refresh(self)
+    Katello::PulpTaskStatus.refresh(self)
   end
 
   def as_json(options = {})
@@ -142,7 +142,7 @@ class TaskStatus < ActiveRecord::Base
   end
 
   def human_readable_message
-    task_template = TaskStatus::TYPES[self.task_type]
+    task_template = Katello::TaskStatus::TYPES[self.task_type]
     return '' if task_template.nil?
     if task_template[:user_message]
       task_template[:user_message] % self.user.login
@@ -160,7 +160,7 @@ class TaskStatus < ActiveRecord::Base
   def pending_message
     # Retrieve a text message that may be rendered for a 'pending' task's status.  This is used in various places,
     # such as System Event history.
-    details = TaskStatus::TYPES[self.task_type]
+    details = Katello::TaskStatus::TYPES[self.task_type]
     case details[:type]
     when :package
       p = self.parameters[:packages]
@@ -197,7 +197,7 @@ class TaskStatus < ActiveRecord::Base
   def message
     # Retrieve a text message that may be rendered for a task's status.  This is used in various places,
     # such as System Event history.
-    details = TaskStatus::TYPES[self.task_type]
+    details = Katello::TaskStatus::TYPES[self.task_type]
     return _("Non-system event") if details.nil?
 
     case details[:type]
@@ -235,7 +235,7 @@ class TaskStatus < ActiveRecord::Base
   end
 
   def humanize_type
-    TaskStatus::TYPES[self.task_type][:name]
+    Katello::TaskStatus::TYPES[self.task_type][:name]
   end
 
   def humanize_parameters
@@ -320,16 +320,16 @@ class TaskStatus < ActiveRecord::Base
 
   def self.refresh(ids)
     unless ids.blank?
-      uuids = TaskStatus.where(:id => ids).pluck(:uuid)
+      uuids = Katello::TaskStatus.where(:id => ids).pluck(:uuid)
       ret = Katello.pulp_server.resources.task.poll_all(uuids)
       ret.each do |pulp_task|
-        PulpTaskStatus.dump_state(pulp_task, TaskStatus.find_by_uuid(pulp_task[:task_id]))
+        Katello::PulpTaskStatus.dump_state(pulp_task, Katello::TaskStatus.find_by_uuid(pulp_task[:task_id]))
       end
     end
   end
 
   def self.make(system, pulp_task, task_type, parameters)
-    task_status = PulpTaskStatus.new(
+    task_status = Katello::PulpTaskStatus.new(
        :organization => system.organization,
        :task_owner => system,
        :task_type => task_type,

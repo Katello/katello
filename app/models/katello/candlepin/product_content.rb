@@ -32,7 +32,7 @@ class Candlepin::ProductContent
   end
 
   def product
-    @product ||= Product.find(@product_id) if @product_id
+    @product ||= Katello::Product.find(@product_id) if @product_id
     @product
   end
 
@@ -65,7 +65,7 @@ class Candlepin::ProductContent
   def refresh_repositories
     product = self.product
 
-    cdn_var_substitutor = Resources::CDN::CdnResource.new(product.provider[:repository_url],
+    cdn_var_substitutor = Katello::Resources::CDN::CdnResource.new(product.provider[:repository_url],
                                                      :ssl_client_cert => OpenSSL::X509::Certificate.new(product.certificate),
                                                      :ssl_client_key => OpenSSL::PKey::RSA.new(product.key),
                                                      :product        => product).substitutor(Rails.logger)
@@ -84,16 +84,16 @@ class Candlepin::ProductContent
       return true
     end
 
-    ca = File.read(Resources::CDN::CdnResource.ca_file)
+    ca = File.read(Katello::Resources::CDN::CdnResource.ca_file)
 
     cdn_var_substitutor.substitute_vars(self.content.contentUrl).each do |(substitutions, path)|
       feed_url = product.repo_url(path)
       arch = substitutions["basearch"] || "noarch"
       repo_name = [self.content.name, substitutions.sort_by {|k, _| k.to_s}.map(&:last)].flatten.compact.join(" ").gsub(/[^a-z0-9\-\._ ]/i, "")
-      version = Resources::CDN::Utils.parse_version(substitutions["releasever"])
+      version = Katello::Resources::CDN::Utils.parse_version(substitutions["releasever"])
 
       begin
-        existing_repos = Repository.where(product_id: product.id,
+        existing_repos = Katello::Repository.where(product_id: product.id,
                                           environment_id: product.organization.library.id,
                                           pulp_id: product.repo_id(repo_name)
                                          )
@@ -110,7 +110,7 @@ class Candlepin::ProductContent
             unprotected = false
           end
           Rails.logger.error("Content type: '#{content_type}'")
-          Repository.create!(:environment => product.organization.library,
+          Katello::Repository.create!(:environment => product.organization.library,
                              :product => product,
                              :pulp_id => product.repo_id(repo_name),
                              :cp_label => self.content.label,
@@ -118,9 +118,9 @@ class Candlepin::ProductContent
                              :arch => arch,
                              :major => version[:major],
                              :minor => version[:minor],
-                             :relative_path => Glue::Pulp::Repos.repo_path_from_content_path(product.organization.library, path),
+                             :relative_path => Katello::Glue::Pulp::Repos.repo_path_from_content_path(product.organization.library, path),
                              :name => repo_name,
-                             :label => Util::Model.labelize(repo_name),
+                             :label => Katello::Util::Model.labelize(repo_name),
                              :feed => feed_url,
                              :feed_ca => ca,
                              :feed_cert => self.product.certificate,

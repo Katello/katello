@@ -150,18 +150,18 @@ module Glue::Pulp::Repo
 
     def generate_distributors
       case self.content_type
-      when Repository::YUM_TYPE
+      when Katello::Repository::YUM_TYPE
         yum_dist_id = self.pulp_id
         yum_dist = Runcible::Models::YumDistributor.new(self.relative_path, (self.unprotected || false), true,
                                                         {:protected => true, :id => yum_dist_id, :auto_publish => true})
         clone_dist = Runcible::Models::YumCloneDistributor.new(:id => "#{self.pulp_id}_clone",
                                                                :destination_distributor_id => yum_dist_id)
         [yum_dist, clone_dist, nodes_distributor]
-      when Repository::FILE_TYPE
+      when Katello::Repository::FILE_TYPE
         dist = Runcible::Models::IsoDistributor.new(true, true)
         dist.auto_publish = true
         [dist]
-      when Repository::PUPPET_TYPE
+      when Katello::Repository::PUPPET_TYPE
         repo_path =  File.join(Katello.config.puppet_repo_root, self.puppet_environment_name, 'modules')
         puppet_install_dist =
             Runcible::Models::PuppetInstallDistributor.new(repo_path,
@@ -187,11 +187,11 @@ module Glue::Pulp::Repo
 
     def importer_type
       case self.content_type
-      when Repository::YUM_TYPE
+      when Katello::Repository::YUM_TYPE
         Runcible::Models::YumImporter::ID
-      when Repository::FILE_TYPE
+      when Katello::Repository::FILE_TYPE
         Runcible::Models::IsoImporter::ID
-      when Repository::PUPPET_TYPE
+      when Katello::Repository::PUPPET_TYPE
         Runcible::Models::PuppetImporter::ID
       else
         raise _("Unexpected repo type %s") % self.content_type
@@ -242,11 +242,11 @@ module Glue::Pulp::Repo
     end
 
     def other_repos_with_same_product_and_content
-      Repository.where(:content_id => self.content_id).in_product(self.product).pluck(:pulp_id) - [self.pulp_id]
+      Katello::Repository.where(:content_id => self.content_id).in_product(self.product).pluck(:pulp_id) - [self.pulp_id]
     end
 
     def other_repos_with_same_content
-      Repository.where(:content_id => self.content_id).pluck(:pulp_id) - [self.pulp_id]
+      Katello::Repository.where(:content_id => self.content_id).pluck(:pulp_id) - [self.pulp_id]
     end
 
     def destroy_repo_orchestration
@@ -271,7 +271,7 @@ module Glue::Pulp::Repo
 
       #do the errata remove call
       unless errata_to_delete.empty?
-        unassociate_by_filter(FilterRule::ERRATA, {"id" => {"$in" => errata_to_delete}})
+        unassociate_by_filter(Katello::FilterRule::ERRATA, {"id" => {"$in" => errata_to_delete}})
       end
 
       # Remove all  package groups with no packages
@@ -280,7 +280,7 @@ module Glue::Pulp::Repo
       end.compact
 
       unless package_groups_to_delete.empty?
-        unassociate_by_filter(FilterRule::PACKAGE_GROUP, {"id" => {"$in" => package_groups_to_delete}})
+        unassociate_by_filter(Katello::FilterRule::PACKAGE_GROUP, {"id" => {"$in" => package_groups_to_delete}})
       end
     end
 
@@ -430,7 +430,7 @@ module Glue::Pulp::Repo
 
     def find_latest_packages_by_name(name)
       packages = Katello.pulp_server.extensions.repository.rpms_by_nvre(self.pulp_id, name)
-      Util::Package.find_latest_packages(packages)
+      Katello::Util::Package.find_latest_packages(packages)
     end
 
     def has_erratum?(errata_id)
@@ -447,7 +447,7 @@ module Glue::Pulp::Repo
       pulp_tasks = Katello.pulp_server.extensions.repository.sync(self.pulp_id, {:override_config => sync_options})
       pulp_task = pulp_tasks.select{ |i| i['tags'].include?("pulp:action:sync") }.first.with_indifferent_access
 
-      task      = PulpSyncStatus.using_pulp_task(pulp_task) do |t|
+      task      = Katello::PulpSyncStatus.using_pulp_task(pulp_task) do |t|
         t.organization         = self.environment.organization
         t.parameters ||= {}
         t.parameters[:options] = options
@@ -464,14 +464,14 @@ module Glue::Pulp::Repo
         return
       end
 
-      task = PulpTaskStatus.using_pulp_task(pulp_task)
-      task.user ||= User.current
+      task = Katello::PulpTaskStatus.using_pulp_task(pulp_task)
+      task.user ||= ::User.current
       task.organization ||= self.environment.organization
       task.save!
 
       notify = task.parameters.try(:[], :options).try(:[], :notify)
       user = task.user
-      if task.state == TaskStatus::Status::FINISHED && task.progress.error_details[:messages].blank?
+      if task.state == Katello::TaskStatus::Status::FINISHED && task.progress.error_details[:messages].blank?
         if user && notify
           notifier_service.success _("Repository '%s' finished syncing successfully.") % [self.name],
                          :user => user, :organization => self.organization
@@ -499,16 +499,16 @@ module Glue::Pulp::Repo
 
     def clone_contents_by_filter(to_repo, content_type, filter_clauses, override_config = {})
       content_classes = {
-          Package::CONTENT_TYPE => :rpm,
-          PackageGroup::CONTENT_TYPE => :package_group,
-          Errata::CONTENT_TYPE => :errata,
-          PuppetModule::CONTENT_TYPE => :puppet_module
+          Katello::Package::CONTENT_TYPE => :rpm,
+          Katello::PackageGroup::CONTENT_TYPE => :package_group,
+          Katello::Errata::CONTENT_TYPE => :errata,
+          Katello::PuppetModule::CONTENT_TYPE => :puppet_module
       }
       raise "Invalid content type #{content_type} sent. It needs to be one of #{content_classes.keys}"\
                                                                      unless content_classes[content_type]
       criteria = {}
       if content_type == Runcible::Extensions::Rpm.content_type
-        criteria[:fields] = Package::PULP_SELECT_FIELDS
+        criteria[:fields] = Katello::Package::PULP_SELECT_FIELDS
       end
 
       if filter_clauses && !filter_clauses.empty?
@@ -533,7 +533,7 @@ module Glue::Pulp::Repo
         # are listed, pulp will retrieve every field it knows about for the rpm
         # (e.g. changelog, filelist...etc).
         events << Katello.pulp_server.extensions.rpm.copy(self.pulp_id, to_repo.pulp_id,
-                                                 { :fields => Package::PULP_SELECT_FIELDS })
+                                                 { :fields => Katello::Package::PULP_SELECT_FIELDS })
         events << clone_distribution(to_repo)
 
         # Since the rpms will be copied above, during the copy of errata and package groups,
@@ -558,7 +558,7 @@ module Glue::Pulp::Repo
 
       criteria = {:type_ids => [content_type], :filters => {:unit => filter_clauses}}
       if content_type == Katello.pulp_server.extensions.rpm.content_type
-        criteria[:fields] = { :unit => Package::PULP_SELECT_FIELDS}
+        criteria[:fields] = { :unit => Katello::Package::PULP_SELECT_FIELDS}
       end
       Katello.pulp_server.extensions.repository.unassociate_units(self.pulp_id, criteria)
     end
@@ -568,7 +568,7 @@ module Glue::Pulp::Repo
       tasks = content_types.collect { |type| type.unassociate_from_repo(self.pulp_id, {}) }.flatten(1)
 
       tasks << Katello.pulp_server.extensions.repository.unassociate_units(self.pulp_id,
-                 {:type_ids => ['rpm'], :filters => {}, :fields => { :unit => Package::PULP_SELECT_FIELDS}})
+                 {:type_ids => ['rpm'], :filters => {}, :fields => { :unit => Katello::Package::PULP_SELECT_FIELDS}})
       tasks
     end
 
@@ -643,7 +643,7 @@ module Glue::Pulp::Repo
 
     def sync_state
       status = sync_status
-      return PulpSyncStatus::Status::NOT_SYNCED if status.nil?
+      return Katello::PulpSyncStatus::Status::NOT_SYNCED if status.nil?
       status.state
     end
 
@@ -653,7 +653,7 @@ module Glue::Pulp::Repo
     end
 
     def successful_sync?(sync_history_item)
-      sync_history_item['state'] == PulpTaskStatus::Status::FINISHED.to_s
+      sync_history_item['state'] == Katello::PulpTaskStatus::Status::FINISHED.to_s
     end
 
     def generate_metadata(force = false)
@@ -692,16 +692,16 @@ module Glue::Pulp::Repo
     def find_distributor(use_clone_distributor = false)
       dist_type_id = if use_clone_distributor
                        case self.content_type
-                       when Repository::YUM_TYPE
+                       when Katello::Repository::YUM_TYPE
                          Runcible::Models::YumCloneDistributor.type_id
-                       when Repository::PUPPET_TYPE
+                       when Katello::Repository::PUPPET_TYPE
                          Runcible::Models::PuppetInstallDistributor.type_id
                        end
                      else
                        case self.content_type
-                       when Repository::YUM_TYPE
+                       when Katello::Repository::YUM_TYPE
                          Runcible::Models::YumDistributor.type_id
-                       when Repository::PUPPET_TYPE
+                       when Katello::Repository::PUPPET_TYPE
                          Runcible::Models::PuppetInstallDistributor.type_id
                        end
                      end
@@ -745,7 +745,7 @@ module Glue::Pulp::Repo
     def upload_content(filepath)
       case content_type
       when "puppet"
-        unit_key, unit_metadata = PuppetModule.generate_unit_data(filepath)
+        unit_key, unit_metadata = Katello::PuppetModule.generate_unit_data(filepath)
       else
         fail _("Uploads not supported for content type '%s'.") % content_type
       end
@@ -773,15 +773,15 @@ module Glue::Pulp::Repo
       results = unit_search(:type_ids => [unit_type_id],
                             :filters => {:unit => unit_key})
       ids = results.map { |result| result[:unit_id] }
-      puppet? ? PuppetModule.index_puppet_modules(ids) : Package.index_packages(ids)
+      puppet? ? Katello::PuppetModule.index_puppet_modules(ids) : Katello::Package.index_packages(ids)
       generate_metadata
     end
 
     def unit_type_id
       case content_type
-      when Repository::YUM_TYPE
+      when Katello::Repository::YUM_TYPE
         "rpm"
-      when Repository::PUPPET_TYPE
+      when Katello::Repository::PUPPET_TYPE
         "puppet_module"
       end
     end
@@ -797,17 +797,17 @@ module Glue::Pulp::Repo
         history = Katello.pulp_server.extensions.repository.sync_status(pulp_id)
 
         if history.nil? || history.empty?
-          history = PulpSyncStatus.convert_history(Katello.pulp_server.extensions.repository.sync_history(pulp_id))
+          history = Katello::PulpSyncStatus.convert_history(Katello.pulp_server.extensions.repository.sync_history(pulp_id))
         end
       rescue
-          history = PulpSyncStatus.convert_history(Katello.pulp_server.extensions.repository.sync_history(pulp_id))
+          history = Katello::PulpSyncStatus.convert_history(Katello.pulp_server.extensions.repository.sync_history(pulp_id))
       end
 
       if history.nil? || history.empty?
-        return PulpSyncStatus.new(:state => PulpSyncStatus::Status::NOT_SYNCED)
+        return Katello::PulpSyncStatus.new(:state => Katello::PulpSyncStatus::Status::NOT_SYNCED)
       else
         history = sort_sync_status(history)
-        return PulpSyncStatus.pulp_task(history.first.with_indifferent_access)
+        return Katello::PulpSyncStatus.pulp_task(history.first.with_indifferent_access)
       end
     end
 

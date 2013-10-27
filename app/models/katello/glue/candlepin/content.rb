@@ -70,7 +70,7 @@ module Glue::Candlepin::Content
       if other_repos_with_same_product_and_content.empty?
         self.product.remove_content_by_id self.content_id
         if other_repos_with_same_content.empty? && !self.product.provider.redhat_provider?
-          Resources::Candlepin::Content.destroy(self.content_id)
+          Katello::Resources::Candlepin::Content.destroy(self.content_id)
         end
       end
 
@@ -80,7 +80,7 @@ module Glue::Candlepin::Content
     def content
       return @content unless @content.nil?
       unless self.content_id.nil?
-        @content = ::Candlepin::Content.find(self.content_id)
+        @content = Katello::Candlepin::Content.find(self.content_id)
       end
       @content
     end
@@ -93,24 +93,24 @@ module Glue::Candlepin::Content
       #to make sure it is not enabled in the contnet before refreshing
       self.content.update({
         :name => self.name,
-        :contentUrl => Glue::Pulp::Repos.custom_content_path(self.product, label),
+        :contentUrl => Katello::Glue::Pulp::Repos.custom_content_path(self.product, label),
         :gpgUrl => yum_gpg_key_url,
         :label => custom_content_label,
         :type => self.content_type,
-        :vendor => Provider::CUSTOM
+        :vendor => Katello::Provider::CUSTOM
       })
     end
 
     def create_content
       #only used for custom content
       raise 'Can only create content for custom providers' if self.product.provider.redhat_provider?
-      new_content = Candlepin::ProductContent.new({
+      new_content = Katello::Candlepin::ProductContent.new({
         :content => {
           :name => self.name,
-          :contentUrl => Glue::Pulp::Repos.custom_content_path(self.product, self.label),
+          :contentUrl => Katello::Glue::Pulp::Repos.custom_content_path(self.product, self.label),
           :type => self.content_type,
           :label => self.custom_content_label,
-          :vendor => Provider::CUSTOM
+          :vendor => Katello::Provider::CUSTOM
         },
         :enabled => true
       })

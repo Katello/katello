@@ -16,7 +16,7 @@ module Authorization::ActivationKey
 
   module ClassMethods
     def readable(org)
-      ActivationKey.readable?(org) ? where(:organization_id => org.id) : where("0 = 1")
+      Katello::ActivationKey.readable?(org) ? where(:organization_id => org.id) : where("0 = 1")
     end
 
     # returns list of virtual permission tags for the current user
@@ -36,7 +36,7 @@ module Authorization::ActivationKey
     end
 
     def no_tag_verbs
-      ActivationKey.list_verbs.keys
+      Katello::ActivationKey.list_verbs.keys
     end
 
     def readable?(org)

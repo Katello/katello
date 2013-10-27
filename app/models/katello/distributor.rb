@@ -16,17 +16,17 @@ class Distributor < ActiveRecord::Base
   include Hooks
   define_hooks :as_json_hook
 
-  include Glue::Candlepin::Consumer if Katello.config.use_cp
-  include Glue if Katello.config.use_cp
-  include Glue::ElasticSearch::Distributor if Katello.config.use_elasticsearch
-  include Authorization::Distributor
-  include AsyncOrchestration
+  include Katello::Glue::Candlepin::Consumer if Katello.config.use_cp
+  include Katello::Glue if Katello.config.use_cp
+  include Katello::Glue::ElasticSearch::Distributor if Katello.config.use_elasticsearch
+  include Katello::Authorization::Distributor
+  include Katello::AsyncOrchestration
 
   after_rollback :rollback_on_create, :on => :create
 
   acts_as_reportable
 
-  belongs_to :environment, :class_name => "KTEnvironment", :inverse_of => :distributors
+  belongs_to :environment, :class_name => "Katello::KTEnvironment", :inverse_of => :distributors
 
   has_many :task_statuses, :as => :task_owner, :dependent => :destroy
   has_many :custom_info, :as => :informable, :dependent => :destroy

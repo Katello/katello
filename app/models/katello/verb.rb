@@ -24,7 +24,7 @@ class Verb < ActiveRecord::Base
 
   # used for user-friendly presentation of this record
   def all_display_names(resource_type_name)
-    verbs  = Verb.verbs_for(resource_type_name, true).merge(Verb.verbs_for(resource_type_name, false))
+    verbs  = Katello::Verb.verbs_for(resource_type_name, true).merge(Verb.verbs_for(resource_type_name, false))
     verbs[verb]
   end
 

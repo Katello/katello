@@ -13,7 +13,7 @@
 
 module Katello
 class EnvironmentSystemGroup < ActiveRecord::Base
-  belongs_to :environment, :class_name => 'KTEnvironment'
+  belongs_to :environment, :class_name => 'Katello::KTEnvironment'
   belongs_to :system_group
 end
 end

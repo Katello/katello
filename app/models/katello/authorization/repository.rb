@@ -40,16 +40,16 @@ module Authorization::Repository
     end
 
     def readable(env)
-      prod_ids = Product.readable(env.organization).collect { |p| p.id }
+      prod_ids = Katello::Product.readable(env.organization).collect { |p| p.id }
       where(product_id: prod_ids, :environment_id => env.id)
     end
 
     def any_readable?(organization)
-      Product.any_readable?(organization)
+      Katello::Product.any_readable?(organization)
     end
 
     def libraries_content_readable(org)
-      repos = Repository.enabled.content_readable(org)
+      repos = Katello::Repository.enabled.content_readable(org)
       lib_ids = []
       repos.each{|r|  lib_ids << (r.library_instance_id || r.id)}
       where(:id => lib_ids)
@@ -57,7 +57,7 @@ module Authorization::Repository
 
     def content_readable(org)
       prod_ids = Katello::Product.readable(org).collect{|p| p.id}
-      env_ids = KTEnvironment.content_readable(org)
+      env_ids = Katello::KTEnvironment.content_readable(org)
       where(environment_id: env_ids, product_id: prod_ids)
     end
 
@@ -71,20 +71,20 @@ module Authorization::Repository
     end
 
     def editable_in_library(org)
-      where(environment_id: org.library.id, product_id: Product.editable(org).pluck("products.id"))
+      where(environment_id: org.library.id, product_id: Katello::Product.editable(org).pluck("products.id"))
     end
 
     def readable_in_org(org, *skip_library)
       if (skip_library.empty? || skip_library.first.nil?)
         # 'skip library' not included, so retrieve repos in library in the result
-        where(environment_id: KTEnvironment.content_readable(org))
+        where(environment_id: Katello::KTEnvironment.content_readable(org))
       else
-        where(environment_id: KTEnvironment.content_readable(org).non_library)
+        where(environment_id: Katello::KTEnvironment.content_readable(org).non_library)
       end
     end
 
     def any_contents_readable_in_org?(org, skip_library = false)
-      KTEnvironment.any_contents_readable?(org, skip_library)
+      Katello::KTEnvironment.any_contents_readable?(org, skip_library)
     end
   end
 

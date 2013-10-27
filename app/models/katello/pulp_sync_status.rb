@@ -109,7 +109,7 @@ end
 
 module Katello
 class PulpSyncStatus < PulpTaskStatus
-  use_index_of TaskStatus if Katello.config.use_elasticsearch
+  use_index_of Katello::TaskStatus if Katello.config.use_elasticsearch
 
   HISTORY_ERROR = 'failed'
   HISTORY_SUCCESS = 'success'
@@ -124,7 +124,7 @@ class PulpSyncStatus < PulpTaskStatus
   end
 
   def progress
-    PulpSyncProgress.new(attributes['progress'])
+    Katello::PulpSyncProgress.new(attributes['progress'])
   end
 
   def after_refresh
@@ -132,13 +132,13 @@ class PulpSyncStatus < PulpTaskStatus
   end
 
   def self.pulp_task(pulp_status)
-    task_status = PulpSyncStatus.find_by_uuid(pulp_status[:id])
+    task_status = Katello::PulpSyncStatus.find_by_uuid(pulp_status[:id])
     task_status = self.new { |t| yield t if block_given? } if task_status.nil?
     task_status.update_state(pulp_status)
   end
 
   def update_state(pulp_status)
-    PulpSyncStatus.dump_state(pulp_status, self)
+    Katello::PulpSyncStatus.dump_state(pulp_status, self)
     correct_state
     self
   end

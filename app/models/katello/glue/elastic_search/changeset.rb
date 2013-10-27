@@ -28,7 +28,7 @@ module Glue::ElasticSearch::Changeset
   end
 
   def extended_index_attrs
-    type      = self.type == "PromotionChangeset" ? Changeset::PROMOTION : Changeset::DELETION
+    type      = self.type == "PromotionChangeset" ? Katello::Changeset::PROMOTION : Katello::Changeset::DELETION
     { :name_sort       => self.name.downcase,
       :type            => type,
       :user            => (self.task_status.nil? || self.task_status.user.nil?) ? "" : self.task_status.user.login

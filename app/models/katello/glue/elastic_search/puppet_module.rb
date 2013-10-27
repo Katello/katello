@@ -31,8 +31,8 @@ module Glue::ElasticSearch::PuppetModule
       {
         "index" => {
           "analysis" => {
-            "filter" => Util::Search.custom_filters,
-            "analyzer" => Util::Search.custom_analyzers
+            "filter" => Katello::Util::Search.custom_filters,
+            "analyzer" => Katello::Util::Search.custom_analyzers
           }
         }
       }
@@ -75,7 +75,7 @@ module Glue::ElasticSearch::PuppetModule
     end
 
     def id_search(ids)
-      return Util::Support.array_with_total unless Tire.index(self.index).exists?
+      return Katello::Util::Support.array_with_total unless Tire.index(self.index).exists?
       search = Tire.search self.index do
         fields [:id, :name, :repoids]
         query do
@@ -100,7 +100,7 @@ module Glue::ElasticSearch::PuppetModule
       options[:repoids] = Array(options[:repoids])
 
       if !Tire.index(self.index).exists? || (options[:repoids] && options[:repoids].empty?)
-        return Util::Support.array_with_total
+        return Katello::Util::Support.array_with_total
       end
 
       all_rows = query.blank? #if blank, get all rows
@@ -133,7 +133,7 @@ module Glue::ElasticSearch::PuppetModule
 
       return search.perform.results
     rescue Tire::Search::SearchRequestFailed
-      Util::Support.array_with_total
+      Katello::Util::Support.array_with_total
     end
 
     def index_puppet_modules(puppet_module_ids)
@@ -143,11 +143,11 @@ module Glue::ElasticSearch::PuppetModule
       end
 
       unless puppet_modules.empty?
-        Tire.index ::PuppetModule.index do
-          create :settings => PuppetModule.index_settings, :mappings => PuppetModule.index_mapping
-        end unless Tire.index(::PuppetModule.index).exists?
+        Tire.index Katello::PuppetModule.index do
+          create :settings => Katello::PuppetModule.index_settings, :mappings => Katello::PuppetModule.index_mapping
+        end unless Tire.index(Katello::PuppetModule.index).exists?
 
-        Tire.index ::PuppetModule.index do
+        Tire.index Katello::PuppetModule.index do
           import puppet_modules
         end
       end
@@ -170,7 +170,7 @@ module Glue::ElasticSearch::PuppetModule
 
     def autocomplete_field_query(field, value)
       value = "*" if value.blank?
-      value = Util::Search.filter_input(value)
+      value = Katello::Util::Search.filter_input(value)
       "#{field}_autocomplete:(#{value})"
     end
   end

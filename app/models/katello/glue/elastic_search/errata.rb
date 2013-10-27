@@ -28,14 +28,14 @@ module Glue::ElasticSearch::Errata
                   "min_gram"  => 3,
                   "max_gram"  => 40
                 }
-              }.merge(Util::Search.custom_filters),
+              }.merge(Katello::Util::Search.custom_filters),
               "analyzer" => {
                 "title_analyzer" => {
                   "type"      => "custom",
                   "tokenizer" => "keyword",
                   "filter"    => %w(standard lowercase asciifolding ngram_filter)
                 }
-              }.merge(Util::Search.custom_analyzers)
+              }.merge(Katello::Util::Search.custom_analyzers)
             }
           }
         }
@@ -89,9 +89,9 @@ module Glue::ElasticSearch::Errata
       def self.repos_for_filter(filter)
         repoid = filter[:repoid] || filter[:repository_id]
         if repoid
-          return [Repository.find(repoid)]
+          return [Katello::Repository.find(repoid)]
         elsif environment_id = filter[:environment_id]
-          env = KTEnvironment.find(environment_id)
+          env = Katello::KTEnvironment.find(environment_id)
           if product_id = filter[:product_id]
             products = [env.products.find_by_cp_id!(product_id)]
           else
@@ -108,7 +108,7 @@ module Glue::ElasticSearch::Errata
 
         repoids = filters[:repoids]
         if !Tire.index(self.index).exists? || (repoids && repoids.empty?)
-          return Util::Support.array_with_total
+          return Katello::Util::Support.array_with_total
         end
 
         all_rows = query.blank?
@@ -144,7 +144,7 @@ module Glue::ElasticSearch::Errata
 
         return search.perform.results
       rescue Tire::Search::SearchRequestFailed
-        Util::Support.array_with_total
+        Katello::Util::Support.array_with_total
       end
 
       def self.index_errata(errata_ids)
@@ -155,10 +155,10 @@ module Glue::ElasticSearch::Errata
 
         unless errata.empty?
           Tire.index Errata.index do
-            create :settings => Errata.index_settings, :mappings => Errata.index_mapping
-          end unless Tire.index(::Errata.index).exists?
+            create :settings => Katello::Errata.index_settings, :mappings => Katello::Errata.index_mapping
+          end unless Tire.index(Katello::Errata.index).exists?
 
-          Tire.index Errata.index do
+          Tire.index Katello::Errata.index do
             import errata
           end
         end
@@ -170,7 +170,7 @@ module Glue::ElasticSearch::Errata
         if text.blank?
           query = "id_title:(*)"
         else
-          text = Util::Search.filter_input(text.downcase)
+          text = Katello::Util::Search.filter_input(text.downcase)
           query = "id_title:(*#{text}*)"
         end
 

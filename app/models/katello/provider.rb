@@ -13,13 +13,13 @@
 module Katello
 class Provider < ActiveRecord::Base
 
-  include Glue::ElasticSearch::Provider if Katello.config.use_elasticsearch
-  include Glue::Provider
-  include Glue
-  include Authorization::Provider
-  include AsyncOrchestration
+  include Katello::Glue::ElasticSearch::Provider if Katello.config.use_elasticsearch
+  include Katello::Glue::Provider
+  include Katello::Glue
+  include Katello::Authorization::Provider
+  include Katello::AsyncOrchestration
 
-  include Ext::PermissionTagCleanup
+  include Katello::Ext::PermissionTagCleanup
 
   REDHAT = 'Red Hat'
   CUSTOM = 'Custom'
@@ -31,7 +31,7 @@ class Provider < ActiveRecord::Base
 
   belongs_to :organization
   belongs_to :task_status, :dependent => :destroy
-  belongs_to :discovery_task, :class_name => 'TaskStatus', :dependent => :destroy
+  belongs_to :discovery_task, :class_name => 'Katello::TaskStatus', :dependent => :destroy
   has_many :products, :inverse_of => :provider
   has_many :repositories, through: :products
 
@@ -80,7 +80,7 @@ class Provider < ActiveRecord::Base
   end
 
   def count_providers(type)
-    Provider.where(:organization_id => self.organization_id, :provider_type => type).count(:id)
+    Katello::Provider.where(:organization_id => self.organization_id, :provider_type => type).count(:id)
   end
 
   def yum_repo?
@@ -130,16 +130,16 @@ class Provider < ActiveRecord::Base
   def available_releases
     releases = []
     begin
-      Util::CdnVarSubstitutor.with_cache do
+      Katello::Util::CdnVarSubstitutor.with_cache do
         self.products.engineering.each do |product|
-          cdn_var_substitutor = Resources::CDN::CdnResource.new(product.provider[:repository_url],
+          cdn_var_substitutor = Katello::Resources::CDN::CdnResource.new(product.provider[:repository_url],
                                                            :ssl_client_cert => OpenSSL::X509::Certificate.new(product.certificate),
                                                            :ssl_client_key => OpenSSL::PKey::RSA.new(product.key)).substitutor
           product.productContent.each do |pc|
             if url_to_releases = pc.content.contentUrl[/^.*\$releasever/]
               begin
                 cdn_var_substitutor.substitute_vars(url_to_releases).each do |(substitutions, path)|
-                  releases << Resources::CDN::Utils.parse_version(substitutions['releasever'])[:minor]
+                  releases << Katello::Resources::CDN::Utils.parse_version(substitutions['releasever'])[:minor]
                 end
               rescue Errors::SecurityViolation => e
                 # Some products may not be accessible but these should not impact available releases available
@@ -191,12 +191,12 @@ class Provider < ActiveRecord::Base
   private
 
   def start_discovery_task(notify = false)
-    task_id = AsyncOperation.current_task_id
+    task_id = Katello::AsyncOperation.current_task_id
     provider_id = self.id
 
     #Lambda to continually update the provider
     found_func = lambda do |url|
-      provider = ::Provider.find(provider_id)
+      provider = Katello::Provider.find(provider_id)
       provider.discovered_repos << url
       provider.save!
     end
@@ -204,18 +204,18 @@ class Provider < ActiveRecord::Base
     #  Using the saved task_id to compare current providers
     #  task id
     continue_func = lambda do
-      new_prov = ::Provider.find(provider_id)
+      new_prov = Katello::Provider.find(provider_id)
       if new_prov.discovery_task.nil? || new_prov.discovery_task.id != task_id
         return false
       end
       true
     end
 
-    discover = RepoDiscovery.new(self.discovery_url)
+    discover = Katello::RepoDiscovery.new(self.discovery_url)
     discover.run(found_func, continue_func)
 
   rescue => e
-    Notify.exception _('Repos discovery failed.'), e if notify
+    Katello::Notify.exception _('Repos discovery failed.'), e if notify
     raise e
   end
 end

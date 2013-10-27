@@ -20,7 +20,7 @@ class Permission < ActiveRecord::Base
   # rubocop:disable HasAndBelongsToMany
   # TODO: change this into has_many :through association
   has_and_belongs_to_many :verbs, :join_table => 'katello_permissions_verbs'
-  has_many :tags, :class_name => "PermissionTag", :dependent => :destroy, :inverse_of => :permission
+  has_many :tags, :class_name => "Katello::PermissionTag", :dependent => :destroy, :inverse_of => :permission
 
   before_save :cleanup_tags_verbs
   before_save :check_global
@@ -37,7 +37,7 @@ class Permission < ActiveRecord::Base
   end
 
   def tag_values=(attributes)
-    self.tags = attributes.collect {|tag| PermissionTag.new(:permission_id => id, :tag_id => tag)}
+    self.tags = attributes.collect {|tag| Katello::PermissionTag.new(:permission_id => id, :tag_id => tag)}
   end
 
   def verb_values
@@ -46,12 +46,12 @@ class Permission < ActiveRecord::Base
 
   def verb_values=(attributes)
     self.verbs = attributes.collect do |verb|
-      Verb.find_or_create_by_verb(verb)
+      Katello::Verb.find_or_create_by_verb(verb)
     end
   end
 
   def resource_type_attributes=(attributes)
-    self.resource_type = ResourceType.find_or_create_by_name(attributes[:name])
+    self.resource_type = Katello::ResourceType.find_or_create_by_name(attributes[:name])
   end
 
   def to_short_text
@@ -101,7 +101,7 @@ class Permission < ActiveRecord::Base
   def as_json(*args)
     ret = super.as_json(*args)
     ret[:tags] = self.tags.collect do |t|
-      t[:formatted] = Tag.formatted(self.resource_type.name, t.tag_id)
+      t[:formatted] = Katello::Tag.formatted(self.resource_type.name, t.tag_id)
         t
     end
     ret[:verbs] = self.verbs

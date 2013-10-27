@@ -12,8 +12,8 @@
 
 module Katello
 class Pool < ActiveRecord::Base
-  include Glue::Candlepin::Pool
-  include Glue::ElasticSearch::Pool if Katello.config.use_elasticsearch
+  include Katello::Glue::Candlepin::Pool
+  include Katello::Glue::ElasticSearch::Pool if Katello.config.use_elasticsearch
 
   self.table_name = "katello_pools"
   has_many :key_pools, :foreign_key => "pool_id", :dependent => :destroy
@@ -32,8 +32,8 @@ class Pool < ActiveRecord::Base
   # If the pool_json is passed in, then candlepin is not hit again to fetch it. This is for the case where
   # prior to this call the pool was already fetched.
   def self.find_pool(cp_id, pool_json = nil)
-    pool_json = Resources::Candlepin::Pool.find(cp_id) if !pool_json
-    Pool.new(pool_json) if !pool_json.nil?
+    pool_json = Katello::Resources::Candlepin::Pool.find(cp_id) if !pool_json
+    Katello::Pool.new(pool_json) if !pool_json.nil?
   end
 end
 end

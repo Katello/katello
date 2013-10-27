@@ -12,12 +12,12 @@
 
 module Katello
 class PulpTaskStatus < TaskStatus
-  use_index_of TaskStatus if Katello.config.use_elasticsearch
+  use_index_of Katello::TaskStatus if Katello.config.use_elasticsearch
   WAIT_TIMES = [0.5, 1, 2, 4, 8, 16]
   WAIT_TIME_STEP = 5
 
   def refresh
-    PulpTaskStatus.refresh(self)
+    Katello::PulpTaskStatus.refresh(self)
   end
 
   def after_refresh
@@ -34,7 +34,7 @@ class PulpTaskStatus < TaskStatus
 
   def self.wait_for_tasks(async_tasks)
     async_tasks = async_tasks.collect do |t|
-      PulpTaskStatus.using_pulp_task(t)
+      Katello::PulpTaskStatus.using_pulp_task(t)
     end
 
     timeout_count = 0
@@ -61,7 +61,7 @@ class PulpTaskStatus < TaskStatus
     else
       task_status = TaskStatus.find_by_uuid(pulp_status[:task_id])
       task_status = self.new { |t| yield t if block_given? } if task_status.nil?
-      PulpTaskStatus.dump_state(pulp_status, task_status)
+      Katello::PulpTaskStatus.dump_state(pulp_status, task_status)
     end
   end
 

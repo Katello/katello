@@ -18,10 +18,10 @@ class ContentViewDefinitionBase < ActiveRecord::Base
   has_many :content_view_definition_repositories, :foreign_key => "content_view_definition_id", :dependent => :destroy
   has_many :repositories, :through => :content_view_definition_repositories, :after_remove => :remove_repository,
                           :before_add => :validate_repos
-  has_many :components, :class_name => "ComponentContentView", :dependent => :destroy,
+  has_many :components, :class_name => "Katello::ComponentContentView", :dependent => :destroy,
                         :foreign_key => "content_view_definition_id"
   has_many :component_content_views, :through => :components, :source => :content_view,
-                                     :class_name => "ContentView",
+                                     :class_name => "Katello::ContentView",
                                      :before_add => :validate_component_views
   has_many :filters, :inverse_of => :content_view_definition, :dependent => :destroy,
                      :foreign_key => "content_view_definition_id"
@@ -76,7 +76,7 @@ class ContentViewDefinitionBase < ActiveRecord::Base
     if repo = repositories.detect(&:puppet?)
       repositories.delete(repo)
     end
-    repositories << Repository.puppet_type.find(id) unless id.blank?
+    repositories << Katello::Repository.puppet_type.find(id) unless id.blank?
   end
 
   protected
@@ -96,7 +96,7 @@ class ContentViewDefinitionBase < ActiveRecord::Base
 
   def remove_repository(repository)
     filters.each do |filter_item|
-      repo_exists = Repository.unscoped.joins(:filters).where(
+      repo_exists = Katello::Repository.unscoped.joins(:filters).where(
                       :filters => {:id => filter_item.id}, :id => repository.id).count
       if repo_exists
         filter_item.repositories.delete(repository)

@@ -21,7 +21,7 @@ module Ext
 
     def setup_label_from_name
       unless label.present?
-        self.label = Util::Model.labelize(name)
+        self.label = Katello::Util::Model.labelize(name)
       end
     end
   end

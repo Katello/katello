@@ -31,26 +31,26 @@ module Glue::Candlepin::Consumer
                     :installedProducts, :autoheal, :releaseVer, :serviceLevel, :capabilities,
                     :initializer => (lambda do |s|
                                        if uuid
-                                         consumer_json = Resources::Candlepin::Consumer.get(uuid)
+                                         consumer_json = Katello::Resources::Candlepin::Consumer.get(uuid)
                                          convert_from_cp_fields(consumer_json)
                                        end
                                      end)
-      lazy_accessor :entitlements, :initializer => lambda {|s| Resources::Candlepin::Consumer.entitlements(uuid) }
-      lazy_accessor :pools, :initializer => lambda {|s| entitlements.collect { |ent| Resources::Candlepin::Pool.find ent["pool"]["id"]} }
-      lazy_accessor :available_pools, :initializer => lambda {|s| Resources::Candlepin::Consumer.available_pools(uuid, false) }
-      lazy_accessor :all_available_pools, :initializer => lambda {|s| Resources::Candlepin::Consumer.available_pools(uuid, true) }
+      lazy_accessor :entitlements, :initializer => lambda {|s| Katello::Resources::Candlepin::Consumer.entitlements(uuid) }
+      lazy_accessor :pools, :initializer => lambda {|s| entitlements.collect { |ent| Katello::Resources::Candlepin::Pool.find ent["pool"]["id"]} }
+      lazy_accessor :available_pools, :initializer => lambda {|s| Katello::Resources::Candlepin::Consumer.available_pools(uuid, false) }
+      lazy_accessor :all_available_pools, :initializer => lambda {|s| Katello::Resources::Candlepin::Consumer.available_pools(uuid, true) }
       lazy_accessor :host, :initializer => (lambda do |s|
-                                              host_attributes = Resources::Candlepin::Consumer.host(self.uuid)
-                                              (System.find_by_uuid(host_attributes['uuid']) || System.new(host_attributes)) if host_attributes
+                                              host_attributes = Katello::Resources::Candlepin::Consumer.host(self.uuid)
+                                              (Katello::System.find_by_uuid(host_attributes['uuid']) || Katello::System.new(host_attributes)) if host_attributes
                                             end)
       lazy_accessor :guests, :initializer => (lambda do |s|
-                                                guests_attributes = Resources::Candlepin::Consumer.guests(self.uuid)
+                                                guests_attributes = Katello::Resources::Candlepin::Consumer.guests(self.uuid)
                                                 guests_attributes.map do |attr|
-                                                  System.find_by_uuid(attr['uuid']) || System.new(attr)
+                                                  Katello::System.find_by_uuid(attr['uuid']) || System.new(attr)
                                                 end
                                               end)
-      lazy_accessor :compliance, :initializer => lambda {|s| Resources::Candlepin::Consumer.compliance(uuid) }
-      lazy_accessor :events, :initializer => lambda {|s| Resources::Candlepin::Consumer.events(uuid) }
+      lazy_accessor :compliance, :initializer => lambda {|s| Katello::Resources::Candlepin::Consumer.compliance(uuid) }
+      lazy_accessor :events, :initializer => lambda {|s| Katello::Resources::Candlepin::Consumer.events(uuid) }
 
       validates :cp_type, :inclusion => {:in => %w(system hypervisor candlepin)},
                           :if => :new_record?
@@ -97,7 +97,7 @@ module Glue::Candlepin::Consumer
 
     def set_candlepin_consumer
       Rails.logger.debug "Creating a consumer in candlepin: #{name}"
-      consumer_json = Resources::Candlepin::Consumer.create(self.cp_environment_id,
+      consumer_json = Katello::Resources::Candlepin::Consumer.create(self.cp_environment_id,
                                                             self.organization.label,
                                                             self.name, self.cp_type,
                                                             self.facts,
@@ -123,7 +123,7 @@ module Glue::Candlepin::Consumer
 
     def update_candlepin_consumer
       Rails.logger.debug "Updating consumer in candlepin: #{name}"
-      Resources::Candlepin::Consumer.update(self.uuid, @facts, @guestIds, @installedProducts, @autoheal,
+      Katello::Resources::Candlepin::Consumer.update(self.uuid, @facts, @guestIds, @installedProducts, @autoheal,
                                             @releaseVer, self.serviceLevel, self.cp_environment_id, @capabilities, @lastCheckin)
     rescue => e
       Rails.logger.error "Failed to update candlepin consumer #{name}: #{e}, #{e.backtrace.join("\n")}"
@@ -132,7 +132,7 @@ module Glue::Candlepin::Consumer
 
     def checkin(checkin_time)
       Rails.logger.debug "Updating consumer check-in time: #{name}"
-      Resources::Candlepin::Consumer.checkin(self.uuid, checkin_time)
+      Katello::Resources::Candlepin::Consumer.checkin(self.uuid, checkin_time)
     rescue => e
       Rails.logger.error "Failed to update consumer check-in time in candlepin for #{name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -140,7 +140,7 @@ module Glue::Candlepin::Consumer
 
     def refresh_subscriptions
       Rails.logger.debug "Refreshing consumer subscriptions in candlepin: #{name}"
-      Resources::Candlepin::Consumer.refresh_entitlements(self.uuid)
+      Katello::Resources::Candlepin::Consumer.refresh_entitlements(self.uuid)
     rescue => e
       Rails.logger.error "Failed to refresh consumer subscriptions in candlepin for #{name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -148,7 +148,7 @@ module Glue::Candlepin::Consumer
 
     def del_candlepin_consumer
       Rails.logger.debug "Deleting consumer in candlepin: #{name}"
-      Resources::Candlepin::Consumer.destroy(self.uuid)
+      Katello::Resources::Candlepin::Consumer.destroy(self.uuid)
     rescue RestClient::Gone
       #ignore already deleted system
       true
@@ -159,14 +159,14 @@ module Glue::Candlepin::Consumer
 
     def regenerate_identity_certificates
       Rails.logger.debug "Regenerating consumer identity certificates: #{name}"
-      Resources::Candlepin::Consumer.regenerate_identity_certificates(self.uuid)
+      Katello::Resources::Candlepin::Consumer.regenerate_identity_certificates(self.uuid)
     rescue => e
       Rails.logger.debug e.backtrace.join("\n\t")
       raise e
     end
 
     def get_pool(id)
-      Resources::Candlepin::Pool.find id
+      Katello::Resources::Candlepin::Pool.find id
     rescue => e
       Rails.logger.debug e.backtrace.join("\n\t")
       raise e
@@ -174,7 +174,7 @@ module Glue::Candlepin::Consumer
 
     def subscribe(pool, quantity = nil)
       Rails.logger.debug "Subscribing to pool '#{pool}' for : #{name}"
-      Resources::Candlepin::Consumer.consume_entitlement self.uuid, pool, quantity
+      Katello::Resources::Candlepin::Consumer.consume_entitlement self.uuid, pool, quantity
     rescue => e
       Rails.logger.debug e.backtrace.join("\n\t")
       raise e
@@ -182,7 +182,7 @@ module Glue::Candlepin::Consumer
 
     def export
       Rails.logger.debug "Exporting manifest"
-      Resources::Candlepin::Consumer.export self.uuid
+      Katello::Resources::Candlepin::Consumer.export self.uuid
     rescue => e
       Rails.logger.debug e.backtrace.join("\n\t")
       raise e
@@ -190,7 +190,7 @@ module Glue::Candlepin::Consumer
 
     def unsubscribe(entitlement)
       Rails.logger.debug "Unsubscribing from entitlement '#{entitlement}' for : #{name}"
-      Resources::Candlepin::Consumer.remove_entitlement self.uuid, entitlement
+      Katello::Resources::Candlepin::Consumer.remove_entitlement self.uuid, entitlement
       #ents = self.entitlements.collect {|ent| ent["id"] if ent["pool"]["id"] == pool}.compact
       #raise ArgumentError, "Not subscribed to the pool #{pool}" if ents.count < 1
       #ents.each { |ent|
@@ -203,7 +203,7 @@ module Glue::Candlepin::Consumer
 
     def unsubscribe_by_serial(serial)
       Rails.logger.debug "Unsubscribing from certificate '#{serial}' for : #{name}"
-      Resources::Candlepin::Consumer.remove_certificate self.uuid, serial
+      Katello::Resources::Candlepin::Consumer.remove_certificate self.uuid, serial
     rescue => e
       Rails.logger.debug e.backtrace.join("\n\t")
       raise e
@@ -211,7 +211,7 @@ module Glue::Candlepin::Consumer
 
     def unsubscribe_all
       Rails.logger.debug "Unsubscribing from all entitlements for : #{name}"
-      Resources::Candlepin::Consumer.remove_entitlements self.uuid
+      Katello::Resources::Candlepin::Consumer.remove_entitlements self.uuid
     rescue => e
       Rails.logger.debug e.backtrace.join("\n\t")
       raise e
@@ -492,7 +492,7 @@ module Glue::Candlepin::Consumer
 
         provided_products = []
         pool["providedProducts"].each do |cp_product|
-          product = ::Product.where(:cp_id => cp_product["productId"]).first
+          product = Katello::Product.where(:cp_id => cp_product["productId"]).first
           if product
             provided_products << product
           end
@@ -560,7 +560,7 @@ module Glue::Candlepin::Consumer
                         :progress => "100",
                         :result => event[:messageText]}
         unless self.task_statuses.where('task_statuses.uuid' => event_status[:task_id]).exists?
-          TaskStatus.make(self, event_status, :candlepin_event, :event => event)
+          Katello::TaskStatus.make(self, event_status, :candlepin_event, :event => event)
         end
       end
     end
@@ -569,19 +569,19 @@ module Glue::Candlepin::Consumer
   module ClassMethods
 
     def all_by_pool(pool_id)
-      entitlements = Resources::Candlepin::Entitlement.get
+      entitlements = Katello::Resources::Candlepin::Entitlement.get
       system_uuids = entitlements.delete_if{|ent| ent["pool"]["id"] != pool_id }.map{|ent| ent["consumer"]["uuid"]}
       return where(:uuid => system_uuids)
     end
 
     def all_by_pool_uuid(pool_id)
-      entitlements = Resources::Candlepin::Entitlement.get
+      entitlements = Katello::Resources::Candlepin::Entitlement.get
       system_uuids = entitlements.delete_if{|ent| ent["pool"]["id"] != pool_id }.map{|ent| ent["consumer"]["uuid"]}
       return system_uuids
     end
 
     def create_hypervisor(environment_id, content_view_id, hypervisor_json)
-      hypervisor = Hypervisor.new(:environment_id => environment_id, :content_view_id => content_view_id)
+      hypervisor = Katello::Hypervisor.new(:environment_id => environment_id, :content_view_id => content_view_id)
       hypervisor.name = hypervisor_json[:name]
       hypervisor.cp_type = 'hypervisor'
       hypervisor.orchestration_for = :hypervisor
@@ -591,18 +591,18 @@ module Glue::Candlepin::Consumer
     end
 
     def register_hypervisors(environment, content_view, hypervisors_attrs)
-      consumers_attrs = Resources::Candlepin::Consumer.register_hypervisors(hypervisors_attrs)
+      consumers_attrs = Katello::Resources::Candlepin::Consumer.register_hypervisors(hypervisors_attrs)
       created = consumers_attrs[:created].map do |hypervisor_attrs|
         System.create_hypervisor(environment.id, content_view.id, hypervisor_attrs)
       end if consumers_attrs[:created]
       consumers_attrs[:updated].each do |hypervisor_attrs|
         if !System.find_by_uuid(hypervisor[:uuid])
-          created << System.create_hypervisor(environment.id, content_view.id, hypervisor)
+          created << Katello::System.create_hypervisor(environment.id, content_view.id, hypervisor)
         end
       end if consumers_attrs[:updated]
       consumers_attrs[:unchanged].each do |hypervisor|
         if !System.find_by_uuid(hypervisor[:uuid])
-          created << System.create_hypervisor(environment.id, content_view.id, hypervisor)
+          created << Katello::System.create_hypervisor(environment.id, content_view.id, hypervisor)
         end
       end if consumers_attrs[:unchanged]
       return consumers_attrs, created

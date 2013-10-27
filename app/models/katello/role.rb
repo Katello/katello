@@ -19,7 +19,7 @@ class Role < ActiveRecord::Base
 
   has_many :roles_users, :dependent => :destroy
   has_many :users, :through => :roles_users, :before_remove => :super_admin_check
-  has_many :permissions, :dependent => :destroy, :inverse_of => :role, :class_name => "Permission", :extend => RolesPermissions::DefaultSystemRegistrationPermission
+  has_many :permissions, :dependent => :destroy, :inverse_of => :role, :class_name => "Katello::Permission", :extend => Katello::RolesPermissions::DefaultSystemRegistrationPermission
   has_many :ldap_group_roles, :dependent => :destroy, :inverse_of => :role
   has_many :resource_types, :through => :permissions
 
@@ -49,7 +49,7 @@ class Role < ActiveRecord::Base
   end
 
   def self.search_by_verb(key, operator, value)
-    permissions = Permission.all(:conditions => "verbs.verb #{operator} '#{value_to_sql(operator, value)}'", :include => :verbs)
+    permissions = Katello::Permission.all(:conditions => "verbs.verb #{operator} '#{value_to_sql(operator, value)}'", :include => :verbs)
     roles = permissions.map(&:role)
     opts  = roles.empty? ? "= 'nil'" : "IN (#{roles.map(&:id).join(',')})"
 
@@ -57,7 +57,7 @@ class Role < ActiveRecord::Base
   end
 
   def self.search_by_type(key, operator, value)
-    permissions = Permission.all(:conditions => "resource_types.name #{operator} '#{value_to_sql(operator, value)}'", :include => :resource_type)
+    permissions = Katello::Permission.all(:conditions => "resource_types.name #{operator} '#{value_to_sql(operator, value)}'", :include => :resource_type)
     roles = permissions.map(&:role)
     opts  = roles.empty? ? "= 'nil'" : "IN (#{roles.map(&:id).join(',')})"
 

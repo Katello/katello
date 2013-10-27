@@ -29,7 +29,7 @@ class SearchFavorite < ActiveRecord::Base
   end
 
   def count_favorites(path)
-    ::SearchFavorite.where(:user_id => self.user_id, :path => path).count(:id)
+    Katello::SearchFavorite.where(:user_id => self.user_id, :path => path).count(:id)
   end
 
 end

@@ -19,11 +19,11 @@ module Katello
 
       included do
 
-        include Glue::Pulp::User if Katello.config.use_pulp
-        include Glue::ElasticSearch::User if Katello.config.use_elasticsearch
-        include Glue if Katello.config.use_cp || Katello.config.use_pulp
+        include Katello::Glue::Pulp::User if Katello.config.use_pulp
+        include Katello::Glue::ElasticSearch::User if Katello.config.use_elasticsearch
+        include Katello::Glue if Katello.config.use_cp || Katello.config.use_pulp
 
-        include Glue::Event
+        include Katello::Glue::Event
 
         def create_event
           Headpin::Actions::UserCreate
@@ -33,14 +33,14 @@ module Katello
           Headpin::Actions::UserDestroy
         end
 
-        include AsyncOrchestration
+        include Katello::AsyncOrchestration
 
-        include Ext::IndexedModel
+        include Katello::Ext::IndexedModel
 
-        include AsyncOrchestration
+        include Katello::AsyncOrchestration
         include Katello::Authorization::User
-        include Authorization::Enforcement
-        include Util::ThreadSession::UserModel
+        include Katello::Authorization::Enforcement
+        include Katello::Util::ThreadSession::UserModel
 
         acts_as_reportable
 
@@ -53,7 +53,7 @@ module Katello
 
         has_many :roles_users, :dependent => :destroy, :class_name => "Katello::RolesUser"
         has_many :katello_roles, :through => :roles_users, :before_remove => :super_admin_check,
-                  :uniq => true, :extend => RolesPermissions::UserOwnRole,
+                  :uniq => true, :extend => Katello::RolesPermissions::UserOwnRole,
                   :source => :role
         has_many :help_tips, :class_name => "Katello::HelpTip"
         has_many :user_notices, :class_name => "Katello::UserNotice"
@@ -83,8 +83,8 @@ module Katello
         end
 
         def not_last_super_user?
-          if !User.current.nil?
-            if self.id == User.current.id
+          if !::User.current.nil?
+            if self.id == ::User.current.id
               self.errors.add(:base, _("Cannot delete currently logged user"))
               return false
             end
@@ -110,7 +110,7 @@ module Katello
         end
 
         def self.authenticate!(login, password)
-          u = User.where({ :login => login }).first
+          u = ::User.where({ :login => login }).first
           # check if user exists
           return nil unless u
           # check if not disabled
@@ -124,8 +124,8 @@ module Katello
 
         # if the user authenticates with LDAP, log them in
         def self.authenticate_using_ldap!(login, password)
-          if Ldap.valid_ldap_authentication? login, password
-            User.where({ :login => login }).first || create_ldap_user!(login)
+          if Katello::Ldap.valid_ldap_authentication? login, password
+            ::User.where({ :login => login }).first || create_ldap_user!(login)
           else
             nil
           end
@@ -135,26 +135,26 @@ module Katello
         def self.create_ldap_user!(login)
           # Some parts of user creation require a current user, but this method
           # will never be called in that way
-          User.current ||= User.first
+          ::User.current ||= ::User.first
           # user gets a dummy password and email
-          u = User.create!(:login => login)
-          User.current = u
+          u = ::User.create!(:login => login)
+          ::User.current = u
           u
         end
 
         def self.cp_oauth_header
-          raise Errors::UserNotSet, "unauthenticated to call a backend engine" if User.current.nil?
-          User.current.cp_oauth_header
+          raise Errors::UserNotSet, "unauthenticated to call a backend engine" if ::User.current.nil?
+          ::User.current.cp_oauth_header
         end
 
         # is the current user consumer? (rhsm)
         def self.consumer?
-          User.current.is_a? CpConsumerUser
+          ::User.current.is_a? CpConsumerUser
         end
 
         def allowed_organizations
           #test for all orgs
-          perms = Permission.joins(:role).joins("INNER JOIN #{Katello::RolesUser.table_name} ON #{Katello::RolesUser.table_name}.role_id = #{Katello::Role.table_name}.id").
+          perms = Katello::Permission.joins(:role).joins("INNER JOIN #{Katello::RolesUser.table_name} ON #{Katello::RolesUser.table_name}.role_id = #{Katello::Role.table_name}.id").
               where("#{Katello::RolesUser.table_name}.user_id = ?", self.id).where(:organization_id => nil).count
           return Katello::Organization.without_deleting.all if perms > 0
 
@@ -163,8 +163,8 @@ module Katello
 
         def disable_helptip(key)
           return if !self.helptips_enabled? #don't update helptips if user has it disabled
-          return if !HelpTip.where(:key => key, :user_id => self.id).empty?
-          help      = HelpTip.new
+          return if !Katello::HelpTip.where(:key => key, :user_id => self.id).empty?
+          help      = Katello::HelpTip.new
           help.key  = key
           help.user = self
           help.save
@@ -172,7 +172,7 @@ module Katello
 
         #Remove up to 5 un-viewed notices
         def pop_notices(organization = nil, count = 5)
-          notices = Notice.for_user(self).for_org(organization).unread.limit(count == :all ? nil : count)
+          notices = Katello::Notice.for_user(self).for_org(organization).unread.limit(count == :all ? nil : count)
           notices.each { |notice| notice.user_notices.each(&:read!) }
 
           notices = notices.map do |notice|
@@ -183,17 +183,17 @@ module Katello
 
         def enable_helptip(key)
           return if !self.helptips_enabled? #don't update helptips if user has it disabled
-          help = HelpTip.where(:key => key, :user_id => self.id).first
+          help = Katello::HelpTip.where(:key => key, :user_id => self.id).first
           return if help.nil?
           help.destroy
         end
 
         def clear_helptips
-          HelpTip.destroy_all(:user_id => self.id)
+          Katello::HelpTip.destroy_all(:user_id => self.id)
         end
 
         def helptip_enabled?(key)
-          return self.helptips_enabled && HelpTip.where(:key => key, :user_id => self.id).first.nil?
+          return self.helptips_enabled && Katello::HelpTip.where(:key => key, :user_id => self.id).first.nil?
         end
 
         def defined_roles
@@ -214,7 +214,7 @@ module Katello
           self.password_reset_sent_at = Time.zone.now
           save!
 
-          UserMailer.send_password_reset(self)
+          Katello::UserMailer.send_password_reset(self)
         end
 
         def has_default_environment?
@@ -305,7 +305,7 @@ module Katello
         # if not, reset them
         def verify_ldap_roles
           # get list of ldap_groups bound to roles the user is in
-          ldap_groups = LdapGroupRole.
+          ldap_groups = Katello::LdapGroupRole.
               joins(:role => :roles_users).
               where(:roles_users => { :ldap => true, :user_id => id }).
               select(:ldap_group).
@@ -314,7 +314,7 @@ module Katello
 
           # make sure the user is still in those groups
           # this operation is inexpensive compared to getting a new group list
-          if !Ldap.is_in_groups(self.login, ldap_groups)
+          if !Katello::Ldap.is_in_groups(self.login, ldap_groups)
             # if user is not in these groups, flush their roles
             # this is expensive
             set_ldap_roles
@@ -328,13 +328,13 @@ module Katello
           # first, delete existing ldap roles
           clear_existing_ldap_roles!
           # load groups from ldap
-          groups = Ldap.ldap_groups(self.login)
+          groups = Katello::Ldap.ldap_groups(self.login)
           groups.each do |group|
             # find corresponding
-            group_roles = LdapGroupRole.find_all_by_ldap_group(group)
+            group_roles = Katello::LdapGroupRole.find_all_by_ldap_group(group)
             group_roles.each do |group_role|
               if group_role && !self.roles.reload.include?(group_role.role)
-                self.roles_users << RolesUser.new(:role => group_role.role, :user => self, :ldap => true)
+                self.roles_users << Katello::RolesUser.new(:role => group_role.role, :user => self, :ldap => true)
               end
             end
           end
@@ -389,7 +389,7 @@ module Katello
         def generate_token(column)
           loop do
             self[column] = SecureRandom.hex(32)
-            break unless User.exists?(column => self[column])
+            break unless ::User.exists?(column => self[column])
           end
         end
 
@@ -434,9 +434,9 @@ module Katello
 
         def generate_remote_id
           if self.login.ascii_only?
-            "#{Util::Model.labelize(self.login)}-#{SecureRandom.hex(4)}"
+            "#{Katello::Util::Model.labelize(self.login)}-#{SecureRandom.hex(4)}"
           else
-            Util::Model.uuid
+            Katello::Util::Model.uuid
           end
         end
 

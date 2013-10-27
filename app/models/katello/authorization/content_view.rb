@@ -46,13 +46,13 @@ module Authorization::ContentView
 
     def tags(ids)
       select('id, name').where(:id => ids).map do |v|
-        VirtualTag.new(v.id, v.name)
+        Katello::VirtualTag.new(v.id, v.name)
       end
     end
 
     def list_tags(org_id)
       select('id, name').where(:organization_id => org_id).map do |v|
-        VirtualTag.new(v.id, v.name)
+        Katello::VirtualTag.new(v.id, v.name)
       end
     end
 

@@ -12,9 +12,9 @@
 
 module Katello
 class Job < ActiveRecord::Base
-  include Glue
-  include Glue::ElasticSearch::Job  if Katello.config.use_elasticsearch
-  include AsyncOrchestration
+  include Katello::Glue
+  include Katello::Glue::ElasticSearch::Job  if Katello.config.use_elasticsearch
+  include Katello::AsyncOrchestration
 
   belongs_to :job_owner, :polymorphic => true
 
@@ -24,17 +24,17 @@ class Job < ActiveRecord::Base
   class << self
     def refresh_tasks(ids)
       unless ids.nil? || ids.empty?
-        uuids = TaskStatus.where(:id => ids).pluck(:uuid)
+        uuids = Katello::TaskStatus.where(:id => ids).pluck(:uuid)
         uuids.each do |uuid|
           pulp_task = Katello.pulp_server.resources.task.poll(uuid)
-          PulpTaskStatus.dump_state(pulp_task, TaskStatus.find_by_uuid(pulp_task[:task_id]))
+          Katello::PulpTaskStatus.dump_state(pulp_task, Katello::TaskStatus.find_by_uuid(pulp_task[:task_id]))
         end
       end
     end
 
     def refresh_for_owner(owner)
       # retrieve any 'in progress' tasks associated with the owner (e.g. system group)
-      tasks = TaskStatus.where('task_statuses.state' => [:waiting, :running]).where(
+      tasks = Katello::TaskStatus.where('task_statuses.state' => [:waiting, :running]).where(
           'jobs.job_owner_id' => owner.id, 'jobs.job_owner_type' => owner.class.name).joins(
           'INNER JOIN job_tasks ON job_tasks.task_status_id = task_statuses.id').joins(
           'INNER JOIN jobs ON jobs.id = job_tasks.job_id')
@@ -42,16 +42,16 @@ class Job < ActiveRecord::Base
       ids = tasks.select('task_statuses.id').collect{|row| row[:id]}
 
       # retrieve the jobs associated with those tasks
-      jobs = Job.where('task_statuses.id' => ids).joins(:task_statuses)
+      jobs = Katello::Job.where('task_statuses.id' => ids).joins(:task_statuses)
 
       # refresh the tasks via pulp
       refresh_tasks(ids) unless ids.empty?
 
       # update the elasticsearch index for the associated jobs
-      Job.index_import(jobs) unless jobs.empty?
+      Katello::Job.index_import(jobs) unless jobs.empty?
 
       # retrieve the jobs for the current owner (e.g. system group)
-      Job.where(:job_owner_id => owner.id, :job_owner_type => owner.class.name)
+      Katello::Job.where(:job_owner_id => owner.id, :job_owner_type => owner.class.name)
     end
   end
 
@@ -62,10 +62,10 @@ class Job < ActiveRecord::Base
       # if the task was returned with a UUID belonging to a system, associate that system with the task
       if !task[:call_request_tags].blank?
         uuid = task[:call_request_tags].first.split('pulp:consumer:').last
-        system = System.where(:uuid => uuid).first
+        system = Katello::System.where(:uuid => uuid).first
       end
 
-      task_status = PulpTaskStatus.new(
+      task_status = Katello::PulpTaskStatus.new(
           :organization => owner.organization,
           :task_owner => system,
           :task_type => task_type,
@@ -128,7 +128,7 @@ class Job < ActiveRecord::Base
       return {:id => self.id}
     else
       return {
-          :task_type => TaskStatus::TYPES[first_task.task_type][:english_name],
+          :task_type => Katello::TaskStatus::TYPES[first_task.task_type][:english_name],
           :summary_message => summary_message(first_task),
           :requested_action_message => requested_action_message(first_task),
           :pending_action_message => (pending_action_message(first_task) if state == :running),
@@ -153,9 +153,9 @@ class Job < ActiveRecord::Base
     running = 0
     error = 0
     self.task_statuses.each do |task|
-      if task.state == TaskStatus::Status::WAITING.to_s || task.state == TaskStatus::Status::RUNNING.to_s
+      if task.state == Katello::TaskStatus::Status::WAITING.to_s || task.state == Katello::TaskStatus::Status::RUNNING.to_s
         running += 1
-      elsif task.state == TaskStatus::Status::ERROR.to_s
+      elsif task.state == Katello::TaskStatus::Status::ERROR.to_s
         error += 1
       end
     end
@@ -171,7 +171,7 @@ class Job < ActiveRecord::Base
 
   def status_message
     first_task = self.task_statuses.first
-    details = TaskStatus::TYPES[first_task.task_type]
+    details = Katello::TaskStatus::TYPES[first_task.task_type]
     details[:event_messages][self.state].first
   end
 

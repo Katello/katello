@@ -58,7 +58,7 @@ class Filter < ActiveRecord::Base
   end
 
   def clone_for_archive
-    filter = Filter.new(:name => self.name)
+    filter = Katello::Filter.new(:name => self.name)
     filter.content_view_definition_id = nil
     filter.products = self.products
     filter.repositories = self.repositories

@@ -12,7 +12,7 @@
 
 module Katello
 class PromotionChangeset < Changeset
-  use_index_of Changeset if Katello.config.use_elasticsearch
+  use_index_of Katello::Changeset if Katello.config.use_elasticsearch
 
   def apply(options = { })
     options = { :async => true, :notify => false }.merge options
@@ -61,9 +61,9 @@ class PromotionChangeset < Changeset
     from_env = self.environment.prior
     to_env   = self.environment
     update_progress! '30'
-    PulpTaskStatus.wait_for_tasks(promote_views(from_env, to_env, self.content_views.composite(false)))
+    Katello::PulpTaskStatus.wait_for_tasks(promote_views(from_env, to_env, self.content_views.composite(false)))
     update_progress! '50'
-    PulpTaskStatus.wait_for_tasks(promote_views(from_env, to_env, self.content_views.composite(true)))
+    Katello::PulpTaskStatus.wait_for_tasks(promote_views(from_env, to_env, self.content_views.composite(true)))
     update_progress! '60'
     self.content_views.composite(false).each{|cv| cv.index_repositories(to_env)}
     update_progress! '80'
@@ -73,18 +73,18 @@ class PromotionChangeset < Changeset
     update_view_cp_content(to_env)
     update_progress! '100'
 
-    PulpTaskStatus.wait_for_tasks(generate_metadata(from_env, to_env))
+    Katello::PulpTaskStatus.wait_for_tasks(generate_metadata(from_env, to_env))
 
     self.promotion_date = Time.now
-    self.state          = Changeset::PROMOTED
+    self.state          = Katello::Changeset::PROMOTED
 
-    Glue::Event.trigger(Katello::Actions::ChangesetPromote, self)
+    Katello::Glue::Event.trigger(Katello::Actions::ChangesetPromote, self)
 
     self.save!
 
     if notify
       message = _("Successfully promoted changeset '%s'.") % self.name
-      Notify.success message, :request_type => "changesets___promote", :organization => self.environment.organization
+      Katello::Notify.success message, :request_type => "changesets___promote", :organization => self.environment.organization
     end
 
   rescue => e
@@ -93,7 +93,7 @@ class PromotionChangeset < Changeset
     Rails.logger.error(e)
     Rails.logger.error(e.backtrace.join("\n"))
     if notify
-      Notify.exception _("Failed to promote changeset '%s'. Check notices for more details") % self.name, e,
+      Katello::Notify.exception _("Failed to promote changeset '%s'. Check notices for more details") % self.name, e,
                    :request_type => "changesets___promote", :organization => self.environment.organization
     end
     raise e

@@ -86,11 +86,11 @@ module Glue::ElasticSearch::Repository
     def index_errata
       errata = self.errata.collect{|err| err.as_json.merge(err.index_options)}
       unless errata.empty?
-        Tire.index Errata.index do
-          create :settings => Errata.index_settings, :mappings => Errata.index_mapping
-        end unless Tire.index(Errata.index).exists?
+        Tire.index Katello::Errata.index do
+          create :settings => Katello::Errata.index_settings, :mappings => Katello::Errata.index_mapping
+        end unless Tire.index(Katello::Errata.index).exists?
 
-        Tire.index Errata.index do
+        Tire.index Katello::Errata.index do
           import errata
         end
       end
@@ -102,11 +102,11 @@ module Glue::ElasticSearch::Repository
       pulp_id = self.pulp_id
 
       unless errata.empty?
-        Tire.index Errata.index do
-          create :settings => Errata.index_settings, :mappings => Errata.index_mapping
-        end unless Tire.index(Errata.index).exists?
+        Tire.index Katello::Errata.index do
+          create :settings => Katello::Errata.index_settings, :mappings => Katello::Errata.index_mapping
+        end unless Tire.index(Katello::Errata.index).exists?
 
-        Tire.index Errata.index do
+        Tire.index Katello::Errata.index do
           import errata do |documents|
             documents.each do |document|
               if !document["repoids"].nil? && document["repoids"].length > 1

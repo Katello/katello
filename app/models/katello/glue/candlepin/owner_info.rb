@@ -14,7 +14,7 @@ module Katello
 class Glue::Candlepin::OwnerInfo
 
   def initialize(organization)
-    @info = Resources::Candlepin::OwnerInfo.find(organization.label)
+    @info = Katello::Resources::Candlepin::OwnerInfo.find(organization.label)
   end
 
   def total_consumers

@@ -20,8 +20,8 @@ end
 
 module Katello
 class PuppetModule
-  include Glue::Pulp::PuppetModule if Katello.config.use_pulp
-  include Glue::ElasticSearch::PuppetModule if Katello.config.use_elasticsearch
+  include Katello::Glue::Pulp::PuppetModule if Katello.config.use_pulp
+  include Katello::Glue::ElasticSearch::PuppetModule if Katello.config.use_elasticsearch
   CONTENT_TYPE = "puppet_module"
 
   def self.parse_metadata(filepath)

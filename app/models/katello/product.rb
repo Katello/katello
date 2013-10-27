@@ -13,15 +13,15 @@
 module Katello
 class Product < ActiveRecord::Base
 
-  include Glue::ElasticSearch::Product if Katello.config.use_elasticsearch
-  include Glue::Candlepin::Product if Katello.config.use_cp
-  include Glue::Pulp::Repos if Katello.config.use_pulp
-  include Glue if Katello.config.use_cp || Katello.config.use_pulp
+  include Katello::Glue::ElasticSearch::Product if Katello.config.use_elasticsearch
+  include Katello::Glue::Candlepin::Product if Katello.config.use_cp
+  include Katello::Glue::Pulp::Repos if Katello.config.use_pulp
+  include Katello::Glue if Katello.config.use_cp || Katello.config.use_pulp
 
-  include Authorization::Product
-  include AsyncOrchestration
+  include Katello::Authorization::Product
+  include Katello::AsyncOrchestration
 
-  include Ext::LabelFromName
+  include Katello::Ext::LabelFromName
 
   attr_accessible :name, :label, :description, :provider_id, :provider,
                   :gpg_key_id, :gpg_key, :cp_id
@@ -152,7 +152,7 @@ class Product < ActiveRecord::Base
     if name.blank?
       self.gpg_key = nil
     else
-      self.gpg_key = GpgKey.readable(organization).find_by_name!(name)
+      self.gpg_key = Katello::GpgKey.readable(organization).find_by_name!(name)
     end
   end
 
@@ -163,15 +163,15 @@ class Product < ActiveRecord::Base
     end
   end
 
-  scope :all_in_org, lambda{|org| Product.joins(:provider).where("#{Katello::Provider.table_name}.organization_id = ?", org.id)}
+  scope :all_in_org, lambda{|org| Katello::Product.joins(:provider).where("#{Katello::Provider.table_name}.organization_id = ?", org.id)}
 
   scope :repositories_cdn_import_failed, where(:cdn_import_success => false)
 
   def assign_unique_label
-    self.label = Util::Model.labelize(self.name) if self.label.blank?
+    self.label = Katello::Util::Model.labelize(self.name) if self.label.blank?
 
     # if the object label is already being used in this org, append the id to make it unique
-    if Product.all_in_org(self.organization).where("#{Katello::Product.table_name}.label = ?", self.label).count > 0
+    if Katello::Product.all_in_org(self.organization).where("#{Katello::Product.table_name}.label = ?", self.label).count > 0
       self.label = self.label + "_" + self.cp_id unless self.cp_id.blank?
     end
   end
@@ -179,7 +179,7 @@ class Product < ActiveRecord::Base
   def as_json(*args)
     ret = super
     ret["gpg_key_name"] = gpg_key ? gpg_key.name : ""
-    ret["marketing_product"] = self.is_a? MarketingProduct
+    ret["marketing_product"] = self.is_a? Katello::MarketingProduct
     ret
   end
 
@@ -202,7 +202,7 @@ class Product < ActiveRecord::Base
   end
 
   def environments
-    KTEnvironment.where(:organization_id => organization.id).
+    Katello::KTEnvironment.where(:organization_id => organization.id).
       where("library = ? OR id IN (?)", true, repositories.map(&:environment_id))
   end
 
@@ -213,7 +213,7 @@ class Product < ActiveRecord::Base
   protected
 
   def self.with_repos(env, enabled_only)
-    query = Repository.in_environment(env.id).select(:product_id)
+    query = Katello::Repository.in_environment(env.id).select(:product_id)
     query = query.enabled if enabled_only
     joins(:provider).where("#{Katello::Provider.table_name}.organization_id" => env.organization).
         where("(#{Katello::Provider.table_name}.provider_type ='#{Provider::CUSTOM}') OR (#{Katello::Provider.table_name}.provider_type ='#{Provider::REDHAT}' AND #{Katello::Product.table_name}.id in (#{query.to_sql}))")

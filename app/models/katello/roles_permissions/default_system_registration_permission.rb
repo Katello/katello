@@ -17,15 +17,15 @@ module RolesPermissions::DefaultSystemRegistrationPermission
   NAME = "default systems reg permission"
 
   def find_default_system_registration_permission
-    resource_type = ResourceType.find_or_create_by_name("environments")
-    verb          = Verb.find_or_create_by_verb("register_systems")
+    resource_type = Katello::ResourceType.find_or_create_by_name("environments")
+    verb          = Katello::Verb.find_or_create_by_verb("register_systems")
 
     _find_default_system_registration_permission(resource_type, verb)
   end
 
   def create_default_system_registration_permission(oranization, environment)
-    resource_type = ResourceType.find_or_create_by_name("environments")
-    verb          = Verb.find_or_create_by_verb("register_systems")
+    resource_type = Katello::ResourceType.find_or_create_by_name("environments")
+    verb          = Katello::Verb.find_or_create_by_verb("register_systems")
 
     proxy_association_owner.permissions.create!(:resource_type => resource_type, :verbs => [verb], :name => NAME, :organization => oranization).tap do |p|
       p.tags.create! :tag_id => environment.id
@@ -33,8 +33,8 @@ module RolesPermissions::DefaultSystemRegistrationPermission
   end
 
   def update_default_system_registration_permission(environment)
-    resource_type = ResourceType.find_or_create_by_name("environments")
-    verb          = Verb.find_or_create_by_verb("register_systems")
+    resource_type = Katello::ResourceType.find_or_create_by_name("environments")
+    verb          = Katello::Verb.find_or_create_by_verb("register_systems")
 
     p = _find_default_system_registration_permission(resource_type, verb)
     p.tags.first.update_attributes!(:tag_id => environment.id)

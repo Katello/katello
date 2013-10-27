@@ -15,13 +15,13 @@ class SystemGroup < ActiveRecord::Base
   include Hooks
   define_hooks :add_system_hook, :remove_system_hook
 
-  include Authorization::SystemGroup
-  include Glue::Pulp::ConsumerGroup if (Katello.config.use_pulp)
-  include Glue::ElasticSearch::SystemGroup if Katello.config.use_elasticsearch
-  include Glue
+  include Katello::Authorization::SystemGroup
+  include Katello::Glue::Pulp::ConsumerGroup if (Katello.config.use_pulp)
+  include Katello::Glue::ElasticSearch::SystemGroup if Katello.config.use_elasticsearch
+  include Katello::Glue
 
-  include Authorization::SystemGroup
-  include Ext::PermissionTagCleanup
+  include Katello::Authorization::SystemGroup
+  include Katello::Ext::PermissionTagCleanup
 
   has_many :key_system_groups, :dependent => :destroy
   has_many :activation_keys, :through => :key_system_groups
@@ -42,7 +42,7 @@ class SystemGroup < ActiveRecord::Base
   #  allow us to do this.
   has_many :environment_system_groups, :dependent => :destroy
   has_many :db_environments, {:through => :environment_system_groups, :source => :environment,
-                              :class_name => 'KTEnvironment', :foreign_key => :environment_id}
+                              :class_name => 'Katello::KTEnvironment', :foreign_key => :environment_id}
   before_save :save_system_environments
 
   validates :pulp_id, :presence => true
@@ -171,13 +171,13 @@ class SystemGroup < ActiveRecord::Base
       group.systems.each do |system|
         system.errata.each do |erratum|
           case erratum.type
-          when Errata::SECURITY
+          when Katello::Errata::SECURITY
             # there is a critical errata, so stop searching...
             group_state = :critical
             break
 
-          when Errata::BUGZILLA
-          when Errata::ENHANCEMENT
+          when Katello::Errata::BUGZILLA
+          when Katello::Errata::ENHANCEMENT
             # set state to warning, but continue searching...
             group_state = :warning
           end
@@ -194,8 +194,8 @@ class SystemGroup < ActiveRecord::Base
   private
 
   #make hidden db_environments accessors private to discourage use
-  SystemGroup.send(:private, :db_environments)
-  SystemGroup.send(:private, :db_environment_ids)
+  Katello::SystemGroup.send(:private, :db_environments)
+  Katello::SystemGroup.send(:private, :db_environment_ids)
 
   def save_system_environments
     if @cached_environments #there was an env modification
@@ -218,7 +218,7 @@ class SystemGroup < ActiveRecord::Base
   end
 
   def save_job(pulp_job, job_type, parameters_type, parameters)
-    job = Job.create!(:pulp_id => pulp_job.first[:task_group_id], :job_owner => self)
+    job = Katello::Job.create!(:pulp_id => pulp_job.first[:task_group_id], :job_owner => self)
     job.create_tasks(self, pulp_job, job_type, parameters_type => parameters)
     job
   end

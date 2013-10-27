@@ -14,7 +14,7 @@ module Katello
 class OrganizationDestroyer
 
   def self.destroy(organization, options = { })
-    OrganizationDestroyer.new(organization, options).setup(organization)
+    Katello::OrganizationDestroyer.new(organization, options).setup(organization)
   end
 
   include AsyncOrchestration
@@ -22,7 +22,7 @@ class OrganizationDestroyer
 
   def initialize(organization, options = { })
     options.assert_valid_keys :user, :async, :notify
-    @options      = { :user => User.current, :async => true, :notify => false }.merge options
+    @options      = { :user => ::User.current, :async => true, :notify => false }.merge options
     @organization_id = organization.id
   end
 
@@ -36,16 +36,16 @@ class OrganizationDestroyer
   end
 
   def run
-    organization = Organization.find(organization_id)
+    organization = Katello::Organization.find(organization_id)
     organization.destroy
 
-    Notify.success _("Successfully removed organization '%s'.") % organization.name,
+    Katello::Notify.success _("Successfully removed organization '%s'.") % organization.name,
                    :request_type => "organization__delete", :user => options[:user] if options[:notify]
   rescue => e
     Rails.logger.error(e)
     Rails.logger.error(e.backtrace.join("\n"))
 
-    Notify.exception _("Failed to delete organization '%s'. Check notices for more details. ") % organization.name, e,
+    Katello::Notify.exception _("Failed to delete organization '%s'. Check notices for more details. ") % organization.name, e,
                      :request_type => "organization__delete", :user => options[:user] if options[:notify]
     raise
   end

@@ -23,7 +23,7 @@ class DeletionChangeset < Changeset
     # check no collision exists
     check_collisions!
 
-    self.state = Changeset::DELETING
+    self.state = Katello::Changeset::DELETING
     self.save!
 
     if options[:async]
@@ -49,15 +49,15 @@ class DeletionChangeset < Changeset
     update_progress! '100'
 
     self.promotion_date = Time.now
-    self.state          = Changeset::DELETED
+    self.state          = Katello::Changeset::DELETED
 
-    Glue::Event.trigger(Katello::Actions::ChangesetPromote, self)
+    Katello::Glue::Event.trigger(Katello::Actions::ChangesetPromote, self)
 
     self.save!
 
     if notify
       message = _("Successfully deleted changeset '%s'.") % self.name
-      Notify.success message, :request_type => "changesets___delete", :organization => self.environment.organization
+      Katello::Notify.success message, :request_type => "changesets___delete", :organization => self.environment.organization
     end
 
   rescue => e
@@ -66,7 +66,7 @@ class DeletionChangeset < Changeset
     Rails.logger.error(e)
     Rails.logger.error(e.backtrace.join("\n"))
     if notify
-      Notify.exception _("Failed to delete changeset '%s'. Check notices for more details") % self.name, e,
+      Katello::Notify.exception _("Failed to delete changeset '%s'. Check notices for more details") % self.name, e,
                    :request_type => "changesets___delete", :organization => self.environment.organization
     end
     raise e

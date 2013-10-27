@@ -13,8 +13,8 @@
 module Katello
 class GpgKey < ActiveRecord::Base
 
-  include Glue::ElasticSearch::GpgKey if Katello.config.use_elasticsearch
-  include Authorization::GpgKey
+  include Katello::Glue::ElasticSearch::GpgKey if Katello.config.use_elasticsearch
+  include Katello::Authorization::GpgKey
   MAX_CONTENT_LENGTH = 100_000
   MAX_CONTENT_LINE_LENGTH = 65
 

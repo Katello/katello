@@ -22,15 +22,15 @@ module Authorization::Product
     scope :syncable, lambda {|org| sync_items(org).with_enabled_repos_only(org.library)}
 
     def readable?
-      Product.all_readable(self.organization).where(:id => id).count > 0
+      Katello::Product.all_readable(self.organization).where(:id => id).count > 0
     end
 
     def syncable?
-      Product.syncable(self.organization).where(:id => id).count > 0
+      Katello::Product.syncable(self.organization).where(:id => id).count > 0
     end
 
     def editable?
-      Product.all_editable(self.organization).where(:id => id).count > 0
+      Katello::Product.all_editable(self.organization).where(:id => id).count > 0
     end
 
     def deletable?
@@ -43,11 +43,11 @@ module Authorization::Product
   module ClassMethods
 
     def all_readable(org)
-      Product.where(:provider_id => Provider.readable(org).pluck(:id))
+      Katello::Product.where(:provider_id => Provider.readable(org).pluck(:id))
     end
 
     def all_editable(org)
-      Product.where(:provider_id => Provider.editable(org).where(:provider_type => Provider::CUSTOM).pluck(:id))
+      Katello::Product.where(:provider_id => Provider.editable(org).where(:provider_type => Katello::Provider::CUSTOM).pluck(:id))
     end
 
     def creatable?(provider)
@@ -55,7 +55,7 @@ module Authorization::Product
     end
 
     def any_readable?(org)
-      Provider.any_readable?(org)
+      Katello::Provider.any_readable?(org)
     end
 
     def sync_items(org)

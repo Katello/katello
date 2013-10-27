@@ -63,11 +63,11 @@ class ResourceType < ActiveRecord::Base
   validates :name, :length => { :maximum => 255 }
 
   def display_name
-    ResourceType::TYPES[name][:name]
+    Katello::ResourceType::TYPES[name][:name]
   end
 
   def global?
-    r = ResourceType::TYPES[name]
+    r = Katello::ResourceType::TYPES[name]
     return r[:global] if r && r[:global]
     false
   end

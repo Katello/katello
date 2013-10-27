@@ -15,10 +15,10 @@ class FilterRule < ActiveRecord::Base
   belongs_to :filter
 
   serialize :parameters, HashWithIndifferentAccess
-  PACKAGE         = Package::CONTENT_TYPE
-  PACKAGE_GROUP   = PackageGroup::CONTENT_TYPE
-  ERRATA          = Errata::CONTENT_TYPE
-  PUPPET_MODULE   = PuppetModule::CONTENT_TYPE
+  PACKAGE         = Katello::Package::CONTENT_TYPE
+  PACKAGE_GROUP   = Katello::PackageGroup::CONTENT_TYPE
+  ERRATA          = Katello::Errata::CONTENT_TYPE
+  PUPPET_MODULE   = Katello::PuppetModule::CONTENT_TYPE
   CONTENT_TYPES   = [PACKAGE, PACKAGE_GROUP, ERRATA, PUPPET_MODULE]
   YUM_CONTENT_OPTIONS = {_('Packages') => PACKAGE, _('Package Groups') => PACKAGE_GROUP, _('Errata') => ERRATA}
   PUPPET_CONTENT_OPTIONS = {_('Puppet Modules') => PUPPET_MODULE}

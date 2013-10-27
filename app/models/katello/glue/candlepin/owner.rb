@@ -25,8 +25,8 @@ module Glue::Candlepin::Owner
           :presence => true,
           :format => { :with => /^[\w-]*$/ }
 
-      lazy_accessor :events, :initializer => lambda {|s| Resources::Candlepin::Owner.events(label) }
-      lazy_accessor :service_levels, :initializer => lambda {|s| Resources::Candlepin::Owner.service_levels(label) }
+      lazy_accessor :events, :initializer => lambda {|s| Katello::Resources::Candlepin::Owner.events(label) }
+      lazy_accessor :service_levels, :initializer => lambda {|s| Katello::Resources::Candlepin::Owner.service_levels(label) }
       lazy_accessor :debug_cert, :initializer => lambda {|s| load_debug_cert}
     end
   end
@@ -50,7 +50,7 @@ module Glue::Candlepin::Owner
 
     def del_owner
       Rails.logger.debug _("Deleting owner in candlepin: %s") % name
-      Resources::Candlepin::Owner.destroy(label)
+      Katello::Resources::Candlepin::Owner.destroy(label)
     rescue => e
       Rails.logger.error _("Failed to delete candlepin owner %s") % "#{name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -84,7 +84,7 @@ module Glue::Candlepin::Owner
     #  candlepin will be deleted before destroy is called on the Organization object
     def del_systems
       Rails.logger.debug _("All Systems for owner %s in candlepin") % name
-      System.joins(:environment).where("environments.organization_id = :org_id", :org_id => self.id).each do |sys|
+      Katello::System.joins(:environment).where("environments.organization_id = :org_id", :org_id => self.id).each do |sys|
         sys.destroy
       end
     rescue => e
@@ -107,11 +107,11 @@ module Glue::Candlepin::Owner
     end
 
     def owner_info
-      Glue::Candlepin::OwnerInfo.new(self)
+      Katello::Glue::Candlepin::OwnerInfo.new(self)
     end
 
     def owner_details
-      Resources::Candlepin::Owner.find self.label
+      Katello::Resources::Candlepin::Owner.find self.label
     end
 
     def service_level
@@ -119,7 +119,7 @@ module Glue::Candlepin::Owner
     end
 
     def service_level=(level)
-      Resources::Candlepin::Owner.update(self.label, {:defaultServiceLevel => level})
+      Katello::Resources::Candlepin::Owner.update(self.label, {:defaultServiceLevel => level})
     end
 
     def pools(consumer_uuid = nil)
@@ -132,17 +132,17 @@ module Glue::Candlepin::Owner
     end
 
     def generate_debug_cert
-      Resources::Candlepin::Owner.generate_ueber_cert(label)
+      Katello::Resources::Candlepin::Owner.generate_ueber_cert(label)
     end
 
     def load_debug_cert
-      return Resources::Candlepin::Owner.get_ueber_cert(label)
+      return Katello::Resources::Candlepin::Owner.get_ueber_cert(label)
     rescue RestClient::ResourceNotFound
       return generate_debug_cert
     end
 
     def owner_auto_attach
-      Resources::Candlepin::Owner.auto_attach(self.label)
+      Katello::Resources::Candlepin::Owner.auto_attach(self.label)
     end
 
   end

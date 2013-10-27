@@ -32,8 +32,8 @@ module Ext::IndexedModel
         #Shared analyzers.  If you need a model-specific analyzer for some reason,
         #  we'll need to refactor this to support that.
         settings :analysis => {
-                    :filter => Util::Search.custom_filters,
-                    :analyzer => Util::Search.custom_analyzers
+                    :filter => Katello::Util::Search.custom_filters,
+                    :analyzer => Katello::Util::Search.custom_analyzers
                   }
 
         def self.index_import(list)

@@ -23,17 +23,17 @@ module Ext::PermissionTagCleanup
   end
 
   def delete_organization_associated_permission_tags
-    PermissionTag.where(
+    Katello::PermissionTag.where(
         :permission_id =>
-            Permission.where(:resource_type_id => ResourceType.where(:name => 'organizations'))
+            Katello::Permission.where(:resource_type_id => Katello::ResourceType.where(:name => 'organizations'))
     ).where(:tag_id => id).delete_all
   end
 
   def delete_associated_permission_tags
-    PermissionTag.where(
+    Katello::PermissionTag.where(
         :permission_id =>
             Permission.where(:organization_id => organization.id).where(
-                :resource_type_id => ResourceType.where(:name => self.class.table_name)
+                :resource_type_id => Katello::ResourceType.where(:name => self.class.table_name)
             )
     ).where(:tag_id => id).delete_all
   end

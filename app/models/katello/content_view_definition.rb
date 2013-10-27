@@ -12,10 +12,10 @@
 
 module Katello
 class ContentViewDefinition < ContentViewDefinitionBase
-  include Glue::ElasticSearch::ContentViewDefinition if Katello.config.use_elasticsearch
-  include Ext::LabelFromName
-  include Authorization::ContentViewDefinition
-  include AsyncOrchestration
+  include Katello::Glue::ElasticSearch::ContentViewDefinition if Katello.config.use_elasticsearch
+  include Katello::Ext::LabelFromName
+  include Katello::Authorization::ContentViewDefinition
+  include Katello::AsyncOrchestration
 
   has_many :content_views, :dependent => :destroy
   has_many :content_view_definition_archives, :foreign_key => :source_id, :dependent => :destroy
@@ -40,20 +40,20 @@ class ContentViewDefinition < ContentViewDefinitionBase
     fail _("Cannot publish definition. Please check for repository conflicts.") if !ready_to_publish?
     options = { :async => true, :notify => false }.merge options
 
-    view = ContentView.create!(:name => name,
+    view = Katello::ContentView.create!(:name => name,
                                :label => label,
                                :description => description,
                                :content_view_definition => self,
                                :organization => organization
                        )
 
-    version = ContentViewVersion.new(:version => 1, :content_view => view)
+    version = Katello::ContentViewVersion.new(:version => 1, :content_view => view)
     version.environments << organization.library
     version.save!
 
     if options[:async]
       async_task = self.async(:organization => self.organization,
-                              :task_type => TaskStatus::TYPES[:content_view_publish][:type]).
+                              :task_type => Katello::TaskStatus::TYPES[:content_view_publish][:type]).
                         generate_repos(view, options[:notify])
 
       version.task_status = async_task
@@ -64,18 +64,18 @@ class ContentViewDefinition < ContentViewDefinitionBase
       # by the UI.
       # At present sync publish call is used by the migration script.
       # but it makes sense for this to be the general behavior.
-      version.task_status = ::TaskStatus.create!(
+      version.task_status = Katello::TaskStatus.create!(
                                :uuid => ::UUIDTools::UUID.random_create.to_s,
                                :user_id => ::User.current.id,
                                :organization => self.organization,
-                               :state => ::TaskStatus::Status::WAITING,
-                               :task_type => TaskStatus::TYPES[:content_view_publish][:type])
+                               :state => Katello::TaskStatus::Status::WAITING,
+                               :task_type => Katello::TaskStatus::TYPES[:content_view_publish][:type])
       version.save!
       begin
         generate_repos(view, options[:notify])
-        version.task_status.update_attributes!(:state => ::TaskStatus::Status::FINISHED)
+        version.task_status.update_attributes!(:state => Katello::TaskStatus::Status::FINISHED)
       rescue => e
-        version.task_status.update_attributes!(:state => ::TaskStatus::Status::ERROR)
+        version.task_status.update_attributes!(:state => Katello::TaskStatus::Status::ERROR)
         raise e
       end
     end
@@ -88,14 +88,14 @@ class ContentViewDefinition < ContentViewDefinitionBase
       associate_contents(cloned)
     end
     view.update_cp_content(view.organization.library)
-    PulpTaskStatus.wait_for_tasks(view.versions.first.generate_metadata)
-    Glue::Event.trigger(Katello::Actions::ContentViewPublish, view)
+    Katello::PulpTaskStatus.wait_for_tasks(view.versions.first.generate_metadata)
+    Katello::Glue::Event.trigger(Katello::Actions::ContentViewPublish, view)
 
     if notify
       message = _("Successfully published content view '%{view_name}' from definition '%{definition_name}'.") %
           {:view_name => view.name, :definition_name => self.name}
 
-      Notify.success(message, :request_type => "content_view_definitions___publish",
+      Katello::Notify.success(message, :request_type => "content_view_definitions___publish",
                               :organization => self.organization)
     end
   rescue => e
@@ -106,7 +106,7 @@ class ContentViewDefinition < ContentViewDefinitionBase
       message = _("Failed to publish content view '%{view_name}' from definition '%{definition_name}'.") %
           {:view_name => view.name, :definition_name => self.name}
 
-      Notify.exception(message, e, :request_type => "content_view_definitions___publish",
+      Katello::Notify.exception(message, e, :request_type => "content_view_definitions___publish",
                                    :organization => self.organization)
     end
 
@@ -170,7 +170,7 @@ class ContentViewDefinition < ContentViewDefinitionBase
 
   def archive
     excluded = %w(type created_at updated_at)
-    cvd_archive = ContentViewDefinitionArchive.new(self.attributes.except(*excluded))
+    cvd_archive = Katello::ContentViewDefinitionArchive.new(self.attributes.except(*excluded))
 
     cvd_archive.repositories            = self.repositories
     cvd_archive.products                = self.products
@@ -183,7 +183,7 @@ class ContentViewDefinition < ContentViewDefinitionBase
   end
 
   def copy(new_attrs = {})
-    new_definition = ContentViewDefinition.new
+    new_definition = Katello::ContentViewDefinition.new
     new_definition.attributes = new_attrs.slice(:name, :label, :description)
     new_definition.composite = self.composite
     new_definition.organization = self.organization
@@ -235,11 +235,11 @@ class ContentViewDefinition < ContentViewDefinitionBase
     repo = cloned.library_instance_id ? cloned.library_instance : cloned
     applicable_filters = filters.applicable(repo)
 
-    applicable_rules_count = PuppetModuleRule.where(:filter_id => applicable_filters).count
+    applicable_rules_count = Katello::PuppetModuleRule.where(:filter_id => applicable_filters).count
     copy_clauses = nil
 
     if applicable_rules_count > 0
-      clause_gen = Util::PuppetClauseGenerator.new(repo, applicable_filters)
+      clause_gen = Katello::Util::PuppetClauseGenerator.new(repo, applicable_filters)
       clause_gen.generate
       copy_clauses = clause_gen.copy_clause
     end
@@ -250,8 +250,8 @@ class ContentViewDefinition < ContentViewDefinitionBase
     # This implies that there are no packages to copy over.
 
     if applicable_rules_count == 0 || copy_clauses
-      pulp_task = repo.clone_contents_by_filter(cloned, FilterRule::PUPPET_MODULE, copy_clauses)
-      PulpTaskStatus.wait_for_tasks([pulp_task])
+      pulp_task = repo.clone_contents_by_filter(cloned, Katello::FilterRule::PUPPET_MODULE, copy_clauses)
+      Katello::PulpTaskStatus.wait_for_tasks([pulp_task])
     end
   end
 
@@ -277,13 +277,13 @@ class ContentViewDefinition < ContentViewDefinitionBase
 
     repo = cloned.library_instance_id ? cloned.library_instance : cloned
     applicable_filters = filters.applicable(repo)
-    applicable_rules_count = FilterRule.yum_types.where(:filter_id => applicable_filters).count
+    applicable_rules_count = Katello::FilterRule.yum_types.where(:filter_id => applicable_filters).count
     copy_clauses = nil
     remove_clauses = nil
     process_errata_and_groups = false
 
     if applicable_rules_count > 0
-      clause_gen = Util::PackageClauseGenerator.new(repo, applicable_filters)
+      clause_gen = Katello::Util::PackageClauseGenerator.new(repo, applicable_filters)
       clause_gen.generate
       copy_clauses = clause_gen.copy_clause
       remove_clauses = clause_gen.remove_clause
@@ -295,27 +295,27 @@ class ContentViewDefinition < ContentViewDefinitionBase
     # This implies that there are no packages to copy over.
 
     if applicable_rules_count == 0 || copy_clauses
-      pulp_task = repo.clone_contents_by_filter(cloned, FilterRule::PACKAGE, copy_clauses, :recursive => true)
-      PulpTaskStatus.wait_for_tasks([pulp_task])
+      pulp_task = repo.clone_contents_by_filter(cloned, Katello::Katello::FilterRule::PACKAGE, copy_clauses, :recursive => true)
+      Katello::PulpTaskStatus.wait_for_tasks([pulp_task])
       process_errata_and_groups = true
     end
 
     if remove_clauses
-      pulp_task = cloned.unassociate_by_filter(FilterRule::PACKAGE, remove_clauses)
-      PulpTaskStatus.wait_for_tasks([pulp_task])
+      pulp_task = cloned.unassociate_by_filter(Katello::FilterRule::PACKAGE, remove_clauses)
+      Katello::PulpTaskStatus.wait_for_tasks([pulp_task])
       process_errata_and_groups = true
     end
 
     if process_errata_and_groups
-      group_tasks = [FilterRule::ERRATA, FilterRule::PACKAGE_GROUP].collect do |content_type|
+      group_tasks = [Katello::FilterRule::ERRATA, Katello::FilterRule::PACKAGE_GROUP].collect do |content_type|
         repo.clone_contents_by_filter(cloned, content_type, nil)
       end
-      PulpTaskStatus.wait_for_tasks(group_tasks)
+      Katello::PulpTaskStatus.wait_for_tasks(group_tasks)
       cloned.purge_empty_groups_errata
     end
 
-    PulpTaskStatus.wait_for_tasks([repo.clone_distribution(cloned)])
-    PulpTaskStatus.wait_for_tasks([repo.clone_file_metadata(cloned)])
+    Katello::PulpTaskStatus.wait_for_tasks([repo.clone_distribution(cloned)])
+    Katello::PulpTaskStatus.wait_for_tasks([repo.clone_file_metadata(cloned)])
   end
 end
 end

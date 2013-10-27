@@ -33,7 +33,7 @@ class PuppetModuleRule < FilterRule
       filters << author_filter(unit)
       filters.compact!
 
-      PuppetModule.search(unit[:name], :page_size => repo.puppet_module_count, :repoids => [repo.pulp_id],
+      Katello::PuppetModule.search(unit[:name], :page_size => repo.puppet_module_count, :repoids => [repo.pulp_id],
                                        :filters => filters).map(&:_id).compact
     end
     ids.flatten!
@@ -65,7 +65,7 @@ class PuppetModuleRule < FilterRule
   end
 
   def sortable_version(version)
-    Util::Package.sortable_version(version)
+    Katello::Util::Package.sortable_version(version)
   end
 end
 end
