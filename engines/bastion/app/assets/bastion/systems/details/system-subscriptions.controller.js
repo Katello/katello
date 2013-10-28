@@ -35,12 +35,14 @@ angular.module('Bastion.systems').controller('SystemSubscriptionsController',
 
         successHandler = function() {
             refresh();
-            $scope.saveSuccess = true;
+            $scope.$parent.saveSuccess = true;
         };
 
         errorHandler = function(error) {
-            $scope.saveError = true;
-            $scope.errors = error.data["errors"];
+            $scope.$parent.saveError = true;
+            $scope.$parent.errors = error.data["errors"];
+            availableSubscriptionsNutupane.table.working = false;
+            currentSubscriptionsNutupane.table.working = false;
         };
 
         currentSubscriptionsNutupane = new Nutupane(SystemSubscription, {systemId: $scope.$stateParams.systemId});
