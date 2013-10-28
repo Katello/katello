@@ -20,7 +20,7 @@ angular.module('Bastion.widgets')
 
         function updateProgress() {
             var uuids = []
-            angular.forEach(callbacks, function(callback, uuid) { uuids.push(uuid); })
+             angular.forEach(callbacks, function(callback, uuid) { uuids.push(uuid); })
             if (uuids.length == 0) {
                 return;
             }
@@ -54,12 +54,16 @@ angular.module('Bastion.widgets')
             scope: {
                 uuid: '@',
             },
-            link: function (scope, element, args) {
-                tasksStatusProvider.register(args.uuid, function(progress) {
-                    scope.progress = progress;
-                });
-                element.bind('$destroy', function() {
-                    tasksStatusProvider.unregister(args.uuid);
+            link: function (scope, element, attrs) {
+                scope.$watch('uuid', function(uuid) {
+                    if(uuid) {
+                        tasksStatusProvider.register(uuid, function(progress) {
+                            scope.progress = progress;
+                        });
+                        element.bind('$destroy', function() {
+                            tasksStatusProvider.unregister(uuid);
+                        });
+                    }
                 });
             }
         }

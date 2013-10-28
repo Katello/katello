@@ -124,6 +124,10 @@ module Orchestrate
           output.update pulp_task_progress: pulp_task, done: done
         end
 
+        def run_progress_weight
+          10
+        end
+
       end
     end
   end
