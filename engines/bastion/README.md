@@ -123,6 +123,10 @@ There is also a filter available.  Use this only when you cannot use the above v
 
     <input type="text" placeholder="{{ 'Username' | translate }}" />
 
+To mark strings for translation in javascript files use the injectable `gettext()`.  This method marks the string for translation while also returning the translated string from the translation angular object.
+
+    var translatedString = gettext('String to translate');
+
 To extract strings into a .pot file for translation run:
 
     grunt i18n:extract
