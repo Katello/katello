@@ -28,7 +28,7 @@ angular.module('Bastion.systems').controller('SystemRegisterController',
     function($scope, $location, Node, CurrentOrganization) {
 
         $scope.organization = CurrentOrganization;
-        $scope.baseURL = $location.protocol() + '://' + $location.host();
+        $scope.baseURL = 'http://' + $location.host();
 
         $scope.nodes = Node.query(function(data) {
             $scope.selectedNode = data.results[0];

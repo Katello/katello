@@ -133,7 +133,6 @@ class Api::V2::RepositoriesControllerTest < Minitest::Rails::ActionController::T
     denied_perms = [@no_permission]
 
     assert_protected_action(:show, allowed_perms, denied_perms) do
-       Rails.logger.error "FOOO\n\n\n"
       get :show, :id => @repository.id
     end
   end
