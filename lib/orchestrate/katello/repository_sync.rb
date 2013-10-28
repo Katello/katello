@@ -15,12 +15,14 @@ module Orchestrate
     class RepositorySync < Dynflow::Action
 
       include Helpers::RemoteAction
+      include Helpers::Lock
 
       input_format do
         param :id, Integer
       end
 
       def plan(repo)
+        lock(repo)
         plan_action(Pulp::RepositorySync, pulp_id: repo.pulp_id)
         plan_self(:id => repo.id)
       end
