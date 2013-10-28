@@ -32,7 +32,19 @@ class Api::V2::DyntasksController < Api::V2::ApiController
     # https://github.com/angular/angular.js/commit/2a2123441c2b749b8f316a24c3ca3f77a9132a01
     uuids = uuids.map { |uuid| uuid.split(',') }.flatten
 
-    render :json => uuids.map { |uuid| { :uuid => uuid, :progress => rand } }
+    execution_plans = uuids.map do |uuid|
+      begin
+        Orchestrate.world.persistence.load_execution_plan(uuid)
+      rescue KeyError
+        raise HttpErrors::BadRequest, _("Task #{uuid} was not found")
+      end
+    end
+
+    json = execution_plans.map do |execution_plan|
+      { :uuid => execution_plan.id,
+        :progress => execution_plan.progress }
+    end
+    render :json => json
   end
 
 end

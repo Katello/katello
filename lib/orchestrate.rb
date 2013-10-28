@@ -12,4 +12,13 @@ module Orchestrate
 
     @world = Dynflow::World.new(world_options)
   end
+
+  def self.trigger(action, *args)
+    uuid, f = world.trigger(action, *args)
+    DynflowTask.create!(uuid: uuid, action: action.name, user_id: User.current.id) do |task|
+      # to set additional task meta-data
+      yield task if block_given?
+    end
+    return uuid, f
+  end
 end
