@@ -38,7 +38,7 @@ module Katello
         include Ext::IndexedModel
 
         include AsyncOrchestration
-        include Katello::Authorization::User
+        include Authorization::User
         include Authorization::Enforcement
         include Util::ThreadSession::UserModel
 
@@ -51,16 +51,16 @@ module Katello
         # PROCEED DEPENDENT ASSOCIATIONS tinyurl.com/rails3458
         before_destroy :not_last_super_user?, :destroy_own_role
 
-        has_many :roles_users, :dependent => :destroy, :class_name => "Katello::RolesUser"
+        has_many :roles_users, :dependent => :destroy, :class_name => "RolesUser"
         has_many :katello_roles, :through => :roles_users, :before_remove => :super_admin_check,
                   :uniq => true, :extend => RolesPermissions::UserOwnRole,
                   :source => :role
-        has_many :help_tips, :class_name => "Katello::HelpTip"
-        has_many :user_notices, :class_name => "Katello::UserNotice"
+        has_many :help_tips, :class_name => "HelpTip"
+        has_many :user_notices, :class_name => "UserNotice"
         has_many :notices, :through => :user_notices
-        has_many :task_statuses, :dependent => :destroy, :class_name => "Katello::TaskStatus"
-        has_many :search_favorites, :dependent => :destroy, :class_name => "Katello::SearchFavorite"
-        has_many :search_histories, :dependent => :destroy, :class_name => "Katello::SearchHistory"
+        has_many :task_statuses, :dependent => :destroy, :class_name => "TaskStatus"
+        has_many :search_favorites, :dependent => :destroy, :class_name => "SearchFavorite"
+        has_many :search_histories, :dependent => :destroy, :class_name => "SearchHistory"
         belongs_to :default_environment, :class_name => "KTEnvironment"
         serialize :preferences, Hash
 
@@ -154,11 +154,11 @@ module Katello
 
         def allowed_organizations
           #test for all orgs
-          perms = Permission.joins(:role).joins("INNER JOIN #{Katello::RolesUser.table_name} ON #{Katello::RolesUser.table_name}.role_id = #{Katello::Role.table_name}.id").
-              where("#{Katello::RolesUser.table_name}.user_id = ?", self.id).where(:organization_id => nil).count
-          return Katello::Organization.without_deleting.all if perms > 0
+          perms = Permission.joins(:role).joins("INNER JOIN #{RolesUser.table_name} ON #{RolesUser.table_name}.role_id = #{Role.table_name}.id").
+              where("#{RolesUser.table_name}.user_id = ?", self.id).where(:organization_id => nil).count
+          return Organization.without_deleting.all if perms > 0
 
-          Katello::Organization.without_deleting.joins(:permissions => {:role => :users}).where(:users => {:id => self.id}).uniq
+          Organization.without_deleting.joins(:permissions => {:role => :users}).where(:users => {:id => self.id}).uniq
         end
 
         def disable_helptip(key)
@@ -374,10 +374,10 @@ module Katello
         protected
 
         def can_be_deleted?
-          query         = Katello::Permission.joins(:resource_type, :role).
-              joins("INNER JOIN #{Katello::RolesUser.table_name} ON #{Katello::RolesUser.table_name}.role_id = #{Katello::Role.table_name}.id").
+          query         = Permission.joins(:resource_type, :role).
+              joins("INNER JOIN #{RolesUser.table_name} ON #{RolesUser.table_name}.role_id = #{Role.table_name}.id").
               where(:katello_resource_types => { :name => :all }, :organization_id => nil)
-          is_superadmin = query.where("#{Katello::RolesUser.table_name}.user_id" => id).count > 0
+          is_superadmin = query.where("#{RolesUser.table_name}.user_id" => id).count > 0
           return true unless is_superadmin
           more_than_one_supers = query.count > 1
           more_than_one_supers

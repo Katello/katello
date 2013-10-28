@@ -12,19 +12,19 @@
 
 module Katello
 class Role < ActiveRecord::Base
-  include Katello::Authorization::Role
-  include Katello::Glue::ElasticSearch::Role if Katello.config.use_elasticsearch
+  include Authorization::Role
+  include Glue::ElasticSearch::Role if Katello.config.use_elasticsearch
 
   acts_as_reportable
 
   has_many :roles_users, :dependent => :destroy
   has_many :users, :through => :roles_users, :before_remove => :super_admin_check
-  has_many :permissions, :dependent => :destroy, :inverse_of => :role, :class_name => "Permission", :extend => RolesPermissions::DefaultSystemRegistrationPermission
+  has_many :permissions, :dependent => :destroy, :inverse_of => :role, :extend => RolesPermissions::DefaultSystemRegistrationPermission
   has_many :ldap_group_roles, :dependent => :destroy, :inverse_of => :role
   has_many :resource_types, :through => :permissions
 
   # scope to facilitate retrieving roles that are 'non-self' roles... group() so that unique roles are returned
-  scope :non_self, where("type <> 'Katello::UserOwnRole' or type is NULL").order("#{Katello::Role.table_name}.name")
+  scope :non_self, where("type <> 'UserOwnRole' or type is NULL").order("#{Role.table_name}.name")
   validates :name, :uniqueness => true, :presence => true
   validates_with Validators::NoTrailingSpaceValidator, :attributes => :name
   validates_with Validators::RolenameValidator, :attributes => :name
@@ -79,23 +79,23 @@ class Role < ActiveRecord::Base
 
   def self.make_readonly_role(name, organization = nil)
     #nil for organization implies all orgs
-    role = Katello::Role.find_or_create_by_name(
+    role = Role.find_or_create_by_name(
             :name => name, :description => 'Read only role.')
     # Setting to unlocked temporarily in case permissions need to be created
     role.locked = false
 
     resource_perms = {}
-    Katello::ResourceType::TYPES.keys.each do |key|
-      resource_perms[key] = Katello::ResourceType.model_for(key).read_verbs if key.to_s != "all"
+    ResourceType::TYPES.keys.each do |key|
+      resource_perms[key] = ResourceType.model_for(key).read_verbs if key.to_s != "all"
     end
 
     resource_perms.each_pair do |key, verbs|
       perm_name =  "Read #{key.to_s.capitalize}"
-      unless Katello::Permission.where(:role_id => role, :name => perm_name).count > 0
-        Katello::Permission.create!(:role => role,
-                                    :resource_type => Katello::ResourceType.find_or_create_by_name(key),
+      unless Permission.where(:role_id => role, :name => perm_name).count > 0
+        Permission.create!(:role => role,
+                                    :resource_type => ResourceType.find_or_create_by_name(key),
                                     :all_tags => true,
-                                    :verbs => verbs.collect{|verb| Katello::Verb.find_or_create_by_verb(verb)},
+                                    :verbs => verbs.collect{|verb| Verb.find_or_create_by_verb(verb)},
                                     :name => perm_name,
                                     :organization => organization,
                                     :description => "Read #{key.to_s.capitalize} permission")
@@ -114,7 +114,7 @@ class Role < ActiveRecord::Base
 
   def self.make_super_admin_role
     # create basic roles
-    superadmin_role = Katello::Role.find_or_create_by_name(
+    superadmin_role = Role.find_or_create_by_name(
       :name => ADMINISTRATOR,
       :description => 'Super administrator with all access.')
     raise "Unable to create super-admin role: #{superadmin_role}" if superadmin_role.nil? || superadmin_role.errors.size > 0
@@ -122,7 +122,7 @@ class Role < ActiveRecord::Base
     #unlock role in case permission needs to be created
     superadmin_role.update_attributes(:locked => false)
 
-    superadmin_role_perm = Katello::Permission.find_or_create_by_name(
+    superadmin_role_perm = Permission.find_or_create_by_name(
       :name => "super-admin-perm",
       :description => 'Super Admin permission',
       :role => superadmin_role, :all_types => true)

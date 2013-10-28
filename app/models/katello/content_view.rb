@@ -27,7 +27,7 @@ class ContentView < ActiveRecord::Base
   has_many :content_view_versions, :dependent => :destroy
   alias_method :versions, :content_view_versions
 
-  belongs_to :environment_default, :class_name => "Katello::KTEnvironment", :inverse_of => :default_content_view,
+  belongs_to :environment_default, :class_name => "KTEnvironment", :inverse_of => :default_content_view,
                                    :foreign_key => :environment_default_id # TODO: this relation seems to be broken
 
   has_many :component_content_views, :dependent => :destroy
@@ -51,11 +51,11 @@ class ContentView < ActiveRecord::Base
 
   def self.in_environment(env)
     joins(:content_view_versions => :content_view_version_environments).
-      where("#{Katello::ContentViewVersionEnvironment.table_name}.environment_id = ?", env.id)
+      where("#{ContentViewVersionEnvironment.table_name}.environment_id = ?", env.id)
   end
 
   def self.composite(composite = true)
-    joins(:content_view_definition).where("#{Katello::ContentViewDefinitionBase.table_name}.composite = ?", composite)
+    joins(:content_view_definition).where("#{ContentViewDefinitionBase.table_name}.composite = ?", composite)
   end
 
   def composite
@@ -67,21 +67,21 @@ class ContentView < ActiveRecord::Base
     # list of component content views, if any, that do not exist in the environment
     # provided.
     if composite
-      content_view_definition.component_content_views.select("distinct #{Katello::ContentView.table_name}.*").
+      content_view_definition.component_content_views.select("distinct #{ContentView.table_name}.*").
               joins(:content_view_versions => :content_view_version_environments).
-              where(["#{Katello::ContentViewVersionEnvironment.table_name}.content_view_version_id "\
+              where(["#{ContentViewVersionEnvironment.table_name}.content_view_version_id "\
                      "NOT IN (SELECT content_view_version_id FROM "\
-                     "#{Katello::ContentViewVersionEnvironment.table_name} WHERE environment_id = ?)",
+                     "#{ContentViewVersionEnvironment.table_name} WHERE environment_id = ?)",
                      env])
     end
   end
 
   def self.promoted(safe = false)
     # retrieve the view, if it has been promoted (i.e. exists in more than 1 environment)
-    relation = select("distinct #{Katello::ContentView.table_name}.*").
+    relation = select("distinct #{ContentView.table_name}.*").
                joins(:content_view_versions => :environments).
-               where("#{Katello::KTEnvironment.table_name}.library" => false).
-               where("#{Katello::ContentView.table_name}.default" => false)
+               where("#{KTEnvironment.table_name}.library" => false).
+               where("#{ContentView.table_name}.default" => false)
 
     if safe
       # do not include group and having in returned relation
@@ -123,7 +123,7 @@ class ContentView < ActiveRecord::Base
   end
 
   def environments
-    KTEnvironment.joins(:content_view_versions).where("#{Katello::ContentViewVersion.table_name}.content_view_id" => self.id)
+    KTEnvironment.joins(:content_view_versions).where("#{ContentViewVersion.table_name}.content_view_id" => self.id)
   end
 
   def in_environment?(env)
@@ -131,7 +131,7 @@ class ContentView < ActiveRecord::Base
   end
 
   def version(env)
-    self.versions.in_environment(env).order("#{Katello::ContentViewVersion.table_name}.id ASC").scoped(:readonly => false).last
+    self.versions.in_environment(env).order("#{ContentViewVersion.table_name}.id ASC").scoped(:readonly => false).last
   end
 
   def version_environment(env)
@@ -159,7 +159,7 @@ class ContentView < ActiveRecord::Base
 
   def all_version_repos
     Repository.joins(:content_view_version).
-      where("#{Katello::ContentViewVersion.table_name}.content_view_id" => self.id)
+      where("#{ContentViewVersion.table_name}.content_view_id" => self.id)
   end
 
   def repos_in_product(env, product)
@@ -173,17 +173,17 @@ class ContentView < ActiveRecord::Base
 
   def products(env)
     repos = repos(env)
-    Product.joins(:repositories).where("#{Katello::Repository.table_name}.id" => repos.map(&:id)).uniq
+    Product.joins(:repositories).where("#{Repository.table_name}.id" => repos.map(&:id)).uniq
   end
 
   #list all products associated to this view across all versions
   def all_version_products
-    Product.joins(:repositories).where("#{Katello::Repository.table_name}.id" => self.all_version_repos).uniq
+    Product.joins(:repositories).where("#{Repository.table_name}.id" => self.all_version_repos).uniq
   end
 
   #get the library instances of all repos within this view
   def all_version_library_instances
-    all_repos = all_version_repos.where(:library_instance_id => nil).pluck("#{Katello::Repository.table_name}.id")
+    all_repos = all_version_repos.where(:library_instance_id => nil).pluck("#{Repository.table_name}.id")
     all_repos += all_version_repos.pluck(:library_instance_id)
     Repository.where(:id => all_repos)
   end
@@ -192,7 +192,7 @@ class ContentView < ActiveRecord::Base
     lib_id = repo.library_instance_id || repo.id
     Repository.in_environment(env).where(:library_instance_id => lib_id).
         joins(:content_view_version).
-        where("#{Katello::ContentViewVersion.table_name}.content_view_id" => self.id)
+        where("#{ContentViewVersion.table_name}.content_view_id" => self.id)
   end
 
   def promote_via_changeset(env, apply_options = {:async => true},
@@ -233,7 +233,7 @@ class ContentView < ActiveRecord::Base
       end
     end
 
-    Glue::Event.trigger(Katello::Actions::ContentViewPromote, self, from_env, to_env)
+    Glue::Event.trigger(Actions::ContentViewPromote, self, from_env, to_env)
 
     tasks
   end
@@ -247,7 +247,7 @@ class ContentView < ActiveRecord::Base
       raise Errors::ChangesetContentException.new(_("Cannot delete from %s, view does not exist there.") % from_env.name)
     end
     version = ContentViewVersion.find(version.id)
-    Glue::Event.trigger(Katello::Actions::ContentViewDemote, self, from_env)
+    Glue::Event.trigger(Actions::ContentViewDemote, self, from_env)
     version.delete(from_env)
     self.destroy if self.versions.empty?
   end

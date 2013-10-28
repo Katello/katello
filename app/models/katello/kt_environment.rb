@@ -20,11 +20,11 @@ class KTEnvironment < ActiveRecord::Base
   include Glue::Event
 
   def create_event
-    Katello::Actions::EnvironmentCreate
+    Actions::EnvironmentCreate
   end
 
   def destroy_event
-    Katello::Actions::EnvironmentDestroy
+    Actions::EnvironmentDestroy
   end
 
   self.table_name = "katello_environments"
@@ -40,10 +40,10 @@ class KTEnvironment < ActiveRecord::Base
   has_many :activation_keys, :dependent => :destroy, :foreign_key => :environment_id
   # rubocop:disable HasAndBelongsToMany
   # TODO: change these into has_many associations
-  has_and_belongs_to_many :priors, { :class_name => "Katello::KTEnvironment", :foreign_key => :environment_id,
+  has_and_belongs_to_many :priors, { :class_name => "KTEnvironment", :foreign_key => :environment_id,
                                      :join_table => "katello_environment_priors",
                                      :association_foreign_key => "prior_id", :uniq => true }
-  has_and_belongs_to_many :successors, { :class_name => "Katello::KTEnvironment", :foreign_key => "prior_id",
+  has_and_belongs_to_many :successors, { :class_name => "KTEnvironment", :foreign_key => "prior_id",
                                          :join_table => "katello_environment_priors",
                                          :association_foreign_key => :environment_id, :readonly => true }
 
@@ -92,7 +92,7 @@ class KTEnvironment < ActiveRecord::Base
 
   after_destroy :unset_users_with_default
 
-   ERROR_CLASS_NAME = "Environment"
+  ERROR_CLASS_NAME = "Environment"
 
   def library?
     self.library
@@ -115,7 +115,7 @@ class KTEnvironment < ActiveRecord::Base
   def content_views(reload = false)
     @content_views = nil if reload
     @content_views ||= ContentView.joins(:content_view_versions => :content_view_version_environments).
-        where("#{Katello::ContentViewVersionEnvironment.table_name}.environment_id" => self.id)
+        where("#{ContentViewVersionEnvironment.table_name}.environment_id" => self.id)
   end
 
   def successor
@@ -160,8 +160,8 @@ class KTEnvironment < ActiveRecord::Base
 
   #list changesets promoting
   def promoting
-    Changeset.joins(:task_status).where('#{Katello::Changeset.table_name}.environment_id' => self.id,
-                                        '#{Katello::TaskStatus.table_name}.state' => [TaskStatus::Status::WAITING,
+    Changeset.joins(:task_status).where("#{Changeset.table_name}.environment_id" => self.id,
+                                        "#{TaskStatus.table_name}.state" => [TaskStatus::Status::WAITING,
                                                                                       TaskStatus::Status::RUNNING])
   end
 

@@ -21,6 +21,7 @@ module Authorization::Role
   end
 
   module ClassMethods
+
     def creatable?
       ::User.allowed_to?([:create], :roles, nil)
     end

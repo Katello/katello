@@ -78,7 +78,7 @@ class PromotionChangeset < Changeset
     self.promotion_date = Time.now
     self.state          = Changeset::PROMOTED
 
-    Glue::Event.trigger(Katello::Actions::ChangesetPromote, self)
+    Glue::Event.trigger(Actions::ChangesetPromote, self)
 
     self.save!
 
