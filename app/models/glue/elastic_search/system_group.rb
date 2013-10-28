@@ -17,8 +17,8 @@ module Glue::ElasticSearch::SystemGroup
     base.class_eval do
       update_related_indexes :systems, :name
 
-      add_system_hook     lambda { |system| reindex_on_association_change(system) }
-      remove_system_hook  lambda { |system| reindex_on_association_change(system) }
+      add_system_hook     lambda { |system| system.update_system_groups }
+      remove_system_hook  lambda { |system| system.update_system_groups }
 
       index_options :extended_json => :extended_index_attrs,
                     :json => {:only => [:id, :organization_id, :name, :description, :max_systems]},

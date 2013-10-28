@@ -37,7 +37,7 @@ describe SystemGroupsController, :katello => true do
     Resources::Candlepin::Consumer.stub!(:update).and_return(true)
     Resources::Candlepin::Consumer.stub!(:destroy).and_return(true)
     Katello.pulp_server.extensions.consumer.stub!(:delete).and_return(true)
-
+    System.any_instance.stub(:update_system_groups)
     @system = create_system(:name=>"bar1", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""})
   end
 

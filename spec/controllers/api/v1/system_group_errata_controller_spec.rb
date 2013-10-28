@@ -32,6 +32,7 @@ describe Api::V1::SystemGroupErrataController, :katello => true do
 
     disable_consumer_group_orchestration
     setup_system_creation
+    System.any_instance.stub(:update_system_groups)
 
     @environment = create_environment(:name => "DEV", :label => "DEV", :prior => @organization.library, :organization => @organization)
     @system      = create_system(:name => "verbose", :environment => @environment, :cp_type => "system", :facts => { "Test1" => 1, "verbose_facts" => "Test facts" })

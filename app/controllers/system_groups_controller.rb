@@ -28,6 +28,7 @@ class SystemGroupsController < ApplicationController
     edit_systems_perm = lambda {@group.systems_editable?}
     {
         :index => any_readable,
+        :all => any_readable,
         :items => any_readable,
         :new => create_perm,
         :create => create_perm,
@@ -62,7 +63,15 @@ class SystemGroupsController < ApplicationController
   end
 
   def index
-    render "index"
+    if current_user.legacy_mode
+      render :index
+    else
+      render 'bastion/layouts/application', :layout => false
+    end
+  end
+
+  def all
+    redirect_to action: 'index', :anchor => '/system-groups'
   end
 
   def new

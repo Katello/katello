@@ -6,6 +6,7 @@ Src::Application.routes.draw do
   resources :system_groups do
     collection do
       get :items
+      get :all
       get :auto_complete
       get :validate_name
     end

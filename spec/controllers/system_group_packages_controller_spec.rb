@@ -35,6 +35,7 @@ describe SystemGroupPackagesController, :katello => true do
 
       Katello.pulp_server.extensions.consumer.stub!(:create).and_return({:id => uuid})
       Katello.pulp_server.extensions.consumer.stub!(:update).and_return(true)
+      System.any_instance.stub(:update_system_groups)
 
       @group = SystemGroup.new(:name=>"test_group", :organization=>@org)
       @system = create_system(:name=>"verbose", :environment => @environment, :cp_type=>"system", :facts=>{"Test1"=>1, "verbose_facts" => "Test facts"})

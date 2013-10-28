@@ -12,43 +12,77 @@
  **/
 
 describe('Factory: SystemGroup', function() {
-    var systemGroupFactory, $httpBackend, Routes, systemGroups;
+    var SystemGroup, $httpBackend, systemGroups;
 
     beforeEach(module('Bastion.system-groups'));
 
     beforeEach(function() {
-        systemGroups = [{id: 0, name: "booyah"}, {id: 1, name: 'lalala'}, {id: 2, name: 'yesssir'}];
-
-        module(function($provide) {
-            Routes = {
-                apiOrganizationSystemGroupsPath: function() { return "/api/system-groups"; }
-            };
-            $provide.value('Routes', Routes);
-            $provide.value('CurrentOrganization', 'ACME');
-        });
-
-        inject(function($injector) {
-            $httpBackend = $injector.get('$httpBackend');
-            systemGroupFactory = $injector.get('SystemGroup');
-        });
+        systemGroups = {
+            results: [{id: 0, name: "booyah"}, {id: 1, name: 'lalala'}, {id: 2, name: 'yesssir'}]
+        };
     });
 
+    beforeEach(inject(function($injector) {
+        $httpBackend = $injector.get('$httpBackend');
+        SystemGroup = $injector.get('SystemGroup');
+    }));
+
     afterEach(function() {
+        $httpBackend.flush();
         $httpBackend.verifyNoOutstandingExpectation();
         $httpBackend.verifyNoOutstandingRequest();
     });
 
     it('makes a request to get the system group list from the API.', function() {
-        $httpBackend.expectGET('/api/system-groups').respond(systemGroups);
-        systemGroupFactory.query(function(response) {
-            expect(response.length).toBe(systemGroups.length);
+        $httpBackend.expectGET('/katello/api/system_groups').respond(systemGroups);
 
-            for (var i = 0; i < systemGroups.length; i++) {
-                expect(response[i].id).toBe(systemGroups[i].id);
-                expect(response[i].name).toBe(systemGroups[i].name);
+        SystemGroup.query(function(response) {
+            expect(response.results.length).toBe(systemGroups.results.length);
+
+            for (var i = 0; i < systemGroups.results.length; i++) {
+                expect(response.results[i].id).toBe(systemGroups.results[i].id);
             }
         });
-        $httpBackend.flush();
     });
+
+    it('provides a way to update a group', function() {
+        var group = systemGroups.results[0];
+
+        group.name = 'NewRepositoryName';
+        $httpBackend.expectPUT('/katello/api/system_groups/0').respond(group);
+
+        SystemGroup.update({name: group.name, id: 0}, function(response) {
+            expect(response).toBeDefined();
+            expect(response.name).toBe(group.name);
+        });
+    });
+
+    it('provides a way to add systems', function() {
+        var systems = [{id: 1}, {id: 2}];
+        $httpBackend.expectPUT('/katello/api/system_groups/0/add_systems').respond(systems);
+        SystemGroup.addSystems({'system_group': {'system_ids': [1,2]} , id: 0}, function(response) {
+            expect(response).toBeDefined();
+            expect(response.length).toBe(systems.length);
+        });
+    });
+
+    it('provides a way to remove systems', function() {
+        var systems = [{id: 1}, {id: 2}];
+        $httpBackend.expectPUT('/katello/api/system_groups/0/remove_systems').respond(systems);
+        SystemGroup.removeSystems({'system_group': {'system_ids': [1,2]} , id: 0}, function(response) {
+            expect(response).toBeDefined();
+            expect(response.length).toBe(systems.length);
+        });
+    });
+
+    it('provides a way to list systems', function() {
+        var systems = {results: [{id: 1}, {id: 2}]};
+        $httpBackend.expectGET('/katello/api/system_groups/0/systems').respond(systems);
+        SystemGroup.systems({id: 0}, function(response) {
+            expect(response).toBeDefined();
+            expect(response.length).toBe(systems.length);
+        });
+    });
+
 });
 

@@ -48,7 +48,7 @@ module Glue
       # TODO: break up method
       # rubocop:disable MethodLength
       def retrieve(query_string, start = 0, search_options = {})
-
+        search_options = search_options.with_indifferent_access
         @query_string = query_string
         @filters      = search_options[:filters] || []
         start         = start || 0
@@ -81,8 +81,9 @@ module Glue
               string query_string, query_options
             end
           end
-
           sort {by sort_by, sort_order.to_s.downcase } if sort_by && sort_order
+
+          fields [:id] if options[:load_records?]
 
           filter :and, filters if filters.any?
 
@@ -160,7 +161,7 @@ module Glue
       def format_sort(sort_by)
         mapping = @obj_class.mapping || {}
         unless mapping[sort_by.to_sym] && mapping[sort_by.to_sym][:type] == 'date'
-          sort_by + '_sort' if !sort_by.include?('_sort')
+          sort_by + '_sort' if !sort_by.to_s.include?('_sort')
         end
       end
 

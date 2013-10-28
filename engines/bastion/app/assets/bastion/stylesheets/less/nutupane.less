@@ -5,7 +5,7 @@
 
   .number-cell {
     text-align: center;
-  }  
+  }
 }
 
 .table-reduced {
@@ -91,7 +91,7 @@
   padding: 10px 20px 8px 10px;
   border-bottom: 1px solid rgb(230, 230, 230);
   overflow: auto;
-  
+
   h2 { margin: 5px 0 0 0; }
 
   .form {
@@ -181,6 +181,11 @@
   ul {
     list-style: none;
     margin: 0;
+
+    &.bullet {
+      list-style: circle;
+      margin-left: 15px;
+    }
   }
 
   .info-label {
@@ -241,4 +246,44 @@
 div.alch-dialog.open.info-value {
   padding: 10px;
   width: 400px;
+}
+
+.details-navigation {
+  margin-bottom: 10px;
+  border-bottom: 2px solid #e3e5e7;
+  width: 100%;
+
+  ul {
+    list-style: none;
+    margin: 0 22px 0 0;
+    padding: 0 5px;
+    -webkit-padding-start: 0;
+    height: 25px;
+
+    li {
+      font-size: 15px;
+      display: inline-block;
+
+      a {
+        padding: 0 15px;
+        position: relative;
+        top: 2px;
+        display: block;
+        height: 25px;
+        text-align: center;
+        text-decoration: none;
+        color: black;
+
+        &:hover {
+            color: @listhover_color;
+            border-bottom: 2px solid @listhover_color;
+        }
+      }
+    }
+    .active {
+      color: @listhover_color;
+      border-bottom: 2px solid @listhover_color;
+    }
+
+  }
 }

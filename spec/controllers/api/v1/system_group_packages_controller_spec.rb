@@ -28,6 +28,7 @@ describe Api::V1::SystemGroupPackagesController, :katello => true do
     login_user(:mock => false)
     set_default_locale
     new_test_org
+    System.any_instance.stub(:update_system_groups)
 
     disable_consumer_group_orchestration
     @group = SystemGroup.create!(:name => "test_group", :organization => @organization, :max_systems => 5)

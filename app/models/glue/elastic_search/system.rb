@@ -147,4 +147,16 @@ module Glue::ElasticSearch::System
 
     attrs
   end
+
+  def update_system_groups
+    system_id = self.id #save the system id for the block
+    id_update = "ctx._source.system_group_ids = [#{self.system_group_ids.join(",")}]; "
+    names = self.system_groups.pluck(:name).map{|name| "\"#{name}\""}
+    name_update = "ctx._source.system_group = [#{names.join(",")}];"
+    Tire.index System.index.name do
+      update System.document_type, system_id, {:script => id_update + name_update }
+    end
+
+  end
+
 end
