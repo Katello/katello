@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130726210956) do
+ActiveRecord::Schema.define(:version => 20131025093810) do
 
   create_table "activation_keys", :force => true do |t|
     t.string   "name"
@@ -196,6 +196,59 @@ ActiveRecord::Schema.define(:version => 20130726210956) do
 
   add_index "distributors", ["content_view_id"], :name => "index_distributors_on_content_view_id"
   add_index "distributors", ["environment_id"], :name => "index_distributors_on_environment_id"
+
+  create_table "dynflow_actions", :id => false, :force => true do |t|
+    t.string  "execution_plan_uuid", :limit => 36, :null => false
+    t.integer "id",                                :null => false
+    t.text    "data"
+  end
+
+  add_index "dynflow_actions", ["execution_plan_uuid", "id"], :name => "dynflow_actions_execution_plan_uuid_id_index", :unique => true
+  add_index "dynflow_actions", ["execution_plan_uuid"], :name => "dynflow_actions_execution_plan_uuid_index"
+
+  create_table "dynflow_execution_plans", :id => false, :force => true do |t|
+    t.string   "uuid",           :limit => 36, :null => false
+    t.text     "data"
+    t.text     "state"
+    t.text     "result"
+    t.datetime "started_at"
+    t.datetime "ended_at"
+    t.float    "real_time"
+    t.float    "execution_time"
+  end
+
+  add_index "dynflow_execution_plans", ["uuid"], :name => "dynflow_execution_plans_uuid_index", :unique => true
+
+  create_table "dynflow_locks", :force => true do |t|
+    t.string  "uuid"
+    t.string  "resource_type"
+    t.integer "resource_id"
+  end
+
+  create_table "dynflow_steps", :id => false, :force => true do |t|
+    t.string   "execution_plan_uuid", :limit => 36, :null => false
+    t.integer  "id",                                :null => false
+    t.integer  "action_id"
+    t.text     "data"
+    t.text     "state"
+    t.datetime "started_at"
+    t.datetime "ended_at"
+    t.float    "real_time"
+    t.float    "execution_time"
+  end
+
+  add_index "dynflow_steps", ["execution_plan_uuid", "action_id"], :name => "dynflow_steps_execution_plan_uuid_action_id_index"
+  add_index "dynflow_steps", ["execution_plan_uuid", "id"], :name => "dynflow_steps_execution_plan_uuid_id_index", :unique => true
+  add_index "dynflow_steps", ["execution_plan_uuid"], :name => "dynflow_steps_execution_plan_uuid_index"
+
+  create_table "dynflow_tasks", :id => false, :force => true do |t|
+    t.string   "uuid"
+    t.string   "action"
+    t.integer  "user_id"
+    t.integer  "organization_id"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+  end
 
   create_table "environment_priors", :id => false, :force => true do |t|
     t.integer "environment_id"
@@ -535,6 +588,10 @@ ActiveRecord::Schema.define(:version => 20130726210956) do
   add_index "roles_users", ["user_id", "role_id"], :name => "index_roles_users_on_user_id_and_role_id", :unique => true
   add_index "roles_users", ["user_id"], :name => "index_roles_users_on_user_id"
 
+  create_table "schema_info", :id => false, :force => true do |t|
+    t.integer "version", :default => 0, :null => false
+  end
+
   create_table "search_favorites", :force => true do |t|
     t.string   "params"
     t.string   "path"
@@ -715,6 +772,11 @@ ActiveRecord::Schema.define(:version => 20130726210956) do
 
   add_foreign_key "distributors", "content_views", :name => "distributors_content_view_id_fk"
   add_foreign_key "distributors", "environments", :name => "distributors_environment_id_fk"
+
+  add_foreign_key "dynflow_actions", "dynflow_execution_plans", :name => "dynflow_actions_execution_plan_uuid_fkey", :column => "execution_plan_uuid", :primary_key => "uuid"
+
+  add_foreign_key "dynflow_steps", "dynflow_actions", :name => "dynflow_steps_execution_plan_uuid_fkey1", :column => "execution_plan_uuid", :primary_key => "execution_plan_uuid"
+  add_foreign_key "dynflow_steps", "dynflow_execution_plans", :name => "dynflow_steps_execution_plan_uuid_fkey", :column => "execution_plan_uuid", :primary_key => "uuid"
 
   add_foreign_key "environment_priors", "environments", :name => "environment_priors_environment_id_fk"
   add_foreign_key "environment_priors", "environments", :name => "environment_priors_prior_id_fk", :column => "prior_id"
