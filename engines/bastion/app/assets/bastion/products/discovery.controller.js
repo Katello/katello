@@ -52,7 +52,7 @@ angular.module('Bastion.products').controller('DiscoveryController',
         $scope.setupSelected = function() {
             $scope.panel.loading = true;
             $scope.discovery.selected = $scope.discoveryTable.getSelected();
-            $scope.transitionTo('products.discovery.create');
+            $scope.transitionTo('products.discovery.create.repos');
         };
 
         $scope.defaultName = function(basePath) {

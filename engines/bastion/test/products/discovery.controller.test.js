@@ -74,7 +74,7 @@ describe('Controller: DiscoveryController', function() {
 
         expect($scope.panel.loading).toBe(true);
         expect($scope.discovery.selected).toBe(fakeSelected);
-        expect($scope.transitionTo).toHaveBeenCalledWith('products.discovery.create');
+        expect($scope.transitionTo).toHaveBeenCalledWith('products.discovery.create.repos');
     });
 
 

@@ -51,12 +51,15 @@ angular.module('Bastion.products').controller('DiscoveryFormController',
             fetchRepoLabel(repo);
         });
 
-        Provider.query(function(values) {
-            $scope.providers = filterEditable(values.results);
+        //We need to re-fetch the providers in case a new one was created
+        $scope.$on('$stateChangeSuccess', function() {
+            Provider.query(function(values) {
+                $scope.providers = filterEditable(values.results);
 
-            if ($scope.providers.length > 0) {
-                $scope.createRepoChoices.product['provider_id'] = $scope.providers[0].id;
-            }
+                if ($scope.providers.length > 0 && $scope.createRepoChoices.product['provider_id'] === undefined) {
+                    $scope.createRepoChoices.product['provider_id'] = $scope.providers[0].id;
+                }
+            });
         });
 
         Product.query({'organization_id': CurrentOrganization}, function(values) {

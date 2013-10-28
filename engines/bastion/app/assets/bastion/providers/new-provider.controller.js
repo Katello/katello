@@ -48,7 +48,12 @@ angular.module('Bastion.providers').controller('NewProviderController',
         };
 
         function success() {
-            $scope.product['provider_id'] = $scope.provider.id;
+            if ($scope.product) {
+                $scope.product['provider_id'] = $scope.provider.id;
+            }
+            if ($scope.createRepoChoices){
+                $scope.createRepoChoices.product['provider_id'] = $scope.provider.id;
+            }
             $scope.transitionBack();
         }
 
