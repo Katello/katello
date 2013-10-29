@@ -22,7 +22,7 @@ Src::Application.routes.draw do
         onlies = [:show, :destroy, :index, :update]
       end
 
-      api_resources :dyntasks, :only => [:index]
+      post '/dyntasks' => 'dyntasks#search'
 
       api_resources :organizations do
         member do
