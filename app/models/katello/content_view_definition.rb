@@ -89,7 +89,7 @@ class ContentViewDefinition < ContentViewDefinitionBase
     end
     view.update_cp_content(view.organization.library)
     PulpTaskStatus.wait_for_tasks(view.versions.first.generate_metadata)
-    Glue::Event.trigger(Katello::Actions::ContentViewPublish, view)
+    Glue::Event.trigger(Actions::ContentViewPublish, view)
 
     if notify
       message = _("Successfully published content view '%{view_name}' from definition '%{definition_name}'.") %

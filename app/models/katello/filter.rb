@@ -12,13 +12,13 @@
 
 module Katello
 class Filter < ActiveRecord::Base
-  belongs_to :content_view_definition, :class_name => "Katello::ContentViewDefinitionBase"
-  has_many  :rules, :class_name => "Katello::FilterRule", :dependent => :destroy
+  belongs_to :content_view_definition, :class_name => "ContentViewDefinitionBase"
+  has_many  :rules, :class_name => "FilterRule", :dependent => :destroy
 
   # rubocop:disable HasAndBelongsToMany
   # TODO: change these into has_many :through associations
-  has_and_belongs_to_many :repositories, :uniq => true, :class_name => "Katello::Repository", :join_table => :katello_filters_repositories
-  has_and_belongs_to_many :products, :uniq => true, :class_name => "Katello::Product", :join_table => :katello_filters_products
+  has_and_belongs_to_many :repositories, :uniq => true, :class_name => "Repository", :join_table => :katello_filters_repositories
+  has_and_belongs_to_many :products, :uniq => true, :class_name => "Product", :join_table => :katello_filters_products
 
   validate :validate_content_definition
   validate :validate_products_and_repos

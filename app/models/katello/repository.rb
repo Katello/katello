@@ -24,11 +24,11 @@ class Repository < ActiveRecord::Base
 
   include Glue::Event
   def destroy_event
-    Katello::Actions::RepositoryDestroy
+    Actions::RepositoryDestroy
   end
 
   def create_event
-    Katello::Actions::RepositoryCreate
+    Actions::RepositoryCreate
   end
 
   include AsyncOrchestration
@@ -41,15 +41,15 @@ class Repository < ActiveRecord::Base
   TYPES = [YUM_TYPE, FILE_TYPE, PUPPET_TYPE]
   SELECTABLE_TYPES = [YUM_TYPE, PUPPET_TYPE]
 
-  belongs_to :environment, :inverse_of => :repositories, :class_name => "Katello::KTEnvironment"
+  belongs_to :environment, :inverse_of => :repositories, :class_name => "KTEnvironment"
   belongs_to :product, :inverse_of => :repositories
   belongs_to :gpg_key, :inverse_of => :repositories
-  belongs_to :library_instance, :class_name => "Katello::Repository"
+  belongs_to :library_instance, :class_name => "Repository"
   has_many :content_view_definition_repositories, :dependent => :destroy
   has_many :content_view_definitions, :through => :content_view_definition_repositories
   # rubocop:disable HasAndBelongsToMany
   # TODO: change this into has_many :through association
-  has_and_belongs_to_many :filters, :class_name => "Katello::Filter", :join_table => :katello_filters_repositories
+  has_and_belongs_to_many :filters, :class_name => "Filter", :join_table => :katello_filters_repositories
   belongs_to :content_view_version, :inverse_of => :repositories
 
   validates :product_id, :presence => true
@@ -68,11 +68,11 @@ class Repository < ActiveRecord::Base
       :message => (_("Please select content type from one of the following: %s") % TYPES.join(', '))
   }
 
-  default_scope order("#{Katello::Repository.table_name}.name ASC")
+  default_scope order("#{Repository.table_name}.name ASC")
   scope :enabled, where(:enabled => true)
   scope :has_feed, where('feed IS NOT NULL')
   scope :in_default_view, joins(:content_view_version => :content_view).
-    where("#{Katello::ContentView.table_name}.default" => true)
+    where("#{ContentView.table_name}.default" => true)
   scope :in_environment, lambda { |env| where(environment_id: env.id) }
 
   scope :yum_type, where(:content_type => YUM_TYPE)
@@ -98,7 +98,7 @@ class Repository < ActiveRecord::Base
 
   def self.in_content_views(views)
     joins(:content_view_version)
-      .where("#{Katello::ContentViewVersion.table_name}.content_view_id" => views.map(&:id))
+      .where("#{ContentViewVersion.table_name}.content_view_id" => views.map(&:id))
   end
 
   def puppet?
@@ -170,7 +170,7 @@ class Repository < ActiveRecord::Base
       # this repo is part of a default content view
       lib_id = self.library_instance_id || self.id
       Repository.in_environment(env).where(:library_instance_id => lib_id).
-          joins(:content_view_version => :content_view).where("#{Katello::ContentView.table_name.default}" => true).first
+          joins(:content_view_version => :content_view).where("#{ContentView.table_name.default}" => true).first
     else
       # this repo is part of a content view that was published from a user created definition
       self.content_view.get_repo_clone(env, self).first
@@ -188,7 +188,7 @@ class Repository < ActiveRecord::Base
   def after_sync(pulp_task_id)
     self.handle_sync_complete_task(pulp_task_id)
     self.index_content
-    Glue::Event.trigger(Katello::Actions::RepositorySync, self)
+    Glue::Event.trigger(Actions::RepositorySync, self)
   end
 
   def as_json(*args)
@@ -263,7 +263,7 @@ class Repository < ActiveRecord::Base
   # equivalent of repo
   def environmental_instances(view)
     repo = self.library_instance || self
-    search = Repository.where("library_instance_id=%s or #{Katello::Repository.table_name}.id=%s"  % [repo.id, repo.id])
+    search = Repository.where("library_instance_id=%s or #{Repository.table_name}.id=%s"  % [repo.id, repo.id])
     search.in_content_views([view])
   end
 

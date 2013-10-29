@@ -304,7 +304,7 @@ module Glue::Pulp::Repo
 
     def packages=(attrs)
       @repo_packages = attrs.collect do |package|
-        Katello::Package.new(package)
+        Package.new(package)
       end
       @repo_packages
     end
@@ -325,7 +325,7 @@ module Glue::Pulp::Repo
 
     def errata=(attrs)
       @repo_errata = attrs.collect do |erratum|
-        Katello::Errata.new(erratum)
+        Errata.new(erratum)
       end
       @repo_errata
     end
@@ -339,7 +339,7 @@ module Glue::Pulp::Repo
 
     def distributions=(attrs)
       @repo_distributions = attrs.collect do |dist|
-        Katello::Distribution.new(dist)
+        Distribution.new(dist)
       end
       @repo_distributions
     end
@@ -354,7 +354,7 @@ module Glue::Pulp::Repo
 
     def package_groups=(attrs)
       @repo_package_groups = attrs.collect do |group|
-        Katello::PackageGroup.new(group)
+        PackageGroup.new(group)
       end
       @repo_package_groups
     end
@@ -396,7 +396,7 @@ module Glue::Pulp::Repo
 
     def puppet_modules=(attrs)
       @repo_puppet_modules = attrs.collect do |puppet_module|
-        Katello::PuppetModule.new(puppet_module)
+        PuppetModule.new(puppet_module)
       end
       @repo_puppet_modules
     end

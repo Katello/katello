@@ -1,6 +1,8 @@
 module Katello
 
   class Engine < ::Rails::Engine
+
+    isolate_namespace Katello
     engine_name 'katello'
 
     initializer "katello.simple_navigation" do |app|
@@ -16,7 +18,7 @@ module Katello
       app.config.assets.paths << "#{::UIAlchemy::Engine.root}/vendor/assets/ui_alchemy/alchemy-forms"
       app.config.assets.paths << "#{::UIAlchemy::Engine.root}/vendor/assets/ui_alchemy/alchemy-buttons"
       app.config.assets.paths << "#{::Katello::Engine.root}/vendor/assets/stylesheets/katello/font-awesome"
-    end
+      end
 
     initializer "katello.paths" do |app|
       app.routes_reloader.paths << "#{Katello::Engine.root}/config/routes/api/v1.rb"
@@ -47,18 +49,6 @@ module Katello
       end
     end
 
-  end
-
-  def table_name_prefix
-    'katello_'
-  end
-
-  def use_relative_model_naming
-    true
-  end
-
-  def self.table_name_prefix
-    'katello_'
   end
 
 end

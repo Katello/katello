@@ -384,7 +384,7 @@ module Glue::Provider
 
         unless product_in_katello_ids.include?(marketing_product_id)
           engineering_product_in_katello_ids = Product.in_org(self.organization).
-            where(:cp_id => engineering_product_ids).pluck("#{Katello::Product.table_name}.id")
+            where(:cp_id => engineering_product_ids).pluck("#{Product.table_name}.id")
           Glue::Candlepin::Product.import_marketing_from_cp(Resources::Candlepin::Product.get(marketing_product_id)[0], engineering_product_in_katello_ids) do |p|
             p.provider = self
           end

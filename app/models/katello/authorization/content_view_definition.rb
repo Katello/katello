@@ -93,7 +93,7 @@ module Authorization::ContentViewDefinition
       if ::User.allowed_all_tags?(verbs, resource, org)
         where(:organization_id => org.id)
       else
-        where("#{Katello::ContentViewDefinitionBase.table_name}.id in (#{::User.allowed_tags_sql(verbs, resource, org)})")
+        where("#{ContentViewDefinitionBase.table_name}.id in (#{::User.allowed_tags_sql(verbs, resource, org)})")
       end
     end
 

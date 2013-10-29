@@ -17,7 +17,7 @@ module Authorization::ContentViewVersion
   module ClassMethods
     def readable(org)
       view_ids = ContentView.readable(org).collect{|v| v.id}
-      joins(:content_view).where("#{Katello::ContentView.table_name}.id" => view_ids)
+      joins(:content_view).where("#{ContentView.table_name}.id" => view_ids)
     end
 
     def promotable(org)
@@ -29,9 +29,9 @@ module Authorization::ContentViewVersion
       resource = :content_views
 
       if ::User.allowed_all_tags?(verbs, resource, org)
-        joins(:content_view).where("#{Katello::ContentView.table_name}.organization_id" => org.id)
+        joins(:content_view).where("#{ContentView.table_name}.organization_id" => org.id)
       else
-        joins(:content_view).where("#{Katello::ContentView.table_name}.id in (#{::User.allowed_tags_sql(verbs, resource, org)})")
+        joins(:content_view).where("#{ContentView.table_name}.id in (#{::User.allowed_tags_sql(verbs, resource, org)})")
       end
     end
   end

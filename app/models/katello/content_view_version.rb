@@ -18,7 +18,7 @@ class ContentViewVersion < ActiveRecord::Base
   belongs_to :content_view
   has_many :content_view_version_environments, :dependent => :destroy
   has_many :environments, {:through      => :content_view_version_environments,
-                           :class_name   => "Katello::KTEnvironment",
+                           :class_name   => "KTEnvironment",
                            :inverse_of   => :content_view_versions,
                            :before_add    => :add_environment,
                            :after_remove => :remove_environment
@@ -26,18 +26,18 @@ class ContentViewVersion < ActiveRecord::Base
 
   has_many :repositories, :dependent => :destroy
   has_one :task_status, :as => :task_owner, :dependent => :destroy
-  belongs_to :definition_archive, :class_name => "Katello::ContentViewDefinitionArchive",
+  belongs_to :definition_archive, :class_name => "ContentViewDefinitionArchive",
                                   :inverse_of => :content_view_versions
 
   validates :definition_archive_id, :presence => true, :if => :has_definition?
 
   before_validation :create_archived_definition
 
-  scope :default_view, joins(:content_view).where("#{Katello::ContentView.table_name}.default" => true)
-  scope :non_default_view, joins(:content_view).where("#{Katello::ContentView.table_name}.default" => false)
+  scope :default_view, joins(:content_view).where("#{ContentView.table_name}.default" => true)
+  scope :non_default_view, joins(:content_view).where("#{ContentView.table_name}.default" => false)
 
   def has_default_content_view?
-    ContentViewVersion.default_view.pluck("#{Katello::ContentViewVersion.table_name}.id").include?(self.id)
+    ContentViewVersion.default_view.pluck("#{ContentViewVersion.table_name}.id").include?(self.id)
   end
 
   def repos(env)
@@ -65,18 +65,18 @@ class ContentViewVersion < ActiveRecord::Base
     # however, for content views, it is desirable to order the repositories
     # based on the name of the product the repository is part of.
     Repository.send(:with_exclusive_scope) do
-      self.repositories.joins(:product).in_environment(env).order("#{Katello::Product.table_name}.name asc")
+      self.repositories.joins(:product).in_environment(env).order("#{Product.table_name}.name asc")
     end
   end
 
   def get_repo_clone(env, repo)
     lib_id = repo.library_instance_id || repo.id
-    self.repos(env).where("#{Katello::Repository.table_name}.library_instance_id" => lib_id)
+    self.repos(env).where("#{Repository.table_name}.library_instance_id" => lib_id)
   end
 
   def self.in_environment(env)
-    joins(:content_view_version_environments).where("#{Katello::ContentViewVersionEnvironment.table_name}.environment_id" => env).
-        order("#{Katello::ContentViewVersionEnvironment.table_name}.environment_id")
+    joins(:content_view_version_environments).where("#{ContentViewVersionEnvironment.table_name}.environment_id" => env).
+        order("#{ContentViewVersionEnvironment.table_name}.environment_id")
   end
 
   def refresh_version(notify = false)
@@ -93,7 +93,7 @@ class ContentViewVersion < ActiveRecord::Base
                               :organization => self.content_view.organization)
     end
 
-    Glue::Event.trigger(Katello::Actions::ContentViewRefresh, self.content_view)
+    Glue::Event.trigger(Actions::ContentViewRefresh, self.content_view)
 
   rescue => e
     Rails.logger.error(e)

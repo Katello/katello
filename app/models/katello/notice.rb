@@ -34,7 +34,7 @@ class Notice < ActiveRecord::Base
 
   def self.for_org(organization = nil)
     if organization
-      where("#{Katello::Notice.table_name}.organization_id = :org_id OR #{Katello::Notice.table_name}.organization_id IS NULL", :org_id => organization.id)
+      where("#{Notice.table_name}.organization_id = :org_id OR #{Notice.table_name}.organization_id IS NULL", :org_id => organization.id)
     else
       scoped
     end
