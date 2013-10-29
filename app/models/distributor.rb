@@ -114,6 +114,10 @@ class Distributor < ActiveRecord::Base
     available_versions.collect { |v| v["name"] }.select { |n| n =~ (Katello.config.katello? ? /\Asat/ : /\Asam/) }.last
   end
 
+  def version
+    facts['distributor_version']
+  end
+
   private
 
     def save_task_status(pulp_task, task_type, parameters_type, parameters)
