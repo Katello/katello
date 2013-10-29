@@ -8,12 +8,12 @@ class DynflowLock < ActiveRecord::Base
   belongs_to :resource, polymorphic: true
 
   scope :active, -> do
-    includes(:dynflow_execution_plan)
+    joins(:dynflow_execution_plan)
     .where('dynflow_execution_plans.state != ?', :stopped)
   end
 
   scope :inactive, -> do
-    includes(:dynflow_execution_plan)
+    joins(:dynflow_execution_plan)
     .where('dynflow_execution_plans.state = ?', :stopped)
   end
 

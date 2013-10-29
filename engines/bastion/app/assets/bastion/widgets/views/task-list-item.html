@@ -1,0 +1,14 @@
+<section>
+  <h4>
+    {{ "Orchestration Status" | i18n }}
+  </h4>
+
+  <div class="detail">
+    <span class="info-label">{{ "Task" | i18n }}</span>
+    <span class="info-value">{{ progressState }} Synchronization</span>
+  </div>
+  <div ng-class="task | progressClasses" class="progress progress-striped">
+    <progress percent="task.progress * 100"></progress>
+  </div>
+  <div class="divider"></div>
+</section>
