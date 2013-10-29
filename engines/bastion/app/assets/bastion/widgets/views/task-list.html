@@ -1,13 +1,12 @@
-<section ng-show="uuid">
+<section ng-repeat="task in tasks">
   <h4>
     {{ "Orchestration Status" | i18n }}
   </h4>
 
   <div class="detail">
     <span class="info-label">{{ "Task" | i18n }}</span>
-    <span class="info-value">Synchronization</span>
+    <span class="info-value">{{ task.uuid }} Synchronization</span>
   </div>
-  <progress percent="progress"></progress>
+  <progress percent="task.progress * 100"></progress>
   <div class="divider"></div>
 </section>
-

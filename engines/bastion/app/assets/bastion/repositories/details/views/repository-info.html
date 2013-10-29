@@ -26,7 +26,7 @@
 
 
 <div class="details fl">
-  <taskprogress uuid="{{ repository.current_task }}"></taskprogress>
+  <tasklist taskActive="true" taskResourceType="Repository" taskResourceId="{{ repository.id }}" ></tasklist>
 
   <section>
 
@@ -101,6 +101,8 @@
 </div>
 
 <div class="details fl">
+
+  <tasklist taskUserId="1" ></tasklist>
 
   <section>
     <h4 translate>Content Counts</h4>
