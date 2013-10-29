@@ -304,7 +304,9 @@ class Repository < ActiveRecord::Base
 
   def assert_deletable
     if self.environment.library? && self.content_view.default?
-      if self.custom? && self.deletable?
+      if self.environment.organization.being_deleted?
+        return true
+      elsif self.custom? && self.deletable?
         return true
       elsif !self.custom? && self.redhat_deletable?
         return true
