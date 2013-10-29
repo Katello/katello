@@ -9,6 +9,16 @@ class DynflowTask < ActiveRecord::Base
              foreign_key: :uuid
   has_many :dynflow_locks, foreign_key: :uuid
 
+  scope :active, -> do
+    joins(:dynflow_execution_plan)
+    .where('dynflow_execution_plans.state != ?', :stopped)
+  end
+
+  scope :inactive, -> do
+    joins(:dynflow_execution_plan)
+    .where('dynflow_execution_plans.state = ?', :stopped)
+  end
+
   def execution_plan
     Orchestrate.world.persistence.load_execution_plan(self.uuid)
   end

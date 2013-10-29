@@ -242,12 +242,10 @@ ActiveRecord::Schema.define(:version => 20131025093810) do
   add_index "dynflow_steps", ["execution_plan_uuid"], :name => "dynflow_steps_execution_plan_uuid_index"
 
   create_table "dynflow_tasks", :id => false, :force => true do |t|
-    t.string   "uuid"
-    t.string   "action"
-    t.integer  "user_id"
-    t.integer  "organization_id"
-    t.datetime "created_at",      :null => false
-    t.datetime "updated_at",      :null => false
+    t.string  "uuid"
+    t.string  "action"
+    t.integer "user_id"
+    t.integer "organization_id"
   end
 
   create_table "environment_priors", :id => false, :force => true do |t|

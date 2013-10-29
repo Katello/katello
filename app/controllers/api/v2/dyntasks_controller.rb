@@ -36,6 +36,7 @@ class Api::V2::DyntasksController < Api::V2::ApiController
     param :resource_type, String, :desc => <<-DESC
       In case :type = 'resource', what resource id we're searching the tasks for
     DESC
+    param :active_only, :bool
     param :page, String
     param :per_page, String
   end
@@ -59,11 +60,12 @@ class Api::V2::DyntasksController < Api::V2::ApiController
   private
 
   def condition_tasks(condition)
-    DynflowTask.tap do |scope|
-      scope = ordering_scope(scope, condition)
-      scope = search_scope(scope, condition)
-      scope = pagination_scope(scope, condition)
-    end.all.map { |task| task_hash(task) }
+    scope = DynflowTask
+    scope = ordering_scope(scope, condition)
+    scope = search_scope(scope, condition)
+    scope = active_scope(scope, condition)
+    scope = pagination_scope(scope, condition)
+    scope.all.map { |task| task_hash(task) }
   end
 
   def search_scope(scope, condition)
@@ -77,11 +79,19 @@ class Api::V2::DyntasksController < Api::V2::ApiController
       if condition[:resource_type].blank? || condition[:resource_id].blank?
         raise HttpErrors::BadRequest, _("User condition requires resource_type and resource_id to be specified")
       end
-      scope.joins(:dynflow_locks).where(dynflows_locks:
+      scope.joins(:dynflow_locks).where(dynflow_locks:
                                                 { resource_type: condition[:resource_type],
                                                   resource_id:   condition[:resource_id] })
     else
       raise HttpErrors::BadRequest, _("Condition %s not supported") % condition[:type]
+    end
+  end
+
+  def active_scope(scope, condition)
+    if condition[:active_only]
+      scope.active
+    else
+      scope
     end
   end
 
@@ -105,6 +115,7 @@ class Api::V2::DyntasksController < Api::V2::ApiController
     task_hash[:result] = task.execution_plan.result
     task_hash[:progress] = task.execution_plan.progress
     @tasks[task.uuid] = task_hash
+    return task_hash
   end
 
 end
