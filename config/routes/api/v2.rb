@@ -40,7 +40,7 @@ Katello::Engine.routes.draw do
       ##############################
       ##############################
 
-      api_resources :dyntasks, :only => [:index]
+      post '/dyntasks' => 'dyntasks#search'
 
       api_resources :organizations do
         member do
