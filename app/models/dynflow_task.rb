@@ -9,4 +9,8 @@ class DynflowTask < ActiveRecord::Base
              foreign_key: :uuid
   has_many :dynflow_locks, foreign_key: :uuid
 
+  def execution_plan
+    Orchestrate.world.persistence.load_execution_plan(self.uuid)
+  end
+
 end
