@@ -127,10 +127,10 @@ class ActivationKeysController < Katello::ApplicationController
   def add_subscriptions
     if params.key? :subscription_id
       params[:subscription_id].keys.each do |pool|
-        kt_pool = ::Pool.where(:cp_id => pool)[0]
+        kt_pool = Pool.where(:cp_id => pool)[0]
 
         if kt_pool.nil?
-          ::Pool.create!(:cp_id => pool, :key_pools => [KeyPool.create!(:activation_key => @activation_key)])
+          Pool.create!(:cp_id => pool, :key_pools => [KeyPool.create!(:activation_key => @activation_key)])
         else
           KeyPool.create!(:activation_key_id => @activation_key.id, :pool_id => kt_pool.id)
         end
@@ -249,7 +249,7 @@ class ActivationKeysController < Katello::ApplicationController
 
     notify.success _("Activation key '%s' was updated.") % @activation_key["name"]
 
-    if !search_validate(ActivationKey, @activation_key.id, params[:search])
+    if !search_validate(Katello::ActivationKey, @activation_key.id, params[:search])
       notify.message _("'%s' no longer matches the current search criteria.") % @activation_key["name"]
     end
 
@@ -339,7 +339,7 @@ class ActivationKeysController < Katello::ApplicationController
     cp_pools = Resources::Candlepin::Owner.pools current_organization.label
     if cp_pools
       # Pool objects
-      pools = cp_pools.collect{|cp_pool| ::Pool.find_pool(cp_pool['id'], cp_pool)}
+      pools = cp_pools.collect{|cp_pool| Pool.find_pool(cp_pool['id'], cp_pool)}
 
       subscriptions = pools.collect do |pool|
         product = Product.where(:cp_id => pool.product_id).first

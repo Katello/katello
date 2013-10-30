@@ -12,7 +12,7 @@
 module Katello
 class ContentViewDefinitionProduct < ActiveRecord::Base
   belongs_to :content_view_definition,
-             :class_name => "ContentViewDefinitionBase",
+             :class_name => "Katello::ContentViewDefinitionBase",
              :inverse_of => :content_view_definition_products
   belongs_to :product, :inverse_of => :content_view_definition_products
 end

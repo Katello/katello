@@ -18,10 +18,10 @@ class ContentViewDefinitionBase < ActiveRecord::Base
   has_many :content_view_definition_repositories, :foreign_key => "content_view_definition_id", :dependent => :destroy
   has_many :repositories, :through => :content_view_definition_repositories, :after_remove => :remove_repository,
                           :before_add => :validate_repos
-  has_many :components, :class_name => "ComponentContentView", :dependent => :destroy,
+  has_many :components, :class_name => "Katello::ComponentContentView", :dependent => :destroy,
                         :foreign_key => "content_view_definition_id"
   has_many :component_content_views, :through => :components, :source => :content_view,
-                                     :class_name => "ContentView",
+                                     :class_name => "Katello::ContentView",
                                      :before_add => :validate_component_views
   has_many :filters, :inverse_of => :content_view_definition, :dependent => :destroy,
                      :foreign_key => "content_view_definition_id"
@@ -113,7 +113,7 @@ class ContentViewDefinitionBase < ActiveRecord::Base
   end
 
   def validate_component_views(view)
-    if type == "ContentViewDefinition"
+    if type == "Katello::ContentViewDefinition"
       # check for repo overlap
       library_repos = component_content_views.map(&:library_repos).flatten + view.library_repos
       library_repo_ids = library_repos.map(&:id)
@@ -132,7 +132,7 @@ class ContentViewDefinitionBase < ActiveRecord::Base
   end
 
   def validate_repos(repo)
-    if type == "ContentViewDefinition"
+    if type == "Katello::ContentViewDefinition"
       # TODO: check composite views
       if repositories.select(&:puppet?).length > 0 && repo.puppet?
         fail Errors::ContentViewRepositoryOverlap.new(_("Definition cannot contain more than one Puppet repository."))

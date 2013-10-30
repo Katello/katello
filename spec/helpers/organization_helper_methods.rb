@@ -10,7 +10,9 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'models/model_spec_helper'
+require File.expand_path("../models/model_spec_helper", File.dirname(__FILE__))
+
+module Katello
 module OrganizationHelperMethods
   include OrchestrationHelper
 
@@ -91,4 +93,5 @@ module OrganizationHelperMethods
     end
     ak
   end
+end
 end

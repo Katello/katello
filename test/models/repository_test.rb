@@ -10,9 +10,10 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require './test/models/repository_base'
-require './test/models/authorization/repository_authorization_test'
+require File.expand_path("repository_base", File.dirname(__FILE__))
+require File.expand_path("authorization/repository_authorization_test", File.dirname(__FILE__))
 
+module Katello
 class RepositoryCreateTest < RepositoryTestBase
 
   def setup
@@ -20,13 +21,13 @@ class RepositoryCreateTest < RepositoryTestBase
     User.current = @admin
     @repo = build(:repository, :fedora_17_el6,
                   :environment => @library,
-                  :product => products(:fedora),
+                  :product => katello_products(:fedora),
                   :content_view_version => @library.default_content_view_version
                  )
   end
 
   def teardown
-    @repo.destroy if @repo.id
+    @repo.destroy if @repo
   end
 
   def test_create
@@ -147,9 +148,9 @@ class RepositoryInstanceTest < RepositoryTestBase
   end
 
   def test_repo_id
-    @fedora             = Product.find(products(:fedora).id)
-    @library            = KTEnvironment.find(environments(:library).id)
-    @acme_corporation   = Organization.find(organizations(:acme_corporation).id)
+    @fedora             = Product.find(katello_products(:fedora).id)
+    @library            = KTEnvironment.find(katello_environments(:library).id)
+    @acme_corporation   = Organization.find(katello_organizations(:acme_corporation).id)
 
     repo_id = Repository.repo_id(@fedora.label, @fedora_17_x86_64.label, @library.label,
                                  @acme_corporation.label, @library.default_content_view.label)
@@ -158,9 +159,9 @@ class RepositoryInstanceTest < RepositoryTestBase
 
   def test_clone_repo_path_for_component
     # validate that clone repo path for a component view does not include the component view label
-    @content_view_definition = content_view_definition_bases(:composite_def)
-    dev = KTEnvironment.find(environments(:dev).id)
-    cv = @content_view_definition.component_content_views.first
+    @content_view_definition = katello_content_view_definition_bases(:composite_def)
+    dev = KTEnvironment.find(katello_environments(:dev).id)
+    cv = @content_view_definition.component_content_views.where(:label => "component_view_1").first
     cve = ContentViewEnvironment.where(:environment_id => dev,
                                         :content_view_id => cv).first
 
@@ -179,10 +180,11 @@ class RepositoryInstanceTest < RepositoryTestBase
     assert_equal "", new_custom_repo.reload.feed
     refute new_custom_repo.feed?
 
-    rhel = Repository.find(repositories(:rhel_6_x86_64))
+    rhel = Repository.find(katello_repositories(:rhel_6_x86_64))
     rhel.feed = ""
     refute rhel.valid?
     refute rhel.save
     refute_empty rhel.errors
   end
+end
 end

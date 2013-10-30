@@ -20,7 +20,7 @@ class Permission < ActiveRecord::Base
   # rubocop:disable HasAndBelongsToMany
   # TODO: change this into has_many :through association
   has_and_belongs_to_many :verbs, :join_table => 'katello_permissions_verbs'
-  has_many :tags, :class_name => "PermissionTag", :dependent => :destroy, :inverse_of => :permission
+  has_many :tags, :class_name => "Katello::PermissionTag", :dependent => :destroy, :inverse_of => :permission
 
   before_save :cleanup_tags_verbs
   before_save :check_global

@@ -10,35 +10,32 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'minitest_helper'
+require 'katello_test_helper'
 
-class AuthorizationTestBase < MiniTest::Rails::ActiveSupport::TestCase
-  extend ActiveRecord::TestFixtures
-
-  fixtures :all
+module Katello
+class AuthorizationTestBase < ActiveSupport::TestCase
 
   def self.before_suite
     services  = ['Candlepin', 'Pulp', 'ElasticSearch', 'Foreman']
-    models    = ['Repository', 'User', 'KTEnvironment', 'ContentViewEnvironment', 'Organization', 'System', 'SystemGroup']
+    models    = ['Repository', 'KTEnvironment', 'ContentViewEnvironment', 'Organization', 'System', 'SystemGroup']
     disable_glue_layers(services, models)
   end
 
   def setup
     Katello.config[:warden] = 'database'
-    @no_perms_user      = User.find(users(:no_perms_user))
+    @no_perms_user      = User.find(users(:restricted))
     @admin              = User.find(users(:admin))
-    @disabled_user      = User.find(users(:disabled_user))
 
-    @fedora_hosted        = Provider.find(providers(:fedora_hosted))
-    @fedora_17_x86_64     = Repository.find(repositories(:fedora_17_x86_64).id)
-    @fedora_17_x86_64_dev = Repository.find(repositories(:fedora_17_x86_64_dev).id)
-    @fedora               = Product.find(products(:fedora).id)
-    @library              = KTEnvironment.find(environments(:library).id)
-    @dev                  = KTEnvironment.find(environments(:dev).id)
-    @acme_corporation     = Organization.find(organizations(:acme_corporation).id)
-    @unassigned_gpg_key   = GpgKey.find(gpg_keys(:unassigned_gpg_key).id)
-
-    @system             = System.find(systems(:simple_server))
+    @fedora_hosted        = Provider.find(katello_providers(:fedora_hosted))
+    @fedora_17_x86_64     = Repository.find(katello_repositories(:fedora_17_x86_64).id)
+    @fedora_17_x86_64_dev = Repository.find(katello_repositories(:fedora_17_x86_64_dev).id)
+    @fedora               = Product.find(katello_products(:fedora).id)
+    @library              = KTEnvironment.find(katello_environments(:library).id)
+    @dev                  = KTEnvironment.find(katello_environments(:dev).id)
+    @acme_corporation     = Organization.find(katello_organizations(:acme_corporation).id)
+    @unassigned_gpg_key   = GpgKey.find(katello_gpg_keys(:unassigned_gpg_key).id)
+    @system             = System.find(katello_systems(:simple_server))
   end
 
+end
 end

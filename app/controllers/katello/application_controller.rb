@@ -24,7 +24,7 @@ class ApplicationController < ::ApplicationController
   helper UIAlchemy::TranslationHelper
   helper_method :current_organization
   helper_method :render_correct_nav
-  before_filter :require_user, :require_org
+  before_filter :require_org
   #before_filter :check_deleted_org
 
   protect_from_forgery # See ActionController::RequestForgeryProtection for details
@@ -60,7 +60,6 @@ class ApplicationController < ::ApplicationController
   end
 
   rescue_from ActiveRecord::RecordInvalid, ActiveRecord::RecordNotSaved  do |e|
-    User.current = current_user
     notify.exception e
     log_exception e, :info
 

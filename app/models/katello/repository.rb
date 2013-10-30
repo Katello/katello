@@ -139,7 +139,7 @@ class Repository < ActiveRecord::Base
       host = Katello.config.host
       port = Katello.config.port
       host += ":" + port.to_s unless port.blank? || port.to_s == "443"
-      gpg_key_content_api_repository_url(self, :host => host + Katello.config.url_prefix.to_s, :protocol => 'https')
+      gpg_key_content_katello_api_repository_url(self, :host => host + Katello.config.url_prefix.to_s, :protocol => 'https')
     end
   end
 
@@ -174,7 +174,7 @@ class Repository < ActiveRecord::Base
       # this repo is part of a default content view
       lib_id = self.library_instance_id || self.id
       Repository.in_environment(env).where(:library_instance_id => lib_id).
-          joins(:content_view_version => :content_view).where("#{Katello::ContentView.table_name.default}" => true).first
+          joins(:content_view_version => :content_view).where("#{Katello::ContentView.table_name}.default" => true).first
     else
       # this repo is part of a content view that was published from a user created definition
       self.content_view.get_repo_clone(env, self).first

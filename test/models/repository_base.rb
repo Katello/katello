@@ -10,12 +10,10 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'minitest_helper'
+require 'katello_test_helper'
 
-class RepositoryTestBase < MiniTest::Rails::ActiveSupport::TestCase
-  extend ActiveRecord::TestFixtures
-
-  fixtures :all
+module Katello
+class RepositoryTestBase < ActiveSupport::TestCase
 
   def self.before_suite
     services  = ['Candlepin', 'Pulp', 'ElasticSearch', 'Foreman']
@@ -24,15 +22,16 @@ class RepositoryTestBase < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def setup
-    @fedora_17_x86_64     = Repository.find(repositories(:fedora_17_x86_64).id)
-    @fedora_17_x86_64_dev = Repository.find(repositories(:fedora_17_x86_64_dev).id)
-    @fedora               = Product.find(products(:fedora).id)
-    @library              = KTEnvironment.find(environments(:library).id)
-    @dev                  = KTEnvironment.find(environments(:dev).id)
-    @staging              = KTEnvironment.find(environments(:staging).id)
-    @acme_corporation     = Organization.find(organizations(:acme_corporation).id)
-    @unassigned_gpg_key   = GpgKey.find(gpg_keys(:unassigned_gpg_key).id)
+    @fedora_17_x86_64     = Repository.find(katello_repositories(:fedora_17_x86_64).id)
+    @fedora_17_x86_64_dev = Repository.find(katello_repositories(:fedora_17_x86_64_dev).id)
+    @fedora               = Product.find(katello_products(:fedora).id)
+    @library              = KTEnvironment.find(katello_environments(:library).id)
+    @dev                  = KTEnvironment.find(katello_environments(:dev).id)
+    @staging              = KTEnvironment.find(katello_environments(:staging).id)
+    @acme_corporation     = Organization.find(katello_organizations(:acme_corporation).id)
+    @unassigned_gpg_key   = GpgKey.find(katello_gpg_keys(:unassigned_gpg_key).id)
     @admin                = User.find(users(:admin))
   end
 
+end
 end

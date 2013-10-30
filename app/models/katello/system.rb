@@ -28,7 +28,7 @@ class System < ActiveRecord::Base
 
   acts_as_reportable
 
-  belongs_to :environment, :class_name => "KTEnvironment", :inverse_of => :systems
+  belongs_to :environment, :class_name => "Katello::KTEnvironment", :inverse_of => :systems
 
   has_many :task_statuses, :as => :task_owner, :dependent => :destroy
   has_many :system_activation_keys, :dependent => :destroy

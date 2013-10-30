@@ -10,7 +10,7 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'helpers/repo_test_data'
+require File.expand_path("repo_test_data", File.dirname(__FILE__))
 
 module ProductHelperMethods
 

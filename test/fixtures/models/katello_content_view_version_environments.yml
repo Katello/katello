@@ -1,0 +1,33 @@
+#Default views
+library_default_version_library:
+  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_default_version) %>
+  environment_id: <%= ActiveRecord::Fixtures.identify(:library) %>
+
+dev_default_version_dev:
+  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:dev_default_version) %>
+  environment_id: <%= ActiveRecord::Fixtures.identify(:dev) %>
+
+staging_default_version_staging:
+  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:staging_default_version) %>
+  environment_id: <%= ActiveRecord::Fixtures.identify(:staging) %>
+
+#Non-Default View
+library_view_version_library:
+  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_view_version) %>
+  environment_id: <%= ActiveRecord::Fixtures.identify(:library) %>
+
+library_dev_view_version_library:
+  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_dev_view_version) %>
+  environment_id: <%= ActiveRecord::Fixtures.identify(:library) %>
+
+library_dev_view_version_dev:
+  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_dev_view_version) %>
+  environment_id: <%= ActiveRecord::Fixtures.identify(:dev) %>
+
+library_component_view1_version_library:
+  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_component_view1_version) %>
+  environment_id: <%= ActiveRecord::Fixtures.identify(:library) %>
+
+library_component_view2_version_library:
+  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_component_view2_version) %>
+  environment_id: <%= ActiveRecord::Fixtures.identify(:library) %>

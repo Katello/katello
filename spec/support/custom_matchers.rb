@@ -10,52 +10,52 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-module CustomMatchers
-  class Notify
-    def initialize(*types)
-      @types = types
-    end
+class Notify
+  def initialize(*types)
+    @types = types
+  end
 
-    def method_missing(method, *args, &block)
-      if args.blank? && block.nil?
-        @types << method.to_sym
-        return self
-      else
-        super
-      end
-    end
-
-    def matches?(controller)
-      raise ArgumentError, 'type cannot be nil' if @types.blank?
-
-      @controller   = controller
-      notifier_mock = RSpec::Mocks::Mock.new('NotifierImpl', :__declared_as => 'Mock')
-      @types.each do |type|
-        notifier_mock.should_receive(type).and_return do |*args|
-          Rails.logger.debug("notify.#{type} received with:\n" + args.map do |arg|
-            case arg
-              when Exception
-                "#{arg.message} (#{arg.class})\n#{arg.backtrace.join("\n")}"
-              else
-                arg.inspect
-            end
-          end.join("\n"))
-          true
-        end
-      end
-      @controller.should_receive(:notify).any_number_of_times.and_return(notifier_mock)
-
-      # always return true, should_receive will handle the errors
-      return true
+  def method_missing(method, *args, &block)
+    if args.blank? && block.nil?
+      @types << method.to_sym
+      return self
+    else
+      super
     end
   end
 
-  def notify(*types)
-    Notify.new(*types)
-  end
+  def matches?(controller)
+    raise ArgumentError, 'type cannot be nil' if @types.blank?
 
+    @controller   = controller
+    notifier_mock = RSpec::Mocks::Mock.new('NotifierImpl', :__declared_as => 'Mock')
+    @types.each do |type|
+      notifier_mock.should_receive(type).and_return do |*args|
+        Rails.logger.debug("notify.#{type} received with:\n" + args.map do |arg|
+          case arg
+            when Exception
+              "#{arg.message} (#{arg.class})\n#{arg.backtrace.join("\n")}"
+            else
+              arg.inspect
+          end
+        end.join("\n"))
+        true
+      end
+    end
+    @controller.should_receive(:notify).any_number_of_times.and_return(notifier_mock)
+
+    # always return true, should_receive will handle the errors
+    return true
+  end
 end
 
+def must_notify_with(type)
+  notify = Katello::Notifications::Notifier.new
+  notify.expects(type).at_least_once
+  @controller.expects(:notify).at_least_once.returns(notify)
+end
+
+=begin
 # @response.body.should be_json({:my => {:expected => ["json","hash"]}})
 # @response.body.should be_json('{"my":{"expected":["json","hash"]}}')
 RSpec::Matchers.define :be_json do |expected|
@@ -81,3 +81,4 @@ RSpec::Matchers.define :be_json do |expected|
     end
   end
 end
+=end

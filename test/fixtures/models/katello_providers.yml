@@ -1,0 +1,23 @@
+fedora_hosted:
+  name:         FedoraHosted
+  description:  Project and repository hosting.
+  provider_type: 'Custom'
+  organization_id: <%= ActiveRecord::Fixtures.identify(:acme_corporation) %>
+
+redhat:
+  name: Red Hat Provider
+  description: Provider of all your red hat needs
+  provider_type: 'Red Hat'
+  organization_id: <%= ActiveRecord::Fixtures.identify(:acme_corporation) %>
+
+candlepin_redhat:
+  name: Red Hat Provider
+  description: Provider of all your red hat needs
+  provider_type: 'Red Hat'
+  organization_id: <%= ActiveRecord::Fixtures.identify(:candlepin_org) %>
+
+puppet_labs:
+  name:           PuppetLabs
+  description:    Fie, fie, you counterfeit. You puppet, you!
+  provider_type:  Custom
+  organization_id: <%= ActiveRecord::Fixtures.identify(:acme_corporation) %>

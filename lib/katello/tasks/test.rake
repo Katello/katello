@@ -1,132 +1,35 @@
-namespace "ptest" do
+require File.expand_path("../engine", File.dirname(__FILE__))
 
-  desc "Run parallel spec tests for headpin or katello, depending on 'app_mode' in katello.yml"
-  task :spec, :pattern, :threads do |_, args|
+namespace :test do
+  namespace :katello do
+    task :test => ['db:test:prepare', 'test:katello:katello_test']
+    task :spec => ['db:test:prepare', 'test:katello:katello_spec']
 
-    tags = {"headpin" => "~katello", "katello" => "~headpin"}
-
-    mode = Katello.config.app_mode
-    puts "testing in #{mode} mode. change 'app_mode' in config/katello.yml."
-    tests("/#{mode}", args, tags[mode])
-  end
-
-  def tests(env, task_args, rspec_args)
-    task_args.with_defaults(:pattern => '\'\'', :threads => 0)
-
-    pattern_search = task_args[:pattern] != '\'\''
-
-    rspec_options = "--tag \"#{rspec_args}\""
-    rspec_options << " -fd" if pattern_search
-
-    cpus = (pattern_search) ? 1 : task_args[:threads]
-
-    Rake::Task["parallel:spec"].invoke(cpus, task_args[:pattern], rspec_options)
-  end
-
-end
-
-if defined?(MiniTest)
-  namespace :minitest do
-    Rake::Task["minitest"].clear
-    Rake::Task["minitest:models"].clear
-    Rake::Task["minitest:controllers"].clear
-    Rake::Task["db:test:prepare"].clear
-
-    if ENV['method']
-      if not ENV['method'].starts_with?('test_')
-        ENV['method'] = "test_#{ENV['method']}"
-      end
-
-      if ENV['TESTOPTS']
-        ENV['TESTOPTS'] += "--name=#{ENV['method']}"
-      else
-        ENV['TESTOPTS'] = "--name=#{ENV['method']}"
-      end
+    Rake::TestTask.new(:katello_test) do |t|
+      t.libs << ["test", "#{Katello::Engine.root}/test"]
+      t.test_files = [
+        "#{Katello::Engine.root}/test/models/repository_test.rb"
+      ]
+      t.verbose = true
     end
 
-    MINITEST_TASKS  = %w(models helpers controllers glue scenarios lib)
-    GLUE_LAYERS     = %w(pulp candlepin elasticsearch)
-    Rake::Task["db:test:prepare"].clear
-
-    namespace :default do
-      MINITEST_TASKS.each do |task|
-        if ENV['test']
-          Rake::Task["db:test:prepare"].clear
-          MiniTest::Rails::Tasks::SubTestTask.new(task => 'test:prepare') do |t|
-            t.libs.push 'test'
-            t.pattern = "test/#{task}/#{ENV['test']}_test.rb"
-          end
-        else
-          desc "Runs the #{task} tests"
-          MiniTest::Rails::Tasks::SubTestTask.new(task => 'test:prepare') do |t|
-            t.libs.push 'test'
-            t.pattern = "test/#{task}/**/*_test.rb"
-          end
-        end
-      end
-    end
-
-    namespace :glue do
-
-      GLUE_LAYERS.each do |task|
-
-        desc "Finds functions without dedicated tests"
-        task "#{task}:untested" do
-          test_functions  = `grep -r 'def test_' test/glue/#{task} --include=*.rb --no-filename`
-          lib_functions   = `grep -r 'def self' app/models/glue/#{task} --include=*.rb --no-filename`
-
-          test_functions  = test_functions.split("\n").map{ |str| str.strip.split("def test_")[1] }.to_set
-          lib_functions   = lib_functions.split("\n").map{ |str| str.strip.split("def ")[1].split("(").first }.to_set
-
-          difference = (lib_functions - test_functions).to_a
-
-          if !difference.empty?
-            puts difference
-            exit 1
-          end
-        end
-
-        if ENV['test']
-          MiniTest::Rails::Tasks::SubTestTask.new(task => 'test:prepare') do |t|
-            t.libs.push 'test'
-            t.pattern = "test/glue/#{task}/#{ENV['test']}_test.rb"
-          end
-        else
-          desc "Runs the #{task} glue layer tests"
-
-          MiniTest::Rails::Tasks::SubTestTask.new(task => 'test:prepare') do |t|
-            t.libs.push 'test'
-            t.pattern = "test/glue/#{task}/**/*_test.rb"
-          end
-        end
-      end
+    Rake::TestTask.new(:katello_spec) do |t|
+      t.libs << ["test", "#{Katello::Engine.root}/test", "spec", "#{Katello::Engine.root}/spec"]
+      t.test_files = [
+        "#{Katello::Engine.root}/spec/models/activation_key_spec.rb"
+      ]
+      t.verbose = true
     end
   end
 
-  desc 'Runs all minitest tests'
-  MiniTest::Rails::Tasks::SubTestTask.new(:minitest) do |t|
-    if ENV["test"]
-      t.pattern = ENV["test"]
-    else
-      t.pattern = "test/#{task}/**/*_test.rb"
-    end
-    t.libs.push 'test'
+  desc "Test Katello plugin"
+  task 'katello' do
+    Rake::Task['test:katello:test'].invoke
+    Rake::Task['test:katello:spec'].invoke
   end
 
 end
 
-namespace :db do
-  namespace :test do
-    task :setup do
-      Rails.env = "test"
-      Rake::Task["db:create"].invoke
-      system("RAILS_ENV=test rake db:migrate") # must call shell command to run engine migrations
-    end
-
-    task :reset do
-      Rails.env = "test"
-      Rake::Task["db:drop"].invoke
-      Rake::Task["db:test:setup"].invoke
-    end
-  end
+Rake::Task[:test].enhance do
+  Rake::Task['test:katello'].invoke
 end
