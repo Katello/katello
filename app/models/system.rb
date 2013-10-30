@@ -193,7 +193,7 @@ class System < ActiveRecord::Base
   end
 
   def type
-    if respond_to?(:guest) && guest == 'true'
+    if respond_to?(:guest) && guest
       _("Guest")
     else
       case self
