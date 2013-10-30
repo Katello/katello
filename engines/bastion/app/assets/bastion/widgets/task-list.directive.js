@@ -90,7 +90,7 @@ angular.module('Bastion.widgets')
                 classes.push("progress-success");
                 break;
             case "error":
-                classes.push("progress-error");
+                classes.push("progress-danger");
                 break;
             }
 
@@ -161,7 +161,7 @@ angular.module('Bastion.widgets')
                 }
 
                 scope.updateTasks = function(tasks) {
-                    angular.forEach(tasks, function(task) {
+                    angular.forEach(tasks.reverse(), function(task) {
                         taskScope(task).task = task;
                     });
                     deleteFinishedTasks(tasks);
