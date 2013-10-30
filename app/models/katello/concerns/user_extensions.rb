@@ -80,6 +80,10 @@ module Katello
           self.preferences = Hash.new unless self.preferences
         end
 
+        def preferences_hash
+          self.preferences.is_a?(Hash) ? self.preferences : self.preferences.unserialized_value
+        end
+
         def not_last_super_user?
           if !User.current.nil?
             if self.id == User.current.id
