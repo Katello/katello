@@ -6,7 +6,8 @@
   = yield :stylesheets
 
 = content_for(:body) do
-  = render :file => "bastion/menu/menu"
+  = generate_menu
+  %nav{'ng-include' => "'menu/views/menu.html'"}
   %article.maincontent
     %section{'ui-view' => ''}
 
