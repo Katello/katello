@@ -1,24 +1,3 @@
-<div class="flash_hud" ng-show="saveSuccess">
-  <a class="control" title="Close" ng-click="saveSuccess = false"></a>
-  <ul class="flash_messages success">
-    <li>
-      {{ "Update successful" | i18n }}
-    </li>
-  </ul>
-</div>
-
-<div class="flash_hud" ng-show="saveError">
-  <a class="control" title="Close" ng-click="saveError = false"></a>
-  <ul class="flash_messages error">
-    <li>
-      {{ "Error occurred saving:" | i18n }}
-    </li>
-    <ul>
-      <li ng-repeat="error in errors">{{ error }}</li>
-    </ul>
-  </ul>
-</div>
-
 <button class="fr btn btn-primary" ng-click="autoAttach()">{{ "Run Auto-Attach" | i18n }}</button>
 <div class="details">
   <section>
