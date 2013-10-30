@@ -31,6 +31,7 @@ class ContentViewTest < MiniTest::Rails::ActiveSupport::TestCase
     @default_view     = ContentView.find(content_views(:acme_default))
     @library_view     = ContentView.find(content_views(:library_view))
     @library_dev_view = ContentView.find(content_views(:library_dev_view))
+    @simple_server    = System.find(systems(:simple_server))
   end
 
   def test_create
@@ -135,6 +136,13 @@ class ContentViewTest < MiniTest::Rails::ActiveSupport::TestCase
     assert_equal count, ContentView.count
     assert @library_view.destroy
     assert_equal count-1, ContentView.count
+  end
+
+  def test_destroy_with_systems
+    @library_view.systems << @simple_server
+    @library_view.save!
+    @library_view.destroy
+    refute_empty @library_view.errors
   end
 
   def test_delete
