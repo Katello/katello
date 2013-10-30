@@ -1,12 +1,6 @@
-ENV["RAILS_ENV"] = "test"
-require 'simplecov'
-SimpleCov.start if ENV["COVERAGE"] # ok
-
-require File.expand_path('../../config/environment', __FILE__)
-
+=begin
 require 'rails'
 require 'minitest/autorun'
-require 'minitest/rails'
 require 'json'
 require 'mocha/setup'
 
@@ -131,32 +125,6 @@ def configure_runcible
   end
 end
 
-def disable_glue_layers(services=[], models=[], force_reload=false)
-  @@model_service_cache ||= {}
-  @@model_service_cache = {} if force_reload
-  change = false
-
-  Katello.config[:use_cp]            = services.include?('Candlepin') ? false : true
-  Katello.config[:use_pulp]          = services.include?('Pulp') ? false : true
-  Katello.config[:use_foreman]       = services.include?('Foreman') ? false : true
-  Katello.config[:use_elasticsearch] = services.include?('ElasticSearch') ? false : true
-
-  cached_entry = {:cp=>Katello.config.use_cp, :pulp=>Katello.config.use_pulp, :es=>Katello.config.use_elasticsearch,
-                  :foreman => Katello.config.use_foreman}
-  models.each do |model|
-    if @@model_service_cache[model] != cached_entry
-      Object.send(:remove_const, model)
-      load "app/models/#{model.underscore}.rb"
-      @@model_service_cache[model] = cached_entry
-      change = true
-    end
-  end
-
-  if change
-    ActiveSupport::Dependencies::Reference.clear!
-    FactoryGirl.reload
-  end
-end
 
 class ResourceTypeBackup
   @@types_backup = ResourceType::TYPES.clone
@@ -216,3 +184,4 @@ begin # load reporters for RubyMine if available
 rescue LoadError
   # ignored
 end if ENV['RUBYMINE']
+=end

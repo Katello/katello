@@ -10,8 +10,9 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'models/model_spec_helper'
-include OrchestrationHelper
+require File.expand_path("../models/model_spec_helper", File.dirname(__FILE__))
+
+include Katello::OrchestrationHelper
 
 module LoginHelperMethods
   def login_user options={}
@@ -31,8 +32,6 @@ module LoginHelperMethods
       return @user
     else
       @mock_user = options[:user]
-      @mock_user ||= mock_model(User, :login=>"test_mock_user", :password=>"Password", :experimental_ui => false,
-                                :mail=>"test_mock_user@somewhere.com", :page_size=>25).as_null_object
       request.env['warden'] = mock(Warden, :user => @mock_user, :authenticate => @mock_user, :authenticate! => @mock_user)
       controller.stub!(:require_org).and_return({})
       return @mock_user

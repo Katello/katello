@@ -10,8 +10,9 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'models/model_spec_helper'
+require File.expand_path("../models/model_spec_helper", File.dirname(__FILE__))
 
+module Katello
 module AuthorizationHelperMethods
   include OrchestrationHelper
 
@@ -89,11 +90,13 @@ module AuthorizationHelperMethods
   end
 
   def user_with_permissions
+    setup_users
     disable_user_orchestration
 
     @users_count ||= 0
     @users_count += 1
-    user = User.create!(:login => "tmp#{@users_count}", :password => "tmp_password", :mail => "tmp#{@users_count}@someserver.com")
+    user = User.find_by_login("one")
+    user.save!
     yield UserPermissionsGenerator.new(user) if block_given?
     user
   end
@@ -110,4 +113,4 @@ module AuthorizationHelperMethods
   end
 
 end
-
+end

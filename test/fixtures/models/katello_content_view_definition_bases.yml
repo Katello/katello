@@ -1,0 +1,38 @@
+simple_cvd:
+  name:         Simple CVD
+  label:        simple_cvd
+  description:  Simple CVD
+  composite:    false
+  type:         Katello::ContentViewDefinition
+  organization_id: <%= ActiveRecord::Fixtures.identify(:acme_corporation) %>
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
+
+populated_cvd:
+  name:         Populated CVD
+  label:        populated_cvd
+  description:  This CVD has products, repositories, filters and rules
+  composite:    false
+  type:         Katello::ContentViewDefinition
+  organization_id: <%= ActiveRecord::Fixtures.identify(:acme_corporation) %>
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
+
+populated_with_repos_and_filters:
+  name:         Populated CVD With Repos and Filters
+  label:        populated_with_repos_and_filters
+  description:  This CVD has repositories, filters and rules
+  composite:    false
+  type:         Katello::ContentViewDefinition
+  organization_id: <%= ActiveRecord::Fixtures.identify(:acme_corporation) %>
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
+
+composite_def:
+  name:         Composite content view definition
+  label:        Composite
+  composite:    true
+  type:         Katello::ContentViewDefinition
+  organization_id: <%= ActiveRecord::Fixtures.identify(:acme_corporation) %>
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
