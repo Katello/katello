@@ -14,7 +14,7 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
 
   before_filter :find_organization, :only => [:index, :show]
   before_filter :find_product, :only => [:index, :create]
-  before_filter :find_repository, :only => [:show, :update, :destroy]
+  before_filter :find_repository, :only => [:show, :update, :destroy, :sync]
   before_filter :authorize
 
   def_param_group :repo do
@@ -28,17 +28,19 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
   end
 
   def rules
-    index_test        = lambda { Repository.any_readable?(@organization) }
-    create_test       = lambda { Repository.creatable?(@product) }
-    read_test         = lambda { @repository.readable? }
-    edit_test         = lambda { @repository.editable? }
+    index_test  = lambda { Repository.any_readable?(@organization) }
+    create_test = lambda { Repository.creatable?(@product) }
+    read_test   = lambda { @repository.readable? }
+    edit_test   = lambda { @repository.editable? }
+    sync_test   = lambda { @repository.syncable? }
 
     {
       :index    => index_test,
       :create   => create_test,
       :show     => read_test,
       :update   => edit_test,
-      :destroy  => edit_test
+      :destroy  => edit_test,
+      :sync     => sync_test
     }
   end
 
@@ -121,6 +123,12 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
     @repository.destroy
 
     respond_for_destroy
+  end
+
+  api :POST, "/repositories/:id/sync", "Synchronise repository"
+  param :id, :identifier, :required => true, :desc => "repository id"
+  def sync
+    respond_for_async(:resource => @repository.sync.first)
   end
 
   protected

@@ -8,20 +8,20 @@
   <header class="details-header">
     <h2 class="fl" translate>Product {{ product.name }}</h2>
 
-    <div class="details-actions fr">
-      <button class="btn btn-danger"
+    <div class="details-action-group fr">
+      <button class="btn btn-danger details-action"
               translate
               ng-hide="product.readonly"
               ng-click="showConfirm = true"
               ng-disabled="!product.permissions.deletable">
         Remove Product
       </button>
-      <button class="btn" ui-sref="products.index">
+      <button class="btn details-action" ui-sref="products.index">
         <i class="icon-remove"></i>
         {{ "Close" | translate }}
       </button>
-      <div translate alch-confirm-modal="removeProduct(product)" show-confirm="showConfirm">
-        Are you sure you want to remove product "{{ product.name }}"?
+      <div alch-confirm-modal="removeProduct(product)" show-confirm="showConfirm">
+        <span translate>Are you sure you want to remove product "{{ product.name }}"?</span>
       </div>
     </div>
   </header>

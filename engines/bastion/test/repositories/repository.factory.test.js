@@ -61,5 +61,14 @@ describe('Factory: Repository', function() {
         });
     });
 
+    it('provides a way to sync a repository', function() {
+        $httpBackend.expectPOST('/katello/api/repositories/1/sync?organization_id=ACME').respond({'state': 'running'});
+
+        Repository.sync({id: 1}, function(task) {
+            expect(task).toBeDefined();
+            expect(task['state']).toBe('running');
+        });
+    });
+
 });
 

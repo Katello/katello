@@ -175,7 +175,7 @@ class RepositoryInstanceTest < RepositoryTestBase
     assert new_custom_repo.save
     assert new_custom_repo.persisted?
     assert_equal "", new_custom_repo.reload.feed
-    refute new_custom_repo.syncable?
+    refute new_custom_repo.feed?
 
     rhel = Repository.find(repositories(:rhel_6_x86_64))
     rhel.feed = ""

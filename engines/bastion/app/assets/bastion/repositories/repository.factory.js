@@ -29,7 +29,8 @@ angular.module('Bastion.repositories').factory('Repository',
             {id: '@id', 'organization_id': CurrentOrganization},
             {
                 update: { method: 'PUT' },
-                query: { method: 'GET' }
+                query: { method: 'GET' },
+                sync: {method: 'POST', params: {action: 'sync'}}
             }
         );
 

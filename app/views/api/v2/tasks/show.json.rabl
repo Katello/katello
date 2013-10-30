@@ -1,4 +1,4 @@
-object @task
+object @resource
 
 extends 'api/v2/common/org_reference'
 extends 'api/v2/common/timestamps'
