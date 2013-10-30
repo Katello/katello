@@ -78,7 +78,6 @@ module Orchestrate
         @tasks.delete_if do |task|
           as_pulp_user(task[:pulp_user]) do
             pulp_task = ::Katello.pulp_server.resources.task.poll(task[:task_id])
-            Logging.logger['glue'].debug("Pulp task status is: #{pulp_task}")
             done = !! pulp_task[:finish_time]
             task[:action].update_progress(done, pulp_task)
             done
@@ -108,10 +107,12 @@ module Orchestrate
           pulp_tasks = pulp.repository.sync(input[:pulp_id], { override_config: sync_options })
           output[:pulp_tasks] = pulp_tasks
 
-          pulp_task = pulp_tasks.find do |task|
+          # TODO: would be better polling for the whole task group to make sure we're really finished at the end
+          sync_task = pulp_tasks.find do |task|
             task['tags'].include?("pulp:action:sync")
           end
-          output[:task_id] = pulp_task['task_id']
+          output[:sync_task] = sync_task
+          output[:task_id] = sync_task['task_id']
           suspend
         end
 
@@ -121,7 +122,24 @@ module Orchestrate
         end
 
         def update_progress(done, pulp_task)
-          output.update pulp_task_progress: pulp_task, done: done
+          output.update sync_task: pulp_task, done: done
+        end
+
+        def run_progress
+          sync_task = output[:sync_task]
+          if sync_task &&
+                sync_task[:progress] &&
+                sync_task[:progress][:yum_importer] &&
+                (content_progress = sync_task[:progress][:yum_importer][:content])
+            if content_progress[:size_total].to_i > 0
+              left = content_progress[:size_left].to_f / content_progress[:size_total]
+              return 1 - left
+            else
+              return 0.01
+            end
+          else
+            return 0.01
+          end
         end
 
         def run_progress_weight
