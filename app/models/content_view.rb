@@ -22,6 +22,7 @@ class ContentView < ActiveRecord::Base
   end
 
   before_destroy :confirm_not_promoted # RAILS3458: this needs to come before associations
+  before_destroy :confirm_no_systems
 
   belongs_to :content_view_definition
   alias_method :definition, :content_view_definition
@@ -42,6 +43,7 @@ class ContentView < ActiveRecord::Base
   has_many :changeset_content_views, :dependent => :destroy
   has_many :changesets, :through => :changeset_content_views
   has_many :activation_keys, :dependent => :destroy
+  has_many :systems, :dependent => :destroy
 
   validates :label, :uniqueness => {:scope => :organization_id},
                     :presence => true
@@ -429,6 +431,14 @@ class ContentView < ActiveRecord::Base
   def confirm_not_promoted
     if promoted?
       errors.add(:base, _("cannot be deleted if it has been promoted."))
+      return false
+    end
+    return true
+  end
+
+  def confirm_no_systems
+    if systems.any?
+      errors.add(:base, _("cannot be deleted if it has associated systems."))
       return false
     end
     return true

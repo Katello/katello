@@ -36,7 +36,8 @@ module ContentViewDefinitionsHelper
 
   def unable_to_remove_view
     _("Before removing this view, all promoted versions must first be deleted from their "\
-      "respective environments using a deletion changeset.")
+      "respective environments using a deletion changeset and any attached systems must "\
+      "be unassociated from this view.")
   end
 
   def publish_button(definition)
