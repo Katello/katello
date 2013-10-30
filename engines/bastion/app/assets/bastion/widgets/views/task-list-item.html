@@ -5,7 +5,7 @@
 
   <div class="detail">
     <span class="info-label">{{ "Task" | i18n }}</span>
-    <span class="info-value">{{ progressState }} Synchronization</span>
+    <span class="info-value">{{ task.action }}</span>
   </div>
   <div ng-class="task | progressClasses" class="progress progress-striped">
     <progress percent="task.progress * 100"></progress>
