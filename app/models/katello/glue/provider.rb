@@ -320,7 +320,7 @@ module Glue::Provider
           if self.failed_products.present?
             message << _("There are %d products having repositories that could not be created.")
             builder = Object.new.extend(ActionView::Helpers::UrlHelper, ActionView::Helpers::TagHelper)
-            path    = Katello.config.url_prefix + '/' + Rails.application.routes.url_helpers.refresh_products_providers_path(:id => self)
+            path    = Katello.config.url_prefix + '/' + Rails.application.routes.url_helpers.refresh_products_katello_providers_path(:id => self)
             link    = builder.link_to(_('repository refresh'),
                                       path,
                                       :method => :put,
