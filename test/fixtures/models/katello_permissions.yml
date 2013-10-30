@@ -1,0 +1,9 @@
+super_admin_perm:
+  name:           Super Admin Permission
+  description:    The keys to the kingdom.
+  all_tags:       true
+  all_verbs:      true
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
+  resource_type_id: <%= ActiveRecord::Fixtures.identify(:all) %>
+  role_id: <%= ActiveRecord::Fixtures.identify(:administrator) %>

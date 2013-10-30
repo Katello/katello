@@ -1,0 +1,11 @@
+dev_library_prior:
+  prior_id: <%= ActiveRecord::Fixtures.identify(:library) %>
+  environment_id: <%= ActiveRecord::Fixtures.identify(:dev) %>
+
+staging_library_prior:
+  prior_id: <%= ActiveRecord::Fixtures.identify(:library) %>
+  environment_id: <%= ActiveRecord::Fixtures.identify(:staging) %>
+
+candlepin_dev_library_prior:
+  prior_id: <%= ActiveRecord::Fixtures.identify(:candlepin_library) %>
+  environment_id: <%= ActiveRecord::Fixtures.identify(:candlepin_dev) %>

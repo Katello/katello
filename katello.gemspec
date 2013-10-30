@@ -13,7 +13,7 @@ Gem::Specification.new do |gem|
   gem.summary     = ""
   gem.description = ""
 
-  gem.files = Dir["{app,vendor,lib,db,config,engines}/**/*"] + ["LICENSE.txt", "Rakefile", "README.md"]
+  gem.files = Dir["{app,vendor,lib,db,config,engines}/**/*"] + ["LICENSE.txt", "README.md"]
   gem.require_paths = ["lib"]
 
   # Core Dependencies
@@ -62,4 +62,11 @@ Gem::Specification.new do |gem|
   gem.add_dependency "compass-960-plugin"
   gem.add_dependency "haml-rails"
   gem.add_dependency "ui_alchemy-rails", '1.0.12'
+
+  # Testing
+  gem.add_dependency "factory_girl_rails", "~> 1.4.0"
+  gem.add_dependency "minitest-tags"
+  gem.add_dependency "minitest-predicates"
+  gem.add_dependency "mocha"
+
 end

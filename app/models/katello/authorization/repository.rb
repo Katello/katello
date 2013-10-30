@@ -80,7 +80,7 @@ module Authorization::Repository
     end
 
     def editable_in_library(org)
-      where(environment_id: org.library.id, product_id: Product.editable(org).pluck("products.id"))
+      where(environment_id: org.library.id, product_id: Product.editable(org).pluck("#{Katello::Product.table_name}.id"))
     end
 
     def readable_in_org(org, *skip_library)

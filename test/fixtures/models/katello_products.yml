@@ -1,0 +1,26 @@
+fedora:
+  name:         Fedora
+  description:  An open source Linux distribution.
+  label:        fedora_label
+  cp_id:        fedora
+  provider_id:  <%= ActiveRecord::Fixtures.identify(:fedora_hosted) %>
+
+redhat:
+  name:         Red Hat Linux
+  description:  A more Enterprisy fedora
+  cp_id:        redhat
+  label:        redhat_label
+  provider_id:  <%= ActiveRecord::Fixtures.identify(:redhat) %>
+
+puppet_product:
+  name:         Puppet Product
+  description:  A product for puppet content
+  cp_id:        puppet
+  label:        puppet_product
+  provider_id:  <%= ActiveRecord::Fixtures.identify(:puppet_labs) %>
+
+empty_product:
+  name:         Empty Product
+  cp_id:        empty_product
+  label:        empty_product
+  provider_id:  <%= ActiveRecord::Fixtures.identify(:fedora_hosted) %>
