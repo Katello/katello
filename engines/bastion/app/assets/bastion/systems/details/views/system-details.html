@@ -64,18 +64,14 @@
   <div class="flash_hud" ng-show="saveSuccess">
     <a class="control clickable" title="Close" ng-click="saveSuccess = false"></a>
     <ul class="flash_messages success">
-      <li>
-        {{ "Save successful" | i18n }}
-      </li>
+      <li translate>Save successful</li>
     </ul>
   </div>
 
   <div class="flash_hud" ng-show="saveError">
     <a class="control clickable" title="Close" ng-click="saveError = false"></a>
     <ul class="flash_messages error">
-      <li>
-        {{ "Error occurred saving:" | i18n }}
-      </li>
+      <li translate>Error occurred saving:</li>
       <ul>
         <li ng-repeat="error in errors">{{ error }}</li>
       </ul>

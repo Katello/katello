@@ -14,7 +14,7 @@
               ng-hide="product.readonly"
               ng-click="showConfirm = true"
               title="{{ (!product.permissions.deletable &&
-                     'You cannot remove this product because it was published to a content view or because you do not have permission.' | i18n)
+                     'You cannot remove this product because it was published to a content view or because you do not have permission.' | translate)
                      || '' }}"
               ng-disabled="!product.permissions.deletable">
         Remove Product
