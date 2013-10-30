@@ -1,21 +1,4 @@
-<div class="flash_hud" ng-show="saveSuccess">
-  <a class="control" title="Close" ng-click="saveSuccess = false"></a>
-  <ul class="flash_messages success">
-    <li translate>Update successful</li>
-  </ul>
-</div>
-
-<div class="flash_hud" ng-show="saveError">
-  <a class="control" title="Close" ng-click="saveError = false"></a>
-  <ul class="flash_messages error">
-    <li translate>Error occurred saving:</li>
-    <ul>
-      <li ng-repeat="error in errors">{{ error }}</li>
-    </ul>
-  </ul>
-</div>
-
-<button class="fr btn btn-primary" ng-click="autoAttach()" translate>Run Auto-Attach</button>
+<button class="fr btn btn-primary" ng-click="autoAttach()">{{ "Run Auto-Attach" | translate }}</button>
 <div class="details">
   <section>
     <h4 translate>Subscription Status Details</h4>

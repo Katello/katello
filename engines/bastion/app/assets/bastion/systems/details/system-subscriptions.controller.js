@@ -34,12 +34,15 @@ angular.module('Bastion.systems').controller('SystemSubscriptionsController',
             refresh;
 
         successHandler = function() {
-            $scope.saveSuccess = true;
+            refresh();
+            $scope.$parent.saveSuccess = true;
         };
 
         errorHandler = function(error) {
-            $scope.saveError = true;
-            $scope.errors = error.data["errors"];
+            $scope.$parent.saveError = true;
+            $scope.$parent.errors = error.data["errors"];
+            availableSubscriptionsNutupane.table.working = false;
+            currentSubscriptionsNutupane.table.working = false;
         };
 
         currentSubscriptionsNutupane = new Nutupane(SystemSubscription, {systemId: $scope.$stateParams.systemId});
@@ -73,10 +76,6 @@ angular.module('Bastion.systems').controller('SystemSubscriptionsController',
                         successHandler, errorHandler);
                 });
             }
-
-            if (selectedRows.length > 0) {
-                refresh();
-            }
         };
 
         $scope.attachSubscriptions = function() {
@@ -87,9 +86,6 @@ angular.module('Bastion.systems').controller('SystemSubscriptionsController',
                 SystemSubscription.save({systemId: $scope.system.uuid, pool: row['cp_id'], quantity: quantity}, successHandler, errorHandler);
             });
 
-            if (selectedRows.length > 0) {
-                refresh();
-            }
         };
 
         $scope.autoAttach = function () {

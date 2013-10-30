@@ -330,7 +330,7 @@ Src::Application.routes.draw do
       match '/environments/:environment_id/consumers' => 'systems#index', :via => :get
       match '/environments/:environment_id/consumers' => 'systems#create', :via => :post
       match '/consumers/:id' => 'systems#regenerate_identity_certificates', :via => :post
-      match '/users/:username/owners' => 'users#list_owners', :via => :get
+      match '/users/:username/owners' => 'users#list_owners', :via => :get, :constraints => {:username => /\S+/}
       match '/consumers/:id/certificates' => 'candlepin_proxies#get', :via => :get, :as => :proxy_consumer_certificates_path
       match '/consumers/:id/release' => 'candlepin_proxies#get', :via => :get, :as => :proxy_consumer_releases_path
       match '/consumers/:id/compliance' => 'candlepin_proxies#get', :via => :get, :as => :proxy_consumer_compliance_path

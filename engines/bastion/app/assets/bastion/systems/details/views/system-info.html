@@ -139,12 +139,12 @@
 
       <div class="detail">
         <span class="info-label" translate>OS</span>
-        <span class="info-value">{{ system.distribution_name }}</span>
+        <span class="info-value">{{ systemFacts.distribution["name"] }}</span>
       </div>
 
       <div class="detail">
         <span class="info-label" translate>Release</span>
-        <span class="info-value">{{ system.kernel  }}</span>
+        <span class="info-value">{{ systemFacts.uname["release"] }}</span>
       </div>
 
       <div class="detail">
@@ -158,7 +158,7 @@
       
       <div class="detail">
         <span class="info-label" translate>Arch</span>
-        <span class="info-value">{{ system.arch }}</span>
+        <span class="info-value">{{ systemFacts.uname["machine"] }}</span>
       </div>     
       
       <div class="detail">
@@ -177,8 +177,8 @@
       </div>
 
       <div class="detail">
-        <span class="info-label" translate>RAM</span>
-        <span class="info-value">{{ system.memory }}</span>
+        <span class="info-label" translate>RAM (GB)</span>
+        <span class="info-value">{{ memory(systemFacts) }}</span>
       </div>
 
       <div class="divider"></div>
