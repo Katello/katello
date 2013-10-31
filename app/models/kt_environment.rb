@@ -45,22 +45,24 @@ class KTEnvironment < ActiveRecord::Base
                                         :join_table => "environment_priors", :association_foreign_key => :environment_id, :readonly => true}
 
   has_many :repositories, dependent: :destroy, foreign_key: :environment_id
-  has_many :systems, :inverse_of => :environment, :dependent => :destroy,  :foreign_key => :environment_id
-  has_many :distributors, :inverse_of => :environment, :dependent => :destroy,  :foreign_key => :environment_id
+  has_many :systems, :inverse_of => :environment, :dependent => :destroy, :foreign_key => :environment_id
+  has_many :environment_system_groups, :dependent => :destroy, :inverse_of => :environment, :foreign_key => :environment_id
+  has_many :distributors, :inverse_of => :environment, :dependent => :destroy, :foreign_key => :environment_id
+  has_many :changesets, :dependent => :destroy, :inverse_of => :environment, :foreign_key => :environment_id
   has_many :working_changesets, :conditions => ["state != '#{Changeset::PROMOTED}'"],
-                                :foreign_key => :environment_id, :dependent => :destroy, :class_name => "Changeset",
-                                :dependent => :destroy, :inverse_of => :environment
+                                :foreign_key => :environment_id, :class_name => "Changeset",
+                                :inverse_of => :environment
 
   has_many :working_deletion_changesets, :conditions => ["state != '#{Changeset::DELETED}'"],
-                                         :foreign_key => :environment_id, :dependent => :destroy, :class_name => "DeletionChangeset",
-                                         :dependent => :destroy, :inverse_of => :environment
+                                         :foreign_key => :environment_id, :class_name => "DeletionChangeset",
+                                         :inverse_of => :environment
   has_many :working_promotion_changesets, :conditions => ["state != '#{Changeset::PROMOTED}'"],
-                                          :foreign_key => :environment_id, :dependent => :destroy, :class_name => "PromotionChangeset",
-                                          :dependent => :destroy, :inverse_of => :environment
+                                          :foreign_key => :environment_id, :class_name => "PromotionChangeset",
+                                          :inverse_of => :environment
 
   has_many :changeset_history, :conditions => {:state => Changeset::PROMOTED},
-                               :foreign_key => :environment_id, :dependent => :destroy, :class_name => "Changeset",
-                               :dependent => :destroy, :inverse_of => :environment
+                               :foreign_key => :environment_id, :class_name => "Changeset",
+                               :inverse_of => :environment
 
   has_many :content_view_version_environments, :foreign_key => :environment_id, :dependent => :destroy
   has_many :content_view_versions, :through => :content_view_version_environments, :inverse_of => :environments

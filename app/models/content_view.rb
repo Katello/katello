@@ -23,7 +23,7 @@ class ContentView < ActiveRecord::Base
 
   before_destroy :confirm_not_promoted # RAILS3458: this needs to come before associations
 
-  belongs_to :content_view_definition
+  belongs_to :content_view_definition, :inverse_of => :content_views
   alias_method :definition, :content_view_definition
   belongs_to :organization, :inverse_of => :content_views
 
@@ -32,16 +32,15 @@ class ContentView < ActiveRecord::Base
   has_many :content_view_versions, :dependent => :destroy
   alias_method :versions, :content_view_versions
 
-  belongs_to :environment_default, :class_name => "KTEnvironment", :inverse_of => :default_content_view,
-                                   :foreign_key => :environment_default_id # TODO: this relation seems to be broken
-
   has_many :component_content_views, :dependent => :destroy
+  has_many :distributors, :dependent => :restrict
   has_many :composite_content_view_definitions,
     :through => :component_content_views, :source => "content_view_definition"
 
   has_many :changeset_content_views, :dependent => :destroy
   has_many :changesets, :through => :changeset_content_views
-  has_many :activation_keys, :dependent => :destroy
+  has_many :activation_keys, :dependent => :restrict
+  has_many :systems, :dependent => :restrict
 
   validates :label, :uniqueness => {:scope => :organization_id},
                     :presence => true

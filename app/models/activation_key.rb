@@ -15,9 +15,9 @@ class ActivationKey < ActiveRecord::Base
   include Glue::ElasticSearch::ActivationKey if Katello.config.use_elasticsearch
   include Authorization::ActivationKey
 
-  belongs_to :organization
-  belongs_to :environment, :class_name => "KTEnvironment"
-  belongs_to :user
+  belongs_to :organization, :inverse_of => :activation_keys
+  belongs_to :environment, :class_name => "KTEnvironment", :inverse_of => :activation_keys
+  belongs_to :user, :inverse_of => :activation_keys
   belongs_to :content_view, :inverse_of => :activation_keys
 
   has_many :key_pools, :dependent => :destroy

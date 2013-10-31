@@ -11,6 +11,6 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class SystemActivationKey < ActiveRecord::Base
-  belongs_to :system
-  belongs_to :activation_key
+  belongs_to :system, :inverse_of => :system_activation_keys
+  belongs_to :activation_key, :inverse_of => :system_activation_keys
 end
