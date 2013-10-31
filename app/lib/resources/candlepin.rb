@@ -104,8 +104,10 @@ module Resources
           end
         end
 
+# rubocop:disable ParameterLists
         def create(env_id, key, name, type, facts, installed_products, autoheal = true, release_ver = nil,
-                   service_level = "", capabilities = nil)
+                   service_level = "", uuid = "", capabilities = nil)
+# rubocop:enable ParameterLists
 
           # These defaults give distributors full capabilities with all types of subscriptions
           if type == 'candlepin'
@@ -120,6 +122,7 @@ module Resources
                    :autoheal => autoheal,
                    :releaseVer => release_ver,
                    :serviceLevel => service_level,
+                   :uuid => uuid,
                    :capabilities => capabilities}
           response = self.post(url, attrs.to_json, self.default_headers).body
           JSON.parse(response).with_indifferent_access
