@@ -39,6 +39,7 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
       :index    => index_test,
       :create   => create_test,
       :show     => read_test,
+      :sync     => edit_test,
       :update   => edit_test,
       :destroy  => edit_test,
       :sync     => sync_test
@@ -109,6 +110,14 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
     respond_for_show(:resource => @repository)
   end
 
+  api :POST, "/repositories/:id/sync", "Sync a repository"
+  param :id, :identifier, :required => true, :desc => "repository id"
+  def sync
+    uuid, feature = Orchestrate.trigger(Orchestrate::Katello::RepositorySync,
+                                        @repository)
+    render :json => { uuid: uuid }
+  end
+
   api :PUT, "/repositories/:id", "Update a repository"
   param :id, :identifier, :required => true, :desc => "repository id"
   param :gpg_key_id, :number, :desc => "id of a gpg key that will be assigned to this repository"
@@ -124,12 +133,6 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
     @repository.destroy
 
     respond_for_destroy
-  end
-
-  api :POST, "/repositories/:id/sync", "Synchronise repository"
-  param :id, :identifier, :required => true, :desc => "repository id"
-  def sync
-    respond_for_async(:resource => @repository.sync.first)
   end
 
   protected

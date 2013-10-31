@@ -213,6 +213,7 @@ Src::Application.routes.draw do
         api_resources :sync, :only => [:index] do
           delete :index, :on => :collection, :action => :cancel
         end
+
         api_resources :packages, :only => [:index, :show] do
           get :search, :on => :collection
         end
