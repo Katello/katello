@@ -16,6 +16,7 @@ describe('Controller: SystemDetailsController', function() {
         $controller,
         System,
         Organization,
+        MenuExpander,
         mockSystem;
 
     beforeEach(module('Bastion.systems',
@@ -58,6 +59,7 @@ describe('Controller: SystemDetailsController', function() {
         };
 
         Organization = {};
+        MenuExpander = {};
 
         spyOn(System, 'get').andCallThrough();
 
@@ -67,9 +69,14 @@ describe('Controller: SystemDetailsController', function() {
             $scope: $scope,
             $state: $state,
             System: System,
-            Organization: Organization
+            Organization: Organization,
+            MenuExpander: MenuExpander
         });
     }));
+
+    it("sets the menu expander on the scope", function() {
+        expect($scope.menuExpander).toBe(MenuExpander);
+    });
 
     it("gets the system using the System service and puts it on the $scope.", function() {
         expect(System.get).toHaveBeenCalledWith({id: 2}, jasmine.any(Function));

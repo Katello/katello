@@ -19,13 +19,15 @@
  * @requires $q
  * @requires Product
  * @requires GPGKey
+ * @requires MenuExpander
  *
  * @description
  *   Provides the functionality for the product details action pane.
  */
 angular.module('Bastion.products').controller('ProductDetailsInfoController',
-    ['$scope', '$q', 'Product', 'GPGKey', function($scope, $q, Product, GPGKey) {
+    ['$scope', '$q', 'Product', 'GPGKey', 'MenuExpander', function($scope, $q, Product, GPGKey, MenuExpander) {
 
+        $scope.menuExpander = MenuExpander;
         $scope.saveSuccess = false;
         $scope.saveError = false;
         $scope.panel = $scope.panel || {loading: false};

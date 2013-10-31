@@ -58,6 +58,11 @@
           Errata
         </a>
       </li>
+      <li ng-repeat="menuItem in menuExpander.getMenu('system')">
+        <a href="{{ menuItem.url }}">
+          {{ menuItem.label }}
+        </a>
+      </li>
     </ul>
   </nav>
 
