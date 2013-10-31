@@ -10,21 +10,20 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-include OrganizationHelperMethods
-
+module Katello
 module SystemHelperMethods
   def setup_system_creation
-    Resources::Candlepin::Consumer.stub(:create).and_return({:owner=> { :key=> 'test_organization'}})
-    Resources::Candlepin::Consumer.stub(:update).and_return({})
-    Resources::Candlepin::Consumer.stub(:entitlements).and_return({})
-    Resources::Candlepin::Consumer.stub(:compliance).and_return({:compliance=>true, :partiallyCompliantProducts=>[], :nonCompliantProducts=>[]}.with_indifferent_access)
-    Resources::Candlepin::Consumer.stub(:available_pools).and_return([])
-    Resources::Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
-    Resources::Candlepin::Consumer.stub!(:update).and_return(true)
+    Resources::Candlepin::Consumer.stubs(:create).returns({:owner=> { :key=> 'test_organization'}})
+    Resources::Candlepin::Consumer.stubs(:update).returns({})
+    Resources::Candlepin::Consumer.stubs(:entitlements).returns({})
+    Resources::Candlepin::Consumer.stubs(:compliance).returns({:compliance=>true, :partiallyCompliantProducts=>[], :nonCompliantProducts=>[]}.with_indifferent_access)
+    Resources::Candlepin::Consumer.stubs(:available_pools).returns([])
+    Resources::Candlepin::Consumer.stubs(:create).returns({:uuid => uuid, :owner => {:key => uuid}})
+    Resources::Candlepin::Consumer.stubs(:update).returns(true)
 
     if Katello.config.katello?
-      Katello.pulp_server.extensions.consumer.stub!(:create).and_return({ :id => uuid })
-      Katello.pulp_server.extensions.consumer.stub!(:update).and_return(true)
+      Katello.pulp_server.extensions.consumer.stubs(:create).returns({ :id => uuid })
+      Katello.pulp_server.extensions.consumer.stubs(:update).returns(true)
     end
     new_test_org
   end
@@ -32,7 +31,7 @@ module SystemHelperMethods
   def create_system attrs
     if attrs.with_indifferent_access[:uuid]
       required_uuid = attrs.with_indifferent_access[:uuid]
-      Resources::Candlepin::Consumer.stub!(:create).and_return({:uuid => required_uuid, :owner => {:key => required_uuid}})
+      Resources::Candlepin::Consumer.stubs(:create).returns({:uuid => required_uuid, :owner => {:key => required_uuid}})
     end
 
     if attrs[:environment] && !attrs[:environment].library? && !attrs[:content_view]
@@ -82,9 +81,10 @@ module SystemHelperMethods
   def stub_consumer_packages_install(expected_response, refresh_response = nil)
     if Katello.config.katello?
       refresh_response ||= expected_response
-      Katello.pulp_server.extensions.consumer.stub!(:install_content).and_return(expected_response)
-      Katello.pulp_server.resources.task.stub!(:poll).and_return(refresh_response)
+      Katello.pulp_server.extensions.consumer.stubs(:install_content).returns(expected_response)
+      Katello.pulp_server.resources.task.stubs(:poll).returns(refresh_response)
     end
   end
 
+end
 end

@@ -10,8 +10,9 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require './test/models/authorization/authorization_base'
+require File.expand_path("authorization_base", File.dirname(__FILE__))
 
+module Katello
 class RepositoryAuthorizationAdminTest < AuthorizationTestBase
 
   def setup
@@ -28,7 +29,7 @@ class RepositoryAuthorizationAdminTest < AuthorizationTestBase
   end
 
   def test_deletable?
-    repository = Repository.find(repositories(:fedora_17_x86_64_library_view))
+    repository = Repository.find(katello_repositories(:fedora_17_x86_64_library_view))
     assert repository.deletable?
   end
 
@@ -74,7 +75,7 @@ class RepositoryAuthorizationNonAuthUserTest < AuthorizationTestBase
 
   def setup
     super
-    User.current = User.find(users(:no_perms_user))
+    User.current = User.find(users(:one))
   end
 
   def test_editable
@@ -125,4 +126,5 @@ class RepositoryAuthorizationNonAuthUserTest < AuthorizationTestBase
     refute Repository.any_contents_readable_in_org?(@acme_corporation)
   end
 
+end
 end

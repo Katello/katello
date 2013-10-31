@@ -1,18 +1,18 @@
 FactoryGirl.define do
   factory :changeset do
     name "changeset"
-    state Changeset::NEW
+    state Katello::Changeset::NEW
   end
 
   factory :promotion_changeset do
     name "promotion changeset"
-    state Changeset::NEW
-    type "PromotionChangeset"
+    state Katello::Changeset::NEW
+    type "Katello::PromotionChangeset"
   end
 
   factory :deletion_changeset do
     sequence(:name) {|n| "deletion_changeset#{n}"}
-    state Changeset::NEW
-    type "DeletionChangeset"
+    state Katello::Changeset::NEW
+    type "Katello::DeletionChangeset"
   end
 end

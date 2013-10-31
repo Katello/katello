@@ -45,6 +45,8 @@ module Katello
       Rake::Task['db:seed'].enhance do
         Katello::Engine.load_seed
       end
+      load "#{Katello::Engine.root}/lib/katello/tasks/test.rake"
+      load "#{Katello::Engine.root}/lib/katello/tasks/jenkins.rake"
     end
 
   end

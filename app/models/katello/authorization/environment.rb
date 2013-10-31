@@ -76,7 +76,7 @@ module Authorization::Environment
       if ::User.allowed_all_tags?(verbs, resource, org)
         where(:organization_id => org)
       else
-        where("environments.id in (#{::User.allowed_tags_sql(verbs, resource, org)})")
+        where("#{Katello::KTEnvironment.table_name}.id in (#{User.allowed_tags_sql(verbs, resource, org)})")
       end
     end
 

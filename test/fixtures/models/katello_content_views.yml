@@ -1,0 +1,78 @@
+acme_default:
+  name:           ACME Default ContentView
+  label:          org_default_label
+  default:        true
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
+  organization_id: <%= ActiveRecord::Fixtures.identify(:acme_corporation) %>
+
+
+#View published only to library
+library_view:
+  name:           Published LIbrary view
+  label:          'published_library_view'
+  default:        false
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
+  organization_id: <%= ActiveRecord::Fixtures.identify(:acme_corporation) %>
+
+#view published to library and dev
+library_dev_view:
+  name:           Published Library and dev view
+  label:          published_dev_view
+  default:        false
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
+  organization_id: <%= ActiveRecord::Fixtures.identify(:acme_corporation) %>
+
+
+candlepin_default_cv:
+  name:           candlepin Default ContentView
+  label:          candlepin_library_default_cv
+  default:        true
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
+  organization_id: <%= ActiveRecord::Fixtures.identify(:candlepin_org) %>
+
+
+# For use with glue/candlepin tests
+candlepin_library_cv:
+  name:           Candlepin Library Content View
+  label:          candlepin_library_cv
+  default:        false
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
+  organization_id: <%= ActiveRecord::Fixtures.identify(:candlepin_org) %>
+
+candlepin_library_dev_cv:
+  name:           Candlepin Library and Dev Content View
+  label:          candlepin_library_dev_cv
+  default:        false
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
+  organization_id: <%= ActiveRecord::Fixtures.identify(:candlepin_org) %>
+
+component_view_1:
+  name:           Component view 1
+  label:          component_view_1
+  default:        false
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
+  organization_id: <%= ActiveRecord::Fixtures.identify(:acme_corporation) %>
+
+component_view_2:
+  name:           Component view 2
+  label:          component_view_2
+  default:        false
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
+  organization_id: <%= ActiveRecord::Fixtures.identify(:acme_corporation) %>
+
+composite_view:
+  name:           Composite view
+  label:          composite_view
+  default:        false
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
+  content_view_definition: <%= ActiveRecord::Fixtures.identify(:composite_def) %>
+  organization_id: <%= ActiveRecord::Fixtures.identify(:acme_corporation) %>
