@@ -46,7 +46,7 @@ else
              when :production
                basic_groups
              when :development
-               basic_groups + [:development, :debugging, :build, :development_boost, :assets]
+               basic_groups + [:development, :debugging, :build, :assets]
              when :test
                # TODO: replace ENV['TRAVIS'] with configuration
                basic_groups + [:development, :test, (:debugging if ENV['TRAVIS'] != 'true')]

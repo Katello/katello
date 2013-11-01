@@ -357,8 +357,6 @@ Requires:        rubygem(gettext) >= 1.9.3
 Requires:        rubygem(ruby_parser)
 Requires:        rubygem(sexp_processor)
 Requires:        rubygem(factory_girl_rails) >= 1.4.0
-# dependencies from bundler.d/development_boost.rb
-Requires:        rubygem(rails-dev-boost)
 # dependencies from bundler.d/apipie.rb
 Requires:        rubygem(maruku)
 
@@ -453,7 +451,6 @@ rm -f .rubocop.yml
     rm -f bundler.d/coverage.rb
     rm -f bundler.d/debugging.rb
     rm -f bundler.d/development.rb
-    rm -f bundler.d/development_boost.rb
     rm -f bundler.d/optional.rb
     rm -rf bundler.d/assets.rb
 %endif
@@ -878,7 +875,6 @@ usermod -a -G katello-shared tomcat
 %files devel
 %{homedir}/bundler.d/development.rb
 %{homedir}/bundler.d/assets.rb
-%{homedir}/bundler.d/development_boost.rb
 %{homedir}/lib/tasks/yard.rake
 %{homedir}/lib/tasks/hudson.rake
 %{homedir}/lib/tasks/jsroutes.rake
