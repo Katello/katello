@@ -10,11 +10,11 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'minitest_helper'
-require './test/support/pulp/repository_support'
+require 'katello_test_helper'
+require 'support/pulp/repository_support'
 
-class GluePulpPuppetModuleTest < MiniTest::Rails::ActiveSupport::TestCase
-  fixtures :all
+module Katello
+class GluePulpPuppetModuleTest < ActiveSupport::TestCase
 
   def setup
     configure_runcible
@@ -25,8 +25,7 @@ class GluePulpPuppetModuleTest < MiniTest::Rails::ActiveSupport::TestCase
 
     VCR.insert_cassette('glue_pulp_puppet_module')
 
-    User.current = User.find(users(:admin))
-    @repository = Repository.find(repositories(:p_forge))
+    @repository = Repository.find(katello_repositories(:p_forge))
     RepositorySupport.create_and_sync_repo(@repository)
 
     @names = ["cron", "httpd", "pureftpd", "samba"]
@@ -51,7 +50,7 @@ class GluePulpPuppetModuleTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def test_cloned_puppet_modules
-    @dev_repo = Repository.find(repositories(:dev_p_forge))
+    @dev_repo = Repository.find(katello_repositories(:dev_p_forge))
     @dev_repo.relative_path = "/test_path/"
     @dev_repo.create_pulp_repo
 
@@ -67,7 +66,7 @@ class GluePulpPuppetModuleTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def test_generate_unit_data
-    path = File.join(Rails.root, "test/fixtures/puppet/puppetlabs-ntp-2.0.1.tar.gz")
+    path = File.join(Katello::Engine.root, "test/fixtures/puppet/puppetlabs-ntp-2.0.1.tar.gz")
     unit_key, unit_metadata = PuppetModule.generate_unit_data(path)
 
     assert_equal "puppetlabs", unit_key["author"]
@@ -77,4 +76,5 @@ class GluePulpPuppetModuleTest < MiniTest::Rails::ActiveSupport::TestCase
     assert_nil unit_metadata[:name]
     assert_nil unit_metadata[:author]
   end
+end
 end

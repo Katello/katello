@@ -10,25 +10,19 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'minitest_helper'
-require './test/support/pulp/repository_support'
-require './test/support/pulp/user_support'
+require 'katello_test_helper'
+require 'support/pulp/repository_support'
 
-class GluePulpConsumerTestBase < MiniTest::Rails::ActiveSupport::TestCase
-  extend ActiveRecord::TestFixtures
+module Katello
+class GluePulpConsumerTestBase < ActiveSupport::TestCase
   include RepositorySupport
 
-  fixtures :all
-
   def self.before_suite
-    @loaded_fixtures = load_fixtures
-    configure_runcible
-
     services  = ['Candlepin', 'ElasticSearch', 'Foreman']
     models    = ['System', 'Repository', 'User']
     disable_glue_layers(services, models)
-
-    User.current = User.find(@loaded_fixtures['users']['admin']['id'])
+    configure_runcible
+    super
   end
 
 end
@@ -38,7 +32,7 @@ class GluePulpConsumerTestCreateDestroy < GluePulpConsumerTestBase
 
   def setup
     VCR.insert_cassette('pulp/consumer/create')
-    @simple_server = System.find(systems(:simple_server).id)
+    @simple_server = System.find(katello_systems(:simple_server).id)
   end
 
   def teardown
@@ -57,7 +51,7 @@ class GluePulpConsumerDeleteTest < GluePulpConsumerTestBase
 
   def setup
     VCR.insert_cassette('pulp/consumer/delete')
-    @simple_server = System.find(systems(:simple_server).id)
+    @simple_server = System.find(katello_systems(:simple_server).id)
     @simple_server.set_pulp_consumer
   end
 
@@ -80,7 +74,7 @@ class GluePulpConsumerTest < GluePulpConsumerTestBase
 
   def setup
     VCR.insert_cassette('pulp/consumer/consumer')
-    @simple_server = System.find(systems(:simple_server).id)
+    @simple_server = System.find(katello_systems(:simple_server).id)
     @simple_server.set_pulp_consumer
   end
 
@@ -114,15 +108,13 @@ class GluePulpConsumerBindTest < GluePulpConsumerTestBase
     super
     VCR.insert_cassette('pulp/consumer/bind')
 
-    Pulp::UserSupport.setup_hidden_user
-    RepositorySupport.create_and_sync_repo(@loaded_fixtures['repositories']['fedora_17_x86_64']['id'])
+    RepositorySupport.create_and_sync_repo(@loaded_fixtures['katello_repositories']['fedora_17_x86_64']['id'])
 
-    @@simple_server = System.find(@loaded_fixtures['systems']['simple_server']['id'])
+    @@simple_server = System.find(@loaded_fixtures['katello_systems']['simple_server']['id'])
     @@simple_server.set_pulp_consumer
   end
 
   def self.after_suite
-    Pulp::UserSupport.delete_hidden_user
     RepositorySupport.destroy_repo
     @@simple_server.del_pulp_consumer
     VCR.eject_cassette
@@ -146,15 +138,13 @@ class GluePulpConsumerRequiresBoundRepoTest < GluePulpConsumerTestBase
     super
     VCR.insert_cassette('pulp/consumer/content')
 
-    Pulp::UserSupport.setup_hidden_user
-    RepositorySupport.create_and_sync_repo(@loaded_fixtures['repositories']['fedora_17_x86_64']['id'])
-    @@simple_server = System.find(@loaded_fixtures['systems']['simple_server']['id'])
+    RepositorySupport.create_and_sync_repo(@loaded_fixtures['katello_repositories']['fedora_17_x86_64']['id'])
+    @@simple_server = System.find(@loaded_fixtures['katello_systems']['simple_server']['id'])
     @@simple_server.set_pulp_consumer
     @@simple_server.enable_yum_repos([RepositorySupport.repo.pulp_id])
   end
 
   def self.after_suite
-    Pulp::UserSupport.delete_hidden_user
     RepositorySupport.destroy_repo
     @@simple_server.del_pulp_consumer if defined? @@simple_server
     VCR.eject_cassette
@@ -222,4 +212,5 @@ class GluePulpConsumerRequiresBoundRepoTest < GluePulpConsumerTestBase
     assert_includes task['tags'], 'pulp:action:unit_install'
   end
 
+end
 end

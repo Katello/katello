@@ -42,12 +42,12 @@ module Glue::Pulp::Errata
 
       def self.find(id)
         erratum_attrs = Katello.pulp_server.extensions.errata.find_by_unit_id(id)
-        ::Errata.new(erratum_attrs) if !erratum_attrs.nil?
+        Katello::Errata.new(erratum_attrs) if !erratum_attrs.nil?
       end
 
       def self.find_by_errata_id(id)
         erratum_attrs = Katello.pulp_server.extensions.errata.find(id)
-        ::Errata.new(erratum_attrs) if !erratum_attrs.nil?
+        Katello::Errata.new(erratum_attrs) if !erratum_attrs.nil?
       end
 
       def self.applicable_for_consumers(uuids, type = nil)
@@ -75,10 +75,10 @@ module Glue::Pulp::Errata
       end
 
       def self.list_by_filter_clauses(clauses)
-        errata = Katello.pulp_server.extensions.errata.search(::Errata::CONTENT_TYPE, :filters => clauses)
+        errata = Katello.pulp_server.extensions.errata.search(Katello::Errata::CONTENT_TYPE, :filters => clauses)
         if errata
           result = errata.collect do |attrs|
-            ::Errata.new(attrs) if attrs
+            Katello::Errata.new(attrs) if attrs
           end
           result.compact
         else
@@ -113,7 +113,7 @@ module Glue::Pulp::Errata
 
       (self.pkglist || []).each do |pack_list|
         packages += pack_list['packages'].collect do |err_pack|
-          ::Package.new(err_pack)
+          Katello::Package.new(err_pack)
         end
       end
 

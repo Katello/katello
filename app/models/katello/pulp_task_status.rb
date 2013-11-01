@@ -34,7 +34,9 @@ class PulpTaskStatus < TaskStatus
 
   def self.wait_for_tasks(async_tasks)
     async_tasks = async_tasks.collect do |t|
-      PulpTaskStatus.using_pulp_task(t)
+      if !t.nil?
+        PulpTaskStatus.using_pulp_task(t)
+      end
     end
 
     timeout_count = 0

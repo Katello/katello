@@ -10,17 +10,15 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'minitest_helper'
-require './test/support/pulp/repository_support'
+require 'katello_test_helper'
+require 'support/pulp/repository_support'
 
-class GluePulpErrataTestBase < MiniTest::Rails::ActiveSupport::TestCase
-  extend ActiveRecord::TestFixtures
+module Katello
+class GluePulpErrataTestBase < ActiveSupport::TestCase
   include RepositorySupport
 
-  fixtures :all
-
   def self.before_suite
-    @loaded_fixtures = load_fixtures
+    super
     configure_runcible
 
     services  = ['Candlepin', 'ElasticSearch', 'Foreman']
@@ -29,8 +27,7 @@ class GluePulpErrataTestBase < MiniTest::Rails::ActiveSupport::TestCase
 
     VCR.insert_cassette('pulp/content/errata')
 
-    User.current = User.find(@loaded_fixtures['users']['admin']['id'])
-    RepositorySupport.create_and_sync_repo(@loaded_fixtures['repositories']['fedora_17_x86_64']['id'])
+    RepositorySupport.create_and_sync_repo(@loaded_fixtures['katello_repositories']['fedora_17_x86_64']['id'])
 
     @@erratum_id = RepositorySupport.repo.errata.select{ |errata| errata.errata_id == 'RHEA-2010:0002' }.first.id
   end
@@ -81,4 +78,5 @@ class GluePulpErrataTest < GluePulpErrataTestBase
     refute_empty product_ids
   end
 
+end
 end

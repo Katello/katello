@@ -5,7 +5,7 @@ module KatelloMiniTestRunner
 
     def before_suites
       # code to run before the first test
-      #configure_vcr
+      configure_vcr
     end
 
     def after_suites
