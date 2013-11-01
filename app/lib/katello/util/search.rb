@@ -52,7 +52,7 @@ module Util
     end
 
     def self.active_record_search_classes
-      ignore_list =  %w(CpConsumerUser Pool)
+      ignore_list =  %w(Katello::CpConsumerUser Katello::Pool)
       classes = get_subclasses(ActiveRecord::Base)
       classes = classes.select{ |c| !ignore_list.include?(c.name) && c.respond_to?(:index) }
 
