@@ -106,6 +106,18 @@ angular.module('Bastion.widgets')
             return classes.join(' ');
         };
     })
+    .directive('activetaskscount', ['taskListProvider', function(taskListProvider) {
+        return {
+            restrict: 'E',
+            template: '<span>{{count}}</span>',
+            link: function(scope) {
+                taskListProvider.registerUser(scope, { activeOnly: true }, '1');
+                scope.updateTasks = function(tasks) {
+                    scope.count = tasks.length;
+                }
+            }
+        };
+     }])
     .directive('tasklistitem', function() {
         return {
             restrict: 'E',
