@@ -1,5 +1,5 @@
 @import "katello_colors";
-@import "bastion/incubator/stylesheets/tables";
+//@import "bastion/incubator/stylesheets/tables";
 @import "bastion/incubator/stylesheets/alch-edit";
 @import "bastion/incubator/stylesheets/alch-confirm";
 
@@ -25,10 +25,10 @@ table.details-visible {
 
 .table {
   font-size: 110%;
-  margin-bottom: 0 !important;
+  margin-bottom: 0;
 
-  tr:hover td,
-  tr.focus td {
+  tr:hover td, tr:hover td a,
+  tr.focus td, tr.focus td a {
     background-color: $listhover_color;
     color: #FFF;
   }
