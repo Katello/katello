@@ -3,7 +3,7 @@ namespace :katello do
   task :refresh_cdn => [:environment] do
     Rails.logger.info("Refreshing CDN products")
     User.current = User.hidden.first
-    Organization.all.each do |org|
+    Katello::Organization.all.each do |org|
       Rails.logger.debug("CDN refresh for org #{org.name}")
       org.redhat_provider.refresh_products
     end
