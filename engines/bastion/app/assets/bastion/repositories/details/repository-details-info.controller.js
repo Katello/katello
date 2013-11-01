@@ -51,7 +51,7 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
         };
 
         $scope.triggerSync = function(repository) {
-           repository.$sync();
+           Repository.sync({ id: repository.id });
         };
 
         $scope.save = function(repository) {
