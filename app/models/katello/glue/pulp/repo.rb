@@ -464,8 +464,8 @@ module Glue::Pulp::Repo
       pulp_tasks = Katello.pulp_server.extensions.repository.sync(self.pulp_id, {:override_config => sync_options})
       pulp_task = pulp_tasks.select{ |i| i['tags'].include?("pulp:action:sync") }.first.with_indifferent_access
 
-      task      = PulpSyncStatus.using_pulp_task(pulp_task) do |t|
-        t.organization         = self.environment.organization
+      task = PulpSyncStatus.using_pulp_task(pulp_task) do |t|
+        t.organization = self.environment.organization
         t.parameters ||= {}
         t.parameters[:options] = options
       end

@@ -29,12 +29,12 @@ class TaskStatus < ActiveRecord::Base
 
   include Glue::ElasticSearch::TaskStatus if Katello.config.use_elasticsearch
 
-  belongs_to :organization, :inverse_of => :task_statuses
+  belongs_to :organization, :inverse_of => :task_statuses, :class_name => "Katello::Organization"
   belongs_to :user, :inverse_of => :task_statuses, :class_name => "::User"
 
   belongs_to :task_owner, :polymorphic => true
   # adding belongs_to :system allows us to perform joins with the owning system, if there is one
-  belongs_to :system, :foreign_key => :task_owner_id, :class_name => "System", :inverse_of => :task_statuses
+  belongs_to :system, :foreign_key => :task_owner_id, :class_name => "Katello::System", :inverse_of => :task_statuses
 
   # needed to delete providers w/ task status
   has_one :provider, :dependent => :nullify
