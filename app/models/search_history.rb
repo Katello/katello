@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 #
 class SearchHistory < ActiveRecord::Base
-  belongs_to :user
+  belongs_to :user, :inverse_of => :search_histories
   validates :params, :length => { :maximum => 255 }
   validates :path, :length => { :maximum => 255 }
 end

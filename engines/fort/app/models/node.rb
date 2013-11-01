@@ -15,7 +15,7 @@ require 'node_capability'
 class Node < ActiveRecord::Base
   include Authorization::Node
 
-  belongs_to :system
+  belongs_to :system, :inverse_of => :node
   has_many :capabilities, :class_name => 'NodeCapability', :dependent => :destroy
   # rubocop:disable HasAndBelongsToMany
   # TODO: change this into has_many :through association

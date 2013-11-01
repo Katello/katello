@@ -147,12 +147,22 @@ def disable_glue_layers(services=[], models=[], force_reload=false)
     if @@model_service_cache[model] != cached_entry
       Object.send(:remove_const, model)
       load "app/models/#{model.underscore}.rb"
+      if model == 'System' && defined?(Fort)
+        # include the concern again after System reloading
+        ::System.send :include, Fort::Concerns::System
+      end
       @@model_service_cache[model] = cached_entry
       change = true
     end
   end
 
   if change
+    # lose references of old classes
+    ActiveRecord::Base.subclasses.each do |model|
+      model.reflect_on_all_associations.each do |association|
+        association.instance_variable_set :@klass, nil
+      end
+    end
     ActiveSupport::Dependencies::Reference.clear!
     FactoryGirl.reload
   end
@@ -215,4 +225,4 @@ begin # load reporters for RubyMine if available
   MiniTest::Reporters.use!
 rescue LoadError
   # ignored
-end if ENV['RUBYMINE']
+end if ENV['RM_INFO']

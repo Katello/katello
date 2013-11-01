@@ -14,7 +14,7 @@ require 'content_node_capability'
 
 class NodeCapability < ActiveRecord::Base
 
-  belongs_to :node
+  belongs_to :node, :inverse_of => :capabilities
 
   serialize :configuration, Hash
 
