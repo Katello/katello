@@ -10,6 +10,7 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+module Katello
 class Dashboard::ErrataWidget < Dashboard::Widget
 
   def accessible?
@@ -22,7 +23,8 @@ class Dashboard::ErrataWidget < Dashboard::Widget
   end
 
   def content_path
-    errata_dashboard_index_path
+    errata_katello_dashboard_index_path
   end
 
+end
 end

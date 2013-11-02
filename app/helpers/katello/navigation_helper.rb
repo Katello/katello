@@ -18,7 +18,7 @@ module NavigationHelper
       # TODO: Get rid of this ugliness
       (
         'angular.module("Bastion.menu").constant("Menus", {
-          menu: ' + menu.to_json + ',
+          menu: ' + main_menu.to_json + ',
           adminMenu: ' + site_menu.to_json + ',
           bannerMenu: ' + banner_menu.to_json + ',
           notices: ' + add_notices.to_json + ',
@@ -36,7 +36,7 @@ module NavigationHelper
     }
   end
 
-  def menu
+  def main_menu
     if !Katello.config.katello?
       items = Navigation::Menus::Headpin::Main.new(current_organization).items
     else

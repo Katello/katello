@@ -20,7 +20,7 @@
 //= require "ui_alchemy/angular-sanitize/angular-sanitize"
 //= require "katello/angular-ui-router.js"
 //= require "ng-upload"
-//= require "angular-gettext"
+//= require "katello/angular-gettext"
 
 //= require "ui_alchemy/alchemy/alchemy"
 
