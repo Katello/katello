@@ -106,7 +106,8 @@ class ProvidersController < Katello::ApplicationController
     orphaned_product_ids = current_organization.redhat_provider.products.engineering.
         where("cp_id not in (?)", subscription_product_ids).pluck(:id)
 
-    render :partial => "providers/redhat/tab", :locals => {:tab_id => params[:tab], :orphaned_product_ids => orphaned_product_ids}
+    render :partial => "katello/providers/redhat/tab",
+           :locals => { :tab_id => params[:tab], :orphaned_product_ids => orphaned_product_ids }
   end
 
   def items

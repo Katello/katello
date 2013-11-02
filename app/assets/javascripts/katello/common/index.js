@@ -31,7 +31,7 @@
 
 //= require "katello/common/katello.module"
 
-//= require "angular-gettext"
+//= require "katello/angular-gettext"
 //= require "bastion/i18n/i18n.module"
 
 //= require "bastion/widgets/widgets.module.js"

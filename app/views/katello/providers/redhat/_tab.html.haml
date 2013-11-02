@@ -3,5 +3,6 @@
   = _("No products are available containing this content type.")
 - else
   - reset_cycle
-  = render :partial=>"providers/redhat/repo_sets", :locals=>{:tab_id=>tab[:id], :orphaned_product_ids => orphaned_product_ids,
-                                                               :provider=>@provider, :product_map=>tab[:products]}
+  = render :partial => "katello/providers/redhat/repo_sets",
+           :locals => { :tab_id => tab[:id], :orphaned_product_ids => orphaned_product_ids,
+                        :provider => @provider, :product_map => tab[:products]}
