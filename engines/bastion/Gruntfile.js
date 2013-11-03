@@ -70,6 +70,23 @@ module.exports = function (grunt) {
                 '!<%= bastion.src %>/i18n/translations.js'
             ]
         },
+        htmlhint: {
+            html: {
+                src: [bastionConfig.src + '/**/*.html'],
+                options: {
+                    'tagname-lowercase': true,
+                    'attr-lowercase': true,
+                    'attr-value-doublequotes': true,
+                    'tag-pair': true,
+                    'tag-self-close': true,
+                    'id-unique': true,
+                    'src-not-empty': true,
+                    'style-disabled': true,
+                    'img-alt-require': true,
+                    'spec-char-escape': true
+                },
+            },
+        },
         karma: {
             server: {
                 configFile: 'karma.conf.js',
@@ -157,12 +174,14 @@ module.exports = function (grunt) {
     grunt.registerTask('ci', [
         'connect:test',
         'jshint',
+        'htmlhint',
         'karma:ci'
     ]);
 
     grunt.registerTask('build', [
         'clean:build',
         'jshint',
+        'htmlhint',
         'test'
     ]);
 

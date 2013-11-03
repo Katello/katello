@@ -14,7 +14,7 @@
            name="newProduct"
            value="false"
            ng-model="createRepoChoices.newProduct"
-           ng-disabled="creating()">
+           ng-disabled="creating()"/>
     <select ng-hide="createRepoChoices.newProduct"
             ng-disabled="creating()"
             ng-model="createRepoChoices.existingProductId"
@@ -28,7 +28,7 @@
            name="newProduct"
            value="true"
            ng-model="createRepoChoices.newProduct"
-           ng-disabled="creating()">
+           ng-disabled="creating()"/>
   </div>
 </div>
 
@@ -43,7 +43,7 @@
              name="name"
              type="text"
              tabindex=1
-             required>
+             required/>
       <span class="note error" ng-show="productForm.name.$invalid">
         <ul><li ng-repeat="message in productForm.name.$error.messages">{{ message }}</li></ul>
       </span>
@@ -59,7 +59,7 @@
              name="label"
              type="text"
              tabindex=2
-             required>
+             required/>
       <span class="note error" ng-show="productForm.label.$invalid">
         <ul><li ng-repeat="message in productForm.label.$error.messages">{{ message }}</li></ul>
       </span>
@@ -98,7 +98,7 @@
       <label for="unprotected" translate>Serve via HTTP</label>
     </div>
     <div class="input">
-      <input type="checkbox" id="unprotected" ng-model="createRepoChoices.unprotected" ng-disabled="creating()">
+      <input type="checkbox" id="unprotected" ng-model="createRepoChoices.unprotected" ng-disabled="creating()"/>
     </div>
   </div>
 </div>
