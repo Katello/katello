@@ -38,7 +38,7 @@ class RepositoryAuthorizationAdminTest < AuthorizationTestBase
   end
 
   def test_redhat_deletable?
-    repository = Repository.find(repositories(:rhel_6_x86_64))
+    repository = Repository.find(katello_repositories(:rhel_6_x86_64))
     refute repository.redhat_deletable?
 
     repository.enabled = false
