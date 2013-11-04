@@ -68,5 +68,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency "minitest-tags"
   gem.add_dependency "minitest-predicates"
   gem.add_dependency "mocha"
+  gem.add_dependency "vcr"
+  gem.add_dependency "webmock"
 
 end

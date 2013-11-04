@@ -10,26 +10,21 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'minitest_helper'
-require './test/support/pulp/repository_support'
-require './test/support/pulp/user_support'
+require 'katello_test_helper'
+require 'support/pulp/repository_support'
+require 'support/pulp/user_support'
 
-
-class GluePulpConsumerGroupTestBase < MiniTest::Rails::ActiveSupport::TestCase
-  extend  ActiveRecord::TestFixtures
+module Katello
+class GluePulpConsumerGroupTestBase < ActiveSupport::TestCase
   include RepositorySupport
 
-  fixtures :all
-
   def self.before_suite
-    @loaded_fixtures = load_fixtures
+    super
     configure_runcible
 
     services  = ['Candlepin', 'ElasticSearch', 'Foreman']
     models    = ['System', 'Repository', 'SystemGroup', 'User']
     disable_glue_layers(services, models)
-
-    User.current = User.find(@loaded_fixtures['users']['admin']['id'])
   end
 
 end
@@ -39,7 +34,7 @@ class GluePulpConsumerGroupCreateTest < GluePulpConsumerGroupTestBase
 
   def setup
     VCR.insert_cassette('pulp/consumer_group/create')
-    @simple_group = SystemGroup.find(system_groups(:simple_group).id)
+    @simple_group = SystemGroup.find(katello_system_groups(:simple_group).id)
   end
 
   def teardown
@@ -58,7 +53,7 @@ class GluePulpConsumerGroupDeleteTest < GluePulpConsumerGroupTestBase
 
   def setup
     VCR.insert_cassette('pulp/consumer_group/delete')
-    @simple_group   = SystemGroup.find(system_groups(:simple_group).id)
+    @simple_group   = SystemGroup.find(katello_system_groups(:simple_group).id)
     @simple_group.set_pulp_consumer_group
   end
 
@@ -83,10 +78,10 @@ class GluePulpConsumerGroupTest < GluePulpConsumerGroupTestBase
   def setup
     VCR.insert_cassette('pulp/consumer_group/delete')
 
-    @simple_server  = System.find(systems(:simple_server).id)
+    @simple_server  = System.find(katello_systems(:simple_server).id)
     @simple_server.set_pulp_consumer
 
-    @simple_group   = SystemGroup.find(system_groups(:simple_group).id)
+    @simple_group   = SystemGroup.find(katello_system_groups(:simple_group).id)
     @simple_group.set_pulp_consumer_group
   end
 
@@ -123,9 +118,9 @@ class GluePulpConsumerGroupRequiresBoundRepoTest < GluePulpConsumerGroupTestBase
 
   def setup
     VCR.insert_cassette('pulp/consumer_group/content')
-    RepositorySupport.create_and_sync_repo(@loaded_fixtures['repositories']['fedora_17_x86_64']['id'])
+    RepositorySupport.create_and_sync_repo(@loaded_fixtures['katello_repositories']['fedora_17_x86_64']['id'])
 
-    @simple_group   = SystemGroup.find(system_groups(:simple_group).id)
+    @simple_group   = SystemGroup.find(katello_system_groups(:simple_group).id)
     @simple_group.set_pulp_consumer_group
   end
 
@@ -192,4 +187,5 @@ class GluePulpConsumerGroupRequiresBoundRepoTest < GluePulpConsumerGroupTestBase
     assert_includes task['tags'], 'pulp:action:unit_install'
   end
 
+end
 end

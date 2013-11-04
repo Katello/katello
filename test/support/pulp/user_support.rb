@@ -10,17 +10,15 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require './test/minitest_helper'
+require 'katello_test_helper'
 
+module Katello
 module Pulp
-  class UserSupport < MiniTest::Rails::ActiveSupport::TestCase
-    extend ActiveRecord::TestFixtures
-
-    fixtures :users
+  class UserSupport < ActiveSupport::TestCase
 
     def self.hidden_user
-      loaded_fixtures = load_fixtures
-      id = loaded_fixtures['users']['hidden']['id']
+      @loaded_fixtures = load_fixtures
+      id = @loaded_fixtures['users']['admin']['id']
       User.find(id)
     end
 
@@ -40,4 +38,5 @@ module Pulp
     end
 
   end
+end
 end

@@ -10,17 +10,15 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'minitest_helper'
-require './test/support/pulp/repository_support'
+require 'katello_test_helper'
+require 'support/pulp/repository_support'
 
-class GluePulpDistributionTestBase < MiniTest::Rails::ActiveSupport::TestCase
-  extend ActiveRecord::TestFixtures
+module Katello
+class GluePulpDistributionTestBase < ActiveSupport::TestCase
   include RepositorySupport
 
-  fixtures :all
-
   def self.before_suite
-    @loaded_fixtures = load_fixtures
+    super
     configure_runcible
 
     services  = ['Candlepin', 'ElasticSearch', 'Foreman']
@@ -29,8 +27,7 @@ class GluePulpDistributionTestBase < MiniTest::Rails::ActiveSupport::TestCase
 
     VCR.insert_cassette('pulp/content/distribution')
 
-    User.current = User.find(@loaded_fixtures['users']['admin']['id'])
-    RepositorySupport.create_and_sync_repo(@loaded_fixtures['repositories']['fedora_17_x86_64']['id'])
+    RepositorySupport.create_and_sync_repo(@loaded_fixtures['katello_repositories']['fedora_17_x86_64']['id'])
   end
 
   def self.after_suite
@@ -49,4 +46,5 @@ class GluePulpDistributionTest < GluePulpDistributionTestBase
     assert_kind_of  Distribution, distribution
   end
 
+end
 end

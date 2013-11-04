@@ -12,11 +12,11 @@ require "#{Katello::Engine.root}/spec/helpers/system_helper_methods"
 require "#{Katello::Engine.root}/spec/models/model_spec_helper"
 require "#{Katello::Engine.root}/spec/support/shared_examples/protected_action_shared_examples"
 require "#{Katello::Engine.root}/spec/support/custom_matchers"
+require "#{Katello::Engine.root}/test/support/vcr"
+require "#{Katello::Engine.root}/test/support/runcible"
 
 FactoryGirl.definition_file_paths = ["#{Katello::Engine.root}/test/factories"]
 FactoryGirl.find_definitions
-
-Katello.pulp_server = Runcible::Instance.new if Katello.config.use_pulp
 
 class ActiveSupport::TestCase
   extend ActiveRecord::TestFixtures
@@ -61,7 +61,10 @@ class ActiveSupport::TestCase
     load_fixtures
     self.fixture_path = "#{Katello::Engine.root}/test/fixtures/models"
     fixtures(:all)
-    load_fixtures
+    @loaded_fixtures = load_fixtures
+    @@admin = User.find(@loaded_fixtures['users']['admin']['id'])
+    @@admin.remote_id = @@admin.login
+    User.current = @@admin
   end
 
 end
@@ -85,8 +88,21 @@ def disable_glue_layers(services=[], models=[], force_reload=false)
 
   models.each do |model|
     if @@model_service_cache[model] != cached_entry
-      Katello.send(:remove_const, model)
-      load "#{Katello::Engine.root}/app/models/katello/#{model.underscore}.rb"
+      begin
+        Katello.send(:remove_const, model)
+        load "#{Katello::Engine.root}/app/models/katello/#{model.underscore}.rb"
+      rescue NameError
+        Object.send(:remove_const, model)
+        load "#{Rails.root}/app/models/#{model.underscore}.rb"
+      end
+      if model == 'User'
+        # Ugly hack to force the model to be loaded properly
+        # Without this, the glue layer functions are not available
+        User.first
+
+        # include the concern again after User reloading
+        User.send :include, Katello::Concerns::UserExtensions
+      end
       @@model_service_cache[model] = cached_entry
       change = true
     end
