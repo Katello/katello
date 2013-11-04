@@ -5,46 +5,43 @@
 
 <h3 translate>Event Details</h3>
 
-<div class="nutupane-sub-section">
-  <div class="details">
-    <section>
-      <div class="detail">
-        <span class="info-label" translate>Summary</span>
-        <span class="info-value">{{ event.human_readable_message }}</span>
-      </div>
-
-      <div class="detail">
-        <span class="info-label" translate>State</span>
-        <i class="icon-spinner icon-spin" ng-show="event.pending"></i>
-        <span class="info-value">{{ event.state }}</span>
-      </div>
-
-      <div class="detail">
-        <span class="info-label" translate>Started At</span>
-        <span class="info-value">{{ event.start_time | date:"short"  }}</span>
-      </div>
-
-      <div class="detail">
-        <span class="info-label" translate>Request</span>
-        <span class="info-value">{{ event.message | date:"short"  }}</span>
-      </div>
-
-      <div class="detail">
-          <span class="info-label" translate>Parameters</span>
-          <span class="info-value">{{ event.human_readable_parameters }}</span>
-      </div>
-    </section>
-    <div class="divider"></div>
-    <section>
-
-      <div class="detail">
-          <span class="info-label" translate>Result</span>
-          <span class="info-value">
-            <div ng-repeat="item in event.human_readable_result">
-              {{ item }}
-            </div>
-          </span>
-      </div>
-    </section>
+<section>
+  <div class="detail">
+    <span class="info-label" translate>Summary</span>
+    <span class="info-value">{{ event.human_readable_message }}</span>
   </div>
-</div>
+
+  <div class="detail">
+    <span class="info-label" translate>State</span>
+    <i class="icon-spinner icon-spin" ng-show="event.pending"></i>
+    <span class="info-value">{{ event.state }}</span>
+  </div>
+
+  <div class="detail">
+    <span class="info-label" translate>Started At</span>
+    <span class="info-value">{{ event.start_time | date:"short"  }}</span>
+  </div>
+
+  <div class="detail">
+    <span class="info-label" translate>Request</span>
+    <span class="info-value">{{ event.message | date:"short"  }}</span>
+  </div>
+
+  <div class="detail">
+      <span class="info-label" translate>Parameters</span>
+      <span class="info-value">{{ event.human_readable_parameters }}</span>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section>
+  <div class="detail">
+      <span class="info-label" translate>Result</span>
+      <span class="info-value">
+        <div ng-repeat="item in event.human_readable_result">
+          {{ item }}
+        </div>
+      </span>
+  </div>
+</section>
