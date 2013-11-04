@@ -8,8 +8,8 @@
   <header class="details-header">
     <h2 class="fl" translate>Product {{ product.name }}</h2>
 
-    <div class="details-action-group fr">
-      <button class="btn btn-danger details-action"
+    <div class="btn-group fr">
+      <button ng-class="{'btn-danger': product.permissions.deletable, btn: !product.permissions.deletable}"
               translate
               ng-hide="product.readonly"
               ng-click="showConfirm = true"
@@ -19,7 +19,7 @@
               ng-disabled="!product.permissions.deletable">
         Remove Product
       </button>
-      <button class="btn details-action" ui-sref="products.index">
+      <button class="btn" ui-sref="products.index">
         <i class="icon-remove"></i>
         {{ "Close" | translate }}
       </button>
@@ -29,26 +29,24 @@
     </div>
   </header>
 
-  <nav class="details-navigation">
-    <ul>
-      <li>
+  <nav>
+    <ul class="nav nav-tabs">
+      <li ng-class="{active: isState('products.details.info')}">
         <a class="clickable"
            translate
-           ui-sref="products.details.info({productId: product.id})"
-           ng-class="{active: isState('products.details.info')}">
+           ui-sref="products.details.info({productId: product.id})">
           Details
         </a>
       </li>
-      <li>
+      <li ng-class="{active: stateIncludes('products.details.repositories')}">
         <a class="clickable"
            translate
-           ui-sref="products.details.repositories.index({productId: product.id})"
-           ng-class="{active: stateIncludes('products.details.repositories')}">
+           ui-sref="products.details.repositories.index({productId: product.id})">
           Repositories
         </a>
       </li>
     </ul>
   </nav>
 
-  <div ui-view></div>
+  <section class="nutupane-sub-section" ui-view></section>
 </section>

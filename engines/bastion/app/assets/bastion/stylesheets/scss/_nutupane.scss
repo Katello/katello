@@ -198,11 +198,6 @@ table.details-visible {
   }
 }
 
-.nutupane-actions {
-  display: inline-block;
-  margin-left: 10px;
-}
-
 .selected-action-container {
   vertical-align: middle;
 }
@@ -245,67 +240,8 @@ table.details-visible {
     font-size:  120%;
   }
 
-  .details-header {
-    height: 40px;
-    position: relative;
-    margin-bottom: 10px;
-  }
-
-  .details-action-group {
-    display: inline-block;
-
-    .details-action {
-      margin-right: 4px;
-
-      &:last-of-type {
-        margin-right: 0;
-      }
-    }
-  }
-
-  button {
-    margin: 0;
-  }
-
   .new-header {
     border-bottom: 3px solid #e3e5e7;
-  }
-
-  .details-navigation {
-    margin-bottom: 10px;
-    border-bottom: 3px solid #e3e5e7;
-    width: 100%;
-
-    ul {
-      list-style: none;
-      margin: 0;
-      margin-right: 22px;
-      padding: 0 5px;
-      -webkit-padding-start: 0;
-      height: 25px;
-
-      li {
-        font-size: 14px;
-        font-weight: bold;
-        display: inline-block;
-
-        a {
-          padding: 0 10px;
-          position: relative;
-          top: 2px;
-          display: block;
-          height: 25px;
-          text-align: center;
-        }
-      }
-
-      .active {
-        color: darken($tone, 40%);
-        border-bottom: 3px solid $rh-blue;
-        @include background( linear-gradient(top , rgba(lighten($tone, 30%),0.0) 90%, lighten($rh-blue, 32%) 100%));
-      }
-
-    }
   }
 
   .divider {
@@ -313,36 +249,6 @@ table.details-visible {
     border-bottom: 1px solid #CCC;
     display: inline-block;
     width: 100%;
-  }
-
-  .details {
-    margin-top: 20px;
-    display: inline-block;
-    vertical-align: top;
-    padding: 0 40px 0 0;
-    width: 50%;
-
-    .detail {
-      margin-bottom: 5px;
-    }
-
-    .info-label {
-      font-weight: 600;
-      display: inline-block;
-      width: 25%;
-      vertical-align: top;
-    }
-
-    .info-value {
-      width: 69%;
-      display: inline-block;
-      padding-left: 4px;
-      word-wrap: break-word;
-    }
-
-    .sub-detail {
-      margin: 5px 15px 0;
-    }
   }
 
   .details-full {
