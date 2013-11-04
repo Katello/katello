@@ -50,10 +50,6 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
             return deferred.promise;
         };
 
-        $scope.triggerSync = function(repository) {
-           Repository.sync({ id: repository.id });
-        };
-
         $scope.save = function(repository) {
             var deferred = $q.defer();
 
