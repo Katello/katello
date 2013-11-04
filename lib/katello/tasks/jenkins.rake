@@ -1,9 +1,11 @@
+require File.expand_path("../engine", File.dirname(__FILE__))
+
 begin
-  require 'ci/reporter/rake/minitest'
 
   namespace :jenkins do
-    namespace :katello do
-      task :test => ['jenkins:setup:minitest', 'rake:test:katello:test']
+    task :katello do
+      Rake::Task['jenkins:setup:minitest'].invoke
+      Rake::Task['rake:test:katello'].invoke
     end
   end
 
