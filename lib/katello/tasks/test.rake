@@ -12,6 +12,7 @@ namespace :test do
       t.libs << ["test", "#{Katello::Engine.root}/test", "spec", "#{Katello::Engine.root}/spec"]
       t.test_files = [
         "#{Katello::Engine.root}/test/models/repository_test.rb",
+        "#{Katello::Engine.root}/test/models/activation_key_test.rb",
         "#{Katello::Engine.root}/spec/models/activation_key_spec.rb"
       ]
       t.verbose = true
