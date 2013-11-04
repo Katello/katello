@@ -4,7 +4,7 @@
          class="input input-search input-xxlarge"
          placeholder="{{ 'URL to discover' | translate }}"
          ng-model="discovery.url"
-         ng-disabled="discovery.pending">
+         ng-disabled="discovery.pending"/>
 
   <button ng-show="!discovery.pending"
          ng-disabled="!discovery.url"
@@ -30,7 +30,7 @@
     <input type="text"
            class="input input-search"
            placeholder="{{ 'Filter' | translate }}"
-           ng-model="discoveryTable.filterTerm">
+           ng-model="discoveryTable.filterTerm"/>
 
     <div ng-hide="system.readonly" class="fr nutupane-actions">
        <button class="btn btn-primary"

@@ -22,7 +22,7 @@
                type="text"
                tabindex="1"
                autofocus
-               required>
+               required/>
         <span class="note error" ng-show="providerForm.name.$invalid">
           <ul>
             <li ng-repeat="message in providerForm.name.$error.messages">{{ message }}</li>
@@ -36,6 +36,7 @@
       <div class="input">
         <button type="button" ui-sref="products.new.form" translate>Cancel</button>
         <button tabindex="2" class="btn-primary" ng-click="save(provider)" translate>Create</button>
+      </div>
     </div>
 
   </form>
