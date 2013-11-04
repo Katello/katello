@@ -263,6 +263,7 @@ class ContentView < ActiveRecord::Base
     if !content_view_definition.ready_to_publish?
       fail _("Cannot refresh view. Check definition for repository conflicts.")
     end
+    content_view_definition.check_puppet_names!
     options = { :async => true, :notify => false }.merge options
 
     # retrieve the 'next' version id to use

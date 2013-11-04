@@ -73,4 +73,12 @@ module Errors
       end
     end
   end
+
+  class PuppetConflictException < StandardError
+    attr_accessor :conflicts
+
+    def initialize(conflicts)
+      self.conflicts = conflicts
+    end
+  end
 end

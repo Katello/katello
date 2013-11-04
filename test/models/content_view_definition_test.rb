@@ -287,4 +287,13 @@ class ContentViewDefinitionTest < MiniTest::Rails::ActiveSupport::TestCase
     assert @content_view_def.destroy
     refute ContentViewDefinition.exists?(@content_view_def.id)
   end
+
+  def test_check_puppet_names
+    @content_view_def.stubs(:puppet_repository).returns(mock(:name_conflicts => ['ntp']))
+
+    assert_raises(Errors::PuppetConflictException) do
+      @content_view_def.check_puppet_names!
+    end
+  end
+
 end
