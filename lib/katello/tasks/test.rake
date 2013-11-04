@@ -34,7 +34,8 @@ namespace :test do
         "#{Katello::Engine.root}/test/models/kt_environment_test.rb",
         "#{Katello::Engine.root}/test/models/organization_test.rb",
         "#{Katello::Engine.root}/test/models/organization_destroyer_test.rb",
-        "#{Katello::Engine.root}/test/models/content_view_definition_test.rb"
+        "#{Katello::Engine.root}/test/models/content_view_definition_test.rb",
+        "#{Katello::Engine.root}/test/glue/candlepin/*_test.rb"
       ]
       t.verbose = true
     end
