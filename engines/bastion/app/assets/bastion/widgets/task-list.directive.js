@@ -106,28 +106,8 @@ angular.module('Bastion.widgets')
             return classes.join(' ');
         };
     })
-    .directive('activetaskscount', ['taskListProvider', function(taskListProvider) {
-        return {
-            restrict: 'E',
-            template: '<span>{{count}}</span>',
-            link: function(scope) {
-                taskListProvider.registerUser(scope, { activeOnly: true }, '1');
-                scope.updateTasks = function(tasks) {
-                    scope.count = tasks.length;
-                }
-            }
-        };
-     }])
-    .directive('tasklistitem', function() {
-        return {
-            restrict: 'E',
-            templateUrl: 'widgets/views/task-list-item.html',
-            link: function(scope) {
-            }
-        };
-    })
     .directive('tasklist',
-               ['$templateCache', '$compile', 'taskListProvider', function($templateCache, $compile, taskListProvider) {
+               ['$compile', 'taskListProvider', function($compile, taskListProvider) {
         return {
             restrict: 'E',
             template: '',
@@ -136,6 +116,7 @@ angular.module('Bastion.widgets')
                 taskUserId: '@taskuserid',
                 taskResourceType: '@taskresourcetype',
                 taskResourceId: '@taskresourceid',
+                taskTemplate: '@tasktemplate'
             },
             link: function (scope, element, attrs) {
                 scope.taskListItems = {}
@@ -144,7 +125,10 @@ angular.module('Bastion.widgets')
                         return scope.taskListItems[task.uuid].scope();
                     } else {
                         var taskScope = scope.$new();
-                        var taskListItem = $compile('<tasklistitem></tasklistitem>')(taskScope);
+                        taskScope.taskTemplate = function() {
+                            return scope.taskTemplate || 'widgets/views/task-list-item.html';
+                        }
+                        var taskListItem = $compile('<div ng-include="taskTemplate()"></div>')(taskScope);
                         element.after(taskListItem);
                         scope.taskListItems[task.uuid] = taskListItem;
                         return taskScope;
