@@ -1,0 +1,22 @@
+<nav class="nav right current-tasks-nav" ng-class="{'active-item': visible}">
+  <ul class="menu-container" id="currentTasks">
+
+    <li class="menu-item">
+      <a class="menu-item-link currentTasksCount clickable"
+         ng-click="toggleVisibility()"
+         ng-class="{'active-item': visible}">
+        {{ count }}
+        <i class="icon-caret-down"></i>
+      </a>
+
+      <span class="dropdown"
+            ng-class="{'dropdown-active': visible}"
+            ng-show="visible"
+            style="width: 50em; padding-left: 1em;">
+        <ul class="active-tasks">
+          <tasklist taskTemplate="widgets/views/current-tasks-item.html" taskUserId="{{ currentUser }}" ></tasklist>
+        </ul>
+      </span>
+    </li>
+  </ul>
+</nav>
