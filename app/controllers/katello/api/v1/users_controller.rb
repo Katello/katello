@@ -65,7 +65,7 @@ class Api::V1::UsersController < Api::V1::ApiController
   api :GET, "/users/:id", "Show a user"
   def show
     @user[:allowed_organizations] = @user.allowed_organizations
-    @user[:roles] = @user.roles
+    @user[:roles] = @user.katello_roles
     respond
   end
 
