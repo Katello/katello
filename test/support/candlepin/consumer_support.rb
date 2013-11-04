@@ -10,8 +10,9 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'minitest_helper'
+require 'katello_test_helper'
 
+module Katello
 module CandlepinConsumerSupport
 
   @system = nil
@@ -92,4 +93,5 @@ module CandlepinConsumerSupport
     puts e
   end
 
+end
 end
