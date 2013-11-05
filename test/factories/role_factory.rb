@@ -1,5 +1,5 @@
 FactoryGirl.define do
-  factory :role do
+  factory :role, :class => Katello::Role do
 
     factory :administrator do
       name        "ADMINISTRATOR"
