@@ -12,7 +12,7 @@
  **/
 
 describe('Controller: ProductDetailsInfoController', function() {
-    var $scope;
+    var $scope, MenuExpander;
 
     beforeEach(module(
         'Bastion.products',
@@ -28,13 +28,20 @@ describe('Controller: ProductDetailsInfoController', function() {
         $scope = $injector.get('$rootScope').$new();
         $scope.$stateParams = {productId: 1};
 
+        MenuExpander = {};
+
         $controller('ProductDetailsInfoController', {
             $scope: $scope,
             $q: $q,
             Product: Product,
-            GPGKey: GPGKey
+            GPGKey: GPGKey,
+            MenuExpander: MenuExpander
         });
     }));
+
+    it("sets the menu expander on the scope", function() {
+        expect($scope.menuExpander).toBe(MenuExpander);
+    });
 
     it('provides a method to retrieve available gpg keys', function() {
         var promise = $scope.gpgKeys(),

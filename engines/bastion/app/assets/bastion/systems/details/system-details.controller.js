@@ -20,13 +20,16 @@
  * @requires $q
  * @requires System
  * @requires Organization
+ * @requires MenuExpander
  *
  * @description
  *   Provides the functionality for the system details action pane.
  */
 angular.module('Bastion.systems').controller('SystemDetailsController',
-    ['$scope', '$state', '$q', 'System', 'Organization',
-    function($scope, $state, $q, System, Organization) {
+    ['$scope', '$state', '$q', 'System', 'Organization', 'MenuExpander',
+    function($scope, $state, $q, System, Organization, MenuExpander) {
+
+        $scope.menuExpander = MenuExpander;
 
         if ($scope.system) {
             $scope.panel = {loading: false};

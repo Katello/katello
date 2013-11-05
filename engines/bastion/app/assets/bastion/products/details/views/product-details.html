@@ -47,6 +47,11 @@
           Repositories
         </a>
       </li>
+      <li ng-repeat="menuItem in menuExpander.getMenu('product')">
+        <a href="{{ menuItem.url }}">
+          {{ menuItem.label }}
+        </a>
+      </li>
     </ul>
   </nav>
 
