@@ -1,51 +1,48 @@
-<button class="fr btn btn-primary" ng-click="autoAttach()">{{ "Run Auto-Attach" | translate }}</button>
-<div class="details">
-  <section>
-    <h4 translate>Subscription Status Details</h4>
+<button class="btn-primary fr" ng-click="autoAttach()">{{ "Run Auto-Attach" | translate }}</button>
 
-    <div class="detail">
-      <span class="info-label" translate>Subscription Status</span>
-        <span class="info-value">
-          <i class="icon-circle" ng-class="getStatusColor(system.compliance.status)"></i>
-          {{ system.compliance.status }}
-        </span>
-    </div>
-
-    <div ng-show="system.compliance.reasons.length > 0" class="detail">
-      <span class="info-label" translate>Details</span>
-      <div class="info-value">
-        <ul class="compliance-reasons">
-          <li ng-repeat="reason in system.compliance.reasons">{{ reason.attributes.name}} - {{ reason.message }}</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="detail">
-      <span class="info-label" translate>Auto-Attach</span>
-      <span class="info-value"
-            alch-edit-checkbox="system.autoheal"
-            on-save="save(system)">
+<section class="details">
+  <h4 translate>Subscription Details</h4>
+  <div class="detail">
+    <span class="info-label" translate>Status</span>
+      <span class="info-value">
+        <i class="icon-circle" ng-class="getStatusColor(system.compliance.status)"></i>
+        {{ system.compliance.status }}
       </span>
+  </div>
+
+  <div ng-show="system.compliance.reasons.length > 0" class="detail">
+    <span class="info-label" translate>Details</span>
+    <div class="info-value">
+      <ul class="compliance-reasons">
+        <li ng-repeat="reason in system.compliance.reasons">{{ reason.attributes.name}} - {{ reason.message }}</li>
+      </ul>
     </div>
-    <div class="detail">
-      <span class="info-label" translate>Service Level</span>
-          <span class="info-value"
-                alch-edit-select="system.serviceLevel"
-                readonly="system.readonly"
-                selector="system.serviceLevel"
-                options="serviceLevels()"
-                options-format="option for option in options"
-                on-save="save(system)">
-          </span>
-    </div>
-  </section>
-</div>
+  </div>
+
+  <div class="detail">
+    <span class="info-label" translate>Auto-Attach</span>
+    <span class="info-value"
+          alch-edit-checkbox="system.autoheal"
+          on-save="save(system)">
+    </span>
+  </div>
+  <div class="detail">
+    <span class="info-label" translate>Service Level</span>
+        <span class="info-value"
+              alch-edit-select="system.serviceLevel"
+              readonly="system.readonly"
+              selector="system.serviceLevel"
+              options="serviceLevels()"
+              options-format="option for option in options"
+              on-save="save(system)">
+        </span>
+  </div>
+</section>
 
 <section class="system-subscriptions">
-
-  <div class="nutupane-titlebar">
-    <h1 class="nutupane-title" translate>Current Subscription(s)</h1>
-  </div>
+  <h4 translate
+      translate-n="currentSubscriptionsTable.rows.length"
+      translate-plural="Current Subscriptions">Current Subscription</h4>
   <div class="nutupane-actionbar">
     <div class="form">
       <input type="text"
@@ -104,9 +101,9 @@
 </section>
 
 <section class="system-subscriptions">
-  <div class="nutupane-titlebar">
-    <h1 class="nutupane-title" translate>Available Subscription(s)</h1>
-  </div>
+  <h4 translate
+      translate-n="availableSubscriptionsTable.rows.length"
+      translate-plural="Available Subscriptions">Available Subscription</h4>
   <div class="nutupane-actionbar">
     <div class="form">
       <input type="text"

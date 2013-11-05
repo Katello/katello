@@ -1,64 +1,59 @@
-<div>
-  <h3 translate>Applicable Errata</h3>
+<h4 translate>Applicable Errata</h4>
+
+<div class="nutupane-actionbar">
+  <div class="form">
+    <input type="text"
+           class="input input-search"
+           placeholder="{{ 'Filter' | translate }}"
+           ng-model="errataTable.errataFilterTerm">
+    <span class="result-count" translate>Showing {{ errataTable.resource.total }} Errata</span>
+  </div>
+
+  <div ng-hide="system.readonly" class="nutupane-actions fr">
+     <button class="btn btn-primary"
+             translate
+             ng-disabled="errataTable.getSelected().length == 0"
+             ng-click="applySelected()">
+       Apply Selected
+     </button>
+  </div>
+
+  <div class="fr select-action">
+    <span translate>{{ errataTable.numSelected }} Selected</span>
+    <span>|</span>
+    <a class="deselect-action"
+       translate
+       ng-class="{ 'disabled-link' : errataTable.numSelected == 0 }"
+       ng-click="errataTable.selectAll(false)">
+      Deselect All
+    </a>
+  </div>
 </div>
 
-<section class="nutupane-sub-section" >
+<div alch-table="errataTable">
+  <div alch-container-scroll control-width="table" alch-infinite-scroll="table.nextPage()">
+    <table ng-class="{'table-mask': table.working}" class="table table-full table-striped">
+      <thead>
+        <tr alch-table-head row-select>
+          <th alch-table-column="type" translate>Type</th>
+          <th alch-table-column="errata_id" translate>Id</th>
+          <th alch-table-column="title" translate>Title</th>
+          <th alch-table-column="issued" translate>Issued</th>
+        </tr>
+      </thead>
 
-  <div class="nutupane-actionbar">
-    <div class="form">
-      <input type="text"
-             class="input input-search"
-             placeholder="{{ 'Filter' | translate }}"
-             ng-model="errataTable.errataFilterTerm">
-      <span class="result-count" translate>Showing {{ errataTable.resource.total }} Errata</span>
-    </div>
-
-    <div ng-hide="system.readonly" class="nutupane-actions fr">
-       <button class="btn btn-primary"
-               translate
-               ng-disabled="errataTable.getSelected().length == 0"
-               ng-click="applySelected()">
-         Apply Selected
-       </button>
-    </div>
-
-    <div class="fr select-action">
-      <span translate>{{ errataTable.numSelected }} Selected</span>
-      <span>|</span>
-      <a class="deselect-action"
-         translate
-         ng-class="{ 'disabled-link' : errataTable.numSelected == 0 }"
-         ng-click="errataTable.selectAll(false)">
-        Deselect All
-      </a>
-    </div>
+      <tbody>
+        <tr alch-table-row ng-repeat="erratum in table.rows | filter:table.errataCompare" row-select="erratum">
+          <td alch-table-cell >{{ erratum.type }}</td>
+          <td alch-table-cell >
+            <a ui-sref="systems.details.errata.details({errataId: erratum.errata_id})">
+              {{ erratum.errata_id }}
+            </a>
+          </td>
+          <td alch-table-cell >{{ erratum.title }}</td>
+          <td alch-table-cell >{{ erratum.issued }}</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
-
-  <div alch-table="errataTable">
-    <div alch-container-scroll control-width="table" alch-infinite-scroll="table.nextPage()">
-      <table ng-class="{'table-mask': table.working}" class="table table-full table-striped">
-        <thead>
-          <tr alch-table-head row-select>
-            <th alch-table-column="type" translate>Type</th>
-            <th alch-table-column="errata_id" translate>Id</th>
-            <th alch-table-column="title" translate>Title</th>
-            <th alch-table-column="issued" translate>Issued</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          <tr alch-table-row ng-repeat="erratum in table.rows | filter:table.errataCompare" row-select="erratum">
-            <td alch-table-cell >{{ erratum.type }}</td>
-            <td alch-table-cell >
-              <a ui-sref="systems.details.errata.details({errataId: erratum.errata_id})">
-                {{ erratum.errata_id }}
-              </a>
-            </td>
-            <td alch-table-cell >{{ erratum.title }}</td>
-            <td alch-table-cell >{{ erratum.issued }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</section>
+</div>
