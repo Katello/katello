@@ -11,11 +11,10 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'minitest_helper'
+require 'katello_test_helper'
 
-class OrganizationDestroyerTest < MiniTest::Rails::ActiveSupport::TestCase
-
-  fixtures :all
+module Katello
+class OrganizationDestroyerTest < ActiveSupport::TestCase
 
   def self.before_suite
     services  = ['Candlepin', 'Pulp', 'ElasticSearch']
@@ -26,8 +25,9 @@ class OrganizationDestroyerTest < MiniTest::Rails::ActiveSupport::TestCase
 
   def test_non_async_destroy
     org = FactoryGirl.create(:organization)
-    User.current = User.hidden.first
+    User.current = User.find(users(:admin))
     OrganizationDestroyer.destroy(org, :async => false)
-    refute Organization.exists?(org.id)
+    refute Katello::Organization.exists?(org.id)
   end
+end
 end
