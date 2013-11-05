@@ -136,12 +136,7 @@ class Api::V2::TasksController < Api::V2::ApiController
 
   def task_hash(task)
     return @tasks[task.uuid] if @tasks[task.uuid]
-    task_hash = task.as_json
-    task_hash[:started_at] = task.execution_plan.started_at
-    task_hash[:ended_at] = task.execution_plan.ended_at
-    task_hash[:state] = task.execution_plan.state
-    task_hash[:result] = task.execution_plan.result
-    task_hash[:progress] = task.execution_plan.progress
+    task_hash = Rabl.render(task, 'dynflow_task_show', :view_path => 'app/views/api/v2/tasks', :format => :hash)
     @tasks[task.uuid] = task_hash
     return task_hash
   end
