@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class UserOwnRole < Role
+class UserOwnRole < Katello::Role
 
   use_index_of Katello::Role if Katello.config.use_elasticsearch
 
