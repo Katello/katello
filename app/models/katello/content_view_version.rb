@@ -17,12 +17,11 @@ class ContentViewVersion < ActiveRecord::Base
 
   belongs_to :content_view
   has_many :content_view_version_environments, :dependent => :destroy
-  has_many :environments, {:through      => :content_view_version_environments,
-                           :class_name   => "Katello::KTEnvironment",
-                           :inverse_of   => :content_view_versions,
-                           :before_add    => :add_environment,
-                           :after_remove => :remove_environment
-                          }
+  has_many :environments, :through      => :content_view_version_environments,
+                          :class_name   => "Katello::KTEnvironment",
+                          :inverse_of   => :content_view_versions,
+                          :before_add    => :add_environment,
+                          :after_remove => :remove_environment
 
   has_many :repositories, :dependent => :destroy
   has_one :task_status, :as => :task_owner, :dependent => :destroy
