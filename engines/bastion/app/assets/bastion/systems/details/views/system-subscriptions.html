@@ -1,4 +1,4 @@
-<button class="btn-primary fr" ng-click="autoAttach()">{{ "Run Auto-Attach" | translate }}</button>
+<button class="btn btn-primary fr" ng-click="autoAttach()">{{ "Run Auto-Attach" | translate }}</button>
 
 <section class="details">
   <h4 translate>Subscription Details</h4>
@@ -52,7 +52,7 @@
     </div>
 
     <div class="fr select-action">
-      <button class="btn-mini" translate
+      <button class="btn btn-default" translate
               ng-disabled="currentSubscriptionsTable.numSelected == 0"
               ng-click="removeSubscriptions()">
         Remove Subscriptions
@@ -112,7 +112,7 @@
              ng-model="availableSubscriptionsTable.filter"/>
     </div>
     <div class="fr select-action">
-      <button class="btn-mini"
+      <button class="btn btn-default"
               translate
               ng-disabled="availableSubscriptionsTable.numSelected == 0"
               ng-click="attachSubscriptions()">
