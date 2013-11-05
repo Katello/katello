@@ -1,14 +1,15 @@
 <div class="control-group buttons">
   <div class="input">
 
-    <button type="button"
+    <button class="btn btn-default btn-lg"
+            type="button"
             ng-click="handleCancel()"
             ng-disabled="working"
             translate>
       Cancel
     </button>
 
-    <button class="btn-primary"
+    <button class="btn btn-primary btn-lg"
             ng-click="handleSave(); working = true"
             ng-disabled="invalid || working">
 

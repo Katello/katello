@@ -3,7 +3,7 @@
     <h2 class="fl" translate>Bulk Actions</h2>
 
     <div class="btn-group fr">
-      <button class="btn-danger"
+      <button class="btn btn-danger"
               translate
               ng-disabled="system.readonly || removeSystems.workingMode"
               ng-click="showConfirm = true; removeSystems.confirm = true"
@@ -16,7 +16,7 @@
         <span>{{ "Removing Systems" | translate }}</span>
       </span>
 
-      <button class="btn-mini" ui-sref="systems.index">
+      <button class="btn btn-default" ui-sref="systems.index">
         <i class="icon-remove"></i>
         {{ "Close" | translate }}
       </button>
