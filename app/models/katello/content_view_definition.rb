@@ -17,7 +17,7 @@ class ContentViewDefinition < ContentViewDefinitionBase
   include Authorization::ContentViewDefinition
   include AsyncOrchestration
 
-  has_many :content_views, :dependent => :destroy
+  has_many :content_views, :dependent => :destroy, :class_name => "Katello::ContentView"
   has_many :content_view_definition_archives, :foreign_key => :source_id, :dependent => :destroy
   alias_method :archives, :content_view_definition_archives
 
