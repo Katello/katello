@@ -45,7 +45,7 @@ class OrganizationDestroyer
   end
 
   def run
-    organization = Organization.find(organization_id)
+    organization = Katello::Organization.find(organization_id)
     organization.destroy
 
     Notify.success _("Successfully removed organization '%s'.") % organization.name,

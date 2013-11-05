@@ -19,6 +19,8 @@ namespace :test do
         "#{Katello::Engine.root}/test/models/content_view_test.rb",
         "#{Katello::Engine.root}/test/models/content_view_version_test.rb",
         "#{Katello::Engine.root}/test/models/kt_environment_test.rb",
+        "#{Katello::Engine.root}/test/models/organization_test.rb",
+        "#{Katello::Engine.root}/test/models/organization_destroyer_test.rb",
         "#{Katello::Engine.root}/spec/models/activation_key_spec.rb"
       ]
       t.verbose = true
