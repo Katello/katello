@@ -169,6 +169,7 @@ class System < ActiveRecord::Base
 
   def as_json(options)
     json = super(options)
+    json = json['system']
     json['environment'] = environment.as_json unless environment.nil?
     json['activation_key'] = activation_keys.as_json unless activation_keys.nil?
 

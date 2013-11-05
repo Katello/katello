@@ -10,26 +10,24 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'minitest_helper'
+require 'katello_test_helper'
 
-class SystemTestBase < MiniTest::Rails::ActiveSupport::TestCase
-  extend ActiveRecord::TestFixtures
-
-  fixtures :all
+module Katello
+class SystemTestBase < ActiveSupport::TestCase
 
   def self.before_suite
-    load_fixtures
-    configure_runcible
-
     services  = ['Candlepin', 'Pulp', 'ElasticSearch', 'Foreman']
     models    = ['User', 'SystemGroup', 'KTEnvironment', 'Organization', 'Product', "ContentView", "System", "ContentViewVersion"]
     disable_glue_layers(services, models)
+
+    configure_runcible
   end
 
   def setup
-    @fedora             = Product.find(products(:fedora).id)
-    @dev                = KTEnvironment.find(environments(:dev).id)
-    @acme_corporation   = Organization.find(organizations(:acme_corporation).id)
-    @system             = System.find(systems(:simple_server))
+    @fedora             = Product.find(katello_products(:fedora).id)
+    @dev                = KTEnvironment.find(katello_environments(:dev).id)
+    @acme_corporation   = Organization.find(katello_organizations(:acme_corporation).id)
+    @system             = System.find(katello_systems(:simple_server))
   end
+end
 end
