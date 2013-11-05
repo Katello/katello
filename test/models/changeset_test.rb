@@ -10,22 +10,23 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'minitest_helper'
+require 'katello_test_helper'
 
-class ChangesetTest < MiniTest::Rails::ActiveSupport::TestCase
-  fixtures :all
+module Katello
+class ChangesetTest < ActiveSupport::TestCase
 
   def self.before_suite
-    models = ["Organization", "KTEnvironment", "ContentViewEnvironment", "Repository"]
+    models = ["Organization", "KTEnvironment", "ContentViewEnvironment", "Repository", "ContentView",
+              "ContentViewVersion"]
     disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
   end
 
   def setup
-    @library              = KTEnvironment.find(environments(:library).id)
-    @dev                  = KTEnvironment.find(environments(:dev).id)
-    @acme_corporation     = Organization.find(organizations(:acme_corporation).id)
-    @library_view         = ContentView.find(content_views(:library_view))
-    @library_dev_view     = ContentView.find(content_views(:library_dev_view))
+    @library              = KTEnvironment.find(katello_environments(:library).id)
+    @dev                  = KTEnvironment.find(katello_environments(:dev).id)
+    @acme_corporation     = Organization.find(katello_organizations(:acme_corporation).id)
+    @library_view         = ContentView.find(katello_content_views(:library_view))
+    @library_dev_view     = ContentView.find(katello_content_views(:library_dev_view))
   end
 
   def test_add_content_view_exception
@@ -44,19 +45,11 @@ class ChangesetTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def test_add_content_view_check_promotion_exception
-    changeset = FactoryGirl.build_stubbed(:promotion_changeset)
-    library   = FactoryGirl.build_stubbed(:library)
-    env       = FactoryGirl.build_stubbed(:environment)
-    view      = FactoryGirl.build_stubbed(:content_view)
-    version   = FactoryGirl.build_stubbed(:content_view_version)
-    library.stubs(:content_view_versions).returns(mock(:find_by_content_view_id => version))
-    library.stubs(:content_views).returns([view])
-    env.stubs(:content_view_versions).returns(mock(:find_by_content_view_id => version))
-    env.stubs(:prior).returns(library)
-    changeset.environment = env
+    changeset = Factory.build(:promotion_changeset)
+    changeset.environment = @dev
 
     assert_raises(Errors::ChangesetContentException) do
-      changeset.add_content_view!(view)
+      changeset.add_content_view!(@library_dev_view)
     end
   end
 
@@ -155,11 +148,11 @@ class ChangesetTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def test_content_view_promotion_during_publish_or_refresh
-    task = FactoryGirl.create(:task_status)
+    task = FactoryGirl.create(:task_status, :user => User.find(users(:admin)))
     ContentViewVersion.any_instance.stubs(:task_status).returns(task)
     TaskStatus.any_instance.stubs(:pending?).returns(true)
 
-    content_view = ContentView.find(content_views(:library_view))
+    content_view = ContentView.find(katello_content_views(:library_view))
 
     changeset = FactoryGirl.create(:promotion_changeset,
                                    :environment => @dev,
@@ -178,7 +171,7 @@ class ChangesetTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def test_destroy
-    content_view = ContentView.find(content_views(:library_view))
+    content_view = ContentView.find(katello_content_views(:library_view))
 
     changeset = FactoryGirl.create(:promotion_changeset,
                                    :environment => @dev)
@@ -186,4 +179,5 @@ class ChangesetTest < MiniTest::Rails::ActiveSupport::TestCase
 
     assert changeset.destroy
   end
+end
 end
