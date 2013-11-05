@@ -25,7 +25,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        1.4.12
+Version:        1.4.13
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -922,6 +922,8 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Tue Nov 05 2013 Partha Aji <paji@redhat.com> 1.4.13-1
+- Fix for a content view migration issue (paji@redhat.com)
 
 * Wed Oct 16 2013 Partha Aji <paji@redhat.com> 1.4.11-1
 - 1018061: Fixing call to Errata class
