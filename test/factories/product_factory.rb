@@ -1,5 +1,5 @@
 FactoryGirl.define do
-  factory :product do
+  factory :product, :class => Katello::Product do
     sequence(:name) { |n| "Product #{n}" }
     sequence(:label) { |n| "product_#{n}" }
 

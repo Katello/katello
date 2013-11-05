@@ -12,7 +12,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 FactoryGirl.define do
-  factory :gpg_key do
+  factory :gpg_key, :class => Katello::GpgKey do
     sequence(:content) { |n| "abc123#{n}" }
   end
 end
