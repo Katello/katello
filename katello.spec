@@ -210,6 +210,8 @@ Requires:       node-installer
 Requires:       postgresql-server
 Requires:       postgresql
 
+Requires:       java-openjdk
+
 %if 0%{?fedora} > 18
 Requires(post): candlepin-tomcat
 %else
@@ -653,6 +655,11 @@ usermod -a -G katello-shared tomcat
 
 %post all
 usermod -a -G katello-shared tomcat
+
+%posttrans all
+# make sure we use openjdk as default
+/usr/sbin/alternatives --set java \
+    $(echo | /usr/sbin/alternatives --config java | grep -o '\S*openjdk\S*')
 
 %files
 ### if you put something here and it should go to headpin as well
