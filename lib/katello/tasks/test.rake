@@ -13,6 +13,7 @@ namespace :test do
       t.test_files = [
         "#{Katello::Engine.root}/test/glue/pulp/*_test.rb",
         "#{Katello::Engine.root}/test/models/repository_test.rb",
+        "#{Katello::Engine.root}/test/models/system_test.rb",
         "#{Katello::Engine.root}/test/models/activation_key_test.rb",
         "#{Katello::Engine.root}/spec/models/activation_key_spec.rb"
       ]
