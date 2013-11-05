@@ -169,6 +169,14 @@ class ContentViewDefinitionsController < ApplicationController
     else
       render_bad_parameters
     end
+  rescue Errors::PuppetConflictException => e
+    details = _("Puppet repository name conflicts: %s.") % e.conflicts.join(", ")
+    notify.error(_("Failed to publish content view '%{view_name}' from definition '%{definition_name}'. %{error}") %
+                 {:view_name => params[:content_view][:name], :definition_name => @view_definition.name, :error => e},
+                 :details => details)
+    logger.error(_("%{exception}\n%{details}") % {:exception => e, :details => details})
+
+    render :text => e.to_s, :status => 500
   rescue => e
     notify.exception(_("Failed to publish content view '%{view_name}' from definition '%{definition_name}'.") %
                          {:view_name => params[:content_view][:name], :definition_name => @view_definition.name}, e)

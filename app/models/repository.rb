@@ -304,6 +304,18 @@ class Repository < ActiveRecord::Base
     feed.present?
   end
 
+  def name_conflicts
+    if puppet?
+      modules = PuppetModule.search("*", :repoids => self.pulp_id,
+                                         :fields => [:name],
+                                         :page_size => self.puppet_module_count)
+
+      modules.map(&:name).group_by(&:to_s).select { |_, v| v.size > 1 }.keys
+    else
+      []
+    end
+  end
+
   protected
 
   def assert_deletable
