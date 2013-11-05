@@ -12,7 +12,7 @@
 
 module Katello
 class ContentViewVersionEnvironment < ActiveRecord::Base
-  belongs_to :environment, :class_name => 'KTEnvironment', :inverse_of => :content_view_version_environments
+  belongs_to :environment, :class_name => 'Katello::KTEnvironment', :inverse_of => :content_view_version_environments
   belongs_to :content_view_version, :inverse_of => :content_view_version_environments
 
   before_create :verify_not_exists
