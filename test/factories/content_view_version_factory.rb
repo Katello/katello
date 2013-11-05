@@ -1,5 +1,5 @@
 FactoryGirl.define do
-  factory :content_view_version do
+  factory :content_view_version, :class => Katello::ContentViewVersion do
     sequence(:version)
     content_view
   end

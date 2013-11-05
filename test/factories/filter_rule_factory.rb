@@ -1,5 +1,5 @@
 FactoryGirl.define do
-  factory :filter_rule do
+  factory :filter_rule, :class => Katello::FilterRule do
     association :filter
     inclusion true
   end
