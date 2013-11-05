@@ -19,7 +19,7 @@ KT.repo_input = (function() {
             return;
         }
 
-        select.chosen({allow_single_deselect: true}).change(function(e) {
+        select.change(function(e) {
             var select = $(this),
                 data = {};
 
