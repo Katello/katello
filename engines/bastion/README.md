@@ -84,9 +84,22 @@ To connect a browser to the test server, point your browser to your machine at p
 
 ## Linting ##
 
-Linting is controlled by the JSHint library. The configuration being used by the project is located at the root of the Bastion engine in the `.jshintrc` file. To run just the linter:
+#### JavaScript
+
+To enforce JavaScript guidelines, we use the [JSHint](http://jshint.com/) library via [grunt-contrib-jshint](https://github.com/gruntjs/grunt-contrib-jshint). The configuration being used by the project is located at the root of the Bastion engine in the `.jshintrc` file.
+
+To run the JavaScript linter:
 
     grunt jshint
+
+#### HTML
+
+To check HTML code, we use [grunt-htmlhint](https://github.com/yaniswang/grunt-htmlhint) which uses the lint checks from [HTMLHint](http://htmlhint.com/).
+
+To run the HTML linter:
+
+    grunt htmlhint
+
 
 ## Conventions ##
 
