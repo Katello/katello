@@ -24,9 +24,9 @@ class ContentView < ActiveRecord::Base
 
   before_destroy :confirm_not_promoted # RAILS3458: this needs to come before associations
 
-  belongs_to :content_view_definition
+  belongs_to :content_view_definition, :class_name => "Katello::ContentViewDefinition"
   alias_method :definition, :content_view_definition
-  belongs_to :organization, :inverse_of => :content_views
+  belongs_to :organization, :inverse_of => :content_views, :class_name => "Katello::Organization"
 
   has_many :content_view_environments, :dependent => :destroy
 
