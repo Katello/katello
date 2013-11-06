@@ -29,6 +29,9 @@
 angular.module('Bastion.systems').controller('SystemDetailsInfoController',
     ['$scope', '$q', '$http', 'Routes', 'System', 'SystemGroup', 'ContentView',
     function($scope, $q, $http, Routes, System, SystemGroup, ContentView) {
+
+        var templatePrefix = '../';
+
         var customInfoErrorHandler = function(error) {
             $scope.saveError = true;
             $scope.errors = error["errors"];
@@ -166,9 +169,9 @@ angular.module('Bastion.systems').controller('SystemDetailsInfoController',
         // TODO upgrade to Angular 1.1.4 so we can move this into a directive
         // and use dynamic templates (http://code.angularjs.org/1.1.4/docs/partials/guide/directive.html)
         $scope.getTemplateForType = function(value) {
-            var template = 'systems/details/views/partials/system-detail-value.html';
+            var template = templatePrefix + 'systems/details/views/partials/system-detail-value.html';
             if (typeof(value) === 'object') {
-                template = 'systems/details/views/partials/system-detail-object.html';
+                template = templatePrefix + 'systems/details/views/partials/system-detail-object.html';
             }
             return template;
         };

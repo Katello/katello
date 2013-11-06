@@ -1,3 +1,3 @@
 collection @collection
 
-extends "/api/v2/system_groups/history_show"
+extends "katello/api/v2/system_groups/history_show"
