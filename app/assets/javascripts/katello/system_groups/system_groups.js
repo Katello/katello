@@ -12,7 +12,7 @@
 */
 
 
-KT.panel.list.registerPage('system_groups', { create : 'new_system_group' });
+KT.panel.list.registerPage('system_groups', { create : 'new_katello_system_group' });
 
 $(document).ready(function() {
     KT.panel.set_expand_cb(function(){
