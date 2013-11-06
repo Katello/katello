@@ -497,7 +497,7 @@ Rails.application.routes.draw do
         delete 'favorite/:id' => 'search#destroy_favorite', :on => :collection, :as => 'destroy_favorite'
       end
 
-      root :to => "user_sessions#new"
+      root :to => "dashboard#index"
 
       resources :password_resets, :only => [:create, :edit, :update] do
         collection do
