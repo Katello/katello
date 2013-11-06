@@ -658,8 +658,10 @@ usermod -a -G katello-shared tomcat
 
 %posttrans all
 # make sure we use openjdk as default
+# prefer the 1.6 (therefore the sort there) if available
+# because of this bug https://bugzilla.redhat.com/show_bug.cgi?id=1010111
 /usr/sbin/alternatives --set java \
-    $(echo | /usr/sbin/alternatives --config java | grep -o '\S*openjdk\S*')
+    $(echo | /usr/sbin/alternatives --config java | grep -o '\S*1\.[67]\.0-openjdk\S*' | sort | head -n1)
 
 %files
 ### if you put something here and it should go to headpin as well
