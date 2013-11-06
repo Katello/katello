@@ -11,16 +11,6 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
  */
 
-KT.panel.list.registerPage(
-    'users',
-    { create            : 'new_user',
-    validation          : KT.user_page.verifyPassword,
-    extra_create_data   : function(){
-        var env_id = $(".path_link.active").attr('data-env_id');
-        return { "user" : { "env_id" : env_id }};
-    }
-});
-
 $(document).ready(function() {
 
     KT.user_page.registerEdits();

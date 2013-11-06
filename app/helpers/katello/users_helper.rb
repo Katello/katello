@@ -13,11 +13,6 @@
 module Katello
 module UsersHelper
 
-  def mask_password(user)
-    return "" if user.password.nil?
-    user.password.gsub(/./, "&#9679;")
-  end
-
   def organization_select(org_id = nil, optional = true, no_org_choice = nil)
     if current_user.id == @user.id
       orgs = current_user.allowed_organizations.reject do |org|

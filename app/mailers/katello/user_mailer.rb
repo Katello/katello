@@ -16,26 +16,14 @@ class UserMailer < ActionMailer::Base
 
   default :from => Katello.config.email_reply_address
 
-  def send_password_reset(user)
-    org = user.default_org
-    User.current = user
-    UserMailer.async(:organization => org).password_reset(user, I18n.locale)
-  end
-
   def send_logins(users)
     org = users.collect { |u| u.default_org }.first || Organization.first
     UserMailer.async(:organization => org).logins(users, I18n.locale)
   end
 
-  def password_reset(user, locale)
-    I18n.locale = locale
-    @user = user
-    mail :to => user.email, :subject => _("Katello User '%s' Password Reset") % user.login
-  end
-
   def logins(users, locale)
     I18n.locale = locale
-    @email = users.first.email
+    @email = users.first.mail
     @users = users
     mail :to => @email, :subject => _("Katello Logins")
   end
