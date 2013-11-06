@@ -9,7 +9,8 @@
     <h2 class="fl" translate>Product {{ product.name }}</h2>
 
     <div class="btn-group fr">
-      <button ng-class="{'btn-danger': product.permissions.deletable, btn: !product.permissions.deletable}"
+      <button class="btn"
+              ng-class="{'btn-danger': product.permissions.deletable, 'btn-default': !product.permissions.deletable}"
               translate
               ng-hide="product.readonly"
               ng-click="showConfirm = true"
@@ -19,7 +20,7 @@
               ng-disabled="!product.permissions.deletable">
         Remove Product
       </button>
-      <button class="btn" ui-sref="products.index">
+      <button class="btn btn-default" ui-sref="products.index">
         <i class="icon-remove"></i>
         {{ "Close" | translate }}
       </button>
