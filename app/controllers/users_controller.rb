@@ -243,7 +243,7 @@ class UsersController < ApplicationController
       @user.default_org         = @organization.id
       @user.save!
 
-    raise no_env_available_msg if default_environment_id.nil? && params['org_id'].present?
+      notify.success _("User organization default updated successfully.")
 
       render :json => { :org => @organization.name }
     else
