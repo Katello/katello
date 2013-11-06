@@ -310,7 +310,7 @@ class KTEnvironment < ActiveRecord::Base
       #  we can't look it up via a query (org.default_content_view)
       content_view = self.organization.default_content_view
       if content_view.nil?
-        content_view = ContentView.new(:default => true, :name => "Default Organization View",
+        content_view = Katello::ContentView.new(:default => true, :name => "Default Organization View",
                                        :organization => self.organization)
       end
 

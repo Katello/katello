@@ -11,13 +11,12 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'minitest_helper'
+require 'katello_test_helper'
 
-class KTEnvironmentTestBase < MiniTest::Rails::ActiveSupport::TestCase
+module Katello
+class KTEnvironmentTestBase < ActiveSupport::TestCase
 
   extend ActiveRecord::TestFixtures
-
-  fixtures :all
 
   def self.before_suite
     services  = ['Candlepin', 'Pulp', 'ElasticSearch', 'Foreman']
@@ -28,13 +27,14 @@ class KTEnvironmentTestBase < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def setup
-    @library              = KTEnvironment.find(environments(:library).id)
-    @dev                  = KTEnvironment.find(environments(:dev).id)
-    @staging              = KTEnvironment.find(environments(:staging).id)
-    @acme_corporation     = Organization.find(organizations(:acme_corporation).id)
+    @library              = KTEnvironment.find(katello_environments(:library).id)
+    @dev                  = KTEnvironment.find(katello_environments(:dev).id)
+    @staging              = KTEnvironment.find(katello_environments(:staging).id)
+    @acme_corporation     = Organization.find(katello_organizations(:acme_corporation).id)
   end
 
 end
+
 
 class KTEnvironmentTest < KTEnvironmentTestBase
 
@@ -71,4 +71,5 @@ class KTEnvironmentTest < KTEnvironmentTestBase
     assert_equal @library.products.uniq.sort, @library.products.sort
     assert_operator @library.repositories.map(&:product).length, :>, @library.products.length
   end
+end
 end
