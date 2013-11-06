@@ -28,8 +28,8 @@ Start by cloning Foreman beside your git checkout of Katello such that:
 Change directories into the Foreman checkout and copy the sample settings and database files:
 
     cd foreman
-    copy settings.yml.sample to settings.yml
-    copy database.yml.sample to database.yml
+    cp config/settings.yaml{.sample,}
+    cp config/database.yml{.sample,}
 
 Now create a local gemfile, add two basic gems and install dependencies:
 
@@ -40,15 +40,14 @@ Now create a local gemfile, add two basic gems and install dependencies:
 
 Finally, create and migrate the database:
 
-    rake db:create
-    rake db:migrate
+    rake db:create db:migrate
 
 ### Setup Katello
 
 The Katello setup assumes that you have a previously setup Foreman checkout or have followed the instructions in the Setup Foreman section. The first step is to add the Katello engine and install dependencies:
 
     echo "gem 'katello', :path => '../katello'" >> bundler.d/Gemfile.local.rb
-    bundle install
+    bundle update
 
 Now add the Katello migrations and initial seed data:
 
@@ -60,10 +59,10 @@ At this point, the development environment should be completely setup and the Ka
 
     rails s
 
-2. Access Foreman in your browser (e.g. http://<hostname>:3000/
-3. Login to Foreman
+2. Access Foreman in your browser (e.g. `http://<hostname>:3000/`)
+3. Login to Foreman (default: `admin` and `changeme`)
 4. Create an initial Foreman organization
-5. Navigate to the Katello engine (e.g. http://<hostname>:3000/katello)
+5. Navigate to the Katello engine (e.g. `http://<hostname>:3000/katello`)
 
 ### Reset Development Environment
 
