@@ -16,7 +16,7 @@ child :custom_info => :customInfo do
 end
 
 child :environment => :environment do
-  extends 'api/v2/environments/show'
+  extends 'katello/api/v2/environments/show'
 end
 
 child :activation_keys => :activation_keys do

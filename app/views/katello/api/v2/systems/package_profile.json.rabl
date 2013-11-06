@@ -1,7 +1,7 @@
 object false
 
-extends "/api/v2/common/index"
+extends "katello/api/v2/common/index"
 
 node :results do
-    partial("/api/v2/systems/package", :object => @collection[:records])
+    partial("katello/api/v2/systems/package", :object => @collection[:records])
 end

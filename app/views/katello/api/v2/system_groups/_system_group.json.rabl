@@ -4,7 +4,7 @@ node :id do |group|
   group.id.to_i
 end
 
-extends "/api/v2/common/timestamps"
+extends "katello/api/v2/common/timestamps"
 
 node :permissions do |group|
   {

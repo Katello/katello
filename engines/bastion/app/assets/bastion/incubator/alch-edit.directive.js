@@ -251,7 +251,7 @@ angular.module('alchemy')
     .directive('alchEditMultiselect', function() {
         return {
             replace: true,
-            templateUrl: 'incubator/views/alch-edit-multiselect.html',
+            templateUrl: '../incubator/views/alch-edit-multiselect.html',
             scope: {
                 model: '=alchEditMultiselect',
                 formatter: '@formatter',
