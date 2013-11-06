@@ -10,10 +10,10 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'minitest_helper'
+require 'katello_test_helper'
 
-class ContentViewTest < MiniTest::Rails::ActiveSupport::TestCase
-  fixtures :all
+module Katello
+class ContentViewTest < ActiveSupport::TestCase
 
   def self.before_suite
     models = ["Organization", "KTEnvironment", "User", "ContentViewEnvironment","ContentViewDefinitionBase",
@@ -25,12 +25,12 @@ class ContentViewTest < MiniTest::Rails::ActiveSupport::TestCase
 
   def setup
     User.current      = User.find(users(:admin))
-    @library          = KTEnvironment.find(environments(:library).id)
-    @dev              = KTEnvironment.find(environments(:dev).id)
-    @acme_corporation = Organization.find(organizations(:acme_corporation).id)
-    @default_view     = ContentView.find(content_views(:acme_default))
-    @library_view     = ContentView.find(content_views(:library_view))
-    @library_dev_view = ContentView.find(content_views(:library_dev_view))
+    @library          = KTEnvironment.find(katello_environments(:library).id)
+    @dev              = KTEnvironment.find(katello_environments(:dev).id)
+    @acme_corporation = Organization.find(katello_organizations(:acme_corporation).id)
+    @default_view     = ContentView.find(katello_content_views(:acme_default))
+    @library_view     = ContentView.find(katello_content_views(:library_view))
+    @library_dev_view = ContentView.find(katello_content_views(:library_dev_view))
   end
 
   def test_create
@@ -177,7 +177,7 @@ class ContentViewTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def test_components_not_in_env
-    composite_view = content_views(:composite_view)
+    composite_view = katello_content_views(:composite_view)
 
     assert_equal 2, composite_view.components_not_in_env(@dev).length
     assert_equal composite_view.content_view_definition.component_content_views.sort,
@@ -185,9 +185,10 @@ class ContentViewTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def test_refresh
-    composite_view = content_views(:composite_view)
+    composite_view = katello_content_views(:composite_view)
 
-    mock_definition = mock(:ready_to_publish? => false)
+    mock_definition = mock()
+    mock_definition.expects(:ready_to_publish?).returns(false)
     composite_view.stubs(:content_view_definition).returns(mock_definition)
 
     assert_raises(RuntimeError) do
@@ -195,4 +196,5 @@ class ContentViewTest < MiniTest::Rails::ActiveSupport::TestCase
     end
   end
 
+end
 end
