@@ -72,7 +72,7 @@ module CandlepinConsumerSupport
     @distributor.description = 'New Distributor'
     @distributor.environment = env
     @distributor.content_view = cv
-    @distributor.facts = {}
+    @distributor.facts = {"distributor_version" => Distributor.latest_version}
 
     VCR.use_cassette('support/candlepin/distributor', :match_requests_on => [:path, :params, :method, :body_json]) do
       @distributor.set_candlepin_consumer

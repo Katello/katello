@@ -130,7 +130,7 @@ class GlueCandlepinConsumerTestDistributor < GlueCandlepinConsumerTestBase
   end
 
   def test_candlepin_distributor_update
-    assert_equal({"distributor_version"=>"sam-1.3"}, @@dist.facts)
+    assert_equal({"distributor_version" => Distributor.latest_version}, @@dist.facts)
     @@dist.facts = {:some => 'fact'}
     @@dist.update_candlepin_consumer
     assert_equal({:some => 'fact'}, @@dist.facts)

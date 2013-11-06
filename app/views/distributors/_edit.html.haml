@@ -14,7 +14,7 @@
 = content_for :content do
   #distributor
     %form.form
-      %input#panel_element_id{:name => @distributor.id, :type => "hidden", :value => "#{name}_#{distributor.id.to_s}", "data-ajax_url"=>url_for(:action=> 'update')}
+      %input#panel_element_id{:name => @distributor.id, :type => "hidden", :value => "#{name}_#{distributor.id.to_s}", "data-ajax_url" => url_for(:action=> 'update')}
 
         %h5 #{_("Distributor Info")}
         .control-group
@@ -30,7 +30,13 @@
             = label :distributor, :name, _("Name")
           .input
             .value
-              #distributor_name{'name' => 'distributor[name]', :class=>("editable edit_panel_element" if editable), 'data-url'=>distributor_path(distributor.id)} #{distributor[:name]}
+              #distributor_name{'name' => 'distributor[name]', :class => ("editable edit_panel_element" if editable), 'data-url' => distributor_path(distributor.id)} #{distributor[:name]}
+        .control_group
+          .label
+            = label :distributor, :version, _("Version")
+          .input
+            .value
+              #{distributor.version}
         .control-group
           .label
             = label :distributor, :description, _("Description")

@@ -81,6 +81,7 @@ class Distributor < ActiveRecord::Base
     json = super(options)
     json['environment'] = environment.as_json unless environment.nil?
     json['content_view'] = content_view.as_json if content_view
+    json['version'] = version.as_json if version
     json
   end
 
@@ -112,6 +113,10 @@ class Distributor < ActiveRecord::Base
 
   def self.latest_version
     available_versions.collect { |v| v["name"] }.select { |n| n =~ (Katello.config.katello? ? /\Asat/ : /\Asam/) }.last
+  end
+
+  def version
+    facts['distributor_version']
   end
 
   private
