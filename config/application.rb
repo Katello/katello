@@ -63,6 +63,9 @@ module Src
     require 'katello/middleware/log_request_uuid'
     config.middleware.insert_after ActionDispatch::RequestId, Katello::Middleware::LogRequestUUID
 
+    require 'katello/middleware/log_silencer'
+    config.middleware.swap Rails::Rack::Logger, Katello::Middleware::LogSilencer
+
     # use dabase configuration form katello.yml instead database.yml
     config.class_eval do
       def database_configuration
