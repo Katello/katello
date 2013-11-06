@@ -10,6 +10,7 @@
   have received a copy of GPLv2 along with this software; if not, see
   http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-%label{:for=>"org_#{@organization.id}", :class=>"label_default_org clickable", :id=>"label_org_#{@organization.id}"}
-  #{@org_label}
-= render :partial=>"common/fav", :locals => {:org=>@organization, :current_user=>current_user}
+.fr
+  %label.fr{:for=>"org_#{@organization.id}", :class=>"label_default_org", :id=>"label_org_#{@organization.id}"}
+    #{@org_label}
+  = render :partial=>"common/fav", :locals => {:org=>@organization, :current_user=>current_user}
