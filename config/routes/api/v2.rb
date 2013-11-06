@@ -22,8 +22,6 @@ Src::Application.routes.draw do
         onlies = [:show, :destroy, :index, :update]
       end
 
-      post '/dyntasks' => 'dyntasks#search'
-
       api_resources :organizations do
         member do
           post :repo_discover
@@ -297,7 +295,9 @@ Src::Application.routes.draw do
       end
 
       api_resources :sync_plans, :only => [:show, :update, :destroy]
-      api_resources :tasks, :only => [:show]
+      api_resources :tasks, :only => [:show] do
+        post :search, :on => :collection
+      end
       api_resources :about, :only => [:index]
 
       match "/version" => "ping#version", :via => :get
