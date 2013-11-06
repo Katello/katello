@@ -19,7 +19,7 @@ module Navigation
         @key           = :logout
         @display       = _("Sign Out")
         @authorization = true
-        @url           = katello_logout_path
+        @url           = logout_users_path
       end
 
     end
