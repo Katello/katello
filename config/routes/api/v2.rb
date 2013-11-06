@@ -86,8 +86,6 @@ Katello::Engine.routes.draw do
       ##############################
       ##############################
 
-      post '/dyntasks' => 'dyntasks#search'
-
       api_resources :organizations do
         api_resources :products, :only => [:index]
         api_resources :environments do
@@ -334,7 +332,9 @@ Katello::Engine.routes.draw do
       end
 
       api_resources :sync_plans, :only => [:show, :update, :destroy]
-      api_resources :tasks, :only => [:show]
+      api_resources :tasks, :only => [:show] do
+        post :search, :on => :collection
+      end
       api_resources :about, :only => [:index]
 
       api_resources :errata, :only => [:show]
