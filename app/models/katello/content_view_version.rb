@@ -15,7 +15,7 @@ class ContentViewVersion < ActiveRecord::Base
   include AsyncOrchestration
   include Authorization::ContentViewVersion
 
-  belongs_to :content_view
+  belongs_to :content_view, :class_name => "Katello::ContentView"
   has_many :content_view_version_environments, :dependent => :destroy
   has_many :environments, :through      => :content_view_version_environments,
                           :class_name   => "Katello::KTEnvironment",

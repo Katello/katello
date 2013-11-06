@@ -226,7 +226,7 @@ class ContentViewDefinitionTest < MiniTest::Rails::ActiveSupport::TestCase
     package_rule1.parameters = HashWithIndifferentAccess.new()
     package_rule1.save!
 
-    package_rule2 = PackageRule.create!(:filter => package_rule1.filter, :inclusion => false)
+    package_rule2 = PackageRule.new(:filter => package_rule1.filter, :inclusion => false)
     package_rule2.parameters = HashWithIndifferentAccess.new()
     package_rule2.save!
 
