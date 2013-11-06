@@ -14,9 +14,9 @@ angular.module('Bastion.widgets')
     .factory('taskListProvider', ['$timeout', '$resource', function($timeout, $resource) {
         var conditions = [], condToScopes = {}, scopeToCond = {},
             timoutId,
-            taskListResource = $resource('/katello/api/dyntasks',
+            taskListResource = $resource('/katello/api/tasks/:id/:action',
                                     {},
-                                    {query: {method:'POST', isArray: true}});
+                                    {query: {method:'POST', isArray: true, params: { action: 'search'}}});
 
         function updateProgress() {
             if(conditions.length == 0) {
