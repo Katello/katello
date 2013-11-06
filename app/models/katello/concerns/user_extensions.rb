@@ -59,7 +59,7 @@ module Katello
         has_many :task_statuses, :dependent => :destroy, :class_name => "Katello::TaskStatus"
         has_many :search_favorites, :dependent => :destroy, :class_name => "Katello::SearchFavorite"
         has_many :search_histories, :dependent => :destroy, :class_name => "Katello::SearchHistory"
-        belongs_to :default_environment, :class_name => "KTEnvironment"
+        belongs_to :default_environment, :class_name => "Katello::KTEnvironment"
         serialize :preferences, Hash
 
         validates :default_locale, :inclusion => {:in => Katello.config.available_locales, :allow_nil => true, :message => _("must be one of %s") % Katello.config.available_locales.join(', ')}

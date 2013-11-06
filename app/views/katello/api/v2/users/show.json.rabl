@@ -2,8 +2,11 @@ object @user
 
 attributes :id, :mail, :login, :disabled
 attributes :default_organization, :default_environment, :own_role_id
-attributes :allowed_organizations
+
+child :allowed_organizations, :root => :allowed_organizations do
+  attributes :id, :label, :name
+end
+
 attributes :preferences
 
-
-extends 'api/v2/common/timestamps'
+extends 'katello/api/v2/common/timestamps'

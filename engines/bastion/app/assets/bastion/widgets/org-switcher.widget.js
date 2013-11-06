@@ -37,7 +37,7 @@ angular.module('Bastion.widgets').directive('orgSwitcher',
     return {
         restrict: 'A',
         scope: true,
-        templateUrl: 'widgets/views/org-switcher.html',
+        templateUrl: '../widgets/views/org-switcher.html',
 
         controller: ['$scope', function($scope) {
             $scope.visible = false;
@@ -53,9 +53,13 @@ angular.module('Bastion.widgets').directive('orgSwitcher',
 
             $scope.refresh = function() {
                 $scope.working = true;
-                $scope.user = User.get({'id': CurrentUser}, function(user) {
+                $scope.user = User.get({'id': CurrentUser}, function(response) {
                     $scope.working = false;
-                    $scope.favoriteOrg = user.preferences.user['default_org'] || null;
+                    if (response.user.preferences.user) {
+                        $scope.favoriteOrg = response.user.preferences.user['default_org'];
+                    } else {
+                        $scope.favoriteOrg = null;
+                    }
                 });
             };
 
