@@ -52,7 +52,7 @@ class DefaultModel
 end
 
 class ResourceType < ActiveRecord::Base
-  belongs_to :permission
+  has_one :permission, :dependent => :destroy
   validates :name, :length => { :maximum => 255 }
 
   def display_name

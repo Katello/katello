@@ -13,7 +13,7 @@
 class SearchFavorite < ActiveRecord::Base
   include SearchHelper
 
-  belongs_to :user
+  belongs_to :user, :inverse_of => :search_favorites
   validate :max_favorites
   validates :params, :length => { :maximum => 255 }
   validates :path, :length => { :maximum => 255 }

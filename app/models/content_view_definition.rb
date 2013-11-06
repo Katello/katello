@@ -36,6 +36,7 @@ class ContentViewDefinition < ContentViewDefinitionBase
   # TODO: break up method
   # rubocop:disable MethodLength
   def publish(name, description, label = nil, options = {})
+    check_puppet_names!
     fail _("Cannot publish definition. Please check for repository conflicts.") if !ready_to_publish?
     options = { :async => true, :notify => false }.merge options
 
@@ -148,6 +149,14 @@ class ContentViewDefinition < ContentViewDefinitionBase
       return repos.select(&:puppet?).length > 1
     end
     false
+  end
+
+  def check_puppet_names!
+    if puppet_repository && (name_conflicts = puppet_repository.name_conflicts).any?
+      fail Errors::PuppetConflictException.new(name_conflicts),
+        _("Selected puppet repository has %s name conflict(s) and cannot be published.") %
+        name_conflicts.length
+    end
   end
 
   def ready_to_publish?

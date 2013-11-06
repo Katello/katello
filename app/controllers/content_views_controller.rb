@@ -47,6 +47,14 @@ class ContentViewsController < ApplicationController
     render :partial => 'content_view_definitions/views/view',
            :locals => { :view_definition => @view.content_view_definition, :view => @view,
                         :task => new_version.task_status }
+  rescue Errors::PuppetConflictException => e
+    details = _("Puppet repository name conflicts: %s.") % e.conflicts.join(", ")
+    notify.error(_("Failed to generate a new version of content view '%{view_name}'. %{error}") %
+                 {:view_name => @view.name, :error => e},
+                 :details => details)
+    logger.error(_("%{exception}\n%{details}") % {:exception => e, :details => details})
+
+    render :text => e.to_s, :status => 500
   rescue => e
     current_version = @view.version(current_organization.library).try(:version)
 

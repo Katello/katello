@@ -12,6 +12,6 @@
 #
 
 class EnvironmentSystemGroup < ActiveRecord::Base
-  belongs_to :environment, :class_name => 'KTEnvironment'
-  belongs_to :system_group
+  belongs_to :environment, :class_name => 'KTEnvironment', :inverse_of => :environment_system_groups
+  belongs_to :system_group, :inverse_of => :environment_system_groups
 end

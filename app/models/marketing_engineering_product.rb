@@ -11,6 +11,6 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class MarketingEngineeringProduct < ActiveRecord::Base
-  belongs_to :marketing_product, :class_name => "Product"
-  belongs_to :engineering_product, :class_name => "Product"
+  belongs_to :marketing_product, :class_name => "Product", :inverse_of => :marketing_engineering_products
+  belongs_to :engineering_product, :class_name => "Product", :inverse_of => :marketing_engineering_products
 end

@@ -66,7 +66,15 @@ Install the JavaScript asset libraries used for testing defined within bower.jso
 
     bower install --dev
 
-Run 'grunt test' to ensure test setup is working
+Run 'grunt test' to ensure test setup is working.
+
+As libraries are updated or added over time, you may have to rerun `npm install` and `bower install`.  If you encounter errors such as this:
+
+```
+ Local Npm module "grunt-angular-gettext" not found. Is it installed?
+```
+
+Running `npm install` and `bower install` again should fix the issue.
 
 #### Test Commands ####
 

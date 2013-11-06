@@ -236,37 +236,18 @@ class UsersController < ApplicationController
   end
 
   def update_environment
-    if Katello.config.katello?
-      default_environment_id = params['env_id'].try(:[], 'env_id').try(:to_i)
+    if params['org_id'].present?
+      @organization = Organization.find_by_id(params['org_id'].try(:to_i))
+
+      @user.default_environment = @organization.library
+      @user.default_org         = @organization.id
+      @user.save!
+
+    raise no_env_available_msg if default_environment_id.nil? && params['org_id'].present?
+
+      render :json => { :org => @organization.name }
     else
-      default_environment_id = nil
-      if !params['org_id'].blank?
-        @organization = Organization.find_by_id(params['org_id'].try(:to_i))
-        default_environment_id = @organization.library.id
-      end
-    end
-
-    if @user.default_environment.try(:id) == default_environment_id
-      err_msg = N_("The system registration default you supplied was the same as the old system registration default.")
-      notify.error err_msg
-      render(:text => err_msg, :status => 400)
-      return
-    end
-
-    fail no_env_available_msg if default_environment_id.nil? && params['org_id'].present?
-
-    @environment              = default_environment_id.nil? ? nil : KTEnvironment.find(default_environment_id)
-    @user.default_environment = @environment
-    @user.save!
-
-    @organization             = @environment.try :organization
-
-    notify.success _("User System Registration Environment updated successfully.")
-
-    if @organization && @environment
-      render :json => { :org => @organization.name, :env => @environment.name, :env_id => @environment.id }
-    else
-      render :json => { :org => _("No system registration default set for this user."), :env => _("No system registration default set for this user.") }
+      render :json => { :org => _("No organization default set for this user.") }
     end
   end
 

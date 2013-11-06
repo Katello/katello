@@ -53,7 +53,9 @@ class User < ActiveRecord::Base
   has_many :task_statuses, :dependent => :destroy
   has_many :search_favorites, :dependent => :destroy
   has_many :search_histories, :dependent => :destroy
-  belongs_to :default_environment, :class_name => "KTEnvironment"
+  has_many :activation_keys, :dependent => :destroy
+  has_many :changeset_users, :dependent => :destroy
+  belongs_to :default_environment, :class_name => "KTEnvironment", :inverse_of => :users
   serialize :preferences, HashWithIndifferentAccess
 
   validates :username, :uniqueness => true, :presence => true

@@ -95,6 +95,7 @@ module Glue::ElasticSearch::PuppetModule
                  :sort => [:name_sort, "ASC"],
                  :search_mode => :all,
                  :default_field => 'name',
+                 :fields => [],
                  :filters => nil}.merge(options)
       options[:repoids] = Array(options[:repoids])
 
@@ -112,6 +113,8 @@ module Glue::ElasticSearch::PuppetModule
             string query, { :default_field => options[:default_field] }
           end
         end
+
+        fields options[:fields] unless options[:fields].blank?
 
         if options[:page_size] > 0
           size options[:page_size]

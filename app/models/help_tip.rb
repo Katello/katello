@@ -11,6 +11,6 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class HelpTip < ActiveRecord::Base
-  belongs_to :user
+  belongs_to :user, :inverse_of => :help_tips
   validates :key, :length => { :maximum => 255 }
 end
