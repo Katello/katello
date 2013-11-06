@@ -11,8 +11,9 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require './test/models/system_base'
+require File.expand_path("system_base", File.dirname(__FILE__))
 
+module Katello
 class SystemClassTest < SystemTestBase
   def test_as_json
     options = {}
@@ -42,7 +43,7 @@ class SystemCreateTest < SystemTestBase
 
   def test_create_with_content_view
     @system = build(:system, :alabama, :name => 'alabama', :description => 'Alabama system', :environment => @dev, :uuid => '1234')
-    @system.content_view = ContentView.find(content_views(:library_dev_view))
+    @system.content_view = ContentView.find(katello_content_views(:library_dev_view))
     assert @system.save
     refute @system.content_view.default?
   end
@@ -51,8 +52,9 @@ class SystemCreateTest < SystemTestBase
     @system = build(:system, :alabama, :name => 'alabama', :description => 'Alabama system', :environment => @dev, :uuid => '1234')
     name = "ಬoo0000"
     @system.name = name
-    @system.content_view = ContentView.find(content_views(:library_dev_view))
+    @system.content_view = ContentView.find(katello_content_views(:library_dev_view))
     assert @system.save!
     refute_nil System.find_by_name(name)
   end
+end
 end
