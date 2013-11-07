@@ -33,7 +33,7 @@ class Repository < ActiveRecord::Base
 
   include AsyncOrchestration
   include Ext::LabelFromName
-  include Rails.application.routes.url_helpers
+  include Katello::Engine.routes.url_helpers
 
   YUM_TYPE = 'yum'
   FILE_TYPE = 'file'
@@ -139,7 +139,7 @@ class Repository < ActiveRecord::Base
       host = Katello.config.host
       port = Katello.config.port
       host += ":" + port.to_s unless port.blank? || port.to_s == "443"
-      gpg_key_content_katello_api_repository_url(self, :host => host + Katello.config.url_prefix.to_s, :protocol => 'https')
+      gpg_key_content_api_repository_url(self, :host => host + Katello.config.url_prefix.to_s, :protocol => 'https')
     end
   end
 
