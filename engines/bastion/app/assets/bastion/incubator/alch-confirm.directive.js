@@ -29,7 +29,7 @@
 angular.module('alchemy')
     .directive('alchConfirm', function() {
         return {
-            templateUrl: '../incubator/views/alch-confirm.html',
+            templateUrl: 'incubator/views/alch-confirm.html',
             replace: true,
             transclude: true,
             scope: {
@@ -40,7 +40,7 @@ angular.module('alchemy')
     })
     .directive('alchConfirmModal', ['$document', function($document) {
         return {
-            templateUrl: '../incubator/views/alch-confirm-modal.html',
+            templateUrl: 'incubator/views/alch-confirm-modal.html',
             replace: true,
             // Note that this causes an error in angular-gettext but that should be fixed when
             // this commit https://github.com/angular/angular.js/commit/bf79bd4194eca2118ae1c492c08dbd217f5ae810
