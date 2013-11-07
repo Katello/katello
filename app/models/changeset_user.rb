@@ -13,6 +13,6 @@
 class ChangesetUser < ActiveRecord::Base
 
   belongs_to :changeset, :inverse_of => :users
-  belongs_to :user
+  belongs_to :user, :inverse_of => :changeset_users
 
 end

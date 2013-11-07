@@ -38,7 +38,7 @@ class System < ActiveRecord::Base
                             :after_remove => :remove_system_group
                            }
   has_many :custom_info, :as => :informable, :dependent => :destroy
-  belongs_to :content_view
+  belongs_to :content_view, :inverse_of => :systems
 
   before_validation :set_default_content_view, :unless => :persisted?
   validates :environment, :presence => true

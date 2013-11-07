@@ -263,7 +263,7 @@ class ApplicationController < ActionController::Base
 
   def verify_ldap
     u = current_user
-    u.verify_ldap_roles if Katello.config.ldap_roles && u.nil?
+    u.verify_ldap_roles if Katello.config.ldap_roles && !u.nil?
   end
 
   def require_org

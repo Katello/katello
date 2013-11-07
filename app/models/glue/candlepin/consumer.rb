@@ -104,6 +104,7 @@ module Glue::Candlepin::Consumer
                                                             self.autoheal,
                                                             self.releaseVer,
                                                             self.serviceLevel,
+                                                            self.uuid,
                                                             self.capabilities)
 
       load_from_cp(consumer_json)

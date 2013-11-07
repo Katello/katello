@@ -11,6 +11,6 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class RolesUser < ActiveRecord::Base
-  belongs_to :role
-  belongs_to :user
+  belongs_to :role, :inverse_of => :roles_users
+  belongs_to :user, :inverse_of => :roles_users
 end

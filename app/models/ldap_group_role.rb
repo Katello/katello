@@ -13,6 +13,6 @@
 class LdapGroupRole < ActiveRecord::Base
   validates :ldap_group, :uniqueness => {:scope => :role_id}
   validates_with Validators::LdapGroupValidator, :attributes => :ldap_group
-  belongs_to :role
+  belongs_to :role, :inverse_of => :ldap_group_roles
 
 end

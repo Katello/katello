@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class FilterRule < ActiveRecord::Base
-  belongs_to :filter
+  belongs_to :filter, :inverse_of => :rules
 
   serialize :parameters, HashWithIndifferentAccess
   PACKAGE         = Package::CONTENT_TYPE

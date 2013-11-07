@@ -13,8 +13,8 @@
 
 class SystemSystemGroup < ActiveRecord::Base
 
-  belongs_to :system
-  belongs_to :system_group
+  belongs_to :system, :inverse_of => :system_system_groups
+  belongs_to :system_group, :inverse_of => :system_system_groups
 
   validate :validate_max_systems_not_exceeded
   validate :validate_system_environments

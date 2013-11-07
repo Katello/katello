@@ -12,6 +12,6 @@
 #
 
 class KeySystemGroup < ActiveRecord::Base
-  belongs_to :activation_key
-  belongs_to :system_group
+  belongs_to :activation_key, :inverse_of => :key_system_groups
+  belongs_to :system_group, :inverse_of => :key_system_groups
 end

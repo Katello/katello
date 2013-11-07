@@ -11,8 +11,10 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class Filter < ActiveRecord::Base
-  belongs_to :content_view_definition, :class_name => "ContentViewDefinitionBase"
-  has_many  :rules, :class_name => "FilterRule", :dependent => :destroy
+  belongs_to :content_view_definition,
+             :class_name => "ContentViewDefinitionBase",
+             :inverse_of => :filters
+  has_many :rules, :class_name => "FilterRule", :dependent => :destroy
 
   # rubocop:disable HasAndBelongsToMany
   # TODO: change these into has_many :through associations

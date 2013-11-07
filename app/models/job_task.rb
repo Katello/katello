@@ -11,6 +11,6 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class JobTask < ActiveRecord::Base
-  belongs_to :job
-  belongs_to :task_status
+  belongs_to :job, :inverse_of => :job_tasks
+  belongs_to :task_status, :inverse_of => :job_task
 end

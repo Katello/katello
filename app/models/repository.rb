@@ -43,7 +43,11 @@ class Repository < ActiveRecord::Base
   belongs_to :environment, :inverse_of => :repositories, :class_name => "KTEnvironment"
   belongs_to :product, :inverse_of => :repositories
   belongs_to :gpg_key, :inverse_of => :repositories
-  belongs_to :library_instance, :class_name => "Repository"
+  belongs_to :library_instance, :class_name => "Repository", :inverse_of => :library_instances_inverse
+  has_many :library_instances_inverse, # TODOp what is the proper name?
+           :class_name  => 'Repository',
+           :dependent   => :restrict,
+           :foreign_key => :library_instance_id
   has_many :content_view_definition_repositories, :dependent => :destroy
   has_many :content_view_definitions, :through => :content_view_definition_repositories
   # rubocop:disable HasAndBelongsToMany
@@ -298,6 +302,18 @@ class Repository < ActiveRecord::Base
 
   def feed?
     feed.present?
+  end
+
+  def name_conflicts
+    if puppet?
+      modules = PuppetModule.search("*", :repoids => self.pulp_id,
+                                         :fields => [:name],
+                                         :page_size => self.puppet_module_count)
+
+      modules.map(&:name).group_by(&:to_s).select { |_, v| v.size > 1 }.keys
+    else
+      []
+    end
   end
 
   protected

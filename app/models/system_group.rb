@@ -70,7 +70,7 @@ class SystemGroup < ActiveRecord::Base
     end
   end
 
-  belongs_to :organization
+  belongs_to :organization, :inverse_of => :system_groups
 
   before_validation(:on => :create) do
     self.pulp_id ||= "#{self.organization.label}-#{Util::Model.labelize(self.name)}-#{SecureRandom.hex(4)}"

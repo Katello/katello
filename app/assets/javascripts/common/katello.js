@@ -218,54 +218,57 @@ KT.orgswitcher = (function($) {
       if (checked){
         options = {user_id : $('#user_id').data("user_id")};
       } else {
-        options = {org : selected_org_id, user_id : $('#user_id').data("user_id")};
+        options = {org_id : selected_org_id, user_id : $('#user_id').data("user_id")};
       }
 
-      //hide the favorite icon temporarily while the ajax operation occurs
-      this_favorite.hide();
+      if (!checked) {
+          //hide the favorite icon temporarily while the ajax operation occurs
+          this_favorite.hide();
 
-      //show the spinner while waiting
-      this_spinner.removeClass('hidden').show();
+          //show the spinner while waiting
+          this_spinner.removeClass('hidden').show();
 
-      $.ajax({
-          type: "PUT",
-          url: url,
-          data: options,
-          cache: false,
-          success: function(data, textStatus, jqXHR){
-            //hide spinner
-            this_spinner.addClass('hidden').hide();
-            if(checked){
-              this_checkbox.attr("checked", false);
-              this_favorite.addClass("favorites_icon-grey");
-              this_favorite.removeClass("favorites_icon-black");
-              this_favorite.attr("title", i18n.make_default_org);
-              if(this_favorite.parent().find('label').length){
-                this_favorite.parent().find('label').html(i18n.make_default_org);
+          $.ajax({
+              type: "PUT",
+              url: url,
+              data: options,
+              cache: false,
+              success: function(data, textStatus, jqXHR){
+                //hide spinner
+                this_spinner.addClass('hidden').hide();
+                if(checked){
+                  this_checkbox.attr("checked", false);
+                  this_favorite.addClass("icon-star-empty").addClass('clickable');
+                  this_favorite.removeClass("icon-star");
+                  this_favorite.attr("title", i18n.make_default_org);
+                  if(this_favorite.parent().find('label').length){
+                    this_favorite.parent().find('label').html(i18n.make_default_org);
+                  }
+                } else {
+                  this_checkbox.attr("checked", true);
+                  all_favorites.removeClass("icon-star");
+                  all_favorites.attr("title", i18n.make_default_org);
+                  $('.favorite').addClass("icon-star").removeClass('clickable');
+                  this_favorite.removeClass("icon-star-empty").addClass("icon-star");
+                  this_favorite.attr("title", i18n.current_default_org);
+                  if(this_favorite.parent().find('label').length){
+                    this_favorite.parent().find('label').html(i18n.current_default_org);
+                  }
+                }
+                this_favorite.show();
+
+                this_checkbox.removeAttr("disabled");
+              },
+              error: function(data, textStatus, jqXHR){
+                //hide the spinner and show the favorite is not selected
+                this_spinner.addClass('hidden').hide();
+                this_checkbox.attr("checked", false);
+                this_favorite.show();
+                this_checkbox.removeAttr("disabled");
               }
-            } else {
-              this_checkbox.attr("checked", true);
-              all_favorites.removeClass("favorites_icon-black");
-              all_favorites.attr("title", i18n.make_default_org);
-              $('.favorite').addClass("favorites_icon-grey");
-              this_favorite.removeClass("favorites_icon-grey").addClass("favorites_icon-black");
-              this_favorite.attr("title", i18n.current_default_org);
-              if(this_favorite.parent().find('label').length){
-                this_favorite.parent().find('label').html(i18n.current_default_org);
-              }
-            }
-            this_favorite.show();
+          });
+      }
 
-            this_checkbox.removeAttr("disabled");
-          },
-          error: function(data, textStatus, jqXHR){
-            //hide the spinner and show the favorite is not selected
-            this_spinner.addClass('hidden').hide();
-            this_checkbox.attr("checked", false);
-            this_favorite.show();
-            this_checkbox.removeAttr("disabled");
-          }
-      });
       return false;
     };
     return {
