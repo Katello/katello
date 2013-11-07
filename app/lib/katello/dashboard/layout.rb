@@ -40,7 +40,7 @@ module Dashboard
     end
 
     def setup_layout
-      if (user_layout = current_user.try(:preferences).try(:[], :dashboard).try(:[], :layout))
+      if (user_layout = current_user.preferences_hash.try(:[], :dashboard).try(:[], :layout))
         user_layout.each do |col|
           @columns << col.each_with_object([]) do |name, column|
             begin
