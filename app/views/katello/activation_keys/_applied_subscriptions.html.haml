@@ -4,7 +4,7 @@
   #{@activation_key.name}
 
 = content_for :remove_item do
-  = link_to _("Remove Activation Key"), katello_activation_key_path(@activation_key.id), :confirm => _('Are you sure?'), :method => :delete, :class=>"remove_item", :remote=>true
+  = link_to _("Remove Activation Key"), activation_key_path(@activation_key.id), :confirm => _('Are you sure?'), :method => :delete, :class=>"remove_item", :remote=>true
 
 = content_for :navigation do
   = render_menu(1..2, activation_keys_navigation)
@@ -24,7 +24,7 @@
     .full.lower_content.clear
       .fl
         = render :partial => "katello/common/filter_table"
-      = form_tag remove_subscriptions_katello_activation_key_path(@activation_key), :id=>"subscription_form", :method=>"post", :remote=>true do
+      = form_tag remove_subscriptions_activation_key_path(@activation_key), :id=>"subscription_form", :method=>"post", :remote=>true do
 
         - if applied_subs.length > 0 && editable
           = submit_tag _('Remove'), :class => 'submit button fr', :id=>"subscription_submit_button", :disabled=>"disabled"
@@ -33,6 +33,6 @@
 
         - if editable
           .actions.panel_link
-            = link_to(_("Add Subscriptions ▸"), available_subscriptions_katello_activation_key_path(@activation_key))
+            = link_to(_("Add Subscriptions ▸"), available_subscriptions_activation_key_path(@activation_key))
 
 = render :template => "katello/layouts/tupane_layout"

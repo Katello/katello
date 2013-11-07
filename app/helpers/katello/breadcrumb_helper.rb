@@ -73,7 +73,7 @@ module ContentBreadcrumbs
       @next_environment.content_view_versions.non_default_view.
       pluck("#{Katello::ContentViewVersion.table_name}.id").to_set
 
-    add_crumb_node!(bc, content_crumb_id, details_katello_promotion_path(@environment.name), _("Content"), [],
+    add_crumb_node!(bc, content_crumb_id, details_promotion_path(@environment.name), _("Content"), [],
                     {:cache => true,
                      :content => render(:partial => "content_views",
                                         :locals => {:environment => @environment,

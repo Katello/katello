@@ -18,10 +18,10 @@
 = render :partial => "katello/system_groups/tupane_header"
 
 = content_for :content do
-  %input.events{:type => "hidden", 'data-url' => status_katello_system_group_events_path(@group.id)}
+  %input.events{:type => "hidden", 'data-url' => status_system_group_events_path(@group.id)}
 
   #packages_container{ "data-parent_id" => @group.id }
-    = form_tag katello_system_group_packages_path(@group.id), :id => "system_content_action_form", :method => "post", :remote => true do
+    = form_tag system_group_packages_path(@group.id), :id => "system_content_action_form", :method => "post", :remote => true do
       %table
         %thead
           %th
@@ -50,14 +50,14 @@
                 %div#content_form
                   - help_text = _("Enter Selected Content...")
                   %input{:type=>'text', :id=>'content_input', :size=>'30', :placeholder => help_text, :title => help_text, :tabindex => auto_tab_index}
-                  %input#add_content.button.hidden{:type=>'button', :value=>_('Install'), 'data-method'=>"POST", 'data-url'=>add_katello_system_group_packages_path(), :tabindex => auto_tab_index}
-                  %input#update_content.button.hidden{:type=>'button', :value=>_('Update'), :'data-method'=>"POST", 'data-url'=>katello_system_group_packages_path(), :tabindex => auto_tab_index}
-                  %input#remove_content.button.hidden{:type=>'button', :value=>_('Remove'), :'data-method'=>"POST", 'data-url'=>remove_katello_system_group_packages_path(), :tabindex => auto_tab_index}
-                  %input#update_all_content.button{:type=>'button', :value=>_('Update All'), 'data-method'=>"POST", 'data-url'=>katello_system_group_packages_path(), :tabindex => auto_tab_index}
+                  %input#add_content.button.hidden{:type=>'button', :value=>_('Install'), 'data-method'=>"POST", 'data-url'=>add_system_group_packages_path(), :tabindex => auto_tab_index}
+                  %input#update_content.button.hidden{:type=>'button', :value=>_('Update'), :'data-method'=>"POST", 'data-url'=>system_group_packages_path(), :tabindex => auto_tab_index}
+                  %input#remove_content.button.hidden{:type=>'button', :value=>_('Remove'), :'data-method'=>"POST", 'data-url'=>remove_system_group_packages_path(), :tabindex => auto_tab_index}
+                  %input#update_all_content.button{:type=>'button', :value=>_('Update All'), 'data-method'=>"POST", 'data-url'=>system_group_packages_path(), :tabindex => auto_tab_index}
     .clear
       &nbsp;
 
-    = form_tag katello_system_group_packages_path(@group.id), :id => "packages_form", :method => "post", :remote => true do
+    = form_tag system_group_packages_path(@group.id), :id => "packages_form", :method => "post", :remote => true do
       %table.packages.ajaxScroll{'data-system_id' => @group.id}
         %thead
           %th{:colspan => 2}

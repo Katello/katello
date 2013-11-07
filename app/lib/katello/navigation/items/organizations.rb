@@ -19,7 +19,7 @@ module Navigation
         @key           = :organizations
         @display       = _("Organizations")
         @authorization = lambda{ Organization.any_readable? }
-        @url           = katello_organizations_path
+        @url           = organizations_path
       end
 
     end

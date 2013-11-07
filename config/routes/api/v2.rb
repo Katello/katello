@@ -6,10 +6,8 @@ class ActionDispatch::Routing::Mapper
   include Katello::Routing::MapperExtensions
 end
 
-Rails.application.routes.draw do
+Katello::Engine.routes.draw do
 
-  scope 'katello', :as => 'katello' do
-    scope :module => :katello do
       namespace :api do
 
         # new v2 routes that point to v2
@@ -356,6 +354,4 @@ Rails.application.routes.draw do
         end # module v1
 
       end # '/api' namespace
-    end
-  end
 end

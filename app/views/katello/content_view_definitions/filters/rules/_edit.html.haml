@@ -6,9 +6,9 @@
 
     .panel_link
       = link_to(_("◀ Back to Filter List"),
-        katello_content_view_definition_filters_path(view_definition.id), {:class => "separator"})
+        content_view_definition_filters_path(view_definition.id), {:class => "separator"})
       = link_to(_("Filter: %{name}") % {:name => filter.name},
-        edit_katello_content_view_definition_filter_path(view_definition.id, filter.id))
+        edit_content_view_definition_filter_path(view_definition.id, filter.id))
 
     %br
 
@@ -21,7 +21,7 @@
         #inclusion{'data-initial_value' => included_text(rule)}
           = _("Specifying %{rule_type} to %{include}") % {:include => included_text(rule), :rule_type => rule_type}
           - if editable
-            %a.subpanel_element{"data-url" => edit_inclusion_katello_content_view_definition_filter_rule_path(view_definition, filter, rule)}
+            %a.subpanel_element{"data-url" => edit_inclusion_content_view_definition_filter_rule_path(view_definition, filter, rule)}
               = _("(Edit)")
 
         - if rule.content_type == Katello::FilterRule::ERRATA

@@ -88,8 +88,8 @@ class ChangesetsController < Katello::ApplicationController
   end
 
   def create
-    if params[:katello_changeset][:action_type].blank? ||
-       params[:katello_changeset][:action_type] == Changeset::PROMOTION
+    if params[:changeset][:action_type].blank? ||
+       params[:changeset][:action_type] == Changeset::PROMOTION
 
       if @next_environment.blank?
         notify.error _("Please create at least one environment.")
@@ -103,8 +103,8 @@ class ChangesetsController < Katello::ApplicationController
       env_id = @environment.id
       type = Changeset::DELETION
     end
-    @changeset = Changeset.create_for(type, :name => params[:katello_changeset][:name],
-                                            :description => params[:katello_changeset][:description],
+    @changeset = Changeset.create_for(type, :name => params[:changeset][:name],
+                                            :description => params[:changeset][:description],
                                             :environment_id => env_id)
 
     notify.success _("Promotion Changeset '%s' was created.") % @changeset["name"]
@@ -282,7 +282,7 @@ class ChangesetsController < Katello::ApplicationController
                        :name => controller_display_name,
                        :accessor => :id,
                        :ajax_load => true,
-                       :ajax_scroll => items_katello_changesets_path,
+                       :ajax_scroll => items_changesets_path,
                        :search_class => Changeset}
   end
 

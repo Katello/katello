@@ -26,19 +26,19 @@ module Navigation
       [
         { :key => :environment,
           :name => _("Defaults"),
-          :url => lambda{edit_environment_katello_user_path(@user.id)},
+          :url => lambda{edit_environment_user_path(@user.id)},
           :if => lambda {@user},
           :options => {:class => "panel_link"}
         },
         { :key => :user_roles,
           :name => _("Roles"),
-          :url => lambda{edit_katello_role_path(@user.own_role.id)},
+          :url => lambda{edit_role_path(@user.own_role.id)},
           :if => lambda{@user},
           :options => {:class => "panel_link"}
         },
         { :key => :user_details,
           :name => _("Details"),
-          :url => lambda{edit_katello_user_path(@user.id)},
+          :url => lambda{edit_user_path(@user.id)},
           :if => lambda{@user},
           :options => {:class => "panel_link"}
         }
@@ -60,7 +60,7 @@ module Navigation
     def menu_users
       {:key => :users,
        :name => _("Users"),
-       :url => katello_users_path,
+       :url => users_path,
        :if => lambda {User.any_readable?},
        :options => {:class => 'operations second_level', "data-menu" => "operations"}
       }
@@ -69,7 +69,7 @@ module Navigation
     def menu_roles
       {:key => :roles,
        :name => _("Roles"),
-       :url => katello_roles_path,
+       :url => roles_path,
        :if => lambda {Role.any_readable?},
        :options => {:class => 'operations second_level', "data-menu" => "operations"}
       }
@@ -78,7 +78,7 @@ module Navigation
     def menu_orgs
       {:key => :orgs,
        :name => _("Organizations"),
-       :url => katello_organizations_path,
+       :url => organizations_path,
        :if => lambda {Organization.any_readable?},
        :options => {:class => 'operations section_level', "data-menu" => "operations"}
       }
@@ -96,7 +96,7 @@ module Navigation
     def menu_about
       {:key => :about,
        :name => _("About"),
-       :url => katello_about_path,
+       :url => about_path,
        :if => lambda {Organization.any_readable?},
        :options => {:class => 'operations section_level', "data-menu" => "operations"}
       }

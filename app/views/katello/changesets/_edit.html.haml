@@ -6,18 +6,18 @@
 
 = content_for :content do
   .grid_10
-    %input#changeset{:type => "hidden", 'data-ajax_url' => katello_changeset_path(@changeset.id)}
+    %input#changeset{:type => "hidden", 'data-ajax_url' => changeset_path(@changeset.id)}
 
     .fieldset
       .grid_3.ra
         %label #{_("Name:")}
       .grid_5.la{ :name => "name", :class => ("editable edit_textfield" if editable),
-          "data-id" => @changeset.id, "data-url" => katello_changeset_path(@changeset.id)} #{@changeset.name }
+          "data-id" => @changeset.id, "data-url" => changeset_path(@changeset.id)} #{@changeset.name }
     .fieldset
       .grid_3.ra
         %label #{_("Description:")}
       .grid_5.la{ :name => "description", :class => ("editable edit_description" if editable),
-          "data-id" => @changeset.id, 'data-maxlength' => default_description_limit, "data-url" => katello_changeset_path(@changeset.id) }<
+          "data-id" => @changeset.id, 'data-maxlength' => default_description_limit, "data-url" => changeset_path(@changeset.id) }<
         = @changeset.description.blank? ? _("None") : @changeset.description
     .fieldset
       .grid_3.ra

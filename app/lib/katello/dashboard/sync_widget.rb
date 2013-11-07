@@ -23,7 +23,7 @@ class Dashboard::SyncWidget < Dashboard::Widget
   end
 
   def content_path
-    sync_katello_dashboard_index_path
+    sync_dashboard_index_path
   end
 end
 end

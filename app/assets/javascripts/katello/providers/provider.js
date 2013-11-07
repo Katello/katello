@@ -11,7 +11,7 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
 
-KT.panel.list.registerPage('providers', { create : 'new_katello_provider' });
+KT.panel.list.registerPage('providers', { create : 'new_provider' });
 
 $(document).ready(function() {
 

@@ -11,7 +11,7 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
 
-KT.panel.list.registerPage('katello_changesets',
+KT.panel.list.registerPage('changesets',
                             { 'extra_params' :
                                 [ { hash_id     : 'env_id',
                                     init_func     : function(){

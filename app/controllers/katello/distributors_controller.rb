@@ -131,7 +131,7 @@ class DistributorsController < Katello::ApplicationController
 
   def create
     @distributor = Distributor.new
-    @distributor.name = params["katello_distributor"]["name"]
+    @distributor.name = params["distributor"]["name"]
     @distributor.cp_type = "candlepin"  # The 'candlepin' type is allowed to export a manifest
     @distributor.facts = {'distributor_version' => params[:distributor][:version]}
     @distributor.environment = KTEnvironment.find(params["distributor"]["environment_id"])
@@ -395,7 +395,7 @@ class DistributorsController < Katello::ApplicationController
       :name => controller_display_name,
       :list_partial => 'list_distributors',
       :ajax_load  => true,
-      :ajax_scroll => items_katello_distributors_path,
+      :ajax_scroll => items_distributors_path,
       :actions => Distributor.any_deletable?(@environment, current_organization) ? 'actions' : nil,
       :initial_action => :subscriptions,
       :search_class => Distributor,

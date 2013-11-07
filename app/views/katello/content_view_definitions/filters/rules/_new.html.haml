@@ -10,7 +10,7 @@
     - if options.length > 0
 
       = kt_form_for(Katello::FilterRule.new,
-        :url => katello_content_view_definition_filter_rules_path(view_definition, filter),
+        :url => content_view_definition_filter_rules_path(view_definition, filter),
         :remote => true, :html => {:id => "filter_rule_form"}) do |form|
 
         = form.select :content_type, options, {},

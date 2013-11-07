@@ -13,7 +13,7 @@
                 .icon.red_icon.fl
           .col_1.one-line-ellipsis{:title=>system.name}
             %h5
-              = link_to system.name, generate_url(katello_systems_path, {:id => system.id}, "system")
+              = link_to system.name, generate_url(systems_path, {:id => system.id}, "system")
           .col_2{:title=>_("Distribution")}
             = system.distribution
           .col_3{:title=>_("Last Checked in Date")}

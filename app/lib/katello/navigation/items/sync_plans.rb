@@ -19,7 +19,7 @@ module Navigation
         @key           = :sync_plans
         @display       = _("Sync Plans")
         @authorization = true
-        @url           = katello_sync_plans_path
+        @url           = sync_plans_path
       end
 
     end

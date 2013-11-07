@@ -19,7 +19,7 @@ module Navigation
         @key           = :content_search
         @display       =  _("Content Search")
         @authorization = lambda{ organization && !KTEnvironment.content_readable(organization).empty? }
-        @url           = katello_content_search_index_path
+        @url           = content_search_index_path
       end
 
     end

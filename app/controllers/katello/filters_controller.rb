@@ -62,15 +62,15 @@ class FiltersController < Katello::ApplicationController
   end
 
   def create
-    filter = Filter.create!(params[:katello_filter]) do |f|
+    filter = Filter.create!(params[:filter]) do |f|
       f.content_view_definition = @view_definition
     end
 
     notify.success(_("Filter '%{filter}' successfully created for content view definition '%{definition}'.") %
-                    {:filter => params[:katello_filter][:name], :definition => @view_definition.name})
+                    {:filter => params[:filter][:name], :definition => @view_definition.name})
 
     render :partial => "katello/common/post_action_close_subpanel",
-           :locals => {:path => edit_katello_content_view_definition_filter_path(@view_definition, filter)}
+           :locals => {:path => edit_content_view_definition_filter_path(@view_definition, filter)}
   end
 
   def edit

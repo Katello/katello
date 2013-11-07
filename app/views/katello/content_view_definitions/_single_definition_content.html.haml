@@ -1,5 +1,5 @@
 -# Partial for the 'Content' pane of a 'single' content view definitio
-- save_url = update_content_katello_content_view_definition_path(view_definition.id)
+- save_url = update_content_content_view_definition_path(view_definition.id)
 
 = render :partial => "katello/content_view_definitions/tupane_header"
 
@@ -10,7 +10,7 @@
            :readable_products => Katello::Product.readable(current_organization),
            :editable_products => Katello::Product.readable(current_organization),
            :content_types => Katello::Repository::TYPES - [Katello::Repository::PUPPET_TYPE],
-           :save_url => update_content_katello_content_view_definition_path(view_definition.id),
+           :save_url => update_content_content_view_definition_path(view_definition.id),
            :title => "Yum Products and Repositories"
 
   = render "katello/common/repo_selector",

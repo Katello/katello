@@ -18,7 +18,7 @@ class Dashboard::NoticesWidget < Dashboard::Widget
   end
 
   def content_path
-    notices_katello_dashboard_index_path
+    notices_dashboard_index_path
   end
 end
 end

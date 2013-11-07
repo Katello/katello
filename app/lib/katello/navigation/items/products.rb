@@ -19,7 +19,7 @@ module Navigation
         @key           = :products
         @display       = _("Products")
         @authorization = lambda{ organization && Provider.any_readable?(organization) }
-        @url           = katello_products_path + '/all'
+        @url           = products_path + '/all'
       end
 
     end

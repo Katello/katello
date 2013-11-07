@@ -38,25 +38,25 @@ module Navigation
       [
         { :key => :view_definition_views,
           :name => _("Views"),
-          :url => (@view_definition.nil? || @view_definition.new_record?) ? "" : views_katello_content_view_definition_path(@view_definition.id),
+          :url => (@view_definition.nil? || @view_definition.new_record?) ? "" : views_content_view_definition_path(@view_definition.id),
           :if => lambda{!@view_definition.nil? && @view_definition.readable? && !@view_definition.new_record?},
           :options => {:class => "panel_link"}
         },
         { :key => :view_definition_content,
           :name => _("Content"),
-          :url => (@view_definition.nil? || @view_definition.new_record?) ? "" : content_katello_content_view_definition_path(@view_definition.id),
+          :url => (@view_definition.nil? || @view_definition.new_record?) ? "" : content_content_view_definition_path(@view_definition.id),
           :if => lambda{!@view_definition.nil? && @view_definition.readable? && !@view_definition.new_record?},
           :options => {:class => "panel_link"}
         },
         { :key => :view_definition_filter,
           :name => _("Filters"),
-          :url => (@view_definition.nil? || @view_definition.new_record?) ? "" : katello_content_view_definition_filters_path(@view_definition.id),
+          :url => (@view_definition.nil? || @view_definition.new_record?) ? "" : content_view_definition_filters_path(@view_definition.id),
           :if => definition_filter_check,
           :options => {:class => "panel_link"}
         },
         { :key => :view_definition_details,
           :name => _("Details"),
-          :url => (@view_definition.nil? || @view_definition.new_record?) ? "" : edit_katello_content_view_definition_path(@view_definition.id),
+          :url => (@view_definition.nil? || @view_definition.new_record?) ? "" : edit_content_view_definition_path(@view_definition.id),
           :if => lambda{!@view_definition.nil? && @view_definition.readable? && !@view_definition.new_record?},
           :options => {:class => "panel_link"}
         }
@@ -93,7 +93,7 @@ module Navigation
     def menu_subscriptions
       {:key => :subscriptions,
        :name => _("Subscriptions"),
-       :url => katello_subscriptions_path,
+       :url => subscriptions_path,
        :items => lambda{[menu_subscriptions_list, menu_distributors_list, menu_activation_keys, menu_import_history]},
        :if => lambda{current_organization},
        :options => {:class => 'content second_level menu_parent', "data-menu" => "content", "data-dropdown" => "subscriptions"}
@@ -103,7 +103,7 @@ module Navigation
     def menu_subscriptions_list
       {:key => :red_hat_subscriptions,
        :name => _("Red Hat Subscriptions"),
-       :url => katello_subscriptions_path,
+       :url => subscriptions_path,
        :if => lambda{current_organization.redhat_provider.readable?},
        :options => {:class => 'content third_level', "data-menu" => "subscriptions", "data-dropdown" => "subscriptions"}
       }
@@ -139,7 +139,7 @@ module Navigation
     end
 
     def menu_contents
-      katello_content_menu = [menu_subscriptions, menu_providers, menu_sync_management, menu_content_search,
+      content_menu = [menu_subscriptions, menu_providers, menu_sync_management, menu_content_search,
                               menu_content_view_definitions, menu_changeset_management]
 
       {:key => :content,
@@ -147,7 +147,7 @@ module Navigation
        :url => :sub_level,
        :options => {:class => 'content top_level', "data-menu" => "content"},
        :if => lambda{current_organization},
-       :items => Katello.config.katello? ? katello_content_menu : [menu_subscriptions]
+       :items => Katello.config.katello? ? content_menu : [menu_subscriptions]
       }
     end
 
@@ -202,7 +202,7 @@ module Navigation
        :name => _("Content View Definitions"),
        :if => lambda{Katello.config.katello? && ContentViewDefinition.any_readable?(current_organization)},
        :options => {:class => 'content second_level', "data-menu" => "content"},
-       :url => katello_content_view_definitions_path,
+       :url => content_view_definitions_path,
       }
     end
 
@@ -322,13 +322,13 @@ module Navigation
       [
           { :key => :promotion_content_view_content,
             :name => _("Content"),
-            :url => lambda{content_katello_organization_environment_content_view_version_path(@view_version.id)},
+            :url => lambda{content_organization_environment_content_view_version_path(@view_version.id)},
             :if => lambda{@view_version},
             :options => {:class => "panel_link"}
           },
           { :key => :promotion_content_view_details,
             :name => _("Details"),
-            :url => lambda{katello_organization_environment_content_view_version_path(@view_version.id)},
+            :url => lambda{organization_environment_content_view_version_path(@view_version.id)},
             :if => lambda{@view_version},
             :options => {:class => "panel_link"}
           }
@@ -339,13 +339,13 @@ module Navigation
       [
         { :key => :products_repositories,
           :name => _("Products and Repositories"),
-          :url => lambda{products_repos_katello_gpg_key_path(@gpg_key.id)},
+          :url => lambda{products_repos_gpg_key_path(@gpg_key.id)},
           :if => lambda{@gpg_key},
           :options => {:class => "panel_link"}
         },
         { :key => :gpg_key_details,
           :name => _("Details"),
-          :url => lambda{edit_katello_gpg_key_path(@gpg_key.id)},
+          :url => lambda{edit_gpg_key_path(@gpg_key.id)},
           :if => lambda{@gpg_key},
           :options => {:class => "panel_link"}
         }
@@ -356,19 +356,19 @@ module Navigation
       menu = [
         { :key => :applied_subscriptions,
           :name => _("Attached Subscriptions"),
-          :url => lambda{applied_subscriptions_katello_activation_key_path(@activation_key.id)},
+          :url => lambda{applied_subscriptions_activation_key_path(@activation_key.id)},
           :if => lambda{@activation_key},
           :options => {:class => "panel_link"}
         },
         { :key => :available_subscriptions,
           :name => _("Available Subscriptions"),
-          :url => lambda{available_subscriptions_katello_activation_key_path(@activation_key.id)},
+          :url => lambda{available_subscriptions_activation_key_path(@activation_key.id)},
           :if => lambda{@activation_key},
           :options => {:class => "panel_link"}
         },
         { :key => :activation_key_details,
           :name => _("Details"),
-          :url => lambda{edit_katello_activation_key_path(@activation_key.id)},
+          :url => lambda{edit_activation_key_path(@activation_key.id)},
           :if => lambda{@activation_key},
           :options => {:class => "panel_link"}
         },
@@ -376,7 +376,7 @@ module Navigation
           :name => _("System Groups"),
           :items => lambda{ak_systems_subnav},
           :if => lambda{@activation_key},
-          :url => lambda{system_groups_katello_activation_key_path(@activation_key.id)},
+          :url => lambda{system_groups_activation_key_path(@activation_key.id)},
           :options => {:class => 'panel_link menu_parent'}
         }
       ]
@@ -387,13 +387,13 @@ module Navigation
       [
         { :key => :activation_keys_menu_system_groups,
           :name => _("System Groups"),
-          :url => lambda{system_groups_katello_activation_key_path(@activation_key.id)},
+          :url => lambda{system_groups_activation_key_path(@activation_key.id)},
           :if => lambda{@activation_key},
           :options => {:class => "third_level panel_link"}
         },
         { :key => :activation_keys_menu_systems,
           :name => _("Systems"),
-          :url => lambda{systems_katello_activation_key_path(@activation_key.id)},
+          :url => lambda{systems_activation_key_path(@activation_key.id)},
           :if => lambda{@activation_key},
           :options => {:class => "third_level panel_link"}
         }
@@ -404,19 +404,19 @@ module Navigation
       [
         { :key => :subscription_details,
           :name => _("Details"),
-          :url => lambda{edit_katello_subscription_path(@subscription.cp_id)},
+          :url => lambda{edit_subscription_path(@subscription.cp_id)},
           :if => lambda{@subscription},
           :options => {:class => "panel_link"},
         },
         { :key => :subscription_products,
           :name => _("Products"),
-          :url => lambda{products_katello_subscription_path(@subscription.cp_id)},
+          :url => lambda{products_subscription_path(@subscription.cp_id)},
           :if => lambda{@subscription},
           :options => {:class => "panel_link"}
         },
         { :key => :consumers,
           :name => _("Units"),
-          :url => lambda{consumers_katello_subscription_path(@subscription.cp_id)},
+          :url => lambda{consumers_subscription_path(@subscription.cp_id)},
           :if => lambda{@subscription},
           :options => {:class => "panel_link"}
         }
@@ -427,19 +427,19 @@ module Navigation
       [
         { :key => :manifest_details,
           :name => _("Details"),
-          :url => edit_manifest_katello_subscriptions_path,
+          :url => edit_manifest_subscriptions_path,
           :if => lambda{current_organization && current_organization.readable?},
           :options => {:class => "panel_link"},
         },
         { :key => :upload,
           :name => _("Import"),
-          :url => new_katello_subscription_path,
+          :url => new_subscription_path,
           :if => lambda{current_organization && current_organization.readable?},
           :options => {:class => "panel_link"},
         },
         { :key => :subscription_history,
           :name => _("History"),
-          :url => history_items_katello_subscriptions_path,
+          :url => history_items_subscriptions_path,
           :if => lambda{current_organization && current_organization.readable?},
           :options => {:class => "panel_link"}
         }
@@ -450,14 +450,14 @@ module Navigation
       menu = [
         { :key => :distributor_details,
           :name => _("Details"),
-          :url => lambda{edit_katello_distributor_path(@distributor.id)},
+          :url => lambda{edit_distributor_path(@distributor.id)},
           :if => lambda{@distributor},
           :options => {:class => "panel_link menu_parent"},
           :items => distributors_subnav
         },
         { :key => :distributor_subscriptions,
           :name => _("Subscriptions"),
-          :url => lambda{subscriptions_katello_distributor_path(@distributor.id)},
+          :url => lambda{subscriptions_distributor_path(@distributor.id)},
           :if => lambda{@distributor},
           :options => {:class => "panel_link"}
         }
@@ -469,19 +469,19 @@ module Navigation
       [
         { :key => :distributor_info,
           :name => _("Distributor Info"),
-          :url => lambda{edit_katello_distributor_path(@distributor.id)},
+          :url => lambda{edit_distributor_path(@distributor.id)},
           :if => lambda{@distributor},
           :options => {:class => "third_level panel_link"},
         },
         { :key => :distributor_events,
           :name => _("Events History"),
-          :url => lambda{katello_distributor_events_path(@distributor.id)},
+          :url => lambda{distributor_events_path(@distributor.id)},
           :if => lambda{@distributor},
           :options => {:class => "third_level panel_link"},
         },
         { :key => :custom_info,
           :name => _("Custom Information"),
-          :url => lambda{custom_info_katello_distributor_path(@distributor.id)},
+          :url => lambda{custom_info_distributor_path(@distributor.id)},
           :if => lambda{@distributor},
           :options => {:class => "third_level panel_link"}
         }
