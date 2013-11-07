@@ -3,7 +3,7 @@
 
 = content_for(:remove_item) do
   - if editable
-    = link_to _("Remove Activation Key"), katello_activation_key_path(@activation_key.id), :confirm => _('Are you sure?'), :method => :delete, :class=>"remove_item", :remote=>true
+    = link_to _("Remove Activation Key"), activation_key_path(@activation_key.id), :confirm => _('Are you sure?'), :method => :delete, :class=>"remove_item", :remote=>true
 
 = content_for(:navigation) do
   = render_menu(1..2, activation_keys_navigation)

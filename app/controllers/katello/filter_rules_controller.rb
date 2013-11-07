@@ -65,13 +65,13 @@ class FilterRulesController < Katello::ApplicationController
   end
 
   def create
-    content_type = params[:katello_filter_rule].delete(:content_type)
-    rule = FilterRule.create_for(content_type, params[:katello_filter_rule].merge(:filter => @filter))
+    content_type = params[:filter_rule].delete(:content_type)
+    rule = FilterRule.create_for(content_type, params[:filter_rule].merge(:filter => @filter))
     notify.success(_("'%{type}' rule successfully created for filter '%{filter}'.") %
-                   {:type => params[:katello_filter_rule][:content_type], :filter => @filter.name})
+                   {:type => params[:filter_rule][:content_type], :filter => @filter.name})
 
     render :partial => "katello/common/post_action_close_subpanel",
-           :locals => {:path => edit_katello_content_view_definition_filter_rule_path(@view_definition, @filter, rule)}
+           :locals => {:path => edit_content_view_definition_filter_rule_path(@view_definition, @filter, rule)}
   end
 
   def edit

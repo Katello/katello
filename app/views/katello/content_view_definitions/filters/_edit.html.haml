@@ -1,5 +1,5 @@
 = javascript 'katello/widgets/tabs'
-- save_url = katello_content_view_definition_filter_path(view_definition.id, filter.id)
+- save_url = content_view_definition_filter_path(view_definition.id, filter.id)
 
 = render :partial => "katello/content_view_definitions/tupane_header"
 
@@ -9,7 +9,7 @@
 
     .panel_link
       = link_to(_("◀ Back to Filter List"),
-        katello_content_view_definition_filters_path(view_definition.id))
+        content_view_definition_filters_path(view_definition.id))
 
     %br
     %h4 #{_("Filter: %{name}") % {:name => filter.name}}

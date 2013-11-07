@@ -19,7 +19,7 @@ module Navigation
         @key           = :systems_by_environment
         @display       = _("By Environment")
         @authorization = lambda{ organization && System.any_readable?(organization) }
-        @url           = katello_environments_systems_path
+        @url           = environments_systems_path
       end
 
     end

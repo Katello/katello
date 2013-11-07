@@ -31,7 +31,7 @@
           #{_("Applied")}
 
 = content_for :content do
-  %input.events{:type => "hidden", 'data-url' => status_katello_system_group_events_path(@group.id)}
+  %input.events{:type => "hidden", 'data-url' => status_system_group_events_path(@group.id)}
 
   #errata_container{ "data-parent_id" => @group.id }
     %table.filter_table.ajaxScroll
@@ -53,13 +53,13 @@
       = image_tag("katello/icons/spinner.gif", :class=>"ajax_scroll")
 
 = content_for :footer do
-  %a#load_more_errata{"data-scroll_url"=>url_for(katello_system_group_errata_path(@group.id)), "data-page_size"=>current_user.page_size, "data-offset"=>offset, :class=>"fl", "style" => "display:none"} #{_("Load %{n} More") % {:n => offset}}
+  %a#load_more_errata{"data-scroll_url"=>url_for(system_group_errata_path(@group.id)), "data-page_size"=>current_user.page_size, "data-offset"=>offset, :class=>"fl", "style" => "display:none"} #{_("Load %{n} More") % {:n => offset}}
   %span.fl{:id => 'loaded_summary', :style => 'margin-left: 20px;', 'data-total' => 0, "data-current_count" => 0 }
     #{_("Viewing %{n} of %{t} results (%{t} Total Errata)") % {:n => 0, :t => 0 }}
 
   - if editable
     %span.fr
-      %button.button.disabled{:id => 'run_errata_button', 'data-url' => katello_system_group_errata_path(@group.id) }
+      %button.button.disabled{:id => 'run_errata_button', 'data-url' => system_group_errata_path(@group.id) }
         #{_('Install')}
     .selection_group
       %span.fr

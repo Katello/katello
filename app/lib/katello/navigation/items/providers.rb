@@ -19,7 +19,7 @@ module Navigation
         @key           = :providers
         @display       = _("Custom Repositories")
         @authorization = lambda{ organization && Provider.any_readable?(organization) }
-        @url           = katello_providers_path
+        @url           = providers_path
       end
 
     end

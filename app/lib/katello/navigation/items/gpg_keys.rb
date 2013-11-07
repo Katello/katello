@@ -19,7 +19,7 @@ module Navigation
         @key           = :gpg_keys
         @display       = _("GPG Keys")
         @authorization = lambda{ organization && GpgKey.any_readable?(organization) }
-        @url           = katello_gpg_keys_path
+        @url           = gpg_keys_path
       end
 
     end

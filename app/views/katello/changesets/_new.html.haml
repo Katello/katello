@@ -30,6 +30,6 @@
               options_for_select(Katello::Changeset::TYPES, :selected => (changeset_type == 'deletion' ? Katello::Changeset::DELETION : Katello::Changeset::PROMOTION)),
               :label => _("Type"), :style => "padding-right:5px;"
 
-      = form.submit _("Save Changeset"), :id => 'save_changeset_button', 'data-url' => katello_changesets_path
+      = form.submit _("Save Changeset"), :id => 'save_changeset_button', 'data-url' => changesets_path
 
 = render :template => "katello/layouts/tupane_layout"

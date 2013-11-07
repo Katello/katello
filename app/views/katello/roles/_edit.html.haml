@@ -85,7 +85,7 @@
               #{_("<< Previous")}
             .button.fr#next_button
               #{_("Next >>")}
-            .button.fr#save_permission_button{'data-url' => katello_role_create_permission_path(@role.id), :tabindex => 6}
+            .button.fr#save_permission_button{'data-url' => role_create_permission_path(@role.id), :tabindex => 6}
               #{_("Done")}
 
       #roles_status
@@ -108,7 +108,7 @@
               %span.text
                 = _("Edit Role")
           - if Katello::Role.deletable?
-            #remove_role.cs_action{ "data-confirm-text" => "#{_('Are you sure you want to remove this role?')}", "data-url" => katello_role_path(@role), :tabindex => 10 }
+            #remove_role.cs_action{ "data-confirm-text" => "#{_('Are you sure you want to remove this role?')}", "data-url" => role_path(@role), :tabindex => 10 }
               %span#remove_role_icon.sprite
                 SPRITE
               %span.text

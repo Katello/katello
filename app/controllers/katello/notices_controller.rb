@@ -59,7 +59,7 @@ class NoticesController < ApplicationController
       end
     else
       respond_to do |format|
-        format.json { render :js => "window.location = '#{katello_logout_path.to_json}'" }
+        format.json { render :js => "window.location = '#{logout_path.to_json}'" }
       end
     end
   end

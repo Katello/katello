@@ -95,7 +95,7 @@ class RolesController < Katello::ApplicationController
                        :name => controller_display_name,
                        :ajax_load  => true,
                        :list_partial => 'katello/roles/list_roles',
-                       :ajax_scroll => items_katello_roles_path,
+                       :ajax_scroll => items_roles_path,
                        :enable_create => Role.creatable?,
                        :search_class => Role}
   end
@@ -118,7 +118,7 @@ class RolesController < Katello::ApplicationController
   end
 
   def create
-    @role = Role.create!(params[:katello_role])
+    @role = Role.create!(params[:role])
     notify.success _("Role '%s' was created.") % @role.name
 
     if search_validate(Role, @role.id, params[:search])

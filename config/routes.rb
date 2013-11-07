@@ -1,9 +1,7 @@
-Rails.application.routes.draw do
+Katello::Engine.routes.draw do
 
   apipie
 
-  scope 'katello', :as => 'katello' do
-    scope :module => :katello do
       resources :system_groups do
         collection do
           get :items
@@ -508,8 +506,6 @@ Rails.application.routes.draw do
       match 'about', :to => "application_info#about", :as => "about"
 
       match '/i18n/dictionary' => 'i18n#show', :via => :get
-    end
-  end
 
   match 'about', :to => "application_info#about", :as => "about"
 end

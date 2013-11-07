@@ -140,8 +140,8 @@ class ProvidersController < Katello::ApplicationController
   end
 
   def create
-    @provider = Provider.create! params[:katello_provider].merge(:provider_type => Provider::CUSTOM,
-                                                                 :organization => current_organization)
+    @provider = Provider.create! params[:provider].merge({ :provider_type => Provider::CUSTOM,
+                                                                   :organization => current_organization })
     notify.success _("Provider '%s' was created.") % @provider['name']
 
     if search_validate(Provider, @provider.id, params[:search])
@@ -252,7 +252,7 @@ class ProvidersController < Katello::ApplicationController
                        :create_label => _('+ New Provider'),
                        :name => controller_display_name,
                        :ajax_load => true,
-                       :ajax_scroll => items_katello_providers_path,
+                       :ajax_scroll => items_providers_path,
                        :initial_action => :products_repos,
                        :search_class => Provider,
                        :enable_create => Provider.creatable?(current_organization)}

@@ -2,5 +2,5 @@
   = render :partial=>"permission", :collection=>role.permissions, :as=>:perm, :locals=>{:data_new=>false, :role=>role}
   / Chrome bug fix, need the %nbsp; below or add permission does not work correctly in chrome
   &nbsp;
-  #add_permission{:data_id=>role.id, :data_url=>katello_roles_show_permission_path(), :class=>"button"}
+  #add_permission{:data_id=>role.id, :data_url=>roles_show_permission_path(), :class=>"button"}
     = _("Add Permission")

@@ -19,7 +19,7 @@ module Navigation
         @key           = :import_history
         @display       = _("Import History")
         @authorization = lambda{ organization && organization.readable? }
-        @url           = history_katello_subscriptions_path
+        @url           = history_subscriptions_path
       end
 
     end

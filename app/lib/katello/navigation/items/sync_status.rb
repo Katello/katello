@@ -19,7 +19,7 @@ module Navigation
         @key           = :sync_status
         @display       = _("Sync Status")
         @authorization = true
-        @url           = katello_sync_management_index_path
+        @url           = sync_management_index_path
       end
 
     end

@@ -15,11 +15,16 @@ module Navigation
   module Items
     class Logout < Navigation::Item
 
+      # temporoary hack - main_app helper that gives access to application’s routes inside Engine should be available but is not.
+      def main_app
+        Rails.application.class.routes.url_helpers
+      end
+
       def initialize
         @key           = :logout
         @display       = _("Sign Out")
         @authorization = true
-        @url           = logout_users_path
+        @url           = main_app.logout_users_path
       end
 
     end

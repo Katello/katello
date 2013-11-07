@@ -224,7 +224,7 @@ class ActivationKeysController < Katello::ApplicationController
   end
 
   def create
-    @activation_key = ActivationKey.create!(params[:katello_activation_key]) do |key|
+    @activation_key = ActivationKey.create!(params[:activation_key]) do |key|
       key.organization = current_organization
       key.user = current_user
     end
@@ -284,7 +284,7 @@ class ActivationKeysController < Katello::ApplicationController
       :name => controller_display_name,
       :list_partial => 'katello/activation_keys/list_activation_keys',
       :ajax_load  => true,
-      :ajax_scroll => items_katello_activation_keys_path,
+      :ajax_scroll => items_activation_keys_path,
       :enable_create => ActivationKey.manageable?(current_organization),
       :search_class => ActivationKey,
       :initial_action => :edit}

@@ -14,6 +14,7 @@ module Katello
 module Navigation
   class Item
     include Navigation::Utils
+    include Katello::Engine.routes.url_helpers
 
     attr_accessor :authorization # Dynamically sets the authorization rule
     attr_reader :key, :display, :url

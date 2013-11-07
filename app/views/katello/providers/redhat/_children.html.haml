@@ -11,7 +11,7 @@
     %td
       =image_tag( "katello/icons/spinner.gif", :class=>"hidden fl", :id=>"spinner_#{repo.id}", :style=>"margin-right:1px;")
       =check_box_tag "repo", repo.id, repo.enabled?,{:id=>"input_repo_#{repo.id}",
-            "data-url" => katello_enable_repo_path(repo.id),
+            "data-url" => enable_repo_path(repo.id),
             :disabled =>(repo.promoted? || !can_enable_repo?),
             :class=>'fl'}
       %label.fl{:for=>"input_repo_#{repo.id}"}

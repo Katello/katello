@@ -1,7 +1,12 @@
 module Katello
 
   class Engine < ::Rails::Engine
-    engine_name 'katello'
+
+    initializer 'katello.mount_engine', :after=> :build_middleware_stack do |app|
+      app.routes_reloader.paths << "#{Katello::Engine.root}/config/routes/mount_engine.rb"
+    end
+
+    isolate_namespace Katello
 
     initializer "katello.simple_navigation" do |app|
       SimpleNavigation::config_file_paths << File.expand_path("../../../config", __FILE__)
@@ -37,6 +42,14 @@ module Katello
     end
 
     config.to_prepare do
+      FastGettext.add_text_domain('katello', {
+        :path => File.expand_path("../../../locale", __FILE__),
+        :type => :po,
+        :ignore_fuzzy => true,
+        :report_warning => false
+        })
+      FastGettext.default_text_domain = 'katello'
+
       # Model extensions
       ::User.send :include, Katello::Concerns::UserExtensions
     end
@@ -54,18 +67,6 @@ module Katello
       load "#{Katello::Engine.root}/lib/katello/tasks/reindex.rake"
     end
 
-  end
-
-  def table_name_prefix
-    'katello_'
-  end
-
-  def use_relative_model_naming
-    true
-  end
-
-  def self.table_name_prefix
-    'katello_'
   end
 
 end

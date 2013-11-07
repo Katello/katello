@@ -1,4 +1,4 @@
-#
+  #
 # Copyright 2013 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
@@ -23,8 +23,8 @@ module DashboardHelper
   end
 
   def systems_search_status_link(anchor_text, status)
-    href_params = {:systems_path => katello_systems_path, :status => status}
-    href_format = "%{katello_systems_path}#/systems?search=status:%{status}"
+    href_params = {:systems_path => systems_path, :status => status}
+    href_format = "%{systems_path}#/systems?search=status:%{status}"
     link_to(anchor_text, href_format % href_params)
   end
 
@@ -74,7 +74,7 @@ module DashboardHelper
   end
 
   def content_view_path_helper(version)
-    katello_content_view_definitions_path +
+    content_view_definitions_path +
         "#panel=content_view_definition_#{version.content_view.content_view_definition.id}&panelpage=views"
   end
 
@@ -112,9 +112,9 @@ module DashboardHelper
 
   def changeset_path_helper(cs)
     if cs.state == Changeset::PROMOTED
-      katello_changesets_path + "#panel=changeset_#{cs.id}&env_id=#{cs.environment_id}"
+      changesets_path + "#panel=changeset_#{cs.id}&env_id=#{cs.environment_id}"
     else
-      katello_promotion_path(cs.environment.prior.name)
+      promotion_path(cs.environment.prior.name)
     end
   end
 
@@ -174,7 +174,7 @@ module DashboardHelper
   end
 
   def system_path_helper(system)
-    katello_systems_path + "#list_search=id:#{system.id}&panel=system_#{system.id}&panelpage=errata"
+    systems_path + "#list_search=id:#{system.id}&panel=system_#{system.id}&panelpage=errata"
   end
 
   def get_checkin(system)

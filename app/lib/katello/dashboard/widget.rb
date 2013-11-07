@@ -13,6 +13,7 @@
 module Katello
 class Dashboard::Widget
   include Rails.application.routes.url_helpers
+  include Katello::Engine.routes.url_helpers
 
   def initialize(organization)
     @organization = organization

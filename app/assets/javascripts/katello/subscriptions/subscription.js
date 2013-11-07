@@ -67,7 +67,7 @@ KT.subscription = (function() {
 $(document).ready(function() {
 
     var options = { };
-    KT.panel.list.registerPage('katello_subscriptions', options);
+    KT.panel.list.registerPage('subscriptions', options);
 
     $('#upload_manifest').live('submit', function(e) {
         var ajax_handler;

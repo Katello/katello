@@ -19,7 +19,7 @@ module Navigation
         @key           = :dashboard
         @display       = _("Dashboard")
         @authorization = true
-        @url           = katello_dashboard_index_path
+        @url           = dashboard_index_path
       end
 
     end
