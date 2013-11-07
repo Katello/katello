@@ -29,7 +29,7 @@ class FilterRule < ActiveRecord::Base
   scope :whitelist, where(:inclusion => true)
   scope :blacklist, where(:inclusion => false)
 
-  scope :yum_types, where(:type => [:PackageGroupRule, :ErratumRule, :PackageRule])
+  scope :yum_types, where(:type => [PackageGroupRule.name, ErratumRule.name, PackageRule.name])
 
   def params_format
     {}
