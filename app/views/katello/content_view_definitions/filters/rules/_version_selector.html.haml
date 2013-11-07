@@ -25,7 +25,7 @@
       %span.rule-search-tipsy.details_icon-grey{title: _('The format for package versions is E:V-R where E represents epoch, V represents version, and R represents release; epoch and release are optional (e.g. 1:1.2.3, 2.2.2-1.4, 2:0.9-1el6, 1.2.3beta)')}
 
     = link_to(_("Save"),
-      update_parameter_katello_content_view_definition_filter_rule_path(rule.filter.content_view_definition.id,
+      update_parameter_content_view_definition_filter_rule_path(rule.filter.content_view_definition.id,
       rule.filter.id, rule.id), :class => 'save_parameters hidden')
 
   - else

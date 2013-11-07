@@ -51,11 +51,11 @@ class SystemGroupsController < Katello::ApplicationController
 
   def param_rules
     {
-       :create => {:katello_system_group => [:name, :description, :max_systems]},
-       :update => {:katello_system_group => [:name, :description, :max_systems]},
+       :create => {:system_group => [:name, :description, :max_systems]},
+       :update => {:system_group => [:name, :description, :max_systems]},
        :add_systems => [:system_ids, :id],
        :remove_systems => [:system_ids, :id],
-       :update_systems => {:katello_system_group => [:environment_id, :content_view_id]}
+       :update_systems => {:system_group => [:environment_id, :content_view_id]}
     }
   end
 
@@ -81,7 +81,7 @@ class SystemGroupsController < Katello::ApplicationController
   end
 
   def create
-    @group = SystemGroup.create!(params[:katello_system_group].merge(:organization_id => current_organization.id))
+    @group = SystemGroup.create!(params[:system_group].merge({:organization_id => current_organization.id}))
     notify.success _("System Group %s created successfully.") % @group.name
     if !search_validate(SystemGroup, @group.id, params[:search])
       notify.message _("'%s' did not meet the current search criteria and is not being shown.") % @group.name
@@ -188,7 +188,7 @@ class SystemGroupsController < Katello::ApplicationController
         :titles => [_('Name')],
         :create => _('System Group'),
         :name => controller_display_name,
-        :ajax_scroll => items_katello_system_groups_path,
+        :ajax_scroll => items_system_groups_path,
         :enable_create => SystemGroup.creatable?(current_organization),
         :initial_action => :systems,
         :list_partial => 'katello/system_groups/list_groups',

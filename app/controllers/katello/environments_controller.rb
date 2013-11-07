@@ -68,10 +68,10 @@ class EnvironmentsController < Katello::ApplicationController
 
   # POST /environments
   def create
-    env_params = {:name => params[:katello_kt_environment][:name],
-                  :description => params[:katello_kt_environment][:description],
-                  :prior => params[:katello_kt_environment][:prior],
-                  :label => params[:katello_kt_environment][:label],
+    env_params = {:name => params[:kt_environment][:name],
+                  :description => params[:kt_environment][:description],
+                  :prior => params[:kt_environment][:prior],
+                  :label => params[:kt_environment][:label],
                   :organization_id => @organization.id}
 
     env_params[:label], label_assigned = generate_label(env_params[:name], 'environment') if env_params[:label].blank?
@@ -114,7 +114,7 @@ class EnvironmentsController < Katello::ApplicationController
     if @environment.destroyed?
       notify.success _("Environment '%s' was deleted.") % @environment.name
       render :partial => "katello/common/post_delete_close_subpanel",
-             :locals => { :path => edit_katello_organization_path(@organization.label) }
+             :locals => { :path => edit_organization_path(@organization.label) }
     else
       err_msg = N_("Removal of the environment failed. If you continue having trouble with this, please contact an Administrator.")
       notify.error err_msg

@@ -13,7 +13,7 @@
     %span.icon_wrap.fl.status_icons
       %span.fl{:class=>(job_details[:state] == :error ? "error_icon" : "check_icon")}
         &nbsp;&nbsp;
-  %a.event_status.subpanel_element{"data-url"=>system_group_katello_event_path(group.id, job.id)}
+  %a.event_status.subpanel_element{"data-url"=>system_group_event_path(group.id, job.id)}
     - if job_pending
       = job_messages[:pending_action_message]
     - else

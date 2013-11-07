@@ -60,7 +60,7 @@ class ProductsController < Katello::ApplicationController
   end
 
   def create
-    product_params = params[:katello_product]
+    product_params = params[:product]
     requested_label = String.new(product_params[:label]) unless product_params[:label].blank?
     product_params[:label], _ = generate_label(product_params[:name], 'product') if product_params[:label].blank?
 
@@ -126,7 +126,7 @@ class ProductsController < Katello::ApplicationController
     @product.destroy
     notify.success _("Product '%s' removed.") % @product[:name]
     render :partial => "katello/common/post_delete_close_subpanel",
-           :locals => { :path => products_repos_katello_provider_path(@product.provider_id) }
+           :locals => { :path => products_repos_provider_path(@product.provider_id) }
   end
 
   def auto_complete

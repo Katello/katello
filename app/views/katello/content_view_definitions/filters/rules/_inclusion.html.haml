@@ -6,7 +6,7 @@
 
   %br
   = kt_form_for(rule,
-    :url => katello_content_view_definition_filter_rule_path(view_definition.id, filter.id, rule.id),
+    :url => content_view_definition_filter_rule_path(view_definition.id, filter.id, rule.id),
     :html => {:id => "update_form"}) do |form|
 
     = radio_button_tag("filter_rule[inclusion]", true, rule.inclusion ? true : false,

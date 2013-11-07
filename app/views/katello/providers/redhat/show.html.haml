@@ -20,12 +20,12 @@
     -#= _("You can encounter missing repositories because of errors during manifest import or new content was uploaded to CDN.")
     -#= _("Note that this action can take some time to complete.")
   - if @provider.products.empty?
-    = (_("No Red Hat products currently exist, please import a manifest <a href='%s'>here</a> to receive Red Hat content.") % katello_subscriptions_path).html_safe
+    = (_("No Red Hat products currently exist, please import a manifest <a href='%s'>here</a> to receive Red Hat content.") % subscriptions_path).html_safe
   - else
     - tabs = redhat_repo_tabs
     #content_tabs.grid_16
       %ul
         - for tab in tabs
           %li
-            %a{:href=>redhat_provider_tab_katello_providers_path({:tab => tab[:id]})}
+            %a{:href=>redhat_provider_tab_providers_path({:tab => tab[:id]})}
               = tab[:name]

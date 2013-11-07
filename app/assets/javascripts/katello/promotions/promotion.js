@@ -634,7 +634,7 @@ var registerEvents = function(){
         $.ajax({
           type: "POST",
           url: button.attr('data-url'),
-          data: $('#new_katello_changeset').serialize(),
+          data: $('#new_changeset').serialize(),
           cache: false,
           success: function(data){
               promotion_page.activate_changeset_tree(data.changeset.type);
@@ -1205,7 +1205,7 @@ $(document).ready(function() {
     //when loading the new panel item, if its new, we need to add a form submit handler
     KT.panel.set_expand_cb(function(id) {
         if (id === 'new') {
-          $('#new_katello_changeset').submit(function(e) {
+          $('#new_changeset').submit(function(e) {
               e.preventDefault();
               $('#save_changeset_button').trigger('click');
           });

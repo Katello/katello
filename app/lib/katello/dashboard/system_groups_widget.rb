@@ -23,7 +23,7 @@ class Dashboard::SystemGroupsWidget < Dashboard::Widget
   end
 
   def content_path
-    system_groups_katello_dashboard_index_path
+    system_groups_dashboard_index_path
   end
 
 end

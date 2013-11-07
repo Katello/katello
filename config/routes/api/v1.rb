@@ -1,10 +1,8 @@
 require 'katello/api/constraints/activation_key_constraint'
 require 'katello/api/constraints/api_version_constraint'
 
-Rails.application.routes.draw do
+Katello::Engine.routes.draw do
 
-  scope 'katello', :as => 'katello' do
-    scope :module => :katello do
       namespace :api do
 
         scope :module => :v1, :constraints => Katello::ApiVersionConstraint.new(:version => 1, :default => true) do
@@ -368,6 +366,4 @@ Rails.application.routes.draw do
         end # v1 scope
 
       end # '/api' namespace
-    end
-  end
 end

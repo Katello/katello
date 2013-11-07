@@ -7,7 +7,7 @@
         %li
           .col_1
             %h5
-              = link_to product.name, katello_sync_management_index_path
+              = link_to product.name, sync_management_index_path
           - if product.sync_status.state == Katello::PulpSyncStatus::RUNNING
             .col_progress{:title=>product.sync_status.progress.step}
               %span

@@ -14,7 +14,7 @@
         = render :partial => 'more_products', :locals => {:products => products}
 
     - if products.length == current_user.page_size
-      %a#products_more{"data-scroll_url"=>url_for(more_products_katello_distributor_path()), "data-page_size"=>current_user.page_size, "data-offset"=>offset, "data-products_count"=>products_count, :class=>"fl"} #{_("More...")}
+      %a#products_more{"data-scroll_url"=>url_for(more_products_distributor_path()), "data-page_size"=>current_user.page_size, "data-offset"=>offset, "data-products_count"=>products_count, :class=>"fl"} #{_("More...")}
       #list-spinner
         = image_tag("katello/icons/spinner.gif", :class=>"ajax_scroll")
   - else

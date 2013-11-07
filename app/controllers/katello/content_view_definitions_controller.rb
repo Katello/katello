@@ -90,7 +90,7 @@ class ContentViewDefinitionsController < Katello::ApplicationController
   end
 
   def create
-    @view_definition = ContentViewDefinition.create!(params[:katello_content_view_definition]) do |cv|
+    @view_definition = ContentViewDefinition.create!(params[:content_view_definition]) do |cv|
       cv.organization = current_organization
     end
     if @view_definition.composite? && params[:content_views]
@@ -163,11 +163,11 @@ class ContentViewDefinitionsController < Katello::ApplicationController
 
   def publish
     # perform the publish
-    if params.key?(:katello_content_view)
-      @view_definition.publish(params[:katello_content_view][:name], params[:katello_content_view][:description],
-                               params[:katello_content_view][:label], {:notify => true})
+    if params.key?(:content_view)
+      @view_definition.publish(params[:content_view][:name], params[:content_view][:description],
+                               params[:content_view][:label], {:notify => true})
       notify.success(_("Started publish of content view '%{view_name}' from definition '%{definition_name}'.") %
-                         {:view_name => params[:katello_content_view][:name], :definition_name => @view_definition.name})
+                         {:view_name => params[:content_view][:name], :definition_name => @view_definition.name})
 
       render :nothing => true
     else
@@ -183,7 +183,7 @@ class ContentViewDefinitionsController < Katello::ApplicationController
     render :text => e.to_s, :status => 500
   rescue => e
     notify.exception(_("Failed to publish content view '%{view_name}' from definition '%{definition_name}'.") %
-                         {:view_name => params[:katello_content_view][:name], :definition_name => @view_definition.name}, e)
+                         {:view_name => params[:content_view][:name], :definition_name => @view_definition.name}, e)
     log_exception(e)
 
     render :text => e.to_s, :status => 500
@@ -299,7 +299,7 @@ class ContentViewDefinitionsController < Katello::ApplicationController
       :create_label => _('+ New View Definition'),
       :name => controller_display_name,
       :ajax_load  => true,
-      :ajax_scroll => items_katello_content_view_definitions_path,
+      :ajax_scroll => items_content_view_definitions_path,
       :enable_create => ContentViewDefinition.creatable?(current_organization),
       :initial_action => :views,
       :search_class => ContentViewDefinition}

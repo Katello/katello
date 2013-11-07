@@ -19,7 +19,7 @@ module Navigation
         @key           = :subscriptions
         @display       = _("Red Hat Subscriptions")
         @authorization = lambda{ organization && organization.redhat_provider.readable? }
-        @url           = katello_subscriptions_path
+        @url           = subscriptions_path
       end
 
     end

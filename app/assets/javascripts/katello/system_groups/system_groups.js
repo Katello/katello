@@ -108,7 +108,7 @@ KT.system_groups = (function(){
 
         if ($('#system_group_new').length > 0) {
             // user is creating a group
-            initial_max = $('#katello_system_group_max_systems').val();
+            initial_max = $('#system_group_max_systems').val();
         } else {
             // user is editing a group
             initial_max = $('#system_group_max_systems').html();

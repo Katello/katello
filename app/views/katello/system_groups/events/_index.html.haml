@@ -6,11 +6,11 @@
   - if total_events_length > 0
     %form#event_filter_form.clear
       %input{:name => "event_search", :type => "search", :placeholder => _('Filter on Loaded Events...'), :id=>"event_search_filter",
-           'data-search_url' => items_katello_system_group_events_path(group.id) }
+           'data-search_url' => items_system_group_events_path(group.id) }
       %button.filter_button#event_filter_button #{('Filter')}
       %br.clear
 
-    %table.filter_table.events.ajaxScroll{'data-url' => status_katello_system_group_events_path(group.id), 'data-total_events' => total_events_length}
+    %table.filter_table.events.ajaxScroll{'data-url' => status_system_group_events_path(group.id), 'data-total_events' => total_events_length}
       %thead
         %th
           %a#event_sort{"data-sort"=>"asc", :class=>"ascending"}
@@ -26,7 +26,7 @@
 
 = content_for :footer do
   - if current_user.page_size < total_events_length
-    %a#more{:style => "padding-left: 20px;", "data-scroll_url"=>url_for(more_items_katello_system_group_events_path(group.id)), "data-page_size"=>current_user.page_size, :class=>"fl"}
+    %a#more{:style => "padding-left: 20px;", "data-scroll_url"=>url_for(more_items_system_group_events_path(group.id)), "data-page_size"=>current_user.page_size, :class=>"fl"}
   - if total_events_length > 0
     %span{:id => 'loaded_summary', :style => "padding-left: 20px;"}
 

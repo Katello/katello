@@ -19,7 +19,7 @@
       %fieldset
         .grid_3.ra.fieldset
           = label :red_hat_provider, :url, _("Repository Url")
-        .grid_9.la.fl#repo_url{'name' => 'provider[repository_url]',:class=>("editable edit_textfield" if @provider.editable?),  'data-url' => katello_provider_path(@provider.id)} #{@provider[:repository_url]}
+        .grid_9.la.fl#repo_url{'name' => 'provider[repository_url]',:class=>("editable edit_textfield" if @provider.editable?),  'data-url' => provider_path(@provider.id)} #{@provider[:repository_url]}
     .clear
     - if @upstream['uuid']
       .full
@@ -36,13 +36,13 @@
             .grid_3.ra.fieldset
               &nbsp;
             - if can_refresh
-              = form_for @provider, :html => {:method => :post, :id => :refresh_manifest}, :remote => true, :url => refresh_manifest_katello_subscriptions_path do |f|
+              = form_for @provider, :html => {:method => :post, :id => :refresh_manifest}, :remote => true, :url => refresh_manifest_subscriptions_path do |f|
                 .grid_2.la#refresh_button
                   = f.submit _("Refresh Manifest"), :id => :refresh_form_button
             -else
               .grid_6.la
                 = _("Refreshing manifest not supported by this manifest.")
-            = form_for @provider, :html => {:method => :post, :id => :delete_manifest}, :remote => true, :url => delete_manifest_katello_subscriptions_path do |f|
+            = form_for @provider, :html => {:method => :post, :id => :delete_manifest}, :remote => true, :url => delete_manifest_subscriptions_path do |f|
               .grid_4.la#delete_button
                 = f.submit _("Delete Manifest"), :id => :delete_form_button, :confirm => _("Deleting a manifest " + |
                           "will permanently remove all current subscriptions. All systems consuming these subscriptions " + |
@@ -80,7 +80,7 @@
       - else
         .full
           %h5 #{_("Upload New Manifest")}
-          = form_for @provider, :html => {:multipart => true, :method => :post, :id => :upload_manifest}, :remote => true, :url => upload_katello_subscriptions_path do |f|
+          = form_for @provider, :html => {:multipart => true, :method => :post, :id => :upload_manifest}, :remote => true, :url => upload_subscriptions_path do |f|
             .full
               %fieldset
                 .grid_3.ra.fieldset
@@ -120,7 +120,7 @@
           - if @statuses.length > 3
             %tr{:class => cycle(nil, 'alt')}
               %td.panel_link{:style => "width: 100%;"}
-                = link_to(_("More..."), katello_subscriptions_path + "/history_items")
+                = link_to(_("More..."), subscriptions_path + "/history_items")
               %td
                 &nbsp;
 

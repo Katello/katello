@@ -23,7 +23,7 @@ class Dashboard::ErrataWidget < Dashboard::Widget
   end
 
   def content_path
-    errata_katello_dashboard_index_path
+    errata_dashboard_index_path
   end
 
 end
