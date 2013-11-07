@@ -497,17 +497,7 @@ Rails.application.routes.draw do
         delete 'favorite/:id' => 'search#destroy_favorite', :on => :collection, :as => 'destroy_favorite'
       end
 
-      resource :user_session do
-        post 'set_org'
-      end
-
-      root :to => "user_sessions#new"
-
-      match '/login' => 'user_sessions#new', :as => 'login'
-      match '/logout' => 'user_sessions#destroy', :via => [:post, :get]
-      match '/user_session/logout' => 'user_sessions#destroy'
-      match '/user_session' => 'user_sessions#show', :via => :get, :as => 'show_user_session'
-      match '/authenticate' => 'user_sessions#authenticate', :via => :get
+      root :to => "dashboard#index"
 
       resources :password_resets, :only => [:create, :edit, :update] do
         collection do

@@ -34,7 +34,6 @@ KT.editable = (function(){
     var initialize = function() {
         initialize_panel_element();
         initialize_ajaxfileupload();
-        initialize_password();
         initialize_textfield();
         initialize_textfield_custom_info();
         initialize_textarea();
@@ -81,19 +80,6 @@ KT.editable = (function(){
                     $("#notification").replaceWith(xhr.responseText);
                 }
             });
-        });
-    };
-
-    var initialize_password = function() {
-        $('.edit_password').each(function() {
-            $(this).editable('destroy');
-            var settings = {
-                type        :  'password',
-                data        :  null,
-                width       :  270,
-                name        :  $(this).attr('name')
-            };
-            $(this).editable($(this).attr('data-url'), $.extend(common_settings, settings));
         });
     };
 

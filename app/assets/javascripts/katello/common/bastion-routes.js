@@ -1571,10 +1571,6 @@
   editParameterListContentViewDefinitionFilterRulePath: function(_content_view_definition_id, _filter_id, _id, options) {
   return Utils.build_path(["content_view_definition_id","filter_id","id"], ["format"], [2,[2,[2,[2,[2,[2,[2,[2,[2,[2,[2,[2,[2,[2,[7,"/",false],[6,"content_view_definitions",false]],[7,"/",false]],[3,"content_view_definition_id",false]],[7,"/",false]],[6,"filters",false]],[7,"/",false]],[3,"filter_id",false]],[7,"/",false]],[6,"rules",false]],[7,"/",false]],[3,"id",false]],[7,"/",false]],[6,"edit_parameter_list",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
   },
-// edit_password_reset => /password_resets/:id/edit(.:format)
-  editPasswordResetPath: function(_id, options) {
-  return Utils.build_path(["id"], ["format"], [2,[2,[2,[2,[2,[2,[7,"/",false],[6,"password_resets",false]],[7,"/",false]],[3,"id",false]],[7,"/",false]],[6,"edit",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
-  },
 // edit_product => /products/:id/edit(.:format)
   editProductPath: function(_id, options) {
   return Utils.build_path(["id"], ["format"], [2,[2,[2,[2,[2,[2,[7,"/",false],[6,"products",false]],[7,"/",false]],[3,"id",false]],[7,"/",false]],[6,"edit",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
@@ -1622,14 +1618,6 @@
 // edit_user => /users/:id/edit(.:format)
   editUserPath: function(_id, options) {
   return Utils.build_path(["id"], ["format"], [2,[2,[2,[2,[2,[2,[7,"/",false],[6,"users",false]],[7,"/",false]],[3,"id",false]],[7,"/",false]],[6,"edit",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
-  },
-// edit_user_session => /user_session/edit(.:format)
-  editUserSessionPath: function(options) {
-  return Utils.build_path([], ["format"], [2,[2,[2,[2,[7,"/",false],[6,"user_session",false]],[7,"/",false]],[6,"edit",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
-  },
-// email_logins_password_resets => /password_resets/email_logins(.:format)
-  emailLoginsPasswordResetsPath: function(options) {
-  return Utils.build_path([], ["format"], [2,[2,[2,[2,[7,"/",false],[6,"password_resets",false]],[7,"/",false]],[6,"email_logins",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
   },
 // enable_api_organization_product_repository_set => /api/organizations/:organization_id/products/:product_id/repository_sets/:id/enable(.:format)
   enableApiOrganizationProductRepositorySetPath: function(_organization_id, _product_id, _id, options) {
@@ -1863,14 +1851,6 @@
   listChangesetsPath: function(options) {
   return Utils.build_path([], ["format"], [2,[2,[2,[2,[7,"/",false],[6,"changesets",false]],[7,"/",false]],[6,"list",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
   },
-// login => /login(.:format)
-  loginPath: function(options) {
-  return Utils.build_path([], ["format"], [2,[2,[7,"/",false],[6,"login",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
-  },
-// logout => /logout(.:format)
-  logoutPath: function(options) {
-  return Utils.build_path([], ["format"], [2,[2,[7,"/",false],[6,"logout",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
-  },
 // manifest_progress_provider => /providers/:id/manifest_progress(.:format)
   manifestProgressProviderPath: function(_id, options) {
   return Utils.build_path(["id"], ["format"], [2,[2,[2,[2,[2,[2,[7,"/",false],[6,"providers",false]],[7,"/",false]],[3,"id",false]],[7,"/",false]],[6,"manifest_progress",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
@@ -2079,14 +2059,6 @@
   newSystemGroupPath: function(options) {
   return Utils.build_path([], ["format"], [2,[2,[2,[2,[7,"/",false],[6,"system_groups",false]],[7,"/",false]],[6,"new",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
   },
-// new_user => /users/new(.:format)
-  newUserPath: function(options) {
-  return Utils.build_path([], ["format"], [2,[2,[2,[2,[7,"/",false],[6,"users",false]],[7,"/",false]],[6,"new",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
-  },
-// new_user_session => /user_session/new(.:format)
-  newUserSessionPath: function(options) {
-  return Utils.build_path([], ["format"], [2,[2,[2,[2,[7,"/",false],[6,"user_session",false]],[7,"/",false]],[6,"new",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
-  },
 // notices => /notices(.:format)
   noticesPath: function(options) {
   return Utils.build_path([], ["format"], [2,[2,[7,"/",false],[6,"notices",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
@@ -2174,14 +2146,6 @@
 // packages_system_system_packages => /systems/:system_id/system_packages/packages(.:format)
   packagesSystemSystemPackagesPath: function(_system_id, options) {
   return Utils.build_path(["system_id"], ["format"], [2,[2,[2,[2,[2,[2,[2,[2,[7,"/",false],[6,"systems",false]],[7,"/",false]],[3,"system_id",false]],[7,"/",false]],[6,"system_packages",false]],[7,"/",false]],[6,"packages",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
-  },
-// password_reset => /password_resets/:id(.:format)
-  passwordResetPath: function(_id, options) {
-  return Utils.build_path(["id"], ["format"], [2,[2,[2,[2,[7,"/",false],[6,"password_resets",false]],[7,"/",false]],[3,"id",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
-  },
-// password_resets => /password_resets(.:format)
-  passwordResetsPath: function(options) {
-  return Utils.build_path([], ["format"], [2,[2,[7,"/",false],[6,"password_resets",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
   },
 // pools_api_activation_key => /api/activation_keys/:id/pools(.:format)
   poolsApiActivationKeyPath: function(_id, options) {

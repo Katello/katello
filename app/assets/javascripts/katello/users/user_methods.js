@@ -58,95 +58,6 @@ KT.user_page = (function() {
         });
         return false;
     },
-    verifyPassword = function() {
-        var match_button = $('.verify_password');
-        var a = $('#password_field').val();
-        var b = $('#confirm_field').val();
-
-        if(a !== b){
-            $("#password_conflict").text(i18n.password_match);
-            $(match_button).addClass("disabled");
-            $('#save_password').die('click');
-            $('#save_user').addClass('disabled');
-            return false;
-        }
-        else {
-            //this is to say, if there is an environment available from which to select, then
-            //allow the creation of a user
-            if ($('#no_env_box').length === 0)
-            {
-                $("#password_conflict").text("");
-                $(match_button).removeClass("disabled");
-
-                //reset the edit user button
-                $('#save_password').die('click');
-                $('#save_password').live('click',changePassword);
-                //reset the new user button
-                if (a === "" && b === "") {
-                    $('#save_user').addClass('disabled');
-                    $('#save_password').addClass('disabled');
-                } else {
-                    $('#save_user').removeClass('disabled');
-                }
-                return true;
-            }
-            else {
-                return false;
-            }
-        }
-
-    },
-    createNewUser = function() {
-        var button = $(this);
-        if (button.hasClass("disabled")) {
-            return false;
-        }
-
-        if (verifyPassword()) {
-            button.addClass('disabled');
-            var username = $('#username_field').val();
-            var password = $('#password_field').val();
-            var email = $('#email_field').val();
-            var env_id = $(".path_link.active").attr('data-env_id');
-            $.ajax({
-                type: "POST",
-                url: button.attr('data-url'),
-                data: { "user":{"username":username, "password":password, "email":email, "env_id":env_id }},
-                cache: false,
-                success: function(data) {
-                    button.removeClass('disabled');
-                    KT.panel.list.add(data);
-                    KT.panel.closePanel($('#panel'));
-                  },
-                error: function(){button.removeClass('disabled');}
-            });
-
-        }
-    },
-    changePassword = function() {
-        var button = $(this);
-        if(button.hasClass("disabled")) {
-            return;
-        }
-        var url = button.attr("data-url");
-        var password = $('#password_field').val();
-        button.addClass("disabled");
-        $.ajax({
-            type: "PUT",
-            url: url,
-            data: { "user":{"password":password}},
-            cache: false,
-            success: function() {
-                button.removeClass("disabled");
-            },
-            error: function(e) {
-                button.removeClass('disabled');
-            },
-            complete: function(e) {
-                notices.checkNotices();
-            }
-        });
-    },
     updateUser = function() {
         var button = $(this),
             url = button.attr("data-url"),
@@ -185,19 +96,13 @@ KT.user_page = (function() {
         });
     },
     registerEdits = function() {
-        $('#password_field').live('keyup.katello', verifyPassword);
-        $('#confirm_field').live('keyup.katello',verifyPassword);
         $('#clear_helptips').live('click',clearHelptips);
-        $('#save_password').live('click',changePassword);
         $('#update_user').live('click',updateUser);
         $('#update_roles').live('submit', updateRoles);
     };
 
     return {
-        createNewUser: createNewUser,
-        verifyPassword: verifyPassword,
         updateUser: updateUser,
-        changePassword: changePassword,
         checkboxChanged: checkboxChanged,
         clearHelptips: clearHelptips,
         updateRoles: updateRoles,

@@ -23,21 +23,6 @@ $(document).ready(function() {
         $(':input:first', this).val($("<div/>").html(string).text());
     };
 
-    $.editable.addInputType('password', {
-        element : function(settings, original) {
-            var input=$('<input type="password">');
-            if(settings.width!=='none') {
-                input.width(settings.width);
-            }
-            if(settings.height!=='none') {
-                input.height(settings.height);
-            }
-            input.attr('autocomplete','off');
-            $(this).append(input);
-            return(input);
-        }
-    });
-
     $.editable.addInputType('custom_info', {
         element: function(settings, original) {
             var input = $("<input/>");
