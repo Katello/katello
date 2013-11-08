@@ -31,6 +31,7 @@ class GluePulpRepoTestBase < MiniTest::Rails::ActiveSupport::TestCase
     @@admin = User.find(@loaded_fixtures['users']['admin']['id'])
     User.current = @@admin
 
+    @@rhel_6_x86_64 = Repository.find(@loaded_fixtures['repositories']['rhel_6_x86_64']['id'])
     @@fedora_17_x86_64 = Repository.find(@loaded_fixtures['repositories']['fedora_17_x86_64']['id'])
     @@fedora_17_x86_64.relative_path = '/test_path/'
     @@fedora_17_x86_64.feed = "file:///var/www/test_repos/zoo"
@@ -100,6 +101,14 @@ class GluePulpRepoTest < GluePulpRepoTestBase
     dists = @fedora_17_x86_64.generate_distributors
     refute_empty dists.select{|d| d.is_a? Runcible::Models::YumDistributor}
     refute_empty dists.select{|d| d.is_a? Runcible::Models::YumCloneDistributor}
+    assert dists.find{|dist| dist.is_a?(Runcible::Models::YumDistributor)}.checksum_type == 'sha256'
+  end
+
+  def test_generate_distributors_rhel5
+    repo = @@rhel_6_x86_64.clone
+    repo.feed = "http://cdn.credhat.com/content/dist/rhel/server/5/5Server/x86_64/os"
+    dists = repo.generate_distributors
+    assert dists.find{|dist| dist.is_a?(Runcible::Models::YumDistributor)}.checksum_type == 'sha1'
   end
 
   def test_populate_from
@@ -388,6 +397,34 @@ class GluePulpRepoOperationsTest < GluePulpRepoTestBase
 
 end
 
+class RHEL5RepoChangesTest < GluePulpRepoTestBase
+
+  fixtures :all
+
+  def setup
+    @loaded_fixtures = load_fixtures
+    @rhel_6_x86_64 = Repository.find(@loaded_fixtures['repositories']['rhel_6_x86_64']['id'])
+  end
+
+  def test_is_rhel_5_fail
+    repo = @rhel_6_x86_64
+    repo.feed = "http://cdn.credhat.com/content/dist/rhel/server/6/6Server/x86_64/os"
+    refute repo.rhel_5?
+  end
+
+  def test_is_rhel_5
+    repo = @rhel_6_x86_64
+    repo.feed = "http://cdn.credhat.com/content/dist/rhel/server/5/5Server/x86_64/os"
+    assert repo.rhel_5?
+  end
+
+  def test_is_rhel_5_htb
+    repo = @rhel_6_x86_64
+    repo.feed = "http://cdn.credhat.com/content/htb/rhel/server/5/5Server/x86_64/sat-tools/6.0.1/os/"
+    assert repo.rhel_5?
+  end
+
+end
 
 class GluePulpRepoRequiresEmptyPromoteTest < GluePulpRepoTestBase
 
