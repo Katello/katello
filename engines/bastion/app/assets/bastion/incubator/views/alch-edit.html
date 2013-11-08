@@ -8,7 +8,11 @@
   </div>
 
   <span ng-switch on="buttonConfig">
-    <div ng-switch-when="addRemove" ng-include="'incubator/views/alch-edit-add-remove-cancel.html'"></div>
-    <div ng-switch-default ng-include="'incubator/views/alch-edit-save-cancel.html'"></div>
+    <div ng-switch-when="addRemove">
+      <div ng-include="'incubator/views/alch-edit-add-remove-cancel.html'"></div>
+    </div>
+    <div ng-switch-default>
+      <div ng-include="'incubator/views/alch-edit-save-cancel.html'"></div>
+    </div>
   </span>
 </div>

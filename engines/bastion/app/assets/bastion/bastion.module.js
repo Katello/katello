@@ -51,8 +51,10 @@ angular.module('Bastion', [
  *   to every request.
  */
 angular.module('Bastion').config(['$httpProvider', '$urlRouterProvider', function($httpProvider, $urlRouterProvider) {
-    $httpProvider.defaults.headers.common['X-CSRF-TOKEN'] = $('meta[name=csrf-token]').attr('content');
-    $httpProvider.defaults.headers.common['ACCEPT'] = 'application/json, text/plain, */*, version=2';
+    $httpProvider.defaults.headers.common = {
+        Accept: 'application/json, text/plain, version=2; */*',
+        'X-XSRF-TOKEN': $('meta[name=csrf-token]').attr('content')
+    };
     $urlRouterProvider.otherwise("/");
 }]);
 

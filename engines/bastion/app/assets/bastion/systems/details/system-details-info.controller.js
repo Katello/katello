@@ -51,7 +51,6 @@ angular.module('Bastion.systems').controller('SystemDetailsInfoController',
                 $scope.previousEnvironment = $scope.system.environment.id;
                 $scope.system.environment.id = environmentId;
                 $scope.editContentView = true;
-                $scope.$apply();
 
                 /*jshint camelcase:false*/
                 $scope.pathSelector.disable_all();
@@ -163,8 +162,6 @@ angular.module('Bastion.systems').controller('SystemDetailsInfoController',
             return Routes.activationKeysPath({anchor: panel});
         };
 
-        // TODO upgrade to Angular 1.1.4 so we can move this into a directive
-        // and use dynamic templates (http://code.angularjs.org/1.1.4/docs/partials/guide/directive.html)
         $scope.getTemplateForType = function(value) {
             var template = 'systems/details/views/partials/system-detail-value.html';
             if (typeof(value) === 'object') {
