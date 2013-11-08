@@ -55,8 +55,8 @@ angular.module('Bastion.widgets').directive('orgSwitcher',
                 $scope.working = true;
                 $scope.user = User.get({'id': CurrentUser}, function(response) {
                     $scope.working = false;
-                    if (response.user.preferences.user) {
-                        $scope.favoriteOrg = response.user.preferences.user['default_org'];
+                    if (response.preferences.user) {
+                        $scope.favoriteOrg = response.preferences.user['default_org'];
                     } else {
                         $scope.favoriteOrg = null;
                     }
