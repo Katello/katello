@@ -128,6 +128,18 @@ module Glue::Pulp::Repo
       raise PulpErrors::ServiceUnavailable.new(message, e)
     end
 
+    def rhel_5?
+      feed = self.library_instance.nil? ? self.feed : self.library_instance.feed
+      path = URI(feed).path
+
+      base_paths = %w(dist htb eus beta).collect do |base_dir|
+        %w(server client workstation power system-z).collect do |spin|
+          "/content/#{base_dir}/rhel/#{spin}/5"
+        end
+      end
+      self.redhat? && base_paths.flatten.any?{ |base| path.starts_with?(base) }
+    end
+
     def generate_importer
       case self.content_type
       when Repository::YUM_TYPE
@@ -150,9 +162,11 @@ module Glue::Pulp::Repo
     def generate_distributors
       case self.content_type
       when Repository::YUM_TYPE
+        checksum =  rhel_5? ? 'sha1' : 'sha256'
         yum_dist_id = self.pulp_id
         yum_dist = Runcible::Models::YumDistributor.new(self.relative_path, (self.unprotected || false), true,
-                                                        {:protected => true, :id => yum_dist_id, :auto_publish => true})
+                                                        {:protected => true, :id => yum_dist_id,
+                                                         :auto_publish => true, :checksum_type => checksum})
         clone_dist = Runcible::Models::YumCloneDistributor.new(:id => "#{self.pulp_id}_clone",
                                                                :destination_distributor_id => yum_dist_id)
         [yum_dist, clone_dist, nodes_distributor]
