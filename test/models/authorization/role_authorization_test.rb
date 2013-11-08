@@ -10,14 +10,15 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require './test/models/authorization/authorization_base'
+require 'models/authorization/authorization_base'
 
+module Katello
 class RoleAuthorizationAdminTest < AuthorizationTestBase
 
   def setup
     super
     User.current = User.find(users('admin'))
-    @role = Role.find(roles(:administrator))
+    @role = Role.find(katello_roles(:administrator))
   end
 
   def test_readable
@@ -50,8 +51,8 @@ class RoleAuthorizationNoPermsTest < AuthorizationTestBase
 
   def setup
     super
-    User.current = User.find(users('no_perms_user'))
-    @role = Role.find(roles(:administrator))
+    User.current = User.find(users('restricted'))
+    @role = Role.find(katello_roles(:administrator))
   end
 
   def test_readable
@@ -78,4 +79,5 @@ class RoleAuthorizationNoPermsTest < AuthorizationTestBase
     refute Role.readable?
   end
 
+end
 end

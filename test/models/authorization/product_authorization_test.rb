@@ -10,8 +10,9 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require './test/models/authorization/authorization_base'
+require 'models/authorization/authorization_base'
 
+module Katello
 class ProductAuthorizationAdminTest < AuthorizationTestBase
 
   def setup
@@ -58,7 +59,7 @@ class ProductAuthorizationAdminTest < AuthorizationTestBase
   end
 
   def test_deletable?
-    product = Product.find(products(:empty_product))
+    product = Product.find(katello_products(:empty_product))
     assert product.deletable?
   end
 
@@ -72,7 +73,7 @@ class ProductAuthorizationNoPermsTest < AuthorizationTestBase
 
   def setup
     super
-    User.current = User.find(users('no_perms_user'))
+    User.current = User.find(users('restricted'))
     @prod = @fedora
     @org = @acme_corporation
   end
@@ -121,4 +122,5 @@ class ProductAuthorizationNoPermsTest < AuthorizationTestBase
     refute Product.creatable?(@fedora_hosted)
   end
 
+end
 end

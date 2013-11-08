@@ -10,13 +10,13 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'minitest_helper'
+require 'katello_test_helper'
 require 'support/auth_support'
 
+module Katello
 module ContentViewAuthBase
   def self.included(base)
     base.class_eval do
-      fixtures :all
       include AuthorizationSupportMethods
     end
     base.extend ClassMethods
@@ -24,15 +24,9 @@ module ContentViewAuthBase
 
   def setup
     @admin       = User.find(users(:admin))
-    @no_perms    = User.find(users(:no_perms_user))
-    @org         = Organization.find(organizations(:acme_corporation))
+    @no_perms    = User.find(users(:restricted))
+    @org         = Organization.find(katello_organizations(:acme_corporation))
     @view        = FactoryGirl.build(:content_view, :organization => @org)
-  end
-
-  def teardown
-    ContentView.delete_all
-    User.delete_all
-    Organization.delete_all
   end
 
   module ClassMethods
@@ -44,7 +38,7 @@ module ContentViewAuthBase
   end
 end
 
-class ContentViewAuthorizationAdminTest < MiniTest::Rails::ActiveSupport::TestCase
+class ContentViewAuthorizationAdminTest < ActiveSupport::TestCase
   include ContentViewAuthBase
 
   def setup
@@ -71,7 +65,7 @@ class ContentViewAuthorizationAdminTest < MiniTest::Rails::ActiveSupport::TestCa
 
 end
 
-class ContentViewAuthorizationNoAuthTest < MiniTest::Rails::ActiveSupport::TestCase
+class ContentViewAuthorizationNoAuthTest < ActiveSupport::TestCase
   include ContentViewAuthBase
 
   def setup
@@ -94,7 +88,7 @@ class ContentViewAuthorizationNoAuthTest < MiniTest::Rails::ActiveSupport::TestC
   end
 end
 
-class ContentViewAuthorizationSinglePermTest < MiniTest::Rails::ActiveSupport::TestCase
+class ContentViewAuthorizationSinglePermTest < ActiveSupport::TestCase
   include ContentViewAuthBase
 
   def setup
@@ -116,4 +110,5 @@ class ContentViewAuthorizationSinglePermTest < MiniTest::Rails::ActiveSupport::T
     @view.save!
     refute_empty ContentView.readable(@org)
   end
+end
 end

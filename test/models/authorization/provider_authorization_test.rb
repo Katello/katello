@@ -10,14 +10,15 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require './test/models/authorization/authorization_base'
+require 'models/authorization/authorization_base'
 
+module Katello
 class ProviderAuthorizationAdminTest < AuthorizationTestBase
 
   def setup
     super
     User.current = User.find(users('admin'))
-    @provider = Provider.find(providers('fedora_hosted'))
+    @provider = Provider.find(katello_providers('fedora_hosted'))
     @org = @acme_corporation
   end
 
@@ -55,8 +56,8 @@ class ProviderAuthorizationNoPermsTest < AuthorizationTestBase
 
   def setup
     super
-    User.current = User.find(users('no_perms_user'))
-    @provider = Provider.find(providers('fedora_hosted'))
+    User.current = User.find(users('restricted'))
+    @provider = Provider.find(katello_providers('fedora_hosted'))
     @org = @acme_corporation
   end
 
@@ -88,4 +89,5 @@ class ProviderAuthorizationNoPermsTest < AuthorizationTestBase
     refute @provider.deletable?
   end
 
+end
 end

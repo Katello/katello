@@ -10,8 +10,9 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require './test/models/authorization/authorization_base'
+require 'models/authorization/authorization_base'
 
+module Katello
 class ContentViewVersionAuthorizationAdminTest < AuthorizationTestBase
   def setup
     super
@@ -26,10 +27,11 @@ end
 class ContentViewVersionAuthorizationNonAuthUserTest < AuthorizationTestBase
   def setup
     super
-    User.current = User.find(users(:no_perms_user))
+    User.current = User.find(users(:restricted))
   end
 
   def test_readable
     assert_empty ContentViewVersion.readable(@acme_corporation)
   end
+end
 end

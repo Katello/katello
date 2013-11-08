@@ -10,7 +10,7 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require File.expand_path("authorization_base", File.dirname(__FILE__))
+require 'models/authorization/authorization_base'
 
 module Katello
 class RepositoryAuthorizationAdminTest < AuthorizationTestBase
@@ -87,7 +87,7 @@ class RepositoryAuthorizationNonAuthUserTest < AuthorizationTestBase
 
   def setup
     super
-    User.current = User.find(users(:one))
+    User.current = User.find(users(:restricted))
   end
 
   def test_editable

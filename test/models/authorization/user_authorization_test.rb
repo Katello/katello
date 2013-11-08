@@ -10,15 +10,16 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require './test/models/authorization/authorization_base'
-require './test/support/auth_support'
+require 'models/authorization/authorization_base'
+require 'support/auth_support'
 
+module Katello
 class UserAuthorizationAdminTest < AuthorizationTestBase
 
   def setup
     super
     User.current = User.find(users('admin'))
-    @user = User.find(users('no_perms_user'))
+    @user = User.find(users('restricted'))
   end
 
   def test_creatable?
@@ -55,7 +56,7 @@ class UserAuthorizationNoPermsTest < AuthorizationTestBase
 
   def setup
     super
-    User.current = User.find(users('no_perms_user'))
+    User.current = User.find(users('restricted'))
     @user = User.current
   end
 
@@ -99,4 +100,5 @@ class UserOrganizationAccess < AuthorizationTestBase
 
     assert_equal 2, @user.allowed_organizations.size
   end
+end
 end

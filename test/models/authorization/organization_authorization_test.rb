@@ -10,8 +10,9 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require './test/models/authorization/authorization_base'
+require 'models/authorization/authorization_base'
 
+module Katello
 class OrganizationAuthorizationAdminTest < AuthorizationTestBase
 
   def setup
@@ -82,7 +83,7 @@ class OrganizationAuthorizationNoPermsTest < AuthorizationTestBase
 
   def setup
     super
-    User.current = User.find(users('no_perms_user'))
+    User.current = User.find(users('restricted'))
     @org = @acme_corporation
   end
 
@@ -142,4 +143,5 @@ class OrganizationAuthorizationNoPermsTest < AuthorizationTestBase
     refute @org.redhat_manageable?
   end
 
+end
 end
