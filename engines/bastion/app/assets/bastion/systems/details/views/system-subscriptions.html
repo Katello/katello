@@ -43,7 +43,7 @@
   <h4 translate
       translate-n="currentSubscriptionsTable.rows.length"
       translate-plural="Current Subscriptions">Current Subscription</h4>
-  <div class="nutupane-actionbar">
+  <div class="nutupane-bar">
     <div class="form">
       <input type="text"
              class="input input-search"
@@ -73,7 +73,7 @@
       This system does not have any current subscriptions
     </p>
     <div ng-show="table.rows.length > 0">
-      <table ng-class="{'table-mask': table.working}" class="table table-full table-striped">
+      <table ng-class="{'table-mask': table.working}" class="table table-striped">
         <thead>
           <tr alch-table-head row-select>
             <th alch-table-column="name" translate>Name</th>
@@ -104,7 +104,7 @@
   <h4 translate
       translate-n="availableSubscriptionsTable.rows.length"
       translate-plural="Available Subscriptions">Available Subscription</h4>
-  <div class="nutupane-actionbar">
+  <div class="nutupane-bar">
     <div class="form">
       <input type="text"
              class="input input-search"
@@ -161,7 +161,7 @@
       There are no available subscriptions
     </p>
     <div ng-show="table.rows.length > 0">
-      <table ng-class="{'table-mask': table.working}" class="table table-full table-striped">
+      <table ng-class="{'table-mask': table.working}" class="table table-striped">
         <thead>
           <tr alch-table-head row-select>
             <th alch-table-column="name" translate>Name</th>

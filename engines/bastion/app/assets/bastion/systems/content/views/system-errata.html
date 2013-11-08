@@ -1,6 +1,6 @@
 <h4 translate>Applicable Errata</h4>
 
-<div class="nutupane-actionbar">
+<div class="nutupane-bar">
   <div class="form">
     <input type="text"
            class="input input-search"
@@ -9,7 +9,7 @@
     <span class="result-count" translate>Showing {{ errataTable.resource.total }} Errata</span>
   </div>
 
-  <div ng-hide="system.readonly" class="nutupane-actions fr">
+  <div ng-hide="system.readonly" class="fr">
      <button class="btn btn-primary"
              translate
              ng-disabled="errataTable.getSelected().length == 0"
@@ -32,7 +32,7 @@
 
 <div alch-table="errataTable">
   <div alch-container-scroll control-width="table" alch-infinite-scroll="table.nextPage()">
-    <table ng-class="{'table-mask': table.working}" class="table table-full table-striped">
+    <table ng-class="{'table-mask': table.working}" class="table table-striped">
       <thead>
         <tr alch-table-head row-select>
           <th alch-table-column="type" translate>Type</th>
