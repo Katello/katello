@@ -10,8 +10,9 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'spec_helper'
+require 'katello_test_helper'
 
+module Katello
 describe TaskStatus do
   let(:package_groups) { ["@mammals", "FTP Server"] }
   let(:packages) { %w[cheetah penguin] }
@@ -30,23 +31,30 @@ describe TaskStatus do
                                              :task_owner => system)
   end
 
-  its(:as_json) { should have_key(:description) }
-  its(:as_json) { should have_key(:result_description) }
-  its(:as_json) { should have_key(:system_name) }
+  it "has valid as_json" do
+    subject.as_json['task_status'].must_include(:description)
+    subject.as_json['task_status'].must_include(:result_description)
+    subject.as_json.must_include(:system_name)
+  end
 
-  context "Package installation" do
+  describe "Package installation" do
     let(:task_type) { :package_install }
     let(:parameters) { { :packages => packages } }
     let(:state) { "finished" }
 
-    its(:description) { should == "Package Install: cheetah, penguin" }
-
-    context "No packages installed" do
-      let(:result) { { :details => {:rpm => { :succeeded => true, :details => { :deps => [], :resolved => []} } } } }
-      its(:result_description) { should == ["No new packages installed"] }
+    it "has a valid description" do
+      subject.description.must_equal("Package Install: cheetah, penguin")
     end
 
-    context "Packages installed" do
+    describe "No packages installed" do
+      let(:result) { { :details => {:rpm => { :succeeded => true, :details => { :deps => [], :resolved => []} } } } }
+
+      it "has a result description of with no new packages installed" do
+        subject.result_description.must_equal(["No new packages installed"])
+      end
+    end
+
+    describe "Packages installed" do
       let(:result) do
         { :details =>
           { :rpm =>
@@ -73,23 +81,31 @@ describe TaskStatus do
           }
         }.with_indifferent_access
       end
-      its(:result_description) { should == ['cheetah-1.26.3-5.noarch', 'elephant-8.8-1.noarch'] }
+
+      it "has a result description of with packages" do
+        subject.result_description.must_equal(['cheetah-1.26.3-5.noarch', 'elephant-8.8-1.noarch'])
+      end
     end
   end
 
-  context "Package group installation" do
+  describe "Package group installation" do
     let(:task_type) { :package_group_install }
     let(:parameters) { { :groups => package_groups } }
     let(:state) { "finished" }
 
-    its(:description) { should == "Package Group Install: @mammals, @FTP Server" }
-
-    context "No packages installed" do
-      let(:result) { { :details => {:package_group => { :succeeded => true, :details => { :deps => [], :resolved => []} } } } }
-      its(:result_description) { should == ["No new packages installed"] }
+    it "has a valid description" do
+      subject.description.must_equal("Package Group Install: @mammals, @FTP Server")
     end
 
-    context "Packages installed" do
+    describe "No packages installed" do
+      let(:result) { { :details => {:package_group => { :succeeded => true, :details => { :deps => [], :resolved => []} } } } }
+
+      it "has a result description of with no new packages installed" do
+        subject.result_description.must_equal(["No new packages installed"])
+      end
+    end
+
+    describe "Packages installed" do
       let(:result) do
         { :details =>
           { :package_group =>
@@ -116,23 +132,31 @@ describe TaskStatus do
           }
         }.with_indifferent_access
       end
-      its(:result_description) { should == ['cheetah-1.26.3-5.noarch', 'elephant-8.8-1.noarch'] }
+
+      it "has a result description of with packages" do
+        subject.result_description.must_equal(['cheetah-1.26.3-5.noarch', 'elephant-8.8-1.noarch'])
+      end
     end
   end
 
-  context "Package uninstallation" do
+  describe "Package uninstallation" do
     let(:task_type) { :package_remove }
     let(:parameters) { { :packages => ["elephant"] } }
     let(:state) { "finished" }
 
-    its(:description) { should == "Package Remove: elephant" }
-
-    context "No packages removed" do
-      let(:result) { { :details => {:rpm => { :succeeded => true, :details => { :deps => [], :resolved => []} } } } }
-      its(:result_description) { should == ["No packages removed"] }
+    it "has a valid description" do
+      subject.description.must_equal("Package Remove: elephant")
     end
 
-    context "Packages removed" do
+    describe "No packages removed" do
+      let(:result) { { :details => {:rpm => { :succeeded => true, :details => { :deps => [], :resolved => []} } } } }
+
+      it "has a result description of with no packates removed" do
+        subject.result_description.must_equal(["No packages removed"])
+      end
+    end
+
+    describe "Packages removed" do
       let(:result) do
         { :details =>
           { :rpm =>
@@ -160,23 +184,30 @@ describe TaskStatus do
         }.with_indifferent_access
       end
 
-      its(:result_description) { should == ['cheetah-1.26.3-5.noarch', 'elephant-8.8-1.noarch'] }
+      it "has a result description of with packages" do
+        subject.result_description.must_equal(['cheetah-1.26.3-5.noarch', 'elephant-8.8-1.noarch'])
+      end
     end
   end
 
-  context "Package group uninstallation" do
+  describe "Package group uninstallation" do
     let(:task_type) { :package_group_remove }
     let(:parameters) { { :groups => package_groups } }
     let(:state) { "finished" }
 
-    its(:description) { should == "Package Group Remove: @mammals, @FTP Server" }
-
-    context "No packages removed" do
-      let(:result) { { :details => {:package_group => { :succeeded => true, :details => { :deps => [], :resolved => []} } } } }
-      its(:result_description) { should == ["No packages removed"] }
+    it "has a valid description" do
+      subject.description.must_equal("Package Group Remove: @mammals, @FTP Server")
     end
 
-    context "Packages removed" do
+    describe "No packages removed" do
+      let(:result) { { :details => {:package_group => { :succeeded => true, :details => { :deps => [], :resolved => []} } } } }
+
+      it "has a result description of with no packates removed" do
+        subject.result_description.must_equal(["No packages removed"])
+      end
+    end
+
+    describe "Packages removed" do
       let(:result) do
         { :details =>
           { :package_group =>
@@ -204,23 +235,30 @@ describe TaskStatus do
         }.with_indifferent_access
       end
 
-      its(:result_description) { should == ['cheetah-1.26.3-5.noarch', 'elephant-8.8-1.noarch']}
+      it "has a result description with packages" do
+        subject.result_description.must_equal(['cheetah-1.26.3-5.noarch', 'elephant-8.8-1.noarch'])
+      end
     end
   end
 
-  context "Package update" do
+  describe "Package update" do
     let(:task_type) { :package_update }
     let(:parameters) { { :packages => ["cheetah"] } }
     let(:state) { "finished" }
 
-    its(:description) { should == "Package Update: cheetah" }
-
-    context "No packages updated" do
-      let(:result) { { :details => {:rpm => { :succeeded => true, :details => { :deps => [], :resolved => []} } } } }
-      its(:result_description) { should == ["No packages updated"] }
+    it "has a valid description" do
+      subject.description.must_equal("Package Update: cheetah")
     end
 
-    context "Packages updated" do
+    describe "No packages updated" do
+      let(:result) { { :details => {:rpm => { :succeeded => true, :details => { :deps => [], :resolved => []} } } } }
+
+      it "has a result description of with no packates updated" do
+        subject.result_description.must_equal(["No packages updated"])
+      end
+    end
+
+    describe "Packages updated" do
       let(:result) do
         { :details =>
           { :rpm =>
@@ -248,11 +286,13 @@ describe TaskStatus do
         }.with_indifferent_access
       end
 
-      its(:result_description) { ['cheetah-1.26.3-5.noarch', 'elephant-8.8-1.noarch'] }
+      it "has a result description with packages" do
+        subject.result_description.must_equal(['cheetah-1.26.3-5.noarch', 'elephant-8.8-1.noarch'])
+      end
     end
   end
 
-  context "Yum error" do
+  describe "Yum error" do
     let(:result) do
       {:errors=>
        ["['Errors were encountered while downloading packages.', 'katello-all-0.1.149-1.fc16.noarch: failure: katello-all-0.1.149-1.fc16.noarch.rpm from katello: [Errno 256] No more mirrors to try.']",
@@ -269,13 +309,16 @@ describe TaskStatus do
     end
     let(:state) { "error" }
 
-    its(:result_description) { should == <<-EXPECTED_MESSAGE.chomp }
-Errors were encountered while downloading packages
-katello-all-0.1.149-1.fc16.noarch: failure: katello-all-0.1.149-1.fc16.noarch.rpm from katello: [Errno 256] No more mirrors to try
-    EXPECTED_MESSAGE
+    it "has a valid result_description" do
+      message = "Errors were encountered while downloading packages\n"
+      message += "katello-all-0.1.149-1.fc16.noarch: failure: "
+      message += "katello-all-0.1.149-1.fc16.noarch.rpm from katello: "
+      message += "[Errno 256] No more mirrors to try"
+      subject.result_description.must_equal(message)
+    end
   end
 
-  context "Pulp error" do
+  describe "Pulp error" do
     let(:result) do
       {:errors=>
        ["('8341bcac-b627-49ce-9383-f75c75f24202', 0)",
@@ -291,7 +334,10 @@ katello-all-0.1.149-1.fc16.noarch: failure: katello-all-0.1.149-1.fc16.noarch.rp
     end
     let(:state) { "error" }
 
-    its(:result_description) { should == 'RequestTimeout' }
+    it "has a result description" do
+      subject.result_description.must_equal('RequestTimeout')
+    end
   end
 
+end
 end

@@ -83,9 +83,7 @@ rKH9OkgKEvwkf8zQjO/XSvuoac83uBEFgKXJwYLHPA3U20JrchKU7klLwzSsmrXA
 EOKEY
 
   def disable_product_orchestration
-    Resources::Candlepin::Product.stubs(:get).returns do
-      [{ :productContent => [] }] #return a fresh hash, as add_repo modified it
-    end
+    Resources::Candlepin::Product.stubs(:get).returns([{:productContent => []}]) #return a fresh hash, as add_repo modified it
     Resources::Candlepin::Product.stubs(:add_content).returns(true)
     Resources::Candlepin::Product.stubs(:delete_content).returns(true)
     Resources::Candlepin::Product.stubs(:create).returns({ :id => '1' })
@@ -179,10 +177,15 @@ EOKEY
   end
 
   def disable_cdn
-    Resources::CDN::CdnResource.stubs(:ca_file => "#{Rails.root}/config/candlepin-ca.crt")
+    Resources::CDN::CdnResource.stubs(:ca_file => "#{Katello::Engine.root}/config/candlepin-ca.crt")
     OpenSSL::X509::Certificate.stubs(:new).returns(&:to_s)
     OpenSSL::PKey::RSA.stubs(:new).returns(&:to_s)
   end
 
+  def method_stub(name, return_data)
+    item = stub
+    item.stubs(name.to_sym).returns(return_data)
+    item
+  end
 end
 end

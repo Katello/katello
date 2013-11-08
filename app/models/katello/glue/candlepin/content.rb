@@ -80,7 +80,7 @@ module Glue::Candlepin::Content
     def content
       return @content unless @content.nil?
       unless self.content_id.nil?
-        @content = ::Candlepin::Content.find(self.content_id)
+        @content = Katello::Candlepin::Content.find(self.content_id)
       end
       @content
     end

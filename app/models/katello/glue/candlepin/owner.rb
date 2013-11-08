@@ -84,7 +84,7 @@ module Glue::Candlepin::Owner
     #  candlepin will be deleted before destroy is called on the Organization object
     def del_systems
       Rails.logger.debug _("All Systems for owner %s in candlepin") % name
-      System.joins(:environment).where("environments.organization_id = :org_id", :org_id => self.id).each do |sys|
+      System.joins(:environment).where("#{Katello::KTEnvironment.table_name}.organization_id = :org_id", :org_id => self.id).each do |sys|
         sys.destroy
       end
     rescue => e

@@ -33,9 +33,9 @@ module AuthorizationHelperMethods
     end
   end
 
-  # for simplified testing without authorization (makes stubbing much more easier)
+  # for simplified testing without authorization (makes stubsbing much more easier)
   def disable_authorization_rules
-    controller.stub(:authorize).and_return(true)
+    @controller.stubs(:authorize).returns(true)
   end
 
   def allow(*args)
@@ -66,7 +66,7 @@ module AuthorizationHelperMethods
 
       verbs_not_in.each{|verb| model_verbs[verb] = verb}
 
-      rt[:model].stub(:list_verbs).and_return(model_verbs.with_indifferent_access)
+      rt[:model].stubs(:list_verbs).returns(model_verbs.with_indifferent_access)
     end
     resource_type = ResourceType.find_or_create_by_name(resource_type)
     tags = [tags] unless Array === tags
@@ -90,13 +90,11 @@ module AuthorizationHelperMethods
   end
 
   def user_with_permissions
-    setup_users
     disable_user_orchestration
 
     @users_count ||= 0
     @users_count += 1
     user = User.find_by_login("one")
-    user.save!
     yield UserPermissionsGenerator.new(user) if block_given?
     user
   end

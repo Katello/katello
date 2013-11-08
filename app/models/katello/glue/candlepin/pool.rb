@@ -34,7 +34,7 @@ module Glue::Candlepin::Pool
 
   module ClassMethods
     def find_by_organization_and_id(organization, pool_id)
-      pool = ::Pool.find_by_cp_id(pool_id) || Pool.new(Resources::Candlepin::Pool.find(pool_id))
+      pool = Katello::Pool.find_by_cp_id(pool_id) || Pool.new(Resources::Candlepin::Pool.find(pool_id))
       if pool.organization == organization
         return pool
       end

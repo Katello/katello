@@ -10,23 +10,25 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'spec_helper'
+require 'katello_test_helper'
+require 'helpers/product_test_data'
 
-describe ::Pool do
+module Katello
+describe Pool do
 
-  context "Find pool by organization and id" do
+  describe "Find pool by organization and id" do
     let(:pool_id) { ProductTestData::POOLS[:id] }
     before do
-      Resources::Candlepin::Pool.should_receive(:find).with(pool_id).and_return(ProductTestData::POOLS)
+      Resources::Candlepin::Pool.expects(:find).with(pool_id).returns(ProductTestData::POOLS)
     end
     it "should return pool that is in the organization" do
       create_org_from_cp_owner(ProductTestData::POOLS[:owner])
-      ::Pool.find_by_organization_and_id(@organization, pool_id).cp_id.should == ProductTestData::POOLS[:id]
+      Pool.find_by_organization_and_id(@organization, pool_id).cp_id.must_equal(ProductTestData::POOLS[:id])
     end
 
     it "should return nil if the pool doesn't belong to the organization" do
       create_org_from_cp_owner(:displayName => "Another Org", :key => "another_org")
-      ::Pool.find_by_organization_and_id(@organization, pool_id).should be_nil
+      Pool.find_by_organization_and_id(@organization, pool_id).must_be_nil
     end
   end
 
@@ -35,4 +37,5 @@ describe ::Pool do
     @organization = Organization.create!(:name=>cp_owner[:displayName], :label=> "pool_org", :label => cp_owner[:key])
   end
 
+end
 end
