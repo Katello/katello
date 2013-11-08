@@ -10,10 +10,11 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'minitest_helper'
+require 'katello_test_helper'
 
-class NavigationMenusTest < MiniTest::Rails::ActiveSupport::TestCase
-  include Rails.application.routes.url_helpers
+module Katello
+class NavigationMenusTest < ActiveSupport::TestCase
+  include Engine.routes.url_helpers
 
   fixtures :all
 
@@ -21,7 +22,7 @@ class NavigationMenusTest < MiniTest::Rails::ActiveSupport::TestCase
     Katello.config[:url_prefix] = '/katello'
     @admin = User.find(users(:admin).id)
     User.current = @admin
-    @acme_corporation = Organization.find(organizations(:acme_corporation).id)
+    @acme_corporation = Organization.find(katello_organizations(:acme_corporation).id)
   end
 
   def test_main_menu
@@ -116,8 +117,9 @@ class NavigationMenusTest < MiniTest::Rails::ActiveSupport::TestCase
   def test_gravatar
     menu = Navigation::Menus::User.new(@admin)
 
-    Katello.config[:gravatar] ? assert_equal("<img src=\"https:///secure.gravatar.com/avatar/985b643b38ac0b1589b212197e27a143?d=mm&s=25\" class=\"gravatar\"><span class=\"gravatar-span\"> admin", menu.display) : assert_equal(@admin.username, menu.display)
+    Katello.config[:gravatar] ? assert_equal("<img src=\"https:///secure.gravatar.com/avatar/985b643b38ac0b1589b212197e27a143?d=mm&s=25\" class=\"gravatar\"><span class=\"gravatar-span\"> admin", menu.display) : assert_equal(@admin.login, menu.display)
     assert        menu.accessible?
   end
 
+end
 end

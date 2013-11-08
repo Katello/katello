@@ -10,9 +10,10 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'minitest_helper'
+require 'katello_test_helper'
 
-class NavigationMenuTest < MiniTest::Rails::ActiveSupport::TestCase
+module Katello
+class NavigationMenuTest < ActiveSupport::TestCase
 
   class TestMenu < Navigation::Menu
     def initialize
@@ -60,7 +61,7 @@ class NavigationMenuTest < MiniTest::Rails::ActiveSupport::TestCase
 
 end
 
-class NavigationAdditionsMenuTest < MiniTest::Rails::ActiveSupport::TestCase
+class NavigationAdditionsMenuTest < ActiveSupport::TestCase
 
   class TestMenu < Navigation::Menu
     def initialize
@@ -146,4 +147,5 @@ class NavigationAdditionsMenuTest < MiniTest::Rails::ActiveSupport::TestCase
     assert_equal 'test_menu_child', child.key
     assert_equal 'test_item_foo', child.items[1].key
   end
+end
 end
