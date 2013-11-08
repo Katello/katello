@@ -1,6 +1,6 @@
 #dashboard_system_groups.widget{"data-quantity"=>quantity}
   - current = 0
-  - critical, warning, ok = SystemGroup.lists_by_updates_needed(current_organization)
+  - critical, warning, ok = Katello::SystemGroup.lists_by_updates_needed(current_organization)
   - if critical.empty? and warning.empty? and ok.empty?
     =_("No system groups found." )
 
