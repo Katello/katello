@@ -24,6 +24,8 @@ class AddForeignKeys < ActiveRecord::Migration
     execute("delete from roles_users where role_id not in (select id from roles)")
     execute("delete from roles_users where user_id not in (select id from users)")
     execute("delete from changeset_content_views where content_view_id not in (select id from content_views)")
+    execute("delete from changeset_users where user_id not in (select id from users)")
+    execute("delete from changeset_users where changeset_id not in (select id from changesets)")
 
     add_foreign_key_deferred 'activation_keys', 'content_views',
                              :name => 'activation_keys_content_view_id_fk'
