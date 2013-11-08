@@ -66,8 +66,8 @@ module Authorization::Enforcement
 
     log_roles(verbs, resource_type, nil, org)
 
-    org_permissions = org_permissions_query(org, resource_type == :organizations)
-    org_permissions = org_permissions.where(:organization_id => nil) if resource_type == :organizations
+    org_permissions = org_permissions_query(org, resource_type.to_sym == :organizations)
+    org_permissions = org_permissions.where(:organization_id => nil) if resource_type.to_sym == :organizations
 
     no_tag_verbs = ResourceType::TYPES[resource_type][:model].no_tag_verbs.clone rescue []
     no_tag_verbs ||= []
@@ -75,7 +75,7 @@ module Authorization::Enforcement
     verbs.delete_if { |verb| no_tag_verbs.member? verb }
 
     all_tags_clause = ""
-    unless resource_type == :organizations || ResourceType.global_types.include?(resource_type.to_s)
+    unless resource_type.to_sym == :organizations || ResourceType.global_types.include?(resource_type.to_s)
       all_tags_clause = " AND (#{Katello::Permission.table_name}.all_tags = :true)"
     end
 
@@ -151,12 +151,12 @@ module Authorization::Enforcement
     verbs = verbs.is_a?(Array) ? verbs.clone : [verbs]
     log_roles(verbs, resource_type, nil, org)
     org = Organization.find(org) if org.is_a?(Numeric)
-    org_permissions = org_permissions_query(org, resource_type == :organizations)
+    org_permissions = org_permissions_query(org, resource_type.to_sym == :organizations)
 
     clause        = ""
     clause_params = { :all => "all", :true => true, :resource_type => resource_type, :verbs => verbs }
 
-    if resource_type != :organizations
+    if resource_type.to_sym != :organizations
       clause = <<-SQL.split.join(" ")
                 #{Katello::Permission.table_name}.resource_type_id =
                   (select id from #{Katello::ResourceType.table_name} where #{Katello::ResourceType.table_name}.name = :resource_type) AND

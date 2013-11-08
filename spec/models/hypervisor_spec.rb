@@ -10,14 +10,13 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'spec_helper'
+require 'katello_test_helper'
 require 'helpers/system_test_data'
 
-include OrchestrationHelper
-include OrganizationHelperMethods
-
+module Katello
 describe Hypervisor do
 
+  include OrchestrationHelper
   include OrganizationHelperMethods
 
   before do
@@ -34,27 +33,26 @@ describe Hypervisor do
     let(:hypervisor_record) { Hypervisor.find_by_uuid(new_hypervisor_attrs[:uuid]) }
 
     before do
-      Resources::Candlepin::Consumer.stub(:register_hypervisors).with(virt_who_params).and_return({"created" => [new_hypervisor_attrs]}.with_indifferent_access)
+      Resources::Candlepin::Consumer.expects(:register_hypervisors).with(virt_who_params).returns({"created" => [new_hypervisor_attrs]}.with_indifferent_access)
     end
 
     it "should call cp" do
-      Resources::Candlepin::Consumer.should_receive(:register_hypervisors).with(virt_who_params)
       System.register_hypervisors(@environment, @content_view, virt_who_params)
     end
 
     it "should create hypervisor record" do
       System.register_hypervisors(@environment, @content_view, virt_who_params)
-      hypervisor_record.should be
+      hypervisor_record.wont_be_nil
     end
 
     it "should not create candlepin consumer" do
-      Resources::Candlepin::Consumer.should_not_receive(:create)
+      Resources::Candlepin::Consumer.expects(:create).never
       System.register_hypervisors(@environment, @content_view, virt_who_params)
     end
 
     it "shoudl have lazy_attributes set" do
       response, hypervisors = System.register_hypervisors(@environment, @content_view, virt_who_params)
-      hypervisors.first.lazy_attributes.should_not == nil
+      hypervisors.first.lazy_attributes.wont_be_nil
     end
   end
 
@@ -65,10 +63,11 @@ describe Hypervisor do
      :update_pulp_consumer, :upload_package_profile, :install_package, :uninstall_package,
      :update_package, :install_package_group, :uninstall_package_group].each do |unsupported_action|
       specify do
-        expect { subject.send(unsupported_action) }.to raise_error Errors::UnsupportedActionException
+        proc { subject.send(unsupported_action) }.must_raise(Katello::Errors::UnsupportedActionException)
       end
     end
   end
 
 end
 
+end

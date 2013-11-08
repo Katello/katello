@@ -71,7 +71,6 @@ class Candlepin::ProductContent
                                                      :ssl_client_cert => OpenSSL::X509::Certificate.new(product.certificate),
                                                      :ssl_client_key => OpenSSL::PKey::RSA.new(product.key),
                                                      :product        => product).substitutor(Rails.logger)
-
     content_url = self.content.contentUrl
     begin
       cdn_var_substitutor.precalculate([content_url])

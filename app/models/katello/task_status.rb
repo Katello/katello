@@ -134,7 +134,7 @@ class TaskStatus < ActiveRecord::Base
     json = super :methods => :pending?
     json.merge(options) if options
 
-    if ('System' == task_owner_type)
+    if ('Katello::System' == task_owner_type)
       methods = [:description, :result_description, :overall_status]
       json.merge!(super(:only => methods, :methods => methods))
       json[:system_name] = task_owner.name
@@ -155,7 +155,7 @@ class TaskStatus < ActiveRecord::Base
 
   # used by search  to filter tasks by systems :)
   def system_filter_clause
-    system_id = task_owner_id if (task_owner_type == 'System')
+    system_id = task_owner_id if (task_owner_type == 'Katello::System')
     {:system_id => system_id}
   end
 

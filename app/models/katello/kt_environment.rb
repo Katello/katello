@@ -36,7 +36,7 @@ class KTEnvironment < ActiveRecord::Base
   before_destroy :is_deletable?
   before_destroy :delete_default_view_version
 
-  belongs_to :organization, :inverse_of => :environments
+  belongs_to :organization, :inverse_of => :environments, :class_name => "Katello::Organization"
   has_many :activation_keys, :dependent => :destroy, :foreign_key => :environment_id
   # rubocop:disable HasAndBelongsToMany
   # TODO: change these into has_many associations

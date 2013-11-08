@@ -12,6 +12,7 @@
 
 require File.expand_path("repo_test_data", File.dirname(__FILE__))
 
+module Katello
 module ProductHelperMethods
 
   def self.included(base)
@@ -23,8 +24,8 @@ module ProductHelperMethods
     @library.library = true
     @library.organization = org
     @library.name = "Library"
-    @library.stub!(:products).and_return([])
-    org.stub!(:library).and_return(@library)
+    @library.stubs(:products).returns([])
+    org.stubs(:library).returns(@library)
     new_test_product org, @library
   end
 
@@ -41,19 +42,19 @@ module ProductHelperMethods
                           :label=>"FOOREPO" + suffix, :pulp_id=>RepoTestData::REPO_ID,
                           :content_id=> "1234", :content_view_version=>env.default_content_view_version,
                           :relative_path=>'/foo/', :feed => 'https://localhost.com/foo')
-    repo.stub(:create_pulp_repo).and_return([])
+    repo.stubs(:create_pulp_repo).returns([])
     repo.save!
 
     pkg = Package.new(:name=>"Pkg" + suffix, :id=>"234" + suffix)
-    repo.stub(:packages).and_return([pkg])
+    repo.stubs(:packages).returns([pkg])
 
     errata = Errata.new(:title=>"Errata" + suffix, :id=>"1235" + suffix)
-    repo.stub(:errata).and_return([errata])
-    Glue::Pulp::Errata.stub!(:filter).and_return([:errata])
+    repo.stubs(:errata).returns([errata])
+    Glue::Pulp::Errata.stubs(:filter).returns([:errata])
     distribution = Distribution.new()
-    repo.stub(:distributions).and_return([distribution])
+    repo.stubs(:distributions).returns([distribution])
 
-    @p.stub(:repos).and_return([repo])
+    @p.stubs(:repos).returns([repo])
     @p
   end
 
@@ -64,14 +65,15 @@ module ProductHelperMethods
 
     repo_clone = new_test_repo(environment, repo.product, repo.name,
                                "#{environment.organization.name}/#{environment.name}/prod/repo", true, "", lib_instance)
-    repo.stub(:create_clone).and_return(repo_clone)
-    repo.stub(:clone_contents).and_return([])
-    repo.stub(:sync).and_return([])
+    repo.stubs(:create_clone).returns(repo_clone)
+    repo.stubs(:clone_contents).returns([])
+    repo.stubs(:sync).returns([])
 
-    repo.stub!(:pulp_repo_facts).and_return({'distributors' => []})
-    repo.stub(:content => {:id => "123"})
+    repo.stubs(:pulp_repo_facts).returns({'distributors' => []})
+    repo.stubs(:content => {:id => "123"})
     Repository.where(:environment_id => environment, :product_id => repo.product).first.tap do |promoted|
-        promoted.stub(:feed => repo.feed)
+        promoted.stubs(:feed => repo.feed)
     end
   end
+end
 end

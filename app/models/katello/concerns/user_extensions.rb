@@ -311,7 +311,7 @@ module Katello
           # get list of ldap_groups bound to roles the user is in
           ldap_groups = LdapGroupRole.
               joins(:role => :roles_users).
-              where(:roles_users => { :ldap => true, :user_id => id }).
+              where(:katello_roles_users => { :ldap => true, :user_id => id }).
               select(:ldap_group).
               uniq.
               map(&:ldap_group)

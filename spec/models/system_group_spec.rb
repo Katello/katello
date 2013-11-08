@@ -10,8 +10,9 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'spec_helper'
+require 'katello_test_helper'
 
+module Katello
 describe SystemGroup do
 
   include OrganizationHelperMethods
@@ -26,96 +27,95 @@ describe SystemGroup do
     @group = SystemGroup.create!(:name=>"TestSystemGroup", :organization=>@org)
 
     setup_system_creation
-    Resources::Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
-    Resources::Candlepin::Consumer.stub!(:update).and_return(true)
-
+    Resources::Candlepin::Consumer.stubs(:create).returns({:uuid => uuid, :owner => {:key => uuid}})
+    Resources::Candlepin::Consumer.stubs(:update).returns(true)
     @environment = create_environment(:name=>"DEV", :label=> "DEV", :prior=>@org.library, :organization=>@org)
     @system = create_system(:name=>"bar1", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""})
   end
 
-  context "create should" do
+  describe "create should" do
 
-    it "should create succesfully with an org", :katello => true do
+    it "should create succesfully with an org (katello)" do
       grp = SystemGroup.create!(:name=>"TestGroup", :organization=>@org)
-      grp.should_not == nil
+      grp.wont_be_nil
     end
 
     it "should not allow creation of a 2nd group in the same org with the same name" do
       grp = SystemGroup.create!(:name=>"TestGroup", :organization=>@org)
       grp2 = SystemGroup.create(:name=>"TestGroup", :organization=>@org)
-      grp2.new_record?.should == true
-      SystemGroup.where(:name=>"TestGroup").count.should == 1
+      grp2.new_record?.must_equal(true)
+      SystemGroup.where(:name=>"TestGroup").count.must_equal(1)
     end
 
     it "should allow systems groups with the same name to be creatd in different orgs" do
       @org2 = Organization.create!(:name=>'test_org2', :label=> 'test_org2')
       grp = SystemGroup.create!(:name=>"TestGroup", :organization=>@org)
       grp2 = SystemGroup.create(:name=>"TestGroup", :organization=>@org2)
-      grp2.new_record?.should == false
-      SystemGroup.where(:name=>"TestGroup").count.should == 2
+      grp2.new_record?.must_equal(false)
+      SystemGroup.where(:name=>"TestGroup").count.must_equal(2)
     end
   end
 
-  context "delete should" do
-    it "should delete a group successfully", :katello => true do
+  describe "delete should" do
+    it "should delete a group successfully (katello)" do
       @group.destroy
-      SystemGroup.where(:name=>@group.name).count.should == 0
+      SystemGroup.where(:name=>@group.name).count.must_equal(0)
     end
   end
 
-  context "update should" do
+  describe "update should" do
 
     it "should allow the name to change" do
       @group.name = "NotATestGroup"
       @group.save!
-      SystemGroup.where(:name=>"NotATestGroup").count.should == 1
+      SystemGroup.where(:name=>"NotATestGroup").count.must_equal(1)
     end
   end
 
-
-  context "changing systems", :katello => true do
+  describe "changing systems (katello)" do
     it "should allow systems to be added" do
-      @system.should_receive(:update_system_groups)
+      @system.expects(:update_system_groups)
       grp = SystemGroup.create!(:name=>"TestGroup", :organization=>@org)
       grp.systems << @system
       grp.save!
-      SystemGroup.find(grp).consumer_ids.size.should == 1
+      SystemGroup.find(grp).consumer_ids.size.must_equal(1)
     end
 
     it "should call allow ids to be removed" do
-      @system.should_receive(:update_system_groups).twice
+      @system.expects(:update_system_groups).twice
       grp = SystemGroup.create!(:name=>"TestGroup", :organization=>@org)
       grp.systems << @system
       grp.systems = grp.systems - [@system]
       grp.save!
-      SystemGroup.find(grp).consumer_ids.size.should == 0
+      SystemGroup.find(grp).consumer_ids.size.must_equal(0)
     end
   end
 
-  context "actions", :katello => true do
+  describe "actions (katello)" do
     it "should raise exception on package install, if no systems in group" do
-      lambda{ @group.install_packages("pkg1")}.should raise_exception(Errors::SystemGroupEmptyException)
+      lambda{ @group.install_packages("pkg1")}.must_raise(Errors::SystemGroupEmptyException)
     end
 
     it "should raise exception on package update, if no systems in group" do
-      lambda{ @group.update_packages("pkg1")}.should raise_exception(Errors::SystemGroupEmptyException)
+      lambda{ @group.update_packages("pkg1")}.must_raise(Errors::SystemGroupEmptyException)
     end
 
     it "should raise exception on package remove, if no systems in group" do
-      lambda{ @group.uninstall_packages("pkg1")}.should raise_exception(Errors::SystemGroupEmptyException)
+      lambda{ @group.uninstall_packages("pkg1")}.must_raise(Errors::SystemGroupEmptyException)
     end
 
     it "should raise exception on package group install, if no systems in group" do
-      lambda{ @group.install_package_groups("grp1")}.should raise_exception(Errors::SystemGroupEmptyException)
+      lambda{ @group.install_package_groups("grp1")}.must_raise(Errors::SystemGroupEmptyException)
     end
 
     it "should raise exception on package group remove, if no systems in group" do
-      lambda{ @group.uninstall_package_groups("grp1")}.should raise_exception(Errors::SystemGroupEmptyException)
+      lambda{ @group.uninstall_package_groups("grp1")}.must_raise(Errors::SystemGroupEmptyException)
     end
 
     it "should raise exception on errata install, if no systems in group" do
-      lambda{ @group.install_errata("errata1")}.should raise_exception(Errors::SystemGroupEmptyException)
+      lambda{ @group.install_errata("errata1")}.must_raise(Errors::SystemGroupEmptyException)
     end
   end
 
+end
 end

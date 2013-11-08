@@ -14,7 +14,7 @@ module Katello
 module Ext::PermissionTagCleanup
   def self.included(base)
     base.class_eval do
-      if base == Organization
+      if base == Katello::Organization
         after_destroy :delete_organization_associated_permission_tags
       else
         after_destroy :delete_associated_permission_tags
@@ -30,12 +30,18 @@ module Ext::PermissionTagCleanup
   end
 
   def delete_associated_permission_tags
-    PermissionTag.where(
-        :permission_id =>
-            Permission.where(:organization_id => organization.id).where(
-                :resource_type_id => ResourceType.where(:name => self.class.table_name)
-            )
-    ).where(:tag_id => id).delete_all
+    resource_type = ResourceType::TYPES.select do |type_id, details|
+      details[:model] == self.class
+    end
+
+    if resource_type
+      PermissionTag.where(
+          :permission_id =>
+              Permission.where(:organization_id => organization.id).where(
+                  :resource_type_id => ResourceType.where(:name => resource_type.keys.first)
+              )
+      ).where(:tag_id => id).delete_all
+    end
   end
 end
 end
