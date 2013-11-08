@@ -503,7 +503,7 @@ Katello::Engine.routes.draw do
     end
   end
 
-  match 'about', :to => "application_info#about", :as => "about"
+  match '/user_session/set_org' => 'user_sessions#set_org', :via => :post
 
   match '/i18n/dictionary' => 'i18n#show', :via => :get
 
