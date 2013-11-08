@@ -300,18 +300,18 @@ class ContentView < ActiveRecord::Base
       version.task_status = task
       version.save!
     else
-      version.task_status = ::TaskStatus.create!(
+      version.task_status = Katello::TaskStatus.create!(
                                :uuid => ::UUIDTools::UUID.random_create.to_s,
                                :user_id => ::User.current.id,
                                :organization => self.organization,
-                               :state => ::TaskStatus::Status::WAITING,
+                               :state => Katello::TaskStatus::Status::WAITING,
                                :task_type => TaskStatus::TYPES[:content_view_refresh][:type])
       version.save!
       begin
         version.refresh_version(options[:notify])
-        version.task_status.update_attributes!(:state => ::TaskStatus::Status::FINISHED)
+        version.task_status.update_attributes!(:state => Katello::TaskStatus::Status::FINISHED)
       rescue => e
-        version.task_status.update_attributes!(:state => ::TaskStatus::Status::ERROR)
+        version.task_status.update_attributes!(:state => Katello::TaskStatus::Status::ERROR)
         raise e
       end
     end

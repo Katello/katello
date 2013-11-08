@@ -65,18 +65,18 @@ class ContentViewDefinition < ContentViewDefinitionBase
       # by the UI.
       # At present sync publish call is used by the migration script.
       # but it makes sense for this to be the general behavior.
-      version.task_status = ::TaskStatus.create!(
+      version.task_status = Katello::TaskStatus.create!(
                                :uuid => ::UUIDTools::UUID.random_create.to_s,
                                :user_id => ::User.current.id,
                                :organization => self.organization,
-                               :state => ::TaskStatus::Status::WAITING,
+                               :state => Katello::TaskStatus::Status::WAITING,
                                :task_type => TaskStatus::TYPES[:content_view_publish][:type])
       version.save!
       begin
         generate_repos(view, options[:notify])
-        version.task_status.update_attributes!(:state => ::TaskStatus::Status::FINISHED)
+        version.task_status.update_attributes!(:state => Katello::TaskStatus::Status::FINISHED)
       rescue => e
-        version.task_status.update_attributes!(:state => ::TaskStatus::Status::ERROR)
+        version.task_status.update_attributes!(:state => Katello::TaskStatus::Status::ERROR)
         raise e
       end
     end

@@ -446,7 +446,7 @@ module Glue::Candlepin::Consumer
 
         provided_products = []
         pool["providedProducts"].each do |cp_product|
-          product = ::Product.where(:cp_id => cp_product["productId"]).first
+          product = Katello::Product.where(:cp_id => cp_product["productId"]).first
           if product
             provided_products << product
           end
@@ -493,7 +493,7 @@ module Glue::Candlepin::Consumer
 
         provided_products = []
         pool["providedProducts"].each do |cp_product|
-          product = ::Product.where(:cp_id => cp_product["productId"]).first
+          product = Katello::Product.where(:cp_id => cp_product["productId"]).first
           if product
             provided_products << product
           end

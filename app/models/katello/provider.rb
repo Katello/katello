@@ -196,7 +196,7 @@ class Provider < ActiveRecord::Base
 
     #Lambda to continually update the provider
     found_func = lambda do |url|
-      provider = ::Provider.find(provider_id)
+      provider = Katello::Provider.find(provider_id)
       provider.discovered_repos << url
       provider.save!
     end
@@ -204,7 +204,7 @@ class Provider < ActiveRecord::Base
     #  Using the saved task_id to compare current providers
     #  task id
     continue_func = lambda do
-      new_prov = ::Provider.find(provider_id)
+      new_prov = Katello::Provider.find(provider_id)
       if new_prov.discovery_task.nil? || new_prov.discovery_task.id != task_id
         return false
       end

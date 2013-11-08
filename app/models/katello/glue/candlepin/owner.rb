@@ -128,7 +128,7 @@ module Glue::Candlepin::Owner
       else
         pools = Resources::Candlepin::Owner.pools self.label
       end
-      pools.collect { |p| ::Pool.new p }
+      pools.collect { |p| Katello::Pool.new p }
     end
 
     def generate_debug_cert

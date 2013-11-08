@@ -65,10 +65,10 @@ module Glue::Pulp::Errata
         filters = {:id => id_system_hash.keys}
         filters[:type] = type unless type.blank?
 
-        found_errata = ::Errata.search("", :start => 0, :page_size => id_system_hash.size,
-                                           :filters => filters, :fields => ::Errata::SHORT_FIELDS)
+        found_errata = Katello::Errata.search("", :start => 0, :page_size => id_system_hash.size,
+                                              :filters => filters, :fields => Katello::Errata::SHORT_FIELDS)
         found_errata.collect do |erratum|
-          e = ::Errata.new_from_search(erratum.as_json)
+          e = Katello::Errata.new_from_search(erratum.as_json)
           e.applicable_consumers = id_system_hash[e.id]
           e
         end

@@ -33,7 +33,7 @@ class SyncPlan < ActiveRecord::Base
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name
   validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
 
-  scope :readable, lambda { |org| ::Provider.any_readable?(org) ? where(:organization_id => org.id) : where("0 = 1") }
+  scope :readable, lambda { |org| Provider.any_readable?(org) ? where(:organization_id => org.id) : where("0 = 1") }
 
   before_save :reassign_sync_plan_to_products
 
