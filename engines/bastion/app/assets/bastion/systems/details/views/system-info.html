@@ -333,10 +333,12 @@
   </div>
 
   <div class="advanced-info" ng-show="hasAdvancedInfo">
-    <header class="details-sub-header advanced-header">
-      <i class="expand-icon clickable" ng-class="{'icon-plus': !showAdvanced, 'icon-minus': showAdvanced}"
-         ng-click="showAdvanced = !showAdvanced"></i>
-      <h3 translate>Advanced Information</h3>
+    <header class="details-sub-header">
+       <h3>
+        <i class="expand-icon clickable" ng-class="{'icon-plus': !showAdvanced, 'icon-minus': showAdvanced}"
+           ng-click="showAdvanced = !showAdvanced"></i>
+         <span translate>Advanced Information</span>
+       </h3>
     </header>
     <div ng-show="showAdvanced" class="details fl">
       <section ng-show="showAdvanced" ng-repeat="(sectionName, subSection) in advancedInfoLeft">

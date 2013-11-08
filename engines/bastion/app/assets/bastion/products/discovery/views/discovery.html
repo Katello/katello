@@ -32,7 +32,7 @@
            placeholder="{{ 'Filter' | translate }}"
            ng-model="discoveryTable.filterTerm"/>
 
-    <div ng-hide="system.readonly" class="fr nutupane-actions">
+    <div ng-hide="system.readonly" class="fr">
        <button class="btn btn-primary"
                translate
                ng-disabled="discoveryTable.getSelected().length == 0"
@@ -56,7 +56,7 @@
 
   </div>
 
-  <table alch-table="discoveryTable" class="table table-full table-striped">
+  <table alch-table="discoveryTable" class="table table-striped">
     <thead>
       <tr alch-table-head row-select>
         <th alch-table-column translate>Discovered URLs</th>

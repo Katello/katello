@@ -18,7 +18,7 @@
 <section>
   <h4 translate>Installed Packages</h4>
 
-  <div class="nutupane-actionbar">
+  <div class="nutupane-bar">
     <div class="form">
       <input type="text"
              class="input input-search"
@@ -27,7 +27,7 @@
       <span class="result-count" translate>Showing {{ currentPackagesTable.resource.total }} Packages</span>
     </div>
 
-    <div class="nutupane-actions fr" ng-hide="system.readonly">
+    <div class="fr" ng-hide="system.readonly">
        <button class="btn btn-primary" translate ng-click="updateAll()">
          Update All
        </button>
@@ -36,7 +36,7 @@
 
   <div alch-table="currentPackagesTable">
     <div alch-container-scroll control-width="table" alch-infinite-scroll="table.nextPage()">
-      <table ng-class="{'table-mask': table.working}" class="table table-full table-striped">
+      <table ng-class="{'table-mask': table.working}" class="table table-striped">
         <thead>
           <tr alch-table-head>
             <th alch-table-column="name" translate>Installed Package</th>

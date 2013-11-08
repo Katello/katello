@@ -4,7 +4,7 @@
       <th alch-table-column="name" sortable>{{ "Name" | translate }}</th>
       <th alch-table-column="provider" sortable>{{ "Provider" | translate }}</th>
       <th alch-table-column="organization" sortable>{{ "Organization" | translate }}</th>
-      <th alch-table-column class="align-center">{{ "Repositories" | translate }}</th>
+      <th alch-table-column class="number-cell">{{ "Repositories" | translate }}</th>
     </tr>
   </thead>
 
@@ -18,7 +18,7 @@
       </td>
       <td alch-table-cell>{{ product.provider.name }}</td>
       <td alch-table-cell>{{ product.organization.name }}</td>
-      <td alch-table-cell class="align-center">{{ product.repository_count }}</td>
+      <td alch-table-cell class="number-cell">{{ product.repository_count }}</td>
     </tr>
   </tbody>
 </table>
