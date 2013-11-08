@@ -61,14 +61,14 @@ describe('Directive: alchConfirm', function() {
         scope.showConfirm = true;
         scope.$digest();
 
-        expect(editableElement.css('display')).not.toBe('none');
+        expect(editableElement.hasClass('ng-hide')).toBe(false);
     });
 
     it("should not display confirmation buttons when showConfirm is false", function() {
         scope.showConfirm = false;
         scope.$digest();
 
-        expect(editableElement.css('display')).toBe('none');
+        expect(editableElement.hasClass('ng-hide')).toBe(true);
     });
 
     it("calls the provided function when the 'Yes' confirmation button is clicked", function() {
@@ -88,7 +88,7 @@ describe('Directive: alchConfirm', function() {
 
         expect(testItem.delete).not.toHaveBeenCalled();
         expect(scope.showConfirm).toBe(false);
-        expect(editableElement.css('display')).toBe('none');
+        expect(editableElement.hasClass('ng-hide')).toBe(true);
     });
 });
 
@@ -142,15 +142,14 @@ describe('Directive: alchConfirmModal', function() {
     it("should display confirmation buttons when showConfirm is true", function() {
         scope.showConfirm = true;
         scope.$digest();
-
-        expect(editableElement.css('display')).not.toBe('none');
+        expect(editableElement.hasClass('ng-hide')).toBe(false);
     });
 
     it("should not display confirmation buttons when showConfirm is false", function() {
         scope.showConfirm = false;
         scope.$digest();
 
-        expect(editableElement.css('display')).toBe('none');
+        expect(editableElement.hasClass('ng-hide')).toBe(true);
     });
 
     it("calls the provided function when the 'Yes' confirmation button is clicked", function() {
@@ -170,7 +169,8 @@ describe('Directive: alchConfirmModal', function() {
 
         expect(testItem.delete).not.toHaveBeenCalled();
         expect(scope.showConfirm).toBe(false);
-        expect(editableElement.css('display')).toBe('none');
+        expect(editableElement.hasClass('ng-hide')).toBe(true);
+
     });
 
     describe("responds to keypress", function() {
@@ -201,7 +201,7 @@ describe('Directive: alchConfirmModal', function() {
 
             expect(testItem.delete).not.toHaveBeenCalled();
             expect(scope.showConfirm).toBe(false);
-            expect(editableElement.css('display')).toBe('none');
+            expect(editableElement.hasClass('ng-hide')).toBe(true);
         });
 
     });

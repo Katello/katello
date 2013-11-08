@@ -34,6 +34,10 @@
 //= require "angular-gettext"
 //= require "bastion/i18n/i18n.module"
 
+//= require "bastion/incubator/alch-menu.directive.js"
+//= require "bastion/incubator/alch-dropdown.directive.js"
+//= require "bastion/incubator/alch-flyout.directive.js"
+
 //= require "bastion/widgets/widgets.module.js"
 //= require "bastion/widgets/org-switcher.widget.js"
 

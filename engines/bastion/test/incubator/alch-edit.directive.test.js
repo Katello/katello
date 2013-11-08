@@ -84,10 +84,10 @@ describe('Directive: alchEdit', function() {
         it("should hide the editable value display on click", function() {
             var element = editableElement.find('.editable');
 
-            expect(element.css('display')).not.toBe('none');
+            expect(element.hasClass('ng-hide')).toBe(false);
             element.trigger('click');
 
-            expect(element.css('display')).toBe('none');
+            expect(element.hasClass('ng-hide')).toBe(true);
         });
 
         it("should call the method set to on-save when clicking save button", function() {

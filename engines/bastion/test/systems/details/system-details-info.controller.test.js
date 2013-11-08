@@ -129,7 +129,6 @@ describe('Controller: SystemDetailsInfoController', function() {
             expect(Object.keys($scope.advancedInfoRight).length).toBe(1);
         });
 
-        // TODO remove me when we upgrade to AngularJS 1.1.4, see note in system-details-info.controller.js
         it("retrieves the correct template for each field based on it's type", function() {
             expect($scope.getTemplateForType("somethingElse")).toBe("systems/details/views/partials/system-detail-value.html");
             expect($scope.getTemplateForType({})).toBe("systems/details/views/partials/system-detail-object.html");

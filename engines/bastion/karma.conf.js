@@ -31,7 +31,7 @@ module.exports = function(config) {
 
             // Must load modules first
             'app/assets/bastion/**/*.module.js',
-            'app/assets/bastion/**/*.js',
+            'app/assets/bastion/**/*.js ',
             'app/assets/bastion/**/*.html',
 
             'test/test-mocks.module.js',
