@@ -133,7 +133,7 @@ module Glue::Pulp::ConsumerGroup
 
     def errata(type = nil)
       uuids = self.systems.pluck(:uuid)
-      ::Errata.applicable_for_consumers(uuids, type)
+      Katello::Errata.applicable_for_consumers(uuids, type)
     end
 
     def install_consumer_errata(errata_ids)
