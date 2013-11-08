@@ -31,6 +31,12 @@ class ApplicationController < ::ApplicationController
 
   after_filter :flash_to_headers
 
+  # Skipping Foreman's filter that clears the user
+  # from the current thread. If this filter is enabled
+  # Katello's rescue_from don't have access to User.current.
+  skip_around_filter :clear_thread
+  after_filter :clear_katello_thread
+
   #custom 404 (render_404) and 500 (render_error) pages
   # this is always in the top
   # order of these are important.
@@ -63,18 +69,17 @@ class ApplicationController < ::ApplicationController
     notify.exception e
     log_exception e, :info
 
-    execute_after_filters
     respond_to do |f|
       f.html { render :text => e.to_s, :layout => !request.xhr?, :status => :unprocessable_entity}
       f.json { render :json => e.record.errors, :status => :unprocessable_entity}
     end
-    User.current = nil
+    execute_after_filters
   end
 
   rescue_from ActiveRecord::RecordNotFound do |e|
     notify.error e.message
-    execute_after_filters
     render :nothing => true, :status => :not_found
+    execute_after_filters
   end
 
   if Katello.config.hide_exceptions
@@ -498,17 +503,19 @@ class ApplicationController < ::ApplicationController
 
   #verify if the specific object with the given id, matches a given search string
   def search_validate(obj_class, id, search, default = :name)
-    obj_class.index.refresh
-    search = '*' if search.nil? || search == ''
-    search = Util::Search.filter_input search
-    query_options = {}
-    query_options[:default_field] = default if default
+    if obj_class.respond_to?(:index)
+      obj_class.index.refresh
+      search = '*' if search.nil? || search == ''
+      search = Util::Search.filter_input search
+      query_options = {}
+      query_options[:default_field] = default if default
 
-    results = obj_class.search do
-      query { string search, query_options}
-      filter :terms, :id => [id]
+      results = obj_class.search do
+        query { string search, query_options}
+        filter :terms, :id => [id]
+      end
+      results.total > 0
     end
-    results.total > 0
   end
 
   # TODO: break up method
@@ -684,8 +691,8 @@ class ApplicationController < ::ApplicationController
 
   def execute_rescue(exception, &renderer)
     log_exception exception
-    if current_user
-      User.current = current_user
+    if session[:user]
+      User.current = User.find(session[:user])
       renderer.call(exception)
       User.current = nil
       execute_after_filters
@@ -693,7 +700,7 @@ class ApplicationController < ::ApplicationController
     else
       notify.warning _("You must be logged in to access that page.")
       execute_after_filters
-      if redirect_to new_user_session_url
+      if redirect_to main_app.login_users_path
         return false
       end
     end
@@ -728,6 +735,12 @@ class ApplicationController < ::ApplicationController
 
   def default_notify_options
     {:organization => current_organization}
+  end
+
+  def clear_katello_thread
+    [:user, :organization, :location].each do |key|
+      Thread.current[key] = nil
+    end
   end
 
 end

@@ -1,7 +1,8 @@
 require 'test_helper'
 require 'factory_girl_rails'
-require "mocha/setup"
 require "webmock/minitest"
+require "mocha/setup"
+
 
 require "#{Katello::Engine.root}/test/support/minitest/spec/shared_examples"
 
@@ -20,6 +21,12 @@ require "#{Katello::Engine.root}/test/support/runcible"
 
 FactoryGirl.definition_file_paths = ["#{Katello::Engine.root}/test/factories"]
 FactoryGirl.find_definitions
+
+module MiniTest::Expectations
+  infect_an_assertion :assert_redirected_to, :must_redirect_to
+  infect_an_assertion :assert_template, :must_render_template
+  infect_an_assertion :assert_response, :must_respond_with
+end
 
 class ActiveSupport::TestCase
   extend ActiveRecord::TestFixtures

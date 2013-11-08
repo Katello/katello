@@ -249,7 +249,7 @@ class ActivationKeysController < Katello::ApplicationController
 
     notify.success _("Activation key '%s' was updated.") % @activation_key["name"]
 
-    if !search_validate(Katello::ActivationKey, @activation_key.id, params[:search])
+    if !search_validate(ActivationKey, @activation_key.id, params[:search])
       notify.message _("'%s' no longer matches the current search criteria.") % @activation_key["name"]
     end
 

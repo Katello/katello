@@ -10,17 +10,12 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require "test_helper"
+require "katello_test_helper"
 
 def login_user_by_described_class(user)
-=begin
-  if described_class.name =~ /^Api::/
-    login_user_api(user)
-  else
-    login_user(:user => user, :mock => false, :superuser => false)
-  end
-=end
   User.current = user
+  session[:user] = user
+  session[:expires_at] = 5.minutes.from_now
 end
 
 shared_examples_for "protected action" do
@@ -37,13 +32,13 @@ shared_examples_for "protected action" do
       if @controller.kind_of? Katello::Api::V1::ApiController
         @controller.expects(:respond_for_exception).with { |e, options| options.try(:[], :status).must == :forbidden }
       else
-        @controller.expects(:render_403)
+        @controller.expects(:render_403).never
       end
 
       req
       on_success if defined?(on_success)
 
-      response.must be_success
+      response.must_be :success?
 
       if respond_to? :authorized_user
         ::Logging.logger['roles'].debug(
@@ -79,7 +74,7 @@ shared_examples_for "bad request" do
   describe "action" do
     it "must fail (katello)" do #TODO headpin
       req
-      response.status.must == HttpErrors::UNPROCESSABLE_ENTITY
+      response.status.must_equal(Katello::HttpErrors::UNPROCESSABLE_ENTITY)
     end
   end
 end
