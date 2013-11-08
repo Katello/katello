@@ -10,14 +10,15 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require './test/models/authorization/authorization_base'
+require 'models/authorization/authorization_base'
 
+module Katello
 class GpgKeyAuthorizationAdminTest < AuthorizationTestBase
 
   def setup
     super
     User.current = User.find(users('admin'))
-    @key = GpgKey.find(gpg_keys('fedora_gpg_key'))
+    @key = GpgKey.find(katello_gpg_keys('fedora_gpg_key'))
   end
 
   def test_readable
@@ -49,8 +50,8 @@ class GpgKeyAuthorizationNoPermsTest < AuthorizationTestBase
 
   def setup
     super
-    User.current = User.find(users('no_perms_user'))
-    @key = GpgKey.find(gpg_keys('fedora_gpg_key'))
+    User.current = User.find(users('restricted'))
+    @key = GpgKey.find(katello_gpg_keys('fedora_gpg_key'))
   end
 
   def test_readable
@@ -77,4 +78,5 @@ class GpgKeyAuthorizationNoPermsTest < AuthorizationTestBase
      refute @key.manageable?
   end
 
+end
 end

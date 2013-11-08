@@ -12,7 +12,7 @@
 
 module Katello
 class ContentViewDefinitionBase < ActiveRecord::Base
-  belongs_to :organization, :inverse_of => :content_view_definitions
+  belongs_to :organization, :inverse_of => :content_view_definitions, :class_name => "Katello::Organization"
   has_many :content_view_definition_products, :foreign_key => "content_view_definition_id", :dependent => :destroy
   has_many :products, :through => :content_view_definition_products, :after_remove => :remove_product
   has_many :content_view_definition_repositories, :foreign_key => "content_view_definition_id", :dependent => :destroy

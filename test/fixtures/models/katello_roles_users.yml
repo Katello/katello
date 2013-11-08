@@ -7,8 +7,8 @@ admin_own_role_admin:
   user_id:  <%= ActiveRecord::Fixtures.identify(:admin) %>
 
 no_perms_user_own_role:
-  role_id:  <%= ActiveRecord::Fixtures.identify(:no_perms_own_role) %>
-  user_id:  <%= ActiveRecord::Fixtures.identify(:no_perms_user) %>
+  role_id:  <%= ActiveRecord::Fixtures.identify(:restricted_own_role) %>
+  user_id:  <%= ActiveRecord::Fixtures.identify(:restricted) %>
 
 hidden_own_role:
   role_id:  <%= ActiveRecord::Fixtures.identify(:hidden_own_role) %>
