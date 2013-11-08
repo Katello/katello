@@ -10,85 +10,96 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'spec_helper'
+require 'katello_test_helper'
+
+module Katello
 describe Role do
+
+  include OrganizationHelperMethods
   include OrchestrationHelper
   include AuthorizationHelperMethods
 
   before do
     disable_user_orchestration
     disable_org_orchestration
+    User.current = users(:admin)
   end
 
-  context "role in valid state should be valid" do
-    specify { Role.new(:name => "aaaaa").should be_valid }
+  describe "role in valid state should be valid" do
+    specify { Role.new(:name => "aaaaa").must_be :valid? }
   end
 
- context "test read only" do
+ describe "test read only" do
    let(:organization) {Organization.create!(:name=>"test_org", :label =>"my_key")}
    let(:role) { Role.make_readonly_role("name", organization)}
    let(:global_role) { Role.make_readonly_role("global-name")}
    let(:admin_role) { Role.make_super_admin_role}
    let(:user) {
-     User.find_or_create_by_login(
+     disable_user_orchestration
+     User.find_or_create_by_login!(
          :login => 'fooo100',
          :password => "password",
          :mail => 'fooo@somewhere.com',
-         :roles => [ role ])
+         :auth_source => auth_sources(:one),
+         :katello_roles => [ role ])
    }
    let(:global_user) {
-     User.find_or_create_by_login(
+     disable_user_orchestration
+     User.find_or_create_by_login!(
          :login => 'global_user',
          :password => "password",
          :mail => 'global_user@somewhere.com',
-         :roles => [ global_role ])
+         :auth_source => auth_sources(:one),
+         :katello_roles => [ global_role ])
    }
    let(:admin_user) {
-     User.find_or_create_by_login(
-         :login => 'admin_user',
+     disable_user_orchestration
+     User.find_or_create_by_login!(
+         :login => 'admin_user_1',
          :password => "password",
          :mail => 'admin_user@somewhere.com',
-         :roles => [ admin_role ])
+         :auth_source => auth_sources(:one),
+         :katello_roles => [ admin_role ])
    }
 
-   context "Check the orgs" do
-     specify{user.allowed_to?(:read, :organizations).should be_false }
-     specify{global_user.allowed_to?(:read, :organizations).should be_true }
+   describe "Check the orgs" do
+     specify{user.allowed_to_in_katello?(:read, :organizations).must_equal(false) }
+     specify{global_user.allowed_to_in_katello?(:read, :organizations).must_equal(true) }
 
-     specify{user.allowed_to?(:read, :organizations, nil, organization).should be_true}
-     specify{global_user.allowed_to?(:read, :organizations, nil, organization).should be_true}
+     specify{user.allowed_to_in_katello?(:read, :organizations, nil, organization).must_equal(true)}
+     specify{global_user.allowed_to_in_katello?(:read, :organizations, nil, organization).must_equal(true)}
 
-     specify{user.allowed_to?(:create, :organizations).should be_false}
-     specify{global_user.allowed_to?(:create, :organizations).should be_false}
-     specify{user.allowed_to?(:update, :organizations).should be_false}
+     specify{user.allowed_to_in_katello?(:create, :organizations).must_equal(false)}
+     specify{global_user.allowed_to_in_katello?(:create, :organizations).must_equal(false)}
+     specify{user.allowed_to_in_katello?(:update, :organizations).must_equal(false)}
 
      specify {
        User.current = user
-       Organization.all_editable?().should be_false
+       Organization.all_editable?().must_equal(false)
      }
      specify {
        User.current = global_user
-       Organization.all_editable?().should be_false
+       Organization.all_editable?().must_equal(false)
      }
      specify {
        User.current = admin_user
-       Organization.all_editable?().should be_true
+       Organization.all_editable?().must_equal(true)
      }
    end
 
-   context "Check the envs", :katello => true do
+   describe "Check the envs(katello)" do
      let(:environment){create_environment(:name=>"my_env", :label=> "my_env", :organization => organization, :prior => organization.library)}
      KTEnvironment.read_verbs.each do |verb|
-       specify{user.allowed_to?(verb, :environments,environment.id,organization).should be_true}
-       specify{user.allowed_to?(verb, :environments).should be_false}
-       specify{global_user.allowed_to?(verb, :environments).should be_true}
+       specify{user.allowed_to_in_katello?(verb, :environments,environment.id,organization).must_equal(true)}
+       specify{user.allowed_to_in_katello?(verb, :environments).must_equal(false)}
+       specify{global_user.allowed_to_in_katello?(verb, :environments).must_equal(true)}
      end
-     specify{user.allowed_to?("update_systems", :environments,environment.id,organization).should be_false}
-     specify{global_user.allowed_to?("update_systems", :environments,environment.id,organization).should be_false}
+     specify{user.allowed_to_in_katello?("update_systems", :environments,environment.id,organization).must_equal(false)}
+     specify{global_user.allowed_to_in_katello?("update_systems", :environments,environment.id,organization).must_equal(false)}
    end
  end
 
- context "Admin permission should be recreated if role exists" do
+ describe "Admin permission should be recreated if role exists" do
    before do
      @admin_role = Role.make_super_admin_role
      @admin_role.update_attributes(:locked=>false)
@@ -96,17 +107,17 @@ describe Role do
      @admin_role.update_attributes(:locked=>true)
    end
 
-   context "recreating permission" do
+   describe "recreating permission" do
      specify {
-       @admin_role.permissions.size.should == 0
+       @admin_role.permissions.size.must_equal(0)
        @admin_role  = Role.make_super_admin_role
-       @admin_role.permissions.size.should == 1
+       @admin_role.permissions.size.must_equal(1)
      }
    end
 
  end
 
- context "read ldap roles" do
+ describe "read ldap roles" do
    before do
      Katello.config[:ldap_roles] = true
      Katello.config[:validate_ldap] = false
@@ -118,88 +129,94 @@ describe Role do
    let(:organization) {Organization.create!(:name=>"test_org", :label =>"my_key")}
    let(:role) { Role.make_readonly_role("name", organization)}
    let(:ldap_role) { Role.make_readonly_role("ldap_role", organization)}
-   context "setting roles on login" do
+   describe "setting roles on login" do
      specify {
-       user = User.find_or_create_by_login(
+      disable_user_orchestration
+       user = User.find_or_create_by_login!(
            :login => 'ldapman5000',
            :password => "password",
            :mail => 'fooo@somewhere.com',
-           :roles => [ role ])
+           :auth_source => auth_sources(:one),
+           :katello_roles => [ role ])
        LdapGroupRole.create!(:ldap_group => "ldap_group", :role => ldap_role)
        # make ldap groups return the correct thing
-       Ldap.stub(:ldap_groups).and_return(['ldap_group'])
-       user.roles.include?(ldap_role).should be_false
+       Ldap.stubs(:ldap_groups).returns(['ldap_group'])
+       user.roles.include?(ldap_role).must_equal(false)
        user.set_ldap_roles
        # reload the user object from the db
        user = User.find_by_login("ldapman5000")
        # ensure the user got the correct ldap role
-       user.roles.include?(ldap_role).should be_true
+       user.katello_roles.include?(ldap_role).must_equal(true)
        # ensure the user still has his original roles, role + login
-       user.roles.include?(role).should be_true
-       (user.roles.size == 3).should be_true
+       user.katello_roles.include?(role).must_equal(true)
+       (user.katello_roles.size == 3).must_equal(true)
      }
    end
 
-   context "verify ldap roles for a normal user" do
+   describe "verify ldap roles for a normal user" do
      specify {
-       user = User.find_or_create_by_login(
+       disable_user_orchestration
+       user = User.find_or_create_by_login!(
            :login => 'ldapman5000',
            :password => "password",
            :mail => 'fooo@somewhere.com',
-           :roles => [ role ])
+           :auth_source => auth_sources(:one),
+           :katello_roles => [ role ])
        LdapGroupRole.create!(:ldap_group => "ldap_group", :role => ldap_role)
        # make ldap groups return the correct thing
-       Ldap.stub(:ldap_groups).and_return(['ldap_group'])
+       Ldap.stubs(:ldap_groups).returns(['ldap_group'])
        user.set_ldap_roles
        # not sure if reloading the user like this is necessary
        user = User.find_by_login('ldapman5000')
-       user.roles.include?(ldap_role).should be_true
-       (user.roles.size == 3).should be_true
+       user.katello_roles.include?(ldap_role).must_equal(true)
+       (user.katello_roles.size == 3).must_equal(true)
        # ldap server hax
-       Ldap.stub(:is_in_groups).and_return(true)
-       Ldap.stub(:ldap_groups).and_return(['ldap_group'])
+       Ldap.stubs(:is_in_groups).returns(true)
+       Ldap.stubs(:ldap_groups).returns(['ldap_group'])
        user.verify_ldap_roles
        # make sure we didnt survive the hax
        user = User.find_by_login('ldapman5000')
-       user.roles.include?(ldap_role).should be_true
-       (user.roles.size == 3).should be_true
+       user.katello_roles.include?(ldap_role).must_equal(true)
+       (user.katello_roles.size == 3).must_equal(true)
      }
    end
 
-   context "verify ldap roles for a changed user" do
+   describe "verify ldap roles for a changed user" do
      specify {
-       user = User.find_or_create_by_login(
+       disable_user_orchestration
+       user = User.find_or_create_by_login!(
            :login => 'ldapman5000',
            :password => "password",
            :mail => 'fooo@somewhere.com',
-           :roles => [ role ])
+           :auth_source => auth_sources(:one),
+           :katello_roles => [ role ])
        LdapGroupRole.create!(:ldap_group => "ldap_group", :role => ldap_role)
        # make ldap groups return the correct thing
-       Ldap.stub(:ldap_groups).and_return(['ldap_group'])
+       Ldap.stubs(:ldap_groups).returns(['ldap_group'])
        user.set_ldap_roles
        # not sure if reloading the user like this is necessary
        user = User.find_by_login('ldapman5000')
-       user.roles.include?(ldap_role).should be_true
+       user.katello_roles.include?(ldap_role).must_equal(true)
        # ldap server hax
-       Ldap.stub(:is_in_groups).and_return(false)
-       Ldap.stub(:ldap_groups).and_return(['ldapppp_group'])
+       Ldap.stubs(:is_in_groups).returns(false)
+       Ldap.stubs(:ldap_groups).returns(['ldapppp_group'])
        user.verify_ldap_roles
        # make sure we didnt survive the hax
        user = User.find_by_login('ldapman5000')
-       user.roles.include?(ldap_role).should be_false
+       user.katello_roles.include?(ldap_role).must_equal(false)
      }
    end
   end
 
- context "checking locked roles" do
-   context "create check" do
+ describe "checking locked roles" do
+   describe "create check" do
      let(:role) {Role.create!(:name => "locked_role",:locked => true)}
      specify do
-       lambda{Permission.create!(:name => "Foo", :role=>role, :all_types => true)}.should raise_error(ActiveRecord::RecordInvalid)
+       lambda{Permission.create!(:name => "Foo", :role=>role, :all_types => true)}.must_raise(ActiveRecord::RecordInvalid)
      end
    end
 
-   context "update check" do
+   describe "update check" do
      let(:role) do
         r = Role.create!(:name => "role")
         Permission.create!(:name => "Foo", :role=>r, :all_types => true)
@@ -207,29 +224,32 @@ describe Role do
         r
      end
      let(:user) do
-       User.find_or_create_by_login(
+       disable_user_orchestration
+       User.find_or_create_by_login!(
            :login => 'fooo100',
            :password => "password",
-           :mail => 'fooo@somewhere.com'
+           :mail => 'fooo@somewhere.com',
+           :auth_source => auth_sources(:one)
            )
      end
      specify do
-       lambda{role.permissions.first.update_attributes!(:all_verbs=>true)}.should raise_error(ActiveRecord::RecordInvalid)
+       lambda{role.permissions.first.update_attributes!(:all_verbs=>true)}.must_raise(ActiveRecord::RecordInvalid)
      end
      specify do
-       lambda{role.permissions.first.destroy}.should raise_error(ActiveRecord::ReadOnlyRecord)
+       lambda{role.permissions.first.destroy}.must_raise(ActiveRecord::ReadOnlyRecord)
      end
      specify do
-        lambda{role.update_attributes!(:name=>"boo")}.should raise_error(ActiveRecord::RecordInvalid)
+        lambda{role.update_attributes!(:name=>"boo")}.must_raise(ActiveRecord::RecordInvalid)
      end
      specify do
-        lambda{role.update_attributes!(:description=>"description")}.should raise_error(ActiveRecord::RecordInvalid)
+        lambda{role.update_attributes!(:description=>"description")}.must_raise(ActiveRecord::RecordInvalid)
      end
      specify do
-        lambda{role.update_attributes!(:users=>[user])}.should_not raise_error(ActiveRecord::RecordInvalid)
+        lambda{role.update_attributes!(:users=>[user])}
      end
    end
 
  end
 
+end
 end

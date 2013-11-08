@@ -14,7 +14,7 @@ module Katello
 class LdapGroupRole < ActiveRecord::Base
   validates :ldap_group, :uniqueness => {:scope => :role_id}
   validates_with Validators::LdapGroupValidator, :attributes => :ldap_group
-  belongs_to :role
+  belongs_to :role, :class_name => "Katello::Role"
 
 end
 end

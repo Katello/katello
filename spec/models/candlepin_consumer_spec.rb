@@ -10,11 +10,12 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'spec_helper'
-require 'helpers/system_test_data'
-include OrchestrationHelper
+require 'katello_test_helper'
 
+module Katello
 describe Glue::Candlepin::Consumer do
+  include OrchestrationHelper
+
   let(:facts) {
     {
       "net.interface.eth2.broadcast" => "123.123.123.123",
@@ -45,26 +46,26 @@ describe Glue::Candlepin::Consumer do
                            :serviceLevel => nil)
   end
 
-  context "the system has a lot of interfaces" do
+  describe "the system has a lot of interfaces" do
     it "should have three interfaces" do
-      @system.interfaces.size.should == 3
+      @system.interfaces.size.must_equal(3)
     end
 
     it "should have an invalid interface" do
       @system.facts["net.interface.em2.ipv4_address"] = nil
-      @system.interfaces.size.should == 3
+      @system.interfaces.size.must_equal(3)
     end
 
     it "should have an extra interface" do
       @system.facts["net.interface.eth4.ipv4_address"] = '192.168.1.121'
-      @system.interfaces.size.should == 4
+      @system.interfaces.size.must_equal(4)
     end
 
     it "should have correct interface mappings" do
       @system.facts["net.interface.eth4.ipv4_address"] = '192.168.1.121'
       @system.interfaces.each do |i|
         if i[:name] == 'eth4'
-          i[:addr].should == '192.168.1.121'
+          i[:addr].must_equal('192.168.1.121')
         end
       end
     end
@@ -74,7 +75,8 @@ describe Glue::Candlepin::Consumer do
       @system.facts["net.interface.eth4.ipv4_address"] = '192.168.1.125'
       @system.facts["net.interface.eth4.ipv4_address"] = '192.168.1.123'
       @system.facts["net.interface.eth4.ipv4_address"] = '192.168.1.122'
-      @system.interfaces.size.should == 4
+      @system.interfaces.size.must_equal(4)
     end
   end
+end
 end

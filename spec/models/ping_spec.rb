@@ -9,12 +9,10 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'spec_helper'
-
-require 'webmock'
-include WebMock::API
+require 'katello_test_helper'
 require 'helpers/config_helper_spec'
 
+module Katello
 describe Ping do
 
   describe "#ping" do
@@ -26,13 +24,13 @@ describe Ping do
       stub_request(:get, "#{Katello.config.elastic_url}/_status")
 
       # candlepin - with oauth
-      Resources::Candlepin::CandlepinPing.stub!(:ping).and_return()
+      Resources::Candlepin::CandlepinPing.stubs(:ping).returns()
 
       # katello jobs
-      Ping.should_receive(:system).with("/sbin/service katello-jobs status").and_return(true)
+      Ping.expects(:system).with("/sbin/service katello-jobs status").returns(true)
     end
 
-    context "headpin mode", :headpin => true do
+    describe "headpin mode", :headpin => true do
       before do
         stub_headpin_mode
 
@@ -41,23 +39,28 @@ describe Ping do
       end
 
       subject { Ping.ping[:result] }
-      it(:headpin => true) { should eql('ok') }
+      it "(headpin)" do
+        subject.must_equal('ok')
+      end
     end
 
-    context "katello mode", :katello => true do
+    describe "katello mode (katello)" do
       before do
         # pulp - without oauth
         stub_request(:get, "#{Katello.config.pulp.url}/services/status/") # gotta have that trailing slash
 
         # pulp - with oauth
-        Katello.pulp_server.resources.user.stub!(:retrieve_all).and_return([])
+        Katello.pulp_server.resources.user.stubs(:retrieve_all).returns([])
 
-        Ping.should_receive(:pulp_without_oauth).and_return(nil)
+        Ping.expects(:pulp_without_oauth).returns(nil)
       end
 
       subject {Ping.ping[:result]}
-      it(:katello => true) { should eql('ok') }
+      it "(katello)" do
+        subject.must_equal('ok')
+      end
     end
 
   end
+end
 end

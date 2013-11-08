@@ -1,6 +1,7 @@
 require 'test_helper'
 require 'factory_girl_rails'
 require "mocha/setup"
+require "webmock/minitest"
 
 require "#{Katello::Engine.root}/test/support/minitest/spec/shared_examples"
 
@@ -9,6 +10,8 @@ require "#{Katello::Engine.root}/spec/helpers/locale_helper_methods"
 require "#{Katello::Engine.root}/spec/helpers/authorization_helper_methods"
 require "#{Katello::Engine.root}/spec/helpers/organization_helper_methods"
 require "#{Katello::Engine.root}/spec/helpers/system_helper_methods"
+require "#{Katello::Engine.root}/spec/helpers/product_helper_methods"
+require "#{Katello::Engine.root}/spec/helpers/repository_helper_methods"
 require "#{Katello::Engine.root}/spec/models/model_spec_helper"
 require "#{Katello::Engine.root}/spec/support/shared_examples/protected_action_shared_examples"
 require "#{Katello::Engine.root}/spec/support/custom_matchers"
@@ -76,14 +79,12 @@ def disable_glue_layers(services=[], models=[], force_reload=false)
 
   Katello.config[:use_cp]            = services.include?('Candlepin') ? false : true
   Katello.config[:use_pulp]          = services.include?('Pulp') ? false : true
-  Katello.config[:use_foreman]       = services.include?('Foreman') ? false : true
   Katello.config[:use_elasticsearch] = services.include?('ElasticSearch') ? false : true
 
   cached_entry = {
     :cp => Katello.config.use_cp,
     :pulp => Katello.config.use_pulp,
-    :es => Katello.config.use_elasticsearch,
-    :foreman => Katello.config.use_foreman
+    :es => Katello.config.use_elasticsearch
   }
 
   models.each do |model|
