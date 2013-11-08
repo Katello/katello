@@ -84,7 +84,7 @@ module Authorization::Organization
 
     def authorized_items(verbs, resource = :organizations)
       if !::User.allowed_all_tags?(verbs, resource)
-        where("organizations.id in (#{::User.allowed_tags_sql(verbs, resource)})")
+        where("#{Organization.table_name}.id in (#{::User.allowed_tags_sql(verbs, resource)})")
       end
     end
   end

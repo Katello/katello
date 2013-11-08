@@ -25,11 +25,11 @@ module Authorization::System
       if org.systems_readable?
         where(:environment_id => org.environment_ids) #list all systems in an org
       else #just list for environments the user can access
-        where_clause = "systems.environment_id in (#{KTEnvironment.systems_readable(org).select(:id).to_sql})"
+        where_clause = "#{System.table_name}.environment_id in (#{KTEnvironment.systems_readable(org).select(:id).to_sql})"
         where_clause += " or "
-        where_clause += "system_system_groups.system_group_id in (#{SystemGroup.systems_readable(org).select(:id).to_sql})"
-        joins("left outer join system_system_groups on systems.id =
-                                    system_system_groups.system_id").where(where_clause)
+        where_clause += "#{SystemSystemGroup.table_name}.system_group_id in (#{SystemGroup.systems_readable(org).select(:id).to_sql})"
+        joins("left outer join #{SystemSystemGroup.table_name} on #{System.table_name}.id =
+                                    #{SystemSystemGroup.table_name}.system_id").where(where_clause)
       end
     end
 

@@ -80,7 +80,7 @@ module Authorization::SystemGroup
       if ::User.allowed_all_tags?(verbs, resource, org)
         where(:organization_id => org)
       else
-        where("system_groups.id in (#{::User.allowed_tags_sql(verbs, resource, org)})")
+        where("#{SystemGroup.table_name}.id in (#{::User.allowed_tags_sql(verbs, resource, org)})")
       end
     end
   end
