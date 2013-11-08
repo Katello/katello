@@ -23,7 +23,6 @@
 //= require "angular-gettext"
 
 //= require "ui_alchemy/alchemy/alchemy"
-//= require "ui_alchemy/alchemy-header/alchemy-header"
 
 //= require "common/katello.global"
 
