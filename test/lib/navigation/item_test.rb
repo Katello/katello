@@ -10,9 +10,10 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'minitest_helper'
+require 'katello_test_helper'
 
-class NavigationItemTest < MiniTest::Rails::ActiveSupport::TestCase
+module Katello
+class NavigationItemTest < ActiveSupport::TestCase
 
   def setup
     @item = Navigation::Item.new('test_item', 'Test Item', true, '/katello/test/item')
@@ -32,4 +33,5 @@ class NavigationItemTest < MiniTest::Rails::ActiveSupport::TestCase
     assert_equal item_hash.to_json, @item.to_json
   end
 
+end
 end

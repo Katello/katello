@@ -10,10 +10,11 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'minitest_helper'
+require 'katello_test_helper'
 
-class NavigationItemsTest < MiniTest::Rails::ActiveSupport::TestCase
-  include Rails.application.routes.url_helpers
+module Katello
+class NavigationItemsTest < ActiveSupport::TestCase
+  include Engine.routes.url_helpers
 
   fixtures :all
 
@@ -21,7 +22,7 @@ class NavigationItemsTest < MiniTest::Rails::ActiveSupport::TestCase
     Katello.config[:url_prefix] = '/katello'
     @admin = User.find(users(:admin).id)
     User.current = @admin
-    @acme_corporation = Organization.find(organizations(:acme_corporation).id)
+    @acme_corporation = Organization.find(katello_organizations(:acme_corporation).id)
     Katello.config.stubs(hide_exceptions: true)
   end
 
@@ -221,7 +222,7 @@ class NavigationItemsTest < MiniTest::Rails::ActiveSupport::TestCase
     item = Navigation::Items::UserAccount.new(@admin)
 
     assert_equal  _('My Account'), item.display
-    assert_equal  "#{users_path(@admin)}#list_search=#{@admin.username}&panel=user_#{@admin.id}&panelpage=edit", item.url
+    assert_equal  "#{users_path(@admin)}#list_search=#{@admin.login}&panel=user_#{@admin.id}&panelpage=edit", item.url
     assert        item.accessible?
   end
 
@@ -229,8 +230,9 @@ class NavigationItemsTest < MiniTest::Rails::ActiveSupport::TestCase
     item = Navigation::Items::Logout.new
 
     assert_equal  _('Sign Out'), item.display
-    assert_equal  logout_path, item.url
+    assert_equal  item.main_app.logout_users_path, item.url
     assert        item.accessible?
   end
 
+end
 end

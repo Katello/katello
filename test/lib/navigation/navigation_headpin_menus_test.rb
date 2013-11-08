@@ -10,10 +10,11 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'minitest_helper'
+require 'katello_test_helper'
 
-class NavigationMenusTest < MiniTest::Rails::ActiveSupport::TestCase
-  include Rails.application.routes.url_helpers
+module Katello
+class NavigationHeadpinMenusTest < ActiveSupport::TestCase
+  include Engine.routes.url_helpers
 
   fixtures :all
 
@@ -21,11 +22,11 @@ class NavigationMenusTest < MiniTest::Rails::ActiveSupport::TestCase
     Katello.config[:url_prefix] = '/katello'
     @admin = User.find(users(:admin).id)
     User.current = @admin
-    @acme_corporation = Organization.find(organizations(:acme_corporation).id)
+    @acme_corporation = Organization.find(katello_organizations(:acme_corporation).id)
   end
 
   def test_main_menu
-    menu = Navigation::Menus::Main.new(@acme_corporation)
+    menu = Navigation::Menus::Headpin::Main.new(@acme_corporation)
 
     assert_nil    menu.display
     assert_equal  3, menu.items.length
@@ -34,7 +35,7 @@ class NavigationMenusTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def test_site_menu
-    menu = Navigation::Menus::Site.new
+    menu = Navigation::Menus::Headpin::Site.new
 
     assert_nil    menu.display
     assert_equal  1, menu.items.length
@@ -43,16 +44,16 @@ class NavigationMenusTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def test_content_menu
-    menu = Navigation::Menus::Content.new(@acme_corporation)
+    menu = Navigation::Menus::Headpin::Content.new(@acme_corporation)
 
     assert_equal  _('Content'), menu.display
-    assert_equal  2, menu.items.length
+    assert_equal  1, menu.items.length
     assert_equal  'dropdown', menu.type
     assert        menu.accessible?
   end
 
   def test_systems_menu
-    @systems_menu = Navigation::Menus::Systems.new(@acme_corporation)
+    @systems_menu = Navigation::Menus::Headpin::Systems.new(@acme_corporation)
 
     assert_equal  _('Systems'), @systems_menu.display
     assert_equal  2, @systems_menu.items.length
@@ -61,7 +62,7 @@ class NavigationMenusTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def test_administer_menu
-    menu = Navigation::Menus::Administer.new
+    menu = Navigation::Menus::Headpin::Administer.new
 
     assert_equal  _('Administer'), menu.display
     assert_equal  4, menu.items.length
@@ -70,20 +71,11 @@ class NavigationMenusTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def test_subscriptions_menu
-    menu = Navigation::Menus::Subscriptions.new(@acme_corporation)
+    menu = Navigation::Menus::Headpin::Subscriptions.new(@acme_corporation)
 
     assert_equal  _('Subscriptions'), menu.display
     assert_equal  4, menu.items.length
-    assert_equal  'flyout', menu.type
-    assert        menu.accessible?
-  end
-
-  def test_providers_menu
-    menu = Navigation::Menus::Providers.new(@acme_corporation)
-
-    assert_equal  _('Repositories'), menu.display
-    assert_equal  1, menu.items.length
-    assert_equal  'flyout', menu.type
+    assert_equal  'dropdown', menu.type
     assert        menu.accessible?
   end
 
@@ -98,8 +90,9 @@ class NavigationMenusTest < MiniTest::Rails::ActiveSupport::TestCase
   def test_gravatar
     menu = Navigation::Menus::User.new(@admin)
 
-    Katello.config[:gravatar] ? assert_equal("<img src=\"https:///secure.gravatar.com/avatar/985b643b38ac0b1589b212197e27a143?d=mm&s=25\" class=\"gravatar\"><span class=\"gravatar-span\">admin", menu.display) : assert_equal(@admin.user, menu.display)
+    Katello.config[:gravatar] ? assert_equal("<img src=\"https:///secure.gravatar.com/avatar/985b643b38ac0b1589b212197e27a143?d=mm&s=25\" class=\"gravatar\"><span class=\"gravatar-span\">admin", menu.display) : assert_equal(@admin.login, menu.display)
     assert        menu.accessible?
   end
 
+end
 end
