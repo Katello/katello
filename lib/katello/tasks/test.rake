@@ -23,6 +23,7 @@ namespace :test do
         "#{Katello::Engine.root}/test/glue/pulp/*_test.rb",
         "#{Katello::Engine.root}/test/lib/navigation/*_test.rb",
         "#{Katello::Engine.root}/test/lib/validators/*_test.rb",
+        "#{Katello::Engine.root}/test/lib/repo_discovery_test.rb",
         "#{Katello::Engine.root}/test/models/authorization/*_test.rb",
         "#{Katello::Engine.root}/test/models/repository_test.rb",
         "#{Katello::Engine.root}/test/models/system_test.rb",
