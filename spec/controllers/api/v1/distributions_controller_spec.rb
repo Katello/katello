@@ -10,10 +10,11 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'spec_helper.rb'
-
-describe Api::V1::DistributionsController, :katello => true do
-  include LoginHelperMethods
+require 'katello_test_helper'
+module Katello
+describe Api::V1::DistributionsController do
+  describe "(katello)" do
+  include OrganizationHelperMethods
   include AuthorizationHelperMethods
   include ProductHelperMethods
   include RepositoryHelperMethods
@@ -29,13 +30,13 @@ describe Api::V1::DistributionsController, :katello => true do
     @env          = @organization.library
     @product      = new_test_product(@organization, @env)
     @repo         = new_test_repo(@env, @product, "repo", "#{@organization.name}/Library/prod/repo")
-    @repo.stub(:has_distribution?).and_return(true)
-    Repository.stub(:find).and_return(@repo)
-    @repo.stub(:distributions).and_return([])
-    ::Distribution.stub(:find).and_return([])
+    @repo.stubs(:has_distribution?).returns(true)
+    Repository.stubs(:find).returns(@repo)
+    @repo.stubs(:distributions).returns([])
+    Katello::Distribution.stubs(:find).returns([])
 
     @request.env["HTTP_ACCEPT"] = "application/json"
-    login_user_api
+    setup_controller_defaults_api
   end
   let(:authorized_user) do
     user_with_permissions do |u|
@@ -72,11 +73,12 @@ describe Api::V1::DistributionsController, :katello => true do
 
     describe "get a listing of distributions" do
       it "should call pulp find repo api" do
-        Repository.should_receive(:find).once.with(@repo.id.to_s).and_return(@repo)
-        @repo.should_receive(:distributions)
+        Repository.expects(:find).once.with(@repo.id.to_s).returns(@repo)
+        @repo.expects(:distributions)
         get 'index', :repository_id => @repo.id.to_s
       end
     end
   end
 end
-
+end
+end

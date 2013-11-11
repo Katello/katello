@@ -30,7 +30,7 @@ shared_examples_for "protected action" do
       before_success if defined?(before_success)
 
       if @controller.kind_of? Katello::Api::V1::ApiController
-        @controller.expects(:respond_for_exception).with { |e, options| options.try(:[], :status).must == :forbidden }
+        @controller.expects(:respond_for_exception).never.with { |e, options| options.try(:[], :status).must_equal(:forbidden) }
       else
         @controller.expects(:render_403).never
       end
@@ -47,6 +47,7 @@ shared_examples_for "protected action" do
       end
     end
   end
+
   describe "NOT ALLOWING me" do
     it "to it (katello)" do #TODO headpin
       if defined? unauthorized_user
@@ -58,7 +59,7 @@ shared_examples_for "protected action" do
         login_user_by_described_class(unauthorized_user) if defined?  unauthorized_user
         before_failure if defined?(before_failure)
         if @controller.kind_of? Katello::Api::V1::ApiController
-          @controller.expects(:respond_for_exception).with { |e, options| options.try(:[], :status).must == :forbidden }
+          @controller.expects(:respond_for_exception).with { |e, options| options.try(:[], :status).must_equal(:forbidden) }
         else
           @controller.expects(:render_403)
         end

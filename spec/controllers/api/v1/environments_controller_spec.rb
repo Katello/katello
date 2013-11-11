@@ -10,20 +10,20 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'spec_helper'
-
+require 'katello_test_helper'
+module Katello
 describe Api::V1::EnvironmentsController do
-  include LoginHelperMethods
+  include OrganizationHelperMethods
   include AuthorizationHelperMethods
 
   before(:each) do
     @org                      = Organization.new(:label => "1")
     @environment              = KTEnvironment.new
     @environment.organization = @org
-    @controller.stub!(:get_organization).and_return(@org)
+    @controller.stubs(:get_organization).returns(@org)
 
     @request.env["HTTP_ACCEPT"] = "application/json"
-    login_user_api
+    setup_controller_defaults_api
   end
 
   let(:user_with_read_permissions) do
@@ -49,27 +49,27 @@ describe Api::V1::EnvironmentsController do
 
   describe "create an environment" do
     before(:each) do
-      KTEnvironment.should_receive(:new).once.and_return(@environment)
-      @environment.should_receive(:valid?).and_return(true)
-      @org.should_receive(:save!).once
+      KTEnvironment.expects(:new).once.returns(@environment)
+      @environment.expects(:valid?).returns(true)
+      @org.expects(:save!).once
     end
 
     it 'should call katello create environment api' do
       post 'create', :organization_id => "1", :environment => { :name => "production", :description => "a" }
     end
   end
+
   describe "bad create request" do
-    it_should_behave_like "bad request" do
-      let(:req) do
-        bad_req = { :organization_id => 1,
-                    :environment     =>
-                        { :bad_foo     => "mwahahaha",
-                          :name        => "production",
-                          :description => "This is the key string" }
-        }.with_indifferent_access
-        post :create, bad_req
-      end
+    let(:req) do
+      bad_req = { :organization_id => 1,
+                  :environment     =>
+                      { :bad_foo     => "mwahahaha",
+                        :name        => "production",
+                        :description => "This is the key string" }
+      }.with_indifferent_access
+      post :create, bad_req
     end
+    it_should_behave_like "bad request"
   end
 
   describe "search a list of environments" do
@@ -77,32 +77,32 @@ describe Api::V1::EnvironmentsController do
     let(:req) { get 'index', { :organization_id => "1", :name => "foo" } }
 
     it 'should call katello environment find api' do
-      KTEnvironment.should_receive(:where).once
+      KTEnvironment.expects(:where).once.returns([@environment])
       req
     end
 
     context 'from katello cli' do
       before do
-        request.stub(:user_agent).and_return('katello-cli')
+        request.stubs(:user_agent).returns('katello-cli')
       end
 
       it 'should return empty set when not found by name' do
-        KTEnvironment.stub(:where => [])
-        KTEnvironment.should_receive(:where).once
+        KTEnvironment.stubs(:where => [])
+        KTEnvironment.expects(:where).once
         req
       end
     end
 
     context 'from subscription-manager' do
       before do
-        request.stub(:user_agent).and_return(nil)
+        request.stubs(:user_agent).returns(nil)
       end
 
       it ' should try again with label when not found by name' do
-        KTEnvironment.should_receive(:where).with do |search_query|
+        KTEnvironment.expects(:where).with do |search_query|
           search_query['name'] == 'foo'
-        end.once.and_return([])
-        KTEnvironment.should_receive(:where).with do |search_query|
+        end.once.returns([])
+        KTEnvironment.expects(:where).with do |search_query|
           search_query['label'] == 'foo'
         end.once
         req
@@ -114,7 +114,7 @@ describe Api::V1::EnvironmentsController do
   describe "show a environment" do
 
     before(:each) do
-      KTEnvironment.stub(:find => @environment)
+      KTEnvironment.stubs(:find => @environment)
     end
 
     let(:action) { :show }
@@ -124,14 +124,14 @@ describe Api::V1::EnvironmentsController do
     it_should_behave_like "protected action"
 
     it 'should call KTEnvironment.first' do
-      KTEnvironment.should_receive(:find).once().and_return(@environment)
+      KTEnvironment.expects(:find).once().returns(@environment)
       req
     end
   end
 
   describe "delete a environment" do
     before (:each) do
-      KTEnvironment.should_receive(:find).once().and_return(@environment)
+      KTEnvironment.expects(:find).once().returns(@environment)
     end
 
     let(:action) { :destroy }
@@ -141,30 +141,30 @@ describe Api::V1::EnvironmentsController do
     it_should_behave_like "protected action"
 
     it 'should call katello environment find api' do
-      @environment.should_receive(:destroy).once
+      @environment.expects(:destroy).once
       req
     end
   end
 
   describe "bad update request" do
-    it_should_behave_like "bad request" do
-      let(:req) do
-        bad_req = { :organization_id => 1,
-                    :id              => 1000,
-                    :environment     =>
-                        { :bad_foo     => "mwahahaha",
-                          :name        => "production",
-                          :description => "This is the key string" }
-        }.with_indifferent_access
-        put :update, bad_req
-      end
+    let(:req) do
+      bad_req = { :organization_id => 1,
+                  :id              => 1000,
+                  :environment     =>
+                      { :bad_foo     => "mwahahaha",
+                        :name        => "production",
+                        :description => "This is the key string" }
+      }.with_indifferent_access
+      put :update, bad_req
     end
+
+    it_should_behave_like "bad request"
   end
 
   describe "update an environment" do
 
     before(:each) do
-      KTEnvironment.stub(:find => @environment)
+      KTEnvironment.stubs(:find => @environment)
     end
 
     let(:action) { :update }
@@ -174,15 +174,15 @@ describe Api::V1::EnvironmentsController do
     it_should_behave_like "protected action"
 
     it 'should call KPEnvironment update_attributes' do
-      KTEnvironment.should_receive(:find).once().and_return(@environment)
-      @environment.should_receive(:update_attributes!).once.and_return(@environment)
+      KTEnvironment.expects(:find).once().returns(@environment)
+      @environment.expects(:update_attributes!).once.returns(@environment)
       req
     end
   end
 
   describe "list available releases" do
     before(:each) do
-      KTEnvironment.stub(:find => @environment)
+      KTEnvironment.stubs(:find => @environment)
     end
 
     let(:action) { :releases }
@@ -192,10 +192,11 @@ describe Api::V1::EnvironmentsController do
     it_should_behave_like "protected action"
 
     it "should show releases that are available in given environment" do
-      @environment.should_receive(:available_releases).and_return(["6.1", "6.2", "6Server"])
+      @environment.expects(:available_releases).returns(["6.1", "6.2", "6Server"])
       req
-      JSON.parse(response.body).should == { "releases" => ["6.1", "6.2", "6Server"] }
+      JSON.parse(response.body).must_equal( { "releases" => ["6.1", "6.2", "6Server"] })
     end
   end
 
+end
 end

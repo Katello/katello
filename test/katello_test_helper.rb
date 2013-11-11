@@ -5,7 +5,6 @@ require "mocha/setup"
 
 
 require "#{Katello::Engine.root}/test/support/minitest/spec/shared_examples"
-
 require "#{Katello::Engine.root}/spec/helpers/login_helper_methods"
 require "#{Katello::Engine.root}/spec/helpers/locale_helper_methods"
 require "#{Katello::Engine.root}/spec/helpers/authorization_helper_methods"
@@ -128,6 +127,28 @@ class ActionController::TestCase
   end
 end
 
+class ActionController::TestCase
+
+  def setup_controller_defaults
+    @routes = Katello::Engine.routes
+    set_user(User.current ? User.current : users(:admin))
+    set_default_locale
+  end
+
+  def set_user(user)
+    User.current = user
+    session[:user] = user.id
+    session[:expires_at] = 5.minutes.from_now
+  end
+
+  def setup_controller_defaults_api
+    @routes = Katello::Engine.routes
+    User.current = users(:admin) unless  User.current
+    @controller.stubs(:require_org).returns ({})
+  end
+
+end
+
 class ActiveSupport::TestCase
   include FactoryGirl::Syntax::Methods
   include FixtureTestCase
@@ -159,7 +180,7 @@ def disable_glue_layers(services=[], models=[], force_reload=false)
         load "#{Katello::Engine.root}/app/models/katello/#{model.underscore}.rb"
       rescue NameError
         Object.send(:remove_const, model)
-        load "#{Rails.root}/app/models/#{model.underscore}.rb"
+        load "#{Katello::Engine.root}/app/models/#{model.underscore}.rb"
       end
       if model == 'User'
         # Ugly hack to force the model to be loaded properly
@@ -177,5 +198,11 @@ def disable_glue_layers(services=[], models=[], force_reload=false)
   if change
     ActiveSupport::Dependencies::Reference.clear!
     FactoryGirl.reload
+  end
+end
+
+def hash_must_include(the_hash, items_to_check_hash)
+  items_to_check_hash.each_pair do |key, value|
+    the_hash[key].must_equal(value)
   end
 end
