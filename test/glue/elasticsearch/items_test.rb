@@ -10,9 +10,10 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'minitest_helper'
+require 'katello_test_helper'
 
-class GlueElasticSearchTest < MiniTest::Rails::ActiveSupport::TestCase
+module Katello
+class GlueElasticSearchTest < ActiveSupport::TestCase
 
   def setup
     @FakeClass = Class.new do
@@ -60,7 +61,6 @@ class GlueElasticSearchTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def test_total_items
-    filters = []
     @results.expect(:total, 10)
 
     @FakeClass.stub(:search, @results) do
@@ -70,4 +70,5 @@ class GlueElasticSearchTest < MiniTest::Rails::ActiveSupport::TestCase
     end
   end
 
+end
 end
