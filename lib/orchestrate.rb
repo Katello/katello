@@ -1,4 +1,11 @@
 module Orchestrate
+  files = Dir.chdir(File.join(Rails.root, 'lib')) do
+    Dir.glob('orchestrate/{helpers,elastic_search,katello,headpin}/**/*.rb') +
+        Dir.glob('{katello,headpin}/actions/*.rb')
+  end
+
+  files.each { |f| require f }
+
   def self.world
     return @world if @world
 
