@@ -24,21 +24,42 @@ class DynflowTask < ActiveRecord::Base
   end
 
   def execution_plan
-    Orchestrate.world.persistence.load_execution_plan(self.uuid)
+    @execution_plan ||= Orchestrate.world.persistence.load_execution_plan(self.uuid)
   end
+
+  # Searches for actions with +task_input+ method and collects the values.
+  # It's used for getting data input params in the action into Rest API
+  def inputs
+    actions_with_task_input = run_actions.select do |action|
+      action.respond_to?(:task_input)
+    end
+    actions_with_task_input.map do |action|
+      action.task_input.merge(action: action.action_class.name)
+    end
+  end
+
 
   # Searches for actions with +task_output+ method and collects the values.
   # It's used for getting data collected in the action into Rest API
   def outputs
-    execution_plan = self.execution_plan
-    run_actions    = execution_plan.run_flow.all_step_ids.map do |step_id|
-      execution_plan.steps[step_id].load_action
-    end
     actions_with_task_output = run_actions.select do |action|
-      action.respond_to?(:task_output)
+      action.respond_to?(:task_output) && !action.output.empty?
     end
     actions_with_task_output.map do |action|
       action.task_output.merge(action: action.action_class.name)
+    end
+  end
+
+  # returns true if the task is running or waiting to be run
+  def pending
+    dynflow_execution_plan.state != 'stopped'
+  end
+
+  private
+
+  def run_actions
+    @run_actions ||= execution_plan.run_flow.all_step_ids.map do |step_id|
+      execution_plan.steps[step_id].load_action
     end
   end
 
