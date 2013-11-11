@@ -10,7 +10,7 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'spec_helper.rb'
+require 'katello_test_helper'
 include OrchestrationHelper
 
 describe Api::V1::SystemGroupErrataController, :katello => true do
@@ -39,7 +39,7 @@ describe Api::V1::SystemGroupErrataController, :katello => true do
     @group = SystemGroup.new(:name => "test_group", :organization => @organization, :max_systems => 5)
     @group.save!
     @group.systems << @system
-    SystemGroup.stub!(:find).and_return(@group)
+    SystemGroup.stubs(:find).returns(@group)
   end
 
   describe "viewing errata" do
@@ -56,7 +56,7 @@ describe Api::V1::SystemGroupErrataController, :katello => true do
         errata.applicable_consumers = []
         to_ret << errata
       }
-      SystemGroup.any_instance.stub(:errata).and_return(to_ret)
+      SystemGroup.any_instance.stubs(:errata).returns(to_ret)
     end
 
     let(:action) { :index }
@@ -67,7 +67,7 @@ describe Api::V1::SystemGroupErrataController, :katello => true do
 
     it_should_behave_like "protected action"
 
-    it { should be_successful }
+    it { must_be_successful }
 
     it "should retrieve errata from pulp" do
       subject
@@ -76,7 +76,7 @@ describe Api::V1::SystemGroupErrataController, :katello => true do
 
   describe "install errata" do
     before do
-      @group.stub(:install_errata).and_return(TaskStatus.new)
+      @group.stubs(:install_errata).returns(TaskStatus.new)
     end
 
     let(:action) { :create }
@@ -87,10 +87,10 @@ describe Api::V1::SystemGroupErrataController, :katello => true do
 
     it_should_behave_like "protected action"
 
-    it { should be_successful }
+    it { must_be_successful }
 
     it "should call model to install errata" do
-      @group.should_receive(:install_errata)
+      @group.expects(:install_errata)
       subject
     end
   end

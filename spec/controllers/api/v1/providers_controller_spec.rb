@@ -10,11 +10,12 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'spec_helper.rb'
-
-describe Api::V1::ProvidersController, :katello => true do
+require 'katello_test_helper'
+module Katello
+describe Api::V1::ProvidersController do
   include LoginHelperMethods
   include AuthorizationHelperMethods
+  include OrganizationHelperMethods
 
   let(:user_with_read_permissions) { user_with_permissions { |u| u.can([:read], :providers, nil, @ogranization) } }
   let(:user_without_read_permissions) { user_without_permissions }
@@ -31,14 +32,14 @@ describe Api::V1::ProvidersController, :katello => true do
     @organization = new_test_org
     @provider     = Provider.create!(:name         => provider_name, :provider_type => Provider::CUSTOM,
                                      :organization => @organization)
-    Provider.stub(:find).with(@provider.id.to_s.to_s).and_return(@provider)
-    Provider.stub(:find_by_name).with(@provider.name).and_return(@provider)
+    Provider.stubs(:find).with(@provider.id.to_s.to_s).returns(@provider)
+    Provider.stubs(:find_by_name).with(@provider.name).returns(@provider)
     @provider.organization = @organization
 
     @request.env["HTTP_ACCEPT"]  = "application/json"
     @request.env["organization"] = @organization.name
+    setup_controller_defaults_api
 
-    login_user_api
   end
 
   let(:to_create) do
@@ -58,7 +59,7 @@ describe Api::V1::ProvidersController, :katello => true do
     }
   end
 
-  describe "list providers" do
+  describe "list providers (katello)" do
 
     let(:action) { :index }
     let(:req) { get :index, :organization_id => @organization.name }
@@ -67,13 +68,13 @@ describe Api::V1::ProvidersController, :katello => true do
     it_should_behave_like "protected action"
 
     it "should scope providers by readable permissions" do
-      Provider.should_receive(:readable).with(@organization).and_return({})
+      Provider.expects(:readable).with(@organization).returns({})
       req
     end
 
   end
 
-  describe "create a provider" do
+  describe "create a provider (katello)" do
 
     let(:action) { :create }
     let(:req) { post 'create', { :provider => to_create, :organization_id => @organization.label } }
@@ -82,10 +83,11 @@ describe Api::V1::ProvidersController, :katello => true do
     it_should_behave_like "protected action"
 
     it "should call Provider.create!" do
-      Provider.should_receive(:create!).and_return(Provider.new)
+      Provider.expects(:create!).returns(Provider.new)
       req
     end
-    it_should_behave_like "bad request" do
+
+    describe "invalid params" do
       let(:req) do
         bad_req = { :organization_id => @organization.label,
                     :provider        =>
@@ -95,10 +97,11 @@ describe Api::V1::ProvidersController, :katello => true do
         }.with_indifferent_access
         post :create, bad_req
       end
+      it_should_behave_like "bad request"
     end
   end
 
-  describe "update a provider" do
+  describe "update a provider (katello)" do
 
     let(:action) { :update }
     let(:req) { put 'update', { :id => @provider.id.to_s, :provider => { :name => another_provider_name } } }
@@ -107,12 +110,12 @@ describe Api::V1::ProvidersController, :katello => true do
     it_should_behave_like "protected action"
 
     it "should call Provider#update_attributes" do
-      Provider.should_receive(:find).with(@provider.id.to_s.to_s).and_return(@provider)
-      @provider.should_receive(:update_attributes!).once
+      Provider.expects(:find).with(@provider.id.to_s.to_s).returns(@provider)
+      @provider.expects(:update_attributes!).once
 
       req
     end
-    it_should_behave_like "bad request" do
+    describe "invalid params" do
       let(:req) do
         bad_req = { :id       => 123,
                     :provider =>
@@ -122,10 +125,11 @@ describe Api::V1::ProvidersController, :katello => true do
         }.with_indifferent_access
         put :update, bad_req
       end
+      it_should_behave_like "bad request"
     end
   end
 
-  describe "find a provider" do
+  describe "find a provider (katello)" do
 
     let(:action) { :show }
     let(:req) { get :show, :id => @provider.id.to_s }
@@ -134,13 +138,13 @@ describe Api::V1::ProvidersController, :katello => true do
     it_should_behave_like "protected action"
 
     it "should call Provider.first" do
-      Provider.should_receive(:find).with(@provider.id.to_s.to_s).and_return(@provider)
+      Provider.expects(:find).with(@provider.id.to_s.to_s).returns(@provider)
 
       req
     end
   end
 
-  describe "delete a provider" do
+  describe "delete a provider (katello)" do
 
     let(:action) { :destroy }
     let(:req) { delete :destroy, :id => @provider.id.to_s }
@@ -149,13 +153,13 @@ describe Api::V1::ProvidersController, :katello => true do
     it_should_behave_like "protected action"
 
     it "should remove the specified provider" do
-      Provider.should_receive(:find).with(@provider.id.to_s.to_s).and_return(@provider)
-      @provider.should_receive(:destroy).once
+      Provider.expects(:find).with(@provider.id.to_s.to_s).returns(@provider)
+      @provider.expects(:destroy).once
       req
     end
   end
 
-  describe "product create" do
+  describe "product create (katello)" do
 
     let(:action) { :product_create }
     let(:req) { post 'product_create', { :id => @provider.id.to_s, :product => product_to_create } }
@@ -164,13 +168,13 @@ describe Api::V1::ProvidersController, :katello => true do
     it_should_behave_like "protected action"
 
     it "should remove the specified provider" do
-      Provider.should_receive(:find).with(@provider.id.to_s.to_s).and_return(@provider)
-      @provider.should_receive(:add_custom_product).once
+      Provider.expects(:find).with(@provider.id.to_s.to_s).returns(@provider)
+      @provider.expects(:add_custom_product).once
       req
     end
   end
 
-  describe "import manifest" do
+  describe "import manifest (katello)" do
 
     let(:action) { :import_manifest }
     let(:req) { post :import_manifest, { :id => @provider.id.to_s, :import => @temp_file } }
@@ -179,20 +183,20 @@ describe Api::V1::ProvidersController, :katello => true do
     it_should_behave_like "protected action"
 
     before(:each) do
-      test_document = "#{Rails.root}/spec/assets/gpg_test_key"
+      test_document = "#{Katello::Engine.root}/spec/assets/gpg_test_key"
       @temp_file    = Rack::Test::UploadedFile.new(test_document, "text/plain")
     end
 
     it "should call Provider#import_manifest" do
       redhat_provider = @organization.redhat_provider
-      Provider.stub(:find).and_return(redhat_provider)
-      redhat_provider.should_receive(:import_manifest).once
+      Provider.stubs(:find).returns(redhat_provider)
+      redhat_provider.expects(:import_manifest).once
       req
     end
 
   end
 
-  describe "refresh products" do
+  describe "refresh products (katello)" do
 
     let(:action) { :refresh_products }
     let(:req) { post :refresh_products, { :id => @provider.id.to_s } }
@@ -203,21 +207,22 @@ describe Api::V1::ProvidersController, :katello => true do
     describe "" do
       before(:each) do
         @redhat_provider = @organization.redhat_provider
-        Provider.stub(:find).with(@redhat_provider.id.to_s.to_s).and_return(@redhat_provider)
+        Provider.stubs(:find).with(@redhat_provider.id.to_s.to_s).returns(@redhat_provider)
       end
 
       it "should refresh all the engineering products of the provider" do
-        @redhat_provider.should_receive(:refresh_products).once
+        @redhat_provider.expects(:refresh_products).once
         post :refresh_products, { :id => @organization.redhat_provider.id.to_s }
-        response.should be_success
+        must_respond_with(:success)
       end
 
       it "should fail for no-red-hat provider" do
-        @organization.redhat_provider.should_not_receive(:refresh_products)
+        @organization.redhat_provider.expects(:refresh_products).never
         post :refresh_products, { :id => @provider.id.to_s }
-        response.should_not be_success
+        must_respond_with(400)
       end
     end
   end
 
+end
 end

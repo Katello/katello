@@ -10,13 +10,15 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'spec_helper.rb'
+require 'katello_test_helper'
+module Katello
 
-describe Api::V1::ChangesetsController, :katello => true do
+describe Api::V1::ChangesetsController do
+  describe "(katello)" do
   include LoginHelperMethods
   include AuthorizationHelperMethods
   include OrchestrationHelper
-
+  include OrganizationHelperMethods
   CSET_ID   = '1'
   CSET_NAME = "changeset_x"
 
@@ -27,22 +29,22 @@ describe Api::V1::ChangesetsController, :katello => true do
     @organization  = Organization.create!(:name => 'test_org', :label => 'test_org')
     @environment   = create_environment(:name => 'test_1', :label => 'test_1', :prior => @organization.library.id, :organization => @organization)
     @environment_2 = create_environment(:name => 'test_2', :label => 'test_2', :prior => @environment, :organization => @organization)
-    KTEnvironment.stub(:find).and_return(@environment)
+    KTEnvironment.stubs(:find).returns(@environment)
 
-    @changeset = mock(PromotionChangeset)
-    @changeset.stub(:environment).and_return(@environment)
-    @changeset.stub(:environment=)
-    @changeset.stub(:state=)
-    @changeset.stub(:save!)
-    @changeset.stub(:async).and_return(@changeset)
-    @changeset.stub(:promote)
-    @changeset.stub(:promotion?).and_return(true)
-    @changeset.stub(:deletion?).and_return(false)
-    @changeset.stub(:to_json => "") # to avoid memory leaking
-    Changeset.stub(:find).and_return(@changeset)
+    @changeset = stub
+    @changeset.stubs(:environment).returns(@environment)
+    @changeset.stubs(:environment=)
+    @changeset.stubs(:state=)
+    @changeset.stubs(:save!)
+    @changeset.stubs(:async).returns(@changeset)
+    @changeset.stubs(:promote)
+    @changeset.stubs(:promotion?).returns(true)
+    @changeset.stubs(:deletion?).returns(false)
+    @changeset.stubs(:to_json => "") # to avoid memory leaking
+    Changeset.stubs(:find).returns(@changeset)
 
     @request.env["HTTP_ACCEPT"] = "application/json"
-    login_user_api
+    setup_controller_defaults_api
   end
 
   let(:to_create) do
@@ -83,7 +85,7 @@ describe Api::V1::ChangesetsController, :katello => true do
     it_should_behave_like "protected action"
 
     it 'should call working_changesets on an environment' do
-      Changeset.should_receive(:select).once
+      Changeset.expects(:select).once
       req
     end
   end
@@ -97,7 +99,7 @@ describe Api::V1::ChangesetsController, :katello => true do
     it_should_behave_like "protected action"
 
     it "should call PromotionChangeset.first" do
-      Changeset.should_receive(:find).with(CSET_ID.to_s).and_return(@changeset)
+      Changeset.expects(:find).with(CSET_ID.to_s).returns(@changeset)
       req
     end
   end
@@ -111,8 +113,8 @@ describe Api::V1::ChangesetsController, :katello => true do
     it_should_behave_like "protected action"
 
     it "should call new and save!" do
-      PromotionChangeset.should_receive(:new).and_return(@changeset)
-      @changeset.should_receive(:save!)
+      PromotionChangeset.expects(:new).returns(@changeset)
+      @changeset.expects(:save!)
 
       req
     end
@@ -127,8 +129,8 @@ describe Api::V1::ChangesetsController, :katello => true do
     it_should_behave_like "protected action"
 
     it "should remove the changeset" do
-      Changeset.should_receive(:find).with(CSET_ID).and_return(@changeset)
-      @changeset.should_receive(:destroy).once
+      Changeset.expects(:find).with(CSET_ID).returns(@changeset)
+      @changeset.expects(:destroy).once
 
       req
     end
@@ -142,15 +144,15 @@ describe Api::V1::ChangesetsController, :katello => true do
     it_should_behave_like "protected action"
 
     it "should call PromotionChangeset.promote asynchronously" do
-      @changeset.should_receive(:apply).once.with(:async => true)
+      @changeset.expects(:apply).once.with(:async => true)
       req
     end
   end
 
   describe "delete cs" do
     before do
-      @changeset.stub(:promotion?).and_return(false)
-      @changeset.stub(:deletion?).and_return(true)
+      @changeset.stubs(:promotion?).returns(false)
+      @changeset.stubs(:deletion?).returns(true)
     end
     let(:action) { :apply }
     let(:req) { post :apply, :id => CSET_ID, :organization_id => "1", :environment_id => 1 }
@@ -159,9 +161,11 @@ describe Api::V1::ChangesetsController, :katello => true do
     it_should_behave_like "protected action"
 
     it "should call PromotionChangeset.promote asynchronously" do
-      @changeset.should_receive(:apply).once.with(:async => true)
+      @changeset.expects(:apply).once.with(:async => true)
       req
     end
   end
 
+end
+end
 end

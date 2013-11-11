@@ -10,7 +10,7 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'spec_helper.rb'
+require 'katello_test_helper'
 
 describe Api::V1::TasksController do
   include LoginHelperMethods
@@ -19,24 +19,24 @@ describe Api::V1::TasksController do
   include OrganizationHelperMethods
 
   before(:each) do
-    login_user_api
+    setup_controller_defaults_api
 
     disable_product_orchestration
     disable_user_orchestration
 
     @organization = new_test_org
-    @controller.stub!(:get_organization).and_return(@organization)
+    @controller.stubs(:get_organization).returns(@organization)
     @provider = Provider.create!(:provider_type => Provider::CUSTOM, :name => "foo1", :organization => @organization)
-    Provider.stub!(:find).and_return(@provider)
+    Provider.stubs(:find).returns(@provider)
 
-    Organization.stub!(:find_by_label).and_return(@organization)
+    Organization.stubs(:find_by_label).returns(@organization)
 
     @task = mock(TaskStatus)
-    @task.stub(:organization).and_return(@organization)
-    @task.stub(:to_json).and_return({})
-    @task.stub(:refresh).and_return({})
-    @task.stub(:user).and_return({})
-    TaskStatus.stub!(:find_by_uuid!).and_return(@task)
+    @task.stubs(:organization).returns(@organization)
+    @task.stubs(:to_json).returns({})
+    @task.stubs(:refresh).returns({})
+    @task.stubs(:user).returns({})
+    TaskStatus.stubs(:find_by_uuid!).returns(@task)
   end
 
   context "get a listing of tasks" do
@@ -51,7 +51,7 @@ describe Api::V1::TasksController do
     it_should_behave_like "protected action"
 
     it "should retrieve all async tasks in the organization" do
-      Glue::ElasticSearch::Items.any_instance.should_receive(:retrieve).and_return([[@task], 1])
+      Glue::ElasticSearch::Items.any_instance.expects(:retrieve).returns([[@task], 1])
       req
     end
   end
@@ -68,12 +68,12 @@ describe Api::V1::TasksController do
     it_should_behave_like "protected action"
 
     it "should retrieve task specified by uuid" do
-      TaskStatus.should_receive(:find_by_uuid!).once.with('1').and_return(@t)
+      TaskStatus.expects(:find_by_uuid!).once.with('1').returns(@t)
       req
     end
 
     it "should refresh retrieved task" do
-      @task.should_receive(:refresh).once.and_return(@task)
+      @task.expects(:refresh).once.returns(@task)
       req
     end
   end
