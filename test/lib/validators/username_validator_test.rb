@@ -10,9 +10,10 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'minitest_helper'
+require 'katello_test_helper'
 
-class UsernameValidatorTest < MiniTest::Rails::ActiveSupport::TestCase
+module Katello
+class UsernameValidatorTest < ActiveSupport::TestCase
 
   def setup
     @validator = Validators::UsernameValidator.new({:attributes => [:name]})
@@ -45,4 +46,5 @@ class UsernameValidatorTest < MiniTest::Rails::ActiveSupport::TestCase
     refute_empty @model.errors[:name]
   end
 
+end
 end
