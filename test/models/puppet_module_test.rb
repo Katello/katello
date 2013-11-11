@@ -10,12 +10,13 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'minitest_helper'
+require 'katello_test_helper'
 
-class PuppetModuleTest < MiniTest::Rails::ActiveSupport::TestCase
+module Katello
+class PuppetModuleTest < ActiveSupport::TestCase
 
   def test_parse_metadata
-    filepath = File.join(Rails.root, "test/fixtures/puppet/puppetlabs-ntp-2.0.1.tar.gz")
+    filepath = File.join(Katello::Engine.root, "test/fixtures/puppet/puppetlabs-ntp-2.0.1.tar.gz")
     metadata = PuppetModule.parse_metadata(filepath)
 
     assert_equal "Puppet Labs", metadata[:author]
@@ -25,9 +26,10 @@ class PuppetModuleTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def test_parse_metadata_with_bad_file
-    filepath = File.join(Rails.root, "test/models/puppet_module_test.rb")
+    filepath = __FILE__
     assert_raises(InvalidPuppetModuleError) do
       PuppetModule.parse_metadata(filepath)
     end
   end
+end
 end
