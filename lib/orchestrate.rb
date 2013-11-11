@@ -10,7 +10,9 @@ module Orchestrate
           persistence_adapter: Dynflow::PersistenceAdapters::Sequel.new(db_config),
           transaction_adapter: Dynflow::TransactionAdapters::ActiveRecord.new }
 
-    @world = Dynflow::World.new(world_options)
+    @world = Orchestrate::World.new(world_options).tap do
+      at_exit { @world.terminate!.wait }
+    end
   end
 
   def self.trigger(action, *args)
