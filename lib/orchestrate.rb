@@ -14,6 +14,8 @@ module Orchestrate
     db_config            = ActiveRecord::Base.configurations[Rails.env]
     db_config['adapter'] = 'postgres' if db_config['adapter'] == 'postgresql'
     world_options        = {
+        logger_adapter:      Dynflow::LoggerAdapters::Delegator.new(Logging.logger['action'],
+                                                                    Logging.logger['dynflow']),
         executor_class:      Dynflow::Executors::Parallel, # TODO configurable Parallel or Remote
         pool_size:           5,
         persistence_adapter: Dynflow::PersistenceAdapters::Sequel.new(db_config),
