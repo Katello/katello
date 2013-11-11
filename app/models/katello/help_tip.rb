@@ -12,6 +12,8 @@
 
 module Katello
 class HelpTip < ActiveRecord::Base
+  self.include_root_in_json = false
+
   belongs_to :user, :class_name => "::User"
   validates :key, :length => { :maximum => 255 }
 end

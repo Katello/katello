@@ -12,6 +12,8 @@
 
 module Katello
 class SystemGroup < ActiveRecord::Base
+  self.include_root_in_json = false
+
   include Hooks
   define_hooks :add_system_hook, :remove_system_hook
 

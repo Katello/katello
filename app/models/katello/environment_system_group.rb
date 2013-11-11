@@ -13,6 +13,8 @@
 
 module Katello
 class EnvironmentSystemGroup < ActiveRecord::Base
+  self.include_root_in_json = false
+
   belongs_to :environment, :class_name => 'KTEnvironment'
   belongs_to :system_group
 end

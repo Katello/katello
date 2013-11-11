@@ -12,6 +12,7 @@
 
 module Katello
 class UserNotice < ActiveRecord::Base
+  self.include_root_in_json = false
 
   belongs_to :user, :class_name => "::User"
   # FIXME, this will delete notice also for other users

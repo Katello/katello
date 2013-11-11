@@ -12,6 +12,7 @@
 
 module Katello
 class ChangesetUser < ActiveRecord::Base
+  self.include_root_in_json = false
 
   belongs_to :changeset, :inverse_of => :users
   belongs_to :user, :class_name => "::User"

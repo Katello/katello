@@ -12,6 +12,7 @@
 
 module Katello
 class PermissionTag < ActiveRecord::Base
+  self.include_root_in_json = false
 
   belongs_to :permission, :inverse_of => :tags
 

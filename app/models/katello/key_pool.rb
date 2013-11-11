@@ -13,6 +13,8 @@
 
 module Katello
 class KeyPool < ActiveRecord::Base
+  self.include_root_in_json = false
+
   belongs_to :activation_key
   belongs_to :pool
 end

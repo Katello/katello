@@ -12,6 +12,7 @@
 
 module Katello
 class ActivationKey < ActiveRecord::Base
+  self.include_root_in_json = false
 
   include Glue::ElasticSearch::ActivationKey if Katello.config.use_elasticsearch
   include Authorization::ActivationKey

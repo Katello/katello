@@ -12,6 +12,8 @@
 
 module Katello
 class CustomInfo < ActiveRecord::Base
+  self.include_root_in_json = false
+
   acts_as_reportable
 
   attr_accessible :keyname, :value, :org_default

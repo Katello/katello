@@ -12,6 +12,8 @@
 
 module Katello
 class SystemActivationKey < ActiveRecord::Base
+  self.include_root_in_json = false
+
   belongs_to :system
   belongs_to :activation_key
 end

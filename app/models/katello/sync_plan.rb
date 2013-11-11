@@ -12,6 +12,8 @@
 
 module Katello
 class SyncPlan < ActiveRecord::Base
+  self.include_root_in_json = false
+
   include Glue
 
   include Glue::ElasticSearch::SyncPlan if Katello.config.use_elasticsearch
