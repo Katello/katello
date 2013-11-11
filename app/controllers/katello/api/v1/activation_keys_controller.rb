@@ -67,7 +67,6 @@ class Api::V1::ActivationKeysController < Api::V1::ApiController
   def index
     query_params[:organization_id] = @organization.id unless @organization.nil?
     query_params[:environment_id] = @environment.id unless @environment.nil?
-
     respond :collection => ActivationKey.where(query_params)
   end
 
@@ -155,7 +154,7 @@ class Api::V1::ActivationKeysController < Api::V1::ApiController
   end
 
   def find_pool
-    @pool = ::Pool.find_by_organization_and_id(@activation_key.organization, params[:poolid])
+    @pool = Katello::Pool.find_by_organization_and_id(@activation_key.organization, params[:poolid])
   end
 
   def find_system_groups
