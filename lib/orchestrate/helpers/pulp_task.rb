@@ -31,7 +31,7 @@ module Orchestrate
         end
 
         # needed by dynflow suspend mechanism
-        def setup_suspend(suspended_action)
+        def setup_progress_updates(suspended_action)
           PulpTask.polling_service.wait_for_task(suspended_action, input[:remote_user], output[:pulp_task][:task_id])
         end
 
