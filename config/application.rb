@@ -192,11 +192,7 @@ FastGettext.add_text_domain('katello', {
 
 FastGettext.default_text_domain = 'katello'
 
-if defined? Dynflow
-  require 'orchestrate'
-  Dir[File.join(Rails.root,'lib/orchestrate/{helpers,elastic_search,katello,headpin}/**/*.rb')].each { |f| require f }
-  Dir[File.join(Rails.root, 'lib/{katello,headpin}/actions/*.rb')].each { |f| require f }
-end
+require 'orchestrate' if defined? Dynflow
 
 if Katello.config.use_pulp && !Object.constants.include?(:Fort) && false
   require File.expand_path("../engines/fort/lib/fort", File.dirname(__FILE__))
