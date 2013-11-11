@@ -20,6 +20,7 @@ namespace :test do
     test_task = Rake::TestTask.new('katello_test_task') do |t|
       t.libs << ["test", "#{Katello::Engine.root}/test"]
       t.test_files = [
+        "#{Katello::Engine.root}/test/glue/elasticsearch/*_test.rb",
         "#{Katello::Engine.root}/test/glue/pulp/*_test.rb",
         "#{Katello::Engine.root}/test/helpers/*_test.rb",
         "#{Katello::Engine.root}/test/lib/navigation/*_test.rb",
