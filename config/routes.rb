@@ -10,7 +10,7 @@ Src::Application.routes.draw do
       User.current = User.first
     end
 
-    set :world, Orchestrate.world
+    set(:world) { Orchestrate.world }
   end
 
   mount dynflow_console => "/dynflow"
