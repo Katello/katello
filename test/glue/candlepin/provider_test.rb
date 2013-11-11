@@ -10,13 +10,11 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'minitest_helper'
+require 'katello_test_helper'
 require 'mocha/setup'
 
-class GlueCandlepinProviderTestBase < MiniTest::Rails::ActiveSupport::TestCase
-  extend  ActiveRecord::TestFixtures
-
-  fixtures :all
+module Katello
+class GlueCandlepinProviderTestBase < ActiveSupport::TestCase
 
   def self.before_suite
     @loaded_fixtures = load_fixtures
@@ -28,9 +26,9 @@ class GlueCandlepinProviderTestBase < MiniTest::Rails::ActiveSupport::TestCase
     User.current = User.find(@loaded_fixtures['users']['admin']['id'])
     VCR.insert_cassette('glue_candlepin_provider', :match_requests_on => [:path, :params, :method, :body_json])
 
-    @@dev      = KTEnvironment.find(@loaded_fixtures['environments']['candlepin_dev']['id'])
-    @@org      = Organization.find(@loaded_fixtures['organizations']['candlepin_org']['id'])
-    @@provider = Provider.find(@loaded_fixtures['providers']['candlepin_redhat']['id'])
+    @@dev      = KTEnvironment.find(@loaded_fixtures['katello_environments']['candlepin_dev']['id'])
+    @@org      = Organization.find(@loaded_fixtures['katello_organizations']['candlepin_org']['id'])
+    @@provider = Provider.find(@loaded_fixtures['katello_providers']['candlepin_redhat']['id'])
 
     @@org.set_owner
   end
@@ -111,4 +109,4 @@ class GlueCandlepinProviderTestDelete < GlueCandlepinProviderTestBase
     @@provider.delete_manifest
   end
 end
-
+end
