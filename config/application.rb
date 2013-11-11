@@ -57,6 +57,8 @@ else
   end
 end
 
+require 'orchestrate'
+
 module Src
   class Application < Rails::Application
 
@@ -84,7 +86,9 @@ module Src
     # -- all .rb files in that directory are automatically loaded.
 
     # Custom directories with classes and modules you want to be autoloadable.
-    config.autoload_paths += %W(#{Rails.root}/app/lib/)
+    config.autoload_paths   += %W(#{Rails.root}/app/lib/)
+    config.eager_load_paths += Orchestrate.eager_load_paths
+
 
     # Only load the plugins named here, in the order given (default is alphabetical).
     # :all can be used as a placeholder for all plugins not explicitly named.
@@ -134,6 +138,8 @@ module Src
       # cannot be added to routes.rb due to conflicting with engines
       app.routes.append{match '/api*a', :to => 'api/v1/errors#render_404'}
       app.routes.append{match '*a', :to => 'errors#routing'}
+
+      Orchestrate.eager_load!
     end
 
     # logging configuration
@@ -191,8 +197,6 @@ FastGettext.add_text_domain('katello', {
 }.update(old_fast_gettext ? {:ignore_obsolete => true} : {:report_warning => false}))
 
 FastGettext.default_text_domain = 'katello'
-
-require 'orchestrate' if defined? Dynflow
 
 if Katello.config.use_pulp && !Object.constants.include?(:Fort) && false
   require File.expand_path("../engines/fort/lib/fort", File.dirname(__FILE__))
