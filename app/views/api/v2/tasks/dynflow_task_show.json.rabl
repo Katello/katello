@@ -1,5 +1,7 @@
-attributes :uuid, :action, :user_id, :organization_id
+object @task if @task
 
-glue @object.execution_plan do
+attributes :uuid, :action, :user_id, :organization_id, :outputs
+
+glue (@task || @object).execution_plan do
   attributes :started_at, :ended_at, :state, :result, :progress
 end
