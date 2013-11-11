@@ -62,20 +62,16 @@ module Katello
     param :url, String, :desc => "base url to perform repo discovery on"
     def repo_discover
       fail _("url not defined.") if params[:url].blank?
-      task = @organization.discover_repos(params[:url])
+      task = ForemanTasks.async_task(Orchestrate::Katello::RepositoryDiscover, params[:url])
       respond_for_async :resource => task
     end
 
-    api :PUT, "/organizations/:id/cancel_repo_discover", "Cancel repository discovery"
-    param :id, String, :desc => "organization id, label, or name"
+    api :PUT, "/organizations/:label/cancel_repo_discover", "Cancel repository discovery"
+    param :label, String, :desc => "Organization label"
     param :url, String, :desc => "base url to perform repo discovery on"
     def cancel_repo_discover
-      task = @organization.repo_discovery_task
-      if task.pending?
-        task.state = TaskStatus::Status::CANCELED
-        task.save!
-      end
-      respond_for_async :resource => task
+      # TODO: implement task canceling
+      render :json => { message: "not implemented" }
     end
 
     api :POST, "/organizations/:id/autoattach_subscriptions", "Auto-attach available subscriptions to all systems within an organization. Asynchronous operation."

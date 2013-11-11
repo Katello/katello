@@ -35,7 +35,12 @@ module Orchestrate
         repo_discovery.run(found, continue)
       end
 
-      # Get the repositories into task
+      # Get the input url info into task
+      def task_input
+        { url: input[:url] }
+      end
+
+      # Get the disovered repositories into task
       def task_output
         { repo_urls: output[:repo_urls] }
       end
