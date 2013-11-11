@@ -11,9 +11,10 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require "minitest_helper"
+require "katello_test_helper"
 
-class PackagesHelperTest < MiniTest::Rails::ActionView::TestCase
+module Katello
+class PackagesHelperTest < ActionView::TestCase
 
   def test_format_package_details
     package = { :name => 'package-a' }
@@ -29,4 +30,5 @@ class PackagesHelperTest < MiniTest::Rails::ActionView::TestCase
     package[:release] = '3'
     assert_equal "package-a = 9:1.2.0-3", format_package_details(package)
   end
+end
 end
