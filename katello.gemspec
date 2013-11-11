@@ -67,7 +67,6 @@ Gem::Specification.new do |gem|
   gem.add_dependency "factory_girl_rails", "~> 1.4.0"
   gem.add_dependency "minitest-tags"
   gem.add_dependency "minitest-predicates"
-  gem.add_dependency "minitest-rails-shoulda"
   gem.add_dependency "mocha", "~> 0.14.0"
   gem.add_dependency "vcr"
   gem.add_dependency "webmock"

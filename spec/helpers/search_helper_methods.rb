@@ -10,6 +10,7 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+module Katello
 module SearchHelperMethods
   def setup_search options = {}, &block
     Tire::Index.instance_eval do
@@ -25,12 +26,12 @@ module SearchHelperMethods
       define_method(:perform) do
         unless block_given?
           data = to_hash
-          (data[:fields].should == options[:fields]) if options.key?(:fields)
-          (data[:query].should == options[:query]) if options.key?(:query)
-          (SearchHelperMethods.compare_filter_params(options[:filter], data[:filter]).should == true) if options.key?(:filter)
-          (data[:size].should == options[:size]) if options.key?(:size)
-          (data[:sort].should == options[:sort])if options.key?(:sort)
-          (data[:from].should == options[:from])if options.key?(:from)
+          (data[:fields].must_equal options[:fields]) if options.key?(:fields)
+          (data[:query].must_equal options[:query]) if options.key?(:query)
+          (SearchHelperMethods.compare_filter_params(options[:filter], data[:filter]).must_equal true) if options.key?(:filter)
+          (data[:size].must_equal options[:size]) if options.key?(:size)
+          (data[:sort].must_equal options[:sort])if options.key?(:sort)
+          (data[:from].must_equal options[:from])if options.key?(:from)
 
           #http://www.fngtps.com/2007/using-openstruct-as-mock-for-activerecord/
           OpenStruct.instance_eval do
@@ -79,4 +80,5 @@ module SearchHelperMethods
       true
     end
   end
+end
 end

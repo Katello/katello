@@ -10,17 +10,17 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'spec_helper'
+require 'katello_test_helper'
 
+module Katello
 describe ContentViewsController do
-  include LoginHelperMethods
+
   include LocaleHelperMethods
   include OrganizationHelperMethods
   include AuthorizationHelperMethods
 
   before (:each) do
-    set_default_locale
-    login_user
+    setup_controller_defaults
     @organization = new_test_org
 
     @definition = ContentViewDefinition.create!(:name => 'test def', :label => 'test_def',
@@ -47,12 +47,12 @@ describe ContentViewsController do
 
   describe "GET auto_complete" do
     before (:each) do
-      ContentView.should_receive(:search).once.and_return([OpenStruct.new(:name => "a", :id =>100)])
+      ContentView.expects(:search).once.returns([OpenStruct.new(:name => "a", :id =>100)])
     end
 
     it 'should succeed' do
       get :auto_complete, :term => "a"
-      response.should be_success
+      must_respond_with(:success)
     end
   end
 
@@ -92,4 +92,5 @@ describe ContentViewsController do
     it_should_behave_like "protected action"
   end
 
+end
 end

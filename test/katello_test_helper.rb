@@ -13,6 +13,7 @@ require "#{Katello::Engine.root}/spec/helpers/organization_helper_methods"
 require "#{Katello::Engine.root}/spec/helpers/system_helper_methods"
 require "#{Katello::Engine.root}/spec/helpers/product_helper_methods"
 require "#{Katello::Engine.root}/spec/helpers/repository_helper_methods"
+require "#{Katello::Engine.root}/spec/helpers/search_helper_methods"
 require "#{Katello::Engine.root}/spec/models/model_spec_helper"
 require "#{Katello::Engine.root}/spec/support/shared_examples/protected_action_shared_examples"
 require "#{Katello::Engine.root}/spec/support/custom_matchers"
@@ -28,6 +29,22 @@ module MiniTest::Expectations
   infect_an_assertion :assert_response, :must_respond_with
   infect_an_assertion :assert_routing, :must_route_to, :do_not_flip
   infect_an_assertion :assert_recognizes, :must_recognize, :do_not_flip
+end
+
+class ActionController::TestCase
+
+  def setup_controller_defaults
+    @routes = Katello::Engine.routes
+    set_user(User.current ? User.current : users(:admin))
+    set_default_locale
+  end
+
+  def set_user(user)
+    User.current = user
+    session[:user] = user.id
+    session[:expires_at] = 5.minutes.from_now
+  end
+
 end
 
 class ActiveSupport::TestCase

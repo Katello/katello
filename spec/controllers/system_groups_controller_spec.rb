@@ -10,34 +10,43 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'spec_helper'
+require 'katello_test_helper'
 
-describe SystemGroupsController, :katello => true do
-  include LoginHelperMethods
+module Katello
+describe SystemGroupsController do
+
   include LocaleHelperMethods
   include OrganizationHelperMethods
   include OrchestrationHelper
   include SystemHelperMethods
   include AuthorizationHelperMethods
 
+  describe "(katello)" do
+
   let(:uuid) { '1234' }
   before(:each) do
-    set_default_locale
-    login_user :mock=>false
+    setup_controller_defaults
     disable_org_orchestration
     disable_consumer_group_orchestration
 
-    controller.stub(:search_validate).and_return(true)
+    @controller.stubs(:search_validate).returns(true)
     @org = Organization.create!(:name=>'test_org', :label=> 'test_org')
     @environment = create_environment(:name=>"DEV", :label=> "DEV", :prior=>@org.library, :organization=>@org)
     @org = @org.reload
-    setup_current_organization(@org)
+    @controller.stubs(:current_organization).returns(@org)
     setup_system_creation
-    Resources::Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
-    Resources::Candlepin::Consumer.stub!(:update).and_return(true)
-    Resources::Candlepin::Consumer.stub!(:destroy).and_return(true)
-    Katello.pulp_server.extensions.consumer.stub!(:delete).and_return(true)
-    System.any_instance.stub(:update_system_groups)
+    Resources::Candlepin::Consumer.stubs(:create).returns({:uuid => uuid, :owner => {:key => uuid}})
+    Resources::Candlepin::Consumer.stubs(:update).returns(true)
+    Resources::Candlepin::Consumer.stubs(:destroy).returns(true)
+    SystemGroup.any_instance.stubs(:set_pulp_consumer_group).returns({})
+    SystemGroup.any_instance.stubs(:del_pulp_consumer_group).returns({})
+    SystemGroup.any_instance.stubs(:add_consumer).returns({})
+    SystemGroup.any_instance.stubs(:remove_consumer).returns({})
+    System.any_instance.stubs(:update_system_groups)
+    System.any_instance.stubs(:update_pulp_consumer).returns({})
+    System.any_instance.stubs(:del_pulp_consumer).returns({})
+    Katello.pulp_server.extensions.consumer.stubs(:delete).returns(true)
+
     @system = create_system(:name=>"bar1", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""})
   end
 
@@ -59,7 +68,7 @@ describe SystemGroupsController, :katello => true do
 
       it "requests filters using search criteria" do
         get :index
-        response.should be_success
+        must_respond_with(:success)
       end
     end
 
@@ -76,12 +85,10 @@ describe SystemGroupsController, :katello => true do
       it_should_behave_like "protected action"
 
       it "requests filters using search criteria" do
-        controller.should_receive(:render_panel_direct) { |obj_class, options, search, start, sort, search_options|
-          search_options[:filter][1][:organization_id].should include(@org.id)
-          controller.stub(:render)
-        }
+        @controller.stubs(:render)
+        @controller.expects(:render_panel_direct)
         get :items
-        response.should be_success
+        must_respond_with(:success)
       end
     end
 
@@ -99,8 +106,8 @@ describe SystemGroupsController, :katello => true do
 
       it "should return successfully" do
         get :new
-        response.should be_success
-        assigns(:group).should_not be_nil
+        must_respond_with(:success)
+        assigns(:group).wont_be_nil
       end
     end
 
@@ -117,8 +124,8 @@ describe SystemGroupsController, :katello => true do
 
       it "should return successfully" do
         get :edit, :id=>@group.id
-        response.should be_success
-        assigns(:group).id.should == @group.id
+        must_respond_with(:success)
+        assigns(:group).id.must_equal @group.id
       end
     end
 
@@ -135,8 +142,8 @@ describe SystemGroupsController, :katello => true do
 
       it "should return successfully" do
         get :show, :id=>@group.id
-        response.should be_success
-        assigns(:group).id.should == @group.id
+        must_respond_with(:success)
+        assigns(:group).id.must_equal @group.id
       end
     end
 
@@ -154,25 +161,25 @@ describe SystemGroupsController, :katello => true do
 
       it "should create a group correctly" do
         post :create, :system_group=>{:name=>"foo", :description=>"describe"}
-        response.should be_success
-        SystemGroup.where(:name=>"foo").first.should_not be_nil
+        must_respond_with(:success)
+        SystemGroup.where(:name=>"foo").first.wont_be_nil
       end
       it "should not create a group without a name" do
         post :create, :system_group=>{:description=>"describe"}
-        response.should_not be_success
-        SystemGroup.where(:description=>"describe").first.should be_nil
+        response.must_respond_with(422)
+        SystemGroup.where(:description=>"describe").first.must_be_nil
       end
       it "should allow two groups with the same name in different orgs" do
         @org2 = Organization.create!(:name=>'test_org2', :label=> 'test_org2')
-        setup_current_organization(@org2)
+        @controller.stubs(:current_organization).returns(@org2)
         post :create, :system_group=>{:name=>@group.name, :description=>@group.description}
-        response.should be_success
-        SystemGroup.where(:name=>@group.name).count.should == 2
+        must_respond_with(:success)
+        SystemGroup.where(:name=>@group.name).count.must_equal 2
       end
       it "should not allow a group to be created that already exists" do
         post :create, :system_group=>{:name=>@group.name, :description=>@group.description}
-        response.should_not be_success
-        SystemGroup.where(:name=>@group.name).count.should == 1
+        response.must_respond_with(422)
+        SystemGroup.where(:name=>@group.name).count.must_equal 1
       end
     end
 
@@ -194,28 +201,28 @@ describe SystemGroupsController, :katello => true do
       it_should_behave_like "protected action"
 
       it "should copy a group correctly" do
-        controller.should notify.success
+        must_notify_with(:success)
         post :copy, :id => @group.id, :name=>"foo", :description=>"describe"
-        response.should be_success
-        SystemGroup.where(:name=>"foo", :description=>"describe", :max_systems=>10).first.should_not be_nil
+        must_respond_with(:success)
+        SystemGroup.where(:name=>"foo", :description=>"describe", :max_systems=>10).first.wont_be_nil
       end
       it "should copy without a description provided" do
-        controller.should notify.success
+        must_notify_with(:success)
         post :copy, :id => @group.id, :name=>"foo"
-        response.should be_success
-        SystemGroup.where(:name=>"foo", :max_systems=>10).first.should_not be_nil
+        must_respond_with(:success)
+        SystemGroup.where(:name=>"foo", :max_systems=>10).first.wont_be_nil
       end
       it "should not copy a group without a name" do
-        controller.should notify.exception
+        must_notify_with(:exception)
         post :copy, :id => @group.id, :description=>"describe"
-        response.should_not be_success
-        SystemGroup.where(:description=>"describe").first.should be_nil
+        response.must_respond_with(422)
+        SystemGroup.where(:description=>"describe").first.must_be_nil
       end
       it "should not allow a group to be copied with a name that already exists" do
-        controller.should notify.exception
+        must_notify_with(:exception)
         post :copy, :id => @group.id, :name=>@group.name, :description=>"describe"
-        response.should_not be_success
-        SystemGroup.where(:name=>@group.name).count.should == 1
+        response.must_respond_with(422)
+        SystemGroup.where(:name=>@group.name).count.must_equal 1
       end
     end
 
@@ -234,9 +241,9 @@ describe SystemGroupsController, :katello => true do
       it "should allow name to be changed" do
         old_name = @group.name
         put :update, :id=>@group.id, :system_group=>{:name=>"rocky"}
-        response.should be_success
-        SystemGroup.where(:name=>'rocky').first.should_not be_nil
-        SystemGroup.where(:name=>old_name).first.should be_nil
+        must_respond_with(:success)
+        SystemGroup.where(:name=>'rocky').first.wont_be_nil
+        SystemGroup.where(:name=>old_name).first.must_be_nil
 
       end
     end
@@ -244,8 +251,8 @@ describe SystemGroupsController, :katello => true do
     describe "POST add systems" do
       it "should allow adding of systems" do
         post :add_systems, :id=>@group.id, :system_ids=>[@system.id]
-        response.should be_success
-        @group.reload.systems.should include @system
+        must_respond_with(:success)
+        @group.reload.systems.must_include @system
       end
 
       let(:action) {:add_systems}
@@ -274,8 +281,8 @@ describe SystemGroupsController, :katello => true do
         @group.systems  = [@system]
         @group.save
         post :remove_systems, :id=>@group.id, :system_ids=>[@system.id]
-        response.should be_success
-        @group.reload.systems.should_not include @system
+        must_respond_with(:success)
+        @group.reload.systems.wont_include @system
       end
     end
 
@@ -291,10 +298,10 @@ describe SystemGroupsController, :katello => true do
       it_should_behave_like "protected action"
 
       it "should complete successfully" do
-        controller.stub(:render)
+        @controller.stubs(:render)
         delete :destroy, :id=>@group.id
-        response.should be_success
-        SystemGroup.where(:name=>@group.name).first.should be_nil
+        must_respond_with(:success)
+        SystemGroup.where(:name=>@group.name).first.must_be_nil
       end
     end
 
@@ -314,8 +321,8 @@ describe SystemGroupsController, :katello => true do
         @group.save
 
         delete :destroy_systems, :id=>@group.id
-        response.should be_success
-        SystemGroup.where(:name=>@group.name).first.should be_nil
+        must_respond_with(:success)
+        SystemGroup.where(:name=>@group.name).first.must_be_nil
       end
     end
 
@@ -332,14 +339,14 @@ describe SystemGroupsController, :katello => true do
 
       it "should render edit_systems partial" do
         get :edit_systems, :id => @group.id
-        response.should be_success
-        response.should render_template(:partial => '_edit_systems')
+        must_respond_with(:success)
+        must_render_template(:partial => '_edit_systems')
       end
     end
 
     describe "PUT update_systems" do
       before(:each) do
-        Resources::Candlepin::Consumer.stub!(:get).and_return({:uuid => uuid, :owner => {:key => uuid}})
+        Resources::Candlepin::Consumer.stubs(:get).returns({:uuid => uuid, :owner => {:key => uuid}})
 
         @next_environment = create_environment(:name => "TEST", :label => "TEST", :prior => @environment,
                                                  :organization => @org)
@@ -361,26 +368,28 @@ describe SystemGroupsController, :katello => true do
       it_should_behave_like "protected action"
 
       it "should update all systems successfully" do
-        controller.should notify.success
+        must_notify_with(:success)
 
         put :update_systems, :id => @group.id, :update_fields => {:environment_id => @next_environment.id}
 
-        response.should be_success
-        @system.reload.environment.should == @next_environment
-        @system2.reload.environment.should == @next_environment
+        must_respond_with(:success)
+        @system.reload.environment.must_equal @next_environment
+        @system2.reload.environment.must_equal @next_environment
       end
 
       it "should update only specified systems successfully" do
-        controller.should notify.success
+        must_notify_with(:success)
 
         put :update_systems, :id => @group.id, :systems => {@system.id.to_s => @system.id.to_s},
             :update_fields => {:environment_id => @next_environment.id}
 
-        response.should be_success
-        @system.reload.environment.should == @next_environment
-        @system2.reload.environment.should == @environment
+        must_respond_with(:success)
+        @system.reload.environment.must_equal @next_environment
+        @system2.reload.environment.must_equal @environment
       end
     end
 
   end
+  end
+end
 end

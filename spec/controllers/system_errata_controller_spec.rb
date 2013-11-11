@@ -10,29 +10,30 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'spec_helper'
+require 'katello_test_helper'
 
-describe SystemErrataController, :katello => true do
-  include LoginHelperMethods
+module Katello
+describe SystemErrataController do
+
   include LocaleHelperMethods
   include SystemHelperMethods
   include AuthorizationHelperMethods
+  include OrganizationHelperMethods
 
-  describe "main" do
+  describe "main (katello)" do
     let(:uuid) { '1234' }
 
     before (:each) do
-      login_user
-      set_default_locale
+      setup_controller_defaults
 
       @organization = setup_system_creation
       @environment = KTEnvironment.new(:name=>'test', :label=> 'test', :prior => @organization.library.id, :organization => @organization)
       @environment.save!
 
-      controller.stub!(:errors)
+      @controller.stubs(:errors)
 
-      Resources::Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
-      Resources::Candlepin::Consumer.stub!(:update).and_return(true)
+      Resources::Candlepin::Consumer.stubs(:create).returns({:uuid => uuid, :owner => {:key => uuid}})
+      Resources::Candlepin::Consumer.stubs(:update).returns(true)
 
     end
 
@@ -57,56 +58,54 @@ describe SystemErrataController, :katello => true do
             errata.release   = "Red Hat Enterprise Linux 6.0"
             to_ret << errata
           }
-          System.any_instance.stub(:errata).and_return(to_ret)
+          System.any_instance.stubs(:errata).returns(to_ret)
         end
 
         describe 'on initial load' do
           it "should be successful" do
             get :index, :system_id => @system.id
-            response.should be_success
+            must_respond_with(:success)
           end
 
           it "should render errata template" do
             get :index, :system_id => @system.id
-            response.should render_template("index")
+            must_render_template("index")
           end
         end
 
         describe 'with an offset' do
           it "should be successful" do
             get :items, :system_id => @system.id, :offset => 25
-            response.should be_success
+            must_respond_with(:success)
           end
 
           it "should render errata items" do
             get :items, :system_id => @system.id, :offset => 25
-            response.should render_template("items")
+            must_render_template("items")
           end
         end
 
         describe 'with a filter type' do
           it "should be successful" do
             get :items, :system_id => @system.id, :offset => 5, :filter_type => 'BugFix'
-            response.should be_success
+            must_respond_with(:success)
           end
 
           it "should render errata items" do
             get :items, :system_id => @system.id, :offset => 5, :filter_type => 'BugFix'
-            response.should render_template("items")
+            must_render_template("items")
           end
         end
 
         describe 'with a bad filter type' do
           it "should be unsuccessful" do
             get :items, :system_id => @system.id, :offset => 5, :filter_type => 'Fake Type'
-            response.should_not be_success
+            response.must_respond_with(400)
           end
         end
       end
 
-      describe 'and installing errata' do
-
-      end
     end
   end
+end
 end

@@ -10,101 +10,86 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'spec_helper'
+require 'katello_test_helper'
 
+module Katello
 describe SearchController do
-  include LoginHelperMethods
+
   include LocaleHelperMethods
   include OrganizationHelperMethods
 
   before(:each) do
+    setup_controller_defaults
     set_default_locale
-    login_user
 
-    controller.stub!(:current_user).and_return(@mock_user)
+    @user = users(:restricted)
 
     @from_resource = "/resource"
     # stub out retrieve_path... this method needs specific details from the request which
     # will not be available from rpec (e.g. HTTP_REFERER)
-    controller.stub!(:retrieve_path).and_return(@from_resource)
+    @controller.stubs(:retrieve_path).returns(@from_resource)
 
     @favoriteText = 'provider.name => theBest'
-    @searchFavorite = mock_model(SearchFavorite, :params => @favorite)
-    @searchFavorites = [@searchFavorite]
+    @search_favorite = SearchFavorite.create!(:params => @favorite, :user => @user, :path => @from_resource)
+    @search_favorites = [@search_favorite]
 
-    @search_history = mock_model(SearchHistory, :params => 'recent history 1')
+    @search_history = SearchHistory.create!(:params => 'recent history 1', :user => @user, :path => @from_resource)
     @search_histories = [@search_history]
-    controller.stub_chain(:current_user, :search_histories, :where, :order).and_return([])
+
+    @user.search_histories = @search_histories
+    @user.search_favorites = @search_favorites
+    @controller.stubs(:current_user).returns(@user)
   end
 
   describe "GET show" do
     it "retrieves search history" do
-      controller.stub_chain(:current_user, :search_histories, :where, :order).and_return(@search_histories)
-
       get 'show'
-      assigns[:search_histories].should == @search_histories
+      assigns[:search_histories].must_equal @search_histories
     end
 
     it "retrieves search favorites" do
-      controller.stub_chain(:current_user, :search_favorites, :where, :order).and_return(@search_favorites)
-
       get 'show'
-      assigns[:search_favorites].should == @search_favorites
+      assigns[:search_favorites].must_equal @search_favorites
     end
 
     it "renders search partial" do
       get 'show'
-      response.should be_success
-      response.should render_template("common/_search")
+      must_respond_with(:success)
+      must_render_template("katello/common/_search")
     end
   end
 
   describe "POST create favorite" do
 
     it "successfully creates favorite" do
-      # stub query used to determine if favorite already exists
-      controller.stub_chain(:current_user, :search_favorites, :where).and_return(@searchFavorites)
-      # stub query used to retrieve favorites to be rendered
-      controller.stub_chain(:current_user, :search_favorites, :where, :order).and_return(@searchFavorites)
-
       post :create_favorite, {:favorite => @favoriteText}
-      assigns(:search_favorites).should_not be_nil
-      assigns(:search_favorites).should eq([@searchFavorite])
-      response.should be_success
+      @user.search_favorites.wont_be_empty
+      must_respond_with(:success)
     end
 
     it "renders search partial" do
       post :create_favorite, {:favorite => @favoriteText}
-      response.should render_template("common/_search")
+      must_render_template("katello/common/_search")
     end
   end
 
   describe "DELETE destroy favorite" do
 
     it "successfully destroys favorite" do
-      controller.stub_chain(:current_user, :search_favorites, :destroy)
-      controller.stub_chain(:current_user, :search_favorites, :where, :order).and_return(@searchFavorites)
-      post :destroy_favorite, {:id => 10}
-      response.should be_success
+      post :destroy_favorite, {:id => @search_favorite.id}
+      must_respond_with(:success)
     end
 
     it "generates an error notification, if exception raised" do
-      # stub query used to retrieve favorites to be rendered
-      controller.stub_chain(:current_user, :search_favorites, :where, :order).and_return(@searchFavorites)
-      # force an exception when creating the favorite
-      controller.stub_chain(:current_user, :search_favorites, :destroy).and_raise(ActiveRecord::RecordNotFound)
-
-      controller.should notify.error
+      must_notify_with(:error)
       post :destroy_favorite, {:id => 10}
     end
 
     it "renders search partial" do
-      # stub query used to retrieve favorites to be rendered
-      controller.stub_chain(:current_user, :search_favorites, :where, :order).and_return(@searchFavorites)
-      controller.stub_chain(:current_user, :search_favorites, :destroy)
-      post :destroy_favorite, {"id" => 10}
-      response.should render_template("common/_search")
+      post :destroy_favorite, {:id => @search_favorite.id}
+      must_render_template("katello/common/_search")
     end
   end
 
+end
 end

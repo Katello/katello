@@ -640,9 +640,9 @@ class SystemsController < ApplicationController
     # retrieve the available groups that aren't currently assigned to the system and that haven't reached their max
     # TODO: move the sql to the model
     @system_groups = SystemGroup.where(:organization_id => current_organization).
-        select("system_groups.id, system_groups.name").
-        joins("LEFT OUTER JOIN system_system_groups ON system_system_groups.system_group_id = system_groups.id").
-        group("system_groups.id, system_groups.name, system_groups.max_systems having count(system_system_groups.system_id) < system_groups.max_systems or system_groups.max_systems = -1").
+        select("#{SystemGroup.table_name}.id, #{SystemGroup.table_name}.name").
+        joins("LEFT OUTER JOIN #{SystemSystemGroup.table_name} ON #{SystemSystemGorup.table_name}.system_group_id = #{SystemGroup.table_name}.id").
+        group("#{SystemGroup.table_name}.id, #{SystemGroup.table_name}.name, #{SystemGroup.table_name}.max_systems having count(#{SystemSytemGroup}.system_id) < #{SystemGroup.table_name}.max_systems or #{SystemGroup.table_name}.max_systems = -1").
         order(:name) - @system.system_groups
 
     render :partial => "system_groups", :locals => {:editable => @system.editable?}
