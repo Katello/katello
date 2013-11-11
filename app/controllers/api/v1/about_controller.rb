@@ -23,14 +23,14 @@ class Api::V1::AboutController < Api::V1::ApiController
   description "This service is only available for authenticated users"
   def index
     @packages = Ping.packages
-    @system_info = {  _("Application") => Katello.config.app_name,
-                      _("Version")     => Katello.config.katello_version,
-                      _("Packages")    => Ping.packages,
+    @system_info = {  "Application" => Katello.config.app_name,
+                      "Version"     => Katello.config.katello_version,
+                      "Packages"    => Ping.packages,
                    }
     if current_user && current_user.allowed_to?(:read, :organizations)
-      @system_info.merge!(_("Environment") => Rails.env,
-                          _("Directory")   => Rails.root,
-                          _("Authentication") => Katello.config.warden,
+      @system_info.merge!("Environment" => Rails.env,
+                          "Directory"   => Rails.root,
+                          "Authentication" => Katello.config.warden,
                           "Ruby" => RUBY_VERSION
                          )
     end
