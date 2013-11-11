@@ -12,6 +12,8 @@
 
 module Katello
 class ComponentContentView < ActiveRecord::Base
+  self.include_root_in_json = false
+
   belongs_to :content_view_definition, :class_name => "ContentViewDefinitionBase",
                                        :inverse_of => :components
   belongs_to :content_view, inverse_of: :component_content_views

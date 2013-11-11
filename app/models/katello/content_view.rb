@@ -12,6 +12,8 @@
 
 module Katello
 class ContentView < ActiveRecord::Base
+  self.include_root_in_json = false
+
   include Ext::LabelFromName
   include Authorization::ContentView
   include Glue::ElasticSearch::ContentView if Katello.config.use_elasticsearch

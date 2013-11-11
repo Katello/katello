@@ -12,6 +12,7 @@
 
 module Katello
 class TaskStatus < ActiveRecord::Base
+  self.include_root_in_json = false
 
   include Util::TaskStatus
 

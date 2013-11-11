@@ -12,6 +12,8 @@
 
 module Katello
 class Filter < ActiveRecord::Base
+  self.include_root_in_json = false
+
   belongs_to :content_view_definition,
              :class_name => "Katello::ContentViewDefinitionBase",
              :inverse_of => :filters

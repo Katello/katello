@@ -12,6 +12,8 @@
 
 module Katello
 class ContentViewVersion < ActiveRecord::Base
+  self.include_root_in_json = false
+
   include AsyncOrchestration
   include Authorization::ContentViewVersion
 

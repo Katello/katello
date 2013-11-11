@@ -12,6 +12,7 @@
 
 module Katello
 class Repository < ActiveRecord::Base
+  self.include_root_in_json = false
 
   before_destroy :assert_deletable
 

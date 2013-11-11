@@ -12,6 +12,8 @@
 
 module Katello
 class FilterRule < ActiveRecord::Base
+  self.include_root_in_json = false
+
   belongs_to :filter, :inverse_of => :rules
 
   serialize :parameters, HashWithIndifferentAccess

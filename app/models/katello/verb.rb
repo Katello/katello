@@ -12,6 +12,8 @@
 
 module Katello
 class Verb < ActiveRecord::Base
+  self.include_root_in_json = false
+
   # rubocop:disable HasAndBelongsToMany
   # TODO: change this into has_many :through association
   has_and_belongs_to_many :permission, :join_table => 'katello_permissions_verbs'

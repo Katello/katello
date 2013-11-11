@@ -12,6 +12,7 @@
 
 module Katello
 class Changeset < ActiveRecord::Base
+  self.include_root_in_json = false
 
   include AsyncOrchestration
   include Glue::ElasticSearch::Changeset  if Katello.config.use_elasticsearch

@@ -12,6 +12,8 @@
 #
 module Katello
 class SearchHistory < ActiveRecord::Base
+  self.include_root_in_json = false
+
   belongs_to :user, :inverse_of => :search_histories, :class_name => "::User"
   validates :params, :length => { :maximum => 255 }
   validates :path, :length => { :maximum => 255 }

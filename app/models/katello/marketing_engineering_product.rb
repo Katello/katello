@@ -12,6 +12,8 @@
 
 module Katello
 class MarketingEngineeringProduct < ActiveRecord::Base
+  self.include_root_in_json = false
+
   belongs_to :marketing_product, :class_name => "Product", :inverse_of => :marketing_engineering_products
   belongs_to :engineering_product, :class_name => "Product", :inverse_of => :marketing_engineering_products
 end

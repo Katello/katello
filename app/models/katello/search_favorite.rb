@@ -12,6 +12,8 @@
 #
 module Katello
 class SearchFavorite < ActiveRecord::Base
+  self.include_root_in_json = false
+
   include SearchHelper
 
   belongs_to :user, :inverse_of => :search_favorites, :class_name => "::User"

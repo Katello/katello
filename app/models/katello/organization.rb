@@ -12,6 +12,7 @@
 
 module Katello
 class Organization < ActiveRecord::Base
+  self.include_root_in_json = false
 
   ALLOWED_DEFAULT_INFO_TYPES = %w(system distributor)
 
