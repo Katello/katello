@@ -17,7 +17,6 @@ module Katello
       def plan(repo)
         # third party plugins can hook here to perform additional actions
       end
-
     end
   end
 end
