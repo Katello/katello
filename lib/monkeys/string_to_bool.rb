@@ -10,8 +10,10 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'spec_helper'
-
-describe ErrataController do
-
+class String
+  def to_bool
+    return true if self == true || self =~ (/(true|t|yes|y|1)$/i)
+    return false if self == false || self.blank? || self =~ (/(false|f|no|n|0)$/i)
+    fail ArgumentError.new("invalid value for Boolean: \"#{self}\"")
+  end
 end

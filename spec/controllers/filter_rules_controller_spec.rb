@@ -10,34 +10,32 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'spec_helper'
+require 'katello_test_helper'
 
-describe FilterRulesController, :katello => true do
-  include LoginHelperMethods
+module Katello
+describe FilterRulesController do
   include LocaleHelperMethods
   include AuthorizationHelperMethods
   include OrchestrationHelper
 
   before(:each) do
-    set_default_locale
-    login_user :mock=>false
+    setup_controller_defaults
     disable_org_orchestration
     disable_user_orchestration
 
-    @organization = new_test_org
-    setup_current_organization(@organization)
+    @organization = katello_organizations(:acme_corporation)
   end
 
-  describe "Controller permission tests" do
+  describe "Controller permission tests (katello)" do
     before(:each) do
       @definition = ContentViewDefinition.create!(:name=>'test def', :label=>'test_def',
                                                   :description=>'test description', :organization=>@organization)
 
-      @filter = mock_model(Filter, {:id => 1, :content_view_definition => @definition})
-      Filter.stub(:find).and_return(@filter)
+      @filter = stub({:id => 1, :content_view_definition => @definition})
+      Filter.stubs(:find).returns(@filter)
 
-      @filter_rule = mock_model(FilterRule, {:id => 1, :filter => @filter})
-      FilterRule.stub(:find).and_return(@filter_rule)
+      @filter_rule = stub({:id => 1, :filter => @filter})
+      FilterRule.stubs(:find).returns(@filter_rule)
     end
 
     describe "GET new" do
@@ -181,4 +179,5 @@ describe FilterRulesController, :katello => true do
     end
   end
 
+end
 end

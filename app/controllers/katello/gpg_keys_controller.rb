@@ -63,7 +63,7 @@ class GpgKeysController < ApplicationController
   end
 
   def show
-    render :partial => "common/list_update", :locals => {:item => @gpg_key, :accessor => "id", :columns => ['name']}
+    render :partial => "katello/common/list_update", :locals => {:item => @gpg_key, :accessor => "id", :columns => ['name']}
   end
 
   def new

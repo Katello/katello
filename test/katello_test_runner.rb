@@ -1,4 +1,5 @@
 require 'ci/reporter/minitest'
+require 'support/vcr'
 
 module KatelloMiniTestRunner
   class Unit < CI::Reporter::Runner

@@ -11,6 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require File.expand_path("repo_test_data", File.dirname(__FILE__))
+require File.expand_path("product_test_data", File.dirname(__FILE__))
 
 module Katello
 module ProductHelperMethods

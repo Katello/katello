@@ -31,7 +31,7 @@ class SearchController < ApplicationController
     @search_histories = current_user.search_histories.where("path LIKE ?", "%#{path}%").order("updated_at desc")
     @search_favorites = current_user.search_favorites.where("path LIKE ?", "%#{path}%").order("params asc")
 
-    render :partial => "common/search"
+    render :partial => "katello/common/search"
 
     # clean up the histories... we will only store the last N entries in the
     # search history, so delete any past N

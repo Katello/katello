@@ -10,18 +10,22 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'spec_helper'
+require 'katello_test_helper'
 
-describe SyncPlansController, :katello => true do
-  include LoginHelperMethods
+module Katello
+describe SyncPlansController do
+
   include LocaleHelperMethods
   include OrganizationHelperMethods
   include AuthorizationHelperMethods
 
+  describe "(katello)" do
+
   describe "rules" do
     before (:each) do
       new_test_org
-      controller.stub(:search_validate).and_return(true)
+      setup_controller_defaults
+      @controller.stubs(:search_validate).returns(true)
     end
     describe "GET index" do
       before do
@@ -53,11 +57,10 @@ describe SyncPlansController, :katello => true do
 
   describe "other-tests" do
     before (:each) do
-      login_user
-      set_default_locale
-      controller.stub(:search_validate).and_return(true)
+      setup_controller_defaults
+      @controller.stubs(:search_validate).returns(true)
       @org = new_test_org
-      controller.stub!(:current_organization).and_return(@org)
+      @controller.stubs(:current_organization).returns(@org)
     end
       let(:plan_create) do
         {
@@ -74,142 +77,143 @@ describe SyncPlansController, :katello => true do
     describe "GET 'index'" do
       it "should be successful" do
         get :index
-        response.should be_success
-        response.should render_template("index")
+        must_respond_with(:success)
+        must_render_template("index")
       end
     end
 
     describe "Create a SyncPlan" do
 
       it "should create a plan successfully" do
-        controller.should notify.success
+        must_notify_with(:success)
         post :create, plan_create
-        SyncPlan.first.should_not be_nil
-        response.should be_success
+        SyncPlan.first.wont_be_nil
+        must_respond_with(:success)
       end
 
       it "should have a valid date" do
-        controller.should notify.error
-        plan_create[:sync_plan].should_not be_nil
+        must_notify_with(:error)
+        plan_create[:sync_plan].wont_be_nil
         data = plan_create
         data[:sync_plan][:plan_date] = '01/101/11'
         post :create, data
-        SyncPlan.first.should be_nil
-        response.should_not be_success
+        SyncPlan.first.must_be_nil
+        response.must_respond_with(400)
       end
 
       it "should have a unique name" do
-        controller.should notify.exception
-        SyncPlan.create!  :name => 'myplan', :interval => 'weekly', :sync_date => DateTime.now, :organization => controller.current_organization
-        SyncPlan.first.should_not be_nil
+        must_notify_with(:exception)
+        SyncPlan.create!  :name => 'myplan', :interval => 'weekly', :sync_date => DateTime.now, :organization => @controller.current_organization
+        SyncPlan.first.wont_be_nil
         post :create, plan_create
-        response.should_not be_success
+        response.must_respond_with(422)
       end
 
       it "should not have a nil name" do
-        controller.should notify.exception
+        must_notify_with(:exception)
         data = plan_create
         data[:sync_plan][:name] = ''
         post :create, data
-        SyncPlan.first.should be_nil
-        response.should_not be_success
+        SyncPlan.first.must_be_nil
+        response.must_respond_with(422)
       end
 
-      it_should_behave_like "bad request"  do
-        let(:req) do
-          bad_params = plan_create
-          bad_params[:sync_plan][:bad_foo] = "gah"
-          post :create, bad_params
-        end
+      let(:req) do
+        bad_params = plan_create
+        bad_params[:sync_plan][:bad_foo] = "gah"
+        post :create, bad_params
       end
+
+      it_should_behave_like "bad request"
     end
 
     describe "Delete a SyncPlan" do
       it "should delete a sync plan successfully" do
-        plan = SyncPlan.create!  :name => 'myplan', :interval => 'weekly', :sync_date => DateTime.now, :organization => controller.current_organization
-        controller.stub!(:render).and_return("") #ignore missing js partial
-        SyncPlan.first.should_not be_nil
-        controller.should notify.success
+        plan = SyncPlan.create!  :name => 'myplan', :interval => 'weekly', :sync_date => DateTime.now, :organization => @controller.current_organization
+        @controller.stubs(:render).returns("") #ignore missing js partial
+        SyncPlan.first.wont_be_nil
+        must_notify_with(:success)
         delete :destroy, :id => plan.id
       end
     end
 
     describe "Update a SyncPlan" do
       before (:each) do
-        @plan = SyncPlan.create! :name => 'myplan', :interval => 'weekly', :sync_date => DateTime.now, :organization => controller.current_organization
+        @plan = SyncPlan.create! :name => 'myplan', :interval => 'weekly', :sync_date => DateTime.now, :organization => @controller.current_organization
       end
 
       it "should update a sync plan name successfully" do
-        SyncPlan.first.should_not be_nil
-        controller.should notify.success
+        SyncPlan.first.wont_be_nil
+        must_notify_with(:success)
         put :update, :id => @plan.id, :sync_plan => {:name => 'yourplan'}
-        response.should be_success
+        must_respond_with(:success)
       end
 
       it "should update a sync plan interval successfully" do
-        SyncPlan.first.should_not be_nil
-        controller.should notify.success
+        SyncPlan.first.wont_be_nil
+        must_notify_with(:success)
         put :update, :id => @plan.id, :sync_plan => {:interval => 'daily'}
-        response.should be_success
+        must_respond_with(:success)
       end
 
       it "should update interval to none successfully" do
-        SyncPlan.first.should_not be_nil
-        controller.should notify.success
+        SyncPlan.first.wont_be_nil
+        must_notify_with(:success)
         put :update, :id => @plan.id, :sync_plan => {:interval => 'none'}
-        response.should be_success
+        must_respond_with(:success)
       end
 
       it "should update a sync plan description successfully" do
-        SyncPlan.first.should_not be_nil
-        controller.should notify.success
+        SyncPlan.first.wont_be_nil
+        must_notify_with(:success)
         put :update, :id => @plan.id, :sync_plan => {:description => 'Would rather be fishing then writing tests'}
-        response.should be_success
+        must_respond_with(:success)
       end
 
       it "should update a sync time description successfully" do
-        SyncPlan.first.should_not be_nil
-        controller.should notify.success
+        SyncPlan.first.wont_be_nil
+        must_notify_with(:success)
         put :update, :id => @plan.id, :sync_plan => {:time => '12:00 pm'}
-        response.should be_success
+        must_respond_with(:success)
       end
 
       it "should update a sync date description successfully" do
-        SyncPlan.first.should_not be_nil
-        controller.should notify.success
+        SyncPlan.first.wont_be_nil
+        must_notify_with(:success)
         put :update, :id => @plan.id, :sync_plan => {:date => '11/11/11'}
-        response.should be_success
+        must_respond_with(:success)
       end
 
       it "should not update bad sync dates" do
-        SyncPlan.first.should_not be_nil
-        controller.should notify.error
+        SyncPlan.first.wont_be_nil
+        must_notify_with(:error)
         put :update, :id => @plan.id, :sync_plan => {:date => '11/111111/11'}
-        response.should_not be_success
+        response.must_respond_with(400)
       end
 
       it "should not update bad sync time" do
-        SyncPlan.first.should_not be_nil
-        controller.should notify.error
+        SyncPlan.first.wont_be_nil
+        must_notify_with(:error)
         put :update, :id => @plan.id, :sync_plan => {:time => '30:00 pmm'}
-        response.should_not be_success
+        response.must_respond_with(400)
       end
 
       it "should not update a blank name" do
-        SyncPlan.first.should_not be_nil
-        controller.should notify.exception
+        SyncPlan.first.wont_be_nil
+        must_notify_with(:exception)
         put :update, :id => @plan.id, :sync_plan => {:name => ''}
-        response.should_not be_success
+        response.must_respond_with(422)
       end
 
-      it_should_behave_like "bad request"  do
-        let(:req) do
-          bad_params =  {:id => @plan.id, :sync_plan => {:name => '122'}}
-          bad_params[:sync_plan][:bad_foo] = "gah"
-          post :create, bad_params
-        end
+      let(:req) do
+        bad_params =  {:id => @plan.id, :sync_plan => {:name => '122'}}
+        bad_params[:sync_plan][:bad_foo] = "gah"
+        post :create, bad_params
       end
 
+      it_should_behave_like "bad request"
     end
   end
+  end
+end
 end

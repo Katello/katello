@@ -14,7 +14,7 @@ namespace :test do
         "#{Katello::Engine.root}/spec/helpers/**/*_spec.rb",
         "#{Katello::Engine.root}/spec/models/**/*_spec.rb",
         "#{Katello::Engine.root}/spec/routing/**/*_spec.rb",
-        "#{Katello::Engine.root}/spec/controllers/activation_keys_controller_spec.rb"
+        "#{Katello::Engine.root}/spec/controllers/*.rb"
       ]
       t.verbose = true
     end

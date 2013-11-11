@@ -34,7 +34,7 @@ class SystemErrataController < ApplicationController
 
   def index
     if @system.class == Hypervisor
-      render :partial => "systems/hypervisor",
+      render :partial => "katello/systems/hypervisor",
              :locals => {:system => @system,
                          :message => _("Hypervisors do not have errata")}
       return
@@ -42,7 +42,7 @@ class SystemErrataController < ApplicationController
 
     offset = current_user.page_size
 
-    render :partial => "systems/errata/index",
+    render :partial => "katello/systems/errata/index",
            :locals => {:system => @system, :editable => @system.editable?, :offset => offset}
   end
 
@@ -55,7 +55,7 @@ class SystemErrataController < ApplicationController
 
     return render_bad_parameters unless errata
 
-    rendered_html = render_to_string(:partial => "systems/errata/items", :locals => { :errata => errata, :editable => @system.editable? })
+    rendered_html = render_to_string(:partial => "katello/systems/errata/items", :locals => { :errata => errata, :editable => @system.editable? })
     render :json => {:html => rendered_html,
                      :results_count => results_count,
                      :total_count => total_count,

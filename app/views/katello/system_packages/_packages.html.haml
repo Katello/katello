@@ -43,7 +43,7 @@
 
 = javascript :system_packages
 
-= render :partial => "systems/system_tupane_header_nav"
+= render :partial => "katello/systems/system_tupane_header_nav"
 
 = content_for :content do
 
@@ -129,4 +129,4 @@
           = submit_tag _("Update"), :class => 'button', :id => 'update_packages', 'data-url' => system_system_packages_path(@system.id), :tabindex => auto_tab_index
           = submit_tag _('Remove'), :class => 'button', :id => 'remove_packages', 'data-url' => remove_system_system_packages_path(@system.id), :tabindex => auto_tab_index
 
-= render :template => "layouts/tupane_layout"
+= render :template => "katello/layouts/tupane_layout"

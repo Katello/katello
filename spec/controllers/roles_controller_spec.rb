@@ -10,14 +10,15 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'spec_helper'
-include OrchestrationHelper
+require 'katello_test_helper'
 
+module Katello
 describe RolesController do
-  include LoginHelperMethods
+
   include LocaleHelperMethods
   include OrganizationHelperMethods
   include AuthorizationHelperMethods
+  include OrchestrationHelper
 
   module RolesControllerTest
     ADMIN_ID = 2
@@ -27,93 +28,91 @@ describe RolesController do
 
   before(:each) do
     disable_user_orchestration
-
-    @user = login_user(:mock=>false)
-    set_default_locale
+    setup_controller_defaults
 
     @organization = new_test_org
-    controller.stub!(:current_organization).and_return(@organization)
-    controller.stub(:search_validate).and_return(true)
+    @controller.stubs(:current_organization).returns(@organization)
+    @controller.stubs(:search_validate).returns(true)
     @admin = Role.create(RolesControllerTest::ADMIN)
   end
 
   describe "create a role" do
 
-    it "should create a role correctly", :katello => true do #TODO headpin
+    it "should create a role correctly (katello)" do #TODO headpin
       post 'create', {:role => RolesControllerTest::ROLE }
-      response.should be_success
-      Role.where(:name=>RolesControllerTest::ROLE[:name]).should_not be_empty
+      must_respond_with(:success)
+      Role.where(:name=>RolesControllerTest::ROLE[:name]).wont_be_empty
     end
 
     describe "with invalid params" do
-      it_should_behave_like "bad request"  do
-        let(:req) do
-          bad_req = {:role => {:bad_foo => "mwahaha"}.merge(RolesControllerTest::ROLE)}
-          post :create, bad_req
-        end
+      let(:req) do
+        bad_req = {:role => {:bad_foo => "mwahaha"}.merge(RolesControllerTest::ROLE)}
+        post :create, bad_req
       end
-      it "should error if no name", :katello => true do #TODO headpin
+      it_should_behave_like "bad request"
+
+      it "should error if no name (katello)" do #TODO headpin
         post 'create', {:role => {}}
-        response.should_not be_success
+        response.must_respond_with(422)
       end
 
-      it "should error if blank name", :katello => true do #TODO headpin
+      it "should error if blank name (katello)" do #TODO headpin
         post 'create', {:role => { :name=> "" }}
-        response.should_not be_success
+        response.must_respond_with(422)
       end
     end
   end
 
   describe "update a role" do
     before (:each) do
-      @role = Role.create(RolesControllerTest::ROLE)
+      @user = users(:restricted)
+      @role = Role.create!(RolesControllerTest::ROLE)
     end
 
-    it 'should allow changing of the name', :katello => true do #TODO headpin
+    it 'should allow changing of the name (katello)' do #TODO headpin
       put 'update', { :id => @role.id, :role => {  :name => "new_test_role_name"}}
-      response.should be_success
-      Role.where(:name=>"new_test_role_name").should_not be_empty
+      must_respond_with(:success)
+      Role.where(:name=>"new_test_role_name").wont_be_empty
     end
 
     it "should be able to show the edit partial" do
       get :edit, :id=>@role.id
-      response.should be_success
+      must_respond_with(:success)
     end
 
     it "should be able to add a user to the role" do
       put 'update', { :id => @role.id, :update_users => { :adding => "true", :user_id => @user.id }}
-      response.should be_success
-      assigns[:role].users.should include @user
+      must_respond_with(:success)
+      assigns[:role].users.must_include @user
     end
 
     it "should be able to remove a user from the role" do
       put 'update', { :id => @role.id, :update_users => { :adding => "false", :user_id => @user.id }}
-      response.should be_success
-      assigns[:role].users.should_not include @user
+      must_respond_with(:success)
+      assigns[:role].users.wont_include @user
     end
 
     describe "with invalid params" do
-      it_should_behave_like "bad request"  do
-        let(:req) do
-          bad_req = {:role => {:description => "lame"}, :id=>@role.id}
-          bad_req[:role][:bad_foo] = "mwahahahaha"
-          put 'update', bad_req
-        end
+      let(:req) do
+        bad_req = {:role => {:description => "lame"}, :id=>@role.id}
+        bad_req[:role][:bad_foo] = "mwahahahaha"
+        put 'update', bad_req
       end
-      it_should_behave_like "bad request"  do
-        let(:req) do
-          bad_req = {:update_users => {:adding => "false", :user_id => @user.id }, :id=>@role.id}
-          bad_req[:update_users][:bad_foo] = "mwahahahaha"
-          put 'update', bad_req
-        end
+      it_should_behave_like "bad request"
+
+      let(:req) do
+        bad_req = {:update_users => {:adding => "false", :user_id => @user.id }, :id=>@role.id}
+        bad_req[:update_users][:bad_foo] = "mwahahahaha"
+        put 'update', bad_req
       end
+      it_should_behave_like "bad request"
     end
 
 =begin
     it 'should disallow changes to admin role' do
       post 'update', {:id=> RolesControllerTest::ADMIN_ID, :name=>"not an admin"}
-      response.should be_success
-      Role.where(:name=>"admin").should_not be_empty
+      must_respond_with(:success)
+      Role.where(:name=>"admin").wont_be_empty
     end
 =end
 
@@ -124,40 +123,36 @@ describe RolesController do
       @role = Role.create(RolesControllerTest::ROLE)
     end
 
-    it 'should successfully delete', :katello => true do #TODO headpin
+    it 'should successfully delete (katello)' do #TODO headpin
       delete 'destroy', :id => @role.id, :format => :js
-      Role.exists?(@role.id).should be_false
+      Role.exists?(@role.id).must_equal(false)
     end
 
     describe 'with wrong id' do
-      it 'should thrown an exception', :katello => true do #TODO headpin
+      it 'should thrown an exception (katello)' do #TODO headpin
         delete 'destroy', { :id => 13 }
-        response.should_not be_success
+        response.must_respond_with(404)
       end
     end
   end
 
   describe "viewing roles" do
-    render_views
-
     before (:each) do
       150.times{|a| Role.create!(:name=>"bar%05d" % [a])}
     end
 
-    it "should show the role 2 pane list", :katello => true do #TODO headpin
+    it "should show the role 2 pane list (katello)" do #TODO headpin
       get :index
-      response.should be_success
-      response.should render_template("index")
+      must_respond_with(:success)
+      must_render_template("index")
     end
 
     it "should render list of roles" do
-
-      controller.should_receive(:render_panel_direct) { |obj_class, options, search, start, sort, search_options|
-        controller.stub(:render)
-      }
+      @controller.stubs(:render)
+      @controller.expects(:render_panel_direct)
 
       get :items
-      response.should be_success
+      must_respond_with(:success)
     end
 
   end
@@ -177,9 +172,8 @@ describe RolesController do
         user_without_permissions
       end
       let(:before_success) do
-        controller.should_receive(:render_panel_direct) { |obj_class, options, search, start, sort, search_options|
-          controller.stub(:render)
-        }
+        @controller.stubs(:render)
+        @controller.expects(:render_panel_direct)
       end
 
       it_should_behave_like "protected action"
@@ -208,33 +202,32 @@ describe RolesController do
     end
 
     it "should be successful" do
-      controller.should notify.success
+      must_notify_with(:success)
       put "create_permission", { :role_id => @role.id, :permission => { :resource_type_attributes => { :name => 'organizations' }, :name=> "New Perm"}}
-      response.should be_success
-      assigns[:role].permissions.should include Permission.where(:name => "New Perm")[0]
+      must_respond_with(:success)
+      assigns[:role].permissions.must_include Permission.where(:name => "New Perm")[0]
     end
 
     it "with all types set should be successful" do
-      controller.should notify.success
+      must_notify_with(:success)
       put "create_permission", { :role_id => @role.id, :permission => { :resource_type_attributes => { :name => 'all' }, :name=> "New Perm"}}
-      response.should be_success
-      assigns[:role].permissions.should include Permission.where(:name => "New Perm")[0]
+      must_respond_with(:success)
+      assigns[:role].permissions.must_include Permission.where(:name => "New Perm")[0]
     end
 
     describe "with bad requests" do
-      it_should_behave_like "bad request"  do
-        let(:req) do
-          put 'create_permission', { :role_id => @role.id, :name=> "New Perm",
-                                     :permission => {:organization_id =>@organization.id, :bad_foo => "xyz"}}.with_indifferent_access
-        end
+      let(:req) do
+        put 'create_permission', { :role_id => @role.id, :name=> "New Perm",
+                                   :permission => {:organization_id =>@organization.id, :bad_foo => "xyz"}}.with_indifferent_access
       end
-      it_should_behave_like "bad request"  do
-        let(:req) do
-          put 'create_permission', { :role_id => @role.id, :name=> "New Perm",
-                                     :permission => {:organization_id =>@organization.id,
-                                                     :resource_type_attributes => {:bad_foo => "xyz", :name => 'all' }}}.with_indifferent_access
-        end
+      it_should_behave_like "bad request"
+
+      let(:req) do
+        put 'create_permission', { :role_id => @role.id, :name=> "New Perm",
+                                   :permission => {:organization_id =>@organization.id,
+                                                   :resource_type_attributes => {:bad_foo => "xyz", :name => 'all' }}}.with_indifferent_access
       end
+      it_should_behave_like "bad request"
     end
   end
 
@@ -247,11 +240,11 @@ describe RolesController do
       @perm = Permission.where(:name => "New Perm")[0]
     end
 
-    it "should remove the permission from the role and delete it", :katello => true do #TODO headpin
-      controller.should notify.success
+    it "should remove the permission from the role and delete it (katello)" do #TODO headpin
+      must_notify_with(:success)
       put "destroy_permission", { :role_id => @role.id, :permission_id => @perm.id}
-      response.should be_success
-      assigns[:role].permissions.should_not include @perm
+      must_respond_with(:success)
+      assigns[:role].permissions.wont_include @perm
     end
 
   end
@@ -265,48 +258,47 @@ describe RolesController do
       @perm = Permission.where(:name => "New Perm")[0]
     end
 
-    it 'should change the name of the permission', :katello => true do #TODO headpin
-      controller.should notify.success
+    it 'should change the name of the permission (katello)' do #TODO headpin
+      must_notify_with(:success)
       put "update_permission", { :role_id => @role.id, :permission_id => @perm.id, :permission => { :name => "New Named Perm"}}
-      response.should be_success
-      Permission.find(@perm.id).name.should == "New Named Perm"
+      must_respond_with(:success)
+      Permission.find(@perm.id).name.must_equal "New Named Perm"
     end
 
-    it 'should change the description of the permission', :katello => true do #TODO headpin
-      controller.should notify.success
+    it 'should change the description of the permission (katello)' do #TODO headpin
+      must_notify_with(:success)
       put "update_permission", { :role_id => @role.id, :permission_id => @perm.id, :permission => { :description => "This is the new description."}}
-      response.should be_success
-      Permission.find(@perm.id).description.should == "This is the new description."
+      must_respond_with(:success)
+      Permission.find(@perm.id).description.must_equal "This is the new description."
     end
 
-    it 'should set all verbs', :katello => true do #TODO headpin
-      controller.should notify.success
+    it 'should set all verbs (katello)' do #TODO headpin
+      must_notify_with(:success)
       put "update_permission", { :role_id => @role.id, :permission_id => @perm.id, :permission => { :all_verbs => true }}
-      response.should be_success
-      Permission.find(@perm.id).all_verbs.should == true
+      must_respond_with(:success)
+      Permission.find(@perm.id).all_verbs.must_equal true
     end
 
-    it 'should set all tags', :katello => true do #TODO headpin
-      controller.should notify.success
+    it 'should set all tags (katello)' do #TODO headpin
+      must_notify_with(:success)
       put "update_permission", { :role_id => @role.id, :permission_id => @perm.id, :permission => { :all_tags => true }}
-      response.should be_success
-      Permission.find(@perm.id).all_tags.should == true
+      must_respond_with(:success)
+      Permission.find(@perm.id).all_tags.must_equal true
     end
 
     describe "with bad requests" do
-      it_should_behave_like "bad request"  do
-        let(:req) do
-          put "update_permission", { :role_id => @role.id, :permission_id => @perm.id,
-                                     :permission => {:name=> "New Perm",  :bad_foo => "xyz"}}
-        end
+      let(:req) do
+        put "update_permission", { :role_id => @role.id, :permission_id => @perm.id,
+                                   :permission => {:name=> "New Perm",  :bad_foo => "xyz"}}
       end
-      it_should_behave_like "bad request"  do
-        let(:req) do
-          put "update_permission", { :role_id => @role.id, :permission_id => @perm.id,
-                                     :permission => {:name=> "New Perm",
-                                                     :resource_type_attributes => {:bad_foo => "xyz", :name => 'all' }}}
-        end
+      it_should_behave_like "bad request"
+
+      let(:req) do
+        put "update_permission", { :role_id => @role.id, :permission_id => @perm.id,
+                                   :permission => {:name=> "New Perm",
+                                                   :resource_type_attributes => {:bad_foo => "xyz", :name => 'all' }}}
       end
+      it_should_behave_like "bad request"
     end
   end
 
@@ -314,9 +306,10 @@ describe RolesController do
 
     it 'should return a json object of verbs and tags' do
       get 'verbs_and_scopes', { :organization_id => @organization.id }
-      response.should be_success
+      must_respond_with(:success)
     end
 
   end
 
+end
 end

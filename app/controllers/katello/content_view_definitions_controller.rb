@@ -163,7 +163,7 @@ class ContentViewDefinitionsController < Katello::ApplicationController
 
   def publish
     # perform the publish
-    if params.key?(:content_view)
+    if params[:content_view].present?
       @view_definition.publish(params[:content_view][:name], params[:content_view][:description],
                                params[:content_view][:label], {:notify => true})
       notify.success(_("Started publish of content view '%{view_name}' from definition '%{definition_name}'.") %

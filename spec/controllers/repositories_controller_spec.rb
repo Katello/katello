@@ -10,10 +10,11 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'spec_helper'
+require 'katello_test_helper'
 
-describe RepositoriesController, :katello => true do
-  include LoginHelperMethods
+module Katello
+describe RepositoriesController do
+
   include LocaleHelperMethods
   include OrganizationHelperMethods
   include ProductHelperMethods
@@ -21,21 +22,24 @@ describe RepositoriesController, :katello => true do
   include OrchestrationHelper
   include AuthorizationHelperMethods
 
+  describe "(katello)" do
+
   describe "rules" do
     before do
+      setup_controller_defaults
       disable_product_orchestration
       disable_user_orchestration
 
       @organization = new_test_org
       @provider = Provider.create!(:provider_type=>Provider::CUSTOM, :name=>"foo1", :organization=>@organization)
-      Provider.stub!(:find).and_return(@provider)
+      Provider.stubs(:find).returns(@provider)
       @product = Product.new({:name=>"prod", :label=> "prod"})
 
       @product.provider = @provider
-      @product.stub(:arch).and_return('noarch')
+      @product.stubs(:arch).returns('noarch')
       @product.save!
-      Product.stub!(:find).and_return(@product)
-      @repository = MemoStruct.new(:id =>1222)
+      Product.stubs(:find).returns(@product)
+      @repository = OpenStruct.new(:id =>1222)
     end
 
     describe "GET New" do
@@ -52,8 +56,8 @@ describe RepositoriesController, :katello => true do
 
     describe "GET Edit" do
       before do
-        Product.stub!(:find).and_return(@product)
-        Katello.pulp_server.extensions.repository.stub(:find).and_return(@repository)
+        Product.stubs(:find).returns(@product)
+        Katello.pulp_server.extensions.repository.stubs(:find).returns(@repository)
       end
       let(:action) {:edit}
       let(:req) { get :edit, :provider_id => @provider.id, :product_id => @product.id, :id => @repository.id}
@@ -69,58 +73,58 @@ describe RepositoriesController, :katello => true do
 
   describe "destroy a repository" do
      before(:each) do
-       login_user
+       setup_controller_defaults
 
-       Provider.stub(:find).and_return(mock_model(Repository))
-       Product.stub(:find).and_return(@product = mock_model(Product))
-       @product.stub(:editable?).and_return(true)
+       Provider.stubs(:find).returns(stub(:id => 1))
+       Product.stubs(:find).returns(@product = stub)
+       @product.stubs(:editable?).returns(true)
 
-       @repository = mock_model(Repository, :name=>"deleted", :id => 123456).as_null_object
-       Repository.stub(:find).and_return(@repository)
-       @repository.stub(:destroy)
+       @repository = OpenStruct.new(:name=>"deleted", :id => 123456)
+       Repository.stubs(:find).returns(@repository)
+       @repository.stubs(:destroy)
      end
 
      describe "on success" do
-       before(:each) { @repository.stub(:destroyed?).and_return(true) }
+       before(:each) { @repository.stubs(:destroyed?).returns(true) }
 
        it "destroys the requested repository" do
-         @repository.should_receive(:destroy)
-         @repository.should_receive(:destroyed?)
+         @repository.expects(:destroy)
+         @repository.expects(:destroyed?)
          delete :destroy, :id => "123456", :provider_id => "123", :product_id => "123", :format => :js
        end
 
         it "updates the view" do
           delete :destroy, :id => "123456", :provider_id => "123", :product_id => "123", :format => :js
-          response.should render_template(:partial => 'common/_post_delete_close_subpanel')
+          must_render_template(:partial => 'katello/common/_post_delete_close_subpanel')
         end
      end
 
      describe "on failure" do
-       before(:each) { @repository.stub(:destroyed?).and_return(false) }
+       before(:each) { @repository.stubs(:destroyed?).returns(false) }
 
        it "should produce an error notice on failure" do
-         controller.should notify.error
+         must_notify_with(:error)
          delete :destroy, :id => "123456", :provider_id => "123", :product_id => "123"
        end
 
        it "shouldn't render anything on failure" do
          delete :destroy, :id => "123456", :provider_id => "123", :product_id => "123"
-         response.body.should be_blank
+         response.body.must_be :blank?
        end
      end
    end
 
   describe "other-tests" do
     before (:each) do
-      login_user
+      setup_controller_defaults
       set_default_locale
 
       @org = new_test_org
       @product = new_test_product(@org, @org.library)
-      test_gpg_content = File.open("#{Rails.root}/spec/assets/gpg_test_key").read
+      test_gpg_content = File.open("#{Katello::Engine.root}/spec/assets/gpg_test_key").read
       @gpg = GpgKey.create!(:name => "foo", :organization => @organization, :content => test_gpg_content)
-      controller.stub!(:current_organization).and_return(@org)
-      Resources::Candlepin::Content.stub(:create => {:id => "123"})
+      @controller.stubs(:current_organization).returns(@org)
+      Resources::Candlepin::Content.stubs(:create => {:id => "123"})
     end
     let(:invalidrepo) do
       {
@@ -135,15 +139,18 @@ describe RepositoriesController, :katello => true do
 
     describe "Create a Repo" do
       it "should reject invalid urls" do
-        controller.should notify.error
+        must_notify_with(:error)
         post :create, invalidrepo
-        response.should_not be_success
+        response.must_respond_with(400)
       end
     end
 
     context "Test gpg create" do
       before do
         disable_product_orchestration
+        Repository.any_instance.stubs(:create_pulp_repo).returns({})
+        Repository.any_instance.stubs(:setup_sync_schedule).returns({})
+        Repository.any_instance.stubs(:set_sync_schedule).returns({})
         content = { :name => "FOO",
                     :id=>"12345",
                     :contentUrl => '/some/path',
@@ -152,9 +159,9 @@ describe RepositoriesController, :katello => true do
                     :label => 'label',
                     :vendor => Provider::CUSTOM}
 
-        Resources::Candlepin::Content.stub!(:get).and_return(content)
-        Resources::Candlepin::Content.stub!(:create).and_return(content)
-        Repository.any_instance.stub(:generate_metadata)
+        Resources::Candlepin::Content.stubs(:get).returns(content)
+        Resources::Candlepin::Content.stubs(:create).returns(content)
+        Repository.any_instance.stubs(:generate_metadata)
         @repo_name = "repo-#{rand 10 ** 8}"
         post :create, { :product_id => @product.id,
                         :provider_id => @product.provider.id,
@@ -166,12 +173,12 @@ describe RepositoriesController, :katello => true do
                               :gpg_key =>@gpg.id.to_s}}
       end
       specify  do
-        response.should be_success
+        must_respond_with(:success)
       end
       subject {Repository.find_by_name(@repo_name)}
-      it{should_not be_nil}
-      its(:gpg_key){should == @gpg}
-      its(:unprotected){should == false}
+      it{wont_be_nil}
+      it {subject.gpg_key.must_equal @gpg}
+      it {subject.unprotected.must_equal false}
     end
 
     context "Test update gpg" do
@@ -185,15 +192,15 @@ describe RepositoriesController, :katello => true do
                     :label => 'label',
                     :vendor => Provider::CUSTOM}
 
-        Resources::Candlepin::Content.stub!(:get).and_return(content)
-        Resources::Candlepin::Content.stub!(:create).and_return(content)
+        Resources::Candlepin::Content.stubs(:get).returns(content)
+        Resources::Candlepin::Content.stubs(:create).returns(content)
 
         @repo = new_test_repo(@organization.library, @product, "newname#{rand 10**6}", "http://fedorahosted org")
         product = @repo.product
-        Repository.stub(:find).and_return(@repo)
-        @repo.stub(:content).and_return(OpenStruct.new(:gpgUrl=>""))
-        @repo.should_receive(:update_content).and_return(Candlepin::Content.new)
-        #@repo.stub(:product).and_return(product)
+        Repository.stubs(:find).returns(@repo)
+        @repo.stubs(:content).returns(OpenStruct.new(:gpgUrl=>""))
+        @repo.expects(:update_content).returns(Candlepin::Content.new)
+        #@repo.stubs(:product).returns(product)
 
         put :update_gpg_key, { :product_id => @product.id,
                               :provider_id => @product.provider.id,
@@ -202,12 +209,14 @@ describe RepositoriesController, :katello => true do
       end
 
       specify do
-        response.should be_success
+        must_respond_with(:success)
       end
 
       subject {Repository.find(@repo.id)}
-      it{should_not be_nil}
-      its(:gpg_key){should == @gpg}
+      it{wont_be_nil}
+      it {subject.gpg_key.must_equal @gpg}
     end
   end
+  end
+end
 end

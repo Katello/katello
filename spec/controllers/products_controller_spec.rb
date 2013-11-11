@@ -12,19 +12,28 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'spec_helper'
+require 'katello_test_helper'
+#require 'ostruct'
 
-describe ProductsController, :katello => true do
-  include LoginHelperMethods
+module Katello
+describe ProductsController do
+
   include LocaleHelperMethods
   include OrganizationHelperMethods
   include AuthorizationHelperMethods
+
+  describe "(katello)" do
+
+  before do
+    setup_controller_defaults
+  end
+
   describe "rules" do
     before do
       @organization = new_test_org
       @provider = Provider.create!(:provider_type=>Provider::CUSTOM, :name=>"foo1", :organization=>@organization)
-      Provider.stub!(:find).and_return(@provider)
-      @product = MemoStruct.new(:provider => @provider, :id => 1000)
+      Provider.stubs(:find).returns(@provider)
+      @product = OpenStruct.new(:provider => @provider, :id => 1000)
     end
     describe "GET New" do
       let(:action) {:new}
@@ -40,7 +49,7 @@ describe ProductsController, :katello => true do
 
     describe "GET Edit" do
       before do
-        Product.stub!(:find).and_return(@product)
+        Product.stubs(:find).returns(@product)
       end
       let(:action) {:edit}
       let(:req) { get :edit, :provider_id => @provider.id, :id => @product.id}
@@ -68,15 +77,13 @@ describe ProductsController, :katello => true do
 
   describe "get auto_complete_product" do
     before (:each) do
-      set_default_locale
-      login_user
-      Product.should_receive(:any_readable?).once.and_return(true)
-      Product.should_receive(:search).once.and_return([OpenStruct.new(:name => "a", :id =>100)])
+      Product.expects(:any_readable?).once.returns(true)
+      Product.expects(:search).once.returns([OpenStruct.new(:name => "a", :id =>100)])
     end
 
     it 'should succeed' do
       get :auto_complete, :term => "a"
-      response.should be_success
+      must_respond_with(:success)
     end
   end
 
@@ -86,58 +93,68 @@ describe ProductsController, :katello => true do
       disable_org_orchestration
       disable_user_orchestration
       set_default_locale
-      login_user
       @organization = new_test_org
       @provider = Provider.create!(:provider_type=>Provider::CUSTOM, :name=>"foo1", :organization=>@organization)
-      Provider.stub!(:find).and_return(@provider)
-      test_gpg_content = File.open("#{Rails.root}/spec/assets/gpg_test_key").read
+      Provider.stubs(:find).returns(@provider)
+      test_gpg_content = File.open("#{Katello::Engine.root}/spec/assets/gpg_test_key").read
       @gpg = GpgKey.create!(:name =>"GPG", :organization=>@organization, :content=>test_gpg_content)
     end
-    context "when creating a product" do
+    describe "when creating a product" do
       before do
         @prod_name = "booyeah"
         post :create, :provider_id => @provider.id, :product => {:name=> @prod_name, :gpg_key => @gpg.id.to_s, :label=>"boo"}
       end
-      specify {response.should be_success}
+      specify {must_respond_with(:success)}
       subject{Product.find_by_name(@prod_name)}
-      it {should_not be_nil}
-      its(:name){should == @prod_name}
-      its(:gpg_key){should == @gpg}
+      it {wont_be_nil}
+      it { subject.name.must_equal @prod_name }
+      it { subject.gpg_key.must_equal @gpg }
     end
 
-    context "when updating a product" do
+    describe "when updating a product" do
       before do
         @product = Product.new({:name=>"prod", :label=> "prod"})
         @product.provider = @provider
-        @product.stub(:arch).and_return('noarch')
+        @product.stubs(:arch).returns('noarch')
         @product.save!
       end
 
-      context "without repositories wizard" do
+      describe "without repositories wizard" do
         before do
           put :update, :provider_id => @provider.id, :id => @product.id,
               :product              => { :gpg_key => @gpg.id.to_s }
         end
-        specify { response.should be_success }
+        specify { must_respond_with(:success) }
         subject { Product.find(@product.id) }
-        its(:gpg_key) { should == @gpg }
+        it { subject.gpg_key.must_equal @gpg }
       end
 
-      [true, false].each do |v|
-        context "with#{'out' unless v} all repositories" do
-          before do
-            @product.should_receive(:reset_repo_gpgs!).once.and_return([]) if v
-            @product.should_not_receive(:reset_repo_gpgs!) unless v
-            controller.stub(:find_product) { controller.instance_variable_set(:@product, @product) }
-            put :update, :provider_id => @provider.id, :id => @product.id,
-                :product              => { :gpg_key => @gpg.id.to_s, :gpg_all_repos => "#{v}" }
-          end
-          specify { response.should be_success }
-          subject { Product.find(@product.id) }
-          its(:gpg_key) { should == @gpg }
+      describe "with all repositories" do
+        before do
+          @product.expects(:reset_repo_gpgs!)
+          Product.stubs(:find).returns(@product)
+          put :update, :provider_id => @provider.id, :id => @product.id,
+              :product              => { :gpg_key => @gpg.id.to_s, :gpg_all_repos => "true" }
         end
+        specify { must_respond_with(:success) }
+        subject { Product.find(@product.id) }
+        it { subject.gpg_key.must_equal @gpg }
+      end
+
+      describe "without all repositories" do
+        before do
+          @product.expects(:reset_repo_gpgs!).never
+          put :update, :provider_id => @provider.id, :id => @product.id,
+              :product              => { :gpg_key => @gpg.id.to_s, :gpg_all_repos => "false" }
+        end
+        specify { must_respond_with(:success) }
+        subject { Product.find(@product.id) }
+        it { subject.gpg_key.must_equal @gpg }
       end
     end
 
   end
+  end
+
+end
 end
