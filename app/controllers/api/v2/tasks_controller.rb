@@ -47,9 +47,14 @@ class Api::V2::TasksController < Api::V2::ApiController
   api :GET, "/tasks/:id", "Show a task info"
   param :id, :identifier, :desc => "task identifier", :required => true
   def show
-    # TODO: use dynflow for getting the task info
-    @task.refresh
-    respond_for_show
+    case @task
+    when DynflowTask
+      respond_for_show(template: 'dynflow_task_show')
+    else
+      # TODO: remove onces nothing goes though TaskStatus
+      @task.refresh
+      respond_for_show
+    end
   end
 
   api :POST, "/tasks/search", "List dynflow tasks for uuids"
@@ -141,15 +146,13 @@ class Api::V2::TasksController < Api::V2::ApiController
     return task_hash
   end
 
-  def find_task
-    @task         = TaskStatus.find_by_id!(params[:id])
-    @organization = @task.organization
-  end
-
   private
 
   def find_task
-    @task = TaskStatus.find_by_id!(params[:id])
+    # temporary searching for both Dynflow task and old-style tasks
+    @task = DynflowTask.find_by_uuid(params[:id])
+    # TODO: remove once nothing goes through the old TaskStatus
+    @task ||= TaskStatus.find_by_id!(params[:id])
     @organization = @task.organization
   end
 
