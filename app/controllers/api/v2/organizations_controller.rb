@@ -56,7 +56,8 @@ class Api::V2::OrganizationsController < Api::V1::OrganizationsController
   param :url, String, :desc => "base url to perform repo discovery on"
   def repo_discover
     fail _("url not defined.") if params[:url].blank?
-    task = @organization.discover_repos(params[:url])
+    uuid, _ = Orchestrate.trigger(Orchestrate::Katello::RepositoryDiscover, params[:url])
+    task = DynflowTask.find_by_uuid!(uuid)
     respond_for_async :resource => task
   end
 
@@ -64,12 +65,8 @@ class Api::V2::OrganizationsController < Api::V1::OrganizationsController
   param :label, String, :desc => "Organization label"
   param :url, String, :desc => "base url to perform repo discovery on"
   def cancel_repo_discover
-    task = @organization.repo_discovery_task
-    if task.pending?
-      task.state = TaskStatus::Status::CANCELED
-      task.save!
-    end
-    respond_for_async :resource => task
+    # TODO: implement task canceling
+    render :json => { message: "not implemented" }
   end
 
   api :GET, "/organizations/:label", "Show an organization"

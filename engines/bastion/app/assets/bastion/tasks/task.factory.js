@@ -33,8 +33,21 @@ angular.module('Bastion.tasks').factory('Task',
             }
         );
 
+        resource.input = function(task, actionName) {
+            if(task.inputs) {
+                return _.find(task.inputs, function(input) { return input.action == actionName });
+            }
+        }
+
+        resource.output = function(task, actionName) {
+            if(task.outputs) {
+                return _.find(task.outputs, function(output) { return output.action == actionName });
+            }
+        }
+
         resource.poll = function(task, returnFunction) {
-            resource.get({id: task.id}, function(data) {
+            // TODO: remove task.id once we get rid of old TaskStatus code
+            resource.get({id: (task.id || task.uuid)}, function(data) {
                 if (data.pending) {
                     $timeout(function() {
                         resource.poll(data, returnFunction);

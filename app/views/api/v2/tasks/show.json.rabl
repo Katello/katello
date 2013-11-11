@@ -1,15 +1,12 @@
-object @resource
+@object ||= @task
+object @object
 
-extends 'api/v2/common/org_reference'
-extends 'api/v2/common/timestamps'
-
-attributes :finish_time, :start_time
-attributes :id, :task_owner_type, :progress, :uuid, :state, :user_id, :task_owner_id, :parameters, :task_type
-attributes :pending? => :pending
-
-@result = (@task || @object).result
-@result = Util::Data::ostructize(@result)
-
-node :result do
-  @result
+case @object
+when DynflowTask
+  extends 'api/v2/tasks/dynflow_task_show'
+when TaskStatus
+  extends 'api/v2/tasks/task_status_show'
+else
+  raise "Unsupported task type: #{@object.class.name}"
 end
+

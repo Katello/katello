@@ -47,14 +47,9 @@ class Api::V2::TasksController < Api::V2::ApiController
   api :GET, "/tasks/:id", "Show a task info"
   param :id, :identifier, :desc => "task identifier", :required => true
   def show
-    case @task
-    when DynflowTask
-      respond_for_show(template: 'dynflow_task_show')
-    else
-      # TODO: remove onces nothing goes though TaskStatus
-      @task.refresh
-      respond_for_show
-    end
+    # TODO: remove onces nothing goes though TaskStatus
+    @task.refresh if @task.is_a? TaskStatus
+    respond_for_show
   end
 
   api :POST, "/tasks/search", "List dynflow tasks for uuids"
