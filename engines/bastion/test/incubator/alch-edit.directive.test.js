@@ -121,7 +121,7 @@ describe('Directive: alchEdit', function() {
             var $filter, elementScope;
             beforeEach(inject(function(_$filter_) {
                 $filter = _$filter_;
-                elementScope = editableElement.scope();
+                elementScope = editableElement.isolateScope();
             }));
 
             it("by executing the provided filter on the model", function() {
@@ -255,7 +255,7 @@ describe('Directive: alchEdit', function() {
 
             compile(editableElement)(scope);
             scope.$digest();
-            directiveScope = editableElement.scope();
+            directiveScope = editableElement.isolateScope();
         });
 
         beforeEach(inject(function($controller) {
