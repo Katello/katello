@@ -47,7 +47,7 @@ describe('Directive: alchMenu', function() {
         compile(element)(scope);
         scope.$digest();
 
-        elementScope = element.scope();
+        elementScope = element.isolateScope();
     });
 
     it("should display a nav", function() {

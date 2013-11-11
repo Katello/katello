@@ -36,7 +36,7 @@ describe('Directive: alchFlyout', function() {
         compile(element)(scope);
         scope.$digest();
 
-        elementScope = element.scope();
+        elementScope = element.isolateScope();
         elementScope.setHover = function() {};
     });
 
