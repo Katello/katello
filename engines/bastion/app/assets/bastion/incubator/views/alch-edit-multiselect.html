@@ -1,8 +1,11 @@
 <div class="alch-dialog alch-multiselect" ng-class="{open: editMode, closed: !editMode}">
   <i class="icon-remove clickable fr" ng-click="editMode = false" ng-show="editMode"></i>
-  <form class="form" ng-show="editMode">
+  <form ng-show="editMode" role="form">
     <h5 translate>Existing Items</h5>
-    <input type="text" ng-model="searchTerm" type="text" placeholder="{{ 'Filter' | translate }}"/>
+    <input class="form-control"
+           ng-model="searchTerm"
+           type="text"
+           placeholder="{{ 'Filter' | translate }}"/>
     <ul>
       <li class="clickable" ng-repeat="option in options | filter:searchTerm">
         <input type="checkbox" ng-model="option.selected" ng-change="toggleOption(option)"/>

@@ -1,0 +1,10 @@
+<form role="form">
+  <div class="form-group" ng-show="editMode">
+    <select class="form-control"
+            ng-model="selector"
+            ng-options="option.id as option.name for option in options">
+      <option ng-show="false" value=""></option>
+    </select>
+  </div>
+  <div alch-edit></div>
+</form>
