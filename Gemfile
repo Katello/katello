@@ -80,7 +80,7 @@ Dir[File.expand_path('bundler.d/*.rb', File.dirname(__FILE__))].each do |bundle|
 end
 
 #gem 'dynflow', '>= 0.1.0'
-gem 'dynflow', :path => '/home/inecas/Projects/dynflow'
+gem 'dynflow', :path => '../dynflow'
 gem 'sinatra' # we use the dynflow web console
 gem 'sequel'  # we use the dynflow default Dynflow persistence adapter
 
