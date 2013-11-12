@@ -22,7 +22,7 @@ module Orchestrate
           param :repo_id, Integer
         end
 
-        def run
+        def run_pulp_task
           sync_options = {}
           sync_options[:max_speed] ||= ::Katello.config.pulp.sync_KBlimit if ::Katello.config.pulp.sync_KBlimit # set bandwidth limit
           sync_options[:num_threads] ||= ::Katello.config.pulp.sync_threads if ::Katello.config.pulp.sync_threads # set threads per sync
@@ -30,11 +30,14 @@ module Orchestrate
           pulp_tasks = pulp.repository.sync(input[:pulp_id], { override_config: sync_options })
           output[:pulp_tasks] = pulp_tasks
 
-          # TODO: would be better polling for the whole task group to make sure we're really finished at the end
-          output[:pulp_task] = pulp_tasks.find do |task|
+          # TODO: would be better polling for the whole task group to make sure
+          # we're really finished at the end.
+          # Look at it once we have more Pulp actions rewritten so that we can find
+          # a common pattern.
+          pulp_task = pulp_tasks.find do |task|
             task['tags'].include?("pulp:action:sync")
           end
-          wait_for_pulp
+          return pulp_task
         end
 
         def run_progress
