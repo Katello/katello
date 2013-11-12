@@ -12,7 +12,7 @@
 
 module Orchestrate
   module Katello
-    class RepositorySync < Dynflow::Action
+    class RepositorySync < Orchestrate::Action
 
       include Helpers::RemoteAction
       include Helpers::Lock

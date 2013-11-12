@@ -13,7 +13,7 @@
 module Orchestrate
   module Katello
     module Pulp
-      class RepositorySync < Dynflow::Action
+      class RepositorySync < Orchestrate::Action
 
         include Helpers::RemoteAction
         include Helpers::PulpTask
