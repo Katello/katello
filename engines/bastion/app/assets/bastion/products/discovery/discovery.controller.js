@@ -40,7 +40,7 @@ angular.module('Bastion.products').controller('DiscoveryController',
 
         setDiscoveryDetails = function(task) {
             var discoveryAction = "Orchestrate::Katello::RepositoryDiscover";
-            var input = Task.input(task, discoveryAction);
+            var action = Task.action(task, discoveryAction);
 
             $scope.discovery.pending = task.pending;
 
@@ -48,12 +48,11 @@ angular.module('Bastion.products').controller('DiscoveryController',
                 $scope.discovery.working = false;
             }
 
-            if(!input) {
+            if(!action) {
                 return
             }
-            $scope.discovery.url = input.url;
-            $scope.discoveryTable.rows = transformRows(Task.output(task, discoveryAction));
-
+            $scope.discovery.url = action.input.url;
+            $scope.discoveryTable.rows = transformRows(action.output);
         };
 
         $scope.setupSelected = function() {
