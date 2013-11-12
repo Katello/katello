@@ -2,7 +2,7 @@
   <thead>
     <tr alch-table-head row-select>
       <th alch-table-column="name" sortable>{{ "Name" | translate }}</th>
-      <th alch-table-column="status" sortable class="align-center">{{ "Subscription Status" | translate }}</th>
+      <th alch-table-column="status" sortable class="number-cell">{{ "Subscription Status" | translate }}</th>
       <th alch-table-column="os" sortable>{{ "OS" | translate }}</th>
       <th alch-table-column="environment" sortable>{{ "Environment" | translate }}</th>
       <th alch-table-column="contentView" sortable>{{ "Content View" | translate }}</th>
@@ -18,7 +18,7 @@
           {{ system.name }}
         </a>
       </td>
-      <td alch-table-cell class="align-center">
+      <td alch-table-cell class="number-cell">
         <span class="icon-circle" ng-class="table.getStatusColor(system.entitlementStatus)"></span>
       </td>
       <td alch-table-cell>{{ system.distribution }}</td>

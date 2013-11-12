@@ -1,48 +1,51 @@
 <section>
 
-  <div class="nutupane-titlebar">
-    <h1 class="nutupane-title">{{ "Products" }}</h1>
+  <div class="row nutupane-bar">
+    <h2 class="col-sm-2" translate>Products</h2>
   </div>
 
-  <div class="nutupane-actionbar">
-    <div class="form">
-      <input type="text"
-             class="input input-search"
-             placeholder="{{ 'Search...' | translate }}"
-             ng-model="table.searchTerm"
-             on-enter="table.search(table.searchTerm)"/>
-      <span class="result-count" translate>
-        Showing {{ table.resource.offset }} of {{ table.resource.subtotal }} ({{ table.resource.total }} Total) Products
-      </span>
+  <div class="row nutupane-bar">
+    <div class="col-sm-3">
+      <div class="input-group input-group">
+        <input type="text"
+               class="form-control"
+               placeholder="{{ 'Search...' | translate }}"
+               ng-model="table.searchTerm"
+               on-enter="table.search(table.searchTerm)"/>
+        <span class="input-group-btn">
+          <button ng-click="table.search(table.searchTerm)" class="btn btn-default" type="button"><i class="icon-search"></i></button>
+        </span>
+      </div>
+    </div>
+    <div class="col-sm-3 nutupane-info">
+      <span translate>Showing {{ table.rows.length }} of {{ table.resource.subtotal }} ({{ table.resource.total }} Total) Products</span>
     </div>
 
-    <div class="nutupane-actions fr">
+    <div class="fr">
+      <div class="nutupane-info fl">
+        <span translate>{{ table.numSelected }} Selected</span>
+        <span>|</span>
+        <a class="deselect-action"
+           translate
+           ng-class="{ 'disabled-link' : table.numSelected == 0 }"
+           ng-click="table.selectAll(false)">
+          Deselect All
+        </a>
+      </div>
+
       <button class="btn btn-primary" ui-sref="products.new.form">
         <i class="icon-plus"></i>
         {{ "New Product" | translate }}
       </button>
-    </div>
 
-    <div class="nutupane-actions fr">
       <button class="btn btn-primary" ui-sref="products.discovery.scan">
         <i class="icon-screenshot"></i>
         {{ "Repo Discovery" | translate }}
       </button>
     </div>
-
-    <div class="fr select-action">
-      <span translate>{{ table.numSelected }} Selected</span>
-      <span>|</span>
-      <a class="deselect-action"
-         translate
-         ng-class="{ 'disabled-link' : table.numSelected == 0 }"
-         ng-click="table.selectAll(false)">
-        Deselect All
-      </a>
-    </div>
   </div>
 
-  <div nutupane-table ng-class="{'table-reduced': $root.$state.current.collapsed}">
+  <div class="nutupane" nutupane-table ng-class="{'table-reduced': $root.$state.current.collapsed}">
     <div class="loading-mask icon-3x" ng-show="table.working" ng-class="{ 'loading-mask-collapsed icon-2x': $root.$state.current.collapsed }">
       <i class="icon-spinner icon-spin"></i>
       <span ng-hide="$root.$state.current.collapsed" translate>Loading...</span>

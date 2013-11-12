@@ -8,9 +8,9 @@
   <header class="details-header">
     <h2 class="fl" translate>System {{ system.name }}</h2>
 
-    <div class="details-action-group fr">
-      <button class="btn-mini btn-danger details-action" ng-disabled="system.readonly" ng-click="showConfirm = true" translate>Remove System</button>
-      <button class="btn-mini details-action" ui-sref="systems.index">
+    <div class="fr">
+      <button class="btn btn-danger" ng-disabled="system.readonly" ng-click="showConfirm = true" translate>Remove System</button>
+      <button class="btn btn-default" ui-sref="systems.index">
         <i class="icon-remove"></i>
         {{ "Close" | translate }}
       </button>
@@ -20,41 +20,35 @@
     </div>
   </header>
 
-  <nav class="details-navigation">
-    <ul>
-      <li>
-        <a class="clickable"
-           translate
-           ui-sref="systems.details.info"
-           ng-class="{active: isState('systems.details.info')}">
+  <nav>
+    <ul class="nav nav-tabs">
+      <li ng-class="{active: isState('systems.details.info')}">
+        <a class="clickable" translate
+           ui-sref="systems.details.info">
           Details
         </a>
       </li>
-      <li>
+      <li ng-class="{active: isState('systems.details.subscriptions')}">
         <a class="clickable" translate
-           ui-sref="systems.details.subscriptions"
-           ng-class="{active: isState('systems.details.subscriptions')}">
+           ui-sref="systems.details.subscriptions">
           Subscriptions
         </a>
       </li>
-      <li>
+      <li ng-class="{active: stateIncludes('systems.details.events')}">
         <a class="clickable" translate
-           ui-sref="systems.details.events.index"
-           ng-class="{active: stateIncludes('systems.details.events')}">
+           ui-sref="systems.details.events.index">
           Events
         </a>
       </li>
-      <li>
+      <li ng-class="{active: isState('systems.details.packages')}">
         <a class="clickable" translate
-           ui-sref="systems.details.packages"
-           ng-class="{active: isState('systems.details.packages')}">
+           ui-sref="systems.details.packages">
           Packages
         </a>
       </li>
-      <li>
+      <li ng-class="{active: isState('systems.details.errata.index')}">
         <a class="clickable" translate
-           ui-sref="systems.details.errata.index"
-           ng-class="{active: isState('systems.details.errata.index')}">
+           ui-sref="systems.details.errata.index">
           Errata
         </a>
       </li>
@@ -83,5 +77,5 @@
     </ul>
   </div>
 
-  <div ui-view></div>
+  <section class="nutupane-sub-section" ui-view></section>
 </section>

@@ -8,10 +8,11 @@ module Bastion
       app.config.assets.paths << Bastion::Engine.root.join('app', 'assets')
       app.config.assets.paths << Bastion::Engine.root.join('vendor', 'assets', 'components')
       app.config.assets.paths << Bastion::Engine.root.join('vendor', 'assets', 'components', 'font-awesome')
+      app.config.assets.paths << Bastion::Engine.root.join('vendor', 'assets', 'components', 'rcue')
 
       # Slight hack due to how import loading of SCSS looks up paths
       app.config.assets.paths << "#{::UIAlchemy::Engine.root}/vendor/assets/ui_alchemy/alchemy-forms"
-      app.config.assets.paths << "#{::UIAlchemy::Engine.root}/vendor/assets/ui_alchemy/alchemy-buttons"
+      app.config.less.paths << "#{Rails.root}/vendor/assets/components"
 
       app.middleware.use ::ActionDispatch::Static, "#{root}/app/assets/bastion"
 
@@ -22,7 +23,10 @@ module Bastion
             puts "Including Bastion master JS file"
             true
           elsif full_path.include?("bastion.scss")
-            puts "Including Bastion master CSS file"
+            puts "Including Bastion master SCSS file"
+            true
+          elsif full_path.include?("bastion.less")
+            puts "Including Bastion master LESS file"
             true
           else
             false

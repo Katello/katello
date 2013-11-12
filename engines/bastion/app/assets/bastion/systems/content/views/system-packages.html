@@ -1,25 +1,24 @@
+<section ng-hide="system.readonly">
+  <h4 translate>Package Actions</h4>
+  <section>
+    <form class="form" ng-submit="performPackageAction()">
+      <select ng-model="packageAction.actionType" required>
+        <option value="packageInstall" translate>Package Install</option>
+        <option value="packageUpdate" translate>Package Update</option>
+        <option value="packageRemove" translate>Package Remove</option>
+        <option value="groupInstall" translate>Group Install</option>
+        <option value="groupRemove" translate>Group Remove</option>
+      </select>
+      <input type="text" placeholder="{{ 'Package/Group Name' | translate}}" ng-model="packageAction.term"/>
+      <button class="btn btn-default" ng-click="performPackageAction()" translate>Perform</button>
+    </form>
+  </section>
+</section>
+
 <section>
+  <h4 translate>Installed Packages</h4>
 
-  <div ng-hide="system.readonly">
-    <h5 translate>Package Actions</h5>
-    <section>
-      <form class="form" ng-submit="performPackageAction()">
-        <select ng-model="packageAction.actionType" required>
-          <option value="packageInstall" translate>Package Install</option>
-          <option value="packageUpdate" translate>Package Update</option>
-          <option value="packageRemove" translate>Package Remove</option>
-          <option value="groupInstall" translate>Group Install</option>
-          <option value="groupRemove" translate>Group Remove</option>
-        </select>
-        <input type="text" placeholder="{{ 'Package/Group Name' | translate}}" ng-model="packageAction.term"/>
-        <input type="submit" name="Perform" value="Perform"/>
-      </form>
-    </section>
-  </div>
-
-  <h5 translate>Installed Packages</h5>
-
-  <div class="nutupane-actionbar">
+  <div class="nutupane-bar">
     <div class="form">
       <input type="text"
              class="input input-search"
@@ -28,7 +27,7 @@
       <span class="result-count" translate>Showing {{ currentPackagesTable.resource.total }} Packages</span>
     </div>
 
-    <div class="nutupane-actions fr" ng-hide="system.readonly">
+    <div class="fr" ng-hide="system.readonly">
        <button class="btn btn-primary" translate ng-click="updateAll()">
          Update All
        </button>
@@ -37,7 +36,7 @@
 
   <div alch-table="currentPackagesTable">
     <div alch-container-scroll control-width="table" alch-infinite-scroll="table.nextPage()">
-      <table ng-class="{'table-mask': table.working}" class="table table-full table-striped">
+      <table ng-class="{'table-mask': table.working}" class="table table-striped">
         <thead>
           <tr alch-table-head>
             <th alch-table-column="name" translate>Installed Package</th>

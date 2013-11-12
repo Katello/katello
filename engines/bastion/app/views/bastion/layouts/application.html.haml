@@ -2,7 +2,8 @@
   = project_name + "-" + default_title
 
 = content_for(:stylesheets_block) do
-  = stylesheet_link_tag "stylesheets/bastion"
+  = stylesheet_link_tag "stylesheets/less/bastion"
+  = stylesheet_link_tag "stylesheets/scss/bastion"
   = yield :stylesheets
 
 = content_for(:body) do

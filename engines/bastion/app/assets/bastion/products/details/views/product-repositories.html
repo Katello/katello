@@ -1,4 +1,5 @@
 <section class="details details-full">
+  <h4 translate>Repositories</h4>
 
   <div class="form">
     <input type="text"
@@ -20,9 +21,9 @@
         <th translate>Type</th>
         <th translate>Last Sync</th>
         <th translate>Sync State</th>
-        <th class="align-center" translate>Packages</th>
-        <th class="align-center" translate>Errata</th>
-        <th class="align-center" translate>Puppet Modules</th>
+        <th class="number-cell" translate>Packages</th>
+        <th class="number-cell" translate>Errata</th>
+        <th class="number-cell" translate>Puppet Modules</th>
       </tr>
     </thead>
 
@@ -44,17 +45,17 @@
           </span>
           <span ng-hide="repository.feed" translate>N/A</span>
         </td>
-        <td class="align-center">
+        <td class="number-cell">
           <a ng-href="/katello/content_search#/!=&search[subgrid][repo_id]={{ repository.id }}&search[subgrid][type]=repo_packages">
             {{ repository.content_counts.rpm || 0 }}
           </a>
         </td>
-        <td class="align-center">
+        <td class="number-cell">
           <a ng-href="/katello/content_search#/!=&search[subgrid][repo_id]={{ repository.id }}&search[subgrid][type]=repo_errata">
           {{ repository.content_counts.erratum || 0 }}
           </a>
         </td>
-        <td class="align-center">
+        <td class="number-cell">
           <a ng-href="/katello/content_search#/!=&search[subgrid][repo_id]={{ repository.id }}&search[subgrid][type]=repo_puppet_modules">
           {{ repository.content_counts.puppet_module || 0 }}
           </a>

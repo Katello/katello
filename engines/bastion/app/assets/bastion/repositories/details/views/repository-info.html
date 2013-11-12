@@ -4,14 +4,14 @@
     {{ "Back to Repository List" | translate }}
   </a>
 
-  <div class="details-action-group fr">
-    <button class="btn details-action"
+  <div class="fr">
+    <button class="btn btn-default"
             ng-click="syncRepository(repository); working = true"
             ng-disabled="syncInProgress(repository.sync_state)">
       <i class="icon-refresh"></i>
       <span translate>Sync Now</span>
     </button>
-    <button class="btn btn-danger details-action"
+    <button class="btn btn-danger"
             ng-click="showConfirm = true"
             ng-disabled="!repository.permissions.deletable">
       {{ "Remove Repository" | translate }}

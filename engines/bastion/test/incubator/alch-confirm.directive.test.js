@@ -74,7 +74,7 @@ describe('Directive: alchConfirm', function() {
     it("calls the provided function when the 'Yes' confirmation button is clicked", function() {
         spyOn(testItem, 'delete');
 
-        editableElement.find('button.primary').click();
+        editableElement.find('button.btn-primary').click();
 
         expect(testItem.delete).toHaveBeenCalledWith(testItem);
     });
@@ -84,7 +84,7 @@ describe('Directive: alchConfirm', function() {
 
         scope.showConfirm = true;
         scope.$digest();
-        editableElement.find('button.secondary').click();
+        editableElement.find('button.btn-default').click();
 
         expect(testItem.delete).not.toHaveBeenCalled();
         expect(scope.showConfirm).toBe(false);
@@ -155,7 +155,7 @@ describe('Directive: alchConfirmModal', function() {
     it("calls the provided function when the 'Yes' confirmation button is clicked", function() {
         spyOn(testItem, 'delete');
 
-        editableElement.find('button.primary').click();
+        editableElement.find('button.btn-primary').click();
 
         expect(testItem.delete).toHaveBeenCalledWith(testItem);
     });
@@ -165,7 +165,7 @@ describe('Directive: alchConfirmModal', function() {
 
         scope.showConfirm = true;
         scope.$digest();
-        editableElement.find('button.secondary').click();
+        editableElement.find('button.btn-default').click();
 
         expect(testItem.delete).not.toHaveBeenCalled();
         expect(scope.showConfirm).toBe(false);
