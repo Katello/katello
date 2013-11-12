@@ -39,8 +39,7 @@ namespace :test do
         "#{Katello::Engine.root}/test/models/content_view_definition_test.rb",
         "#{Katello::Engine.root}/test/glue/candlepin/*_test.rb",
         "#{Katello::Engine.root}/test/models/puppet_module_test.rb",
-        "#{Katello::Engine.root}/test/models/pulp_sync_status_test.rb",
-        "#{Katello::Engine.root}/spec/models/activation_key_spec.rb"
+        "#{Katello::Engine.root}/test/models/pulp_sync_status_test.rb"
       ]
       t.verbose = true
     end
