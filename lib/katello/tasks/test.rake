@@ -11,6 +11,7 @@ namespace :test do
     spec_task = Rake::TestTask.new('katello_spec_task') do |t|
       t.libs << ["test", "#{Katello::Engine.root}/test", "spec", "#{Katello::Engine.root}/spec"]
       t.test_files = [
+        "#{Katello::Engine.root}/spec/helpers/**/*_spec.rb",
         "#{Katello::Engine.root}/spec/models/**/*_spec.rb",
         "#{Katello::Engine.root}/spec/controllers/activation_keys_controller_spec.rb"
       ]
