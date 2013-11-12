@@ -12,7 +12,7 @@
 
 module Orchestrate
   module Katello
-    class RepositoryDiscover < Dynflow::Action
+    class RepositoryDiscover < Orchestrate::Action
 
       input_format do
         param :url, String
@@ -34,17 +34,6 @@ module Orchestrate
         continue = lambda { true }
         repo_discovery.run(found, continue)
       end
-
-      # Get the input url info into task
-      def task_input
-        { url: input[:url] }
-      end
-
-      # Get the disovered repositories into task
-      def task_output
-        { repo_urls: output[:repo_urls] }
-      end
-
     end
   end
 end
