@@ -3,42 +3,26 @@ module Orchestrate
 
     module PulpTask
 
-      def self.included(base)
-        base.extend(ClassMethods)
+      def run
+        update_progress(false, run_pulp_task)
+        if output[:pulp_task].nil? || output[:pulp_task][:task_id].nil?
+          raise ":task_id has to be present in the pulp task"
+        end
+        suspend
       end
 
-      module ClassMethods
-
-        def generate_phase(phase_module)
-          super.tap do |phase_class|
-            if phase_module == Dynflow::Action::RunPhase
-              phase_class.send(:include, RunMethods)
-            end
-          end
-        end
-
+      def run_pulp_task
+        raise "Method run_pulp_task needs to be implemented in the action"
       end
 
-      module RunMethods
+      # needed by dynflow suspend mechanism
+      def setup_progress_updates(suspended_action)
+        PulpTask.polling_service.wait_for_task(suspended_action, input[:remote_user], output[:pulp_task][:task_id])
+      end
 
-        def wait_for_pulp
-          Logging.logger['glue'].debug("pulp task is #{output[:pulp_task]}")
-          Logging.logger['glue'].debug("pulp task id is #{output[:pulp_task][:task_id]}")
-          if output[:pulp_task].nil? || output[:pulp_task][:task_id].nil?
-            raise "output[:pulp_task][:task_id] has to be present to be able to wait for the task"
-          end
-          suspend
-        end
-
-        # needed by dynflow suspend mechanism
-        def setup_progress_updates(suspended_action)
-          PulpTask.polling_service.wait_for_task(suspended_action, input[:remote_user], output[:pulp_task][:task_id])
-        end
-
-        # invoked by PollingService
-        def update_progress(done, pulp_task)
-          output.update pulp_task: pulp_task, done: done
-        end
+      # invoked by PollingService
+      def update_progress(done, pulp_task)
+        output.update pulp_task: pulp_task, done: done
       end
 
       def self.polling_service
