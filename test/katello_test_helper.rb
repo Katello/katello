@@ -26,6 +26,8 @@ module MiniTest::Expectations
   infect_an_assertion :assert_redirected_to, :must_redirect_to
   infect_an_assertion :assert_template, :must_render_template
   infect_an_assertion :assert_response, :must_respond_with
+  infect_an_assertion :assert_routing, :must_route_to, :do_not_flip
+  infect_an_assertion :assert_recognizes, :must_recognize, :do_not_flip
 end
 
 class ActiveSupport::TestCase
