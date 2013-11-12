@@ -33,15 +33,11 @@ angular.module('Bastion.tasks').factory('Task',
             }
         );
 
-        resource.input = function(task, actionName) {
-            if(task.inputs) {
-                return _.find(task.inputs, function(input) { return input.action == actionName });
-            }
-        }
-
-        resource.output = function(task, actionName) {
-            if(task.outputs) {
-                return _.find(task.outputs, function(output) { return output.action == actionName });
+        resource.action = function(task, actionName) {
+            if(task.actions) {
+                return _.find(task.actions, function(action) {
+                    return action.action == actionName
+                });
             }
         }
 

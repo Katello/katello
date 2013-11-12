@@ -27,26 +27,11 @@ class DynflowTask < ActiveRecord::Base
     @execution_plan ||= Orchestrate.world.persistence.load_execution_plan(self.uuid)
   end
 
-  # Searches for actions with +task_input+ method and collects the values.
-  # It's used for getting data input params in the action into Rest API
-  def inputs
-    actions_with_task_input = run_actions.select do |action|
-      action.respond_to?(:task_input)
-    end
-    actions_with_task_input.map do |action|
-      action.task_input.merge(action: action.action_class.name)
-    end
-  end
-
-
-  # Searches for actions with +task_output+ method and collects the values.
-  # It's used for getting data collected in the action into Rest API
-  def outputs
-    actions_with_task_output = run_actions.select do |action|
-      action.respond_to?(:task_output) && !action.output.empty?
-    end
-    actions_with_task_output.map do |action|
-      action.task_output.merge(action: action.action_class.name)
+  def actions
+    run_actions.map do |action|
+      { action: action.action_class.name,
+        input:  action.task_input,
+        output: action.task_output }
     end
   end
 
