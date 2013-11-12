@@ -10,14 +10,17 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'spec_helper'
+require 'katello_test_helper'
 
-describe ChangesetsController, :katello => true do
-  include LoginHelperMethods
+module Katello
+describe ChangesetsController do
+
+  describe "(katello)" do
+
   include LocaleHelperMethods
   include OrganizationHelperMethods
   include AuthorizationHelperMethods
-  include UserHelperMethods
+
   module CSControllerTest
 
     ENV_NAME = "environment_name"
@@ -28,8 +31,7 @@ describe ChangesetsController, :katello => true do
   end
 
   before(:each) do
-    login_user
-    set_default_locale
+    setup_controller_defaults
 
     @org = new_test_org
 
@@ -51,42 +53,40 @@ describe ChangesetsController, :katello => true do
 
     it "should show the changeset 2 pane list" do
       get :index
-      response.should be_success
+      must_respond_with(:success)
     end
 
     it "changesetuser should be empty" do
       get :index
-      @changeset.users.should be_empty
+      @changeset.users.must_be_empty
     end
 
     it "should return a portion of changesets for an environment" do
-      controller.should_receive(:render_panel_direct) { |obj_class, options, search, start, sort, search_options|
-        search_options[:filter][0][:environment_id].should == [@env.id]
-        controller.stub(:render)
-      }
+      @controller.expects(:render_panel_direct)
+      @controller.stubs(:render).returns('')
 
       get :items, :env_id=>@env.id
-      response.should be_success
+      must_respond_with(:success)
     end
 
     it "should be able to show the edit partial" do
       get :edit, :id=>@changeset.id
-      response.should be_success
+      must_respond_with(:success)
     end
 
     it "should be able to update the name of a changeset" do
       post :update, :id=>@changeset.id, :name=>"newname"
-      response.should be_success
-      Changeset.find(@changeset.id).name.should == "newname"
+      must_respond_with(:success)
+      Changeset.find(@changeset.id).name.must_equal "newname"
     end
 
     it "should be able to check the status of a changeset being promoted" do
 
-      @changeset.task_status = TaskStatus.create!(:organization_id =>@org.id, :uuid=>"FOO", :progress=>"0", :user=> new_user)
+      @changeset.task_status = TaskStatus.create!(:organization_id =>@org.id, :uuid=>"FOO", :progress=>"0", :user=> users(:one))
       @changeset.save!
       get :changeset_status, :id=>@changeset.id
-      response.should be_success
-      response.should contain('changeset_' + @changeset.id.to_s)
+      must_respond_with(:success)
+      response.body.must_include('changeset_' + @changeset.id.to_s)
     end
 
   end
@@ -95,59 +95,59 @@ describe ChangesetsController, :katello => true do
 
     describe 'with only environment ids' do
       it 'should create a changeset correctly and send a notification' do
-        controller.should notify.success
+        must_notify_with(:success)
         post 'create', {:changeset => {:name => "Changeset 7055"}, :next_env_id => @next_env.id}
-        response.should be_success
-        PromotionChangeset.exists?(:name => 'Changeset 7055').should be_true
+        must_respond_with(:success)
+        PromotionChangeset.exists?(:name => 'Changeset 7055').must_equal(true)
       end
     end
 
     describe 'with a next environment id' do
       it 'should create a changeset correctly and send a notification' do
-        controller.should notify.success
+        must_notify_with(:success)
         post 'create', {:changeset => {:name => "Changeset 7055"}, :next_env_id => @next_env.id}
-        response.should be_success
-        PromotionChangeset.exists?(:name=>'Changeset 7055').should be_true
+        must_respond_with(:success)
+        PromotionChangeset.exists?(:name=>'Changeset 7055').must_equal(true)
       end
     end
 
     describe 'with a deletion type' do
       it 'should create a changeset correctly and send a notification' do
-        controller.should notify.success
+        must_notify_with(:success)
         post 'create', {:changeset => {:name => "Changeset 7056", :description => "FOO", :action_type => Changeset::DELETION}, :env_id => @env.id}
-        response.should be_success
-        DeletionChangeset.exists?(:name => "Changeset 7056").should be_true
+        must_respond_with(:success)
+        DeletionChangeset.exists?(:name => "Changeset 7056").must_equal(true)
       end
     end
 
     describe 'with a promotion type' do
       it 'should create a changeset correctly and send a notification' do
-        controller.should notify.success
+        must_notify_with(:success)
         post 'create', {:changeset => {:name => "Changeset 7056", :description => "FOO", :action_type => Changeset::PROMOTION}, :env_id => @env.id, :next_env_id => @next_env.id}
-        response.should be_success
-        PromotionChangeset.exists?.should be_true
+        must_respond_with(:success)
+        PromotionChangeset.exists?.must_equal(true)
       end
     end
 
     describe 'with a description' do
       it 'should create a changeset correctly and send a notification' do
-        controller.should notify.success
+        must_notify_with(:success)
         post 'create', {:changeset => {:name => "Changeset 7056", :description => "FOO"}, :next_env_id => @next_env.id}
-        response.should be_success
-        PromotionChangeset.exists?(:description=>'FOO').should be_true
+        must_respond_with(:success)
+        PromotionChangeset.exists?(:description=>'FOO').must_equal(true)
       end
     end
 
     it 'should cause an error notification if name is left blank' do
-      controller.should notify.exception
+      must_notify_with(:exception)
       post 'create', {:env_id => @env.id, :next_env_id => @next_env.id, :changeset => {:name => ''}}
-      response.should_not be_success
+      response.must_respond_with(422)
     end
 
     it 'should cause an error notification if no environment id is present' do
-      controller.should notify.error
+      must_notify_with(:error)
       post 'create', {:changeset => { :name => 'Test/Changeset 4.5'}}
-      response.should_not be_success
+      response.must_respond_with(406)
     end
 
   end
@@ -158,17 +158,17 @@ describe ChangesetsController, :katello => true do
     end
 
     it 'should successfully delete a changeset' do
-      controller.should notify.success
+      must_notify_with(:success)
       delete 'destroy', :id=>@changeset.id
-      response.should be_success
-      Changeset.exists?(:id=>@changeset.id).should be_false
+      must_respond_with(:success)
+      Changeset.exists?(:id=>@changeset.id).must_equal(false)
     end
 
     it 'should raise an exception if no such changeset exists' do
-      controller.should notify.error
+      must_notify_with(:error)
       delete 'destroy', :id=>20
-      response.should_not be_success
-      Changeset.exists?(:id=>@changeset.id).should be_true
+      response.must_respond_with(404)
+      Changeset.exists?(:id=>@changeset.id).must_equal(true)
     end
   end
 
@@ -179,15 +179,15 @@ describe ChangesetsController, :katello => true do
 
     it 'should successfully update a changeset' do
       put 'update', {:id=>@changeset.id, :name=> 'newname'}
-      response.should be_success
-      response.headers.should include("X-ChangesetUsers")
-      Changeset.exists?(:name=>'newname').should be_true
+      must_respond_with(:success)
+      response.headers.must_include("X-ChangesetUsers")
+      Changeset.exists?(:name=>'newname').must_equal(true)
     end
 
     it 'should not have a changeset user for name-only updates ' do
       put 'update', {:id=>@changeset.id, :name=> 'anothername'}
-      response.should be_success
-      @changeset.users.length.should == 0
+      must_respond_with(:success)
+      @changeset.users.length.must_equal 0
     end
   end
 
@@ -211,13 +211,8 @@ describe ChangesetsController, :katello => true do
       end
 
       let(:before_success) do
-        controller.should_receive(:render_panel_direct) { |obj_class, options, search, start, sort, search_options|
-          filter_coll = {}
-          search_options[:filter].each{|f| filter_coll.merge!(f)}
-          filter_coll[:environment_id].should == [@env3.id]
-          filter_coll[:state].should == ["promoted", "deleted"]
-          controller.stub(:render)
-        }
+        @controller.expects(:render_panel_direct)
+        @controller.stubs(:render)
       end
       it_should_behave_like "protected action"
     end
@@ -232,7 +227,7 @@ describe ChangesetsController, :katello => true do
         user_with_permissions { |u| u.can(:read_changesets, :environments, @env3.id, @organization) }
       end
       let(:on_success) do
-        assigns(:environment).should == @env3
+        assigns(:environment).must_equal @env3
       end
       it_should_behave_like "protected action"
     end
@@ -278,5 +273,7 @@ describe ChangesetsController, :katello => true do
     end
 
   end
+  end
 
+end
 end

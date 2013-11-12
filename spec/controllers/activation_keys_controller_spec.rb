@@ -28,11 +28,7 @@ describe ActivationKeysController do
   end
 
   before(:each) do
-    @routes = Katello::Engine.routes
-    set_default_locale
-
-    session[:user] = User.current ? User.current.id : users(:admin)
-    session[:expires_at] = 5.minutes.from_now
+    setup_controller_defaults
     @organization = new_test_org
 
     @controller.stubs(:require_org).returns(true)

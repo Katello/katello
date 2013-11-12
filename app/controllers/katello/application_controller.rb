@@ -341,7 +341,7 @@ class ApplicationController < ::ApplicationController
   # render 403 page
   def render_403
     respond_to do |format|
-      format.html { render :template => "common/403", :layout => !request.xhr?, :status => 403 }
+      format.html { render :template => "katello/common/403", :layout => !request.xhr?, :status => 403 }
       format.atom { head 403 }
       format.xml  { head 403 }
       format.json { head 403 }
@@ -355,7 +355,7 @@ class ApplicationController < ::ApplicationController
       logger.error _("Rendering 404:") + " #{exception.message}"
     end
     respond_to do |format|
-      format.html { render :template => "common/404", :layout => !request.xhr?, :status => 404 }
+      format.html { render :template => "katello/common/404", :layout => !request.xhr?, :status => 404 }
       format.atom { head 404 }
       format.xml  { head 404 }
       format.json { head 404 }
@@ -400,12 +400,12 @@ class ApplicationController < ::ApplicationController
       notify.exception(message, exception)
     else
       notify.error message
-      log.warn message
+      Rails.logger.warn message
     end
 
     respond_to do |format|
       format.html do
-        render :template => 'common/400', :layout => !request.xhr?, :status => status,
+        render :template => 'katello/common/400', :layout => !request.xhr?, :status => status,
                :locals   => {:message => message}
       end
       format.atom { head exception.status_code }
@@ -423,7 +423,7 @@ class ApplicationController < ::ApplicationController
     end
     respond_to do |format|
       format.html do
-        render :template => "common/500", :layout => "katello", :status => 500,
+        render :template => "katello/common/500", :layout => "katello", :status => 500,
                :locals => {:error => exception}
       end
       format.atom { head 500 }

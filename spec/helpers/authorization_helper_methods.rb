@@ -94,7 +94,7 @@ module AuthorizationHelperMethods
 
     @users_count ||= 0
     @users_count += 1
-    user = User.find_by_login("one")
+    user = User.find_by_login('one')
     yield UserPermissionsGenerator.new(user) if block_given?
     user
   end

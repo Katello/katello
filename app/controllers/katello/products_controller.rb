@@ -153,5 +153,6 @@ class ProductsController < Katello::ApplicationController
   def find_product
     @product = Product.find(params[:id])
   end
+
 end
 end
