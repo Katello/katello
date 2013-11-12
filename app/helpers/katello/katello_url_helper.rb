@@ -12,6 +12,7 @@
 
 module Katello
 module KatelloUrlHelper
+  include Rails.application.routes.url_helpers
 
   unless defined? CONSTANTS_DEFINED
     PORT = /(([:]\d{1,5})?)/
