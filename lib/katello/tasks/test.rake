@@ -22,8 +22,7 @@ namespace :test do
     test_task = Rake::TestTask.new('katello_test_task') do |t|
       t.libs << ["test", "#{Katello::Engine.root}/test"]
       t.test_files = [
-        "#{Katello::Engine.root}/test/glue/elasticsearch/*_test.rb",
-        "#{Katello::Engine.root}/test/glue/pulp/*_test.rb",
+        "#{Katello::Engine.root}/test/glue/**/*_test.rb",
         "#{Katello::Engine.root}/test/helpers/*_test.rb",
         "#{Katello::Engine.root}/test/lib/navigation/*_test.rb",
         "#{Katello::Engine.root}/test/lib/validators/*_test.rb",
@@ -40,7 +39,6 @@ namespace :test do
         "#{Katello::Engine.root}/test/models/organization_test.rb",
         "#{Katello::Engine.root}/test/models/organization_destroyer_test.rb",
         "#{Katello::Engine.root}/test/models/content_view_definition_test.rb",
-        "#{Katello::Engine.root}/test/glue/candlepin/*_test.rb",
         "#{Katello::Engine.root}/test/models/puppet_module_test.rb",
         "#{Katello::Engine.root}/test/models/pulp_sync_status_test.rb"
       ]
