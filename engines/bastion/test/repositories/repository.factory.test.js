@@ -41,7 +41,7 @@ describe('Factory: Repository', function() {
     });
 
     it('provides a way to get a list of repositories', function() {
-        $httpBackend.expectGET('/katello/api/repositories?organization_id=ACME&product_id=1')
+        $httpBackend.expectGET('/api/repositories?organization_id=ACME&product_id=1')
                     .respond(repositories);
 
         Repository.query({'product_id': 1}, function(repositories) {
@@ -53,7 +53,7 @@ describe('Factory: Repository', function() {
         var updatedRepository = repositories.records[0];
 
         updatedRepository.name = 'NewRepositoryName';
-        $httpBackend.expectPUT('/katello/api/repositories/1?organization_id=ACME').respond(updatedRepository);
+        $httpBackend.expectPUT('/api/repositories/1?organization_id=ACME').respond(updatedRepository);
 
         Repository.update({name: 'NewRepositoryName', id: 1}, function(repository) {
             expect(repository).toBeDefined();
@@ -62,7 +62,7 @@ describe('Factory: Repository', function() {
     });
 
     it('provides a way to sync a repository', function() {
-        $httpBackend.expectPOST('/katello/api/repositories/1/sync?organization_id=ACME').respond({'state': 'running'});
+        $httpBackend.expectPOST('/api/repositories/1/sync?organization_id=ACME').respond({'state': 'running'});
 
         Repository.sync({id: 1}, function(task) {
             expect(task).toBeDefined();

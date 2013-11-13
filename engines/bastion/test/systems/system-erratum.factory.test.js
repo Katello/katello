@@ -32,7 +32,7 @@ describe('Factory: SystemErratum', function($provide) {
         };
         task = {id: 'task_id'};
         routes = {
-            apiSystemsPath: function() {return '/katello/api/systems'}
+            apiSystemsPath: function() {return '/api/systems'}
         };
         $provide.value('Routes', routes);
     }));
@@ -47,14 +47,14 @@ describe('Factory: SystemErratum', function($provide) {
     });
 
     it('provides a way to get a list of errata', function() {
-        $httpBackend.expectGET('/katello/api/systems/SYS_ID/errata').respond(errata);
+        $httpBackend.expectGET('/api/systems/SYS_ID/errata').respond(errata);
         SystemErratum.get({ id: 'SYS_ID' }, function(results) {
             expect(results.total).toBe(2);
         });
     });
 
     it('provides a way to apply a list of errata', function() {
-        $httpBackend.expectPUT('/katello/api/systems/SYS_ID/errata/apply').respond(task);
+        $httpBackend.expectPUT('/api/systems/SYS_ID/errata/apply').respond(task);
         SystemErratum.apply({ uuid: 'SYS_ID', errata_ids: ['RHSA-1'] }, function(results) {
             expect(results.id).toBe(task.id);
         });

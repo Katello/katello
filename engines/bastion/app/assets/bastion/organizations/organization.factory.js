@@ -23,7 +23,7 @@
 angular.module('Bastion.organizations').factory('Organization',
     ['$resource', function($resource) {
 
-        return $resource('/katello/api/organizations/:id/:action',
+        return $resource('/api/content/organizations/:id/:action',
             {id: '@id'},
             {
                 query:  {method: 'GET', isArray: false},

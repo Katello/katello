@@ -42,7 +42,7 @@ describe('Factory: Product', function() {
     });
 
     it('provides a way to get a list of products', function() {
-        $httpBackend.expectGET('/katello/api/products').respond(products);
+        $httpBackend.expectGET('/api/products').respond(products);
 
         Product.query(function(products) {
             expect(products.records.length).toBe(2);
@@ -53,7 +53,7 @@ describe('Factory: Product', function() {
         var updatedProduct = products.records[0];
 
         updatedProduct.name = 'NewProductName';
-        $httpBackend.expectPUT('/katello/api/products/1').respond(updatedProduct);
+        $httpBackend.expectPUT('/api/products/1').respond(updatedProduct);
 
         Product.update({ id: 1 }, function(product) {
             expect(product).toBeDefined();
