@@ -6,7 +6,7 @@
       <button class="btn btn-danger"
               translate
               ng-disabled="system.readonly || removeSystems.workingMode"
-              ng-click="showConfirm = true; removeSystems.confirm = true"
+              ng-click="openModal()"
               ng-hide="removeSystems.workingMode">
         Remove Systems
       </button>
@@ -21,9 +21,10 @@
         {{ "Close" | translate }}
       </button>
 
-      <div alch-confirm-modal="performRemoveSystems()" show-confirm="removeSystems.confirm" translate>
-        Are you sure you want to remove the {{ getSelectedSystemIds().length }} systems(s) selected?
-      </div>
+      <div alch-modal="performRemoveSystems()" model="table"
+           modal-header='Remove {{ table.getSelected().length }} Systems?'
+           modal-body='Are you sure you want to remove the {{ table.getSelected().length }} systems(s) selected?'></div>
+
     </div>
   </header>
 

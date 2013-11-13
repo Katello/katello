@@ -11,14 +11,16 @@
       <i class="icon-refresh"></i>
       <span translate>Sync Now</span>
     </button>
+
+    <div alch-modal="removeRepository(repository)" model="repository"
+         modal-header='Remove Repository "{{repository.name}}"?'
+         modal-body='Are you sure you want to remove repository "{{ repository.name }}"?'></div>
+
     <button class="btn btn-danger"
-            ng-click="showConfirm = true"
+            ng-click="openModal()"
             ng-disabled="!repository.permissions.deletable">
       {{ "Remove Repository" | translate }}
     </button>
-    <div alch-confirm-modal="removeRepository(repository)" show-confirm="showConfirm">
-      <span translate>Are you sure you want to remove repository "{{repository.name}}"?</span>
-    </div>
   </div>
 </div>
 

@@ -9,11 +9,16 @@
     <h2 class="fl" translate>Product {{ product.name }}</h2>
 
     <div class="fr">
+
+      <div alch-modal="removeProduct(product)" model="product"
+           modal-header='Remove Product "{{product.name}}"?'
+           modal-body='Are you sure you want to remove product "{{ product.name }}"?'></div>
+
       <button class="btn"
               ng-class="{'btn-danger': product.permissions.deletable, 'btn-default': !product.permissions.deletable}"
               translate
               ng-hide="product.readonly"
-              ng-click="showConfirm = true"
+              ng-click="openModal()"
               title="{{ (!product.permissions.deletable &&
                      'You cannot remove this product because it was published to a content view or because you do not have permission.' | translate)
                      || '' }}"
@@ -24,9 +29,6 @@
         <i class="icon-remove"></i>
         {{ "Close" | translate }}
       </button>
-      <div alch-confirm-modal="removeProduct(product)" show-confirm="showConfirm">
-        <p translate>Are you sure you want to remove product "{{ product.name }}"?</p>
-      </div>
     </div>
   </header>
 

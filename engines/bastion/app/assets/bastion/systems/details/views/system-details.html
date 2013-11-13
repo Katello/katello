@@ -9,14 +9,16 @@
     <h2 class="fl" translate>System {{ system.name }}</h2>
 
     <div class="fr">
-      <button class="btn btn-danger" ng-disabled="system.readonly" ng-click="showConfirm = true" translate>Remove System</button>
+
+      <div alch-modal="removeSystem(system)" model="system"
+           modal-header='Remove System "{{system.name}}"?'
+           modal-body='Are you sure you want to remove system "{{ system.name }}"?'></div>
+
+      <button class="btn btn-danger" ng-disabled="system.readonly" ng-click="openModal()" translate>Remove System</button>
       <button class="btn btn-default" ui-sref="systems.index">
         <i class="icon-remove"></i>
         {{ "Close" | translate }}
       </button>
-      <div alch-confirm-modal="removeSystem(system)" show-confirm="showConfirm">
-        <p translate>Are you sure you want to remove system {{ system.name }}?</p>
-      </div>
     </div>
   </header>
 
