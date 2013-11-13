@@ -11,13 +11,13 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require "minitest_helper"
+require "katello_test_helper"
 
 class ProductsControllerTest < MiniTest::Rails::ActionController::TestCase
   fixtures :all
 
   def setup
-    @org = organizations(:acme_corporation)
+    @org = katello_organizations(:acme_corporation)
     @environment = environments(:library)
     @redhat_product = products(:redhat)
     @custom_product = products(:fedora)

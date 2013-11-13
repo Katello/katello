@@ -17,7 +17,7 @@ class ContentViewEnvironment < ActiveRecord::Base
   include Glue::Candlepin::Environment if Katello.config.use_cp
   include Glue if Katello.config.use_cp
 
-  belongs_to :content_view
+  belongs_to :content_view, :class_name => "Katello::ContentView"
   belongs_to :environment, :class_name => "KTEnvironment"
 
   # retrieve the owning environment for this content view environment.

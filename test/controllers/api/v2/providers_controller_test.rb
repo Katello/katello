@@ -11,7 +11,7 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require "minitest_helper"
+require "katello_test_helper"
 
 class Api::V2::ProvidersControllerTest < Minitest::Rails::ActionController::TestCase
 
@@ -23,7 +23,7 @@ class Api::V2::ProvidersControllerTest < Minitest::Rails::ActionController::Test
   end
 
   def models
-    @organization = organizations(:acme_corporation)
+    @organization = katello_organizations(:acme_corporation)
   end
 
   def permissions
