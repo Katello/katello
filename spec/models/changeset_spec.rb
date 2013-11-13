@@ -56,7 +56,7 @@ describe Changeset, :katello => true do
 
     it "changeset json should contain the types" do
       json = @changeset.as_json
-      json['promotion_changeset'][:action_type].wont_be_nil
+      json[:action_type].wont_be_nil
     end
 
     describe "scopes" do
