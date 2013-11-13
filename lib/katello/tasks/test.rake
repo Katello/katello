@@ -30,6 +30,7 @@ namespace :test do
         "#{Katello::Engine.root}/test/models/authorization/*_test.rb",
         "#{Katello::Engine.root}/test/models/repository_test.rb",
         "#{Katello::Engine.root}/test/models/system_test.rb",
+        "#{Katello::Engine.root}/test/models/distributor_test.rb",
         "#{Katello::Engine.root}/test/models/activation_key_test.rb",
         "#{Katello::Engine.root}/test/models/changeset_test.rb",
         "#{Katello::Engine.root}/test/models/content_view_test.rb",

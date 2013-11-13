@@ -10,10 +10,10 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'minitest_helper'
+require 'katello_test_helper'
 
-class DistributorTest < MiniTest::Rails::ActiveSupport::TestCase
-  fixtures :all
+module Katello
+class DistributorTest < ActiveSupport::TestCase
 
   def self.before_suite
     models = ["Organization", "KTEnvironment", "User", "Distributor"]
@@ -26,7 +26,7 @@ class DistributorTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def setup
-    @distributor = Distributor.find(distributors(:acme_distributor))
+    @distributor = Distributor.find(katello_distributors(:acme_distributor))
   end
 
   def test_create
@@ -40,4 +40,5 @@ class DistributorTest < MiniTest::Rails::ActiveSupport::TestCase
     assert @distributor.save!
   end
 
+end
 end
