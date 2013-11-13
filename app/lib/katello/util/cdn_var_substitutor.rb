@@ -50,14 +50,14 @@ module Util
     # values are loaded from CDN
     def substitute_vars(path_with_vars)
       if path_with_vars =~ /^(.*\$\w+)(.*)$/
-        prefix_with_vars, suffix_witout_vars =  $1, $2
+        prefix_with_vars, suffix_without_vars =  $1, $2
       else
-        prefix_with_vars, suffix_witout_vars = "", path_with_vars
+        prefix_with_vars, suffix_without_vars = "", path_with_vars
       end
 
       prefixes_without_vars = substitute_vars_in_prefix(prefix_with_vars)
       paths_without_vars = prefixes_without_vars.reduce({}) do |h, (substitutions, prefix_without_vars)|
-        h[substitutions] = prefix_without_vars + suffix_witout_vars
+        h[substitutions] = prefix_without_vars + suffix_without_vars
         h
       end
       return paths_without_vars
