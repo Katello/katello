@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 
-require "minitest_helper"
+require "katello_test_helper"
 
 class Api::V2::GpgKeysControllerTest < Minitest::Rails::ActionController::TestCase
 
@@ -23,7 +23,7 @@ class Api::V2::GpgKeysControllerTest < Minitest::Rails::ActionController::TestCa
   end
 
   def models
-    @organization = Organization.find(organizations(:acme_corporation))
+    @organization = Organization.find(katello_organizations(:acme_corporation))
     @product = Product.find(products(:fedora).id)
   end
 

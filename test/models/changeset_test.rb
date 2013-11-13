@@ -123,7 +123,7 @@ class ChangesetTest < ActiveSupport::TestCase
                                       :environment => @dev)
 
     assert changeset.add_content_view!(view)
-    assert_includes changeset.content_views.reload, view
+    assert_includes changeset.content_views.reload.map(&:id), view.id
     view.delete(@dev)
     refute_includes @dev.content_views(true), view
 

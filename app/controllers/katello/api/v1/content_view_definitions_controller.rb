@@ -209,8 +209,8 @@ class Api::V1::ContentViewDefinitionsController < Api::V1::ApiController
   private
 
   def _update_products!(params)
-    @products        = Product.readable(@organization).where(:cp_id                      => params[:products],
-                                                             "providers.organization_id" => @organization.id).joins(:provider)
+    @products        = Product.readable(@organization).joins(:provider)
+      .where(:cp_id => params[:products], "#{Provider.table_name}.organization_id" => @organization.id)
     deleted_products = @definition.products - @products
     added_products   = @products - @definition.products
 

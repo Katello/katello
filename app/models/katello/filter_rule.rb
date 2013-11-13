@@ -16,7 +16,7 @@ class FilterRule < ActiveRecord::Base
 
   belongs_to :filter, :inverse_of => :rules
 
-  serialize :parameters, HashWithIndifferentAccess
+  serialize :parameters, Hash
   PACKAGE         = Package::CONTENT_TYPE
   PACKAGE_GROUP   = PackageGroup::CONTENT_TYPE
   ERRATA          = Errata::CONTENT_TYPE
@@ -38,7 +38,7 @@ class FilterRule < ActiveRecord::Base
   end
 
   def parameters
-    write_attribute(:parameters, HashWithIndifferentAccess.new) unless self[:parameters]
+    write_attribute(:parameters, Hash.new) unless self[:parameters]
     self[:parameters]
   end
 

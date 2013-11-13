@@ -140,8 +140,8 @@ class Api::V1::FiltersController < Api::V1::ApiController
   end
 
   def _update_products!(params)
-    @products        = Product.readable(@organization).where(:cp_id                      => params[:products],
-                                                             "providers.organization_id" => @organization.id).joins(:provider)
+    @products        = Product.readable(@organization).joins(:provider)
+      .where(:cp_id => params[:products], "#{Provider.table_name}.organization_id" => @organization.id)
     deleted_products = @filter.products - @products
     added_products   = @products - @filter.products
     @filter.products -= deleted_products

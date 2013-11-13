@@ -10,10 +10,10 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require "minitest_helper"
+require "katello_test_helper"
 
-class Api::V1::PuppetModulesControllerTest < MiniTest::Rails::ActionController::TestCase
-  fixtures :all
+module Katello
+class Api::V1::PuppetModulesControllerTest < ActionController::TestCase
 
   def before_suite
     models = ["Organization", "KTEnvironment", "PuppetModule", "Repository", "Product", "Provider"]
@@ -22,11 +22,12 @@ class Api::V1::PuppetModulesControllerTest < MiniTest::Rails::ActionController::
   end
 
   def setup
-    @repo = Repository.find(repositories(:p_forge))
+    @repo = Repository.find(katello_repositories(:p_forge))
     @env_read_permission = UserPermission.new(:read_contents, :environments)
     @prod_read_permission = UserPermission.new(:read, :providers)
     @read_permission = @env_read_permission + @prod_read_permission
     @unauth_perms = [NO_PERMISSION, @env_read_permission, @prod_read_permission]
+    setup_controller_defaults
     login_user(User.find(users(:admin)))
   end
 
@@ -64,4 +65,5 @@ class Api::V1::PuppetModulesControllerTest < MiniTest::Rails::ActionController::
     get :show, :repository_id => @repo.id, :id => "abc-123"
     assert_response 404
   end
+end
 end

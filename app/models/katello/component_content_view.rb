@@ -16,6 +16,6 @@ class ComponentContentView < ActiveRecord::Base
 
   belongs_to :content_view_definition, :class_name => "ContentViewDefinitionBase",
                                        :inverse_of => :components
-  belongs_to :content_view, inverse_of: :component_content_views
+  belongs_to :content_view, :class_name => "Katello::ContentView", inverse_of: :component_content_views
 end
 end

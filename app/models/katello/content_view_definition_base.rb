@@ -99,7 +99,7 @@ class ContentViewDefinitionBase < ActiveRecord::Base
   def remove_repository(repository)
     filters.each do |filter_item|
       repo_exists = Repository.unscoped.joins(:filters).where(
-                      :filters => {:id => filter_item.id}, :id => repository.id).count
+                      Filter.table_name => {:id => filter_item.id}, :id => repository.id).count
       if repo_exists
         filter_item.repositories.delete(repository)
         filter_item.save!

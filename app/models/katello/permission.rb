@@ -17,7 +17,7 @@ class Permission < ActiveRecord::Base
   include Katello::Glue::ElasticSearch::Permission if Katello.config.use_elasticsearch
   before_destroy :check_locked # RAILS3458: must be before dependent associations http://tinyurl.com/rails3458
   belongs_to :resource_type, :inverse_of => :permission # TODO: belongs_to permission on the other side
-  belongs_to :organization, :inverse_of => :permissions
+  belongs_to :organization, :class_name => "Katello::Organization", :inverse_of => :permissions
   belongs_to :role, :inverse_of => :permissions
   # rubocop:disable HasAndBelongsToMany
   # TODO: change this into has_many :through association
