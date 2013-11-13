@@ -12,6 +12,8 @@
 
 module Katello
 class Role < ActiveRecord::Base
+  self.include_root_in_json = false
+
   include Katello::Authorization::Role
   include Katello::Glue::ElasticSearch::Role if Katello.config.use_elasticsearch
 

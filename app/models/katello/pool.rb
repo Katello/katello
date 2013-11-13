@@ -12,6 +12,8 @@
 
 module Katello
 class Pool < ActiveRecord::Base
+  self.include_root_in_json = false
+
   include Glue::Candlepin::Pool
   include Glue::ElasticSearch::Pool if Katello.config.use_elasticsearch
 

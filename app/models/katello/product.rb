@@ -12,6 +12,7 @@
 
 module Katello
 class Product < ActiveRecord::Base
+  self.include_root_in_json = false
 
   include Glue::ElasticSearch::Product if Katello.config.use_elasticsearch
   include Glue::Candlepin::Product if Katello.config.use_cp

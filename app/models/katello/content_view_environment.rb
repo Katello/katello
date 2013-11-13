@@ -12,6 +12,8 @@
 
 module Katello
 class ContentViewEnvironment < ActiveRecord::Base
+  self.include_root_in_json = false
+
   include Glue::Candlepin::Environment if Katello.config.use_cp
   include Glue if Katello.config.use_cp
 

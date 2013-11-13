@@ -13,6 +13,8 @@
 
 module Katello
 class System < ActiveRecord::Base
+  self.include_root_in_json = false
+
   include Hooks
   define_hooks :add_system_group_hook, :remove_system_group_hook,
                :as_json_hook
@@ -169,7 +171,6 @@ class System < ActiveRecord::Base
 
   def as_json(options)
     json = super(options)
-    json = json['system']
     json['environment'] = environment.as_json unless environment.nil?
     json['activation_key'] = activation_keys.as_json unless activation_keys.nil?
 

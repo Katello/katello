@@ -12,6 +12,8 @@
 
 module Katello
 class ContentViewVersionEnvironment < ActiveRecord::Base
+  self.include_root_in_json = false
+
   belongs_to :environment, :class_name => 'Katello::KTEnvironment'
   belongs_to :content_view_version
 

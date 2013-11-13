@@ -13,6 +13,7 @@
 
 module Katello
 class SystemSystemGroup < ActiveRecord::Base
+  self.include_root_in_json = false
 
   belongs_to :system
   belongs_to :system_group

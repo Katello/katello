@@ -13,6 +13,8 @@
 
 module Katello
 class Distributor < ActiveRecord::Base
+  self.include_root_in_json = false
+
   include Hooks
   define_hooks :as_json_hook
 

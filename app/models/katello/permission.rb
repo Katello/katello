@@ -12,6 +12,8 @@
 
 module Katello
 class Permission < ActiveRecord::Base
+  self.include_root_in_json = false
+
   include Katello::Glue::ElasticSearch::Permission if Katello.config.use_elasticsearch
   before_destroy :check_locked # RAILS3458: must be before dependent associations http://tinyurl.com/rails3458
   belongs_to :resource_type # TODO: belongs_to permission on the other side
