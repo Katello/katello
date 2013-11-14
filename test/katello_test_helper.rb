@@ -21,6 +21,7 @@ require "#{Katello::Engine.root}/test/support/vcr"
 require "#{Katello::Engine.root}/test/support/runcible"
 require 'support/auth_support'
 require 'support/controller_support'
+require 'support/search_service'
 
 FactoryGirl.definition_file_paths = ["#{Katello::Engine.root}/test/factories"]
 FactoryGirl.find_definitions

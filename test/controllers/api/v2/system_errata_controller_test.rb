@@ -13,13 +13,13 @@
 
 require "katello_test_helper"
 
-class Api::V2::SystemErrataControllerTest < Minitest::Rails::ActionController::TestCase
-
-  fixtures :all
+module Katello
+class Api::V2::SystemErrataControllerTest < ActionController::TestCase
 
   def self.before_suite
     models = ["System"]
     disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
+    super
   end
 
   def permissions
@@ -29,10 +29,11 @@ class Api::V2::SystemErrataControllerTest < Minitest::Rails::ActionController::T
   end
 
   def setup
+    setup_controller_defaults
     login_user(User.find(users(:admin)))
     @request.env['HTTP_ACCEPT'] = 'application/json'
 
-    @system = systems(:simple_server)
+    @system = katello_systems(:simple_server)
     permissions
   end
 
@@ -53,4 +54,5 @@ class Api::V2::SystemErrataControllerTest < Minitest::Rails::ActionController::T
     end
   end
 
+end
 end

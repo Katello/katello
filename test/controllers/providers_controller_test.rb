@@ -13,7 +13,7 @@
 
 require "katello_test_helper"
 
-class ProvidersControllerTest < MiniTest::Rails::ActionController::TestCase
+class ProvidersControllerTest < ActionController::TestCase
   fixtures :all
 
   def setup

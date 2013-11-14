@@ -12,7 +12,7 @@
 
 require "katello_test_helper"
 
-class ContentViewsControllerTest < MiniTest::Rails::ActionController::TestCase
+class ContentViewsControllerTest < ActionController::TestCase
   fixtures :all
 
   def self.before_suite
@@ -32,14 +32,14 @@ class ContentViewsControllerTest < MiniTest::Rails::ActionController::TestCase
 
     login_user(User.find(users(:admin)), @org)
 
-    @content_view_definition = content_view_definition_bases(:simple_cvd)
-    @content_view = content_views(:library_dev_view)
+    @content_view_definition = katello_content_view_definition_bases(:simple_cvd)
+    @content_view = katello_content_views(:library_dev_view)
     @content_view.content_view_definition = @content_view_definition
     @content_view.save!
   end
 
   test "DELETE destroy should be successful" do
-    content_view = content_views(:library_view)
+    content_view = katello_content_views(:library_view)
     content_view.content_view_definition = @content_view_definition
     content_view.save!
     # success notice created

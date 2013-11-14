@@ -12,7 +12,7 @@
 
 require "katello_test_helper"
 
-class FilterRulesControllerTest < MiniTest::Rails::ActionController::TestCase
+class FilterRulesControllerTest < ActionController::TestCase
   fixtures :all
 
   def self.before_suite
