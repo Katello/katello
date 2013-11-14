@@ -183,10 +183,7 @@ angular.module('alchemy')
                 deletable: '@deletable',
                 handleDelete: '&onDelete'
             },
-            template: '<div>' +
-                        '<input ng-model="model" ng-show="editMode"/>' +
-                        '<div alch-edit></div>' +
-                      '</div>'
+            templateUrl: 'incubator/views/alch-edit-text.html'
         };
     })
     .directive('alchEditTextarea', function() {
@@ -198,10 +195,7 @@ angular.module('alchemy')
                 handleSave: '&onSave',
                 handleCancel: '&onCancel'
             },
-            template: '<div>' +
-                        '<textarea rows=8 cols=40 ng-model="model" ng-show="editMode"></textarea>' +
-                        '<div alch-edit></div>' +
-                      '</div>'
+            templateUrl: 'incubator/views/alch-edit-textarea.html'
         };
     })
     .directive('alchEditCheckbox', function() {
@@ -213,10 +207,7 @@ angular.module('alchemy')
                 handleSave: '&onSave',
                 handleCancel: '&onCancel'
             },
-            template: '<div>' +
-                        '<input type="checkbox" ng-model="model" ng-show="editMode"/>' +
-                        '<div alch-edit></div>' +
-                      '</div>'
+            templateUrl: 'incubator/views/alch-edit-textarea.html'
         };
     })
     .directive('alchEditSelect', function() {
@@ -231,14 +222,7 @@ angular.module('alchemy')
                 handleCancel: '&onCancel',
                 editTrigger: '='
             },
-            template: '<div>' +
-                        '<select ng-model="selector" ' +
-                                 'ng-options="option.id as option.name for option in options" ' +
-                                 'ng-show="editMode">' +
-                                 '<option ng-show="false" value=""></option>' +
-                        '</select>' +
-                        '<div alch-edit></div>' +
-                      '</div>',
+            templateUrl: 'incubator/views/alch-edit-select.html',
             compile: function(element, attrs) {
                 var optionsFormat = attrs['optionsFormat'];
                 if (optionsFormat) {
