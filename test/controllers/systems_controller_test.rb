@@ -21,14 +21,14 @@ describe SystemsController do
                 "FilterRule", "ErratumRule", "PackageRule", "PackageGroupRule",
                 "ContentViewEnvironment", "ContentViewDefinition", "System"]
     disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
-    @system = systems(:simple_server)
+    @system = katello_systems(:simple_server)
     @org = @system.organization
     login_user(User.find(users(:admin)), @org)
   end
 
   describe "update"  do
     before do
-      @content_view = content_views(:library_dev_view)
+      @content_view = katello_content_views(:library_dev_view)
       @cv_id = @content_view.id
       @env_id = @system.environment.id
       @subscribe_permission = UserPermission.new(:subscribe, :content_views, @cv_id, @content_view.organization)

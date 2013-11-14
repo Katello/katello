@@ -13,13 +13,13 @@
 
 require "katello_test_helper"
 
-class Api::V2::ProvidersControllerTest < Minitest::Rails::ActionController::TestCase
-
-  fixtures :all
+module Katello
+class Api::V2::ProvidersControllerTest < ActionController::TestCase
 
   def self.before_suite
     models = ["Provider"]
     disable_glue_layers(["ElasticSearch"], models)
+    super
   end
 
   def models
@@ -34,9 +34,10 @@ class Api::V2::ProvidersControllerTest < Minitest::Rails::ActionController::Test
   end
 
   def setup
+    setup_controller_defaults
     login_user(User.find(users(:admin)))
     @request.env['HTTP_ACCEPT'] = 'application/json'
-    @fake_search_service = @controller.load_search_service(FakeSearchService.new)
+    @fake_search_service = @controller.load_search_service(Support::SearchService::FakeSearchService.new)
     models
     permissions
   end
@@ -80,4 +81,5 @@ class Api::V2::ProvidersControllerTest < Minitest::Rails::ActionController::Test
     end
   end
 
+end
 end

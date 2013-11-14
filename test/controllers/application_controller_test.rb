@@ -12,7 +12,7 @@
 
 require 'katello_test_helper'
 
-class AControllerTest < MiniTest::Rails::ActionController::TestCase
+class AControllerTest < ActionController::TestCase
   ERROR_MESSAGE = 'user should not see this'
 
   class AController < ApplicationController

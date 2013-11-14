@@ -13,14 +13,14 @@
 
 require "katello_test_helper"
 
-class ProductsControllerTest < MiniTest::Rails::ActionController::TestCase
+class ProductsControllerTest < ActionController::TestCase
   fixtures :all
 
   def setup
     @org = katello_organizations(:acme_corporation)
-    @environment = environments(:library)
-    @redhat_product = products(:redhat)
-    @custom_product = products(:fedora)
+    @environment = katello_environments(:library)
+    @redhat_product = katello_products(:redhat)
+    @custom_product = katello_products(:fedora)
     login_user(User.find(users(:admin)), @org)
     models = ["Organization", "KTEnvironment"]
     services = ["Pulp", "ElasticSearch", "Foreman", "Candlepin"]

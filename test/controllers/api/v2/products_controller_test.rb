@@ -13,19 +13,19 @@
 
 require "katello_test_helper"
 
-class Api::V2::ProductsControllerTest < Minitest::Rails::ActionController::TestCase
-
-  fixtures :all
+module Katello
+class Api::V2::ProductsControllerTest < ActionController::TestCase
 
   def self.before_suite
     models = ["Product"]
     disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
+    super
   end
 
   def models
     @organization = katello_organizations(:acme_corporation)
-    @provider = providers(:fedora_hosted)
-    @product = products(:empty_product)
+    @provider = katello_providers(:fedora_hosted)
+    @product = katello_products(:empty_product)
   end
 
   def permissions
@@ -36,9 +36,10 @@ class Api::V2::ProductsControllerTest < Minitest::Rails::ActionController::TestC
   end
 
   def setup
+    setup_controller_defaults
     login_user(User.find(users(:admin)))
     @request.env['HTTP_ACCEPT'] = 'application/json'
-    @fake_search_service = @controller.load_search_service(FakeSearchService.new)
+    @fake_search_service = @controller.load_search_service(Support::SearchService::FakeSearchService.new)
     models
     permissions
   end
@@ -131,4 +132,5 @@ class Api::V2::ProductsControllerTest < Minitest::Rails::ActionController::TestC
     end
   end
 
+end
 end

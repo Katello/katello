@@ -24,6 +24,7 @@ namespace :test do
       t.libs << ["test", "#{Katello::Engine.root}/test"]
       t.test_files = [
         "#{Katello::Engine.root}/test/controllers/api/v1/*_test.rb",
+        "#{Katello::Engine.root}/test/controllers/api/v2/*_test.rb",
         "#{Katello::Engine.root}/test/glue/**/*_test.rb",
         "#{Katello::Engine.root}/test/helpers/*_test.rb",
         "#{Katello::Engine.root}/test/lib/navigation/*_test.rb",
