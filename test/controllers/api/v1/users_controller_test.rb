@@ -10,11 +10,17 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'minitest_helper'
+require 'katello_test_helper'
 
-class Api::V1::UsersControllerTest < MiniTest::Rails::ActionController::TestCase
-  def test_list_owners_username
-    assert_routing "/api/users/admin@mail.com/owners", :controller => "api/v1/users",
-      :action => "list_owners", :username => "admin@mail.com"
+module Katello
+class Api::V1::UsersControllerTest < ActionController::TestCase
+  def setup
+    setup_engine_routes
   end
+
+  def test_list_owners_username
+    assert_routing "/api/users/admin@mail.com/owners", :controller => "katello/api/v1/users",
+      :action => "list_owners", :login => "admin@mail.com"
+  end
+end
 end

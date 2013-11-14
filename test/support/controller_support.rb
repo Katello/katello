@@ -10,7 +10,11 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+require 'support/auth_support'
+
 module ControllerSupport
+  include Katello::AuthorizationSupportMethods
+
   def check_permission(params)
     permissions = params[:permission].is_a?(Array) ? params[:permission] : [params[:permission]]
 
@@ -19,7 +23,7 @@ module ControllerSupport
       user = no_permission_user
 
       if permission
-        permission.call(::AuthorizationSupportMethods::UserPermissionsGenerator.new(user))
+        permission.call(Katello::AuthorizationSupportMethods::UserPermissionsGenerator.new(user))
       end
 
       action = params[:action]
@@ -64,14 +68,9 @@ module ControllerSupport
   end
 
   def no_permission_user
-    begin
-      user = User.find(users(:no_perms_user))
-      user.own_role.permissions.delete_all
-      user
-    rescue
-      # fixtures not loaded
-      FactoryGirl.create(:user)
-    end
+    user = User.find(users(:restricted))
+    user.own_role.permissions.delete_all
+    user
   end
 end
 

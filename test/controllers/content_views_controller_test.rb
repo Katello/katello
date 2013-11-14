@@ -10,7 +10,7 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require "minitest_helper"
+require "katello_test_helper"
 
 class ContentViewsControllerTest < MiniTest::Rails::ActionController::TestCase
   fixtures :all
@@ -28,7 +28,7 @@ class ContentViewsControllerTest < MiniTest::Rails::ActionController::TestCase
   end
 
   def setup
-    @org = organizations(:acme_corporation)
+    @org = katello_organizations(:acme_corporation)
 
     login_user(User.find(users(:admin)), @org)
 

@@ -10,7 +10,7 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'minitest_helper'
+require 'katello_test_helper'
 
 module ContentViewDefinitionSupport
 
@@ -18,6 +18,7 @@ module ContentViewDefinitionSupport
     read_permission = lambda do |user|
       user.can(:read, :content_view_definitions, [cvd.id], org)
     end
+
     update_permission = lambda do |user|
       user.can(:update, :content_view_definitions, [cvd.id], org)
     end
@@ -25,6 +26,7 @@ module ContentViewDefinitionSupport
     create_permission = lambda do |user|
       user.can(:create, :content_view_definitions, nil, org)
     end
+
     delete_permission = lambda do |user|
       user.can(:delete, :content_view_definitions, [cvd.id], org)
     end
@@ -32,14 +34,13 @@ module ContentViewDefinitionSupport
     publish_permission = lambda do |user|
       user.can(:publish, :content_view_definitions, [cvd.id], org)
     end
-    OpenStruct.new(
-      {
-          :readable => [read_permission, update_permission, create_permission,
-                        delete_permission, publish_permission],
-          :editable => [update_permission, create_permission],
-          :read_only => [read_permission, delete_permission, publish_permission]
-      })
 
+    OpenStruct.new({
+      :readable => [read_permission, update_permission, create_permission,
+                    delete_permission, publish_permission],
+      :editable => [update_permission, create_permission],
+      :read_only => [read_permission, delete_permission, publish_permission]
+    })
   end
 
 end

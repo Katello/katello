@@ -47,7 +47,7 @@ class Changeset < ActiveRecord::Base
   belongs_to :environment, :class_name => "Katello::KTEnvironment"
   belongs_to :task_status
   has_many :changeset_content_views, :dependent => :destroy
-  has_many :content_views, :through => :changeset_content_views
+  has_many :content_views, :through => :changeset_content_views, :class_name => "Katello::ContentView"
 
   # find changesets in given state/states
   scope :with_state, lambda { |*states| where(:state => states.map(&:to_s)) }

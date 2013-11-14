@@ -15,7 +15,7 @@ require "katello_test_helper"
 module Katello
 describe Api::V2::ChangesetsController do
   before do
-    @routes = Katello::Engine.routes
+    setup_engine_routes
   end
   describe "routing" do
 
