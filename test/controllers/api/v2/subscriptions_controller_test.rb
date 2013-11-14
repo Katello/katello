@@ -13,18 +13,18 @@
 
 require "katello_test_helper"
 
-class Api::V2::SubscriptionsControllerTest < Minitest::Rails::ActionController::TestCase
-
-  fixtures :all
+module Katello
+class Api::V2::SubscriptionsControllerTest < ActionController::TestCase
 
   def self.before_suite
     models = ["System"]
     disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
+    super
   end
 
   def models
-    @system = systems(:simple_server)
-    @products = products
+    @system = katello_systems(:simple_server)
+    @products = katello_products
   end
 
   def permissions
@@ -35,6 +35,7 @@ class Api::V2::SubscriptionsControllerTest < Minitest::Rails::ActionController::
   end
 
   def setup
+    setup_controller_defaults
     login_user(User.find(users(:admin)))
     @request.env['HTTP_ACCEPT'] = 'application/json'
     System.any_instance.stubs(:subscribe).returns(true)
@@ -43,7 +44,7 @@ class Api::V2::SubscriptionsControllerTest < Minitest::Rails::ActionController::
     System.any_instance.stubs(:filtered_pools).returns([])
     System.any_instance.stubs(:releaseVer).returns(1)
     System.any_instance.stubs(:consumed_entitlements).returns([])
-    @fake_search_service = @controller.load_search_service(FakeSearchService.new)
+    @fake_search_service = @controller.load_search_service(Support::SearchService::FakeSearchService.new)
 
     models
     permissions
@@ -88,4 +89,5 @@ class Api::V2::SubscriptionsControllerTest < Minitest::Rails::ActionController::
     assert_template 'api/v2/subscriptions/show'
   end
 
+end
 end

@@ -13,9 +13,8 @@
 
 require "katello_test_helper"
 
-class Api::V2::SystemsBulkActionsControllerTest < Minitest::Rails::ActionController::TestCase
-
-  fixtures :all
+module Katello
+class Api::V2::SystemsBulkActionsControllerTest < ActionController::TestCase
 
   def self.before_suite
     models = ["System"]
@@ -30,17 +29,18 @@ class Api::V2::SystemsBulkActionsControllerTest < Minitest::Rails::ActionControl
   end
 
   def setup
+    setup_controller_defaults
     login_user(User.find(users(:admin)))
     @request.env['HTTP_ACCEPT'] = 'application/json'
 
-    @system1 = systems(:simple_server)
-    @system2 = systems(:simple_server2)
+    @system1 = katello_systems(:simple_server)
+    @system2 = katello_systems(:simple_server2)
     @system_ids = [@system1.id, @system2.id]
     @systems = [@system1, @system2]
     @system_ids = @systems.map(&:id)
 
-    @system_group1 = system_groups(:simple_group)
-    @system_group2 = system_groups(:another_simple_group)
+    @system_group1 = katello_system_groups(:simple_group)
+    @system_group2 = katello_system_groups(:another_simple_group)
 
     permissions
 
@@ -166,4 +166,5 @@ class Api::V2::SystemsBulkActionsControllerTest < Minitest::Rails::ActionControl
     end
   end
 
+end
 end

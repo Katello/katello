@@ -68,7 +68,7 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
     if @product
       options[:filters] << {:term => {:product_id => @product.id}}
     else
-      product_ids = Product.readable(@organization).pluck("products.id")
+      product_ids = Product.readable(@organization).pluck("#{Product.table_name}.id")
       options[:filters] << [{:terms => {:product_id => product_ids}}]
     end
 

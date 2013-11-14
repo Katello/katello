@@ -12,7 +12,7 @@
 
 require "katello_test_helper"
 
-class FiltersControllerTest < MiniTest::Rails::ActionController::TestCase
+class FiltersControllerTest < ActionController::TestCase
   fixtures :all
 
   def self.before_suite
@@ -30,8 +30,8 @@ class FiltersControllerTest < MiniTest::Rails::ActionController::TestCase
 
     login_user(User.find(users(:admin)), @org)
 
-    @product = Product.find(products(:redhat).id)
-    @repo = Repository.find(repositories(:fedora_17_x86_64).id)
+    @product = Product.find(katello_products(:redhat).id)
+    @repo = Repository.find(katello_repositories(:fedora_17_x86_64).id)
 
     @filter = filters(:populated_filter)
   end
@@ -137,7 +137,7 @@ class FiltersControllerTest < MiniTest::Rails::ActionController::TestCase
   end
 
   test "PUT update - add a puppet repository" do
-    puppet_repo = repositories(:p_forge)
+    puppet_repo = katello_repositories(:p_forge)
     @filter.content_view_definition.puppet_repository_id = puppet_repo.id
 
     # success notice created

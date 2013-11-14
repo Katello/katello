@@ -13,19 +13,19 @@
 
 require "katello_test_helper"
 
-class Api::V2::RepositoriesControllerTest < Minitest::Rails::ActionController::TestCase
-
-  fixtures :all
+module Katello
+class Api::V2::RepositoriesControllerTest < ActionController::TestCase
 
   def self.before_suite
     models = ["Repository", "Product"]
     disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
+    super
   end
 
   def models
     @organization = Organization.find(katello_organizations(:acme_corporation))
-    @repository = repositories(:fedora_17_unpublished)
-    @product = products(:fedora)
+    @repository = katello_repositories(:fedora_17_unpublished)
+    @product = katello_products(:fedora)
   end
 
   def permissions
@@ -38,10 +38,11 @@ class Api::V2::RepositoriesControllerTest < Minitest::Rails::ActionController::T
   end
 
   def setup
+    setup_controller_defaults
     login_user(User.find(users(:admin)))
     User.current = User.find(users(:admin))
     @request.env['HTTP_ACCEPT'] = 'application/json'
-    @fake_search_service = @controller.load_search_service(FakeSearchService.new)
+    @fake_search_service = @controller.load_search_service(Support::SearchService::FakeSearchService.new)
     models
     permissions
   end
@@ -87,7 +88,7 @@ class Api::V2::RepositoriesControllerTest < Minitest::Rails::ActionController::T
   end
 
   def test_create_with_gpg_key
-    key = GpgKey.find(gpg_keys('fedora_gpg_key'))
+    key = GpgKey.find(katello_gpg_keys('fedora_gpg_key'))
 
     product = MiniTest::Mock.new
     product.expect(:gpg_key, key)
@@ -187,4 +188,5 @@ class Api::V2::RepositoriesControllerTest < Minitest::Rails::ActionController::T
     end
   end
 
+end
 end
