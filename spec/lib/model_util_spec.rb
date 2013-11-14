@@ -12,49 +12,43 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'spec_helper'
+require 'katello_test_helper'
 
+module Katello
 describe Util::Model do
-
-  it "should work with tag" do
-    Util::Model.table_to_class("tag").class_name.should match("Tag")
-  end
-
-  it "should work with kt_environment" do
-    Util::Model.table_to_class("kt_environment").class_name.should match("KTEnvironment")
-  end
 
   it "should return tags for organization" do
     disable_org_orchestration
     @o1 = Organization.create!(:name=>'test_org1', :label=> 'test_org1')
     @provider = Provider.create!(:provider_type=>Provider::CUSTOM, :name=>"foo1", :organization=>@o1)
     @provider2 = Provider.create!(:provider_type=>Provider::CUSTOM, :name=>"foo2", :organization=>@o1)
-    Tag.tags_for("providers", @o1.id).size.should be(2)
+    Tag.tags_for("providers", @o1.id).size.must_equal(2)
   end
 
-  context "labelize tests" do
-    specify {Util::Model::labelize("sweet home alabama").should == "sweet_home_alabama"}
-    specify {Util::Model::labelize("sweet-home+alabama").should == "sweet-home_alabama"}
-    specify {Util::Model::labelize("sweet home 谷歌地球").should_not  =~ /sweet*/}
-    specify {Util::Model::labelize("sweet home 谷歌地球").should  =~ /^[a-zA-Z0-9\-_]+$/}
-    specify {Util::Model::labelize('a' * 129).length.should <= 128 }
+  describe "labelize tests" do
+    specify {Util::Model::labelize("sweet home alabama").must_equal "sweet_home_alabama"}
+    specify {Util::Model::labelize("sweet-home+alabama").must_equal "sweet-home_alabama"}
+    specify {Util::Model::labelize("sweet home 谷歌地球").wont_match /sweet*/}
+    specify {Util::Model::labelize("sweet home 谷歌地球").must_match /^[a-zA-Z0-9\-_]+$/}
+    specify {Util::Model::labelize('a' * 129).length.must_be(:<=, 128) }
   end
 
-  context "setup_label_from_name" do
+  describe "setup_label_from_name" do
     before(:each) do
       disable_org_orchestration
       @product = Product.new(:name => "AOL4")
-      @product.stub(:provider).and_return(mock_model("Provider"))
-      @product.provider.stub(:redhat_provider?).and_return(true)
-      @product.stub(:provider_id).and_return(1)
-      lib = mock_model("KTEnvironment", :library => true)
-      @product.stub(:environments).and_return([lib])
+      @product.stubs(:provider).returns({})
+      @product.provider.stubs(:redhat_provider?).returns(true)
+      @product.stubs(:provider_id).returns(1)
+      lib = OpenStruct.new(:library => true)
+      @product.stubs(:environments).returns([lib])
     end
 
     it "should populate label before validation" do
-      @product.should be_valid
-      @product.label.should eql("AOL4")
+      @product.must_be :valid?
+      @product.label.must_equal("AOL4")
     end
   end
 
+end
 end
