@@ -26,6 +26,9 @@ class System < ActiveRecord::Base
   include Authorization::System
   include AsyncOrchestration
 
+  attr_accessible :name, :uuid, :description, :location, :environment, :content_view,
+                  :environment_id, :content_view_id
+
   after_rollback :rollback_on_create, :on => :create
 
   acts_as_reportable

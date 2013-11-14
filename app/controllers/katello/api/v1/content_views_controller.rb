@@ -41,6 +41,7 @@ class Api::V1::ContentViewsController < Api::V1::ApiController
   param :name, String, :desc => "content view name", :required => false
   param :id, :identifier, :desc => "content view id", :required => false
   def index
+    query_params.delete(:content_view)
     query_params.delete(:environment_id)
     query_params.delete(:organization_id)
 
