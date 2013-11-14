@@ -27,6 +27,8 @@ module Glue::Candlepin::Consumer
 
       as_json_hook :consumer_as_json
 
+      attr_accessible :cp_type, :owner, :serviceLevel, :installedProducts, :facts
+
       lazy_accessor :href, :facts, :cp_type, :href, :idCert, :owner, :lastCheckin, :created, :guestIds,
                     :installedProducts, :autoheal, :releaseVer, :serviceLevel, :capabilities, :entitlementStatus,
                     :initializer => (lambda do |s|

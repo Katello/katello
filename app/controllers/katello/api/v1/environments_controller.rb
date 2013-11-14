@@ -80,8 +80,8 @@ class Api::V1::EnvironmentsController < Api::V1::ApiController
     {
         :create     => { :environment => %w(name label description prior) },
         :update     => { :environment => %w(name description prior) },
-        :index      => [:name, :library, :id, :organization_id],
-        :rhsm_index => [:name, :library, :id, :organization_id]
+        :index      => [:name, :library, :id, :organization_id, :environment],
+        :rhsm_index => [:name, :library, :id, :organization_id, :environment]
     }
   end
 
@@ -101,6 +101,7 @@ class Api::V1::EnvironmentsController < Api::V1::ApiController
   api :GET, "/organizations/:organization_id/environments", "List environments in an organization"
   param_group :search_params
   def index
+    query_params.delete(:environment)
     query_params[:organization_id] = @organization.id
     @environments                  = KTEnvironment.where query_params
 
@@ -219,13 +220,13 @@ class Api::V1::EnvironmentsController < Api::V1::ApiController
 
   def get_content_view_environments(name = nil)
     environments = ContentViewEnvironment.joins(:content_view => :organization).
-        where("organizations.id = ?", @organization.id)
-    environments = environments.where("content_view_environments.name = ?", name) if name
+        where("#{Katello::Organization.table_name}.id = ?", @organization.id)
+    environments = environments.where("#{Katello::ContentViewEnvironment.table_name}.name = ?", name) if name
 
     if environments.empty?
       environments = ContentViewEnvironment.joins(:content_view => :organization).
-          where("organizations.id = ?", @organization.id)
-      environments = environments.where("content_view_environments.label = ?", name) if name
+          where("#{Katello::Organization.table_name}.id = ?", @organization.id)
+      environments = environments.where("#{Katello::ContentViewEnvironment.table_name}.label = ?", name) if name
     end
 
     # remove any content view environments that aren't readable

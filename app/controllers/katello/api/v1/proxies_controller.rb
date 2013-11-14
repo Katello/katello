@@ -18,8 +18,9 @@ class Api::V1::ProxiesController < Api::V1::ApiController
   # TODO: break up method
   # rubocop:disable MethodLength
   def rules
+
     proxy_test = lambda do
-      route, _, params = Rails.application.routes.router.recognize(request) do |rte, match, parameters|
+      route, _, params = Engine.routes.router.recognize(request) do |rte, match, parameters|
         break rte, match, parameters if rte.name
       end
 
