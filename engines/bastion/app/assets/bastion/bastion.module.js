@@ -25,6 +25,7 @@ angular.module('Bastion', [
     'alch-templates',
     'ngSanitize',
     'ui.bootstrap',
+    'angular-blocks',
     'Katello.globals',
     'Bastion.i18n',
     'Bastion.menu',
