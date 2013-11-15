@@ -17,7 +17,7 @@ class Api::V1::RootController < Api::V1::ApiController
   skip_before_filter :require_user
 
   def resource_list
-    all_routes = Rails.application.routes.routes
+    all_routes = Engine.routes.routes
     all_routes = all_routes.collect { |r| r.path.spec.to_s }
 
     api_root_routes = all_routes.select do |path|

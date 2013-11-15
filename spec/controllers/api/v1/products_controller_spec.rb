@@ -11,13 +11,13 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require 'katello_test_helper'
-
-describe Api::V1::ProductsController, :katello => true do
-  include LoginHelperMethods
+module Katello
+describe Api::V1::ProductsController do
+  describe "katello" do
+  include OrganizationHelperMethods
   include AuthorizationHelperMethods
   include ProductHelperMethods
   include RepositoryHelperMethods
-  include LocaleHelperMethods
 
   let(:user_with_read_permissions) { user_with_permissions { |u| u.can([:read], :providers, @provider.id, @organization) } }
   let(:user_without_read_permissions) { user_without_permissions }
@@ -32,7 +32,7 @@ describe Api::V1::ProductsController, :katello => true do
 
     @organization = new_test_org
 
-    @test_gpg_content = File.open("#{Rails.root}/spec/assets/gpg_test_key").read
+    @test_gpg_content = File.open("#{Engine.root}/spec/assets/gpg_test_key").read
 
     @environment = create_environment(:name => "foo123", :label => "foo123", :organization => @organization, :prior => @organization.library)
     @provider    = Provider.create!(:name         => "provider", :provider_type => Provider::CUSTOM,
@@ -56,7 +56,7 @@ describe Api::V1::ProductsController, :katello => true do
 
     Product.stubs(:select).returns(@products)
     @product.stubs(:repos).returns(@repositories)
-    @product.stubs(:sync_state => ::PulpSyncStatus::Status::NOT_SYNCED)
+    @product.stubs(:sync_state => Katello::PulpSyncStatus::Status::NOT_SYNCED)
 
     @request.env["HTTP_ACCEPT"] = "application/json"
     setup_controller_defaults_api
@@ -75,7 +75,7 @@ describe Api::V1::ProductsController, :katello => true do
 
     subject { req }
 
-    it { must_be_success }
+    it {req.must_respond_with(:success) }
   end
 
   describe "update product" do
@@ -94,7 +94,7 @@ describe Api::V1::ProductsController, :katello => true do
 
     it_should_behave_like "protected action"
 
-    it_should_behave_like "bad request" do
+    describe "invalid params" do
       let(:req) do
         bad_req = { :id              => @product.cp_id,
                     :organization_id => @organization.label,
@@ -104,12 +104,13 @@ describe Api::V1::ProductsController, :katello => true do
         }.with_indifferent_access
         put :update, bad_req
       end
+      it_should_behave_like "bad request"
     end
 
     context "custom product" do
       subject { req }
 
-      it { must_be_success }
+      it { req.must_respond_with(:success) }
 
       it "should change allowed attributes" do
         @product.expects(:gpg_key_name=)
@@ -132,7 +133,7 @@ describe Api::V1::ProductsController, :katello => true do
 
       it do
         req
-        response.code.should eq("400")
+        response.code.must_equal("400")
       end
     end
   end
@@ -141,7 +142,10 @@ describe Api::V1::ProductsController, :katello => true do
     before do
       @dumb_prod = { :id => @product.id }
       Product.stubs(:all_readable).returns(@products)
-      @products.stub_chain(:select, :joins, :where, :all).returns(@dumb_prod)
+      @products.stubs(:select).returns(stub(:joins => stub(:where =>
+                                                  stub(:all => @dumb_prod))))
+
+#      @products.stub_chain(:select, :joins, :where, :all).returns(@dumb_prod)
     end
 
     it "should find organization" do
@@ -213,12 +217,13 @@ describe Api::V1::ProductsController, :katello => true do
       @content_view = build_stubbed(:content_view)
       @product.stubs(:readable?).returns(true)
       @repositories.stubs(:where).returns(@repositories)
-      ContentView.stub_chain(:readable, :find).returns(@content_view)
+      ContentView.stubs(:readable).returns(stub(:find => @content_view))
       @product.expects(:repos).with(@environment, nil, @content_view)
       get 'repositories', :organization_id => @organization.label,
         :environment_id => @environment.id, :id => @product.id,
         :content_view_id => @content_view.id
     end
   end
-
+end
+end
 end

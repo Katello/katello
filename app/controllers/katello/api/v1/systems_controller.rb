@@ -100,7 +100,7 @@ class Api::V1::SystemsController < Api::V1::ApiController
   api :POST, "/environments/:environment_id/systems", "Register a system in environment"
   param_group :system
   def create
-    @system = System.create!(params.merge(:environment  => @environment,
+    @system = System.create!(params.except(:format).merge(:environment  => @environment,
                                           :content_view => @content_view,
                                           :serviceLevel => params[:service_level]))
     respond_for_create
@@ -116,7 +116,7 @@ See virt-who tool for more details.
 DESC
   # TODO: refactor render
   def hypervisors_update
-    cp_response, _ = System.register_hypervisors(@environment, @content_view, params.except(:controller, :action))
+    cp_response, _ = System.register_hypervisors(@environment, @content_view, params.except(:controller, :action, :format))
     render :json => cp_response
   end
 
