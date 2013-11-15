@@ -58,7 +58,7 @@ module Util
             end
             Thread.current[:user] = o
 
-            if Katello.config.use_pulp && o
+            if Katello.config.use_pulp && o && o.respond_to?(:remote_id)
               uri = URI.parse(Katello.config.pulp.url)
 
               Katello.pulp_server = Runcible::Instance.new(
