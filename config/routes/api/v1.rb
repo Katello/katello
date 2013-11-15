@@ -154,7 +154,13 @@ Katello::Engine.routes.draw do
             match '/serials/:serial_id' => 'subscriptions#destroy_by_serial', :via => :delete
           end
         end
-        resource :packages, :action => [:create, :update, :destroy], :controller => :system_packages
+
+        resources :packages, :only => [:create], :controller => :system_packages do
+          collection do
+            put :update
+            delete :destroy
+          end
+        end
       end
 
       resources :distributors, :only => [:show, :destroy, :create, :index, :update] do

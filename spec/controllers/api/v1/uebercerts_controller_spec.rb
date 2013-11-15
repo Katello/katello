@@ -11,15 +11,14 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require 'katello_test_helper'
-
+module Katello
 describe Api::V1::UebercertsController do
-  include LoginHelperMethods
   include AuthorizationHelperMethods
   OWNER_KEY = "some_org"
 
   let(:org) { Organization.new(:label => OWNER_KEY) }
   before(:each) do
-    login_user
+    setup_controller_defaults_api
     @controller.stubs(:get_organization).returns(org)
   end
 
@@ -55,4 +54,5 @@ describe Api::V1::UebercertsController do
       get :show, :organization_id => OWNER_KEY
     end
   end
+end
 end

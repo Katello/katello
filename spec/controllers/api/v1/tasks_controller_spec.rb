@@ -11,9 +11,8 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require 'katello_test_helper'
-
+module Katello
 describe Api::V1::TasksController do
-  include LoginHelperMethods
   include AuthorizationHelperMethods
   include OrchestrationHelper
   include OrganizationHelperMethods
@@ -31,7 +30,7 @@ describe Api::V1::TasksController do
 
     Organization.stubs(:find_by_label).returns(@organization)
 
-    @task = mock(TaskStatus)
+    @task = mock()
     @task.stubs(:organization).returns(@organization)
     @task.stubs(:to_json).returns({})
     @task.stubs(:refresh).returns({})
@@ -78,4 +77,5 @@ describe Api::V1::TasksController do
     end
   end
 
+end
 end

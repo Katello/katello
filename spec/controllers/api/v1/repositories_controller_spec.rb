@@ -11,11 +11,10 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require 'katello_test_helper'
-
-describe Api::V1::RepositoriesController, :katello => true do
+module Katello
+describe Api::V1::RepositoriesController do
+  describe "(katello)" do
   include OrchestrationHelper
-  include LoginHelperMethods
-  include LocaleHelperMethods
   include AuthorizationHelperMethods
   include OrchestrationHelper
   include ProductHelperMethods
@@ -23,7 +22,7 @@ describe Api::V1::RepositoriesController, :katello => true do
   include OrganizationHelperMethods
 
   let(:task_stubs) do
-    @task = mock(PulpTaskStatus)
+    @task = mock()
     @task.stubs(:save!).returns(true)
     @task.stubs(:to_json).returns("")
     @task
@@ -52,7 +51,8 @@ describe Api::V1::RepositoriesController, :katello => true do
       PulpSyncStatus.stubs(:using_pulp_task).returns(task_stubs)
       Katello.pulp_server.extensions.package_group.stubs(:all => {})
       Katello.pulp_server.extensions.package_category.stubs(:all => {})
-      @test_gpg_content = File.open("#{Rails.root}/spec/assets/gpg_test_key").read
+      @test_gpg_content = File.open("#{Engine.root}/spec/assets/gpg_test_key").read
+      setup_engine_routes
     end
 
     describe "for create" do
@@ -156,14 +156,14 @@ describe Api::V1::RepositoriesController, :katello => true do
       @request.env["HTTP_ACCEPT"] = "application/json"
       setup_controller_defaults_api
 
-      @test_gpg_content = File.open("#{Rails.root}/spec/assets/gpg_test_key").read
+      @test_gpg_content = File.open("#{Engine.root}/spec/assets/gpg_test_key").read
 
       disable_authorization_rules
     end
 
     describe "show a repository" do
       it 'should call pulp glue layer' do
-        repo_mock = mock(Repository)
+        repo_mock = mock()
         Repository.expects(:find).with("1").returns(repo_mock)
         repo_mock.expects(:to_hash)
         get 'show', :id => '1'
@@ -224,7 +224,7 @@ describe Api::V1::RepositoriesController, :katello => true do
 
       context 'there is already a repo for the product with the same name' do
         it "should notify about conflict" do
-          @product.stubs(:add_repo).returns { raise Errors::ConflictException }
+          @product.stubs(:add_repo).raises(Errors::ConflictException)
           post 'create', :name => 'repo_1', :label => 'repo_1', :url => 'http://www.repo.org', :product_id => 'product_1', :organization_id => @organization.label
           response.code.must_equal '409'
         end
@@ -300,21 +300,21 @@ describe Api::V1::RepositoriesController, :katello => true do
 
     describe "update a repository" do
       before do
-        @repo = mock(Repository)
+        @repo = mock
       end
 
       context "Bad request" do
         before { @repo.stubs(:redhat? => false) }
-        it_should_behave_like "bad request" do
-          let(:req) do
-            bad_req = { :id         => 123,
-                        :repository =>
-                            { :bad_foo      => "mwahahaha",
-                              :gpg_key_name => "Gpg Key" }
-            }.with_indifferent_access
-            put :update, bad_req
-          end
+        let(:req) do
+          bad_req = { :id         => 123,
+                      :repository =>
+                          { :bad_foo      => "mwahahaha",
+                            :gpg_key_name => "Gpg Key" }
+          }.with_indifferent_access
+          put :update, bad_req
         end
+
+        it_should_behave_like "bad request"
       end
 
       context "Custom repo" do
@@ -352,7 +352,7 @@ describe Api::V1::RepositoriesController, :katello => true do
       context 'there is already a repo for the product with the same name' do
         before do
           Product.stubs(:find_by_cp_id => @product)
-          @product.stubs(:add_repo).returns { raise Errors::ConflictException }
+          @product.stubs(:add_repo).raises(Errors::ConflictException)
           @product.stubs(:custom?).returns(true)
         end
 
@@ -366,7 +366,7 @@ describe Api::V1::RepositoriesController, :katello => true do
 
     describe "show a repository" do
       it 'should call pulp glue layer' do
-        repo_mock = mock(Repository)
+        repo_mock = mock()
         Repository.expects(:find).with("1").returns(repo_mock)
         repo_mock.expects(:to_hash)
         get 'show', :id => '1'
@@ -424,7 +424,7 @@ describe Api::V1::RepositoriesController, :katello => true do
         Katello.pulp_server.extensions.repository.expects(:package_groups).with("123")
         subject
       end
-      it { must_be_success }
+      it { must_respond_with(:success) }
     end
 
     describe "get list of repository package categories" do
@@ -439,8 +439,10 @@ describe Api::V1::RepositoriesController, :katello => true do
         Katello.pulp_server.extensions.repository.expects(:package_categories).with("123")
         subject
       end
-      it { must_be_success }
+      it { must_respond_with(:success) }
     end
   end
 
+end
+end
 end

@@ -42,8 +42,8 @@ class Api::V1::UsersController < Api::V1::ApiController
   end
 
   def param_rules
-    { :create => [:login, :password, :email, :disabled, :default_organization_id, :default_locale],
-      :update => { :user => [:password, :email, :disabled, :default_organization_id, :default_locale] }
+    { :create => [:login, :password, :mail, :email, :disabled, :default_environment_id, :default_locale],
+      :update => { :user => [:password, :mail, :email, :disabled, :default_environment_id, :default_locale] }
     }
   end
 
