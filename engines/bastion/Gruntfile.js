@@ -119,13 +119,7 @@ module.exports = function (grunt) {
                     id: 'bastion_api',
                     title: 'API Reference',
                     scripts: [
-                        'app/assets/bastion/components/',
-                        'app/assets/bastion/i18n/',
-                        'app/assets/bastion/incubator',
-                        'app/assets/bastion/menu',
-                        'app/assets/bastion/systems',
-                        'app/assets/bastion/utils',
-                        'app/assets/bastion/widgets'
+                        'app/assets/bastion/'
                     ]
                 }]
             }],
