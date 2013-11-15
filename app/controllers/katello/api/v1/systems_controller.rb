@@ -115,7 +115,7 @@ See virt-who tool for more details.
 DESC
   # TODO: refactor render
   def hypervisors_update
-    cp_response, _ = System.register_hypervisors(@environment, @content_view, params.except(:controller, :action))
+    cp_response, _ = System.register_hypervisors(@environment, @content_view, params.except(:controller, :action, :format))
     render :json => cp_response
   end
 

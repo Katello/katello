@@ -27,7 +27,7 @@ describe Api::V1::PackagesController do
     disable_product_orchestration
     disable_user_orchestration
     disable_repo_orchestration
-
+    setup_controller_defaults_api
     @organization = new_test_org
     @env          = @organization.library
     @product      = new_test_product(@organization, @env)
@@ -39,24 +39,27 @@ describe Api::V1::PackagesController do
     Repository.stubs(:find).returns(@repo)
 
     @repo.stubs(:packages).returns([])
-    package = { 'repository_memberships' => [repo_id] }.with_indifferent_access
-    Katello.pulp_server.extensions.rpm.stubs(:find_by_unit_id).returns(package)
-
+    @package = { 'repository_memberships' => [repo_id] }.with_indifferent_access
     @request.env["HTTP_ACCEPT"] = "application/json"
-    setup_controller_defaults_api
+
+    Katello.pulp_server.extensions.rpm.stubs(:find_by_unit_id).returns(@package)
+
   end
 
-  let(:authorized_user) do
-    user_with_permissions do |u|
-      u.can(:read_contents, :environments, @organization.library.id, @organization)
-      u.can(:read, :providers, @provider.id, @organization)
+  describe "rules" do
+    before do
+      Package.stubs(:find).returns(Package.new(@package))
     end
-  end
-  let(:unauthorized_user) do
-    user_without_permissions
-  end
 
-  context "rules" do
+    let(:authorized_user) do
+      user_with_permissions do |u|
+        u.can(:read_contents, :environments, @organization.library.id, @organization)
+        u.can(:read, :providers, @provider.id, @organization)
+      end
+    end
+    let(:unauthorized_user) do
+      user_without_permissions
+    end
     describe "get a listing by repo" do
       let(:action) { :index }
       let(:req) {

@@ -11,13 +11,12 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require 'katello_test_helper'
-include OrchestrationHelper
-
+module Katello
 describe Api::V1::SystemPackagesController do
-  include LoginHelperMethods
-  include LocaleHelperMethods
+  include OrganizationHelperMethods
   include SystemHelperMethods
   include AuthorizationHelperMethods
+  include OrchestrationHelper
 
   let(:uuid) { '1234' }
 
@@ -28,10 +27,8 @@ describe Api::V1::SystemPackagesController do
   let(:packages) { %w[zsh bash] }
 
   before(:each) do
-    login_user(:mock => false)
-    set_default_locale
+    setup_controller_defaults_api
     disable_org_orchestration
-    User.current = @user
     Resources::Candlepin::Consumer.stubs(:create).returns({ :uuid => uuid, :owner => { :key => uuid } })
     Resources::Candlepin::Consumer.stubs(:update).returns(true)
 
@@ -60,7 +57,7 @@ describe Api::V1::SystemPackagesController do
     let(:unauthorized_user) { user_without_update_permissions }
     it_should_behave_like "protected action"
 
-    it { must_be_successful }
+    it { must_respond_with(:success) }
 
     it "should call model to install packages" do
       @system.expects(:install_packages)
@@ -78,7 +75,7 @@ describe Api::V1::SystemPackagesController do
 
     subject { post :create, :organization_id => @organization.name, :system_id => @system.uuid, :groups => package_groups }
 
-    it { must_be_successful }
+    it { must_respond_with(:success) }
 
     it "should call model to install packages" do
       @system.expects(:install_package_groups)
@@ -101,7 +98,7 @@ describe Api::V1::SystemPackagesController do
     let(:unauthorized_user) { user_without_update_permissions }
     it_should_behave_like "protected action"
 
-    it { must_be_successful }
+    it { must_respond_with(:success) }
 
     it "should call model to remove packages" do
       @system.expects(:uninstall_packages)
@@ -119,7 +116,7 @@ describe Api::V1::SystemPackagesController do
 
     subject { delete :destroy, :organization_id => @organization.name, :system_id => @system.uuid, :groups => package_groups }
 
-    it { must_be_successful }
+    it { must_respond_with(:success) }
 
     it "should call model to remove package groups" do
       @system.expects(:uninstall_package_groups)
@@ -142,7 +139,7 @@ describe Api::V1::SystemPackagesController do
     let(:unauthorized_user) { user_without_update_permissions }
     it_should_behave_like "protected action"
 
-    it { must_be_successful }
+    it { must_respond_with(:success) }
 
     it "should call model to update packages" do
       @system.expects(:update_packages)
@@ -160,4 +157,5 @@ describe Api::V1::SystemPackagesController do
                              :uuid            => "1234")
   end
 
+end
 end

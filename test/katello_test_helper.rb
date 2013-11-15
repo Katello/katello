@@ -142,7 +142,7 @@ class ActionController::TestCase
   end
 
   def setup_controller_defaults_api
-    @routes = Katello::Engine.routes
+    setup_engine_routes
     User.current = users(:admin) unless  User.current
     @controller.stubs(:require_org).returns ({})
   end
