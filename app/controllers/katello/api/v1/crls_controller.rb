@@ -22,7 +22,7 @@ class Api::V1::CrlsController < Api::V1::ApiController
 
   api :GET, "/crls", "Regenerate X.509 CRL immediately and return them"
   def index
-    render :text => ::Resources::Candlepin::Proxy.get('/crl')
+    render :text => Resources::Candlepin::Proxy.get('/crl')
   end
 
 end

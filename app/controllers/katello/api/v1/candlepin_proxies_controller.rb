@@ -16,19 +16,19 @@ class Api::V1::CandlepinProxiesController < Api::V1::ProxiesController
   # authorization rules are implemented in proxies_controller.rb
 
   def get
-    r = ::Resources::Candlepin::Proxy.get(@request_path)
+    r = Resources::Candlepin::Proxy.get(@request_path)
     logger.debug r
     render :json => r
   end
 
   def delete
-    r = ::Resources::Candlepin::Proxy.delete(@request_path)
+    r = Resources::Candlepin::Proxy.delete(@request_path)
     logger.debug r
     render :json => r
   end
 
   def post
-    r = ::Resources::Candlepin::Proxy.post(@request_path, @request_body)
+    r = Resources::Candlepin::Proxy.post(@request_path, @request_body)
     logger.debug r
     render :json => r
   end

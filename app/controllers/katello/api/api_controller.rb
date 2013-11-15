@@ -50,6 +50,14 @@ class Api::ApiController < ::Api::BaseController
   def require_user
     if authenticate && session[:user]
       User.current = User.find(session[:user])
+    else
+      # If the request is from rhsm, it may include a client cert; therefore, use it
+      ssl_client_cert = client_cert_from_request
+      unless ssl_client_cert.blank?
+        consumer_cert = OpenSSL::X509::Certificate.new(ssl_client_cert)
+        uuid = uuid(consumer_cert)
+        User.current = CpConsumerUser.new(:uuid => uuid, :login => uuid, :remote_id => uuid)
+      end
     end
   rescue => e
     logger.error "failed to authenticate API request: " << pp_exception(e)
@@ -112,5 +120,26 @@ class Api::ApiController < ::Api::BaseController
     fail "automatic response method '%s' not defined" % method_name unless respond_to?(method_name, true)
     return send(method_name, options)
   end
-end
+
+  def client_cert_from_request
+    cert = request.env['SSL_CLIENT_CERT'] || request.env['HTTP_SSL_CLIENT_CERT']
+    return nil if cert.blank? || cert == "(null)"
+    # apache does not preserve new lines in cert file - work-around:
+    if cert.include?("-----BEGIN CERTIFICATE----- ")
+      cert = cert.to_s.gsub("-----BEGIN CERTIFICATE----- ", "").gsub(" -----END CERTIFICATE-----", "")
+      cert.gsub!(" ", "\n")
+      cert = "-----BEGIN CERTIFICATE-----\n#{cert}-----END CERTIFICATE-----\n"
+    end
+    return cert
+  end
+
+  def uuid(cert)
+    drop_cn_prefix_from_subject(cert.subject.to_s)
+  end
+
+  def drop_cn_prefix_from_subject(subject_string)
+    subject_string.sub(/\/CN=/i, '')
+  end
+
+  end
 end
