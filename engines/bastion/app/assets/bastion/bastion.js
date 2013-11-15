@@ -36,6 +36,7 @@
 //= require "common/experimental/katello-globals.module"
 
 //= require "angular-ui-bootstrap/ui-bootstrap-0.6.0.js"
+//= require "angular-blocks/angular-blocks.js"
 
 //= require "bastion/bastion.module"
 

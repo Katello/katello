@@ -1,0 +1,68 @@
+<section>
+
+  <div class="flash_hud" ng-show="saveSuccess">
+    <a class="control" title="Close" ng-click="saveSuccess = false"></a>
+    <ul class="flash_messages success">
+      <li ng-repeat="message in successMessages">{{ message }}</li>
+    </ul>
+  </div>
+
+  <div class="row nutupane-bar">
+    <h2 class="col-sm-2">
+      <span data-block="header">
+        REPLACE ME
+      </span>
+    </h2>
+  </div>
+
+  <div class="row nutupane-bar">
+    <div class="col-sm-3">
+      <div class="input-group input-group">
+        <input type="text"
+               class="form-control"
+               placeholder="{{ 'Search...' | translate }}"
+               ng-model="table.searchTerm"
+               on-enter="table.search(table.searchTerm)"/>
+        <span class="input-group-btn">
+          <button ng-click="table.search(table.searchTerm)" class="btn btn-default" type="button"><i class="icon-search"></i></button>
+        </span>
+      </div>
+    </div>
+
+    <div class="col-sm-3 nutupane-info">
+      <span translate>Showing {{ table.rows.length }} of {{ table.resource.subtotal }} ({{ table.resource.total }} Total)</span>
+    </div>
+      
+    <div class="fr">
+      <div class="nutupane-info fl">
+        <span translate>{{ table.numSelected }} Selected</span>
+        <span>|</span>
+        <a class="deselect-action"
+           translate
+           ng-class="{ 'disabled-link' : table.numSelected == 0 }"
+           ng-click="table.selectAll(false)">
+          Deselect All
+        </a>
+      </div>
+
+      <div class="fl">
+        <div data-block="actions"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="nutupane" alch-table="table" nutupane-table ng-class="{'table-reduced': $root.$state.current.collapsed}">
+    <div class="loading-mask icon-3x" ng-show="table.working" ng-class="{ 'loading-mask-collapsed icon-2x': $root.$state.current.collapsed }">
+      <i class="icon-spinner icon-spin"></i>
+      <span ng-hide="$root.$state.current.collapsed">{{ "Loading..." | translate }}</span>
+    </div>
+
+    <div alch-container-scroll control-width="table" alch-infinite-scroll="table.nextPage()">
+      <div ui-view="table"></div>
+    </div>
+  </div>
+
+  <span class="action-panel" ui-view="action-panel"></span>
+
+</section>
