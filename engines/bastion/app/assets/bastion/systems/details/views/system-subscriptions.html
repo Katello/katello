@@ -69,11 +69,11 @@
   </div>
 
   <div alch-table="currentSubscriptionsTable">
-    <p ng-show="table.rows.length == 0" translate>
+    <p ng-show="currentSubscriptionsTable.rows.length == 0" translate>
       This system does not have any current subscriptions
     </p>
-    <div ng-show="table.rows.length > 0">
-      <table ng-class="{'table-mask': table.working}" class="table table-striped">
+    <div ng-show="currentSubscriptionsTable.rows.length > 0">
+      <table ng-class="{'table-mask': currentSubscriptionsTable.working}" class="table table-striped">
         <thead>
           <tr alch-table-head row-select>
             <th alch-table-column="name" translate>Name</th>
@@ -86,7 +86,9 @@
         </thead>
 
         <tbody>
-          <tr alch-table-row ng-repeat="subscription in table.rows | filter:table.filter" row-select="subscription">
+          <tr alch-table-row
+              row-select="subscription"
+              ng-repeat="subscription in currentSubscriptionsTable.rows | filter:currentSubscriptionsTable.filter">
             <td alch-table-cell>{{ subscription.poolName }}</td>
             <td alch-table-cell>{{ subscription.sla }}</td>
             <td alch-table-cell>{{ subscription.contractNumber }}</td>
@@ -157,11 +159,11 @@
   </div>
 
   <div alch-table="availableSubscriptionsTable">
-    <p ng-show="table.rows.length == 0" translate>
+    <p ng-show="availableSubscriptionsTable.rows.length == 0" translate>
       There are no available subscriptions
     </p>
-    <div ng-show="table.rows.length > 0">
-      <table ng-class="{'table-mask': table.working}" class="table table-striped">
+    <div ng-show="availableSubscriptionsTable.rows.length > 0">
+      <table ng-class="{'table-mask': availableSubscriptionsTable.working}" class="table table-striped">
         <thead>
           <tr alch-table-head row-select>
             <th alch-table-column="name" translate>Name</th>
@@ -175,17 +177,17 @@
 
         <tbody>
           <tr alch-table-row row-select="subscription"
-              ng-repeat="subscription in table.rows | filter:table.formatAvailableDisplay | filter:table.filter">
+              ng-repeat="subscription in availableSubscriptionsTable.rows | filter:availableSubscriptionsTable.formatAvailableDisplay | filter:availableSubscriptionsTable.filter">
             <td alch-table-cell>{{ subscription.product_name }}</td>
             <td alch-table-cell>{{ subscription.support_level }}</td>
             <td alch-table-cell>{{ subscription.contract_number }}</td>
             <td alch-table-cell>
-              <span ng-show="table.showSelector(subscription)">
+              <span ng-show="availableSubscriptionsTable.showSelector(subscription)">
                 <select ng-show="subscription.selected" ng-model="subscription.amount"
-                        ng-options="value for value in table.range(1, subscription.available + 1)">
+                        ng-options="value for value in availableSubscriptionsTable.range(1, subscription.available + 1)">
                 </select>
               </span>
-              <span ng-hide="table.showSelector(subscription)">
+              <span ng-hide="availableSubscriptionsTable.showSelector(subscription)">
                 {{ subscription.availableDisplay }}
               </span>
             </td>

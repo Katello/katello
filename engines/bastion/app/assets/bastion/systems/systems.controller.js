@@ -42,14 +42,16 @@ angular.module('Bastion.systems').controller('SystemsController',
         };
 
         var nutupane = new Nutupane(System, params);
-        $scope.table = nutupane.table;
+        $scope.systemTable = nutupane.table;
         $scope.removeRow = nutupane.removeRow;
 
-        $scope.table.getStatusColor = SystemsHelper.getStatusColor;
+        $scope.systemTable.getStatusColor = SystemsHelper.getStatusColor;
 
-        $scope.table.closeItem = function() {
+        $scope.systemTable.closeItem = function() {
             $scope.transitionTo('systems.index');
         };
+
+        $scope.table = $scope.systemTable;
 
         $scope.removeSystem = function (system) {
             system.$remove(function() {

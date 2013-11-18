@@ -41,12 +41,12 @@ describe('Controller: ProductsController', function() {
     }));
 
     it('attaches the nutupane table to the scope', function() {
-        expect($scope.table).toBeDefined();
+        expect($scope.productTable).toBeDefined();
     });
 
     it('sets the closeItem function to transition to the index page', function() {
         spyOn($scope, "transitionTo");
-        $scope.table.closeItem();
+        $scope.productTable.closeItem();
 
         expect($scope.transitionTo).toHaveBeenCalledWith('products.index');
     });

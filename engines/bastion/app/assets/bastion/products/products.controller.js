@@ -41,11 +41,13 @@ angular.module('Bastion.products').controller('ProductsController',
         };
 
         var nutupane = new Nutupane(Product, params);
-        $scope.table = nutupane.table;
+        $scope.productTable = nutupane.table;
         $scope.removeRow = nutupane.removeRow;
 
-        $scope.table.closeItem = function() {
+        $scope.productTable.closeItem = function() {
             $scope.transitionTo('products.index');
         };
+
+        $scope.table = $scope.productTable;
     }]
 );
