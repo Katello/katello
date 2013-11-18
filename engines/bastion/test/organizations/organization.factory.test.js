@@ -44,31 +44,31 @@ describe('Factory: Organization', function() {
     });
 
     it('provides a way retrieve an organization', function() {
-        $httpBackend.expectGET('/katello/api/organizations').respond(organizations);
+        $httpBackend.expectGET('/api/content/organizations').respond(organizations);
         Organization.query(function(organizations) {
             expect(organizations.records.length).toBe(2);
         });
     });
 
     it('provides a way to auto attach available subscriptions to systems', function() {
-        $httpBackend.expectPOST('/katello/api/organizations/ACME/auto_attach').respond(task);
+        $httpBackend.expectPOST('/api/content/organizations/ACME/auto_attach').respond(task);
         Organization.autoAttach({id: 'ACME'}, function(results) {
             expect(results.id).toBe(task.id);
         });
     });
 
     it('provides a way to get repo discover', function() {
-        $httpBackend.expectPOST('/katello/api/organizations/ACME/repo_discover').respond(task);
+        $httpBackend.expectPOST('/api/content/organizations/ACME/repo_discover').respond(task);
         Organization.repoDiscover({ id: 'ACME' , url: '/foo'});
     });
 
     it('provides a way to cancel repo discover', function() {
-        $httpBackend.expectPOST('/katello/api/organizations/ACME/repo_discover').respond(task);
+        $httpBackend.expectPOST('/api/content/organizations/ACME/repo_discover').respond(task);
         Organization.repoDiscover({ id: 'ACME' , url: '/foo'});
     });
 
     it('provides a way to get an org', function() {
-        $httpBackend.expectGET('/katello/api/organizations/ACME').respond(organizations.records[0]);
+        $httpBackend.expectGET('/api/content/organizations/ACME').respond(organizations.records[0]);
 
         Organization.query({ id: 'ACME' }, function(response) {
             expect(response.id).toBe(1);

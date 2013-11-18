@@ -25,7 +25,7 @@ angular.module('Bastion.repositories').factory('Repository',
     ['$resource', 'CurrentOrganization',
     function($resource, CurrentOrganization) {
 
-        return $resource('/katello/api/repositories/:id/:action',
+        return $resource('/api/repositories/:id/:action',
             {id: '@id', 'organization_id': CurrentOrganization},
             {
                 update: { method: 'PUT' },

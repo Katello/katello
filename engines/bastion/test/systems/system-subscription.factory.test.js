@@ -22,7 +22,7 @@ describe('Factory: SystemSubscription', function() {
         var routes;
         subscription = {id: 1};
         routes = {
-            apiSystemsPath: function(){return '/katello/api/systems'}
+            apiSystemsPath: function(){return '/api/systems'}
         };
         $provide.value('Routes', routes);
     }));
@@ -37,21 +37,21 @@ describe('Factory: SystemSubscription', function() {
     });
 
     it('provides a way to get a system subscription', function() {
-        $httpBackend.expectGET('/katello/api/systems/1/subscriptions/1').respond(subscription);
+        $httpBackend.expectGET('/api/systems/1/subscriptions/1').respond(subscription);
         SystemSubscription.get({ id: 1, systemId: 1}, function(results) {
             expect(results.id).toBe(subscription.id);
         });
     });
 
     it('provides a way to create a system subscription', function() {
-        $httpBackend.expectPOST('/katello/api/systems/1/subscriptions/1').respond(subscription);
+        $httpBackend.expectPOST('/api/systems/1/subscriptions/1').respond(subscription);
         SystemSubscription.save({ id: 1, systemId: 1}, function(results) {
             expect(results.id).toBe(subscription.id);
         });
     });
 
     it('provides a way to remove a system subscription', function() {
-        $httpBackend.expectDELETE('/katello/api/systems/1/subscriptions/1').respond(subscription);
+        $httpBackend.expectDELETE('/api/systems/1/subscriptions/1').respond(subscription);
         SystemSubscription.remove({ id: 1, systemId: 1}, function(results) {
             expect(results.id).toBe(subscription.id);
         });

@@ -32,7 +32,7 @@ describe('Factory: SystemPackage', function() {
         };
         task = {id: 'task_id'};
         routes = {
-            apiSystemsPath: function() {return '/katello/api/systems'}
+            apiSystemsPath: function() {return '/api/systems'}
         };
         $provide.value('Routes', routes);
     }));
@@ -47,35 +47,35 @@ describe('Factory: SystemPackage', function() {
     });
 
     it('provides a way to get a list of packages', function() {
-        $httpBackend.expectGET('/katello/api/systems/SYS_ID/packages').respond(packages);
+        $httpBackend.expectGET('/api/systems/SYS_ID/packages').respond(packages);
         SystemPackage.get({ id: 'SYS_ID' }, function(results) {
             expect(results.total).toBe(2);
         });
     });
 
     it('provides a way to install a list of packages', function() {
-        $httpBackend.expectPUT('/katello/api/systems/SYS_ID/packages/install').respond(task);
+        $httpBackend.expectPUT('/api/systems/SYS_ID/packages/install').respond(task);
         SystemPackage.install({ uuid: 'SYS_ID', packages: ['kernel'] }, function(results) {
             expect(results.id).toBe(task.id);
         });
     });
 
     it('provides a way to update a list of packages', function() {
-        $httpBackend.expectPUT('/katello/api/systems/SYS_ID/packages/upgrade').respond(task);
+        $httpBackend.expectPUT('/api/systems/SYS_ID/packages/upgrade').respond(task);
         SystemPackage.update({ uuid: 'SYS_ID', packages: ['kernel'] }, function(results) {
             expect(results.id).toBe(task.id);
         });
     });
 
     it('provides a way to update all of packages', function() {
-        $httpBackend.expectPUT('/katello/api/systems/SYS_ID/packages/upgrade_all').respond(task);
+        $httpBackend.expectPUT('/api/systems/SYS_ID/packages/upgrade_all').respond(task);
         SystemPackage.updateAll({ uuid: 'SYS_ID', packages: ['kernel'] }, function(results) {
             expect(results.id).toBe(task.id);
         });
     });
 
     it('provides a way to remove a list of packages', function() {
-        $httpBackend.expectPUT('/katello/api/systems/SYS_ID/packages/remove').respond(task);
+        $httpBackend.expectPUT('/api/systems/SYS_ID/packages/remove').respond(task);
         SystemPackage.remove({ uuid: 'SYS_ID', packages: ['kernel'] }, function(results) {
             expect(results.id).toBe(task.id);
         });

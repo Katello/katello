@@ -42,7 +42,7 @@ describe('Factory: Provider', function() {
     });
 
     it('provides a way to get a list of providers', function() {
-        $httpBackend.expectGET('/katello/api/providers?organization_id=ACME').respond(providers);
+        $httpBackend.expectGET('/api/providers?organization_id=ACME').respond(providers);
 
         Provider.query({ organization_id: 'ACME' }, function(providers) {
             expect(providers.records.length).toBe(2);

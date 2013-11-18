@@ -22,38 +22,89 @@ Katello::Engine.routes.draw do
         onlies = [:show, :destroy, :index, :update]
       end
 
-      api_resources :organizations do
-        member do
-          post :repo_discover
-          post :cancel_repo_discover
+      # scope path organizations, environments, roles since they conflict with Foreman
+      scope "/content" do
+
+        api_resources :organizations do
+          member do
+            post :repo_discover
+            post :cancel_repo_discover
+          end
+          api_resources :products, :only => [:index]
+          api_resources :environments
+          api_resources :sync_plans, :only => [:index, :create]
+          api_resources :tasks, :only => [:index, :show]
+          api_resources :providers, :only => [:index], :constraints => {:organization_id => /[^\/]*/}
+          scope :constraints => Katello::RegisterWithActivationKeyContraint.new do
+            match '/systems' => 'systems#activate', :via => :post
+          end
+          api_resources :systems, :only => [:index, :create] do
+            get :report, :on => :collection
+          end
+          api_resources :distributors, :only => [:index, :create]
+          resource :uebercert, :only => [:show]
+
+          api_resources :activation_keys, :only => [:index, :create]
+          api_resources :system_groups, :only => [:index, :create]
+          api_resources :gpg_keys, :only => [:index, :create]
+
+          match '/default_info/:informable_type' => 'organization_default_info#create', :via => :post, :as => :create_default_info
+          match '/default_info/:informable_type/*keyname' => 'organization_default_info#destroy', :via => :delete, :as => :destroy_default_info
+          match '/default_info/:informable_type/apply' => 'organization_default_info#apply_to_all', :via => :post, :as => :apply_default_info
+
+          match '/auto_attach' => 'organizations#auto_attach_all_systems', :via => :post, :as => :auto_attach_all_systems
+
+          api_resources :content_views, :only => [:index, :create]
+          api_resources :content_view_definitions, :only => [:index, :create]
         end
-        api_resources :products, :only => [:index]
-        api_resources :environments
-        api_resources :sync_plans, :only => [:index, :create]
-        api_resources :tasks, :only => [:index, :show]
-        api_resources :providers, :only => [:index], :constraints => {:organization_id => /[^\/]*/}
-        scope :constraints => Katello::RegisterWithActivationKeyContraint.new do
-          match '/systems' => 'systems#activate', :via => :post
+
+        api_resources :environments, :only => [:show, :update, :destroy] do
+          scope :constraints => Katello::RegisterWithActivationKeyContraint.new do
+            match '/systems' => 'systems#activate', :via => :post
+          end
+          api_resources :systems, :only => [:create, :index] do
+            get :report, :on => :collection
+          end
+          api_resources :distributors, :only => [:create, :index]
+          api_resources :products, :only => [:index] do
+            get :repositories, :on => :member
+          end
+
+          api_resources :activation_keys, :only => [:index, :create]
+          api_resources :content_views, :only => [:index]
+          api_resources :changesets, :only => [:index, :create]
+
+          member do
+            get :releases
+            get :repositories
+          end
         end
-        api_resources :systems, :only => [:index, :create] do
+
+        api_resources :users do
           get :report, :on => :collection
+          get :sync_ldap_roles, :on => :collection
+          api_resources :roles, :controller => :users, :only => [] do
+            post :index, :on => :collection, :action => :add_role
+            delete :destroy, :on => :member, :action => :remove_role
+            get :index, :on => :collection, :action => :list_roles
+          end
         end
-        api_resources :distributors, :only => [:index, :create]
-        resource :uebercert, :only => [:show]
 
-        api_resources :activation_keys, :only => [:index, :create]
-        api_resources :system_groups, :only => [:index, :create]
-        api_resources :gpg_keys, :only => [:index, :create]
+        api_resources :roles do
+          get :available_verbs, :on => :collection, :action => :available_verbs
+          api_resources :permissions, :only => [:index, :show, :create, :destroy]
+          api_resources :ldap_groups, :controller => :role_ldap_groups, :only => [:create, :destroy, :index]
+        end
 
-        match '/default_info/:informable_type' => 'organization_default_info#create', :via => :post, :as => :create_default_info
-        match '/default_info/:informable_type/*keyname' => 'organization_default_info#destroy', :via => :delete, :as => :destroy_default_info
-        match '/default_info/:informable_type/apply' => 'organization_default_info#apply_to_all', :via => :post, :as => :apply_default_info
+        # subscription-manager support
+        match '/users/:login/owners' => 'users#list_owners', :via => :get
 
-        match '/auto_attach' => 'organizations#auto_attach_all_systems', :via => :post, :as => :auto_attach_all_systems
+        api_resources :about, :only => [:index]
 
-        api_resources :content_views, :only => [:index, :create]
-        api_resources :content_view_definitions, :only => [:index, :create]
-      end
+        match "/version" => "ping#version", :via => :get
+        match "/status" => "ping#server_status", :via => :get
+
+      end # end scope "/content
 
       api_resources :system_groups do
         member do
@@ -230,28 +281,6 @@ Katello::Engine.routes.draw do
         end
       end
 
-      api_resources :environments, :only => [:show, :update, :destroy] do
-        scope :constraints => Katello::RegisterWithActivationKeyContraint.new do
-          match '/systems' => 'systems#activate', :via => :post
-        end
-        api_resources :systems, :only => [:create, :index] do
-          get :report, :on => :collection
-        end
-        api_resources :distributors, :only => [:create, :index]
-        api_resources :products, :only => [:index] do
-          get :repositories, :on => :member
-        end
-
-        api_resources :activation_keys, :only => [:index, :create]
-        api_resources :content_views, :only => [:index]
-        api_resources :changesets, :only => [:index, :create]
-
-        member do
-          get :releases
-          get :repositories
-        end
-      end
-
       api_resources :gpg_keys, :only => [:index, :show, :update, :destroy] do
         get :content, :on => :member
       end
@@ -277,28 +306,8 @@ Katello::Engine.routes.draw do
         end
       end
 
-      api_resources :users do
-        get :report, :on => :collection
-        get :sync_ldap_roles, :on => :collection
-        api_resources :roles, :controller => :users, :only => [] do
-          post :index, :on => :collection, :action => :add_role
-          delete :destroy, :on => :member, :action => :remove_role
-          get :index, :on => :collection, :action => :list_roles
-        end
-      end
-
-      api_resources :roles do
-        get :available_verbs, :on => :collection, :action => :available_verbs
-        api_resources :permissions, :only => [:index, :show, :create, :destroy]
-        api_resources :ldap_groups, :controller => :role_ldap_groups, :only => [:create, :destroy, :index]
-      end
-
       api_resources :sync_plans, :only => [:show, :update, :destroy]
       api_resources :tasks, :only => [:show]
-      api_resources :about, :only => [:index]
-
-      match "/version" => "ping#version", :via => :get
-      match "/status" => "ping#server_status", :via => :get
 
       # api custom information
       match '/custom_info/:informable_type/:informable_id' => 'custom_info#create', :via => :post, :as => :create_custom_info
@@ -307,8 +316,6 @@ Katello::Engine.routes.draw do
       match '/custom_info/:informable_type/:informable_id/*keyname' => 'custom_info#update', :via => :put, :as => :update_custom_info
       match '/custom_info/:informable_type/:informable_id/*keyname' => 'custom_info#destroy', :via => :delete, :as => :destroy_custom_info
 
-      # subscription-manager support
-      match '/users/:login/owners' => 'users#list_owners', :via => :get
 
     end # module v2
 

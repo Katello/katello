@@ -190,20 +190,6 @@ Katello::Engine.routes.draw do
     end
   end
 
-  resources :dashboard, :only => [:index] do
-    collection do
-      get :sync
-      get :notices
-      get :errata
-      get :content_views
-      get :promotions
-      get :systems
-      get :system_groups
-      get :subscriptions
-      put :update
-    end
-  end
-
   resources :systems do
     resources :events, :only => [:index, :show], :controller => "system_events" do
       collection do
@@ -332,24 +318,6 @@ Katello::Engine.routes.draw do
     end
   end
 
-  resources :users do
-    collection do
-      get :auto_complete_search
-      get :items
-      post :enable_helptip
-      post :disable_helptip
-    end
-    member do
-      post :clear_helptips
-      put :update_roles
-      put :update_locale
-      put :update_preference
-      put :setup_default_org
-      get :edit_environment
-      put :update_environment
-    end
-  end
-
   resources :providers do
     collection do
       get :auto_complete_search
@@ -406,40 +374,6 @@ Katello::Engine.routes.draw do
     end
   end
 
-  match '/organizations/:org_id/environments/:env_id/edit' => 'environments#update', :via => :put
-
-  resources :organizations do
-    collection do
-      get :auto_complete_search
-      get :items
-      get :default_label
-    end
-    member do
-      get :show
-      get :environments_partial
-      get :events
-      get :download_debug_certificate
-      get :apply_default_info_status
-    end
-    resources :environments do
-      get :default_label, :on => :collection
-      member do
-        get :products
-        get :content_views
-      end
-      collection do
-        get :registerable_paths
-      end
-      resources :content_view_versions, :only => [:show] do
-        member do
-          get :content
-        end
-      end
-    end
-  end
-  match '/organizations/:id/edit' => 'organizations#update', :via => :put
-  match '/organizations/:id/default_info/:informable_type' => 'organizations#default_info', :via => :get, :as => :organization_default_info
-
   resources :changesets, :only => [:update, :index, :show, :create, :new, :edit, :destroy] do
     member do
       put :name
@@ -455,34 +389,109 @@ Katello::Engine.routes.draw do
     end
   end
 
-  resources :environments do
-    member do
-      get :content_views
-    end
-  end
+  # scope path organizations, environments, roles since they conflict with Foreman
+  scope "/content" do
 
-  match '/roles/show_permission' => 'roles#show_permission', :via => :get
-  resources :roles do
-    put "create_permission" => "roles#create_permission"
+    resources :dashboard, :only => [:index] do
+      collection do
+        get :sync
+        get :notices
+        get :errata
+        get :content_views
+        get :promotions
+        get :systems
+        get :system_groups
+        get :subscriptions
+        put :update
+      end
+    end
 
-    resources :permission, :only => {} do
-      delete "destroy_permission" => "roles#destroy_permission", :as => "destroy"
-      post "update_permission" => "roles#update_permission", :as => "update"
-    end
-    collection do
-      get :auto_complete_search
-      get :items
-    end
-    resources :ldap_groups, :only => [] do
+    resources :users do
+      collection do
+        get :auto_complete_search
+        get :items
+        post :enable_helptip
+        post :disable_helptip
+      end
       member do
-        delete "destroy" => "roles#destroy_ldap_group", :as => "destroy"
+        post :clear_helptips
+        put :update_roles
+        put :update_locale
+        put :update_preference
+        put :setup_default_org
+        get :edit_environment
+        put :update_environment
+      end
+    end
+
+    match '/organizations/:org_id/environments/:env_id/edit' => 'environments#update', :via => :put
+
+    resources :organizations do
+      collection do
+        get :auto_complete_search
+        get :items
+        get :default_label
+      end
+      member do
+        get :show
+        get :environments_partial
+        get :events
+        get :download_debug_certificate
+        get :apply_default_info_status
+      end
+      resources :environments do
+        get :default_label, :on => :collection
+        member do
+          get :products
+          get :content_views
+        end
+        collection do
+          get :registerable_paths
+        end
+        resources :content_view_versions, :only => [:show] do
+          member do
+            get :content
+          end
+        end
+      end
+    end
+    match '/organizations/:id/edit' => 'organizations#update', :via => :put
+    match '/organizations/:id/default_info/:informable_type' => 'organizations#default_info', :via => :get, :as => :organization_default_info
+
+    resources :environments do
+      member do
+        get :content_views
+      end
+    end
+
+    match '/roles/show_permission' => 'roles#show_permission', :via => :get
+    resources :roles do
+      put "create_permission" => "roles#create_permission"
+
+      resources :permission, :only => {} do
+        delete "destroy_permission" => "roles#destroy_permission", :as => "destroy"
+        post "update_permission" => "roles#update_permission", :as => "update"
       end
       collection do
-        post "create" => "roles#create_ldap_group", :as => "create"
+        get :auto_complete_search
+        get :items
+      end
+      resources :ldap_groups, :only => [] do
+        member do
+          delete "destroy" => "roles#destroy_ldap_group", :as => "destroy"
+        end
+        collection do
+          post "create" => "roles#create_ldap_group", :as => "create"
+        end
       end
     end
-  end
-  match '/roles/:organization_id/resource_type/verbs_and_scopes' => 'roles#verbs_and_scopes', :via => :get, :as => 'verbs_and_scopes'
+    match '/roles/:organization_id/resource_type/verbs_and_scopes' => 'roles#verbs_and_scopes', :via => :get, :as => 'verbs_and_scopes'
+
+    root :to => "dashboard#index"
+
+    match 'about', :to => "application_info#about", :as => "about"
+
+  end # end scope "/content
 
   resources :search, :only => {} do
     get 'show', :on => :collection
@@ -495,17 +504,8 @@ Katello::Engine.routes.draw do
     delete 'favorite/:id' => 'search#destroy_favorite', :on => :collection, :as => 'destroy_favorite'
   end
 
-  root :to => "dashboard#index"
-
-  resources :password_resets, :only => [:create, :edit, :update] do
-    collection do
-      post :email_logins
-    end
-  end
-
   match '/user_session/set_org' => 'user_sessions#set_org', :via => :post
 
   match '/i18n/dictionary' => 'i18n#show', :via => :get
 
-  match 'about', :to => "application_info#about", :as => "about"
 end

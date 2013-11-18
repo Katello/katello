@@ -23,7 +23,7 @@ describe('Factory: SystemTask', function() {
         task = {id: 'TASK_ID', pending: false};
         pendingTask = {id: 'PENDING_TASK_ID', pending: true};
         routes = {
-            apiSystemsPath: function() {return '/katello/api/systems/'}
+            apiSystemsPath: function() {return '/api/systems/'}
         };
         $provide.value('Routes', routes);
     }));
@@ -38,14 +38,14 @@ describe('Factory: SystemTask', function() {
     });
 
     it('provides a way to get a system task', function() {
-        $httpBackend.expectGET('/katello/api/systems//tasks/TASK_ID?paged=false').respond(task);
+        $httpBackend.expectGET('/api/systems//tasks/TASK_ID?paged=false').respond(task);
         SystemTask.get({ id: 'TASK_ID' }, function(results) {
             expect(results.id).toBe(task.id);
         });
     });
 
     it('provides a way to poll a task', function() {
-        $httpBackend.expectGET('/katello/api/systems//tasks/PENDING_TASK_ID?paged=false').respond(pendingTask);
+        $httpBackend.expectGET('/api/systems//tasks/PENDING_TASK_ID?paged=false').respond(pendingTask);
         SystemTask.poll(pendingTask, function(results) {});
     });
 });
