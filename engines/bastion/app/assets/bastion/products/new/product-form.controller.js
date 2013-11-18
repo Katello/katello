@@ -73,7 +73,7 @@ angular.module('Bastion.products').controller('ProductFormController',
         }
 
         function success(response) {
-            $scope.table.addRow(response);
+            $scope.productTable.addRow(response);
             $scope.transitionTo('products.details.repositories.index', {productId: $scope.product.id});
         }
 

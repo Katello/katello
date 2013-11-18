@@ -113,7 +113,7 @@ angular.module('Bastion.products').controller('DiscoveryFormController',
             $scope.createRepoChoices.newProduct = 'false';
             $scope.products.unshift(response);
             //add it to the main products table
-            $scope.table.addRow(response);
+            $scope.productTable.addRow(response);
             createNextRepo();
         }
 

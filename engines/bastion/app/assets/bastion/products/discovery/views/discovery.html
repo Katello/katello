@@ -64,7 +64,9 @@
     </thead>
 
     <tbody>
-      <tr alch-table-row ng-repeat="urlRow in table.rows | filter:table.filterTerm" row-select="urlRow">
+      <tr alch-table-row
+          row-select="urlRow"
+          ng-repeat="urlRow in discoveryTable.rows | filter:discoveryTable.filterTerm">
         <td alch-table-cell>{{ urlRow.path }}</td>
       </tr>
     </tbody>

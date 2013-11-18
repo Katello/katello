@@ -41,7 +41,7 @@ describe('Controller: SystemsBulkActionController', function() {
 
     beforeEach(inject(function($controller, $rootScope, $q) {
         $scope = $rootScope.$new();
-        $scope.table = {
+        $scope.systemTable = {
             getSelected: function() {return [
                 {id: 1},
                 {id: 2},
@@ -63,7 +63,7 @@ describe('Controller: SystemsBulkActionController', function() {
         $scope.performRemoveSystems();
 
         expect(BulkAction.removeSystems).toHaveBeenCalledWith(
-            {ids: _.pluck($scope.table.getSelected(), 'id')},
+            {ids: _.pluck($scope.systemTable.getSelected(), 'id')},
             jasmine.any(Function), jasmine.any(Function)
         );
     });
@@ -86,7 +86,7 @@ describe('Controller: SystemsBulkActionController', function() {
 
         expect(BulkAction.addSystemGroups).toHaveBeenCalledWith(
             {
-                ids: _.pluck($scope.table.getSelected(), 'id'),
+                ids: _.pluck($scope.systemTable.getSelected(), 'id'),
                 system_group_ids: _.pluck($scope.systemGroups.groups, 'id')
             },
             jasmine.any(Function), jasmine.any(Function)
@@ -104,7 +104,7 @@ describe('Controller: SystemsBulkActionController', function() {
 
         expect(BulkAction.removeSystemGroups).toHaveBeenCalledWith(
             {
-                ids: _.pluck($scope.table.getSelected(), 'id'),
+                ids: _.pluck($scope.systemTable.getSelected(), 'id'),
                 system_group_ids: _.pluck($scope.systemGroups.groups, 'id')
             },
             jasmine.any(Function), jasmine.any(Function)
@@ -123,7 +123,7 @@ describe('Controller: SystemsBulkActionController', function() {
 
         expect(BulkAction.installContent).toHaveBeenCalledWith(
             {
-                ids: _.pluck($scope.table.getSelected(), 'id'),
+                ids: _.pluck($scope.systemTable.getSelected(), 'id'),
                 content_type: $scope.content.contentType,
                 content: $scope.content.content.split(/ *, */)
             },
@@ -143,7 +143,7 @@ describe('Controller: SystemsBulkActionController', function() {
 
         expect(BulkAction.updateContent).toHaveBeenCalledWith(
             {
-                ids: _.pluck($scope.table.getSelected(), 'id'),
+                ids: _.pluck($scope.systemTable.getSelected(), 'id'),
                 content_type: $scope.content.contentType,
                 content: $scope.content.content.split(/ *, */)
             },
@@ -163,7 +163,7 @@ describe('Controller: SystemsBulkActionController', function() {
 
         expect(BulkAction.removeContent).toHaveBeenCalledWith(
             {
-                ids: _.pluck($scope.table.getSelected(), 'id'),
+                ids: _.pluck($scope.systemTable.getSelected(), 'id'),
                 content_type: $scope.content.contentType,
                 content: $scope.content.content.split(/ *, */)
             },
@@ -183,7 +183,7 @@ describe('Controller: SystemsBulkActionController', function() {
 
         expect(BulkAction.installContent).toHaveBeenCalledWith(
             {
-                ids: _.pluck($scope.table.getSelected(), 'id'),
+                ids: _.pluck($scope.systemTable.getSelected(), 'id'),
                 content_type: $scope.content.contentType,
                 content: $scope.content.content.split(/ *, */)
             },
@@ -203,7 +203,7 @@ describe('Controller: SystemsBulkActionController', function() {
 
         expect(BulkAction.updateContent).toHaveBeenCalledWith(
             {
-                ids: _.pluck($scope.table.getSelected(), 'id'),
+                ids: _.pluck($scope.systemTable.getSelected(), 'id'),
                 content_type: $scope.content.contentType,
                 content: $scope.content.content.split(/ *, */)
             },
@@ -223,7 +223,7 @@ describe('Controller: SystemsBulkActionController', function() {
 
         expect(BulkAction.removeContent).toHaveBeenCalledWith(
             {
-                ids: _.pluck($scope.table.getSelected(), 'id'),
+                ids: _.pluck($scope.systemTable.getSelected(), 'id'),
                 content_type: $scope.content.contentType,
                 content: $scope.content.content.split(/ *, */)
             },
@@ -243,7 +243,7 @@ describe('Controller: SystemsBulkActionController', function() {
 
         expect(BulkAction.installContent).toHaveBeenCalledWith(
             {
-                ids: _.pluck($scope.table.getSelected(), 'id'),
+                ids: _.pluck($scope.systemTable.getSelected(), 'id'),
                 content_type: $scope.content.contentType,
                 content: $scope.content.content.split(/ *, */)
             },

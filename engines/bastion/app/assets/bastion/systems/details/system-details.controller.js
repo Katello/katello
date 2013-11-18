@@ -38,8 +38,8 @@ angular.module('Bastion.systems').controller('SystemDetailsController',
         }
 
         $scope.system = System.get({id: $scope.$stateParams.systemId}, function(system) {
-            $scope.$watch("table.rows.length > 0", function() {
-                $scope.table.replaceRow(system);
+            $scope.$watch("systemTable.rows.length > 0", function() {
+                $scope.systemTable.replaceRow(system);
             });
 
             $scope.$broadcast('system.loaded', system);

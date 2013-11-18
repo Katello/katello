@@ -52,7 +52,7 @@ describe('Controller: SystemsController', function() {
 
     it("provides a way to close the details panel.", function() {
         spyOn($scope, "transitionTo");
-        $scope.table.closeItem();
+        $scope.systemTable.closeItem();
         expect($scope.transitionTo).toHaveBeenCalledWith('systems.index');
     });
 

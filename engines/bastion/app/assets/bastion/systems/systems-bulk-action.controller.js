@@ -76,7 +76,7 @@ angular.module('Bastion.systems').controller('SystemsBulkActionController',
 
             success = function(data) {
                 deferred.resolve(data);
-                angular.forEach($scope.table.getSelected(), function(row) {
+                angular.forEach($scope.systemTable.getSelected(), function(row) {
                     $scope.removeRow(row.id);
                 });
 
@@ -197,7 +197,7 @@ angular.module('Bastion.systems').controller('SystemsBulkActionController',
         };
 
         $scope.getSelectedSystemIds = function() {
-            var rows = $scope.table.getSelected();
+            var rows = $scope.systemTable.getSelected();
             return _.pluck(rows, 'id');
         };
 

@@ -1,4 +1,4 @@
-<table class="table table-striped" ng-class="{'table-mask': table.working}">
+<table class="table table-striped" ng-class="{'table-mask': systemTable.working}">
   <thead>
     <tr alch-table-head row-select>
       <th alch-table-column sortable>{{ "Name" | translate }}</th>
@@ -6,7 +6,7 @@
   </thead>
 
   <tbody>
-    <tr alch-table-row ng-repeat="system in table.rows" row-select="system">
+    <tr alch-table-row ng-repeat="system in systemTable.rows" row-select="system">
       <td alch-table-cell>
         <a class="clickable" ui-sref="systems.details.info({systemId: system.uuid})">
           {{ system.name }}
