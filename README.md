@@ -21,43 +21,70 @@ To setup a development environment begin with following the standard setup for K
 
 Start by cloning Foreman beside your git checkout of Katello such that:
 
-    workspace/
-        foreman/
-        katello/
+```
+workspace/
+    foreman/
+    katello/
+```
 
 Change directories into the Foreman checkout and copy the sample settings and database files:
 
-    cd foreman
-    cp config/settings.yaml{.sample,}
-    cp config/database.yml{.sample,}
+```bash
+cd foreman
+cp config/settings.yaml.sample settings.yaml
+cp config/database.yml.sample database.yml
+```
+
+Edit `config/settings.yaml`:
+
+```yml
+:require_ssl: false
+# ...
+:organizations_enabled: true
+```
 
 Now create a local gemfile, add two basic gems and install dependencies:
 
-    touch bundler.d/Gemfile.local.rb
-    echo "gem 'facter'" >> bundler.d/Gemfile.local.rb
-    echo "gem 'puppet'" >> bundler.d/Gemfile.local.rb
-    bundle install
+```bash
+touch bundler.d/Gemfile.local.rb
+echo "gem 'facter'" >> bundler.d/Gemfile.local.rb
+echo "gem 'puppet'" >> bundler.d/Gemfile.local.rb
+bundle install
+```
 
 Finally, create and migrate the database:
 
-    rake db:create db:migrate
+```bash
+rake db:create db:migrate
+```
 
 ### Setup Katello
 
 The Katello setup assumes that you have a previously setup Foreman checkout or have followed the instructions in the Setup Foreman section. The first step is to add the Katello engine and install dependencies:
 
-    echo "gem 'katello', :path => '../katello'" >> bundler.d/Gemfile.local.rb
-    bundle update
+```bash
+echo "gem 'katello', :path => '../katello'" >> bundler.d/Gemfile.local.rb
+bundle update
+```
 
 Now add the Katello migrations and initial seed data:
 
-    rake db:migrate && rake db:seed
+```bash
+rake db:migrate && rake db:seed
+```
+
+Make sure that `use_ssl: false` is set in `config/katello.yml`. (**debatable**)
 
 At this point, the development environment should be completely setup and the Katello engine functionality available. To verify this:
 
 1. Start the development server
 
+    ```bash
+    pwd
+    ~/workspace/foreman
+
     rails s
+    ```
 
 2. Access Foreman in your browser (e.g. `http://<hostname>:3000/`)
 3. Login to Foreman (default: `admin` and `changeme`)
@@ -72,18 +99,22 @@ In order to reset the development environment, all backend data and the database
 
 Now that the data has been reset, the Foreman database needs to be migrated without Katello. First, disable the Katello gem by opening `bundler.d/Gemfile.local.rb` and commenting out the inclusion of Katello.
 
-    cat bundler.d/Gemfile.local.rb
-    #gem 'katello', :path => '../katello'
+```bash
+cat bundler.d/Gemfile.local.rb
+#gem 'katello', :path => '../katello'
 
-    rake db:migrate
+rake db:migrate
+```
 
 Next, Katello migrations need to be added along with initial seed data. Re-enable the Katello gem, migrate and seed:
 
-    cat bundler.d/Gemfile.local.rb
-    gem 'katello', :path => '../katello'
+```bash
+cat bundler.d/Gemfile.local.rb
+gem 'katello', :path => '../katello'
 
-    bundle install
-    rake db:migrate && rake db:seed
+bundle install
+rake db:migrate && rake db:seed
+```
 
 ## Found a bug?
 
