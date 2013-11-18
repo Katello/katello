@@ -13,14 +13,16 @@
 
 require "katello_test_helper"
 
+module Katello
 class ProvidersControllerTest < ActionController::TestCase
-  fixtures :all
 
   def setup
+    setup_controller_defaults
     @org = katello_organizations(:acme_corporation)
-    @redhat_product = providers(:redhat)
-    @custom_product = providers(:fedora_hosted)
-    login_user(User.find(users(:admin)), @org)
+    @redhat_product = katello_providers(:redhat)
+    @custom_product = katello_providers(:fedora_hosted)
+    login_user(User.find(users(:admin)))
+    set_organization(@org)
 
     models = ["Organization", "KTEnvironment", "Provider", "Product"]
     services = ["Candlepin", "Pulp", "ElasticSearch", "Foreman"]
@@ -33,4 +35,5 @@ class ProvidersControllerTest < ActionController::TestCase
     assert_response :success
   end
 
+end
 end

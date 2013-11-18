@@ -12,6 +12,7 @@
 
 require "katello_test_helper"
 
+module Katello
 class ContentViewsControllerTest < ActionController::TestCase
   fixtures :all
 
@@ -25,12 +26,15 @@ class ContentViewsControllerTest < ActionController::TestCase
 
     services = ["Candlepin", "Pulp", "ElasticSearch"]
     disable_glue_layers(services, models, true)
+    super
   end
 
   def setup
+    setup_controller_defaults
     @org = katello_organizations(:acme_corporation)
 
-    login_user(User.find(users(:admin)), @org)
+    login_user(User.find(users(:admin)))
+    set_organization(katello_organizations(:acme_corporation))
 
     @content_view_definition = katello_content_view_definition_bases(:simple_cvd)
     @content_view = katello_content_views(:library_dev_view)
@@ -65,10 +69,11 @@ class ContentViewsControllerTest < ActionController::TestCase
     post :refresh, :content_view_definition_id => @content_view_definition.id, :id => @content_view.id
 
     assert_response :success
-    assert_template :partial => 'content_view_definitions/views/_view'
+    assert_template :partial => 'katello/content_view_definitions/views/_view'
 
     view = ContentView.find_by_id(@content_view.id)
     refute_nil view.versions.last.task_status
     assert_equal view.reload.versions.last.version, 2
   end
+end
 end

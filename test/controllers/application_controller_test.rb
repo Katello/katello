@@ -12,10 +12,11 @@
 
 require 'katello_test_helper'
 
+module Katello
 class AControllerTest < ActionController::TestCase
   ERROR_MESSAGE = 'user should not see this'
 
-  class AController < ApplicationController
+  class AController < Katello::ApplicationController
     def rules
       { failing_action: -> { true } }
     end
@@ -27,12 +28,9 @@ class AControllerTest < ActionController::TestCase
 
   self.controller_class = AController
 
-  fixtures :all
-
   def setup
-    @org = organizations :acme_corporation
-    login_user users(:admin), @org
-
+    setup_controller_defaults
+    @org = katello_organizations :acme_corporation
     Katello.config.stubs(hide_exceptions: true)
   end
 
@@ -44,4 +42,4 @@ class AControllerTest < ActionController::TestCase
     assert response.body =~ /#{ERROR_MESSAGE}/
   end
 end
-
+end
