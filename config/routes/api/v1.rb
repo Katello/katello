@@ -46,7 +46,12 @@ Katello::Engine.routes.draw do
             put :update_systems
           end
 
-          resource :packages, :action => [:create, :update, :destroy], :controller => :system_group_packages
+          resources :packages, :only => [:create], :controller => :system_group_packages do
+            collection do
+              put :update
+              delete :destroy
+            end
+          end
           resources :errata, :only => [:index, :create], :controller => :system_group_errata
         end
 

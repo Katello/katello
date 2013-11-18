@@ -12,19 +12,22 @@
 
 require 'katello_test_helper'
 
-describe Api::V1::SystemGroupsController, :katello => true do
-  include LoginHelperMethods
+module Katello
+describe Api::V1::SystemGroupsController do
   include AuthorizationHelperMethods
+  include OrganizationHelperMethods
   include OrchestrationHelper
   include SystemHelperMethods
 
   let(:uuid) { '1234' }
 
+  describe "(katello)" do
+
   before(:each) do
     disable_org_orchestration
-    disable_consumer_group_orchestration
 
-    SystemGroup.stubs(:index).returns(stubs.as_null_object)
+    index_mock = stub_everything("index")
+    SystemGroup.stubs(:index).returns(index_mock)
 
     @org         = Organization.create!(:name => 'test_org', :label => 'test_org')
     @environment = create_environment(:name => 'test_1', :label => 'test_1', :prior => @org.library.id, :organization => @org)
@@ -36,6 +39,11 @@ describe Api::V1::SystemGroupsController, :katello => true do
     Resources::Candlepin::Consumer.stubs(:destroy).returns(true)
     Katello.pulp_server.extensions.consumer.stubs(:delete).returns(true)
 
+    SystemGroup.any_instance.stubs(:set_pulp_consumer_group).returns({})
+    SystemGroup.any_instance.stubs(:del_pulp_consumer_group).returns({})
+    SystemGroup.any_instance.stubs(:add_consumer).returns({})
+    SystemGroup.any_instance.stubs(:remove_consumer).returns({})
+
     @system = create_system(:name => "bar1", :environment => @environment, :cp_type => "system", :facts => { "Test" => "" })
 
     @request.env["HTTP_ACCEPT"] = "application/json"
@@ -44,7 +52,8 @@ describe Api::V1::SystemGroupsController, :katello => true do
 
   describe "Controller tests " do
     before(:each) do
-      SystemGroup.stubs(:search).returns(stubs.as_null_object)
+      search_mock = stub_everything("search")
+      SystemGroup.stubs(:search).returns(search_mock)
       @group = SystemGroup.create!(:name => "test_group", :organization => @org, :max_systems => 5)
     end
 
@@ -60,6 +69,7 @@ describe Api::V1::SystemGroupsController, :katello => true do
       it_should_behave_like "protected action"
 
       it "requests filters using search criteria" do
+        Glue::ElasticSearch::Items.any_instance.expects(:retrieve).returns([@group], 1)
         get :index, :organization_id => @org.label
         must_respond_with(:success)
       end
@@ -125,7 +135,7 @@ describe Api::V1::SystemGroupsController, :katello => true do
 
       it "should not create a group without a name" do
         post :create, :organization_id => @org.label, :system_group => { :description => "describe", :max_systems => 5 }
-        response.wont_be_success
+        response.must_respond_with(422)
         SystemGroup.where(:description => "describe").first.must_be_nil
       end
 
@@ -152,7 +162,7 @@ describe Api::V1::SystemGroupsController, :katello => true do
 
       it "should not allow a group to be created that already exists" do
         post :create, :organization_id => @org.label, :system_group => { :name => @group.name, :description => @group.description }
-        response.wont_be_success
+        response.must_respond_with(422)
         SystemGroup.where(:name => @group.name).count.must_equal 1
       end
     end
@@ -174,25 +184,19 @@ describe Api::V1::SystemGroupsController, :katello => true do
         first = SystemGroup.where(:name => "foo").first
         first.wont_be_nil
         first[:max_systems].must_equal 1234
+        first[:description].must_equal "describe"
       end
 
       it "should not create 2 groups with the same name" do
-        post :copy, :organization_id => @org.label, :id => @group.id, :system_group => { :new_name => "foo2", :description => "describe" }
-        post :copy, :organization_id => @org.label, :id => @group.id, :system_group => { :new_name => "foo2", :description => "describe" }
-        response.wont_be_success
-        SystemGroup.where(:name => "foo2").count.must_equal 1
+        post :copy, :organization_id => @org.label, :id => @group.id, :system_group => { :new_name => @group.name, :description => "describe" }
+        response.must_respond_with(422)
+        SystemGroup.where(:name => @group.name).count.must_equal 1
       end
 
-      it "should inherit fields from existing group unless specified in API call" do
-        post :copy, :organization_id => @org.label, :id => @group.id, :system_group => { :new_name => "foo", :description => "describe new", :max_systems => 1234 }
+      it "should inherit fields from existing group" do
+        post :copy, :organization_id => @org.label, :id => @group.id, :system_group => { :new_name => "foo" }
         must_respond_with(:success)
         first = SystemGroup.where(:name => "foo").first
-        first[:max_systems].must_equal 1234
-        first[:description].must_equal "describe new"
-
-        post :copy, :organization_id => @org.label, :id => @group.id, :system_group => { :new_name => "foo2" }
-        must_respond_with(:success)
-        first = SystemGroup.where(:name => "foo2").first
         first[:max_systems].must_equal @group.max_systems
         first[:description].must_equal @group.description
       end
@@ -200,7 +204,7 @@ describe Api::V1::SystemGroupsController, :katello => true do
       it "should not let you copy one group to a different org" do
         @org2 = Organization.create!(:name => 'test_org2', :label => 'test_org2')
         post :copy, :organization_id => @org2.label, :id => @group.id, :system_group => { :new_name => "foo2", :description => "describe" }
-        response.wont_be_success
+        response.must_respond_with(400)
         SystemGroup.where(:name => "foo2").count.must_equal 0
       end
 
@@ -273,7 +277,7 @@ describe Api::V1::SystemGroupsController, :katello => true do
         post :remove_systems, :organization_id => @org.id, :id => @group.id,
              :system_group                     => { :system_ids => [@system.uuid] }
         must_respond_with(:success)
-        @group.reload.systems.should_not include @system
+        @group.reload.systems.wont_include(@system)
       end
 
     end
@@ -290,7 +294,7 @@ describe Api::V1::SystemGroupsController, :katello => true do
       it_should_behave_like "protected action"
 
       it "should complete successfully" do
-        controller.stubs(:render)
+        @controller.stubs(:render)
         delete :destroy, :organization_id => @org.label, :id => @group.id
         must_respond_with(:success)
         SystemGroup.where(:name => @group.name).first.must_be_nil
@@ -336,7 +340,7 @@ describe Api::V1::SystemGroupsController, :katello => true do
       it_should_behave_like "protected action"
 
       it "should complete successfully" do
-        SystemGroup.stub_chain(:where, :first).returns(@group)
+        SystemGroup.stubs(:where).returns(stub(:first => @group))
         @group.stubs(:systems).returns([@system])
         @system.expects(:update_attributes!).with(attrs).returns(true)
 
@@ -346,4 +350,6 @@ describe Api::V1::SystemGroupsController, :katello => true do
     end
   end
 
+  end
+end
 end

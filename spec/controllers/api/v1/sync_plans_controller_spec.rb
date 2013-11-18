@@ -12,8 +12,8 @@
 
 require 'katello_test_helper'
 
+module Katello
 describe Api::V1::SyncPlansController do
-  include LoginHelperMethods
   include AuthorizationHelperMethods
 
   before(:each) do
@@ -38,12 +38,13 @@ describe Api::V1::SyncPlansController do
       }.with_indifferent_access
     }
 
-    it_should_behave_like "bad request" do
+    describe "invalid create params" do
       let(:req) do
         bad_req                       = request_params
         bad_req[:sync_plan][:bad_foo] = "mwahaha"
         post :create, bad_req
       end
+      it_should_behave_like "bad request"
     end
 
     it "must_be successful" do
@@ -68,12 +69,13 @@ describe Api::V1::SyncPlansController do
       }.with_indifferent_access
     }
 
-    it_should_behave_like "bad request" do
+    describe "invalid create params" do
       let(:req) do
         bad_req                       = request_params
         bad_req[:sync_plan][:bad_foo] = "mwahaha"
         put :update, bad_req
       end
+      it_should_behave_like "bad request"
     end
 
     it "must_be successful" do
@@ -82,4 +84,5 @@ describe Api::V1::SyncPlansController do
       SyncPlan.first.name.must_equal request_params[:sync_plan][:name]
     end
   end
+end
 end
