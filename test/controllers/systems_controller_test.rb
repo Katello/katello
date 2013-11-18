@@ -13,17 +13,18 @@
 
 require "katello_test_helper"
 
+module Katello
 describe SystemsController do
-  fixtures :all
 
   before do
     models = ["Organization", "KTEnvironment", "User", "Filter",
                 "FilterRule", "ErratumRule", "PackageRule", "PackageGroupRule",
                 "ContentViewEnvironment", "ContentViewDefinition", "System"]
     disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
+    setup_controller_defaults
     @system = katello_systems(:simple_server)
     @org = @system.organization
-    login_user(User.find(users(:admin)), @org)
+    set_organization(@org)
   end
 
   describe "update"  do
@@ -55,4 +56,5 @@ describe SystemsController do
       )
     end
   end
+end
 end

@@ -25,32 +25,32 @@ class ErratumRule < FilterRule
 
   [:start, :end].each do |date_type|
     define_method("#{date_type}_date") do
-      dt = parameters[:date_range].try(:[], date_type)
+      dt = parameters["date_range"].try(:[], date_type)
       Time.at(dt) if dt
     end
 
     define_method("#{date_type}_date=") do |date|
-      parameters[:date_range] ||= {}
+      parameters["date_range"] ||= {}
       if date
-        parameters[:date_range][date_type] = date.to_i
+        parameters["date_range"][date_type] = date.to_i
       else
-        parameters[:date_range].delete(date_type)
-        parameters.delete(:date_range) if parameters[:date_range].empty?
+        parameters["date_range"].delete(date_type)
+        parameters.delete("date_range") if parameters["date_range"].empty?
       end
     end
   end
 
   def errata_types=(etypes)
     if etypes.blank?
-      parameters.delete(:errata_type)
+      parameters.delete("errata_type")
     else
-      parameters[:errata_type] ||= {}
-      parameters[:errata_type] = etypes
+      parameters["errata_type"] ||= {}
+      parameters["errata_type"] = etypes
     end
   end
 
   def errata_types
-    parameters[:errata_type]
+    parameters["errata_type"]
   end
 
   def generate_clauses(repo)
@@ -71,7 +71,7 @@ class ErratumRule < FilterRule
 
       {"id" => {"$in" => ids}}  unless ids.empty?
     else
-      if parameters.key? :date_range
+      if parameters.key? "date_range"
         dr = {}
         dr["$gte"] = start_date.as_json if start_date
         dr["$lte"] = end_date.as_json if end_date

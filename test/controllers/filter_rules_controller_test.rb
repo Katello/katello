@@ -12,8 +12,8 @@
 
 require "katello_test_helper"
 
+module Katello
 class FilterRulesControllerTest < ActionController::TestCase
-  fixtures :all
 
   def self.before_suite
     models = ["Organization", "KTEnvironment", "User", "Product", "Repository",
@@ -22,20 +22,20 @@ class FilterRulesControllerTest < ActionController::TestCase
               "ContentViewDefinitionProduct", "Filter", "FilterRule"]
     services = ["Candlepin", "Pulp", "ElasticSearch", "Foreman"]
     disable_glue_layers(services, models, true)
+    super
   end
 
   def setup
+    setup_controller_defaults
     @org = katello_organizations(:acme_corporation)
-
-    login_user(User.find(users(:admin)), @org)
-
-    @filter = filters(:simple_filter)
+    set_organization(@org)
+    @filter = katello_filters(:simple_filter)
   end
 
   test "GET new - should be successful" do
     get :new, :content_view_definition_id => @filter.content_view_definition.id, :filter_id => @filter.id
     assert_response :success
-    assert_template :partial => 'content_view_definitions/filters/rules/_new'
+    assert_template :partial => 'katello/content_view_definitions/filters/rules/_new'
   end
 
   test "POST create - create package rule should be successful" do
@@ -99,47 +99,47 @@ class FilterRulesControllerTest < ActionController::TestCase
   end
 
   test "GET edit - should be successful" do
-    @filter = filters(:populated_filter)
+    @filter = katello_filters(:populated_filter)
 
     get :edit, :content_view_definition_id => @filter.content_view_definition.id, :filter_id => @filter.id,
         :id => @filter.rules.first.id
 
     assert_response :success
-    assert_template :partial => 'content_view_definitions/filters/rules/_edit'
+    assert_template :partial => 'katello/content_view_definitions/filters/rules/_edit'
   end
 
   test "GET edit_inclusion - should be successful" do
-    @filter = filters(:populated_filter)
+    @filter = katello_filters(:populated_filter)
 
     get :edit_inclusion, :content_view_definition_id => @filter.content_view_definition.id,
         :filter_id => @filter.id, :id => @filter.rules.first.id
 
     assert_response :success
-    assert_template :partial => 'content_view_definitions/filters/rules/_inclusion'
+    assert_template :partial => 'katello/content_view_definitions/filters/rules/_inclusion'
   end
 
   test "GET edit_parameter_list - should be successful" do
-    @filter = filters(:populated_filter)
+    @filter = katello_filters(:populated_filter)
 
     get :edit_parameter_list, :content_view_definition_id => @filter.content_view_definition.id,
         :filter_id => @filter.id, :id => PackageRule.where(:filter_id => @filter.id).first.id
 
     assert_response :success
-    assert_template :partial => 'content_view_definitions/filters/rules/_parameter_list'
+    assert_template :partial => 'katello/content_view_definitions/filters/rules/_parameter_list'
   end
 
   test "GET edit_date_type_parameters - should be successful" do
-    @filter = filters(:populated_filter)
+    @filter = katello_filters(:populated_filter)
 
     get :edit_date_type_parameters, :content_view_definition_id => @filter.content_view_definition.id,
         :filter_id => @filter.id, :id => ErratumRule.where(:filter_id => @filter.id).first.id
 
     assert_response :success
-    assert_template :partial => 'content_view_definitions/filters/rules/_edit_errata_parameters'
+    assert_template :partial => 'katello/content_view_definitions/filters/rules/_edit_errata_parameters'
   end
 
   test "PUT update - inclusion=false should be successful" do
-    @filter = filters(:populated_filter)
+    @filter = katello_filters(:populated_filter)
     rule = ErratumRule.where(:filter_id => @filter.id).first
 
     assert_equal rule.inclusion, true
@@ -157,7 +157,7 @@ class FilterRulesControllerTest < ActionController::TestCase
   end
 
   test "PUT add_parameter - for package rule should be successful" do
-    @filter = filters(:populated_filter)
+    @filter = katello_filters(:populated_filter)
     rule = PackageRule.where(:filter_id => @filter.id).first
 
     # success notice created
@@ -169,12 +169,12 @@ class FilterRulesControllerTest < ActionController::TestCase
         :id => rule.id, :parameter => {:unit => {:name => 'kernel.*'}}
 
     assert_response :success
-    assert_template :partial => 'content_view_definitions/filters/rules/_package_item'
-    assert_includes rule.reload.parameters[:units], {"name" => "kernel.*"}
+    assert_template :partial => 'katello/content_view_definitions/filters/rules/_package_item'
+    assert_includes rule.reload.parameters["units"], {"name" => "kernel.*"}
   end
 
   test "PUT add_parameter - for package group rule should be successful" do
-    @filter = filters(:populated_filter)
+    @filter = katello_filters(:populated_filter)
     rule = PackageGroupRule.where(:filter_id => @filter.id).first
 
     # success notice created
@@ -186,12 +186,12 @@ class FilterRulesControllerTest < ActionController::TestCase
         :id => rule.id, :parameter => {:unit => {:name => 'Desktop'}}
 
     assert_response :success
-    assert_template :partial => 'content_view_definitions/filters/rules/_package_group_item'
-    assert_includes rule.reload.parameters[:units], {"name" => "Desktop"}
+    assert_template :partial => 'katello/content_view_definitions/filters/rules/_package_group_item'
+    assert_includes rule.reload.parameters["units"], {"name" => "Desktop"}
   end
 
   test "PUT add_parameter - for errata parameter rule should be successful" do
-    @filter = filters(:populated_filter)
+    @filter = katello_filters(:populated_filter)
     rule = ErratumRule.where(:filter_id => @filter.id).first
     rule.parameters = HashWithIndifferentAccess.new
     format = "%m/%d/%Y%:z"
@@ -211,7 +211,7 @@ class FilterRulesControllerTest < ActionController::TestCase
         :id => rule.id, :parameter => {:unit => {:id => 'RHSA-2013-1234'}}
 
     assert_response :success
-    assert_template :partial => 'content_view_definitions/filters/rules/_errata_item'
+    assert_template :partial => 'katello/content_view_definitions/filters/rules/_errata_item'
     assert_equal rule.reload.parameters, {"units" => [{"id" => "RHSA-2013-1234"}]}
   end
 
@@ -219,7 +219,7 @@ class FilterRulesControllerTest < ActionController::TestCase
     # The erratum rule that is in the populated_filter contains an id parameter;
     # however, for this test, we'll convert it to one that contains a date
     # range and type, by adding each individually.
-    @filter = filters(:populated_filter)
+    @filter = katello_filters(:populated_filter)
     rule = ErratumRule.where(:filter_id => @filter.id).first
 
     # success notice created
@@ -231,29 +231,29 @@ class FilterRulesControllerTest < ActionController::TestCase
     start_date = DateTime.strptime("01/02/2012" + zone, format)
     end_date = DateTime.strptime("01/31/2013" + zone, format)
     put :add_parameter, :content_view_definition_id => @filter.content_view_definition.id, :filter_id => @filter.id,
-        :id => rule.id, :parameter => {:date_range => {:start => start_date.strftime("%m/%d/%Y")}}
+        :id => rule.id, :parameter => {"date_range" => {"start" => start_date.strftime("%m/%d/%Y")}}
 
     assert_response :success
     assert_equal start_date.to_i, rule.reload.start_date.to_i
 
     put :add_parameter, :content_view_definition_id => @filter.content_view_definition.id, :filter_id => @filter.id,
-        :id => rule.id, :parameter => {:date_range => {:end => end_date.strftime("%m/%d/%Y")}}
+        :id => rule.id, :parameter => {"date_range" => {"end" => end_date.strftime("%m/%d/%Y")}}
 
     assert_response :success
     assert_equal start_date.to_i, rule.reload.start_date.to_i
     assert_equal end_date.to_i, rule.reload.end_date.to_i
 
     put :add_parameter, :content_view_definition_id => @filter.content_view_definition.id, :filter_id => @filter.id,
-        :id => rule.id, :parameter => {:errata_type => ['security']}
+        :id => rule.id, :parameter => {"errata_type" => ['security']}
 
     assert_response :success
-    assert_equal rule.reload.parameters, {"errata_type" => ['security'],
-                                          "date_range" => {"start" => start_date.to_i,
-                                                           "end" => end_date.to_i}}
+    assert_equal rule.reload.parameters, {"date_range" => {"start" => start_date.to_i,
+                                                           "end" => end_date.to_i},
+                                          "errata_type" => ['security']}
   end
 
   test "PUT update_parameter - for package rule version should be successful" do
-    @filter = filters(:populated_filter)
+    @filter = katello_filters(:populated_filter)
     rule = PackageRule.where(:filter_id => @filter.id).first
 
     # success notice created
@@ -265,11 +265,11 @@ class FilterRulesControllerTest < ActionController::TestCase
         :id => rule.id, :parameter => {:unit => {:name => 'xterm.*', :version => '6.0'}}
 
     assert_response :success
-    assert_includes rule.reload.parameters[:units], {"name" => "xterm.*", "version" => "6.0"}
+    assert_includes rule.reload.parameters["units"], {"name" => "xterm.*", "version" => "6.0"}
   end
 
   test "PUT update_parameter - for package rule min_version and max_version should be successful" do
-    @filter = filters(:populated_filter)
+    @filter = katello_filters(:populated_filter)
     rule = PackageRule.where(:filter_id => @filter.id).first
 
     # success notice created
@@ -281,11 +281,11 @@ class FilterRulesControllerTest < ActionController::TestCase
         :id => rule.id, :parameter => {:unit => {:name => 'xterm.*', :min_version => '7.0', :max_version => '10.0'}}
 
     assert_response :success
-    assert_includes rule.reload.parameters[:units], {"name" => "xterm.*", "min_version" => "7.0", "max_version" => "10.0"}
+    assert_includes rule.reload.parameters["units"], {"name" => "xterm.*", "min_version" => "7.0", "max_version" => "10.0"}
   end
 
   test "DELETE destroy_parameters - should be successful" do
-    @filter = filters(:populated_filter)
+    @filter = katello_filters(:populated_filter)
     rule = ErratumRule.where(:filter_id => @filter.id).first
 
     # success notice created
@@ -293,17 +293,17 @@ class FilterRulesControllerTest < ActionController::TestCase
     notify.expects(:success).at_least_once
     @controller.expects(:notify).at_least_once.returns(notify)
 
-    assert_equal rule.parameters[:units].length, 1
+    assert_equal rule.parameters["units"].length, 1
 
     delete :destroy_parameters, :content_view_definition_id => @filter.content_view_definition.id,
-           :filter_id => @filter.id, :id => rule.id, :units => [rule.parameters[:units].first[:id]]
+           :filter_id => @filter.id, :id => rule.id, :units => [rule.parameters["units"].first["id"]]
 
     assert_response :success
     assert_empty rule.reload.parameters[:units]
   end
 
   test "DELETE destroy_rules - should be successful" do
-    @filter = filters(:populated_filter)
+    @filter = katello_filters(:populated_filter)
 
     # success notice created
     notify = Notifications::Notifier.new
@@ -320,4 +320,5 @@ class FilterRulesControllerTest < ActionController::TestCase
     assert_empty @filter.rules
   end
 
+end
 end
