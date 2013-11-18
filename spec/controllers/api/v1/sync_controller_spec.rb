@@ -11,11 +11,10 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require 'katello_test_helper'
-include OrchestrationHelper
 
-describe Api::V1::SyncController, :katello => true do
-  include LoginHelperMethods
-  include LocaleHelperMethods
+module Katello
+describe Api::V1::SyncController do
+  include OrchestrationHelper
   include OrganizationHelperMethods
   include ProductHelperMethods
   include RepositoryHelperMethods
@@ -57,9 +56,10 @@ describe Api::V1::SyncController, :katello => true do
       "tags"          => ["pulp:action:sync", "pulp:repository:repo_id_2"] }
   end
 
+  describe "(katello)" do
+
   before(:each) do
-    login_user
-    set_default_locale
+    setup_controller_defaults_api
     disable_org_orchestration
   end
 
@@ -141,20 +141,20 @@ describe Api::V1::SyncController, :katello => true do
 
     describe "find_object" do
 
-      subject { controller.send(:find_object) }
+      subject { @controller.send(:find_object) }
 
       it "should find provider if :provider_id is specified" do
         found_provider = {}
         Provider.expects(:find).once.with(provider_id).returns(found_provider)
-        controller.stubs(:params).returns({ :provider_id => provider_id })
+        @controller.stubs(:params).returns({ :provider_id => provider_id })
 
         subject.must_equal found_provider
       end
 
       it "should find product if :product_id is specified" do
         stub_product_with_repo
-        controller.stubs(:params).returns({ :organization_id => @organization.label, :product_id => @product.id })
-        controller.send(:find_optional_organization)
+        @controller.stubs(:params).returns({ :organization_id => @organization.label, :product_id => @product.id })
+        @controller.send(:find_optional_organization)
         subject.must_equal @product
       end
 
@@ -163,13 +163,13 @@ describe Api::V1::SyncController, :katello => true do
         found_repository.stubs(:environment).returns(KTEnvironment.new(:library => true))
 
         Repository.expects(:find).once.with(repository_id).returns(found_repository)
-        controller.stubs(:params).returns({ :repository_id => repository_id })
+        @controller.stubs(:params).returns({ :repository_id => repository_id })
 
         subject.must_equal found_repository
       end
 
       it "should raise an error if none were specified" do
-        lambda { subject }.should raise_error(HttpErrors::NotFound)
+        lambda { subject }.must_raise(HttpErrors::NotFound)
       end
     end
 
@@ -237,7 +237,7 @@ describe Api::V1::SyncController, :katello => true do
 
       it "should not call cancel_sync when the object is not being synchronized" do
         @syncable.stubs(:sync_state).returns(PulpSyncStatus::Status::FINISHED)
-        @syncable.should_not_receive(:cancel_sync)
+        @syncable.expects(:cancel_sync).never
         delete :cancel, :provider_id => provider_id
       end
 
@@ -248,7 +248,7 @@ describe Api::V1::SyncController, :katello => true do
         @organization = Organization.create!(:name => "organization", :label => "123")
 
         @syncable = mock()
-        @syncable.stubs(:latest_sync_statuses).once.returns([async_task_1, async_task_2])
+        @syncable.stubs(:latest_sync_statuses).returns([async_task_1, async_task_2])
         @syncable.stubs(:organization).returns(@organization)
         @syncable.stubs(:sync)
 
@@ -286,5 +286,7 @@ describe Api::V1::SyncController, :katello => true do
     Repository.stubs(:find).returns(@repository)
   end
 
-end
+  end
 
+end
+end

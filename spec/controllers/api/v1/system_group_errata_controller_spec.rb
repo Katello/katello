@@ -11,12 +11,12 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require 'katello_test_helper'
-include OrchestrationHelper
 
-describe Api::V1::SystemGroupErrataController, :katello => true do
-  include LoginHelperMethods
-  include LocaleHelperMethods
+module Katello
+describe Api::V1::SystemGroupErrataController do
   include AuthorizationHelperMethods
+  include OrchestrationHelper
+  include OrganizationHelperMethods
   include SystemHelperMethods
 
   let(:user_with_read_permissions) { user_with_permissions { |u| u.can(:read_systems, :system_groups, @group.id, @organization) } }
@@ -26,9 +26,10 @@ describe Api::V1::SystemGroupErrataController, :katello => true do
   let(:uuid) { '1234' }
   let(:errata) { %w[RHBA-2012:0001 RHSA-2012:0002] }
 
+  describe "(katello)" do
+
   before(:each) do
-    set_default_locale
-    login_user(:mock => false)
+    setup_controller_defaults_api
 
     disable_consumer_group_orchestration
     setup_system_creation
@@ -68,11 +69,15 @@ describe Api::V1::SystemGroupErrataController, :katello => true do
 
     it_should_behave_like "protected action"
 
-    it { must_be_successful }
-
     it "should retrieve errata from pulp" do
       subject
     end
+
+    it "should be successful" do
+      subject
+      must_respond_with(:success)
+    end
+
   end
 
   describe "install errata" do
@@ -88,11 +93,17 @@ describe Api::V1::SystemGroupErrataController, :katello => true do
 
     it_should_behave_like "protected action"
 
-    it { must_be_successful }
-
     it "should call model to install errata" do
       @group.expects(:install_errata)
       subject
     end
+
+    it "should be successful" do
+      subject
+      must_respond_with(:success)
+    end
+
   end
+  end
+end
 end
