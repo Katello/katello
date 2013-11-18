@@ -11,12 +11,12 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require 'katello_test_helper'
-include OrchestrationHelper
 
+module Katello
 describe Api::V1::SubscriptionsController do
-  include LoginHelperMethods
-  include LocaleHelperMethods
   include SystemHelperMethods
+  include OrchestrationHelper
+  include OrganizationHelperMethods
   include AuthorizationHelperMethods
 
   let(:facts) { { "distribution.name" => "Fedora" } }
@@ -28,8 +28,7 @@ describe Api::V1::SubscriptionsController do
   let(:user_without_update_permissions) { user_without_permissions }
 
   before (:each) do
-    login_user
-    set_default_locale
+    setup_controller_defaults_api
     disable_org_orchestration
 
     Resources::Candlepin::Consumer.stubs(:create).returns({ :uuid => uuid, :owner => { :key => uuid } })
@@ -51,30 +50,30 @@ describe Api::V1::SubscriptionsController do
     let(:unauthorized_user) { user_without_update_permissions }
     it_should_behave_like "protected action"
 
-    it "requires pool and quantity to be specified", :katello => true do #TODO headpin
+    it "requires pool and quantity to be specified (katello)" do #TODO headpin
       post :create, :system_id => @system.id
       response.code.must_equal "400"
     end
 
     context "subscribes" do
-      it "to one pool", :katello => true do #TODO headpin
+      it "to one pool (katello)" do #TODO headpin
         Resources::Candlepin::Consumer.expects(:consume_entitlement).once.with(@system.uuid, "poolidXYZ", "1")
         post :create, :system_id => @system.id, :pool => "poolidXYZ", :quantity => '1'
       end
     end
 
     context "unsubscribes" do
-      it "from one pool", :katello => true do #TODO headpin
+      it "from one pool (katello)" do #TODO headpin
         Resources::Candlepin::Consumer.expects(:remove_entitlement).once.with(@system.uuid, "poolidXYZ")
         post :destroy, :system_id => @system.id, :id => "poolidXYZ"
       end
 
-      it "from one pool by serial", :katello => true do #TODO headpin
+      it "from one pool by serial (katello)" do #TODO headpin
         Resources::Candlepin::Consumer.expects(:remove_certificate).once.with(@system.uuid, "serialidXYZ")
         post :destroy_by_serial, :system_id => @system.id, :serial_id => "serialidXYZ"
       end
 
-      it "from all pools", :katello => true do #TODO headpin
+      it "from all pools (katello)" do #TODO headpin
         Resources::Candlepin::Consumer.expects(:remove_entitlements).once.with(@system.uuid)
         post :destroy_all, :system_id => @system.id
       end
@@ -87,12 +86,12 @@ describe Api::V1::SubscriptionsController do
       let(:unauthorized_user) { user_without_read_permissions }
       it_should_behave_like "protected action"
 
-      it "should find System", :katello => true do #TODO heapdin
+      it "should find System (katello)" do #TODO heapdin
         System.expects(:first).once.with(has_entries(:conditions => { :uuid => @system.uuid })).returns(@system)
         get :index, :system_id => @system.uuid
       end
 
-      it "should retrieve Consumer's errata from pulp", :katello => true do #TODO headpin
+      it "should retrieve Consumer's errata from pulp (katello)" do #TODO headpin
         Resources::Candlepin::Consumer.expects(:entitlements).once.with(uuid).returns([])
         get :index, :system_id => @system.uuid
       end
@@ -100,3 +99,5 @@ describe Api::V1::SubscriptionsController do
 
   end
 end
+end
+
