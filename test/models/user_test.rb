@@ -11,30 +11,15 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require './test/models/user_base'
+require 'models/user_base'
 
+module Katello
 class UserClassTest < UserTestBase
-
-  def test_authenticate
-    refute_nil User.authenticate!(@no_perms_user.username, @no_perms_user.username)
-  end
-
-  def test_authenticate_fails_with_wrong_password
-    assert_nil User.authenticate!(@no_perms_user.username, '')
-  end
-
-  def test_authenticate_fails_with_non_user
-    assert_nil User.authenticate!('fake_user', '')
-  end
-
-  def test_authenticate_fails_with_disabled_user
-    assert_nil User.authenticate!(@disabled_user.username, @disabled_user.password)
-  end
 
   def test_cp_oauth_header
     User.current = @admin
     assert        User.cp_oauth_header.key?('cp-user')
-    assert_equal  @admin.username, User.cp_oauth_header['cp-user']
+    assert_equal  @admin.login, User.cp_oauth_header['cp-user']
   end
 
   def test_consumer?
@@ -56,6 +41,7 @@ class UserCreateTest < UserTestBase
   def setup
     super
     @user = build(:user, :batman)
+    @user.auth_source = auth_sources(:one)
   end
 
   def teardown
@@ -66,52 +52,10 @@ class UserCreateTest < UserTestBase
     assert @user.save
   end
 
-  def test_create_with_short_password
-    @user.password = "a"
-
-    assert !@user.save
-    assert_includes @user.errors, :password
-  end
-
-  def test_create_with_htmlchars_username
-    @user.username = 'html_char_<blink>hacker</blink>'
-    assert @user.save
-    refute_includes @user.errors, :username
-  end
-
-  def test_create_with_long_username
-    @user.username = 'a'*129
-    assert !@user.save
-    assert_equal 1, @user.errors.size
-  end
-
   def test_before_create_self_role
     @user.save
 
     refute_nil @user.own_role
-  end
-
-  def test_before_save_hash_password
-    @user.save
-
-    refute_equal "Villa", @user.password
-  end
-
-  def test_i18n_username
-    uname = "ಬoo0000"
-    @user.username = uname
-    assert        @user.save
-    refute_nil    @user.remote_id
-    assert_empty  @user.errors
-    refute_nil    User.find_by_username(uname)
-  end
-
-  def test_email_username
-    email = "foo@redhat.com"
-    @user.username = email
-    assert        @user.save
-    assert_empty  @user.errors
-    refute_nil    User.find_by_username(email)
   end
 
 end
@@ -121,7 +65,7 @@ class UserTest < UserTestBase
   def setup
     super
     User.current = @admin
-    @admin_role  = Role.find(roles(:administrator))
+    @admin_role  = Role.find(katello_roles(:administrator))
   end
 
   def test_own_role
@@ -184,13 +128,7 @@ class UserTest < UserTestBase
 
   def test_cp_oauth_header
     assert        @admin.cp_oauth_header.key?('cp-user')
-    assert_equal  @admin.username, @admin.cp_oauth_header['cp-user']
-  end
-
-  def test_send_password_reset
-    UserMailer.stub(:send_password_reset, true) do
-      assert @admin.send_password_reset
-    end
+    assert_equal  @admin.login, @admin.cp_oauth_header['cp-user']
   end
 
   def test_has_default_environment?
@@ -273,7 +211,7 @@ class UserProtectedMethodTest < UserTestBase
   def setup
     super
     User.current = @admin
-    @admin_role  = Role.find(roles(:administrator))
+    @admin_role  = Role.find(katello_roles(:administrator))
   end
 
   def test_can_be_deleted?
@@ -281,7 +219,7 @@ class UserProtectedMethodTest < UserTestBase
   end
 
   def test_own_role_included_in_roles_without_own_role
-    @admin.roles.delete(@admin.own_role)
+    @admin.katello_roles.delete(@admin.own_role)
     refute @admin.valid?
   end
 end
@@ -291,15 +229,7 @@ class UserInstancePrivateMethodTest < UserTestBase
   def setup
     super
     User.current = @admin
-    @admin_role  = Role.find(roles(:administrator))
-  end
-
-  def test_generate_token
-    @admin.send(:generate_token, :password_reset_token)
-    @admin.save!
-    @no_perms_user.send(:generate_token, :password_reset_token)
-
-    refute_equal @no_perms_user.password_reset_token, @admin.password_reset_token
+    @admin_role  = Role.find(katello_roles(:administrator))
   end
 
   def test_super_admin_check
@@ -313,86 +243,7 @@ class UserInstancePrivateMethodTest < UserTestBase
   end
 
   def test_generate_remote_id
-    refute_equal @admin.send(:generate_remote_id), @admin.username
-  end
-
-end
-
-class UserLdapTest < UserTestBase
-
-  def self.before_suite
-    super
-    options = { :warden => "ldap", :validate_ldap => false }
-    config = Katello::Configuration::Node.new(Katello.config.to_hash.update options)
-    Katello.stubs(:config).returns(config)
-    @@user = User.create_ldap_user!('testuser')
-  end
-
-  def setup
-    super
-    @ldap = Minitest::Mock.new
-    @ldap.expect(:authenticate?, true, [@@user.username, @@user.password])
-    @ldap.expect(:group_list, ['test_role'], [@@user.username])
-    @ldap.expect(:is_in_groups?, true, [@@user.username, []])
-  end
-
-  def test_no_email
-    assert_nil @@user.email
-  end
-
-  def test_find_created
-    refute_nil User.find_by_username('testuser')
-  end
-
-  def test_authenticate_using_ldap!
-    LdapFluff.stub(:new, @ldap) do
-      assert_instance_of User, User.authenticate_using_ldap!(@@user.username, @@user.password)
-    end
-  end
-
-  def test_create_ldap_user!
-    options = { :warden => "ldap" }
-    override_config(options)
-    assert_instance_of User, User.create_ldap_user!('alice')
-  end
-
-  def test_clear_existing_ldap_roles
-    options = { :warden => "ldap" }
-    override_config(options)
-
-    LdapFluff.stub(:new, @ldap) do
-      @@user.set_ldap_roles
-      refute_empty @@user.roles
-
-      @@user.clear_existing_ldap_roles!
-      assert_empty @@user.ldap_roles
-    end
-  end
-
-  def test_set_ldap_roles
-    options = { :warden => "ldap" }
-    override_config(options)
-    
-    LdapFluff.stub(:new, @ldap) do
-      @@user.set_ldap_roles
-
-      refute_empty @@user.roles
-    end
-  end
-
-  def test_verify_ldap_roles
-    options = { :warden => "ldap" }
-    override_config(options)
-
-    LdapFluff.stub(:new, @ldap) do
-      @@user.set_ldap_roles
-
-      assert @@user.verify_ldap_roles
-    end
-  end
-
-  def test_not_ldap_mode?
-    assert @admin.not_ldap_mode?
+    refute_equal @admin.send(:generate_remote_id), @admin.login
   end
 
 end
@@ -401,7 +252,7 @@ class UserDefaultEnvTest < UserTestBase
 
   def self.before_suite
     services  = ['Candlepin', 'Pulp', 'ElasticSearch', 'Foreman']
-    models    = ['User', 'KTEnvironment', 'Repository', 'System']
+    models    = ['User', 'KTEnvironment', 'Repository', 'System', 'ContentViewEnvironment']
     disable_glue_layers(services, models)
   end
 
@@ -410,6 +261,7 @@ class UserDefaultEnvTest < UserTestBase
     @org = @acme_corporation
     @env = @dev
     @user = @admin
+    User.current = @admin
   end
 
   def test_set_default_env
@@ -442,4 +294,5 @@ class UserDefaultEnvTest < UserTestBase
     refute_empty @user.search_favorites
   end
 
+end
 end
