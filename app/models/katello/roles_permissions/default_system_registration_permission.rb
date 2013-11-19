@@ -42,7 +42,7 @@ module RolesPermissions::DefaultSystemRegistrationPermission
 
   def _find_default_system_registration_permission(resource_type, verb)
     joins(:verbs).
-        where(:resource_type_id => resource_type, :verbs => { :id => verb }, :name => NAME).first
+        where(:resource_type_id => resource_type, Verb.table_name => { :id => verb }, :name => NAME).first
   end
 end
 end
