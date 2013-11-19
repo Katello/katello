@@ -165,7 +165,7 @@ def disable_glue_layers(services=[], models=[], force_reload=false)
         load "#{Katello::Engine.root}/app/models/katello/#{model.underscore}.rb"
       rescue NameError
         Object.send(:remove_const, model)
-        load "#{Katello::Engine.root}/app/models/#{model.underscore}.rb"
+        load "#{Rails.root}/app/models/#{model.underscore}.rb"
       end
       if model == 'User'
         # Ugly hack to force the model to be loaded properly
