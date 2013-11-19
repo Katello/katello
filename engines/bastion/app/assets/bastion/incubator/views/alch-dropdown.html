@@ -11,7 +11,8 @@
       <span class="fl">{{ item.display }}</span>
       <i class="icon-caret-right flyout-indicator" ng-show="item.type=='flyout'"></i> </a>
     <ul alch-flyout="item.items"
-        ng-show="flyout.show"
+        ng-if="item.type == 'flyout'"
+        ng-show="item.active"
         ng-class="{ 'dropdown-active' : dropdown.show }">
     </ul>
   </li>

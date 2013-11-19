@@ -96,8 +96,6 @@ describe('Directive: alchDropdown', function() {
 
             expect(elementScope.setHover).toHaveBeenCalledWith(testItems[2], true);
             expect(testItems[2].active).toBe(true);
-            expect(elementScope.flyout.show).toBe(true);
-            expect(elementScope.flyout).toBe(testItems[2].items);
         });
 
         it("by setting the item to inactive on mouse out", function() {
@@ -105,7 +103,6 @@ describe('Directive: alchDropdown', function() {
             target.mouseleave();
 
             expect(elementScope.setHover).toHaveBeenCalledWith(testItems[2], false);
-            expect(elementScope.flyout.show).toBe(false);
         });
     });
 
