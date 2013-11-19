@@ -27,8 +27,8 @@
  *   Provides the functionality for the repo discovery action pane.
  */
 angular.module('Bastion.products').controller('DiscoveryController',
-    ['$scope', '$q', '$timeout', '$http', 'Task', 'Organization', 'CurrentOrganization',
-    function($scope, $q, $timeout, $http, Task, Organization, CurrentOrganization) {
+    ['$scope', '$q', '$timeout', '$http', 'taskListProvider', 'Organization', 'CurrentOrganization',
+    function($scope, $q, $timeout, $http, taskListProvider, Organization, CurrentOrganization) {
         var transformRows, setDiscoveryDetails;
 
         $scope.discovery = {url: ''};
@@ -92,24 +92,21 @@ angular.module('Bastion.products').controller('DiscoveryController',
             }
         });
 
+        $scope.updateTask = function(task) {
+            setDiscoveryDetails(task);
+            if(!task.pending) {
+                taskListProvider.unregisterScope($scope);
+            }
+        }
+
         $scope.discover = function() {
             $scope.discovery.pending = true;
             $scope.discoveryTable.rows = [];
             $scope.discoveryTable.selectAll(false);
-            Organization.repoDiscover({id: CurrentOrganization, url: $scope.discovery.url}, function(response) {
-                pollTask(response);
+            Organization.repoDiscover({id: CurrentOrganization, url: $scope.discovery.url}, function(task) {
+                taskListProvider.registerScope($scope, { type: 'task', task_id: task.uuid })
             });
         };
 
-        function pollTask(task) {
-            if (task.pending) {
-                Task.poll(task, function(response) {
-                    setDiscoveryDetails(response);
-                });
-            }
-            else {
-                setDiscoveryDetails(task);
-            }
-        }
     }]
 );
