@@ -31,12 +31,12 @@ angular.module('alchemy').directive('alchSaveControl', function() {
     return {
         restrict: 'AE',
         replace: true,
-        transclude: true,
         templateUrl: 'widgets/views/save-control.html',
         scope: {
             handleSave: '&onSave',
             handleCancel: '&onCancel',
-            invalid: '='
+            invalid: '=',
+            working: '='
         }
     };
 });

@@ -31,6 +31,7 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
         $scope.repositoryTypes = [{name: 'yum'}, {name: 'puppet'}];
 
         $scope.$watch('repository.name', function() {
+            $scope.repositoryForm.name.$setValidity('server', true);
             FormUtils.labelize($scope.repository, $scope.repositoryForm);
         });
 
@@ -51,7 +52,7 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
             $scope.working = false;
 
             angular.forEach(response.data.errors, function(errors, field) {
-                $scope.repositoryForm[field].$setValidity('', false);
+                $scope.repositoryForm[field].$setValidity('server', false);
                 $scope.repositoryForm[field].$error.messages = errors;
             });
         }

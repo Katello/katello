@@ -36,6 +36,8 @@ describe('Controller: ProductFormController', function() {
             closeItem: function() {}
         };
 
+        $scope.panel = {};
+
         $controller('ProductFormController', {
             $scope: $scope,
             $http: $http,

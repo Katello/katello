@@ -6,6 +6,7 @@
     </div>
     <div class="input">
       <input ng-model="product.name"
+             id="name"
              name="name"
              type="text"
              tabindex="1"
@@ -23,6 +24,7 @@
     </div>
     <div class="input">
       <input ng-model="product.label"
+             id="label"
              name="label"
              type="text"
              tabindex="2"
@@ -39,6 +41,7 @@
     </div>
     <div class="input">
       <select required
+              id="provider_id"
               tabindex="3"
               name="provider_id"
               ng-model="product.provider_id"
@@ -59,6 +62,7 @@
     </div>
     <div class="input">
       <select tabindex="4"
+              id="gpg_key_id"
               name="gpg_key_id"
               ng-model="product.gpg_key_id"
               ng-options="gpg_key.id as gpg_key.name for gpg_key in gpgKeys">
@@ -72,6 +76,7 @@
     </div>
     <div class="input">
       <textarea ng-model="product.description"
+                id="description"
                 name="description"
                 tabindex="5"
                 rows="10"
@@ -88,7 +93,8 @@
   <div alch-save-control
        on-cancel="transitionTo('products.index')"
        on-save="save(product)"
-       invalid="productForm.$invalid">
+       invalid="productForm.$invalid"
+       working="working">
   </div>
 
 </form>
