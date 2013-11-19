@@ -189,41 +189,21 @@ class ApplicationController < ::ApplicationController
   end
 
   def current_organization
-    # ENGINE: Remove from this function when db:seed can populate an initial
-    #         Katello organization, supderamin Role and assign to the user
-    if !session[:current_organization_id]
-      if Katello::Role.all.length == 0
-        superadmin_role = Role.make_super_admin_role
-      end
-      if User.first.katello_roles.length == 0
-        user = User.first
-        user.katello_roles << Katello::Role.first
-        user.save!
-      end
-      if Katello::Organization.all.length == 0
-        first_org = Organization.find_or_create_by_name(
-          :name => 'ACME_Corporation',
-          :label => 'ACME_Corporation'
-        )
-      end
-      @current_org = Katello::Organization.first
-      return @current_org
-    else
-      begin
-        if @current_org.nil? && current_user
-          o = Organization.find(session[:current_organization_id])
-          if current_user.allowed_organizations.include?(o)
-            @current_org = o
-          else
-            fail ActiveRecord::RecordNotFound.new _("Permission Denied. User '%{user}' does not have permissions to access organization '%{org}'.") % {:user => User.current.login, :org => o.name}
-          end
+    return nil unless session[:current_organization_id]
+    begin
+      if @current_org.nil? && current_user
+        o = Organization.find(session[:current_organization_id])
+        if current_user.allowed_organizations.include?(o)
+          @current_org = o
+        else
+          fail ActiveRecord::RecordNotFound.new _("Permission Denied. User '%{user}' does not have permissions to access organization '%{org}'.") % {:user => User.current.login, :org => o.name}
         end
-        return @current_org
-      rescue ActiveRecord::RecordNotFound => error
-        log_exception error
-        session.delete(:current_organization_id)
-        org_not_found_error
       end
+      return @current_org
+    rescue ActiveRecord::RecordNotFound => error
+      log_exception error
+      session.delete(:current_organization_id)
+      org_not_found_error
     end
   end
 
