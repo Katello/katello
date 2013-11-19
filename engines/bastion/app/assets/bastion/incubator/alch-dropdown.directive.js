@@ -17,19 +17,7 @@ angular.module('alchemy').directive('alchDropdown', function() {
 
         controller: ['$scope', function($scope) {
             $scope.setHover = function(item, mousein) {
-                if (mousein) {
-                    item.active = true;
-
-                    if (item.type === 'flyout') {
-                        $scope.flyout = item.items;
-                        $scope.flyout.show = true;
-                    }
-                } else {
-                    if ($scope.flyout) {
-                        $scope.flyout.show = false;
-                    }
-                    item.active = false;
-                }
+                item.active = mousein;
             };
 
             $scope.isRight = function(direction) {
