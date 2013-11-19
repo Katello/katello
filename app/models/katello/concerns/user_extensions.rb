@@ -53,9 +53,9 @@ module Katello
 
         has_many :roles_users, :dependent => :destroy, :class_name => Katello::RolesUser
         has_many :katello_roles, :through => :roles_users, :before_remove => :super_admin_check, :uniq => true, :extend => RolesPermissions::UserOwnRole, :source => :role
-        has_many :help_tips, :dependent => :destroy
-        has_many :user_notices, :dependent => :destroy
-        has_many :notices, :through => :user_notices
+        has_many :help_tips, :dependent => :destroy, :class_name => "Katello::HelpTip"
+        has_many :user_notices, :dependent => :destroy, :class_name => "Katello::UserNotice"
+        has_many :notices, :through => :user_notices, :class_name => "Katello::Notice"
         has_many :task_statuses, :dependent => :destroy, :class_name => "Katello::TaskStatus"
         has_many :search_favorites, :dependent => :destroy, :class_name => "Katello::SearchFavorite"
         has_many :search_histories, :dependent => :destroy, :class_name => "Katello::SearchHistory"
@@ -63,6 +63,7 @@ module Katello
         serialize :preferences, Hash
 
         validates :default_locale, :inclusion => {:in => Katello.config.available_locales, :allow_nil => true, :message => _("must be one of %s") % Katello.config.available_locales.join(', ')}
+        validates_with Validators::OwnRolePresenceValidator, :attributes => :katello_roles
 
         before_validation :create_own_role
         after_validation :setup_remote_id
@@ -165,8 +166,8 @@ module Katello
 
         def disable_helptip(key)
           return if !self.helptips_enabled? #don't update helptips if user has it disabled
-          return if !HelpTip.where(:key => key, :user_id => self.id).empty?
-          help      = HelpTip.new
+          return if !Katello::HelpTip.where(:key => key, :user_id => self.id).empty?
+          help      = Katello::HelpTip.new
           help.key  = key
           help.user = self
           help.save
@@ -185,17 +186,17 @@ module Katello
 
         def enable_helptip(key)
           return if !self.helptips_enabled? #don't update helptips if user has it disabled
-          help = HelpTip.where(:key => key, :user_id => self.id).first
+          help = Katello::HelpTip.where(:key => key, :user_id => self.id).first
           return if help.nil?
           help.destroy
         end
 
         def clear_helptips
-          HelpTip.destroy_all(:user_id => self.id)
+          Katello::HelpTip.destroy_all(:user_id => self.id)
         end
 
         def helptip_enabled?(key)
-          return self.helptips_enabled && HelpTip.where(:key => key, :user_id => self.id).first.nil?
+          return self.helptips_enabled && Katello::HelpTip.where(:key => key, :user_id => self.id).first.nil?
         end
 
         def defined_roles
@@ -203,7 +204,7 @@ module Katello
         end
 
         def defined_role_ids
-          self.role_ids - [self.own_role.id]
+          self.katello_role_ids - [self.own_role.id]
         end
 
         def cp_oauth_header
@@ -229,25 +230,25 @@ module Katello
         end
 
         def default_locale
-          self.preferences[:user][:locale] rescue nil
+          self.preferences_hash[:user][:locale] rescue nil
         end
 
         def default_locale=(locale)
-          self.preferences[:user] = { } unless self.preferences.key? :user
-          self.preferences[:user][:locale] = locale
+          self.preferences_hash[:user] = { } unless self.preferences_hash.key? :user
+          self.preferences_hash[:user][:locale] = locale
         end
 
         def legacy_mode
-          self.preferences[:user][:legacy_mode] rescue nil
+          self.preferences_hash[:user][:legacy_mode] rescue nil
         end
 
         def legacy_mode=(use_legacy_mode)
-          self.preferences[:user] = { } unless self.preferences.key? :user
-          self.preferences[:user][:legacy_mode] = use_legacy_mode.to_bool
+          self.preferences_hash[:user] = { } unless self.preferences_hash.key? :user
+          self.preferences_hash[:user][:legacy_mode] = use_legacy_mode.to_bool
         end
 
         def default_org
-          org_id = self.preferences[:user][:default_org] rescue nil
+          org_id = self.preferences_hash[:user][:default_org] rescue nil
           if org_id && !org_id.nil? && org_id != "nil"
             org = Organization.find_by_id(org_id)
             return org if allowed_organizations.include?(org)
@@ -258,40 +259,40 @@ module Katello
 
         #set the default org if it's an actual org_id
         def default_org=(org_id)
-          self.preferences[:user] = { } unless self.preferences.key? :user
+          self.preferences_hash[:user] = { } unless self.preferences_hash.key? :user
           if !org_id.nil? && org_id != "nil"
             organization = Organization.find_by_id(org_id)
-            self.preferences[:user][:default_org] = organization.id
+            self.preferences_hash[:user][:default_org] = organization.id
           else
-            self.preferences[:user][:default_org] = nil
+            self.preferences_hash[:user][:default_org] = nil
           end
         end
 
         def subscriptions_match_system_preference
-          self.preferences[:user][:subscriptions_match_system] rescue false
+          self.preferences_hash[:user][:subscriptions_match_system] rescue false
         end
 
         def subscriptions_match_system_preference=(flag)
-          self.preferences[:user] = { } unless self.preferences.key? :user
-          self.preferences[:user][:subscriptions_match_system] = flag
+          self.preferences_hash[:user] = { } unless self.preferences_hash.key? :user
+          self.preferences_hash[:user][:subscriptions_match_system] = flag
         end
 
         def subscriptions_match_installed_preference
-          self.preferences[:user][:subscriptions_match_installed] rescue false
+          self.preferences_hash[:user][:subscriptions_match_installed] rescue false
         end
 
         def subscriptions_match_installed_preference=(flag)
-          self.preferences[:user] = { } unless self.preferences.key? :user
-          self.preferences[:user][:subscriptions_match_installed] = flag
+          self.preferences_hash[:user] = { } unless self.preferences_hash.key? :user
+          self.preferences_hash[:user][:subscriptions_match_installed] = flag
         end
 
         def subscriptions_no_overlap_preference
-          self.preferences[:user][:subscriptions_no_overlap] rescue false
+          self.preferences_hash[:user][:subscriptions_no_overlap] rescue false
         end
 
         def subscriptions_no_overlap_preference=(flag)
-          self.preferences[:user] = { } unless self.preferences.key? :user
-          self.preferences[:user][:subscriptions_no_overlap] = flag
+          self.preferences_hash[:user] = { } unless self.preferences_hash.key? :user
+          self.preferences_hash[:user][:subscriptions_no_overlap] = flag
         end
 
         def as_json(options)
@@ -408,8 +409,7 @@ module Katello
         end
 
         def create_own_role
-          # ENGINE: Handle this more cleanly after user's are more stable
-          #return unless new_record?
+          return unless new_record?
           katello_roles.find_or_create_own_role(self)
         end
 
