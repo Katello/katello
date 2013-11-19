@@ -10,10 +10,10 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'minitest_helper'
+require 'katello_test_helper'
 
-class DeletionChangesetTest < MiniTest::Rails::ActiveSupport::TestCase
-  fixtures :all
+module Katello
+class DeletionChangesetTest < ActiveSupport::TestCase
 
   def self.before_suite
     models = ["Organization", "ContentView", "Product", "ContentViewEnvironment", "KTEnvironment",
@@ -22,13 +22,13 @@ class DeletionChangesetTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def setup
-    @library              = KTEnvironment.find(environments(:library).id)
-    @dev                  = KTEnvironment.find(environments(:dev).id)
-    @acme_corporation     = Organization.find(organizations(:acme_corporation).id)
-    @product              = Product.find(products(:fedora))
-    @repo_dev             = Repository.find(repositories(:fedora_17_x86_64_dev))
-    @repo_library         = Repository.find(repositories(:fedora_17_x86_64))
-    @library_dev_view     = ContentView.find(content_views(:library_dev_view))
+    @library              = KTEnvironment.find(katello_environments(:library).id)
+    @dev                  = KTEnvironment.find(katello_environments(:dev).id)
+    @acme_corporation     = Organization.find(katello_organizations(:acme_corporation).id)
+    @product              = Product.find(katello_products(:fedora))
+    @repo_dev             = Repository.find(katello_repositories(:fedora_17_x86_64_dev))
+    @repo_library         = Repository.find(katello_repositories(:fedora_17_x86_64))
+    @library_dev_view     = ContentView.find(katello_content_views(:library_dev_view))
 
     @changeset            = DeletionChangeset.create!(:name =>'PrecreatedCS',
                                               :environment_id => @dev.id)
@@ -70,4 +70,5 @@ class DeletionChangesetTest < MiniTest::Rails::ActiveSupport::TestCase
     refute_includes ContentView.find(@library_dev_view).environments, @dev
   end
 
+end
 end
