@@ -27,7 +27,7 @@
     <div class="col-sm-3 nutupane-info">
       <span translate>Showing {{ table.rows.length }} of {{ table.resource.subtotal }} ({{ table.resource.total }} Total)</span>
     </div>
-      
+
     <div class="fr">
       <div class="nutupane-info fl">
         <span translate>{{ table.numSelected }} Selected</span>
@@ -35,7 +35,7 @@
         <a class="deselect-action"
            translate
            ng-class="{ 'disabled-link' : table.numSelected == 0 }"
-           ng-click="table.selectAll(false)">
+           ng-click="table.selectAllResults(false)">
           Deselect All
         </a>
       </div>
