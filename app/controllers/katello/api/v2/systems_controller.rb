@@ -126,6 +126,7 @@ class Api::V2::SystemsController < Api::V1::SystemsController
   api :GET, "/systems/task/:task_id", "Grab a single system task"
   param :task_id, String, :desc => "Id of the task", :required => true
   def task
+    # TODO: make sure nobody uses this call and remove it
     task = TaskStatus.find(params[:task_id]).refresh
     respond_for_show(:resource => task, :template => :task)
   end

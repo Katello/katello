@@ -33,14 +33,6 @@ angular.module('Bastion.tasks').factory('Task',
             }
         );
 
-        resource.action = function(task, actionName) {
-            if(task.actions) {
-                return _.find(task.actions, function(action) {
-                    return action.action == actionName
-                });
-            }
-        }
-
         resource.poll = function(task, returnFunction) {
             // TODO: remove task.id once we get rid of old TaskStatus code
             resource.get({id: (task.id || task.uuid)}, function(data) {

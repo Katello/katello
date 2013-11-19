@@ -89,6 +89,28 @@ angular.module('Bastion.systems').config(['$stateProvider', function($stateProvi
         templateUrl: 'systems/details/views/system-info.html'
     });
 
+    $stateProvider.state('systems.details.tasks', {
+        abstract: true,
+        collapsed: true,
+        controller: 'TasksController',
+        data: {
+            resourceId: ':systemId',
+            resourceType: 'System'
+        },
+        template: '<div ui-view></div>'
+    })
+    .state('systems.details.tasks.index', {
+        url: '/tasks',
+        collapsed: true,
+        templateUrl: 'tasks/views/tasks.html'
+    })
+    .state('systems.details.tasks.details', {
+        url: '/tasks/:taskId',
+        collapsed: true,
+        controller: 'TaskDetailsController',
+        templateUrl: 'tasks/views/task-details.html'
+    });
+
     $stateProvider.state('systems.details.events', {
         abstract: true,
         collapsed: true,
