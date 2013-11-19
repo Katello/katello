@@ -36,6 +36,8 @@ angular.module('alchemy')
             return selectedRows;
         };
 
+        $scope.table.selectAllDisabled = false;
+
         this.addRow = function(row) {
             rows.push(row);
 
@@ -75,6 +77,7 @@ angular.module('alchemy')
                 return '<th class="row-select">' +
                           '<input type="checkbox"' +
                                   'ng-model="table.allSelected"' +
+                                  'ng-disabled="table.selectAllDisabled"' +
                                   'ng-change="allSelected(table)">' +
                         '</th>';
             };

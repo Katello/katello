@@ -68,6 +68,11 @@ angular.module('Bastion.widgets').factory('Nutupane',
                 table.working = true;
 
                 resource[table.action](params, function (response) {
+
+                    angular.forEach(response.results, function(row) {
+                        row.selected = table.allResultsSelected;
+                    });
+
                     if (replace) {
                         table.rows = response.results;
                     } else {
@@ -80,10 +85,6 @@ angular.module('Bastion.widgets').factory('Nutupane',
                         deferred.resolve(response);
                         table.resource = response;
                         table.resource.offset = table.rows.length;
-
-                        if (self.selectAllMode) {
-                            table.selectAll(true);
-                        }
                     }, 0);
                     table.working = false;
                 });
@@ -94,11 +95,14 @@ angular.module('Bastion.widgets').factory('Nutupane',
                 return params;
             };
 
+            self.enableSelectAllResults = function() {
+                self.table.selectAllResultsEnabled = true;
+                self.table.allResultsSelected = false;
+            };
+
             self.setParams = function(newParams) {
                params = newParams;
             };
-
-            self.selectAllMode = false;
 
             self.searchTransform = function(term) {
                 return term;
@@ -129,11 +133,31 @@ angular.module('Bastion.widgets').factory('Nutupane',
                 return self.table.rows;
             };
 
+            self.getAllSelectedResults = function() {
+                return {
+                    selectedObjects: self.table.getSelected(),
+                    selectAllResults:self.table.allResultsSelected,
+                    searchString: self.table.searchTerm || '',
+                    deselected: self.getDeselected()
+                };
+            };
+
+            self.getDeselected = function() {
+                var deselectedRows = [];
+                angular.forEach(self.table.rows, function(row, rowIndex) {
+                    if (row.selected !== true) {
+                        deselectedRows.push(self.table.rows[rowIndex]);
+                    }
+                });
+                return deselectedRows;
+            };
+
             self.table.search = function(searchTerm) {
                 $location.search('search', searchTerm);
                 self.table.resource.offset = 0;
                 self.table.rows = [];
                 self.table.closeItem();
+                self.table.selectAllResults(false);
 
                 if (!self.table.working) {
                     self.query(searchTerm);
@@ -146,14 +170,17 @@ angular.module('Bastion.widgets').factory('Nutupane',
             };
 
             self.table.replaceRow = function(row) {
-                var index = null;
+                var index, selected;
+                index = null;
                 angular.forEach(self.table.rows, function(item, itemIndex) {
                     if (item.id === row.id) {
                         index = itemIndex;
+                        selected = item.selected;
                     }
                 });
 
                 if (index >= 0) {
+                    row.selected = selected; //Preserve selectedness
                     self.table.rows[index] = row;
                 }
             };
@@ -177,6 +204,22 @@ angular.module('Bastion.widgets').factory('Nutupane',
                 var length = self.table.rows.length;
                 var subtotal = self.table.resource.subtotal;
                 return ((length === 0 && subtotal !== 0) || (length < subtotal));
+            };
+
+            // Wraps the table.selectAll() function if selectAllResultsEnabled is not set
+            // Otherwise provides expanded functionality
+            self.table.selectAllResults = function(selectAll) {
+                self.table.selectAll(selectAll);
+
+                if (self.table.selectAllResultsEnabled) {
+                    self.table.selectAllDisabled = selectAll;
+                    self.table.allResultsSelected = selectAll;
+                    self.table.numSelected = selectAll ? self.table.resource.subtotal : 0;
+                }
+            };
+
+            self.table.allResultsSelectCount = function(){
+                return self.table.resource.subtotal - self.getDeselected().length;
             };
 
             self.table.sortBy = function(column) {
