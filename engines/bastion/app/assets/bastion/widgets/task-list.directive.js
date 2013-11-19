@@ -26,7 +26,11 @@ angular.module('Bastion.widgets')
                 angular.forEach(conditionsTasks, function(conditionTasks) {
                     var scopes = condToScopes[JSON.stringify(conditionTasks.condition)];
                     angular.forEach(scopes, function(scope) {
-                        scope.updateTasks(conditionTasks.tasks);
+                        if(conditionTasks.condition.type == 'task') {
+                            scope.updateTask(conditionTasks.tasks[0]);
+                        } else {
+                            scope.updateTasks(conditionTasks.tasks);
+                        }
                     });
                 });
             });
