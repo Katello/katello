@@ -14,7 +14,7 @@ module Katello
 class FilterRule < ActiveRecord::Base
   self.include_root_in_json = false
 
-  belongs_to :filter, :inverse_of => :rules
+  belongs_to :filter, :class_name => "Katello::Filter", :inverse_of => :rules
 
   serialize :parameters, Hash
   PACKAGE         = Package::CONTENT_TYPE
