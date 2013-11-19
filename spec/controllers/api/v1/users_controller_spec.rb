@@ -10,13 +10,13 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'spec_helper.rb'
-include OrchestrationHelper
-
+require 'katello_test_helper'
+module Katello
 describe Api::V1::UsersController do
   include LoginHelperMethods
   include LocaleHelperMethods
   include AuthorizationHelperMethods
+  include OrchestrationHelper
 
   before do
     disable_user_orchestration
@@ -33,7 +33,7 @@ describe Api::V1::UsersController do
 
     before (:each) do
       @user = User.new(:login => "test_user", :password => "123")
-      User.stub(:find).with("123").and_return(@user)
+      User.stubs(:find).with("123").returns(@user)
     end
 
     describe "show users" do
@@ -79,7 +79,7 @@ describe Api::V1::UsersController do
 
   describe "create" do
     before do
-      login_user_api
+      setup_controller_defaults_api
       @request.env["HTTP_ACCEPT"] = "application/json"
     end
     let(:request_params) do
@@ -98,18 +98,18 @@ describe Api::V1::UsersController do
       end
     end
 
-    it "should be successful" do
+    it "must_be successful" do
       post :create, request_params
-      response.should be_success
-      User.last.should_not be_nil
-      User.last.login.should == request_params[:login]
-      User.last.disabled?.should == request_params[:disabled]
+      must_respond_with(:success)
+      User.last.wont_be_nil
+      User.last.login.must_equal request_params[:login]
+      User.last.disabled?.must_equal request_params[:disabled]
     end
   end
 
   describe "update" do
     before do
-      login_user_api
+      setup_controller_defaults_api
       @request.env["HTTP_ACCEPT"] = "application/json"
     end
 
@@ -132,15 +132,16 @@ describe Api::V1::UsersController do
       end
     end
 
-    it "should be successful" do
+    it "must_be successful" do
       old_pass = user.password
       put :update, request_params
-      response.should be_success
-      User.last.should_not be_nil
+      must_respond_with(:success)
+      User.last.wont_be_nil
       User.last.password.should_not == old_pass
-      User.last.disabled?.should == request_params[:user][:disabled]
+      User.last.disabled?.must_equal request_params[:user][:disabled]
     end
   end
 
 end
 
+end

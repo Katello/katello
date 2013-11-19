@@ -38,7 +38,8 @@ class CustomInfo < ActiveRecord::Base
   # find the Katello object by type and ID (i.e. "system", 32)
   def self.find_informable(informable_type, informable_id)
     class_name = informable_type.classify
-    informable = "Katello::#{class_name}".constantize.find(informable_id)
+    class_name = "Katello::#{class_name}" unless class_name.start_with?("Katello::")
+    informable = class_name.constantize.find(informable_id)
     fail _("Resource %s does not support custom information") % class_name unless informable.respond_to? :custom_info
     return informable
   end
