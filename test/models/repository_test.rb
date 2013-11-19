@@ -131,12 +131,14 @@ class RepositoryInstanceTest < RepositoryTestBase
   end
 
   def test_create_clone
+    @fedora_17_x86_64.stubs(:checksum_type).returns(nil)
     clone = @fedora_17_x86_64.create_clone(@staging)
     assert clone.id
     assert Repository.in_environment(@staging).where(:library_instance_id=>@fedora_17_x86_64.id).count > 0
   end
 
   def test_create_clone_preserve_type
+    @fedora_17_x86_64.stubs(:checksum_type).returns(nil)
     @fedora_17_x86_64.content_type = 'file'
     @fedora_17_x86_64.save!
     clone = @fedora_17_x86_64.create_clone(@staging)
