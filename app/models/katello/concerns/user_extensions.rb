@@ -63,6 +63,7 @@ module Katello
         serialize :preferences, Hash
 
         validates :default_locale, :inclusion => {:in => Katello.config.available_locales, :allow_nil => true, :message => _("must be one of %s") % Katello.config.available_locales.join(', ')}
+        validates_with Validators::OwnRolePresenceValidator, :attributes => :katello_roles
 
         before_validation :create_own_role
         after_validation :setup_remote_id
@@ -203,7 +204,7 @@ module Katello
         end
 
         def defined_role_ids
-          self.role_ids - [self.own_role.id]
+          self.katello_role_ids - [self.own_role.id]
         end
 
         def cp_oauth_header
