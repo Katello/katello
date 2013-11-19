@@ -43,14 +43,13 @@ angular.module('Bastion.systems').controller('TaskDetailsController',
             $scope.transitionTo(fromState, fromParams);
         };
 
-        $scope.updateTasks = function(tasks) {
-            var task = tasks[0];
+        $scope.updateTask = function(task) {
             $scope.task = task;
             if(!$scope.task.pending) {
                 taskListProvider.unregisterScope($scope);
             }
         }
 
-        taskListProvider.registerScope($scope, { 'type': 'task', 'task_id': taskId })
+        taskListProvider.registerScope($scope, { type: 'task', task_id: taskId })
     }
 ]);
