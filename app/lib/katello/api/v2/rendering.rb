@@ -3,6 +3,9 @@ module Api
   module V2
     module Rendering
 
+      SINGLE_OBJECT_ROOT = "result"
+      COLLECTION_ROOT = "results"
+
       def respond_for_show(options = {})
         respond_with_template_resource(options[:template] || 'show', controller_name, options)
       end
@@ -36,10 +39,14 @@ module Api
         yield if block_given?
         status = options[:status] || 200
 
-        render :template => "katello/api/v2/%s/%s" % [resource_name, action], :status => status
+        render :template => "katello/api/v2/common/#{options[:resource_type]}",
+               :locals => { :action => action, :resource_name => resource_name, :root_name => options[:root_name] },
+               :status => status
       end
 
       def respond_with_template_resource(action, resource_name, options = {})
+        options[:resource_type] = "single_resource"
+        options[:root_name] = SINGLE_OBJECT_ROOT
         respond_with_template(action, resource_name, options) do
           @resource = options[:resource] unless options[:resource].nil?
           @resource = get_resource if @resource.nil?
@@ -47,6 +54,8 @@ module Api
       end
 
       def respond_with_template_collection(action, resource_name, options = {})
+        options[:resource_type] = "collection_resource"
+        options[:root_name] = COLLECTION_ROOT
         respond_with_template(action, resource_name, options) do
           @collection = options[:collection] unless options[:collection].nil?
           @collection = get_resource_collection if @collection.nil?
