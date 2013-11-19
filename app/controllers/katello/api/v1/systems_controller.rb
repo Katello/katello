@@ -29,7 +29,6 @@ class Api::V1::SystemsController < Api::V1::ApiController
   before_filter :find_content_view, :only => [:create, :update]
 
   before_filter :authorize, :except => [:activate, :upload_package_profile]
-  skip_before_filter :require_user, :only => [:activate, :upload_package_profile]
 
   def organization_id_keys
     [:organization_id, :owner]
@@ -100,9 +99,9 @@ class Api::V1::SystemsController < Api::V1::ApiController
   api :POST, "/environments/:environment_id/systems", "Register a system in environment"
   param_group :system
   def create
-    @system = System.create!(params.except(:format).merge(:environment  => @environment,
-                                          :content_view => @content_view,
-                                          :serviceLevel => params[:service_level]))
+    @system = System.create!(system_params.merge(:environment  => @environment,
+                                                 :content_view => @content_view,
+                                                 :serviceLevel => params[:service_level]))
     respond_for_create
   end
 
@@ -132,7 +131,7 @@ DESC
     activation_keys = find_activation_keys
     ActiveRecord::Base.transaction do
       # create new system entry
-      @system = System.new(params.except(:activation_keys))
+      @system = System.new(system_params)
 
       # register system - we apply ak in reverse order so when they conflict e.g. in environment, the first wins.
       activation_keys.reverse_each { |ak| ak.apply_to_system(@system) }
@@ -297,16 +296,7 @@ A hint for choosing the right value for the releaseVer param
   api :PUT, "/consumers/:id/profile", "Update installed packages"
   param :id, String, :desc => "UUID of the system", :required => true
   def upload_package_profile
-    #BZ 1020550
-    # Subscription manager will not send the client cert and will exit with non-zero exit code
-    # if we return a 401, so manually try to auth, and return nothing if auth fails
-    allowed = false
-    catch(:warden) do
-      require_user
-      User.current = current_user
-      allowed = rules[:upload_package_profile].call
-    end
-
+    allowed = rules[:upload_package_profile].call
     if allowed && Katello.config.katello?
       fail HttpErrors::BadRequest, _("No package profile received for %s") % @system.name unless params.key?(:_json)
       @system.upload_package_profile(params[:_json])
@@ -638,6 +628,18 @@ This information is then used for computing the errata available for the system.
   # otherwise the index action doesn't have to know about the changes
   def refresh_index
     System.index.refresh if Katello.config.use_elasticsearch
+  end
+
+  def system_params
+    system_params = params.slice(:name, :owner, :facts, :installedProducts)
+
+    if params.key?(:cp_type)
+      system_params[:cp_type] = params[:cp_type]
+    elsif params.key?(:type)
+      system_params[:cp_type] = params[:type]
+    end
+
+    system_params
   end
 
 end

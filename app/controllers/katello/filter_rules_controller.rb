@@ -118,11 +118,11 @@ class FilterRulesController < Katello::ApplicationController
   def add_parameter
     if params[:parameter]
       if params[:parameter][:unit]
-        @rule.parameters[:units] ||= []
-        @rule.parameters[:units] << params[:parameter][:unit]
+        @rule.parameters["units"] ||= []
+        @rule.parameters["units"] << params[:parameter][:unit]
 
         # a parameter may not contain both units and following properties; therefore, remove them
-        [:date_range, :errata_type, :severity].each{ |parameter| @rule.parameters.delete(parameter)}
+        %w(date_range errata_type severity).each{ |parameter| @rule.parameters.delete(parameter)}
         @rule.save!
 
         notify.success(_("%{type} rule successfully updated for filter '%{filter}'.") %
@@ -136,7 +136,7 @@ class FilterRulesController < Katello::ApplicationController
 
       else
         if params[:parameter][:date_range]
-          @rule.parameters[:date_range] ||= {}
+          @rule.parameters["date_range"] ||= {}
           if params[:parameter][:date_range][:start]
             @rule.start_date = parse_calendar_date params[:parameter][:date_range][:start]
             return render_bad_parameters(_('Invalid date or time format')) unless @rule.start_date
@@ -145,7 +145,7 @@ class FilterRulesController < Katello::ApplicationController
             return render_bad_parameters(_('Invalid date or time format')) unless @rule.end_date
           end
         elsif params[:parameter][:errata_type]
-          @rule.parameters[:errata_type] ||= []
+          @rule.parameters["errata_type"] ||= []
           @rule.errata_types = params[:parameter][:errata_type]
           result = selected_errata_types(@rule)
         else
@@ -153,7 +153,7 @@ class FilterRulesController < Katello::ApplicationController
           @rule.parameters.merge!(params[:parameter])
         end
         # a parameter may not contain both units and the parameter provided; therefore, remove the units
-        @rule.parameters.delete(:units)
+        @rule.parameters.delete("units")
         @rule.save!
 
         notify.success(_("%{type} rule successfully updated for filter '%{filter}'.") %
@@ -174,7 +174,7 @@ class FilterRulesController < Katello::ApplicationController
 
       # replace the current parameters (e.g. version, min_version, max_version), with
       # the new parameters received
-      @rule.parameters[:units].detect{|unit| unit[:name] == parameter_name}.try(:replace, params[:parameter][:unit])
+      @rule.parameters["units"].detect{|unit| unit["name"] == parameter_name}.try(:replace, params[:parameter][:unit])
       @rule.save!
 
       notify.success(_("Parameter %{parameter} successfully updated for filter %{filter} of type %{type}.") %

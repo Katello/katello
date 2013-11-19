@@ -121,6 +121,10 @@ class ActionController::TestCase
     session[:expires_at] = 5.minutes.from_now
   end
   alias_method :login_user, :set_user
+
+  def set_organization(org)
+    session[:current_organization_id] = org.id
+  end
 end
 
 class ActionController::TestCase

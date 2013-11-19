@@ -13,18 +13,21 @@
 
 require "katello_test_helper"
 
+module Katello
 class ProductsControllerTest < ActionController::TestCase
-  fixtures :all
 
   def setup
+    models = ["Organization", "KTEnvironment"]
+    services = ["Pulp", "ElasticSearch", "Foreman", "Candlepin"]
+    disable_glue_layers(services, models)
+
+    setup_controller_defaults
     @org = katello_organizations(:acme_corporation)
     @environment = katello_environments(:library)
     @redhat_product = katello_products(:redhat)
     @custom_product = katello_products(:fedora)
-    login_user(User.find(users(:admin)), @org)
-    models = ["Organization", "KTEnvironment"]
-    services = ["Pulp", "ElasticSearch", "Foreman", "Candlepin"]
-    disable_glue_layers(services, models)
+    login_user(User.find(users(:admin)))
+    set_organization(@org)
 
     @pc = Candlepin::ProductContent.new({:content=>{:id=>'3'}}, @redhat_product.id)
     Product.any_instance.stubs(:productContent).returns([@pc])
@@ -62,4 +65,5 @@ class ProductsControllerTest < ActionController::TestCase
     assert_response :bad_request
   end
 
+end
 end

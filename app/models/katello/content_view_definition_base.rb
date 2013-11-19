@@ -26,7 +26,7 @@ class ContentViewDefinitionBase < ActiveRecord::Base
                                      :class_name => "Katello::ContentView",
                                      :before_add => :validate_component_views
   has_many :filters, :inverse_of => :content_view_definition, :dependent => :destroy,
-                     :foreign_key => "content_view_definition_id"
+                     :foreign_key => "content_view_definition_id", :class_name => "Katello::Filter"
 
   validates :organization, :presence => true
 
