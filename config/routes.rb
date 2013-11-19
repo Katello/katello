@@ -497,12 +497,6 @@ Katello::Engine.routes.draw do
 
   root :to => "dashboard#index"
 
-  resources :password_resets, :only => [:create, :edit, :update] do
-    collection do
-      post :email_logins
-    end
-  end
-
   match '/user_session/set_org' => 'user_sessions#set_org', :via => :post
 
   match '/i18n/dictionary' => 'i18n#show', :via => :get
