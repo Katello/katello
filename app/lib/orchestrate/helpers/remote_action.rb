@@ -44,8 +44,12 @@ module Orchestrate
         as_remote_user { finalize_without_remote_user }
       end
 
-      def pulp
+      def pulp_resources
         ::Katello.pulp_server.resources
+      end
+
+      def pulp_extensions
+        ::Katello.pulp_server.extensions
       end
 
       private

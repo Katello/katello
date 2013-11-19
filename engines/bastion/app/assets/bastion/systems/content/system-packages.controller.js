@@ -30,7 +30,11 @@ angular.module('Bastion.systems').controller('SystemPackagesController',
         var packagesNutupane, packageActions, openEventInfo;
 
         openEventInfo = function(event) {
-            $scope.transitionTo('systems.details.events.details', {eventId: event.id});
+            if(event.uuid) {
+                $scope.transitionTo('systems.details.tasks.details', {taskId: event.uuid});
+            } else {
+                $scope.transitionTo('systems.details.events.details', {eventId: event.id});
+            }
         };
 
         $scope.packageAction = {actionType: 'packageInstall'}; //default to packageInstall

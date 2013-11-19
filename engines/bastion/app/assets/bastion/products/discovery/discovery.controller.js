@@ -39,20 +39,14 @@ angular.module('Bastion.products').controller('DiscoveryController',
         }
 
         setDiscoveryDetails = function(task) {
-            var discoveryAction = "Orchestrate::Katello::RepositoryDiscover";
-            var action = Task.action(task, discoveryAction);
-
             $scope.discovery.pending = task.pending;
 
             if (!task.pending) {
                 $scope.discovery.working = false;
             }
 
-            if(!action) {
-                return
-            }
-            $scope.discovery.url = action.input.url;
-            $scope.discoveryTable.rows = transformRows(action.output);
+            $scope.discovery.url = task.input;
+            $scope.discoveryTable.rows = transformRows(task.output);
         };
 
         $scope.setupSelected = function() {
@@ -71,11 +65,7 @@ angular.module('Bastion.products').controller('DiscoveryController',
             Organization.cancelRepoDiscover({id: CurrentOrganization});
         };
 
-        transformRows = function(output) {
-            if(!output) {
-                return [];
-            }
-            var urls = output.repo_urls;
+        transformRows = function(urls) {
             var baseUrl, toRet;
             baseUrl = $scope.discovery.url;
 
