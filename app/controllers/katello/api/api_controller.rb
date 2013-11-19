@@ -142,5 +142,11 @@ class Api::ApiController < ::Api::BaseController
     subject_string.sub(/\/CN=/i, '')
   end
 
+  # trigger dynflow action and return the dynflow task object
+  def async_task(action, *args)
+    uuid, _ = Orchestrate.trigger(action, *args)
+    return DynflowTask.find_by_uuid!(uuid)
+  end
+
 end
 end

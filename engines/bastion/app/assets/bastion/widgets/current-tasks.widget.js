@@ -46,7 +46,7 @@ angular.module('Bastion.widgets').directive('currentTasks',
                 });
             }],
             link: function(scope) {
-                taskListProvider.registerUser(scope, { activeOnly: true }, CurrentUser);
+                taskListProvider.registerScope(scope, { active_only: true, type: 'user', user_id: CurrentUser});
             }
         };
     }]);

@@ -27,7 +27,7 @@ module Orchestrate
           sync_options[:max_speed] ||= ::Katello.config.pulp.sync_KBlimit if ::Katello.config.pulp.sync_KBlimit # set bandwidth limit
           sync_options[:num_threads] ||= ::Katello.config.pulp.sync_threads if ::Katello.config.pulp.sync_threads # set threads per sync
 
-          pulp_tasks = pulp.repository.sync(input[:pulp_id], { override_config: sync_options })
+          pulp_tasks = pulp_resources.repository.sync(input[:pulp_id], { override_config: sync_options })
           output[:pulp_tasks] = pulp_tasks
 
           # TODO: would be better polling for the whole task group to make sure

@@ -38,15 +38,18 @@ class Api::V2::SystemPackagesController < Api::V2::ApiController
   def install
     if params[:packages]
       packages = validate_package_list_format(params[:packages])
-      task     = @system.install_packages(packages)
+      task     = async_task(Orchestrate::Katello::SystemPackageInstall, @system, packages)
+      respond_for_async :resource => task
+      return
     end
 
     if params[:groups]
       groups = extract_group_names(params[:groups])
       task   = @system.install_package_groups(groups)
+      respond_for_show :template => 'system_task', :resource => task
+      return
     end
 
-    respond_for_show :template => 'system_task', :resource => task
   end
 
   # update packages remotely
@@ -71,15 +74,17 @@ class Api::V2::SystemPackagesController < Api::V2::ApiController
   def remove
     if params[:packages]
       packages = validate_package_list_format(params[:packages])
-      task     = @system.uninstall_packages(packages)
+      task     = async_task(Orchestrate::Katello::SystemPackageRemove, @system, packages)
+      respond_for_async :resource => task
+      return
     end
 
     if params[:groups]
       groups = extract_group_names(params[:groups])
       task   = @system.uninstall_package_groups(groups)
+      respond_for_show :template => 'system_task', :resource => task
+      return
     end
-
-    respond_for_show :template => 'system_task', :resource => task
   end
 
   private
