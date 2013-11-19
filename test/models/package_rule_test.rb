@@ -10,18 +10,20 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'minitest_helper'
+require 'katello_test_helper'
 
-class PackageRuleTest < MiniTest::Rails::ActiveSupport::TestCase
-  fixtures :all
+module Katello
+class PackageRuleTest < ActiveSupport::TestCase
 
   def self.before_suite
     models = ["Organization", "KTEnvironment", "User", "ContentViewDefinitionBase",
-              "ContentViewDefinition", "Filter", "FilterRule", "PackageRule"]
-    disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
+              "ContentViewDefinition", "ContentViewEnvironment", "Filter", "FilterRule",
+              "PackageRule"]
+    disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models, true)
   end
 
   def setup
+    User.current = User.find(users(:admin))
     @filter_rule = FactoryGirl.build(:package_filter_rule)
   end
 
@@ -49,14 +51,16 @@ class PackageRuleTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def assert_bad_params(params)
-    @filter_rule.parameters = params.with_indifferent_access
+    @filter_rule.parameters = params
     assert_raises(ActiveRecord::RecordInvalid) do
       @filter_rule.save!
     end
   end
 
   def assert_good_params(params)
-    @filter_rule.parameters = params.with_indifferent_access
+    @filter_rule.parameters = params
     assert @filter_rule.save
   end
+
+end
 end

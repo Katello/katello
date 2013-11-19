@@ -10,27 +10,22 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'minitest_helper'
+require 'katello_test_helper'
 
-class FilterTest < MiniTest::Rails::ActiveSupport::TestCase
-  fixtures :all
+module Katello
+class FilterTest < ActiveSupport::TestCase
 
   def self.before_suite
-    #models = ["Organization", "KTEnvironment", "User","Filter", "ContentViewEnvironment",
-    #          "ContentViewDefinition", "Product", "Repository"]
-    #disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
-    #    #
-        models = ["Organization", "KTEnvironment", "User","Filter", "ContentViewEnvironment", "ContentViewDefinitionBase",
-                  "ContentViewDefinition", "Product", "Repository"]
-        disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models, true)
-
+    models = ["Organization", "KTEnvironment", "User","Filter", "ContentViewEnvironment",
+              "ContentViewDefinitionBase", "ContentViewDefinition", "Product", "Repository"]
+    disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models, true)
   end
 
   def setup
-    #User.current = User.find(users(:admin))
+    User.current = User.find(users(:admin))
     @filter = FactoryGirl.build(:filter)
-    @repo = Repository.find(repositories(:fedora_17_x86_64).id)
-    @product = Product.find(products(:fedora).id)
+    @repo = Repository.find(katello_repositories(:fedora_17_x86_64).id)
+    @product = Product.find(katello_products(:fedora).id)
   end
 
   def test_create
@@ -140,4 +135,5 @@ s  def test_content_definition_delete_repo
     assert_empty cvd.filters.first.products
   end
 
+end
 end
