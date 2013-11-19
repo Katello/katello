@@ -40,16 +40,13 @@ angular.module('Bastion.widgets')
         }
         scheduleUpdate();
 
-        function addScope(scope, searchOptions, condition) {
-            if(searchOptions.activeOnly) {
-                condition['active_only'] = true;
+        function addScope(scope, searchOptions) {
+            if(!condToScopes[JSON.stringify(searchOptions)]) {
+                conditions.push(searchOptions);
+                condToScopes[JSON.stringify(searchOptions)] = [];
             }
-            if(!condToScopes[JSON.stringify(condition)]) {
-                conditions.push(condition);
-                condToScopes[JSON.stringify(condition)] = [];
-            }
-            condToScopes[JSON.stringify(condition)].push(scope);
-            scopeToCond[scope.$id] = condition;
+            condToScopes[JSON.stringify(searchOptions)].push(scope);
+            scopeToCond[scope.$id] = searchOptions;
         };
 
         function deleteScope(scope) {
@@ -68,15 +65,10 @@ angular.module('Bastion.widgets')
         };
 
         return {
-            registerUser: function(scope, searchOptions, userId) {
-                addScope(scope, searchOptions, { type: 'user', user_id: userId });
+            registerScope: function(scope, searchOptions) {
+                addScope(scope, searchOptions);
             },
-            registerResource: function(scope, searchOptions, resourceType, resourceId) {
-                addScope(scope, searchOptions, { type: 'resource',
-                                                 resource_type: resourceType,
-                                                 resource_id: resourceId });
-            },
-            unregister: function(scope) { deleteScope(scope); }
+            unregisterScope: function(scope) { deleteScope(scope); }
         };
     }])
     .filter('progressClasses', function () {
@@ -152,8 +144,22 @@ angular.module('Bastion.widgets')
                     });
                 }
 
-                function searchOptions() {
-                    return { activeOnly: scope.taskActive == 'true' }
+                function searchOptions(type) {
+                    return { 'active_only': scope.taskActive == 'true',
+                             'type': type };
+                }
+
+                function userSearchOptions(userId) {
+                    var ret = searchOptions('user');
+                    ret['user_id'] = userId;
+                    return ret;
+                }
+
+                function resourceSearchOptions(resourceType, resourceId) {
+                    var ret = searchOptions('resource');
+                    ret['resource_type'] = resourceType;
+                    ret['resource_id'] = resourceId;
+                    return ret;
                 }
 
                 scope.updateTasks = function(tasks) {
@@ -164,17 +170,17 @@ angular.module('Bastion.widgets')
                 }
                 scope.$watch('taskUserId', function(userId) {
                     if(userId) {
-                        taskListProvider.registerUser(scope, searchOptions(), userId)
+                        taskListProvider.registerScope(scope, userSearchOptions(userId));
                     }
                 })
                 scope.$watch('taskResourceId', function(resourceId) {
                     if(resourceId) {
-                        taskListProvider.registerResource(scope, searchOptions(), scope.taskResourceType, resourceId);
+                        taskListProvider.registerScope(scope, resourceSearchOptions(scope.taskResourceType, resourceId));
                     }
                 })
 
                 element.bind('$destroy', function() {
-                    taskListProvider.unregister(scope);
+                    taskListProvider.unregisterScope(scope);
                 });
             }
         }

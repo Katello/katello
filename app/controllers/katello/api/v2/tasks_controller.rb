@@ -55,7 +55,10 @@ class Api::V2::TasksController < Api::V2::ApiController
 
   api :POST, "/tasks/search", "List dynflow tasks for uuids"
   param :conditions, Array, :desc => 'List of uuids to fetch info about' do
-    param :type, %w[user resource]
+    param :type, %w[user resource task]
+    param :task_id, String, :desc => <<-DESC
+      In case :type = 'task', find the task by the uuid
+    DESC
     param :user_id, String, :desc => <<-DESC
       In case :type = 'user', find tasks for the user
     DESC
@@ -106,11 +109,16 @@ class Api::V2::TasksController < Api::V2::ApiController
       scope.where(user_id: condition[:user_id])
     when 'resource'
       if condition[:resource_type].blank? || condition[:resource_id].blank?
-        raise HttpErrors::BadRequest, _("User condition requires resource_type and resource_id to be specified")
+        raise HttpErrors::BadRequest, _("Resource condition requires resource_type and resource_id to be specified")
       end
       scope.joins(:dynflow_locks).where(dynflow_locks:
                                                 { resource_type: condition[:resource_type],
                                                   resource_id:   condition[:resource_id] })
+    when 'task'
+      if condition[:task_id].blank?
+        raise HttpErrors::BadRequest, _("Task condition requires task_id to be specified")
+      end
+      scope.where(uuid: condition[:task_id])
     else
       raise HttpErrors::BadRequest, _("Condition %s not supported") % condition[:type]
     end

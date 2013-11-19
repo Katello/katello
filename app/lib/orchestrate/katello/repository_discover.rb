@@ -34,6 +34,17 @@ module Orchestrate
         continue = lambda { true }
         repo_discovery.run(found, continue)
       end
+
+
+      # @return <String> urls found by the action
+      def task_input
+        input[:url]
+      end
+
+      # @return [Array<String>] urls found by the action
+      def task_output
+        output[:repo_urls] || []
+      end
     end
   end
 end

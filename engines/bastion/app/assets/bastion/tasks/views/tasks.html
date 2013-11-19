@@ -1,0 +1,47 @@
+<section class="nutupane-sub-section">
+  <div class="nutupane-actionbar">
+    <div class="form">
+        <input type="text"
+               class="input input-search"
+               placeholder="{{ 'Search...' | translate }}"
+               ng-model="tasksTable.searchTerm"
+               on-enter="tasksTable.search(tasksTable.searchTerm)"/>
+      <span class="result-count" translate>
+        Showing {{ tasksTable.rows.length }} of {{ tasksTable.resource.subtotal }} ({{ tasksTable.resource.total }} Total) Events
+      </span>
+    </div>
+  </div>
+
+  <div alch-table="tasksTable">
+    <div alch-container-scroll control-width="table" alch-infinite-scroll="table.nextPage()">
+      <table ng-class="{'table-mask': table.working}" class="table table-full table-striped">
+        <thead>
+        <tr alch-table-head>
+          <th alch-table-column="Status" style="width: 10%" translate>Status</th>
+          <th alch-table-column="Event" translate>Event</th>
+          <th alch-table-column="User" style="width: 15%" translate>User</th>
+          <th alch-table-column="Date" translate>Date</th>
+        </tr>
+        </thead>
+
+        <tbody>
+          <tr alch-table-row ng-repeat="task in table.rows">
+            <td alch-table-cell>
+              <div ng-class="task | progressClasses" class="progress progress-striped">
+                <progress percent="task.progress * 100"></progress>
+              </div>
+            </td>
+            <td alch-table-cell>
+              <a class="clickable active" ui-sref="systems.details.tasks.details({taskId: task.uuid})">
+                {{ task.humanized.action }}
+                {{ task.humanized.input }}
+              </a>
+            </td>
+            <td alch-table-cell>{{ task.username }}</td>
+            <td alch-table-cell>{{ task.started_at | date:"short" }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>

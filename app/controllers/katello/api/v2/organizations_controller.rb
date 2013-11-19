@@ -57,8 +57,7 @@ class Api::V2::OrganizationsController < Api::V1::OrganizationsController
   param :url, String, :desc => "base url to perform repo discovery on"
   def repo_discover
     fail _("url not defined.") if params[:url].blank?
-    uuid, _ = Orchestrate.trigger(Orchestrate::Katello::RepositoryDiscover, params[:url])
-    task = DynflowTask.find_by_uuid!(uuid)
+    task = async_task(Orchestrate::Katello::RepositoryDiscover, params[:url])
     respond_for_async :resource => task
   end
 
