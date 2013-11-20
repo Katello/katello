@@ -95,24 +95,13 @@ At this point, the development environment should be completely setup and the Ka
 
 In order to reset the development environment, all backend data and the database needs to be reset. To reiterate, the following will destroy all data in Pulp, Candlepin and your Foreman/Katello database. From the Foreman checkout run:
 
-    rake katello:reset
-
-Now that the data has been reset, the Foreman database needs to be migrated without Katello. First, disable the Katello gem by opening `bundler.d/Gemfile.local.rb` and commenting out the inclusion of Katello.
-
 ```bash
-cat bundler.d/Gemfile.local.rb
-#gem 'katello', :path => '../katello'
-
-rake db:migrate
+rake katello:reset
 ```
 
-Next, Katello migrations need to be added along with initial seed data. Re-enable the Katello gem, migrate and seed:
+Once the data has been reset, execute the following to run all Foreman and Katello migrations and then seed the database:
 
 ```bash
-cat bundler.d/Gemfile.local.rb
-gem 'katello', :path => '../katello'
-
-bundle install
 rake db:migrate && rake db:seed
 ```
 
