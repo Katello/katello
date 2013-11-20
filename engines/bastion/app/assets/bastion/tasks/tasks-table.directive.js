@@ -28,7 +28,13 @@ angular.module('Bastion.tasks').directive('tasksTable',
 
         return {
             restrict: 'E',
-            templateUrl: 'tasks/views/tasks-table.html',
+            templateUrl: function(element, attrs) {
+                if(attrs.templateUrl) {
+                    return attrs.templateUrl;
+                } else {
+                    return 'tasks/views/tasks-table.html';
+                }
+            },
             scope: {
                 resourceId: '@',
                 resourceType: '@',

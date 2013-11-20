@@ -73,11 +73,6 @@ angular.module('Bastion.tasks').factory('TasksNutupane',
                 }
             };
 
-            self.updateProgressbar = function(task) {
-                var type = task.result == 'error' ? 'danger' : 'success';
-                task.progressbar = { value: task.progress * 100, type: type }
-            };
-
             // Updates values for existing tasks and adds new rows
             self.refreshTasks = function(tasks) {
                 // we reverse because we add new items to the top of
@@ -92,7 +87,6 @@ angular.module('Bastion.tasks').factory('TasksNutupane',
                         self.table.rows.unshift(task);
                         self.existingTasks[task.uuid] = task;
                     }
-                    self.updateProgressbar(self.existingTasks[task.uuid]);
                 });
             }
 
