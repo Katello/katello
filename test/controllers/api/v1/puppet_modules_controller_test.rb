@@ -27,7 +27,7 @@ class Api::V1::PuppetModulesControllerTest < ActionController::TestCase
     @prod_read_permission = UserPermission.new(:read, :providers)
     @read_permission = @env_read_permission + @prod_read_permission
     @unauth_perms = [NO_PERMISSION, @env_read_permission, @prod_read_permission]
-    setup_controller_defaults
+    setup_controller_defaults_api
     login_user(User.find(users(:admin)))
   end
 

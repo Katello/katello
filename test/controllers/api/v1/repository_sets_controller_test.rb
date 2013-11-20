@@ -20,7 +20,7 @@ class Api::V1::RepositorySetsControllerTest < ActionController::TestCase
     models = ["Organization", "KTEnvironment", "Changeset", "Product"]
     services = ["Pulp", "ElasticSearch"]
     disable_glue_layers(services, models)
-    setup_controller_defaults
+    setup_controller_defaults_api
     @org = katello_organizations(:acme_corporation)
     @environment = katello_environments(:library)
     @redhat_product = katello_products(:redhat)
