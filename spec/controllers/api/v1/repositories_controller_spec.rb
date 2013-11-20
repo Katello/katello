@@ -11,6 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require 'katello_test_helper'
+
 module Katello
 describe Api::V1::RepositoriesController do
   describe "(katello)" do
@@ -265,7 +266,7 @@ describe Api::V1::RepositoriesController do
           end
         end
 
-        context "must_be protected by default" do
+        context "should be protected by default" do
           it "should use no gpg key" do
             @product.expects(:add_repo).with do |label, name, url, type, unprotected, gpg|
               unprotected == false
@@ -274,7 +275,7 @@ describe Api::V1::RepositoriesController do
           end
         end
 
-        context "must_be able to be unprotected" do
+        context "should be able to be unprotected" do
           it "should use no gpg key" do
             @product.expects(:add_repo).with do |label, name, url, type, unprotected, gpg|
               unprotected == true

@@ -10,6 +10,7 @@
 ## http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require 'katello_test_helper'
+
 module Katello
 describe Api::V1::GpgKeysController do
   describe "(katello)" do
@@ -32,14 +33,14 @@ describe Api::V1::GpgKeysController do
   describe "GET content" do
     describe "with valid GPG Key id" do
 
-      it "must_be successful" do
+      it "should be successful" do
         get :content, :id => @gpg_key.id
         response.body.must_equal @gpg_key.content
       end
     end
 
     describe "with invalid GPG Key id" do
-      it "must_be unsuccessful" do
+      it "should be unsuccessful" do
         get :content, :id => 9999
         response.response_code.must_equal 404
       end

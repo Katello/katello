@@ -11,6 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require 'katello_test_helper'
+
 module Katello
 describe Api::V1::RolesController do
   include OrganizationHelperMethods

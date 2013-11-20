@@ -40,14 +40,14 @@ describe Api::V1::OrganizationDefaultInfoController do
 
   describe "add default custom info to an org" do
 
-    it "must_be successful" do
+    it "should be successful" do
       Organization.find(@org.id).default_info["system"].empty?.must_equal true
       post :create, :organization_id => @org.label, :keyname => "test_key", :informable_type => "system"
       response.code.must_equal "200"
       Organization.find(@org.id).default_info["system"].include?("test_key").must_equal true
     end
 
-    it "must_be successful with html characters in the keyname" do
+    it "should be successful with html characters in the keyname" do
       Organization.find(@org.id).default_info["system"].empty?.must_equal true
       post :create, :organization_id => @org.label, :keyname => "<blink>fookey</blink>", :informable_type => "system"
       response.code.must_equal "200"
@@ -97,14 +97,14 @@ describe Api::V1::OrganizationDefaultInfoController do
       @org.save!
     end
 
-    it "must_be successful" do
+    it "should be successful" do
       Organization.find(@org.id).default_info["system"].size.must_equal 2
       post :destroy, :organization_id => @org.label, :keyname => "test_key", :informable_type => "system"
       response.code.must_equal "200"
       Organization.find(@org.id).default_info["system"].size.must_equal 1
     end
 
-    it "must_be successful with html characters in the keyname" do
+    it "should be successful with html characters in the keyname" do
       Organization.find(@org.id).default_info["system"].size.must_equal 2
       post :destroy, :organization_id => @org.label, :keyname => "<blink>fookey</blink>", :informable_type => "system"
       response.code.must_equal "200"
@@ -134,7 +134,7 @@ describe Api::V1::OrganizationDefaultInfoController do
       end
     end
 
-    it "must_be successful" do
+    it "should be successful" do
       @org.systems.each do |s|
         s.custom_info.empty?.must_equal true
       end
