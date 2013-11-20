@@ -185,9 +185,3 @@ def disable_glue_layers(services=[], models=[], force_reload=false)
     FactoryGirl.reload
   end
 end
-
-def hash_must_include(the_hash, items_to_check_hash)
-  items_to_check_hash.each_pair do |key, value|
-    the_hash[key].must_equal(value)
-  end
-end
