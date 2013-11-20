@@ -13,8 +13,8 @@
   </div>
 
   <div alch-table="tasksTable">
-    <div alch-container-scroll control-width="table" alch-infinite-scroll="table.nextPage()">
-      <table ng-class="{'table-mask': table.working}" class="table table-full table-striped">
+    <div alch-container-scroll control-width="table" alch-infinite-scroll="tasksTable.nextPage()">
+      <table ng-class="{'table-mask': tasksTable.working}" class="table table-full table-striped">
         <thead>
         <tr alch-table-head>
           <th alch-table-column="Status" style="width: 10%" translate>Status</th>
@@ -25,14 +25,14 @@
         </thead>
 
         <tbody>
-          <tr alch-table-row ng-repeat="task in table.rows">
+          <tr alch-table-row ng-repeat="task in tasksTable.rows">
             <td alch-table-cell>
               <div ng-class="task | progressClasses" class="progress progress-striped">
                 <progress percent="task.progress * 100"></progress>
               </div>
             </td>
             <td alch-table-cell>
-              <a class="clickable active" ng-click="table.gotoDetails(task.uuid)">
+              <a class="clickable active" ng-click="tasksTable.gotoDetails(task.uuid)">
                 {{ task.humanized.action }}
                 {{ task.humanized.input }}
               </a>
