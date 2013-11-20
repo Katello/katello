@@ -10,12 +10,11 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'spec_helper'
-include OrchestrationHelper
+require 'katello_test_helper'
 
-describe Api::V1::SyncController, :katello => true do
-  include LoginHelperMethods
-  include LocaleHelperMethods
+module Katello
+describe Api::V1::SyncController do
+  include OrchestrationHelper
   include OrganizationHelperMethods
   include ProductHelperMethods
   include RepositoryHelperMethods
@@ -57,9 +56,10 @@ describe Api::V1::SyncController, :katello => true do
       "tags"          => ["pulp:action:sync", "pulp:repository:repo_id_2"] }
   end
 
+  describe "(katello)" do
+
   before(:each) do
-    login_user
-    set_default_locale
+    setup_controller_defaults_api
     disable_org_orchestration
   end
 
@@ -141,35 +141,35 @@ describe Api::V1::SyncController, :katello => true do
 
     describe "find_object" do
 
-      subject { controller.send(:find_object) }
+      subject { @controller.send(:find_object) }
 
       it "should find provider if :provider_id is specified" do
         found_provider = {}
-        Provider.should_receive(:find).once.with(provider_id).and_return(found_provider)
-        controller.stub!(:params).and_return({ :provider_id => provider_id })
+        Provider.expects(:find).once.with(provider_id).returns(found_provider)
+        @controller.stubs(:params).returns({ :provider_id => provider_id })
 
-        subject.should == found_provider
+        subject.must_equal found_provider
       end
 
       it "should find product if :product_id is specified" do
         stub_product_with_repo
-        controller.stub!(:params).and_return({ :organization_id => @organization.label, :product_id => @product.id })
-        controller.send(:find_optional_organization)
-        subject.should == @product
+        @controller.stubs(:params).returns({ :organization_id => @organization.label, :product_id => @product.id })
+        @controller.send(:find_optional_organization)
+        subject.must_equal @product
       end
 
       it "should find repository if :repository_id is specified" do
         found_repository = Repository.new
-        found_repository.stub!(:environment).and_return(KTEnvironment.new(:library => true))
+        found_repository.stubs(:environment).returns(KTEnvironment.new(:library => true))
 
-        Repository.should_receive(:find).once.with(repository_id).and_return(found_repository)
-        controller.stub!(:params).and_return({ :repository_id => repository_id })
+        Repository.expects(:find).once.with(repository_id).returns(found_repository)
+        @controller.stubs(:params).returns({ :repository_id => repository_id })
 
-        subject.should == found_repository
+        subject.must_equal found_repository
       end
 
       it "should raise an error if none were specified" do
-        lambda { subject }.should raise_error(HttpErrors::NotFound)
+        lambda { subject }.must_raise(HttpErrors::NotFound)
       end
     end
 
@@ -177,17 +177,17 @@ describe Api::V1::SyncController, :katello => true do
       before(:each) do
         stub_product_with_repo
 
-        Katello.pulp_server.extensions.repository.stub(:sync).with(@repository.pulp_id, anything()).and_return([async_task_1])
-        Katello.pulp_server.extensions.repository.stub(:sync).with(@repository2.pulp_id, anything()).and_return([async_task_2])
+        Katello.pulp_server.extensions.repository.stubs(:sync).with(@repository.pulp_id, anything()).returns([async_task_1])
+        Katello.pulp_server.extensions.repository.stubs(:sync).with(@repository2.pulp_id, anything()).returns([async_task_2])
       end
 
       it "should find provider" do
-        Provider.should_receive(:find).once.with(provider_id).and_return(@provider)
+        Provider.expects(:find).once.with(provider_id).returns(@provider)
         post :create, :provider_id => provider_id
       end
 
       it "should call sync on the object of synchronization" do
-        @provider.should_receive(:sync).once.and_return([async_task_1, async_task_2])
+        @provider.expects(:sync).once.returns([async_task_1, async_task_2])
         post :create, :provider_id => provider_id
       end
 
@@ -196,18 +196,18 @@ describe Api::V1::SyncController, :katello => true do
         post :create, :provider_id => provider_id
 
         found = PulpTaskStatus.all
-        found.size.should == count + 2
-        found.any? { |t| t['uuid'] == async_task_1['task_id'] }.should == true
-        found.any? { |t| t['uuid'] == async_task_2['task_id'] }.should == true
+        found.size.must_equal count + 2
+        found.any? { |t| t['uuid'] == async_task_1['task_id'] }.must_equal true
+        found.any? { |t| t['uuid'] == async_task_2['task_id'] }.must_equal true
       end
 
       it "should return sync objects" do
         post :create, :provider_id => provider_id
 
         status = JSON.parse(response.body)
-        status.size.should == 2
-        status.any? { |s| s['uuid'] == async_task_1['task_id'] }.should == true
-        status.any? { |s| s['uuid'] == async_task_2['task_id'] }.should == true
+        status.size.must_equal 2
+        status.any? { |s| s['uuid'] == async_task_1['task_id'] }.must_equal true
+        status.any? { |s| s['uuid'] == async_task_2['task_id'] }.must_equal true
       end
     end
 
@@ -216,28 +216,28 @@ describe Api::V1::SyncController, :katello => true do
         @organization = Organization.create!(:name => "organization", :label => "123")
 
         @syncable = mock('syncable')
-        @syncable.stub!(:id)
-        @syncable.stub!(:cance_sync)
-        @syncable.stub!(:organization).and_return(@organization)
-        @syncable.stub!(:sync)
+        @syncable.stubs(:id)
+        @syncable.stubs(:cance_sync)
+        @syncable.stubs(:organization).returns(@organization)
+        @syncable.stubs(:sync)
 
-        Provider.stub!(:find).and_return(@syncable)
+        Provider.stubs(:find).returns(@syncable)
       end
 
       it "should find provider" do
-        Provider.should_receive(:find).once.with(provider_id).and_return(@syncable)
+        Provider.expects(:find).once.with(provider_id).returns(@syncable)
         post :create, :provider_id => provider_id
       end
 
       it "should call cancel_sync on the object of synchronization" do
-        @syncable.stub(:sync_state).and_return(PulpSyncStatus::Status::RUNNING)
-        @syncable.should_receive(:cancel_sync)
+        @syncable.stubs(:sync_state).returns(PulpSyncStatus::Status::RUNNING)
+        @syncable.expects(:cancel_sync)
         delete :cancel, :provider_id => provider_id
       end
 
       it "should not call cancel_sync when the object is not being synchronized" do
-        @syncable.stub(:sync_state).and_return(PulpSyncStatus::Status::FINISHED)
-        @syncable.should_not_receive(:cancel_sync)
+        @syncable.stubs(:sync_state).returns(PulpSyncStatus::Status::FINISHED)
+        @syncable.expects(:cancel_sync).never
         delete :cancel, :provider_id => provider_id
       end
 
@@ -248,20 +248,20 @@ describe Api::V1::SyncController, :katello => true do
         @organization = Organization.create!(:name => "organization", :label => "123")
 
         @syncable = mock()
-        @syncable.stub!(:latest_sync_statuses).once.and_return([async_task_1, async_task_2])
-        @syncable.stub!(:organization).and_return(@organization)
-        @syncable.stub!(:sync)
+        @syncable.stubs(:latest_sync_statuses).returns([async_task_1, async_task_2])
+        @syncable.stubs(:organization).returns(@organization)
+        @syncable.stubs(:sync)
 
-        Provider.stub!(:find).and_return(@syncable)
+        Provider.stubs(:find).returns(@syncable)
       end
 
       it "should find provider" do
-        Provider.should_receive(:find).once.with(provider_id).and_return(@syncable)
+        Provider.expects(:find).once.with(provider_id).returns(@syncable)
         post :create, :provider_id => provider_id
       end
 
       it "should call latest_sync_statuses on the object of synchronization" do
-        @syncable.should_receive(:sync_status)
+        @syncable.expects(:sync_status)
         get :index, :provider_id => provider_id
       end
     end
@@ -273,18 +273,20 @@ describe Api::V1::SyncController, :katello => true do
     @organization = new_test_org
 
     @provider = Provider.create!(:provider_type => Provider::CUSTOM, :name => "foo1", :organization => @organization)
-    Provider.stub!(:find).and_return(@provider)
+    Provider.stubs(:find).returns(@provider)
     @product          = Product.new({ :name => "prod", :label => "prod" })
     @product.provider = @provider
-    @product.stub(:arch).and_return('noarch')
+    @product.stubs(:arch).returns('noarch')
     @product.save!
-    Product.stub!(:find).and_return(@product)
-    Product.stub!(:find_by_cp_id).and_return(@product)
+    Product.stubs(:find).returns(@product)
+    Product.stubs(:find_by_cp_id).returns(@product)
     @repository  = new_test_repo(@organization.library, @product, "repo_1", "#{@organization.name}/Library/prod/repo")
     @repository2 = new_test_repo(@organization.library, @product, "repo_2", "#{@organization.name}/Library/prod/repo")
 
-    Repository.stub(:find).and_return(@repository)
+    Repository.stubs(:find).returns(@repository)
+  end
+
   end
 
 end
-
+end

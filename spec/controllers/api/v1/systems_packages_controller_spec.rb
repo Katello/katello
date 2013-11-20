@@ -10,14 +10,13 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'spec_helper.rb'
-include OrchestrationHelper
-
+require 'katello_test_helper'
+module Katello
 describe Api::V1::SystemPackagesController do
-  include LoginHelperMethods
-  include LocaleHelperMethods
+  include OrganizationHelperMethods
   include SystemHelperMethods
   include AuthorizationHelperMethods
+  include OrchestrationHelper
 
   let(:uuid) { '1234' }
 
@@ -28,29 +27,27 @@ describe Api::V1::SystemPackagesController do
   let(:packages) { %w[zsh bash] }
 
   before(:each) do
-    login_user(:mock => false)
-    set_default_locale
+    setup_controller_defaults_api
     disable_org_orchestration
-    User.current = @user
-    Resources::Candlepin::Consumer.stub!(:create).and_return({ :uuid => uuid, :owner => { :key => uuid } })
-    Resources::Candlepin::Consumer.stub!(:update).and_return(true)
+    Resources::Candlepin::Consumer.stubs(:create).returns({ :uuid => uuid, :owner => { :key => uuid } })
+    Resources::Candlepin::Consumer.stubs(:update).returns(true)
 
     if Katello.config.katello?
-      Katello.pulp_server.extensions.consumer.stub!(:create).and_return({ :id => uuid })
-      Katello.pulp_server.extensions.consumer.stub!(:update).and_return(true)
+      Katello.pulp_server.extensions.consumer.stubs(:create).returns({ :id => uuid })
+      Katello.pulp_server.extensions.consumer.stubs(:update).returns(true)
     end
 
     @organization  = Organization.create!(:name => 'test_org', :label => 'test_org')
     @environment_1 = create_environment(:name => 'test_1', :label => 'test_1', :prior => @organization.library.id, :organization => @organization)
     @system        = create_system(:environment => @environment_1, :uuid => "1234", :name => "system.example.com", :cp_type => 'system', :facts => { :foo => :bar })
-    System.stub(:first => @system)
+    System.stubs(:first => @system)
   end
 
   describe "install package" do
 
     before do
       @task_status = stub_task_status(:package_install, :packages => packages)
-      @system.stub(:install_packages).and_return(@task_status)
+      @system.stubs(:install_packages).returns(@task_status)
     end
 
     let(:action) { :create }
@@ -60,10 +57,10 @@ describe Api::V1::SystemPackagesController do
     let(:unauthorized_user) { user_without_update_permissions }
     it_should_behave_like "protected action"
 
-    it { should be_successful }
+    it { must_respond_with(:success) }
 
     it "should call model to install packages" do
-      @system.should_receive(:install_packages)
+      @system.expects(:install_packages)
       subject
     end
 
@@ -73,15 +70,15 @@ describe Api::V1::SystemPackagesController do
 
     before do
       @task_status = stub_task_status(:package_group_install, :groups => package_groups)
-      @system.stub(:install_package_groups).and_return(@task_status)
+      @system.stubs(:install_package_groups).returns(@task_status)
     end
 
     subject { post :create, :organization_id => @organization.name, :system_id => @system.uuid, :groups => package_groups }
 
-    it { should be_successful }
+    it { must_respond_with(:success) }
 
     it "should call model to install packages" do
-      @system.should_receive(:install_package_groups)
+      @system.expects(:install_package_groups)
       subject
     end
 
@@ -91,7 +88,7 @@ describe Api::V1::SystemPackagesController do
 
     before do
       @task_status = stub_task_status(:package_remove, :packages => packages)
-      @system.stub(:uninstall_packages).and_return(@task_status)
+      @system.stubs(:uninstall_packages).returns(@task_status)
     end
 
     let(:action) { :destroy }
@@ -101,10 +98,10 @@ describe Api::V1::SystemPackagesController do
     let(:unauthorized_user) { user_without_update_permissions }
     it_should_behave_like "protected action"
 
-    it { should be_successful }
+    it { must_respond_with(:success) }
 
     it "should call model to remove packages" do
-      @system.should_receive(:uninstall_packages)
+      @system.expects(:uninstall_packages)
       subject
     end
 
@@ -114,15 +111,15 @@ describe Api::V1::SystemPackagesController do
 
     before do
       @task_status = stub_task_status(:package_group_remove, :groups => package_groups)
-      @system.stub(:uninstall_package_groups).and_return(@task_status)
+      @system.stubs(:uninstall_package_groups).returns(@task_status)
     end
 
     subject { delete :destroy, :organization_id => @organization.name, :system_id => @system.uuid, :groups => package_groups }
 
-    it { should be_successful }
+    it { must_respond_with(:success) }
 
     it "should call model to remove package groups" do
-      @system.should_receive(:uninstall_package_groups)
+      @system.expects(:uninstall_package_groups)
       subject
     end
 
@@ -132,7 +129,7 @@ describe Api::V1::SystemPackagesController do
 
     before do
       @task_status = stub_task_status(:package_update, :packages => packages)
-      @system.stub(:update_packages).and_return(@task_status)
+      @system.stubs(:update_packages).returns(@task_status)
     end
 
     let(:action) { :create }
@@ -142,10 +139,10 @@ describe Api::V1::SystemPackagesController do
     let(:unauthorized_user) { user_without_update_permissions }
     it_should_behave_like "protected action"
 
-    it { should be_successful }
+    it { must_respond_with(:success) }
 
     it "should call model to update packages" do
-      @system.should_receive(:update_packages)
+      @system.expects(:update_packages)
       subject
     end
 
@@ -160,4 +157,5 @@ describe Api::V1::SystemPackagesController do
                              :uuid            => "1234")
   end
 
+end
 end

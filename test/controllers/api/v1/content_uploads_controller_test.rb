@@ -23,7 +23,7 @@ describe Api::V1::ContentUploadsController do
   end
 
   def setup
-    setup_controller_defaults
+    setup_controller_defaults_api
     @repo = Repository.find(katello_repositories(:fedora_17_x86_64))
     @org = katello_organizations(:acme_corporation)
     @environment = katello_environments(:library)
