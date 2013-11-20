@@ -15,6 +15,7 @@ module Orchestrate
     module PulpPackagesPresenter
 
       def task_input
+        return {} unless action_details
         action_details.input
       end
 
@@ -36,9 +37,10 @@ module Orchestrate
       #                               fullname: "m17n-db-datafiles-1.5.5-1.1.el6.noarch",
       #                               dependency: true ] }
       def task_output
-        task_output = {}
+        return {} unless action_details
         pulp_task = action_details.output[:pulp_task]
-        return task_output unless pulp_task
+        return {} unless pulp_task
+        task_output = {}
 
         if steps = task_output_steps(pulp_task)
           task_output[:steps] = steps
@@ -56,6 +58,7 @@ module Orchestrate
       end
 
       def humanized_input
+        return "" unless task_input[:args]
         task_input[:args].join(", ")
       end
 
