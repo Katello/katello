@@ -23,8 +23,8 @@
  *   Provides the functionality for the system events list pane.
  */
 angular.module('Bastion.tasks').controller('TasksController',
-    ['$scope', '$state', 'Task', 'Nutupane', 'taskListProvider',
-    function($scope, $state, Task,  Nutupane, taskListProvider) {
+    ['$scope', '$state', 'Task', 'Nutupane', 'Task',
+    function($scope, $state, Task,  Nutupane, Task) {
         var params, tasksNutupane;
         var systemId = 1;
         var systemUuid = $scope.$stateParams.systemId;
@@ -42,8 +42,7 @@ angular.module('Bastion.tasks').controller('TasksController',
             self.existingTasks = {}
 
             self.register = function(scope) {
-                scope.updateTasks = self.updateTasks;
-                taskListProvider.registerScope(scope, params);
+                self.searchId = Task.registerSearch(params, self.updateTasks);
             };
 
             self.load = function(replace) {

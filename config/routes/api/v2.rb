@@ -315,7 +315,7 @@ Katello::Engine.routes.draw do
 
       api_resources :sync_plans, :only => [:show, :update, :destroy]
       api_resources :tasks, :only => [:show] do
-        post :search, :on => :collection
+        post :bulk_search, :on => :collection
       end
       api_resources :about, :only => [:index]
 
