@@ -1,7 +1,5 @@
-object Util::Data::ostructize(@resource) => :ping
-
-attributes :result
-child :status => :services do
+attributes :status
+child :services => :services do
   attributes :elasticsearch
   attributes :katello_jobs
   attributes :foreman_auth
