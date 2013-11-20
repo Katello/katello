@@ -22,13 +22,12 @@
  *   Provides the functionality for the details of a system event.
  */
 angular.module('Bastion.systems').controller('TaskDetailsController',
-    ['$scope', 'Task',
-    function($scope, Task) {
+    ['$scope', '$state', 'Task',
+    function($scope, $state, Task) {
         var taskId, fromState, fromParams;
 
-        fromState = 'systems.details.tasks.index';
+        fromState = $state.current.data.defaultBackState;
         fromParams = {};
-
         taskId = $scope.$stateParams.taskId;
 
         //Record our from state, so we can transition back there

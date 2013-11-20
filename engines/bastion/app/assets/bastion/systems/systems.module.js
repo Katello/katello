@@ -92,21 +92,19 @@ angular.module('Bastion.systems').config(['$stateProvider', function($stateProvi
     $stateProvider.state('systems.details.tasks', {
         abstract: true,
         collapsed: true,
-        controller: 'TasksController',
-        data: {
-            resourceId: ':systemId',
-            resourceType: 'System'
-        },
         template: '<div ui-view></div>'
     })
     .state('systems.details.tasks.index', {
         url: '/tasks',
         collapsed: true,
-        templateUrl: 'tasks/views/tasks.html'
+        template: '<tasks-table  details-state="systems.details.tasks.details"' +
+                  '              resource-type="System"' +
+                  '              resource-id="{{ system.id }}"/>'
     })
     .state('systems.details.tasks.details', {
         url: '/tasks/:taskId',
         collapsed: true,
+        data: { defaultBackState: 'systems.details.tasks.index' },
         controller: 'TaskDetailsController',
         templateUrl: 'tasks/views/task-details.html'
     });

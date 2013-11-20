@@ -32,7 +32,7 @@
               </div>
             </td>
             <td alch-table-cell>
-              <a class="clickable active" ui-sref="systems.details.tasks.details({taskId: task.uuid})">
+              <a class="clickable active" ng-click="table.gotoDetails(task.uuid)">
                 {{ task.humanized.action }}
                 {{ task.humanized.input }}
               </a>
