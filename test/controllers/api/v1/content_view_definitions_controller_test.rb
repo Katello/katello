@@ -21,7 +21,7 @@ describe Api::V1::ContentViewDefinitionsController do
              "ContentViewDefinition", "Product", "Repository"]
     disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
 
-    setup_controller_defaults
+    setup_controller_defaults_api
     login_user(User.find(users(:admin).id))
 
     @organization = Organization.find(katello_organizations(:acme_corporation))

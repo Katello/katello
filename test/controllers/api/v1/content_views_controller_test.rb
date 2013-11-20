@@ -24,7 +24,7 @@ class Api::V1::ContentViewsControllerTest < ActionController::TestCase
   end
 
   def setup
-    setup_controller_defaults
+    setup_controller_defaults_api
     @content_view = katello_content_views(:library_dev_view)
     @default_view = katello_content_views(:acme_default)
     @definition = ContentViewDefinition.find(katello_content_view_definition_bases(:simple_cvd))
