@@ -15,6 +15,7 @@ module Bastion
       app.config.less.paths << "#{Rails.root}/vendor/assets/components"
 
       app.middleware.use ::ActionDispatch::Static, "#{root}/app/assets/bastion"
+      app.middleware.use ::ActionDispatch::Static, "#{root}/app/assets/bootstrap"
 
       app.config.assets.precompile << proc do |path|
         full_path = Rails.application.assets.resolve(path).to_path
