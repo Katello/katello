@@ -17,15 +17,6 @@ angular.module('Bastion.widgets')
                 return ""
             }
             var classes = [];
-            switch(task.result) {
-            case "success": case "pending":
-                classes.push("progress-success");
-                break;
-            case "error":
-                classes.push("progress-danger");
-                break;
-            }
-
             switch(task.state) {
             case "running": case "pending":
                 classes.push("active");
