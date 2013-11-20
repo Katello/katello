@@ -172,8 +172,8 @@ When adding functionality that introduces a new entity that maps to an external 
 First, create a folder in `app/assets/bastion` that is the plural version of the entity name (e.g. systems). Follow by creating a file to hold the module definition and the resource.
 
     mkdir app/assets/bastion/systems
-    touch app/assets/bastion/systems.module.js
-    touch app/assets/bastion/system.factory.js
+    touch app/assets/bastion/systems/systems.module.js
+    touch app/assets/bastion/systems/system.factory.js
 
 ##### Module #####
 
