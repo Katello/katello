@@ -14,7 +14,7 @@
             ng-show="visible"
             style="width: 50em; padding-left: 1em;">
         <ul class="active-tasks">
-          <tasklist taskTemplate="widgets/views/current-tasks-item.html" taskUserId="{{ currentUser }}" ></tasklist>
+          <tasks-table template-url="tasks/views/user-tasks-table.html" user-id="{{ currentUser }}" ></tasks-table>
         </ul>
       </span>
     </li>

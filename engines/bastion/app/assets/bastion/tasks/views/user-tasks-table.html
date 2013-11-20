@@ -1,0 +1,30 @@
+<section class="nutupane-sub-section">
+  <div alch-table="tasksTable">
+    <table ng-class="{'table-mask': tasksTable.working}" class="table table-full table-striped">
+      <thead>
+      <tr alch-table-head>
+        <th alch-table-column="Status" style="width: 20%" translate>Status</th>
+        <th alch-table-column="Event" translate>Event</th>
+        <th alch-table-column="Date" style="width: 10em" translate>Date</th>
+      </tr>
+      </thead>
+
+      <tbody>
+        <tr alch-table-row ng-repeat="task in tasksTable.rows">
+          <td alch-table-cell>
+            <div ng-class="task | progressClasses" class="progress progress-striped">
+              <progress percent="task.progressbar"></progress>
+            </div>
+          </td>
+          <td alch-table-cell>
+            <a class="clickable active" ng-click="tasksTable.gotoDetails(task.uuid)">
+              {{ task.humanized.action }}
+              {{ task.humanized.input }}
+            </a>
+          </td>
+          <td alch-table-cell>{{ task.started_at | date:"short" }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>

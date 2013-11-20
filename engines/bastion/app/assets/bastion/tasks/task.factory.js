@@ -47,6 +47,11 @@ angular.module('Bastion.tasks').factory('Task',
             return { searches: searches };
         }
 
+        function taskProgressbar(task) {
+            var type = task.result == 'error' ? 'danger' : 'success';
+            return { value: task.progress * 100, type: type }
+        };
+
         function updateProgress(periodic) {
             if(_.keys(searchParamsById).length == 0) {
                 return;
@@ -57,6 +62,9 @@ angular.module('Bastion.tasks').factory('Task',
                         var searchId = tasksSearch['search_params']['search_id'];
                         var callback = callbackById[searchId];
                         try {
+                        _.each(tasksSearch['results'], function(task) {
+                            task.progressbar = taskProgressbar(task);
+                        });
                             if(tasksSearch['search_params']['type'] == 'task') {
                                 callback(tasksSearch['results'][0]);
                             } else {
