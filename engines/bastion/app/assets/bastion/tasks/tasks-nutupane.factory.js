@@ -12,37 +12,47 @@
  */
 
 /**
- * @ngdoc object
- * @name  Bastion.systems.controller:SystemEventsController
+ * @ngdoc service
+ * @name  Bastion.widgets.service:Nutupane
  *
- * @requires $scope
- * @requires System
- * @requires Nutupane
+ * @requires $location
+ * @requires $q
+ * @requires $timeout
  *
  * @description
- *   Provides the functionality for the system events list pane.
+ *   Defines the Nutupane factory for adding common functionality to the Nutupane master-detail
+ *   pattern.  Note that the API Nutupane uses must provide a response of the following structure:
+ *
+ *   {
+ *      offset: 25,
+ *      subtotal: 50,
+ *      total: 100,
+ *      results: [...]
+ *   }
+ *
+ * @example
+ *   <pre>
+       angular.module('example').controller('ExampleController',
+           ['Nutupane', function(Nutupane)) {
+               var nutupane                = new Nutupane(ExampleResource);
+               $scope.table                = nutupane.table;
+           }]
+       );
+    </pre>
  */
-angular.module('Bastion.tasks').controller('TasksController',
-    ['$scope', '$state', 'Task', 'Nutupane', 'Task',
-    function($scope, $state, Task,  Nutupane, Task) {
-        var params, tasksNutupane;
-        var systemId = 1;
-        var systemUuid = $scope.$stateParams.systemId;
-        params = {
-            'resource_id':      systemId,
-            'resource_type':    $state.current.data.resourceType,
-            'type':             'resource',
-        };
-
-        var TasksNutupane = function(params) {
+angular.module('Bastion.tasks').factory('TasksNutupane',
+    ['Task', 'Nutupane', function(Task, Nutupane) {
+        var TasksNutupane = function() {
             var self = this;
 
             Nutupane.call(self, Task, {});
 
             self.existingTasks = {}
 
-            self.register = function(scope) {
-                self.searchId = Task.registerSearch(params, self.updateTasks);
+            self.registerSearch = function(params) {
+                if(!self.searchId) {
+                    self.searchId = Task.registerSearch(params, self.updateTasks);
+                }
             };
 
             self.load = function(replace) {
@@ -101,11 +111,7 @@ angular.module('Bastion.tasks').controller('TasksController',
                     self.table.rows.splice(i, 1);
                 });
             }
-
         }
+        return TasksNutupane;
+    }]);
 
-        tasksNutupane = new TasksNutupane(params);
-        tasksNutupane.register($scope);
-        $scope.tasksTable = tasksNutupane.table;
-    }
-]);
