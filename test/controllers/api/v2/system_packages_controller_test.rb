@@ -31,7 +31,7 @@ class Api::V2::SystemPackagesControllerTest < ActionController::TestCase
   end
 
   def setup
-    setup_controller_defaults
+    setup_controller_defaults_api
     login_user(User.find(users(:admin)))
     @request.env['HTTP_ACCEPT'] = 'application/json'
 

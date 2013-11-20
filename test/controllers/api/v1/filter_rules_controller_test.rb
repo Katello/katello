@@ -23,7 +23,7 @@ describe Api::V1::FilterRulesController do
                 "FilterRule", "ErratumRule", "PackageRule", "PackageGroupRule",
                 "ContentViewEnvironment", "ContentViewDefinition"]
     disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
-    setup_controller_defaults
+    setup_controller_defaults_api
     login_user(User.find(users(:admin)))
     @filter = katello_filters(:simple_filter)
   end
