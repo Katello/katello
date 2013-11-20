@@ -47,7 +47,7 @@ describe Api::V1::SyncPlansController do
       it_should_behave_like "bad request"
     end
 
-    it "must_be successful" do
+    it "should be successful" do
       post :create, request_params
       must_respond_with(:success)
       SyncPlan.first.wont_be_nil
@@ -78,7 +78,7 @@ describe Api::V1::SyncPlansController do
       it_should_behave_like "bad request"
     end
 
-    it "must_be successful" do
+    it "should be successful" do
       put :update, request_params
       must_respond_with(:success)
       SyncPlan.first.name.must_equal request_params[:sync_plan][:name]

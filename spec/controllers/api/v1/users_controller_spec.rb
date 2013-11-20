@@ -11,6 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require 'katello_test_helper'
+
 module Katello
 describe Api::V1::UsersController do
   include LocaleHelperMethods
@@ -111,7 +112,7 @@ describe Api::V1::UsersController do
       end
     end
 
-    it "must_be successful" do
+    it "should be successful" do
       skip("TODO: these should be deleted once integration with foreman has accounted for them")
       post :create, request_params
       must_respond_with(:success)
@@ -150,7 +151,7 @@ describe Api::V1::UsersController do
     end
 
 
-    it "must_be successful" do
+    it "should be successful" do
       skip("TODO: these should be deleted once integration with foreman has accounted for them")
 
       old_pass = user.password

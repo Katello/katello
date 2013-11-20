@@ -11,6 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require 'katello_test_helper'
+
 module Katello
 #def self.it_should_require_admin_for_actions(*actions)
 #  actions.each do |action|
