@@ -286,6 +286,7 @@ class Repository < ActiveRecord::Base
                            :content_type => self.content_type,
                            :unprotected => self.unprotected
                            )
+    clone.checksum_type = self.checksum_type if self.checksum_type
     clone.pulp_id = clone.clone_id(to_env, content_view)
     clone.relative_path = Repository.clone_repo_path(self, to_env, content_view)
     clone.save!
