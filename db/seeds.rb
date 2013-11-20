@@ -30,19 +30,24 @@ reader_role.update_attributes(:locked => true)
 # update the Foreman 'admin' to be Katello super admin
 ::User.current = user_admin = ::User.admin
 raise "Foreman admin does not exist" unless user_admin
-user_admin.update_attributes(:katello_roles => [superadmin_role],:remote_id => first_user_name)
+# create a self role for user_admin, this is normally created during admin creation;
+# however, for the initial migrate/seed, it needs to be done manually
+user_admin.katello_roles.find_or_create_own_role(user_admin)
+user_admin.katello_roles << superadmin_role
+user_admin.remote_id = first_user_name
+user_admin.save
 raise "Unable to update admin user: #{format_errors(user_admin)}" if user_admin.errors.size > 0
 
 unless hidden_user = ::User.hidden.first
   ::User.current = ::User.admin
   login = "hidden-#{Password.generate_random_string(6)}"
   hidden_user = ::User.new(:auth_source_id => AuthSourceInternal.first.id,
-                       :login => login,
-                       :password => Password.generate_random_string(25),
-                       :mail => "#{Password.generate_random_string(10)}@localhost",
-                       :remote_id => login,
-                       :hidden => true,
-                       :katello_roles => [])
+                           :login => login,
+                           :password => Password.generate_random_string(25),
+                           :mail => "#{Password.generate_random_string(10)}@localhost",
+                           :remote_id => login,
+                           :hidden => true,
+                           :katello_roles => [])
   hidden_user.save!
   fail "Unable to create hidden user: #{format_errors hidden_user}" if hidden_user.nil? || hidden_user.errors.size > 0
 end
