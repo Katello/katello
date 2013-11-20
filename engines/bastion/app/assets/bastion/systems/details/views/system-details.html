@@ -42,14 +42,14 @@
           System Groups
         </a>
       </li>
-      <li ng-class="{active: stateIncludes('systems.details.events')}">
+      <li ng-class="{active: stateIncludes('systems.details.tasks')}">
         <a translate
            ui-sref="systems.details.tasks.index">
           Tasks
         </a>
       </li>
-      <li>
-        <a translate
+      <li ng-class="{active: stateIncludes('systems.details.events')}">
+        <a class="clickable" translate
            ui-sref="systems.details.events.index">
           Events
         </a>
