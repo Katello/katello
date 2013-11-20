@@ -22,8 +22,8 @@
  *   Provides the functionality for the details of a system event.
  */
 angular.module('Bastion.systems').controller('TaskDetailsController',
-    ['$scope', 'taskListProvider',
-    function($scope, taskListProvider) {
+    ['$scope', 'Task',
+    function($scope, Task) {
         var taskId, fromState, fromParams;
 
         fromState = 'systems.details.tasks.index';
@@ -46,10 +46,10 @@ angular.module('Bastion.systems').controller('TaskDetailsController',
         $scope.updateTask = function(task) {
             $scope.task = task;
             if(!$scope.task.pending) {
-                taskListProvider.unregisterScope($scope);
+                Task.unregisterSearch($scope.searchId);
             }
         }
 
-        taskListProvider.registerScope($scope, { type: 'task', task_id: taskId })
+        $scope.searchId = Task.registerSearch({ type: 'task', task_id: taskId }, $scope.updateTask)
     }
 ]);
