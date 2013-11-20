@@ -11,70 +11,6 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
  **/
 angular.module('Bastion.widgets')
-    .factory('taskListProvider', ['$timeout', '$resource', function($timeout, $resource) {
-        var conditions = [], condToScopes = {}, scopeToCond = {},
-            timoutId,
-            taskListResource = $resource('/katello/api/tasks/:id/:action',
-                                    {},
-                                    {query: {method:'POST', isArray: true, params: { action: 'search'}}});
-
-        function updateProgress() {
-            if(conditions.length == 0) {
-                return;
-            }
-            taskListResource.query({conditions: conditions}, function(conditionsTasks) {
-                angular.forEach(conditionsTasks, function(conditionTasks) {
-                    var scopes = condToScopes[JSON.stringify(conditionTasks.condition)];
-                    angular.forEach(scopes, function(scope) {
-                        if(conditionTasks.condition.type == 'task') {
-                            scope.updateTask(conditionTasks.tasks[0]);
-                        } else {
-                            scope.updateTasks(conditionTasks.tasks);
-                        }
-                    });
-                });
-            });
-        }
-        function scheduleUpdate() {
-            // save the timeoutId for canceling
-            timeoutId = $timeout(function() {
-                updateProgress();
-                scheduleUpdate(); // schedule the next update
-            }, 1500);
-        }
-        scheduleUpdate();
-
-        function addScope(scope, searchOptions) {
-            if(!condToScopes[JSON.stringify(searchOptions)]) {
-                conditions.push(searchOptions);
-                condToScopes[JSON.stringify(searchOptions)] = [];
-            }
-            condToScopes[JSON.stringify(searchOptions)].push(scope);
-            scopeToCond[scope.$id] = searchOptions;
-        };
-
-        function deleteScope(scope) {
-            condition = scopeToCond[scope.$id];
-            if(!condition) {
-                return;
-            }
-            scopeIndex = condToScopes[JSON.stringify(condition)].indexOf(scope);
-            condToScopes[JSON.stringify(condition)].splice(scopeIndex, 1);
-            if(condToScopes[JSON.stringify(condition)].length == 0) {
-                condIndex = conditions.indexOf(condition);
-                conditions.splice(condIndex, 1);
-                delete condToScopes[JSON.stringify(condition)];
-            }
-            delete scopeToCond[scope.$id];
-        };
-
-        return {
-            registerScope: function(scope, searchOptions) {
-                addScope(scope, searchOptions);
-            },
-            unregisterScope: function(scope) { deleteScope(scope); }
-        };
-    }])
     .filter('progressClasses', function () {
         return function(task) {
             if(!task) {
@@ -103,7 +39,7 @@ angular.module('Bastion.widgets')
         };
     })
     .directive('tasklist',
-               ['$compile', 'taskListProvider', function($compile, taskListProvider) {
+               ['$compile', 'Task', function($compile, Task) {
         return {
             restrict: 'E',
             template: '',
@@ -174,17 +110,17 @@ angular.module('Bastion.widgets')
                 }
                 scope.$watch('taskUserId', function(userId) {
                     if(userId) {
-                        taskListProvider.registerScope(scope, userSearchOptions(userId));
+                        scope.searchId = Task.registerSearch(userSearchOptions(userId), scope.updateTasks);
                     }
                 })
                 scope.$watch('taskResourceId', function(resourceId) {
                     if(resourceId) {
-                        taskListProvider.registerScope(scope, resourceSearchOptions(scope.taskResourceType, resourceId));
+                        scope.searchId = Task.registerSearch(resourceSearchOptions(scope.taskResourceType, resourceId), scope.updateTasks);
                     }
                 })
 
                 element.bind('$destroy', function() {
-                    taskListProvider.unregisterScope(scope);
+                    Task.unregisterSearch(scope.searchId);
                 });
             }
         }

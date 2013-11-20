@@ -12,8 +12,8 @@
  **/
 
 angular.module('Bastion.widgets').directive('currentTasks',
-    ['$document', 'CurrentUser', 'taskListProvider',
-    function($document, CurrentUser, taskListProvider) {
+    ['$document', 'CurrentUser', 'Task',
+    function($document, CurrentUser, Task) {
 
         return {
             restrict: 'A',
@@ -46,7 +46,7 @@ angular.module('Bastion.widgets').directive('currentTasks',
                 });
             }],
             link: function(scope) {
-                taskListProvider.registerScope(scope, { active_only: true, type: 'user', user_id: CurrentUser});
+                Task.registerSearch({ active_only: true, type: 'user', user_id: CurrentUser}, scope.updateTasks);
             }
         };
     }]);

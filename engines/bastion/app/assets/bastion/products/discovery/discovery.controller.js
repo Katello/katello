@@ -27,8 +27,8 @@
  *   Provides the functionality for the repo discovery action pane.
  */
 angular.module('Bastion.products').controller('DiscoveryController',
-    ['$scope', '$q', '$timeout', '$http', 'taskListProvider', 'Organization', 'CurrentOrganization',
-    function($scope, $q, $timeout, $http, taskListProvider, Organization, CurrentOrganization) {
+    ['$scope', '$q', '$timeout', '$http', 'Task', 'Organization', 'CurrentOrganization',
+    function($scope, $q, $timeout, $http, Task, Organization, CurrentOrganization) {
         var transformRows, setDiscoveryDetails;
 
         $scope.discovery = {url: ''};
@@ -84,18 +84,10 @@ angular.module('Bastion.products').controller('DiscoveryController',
             });
         };
 
-        Organization.get({id: CurrentOrganization}, function(org) {
-            if (org['discovery_task_id']) {
-                Task.get({id: org['discovery_task_id']}, function(task) {
-                    pollTask(task);
-                });
-            }
-        });
-
         $scope.updateTask = function(task) {
             setDiscoveryDetails(task);
             if(!task.pending) {
-                taskListProvider.unregisterScope($scope);
+                Task.unregisterScope($scope.taskSearchId);
             }
         }
 
@@ -104,7 +96,7 @@ angular.module('Bastion.products').controller('DiscoveryController',
             $scope.discoveryTable.rows = [];
             $scope.discoveryTable.selectAll(false);
             Organization.repoDiscover({id: CurrentOrganization, url: $scope.discovery.url}, function(task) {
-                taskListProvider.registerScope($scope, { type: 'task', task_id: task.uuid })
+                $scope.taskSearchId = Task.registerSearch({ type: 'task', task_id: task.uuid }, $scope.updateTask);
             });
         };
 

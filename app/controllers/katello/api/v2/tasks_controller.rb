@@ -35,7 +35,7 @@ class Api::V2::TasksController < Api::V2::ApiController
     {
       :index  => test,
       :show  => test,
-      :search => dummy,
+      :bulk_search => dummy,
     }
   end
 
@@ -53,8 +53,12 @@ class Api::V2::TasksController < Api::V2::ApiController
     respond_for_show
   end
 
-  api :POST, "/tasks/search", "List dynflow tasks for uuids"
-  param :conditions, Array, :desc => 'List of uuids to fetch info about' do
+  api :POST, "/tasks/bulk_search", "List dynflow tasks for uuids"
+  param :searches, Array, :desc => 'List of uuids to fetch info about' do
+    param :search_id, String, :desc => <<-DESC
+      Arbitraty value for client to identify the the request parts with results.
+      It's passed in the results to be able to pair the requests and responses properly.
+    DESC
     param :type, %w[user resource task]
     param :task_id, String, :desc => <<-DESC
       In case :type = 'task', find the task by the uuid
@@ -73,72 +77,72 @@ class Api::V2::TasksController < Api::V2::ApiController
     param :per_page, String
   end
   desc <<-DESC
-    For every condition it returns the list of tasks that satisfty the condition.
-    The reason for supporting multiple conditions is the UI that might be ending
-    needing periodic updates on task status for various conditions at the same time.
+    For every search it returns the list of tasks that satisfty the condition.
+    The reason for supporting multiple searches is the UI that might be ending
+    needing periodic updates on task status for various searches at the same time.
     This way, it is possible to get all the task statuses with one request.
   DESC
-  def search
-    conditions = Array(params[:conditions])
+  def bulk_search
+    searches = Array(params[:searches])
     @tasks = {}
 
-    ret = conditions.map do |condition|
-      { condition: condition,
-        tasks: condition_tasks(condition) }
+    ret = searches.map do |search_params|
+      { search_params: search_params,
+        results: search_tasks(search_params) }
     end
     render :json => ret
   end
 
   private
 
-  def condition_tasks(condition)
+  def search_tasks(search_params)
     scope = DynflowTask
-    scope = ordering_scope(scope, condition)
-    scope = search_scope(scope, condition)
-    scope = active_scope(scope, condition)
-    scope = pagination_scope(scope, condition)
+    scope = ordering_scope(scope, search_params)
+    scope = search_scope(scope, search_params)
+    scope = active_scope(scope, search_params)
+    scope = pagination_scope(scope, search_params)
     scope.all.map { |task| task_hash(task) }
   end
 
-  def search_scope(scope, condition)
-    case condition[:type]
+  def search_scope(scope, search_params)
+    case search_params[:type]
     when 'user'
-      if condition[:user_id].blank?
-        raise HttpErrors::BadRequest, _("User condition requires user_id to be specified")
+      if search_params[:user_id].blank?
+        raise HttpErrors::BadRequest, _("User search_params requires user_id to be specified")
       end
-      scope.where(user_id: condition[:user_id])
+      scope.where(user_id: search_params[:user_id])
     when 'resource'
-      if condition[:resource_type].blank? || condition[:resource_id].blank?
-        raise HttpErrors::BadRequest, _("Resource condition requires resource_type and resource_id to be specified")
+      if search_params[:resource_type].blank? || search_params[:resource_id].blank?
+        raise HttpErrors::BadRequest, _("Resource search_params requires resource_type and resource_id to be specified")
       end
       scope.joins(:dynflow_locks).where(dynflow_locks:
-                                                { resource_type: condition[:resource_type],
-                                                  resource_id:   condition[:resource_id] })
+                                                { resource_type: search_params[:resource_type],
+                                                  resource_id:   search_params[:resource_id] })
     when 'task'
-      if condition[:task_id].blank?
-        raise HttpErrors::BadRequest, _("Task condition requires task_id to be specified")
+      if search_params[:task_id].blank?
+        raise HttpErrors::BadRequest, _("Task search_params requires task_id to be specified")
       end
-      scope.where(uuid: condition[:task_id])
+      scope.where(uuid: search_params[:task_id])
     else
-      raise HttpErrors::BadRequest, _("Condition %s not supported") % condition[:type]
+      raise HttpErrors::BadRequest, _("Search_Params %s not supported") % search_params[:type]
     end
   end
 
-  def active_scope(scope, condition)
-    if condition[:active_only]
+  def active_scope(scope, search_params)
+    if search_params[:active_only]
       scope.active
     else
       scope
     end
   end
 
-  def pagination_scope(scope, condition)
-    page     = condition[:page] || 1
-    per_page = condition[:per_page] || 10
+  def pagination_scope(scope, search_params)
+    page     = search_params[:page] || 1
+    per_page = search_params[:per_page] || 10
     scope = scope.limit(per_page).offset((page - 1) * per_page)
   end
 
-  def ordering_scope(scope, condition)
+  def ordering_scope(scope, search_params)
     scope.joins(:dynflow_execution_plan).
         order('dynflow_execution_plans.started_at DESC')
   end
