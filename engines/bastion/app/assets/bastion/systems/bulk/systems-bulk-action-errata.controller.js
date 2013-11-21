@@ -56,15 +56,16 @@ angular.module('Bastion.systems').controller('SystemsBulkActionErrataController'
             success = function(data) {
                 deferred.resolve(data);
                 $scope.content.workingMode = false;
-                $scope.status.success = data["displayMessage"];
-                $scope.status.showSuccess = true;
+                $scope.successMessages.push(data["displayMessage"]);
             };
 
             error = function(error) {
                 deferred.reject(error.data["errors"]);
                 $scope.content.workingMode = false;
-                $scope.status.showError = true;
-                $scope.status.errors = error.data["errors"];
+                _.each(error.data.errors, function(errorMessage) {
+                    $scope.errorMessages.push(gettext("An error occurred installing Errata: ") + errorMessage);
+                });
+
             };
 
             initContentAction($scope.content);

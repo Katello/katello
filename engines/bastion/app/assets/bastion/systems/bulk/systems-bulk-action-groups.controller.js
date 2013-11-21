@@ -18,6 +18,7 @@
  * @requires $scope
  * @requires $q
  * @requires $location
+ * @requires gettext
  * @requires BulkAction
  * @requires SystemGroup
  * @requires CurrentOrganization
@@ -26,18 +27,11 @@
  *   A controller for providing bulk action functionality to the systems page.
  */
 angular.module('Bastion.systems').controller('SystemsBulkActionGroupsController',
-    ['$scope', '$q', '$location', 'BulkAction', 'SystemGroup', 'CurrentOrganization',
-    function($scope, $q, $location, BulkAction, SystemGroup, CurrentOrganization) {
+    ['$scope', '$q', '$location', 'gettext', 'BulkAction', 'SystemGroup', 'CurrentOrganization',
+    function($scope, $q, $location, gettext, BulkAction, SystemGroup, CurrentOrganization) {
 
         $scope.actionParams = {
             ids: []
-        };
-
-        $scope.status = {
-            showSuccess: false,
-            showError: false,
-            success: '',
-            errors: []
         };
 
         $scope.systemGroups = {
@@ -75,16 +69,16 @@ angular.module('Bastion.systems').controller('SystemsBulkActionGroupsController'
                 deferred.resolve(data);
                 $scope.systemGroups.workingMode = false;
                 $scope.editMode = true;
-                $scope.status.success = data["displayMessage"];
-                $scope.status.showSuccess = true;
+                $scope.successMessages.push(data["displayMessage"]);
             };
 
             error = function(error) {
                 deferred.reject(error.data["errors"]);
                 $scope.systemGroups.workingMode = false;
                 $scope.editMode = true;
-                $scope.status.showError = true;
-                $scope.status.errors = error.data["errors"];
+                _.each(error.data.errors, function(errorMessage) {
+                    $scope.errorMessages.push(gettext("An error occurred: ") + errorMessage);
+                });
             };
 
             if ($scope.systemGroups.action === 'add') {

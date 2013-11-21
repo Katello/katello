@@ -55,25 +55,21 @@ angular.module('Bastion.system-groups').controller('SystemGroupAddSystemsControl
         $scope.isAdding  = false;
         $scope.addSystemsTable.closeItem = function() {};
 
-
         $scope.showAddButton = function() {
             return $scope.addSystemsTable.numSelected === 0 || $scope.isAdding || !$scope.group.permissions.editable;
         };
 
         $scope.addSelected = function() {
             var selected;
-            $scope.errors = undefined;
             selected = _.pluck($scope.addSystemsTable.getSelected(), 'uuid');
 
             $scope.isAdding = true;
             SystemGroup.addSystems({id: $scope.group.id, 'system_group': {'system_ids': selected}}, function(){
-                $scope.successMessage = gettext("Successfully added %s systems.").replace('%s', selected.length);
+                $scope.successMessages.push(gettext("Successfully added %s systems.").replace('%s', selected.length));
                 $scope.isAdding = false;
                 addSystemsPane.refresh();
-            }, function(response){
-                $scope.saveError = true;
-                $scope.saveSuccess = false;
-                $scope.errors = response.data.displayMessage;
+            }, function(response) {
+                $scope.$parent.errorMessages = response.data.displayMessage;
                 $scope.isAdding  = false;
             });
         };

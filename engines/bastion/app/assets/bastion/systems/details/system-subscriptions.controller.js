@@ -35,12 +35,13 @@ angular.module('Bastion.systems').controller('SystemSubscriptionsController',
 
         successHandler = function() {
             refresh();
-            $scope.$parent.saveSuccess = true;
+            $scope.successMessages.push(gettext('Subscriptions updated.'));
         };
 
         errorHandler = function(error) {
-            $scope.$parent.saveError = true;
-            $scope.$parent.errors = error.data["errors"];
+            _.each(error.data["errors"], function(errorMessage) {
+                $scope.errorMessages.push(gettext('An error occurred updating the subscription: ') + errorMessage);
+            });
             availableSubscriptionsNutupane.table.working = false;
             currentSubscriptionsNutupane.table.working = false;
         };

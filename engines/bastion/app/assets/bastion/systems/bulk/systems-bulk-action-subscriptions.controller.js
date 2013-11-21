@@ -38,13 +38,6 @@ angular.module('Bastion.systems').controller('SystemsBulkActionSubscriptionsCont
             ids: []
         };
 
-        $scope.status = {
-            showSuccess: false,
-            showError: false,
-            success: '',
-            errors: []
-        };
-
         $scope.subscription = {
             confirm: false,
             workingMode: false
@@ -63,11 +56,16 @@ angular.module('Bastion.systems').controller('SystemsBulkActionSubscriptionsCont
                     $scope.subscription.autoAttachTask = polledTask;
                     $scope.subscription.workingMode = false;
                 });
+
+                $scope.successMessages.push(gettext('Successfully Scheduled Auto-attach.'));
             };
 
             error = function(error) {
                 deferred.reject(error.data["errors"]);
                 $scope.subscription.workingMode = false;
+                _.each(error.data.errors, function(errorMessage) {
+                    $scope.errorMessages.push(gettext("An error occurred applying Subscriptions: ") + errorMessage);
+                });
             };
 
             Organization.autoAttach({}, success, error);
