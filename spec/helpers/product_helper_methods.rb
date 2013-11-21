@@ -68,7 +68,7 @@ module ProductHelperMethods
     repo.stub(:clone_contents).and_return([])
     repo.stub(:sync).and_return([])
 
-    repo.stub!(:pulp_repo_facts).and_return({:clone_ids => []})
+    repo.stub!(:pulp_repo_facts).and_return({'distributors' => []})
     repo.stub(:content => {:id => "123"})
     Repository.where(:environment_id => environment, :product_id => repo.product).first.tap do |promoted|
         promoted.stub(:feed => repo.feed)
