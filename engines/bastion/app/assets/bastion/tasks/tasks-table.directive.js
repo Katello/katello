@@ -70,6 +70,10 @@ angular.module('Bastion.tasks').directive('tasksTable',
                                                              'user_id': userId });
                     }
                 });
+
+                element.bind('$destroy', function() {
+                    scope.tasksNutupane.unregisterSearch();
+                });
             }
         };
     }

@@ -42,12 +42,21 @@ angular.module('Bastion.systems').controller('TaskDetailsController',
             $scope.transitionTo(fromState, fromParams);
         };
 
+        $scope.unregisterSearch = function() {
+            Task.unregisterSearch($scope.searchId);
+            $scope.searchId = undefined;
+        }
+
         $scope.updateTask = function(task) {
             $scope.task = task;
             if(!$scope.task.pending) {
-                Task.unregisterSearch($scope.searchId);
+                $scope.unregisterSearch();
             }
         }
+
+        $scope.$on('$destroy', function() {
+            $scope.unregisterSearch();
+        });
 
         $scope.searchId = Task.registerSearch({ type: 'task', task_id: taskId }, $scope.updateTask)
     }
