@@ -8,10 +8,6 @@
   <header class="details-header">
     <h2 class="fl" translate>System Group: {{ group.name }}</h2>
 
-    <div class="note error" ng-show="removeError">
-      <ul><li>{{ removeError }}</li></ul>
-    </div>
-
     <div class="details-actions fr">
       <button class="btn btn-danger"
               ng-click="openModal()" ng-disabled="!group.permissions.deletable" translate>
@@ -39,9 +35,7 @@
     <form>
       <h5 translate>Copy</h5>
       <div class="input">
-        <span class="note error" ng-show="copyError">
-          <ul><li>{{ copyError }}</li></ul>
-        </span>
+        <div alch-alert error-messages="copyErrorMessages"></div>
         <div class="info-label">
           <label for="copy_name" translate>New Name:</label>
         </div>
@@ -92,6 +86,9 @@
       </li>
     </ul>
   </nav>
+
+  <div alch-alert success-messages="successMessages" error-messages="errorMessages"></div>
+
   <section class="nutupane-sub-section" ui-view></section>
 </section>
 

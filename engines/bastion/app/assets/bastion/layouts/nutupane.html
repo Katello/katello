@@ -1,11 +1,6 @@
 <section>
 
-  <div class="flash_hud" ng-show="saveSuccess">
-    <a class="control" tooltip="Close" ng-click="saveSuccess = false"></a>
-    <ul class="flash_messages success">
-      <li ng-repeat="message in successMessages">{{ message }}</li>
-    </ul>
-  </div>
+  <div alch-alert success-messages="successMessages"></div>
 
   <div class="row nutupane-bar">
     <h2 class="col-sm-2">

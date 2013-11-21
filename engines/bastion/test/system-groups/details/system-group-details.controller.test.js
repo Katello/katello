@@ -12,7 +12,7 @@
  **/
 
 describe('Controller: SystemGroupDetailsController', function() {
-    var $scope, SystemGroup, newGroup;
+    var $scope, gettext, SystemGroup, newGroup;
 
     beforeEach(module('Bastion.system-groups', 'Bastion.test-mocks'));
 
@@ -29,9 +29,15 @@ describe('Controller: SystemGroupDetailsController', function() {
         $scope.$stateParams = {systemGroupId: 1};
         $scope.removeRow = function() {};
         $scope.table = {addRow: function() {}};
+
+        gettext = function(message) {
+            return message;
+        };
+
         $controller('SystemGroupDetailsController', {
             $scope: $scope,
             $state: $state,
+            gettext: gettext,
             SystemGroup: SystemGroup
         });
     }));
@@ -53,15 +59,16 @@ describe('Controller: SystemGroupDetailsController', function() {
     it('should save the product successfully', function() {
         $scope.save($scope.group);
 
-        expect($scope.saveSuccess).toBe(true);
+        expect($scope.errorMessages.length).toBe(0);
+        expect($scope.successMessages.length).toBe(1);
     });
 
     it('should fail to save the group', function() {
         $scope.group.failed = true;
         $scope.save($scope.group);
 
-        expect($scope.saveSuccess).toBe(false);
-        expect($scope.saveError).toBe(true);
+        expect($scope.successMessages.length).toBe(0);
+        expect($scope.errorMessages.length).toBe(1);
     });
 
     it('should be able to copy the group', function(){
