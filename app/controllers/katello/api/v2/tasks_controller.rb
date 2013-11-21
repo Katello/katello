@@ -106,6 +106,8 @@ class Api::V2::TasksController < Api::V2::ApiController
 
   def search_scope(scope, search_params)
     case search_params[:type]
+    when 'all'
+      scope
     when 'user'
       if search_params[:user_id].blank?
         raise HttpErrors::BadRequest, _("User search_params requires user_id to be specified")
@@ -116,8 +118,8 @@ class Api::V2::TasksController < Api::V2::ApiController
         raise HttpErrors::BadRequest, _("Resource search_params requires resource_type and resource_id to be specified")
       end
       scope.joins(:dynflow_locks).where(dynflow_locks:
-                                                { resource_type: search_params[:resource_type],
-                                                  resource_id:   search_params[:resource_id] })
+                                        { resource_type: search_params[:resource_type],
+                                          resource_id:   search_params[:resource_id] })
     when 'task'
       if search_params[:task_id].blank?
         raise HttpErrors::BadRequest, _("Task search_params requires task_id to be specified")
