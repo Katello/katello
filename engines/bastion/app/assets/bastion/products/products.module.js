@@ -100,10 +100,20 @@ angular.module('Bastion.products').config(['$stateProvider', function($stateProv
     })
     .state("products.discovery.create", {
         collapsed: true,
+        abstract: true,
+        controller: 'DiscoveryFormController',
+        template: '<div ui-view></div>'
+    })
+    .state("products.discovery.create.repos", {
+        collapsed: true,
         url: '/products/discovery/scan/create',
-        templateUrl: 'products/views/discovery_create.html',
-        controller: 'DiscoveryFormController'
-
+        templateUrl: 'products/views/discovery_create.html'
+    })
+    .state("products.discovery.create.new_provider", {
+        collapsed: true,
+        url: '/products/discovery/scan/new_provider',
+        controller: 'NewProviderController',
+        templateUrl: 'providers/views/new.html'
     })
 
     .state("products.details", {
