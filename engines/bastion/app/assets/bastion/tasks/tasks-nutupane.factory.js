@@ -55,6 +55,13 @@ angular.module('Bastion.tasks').factory('TasksNutupane',
                 }
             };
 
+            self.unregisterSearch = function(params) {
+                if(self.searchId) {
+                    Task.unregisterSearch(self.searchId);
+                    self.searchId = undefined;
+                }
+            };
+
             self.load = function(replace) {
                 self.table.working = true;
             };
