@@ -124,7 +124,7 @@ class ActionController::TestCase
 
   def setup_controller_defaults_api
     setup_controller_defaults(true)
-    @controller.stubs(:require_org).returns ({})
+    @controller.stubs(:require_org).returns({})
   end
 
   alias_method :login_user, :set_user

@@ -14,7 +14,6 @@ namespace :test do
         "#{Katello::Engine.root}/spec/helpers/**/*_spec.rb",
         "#{Katello::Engine.root}/spec/models/**/*_spec.rb",
         "#{Katello::Engine.root}/spec/routing/**/*_spec.rb",
-        "#{Katello::Engine.root}/spec/controllers/*.rb",
         "#{Katello::Engine.root}/spec/lib/**/*_spec.rb",
         "#{Katello::Engine.root}/spec/controllers/*.rb",
         "#{Katello::Engine.root}/spec/controllers/api/*.rb"
