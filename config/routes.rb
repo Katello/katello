@@ -332,6 +332,12 @@ Katello::Engine.routes.draw do
     end
   end
 
+  resources :tasks, :only => [:index] do
+    collection do
+      get :all
+    end
+  end
+
   resources :users do
     collection do
       get :auto_complete_search

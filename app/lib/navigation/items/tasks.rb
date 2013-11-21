@@ -10,28 +10,17 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-module Katello
 module Navigation
-  module Menus
-    class Administer < Navigation::Menu
+  module Items
+    class Tasks < Navigation::Item
 
       def initialize
-        @key           = :administer
-        @display       = _("Administer")
-        @authorization = true
-        @type          = 'dropdown'
-        @items         = [
-          Navigation::Items::Organizations.new,
-          Navigation::Items::Users.new,
-          Navigation::Items::Roles.new,
-          Navigation::Items::Synchronization.new,
-          Navigation::Items::Tasks.new,
-          Navigation::Items::About.new
-        ]
-        super
+        @key           = :tasks
+        @display       = _("Tasks")
+        @authorization = lambda{ User.current.has_superadmin_role? }
+        @url           = all_tasks_path
       end
 
     end
   end
-end
 end
