@@ -1,17 +1,4 @@
 <section class="nutupane-sub-section">
-  <div class="nutupane-actionbar">
-    <div class="form">
-        <input type="text"
-               class="input input-search"
-               placeholder="{{ 'Search...' | translate }}"
-               ng-model="tasksTable.searchTerm"
-               on-enter="tasksTable.search(tasksTable.searchTerm)"/>
-      <span class="result-count" translate>
-        Showing {{ tasksTable.rows.length }} of {{ tasksTable.resource.subtotal }} ({{ tasksTable.resource.total }} Total) Events
-      </span>
-    </div>
-  </div>
-
   <div alch-table="tasksTable">
     <div alch-container-scroll control-width="table" alch-infinite-scroll="tasksTable.nextPage()">
       <table ng-class="{'table-mask': tasksTable.working}" class="table table-full table-striped">
