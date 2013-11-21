@@ -9,22 +9,24 @@
 ## have received a copy of GPLv2 along with this software; if not, see
 ## http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'spec_helper'
+require 'katello_test_helper'
 
-describe Api::V1::GpgKeysController, :katello => true do
-  include LoginHelperMethods
+module Katello
+describe Api::V1::GpgKeysController do
+  describe "(katello)" do
+  include OrganizationHelperMethods
   include AuthorizationHelperMethods
 
   let(:authorized_user) { user_with_permissions { |u| u.can(:gpg, :organizations, nil, @organization) } }
   let(:unauthorized_user) { user_without_permissions }
 
   before(:each) do
-    login_user_api
+    setup_controller_defaults_api
     @request.env["HTTP_ACCEPT"] = "application/json"
     disable_org_orchestration
 
     @organization = new_test_org
-    @test_gpg_content = File.open("#{Rails.root}/spec/assets/gpg_test_key").read
+    @test_gpg_content = File.open("#{Katello::Engine.root}/spec/assets/gpg_test_key").read
     @gpg_key      = GpgKey.create!(:name => "Another Test Key", :content => @test_gpg_content, :organization => @organization)
   end
 
@@ -33,14 +35,14 @@ describe Api::V1::GpgKeysController, :katello => true do
 
       it "should be successful" do
         get :content, :id => @gpg_key.id
-        response.body.should == @gpg_key.content
+        response.body.must_equal @gpg_key.content
       end
     end
 
     describe "with invalid GPG Key id" do
       it "should be unsuccessful" do
         get :content, :id => 9999
-        response.response_code.should == 404
+        response.response_code.must_equal 404
       end
     end
   end
@@ -68,9 +70,12 @@ describe Api::V1::GpgKeysController, :katello => true do
       response.body == @gpg_key.to_json
     end
 
-    it "should include assigned repos and products" do
+    it "must_include assigned repos and products" do
       req
-      JSON.parse(response.body).should include("repositories" => [], "products" => [])
+      resp_json = JSON.parse(response.body)
+      resp_json.must_include("repositories", "products")
+      resp_json["products"].must_be_empty
+      resp_json["repositories"].must_be_empty
     end
   end
 
@@ -85,11 +90,11 @@ describe Api::V1::GpgKeysController, :katello => true do
 
       it "returns JSON with created key" do
         req
-        JSON.parse(response.body).slice(*%w[name content]).should == req_params[:gpg_key]
+        JSON.parse(response.body).slice(*%w[name content]).must_equal req_params[:gpg_key]
       end
     end
 
-    it_should_behave_like "bad request" do
+    describe "test invalid params" do
       let(:req) do
         bad_req = { :organization_id => @organization.name,
                     :gpg_key         =>
@@ -99,6 +104,7 @@ describe Api::V1::GpgKeysController, :katello => true do
         }.with_indifferent_access
         post :create, bad_req
       end
+      it_should_behave_like "bad request"
     end
   end
 
@@ -109,9 +115,9 @@ describe Api::V1::GpgKeysController, :katello => true do
     it_should_behave_like "protected action"
 
     it "returns JSON with updated key" do
-      GpgKey.stub(:find).with(@gpg_key.id.to_s).and_return(@gpg_key)
+      GpgKey.stubs(:find).with(@gpg_key.id.to_s).returns(@gpg_key)
       req
-      JSON.parse(response.body).slice(*%w[name content]).should == req_params[:gpg_key]
+      JSON.parse(response.body).slice(*%w[name content]).must_equal req_params[:gpg_key]
     end
   end
 
@@ -123,8 +129,9 @@ describe Api::V1::GpgKeysController, :katello => true do
 
     it "remove the record" do
       req
-      GpgKey.where(:id => @gpg_key.id).should be_empty
+      GpgKey.where(:id => @gpg_key.id).must_be_empty
     end
   end
 end
-
+end
+end

@@ -10,10 +10,10 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'spec_helper'
+require 'katello_test_helper'
 
+module Katello
 describe Api::V1::OrganizationsController do
-  include LoginHelperMethods
   include AuthorizationHelperMethods
   include OrganizationHelperMethods
 
@@ -30,9 +30,9 @@ describe Api::V1::OrganizationsController do
 
   before(:each) do
     @org = new_test_org
-    @controller.stub(:get_organization => @org)
+    @controller.stubs(:get_organization => @org)
     @request.env["HTTP_ACCEPT"] = "application/json"
-    login_user_api
+    setup_controller_defaults_api
   end
 
   describe "create" do
@@ -47,7 +47,7 @@ describe Api::V1::OrganizationsController do
       it_should_behave_like "protected action"
 
       it 'should call katello create organization api' do
-        Organization.should_receive(:create!).once.with(:name => 'test org', :description => 'description', :label => 'test_org').and_return(@org)
+        Organization.expects(:create!).once.with(:name => 'test org', :description => 'description', :label => 'test_org').returns(@org)
         req
       end
     end
@@ -58,8 +58,8 @@ describe Api::V1::OrganizationsController do
       it_should_behave_like "protected action"
 
       it 'should call katello create organization api' do
-        Organization.should_receive(:create!).once.with(:name  => 'test org with spaces', :description => 'description',
-                                                        :label => 'test_org_with_spaces').and_return(@org)
+        Organization.expects(:create!).once.with(:name  => 'test org with spaces', :description => 'description',
+                                                        :label => 'test_org_with_spaces').returns(@org)
         req
       end
     end
@@ -70,8 +70,8 @@ describe Api::V1::OrganizationsController do
       it_should_behave_like "protected action"
 
       it 'should call katello create organization api' do
-        Organization.should_receive(:create!).once.with(:name  => 'test org', :description => 'description',
-                                                        :label => 'some_other_label').and_return(@org)
+        Organization.expects(:create!).once.with(:name  => 'test org', :description => 'description',
+                                                        :label => 'some_other_label').returns(@org)
         req
       end
     end
@@ -86,9 +86,9 @@ describe Api::V1::OrganizationsController do
     it_should_behave_like "protected action"
 
     it 'should find all readable orgs that are not being deleted' do
-      Organization.should_receive(:without_deleting).at_least(:once).and_return(Organization)
-      Organization.should_receive(:readable).at_least(:once).and_return(Organization)
-      Organization.should_receive(:where).once
+      Organization.expects(:without_deleting).at_least_once.returns(Organization)
+      Organization.expects(:readable).at_least_once.returns(Organization)
+      Organization.expects(:where).once
       req
     end
   end
@@ -102,7 +102,7 @@ describe Api::V1::OrganizationsController do
     it_should_behave_like "protected action"
 
     it 'should call katello organization find api' do
-      @controller.should_receive(:find_organization)
+      @controller.expects(:find_organization)
       req
     end
   end
@@ -116,12 +116,12 @@ describe Api::V1::OrganizationsController do
     it_should_behave_like "protected action"
 
     it 'should find org' do
-      @controller.should_receive(:find_organization)
+      @controller.expects(:find_organization)
       req
     end
 
     it 'should call organization destroyer' do
-      OrganizationDestroyer.should_receive(:destroy).with(@org).once
+      OrganizationDestroyer.expects(:destroy).with(@org).once
       req
     end
   end
@@ -134,7 +134,7 @@ describe Api::V1::OrganizationsController do
     it_should_behave_like "protected action"
 
     it "should call into Repo discovery" do
-      @org.should_receive(:discover_repos).and_return(TaskStatus.new)
+      @org.expects(:discover_repos).returns(TaskStatus.new)
       req
     end
   end
@@ -148,16 +148,16 @@ describe Api::V1::OrganizationsController do
     it_should_behave_like "protected action"
 
     it 'should find org' do
-      @controller.should_receive(:find_organization)
+      @controller.expects(:find_organization)
       req
     end
 
     it 'should call org update_attributes' do
-      @org.should_receive(:update_attributes!).once
+      @org.expects(:update_attributes!).once
       req
     end
 
-    it_should_behave_like "bad request" do
+    describe "invalid params" do
       let(:req) do
         bad_req = { :id           => 123,
                     :organization =>
@@ -167,6 +167,9 @@ describe Api::V1::OrganizationsController do
         }.with_indifferent_access
         put :update, bad_req
       end
+      it_should_behave_like "bad request"
+
     end
   end
+end
 end

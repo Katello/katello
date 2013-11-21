@@ -4,18 +4,19 @@ namespace :test do
 
   desc "Run the Katello plugin test suite."
   task :katello => ['db:test:prepare'] do
-    # Set the test loader explicitly to ensure that the ci_reporter gem 
+    # Set the test loader explicitly to ensure that the ci_reporter gem
     # doesn't override our test runner
     ENV['TESTOPTS'] = "#{ENV['TESTOPTS']} #{Katello::Engine.root}/test/katello_test_runner.rb"
-    
+
     spec_task = Rake::TestTask.new('katello_spec_task') do |t|
       t.libs << ["test", "#{Katello::Engine.root}/test", "spec", "#{Katello::Engine.root}/spec"]
       t.test_files = [
         "#{Katello::Engine.root}/spec/helpers/**/*_spec.rb",
         "#{Katello::Engine.root}/spec/models/**/*_spec.rb",
         "#{Katello::Engine.root}/spec/routing/**/*_spec.rb",
-        "#{Katello::Engine.root}/spec/controllers/*.rb",
         "#{Katello::Engine.root}/spec/lib/**/*_spec.rb",
+        "#{Katello::Engine.root}/spec/controllers/*.rb",
+        "#{Katello::Engine.root}/spec/controllers/api/*.rb"
       ]
       t.verbose = true
     end

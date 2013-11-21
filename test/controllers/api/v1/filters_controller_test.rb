@@ -26,7 +26,7 @@ describe Api::V1::FiltersController do
   end
 
   before do
-    setup_controller_defaults
+    setup_controller_defaults_api
     login_user(User.find(users(:admin)))
     @filter = katello_filters(:simple_filter)
     Product.any_instance.stubs(:productContent).returns([])

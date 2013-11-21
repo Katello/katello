@@ -10,14 +10,14 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'spec_helper'
+require 'katello_test_helper'
 
+module Katello
 describe Api::V1::SyncPlansController do
-  include LoginHelperMethods
   include AuthorizationHelperMethods
 
   before(:each) do
-    login_user_api
+    setup_controller_defaults_api
     @request.env["HTTP_ACCEPT"] = "application/json"
     disable_org_orchestration
 
@@ -38,19 +38,20 @@ describe Api::V1::SyncPlansController do
       }.with_indifferent_access
     }
 
-    it_should_behave_like "bad request" do
+    describe "invalid create params" do
       let(:req) do
         bad_req                       = request_params
         bad_req[:sync_plan][:bad_foo] = "mwahaha"
         post :create, bad_req
       end
+      it_should_behave_like "bad request"
     end
 
     it "should be successful" do
       post :create, request_params
-      response.should be_success
-      SyncPlan.first.should_not be_nil
-      SyncPlan.first.name.should == request_params[:sync_plan][:name]
+      must_respond_with(:success)
+      SyncPlan.first.wont_be_nil
+      SyncPlan.first.name.must_equal request_params[:sync_plan][:name]
     end
   end
 
@@ -68,18 +69,20 @@ describe Api::V1::SyncPlansController do
       }.with_indifferent_access
     }
 
-    it_should_behave_like "bad request" do
+    describe "invalid create params" do
       let(:req) do
         bad_req                       = request_params
         bad_req[:sync_plan][:bad_foo] = "mwahaha"
         put :update, bad_req
       end
+      it_should_behave_like "bad request"
     end
 
     it "should be successful" do
       put :update, request_params
-      response.should be_success
-      SyncPlan.first.name.should == request_params[:sync_plan][:name]
+      must_respond_with(:success)
+      SyncPlan.first.name.must_equal request_params[:sync_plan][:name]
     end
   end
+end
 end

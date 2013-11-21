@@ -155,7 +155,7 @@ class Api::V1::ActivationKeysController < Api::V1::ApiController
   end
 
   def find_pool
-    @pool = ::Pool.find_by_organization_and_id(@activation_key.organization, params[:poolid])
+    @pool = Pool.find_by_organization_and_id(@activation_key.organization, params[:poolid])
   end
 
   def find_system_groups

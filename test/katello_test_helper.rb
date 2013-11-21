@@ -5,7 +5,6 @@ require "mocha/setup"
 
 
 require "#{Katello::Engine.root}/test/support/minitest/spec/shared_examples"
-
 require "#{Katello::Engine.root}/spec/helpers/login_helper_methods"
 require "#{Katello::Engine.root}/spec/helpers/locale_helper_methods"
 require "#{Katello::Engine.root}/spec/helpers/authorization_helper_methods"
@@ -98,13 +97,13 @@ class ActionController::TestCase
     @routes = Katello::Engine.routes
   end
 
-  def setup_controller_defaults
-    set_user(User.current)
+  def setup_controller_defaults(is_api = false)
+    set_user(User.current, is_api)
     set_default_locale
     setup_engine_routes
   end
 
-  def set_user(user = nil)
+  def set_user(user = nil, is_api = false)
     if user.is_a?(UserPermission) || user.is_a?(UserPermissionSet)
       permissions = user
       user = users(:restricted)
@@ -117,10 +116,17 @@ class ActionController::TestCase
     if permissions
       permissions.call(Katello::AuthorizationSupportMethods::UserPermissionsGenerator.new(user))
     end
-
-    session[:user] = user.id
-    session[:expires_at] = 5.minutes.from_now
+    unless is_api
+      session[:user] = user.id
+      session[:expires_at] = 5.minutes.from_now
+    end
   end
+
+  def setup_controller_defaults_api
+    setup_controller_defaults(true)
+    @controller.stubs(:require_org).returns({})
+  end
+
   alias_method :login_user, :set_user
 
   def set_organization(org)

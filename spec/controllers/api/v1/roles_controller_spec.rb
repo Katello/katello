@@ -10,13 +10,14 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'spec_helper.rb'
-include OrchestrationHelper
+require 'katello_test_helper'
 
+module Katello
 describe Api::V1::RolesController do
-  include LoginHelperMethods
+  include OrganizationHelperMethods
   include LocaleHelperMethods
   include AuthorizationHelperMethods
+  include OrchestrationHelper
 
   let(:user_with_read_permissions) { user_with_permissions { |u| u.can(:read, :roles) } }
   let(:user_without_read_permissions) { user_without_permissions }
@@ -31,9 +32,9 @@ describe Api::V1::RolesController do
 
   before (:each) do
     @role= Role.new(:name => "test_role", :description => "role description")
-    Role.stub(:find).with(role_id.to_s).and_return(@role)
+    Role.stubs(:find).with(role_id.to_s).returns(@role)
 
-    login_user_api
+    setup_controller_defaults_api
   end
 
   describe "list roles" do
@@ -44,9 +45,9 @@ describe Api::V1::RolesController do
     it_should_behave_like "protected action"
 
     it 'should find all roles' do
-      Role.should_receive(:readable).and_return(Role)
-      Role.should_receive(:non_self).once.and_return(Role)
-      Role.should_receive(:where).once.and_return([@role])
+      Role.expects(:readable).returns(Role)
+      Role.expects(:non_self).once.returns(Role)
+      Role.expects(:where).once.returns([@role])
       req
     end
   end
@@ -59,7 +60,7 @@ describe Api::V1::RolesController do
     it_should_behave_like "protected action"
 
     it 'should find a role' do
-      Role.should_receive(:find).with(role_id.to_s)
+      Role.expects(:find).with(role_id.to_s)
       req
     end
   end
@@ -73,16 +74,15 @@ describe Api::V1::RolesController do
     it_should_behave_like "protected action"
 
     it 'should create a role' do
-      Role.should_receive(:create!).with(role_params)
+      Role.expects(:create!).with(role_params)
       req
     end
     describe "with invalid params" do
-      it_should_behave_like "bad request" do
-        let(:req) do
-          bad_req = { :role => { :bad_foo => "mwahaha" }.merge(role_params) }
-          post :create, bad_req
-        end
+      let(:req) do
+        bad_req = { :role => { :bad_foo => "mwahaha" }.merge(role_params) }
+        post :create, bad_req
       end
+      it_should_behave_like "bad request"
     end
   end
 
@@ -95,31 +95,31 @@ describe Api::V1::RolesController do
     it_should_behave_like "protected action"
 
     before :each do
-      @role.stub(:save!).and_return(true)
-      @role.stub(:update_attributes!).and_return(true)
+      @role.stubs(:save!).returns(true)
+      @role.stubs(:update_attributes!).returns(true)
     end
 
     it 'should find the role' do
-      Role.should_receive(:find).with(role_id.to_s)
+      Role.expects(:find).with(role_id.to_s)
       req
     end
 
     it 'should update role\'s params' do
-      @role.should_receive(:update_attributes!).with(role_params)
+      @role.expects(:update_attributes!).with(role_params)
       req
     end
 
     it 'should save the changes' do
-      @role.should_receive(:save!)
+      @role.expects(:save!)
       req
     end
     describe "with invalid params" do
-      it_should_behave_like "bad request" do
-        let(:req) do
-          bad_req = { :id => role_id, :role => { :bad_foo => "mwahaha" }.merge(role_params) }
-          put :update, bad_req
-        end
+      let(:req) do
+        bad_req = { :id => role_id, :role => { :bad_foo => "mwahaha" }.merge(role_params) }
+        put :update, bad_req
       end
+
+      it_should_behave_like "bad request"
     end
 
   end
@@ -132,12 +132,12 @@ describe Api::V1::RolesController do
     it_should_behave_like "protected action"
 
     it 'should find the role' do
-      Role.should_receive(:find).with(role_id)
+      Role.expects(:find).with(role_id)
       req
     end
 
     it 'should destroy the role' do
-      @role.should_receive(:destroy)
+      @role.expects(:destroy)
       req
     end
 
@@ -145,3 +145,4 @@ describe Api::V1::RolesController do
 
 end
 
+end
