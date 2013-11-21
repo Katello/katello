@@ -14,7 +14,9 @@
             ng-show="visible"
             style="width: 50em; padding-left: 1em;">
         <ul class="active-tasks">
-          <tasks-table template-url="tasks/views/user-tasks-table.html" user-id="{{ currentUser }}" ></tasks-table>
+          <tasks-table template-url="tasks/views/user-tasks-table.html"
+                       details-state="tasks.details"
+                       user-id="{{ currentUser }}" ></tasks-table>
         </ul>
       </span>
     </li>

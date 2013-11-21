@@ -40,6 +40,7 @@ angular.module('Bastion.tasks').directive('tasksTable',
                 resourceType: '@',
                 userId: '@',
                 activeOnly: '@',
+                all: '@',
                 detailsState: '@'
             },
             controller: ['$scope', '$state', function($scope, $state) {
@@ -69,6 +70,11 @@ angular.module('Bastion.tasks').directive('tasksTable',
                                                              'active_only': scope.activeOnly,
                                                              'user_id': userId });
                     }
+                });
+
+                scope.$watch('all', function() {
+                    scope.tasksNutupane.registerSearch({ 'type': 'all',
+                                                         'active_only': scope.activeOnly });
                 });
 
                 element.bind('$destroy', function() {
