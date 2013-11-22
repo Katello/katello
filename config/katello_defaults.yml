@@ -86,6 +86,15 @@ common:
   # run yard server inside katello server
   embed_yard_documentation: false
 
+  # settings fo Dynflow
+  dynflow:
+    # run Dynflow execution in separate process
+    remote: false
+    # path to socket being used for communication between thins and Dynflow execution process
+    socket_path: tmp/dynflow_socket
+    # size of Worker pool
+    pool_size: 10
+
   #setup how often you want
   #your notifications to be checked
   #for you to receive the right notifications
@@ -290,6 +299,9 @@ production:
     loggers:
       sql:
         level: fatal
+  dynflow:
+    remote: true
+    pool_size: 100
 
 #
 # Development environment configuration
