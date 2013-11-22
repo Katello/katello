@@ -4,8 +4,7 @@
     <li class="menu-item">
       <a class="menu-item-link organization-name clickable"
          ng-click="toggleVisibility()"
-         ng-class="{'active-item': visible}"
-         title="{{ currentOrganization.name }}">
+         ng-class="{'active-item': visible}">
         {{ currentOrganization.name || "Select an Organization" | translate }}
         <i class="icon-caret-down"></i>
       </a>
@@ -19,7 +18,9 @@
 
           <li class="dropdown-item clickable" ng-repeat="organization in user.allowed_organizations | filter:orgFilter">
             <i class="fl clickable"
-               title="{{ 'Make this your default organization.' | translate }}"
+               tooltip="{{ 'Make this your default organization.' | translate }}"
+               tooltip-placement="top org-switcher"
+               tooltip-append-to-body="true"
                ng-click="setDefaultOrg($event, organization)"
                ng-class="{'icon-star-empty': organization.id != favoriteOrg, 'icon-star': organization.id == favoriteOrg}"></i>
 

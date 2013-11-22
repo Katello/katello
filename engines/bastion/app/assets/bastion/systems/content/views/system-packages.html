@@ -49,14 +49,14 @@
             <td alch-table-cell>{{ package.nvrea }}</td>
             <td alch-table-cell ng-hide="currentPackagesTable.system.readonly">
 
-                <i class="clickable active icon-remove-sign" ng-hide="package.removeTask" title="{{ 'Remove' | translate }}"
+                <i class="clickable active icon-remove-sign" ng-hide="package.removeTask" tooltip="{{ 'Remove' | translate }}"
                    ng-click="currentPackagesTable.removePackage(package)"></i>
 
                 <i class="icon-spinner icon-spin" ng-show="package.removeTask.pending"></i>
                 <span ng-show="package.removeTask && !package.removeTask.pending">
 
-                  <i ng-show="currentPackagesTable.taskFailed(package.removeTask)" class="icon-exclamation-sign" title="{{ 'Failed' | translate }}"></i>
-                  <i ng-hide="currentPackagesTable.taskFailed(package.removeTask)" class="icon-check-sign" title="{{ 'Success' | translate }}"></i>
+                  <i ng-show="currentPackagesTable.taskFailed(package.removeTask)" class="icon-exclamation-sign" tooltip="{{ 'Failed' | translate }}"></i>
+                  <i ng-hide="currentPackagesTable.taskFailed(package.removeTask)" class="icon-check-sign" tooltip="{{ 'Success' | translate }}"></i>
 
                   <a ng-click="currentPackagesTable.openEventInfo(package.removeTask)" >
                     <span translate ng-show="package.removeTask.affected_units == 1">

@@ -63,14 +63,14 @@
   </nav>
 
   <div class="flash_hud" ng-show="saveSuccess">
-    <a class="control clickable" title="Close" ng-click="saveSuccess = false"></a>
+    <a class="control clickable" tooltip="{{ 'Close' | translate }}" ng-click="saveSuccess = false"></a>
     <ul class="flash_messages success">
       <li translate>Save successful</li>
     </ul>
   </div>
 
   <div class="flash_hud" ng-show="saveError">
-    <a class="control clickable" title="Close" ng-click="saveError = false"></a>
+    <a class="control clickable" tooltip="{{ 'Close' | translate }}" ng-click="saveError = false"></a>
     <ul class="flash_messages error">
       <li translate>Error occurred saving:</li>
       <ul>
