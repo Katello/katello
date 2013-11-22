@@ -25,9 +25,10 @@ class ContentViewTest < ActiveSupport::TestCase
 
   def setup
     User.current      = User.find(users(:admin))
+    @acme_corporation = get_organization(:organization1)
+
     @library          = KTEnvironment.find(katello_environments(:library).id)
     @dev              = KTEnvironment.find(katello_environments(:dev).id)
-    @acme_corporation = Organization.find(katello_organizations(:acme_corporation).id)
     @default_view     = ContentView.find(katello_content_views(:acme_default))
     @library_view     = ContentView.find(katello_content_views(:library_view))
     @library_dev_view = ContentView.find(katello_content_views(:library_dev_view))

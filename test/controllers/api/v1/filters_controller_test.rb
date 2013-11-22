@@ -36,7 +36,7 @@ describe Api::V1::FiltersController do
     Product.any_instance.stubs(:last_sync).returns(nil)
     Product.any_instance.stubs(:sync_plan).returns(nil)
     @cvd = @filter.content_view_definition
-    @organization = @cvd.organization
+    @organization = get_organization(:organization1)
 
     perms = ContentViewDefinitionSupport.generate_permissions(@cvd, @organization)
     @readable_permissions = perms.readable
@@ -75,7 +75,7 @@ describe Api::V1::FiltersController do
   describe "show" do
     before do
       @req = lambda do
-        get :show, :organization_id => @filter.content_view_definition.organization.label,
+        get :show, :organization_id => @organization.label,
             :content_view_definition_id=> @filter.content_view_definition.id,
             :id => @filter.id
       end
@@ -103,14 +103,14 @@ describe Api::V1::FiltersController do
     end
 
     it "should throw an 404 if definition is not found" do
-      get :show, :organization_id => @filter.content_view_definition.organization.label,
+      get :show, :organization_id => @organization.label,
           :content_view_definition_id=> rand(100),
           :id => @filter.id
       assert_response :missing
     end
 
     it "should throw an 404 if filter is not found" do
-      get :show, :organization_id => @filter.content_view_definition.organization.label,
+      get :show, :organization_id => @organization.label,
           :content_view_definition_id=> @filter.content_view_definition.id,
           :id => -1
       assert_response :missing
@@ -121,7 +121,7 @@ describe Api::V1::FiltersController do
   describe "delete" do
     before do
       @req = lambda do
-        delete :destroy, :organization_id => @filter.content_view_definition.organization.label,
+        delete :destroy, :organization_id => @organization.label,
                :content_view_definition_id=> @filter.content_view_definition.id,
                :id => @filter.id
       end
@@ -151,7 +151,7 @@ describe Api::V1::FiltersController do
     before do
       @name = @filter.name + "Cool"
       @req = lambda do
-        post :create, :organization_id => @filter.content_view_definition.organization.label,
+        post :create, :organization_id => @organization.label,
              :content_view_definition_id=> @filter.content_view_definition.id,
              :filter => @name
       end
@@ -183,7 +183,7 @@ describe Api::V1::FiltersController do
     before do
       @filter = katello_filters(:populated_filter)
       @cvd = @filter.content_view_definition
-      @organization = @cvd.organization
+      @organization = get_organization(:organization1)
       @product = @cvd.products.first
       @filter.products << @product
       @filter.save!
@@ -223,7 +223,7 @@ describe Api::V1::FiltersController do
     before do
       @filter = katello_filters(:populated_filter)
       @cvd = @filter.content_view_definition
-      @organization = @cvd.organization
+      @organization = get_organization(:organization1)
       @product_id = @cvd.products.first.cp_id
       refute_includes(@filter.products, @product_id)
       @req = lambda do
@@ -262,7 +262,7 @@ describe Api::V1::FiltersController do
     before do
       @filter = katello_filters(:populated_filter)
       @cvd = @filter.content_view_definition
-      @organization = @cvd.organization
+      @organization = get_organization(:organization1)
       @repo = @cvd.repositories.first
       @filter.repositories << @repo
       @filter.save!
@@ -301,7 +301,7 @@ describe Api::V1::FiltersController do
     before do
       @filter = katello_filters(:populated_filter)
       @cvd = @filter.content_view_definition
-      @organization = @cvd.organization
+      @organization = get_organization(:organization1)
       @repo_id = @cvd.repositories.first.id
       refute_includes(@filter.repositories, @repo_id)
 

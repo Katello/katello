@@ -60,7 +60,6 @@ module FixtureTestCase
     self.set_fixture_class :katello_gpg_keys => "Katello::GpgKey"
     self.set_fixture_class :katello_help_tips => "Katello::HelpTip"
     self.set_fixture_class :katello_notices => "Katello::Notice"
-    self.set_fixture_class :katello_organizations => "Katello::Organization"
     self.set_fixture_class :katello_permissions => "Katello::Permission"
     self.set_fixture_class :katello_products => "Katello::Product"
     self.set_fixture_class :katello_providers => "Katello::Provider"
@@ -81,6 +80,7 @@ module FixtureTestCase
       self.fixture_path = "#{Katello::Engine.root}/test/fixtures/models"
       fixtures(:all)
       @loaded_fixtures = load_fixtures
+
       @@admin = User.find(@loaded_fixtures['users']['admin']['id'])
       @@admin.remote_id = @@admin.login
       User.current = @@admin
@@ -137,6 +137,13 @@ end
 class ActiveSupport::TestCase
   include FactoryGirl::Syntax::Methods
   include FixtureTestCase
+
+  def get_organization(org_sym)
+    organization = Organization.find(taxonomies(org_sym))
+    organization.label = organization.name
+    organization.save
+    organization
+  end
 end
 
 class ActionController::IntegrationTest
@@ -165,7 +172,11 @@ def disable_glue_layers(services=[], models=[], force_reload=false)
         load "#{Katello::Engine.root}/app/models/katello/#{model.underscore}.rb"
       rescue NameError
         Object.send(:remove_const, model)
-        load "#{Rails.root}/app/models/#{model.underscore}.rb"
+        if model == 'Organization'
+          load "#{Rails.root}/app/models/taxonomies/#{model.underscore}.rb"
+        else
+          load "#{Rails.root}/app/models/#{model.underscore}.rb"
+        end
       end
       if model == 'User'
         # Ugly hack to force the model to be loaded properly
@@ -175,6 +186,15 @@ def disable_glue_layers(services=[], models=[], force_reload=false)
         # include the concern again after User reloading
         User.send :include, Katello::Concerns::UserExtensions
       end
+      if model == 'Organization'
+        # Ugly hack to force the model to be loaded properly
+        # Without this, the glue layer functions are not available
+        Organization.first
+
+        # include the concern again after Organization reloading
+        Organization.send :include, Katello::Concerns::OrganizationExtensions
+      end
+
       @@model_service_cache[model] = cached_entry
       change = true
     end

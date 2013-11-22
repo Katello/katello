@@ -45,7 +45,7 @@ module Katello
         has_many :products, :class_name => "Katello::Product", :through => :providers
         has_many :environments, :class_name => "Katello::KTEnvironment", :dependent => :destroy, :inverse_of => :organization
         has_one :library, :class_name => "Katello::KTEnvironment", :conditions => {:library => true}, :dependent => :destroy
-        has_many :gpg_keys, :class_name => "Katello::GPGKey", :dependent => :destroy, :inverse_of => :organization
+        has_many :gpg_keys, :class_name => "Katello::GpgKey", :dependent => :destroy, :inverse_of => :organization
         has_many :permissions, :class_name => "Katello::Permission", :dependent => :destroy, :inverse_of => :organization
         has_many :sync_plans, :class_name => "Katello::SyncPlan", :dependent => :destroy, :inverse_of => :organization
         has_many :system_groups, :class_name => "Katello::SystemGroup", :dependent => :destroy, :inverse_of => :organization
@@ -171,6 +171,10 @@ module Katello
               self.default_info[key] = []
             end
           end
+        end
+
+        def default_info_hash
+          self.default_info.is_a?(Hash) ? self.default_info : self.default_info.unserialized_value
         end
 
         def self.check_informable_type!(informable_type, options = {})

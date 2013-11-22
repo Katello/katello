@@ -4,7 +4,7 @@ acme_default:
   default:        true
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>
-  organization_id: <%= ActiveRecord::Fixtures.identify(:acme_corporation) %>
+  organization_id: <%= ActiveRecord::Fixtures.identify(:organization1) %>
 
 
 #View published only to library
@@ -14,7 +14,7 @@ library_view:
   default:        false
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>
-  organization_id: <%= ActiveRecord::Fixtures.identify(:acme_corporation) %>
+  organization_id: <%= ActiveRecord::Fixtures.identify(:organization1) %>
 
 #view published to library and dev
 library_dev_view:
@@ -23,7 +23,7 @@ library_dev_view:
   default:        false
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>
-  organization_id: <%= ActiveRecord::Fixtures.identify(:acme_corporation) %>
+  organization_id: <%= ActiveRecord::Fixtures.identify(:organization1) %>
 
 
 candlepin_default_cv:
@@ -32,7 +32,7 @@ candlepin_default_cv:
   default:        true
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>
-  organization_id: <%= ActiveRecord::Fixtures.identify(:candlepin_org) %>
+  organization_id: <%= ActiveRecord::Fixtures.identify(:organization2) %>
 
 
 # For use with glue/candlepin tests
@@ -42,7 +42,7 @@ candlepin_library_cv:
   default:        false
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>
-  organization_id: <%= ActiveRecord::Fixtures.identify(:candlepin_org) %>
+  organization_id: <%= ActiveRecord::Fixtures.identify(:organization2) %>
 
 candlepin_library_dev_cv:
   name:           Candlepin Library and Dev Content View
@@ -50,7 +50,7 @@ candlepin_library_dev_cv:
   default:        false
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>
-  organization_id: <%= ActiveRecord::Fixtures.identify(:candlepin_org) %>
+  organization_id: <%= ActiveRecord::Fixtures.identify(:organization2) %>
 
 component_view_1:
   name:           Component view 1
@@ -58,7 +58,7 @@ component_view_1:
   default:        false
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>
-  organization_id: <%= ActiveRecord::Fixtures.identify(:acme_corporation) %>
+  organization_id: <%= ActiveRecord::Fixtures.identify(:organization1) %>
 
 component_view_2:
   name:           Component view 2
@@ -66,7 +66,7 @@ component_view_2:
   default:        false
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>
-  organization_id: <%= ActiveRecord::Fixtures.identify(:acme_corporation) %>
+  organization_id: <%= ActiveRecord::Fixtures.identify(:organization1) %>
 
 composite_view:
   name:           Composite view
@@ -75,4 +75,4 @@ composite_view:
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>
   content_view_definition_id: <%= ActiveRecord::Fixtures.identify(:composite_def) %>
-  organization_id: <%= ActiveRecord::Fixtures.identify(:acme_corporation) %>
+  organization_id: <%= ActiveRecord::Fixtures.identify(:organization1) %>

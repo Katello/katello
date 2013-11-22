@@ -30,7 +30,8 @@ class LdapValidatorTest < MiniTest::Rails::ActiveSupport::TestCase
   def setup
     options = { :warden => "ldap", :validate_ldap => true, :katello? => false }
     override_config(options)
-    @acme_corporation   = Organization.find(organizations(:acme_corporation).id)
+    @acme_corporation   = get_organization(:organization1)
+
     @dev                = KTEnvironment.find(environments(:dev).id)
     @user = build(:user, :batman)
   end

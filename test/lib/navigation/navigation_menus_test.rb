@@ -22,7 +22,7 @@ class NavigationMenusTest < ActiveSupport::TestCase
     Katello.config[:url_prefix] = '/katello'
     @admin = User.find(users(:admin).id)
     User.current = @admin
-    @acme_corporation = Organization.find(katello_organizations(:acme_corporation).id)
+    @acme_corporation = get_organization(:organization1)
   end
 
   def test_main_menu

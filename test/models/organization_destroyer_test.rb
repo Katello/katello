@@ -27,7 +27,7 @@ class OrganizationDestroyerTest < ActiveSupport::TestCase
     org = FactoryGirl.create(:organization)
     User.current = User.find(users(:admin))
     OrganizationDestroyer.destroy(org, :async => false)
-    refute Katello::Organization.exists?(org.id)
+    refute Organization.exists?(org.id)
   end
 end
 end
