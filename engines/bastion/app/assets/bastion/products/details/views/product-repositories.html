@@ -1,18 +1,16 @@
 <section class="details details-full">
   <h4 translate>Repositories</h4>
 
-  <div class="form">
-    <input type="text"
-           class="input input-search"
-           placeholder="{{ 'Filter' | translate }}"
-           ng-model="repositorySearch"/>
-    <button class="btn btn-primary fr"
-            translate
-            ng-disabled="product.readonly"
-            ui-sref="products.details.repositories.new({productId: product.id})">
-      Create Repository
-    </button>
-  </div>
+  <input type="text"
+         class="form-control filter-input"
+         placeholder="{{ 'Filter' | translate }}"
+         ng-model="repositorySearch"/>
+  <button class="btn btn-primary fr"
+          translate
+          ng-disabled="product.readonly"
+          ui-sref="products.details.repositories.new({productId: product.id})">
+    Create Repository
+  </button>
 
   <table class="table table-striped">
     <thead>

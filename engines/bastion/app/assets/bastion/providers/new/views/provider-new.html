@@ -8,37 +8,21 @@
     <h4 translate>Add New Provider</h4>
   </header>
 
-  <form name="providerForm" class="form" novalidate>
-
-    <div class="control-group required" ng-class="{ 'error' : providerForm.name.$invalid }">
-
-      <div class="label">
-        <label class="required" for="name" translate>Name</label>
-      </div>
-
-      <div class="input">
-        <input ng-model="provider.name"
-               name="name"
-               type="text"
-               tabindex="1"
-               autofocus
-               required/>
-        <span class="note error" ng-show="providerForm.name.$invalid">
-          <ul>
-            <li ng-repeat="message in providerForm.name.$error.messages">{{ message }}</li>
-          </ul>
-        </span>
-      </div>
-
+  <form name="providerForm" class="form-horizontal" novalidate>
+    <div alch-form-group label="{{ 'Name' | translate }}" required>
+      <input id="name"
+             name="name"
+             ng-model="provider.name"
+             type="text"
+             tabindex="2"
+             required/>
     </div>
-
-    <div class="control-group buttons">
-      <div class="input">
-        <button type="button" class="btn btn-default btn-lg" ui-sref="products.new.form" translate>Cancel</button>
-        <button tabindex="2" class="btn btn-primary btn-lg" ng-click="save(provider)" translate>Create</button>
-      </div>
+    
+    <div alch-form-buttons
+         on-cancel="transitionTo('products.new.form')"
+         on-save="save(provider)"
+         working="working">
     </div>
-
   </form>
 
 </section>
