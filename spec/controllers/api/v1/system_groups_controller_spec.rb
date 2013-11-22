@@ -25,6 +25,7 @@ describe Api::V1::SystemGroupsController, :katello => true do
     disable_consumer_group_orchestration
 
     SystemGroup.stub(:index).and_return(stub.as_null_object)
+    System.any_instance.stub(:update_system_groups)
 
     @org         = Organization.create!(:name => 'test_org', :label => 'test_org')
     @environment = create_environment(:name => 'test_1', :label => 'test_1', :prior => @org.library.id, :organization => @org)
@@ -44,8 +45,8 @@ describe Api::V1::SystemGroupsController, :katello => true do
 
   describe "Controller tests " do
     before(:each) do
-      SystemGroup.stub!(:search).and_return(stub.as_null_object)
       @group = SystemGroup.create!(:name => "test_group", :organization => @org, :max_systems => 5)
+      Glue::ElasticSearch::Items.any_instance.stub(:retrieve).and_return([0, Util::Support.array_with_total])
     end
 
     describe "GET index" do

@@ -18,6 +18,7 @@ describe('Controller: SystemDetailsInfoController', function() {
         System,
         SystemGroup,
         mockSystem,
+        CurrentOrganization,
         mockContentViews;
 
     beforeEach(module(
@@ -46,6 +47,7 @@ describe('Controller: SystemDetailsInfoController', function() {
 
         spyOn(System, 'releaseVersions').andReturn(['RHEL6']);
 
+        CurrentOrganization = 'foo';
         Routes = {
             apiCustomInfoPath: function(informable, id) {
                 return ['/api', informable, id].join('/')
@@ -67,7 +69,8 @@ describe('Controller: SystemDetailsInfoController', function() {
             Routes: Routes,
             System: System,
             SystemGroup: SystemGroup,
-            ContentView: ContentView
+            ContentView: ContentView,
+            CurrentOrganization: CurrentOrganization
         });
 
         $scope.system = new System({
@@ -94,7 +97,7 @@ describe('Controller: SystemDetailsInfoController', function() {
     it("populates organizational system groups via the SystemGroups factory.", function() {
         spyOn(SystemGroup, 'query');
         $scope.systemGroups();
-        expect(SystemGroup.query).toHaveBeenCalledWith(jasmine.any(Function));
+        expect(SystemGroup.query).toHaveBeenCalledWith({'organization_id': CurrentOrganization}, jasmine.any(Function));
     });
 
     it("allows updating the system's groups", function() {

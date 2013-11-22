@@ -23,6 +23,7 @@ describe SystemsController do
     let(:uuid) { '1234' }
     before (:each) do
       setup_system_creation
+      System.any_instance.stub(:update_system_groups)
       @environment = KTEnvironment.new(:name=>'test', :label=> 'test', :prior => @organization.library.id, :organization => @organization)
       @environment.save!
       Resources::Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
@@ -138,6 +139,7 @@ describe SystemsController do
       @env2 = create_environment(:name=>'env2', :label=> 'env2', :prior => @env1.id, :organization => @organization)
 
       controller.stub(:search_validate).and_return(false)
+      System.any_instance.stub(:update_system_groups)
 
       Resources::Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
       Resources::Candlepin::Consumer.stub!(:get).and_return({:uuid => uuid, :owner => {:key => uuid}})

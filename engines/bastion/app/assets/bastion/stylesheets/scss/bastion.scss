@@ -151,6 +151,10 @@ input[type="checkbox"] {
 }
 
 .form {
+  input[type="number"] {
+    width: 75px;
+  }
+
   input[type="text"],
   input[type="url"] {
 
@@ -193,4 +197,25 @@ input[type="checkbox"] {
   background: rgb(250, 250, 250);
   margin-top: 20px;
   padding: 8px;
+}
+
+.page-error {
+  color: $rh-red2 !important;
+}
+
+//used for small panes such 'copy' actions
+.action-pane {
+  border:  1px solid $border_color;
+  background-color: white;
+  color: black;
+  padding:  10px;
+  width:  300px;
+  min-height: 100px;
+  z-index: 1;
+  position: absolute;
+  right:  20px;
+  top:  50px;
+  input {
+    margin-bottom: 10px;
+  }
 }

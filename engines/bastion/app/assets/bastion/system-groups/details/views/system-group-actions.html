@@ -1,0 +1,34 @@
+<section class="nutupane-sub-section" >
+
+  <span translate>
+    The following actions can be performed on systems in this group:
+  </span>
+
+  <ul class="bullet">
+    <li>
+      <a translate ng-href="{{ $state.href('systems.bulk-actions.packages') }}?select_all=true&search=system_group:'{{ group.name }}'">
+        Package Installation, Removal, and Update
+      </a>
+    </li>
+
+
+    <li>
+      <a translate ng-href="{{ $state.href('systems.bulk-actions.errata') }}?select_all=true&search=system_group:'{{ group.name }}'">
+        Errata Installation
+      </a>
+    </li>
+
+    <li>
+      <a translate ng-href="{{ $state.href('systems.bulk-actions.groups') }}?select_all=true&search=system_group:'{{ group.name }}'">
+        System Group Membership
+      </a>
+    </li>
+
+    <li>
+      <p translate>
+        Change assigned Environment or Content View
+      </p>
+    </li>
+
+  </ul>
+</section>

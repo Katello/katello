@@ -18,7 +18,7 @@ module Navigation
         @key           = :system_groups
         @display       = _("System Groups")
         @authorization = lambda{ organization && SystemGroup.any_readable?(organization) }
-        @url           = system_groups_path
+        @url           = ::User.current.legacy_mode ? system_groups_path : all_system_groups_path
       end
 
     end

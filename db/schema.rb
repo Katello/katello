@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130726210956) do
+ActiveRecord::Schema.define(:version => 20131115164314) do
 
   create_table "activation_keys", :force => true do |t|
     t.string   "name"
@@ -204,14 +204,6 @@ ActiveRecord::Schema.define(:version => 20130726210956) do
 
   add_index "environment_priors", ["environment_id"], :name => "index_environment_priors_on_environment_id"
   add_index "environment_priors", ["prior_id"], :name => "index_environment_priors_on_prior_id"
-
-  create_table "environment_system_groups", :force => true do |t|
-    t.integer "environment_id"
-    t.integer "system_group_id"
-  end
-
-  add_index "environment_system_groups", ["environment_id"], :name => "index_environment_system_groups_on_environment_id"
-  add_index "environment_system_groups", ["system_group_id"], :name => "index_environment_system_groups_on_system_group_id"
 
   create_table "environments", :force => true do |t|
     t.string   "name",                               :null => false
@@ -578,7 +570,6 @@ ActiveRecord::Schema.define(:version => 20130726210956) do
 
   create_table "system_groups", :force => true do |t|
     t.string   "name",                            :null => false
-    t.string   "pulp_id",                         :null => false
     t.text     "description"
     t.integer  "max_systems",     :default => -1, :null => false
     t.integer  "organization_id",                 :null => false
@@ -588,7 +579,6 @@ ActiveRecord::Schema.define(:version => 20130726210956) do
 
   add_index "system_groups", ["name", "organization_id"], :name => "index_system_groups_on_name_and_organization_id", :unique => true
   add_index "system_groups", ["organization_id"], :name => "index_system_groups_on_organization_id"
-  add_index "system_groups", ["pulp_id"], :name => "index_system_groups_on_pulp_id"
 
   create_table "system_system_groups", :force => true do |t|
     t.integer  "system_id"
@@ -718,9 +708,6 @@ ActiveRecord::Schema.define(:version => 20130726210956) do
 
   add_foreign_key "environment_priors", "environments", :name => "environment_priors_environment_id_fk"
   add_foreign_key "environment_priors", "environments", :name => "environment_priors_prior_id_fk", :column => "prior_id"
-
-  add_foreign_key "environment_system_groups", "environments", :name => "environment_system_groups_environment_id_fk"
-  add_foreign_key "environment_system_groups", "system_groups", :name => "environment_system_groups_system_group_id_fk"
 
   add_foreign_key "environments", "organizations", :name => "environments_organization_id_fk"
 

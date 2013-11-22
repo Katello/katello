@@ -38,7 +38,6 @@ class ActivationKey < ActiveRecord::Base
   validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
   validates :environment, :presence => true
   validate :environment_exists
-  validate :environment_key_conflict
   validates :content_view, :presence => true, :allow_blank => false
   validates_each :usage_limit do |record, attr, value|
     if !value.nil? && (value < -1 || value == 0 || (value != -1 && value < record.usage_count))
@@ -53,14 +52,6 @@ class ActivationKey < ActiveRecord::Base
       errors.add(:environment, _("ID: %s doesn't exist ") % environment_id)
     elsif environment.organization != self.organization
       errors.add(:environment, _("name: %s doesn't exist ") % environment.name)
-    end
-  end
-
-  def environment_key_conflict
-    conflicts = self.system_groups.select{|g| !g.environments.empty? && !g.environments.include?(self.environment)}
-    names = conflicts.join(",")
-    if !conflicts.empty?
-      errors.add(:environment, _("The selected system groups (%s) are not compatible with the selected environment.") % names)
     end
   end
 

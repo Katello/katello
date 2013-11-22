@@ -210,6 +210,23 @@ angular.module('alchemy')
             templateUrl: 'incubator/views/alch-edit-textarea.html'
         };
     })
+    .directive('alchEditCustom', function() {
+        return {
+            replace: true,
+            transclude: true,
+            templateUrl: 'incubator/views/alch-edit-custom.html',
+            scope: {
+                model: '=alchEditCustom',
+                readonly: '=',
+                handleSave: '&onSave',
+                handleCancel: '&onCancel',
+                deletable: '@deletable',
+                handleDelete: '&onDelete',
+                formatter: '@formatter',
+                formatterOptions: '=formatterOptions'
+            }
+        };
+    })
     .directive('alchEditSelect', function() {
         return {
             replace: true,

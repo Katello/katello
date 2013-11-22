@@ -1,0 +1,101 @@
+<section class="nutupane-sub-section">
+
+
+  <div class="flash_hud" ng-show="successMessage">
+    <a class="control" tooltip="{{ 'Close' | translate }}" ng-click="successMessage = undefined"></a>
+    <ul class="flash_messages success">
+      <li>{{ successMessage }}</li>
+    </ul>
+  </div>
+
+  <div class="flash_hud" ng-show="errors">
+    <a class="control" tooltip="{{ 'Close' | translate }}" ng-click="errors = undefined"></a>
+    <ul class="flash_messages error">
+      <li translate>Error occurred:</li>
+      <ul>
+        <li>{{ errors }}</li>
+      </ul>
+    </ul>
+  </div>
+
+  <div class="nutupane-bar">
+
+    <div class="col-sm-3">
+      <div class="input-group input-group">
+        <input type="text"
+               class="form-control"
+               placeholder="{{ 'Search...' | translate }}"
+               ng-model="addSystemsTable.searchTerm"
+               on-enter="addSystemsTable.search(addSystemsTable.searchTerm)"/>
+        <span class="input-group-btn">
+          <button ng-click="addSystemsTable.search(addSystemsTable.searchTerm)" class="btn btn-default" type="button"><i class="icon-search"></i></button>
+        </span>
+      </div>
+    </div>
+
+    <div class="col-sm-3 nutupane-info">
+      <span translate>Showing {{ addSystemsTable.rows.length }} of {{ addSystemsTable.resource.subtotal }} ({{ addSystemsTable.resource.total }} Total) Systems</span>
+    </div>
+
+    <div class="fr">
+      <div class="fl nutupane-info">
+        <span translate>{{ addSystemsTable.numSelected }} Selected</span>
+        <span>|</span>
+        <a class="deselect-action"
+           translate
+           ng-class="{ 'disabled-link' : addSystemsTable.numSelected == 0 }"
+           ng-click="addSystemsTable.selectAll(false)">
+          Deselect All
+        </a>
+      </div>
+
+      <div ng-hide="group.readonly" class="nutupane-actions fr">
+         <button class="btn btn-primary"
+                 translate
+                 ng-disabled="showAddButton()"
+                 ng-click="addSelected()">
+           Add Selected
+         </button>
+      </div>
+
+    </div>
+  </div>
+
+  <div alch-table="addSystemsTable" class="nutupane">
+    <div alch-container-scroll control-width="addSystemsTable" alch-infinite-scroll="addSystemsTable.nextPage()">
+
+      <div class="loading-mask icon-3x" ng-show="addSystemsTable.working && addSystemsTable.rows.length == 0">
+        <i class="icon-spinner icon-spin"></i>
+        {{ "Loading..." | translate }}
+      </div>
+
+      <table ng-class="{'table-mask': addSystemsTable.working}" class="table table-full table-striped">
+        <thead>
+          <tr alch-table-head row-select>
+            <th alch-table-column="name" translate>Name</th>
+            <th alch-table-column="name" translate>Environment</th>
+            <th alch-table-column="name" translate>Content View</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr alch-table-row ng-repeat="system in addSystemsTable.rows">
+            <td class="row-select">
+              <input type="checkbox"
+                     ng-model="system.selected"
+                     ng-change="itemSelected(system)"/>
+            </td>
+            <td alch-table-cell>
+              <a ui-sref="systems.details.info({systemId: system.id})">
+                {{ system.name }}
+              </a>
+            </td>
+            <td alch-table-cell>{{ system.environment.name }}</td>
+            <td alch-table-cell>{{ system.content_view.name }}</td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>

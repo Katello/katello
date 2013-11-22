@@ -17,7 +17,6 @@ class SystemSystemGroup < ActiveRecord::Base
   belongs_to :system_group, :inverse_of => :system_system_groups
 
   validate :validate_max_systems_not_exceeded
-  validate :validate_system_environments
 
   def validate_max_systems_not_exceeded
     if new_record?
@@ -25,13 +24,6 @@ class SystemSystemGroup < ActiveRecord::Base
       if (system_group) && (system_group.max_systems != SystemGroup::UNLIMITED_SYSTEMS) && (system_group.systems.size >= system_group.max_systems)
         errors.add :base, _("You cannot have more than %{max_systems} system(s) associated with system group '%{group}'.") % {:max_systems => system_group.max_systems, :group => system_group.name}
       end
-    end
-  end
-
-  def validate_system_environments
-    envs = system_group.environments
-    if !envs.empty? && !envs.include?(system.environment)
-      errors.add :base, _("System's environment not compatible with the group '%s'.") % system_group.name
     end
   end
 

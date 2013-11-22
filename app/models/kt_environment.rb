@@ -46,7 +46,6 @@ class KTEnvironment < ActiveRecord::Base
 
   has_many :repositories, dependent: :destroy, foreign_key: :environment_id
   has_many :systems, :inverse_of => :environment, :dependent => :destroy, :foreign_key => :environment_id
-  has_many :environment_system_groups, :dependent => :destroy, :inverse_of => :environment, :foreign_key => :environment_id
   has_many :distributors, :inverse_of => :environment, :dependent => :destroy, :foreign_key => :environment_id
   has_many :changesets, :dependent => :destroy, :inverse_of => :environment, :foreign_key => :environment_id
   has_many :working_changesets, :conditions => ["state != '#{Changeset::PROMOTED}'"],

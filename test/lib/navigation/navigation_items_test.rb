@@ -69,7 +69,7 @@ class NavigationItemsTest < MiniTest::Rails::ActiveSupport::TestCase
     item_item = Navigation::Items::SystemGroups.new(@acme_corporation)
 
     assert_equal  _('System Groups'), item_item.display
-    assert_equal  system_groups_path, item_item.url
+    assert_equal  "#{system_groups_path}/all", item_item.url
     assert        item_item.accessible?
   end
 

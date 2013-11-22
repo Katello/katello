@@ -115,13 +115,6 @@ describe ActivationKey do
       @akey.save!
       ActivationKey.find(@akey.id).system_groups.should include @group
     end
-
-    it "Should not allow groups to be added that conflict with the environment" do
-      @group.environments = [@environment_2]
-      @group.save!
-      lambda{@akey.system_groups << @group
-             @akey.save!}.should raise_exception
-    end
   end
 
   describe "pools in a activation key" do

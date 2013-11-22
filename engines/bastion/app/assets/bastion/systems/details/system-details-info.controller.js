@@ -22,13 +22,14 @@
  * @requires System
  * @requires SystemGroup
  * @requires ContentView
+ * @requires CurrentOrganization
  *
  * @description
  *   Provides the functionality for the system details action pane.
  */
 angular.module('Bastion.systems').controller('SystemDetailsInfoController',
-    ['$scope', '$q', '$http', 'Routes', 'System', 'SystemGroup', 'ContentView',
-    function($scope, $q, $http, Routes, System, SystemGroup, ContentView) {
+    ['$scope', '$q', '$http', 'Routes', 'System', 'SystemGroup', 'ContentView', 'CurrentOrganization',
+    function($scope, $q, $http, Routes, System, SystemGroup, ContentView, CurrentOrganization) {
         var customInfoErrorHandler = function(error) {
             $scope.saveError = true;
             $scope.errors = error["errors"];
@@ -121,8 +122,8 @@ angular.module('Bastion.systems').controller('SystemDetailsInfoController',
         $scope.systemGroups = function() {
             var deferred = $q.defer();
 
-            SystemGroup.query(function(systemGroups) {
-                deferred.resolve(systemGroups);
+            SystemGroup.query({'organization_id': CurrentOrganization}, function(systemGroups) {
+                deferred.resolve(systemGroups['results']);
             });
 
             return deferred.promise;

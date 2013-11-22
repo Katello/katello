@@ -42,7 +42,6 @@ Src::Application.routes.draw do
         resource :uebercert, :only => [:show]
 
         api_resources :activation_keys, :only => [:index, :create]
-        api_resources :system_groups, :only => [:index, :create]
         api_resources :gpg_keys, :only => [:index, :create]
 
         match '/default_info/:informable_type' => 'organization_default_info#create', :via => :post, :as => :create_default_info
@@ -60,9 +59,9 @@ Src::Application.routes.draw do
           get :systems
           get :history
           match "/history/:job_id" => "system_groups#history_show", :via => :get
-          post :add_systems
+          put :add_systems
           post :copy
-          post :remove_systems
+          put :remove_systems
           delete :destroy_systems
         end
 

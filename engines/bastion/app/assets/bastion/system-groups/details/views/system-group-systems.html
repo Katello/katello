@@ -1,0 +1,23 @@
+<nav>
+  <ul class="nav nav-tabs">
+    <li ng-class="{active: isState('system-groups.details.systems.list')}">
+      <a class="clickable"
+         ui-sref="system-groups.details.systems.list">
+        <span translate>
+          List/Remove
+        </span>
+      </a>
+    </li>
+
+    <li ng-class="{active: stateIncludes('system-groups.details.systems.add')}" ng-show="group.permissions.editable">
+      <a class="clickable"
+         ui-sref="system-groups.details.systems.add">
+        <span translate>
+          Add
+        </span>
+      </a>
+    </li>
+  </ul>
+</nav>
+
+<div ui-view></div>

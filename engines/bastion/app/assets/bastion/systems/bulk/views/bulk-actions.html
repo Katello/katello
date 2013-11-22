@@ -1,5 +1,5 @@
 <section class="nutupane-details" ng-cloak alch-container-scroll>
-  <header class="new-header details-header">
+  <header class="details-header">
     <h2 class="fl" translate>Bulk Actions</h2>
 
     <div class="fr">
@@ -27,6 +27,46 @@
 
     </div>
   </header>
+
+  <nav class="details-navigation">
+    <ul>
+      <li>
+        <a class="clickable"
+           translate
+           ui-sref="systems.bulk-actions.packages"
+           ng-class="{active: isState('systems.bulk-actions.packages')}">
+          Packages
+        </a>
+      </li>
+
+      <li>
+        <a class="clickable"
+           translate
+           ui-sref="systems.bulk-actions.errata"
+           ng-class="{active: isState('systems.bulk-actions.errata')}">
+          Errata
+        </a>
+      </li>
+
+      <li>
+        <a class="clickable"
+           translate
+           ui-sref="systems.bulk-actions.groups"
+           ng-class="{active: isState('systems.bulk-actions.groups')}">
+          System Groups
+        </a>
+      </li>
+
+      <li>
+        <a class="clickable"
+           translate
+           ui-sref="systems.bulk-actions.subscriptions"
+           ng-class="{active: isState('systems.bulk-actions.subscriptions')}">
+          Subscriptions
+        </a>
+      </li>
+    </ul>
+  </nav>
 
   <div class="flash_hud" ng-show="status.showSuccess">
     <a class="control" tooltip="{{ 'Close' | translate }}" ng-click="status.showSuccess = false"></a>

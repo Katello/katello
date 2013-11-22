@@ -36,6 +36,21 @@ class Api::V2::ApiController < Api::ApiController
     end
   end
 
+  def item_search(item_class, params, options)
+    options[:sort_by] = params[:sort_by] if params[:sort_by]
+    options[:sort_order] = params[:sort_order] if params[:sort_order]
+    options[:page_size] = params[:page_size] || current_user.page_size
+
+    items = Glue::ElasticSearch::Items.new(item_class)
+    systems, total_count = items.retrieve(params[:search], params[:offset], options)
+
+    {
+      :results  => systems,
+      :subtotal => total_count,
+      :total    => items.total_items
+    }
+  end
+
   protected
 
     def labelize_params(params)

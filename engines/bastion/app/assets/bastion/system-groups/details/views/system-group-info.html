@@ -1,0 +1,79 @@
+<section>
+
+  <div class="flash_hud" ng-show="saveSuccess">
+    <a class="control" tooltip="{{ 'Close' | translate }}" ng-click="saveSuccess = false"></a>
+    <ul class="flash_messages success">
+      <li translate>Save successful</li>
+    </ul>
+  </div>
+
+  <div class="flash_hud" ng-show="saveError">
+    <a class="control" tooltip="{{ 'Close' | translate }}" ng-click="saveError = false"></a>
+    <ul class="flash_messages error">
+      <li translate>Error occurred saving:</li>
+      <ul>
+        <li>{{ errors }}</li>
+      </ul>
+    </ul>
+  </div>
+
+  <div class="details fl">
+    <section>
+      <div class="detail">
+        <span class="info-label" translate>Name</span>
+        <span class="info-value"
+              alch-edit-text="group.name"
+              readonly="group.readonly"
+              on-save="save(group)">
+        </span>
+      </div>
+
+      <div class="detail">
+        <span class="info-label" translate>Description</span>
+        <span class="info-value"
+              alch-edit-textarea="group.description"
+              readonly="group.readonly"
+              on-save="save(group)">
+        </span>
+      </div>
+
+      <div class="detail">
+
+        <span class="info-label" translate>System Limit</span>
+
+        <span class="info-value"
+              alch-edit-custom="group.max_systems"
+              readonly="group.readonly"
+              formatter="defaultNumberString"
+              formatter-options="limitTranslations"
+              on-save="save(group)">
+
+          <div class="form input">
+            <div>
+              <span translate>
+                Unlimited Systems:
+              </span>
+              <input type='checkbox'
+                   ng-model="unlimited"
+                   ng-checked="isUnlimited(group)"
+                   ng-change="unlimitedChanged()"/>
+            </div>
+            <div ng-hide="isUnlimited(group)" >
+              <span translate>
+                Limit:
+              </span>
+              <input ng-model="group.max_systems"
+                     name="max_systems"
+                     type="number"
+                     tabindex="2"/>
+              <span class="note error" ng-show="groupForm.max_systems.$invalid">
+                <ul><li ng-repeat="message in groupForm.max_systems.$error.messages">{{ message }}</li></ul>
+              </span>
+            </div>
+          </div>
+
+        </span>
+      </div>
+    </section>
+  </div>
+</section>

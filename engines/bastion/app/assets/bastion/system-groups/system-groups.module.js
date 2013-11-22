@@ -18,4 +18,85 @@
  * @description
  *   Module for system groups related functionality.
  */
-angular.module('Bastion.system-groups', ['ngResource', 'Bastion.utils']);
+angular.module('Bastion.system-groups', ['ngResource', 'Bastion.utils', 'ui.router']);
+
+angular.module('Bastion.system-groups').config(['$stateProvider', function($stateProvider) {
+    $stateProvider.state('system-groups', {
+        abstract: true,
+        controller: 'SystemGroupsController',
+        templateUrl: 'system-groups/views/system-groups.html'
+    })
+    .state('system-groups.index', {
+        url: '/system-groups',
+        views: {
+            'table': {
+                templateUrl: 'system-groups/views/system-groups-table-full.html'
+            }
+        }
+    })
+    .state('system-groups.new', {
+        abstract: true,
+        collapsed: true,
+        views: {
+            'table': {
+                templateUrl: 'system-groups/views/system-groups-table-collapsed.html'
+            },
+            'action-panel': {
+                controller: 'NewSystemGroupController',
+                templateUrl: 'system-groups/new/views/system-group-new.html'
+            }
+        }
+    })
+    .state('system-groups.new.form', {
+        url: '/system-groups/new',
+        collapsed: true,
+        controller: 'SystemGroupFormController',
+        templateUrl: 'system-groups/new/views/system-group-new-form.html'
+    });
+
+    $stateProvider.state("system-groups.details", {
+        abstract: true,
+        url: '/system-groups/:systemGroupId',
+        collapsed: true,
+        views: {
+            'table': {
+                templateUrl: 'system-groups/views/system-groups-table-collapsed.html'
+            },
+            'action-panel': {
+                controller: 'SystemGroupDetailsController',
+                templateUrl: 'system-groups/details/views/system-group-details.html'
+            }
+        }
+    })
+    .state('system-groups.details.info', {
+        url: '/info',
+        collapsed: true,
+        controller: 'SystemGroupDetailsInfoController',
+        templateUrl: 'system-groups/details/views/system-group-info.html'
+    })
+    .state('system-groups.details.systems', {
+        abstract: true,
+        collapsed: true,
+        templateUrl: 'system-groups/details/views/system-group-systems.html'
+    })
+    .state('system-groups.details.systems.list', {
+        url: '/systems',
+        collapsed: true,
+        controller: 'SystemGroupSystemsController',
+        templateUrl: 'system-groups/details/views/system-group-systems-list.html'
+    })
+    .state('system-groups.details.systems.add', {
+        url: '/add-systems',
+        collapsed: true,
+        controller: 'SystemGroupAddSystemsController',
+        templateUrl: 'system-groups/details/views/system-group-add-systems.html'
+    })
+    .state('system-groups.details.actions', {
+        url: '/actions',
+        collapsed: true,
+        templateUrl: 'system-groups/details/views/system-group-actions.html'
+    });
+
+
+
+}]);

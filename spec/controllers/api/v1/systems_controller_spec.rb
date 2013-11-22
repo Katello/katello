@@ -52,6 +52,7 @@ describe Api::V1::SystemsController do
 
     System.stub(:index).and_return(stub.as_null_object)
     System.stub(:prepopulate!).and_return(true)
+    System.any_instance.stub(:update_system_groups)
 
     Resources::Candlepin::Consumer.stub!(:create).and_return({ :uuid => uuid, :owner => { :key => uuid } })
     Resources::Candlepin::Consumer.stub!(:update).and_return(true)
