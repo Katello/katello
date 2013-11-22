@@ -25,21 +25,21 @@
  *   Provides the functionality for the product details action pane.
  */
 angular.module('Bastion.products').controller('ProductDetailsInfoController',
-    ['$scope', '$q', 'Product', 'GPGKey', 'MenuExpander', function($scope, $q, Product, GPGKey, MenuExpander) {
+    ['$scope', '$q', 'Product', 'GPGKey', 'MenuExpander', function ($scope, $q, Product, GPGKey, MenuExpander) {
 
         $scope.menuExpander = MenuExpander;
         $scope.saveSuccess = false;
         $scope.saveError = false;
         $scope.panel = $scope.panel || {loading: false};
 
-        $scope.product = $scope.product || Product.get({id: $scope.$stateParams.productId}, function() {
+        $scope.product = $scope.product || Product.get({id: $scope.$stateParams.productId}, function () {
             $scope.panel.loading = false;
         });
 
-        $scope.gpgKeys = function() {
+        $scope.gpgKeys = function () {
             var deferred = $q.defer();
 
-            GPGKey.query(function(gpgKeys) {
+            GPGKey.query(function (gpgKeys) {
                 var results = gpgKeys.results;
 
                 results.unshift({id: null});
@@ -49,13 +49,13 @@ angular.module('Bastion.products').controller('ProductDetailsInfoController',
             return deferred.promise;
         };
 
-        $scope.save = function(product) {
+        $scope.save = function (product) {
             var deferred = $q.defer();
 
-            product.$update(function(response) {
+            product.$update(function (response) {
                 deferred.resolve(response);
                 $scope.saveSuccess = true;
-            }, function(response) {
+            }, function (response) {
                 deferred.reject(response);
                 $scope.saveError = true;
                 $scope.errors = response.data.errors;

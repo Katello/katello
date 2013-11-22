@@ -26,24 +26,24 @@
  */
 angular.module('Bastion.providers').controller('NewProviderController',
     ['$scope', 'Provider', 'CurrentOrganization',
-    function($scope, Provider, CurrentOrganization) {
+    function ($scope, Provider, CurrentOrganization) {
         var fromState, fromParams;
 
         $scope.provider = new Provider({'organization_id': CurrentOrganization});
         $scope.panel.loading = false;
 
-        $scope.save = function(provider) {
+        $scope.save = function (provider) {
             provider.$save(success, error);
         };
 
-        $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromStateIn, fromParamsIn) {
+        $scope.$on('$stateChangeSuccess', function (event, toState, toParams, fromStateIn, fromParamsIn) {
             if (!fromStateIn.abstract) {
                 fromState = fromStateIn;
                 fromParams = fromParamsIn;
             }
         });
 
-        $scope.transitionBack = function() {
+        $scope.transitionBack = function () {
             $scope.transitionTo(fromState, fromParams);
         };
 
@@ -53,7 +53,7 @@ angular.module('Bastion.providers').controller('NewProviderController',
         }
 
         function error(response) {
-            angular.forEach(response.data.errors, function(errors, field) {
+            angular.forEach(response.data.errors, function (errors, field) {
                 $scope.providerForm[field].$setValidity('', false);
                 $scope.providerForm[field].$error.messages = errors;
             });

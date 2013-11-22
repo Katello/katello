@@ -24,7 +24,7 @@
  *   Provides the functionality for the repository details pane.
  */
 angular.module('Bastion.repositories').controller('RepositoryDetailsInfoController',
-    ['$scope', '$q', 'Repository', 'GPGKey', function($scope, $q, Repository, GPGKey) {
+    ['$scope', '$q', 'Repository', 'GPGKey', function ($scope, $q, Repository, GPGKey) {
 
         $scope.saveSuccess = false;
         $scope.saveError = false;
@@ -34,10 +34,10 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
             'id': $scope.$stateParams.repositoryId
         });
 
-        $scope.gpgKeys = function() {
+        $scope.gpgKeys = function () {
             var deferred = $q.defer();
 
-            GPGKey.query(function(gpgKeys) {
+            GPGKey.query(function (gpgKeys) {
                 var results = gpgKeys.results;
 
                 results.unshift({id: null});
@@ -47,13 +47,13 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
             return deferred.promise;
         };
 
-        $scope.save = function(repository) {
+        $scope.save = function (repository) {
             var deferred = $q.defer();
 
-            repository.$update(function(response) {
+            repository.$update(function (response) {
                 deferred.resolve(response);
                 $scope.saveSuccess = true;
-            }, function(response) {
+            }, function (response) {
                 deferred.reject(response);
                 $scope.saveError = true;
                 $scope.errors = response.data.errors;
@@ -62,19 +62,19 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
             return deferred.promise;
         };
 
-        $scope.removeRepository = function(repository) {
-            repository.$delete(function() {
+        $scope.removeRepository = function (repository) {
+            repository.$delete(function () {
                 $scope.transitionTo('products.details.repositories.index', {productId: $scope.$stateParams.productId});
             });
         };
 
-        $scope.uploadContent = function(content, completed) {
+        $scope.uploadContent = function (content, completed) {
             var returnData;
 
             if (content !== "Please wait...") {
                 try {
                     returnData = JSON.parse(angular.element(content).html());
-                } catch(err) {
+                } catch (err) {
                     returnData = content;
                 }
 
@@ -94,12 +94,12 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
             }
         };
 
-        $scope.syncInProgress = function(state) {
+        $scope.syncInProgress = function (state) {
             return (state === 'running' || state === 'waiting');
         };
 
-        $scope.syncRepository = function(repository) {
-            Repository.sync({id: repository.id}, function(task) {
+        $scope.syncRepository = function (repository) {
+            Repository.sync({id: repository.id}, function (task) {
                 repository['sync_state'] = task.state;
             });
         };

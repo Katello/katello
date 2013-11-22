@@ -33,7 +33,7 @@
  * @example
  *   <pre>
        angular.module('example').controller('ExampleController',
-           ['Nutupane', function(Nutupane)) {
+           ['Nutupane', function (Nutupane)) {
                var nutupane                = new Nutupane(ExampleResource);
                $scope.table                = nutupane.table;
            }]
@@ -41,8 +41,8 @@
     </pre>
  */
 angular.module('Bastion.widgets').factory('Nutupane',
-    ['$location', '$q', '$timeout', function($location, $q, $timeout) {
-        var Nutupane = function(resource, params, action) {
+    ['$location', '$q', '$timeout', function ($location, $q, $timeout) {
+        var Nutupane = function (resource, params, action) {
             var self = this;
             params = params || {};
 
@@ -76,7 +76,7 @@ angular.module('Bastion.widgets').factory('Nutupane',
 
                     // This $timeout is necessary to cause a digest cycle
                     // in order to prevent loading two sets of results.
-                    $timeout(function() {
+                    $timeout(function () {
                         deferred.resolve(response);
                         table.resource = response;
                         table.resource.offset = table.rows.length;
@@ -86,29 +86,29 @@ angular.module('Bastion.widgets').factory('Nutupane',
                 return deferred.promise;
             }
 
-            self.getParams = function() {
+            self.getParams = function () {
                 return params;
             };
 
-            self.setParams = function(newParams) {
-               params = newParams;
+            self.setParams = function (newParams) {
+                params = newParams;
             };
 
-            self.query = function() {
+            self.query = function () {
                 var table = self.table;
                 params.offset = table.rows.length;
                 params.search = table.searchTerm || "";
                 return load();
             };
 
-            self.refresh = function() {
+            self.refresh = function () {
                 return load(true);
             };
 
-            self.removeRow = function(id) {
+            self.removeRow = function (id) {
                 var table = self.table;
 
-                table.rows = _.reject(table.rows, function(item) {
+                table.rows = _.reject(table.rows, function (item) {
                     return item.id === id;
                 }, this);
 
@@ -118,7 +118,7 @@ angular.module('Bastion.widgets').factory('Nutupane',
                 return self.table.rows;
             };
 
-            self.table.search = function(searchTerm) {
+            self.table.search = function (searchTerm) {
                 $location.search('search', searchTerm);
                 self.table.resource.offset = 0;
                 self.table.rows = [];
@@ -130,13 +130,13 @@ angular.module('Bastion.widgets').factory('Nutupane',
             };
 
             // Must be overridden
-            self.table.closeItem = function() {
+            self.table.closeItem = function () {
                 throw "NotImplementedError";
             };
 
-            self.table.replaceRow = function(row) {
+            self.table.replaceRow = function (row) {
                 var index = null;
-                angular.forEach(self.table.rows, function(item, itemIndex) {
+                angular.forEach(self.table.rows, function (item, itemIndex) {
                     if (item.id === row.id) {
                         index = itemIndex;
                     }
@@ -147,14 +147,14 @@ angular.module('Bastion.widgets').factory('Nutupane',
                 }
             };
 
-            self.table.addRow = function(row) {
+            self.table.addRow = function (row) {
                 self.table.rows.unshift(row);
                 self.table.resource.offset += 1;
                 self.table.resource.subtotal += 1;
                 self.table.resource.total += 1;
             };
 
-            self.table.nextPage = function() {
+            self.table.nextPage = function () {
                 var table = self.table;
                 if (table.working || !table.hasMore()) {
                     return;
@@ -162,13 +162,13 @@ angular.module('Bastion.widgets').factory('Nutupane',
                 return self.query();
             };
 
-            self.table.hasMore = function() {
+            self.table.hasMore = function () {
                 var length = self.table.rows.length;
                 var subtotal = self.table.resource.subtotal;
                 return ((length === 0 && subtotal !== 0) || (length < subtotal));
             };
 
-            self.table.sortBy = function(column) {
+            self.table.sortBy = function (column) {
                 var sort = self.table.resource.sort;
                 if (!column) {
                     return;

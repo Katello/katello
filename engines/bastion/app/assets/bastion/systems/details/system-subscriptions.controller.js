@@ -26,19 +26,19 @@
  */
 angular.module('Bastion.systems').controller('SystemSubscriptionsController',
     ['$scope', 'gettext', 'SystemSubscription', 'System', 'Nutupane', 'SystemsHelper',
-    function($scope, gettext, SystemSubscription, System, Nutupane, SystemsHelper) {
+    function ($scope, gettext, SystemSubscription, System, Nutupane, SystemsHelper) {
         var currentSubscriptionsNutupane,
             availableSubscriptionsNutupane,
             successHandler,
             errorHandler,
             refresh;
 
-        successHandler = function() {
+        successHandler = function () {
             refresh();
             $scope.$parent.saveSuccess = true;
         };
 
-        errorHandler = function(error) {
+        errorHandler = function (error) {
             $scope.$parent.saveError = true;
             $scope.$parent.errors = error.data["errors"];
             availableSubscriptionsNutupane.table.working = false;
@@ -53,7 +53,7 @@ angular.module('Bastion.systems').controller('SystemSubscriptionsController',
         $scope.availableSubscriptionsTable = availableSubscriptionsNutupane.table;
         availableSubscriptionsNutupane.query();
 
-        refresh = function() {
+        refresh = function () {
             availableSubscriptionsNutupane.table.selectAll(false);
             availableSubscriptionsNutupane.refresh();
             currentSubscriptionsNutupane.table.selectAll(false);
@@ -61,7 +61,7 @@ angular.module('Bastion.systems').controller('SystemSubscriptionsController',
             $scope.system.$get();
         };
 
-        $scope.removeSubscriptions = function() {
+        $scope.removeSubscriptions = function () {
             var selectedRows = $scope.currentSubscriptionsTable.getSelected(),
                 allSelected = $scope.currentSubscriptionsTable.allSelected;
 
@@ -71,17 +71,17 @@ angular.module('Bastion.systems').controller('SystemSubscriptionsController',
             if (allSelected) {
                 SystemSubscription.remove({systemId: $scope.system.uuid}, successHandler, errorHandler);
             } else {
-                _.each(selectedRows, function(row) {
+                _.each(selectedRows, function (row) {
                     SystemSubscription.remove({systemId: $scope.system.uuid, id: row.entitlementId},
                         successHandler, errorHandler);
                 });
             }
         };
 
-        $scope.attachSubscriptions = function() {
+        $scope.attachSubscriptions = function () {
             var selectedRows = $scope.availableSubscriptionsTable.getSelected();
 
-            _.each(selectedRows, function(row) {
+            _.each(selectedRows, function (row) {
                 var quantity = row.amount || 1;
                 SystemSubscription.save({systemId: $scope.system.uuid, pool: row['cp_id'], quantity: quantity}, successHandler, errorHandler);
             });
@@ -93,7 +93,7 @@ angular.module('Bastion.systems').controller('SystemSubscriptionsController',
             refresh();
         };
 
-        $scope.availableSubscriptionsTable.range = function(start, end, step) {
+        $scope.availableSubscriptionsTable.range = function (start, end, step) {
             var range = [];
             start = start || 0;
             step = step || 1;
@@ -108,7 +108,7 @@ angular.module('Bastion.systems').controller('SystemSubscriptionsController',
         $scope.availableSubscriptionsTable.matchInstalled = false;
         $scope.availableSubscriptionsTable.noOverlap = false;
 
-        $scope.availableSubscriptionsTable.filterSubscriptions = function() {
+        $scope.availableSubscriptionsTable.filterSubscriptions = function () {
             var params = availableSubscriptionsNutupane.getParams();
 
             params['match_system'] = $scope.availableSubscriptionsTable.matchSystem;
@@ -119,7 +119,7 @@ angular.module('Bastion.systems').controller('SystemSubscriptionsController',
             availableSubscriptionsNutupane.refresh();
         };
 
-        $scope.availableSubscriptionsTable.formatAvailableDisplay = function(subscription) {
+        $scope.availableSubscriptionsTable.formatAvailableDisplay = function (subscription) {
             var available = subscription.available;
             available = available < 0 ? gettext('Unlimited') : available;
             subscription.availableDisplay = available;

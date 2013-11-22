@@ -30,7 +30,7 @@
  */
 angular.module('Bastion.systems').controller('SystemsController',
     ['$scope', '$location', 'gettext', 'Nutupane', 'System', 'CurrentOrganization', 'SystemsHelper',
-    function($scope, $location, gettext, Nutupane, System, CurrentOrganization, SystemsHelper) {
+    function ($scope, $location, gettext, Nutupane, System, CurrentOrganization, SystemsHelper) {
 
         var params = {
             'organization_id':  CurrentOrganization,
@@ -47,14 +47,14 @@ angular.module('Bastion.systems').controller('SystemsController',
 
         $scope.systemTable.getStatusColor = SystemsHelper.getStatusColor;
 
-        $scope.systemTable.closeItem = function() {
+        $scope.systemTable.closeItem = function () {
             $scope.transitionTo('systems.index');
         };
 
         $scope.table = $scope.systemTable;
 
         $scope.removeSystem = function (system) {
-            system.$remove(function() {
+            system.$remove(function () {
                 $scope.removeRow(system.id);
                 $scope.saveSuccess = true;
                 $scope.successMessages = [gettext('System %s has been deleted.').replace('%s', system.name)];

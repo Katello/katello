@@ -6,7 +6,7 @@
  * @description
  *   Provides a "dropdown" menu.
  */
-angular.module('alchemy').directive('alchDropdown', function() {
+angular.module('alchemy').directive('alchDropdown', function () {
     return {
         restrict: 'EA',
         replace: true,
@@ -15,12 +15,12 @@ angular.module('alchemy').directive('alchDropdown', function() {
         },
         templateUrl: 'incubator/views/alch-dropdown.html',
 
-        controller: ['$scope', function($scope) {
-            $scope.setHover = function(item, mousein) {
+        controller: ['$scope', function ($scope) {
+            $scope.setHover = function (item, mousein) {
                 item.active = mousein;
             };
 
-            $scope.isRight = function(direction) {
+            $scope.isRight = function (direction) {
                 return direction === 'right';
             };
         }]

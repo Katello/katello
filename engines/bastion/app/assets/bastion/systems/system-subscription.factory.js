@@ -23,7 +23,7 @@
  */
 angular.module('Bastion.systems').factory('SystemSubscription',
     ['$resource', 'Routes',
-        function($resource, Routes) {
+        function ($resource, Routes) {
             return $resource(Routes.apiSystemsPath() + '/:systemId/subscriptions/:id', {systemId: '@systemId', id: '@id'}, {
                 query: {method: 'GET', isArray: false, params: {paged: true}}
             });

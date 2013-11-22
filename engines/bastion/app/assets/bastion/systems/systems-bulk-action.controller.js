@@ -29,7 +29,7 @@
 angular.module('Bastion.systems').controller('SystemsBulkActionController',
     ['$scope', '$q', 'BulkAction', 'SystemGroup', 'gettext',
      'Organization', 'Task',
-    function($scope, $q, BulkAction, SystemGroup, gettext,
+    function ($scope, $q, BulkAction, SystemGroup, gettext,
         Organization, Task) {
 
         $scope.actionParams = {
@@ -66,7 +66,7 @@ angular.module('Bastion.systems').controller('SystemsBulkActionController',
             workingMode: false
         };
 
-        $scope.performRemoveSystems = function() {
+        $scope.performRemoveSystems = function () {
             var success, error, deferred = $q.defer();
 
             $scope.removeSystems.confirm = false;
@@ -74,9 +74,9 @@ angular.module('Bastion.systems').controller('SystemsBulkActionController',
 
             $scope.actionParams.ids = $scope.getSelectedSystemIds();
 
-            success = function(data) {
+            success = function (data) {
                 deferred.resolve(data);
-                angular.forEach($scope.systemTable.getSelected(), function(row) {
+                angular.forEach($scope.systemTable.getSelected(), function (row) {
                     $scope.removeRow(row.id);
                 });
 
@@ -85,7 +85,7 @@ angular.module('Bastion.systems').controller('SystemsBulkActionController',
                 $scope.status.showSuccess = true;
             };
 
-            error = function(error) {
+            error = function (error) {
                 deferred.reject(error.data["errors"]);
                 $scope.removeSystems.workingMode = false;
                 $scope.status.showError = true;
@@ -97,22 +97,22 @@ angular.module('Bastion.systems').controller('SystemsBulkActionController',
             return deferred.promise;
         };
 
-        $scope.getSystemGroups = function() {
+        $scope.getSystemGroups = function () {
             var deferred = $q.defer();
 
-            SystemGroup.query(function(systemGroups) {
+            SystemGroup.query(function (systemGroups) {
                 deferred.resolve(systemGroups);
             });
 
             return deferred.promise;
         };
 
-        $scope.confirmSystemGroupAction = function(action) {
+        $scope.confirmSystemGroupAction = function (action) {
             $scope.systemGroups.confirm = true;
             $scope.systemGroups.action = action;
         };
 
-        $scope.performSystemGroupAction = function() {
+        $scope.performSystemGroupAction = function () {
             var success, error, deferred = $q.defer();
 
             $scope.systemGroups.confirm = false;
@@ -122,7 +122,7 @@ angular.module('Bastion.systems').controller('SystemsBulkActionController',
             $scope.actionParams['ids'] = $scope.getSelectedSystemIds();
             $scope.actionParams['system_group_ids'] = _.pluck($scope.systemGroups.groups, "id");
 
-            success = function(data) {
+            success = function (data) {
                 deferred.resolve(data);
                 $scope.systemGroups.workingMode = false;
                 $scope.editMode = true;
@@ -130,7 +130,7 @@ angular.module('Bastion.systems').controller('SystemsBulkActionController',
                 $scope.status.showSuccess = true;
             };
 
-            error = function(error) {
+            error = function (error) {
                 deferred.reject(error.data["errors"]);
                 $scope.systemGroups.workingMode = false;
                 $scope.editMode = true;
@@ -147,7 +147,7 @@ angular.module('Bastion.systems').controller('SystemsBulkActionController',
             return deferred.promise;
         };
 
-        $scope.updatePlaceholder = function(contentType) {
+        $scope.updatePlaceholder = function (contentType) {
             if (contentType === "package") {
                 $scope.content.placeholder = gettext('Enter Package Name(s)...');
             } else if (contentType === "package_group") {
@@ -157,26 +157,26 @@ angular.module('Bastion.systems').controller('SystemsBulkActionController',
             }
         };
 
-        $scope.confirmContentAction = function(action, actionInput) {
+        $scope.confirmContentAction = function (action, actionInput) {
             $scope.content.confirm = true;
             $scope.content.action = action;
             $scope.content.actionInput = actionInput;
         };
 
-        $scope.performContentAction = function() {
+        $scope.performContentAction = function () {
             var success, error, deferred = $q.defer();
 
             $scope.content.confirm = false;
             $scope.content.workingMode = true;
 
-            success = function(data) {
+            success = function (data) {
                 deferred.resolve(data);
                 $scope.content.workingMode = false;
                 $scope.status.success = data["displayMessage"];
                 $scope.status.showSuccess = true;
             };
 
-            error = function(error) {
+            error = function (error) {
                 deferred.reject(error.data["errors"]);
                 $scope.content.workingMode = false;
                 $scope.status.showError = true;
@@ -196,27 +196,27 @@ angular.module('Bastion.systems').controller('SystemsBulkActionController',
             return deferred.promise;
         };
 
-        $scope.getSelectedSystemIds = function() {
+        $scope.getSelectedSystemIds = function () {
             var rows = $scope.systemTable.getSelected();
             return _.pluck(rows, 'id');
         };
 
-        $scope.performAutoAttachSubscriptions = function() {
+        $scope.performAutoAttachSubscriptions = function () {
             var success, error, deferred = $q.defer();
 
             $scope.subscription.confirm = false;
             $scope.subscription.workingMode = true;
 
-            success = function(scheduledTask) {
+            success = function (scheduledTask) {
                 deferred.resolve(scheduledTask);
                 $scope.subscription.autoAttachTask = scheduledTask;
-                Task.poll(scheduledTask, function(polledTask) {
+                Task.poll(scheduledTask, function (polledTask) {
                     $scope.subscription.autoAttachTask = polledTask;
                     $scope.subscription.workingMode = false;
                 });
             };
 
-            error = function(error) {
+            error = function (error) {
                 deferred.reject(error.data["errors"]);
                 $scope.subscription.workingMode = false;
             };
@@ -235,15 +235,15 @@ angular.module('Bastion.systems').controller('SystemsBulkActionController',
         function autoAttachSubscriptionsInProgress() {
             // Check to see if an 'auto attach subscriptions' action is currently in progress.
             // If it is, poll on the associated task, until it is completed.
-            Organization.query(function(organization) {
+            Organization.query(function (organization) {
                 if (organization['owner_auto_attach_all_systems_task_id'] !== null) {
 
-                    Task.query({'id' : organization['owner_auto_attach_all_systems_task_id']}, function(task) {
+                    Task.query({'id' : organization['owner_auto_attach_all_systems_task_id']}, function (task) {
                         $scope.subscription.autoAttachTask = task;
 
                         if (task.pending) {
                             $scope.subscription.workingMode = true;
-                            Task.poll(task, function(polledTask) {
+                            Task.poll(task, function (polledTask) {
                                 $scope.subscription.autoAttachTask = polledTask;
                                 $scope.subscription.workingMode = false;
                             });

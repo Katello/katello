@@ -24,7 +24,7 @@
  */
 angular.module('Bastion.tasks').factory('Task',
     ['$resource', '$timeout', 'CurrentOrganization',
-    function($resource, $timeout, CurrentOrganization) {
+    function ($resource, $timeout, CurrentOrganization) {
 
         var resource = $resource('/katello/api/tasks/:id/:action',
             {id: '@uuid', 'organization_id': CurrentOrganization},
@@ -33,18 +33,17 @@ angular.module('Bastion.tasks').factory('Task',
             }
         );
 
-        resource.poll = function(task, returnFunction) {
-            resource.get({id: task.id}, function(data) {
+        resource.poll = function (task, returnFunction) {
+            resource.get({id: task.id}, function (data) {
                 if (data.pending) {
-                    $timeout(function() {
+                    $timeout(function () {
                         resource.poll(data, returnFunction);
                     }, 8000);
-                }
-                else{
+                } else {
                     returnFunction(data);
                 }
-            }, function() {
-                returnFunction({'human_readable_result':"Failed to fetch task", failed: true});
+            }, function () {
+                returnFunction({'human_readable_result': "Failed to fetch task", failed: true});
             });
         };
         return resource;

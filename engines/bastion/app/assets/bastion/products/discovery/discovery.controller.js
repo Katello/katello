@@ -28,7 +28,7 @@
  */
 angular.module('Bastion.products').controller('DiscoveryController',
     ['$scope', '$q', '$timeout', '$http', 'Task', 'Organization', 'CurrentOrganization',
-    function($scope, $q, $timeout, $http, Task, Organization, CurrentOrganization) {
+    function ($scope, $q, $timeout, $http, Task, Organization, CurrentOrganization) {
         var transformRows, setDiscoveryDetails;
 
         $scope.discovery = {url: ''};
@@ -38,7 +38,7 @@ angular.module('Bastion.products').controller('DiscoveryController',
             $scope.discoveryTable = {rows: []};
         }
 
-        setDiscoveryDetails = function(task) {
+        setDiscoveryDetails = function (task) {
             $scope.discovery.url = task.parameters.url;
             $scope.discoveryTable.rows = transformRows(task.result);
 
@@ -49,27 +49,27 @@ angular.module('Bastion.products').controller('DiscoveryController',
             }
         };
 
-        $scope.setupSelected = function() {
+        $scope.setupSelected = function () {
             $scope.panel.loading = true;
             $scope.discovery.selected = $scope.discoveryTable.getSelected();
             $scope.transitionTo('products.discovery.create');
         };
 
-        $scope.defaultName = function(basePath) {
+        $scope.defaultName = function (basePath) {
             //Remove leading/trailing slash and replace rest with space
             return basePath.replace(/^\//, "").replace(/\/$/, "").replace(/\//g, ' ');
         };
 
-        $scope.cancelDiscovery = function() {
+        $scope.cancelDiscovery = function () {
             $scope.discovery.working = true;
             Organization.cancelRepoDiscover({id: CurrentOrganization});
         };
 
-        transformRows = function(urls) {
+        transformRows = function (urls) {
             var baseUrl, toRet;
             baseUrl = $scope.discovery.url;
 
-            toRet = _.map(urls, function(url) {
+            toRet = _.map(urls, function (url) {
                 var path = url.replace(baseUrl, "");
                 return {
                     url: url,
@@ -79,31 +79,31 @@ angular.module('Bastion.products').controller('DiscoveryController',
                 };
             });
 
-            return _.sortBy(toRet, function(item) {
+            return _.sortBy(toRet, function (item) {
                 return item.url;
             });
         };
 
-        Organization.get({id: CurrentOrganization}, function(org) {
+        Organization.get({id: CurrentOrganization}, function (org) {
             if (org['discovery_task_id']) {
-                Task.get({id: org['discovery_task_id']}, function(task) {
+                Task.get({id: org['discovery_task_id']}, function (task) {
                     pollTask(task);
                 });
             }
         });
 
-        $scope.discover = function() {
+        $scope.discover = function () {
             $scope.discovery.pending = true;
             $scope.discoveryTable.rows = [];
             $scope.discoveryTable.selectAll(false);
-            Organization.repoDiscover({id: CurrentOrganization, url: $scope.discovery.url}, function(response) {
+            Organization.repoDiscover({id: CurrentOrganization, url: $scope.discovery.url}, function (response) {
                 pollTask(response);
             });
         };
 
         function pollTask(task) {
             if (task.pending) {
-                Task.poll(task, function(response) {
+                Task.poll(task, function (response) {
                     setDiscoveryDetails(response);
                 });
             }
