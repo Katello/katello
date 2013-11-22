@@ -25,21 +25,21 @@
  */
 angular.module('Bastion.repositories').controller('NewRepositoryController',
     ['$scope', 'Repository', 'GPGKey', 'FormUtils',
-    function($scope, Repository, GPGKey, FormUtils) {
+    function ($scope, Repository, GPGKey, FormUtils) {
 
         $scope.repository = new Repository({'product_id': $scope.$stateParams.productId});
         $scope.repositoryTypes = [{name: 'yum'}, {name: 'puppet'}];
 
-        $scope.$watch('repository.name', function() {
+        $scope.$watch('repository.name', function () {
             $scope.repositoryForm.name.$setValidity('server', true);
             FormUtils.labelize($scope.repository, $scope.repositoryForm);
         });
 
-        GPGKey.query(function(gpgKeys) {
+        GPGKey.query(function (gpgKeys) {
             $scope.gpgKeys = gpgKeys.results;
         });
 
-        $scope.save = function(repository) {
+        $scope.save = function (repository) {
             repository.$save(success, error);
         };
 
@@ -51,7 +51,7 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
         function error(response) {
             $scope.working = false;
 
-            angular.forEach(response.data.errors, function(errors, field) {
+            angular.forEach(response.data.errors, function (errors, field) {
                 $scope.repositoryForm[field].$setValidity('server', false);
                 $scope.repositoryForm[field].$error.messages = errors;
             });

@@ -23,7 +23,7 @@
  */
 angular.module('Bastion.systems').factory('SystemPackage',
     ['$resource', 'Routes',
-    function($resource, Routes) {
+    function ($resource, Routes) {
         return $resource(Routes.apiSystemsPath() + '/:id/packages/:action', {id: '@uuid'}, {
             get: {method: 'GET', isArray: false},
             remove: {method: 'PUT', params: {action: 'remove'}},

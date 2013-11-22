@@ -21,7 +21,7 @@
  *   Provides a $resource for product or list of products.
  */
 angular.module('Bastion.products').factory('Product',
-    ['$resource', function($resource) {
+    ['$resource', function ($resource) {
 
         return $resource('/katello/api/products/:id/:action', {id: '@id'}, {
             update: { method: 'PUT'},

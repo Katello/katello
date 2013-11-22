@@ -23,7 +23,7 @@
  *   Provides a $resource for system groups.
  */
 angular.module('Bastion.system-groups').factory('SystemGroup',
-    ['$resource', 'Routes', 'CurrentOrganization', function($resource, Routes, CurrentOrganization) {
+    ['$resource', 'Routes', 'CurrentOrganization', function ($resource, Routes, CurrentOrganization) {
         return $resource(Routes.apiOrganizationSystemGroupsPath(CurrentOrganization) + '/:systemGroupId',
             {systemGroupId: '@systemGroupId'});
-}]);
+    }]);

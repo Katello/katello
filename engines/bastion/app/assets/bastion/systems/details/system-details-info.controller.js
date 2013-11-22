@@ -28,8 +28,8 @@
  */
 angular.module('Bastion.systems').controller('SystemDetailsInfoController',
     ['$scope', '$q', '$http', 'Routes', 'System', 'SystemGroup', 'ContentView',
-    function($scope, $q, $http, Routes, System, SystemGroup, ContentView) {
-        var customInfoErrorHandler = function(error) {
+    function ($scope, $q, $http, Routes, System, SystemGroup, ContentView) {
+        var customInfoErrorHandler = function (error) {
             $scope.saveError = true;
             $scope.errors = error["errors"];
         };
@@ -38,13 +38,13 @@ angular.module('Bastion.systems').controller('SystemDetailsInfoController',
         $scope.saveSuccess = false;
         $scope.saveError = false;
 
-        $scope.$on('system.loaded', function() {
+        $scope.$on('system.loaded', function () {
             $scope.setupSelector();
             $scope.systemFacts = dotNotationToObj($scope.system.facts);
             populateExcludedFacts();
         });
 
-        $scope.setEnvironment = function(environmentId) {
+        $scope.setEnvironment = function (environmentId) {
             environmentId = parseInt(environmentId, 10);
 
             if ($scope.previousEnvironment !== environmentId) {
@@ -57,7 +57,7 @@ angular.module('Bastion.systems').controller('SystemDetailsInfoController',
             }
         };
 
-        $scope.cancelContentViewUpdate = function() {
+        $scope.cancelContentViewUpdate = function () {
             if ($scope.editContentView) {
                 $scope.editContentView = false;
                 $scope.system.environment.id = $scope.previousEnvironment;
@@ -68,7 +68,7 @@ angular.module('Bastion.systems').controller('SystemDetailsInfoController',
             }
         };
 
-        $scope.saveContentView = function(system) {
+        $scope.saveContentView = function (system) {
             $scope.previousEnvironment = undefined;
             $scope.save(system);
 
@@ -76,7 +76,7 @@ angular.module('Bastion.systems').controller('SystemDetailsInfoController',
             $scope.pathSelector.enable_all();
         };
 
-        $scope.updateSystemGroups = function(systemGroups) {
+        $scope.updateSystemGroups = function (systemGroups) {
             var data, success, error, deferred = $q.defer();
 
             data = {
@@ -85,10 +85,10 @@ angular.module('Bastion.systems').controller('SystemDetailsInfoController',
                 }
             };
 
-            success = function(data) {
+            success = function (data) {
                 deferred.resolve(data);
             };
-            error = function(error) {
+            error = function (error) {
                 deferred.reject(error.data["errors"]);
                 $scope.saveError = true;
                 $scope.errors = error.data["errors"];
@@ -98,58 +98,58 @@ angular.module('Bastion.systems').controller('SystemDetailsInfoController',
             return deferred.promise;
         };
 
-        $scope.releaseVersions = function() {
+        $scope.releaseVersions = function () {
             var deferred = $q.defer();
 
-            System.releaseVersions({ id: $scope.system.uuid }, function(response) {
+            System.releaseVersions({ id: $scope.system.uuid }, function (response) {
                 deferred.resolve(response.results);
             });
 
             return deferred.promise;
         };
 
-        $scope.contentViews = function() {
+        $scope.contentViews = function () {
             var deferred = $q.defer();
 
-            ContentView.query({ 'environment_id': $scope.system.environment.id }, function(response) {
+            ContentView.query({ 'environment_id': $scope.system.environment.id }, function (response) {
                 deferred.resolve(response.results);
             });
 
             return deferred.promise;
         };
 
-        $scope.systemGroups = function() {
+        $scope.systemGroups = function () {
             var deferred = $q.defer();
 
-            SystemGroup.query(function(systemGroups) {
+            SystemGroup.query(function (systemGroups) {
                 deferred.resolve(systemGroups);
             });
 
             return deferred.promise;
         };
 
-        $scope.saveCustomInfo = function(info) {
+        $scope.saveCustomInfo = function (info) {
             var url = [Routes.apiCustomInfoPath("system", $scope.system.id), info.keyname].join('/');
             return $http.put(url, {'custom_info': info}).error(customInfoErrorHandler);
         };
 
-        $scope.addCustomInfo = function(info) {
+        $scope.addCustomInfo = function (info) {
             var url, success;
             url = Routes.apiCustomInfoPath("system", $scope.system.id);
 
-            success = function() {
+            success = function () {
                 $scope.system.customInfo.push(info);
             };
 
             return $http.post(url, {'custom_info': info}).success(success).error(customInfoErrorHandler);
         };
 
-        $scope.deleteCustomInfo = function(info) {
+        $scope.deleteCustomInfo = function (info) {
             var url, success;
             url = [Routes.apiCustomInfoPath("system", $scope.system.id), info.keyname].join('/');
 
-            success = function() {
-                $scope.system.customInfo = _.filter($scope.system.customInfo, function(keyValue) {
+            success = function () {
+                $scope.system.customInfo = _.filter($scope.system.customInfo, function (keyValue) {
                     return keyValue !== info;
                 }, this);
             };
@@ -157,12 +157,12 @@ angular.module('Bastion.systems').controller('SystemDetailsInfoController',
             return $http.delete(url).success(success).error(customInfoErrorHandler);
         };
 
-        $scope.getActivationKeyLink = function(activationKey) {
+        $scope.getActivationKeyLink = function (activationKey) {
             var panel = '/!=&panel=activation_key_%s&panelpage=edit'.replace('%s', activationKey.id);
             return Routes.activationKeysPath({anchor: panel});
         };
 
-        $scope.getTemplateForType = function(value) {
+        $scope.getTemplateForType = function (value) {
             var template = 'systems/details/views/partials/system-detail-value.html';
             if (typeof(value) === 'object') {
                 template = 'systems/details/views/partials/system-detail-object.html';
@@ -191,7 +191,7 @@ angular.module('Bastion.systems').controller('SystemDetailsInfoController',
             $scope.advancedInfoLeft = {};
             $scope.advancedInfoRight = {};
             var index = 0;
-            angular.forEach($scope.systemFacts, function(value, key) {
+            angular.forEach($scope.systemFacts, function (value, key) {
                 if (index % 2 === 0) {
                     $scope.advancedInfoLeft[key] = value;
                 } else {
@@ -204,7 +204,7 @@ angular.module('Bastion.systems').controller('SystemDetailsInfoController',
 
         }
 
-        $scope.memory = function(facts) {
+        $scope.memory = function (facts) {
             var mem;
             if (facts !== undefined) {
                 if (facts.memory !== undefined) {
@@ -233,27 +233,27 @@ angular.module('Bastion.systems').controller('SystemDetailsInfoController',
             memory = parseFloat(mems[0]);
             unit = mems[1];
 
-            switch(unit) {
-                case 'B':
+            switch (unit) {
+            case 'B':
                 memory = 0;
                 break;
 
-                case 'kB':
+            case 'kB':
                 memory = 0;
                 break;
 
-                case 'MB':
+            case 'MB':
                 memory /= 1024;
                 break;
 
-                case 'GB':
+            case 'GB':
                 break;
 
-                case 'TB':
+            case 'TB':
                 memory *= 1024;
                 break;
 
-                default:
+            default:
                 // by default memory is in kB
                 memory /= (1024 * 1024);
                 break;

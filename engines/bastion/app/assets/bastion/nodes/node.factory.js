@@ -21,7 +21,7 @@
  *   Provides a $resource for nodes or list of nodes.
  */
 angular.module('Bastion.nodes').factory('Node',
-    ['$resource', function($resource) {
+    ['$resource', function ($resource) {
 
         return $resource('/katello/api/nodes/:id/:action', {id: '@id'}, {
             query:  {method: 'GET'}

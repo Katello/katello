@@ -21,8 +21,8 @@
  * @example
  *
  */
-angular.module('alchemy.format').filter('arrayToString', [function() {
-    return function(toFormat, stringToPluck, separator) {
+angular.module('alchemy.format').filter('arrayToString', [function () {
+    return function (toFormat, stringToPluck, separator) {
         stringToPluck = stringToPluck || 'name';
         separator = separator || ', ';
         return _.pluck(toFormat, stringToPluck).join(separator);

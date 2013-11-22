@@ -52,7 +52,7 @@ angular.module('Bastion', [
  *   Used for establishing application wide configuration such as adding the Rails CSRF token
  *   to every request.
  */
-angular.module('Bastion').config(['$httpProvider', '$urlRouterProvider', function($httpProvider, $urlRouterProvider) {
+angular.module('Bastion').config(['$httpProvider', '$urlRouterProvider', function ($httpProvider, $urlRouterProvider) {
     $httpProvider.defaults.headers.common = {
         Accept: 'application/json, text/plain, version=2; */*',
         'X-XSRF-TOKEN': $('meta[name=csrf-token]').attr('content')
@@ -68,6 +68,7 @@ angular.module('Bastion').config(['$httpProvider', '$urlRouterProvider', functio
  * @requires $rootScope
  * @requires $state
  * @requires $stateParams
+ * @requires $templateCache
  * @requires gettextCatalog
  * @requires currentLocale
  *
@@ -75,7 +76,7 @@ angular.module('Bastion').config(['$httpProvider', '$urlRouterProvider', functio
  *   Set up some common state related functionality and set the current language.
  */
 angular.module('Bastion').run(['$rootScope', '$state', '$stateParams', '$templateCache', 'gettextCatalog', 'currentLocale',
-    function($rootScope, $state, $stateParams, $templateCache, gettextCatalog, currentLocale) {
+    function ($rootScope, $state, $stateParams, $templateCache, gettextCatalog, currentLocale) {
 
         $rootScope.$state = $state;
         $rootScope.$stateParams = $stateParams;

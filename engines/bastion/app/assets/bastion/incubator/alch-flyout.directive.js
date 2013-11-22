@@ -7,7 +7,7 @@
  *   Provides a "flyout" sub-menu for menu items with one or more
  *   child menu items.
  */
-angular.module('alchemy').directive('alchFlyout', function() {
+angular.module('alchemy').directive('alchFlyout', function () {
     return {
         restrict: 'EA',
         replace: true,

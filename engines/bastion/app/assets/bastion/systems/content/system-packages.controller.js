@@ -26,20 +26,20 @@
  */
 angular.module('Bastion.systems').controller('SystemPackagesController',
     ['$scope', 'SystemPackage', 'SystemTask', 'gettext', 'Nutupane',
-    function($scope, SystemPackage, SystemTask, gettext, Nutupane) {
+    function ($scope, SystemPackage, SystemTask, gettext, Nutupane) {
         var packagesNutupane, packageActions, openEventInfo;
 
-        openEventInfo = function(event) {
+        openEventInfo = function (event) {
             $scope.transitionTo('systems.details.events.details', {eventId: event.id});
         };
 
         $scope.packageAction = {actionType: 'packageInstall'}; //default to packageInstall
 
-        $scope.updateAll = function() {
+        $scope.updateAll = function () {
             SystemPackage.updateAll({uuid: $scope.system.uuid}, openEventInfo);
         };
 
-        $scope.performPackageAction = function() {
+        $scope.performPackageAction = function () {
             var action, terms;
             action = $scope.packageAction.actionType;
             terms = $scope.packageAction.term.split(/ *, */);
@@ -47,19 +47,19 @@ angular.module('Bastion.systems').controller('SystemPackagesController',
         };
 
         packageActions = {
-            packageInstall: function(termList) {
+            packageInstall: function (termList) {
                 SystemPackage.install({uuid: $scope.system.uuid, packages: termList}, openEventInfo);
             },
-            packageUpdate: function(termList) {
+            packageUpdate: function (termList) {
                 SystemPackage.update({uuid: $scope.system.uuid, packages: termList}, openEventInfo);
             },
-            packageRemove: function(termList) {
+            packageRemove: function (termList) {
                 SystemPackage.remove({uuid: $scope.system.uuid, packages: termList}, openEventInfo);
             },
-            groupInstall: function(termList) {
+            groupInstall: function (termList) {
                 SystemPackage.install({uuid: $scope.system.uuid, groups: termList}, openEventInfo);
             },
-            groupRemove: function(termList) {
+            groupRemove: function (termList) {
                 SystemPackage.remove({uuid: $scope.system.uuid, groups: termList}, openEventInfo);
             }
         };
@@ -69,28 +69,30 @@ angular.module('Bastion.systems').controller('SystemPackagesController',
         $scope.currentPackagesTable.openEventInfo = openEventInfo;
         $scope.currentPackagesTable.system = $scope.system;
 
-        $scope.currentPackagesTable.taskFailed = function(task) {
-          return task === undefined || task.failed || task['affected_units'] === 0;
+        $scope.currentPackagesTable.taskFailed = function (task) {
+            return task === undefined || task.failed || task['affected_units'] === 0;
         };
 
-        $scope.currentPackagesTable.removePackage = function(pkg) {
-            SystemPackage.remove({
+        $scope.currentPackagesTable.removePackage = function (pkg) {
+            SystemPackage.remove(
+            {
                 uuid: $scope.system.uuid,
-                packages:[{name: pkg.name, version: pkg.version,
-                           arch: pkg.arch, release: pkg.release}]},
-                function(scheduledTask) {
-                    pkg.removeTask = scheduledTask;
-                    SystemTask.poll(scheduledTask, function(polledTask) {
-                        pkg.removeTask = polledTask;
-                    });
-                },
-                function(data) {
-                    var message = gettext("Error starting task ");
-                    if (data.data.displayMessage) {
-                        message += ":" + data.data.displayMessage;
-                    }
-                    pkg.removeTask = {'human_readable_result':message, failed: true};
+                packages: [{name: pkg.name, version: pkg.version,
+                           arch: pkg.arch, release: pkg.release}]
+            },
+            function (scheduledTask) {
+                pkg.removeTask = scheduledTask;
+                SystemTask.poll(scheduledTask, function (polledTask) {
+                    pkg.removeTask = polledTask;
                 });
+            },
+            function (data) {
+                var message = gettext("Error starting task ");
+                if (data.data.displayMessage) {
+                    message += ":" + data.data.displayMessage;
+                }
+                pkg.removeTask = {'human_readable_result': message, failed: true};
+            });
         };
     }
 ]);

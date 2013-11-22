@@ -19,9 +19,9 @@
  *   Helper service that contains functionality common amongst systems.
  */
 angular.module('Bastion.systems').service('SystemsHelper',
-    function() {
+    function () {
 
-        this.getStatusColor = function(status) {
+        this.getStatusColor = function (status) {
             var colors = {
                     'valid': 'green',
                     'partial': 'yellow',
