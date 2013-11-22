@@ -42,9 +42,9 @@ module Glue
     end
 
     def self.trigger(event_class, *args)
-      uuid, promise = ::Actions.trigger(event_class, *args)
+      uuid, _, finished = *::Actions.trigger(event_class, *args)
       ::Logging.logger['glue'].debug("Started plan with #{uuid}")
-      promise.wait
+      finished.wait
       ::Logging.logger['glue'].debug("Finished plan with #{uuid}")
       # execution_plan.failed_steps.each do |step|
       #   Notify.warning(_("Failed to perform additional action %{action}: %{message}") %
