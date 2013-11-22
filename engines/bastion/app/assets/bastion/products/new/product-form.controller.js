@@ -74,8 +74,10 @@ angular.module('Bastion.products').controller('ProductFormController',
         $scope.product = $scope.product || new Product();
 
         $scope.$watch('product.name', function() {
-            $scope.productForm.name.$setValidity('server', true);
-            FormUtils.labelize($scope.product, $scope.productForm);
+            if ($scope.productForm.name) {
+                $scope.productForm.name.$setValidity('server', true);
+                FormUtils.labelize($scope.product, $scope.productForm);
+            }
         });
 
         $scope.save = function(product) {

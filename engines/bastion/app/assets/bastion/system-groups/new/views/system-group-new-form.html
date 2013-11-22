@@ -1,77 +1,46 @@
-<form name="groupForm" class="form" novalidate>
+<form name="groupForm" class="form-horizontal" novalidate role="form">
 
-  <div class="control-group required" ng-class="{ 'error' : groupForm.name.$invalid }">
-    <div class="label">
-      <label for="name" translate>Name</label>
-    </div>
-    <div class="input">
-      <input ng-model="group.name"
-             name="name"
-             type="text"
-             tabindex="1"
-             autofocus
-             required/>
-      <span class="note error" ng-show="groupForm.name.$invalid">
-        <ul><li ng-repeat="message in groupForm.name.$error.messages">{{ message }}</li></ul>
-      </span>
+  <div alch-form-group label="{{ 'Name' | translate }}">
+    <input id="name"
+           name="name"
+           ng-model="group.name"
+           type="text"
+           tabindex="1"
+           autofocus
+           required/>
+  </div>
+
+  <div alch-form-group label="{{ 'System Limit' | translate }}" field="max_systems">
+    <span translate>Unlimited Systems:</span>
+    <input type="checkbox"
+           name="limit"
+           ng-model="unlimited"
+           ng-checked="isUnlimited(group)"
+           ng-change="unlimitedChanged(group)"/>
+
+    <div alch-form-group label="{{ 'Limit' | translate }}" ng-hide="isUnlimited(group)">
+      <input id="max_systems"
+             name="max_systems"
+             class="form-control"
+             ng-model="group.max_systems"
+             type="number"
+             ng-change="inputChanged(group)"
+             tabindex="2"/>
     </div>
   </div>
 
-  <div class="control-group" ng-class="{ 'error' : groupForm.max_systems.$invalid }">
-    <div class="label">
-      <label for="limit" translate>System Limit</label>
-    </div>
-    <div class="form">
-      <div>
-        <span translate>
-          Unlimited Systems:
-        </span>
-        <input type='checkbox'
-             name="limit"
-             ng-model="unlimited"
-             ng-checked="isUnlimited(group)"
-             ng-change="unlimitedChanged(group)"/>
-      </div>
-      <div ng-hide="isUnlimited(group)" >
-        <span translate>
-          Limit:
-        </span>
-        <input ng-model="group.max_systems"
-               name="max_systems"
-               type="number"
-               ng-change="inputChanged(group)"
-               tabindex="2"/>
-        <span class="note error" ng-show="groupForm.max_systems.$invalid">
-          <ul><li ng-repeat="message in groupForm.max_systems.$error.messages">{{ message }}</li></ul>
-        </span>
-      </div>
-    </div>
+  <div alch-form-group label="{{ 'Description' | translate }}">
+    <textarea id="description"
+              name="description"
+              ng-model="group.description"
+              tabindex="3">
+    </textarea>
   </div>
 
-  <div class="control-group">
-    <div class="label">
-      <label class="required" for="description" translate>Description</label>
-    </div>
-    <div class="input">
-      <textarea ng-model="group.description"
-                name="description"
-                tabindex="3"
-                rows="10"
-                columns="40">
-      </textarea>
-      <span class="note error" ng-show="groupForm.description.$invalid">
-        <ul>
-          <li ng-repeat="message in groupForm.description.$error.messages">{{ message }}</li>
-        </ul>
-      </span>
-    </div>
-  </div>
-
-  <div alch-save-control
+  <div alch-form-buttons
        on-cancel="transitionTo('system-groups.index')"
        on-save="save(group)"
-       working="working"
-       invalid="groupForm.$invalid">
+       working="working">
   </div>
 
 </form>

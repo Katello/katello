@@ -31,8 +31,10 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
         $scope.repositoryTypes = [{name: 'yum'}, {name: 'puppet'}];
 
         $scope.$watch('repository.name', function() {
-            $scope.repositoryForm.name.$setValidity('server', true);
-            FormUtils.labelize($scope.repository, $scope.repositoryForm);
+            if ($scope.repositoryForm.name) {
+                $scope.repositoryForm.name.$setValidity('server', true);
+                FormUtils.labelize($scope.repository, $scope.repositoryForm);
+            }
         });
 
         GPGKey.query(function(gpgKeys) {

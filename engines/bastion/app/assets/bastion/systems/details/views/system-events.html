@@ -1,15 +1,15 @@
 <h4 translate>System Events</h4>
 <div class="nutupane-bar">
-  <div class="form">
-      <input type="text"
-             class="input input-search"
-             placeholder="{{ 'Search...' | translate }}"
-             ng-model="eventsTable.searchTerm"
-             on-enter="eventsTable.search(eventsTable.searchTerm)"/>
-    <span class="result-count" translate>
-      Showing {{ eventsTable.rows.length }} of {{ eventsTable.resource.subtotal }} ({{ eventsTable.resource.total }} Total) Events
-    </span>
-  </div>
+  <form ng-submit="eventsTable.search(eventsTable.searchTerm)">
+    <input type="text"
+           class="form-control filter-input"
+           placeholder="{{ 'Search...' | translate }}"
+           ng-model="eventsTable.searchTerm"/>
+  </form>
+
+  <span class="nutupane-info" translate>
+    Showing {{ eventsTable.rows.length }} of {{ eventsTable.resource.subtotal }} ({{ eventsTable.resource.total }} Total) Events
+  </span>
 </div>
 
 <div alch-table="eventsTable">
