@@ -26,7 +26,7 @@ module Katello
       respond_for_show :resource => resource
     end
 
-    api :GET, "/system_status", "Shows version information"
+    api :GET, "/status", "Shows version information"
     description "This service is also available for unauthenticated users"
     def server_status
       # rubocop:disable SymbolName
