@@ -44,12 +44,10 @@
       translate-n="currentSubscriptionsTable.rows.length"
       translate-plural="Current Subscriptions">Current Subscription</h4>
   <div class="nutupane-bar">
-    <div class="form">
-      <input type="text"
-             class="input input-search"
-             placeholder="{{ 'Filter' | translate }}"
-             ng-model="currentSubscriptionsTable.filter"/>
-    </div>
+    <input type="text"
+           class="form-control filter-input"
+           placeholder="{{ 'Filter' | translate }}"
+           ng-model="currentSubscriptionsTable.filter"/>
 
     <div class="fr select-action">
       <button class="btn btn-default" translate
@@ -107,12 +105,11 @@
       translate-n="availableSubscriptionsTable.rows.length"
       translate-plural="Available Subscriptions">Available Subscription</h4>
   <div class="nutupane-bar">
-    <div class="form">
-      <input type="text"
-             class="input input-search"
-             placeholder="{{ 'Filter' | translate }}"
-             ng-model="availableSubscriptionsTable.filter"/>
-    </div>
+    <input type="text"
+           class="form-control filter-input"
+           placeholder="{{ 'Filter' | translate }}"
+           ng-model="availableSubscriptionsTable.filter"/>
+
     <div class="fr select-action">
       <button class="btn btn-default"
               translate

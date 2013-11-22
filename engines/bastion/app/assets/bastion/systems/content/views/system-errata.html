@@ -1,13 +1,11 @@
 <h4 translate>Applicable Errata</h4>
 
 <div class="nutupane-bar">
-  <div class="form">
-    <input type="text"
-           class="input input-search"
-           placeholder="{{ 'Filter' | translate }}"
-           ng-model="errataTable.errataFilterTerm"/>
-    <span class="result-count" translate>Showing {{ errataTable.resource.total }} Errata</span>
-  </div>
+  <input type="text"
+         class="form-control filter-input"
+         placeholder="{{ 'Filter' | translate }}"
+         ng-model="errataTable.errataFilterTerm"/>
+  <span class="result-count" translate>Showing {{ errataTable.resource.total }} Errata</span>
 
   <div ng-hide="system.readonly" class="fr">
      <button class="btn btn-primary"

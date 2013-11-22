@@ -1,0 +1,9 @@
+<div class="form-group" ng-class="{ 'has-error' : hasErrors() }">
+  <label for="{{ field }}" class="control-label col-sm-2">{{ label }}</label>
+  <div class="col-sm-4">
+    <div ng-transclude></div>
+  </div>
+  <span class="help-block" ng-show="hasMessages">
+    <ul><li ng-repeat="message in messages">{{ message }}</li></ul>
+  </span>
+</div>
