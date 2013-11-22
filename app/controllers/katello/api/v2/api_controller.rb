@@ -64,7 +64,7 @@ module Katello
 
       def find_organization
         organization_id = params[:organization_id]
-        @organization = Katello::Organization.without_deleting.having_name_or_label(organization_id).first
+        @organization = Organization.without_deleting.having_name_or_label(organization_id).first
       end
 
       def sort_params

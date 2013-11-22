@@ -52,6 +52,7 @@ module Katello
 
       # Model extensions
       ::User.send :include, Katello::Concerns::UserExtensions
+      ::Organization.send :include, Katello::Concerns::OrganizationExtensions
     end
 
     rake_tasks do

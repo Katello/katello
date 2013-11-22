@@ -162,7 +162,7 @@ class EnvironmentsController < Katello::ApplicationController
 
   def find_organization
     org_id = params[:organization_id] || params[:org_id]
-    @organization = Katello::Organization.first(:conditions => {:label => org_id})
+    @organization = Organization.first(:conditions => {:label => org_id})
     notify.error _("Couldn't find organization '%s'") % org_id if @organization.nil?
   end
 

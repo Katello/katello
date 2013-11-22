@@ -18,7 +18,7 @@ class Notice < ActiveRecord::Base
 
   has_many :user_notices, :class_name => "Katello::UserNotice", :dependent => :destroy
   has_many :users, :through => :user_notices, :class_name => "::User"
-  belongs_to :organization, :class_name => "Katello::Organization", :inverse_of => :notices
+  belongs_to :organization, :class_name => "::Organization", :inverse_of => :notices
 
   TYPES = [:message, :warning, :success, :error]
 

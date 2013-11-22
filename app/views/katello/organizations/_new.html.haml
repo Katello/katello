@@ -5,7 +5,7 @@
   / pretty
 
 = content_for :content do
-  = kt_form_for Katello::Organization.new do |form|
+  = kt_form_for Organization.new do |form|
 
     = form.text_field :name, :label => _("Name"), :class => :name_input
     = form.field :orglabel, :label => _("Label") do

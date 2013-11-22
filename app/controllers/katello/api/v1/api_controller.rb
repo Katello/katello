@@ -76,7 +76,7 @@ class Api::V1::ApiController < Api::ApiController
 
   def get_organization(org_id)
     # name/label is always unique
-    return Katello::Organization.without_deleting.having_name_or_label(org_id).first
+    return Organization.without_deleting.having_name_or_label(org_id).first
   end
 
   def organization_id
