@@ -12,7 +12,7 @@
  **/
 
 describe('Controller: RepositoryDetailsInfoController', function() {
-    var $scope;
+    var $scope, gettext;
 
     beforeEach(module(
         'Bastion.repositories',
@@ -35,6 +35,11 @@ describe('Controller: RepositoryDetailsInfoController', function() {
             'sync_state': 'finished'
         });
 
+
+        gettext = function(message) {
+            return message;
+        };
+
         Repository.sync = function(params, callback) {
             callback.call(this, {'state': 'running'});
         };
@@ -42,6 +47,7 @@ describe('Controller: RepositoryDetailsInfoController', function() {
         $controller('RepositoryDetailsInfoController', {
             $scope: $scope,
             $q: $q,
+            gettext: gettext,
             Repository: Repository,
             GPGKey: GPGKey
         });
@@ -63,24 +69,25 @@ describe('Controller: RepositoryDetailsInfoController', function() {
         $scope.$apply();
     });
 
-    it('should save the product and return a promise', function() {
+    it('should save the repository and return a promise', function() {
         var promise = $scope.save($scope.repository);
 
         expect(promise.then).toBeDefined();
     });
 
-    it('should save the system successfully', function() {
+    it('should save the repository successfully', function() {
         $scope.save($scope.repository);
 
-        expect($scope.saveSuccess).toBe(true);
+        expect($scope.errorMessages.length).toBe(0);
+        expect($scope.successMessages.length).toBe(1);
     });
 
-    it('should fail to save the system', function() {
+    it('should fail to save the repository', function() {
         $scope.repository.failed = true;
         $scope.save($scope.repository);
 
-        expect($scope.saveSuccess).toBe(false);
-        expect($scope.saveError).toBe(true);
+        expect($scope.successMessages.length).toBe(0);
+        expect($scope.errorMessages.length).toBe(1);
     });
 
     it('should provide a way to remove a repository', function() {
@@ -93,15 +100,16 @@ describe('Controller: RepositoryDetailsInfoController', function() {
     it('should set an error message if a file upload status is not success', function() {
         $scope.uploadContent('<pre>"There was an error"</pre>', true);
 
-        expect($scope.uploadStatus).toBe('error');
-        expect($scope.errorMessage).toBe('There was an error');
+        expect($scope.uploadSuccessMessages.length).toBe(0);
+        expect($scope.uploadErrorMessages.length).toBe(1);
     });
 
-    it('should set the upload status to success and refresh the repositoriy if a file upload status is success', function() {
+    it('should set the upload status to success and refresh the repository if a file upload status is success', function() {
         spyOn($scope.repository, '$get');
         $scope.uploadContent('<pre>{"status": "success"}</pre>', true);
 
-        expect($scope.uploadStatus).toBe('success');
+        expect($scope.uploadErrorMessages.length).toBe(0);
+        expect($scope.uploadSuccessMessages.length).toBe(1);
         expect($scope.repository.$get).toHaveBeenCalled();
     });
 

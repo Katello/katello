@@ -18,14 +18,18 @@
  * @requires $scope
  * @requires $state
  * @requires $q
+ * @requires gettext
  * @requires SystemGroup
  *
  * @description
  *   Provides the functionality for the system group details action pane.
  */
 angular.module('Bastion.system-groups').controller('SystemGroupDetailsController',
-    ['$scope', '$state', '$q', 'SystemGroup',
-    function($scope, $state, $q, SystemGroup) {
+    ['$scope', '$state', '$q', 'gettext', 'SystemGroup',
+    function($scope, $state, $q, gettext, SystemGroup) {
+        $scope.successMessages = [];
+        $scope.errorMessages = [];
+        $scope.copyErrorMessages = [];
 
         if ($scope.group) {
             $scope.panel = {loading: false};
@@ -43,13 +47,10 @@ angular.module('Bastion.system-groups').controller('SystemGroupDetailsController
 
             group.$update(function(response) {
                 deferred.resolve(response);
-                $scope.saveSuccess = true;
-                $scope.saveError = false;
+                $scope.successMessages.push(gettext('System Group updated'));
             }, function(response) {
                 deferred.reject(response);
-                $scope.saveError = true;
-                $scope.saveSuccess = false;
-                $scope.errors = response.data.displayMessage;
+                $scope.errorMessages.push(gettext("An error occurred saving the System Group: ") + response.data.displayMessage);
             });
             return deferred.promise;
         };
@@ -57,11 +58,10 @@ angular.module('Bastion.system-groups').controller('SystemGroupDetailsController
         $scope.copy = function(newName) {
             SystemGroup.copy({id: $scope.group.id, 'system_group': {name: newName}}, function(response) {
                 $scope.showCopy = false;
-                $scope.copyError = false;
                 $scope.table.addRow(response);
                 $scope.transitionTo('system-groups.details.info', {systemGroupId: response['id']});
             }, function(response) {
-                $scope.copyError = response.data.displayMessage;
+                $scope.copyErrorMessages.push(response.data.displayMessage);
             });
         };
 
@@ -71,8 +71,9 @@ angular.module('Bastion.system-groups').controller('SystemGroupDetailsController
             group.$delete(function() {
                 $scope.removeRow(id);
                 $scope.transitionTo('system-groups.index');
+                $scope.successMessages.push(gettext('System Group removed.'));
             }, function(response) {
-                $scope.removeError = response.data.displayMessage;
+                $scope.errorMessages.push(gettext("An error occurred removing the System Group: ") + response.data.displayMessage);
             });
         };
 

@@ -145,20 +145,7 @@
   <section class="well" ng-show="repository.content_type == 'puppet'">
     <h5 translate>Upload Puppet Module</h5>
 
-    <div class="flash_hud" ng-show="uploadStatus">
-      <a class="control" tooltip="{{ 'Close' | translate }}" ng-click="uploadStatus = null"></a>
-      <ul class="flash_messages success" ng-show="uploadStatus == 'success'">
-        <li translate>Puppet module successfully uploaded.</li>
-      </ul>
-      <ul class="flash_messages error" ng-show="uploadStatus == 'error'">
-        <li>
-          {{ "There was an error during module upload:" | translate }}
-          <ul>
-            <li>{{ errorMessage }}</li>
-          </ul>
-        </li>
-      </ul>
-    </div>
+    <div alch-alert success-messages="uploadSuccessMessages" error-messages="uploadErrorMessages"></div>
 
     <form class="form labels_top"
           action="/katello/api/repositories/{{ repository.id }}/content_uploads/file"

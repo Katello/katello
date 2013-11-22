@@ -18,25 +18,21 @@
  * @requires $scope
  * @requires $q
  * @requires $location
+ * @requires gettext
  * @requires BulkAction
  *
  * @description
  *   A controller for providing bulk action functionality to the systems page.
  */
 angular.module('Bastion.systems').controller('SystemsBulkActionController',
-    ['$scope', '$q', '$location', 'BulkAction',
-    function($scope, $q, $location, BulkAction) {
+    ['$scope', '$q', '$location', 'gettext', 'BulkAction',
+    function($scope, $q, $location, gettext, BulkAction) {
+        $scope.successMessages = [];
+        $scope.errorMessages = [];
 
         $scope.removeSystems = {
             confirm: false,
             workingMode: false
-        };
-
-        $scope.status = {
-            showSuccess: false,
-            showError: false,
-            success: '',
-            errors: []
         };
 
         $scope.actionParams = {
@@ -58,15 +54,15 @@ angular.module('Bastion.systems').controller('SystemsBulkActionController',
                 });
 
                 $scope.removeSystems.workingMode = false;
-                $scope.status.success = data["displayMessage"];
-                $scope.status.showSuccess = true;
+                $scope.successMessages.push(data["displayMessage"]);
             };
 
             error = function(error) {
                 deferred.reject(error.data["errors"]);
                 $scope.removeSystems.workingMode = false;
-                $scope.status.showError = true;
-                $scope.status.errors = error.data["errors"];
+                _.each(error.data.errors, function(errorMessage) {
+                    $scope.errorMessages.push(gettext("An error occurred removing the Systems: ") + errorMessage);
+                });
             };
 
             BulkAction.removeSystems($scope.actionParams, success, error);

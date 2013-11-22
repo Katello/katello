@@ -32,6 +32,9 @@ angular.module('Bastion.systems').controller('SystemsController',
     ['$scope', '$location', 'gettext', 'Nutupane', 'System', 'CurrentOrganization', 'SystemsHelper',
     function($scope, $location, gettext, Nutupane, System, CurrentOrganization, SystemsHelper) {
 
+        $scope.successMessages = [];
+        $scope.errorMessages = [];
+
         var params = {
             'organization_id':  CurrentOrganization,
             'search':           $location.search().search || "",
@@ -60,8 +63,7 @@ angular.module('Bastion.systems').controller('SystemsController',
         $scope.removeSystem = function (system) {
             system.$remove(function() {
                 $scope.removeRow(system.id);
-                $scope.saveSuccess = true;
-                $scope.successMessages = [gettext('System %s has been deleted.').replace('%s', system.name)];
+                $scope.successMessages.push(gettext('System %s has been deleted.').replace('%s', system.name));
                 $scope.transitionTo('systems.index');
             });
         };

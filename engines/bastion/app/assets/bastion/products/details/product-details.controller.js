@@ -25,6 +25,9 @@
 angular.module('Bastion.products').controller('ProductDetailsController',
     ['$scope', '$state', 'Product', function($scope, $state, Product) {
 
+        $scope.successMessages = [];
+        $scope.errorMessages = [];
+
         if ($scope.product) {
             $scope.panel = {loading: false};
         } else {

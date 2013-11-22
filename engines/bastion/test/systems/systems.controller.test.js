@@ -70,7 +70,6 @@ describe('Controller: SystemsController', function() {
         $scope.removeSystem(testSystem);
 
         expect($scope.transitionTo).toHaveBeenCalledWith('systems.index');
-        expect($scope.saveSuccess).toBe(true);
         expect($scope.successMessages[0]).toBe('System test has been deleted.');
 
     });
