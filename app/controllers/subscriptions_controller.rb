@@ -74,7 +74,7 @@ class SubscriptionsController < ApplicationController
 
     # Limit subscriptions to current org and Red Hat provider
     filters << {:term => {:org => current_organization.label}}
-    filters << {:term => {:provider_id => current_organization.redhat_provider.id}}
+    filters << {:term => {:provider_id => @provider.id}}
 
     options = {
         :filters => filters,
@@ -89,7 +89,7 @@ class SubscriptionsController < ApplicationController
     # Without any search terms, reindex all subscriptions in elasticsearch. This is to insure
     # that the latest information is searchable.
     if offset == 0 && query_string.blank?
-      current_organization.redhat_provider.index_subscriptions
+      @provider.index_subscriptions
     end
 
     items = Glue::ElasticSearch::Items.new(Pool)
