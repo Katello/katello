@@ -183,7 +183,7 @@ angular.module('alchemy')
                 deletable: '@deletable',
                 handleDelete: '&onDelete'
             },
-            templateUrl: 'incubator/views/alch-edit-text.html'
+            templateUrl: '../incubator/views/alch-edit-text.html'
         };
     })
     .directive('alchEditTextarea', function() {
@@ -195,7 +195,7 @@ angular.module('alchemy')
                 handleSave: '&onSave',
                 handleCancel: '&onCancel'
             },
-            templateUrl: 'incubator/views/alch-edit-textarea.html'
+            templateUrl: '../incubator/views/alch-edit-textarea.html'
         };
     })
     .directive('alchEditCheckbox', function() {
@@ -207,14 +207,14 @@ angular.module('alchemy')
                 handleSave: '&onSave',
                 handleCancel: '&onCancel'
             },
-            templateUrl: 'incubator/views/alch-edit-textarea.html'
+            templateUrl: '../incubator/views/alch-edit-textarea.html'
         };
     })
     .directive('alchEditCustom', function() {
         return {
             replace: true,
             transclude: true,
-            templateUrl: 'incubator/views/alch-edit-custom.html',
+            templateUrl: '../incubator/views/alch-edit-custom.html',
             scope: {
                 model: '=alchEditCustom',
                 readonly: '=',
@@ -239,7 +239,7 @@ angular.module('alchemy')
                 handleCancel: '&onCancel',
                 editTrigger: '='
             },
-            templateUrl: 'incubator/views/alch-edit-select.html',
+            templateUrl: '../incubator/views/alch-edit-select.html',
             compile: function(element, attrs) {
                 var optionsFormat = attrs['optionsFormat'];
                 if (optionsFormat) {

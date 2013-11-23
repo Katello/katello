@@ -14,6 +14,6 @@ angular.module('alchemy').directive('alchFlyout', function() {
         scope: {
             'flyout' : '=alchFlyout'
         },
-        templateUrl: 'incubator/views/alch-flyout.html'
+        templateUrl: '../incubator/views/alch-flyout.html'
     };
 });
