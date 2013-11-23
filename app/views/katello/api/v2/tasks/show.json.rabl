@@ -2,7 +2,7 @@ n@object ||= @task
 object @object
 
 case @object
-when DynflowTask
+when Task
   extends 'api/v2/tasks/dynflow_task_show'
 when TaskStatus
   extends 'api/v2/tasks/task_status_show'

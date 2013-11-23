@@ -96,7 +96,7 @@ class Api::V2::TasksController < Api::V2::ApiController
   private
 
   def search_tasks(search_params)
-    scope = DynflowTask
+    scope = Task.select('DISTINCT tasks.*, dynflow_execution_plans.*')
     scope = ordering_scope(scope, search_params)
     scope = search_scope(scope, search_params)
     scope = active_scope(scope, search_params)
@@ -112,14 +112,16 @@ class Api::V2::TasksController < Api::V2::ApiController
       if search_params[:user_id].blank?
         raise HttpErrors::BadRequest, _("User search_params requires user_id to be specified")
       end
-      scope.where(user_id: search_params[:user_id])
+      scope.joins(:locks).where(locks:
+                                { resource_type: 'User',
+                                  resource_id:   search_params[:user_id] })
     when 'resource'
       if search_params[:resource_type].blank? || search_params[:resource_id].blank?
         raise HttpErrors::BadRequest, _("Resource search_params requires resource_type and resource_id to be specified")
       end
-      scope.joins(:dynflow_locks).where(dynflow_locks:
-                                        { resource_type: search_params[:resource_type],
-                                          resource_id:   search_params[:resource_id] })
+      scope.joins(:locks).where(locks:
+                                { resource_type: search_params[:resource_type],
+                                  resource_id:   search_params[:resource_id] })
     when 'task'
       if search_params[:task_id].blank?
         raise HttpErrors::BadRequest, _("Task search_params requires task_id to be specified")
@@ -160,7 +162,7 @@ class Api::V2::TasksController < Api::V2::ApiController
 
   def find_task
     # temporary searching for both Dynflow task and old-style tasks
-    @task = DynflowTask.find_by_uuid(params[:id])
+    @task = Task.find_by_uuid(params[:id])
     # TODO: remove once nothing goes through the old TaskStatus
     @task ||= TaskStatus.find_by_id!(params[:id])
     @organization = @task.organization
