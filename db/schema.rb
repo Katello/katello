@@ -219,12 +219,6 @@ ActiveRecord::Schema.define(:version => 20131115164314) do
 
   add_index "dynflow_execution_plans", ["uuid"], :name => "dynflow_execution_plans_uuid_index", :unique => true
 
-  create_table "dynflow_locks", :force => true do |t|
-    t.string  "uuid"
-    t.string  "resource_type"
-    t.integer "resource_id"
-  end
-
   create_table "dynflow_steps", :id => false, :force => true do |t|
     t.string   "execution_plan_uuid", :limit => 36, :null => false
     t.integer  "id",                                :null => false
@@ -240,13 +234,6 @@ ActiveRecord::Schema.define(:version => 20131115164314) do
   add_index "dynflow_steps", ["execution_plan_uuid", "action_id"], :name => "dynflow_steps_execution_plan_uuid_action_id_index"
   add_index "dynflow_steps", ["execution_plan_uuid", "id"], :name => "dynflow_steps_execution_plan_uuid_id_index", :unique => true
   add_index "dynflow_steps", ["execution_plan_uuid"], :name => "dynflow_steps_execution_plan_uuid_index"
-
-  create_table "dynflow_tasks", :id => false, :force => true do |t|
-    t.string  "uuid"
-    t.string  "action"
-    t.integer "user_id"
-    t.integer "organization_id"
-  end
 
   create_table "environment_priors", :id => false, :force => true do |t|
     t.integer "environment_id"
@@ -370,6 +357,16 @@ ActiveRecord::Schema.define(:version => 20131115164314) do
 
   add_index "ldap_group_roles", ["ldap_group", "role_id"], :name => "index_ldap_group_roles_on_ldap_group_and_role_id", :unique => true
   add_index "ldap_group_roles", ["role_id"], :name => "index_ldap_group_roles_on_role_id"
+
+  create_table "locks", :force => true do |t|
+    t.string  "uuid"
+    t.string  "name"
+    t.string  "resource_type"
+    t.integer "resource_id"
+    t.boolean "exclusive"
+  end
+
+  add_index "locks", ["resource_type", "resource_id"], :name => "index_locks_on_resource_type_and_resource_id"
 
   create_table "marketing_engineering_products", :force => true do |t|
     t.integer "marketing_product_id"
@@ -682,6 +679,11 @@ ActiveRecord::Schema.define(:version => 20131115164314) do
   add_index "task_statuses", ["task_owner_id"], :name => "index_task_statuses_on_task_owner_id"
   add_index "task_statuses", ["user_id"], :name => "index_task_statuses_on_user_id"
   add_index "task_statuses", ["uuid"], :name => "index_task_statuses_on_uuid"
+
+  create_table "tasks", :id => false, :force => true do |t|
+    t.string "uuid"
+    t.string "action"
+  end
 
   create_table "user_notices", :force => true do |t|
     t.integer "user_id"

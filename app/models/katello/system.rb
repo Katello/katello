@@ -241,6 +241,14 @@ class System < ActiveRecord::Base
     hash.with_indifferent_access
   end
 
+  def self.available_locks
+    [:read, :write]
+  end
+
+  def related_resources
+    self.organization
+  end
+
   private
 
     def refresh_running_tasks
@@ -272,5 +280,5 @@ class System < ActiveRecord::Base
       hash
     end
 
-end
+  end
 end

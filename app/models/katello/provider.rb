@@ -178,6 +178,10 @@ class Provider < ActiveRecord::Base
     super.merge('organization_label' => self.organization.label)
   end
 
+  def related_resources
+    self.organization
+  end
+
   protected
 
    def sanitize_repository_url

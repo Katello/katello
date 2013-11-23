@@ -160,7 +160,7 @@ angular.module('Bastion.products').config(['$stateProvider', function($stateProv
         collapsed: true,
         template: '<tasks-table  details-state="products.details.tasks.details"' +
                   '              resource-type="Product"' +
-                  '              resource-id="{{ product.id }}"/>'
+                  '              resource-id="{{ product.katello_id }}"/>'
     })
     .state('products.details.tasks.details', {
         url: '/tasks/:taskId',
