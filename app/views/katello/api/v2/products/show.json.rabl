@@ -1,6 +1,7 @@
 object @resource
 
 attributes :cp_id => :id
+attributes :id => :katello_id
 attributes :name, :label, :description
 
 extends 'katello/api/v2/common/org_reference'

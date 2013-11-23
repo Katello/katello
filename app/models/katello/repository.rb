@@ -320,6 +320,14 @@ class Repository < Katello::Model
     end
   end
 
+  def self.available_locks
+    [:read, :write]
+  end
+
+  def related_resources
+    self.product
+  end
+
   protected
 
   def assert_deletable

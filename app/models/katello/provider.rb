@@ -186,6 +186,10 @@ class Provider < Katello::Model
     repositories.length
   end
 
+  def related_resources
+    self.organization
+  end
+
   protected
 
    def sanitize_repository_url

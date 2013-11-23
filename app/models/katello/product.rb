@@ -218,6 +218,10 @@ class Product < Katello::Model
     repositories.any?(&:feed?)
   end
 
+  def related_resources
+    self.provider
+  end
+
   protected
 
   def self.with_repos(env, enabled_only)
