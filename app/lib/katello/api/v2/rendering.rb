@@ -3,7 +3,6 @@ module Katello
     module V2
       module Rendering
 
-        RESOURCE_ROOT = "result"
         COLLECTION_ROOT = "results"
 
         def respond_for_show(options = {})
@@ -40,13 +39,16 @@ module Katello
           status = options[:status] || 200
 
           render :template => "katello/api/v2/common/#{options[:response_type]}",
-                 :locals => { :action => action, :resource_name => resource_name, :root_name => options[:root_name] },
+                 :locals => { :action => action,
+                              :resource_name => resource_name,
+                              :object_root => options[:object_root],
+                              :root_name => options[:root_name] },
                  :status => status
         end
 
         def respond_with_template_resource(action, resource_name, options = {})
           options[:response_type] = "resource"
-          options[:root_name] = RESOURCE_ROOT
+          options[:object_root] = params[:object_root]
           respond_with_template(action, resource_name, options) do
             @resource = options[:resource] unless options[:resource].nil?
             @resource = get_resource if @resource.nil?
@@ -55,7 +57,7 @@ module Katello
 
         def respond_with_template_collection(action, resource_name, options = {})
           options[:response_type] = "collection"
-          options[:root_name] = COLLECTION_ROOT
+          options[:root_name] = params[:root_name] || COLLECTION_ROOT
           respond_with_template(action, resource_name, options) do
             @collection = options[:collection] unless options[:collection].nil?
             @collection = get_resource_collection if @collection.nil?
