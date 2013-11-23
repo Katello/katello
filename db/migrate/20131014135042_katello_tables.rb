@@ -194,14 +194,6 @@ class KatelloTables < ActiveRecord::Migration
     add_index "katello_environment_priors", ["environment_id"], :name => "index_environment_priors_on_environment_id"
     add_index "katello_environment_priors", ["prior_id"], :name => "index_environment_priors_on_prior_id"
 
-    create_table "katello_environment_system_groups", :force => true do |t|
-      t.integer "environment_id"
-      t.integer "system_group_id"
-    end
-
-    add_index "katello_environment_system_groups", ["environment_id"], :name => "index_environment_system_groups_on_environment_id"
-    add_index "katello_environment_system_groups", ["system_group_id"], :name => "index_environment_system_groups_on_system_group_id"
-
     create_table "katello_environments", :force => true do |t|
       t.string   "name",                               :null => false
       t.text     "description"
@@ -567,7 +559,6 @@ class KatelloTables < ActiveRecord::Migration
 
     create_table "katello_system_groups", :force => true do |t|
       t.string   "name",                            :null => false
-      t.string   "pulp_id",                         :null => false
       t.text     "description"
       t.integer  "max_systems",     :default => -1, :null => false
       t.integer  "organization_id",                 :null => false
@@ -577,7 +568,6 @@ class KatelloTables < ActiveRecord::Migration
 
     add_index "katello_system_groups", ["name", "organization_id"], :name => "index_system_groups_on_name_and_organization_id", :unique => true
     add_index "katello_system_groups", ["organization_id"], :name => "index_system_groups_on_organization_id"
-    add_index "katello_system_groups", ["pulp_id"], :name => "index_system_groups_on_pulp_id"
 
     create_table "katello_system_system_groups", :force => true do |t|
       t.integer  "system_id"
@@ -664,7 +654,6 @@ end
     drop_table "delayed_jobs"
     drop_table "katello_distributors"
     drop_table "katello_environment_priors"
-    drop_table "katello_environment_system_groups"
     drop_table "katello_environments"
     drop_table "katello_filter_rules"
     drop_table "katello_filters"
