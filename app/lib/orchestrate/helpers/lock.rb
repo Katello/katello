@@ -1,9 +1,7 @@
 module Orchestrate
   module Helpers
 
-    # Helpers for remote actions
-    # wraps the plan/run/finalize methods to include the info about the user
-    # that triggered the action.
+    # Helpers for locking the resource with the task
     module Lock
 
       def self.included(base)
@@ -24,8 +22,19 @@ module Orchestrate
 
       module PlanMethods
 
-        def lock(model)
-          DynflowLock.lock!(execution_plan_id, model)
+        # @see Lock.exclusive!
+        def exclusive_lock(resource)
+          ::Lock.exclusive!(resource, execution_plan_id)
+        end
+
+        # @see Lock.lock!
+        def lock(resource, *lock_names)
+          ::Lock.lock!(resource, execution_plan_id, *lock_names)
+        end
+
+        # @see Lock.link!
+        def link(resource)
+          ::Lock.link!(resource, execution_plan_id)
         end
 
       end
