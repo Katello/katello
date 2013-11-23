@@ -27,15 +27,17 @@ class Product < ActiveRecord::Base
   attr_accessible :name, :label, :description, :provider_id, :provider,
                   :gpg_key_id, :gpg_key, :cp_id
 
-  has_many :marketing_engineering_products, :foreign_key => :engineering_product_id, :dependent => :destroy
+  has_many :marketing_engineering_products, :class_name => "Katello::MarketingEngineeringProduct",
+           :foreign_key => :engineering_product_id, :dependent => :destroy
   has_many :marketing_products, :through => :marketing_engineering_products
 
   belongs_to :provider, :inverse_of => :products
   belongs_to :sync_plan, :inverse_of => :products
   belongs_to :gpg_key, :inverse_of => :products
-  has_many :content_view_definition_products, :dependent => :destroy
+  has_many :content_view_definition_products, :class_name => "Katello::ContentViewDefinitionProduct",
+           :dependent => :destroy
   has_many :content_view_definitions, :through => :content_view_definition_products
-  has_many :repositories, :dependent => :destroy
+  has_many :repositories, :class_name => "Katello::Repository", :dependent => :destroy
 
   validates :provider_id, :presence => true
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name

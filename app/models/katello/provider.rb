@@ -32,8 +32,8 @@ class Provider < ActiveRecord::Base
 
   belongs_to :organization, :inverse_of => :providers, :class_name => "Katello::Organization"
   belongs_to :task_status, :inverse_of => :provider
-  belongs_to :discovery_task, :class_name => 'TaskStatus', :dependent => :destroy, :inverse_of => :provider
-  has_many :products, :inverse_of => :provider, :dependent => :destroy
+  belongs_to :discovery_task, :class_name => "Katello::TaskStatus", :dependent => :destroy, :inverse_of => :provider
+  has_many :products, :class_name => "Katello::Product", :inverse_of => :provider, :dependent => :destroy
   has_many :repositories, through: :products
 
   validates :name, :uniqueness => {:scope => :organization_id}

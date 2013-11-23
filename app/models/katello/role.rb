@@ -19,10 +19,11 @@ class Role < ActiveRecord::Base
 
   acts_as_reportable
 
-  has_many :roles_users, :dependent => :destroy
+  has_many :roles_users, :class_name => "Katello::RolesUser", :dependent => :destroy
   has_many :users, :through => :roles_users, :before_remove => :super_admin_check
-  has_many :permissions, :dependent => :destroy, :inverse_of => :role, :class_name => "Permission", :extend => RolesPermissions::DefaultSystemRegistrationPermission
-  has_many :ldap_group_roles, :dependent => :destroy, :inverse_of => :role
+  has_many :permissions, :class_name => "Katello::Permission", :dependent => :destroy, :inverse_of => :role,
+           :extend => RolesPermissions::DefaultSystemRegistrationPermission
+  has_many :ldap_group_roles, :class_name => "Katello::LdapGroupRole", :dependent => :destroy, :inverse_of => :role
   has_many :resource_types, :through => :permissions
 
   # scope to facilitate retrieving roles that are 'non-self' roles... group() so that unique roles are returned

@@ -262,12 +262,12 @@ describe ContentViewDefinitionsController do
       end
 
       it "should not publish a content view definition with puppet name conflicts" do
-        ContentViewDefinition.stub(:find).and_return(@definition)
-        @definition.stub_chain(:puppet_repository, :name_conflicts).and_return([:apache])
-        controller.should notify.error
+        ContentViewDefinition.stubs(:find).returns(@definition)
+        @definition.stubs(:puppet_repository).returns(stub(:name_conflicts => [:apache]))
 
+        must_notify_with(:error)
         post :publish, :id => @definition.id, :content_view => {:name => "published_view"}
-        response.should_not be_success
+        must_respond_with(500)
       end
     end
 

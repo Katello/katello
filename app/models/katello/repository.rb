@@ -47,10 +47,11 @@ class Repository < ActiveRecord::Base
   belongs_to :gpg_key, :inverse_of => :repositories
   belongs_to :library_instance, :class_name => "Katello::Repository", :inverse_of => :library_instances_inverse
   has_many :library_instances_inverse, # TODOp what is the proper name?
-           :class_name  => 'Repository',
+           :class_name  => 'Katello::Repository',
            :dependent   => :restrict,
            :foreign_key => :library_instance_id
-  has_many :content_view_definition_repositories, :dependent => :destroy
+  has_many :content_view_definition_repositories, :class_name => "Katello::ContentViewDefinitionRepository",
+           :dependent => :destroy
   has_many :content_view_definitions, :through => :content_view_definition_repositories
   # rubocop:disable HasAndBelongsToMany
   # TODO: change this into has_many :through association

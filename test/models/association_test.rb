@@ -15,7 +15,7 @@ require 'katello_test_helper'
 module Katello
 describe 'associations' do
   def location(model, association)
-    path     = "#{Rails.root}/app/models/#{model.name.underscore}.rb"
+    path     = "#{Katello::Engine.root}/app/models/#{model.name.underscore}.rb"
     location = if File.exist? path
                  content     = File.read path
                  line_number = content.lines.find_index do |line|
@@ -29,6 +29,8 @@ describe 'associations' do
   end
 
   ActiveRecord::Base.subclasses.each do |model|
+    next unless model.table_name.starts_with?('katello_')
+
     describe model do
       model.reflect_on_all_associations(:belongs_to).each do |association|
         describe "belongs_to: #{association.name.inspect}" do

@@ -23,16 +23,16 @@ class SystemGroup < ActiveRecord::Base
   include Authorization::SystemGroup
   include Ext::PermissionTagCleanup
 
-  has_many :key_system_groups, :dependent => :destroy
+  has_many :key_system_groups, :class_name => "Katello::KeySystemGroup", :dependent => :destroy
   has_many :activation_keys, :through => :key_system_groups
 
-  has_many :system_system_groups, :dependent => :destroy
+  has_many :system_system_groups, :class_name => "Katello::SystemSystemGroup", :dependent => :destroy
   has_many :systems, {:through      => :system_system_groups,
                       :after_add    => :add_system,
                       :after_remove => :remove_system
                      }
 
-  has_many :jobs, :as => :job_owner, :dependent => :nullify
+  has_many :jobs, :class_name => "Katello::Job", :as => :job_owner, :dependent => :nullify
 
   validates :name, :presence => true
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name
@@ -134,7 +134,7 @@ class SystemGroup < ActiveRecord::Base
   end
 
   def errata(type = nil)
-    ::Errata.applicable_for_consumers(consumer_ids, type)
+    Errata.applicable_for_consumers(consumer_ids, type)
   end
 
   def total_systems

@@ -30,20 +30,20 @@ class ContentView < ActiveRecord::Base
   alias_method :definition, :content_view_definition
   belongs_to :organization, :inverse_of => :content_views, :class_name => "Katello::Organization"
 
-  has_many :content_view_environments, :dependent => :destroy
+  has_many :content_view_environments, :class_name => "Katello::ContentViewEnvironment", :dependent => :destroy
 
-  has_many :content_view_versions, :dependent => :destroy
+  has_many :content_view_versions, :class_name => "Katello::ContentViewVersion", :dependent => :destroy
   alias_method :versions, :content_view_versions
 
-  has_many :component_content_views, :dependent => :destroy
-  has_many :distributors, :dependent => :restrict
+  has_many :component_content_views, :class_name => "Katello::ComponentContentView", :dependent => :destroy
+  has_many :distributors, :class_name => "Katello::Distributor", :dependent => :restrict
   has_many :composite_content_view_definitions,
     :through => :component_content_views, :source => "content_view_definition"
 
-  has_many :changeset_content_views, :dependent => :destroy
+  has_many :changeset_content_views, :class_name => "Katello::ChangesetContentView", :dependent => :destroy
   has_many :changesets, :through => :changeset_content_views
-  has_many :activation_keys, :dependent => :restrict
-  has_many :systems, :dependent => :restrict
+  has_many :activation_keys, :class_name => "Katello::ActivationKey", :dependent => :restrict
+  has_many :systems, :class_name => "Katello::System", :dependent => :restrict
 
   validates :label, :uniqueness => {:scope => :organization_id},
                     :presence => true

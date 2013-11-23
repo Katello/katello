@@ -173,6 +173,9 @@ EOKEY
       define_method(:index_errata) {
         #do nothing
       }
+      define_method(:lookup_checksum_type) {
+        #do nothing
+      }
     end
   end
 

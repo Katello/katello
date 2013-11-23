@@ -28,10 +28,10 @@ class Distributor < ActiveRecord::Base
 
   acts_as_reportable
 
-  belongs_to :environment, :class_name => "KTEnvironment", :inverse_of => :distributors
+  belongs_to :environment, :class_name => "Katello::KTEnvironment", :inverse_of => :distributors
 
-  has_many :task_statuses, :as => :task_owner, :dependent => :destroy
-  has_many :custom_info, :as => :informable, :dependent => :destroy
+  has_many :task_statuses, :class_name => "Katello::TaskStatus", :as => :task_owner, :dependent => :destroy
+  has_many :custom_info, :class_name => "Katello::CustomInfo", :as => :informable, :dependent => :destroy
   belongs_to :content_view, :inverse_of => :distributors
 
   validates :environment, :presence => true
