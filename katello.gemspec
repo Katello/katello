@@ -57,6 +57,7 @@ Gem::Specification.new do |gem|
 
   # UI
   gem.add_dependency "simple-navigation", ">= 3.3.4"
+  gem.add_dependency "less-rails"
   gem.add_dependency "sass-rails"
   gem.add_dependency "compass-rails"
   gem.add_dependency "compass-960-plugin"
