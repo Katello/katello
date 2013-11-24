@@ -1,4 +1,4 @@
 object @role
 
 attributes :id, :name, :locked, :description
-extends 'api/v2/common/timestamps'
+extends 'katello/api/v2/common/timestamps'
