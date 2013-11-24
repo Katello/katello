@@ -31,7 +31,7 @@
 
 //= require "common/katello.module"
 
-//= require "angular-gettext"
+//= require "angular-gettext/angular-gettext"
 //= require "bastion/i18n/i18n.module"
 
 //= require "bastion/incubator/alch-menu.directive.js"
