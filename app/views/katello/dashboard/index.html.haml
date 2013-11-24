@@ -1,4 +1,4 @@
-= javascript 'katello/dashboard'
+= javascript "katello/dashboard"
 
 - if current_user && current_user.allowed_organizations.length == 0
   .grid_16.flash_hud
@@ -19,8 +19,4 @@
       %select.num_of_results.popout
         - ['5', '15', '30'].each do |i|
           %option.popout{:value => i} #{i} results
-    -#.popout_row.popout
-    -#  %label.popout Over
-    -#  %select.num_of_hours.popout
-    -#    - [60.minutes, 24.hours, 48.hours, 168.hours].each do |i|
-    -#      %option.popout{:value => i} #{distance_of_time_in_words(i)}
+

@@ -16,7 +16,7 @@ require 'ostruct'
 # TODO: start date range not working?  start:2012-01-31 fails but start:"2012-01-31" works
 
 module Katello
-class SubscriptionsController < Katello::ApplicationController
+class SubscriptionsController < ApplicationController
 
   before_filter :find_provider
   before_filter :find_subscription, :except => [:index, :items, :new, :upload, :delete_manifest, :history, :history_items, :edit_manifest, :refresh_manifest]
@@ -67,7 +67,6 @@ class SubscriptionsController < Katello::ApplicationController
     render :index
   end
 
-  # TODO: remove this method and route since nutupane (experimental mode) uses the api method subscriptions_controller#organization_index
   def items
     query_string = params[:search]
     offset = params[:offset].to_i || 0
@@ -76,6 +75,10 @@ class SubscriptionsController < Katello::ApplicationController
     # Limit subscriptions to current org and Red Hat provider
     filters << {:term => {:org => current_organization.label}}
     filters << {:term => {:provider_id => current_organization.redhat_provider.id}}
+    # Date range filters for expiration. These are few and don't fit into search dropdown
+    # capabilities so for now get name of expiration filter from querystring.
+    filters << Pool.expiration_filter(params[:expiration_filter])
+    filters.compact!
 
     options = {
         :filters => filters,
@@ -281,7 +284,7 @@ class SubscriptionsController < Katello::ApplicationController
   end
 
   def find_subscription
-    @subscription = Pool.find_pool(params[:id])
+    @subscription = Katello::Pool.find_pool(params[:id])
   end
 
   def setup_options
@@ -297,7 +300,7 @@ class SubscriptionsController < Katello::ApplicationController
                        :ajax_load  => true,
                        :ajax_scroll => items_subscriptions_path,
                        :actions => nil,
-                       :search_class => Pool,
+                       :search_class => Katello::Pool,
                        :accessor => 'unused'
                       }
   end
