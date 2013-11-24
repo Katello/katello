@@ -14,11 +14,6 @@ module Orchestrate
   module Helpers
     module PulpPackagesPresenter
 
-      def task_input
-        return {} unless action_details
-        action_details.input
-      end
-
       # Reformats the pulp_task output to Katello task details in the following
       # format:
       #
@@ -58,8 +53,8 @@ module Orchestrate
       end
 
       def humanized_input
-        return "" unless task_input[:args]
-        task_input[:args].join(", ")
+        args = task_input[:packages] || task_input[:groups] || []
+        [args.join(", ")] + Helpers::Humanizer.new(self).input
       end
 
       def humanized_output
@@ -100,7 +95,8 @@ module Orchestrate
       def task_output_result(pulp_task)
         if pulp_task[:result] &&
               pulp_task[:result][:details] &&
-              (rpm_result = pulp_task[:result][:details][:rpm])
+              (rpm_result = pulp_task[:result][:details][:rpm]) &&
+              rpm_result[:details][:resolved]
           packages = rpm_result[:details][:resolved].map do |package|
             task_output_package(package, false)
           end

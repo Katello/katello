@@ -25,6 +25,14 @@ module Orchestrate
         plan_action(Pulp::RepositorySync, pulp_id: repo.pulp_id)
       end
 
+      def humanized_name
+        _("Synchronize")
+      end
+
+      def humanized_input
+        Helpers::Humanizer.new(self).input
+      end
+
       def finalize
         repo = Repository.find(input[:repository][:id])
         repo.index_content
