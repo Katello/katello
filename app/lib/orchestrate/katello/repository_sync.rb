@@ -12,23 +12,21 @@
 
 module Orchestrate
   module Katello
-    class RepositorySync < Orchestrate::Action
+    class RepositorySync < Orchestrate::EntryAction
 
       include Helpers::RemoteAction
-      include Helpers::Lock
 
       input_format do
         param :id, Integer
       end
 
       def plan(repo)
-        lock(repo)
+        action_subject(repo)
         plan_action(Pulp::RepositorySync, pulp_id: repo.pulp_id)
-        plan_self(:id => repo.id)
       end
 
       def finalize
-        repo = Repository.find(input[:id])
+        repo = Repository.find(input[:repository][:id])
         repo.index_content
       end
 
