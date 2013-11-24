@@ -12,17 +12,17 @@ module.exports = function(config) {
             'app/assets/bastion/**/*.html': ['ng-html2js']
         },
         files: [
-            'vendor/assets/dev-components/jquery/jquery.js',
-            'vendor/assets/dev-components/angular/angular.js',
-            'vendor/assets/dev-components/angular-mocks/angular-mocks.js',
-            'vendor/assets/dev-components/angular-sanitize/angular-sanitize.js',
-            'vendor/assets/dev-components/angular-resource/angular-resource.js',
-            'vendor/assets/dev-components/ngInfiniteScroll/ng-infinite-scroll.js',
-            'vendor/assets/dev-components/alchemy/alchemy.js',
-            'vendor/assets/dev-components/underscore/underscore.js',
-            '../../vendor/assets/javascripts/katello/angular-ui-router.js',
-            '../../vendor/assets/javascripts/katello/angular-gettext.js',
-            'vendor/assets/components/ng-upload.js',
+            '.tmp/assets/dev-components/jquery/jquery.js',
+            '.tmp/assets/dev-components/angular/angular.js',
+            '.tmp/assets/dev-components/angular-mocks/angular-mocks.js',
+            '.tmp/assets/dev-components/alchemy/alchemy.js',
+            '.tmp/assets/dev-components/underscore/underscore.js',
+
+            'vendor/assets/components/angular-sanitize/angular-sanitize.js',
+            'vendor/assets/components/angular-resource/angular-resource.js',
+            'vendor/assets/components/angular-ui-router/angular-ui-router.js',
+            'vendor/assets/components/angular-gettext/angular-gettext.js',
+            'vendor/assets/components/ng-upload/ng-upload.js',
 
             '../../app/assets/javascripts/katello/common/katello.global.js',
             '../../app/assets/javascripts/katello/common/katello.module.js',
