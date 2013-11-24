@@ -223,6 +223,10 @@ class Product < Katello::Model
     self.provider
   end
 
+  def to_action_input
+    super.merge(cp_id: cp_id)
+  end
+
   protected
 
   def self.with_repos(env, enabled_only)
