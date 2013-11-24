@@ -16,6 +16,7 @@ class Organization < ActiveRecord::Base
 
   ALLOWED_DEFAULT_INFO_TYPES = %w(system distributor)
 
+  include Ext::ActionSubject
   include Glue::Candlepin::Owner if Katello.config.use_cp
   include Glue if Katello.config.use_cp
 
