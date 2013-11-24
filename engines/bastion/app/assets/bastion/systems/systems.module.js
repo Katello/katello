@@ -39,19 +39,17 @@ angular.module('Bastion.systems', [
  *   Used for systems level configuration such as setting up the ui state machine.
  */
 angular.module('Bastion.systems').config(['$stateProvider', function($stateProvider) {
-    var templatePrefix = '../';
-
     $stateProvider.state('systems', {
         abstract: true,
         controller: 'SystemsController',
-        templateUrl: templatePrefix + 'systems/views/systems.html'
+        templateUrl: 'systems/views/systems.html'
     });
 
     $stateProvider.state('systems.index', {
         url: '/systems',
         views: {
             'table': {
-                templateUrl: templatePrefix + 'systems/views/systems-table-full.html'
+                templateUrl: 'systems/views/systems-table-full.html'
             }
         }
     });
@@ -61,11 +59,11 @@ angular.module('Bastion.systems').config(['$stateProvider', function($stateProvi
         collapsed: true,
         views: {
             'table': {
-                templateUrl: templatePrefix + 'systems/views/systems-table-collapsed.html'
+                templateUrl: 'systems/views/systems-table-collapsed.html'
             },
             'action-panel': {
                 controller: 'SystemRegisterController',
-                templateUrl: templatePrefix + 'systems/views/register.html'
+                templateUrl: 'systems/views/register.html'
             }
         }
     });
@@ -76,11 +74,11 @@ angular.module('Bastion.systems').config(['$stateProvider', function($stateProvi
         collapsed: true,
         views: {
             'table': {
-                templateUrl: templatePrefix + 'systems/views/systems-table-collapsed.html'
+                templateUrl: 'systems/views/systems-table-collapsed.html'
             },
             'action-panel': {
                 controller: 'SystemDetailsController',
-                templateUrl: templatePrefix + 'systems/details/views/system-details.html'
+                templateUrl: 'systems/details/views/system-details.html'
             }
         }
     })
@@ -88,7 +86,7 @@ angular.module('Bastion.systems').config(['$stateProvider', function($stateProvi
         url: '/info',
         collapsed: true,
         controller: 'SystemDetailsInfoController',
-        templateUrl: templatePrefix + 'systems/details/views/system-info.html'
+        templateUrl: 'systems/details/views/system-info.html'
     });
 
     $stateProvider.state('systems.details.events', {
@@ -100,20 +98,20 @@ angular.module('Bastion.systems').config(['$stateProvider', function($stateProvi
     .state('systems.details.events.index', {
         url: '/events',
         collapsed: true,
-        templateUrl: templatePrefix + 'systems/details/views/system-events.html'
+        templateUrl: 'systems/details/views/system-events.html'
     })
     .state('systems.details.events.details', {
         url: '/events/:eventId',
         collapsed: true,
         controller: 'SystemEventDetailsController',
-        templateUrl: templatePrefix + 'systems/details/views/system-event-details.html'
+        templateUrl: 'systems/details/views/system-event-details.html'
     });
 
     $stateProvider.state('systems.details.subscriptions', {
         url: '/subscriptions',
         collapsed: true,
         controller: 'SystemSubscriptionsController',
-        templateUrl: templatePrefix + 'systems/details/views/system-subscriptions.html'
+        templateUrl: 'systems/details/views/system-subscriptions.html'
     });
 
     $stateProvider.state("systems.bulk-actions", {
@@ -121,11 +119,11 @@ angular.module('Bastion.systems').config(['$stateProvider', function($stateProvi
         collapsed: true,
         views: {
             'table': {
-                templateUrl: templatePrefix + 'systems/views/systems-table-collapsed.html'
+                templateUrl: 'systems/views/systems-table-collapsed.html'
             },
             'action-panel': {
                 controller: 'SystemsBulkActionController',
-                templateUrl: templatePrefix + 'systems/bulk/views/bulk-actions.html'
+                templateUrl: 'systems/bulk/views/bulk-actions.html'
             }
         }
     })
@@ -133,32 +131,32 @@ angular.module('Bastion.systems').config(['$stateProvider', function($stateProvi
         url: '/systems/bulk-actions/packages',
         collapsed: true,
         controller: 'SystemsBulkActionPackagesController',
-        templateUrl: templatePrefix + 'systems/bulk/views/bulk-actions-packages.html'
+        templateUrl: 'systems/bulk/views/bulk-actions-packages.html'
     })
     .state('systems.bulk-actions.errata', {
         url: '/systems/bulk-actions/errata',
         collapsed: true,
         controller: 'SystemsBulkActionErrataController',
-        templateUrl: templatePrefix + 'systems/bulk/views/bulk-actions-errata.html'
+        templateUrl: 'systems/bulk/views/bulk-actions-errata.html'
     })
     .state('systems.bulk-actions.groups', {
         url: '/systems/bulk-actions/groups',
         collapsed: true,
         controller: 'SystemsBulkActionGroupsController',
-        templateUrl: templatePrefix + 'systems/bulk/views/bulk-actions-groups.html'
+        templateUrl: 'systems/bulk/views/bulk-actions-groups.html'
     })
     .state('systems.bulk-actions.subscriptions', {
         url: '/systems/bulk-actions/bulk-subscriptions',
         collapsed: true,
         controller: 'SystemsBulkActionSubscriptionsController',
-        templateUrl: templatePrefix + 'systems/bulk/views/bulk-actions-subscriptions.html'
+        templateUrl: 'systems/bulk/views/bulk-actions-subscriptions.html'
     });
 
     $stateProvider.state('systems.details.packages', {
         url: '/packages/',
         collapsed: true,
         controller: 'SystemPackagesController',
-        templateUrl: templatePrefix + 'systems/content/views/system-packages.html'
+        templateUrl: 'systems/content/views/system-packages.html'
     });
 
 
@@ -171,12 +169,12 @@ angular.module('Bastion.systems').config(['$stateProvider', function($stateProvi
     .state('systems.details.errata.index', {
         url: '/errata/',
         collapsed: true,
-        templateUrl: templatePrefix + 'systems/content/views/system-errata.html'
+        templateUrl: 'systems/content/views/system-errata.html'
     })
     .state('systems.details.errata.details', {
         url: '/errata/:errataId/',
         collapsed: true,
-        templateUrl: templatePrefix + 'systems/content/views/errata-details.html'
+        templateUrl: 'systems/content/views/errata-details.html'
     });
 
 }]);

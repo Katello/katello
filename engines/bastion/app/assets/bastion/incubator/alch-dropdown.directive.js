@@ -13,7 +13,7 @@ angular.module('alchemy').directive('alchDropdown', function() {
         scope: {
             'dropdown' : '=alchDropdown'
         },
-        templateUrl: '../incubator/views/alch-dropdown.html',
+        templateUrl: 'incubator/views/alch-dropdown.html',
 
         controller: ['$scope', function($scope) {
             $scope.setHover = function(item, mousein) {

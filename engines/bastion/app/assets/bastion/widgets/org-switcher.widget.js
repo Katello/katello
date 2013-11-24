@@ -37,7 +37,7 @@ angular.module('Bastion.widgets').directive('orgSwitcher',
     return {
         restrict: 'A',
         scope: true,
-        templateUrl: '../widgets/views/org-switcher.html',
+        templateUrl: 'widgets/views/org-switcher.html',
 
         controller: ['$scope', function($scope) {
             $scope.visible = false;
