@@ -113,7 +113,8 @@ class Api::V2::TasksController < Api::V2::ApiController
         raise HttpErrors::BadRequest, _("User search_params requires user_id to be specified")
       end
       scope.joins(:locks).where(locks:
-                                { resource_type: 'User',
+                                { name: Lock::OWNER_LOCK_NAME,
+                                  resource_type: 'User',
                                   resource_id:   search_params[:user_id] })
     when 'resource'
       if search_params[:resource_type].blank? || search_params[:resource_id].blank?

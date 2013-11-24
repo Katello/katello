@@ -12,6 +12,15 @@
 
 class Lock < ActiveRecord::Base
 
+  LINK_LOCK_NAME = :link_resource
+  OWNER_LOCK_NAME = :task_owner
+
+  # not really intedet to be created in database, but it's used for
+  # explicitly stating that the all the locks for resource should be used
+  ALL_LOCK_NAME = :all
+
+  RESERVED_LOCK_NAMES = [LINK_LOCK_NAME, OWNER_LOCK_NAME, ALL_LOCK_NAME]
+
   class LockConflict < StandardError
     attr_reader :required_lock, :conflicting_locks
     def initialize(required_lock, conflicting_locks)
@@ -102,7 +111,7 @@ class Lock < ActiveRecord::Base
     # and should be used only for actions that tolerate other actions to be
     # performed on the resource. Usually, this shouldn't needed to be done
     # through the action directly, because the lock should assign it's parrent
-    # objects to the action recursively (using +related_resources+ method in model
+    # objects to the action srecursively (using +related_resources+ method in model
     # objects)
     def link!(resource, uuid)
       build_link(resource, uuid).save!
@@ -127,10 +136,10 @@ class Lock < ActiveRecord::Base
       else
         raise "The resource #{resource.class.name} doesn't define any available lock"
       end
-      if lock_names.include?(link_lock_name) || lock_names.include?(owner_lock_name)
-        raise "Lock names #{link_lock_name} and #{owner_lock_name} are reserved"
+      if lock_names.any? { |lock_name| RESERVED_LOCK_NAMES.include?(lock_name) }
+        raise "Lock name #{lock_name} is reserved"
       end
-      lock_names.concat([link_lock_name, owner_lock_name]) if include_links
+      lock_names.concat([LINK_LOCK_NAME, OWNER_LOCK_NAME]) if include_links
       return lock_names
     end
 
@@ -155,11 +164,11 @@ class Lock < ActiveRecord::Base
     end
 
     def build_link(resource, uuid = nil)
-      build(uuid, resource, link_lock_name, false)
+      build(uuid, resource, LINK_LOCK_NAME, false)
     end
 
     def build_owner(user, uuid = nil)
-      build(uuid, user, owner_lock_name, false)
+      build(uuid, user, OWNER_LOCK_NAME, false)
     end
 
     def build(uuid, resource, lock_name, exclusive)
@@ -170,26 +179,14 @@ class Lock < ActiveRecord::Base
                exclusive:     !!exclusive)
     end
 
-    def link_lock_name
-      :link_resource
-    end
-
-    def owner_lock_name
-      :task_owner
-    end
-
     # recursively search for related resources of the resource (using
     # the +related_resources+ method, avoiding the cycles
-    def related_resources(resource, result = [])
-      if resource.respond_to?(:related_resources)
-        Array(resource.related_resources).each do |related_resource|
-          unless result.include?(related_resource)
-            result << related_resource
-            related_resources(related_resource, result)
-          end
-        end
+    def related_resources(resource)
+      if resource.respond_to?(:related_resources_recursive)
+        return resource.related_resources_recursive
+      else
+        return []
       end
-      return result
     end
   end
 
