@@ -122,6 +122,46 @@ $col_width: (($static_width) * 0.5);
       }
     }
 
+    #dashboard_subscriptions_totals {
+      ul {
+        margin-left: 2px;
+      }
+      li {
+        float: left;
+        width: 146px;
+        height: 70px;
+        padding: 10px;
+        margin: 0;
+      }
+      li span {
+        display: inline-block;
+        vertical-align: top;
+        line-height: 1.2em;
+        font-size: 95%;
+      }
+      li.center-col {
+        @include border-radius(0);
+        border-left: 1px solid #d8d8d8;
+        border-right: 1px solid #d8d8d8;
+      }
+      li.right-col {
+        padding-right: 0;
+      }
+      li.left-col {
+        padding-left: 0;
+      }
+      h4 {
+        display: inline;
+        margin-left: 0px;
+        font-size: 110%;
+        font-weight: normal;
+      }
+      h5 {
+        display: inline;
+        font-size: 175%;
+      }
+    }
+
     #dashboard_errata {
       .scroll-pane {
         height: $height - 26;
@@ -587,3 +627,4 @@ $col_width: (($static_width) * 0.5);
     padding-bottom: 1em;
   }
 }
+
