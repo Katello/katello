@@ -14,6 +14,7 @@ module Katello
 class Provider < Katello::Model
   self.include_root_in_json = false
 
+  include Ext::ActionSubject
   include Glue::ElasticSearch::Provider if Katello.config.use_elasticsearch
   include Glue::Provider
   include Glue

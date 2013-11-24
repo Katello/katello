@@ -12,13 +12,12 @@
 
 module Orchestrate
   module Katello
-    class SystemPackageInstall < Orchestrate::Action
+    class SystemPackageInstall < Orchestrate::EntryAction
 
-      include Helpers::Lock
       include Helpers::PulpPackagesPresenter
 
       def plan(system, packages)
-        lock(system)
+        action_subject(system, :packages => packages)
         plan_action(Pulp::ConsumerContentInstall,
                     consumer_uuid: system.uuid,
                     type: 'rpm',
