@@ -26,7 +26,7 @@ module Orchestrate
           parts = PARTS_ORDER
         end
         included_parts(parts, @input).map do |part|
-          [part, humanize_resource(part, @input[part])]
+          [part, humanize_resource(part, @input[part], @input)]
         end
       end
 
@@ -34,15 +34,30 @@ module Orchestrate
         parts.select { |part| data.has_key?(part) }
       end
 
-      def humanize_resource(type, data)
+      def humanize_resource(type, data, other_data)
         humanized_type = _(type)
         humanized_value = data[:name] || data[:label] || data[:id]
         { text: "#{humanized_type} '#{humanized_value}'",
-         link: link_to_resource(type, data) }
+         link: link_to_resource(type, data, other_data) }
       end
 
-      def link_to_resource(type, data)
-        "/hello/kitty"
+      def link_to_resource(type, data, other_data)
+        case type
+        when :product
+          "#/products/#{data[:cp_id]}/info" if data[:cp_id]
+        when :repository
+          if other_data[:product] && other_data[:product][:cp_id] && data[:id]
+            "#/products/#{other_data[:product][:cp_id]}/repositories/#{data[:id]}"
+          end
+        when :system
+          if data[:uuid]
+            "#/systems/#{data[:uuid]}/info"
+          end
+        when :organization
+          if data[:label]
+            "/katello/organizations#/!=&panel=organization_#{data[:label]}&!="
+          end
+        end
       end
     end
   end
