@@ -19,8 +19,8 @@ class ApiVersionConstraint
 
   def matches?(req)
     header_match = req.accept.match(/version=([\d\.]+)/)
-    route_match = req.fullpath.match(/api\/v\d\//)
-    version_match = req.fullpath.match(/api\/v#{@version}\//)
+    route_match = req.fullpath.match(%r{api/v\d/})
+    version_match = req.fullpath.match(%r{api/v#{@version}/})
 
     if route_match
       version_match
