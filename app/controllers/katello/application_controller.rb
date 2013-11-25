@@ -16,6 +16,7 @@ require 'base64'
 module Katello
 class ApplicationController < ::ApplicationController
   layout 'katello/layouts/katello'
+  include Katello::Menu
   include Notifications::ControllerHelper
   include Profiling
   include KTLocale
