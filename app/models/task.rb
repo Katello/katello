@@ -57,6 +57,10 @@ class Task < ActiveRecord::Base
       output: main_action.respond_to?(:humanized_output) && main_action.humanized_output }
   end
 
+  def cli_example
+    main_action.respond_to?(:cli_example) && main_action.cli_example
+  end
+
   def main_action
     return @main_action if @main_action
     main_action_id = execution_plan.root_plan_step.action_id
