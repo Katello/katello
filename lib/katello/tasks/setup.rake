@@ -53,6 +53,9 @@ namespace :katello do
     Rake::Task['katello:reset_backends'].invoke
     Rake::Task['db:drop'].invoke
     Rake::Task['db:create'].invoke
-    puts "Foreman/Katello and backend databases cleared. Please follow the Katello setup instructions to recreate your development environment."
+
+    # Otherwise migration fails since it currently requires a reloaded environment
+    system('rake db:migrate')
+    Rake::Task['db:seed'].invoke
   end
 end
