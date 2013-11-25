@@ -31,8 +31,8 @@ Change directories into the Foreman checkout and copy the sample settings and da
 
 ```bash
 cd foreman
-cp config/settings.yaml.sample settings.yaml
-cp config/database.yml.sample database.yml
+cp config/settings.yaml.example config/settings.yaml
+cp config/database.yml.example config/database.yml
 ```
 
 Edit `config/settings.yaml`:
@@ -41,6 +41,12 @@ Edit `config/settings.yaml`:
 :require_ssl: false
 # ...
 :organizations_enabled: true
+```
+
+Ensure you have ```libvirt-devel``` installed:
+
+```bash
+sudo yum install libvirt-devel
 ```
 
 Now create a local gemfile, add two basic gems and install dependencies:
@@ -71,6 +77,12 @@ Now add the Katello migrations and initial seed data:
 
 ```bash
 rake db:migrate && rake db:seed
+```
+
+If you have set ```RAILS_RELATIVE_URL_ROOT``` in the past then you need to be sure to ```unset``` it and remove it from ```.bashrc``` or ```.bash_profile``` as appropriate.
+
+```bash
+unset RAILS_RELATIVE_URL_ROOT
 ```
 
 Make sure that `use_ssl: false` is set in `config/katello.yml`. (**debatable**)
