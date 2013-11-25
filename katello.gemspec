@@ -13,7 +13,12 @@ Gem::Specification.new do |gem|
   gem.summary     = ""
   gem.description = ""
 
-  gem.files = Dir["{app,vendor,lib,db,config,engines}/**/*"] + ["LICENSE.txt", "README.md"]
+  gem.files = Dir["{app,vendor,lib,db,config}/**/*"] + ["LICENSE.txt", "README.md"]
+  gem.files += Dir["engines/bastion/{app,vendor,lib}/**/*"]
+  gem.files += Dir["engines/bastion/{README.md,Bastion.gemspec}"]
+  gem.files += Dir["engines/fort/{app,config,db,lib}/**/*"]
+  gem.files += Dir["engines/bastion/{README.md,fort.gemspec}"]
+
   gem.require_paths = ["lib"]
 
   # Core Dependencies
