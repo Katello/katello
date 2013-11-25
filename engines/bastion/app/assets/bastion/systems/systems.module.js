@@ -99,6 +99,7 @@ angular.module('Bastion.systems').config(['$stateProvider', function ($stateProv
         url: '/tasks',
         collapsed: true,
         template: '<tasks-table  details-state="systems.details.tasks.details"' +
+                  '              known-context="system,organization"' +
                   '              resource-type="System"' +
                   '              resource-id="{{ system.id }}"/>'
     })
