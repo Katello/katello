@@ -99,12 +99,6 @@ In order to reset the development environment, all backend data and the database
 rake katello:reset
 ```
 
-Once the data has been reset, execute the following to run all Foreman and Katello migrations and then seed the database:
-
-```bash
-rake db:migrate && rake db:seed
-```
-
 ## Found a bug?
 
 That's rather unfortunate. But don't worry! We can help. Just file a bug
