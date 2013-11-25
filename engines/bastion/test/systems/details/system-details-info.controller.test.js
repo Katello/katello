@@ -14,10 +14,10 @@
 describe('Controller: SystemDetailsInfoController', function() {
     var $scope,
         $controller,
+        gettext,
         Routes,
         System,
         SystemGroup,
-        mockSystem,
         CurrentOrganization,
         mockContentViews;
 
@@ -54,6 +54,10 @@ describe('Controller: SystemDetailsInfoController', function() {
             }
         };
 
+        gettext = function(message) {
+            return message;
+        };
+
         $scope.setupSelector = function() {};
         $scope.pathSelector = {
             select: function() {},
@@ -66,6 +70,7 @@ describe('Controller: SystemDetailsInfoController', function() {
             $scope: $scope,
             $q: $q,
             $http: $http,
+            gettext: gettext,
             Routes: Routes,
             System: System,
             SystemGroup: SystemGroup,

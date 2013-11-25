@@ -1,20 +1,3 @@
-<div class="flash_hud" ng-show="status.showSuccess">
-  <a class="control" tooltip="{{ 'Close' | translate }}" ng-click="status.showSuccess = false"></a>
-  <ul class="flash_messages success">
-    <li>{{ status.success }}</li>
-  </ul>
-</div>
-
-<div class="flash_hud" ng-show="status.showError">
-  <a class="control" tooltip="{{ 'Close' | translate }}" ng-click="status.showError = false"></a>
-  <ul class="flash_messages error">
-    <li translate>Error occurred:</li>
-    <ul>
-      <li ng-repeat="error in status.errors">{{ error }}</li>
-    </ul>
-  </ul>
-</div>
-
 <h4 translate>System Group Management</h4>
 
 <div class="details">

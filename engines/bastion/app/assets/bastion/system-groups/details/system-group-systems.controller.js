@@ -27,7 +27,6 @@
 angular.module('Bastion.system-groups').controller('SystemGroupSystemsController',
     ['$scope', '$location', 'gettext', 'Nutupane', 'SystemGroup',
     function($scope, $location, gettext, Nutupane, SystemGroup) {
-
         var systemsPane, params;
 
         params = {
@@ -51,11 +50,11 @@ angular.module('Bastion.system-groups').controller('SystemGroupSystemsController
             SystemGroup.removeSystems({id: $scope.group.id, 'system_group': {'system_ids': selected}}, function(){
                 systemsPane.table.selectAll(false);
                 systemsPane.refresh();
-                $scope.successMessage = gettext("Successfully removed %s systems.").replace('%s', selected.length);
+                $scope.successMessages.push(gettext("Successfully removed %s systems.").replace('%s', selected.length));
                 $scope.isRemoving = false;
             }, function(response) {
                 $scope.isRemoving = false;
-                $scope.errors = response.data.displayMessage;
+                $scope.errorMessages.push(gettext("An error occurred removing the systems.") + response.data.displayMessage);
             });
         };
 

@@ -18,6 +18,7 @@
  * @requires $scope
  * @requires $q
  * @requires $http
+ * @requires gettext
  * @requires Routes
  * @requires System
  * @requires SystemGroup
@@ -28,17 +29,16 @@
  *   Provides the functionality for the system details action pane.
  */
 angular.module('Bastion.systems').controller('SystemDetailsInfoController',
-    ['$scope', '$q', '$http', 'Routes', 'System', 'SystemGroup', 'ContentView', 'CurrentOrganization',
-    function($scope, $q, $http, Routes, System, SystemGroup, ContentView, CurrentOrganization) {
+    ['$scope', '$q', '$http', 'gettext', 'Routes', 'System', 'SystemGroup', 'ContentView', 'CurrentOrganization',
+    function($scope, $q, $http, gettext, Routes, System, SystemGroup, ContentView, CurrentOrganization) {
 
         var customInfoErrorHandler = function(error) {
-            $scope.saveError = true;
-            $scope.errors = error["errors"];
+            _.each(error.errors, function(errorMessage) {
+                $scope.errorMessages.push(gettext("An error occurred updating Custom Information: ") + errorMessage);
+            });
         };
 
         $scope.editContentView = false;
-        $scope.saveSuccess = false;
-        $scope.saveError = false;
 
         $scope.$on('system.loaded', function() {
             $scope.setupSelector();
@@ -89,11 +89,13 @@ angular.module('Bastion.systems').controller('SystemDetailsInfoController',
 
             success = function(data) {
                 deferred.resolve(data);
+                $scope.successMessages.push('System Saved.');
             };
             error = function(error) {
-                deferred.reject(error.data["errors"]);
-                $scope.saveError = true;
-                $scope.errors = error.data["errors"];
+                deferred.reject(error.data.errors);
+                _.each(error.data.errors, function(errorMessage) {
+                    $scope.errorMessages.push(gettext("An error occurred updating System Groups: ") + errorMessage);
+                });
             };
 
             System.saveSystemGroups({id: $scope.system.uuid}, data, success, error);

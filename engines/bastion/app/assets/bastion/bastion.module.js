@@ -113,11 +113,6 @@ angular.module('Bastion').run(['$rootScope', '$state', '$stateParams', '$templat
         // Set the current language
         gettextCatalog.currentLanguage = currentLocale;
 
-        // Temporary workaround until angular-ui-bootstrap releases bootstrap 3 support.
-        $templateCache.put('template/modal/backdrop.html', '<div class="modal-backdrop fade" ng-class="{in: animate}" ng-style="{\'z-index\': 1040 + index*10}"></div>');
-        $templateCache.put('template/modal/window.html', '<div class="modal fade {{ windowClass }}" ng-class="{in: animate}" ng-style="{\'z-index\': 1050 + index*10, display: \'block\'}" ng-click="close($event)"><div class="modal-dialog"><div class="modal-content" ng-transclude></div></div></div>');
-        $templateCache.put('template/tooltip/tooltip-popup.html', '<div class="tooltip {{placement}}" ng-class="{ in: isOpen(), fade: animation() }"><div class="tooltip-arrow"></div><div class="tooltip-inner" ng-bind="content"></div></div>');
-
         $rootScope.$on('$stateChangeStart',
             function() {
             //save location.search so we can add it back after transition is done
@@ -130,5 +125,10 @@ angular.module('Bastion').run(['$rootScope', '$state', '$stateParams', '$templat
                 $location.search(this.locationSearch);
         });
 
+        // Temporary workaround until angular-ui-bootstrap releases bootstrap 3 support.
+        $templateCache.put('template/modal/backdrop.html', '<div class="modal-backdrop fade" ng-class="{in: animate}" ng-style="{\'z-index\': 1040 + index*10}"></div>');
+        $templateCache.put('template/modal/window.html', '<div class="modal fade {{ windowClass }}" ng-class="{in: animate}" ng-style="{\'z-index\': 1050 + index*10, display: \'block\'}" ng-click="close($event)"><div class="modal-dialog"><div class="modal-content" ng-transclude></div></div></div>');
+        $templateCache.put('template/tooltip/tooltip-popup.html', '<div class="tooltip {{placement}}" ng-class="{ in: isOpen(), fade: animation() }"><div class="tooltip-arrow"></div><div class="tooltip-inner" ng-bind="content"></div></div>');
+        $templateCache.put('template/alert/alert.html', '<div class="alert" ng-class=\'type && "alert-" + type\'><button ng-show="closeable" type="button" class="close" ng-click="close()">&times;</button><div ng-transclude></div></div>');
     }
 ]);

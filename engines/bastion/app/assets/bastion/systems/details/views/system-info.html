@@ -1,22 +1,5 @@
 <section>
 
-  <div class="flash_hud" ng-show="saveSuccess">
-    <a class="control" tooltip="{{ 'Close' | translate }}" ng-click="saveSuccess = false"></a>
-    <ul class="flash_messages success">
-      <li translate>Save successful</li>
-    </ul>
-  </div>
-
-  <div class="flash_hud" ng-show="saveError">
-    <a class="control" tooltip="{{ 'Close' | translate }}" ng-click="saveError = false"></a>
-    <ul class="flash_messages error">
-      <li translate>Error occurred saving:</li>
-      <ul>
-        <li ng-repeat="error in errors">{{ error }}</li>
-      </ul>
-    </ul>
-  </div>
-
   <div class="details fl">
     <section>
       <h4 translate>Basic Information</h4>
@@ -233,12 +216,8 @@
       </div>
 
       <div class="detail">
-        <div class="flash_hud" ng-show="editContentView">
-          <ul class="flash_messages warning">
-            <li translate>
-              You must select a new content view before your change of environment can be saved. Use the cancel button on content view selection to revert your environment selection.
-            </li>
-          </ul>
+        <div alert type="'info'" ng-show="editContentView">
+          <p translate>You must select a new content view before your change of environment can be saved. Use the cancel button on content view selection to revert your environment selection.</p>
         </div>
         <span class="info-label" translate>Environment</span>
         <span id="environment_path_selector" 
