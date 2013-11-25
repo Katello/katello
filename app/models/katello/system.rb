@@ -254,6 +254,10 @@ class System < Katello::Model
     self.organization
   end
 
+  def to_action_input
+    super.merge(uuid: uuid)
+  end
+
   private
 
     def refresh_running_tasks
