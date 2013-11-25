@@ -33,6 +33,18 @@ module Orchestrate
         Pulp::ConsumerContentUninstall
       end
 
+      def cli_example
+        if task_input[:organization].nil? ||
+              task_input[:system].nil? ||
+              task_input[:packages].nil?
+          return ""
+        end
+        <<-EXAMPLE
+katello system packages --org '#{task_input[:organization][:name]}'\\
+                        --name '#{task_input[:system][:name]}'\\
+                        --remove '#{task_input[:packages].join(',')}'
+        EXAMPLE
+      end
 
     end
   end
