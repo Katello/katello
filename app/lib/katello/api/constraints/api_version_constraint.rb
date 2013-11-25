@@ -18,8 +18,13 @@ class ApiVersionConstraint
   end
 
   def matches?(req)
-    req.accept =~ /version=([\d\.]+)/
-    if (version = $1) # version is specified in header
+    header_match = req.accept.match(/version=([\d\.]+)/)
+    route_match = req.fullpath.match(/api\/v\d\//)
+    version_match = req.fullpath.match(/api\/v#{@version}\//)
+
+    if route_match
+      version_match
+    elsif header_match && (version = header_match[1]) # version is specified in header
       version == @version.to_s # are the versions same
     else
       @default # version is not specified, match if it's default version of api
