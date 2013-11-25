@@ -31,8 +31,6 @@ angular.module('Bastion.systems').controller('SystemDetailsInfoController',
     ['$scope', '$q', '$http', 'Routes', 'System', 'SystemGroup', 'ContentView', 'CurrentOrganization',
     function($scope, $q, $http, Routes, System, SystemGroup, ContentView, CurrentOrganization) {
 
-        var templatePrefix = '../';
-
         var customInfoErrorHandler = function(error) {
             $scope.saveError = true;
             $scope.errors = error["errors"];
@@ -167,9 +165,9 @@ angular.module('Bastion.systems').controller('SystemDetailsInfoController',
         };
 
         $scope.getTemplateForType = function(value) {
-            var template = templatePrefix + 'systems/details/views/partials/system-detail-value.html';
+            var template = 'systems/details/views/partials/system-detail-value.html';
             if (typeof(value) === 'object') {
-                template = templatePrefix + 'systems/details/views/partials/system-detail-object.html';
+                template = 'systems/details/views/partials/system-detail-object.html';
             }
             return template;
         };

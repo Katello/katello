@@ -53,13 +53,30 @@ angular.module('Bastion', [
  *   Used for establishing application wide configuration such as adding the Rails CSRF token
  *   to every request.
  */
-angular.module('Bastion').config(['$httpProvider', '$urlRouterProvider', function($httpProvider, $urlRouterProvider) {
-    $httpProvider.defaults.headers.common = {
-        Accept: 'application/json, text/plain, version=2; */*',
-        'X-XSRF-TOKEN': $('meta[name=csrf-token]').attr('content')
-    };
-    $urlRouterProvider.otherwise("/");
-}]);
+angular.module('Bastion').config(
+    ['$httpProvider', '$urlRouterProvider', '$provide',
+    function($httpProvider, $urlRouterProvider, $provide) {
+        $httpProvider.defaults.headers.common = {
+            Accept: 'application/json, text/plain, version=2; */*',
+            'X-XSRF-TOKEN': $('meta[name=csrf-token]').attr('content')
+        };
+        $urlRouterProvider.otherwise("/");
+
+        $provide.factory('PrefixInterceptor', ['$q', function($q) {
+            return {
+                request: function(config) {
+                    if (config.url.indexOf('.html') !== -1) {
+                        config.url = '/' + config.url;
+                    }
+
+                    return config || $q.when(config);
+                }
+            };
+        }]);
+
+        $httpProvider.interceptors.push('PrefixInterceptor');
+    }]
+);
 
 
 /**
