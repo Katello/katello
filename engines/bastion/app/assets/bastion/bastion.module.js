@@ -62,11 +62,13 @@ angular.module('Bastion').config(
         };
         $urlRouterProvider.otherwise("/");
 
-        $provide.factory('PrefixInterceptor', ['$q', function($q) {
+        $provide.factory('PrefixInterceptor', ['$q', '$templateCache', function($q, $templateCache) {
             return {
                 request: function(config) {
                     if (config.url.indexOf('.html') !== -1) {
-                        config.url = '/' + config.url;
+                        if ($templateCache.get(config.url) === undefined) {
+                            config.url = '/' + config.url;
+                        }
                     }
 
                     return config || $q.when(config);
