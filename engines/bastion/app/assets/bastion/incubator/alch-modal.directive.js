@@ -26,7 +26,7 @@ angular.module('alchemy').directive('alchModal',
     ['$templateCache', '$modal', function($templateCache, $modal) {
     return {
         // To be expanded when we add additional type of modals
-        templateUrl: 'incubator/views/alch-modal-remove.html',
+        templateUrl: '../incubator/views/alch-modal-remove.html',
         replace: true,
         scope: {
             action: '&alchModal',

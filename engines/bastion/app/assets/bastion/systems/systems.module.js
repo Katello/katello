@@ -65,7 +65,7 @@ angular.module('Bastion.systems').config(['$stateProvider', function($stateProvi
             },
             'action-panel': {
                 controller: 'SystemRegisterController',
-                templateUrl: 'systems/views/register.html'
+                templateUrl: templatePrefix + 'systems/views/register.html'
             }
         }
     });
@@ -133,19 +133,19 @@ angular.module('Bastion.systems').config(['$stateProvider', function($stateProvi
         url: '/systems/bulk-actions/packages',
         collapsed: true,
         controller: 'SystemsBulkActionPackagesController',
-        templateUrl: 'systems/bulk/views/bulk-actions-packages.html'
+        templateUrl: templatePrefix + 'systems/bulk/views/bulk-actions-packages.html'
     })
     .state('systems.bulk-actions.errata', {
         url: '/systems/bulk-actions/errata',
         collapsed: true,
         controller: 'SystemsBulkActionErrataController',
-        templateUrl: 'systems/bulk/views/bulk-actions-errata.html'
+        templateUrl: templatePrefix + 'systems/bulk/views/bulk-actions-errata.html'
     })
     .state('systems.bulk-actions.groups', {
         url: '/systems/bulk-actions/groups',
         collapsed: true,
         controller: 'SystemsBulkActionGroupsController',
-        templateUrl: 'systems/bulk/views/bulk-actions-groups.html'
+        templateUrl: templatePrefix + 'systems/bulk/views/bulk-actions-groups.html'
     })
     .state('systems.bulk-actions.subscriptions', {
         url: '/systems/bulk-actions/bulk-subscriptions',

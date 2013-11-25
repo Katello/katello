@@ -15,9 +15,11 @@ class ContentViewDefinitionBase < ActiveRecord::Base
   self.include_root_in_json = false
 
   belongs_to :organization, :inverse_of => :content_view_definitions, :class_name => "Katello::Organization"
-  has_many :content_view_definition_products, :foreign_key => "content_view_definition_id", :dependent => :destroy
+  has_many :content_view_definition_products, :class_name => "Katello::ContentViewDefinitionProduct",
+           :foreign_key => "content_view_definition_id", :dependent => :destroy
   has_many :products, :through => :content_view_definition_products, :after_remove => :remove_product
-  has_many :content_view_definition_repositories, :foreign_key => "content_view_definition_id", :dependent => :destroy
+  has_many :content_view_definition_repositories, :class_name => "Katello::ContentViewDefinitionRepository",
+           :foreign_key => "content_view_definition_id", :dependent => :destroy
   has_many :repositories, :through => :content_view_definition_repositories, :after_remove => :remove_repository,
                           :before_add => :validate_repos
   has_many :components, :class_name => "Katello::ComponentContentView", :dependent => :destroy,

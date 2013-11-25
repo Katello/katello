@@ -37,8 +37,9 @@ class KTEnvironment < ActiveRecord::Base
   before_destroy :is_deletable?
   before_destroy :delete_default_view_version
 
-  belongs_to :organization, :inverse_of => :environments, :class_name => "Katello::Organization"
-  has_many :activation_keys, :dependent => :destroy, :foreign_key => :environment_id
+  belongs_to :organization, :class_name => "Katello::Organization", :inverse_of => :environments
+  has_many :activation_keys, :class_name => "Katello::ActivationKey",
+           :dependent => :destroy, :foreign_key => :environment_id
   # rubocop:disable HasAndBelongsToMany
   # TODO: change these into has_many associations
   has_and_belongs_to_many :priors, { :class_name => "Katello::KTEnvironment", :foreign_key => :environment_id,
@@ -48,28 +49,37 @@ class KTEnvironment < ActiveRecord::Base
                                          :join_table => "katello_environment_priors",
                                          :association_foreign_key => :environment_id, :readonly => true }
 
-  has_many :repositories, dependent: :destroy, foreign_key: :environment_id
-  has_many :systems, :inverse_of => :environment, :dependent => :destroy, :foreign_key => :environment_id
-  has_many :distributors, :inverse_of => :environment, :dependent => :destroy, :foreign_key => :environment_id
-  has_many :changesets, :dependent => :destroy, :inverse_of => :environment, :foreign_key => :environment_id
+  has_many :repositories, :class_name => "Katello::Repository", dependent: :destroy, foreign_key: :environment_id
+  has_many :systems, :class_name => "Katello::System", :inverse_of => :environment,
+           :dependent => :destroy, :foreign_key => :environment_id
+  has_many :distributors, :class_name => "Katello::Distributor", :inverse_of => :environment,
+           :dependent => :destroy, :foreign_key => :environment_id
+  has_many :changesets, :class_name => "Katello::Changeset", :dependent => :destroy,
+           :inverse_of => :environment, :foreign_key => :environment_id
   has_many :working_changesets, :conditions => ["state != '#{Changeset::PROMOTED}'"],
-                                :foreign_key => :environment_id, :class_name => "Changeset",
+                                :foreign_key => :environment_id,
+                                :class_name => "Katello::Changeset",
                                 :inverse_of => :environment
 
   has_many :working_deletion_changesets, :conditions => ["state != '#{Changeset::DELETED}'"],
-                                         :foreign_key => :environment_id, :class_name => "DeletionChangeset",
+                                         :foreign_key => :environment_id,
+                                         :class_name => "Katello::DeletionChangeset",
                                          :inverse_of => :environment
   has_many :working_promotion_changesets, :conditions => ["state != '#{Changeset::PROMOTED}'"],
-                                          :foreign_key => :environment_id, :class_name => "PromotionChangeset",
+                                          :foreign_key => :environment_id,
+                                          :class_name => "Katello::PromotionChangeset",
                                           :inverse_of => :environment
 
   has_many :changeset_history, :conditions => {:state => Changeset::PROMOTED},
-                               :foreign_key => :environment_id, :class_name => "Changeset",
+                               :foreign_key => :environment_id,
+                               :class_name => "Katello::Changeset",
                                :inverse_of => :environment
 
-  has_many :content_view_version_environments, :foreign_key => :environment_id, :dependent => :destroy
+  has_many :content_view_version_environments, :class_name => "Katello::ContentViewVersionEnvironment",
+           :foreign_key => :environment_id, :dependent => :destroy
   has_many :content_view_versions, :through => :content_view_version_environments, :inverse_of => :environments
-  has_many :content_view_environments, :foreign_key => :environment_id, :inverse_of => :environment, :dependent => :destroy
+  has_many :content_view_environments, :class_name => "Katello::ContentViewEnvironment",
+           :foreign_key => :environment_id, :inverse_of => :environment, :dependent => :destroy
 
   has_many :users, :foreign_key => :default_environment_id, :inverse_of => :default_environment, :dependent => :nullify
 

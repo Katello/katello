@@ -1,6 +1,6 @@
 object false
 
-extends "api/v2/common/metadata"
+extends "katello/api/v2/common/metadata"
 
 child @collection[:results] => :results do
   attributes :name
@@ -8,7 +8,7 @@ child @collection[:results] => :results do
   attributes :content_view, :content_view_id
 
   child :environment => :environment do
-    extends 'api/v2/environments/show'
+    extends 'katello/api/v2/environments/show'
   end
 end
 

@@ -18,15 +18,16 @@ class ContentViewVersion < ActiveRecord::Base
   include Authorization::ContentViewVersion
 
   belongs_to :content_view, :class_name => "Katello::ContentView", :inverse_of => :content_view_versions
-  has_many :content_view_version_environments, :dependent => :destroy
+  has_many :content_view_version_environments, :class_name => "Katello::ContentViewVersionEnvironment",
+           :dependent => :destroy
   has_many :environments, :through      => :content_view_version_environments,
                           :class_name   => "Katello::KTEnvironment",
                           :inverse_of   => :content_view_versions,
                           :before_add    => :add_environment,
                           :after_remove => :remove_environment
 
-  has_many :repositories, :dependent => :destroy
-  has_one :task_status, :as => :task_owner, :dependent => :destroy
+  has_many :repositories, :class_name => "Katello::Repository", :dependent => :destroy
+  has_one :task_status, :class_name => "Katello::TaskStatus", :as => :task_owner, :dependent => :destroy
   belongs_to :definition_archive, :class_name => "Katello::ContentViewDefinitionArchive",
                                   :inverse_of => :content_view_versions
 

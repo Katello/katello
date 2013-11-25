@@ -20,7 +20,7 @@ class Job < ActiveRecord::Base
 
   belongs_to :job_owner, :polymorphic => true
 
-  has_many :job_tasks, :dependent => :destroy
+  has_many :job_tasks, :class_name => "Katello::JobTask", :dependent => :destroy
   has_many :task_statuses, :through => :job_tasks
 
   class << self

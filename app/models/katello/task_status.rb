@@ -38,14 +38,14 @@ class TaskStatus < ActiveRecord::Base
   belongs_to :system, :foreign_key => :task_owner_id, :class_name => "Katello::System", :inverse_of => :task_statuses
 
   # needed to delete providers w/ task status
-  has_one :provider, :dependent => :nullify
+  has_one :provider, :class_name => "Katello::Provider", :dependent => :nullify
 
   # a task may be optionally associated with a job, but it is not required
   # an example scenario would be a job that is created by performing an action on a system group
-  has_one :job_task, :dependent => :destroy
+  has_one :job_task,  :class_name => "Katello::JobTask", :dependent => :destroy
   has_one :job, :through => :job_task
 
-  has_one :changeset, :dependent => :nullify
+  has_one :changeset, :class_name => "Katello::Changeset",  :dependent => :nullify
 
   before_save :setup_task_type
 

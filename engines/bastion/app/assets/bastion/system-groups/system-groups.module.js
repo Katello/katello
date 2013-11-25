@@ -21,16 +21,18 @@
 angular.module('Bastion.system-groups', ['ngResource', 'Bastion.utils', 'ui.router']);
 
 angular.module('Bastion.system-groups').config(['$stateProvider', function($stateProvider) {
+    var templatePrefix = '../';
+
     $stateProvider.state('system-groups', {
         abstract: true,
         controller: 'SystemGroupsController',
-        templateUrl: 'system-groups/views/system-groups.html'
+        templateUrl: templatePrefix + 'system-groups/views/system-groups.html'
     })
     .state('system-groups.index', {
         url: '/system-groups',
         views: {
             'table': {
-                templateUrl: 'system-groups/views/system-groups-table-full.html'
+                templateUrl: templatePrefix + 'system-groups/views/system-groups-table-full.html'
             }
         }
     })
@@ -39,11 +41,11 @@ angular.module('Bastion.system-groups').config(['$stateProvider', function($stat
         collapsed: true,
         views: {
             'table': {
-                templateUrl: 'system-groups/views/system-groups-table-collapsed.html'
+                templateUrl: templatePrefix + 'system-groups/views/system-groups-table-collapsed.html'
             },
             'action-panel': {
                 controller: 'NewSystemGroupController',
-                templateUrl: 'system-groups/new/views/system-group-new.html'
+                templateUrl: templatePrefix + 'system-groups/new/views/system-group-new.html'
             }
         }
     })
@@ -51,7 +53,7 @@ angular.module('Bastion.system-groups').config(['$stateProvider', function($stat
         url: '/system-groups/new',
         collapsed: true,
         controller: 'SystemGroupFormController',
-        templateUrl: 'system-groups/new/views/system-group-new-form.html'
+        templateUrl: templatePrefix + 'system-groups/new/views/system-group-new-form.html'
     });
 
     $stateProvider.state("system-groups.details", {
@@ -60,11 +62,11 @@ angular.module('Bastion.system-groups').config(['$stateProvider', function($stat
         collapsed: true,
         views: {
             'table': {
-                templateUrl: 'system-groups/views/system-groups-table-collapsed.html'
+                templateUrl: templatePrefix + 'system-groups/views/system-groups-table-collapsed.html'
             },
             'action-panel': {
                 controller: 'SystemGroupDetailsController',
-                templateUrl: 'system-groups/details/views/system-group-details.html'
+                templateUrl: templatePrefix + 'system-groups/details/views/system-group-details.html'
             }
         }
     })
@@ -72,29 +74,29 @@ angular.module('Bastion.system-groups').config(['$stateProvider', function($stat
         url: '/info',
         collapsed: true,
         controller: 'SystemGroupDetailsInfoController',
-        templateUrl: 'system-groups/details/views/system-group-info.html'
+        templateUrl: templatePrefix + 'system-groups/details/views/system-group-info.html'
     })
     .state('system-groups.details.systems', {
         abstract: true,
         collapsed: true,
-        templateUrl: 'system-groups/details/views/system-group-systems.html'
+        templateUrl: templatePrefix + 'system-groups/details/views/system-group-systems.html'
     })
     .state('system-groups.details.systems.list', {
         url: '/systems',
         collapsed: true,
         controller: 'SystemGroupSystemsController',
-        templateUrl: 'system-groups/details/views/system-group-systems-list.html'
+        templateUrl: templatePrefix + 'system-groups/details/views/system-group-systems-list.html'
     })
     .state('system-groups.details.systems.add', {
         url: '/add-systems',
         collapsed: true,
         controller: 'SystemGroupAddSystemsController',
-        templateUrl: 'system-groups/details/views/system-group-add-systems.html'
+        templateUrl: templatePrefix + 'system-groups/details/views/system-group-add-systems.html'
     })
     .state('system-groups.details.actions', {
         url: '/actions',
         collapsed: true,
-        templateUrl: 'system-groups/details/views/system-group-actions.html'
+        templateUrl: templatePrefix + 'system-groups/details/views/system-group-actions.html'
     });
 
 

@@ -59,7 +59,7 @@ end
 
 module Katello
 class ResourceType < ActiveRecord::Base
-  has_one :permission, :dependent => :destroy
+  has_one :permission, :class_name => "Katello::Permission", :dependent => :destroy
   validates :name, :length => { :maximum => 255 }
 
   def display_name

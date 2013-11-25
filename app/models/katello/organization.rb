@@ -37,23 +37,23 @@ class Organization < ActiveRecord::Base
 
   include Ext::LabelFromName
 
-  has_many :activation_keys, :dependent => :destroy
-  has_many :providers, :dependent => :destroy
+  has_many :activation_keys, :class_name => "Katello::ActivationKey", :dependent => :destroy
+  has_many :providers, :class_name => "Katello::Provider", :dependent => :destroy
   has_many :products, :through => :providers
-  has_many :environments, :class_name => "KTEnvironment", :dependent => :destroy, :inverse_of => :organization
-  has_one :library, :class_name => "KTEnvironment", :conditions => {:library => true}
-  has_many :gpg_keys, :dependent => :destroy, :inverse_of => :organization
-  has_many :permissions, :dependent => :destroy, :inverse_of => :organization
-  has_many :sync_plans, :dependent => :destroy, :inverse_of => :organization
-  has_many :system_groups, :dependent => :destroy, :inverse_of => :organization
-  has_many :content_view_definitions, :class_name => "ContentViewDefinitionBase", :dependent => :destroy
-  has_many :content_views, :dependent => :destroy
-  has_many :task_statuses, :dependent => :destroy, :as => :task_owner
+  has_many :environments, :class_name => "Katello::KTEnvironment", :dependent => :destroy, :inverse_of => :organization
+  has_one :library, :class_name => "Katello::KTEnvironment", :conditions => {:library => true}
+  has_many :gpg_keys, :class_name => "Katello::GpgKey", :dependent => :destroy, :inverse_of => :organization
+  has_many :permissions, :class_name => "Katello::Permission", :dependent => :destroy, :inverse_of => :organization
+  has_many :sync_plans, :class_name => "Katello::SyncPlan", :dependent => :destroy, :inverse_of => :organization
+  has_many :system_groups, :class_name => "Katello::SystemGroup", :dependent => :destroy, :inverse_of => :organization
+  has_many :content_view_definitions, :class_name => "Katello::ContentViewDefinitionBase", :dependent => :destroy
+  has_many :content_views, :class_name => "Katello::ContentView", :dependent => :destroy
+  has_many :task_statuses, :class_name => "Katello::TaskStatus", :dependent => :destroy, :as => :task_owner
 
   #older association
-  has_many :org_tasks, :dependent => :destroy, :class_name => "TaskStatus", :inverse_of => :organization
+  has_many :org_tasks, :class_name => "Katello::TaskStatus", :dependent => :destroy, :inverse_of => :organization
 
-  has_many :notices, :dependent => :destroy
+  has_many :notices, :class_name => "Katello::Notice", :dependent => :destroy
 
   serialize :default_info, Hash
 

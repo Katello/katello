@@ -35,15 +35,15 @@ class System < ActiveRecord::Base
 
   belongs_to :environment, :class_name => "Katello::KTEnvironment", :inverse_of => :systems
 
-  has_many :task_statuses, :as => :task_owner, :dependent => :destroy
-  has_many :system_activation_keys, :dependent => :destroy
+  has_many :task_statuses, :class_name => "Katello::TaskStatus", :as => :task_owner, :dependent => :destroy
+  has_many :system_activation_keys, :class_name => "Katello::SystemActivationKey", :dependent => :destroy
   has_many :activation_keys, :through => :system_activation_keys
-  has_many :system_system_groups, :dependent => :destroy
+  has_many :system_system_groups, :class_name => "Katello::SystemSystemGroup", :dependent => :destroy
   has_many :system_groups, {:through      => :system_system_groups,
                             :after_add    => :add_system_group,
                             :after_remove => :remove_system_group
                            }
-  has_many :custom_info, :as => :informable, :dependent => :destroy
+  has_many :custom_info, :class_name => "Katello::CustomInfo", :as => :informable, :dependent => :destroy
   belongs_to :content_view, :inverse_of => :systems
 
   before_validation :set_default_content_view, :unless => :persisted?

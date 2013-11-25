@@ -15,7 +15,7 @@ angular.module('alchemy').directive('alchMenu', ['$window', function($window) {
             'menu': '=alchMenu',
             'compact' : '@'
         },
-        templateUrl: 'incubator/views/alch-menu.html',
+        templateUrl: '../incubator/views/alch-menu.html',
         controller: ['$scope', function($scope) {
             $scope.dropdown = {};
 

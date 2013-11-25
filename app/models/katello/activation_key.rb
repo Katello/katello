@@ -22,13 +22,13 @@ class ActivationKey < ActiveRecord::Base
   belongs_to :user, :inverse_of => :activation_keys, :class_name => "::User"
   belongs_to :content_view, :inverse_of => :activation_keys
 
-  has_many :key_pools, :dependent => :destroy
+  has_many :key_pools, :class_name => "Katello::KeyPool", :dependent => :destroy
   has_many :pools, :through => :key_pools
 
-  has_many :key_system_groups, :dependent => :destroy
+  has_many :key_system_groups, :class_name => "Katello::KeySystemGroup", :dependent => :destroy
   has_many :system_groups, :through => :key_system_groups
 
-  has_many :system_activation_keys, :dependent => :destroy
+  has_many :system_activation_keys, :class_name => "Katello::SystemActivationKey", :dependent => :destroy
   has_many :systems, :through => :system_activation_keys
 
   after_find :validate_pools

@@ -43,10 +43,10 @@ class Changeset < ActiveRecord::Base
   validates_with Validators::NotInLibraryValidator
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name
 
-  has_many :users, :class_name => "ChangesetUser", :inverse_of => :changeset, :dependent => :destroy
+  has_many :users, :class_name => "Katello::ChangesetUser", :inverse_of => :changeset, :dependent => :destroy
   belongs_to :environment, :class_name => "Katello::KTEnvironment", :inverse_of => :changesets
   belongs_to :task_status, :inverse_of => :changeset
-  has_many :changeset_content_views, :dependent => :destroy
+  has_many :changeset_content_views, :class_name => "Katello::ChangesetContentView", :dependent => :destroy
   has_many :content_views, :through => :changeset_content_views, :class_name => "Katello::ContentView"
 
   # find changesets in given state/states
