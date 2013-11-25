@@ -41,7 +41,8 @@ angular.module('Bastion.tasks').directive('tasksTable',
                 userId: '@',
                 activeOnly: '@',
                 all: '@',
-                detailsState: '@'
+                detailsState: '@',
+                knownContext: '@'
             },
             controller: ['$scope', '$state', function($scope, $state) {
                 // we need to set the tasksTable before the template

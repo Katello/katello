@@ -21,7 +21,7 @@
             <td alch-table-cell>
               <a class="clickable active" ng-click="tasksTable.gotoDetails(task.uuid)">
                 {{ task.humanized.action }}
-                {{ task.humanized.input | taskInputCompile }}
+                {{ task.humanized.input | taskInputReduce:knownContext | taskInputCompile }}
               </a>
             </td>
             <td alch-table-cell>{{ task.username }}</td>
