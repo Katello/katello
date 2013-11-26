@@ -1,8 +1,6 @@
-attributes :status
+object Katello::Util::Data.ostructize(@resource)
+
+attribute :status
 child :services => :services do
-  attributes :elasticsearch
-  attributes :katello_jobs
-  attributes :foreman_auth
-  attributes :candlepin, :candlepin_auth
-  attributes :pulp, :pulp_auth
+  attributes :elasticsearch, :katello_jobs, :foreman_auth, :candlepin, :candlepin_auth, :pulp, :pulp_auth
 end
