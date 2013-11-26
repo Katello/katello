@@ -1,5 +1,5 @@
-module Orchestrate
-  require 'orchestrate/world'
+module Actions
+  require 'actions/world'
 
   def self.world
     return @world if @world
@@ -14,7 +14,7 @@ module Orchestrate
         persistence_adapter: Dynflow::PersistenceAdapters::Sequel.new(db_config),
         transaction_adapter: Dynflow::TransactionAdapters::ActiveRecord.new }
 
-    @world = Orchestrate::World.new(world_options).tap do |world|
+    @world = Actions::World.new(world_options).tap do |world|
       ActionDispatch::Reloader.to_prepare { world.reload! }
       at_exit { @world.terminate!.wait }
     end
@@ -25,7 +25,7 @@ module Orchestrate
   end
 
   def self.eager_load_paths
-    %W( #{Rails.root}/app/lib/orchestrate
+    %W( #{Rails.root}/app/lib/actions
         #{Rails.root}/app/lib/headpin/actions
         #{Rails.root}/app/lib/katello/actions )
 

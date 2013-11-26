@@ -1,6 +1,6 @@
-module Orchestrate
+module Actions
 
-  class EntryAction < Orchestrate::Action
+  class EntryAction < Actions::Action
     include Helpers::ArgsSerialization
     include Helpers::Lock
 
