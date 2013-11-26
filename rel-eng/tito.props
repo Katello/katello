@@ -1,6 +1,9 @@
 [globalconfig]
-default_builder = tito.builder.Builder
-default_tagger = tito.tagger.VersionTagger
+default_builder = tito.builder.GemBuilder
+default_tagger = tito.tagger.ReleaseTagger
+changelog_do_not_remove_cherrypick = 0
+changelog_format = %s (%ae)
+tag_suffix = -sat
 
 [katello-nightly-rhel6]
 disttag = .el6
