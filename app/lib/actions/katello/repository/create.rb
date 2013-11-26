@@ -13,21 +13,18 @@
 module Actions
   module Katello
     module Repository
-      class Sync < Actions::EntryAction
+      class Create < Actions::EntryAction
 
-        include Helpers::RemoteAction
-
-        input_format do
-          param :id, Integer
-        end
-
-        def plan(repo)
-          action_subject(repo)
-          plan_action(Pulp::Repository::Sync, pulp_id: repo.pulp_id)
+        def plan(repository)
+          repository.save!
+          org = repository.product.organization
+          org.default_content_view.update_cp_content(org.library)
+          repository.generate_metadata
+          action_subject(repository)
         end
 
         def humanized_name
-          _("Synchronize")
+          _("Create")
         end
 
         def cli_example
@@ -37,15 +34,10 @@ module Actions
             return ""
           end
         <<-EXAMPLE
-katello repo synchronize --org '#{task_input[:organization][:name]}'\\
-                         --product '#{task_input[:product][:name]}'\\
-                         --name '#{task_input[:repository][:name]}'
+katello repo create --org '#{task_input[:organization][:name]}'\\
+                    --product '#{task_input[:product][:name]}'\\
+                    --name '#{task_input[:repository][:name]}'
         EXAMPLE
-        end
-
-        def finalize
-          repo = ::Repository.find(input[:repository][:id])
-          repo.index_content
         end
 
       end

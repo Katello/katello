@@ -93,7 +93,7 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
 
     repository = @product.add_repo(params[:label], params[:name], params[:url],
                                    params[:content_type], params[:unprotected], gpg_key)
-
+    trigger(::Actions::Katello::Repository::Create, repository)
     respond_for_show(:resource => repository)
   end
 
@@ -123,7 +123,7 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
   api :DELETE, "/repositories/:id", "Destroy a repository"
   param :id, :identifier, :required => true
   def destroy
-    @repository.destroy
+    trigger(::Actions::Katello::Repository::Destroy, @repository)
 
     respond_for_destroy
   end
