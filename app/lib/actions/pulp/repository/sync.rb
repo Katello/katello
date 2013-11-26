@@ -11,9 +11,9 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Actions
-  module Katello
-    module Pulp
-      class RepositorySync < Actions::Action
+  module Pulp
+    module Repository
+      class Sync < Actions::Action
 
         include Helpers::RemoteAction
         include Helpers::PulpTask
