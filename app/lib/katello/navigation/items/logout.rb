@@ -15,7 +15,8 @@ module Navigation
   module Items
     class Logout < Navigation::Item
 
-      # temporoary hack - main_app helper that gives access to application’s routes inside Engine should be available but is not.
+      # temporoary hack - main_app helper that gives access to application's
+      # routes inside Engine should be available but is not.
       def main_app
         Rails.application.class.routes.url_helpers
       end

@@ -38,7 +38,7 @@ class FilterRule < ActiveRecord::Base
   end
 
   def parameters
-    write_attribute(:parameters, Hash.new) unless self[:parameters]
+    write_attribute(:parameters, {}) unless self[:parameters]
     self[:parameters]
   end
 

@@ -65,6 +65,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency "ui_alchemy-rails", '1.0.12'
 
   # Testing
+  gem.add_dependency "rubocop", "0.15.0"
   gem.add_dependency "factory_girl_rails", "~> 1.4.0"
   gem.add_dependency "minitest-tags"
   gem.add_dependency "minitest-predicates"

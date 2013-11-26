@@ -35,7 +35,6 @@ require "monkeys/string_to_bool"
 # ENGINE: Re-enable after fixing migrations in Katello proper
 #require File.expand_path("../engines/fort/lib/fort", File.dirname(__FILE__))
 
-
 module Katello
 
   require "katello/app_config"

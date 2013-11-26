@@ -102,7 +102,6 @@ class ResourceType < ActiveRecord::Base
     fail ResourceTypeNotFound.new(resource_type, TYPES.keys) unless TYPES.key? resource_type
   end
 
-
   if Katello.config.katello?
     TYPES = {
         :organizations => {:model => Katello::Organization, :name => _("Organizations"), :global => false},

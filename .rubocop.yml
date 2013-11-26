@@ -29,6 +29,24 @@ RaiseArgs:
 ClassLength:
   Enabled: false # agree on a limit and enable
 
+IndentationWidth:
+  Enabled: false
+
+EmptyLinesAroundBody:
+  Enabled: false
+
+Output:
+  Enabled: false
+
+CyclomaticComplexity:
+  Enabled: false
+
+BracesAroundHashParameters:
+  Enabled: false
+
+AlignHash:
+  Enabled: false
+
 # end TODO
 
 AllCops:
@@ -36,8 +54,9 @@ AllCops:
   Excludes:
     - script/rails
     - script/thin
-    - db/schema.rb
+    - db/migrate/20131014135042_katello_tables.rb
     - engines/bastion/node_modules/**
+    - engines/bastion/vendor/assets/dev-components/**
     # TODO: remove these other paths as we fix them
     - spec/**
     - test/**
