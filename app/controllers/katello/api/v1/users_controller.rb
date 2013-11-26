@@ -36,7 +36,6 @@ class Api::V1::UsersController < Api::V1::ApiController
       :add_role        => edit_test,
       :remove_role     => edit_test,
       :list_roles      => edit_test,
-      :report          => index_test,
       :sync_ldap_roles => create_test # expensive operation, set high perms to avoid DOS
     }
   end
@@ -152,27 +151,6 @@ class Api::V1::UsersController < Api::V1::ApiController
     @user.roles.delete(role)
     @user.save!
     respond_for_status :message => _("User '%{login}' unassigned from role '%{rolename}'") % { :login => @user.login, :rolename => role.name }
-  end
-
-  api :GET, "/users/report", "Reports all users in the system in a format according to 'Accept' headers.
-  Supported formats are plain text, html, csv, pdf"
-  def report
-    users_report = User.report_table(:all,
-                                     :only    => [:login, :created_at, :updated_at],
-                                     :include => { :roles => { :only => [:name] } })
-
-    respond_to do |format|
-      format.html do
-        render :text => users_report.as(:html), :type => :html
-        return
-      end
-      format.text { render :text => users_report.as(:text, :ignore_table_width => true) }
-      format.csv { render :text => users_report.as(:csv) }
-      format.pdf do
-        send_data(users_report.as(:prawn_pdf), :filename => "katello_users_report.pdf",
-                                               :type => "application/pdf")
-      end
-    end
   end
 
   # rhsm

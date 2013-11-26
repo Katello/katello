@@ -26,8 +26,6 @@ class Distributor < ActiveRecord::Base
 
   after_rollback :rollback_on_create, :on => :create
 
-  acts_as_reportable
-
   belongs_to :environment, :class_name => "Katello::KTEnvironment", :inverse_of => :distributors
 
   has_many :task_statuses, :class_name => "Katello::TaskStatus", :as => :task_owner, :dependent => :destroy

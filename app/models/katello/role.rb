@@ -17,8 +17,6 @@ class Role < ActiveRecord::Base
   include Katello::Authorization::Role
   include Katello::Glue::ElasticSearch::Role if Katello.config.use_elasticsearch
 
-  acts_as_reportable
-
   has_many :roles_users, :class_name => "Katello::RolesUser", :dependent => :destroy
   has_many :users, :through => :roles_users, :before_remove => :super_admin_check
   has_many :permissions, :class_name => "Katello::Permission", :dependent => :destroy, :inverse_of => :role,

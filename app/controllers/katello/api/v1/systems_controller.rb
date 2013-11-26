@@ -15,6 +15,8 @@ module Katello
 class Api::V1::SystemsController < Api::V1::ApiController
   respond_to :json
 
+  skip_before_filter :set_default_response_format, :only => :report
+
   before_filter :verify_presence_of_organization_or_environment, :only => [:create, :index, :activate]
   before_filter :find_optional_organization, :only => [:create, :hypervisors_update, :index, :activate, :report, :tasks]
   before_filter :find_only_environment, :only => [:create]
@@ -319,65 +321,32 @@ A hint for choosing the right value for the releaseVer param
           :methods => [:environment, :organization, :compliance_color, :compliant_until, :custom_info]
       )
     end
-    data.flatten!
 
-    transforms = lambda do |r|
-      r.organization    = r.organization.name
-      r.environment     = r.environment.name
-      r.created_at      = r.created_at.to_s
-      r.updated_at      = r.updated_at.to_s
-      r.compliant_until = r.compliant_until.to_s
-      r.custom_info     = r.custom_info.collect { |info| info.to_s }.join(", ")
-    end
-
-    system_report = Ruport::Data::Table.new(
+    system_report = Util::ReportTable.new(
         :data         => data,
-        :column_names => %w(name uuid location organization environment created_at updated_at compliance_color
-                            compliant_until custom_info),
-        :record_class => Ruport::Data::Record,
-        :transforms   => transforms
+        :column_names => ["name",
+                          "uuid",
+                          "location",
+                          "organization",
+                          "environment",
+                          "created_at",
+                          "updated_at",
+                          "compliance_color",
+                          "compliant_until",
+                          "custom_info"
+        ],
+        :transforms   => lambda { |r|
+          r.organization    = r.organization.name
+          r.environment     = r.environment.name
+          r.created_at      = r.created_at.to_s
+          r.updated_at      = r.updated_at.to_s
+          r.compliant_until = r.compliant_until.to_s
+          r.custom_info     = r.custom_info.collect { |info| info.to_s }.join(", ")
+        }
     )
-
-    pdf_options = { :pdf_format   => {
-        :page_layout => :portrait,
-        :page_size   => "LETTER",
-        :left_margin => 5
-    },
-                    :table_format => {
-                        :width         => 585,
-                        :cell_style    => { :size => 8 },
-                        :row_colors    => %w(FFFFFF F0F0F0),
-                        :column_widths => {
-                            0 => 100,
-                            1 => 100,
-                            2 => 50,
-                            3 => 40,
-                            4 => 75,
-                            5 => 60,
-                            6 => 60 }
-                    }
-    }
-
-    system_report.rename_column("created_at", "created")
-    system_report.rename_column("updated_at", "updated")
-    system_report.rename_column("compliance_color", "compliance")
-    system_report.rename_column("compliant_until", "compliant until")
-    system_report.rename_column("custom_info", "custom info")
-
     respond_to do |format|
-      format.html do
-        render :text => system_report.as(:html), :type => :html
-        return
-      end
-      format.text { render :text => system_report.as(:text, :ignore_table_width => true) }
+      format.text { render :text => system_report.as(:text) }
       format.csv { render :text => system_report.as(:csv) }
-      format.pdf do
-        send_data(
-            system_report.as(:prawn_pdf, pdf_options),
-            :filename => "%s_systems_report.pdf" % (Katello.config.katello? ? "katello" : "headpin"),
-            :type     => "application/pdf"
-        )
-      end
     end
   end
 

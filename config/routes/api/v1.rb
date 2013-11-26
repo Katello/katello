@@ -305,7 +305,6 @@ Katello::Engine.routes.draw do
       resources :errata, :only => [:index]
 
       resources :users do
-        get :report, :on => :collection
         get :sync_ldap_roles, :on => :collection
         resources :roles, :controller => :users, :only => [] do
           post :index, :on => :collection, :action => :add_role

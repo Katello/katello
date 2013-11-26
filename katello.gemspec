@@ -46,11 +46,6 @@ Gem::Specification.new do |gem|
   gem.add_dependency "apipie-rails", ">= 0.0.13"
   gem.add_dependency "maruku"
 
-  # Reporting
-  gem.add_dependency "pdf-reader"
-  gem.add_dependency "prawn"
-  gem.add_dependency "acts_as_reportable", ">=1.1.1"
-
   # Pulp
   gem.add_dependency "runcible", "1.0.7"
   gem.add_dependency "anemone"
