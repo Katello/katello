@@ -12,45 +12,47 @@
 
 module Actions
   module Katello
-    class RepositorySync < Actions::EntryAction
+    module Repository
+      class Sync < Actions::EntryAction
 
-      include Helpers::RemoteAction
+        include Helpers::RemoteAction
 
-      input_format do
-        param :id, Integer
-      end
-
-      def plan(repo)
-        action_subject(repo)
-        plan_action(Pulp::RepositorySync, pulp_id: repo.pulp_id)
-      end
-
-      def humanized_name
-        _("Synchronize")
-      end
-
-      def humanized_input
-        Helpers::Humanizer.new(self).input
-      end
-
-      def cli_example
-        if task_input[:organization].nil? ||
-              task_input[:product].nil? ||
-              task_input[:repository].nil?
-          return ""
+        input_format do
+          param :id, Integer
         end
+
+        def plan(repo)
+          action_subject(repo)
+          plan_action(Pulp::Repository::Sync, pulp_id: repo.pulp_id)
+        end
+
+        def humanized_name
+          _("Synchronize")
+        end
+
+        def humanized_input
+          Helpers::Humanizer.new(self).input
+        end
+
+        def cli_example
+          if task_input[:organization].nil? ||
+                task_input[:product].nil? ||
+                task_input[:repository].nil?
+            return ""
+          end
         <<-EXAMPLE
 katello repo synchronize --org '#{task_input[:organization][:name]}'\\
                          --product '#{task_input[:product][:name]}'\\
                          --name '#{task_input[:repository][:name]}'
         EXAMPLE
-      end
+        end
 
-      def finalize
-        repo = Repository.find(input[:repository][:id])
-        repo.index_content
-      end
+        def finalize
+          repo = ::Repository.find(input[:repository][:id])
+          repo.index_content
+        end
 
+      end
     end
   end
 end
