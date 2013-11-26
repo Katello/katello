@@ -10,27 +10,27 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-module Orchestrate
+module Actions
   module Katello
-    class SystemPackageRemove < Orchestrate::EntryAction
+    class SystemPackageInstall < Actions::EntryAction
 
       include Helpers::PulpPackagesPresenter
 
       def plan(system, packages)
         action_subject(system, :packages => packages)
-        plan_action(Pulp::ConsumerContentUninstall,
+        plan_action(Pulp::ConsumerContentInstall,
                     consumer_uuid: system.uuid,
                     type: 'rpm',
                     args: packages)
       end
 
       def humanized_name
-        _("Remove package")
+        _("Install package")
       end
 
       # Used by PulpPackagesPresenter to find the details about the task
       def pulp_subaction
-        Pulp::ConsumerContentUninstall
+        Pulp::ConsumerContentInstall
       end
 
       def cli_example
@@ -42,7 +42,7 @@ module Orchestrate
         <<-EXAMPLE
 katello system packages --org '#{task_input[:organization][:name]}'\\
                         --name '#{task_input[:system][:name]}'\\
-                        --remove '#{task_input[:packages].join(',')}'
+                        --install '#{task_input[:packages].join(',')}'
         EXAMPLE
       end
 

@@ -42,7 +42,7 @@ module Glue
     end
 
     def self.trigger(event_class, *args)
-      uuid, promise = ::Orchestrate.trigger(event_class, *args)
+      uuid, promise = ::Actions.trigger(event_class, *args)
       ::Logging.logger['glue'].debug("Started plan with #{uuid}")
       promise.wait
       ::Logging.logger['glue'].debug("Finished plan with #{uuid}")

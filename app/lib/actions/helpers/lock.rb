@@ -1,4 +1,4 @@
-module Orchestrate
+module Actions
   module Helpers
 
     # Helpers for locking the resource with the task

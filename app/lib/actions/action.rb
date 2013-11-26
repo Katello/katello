@@ -1,4 +1,4 @@
-module Orchestrate
+module Actions
   class Action < Dynflow::Action
 
     # This method says what data form input gets into the task details in Rest API
