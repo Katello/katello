@@ -36,17 +36,16 @@ module Katello
           yield if block_given?
           status = options[:status] || 200
 
-          render :template => "katello/api/v2/common/#{options[:response_type]}",
-                 :locals => { :action => action,
-                              :resource_name => resource_name,
-                              :object_root => options[:object_root],
+          render :template => "katello/api/v2/#{resource_name}/#{action}",
+                 :status => status,
+                 :locals => { :object_name => options[:object_name],
                               :root_name => options[:root_name] },
-                 :status => status
+                 :layout => "katello/api/v2/layouts/#{options[:layout]}"
         end
 
         def respond_with_template_resource(action, resource_name, options = {})
-          options[:response_type] = "resource"
-          options[:object_root] = params[:object_root]
+          options[:layout] = "resource"
+          options[:object_name] = params[:object_name]
           respond_with_template(action, resource_name, options) do
             @resource = options[:resource] unless options[:resource].nil?
             @resource = get_resource if @resource.nil?
@@ -54,7 +53,7 @@ module Katello
         end
 
         def respond_with_template_collection(action, resource_name, options = {})
-          options[:response_type] = "collection"
+          options[:layout] = "collection"
           options[:root_name] = params[:root_name] || "results"
           respond_with_template(action, resource_name, options) do
             @collection = options[:collection] unless options[:collection].nil?
