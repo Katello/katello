@@ -31,7 +31,6 @@ class KTEnvironment < ActiveRecord::Base
   self.table_name = "katello_environments"
   include Ext::LabelFromName
   include Ext::PermissionTagCleanup
-  acts_as_reportable
 
   # RAILS3458: before_destroys before associations. see http://tinyurl.com/rails3458
   before_destroy :is_deletable?

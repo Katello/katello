@@ -16,9 +16,9 @@ class Api::V1::DistributorsController < Api::V1::ApiController
   respond_to :json
 
   before_filter :verify_presence_of_organization_or_environment, :only => [:create, :index, :activate]
-  before_filter :find_optional_organization, :only => [:create, :hypervisors_update, :index, :activate, :report, :tasks]
+  before_filter :find_optional_organization, :only => [:create, :hypervisors_update, :index, :activate, :tasks]
   before_filter :find_only_environment, :only => [:create]
-  before_filter :find_environment, :only => [:create, :index, :report, :tasks]
+  before_filter :find_environment, :only => [:create, :index, :tasks]
   before_filter :find_distributor, :only => [:destroy, :show, :update,
                                              :subscribe, :unsubscribe, :subscriptions, :pools, :export]
   before_filter :find_task, :only => [:task_show]
@@ -45,7 +45,6 @@ class Api::V1::DistributorsController < Api::V1::ApiController
         :index         => index_distributors,
         :show          => read_distributor,
         :destroy       => delete_distributor,
-        :report        => index_distributors,
         :subscribe     => edit_distributor,
         :unsubscribe   => edit_distributor,
         :subscriptions => read_distributor,
@@ -151,77 +150,6 @@ class Api::V1::DistributorsController < Api::V1::ApiController
     cp_pools = @distributor.filtered_pools(match_distributor, match_installed, no_overlap)
 
     respond_for_index :collection => { :pools => cp_pools }
-  end
-
-  # TODO: break up this method
-  api :GET, "/environments/:environment_id/distributors/report", "Get distributor reports for the environment"
-  api :GET, "/organizations/:organization_id/distributors/report", "Get distributor reports for the organization"
-  def report # rubocop:disable MethodLength
-    data = @environment.nil? ? @organization.distributors.readable(@organization) : @environment.distributors.readable(@organization)
-
-    data = data.flatten.map do |r|
-      r.reportable_data(
-          :only    => [:uuid, :name, :location, :created_at, :updated_at],
-          :methods => [:environment, :organization, :compliance_color, :compliant_until, :custom_info]
-      )
-    end
-    data.flatten!
-
-    transforms = lambda do |r|
-      r.organization    = r.organization.name
-      r.environment     = r.environment.name
-      r.created_at      = r.created_at.to_s
-      r.updated_at      = r.updated_at.to_s
-      r.compliant_until = r.compliant_until.to_s
-      r.custom_info     = r.custom_info.collect { |info| info.to_s }.join(", ")
-    end
-
-    distributor_report = Ruport::Data::Table.new(
-        :data         => data,
-        :column_names => %w(name uuid location organization environment
-                            created_at updated_at compliance_color compliant_until custom_info),
-        :record_class => Ruport::Data::Record,
-        :transforms   => transforms
-    )
-
-    pdf_options = { :pdf_format   => {
-        :page_layout => :portrait,
-        :page_size   => "LETTER",
-        :left_margin => 5
-    },
-                    :table_format => {
-                        :width         => 585,
-                        :cell_style    => { :size => 8 },
-                        :row_colors    => %w(FFFFFF F0F0F0),
-                        :column_widths => {
-                            0 => 100,
-                            1 => 100,
-                            2 => 50,
-                            3 => 40,
-                            4 => 75,
-                            5 => 60,
-                            6 => 60 }
-                    }
-    }
-
-    distributor_report.rename_column("created_at", "created")
-    distributor_report.rename_column("updated_at", "updated")
-    distributor_report.rename_column("compliance_color", "compliance")
-    distributor_report.rename_column("compliant_until", "compliant until")
-    distributor_report.rename_column("custom_info", "custom info")
-
-    respond_to do |format|
-      format.html { render :text => distributor_report.as(:html), :type => :html }
-      format.text { render :text => distributor_report.as(:text, :ignore_table_width => true) }
-      format.csv { render :text => distributor_report.as(:csv) }
-      format.pdf do
-        send_data(
-            distributor_report.as(:prawn_pdf, pdf_options),
-            :filename => "%s_distributors_report.pdf" % (Katello.config.katello? ? "katello" : "headpin"),
-            :type     => "application/pdf"
-        )
-      end
-    end
   end
 
   api :GET, "/organizations/:organization_id/distributors/tasks", "List async tasks for the distributor"

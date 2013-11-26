@@ -42,8 +42,6 @@ module Katello
         include Authorization::Enforcement
         include Util::ThreadSession::UserModel
 
-        acts_as_reportable
-
         scope :hidden, where(:hidden => true)
         scope :visible, where(:hidden => false)
 

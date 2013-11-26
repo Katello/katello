@@ -31,8 +31,6 @@ class System < ActiveRecord::Base
 
   after_rollback :rollback_on_create, :on => :create
 
-  acts_as_reportable
-
   belongs_to :environment, :class_name => "Katello::KTEnvironment", :inverse_of => :systems
 
   has_many :task_statuses, :class_name => "Katello::TaskStatus", :as => :task_owner, :dependent => :destroy
@@ -233,6 +231,14 @@ class System < ActiveRecord::Base
     system_id = "id:#{self.id}"
     Tire::Configuration.client.delete "#{Tire::Configuration.url}/katello_system/_query?q=#{system_id}"
     Tire.index('katello_system').refresh
+  end
+
+  def reportable_data(options={})
+    hash = self.as_json(options.slice(:only, :except))
+    if options[:methods]
+      options[:methods].each{ |method| hash[method] = self.send(method) }
+    end
+    hash.with_indifferent_access
   end
 
   private
