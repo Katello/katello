@@ -143,6 +143,10 @@ class Api::ApiController < ::Api::BaseController
 
   end
 
+  def trigger(action, *args)
+    ::Actions.trigger(action, *args)
+  end
+
   # trigger dynflow action and return the dynflow task object
   def async_task(action, *args)
     uuid, _ = ::Actions.trigger(action, *args)

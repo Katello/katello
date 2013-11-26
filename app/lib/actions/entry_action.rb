@@ -29,5 +29,10 @@ module Actions
         lock(resource, resource_locks)
       end
     end
+
+    def humanized_input
+      Helpers::Humanizer.new(self).input
+    end
+
   end
 end
