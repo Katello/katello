@@ -1,99 +1,55 @@
-<form name="productForm" class="form" novalidate>
+<form name="productForm" class="form-horizontal" novalidate role="form">
 
-  <div class="control-group required" ng-class="{ 'error' : productForm.name.$invalid }">
-    <div class="label">
-      <label for="name" translate>Name</label>
-    </div>
-    <div class="input">
-      <input ng-model="product.name"
-             id="name"
-             name="name"
-             type="text"
-             tabindex="1"
-             autofocus
-             required/>
-      <span class="note error" ng-show="productForm.name.$invalid">
-        <ul><li ng-repeat="message in productForm.name.$error.messages">{{ message }}</li></ul>
-      </span>
-    </div>
+  <div alch-form-group label="{{ 'Name' | translate }}">
+    <input id="name"
+           name="name"
+           ng-model="product.name"
+           type="text"
+           tabindex="1"
+           autofocus
+           required/>
   </div>
 
-  <div class="control-group required" ng-class="{ 'error' : productForm.label.$invalid }">
-    <div class="label">
-      <label class="required" for="label" translate>Label</label>
-    </div>
-    <div class="input">
-      <input ng-model="product.label"
-             id="label"
-             name="label"
-             type="text"
-             tabindex="2"
-             required/>
-      <span class="note error" ng-show="productForm.label.$invalid">
-        <ul><li ng-repeat="message in productForm.label.$error.messages">{{ message }}</li></ul>
-      </span>
-    </div>
+  <div alch-form-group label="{{ 'Label' | translate }}">
+    <input id="label"
+           name="label"
+           ng-model="product.label"
+           type="text"
+           tabindex="2"
+           required/>
   </div>
 
-  <div class="control-group required" ng-class="{ 'error' : productForm.provider_id.$invalid }">
-    <div class="label">
-      <label class="required" for="provider_id" translate>Provider</label>
-    </div>
-    <div class="input">
-      <select required
-              id="provider_id"
-              tabindex="3"
-              name="provider_id"
-              ng-model="product.provider_id"
-              ng-options="provider.id as provider.name for provider in providers">
-      </select>
-      <a ui-sref="products.new.provider" translate>+ New Provider</a>
-      <span class="note error" ng-show="productForm.provider_id.$invalid">
-        <ul>
-          <li ng-repeat="message in productForm.provider_id.$error.messages">{{ message }}</li>
-        </ul>
-      </span>
-    </div>
+  <div alch-form-group label="{{ 'Provider' | translate }}">
+    <select id="provider_id"
+            name="provider_id"
+            ng-model="product.provider_id"
+            ng-options="provider.id as provider.name for provider in providers"
+            tabindex="3"
+            required>
+    </select>
+    <a ui-sref="products.new.provider" translate>+ New Provider</a>
   </div>
 
-  <div class="control-group">
-    <div class="label">
-      <label for="gpg_key_id" translate>GPG Key</label>
-    </div>
-    <div class="input">
-      <select tabindex="4"
-              id="gpg_key_id"
-              name="gpg_key_id"
-              ng-model="product.gpg_key_id"
-              ng-options="gpg_key.id as gpg_key.name for gpg_key in gpgKeys">
-      </select>
-    </div>
+  <div alch-form-group label="{{ 'GPG Key' | translate }}">
+    <select id="gpg_key_id"
+            name="gpg_key_id"
+            ng-model="product.gpg_key_id"
+            ng-options="gpg_key.id as gpg_key.name for gpg_key in gpgKeys"
+            tabindex="4">
+    </select>
   </div>
 
-  <div class="control-group">
-    <div class="label">
-      <label class="required" for="description" translate>Description</label>
-    </div>
-    <div class="input">
-      <textarea ng-model="product.description"
-                id="description"
-                name="description"
-                tabindex="5"
-                rows="10"
-                columns="40">
-      </textarea>
-      <span class="note error" ng-show="productForm.description.$invalid">
-        <ul>
-          <li ng-repeat="message in productForm.description.$error.messages">{{ message }}</li>
-        </ul>
-      </span>
-    </div>
+  <div alch-form-group label="{{ 'Description' | translate }}">
+    <textarea id="description"
+              name="description"
+              ng-model="product.description"
+              tabindex="5">
+    </textarea>
   </div>
 
-  <div alch-save-control
+  <div alch-form-buttons
        on-cancel="transitionTo('products.index')"
        on-save="save(product)"
-       invalid="productForm.$invalid"
        working="working">
   </div>
 

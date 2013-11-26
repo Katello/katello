@@ -7,25 +7,25 @@
     </span>
     <h4 translate>System Errata Management</h4>
 
-    <form name="systemContentForm" class="form" ng-hide="content.workingMode">
+    <form name="systemContentForm" ng-hide="content.workingMode">
 
-      <div>
-        <input name="label"
+      <div class="input-group">
+        <input class="form-control"
+               name="label"
                type="text"
                placeholder="{{ content.placeholder }}"
                ng-model="content.content"
                ng-disabled="content.confirm"
                required/>
-      </div>
 
-      <div>
-        <button class="btn btn-default"
-                translate
-                ng-click="confirmContentAction('install', content)"
-                ng-disabled="!systemContentForm.$valid || content.confirm">
-          Install
-        </button>
-
+        <span class="input-group-btn">
+          <button class="btn btn-default"
+                  translate
+                  ng-click="confirmContentAction('install', content)"
+                  ng-disabled="!systemContentForm.$valid || content.confirm">
+            Install
+          </button>
+        </span>
       </div>
 
       <div class="inline-confirmation" ng-show="content.confirm">
@@ -45,6 +45,5 @@
 
     </form>
 
-    <div class="divider"></div>
   </section>
 </div>
