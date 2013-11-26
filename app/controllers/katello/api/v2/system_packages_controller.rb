@@ -38,7 +38,7 @@ class Api::V2::SystemPackagesController < Api::V2::ApiController
   def install
     if params[:packages]
       packages = validate_package_list_format(params[:packages])
-      task     = async_task(Orchestrate::Katello::SystemPackageInstall, @system, packages)
+      task     = async_task(::Actions::Katello::SystemPackageInstall, @system, packages)
       respond_for_async :resource => task
       return
     end
@@ -74,7 +74,7 @@ class Api::V2::SystemPackagesController < Api::V2::ApiController
   def remove
     if params[:packages]
       packages = validate_package_list_format(params[:packages])
-      task     = async_task(Orchestrate::Katello::SystemPackageRemove, @system, packages)
+      task     = async_task(::Actions::Katello::SystemPackageRemove, @system, packages)
       respond_for_async :resource => task
       return
     end

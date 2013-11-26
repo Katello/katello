@@ -1,4 +1,4 @@
-module Orchestrate
+module Actions
   class World < Dynflow::World
     def trigger(action, *args, &block)
       uuid, f = super(action, *args, &block)

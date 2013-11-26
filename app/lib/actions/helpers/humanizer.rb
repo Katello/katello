@@ -1,4 +1,4 @@
-module Orchestrate
+module Actions
   module Helpers
 
     class Humanizer

@@ -113,8 +113,8 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
   api :POST, "/repositories/:id/sync", "Sync a repository"
   param :id, :identifier, :required => true, :desc => "repository id"
   def sync
-    uuid, feature = Orchestrate.trigger(Orchestrate::Katello::RepositorySync,
-                                        @repository)
+    uuid, feature = ::Actions.trigger(::Actions::Katello::RepositorySync,
+                                      @repository)
     render :json => { uuid: uuid }
   end
 
