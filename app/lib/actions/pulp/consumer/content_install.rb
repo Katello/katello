@@ -11,9 +11,9 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Actions
-  module Katello
-    module Pulp
-      class ConsumerContentUninstall < Actions::Action
+  module Pulp
+    module Consumer
+      class ContentInstall < Actions::Action
 
         include Helpers::RemoteAction
         include Helpers::PulpTask
@@ -25,9 +25,9 @@ module Actions
         end
 
         def run_pulp_task
-          pulp_extensions.consumer.uninstall_content(input[:consumer_uuid],
-                                                     input[:type],
-                                                     input[:args])
+          pulp_extensions.consumer.install_content(input[:consumer_uuid],
+                                                   input[:type],
+                                                   input[:args])
         end
 
       end
