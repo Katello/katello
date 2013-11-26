@@ -25,14 +25,15 @@ class Repository < ActiveRecord::Base
   include Glue if (Katello.config.use_cp || Katello.config.use_pulp)
   include Authorization::Repository
 
-  include Glue::Event
-  def destroy_event
-    Katello::Actions::RepositoryDestroy
-  end
-
-  def create_event
-    Katello::Actions::RepositoryCreate
-  end
+  # NG_TODO: update engines to use Actions::Katello::Repository actions
+  # include Glue::Event
+  # def destroy_event
+  #   Katello::Actions::RepositoryDestroy
+  # end
+  #
+  # def create_event
+  #   Katello::Actions::RepositoryCreate
+  # end
 
   include AsyncOrchestration
   include Ext::LabelFromName
