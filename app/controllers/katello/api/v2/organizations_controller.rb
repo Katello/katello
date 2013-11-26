@@ -57,7 +57,7 @@ class Api::V2::OrganizationsController < Api::V1::OrganizationsController
   param :url, String, :desc => "base url to perform repo discovery on"
   def repo_discover
     fail _("url not defined.") if params[:url].blank?
-    task = async_task(Orchestrate::Katello::RepositoryDiscover, params[:url])
+    task = async_task(::Actions::Katello::RepositoryDiscover, params[:url])
     respond_for_async :resource => task
   end
 
