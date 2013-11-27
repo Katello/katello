@@ -52,6 +52,10 @@ angular.module('Bastion.tasks').factory('Task',
             return { value: task.progress * 100, type: type }
         };
 
+        function schedulePoll() {
+            $timeout(function() { updateProgress(true); }, 1500);
+        }
+
         function updateProgress(periodic) {
             if(_.keys(searchParamsById).length == 0) {
                 return;
@@ -78,10 +82,10 @@ angular.module('Bastion.tasks').factory('Task',
                 }
                 finally {
                     // schedule the next update
-                    if(periodic) {
-                        $timeout(function() { updateProgress(periodic); }, 1500);
-                    };
+                    if(periodic) { schedulePoll(); };
                 }
+            }, function() {
+                if(periodic) { schedulePoll(); };
             });
         }
 
