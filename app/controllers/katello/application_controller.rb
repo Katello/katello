@@ -22,6 +22,7 @@ class ApplicationController < ::ApplicationController
   include KTLocale
   clear_helpers
 
+  helper Katello::Engine.helpers
   helper UIAlchemy::TranslationHelper
   helper_method :current_organization
   helper_method :render_correct_nav
