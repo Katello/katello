@@ -25,6 +25,7 @@ class ApplicationController < ::ApplicationController
 
   clear_helpers
 
+  helper Katello::Engine.helpers
   helper UIAlchemy::TranslationHelper
   helper ::ApplicationHelper
   helper ::TaxonomyHelper
