@@ -2,14 +2,14 @@ module Katello
 
   class Engine < ::Rails::Engine
 
-    initializer 'katello.mount_engine', :after=> :build_middleware_stack do |app|
+    initializer 'katello.mount_engine', :after => :build_middleware_stack do |app|
       app.routes_reloader.paths << "#{Katello::Engine.root}/config/routes/mount_engine.rb"
     end
 
     isolate_namespace Katello
 
     initializer "katello.simple_navigation" do |app|
-      SimpleNavigation::config_file_paths << File.expand_path("../../../config", __FILE__)
+      SimpleNavigation.config_file_paths << File.expand_path("../../../config", __FILE__)
     end
 
     initializer "katello.load_app_instance_data" do |app|
@@ -65,6 +65,7 @@ module Katello
       load "#{Katello::Engine.root}/lib/katello/tasks/delete_orphaned_content.rake"
       load "#{Katello::Engine.root}/lib/katello/tasks/regenerate_repo_metadata.rake"
       load "#{Katello::Engine.root}/lib/katello/tasks/reindex.rake"
+      load "#{Katello::Engine.root}/lib/katello/tasks/rubocop.rake"
     end
 
   end

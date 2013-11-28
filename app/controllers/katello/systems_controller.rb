@@ -642,7 +642,9 @@ class SystemsController < ApplicationController
     @system_groups = SystemGroup.where(:organization_id => current_organization).
         select("#{SystemGroup.table_name}.id, #{SystemGroup.table_name}.name").
         joins("LEFT OUTER JOIN #{SystemSystemGroup.table_name} ON #{SystemSystemGorup.table_name}.system_group_id = #{SystemGroup.table_name}.id").
-        group("#{SystemGroup.table_name}.id, #{SystemGroup.table_name}.name, #{SystemGroup.table_name}.max_systems having count(#{SystemSytemGroup}.system_id) < #{SystemGroup.table_name}.max_systems or #{SystemGroup.table_name}.max_systems = -1").
+        group("#{SystemGroup.table_name}.id, #{SystemGroup.table_name}.name, \
+              #{SystemGroup.table_name}.max_systems having count(#{SystemSytemGroup}.system_id) < #{SystemGroup.table_name}.max_systems \
+              or #{SystemGroup.table_name}.max_systems = -1").
         order(:name) - @system.system_groups
 
     render :partial => "system_groups", :locals => {:editable => @system.editable?}

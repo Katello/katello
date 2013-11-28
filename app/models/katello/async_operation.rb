@@ -88,6 +88,7 @@ class AsyncOperation
   end
 
   private
+
   def current_time
     (ActiveRecord::Base.default_timezone == :utc) ? Time.now.utc : Time.zone.now
     rescue NoMethodError

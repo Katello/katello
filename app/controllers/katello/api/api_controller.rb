@@ -141,5 +141,5 @@ class Api::ApiController < ::Api::BaseController
     subject_string.sub(/\/CN=/i, '')
   end
 
-  end
+end
 end

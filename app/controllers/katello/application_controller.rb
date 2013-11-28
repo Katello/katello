@@ -192,20 +192,6 @@ class ApplicationController < ::ApplicationController
     # ENGINE: Remove from this function when db:seed can populate an initial
     #         Katello organization, supderamin Role and assign to the user
     if !session[:current_organization_id]
-      if Katello::Role.all.length == 0
-        superadmin_role = Role.make_super_admin_role
-      end
-      if User.first.katello_roles.length == 0
-        user = User.first
-        user.katello_roles << Katello::Role.first
-        user.save!
-      end
-      if Katello::Organization.all.length == 0
-        first_org = Organization.find_or_create_by_name(
-          :name => 'ACME_Corporation',
-          :label => 'ACME_Corporation'
-        )
-      end
       @current_org = Katello::Organization.first
       return @current_org
     else

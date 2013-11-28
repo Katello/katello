@@ -9,10 +9,7 @@ require 'util/puppet'
 
 # variables which are taken from Puppet
 first_user_name = (un = Util::Puppet.config_value("user_name")).blank? ? 'admin' : un
-first_user_password = (pw = Util::Puppet.config_value("user_pass")).blank? ? 'admin' : pw
-first_user_email = (em = Util::Puppet.config_value("user_email")).blank? ? 'root@localhost' : em
 first_org_name = (org = Util::Puppet.config_value("org_name")).blank? ? 'ACME_Corporation' : org
-first_remote_id = first_user_name.gsub(/[^A-Za-z0-9_-]/, "_")
 
 def format_errors(model = nil)
   return '(nil found)' if model.nil?
@@ -24,19 +21,19 @@ superadmin_role = Katello::Role.make_super_admin_role
 
 # create read *everything* role and assign permissions to it
 reader_role = Katello::Role.make_readonly_role('Read Everything')
-raise "Unable to create reader role: #{format_errors reader_role}" if reader_role.nil? || reader_role.errors.size > 0
+fail "Unable to create reader role: #{format_errors reader_role}" if reader_role.nil? || reader_role.errors.size > 0
 reader_role.update_attributes(:locked => true)
 
 # update the Foreman 'admin' to be Katello super admin
 ::User.current = user_admin = ::User.admin
-raise "Foreman admin does not exist" unless user_admin
+fail "Foreman admin does not exist" unless user_admin
 # create a self role for user_admin, this is normally created during admin creation;
 # however, for the initial migrate/seed, it needs to be done manually
 user_admin.katello_roles.find_or_create_own_role(user_admin)
 user_admin.katello_roles << superadmin_role
 user_admin.remote_id = first_user_name
 user_admin.save
-raise "Unable to update admin user: #{format_errors(user_admin)}" if user_admin.errors.size > 0
+fail "Unable to update admin user: #{format_errors(user_admin)}" if user_admin.errors.size > 0
 
 unless hidden_user = ::User.hidden.first
   ::User.current = ::User.admin

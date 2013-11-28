@@ -139,8 +139,14 @@ module Navigation
     end
 
     def menu_contents
-      content_menu = [menu_subscriptions, menu_providers, menu_sync_management, menu_content_search,
-                              menu_content_view_definitions, menu_changeset_management]
+      content_menu = [
+        menu_subscriptions,
+        menu_providers,
+        menu_sync_management,
+        menu_content_search,
+        menu_content_view_definitions,
+        menu_changeset_management
+      ]
 
       {:key => :content,
        :name => _("Content"),

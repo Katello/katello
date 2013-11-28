@@ -1,3 +1,4 @@
+# rubocop:disable AccessModifierIndentation
 #
 # Copyright 2013 Red Hat, Inc.
 #
@@ -146,7 +147,7 @@ module Katello
         end
 
         def self.cp_oauth_header
-          raise Errors::UserNotSet, "unauthenticated to call a backend engine" if User.current.nil?
+          fail Errors::UserNotSet, "unauthenticated to call a backend engine" if User.current.nil?
           User.current.cp_oauth_header
         end
 
@@ -421,7 +422,7 @@ module Katello
           if role.superadmin? && role.users.length == 1
             message = _("Cannot dissociate user '%{login}' from '%{role}' role. Need at least one user in the '%{role}' role.") % {:login => login, :role => role.name}
             errors[:base] << message
-            raise ActiveRecord::RecordInvalid, self
+            fail ActiveRecord::RecordInvalid, self
           end
         end
 

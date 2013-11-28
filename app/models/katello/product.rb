@@ -224,7 +224,9 @@ class Product < ActiveRecord::Base
     query = Repository.in_environment(env.id).select(:product_id)
     query = query.enabled if enabled_only
     joins(:provider).where("#{Katello::Provider.table_name}.organization_id" => env.organization).
-        where("(#{Katello::Provider.table_name}.provider_type ='#{Provider::CUSTOM}') OR (#{Katello::Provider.table_name}.provider_type ='#{Provider::REDHAT}' AND #{Katello::Product.table_name}.id in (#{query.to_sql}))")
+        where("(#{Katello::Provider.table_name}.provider_type ='#{Provider::CUSTOM}') OR \
+              (#{Katello::Provider.table_name}.provider_type ='#{Provider::REDHAT}' AND \
+              #{Katello::Product.table_name}.id in (#{query.to_sql}))")
   end
 
   def validate_unique_name
