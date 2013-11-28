@@ -10,6 +10,7 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+module Katello
 class Lock < ActiveRecord::Base
 
   LINK_LOCK_NAME = :link_resource
@@ -62,7 +63,7 @@ class Lock < ActiveRecord::Base
 
   # returns a scope of the locks coliding with this one
   def coliding_locks
-    coliding_locks_scope = Lock.active.where('locks.uuid != ?', uuid)
+    coliding_locks_scope = Lock.active.where('katello_locks.uuid != ?', uuid)
     coliding_locks_scope = coliding_locks_scope.where(name:          name,
                                                       resource_id:  resource_id,
                                                       resource_type: resource_type)
@@ -190,4 +191,5 @@ class Lock < ActiveRecord::Base
     end
   end
 
+end
 end

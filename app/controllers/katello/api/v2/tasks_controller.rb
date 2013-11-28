@@ -96,7 +96,7 @@ class Api::V2::TasksController < Api::V2::ApiController
   private
 
   def search_tasks(search_params)
-    scope = Task.select('DISTINCT tasks.*, dynflow_execution_plans.*')
+    scope = Task.select('DISTINCT katello_tasks.*, dynflow_execution_plans.*')
     scope = ordering_scope(scope, search_params)
     scope = search_scope(scope, search_params)
     scope = active_scope(scope, search_params)
@@ -112,7 +112,7 @@ class Api::V2::TasksController < Api::V2::ApiController
       if search_params[:user_id].blank?
         raise HttpErrors::BadRequest, _("User search_params requires user_id to be specified")
       end
-      scope.joins(:locks).where(locks:
+      scope.joins(:locks).where(katello_locks:
                                 { name: Lock::OWNER_LOCK_NAME,
                                   resource_type: 'User',
                                   resource_id:   search_params[:user_id] })
@@ -120,7 +120,7 @@ class Api::V2::TasksController < Api::V2::ApiController
       if search_params[:resource_type].blank? || search_params[:resource_id].blank?
         raise HttpErrors::BadRequest, _("Resource search_params requires resource_type and resource_id to be specified")
       end
-      scope.joins(:locks).where(locks:
+      scope.joins(:locks).where(katello_locks:
                                 { resource_type: search_params[:resource_type],
                                   resource_id:   search_params[:resource_id] })
     when 'task'
@@ -154,7 +154,7 @@ class Api::V2::TasksController < Api::V2::ApiController
 
   def task_hash(task)
     return @tasks[task.uuid] if @tasks[task.uuid]
-    task_hash = Rabl.render(task, 'dynflow_task_show', :view_path => 'app/views/api/v2/tasks', :format => :hash)
+    task_hash = Rabl.render(task, 'dynflow_task_show', :view_path => "#{Katello::Engine.root}/app/views/katello/api/v2/tasks", :format => :hash, :scope => self)
     @tasks[task.uuid] = task_hash
     return task_hash
   end

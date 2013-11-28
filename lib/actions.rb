@@ -25,17 +25,15 @@ module Actions
   end
 
   def self.eager_load_paths
-    %W( #{Rails.root}/app/lib/actions
-        #{Rails.root}/app/lib/headpin/actions
-        #{Rails.root}/app/lib/katello/actions )
-
+    @eager_load_paths ||= []
   end
 
   def self.eager_load!
     eager_load_paths.each do |load_path|
-      matcher = /\A#{Regexp.escape(load_path)}\/(.*)\.rb\Z/
+      # todo: does the reloading work now?x
+      matcher = %r[A.*/actions/(.*)\.rb\Z]
       Dir.glob("#{load_path}/**/*.rb").sort.each do |file|
-        require_dependency file.sub(matcher, '\1')
+        require_dependency file
       end
     end
   end

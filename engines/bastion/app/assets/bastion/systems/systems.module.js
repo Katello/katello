@@ -99,7 +99,7 @@ angular.module('Bastion.systems').config(['$stateProvider', function ($stateProv
         collapsed: true,
         template: '<tasks-table  details-state="systems.details.tasks.details"' +
                   '              known-context="system,organization"' +
-                  '              resource-type="System"' +
+                  '              resource-type="Katello::System"' +
                   '              resource-id="{{ system.id }}"/>'
     })
     .state('systems.details.tasks.details', {

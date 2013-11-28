@@ -24,17 +24,17 @@ module Actions
 
         # @see Lock.exclusive!
         def exclusive_lock(resource)
-          ::Lock.exclusive!(resource, execution_plan_id)
+          ::Katello::Lock.exclusive!(resource, execution_plan_id)
         end
 
         # @see Lock.lock!
         def lock(resource, *lock_names)
-          ::Lock.lock!(resource, execution_plan_id, *lock_names)
+          ::Katello::Lock.lock!(resource, execution_plan_id, *lock_names)
         end
 
         # @see Lock.link!
         def link(resource)
-          ::Lock.link!(resource, execution_plan_id)
+          ::Katello::Lock.link!(resource, execution_plan_id)
         end
 
       end
