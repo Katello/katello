@@ -16,12 +16,12 @@
       = yield :header
 
   - if content_for?(:content)
-    %a.close{:href => "#", "data-close"=>"panel"} #{_("Close")}
+    %a.panel-close{:href => "#", "data-close"=>"panel"} #{_("Close")}
     #panel_main.scroll-pane
       = yield :content
 
   - if content_for?(:subcontent)
-    %a.close{:href => "#", "data-close"=>"subpanel"} #{_("Close")}
+    %a.panel-close{:href => "#", "data-close"=>"subpanel"} #{_("Close")}
     #subpanel_main.scroll-pane
       = yield :subcontent
 
@@ -35,5 +35,5 @@
 - if content_for?(:inline_javascript)
   %script{ :type => "text/javascript" }
     = yield :inline_javascript
-= yield :javascripts
+= yield :katello_javascripts
 = yield :stylesheets

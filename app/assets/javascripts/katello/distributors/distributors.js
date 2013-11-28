@@ -26,7 +26,7 @@ if (KT.panel_search_autocomplete !== undefined) {
     KT.panel_search_autocomplete = KT.panel_search_autocomplete.concat(["distribution.name:", "distribution.version:"]);
 }
 
-(function(){
+$(document).ready(function() {
     var options = { create : 'new_distributor' };
 
     if (window.env_select !== undefined) {
@@ -42,7 +42,7 @@ if (KT.panel_search_autocomplete !== undefined) {
         };
     }
     KT.panel.list.registerPage('distributors', options);
-}());
+});
 
 $(document).ready(function() {
 

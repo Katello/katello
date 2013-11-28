@@ -8,7 +8,7 @@
     = link_to _("Remove GPG Key"), gpg_key_path(@gpg_key.id), :confirm => _('Are you sure?'), :method => :delete, :class=>"remove_item", :remote=>true
 
 = content_for :navigation do
-  = render_menu(1..2, gpg_keys_navigation)
+  = render_subnav_menu(1..2, gpg_keys_navigation)
 
 = content_for :content do
   = help_tip_button('gpg_keys_edit-help')
