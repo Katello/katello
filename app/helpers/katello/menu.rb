@@ -15,7 +15,7 @@ module Menu
   def self.included(base)
     base.send :include, Navigation
     base.class_eval do
-      helper_method :render_menu
+      helper_method :render_subnav_menu
       helper_method :render_sublevel_menu
       helper_method :render_main_menu
       helper_method :render_main_sub_menu
@@ -23,7 +23,8 @@ module Menu
       helper_method :render_notifications_menu
     end
   end
-  def render_menu(level, items = nil, prune = true)
+
+  def render_subnav_menu(level, items = nil, prune = true)
     items ||= menu_main
     prune_menu(items) if prune
     render_navigation(:items => items, :expand_all => true, :level => level)
@@ -32,7 +33,7 @@ module Menu
   def render_main_menu
     prune = @main_nav.nil?
     @main_nav ||= menu_main
-    render_menu(1, @main_nav, prune)
+    render_subnav_menu(1, @main_nav, prune)
   end
 
   def render_admin_menu

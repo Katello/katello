@@ -2,11 +2,11 @@ module Katello
 
   class Engine < ::Rails::Engine
 
+    isolate_namespace Katello
+
     initializer 'katello.mount_engine', :after => :build_middleware_stack do |app|
       app.routes_reloader.paths << "#{Katello::Engine.root}/config/routes/mount_engine.rb"
     end
-
-    isolate_namespace Katello
 
     initializer "katello.simple_navigation" do |app|
       SimpleNavigation.config_file_paths << File.expand_path("../../../config", __FILE__)
@@ -64,6 +64,10 @@ module Katello
       # Model extensions
       ::User.send :include, Katello::Concerns::UserExtensions
       ::Organization.send :include, Katello::Concerns::OrganizationExtensions
+    end
+
+    initializer 'katello.register_plugin', :after => :disable_dependency_loading do
+      require 'katello/plugin'
     end
 
     rake_tasks do
