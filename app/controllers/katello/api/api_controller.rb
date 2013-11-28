@@ -141,7 +141,6 @@ class Api::ApiController < ::Api::BaseController
     subject_string.sub(/\/CN=/i, '')
   end
 
-  end
 
   def trigger(action, *args)
     ::Actions.trigger(action, *args)
@@ -153,4 +152,5 @@ class Api::ApiController < ::Api::BaseController
     return Task.find_by_uuid!(uuid)
   end
 
+end
 end

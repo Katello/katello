@@ -19,7 +19,7 @@ module Actions
         def add_object(object)
           case object
           when ActiveRecord::Base
-            key = object.class.name.underscore
+            key = object.class.name.underscore[/\w*\Z/]
             value = object_to_value(object)
             add(key, value)
           when Hash

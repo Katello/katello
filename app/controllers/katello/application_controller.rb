@@ -20,7 +20,7 @@ class ApplicationController < ::ApplicationController
   include Notifications::ControllerHelper
   include Profiling
   include KTLocale
-  clear_helpers
+  #clear_helpers
 
   helper Katello::Engine.helpers
   helper UIAlchemy::TranslationHelper

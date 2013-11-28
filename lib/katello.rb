@@ -28,7 +28,6 @@ require "uuidtools"
 require "delayed_job"
 
 require File.expand_path("../engines/bastion/lib/bastion", File.dirname(__FILE__))
-require "headpin/headpin"
 require "monkeys/string_to_bool"
 
 # ENGINE: Re-enable after fixing migrations in Katello proper
@@ -41,6 +40,5 @@ module Katello
   require "katello/engine"
   require "katello/load_configuration"
   require "katello/logging"
-  require "katello/actions/actions"
 
 end

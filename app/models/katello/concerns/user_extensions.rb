@@ -146,8 +146,12 @@ module Katello
         end
 
         def self.cp_oauth_header
-          raise Errors::UserNotSet, "unauthenticated to call a backend engine" if User.current.nil?
-          User.current.cp_oauth_header
+          raise Errors::UserNotSet, "unauthenticated to call a backend engine" if Thread.current[:cp_oauth_header].nil?
+          Thread.current[:cp_oauth_header]
+        end
+
+        def cp_oauth_header
+          { 'cp-user' => self.username }
         end
 
         # is the current user consumer? (rhsm)
