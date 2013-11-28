@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #
 # Copyright 2013 Red Hat, Inc.
 #
@@ -10,17 +11,24 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-module Navigation
-  module Items
-    class Tasks < Navigation::Item
+# rubocop:disable SymbolName
+module Katello
+class TasksController < Katello::ApplicationController
 
-      def initialize
-        @key           = :tasks
-        @display       = _("Tasks")
-        @authorization = lambda{ User.current.has_superadmin_role? }
-        @url           = all_tasks_path
-      end
-
-    end
+  def rules
+    {
+      :index => lambda { true },
+      :all   => lambda { true }
+    }
   end
+
+  def index
+    render 'bastion/layouts/application', :layout => false
+  end
+
+  def all
+    redirect_to action: 'index', :anchor => '/tasks'
+  end
+
+end
 end

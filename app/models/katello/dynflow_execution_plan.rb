@@ -10,6 +10,7 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+module Katello
 class DynflowExecutionPlan < ActiveRecord::Base
 
   self.table_name  = 'dynflow_execution_plans'
@@ -18,4 +19,5 @@ class DynflowExecutionPlan < ActiveRecord::Base
   def self.create_or_update(*args)
     raise "Read only model - it's managed by Dynflow persistence layer"
   end
+end
 end

@@ -1,4 +1,17 @@
+require 'dynflow/web_console'
+
 Katello::Engine.routes.draw do
+
+  dynflow_console = Dynflow::WebConsole.setup do
+    before do
+      # NG_TODO: propper authentication
+      User.current = User.first
+    end
+
+    set(:world) { Actions.world }
+  end
+
+  mount dynflow_console => "/dynflow"
 
   resources :system_groups do
     collection do

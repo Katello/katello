@@ -44,7 +44,7 @@ katello repo synchronize --org '#{task_input[:organization][:name]}'\\
         end
 
         def finalize
-          repo = ::Repository.find(input[:repository][:id])
+          repo = ::Katello::Repository.find(input[:repository][:id])
           repo.index_content
         end
 
