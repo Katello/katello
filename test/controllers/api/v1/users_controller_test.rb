@@ -13,14 +13,14 @@
 require 'katello_test_helper'
 
 module Katello
-class Api::V1::UsersControllerTest < ActionController::TestCase
-  def setup
-    setup_engine_routes
-  end
+  class Api::V1::UsersControllerTest < ActionController::TestCase
+    def setup
+      setup_engine_routes
+    end
 
-  def test_list_owners_username
-    assert_routing "/api/users/admin@mail.com/owners", :controller => "katello/api/v1/users",
-      :action => "list_owners", :login => "admin@mail.com"
+    def test_list_owners_username
+      assert_routing "/api/users/admin@mail.com/owners", :controller => "katello/api/v1/users",
+        :action => "list_owners", :login => "admin@mail.com", :apiv => "v1"
+    end
   end
-end
 end
