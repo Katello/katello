@@ -72,6 +72,21 @@ Requires(postun): initscripts coreutils sed
 Requires(pre): shadow-utils
 Requires(preun): chkconfig
 Requires(preun): initscripts
+
+#Pulp Requirements
+Requires: pulp-katello-plugins
+Requires: pulp-nodes-parent
+Requires: pulp-puppet-plugins
+Requires: pulp-rpm-plugins
+Requires: pulp-selinux
+Requires: pulp-server
+
+#Qpid Requirements
+Requires: qpid-cpp-client
+Requires: qpid-cpp-client-ssl
+Requires: qpid-cpp-server
+Requires: qpid-cpp-server-ssl
+
 Requires: candlepin-selinux
 Requires: createrepo >= 0.9.9-18%{?dist}
 Requires: elasticsearch
@@ -85,16 +100,6 @@ Requires: mongodb-server
 Requires: node-installer
 Requires: postgresql
 Requires: postgresql-server
-Requires: pulp-katello-plugins
-Requires: pulp-nodes-parent
-Requires: pulp-puppet-plugins
-Requires: pulp-rpm-plugins
-Requires: pulp-selinux
-Requires: pulp-server
-Requires: qpid-cpp-client
-Requires: qpid-cpp-client-ssl
-Requires: qpid-cpp-server
-Requires: qpid-cpp-server-ssl
 Requires: v8
 Requires: %{?scl_prefix}rubygems
 Requires: %{?scl_prefix}rubygem-rails 
@@ -135,15 +140,6 @@ Requires: %{?scl_prefix}rubygem-compass-rails
 Requires: %{?scl_prefix}rubygem-compass-960-plugin 
 Requires: %{?scl_prefix}rubygem-haml-rails 
 Requires: %{?scl_prefix}rubygem-ui_alchemy-rails = 1.0.12
-Requires: %{?scl_prefix}rubygem-factory_girl_rails => 1.4.0
-Requires: %{?scl_prefix}rubygem-factory_girl_rails < 1.5
-Requires: %{?scl_prefix}rubygem-minitest-tags 
-Requires: %{?scl_prefix}rubygem-minitest-predicates 
-Requires: %{?scl_prefix}rubygem-mocha => 0.14.0
-Requires: %{?scl_prefix}rubygem-mocha < 0.15
-Requires: %{?scl_prefix}rubygem-vcr 
-Requires: %{?scl_prefix}rubygem-webmock 
-Requires: %{?scl_prefix}rubygem-ruport
 BuildRequires: %{?scl_prefix}rubygems
 BuildArch: noarch
 Provides: rubygem(katello) = %{version}
