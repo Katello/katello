@@ -128,6 +128,12 @@ What's included in this repository:
  * script - various development scripts
  * actual Rails app of Katello
 
+| Branch          | Details                      |
+| --------------  | ---------------------------- |
+| **engine**      | current development branch   |
+| **KATELLO-X.X** | released versions of Katello |
+| **master**      | really old, don't use        |
+
 ## Contact & Resources
 
  * [Katello.org](http://katello.org)
