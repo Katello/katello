@@ -11,7 +11,7 @@ Katello::Engine.routes.draw do
   namespace :api do
 
     # new v2 routes that point to v2
-    scope "(:apiv)", :module => :v2, :defaults => {:apiv => 'v2'}, :apiv => /v1|v2/, :constraints => Katello::ApiVersionConstraint.new(:version => 2) do
+    scope "(:api_version)", :module => :v2, :defaults => {:api_version => 'v2'}, :api_version => /v1|v2/, :constraints => Katello::ApiVersionConstraint.new(:version => 2) do
 
       match '/' => 'root#resource_list'
 
