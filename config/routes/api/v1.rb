@@ -1,11 +1,10 @@
 require 'katello/api/constraints/activation_key_constraint'
-require 'katello/api/constraints/api_version_constraint'
 
 Katello::Engine.routes.draw do
 
   namespace :api do
 
-    scope "(:api_version)", :module => :v1, :defaults => {:api_version => 'v1'}, :api_version => /v1|v2/, :constraints => Katello::ApiVersionConstraint.new(:version => 1, :default => true) do
+    scope "(:api_version)", :module => :v1, :defaults => {:api_version => 'v1'}, :api_version => /v1|v2/, :constraints => ApiConstraints.new(:version => 1, :default => true) do
 
       match '/' => 'root#resource_list'
 
