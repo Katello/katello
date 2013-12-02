@@ -36,7 +36,7 @@ module Katello
                        elastic_url rest_client_timeout elastic_index
                        katello_version pulp email_reply_address
                        embed_yard_documentation logging system_lang profiling
-                       exception_paranoia hide_exceptions)
+                       exception_paranoia hide_exceptions dynflow)
                   )
 
           has_values :app_mode, %w(katello headpin)
@@ -57,6 +57,12 @@ module Katello
                 end
               end
             end
+          end
+
+          validate :dynflow do
+            is_boolean :remote
+            has_key :socket_path
+            is_type :pool_size, Integer
           end
 
           unless config.katello?
