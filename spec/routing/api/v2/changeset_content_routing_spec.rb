@@ -22,23 +22,23 @@ describe Api::V2::ChangesetsContentController do
     let(:cs_content_controller) { "katello/api/v1/changesets_content" }
 
     it "should route to the correct controller actions" do
-      { :method => :post, :path => "/api/changesets/1/products" }.must_route_to({:controller => cs_content_controller, :action => "add_product", :changeset_id => "1"})
-      { :method => :delete, :path => "/api/changesets/1/products/2" }.must_route_to({:controller => cs_content_controller, :action => "remove_product", :changeset_id => "1", :id => "2"})
+      { :method => :post, :path => "/api/changesets/1/products" }.must_route_to({:controller => cs_content_controller, :action => "add_product", :changeset_id => "1", :api_version => "v1"})
+      { :method => :delete, :path => "/api/changesets/1/products/2" }.must_route_to({:controller => cs_content_controller, :action => "remove_product", :changeset_id => "1", :id => "2", :api_version => "v1"})
 
-      { :method => :post, :path => "/api/changesets/1/packages" }.must_route_to({:controller => cs_content_controller, :action => "add_package", :changeset_id => "1"})
-      { :method => :delete, :path => "/api/changesets/1/packages/2" }.must_route_to({:controller => cs_content_controller, :action => "remove_package", :changeset_id => "1", :id => "2"})
+      { :method => :post, :path => "/api/changesets/1/packages" }.must_route_to({:controller => cs_content_controller, :action => "add_package", :changeset_id => "1", :api_version => "v1"})
+      { :method => :delete, :path => "/api/changesets/1/packages/2" }.must_route_to({:controller => cs_content_controller, :action => "remove_package", :changeset_id => "1", :id => "2", :api_version => "v1"})
 
-      { :method => :post, :path => "/api/changesets/1/errata" }.must_route_to({:controller => cs_content_controller, :action => "add_erratum", :changeset_id => "1"})
-      { :method => :delete, :path => "/api/changesets/1/errata/2" }.must_route_to({:controller => cs_content_controller, :action => "remove_erratum", :changeset_id => "1", :id => "2"})
+      { :method => :post, :path => "/api/changesets/1/errata" }.must_route_to({:controller => cs_content_controller, :action => "add_erratum", :changeset_id => "1", :api_version => "v1"})
+      { :method => :delete, :path => "/api/changesets/1/errata/2" }.must_route_to({:controller => cs_content_controller, :action => "remove_erratum", :changeset_id => "1", :id => "2", :api_version => "v1"})
 
-      { :method => :post, :path => "/api/changesets/1/repositories" }.must_route_to({:controller => cs_content_controller, :action => "add_repo", :changeset_id => "1"})
-      { :method => :delete, :path => "/api/changesets/1/repositories/2" }.must_route_to({:controller => cs_content_controller, :action => "remove_repo", :changeset_id => "1", :id => "2"})
+      { :method => :post, :path => "/api/changesets/1/repositories" }.must_route_to({:controller => cs_content_controller, :action => "add_repo", :changeset_id => "1", :api_version => "v1"})
+      { :method => :delete, :path => "/api/changesets/1/repositories/2" }.must_route_to({:controller => cs_content_controller, :action => "remove_repo", :changeset_id => "1", :id => "2", :api_version => "v1"})
 
-      { :method => :post, :path => "/api/changesets/1/distributions" }.must_route_to({:controller => cs_content_controller, :action => "add_distribution", :changeset_id => "1"})
-      { :method => :delete, :path => "/api/changesets/1/distributions/2" }.must_route_to({:controller => cs_content_controller, :action => "remove_distribution", :changeset_id => "1", :id => "2"})
+      { :method => :post, :path => "/api/changesets/1/distributions" }.must_route_to({:controller => cs_content_controller, :action => "add_distribution", :changeset_id => "1", :api_version => "v1"})
+      { :method => :delete, :path => "/api/changesets/1/distributions/2" }.must_route_to({:controller => cs_content_controller, :action => "remove_distribution", :changeset_id => "1", :id => "2", :api_version => "v1"})
 
-      { :method => :post, :path => "/api/changesets/1/content_views" }.must_route_to({:controller => cs_content_controller, :action => "add_content_view", :changeset_id => "1"})
-      { :method => :delete, :path => "/api/changesets/1/content_views/2" }.must_route_to({:controller => cs_content_controller, :action => "remove_content_view", :changeset_id => "1", :id => "2"})
+      { :method => :post, :path => "/api/changesets/1/content_views" }.must_route_to({:controller => cs_content_controller, :action => "add_content_view", :changeset_id => "1", :api_version => "v1"})
+      { :method => :delete, :path => "/api/changesets/1/content_views/2" }.must_route_to({:controller => cs_content_controller, :action => "remove_content_view", :changeset_id => "1", :id => "2", :api_version => "v1"})
     end
 
   end
