@@ -5,7 +5,7 @@ Katello::Engine.routes.draw do
 
   namespace :api do
 
-    scope "(:apiv)", :module => :v1, :defaults => {:apiv => 'v1'}, :apiv => /v1|v2/, :constraints => Katello::ApiVersionConstraint.new(:version => 1, :default => true) do
+    scope "(:api_version)", :module => :v1, :defaults => {:api_version => 'v1'}, :api_version => /v1|v2/, :constraints => Katello::ApiVersionConstraint.new(:version => 1, :default => true) do
 
       match '/' => 'root#resource_list'
 
