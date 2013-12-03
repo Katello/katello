@@ -25,5 +25,5 @@ group :development do
   gem 'minitest-rails'
 
   gem 'factory_girl_rails', "~> 1.4.0"
-  gem 'rubocop', "0.14.1"
+  gem 'rubocop', "~> 0.15.0"
 end
