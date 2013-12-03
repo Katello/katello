@@ -1,0 +1,37 @@
+<div class="details">
+
+  <h3 translate>Publish New Version</h3>
+
+  <p translate>
+    This latest version of the '{{ contentView.name }}' content view will be published to the
+    library. You can see this new version in the '{{ contentView.name }}' views datatable. From there
+    you are able to promote through any promotion path.
+  </p>
+
+  <header class="details-header">
+    <h3>Version Details</h3>
+  </header>
+
+  <form name="versionForm" class="form-horizontal" role="form" novalidate>
+
+    <div alch-form-group label="{{ 'Version' | translate }}">
+      <span>{{ contentView.versions.length + 1 }}</span>
+    </div>
+
+    <div alch-form-group label="{{ 'Name' | translate }}">
+      <textarea id="comment"
+                name="comment"
+                ng-model="version.description"
+                tabindex="1"
+                autofocus
+                required/>
+      </textarea>
+    </div>
+
+    <div alch-form-buttons
+         on-cancel="transitionTo('content-views-details.versions', {contentViewId: contentView.id})"
+         on-save="publish(version)">
+    </div>
+  </form>
+
+</div>

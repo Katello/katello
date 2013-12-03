@@ -1,0 +1,10 @@
+<div ng-repeat="path in paths">
+  <ul class="path-list">
+    <li class="path-list-item" ng-repeat="item in path">
+      <label class="path-list-item-label" ng-class="{ active: item.selected }" ng-mouseenter="hover = true" ng-mouseleave="hover = false">
+        <input type="checkbox" ng-model="item.selected" ng-show="item.selectable" ng-disabled="!item.selectable"/>
+        {{ item.name }}
+      </label>
+    </li>
+  </ul>
+</div>

@@ -26,11 +26,14 @@ angular.module('Bastion.content-views').factory('ContentView',
     ['$resource', 'Routes', 'CurrentOrganization',
     function ($resource, Routes, CurrentOrganization) {
 
-        return $resource(Routes.apiOrganizationContentViewsPath(CurrentOrganization) + '/:id/:action',
+        return $resource('/content_views/:id/:action',
             {id: '@id'},
             {
-                update: { method: 'PUT' },
-                query:  { method: 'GET', isArray: false}
+                update: {method: 'PUT'},
+                query:  {method: 'GET', isArray: false},
+                versions: {method: 'GET', isArray: false, params: {action: versions}},
+                publish: {method: 'POST', params: {action: publish}},
+                puppetModules: {method: 'GET', isArray: false, params: {action: puppet_modules}}
             }
         );
 

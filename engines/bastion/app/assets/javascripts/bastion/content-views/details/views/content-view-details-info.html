@@ -1,0 +1,26 @@
+<div class="details">
+
+  <div class="detail">
+    <span class="info-label" translate>Name</span>
+    <span class="info-value"
+          alch-edit-text="contentView.name"
+          on-save="save(contentView)"
+          readonly="contentView.readonly">
+    </span>
+  </div>
+
+  <div class="detail">
+    <span class="info-label" translate>Label</span>
+    <span class="info-value">{{ contentView.label }}</span>
+  </div>
+
+  <div class="detail">
+    <span class="info-label" translate>Description</span>
+    <span class="info-value"
+          alch-edit-textarea="contentView.description"
+          on-save="save(contentView)"
+          readonly="contentView.readonly">
+    </span>
+  </div>
+
+</div>

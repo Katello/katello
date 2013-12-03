@@ -20,6 +20,7 @@
 //= require "bastion/angular-gettext/angular-gettext"
 //= require "bastion/angular-blocks/angular-blocks"
 //= require_tree "../../../../vendor/assets/javascripts/bastion/angular-bootstrap"
+//= require "bastion/angular-animate/angular-animate"
 //= require "bastion/alchemy/alchemy"
 
 //= require "katello/common/katello.global"
@@ -59,6 +60,7 @@
 
 //= require "bastion/content-views/content-views.module"
 //= require_tree "./content-views"
+//= stub "bastion/content-views/content-view.factory"
 
 //= require "bastion/errata/errata.module"
 //= require_tree "./errata"

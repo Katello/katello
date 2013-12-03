@@ -9,24 +9,23 @@
  * NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
  * have received a copy of GPLv2 along with this software; if not, see
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
- */
+*/
 
 /**
- * @ngdoc directive
- * @name Bastion.widgets.directive:pathSelector
+ * @ngdoc object
+ * @name  Bastion.content-views.controller:ContentViewInfoController
+ *
+ * @requires $scope
+ * @requires ContentView
  *
  * @description
- *
- * @example
+ *   Provides the functionality specific to ContentViews for use with the Nutupane UI pattern.
+ *   Defines the columns to display and the transform function for how to generate each row
+ *   within the table.
  */
-angular.module('Bastion.widgets').directive('pathSelector',
-    [function() {
-    return {
-        restrict: 'AE',
-        scope: {
-            paths: '=pathSelector',
-        },
-        templateUrl: 'widgets/views/path-selector.html',
-        link: function(scope) {}
-    };
-}]);
+angular.module('Bastion.content-views').controller('ContentViewInfoController',
+    ['$scope', 'ContentView',
+    function($scope, ContentView) {
+
+    }]
+);

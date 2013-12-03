@@ -1,0 +1,69 @@
+<section class="details-section" ng-cloak alch-container-scroll>
+
+  <ol class="breadcrumb row">
+    <li><a ui-sref="content-views.index" translate>Content Views List</a></li>
+    <li translate>{{ contentView.name }} Detail</li>
+  </ol>
+
+  <header class="row details-header">
+    <h2 class="col-sm-12">{{ contentView.name }}</h2>
+    <div class="col-sm-12">
+      <span class="sub-header" translate>Created {{ contentView.created | date:'short' }} by {{ contentView.user }}</span>
+
+      <div class="fr">
+        <button class="btn btn-primary" ui-sref="content-views-details.publish">
+          <i class="icon-paste"></i>
+          {{ "Publish New Version" | translate }}
+        </button>
+
+        <button class="btn btn-default" ui-sref="content-views-details.clone">
+          <i class="icon-copy"></i>
+          {{ "Clone View" | translate }}
+        </button>
+
+        <button class="btn btn-default" ui-sref="content-views.index">
+          <i class="icon-trash"></i>
+          {{ "Remove View" | translate }}
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <nav class="details-navigation">
+    <ul>
+      <li ng-class="{active: isState('content-views-details.versions')}">
+        <a ui-sref="content-views-details.versions" translate>
+          Versions
+        </a>
+      </li>
+
+      <li ng-class="{active: stateIncludes('content-views-details.products')}">
+        <a ui-sref="content-views-details.products.list" translate>
+          Products and Repositories
+        </a>
+      </li>
+
+      <li ng-class="{active: stateIncludes('content-views-details.filters')}">
+        <a ui-sref="content-views-details.filters.list" translate>
+          Package/Errata Filters
+        </a>
+      </li>
+
+      <li ng-class="{active: isState('content-views-details.puppet-modules')}">
+        <a ui-sref="content-views-details.puppet-modules" translate>
+          Puppet Modules
+        </a>
+      </li>
+
+      <li ng-class="{active: isState('content-views-details.info')}">
+        <a ui-sref="content-views-details.info" translate>
+          Details
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <div ui-view></div>
+
+</section>

@@ -41,8 +41,8 @@ angular.module('alchemy').directive('alchFormButtons', function () {
             scope.isInvalid = function () {
                 var invalid = controller.$invalid;
 
-                angular.forEach(controller, function (value) {
-                    if (value.$error) {
+                angular.forEach(controller, function(value) {
+                    if (value && value.$error) {
                         if (value.$error.server) {
                             invalid = false;
                         }
