@@ -15,12 +15,12 @@
 
 //= require "alchemy/underscore"
 
-//= require "ui_alchemy/angular/angular"
-//= require "ui_alchemy/angular-resource/angular-resource"
-//= require "ui_alchemy/angular-sanitize/angular-sanitize"
-//= require "katello/angular-ui-router.js"
-//= require "ng-upload"
-//= require "katello/angular-gettext"
+//= require "angular/angular"
+//= require "angular-resource/angular-resource"
+//= require "angular-sanitize/angular-sanitize"
+//= require "angular-ui-router/angular-ui-router.js"
+//= require "ng-upload/ng-upload"
+//= require "angular-gettext/angular-gettext"
 
 //= require "ui_alchemy/alchemy/alchemy"
 
