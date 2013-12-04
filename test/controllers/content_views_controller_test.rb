@@ -10,9 +10,10 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require "minitest_helper"
+require "katello_test_helper"
 
-class ContentViewsControllerTest < MiniTest::Rails::ActionController::TestCase
+module Katello
+class ContentViewsControllerTest < ActionController::TestCase
   fixtures :all
 
   def self.before_suite
@@ -25,21 +26,24 @@ class ContentViewsControllerTest < MiniTest::Rails::ActionController::TestCase
 
     services = ["Candlepin", "Pulp", "ElasticSearch"]
     disable_glue_layers(services, models, true)
+    super
   end
 
   def setup
-    @org = organizations(:acme_corporation)
+    setup_controller_defaults
+    @org = katello_organizations(:acme_corporation)
 
-    login_user(User.find(users(:admin)), @org)
+    login_user(User.find(users(:admin)))
+    set_organization(katello_organizations(:acme_corporation))
 
-    @content_view_definition = content_view_definition_bases(:simple_cvd)
-    @content_view = content_views(:library_dev_view)
+    @content_view_definition = katello_content_view_definition_bases(:simple_cvd)
+    @content_view = katello_content_views(:library_dev_view)
     @content_view.content_view_definition = @content_view_definition
     @content_view.save!
   end
 
   test "DELETE destroy should be successful" do
-    content_view = content_views(:library_view)
+    content_view = katello_content_views(:library_view)
     content_view.content_view_definition = @content_view_definition
     content_view.save!
     # success notice created
@@ -65,10 +69,11 @@ class ContentViewsControllerTest < MiniTest::Rails::ActionController::TestCase
     post :refresh, :content_view_definition_id => @content_view_definition.id, :id => @content_view.id
 
     assert_response :success
-    assert_template :partial => 'content_view_definitions/views/_view'
+    assert_template :partial => 'katello/content_view_definitions/views/_view'
 
     view = ContentView.find_by_id(@content_view.id)
     refute_nil view.versions.last.task_status
     assert_equal view.reload.versions.last.version, 2
   end
+end
 end

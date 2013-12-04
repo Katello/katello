@@ -11,20 +11,23 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require "minitest_helper"
+require "katello_test_helper"
 
-class ProductsControllerTest < MiniTest::Rails::ActionController::TestCase
-  fixtures :all
+module Katello
+class ProductsControllerTest < ActionController::TestCase
 
   def setup
-    @org = organizations(:acme_corporation)
-    @environment = environments(:library)
-    @redhat_product = products(:redhat)
-    @custom_product = products(:fedora)
-    login_user(User.find(users(:admin)), @org)
     models = ["Organization", "KTEnvironment"]
     services = ["Pulp", "ElasticSearch", "Foreman", "Candlepin"]
     disable_glue_layers(services, models)
+
+    setup_controller_defaults
+    @org = katello_organizations(:acme_corporation)
+    @environment = katello_environments(:library)
+    @redhat_product = katello_products(:redhat)
+    @custom_product = katello_products(:fedora)
+    login_user(User.find(users(:admin)))
+    set_organization(@org)
 
     @pc = Candlepin::ProductContent.new({:content=>{:id=>'3'}}, @redhat_product.id)
     Product.any_instance.stubs(:productContent).returns([@pc])
@@ -62,4 +65,5 @@ class ProductsControllerTest < MiniTest::Rails::ActionController::TestCase
     assert_response :bad_request
   end
 
+end
 end

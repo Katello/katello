@@ -11,11 +11,12 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require "minitest_helper"
-require './test/support/content_view_definition_support'
+require "katello_test_helper"
+require 'support/content_view_definition_support'
 
+module Katello
 describe Api::V1::FiltersController do
-  fixtures :all
+
   before :suite do
     models = ["User", "Role", "UserOwnRole", "Permission", "Organization", "KTEnvironment",
               "Filter", "ContentViewDefinition",
@@ -25,8 +26,9 @@ describe Api::V1::FiltersController do
   end
 
   before do
+    setup_controller_defaults_api
     login_user(User.find(users(:admin)))
-    @filter = filters(:simple_filter)
+    @filter = katello_filters(:simple_filter)
     Product.any_instance.stubs(:productContent).returns([])
     Product.any_instance.stubs(:multiplier).returns(1)
     Product.any_instance.stubs(:attrs).returns({})
@@ -179,7 +181,7 @@ describe Api::V1::FiltersController do
 
   describe "list_products" do
     before do
-      @filter = filters(:populated_filter)
+      @filter = katello_filters(:populated_filter)
       @cvd = @filter.content_view_definition
       @organization = @cvd.organization
       @product = @cvd.products.first
@@ -219,7 +221,7 @@ describe Api::V1::FiltersController do
 
   describe "update_products" do
     before do
-      @filter = filters(:populated_filter)
+      @filter = katello_filters(:populated_filter)
       @cvd = @filter.content_view_definition
       @organization = @cvd.organization
       @product_id = @cvd.products.first.cp_id
@@ -258,7 +260,7 @@ describe Api::V1::FiltersController do
 
   describe "list_repositories" do
     before do
-      @filter = filters(:populated_filter)
+      @filter = katello_filters(:populated_filter)
       @cvd = @filter.content_view_definition
       @organization = @cvd.organization
       @repo = @cvd.repositories.first
@@ -297,7 +299,7 @@ describe Api::V1::FiltersController do
 
   describe "update_repositories" do
     before do
-      @filter = filters(:populated_filter)
+      @filter = katello_filters(:populated_filter)
       @cvd = @filter.content_view_definition
       @organization = @cvd.organization
       @repo_id = @cvd.repositories.first.id
@@ -335,4 +337,5 @@ describe Api::V1::FiltersController do
 
   end
 
+end
 end

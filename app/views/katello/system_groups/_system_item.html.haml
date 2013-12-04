@@ -1,0 +1,16 @@
+
+%tr{'data-id' => system.system.id, :class => cycle("", "alt")}
+  %td
+    %input.system_checkbox{:type => :checkbox, :name => "systems[#{system.system.id}]", 'data-id' => system.system.id,
+                           :disabled => ('disabled' if !@group.editable?)}
+    - if Katello::System.readable(system.system.organization)
+      = link_to system.system.name, systems_path(:anchor => "/systems/#{system.system.uuid}/info")
+    - else
+      = system.system.name
+  %td
+    = system.system.environment.name
+  - if Katello.config.katello?
+    %td
+      = system.system.content_view.try(:name)
+  %td
+    = system.created_at

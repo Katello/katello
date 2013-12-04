@@ -1,0 +1,47 @@
+@import "compass/reset";
+@import "katello/overrides";
+$login_background_top_color: lighten($primary_color, 10%) !default;
+$login_background_bottom-color: darken($primary_color, 10%) !default;
+
+$switcherformwidth: 300px;
+
+@import "alchemy/composites/login";
+@import "katello/widgets/search";
+@import "katello/widgets/scrollpane";
+@import "katello/katello_base";
+
+@import "jquery.jscrollpane";
+@import "jquery.jnotify";
+
+//card/form spinner
+.spinner {
+  margin: 0 auto;
+  margin-top: 10%;
+  height: 16px;
+  width: 16px;
+  display: block;
+  position: relative;
+  z-index: 1000;
+  background: $spinner_img;
+}
+
+.fl {
+  float: left;
+}
+
+//* ugly IE8 specific hacks for the border to look decent/*/
+@media \0screen {
+  .container {
+    padding: 0 !important;
+  }
+}
+
+body > footer {
+  display: none;
+}
+
+.login-version {
+  color:white;
+  margin-left: 15px;
+}
+@import "look";

@@ -11,19 +11,20 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require "minitest_helper"
+require "katello_test_helper"
 
-class Api::V1::RepositorySetsControllerTest < MiniTest::Rails::ActionController::TestCase
-  fixtures :all
+module Katello
+class Api::V1::RepositorySetsControllerTest < ActionController::TestCase
 
   def setup
     models = ["Organization", "KTEnvironment", "Changeset", "Product"]
     services = ["Pulp", "ElasticSearch"]
     disable_glue_layers(services, models)
-    @org = organizations(:acme_corporation)
-    @environment = environments(:library)
-    @redhat_product = products(:redhat)
-    @custom_product = products(:fedora)
+    setup_controller_defaults_api
+    @org = katello_organizations(:acme_corporation)
+    @environment = katello_environments(:library)
+    @redhat_product = katello_products(:redhat)
+    @custom_product = katello_products(:fedora)
     login_user(User.find(users(:admin)))
   end
 
@@ -87,4 +88,5 @@ class Api::V1::RepositorySetsControllerTest < MiniTest::Rails::ActionController:
     assert_response :error
   end
 
+end
 end

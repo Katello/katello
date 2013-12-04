@@ -17,7 +17,7 @@ class ContentNodeCapability < NodeCapability
   after_save :enable_pulp_node
 
   def validate_configuration
-    raise _("Oauth credentials cannot be blank") if self.configuration['oauth'].blank?
+    fail _("Oauth credentials cannot be blank") if self.configuration['oauth'].blank?
   end
 
   def enable_pulp_node

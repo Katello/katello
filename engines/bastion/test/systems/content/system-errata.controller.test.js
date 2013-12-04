@@ -63,29 +63,14 @@ describe('Controller: SystemErrataController', function() {
         expect($scope.errataTable).toBeTruthy();
     });
 
-    it("provides a way to open the errata details panel.", function() {
-        spyOn($scope, "transitionTo");
-        $scope.errataTable.transitionToErratum(mockErratum);
-        expect($scope.erratum).toBeTruthy();
-        expect($scope.transitionTo).toHaveBeenCalledWith('systems.details.errata.details',
-                                                         {errataId: mockErratum.errata_id});
-    });
-
-    it("provides a way to open event details.", function() {
-        spyOn($scope, "transitionTo");
-        $scope.openEventInfo(mockTask);
-        expect($scope.transitionTo).toHaveBeenCalledWith('systems.details.events.details',
-                                                         {eventId: mockTask.id});
-    });
-
     it("provide a way to apply errata", function() {
         spyOn(SystemErratum, "apply").andCallThrough();
         spyOn($scope.errataTable, "selectAll");
-        spyOn($scope, "openEventInfo");
+        spyOn($scope, "transitionTo");
         $scope.applySelected();
         expect(SystemErratum.apply).toHaveBeenCalledWith({uuid: mockSystem.uuid, errata_ids: [mockErratum.errata_id]},
                                                          jasmine.any(Function));
-        expect($scope.openEventInfo).toHaveBeenCalledWith(mockTask);
+        expect($scope.transitionTo).toHaveBeenCalledWith('systems.details.events.details', {eventId: mockTask.id});
         expect($scope.errataTable.selectAll).toHaveBeenCalledWith(false);
     });
 });

@@ -1,0 +1,90 @@
+<div class="row">
+  <form ng-submit="discover()" role="form" class="col-sm-6">
+    <div class="input-group">
+
+      <input type="url"
+             class="form-control input-lg"
+             placeholder="{{ 'URL to discover' | translate }}"
+             ng-model="discovery.url"
+             ng-disabled="discovery.pending"/>
+
+      <span class="input-group-btn input-group-lg">
+        <button ng-show="!discovery.pending"
+               ng-disabled="!discovery.url"
+               translate
+               type="submit"
+               class="btn btn-primary btn-lg">
+          Discover
+        </button>
+
+        <button type="button"
+                ng-disabled="discovery.working"
+                ng-show="discovery.pending"
+                ng-click="cancelDiscovery()"
+                class="btn btn-primary btn-lg">
+          <i class="icon-spinner icon-spin" ng-show="discovery.pending"></i>
+          {{ 'Cancel' | translate }}
+        </button>
+      </span>
+
+    </div>
+  </form>
+</div>
+
+<section class="nutupane-sub-section row">
+  <div class="details details-full">
+    
+    <h3 class="col-sm-12" translate>Results</h3>
+
+    <div class="col-sm-4">
+      <input type="text"
+             class="form-control"
+             placeholder="{{ 'Filter' | translate }}"
+             ng-model="discoveryTable.filterTerm"/>
+    </div>
+
+    <div class="col-sm-8 fr">
+      <div ng-hide="system.readonly" class="fr">
+         <button class="btn btn-primary"
+                 translate
+                 ng-disabled="discoveryTable.getSelected().length == 0"
+                 ng-click="setupSelected()">
+           Create Selected
+         </button>
+      </div>
+
+      <div class="fr select-action">
+        <span translate>{{ discoveryTable.numSelected }} Selected</span>
+        <span>|</span>
+        <span>
+          <a class="deselect-action"
+             translate
+             ng-class="{ 'disabled-link' : discoveryTable.numSelected == 0 }"
+             ng-click="discoveryTable.selectAll(false)">
+            Deselect All
+          </a>
+        </span>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="col-sm-12">
+    <table alch-table="discoveryTable" class="table table-striped">
+      <thead>
+        <tr alch-table-head row-select>
+          <th alch-table-column translate>Discovered URLs</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr alch-table-row
+            row-select="urlRow"
+            ng-repeat="urlRow in discoveryTable.rows | filter:discoveryTable.filterTerm">
+          <td alch-table-cell>{{ urlRow.path }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</section>

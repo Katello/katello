@@ -10,17 +10,15 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'minitest_helper'
-require './test/support/pulp/task_support'
+require 'katello_test_helper'
+require 'support/pulp/task_support'
 
-class GluePulpRepoTestBase < MiniTest::Rails::ActiveSupport::TestCase
-  extend ActiveRecord::TestFixtures
+module Katello
+class GluePulpRepoTestBase < ActiveSupport::TestCase
   include TaskSupport
 
-  fixtures :all
-
   def self.before_suite
-    @loaded_fixtures = load_fixtures
+    super
     configure_runcible
 
     services  = ['Candlepin', 'ElasticSearch', 'Foreman']
@@ -28,10 +26,7 @@ class GluePulpRepoTestBase < MiniTest::Rails::ActiveSupport::TestCase
                  'Organization', 'Product', 'ContentViewEnvironment']
     disable_glue_layers(services, models, true)
 
-    @@admin = User.find(@loaded_fixtures['users']['admin']['id'])
-    User.current = @@admin
-
-    @@fedora_17_x86_64 = Repository.find(@loaded_fixtures['repositories']['fedora_17_x86_64']['id'])
+    @@fedora_17_x86_64 = Repository.find(@loaded_fixtures['katello_repositories']['fedora_17_x86_64']['id'])
     @@fedora_17_x86_64.relative_path = '/test_path/'
     @@fedora_17_x86_64.feed = "file:///var/www/test_repos/zoo"
   end
@@ -184,7 +179,7 @@ class GluePulpPuppetRepoTest < GluePulpRepoTestBase
   def self.before_suite
     super
     VCR.insert_cassette('pulp/repository/puppet')
-    @@p_forge = Repository.find(@loaded_fixtures['repositories']['p_forge']['id'])
+    @@p_forge = Repository.find(@loaded_fixtures['katello_repositories']['p_forge']['id'])
     @@p_forge.relative_path = '/test_path/'
     @@p_forge.feed = "http://davidd.fedorapeople.org/repos/random_puppet/"
     @@p_forge.create_pulp_repo
@@ -197,7 +192,6 @@ class GluePulpPuppetRepoTest < GluePulpRepoTestBase
 
   def setup
     super
-    User.current = @@admin
     @p_forge = @@p_forge
     @p_forge.relative_path = '/test_path/'
   end
@@ -211,7 +205,7 @@ class GluePulpPuppetRepoTest < GluePulpRepoTestBase
       options[:wait] == false && options[:reindex] == false && options[:index_units].size > 0
     end
 
-    @filepath = File.join(Rails.root, "test/fixtures/puppet/puppetlabs-ntp-2.0.1.tar.gz")
+    @filepath = File.join(Katello::Engine.root, "test/fixtures/puppet/puppetlabs-ntp-2.0.1.tar.gz")
     @p_forge.upload_content(@filepath)
     assert_includes @p_forge.puppet_modules.map(&:name), "ntp"
   end
@@ -248,7 +242,7 @@ class GluePulpRepoContentsTest < GluePulpRepoTestBase
   end
 
   def test_sync_state
-    assert_equal ::PulpSyncStatus::FINISHED, @@fedora_17_x86_64.sync_state
+    assert_equal PulpSyncStatus::FINISHED, @@fedora_17_x86_64.sync_state
   end
 
   def test_successful_sync?
@@ -338,7 +332,7 @@ class GluePulpRepoOperationsTest < GluePulpRepoTestBase
     super
     VCR.insert_cassette('pulp/repository/operations')
 
-    @@fedora_17_x86_64_dev = Repository.find(@loaded_fixtures['repositories']['fedora_17_x86_64_dev']['id'])
+    @@fedora_17_x86_64_dev = Repository.find(@loaded_fixtures['katello_repositories']['fedora_17_x86_64_dev']['id'])
 
     @@fedora_17_x86_64.create_pulp_repo
     task_list = @@fedora_17_x86_64.sync
@@ -351,7 +345,7 @@ class GluePulpRepoOperationsTest < GluePulpRepoTestBase
   end
 
   def test_create_clone
-    staging = KTEnvironment.find(environments(:staging).id)
+    staging = KTEnvironment.find(katello_environments(:staging).id)
     clone = @@fedora_17_x86_64.create_clone(staging)
 
     assert_kind_of Repository, clone
@@ -361,7 +355,7 @@ class GluePulpRepoOperationsTest < GluePulpRepoTestBase
   end
 
   def test_clone_contents
-    dev = KTEnvironment.find(environments(:dev).id)
+    dev = KTEnvironment.find(katello_environments(:dev).id)
     @@fedora_17_x86_64_dev.relative_path = Repository.clone_repo_path(@@fedora_17_x86_64, dev, dev.default_content_view)
     @@fedora_17_x86_64_dev.create_pulp_repo
 
@@ -374,8 +368,8 @@ class GluePulpRepoOperationsTest < GluePulpRepoTestBase
   end
 
   def test_promote
-    library = KTEnvironment.find(environments(:library).id)
-    staging = KTEnvironment.find(environments(:staging).id)
+    library = KTEnvironment.find(katello_environments(:library).id)
+    staging = KTEnvironment.find(katello_environments(:staging).id)
 
     task_list = @@fedora_17_x86_64.promote(library, staging)
     assert_equal 5, task_list.length
@@ -398,8 +392,8 @@ class GluePulpRepoRequiresEmptyPromoteTest < GluePulpRepoTestBase
     super
     VCR.insert_cassette('pulp/repository/add_contents')
 
-    @@library = KTEnvironment.find(@loaded_fixtures['environments']['library']['id'])
-    @@staging = KTEnvironment.find(@loaded_fixtures['environments']['staging']['id'])
+    @@library = KTEnvironment.find(@loaded_fixtures['katello_environments']['library']['id'])
+    @@staging = KTEnvironment.find(@loaded_fixtures['katello_environments']['staging']['id'])
 
     @@fedora_17_x86_64.create_pulp_repo
     task_list = @@fedora_17_x86_64.sync
@@ -450,8 +444,8 @@ class GluePulpRepoRequiresSyncAndPromoteTest < GluePulpRepoTestBase
     super
     VCR.insert_cassette('pulp/repository/remove_contents')
 
-    @@library = KTEnvironment.find(@loaded_fixtures['environments']['library']['id'])
-    @@staging = KTEnvironment.find(@loaded_fixtures['environments']['staging']['id'])
+    @@library = KTEnvironment.find(@loaded_fixtures['katello_environments']['library']['id'])
+    @@staging = KTEnvironment.find(@loaded_fixtures['katello_environments']['staging']['id'])
 
     @@fedora_17_x86_64.create_pulp_repo
     task_list = @@fedora_17_x86_64.sync
@@ -484,4 +478,5 @@ class GluePulpRepoRequiresSyncAndPromoteTest < GluePulpRepoTestBase
     assert @@cloned_repo.delete_distribution("ks-Test Family-TestVariant-16-x86_64")
   end
 
+end
 end

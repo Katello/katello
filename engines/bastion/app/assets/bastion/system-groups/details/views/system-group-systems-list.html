@@ -1,0 +1,77 @@
+<section class="nutupane-sub-section" >
+
+  <div class="nutupane-bar">
+
+    <div class="col-sm-3">
+      <div class="input-group input-group">
+        <input type="text"
+               class="form-control"
+               placeholder="{{ 'Search...' | translate }}"
+               ng-model="systemsTable.searchTerm"
+               on-enter="systemsTable.search(systemsTable.searchTerm)"/>
+        <span class="input-group-btn">
+          <button ng-click="systemsTable.search(systemsTable.searchTerm)" class="btn btn-default" type="button"><i class="icon-search"></i></button>
+        </span>
+      </div>
+    </div>
+
+    <div class="col-sm-3 nutupane-info">
+      <span translate>Showing {{ systemsTable.rows.length }} of {{ systemsTable.resource.subtotal }} ({{ systemsTable.resource.total }} Total) System Groups</span>
+    </div>
+
+    <div class="fr">
+      <div class="fl nutupane-info">
+        <span translate>{{ systemsTable.numSelected }} Selected</span>
+        <span>|</span>
+        <a class="deselect-action"
+           translate
+           ng-class="{ 'disabled-link' : systemsTable.numSelected == 0 }"
+           ng-click="systemsTable.selectAll(false)">
+          Deselect All
+        </a>
+      </div>
+
+      <div ng-hide="group.readonly" class="nutupane-actions fr">
+         <button class="btn btn-primary"
+                 translate
+                 ng-disabled="systemsTable.getSelected().length == 0 || isRemoving"
+                 ng-click="removeSelected()">
+           Remove Selected
+         </button>
+      </div>
+    </div>
+  </div>
+
+  <div alch-table="systemsTable" class="nutupane">
+    <div alch-container-scroll control-width="systemsTable" alch-infinite-scroll="systemsTable.nextPage()">
+
+      <div class="loading-mask icon-3x" ng-show="systemsTable.working && systemsTable.rows.length == 0">
+        <i class="icon-spinner icon-spin"></i>
+        {{ "Loading..." | translate }}
+      </div>
+
+      <table ng-class="{'table-mask': systemsTable.working}" class="table table-full table-striped">
+        <thead>
+          <tr alch-table-head row-select>
+            <th alch-table-column="name" translate>Name</th>
+            <th alch-table-column="environment" translate>Environment</th>
+            <th alch-table-column="content_view" translate>Content View</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr alch-table-row ng-repeat="system in systemsTable.rows" row-select="system">
+            <td alch-table-cell >
+              <a ui-sref="systems.details.info({systemId: system.id})">
+                {{ system.name}}
+              </a>
+            </td>
+            <td alch-table-cell >{{ system.environment.name}}</td>
+            <td alch-table-cell >{{ system.content_view.name}}</td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>

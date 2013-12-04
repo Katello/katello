@@ -1,0 +1,26 @@
+- options = content_options(filter)
+
+= content_for :title do
+  #{_("New Rule")}
+
+= content_for :subcontent do
+
+  #rule_create
+
+    - if options.length > 0
+
+      = kt_form_for(Katello::FilterRule.new,
+        :url => content_view_definition_filter_rules_path(view_definition, filter),
+        :remote => true, :html => {:id => "filter_rule_form"}) do |form|
+
+        = form.select :content_type, options, {},
+          {:label => _("Filter on"), :size=>1, :tabindex => form.tabindex}
+
+        = form.submit _("Create"), :class => 'create_button'
+
+    - else
+
+      %p
+        = _("Please associate some content with this filter before creating a rule.")
+
+= render :template => "katello/layouts/tupane_layout"

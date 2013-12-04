@@ -1,0 +1,74 @@
+<section class="nutupane-details" ng-cloak alch-container-scroll>
+  <header class="details-header">
+    <h2 class="fl" translate>Bulk Actions</h2>
+
+    <div class="fr">
+      <button class="btn btn-danger"
+              translate
+              ng-disabled="system.readonly || removeSystems.workingMode"
+              ng-click="openModal()"
+              ng-hide="removeSystems.workingMode">
+        Remove Systems
+      </button>
+
+      <span ng-show="removeSystems.workingMode">
+        <i class="icon-spinner inline-icon icon-spin"></i>
+        <span>{{ "Removing Systems" | translate }}</span>
+      </span>
+
+      <button class="btn btn-default" ui-sref="systems.index">
+        <i class="icon-remove"></i>
+        {{ "Close" | translate }}
+      </button>
+
+      <div alch-modal="performRemoveSystems()" model="table"
+           modal-header='Remove {{ systemTable.getSelected().length }} Systems?'
+           modal-body='Are you sure you want to remove the {{ systemTable.getSelected().length }} systems(s) selected?'></div>
+
+    </div>
+  </header>
+
+  <nav class="details-navigation">
+    <ul>
+      <li>
+        <a class="clickable"
+           translate
+           ui-sref="systems.bulk-actions.packages"
+           ng-class="{active: isState('systems.bulk-actions.packages')}">
+          Packages
+        </a>
+      </li>
+
+      <li>
+        <a class="clickable"
+           translate
+           ui-sref="systems.bulk-actions.errata"
+           ng-class="{active: isState('systems.bulk-actions.errata')}">
+          Errata
+        </a>
+      </li>
+
+      <li>
+        <a class="clickable"
+           translate
+           ui-sref="systems.bulk-actions.groups"
+           ng-class="{active: isState('systems.bulk-actions.groups')}">
+          System Groups
+        </a>
+      </li>
+
+      <li>
+        <a class="clickable"
+           translate
+           ui-sref="systems.bulk-actions.subscriptions"
+           ng-class="{active: isState('systems.bulk-actions.subscriptions')}">
+          Subscriptions
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <div alch-alert success-messages="successMessages" error-messages="errorMessages"></div>
+
+  <div ui-view></div>
+</section>

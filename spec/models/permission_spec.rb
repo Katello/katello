@@ -10,8 +10,11 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'spec_helper'
+require 'katello_test_helper'
+
+module Katello
 describe Permission do
+  include OrganizationHelperMethods
   include OrchestrationHelper
   include AuthorizationHelperMethods
 
@@ -33,30 +36,34 @@ describe Permission do
   before(:each) do
     disable_user_orchestration
 
-    @some_role = Role.find_or_create_by_name(:name => 'some_role')
-    @repo_admin = Role.find_or_create_by_name(:name => 'repo_admin')
-    @super_admin = Role.find_or_create_by_name(:name => 'super_admin')
+    @some_role = Role.find_or_create_by_name!(:name => 'some_role')
+    @repo_admin = Role.find_or_create_by_name!(:name => 'repo_admin')
+    @super_admin = Role.find_or_create_by_name!(:name => 'super_admin')
 
     @magic_perm = Permission.create!(:role => @super_admin, :name => 'test1000',
                                 :resource_type=> ResourceType.find_or_create_by_name(:all),
                                 :all_tags => true, :all_verbs => true, :organization => nil)
 
-    @god = User.find_or_create_by_username(
-      :username => 'god',
+    @god = User.find_or_create_by_login!(
+      :login => 'god',
       :password => "password",
-      :email => 'god@somewhere.com',
-      :roles => [ @super_admin ])
+      :mail => 'god@somewhere.com',
+      :auth_source => auth_sources(:one),
+      :katello_roles => [ @super_admin ])
 
-    @admin = User.find_or_create_by_username(
-      :username => 'admin-custom',
+    @admin = User.find_or_create_by_login!(
+      :login => 'admin-custom',
       :password => "password",
-      :email => 'admin@somewhere.com',
-      :roles => [ @some_role ])
-    @user_bob = User.find_or_create_by_username(
-      :username => 'bob',
+      :mail => 'admin@somewhere.com',
+      :auth_source => auth_sources(:one),
+      :katello_roles => [ @some_role ])
+
+    @user_bob = User.find_or_create_by_login!(
+      :login => 'bob',
       :password => "password",
-      :email => 'bob@somewhere.com',
-      :roles => [ @repo_admin ])
+      :mail => 'bob@somewhere.com',
+      :auth_source => auth_sources(:one),
+      :katello_roles => [ @repo_admin ])
 
     allow @some_role, [:create], :organizations
     allow @some_role, [:new], :organizations
@@ -79,36 +86,36 @@ describe Permission do
   end
 
   it "should list tags properly" do
-    ResourceType.all.collect{|t| t.name}.sort.should_not == nil
+    ResourceType.all.collect{|t| t.name}.sort.wont_be_nil
   end
 
   it "should list verbs properly" do
-    Verb.verbs_for("repogroup").keys.should include  "create_repo"
+    Verb.verbs_for("repogroup").keys.must_include("create_repo")
   end
 
-  context "super_admin" do
-    it { @god.allowed_to?('create', 'organizations').should be_true }
-    it { @god.allowed_to?('create', 'providers').should be_true if Katello.config.katello? }
+  describe "super_admin" do
+    it { @god.allowed_to_in_katello?('create', 'organizations').must_equal(true) }
+    it { @god.allowed_to_in_katello?('create', 'providers').must_equal(true) if Katello.config.katello? }
   end
 
-  context "some_role" do
-    it { @admin.allowed_to?('create', 'organizations').should be_true }
-    it { @admin.allowed_to?('delete', 'organizations').should be_false }
-    it { @admin.allowed_to?('create', 'xxx').should be_false }
+  describe "some_role" do
+    it { @admin.allowed_to_in_katello?('create', 'organizations').must_equal(true) }
+    it { @admin.allowed_to_in_katello?('delete', 'organizations').must_equal(false) }
+    it { @admin.allowed_to_in_katello?('create', 'xxx').must_equal(false) }
   end
 
-  context "repo_admin" do
-    it { @user_bob.allowed_to?('create', 'organizations').should be_false }
-    it { @user_bob.allowed_to?("create_repo", "repogroup", @repogroup_internal).should be_true }
-    it { @user_bob.allowed_to?("create_repo", "repogroup", 10**7).should be_true } #global implies all tags = true
-    it { @user_bob.allowed_to?("create_repo", "repo-bad").should be_false }
-    it { @user_bob.allowed_to?("delete_repo", "repo", [@repogroup_internal, @repo_rhel6]).should be_true }
-    it { @user_bob.allowed_to?("delete_repo", "repo", [@repogroup_internal]).should be_true }
-    it { @user_bob.allowed_to?("create_repo", "repogroup", @repogroup_internal).should be_true }
-    it { @user_bob.allowed_to?("delete_repo", "repo", [@repogroup_internal]).should be_true }
+  describe "repo_admin" do
+    it { @user_bob.allowed_to_in_katello?('create', 'organizations').must_equal(false) }
+    it { @user_bob.allowed_to_in_katello?("create_repo", "repogroup", @repogroup_internal).must_equal(true) }
+    it { @user_bob.allowed_to_in_katello?("create_repo", "repogroup", 10**7).must_equal(true) } #global implies all tags = true
+    it { @user_bob.allowed_to_in_katello?("create_repo", "repo-bad").must_equal(false) }
+    it { @user_bob.allowed_to_in_katello?("delete_repo", "repo", [@repogroup_internal, @repo_rhel6]).must_equal(true) }
+    it { @user_bob.allowed_to_in_katello?("delete_repo", "repo", [@repogroup_internal]).must_equal(true) }
+    it { @user_bob.allowed_to_in_katello?("create_repo", "repogroup", @repogroup_internal).must_equal(true) }
+    it { @user_bob.allowed_to_in_katello?("delete_repo", "repo", [@repogroup_internal]).must_equal(true) }
   end
 
-  context "global org tests" do
+  describe "global org tests" do
     before do
       disable_org_orchestration
       @organization = Organization.create!(:name=>'test_organization', :label=> 'test_organization')
@@ -119,9 +126,9 @@ describe Permission do
          @magic_perm = Permission.create!(:role => @some_role, :all_verbs=> true, :name => 'test1000', :all_tags=> true,
                            :resource_type=> ResourceType.find_or_create_by_name(:all), :organization => nil)
       end
-      specify {Permission.last.all_types?.should be_true}
-      specify { @admin.allowed_to?(:foo_verb, :bar_resource_type, nil, @organization).should be_true}
-      specify { @admin.allowed_to?(:foo_verb, :bar_resource_type, nil, nil).should be_true}
+      specify {Permission.last.all_types?.must_equal(true)}
+      specify { @admin.allowed_to_in_katello?(:foo_verb, :bar_resource_type, nil, @organization).must_equal(true)}
+      specify { @admin.allowed_to_in_katello?(:foo_verb, :bar_resource_type, nil, nil).must_equal(true)}
     end
 
     describe "allow all verbs" do
@@ -132,12 +139,12 @@ describe Permission do
         @magic_perm = Permission.create!(:name => 'test1000', :role => @some_role, :all_verbs => true, :tag_values =>[@tag],
                                       :resource_type=> @res_type)
       end
-      specify {@admin.allowed_to?("do_magic_verb", @res_type_name).should be_true}
-      specify {@admin.allowed_to?("do_magic_verb", @res_type_name,nil, @organization).should be_true}
-      specify {@admin.allowed_to?("do_magic_verb", @res_type_name, @tag).should be_true}
-      specify {@admin.allowed_to?("do_magic_verb", @res_type_name, @tag, @organization).should be_true}
-      specify {@admin.allowed_to?("do_magic_verb", @res_type_name + "foo", 10 ** 6).should be_false}
-      specify {@admin.allowed_to?("do_magic_verb", @res_type_name + "foo", 10 ** 6, @organization).should be_false}
+      specify {@admin.allowed_to_in_katello?("do_magic_verb", @res_type_name).must_equal(true)}
+      specify {@admin.allowed_to_in_katello?("do_magic_verb", @res_type_name,nil, @organization).must_equal(true)}
+      specify {@admin.allowed_to_in_katello?("do_magic_verb", @res_type_name, @tag).must_equal(true)}
+      specify {@admin.allowed_to_in_katello?("do_magic_verb", @res_type_name, @tag, @organization).must_equal(true)}
+      specify {@admin.allowed_to_in_katello?("do_magic_verb", @res_type_name + "foo", 10 ** 6).must_equal(false)}
+      specify {@admin.allowed_to_in_katello?("do_magic_verb", @res_type_name + "foo", 10 ** 6, @organization).must_equal(false)}
     end
 
     describe "allow all tags" do
@@ -151,12 +158,12 @@ describe Permission do
                                          :all_tags=> true,
                                       :resource_type=> @res_type)
       end
-      specify{@admin.allowed_to?(@verb_name, @res_type_name,@foo_tag).should be_true}
-      specify{@admin.allowed_to?(@verb_name, @res_type_name,@foo_tag, @organization).should be_true}
-      specify{@admin.allowed_to?(@verb_name, @res_type_name + "foo",@foo_tag).should be_false}
-      specify{@admin.allowed_to?(@verb_name, @res_type_name + "foo",@foo_tag, @organization).should be_false}
-      specify{@admin.allowed_to?(@verb_name + "_foo", @res_type_name,@foo_tag).should be_false}
-      specify{@admin.allowed_to?(@verb_name + "_foo", @res_type_name,@foo_tag, @organization).should be_false}
+      specify{@admin.allowed_to_in_katello?(@verb_name, @res_type_name,@foo_tag).must_equal(true)}
+      specify{@admin.allowed_to_in_katello?(@verb_name, @res_type_name,@foo_tag, @organization).must_equal(true)}
+      specify{@admin.allowed_to_in_katello?(@verb_name, @res_type_name + "foo",@foo_tag).must_equal(false)}
+      specify{@admin.allowed_to_in_katello?(@verb_name, @res_type_name + "foo",@foo_tag, @organization).must_equal(false)}
+      specify{@admin.allowed_to_in_katello?(@verb_name + "_foo", @res_type_name,@foo_tag).must_equal(false)}
+      specify{@admin.allowed_to_in_katello?(@verb_name + "_foo", @res_type_name,@foo_tag, @organization).must_equal(false)}
     end
 
     describe "regular perms" do
@@ -170,11 +177,11 @@ describe Permission do
                                          :tag_values=> [@tag_name],
                                       :resource_type=> @res_type)
       end
-      specify{@admin.allowed_to?(@verb_name, @res_type_name,[@tag_name]).should be_true}
-      specify{@admin.allowed_to?(@verb_name, @res_type_name,[@tag_name], @organization).should be_true}
+      specify{@admin.allowed_to_in_katello?(@verb_name, @res_type_name,[@tag_name]).must_equal(true)}
+      specify{@admin.allowed_to_in_katello?(@verb_name, @res_type_name,[@tag_name], @organization).must_equal(true)}
       #global implies all tags = true
-      specify{@admin.allowed_to?(@verb_name, @res_type_name,[@tag_name + 11]).should be_true}
-      specify{@admin.allowed_to?(@verb_name, @res_type_name + "foo",[@tag_name], @organization).should be_false}
+      specify{@admin.allowed_to_in_katello?(@verb_name, @res_type_name,[@tag_name + 11]).must_equal(true)}
+      specify{@admin.allowed_to_in_katello?(@verb_name, @res_type_name + "foo",[@tag_name], @organization).must_equal(false)}
     end
 
     describe "regular perms no tags" do
@@ -186,16 +193,16 @@ describe Permission do
         @magic_perm = Permission.create!(:name => 'test1000', :role => @some_role, :verbs => [@verb],
                                       :resource_type=> @res_type)
       end
-      specify{@admin.allowed_to?(@verb_name, @res_type_name,nil).should be_true}
-      specify{@admin.allowed_to?(@verb_name, @res_type_name,nil, @organization).should be_true}
+      specify{@admin.allowed_to_in_katello?(@verb_name, @res_type_name,nil).must_equal(true)}
+      specify{@admin.allowed_to_in_katello?(@verb_name, @res_type_name,nil, @organization).must_equal(true)}
 
       #global implies all tags = true
-      specify{@admin.allowed_to?(@verb_name, @res_type_name,["1000"]).should be_true}
+      specify{@admin.allowed_to_in_katello?(@verb_name, @res_type_name,["1000"]).must_equal(true)}
     end
 
   end
 
-  context "non global org tests" do
+  describe "non global org tests" do
     before do
       disable_org_orchestration
       @organization = Organization.create!(:name=>'test_organization', :label=> 'test_organization')
@@ -206,9 +213,9 @@ describe Permission do
          @magic_perm = Permission.create!(:name => 'test1000', :role => @some_role, :all_tags=> true, :all_verbs=>true,
                          :resource_type=> ResourceType.find_or_create_by_name(:all), :organization => @organization)
       end
-      specify {Permission.last.all_types?.should be_true}
-      specify { @admin.allowed_to?(:foo_verb, :bar_resource_type, nil, @organization).should be_true}
-      specify { @admin.allowed_to?(:foo_verb, :bar_resource_type, nil, nil).should be_false}
+      specify {Permission.last.all_types?.must_equal(true)}
+      specify { @admin.allowed_to_in_katello?(:foo_verb, :bar_resource_type, nil, @organization).must_equal(true)}
+      specify { @admin.allowed_to_in_katello?(:foo_verb, :bar_resource_type, nil, nil).must_equal(false)}
     end
 
     describe "allow all verbs" do
@@ -219,12 +226,12 @@ describe Permission do
         @magic_perm = Permission.create!(:name => 'test1000', :role => @some_role, :all_verbs => true,:tag_values => [@tag_name],
                                       :resource_type=> @res_type, :organization => @organization)
       end
-      specify {@admin.allowed_to?("do_magic_verb", @res_type_name, nil).should be_false}
-      specify {@admin.allowed_to?("do_magic_verb", @res_type_name, nil, @organization).should be_true}
-      specify {@admin.allowed_to?("do_magic_verb", @res_type_name, @tag_name).should be_false}
-      specify {@admin.allowed_to?("do_magic_verb", @res_type_name, @tag_name, @organization).should be_true}
-      specify {@admin.allowed_to?("do_magic_verb", @res_type_name + "foo", 1222).should be_false}
-      specify {@admin.allowed_to?("do_magic_verb", @res_type_name + "foo", 1222, @organization).should be_false}
+      specify {@admin.allowed_to_in_katello?("do_magic_verb", @res_type_name, nil).must_equal(false)}
+      specify {@admin.allowed_to_in_katello?("do_magic_verb", @res_type_name, nil, @organization).must_equal(true)}
+      specify {@admin.allowed_to_in_katello?("do_magic_verb", @res_type_name, @tag_name).must_equal(false)}
+      specify {@admin.allowed_to_in_katello?("do_magic_verb", @res_type_name, @tag_name, @organization).must_equal(true)}
+      specify {@admin.allowed_to_in_katello?("do_magic_verb", @res_type_name + "foo", 1222).must_equal(false)}
+      specify {@admin.allowed_to_in_katello?("do_magic_verb", @res_type_name + "foo", 1222, @organization).must_equal(false)}
     end
 
     describe "allow all tags" do
@@ -238,15 +245,15 @@ describe Permission do
                                          :all_tags=> true,
                                       :resource_type=> @res_type, :organization => @organization)
       end
-      specify{@admin.allowed_to?(@verb_name, @res_type_name,@foo_tag).should be_false}
-      specify{@admin.allowed_to?(@verb_name, @res_type_name,@foo_tag, @organization).should be_true}
-      specify{@admin.allowed_to?(@verb_name, @res_type_name + "foo",@foo_tag).should be_false}
-      specify{@admin.allowed_to?(@verb_name, @res_type_name + "foo",@foo_tag, @organization).should be_false}
-      specify{@admin.allowed_to?(@verb_name + "_foo", @res_type_name,@foo_tag).should be_false}
-      specify{@admin.allowed_to?(@verb_name + "_foo", @res_type_name,@foo_tag, @organization).should be_false}
+      specify{@admin.allowed_to_in_katello?(@verb_name, @res_type_name,@foo_tag).must_equal(false)}
+      specify{@admin.allowed_to_in_katello?(@verb_name, @res_type_name,@foo_tag, @organization).must_equal(true)}
+      specify{@admin.allowed_to_in_katello?(@verb_name, @res_type_name + "foo",@foo_tag).must_equal(false)}
+      specify{@admin.allowed_to_in_katello?(@verb_name, @res_type_name + "foo",@foo_tag, @organization).must_equal(false)}
+      specify{@admin.allowed_to_in_katello?(@verb_name + "_foo", @res_type_name,@foo_tag).must_equal(false)}
+      specify{@admin.allowed_to_in_katello?(@verb_name + "_foo", @res_type_name,@foo_tag, @organization).must_equal(false)}
     end
 
-    describe "no_tag_verbs", :katello => true do
+    describe "no_tag_verbs(katello)" do
       before do
         @foo_tag = 0022
         @res_type_name = :providers
@@ -257,16 +264,16 @@ describe Permission do
         @magic_perm = Permission.create!(:name => 'test1000', :role => @some_role, :verbs => [@verb],
                                       :resource_type=> @res_type, :organization => @organization)
       end
-      specify{@admin.allowed_to?(@verb_name, @res_type_name,nil, @organization).should be_true}
-      specify{@admin.allowed_to?(@verb_name, @res_type_name,@foo_tag, @organization).should be_true}
+      specify{@admin.allowed_to_in_katello?(@verb_name, @res_type_name,nil, @organization).must_equal(true)}
+      specify{@admin.allowed_to_in_katello?(@verb_name, @res_type_name,@foo_tag, @organization).must_equal(true)}
 
-      specify{@admin.allowed_to?(@verb_name, @res_type_name,nil,nil).should be_false}
-      specify{@admin.allowed_to?(@verb_name, @res_type_name,@foo_tag, nil).should be_false}
+      specify{@admin.allowed_to_in_katello?(@verb_name, @res_type_name,nil,nil).must_equal(false)}
+      specify{@admin.allowed_to_in_katello?(@verb_name, @res_type_name,@foo_tag, nil).must_equal(false)}
     end
 
   end
 
-  context "org_id_create" do
+  describe "org_id_create" do
     before do
       disable_org_orchestration
       @organization = Organization.create!(:name=>'test_organization', :label=> 'test_organization')
@@ -276,11 +283,11 @@ describe Permission do
                                    :resource_type=> @res_type, :organization => @organization)
     end
     specify "should have the org embedded in the permission" do
-      @magic_perm.organization.should_not be_nil
+      @magic_perm.organization.wont_be_nil
     end
   end
 
-  context "all_tag tests" do
+  describe "all_tag tests" do
     before do
       disable_org_orchestration
       @organization = Organization.create!(:name=>'test_organization', :label=> 'test_organization')
@@ -295,26 +302,26 @@ describe Permission do
 
       specify "shouldn't be allowed without all_tags '" do
         @perm.all_verbs = true
-        @perm.all_types?.should be_true
-        @perm.save.should be_false
+        @perm.all_types?.must_equal(true)
+        @perm.save.must_equal(false)
       end
 
       specify "shouldn't be allowed without all_verbs '" do
         @perm.all_tags = true
-        @perm.all_types?.should be_true
-        @perm.save.should be_false
+        @perm.all_types?.must_equal(true)
+        @perm.save.must_equal(false)
       end
 
       specify "should be allowed with all_verbs and all_tags" do
         @perm.all_verbs = true
         @perm.all_tags = true
-        @perm.save.should be_true
+        @perm.save.must_equal(true)
       end
 
     end
   end
 
-  context "cleanup" do
+  describe "cleanup" do
     before do
       disable_org_orchestration
       @organization = Organization.create!(:name=>'test_organization_1', :label=> 'test_organization_1')
@@ -328,13 +335,13 @@ describe Permission do
       end
 
       specify "should result in removal of organization-specific tags" do
-        Organization.any_instance.stub(:being_deleted?).and_return(true)
+        Organization.any_instance.stubs(:being_deleted?).returns(true)
         @organization2.destroy
-        Permission.find_by_name('test1001').tag_values.should == [@organization.id]
+        Permission.find_by_name('test1001').tag_values.must_equal([@organization.id])
       end
     end
 
-    describe "after environment deletion", :katello => true do
+    describe "after environment deletion(katello)" do
       before do
         disable_env_orchestration
         @environment = create_environment(
@@ -343,13 +350,13 @@ describe Permission do
             {:name=>"test1001", :label=> "test101", :organization => @organization, :prior => @organization.library})
 
         p = Permission.new(:name => 'test1001', :role => @some_role, :tag_values=> [@environment.id, @environment2.id],
-           :resource_type=> ResourceType.find_or_create_by_name('environments'), :organization => @organization)
+           :resource_type=> ResourceType.find_or_create_by_name!('environments'), :organization => @organization)
         p.save!
       end
 
       specify "should result in removal of environment-specific tags" do
         @environment.destroy
-        Permission.find_by_name('test1001').tag_values.should == [@environment2.id]
+        Permission.find_by_name('test1001').tag_values.must_equal([@environment2.id])
       end
     end
 
@@ -360,12 +367,12 @@ describe Permission do
         @provider2 = Provider.create!({:name => 'test1001', :repository_url => 'https://something2.net',
                                       :provider_type => Provider::CUSTOM, :organization => @organization})
         Permission.create!(:name => 'test1001', :role => @some_role, :tag_values=> [@provider.id, @provider2.id],
-                                   :resource_type=> ResourceType.find_or_create_by_name('providers'), :organization => @organization)
+                                   :resource_type=> ResourceType.find_or_create_by_name!('providers'), :organization => @organization)
       end
 
       specify "should result in removal of provider-specific tags" do
         @provider.destroy
-        Permission.find_by_name('test1001').tag_values.should == [@provider2.id]
+        Permission.find_by_name('test1001').tag_values.must_equal([@provider2.id])
       end
     end
 
@@ -379,10 +386,12 @@ describe Permission do
                            :resource_type=> ResourceType.find_or_create_by_name('system_groups'), :organization => @organization)
       end
 
-      it "should result in removal of system-group-specific tags", :katello => true do #TODO headpin
+      it "should result in removal of system-group-specific tags(katello)" do #TODO headpin
         @group.destroy
-        Permission.find_by_name('test1001').tag_values.should == [@group2.id]
+        Permission.find_by_name('test1001').tag_values.must_equal([@group2.id])
       end
     end
   end
+
+end
 end

@@ -10,19 +10,23 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'spec_helper'
+require 'katello_test_helper'
+
+module Katello
 describe KTEnvironment do
   include AuthorizationHelperMethods
   include OrchestrationHelper
+  include OrganizationHelperMethods
 
   describe "perm tests" do
+
     before do
       disable_product_orchestration
       disable_org_orchestration
-      @organization = Organization.create!(:name=>'test_organization', :label=> 'test_organization')
-      @env_name =  'test_environment'
-      @environment = create_environment({:name=>@env_name, :label=> @env_name, :organization => @organization, :prior => @organization.library})
+      @organization = katello_organizations(:acme_corporation)
+      @environment = katello_environments(:dev)
     end
+
     describe "check on operations" do
 
       all_verb_methods = [:viewable_for_promotions?,
@@ -48,26 +52,25 @@ describe KTEnvironment do
       }
       permission_matrix.each_pair do |perm, true_ops|
         true_ops.each do |op|
-          it "user with #{perm} on environments should be allowed to #{op}", :katello => true do #TODO headpin
-            User.current = user_with_permissions{|u| u.can(perm, :environments,nil, @organization, :all_tags => true)}
-            KTEnvironment.find(@environment.id).send(op).should be_true
+          it "user with #{perm} on environments should be allowed to #{op} (katello)" do #TODO headpin
+            User.current = user_with_permissions { |u| u.can(perm, :environments, nil, @organization, :all_tags => true) }
+            KTEnvironment.find(@environment.id).send(op).must_equal(true)
           end
-          it "user without perms should not  be allowed", :katello => true do
+          it "user without perms should not  be allowed (katello)" do
             User.current = user_without_permissions
-            KTEnvironment.find(@environment.id).send(op).should_not be_true
+            KTEnvironment.find(@environment.id).send(op).wont_equal(true)
           end
         end
         false_ops = all_verb_methods - true_ops
         false_ops.each do |op|
-          it "user with #{perm} on environments should NOT be allowed to #{op}", :katello => true do
-            User.current = user_with_permissions{|u| u.can(perm, :environments,nil, @organization, :all_tags => true)}
-            KTEnvironment.find(@environment.id).send(op).should_not be_true
+          it "user with #{perm} on environments should NOT be allowed to #{op} (katello)" do
+            User.current = user_with_permissions{ |u| u.can(perm, :environments,nil, @organization, :all_tags => true) }
+            KTEnvironment.find(@environment.id).send(op).wont_equal(true)
           end
-          it "user without perms should not  be allowed", :katello => true do
+          it "user without perms should not  be allowed (katello)" do
             User.current = user_without_permissions
-            KTEnvironment.find(@environment.id).send(op).should_not be_true
+            KTEnvironment.find(@environment.id).send(op).wont_equal(true)
           end
-
         end
       end
     end
@@ -79,11 +82,12 @@ describe KTEnvironment do
       disable_product_orchestration
       disable_repo_orchestration
       disable_org_orchestration
-      Repository.any_instance.stub(:save_content_orchestration).and_return(true)
-      Repository.any_instance.stub(:clear_content_indices).and_return(true)
-      Repository.any_instance.stub(:destroy_repo_orchestration).and_return(true)
 
-      @env_name =  'test_environment'
+      Repository.any_instance.stubs(:save_content_orchestration).returns(true)
+      Repository.any_instance.stubs(:clear_content_indices).returns(true)
+      Repository.any_instance.stubs(:destroy_repo_orchestration).returns(true)
+
+      @env_name = 'test_environment'
 
       @organization = Organization.create!(:name=>'test_organization', :label=> 'test_organization')
       @provider = @organization.redhat_provider
@@ -93,51 +97,54 @@ describe KTEnvironment do
       @third_product = Product.create!(:name =>"prod3", :label=> "prrod3",:cp_id => '45678', :provider => @provider)
       @fourth_product = Product.create!(:name =>"prod4", :label => "prod4", :cp_id => '32683', :provider => @provider)
       @environment = create_environment({:name=>@env_name, :organization => @organization, :label=> @env_name, :prior => @organization.library})
+
       FactoryGirl.create(:repository, product: @first_product, environment: @environment,
                              content_view_version_id: @environment.content_view_versions.first.id)
       FactoryGirl.create(:repository, product: @third_product, environment: @environment,
                             content_view_version_id: @environment.content_view_versions.first.id)
     end
 
-    specify { @environment.name.should == @env_name }
-    #specify { @environment.prior.should be_nil }
-    specify { @environment.successor.should be_nil }
-    specify { @organization.environments.should include @environment }
-    specify { @environment.organization.should == @organization }
-    specify { @environment.products.size.should == 2 }
-    specify { @environment.products.should include @first_product }
-    specify { @environment.products.should include @third_product }
+    specify { @environment.prior.wont_be :nil? }
+    specify { @environment.successor.must_be :nil? }
+    specify { @organization.environments.must_include(@environment) }
+    specify { @environment.organization.must_equal(@organization) }
+    specify { @environment.products.size.must_equal(2) }
+    specify { @environment.products.must_include(@first_product) }
+    specify { @environment.products.must_include(@third_product) }
 
-    context "prior environment can be set" do
-      before { @new_env = create_environment({:name=>@environment.name + '-prior', :label=> @environment.name + '-prior',
+    describe "prior environment can be set" do
+      before do
+        @new_env = KTEnvironment.create!({
+          :name=>@environment.name + '-prior',
+          :label=> @environment.name + '-prior',
           :prior => @environment.id,
           :organization => @organization
-      })}
+        })
+      end
 
-      specify { @new_env.prior.should == @environment }
-      specify { @environment.successor.should == @new_env }
+      specify { @new_env.prior.must_equal(@environment) }
+      specify { @environment.successor.must_equal(@new_env) }
     end
 
     describe "update an environment" do
       specify "name should not be changed" do
         @environment.name = "changed_name"
-        @environment.should be_valid
+        @environment.must_be :valid?
       end
     end
 
-    context "delete an environment" do
+    describe "delete an environment" do
 
       it "should delete the environment" do
         id = @environment.id
         @environment.destroy
-        lambda{KTEnvironment.find(id)}.should raise_error(ActiveRecord::RecordNotFound)
+        lambda { KTEnvironment.find(id)}.must_raise(ActiveRecord::RecordNotFound)
       end
     end
-
-    context "available products" do
+    describe "available products" do
 
       before(:each) do
-        @prior_env = KTEnvironment.new({:name=>@env_name + '-prior', :label=> @env_name + '-prior', :prior => @environment.id})
+        @prior_env = KTEnvironment.new({:name=>@environment.name + '-prior', :label=> @environment.name + '-prior', :prior => @environment.id})
         @organization.environments << @prior_env
         @prior_env.save!
         @organization.save!
@@ -155,37 +162,37 @@ describe KTEnvironment do
       it "should return products from prior env" do
         @environment.prior = @prior_env.id
 
-        @environment.available_products.size.should == 1
-        @environment.available_products.should include @second_product
+        @environment.available_products.size.must_equal(1)
+        @environment.available_products.must_include(@second_product)
       end
 
       it "should return products from the library if there is no prior env" do
-        @environment.available_products.size.should == 2
-        @environment.available_products.should include @second_product
-        @environment.available_products.should include @fourth_product
+        @environment.available_products.size.must_equal(2)
+        @environment.available_products.must_include(@second_product)
+        @environment.available_products.must_include(@fourth_product)
       end
 
     end
 
-    context "create environment with invalid parameters" do
+    describe "create environment with invalid parameters" do
       it "should be invalid to create two envs with the same name within one organization" do
         @environment2 = KTEnvironment.new({:name => @env_name})
         @organization.environments << @environment2
 
-        @environment2.should_not be_valid
-        @environment2.errors[:name].should_not be_empty
+        @environment2.wont_be :valid?
+        @environment2.errors[:name].wont_be :empty?
       end
 
       it "should be invalid to create an environment without a prior" do
         @environment2 = KTEnvironment.new({:name => @env_name})
         @organization.environments << @environment2
 
-        @environment2.should_not be_valid
-        @environment2.errors[:prior].should_not be_empty
+        @environment2.wont_be :valid?
+        @environment2.errors[:prior].wont_be :empty?
       end
     end
 
-    context "environment path" do
+    describe "environment path" do
       before(:each) do
         @env1 = KTEnvironment.new({:name => @env_name + '-succ1', :label=>'env-succ1'})
         @env2 = KTEnvironment.new({:name => @env_name + '-succ2',:label=>'env-succ2'})
@@ -197,12 +204,12 @@ describe KTEnvironment do
         @env2.save!
       end
 
-      specify { @environment.path.size.should == 3 }
-      specify { @environment.path.should include @env1 }
-      specify { @environment.path.should include @env2 }
+      specify { @environment.path.size.must_equal(3) }
+      specify { @environment.path.must_include(@env1) }
+      specify { @environment.path.must_include(@env2) }
     end
 
-    context "Test priors" do
+    describe "Test priors" do
       before(:each) do
         @e1 = create_environment({:name=>@env_name + '-succ1', :label=> @env_name + '-succ1',
                   :organization => @organization, :prior => @environment})
@@ -214,11 +221,11 @@ describe KTEnvironment do
       end
 
       specify{ lambda {create_environment({:name=>@env_name + '-succ3', :label=> @env_name + '-succ3',
-                :organization => @organization, :prior => @e1})}.should raise_error(ActiveRecord::RecordInvalid)}
+                :organization => @organization, :prior => @e1})}.must_raise(ActiveRecord::RecordInvalid)}
 
     end
 
-    context "libraries" do
+    describe "libraries" do
       it "should be the only KTEnvironment that can have multiple priors" do
         @env1 = KTEnvironment.new({:name=>@env_name + '1', :label=> @env_name + '1',
                   :organization => @organization, :prior => @organization.library})
@@ -227,10 +234,10 @@ describe KTEnvironment do
         @env3 = KTEnvironment.new({:name=>@env_name + '3', :label=> @env_name + '3',
                   :organization => @organization, :prior => @organization.library})
 
-        @env1.should be_valid
-        @env2.should be_valid
-        @env3.should be_valid
-        @organization.library.should be_valid
+        @env1.must_be :valid?
+        @env2.must_be :valid?
+        @env3.must_be :valid?
+        @organization.library.must_be :valid?
       end
     end
 
@@ -240,21 +247,31 @@ describe KTEnvironment do
                 content_view_environments.where(:environment_id=>@environment.id).first
         already_promoted_content("123", "456")
         newly_promoted_content("123", "456", "789", "10")
-        Resources::Candlepin::Environment.should_receive(:add_content).with(@content_view_environment.cp_id,
+        Resources::Candlepin::Environment.expects(:add_content).with(@content_view_environment.cp_id,
                                                                                 Set.new(["789", "10"]))
         @content_view_environment.update_cp_content
       end
 
       def already_promoted_content(*content_ids)
         @already_promoted_content_ids = content_ids
-        Resources::Candlepin::Environment.stub(:find).and_return(
+        Resources::Candlepin::Environment.stubs(:find).returns(
           {:environmentContent => @already_promoted_content_ids.map {|id| {:contentId => id}}})
       end
 
       def newly_promoted_content(*content_ids)
-        promoted_repos = content_ids.map{|id| mock(:content_id => id, :enabled=>true) }
-        @content_view_environment.stub_chain(:content_view, :repos).and_return(promoted_repos)
+        promoted_repos = content_ids.map do |id|
+          repo = stub
+          repo.stubs(:content_id).returns(id)
+          repo.stubs(:enabled).returns(true)
+          repo
+        end
+
+        content_view = stub
+        content_view.stubs(:repos).returns(promoted_repos)
+        @content_view_environment.stubs(:content_view).returns(content_view)
       end
     end
+
   end
+end
 end

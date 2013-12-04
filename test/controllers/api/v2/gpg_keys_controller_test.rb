@@ -10,21 +10,20 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+require "katello_test_helper"
 
-require "minitest_helper"
-
-class Api::V2::GpgKeysControllerTest < Minitest::Rails::ActionController::TestCase
-
-  fixtures :all
+module Katello
+class Api::V2::GpgKeysControllerTest < ActionController::TestCase
 
   def self.before_suite
     models = ["GpgKey"]
     disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
+    super
   end
 
   def models
-    @organization = Organization.find(organizations(:acme_corporation))
-    @product = Product.find(products(:fedora).id)
+    @organization = Organization.find(katello_organizations(:acme_corporation))
+    @product = Product.find(katello_products(:fedora).id)
   end
 
   def permissions
@@ -33,10 +32,11 @@ class Api::V2::GpgKeysControllerTest < Minitest::Rails::ActionController::TestCa
   end
 
   def setup
+    setup_controller_defaults_api
     login_user(User.find(users(:admin)))
     User.current = User.find(users(:admin))
     @request.env['HTTP_ACCEPT'] = 'application/json'
-    @fake_search_service = @controller.load_search_service(FakeSearchService.new)
+    @fake_search_service = @controller.load_search_service(Support::SearchService::FakeSearchService.new)
     models
     permissions
   end
@@ -57,4 +57,5 @@ class Api::V2::GpgKeysControllerTest < Minitest::Rails::ActionController::TestCa
     end
   end
 
+end
 end

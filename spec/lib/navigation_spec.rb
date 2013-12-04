@@ -9,25 +9,24 @@
 # NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
-RSpec::Matchers.define :be_unique do
-  match do |actual|
-    actual == actual.uniq
-  end
-end
+
+require 'katello_test_helper'
 
 def check_menu_items(items)
   return if items.nil?
-  items.map{|i| i[:key]}.should be_unique
+  keys = items.map{|i| i[:key]}
+  keys.uniq.must_equal(keys)
   items.each do |item|
     check_menu_items(item[:items]) if item[:items] && item[:items].is_a?(Array)
   end
 end
 
+module Katello
 describe Navigation do
 
   before do
     AppConfig = double() unless defined?(AppConfig)
-    AppConfig.stub!(:katello?) { true }
+    AppConfig.stubs(:katello?) { true }
 
     @navigation_class = Class.new do
 
@@ -65,10 +64,11 @@ describe Navigation do
    :new_subscription_navigation,
    :promotion_packages_navigation
     ].each do |menu|
-    context "##{menu}", :katello => true do #TODO headpin
+    describe "##{menu} (katello)" do #TODO headpin
       subject { @navigation.send(menu) }
       specify { check_menu_items(subject) }
     end
   end
 
+end
 end

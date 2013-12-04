@@ -1,11 +1,11 @@
-require 'api/constraints/activation_key_constraint'
-require 'api/constraints/api_version_constraint'
+require 'katello/api/constraints/activation_key_constraint'
+require 'katello/api/constraints/api_version_constraint'
 
-Src::Application.routes.draw do
+Katello::Engine.routes.draw do
 
   namespace :api do
 
-    scope :module => :v1, :constraints => ApiVersionConstraint.new(:version => 1, :default => true) do
+    scope :module => :v1, :constraints => Katello::ApiVersionConstraint.new(:version => 1, :default => true) do
 
       match '/' => 'root#resource_list'
 
@@ -46,7 +46,12 @@ Src::Application.routes.draw do
             put :update_systems
           end
 
-          resource :packages, :action => [:create, :update, :destroy], :controller => :system_group_packages
+          resources :packages, :only => [:create], :controller => :system_group_packages do
+            collection do
+              put :update
+              delete :destroy
+            end
+          end
           resources :errata, :only => [:index, :create], :controller => :system_group_errata
         end
 
@@ -58,7 +63,7 @@ Src::Application.routes.draw do
         resources :tasks, :only => [:index]
         resources :providers, :only => [:index], :constraints => {:organization_id => /[^\/]*/}
 
-        scope :constraints => RegisterWithActivationKeyContraint.new do
+        scope :constraints => Katello::RegisterWithActivationKeyContraint.new do
           match '/systems' => 'systems#activate', :via => :post
         end
         resources :systems, :only => [:index, :create] do
@@ -149,7 +154,13 @@ Src::Application.routes.draw do
             match '/serials/:serial_id' => 'subscriptions#destroy_by_serial', :via => :delete
           end
         end
-        resource :packages, :action => [:create, :update, :destroy], :controller => :system_packages
+
+        resources :packages, :only => [:create], :controller => :system_packages do
+          collection do
+            put :update
+            delete :destroy
+          end
+        end
       end
 
       resources :distributors, :only => [:show, :destroy, :create, :index, :update] do
@@ -164,6 +175,7 @@ Src::Application.routes.draw do
           end
         end
       end
+      match "/distributor_versions" => "distributors#versions", :via => :get, :as => :distributors_versions
 
       resources :providers, :except => [:index] do
         resources :sync, :only => [:index, :create] do
@@ -264,7 +276,7 @@ Src::Application.routes.draw do
       end
 
       resources :environments, :only => [:show, :update, :destroy] do
-        scope :constraints => RegisterWithActivationKeyContraint.new do
+        scope :constraints => Katello::RegisterWithActivationKeyContraint.new do
           match '/systems' => 'systems#activate', :via => :post
         end
         resources :systems, :only => [:create, :index] do
@@ -293,7 +305,6 @@ Src::Application.routes.draw do
       resources :errata, :only => [:index]
 
       resources :users do
-        get :report, :on => :collection
         get :sync_ldap_roles, :on => :collection
         resources :roles, :controller => :users, :only => [] do
           post :index, :on => :collection, :action => :add_role
@@ -318,7 +329,7 @@ Src::Application.routes.draw do
       match "/version" => "ping#version", :via => :get
 
       # subscription-manager support
-      scope :constraints => RegisterWithActivationKeyContraint.new do
+      scope :constraints => Katello::RegisterWithActivationKeyContraint.new do
         match '/consumers' => 'systems#activate', :via => :post
       end
       match '/hypervisors' => 'systems#hypervisors_update', :via => :post
@@ -329,7 +340,7 @@ Src::Application.routes.draw do
       match '/environments/:environment_id/consumers' => 'systems#index', :via => :get
       match '/environments/:environment_id/consumers' => 'systems#create', :via => :post
       match '/consumers/:id' => 'systems#regenerate_identity_certificates', :via => :post
-      match '/users/:username/owners' => 'users#list_owners', :via => :get, :constraints => {:username => /\S+/}
+      match '/users/:login/owners' => 'users#list_owners', :via => :get, :constraints => {:login => /\S+/}
       match '/consumers/:id/certificates' => 'candlepin_proxies#get', :via => :get, :as => :proxy_consumer_certificates_path
       match '/consumers/:id/release' => 'candlepin_proxies#get', :via => :get, :as => :proxy_consumer_releases_path
       match '/consumers/:id/compliance' => 'candlepin_proxies#get', :via => :get, :as => :proxy_consumer_compliance_path
@@ -365,5 +376,4 @@ Src::Application.routes.draw do
     end # v1 scope
 
   end # '/api' namespace
-
 end

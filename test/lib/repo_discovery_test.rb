@@ -10,12 +10,13 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'minitest_helper'
+require 'katello_test_helper'
 
-class FileRepoDiscoveryTest < MiniTest::Rails::ActiveSupport::TestCase
+module Katello
+class FileRepoDiscoveryTest < ActiveSupport::TestCase
 
   def test_run
-    base_url = "file://#{File.expand_path(File.dirname(__FILE__))}".gsub("lib", "fixtures/")
+    base_url = "file://#{Katello::Engine.root}/test/fixtures/"
 
     rd = RepoDiscovery.new(base_url)
     found = []
@@ -28,4 +29,5 @@ class FileRepoDiscoveryTest < MiniTest::Rails::ActiveSupport::TestCase
     assert_equal found.first, base_url + 'test_repos/zoo'
   end
 
+end
 end

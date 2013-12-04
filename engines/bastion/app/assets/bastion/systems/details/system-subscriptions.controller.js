@@ -16,7 +16,7 @@
  * @name  Bastion.subscriptions.controller:SystemSubscriptionsController
  *
  * @requires $scope
- * @requires i18nFilter
+ * @requires gettext
  * @requires System
  * @requires Subscriptions
  * @requires Nutupane
@@ -25,8 +25,8 @@
  *   Provides the functionality for the system details action pane.
  */
 angular.module('Bastion.systems').controller('SystemSubscriptionsController',
-    ['$scope', 'i18nFilter', 'SystemSubscription', 'System', 'Nutupane', 'SystemsHelper',
-    function($scope, i18nFilter, SystemSubscription, System, Nutupane, SystemsHelper) {
+    ['$scope', 'gettext', 'SystemSubscription', 'System', 'Nutupane', 'SystemsHelper',
+    function($scope, gettext, SystemSubscription, System, Nutupane, SystemsHelper) {
         var currentSubscriptionsNutupane,
             availableSubscriptionsNutupane,
             successHandler,
@@ -35,12 +35,13 @@ angular.module('Bastion.systems').controller('SystemSubscriptionsController',
 
         successHandler = function() {
             refresh();
-            $scope.$parent.saveSuccess = true;
+            $scope.successMessages.push(gettext('Subscriptions updated.'));
         };
 
         errorHandler = function(error) {
-            $scope.$parent.saveError = true;
-            $scope.$parent.errors = error.data["errors"];
+            _.each(error.data["errors"], function(errorMessage) {
+                $scope.errorMessages.push(gettext('An error occurred updating the subscription: ') + errorMessage);
+            });
             availableSubscriptionsNutupane.table.working = false;
             currentSubscriptionsNutupane.table.working = false;
         };
@@ -121,7 +122,7 @@ angular.module('Bastion.systems').controller('SystemSubscriptionsController',
 
         $scope.availableSubscriptionsTable.formatAvailableDisplay = function(subscription) {
             var available = subscription.available;
-            available = available < 0 ? i18nFilter('Unlimited') : available;
+            available = available < 0 ? gettext('Unlimited') : available;
             subscription.availableDisplay = available;
             return subscription;
         };

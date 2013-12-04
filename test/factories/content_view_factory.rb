@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 FactoryGirl.define do
-  factory :content_view do
+  factory :content_view, :class => Katello::ContentView do
     sequence(:name) { |n| "Database#{n}" }
     description "This content view is for database content"
     organization

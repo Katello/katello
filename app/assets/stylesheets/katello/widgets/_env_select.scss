@@ -1,0 +1,123 @@
+@import "katello/katello_base";
+
+
+#path-container {
+
+  .path_selector {
+    width: auto;
+  }
+}
+
+.jbreadcrumb {
+  list-style: none;
+  overflow: hidden;
+  max-height: 34px;
+  /*font: 14px;*/
+  position: relative;
+  z-index: 0;
+  @include unselectable;
+  .selected {
+    background: $listhover_color !important;
+    color: $white_color;
+    @include text-shadow(2px 2px 2px rgba($black_color, 0.6));
+    &:after {
+      border-left-color: $listhover_color !important;
+    }
+  }
+
+  li {
+      float: left;
+      margin-left: 0;
+      white-space: nowrap;
+      &:first-child {
+        @include crumb-nohover;
+        a {
+          padding-left: 6px;
+          @include border-left-radius(5px);
+        }
+      }
+      &:nth-child(n) {
+        @include crumb-nohover;
+        a {
+          background: $breadcrumbbg_color;
+          &:after { border-left-color: $breadcrumbbg_color; }
+        }
+      }
+      &:last-child {
+        @include crumb-nohover;
+        a {
+          overflow: hidden;
+          padding-right: 10px;
+          @include border-right-radius(5px);
+          &:before {
+            content: None;
+          }
+
+          &:hover {
+            color: $white_color;
+            background: $listhover_color !important;
+          }
+          &:after {
+            border: 0;
+            border-left: 0px solid $breadcrumbbg_color;
+            &:hover { border-left-color: $listhover_color !important; }
+          }
+        }
+      }
+      a {
+        color: $black_color;
+        text-decoration: none;
+        padding: 8px 0 8px 20px;
+
+        background: $breadcrumbbg_color;                    //fallback color
+        position: relative;
+        display: block;
+        float: left;
+
+        div {
+          overflow: hidden;
+        }
+        &:hover {
+          background: $listhover_color !important;
+          color: $white_color;
+          @include text-shadow(2px 2px 2px rgba($black_color, 0.6));
+          &:after { border-left-color: $listhover_color !important; }
+        }
+        &.active {
+          background: $kselected_color;
+          color: white;
+          &:after { border-left-color: $kselected_color };
+          &:hover:after { border-left-color: $listhover_color !important; }
+        }
+        &:after {
+          content: " ";
+          display: block;
+          width: 0;
+          height: 0;
+          border-top: 30px solid transparent;            //Go big on the size, and let overflow hide
+          border-bottom: 30px solid transparent;
+          border-left: 15px solid $breadcrumbbg_color;
+          position: absolute;
+          top: 50%;
+          margin-top: -30px;
+          left: 100%;
+          z-index: 2;
+        }
+        &:before {
+          content: " ";
+          display: block;
+          width: 0;
+          height: 0;
+          border-top: 30px solid transparent;            //Go big on the size, and let overflow hide
+          border-bottom: 30px solid transparent;
+          border-left: 15px solid white;
+          position: absolute;
+          top: 50%;
+          margin-top: -30px;
+          margin-left: 1px;
+          left: 100%;
+          z-index: 1;
+        }
+     }
+  }
+}

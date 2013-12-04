@@ -12,7 +12,7 @@
  **/
 
 describe('Controller: ProductDetailsInfoController', function() {
-    var $scope;
+    var $scope, gettext, MenuExpander;
 
     beforeEach(module(
         'Bastion.products',
@@ -28,13 +28,25 @@ describe('Controller: ProductDetailsInfoController', function() {
         $scope = $injector.get('$rootScope').$new();
         $scope.$stateParams = {productId: 1};
 
+        MenuExpander = {};
+
+        gettext = function(message) {
+            return message;
+        };
+
         $controller('ProductDetailsInfoController', {
             $scope: $scope,
             $q: $q,
+            gettext: gettext,
             Product: Product,
-            GPGKey: GPGKey
+            GPGKey: GPGKey,
+            MenuExpander: MenuExpander
         });
     }));
+
+    it("sets the menu expander on the scope", function() {
+        expect($scope.menuExpander).toBe(MenuExpander);
+    });
 
     it('provides a method to retrieve available gpg keys', function() {
         var promise = $scope.gpgKeys(),
@@ -60,15 +72,17 @@ describe('Controller: ProductDetailsInfoController', function() {
     it('should save the product successfully', function() {
         $scope.save($scope.product);
 
-        expect($scope.saveSuccess).toBe(true);
+        expect($scope.successMessages.length).toBe(1);
+        expect($scope.errorMessages.length).toBe(0);
     });
 
     it('should fail to save the product', function() {
         $scope.product.failed = true;
+
         $scope.save($scope.product);
 
-        expect($scope.saveSuccess).toBe(false);
-        expect($scope.saveError).toBe(true);
+        expect($scope.successMessages.length).toBe(0);
+        expect($scope.errorMessages.length).toBe(1);
     });
 
 });

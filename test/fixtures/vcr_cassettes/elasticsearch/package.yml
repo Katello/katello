@@ -5,62 +5,6 @@ http_interactions:
     uri: http://localhost:9200/katello_test_package
     body: 
       encoding: US-ASCII
-      string: "{\"settings\":{\"index\":{\"analysis\":{\"filter\":{\"ngram_filter\":{\"type\":\"edgeNGram\",\"side\":\"front\",\"min_gram\":1,\"max_gram\":30}},\"analyzer\":{\"kt_name_analyzer\":{\"type\":\"custom\",\"tokenizer\":\"keyword\",\"filter\":[\"lowercase\",\"asciifolding\"]},\"autcomplete_name_analyzer\":{\"type\":\"custom\",\"tokenizer\":\"keyword\",\"filter\":[\"standard\",\"lowercase\",\"asciifolding\",\"ngram_filter\"]}}}}},\"mappings\":{\"package\":{\"properties\":{\"id\":{\"type\":\"string\",\"index\":\"not_analyzed\"},\"name\":{\"type\":\"string\",\"analyzer\":\"kt_name_analyzer\"},\"name_autocomplete\":{\"type\":\"string\",\"analyzer\":\"autcomplete_name_analyzer\"},\"nvrea_autocomplete\":{\"type\":\"string\",\"analyzer\":\"autcomplete_name_analyzer\"},\"nvrea\":{\"type\":\"string\",\"analyzer\":\"kt_name_analyzer\"},\"nvrea_sort\":{\"type\":\"string\",\"index\":\"not_analyzed\"},\"repoids\":{\"type\":\"string\",\"index\":\"not_analyzed\"},\"sortable_version\":{\"type\":\"string\",\"index\":\"not_analyzed\"},\"sortable_release\":{\"type\":\"string\",\"index\":\"not_analyzed\"}}}}}"
-    headers: 
-      Accept: 
-      - "*/*; q=0.5, application/xml"
-      Accept-Encoding: 
-      - gzip, deflate
-      Content-Length: 
-      - "945"
-      User-Agent: 
-      - Ruby
-  response: 
-    status: 
-      code: 200
-      message: OK
-    headers: 
-      Content-Type: 
-      - application/json; charset=UTF-8
-      Content-Length: 
-      - "31"
-    body: 
-      encoding: US-ASCII
-      string: "{\"ok\":true,\"acknowledged\":true}"
-    http_version: 
-  recorded_at: Fri, 20 Sep 2013 21:01:51 GMT
-- request: 
-    method: delete
-    uri: http://localhost:9200/katello_test_package
-    body: 
-      encoding: US-ASCII
-      string: ""
-    headers: 
-      Accept: 
-      - "*/*; q=0.5, application/xml"
-      Accept-Encoding: 
-      - gzip, deflate
-      User-Agent: 
-      - Ruby
-  response: 
-    status: 
-      code: 200
-      message: OK
-    headers: 
-      Content-Type: 
-      - application/json; charset=UTF-8
-      Content-Length: 
-      - "31"
-    body: 
-      encoding: US-ASCII
-      string: "{\"ok\":true,\"acknowledged\":true}"
-    http_version: 
-  recorded_at: Mon, 07 Oct 2013 17:10:50 GMT
-- request: 
-    method: post
-    uri: http://localhost:9200/katello_test_package
-    body: 
-      encoding: US-ASCII
       string: "{\"settings\":{\"index\":{\"analysis\":{\"filter\":{\"ngram_filter\":{\"type\":\"edgeNGram\",\"side\":\"front\",\"min_gram\":1,\"max_gram\":30}},\"analyzer\":{\"kt_name_analyzer\":{\"type\":\"custom\",\"tokenizer\":\"keyword\",\"filter\":[\"standard\",\"lowercase\",\"asciifolding\",\"ngram_filter\"]},\"autcomplete_name_analyzer\":{\"type\":\"custom\",\"tokenizer\":\"keyword\",\"filter\":[\"standard\",\"lowercase\",\"asciifolding\",\"ngram_filter\"]}}}}},\"mappings\":{\"package\":{\"properties\":{\"id\":{\"type\":\"string\",\"index\":\"not_analyzed\"},\"name\":{\"type\":\"string\",\"analyzer\":\"kt_name_analyzer\"},\"name_autocomplete\":{\"type\":\"string\",\"analyzer\":\"autcomplete_name_analyzer\"},\"nvrea_autocomplete\":{\"type\":\"string\",\"analyzer\":\"autcomplete_name_analyzer\"},\"nvrea\":{\"type\":\"string\",\"analyzer\":\"kt_name_analyzer\"},\"nvrea_sort\":{\"type\":\"string\",\"index\":\"not_analyzed\"},\"repoids\":{\"type\":\"string\",\"index\":\"not_analyzed\"},\"sortable_version\":{\"type\":\"string\",\"index\":\"not_analyzed\"},\"sortable_release\":{\"type\":\"string\",\"index\":\"not_analyzed\"}}}}}"
     headers: 
       Accept: 
@@ -86,6 +30,73 @@ http_interactions:
     http_version: 
   recorded_at: Mon, 07 Oct 2013 17:10:51 GMT
 - request: 
+    method: delete
+    uri: http://localhost:9200/katello_test_package
+    body: 
+      encoding: US-ASCII
+      string: ""
+    headers: 
+      Accept: 
+      - "*/*; q=0.5, application/xml"
+      Accept-Encoding: 
+      - gzip, deflate
+      User-Agent: 
+      - Ruby
+  response: 
+    status: 
+      code: 404
+      message: Not Found
+    headers: 
+      Content-Type: 
+      - application/json; charset=UTF-8
+      Content-Encoding:
+      - gzip
+      Content-Length: 
+      - "100"
+    body: 
+      encoding: ASCII-8BIT
+      string: !binary |
+        H4sIAAAAAAAC/6pWSi0qyi9SslLyzEtJrfDNLC7OzEt3rUhOLSjJzM+Ljs5O
+        LEnNycmPL0ktLokvSEzOTkxPjVXIhaiLVdJRKi5JLCktVrIyMTCpBQAAAP//
+        AwCrd7KQTgAAAA==
+
+    http_version: 
+  recorded_at: Mon, 11 Nov 2013 16:12:07 GMT
+- request: 
+    method: post
+    uri: http://localhost:9200/katello_test_package
+    body: 
+      encoding: US-ASCII
+      string: "{\"settings\":{\"index\":{\"analysis\":{\"filter\":{\"ngram_filter\":{\"type\":\"edgeNGram\",\"side\":\"front\",\"min_gram\":1,\"max_gram\":30}},\"analyzer\":{\"kt_name_analyzer\":{\"type\":\"custom\",\"tokenizer\":\"keyword\",\"filter\":[\"lowercase\",\"asciifolding\"]},\"autcomplete_name_analyzer\":{\"type\":\"custom\",\"tokenizer\":\"keyword\",\"filter\":[\"standard\",\"lowercase\",\"asciifolding\",\"ngram_filter\"]}}}}},\"mappings\":{\"package\":{\"properties\":{\"id\":{\"type\":\"string\",\"index\":\"not_analyzed\"},\"name\":{\"type\":\"string\",\"analyzer\":\"kt_name_analyzer\"},\"name_autocomplete\":{\"type\":\"string\",\"analyzer\":\"autcomplete_name_analyzer\"},\"nvrea_autocomplete\":{\"type\":\"string\",\"analyzer\":\"autcomplete_name_analyzer\"},\"nvrea\":{\"type\":\"string\",\"analyzer\":\"kt_name_analyzer\"},\"nvrea_sort\":{\"type\":\"string\",\"index\":\"not_analyzed\"},\"repoids\":{\"type\":\"string\",\"index\":\"not_analyzed\"},\"sortable_version\":{\"type\":\"string\",\"index\":\"not_analyzed\"},\"sortable_release\":{\"type\":\"string\",\"index\":\"not_analyzed\"}}}}}"
+    headers: 
+      Accept: 
+      - "*/*; q=0.5, application/xml"
+      Accept-Encoding: 
+      - gzip, deflate
+      Content-Length: 
+      - "945"
+      User-Agent: 
+      - Ruby
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Content-Type: 
+      - application/json; charset=UTF-8
+      Content-Encoding:
+      - gzip
+      Content-Length: 
+      - "53"
+    body: 
+      encoding: ASCII-8BIT
+      string: !binary |
+        H4sIAAAAAAAC/6pWys9WsiopKk3VUUpMzs7LL89JTUlPTYGI1QIAAAD//wMA
+        RQlp+h8AAAA=
+
+    http_version: 
+  recorded_at: Mon, 11 Nov 2013 16:12:07 GMT
+- request: 
     method: post
     uri: http://localhost:9200/katello_test_package/_bulk
     body: 
@@ -124,13 +135,20 @@ http_interactions:
     headers: 
       Content-Type: 
       - application/json; charset=UTF-8
+      Content-Encoding:
+      - gzip
       Content-Length: 
-      - "837"
+      - "151"
     body: 
-      encoding: US-ASCII
-      string: "{\"took\":74,\"items\":[{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-1\",\"_version\":1,\"ok\":true}},{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-2\",\"_version\":1,\"ok\":true}},{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-3\",\"_version\":1,\"ok\":true}},{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-4\",\"_version\":1,\"ok\":true}},{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-5\",\"_version\":1,\"ok\":true}},{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-6\",\"_version\":1,\"ok\":true}},{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-7\",\"_version\":1,\"ok\":true}},{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-8\",\"_version\":1,\"ok\":true}}]}"
+      encoding: ASCII-8BIT
+      string: !binary |
+        H4sIAAAAAAAC/7zNuwrCMBQG4Hf55zgk8UZeRSTE9iAhtSnNUZSQd7cFBxc3
+        Odt/Gb4KzjnBGasQmW4F7lQRx56ecBX+k5AC0zBkz1TYT6FL4UpQ8PyaaLm/
+        ltgvPVw6bexGr8OD5hLzCKcVVornO7Wm/qcYEcWKKFsRZSei7EWUg4hy/K2c
+        2xsAAP//AwA9db85RQMAAA==
+
     http_version: 
-  recorded_at: Mon, 07 Oct 2013 17:10:51 GMT
+  recorded_at: Mon, 11 Nov 2013 16:12:07 GMT
 - request: 
     method: post
     uri: http://localhost:9200/katello_test_package/_refresh
@@ -153,13 +171,18 @@ http_interactions:
     headers: 
       Content-Type: 
       - application/json; charset=UTF-8
+      Content-Encoding:
+      - gzip
       Content-Length: 
-      - "59"
+      - "84"
     body: 
-      encoding: US-ASCII
-      string: "{\"ok\":true,\"_shards\":{\"total\":6,\"successful\":3,\"failed\":0}}"
+      encoding: ASCII-8BIT
+      string: !binary |
+        H4sIAAAAAAAC/6pWys9WsiopKk3VUYovzkgsSilWsqpWKskvScxRsjLTUSou
+        TU5OLS5OKwVyjXWU0hIzc1JTlKwMamsBAAAA//8DAFCozLA7AAAA
+
     http_version: 
-  recorded_at: Mon, 07 Oct 2013 17:10:51 GMT
+  recorded_at: Mon, 11 Nov 2013 16:12:07 GMT
 - request: 
     method: head
     uri: http://localhost:9200/katello_test_package
@@ -186,7 +209,7 @@ http_interactions:
       encoding: US-ASCII
       string: ""
     http_version: 
-  recorded_at: Mon, 07 Oct 2013 17:10:51 GMT
+  recorded_at: Mon, 11 Nov 2013 16:12:07 GMT
 - request: 
     method: get
     uri: http://localhost:9200/katello_test_package/_search?from=0&size=8
@@ -209,13 +232,22 @@ http_interactions:
     headers: 
       Content-Type: 
       - application/json; charset=UTF-8
+      Content-Encoding:
+      - gzip
       Content-Length: 
-      - "1163"
+      - "247"
     body: 
-      encoding: US-ASCII
-      string: "{\"took\":6,\"timed_out\":false,\"_shards\":{\"total\":3,\"successful\":3,\"failed\":0},\"hits\":{\"total\":7,\"max_score\":1.0,\"hits\":[{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-3\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-3\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-3\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-6\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-6\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-6\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-1\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-1\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-1\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-4\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-4\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-4\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-7\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-7\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-7\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-5\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-5\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-5\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-8\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-8\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-8\"}}]}}"
+      encoding: ASCII-8BIT
+      string: !binary |
+        H4sIAAAAAAAC/6zO3WrEIBAF4HeZa1vW5hdfZVlkaiZdiVlDNLAl+O41LIXQ
+        q4F6OcczzrdD9H4CVVcCop1p0H6LoEZ0gQTocMd1CKD2XIvoQOVa2IyhEMbt
+        NY5oHQ2gLknA3cZzuRMw41MH41cCJd8vv43rDto+BnqCggkjOed1pBD1gmbC
+        L4J8On4veQlOic1XAD+N/KjeqiM4fzxaci/p39pKi7fH0/VIjwluAh4407mX
+        kvg3quWhWiaqLYKSPJRkomQRVM1D1UxUXQTV8VAdE9UVQTU8VMNENUVQPQ/V
+        M1F9Rt1S+gEAAP//AwB/eTFujAQAAA==
+
     http_version: 
-  recorded_at: Mon, 07 Oct 2013 17:10:51 GMT
+  recorded_at: Mon, 11 Nov 2013 16:12:07 GMT
 - request: 
     method: head
     uri: http://localhost:9200/katello_test_package
@@ -242,7 +274,7 @@ http_interactions:
       encoding: US-ASCII
       string: ""
     http_version: 
-  recorded_at: Mon, 07 Oct 2013 17:10:51 GMT
+  recorded_at: Mon, 11 Nov 2013 16:12:08 GMT
 - request: 
     method: get
     uri: http://localhost:9200/katello_test_package/_search?from=0&size=8
@@ -265,13 +297,21 @@ http_interactions:
     headers: 
       Content-Type: 
       - application/json; charset=UTF-8
+      Content-Encoding:
+      - gzip
       Content-Length: 
-      - "269"
+      - "186"
     body: 
-      encoding: US-ASCII
-      string: "{\"took\":1,\"timed_out\":false,\"_shards\":{\"total\":3,\"successful\":3,\"failed\":0},\"hits\":{\"total\":1,\"max_score\":1.0,\"hits\":[{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-8\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-8\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-8\"}}]}}"
+      encoding: ASCII-8BIT
+      string: !binary |
+        H4sIAAAAAAAC/1yO0QqDMAxF/+U+d8NNBqO/IlKyGmexWrERHNJ/X0UGssd7
+        cpKbDRJCD/1QEDdwY8Ii0C35yAomdjQ3EXrLlpCHLhXiYi3H2C5HbMl5bqCL
+        pNA5Ocs3hYFWE22YOadr8TOqDcaNDa/Q6EnY+2CEo5iJbE9vRq6Wz5SXcCIu
+        t4Be9nYvL88dnA+3jv3x6b828xTcPqp2uifUCiMNfPZSqlP6AgAA//8DAO7+
+        0b8NAQAA
+
     http_version: 
-  recorded_at: Mon, 07 Oct 2013 17:10:51 GMT
+  recorded_at: Mon, 11 Nov 2013 16:12:08 GMT
 - request: 
     method: post
     uri: http://localhost:9200/katello_test_package/_bulk
@@ -311,13 +351,20 @@ http_interactions:
     headers: 
       Content-Type: 
       - application/json; charset=UTF-8
+      Content-Encoding:
+      - gzip
       Content-Length: 
-      - "837"
+      - "151"
     body: 
-      encoding: US-ASCII
-      string: "{\"took\":14,\"items\":[{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-1\",\"_version\":2,\"ok\":true}},{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-2\",\"_version\":2,\"ok\":true}},{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-3\",\"_version\":2,\"ok\":true}},{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-4\",\"_version\":2,\"ok\":true}},{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-5\",\"_version\":2,\"ok\":true}},{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-6\",\"_version\":2,\"ok\":true}},{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-7\",\"_version\":2,\"ok\":true}},{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-8\",\"_version\":2,\"ok\":true}}]}"
+      encoding: ASCII-8BIT
+      string: !binary |
+        H4sIAAAAAAAC/7zNuwrCMBQG4Hf55zg09ZpXEQlpe5CQ2pTmVJSQd28LDi5u
+        crb/MnwZHGOAuSh4pkeCuWb4oaMXTIb9JATH1PfRMiW2o2uDuxMULL9HWu+v
+        xXdrd01b6XpXbcOTpuTjAKMVNomnmUpR/1O0iFKLKHsR5SCiHEWUk4hy/q3c
+        ygIAAP//AwBR4XjfRAMAAA==
+
     http_version: 
-  recorded_at: Mon, 07 Oct 2013 17:10:51 GMT
+  recorded_at: Mon, 11 Nov 2013 16:12:08 GMT
 - request: 
     method: post
     uri: http://localhost:9200/katello_test_package/_refresh
@@ -340,13 +387,18 @@ http_interactions:
     headers: 
       Content-Type: 
       - application/json; charset=UTF-8
+      Content-Encoding:
+      - gzip
       Content-Length: 
-      - "59"
+      - "84"
     body: 
-      encoding: US-ASCII
-      string: "{\"ok\":true,\"_shards\":{\"total\":6,\"successful\":3,\"failed\":0}}"
+      encoding: ASCII-8BIT
+      string: !binary |
+        H4sIAAAAAAAC/6pWys9WsiopKk3VUYovzkgsSilWsqpWKskvScxRsjLTUSou
+        TU5OLS5OKwVyjXWU0hIzc1JTlKwMamsBAAAA//8DAFCozLA7AAAA
+
     http_version: 
-  recorded_at: Mon, 07 Oct 2013 17:10:51 GMT
+  recorded_at: Mon, 11 Nov 2013 16:12:08 GMT
 - request: 
     method: head
     uri: http://localhost:9200/katello_test_package
@@ -373,7 +425,7 @@ http_interactions:
       encoding: US-ASCII
       string: ""
     http_version: 
-  recorded_at: Mon, 07 Oct 2013 17:10:51 GMT
+  recorded_at: Mon, 11 Nov 2013 16:12:08 GMT
 - request: 
     method: get
     uri: http://localhost:9200/katello_test_package/_search?from=0&size=8
@@ -396,13 +448,21 @@ http_interactions:
     headers: 
       Content-Type: 
       - application/json; charset=UTF-8
+      Content-Encoding:
+      - gzip
       Content-Length: 
-      - "418"
+      - "202"
     body: 
-      encoding: US-ASCII
-      string: "{\"took\":1,\"timed_out\":false,\"_shards\":{\"total\":3,\"successful\":3,\"failed\":0},\"hits\":{\"total\":2,\"max_score\":1.0,\"hits\":[{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-6\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-6\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-6\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-4\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-4\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-4\"}}]}}"
+      encoding: ASCII-8BIT
+      string: !binary |
+        H4sIAAAAAAAC/6SOQQqDMBBF7/LXabFVushVSgnTOLbB2IgZwSK5eyNSkK6E
+        Lv+fNzNvhoTQQl8UxHVcmzAKdEM+soKJTxrqCD1nSshDlwpxtJZjbMY1NuQ8
+        19BFUng62cJnhY4mE20YGPp0LL7EdYZxr5onaLQk7H0wwlFMT7alByO/lnef
+        l7BpXP4CutvTuTxclmJ7uHHsV9NfbOA+uGV0Xdol4abwoo63XErqb6lqn1S1
+        U6rKUreUPgAAAP//AwBweWl5ogEAAA==
+
     http_version: 
-  recorded_at: Mon, 07 Oct 2013 17:10:51 GMT
+  recorded_at: Mon, 11 Nov 2013 16:12:08 GMT
 - request: 
     method: head
     uri: http://localhost:9200/katello_test_package
@@ -429,7 +489,7 @@ http_interactions:
       encoding: US-ASCII
       string: ""
     http_version: 
-  recorded_at: Mon, 07 Oct 2013 17:10:51 GMT
+  recorded_at: Mon, 11 Nov 2013 16:12:08 GMT
 - request: 
     method: get
     uri: http://localhost:9200/katello_test_package/_search?from=0&size=8
@@ -452,13 +512,22 @@ http_interactions:
     headers: 
       Content-Type: 
       - application/json; charset=UTF-8
+      Content-Encoding:
+      - gzip
       Content-Length: 
-      - "1163"
+      - "246"
     body: 
-      encoding: US-ASCII
-      string: "{\"took\":1,\"timed_out\":false,\"_shards\":{\"total\":3,\"successful\":3,\"failed\":0},\"hits\":{\"total\":7,\"max_score\":1.0,\"hits\":[{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-3\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-3\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-3\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-6\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-6\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-6\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-1\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-1\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-1\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-4\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-4\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-4\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-7\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-7\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-7\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-2\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-2\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-2\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-5\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-5\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-5\"}}]}}"
+      encoding: ASCII-8BIT
+      string: !binary |
+        H4sIAAAAAAAC/6zO3WrDMAwF4HfRtTfq/IJfpRSjOcpq4tQhdqAl+N3nUAZh
+        V4L5UsdH1rdD9H4C1QmIdqZB+y2CGtEFEqDDHdchgNpzK6IDVQsImzEUwri9
+        xxGtowHUJQm423gu9wJmfOpg/Eqg5Oflt3HdQdvHQE9QMGEk57yOFKJe0Ez4
+        TZBPx9eSl+CU2HwF8MvIqv6oj+D88WjJvaV/ayst3h5P1yM9JrgJeOBM515K
+        4t+ojofqmKiuCEryUJKJkkVQDQ/VMFFNEVTPQ/VMVF8EVfFQFRNVFUG1PFTL
+        RLUZdUvpBwAA//8DAEs39UyLBAAA
+
     http_version: 
-  recorded_at: Mon, 07 Oct 2013 17:10:51 GMT
+  recorded_at: Mon, 11 Nov 2013 16:12:08 GMT
 - request: 
     method: head
     uri: http://localhost:9200/katello_test_package
@@ -485,7 +554,7 @@ http_interactions:
       encoding: US-ASCII
       string: ""
     http_version: 
-  recorded_at: Mon, 07 Oct 2013 17:10:51 GMT
+  recorded_at: Mon, 11 Nov 2013 16:12:08 GMT
 - request: 
     method: get
     uri: http://localhost:9200/katello_test_package/_search?from=0&size=8
@@ -508,13 +577,21 @@ http_interactions:
     headers: 
       Content-Type: 
       - application/json; charset=UTF-8
+      Content-Encoding:
+      - gzip
       Content-Length: 
-      - "418"
+      - "202"
     body: 
-      encoding: US-ASCII
-      string: "{\"took\":1,\"timed_out\":false,\"_shards\":{\"total\":3,\"successful\":3,\"failed\":0},\"hits\":{\"total\":2,\"max_score\":1.0,\"hits\":[{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-6\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-6\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-6\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-4\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-4\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-4\"}}]}}"
+      encoding: ASCII-8BIT
+      string: !binary |
+        H4sIAAAAAAAC/6SOQQqDMBBF7/LXabFVushVSgnTOLbB2IgZwSK5eyNSkK6E
+        Lv+fNzNvhoTQQl8UxHVcmzAKdEM+soKJTxrqCD1nSshDlwpxtJZjbMY1NuQ8
+        19BFUng62cJnhY4mE20YGPp0LL7EdYZxr5onaLQk7H0wwlFMT7alByO/lnef
+        l7BpXP4CutvTuTxclmJ7uHHsV9NfbOA+uGV0Xdol4abwoo63XErqb6lqn1S1
+        U6rKUreUPgAAAP//AwBweWl5ogEAAA==
+
     http_version: 
-  recorded_at: Mon, 07 Oct 2013 17:10:51 GMT
+  recorded_at: Mon, 11 Nov 2013 16:12:08 GMT
 - request: 
     method: head
     uri: http://localhost:9200/katello_test_package
@@ -541,7 +618,7 @@ http_interactions:
       encoding: US-ASCII
       string: ""
     http_version: 
-  recorded_at: Mon, 07 Oct 2013 17:10:51 GMT
+  recorded_at: Mon, 11 Nov 2013 16:12:08 GMT
 - request: 
     method: get
     uri: http://localhost:9200/katello_test_package/_search?from=0&size=8
@@ -564,13 +641,22 @@ http_interactions:
     headers: 
       Content-Type: 
       - application/json; charset=UTF-8
+      Content-Encoding:
+      - gzip
       Content-Length: 
-      - "865"
+      - "230"
     body: 
-      encoding: US-ASCII
-      string: "{\"took\":1,\"timed_out\":false,\"_shards\":{\"total\":3,\"successful\":3,\"failed\":0},\"hits\":{\"total\":5,\"max_score\":1.0,\"hits\":[{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-6\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-6\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-6\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-1\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-1\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-1\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-4\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-4\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-4\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-2\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-2\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-2\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-5\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-5\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-5\"}}]}}"
+      encoding: ASCII-8BIT
+      string: !binary |
+        H4sIAAAAAAAC/6zO0YrDIBAF0H+5z26pabIP/kopMjWTVmJqiAZagv9eQ1kI
+        +yQ0j3O945wF0fseqhaIduBW+zlCdeQCC+hwp6kNUEtuRXJQJ4EwG8MhdPNn
+        7Mg6bqGOSeBu47bcCAz01MH4iaHk4fjXOC/Q9tHyEwo9RXbO68gh6pFMTzdG
+        Ph1fY17CJrH5CuhqZHX6+V2D7cedZfeR/q9NPHq7Pp3XdJ1wEXjQwNteSuJr
+        lCxDyUKU3AVVl6HqQlS9C6oqQ1WFqGoXVFOGagpRTUZdUnoDAAD//wMAw0ua
+        UGEDAAA=
+
     http_version: 
-  recorded_at: Mon, 07 Oct 2013 17:10:51 GMT
+  recorded_at: Mon, 11 Nov 2013 16:12:08 GMT
 - request: 
     method: post
     uri: http://localhost:9200/katello_test_package/_bulk
@@ -610,13 +696,20 @@ http_interactions:
     headers: 
       Content-Type: 
       - application/json; charset=UTF-8
+      Content-Encoding:
+      - gzip
       Content-Length: 
-      - "836"
+      - "151"
     body: 
-      encoding: US-ASCII
-      string: "{\"took\":2,\"items\":[{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-1\",\"_version\":3,\"ok\":true}},{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-2\",\"_version\":3,\"ok\":true}},{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-3\",\"_version\":3,\"ok\":true}},{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-4\",\"_version\":3,\"ok\":true}},{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-5\",\"_version\":3,\"ok\":true}},{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-6\",\"_version\":3,\"ok\":true}},{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-7\",\"_version\":3,\"ok\":true}},{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-8\",\"_version\":3,\"ok\":true}}]}"
+      encoding: ASCII-8BIT
+      string: !binary |
+        H4sIAAAAAAAC/7zNvQrCMBQF4Hc5cxzaqJW8ikhI24uE1KY0t2IJeXdbcHBx
+        k7udn+HL4BgDTKPgmR4J5prhx55eMBn2kxAc0zBEy5TYTq4L7k5QsLxOtN1f
+        i++37tquqvWh2ocnzcnHEUYr7BLPC5Wi/qfUIooWUY4iyklEOYsojYhy+a3c
+        yhsAAP//AwBU2hYpRAMAAA==
+
     http_version: 
-  recorded_at: Mon, 07 Oct 2013 17:10:51 GMT
+  recorded_at: Mon, 11 Nov 2013 16:12:08 GMT
 - request: 
     method: post
     uri: http://localhost:9200/katello_test_package/_refresh
@@ -639,13 +732,18 @@ http_interactions:
     headers: 
       Content-Type: 
       - application/json; charset=UTF-8
+      Content-Encoding:
+      - gzip
       Content-Length: 
-      - "59"
+      - "84"
     body: 
-      encoding: US-ASCII
-      string: "{\"ok\":true,\"_shards\":{\"total\":6,\"successful\":3,\"failed\":0}}"
+      encoding: ASCII-8BIT
+      string: !binary |
+        H4sIAAAAAAAC/6pWys9WsiopKk3VUYovzkgsSilWsqpWKskvScxRsjLTUSou
+        TU5OLS5OKwVyjXWU0hIzc1JTlKwMamsBAAAA//8DAFCozLA7AAAA
+
     http_version: 
-  recorded_at: Mon, 07 Oct 2013 17:10:51 GMT
+  recorded_at: Mon, 11 Nov 2013 16:12:08 GMT
 - request: 
     method: head
     uri: http://localhost:9200/katello_test_package
@@ -672,7 +770,7 @@ http_interactions:
       encoding: US-ASCII
       string: ""
     http_version: 
-  recorded_at: Mon, 07 Oct 2013 17:10:51 GMT
+  recorded_at: Mon, 11 Nov 2013 16:12:08 GMT
 - request: 
     method: get
     uri: http://localhost:9200/katello_test_package/_search?from=0&size=8
@@ -695,13 +793,22 @@ http_interactions:
     headers: 
       Content-Type: 
       - application/json; charset=UTF-8
+      Content-Encoding:
+      - gzip
       Content-Length: 
-      - "1312"
+      - "255"
     body: 
-      encoding: US-ASCII
-      string: "{\"took\":1,\"timed_out\":false,\"_shards\":{\"total\":3,\"successful\":3,\"failed\":0},\"hits\":{\"total\":8,\"max_score\":1.0,\"hits\":[{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-3\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-3\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-3\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-6\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-6\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-6\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-1\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-1\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-1\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-4\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-4\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-4\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-7\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-7\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-7\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-2\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-2\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-2\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-5\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-5\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-5\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-8\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-8\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-8\"}}]}}"
+      encoding: ASCII-8BIT
+      string: !binary |
+        H4sIAAAAAAAC/6zO3WrDMAwF4HfRtTfq/ONXKcVojrKaOHWIHWgJefc5lEHY
+        lWC+1PGR9W0QvR9BtQKinajXfo2gBnSBBOhwx6UPoLbUiuhAlQLCagyFMKzv
+        cUDrqAd12QXcbTyXOwETPnUwfiFQ8vPy27huoO2jpycoGDGSc15HClHPaEb8
+        Jkin42tOS3BKbLoC+GVkUX6UR3D+eLDk3tK/tYVmb4+n65EeE9wEPHCic2/f
+        xb9RDQ/VMFFNFpTkoSQTJbOgKh6qYqKqLKiWh2qZqDYLquChCiaqyIKqeaia
+        iaqzoDoeqmOiuoS67fsPAAAA//8DADEMYo8gBQAA
+
     http_version: 
-  recorded_at: Mon, 07 Oct 2013 17:10:51 GMT
+  recorded_at: Mon, 11 Nov 2013 16:12:08 GMT
 - request: 
     method: post
     uri: http://localhost:9200/katello_test_package/_bulk
@@ -741,13 +848,20 @@ http_interactions:
     headers: 
       Content-Type: 
       - application/json; charset=UTF-8
+      Content-Encoding:
+      - gzip
       Content-Length: 
-      - "836"
+      - "152"
     body: 
-      encoding: US-ASCII
-      string: "{\"took\":1,\"items\":[{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-1\",\"_version\":4,\"ok\":true}},{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-2\",\"_version\":4,\"ok\":true}},{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-3\",\"_version\":4,\"ok\":true}},{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-4\",\"_version\":4,\"ok\":true}},{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-5\",\"_version\":4,\"ok\":true}},{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-6\",\"_version\":4,\"ok\":true}},{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-7\",\"_version\":4,\"ok\":true}},{\"index\":{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-8\",\"_version\":4,\"ok\":true}}]}"
+      encoding: ASCII-8BIT
+      string: !binary |
+        H4sIAAAAAAAC/7zNuwrCMBQG4Hf55zj0opW8ikiI7aGE1KY0R1FC3t0WOnTp
+        Jmf7L8OXwCF46EbBMT0j9C3BjR19oBPMluAt0zAEwxTZTLb1ticoGP5OtNy7
+        xXVLt4+2KKtTsQ5vmqMLI3StsEo8vyhn9T+lFFEqEaUWUc4iykVEaUSU67Fy
+        zz8AAAD//wMAcM6jx0QDAAA=
+
     http_version: 
-  recorded_at: Mon, 07 Oct 2013 17:10:51 GMT
+  recorded_at: Mon, 11 Nov 2013 16:12:08 GMT
 - request: 
     method: post
     uri: http://localhost:9200/katello_test_package/_refresh
@@ -770,13 +884,18 @@ http_interactions:
     headers: 
       Content-Type: 
       - application/json; charset=UTF-8
+      Content-Encoding:
+      - gzip
       Content-Length: 
-      - "59"
+      - "84"
     body: 
-      encoding: US-ASCII
-      string: "{\"ok\":true,\"_shards\":{\"total\":6,\"successful\":3,\"failed\":0}}"
+      encoding: ASCII-8BIT
+      string: !binary |
+        H4sIAAAAAAAC/6pWys9WsiopKk3VUYovzkgsSilWsqpWKskvScxRsjLTUSou
+        TU5OLS5OKwVyjXWU0hIzc1JTlKwMamsBAAAA//8DAFCozLA7AAAA
+
     http_version: 
-  recorded_at: Mon, 07 Oct 2013 17:10:51 GMT
+  recorded_at: Mon, 11 Nov 2013 16:12:08 GMT
 - request: 
     method: head
     uri: http://localhost:9200/katello_test_package
@@ -803,7 +922,7 @@ http_interactions:
       encoding: US-ASCII
       string: ""
     http_version: 
-  recorded_at: Mon, 07 Oct 2013 17:10:51 GMT
+  recorded_at: Mon, 11 Nov 2013 16:12:08 GMT
 - request: 
     method: get
     uri: http://localhost:9200/katello_test_package/_search?from=0&size=8
@@ -826,13 +945,22 @@ http_interactions:
     headers: 
       Content-Type: 
       - application/json; charset=UTF-8
+      Content-Encoding:
+      - gzip
       Content-Length: 
-      - "1312"
+      - "255"
     body: 
-      encoding: US-ASCII
-      string: "{\"took\":1,\"timed_out\":false,\"_shards\":{\"total\":3,\"successful\":3,\"failed\":0},\"hits\":{\"total\":8,\"max_score\":1.0,\"hits\":[{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-3\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-3\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-3\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-6\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-6\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-6\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-1\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-1\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-1\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-4\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-4\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-4\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-7\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-7\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-7\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-2\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-2\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-2\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-5\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-5\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-5\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-8\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-8\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-8\"}}]}}"
+      encoding: ASCII-8BIT
+      string: !binary |
+        H4sIAAAAAAAC/6zO3WrDMAwF4HfRtTfq/ONXKcVojrKaOHWIHWgJefc5lEHY
+        lWC+1PGR9W0QvR9B1QKinajXfo2gBnSBBOhwx6UPoLbUiuhAlQLCagyFMKzv
+        cUDrqAd12QXcbTyXOwETPnUwfiFQ8vPy27huoO2jpycoGDGSc15HClHPaEb8
+        Jkin42tOS3BKbLoC+GVkUX6UR3D+eLDk3tK/tYVmb4+n65EeE9wEPHCic2/f
+        xb9RDQ/VMFFNFpTkoSQTJbOgKh6qYqKqLKiWh2qZqDYLquChCiaqyIKqeaia
+        iaqzoDoeqmOiuoS67fsPAAAA//8DABBMp94gBQAA
+
     http_version: 
-  recorded_at: Mon, 07 Oct 2013 17:10:51 GMT
+  recorded_at: Mon, 11 Nov 2013 16:12:08 GMT
 - request: 
     method: head
     uri: http://localhost:9200/katello_test_package
@@ -859,7 +987,7 @@ http_interactions:
       encoding: US-ASCII
       string: ""
     http_version: 
-  recorded_at: Mon, 07 Oct 2013 17:10:51 GMT
+  recorded_at: Mon, 11 Nov 2013 16:12:08 GMT
 - request: 
     method: get
     uri: http://localhost:9200/katello_test_package/_search?from=0&size=8
@@ -882,13 +1010,19 @@ http_interactions:
     headers: 
       Content-Type: 
       - application/json; charset=UTF-8
+      Content-Encoding:
+      - gzip
       Content-Length: 
-      - "122"
+      - "120"
     body: 
-      encoding: US-ASCII
-      string: "{\"took\":1,\"timed_out\":false,\"_shards\":{\"total\":3,\"successful\":3,\"failed\":0},\"hits\":{\"total\":0,\"max_score\":null,\"hits\":[]}}"
+      encoding: ASCII-8BIT
+      string: !binary |
+        H4sIAAAAAAAC/0zKMQrDMAwF0Lv8WUOgmXSVUoywZWKqxBDJUAi+ewul0PHB
+        uxC9P8ErIdquJfUR4CrmSki+yVkcfH1WiIFvBB85q3sdX1ZppgW8TMLW4j8v
+        hF1eyXM/FXwMs1+5P+Z8AwAA//8DAHICYWJ6AAAA
+
     http_version: 
-  recorded_at: Mon, 07 Oct 2013 17:10:51 GMT
+  recorded_at: Mon, 11 Nov 2013 16:12:08 GMT
 - request: 
     method: head
     uri: http://localhost:9200/katello_test_package
@@ -915,7 +1049,7 @@ http_interactions:
       encoding: US-ASCII
       string: ""
     http_version: 
-  recorded_at: Mon, 07 Oct 2013 17:10:51 GMT
+  recorded_at: Mon, 11 Nov 2013 16:12:08 GMT
 - request: 
     method: get
     uri: http://localhost:9200/katello_test_package/_search?from=0&size=8
@@ -938,11 +1072,19 @@ http_interactions:
     headers: 
       Content-Type: 
       - application/json; charset=UTF-8
+      Content-Encoding:
+      - gzip
       Content-Length: 
-      - "567"
+      - "208"
     body: 
-      encoding: US-ASCII
-      string: "{\"took\":2,\"timed_out\":false,\"_shards\":{\"total\":3,\"successful\":3,\"failed\":0},\"hits\":{\"total\":3,\"max_score\":1.0,\"hits\":[{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-1\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-1\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-1\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-2\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-2\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-2\"}},{\"_index\":\"katello_test_package\",\"_type\":\"package\",\"_id\":\"abc123-5\",\"_score\":1.0,\"fields\":{\"id\":\"abc123-5\",\"repoids\":[\"abcrepo\"],\"name\":\"abc123-5\"}}]}}"
+      encoding: ASCII-8BIT
+      string: !binary |
+        H4sIAAAAAAAC/6yOQQrCMBBF7/LXUWylm1xFJIzpVENTU5opVErubqoIxVVB
+        l//Pm5k3Q0JooY8K4jquTRgFuiEfWcHEGw11hJ4zJeRfWByt5Rib8R0bcp5r
+        6ENSuDn5gjuaTLRhYOhif/gQpxnG3WueoNGSsPfBCEcxPdmWroz8Wh59XsKq
+        cfkL6GKL8rgrlmJ9uHHs36bf2MB9cMvotLRLwlnhTh2vuZTUz1LlNqlyo1T5
+        F6lqm1S1UarKUueUngAAAP//AwDBeZylNwIAAA==
+
     http_version: 
-  recorded_at: Mon, 07 Oct 2013 17:10:51 GMT
-recorded_with: VCR 2.5.0
+  recorded_at: Mon, 11 Nov 2013 16:12:08 GMT
+recorded_with: VCR 2.7.0

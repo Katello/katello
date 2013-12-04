@@ -14,8 +14,10 @@
 describe('Controller: SystemDetailsController', function() {
     var $scope,
         $controller,
+        gettext,
         System,
         Organization,
+        MenuExpander,
         mockSystem;
 
     beforeEach(module('Bastion.systems',
@@ -33,6 +35,10 @@ describe('Controller: SystemDetailsController', function() {
             transitionTo: function() {}
         };
 
+        gettext = function(message) {
+            return message;
+        };
+
         mockSystem = {
             failed: false,
             uuid: 2,
@@ -44,7 +50,7 @@ describe('Controller: SystemDetailsController', function() {
             },
             $update: function(success, error) {
                 if (mockSystem.failed) {
-                    error({ data: {errors: {}}});
+                    error({ data: {errors: ['error!']}});
                 } else {
                     success(mockSystem);
                 }
@@ -58,6 +64,7 @@ describe('Controller: SystemDetailsController', function() {
         };
 
         Organization = {};
+        MenuExpander = {};
 
         spyOn(System, 'get').andCallThrough();
 
@@ -66,10 +73,16 @@ describe('Controller: SystemDetailsController', function() {
         $controller('SystemDetailsController', {
             $scope: $scope,
             $state: $state,
+            gettext: gettext,
             System: System,
-            Organization: Organization
+            Organization: Organization,
+            MenuExpander: MenuExpander
         });
     }));
+
+    it("sets the menu expander on the scope", function() {
+        expect($scope.menuExpander).toBe(MenuExpander);
+    });
 
     it("gets the system using the System service and puts it on the $scope.", function() {
         expect(System.get).toHaveBeenCalledWith({id: 2}, jasmine.any(Function));
@@ -89,14 +102,16 @@ describe('Controller: SystemDetailsController', function() {
     it('should save the system successfully', function() {
         $scope.save(mockSystem);
 
-        expect($scope.saveSuccess).toBe(true);
+        expect($scope.successMessages.length).toBe(1);
+        expect($scope.errorMessages.length).toBe(0);
     });
 
     it('should fail to save the system', function() {
         mockSystem.failed = true;
         $scope.save(mockSystem);
 
-        expect($scope.saveError).toBe(true);
+        expect($scope.successMessages.length).toBe(0);
+        expect($scope.errorMessages.length).toBe(1);
     });
 
 });

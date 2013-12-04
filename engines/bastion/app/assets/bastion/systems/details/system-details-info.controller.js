@@ -18,25 +18,27 @@
  * @requires $scope
  * @requires $q
  * @requires $http
+ * @requires gettext
  * @requires Routes
  * @requires System
  * @requires SystemGroup
  * @requires ContentView
+ * @requires CurrentOrganization
  *
  * @description
  *   Provides the functionality for the system details action pane.
  */
 angular.module('Bastion.systems').controller('SystemDetailsInfoController',
-    ['$scope', '$q', '$http', 'Routes', 'System', 'SystemGroup', 'ContentView',
-    function($scope, $q, $http, Routes, System, SystemGroup, ContentView) {
+    ['$scope', '$q', '$http', 'gettext', 'Routes', 'System', 'SystemGroup', 'ContentView', 'CurrentOrganization',
+    function($scope, $q, $http, gettext, Routes, System, SystemGroup, ContentView, CurrentOrganization) {
+
         var customInfoErrorHandler = function(error) {
-            $scope.saveError = true;
-            $scope.errors = error["errors"];
+            _.each(error.errors, function(errorMessage) {
+                $scope.errorMessages.push(gettext("An error occurred updating Custom Information: ") + errorMessage);
+            });
         };
 
         $scope.editContentView = false;
-        $scope.saveSuccess = false;
-        $scope.saveError = false;
 
         $scope.$on('system.loaded', function() {
             $scope.setupSelector();
@@ -51,7 +53,6 @@ angular.module('Bastion.systems').controller('SystemDetailsInfoController',
                 $scope.previousEnvironment = $scope.system.environment.id;
                 $scope.system.environment.id = environmentId;
                 $scope.editContentView = true;
-                $scope.$apply();
 
                 /*jshint camelcase:false*/
                 $scope.pathSelector.disable_all();
@@ -88,11 +89,13 @@ angular.module('Bastion.systems').controller('SystemDetailsInfoController',
 
             success = function(data) {
                 deferred.resolve(data);
+                $scope.successMessages.push('System Saved.');
             };
             error = function(error) {
-                deferred.reject(error.data["errors"]);
-                $scope.saveError = true;
-                $scope.errors = error.data["errors"];
+                deferred.reject(error.data.errors);
+                _.each(error.data.errors, function(errorMessage) {
+                    $scope.errorMessages.push(gettext("An error occurred updating System Groups: ") + errorMessage);
+                });
             };
 
             System.saveSystemGroups({id: $scope.system.uuid}, data, success, error);
@@ -122,8 +125,8 @@ angular.module('Bastion.systems').controller('SystemDetailsInfoController',
         $scope.systemGroups = function() {
             var deferred = $q.defer();
 
-            SystemGroup.query(function(systemGroups) {
-                deferred.resolve(systemGroups);
+            SystemGroup.query({'organization_id': CurrentOrganization}, function(systemGroups) {
+                deferred.resolve(systemGroups['results']);
             });
 
             return deferred.promise;
@@ -163,8 +166,6 @@ angular.module('Bastion.systems').controller('SystemDetailsInfoController',
             return Routes.activationKeysPath({anchor: panel});
         };
 
-        // TODO upgrade to Angular 1.1.4 so we can move this into a directive
-        // and use dynamic templates (http://code.angularjs.org/1.1.4/docs/partials/guide/directive.html)
         $scope.getTemplateForType = function(value) {
             var template = 'systems/details/views/partials/system-detail-value.html';
             if (typeof(value) === 'object') {

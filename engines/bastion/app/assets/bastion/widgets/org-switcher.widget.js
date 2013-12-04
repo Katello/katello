@@ -15,62 +15,76 @@
  * @ngdoc directive
  * @name Bastion.widgets.directive:orgSwitcher
  *
- * @requires $compile
- * @requires $http
  * @requires $window
  * @requires $document
  * @requires Routes
+ * @requires CurrentUser
+ * @requires User
+ * @requires CurrentOrganization
+ * @requires Organization
  *
  * @description
- *  Used to provide an organization switcher for the logged in user.  Currently simply stuffs
- *  _allowed_orgs.html.haml into the #allowed-orgs ul element.
- *
- *  TODO: angularize this directive.
+ *  Used to provide an organization switcher for the logged in user.
  *
  * @example
  *  <span class="spinner"></span>
  *  <ul org-switcher></ul>
  */
 angular.module('Bastion.widgets').directive('orgSwitcher',
-    ['$compile', '$http', '$window', '$document', 'Routes',
-    function($compile, $http, $window, $document, Routes) {
+    ['$window', '$document', 'Routes', 'CurrentUser', 'User', 'CurrentOrganization', 'Organization',
+    function($window, $document, Routes, CurrentUser, User, CurrentOrganization, Organization) {
 
     return {
         restrict: 'A',
-        transclude: true,
+        scope: true,
+        templateUrl: 'widgets/views/org-switcher.html',
 
-        controller: ['$scope', '$element', function($scope, $element) {
-            var $spinner = $element.parent().find('.spinner');
+        controller: ['$scope', function($scope) {
+            $scope.visible = false;
+            $scope.working = false;
 
-            $scope.orgSwitcher = {
-                visible: false
+            if (CurrentOrganization) {
+                $scope.currentOrganization = Organization.get({'id': CurrentOrganization});
+            }
+
+            $scope.toggleVisibility = function() {
+                $scope.visible = !$scope.visible;
             };
 
-            $scope.orgSwitcher.toggleVisibility = function() {
-                $scope.orgSwitcher.visible = !$scope.orgSwitcher.visible;
-            };
-
-            $spinner.fadeIn();
-            $scope.orgSwitcher.refresh = function() {
-                $http.get(Routes.allowedOrgsUserSessionPath()).then(function(response) {
-                    $spinner.fadeOut();
-                    $element.html(response.data);
-                    $compile($element.find('li'))($scope);
+            $scope.refresh = function() {
+                $scope.working = true;
+                $scope.user = User.get({'id': CurrentUser}, function(response) {
+                    $scope.working = false;
+                    if (response.preferences.user) {
+                        $scope.favoriteOrg = response.preferences.user['default_org'];
+                    } else {
+                        $scope.favoriteOrg = null;
+                    }
                 });
             };
 
-            $scope.orgSwitcher.selectOrg = function(event, organizationId) {
-                event.preventDefault();
+            $scope.selectOrg = function(organization) {
+                $scope.visible = false;
 
-                $http.post(Routes.setOrgUserSessionPath({'org_id': organizationId})).success(function() {
+                User.selectOrg(organization.id, function() {
                     $window.location = Routes.dashboardIndexPath();
                 });
             };
 
-            $scope.$watch('orgSwitcher.visible', function(newValue, oldValue) {
+            $scope.setDefaultOrg = function (event, organization) {
+                var organizationId = organization.id;
+                if (organization.id === $scope.favoriteOrg) {
+                    organizationId = null;
+                }
+
+                User.setDefaultOrg($scope.user.id, organizationId, function() {
+                    $scope.favoriteOrg = organizationId;
+                });
+            };
+
+            $scope.$watch('visible', function(newValue, oldValue) {
                 if (newValue && (newValue !== oldValue)) {
-                    // Refresh the list of organizations
-                    $scope.orgSwitcher.refresh();
+                    $scope.refresh();
                 }
             });
 
@@ -79,7 +93,10 @@ angular.module('Bastion.widgets').directive('orgSwitcher',
             $document.bind('click', function (event) {
                 var target = angular.element(event.target);
                 if (!orgSwitcherMenu.find(target).length) {
-                    $scope.orgSwitcher.visible = false;
+                    $scope.visible = false;
+                    if (!$scope.$$phase) {
+                        $scope.$apply();
+                    }
                 }
             });
         }]

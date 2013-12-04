@@ -2,11 +2,13 @@
   = project_name + "-" + default_title
 
 = content_for(:stylesheets_block) do
-  = stylesheet_link_tag "stylesheets/bastion"
+  = stylesheet_link_tag "stylesheets/less/bastion"
+  = stylesheet_link_tag "stylesheets/scss/bastion"
   = yield :stylesheets
 
 = content_for(:body) do
-  = render :file => "bastion/menu/menu"
+  = generate_menu
+  %nav{'ng-include' => "'../menu/views/menu.html'"}
   %article.maincontent
     %section{'ui-view' => ''}
 
@@ -16,9 +18,10 @@
     -if protect_against_forgery?
       :plain
         var AUTH_TOKEN = #{form_authenticity_token.inspect};
-    = render :partial => 'common/config'
-    = render :partial => 'common/ajax_notices'
-    = render :partial => 'common/notification'
+        angular.module('Bastion').value('currentLocale', '#{I18n.locale}');
+    = render :partial => 'katello/common/config'
+    = render :partial => 'katello/common/ajax_notices'
+    = render :partial => 'katello/common/notification'
     = yield :inline_javascript
 
   = yield :javascripts

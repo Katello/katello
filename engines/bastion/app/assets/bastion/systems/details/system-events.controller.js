@@ -46,9 +46,5 @@ angular.module('Bastion.systems').controller('SystemEventsController',
         };
 
         $scope.eventsTable = eventsNutupane.table;
-        $scope.eventsTable.openEventInfo = function(event) {
-            $scope.transitionTo('systems.details.events.details', {eventId:event.id});
-        };
-
     }
 ]);

@@ -29,11 +29,6 @@ angular.module('Bastion.systems').controller('SystemErrataController',
     function($scope, SystemErratum, SystemTask, Nutupane) {
         var errataNutupane;
 
-        //Used to transition from errata details to errata
-        $scope.transitionToIndex = function() {
-            $scope.transitionTo('systems.details.errata.index');
-        };
-
         errataNutupane = new Nutupane(SystemErratum, {'id': $scope.$stateParams.systemId}, 'get');
         $scope.errataTable = errataNutupane.table;
         $scope.errataTable.errataFilterTerm = "";
@@ -42,15 +37,6 @@ angular.module('Bastion.systems').controller('SystemErrataController',
             return item.type.indexOf(searchText)  >= 0 ||
                 item.errata_id.indexOf(searchText) >= 0 ||
                 item.title.indexOf(searchText) >= 0;
-        };
-
-        $scope.errataTable.transitionToErratum = function(erratum) {
-            $scope.erratum = SystemErratum.get({'id': $scope.$stateParams.systemId, 'errata_id': erratum.errata_id});
-            $scope.transitionTo('systems.details.errata.details', {errataId: erratum.errata_id});
-        };
-
-        $scope.openEventInfo = function(event) {
-            $scope.transitionTo('systems.details.events.details', {eventId: event.id});
         };
 
         $scope.applySelected = function() {
@@ -63,7 +49,7 @@ angular.module('Bastion.systems').controller('SystemErrataController',
                 SystemErratum.apply({uuid: $scope.system.uuid, errata_ids: errataIds},
                                    function(task) {
                                      $scope.errataTable.selectAll(false);
-                                     $scope.openEventInfo(task);
+                                     $scope.transitionTo('systems.details.events.details', {eventId: task.id});
                                    });
             }
         };

@@ -22,7 +22,7 @@ angular.module('Bastion.systems', [
     'ngResource',
     'alchemy',
     'alch-templates',
-    'ui.compat',
+    'ui.router',
     'Bastion.widgets',
     'Bastion.subscriptions',
     'Bastion.nodes',
@@ -123,16 +123,33 @@ angular.module('Bastion.systems').config(['$stateProvider', function($stateProvi
             },
             'action-panel': {
                 controller: 'SystemsBulkActionController',
-                templateUrl: 'systems/views/bulk-actions.html'
+                templateUrl: 'systems/bulk/views/bulk-actions.html'
             }
         }
-    });
-
-    $stateProvider.state('systems.bulk-actions.list', {
-        url: '/systems/bulk-actions',
+    })
+    .state('systems.bulk-actions.packages', {
+        url: '/systems/bulk-actions/packages',
         collapsed: true,
-        controller: 'SystemsBulkActionController',
-        templateUrl: 'systems/views/bulk-actions-list.html'
+        controller: 'SystemsBulkActionPackagesController',
+        templateUrl: 'systems/bulk/views/bulk-actions-packages.html'
+    })
+    .state('systems.bulk-actions.errata', {
+        url: '/systems/bulk-actions/errata',
+        collapsed: true,
+        controller: 'SystemsBulkActionErrataController',
+        templateUrl: 'systems/bulk/views/bulk-actions-errata.html'
+    })
+    .state('systems.bulk-actions.groups', {
+        url: '/systems/bulk-actions/groups',
+        collapsed: true,
+        controller: 'SystemsBulkActionGroupsController',
+        templateUrl: 'systems/bulk/views/bulk-actions-groups.html'
+    })
+    .state('systems.bulk-actions.subscriptions', {
+        url: '/systems/bulk-actions/bulk-subscriptions',
+        collapsed: true,
+        controller: 'SystemsBulkActionSubscriptionsController',
+        templateUrl: 'systems/bulk/views/bulk-actions-subscriptions.html'
     });
 
     $stateProvider.state('systems.details.packages', {

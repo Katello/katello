@@ -1,0 +1,19 @@
+<ul class="dropdown"
+    ng-class="{ 'dropdown-right' : isRight(dropdown.direction), 'dropdown-active' : dropdown.show }">
+  <li class="dropdown-item"
+      ng-repeat="item in dropdown"
+      ng-mouseenter="setHover(item, true)"
+      ng-mouseleave="setHover(item, false)">
+
+    <a class="dropdown-item-link"
+       href="{{ item.url }}"
+       ng-class="{'menu-anchor' : item.type, 'dropdown-item-link-active' : item.active }">
+      <span class="fl">{{ item.display }}</span>
+      <i class="icon-caret-right flyout-indicator" ng-show="item.type=='flyout'"></i> </a>
+    <ul alch-flyout="item.items"
+        ng-if="item.type == 'flyout'"
+        ng-show="item.active"
+        ng-class="{ 'dropdown-active' : dropdown.show }">
+    </ul>
+  </li>
+</ul>

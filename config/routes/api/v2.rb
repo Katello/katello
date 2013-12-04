@@ -1,17 +1,17 @@
-require 'api/constraints/activation_key_constraint'
-require 'api/constraints/api_version_constraint'
-require 'api/mapper_extensions'
+require 'katello/api/constraints/activation_key_constraint'
+require 'katello/api/constraints/api_version_constraint'
+require 'katello/api/mapper_extensions'
 
 class ActionDispatch::Routing::Mapper
   include Katello::Routing::MapperExtensions
 end
 
-Src::Application.routes.draw do
+Katello::Engine.routes.draw do
 
   namespace :api do
 
     # new v2 routes that point to v2
-    scope :module => :v2, :constraints => ApiVersionConstraint.new(:version => 2) do
+    scope :module => :v2, :constraints => Katello::ApiVersionConstraint.new(:version => 2) do
 
       match '/' => 'root#resource_list'
 
@@ -32,7 +32,7 @@ Src::Application.routes.draw do
         api_resources :sync_plans, :only => [:index, :create]
         api_resources :tasks, :only => [:index, :show]
         api_resources :providers, :only => [:index], :constraints => {:organization_id => /[^\/]*/}
-        scope :constraints => RegisterWithActivationKeyContraint.new do
+        scope :constraints => Katello::RegisterWithActivationKeyContraint.new do
           match '/systems' => 'systems#activate', :via => :post
         end
         api_resources :systems, :only => [:index, :create] do
@@ -42,7 +42,6 @@ Src::Application.routes.draw do
         resource :uebercert, :only => [:show]
 
         api_resources :activation_keys, :only => [:index, :create]
-        api_resources :system_groups, :only => [:index, :create]
         api_resources :gpg_keys, :only => [:index, :create]
 
         match '/default_info/:informable_type' => 'organization_default_info#create', :via => :post, :as => :create_default_info
@@ -60,9 +59,9 @@ Src::Application.routes.draw do
           get :systems
           get :history
           match "/history/:job_id" => "system_groups#history_show", :via => :get
-          post :add_systems
+          put :add_systems
           post :copy
-          post :remove_systems
+          put :remove_systems
           delete :destroy_systems
         end
 
@@ -125,6 +124,7 @@ Src::Application.routes.draw do
           end
         end
       end
+      match "/distributor_versions" => "distributors#versions", :via => :get, :as => :distributor_versions
 
       api_resources :subscriptions, :only => [] do
         collection do
@@ -207,7 +207,7 @@ Src::Application.routes.draw do
       api_resources :ping, :only => [:index]
 
       api_resources :repositories, :only => [:index, :create, :show, :update, :destroy], :constraints => { :id => /[0-9a-zA-Z\-_.]*/ } do
-        api_resources :sync, :only => [:index, :create] do
+        api_resources :sync, :only => [:index] do
           delete :index, :on => :collection, :action => :cancel
         end
         api_resources :packages, :only => [:index, :show] do
@@ -222,6 +222,7 @@ Src::Application.routes.draw do
           get :package_groups
           get :package_group_categories
           get :gpg_key_content
+          post :sync
         end
         collection do
           post :sync_complete
@@ -229,7 +230,7 @@ Src::Application.routes.draw do
       end
 
       api_resources :environments, :only => [:show, :update, :destroy] do
-        scope :constraints => RegisterWithActivationKeyContraint.new do
+        scope :constraints => Katello::RegisterWithActivationKeyContraint.new do
           match '/systems' => 'systems#activate', :via => :post
         end
         api_resources :systems, :only => [:create, :index] do
@@ -306,17 +307,17 @@ Src::Application.routes.draw do
       match '/custom_info/:informable_type/:informable_id/*keyname' => 'custom_info#destroy', :via => :delete, :as => :destroy_custom_info
 
       # subscription-manager support
-      match '/users/:username/owners' => 'users#list_owners', :via => :get
+      match '/users/:login/owners' => 'users#list_owners', :via => :get
 
     end # module v2
 
     # routes that didn't change in v2 and point to v1
-    scope :module => :v1, :constraints => ApiVersionConstraint.new(:version => 2) do
+    scope :module => :v1, :constraints => Katello::ApiVersionConstraint.new(:version => 2) do
 
       api_resources :crls, :only => [:index]
 
       # subscription-manager support
-      scope :constraints => RegisterWithActivationKeyContraint.new do
+      scope :constraints => Katello::RegisterWithActivationKeyContraint.new do
         match '/consumers' => 'systems#activate', :via => :post
       end
       match '/hypervisors' => 'systems#hypervisors_update', :via => :post
@@ -352,5 +353,4 @@ Src::Application.routes.draw do
     end # module v1
 
   end # '/api' namespace
-
 end

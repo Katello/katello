@@ -48,14 +48,14 @@ module Katello
 
       def is_type(key, *types)
         unless types.any? { |type| type === config[key] }
-          raise error_format(key.to_sym, "has to be one of #{types.inspect} types")
+          fail error_format(key.to_sym, "has to be one of #{types.inspect} types")
         end
       end
 
       def has_values(key, values, options = {})
         values << nil if options[:allow_nil]
         return true if values.include?(config[key])
-        raise ArgumentError, error_format(key, "should be one of #{values.inspect}, but was #{config[key].inspect}")
+        fail ArgumentError, error_format(key, "should be one of #{values.inspect}, but was #{config[key].inspect}")
       end
 
       def has_keys(*keys)
@@ -64,7 +64,7 @@ module Katello
 
       def has_key(key)
         unless config.key? key.to_sym
-          raise error_format(key.to_sym, 'is required')
+          fail error_format(key.to_sym, 'is required')
         end
       end
 
@@ -78,7 +78,7 @@ module Katello
 
       def is_not_empty(key)
         if config[key].nil? || config[key].empty?
-          raise error_format(key.to_sym, "must not be empty")
+          fail error_format(key.to_sym, "must not be empty")
         end
       end
     end

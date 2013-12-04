@@ -1,0 +1,183 @@
+@import "katello/katello_base";
+
+#distributors {
+  .path_selector {
+    @include border-radius(4px);
+    top: auto;
+  }
+  table {
+    margin-bottom: 4px;
+    td {
+      &.package_select {
+          width: 29px;
+      }
+    }
+  }
+  .tall {
+    @extend .block;
+    height: 40px;
+
+    li {
+      padding: 0;
+      height: 1.2em;
+    }
+    .column_3 {
+      height: 35px;
+    }
+    #new {
+        height: 25px;
+        width: 10em !important;
+    }
+  }
+
+  .product {
+    float: left;
+    height: 40px;
+  }
+  #subscriptions {
+    .labels {
+      overflow: auto;
+    }
+    label { display: block; }
+    .needs_attention { color: red; }
+
+    .lower_content {
+      margin-top: 10px;
+      table {
+        tbody {
+          td:first-child { text-align: left; text-indent: 2px; }
+          td:last-child {
+            font-weight: 500;
+            &:hover {
+              span { color: $kselected_color;}
+              .remove_subscription_img { background: $circle_x_icon_black; }
+              .subscribe { background: $play_icon_black; }
+            }
+          }
+          .subscription_row { margin-left: 19px; }
+          .remove_subscription_img { background: $circle_x_icon_grey; overflow: hidden; margin-right: 2px; margin-top: 2px; }
+          .subscribe { background: $play_icon_grey; overflow: hidden; margin-right: 2px; margin-top: 2px; }
+          span { margin-top: 3px; display: block; float: left; color: #888; }
+          .editable {
+            @include border-radius(0);
+            background: $edit_icon;
+            background-position: 100px 7px;
+            width: 180px;
+            padding: 6px 0px;
+            text-align: center;
+          }
+        }
+      }
+    }
+    .add_subs {
+      float: right;
+      padding-left: 25px;
+    }
+  }
+  .subs {
+    background-color: $white_color;
+    @include border-radius(5px);
+    border: 1px solid $border_color;
+    font-family: $headlinefont;
+    color: #747474;
+    font-size: 14px;
+    height: auto;
+    .subs_text {
+        margin: 8px 0 2px 8px;
+        padding: 0px;
+        float: left;
+        height: 30px;
+        width: 89%;
+        border-bottom: 1px dotted $border_color;
+    }
+    .subs_shadow {
+      height: 36px;
+    }
+    .subs_image_wrapper {
+      height:36px;
+      width: 36px;
+      float: left;
+      @include box-shadow(1px, 1px, 4px, #888);
+      @include border-radius(0 0 5px 0);
+      padding: 0 4px 4px 0;
+    }
+    .subs_image {
+      height: 23px;
+      width: 25px;
+      background: $status_icons_green;
+      float: left;
+      margin: 8px 8px;
+      &.green {
+       background: $status_icons_green;
+      }
+      &.yellow {
+       background: $status_icons_yellow;
+      }
+      &.red {
+       background: $status_icons_red;
+      }
+    }
+    .subs_top {
+      width: 100%;
+      height: 100%;
+      font-size: 15px;
+      border-bottom: 1px solid $border_color;
+      @include border-radius(5px)
+    }
+  }
+  #list-spinner {
+    display: none;
+  }
+  #package_sort {
+    &.ascending {
+        &:after {
+            content: "\00A0\25B2";
+        }
+    }
+    &.descending {
+        &:after {
+            content: "\00A0\25BC";
+        }
+    }
+  }
+  .delete_icon {
+    display: inline;
+    background: $circle_x_icon_black;
+    width: 16px;
+    height: 16px;
+    margin-right: 4px;
+  }
+  .summary {
+    background-color: $white_color;
+    @include border-radius(5px);
+    border: 1px solid $border_color;
+    font-family: $headlinefont;
+    color: #747474;
+    font-size: 14px;
+    .summary_text {
+        margin: 8px 0 2px 8px;
+        padding: 0px;
+        float: left;
+    }
+    .summary_top {
+      width: 100%;
+      height: 36px;
+      font-size: 15px;
+      @include border-radius(10px)
+    }
+    .summary_left {
+      border-right: 1px solid $border_color;
+      width: 49%;
+      float: left;
+      clear: left;
+    }
+    .summary_right {
+      width: 49%;
+      float: right;
+    }
+    .summary_num {
+      font-size: 24px;
+      color: #999;
+    }
+  }
+}

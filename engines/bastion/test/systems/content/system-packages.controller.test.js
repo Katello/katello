@@ -12,7 +12,7 @@
  **/
 
 describe('Controller: SystemPackagesController', function() {
-    var $scope, Nutupane, SystemTask, SystemPackage, mockSystem, mockTask, i18nFilter, System;
+    var $scope, Nutupane, SystemTask, SystemPackage, mockSystem, mockTask, gettext, System;
 
     beforeEach(module('Bastion.systems', 'Bastion.test-mocks'));
 
@@ -48,7 +48,7 @@ describe('Controller: SystemPackagesController', function() {
             pending: true,
             id: 7
         };
-        i18nFilter = function() {};
+        gettext = function() {};
 
     });
 
@@ -59,7 +59,7 @@ describe('Controller: SystemPackagesController', function() {
         $controller('SystemPackagesController', {$scope: $scope,
                                                SystemPackage: SystemPackage,
                                                SystemTask: SystemTask,
-                                               i18nFilter:i18nFilter,
+                                               gettext:gettext,
                                                Nutupane: Nutupane});
     }));
 

@@ -10,18 +10,22 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'spec_helper'
+require 'katello_test_helper'
 
-describe SyncSchedulesController, :katello => true do
-  include LoginHelperMethods
+module Katello
+describe SyncSchedulesController do
+
   include LocaleHelperMethods
   include OrganizationHelperMethods
   include ProductHelperMethods
   include OrchestrationHelper
   include AuthorizationHelperMethods
 
+  describe "(katello)" do
+
   describe "rules" do
     before (:each) do
+      setup_controller_defaults
       new_test_org
     end
     describe "GET index" do
@@ -41,7 +45,7 @@ describe SyncSchedulesController, :katello => true do
 
     describe "Manage test" do
       before do
-        @controller.stub!(:find_products).and_return({})
+        @controller.stubs(:find_products).returns({})
       end
       let(:action) {:apply}
       let(:req) { post :apply}
@@ -57,8 +61,7 @@ describe SyncSchedulesController, :katello => true do
 
   describe "others" do
     before (:each) do
-      login_user
-      set_default_locale
+      setup_controller_defaults
 
       @org = new_test_org
       for i in 1..10
@@ -67,24 +70,26 @@ describe SyncSchedulesController, :katello => true do
                                       :organization => @org)
       end
       @p = new_test_product(@org, @org.library)
-      controller.stub!(:current_organization).and_return(@org)
+      @controller.stubs(:current_organization).returns(@org)
     end
 
     describe "GET 'index'" do
       it "should be successful" do
         get 'index'
-        response.should be_success
+        must_respond_with(:success)
       end
     end
 
     describe "POST 'apply'" do
       it "should receive a notice" do
-        controller.should notify.success
+        Repository.any_instance.stubs(:set_sync_schedule)
+        must_notify_with(:success)
         plans = [SyncPlan.first.id.to_s]
         products = [Product.first.id.to_s]
         post 'apply', {:data => {:plans=> plans, :products=> products}.to_json}
       end
     end
   end
-
+  end
+end
 end

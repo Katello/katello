@@ -1,11 +1,11 @@
-
-Src::Application.routes.draw do
+Katello::Engine.routes.draw do
 
   apipie
 
   resources :system_groups do
     collection do
       get :items
+      get :all
       get :auto_complete
       get :validate_name
     end
@@ -495,26 +495,11 @@ Src::Application.routes.draw do
     delete 'favorite/:id' => 'search#destroy_favorite', :on => :collection, :as => 'destroy_favorite'
   end
 
-  resource :user_session do
-    post 'set_org'
-    get 'allowed_orgs'
-  end
+  root :to => "dashboard#index"
 
-  root :to => "user_sessions#new"
-
-  match '/login' => 'user_sessions#new', :as => 'login'
-  match '/logout' => 'user_sessions#destroy', :via => [:post, :get]
-  match '/user_session/logout' => 'user_sessions#destroy'
-  match '/user_session' => 'user_sessions#show', :via => :get, :as => 'show_user_session'
-  match '/authenticate' => 'user_sessions#authenticate', :via => :get
-
-  resources :password_resets, :only => [:create, :edit, :update] do
-    collection do
-      post :email_logins
-    end
-  end
-
-  match 'about', :to => "application_info#about", :as => "about"
+  match '/user_session/set_org' => 'user_sessions#set_org', :via => :post
 
   match '/i18n/dictionary' => 'i18n#show', :via => :get
+
+  match 'about', :to => "application_info#about", :as => "about"
 end

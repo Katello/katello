@@ -10,8 +10,9 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'models/model_spec_helper'
+require File.expand_path("../models/model_spec_helper", File.dirname(__FILE__))
 
+module Katello
 module AuthorizationHelperMethods
   include OrchestrationHelper
 
@@ -32,9 +33,9 @@ module AuthorizationHelperMethods
     end
   end
 
-  # for simplified testing without authorization (makes stubbing much more easier)
+  # for simplified testing without authorization (makes stubsbing much more easier)
   def disable_authorization_rules
-    controller.stub(:authorize).and_return(true)
+    @controller.stubs(:authorize).returns(true)
   end
 
   def allow(*args)
@@ -65,7 +66,7 @@ module AuthorizationHelperMethods
 
       verbs_not_in.each{|verb| model_verbs[verb] = verb}
 
-      rt[:model].stub(:list_verbs).and_return(model_verbs.with_indifferent_access)
+      rt[:model].stubs(:list_verbs).returns(model_verbs.with_indifferent_access)
     end
     resource_type = ResourceType.find_or_create_by_name(resource_type)
     tags = [tags] unless Array === tags
@@ -93,7 +94,7 @@ module AuthorizationHelperMethods
 
     @users_count ||= 0
     @users_count += 1
-    user = User.create!(:username => "tmp#{@users_count}", :password => "tmp_password", :email => "tmp#{@users_count}@someserver.com")
+    user = User.find_by_login('one')
     yield UserPermissionsGenerator.new(user) if block_given?
     user
   end
@@ -110,4 +111,4 @@ module AuthorizationHelperMethods
   end
 
 end
-
+end

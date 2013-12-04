@@ -41,35 +41,14 @@ describe('Controller: ProductsController', function() {
     }));
 
     it('attaches the nutupane table to the scope', function() {
-        expect($scope.table).toBeDefined();
+        expect($scope.productTable).toBeDefined();
     });
 
     it('sets the closeItem function to transition to the index page', function() {
         spyOn($scope, "transitionTo");
-        $scope.table.closeItem();
+        $scope.productTable.closeItem();
 
         expect($scope.transitionTo).toHaveBeenCalledWith('products.index');
-    });
-
-    it('provides a method to transition to the new product page', function() {
-        spyOn($scope, "transitionTo");
-        $scope.transitionToNewProduct();
-
-        expect($scope.transitionTo).toHaveBeenCalledWith('products.new.form');
-    });
-
-    it('provides a method to transition to the repo discovery page', function() {
-        spyOn($scope, "transitionTo");
-        $scope.transitionToDiscovery();
-
-        expect($scope.transitionTo).toHaveBeenCalledWith('products.discovery.scan');
-    });
-
-    it('sets the openProduct function to transition to a repository page', function() {
-        spyOn($scope, "transitionTo");
-        $scope.table.openProduct({ id: 1 });
-
-        expect($scope.transitionTo).toHaveBeenCalledWith('products.details.repositories.index', { productId: 1 });
     });
 
 });

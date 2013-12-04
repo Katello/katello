@@ -10,13 +10,13 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'spec_helper.rb'
-include OrchestrationHelper
+require 'katello_test_helper'
 
-describe Api::V1::SystemGroupPackagesController, :katello => true do
-  include LoginHelperMethods
-  include LocaleHelperMethods
+module Katello
+describe Api::V1::SystemGroupPackagesController do
   include AuthorizationHelperMethods
+  include OrchestrationHelper
+  include OrganizationHelperMethods
 
   let(:user_with_update_permissions) { user_with_permissions { |u| u.can(:update_systems, :system_groups, @group.id, @organization) } }
   let(:user_without_update_permissions) { user_without_permissions }
@@ -24,19 +24,22 @@ describe Api::V1::SystemGroupPackagesController, :katello => true do
   let(:package_groups) { %w[@Editors FTP Server] }
   let(:packages) { %w[zsh bash] }
 
+  describe "(katello)" do
+
   before(:each) do
-    login_user(:mock => false)
-    set_default_locale
+    setup_controller_defaults_api
+
     new_test_org
+    System.any_instance.stub(:update_system_groups)
 
     disable_consumer_group_orchestration
     @group = SystemGroup.create!(:name => "test_group", :organization => @organization, :max_systems => 5)
-    SystemGroup.stub!(:find).and_return(@group)
+    SystemGroup.stubs(:find).returns(@group)
   end
 
   describe "install package" do
     before do
-      @group.stub(:install_packages).and_return(TaskStatus.new())
+      @group.stubs(:install_packages).returns(TaskStatus.new())
     end
 
     let(:action) { :create }
@@ -47,33 +50,38 @@ describe Api::V1::SystemGroupPackagesController, :katello => true do
 
     it_should_behave_like "protected action"
 
-    it { should be_successful }
-
     it "should call model to install packages" do
-      @group.should_receive(:install_packages)
+      @group.expects(:install_packages)
       subject
     end
 
+    it "should be successful" do
+      post :create, :organization_id => @organization.name, :system_group_id => @group.id, :packages => packages
+      must_respond_with(:success)
+    end
   end
 
   describe "install package group" do
     before do
-      @group.stub(:install_package_groups).and_return(TaskStatus.new())
+      @group.stubs(:install_package_groups).returns(TaskStatus.new())
     end
 
     subject { post :create, :organization_id => @organization.name, :system_group_id => @group.id, :groups => package_groups }
 
-    it { should be_successful }
-
     it "should call model to install package groups" do
-      @group.should_receive(:install_package_groups)
+      @group.expects(:install_package_groups)
       subject
+    end
+
+    it "should be successful" do
+      post :create, :organization_id => @organization.name, :system_group_id => @group.id, :groups => package_groups
+      must_respond_with(:success)
     end
   end
 
   describe "remove package" do
     before do
-      @group.stub(:uninstall_packages).and_return(TaskStatus.new())
+      @group.stubs(:uninstall_packages).returns(TaskStatus.new())
     end
 
     let(:action) { :destroy }
@@ -83,32 +91,38 @@ describe Api::V1::SystemGroupPackagesController, :katello => true do
     let(:unauthorized_user) { user_without_update_permissions }
     it_should_behave_like "protected action"
 
-    it { should be_successful }
-
     it "should call model to remove packages" do
-      @group.should_receive(:uninstall_packages)
+      @group.expects(:uninstall_packages)
       subject
+    end
+
+    it "should be successful" do
+      delete :destroy, :organization_id => @organization.name, :system_group_id => @group.id, :packages => packages
+      must_respond_with(:success)
     end
   end
 
   describe "remove package group" do
     before do
-      @group.stub(:uninstall_package_groups).and_return(TaskStatus.new())
+      @group.stubs(:uninstall_package_groups).returns(TaskStatus.new())
     end
 
     subject { delete :destroy, :organization_id => @organization.name, :system_group_id => @group.id, :groups => package_groups }
 
-    it { should be_successful }
-
     it "should call model to remove package groups" do
-      @group.should_receive(:uninstall_package_groups)
+      @group.expects(:uninstall_package_groups)
       subject
+    end
+
+    it "should be successful" do
+      delete :destroy, :organization_id => @organization.name, :system_group_id => @group.id, :groups => package_groups
+      must_respond_with(:success)
     end
   end
 
   describe "update package" do
     before do
-      @group.stub(:update_packages).and_return(TaskStatus.new())
+      @group.stubs(:update_packages).returns(TaskStatus.new())
     end
 
     let(:action) { :create }
@@ -118,26 +132,34 @@ describe Api::V1::SystemGroupPackagesController, :katello => true do
     let(:unauthorized_user) { user_without_update_permissions }
     it_should_behave_like "protected action"
 
-    it { should be_successful }
-
     it "should call model to update packages" do
-      @group.should_receive(:update_packages)
+      @group.expects(:update_packages)
       subject
+    end
+
+    it "should be successful" do
+      put :update, :organization_id => @organization.name, :system_group_id => @group.id, :packages => packages
+      must_respond_with(:success)
     end
   end
 
   describe "update package groups" do
     before do
-      @group.stub(:install_package_groups).and_return(TaskStatus.new())
+      @group.stubs(:install_package_groups).returns(TaskStatus.new())
     end
 
     subject { put :update, :organization_id => @organization.name, :system_group_id => @group.id, :groups => package_groups }
 
-    it { should be_successful }
-
     it "should call model to update package groups" do
-      @group.should_receive(:install_package_groups)
+      @group.expects(:install_package_groups)
       subject
     end
+
+    it "should be successful" do
+      put :update, :organization_id => @organization.name, :system_group_id => @group.id, :groups => package_groups
+      must_respond_with(:success)
+    end
   end
+  end
+end
 end

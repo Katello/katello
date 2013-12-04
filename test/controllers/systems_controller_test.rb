@@ -11,24 +11,25 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require "minitest_helper"
+require "katello_test_helper"
 
+module Katello
 describe SystemsController do
-  fixtures :all
 
   before do
     models = ["Organization", "KTEnvironment", "User", "Filter",
                 "FilterRule", "ErratumRule", "PackageRule", "PackageGroupRule",
                 "ContentViewEnvironment", "ContentViewDefinition", "System"]
     disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
-    @system = systems(:simple_server)
+    setup_controller_defaults
+    @system = katello_systems(:simple_server)
     @org = @system.organization
-    login_user(User.find(users(:admin)), @org)
+    set_organization(@org)
   end
 
   describe "update"  do
     before do
-      @content_view = content_views(:library_dev_view)
+      @content_view = katello_content_views(:library_dev_view)
       @cv_id = @content_view.id
       @env_id = @system.environment.id
       @subscribe_permission = UserPermission.new(:subscribe, :content_views, @cv_id, @content_view.organization)
@@ -55,4 +56,5 @@ describe SystemsController do
       )
     end
   end
+end
 end

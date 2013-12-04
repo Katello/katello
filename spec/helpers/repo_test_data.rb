@@ -10,6 +10,8 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http =>//www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+require 'active_support/core_ext/hash/indifferent_access'
+
 module RepoTestData
   REPO_NAME = 'repo'
   REPO_LABEL = 'repo_label'

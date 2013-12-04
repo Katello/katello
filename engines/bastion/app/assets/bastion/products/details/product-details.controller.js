@@ -25,6 +25,9 @@
 angular.module('Bastion.products').controller('ProductDetailsController',
     ['$scope', '$state', 'Product', function($scope, $state, Product) {
 
+        $scope.successMessages = [];
+        $scope.errorMessages = [];
+
         if ($scope.product) {
             $scope.panel = {loading: false};
         } else {
@@ -35,13 +38,6 @@ angular.module('Bastion.products').controller('ProductDetailsController',
             $scope.panel.loading = false;
         });
 
-        $scope.transitionToInfo = function(product) {
-            $scope.transitionTo('products.details.info', {productId: product.id});
-        };
-
-        $scope.transitionToRepositories = function(product) {
-            $scope.transitionTo('products.details.repositories.index', {productId: product.id});
-        };
 
         $scope.removeProduct = function(product) {
             var id = product.id;

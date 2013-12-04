@@ -1,5 +1,5 @@
 FactoryGirl.define do
-  factory :system do
+  factory :system, :class => Katello::System do
 
     ignore do
       stubbed = true

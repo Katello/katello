@@ -19,6 +19,9 @@ describe('Directive: alchEdit', function() {
 
     beforeEach(module('alchemy',
         'incubator/views/alch-edit.html',
+        'incubator/views/alch-edit-text.html',
+        'incubator/views/alch-edit-textarea.html',
+        'incubator/views/alch-edit-select.html',
         'incubator/views/alch-edit-add-item.html',
         'incubator/views/alch-edit-add-remove-cancel.html',
         'incubator/views/alch-edit-multiselect.html',
@@ -34,7 +37,7 @@ describe('Directive: alchEdit', function() {
             delete: function() {}
         };
 
-        i18nFilter = function() {
+        gettext = function() {
             this.$get = function() {
                 return function() {};
             };
@@ -42,7 +45,8 @@ describe('Directive: alchEdit', function() {
             return this;
         };
 
-        $provide.provider('i18nFilter', i18nFilter);
+        $provide.provider('gettext', gettext);
+        $provide.provider('translateFilter', gettext);
     }));
 
     beforeEach(inject(function(_$compile_, _$rootScope_) {
@@ -83,10 +87,10 @@ describe('Directive: alchEdit', function() {
         it("should hide the editable value display on click", function() {
             var element = editableElement.find('.editable');
 
-            expect(element.css('display')).not.toBe('none');
+            expect(element.hasClass('ng-hide')).toBe(false);
             element.trigger('click');
 
-            expect(element.css('display')).toBe('none');
+            expect(element.hasClass('ng-hide')).toBe(true);
         });
 
         it("should call the method set to on-save when clicking save button", function() {
@@ -120,7 +124,7 @@ describe('Directive: alchEdit', function() {
             var $filter, elementScope;
             beforeEach(inject(function(_$filter_) {
                 $filter = _$filter_;
-                elementScope = editableElement.scope();
+                elementScope = editableElement.isolateScope();
             }));
 
             it("by executing the provided filter on the model", function() {
@@ -254,7 +258,7 @@ describe('Directive: alchEdit', function() {
 
             compile(editableElement)(scope);
             scope.$digest();
-            directiveScope = editableElement.scope();
+            directiveScope = editableElement.isolateScope();
         });
 
         beforeEach(inject(function($controller) {

@@ -16,11 +16,11 @@
  * @name  Bastion.products.controller:ProducFormController
  *
  * @requires $scope
- * @requires $http
  * @requires $q
  * @requires Product
  * @requires Provider
- * @requires CurrentOrganization
+ * @requires GPGKey
+ * @requires FormUtils
  *
  * @description
  *   Provides the functionality specific to Products for use with the Nutupane UI pattern.
@@ -28,19 +28,55 @@
  *   within the table.
  */
 angular.module('Bastion.products').controller('ProductFormController',
-    ['$scope', '$http', '$q', 'Product', 'Provider', 'GPGKey',
-    function($scope, $http, $q, Product, Provider, GPGKey) {
+    ['$scope', '$q', 'Product', 'Provider', 'GPGKey', 'FormUtils',
+    function($scope, $q, Product, Provider, GPGKey, FormUtils) {
+
+        function fetchProviders() {
+            Provider.query(function(providers) {
+                $scope.providers = providers.results;
+            });
+        }
+
+        function fetchGpgKeys() {
+            GPGKey.query(function(gpgKeys) {
+                $scope.gpgKeys = gpgKeys.results;
+            });
+        }
+
+        function populateSelects() {
+            var deferred = $q.defer();
+
+            $scope.$watch("providers && gpgKeys", function(value) {
+                if (value !== undefined) {
+                    deferred.resolve(true);
+                }
+            });
+
+            fetchProviders();
+            fetchGpgKeys();
+
+            return deferred.promise;
+        }
+
+        function success(response) {
+            $scope.productTable.addRow(response);
+            $scope.transitionTo('products.details.repositories.index', {productId: $scope.product.id});
+        }
+
+        function error(response) {
+            $scope.working = false;
+            angular.forEach(response.data.errors, function(errors, field) {
+                $scope.productForm[field].$setValidity('server', false);
+                $scope.productForm[field].$error.messages = errors;
+            });
+        }
 
         $scope.product = $scope.product || new Product();
 
-        $scope.$on('$stateChangeSuccess', function(event, toState) {
-            if (toState.name === 'products.new.form') {
-                $scope.providers = fetchProviders();
-                $scope.gpgKeys = fetchGPGKeys();
-
-                $q.all([$scope.gpgKeys, $scope.providers]).then(function() {
-                    $scope.panel.loading = false;
-                });
+        $scope.$watch('product.name', function() {
+            if ($scope.productForm.name) {
+                $scope.productForm.name.$setValidity('server', true);
+                FormUtils.labelize($scope.product, $scope.productForm);
             }
         });
 
@@ -48,54 +84,8 @@ angular.module('Bastion.products').controller('ProductFormController',
             product.$save(success, error);
         };
 
-        $scope.$watch('product.name', function() {
-            $scope.productForm.name.$setValidity('', true);
-
-            $http.get(
-                '/katello/organizations/default_label', {
-                params: {'name': $scope.product.name}
-            })
-            .success(function(response) {
-                $scope.product.label = response;
-            })
-            .error(function(response) {
-                $scope.productForm.label.$setValidity('', false);
-                $scope.productForm.label.$error.messages = response.errors;
-            });
+        populateSelects().then(function() {
+            $scope.panel.loading = false;
         });
-
-        function fetchProviders() {
-            var deferred = $q.defer();
-
-            Provider.query(function(providers) {
-                deferred.resolve(providers.results);
-            });
-
-            return deferred.promise;
-        }
-
-        function fetchGPGKeys() {
-            var deferred = $q.defer();
-
-            GPGKey.query(function(gpgKeys) {
-                deferred.resolve(gpgKeys.results);
-            });
-
-            return deferred.promise;
-        }
-
-        function success(response) {
-            $scope.table.addRow(response);
-            $scope.transitionTo('products.details.repositories.index', {productId: $scope.product.id});
-        }
-
-        function error(response) {
-            $scope.working = false;
-            angular.forEach(response.data.errors, function(errors, field) {
-                $scope.productForm[field].$setValidity('', false);
-                $scope.productForm[field].$error.messages = errors;
-            });
-        }
-
     }]
 );

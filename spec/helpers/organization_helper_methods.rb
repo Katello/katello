@@ -10,7 +10,9 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'models/model_spec_helper'
+require File.expand_path("../models/model_spec_helper", File.dirname(__FILE__))
+
+module Katello
 module OrganizationHelperMethods
   include OrchestrationHelper
 
@@ -30,7 +32,7 @@ module OrganizationHelperMethods
   end
 
   def current_organization=(org)
-    controller.stub!(:current_organization).and_return(org)
+    controller.stubs(:current_organization).returns(org)
   end
 
   def create_environment(attrs)
@@ -69,11 +71,11 @@ module OrganizationHelperMethods
   end
 
   def promote_content_view(cv, from_env, to_env)
-    Katello.pulp_server.extensions.repository.stub(:create).and_return({})
-    Repository.any_instance.stub(:clone_contents).and_return([])
-    Repository.any_instance.stub(:sync).and_return([])
-    Repository.any_instance.stub(:pulp_repo_facts).and_return({'distributors' => []})
-    Glue::Event.stub(:trigger).and_return({})
+    Katello.pulp_server.extensions.repository.stubs(:create).returns({})
+    Repository.any_instance.stubs(:clone_contents).returns([])
+    Repository.any_instance.stubs(:sync).returns([])
+    Repository.any_instance.stubs(:pulp_repo_facts).returns({:clone_ids => []})
+    Glue::Event.stubs(:trigger).returns({})
     cv.promote(from_env, to_env)
   end
 
@@ -91,4 +93,5 @@ module OrganizationHelperMethods
     end
     ak
   end
+end
 end

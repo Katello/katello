@@ -10,38 +10,40 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'spec_helper'
-include OrchestrationHelper
+require 'katello_test_helper'
+require 'helpers/product_test_data'
 
+module Katello
 describe SyncPlan, :katello => true do
+
+  include OrchestrationHelper
 
   describe "SyncPlan should" do
     before(:each) do
-      disable_org_orchestration
-      @organization = Organization.create!(:name=>'test_org', :label=> 'test_org')
+      @organization = katello_organizations(:acme_corporation)
       @plan = SyncPlan.create!({:name => 'Norman Rockwell', :organization => @organization, :sync_date => DateTime.now, :interval => 'daily'})
     end
 
     it "be able to create" do
-      @plan.should_not be_nil
+      @plan.wont_be_nil
     end
 
     it "be able to gracefull handle invalid intervals" do
       @plan.interval = 'notgood'
-      @plan.should_not be_valid
+      @plan.wont_be :valid?
     end
 
     it "be able to modify valid intervals" do
       @plan.interval = 'weekly'
-      @plan.should be_valid
+      @plan.must_be :valid?
     end
 
     it "be able to update" do
       p = SyncPlan.find_by_name('Norman Rockwell')
-      p.should_not be_nil
+      p.wont_be_nil
       new_name = p.name + "N"
       p = SyncPlan.update(p.id, {:name => new_name})
-      p.name.should == new_name
+      p.name.must_equal(new_name)
     end
 
     it "be able to delete" do
@@ -49,43 +51,45 @@ describe SyncPlan, :katello => true do
       pid = p.id
       p.destroy
 
-      lambda{SyncPlan.find(pid)}.should raise_error(ActiveRecord::RecordNotFound)
+      lambda{SyncPlan.find(pid)}.must_raise(ActiveRecord::RecordNotFound)
     end
 
     it "should have proper pulp duration format" do
       @plan.interval = 'weekly'
-      @plan.schedule_format.should_not be_nil
-      @plan.schedule_format.should =~ /\/P7D$/
+      @plan.schedule_format.wont_be_nil
+      @plan.schedule_format.must_match(/\/P7D$/)
     end
 
     it "should properly handle pulp duration of none" do
       @plan.interval = 'none'
       @plan.sync_date = DateTime.now.tomorrow()
-      @plan.schedule_format.should_not be_nil
-      @plan.schedule_format.should =~ /R1\/.*\/P1D/
+      @plan.schedule_format.wont_be_nil
+      @plan.schedule_format.must_match(/R1\/.*\/P1D/)
     end
 
     it "should properly handle pulp duration of none if scheduled in past" do
       @plan.interval = 'none'
       @plan.sync_date = DateTime.now.yesterday()
-      @plan.schedule_format.should == nil
+      @plan.schedule_format.must_be_nil
     end
 
     it "reassign sync_plan to its products after update" do
       disable_product_orchestration
 
-      organization = Organization.create!(:name=>ProductTestData::ORG_ID, :label => 'admin-org-37070')
+      organization = katello_organizations(:acme_corporation)
       @plan.products.create! ProductTestData::SIMPLE_PRODUCT.merge(
                                  :provider => organization.redhat_provider)
       @plan.save!
       @plan.reload
-      @plan.should have(1).products
+      @plan.products.length.must_equal(1)
 
       #updating plan
       @plan.sync_date += 1
-      @plan.products.to_a.first.should_receive(:setup_sync_schedule).and_return(true)
-      lambda { @plan.save! }.should_not raise_exception
+      @plan.products.to_a.first.expects(:setup_sync_schedule).returns(true)
+      @plan.save!
+      @plan.must_be :valid?
     end
   end
 
+end
 end

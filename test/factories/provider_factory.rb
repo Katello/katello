@@ -1,5 +1,5 @@
 FactoryGirl.define do
-  factory :provider do
+  factory :provider, :class => Katello::Provider do
     sequence(:name) { |n| "Adobe #{n}" }
     provider_type "Custom"
     association   :organization

@@ -10,17 +10,18 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'spec_helper'
+require 'katello_test_helper'
 
+module Katello
 describe NoticesController do
-  include LoginHelperMethods
+
   include LocaleHelperMethods
   include OrganizationHelperMethods
 
   before (:each) do
-    @user = login_user :mock => false
-    set_default_locale
-    controller.stub(:render_panel_direct).and_return([])
+    setup_controller_defaults
+    @user = User.current
+    @controller.stubs(:render_panel_direct).returns([])
   end
 
   describe "viewing notices" do
@@ -29,52 +30,51 @@ describe NoticesController do
       @notices = Notice.select(:id).where("text like 'bar%'").order("id desc").all.collect{|s| s.id}
     end
 
-    it 'should show all user notices', :katello => true do #TODO headpin
+    it 'should show all user notices (katello)' do #TODO headpin
       get :show
-      response.should be_success
-      response.should render_template("show")
+      must_respond_with(:success)
+      must_render_template("show")
       assigns[:notices]
 
     end
 
-    it 'should show all unread notices for a user', :katello => true do #TODO headpin
+    it 'should show all unread notices for a user (katello)' do #TODO headpin
       @request.env['HTTP_ACCEPT'] = 'application/json'
       get :get_new
-      response.should be_success
+      must_respond_with(:success)
     end
 
-    it 'should show the details for a specific notice', :katello => true do #TODO headpin
+    it 'should show the details for a specific notice (katello)' do #TODO headpin
       n = Notice.create!(:text=>"Test notice", :level=>:success,
                     :details=>"Notices success details.",
                     :user_notices=>[UserNotice.new(:user => @user)])
       get :details, :id=>n.id
-      response.should be_success
+      must_respond_with(:success)
     end
 
-    it 'should throw an exception if the notice has no details', :katello => true do #TODO headpin
+    it 'should throw an exception if the notice has no details (katello)' do #TODO headpin
       Notice.create!(:text=>"Test notice", :level=>:success,
                     :user_notices=>[UserNotice.new(:user => @user)])
       get :details, :id=>21
-      response.should_not be_success
+      response.must_respond_with(404)
     end
   end
 
   describe "deleting notices" do
     before (:each) do
-      controller.stub!(:render)
+      @controller.stubs(:render)
       10.times { |a| Notice.create!(:text => "bar#{a}",
                                     :level => :success,
                                     :user_notices => [UserNotice.new(:user => @user, :viewed => true)]) }
     end
 
-    it 'should allow all notices to be destroyed for a single user', :katello => true do #TODO headpin
-      -> { delete :destroy_all }.should change { UserNotice.count }.by -10
-      response.should be_success
-    end
-    it 'should allow all notices to be destroyed for a single user', :katello => true do #TODO headpin
-      -> { delete :destroy_all }.should change { Notice.count }.by -10
-      response.should be_success
+    it 'should allow all notices to be destroyed for a single user (katello)' do #TODO headpin
+      pre_count = UserNotice.count
+      delete :destroy_all
+      must_respond_with(:success)
+      UserNotice.count.must_equal(pre_count - 10)
     end
   end
 
+end
 end

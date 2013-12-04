@@ -1,0 +1,174 @@
+<div>
+  <a ng-href="#/products/{{ repository.product.cp_id }}/repositories">
+    <i class="icon-backward clickable"></i>
+    {{ "Back to Repository List" | translate }}
+  </a>
+
+  <div class="fr">
+    <button class="btn btn-default"
+            ng-click="syncRepository(repository); working = true"
+            ng-disabled="syncInProgress(repository.sync_state)">
+      <i class="icon-refresh"></i>
+      <span translate>Sync Now</span>
+    </button>
+
+    <div alch-modal="removeRepository(repository)" model="repository"
+         modal-header='Remove Repository "{{repository.name}}"?'
+         modal-body='Are you sure you want to remove repository "{{ repository.name }}"?'></div>
+
+    <button class="btn btn-danger"
+            ng-click="openModal()"
+            ng-disabled="!repository.permissions.deletable">
+      {{ "Remove Repository" | translate }}
+    </button>
+  </div>
+</div>
+
+<div class="details fl">
+  <section>
+
+    <h4 translate>Basic Information</h4>
+
+    <div class="detail">
+      <span class="info-label" translate>Name</span>
+      <span class="info-value">{{ repository.name }}</span>
+    </div>
+
+    <div class="detail">
+      <span class="info-label" translate>Label</span>
+      <span class="info-value">{{ repository.label }}</span>
+    </div>
+
+    <div class="detail">
+      <span class="info-label" translate>Type</span>
+      <span class="info-value">{{ repository.content_type }}</span>
+    </div>
+
+    <div class="detail">
+      <span class="info-label" translate>URL</span>
+      <span class="info-value"
+            alch-edit-text="repository.feed"
+            on-save="save(repository)"
+            readonly="repository.readonly">
+      </span>
+    </div>
+
+    <div class="detail">
+      <span class="info-label" translate>Protected</span>
+      <span class="info-value">{{ !repository.unprotected }}</span>
+    </div>
+
+    <div class="detail">
+      <span class="info-label" translate>Published At</span>
+      <span class="info-value">
+        <a ng-href="{{ repository.full_path }}">{{ repository.full_path }}</a>
+      </span>
+    </div>
+
+    <div class="detail">
+      <span class="info-label" translate>GPG Key</span>
+      <span class="info-value"
+            alch-edit-select="repository.gpg_key.name"
+            readonly="repository.readonly"
+            selector="repository.gpg_key_id"
+            options="gpgKeys()"
+            on-save="save(repository)">
+      </span>
+    </div>
+
+    <div class="divider"></div>
+  </section>
+
+  <section>
+    <h4 translate>Sync Status</h4>
+
+    <div class="detail">
+      <span class="info-label" translate>Last Sync</span>
+      <span class="info-value">{{ repository.last_sync | date:'short' }}</span>
+    </div>
+
+    <div class="detail">
+      <span class="info-label" translate>Sync State</span>
+      <span class="info-value">
+        <a href="sync_management/index">{{ repository.sync_state }}</a>
+      </span>
+    </div>
+  </section>
+
+</div>
+
+<div class="details fl">
+
+  <section>
+    <h4 translate>Content Counts</h4>
+
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th colspan="2" translate>Content Type</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr ng-show="repository.content_type == 'yum'">
+          <td translate>Packages</td>
+          <td class="align-center">
+            <a ng-href="/katello/content_search#/!=&search[subgrid][repo_id]={{ repository.id }}&search[subgrid][type]=repo_packages">
+              {{ repository.content_counts.rpm || 0 }}
+            </a>
+          </td>
+        </tr>
+        <tr ng-show="repository.content_type == 'yum'">
+          <td translate>Errata</td>
+          <td class="align-center">
+            <a ng-href="/katello/content_search#/!=&search[subgrid][repo_id]={{ repository.id }}&search[subgrid][type]=repo_errata">
+            {{ repository.content_counts.erratum || 0 }}
+            </a>
+          </td>
+        </tr>
+        <tr ng-show="repository.content_type == 'yum'">
+          <td translate>Package Groups</td>
+          <td class="align-center">{{ repository.content_counts.package_group || 0 }}</td>
+        </tr>
+        <tr ng-show="repository.content_type == 'puppet'">
+          <td translate>Puppet Modules</td>
+          <td class="align-center">
+            <a ng-href="/katello/content_search#/!=&search[subgrid][repo_id]={{ repository.id }}&search[subgrid][type]=repo_puppet_modules">
+            {{ repository.content_counts.puppet_module || 0 }}
+            </a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="well" ng-show="repository.content_type == 'puppet'">
+    <h5 translate>Upload Puppet Module</h5>
+
+    <div alch-alert success-messages="uploadSuccessMessages" error-messages="uploadErrorMessages"></div>
+
+    <form class="form labels_top"
+          action="/katello/api/repositories/{{ repository.id }}/content_uploads/file"
+          ng-upload
+          upload-options-enable-controls>
+
+      <div class="control-group">
+        <div class="input">
+          <input type="file" name="content"/>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <div class="control-button">
+          <button class="primary" upload-submit="uploadContent(content, completed)" ng-click="uploading = true">
+            <i class="icon-spinner icon-spin" ng-show="uploading"></i>
+            <span ng-show="uploading" translate>Uploading...</span>
+            <span ng-hide="uploading" translate>Upload</span>
+          </button>
+        </div>
+      </div>
+
+    </form>
+  </section>
+
+</div>

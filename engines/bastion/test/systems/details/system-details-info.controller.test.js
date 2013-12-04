@@ -14,10 +14,11 @@
 describe('Controller: SystemDetailsInfoController', function() {
     var $scope,
         $controller,
+        gettext,
         Routes,
         System,
         SystemGroup,
-        mockSystem,
+        CurrentOrganization,
         mockContentViews;
 
     beforeEach(module(
@@ -46,10 +47,15 @@ describe('Controller: SystemDetailsInfoController', function() {
 
         spyOn(System, 'releaseVersions').andReturn(['RHEL6']);
 
+        CurrentOrganization = 'foo';
         Routes = {
             apiCustomInfoPath: function(informable, id) {
                 return ['/api', informable, id].join('/')
             }
+        };
+
+        gettext = function(message) {
+            return message;
         };
 
         $scope.setupSelector = function() {};
@@ -64,10 +70,12 @@ describe('Controller: SystemDetailsInfoController', function() {
             $scope: $scope,
             $q: $q,
             $http: $http,
+            gettext: gettext,
             Routes: Routes,
             System: System,
             SystemGroup: SystemGroup,
-            ContentView: ContentView
+            ContentView: ContentView,
+            CurrentOrganization: CurrentOrganization
         });
 
         $scope.system = new System({
@@ -94,7 +102,7 @@ describe('Controller: SystemDetailsInfoController', function() {
     it("populates organizational system groups via the SystemGroups factory.", function() {
         spyOn(SystemGroup, 'query');
         $scope.systemGroups();
-        expect(SystemGroup.query).toHaveBeenCalledWith(jasmine.any(Function));
+        expect(SystemGroup.query).toHaveBeenCalledWith({'organization_id': CurrentOrganization}, jasmine.any(Function));
     });
 
     it("allows updating the system's groups", function() {
@@ -129,7 +137,6 @@ describe('Controller: SystemDetailsInfoController', function() {
             expect(Object.keys($scope.advancedInfoRight).length).toBe(1);
         });
 
-        // TODO remove me when we upgrade to AngularJS 1.1.4, see note in system-details-info.controller.js
         it("retrieves the correct template for each field based on it's type", function() {
             expect($scope.getTemplateForType("somethingElse")).toBe("systems/details/views/partials/system-detail-value.html");
             expect($scope.getTemplateForType({})).toBe("systems/details/views/partials/system-detail-object.html");

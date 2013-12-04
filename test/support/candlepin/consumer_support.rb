@@ -10,8 +10,9 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'minitest_helper'
+require 'katello_test_helper'
 
+module Katello
 module CandlepinConsumerSupport
 
   @system = nil
@@ -72,7 +73,7 @@ module CandlepinConsumerSupport
     @distributor.description = 'New Distributor'
     @distributor.environment = env
     @distributor.content_view = cv
-    @distributor.facts = {}
+    @distributor.facts = {"distributor_version" => Distributor.latest_version}
 
     VCR.use_cassette('support/candlepin/distributor', :match_requests_on => [:path, :params, :method, :body_json]) do
       @distributor.set_candlepin_consumer
@@ -92,4 +93,5 @@ module CandlepinConsumerSupport
     puts e
   end
 
+end
 end

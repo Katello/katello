@@ -92,9 +92,22 @@ To connect a browser to the test server, point your browser to your machine at p
 
 ## Linting ##
 
-Linting is controlled by the JSHint library. The configuration being used by the project is located at the root of the Bastion engine in the `.jshintrc` file. To run just the linter:
+#### JavaScript
+
+To enforce JavaScript guidelines, we use the [JSHint](http://jshint.com/) library via [grunt-contrib-jshint](https://github.com/gruntjs/grunt-contrib-jshint). The configuration being used by the project is located at the root of the Bastion engine in the `.jshintrc` file.
+
+To run the JavaScript linter:
 
     grunt jshint
+
+#### HTML
+
+To check HTML code, we use [grunt-htmlhint](https://github.com/yaniswang/grunt-htmlhint) which uses the lint checks from [HTMLHint](http://htmlhint.com/).
+
+To run the HTML linter:
+
+    grunt htmlhint
+
 
 ## Conventions ##
 
@@ -115,19 +128,42 @@ Linting is controlled by the JSHint library. The configuration being used by the
 
 ## i18n ##
 
-Internationalization is handled through the use of an angular filter and a service side API call that retrieves a hash containing the translations based on the user's language preference. The dictionary hash takes advantage of the Ruby gettext translation service. To declare a string for i18n within an angular template:
+Internationalization is handled through the use of an angular-gettext (https://github.com/rubenv/angular-gettext).  Strings are marked for translation, extracted into a .pot file, translated, and then compiled into an angular object from the resulting .po files.  To mark a string for translation within an angular template:
 
-    <h1>{{ "My Header" | i18n }}</h1>
+    <h1 translate>My Header</h1>
 
-To denote a string with replacement:
+Full interpolation support is available so the following will work:
 
-    <h1>{{ "My %type Header" | i18n:{'type': 'New'} }}</h1>
+    <h1 translate>My {{type}} Header</h1>
 
-In order for a string to be included in the translation dictionary, the string must be manually entered into the internalization dictionary using the english translation as the key. This dictionary can be found at `app/views/i18n/_dictionary.haml`. To add the example entries above, we would append to the list:
+Plurals are also supported:
 
-    "My Header": "#{_("My Header"_)}",
-    "My %type Header": "#{_("My %type Header")}"
+    <span translate translate-n="count" translate-plural="There are {{count}} messages">There is {{count}} message</a>
 
+There is also a filter available.  Use this only when you cannot use the above version.  Some times you may need to use the filter version include when translating HTML attributes and when other directives conflict with the translate directive.  Syntax follows:
+
+    <input type="text" placeholder="{{ 'Username' | translate }}" />
+
+To mark strings for translation in javascript files use the injectable `gettext()`.  This method marks the string for translation while also returning the translated string from the translation angular object.
+
+    var translatedString = gettext('String to translate');
+
+To extract strings into a .pot file for translation run:
+
+    grunt i18n:extract
+
+To create an angular object from translated .po files run:
+
+    grunt i18n:compile
+
+### i18n workflow ###
+
+1. Developers write a bunch of code, being sure to use the translate directive to mark strings for translation.
+1. We have a string freeze close to our release.
+1. A developer runs grunt i18n:extract to generate the application's .pot file and checks it into source control.
+1. Either we point our translators at our github repository or provide them the .pot file.
+1. The translators create .po files for each language and either send them back or open a PR with them.
+1. Once the .po files are checked into source control a developer runs grunt i18n:compile which creates a javascript file that angular will use to populate the translations based on the user's locale.
 
 ## Basics of Adding a New Entity ##
 
@@ -136,8 +172,8 @@ When adding functionality that introduces a new entity that maps to an external 
 First, create a folder in `app/assets/bastion` that is the plural version of the entity name (e.g. systems). Follow by creating a file to hold the module definition and the resource.
 
     mkdir app/assets/bastion/systems
-    touch app/assets/bastion/systems.module.js
-    touch app/assets/bastion/system.factory.js
+    touch app/assets/bastion/systems/systems.module.js
+    touch app/assets/bastion/systems/system.factory.js
 
 ##### Module #####
 
@@ -154,11 +190,11 @@ The module defines a namespace that all functionality dedicated to this entity w
         'ngResource',
         'alchemy',
         'alch-templates',
-        'ui.compat',
+        'ui.router',
         'Bastion.widgets'
      ]);
 
-The module definition defines the 'Bastion.systems' namespace and tells Angular to make available the libraries `ngResource`, `alchemy`, `alch-templates`, `ui.compat` and `Bastion.widgets`. These libraries are other similarly defined Angular modules.
+The module definition defines the 'Bastion.systems' namespace and tells Angular to make available the libraries `ngResource`, `alchemy`, `alch-templates`, `ui.router` and `Bastion.widgets`. These libraries are other similarly defined Angular modules.
 
 ##### Resource #####
 

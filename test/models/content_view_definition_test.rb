@@ -11,14 +11,14 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'minitest_helper'
+require 'katello_test_helper'
 
-class ContentViewDefinitionTest < MiniTest::Rails::ActiveSupport::TestCase
-  fixtures :all
+module Katello
+class ContentViewDefinitionTest < ActiveSupport::TestCase
 
   def self.before_suite
     models = ["Product", "Repository","Organization", "KTEnvironment", "ContentViewDefinitionBase",
-              "ContentViewDefinition", "ContentViewEnvironment",
+              "ContentViewDefinition", "ContentViewEnvironment", "ContentView",
               "ContentViewDefinitionRepository", "ContentViewDefinitionProduct", "ContentViewVersion",
               "User"]
     disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch", "Foreman"], models, true)
@@ -26,9 +26,9 @@ class ContentViewDefinitionTest < MiniTest::Rails::ActiveSupport::TestCase
 
   def setup
     User.current = User.find(users(:admin))
-    @content_view_def = ContentViewDefinition.find(content_view_definition_bases(:simple_cvd).id)
-    @repo = Repository.find(repositories(:fedora_17_x86_64).id)
-    @product               = Product.find(products(:fedora).id)
+    @content_view_def = ContentViewDefinition.find(katello_content_view_definition_bases(:simple_cvd).id)
+    @repo = Repository.find(katello_repositories(:fedora_17_x86_64).id)
+    @product               = Product.find(katello_products(:fedora).id)
   end
 
   def after_tests
@@ -187,9 +187,9 @@ class ContentViewDefinitionTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def test_validate_component_views_before_add
-    content_view_def = content_view_definition_bases(:simple_cvd)
+    content_view_def = ContentViewDefinition.find(katello_content_view_definition_bases(:simple_cvd))
     ContentView.any_instance.stubs(:library_repos).returns([@repo])
-    content_view = content_views(:library_dev_view)
+    content_view = ContentView.find(katello_content_views(:library_dev_view))
 
     assert_raises(Errors::ContentViewDefinitionBadContent) do
       content_view_def.component_content_views << content_view
@@ -198,9 +198,9 @@ class ContentViewDefinitionTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def test_puppet_repository_id
-    content_view_def = ContentViewDefinition.find(content_view_definition_bases(:simple_cvd))
-    repo = Repository.find(repositories(:p_forge))
-    dev_repo = Repository.find(repositories(:dev_p_forge))
+    content_view_def = ContentViewDefinition.find(katello_content_view_definition_bases(:simple_cvd))
+    repo = Repository.find(katello_repositories(:p_forge))
+    dev_repo = Repository.find(katello_repositories(:dev_p_forge))
 
     content_view_def.puppet_repository_id = repo.id
     content_view_def.save!
@@ -213,21 +213,19 @@ class ContentViewDefinitionTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def test_associate_yum_types
-    cloned = Repository.find(repositories(:fedora_17_x86_64_dev).id)
-    repo = Repository.find(repositories(:fedora_17_x86_64).id)
+    cloned = Repository.find(katello_repositories(:fedora_17_x86_64_dev).id)
+    repo = Repository.find(katello_repositories(:fedora_17_x86_64).id)
     cloned.stubs(:library_instance_id).returns(repo.id)
     cloned.stubs(:library_instance).returns(repo)
-
-    dev_repo = Repository.find(repositories(:dev_p_forge))
 
     package_rule1 = FactoryGirl.build(:package_filter_rule)
     filter = package_rule1.filter
     package_rule1.inclusion = true
-    package_rule1.parameters = HashWithIndifferentAccess.new()
+    package_rule1.parameters = HashWithIndifferentAccess.new
     package_rule1.save!
 
-    package_rule2 = PackageRule.create!(:filter => package_rule1.filter, :inclusion => false)
-    package_rule2.parameters = HashWithIndifferentAccess.new()
+    package_rule2 = PackageRule.new(:filter => package_rule1.filter, :inclusion => false)
+    package_rule2.parameters = HashWithIndifferentAccess.new
     package_rule2.save!
 
     cvd =  filter.content_view_definition
@@ -254,15 +252,15 @@ class ContentViewDefinitionTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def test_associate_puppet
-    cloned = Repository.find(repositories(:dev_p_forge).id)
-    repo = Repository.find(repositories(:p_forge))
+    cloned = Repository.find(katello_repositories(:dev_p_forge).id)
+    repo = Repository.find(katello_repositories(:p_forge))
     cloned.stubs(:library_instance_id).returns(repo.id)
     cloned.stubs(:library_instance).returns(repo)
 
     puppet_module_rule = FactoryGirl.build(:puppet_module_filter_rule)
     filter = puppet_module_rule.filter
     puppet_module_rule.inclusion = true
-    puppet_module_rule.parameters = HashWithIndifferentAccess.new()
+    puppet_module_rule.parameters = HashWithIndifferentAccess.new
     puppet_module_rule.save!
 
     cvd =  filter.content_view_definition
@@ -280,7 +278,7 @@ class ContentViewDefinitionTest < MiniTest::Rails::ActiveSupport::TestCase
 
   def test_destroy
     @content_view_def.filters.create
-    @content_view_def.content_views << content_views(:library_view)
+    @content_view_def.content_views << ContentView.find(katello_content_views(:library_view))
     refute_empty @content_view_def.filters.reload
     refute_empty @content_view_def.content_views.reload
 
@@ -296,4 +294,5 @@ class ContentViewDefinitionTest < MiniTest::Rails::ActiveSupport::TestCase
     end
   end
 
+end
 end

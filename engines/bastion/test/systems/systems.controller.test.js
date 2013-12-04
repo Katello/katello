@@ -12,7 +12,7 @@
  **/
 
 describe('Controller: SystemsController', function() {
-    var $scope, i18nFilter, System, Nutupane, Routes;
+    var $scope, gettext, System, Nutupane, Routes;
 
     // load the systems module and template
     beforeEach(module('Bastion.systems', 'Bastion.test-mocks'));
@@ -30,7 +30,7 @@ describe('Controller: SystemsController', function() {
             apiSystemsPath: function() { return '/api/systems';},
             editSystemPath: function(id) { return '/system/' + id;}
         };
-        i18nFilter = function(message) {
+        gettext = function(message) {
             return message;
         };
         System = {};
@@ -43,30 +43,17 @@ describe('Controller: SystemsController', function() {
         $controller('SystemsController', {
             $scope: $scope,
             $state: $state,
-            i18nFilter: i18nFilter,
+            gettext: gettext,
             Nutupane: Nutupane,
             System: System,
             CurrentOrganization: 'CurrentOrganization'
         });
     }));
 
-    it("provides a way to open the details panel.", function() {
-        spyOn($scope, "transitionTo");
-        $scope.table.openDetails({ uuid: 2 });
-        expect($scope.transitionTo).toHaveBeenCalledWith('systems.details.info', {systemId: 2});
-    });
-
     it("provides a way to close the details panel.", function() {
         spyOn($scope, "transitionTo");
-        $scope.table.closeItem();
+        $scope.systemTable.closeItem();
         expect($scope.transitionTo).toHaveBeenCalledWith('systems.index');
-    });
-
-    it('should provide a way to transition to the register page', function() {
-        spyOn($scope, 'transitionTo');
-        $scope.transitionToRegisterSystem();
-
-        expect($scope.transitionTo).toHaveBeenCalledWith('systems.register');
     });
 
     it("provides a way to delete systems.", function() {
@@ -83,7 +70,6 @@ describe('Controller: SystemsController', function() {
         $scope.removeSystem(testSystem);
 
         expect($scope.transitionTo).toHaveBeenCalledWith('systems.index');
-        expect($scope.saveSuccess).toBe(true);
         expect($scope.successMessages[0]).toBe('System test has been deleted.');
 
     });

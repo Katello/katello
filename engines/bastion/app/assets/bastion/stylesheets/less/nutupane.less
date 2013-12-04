@@ -1,0 +1,294 @@
+@import "variables";
+
+.table {
+  table-layout: fixed;
+
+  .number-cell {
+    text-align: center;
+  }
+}
+
+.table-reduced {
+  width: 20%;
+  float: left;
+}
+
+.container-scroll-wrapper {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.table-mask {
+  opacity: 0.4;
+}
+
+.nutupane {
+  .table {
+    margin-bottom: 0;
+
+    tr:hover td, tr:hover td a,
+    tr.focus td, tr.focus td a {
+      background-color: @listhover_color;
+      color: #FFF;
+    }
+
+    th.row-select,
+    td.row-select {
+      width: 25px;
+      max-width: 25px;
+    }
+
+    tr.active, tbody tr:hover, tr.active-row td {
+      background-color: @listhover_color;
+      color: #FFF;
+
+      a {
+        color: #FFF;
+      }
+    }
+
+    th.sortable {
+      cursor: pointer;
+    }
+
+    th {
+      color: rgb(92, 92, 92);
+
+      .sort-icon {
+        position: relative;
+        left: 4px;
+      }
+
+      .icon-sort-down {
+        bottom: 2px;
+      }
+
+      .icon-sort-up {
+        top: 4px;
+      }
+
+    }
+
+    .selected-row {
+      background-color: @listhover_color;
+      color: white;
+
+    }
+
+    .active-row {
+      .icon-active {
+        margin-top: 1px;
+        font-size: 14px;
+        position: absolute;
+        right: 15px;
+      }
+    }
+  }
+}
+
+.nutupane-bar {
+  background: rgb(250, 250, 250);
+  padding: 10px 20px 8px 10px;
+  border-bottom: 1px solid rgb(230, 230, 230);
+  overflow: auto;
+
+  h2 { margin: 5px 0 0 0; }
+
+  .form {
+    width: auto;
+    float: left;
+
+    input {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.nutupane-details {
+  height: 100%;
+  left: 20%;
+  min-width: 30%;
+  padding: 20px;
+  position: absolute;
+  width: 80%;
+  border-left: 1px solid #CCC;
+  overflow-y: auto;
+  @include box-shadow(0 0 5px #dddddd inset);
+
+  .details {
+    display: inline-block;
+    vertical-align: top;
+    padding: 0 40px 0 0;
+    width: 50%;
+  }
+
+  .detail:not(:last-child) {
+    margin-bottom: 5px;
+  }
+
+  .details-header {
+    height: 40px;
+    position: relative;
+    margin-bottom: 10px;
+
+    .action-context {
+      width: 300px;
+    }
+  }
+
+  .nutupane-sub-section {
+    height: 250px;
+    padding-top: 20px;
+
+    section {
+      padding: 0 0 30px;
+    }
+  }
+
+  .icon-backward {
+    padding-right: 5px;
+  }
+
+  h2 {
+    margin: 0;
+  }
+
+  h4, h5 {
+    margin: 10px 0;
+    text-transform: capitalize;
+  }
+
+  h5 {
+    font-size:  120%;
+  }
+
+  .new-header {
+    border-bottom: 3px solid #e3e5e7;
+  }
+
+  .divider {
+    height: 30px;
+    border-bottom: 1px solid #CCC;
+    display: inline-block;
+    width: 100%;
+  }
+
+  .details-full {
+    width: 100%;
+    padding: 0;
+  }
+
+  ul {
+    list-style: none;
+    margin: 0;
+
+    &.bullet {
+      list-style: circle;
+      margin-left: 15px;
+    }
+  }
+
+  .info-label {
+    font-weight: 600;
+    display: inline-block;
+    width: 25%;
+    vertical-align: top;
+  }
+
+  .info-value {
+    width: 69%;
+    display: inline-block;
+    padding-left: 4px;
+    word-wrap: break-word;
+  }
+
+  .sub-detail {
+    margin: 5px 15px 0;
+  }
+
+  .advanced-info {
+    clear: both;
+  }
+
+  .filter-input {
+    float: left;
+    width: 33%;
+  }
+}
+
+.nutupane-info {
+  padding: 7px 0;
+  margin-right: 10px;
+}
+
+.select-action {
+  margin-top: 6px;
+
+  button {
+    margin-right: 15px;
+    vertical-align: middle;
+  }
+}
+
+.inline-icon {
+  font-size: 110%;
+  margin-top: 3px;
+  margin-right: 3px;
+}
+
+.expand-icon {
+  padding-right: 5px;
+}
+
+.editable {
+  overflow: auto;
+
+  &:hover {
+    background: rgb(245, 245, 245);
+  }
+}
+
+div.alch-dialog.open.info-value {
+  padding: 10px;
+  width: 400px;
+}
+
+.details-navigation {
+  margin-bottom: 10px;
+  border-bottom: 2px solid #e3e5e7;
+  width: 100%;
+
+  ul {
+    list-style: none;
+    margin: 0 22px 0 0;
+    padding: 0 5px;
+    -webkit-padding-start: 0;
+    height: 25px;
+
+    li {
+      font-size: 15px;
+      display: inline-block;
+
+      a {
+        padding: 0 15px;
+        position: relative;
+        top: 2px;
+        display: block;
+        height: 25px;
+        text-align: center;
+        text-decoration: none;
+        color: black;
+
+        &:hover {
+            color: @listhover_color;
+            border-bottom: 2px solid @listhover_color;
+        }
+      }
+    }
+    .active {
+      color: @listhover_color;
+      border-bottom: 2px solid @listhover_color;
+    }
+
+  }
+}

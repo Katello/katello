@@ -80,6 +80,10 @@ angular.module('Bastion.widgets').factory('Nutupane',
                         deferred.resolve(response);
                         table.resource = response;
                         table.resource.offset = table.rows.length;
+
+                        if (self.selectAllMode) {
+                            table.selectAll(true);
+                        }
                     }, 0);
                     table.working = false;
                 });
@@ -94,10 +98,17 @@ angular.module('Bastion.widgets').factory('Nutupane',
                params = newParams;
             };
 
+            self.selectAllMode = false;
+
+            self.searchTransform = function(term) {
+                return term;
+            };
+
             self.query = function() {
                 var table = self.table;
                 params.offset = table.rows.length;
                 params.search = table.searchTerm || "";
+                params.search = self.searchTransform(params.search);
                 return load();
             };
 
@@ -125,7 +136,7 @@ angular.module('Bastion.widgets').factory('Nutupane',
                 self.table.closeItem();
 
                 if (!self.table.working) {
-                    self.query();
+                    self.query(searchTerm);
                 }
             };
 

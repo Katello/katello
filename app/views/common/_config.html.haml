@@ -1,7 +1,0 @@
-:plain
-  KT.routes.options.prefix = "#{root_path()}";
-  angular.module('Katello.globals').constant("RootURL", "#{root_path()}");
-
--if current_organization
-  :plain
-    angular.module('Katello.globals').value('CurrentOrganization', "#{current_organization.label}");

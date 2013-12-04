@@ -10,12 +10,13 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'minitest_helper'
+require 'katello_test_helper'
 
-class PackageTest < MiniTest::Rails::ActiveSupport::TestCase
+module Katello
+class PackageTest < ActiveSupport::TestCase
   i_suck_and_my_tests_are_order_dependent!
 
-  FIXTURES_FILE = File.join(Rails.root, "test", "fixtures", "elasticsearch", "packages.yml")
+  FIXTURES_FILE = File.join(Katello::Engine.root, "test", "fixtures", "elasticsearch", "packages.yml")
 
   def self.before_suite
     disable_glue_layers(["Pulp"], ["Package"]) # enable glue layers
@@ -102,4 +103,5 @@ class PackageTest < MiniTest::Rails::ActiveSupport::TestCase
     Package.search("*", 0, @packages.length, [@repo.pulp_id], [:id, "ASC"], :all,
                    'name', filters)
   end
+end
 end

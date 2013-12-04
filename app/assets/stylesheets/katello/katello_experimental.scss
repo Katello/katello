@@ -1,0 +1,90 @@
+@import "compass";
+
+* {
+  @include box-sizing(border-box);
+}
+
+@import "katello/katello_base";
+@import "alchemy/components/normalize";
+@import "alchemy-forms/forms";
+@import "alchemy-buttons/buttons";
+
+body {
+  background: white;
+  min-width: 800px;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+fieldset {
+  border: none;
+}
+article {
+  min-height: 710px;
+}
+
+body > footer {
+  margin-top: 0;
+  height: 20%;
+}
+
+.maincontent {
+  margin-top: 0;
+  border: none;
+}
+
+#legacy_indicator {
+  position: absolute;
+  color: rgb(255, 196, 90);
+  top: 3px;
+  left: 132px;
+  font-family: Overpass;
+}
+
+.editable {
+  padding: 0;
+}
+
+input {
+  background: white;
+}
+
+.editable {
+  background: $edit_icon;
+  cursor: pointer;
+  cursor: hand;
+  border-radius: 0;
+
+  &:hover {
+    background: $edit_hover_icon;
+  }
+}
+
+.value {
+  padding-left: 10px !important;
+}
+
+table {
+  margin: 0px;
+}
+
+.status_icon {
+  height: 15px;
+  width: 15px;
+  background: $status_icons_green_small;
+  //margin: 2px 1px 1px 1px;
+
+  &.green {
+    background: $status_icons_green_small;
+  }
+  &.yellow {
+    background: $status_icons_yellow_small;
+  }
+  &.red {
+    background: $status_icons_red_small;
+  }
+}

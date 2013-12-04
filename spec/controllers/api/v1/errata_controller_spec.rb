@@ -10,10 +10,12 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'spec_helper.rb'
+require 'katello_test_helper'
 
-describe Api::V1::ErrataController, :katello => true do
-  include LoginHelperMethods
+module Katello
+describe Api::V1::ErrataController do
+  describe "(katello)" do
+  include OrganizationHelperMethods
   include AuthorizationHelperMethods
   include ProductHelperMethods
   include RepositoryHelperMethods
@@ -30,18 +32,18 @@ describe Api::V1::ErrataController, :katello => true do
     @product      = new_test_product(@organization, @env)
     @repo         = new_test_repo(@env, @product, "repo", "#{@organization.name}/Library/prod/repo")
 
-    @product.stub(:repos).and_return([@repository])
-    @repo.stub(:has_distribution?).and_return(true)
-    Repository.stub(:find).and_return(@repo)
+    @product.stubs(:repos).returns([@repository])
+    @repo.stubs(:has_distribution?).returns(true)
+    Repository.stubs(:find).returns(@repo)
 
-    KTEnvironment.stub(:find).and_return(@organization.library)
+    KTEnvironment.stubs(:find).returns(@organization.library)
     @erratum = {}
-    @erratum.stub(:repoids).and_return([@repo.pulp_id])
-    ::Errata.stub(:find_by_errata_id => @erratum)
-    ::Errata.stub(:filter => @erratum)
+    @erratum.stubs(:repoids).returns([@repo.pulp_id])
+    Katello::Errata.stubs(:find_by_errata_id => @erratum)
+    Katello::Errata.stubs(:filter => @erratum)
 
     @request.env["HTTP_ACCEPT"] = "application/json"
-    login_user_api
+    setup_controller_defaults_api
   end
 
   let(:authorized_user) do
@@ -87,41 +89,41 @@ describe Api::V1::ErrataController, :katello => true do
 
     describe "get a listing of erratas" do
       before(:each) do
-        @repo = mock(Glue::Pulp::Repo)
+        @repo = mock
       end
 
       it "should call pulp find repo api" do
-        ::Errata.should_receive(:filter).once.with(:repoid => '1').and_return([])
+        Katello::Errata.expects(:filter).once.with(:repoid => '1').returns([])
         get 'index', :repoid => '1'
       end
 
       it "should accept type as filter attribute" do
-        ::Errata.should_receive(:filter).once.with(:repoid => '1', :type => 'security').and_return([])
+        Katello::Errata.expects(:filter).once.with(:repoid => '1', :type => 'security').returns([])
         get 'index', :repoid => '1', :type => 'security'
 
-        ::Errata.should_receive(:filter).once.with(:type => 'security', :environment_id => '123').and_return([])
+        Katello::Errata.expects(:filter).once.with(:type => 'security', :environment_id => '123').returns([])
         get 'index', :type => 'security', :environment_id => "123"
 
-        ::Errata.should_receive(:filter).once.with(:severity => 'critical', :environment_id => '123').and_return([])
+        Katello::Errata.expects(:filter).once.with(:severity => 'critical', :environment_id => '123').returns([])
         get 'index', :severity => 'critical', :environment_id => "123"
 
-        ::Errata.should_receive(:filter).once.with(:severity => 'critical', :product_id => 'product-123', :environment_id => '123').and_return([])
+        Katello::Errata.expects(:filter).once.with(:severity => 'critical', :product_id => 'product-123', :environment_id => '123').returns([])
         get 'index', :severity => 'critical', :product_id => 'product-123', :environment_id => "123"
       end
 
       it "should not accept a call without specifying envirovnemnt or repoid" do
         get 'index', :type => 'security'
-        response.response_code.should == 400
+        response.response_code.must_equal 400
       end
     end
 
     describe "show an erratum" do
       it "should call pulp find errata api" do
-        ::Errata.should_receive(:find_by_errata_id).once.with('1')
+        Katello::Errata.expects(:find_by_errata_id).once.with('1')
         get 'show', :id => '1', :repository_id => 1
       end
     end
   end
-
+  end
 end
-
+end

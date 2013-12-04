@@ -1,0 +1,32 @@
+<h4 translate>System Group Management</h4>
+
+<div class="details">
+  <section>
+    <div class="detail">
+      <span class="info-label" translate>System Groups</span>
+      <span class="info-value"
+            alch-edit-multiselect="systemGroups.groups"
+            formatter="arrayToString"
+            options="getSystemGroups()"
+            button-config="addRemove"
+            on-add="confirmSystemGroupAction('add')"
+            on-remove="confirmSystemGroupAction('remove')"
+            display-value-default='{{ "Click to select..." | translate }}'
+            forced-working-mode="systemGroups.workingMode">
+      </span>
+    </div>
+
+    <div class="inline-confirmation" ng-show="systemGroups.confirm">
+      <div class="confirmation_text" ng-show="systemGroups.action == 'add'" translate>
+        Are you sure you want to add the {{ getSelectedSystemIds().length }} systems(s) selected to the system group(s) chosen?
+      </div>
+      <div class="confirmation_text" ng-show="systemGroups.action == 'remove'" translate>
+        Are you sure you want to remove the {{ getSelectedSystemIds().length }} systems(s) selected to the system group(s) chosen?
+      </div>
+      <button class="btn btn-default" ng-click="systemGroups.confirm = false" translate>No</button>
+      <button class="btn btn-default" ng-click="performSystemGroupAction()" translate>Yes</button>
+    </div>
+
+    <div class="divider"></div>
+  </section>
+</div>

@@ -74,4 +74,78 @@ http_interactions:
       string: "{\"displayMessage\":\"Consumer 9159db05-4b66-4aec-919f-43524f2e6775 has been deleted\",\"deletedId\":\"9159db05-4b66-4aec-919f-43524f2e6775\"}"
     http_version: 
   recorded_at: Fri, 20 Sep 2013 20:51:24 GMT
-recorded_with: VCR 2.5.0
+- request: 
+    method: delete
+    uri: https://localhost:8443/candlepin/consumers/dea9c749-7cfb-4aa8-8626-ef271f422984
+    body: 
+      encoding: US-ASCII
+      string: ""
+    headers: 
+      Accept: 
+      - "*/*; q=0.5, application/xml"
+      Accept-Encoding: 
+      - gzip, deflate
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="9A5fjsGTjzE2yiQPrAjy58pZ5maBYEOYbp86A1aQ", oauth_signature="l8bMT2Q7%2FUtMw%2B375EA86l0NNqA%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1383580846", oauth_version="1.0"
+      Cp-User: 
+      - admin
+      User-Agent: 
+      - Ruby
+  response: 
+    status: 
+      code: 410
+      message: Gone
+    headers: 
+      Server: 
+      - Apache-Coyote/1.1
+      X-Candlepin-Version: 
+      - 0.8.29-1
+      Content-Type: 
+      - application/json
+      Transfer-Encoding: 
+      - chunked
+      Date: 
+      - Mon, 04 Nov 2013 16:00:45 GMT
+    body: 
+      encoding: US-ASCII
+      string: "{\"displayMessage\":\"Unit dea9c749-7cfb-4aa8-8626-ef271f422984 has been deleted\",\"deletedId\":\"dea9c749-7cfb-4aa8-8626-ef271f422984\"}"
+    http_version: 
+  recorded_at: Mon, 04 Nov 2013 16:00:46 GMT
+- request: 
+    method: delete
+    uri: https://localhost:8443/candlepin/consumers/0480d406-7a7b-41da-9e4c-2d28a872dcb9
+    body: 
+      encoding: US-ASCII
+      string: ""
+    headers: 
+      Accept: 
+      - "*/*; q=0.5, application/xml"
+      Accept-Encoding: 
+      - gzip, deflate
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="AKNoF2adk6Vh2Xx2bRhmltjqliFrfLluITozD2I6o", oauth_signature="58uXFnmBZV3krPFHsSS%2F9ekWg6k%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1383773768", oauth_version="1.0"
+      Cp-User: 
+      - admin
+      User-Agent: 
+      - Ruby
+  response: 
+    status: 
+      code: 410
+      message: Gone
+    headers: 
+      Server: 
+      - Apache-Coyote/1.1
+      X-Candlepin-Version: 
+      - 0.8.28-1
+      Content-Type: 
+      - application/json
+      Transfer-Encoding: 
+      - chunked
+      Date: 
+      - Wed, 06 Nov 2013 21:36:08 GMT
+    body: 
+      encoding: US-ASCII
+      string: "{\"displayMessage\":\"Unit 0480d406-7a7b-41da-9e4c-2d28a872dcb9 has been deleted\",\"deletedId\":\"0480d406-7a7b-41da-9e4c-2d28a872dcb9\"}"
+    http_version: 
+  recorded_at: Wed, 06 Nov 2013 21:36:08 GMT
+recorded_with: VCR 2.7.0

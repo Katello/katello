@@ -10,17 +10,24 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require "spec_helper"
+require "katello_test_helper"
 
+module Katello
 describe Api::V2::ChangesetsController do
+  before do
+    setup_engine_routes
+  end
   describe "routing" do
 
-    let(:cs_controller) { "api/v1/changesets" }
+    let(:cs_controller) { "katello/api/v1/changesets" }
 
-    it { { :get => "/api/changesets/1" }.should route_to(:controller => cs_controller, :action => "show", :id => "1") }
-    it { { :put => "/api/changesets/1" }.should route_to(:controller => cs_controller, :action => "update", :id => "1") }
-    it { { :delete => "/api/changesets/1" }.should route_to(:controller => cs_controller, :action => "destroy", :id => "1") }
-    it { { :post => "/api/changesets/1/apply" }.should route_to(:controller => cs_controller, :action => "apply", :id => "1") }
+    it "should route correctly" do
+      {:method => :get, :path => "/api/changesets/1" }.must_route_to({:controller => cs_controller, :action => "show", :id => "1"})
+      {:method => :put, :path => "/api/changesets/1" }.must_route_to({:controller => cs_controller, :action => "update", :id => "1"})
+      {:method => :delete, :path => "/api/changesets/1" }.must_route_to({:controller => cs_controller, :action => "destroy", :id => "1"})
+      {:method => :post, :path => "/api/changesets/1/apply" }.must_route_to({:controller => cs_controller, :action => "apply", :id => "1"})
+    end
 
   end
+end
 end

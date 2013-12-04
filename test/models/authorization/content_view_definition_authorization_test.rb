@@ -10,21 +10,19 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'minitest_helper'
+require 'katello_test_helper'
 require 'support/auth_support'
 
+module Katello
 module ContentViewDefinitionAuthBase
   def self.included(base)
-    base.class_eval do
-      fixtures :all
-    end
     base.extend ClassMethods
   end
 
   def setup
     @admin       = User.find(users(:admin))
-    @no_perms    = User.find(users(:no_perms_user))
-    @org         = Organization.find(organizations(:acme_corporation))
+    @no_perms    = User.find(users(:restricted))
+    @org         = Organization.find(katello_organizations(:acme_corporation))
     @cvd         = FactoryGirl.create(:content_view_definition, :organization => @org)
   end
 
@@ -41,7 +39,7 @@ module ContentViewDefinitionAuthBase
   end
 end
 
-class ContentViewDefinitionAuthorizationAdminTest < MiniTest::Rails::ActiveSupport::TestCase
+class ContentViewDefinitionAuthorizationAdminTest < ActiveSupport::TestCase
   include ContentViewDefinitionAuthBase
 
   def setup
@@ -77,7 +75,7 @@ class ContentViewDefinitionAuthorizationAdminTest < MiniTest::Rails::ActiveSuppo
 
 end
 
-class ContentViewDefinitionAuthorizationNoPermTest < MiniTest::Rails::ActiveSupport::TestCase
+class ContentViewDefinitionAuthorizationNoPermTest < ActiveSupport::TestCase
   include ContentViewDefinitionAuthBase
 
   def setup
@@ -106,7 +104,7 @@ class ContentViewDefinitionAuthorizationNoPermTest < MiniTest::Rails::ActiveSupp
   end
 end
 
-class ContentViewDefinitionAuthorizationReadonlyTest < MiniTest::Rails::ActiveSupport::TestCase
+class ContentViewDefinitionAuthorizationReadonlyTest < ActiveSupport::TestCase
   include ContentViewDefinitionAuthBase, AuthorizationSupportMethods
 
   def setup
@@ -136,7 +134,7 @@ class ContentViewDefinitionAuthorizationReadonlyTest < MiniTest::Rails::ActiveSu
 end
 
 # random permission
-class ContentViewDefinitionAuthorizationTest < MiniTest::Rails::ActiveSupport::TestCase
+class ContentViewDefinitionAuthorizationTest < ActiveSupport::TestCase
   include ContentViewDefinitionAuthBase, AuthorizationSupportMethods
 
   def setup
@@ -153,4 +151,5 @@ class ContentViewDefinitionAuthorizationTest < MiniTest::Rails::ActiveSupport::T
     refute @cvd.deletable?
   end
 
+end
 end

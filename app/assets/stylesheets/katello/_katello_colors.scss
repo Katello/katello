@@ -1,0 +1,109 @@
+@import "katello/overrides";
+/* Katello Colors */
+$kprimary_color:            $primary_color;
+$kprimary_border_color:     darken($kprimary_color,2%);
+$kprimary_hover_color:      lighten($kprimary_color, 70%);
+$kselected_color:           darken($kprimary_color,6%);
+$listhover_color:           lighten($kselected_color,20%);
+$text_color:                #1A1A1A;
+$black_color:               #000;
+$white_color:               #FFF;
+$background_color:          #d9d9d9;
+
+$linkfg_color:              darken($kprimary_color,2%);
+$tabon_color:               darken($kselected_color,1%);
+$taboff_color:              #747474;
+$lightkprimary_color:       lighten($kprimary_color, 35%);
+$headerbg_color:            $kprimary_color;
+
+$formheadbg_color:          #eee;
+$formheadfg_color:          #333;
+$labelfg_color:             #888;
+
+$orgbox_color:              $white_color;
+
+$breadcrumbbg_color:        #e9e9e9;
+
+$lightgrey_color:           #939292;
+$lightergrey_color:         lighten($lightgrey_color, 40%);
+$alt_color:                 #888;
+$panel_color:               #F5FAFA;
+
+$input-background_color:    #f0f0f0;
+
+$footerbg_color:            #f3f3f3;
+$stroke_color:              #aaa;
+$error_color:               #cb292b;
+$warning_color:             #f6a20a;
+
+$header_color:              #333;
+
+$good_color:                #bfcc29;
+$ok_color:                  orange;
+$bad_color:                 red;
+
+$tree-container_color:              #F2F2F2;
+$tree-border_color:                 #B5B5B5;
+//$tree-breadcrumb_color:             #356e76;
+$tree-breadcrumb_color:             $kprimary_color;
+$tree-current-breadcrumb_color:     $black_color;
+$tree-locked-breadcrumb_color:      #FEE7C6;
+$tree-search-border_color:          $kprimary_border_color;
+$tree-header-border_color:          #F2F2F2;
+$tree-item-hover_color:             $black_color;
+$tree-item-border-hover_color:      $kprimary_border_color;
+$tree-item-background-hover_color:  $kprimary_hover_color;
+$tree-actionbar_color:              $kprimary_hover_color;
+$tree-slideup-background_color:     #F5FAFA;
+$changeset-promoting_color:         #f6891f;
+$validation_error_color:            #FF4040;
+
+$product_color:             #070;
+$package_color:             #666;
+$errata_color:              #700;
+$repo_color:                $listhover_color;
+
+$global_permission_color:   #f6891f;
+
+$helptip-background_color:  #EEE;
+$helptip-border_color:      #DDD;
+
+$path-border_color:         #d3d3d3;
+
+$jScrollPane-bar_color:     #8B8B9F;
+
+$border_color:              #d7d7d7;
+$table-border_color:        $border_color;
+
+@mixin widget-background-color {
+  @include background-image(linear-gradient(top, #F9F9F9, #E4E4E4));
+}
+
+$widget-border-color: #C9C9C9;
+$widget-background-color: #F9F8F8;
+
+
+/************************
+* Company Switcher Colors
+*************************/
+$switcher-top_color: #FFF;
+$switcher-bottom_color: rgba(204,204,204,1);
+
+@mixin switcher-button_color{
+  @include background(linear-gradient(top, $switcher-top_color 0%, $switcher-top_color 50%, $switcher-bottom_color 100%));
+}
+
+@mixin switcher-button-active_color {
+  @include background(linear-gradient(top, $switcher-bottom_color 0%, $switcher-top_color 50%, $switcher-top_color 100%));
+}
+
+@mixin switcher-form_color {
+  @include background(linear-gradient(top, $switcher-top_color 0%, $switcher-bottom_color 75%, $switcher-bottom_color 100%));
+}
+
+$nav-header_background:           rgb(0, 130, 184);
+$logo-header_background:          #005B80;
+$link-hover_color:                white;
+$link_color:                      white;
+$link-border_color:               rgb(2, 181, 255);
+$dropdown-link-hover_background:  rgb(0, 130, 184);

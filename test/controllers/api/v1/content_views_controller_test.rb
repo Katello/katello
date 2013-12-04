@@ -11,9 +11,10 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require "minitest_helper"
+require "katello_test_helper"
 
-class Api::V1::ContentViewsControllerTest < MiniTest::Rails::ActionController::TestCase
+module Katello
+class Api::V1::ContentViewsControllerTest < ActionController::TestCase
   fixtures :all
 
   def before_suite
@@ -23,19 +24,20 @@ class Api::V1::ContentViewsControllerTest < MiniTest::Rails::ActionController::T
   end
 
   def setup
-    @content_view = content_views(:library_dev_view)
-    @default_view = content_views(:acme_default)
-    @definition = ContentViewDefinition.find(content_view_definition_bases(:simple_cvd))
+    setup_controller_defaults_api
+    @content_view = katello_content_views(:library_dev_view)
+    @default_view = katello_content_views(:acme_default)
+    @definition = ContentViewDefinition.find(katello_content_view_definition_bases(:simple_cvd))
     @content_view.update_attribute(:content_view_definition_id, @definition.id)
-    @environment = environments(:staging)
-    @dev = environments(:dev)
-    @organization = organizations(:acme_corporation)
+    @environment = katello_environments(:staging)
+    @dev = katello_environments(:dev)
+    @organization = katello_organizations(:acme_corporation)
+
     @read_permission = UserPermission.new(:read, :content_views)
     @env_promote_permission = UserPermission.new(:promote_changesets, :environments, @environment.id)
     @promote_permission = UserPermission.new(:promote, :content_views) + @env_promote_permission
     @delete_permission = UserPermission.new(:delete, :content_view_definitions)
     @publish_permission = UserPermission.new(:publish, :content_view_definitions)
-
   end
 
   describe "permissions" do
@@ -144,8 +146,9 @@ class Api::V1::ContentViewsControllerTest < MiniTest::Rails::ActionController::T
     login_user(User.find(users(:admin).id))
     ContentView.any_instance.stubs(:deletable?).returns(true)
     delete :destroy, organization_id: @organization.name, id: @content_view.id
-    assert response.body =~ /\AError while deleting.*promoted.*\z/
+    assert response.body =~ /Error while deleting.*promoted/
     assert ContentView.exists?(@content_view.id)
   end
 
+end
 end

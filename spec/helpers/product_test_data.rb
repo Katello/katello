@@ -10,6 +10,7 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+module Katello
 module ProductTestData
   ORG_ID = "admin-org-37070"
   PRODUCT_ID = '37070'
@@ -76,7 +77,7 @@ module ProductTestData
     :id => ProductTestData::PRODUCT_ID,
     :multiplier => 1,
     :productContent => [
-         Candlepin::ProductContent.new(
+         Katello::Candlepin::ProductContent.new(
           "content" => {
             "name" => "some-name(33)",
             "id" => "1234999",
@@ -351,4 +352,5 @@ module ProductTestData
 #
 #
 
+end
 end

@@ -10,11 +10,10 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require "minitest_helper"
+require "katello_test_helper"
 
-class FiltersControllerTest < MiniTest::Rails::ActionController::TestCase
-  fixtures :all
-
+module Katello
+class FiltersControllerTest < ActionController::TestCase
   def self.before_suite
     models = ["Organization", "KTEnvironment", "User", "Product", "Repository",
               "ContentViewEnvironment", "Filter", "ContentViewDefinitionBase",
@@ -23,29 +22,30 @@ class FiltersControllerTest < MiniTest::Rails::ActionController::TestCase
                "PackageGroupRule", "ErratumRule"]
     services = ["Candlepin", "Pulp", "ElasticSearch", "Foreman"]
     disable_glue_layers(services, models, true)
+    super
   end
 
   def setup
-    @org = organizations(:acme_corporation)
+    setup_controller_defaults
+    @org = katello_organizations(:acme_corporation)
+    set_organization(@org)
 
-    login_user(User.find(users(:admin)), @org)
+    @product = Product.find(katello_products(:redhat).id)
+    @repo = Repository.find(katello_repositories(:fedora_17_x86_64).id)
 
-    @product = Product.find(products(:redhat).id)
-    @repo = Repository.find(repositories(:fedora_17_x86_64).id)
-
-    @filter = filters(:populated_filter)
+    @filter = katello_filters(:populated_filter)
   end
 
   test "GET index - should be successful" do
     get :index, :content_view_definition_id => @filter.content_view_definition.id
     assert_response :success
-    assert_template :partial => 'content_view_definitions/filters/_index'
+    assert_template :partial => 'katello/content_view_definitions/filters/_index'
   end
 
   test "GET new - should be successful" do
     get :new, :content_view_definition_id => @filter.content_view_definition.id
     assert_response :success
-    assert_template :partial => 'content_view_definitions/filters/_new'
+    assert_template :partial => 'katello/content_view_definitions/filters/_new'
   end
 
   test "POST create - should be successful" do
@@ -69,7 +69,7 @@ class FiltersControllerTest < MiniTest::Rails::ActionController::TestCase
     get :edit, :content_view_definition_id => @filter.content_view_definition.id,
         :id => @filter.id
     assert_response :success
-    assert_template :partial => 'content_view_definitions/filters/_edit'
+    assert_template :partial => 'katello/content_view_definitions/filters/_edit'
   end
 
   test "PUT update - add product should be successful" do
@@ -82,7 +82,7 @@ class FiltersControllerTest < MiniTest::Rails::ActionController::TestCase
         :id => @filter.id, :products => [@product.id]
 
     assert_response :success
-    assert_equal @filter.reload.products.first, @product
+    assert_equal @filter.products.reload.first, @product
   end
 
   test "PUT update - remove product should be successful" do
@@ -113,7 +113,7 @@ class FiltersControllerTest < MiniTest::Rails::ActionController::TestCase
         :id => @filter.id, :repos => {@repo.product_id => @repo.id}
 
     assert_response :success
-    assert_equal @filter.reload.repositories.first.id, @repo.id
+    assert_equal @filter.repositories.reload.first.id, @repo.id
   end
 
   test "PUT update - remove repository should be successful" do
@@ -137,7 +137,7 @@ class FiltersControllerTest < MiniTest::Rails::ActionController::TestCase
   end
 
   test "PUT update - add a puppet repository" do
-    puppet_repo = repositories(:p_forge)
+    puppet_repo = katello_repositories(:p_forge)
     @filter.content_view_definition.puppet_repository_id = puppet_repo.id
 
     # success notice created
@@ -164,4 +164,5 @@ class FiltersControllerTest < MiniTest::Rails::ActionController::TestCase
     assert_response :success
     assert_nil Filter.find_by_id(@filter.id)
   end
+end
 end

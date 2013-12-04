@@ -10,13 +10,11 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'minitest_helper'
-require './test/support/candlepin/owner_support'
+require 'katello_test_helper'
+require 'support/candlepin/owner_support'
 
-class GlueCandlepinOwnerTestBase < MiniTest::Rails::ActiveSupport::TestCase
-  extend  ActiveRecord::TestFixtures
-
-  fixtures :all
+module Katello
+class GlueCandlepinOwnerTestBase < ActiveSupport::TestCase
 
   def self.before_suite
     @loaded_fixtures = load_fixtures
@@ -56,7 +54,7 @@ class GlueCandlepinOwnerTestSLA < GlueCandlepinOwnerTestBase
     e = assert_raises(RestClient::BadRequest) do
       @@org.service_level = 'Premium'
     end
-    expected = "{\n  \"displayMessage\" : \"Service level 'Premium' is not available to consumers of organization GlueCandlepinOwnerTestSystem_1.\"\n}"
+    expected = "{\n  \"displayMessage\" : \"Service level 'Premium' is not available to units of organization GlueCandlepinOwnerTestSystem_1.\"\n}"
     assert_equal JSON.parse(expected), JSON.parse(e.response)
     assert_equal nil, @@org.service_level
 
@@ -69,4 +67,5 @@ class GlueCandlepinOwnerTestSLA < GlueCandlepinOwnerTestBase
     assert_equal nil, @@org.service_level
   end
 
+end
 end

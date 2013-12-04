@@ -1,0 +1,18 @@
+simple_server:
+  name:         Simple Server
+  description:  Super administrator with all access.
+  uuid:         010E99C0-3276-11E2-81C1-0800200C9A66
+  environment_id: <%= ActiveRecord::Fixtures.identify(:dev) %>
+  content_view_id: <%= ActiveRecord::Fixtures.identify(:acme_default) %>
+
+simple_server2:
+  name:         Simple Server 2
+  description:  Super administrator with all access.
+  uuid:         010E99C0-3276-11E2-81C1-0800200C9A77
+  environment_id: <%= ActiveRecord::Fixtures.identify(:dev) %>
+  content_view_id: <%= ActiveRecord::Fixtures.identify(:acme_default) %>
+
+candlepin_system:
+  name:         Candlepin System
+  description:  System before creating in candlepin
+  environment_id: <%= ActiveRecord::Fixtures.identify(:dev) %>

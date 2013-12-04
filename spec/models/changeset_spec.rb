@@ -10,10 +10,11 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'spec_helper'
-include OrchestrationHelper
+require 'katello_test_helper'
 
+module Katello
 describe Changeset, :katello => true do
+  include OrchestrationHelper
 
   describe "Changeset should" do
     before(:each) do
@@ -21,42 +22,41 @@ describe Changeset, :katello => true do
       disable_product_orchestration
       disable_user_orchestration
 
-      User.current  = User.find_or_create_by_username(:username => 'admin', :password => 'admin12345')
-      @organization = Organization.create!(:name=>'candyroom', :label => 'test_organization')
-      @environment  = create_environment(:name=>'julia', :label=> 'julia', :prior => @organization.library,
-                                            :organization => @organization)
+      User.current  = users(:admin)
+      @organization = katello_organizations(:acme_corporation)
+      @environment  = katello_environments(:dev)
       @changeset    = PromotionChangeset.create!(:environment => @environment, :name => "foo-changeset")
     end
 
     it "changeset should not be null" do
-      @environment.should_not be_nil
-      @environment.working_changesets.should_not be_nil
+      @environment.wont_be_nil
+      @environment.working_changesets.wont_be_nil
     end
 
     it "changeset first user should equal current user" do
       cu = ChangesetUser.new(:changeset => @changeset, :user => User.current)
       cu.save!
-      @changeset.users.first.user_id.should == User.current.id
-      @changeset.users.first.changeset_id.should == @changeset.id
+      @changeset.users.first.user_id.must_equal(User.current.id)
+      @changeset.users.first.changeset_id.must_equal(@changeset.id)
     end
 
     it "changeset find or create should work" do
       cu = ChangesetUser.find_or_create_by_user_id_and_changeset_id(User.current.id, @changeset.id)
       cu.save!
-      @changeset.users.first.user_id.should == User.current.id
-      @changeset.users.first.changeset_id.should == @changeset.id
+      @changeset.users.first.user_id.must_equal(User.current.id)
+      @changeset.users.first.changeset_id.must_equal(@changeset.id)
     end
 
-    it "changeset find or create should work" do
+    it "changeset destroy all should work" do
       cu = ChangesetUser.find_or_create_by_user_id_and_changeset_id(User.current.id, @changeset.id)
       cu.save!
       ChangesetUser.destroy_all(:changeset_id => @changeset.id)
-      @changeset.users.should be_empty
+      @changeset.users.must_be_empty
     end
 
     it "changeset json should contain the types" do
-      json = JSON.load(@changeset.to_json)
-      json['action_type'].should_not be_nil
+      json = @changeset.as_json
+      json[:action_type].wont_be_nil
     end
 
     describe "scopes" do
@@ -71,30 +71,26 @@ describe Changeset, :katello => true do
 
       describe ".with_state" do
         it "should find right changesets" do
-          Changeset.with_state(Changeset::DELETED).should be_empty
-          Changeset.with_state(Changeset::NEW).size.should eql(1)
-          Changeset.with_state(Changeset::PROMOTING).size.should eql(1)
-          Changeset.with_state(Changeset::NEW, Changeset::PROMOTING).size.should eql(2)
+          Changeset.with_state(Changeset::DELETED).must_be_empty
+          Changeset.with_state(Changeset::NEW).size.must_equal(1)
+          Changeset.with_state(Changeset::PROMOTING).size.must_equal(1)
+          Changeset.with_state(Changeset::NEW, Changeset::PROMOTING).size.must_equal(2)
           Changeset.with_state(Changeset::DELETED,
                                Changeset::NEW,
-                               Changeset::PROMOTING).size.should eql(2)
+                               Changeset::PROMOTING).size.must_equal(2)
         end
       end
 
       describe ".started" do
         subject { Changeset.started }
-        its(:size) { should eql(2) }
-        it { should include(@promoting, @deleting) }
+        it { subject.size.must_equal(2) }
+        it { subject.must_include(@promoting, @deleting) }
       end
 
       describe ".colliding(changeset)" do
         before do
-          @alpha      = create_environment(:name         => 'alpha', :label => 'alpha',
-                                              :prior        => @environment,
-                                              :organization => @organization)
-          @beta       = create_environment(:name         => 'beta', :label => 'beta',
-                                              :prior        => @organization.library,
-                                              :organization => @organization)
+          @alpha      = katello_environments(:dev)
+          @beta       = katello_environments(:staging)
           @collision = PromotionChangeset.create!(:environment => @alpha,
                                                    :name        => "collision1")
           @no_collision = PromotionChangeset.create!(:environment => @beta,
@@ -102,20 +98,20 @@ describe Changeset, :katello => true do
         end
 
         it 'should detect "identical" collision' do
-          Changeset.colliding(@promoting).should include(@deleting)
+          Changeset.colliding(@promoting).must_include(@deleting)
         end
 
         it 'should detect "following" collision' do
-          Changeset.colliding(@promoting).should include(@collision)
+          Changeset.colliding(@promoting).must_include(@collision)
         end
 
         it 'should detect "previous" collision' do
-          Changeset.colliding(@collision).should include(@promoting)
+          Changeset.colliding(@collision).must_include(@promoting)
         end
 
         it 'should ignore other cases' do
-          Changeset.colliding(@promoting).should_not include(@no_collision) # only same start
-          Changeset.colliding(@collision).should_not include(@no_collision) # nothing in common
+          Changeset.colliding(@promoting).wont_include(@no_collision) # only same start
+          Changeset.colliding(@collision).wont_include(@no_collision) # nothing in common
         end
       end
     end
@@ -123,45 +119,49 @@ describe Changeset, :katello => true do
     describe "fail adding content not contained in the prior environment" do
       before do
         @view = FactoryGirl.create(:content_view, :organization => @organization)
-        @changeset.stub_chain(:environment, :prior) do
-          mock(:env,
-               :content_views => mock(:include? => false)
-              )
-        end
+        content_view = stub
+        content_view.stubs(:include?).returns(false)
+        prior = stub
+        prior.stubs(:content_views).returns(content_view)
+        environment = stub
+        environment.stubs(:prior).returns(prior)
+        @changeset.stubs(:environment).returns(environment)
       end
 
       it "should fail on add view" do
-        lambda { @changeset.add_content_view!(@view) }.should raise_error(Errors::ChangesetContentException)
+        lambda { @changeset.add_content_view!(@view) }.must_raise(Errors::ChangesetContentException)
       end
     end
 
     describe "promotions" do
       before(:each) do
-        @changeset.stub(:wait_for_tasks).and_return(nil)
-        @changeset.stub(:affected_repos).and_return([])
+        @changeset.stubs(:wait_for_tasks).returns(nil)
+        @changeset.stubs(:affected_repos).returns([])
       end
 
       it "should update env content" do
         @changeset.state = Changeset::REVIEW
         @content_view_environment = @environment.content_view_environment
-        @environment.stub(:content_view_environment).and_return(@content_view_environment)
-        @changeset.should_receive(:update_view_cp_content)
+        @environment.stubs(:content_view_environment).returns(@content_view_environment)
+        @changeset.expects(:update_view_cp_content)
         @changeset.apply(:async => false)
       end
 
       it "should have correct state after successful promotion" do
         @changeset.state = Changeset::REVIEW
         @changeset.apply(:async => false)
-        @changeset.state.should == Changeset::PROMOTED
+        @changeset.state.must_equal(Changeset::PROMOTED)
       end
 
       it "should have correct state after unsuccessful promotion" do
         @changeset.state = Changeset::REVIEW
-        @changeset.stub(:promote_views).and_raise(StandardError)
-        lambda { @changeset.apply(:async => false) }.should raise_exception
-        @changeset.state.should == Changeset::FAILED
+        @changeset.stubs(:promote_views).raises(StandardError)
+        lambda { @changeset.apply(:async => false) }.must_raise StandardError
+        @changeset.state.must_equal(Changeset::FAILED)
       end
 
     end
   end
+
+end
 end

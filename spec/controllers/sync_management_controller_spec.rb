@@ -10,49 +10,53 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'spec_helper'
+require 'katello_test_helper'
 
-describe SyncManagementController, :katello => true do
-  include LoginHelperMethods
+module Katello
+describe SyncManagementController do
+
   include LocaleHelperMethods
   include AuthorizationHelperMethods
   include ProductHelperMethods
   include OrchestrationHelper
+  include OrganizationHelperMethods
 
   before (:each) do
-    login_user
-    set_default_locale
+    setup_controller_defaults
   end
 
-  context "Environment is set" do
+  describe "Environment is set (katello)" do
     before (:each) do
-      Katello.pulp_server.extensions.repository.stub(:search_by_repository_ids).and_return([])
-      setup_current_organization
+      Katello.pulp_server.extensions.repository.stubs(:search_by_repository_ids).returns([])
+      @organization = new_test_org
+      @controller.stubs(:current_organization).returns(@organization)
       @library = KTEnvironment.new
-      @library.stub!(:library?).and_return(true)
-      @mock_org.stub!(:library).and_return(@library)
-      Glue::Pulp::Repos.stub!(:prepopulate!).and_return({})
+      @library.stubs(:library?).returns(true)
+      @organization.stubs(:library).returns(@library)
+      Glue::Pulp::Repos.stubs(:prepopulate!).returns({})
+      @controller.stubs(:get_product_info).returns({})
 
-      @library.stub!(:products).and_return(
+      @library.stubs(:products).returns(
           OpenStruct.new.tap do |os|
             def os.readable(org); []; end
             def os.syncable(org); []; end
           end
       )
-      Provider.stub!(:any_readable?).and_return(true)
+      Provider.stubs(:any_readable?).returns(true)
     end
 
     describe "GET 'index'" do
       it "should be successful" do
         get 'index'
-        response.should be_success
+        must_respond_with(:success)
       end
     end
 
     describe "GET 'manage'" do
       it "should be successful" do
+        @controller.expects(:render)
         get 'manage'
-        response.should be_success
+        must_respond_with(:success)
       end
     end
   end
@@ -61,8 +65,8 @@ describe SyncManagementController, :katello => true do
     before (:each) do
       @organization = new_test_org
       @product = new_test_product @organization, @organization.library
-      Provider.stub(:find).and_return @product.provider
-      Product.stub(:find).and_return @product
+      Provider.stubs(:find).returns @product.provider
+      Product.stubs(:find).returns @product
     end
 
     describe "GET index" do
@@ -92,4 +96,5 @@ describe SyncManagementController, :katello => true do
       it_should_behave_like "protected action"
     end
   end
+end
 end

@@ -11,16 +11,18 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require "minitest_helper"
+require "katello_test_helper"
 
-class ProvidersControllerTest < MiniTest::Rails::ActionController::TestCase
-  fixtures :all
+module Katello
+class ProvidersControllerTest < ActionController::TestCase
 
   def setup
-    @org = organizations(:acme_corporation)
-    @redhat_product = providers(:redhat)
-    @custom_product = providers(:fedora_hosted)
-    login_user(User.find(users(:admin)), @org)
+    setup_controller_defaults
+    @org = katello_organizations(:acme_corporation)
+    @redhat_product = katello_providers(:redhat)
+    @custom_product = katello_providers(:fedora_hosted)
+    login_user(User.find(users(:admin)))
+    set_organization(@org)
 
     models = ["Organization", "KTEnvironment", "Provider", "Product"]
     services = ["Candlepin", "Pulp", "ElasticSearch", "Foreman"]
@@ -33,4 +35,5 @@ class ProvidersControllerTest < MiniTest::Rails::ActionController::TestCase
     assert_response :success
   end
 
+end
 end

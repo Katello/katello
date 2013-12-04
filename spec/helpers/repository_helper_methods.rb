@@ -1,8 +1,11 @@
+module Katello
 module RepositoryHelperMethods
 
   def stub_repos(repos)
-    repos.stub(:where => repos)
-    Repository.stub_chain(:joins, :where).and_return(repos)
+    repos.stub(:where).returns(repos)
+    where = stub
+    where.returns(repos)
+    Repository.stubs(:joins).returns(where)
 
     Product.instance_eval do
       define_method(:repos) do |env|
@@ -23,9 +26,10 @@ module RepositoryHelperMethods
                           :content_view_version=>env.content_view_versions.first,
                           :feed=>'http://localhost.com/foo')
     repo.library_instance = library_instance if library_instance
-    repo.stub(:create_pulp_repo).and_return([])
+    repo.stubs(:create_pulp_repo).returns([])
     repo.save!
     repo
   end
 
+end
 end

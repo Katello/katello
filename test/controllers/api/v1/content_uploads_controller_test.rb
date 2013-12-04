@@ -11,10 +11,10 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require "minitest_helper"
+require "katello_test_helper"
 
+module Katello
 describe Api::V1::ContentUploadsController do
-  fixtures :all
 
   def before_suite
     models = ["Organization", "KTEnvironment", "Repository", "Product", "Provider", "Package"]
@@ -23,9 +23,10 @@ describe Api::V1::ContentUploadsController do
   end
 
   def setup
-    @repo = Repository.find(repositories(:fedora_17_x86_64))
-    @org = organizations(:acme_corporation)
-    @environment = environments(:library)
+    setup_controller_defaults_api
+    @repo = Repository.find(katello_repositories(:fedora_17_x86_64))
+    @org = katello_organizations(:acme_corporation)
+    @environment = katello_environments(:library)
     login_user(User.find(users(:admin)))
 
     @edit_permission = UserPermission.new(:update, :providers)
@@ -113,7 +114,7 @@ describe Api::V1::ContentUploadsController do
     end
 
     it "should upload a file" do
-      test_document = "#{Rails.root}/test/fixtures/files/puppet_module.tar.gz"
+      test_document = File.join(Engine.root, "test", "fixtures", "files", "puppet_module.tar.gz")
       puppet_module = Rack::Test::UploadedFile.new(test_document, '')
       Repository.any_instance.stubs(:upload_content)
 
@@ -131,4 +132,5 @@ describe Api::V1::ContentUploadsController do
     pulp_server = mock(:resources => resources)
     Katello.expects(:pulp_server).returns(pulp_server)
   end
+end
 end

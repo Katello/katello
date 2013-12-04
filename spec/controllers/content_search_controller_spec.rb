@@ -10,10 +10,11 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'spec_helper'
+require 'katello_test_helper'
 
-describe ContentSearchController, :katello => true do
-  include LoginHelperMethods
+module Katello
+describe ContentSearchController do
+
   include LocaleHelperMethods
   include OrganizationHelperMethods
   include AuthorizationHelperMethods
@@ -22,36 +23,33 @@ describe ContentSearchController, :katello => true do
   include SearchHelperMethods
 
   before do
-    login_user
-    set_default_locale
-    controller.stub!(:notice)
-    controller.stub(:search_validate).and_return(true)
+    setup_controller_defaults
+    @controller.stubs(:notice)
+    @controller.stubs(:search_validate).returns(true)
     disable_product_orchestration
     disable_repo_orchestration
   end
 
   describe "check packages and errata" do
     before (:each) do
-      # for these tests we need full user
-      login_user :mock => false
 
       @organization = new_test_org #controller.current_organization
-      controller.stub!(:current_organization).and_return(@organization)
+      @controller.stubs(:current_organization).returns(@organization)
       @env1 = create_environment(:name=>"env1", :label=> "env1", :organization => @organization, :prior => @organization.library)
       @provider = Provider.create!(:name => "provider", :provider_type => Provider::CUSTOM,
                                    :organization => @organization, :repository_url => "https://something.url/stuff")
       @product = Product.new({:name=>"prod", :label=> "prod"})
 
       @product.provider = @provider
-      @product.stub(:arch).and_return('noarch')
+      @product.stubs(:arch).returns('noarch')
       @product.save!
       @repo_library = new_test_repo(@organization.library, @product, "repo", "#{@organization.name}/Library/prod/repo")
       @cv_library = @organization.library.content_views.first
       promote_content_view(@cv_library, @organization.library, @env1)
-      ContentView.any_instance.stub(:total_package_count).and_return(0)
-      ContentView.any_instance.stub(:total_errata_count).and_return(0)
-      Repository.any_instance.stub(:package_count).and_return(0)
-      Repository.any_instance.stub(:errata_count).and_return(0)
+      ContentView.any_instance.stubs(:total_package_count).returns(0)
+      ContentView.any_instance.stubs(:total_errata_count).returns(0)
+      Repository.any_instance.stubs(:package_count).returns(0)
+      Repository.any_instance.stubs(:errata_count).returns(0)
     end
     after do
       reset_search
@@ -63,7 +61,7 @@ describe ContentSearchController, :katello => true do
             @env1 = KTEnvironment.find(@env1.id)
             content_view = @env1.content_views.where(:id => @cv_library.id).first
             @repo = content_view.repos(@env1).first
-            Repository.stub(:search).and_return([@repo])
+            Repository.stubs(:search).returns([@repo])
             repo_filter_ids = [@repo_library.pulp_id, @repo.pulp_id].collect do |repo|
                   {:term => {:repoids => [repo]}}
             end
@@ -81,9 +79,9 @@ describe ContentSearchController, :katello => true do
                          :results => [])
             params = {"mode"=>mode.to_s, "#{content_type}"=>{"search"=>""}, "content_type"=>"#{content_type}", "repos"=>{"search"=>""}}
             post "#{content_type}", params
-            response.should be_success
+            must_respond_with(:success)
             result = JSON.parse(response.body)
-            result["name"].should == content_type.to_s.split('_').map(&:capitalize).join(' ')
+            result["name"].must_equal content_type.to_s.split('_').map(&:capitalize).join(' ')
           end
 
           it "should return some repo_compare_#{content_type}" do
@@ -104,16 +102,17 @@ describe ContentSearchController, :katello => true do
                 "0"=>{"env_id"=>@repo_library.environment.id.to_s, "repo_id"=>@repo_library.id.to_s, "view_id"=>view_id},
                 "1"=>{"env_id"=>@repo.environment.id.to_s, "repo_id"=>@repo.id.to_s, "view_id"=>view_id}}}
             post "repo_compare_#{content_type}", params
-            response.should be_success
+            must_respond_with(:success)
             result = JSON.parse(response.body)
-            result["rows"].should_not be_empty
-            result["rows"][0]["id"].should == result1.id
-            result["cols"].should_not be_empty
-            result["cols"][@repo_library.id.to_s].should_not be_nil
-            result["cols"][@repo.id.to_s].should_not be_nil
+            result["rows"].wont_be_empty
+            result["rows"][0]["id"].must_equal result1.id
+            result["cols"].wont_be_empty
+            result["cols"][@repo_library.id.to_s].wont_be_nil
+            result["cols"][@repo.id.to_s].wont_be_nil
           end
         end
       end
     end
   end
+end
 end

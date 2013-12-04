@@ -10,13 +10,13 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'spec_helper.rb'
-include OrchestrationHelper
+require 'katello_test_helper'
 
-describe Api::V1::SystemGroupErrataController, :katello => true do
-  include LoginHelperMethods
-  include LocaleHelperMethods
+module Katello
+describe Api::V1::SystemGroupErrataController do
   include AuthorizationHelperMethods
+  include OrchestrationHelper
+  include OrganizationHelperMethods
   include SystemHelperMethods
 
   let(:user_with_read_permissions) { user_with_permissions { |u| u.can(:read_systems, :system_groups, @group.id, @organization) } }
@@ -26,12 +26,14 @@ describe Api::V1::SystemGroupErrataController, :katello => true do
   let(:uuid) { '1234' }
   let(:errata) { %w[RHBA-2012:0001 RHSA-2012:0002] }
 
+  describe "(katello)" do
+
   before(:each) do
-    set_default_locale
-    login_user(:mock => false)
+    setup_controller_defaults_api
 
     disable_consumer_group_orchestration
     setup_system_creation
+    System.any_instance.stub(:update_system_groups)
 
     @environment = create_environment(:name => "DEV", :label => "DEV", :prior => @organization.library, :organization => @organization)
     @system      = create_system(:name => "verbose", :environment => @environment, :cp_type => "system", :facts => { "Test1" => 1, "verbose_facts" => "Test facts" })
@@ -39,7 +41,7 @@ describe Api::V1::SystemGroupErrataController, :katello => true do
     @group = SystemGroup.new(:name => "test_group", :organization => @organization, :max_systems => 5)
     @group.save!
     @group.systems << @system
-    SystemGroup.stub!(:find).and_return(@group)
+    SystemGroup.stubs(:find).returns(@group)
   end
 
   describe "viewing errata" do
@@ -56,7 +58,7 @@ describe Api::V1::SystemGroupErrataController, :katello => true do
         errata.applicable_consumers = []
         to_ret << errata
       }
-      SystemGroup.any_instance.stub(:errata).and_return(to_ret)
+      SystemGroup.any_instance.stubs(:errata).returns(to_ret)
     end
 
     let(:action) { :index }
@@ -67,16 +69,20 @@ describe Api::V1::SystemGroupErrataController, :katello => true do
 
     it_should_behave_like "protected action"
 
-    it { should be_successful }
-
     it "should retrieve errata from pulp" do
       subject
     end
+
+    it "should be successful" do
+      subject
+      must_respond_with(:success)
+    end
+
   end
 
   describe "install errata" do
     before do
-      @group.stub(:install_errata).and_return(TaskStatus.new)
+      @group.stubs(:install_errata).returns(TaskStatus.new)
     end
 
     let(:action) { :create }
@@ -87,11 +93,17 @@ describe Api::V1::SystemGroupErrataController, :katello => true do
 
     it_should_behave_like "protected action"
 
-    it { should be_successful }
-
     it "should call model to install errata" do
-      @group.should_receive(:install_errata)
+      @group.expects(:install_errata)
       subject
     end
+
+    it "should be successful" do
+      subject
+      must_respond_with(:success)
+    end
+
   end
+  end
+end
 end

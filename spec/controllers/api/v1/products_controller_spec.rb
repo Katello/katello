@@ -10,14 +10,15 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'spec_helper'
+require 'katello_test_helper'
 
-describe Api::V1::ProductsController, :katello => true do
-  include LoginHelperMethods
+module Katello
+describe Api::V1::ProductsController do
+  describe "katello" do
+  include OrganizationHelperMethods
   include AuthorizationHelperMethods
   include ProductHelperMethods
   include RepositoryHelperMethods
-  include LocaleHelperMethods
 
   let(:user_with_read_permissions) { user_with_permissions { |u| u.can([:read], :providers, @provider.id, @organization) } }
   let(:user_without_read_permissions) { user_without_permissions }
@@ -32,7 +33,7 @@ describe Api::V1::ProductsController, :katello => true do
 
     @organization = new_test_org
 
-    @test_gpg_content = File.open("#{Rails.root}/spec/assets/gpg_test_key").read
+    @test_gpg_content = File.open("#{Engine.root}/spec/assets/gpg_test_key").read
 
     @environment = create_environment(:name => "foo123", :label => "foo123", :organization => @organization, :prior => @organization.library)
     @provider    = Provider.create!(:name         => "provider", :provider_type => Provider::CUSTOM,
@@ -40,7 +41,7 @@ describe Api::V1::ProductsController, :katello => true do
     @product     = Product.new({ :name => "prod", :label => "prod" })
 
     @product.provider = @provider
-    @product.stub(:arch).and_return('noarch')
+    @product.stubs(:arch).returns('noarch')
     @product.save!
     @repo_library = new_test_repo(@organization.library, @product, "repo", "#{@organization.name}/Library/prod/repo")
 
@@ -51,20 +52,20 @@ describe Api::V1::ProductsController, :katello => true do
 
     @product = @products[0]
 
-    Product.stub!(:find_by_cp_id).and_return(@product)
-    Product.stub!(:find).and_return(@product)
+    Product.stubs(:find_by_cp_id).returns(@product)
+    Product.stubs(:find).returns(@product)
 
-    Product.stub!(:select).and_return(@products)
-    @product.stub(:repos).and_return(@repositories)
-    @product.stub(:sync_state => ::PulpSyncStatus::Status::NOT_SYNCED)
+    Product.stubs(:select).returns(@products)
+    @product.stubs(:repos).returns(@repositories)
+    @product.stubs(:sync_state => Katello::PulpSyncStatus::Status::NOT_SYNCED)
 
     @request.env["HTTP_ACCEPT"] = "application/json"
-    login_user_api
+    setup_controller_defaults_api
   end
 
   describe "show product" do
     before do
-      Katello.pulp_server.extensions.repository.stub(:retrieve).and_return(RepoTestData::REPO_PROPERTIES)
+      Katello.pulp_server.extensions.repository.stubs(:retrieve).returns(RepoTestData::REPO_PROPERTIES)
     end
 
     let(:action) { :show }
@@ -75,16 +76,16 @@ describe Api::V1::ProductsController, :katello => true do
 
     subject { req }
 
-    it { should be_success }
+    it {req.must_respond_with(:success) }
   end
 
   describe "update product" do
     let(:gpg_key) { GpgKey.create!(:name => "Gpg key", :content => @test_gpg_content, :organization => @organization) }
 
     before do
-      Katello.pulp_server.extensions.repository.stub(:retrieve).and_return(RepoTestData::REPO_PROPERTIES)
-      Product.stub(:find_by_cp_id).with(@product.cp_id).and_return(@product)
-      @product.stub(:update_attributes! => true)
+      Katello.pulp_server.extensions.repository.stubs(:retrieve).returns(RepoTestData::REPO_PROPERTIES)
+      Product.stubs(:find_by_cp_id).with(@product.cp_id).returns(@product)
+      @product.stubs(:update_attributes! => true)
     end
 
     let(:action) { :update }
@@ -94,7 +95,7 @@ describe Api::V1::ProductsController, :katello => true do
 
     it_should_behave_like "protected action"
 
-    it_should_behave_like "bad request" do
+    describe "invalid params" do
       let(:req) do
         bad_req = { :id              => @product.cp_id,
                     :organization_id => @organization.label,
@@ -104,21 +105,22 @@ describe Api::V1::ProductsController, :katello => true do
         }.with_indifferent_access
         put :update, bad_req
       end
+      it_should_behave_like "bad request"
     end
 
     context "custom product" do
       subject { req }
 
-      it { should be_success }
+      it { req.must_respond_with(:success) }
 
       it "should change allowed attributes" do
-        @product.should_receive(:gpg_key_name=)
-        @product.should_receive(:update_attributes!).with("description" => "another description")
+        @product.expects(:gpg_key_name=)
+        @product.expects(:update_attributes!).with("description" => "another description")
         req
       end
 
       it "should reset repos' GPGs, if updating recursive" do
-        @product.should_receive(:reset_repo_gpgs!)
+        @product.expects(:reset_repo_gpgs!)
         put 'update', :id => @product.cp_id, :organization_id => @organization.label, :product => { :gpg_key_name => gpg_key.name, :description => "another description", :recursive => true }
       end
     end
@@ -132,7 +134,7 @@ describe Api::V1::ProductsController, :katello => true do
 
       it do
         req
-        response.code.should eq("400")
+        response.code.must_equal("400")
       end
     end
   end
@@ -140,28 +142,31 @@ describe Api::V1::ProductsController, :katello => true do
   context "show all @products" do
     before do
       @dumb_prod = { :id => @product.id }
-      Product.stub!(:all_readable).and_return(@products)
-      @products.stub_chain(:select, :joins, :where, :all).and_return(@dumb_prod)
+      Product.stubs(:all_readable).returns(@products)
+      @products.stubs(:select).returns(stub(:joins => stub(:where =>
+                                                  stub(:all => @dumb_prod))))
+
+#      @products.stub_chain(:select, :joins, :where, :all).returns(@dumb_prod)
     end
 
     it "should find organization" do
-      @controller.should_receive(:find_optional_organization)
+      @controller.expects(:find_optional_organization)
       get 'index', :organization_id => @organization.label
     end
 
     it "should find library" do
       get 'index', :organization_id => @organization.label
-      response.should be_success
+      must_respond_with(:success)
     end
 
     it "should respond with success" do
       get 'index', :organization_id => @organization.label
-      response.should be_success
+      must_respond_with(:success)
     end
 
     it "should respond return product json" do
       get 'index', :organization_id => @organization.label
-      response.body.should == @dumb_prod.to_json
+      response.body.must_equal @dumb_prod.to_json
     end
   end
 
@@ -175,50 +180,51 @@ describe Api::V1::ProductsController, :katello => true do
     it_should_behave_like "protected action"
 
     it "should find environment" do
-      KTEnvironment.should_receive(:find_by_id).once.with(@environment.id.to_s).and_return([@environment])
+      KTEnvironment.expects(:find_by_id).once.with(@environment.id.to_s).returns([@environment])
       get 'repositories', :organization_id => @organization.label, :environment_id => @environment.id.to_s, :id => @product.id
     end
 
     it "should find product" do
-      Product.should_receive(:find_by_cp_id).once.with(@product.id.to_s, @organization).and_return(@products[0])
+      Product.expects(:find_by_cp_id).once.with(@product.id.to_s, @organization).returns(@products[0])
       get 'repositories', :organization_id => @organization.label, :environment_id => @environment.id, :id => @product.id
     end
 
     it "should retrieve all repositories for the product" do
-      @product.stub!(:readable?).and_return(true)
-      Product.stub!(:all_readable).and_return(@products)
-      @product.should_receive(:repos).once.with(@organization.library, nil, nil).and_return({})
+      @product.stubs(:readable?).returns(true)
+      Product.stubs(:all_readable).returns(@products)
+      @product.expects(:repos).once.with(@organization.library, nil, nil).returns({})
       get 'repositories', :organization_id => @organization.label, :id => @product.id
     end
 
     it "should return json of product repositories" do
-      Package.stub!(:search).and_return({})
-      PuppetModule.stub!(:search).and_return({})
-      Repository.any_instance.stub(:last_sync).and_return(nil)
+      Package.stubs(:search).returns({})
+      PuppetModule.stubs(:search).returns({})
+      Repository.any_instance.stubs(:last_sync).returns(nil)
 
-      @product.stub!(:readable?).and_return(true)
-      @repositories.stub!(:where).and_return(@repositories)
+      @product.stubs(:readable?).returns(true)
+      @repositories.stubs(:where).returns(@repositories)
       get 'repositories', :organization_id => @organization.label, :environment_id => @organization.library.id, :id => @product.id
-      response.body.should == @repositories.to_json
+      response.body.must_equal @repositories.to_json
     end
 
     it "should return 400 for a non-library environment with no content_view_id" do
-      @product.stub!(:readable?).and_return(true)
-      @repositories.stub!(:where).and_return(@repositories)
+      @product.stubs(:readable?).returns(true)
+      @repositories.stubs(:where).returns(@repositories)
       get 'repositories', :organization_id => @organization.label, :environment_id => @environment.id, :id => @product.id
-      response.status.should eql(400)
+      response.status.must_equal(400)
     end
 
     it "should call product repos with a content view" do
       @content_view = build_stubbed(:content_view)
-      @product.stub!(:readable?).and_return(true)
-      @repositories.stub!(:where).and_return(@repositories)
-      ContentView.stub_chain(:readable, :find).and_return(@content_view)
-      @product.should_receive(:repos).with(@environment, nil, @content_view)
+      @product.stubs(:readable?).returns(true)
+      @repositories.stubs(:where).returns(@repositories)
+      ContentView.stubs(:readable).returns(stub(:find => @content_view))
+      @product.expects(:repos).with(@environment, nil, @content_view)
       get 'repositories', :organization_id => @organization.label,
         :environment_id => @environment.id, :id => @product.id,
         :content_view_id => @content_view.id
     end
   end
-
+end
+end
 end

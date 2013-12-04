@@ -10,27 +10,25 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'spec_helper'
+require 'katello_test_helper'
 
-describe PromotionsController, :katello => true do
-  include LoginHelperMethods
+module Katello
+describe PromotionsController do
   include LocaleHelperMethods
   include OrchestrationHelper
   include OrganizationHelperMethods
   include ProductHelperMethods
   include AuthorizationHelperMethods
 
-  before (:each) do
-    login_user
-    set_default_locale
-  end
+  describe "(katello)" do
 
   describe "Getting the promotions page " do
 
     before (:each) do
+      setup_controller_defaults
       @org = new_test_org
-      controller.stub(:current_organization).and_return(@org)
-      Glue::Pulp::Repos.stub!(:prepopulate!).and_return([])
+      @controller.stubs(:current_organization).returns(@org)
+      Glue::Pulp::Repos.stubs(:prepopulate!).returns([])
       @env = @org.library
 
     end
@@ -38,40 +36,42 @@ describe PromotionsController, :katello => true do
     it "should be successful with library and no next environment" do
       get 'show', :id=>@env.name
 
-      response.should be_success
+      must_respond_with(:success)
 
-      assigns(:environment).should  == @env
-      assigns(:next_environment).should == nil
+      assigns(:environment).must_equal @env
+      assigns(:next_environment).must_equal nil
     end
 
     it "should be successful on the library and a next environment" do
       @env2 = KTEnvironment.new(:organization=>@org, :label=> "otherenv", :library=>false, :name=>"otherenv", :prior=>@org.library)
       @env2.save!
       get 'show', :id=>@env.name
-      response.should be_success
-      assigns(:next_environment).should == @env2
-      assigns(:environment).should  == @env
-      assigns(:path).should_not be_nil
+      must_respond_with(:success)
+      assigns(:next_environment).must_equal @env2
+      assigns(:environment).must_equal @env
+      assigns(:path).wont_be_nil
     end
 
     it "should be successful on the next environment with no changeset" do
       @env2 = KTEnvironment.new(:organization=>@org,:label=> "otherenv", :library=>false, :name=>"otherenv", :prior=>@org.library)
       @env2.save!
       get 'show', :id=>@env2.name
-      response.should be_success
-      assigns(:environment).should == @env2
-      assigns(:next_environment).should == nil
+      must_respond_with(:success)
+      assigns(:environment).must_equal @env2
+      assigns(:next_environment).must_equal nil
     end
 
   end
 
-describe "rules" do
+  describe "rules" do
     before (:each) do
+      setup_controller_defaults
       @organization = new_test_org
+      @controller.stubs(:current_organization).returns(@organization)
       @env1 = @organization.library
       @env2 = create_environment(:name=>"FOO", :label=> "FOO", :prior => @env1, :organization=>@organization)
       @env3 = create_environment(:name=>"FOO2", :label=> "FOO2", :prior => @env2, :organization=>@organization)
-      Glue::Pulp::Repos.stub!(:prepopulate!).and_return([])
+      Glue::Pulp::Repos.stubs(:prepopulate!).returns([])
     end
 
     describe "GET index with changesets readable" do
@@ -84,8 +84,8 @@ describe "rules" do
         user_without_permissions
       end
       let(:on_success) do
-        assigns(:environment).should == @env2
-        assigns(:next_environment).should == @env3
+        assigns(:environment).must_equal @env2
+        assigns(:next_environment).must_equal @env3
       end
       it_should_behave_like "protected action"
     end
@@ -100,8 +100,8 @@ describe "rules" do
         user_without_permissions
       end
       let(:on_success) do
-        assigns(:environment).should == @env2
-        assigns(:next_environment).should == @env3
+        assigns(:environment).must_equal @env2
+        assigns(:next_environment).must_equal @env3
       end
       it_should_behave_like "protected action"
     end
@@ -110,7 +110,7 @@ describe "rules" do
       describe "apply" do
         shared_examples_for "promotion page perm checks" do
           it "test action" do
-            login_user(:user => authorized_user, :mock => false, :superuser => false)
+            set_user(authorized_user)
             get 'show', {:id => env.name}
             on_show
           end
@@ -122,14 +122,14 @@ describe "rules" do
             user_with_permissions { |u| u.can(:read_contents, :environments, @env1.id, @organization) }
           end
           let(:on_show) {
-            response.should be_success
-            assigns[:locals_hash]["read_contents"].should == true
-            assigns[:locals_hash]["read_promotion_changesets"].should == false
-            assigns[:locals_hash]["read_deletion_changesets"].should == false
-            assigns[:locals_hash]["manage_promotion_changesets"].should == false
-            assigns[:locals_hash]["manage_deletion_changesets"].should  == false
-            assigns[:locals_hash]["apply_promotion_changesets"].should == false
-            assigns[:locals_hash]["apply_deletion_changesets"].should == false
+            must_respond_with(:success)
+            assigns[:locals_hash]["read_contents"].must_equal true
+            assigns[:locals_hash]["read_promotion_changesets"].must_equal false
+            assigns[:locals_hash]["read_deletion_changesets"].must_equal false
+            assigns[:locals_hash]["manage_promotion_changesets"].must_equal false
+            assigns[:locals_hash]["manage_deletion_changesets"].must_equal false
+            assigns[:locals_hash]["apply_promotion_changesets"].must_equal false
+            assigns[:locals_hash]["apply_deletion_changesets"].must_equal false
           }
           it_should_behave_like "promotion page perm checks"
         end
@@ -140,38 +140,39 @@ describe "rules" do
             user_with_permissions { |u| u.can(:promote_changesets, :environments, @env2.id, @organization) }
           end
           let(:on_show) {
-            response.should be_success
-            assigns[:locals_hash]["read_contents"].should be_false
-            assigns[:locals_hash]["read_promotion_changesets"].should be_true
-            assigns[:locals_hash]["read_deletion_changesets"].should be_false
-            assigns[:locals_hash]["manage_promotion_changesets"].should be_false
-            assigns[:locals_hash]["manage_deletion_changesets"].should be_false
-            assigns[:locals_hash]["apply_promotion_changesets"].should be_true
-            assigns[:locals_hash]["apply_deletion_changesets"].should be_false
+            must_respond_with(:success)
+            assigns[:locals_hash]["read_contents"].must_equal(false)
+            assigns[:locals_hash]["read_promotion_changesets"].must_equal(true)
+            assigns[:locals_hash]["read_deletion_changesets"].must_equal(false)
+            assigns[:locals_hash]["manage_promotion_changesets"].must_equal(false)
+            assigns[:locals_hash]["manage_deletion_changesets"].must_equal(false)
+            assigns[:locals_hash]["apply_promotion_changesets"].must_equal(true)
+            assigns[:locals_hash]["apply_deletion_changesets"].must_equal(false)
           }
-          #it_should_behave_like "promotion page perm checks"
+          it_should_behave_like "promotion page perm checks"
         end
+
         describe "user with deletion perms" do
           let(:env) {@env2}
           let(:authorized_user) do
             user_with_permissions { |u| u.can(:delete_changesets, :environments, @env2.id, @organization) }
           end
           let(:on_show) {
-            response.should be_success
-            assigns[:locals_hash]["read_contents"].should be_false
-            assigns[:locals_hash]["read_promotion_changesets"].should be_false
-            assigns[:locals_hash]["read_deletion_changesets"].should be_true
-            assigns[:locals_hash]["manage_promotion_changesets"].should be_false
-            assigns[:locals_hash]["manage_deletion_changesets"].should be_false
-            assigns[:locals_hash]["apply_promotion_changesets"].should be_false
-            assigns[:locals_hash]["apply_deletion_changesets"].should be_true
+            must_respond_with(:success)
+            assigns[:locals_hash]["read_contents"].must_equal(false)
+            assigns[:locals_hash]["read_promotion_changesets"].must_equal(false)
+            assigns[:locals_hash]["read_deletion_changesets"].must_equal(true)
+            assigns[:locals_hash]["manage_promotion_changesets"].must_equal(false)
+            assigns[:locals_hash]["manage_deletion_changesets"].must_equal(false)
+            assigns[:locals_hash]["apply_promotion_changesets"].must_equal(false)
+            assigns[:locals_hash]["apply_deletion_changesets"].must_equal(true)
           }
           it_should_behave_like "promotion page perm checks"
         end
-
       end
+
     end
-
+  end
+  end
 end
-
 end

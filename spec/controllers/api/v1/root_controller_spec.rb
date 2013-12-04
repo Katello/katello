@@ -10,13 +10,12 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'spec_helper'
+require 'katello_test_helper'
 
+module Katello
 describe Api::V1::RootController do
-  include LoginHelperMethods
-
   before (:each) do
-    login_user
+    setup_controller_defaults_api
     @request.env["HTTP_ACCEPT"] = "application/json"
     @packages                   = { "rel" => "packages", "href" => "/api/packages/" }
     @systems                    = { "rel" => "systems", "href" => "/api/systems/" }
@@ -34,27 +33,27 @@ describe Api::V1::RootController do
 
   context "in headpin mode" do
     before (:each) do
-      Katello.config.stub!(:katello?).and_return(false)
+      Katello.config.stubs(:katello?).returns(false)
     end
     it "should not show katello apis" do
       resource_list
-      json(response).should include @systems
-      json(response).should_not include @packages
-      json(response).should_not include @tasks
-      json(response).should_not include @gpg_keys
+      json(response).must_include @systems
+      json(response).wont_include(@packages)
+      json(response).wont_include(@tasks)
+      json(response).wont_include(@gpg_keys)
     end
   end
 
   context "in katello mode" do
-
     before (:each) do
-      Katello.config.stub!(:katello?).and_return(true)
+      Katello.config.stubs(:katello?).returns(true)
     end
-    it "should show katello apis", :katello => true do #TODO headpin
+    it "should show katello apis (katello)" do #TODO headpin
       resource_list
-      json(response).should include @systems
-      json(response).should include @packages
+      json(response).must_include(@systems)
+      json(response).must_include(@packages)
     end
   end
 
+end
 end

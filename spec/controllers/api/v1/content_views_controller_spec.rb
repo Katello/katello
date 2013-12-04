@@ -10,11 +10,14 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'spec_helper'
+require 'katello_test_helper'
 
-describe Api::V1::ContentViewsController, :katello => true do
+module Katello
+describe Api::V1::ContentViewsController do
+  describe "(katello)" do
   include LoginHelperMethods
   include AuthorizationHelperMethods
+  include OrganizationHelperMethods
 
   before(:each) do
     disable_org_orchestration
@@ -23,7 +26,7 @@ describe Api::V1::ContentViewsController, :katello => true do
 
     @org                        = FactoryGirl.create(:organization)
     @request.env["HTTP_ACCEPT"] = "application/json"
-    login_user_api
+    setup_controller_defaults_api
   end
 
   describe "index" do
@@ -37,10 +40,9 @@ describe Api::V1::ContentViewsController, :katello => true do
       let(:org_view_ids) { @org.content_views.map(&:id) }
 
       subject { req }
-      it { should be_success }
+      it { req.must_respond_with(:success) }
 
-      specify { subject && assigns[:content_views].map(&:id).should
-      eql(org_view_ids) }
+      specify { subject && assigns[:content_views].map(&:id).must_equal(org_view_ids) }
     end
 
     context "with environment filter param" do
@@ -55,9 +57,9 @@ describe Api::V1::ContentViewsController, :katello => true do
         view_version.save!
 
         get "index", :organization_id => @org.name, :environment_id => env.id
-        response.should be_success
+        must_respond_with(:success)
         ids = env.content_views(true).map(&:id)
-        assigns[:content_views].map(&:id).sort.should eql(ids.sort)
+        assigns[:content_views].map(&:id).sort.must_equal(ids.sort)
       end
     end
 
@@ -69,8 +71,8 @@ describe Api::V1::ContentViewsController, :katello => true do
 
         subject { req }
 
-        it { should be_success }
-        specify { subject && (assigns[:content_views].map(&:id).should eql([view.id])) }
+        it { req.must_respond_with(:success) }
+        specify { subject && (assigns[:content_views].map(&:id).must_equal([view.id])) }
       end
 
     end
@@ -81,17 +83,19 @@ describe Api::V1::ContentViewsController, :katello => true do
       @def                          = FactoryGirl.build_stubbed(:content_view_definition)
       @view                         = FactoryGirl.build_stubbed(:content_view, :organization => @org)
       @view.content_view_definition = @def
-      ContentView.stub(:find).with(@view.id.to_s).and_return(@view)
+      ContentView.stubs(:find).with(@view.id.to_s).returns(@view)
     end
 
     it "should call ContentView#refresh" do
-      version = mock_model(ContentViewVersion)
-      @view.should_receive(:refresh_view).and_return(version)
-      version.should_receive(:task_status).and_return(TaskStatus.new)
-      @def.should_receive(:publishable?).and_return(true)
+      version = mock
+      @view.expects(:refresh_view).returns(version)
+      version.expects(:task_status).returns(TaskStatus.new)
+      @def.expects(:publishable?).returns(true)
       post "refresh", :id => @view.id.to_s
-      response.status.should eql(202)
+      response.status.must_equal(202)
     end
   end
 
+end
+end
 end

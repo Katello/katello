@@ -10,12 +10,13 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'minitest_helper'
+require 'katello_test_helper'
 
-class AControllerTest < MiniTest::Rails::ActionController::TestCase
+module Katello
+class AControllerTest < ActionController::TestCase
   ERROR_MESSAGE = 'user should not see this'
 
-  class AController < ApplicationController
+  class AController < Katello::ApplicationController
     def rules
       { failing_action: -> { true } }
     end
@@ -27,12 +28,9 @@ class AControllerTest < MiniTest::Rails::ActionController::TestCase
 
   self.controller_class = AController
 
-  fixtures :all
-
   def setup
-    @org = organizations :acme_corporation
-    login_user users(:admin), @org
-
+    setup_controller_defaults
+    @org = katello_organizations :acme_corporation
     Katello.config.stubs(hide_exceptions: true)
   end
 
@@ -44,4 +42,4 @@ class AControllerTest < MiniTest::Rails::ActionController::TestCase
     assert response.body =~ /#{ERROR_MESSAGE}/
   end
 end
-
+end

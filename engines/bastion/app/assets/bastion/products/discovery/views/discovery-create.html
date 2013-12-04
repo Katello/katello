@@ -1,0 +1,171 @@
+<a ui-sref="products.discovery.scan">
+  <i class="icon-backward"></i>
+  {{ "Back To Repository Selection" | translate }}
+</a>
+
+<h3 translate>Product Selection</h3>
+
+<span translate>Create Repositories within:</span>
+
+<div class="form">
+  <div class="control-group">
+    <label for="newProduct" translate>Existing Product:</label>
+    <input type="radio"
+           name="newProduct"
+           value="false"
+           ng-model="createRepoChoices.newProduct"
+           ng-disabled="creating()"/>
+    <select ng-hide="createRepoChoices.newProduct"
+            ng-disabled="creating()"
+            ng-model="createRepoChoices.existingProductId"
+            ng-options="product.id as product.name for product in products">
+    </select>
+  </div>
+
+  <div class="control-group">
+    <label for="newProduct" translate>New Product:</label>
+    <input type="radio"
+           name="newProduct"
+           value="true"
+           ng-model="createRepoChoices.newProduct"
+           ng-disabled="creating()"/>
+  </div>
+</div>
+
+<form name="productForm" class="form" ng-show="createRepoChoices.newProduct" ng-disabled="creating()" novalidate>
+
+  <div class="control-group required" ng-class="{ 'error' : productForm.name.$invalid }">
+    <div class="label">
+      <label for="name" translate>Name</label>
+    </div>
+    <div class="input">
+      <input ng-model="createRepoChoices.product.name"
+             name="name"
+             type="text"
+             tabindex=1
+             required/>
+      <span class="note error" ng-show="productForm.name.$invalid">
+        <ul><li ng-repeat="message in productForm.name.$error.messages">{{ message }}</li></ul>
+      </span>
+    </div>
+  </div>
+
+  <div class="control-group required" ng-class="{ 'error' : productForm.label.$invalid }">
+    <div class="label">
+      <label class="required" for="label" translate>Label</label>
+    </div>
+    <div class="input">
+      <input ng-model="createRepoChoices.product.label"
+             name="label"
+             type="text"
+             tabindex=2
+             required/>
+      <span class="note error" ng-show="productForm.label.$invalid">
+        <ul><li ng-repeat="message in productForm.label.$error.messages">{{ message }}</li></ul>
+      </span>
+    </div>
+  </div>
+
+  <div class="control-group" >
+    <div class="label">
+      <label for="provider" translate>Provider</label>
+    </div>
+    <select
+      ng-model="createRepoChoices.product.provider_id"
+      ng-options="provider.id as provider.name for provider in providers">
+    </select>
+    <a ui-sref="products.new.provider" translate>+ New Provider</a>
+  </div>
+
+  <div class="control-group" >
+    <div class="label">
+      <label for="gpgkey" translate>GPG Key:</label>
+    </div>
+    <select
+      ng-model="createRepoChoices.product.gpg_key_id"
+      ng-options="gpg_key.id as gpg_key.name for gpg_key in gpgKeys">
+    </select>
+  </div>
+
+</form>
+
+
+<div class="form">
+  <h3 translate>Options</h3>
+
+  <div class="control-group" >
+    <div class="label">
+      <label for="unprotected" translate>Serve via HTTP</label>
+    </div>
+    <div class="input">
+      <input type="checkbox" id="unprotected" ng-model="createRepoChoices.unprotected" ng-disabled="creating()"/>
+    </div>
+  </div>
+</div>
+
+<section class="form">
+  
+  <h3 translate>Selected URLs</h3>
+
+  <div ng-repeat="repo in discovery.selected">
+    <form novalidate>
+
+      <i class="icon-circle"></i>
+      {{  repo.url }}
+      <i class="icon-check" ng-show="repo.created"></i>
+
+      <div class="control-group error required" ng-show="repo.form.$invalid">
+        <div class="label" >
+           <label> {{ repo.form.messages }}</label>
+        </div>
+        <div class="input"></div>
+      </div>
+
+      <div class="control-group required" ng-class="{ 'error' : repo.form.$invalid }">
+        <div class="label">
+           <label translate>Name</label>
+        </div>
+
+        <div class="input">
+          <input ng-model="repo.name"
+                 ng-disabled="creating() || repo.created"
+                 name="name"
+                 type="text"
+                 tabindex=1
+                 required />
+        </div>
+      </div>
+
+      <div class="control-group required" ng-class="{ 'error' : repo.form.$invalid }">
+
+        <div class="label">
+          <label translate>Label</label>
+        </div>
+
+        <div class="input">
+          <input ng-model="repo.label"
+                 ng-class="{ 'error' : repo.form.$invalid }"
+                 ng-disabled="creating() || repo.created"
+                 name="label"
+                 type="text"
+                 tabindex=2
+                 required/>
+        </div>
+
+      </div>
+
+    </form>
+  </div>
+
+  <div class="control-group buttons">
+    <div class="input">
+      <button ng-click="createRepos()"
+              ng-disabled="creating()"
+              translate
+              class="btn btn-primary btn-large">
+        Create
+      </button>
+    </div>
+  </div>
+
+</section>

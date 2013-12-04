@@ -1,30 +1,30 @@
 <section class="nutupane-details" ng-cloak alch-container-scroll>
 
   <header class="details-header new-header">
-    <h2 class="fl">{{ "System Registration" | i18n }}</h2>
+    <h2 class="fl" translate>System Registration</h2>
 
-    <div class="details-actions fr">
-      <button class="btn-mini" ng-click="table.closeItem()">
+    <div class="fr">
+      <button class="btn btn-default" ui-sref="systems.index">
         <i class="icon-remove"></i>
-        {{ "Close" | i18n }}
+        {{ "Close" | translate }}
       </button>
     </div>
   </header>
 
-  <p>{{ "To register a system to this server, run the following commands within a console on the client system." | i18n }}</p>
+  <p translate>To register a system to this server, run the following commands within a console on the client system.</p>
 
-  <p>{{ "Install the pre-built bootstrap RPM. This will configure the system to use this server." | i18n }}</p>
+  <p translate>Install the pre-built bootstrap RPM. This will configure the system to use this server.</p>
 
   <pre>rpm -Uvh {{ baseURL }}/pub/candlepin-cert-consumer-latest.noarch.rpm</pre>
 
-  <p>{{ "Use Subscription Manager to register." | i18n }}</p>
+  <p translate>Use Subscription Manager to register.</p>
 
   <pre><code>subscription-manager register --org="{{ organization }}"</code></pre>
 
   <div ng-show="nodes.results.length > 0">
     <p>
-      <h5>Consuming Content From a Node</h5>
-      {{ "Selected Node:" | i18n }}
+      <h5 translate>Consuming Content From a Node</h5>
+      {{ "Selected Node:" | translate }}
       <select ng-model="selectedNode"
               ng-options="node.hostname for node in nodes.results">
       </select>

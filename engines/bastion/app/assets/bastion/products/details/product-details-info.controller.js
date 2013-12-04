@@ -17,17 +17,21 @@
  *
  * @requires $scope
  * @requires $q
+ * @requires gettext
  * @requires Product
  * @requires GPGKey
+ * @requires MenuExpander
  *
  * @description
  *   Provides the functionality for the product details action pane.
  */
 angular.module('Bastion.products').controller('ProductDetailsInfoController',
-    ['$scope', '$q', 'Product', 'GPGKey', function($scope, $q, Product, GPGKey) {
+    ['$scope', '$q', 'gettext', 'Product', 'GPGKey', 'MenuExpander', function($scope, $q, gettext, Product, GPGKey, MenuExpander) {
 
-        $scope.saveSuccess = false;
-        $scope.saveError = false;
+        $scope.successMessages = [];
+        $scope.errorMessages = [];
+
+        $scope.menuExpander = MenuExpander;
         $scope.panel = $scope.panel || {loading: false};
 
         $scope.product = $scope.product || Product.get({id: $scope.$stateParams.productId}, function() {
@@ -52,11 +56,12 @@ angular.module('Bastion.products').controller('ProductDetailsInfoController',
 
             product.$update(function(response) {
                 deferred.resolve(response);
-                $scope.saveSuccess = true;
+                $scope.successMessages.push(gettext('Product Saved'));
             }, function(response) {
                 deferred.reject(response);
-                $scope.saveError = true;
-                $scope.errors = response.data.errors;
+                _.each(response.data.errors, function(errorMessage) {
+                    $scope.errorMessages.push(gettext("An error occurred saving the Product: ") + errorMessage);
+                });
             });
 
             return deferred.promise;

@@ -1,65 +1,64 @@
-<button class="fr btn btn-primary" ng-click="autoAttach()">{{ "Run Auto-Attach" | i18n }}</button>
-<div class="details">
-  <section>
-    <h4>{{ "Subscription Status Details" | i18n }}</h4>
+<button class="btn btn-primary fr" ng-click="autoAttach()">{{ "Run Auto-Attach" | translate }}</button>
 
-    <div class="detail">
-      <span class="info-label">{{ "Subscription Status" | i18n }}</span>
-        <span class="info-value">
-          <i class="icon-circle" ng-class="getStatusColor(system.compliance.status)"></i>
-          {{ system.compliance.status }}
-        </span>
-    </div>
-
-    <div ng-show="system.compliance.reasons.length > 0" class="detail">
-      <span class="info-label">{{ "Details" | i18n }}</span>
-      <div class="info-value">
-        <ul class="compliance-reasons">
-          <li ng-repeat="reason in system.compliance.reasons">{{ reason.attributes.name}} - {{ reason.message }}</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="detail">
-      <span class="info-label">{{ "Auto-Attach" | i18n }}</span>
-      <span class="info-value"
-            alch-edit-checkbox="system.autoheal"
-            on-save="save(system)">
+<section class="details">
+  <h4 translate>Subscription Details</h4>
+  <div class="detail">
+    <span class="info-label" translate>Status</span>
+      <span class="info-value">
+        <i class="icon-circle" ng-class="getStatusColor(system.compliance.status)"></i>
+        {{ system.compliance.status }}
       </span>
+  </div>
+
+  <div ng-show="system.compliance.reasons.length > 0" class="detail">
+    <span class="info-label" translate>Details</span>
+    <div class="info-value">
+      <ul class="compliance-reasons">
+        <li ng-repeat="reason in system.compliance.reasons">{{ reason.attributes.name}} - {{ reason.message }}</li>
+      </ul>
     </div>
-    <div class="detail">
-      <span class="info-label">{{ "Service Level" | i18n }}</span>
-          <span class="info-value"
-                alch-edit-select="system.serviceLevel"
-                readonly="system.readonly"
-                selector="system.serviceLevel"
-                options="serviceLevels()"
-                options-format="option for option in options"
-                on-save="save(system)">
-          </span>
-    </div>
-  </section>
-</div>
+  </div>
+
+  <div class="detail">
+    <span class="info-label" translate>Auto-Attach</span>
+    <span class="info-value"
+          alch-edit-checkbox="system.autoheal"
+          on-save="save(system)">
+    </span>
+  </div>
+  <div class="detail">
+    <span class="info-label" translate>Service Level</span>
+        <span class="info-value"
+              alch-edit-select="system.serviceLevel"
+              readonly="system.readonly"
+              selector="system.serviceLevel"
+              options="serviceLevels()"
+              options-format="option for option in options"
+              on-save="save(system)">
+        </span>
+  </div>
+</section>
 
 <section class="system-subscriptions">
-
-  <div class="nutupane-titlebar">
-    <h1 class="nutupane-title">{{ "Current Subscription(s)" | i18n }}</h1>
-  </div>
-  <div class="nutupane-actionbar">
-    <div class="form">
-      <input type="text"
-             class="input input-search"
-             placeholder="{{ 'Filter' | i18n }}"
-             ng-model="currentSubscriptionsTable.filter"/>
-    </div>
+  <h4 translate
+      translate-n="currentSubscriptionsTable.rows.length"
+      translate-plural="Current Subscriptions">Current Subscription</h4>
+  <div class="nutupane-bar">
+    <input type="text"
+           class="form-control filter-input"
+           placeholder="{{ 'Filter' | translate }}"
+           ng-model="currentSubscriptionsTable.filter"/>
 
     <div class="fr select-action">
-      <button class="btn-mini" ng-disabled="currentSubscriptionsTable.numSelected == 0"
-              ng-click="removeSubscriptions()">{{ "Remove Subscriptions" | i18n }}</button>
-      <span>{{ currentSubscriptionsTable.numSelected }} Selected</span>
+      <button class="btn btn-default" translate
+              ng-disabled="currentSubscriptionsTable.numSelected == 0"
+              ng-click="removeSubscriptions()">
+        Remove Subscriptions
+      </button>
+      <span translate>{{ currentSubscriptionsTable.numSelected }} Selected</span>
       <span>|</span>
       <a class="deselect-action"
+         translate
          ng-class="{ 'disabled-link' : currentSubscriptionsTable.numSelected == 0 }"
          ng-click="currentSubscriptionsTable.selectAll(false)">
         Deselect All
@@ -68,24 +67,26 @@
   </div>
 
   <div alch-table="currentSubscriptionsTable">
-    <p ng-show="table.rows.length == 0">
-      {{ "This system does not have any current subscriptions" | i18n }}
+    <p ng-show="currentSubscriptionsTable.rows.length == 0" translate>
+      This system does not have any current subscriptions
     </p>
-    <div ng-show="table.rows.length > 0">
-      <table ng-class="{'table-mask': table.working}" class="table table-full table-striped">
+    <div ng-show="currentSubscriptionsTable.rows.length > 0">
+      <table ng-class="{'table-mask': currentSubscriptionsTable.working}" class="table table-striped">
         <thead>
           <tr alch-table-head row-select>
-            <th alch-table-column="name">{{ "Name" | i18n }}</th>
-            <th alch-table-column="sla">{{ "SLA" | i18n }}</th>
-            <th alch-table-column="contract">{{ "Contract" | i18n }}</th>
-            <th alch-table-column="quantity">{{ "Quantity" | i18n }}</th>
-            <th alch-table-column="startDate">{{ "Start Date" | i18n }}</th>
-            <th alch-table-column="endDate">{{ "End Date" | i18n }}</th>
+            <th alch-table-column="name" translate>Name</th>
+            <th alch-table-column="sla" translate>SLA</th>
+            <th alch-table-column="contract" translate>Contract</th>
+            <th alch-table-column="quantity" translate>Quantity</th>
+            <th alch-table-column="startDate" translate>Start Date</th>
+            <th alch-table-column="endDate" translate>End Date</th>
           </tr>
         </thead>
 
         <tbody>
-          <tr alch-table-row ng-repeat="subscription in table.rows | filter:table.filter" row-select="subscription">
+          <tr alch-table-row
+              row-select="subscription"
+              ng-repeat="subscription in currentSubscriptionsTable.rows | filter:currentSubscriptionsTable.filter">
             <td alch-table-cell>{{ subscription.poolName }}</td>
             <td alch-table-cell>{{ subscription.sla }}</td>
             <td alch-table-cell>{{ subscription.contractNumber }}</td>
@@ -100,22 +101,26 @@
 </section>
 
 <section class="system-subscriptions">
-  <div class="nutupane-titlebar">
-    <h1 class="nutupane-title">{{ "Available Subscription(s)" | i18n }}</h1>
-  </div>
-  <div class="nutupane-actionbar">
-    <div class="form">
-      <input type="text"
-             class="input input-search"
-             placeholder="{{ 'Filter' | i18n }}"
-             ng-model="availableSubscriptionsTable.filter">
-    </div>
+  <h4 translate
+      translate-n="availableSubscriptionsTable.rows.length"
+      translate-plural="Available Subscriptions">Available Subscription</h4>
+  <div class="nutupane-bar">
+    <input type="text"
+           class="form-control filter-input"
+           placeholder="{{ 'Filter' | translate }}"
+           ng-model="availableSubscriptionsTable.filter"/>
+
     <div class="fr select-action">
-      <button class="btn-mini" ng-disabled="availableSubscriptionsTable.numSelected == 0"
-              ng-click="attachSubscriptions()">{{ "Attach Subscriptions" | i18n }}</button>
-      <span>{{ availableSubscriptionsTable.numSelected }} Selected</span>
+      <button class="btn btn-default"
+              translate
+              ng-disabled="availableSubscriptionsTable.numSelected == 0"
+              ng-click="attachSubscriptions()">
+        Attach Subscriptions
+      </button>
+      <span translate>{{ availableSubscriptionsTable.numSelected }} Selected</span>
       <span>|</span>
       <a class="deselect-action"
+         translate
          ng-class="{ 'disabled-link' : availableSubscriptionsTable.numSelected == 0 }"
          ng-click="availableSubscriptionsTable.selectAll(false)">
         Deselect All
@@ -128,7 +133,7 @@
                class="input"
                ng-model="availableSubscriptionsTable.matchSystem"
                ng-change="availableSubscriptionsTable.filterSubscriptions()"/>
-        <label for="subscriptions-match">{{ "Subscriptions match system" | i18n }}</label>
+        <label for="subscriptions-match" translate>Subscriptions match system</label>
       </span>
       <span class="filter-option">
         <input type="checkbox"
@@ -136,7 +141,7 @@
                class="input"
                ng-model="availableSubscriptionsTable.matchInstalled"
                ng-change="availableSubscriptionsTable.filterSubscriptions()"/>
-        <label for="subscriptions-match-installed">{{ "Subscriptions match installed software" | i18n }}</label>
+        <label for="subscriptions-match-installed" translate>Subscriptions match installed software</label>
       </span>
 
       <span class="filter-option">
@@ -145,41 +150,41 @@
                class="input"
                ng-model="availableSubscriptionsTable.noOverlap"
                ng-change="availableSubscriptionsTable.filterSubscriptions()"/>
-        <label for="subscriptions-no-overlap">{{ "No overlap with current" | i18n }}</label>
+        <label for="subscriptions-no-overlap" translate>No overlap with current</label>
         </span>
     </div>
   </div>
 
   <div alch-table="availableSubscriptionsTable">
-    <p ng-show="table.rows.length == 0">
-      {{ "There are no available subscriptions" | i18n }}
+    <p ng-show="availableSubscriptionsTable.rows.length == 0" translate>
+      There are no available subscriptions
     </p>
-    <div ng-show="table.rows.length > 0">
-      <table ng-class="{'table-mask': table.working}" class="table table-full table-striped">
+    <div ng-show="availableSubscriptionsTable.rows.length > 0">
+      <table ng-class="{'table-mask': availableSubscriptionsTable.working}" class="table table-striped">
         <thead>
           <tr alch-table-head row-select>
-            <th alch-table-column="name">{{ "Name" | i18n }}</th>
-            <th alch-table-column="sla">{{ "SLA" | i18n }}</th>
-            <th alch-table-column="contract">{{ "Contract" | i18n }}</th>
-            <th alch-table-column="quantity">{{ "Available" | i18n }}</th>
-            <th alch-table-column="startDate">{{ "Start Date" | i18n }}</th>
-            <th alch-table-column="endDate">{{ "End Date" | i18n }}</th>
+            <th alch-table-column="name" translate>Name</th>
+            <th alch-table-column="sla" translate>SLA</th>
+            <th alch-table-column="contract" translate>Contract</th>
+            <th alch-table-column="quantity" translate>Available</th>
+            <th alch-table-column="startDate" translate>Start Date</th>
+            <th alch-table-column="endDate" translate>End Date</th>
           </tr>
         </thead>
 
         <tbody>
           <tr alch-table-row row-select="subscription"
-              ng-repeat="subscription in table.rows | filter:table.formatAvailableDisplay | filter:table.filter">
+              ng-repeat="subscription in availableSubscriptionsTable.rows | filter:availableSubscriptionsTable.formatAvailableDisplay | filter:availableSubscriptionsTable.filter">
             <td alch-table-cell>{{ subscription.product_name }}</td>
             <td alch-table-cell>{{ subscription.support_level }}</td>
             <td alch-table-cell>{{ subscription.contract_number }}</td>
             <td alch-table-cell>
-              <span ng-show="table.showSelector(subscription)">
+              <span ng-show="availableSubscriptionsTable.showSelector(subscription)">
                 <select ng-show="subscription.selected" ng-model="subscription.amount"
-                        ng-options="value for value in table.range(1, subscription.available + 1)">
+                        ng-options="value for value in availableSubscriptionsTable.range(1, subscription.available + 1)">
                 </select>
               </span>
-              <span ng-hide="table.showSelector(subscription)">
+              <span ng-hide="availableSubscriptionsTable.showSelector(subscription)">
                 {{ subscription.availableDisplay }}
               </span>
             </td>

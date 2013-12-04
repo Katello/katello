@@ -1,0 +1,20 @@
+<div class="loading-mask loading-mask-panel icon-3x" ng-show="panel.loading">
+  <i class="icon-spinner icon-spin"></i>
+  {{ "Loading..." | translate }}
+</div>
+
+<section class="nutupane-details" ng-cloak alch-container-scroll>
+  <header class="new-header details-header">
+    <h2 class="fl" translate>New System Group</h2>
+
+    <div class="details-actions fr">
+      <button class="btn btn-default" ui-sref="system-groups.index">
+        <i class="icon-remove"></i>
+        {{ "Close" | translate }}
+      </button>
+    </div>
+  </header>
+
+  <div ui-view></div>
+
+</section>

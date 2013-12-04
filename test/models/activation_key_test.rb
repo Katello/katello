@@ -10,19 +10,19 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'minitest_helper'
+require 'katello_test_helper'
 
-class ActivationKeyTest < MiniTest::Rails::ActiveSupport::TestCase
-  fixtures :all
+module Katello
+class ActivationKeyTest < ActiveSupport::TestCase
 
   def setup
-    @dev_key = activation_keys(:dev_key)
-    @dev_view = content_views(:library_dev_view)
-    @lib_view = content_views(:library_view)
+    @dev_key = katello_activation_keys(:dev_key)
+    @dev_view = katello_content_views(:library_dev_view)
+    @lib_view = katello_content_views(:library_view)
   end
 
   test "can have content view" do
-    @dev_key = activation_keys(:dev_key)
+    @dev_key = katello_activation_keys(:dev_key)
     @dev_key.content_view = @dev_view
     assert @dev_key.save!
     assert_not_nil @dev_key.content_view
@@ -46,4 +46,5 @@ class ActivationKeyTest < MiniTest::Rails::ActiveSupport::TestCase
     end
   end
 
+end
 end

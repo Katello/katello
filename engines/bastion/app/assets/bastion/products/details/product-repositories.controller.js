@@ -26,7 +26,6 @@
 angular.module('Bastion.products').controller('ProductRepositoriesController',
     ['$scope', 'Repository', 'CurrentOrganization',
     function($scope, Repository, CurrentOrganization) {
-
         if ($scope.$stateParams.productId && !$scope.$stateParams.repositoryId) {
             Repository.query({
                 'product_id': $scope.$stateParams.productId,
@@ -37,17 +36,5 @@ angular.module('Bastion.products').controller('ProductRepositoriesController',
                 $scope.repositories = response.results;
             });
         }
-
-        $scope.showRepository = function(repository) {
-            $scope.transitionTo('products.details.repositories.info', {
-                productId: $scope.$stateParams.productId,
-                repositoryId: repository.id
-            });
-        };
-
-        $scope.openCreateRepository = function(productId) {
-            $scope.transitionTo('products.details.repositories.new', {productId: productId});
-        };
-
     }]
 );

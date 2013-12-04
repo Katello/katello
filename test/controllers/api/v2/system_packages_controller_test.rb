@@ -11,15 +11,17 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require "minitest_helper"
+require "katello_test_helper"
 
-class Api::V2::SystemPackagesControllerTest < Minitest::Rails::ActionController::TestCase
+module Katello
+class Api::V2::SystemPackagesControllerTest < ActionController::TestCase
 
   fixtures :all
 
   def self.before_suite
     models = ["System"]
     disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
+    super
   end
 
   def permissions
@@ -29,10 +31,11 @@ class Api::V2::SystemPackagesControllerTest < Minitest::Rails::ActionController:
   end
 
   def setup
+    setup_controller_defaults_api
     login_user(User.find(users(:admin)))
     @request.env['HTTP_ACCEPT'] = 'application/json'
 
-    @system = systems(:simple_server)
+    @system = katello_systems(:simple_server)
     permissions
   end
 
@@ -112,4 +115,5 @@ class Api::V2::SystemPackagesControllerTest < Minitest::Rails::ActionController:
     end
   end
 
+end
 end

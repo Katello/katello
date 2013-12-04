@@ -10,8 +10,9 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'spec_helper'
+require 'katello_test_helper'
 
+module Katello
 describe Mapping do
 
   let :map do
@@ -27,23 +28,24 @@ describe Mapping do
   end
 
   before :each do
-    Mapping.stub!(:configuration).and_return(map)
+    Mapping.stubs(:configuration).returns(map)
   end
 
   it "should handle nils" do
-    Mapping::ImageFactoryNaming.translate.should == ["", ""]
+    Mapping::ImageFactoryNaming.translate.must_equal ["", ""]
   end
 
   it "should handle empty values" do
-    Mapping::ImageFactoryNaming.translate("", "").should == ["", ""]
+    Mapping::ImageFactoryNaming.translate("", "").must_equal ["", ""]
   end
 
   it "should handle identity" do
-    Mapping::ImageFactoryNaming.translate("Fedora", "15").should == ["Fedora", "15"]
+    Mapping::ImageFactoryNaming.translate("Fedora", "15").must_equal ["Fedora", "15"]
   end
 
   it "should ba able to handle wild chars" do
-    Mapping::ImageFactoryNaming.translate("Red Hat Enterprise Linux Server", "5.5").should == ["RHEL-5", "U5"]
+    Mapping::ImageFactoryNaming.translate("Red Hat Enterprise Linux Server", "5.5").must_equal ["RHEL-5", "U5"]
   end
 
+end
 end

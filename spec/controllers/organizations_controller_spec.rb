@@ -10,10 +10,11 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'spec_helper'
+require 'katello_test_helper'
 
+module Katello
 describe OrganizationsController do
-  include LoginHelperMethods
+
   include LocaleHelperMethods
   include OrganizationHelperMethods
   include AuthorizationHelperMethods
@@ -23,6 +24,11 @@ describe OrganizationsController do
     ORGANIZATION = {:organization => {:name => "organization_name", :label => "organization_name",:description => "organization_description"},
                     :environment => {:description=>"foo", :label => "foo",:name => "organization_env"}}
     ORGANIZATION_UPDATE = {:description => "organization_description"}
+  end
+
+  before (:each) do
+    setup_controller_defaults
+    @controller.stubs(:search_validate).returns(true)
   end
 
   describe "rules" do
@@ -40,24 +46,14 @@ describe OrganizationsController do
         user_without_permissions
       end
 
-      let(:before_success) do
-        controller.should_receive(:render_panel_direct) { |obj_class, options, search, start, sort, search_options|
-          found = nil
-          search_options[:filter].each{|f|  found = f['id'] if f['id'] }
-          assert !found.include?(@org1.id)
-          assert found.include?(@organization.id)
-          controller.stub(:render)
-        }
-      end
-
       it_should_behave_like "protected action"
     end
 
     describe "update org put" do
       before do
-        @organization.stub!(:update_attributes!).and_return(OrgControllerTest::ORGANIZATION[:organization])
-        @organization.stub!(:name).and_return(OrgControllerTest::ORGANIZATION[:organization][:name])
-        Organization.stub!(:find_by_label).and_return(@organization)
+        @organization.stubs(:update_attributes!).returns(OrgControllerTest::ORGANIZATION[:organization])
+        @organization.stubs(:name).returns(OrgControllerTest::ORGANIZATION[:organization][:name])
+        Organization.stubs(:find_by_label).returns(@organization)
       end
       let(:action) {:update}
       let(:req) do
@@ -73,66 +69,57 @@ describe OrganizationsController do
     end
   end
 
-  before (:each) do
-    login_user
-    set_default_locale
-    controller.stub(:search_validate).and_return(true)
-  end
-
   describe "create a root org" do
     describe 'with valid parameters' do
       before (:each) do
         # for these tests we need full user
-        login_user :mock => false
 
         @organization = new_test_org #controller.current_organization
-        controller.stub!(:current_organization).and_return(@organization)
+        @controller.stubs(:current_organization).returns(@organization)
       end
 
-      it 'should create organization', :katello => true do #TODO headpin
+      it 'should create organization (katello)' do #TODO headpin
         post 'create', OrgControllerTest::ORGANIZATION
-        response.should_not redirect_to(:action => 'new')
-        response.should be_success
-        assigns[:organization].name.should == OrgControllerTest::ORGANIZATION[:organization][:name]
+        must_respond_with(:success)
+        assigns[:organization].name.must_equal OrgControllerTest::ORGANIZATION[:organization][:name]
       end
 
-      it 'should create organization and account for spaces', :katello => true do #TODO headpin
+      it 'should create organization and account for spaces (katello)' do #TODO headpin
         post 'create', {:organization => {:name => "multi word organization",:label=> "multi-word-organization",
           :description => "spaced out organization"}, :environment => {:name => "first-env", :label => "first-env"}}
-        response.should_not redirect_to(:action => 'new')
-        response.should be_success
-        assigns[:organization].name.should == "multi word organization"
-        assigns[:organization].label.should == "multi-word-organization"
+        must_respond_with(:success)
+        assigns[:organization].name.must_equal "multi word organization"
+        assigns[:organization].label.must_equal "multi-word-organization"
       end
 
       it 'should generate a success notice' do
-        controller.should notify(:success)
+        must_notify_with(:success)
         post 'create', OrgControllerTest::ORGANIZATION
-        response.should be_success
+        must_respond_with(:success)
       end
     end
 
     describe 'with invalid paramaters' do
       it 'should generate an error notice' do
-        controller.should notify.error
+        must_notify_with(:error)
         post 'create', { :name => "", :description => "" }
-        response.should_not be_success
+        response.must_respond_with(400)
       end
 
       it 'should generate an error notice for a bad label' do
-        controller.should notify.exception
+        must_notify_with(:exception)
         post 'create', {:organization => { :name => "ACME", :label => "bad\n<label>" }}
-        response.should_not be_success
+        response.must_respond_with(422)
       end
 
-      it_should_behave_like "bad request"  do
-        let(:req) do
-          bad_req           = { :organization => { :name    => "multi word organization", :description => "spaced out organization",
-                                                   :envname => "first-env" } }
-          bad_req[:bad_foo] = "mwahaha"
-          post :create, bad_req
-        end
+      let(:req) do
+        bad_req           = { :organization => { :name    => "multi word organization", :description => "spaced out organization",
+                                                 :envname => "first-env" } }
+        bad_req[:bad_foo] = "mwahaha"
+        post :create, bad_req
       end
+
+      it_should_behave_like "bad request"
     end
 
   end
@@ -144,17 +131,15 @@ describe OrganizationsController do
 
     it 'should call katello organization find api' do
       get :index
-      response.should be_success
-      response.should render_template("index")
+      must_respond_with(:success)
+      must_render_template("index")
     end
 
     it 'should allow for an offset' do
-      controller.should_receive(:render_panel_direct) { |obj_class, options, search, start, sort, filters|
-        start.should == "5"
-        controller.stub(:render)
-      }
+      @controller.stubs(:render)
+      @controller.expects(:render_panel_direct)
       get 'items', :offset=> "5"
-      response.should be_success
+      must_respond_with(:success)
     end
   end
 
@@ -162,66 +147,63 @@ describe OrganizationsController do
 
     describe "with no exceptions thrown" do
       before (:each) do
-
-        login_user :mock=>false
-        @controller.stub!(:render).and_return("") #fix for not finding partial
+        @controller.stubs(:render).returns("") #fix for not finding partial
         @org = new_test_org
-        @org.stub!(:name).and_return(OrgControllerTest::ORGANIZATION[:name])
-        Organization.stub!(:find_by_label).and_return(@org)
+        @org.stubs(:name).returns(OrgControllerTest::ORGANIZATION[:name])
+        Organization.stubs(:find_by_label).returns(@org)
         new_test_org
       end
 
-      it 'should call katello organization destroy api if there are more than 1 organizations', :katello => true do #TODO headpin
-        @controller.stub(:current_user).and_return(@user)
-        Organization.stub!(:count).and_return(2)
-        OrganizationDestroyer.should_receive(:destroy).with(@org, :notify => true).once.and_return(true)
+      it 'should call katello organization destroy api if there are more than 1 organizations (katello)' do #TODO headpin
+        Organization.stubs(:count).returns(2)
+        OrganizationDestroyer.expects(:destroy).with(@org, :notify => true).once.returns(true)
         delete 'destroy', :id => @org.id
-        response.should be_success
+        must_respond_with(:success)
       end
 
       it "should generate a success notice" do
-        Organization.stub!(:count).and_return(2)
-        OrganizationDestroyer.should_receive(:destroy).with(@org, :notify => true).once.and_return(true)
-        controller.should notify.success
+        Organization.stubs(:count).returns(2)
+        OrganizationDestroyer.expects(:destroy).with(@org, :notify => true).once.returns(true)
+        must_notify_with(:success)
         delete 'destroy', :id => @org.id
-        response.should be_success
+        must_respond_with(:success)
       end
 
-      it "should be successful", :katello => true do #TODO headpin
-        Organization.stub!(:count).and_return(2)
+      it "should be successful (katello)" do #TODO headpin
+        Organization.stubs(:count).returns(2)
         delete 'destroy', :id => @org.id
-        response.should be_success
+        must_respond_with(:success)
       end
     end
 
     describe "with exceptions thrown" do
       before (:each) do
         new_test_org
-        Organization.stub!(:find_by_label).and_return(@organization)
+        Organization.stubs(:find_by_label).returns(@organization)
       end
       it "should generate an errors notice" do
-        controller.should notify.error
+        must_notify_with(:error)
         delete 'destroy', :id => @organization.id
-        response.should_not be_success
+        response.must_respond_with(400)
       end
     end
 
     describe "exception is thrown in katello api" do
       before (:each) do
         @organization = new_test_org
-        @organization.stub!(:destroy).and_raise(StandardError)
-        Organization.stub!(:find_by_label).and_return(@organization)
+        @organization.stubs(:destroy).raises(StandardError)
+        Organization.stubs(:find_by_label).returns(@organization)
       end
 
       it "should generate an error notice" do
-        controller.should notify.error
+        must_notify_with(:error)
         delete 'destroy', :id =>  OrgControllerTest::ORG_ID
-        response.should_not be_success
+        response.must_respond_with(400)
       end
 
-      it "should redirect to show view", :katello => true do #TODO headpin
+      it "should redirect to show view (katello)" do #TODO headpin
         delete 'destroy', :id =>  OrgControllerTest::ORG_ID
-        response.should_not be_success
+        response.must_respond_with(400)
       end
     end
   end
@@ -232,55 +214,56 @@ describe OrganizationsController do
 
       before (:each) do
         @organization = new_test_org
-        @organization.stub!(:save!).and_return(true)
-        @organization.stub!(:update_attributes!).and_return(OrgControllerTest::ORGANIZATION[:organization])
-        @organization.stub!(:name).and_return(OrgControllerTest::ORGANIZATION[:organization][:name])
-        Organization.stub!(:find_by_label).and_return(@organization)
+        @organization.stubs(:save!).returns(true)
+        @organization.stubs(:update_attributes!).returns(OrgControllerTest::ORGANIZATION[:organization])
+        @organization.stubs(:name).returns(OrgControllerTest::ORGANIZATION[:organization][:name])
+        Organization.stubs(:find_by_label).returns(@organization)
       end
 
-      it "should call katello org update api", :katello => true do #TODO headpin
-        @organization.should_receive(:save!).once
+      it "should call katello org update api (katello)" do #TODO headpin
+        @organization.expects(:save!).once
         put 'update', :id => OrgControllerTest::ORG_ID, :organization => OrgControllerTest::ORGANIZATION_UPDATE
-        response.should be_success
+        must_respond_with(:success)
       end
 
       it "should generate a success notice" do
-        controller.should notify.success
+        must_notify_with(:success)
         put 'update', :id => OrgControllerTest::ORG_ID, :organization => OrgControllerTest::ORGANIZATION_UPDATE
       end
 
-      it "should not redirect from edit view", :katello => true do #TODO headpin
+      it "should not redirect from edit view (katello)" do #TODO headpin
         put 'update', :id => OrgControllerTest::ORG_ID, :organization => OrgControllerTest::ORGANIZATION_UPDATE
-        response.should_not be_redirect
+        response.must_respond_with(:success)
       end
     end
     describe "with invalid params" do
       before do
         @organization = new_test_org
       end
-      it_should_behave_like "bad request"  do
-        let(:req) do
-          bad_req = {:id => @organization.label, :organization => {:desc =>"grand" }}
-          put :update, bad_req
-        end
+
+      let(:req) do
+        bad_req = {:id => @organization.label, :organization => {:desc =>"grand" }}
+        put :update, bad_req
       end
+
+      it_should_behave_like "bad request"
     end
 
     describe "exception is thrown in katello api" do
       before(:each) do
         @organization = new_test_org
-        @organization.stub!(:update).and_raise(StandardError)
-        Organization.stub!(:find_by_label).and_return(@organization)
+        @organization.stubs(:update).raises(StandardError)
+        Organization.stubs(:find_by_label).returns(@organization)
       end
 
       it "should generate an error notice" do
-        controller.should notify.error
+        must_notify_with(:error)
         put 'update', :id => OrgControllerTest::ORG_ID
       end
 
-      it "should not redirect from edit view", :katello => true do #TODO headpin
+      it "should not redirect from edit view (katello)" do #TODO headpin
         put 'update', :id => OrgControllerTest::ORG_ID
-        response.should_not be_redirect
+        must_respond_with(400)
       end
     end
   end
@@ -290,9 +273,9 @@ describe OrganizationsController do
       new_test_org
     end
     it "should download" do
-      Resources::Candlepin::Owner.should_receive(:get_ueber_cert).once.and_return(:cert => "uber",:key=>"ueber")
+      Resources::Candlepin::Owner.expects(:get_ueber_cert).once.returns(:cert => "uber",:key=>"ueber")
       get :download_debug_certificate, :id => @organization.id.to_s
-      response.should be_success
+      must_respond_with(:success)
     end
 
   end
@@ -300,16 +283,16 @@ describe OrganizationsController do
   describe "default_info" do
 
     before(:each) do
-      login_user
       @organization = new_test_org
-      Organization.stub!(:find_by_label).and_return(@organization)
+      Organization.stubs(:find_by_label).returns(@organization)
     end
 
     it "should render template" do
       get :default_info, :id => @organization.id.to_s, :informable_type => "system"
-      response.should be_success
-      response.should render_template("default_info")
+      must_respond_with(:success)
+      must_render_template("default_info")
     end
 
   end
+end
 end

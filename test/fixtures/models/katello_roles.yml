@@ -1,0 +1,37 @@
+administrator:
+  name:         Administrator
+  description:  Super administrator with all access.
+  locked:       true
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
+
+admin_own_role:
+  name:   admin_own_role
+  type:   Katello::UserOwnRole
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
+
+restricted_own_role:
+  name:   restricted_own_role
+  type:   Katello::UserOwnRole
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
+
+hidden_own_role:
+  name:   hidden_own_role
+  type:   Katello::UserOwnRole
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
+
+basic_role:
+  name:   Role
+  description:  Description
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
+
+one_own_role:
+  name:   one_own_role
+  description:  One User Fixtures Own Role
+  type:   Katello::UserOwnRole
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>

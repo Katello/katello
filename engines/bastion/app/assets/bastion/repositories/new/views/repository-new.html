@@ -1,0 +1,73 @@
+<section>
+
+  <header>
+    <h5>
+      <i class="icon-backward clickable" ui-sref="products.details.repositories.index({productId: $scope.product.id})"></i>
+      {{ "Add New Repository" | translate }}
+    </h5>
+  </header>
+
+  <form name="repositoryForm" class="form-horizontal" novalidate role="form">
+
+    <div alch-form-group label="{{ 'Name' | translate }}">
+      <input id="name"
+             name="name"
+             ng-model="repository.name"
+             type="text"
+             tabindex="1"
+             autofocus
+             required/>
+    </div>
+
+    <div alch-form-group label="{{ 'Label' | translate }}">
+      <input id="label"
+             name="label"
+             ng-model="repository.label"
+             type="text"
+             tabindex="1"
+             required/>
+    </div>
+
+    <div alch-form-group label="{{ 'Type' | translate }}">
+      <select required
+              tabindex="3"
+              id="content_type"
+              name="content_type"
+              ng-model="repository.content_type"
+              ng-options="type.name as type.name for type in repositoryTypes">
+      </select>
+    </div>
+
+    <div alch-form-group label="{{ 'URL' | translate }}">
+      <input id="url"
+             name="url"
+             ng-model="repository.url"
+             type="text"
+             tabindex="4"/>
+    </div>
+
+    <div alch-form-group label="{{ 'Publish via HTTP' | translate }}">
+      <input id="unprotected"
+             name="unprotected"
+             ng-model="repository.unprotected"
+             type="checkbox"
+             tabindex="5"/>
+    </div>
+
+    <div alch-form-group label="{{ 'GPG Key' | translate }}">
+      <select id="gpg_key_id"
+              name="gpg_key_id"
+              ng-model="repository.gpg_key_id"
+              ng-options="gpg_key.id as gpg_key.name for gpg_key in gpgKeys"
+              tabindex="6">
+      </select>
+    </div>
+
+    <div alch-form-buttons
+         on-cancel="transitionTo('products.index')"
+         on-save="save(repository)"
+         working="working">
+    </div>
+
+  </form>
+</section>

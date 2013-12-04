@@ -10,33 +10,34 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'spec_helper'
+require 'katello_test_helper'
 
-describe Util::Package, :katello => true do
+module Katello
+describe Util::Package do
 
-  describe "nvrea" do
+  describe "nvrea (katello)" do
 
     shared_examples_for "nvrea parsable string" do
       it "can be parsed" do
-        Util::Package.parse_nvrea(subject).should == expected
+        Util::Package.parse_nvrea(subject).must_equal expected
       end
     end
 
     shared_examples_for "nvrea_nvre parsable string" do
       it "can be parsed" do
-        Util::Package.parse_nvrea_nvre(subject).should == expected
+        Util::Package.parse_nvrea_nvre(subject).must_equal expected
       end
     end
 
-    context "name not in nvrea format" do
+    describe "name not in nvrea format" do
       subject { "this-is-not-nvrea" }
 
       it "can not be parsed by nvrea" do
-        Util::Package.parse_nvrea(subject).should be_nil
+        Util::Package.parse_nvrea(subject).must_be_nil
       end
     end
 
-    context "full nvrea with rpm" do
+    describe "full nvrea with rpm" do
       subject { "1:name-ver.si.on-relea.se.x86_64.rpm" }
       let(:expected) do
         { :epoch => "1",
@@ -51,7 +52,7 @@ describe Util::Package, :katello => true do
       it_should_behave_like "nvrea_nvre parsable string"
     end
 
-    context "full nvrea without rpm" do
+    describe "full nvrea without rpm" do
       subject { "1:name-ver.si.on-relea.se.x86_64" }
       let(:expected) do
         { :epoch => "1",
@@ -65,7 +66,7 @@ describe Util::Package, :katello => true do
       it_should_behave_like "nvrea_nvre parsable string"
     end
 
-    context "nvrea with dash and dots in name and rpm" do
+    describe "nvrea with dash and dots in name and rpm" do
       subject { "name-with-dashes-and.dots-1.0-1.noarch.rpm" }
       let(:expected) do
         { :name  => "name-with-dashes-and.dots",
@@ -78,7 +79,7 @@ describe Util::Package, :katello => true do
       it_should_behave_like "nvrea_nvre parsable string"
     end
 
-    context "nvrea with rpm without epoch" do
+    describe "nvrea with rpm without epoch" do
       subject { "name-ver.si.on-relea.se.x86_64.rpm" }
       let(:expected) do
         { :name  => "name",
@@ -92,7 +93,7 @@ describe Util::Package, :katello => true do
       it_should_behave_like "nvrea_nvre parsable string"
     end
 
-    context "nvrea without rpm and epoch" do
+    describe "nvrea without rpm and epoch" do
       subject { "name-ver.si.on-relea.se.x86_64" }
       let(:expected) do
         { :name  => "name",
@@ -106,19 +107,19 @@ describe Util::Package, :katello => true do
     end
   end
 
-  describe "nvre" do
+  describe "nvre (katello)" do
 
     shared_examples_for "nvre parsable string" do
       it "can be parsed" do
-        Util::Package.parse_nvre(subject).should == expected
+        Util::Package.parse_nvre(subject).must_equal expected
       end
 
       it "can be build" do
-        Util::Package.build_nvrea(expected).should == subject
+        Util::Package.build_nvrea(expected).must_equal subject
       end
     end
 
-    context "full nvre" do
+    describe "full nvre" do
       subject { "1:name-ver.si.on-relea.se" }
       let(:expected) do
         { :epoch => "1",
@@ -131,7 +132,7 @@ describe Util::Package, :katello => true do
       it_should_behave_like "nvrea_nvre parsable string"
     end
 
-    context "nvre without epoch" do
+    describe "nvre without epoch" do
       subject { "name-ver.si.on-relea.se" }
       let(:expected) do
         { :name  => "name",
@@ -144,7 +145,7 @@ describe Util::Package, :katello => true do
       it_should_behave_like "nvrea_nvre parsable string"
     end
 
-    context "nvre with dash and dots in name and rpm" do
+    describe "nvre with dash and dots in name and rpm" do
       subject { "name-with-dashes-and.dots-1.0-1" }
       let(:expected) do
         { :name  => "name-with-dashes-and.dots",
@@ -156,4 +157,5 @@ describe Util::Package, :katello => true do
     end
 
   end
+end
 end

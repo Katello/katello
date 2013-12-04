@@ -1,17 +1,21 @@
-<span>
-  <form class="form add-item">
-    <h5>{{ "Add New Item" | i18n}}</h5>
-    <input type="text" ng-model="newKey" type="text" placeholder="{{ 'Key' | i18n }}">
-    <input type="text" ng-model="newValue" type="text" placeholder="{{ 'Value'| i18n }}">
+<form class="add-item form-inline" role="form">
+  <h5 translate>Add New Item</h5>
+  <div class="form-group">
+    <input class="form-control" type="text" ng-model="newKey" type="text" placeholder="{{ 'Key' | translate }}" />
+  </div>
+  <div class="form-group">
+    <input class="form-control" type="text" ng-model="newValue" type="text" placeholder="{{ 'Value' | translate }}" />
+  </div>
 
-      <span ng-show="workingMode">
-        <i class="icon-spinner inline-icon icon-spin"></i>
-        <span>{{ "Working" | i18n }}</span>
-      </span>
-    <button class="btn primary small"
-            ng-click="add({value: {keyname: newKey, value: newValue}})"
-            ng-hide="workingMode">
-      {{ "Add" | i18n }}
-    </button>
-  </form>
-</span>
+  <span ng-show="workingMode">
+    <i class="icon-spinner inline-icon icon-spin"></i>
+    <span translate>Working</span>
+  </span>
+
+  <button class="btn btn-primary"
+          translate
+          ng-click="add({value: {keyname: newKey, value: newValue}})"
+          ng-hide="workingMode">
+    Add
+  </button>
+</form>

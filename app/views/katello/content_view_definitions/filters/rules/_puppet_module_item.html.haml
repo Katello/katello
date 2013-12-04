@@ -1,0 +1,20 @@
+%tr
+  %td.author_name
+    - if editable
+      = check_box_tag "units[#{unit[:name]}]", unit[:name], false,
+        {:class => :parameter_checkbox, 'data-id' => unit[:name]}
+      = label_tag(_('Author:'))
+      = text_field_tag("units[author]", unit[:author], :class => "author",
+        :placeholder => _('Enter Author Name...'))
+    - else
+      = label_tag(_('Author:'))
+      = unit[:author]
+
+  %td.parameter_name{:style => 'vertical-align: middle;'}
+    .panel_link
+      = label_tag(_('Name:'))
+      %label.module_name
+        = unit[:name]
+
+  = render "katello/content_view_definitions/filters/rules/version_selector",
+    :unit => unit, :editable => editable, :rule => rule

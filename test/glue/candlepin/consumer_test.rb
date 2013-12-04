@@ -10,32 +10,32 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'minitest_helper'
-require './test/support/candlepin/consumer_support'
+require 'katello_test_helper'
+require 'support/candlepin/consumer_support'
 
-class GlueCandlepinConsumerTestBase < MiniTest::Rails::ActiveSupport::TestCase
-  extend  ActiveRecord::TestFixtures
+module Katello
+class GlueCandlepinConsumerTestBase < ActiveSupport::TestCase
+  include CandlepinConsumerSupport
 
-  fixtures :all
   @@dev = nil
   @@org = nil
   @@dev_cv = nil
   @@dev_cve = nil
 
   def self.before_suite
-    @loaded_fixtures = load_fixtures
+    super
 
     services  = ['Pulp', 'ElasticSearch', 'Foreman']
-    models    = ['System', 'User', 'KTEnvironment', 'Organization', 'Product', 'ContentView', 'ContentViewDefinition', 'ContentViewEnvironment', 'ContentViewVersion', "Distributor"]
+    models    = ['System', 'KTEnvironment', 'Organization', 'Product', 'ContentView', 'ContentViewDefinition', 'ContentViewEnvironment', 'ContentViewVersion', "Distributor"]
     disable_glue_layers(services, models)
 
     User.current = User.find(@loaded_fixtures['users']['admin']['id'])
     VCR.insert_cassette('glue_candlepin_consumer', :match_requests_on => [:path, :params, :method, :body_json])
 
-    @@dev      = KTEnvironment.find(@loaded_fixtures['environments']['candlepin_dev']['id'])
-    @@org      = Organization.find(@loaded_fixtures['organizations']['candlepin_org']['id'])
-    @@dev_cv   = ContentView.find(@loaded_fixtures['content_views']['candlepin_library_dev_cv']['id'])
-    @@dev_cve  = ContentViewEnvironment.find(@loaded_fixtures['content_view_environments']['candlepin_library_dev_cve']['id'])
+    @@dev      = KTEnvironment.find(@loaded_fixtures['katello_environments']['candlepin_dev']['id'])
+    @@org      = Organization.find(@loaded_fixtures['katello_organizations']['candlepin_org']['id'])
+    @@dev_cv   = ContentView.find(@loaded_fixtures['katello_content_views']['candlepin_library_dev_cv']['id'])
+    @@dev_cve  = ContentViewEnvironment.find(@loaded_fixtures['katello_content_view_environments']['candlepin_library_dev_cve']['id'])
     @@dev_cve.cp_id = @@dev_cv.cp_environment_id @@dev
 
     # Create the environment in candlepin
@@ -53,6 +53,10 @@ class GlueCandlepinConsumerTestBase < MiniTest::Rails::ActiveSupport::TestCase
 end
 
 class GlueCandlepinConsumerTestSystem < GlueCandlepinConsumerTestBase
+
+  def setup
+    super
+  end
 
   def self.before_suite
     super
@@ -130,7 +134,7 @@ class GlueCandlepinConsumerTestDistributor < GlueCandlepinConsumerTestBase
   end
 
   def test_candlepin_distributor_update
-    assert_equal({"distributor_version"=>"sam-1.3"}, @@dist.facts)
+    assert_equal({"distributor_version" => Distributor.latest_version}, @@dist.facts)
     @@dist.facts = {:some => 'fact'}
     @@dist.update_candlepin_consumer
     assert_equal({:some => 'fact'}, @@dist.facts)
@@ -162,4 +166,5 @@ class GlueCandlepinConsumerTestSecondDelete < GlueCandlepinConsumerTestBase
     assert_equal true, CandlepinConsumerSupport.destroy_distributor(@dist.id, 'support/candlepin/distributor_delete')
   end
 
+end
 end

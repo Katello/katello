@@ -10,57 +10,60 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'spec_helper'
+require 'katello_test_helper'
 
+module Katello
 describe SystemEventsController do
-  include LoginHelperMethods
+
   include LocaleHelperMethods
   include SystemHelperMethods
   include AuthorizationHelperMethods
-  include UserHelperMethods
+  include OrganizationHelperMethods
+
   describe "main" do
     let(:uuid) { '1234' }
     before (:each) do
-      login_user(:mock => false)
-      set_default_locale
+      setup_controller_defaults
       @organization = setup_system_creation
       @environment = create_environment(:name=>'test', :label=> 'test', :prior => @organization.library.id, :organization => @organization)
 
-      Resources::Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
-      Resources::Candlepin::Consumer.stub!(:update).and_return(true)
-      Resources::Candlepin::Consumer.stub!(:events).and_return([])
+      Resources::Candlepin::Consumer.stubs(:create).returns({:uuid => uuid, :owner => {:key => uuid}})
+      Resources::Candlepin::Consumer.stubs(:update).returns(true)
+      Resources::Candlepin::Consumer.stubs(:events).returns([])
 
-      Katello.pulp_server.extensions.consumer.stub!(:create).and_return({:id => uuid})
-      Katello.pulp_server.extensions.consumer.stub!(:update).and_return(true)
+      Katello.pulp_server.extensions.consumer.stubs(:create).returns({:id => uuid})
+      Katello.pulp_server.extensions.consumer.stubs(:update).returns(true)
     end
 
-    describe "system tasks", :katello => true do
+    describe "system tasks (katello)" do
       before do
         @system = create_system(:name=>"bar", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""})
       end
-      context "shows the Tasks list" do
+      describe "shows the Tasks list" do
         before do
-          User.current = @user
+          System.any_instance.stubs(:refresh_tasks)
+          Katello.pulp_server.extensions.consumer.stubs(:install_content).returns(pulp_task_without_error)
+          Katello.pulp_server.resources.task.stubs(:poll).returns(pulp_task_without_error)
           stub_consumer_packages_install(pulp_task_without_error)
           @task = @system.install_packages(["foo", "bar", "bazz", "geez"])
 
         end
         specify "index call does the right thing" do
           get :index, :system_id => @system.id
-          response.should be_success
+          must_respond_with(:success)
         end
 
         specify "status call does the right thing" do
           get :event_status, :system_id => @system.id, :task_id => @task.id
-          response.should be_success
-          JSON.parse(response.body)["tasks"].first["id"].should == @task.id
+          must_respond_with(:success)
+          JSON.parse(response.body)["tasks"].first["id"].must_equal @task.id
         end
 
         specify "status call does the right thing for multi tasks" do
           task1 = @system.install_packages(["baz"])
           get :event_status, :system_id => @system.id, :task_id => [@task.id, task1.id]
-          response.should be_success
-          JSON.parse(response.body)["tasks"].collect{|item| item['id']}.sort.should == [@task.id, task1.id].sort
+          must_respond_with(:success)
+          JSON.parse(response.body)["tasks"].collect{|item| item['id']}.sort.must_equal [@task.id, task1.id].sort
         end
 
       end
@@ -68,4 +71,5 @@ describe SystemEventsController do
     end
 
   end
+end
 end

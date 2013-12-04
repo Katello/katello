@@ -44,7 +44,7 @@ module Katello
         if key? key
           @data[key].is_a?(Proc) ? @data[key].call : @data[key]
         else
-          raise NoKey, key
+          fail NoKey, key
         end
       end
 
@@ -63,7 +63,7 @@ module Katello
       #    node.present? :key1, :key2
       def present?(*keys)
         key, rest = keys.first, keys[1..-1]
-        raise ArgumentError, 'supply at least one key' unless key
+        fail ArgumentError, 'supply at least one key' unless key
         key?(key) && self[key] && if rest.empty?
                                     true
                                   elsif self[key].is_a?(Node)
@@ -133,7 +133,7 @@ module Katello
 
       # converts Hash by symbolizing keys and allowing only symbols as keys
       def convert_hash(hash)
-        raise ArgumentError, "#{hash.inspect} is not a Hash" unless hash.is_a?(Hash)
+        fail ArgumentError, "#{hash.inspect} is not a Hash" unless hash.is_a?(Hash)
 
         hash.keys.each do |key|
           hash[key.to_s] = convert hash.delete(key)

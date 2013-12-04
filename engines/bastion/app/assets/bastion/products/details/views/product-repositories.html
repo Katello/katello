@@ -1,0 +1,65 @@
+<section class="details details-full">
+  <h4 translate>Repositories</h4>
+
+  <input type="text"
+         class="form-control filter-input"
+         placeholder="{{ 'Filter' | translate }}"
+         ng-model="repositorySearch"/>
+  <button class="btn btn-primary fr"
+          translate
+          ng-disabled="product.readonly"
+          ui-sref="products.details.repositories.new({productId: product.id})">
+    Create Repository
+  </button>
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th translate>Name</th>
+        <th translate>Type</th>
+        <th translate>Last Sync</th>
+        <th translate>Sync State</th>
+        <th class="number-cell" translate>Packages</th>
+        <th class="number-cell" translate>Errata</th>
+        <th class="number-cell" translate>Puppet Modules</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr ng-repeat="repository in repositories | filter:repositorySearch" row-select>
+        <td>
+          <a class="clickable" ng-href="#/products/{{ product.id }}/repositories/{{ repository.id }}">{{ repository.name }}</a>
+        </td>
+        <td>{{ repository.content_type }}</td>
+        <td>
+          <span ng-show="repository.feed">
+            {{ repository.last_sync | date:"short" }}
+          </span>
+          <span ng-hide="repository.feed" translate>N/A</span>
+        </td>
+        <td>
+          <span ng-show="repository.feed">
+            <a href="sync_management/index">{{ repository.sync_state }}</a>
+          </span>
+          <span ng-hide="repository.feed" translate>N/A</span>
+        </td>
+        <td class="number-cell">
+          <a ng-href="/katello/content_search#/!=&search[subgrid][repo_id]={{ repository.id }}&search[subgrid][type]=repo_packages">
+            {{ repository.content_counts.rpm || 0 }}
+          </a>
+        </td>
+        <td class="number-cell">
+          <a ng-href="/katello/content_search#/!=&search[subgrid][repo_id]={{ repository.id }}&search[subgrid][type]=repo_errata">
+          {{ repository.content_counts.erratum || 0 }}
+          </a>
+        </td>
+        <td class="number-cell">
+          <a ng-href="/katello/content_search#/!=&search[subgrid][repo_id]={{ repository.id }}&search[subgrid][type]=repo_puppet_modules">
+          {{ repository.content_counts.puppet_module || 0 }}
+          </a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+</section>

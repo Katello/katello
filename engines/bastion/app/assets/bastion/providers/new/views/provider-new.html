@@ -1,0 +1,28 @@
+<section>
+
+  <header>
+    <a ng-click="transitionBack()" class="clickable">
+      <i class="icon-backward"></i>
+      {{ "Back to Product Creation" | translate }}
+    </a>
+    <h4 translate>Add New Provider</h4>
+  </header>
+
+  <form name="providerForm" class="form-horizontal" novalidate>
+    <div alch-form-group label="{{ 'Name' | translate }}">
+      <input id="name"
+             name="name"
+             ng-model="provider.name"
+             type="text"
+             tabindex="2"
+             required/>
+    </div>
+    
+    <div alch-form-buttons
+         on-cancel="transitionTo('products.new.form')"
+         on-save="save(provider)"
+         working="working">
+    </div>
+  </form>
+
+</section>

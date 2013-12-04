@@ -11,17 +11,20 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require "minitest_helper"
+require "katello_test_helper"
 
+module Katello
 describe Api::V1::ContentViewDefinitionsController do
-  fixtures :all
 
   before do
     models = ["Organization", "KTEnvironment", "User","ContentViewEnvironment",
              "ContentViewDefinition", "Product", "Repository"]
     disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
-    login_user(User.find(users(:admin)))
-    @organization = Organization.find(organizations(:acme_corporation))
+
+    setup_controller_defaults_api
+    login_user(User.find(users(:admin).id))
+
+    @organization = Organization.find(katello_organizations(:acme_corporation))
     organization_relation = stub(first: @organization)
     without_deleting = stub(having_name_or_label: organization_relation)
     Organization.stubs(:without_deleting).returns(without_deleting)
@@ -116,8 +119,8 @@ describe Api::V1::ContentViewDefinitionsController do
 
     it "should create a content view" do
       cv_count = ContentView.count
-      req = post :publish, :id => definition.id,
-        :organization_id => @organization.id, :name => "TestView"
+      post :publish, :id => definition.id, :organization_id => @organization.id,
+        :name => "TestView"
       assert_response :success
       assert_equal cv_count+1, ContentView.count
     end
@@ -215,7 +218,7 @@ describe Api::V1::ContentViewDefinitionsController do
       Product.any_instance.stubs(:sync_state).returns(nil)
       Product.any_instance.stubs(:last_sync).returns(nil)
       Product.any_instance.stubs(:sync_plan).returns(nil)
-      @cvd = content_view_definition_bases(:populated_cvd)
+      @cvd = katello_content_view_definition_bases(:populated_cvd)
     end
 
     describe "list_products" do
@@ -232,7 +235,7 @@ describe Api::V1::ContentViewDefinitionsController do
 
     describe "list_all_products" do
       it "should show all products in the cvd " do
-        cvd = content_view_definition_bases(:populated_with_repos_and_filters)
+        cvd = katello_content_view_definition_bases(:populated_with_repos_and_filters)
         get :list_all_products, :organization_id => cvd.organization.label,
             :content_view_definition_id=> cvd.id
         assert_response :success
@@ -283,4 +286,5 @@ describe Api::V1::ContentViewDefinitionsController do
 
   end # product/repository actions
 
+end
 end

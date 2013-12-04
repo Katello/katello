@@ -1,0 +1,19 @@
+administrator_admin:
+  role_id:  <%= ActiveRecord::Fixtures.identify(:administrator) %>
+  user_id:  <%= ActiveRecord::Fixtures.identify(:admin) %>
+
+admin_own_role_admin:
+  role_id:  <%= ActiveRecord::Fixtures.identify(:admin_own_role) %>
+  user_id:  <%= ActiveRecord::Fixtures.identify(:admin) %>
+
+no_perms_user_own_role:
+  role_id:  <%= ActiveRecord::Fixtures.identify(:restricted_own_role) %>
+  user_id:  <%= ActiveRecord::Fixtures.identify(:restricted) %>
+
+hidden_own_role:
+  role_id:  <%= ActiveRecord::Fixtures.identify(:hidden_own_role) %>
+  user_id:  <%= ActiveRecord::Fixtures.identify(:hidden) %>
+
+one_own_role_one:
+  role_id:  <%= ActiveRecord::Fixtures.identify(:one_own_role) %>
+  user_id:  <%= ActiveRecord::Fixtures.identify(:one) %>

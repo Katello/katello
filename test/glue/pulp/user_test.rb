@@ -10,12 +10,13 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'minitest_helper'
+require 'katello_test_helper'
 
-class GluePulpUserTestBase < MiniTest::Rails::ActiveSupport::TestCase
-  extend ActiveRecord::TestFixtures
+module Katello
+class GluePulpUserTestBase < ActiveSupport::TestCase
 
   def self.before_suite
+    super
     configure_runcible
 
     services  = ['Candlepin', 'ElasticSearch', 'Foreman']
@@ -108,4 +109,5 @@ class GluePulpUserTest < GluePulpUserTestBase
     refute_includes attributes, :backend_attribute_only
   end
 
+end
 end
