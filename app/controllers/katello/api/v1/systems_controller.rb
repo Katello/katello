@@ -324,25 +324,16 @@ A hint for choosing the right value for the releaseVer param
 
     system_report = Util::ReportTable.new(
         :data         => data,
-        :column_names => ["name",
-                          "uuid",
-                          "location",
-                          "organization",
-                          "environment",
-                          "created_at",
-                          "updated_at",
-                          "compliance_color",
-                          "compliant_until",
-                          "custom_info"
-        ],
-        :transforms   => lambda { |r|
-          r.organization    = r.organization.name
-          r.environment     = r.environment.name
-          r.created_at      = r.created_at.to_s
-          r.updated_at      = r.updated_at.to_s
-          r.compliant_until = r.compliant_until.to_s
-          r.custom_info     = r.custom_info.collect { |info| info.to_s }.join(", ")
-        }
+        :column_names => %w(name uuid location organization environment created_at updated_at
+                            compliance_color compliant_until custom_info),
+        :transforms   => (lambda do |r|
+                             r.organization    = r.organization.name
+                             r.environment     = r.environment.name
+                             r.created_at      = r.created_at.to_s
+                             r.updated_at      = r.updated_at.to_s
+                             r.compliant_until = r.compliant_until.to_s
+                             r.custom_info     = r.custom_info.collect { |info| info.to_s }.join(", ")
+                          end)
     )
     respond_to do |format|
       format.text { render :text => system_report.as(:text) }

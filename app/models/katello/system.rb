@@ -233,7 +233,7 @@ class System < ActiveRecord::Base
     Tire.index('katello_system').refresh
   end
 
-  def reportable_data(options={})
+  def reportable_data(options = {})
     hash = self.as_json(options.slice(:only, :except))
     if options[:methods]
       options[:methods].each{ |method| hash[method] = self.send(method) }

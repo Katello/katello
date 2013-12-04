@@ -24,7 +24,7 @@ module Util
       self.data = params[:data]
       self.renamed_columns = {}
       self.column_hash = {}
-      column_names.each{ |name| column_hash[name] = {:name=>name}} 
+      column_names.each{ |name| column_hash[name] = {:name => name}}
     end
 
     def rename_column(original, new)
@@ -33,9 +33,9 @@ module Util
 
     def as(type)
       if type == :csv
-        as_csv(transform_data())
+        as_csv(transform_data)
       elsif type == :text
-        as_text(transform_data())
+        as_text(transform_data)
       end
     end
 
@@ -84,9 +84,9 @@ module Util
 
     def pad(string, max_size)
       new_spaces = max_size - string.size
-      left = new_spaces/2.to_i
+      left = new_spaces / 2.to_i
       right = new_spaces - left
-      (" "*left) + string + (" "*right)
+      (" " * left) + string + (" " * right)
     end
 
     def as_csv(transformed_data)
