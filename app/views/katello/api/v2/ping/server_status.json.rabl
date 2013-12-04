@@ -1,3 +1,4 @@
-object Util::Data::ostructize(@resource) => :status
+object Katello::Util::Data.ostructize(@resource)
 
-attributes :result, :release, :version, :standalone, :timeUTC
+# rubocop:disable SymbolName
+attributes :release, :version, :timeUTC

@@ -11,65 +11,68 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class Api::V2::ApiController < Api::ApiController
+  class Api::V2::ApiController < Api::ApiController
 
-  include Api::Version2
-  include Api::V2::Rendering
-  include Api::V2::ErrorHandling
+    include Api::Version2
+    include Api::V2::Rendering
+    include Api::V2::ErrorHandling
 
-  # support for session (thread-local) variables must be the last filter in this class
-  include Foreman::ThreadSession::Cleaner
-  include AuthorizationRules
+    # support for session (thread-local) variables must be the last filter in this class
+    include Foreman::ThreadSession::Cleaner
+    include AuthorizationRules
 
-  before_filter :load_search_service, :only => [:index]
+    before_filter :load_search_service, :only => [:index]
 
-  resource_description do
-    api_version 'v2'
-  end
-
-  def_param_group :search do
-    param :search, String, :desc => "Search string"
-    param :offset, :number, :desc => "Starting location to retrieve data from"
-    param :limit,  :number, :desc => "Number of results to return"
-    param :sort, Hash do
-      param :by, String, :desc => "Field to sort the results on"
-      param :order, String, :desc => "How to order the sorted results (e.g. ASC for ascending)"
-    end
-  end
-
-  def item_search(item_class, params, options)
-    options[:sort_by] = params[:sort_by] if params[:sort_by]
-    options[:sort_order] = params[:sort_order] if params[:sort_order]
-    options[:page_size] = params[:page_size] || current_user.page_size
-
-    items = Glue::ElasticSearch::Items.new(item_class)
-    systems, total_count = items.retrieve(params[:search], params[:offset], options)
-
-    {
-      :results  => systems,
-      :subtotal => total_count,
-      :total    => items.total_items
-    }
-  end
-
-  protected
-
-    def labelize_params(params)
-      return params[:label] unless params.try(:[], :label).nil?
-      return Util::Model.labelize(params[:name]) unless params.try(:[], :name).nil?
+    resource_description do
+      api_version 'v2'
     end
 
-    def find_organization
-      organization_id = params[:organization_id]
-      @organization = Katello::Organization.without_deleting.having_name_or_label(organization_id).first
+    def_param_group :search do
+      param :search, String, :desc => "Search string"
+      param :offset, :number, :desc => "Starting location to retrieve data from"
+      param :limit,  :number, :desc => "Number of results to return"
+      param :sort, Hash do
+        param :by, String, :desc => "Field to sort the results on"
+        param :order, String, :desc => "How to order the sorted results (e.g. ASC for ascending)"
+      end
     end
 
-    def sort_params
-      options = {}
+    param :object_root, String, :desc => "root-node of single-resource responses (optional)"
+    param :root_name, String, :desc => "root-node of collection contained in responses (default: 'results')"
+
+    def item_search(item_class, params, options)
       options[:sort_by] = params[:sort_by] if params[:sort_by]
       options[:sort_order] = params[:sort_order] if params[:sort_order]
-      options
+      options[:page_size] = params[:page_size] || current_user.page_size
+
+      items = Glue::ElasticSearch::Items.new(item_class)
+      systems, total_count = items.retrieve(params[:search], params[:offset], options)
+
+      {
+        :results  => systems,
+        :subtotal => total_count,
+        :total    => items.total_items
+      }
     end
 
-end
+    protected
+
+      def labelize_params(params)
+        return params[:label] unless params.try(:[], :label).nil?
+        return Util::Model.labelize(params[:name]) unless params.try(:[], :name).nil?
+      end
+
+      def find_organization
+        organization_id = params[:organization_id]
+        @organization = Katello::Organization.without_deleting.having_name_or_label(organization_id).first
+      end
+
+      def sort_params
+        options = {}
+        options[:sort_by] = params[:sort_by] if params[:sort_by]
+        options[:sort_order] = params[:sort_order] if params[:sort_order]
+        options
+      end
+
+  end
 end
