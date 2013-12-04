@@ -16,6 +16,7 @@ module Dashboard
 
     AVAILABLE_WIDGETS = %w(
       subscriptions
+      subscriptions_totals
       notices
       content_views
       sync
@@ -69,6 +70,7 @@ module Dashboard
     def get_widget(name, org)
       "Katello::Dashboard::#{name.camelcase}Widget".constantize.new(org)
     end
+
   end
 end
 end
