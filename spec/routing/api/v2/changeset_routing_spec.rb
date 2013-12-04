@@ -22,10 +22,10 @@ describe Api::V2::ChangesetsController do
     let(:cs_controller) { "katello/api/v1/changesets" }
 
     it "should route correctly" do
-      {:method => :get, :path => "/api/changesets/1" }.must_route_to({:controller => cs_controller, :action => "show", :id => "1"})
-      {:method => :put, :path => "/api/changesets/1" }.must_route_to({:controller => cs_controller, :action => "update", :id => "1"})
-      {:method => :delete, :path => "/api/changesets/1" }.must_route_to({:controller => cs_controller, :action => "destroy", :id => "1"})
-      {:method => :post, :path => "/api/changesets/1/apply" }.must_route_to({:controller => cs_controller, :action => "apply", :id => "1"})
+      {:method => :get, :path => "/api/changesets/1" }.must_route_to({:controller => cs_controller, :action => "show", :id => "1", :api_version => "v1"})
+      {:method => :put, :path => "/api/changesets/1" }.must_route_to({:controller => cs_controller, :action => "update", :id => "1", :api_version => "v1"})
+      {:method => :delete, :path => "/api/changesets/1" }.must_route_to({:controller => cs_controller, :action => "destroy", :id => "1", :api_version => "v1"})
+      {:method => :post, :path => "/api/changesets/1/apply" }.must_route_to({:controller => cs_controller, :action => "apply", :id => "1", :api_version => "v1"})
     end
 
   end

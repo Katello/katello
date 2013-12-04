@@ -1,5 +1,4 @@
 require 'katello/api/constraints/activation_key_constraint'
-require 'katello/api/constraints/api_version_constraint'
 require 'katello/api/mapper_extensions'
 
 class ActionDispatch::Routing::Mapper
@@ -11,7 +10,7 @@ Katello::Engine.routes.draw do
   namespace :api do
 
     # new v2 routes that point to v2
-    scope :module => :v2, :constraints => Katello::ApiVersionConstraint.new(:version => 2) do
+    scope "(:api_version)", :module => :v2, :defaults => {:api_version => 'v2'}, :api_version => /v1|v2/, :constraints => ApiConstraints.new(:version => 2) do
 
       match '/' => 'root#resource_list'
 
@@ -312,7 +311,7 @@ Katello::Engine.routes.draw do
     end # module v2
 
     # routes that didn't change in v2 and point to v1
-    scope :module => :v1, :constraints => Katello::ApiVersionConstraint.new(:version => 2) do
+    scope :module => :v1, :constraints => ApiConstraints.new(:version => 2) do
 
       api_resources :crls, :only => [:index]
 
