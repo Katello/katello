@@ -72,5 +72,6 @@ Gem::Specification.new do |gem|
   gem.add_dependency "mocha", "~> 0.14.0"
   gem.add_dependency "vcr"
   gem.add_dependency "webmock"
+  gem.add_dependency "rubocop-checkstyle_formatter"
 
 end
