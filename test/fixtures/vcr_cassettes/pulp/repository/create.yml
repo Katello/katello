@@ -14,7 +14,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="vGBHwHeTMF3SNzthXvAuvKkk0K5fF2ddYcBegKiLiI", oauth_signature="yvrSXkRI09%2BfpaIS5B4MhakhY1Y%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1384979790", oauth_version="1.0"
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="SOPBVGUfv9pyBXm3RGIjjRVjX1vGBNMXRkFE2xsELo", oauth_signature="FTbNI0U3xjypOm8XDG1MY8xF8eo%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1386107706", oauth_version="1.0"
       Pulp-User: 
       - admin
       Content-Length: 
@@ -27,7 +27,7 @@ http_interactions:
       message: Created
     headers: 
       Date: 
-      - Wed, 20 Nov 2013 20:36:30 GMT
+      - Tue, 03 Dec 2013 21:55:06 GMT
       Server: 
       - Apache/2.2.15 (Red Hat)
       Location: 
@@ -38,9 +38,9 @@ http_interactions:
       - application/json
     body: 
       encoding: US-ASCII
-      string: "{\"scratchpad\": {}, \"display_name\": \"Fedora 17 x86_64\", \"description\": null, \"_ns\": \"repos\", \"notes\": {\"_repo-type\": \"rpm-repo\"}, \"content_unit_counts\": {}, \"_id\": {\"$oid\": \"528d1d4e5ca0135031407940\"}, \"id\": \"1\", \"_href\": \"/pulp/api/v2/repositories/1/\"}"
+      string: "{\"scratchpad\": {}, \"display_name\": \"Fedora 17 x86_64\", \"description\": null, \"_ns\": \"repos\", \"notes\": {\"_repo-type\": \"rpm-repo\"}, \"content_unit_counts\": {}, \"_id\": {\"$oid\": \"529e533a4b261653f90a0b92\"}, \"id\": \"1\", \"_href\": \"/pulp/api/v2/repositories/1/\"}"
     http_version: 
-  recorded_at: Wed, 20 Nov 2013 20:36:30 GMT
+  recorded_at: Tue, 03 Dec 2013 21:55:06 GMT
 - request: 
     method: delete
     uri: https://localhost/pulp/api/v2/repositories/1/
@@ -55,7 +55,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="xff903INqvf1kTYKersyJJmGvkWkNAPWiMEXphNiY", oauth_signature="YHt%2BSsDAAmsM0C26eQ7%2BbAY94dw%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1384979790", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="uYYBXNMvpyIWl9KWwe1tB8vlBom2BsG21Nt7nINdoU", oauth_signature="vIMs%2FSyPRY4w62Qmah%2FhPcYrI9Q%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1386107706", oauth_version="1.0"
       Pulp-User: 
       - admin
       User-Agent: 
@@ -66,7 +66,7 @@ http_interactions:
       message: Accepted
     headers: 
       Date: 
-      - Wed, 20 Nov 2013 20:36:30 GMT
+      - Tue, 03 Dec 2013 21:55:06 GMT
       Server: 
       - Apache/2.2.15 (Red Hat)
       Content-Encoding: 
@@ -77,7 +77,7 @@ http_interactions:
       - application/json
     body: 
       encoding: US-ASCII
-      string: "[{\"task_group_id\": \"122a56a0-61bc-4167-bfec-69578d316d06\", \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/task_groups/122a56a0-61bc-4167-bfec-69578d316d06/\", \"task_id\": \"bb99d5fd-7c99-4d19-a29f-1747c7db7b6c\", \"call_request_tags\": [\"pulp:repository:1\", \"pulp:action:delete\"], \"reasons\": [], \"start_time\": null, \"tags\": [\"pulp:repository:1\", \"pulp:action:delete\"], \"state\": \"waiting\", \"finish_time\": null, \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {}, \"call_request_group_id\": \"122a56a0-61bc-4167-bfec-69578d316d06\", \"call_request_id\": \"bb99d5fd-7c99-4d19-a29f-1747c7db7b6c\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}]"
+      string: "[{\"task_group_id\": \"7a733189-6ffb-4718-a430-3627c25b078b\", \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/task_groups/7a733189-6ffb-4718-a430-3627c25b078b/\", \"task_id\": \"8019ea4d-be6f-4ff7-8338-dea3ccc4fe8f\", \"call_request_tags\": [\"pulp:repository:1\", \"pulp:action:delete\"], \"reasons\": [], \"start_time\": null, \"tags\": [\"pulp:repository:1\", \"pulp:action:delete\"], \"state\": \"waiting\", \"finish_time\": null, \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {}, \"call_request_group_id\": \"7a733189-6ffb-4718-a430-3627c25b078b\", \"call_request_id\": \"8019ea4d-be6f-4ff7-8338-dea3ccc4fe8f\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}]"
     http_version: 
-  recorded_at: Wed, 20 Nov 2013 20:36:30 GMT
+  recorded_at: Tue, 03 Dec 2013 21:55:06 GMT
 recorded_with: VCR 2.7.0
