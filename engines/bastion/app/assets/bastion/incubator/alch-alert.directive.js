@@ -39,7 +39,7 @@ angular.module('alchemy').directive('alchAlert', function() {
             scope.alerts = [];
 
             function addToAlerts(messages) {
-                scope.alerts = _.union(scope.alerts, messages);
+                scope.alerts = messages;
             }
 
             scope.$watch('successMessages', function(messages) {

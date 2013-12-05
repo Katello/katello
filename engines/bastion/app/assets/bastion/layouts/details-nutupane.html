@@ -1,0 +1,63 @@
+<section>
+
+  <div alch-alert success-messages="successMessages" error-messages="errorMessages"></div>
+
+  <div class="row nutupane-bar">
+    <h2 class="col-sm-2">
+      <span data-block="header">
+        REPLACE ME
+      </span>
+    </h2>
+  </div>
+
+  <div class="row nutupane-bar">
+    <div class="col-sm-3">
+      <div class="input-group input-group">
+        <input type="text"
+               class="form-control"
+               placeholder="{{ 'Search...' | translate }}"
+               ng-model="detailsTable.searchTerm"
+               on-enter="detailsTable.search(table.searchTerm)"/>
+        <span class="input-group-btn">
+          <button ng-click="detailsTable.search(detailsTable.searchTerm)" class="btn btn-default" type="button"><i class="icon-search"></i></button>
+        </span>
+      </div>
+    </div>
+
+    <div class="col-sm-3 nutupane-info">
+      <span translate>Showing {{ detailsTable.rows.length }} of {{ detailsTable.resource.subtotal }} ({{ detailsTable.resource.total }} Total)</span>
+    </div>
+
+    <div class="fr">
+      <div class="nutupane-info fl">
+        <span translate>{{ detailsTable.numSelected }} Selected</span>
+        <span>|</span>
+        <a class="deselect-action"
+           translate
+           ng-class="{ 'disabled-link' : detailsTable.numSelected == 0 }"
+           ng-click="detailsTable.selectAllResults(false)">
+          Deselect All
+        </a>
+      </div>
+
+      <div class="fl">
+        <div data-block="actions"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="nutupane" alch-table="detailsTable" nutupane-table>
+    <div class="loading-mask icon-3x" ng-show="detailsTable.working">
+      <i class="icon-spinner icon-spin"></i>
+      <span ng-hide="$root.$state.current.collapsed">{{ "Loading..." | translate }}</span>
+    </div>
+
+    <div alch-container-scroll control-width="detailsTable" alch-infinite-scroll="detailsTable.nextPage()">
+      <div data-block="table" ui-view="table"></div>
+    </div>
+  </div>
+
+  <span class="action-panel" ui-view="action-panel"></span>
+
+</section>
