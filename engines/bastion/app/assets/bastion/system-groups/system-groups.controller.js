@@ -47,15 +47,5 @@ angular.module('Bastion.system-groups').controller('SystemGroupsController',
             $scope.transitionTo('system-groups.index');
         };
 
-        $scope.readableGroupLimit = function(total) {
-            if(total === -1) {
-                return gettext("Unlimited");
-            }
-            else {
-                return total;
-            }
-        };
-        $scope.table.readableGroupLimit = $scope.readableGroupLimit;
-
     }]
 );

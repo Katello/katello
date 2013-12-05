@@ -38,6 +38,15 @@ module Authorization::SystemGroup
       items(org, [:delete_systems])
     end
 
+    def assert_editable(groups)
+      invalid_perms = groups.select{ |group| !group.editable? }.collect{ |group| group.name }
+
+      unless invalid_perms.empty?
+        fail Errors::SecurityViolation, _("Group membership modification is not allowed for system group(s): %s") % invalid_perms.join(', ')
+      end
+      true
+    end
+
     def creatable?(org)
       ::User.allowed_to?([:create], :system_groups, nil, org)
     end

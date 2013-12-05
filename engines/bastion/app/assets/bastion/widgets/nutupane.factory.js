@@ -143,13 +143,26 @@ angular.module('Bastion.widgets').factory('Nutupane',
                 return self.table.rows;
             };
 
-            self.getAllSelectedResults = function() {
-                return {
-                    selectedObjects: self.table.getSelected(),
-                    selectAllResults:self.table.allResultsSelected,
-                    searchString: self.table.searchTerm || '',
-                    deselected: self.getDeselected()
+            self.getAllSelectedResults = function(identifier) {
+                var selected;
+                identifier = identifier || 'id';
+                selected = {
+                    included: {
+                        ids: [],
+                        search: null
+                    },
+                    excluded: {
+                        ids: []
+                    }
                 };
+
+                if (self.table.allResultsSelected) {
+                    selected.included.search = self.table.searchTerm || '';
+                    selected.excluded.ids = _.pluck(self.getDeselected(), identifier);
+                } else {
+                    selected.included.ids = _.pluck(self.table.getSelected(), identifier);
+                }
+                return selected;
             };
 
             self.getDeselected = function() {
@@ -227,7 +240,7 @@ angular.module('Bastion.widgets').factory('Nutupane',
                 }
             };
 
-            self.table.allResultsSelectCount = function(){
+            self.table.allResultsSelectCount = function() {
                 return self.table.resource.subtotal - self.getDeselected().length;
             };
 

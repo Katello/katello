@@ -1,32 +1,71 @@
-<h4 translate>System Group Management</h4>
-
-<div class="details">
-  <section>
-    <div class="detail">
-      <span class="info-label" translate>System Groups</span>
-      <span class="info-value"
-            alch-edit-multiselect="systemGroups.groups"
-            formatter="arrayToString"
-            options="getSystemGroups()"
-            button-config="addRemove"
-            on-add="confirmSystemGroupAction('add')"
-            on-remove="confirmSystemGroupAction('remove')"
-            display-value-default='{{ "Click to select..." | translate }}'
-            forced-working-mode="systemGroups.workingMode">
-      </span>
-    </div>
-
-    <div class="inline-confirmation" ng-show="systemGroups.confirm">
-      <div class="confirmation_text" ng-show="systemGroups.action == 'add'" translate>
-        Are you sure you want to add the {{ getSelectedSystemIds().length }} systems(s) selected to the system group(s) chosen?
-      </div>
-      <div class="confirmation_text" ng-show="systemGroups.action == 'remove'" translate>
-        Are you sure you want to remove the {{ getSelectedSystemIds().length }} systems(s) selected to the system group(s) chosen?
-      </div>
-      <button class="btn btn-default" ng-click="systemGroups.confirm = false" translate>No</button>
-      <button class="btn btn-default" ng-click="performSystemGroupAction()" translate>Yes</button>
-    </div>
-
-    <div class="divider"></div>
-  </section>
+<div class="alert alert-info" ng-show="systemGroups.action == 'add'">
+  <div translate>
+    Are you sure you want to add the {{ table.numSelected }} systems(s) selected to the system group(s) chosen?
+  </div>
+  <button class="btn btn-default" ng-click="systemGroups.action = null; systemGroups.working = false" translate>No</button>
+  <button class="btn btn-default" ng-click="performSystemGroupAction()" translate>Yes</button>
 </div>
+
+<div class="alert alert-info" ng-show="systemGroups.action == 'remove'">
+  <div translate>
+    Are you sure you want to remove the {{ table.numSelected }} systems(s) selected to the system group(s) chosen?
+  </div>
+  <button class="btn btn-default" ng-click="systemGroups.action = null; systemGroups.working = false" translate>No</button>
+  <button class="btn btn-default" ng-click="performSystemGroupAction()" translate>Yes</button>
+</div>
+
+<div class="alert alert-info" ng-show="systemGroups.working && !systemGroups.action" translate>
+  <i class="icon-spinner inline-icon icon-spin"></i>
+  Processing
+</div>
+
+<section>
+  <div data-extend-template="layouts/details-nutupane.html">
+
+    <div data-block="header" translate>
+      System Group Membership Management
+    </div>
+
+    <div data-block="actions">
+      <button class="btn btn-primary" ng-disable="detailsTable.numSelected == 0"
+              ng-click="systemGroups.action = 'add'; systemGroups.working = true">
+        <i class="icon-plus"></i>
+        {{ "Add To" | translate }}
+      </button>
+
+      <button class="btn btn-primary" ng-disable="detailsTable.numSelected == 0"
+              ng-click="systemGroups.action = 'remove'; systemGroups.working = true">
+        <i class="icon-minus"></i>
+        {{ "Remove From" | translate }}
+      </button>
+    </div>
+
+    <table data-block="table"  class="table table-striped" ng-class="{'table-mask': systemGroups.working}">
+      <thead>
+        <tr alch-table-head row-select>
+          <th alch-table-column="name">{{ "Name" | translate }}</th>
+          <th alch-table-column="systems">{{ "Systems" | translate }}</th>
+          <th alch-table-column="limit">{{ "Limit" | translate }}</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr alch-table-row ng-repeat="group in detailsTable.rows" row-select="group">
+          <td alch-table-cell>
+            <a class="clickable" ui-sref="system-groups.details.info({systemGroupId: group.id})">
+              {{ group.name }}
+            </a>
+          </td>
+          <td alch-table-cell>
+            <a class="clickable" ui-sref="system-groups.details.systems({systemGroupId: group.id})">
+              {{ group.total_systems }}
+            </a>
+          </td>
+          <td alch-table-cell>{{ group.max_systems | unlimitedFilter }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+
+</section>

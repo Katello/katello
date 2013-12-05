@@ -64,7 +64,16 @@
     </ul>
   </nav>
 
-  <div alch-alert success-messages="successMessages" error-messages="errorMessages"></div>
+  <div>
 
-  <div ui-view></div>
+    <div class="alert warning alert-warning" ng-show="table.numSelected == 0">
+      <i class="icon-exclamation-sign"></i>
+      {{ 'At least one system needs to be selected in order to perform a bulk action.' | translate }}
+    </div>
+
+    <span ng-hide="table.numSelected == 0">
+      <div ui-view></div>
+    </span>
+  </div>
+
 </section>

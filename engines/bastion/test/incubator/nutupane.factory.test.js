@@ -212,10 +212,9 @@ describe('Factory: Nutupane', function() {
                 item.selected = true;
             });
             nutupane.table.rows[0].selected = false;
-            results = nutupane.getAllSelectedResults();
-            expect(results.deselected[0]).toBe(nutupane.table.rows[0]);
-            expect(results.searchString).toBe("FOO");
-            expect(results.selectAllResults).toBe(true);
+            results = nutupane.getAllSelectedResults('id');
+            expect(results.excluded.ids[0]).toBe(nutupane.table.rows[0]['id']);
+            expect(results.included.search).toBe("FOO");
         });
 
         describe("provides a way to sort the table", function() {

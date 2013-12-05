@@ -20,7 +20,7 @@
           {{ group.total_systems }}
         </a>
       </td>
-      <td alch-table-cell>{{ table.readableGroupLimit(group.max_systems) }}</td>
+      <td alch-table-cell>{{ group.max_systems | unlimitedFilter }}</td>
     </tr>
   </tbody>
 </table>
