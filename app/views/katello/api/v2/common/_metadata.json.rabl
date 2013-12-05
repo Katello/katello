@@ -2,8 +2,8 @@ object false
 
 node(:total)    { @collection[:total] }
 node(:subtotal) { @collection[:subtotal] }
-node(:offset)   { params[:offset] }
-node(:limit)    { params[:page_size] }
+node(:page)     { @collection[:page] }
+node(:per_page) { @collection[:per_page] }
 node(:search)   { params[:search] }
 node(:sort) do
   {

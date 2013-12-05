@@ -35,7 +35,7 @@ angular.module('Bastion.system-groups').controller('SystemGroupAddSystemsControl
         params = {
             'organization_id':          CurrentOrganization,
             'search':                   $location.search().search || "",
-            'offset':                   0,
+            'page':                     1,
             'sort_by':                  'name',
             'sort_order':               'ASC',
             'paged':                    true
@@ -64,7 +64,7 @@ angular.module('Bastion.system-groups').controller('SystemGroupAddSystemsControl
             selected = _.pluck($scope.addSystemsTable.getSelected(), 'uuid');
 
             $scope.isAdding = true;
-            SystemGroup.addSystems({id: $scope.group.id, 'system_group': {'system_ids': selected}}, function(){
+            SystemGroup.addSystems({id: $scope.group.id, 'system_ids': selected}, function(){
                 $scope.successMessages.push(gettext("Successfully added %s systems.").replace('%s', selected.length));
                 $scope.isAdding = false;
                 addSystemsPane.refresh();

@@ -33,7 +33,6 @@ angular.module('Bastion.products').controller('ProductsController',
         var params = {
             'organization_id':  CurrentOrganization,
             'search':           $location.search().search || "",
-            'offset':           0,
             'sort_by':          'name',
             'sort_order':       'ASC',
             'enabled' :         true,

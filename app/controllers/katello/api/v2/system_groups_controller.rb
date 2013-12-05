@@ -13,10 +13,11 @@
 module Katello
 class Api::V2::SystemGroupsController <  Api::V2::ApiController
 
-  before_filter :find_group, :only => [:copy, :show, :update, :destroy, :destroy_systems,
-                                       :add_systems, :remove_systems, :systems]
+  before_filter :find_system_group, :only => [:copy, :show, :update, :destroy, :destroy_systems,
+                                              :add_systems, :remove_systems, :systems]
   before_filter :find_organization, :only => [:index, :create]
   before_filter :authorize
+  before_filter :load_search_service, :only => [:index, :systems]
 
   def rules
     any_readable         = lambda { @organization && SystemGroup.any_readable?(@organization) }
@@ -41,12 +42,10 @@ class Api::V2::SystemGroupsController <  Api::V2::ApiController
   end
 
   def_param_group :system_group do
-    param :system_group, Hash, :required => true, :action_aware => true do
-      param :name, String, :required => true, :desc => "System group name"
-      param :system_ids, Array, :required => false, :desc => "List of system uuids to be in the group"
-      param :description, String
-      param :max_systems, Integer, :desc => "Maximum number of systems in the group"
-    end
+    param :name, String, :required => true, :desc => "System group name"
+    param :system_ids, Array, :required => false, :desc => "List of system uuids to be in the group"
+    param :description, String
+    param :max_systems, Integer, :desc => "Maximum number of systems in the group"
   end
 
   api :GET, "/system_groups/:id", "Show a system group"
@@ -56,8 +55,10 @@ class Api::V2::SystemGroupsController <  Api::V2::ApiController
   end
 
   api :GET, "/system_groups", "List system groups"
+  api :GET, "/organizations/:organization_id/system_groups"
+  param_group :search, Api::V2::ApiController
   param :organization_id, :identifier, :desc => "organization identifier", :required => true
-  param :name, String, :desc => "System group name to filter by"
+  param :name, String, :desc => "system group name to filter by"
   def index
     filters = [:terms => {:id => SystemGroup.readable(@organization).pluck(:id)}]
     filters << {:term => {:name => params[:name].downcase}} if params[:name]
@@ -70,13 +71,15 @@ class Api::V2::SystemGroupsController <  Api::V2::ApiController
   end
 
   api :POST, "/system_groups", "Create a system group"
+  api :POST, "/organizations/:organization_id/system_groups", "Create a system group"
+  param :organization_id, :identifier, :desc => "organization identifier", :required => true
   param_group :system_group
   def create
     if params[:system_ids]
       params[:system_ids] = system_ids_to_uuids(params[:system_ids])
     end
 
-    @system_group              = SystemGroup.new(params.slice(:name, :description, :max_systems, :system_ids))
+    @system_group = SystemGroup.new(params.slice(:name, :description, :max_systems, :system_ids))
     @system_group.organization = @organization
     @system_group.save!
     respond
@@ -86,14 +89,14 @@ class Api::V2::SystemGroupsController <  Api::V2::ApiController
   param :id, :identifier, :desc => "Id of the system group", :required => true
   param_group :system_group
   def update
-    if params[:system_ids]
-      params[:system_ids] = system_uuids_to_ids(params[:system_ids])
-    end
+    params[:system_ids] = system_uuids_to_ids(params[:system_ids]) if params[:system_ids]
+
     @system_group.attributes = params.slice(:name, :description, :system_ids, :max_systems)
     @system_group.save!
     respond
   end
 
+  # TODO: switch to systems controller index w/ @adprice pull-request
   api :GET, "/system_groups/:id/systems", "List systems in the group"
   param :id, :identifier, :desc => "Id of the system group", :required => true
   def systems
@@ -106,12 +109,10 @@ class Api::V2::SystemGroupsController <  Api::V2::ApiController
 
   api :PUT, "/system_groups/:id/add_systems", "Add systems to the group"
   param :id, :identifier, :desc => "Id of the system group", :required => true
-  param :system_group, Hash, :required => true do
-    param :system_ids, Array, :desc => "Array of system ids"
-  end
+  param :system_ids, Array, :desc => "Array of system ids"
   def add_systems
-    ids                      = system_uuids_to_ids(params[:system_group][:system_ids])
-    @systems                 = System.readable(@system_group.organization).where(:id => ids)
+    ids = system_uuids_to_ids(params[:system_ids])
+    @systems = System.readable(@system_group.organization).where(:id => ids)
     @system_group.system_ids = (@system_group.system_ids + @systems.collect { |s| s.id }).uniq
     @system_group.save!
     System.index.refresh
@@ -120,12 +121,10 @@ class Api::V2::SystemGroupsController <  Api::V2::ApiController
 
   api :PUT, "/system_groups/:id/remove_systems", "Remove systems from the group"
   param :id, :identifier, :desc => "Id of the system group", :required => true
-  param :system_group, Hash, :required => true do
-    param :system_ids, Array, :desc => "Array of system ids"
-  end
+  param :system_ids, Array, :desc => "Array of system ids"
   def remove_systems
-    ids                      = system_uuids_to_ids(params[:system_group][:system_ids])
-    system_ids               = System.readable(@system_group.organization).where(:id => ids).collect { |s| s.id }
+    ids = system_uuids_to_ids(params[:system_ids])
+    system_ids = System.readable(@system_group.organization).where(:id => ids).collect { |s| s.id }
     @system_group.system_ids = (@system_group.system_ids - system_ids).uniq
     @system_group.save!
     System.index.refresh
@@ -134,6 +133,7 @@ class Api::V2::SystemGroupsController <  Api::V2::ApiController
 
   api :GET, "/system_groups/:id/history", "History of jobs performed on a system group"
   param :id, :identifier, :desc => "Id of the system group", :required => true
+  # TODO: v2 update
   def history
     super
   end
@@ -141,23 +141,23 @@ class Api::V2::SystemGroupsController <  Api::V2::ApiController
   api :GET, "/system_groups/:id/history", "History of a job performed on a system group"
   param :id, :identifier, :desc => "Id of the system group", :required => true
   param :job_id, :identifier, :desc => "Id of a job for filtering"
+  # TODO: v2 update
   def history_show
     super
   end
 
   api :POST, "/system_groups/:id/copy", "Make copy of a system group"
-  param :id, :identifier, :desc => "Id of the system group", :required => true
-  param :system_group, Hash, :required => true, :action_aware => true do
-    param :new_name, String, :required => true, :desc => "System group name"
-    param :description, String
-    param :max_systems, Integer, :desc => "Maximum number of systems in the group"
-  end
+  param :id, :identifier, :desc => "ID of the system group", :required => true
+  param :new_name, String, :required => true, :desc => "system group name"
+  param :description, String
+  param :max_systems, Integer, :desc => "maximum number of systems in the group"
   def copy
     super
   end
 
   api :DELETE, "/system_groups/:id", "Destroy a system group"
   param :id, :identifier, :desc => "Id of the system group", :required => true
+  # TODO: v2 update
   def destroy
     @system_group.destroy
     respond_for_destroy
@@ -165,13 +165,14 @@ class Api::V2::SystemGroupsController <  Api::V2::ApiController
 
   api :DELETE, "/system_groups/:id/destroy_systems", "Destroy a system group nad contained systems"
   param :id, :identifier, :desc => "Id of the system group", :required => true
+  # TODO: v2 update
   def destroy_systems
     super
   end
 
   api :POST, "/system_groups/:id/copy", "Make copy of a system group"
-  param :id, :identifier, :desc => "Id of the system group", :required => true
-  param :name, String, :required => true, :desc => "New System Group name"
+  param :id, :identifier, :desc => "ID of the system group", :required => true
+  param :name, String, :required => true, :desc => "New system group name"
   def copy
     new_group              = SystemGroup.new
     new_group.name         = params[:system_group][:name]
@@ -185,7 +186,7 @@ class Api::V2::SystemGroupsController <  Api::V2::ApiController
 
   private
 
-  def find_group
+  def find_system_group
     @system_group = SystemGroup.where(:id => params[:id]).first
     fail HttpErrors::NotFound, _("Couldn't find system group '%s'") % params[:id] if @system_group.nil?
   end

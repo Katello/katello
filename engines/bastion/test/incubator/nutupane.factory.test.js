@@ -158,7 +158,7 @@ describe('Factory: Nutupane', function() {
 
         describe("provides a way to sort the table", function() {
             it ("defaults the sort to ascending if the previous sort does not match the new sort.", function() {
-                var expectedParams = {sort_by: 'name', sort_order: 'ASC', offset: 0, search: ''};
+                var expectedParams = {sort_by: 'name', sort_order: 'ASC', search: '', page: 1};
                 nutupane.table.resource.sort = {};
 
                 spyOn(Resource, 'query');
@@ -168,7 +168,7 @@ describe('Factory: Nutupane', function() {
             });
 
             it("toggles the sort order if already sorting by that column", function() {
-                var expectedParams = {sort_by: 'name', sort_order: 'DESC', offset: 0, search: ''};
+                var expectedParams = {sort_by: 'name', sort_order: 'DESC', search: '', page: 1};
                 nutupane.table.resource.sort = {
                     by: 'name',
                     order: 'ASC'

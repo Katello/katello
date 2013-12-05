@@ -34,7 +34,6 @@ angular.module('Bastion.system-groups').controller('SystemGroupsController',
         var params = {
             'organization_id':  CurrentOrganization,
             'search':           $location.search().search || "",
-            'offset':           0,
             'sort_by':          'name',
             'sort_order':       'ASC',
             'paged':            true

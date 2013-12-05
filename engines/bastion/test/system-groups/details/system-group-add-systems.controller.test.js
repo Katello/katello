@@ -61,7 +61,7 @@ describe('Controller: SystemGroupAddSystemsController', function() {
     it('adds selected systems', function(){
         spyOn(SystemGroup, "addSystems");
         $scope.addSelected();
-        expected_params = {id: $scope.group.id, 'system_group': {'system_ids': ['abcd']}};
+        expected_params = {id: $scope.group.id, 'system_ids': ['abcd']};
         expect(SystemGroup.addSystems).toHaveBeenCalledWith(expected_params, jasmine.any(Function), jasmine.any(Function));
     });
 

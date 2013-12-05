@@ -17,10 +17,9 @@ class SystemGroup < ActiveRecord::Base
   include Hooks
   define_hooks :add_system_hook, :remove_system_hook
 
-  include Authorization::SystemGroup
+  include Katello::Authorization::SystemGroup
   include Glue::ElasticSearch::SystemGroup if Katello.config.use_elasticsearch
 
-  include Authorization::SystemGroup
   include Ext::PermissionTagCleanup
 
   has_many :key_system_groups, :class_name => "Katello::KeySystemGroup", :dependent => :destroy

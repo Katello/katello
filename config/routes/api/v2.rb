@@ -14,6 +14,24 @@ Katello::Engine.routes.draw do
 
       match '/' => 'root#resource_list'
 
+      # Alphabetical resources
+
+      resources :organizations, :only => [] do
+        resources :system_groups, :only => [:index, :create]
+      end
+
+      resources :system_groups, :only => [:index, :create, :show, :update] do
+        member do
+          post :copy
+          get :systems  # TODO: move below when @adprice systems pull-request
+          put :add_systems
+          put :remove_systems
+        end
+        # resources :systems, :only => [:index]
+      end
+
+      # TODO: Reorganize below into above alphabetical as each v2 controller is updated
+
       # Headpin does not support system creation
       if Katello.config.katello?
         onlies = [:show, :destroy, :create, :index, :update]
@@ -55,12 +73,8 @@ Katello::Engine.routes.draw do
 
       api_resources :system_groups do
         member do
-          get :systems
           get :history
           match "/history/:job_id" => "system_groups#history_show", :via => :get
-          put :add_systems
-          post :copy
-          put :remove_systems
           delete :destroy_systems
         end
 

@@ -24,7 +24,7 @@
  *   pattern.  Note that the API Nutupane uses must provide a response of the following structure:
  *
  *   {
- *      offset: 25,
+ *      page: 1,
  *      subtotal: 50,
  *      total: 100,
  *      results: [...]
@@ -55,7 +55,7 @@ angular.module('Bastion.widgets').factory('Nutupane',
             };
 
             // Set default resource values
-            resource.offset = 0;
+            resource.page = 0;
             resource.subtotal = "0";
             resource.total = "0";
             resource.results = [];
@@ -67,19 +67,21 @@ angular.module('Bastion.widgets').factory('Nutupane',
                 replace = replace || false;
                 table.working = true;
 
+                params.page = table.resource.page + 1;
                 resource[table.action](params, function (response) {
                     if (replace) {
                         table.rows = response.results;
                     } else {
                         table.rows = table.rows.concat(response.results);
                     }
+                    table.resource.page = parseInt(response.page, 10);
 
                     // This $timeout is necessary to cause a digest cycle
                     // in order to prevent loading two sets of results.
                     $timeout(function() {
                         deferred.resolve(response);
                         table.resource = response;
-                        table.resource.offset = table.rows.length;
+                        table.resource.page = parseInt(response.page, 10);
 
                         if (self.selectAllMode) {
                             table.selectAll(true);
@@ -106,13 +108,16 @@ angular.module('Bastion.widgets').factory('Nutupane',
 
             self.query = function() {
                 var table = self.table;
-                params.offset = table.rows.length;
+                if (table.rows.length === 0) {
+                    table.resource.page = 0;
+                }
                 params.search = table.searchTerm || "";
                 params.search = self.searchTransform(params.search);
                 return load();
             };
 
             self.refresh = function() {
+                self.table.resource.page = 0;
                 return load(true);
             };
 
@@ -131,7 +136,7 @@ angular.module('Bastion.widgets').factory('Nutupane',
 
             self.table.search = function(searchTerm) {
                 $location.search('search', searchTerm);
-                self.table.resource.offset = 0;
+                self.table.resource.page = 1;
                 self.table.rows = [];
                 self.table.closeItem();
 
@@ -160,7 +165,6 @@ angular.module('Bastion.widgets').factory('Nutupane',
 
             self.table.addRow = function(row) {
                 self.table.rows.unshift(row);
-                self.table.resource.offset += 1;
                 self.table.resource.subtotal += 1;
                 self.table.resource.total += 1;
             };

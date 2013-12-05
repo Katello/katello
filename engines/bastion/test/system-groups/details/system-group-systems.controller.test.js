@@ -61,7 +61,7 @@ describe('Controller: SystemGroupSystemsController', function() {
     it('removes selected systems', function(){
         spyOn(SystemGroup, "removeSystems");
         $scope.removeSelected();
-        expected_params = {id: $scope.group.id, 'system_group': {'system_ids': ['abcd']}};
+        expected_params = {id: $scope.group.id, 'system_ids': ['abcd']};
         expect(SystemGroup.removeSystems).toHaveBeenCalledWith(expected_params, jasmine.any(Function), jasmine.any(Function));
     });
 
