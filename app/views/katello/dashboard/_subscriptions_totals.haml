@@ -1,0 +1,19 @@
+- owner_info = current_organization.owner_info
+
+#dashboard_subscriptions_totals.widget
+  %ul
+    %li.left-col
+      %h5
+        .sub_count
+          = link_to number_with_delimiter(total_active_subscriptions), subscriptions_path
+      %span active subscriptions
+    %li.center-col
+      %h5
+        .sub_count
+          = link_to number_with_delimiter(total_expiring_subscriptions), subscriptions_path({:expiration_filter => "soon"})
+      %span subscriptions expiring in next 120 days
+    %li.right-col
+      %h5
+        .sub_count
+          = link_to number_with_delimiter(total_recently_expired_subscriptions), subscriptions_path({:expiration_filter => "recent"})
+      %span recently expired subscriptions
