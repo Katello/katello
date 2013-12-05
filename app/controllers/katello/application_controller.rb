@@ -189,10 +189,8 @@ class ApplicationController < ::ApplicationController
   end
 
   def current_organization
-    # ENGINE: Remove from this function when db:seed can populate an initial
-    #         Katello organization, supderamin Role and assign to the user
     if !session[:current_organization_id]
-      @current_org = Organization.first
+      @current_org = Organization.current
       return @current_org
     else
       begin

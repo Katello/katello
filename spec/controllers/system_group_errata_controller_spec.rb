@@ -29,8 +29,11 @@ describe SystemGroupErrataController do
       disable_org_orchestration
       disable_consumer_group_orchestration
 
-      @org = Organization.create!(:name=>'test_org', :label=> 'test_org')
-      @environment = create_environment(:name=>"DEV", :label=> "DEV", :prior=>@org.library, :organization=>@org)
+      @organization = get_organization(:organization1)
+      @controller.stubs(:current_organization).returns(@organization)
+
+      @environment = create_environment(:name=>"DEV", :label=> "DEV",
+                                        :prior=>@organization.library, :organization=>@organization)
 
       Resources::Candlepin::Consumer.stubs(:create).returns({:uuid => uuid, :owner => {:key => uuid}})
       Resources::Candlepin::Consumer.stubs(:update).returns(true)
@@ -39,7 +42,7 @@ describe SystemGroupErrataController do
       Katello.pulp_server.extensions.consumer.stubs(:update).returns(true)
       System.any_instance.stubs(:update_system_groups)
 
-      @group = SystemGroup.new(:name=>"test_group", :organization=>@org)
+      @group = SystemGroup.new(:name=>"test_group", :organization=>@organization)
       @system = create_system(:name=>"verbose", :environment => @environment, :cp_type=>"system", :facts=>{"Test1"=>1, "verbose_facts" => "Test facts"})
       @group.save!
       @group.systems << @system

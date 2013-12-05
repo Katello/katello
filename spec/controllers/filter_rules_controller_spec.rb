@@ -24,6 +24,7 @@ describe FilterRulesController do
     disable_user_orchestration
 
     @organization = get_organization(:organization1)
+    @controller.stubs(:current_organization).returns(@organization)
   end
 
   describe "Controller permission tests (katello)" do
