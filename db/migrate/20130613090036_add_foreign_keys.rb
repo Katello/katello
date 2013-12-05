@@ -24,6 +24,21 @@ class AddForeignKeys < ActiveRecord::Migration
     execute("delete from changeset_users where user_id not in (select id from users)")
     execute("delete from changeset_users where changeset_id not in (select id from changesets)")
 
+    execute("delete from component_content_views where content_view_definition_id not in (select id from content_view_definition_bases) or content_view_id not in (select id from content_views)")
+    execute("delete from content_view_definition_bases where source_id not in (select id from content_view_definition_bases)")
+    execute("delete from content_views where content_view_definition_id not in (select id from content_view_definition_bases)")
+    execute("delete from content_view_definition_products where content_view_definition_id not in (select id from content_view_definition_bases)")
+    execute("delete from content_view_definition_repositories where content_view_definition_id not in (select id from content_view_definition_bases)")
+    execute("delete from filters where content_view_definition_id not in (select id from content_view_definition_bases)")
+    execute("delete from filters_products where filter_id not in (select id from filters)")
+    execute("delete from filters_repositories where filter_id not in (select id from filters)")
+    execute("delete from filter_rules where filter_id not in (select id from filters)")
+
+    execute("delete from content_view_versions where content_view_id not in (select id from content_views)")
+    execute("delete from content_view_version_environments where content_view_version_id not in (select id from content_view_versions)")
+    execute("delete from component_content_views where content_view_definition_id not in (select id from content_view_definition_bases) or content_view_id not in (select id from content_views)")
+    execute("delete from content_view_environments where content_view_id not in (select id from content_views)")
+
     add_foreign_key_deferred 'activation_keys', 'content_views',
                              :name => 'activation_keys_content_view_id_fk'
     add_foreign_key_deferred 'activation_keys', 'environments',
