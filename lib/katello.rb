@@ -23,6 +23,7 @@ require "haml-rails"
 require "compass-rails"
 require "ninesixty"
 require "ui_alchemy-rails"
+require "deface"
 
 require "uuidtools"
 require "delayed_job"

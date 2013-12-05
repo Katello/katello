@@ -28,6 +28,10 @@ module Katello
       app.routes_reloader.paths << "#{Katello::Engine.root}/config/routes/api/v2.rb"
     end
 
+    initializer "katello.helpers" do |app|
+      ActionView::Base.send :include, Katello::TaxonomyHelper
+    end
+
     initializer "logging" do |app|
       if caller.last =~ /script\/delayed_job:\d+$/ ||
           ((caller[-10..-1] || []).any? {|l| l =~ /\/rake/} && ARGV.include?("jobs:work"))
