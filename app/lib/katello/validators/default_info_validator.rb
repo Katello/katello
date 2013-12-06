@@ -17,6 +17,10 @@ module Validators
     MAX_SIZE = 256
 
     def validate_each(record, attribute, value)
+      if value.class == ActiveRecord::AttributeMethods::Serialization::Attribute
+        value = value.unserialized_value
+      end
+
       value.each_key do |type|
         value[type].each do |key|
           if key.blank?

@@ -26,7 +26,7 @@ describe ActivationKey do
     disable_consumer_group_orchestration
     disable_product_orchestration
 
-    @organization = katello_organizations(:acme_corporation)
+    @organization = get_organization(:organization1)
     @environment_1 = katello_environments(:dev)
     @environment_2 = katello_environments(:staging)
     @akey = ActivationKey.create(:name => aname, :description => adesc, :organization => @organization,

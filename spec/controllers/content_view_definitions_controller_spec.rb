@@ -26,7 +26,7 @@ describe ContentViewDefinitionsController do
     disable_org_orchestration
     disable_user_orchestration
 
-    @organization = katello_organizations(:acme_corporation)
+    @organization = get_organization(:organization1)
     @controller.stubs(:current_organization).returns(@organization)
   end
 

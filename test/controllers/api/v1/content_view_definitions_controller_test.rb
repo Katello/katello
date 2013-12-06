@@ -24,7 +24,7 @@ describe Api::V1::ContentViewDefinitionsController do
     setup_controller_defaults_api
     login_user(User.find(users(:admin).id))
 
-    @organization = Organization.find(katello_organizations(:acme_corporation))
+    @organization = get_organization(:organization1)
     organization_relation = stub(first: @organization)
     without_deleting = stub(having_name_or_label: organization_relation)
     Organization.stubs(:without_deleting).returns(without_deleting)
@@ -223,7 +223,7 @@ describe Api::V1::ContentViewDefinitionsController do
 
     describe "list_products" do
       it "should show products in the cvd" do
-        get :list_products, :organization_id => @cvd.organization.label,
+        get :list_products, :organization_id => @organization.label,
                             :content_view_definition_id=> @cvd.id
         assert_response :success
 
@@ -236,7 +236,7 @@ describe Api::V1::ContentViewDefinitionsController do
     describe "list_all_products" do
       it "should show all products in the cvd " do
         cvd = katello_content_view_definition_bases(:populated_with_repos_and_filters)
-        get :list_all_products, :organization_id => cvd.organization.label,
+        get :list_all_products, :organization_id => @organization.label,
             :content_view_definition_id=> cvd.id
         assert_response :success
 
@@ -249,7 +249,7 @@ describe Api::V1::ContentViewDefinitionsController do
     describe "update_products" do
       it "should update product to the cvd" do
         refute_empty(@cvd.products)
-        post :update_products, :organization_id => @cvd.organization.label,
+        post :update_products, :organization_id => @organization.label,
                         :content_view_definition_id=> @cvd.id,
                         :products => []
         assert_response :success
@@ -262,7 +262,7 @@ describe Api::V1::ContentViewDefinitionsController do
 
     describe "list_repositories" do
       it "should show repos in the cvd" do
-        get :list_repositories, :organization_id => @cvd.organization.label,
+        get :list_repositories, :organization_id => @organization.label,
             :content_view_definition_id=> @cvd.id
         assert_response :success
 
@@ -275,7 +275,7 @@ describe Api::V1::ContentViewDefinitionsController do
     describe "update_repostories" do
       it "should update product to the cvd" do
         refute_empty(@cvd.repositories)
-        post :update_repositories, :organization_id => @cvd.organization.label,
+        post :update_repositories, :organization_id => @organization.label,
              :content_view_definition_id=> @cvd.id,
              :repos => []
         assert_response :success

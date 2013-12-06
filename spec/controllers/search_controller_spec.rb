@@ -24,6 +24,9 @@ describe SearchController do
 
     @user = users(:restricted)
 
+    @organization = get_organization(:organization1)
+    @controller.stubs(:current_organization).returns(@organization)
+
     @from_resource = "/resource"
     # stub out retrieve_path... this method needs specific details from the request which
     # will not be available from rpec (e.g. HTTP_REFERER)

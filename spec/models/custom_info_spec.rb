@@ -24,7 +24,7 @@ describe CustomInfo do
   before(:each) do
     disable_org_orchestration
 
-    @organization = katello_organizations(:acme_corporation)
+    @organization = get_organization(:organization1)
     @environment = katello_environments(:dev)
 
     Resources::Candlepin::Consumer.stubs(:create).returns({:uuid => uuid, :owner => {:key => uuid}})

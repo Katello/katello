@@ -31,7 +31,7 @@ end
 class OrganizationTestCreate < OrganizationTestBase
 
   def test_create_validate_view
-    org = Katello::Organization.create!(:name=>"TestOrg", :label=>'test_org')
+    org = Organization.create!(:name=>"TestOrg", :label=>'test_org')
     refute_nil org.library
     refute_nil org.default_content_view
     refute_nil org.library.default_content_view_version

@@ -33,7 +33,11 @@ class GlueCandlepinConsumerTestBase < ActiveSupport::TestCase
     VCR.insert_cassette('glue_candlepin_consumer', :match_requests_on => [:path, :params, :method, :body_json])
 
     @@dev      = KTEnvironment.find(@loaded_fixtures['katello_environments']['candlepin_dev']['id'])
-    @@org      = Organization.find(@loaded_fixtures['katello_organizations']['candlepin_org']['id'])
+
+    @@org      = Organization.find(@loaded_fixtures['taxonomies']['organization2']['id'])
+    @@org.setup_label_from_name
+    @@org.save
+
     @@dev_cv   = ContentView.find(@loaded_fixtures['katello_content_views']['candlepin_library_dev_cv']['id'])
     @@dev_cve  = ContentViewEnvironment.find(@loaded_fixtures['katello_content_view_environments']['candlepin_library_dev_cve']['id'])
     @@dev_cve.cp_id = @@dev_cv.cp_environment_id @@dev

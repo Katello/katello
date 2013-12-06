@@ -31,10 +31,10 @@ class ContentViewsControllerTest < ActionController::TestCase
 
   def setup
     setup_controller_defaults
-    @org = katello_organizations(:acme_corporation)
+    @org = get_organization(:organization1)
 
     login_user(User.find(users(:admin)))
-    set_organization(katello_organizations(:acme_corporation))
+    set_organization(get_organization(:organization1))
 
     @content_view_definition = katello_content_view_definition_bases(:simple_cvd)
     @content_view = katello_content_views(:library_dev_view)

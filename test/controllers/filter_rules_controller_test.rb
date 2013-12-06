@@ -27,7 +27,7 @@ class FilterRulesControllerTest < ActionController::TestCase
 
   def setup
     setup_controller_defaults
-    @org = katello_organizations(:acme_corporation)
+    @org = get_organization(:organization1)
     set_organization(@org)
     @filter = katello_filters(:simple_filter)
   end

@@ -27,7 +27,7 @@ class GlueCandlepinProviderTestBase < ActiveSupport::TestCase
     VCR.insert_cassette('glue_candlepin_provider', :match_requests_on => [:path, :params, :method, :body_json])
 
     @@dev      = KTEnvironment.find(@loaded_fixtures['katello_environments']['candlepin_dev']['id'])
-    @@org      = Organization.find(@loaded_fixtures['katello_organizations']['candlepin_org']['id'])
+    @@org      = Organization.find(@loaded_fixtures['taxonomies']['organization2']['id'])
     @@provider = Provider.find(@loaded_fixtures['katello_providers']['candlepin_redhat']['id'])
 
     @@org.set_owner

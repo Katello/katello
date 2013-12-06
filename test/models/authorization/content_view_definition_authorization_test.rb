@@ -22,7 +22,7 @@ module ContentViewDefinitionAuthBase
   def setup
     @admin       = User.find(users(:admin))
     @no_perms    = User.find(users(:restricted))
-    @org         = Organization.find(katello_organizations(:acme_corporation))
+    @org         = get_organization(:organization1)
     @cvd         = FactoryGirl.create(:content_view_definition, :organization => @org)
   end
 
