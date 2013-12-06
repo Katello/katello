@@ -204,6 +204,7 @@ Katello::Engine.routes.draw do
       end
 
       api_resources :ping, :only => [:index]
+      match "/status" => "ping#server_status", :via => :get
 
       api_resources :repositories, :only => [:index, :create, :show, :update, :destroy], :constraints => { :id => /[0-9a-zA-Z\-_.]*/ } do
         api_resources :sync, :only => [:index] do
@@ -294,9 +295,6 @@ Katello::Engine.routes.draw do
       api_resources :sync_plans, :only => [:show, :update, :destroy]
       api_resources :tasks, :only => [:show]
       api_resources :about, :only => [:index]
-
-      match "/version" => "ping#version", :via => :get
-      match "/status" => "ping#server_status", :via => :get
 
       # api custom information
       match '/custom_info/:informable_type/:informable_id' => 'custom_info#create', :via => :post, :as => :create_custom_info

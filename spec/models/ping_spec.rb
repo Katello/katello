@@ -24,28 +24,29 @@ describe Ping do
       stub_request(:get, "#{Katello.config.elastic_url}/_status")
 
       # candlepin - with oauth
-      Resources::Candlepin::CandlepinPing.stubs(:ping).returns()
+      Resources::Candlepin::CandlepinPing.stubs(:ping).returns
 
       # katello jobs
       Ping.expects(:system).with("/sbin/service katello-jobs status").returns(true)
     end
 
     describe "headpin mode", :headpin => true do
-      before do
+      subject { Ping.ping[:status] }
+      it "(headpin)" do
+
         stub_headpin_mode
 
         # thumbslug - without authentication
         stub_request(:get, "#{Katello.config.thumbslug_url}/ping").to_raise(OpenSSL::SSL::SSLError)
-      end
 
-      subject { Ping.ping[:result] }
-      it "(headpin)" do
-        subject.must_equal('ok')
+        subject.must_be_instance_of(String)
       end
     end
 
-    describe "katello mode (katello)" do
-      before do
+    describe "katello mode" do
+      subject { Ping.ping[:status] }
+      it "(katello)" do
+
         # pulp - without oauth
         stub_request(:get, "#{Katello.config.pulp.url}/services/status/") # gotta have that trailing slash
 
@@ -53,11 +54,8 @@ describe Ping do
         Katello.pulp_server.resources.user.stubs(:retrieve_all).returns([])
 
         Ping.expects(:pulp_without_oauth).returns(nil)
-      end
 
-      subject {Ping.ping[:result]}
-      it "(katello)" do
-        subject.must_equal('ok')
+        subject.must_be_instance_of(String)
       end
     end
 
