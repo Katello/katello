@@ -59,20 +59,19 @@ Gem::Specification.new do |gem|
   gem.add_dependency "simple-navigation", ">= 3.3.4"
   gem.add_dependency "less-rails"
   gem.add_dependency "sass-rails"
-  gem.add_dependency "compass-rails"
-  gem.add_dependency "compass-960-plugin"
+  gem.add_development_dependency "compass-rails"
+  gem.add_development_dependency "compass-960-plugin"
   gem.add_dependency "haml-rails"
   gem.add_dependency "ui_alchemy-rails", '1.0.12'
   gem.add_dependency "deface"
 
   # Testing
-  gem.add_dependency "rubocop", "0.15.0"
-  gem.add_dependency "factory_girl_rails", "~> 1.4.0"
-  gem.add_dependency "minitest-tags"
-  gem.add_dependency "minitest-predicates"
-  gem.add_dependency "mocha", "~> 0.14.0"
-  gem.add_dependency "vcr"
-  gem.add_dependency "webmock"
-  gem.add_dependency "rubocop-checkstyle_formatter"
+  gem.add_development_dependency "rubocop", "0.15.0"
+  gem.add_development_dependency "factory_girl_rails", "~> 1.4.0"
+  gem.add_development_dependency "minitest-tags"
+  gem.add_development_dependency "mocha", "~> 0.14.0"
+  gem.add_development_dependency "vcr"
+  gem.add_development_dependency "webmock"
+  gem.add_development_dependency "rubocop-checkstyle_formatter"
 
 end
