@@ -11,19 +11,19 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-module Validators
-  class ChangesetDistributionValidator < ActiveModel::Validator
-    def validate(record)
-      if record.repositories.empty?
-        if record.errors[:base] << _("Distribution '%s' does not belong to the specified product!") % record.distribution_id
-          return
+  module Validators
+    class ChangesetDistributionValidator < ActiveModel::Validator
+      def validate(record)
+        if record.repositories.empty?
+          if record.errors[:base] << _("Distribution '%s' does not belong to the specified product!") % record.distribution_id
+            return
+          end
         end
-      end
-      if record.promotable_repositories.empty?
-        record.errors[:base] << _("Repository of the distribution '%s' has not been promoted into the target environment!") %
-          record.distribution_id
+        if record.promotable_repositories.empty?
+          record.errors[:base] << _("Repository of the distribution '%s' has not been promoted into the target environment!") %
+              record.distribution_id
+        end
       end
     end
   end
-end
 end

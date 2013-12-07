@@ -11,11 +11,12 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-module Glue
-  module Pulp
-    module PulpErrors
-      class ServiceUnavailable < HttpErrors::ServiceUnavailable; end
+  module Glue
+    module Pulp
+      module PulpErrors
+        class ServiceUnavailable < HttpErrors::ServiceUnavailable;
+        end
+      end
     end
   end
-end
 end

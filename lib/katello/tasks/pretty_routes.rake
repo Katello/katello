@@ -2,9 +2,9 @@ desc 'Pretty print out all defined routes in match order, with names. Target spe
 
 task :pretty_routes => :environment do
   all_routes = ENV['CONTROLLER'] ? ActionController::Routing::Routes.routes.select { |route| route.defaults[:controller] == ENV['CONTROLLER'] } : ActionController::Routing::Routes.routes
-  routes = all_routes.collect do |route|
+  routes     = all_routes.collect do |route|
     reqs = route.requirements.empty? ? "" : route.requirements[:controller] + '#' + route.requirements[:action]
-    {:name => route.name, :verb => route.verb, :path => route.path, :reqs => reqs}
+    { :name => route.name, :verb => route.verb, :path => route.path, :reqs => reqs }
   end
   if ENV['TEXT']
     filename = 'routes.txt'

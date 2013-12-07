@@ -14,29 +14,29 @@
 require 'katello_test_helper'
 
 module Katello
-class OrganizationTestBase < ActiveSupport::TestCase
+  class OrganizationTestBase < ActiveSupport::TestCase
 
-  def self.before_suite
-    services  = ['Candlepin', 'Pulp', 'ElasticSearch', 'Foreman']
-    models    = ['Organization', 'KTEnvironment', 'ContentView',
-                 'ContentViewEnvironment']
-    disable_glue_layers(services, models, true)
+    def self.before_suite
+      services = ['Candlepin', 'Pulp', 'ElasticSearch', 'Foreman']
+      models   = ['Organization', 'KTEnvironment', 'ContentView',
+                  'ContentViewEnvironment']
+      disable_glue_layers(services, models, true)
+    end
+
+    def setup
+    end
+
   end
 
-  def setup
+  class OrganizationTestCreate < OrganizationTestBase
+
+    def test_create_validate_view
+      org = Organization.create!(:name => "TestOrg", :label => 'test_org')
+      refute_nil org.library
+      refute_nil org.default_content_view
+      refute_nil org.library.default_content_view_version
+      refute_empty org.default_content_view.content_view_environments
+    end
+
   end
-
-end
-
-class OrganizationTestCreate < OrganizationTestBase
-
-  def test_create_validate_view
-    org = Organization.create!(:name=>"TestOrg", :label=>'test_org')
-    refute_nil org.library
-    refute_nil org.default_content_view
-    refute_nil org.library.default_content_view_version
-    refute_empty org.default_content_view.content_view_environments
-  end
-
-end
 end

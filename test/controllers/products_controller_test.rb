@@ -14,56 +14,56 @@
 require "katello_test_helper"
 
 module Katello
-class ProductsControllerTest < ActionController::TestCase
+  class ProductsControllerTest < ActionController::TestCase
 
-  def setup
-    models = ["Organization", "KTEnvironment"]
-    services = ["Pulp", "ElasticSearch", "Foreman", "Candlepin"]
-    disable_glue_layers(services, models)
+    def setup
+      models   = ["Organization", "KTEnvironment"]
+      services = ["Pulp", "ElasticSearch", "Foreman", "Candlepin"]
+      disable_glue_layers(services, models)
 
-    setup_controller_defaults
-    @org = get_organization(:organization1)
-    @environment = katello_environments(:library)
-    @redhat_product = katello_products(:redhat)
-    @custom_product = katello_products(:fedora)
-    login_user(User.find(users(:admin)))
-    set_organization(@org)
+      setup_controller_defaults
+      @org            = get_organization(:organization1)
+      @environment    = katello_environments(:library)
+      @redhat_product = katello_products(:redhat)
+      @custom_product = katello_products(:fedora)
+      login_user(User.find(users(:admin)))
+      set_organization(@org)
 
-    @pc = Candlepin::ProductContent.new({:content=>{:id=>'3'}}, @redhat_product.id)
-    Product.any_instance.stubs(:productContent).returns([@pc])
+      @pc = Candlepin::ProductContent.new({ :content => { :id => '3' } }, @redhat_product.id)
+      Product.any_instance.stubs(:productContent).returns([@pc])
+    end
+
+    test "enabling a reposet should call refresh_repositories" do
+      Product.stubs(:find).returns(@redhat_product)
+      @redhat_product.expects(:refresh_content).with('3').returns(@pc)
+
+      put :refresh_content, { :id => @redhat_product.id, :content_id => '3' }
+      assert_response :success
+    end
+
+    test "disabling a reposet should call disable_content" do
+      Product.stubs(:find).returns(@redhat_product)
+      @redhat_product.expects(:disable_content).with('3').returns(@pc)
+
+      put :disable_content, { :id => @redhat_product.id, :content_id => '3' }
+      assert_response :success
+    end
+
+    test "enabling a reposet should error for a custom product" do
+      Product.stubs(:find).returns(@custom_product)
+      @redhat_product.stubs(:refresh_content).with('3').returns(@pc)
+
+      put :refresh_content, { :id => @custom_product.id, :content_id => '3' }
+      assert_response :bad_request
+    end
+
+    test "disabling a reposet should call disable_content" do
+      Product.stubs(:find).returns(@custom_product)
+      @redhat_product.stubs(:disable_content).with('3').returns(@pc)
+
+      put :disable_content, { :id => @custom_product.id, :content_id => '3' }
+      assert_response :bad_request
+    end
+
   end
-
-  test "enabling a reposet should call refresh_repositories" do
-    Product.stubs(:find).returns(@redhat_product)
-    @redhat_product.expects(:refresh_content).with('3').returns(@pc)
-
-    put :refresh_content, {:id => @redhat_product.id,  :content_id=>'3'}
-    assert_response :success
-  end
-
-  test "disabling a reposet should call disable_content" do
-    Product.stubs(:find).returns(@redhat_product)
-    @redhat_product.expects(:disable_content).with('3').returns(@pc)
-
-    put :disable_content, {:id => @redhat_product.id,  :content_id=>'3'}
-    assert_response :success
-  end
-
-  test "enabling a reposet should error for a custom product" do
-    Product.stubs(:find).returns(@custom_product)
-    @redhat_product.stubs(:refresh_content).with('3').returns(@pc)
-
-    put :refresh_content, {:id => @custom_product.id,  :content_id=>'3'}
-    assert_response :bad_request
-  end
-
-  test "disabling a reposet should call disable_content" do
-    Product.stubs(:find).returns(@custom_product)
-    @redhat_product.stubs(:disable_content).with('3').returns(@pc)
-
-    put :disable_content, {:id => @custom_product.id,  :content_id=>'3'}
-    assert_response :bad_request
-  end
-
-end
 end

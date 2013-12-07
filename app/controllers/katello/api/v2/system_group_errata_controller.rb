@@ -11,9 +11,9 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class Api::V2::SystemGroupErrataController < Api::V1::SystemGroupErrataController
+  class Api::V2::SystemGroupErrataController < Api::V1::SystemGroupErrataController
 
-  include Api::V2::Rendering
+    include Api::V2::Rendering
 
-end
+  end
 end

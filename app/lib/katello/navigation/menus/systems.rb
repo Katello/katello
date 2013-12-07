@@ -11,25 +11,25 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-module Navigation
-  module Menus
-    class Systems < Navigation::Menu
+  module Navigation
+    module Menus
+      class Systems < Navigation::Menu
 
-      def initialize(organization)
-        @key           = :systems
-        @display       = _("Systems")
-        @type          = 'dropdown'
-        @authorization = true
-        @items         = [
-          Navigation::Items::Systems.new(organization),
-          Navigation::Items::SystemGroups.new(organization)
-        ]
+        def initialize(organization)
+          @key           = :systems
+          @display       = _("Systems")
+          @type          = 'dropdown'
+          @authorization = true
+          @items         = [
+              Navigation::Items::Systems.new(organization),
+              Navigation::Items::SystemGroups.new(organization)
+          ]
 
-        @items << Navigation::Items::SystemsByEnvironment.new(organization) if ::User.current.legacy_mode
-        super
+          @items << Navigation::Items::SystemsByEnvironment.new(organization) if ::User.current.legacy_mode
+          super
+        end
+
       end
-
     end
   end
-end
 end

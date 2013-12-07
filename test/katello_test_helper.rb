@@ -40,8 +40,8 @@ module FixtureTestCase
     extend ActiveRecord::TestFixtures
 
     self.use_transactional_fixtures = true
-    self.use_instantiated_fixtures = false
-    self.pre_loaded_fixtures = true
+    self.use_instantiated_fixtures  = false
+    self.pre_loaded_fixtures        = true
 
     self.set_fixture_class :katello_activation_keys => "Katello::ActivationKey"
     self.set_fixture_class :katello_component_content_views => "Katello::ComponentContentView"
@@ -81,9 +81,9 @@ module FixtureTestCase
       fixtures(:all)
       @loaded_fixtures = load_fixtures
 
-      @@admin = User.find(@loaded_fixtures['users']['admin']['id'])
+      @@admin           = User.find(@loaded_fixtures['users']['admin']['id'])
       @@admin.remote_id = @@admin.login
-      User.current = @@admin
+      User.current      = @@admin
     end
   end
 end
@@ -106,18 +106,18 @@ class ActionController::TestCase
   def set_user(user = nil, is_api = false)
     if user.is_a?(UserPermission) || user.is_a?(UserPermissionSet)
       permissions = user
-      user = users(:restricted)
+      user        = users(:restricted)
     end
 
-    user ||= users(:admin)
-    user = User.find(user)
+    user         ||= users(:admin)
+    user         = User.find(user)
     User.current = user
 
     if permissions
       permissions.call(Katello::AuthorizationSupportMethods::UserPermissionsGenerator.new(user))
     end
     unless is_api
-      session[:user] = user.id
+      session[:user]       = user.id
       session[:expires_at] = 5.minutes.from_now
     end
   end
@@ -139,7 +139,7 @@ class ActiveSupport::TestCase
   include FixtureTestCase
 
   def get_organization(org_sym)
-    organization = Organization.find(taxonomies(org_sym))
+    organization       = Organization.find(taxonomies(org_sym))
     organization.label = organization.name
     organization.save
     organization
@@ -153,16 +153,16 @@ end
 def disable_glue_layers(services=[], models=[], force_reload=false)
   @@model_service_cache ||= {}
   @@model_service_cache = {} if force_reload
-  change = false
+  change                = false
 
   Katello.config[:use_cp]            = services.include?('Candlepin') ? false : true
   Katello.config[:use_pulp]          = services.include?('Pulp') ? false : true
   Katello.config[:use_elasticsearch] = services.include?('ElasticSearch') ? false : true
 
   cached_entry = {
-    :cp => Katello.config.use_cp,
-    :pulp => Katello.config.use_pulp,
-    :es => Katello.config.use_elasticsearch
+      :cp   => Katello.config.use_cp,
+      :pulp => Katello.config.use_pulp,
+      :es   => Katello.config.use_elasticsearch
   }
 
   models.each do |model|
@@ -196,7 +196,7 @@ def disable_glue_layers(services=[], models=[], force_reload=false)
       end
 
       @@model_service_cache[model] = cached_entry
-      change = true
+      change                       = true
     end
   end
 

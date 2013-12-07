@@ -11,20 +11,20 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class UserOwnRole < Katello::Role
+  class UserOwnRole < Katello::Role
 
-  use_index_of Katello::Role if Katello.config.use_elasticsearch
+    use_index_of Katello::Role if Katello.config.use_elasticsearch
 
-  def self_role_for_user
-    users.first
-  end
+    def self_role_for_user
+      users.first
+    end
 
-  def create_or_update_default_system_registration_permission(organization, default_environment)
-    if permissions.find_default_system_registration_permission
-      permissions.update_default_system_registration_permission(default_environment)
-    else
-      permissions.create_default_system_registration_permission(organization, default_environment)
+    def create_or_update_default_system_registration_permission(organization, default_environment)
+      if permissions.find_default_system_registration_permission
+        permissions.update_default_system_registration_permission(default_environment)
+      else
+        permissions.create_default_system_registration_permission(organization, default_environment)
+      end
     end
   end
-end
 end

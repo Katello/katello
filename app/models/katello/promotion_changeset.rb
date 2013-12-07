@@ -11,111 +11,111 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class PromotionChangeset < Changeset
-  use_index_of Changeset if Katello.config.use_elasticsearch
+  class PromotionChangeset < Changeset
+    use_index_of Changeset if Katello.config.use_elasticsearch
 
-  def apply(options = { })
-    options = { :async => true, :notify => false }.merge options
+    def apply(options = {})
+      options = { :async => true, :notify => false }.merge options
 
-    check_review_state!
+      check_review_state!
 
-    validate_content_view_tasks_complete!
+      validate_content_view_tasks_complete!
 
-    # if the user is attempting to promote a composite view and one or more of the
-    # component views neither exists in the target environment nor is part
-    # of the changeset, stop the promotion
-    self.content_views.composite.each do |view|
-      components = view.components_not_in_env(self.environment) - self.content_views
-      unless components.blank?
-        fail _("Please add '%{component_content_views}' to the changeset '%{changeset}' "\
+      # if the user is attempting to promote a composite view and one or more of the
+      # component views neither exists in the target environment nor is part
+      # of the changeset, stop the promotion
+      self.content_views.composite.each do |view|
+        components = view.components_not_in_env(self.environment) - self.content_views
+        unless components.blank?
+          fail _("Please add '%{component_content_views}' to the changeset '%{changeset}' "\
                 "if you wish to promote the composite view '%{composite_view}' with it.") %
-                { :component_content_views => components.map(&:name).join(', '),
-                  :changeset => self.name, :composite_view => view.name}
+                   { :component_content_views => components.map(&:name).join(', '),
+                     :changeset               => self.name, :composite_view => view.name }
+        end
+      end
+      validate_content! self.content_views
+
+      # check no collision exists
+      check_collisions!
+
+      self.state = Changeset::PROMOTING
+      self.save!
+
+      if options[:async]
+        task             = self.async(:organization => self.environment.organization).promote_content(options[:notify])
+        self.task_status = task
+        self.save!
+        self.task_status
+      else
+        self.task_status = nil
+        self.save!
+        promote_content(options[:notify])
       end
     end
-    validate_content! self.content_views
 
-    # check no collision exists
-    check_collisions!
+    # TODO: break up method
+    # rubocop:disable MethodLength
+    def promote_content(notify = false)
+      update_progress! '0'
 
-    self.state = Changeset::PROMOTING
-    self.save!
+      from_env = self.environment.prior
+      to_env   = self.environment
+      update_progress! '30'
+      PulpTaskStatus.wait_for_tasks(promote_views(from_env, to_env, self.content_views.composite(false)))
+      update_progress! '50'
+      PulpTaskStatus.wait_for_tasks(promote_views(from_env, to_env, self.content_views.composite(true)))
+      update_progress! '60'
+      update_view_cp_content(to_env)
+      update_progress! '70'
+      trigger_repository_change(to_env)
+      update_progress! '100'
 
-    if options[:async]
-      task             = self.async(:organization => self.environment.organization).promote_content(options[:notify])
-      self.task_status = task
+      self.promotion_date = Time.now
+      self.state          = Changeset::PROMOTED
+      Glue::Event.trigger(Katello::Actions::ChangesetPromote, self)
       self.save!
-      self.task_status
-    else
-      self.task_status = nil
+
+      if notify
+        message = _("Successfully promoted changeset '%s'.") % self.name
+        Notify.success message, :request_type => "changesets___promote", :organization => self.environment.organization
+      end
+
+    rescue => e
+      self.state = Changeset::FAILED
       self.save!
-      promote_content(options[:notify])
-    end
-  end
-
-  # TODO: break up method
-  # rubocop:disable MethodLength
-  def promote_content(notify = false)
-    update_progress! '0'
-
-    from_env = self.environment.prior
-    to_env   = self.environment
-    update_progress! '30'
-    PulpTaskStatus.wait_for_tasks(promote_views(from_env, to_env, self.content_views.composite(false)))
-    update_progress! '50'
-    PulpTaskStatus.wait_for_tasks(promote_views(from_env, to_env, self.content_views.composite(true)))
-    update_progress! '60'
-    update_view_cp_content(to_env)
-    update_progress! '70'
-    trigger_repository_change(to_env)
-    update_progress! '100'
-
-    self.promotion_date = Time.now
-    self.state          = Changeset::PROMOTED
-    Glue::Event.trigger(Katello::Actions::ChangesetPromote, self)
-    self.save!
-
-    if notify
-      message = _("Successfully promoted changeset '%s'.") % self.name
-      Notify.success message, :request_type => "changesets___promote", :organization => self.environment.organization
+      Rails.logger.error(e)
+      Rails.logger.error(e.backtrace.join("\n"))
+      if notify
+        Notify.exception _("Failed to promote changeset '%s'. Check notices for more details") % self.name, e,
+                         :request_type => "changesets___promote", :organization => self.environment.organization
+      end
+      raise e
     end
 
-  rescue => e
-    self.state = Changeset::FAILED
-    self.save!
-    Rails.logger.error(e)
-    Rails.logger.error(e.backtrace.join("\n"))
-    if notify
-      Notify.exception _("Failed to promote changeset '%s'. Check notices for more details") % self.name, e,
-                   :request_type => "changesets___promote", :organization => self.environment.organization
+    def promote_views(from_env, to_env, views)
+      views = views.collect do |view|
+        view.promote(from_env, to_env)
+      end
+      views.flatten
     end
-    raise e
-  end
 
-  def promote_views(from_env, to_env, views)
-    views = views.collect do |view|
-      view.promote(from_env, to_env)
+    def update_view_cp_content(to_env)
+      self.content_views.collect do |view|
+        view.update_cp_content(to_env)
+      end
     end
-    views.flatten
-  end
 
-  def update_view_cp_content(to_env)
-    self.content_views.collect do |view|
-      view.update_cp_content(to_env)
+    def trigger_repository_change(to_env)
+      repos = affected_repos.collect do |repo|
+        repo.get_clone(to_env)
+      end
+      Repository.trigger_contents_changed(repos, :wait => true, :reindex => true)
+    end
+
+    def affected_repos
+      repos = []
+      repos += self.content_views.collect { |v| v.repos(self.environment.prior) }.flatten(1)
+      repos.uniq
     end
   end
-
-  def trigger_repository_change(to_env)
-    repos = affected_repos.collect do |repo|
-      repo.get_clone(to_env)
-    end
-    Repository.trigger_contents_changed(repos, :wait => true, :reindex => true)
-  end
-
-  def affected_repos
-    repos = []
-    repos += self.content_views.collect { |v| v.repos(self.environment.prior)}.flatten(1)
-    repos.uniq
-  end
-end
 end

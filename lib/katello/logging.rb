@@ -105,9 +105,9 @@ module Katello
       # set level and enabled configuration
       loggers_hash = configuration.loggers.to_hash
       loggers_hash.keys.tap { |a| a.delete(:root) }.each do |logger_name|
-        logger_config = configuration.loggers[logger_name]
-        logger        = ::Logging.logger[logger_name]
-        logger.level = logger_config.level if logger_config.key?(:level)
+        logger_config   = configuration.loggers[logger_name]
+        logger          = ::Logging.logger[logger_name]
+        logger.level    = logger_config.level if logger_config.key?(:level)
         logger.additive = logger_config.enabled if logger_config.key?(:enabled)
         enable_tailing logger, logger_config if logger_config.key?(:tail_command)
         logger.trace = configuration.log_trace
@@ -161,23 +161,23 @@ module Katello
 
     def build_syslog_appender(name, options)
       ::Logging.appenders.syslog(
-        name,
-        options.reverse_merge(:ident    => "#{options[:prefix]}katello",
-                              :facility => ::Syslog::Constants::LOG_DAEMON)
+          name,
+          options.reverse_merge(:ident    => "#{options[:prefix]}katello",
+                                :facility => ::Syslog::Constants::LOG_DAEMON)
       )
     end
 
     def build_file_appender(name, options)
-      path = root_configuration.path
+      path         = root_configuration.path
       log_filename = "#{path}/#{options[:prefix]}#{root_configuration.filename}"
       begin
         ::Logging.appenders.rolling_file(
-          name,
-          options.reverse_merge(:filename => log_filename,
-                                :roll_by  => 'date',
-                                :age      => root_configuration.age,
-                                :keep     => root_configuration.keep,
-                                :layout   => build_layout(root_configuration.pattern, configuration.colorize))
+            name,
+            options.reverse_merge(:filename => log_filename,
+                                  :roll_by  => 'date',
+                                  :age      => root_configuration.age,
+                                  :keep     => root_configuration.keep,
+                                  :layout   => build_layout(root_configuration.pattern, configuration.colorize))
         )
       rescue ArgumentError
         # if appender cannot open output file we ignore it, STDOUT fallback will be used

@@ -85,7 +85,7 @@ module Katello
       def load(environment = nil)
         Node.new.tap do |c|
           load_config_file c, environment
-          config_post_process.call c, environment  if config_post_process
+          config_post_process.call c, environment if config_post_process
           validate c, environment
         end
       end

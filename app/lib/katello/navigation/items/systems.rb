@@ -11,18 +11,18 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-module Navigation
-  module Items
-    class Systems < Navigation::Item
+  module Navigation
+    module Items
+      class Systems < Navigation::Item
 
-      def initialize(organization)
-        @key           = :systems
-        @display       = _("All")
-        @authorization = lambda{ organization && System.any_readable?(organization) }
-        @url           = ::User.current.legacy_mode ? systems_path : systems_path + '/all'
+        def initialize(organization)
+          @key           = :systems
+          @display       = _("All")
+          @authorization = lambda { organization && System.any_readable?(organization) }
+          @url           = ::User.current.legacy_mode ? systems_path : systems_path + '/all'
+        end
+
       end
-
     end
   end
-end
 end

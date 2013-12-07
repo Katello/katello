@@ -4,13 +4,13 @@
 require "optparse"
 require "fileutils"
 
-NAME = "katello-debug"
-PAD = "  "
+NAME    = "katello-debug"
+PAD     = "  "
 
 # Set up the options
 options = {}
 
-optparse = OptionParser.new do|opts|
+optparse = OptionParser.new do |opts|
   opts.banner = "Usage: #{NAME} [options] command"
 
   options[:basedir] = '/tmp'
@@ -50,89 +50,89 @@ puts "detected deployment: \t#{deployment}"
 
 # Define what we want to collect
 MISC = [
-"/var/log/audit/audit.log",
-"/var/log/httpd",
-"/etc/httpd/conf.d"
+    "/var/log/audit/audit.log",
+    "/var/log/httpd",
+    "/etc/httpd/conf.d"
 ]
 
 CANDLEPIN = [
-"/var/log/candlepin",
-"/var/log/tomcat6",
-"/etc/candlepin/candlepin.conf",
-"/etc/tomcat6/server.xml"
+    "/var/log/candlepin",
+    "/var/log/tomcat6",
+    "/etc/candlepin/candlepin.conf",
+    "/etc/tomcat6/server.xml"
 ]
 
 THUMBSLUG = [
-"/etc/thumbslug",
-"/var/log/thumbslug"
+    "/etc/thumbslug",
+    "/var/log/thumbslug"
 ]
 
 KATELLO_HEADPIN = [
-"/var/log/katello",
-"/etc/katello/client.conf",
-"/etc/katello/katello.yml",
-"/etc/katello/mapping.yml",
-"/etc/katello/thin.yml",
-"/etc/katello/katello-configure.conf",
-"/etc/httpd/conf.d/katello.conf",
-"/etc/katello/environment.rb"
+    "/var/log/katello",
+    "/etc/katello/client.conf",
+    "/etc/katello/katello.yml",
+    "/etc/katello/mapping.yml",
+    "/etc/katello/thin.yml",
+    "/etc/katello/katello-configure.conf",
+    "/etc/httpd/conf.d/katello.conf",
+    "/etc/katello/environment.rb"
 ]
 
 ELASTIC_SEARCH = [
-"/var/log/elasticsearch",
-"/etc/elasticsearch"
+    "/var/log/elasticsearch",
+    "/etc/elasticsearch"
 ]
 
 PULP = [
-"/etc/pulp/server.conf",
-"/var/log/pulp",
-"/etc/httpd/conf.d/pulp.conf",
-"/etc/qpidd.conf"
+    "/etc/pulp/server.conf",
+    "/var/log/pulp",
+    "/etc/httpd/conf.d/pulp.conf",
+    "/etc/qpidd.conf"
 ]
 
 FOREMAN = [
-"/var/log/foreman",
-"/etc/foreman/settings.yaml",
-"/etc/foreman/thin.yml",
-"/etc/foreman/email.yaml",
-"/etc/foreman/database.yml",
-"/etc/sysconfig/foreman"
+    "/var/log/foreman",
+    "/etc/foreman/settings.yaml",
+    "/etc/foreman/thin.yml",
+    "/etc/foreman/email.yaml",
+    "/etc/foreman/database.yml",
+    "/etc/sysconfig/foreman"
 ]
 
-SIGNO = [
-"/etc/signo/thin.yml",
-"/etc/signo/sso.yml",
-"/var/log/signo"
+SIGNO      = [
+    "/etc/signo/thin.yml",
+    "/etc/signo/sso.yml",
+    "/var/log/signo"
 ]
 
 # Exclude these files from the debug
-EXCLUDES = [
-"/etc/tomcat6/keystore",
-"/etc/candlepin/certs/candlepin-ca.key",
-"/etc/candlepin/certs/candlepin-ca.crt",
-"/etc/candlepin/certs/candlepin-upstream-ca.crt",
-"/etc/katello/pk12_password-file",
-"/etc/katello/candlepin_ca_password-file",
-"/etc/katello/nss_db_password-file",
-"/etc/katello/keystore_password-file",
-"/etc/katello/ssl_ca_password-file",
-"/etc/katello/pulp_user_password-file",
-"/etc/katello/oauth_token-file"
+EXCLUDES   = [
+    "/etc/tomcat6/keystore",
+    "/etc/candlepin/certs/candlepin-ca.key",
+    "/etc/candlepin/certs/candlepin-ca.crt",
+    "/etc/candlepin/certs/candlepin-upstream-ca.crt",
+    "/etc/katello/pk12_password-file",
+    "/etc/katello/candlepin_ca_password-file",
+    "/etc/katello/nss_db_password-file",
+    "/etc/katello/keystore_password-file",
+    "/etc/katello/ssl_ca_password-file",
+    "/etc/katello/pulp_user_password-file",
+    "/etc/katello/oauth_token-file"
 ]
 
 # sources list for katello or headpin deployment
-sources = []
-sources += MISC
-sources += KATELLO_HEADPIN
-sources += ELASTIC_SEARCH
-sources += CANDLEPIN
-sources += PULP if deployment == 'katello'
-sources += SIGNO if deployment == 'katello'
-sources += FOREMAN if use_foreman
-sources += THUMBSLUG if deployment == 'headpin'
+sources    = []
+sources    += MISC
+sources    += KATELLO_HEADPIN
+sources    += ELASTIC_SEARCH
+sources    += CANDLEPIN
+sources    += PULP if deployment == 'katello'
+sources    += SIGNO if deployment == 'katello'
+sources    += FOREMAN if use_foreman
+sources    += THUMBSLUG if deployment == 'headpin'
 
 # Collect the files
-timename =  "katello-debug-#{Time.now.strftime("%Y%m%d%H%M%S")}"
+timename   = "katello-debug-#{Time.now.strftime("%Y%m%d%H%M%S")}"
 target_dir = File.join(options[:basedir], timename)
 
 if File.exists?(target_dir)
@@ -213,7 +213,7 @@ end
 if options[:archive]
   # Tar the output and log it
   tarfile = target_dir + ".tar.gz"
-  pwd = Dir.pwd
+  pwd     = Dir.pwd
   Dir.chdir(options[:basedir])
   `tar -czf #{tarfile} #{timename}`
   Dir.chdir(pwd)

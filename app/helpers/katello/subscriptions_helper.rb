@@ -11,35 +11,35 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-module SubscriptionsHelper
+  module SubscriptionsHelper
 
-  def subscriptions_product_helper(product_id)
-    cp_product = Resources::Candlepin::Product.get(product_id).first
-    product = OpenStruct.new cp_product
-    product.cp_id = cp_product['id']
-    product
-  end
+    def subscriptions_product_helper(product_id)
+      cp_product    = Resources::Candlepin::Product.get(product_id).first
+      product       = OpenStruct.new cp_product
+      product.cp_id = cp_product['id']
+      product
+    end
 
-  def subscriptions_manifest_link_helper(status, label = nil)
-    if status['webAppPrefix']
-      if !status['webAppPrefix'].start_with? 'http'
-        url = "http://#{status['webAppPrefix']}"
+    def subscriptions_manifest_link_helper(status, label = nil)
+      if status['webAppPrefix']
+        if !status['webAppPrefix'].start_with? 'http'
+          url = "http://#{status['webAppPrefix']}"
+        else
+          url = status['webAppPrefix']
+        end
+
+        url += '/' if !url.end_with? '/'
+        url += status['upstreamId']
+        link_to((label.nil? ? url : label), url, :target => '_blank')
       else
-        url = status['webAppPrefix']
+        label.nil? ? status['upstreamId'] : label
       end
+    end
 
-      url += '/' if !url.end_with? '/'
-      url += status['upstreamId']
-      link_to((label.nil? ? url : label), url, :target => '_blank')
-    else
-      label.nil? ? status['upstreamId'] : label
+    def subscriptions_candlepin_status
+      Resources::Candlepin::CandlepinPing.ping
+    rescue
+      { 'rulesVersion' => '', 'rulesSource' => '' }
     end
   end
-
-  def subscriptions_candlepin_status
-    Resources::Candlepin::CandlepinPing.ping
-  rescue
-    {'rulesVersion' => '', 'rulesSource' => ''}
-  end
-end
 end

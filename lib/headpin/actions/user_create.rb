@@ -15,9 +15,9 @@ module Headpin
     class UserCreate < Dynflow::Action
 
       def plan(user)
-        plan_self('login' => user.login,
-                  'mail' => user.mail,
-                  'admin' => user.has_superadmin_role?,
+        plan_self('login'  => user.login,
+                  'mail'   => user.mail,
+                  'admin'  => user.has_superadmin_role?,
                   'hidden' => user.hidden?)
       end
 

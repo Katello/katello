@@ -25,14 +25,14 @@ class Api::V1::NodeCapabilitiesController < Api::V1::ApiController
   end
 
   def rules
-    read_test   = lambda{ Node.readable? }
-    edit_test   = lambda{ Node.editable? }
+    read_test = lambda { Node.readable? }
+    edit_test = lambda { Node.editable? }
     {
-      :index                => read_test,
-      :show                 => read_test,
-      :create               => edit_test,
-      :update               => edit_test,
-      :destroy              => edit_test
+        :index   => read_test,
+        :show    => read_test,
+        :create  => edit_test,
+        :update  => edit_test,
+        :destroy => edit_test
     }
   end
 
@@ -49,8 +49,8 @@ class Api::V1::NodeCapabilitiesController < Api::V1::ApiController
   api :POST, "/nodes/:node_id/capabilities", "Create a capability for a node"
   param_group :capability
   def create
-    cap_class = NodeCapability.class_for(params[:capability][:type])
-    capability = cap_class.new(params[:capability].except(:type, :node_id))
+    cap_class       = NodeCapability.class_for(params[:capability][:type])
+    capability      = cap_class.new(params[:capability].except(:type, :node_id))
     capability.node = @node
     capability.save!
     respond :resource => capability
@@ -79,6 +79,6 @@ class Api::V1::NodeCapabilitiesController < Api::V1::ApiController
 
   def find_capability
     #Note that the user is passing in the type as param :id
-    @capability = @node.capabilities.detect{ |c| c.is_a? NodeCapability.class_for(params[:id]) }
+    @capability = @node.capabilities.detect { |c| c.is_a? NodeCapability.class_for(params[:id]) }
   end
 end

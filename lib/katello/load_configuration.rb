@@ -37,7 +37,7 @@ module Katello
                        katello_version pulp email_reply_address
                        embed_yard_documentation logging system_lang profiling
                        exception_paranoia hide_exceptions)
-                  )
+          )
 
           has_values :app_mode, %w(katello headpin)
           has_values :url_prefix, %w(/headpin /sam /katello)
@@ -69,13 +69,13 @@ module Katello
         end,
 
         :config_post_process      => lambda do |config, environment|
-          config[:katello?] = lambda { config.app_mode == 'katello' }
-          config[:headpin?] = lambda { config.app_mode == 'headpin' }
-          config[:app_name] ||= config.katello? ? 'Katello' : 'Headpin'
+          config[:katello?]          = lambda { config.app_mode == 'katello' }
+          config[:headpin?]          = lambda { config.app_mode == 'headpin' }
+          config[:app_name]          ||= config.katello? ? 'Katello' : 'Headpin'
 
-          config[:use_cp] = true if config[:use_cp].nil?
-          config[:use_pulp] = config.katello? if config[:use_pulp].nil?
-          config[:use_foreman] = false if config[:use_foreman].nil?
+          config[:use_cp]            = true if config[:use_cp].nil?
+          config[:use_pulp]          = config.katello? if config[:use_pulp].nil?
+          config[:use_foreman]       = false if config[:use_foreman].nil?
           config[:use_elasticsearch] = true if config[:use_elasticsearch].nil?
 
           config[:email_reply_address] = if config[:email_reply_address]
@@ -106,7 +106,7 @@ module Katello
         :load_yml_post_process    => lambda do |config|
           config.each do |env_name, env_config|
             if env_config && env_config.present?(:database)
-              database_config = env_config.database
+              database_config            = env_config.database
               database_config[:password] = Password.decrypt database_config.password if database_config.present?(:password)
             end
           end

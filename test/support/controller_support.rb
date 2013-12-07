@@ -27,15 +27,15 @@ module ControllerSupport
       end
 
       action = params[:action]
-      req = params[:request]
-      @controller.define_singleton_method(action) {render :nothing => true}
+      req    = params[:request]
+      @controller.define_singleton_method(action) { render :nothing => true }
 
       login_user(user)
       req.call
 
       if params[:authorized]
         msg = "Expected response for #{action} to be a <success>, but was <#{response.status}> instead. \n" +
-                                                "#{user.own_role.summary}"
+            "#{user.own_role.summary}"
         assert_response :success, msg
       else
         msg = "Security Violation (403) expected for #{action}, got #{response.status} instead. \n#{user.own_role.summary}"
@@ -46,14 +46,14 @@ module ControllerSupport
 
   def assert_protected_action(action_name, allowed_perms, denied_perms, &block)
     assert_authorized(
-              :permission => allowed_perms,
-              :action => action_name,
-              :request => block
+        :permission => allowed_perms,
+        :action     => action_name,
+        :request    => block
     )
     refute_authorized(
         :permission => denied_perms,
-        :action => action_name,
-        :request => block
+        :action     => action_name,
+        :request    => block
     )
   end
 
@@ -76,7 +76,7 @@ end
 
 UserPermission = Struct.new(:verbs, :resource_type, :tags, :org, :options) do
   def call(generator)
-    self.tags ||= []
+    self.tags    ||= []
     self.options ||= {}
     generator.can(verbs, resource_type, tags, org, options)
   end
@@ -87,7 +87,7 @@ UserPermission = Struct.new(:verbs, :resource_type, :tags, :org, :options) do
 end
 
 # create a constant for a lack of permissions
-NO_PERMISSION = lambda { |user| }
+NO_PERMISSION  = lambda { |user| }
 
 class UserPermissionSet
   attr_accessor :permissions

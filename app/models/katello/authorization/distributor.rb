@@ -11,58 +11,58 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-module Authorization::Distributor
-  extend ActiveSupport::Concern
+  module Authorization::Distributor
+    extend ActiveSupport::Concern
 
-  module ClassMethods
-    # returns list of virtual permission tags for the current user
-    def list_tags
-      select('id,name').all.collect { |m| VirtualTag.new(m.id, m.name) }
-    end
+    module ClassMethods
+      # returns list of virtual permission tags for the current user
+      def list_tags
+        select('id,name').all.collect { |m| VirtualTag.new(m.id, m.name) }
+      end
 
-    def readable(org)
-      fail "scope requires an organization" if org.nil?
-      if org.distributors_readable?
-        where(:environment_id => org.environment_ids) #list all distributors in an org
-      else #just list for environments the user can access
-        where("distributors.environment_id in (#{KTEnvironment.distributors_readable(org).select(:id).to_sql})")
+      def readable(org)
+        fail "scope requires an organization" if org.nil?
+        if org.distributors_readable?
+          where(:environment_id => org.environment_ids) #list all distributors in an org
+        else #just list for environments the user can access
+          where("distributors.environment_id in (#{KTEnvironment.distributors_readable(org).select(:id).to_sql})")
+        end
+      end
+
+      def any_readable?(org)
+        org.distributors_readable? ||
+            KTEnvironment.distributors_readable(org).count > 0
+      end
+
+      # TODO: these two functions are somewhat poorly written and need to be redone
+      def any_deletable?(env, org)
+        if env
+          env.distributors_deletable?
+        else
+          org.distributors_deletable?
+        end
+      end
+
+      def registerable?(env, org, content_view = nil)
+        subscribable = content_view ? content_view.subscribable? : true
+        registerable = (env || org).distributors_registerable?
+        subscribable && registerable
       end
     end
 
-    def any_readable?(org)
-      org.distributors_readable? ||
-          KTEnvironment.distributors_readable(org).count > 0
-    end
+    included do
+      def readable?
+        environment.distributors_readable?
+      end
 
-    # TODO: these two functions are somewhat poorly written and need to be redone
-    def any_deletable?(env, org)
-      if env
-        env.distributors_deletable?
-      else
-        org.distributors_deletable?
+      def editable?
+        environment.distributors_editable?
+      end
+
+      def deletable?
+        environment.distributors_deletable?
       end
     end
 
-    def registerable?(env, org, content_view = nil)
-      subscribable = content_view ? content_view.subscribable? : true
-      registerable = (env || org).distributors_registerable?
-      subscribable && registerable
-    end
   end
-
-  included do
-    def readable?
-      environment.distributors_readable?
-    end
-
-    def editable?
-      environment.distributors_editable?
-    end
-
-    def deletable?
-      environment.distributors_deletable?
-    end
-  end
-
-end
 end

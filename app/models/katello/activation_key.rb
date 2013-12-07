@@ -11,160 +11,160 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class ActivationKey < ActiveRecord::Base
-  self.include_root_in_json = false
+  class ActivationKey < ActiveRecord::Base
+    self.include_root_in_json = false
 
-  include Glue::ElasticSearch::ActivationKey if Katello.config.use_elasticsearch
-  include Authorization::ActivationKey
+    include Glue::ElasticSearch::ActivationKey if Katello.config.use_elasticsearch
+    include Authorization::ActivationKey
 
-  belongs_to :organization, :inverse_of => :activation_keys
-  belongs_to :environment, :class_name => "KTEnvironment", :inverse_of => :activation_keys
-  belongs_to :user, :inverse_of => :activation_keys, :class_name => "::User"
-  belongs_to :content_view, :inverse_of => :activation_keys
+    belongs_to :organization, :inverse_of => :activation_keys
+    belongs_to :environment, :class_name => "KTEnvironment", :inverse_of => :activation_keys
+    belongs_to :user, :inverse_of => :activation_keys, :class_name => "::User"
+    belongs_to :content_view, :inverse_of => :activation_keys
 
-  has_many :key_pools, :class_name => "Katello::KeyPool", :dependent => :destroy
-  has_many :pools, :through => :key_pools
+    has_many :key_pools, :class_name => "Katello::KeyPool", :dependent => :destroy
+    has_many :pools, :through => :key_pools
 
-  has_many :key_system_groups, :class_name => "Katello::KeySystemGroup", :dependent => :destroy
-  has_many :system_groups, :through => :key_system_groups
+    has_many :key_system_groups, :class_name => "Katello::KeySystemGroup", :dependent => :destroy
+    has_many :system_groups, :through => :key_system_groups
 
-  has_many :system_activation_keys, :class_name => "Katello::SystemActivationKey", :dependent => :destroy
-  has_many :systems, :through => :system_activation_keys
+    has_many :system_activation_keys, :class_name => "Katello::SystemActivationKey", :dependent => :destroy
+    has_many :systems, :through => :system_activation_keys
 
-  after_find :validate_pools
+    after_find :validate_pools
 
-  before_validation :set_default_content_view, :unless => :persisted?
-  validates_with Validators::KatelloNameFormatValidator, :attributes => :name
-  validates :name, :presence => true
-  validates :name, :uniqueness => {:scope => :organization_id}
-  validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
-  validates :environment, :presence => true
-  validate :environment_exists
-  validates :content_view, :presence => true, :allow_blank => false
-  validates_each :usage_limit do |record, attr, value|
-    if !value.nil? && (value < -1 || value == 0 || (value != -1 && value < record.usage_count))
-      # we don't let users to set usage limit lower than current usage
-      record.errors[attr] << _("must be higher than current usage (%s) or unlimited" % record.usage_count)
-    end
-  end
-  validates_with Validators::ContentViewEnvironmentValidator
-
-  def environment_exists
-    if environment.nil?
-      errors.add(:environment, _("ID: %s doesn't exist ") % environment_id)
-    elsif environment.organization != self.organization
-      errors.add(:environment, _("name: %s doesn't exist ") % environment.name)
-    end
-  end
-
-  def usage_count
-    system_activation_keys.count
-  end
-
-  # sets up system when registering with this activation key - must be executed in a transaction
-  def apply_to_system(system)
-    if !usage_limit.nil? && usage_limit != -1 && usage_count >= usage_limit
-      fail Errors::UsageLimitExhaustedException, _("Usage limit (%{limit}) exhausted for activation key '%{name}'") % {:limit => usage_limit, :name => name}
-    end
-    system.environment_id = self.environment_id if self.environment_id
-    system.content_view_id = self.content_view_id if self.content_view_id
-    system.system_activation_keys.build(:activation_key => self)
-  end
-
-  def calculate_consumption(product, pools, allocate)
-    pools = pools.sort_by { |pool| [pool.start_date, pool.cp_id] }
-    consumption = {}
-
-    if product.provider.redhat_provider?
-      pools.each do |pool|
-        consumption[pool] ||= 0
-        consumption[pool] += 1
+    before_validation :set_default_content_view, :unless => :persisted?
+    validates_with Validators::KatelloNameFormatValidator, :attributes => :name
+    validates :name, :presence => true
+    validates :name, :uniqueness => { :scope => :organization_id }
+    validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
+    validates :environment, :presence => true
+    validate :environment_exists
+    validates :content_view, :presence => true, :allow_blank => false
+    validates_each :usage_limit do |record, attr, value|
+      if !value.nil? && (value < -1 || value == 0 || (value != -1 && value < record.usage_count))
+        # we don't let users to set usage limit lower than current usage
+        record.errors[attr] << _("must be higher than current usage (%s) or unlimited" % record.usage_count)
       end
-    else
-      consumption[pools.first] = 1
     end
-    return consumption
-  end
+    validates_with Validators::ContentViewEnvironmentValidator
 
-  # subscribe to each product according the entitlements remaining
-  # TODO: break up method
-  # rubocop:disable MethodLength
-  def subscribe_system(system)
-    already_subscribed = []
-    begin
-      # sanity check before we start subscribing
-      self.pools.each do |pool|
-        fail _("Pool %s has no product associated") % pool.cp_id unless pool.product_id
-        fail _("Unable to determine quantity for pool %s") % pool.cp_id unless pool.quantity
+    def environment_exists
+      if environment.nil?
+        errors.add(:environment, _("ID: %s doesn't exist ") % environment_id)
+      elsif environment.organization != self.organization
+        errors.add(:environment, _("name: %s doesn't exist ") % environment.name)
       end
+    end
 
-      allocate = system.sockets.to_i
-      Rails.logger.debug "Number of sockets for registration: #{allocate}"
-      fail _("Number of sockets must be higher than 0 for system %s") % system.name if allocate <= 0
+    def usage_count
+      system_activation_keys.count
+    end
 
-      # we sort just to make the order deterministig.
-      self.pools.group_by(&:product_id).sort_by(&:first).each do |product_id, pools|
-        product = Product.find_by_cp_id(product_id, self.organization)
-        consumption = calculate_consumption(product, pools, allocate)
+    # sets up system when registering with this activation key - must be executed in a transaction
+    def apply_to_system(system)
+      if !usage_limit.nil? && usage_limit != -1 && usage_count >= usage_limit
+        fail Errors::UsageLimitExhaustedException, _("Usage limit (%{limit}) exhausted for activation key '%{name}'") % { :limit => usage_limit, :name => name }
+      end
+      system.environment_id  = self.environment_id if self.environment_id
+      system.content_view_id = self.content_view_id if self.content_view_id
+      system.system_activation_keys.build(:activation_key => self)
+    end
 
-        Rails.logger.debug "Autosubscribing pools: #{consumption.map { |pool, amount| "#{pool.cp_id} => #{amount}"}.join(", ")}"
-        consumption.each do |pool, amount|
-          Rails.logger.debug "Subscribing #{system.name} to product: #{product_id}, consuming pool #{pool.cp_id} of amount: #{amount}"
-          if entitlements_array = system.subscribe(pool.cp_id, amount)
-            # store for possible rollback
-            entitlements_array.each do |ent|
-              already_subscribed << ent['id']
+    def calculate_consumption(product, pools, allocate)
+      pools       = pools.sort_by { |pool| [pool.start_date, pool.cp_id] }
+      consumption = {}
+
+      if product.provider.redhat_provider?
+        pools.each do |pool|
+          consumption[pool] ||= 0
+          consumption[pool] += 1
+        end
+      else
+        consumption[pools.first] = 1
+      end
+      return consumption
+    end
+
+    # subscribe to each product according the entitlements remaining
+    # TODO: break up method
+    # rubocop:disable MethodLength
+    def subscribe_system(system)
+      already_subscribed = []
+      begin
+        # sanity check before we start subscribing
+        self.pools.each do |pool|
+          fail _("Pool %s has no product associated") % pool.cp_id unless pool.product_id
+          fail _("Unable to determine quantity for pool %s") % pool.cp_id unless pool.quantity
+        end
+
+        allocate = system.sockets.to_i
+        Rails.logger.debug "Number of sockets for registration: #{allocate}"
+        fail _("Number of sockets must be higher than 0 for system %s") % system.name if allocate <= 0
+
+        # we sort just to make the order deterministig.
+        self.pools.group_by(&:product_id).sort_by(&:first).each do |product_id, pools|
+          product     = Product.find_by_cp_id(product_id, self.organization)
+          consumption = calculate_consumption(product, pools, allocate)
+
+          Rails.logger.debug "Autosubscribing pools: #{consumption.map { |pool, amount| "#{pool.cp_id} => #{amount}" }.join(", ")}"
+          consumption.each do |pool, amount|
+            Rails.logger.debug "Subscribing #{system.name} to product: #{product_id}, consuming pool #{pool.cp_id} of amount: #{amount}"
+            if entitlements_array = system.subscribe(pool.cp_id, amount)
+              # store for possible rollback
+              entitlements_array.each do |ent|
+                already_subscribed << ent['id']
+              end
             end
           end
         end
+      rescue => e
+        Rails.logger.error "Autosubscribtion failed, rolling back: #{already_subscribed.inspect}"
+        already_subscribed.each do |entitlement_id|
+          begin
+            Rails.logger.debug "Rolling back: #{entitlement_id}"
+            system.unsubscribe(entitlement_id)
+          rescue => re
+            Rails.logger.fatal "Rollback failed, skipping: #{re.message}"
+          end
+        end
+        raise e
       end
-    rescue => e
-      Rails.logger.error "Autosubscribtion failed, rolling back: #{already_subscribed.inspect}"
-      already_subscribed.each do |entitlement_id|
+    end
+
+    def as_json(*args)
+      ret               = super(*args)
+      ret[:pools]       = pools.map do |pool|
+        pool.as_json
+      end
+      ret[:usage_count] = usage_count
+      ret[:editable]    = ActivationKey.readable?(organization)
+      ret
+    end
+
+    private
+
+    def set_default_content_view
+      self.content_view = self.environment.try(:default_content_view) unless self.content_view
+    end
+
+    # Fetch each of the pools from candlepin, removing any that no longer
+    # exist (eg. from loss of a Virtual Guest pool)
+    def validate_pools
+      obsolete_pools = []
+      self.pools.each do |pool|
         begin
-          Rails.logger.debug "Rolling back: #{entitlement_id}"
-          system.unsubscribe(entitlement_id)
-        rescue => re
-          Rails.logger.fatal "Rollback failed, skipping: #{re.message}"
+          Resources::Candlepin::Pool.find(pool.cp_id)
+        rescue RestClient::ResourceNotFound
+          obsolete_pools << pool
         end
       end
-      raise e
-    end
-  end
-
-  def as_json(*args)
-    ret = super(*args)
-    ret[:pools] = pools.map do |pool|
-      pool.as_json
-    end
-    ret[:usage_count] = usage_count
-    ret[:editable] = ActivationKey.readable?(organization)
-    ret
-  end
-
-  private
-
-  def set_default_content_view
-    self.content_view = self.environment.try(:default_content_view) unless self.content_view
-  end
-
-  # Fetch each of the pools from candlepin, removing any that no longer
-  # exist (eg. from loss of a Virtual Guest pool)
-  def validate_pools
-    obsolete_pools = []
-    self.pools.each do |pool|
-      begin
-        Resources::Candlepin::Pool.find(pool.cp_id)
-      rescue RestClient::ResourceNotFound
-        obsolete_pools << pool
+      updated_pools = self.pools - obsolete_pools
+      if self.pools != updated_pools
+        self.pools = updated_pools
+        self.save!
       end
     end
-    updated_pools = self.pools - obsolete_pools
-    if self.pools != updated_pools
-      self.pools = updated_pools
-      self.save!
-    end
-  end
 
-end
+  end
 end

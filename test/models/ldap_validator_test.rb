@@ -22,17 +22,17 @@ class LdapValidatorTest < MiniTest::Rails::ActiveSupport::TestCase
     @loaded_fixtures = load_fixtures
     configure_runcible
 
-    services  = ['Candlepin', 'Pulp', 'ElasticSearch', 'Foreman']
-    models    = ['User', 'Organization', 'LdapGroupRole']
+    services = ['Candlepin', 'Pulp', 'ElasticSearch', 'Foreman']
+    models   = ['User', 'Organization', 'LdapGroupRole']
     disable_glue_layers(services, models)
   end
 
   def setup
     options = { :warden => "ldap", :validate_ldap => true, :katello? => false }
     override_config(options)
-    @acme_corporation   = get_organization(:organization1)
+    @acme_corporation = get_organization(:organization1)
 
-    @dev                = KTEnvironment.find(environments(:dev).id)
+    @dev  = KTEnvironment.find(environments(:dev).id)
     @user = build(:user, :batman)
   end
 
@@ -54,14 +54,14 @@ class LdapValidatorTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def test_ldap_validation_disabled
-    options = {:warden => "ldap", :validate_ldap => false, :katello? => false }
+    options = { :warden => "ldap", :validate_ldap => false, :katello? => false }
     override_config(options)
     LdapFluff.any_instance.stubs(:valid_user?).returns(false)
     assert @user.save
   end
 
   def test_ldap_disabled
-    options = {:warden => "database", :validate_ldap => false, :katello? => false }
+    options = { :warden => "database", :validate_ldap => false, :katello? => false }
     override_config(options)
     LdapFluff.any_instance.stubs(:valid_user?).returns(false)
     assert @user.save
@@ -70,8 +70,8 @@ class LdapValidatorTest < MiniTest::Rails::ActiveSupport::TestCase
   def test_ldap_group
     role = Role.find(roles(:basic_role).id)
     LdapFluff.any_instance.stubs(:valid_group?).returns(true)
-    lgr = LdapGroupRole.new
-    lgr.role = role
+    lgr            = LdapGroupRole.new
+    lgr.role       = role
     lgr.ldap_group = "superheros"
     assert lgr.save
   end
@@ -79,8 +79,8 @@ class LdapValidatorTest < MiniTest::Rails::ActiveSupport::TestCase
   def test_ldap_group_invalid
     role = Role.find(roles(:basic_role).id)
     LdapFluff.any_instance.stubs(:valid_group?).returns(false)
-    lgr = LdapGroupRole.new
-    lgr.role = role
+    lgr            = LdapGroupRole.new
+    lgr.role       = role
     lgr.ldap_group = "superheros"
     assert !lgr.save
     assert_includes lgr.errors, :ldap_group

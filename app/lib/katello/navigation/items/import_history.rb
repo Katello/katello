@@ -11,18 +11,18 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-module Navigation
-  module Items
-    class ImportHistory < Navigation::Item
+  module Navigation
+    module Items
+      class ImportHistory < Navigation::Item
 
-      def initialize(organization)
-        @key           = :import_history
-        @display       = _("Import History")
-        @authorization = lambda{ organization && organization.readable? }
-        @url           = history_subscriptions_path
+        def initialize(organization)
+          @key           = :import_history
+          @display       = _("Import History")
+          @authorization = lambda { organization && organization.readable? }
+          @url           = history_subscriptions_path
+        end
+
       end
-
     end
   end
-end
 end

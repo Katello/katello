@@ -13,172 +13,172 @@
 require 'katello_test_helper'
 
 module Katello
-describe FilterRulesController do
-  include LocaleHelperMethods
-  include AuthorizationHelperMethods
-  include OrchestrationHelper
+  describe FilterRulesController do
+    include LocaleHelperMethods
+    include AuthorizationHelperMethods
+    include OrchestrationHelper
 
-  before(:each) do
-    setup_controller_defaults
-    disable_org_orchestration
-    disable_user_orchestration
-
-    @organization = get_organization(:organization1)
-    @controller.stubs(:current_organization).returns(@organization)
-  end
-
-  describe "Controller permission tests (katello)" do
     before(:each) do
-      @definition = ContentViewDefinition.create!(:name=>'test def', :label=>'test_def',
-                                                  :description=>'test description', :organization=>@organization)
+      setup_controller_defaults
+      disable_org_orchestration
+      disable_user_orchestration
 
-      @filter = stub({:id => 1, :content_view_definition => @definition})
-      Filter.stubs(:find).returns(@filter)
-
-      @filter_rule = stub({:id => 1, :filter => @filter})
-      FilterRule.stubs(:find).returns(@filter_rule)
+      @organization = get_organization(:organization1)
+      @controller.stubs(:current_organization).returns(@organization)
     end
 
-    describe "GET new" do
-      let(:action) { :new }
-      let(:req) { get :new, :content_view_definition_id => @definition.id, :filter_id => @filter.id }
-      let(:authorized_user) do
-        user_with_permissions { |u| u.can(:update, :content_view_definitions, @definition.id, @organization) }
+    describe "Controller permission tests (katello)" do
+      before(:each) do
+        @definition = ContentViewDefinition.create!(:name        => 'test def', :label => 'test_def',
+                                                    :description => 'test description', :organization => @organization)
+
+        @filter = stub({ :id => 1, :content_view_definition => @definition })
+        Filter.stubs(:find).returns(@filter)
+
+        @filter_rule = stub({ :id => 1, :filter => @filter })
+        FilterRule.stubs(:find).returns(@filter_rule)
       end
-      let(:unauthorized_user) do
-        user_without_permissions
+
+      describe "GET new" do
+        let(:action) { :new }
+        let(:req) { get :new, :content_view_definition_id => @definition.id, :filter_id => @filter.id }
+        let(:authorized_user) do
+          user_with_permissions { |u| u.can(:update, :content_view_definitions, @definition.id, @organization) }
+        end
+        let(:unauthorized_user) do
+          user_without_permissions
+        end
+        it_should_behave_like "protected action"
       end
-      it_should_behave_like "protected action"
+
+      describe "POST create" do
+        let(:action) { :create }
+        let(:req) { post :create, :content_view_definition_id => @definition.id, :filter_id => @filter.id }
+        let(:authorized_user) do
+          user_with_permissions { |u| u.can(:update, :content_view_definitions, @definition.id, @organization) }
+        end
+        let(:unauthorized_user) do
+          user_without_permissions
+        end
+        it_should_behave_like "protected action"
+      end
+
+      describe "GET edit" do
+        let(:action) { :edit }
+        let(:req) { get :edit, :content_view_definition_id => @definition.id, :filter_id => @filter.id,
+                        :id                                => @filter_rule.id }
+        let(:authorized_user) do
+          user_with_permissions { |u| u.can(:update, :content_view_definitions, @definition.id, @organization) }
+        end
+        let(:unauthorized_user) do
+          user_without_permissions
+        end
+        it_should_behave_like "protected action"
+      end
+
+      describe "GET edit_inclusion" do
+        let(:action) { :edit_inclusion }
+        let(:req) { get :edit_inclusion, :content_view_definition_id => @definition.id,
+                        :filter_id                                   => @filter.id, :id => @filter_rule.id }
+        let(:authorized_user) do
+          user_with_permissions { |u| u.can(:update, :content_view_definitions, @definition.id, @organization) }
+        end
+        let(:unauthorized_user) do
+          user_without_permissions
+        end
+        it_should_behave_like "protected action"
+      end
+
+      describe "GET edit_parameter_list" do
+        let(:action) { :edit_parameter_list }
+        let(:req) { get :edit_parameter_list, :content_view_definition_id => @definition.id, :filter_id => @filter.id,
+                        :id                                               => @filter_rule.id }
+        let(:authorized_user) do
+          user_with_permissions { |u| u.can(:update, :content_view_definitions, @definition.id, @organization) }
+        end
+        let(:unauthorized_user) do
+          user_without_permissions
+        end
+        it_should_behave_like "protected action"
+      end
+
+      describe "GET edit_date_type_parameters" do
+        let(:action) { :edit_date_type_parameters }
+        let(:req) { get :edit_date_type_parameters, :content_view_definition_id => @definition.id, :filter_id => @filter.id,
+                        :id                                                     => @filter_rule.id }
+        let(:authorized_user) do
+          user_with_permissions { |u| u.can(:update, :content_view_definitions, @definition.id, @organization) }
+        end
+        let(:unauthorized_user) do
+          user_without_permissions
+        end
+        it_should_behave_like "protected action"
+      end
+
+      describe "PUT update" do
+        let(:action) { :update }
+        let(:req) { put :update, :content_view_definition_id => @definition.id, :filter_id => @filter.id,
+                        :id                                  => @filter_rule.id }
+        let(:authorized_user) do
+          user_with_permissions { |u| u.can(:update, :content_view_definitions, @definition.id, @organization) }
+        end
+        let(:unauthorized_user) do
+          user_without_permissions
+        end
+        it_should_behave_like "protected action"
+      end
+
+      describe "PUT add_parameter" do
+        let(:action) { :add_parameter }
+        let(:req) { put :add_parameter, :content_view_definition_id => @definition.id, :filter_id => @filter.id,
+                        :id                                         => @filter_rule.id }
+        let(:authorized_user) do
+          user_with_permissions { |u| u.can(:update, :content_view_definitions, @definition.id, @organization) }
+        end
+        let(:unauthorized_user) do
+          user_without_permissions
+        end
+        it_should_behave_like "protected action"
+      end
+
+      describe "PUT update_parameter" do
+        let(:action) { :update_parameter }
+        let(:req) { put :update_parameter, :content_view_definition_id => @definition.id, :filter_id => @filter.id,
+                        :id                                            => @filter_rule.id }
+        let(:authorized_user) do
+          user_with_permissions { |u| u.can(:update, :content_view_definitions, @definition.id, @organization) }
+        end
+        let(:unauthorized_user) do
+          user_without_permissions
+        end
+        it_should_behave_like "protected action"
+      end
+
+      describe "DELETE destroy_parameters" do
+        let(:action) { :destroy_parameters }
+        let(:req) { delete :destroy_parameters, :content_view_definition_id => @definition.id, :filter_id => @filter.id,
+                           :id                                              => @filter_rule.id }
+        let(:authorized_user) do
+          user_with_permissions { |u| u.can(:update, :content_view_definitions, @definition.id, @organization) }
+        end
+        let(:unauthorized_user) do
+          user_without_permissions
+        end
+        it_should_behave_like "protected action"
+      end
+
+      describe "DELETE destroy_rules" do
+        let(:action) { :destroy_rules }
+        let(:req) { delete :destroy_rules, :content_view_definition_id => @definition.id, :filter_id => @filter.id }
+        let(:authorized_user) do
+          user_with_permissions { |u| u.can(:update, :content_view_definitions, @definition.id, @organization) }
+        end
+        let(:unauthorized_user) do
+          user_without_permissions
+        end
+        it_should_behave_like "protected action"
+      end
     end
 
-    describe "POST create" do
-      let(:action) { :create }
-      let(:req) { post :create, :content_view_definition_id => @definition.id, :filter_id => @filter.id }
-      let(:authorized_user) do
-        user_with_permissions { |u| u.can(:update, :content_view_definitions, @definition.id, @organization) }
-      end
-      let(:unauthorized_user) do
-        user_without_permissions
-      end
-      it_should_behave_like "protected action"
-    end
-
-    describe "GET edit" do
-      let(:action) { :edit }
-      let(:req) { get :edit, :content_view_definition_id => @definition.id, :filter_id => @filter.id,
-                      :id => @filter_rule.id }
-      let(:authorized_user) do
-        user_with_permissions { |u| u.can(:update, :content_view_definitions, @definition.id, @organization) }
-      end
-      let(:unauthorized_user) do
-        user_without_permissions
-      end
-      it_should_behave_like "protected action"
-    end
-
-    describe "GET edit_inclusion" do
-      let(:action) { :edit_inclusion }
-      let(:req) { get :edit_inclusion, :content_view_definition_id => @definition.id,
-                      :filter_id => @filter.id, :id => @filter_rule.id }
-      let(:authorized_user) do
-        user_with_permissions { |u| u.can(:update, :content_view_definitions, @definition.id, @organization) }
-      end
-      let(:unauthorized_user) do
-        user_without_permissions
-      end
-      it_should_behave_like "protected action"
-    end
-
-    describe "GET edit_parameter_list" do
-      let(:action) { :edit_parameter_list }
-      let(:req) { get :edit_parameter_list, :content_view_definition_id => @definition.id, :filter_id => @filter.id,
-                      :id => @filter_rule.id }
-      let(:authorized_user) do
-        user_with_permissions { |u| u.can(:update, :content_view_definitions, @definition.id, @organization) }
-      end
-      let(:unauthorized_user) do
-        user_without_permissions
-      end
-      it_should_behave_like "protected action"
-    end
-
-    describe "GET edit_date_type_parameters" do
-      let(:action) { :edit_date_type_parameters }
-      let(:req) { get :edit_date_type_parameters, :content_view_definition_id => @definition.id, :filter_id => @filter.id,
-                      :id => @filter_rule.id }
-      let(:authorized_user) do
-        user_with_permissions { |u| u.can(:update, :content_view_definitions, @definition.id, @organization) }
-      end
-      let(:unauthorized_user) do
-        user_without_permissions
-      end
-      it_should_behave_like "protected action"
-    end
-
-    describe "PUT update" do
-      let(:action) { :update }
-      let(:req) { put :update, :content_view_definition_id => @definition.id, :filter_id => @filter.id,
-                      :id => @filter_rule.id}
-      let(:authorized_user) do
-        user_with_permissions { |u| u.can(:update, :content_view_definitions, @definition.id, @organization) }
-      end
-      let(:unauthorized_user) do
-        user_without_permissions
-      end
-      it_should_behave_like "protected action"
-    end
-
-    describe "PUT add_parameter" do
-      let(:action) { :add_parameter }
-      let(:req) { put :add_parameter, :content_view_definition_id => @definition.id, :filter_id => @filter.id,
-                      :id => @filter_rule.id}
-      let(:authorized_user) do
-        user_with_permissions { |u| u.can(:update, :content_view_definitions, @definition.id, @organization) }
-      end
-      let(:unauthorized_user) do
-        user_without_permissions
-      end
-      it_should_behave_like "protected action"
-    end
-
-    describe "PUT update_parameter" do
-      let(:action) { :update_parameter }
-      let(:req) { put :update_parameter, :content_view_definition_id => @definition.id, :filter_id => @filter.id,
-                      :id => @filter_rule.id}
-      let(:authorized_user) do
-        user_with_permissions { |u| u.can(:update, :content_view_definitions, @definition.id, @organization) }
-      end
-      let(:unauthorized_user) do
-        user_without_permissions
-      end
-      it_should_behave_like "protected action"
-    end
-
-    describe "DELETE destroy_parameters" do
-      let(:action) { :destroy_parameters }
-      let(:req) { delete :destroy_parameters, :content_view_definition_id => @definition.id, :filter_id => @filter.id,
-                      :id => @filter_rule.id}
-      let(:authorized_user) do
-        user_with_permissions { |u| u.can(:update, :content_view_definitions, @definition.id, @organization) }
-      end
-      let(:unauthorized_user) do
-        user_without_permissions
-      end
-      it_should_behave_like "protected action"
-    end
-
-    describe "DELETE destroy_rules" do
-      let(:action) { :destroy_rules }
-      let(:req) { delete :destroy_rules, :content_view_definition_id => @definition.id, :filter_id => @filter.id }
-      let(:authorized_user) do
-        user_with_permissions { |u| u.can(:update, :content_view_definitions, @definition.id, @organization) }
-      end
-      let(:unauthorized_user) do
-        user_without_permissions
-      end
-      it_should_behave_like "protected action"
-    end
   end
-
-end
 end

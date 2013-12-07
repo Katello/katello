@@ -11,28 +11,28 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-module Glue::ElasticSearch::Role
-  def self.included(base)
-    base.send :include, Ext::IndexedModel
+  module Glue::ElasticSearch::Role
+    def self.included(base)
+      base.send :include, Ext::IndexedModel
 
-    base.class_eval do
-      index_options :extended_json => :extended_index_attrs,
-                    :display_attrs => [:name, :permissions, :description]
+      base.class_eval do
+        index_options :extended_json => :extended_index_attrs,
+                      :display_attrs => [:name, :permissions, :description]
 
-      mapping do
-        indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
-        indexes :name_sort, :type => 'string', :index => :not_analyzed
-        indexes :self_role, :type => 'boolean'
-        indexes :locked, :type => 'boolean'
+        mapping do
+          indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
+          indexes :name_sort, :type => 'string', :index => :not_analyzed
+          indexes :self_role, :type => 'boolean'
+          indexes :locked, :type => 'boolean'
+        end
       end
     end
-  end
 
-  def extended_index_attrs
-    {:name_sort => name.downcase,
-     :permissions => self.permissions.collect{|p| p.name},
-     :self_role => (self.class == UserOwnRole)
-    }
+    def extended_index_attrs
+      { :name_sort   => name.downcase,
+        :permissions => self.permissions.collect { |p| p.name },
+        :self_role   => (self.class == UserOwnRole)
+      }
+    end
   end
-end
 end

@@ -11,24 +11,24 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-module Navigation
-  module Items
-    class Logout < Navigation::Item
+  module Navigation
+    module Items
+      class Logout < Navigation::Item
 
-      # temporoary hack - main_app helper that gives access to application's
-      # routes inside Engine should be available but is not.
-      def main_app
-        Rails.application.class.routes.url_helpers
+        # temporoary hack - main_app helper that gives access to application's
+        # routes inside Engine should be available but is not.
+        def main_app
+          Rails.application.class.routes.url_helpers
+        end
+
+        def initialize
+          @key           = :logout
+          @display       = _("Sign Out")
+          @authorization = true
+          @url           = main_app.logout_users_path
+        end
+
       end
-
-      def initialize
-        @key           = :logout
-        @display       = _("Sign Out")
-        @authorization = true
-        @url           = main_app.logout_users_path
-      end
-
     end
   end
-end
 end

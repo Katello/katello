@@ -11,11 +11,11 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class ChangesetUser < ActiveRecord::Base
-  self.include_root_in_json = false
+  class ChangesetUser < ActiveRecord::Base
+    self.include_root_in_json = false
 
-  belongs_to :changeset, :inverse_of => :users
-  belongs_to :user, :inverse_of => :changeset_users, :class_name => "::User"
+    belongs_to :changeset, :inverse_of => :users
+    belongs_to :user, :inverse_of => :changeset_users, :class_name => "::User"
 
-end
+  end
 end

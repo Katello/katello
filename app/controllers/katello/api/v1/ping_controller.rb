@@ -19,7 +19,7 @@ module Katello
     api :GET, "/ping", "Shows status of system and it's subcomponents"
     description "This service is only available for authenticated users"
     def index
-      resource = Hash[Ping.ping.collect { |k, v| [{:status => :result, :services => :status}[k], v] }]
+      resource = Hash[Ping.ping.collect { |k, v| [{ :status => :result, :services => :status }[k], v] }]
       resource[:status].each_key do |key|
         resource[:status][key][:result] = resource[:status][key][:status]
       end

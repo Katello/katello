@@ -15,8 +15,8 @@ module Katello
     class EnvironmentCreate < Dynflow::Action
 
       def plan(environment)
-        plan_self('name' => environment.name,
-                  'label' => environment.label,
+        plan_self('name'               => environment.name,
+                  'label'              => environment.label,
                   'organization_label' => environment.organization.label)
       end
 

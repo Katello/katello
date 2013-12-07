@@ -11,85 +11,85 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-module Glue::Pulp::User
-  def self.included(base)
-    if (base.method_defined?(:remote_id))
-      base.send :include, InstanceMethods
-      base.send :include, LazyAccessor
-      base.class_eval do
-        lazy_accessor :pulp_name, :initializer => lambda {|s| Katello.pulp_server.resources.user.retrieve(self.remote_id) }
-        before_save :save_pulp_orchestration
-        before_destroy :destroy_pulp_orchestration
+  module Glue::Pulp::User
+    def self.included(base)
+      if (base.method_defined?(:remote_id))
+        base.send :include, InstanceMethods
+        base.send :include, LazyAccessor
+        base.class_eval do
+          lazy_accessor :pulp_name, :initializer => lambda { |s| Katello.pulp_server.resources.user.retrieve(self.remote_id) }
+          before_save :save_pulp_orchestration
+          before_destroy :destroy_pulp_orchestration
+        end
       end
     end
-  end
 
-  module InstanceMethods
+    module InstanceMethods
 
-    def initialize(attrs = nil, options = {})
-      attrs = prune_pulp_only_attributes(attrs)
-      super
-    end
+      def initialize(attrs = nil, options = {})
+        attrs = prune_pulp_only_attributes(attrs)
+        super
+      end
 
-    def prune_pulp_only_attributes(attrs)
-      unless attrs.nil?
-        attrs = attrs.reject do |k, v|
-          !self.class.column_defaults.keys.member?(k.to_s) && (!respond_to?(:"#{k.to_s}=") rescue true)
+      def prune_pulp_only_attributes(attrs)
+        unless attrs.nil?
+          attrs = attrs.reject do |k, v|
+            !self.class.column_defaults.keys.member?(k.to_s) && (!respond_to?(:"#{k.to_s}=") rescue true)
+          end
+        end
+
+        return attrs
+      end
+
+      def set_pulp_user(args = {})
+        password = args.fetch(:password, Password.generate_random_string(16))
+
+        Katello.pulp_server.resources.user.create(self.remote_id,
+                                                  { :name     => self.remote_id,
+                                                    :password => password })
+      rescue RestClient::ExceptionWithResponse => e
+        if e.http_code == 409
+          Rails.logger.info "pulp user #{self.remote_id}: already exists. continuing"
+          true #assume everything is ok unless there was an exception thrown
+        else
+          Rails.logger.error "Failed to create pulp user #{self.remote_id}: #{e}, #{e.backtrace.join("\n")}"
+          raise e
+        end
+      rescue => e
+        Rails.logger.error "Failed to create pulp user #{self.remote_id}: #{e}, #{e.backtrace.join("\n")}"
+        fail e
+      end
+
+      def set_super_user_role
+        Katello.pulp_server.resources.role.add "super-users", self.remote_id
+        true #assume everything is ok unless there was an exception thrown
+      end
+
+      def del_pulp_user
+        Katello.pulp_server.resources.user.delete(self.remote_id)
+      rescue => e
+        Rails.logger.error "Failed to delete pulp user #{self.remote_id}: #{e}, #{e.backtrace.join("\n")}"
+        raise e
+      end
+
+      def del_super_admin_role
+        Katello.pulp_server.resources.role.remove("super-users", self.remote_id)
+        true #assume everything is ok unless there was an exception thrown
+      end
+
+      def save_pulp_orchestration
+        case self.orchestration_for
+        when :create
+          pre_queue.create(:name => "create pulp user: #{self.remote_id}", :priority => 3, :action => [self, :set_pulp_user])
+          pre_queue.create(:name => "add 'super-user' to: #{self.remote_id}", :priority => 4, :action => [self, :set_super_user_role])
         end
       end
 
-      return attrs
-    end
-
-    def set_pulp_user(args = {})
-      password = args.fetch(:password, Password.generate_random_string(16))
-
-      Katello.pulp_server.resources.user.create(self.remote_id,
-                                                {:name => self.remote_id,
-                                                 :password => password})
-    rescue RestClient::ExceptionWithResponse => e
-      if e.http_code == 409
-        Rails.logger.info "pulp user #{self.remote_id}: already exists. continuing"
-        true #assume everything is ok unless there was an exception thrown
-      else
-        Rails.logger.error "Failed to create pulp user #{self.remote_id}: #{e}, #{e.backtrace.join("\n")}"
-        raise e
-      end
-    rescue => e
-      Rails.logger.error "Failed to create pulp user #{self.remote_id}: #{e}, #{e.backtrace.join("\n")}"
-      fail e
-    end
-
-    def set_super_user_role
-      Katello.pulp_server.resources.role.add "super-users", self.remote_id
-      true #assume everything is ok unless there was an exception thrown
-    end
-
-    def del_pulp_user
-      Katello.pulp_server.resources.user.delete(self.remote_id)
-    rescue => e
-      Rails.logger.error "Failed to delete pulp user #{self.remote_id}: #{e}, #{e.backtrace.join("\n")}"
-      raise e
-    end
-
-    def del_super_admin_role
-      Katello.pulp_server.resources.role.remove("super-users", self.remote_id)
-      true #assume everything is ok unless there was an exception thrown
-    end
-
-    def save_pulp_orchestration
-      case self.orchestration_for
-      when :create
-        pre_queue.create(:name => "create pulp user: #{self.remote_id}", :priority => 3, :action => [self, :set_pulp_user])
-        pre_queue.create(:name => "add 'super-user' to: #{self.remote_id}", :priority => 4, :action => [self, :set_super_user_role])
+      def destroy_pulp_orchestration
+        pre_queue.create(:name => "remove 'super-user' from: #{self.remote_id}", :priority => 3, :action => [self, :del_super_admin_role])
+        pre_queue.create(:name => "delete pulp user: #{self.remote_id}", :priority => 4, :action => [self, :del_pulp_user])
       end
     end
 
-    def destroy_pulp_orchestration
-      pre_queue.create(:name => "remove 'super-user' from: #{self.remote_id}", :priority => 3, :action => [self, :del_super_admin_role])
-      pre_queue.create(:name => "delete pulp user: #{self.remote_id}", :priority => 4, :action => [self, :del_pulp_user])
-    end
   end
-
-end
 end

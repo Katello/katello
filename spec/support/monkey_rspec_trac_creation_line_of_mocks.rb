@@ -18,11 +18,11 @@
 require 'rspec/rails/version'
 
 version = begin
-  const  = if defined? RSpec::Version::STRING
-             RSpec::Version::STRING
-           else
-             RSpec::Core::Version::STRING
-           end
+  const   = if defined? RSpec::Version::STRING
+              RSpec::Version::STRING
+            else
+              RSpec::Core::Version::STRING
+            end
   version = const.split('.').map &:to_i
   version[0] == 2 && (5..13).include?(version[1])
 rescue

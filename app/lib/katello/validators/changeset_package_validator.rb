@@ -11,19 +11,19 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-module Validators
-  class ChangesetPackageValidator < ActiveModel::Validator
-    def validate(record)
-      if record.repositories.empty?
-        if record.errors[:base] << _("Package '%s' doesn't belong to the specified product!") % record.package_id
-          return
+  module Validators
+    class ChangesetPackageValidator < ActiveModel::Validator
+      def validate(record)
+        if record.repositories.empty?
+          if record.errors[:base] << _("Package '%s' doesn't belong to the specified product!") % record.package_id
+            return
+          end
         end
-      end
 
-      if record.changeset.action_type == Changeset::PROMOTION && record.promotable_repositories.empty?
-        record.errors[:base] << _("Repository of the package '%s' has not been promoted into the target environment!") % record.package_id
+        if record.changeset.action_type == Changeset::PROMOTION && record.promotable_repositories.empty?
+          record.errors[:base] << _("Repository of the package '%s' has not been promoted into the target environment!") % record.package_id
+        end
       end
     end
   end
-end
 end

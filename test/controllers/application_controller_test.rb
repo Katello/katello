@@ -13,33 +13,33 @@
 require 'katello_test_helper'
 
 module Katello
-class AControllerTest < ActionController::TestCase
-  ERROR_MESSAGE = 'user should not see this'
+  class AControllerTest < ActionController::TestCase
+    ERROR_MESSAGE = 'user should not see this'
 
-  class AController < Katello::ApplicationController
-    def rules
-      { failing_action: -> { true } }
+    class AController < Katello::ApplicationController
+      def rules
+        { failing_action: -> { true } }
+      end
+
+      def failing_action
+        raise ERROR_MESSAGE
+      end
     end
 
-    def failing_action
-      raise ERROR_MESSAGE
+    self.controller_class = AController
+
+    def setup
+      setup_controller_defaults
+      @org = get_organization(:organization1)
+      Katello.config.stubs(hide_exceptions: true)
+    end
+
+    test 'any action test shows error notification for any error' do
+      assert @controller.is_a? AController
+      notify = stub exception: -> e, *_ { e.message == ERROR_MESSAGE }
+      @controller.expects(:notify).returns(notify)
+      get :failing_action
+      assert response.body =~ /#{ERROR_MESSAGE}/
     end
   end
-
-  self.controller_class = AController
-
-  def setup
-    setup_controller_defaults
-    @org = get_organization(:organization1)
-    Katello.config.stubs(hide_exceptions: true)
-  end
-
-  test 'any action test shows error notification for any error' do
-    assert @controller.is_a? AController
-    notify = stub exception: -> e, *_ { e.message == ERROR_MESSAGE }
-    @controller.expects(:notify).returns(notify)
-    get :failing_action
-    assert response.body =~ /#{ERROR_MESSAGE}/
-  end
-end
 end

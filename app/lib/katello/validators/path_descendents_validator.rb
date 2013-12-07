@@ -11,26 +11,26 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-module Validators
-  class PathDescendentsValidator < ActiveModel::Validator
-    def validate(record)
-      #need to ensure that
-      #environment is not duplicated in its path
-      # We do not want circular dependencies
-      return if record.prior.nil?
-      record.errors[:prior] << _(" environment cannot be set to an environment already on its path") if is_duplicate? record.prior
-    end
-
-    def is_duplicate?(record)
-      s = record.successor
-      ret = [record.id]
-      until s.nil?
-        return true if ret.include? s.id
-        ret << s.id
-        s = s.successor
+  module Validators
+    class PathDescendentsValidator < ActiveModel::Validator
+      def validate(record)
+        #need to ensure that
+        #environment is not duplicated in its path
+        # We do not want circular dependencies
+        return if record.prior.nil?
+        record.errors[:prior] << _(" environment cannot be set to an environment already on its path") if is_duplicate? record.prior
       end
-      false
+
+      def is_duplicate?(record)
+        s   = record.successor
+        ret = [record.id]
+        until s.nil?
+          return true if ret.include? s.id
+          ret << s.id
+          s = s.successor
+        end
+        false
+      end
     end
   end
-end
 end

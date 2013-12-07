@@ -17,7 +17,7 @@ module Katello
     class << self
 
       OK_RETURN_CODE = 'ok'
-      PACKAGES = %w(katello candlepin pulp thumbslug qpid ldap_fluff elasticsearch)
+      PACKAGES       = %w(katello candlepin pulp thumbslug qpid ldap_fluff elasticsearch)
 
       #
       # Calls "status" services in all backend engines.
@@ -29,21 +29,21 @@ module Katello
       def ping
         if Katello.config.katello?
           result = { :status => OK_RETURN_CODE, :services => {
-            :pulp => {},
-            :candlepin => {},
-            :elasticsearch => {},
-            :pulp_auth => {},
-            :candlepin_auth => {},
-            :katello_jobs => {},
-          }}
+              :pulp           => {},
+              :candlepin      => {},
+              :elasticsearch  => {},
+              :pulp_auth      => {},
+              :candlepin_auth => {},
+              :katello_jobs   => {},
+          } }
         else
           result = { :status => OK_RETURN_CODE, :services => {
-            :candlepin => {},
-            :elasticsearch => {},
-            :candlepin_auth => {},
-            :katello_jobs => {},
-            :thumbslug => {}
-          }}
+              :candlepin      => {},
+              :elasticsearch  => {},
+              :candlepin_auth => {},
+              :katello_jobs   => {},
+              :thumbslug      => {}
+          } }
         end
 
         # pulp - ping without oauth
@@ -71,7 +71,7 @@ module Katello
           exception_watch(result[:services][:thumbslug]) do
             begin
               RestClient.get "#{url}/ping"
-            # rubocop:disable HandleExceptions
+                # rubocop:disable HandleExceptions
             rescue OpenSSL::SSL::SSLError
               # We want to see this error, because it means that Thumbslug
               # is running and refused our (non-existent) ssl cert.
@@ -105,17 +105,17 @@ module Katello
       def exception_watch(result, &block)
         start = Time.new
         yield
-        result[:status] = OK_RETURN_CODE
+        result[:status]      = OK_RETURN_CODE
         result[:duration_ms] = ((Time.new - start) * 1000).round.to_s
       rescue => e
         Rails.logger.warn(e.backtrace ? [e.message, e.backtrace].join("\n") : e.message)
-        result[:status] = 'FAIL'
+        result[:status]  = 'FAIL'
         result[:message] = e.message
       end
 
       # get package information for katello and its components
       def packages
-        names = PACKAGES.join("|")
+        names    = PACKAGES.join("|")
         packages = `rpm -qa | egrep "#{names}"`
         packages.split("\n").sort
       end
@@ -125,11 +125,11 @@ module Katello
       # because it returns empty string, which is not enough to say
       # pulp is the one that responded
       def pulp_without_oauth
-        url = Katello.config.pulp.url
-        uri = URI("#{url}/repositories/")
+        url  = Katello.config.pulp.url
+        uri  = URI("#{url}/repositories/")
         http = Net::HTTP.new(uri.host, uri.port)
         if uri.scheme == "https"
-          http.use_ssl = true
+          http.use_ssl     = true
           http.verify_mode = OpenSSL::SSL::VERIFY_NONE
         end
         unless http.options(uri.path).content_length > 0

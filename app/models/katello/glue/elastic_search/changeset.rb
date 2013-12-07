@@ -11,28 +11,28 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-module Glue::ElasticSearch::Changeset
-  def self.included(base)
-    base.send :include, Ext::IndexedModel
+  module Glue::ElasticSearch::Changeset
+    def self.included(base)
+      base.send :include, Ext::IndexedModel
 
-    base.class_eval do
+      base.class_eval do
 
-      index_options :extended_json => :extended_index_attrs,
-                    :display_attrs => [:name, :description, :user, :type]
+        index_options :extended_json => :extended_index_attrs,
+                      :display_attrs => [:name, :description, :user, :type]
 
-      mapping do
-        indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
-        indexes :name_sort, :type => 'string', :index => :not_analyzed
+        mapping do
+          indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
+          indexes :name_sort, :type => 'string', :index => :not_analyzed
+        end
       end
     end
-  end
 
-  def extended_index_attrs
-    type      = self.type == "PromotionChangeset" ? Changeset::PROMOTION : Changeset::DELETION
-    { :name_sort       => self.name.downcase,
-      :type            => type,
-      :user            => (self.task_status.nil? || self.task_status.user.nil?) ? "" : self.task_status.user.login
-    }
+    def extended_index_attrs
+      type = self.type == "PromotionChangeset" ? Changeset::PROMOTION : Changeset::DELETION
+      { :name_sort => self.name.downcase,
+        :type      => type,
+        :user      => (self.task_status.nil? || self.task_status.user.nil?) ? "" : self.task_status.user.login
+      }
+    end
   end
-end
 end

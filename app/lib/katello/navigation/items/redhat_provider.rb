@@ -11,18 +11,18 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-module Navigation
-  module Items
-    class RedhatProvider < Navigation::Item
+  module Navigation
+    module Items
+      class RedhatProvider < Navigation::Item
 
-      def initialize(organization)
-        @key           = :redhat_provider
-        @display       = _("Red Hat Repositories")
-        @authorization = lambda{ organization && organization.readable? }
-        @url           = redhat_provider_providers_path
+        def initialize(organization)
+          @key           = :redhat_provider
+          @display       = _("Red Hat Repositories")
+          @authorization = lambda { organization && organization.readable? }
+          @url           = redhat_provider_providers_path
+        end
+
       end
-
     end
   end
-end
 end

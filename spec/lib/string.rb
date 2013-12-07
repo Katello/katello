@@ -22,6 +22,6 @@ describe String do
   end
 
   it "should rase an exception for unknown strings" do
-    lambda {"JarjarBinks".to_bool()}.should raise_exception
+    lambda { "JarjarBinks".to_bool() }.should raise_exception
   end
 end

@@ -14,7 +14,7 @@ module Katello
 
     initializer "katello.load_app_instance_data" do |app|
       app.config.paths['db/migrate'] += Katello::Engine.paths['db/migrate'].existent
-      app.config.autoload_paths += Dir["#{config.root}/app/lib)"]
+      app.config.autoload_paths      += Dir["#{config.root}/app/lib)"]
     end
 
     initializer "katello.assets.paths", :group => :all do |app|
@@ -30,24 +30,24 @@ module Katello
 
     initializer "logging" do |app|
       if caller.last =~ /script\/delayed_job:\d+$/ ||
-          ((caller[-10..-1] || []).any? {|l| l =~ /\/rake/} && ARGV.include?("jobs:work"))
+          ((caller[-10..-1] || []).any? { |l| l =~ /\/rake/ } && ARGV.include?("jobs:work"))
         Katello::Logging.configure(:prefix => 'delayed_')
         Delayed::Worker.logger = ::Logging.logger['app']
       else
         Katello::Logging.configure
       end
 
-      app.config.logger = ::Logging.logger['app']
+      app.config.logger               = ::Logging.logger['app']
       app.config.active_record.logger = ::Logging.logger['sql']
     end
 
     config.to_prepare do
       FastGettext.add_text_domain('katello', {
-        :path => File.expand_path("../../../locale", __FILE__),
-        :type => :po,
-        :ignore_fuzzy => true,
-        :report_warning => false
-        })
+          :path           => File.expand_path("../../../locale", __FILE__),
+          :type           => :po,
+          :ignore_fuzzy   => true,
+          :report_warning => false
+      })
       FastGettext.default_text_domain = 'katello'
 
       # Model extensions

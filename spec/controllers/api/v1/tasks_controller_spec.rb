@@ -13,70 +13,70 @@
 require 'katello_test_helper'
 
 module Katello
-describe Api::V1::TasksController do
-  include AuthorizationHelperMethods
-  include OrchestrationHelper
-  include OrganizationHelperMethods
+  describe Api::V1::TasksController do
+    include AuthorizationHelperMethods
+    include OrchestrationHelper
+    include OrganizationHelperMethods
 
-  before(:each) do
-    setup_controller_defaults_api
+    before(:each) do
+      setup_controller_defaults_api
 
-    disable_product_orchestration
-    disable_user_orchestration
+      disable_product_orchestration
+      disable_user_orchestration
 
-    @organization = new_test_org
-    @controller.stubs(:get_organization).returns(@organization)
-    @provider = Provider.create!(:provider_type => Provider::CUSTOM, :name => "foo1", :organization => @organization)
-    Provider.stubs(:find).returns(@provider)
+      @organization = new_test_org
+      @controller.stubs(:get_organization).returns(@organization)
+      @provider = Provider.create!(:provider_type => Provider::CUSTOM, :name => "foo1", :organization => @organization)
+      Provider.stubs(:find).returns(@provider)
 
-    Organization.stubs(:find_by_label).returns(@organization)
+      Organization.stubs(:find_by_label).returns(@organization)
 
-    @task = mock()
-    @task.stubs(:organization).returns(@organization)
-    @task.stubs(:to_json).returns({})
-    @task.stubs(:refresh).returns({})
-    @task.stubs(:user).returns({})
-    TaskStatus.stubs(:find_by_uuid!).returns(@task)
+      @task = mock()
+      @task.stubs(:organization).returns(@organization)
+      @task.stubs(:to_json).returns({})
+      @task.stubs(:refresh).returns({})
+      @task.stubs(:user).returns({})
+      TaskStatus.stubs(:find_by_uuid!).returns(@task)
+    end
+
+    context "get a listing of tasks" do
+      let(:action) { :index }
+      let(:req) { get :index, :organization_id => @organization.id }
+      let(:authorized_user) do
+        user_with_permissions { |u| u.can(:read, :providers, @provider.id, @organization) }
+      end
+      let(:unauthorized_user) do
+        user_without_permissions
+      end
+      it_should_behave_like "protected action"
+
+      it "should retrieve all async tasks in the organization" do
+        Glue::ElasticSearch::Items.any_instance.expects(:retrieve).returns([[@task], 1])
+        req
+      end
+    end
+
+    context "get a specific task" do
+      let(:action) { :show }
+      let(:req) { get :show, :id => '1' }
+      let(:authorized_user) do
+        user_with_permissions { |u| u.can(:read, :providers, @provider.id, @organization) }
+      end
+      let(:unauthorized_user) do
+        user_without_permissions
+      end
+      it_should_behave_like "protected action"
+
+      it "should retrieve task specified by uuid" do
+        TaskStatus.expects(:find_by_uuid!).once.with('1').returns(@t)
+        req
+      end
+
+      it "should refresh retrieved task" do
+        @task.expects(:refresh).once.returns(@task)
+        req
+      end
+    end
+
   end
-
-  context "get a listing of tasks" do
-    let(:action) { :index }
-    let(:req) { get :index, :organization_id => @organization.id }
-    let(:authorized_user) do
-      user_with_permissions { |u| u.can(:read, :providers, @provider.id, @organization) }
-    end
-    let(:unauthorized_user) do
-      user_without_permissions
-    end
-    it_should_behave_like "protected action"
-
-    it "should retrieve all async tasks in the organization" do
-      Glue::ElasticSearch::Items.any_instance.expects(:retrieve).returns([[@task], 1])
-      req
-    end
-  end
-
-  context "get a specific task" do
-    let(:action) { :show }
-    let(:req) { get :show, :id => '1' }
-    let(:authorized_user) do
-      user_with_permissions { |u| u.can(:read, :providers, @provider.id, @organization) }
-    end
-    let(:unauthorized_user) do
-      user_without_permissions
-    end
-    it_should_behave_like "protected action"
-
-    it "should retrieve task specified by uuid" do
-      TaskStatus.expects(:find_by_uuid!).once.with('1').returns(@t)
-      req
-    end
-
-    it "should refresh retrieved task" do
-      @task.expects(:refresh).once.returns(@task)
-      req
-    end
-  end
-
-end
 end

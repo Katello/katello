@@ -11,86 +11,86 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-module Util
+  module Util
 
-  class PackageFilter
-    FILTER_COLUMNS = { :epoch => :epoch,
-                       :version => :sortable_version,
-                       :release => :sortable_release
-                     }
-    LESS_THAN = "lt"
-    GREATER_THAN = "gt"
-    EQUAL = "eq"
-    OPERATORS = [LESS_THAN, GREATER_THAN, EQUAL]
+    class PackageFilter
+      FILTER_COLUMNS = { :epoch   => :epoch,
+                         :version => :sortable_version,
+                         :release => :sortable_release
+      }
+      LESS_THAN      = "lt"
+      GREATER_THAN   = "gt"
+      EQUAL          = "eq"
+      OPERATORS      = [LESS_THAN, GREATER_THAN, EQUAL]
 
-    attr_accessor :operator, :version, :epoch, :release
+      attr_accessor :operator, :version, :epoch, :release
 
-    def initialize(evr, operator = nil)
-      extract_epoch_version_release(evr)
-      self.operator = operator
-    end
-
-    def extract_epoch_version_release(evr)
-      match = case evr
-              when /\A(\d+):(.*)-(.*)\z/
-                evr.match(/\A(?<epoch>\d+):(?<version>.*)-(?<release>.*)\z/)
-              when /\A(\d+):(.*)\z/
-                evr.match(/\A(?<epoch>\d+):(?<version>.*)\z/)
-              when /\A(.*)-(.*)\z/
-                evr.match(/\A(?<version>.*)-(?<release>.*)\z/)
-              else
-                evr.match(/\A(?<version>.*)\z/)
-              end
-      self.version = Package.sortable_version(match[:version])
-      self.epoch = match[:epoch] rescue nil
-      self.release = (match[:release] rescue nil) ? Package.sortable_version(match[:release]) : nil
-    end
-
-    def clauses
-      operator == "eq" ? equality_clauses : range_clauses
-    end
-
-    private
-
-    def equality_clauses
-      clauses = []
-      clauses << {:term => {:sortable_version => self.version}} unless self.version.blank?
-      clauses << {:term => {:sortable_release => self.release}} unless self.release.blank?
-      clauses << {:term => {:epoch => self.epoch}} unless self.epoch.blank?
-      {:and => clauses}
-    end
-
-    def range_clauses
-      clauses = []
-
-      if epoch
-        clauses << range_clause(:epoch, operator, epoch)
-        clauses << combo_clause({:epoch => epoch}, :version, operator, version)
-        if release
-          clauses << combo_clause({:epoch => epoch, :version => version},
-                                  :release, operator, release)
-        end
-      else
-        clauses << range_clause(:version, operator, version)
-        if release
-          clauses << combo_clause({:version => version}, :release, operator, release)
-        end
+      def initialize(evr, operator = nil)
+        extract_epoch_version_release(evr)
+        self.operator = operator
       end
 
-      {:or => clauses}
-    end
-
-    def range_clause(field, operator, value)
-      {:range => {FILTER_COLUMNS[field] => {operator => value}}}
-    end
-
-    def combo_clause(eq_fields, field, operator, value)
-      eq_clauses = eq_fields.map do |key, val|
-        {:term => {FILTER_COLUMNS[key] => val}}
+      def extract_epoch_version_release(evr)
+        match        = case evr
+                       when /\A(\d+):(.*)-(.*)\z/
+                         evr.match(/\A(?<epoch>\d+):(?<version>.*)-(?<release>.*)\z/)
+                       when /\A(\d+):(.*)\z/
+                         evr.match(/\A(?<epoch>\d+):(?<version>.*)\z/)
+                       when /\A(.*)-(.*)\z/
+                         evr.match(/\A(?<version>.*)-(?<release>.*)\z/)
+                       else
+                         evr.match(/\A(?<version>.*)\z/)
+                       end
+        self.version = Package.sortable_version(match[:version])
+        self.epoch = match[:epoch] rescue nil
+        self.release = (match[:release] rescue nil) ? Package.sortable_version(match[:release]) : nil
       end
 
-      {:and => (eq_clauses << range_clause(field, operator, value))}
+      def clauses
+        operator == "eq" ? equality_clauses : range_clauses
+      end
+
+      private
+
+      def equality_clauses
+        clauses = []
+        clauses << { :term => { :sortable_version => self.version } } unless self.version.blank?
+        clauses << { :term => { :sortable_release => self.release } } unless self.release.blank?
+        clauses << { :term => { :epoch => self.epoch } } unless self.epoch.blank?
+        { :and => clauses }
+      end
+
+      def range_clauses
+        clauses = []
+
+        if epoch
+          clauses << range_clause(:epoch, operator, epoch)
+          clauses << combo_clause({ :epoch => epoch }, :version, operator, version)
+          if release
+            clauses << combo_clause({ :epoch => epoch, :version => version },
+                                    :release, operator, release)
+          end
+        else
+          clauses << range_clause(:version, operator, version)
+          if release
+            clauses << combo_clause({ :version => version }, :release, operator, release)
+          end
+        end
+
+        { :or => clauses }
+      end
+
+      def range_clause(field, operator, value)
+        { :range => { FILTER_COLUMNS[field] => { operator => value } } }
+      end
+
+      def combo_clause(eq_fields, field, operator, value)
+        eq_clauses = eq_fields.map do |key, val|
+          { :term => { FILTER_COLUMNS[key] => val } }
+        end
+
+        { :and => (eq_clauses << range_clause(field, operator, value)) }
+      end
     end
   end
-end
 end

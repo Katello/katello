@@ -13,85 +13,85 @@
 require File.expand_path("../models/model_spec_helper", File.dirname(__FILE__))
 
 module Katello
-module OrganizationHelperMethods
-  include OrchestrationHelper
+  module OrganizationHelperMethods
+    include OrchestrationHelper
 
-  def new_test_org user=nil
-    disable_org_orchestration
-    suffix = Organization.count + 1
-    @organization = Organization.create!(:name=>"test_organization#{suffix}", :label=> "test_organization#{suffix}_label")
-    session[:current_organization_id] = @organization.id if defined? session
-    return @organization
-  end
-
-  def new_test_org_model user=nil
-    disable_org_orchestration
-    suffix = Organization.count + 1
-    @organization = Organization.create!(:name=>"test_organization#{suffix}", :label=> "test_organization#{suffix}_label")
-    return @organization
-  end
-
-  def current_organization=(org)
-    controller.stubs(:current_organization).returns(org)
-  end
-
-  def create_environment(attrs)
-    env = KTEnvironment.create!(attrs)
-    if block_given?
-      yield env
-      env.save!
+    def new_test_org user=nil
+      disable_org_orchestration
+      suffix                            = Organization.count + 1
+      @organization                     = Organization.create!(:name => "test_organization#{suffix}", :label => "test_organization#{suffix}_label")
+      session[:current_organization_id] = @organization.id if defined? session
+      return @organization
     end
 
-    if !attrs[:content_view]
+    def new_test_org_model user=nil
+      disable_org_orchestration
+      suffix        = Organization.count + 1
+      @organization = Organization.create!(:name => "test_organization#{suffix}", :label => "test_organization#{suffix}_label")
+      return @organization
+    end
+
+    def current_organization=(org)
+      controller.stubs(:current_organization).returns(org)
+    end
+
+    def create_environment(attrs)
+      env = KTEnvironment.create!(attrs)
+      if block_given?
+        yield env
+        env.save!
+      end
+
+      if !attrs[:content_view]
         find_or_create_content_view(env)
+      end
+      env
     end
-    env
-  end
 
-  def find_or_create_content_view(env)
-    if !env.library? && !env.default_content_view
-      return env.content_views.first unless env.content_views.empty?
+    def find_or_create_content_view(env)
+      if !env.library? && !env.default_content_view
+        return env.content_views.first unless env.content_views.empty?
 
-      count = ContentViewDefinition.count + 1
-      definition = ContentViewDefinition.create!(:name => "test def #{count}", :label => "test_def_#{count}",
-                                              :description => 'test description',
-                                              :organization => env.organization)
-      count = ContentView.count + 1
-      view = ContentView.create!(:name => "test view #{count}", :label => "test_view_#{count}",
-                              :organization => env.organization,
-                              :content_view_definition => definition)
+        count      = ContentViewDefinition.count + 1
+        definition = ContentViewDefinition.create!(:name         => "test def #{count}", :label => "test_def_#{count}",
+                                                   :description  => 'test description',
+                                                   :organization => env.organization)
+        count      = ContentView.count + 1
+        view       = ContentView.create!(:name                    => "test view #{count}", :label => "test_view_#{count}",
+                                         :organization            => env.organization,
+                                         :content_view_definition => definition)
 
-      version = ContentViewVersion.new(:content_view => view,
-                                       :version => 1)
-      version.environments << env
-      version.save!
-      view.save!
+        version = ContentViewVersion.new(:content_view => view,
+                                         :version      => 1)
+        version.environments << env
+        version.save!
+        view.save!
+      end
+      view
     end
-    view
-  end
 
-  def promote_content_view(cv, from_env, to_env)
-    Katello.pulp_server.extensions.repository.stubs(:create).returns({})
-    Repository.any_instance.stubs(:clone_contents).returns([])
-    Repository.any_instance.stubs(:sync).returns([])
-    Repository.any_instance.stubs(:pulp_repo_facts).returns({:clone_ids => []})
-    Glue::Event.stubs(:trigger).returns({})
-    cv.promote(from_env, to_env)
-  end
+    def promote_content_view(cv, from_env, to_env)
+      Katello.pulp_server.extensions.repository.stubs(:create).returns({})
+      Repository.any_instance.stubs(:clone_contents).returns([])
+      Repository.any_instance.stubs(:sync).returns([])
+      Repository.any_instance.stubs(:pulp_repo_facts).returns({ :clone_ids => [] })
+      Glue::Event.stubs(:trigger).returns({})
+      cv.promote(from_env, to_env)
+    end
 
-  def create_activation_key(attrs)
-    env_id = attrs.delete(:environment_id)
-    attrs[:environment] = KTEnvironment.find(env_id) if env_id
-    if attrs[:environment] && !attrs[:environment].library? && !attrs[:content_view]
-      cv = find_or_create_content_view(attrs[:environment])
-      attrs[:content_view] = cv
+    def create_activation_key(attrs)
+      env_id              = attrs.delete(:environment_id)
+      attrs[:environment] = KTEnvironment.find(env_id) if env_id
+      if attrs[:environment] && !attrs[:environment].library? && !attrs[:content_view]
+        cv                   = find_or_create_content_view(attrs[:environment])
+        attrs[:content_view] = cv
+      end
+      ak = ActivationKey.create!(attrs)
+      if block_given?
+        yield ak
+        ak.save!
+      end
+      ak
     end
-    ak = ActivationKey.create!(attrs)
-    if block_given?
-      yield ak
-      ak.save!
-    end
-    ak
   end
-end
 end

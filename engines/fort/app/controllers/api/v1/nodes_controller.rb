@@ -29,24 +29,24 @@ class Api::V1::NodesController < Api::V1::ApiController
     create_test = lambda do
       Node.editable? ||
           User.consumer? &&
-          params[:node] &&
-          params[:node][:system_uuid] == current_user.uuid
+              params[:node] &&
+              params[:node][:system_uuid] == current_user.uuid
     end
 
     {
-      :index                => read_test,
-      :show                 => read_test,
-      :show_by_uuid         => show_by_uuid_test,
-      :create               => create_test,
-      :update               => edit_test,
-      :destroy              => edit_test,
-      :sync                 => edit_test
+        :index        => read_test,
+        :show         => read_test,
+        :show_by_uuid => show_by_uuid_test,
+        :create       => create_test,
+        :update       => edit_test,
+        :destroy      => edit_test,
+        :sync         => edit_test
     }
   end
 
   def param_rules
     {
-      :update => { :node => [:environment_ids] }
+        :update => { :node => [:environment_ids] }
     }
   end
 
@@ -64,7 +64,7 @@ class Api::V1::NodesController < Api::V1::ApiController
   api :GET, "/nodes/by_uuid/:uuid", "Get details about a node on a registered system"
   def show_by_uuid
     system = System.find_by_uuid!(params[:uuid])
-    @node = Node.find_by_system_id(system.id)
+    @node  = Node.find_by_system_id(system.id)
     unless @node
       fail HttpErrors::NotFound, _("System %s is not a registered node") % params[:uuid]
     end
@@ -81,14 +81,14 @@ class Api::V1::NodesController < Api::V1::ApiController
     end
   end
   def create
-    system = System.find_by_uuid!(params[:node][:system_uuid])
+    system      = System.find_by_uuid!(params[:node][:system_uuid])
     node_params = { :system_id => system.id }.merge(params[:node].slice(:environment_ids))
-    @node = Node.new(node_params)
+    @node       = Node.new(node_params)
     @node.save!
     if params[:node][:capabilities]
       params[:node][:capabilities].each do |capability_data|
-        cap_class = NodeCapability.class_for(capability_data[:type])
-        capability = cap_class.new(capability_data.slice(:configuration))
+        cap_class       = NodeCapability.class_for(capability_data[:type])
+        capability      = cap_class.new(capability_data.slice(:configuration))
         capability.node = @node
         capability.save!
       end

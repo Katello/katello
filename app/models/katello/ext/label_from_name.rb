@@ -11,19 +11,19 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-module Ext
-  module LabelFromName
-    def self.included(base)
-      base.class_eval do
-        before_validation :setup_label_from_name
+  module Ext
+    module LabelFromName
+      def self.included(base)
+        base.class_eval do
+          before_validation :setup_label_from_name
+        end
       end
-    end
 
-    def setup_label_from_name
-      unless label.present?
-        self.label = Util::Model.labelize(name)
+      def setup_label_from_name
+        unless label.present?
+          self.label = Util::Model.labelize(name)
+        end
       end
     end
   end
-end
 end

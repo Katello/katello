@@ -11,44 +11,44 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class Api::V1::RootController < Api::V1::ApiController
+  class Api::V1::RootController < Api::V1::ApiController
 
-  skip_before_filter :authorize # ok - only shows URLs available
-  skip_before_filter :require_user
+    skip_before_filter :authorize # ok - only shows URLs available
+    skip_before_filter :require_user
 
-  def resource_list
-    all_routes = Engine.routes.routes
-    all_routes = all_routes.collect { |r| r.path.spec.to_s }
+    def resource_list
+      all_routes = Engine.routes.routes
+      all_routes = all_routes.collect { |r| r.path.spec.to_s }
 
-    api_root_routes = all_routes.select do |path|
-      path =~ %r{^/api/[^/]+/:id\(\.:format\)$}
+      api_root_routes = all_routes.select do |path|
+        path =~ %r{^/api/[^/]+/:id\(\.:format\)$}
+      end
+      api_root_routes = api_root_routes.collect { |path| path[0..-(":id(.:format)".length + 1)] }.uniq
+
+      api_root_routes.collect! { |r| { :rel => r["/api/".size..-2], :href => r } }
+
+      # provide some fake paths that does not exist (but rhsm is checking it's existance)
+      api_root_routes << { :href => '/api/packages/', :rel => 'packages' }
+      api_root_routes << { :href => '/api/status/', :rel => 'status' }
+
+      # katello only APIs
+      katello_only = ["/api/templates/",
+                      "/api/changesets/",
+                      "/api/repositories/",
+                      "/api/packages/",
+                      "/api/errata/",
+                      "/api/disributions/",
+                      "/api/tasks/",
+                      "/api/gpg_keys/",
+                      "/api/environments/"
+      ]
+
+      # filter out katello-only apis from headpin resource list
+      if !Katello.config.katello?
+        api_root_routes = api_root_routes.select { |api| !katello_only.include?(api[:href]) }
+      end
+      respond_for_index :collection => api_root_routes
     end
-    api_root_routes = api_root_routes.collect { |path| path[0..-(":id(.:format)".length + 1)] }.uniq
 
-    api_root_routes.collect! { |r| { :rel => r["/api/".size..-2], :href => r } }
-
-    # provide some fake paths that does not exist (but rhsm is checking it's existance)
-    api_root_routes << { :href => '/api/packages/', :rel => 'packages' }
-    api_root_routes << { :href => '/api/status/', :rel => 'status' }
-
-    # katello only APIs
-    katello_only = ["/api/templates/",
-                    "/api/changesets/",
-                    "/api/repositories/",
-                    "/api/packages/",
-                    "/api/errata/",
-                    "/api/disributions/",
-                    "/api/tasks/",
-                    "/api/gpg_keys/",
-                    "/api/environments/"
-    ]
-
-    # filter out katello-only apis from headpin resource list
-    if !Katello.config.katello?
-      api_root_routes = api_root_routes.select { |api| !katello_only.include?(api[:href]) }
-    end
-    respond_for_index :collection => api_root_routes
   end
-
-end
 end

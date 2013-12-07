@@ -17,8 +17,8 @@ end
 node :gpg_key do |product|
   if !product.gpg_key.nil?
     {
-      id: product.gpg_key.id,
-      name: product.gpg_key.name
+        id:   product.gpg_key.id,
+        name: product.gpg_key.name
     }
   end
 end
@@ -29,7 +29,7 @@ end
 
 node :permissions do |product|
   {
-    :deletable => product.deletable?
+      :deletable => product.deletable?
   }
 end
 

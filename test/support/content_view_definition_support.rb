@@ -36,11 +36,11 @@ module ContentViewDefinitionSupport
     end
 
     OpenStruct.new({
-      :readable => [read_permission, update_permission, create_permission,
-                    delete_permission, publish_permission],
-      :editable => [update_permission, create_permission],
-      :read_only => [read_permission, delete_permission, publish_permission]
-    })
+                       :readable  => [read_permission, update_permission, create_permission,
+                                      delete_permission, publish_permission],
+                       :editable  => [update_permission, create_permission],
+                       :read_only => [read_permission, delete_permission, publish_permission]
+                   })
   end
 
 end

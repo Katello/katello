@@ -13,114 +13,114 @@
 require 'models/authorization/authorization_base'
 
 module Katello
-class ProductAuthorizationAdminTest < AuthorizationTestBase
+  class ProductAuthorizationAdminTest < AuthorizationTestBase
 
-  def setup
-    super
-    User.current = User.find(users('admin'))
-    @prod = @fedora
-    @org = @acme_corporation
+    def setup
+      super
+      User.current = User.find(users('admin'))
+      @prod        = @fedora
+      @org         = @acme_corporation
+    end
+
+    def test_all_readable
+      refute_empty Product.all_readable(@org)
+    end
+
+    def test_readable
+      refute_empty Product.readable(@org)
+    end
+
+    def test_all_editable
+      refute_empty Product.all_editable(@org)
+    end
+
+    def test_editable
+      refute_empty Product.editable(@org)
+    end
+
+    def test_syncable
+      refute_empty Product.syncable(@org)
+    end
+
+    def test_any_readable?
+      assert Product.any_readable?(@org)
+    end
+
+    def test_readable?
+      assert @prod.readable?
+    end
+
+    def test_syncable?
+      assert @prod.syncable?
+    end
+
+    def test_editable?
+      assert @prod.editable?
+    end
+
+    def test_deletable?
+      product = Product.find(katello_products(:empty_product))
+      assert product.deletable?
+    end
+
+    def test_creatable?
+      assert Product.creatable?(@fedora_hosted)
+    end
+
   end
 
-  def test_all_readable
-    refute_empty Product.all_readable(@org)
+  class ProductAuthorizationNoPermsTest < AuthorizationTestBase
+
+    def setup
+      super
+      User.current = User.find(users('restricted'))
+      @prod        = @fedora
+      @org         = @acme_corporation
+    end
+
+    def test_all_readable
+      assert_empty Product.all_readable(@org)
+    end
+
+    def test_readable
+      assert_empty Product.readable(@org)
+    end
+
+    def test_all_editable
+      assert_empty Product.all_editable(@org)
+    end
+
+    def test_editable
+      assert_empty Product.editable(@org)
+    end
+
+    def test_syncable
+      assert_empty Product.syncable(@org)
+    end
+
+    def test_any_readable?
+      refute Product.any_readable?(@org)
+    end
+
+    def test_readable?
+      refute @prod.readable?
+    end
+
+    def test_syncable?
+      refute @prod.syncable?
+    end
+
+    def test_editable?
+      refute @prod.editable?
+    end
+
+    def test_deletable?
+      refute @prod.deletable?
+    end
+
+    def test_creatable?
+      refute Product.creatable?(@fedora_hosted)
+    end
+
   end
-
-  def test_readable
-    refute_empty Product.readable(@org)
-  end
-
-  def test_all_editable
-    refute_empty Product.all_editable(@org)
-  end
-
-  def test_editable
-    refute_empty Product.editable(@org)
-  end
-
-  def test_syncable
-    refute_empty Product.syncable(@org)
-  end
-
-  def test_any_readable?
-    assert Product.any_readable?(@org)
-  end
-
-  def test_readable?
-    assert @prod.readable?
-  end
-
-  def test_syncable?
-    assert @prod.syncable?
-  end
-
-  def test_editable?
-    assert @prod.editable?
-  end
-
-  def test_deletable?
-    product = Product.find(katello_products(:empty_product))
-    assert product.deletable?
-  end
-
-  def test_creatable?
-    assert Product.creatable?(@fedora_hosted)
-  end
-
-end
-
-class ProductAuthorizationNoPermsTest < AuthorizationTestBase
-
-  def setup
-    super
-    User.current = User.find(users('restricted'))
-    @prod = @fedora
-    @org = @acme_corporation
-  end
-
-  def test_all_readable
-    assert_empty Product.all_readable(@org)
-  end
-
-  def test_readable
-    assert_empty Product.readable(@org)
-  end
-
-  def test_all_editable
-    assert_empty Product.all_editable(@org)
-  end
-
-  def test_editable
-    assert_empty Product.editable(@org)
-  end
-
-  def test_syncable
-    assert_empty Product.syncable(@org)
-  end
-
-  def test_any_readable?
-    refute Product.any_readable?(@org)
-  end
-
-  def test_readable?
-    refute @prod.readable?
-  end
-
-  def test_syncable?
-    refute @prod.syncable?
-  end
-
-  def test_editable?
-    refute @prod.editable?
-  end
-
-  def test_deletable?
-    refute @prod.deletable?
-  end
-
-  def test_creatable?
-    refute Product.creatable?(@fedora_hosted)
-  end
-
-end
 end

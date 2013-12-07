@@ -31,7 +31,6 @@ attributes :checkin_time, :created
 attributes :installedProducts
 
 
-
 node :releaseVer do |sys|
   sys.releaseVer.is_a?(Hash) ? sys.releaseVer[:releaseVer] : sys.releaseVer
 end

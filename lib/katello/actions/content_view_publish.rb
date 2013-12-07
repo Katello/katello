@@ -15,10 +15,10 @@ module Katello
     class ContentViewPublish < Dynflow::Action
 
       def plan(content_view)
-        plan_self('id' => content_view.id,
-                  'label' => content_view.label,
+        plan_self('id'                 => content_view.id,
+                  'label'              => content_view.label,
                   'organization_label' => content_view.organization.label
-                  )
+        )
       end
 
       input_format do

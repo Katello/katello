@@ -13,8 +13,8 @@
 require "katello_test_helper"
 
 def login_user_by_described_class(user)
-  User.current = user
-  session[:user] = user
+  User.current         = user
+  session[:user]       = user
   session[:expires_at] = 5.minutes.from_now
 end
 
@@ -26,7 +26,7 @@ shared_examples_for "protected action" do
         @controller.stubs(:render)
       end
 
-      login_user_by_described_class(authorized_user) if defined?  authorized_user
+      login_user_by_described_class(authorized_user) if defined? authorized_user
       before_success if defined?(before_success)
 
       if @controller.kind_of? Katello::Api::V1::ApiController
@@ -56,7 +56,7 @@ shared_examples_for "protected action" do
           @controller.stubs(:render)
         end
         session.delete(:current_organization_id)
-        login_user_by_described_class(unauthorized_user) if defined?  unauthorized_user
+        login_user_by_described_class(unauthorized_user) if defined? unauthorized_user
         before_failure if defined?(before_failure)
         if @controller.kind_of? Katello::Api::V1::ApiController
           @controller.expects(:respond_for_exception).with { |e, options| options.try(:[], :status).must_equal(:forbidden) }

@@ -16,12 +16,12 @@ require 'minitest_helper'
 require File.expand_path('../../../lib/katello/url_constrained_cookie_store', __FILE__)
 
 class UrlConstrainedCookieStoreTest < ActionController::IntegrationTest
-  SessionKey = '_test_session'
+  SessionKey    = '_test_session'
   SessionSecret = '16a7078c778fb1e28d062c6d1a26e864'
 
-  Verifier = ActiveSupport::MessageVerifier.new(SessionSecret, :digest => 'SHA1')
-  SignedBar = Verifier.generate(:foo => "bar", :created_at => (Time.now - 2.minute),
-      :session_id => SecureRandom.hex(16))
+  Verifier  = ActiveSupport::MessageVerifier.new(SessionSecret, :digest => 'SHA1')
+  SignedBar = Verifier.generate(:foo        => "bar", :created_at => (Time.now - 2.minute),
+                                :session_id => SecureRandom.hex(16))
 
   def test_doesnt_update_expiraton_date_for_excluded_urls
     with_test_route_set(:expire_after => 1.minute, :expiration_exceptions => "/no_expiration") do
@@ -93,7 +93,7 @@ class RoutedRackApp
 
   def initialize(routes, &blk)
     @routes = routes
-    @stack = ActionDispatch::MiddlewareStack.new(&blk).build(@routes)
+    @stack  = ActionDispatch::MiddlewareStack.new(&blk).build(@routes)
   end
 
   def call(env)

@@ -2,11 +2,11 @@ FactoryGirl.define do
   factory :provider, :class => Katello::Provider do
     sequence(:name) { |n| "Adobe #{n}" }
     provider_type "Custom"
-    association   :organization
+    association :organization
 
     trait :fedora_hosted do
-      name          "FedoraHosted"
-      description   "Project and repository hosting."
+      name "FedoraHosted"
+      description "Project and repository hosting."
       provider_type "Custom"
     end
 

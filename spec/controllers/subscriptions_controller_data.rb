@@ -11,9 +11,9 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-module SubscriptionsControllerData
-  def candlepin_owner_imports action
-    case action
+  module SubscriptionsControllerData
+    def candlepin_owner_imports action
+      case action
       when :manifest_upload_failure
         s = '
 [
@@ -54,14 +54,14 @@ module SubscriptionsControllerData
 '
       else
         s = ''
+      end
+
+      r = JSON.parse(s).collect { |s| s.with_indifferent_access }
+      Resources::Candlepin::Owner.stubs(:imports).returns(r)
     end
 
-    r = JSON.parse(s).collect {|s| s.with_indifferent_access}
-    Resources::Candlepin::Owner.stubs(:imports).returns(r)
-  end
-
-  def candlepin_owner_pools action
-    case action
+    def candlepin_owner_pools action
+      case action
       when three_pools
         s = '
 [
@@ -539,10 +539,10 @@ module SubscriptionsControllerData
 '
       else
         s = ''
-    end
+      end
 
-    r = JSON.parse(s).collect {|s| s.with_indifferent_access}
-    Resources::Candlepin::Owner.stubs(:imports).returns(r)
+      r = JSON.parse(s).collect { |s| s.with_indifferent_access }
+      Resources::Candlepin::Owner.stubs(:imports).returns(r)
+    end
   end
-end
 end

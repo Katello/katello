@@ -11,13 +11,13 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-module Validators
-  class UsernameValidator < ActiveModel::EachValidator
-    def validate_each(record, attribute, value)
-      if value
-        KatelloNameFormatValidator.validate_length(record, attribute, value, 128, 3)
+  module Validators
+    class UsernameValidator < ActiveModel::EachValidator
+      def validate_each(record, attribute, value)
+        if value
+          KatelloNameFormatValidator.validate_length(record, attribute, value, 128, 3)
+        end
       end
     end
   end
-end
 end

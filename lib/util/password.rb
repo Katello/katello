@@ -41,7 +41,7 @@ module Password
 
   # Generates random string like for length = 10 => "iCi5MxiTDn"
   def self.generate_random_string(length)
-    chars = ('A'..'Z').to_a + ('a'..'z').to_a + (0..9).to_a
+    chars  = ('A'..'Z').to_a + ('a'..'z').to_a + (0..9).to_a
     result = []
     length.to_i.times { result += chars.sample(1) }
     result.join
@@ -78,7 +78,7 @@ module Password
     cipher = OpenSSL::Cipher::Cipher.new("aes-256-cbc")
     cipher.encrypt
     cipher.key = Digest::SHA2.hexdigest(passphrase)
-    cipher.iv = Digest::SHA2.hexdigest(passphrase + passphrase)
+    cipher.iv  = Digest::SHA2.hexdigest(passphrase + passphrase)
 
     encrypted = cipher.update(text)
     encrypted << cipher.final
@@ -89,7 +89,7 @@ module Password
     cipher = OpenSSL::Cipher::Cipher.new("aes-256-cbc")
     cipher.decrypt
     cipher.key = Digest::SHA2.hexdigest(passphrase)
-    cipher.iv = Digest::SHA2.hexdigest(passphrase + passphrase)
+    cipher.iv  = Digest::SHA2.hexdigest(passphrase + passphrase)
 
     decrypted = cipher.update(text)
     decrypted << cipher.final

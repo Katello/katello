@@ -31,9 +31,9 @@ class Api::V2::NodesController < Api::V1::NodesController
     @nodes = Node.all
 
     collection = {
-      :results  => @nodes,
-      :subtotal => @nodes.size,
-      :total    => @nodes.size
+        :results  => @nodes,
+        :subtotal => @nodes.size,
+        :total    => @nodes.size
     }
 
     respond_for_index :collection => collection

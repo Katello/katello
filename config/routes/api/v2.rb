@@ -10,7 +10,7 @@ Katello::Engine.routes.draw do
   namespace :api do
 
     # new v2 routes that point to v2
-    scope "(:api_version)", :module => :v2, :defaults => {:api_version => 'v2'}, :api_version => /v1|v2/, :constraints => ApiConstraints.new(:version => 2) do
+    scope "(:api_version)", :module => :v2, :defaults => { :api_version => 'v2' }, :api_version => /v1|v2/, :constraints => ApiConstraints.new(:version => 2) do
 
       match '/' => 'root#resource_list'
 
@@ -30,7 +30,7 @@ Katello::Engine.routes.draw do
         api_resources :environments
         api_resources :sync_plans, :only => [:index, :create]
         api_resources :tasks, :only => [:index, :show]
-        api_resources :providers, :only => [:index], :constraints => {:organization_id => /[^\/]*/}
+        api_resources :providers, :only => [:index], :constraints => { :organization_id => /[^\/]*/ }
         scope :constraints => Katello::RegisterWithActivationKeyContraint.new do
           match '/systems' => 'systems#activate', :via => :post
         end
@@ -195,7 +195,7 @@ Katello::Engine.routes.draw do
         #get :dependencies, :on => :member, :action => :dependencies
 
         api_attachable_resources :products, :controller => :changesets_content
-        api_attachable_resources :packages, :controller => :changesets_content, :constraints => {:id => /[0-9a-zA-Z\-_.]+/}
+        api_attachable_resources :packages, :controller => :changesets_content, :constraints => { :id => /[0-9a-zA-Z\-_.]+/ }
         api_attachable_resources :errata, :controller => :changesets_content
         api_attachable_resources :repositories, :controller => :changesets_content, :resource_name => :repo
         api_attachable_resources :distributions, :controller => :changesets_content
@@ -213,8 +213,8 @@ Katello::Engine.routes.draw do
         api_resources :packages, :only => [:index, :show] do
           get :search, :on => :collection
         end
-        api_resources :errata, :only => [:index, :show], :constraints => {:id => /[0-9a-zA-Z\-\+%_.:]+/}
-        api_resources :distributions, :only => [:index, :show], :constraints => {:id => /[0-9a-zA-Z \-\+%_.]+/}
+        api_resources :errata, :only => [:index, :show], :constraints => { :id => /[0-9a-zA-Z\-\+%_.:]+/ }
+        api_resources :distributions, :only => [:index, :show], :constraints => { :id => /[0-9a-zA-Z \-\+%_.]+/ }
         api_resources :puppet_modules, :only => [:index, :show] do
           get :search, :on => :collection
         end

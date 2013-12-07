@@ -11,18 +11,18 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-module Navigation
-  module Items
-    class ContentSearch < Navigation::Item
+  module Navigation
+    module Items
+      class ContentSearch < Navigation::Item
 
-      def initialize(organization)
-        @key           = :content_search
-        @display       =  _("Content Search")
-        @authorization = lambda{ organization && !KTEnvironment.content_readable(organization).empty? }
-        @url           = content_search_index_path
+        def initialize(organization)
+          @key           = :content_search
+          @display       = _("Content Search")
+          @authorization = lambda { organization && !KTEnvironment.content_readable(organization).empty? }
+          @url           = content_search_index_path
+        end
+
       end
-
     end
   end
-end
 end

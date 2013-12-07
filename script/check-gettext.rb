@@ -2,7 +2,7 @@
 
 require 'optparse'
 
-default_options = {:dir => File.expand_path("../..", __FILE__)}
+default_options = { :dir => File.expand_path("../..", __FILE__) }
 
 options = default_options.dup
 
@@ -50,14 +50,14 @@ Dir.glob(File.join(dir, "**", "*")).each do |file|
   next if file.include?("/vendor/converge-ui/") # we skip converge-ui for now
   next if file.end_with?("check-gettext.rb") # we don't check this very file
   relative_file = file.sub(/^#{Regexp.escape(dir)}/, "")
-  file_content = File.read(file)
+  file_content  = File.read(file)
   begin
     gettext_strings = file_content.scan(/(_\(".*?"\))(.*)$/).map do |(string, suffix)|
       if suffix.to_s.include?(".replace") # this is javascript and it uses different tool
         next
       end
       if suffix = suffix.to_s[/(\s*%\s*.*$)/]
-        parts = suffix.split(/(\])/)
+        parts  = suffix.split(/(\])/)
         suffix = parts.reduce("") do |str, part|
           str << part
           break str if str.count("[") == str.count("]")
@@ -79,7 +79,7 @@ Dir.glob(File.join(dir, "**", "*")).each do |file|
       puts "#{relative_file}: #{malformed}"
       if options[:fix]
         variables = malformed.scan(/#\{(.*?)\}/).map(&:first)
-        fixed = malformed.gsub(/#\{.*?\}/, "%s")
+        fixed     = malformed.gsub(/#\{.*?\}/, "%s")
         fixed << " % "
         if variables.size == 1
           fixed << variables.first
@@ -109,7 +109,7 @@ Dir.glob(File.join(dir, "**", "*")).each do |file|
           puts array_vars.inspect
           puts "[y/n]"
           if gets.chomp == "y"
-            mapping = array_vars.reduce({}) do |h, var|
+            mapping             = array_vars.reduce({}) do |h, var|
               puts "Write alias for #{var}"
               h.update(var => gets.chomp)
             end

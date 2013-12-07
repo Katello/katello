@@ -2,9 +2,9 @@ FactoryGirl.define do
   factory :role, :class => Katello::Role do
 
     factory :administrator do
-      name        "ADMINISTRATOR"
+      name "ADMINISTRATOR"
       description "Super administrator with all access."
-      locked      true
+      locked true
     end
 
   end

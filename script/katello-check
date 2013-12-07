@@ -46,7 +46,7 @@ require "/usr/share/katello/config/application"
 Rails.application.require_environment!
 
 # TYPE => DESCRIPTION (HOW TO FIX IT)
-ERROR_TYPES = {}
+ERROR_TYPES               = {}
 ERROR_TYPES[:ERRREPOKAPU] = <<EOS
 Repository was found in Katello, but not in Pulp. To fix this you need to add
 the repository to Pulp using pulp-admin cli tool.

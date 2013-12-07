@@ -1,5 +1,5 @@
 namespace :katello do
-  task :reindex => ["environment", "katello:reset_backends:elasticsearch"]  do
+  task :reindex => ["environment", "katello:reset_backends:elasticsearch"] do
     User.current = User.first #set a user for orchestration
 
     Dir.glob(Katello::Engine.root.to_s + '/app/models/katello/*.rb').each { |file| require file }
@@ -21,13 +21,13 @@ namespace :katello do
 
     print "Re-indexing Repositories\n"
 
-    Katello::Repository.enabled.each{ |repo| repo.index_content }
+    Katello::Repository.enabled.each { |repo| repo.index_content }
 
     print "Re-indexing Pools\n"
     cp_pools = Katello::Resources::Candlepin::Pool.all
     if cp_pools
       # Pool objects
-      pools = cp_pools.collect{ |cp_pool| Katello::Pool.find_pool(cp_pool['id'], cp_pool) }
+      pools = cp_pools.collect { |cp_pool| Katello::Pool.find_pool(cp_pool['id'], cp_pool) }
       # Index pools
       Katello::Pool.index_pools(pools) if pools.length > 0
     end

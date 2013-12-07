@@ -10,34 +10,34 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class Api::V1::AboutController < Api::V1::ApiController
+  class Api::V1::AboutController < Api::V1::ApiController
 
-  before_filter :authorize # ok - anyone authenticated can ask for status
+    before_filter :authorize # ok - anyone authenticated can ask for status
 
-  def rules
-    {
-      :index => lambda { true }
-    }
-  end
-
-  api :GET, "/about", "Shows status of system and it's subcomponents"
-  description "This service is only available for authenticated users"
-  def index
-    @packages = Ping.packages
-    @system_info = {  "Application" => Katello.config.app_name,
-                      "Version"     => Katello.config.katello_version,
-                      "Packages"    => Ping.packages,
-                   }
-    if current_user && current_user.allowed_to?(:read, :organizations)
-      @system_info.merge!("Environment" => Rails.env,
-                          "Directory"   => Rails.root,
-                          "Authentication" => Katello.config.warden,
-                          "Ruby" => RUBY_VERSION
-                         )
+    def rules
+      {
+          :index => lambda { true }
+      }
     end
 
-    respond_for_show :resource => @system_info
-  end
+    api :GET, "/about", "Shows status of system and it's subcomponents"
+    description "This service is only available for authenticated users"
+    def index
+      @packages    = Ping.packages
+      @system_info = { "Application" => Katello.config.app_name,
+                       "Version"     => Katello.config.katello_version,
+                       "Packages"    => Ping.packages,
+      }
+      if current_user && current_user.allowed_to?(:read, :organizations)
+        @system_info.merge!("Environment"    => Rails.env,
+                            "Directory"      => Rails.root,
+                            "Authentication" => Katello.config.warden,
+                            "Ruby"           => RUBY_VERSION
+        )
+      end
 
-end
+      respond_for_show :resource => @system_info
+    end
+
+  end
 end
