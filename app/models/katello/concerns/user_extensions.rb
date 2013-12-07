@@ -375,7 +375,7 @@ module Katello
           true
         end
 
-        protected
+        protected # rubocop:disable AccessControl
 
         def can_be_deleted?
           query         = Katello::Permission.joins(:resource_type, :role).
@@ -387,7 +387,7 @@ module Katello
           more_than_one_supers
         end
 
-        private
+        private # rubocop:disable AccessControl
 
         # generate a random token, that is unique within the User table for the column provided
         def generate_token(column)

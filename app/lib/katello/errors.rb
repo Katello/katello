@@ -12,38 +12,38 @@
 
 module Katello
   module Errors
-    class NotFound < StandardError;
+    class NotFound < StandardError
     end
 
     # unauthorized access
-    class SecurityViolation < StandardError;
+    class SecurityViolation < StandardError
     end
 
-    class UserNotSet < SecurityViolation;
+    class UserNotSet < SecurityViolation
     end
 
-    class OrchestrationException < StandardError;
+    class OrchestrationException < StandardError
     end
 
-    class TemplateContentException < StandardError;
+    class TemplateContentException < StandardError
     end
 
-    class TemplateExportException < StandardError;
+    class TemplateExportException < StandardError
     end
 
-    class ChangesetContentException < StandardError;
+    class ChangesetContentException < StandardError
     end
 
-    class ConflictException < StandardError;
+    class ConflictException < StandardError
     end
 
-    class ContentViewRepositoryOverlap < StandardError;
+    class ContentViewRepositoryOverlap < StandardError
     end
 
-    class ContentViewDefinitionBadContent < StandardError;
+    class ContentViewDefinitionBadContent < StandardError
     end
 
-    class ContentViewTaskInProgress < StandardError;
+    class ContentViewTaskInProgress < StandardError
     end
 
     class SystemGroupEmptyException < StandardError
@@ -52,10 +52,10 @@ module Katello
       end
     end
 
-    class ConnectionRefusedException < StandardError;
+    class ConnectionRefusedException < StandardError
     end
 
-    class UsageLimitExhaustedException < StandardError;
+    class UsageLimitExhaustedException < StandardError
     end
 
     class UnsupportedActionException < StandardError

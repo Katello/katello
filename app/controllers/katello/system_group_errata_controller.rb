@@ -78,7 +78,8 @@ module Katello
       render :text => job.id
 
     rescue Errors::SystemGroupEmptyException => e
-      notify.error _("Install of Errata '%{errata}' scheduled for System Group '%{group}' failed.  Reason: %{message}") % { :errata => params[:errata_ids], :group => @group.name, :message => e.message }
+      notify.error _("Install of Errata '%{errata}' scheduled for System Group '%{group}' failed.  Reason: %{message}") %
+                       { :errata => params[:errata_ids], :group => @group.name, :message => e.message }
 
       render :text => ''
     end

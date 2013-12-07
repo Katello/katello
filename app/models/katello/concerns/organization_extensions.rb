@@ -238,7 +238,7 @@ module Katello
           products.any?(&:syncable_content?)
         end
 
-        private
+        private # rubocop:disable AccessControl
 
         def start_discovery_task(url, notify = false)
           task_id         = AsyncOperation.current_task_id

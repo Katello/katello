@@ -150,11 +150,8 @@ module Katello
       # re-raise the same exception with nicer error message
       def raise_rest_client_exception(e, a_path, http_method)
         # message method in rest-client is hardcoded - we need to override it
-        msg = "#{name}: #{e.message} #{e.http_body} (#{http_method} #{a_path})"
-        (
-        class << e;
-          self;
-        end).instance_eval do
+        msg  = "#{name}: #{e.message} #{e.http_body} (#{http_method} #{a_path})"
+        singleton_class.instance_eval do
           define_method(:message) do
             msg
           end

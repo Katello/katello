@@ -211,18 +211,18 @@ module Katello
 
       if content_type == Repository::PUPPET_TYPE
         completed = val.progress.total_count - val.progress.items_left
-        progress  = if val.state =~ /error/i then
+        progress  = if val.state =~ /error/i
                       -1
-                    elsif val.progress.total_count == 0 then
+                    elsif val.progress.total_count == 0
                       0
                     else
                       completed.to_f / val.progress.total_count.to_f * 100
                     end
       else
         completed = val.progress.total_size - val.progress.size_left
-        progress  = if val.state =~ /error/i then
+        progress  = if val.state =~ /error/i
                       -1
-                    elsif val.progress.total_size == 0 then
+                    elsif val.progress.total_size == 0
                       0
                     else
                       completed.to_f / val.progress.total_size.to_f * 100

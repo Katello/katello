@@ -325,7 +325,7 @@ A hint for choosing the right value for the releaseVer param
       system_report = Util::ReportTable.new(
           :data         => data,
           :column_names => %w(name uuid location organization environment created_at updated_at
-                            compliance_color compliant_until custom_info),
+                              compliance_color compliant_until custom_info),
           :transforms   => (lambda do |r|
             r.organization    = r.organization.name
             r.environment     = r.environment.name
