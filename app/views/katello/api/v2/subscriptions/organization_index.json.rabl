@@ -3,8 +3,8 @@ node(:subtotal) { @collection[:subtotal] }
 node(:offset) { params[:offset] }
 node(:limit) { params[:page_size] }
 node(:search) { params[:search] }
-node(:sort) { {:by => params[:sort_by], :order => params[:sort_order]} }
+node(:sort) { { :by => params[:sort_by], :order => params[:sort_order] } }
 
 node :results do
-    partial("katello/api/v2/subscriptions/show", :object => @collection[:subscriptions])
+  partial("katello/api/v2/subscriptions/show", :object => @collection[:subscriptions])
 end

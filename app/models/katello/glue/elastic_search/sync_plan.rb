@@ -11,23 +11,23 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-module Glue::ElasticSearch::SyncPlan
-  def self.included(base)
-    base.send :include, Ext::IndexedModel
+  module Glue::ElasticSearch::SyncPlan
+    def self.included(base)
+      base.send :include, Ext::IndexedModel
 
-    base.class_eval do
-      index_options :extended_json => :extended_index_attrs,
-                    :display_attrs => [:name, :sync_date, :description, :interval]
-      mapping do
-        indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
-        indexes :name_sort, :type => 'string', :index => :not_analyzed
-        indexes :sync_date, :type => 'date'
+      base.class_eval do
+        index_options :extended_json => :extended_index_attrs,
+                      :display_attrs => [:name, :sync_date, :description, :interval]
+        mapping do
+          indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
+          indexes :name_sort, :type => 'string', :index => :not_analyzed
+          indexes :sync_date, :type => 'date'
+        end
       end
     end
-  end
 
-  def extended_index_attrs
-    {:name_sort => name.downcase}
+    def extended_index_attrs
+      { :name_sort => name.downcase }
+    end
   end
-end
 end

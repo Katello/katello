@@ -5,7 +5,7 @@ FactoryGirl.define do
   end
 
   factory :package_filter_rule, :class => Katello::PackageRule, :parent => :filter_rule do
-    parameters ({:units =>[{:name =>["g*"]}]}).with_indifferent_access
+    parameters ({ :units => [{ :name => ["g*"] }] }).with_indifferent_access
   end
 
   factory :erratum_filter_rule, :class => Katello::ErratumRule, :parent => :filter_rule do

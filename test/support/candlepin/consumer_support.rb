@@ -13,85 +13,85 @@
 require 'katello_test_helper'
 
 module Katello
-module CandlepinConsumerSupport
+  module CandlepinConsumerSupport
 
-  @system = nil
+    @system = nil
 
-  def self.system_id
-    @system.id
-  end
-
-  def self.system
-    @system
-  end
-
-  def self.create_system(name, env, cv)
-    @system = System.new
-    @system.cp_type = 'system'
-    @system.name = name
-    @system.description = 'New System'
-    @system.environment = env
-    @system.content_view = cv
-    @system.facts = {}
-    @system.arch = 'x86_64'
-    @system.sockets = 2
-    @system.memory = 256
-    @system.guest = false
-
-    VCR.use_cassette('support/candlepin/system', :match_requests_on => [:path, :params, :method, :body_json]) do
-      @system.set_candlepin_consumer
+    def self.system_id
+      @system.id
     end
-  rescue => e
-    puts e
-    puts e.backtrace
-  ensure
-    return @system
-  end
 
-  def self.destroy_system(id=@system_id, cassette='support/candlepin/system')
-    VCR.use_cassette(cassette, :match_requests_on => [:path, :params, :method, :body_json]) do
-      @system.del_candlepin_consumer
+    def self.system
+      @system
     end
-  rescue RestClient::ResourceNotFound => e
-    puts e
-  end
 
-  @distributor = nil
+    def self.create_system(name, env, cv)
+      @system              = System.new
+      @system.cp_type      = 'system'
+      @system.name         = name
+      @system.description  = 'New System'
+      @system.environment  = env
+      @system.content_view = cv
+      @system.facts        = {}
+      @system.arch         = 'x86_64'
+      @system.sockets      = 2
+      @system.memory       = 256
+      @system.guest        = false
 
-  def self.distributor_id
-    @distributor.id
-  end
-
-  def self.distributor
-    @distributor
-  end
-
-  def self.create_distributor(name, env, cv)
-    @distributor = Distributor.new
-    @distributor.cp_type = 'candlepin'
-    @distributor.name = name
-    @distributor.description = 'New Distributor'
-    @distributor.environment = env
-    @distributor.content_view = cv
-    @distributor.facts = {"distributor_version" => Distributor.latest_version}
-
-    VCR.use_cassette('support/candlepin/distributor', :match_requests_on => [:path, :params, :method, :body_json]) do
-      @distributor.set_candlepin_consumer
+      VCR.use_cassette('support/candlepin/system', :match_requests_on => [:path, :params, :method, :body_json]) do
+        @system.set_candlepin_consumer
+      end
+    rescue => e
+      puts e
+      puts e.backtrace
+    ensure
+      return @system
     end
-  rescue => e
-    puts e
-    puts e.backtrace
-  ensure
-    return @distributor
-  end
 
-  def self.destroy_distributor(id=@distributor_id, cassette='support/candlepin/distributor')
-    VCR.use_cassette(cassette, :match_requests_on => [:path, :params, :method, :body_json]) do
-      @distributor.del_candlepin_consumer
+    def self.destroy_system(id=@system_id, cassette='support/candlepin/system')
+      VCR.use_cassette(cassette, :match_requests_on => [:path, :params, :method, :body_json]) do
+        @system.del_candlepin_consumer
+      end
+    rescue RestClient::ResourceNotFound => e
+      puts e
     end
-  rescue RestClient::ResourceNotFound => e
-    puts e
-  end
 
-end
+    @distributor = nil
+
+    def self.distributor_id
+      @distributor.id
+    end
+
+    def self.distributor
+      @distributor
+    end
+
+    def self.create_distributor(name, env, cv)
+      @distributor              = Distributor.new
+      @distributor.cp_type      = 'candlepin'
+      @distributor.name         = name
+      @distributor.description  = 'New Distributor'
+      @distributor.environment  = env
+      @distributor.content_view = cv
+      @distributor.facts        = { "distributor_version" => Distributor.latest_version }
+
+      VCR.use_cassette('support/candlepin/distributor', :match_requests_on => [:path, :params, :method, :body_json]) do
+        @distributor.set_candlepin_consumer
+      end
+    rescue => e
+      puts e
+      puts e.backtrace
+    ensure
+      return @distributor
+    end
+
+    def self.destroy_distributor(id=@distributor_id, cassette='support/candlepin/distributor')
+      VCR.use_cassette(cassette, :match_requests_on => [:path, :params, :method, :body_json]) do
+        @distributor.del_candlepin_consumer
+      end
+    rescue RestClient::ResourceNotFound => e
+      puts e
+    end
+
+  end
 end

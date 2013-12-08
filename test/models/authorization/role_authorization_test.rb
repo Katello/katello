@@ -13,71 +13,71 @@
 require 'models/authorization/authorization_base'
 
 module Katello
-class RoleAuthorizationAdminTest < AuthorizationTestBase
+  class RoleAuthorizationAdminTest < AuthorizationTestBase
 
-  def setup
-    super
-    User.current = User.find(users('admin'))
-    @role = Role.find(katello_roles(:administrator))
+    def setup
+      super
+      User.current = User.find(users('admin'))
+      @role        = Role.find(katello_roles(:administrator))
+    end
+
+    def test_readable
+      refute_empty Role.readable
+    end
+
+    def test_creatable?
+      assert Role.creatable?
+    end
+
+    def test_editable?
+      assert Role.editable?
+    end
+
+    def test_deletable?
+      assert Role.deletable?
+    end
+
+    def test_any_readable?
+      assert Role.any_readable?
+    end
+
+    def test_readable?
+      assert Role.readable?
+    end
+
   end
 
-  def test_readable
-    refute_empty Role.readable
+  class RoleAuthorizationNoPermsTest < AuthorizationTestBase
+
+    def setup
+      super
+      User.current = User.find(users('restricted'))
+      @role        = Role.find(katello_roles(:administrator))
+    end
+
+    def test_readable
+      assert Role.readable.empty?
+    end
+
+    def test_creatable?
+      refute Role.creatable?
+    end
+
+    def test_editable?
+      refute Role.editable?
+    end
+
+    def test_deletable?
+      refute Role.deletable?
+    end
+
+    def test_any_readable?
+      refute Role.any_readable?
+    end
+
+    def test_readable?
+      refute Role.readable?
+    end
+
   end
-
-  def test_creatable?
-    assert Role.creatable?
-  end
-
-  def test_editable?
-    assert Role.editable?
-  end
-
-  def test_deletable?
-    assert Role.deletable?
-  end
-
-  def test_any_readable?
-    assert Role.any_readable?
-  end
-
-  def test_readable?
-    assert Role.readable?
-  end
-
-end
-
-class RoleAuthorizationNoPermsTest < AuthorizationTestBase
-
-  def setup
-    super
-    User.current = User.find(users('restricted'))
-    @role = Role.find(katello_roles(:administrator))
-  end
-
-  def test_readable
-    assert Role.readable.empty?
-  end
-
-  def test_creatable?
-    refute Role.creatable?
-  end
-
-  def test_editable?
-    refute Role.editable?
-  end
-
-  def test_deletable?
-    refute Role.deletable?
-  end
-
-  def test_any_readable?
-    refute Role.any_readable?
-  end
-
-  def test_readable?
-    refute Role.readable?
-  end
-
-end
 end

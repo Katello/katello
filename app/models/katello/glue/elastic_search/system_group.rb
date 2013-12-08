@@ -11,34 +11,34 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-module Glue::ElasticSearch::SystemGroup
-  def self.included(base)
-    base.send :include, Ext::IndexedModel
+  module Glue::ElasticSearch::SystemGroup
+    def self.included(base)
+      base.send :include, Ext::IndexedModel
 
-    base.class_eval do
-      update_related_indexes :systems, :name
+      base.class_eval do
+        update_related_indexes :systems, :name
 
-      add_system_hook     lambda { |system| system.update_system_groups }
-      remove_system_hook  lambda { |system| system.update_system_groups }
+        add_system_hook lambda { |system| system.update_system_groups }
+        remove_system_hook lambda { |system| system.update_system_groups }
 
-      index_options :extended_json => :extended_index_attrs,
-                    :json => {:only => [:id, :organization_id, :name, :description, :max_systems]},
-                    :display_attrs => [:name, :description, :system]
+        index_options :extended_json => :extended_index_attrs,
+                      :json          => { :only => [:id, :organization_id, :name, :description, :max_systems] },
+                      :display_attrs => [:name, :description, :system]
 
-      mapping do
-        indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
-        indexes :description, :type => 'string', :analyzer => :kt_name_analyzer
-        indexes :name_sort, :type => 'string', :index => :not_analyzed
-        indexes :name_autocomplete, :type => 'string', :analyzer => 'autcomplete_name_analyzer'
+        mapping do
+          indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
+          indexes :description, :type => 'string', :analyzer => :kt_name_analyzer
+          indexes :name_sort, :type => 'string', :index => :not_analyzed
+          indexes :name_autocomplete, :type => 'string', :analyzer => 'autcomplete_name_analyzer'
+        end
       end
     end
-  end
 
-  def extended_index_attrs
-    {:name_sort => name.downcase, :name_autocomplete => self.name,
-     :system => self.systems.collect{|s| s.name}
-    }
-  end
+    def extended_index_attrs
+      { :name_sort => name.downcase, :name_autocomplete => self.name,
+        :system    => self.systems.collect { |s| s.name }
+      }
+    end
 
-end
+  end
 end

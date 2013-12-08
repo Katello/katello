@@ -157,14 +157,14 @@ Katello::Engine.routes.draw do
     end
   end
 
-  get  "sync_schedules/index"
+  get "sync_schedules/index"
   post "sync_schedules/apply"
 
   get "sync_management/manage"
   get "sync_management/index"
   post "sync_management/sync"
-  get  "sync_management/sync_status"
-  get  "sync_management/product_status"
+  get "sync_management/sync_status"
+  get "sync_management/product_status"
   resources :sync_management, :only => [:destroy]
 
   get "notices/note_count"
@@ -260,7 +260,7 @@ Katello::Engine.routes.draw do
       post :bulk_errata_install
     end
   end
-  resources :operations, :only => [:index]  do
+  resources :operations, :only => [:index] do
   end
 
   resources :packages, :only => [:show] do

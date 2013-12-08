@@ -11,33 +11,33 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-module Validators
-  class PermissionValidator < ActiveModel::Validator
-    def validate(record)
-      if record.role.locked?
-        record.errors[:base] << _("Cannot add/remove or change permissions related to a locked role.")
-      end
+  module Validators
+    class PermissionValidator < ActiveModel::Validator
+      def validate(record)
+        if record.role.locked?
+          record.errors[:base] << _("Cannot add/remove or change permissions related to a locked role.")
+        end
 
-      if record.all_verbs? && !record.verbs.empty?
-        record.errors[:base] << N_("Cannot specify a verb if all_verbs is selected.")
-      end
+        if record.all_verbs? && !record.verbs.empty?
+          record.errors[:base] << N_("Cannot specify a verb if all_verbs is selected.")
+        end
 
-      if record.all_tags? && !record.tags.empty?
-        record.errors[:base] << N_("Cannot specify a tag if all_tags is selected.")
-      end
+        if record.all_tags? && !record.tags.empty?
+          record.errors[:base] << N_("Cannot specify a tag if all_tags is selected.")
+        end
 
-      if record.all_types? && (!record.all_verbs? || !record.all_tags?)
-        record.errors[:base] << N_("Cannot specify all_types without all_tags and all_verbs")
-      end
+        if record.all_types? && (!record.all_verbs? || !record.all_tags?)
+          record.errors[:base] << N_("Cannot specify all_types without all_tags and all_verbs")
+        end
 
-      begin
-        ResourceType.check(record.resource_type.name, record.verb_values)
-      rescue VerbNotFound => verb_error
-        record.errors[:base] << verb_error.message
-      rescue ResourceTypeNotFound => type_error
-        record.errors[:base] << type_error.message
+        begin
+          ResourceType.check(record.resource_type.name, record.verb_values)
+        rescue VerbNotFound => verb_error
+          record.errors[:base] << verb_error.message
+        rescue ResourceTypeNotFound => type_error
+          record.errors[:base] << type_error.message
+        end
       end
     end
   end
-end
 end

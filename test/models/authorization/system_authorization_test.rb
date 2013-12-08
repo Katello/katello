@@ -13,83 +13,83 @@
 require 'models/authorization/authorization_base'
 
 module Katello
-class SystemAuthorizationAdminTest < AuthorizationTestBase
+  class SystemAuthorizationAdminTest < AuthorizationTestBase
 
-  def setup
-    super
-    User.current = User.find(users('admin'))
-    @sys = @system
-    @org = @acme_corporation
-    @env = @dev
+    def setup
+      super
+      User.current = User.find(users('admin'))
+      @sys         = @system
+      @org         = @acme_corporation
+      @env         = @dev
+    end
+
+    def test_readable
+      refute_empty System.readable(@org)
+    end
+
+    def test_registerable?
+      assert System.registerable?(@env, @org)
+    end
+
+    def test_any_deletable?
+      assert System.any_deletable?(@env, @org)
+    end
+
+    def test_any_readable?
+      assert System.any_readable?(@org)
+    end
+
+    def test_readable?
+      assert @sys.readable?
+    end
+
+    def test_editable?
+      assert @sys.editable?
+    end
+
+    def test_deletable?
+      assert @sys.deletable?
+    end
+
   end
 
-  def test_readable
-    refute_empty System.readable(@org)
+  class SystemAuthorizationNoPermsTest < AuthorizationTestBase
+
+    def setup
+      super
+      User.current = User.find(users('restricted'))
+      @sys         = @system
+      @org         = @acme_corporation
+      @env         = @dev
+    end
+
+    def test_readable
+      assert_empty System.readable(@org)
+    end
+
+    def test_registerable?
+      refute System.registerable?(@env, @org)
+    end
+
+    def test_any_deletable?
+      refute System.any_deletable?(@env, @org)
+    end
+
+    def test_any_readable?
+      refute System.any_readable?(@org)
+    end
+
+    def test_readable?
+      refute @sys.readable?
+    end
+
+    def test_editable?
+      refute @sys.editable?
+    end
+
+    def test_deletable?
+      refute @sys.deletable?
+    end
+
   end
-
-  def test_registerable?
-    assert System.registerable?(@env, @org)
-  end
-
-  def test_any_deletable?
-    assert System.any_deletable?(@env, @org)
-  end
-
-  def test_any_readable?
-    assert System.any_readable?(@org)
-  end
-
-  def test_readable?
-    assert @sys.readable?
-  end
-
-  def test_editable?
-    assert @sys.editable?
-  end
-
-  def test_deletable?
-    assert @sys.deletable?
-  end
-
-end
-
-class SystemAuthorizationNoPermsTest < AuthorizationTestBase
-
-  def setup
-    super
-    User.current = User.find(users('restricted'))
-    @sys = @system
-    @org = @acme_corporation
-    @env = @dev
-  end
-
-  def test_readable
-    assert_empty System.readable(@org)
-  end
-
-  def test_registerable?
-    refute System.registerable?(@env, @org)
-  end
-
-  def test_any_deletable?
-    refute System.any_deletable?(@env, @org)
-  end
-
-  def test_any_readable?
-    refute System.any_readable?(@org)
-  end
-
-  def test_readable?
-    refute @sys.readable?
-  end
-
-  def test_editable?
-    refute @sys.editable?
-  end
-
-  def test_deletable?
-    refute @sys.deletable?
-  end
-
-end
 end

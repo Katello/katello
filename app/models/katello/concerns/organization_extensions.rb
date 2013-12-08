@@ -44,7 +44,7 @@ module Katello
         has_many :providers, :class_name => "Katello::Provider", :dependent => :destroy
         has_many :products, :class_name => "Katello::Product", :through => :providers
         has_many :environments, :class_name => "Katello::KTEnvironment", :dependent => :destroy, :inverse_of => :organization
-        has_one :library, :class_name => "Katello::KTEnvironment", :conditions => {:library => true}, :dependent => :destroy
+        has_one :library, :class_name => "Katello::KTEnvironment", :conditions => { :library => true }, :dependent => :destroy
         has_many :gpg_keys, :class_name => "Katello::GpgKey", :dependent => :destroy, :inverse_of => :organization
         has_many :permissions, :class_name => "Katello::Permission", :dependent => :destroy, :inverse_of => :organization
         has_many :sync_plans, :class_name => "Katello::SyncPlan", :dependent => :destroy, :inverse_of => :organization
@@ -62,7 +62,7 @@ module Katello
 
         attr_accessor :statistics
 
-        scope :having_name_or_label, lambda { |name_or_label| { :conditions => ["name = :id or label = :id", {:id => name_or_label}] } }
+        scope :having_name_or_label, lambda { |name_or_label| { :conditions => ["name = :id or label = :id", { :id => name_or_label }] } }
 
         before_create :create_library
         before_create :create_redhat_provider
@@ -71,7 +71,7 @@ module Katello
         validates :name, :uniqueness => true, :presence => true
         validates_with Validators::KatelloNameFormatValidator, :attributes => :name
         validates :label, :uniqueness => { :message => _("already exists (including organizations being deleted)") },
-                  :presence => true
+                  :presence           => true
         validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
         validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
         validate :unique_name_and_label
@@ -131,7 +131,7 @@ module Katello
         end
 
         def validate_destroy(current_org)
-          def_error = _("Could not delete organization '%s'.")  % [self.name]
+          def_error = _("Could not delete organization '%s'.") % [self.name]
           if (current_org == self)
             [def_error, _("The current organization cannot be deleted. Please switch to a different organization before deleting.")]
           elsif (Organization.count == 1)
@@ -142,8 +142,8 @@ module Katello
         def discover_repos(url, notify = false)
           fail _("Repository Discovery already in progress") if self.repo_discovery_task && !self.repo_discovery_task.finished?
           fail _("Discovery URL not set.") if url.blank?
-          task = self.async(:organization => self, :task_type => :repo_discovery).start_discovery_task(url, notify)
-          task.parameters = {:url => url}
+          task            = self.async(:organization => self, :task_type => :repo_discovery).start_discovery_task(url, notify)
+          task.parameters = { :url => url }
           self.task_statuses << task
           self.save!
           task
@@ -181,9 +181,9 @@ module Katello
           defaults = {
               :message => _("Informable Type must be one of the following [ %{list} ]") %
                   { :list => ALLOWED_DEFAULT_INFO_TYPES.join(", ") },
-              :error => RuntimeError
+              :error   => RuntimeError
           }
-          options = defaults.merge(options)
+          options  = defaults.merge(options)
 
           unless ALLOWED_DEFAULT_INFO_TYPES.include?(informable_type)
             fail options[:error], options[:message]
@@ -191,15 +191,15 @@ module Katello
         end
 
         def apply_default_info(informable_type, custom_info, options = {})
-          options = {:async => true}.merge(options)
+          options = { :async => true }.merge(options)
           Organization.check_informable_type!(informable_type)
-          objects = self.send(informable_type.pluralize)
+          objects       = self.send(informable_type.pluralize)
           ids_and_types = objects.inject([]) do |collection, obj|
             collection << { :informable_type => obj.class.name, :informable_id => obj.id }
           end
 
           if options[:async]
-            task = self.async(:organization => self, :task_type => "apply default info").run_apply_info(ids_and_types, custom_info)
+            task                    = self.async(:organization => self, :task_type => "apply default info").run_apply_info(ids_and_types, custom_info)
             self.apply_info_task_id = task.id
             self.save!
             return task
@@ -218,8 +218,8 @@ module Katello
         end
 
         def auto_attach_all_systems
-          job = self.owner_auto_attach
-          task = self.async(:organization => self, :task_type => "monitor owner all_systems auto_attach").monitor_owner_auto_attach(job)
+          job                                        = self.owner_auto_attach
+          task                                       = self.async(:organization => self, :task_type => "monitor owner all_systems auto_attach").monitor_owner_auto_attach(job)
           self.owner_auto_attach_all_systems_task_id = task.id
           self.save!
           return task
@@ -238,17 +238,17 @@ module Katello
           products.any?(&:syncable_content?)
         end
 
-      private
+        private # rubocop:disable AccessControl
 
         def start_discovery_task(url, notify = false)
-          task_id = AsyncOperation.current_task_id
-          task = TaskStatus.find(task_id)
-          task.parameters = {:url => url}
-          task.result ||= []
+          task_id         = AsyncOperation.current_task_id
+          task            = TaskStatus.find(task_id)
+          task.parameters = { :url => url }
+          task.result     ||= []
           task.save!
 
           #Lambda to continually update the task
-          found_func = lambda do |found_url|
+          found_func    = lambda do |found_url|
             task = TaskStatus.find(task_id)
             task.result << found_url
             task.save!

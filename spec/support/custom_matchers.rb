@@ -33,10 +33,10 @@ class Notify
       notifier_mock.should_receive(type).and_return do |*args|
         Rails.logger.debug("notify.#{type} received with:\n" + args.map do |arg|
           case arg
-            when Exception
-              "#{arg.message} (#{arg.class})\n#{arg.backtrace.join("\n")}"
-            else
-              arg.inspect
+          when Exception
+            "#{arg.message} (#{arg.class})\n#{arg.backtrace.join("\n")}"
+          else
+            arg.inspect
           end
         end.join("\n"))
         true

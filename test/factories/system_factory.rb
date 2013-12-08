@@ -6,7 +6,7 @@ FactoryGirl.define do
     end
 
     trait :alabama do
-      name     "Alabama"
+      name "Alabama"
     end
 
   end

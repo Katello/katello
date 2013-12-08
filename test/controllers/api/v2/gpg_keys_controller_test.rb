@@ -13,49 +13,49 @@
 require "katello_test_helper"
 
 module Katello
-class Api::V2::GpgKeysControllerTest < ActionController::TestCase
+  class Api::V2::GpgKeysControllerTest < ActionController::TestCase
 
-  def self.before_suite
-    models = ["GpgKey"]
-    disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
-    super
-  end
-
-  def models
-    @organization = get_organization(:organization1)
-    @product = Product.find(katello_products(:fedora).id)
-  end
-
-  def permissions
-    @administer_permission = UserPermission.new(:gpg, :organizations, nil, @organization)
-    @no_permission = NO_PERMISSION
-  end
-
-  def setup
-    setup_controller_defaults_api
-    login_user(User.find(users(:admin)))
-    User.current = User.find(users(:admin))
-    @request.env['HTTP_ACCEPT'] = 'application/json'
-    @fake_search_service = @controller.load_search_service(Support::SearchService::FakeSearchService.new)
-    models
-    permissions
-  end
-
-  def test_index
-    get :index, :organization_id => @organization.label
-
-    assert_response :success
-    assert_template 'api/v2/gpg_keys/index'
-  end
-
-  def test_index_protected
-    allowed_perms = [@administer_permission]
-    denied_perms = [@no_permission]
-
-    assert_protected_action(:index, allowed_perms, denied_perms) do
-      get :index, :organization_id => @organization.label
+    def self.before_suite
+      models = ["GpgKey"]
+      disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
+      super
     end
-  end
 
-end
+    def models
+      @organization = get_organization(:organization1)
+      @product      = Product.find(katello_products(:fedora).id)
+    end
+
+    def permissions
+      @administer_permission = UserPermission.new(:gpg, :organizations, nil, @organization)
+      @no_permission         = NO_PERMISSION
+    end
+
+    def setup
+      setup_controller_defaults_api
+      login_user(User.find(users(:admin)))
+      User.current                = User.find(users(:admin))
+      @request.env['HTTP_ACCEPT'] = 'application/json'
+      @fake_search_service        = @controller.load_search_service(Support::SearchService::FakeSearchService.new)
+      models
+      permissions
+    end
+
+    def test_index
+      get :index, :organization_id => @organization.label
+
+      assert_response :success
+      assert_template 'api/v2/gpg_keys/index'
+    end
+
+    def test_index_protected
+      allowed_perms = [@administer_permission]
+      denied_perms  = [@no_permission]
+
+      assert_protected_action(:index, allowed_perms, denied_perms) do
+        get :index, :organization_id => @organization.label
+      end
+    end
+
+  end
 end

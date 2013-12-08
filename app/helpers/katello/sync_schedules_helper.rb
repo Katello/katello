@@ -11,18 +11,18 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-module SyncSchedulesHelper
+  module SyncSchedulesHelper
 
-  def hover_format(item)
-    case item.interval
-    when 'daily'
-      _("Daily at %{time} from %{date} %{zone}") % {:time => item.plan_time, :date => item.plan_date, :zone => item.plan_zone}
-    when 'weekly'
-      _("Every %{day} at %{time} from %{date} %{zone}") % {:day => item.plan_day, :time => item.plan_time, :date => item.plan_date, :zone => item.plan_zone}
-    else
-      _("Hourly from %{date} - %{time} %{zone}") % {:date => item.plan_date, :time => item.plan_time, :zone => item.plan_zone}
+    def hover_format(item)
+      case item.interval
+      when 'daily'
+        _("Daily at %{time} from %{date} %{zone}") % { :time => item.plan_time, :date => item.plan_date, :zone => item.plan_zone }
+      when 'weekly'
+        _("Every %{day} at %{time} from %{date} %{zone}") % { :day => item.plan_day, :time => item.plan_time, :date => item.plan_date, :zone => item.plan_zone }
+      else
+        _("Hourly from %{date} - %{time} %{zone}") % { :date => item.plan_date, :time => item.plan_time, :zone => item.plan_zone }
+      end
     end
-  end
 
-end
+  end
 end

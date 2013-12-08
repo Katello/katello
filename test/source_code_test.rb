@@ -54,14 +54,14 @@ class SourceCodeTest < MiniTest::Rails::ActiveSupport::TestCase
       end.compact
 
       assert_empty bad_lines,
-             "#{message + "\n" if message}check lines:\n" + bad_lines.
-                 map { |line, line_number, file_path| ' - %s:%d: %s' % [file_path, line_number, line.strip] }.
-                 join("\n")
+                   "#{message + "\n" if message}check lines:\n" + bad_lines.
+                       map { |line, line_number, file_path| ' - %s:%d: %s' % [file_path, line_number, line.strip] }.
+                       join("\n")
     end
 
     def fail_on_ruby_keyword(message = nil, &condition)
       bad_tokens = each_file.collect do |file, file_path|
-        lexed_file = Ripper.lex(file)
+        lexed_file         = Ripper.lex(file)
         bad_tokens_in_file = []
         lexed_file.each_with_index do |entry, index|
           bad_tokens_in_file << [file_path, entry[0][0], entry[0][1]] if condition.call(lexed_file, index, entry)
@@ -69,9 +69,9 @@ class SourceCodeTest < MiniTest::Rails::ActiveSupport::TestCase
         bad_tokens_in_file
       end.flatten(1)
       assert_empty bad_tokens,
-        "#{message + "\n" if message}" + bad_tokens.collect { |file_path, line_no, column_no|
-          " - %s: [%d, %d]" % [file_path, line_no, column_no]
-        }.join("\n")
+                   "#{message + "\n" if message}" + bad_tokens.collect { |file_path, line_no, column_no|
+                     " - %s: [%d, %d]" % [file_path, line_no, column_no]
+                   }.join("\n")
     end
 
     def self.token_is_keyword?(str, lex, index, token)
@@ -200,9 +200,9 @@ Multiple anonymous placeholders:
 
   describe 'DB schema/structure' do
     it 'should be up to date' do
-      message = 'The schema is not up to date. Please run db:migrate and check in db/schema.rb or db/structure.rb'
-      schema_dirs = Dir.glob('db/migrate/*.rb') + Dir.glob('engines/*/db/migrate/*.rb')
-      schema_version = schema_dirs.collect{ |f| File.basename(f) }.sort.last[/(\d+).*.rb/, 1]
+      message        = 'The schema is not up to date. Please run db:migrate and check in db/schema.rb or db/structure.rb'
+      schema_dirs    = Dir.glob('db/migrate/*.rb') + Dir.glob('engines/*/db/migrate/*.rb')
+      schema_version = schema_dirs.collect { |f| File.basename(f) }.sort.last[/(\d+).*.rb/, 1]
       actual_version = if File.exist? 'db/schema.rb'
                          File.read('db/schema.rb')[/^ActiveRecord::Schema.define\(\:version \=\> (\d+)\) do/, 1]
                        elsif File.exist? 'db/structure.sql'

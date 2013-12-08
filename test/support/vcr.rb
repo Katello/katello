@@ -27,9 +27,9 @@ def configure_vcr
     end
 
     c.default_cassette_options = {
-      :record => mode,
-      :match_requests_on => [:method, :path, :params, :body_json],
-      :serialize_with => :syck
+        :record            => mode,
+        :match_requests_on => [:method, :path, :params, :body_json],
+        :serialize_with    => :syck
     }
 
     begin

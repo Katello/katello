@@ -11,22 +11,22 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class Api::V1::StatusController < Api::V1::ApiController
+  class Api::V1::StatusController < Api::V1::ApiController
 
-  skip_before_filter :require_user
-  skip_before_filter :authorize # ok - authenticated users are able to call this
+    skip_before_filter :require_user
+    skip_before_filter :authorize # ok - authenticated users are able to call this
 
-  api :GET, "/status/memory", "Counts objects in memory for debug purposes. Can take a while!"
-  def memory
-    User.as :admin do
-      objs = Hash.new(0)
-      ObjectSpace.each_object do |o|
-        objs[o.class] += 1
+    api :GET, "/status/memory", "Counts objects in memory for debug purposes. Can take a while!"
+    def memory
+      User.as :admin do
+        objs = Hash.new(0)
+        ObjectSpace.each_object do |o|
+          objs[o.class] += 1
+        end
+        output = objs.sort_by { |c, n| n }.last(30)
+        render :text => PP.pp(output, "")
       end
-      output = objs.sort_by { |c, n| n }.last(30)
-      render :text => PP.pp(output, "")
     end
-  end
 
-end
+  end
 end

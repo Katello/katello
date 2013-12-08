@@ -13,129 +13,129 @@
 require 'models/authorization/authorization_base'
 
 module Katello
-class SystemGroupAuthorizationAdminTest < AuthorizationTestBase
+  class SystemGroupAuthorizationAdminTest < AuthorizationTestBase
 
-  def setup
-    super
-    User.current = User.find(users('admin'))
-    @group = SystemGroup.find(katello_system_groups(:simple_group))
-    @org = @acme_corporation
+    def setup
+      super
+      User.current = User.find(users('admin'))
+      @group       = SystemGroup.find(katello_system_groups(:simple_group))
+      @org         = @acme_corporation
+    end
+
+    def test_readable
+      refute_empty SystemGroup.readable(@org)
+    end
+
+    def test_editable
+      refute_empty SystemGroup.editable(@org)
+    end
+
+    def test_systems_readable
+      refute_empty SystemGroup.systems_readable(@org)
+    end
+
+    def test_systems_editable
+      refute_empty SystemGroup.systems_editable(@org)
+    end
+
+    def test_systems_deletable
+      refute_empty SystemGroup.systems_deletable(@org)
+    end
+
+    def test_creatable?
+      assert SystemGroup.creatable?(@org)
+    end
+
+    def test_any_readable?
+      assert SystemGroup.any_readable?(@org)
+    end
+
+    def test_systems_readable?
+      assert @group.systems_readable?
+    end
+
+    def test_systems_deletable?
+      assert @group.systems_deletable?
+    end
+
+    def test_systems_editable?
+      assert @group.systems_editable?
+    end
+
+    def test_readable?
+      assert @group.readable?
+    end
+
+    def test_editable?
+      assert @group.editable?
+    end
+
+    def test_deletable?
+      assert @group.deletable?
+    end
+
   end
 
-  def test_readable
-    refute_empty SystemGroup.readable(@org)
+  class SystemGroupAuthorizationNoPermsTest < AuthorizationTestBase
+
+    def setup
+      super
+      User.current = User.find(users('restricted'))
+      @group       = SystemGroup.find(katello_system_groups(:simple_group))
+      @org         = @acme_corporation
+    end
+
+    def test_readable
+      assert_empty SystemGroup.readable(@org)
+    end
+
+    def test_editable
+      assert_empty SystemGroup.editable(@org)
+    end
+
+    def test_systems_readable
+      assert_empty SystemGroup.systems_readable(@org)
+    end
+
+    def test_systems_editable
+      assert_empty SystemGroup.systems_editable(@org)
+    end
+
+    def test_systems_deletable
+      assert_empty SystemGroup.systems_deletable(@org)
+    end
+
+    def test_creatable?
+      refute SystemGroup.creatable?(@org)
+    end
+
+    def test_any_readable?
+      refute SystemGroup.any_readable?(@org)
+    end
+
+    def test_systems_readable?
+      refute @group.systems_readable?
+    end
+
+    def test_systems_deletable?
+      refute @group.systems_deletable?
+    end
+
+    def test_systems_editable?
+      refute @group.systems_editable?
+    end
+
+    def test_readable?
+      refute @group.readable?
+    end
+
+    def test_editable?
+      refute @group.editable?
+    end
+
+    def test_deletable?
+      refute @group.deletable?
+    end
+
   end
-
-  def test_editable
-    refute_empty SystemGroup.editable(@org)
-  end
-
-  def test_systems_readable
-    refute_empty SystemGroup.systems_readable(@org)
-  end
-
-  def test_systems_editable
-    refute_empty SystemGroup.systems_editable(@org)
-  end
-
-  def test_systems_deletable
-    refute_empty SystemGroup.systems_deletable(@org)
-  end
-
-  def test_creatable?
-    assert SystemGroup.creatable?(@org)
-  end
-
-  def test_any_readable?
-    assert SystemGroup.any_readable?(@org)
-  end
-
-  def test_systems_readable?
-    assert @group.systems_readable?
-  end
-
-  def test_systems_deletable?
-    assert @group.systems_deletable?
-  end
-
-  def test_systems_editable?
-    assert @group.systems_editable?
-  end
-
-  def test_readable?
-    assert @group.readable?
-  end
-
-  def test_editable?
-    assert @group.editable?
-  end
-
-  def test_deletable?
-    assert @group.deletable?
-  end
-
-end
-
-class SystemGroupAuthorizationNoPermsTest < AuthorizationTestBase
-
-  def setup
-    super
-    User.current = User.find(users('restricted'))
-    @group = SystemGroup.find(katello_system_groups(:simple_group))
-    @org = @acme_corporation
-  end
-
-  def test_readable
-    assert_empty SystemGroup.readable(@org)
-  end
-
-  def test_editable
-    assert_empty SystemGroup.editable(@org)
-  end
-
-  def test_systems_readable
-    assert_empty SystemGroup.systems_readable(@org)
-  end
-
-  def test_systems_editable
-    assert_empty SystemGroup.systems_editable(@org)
-  end
-
-  def test_systems_deletable
-    assert_empty SystemGroup.systems_deletable(@org)
-  end
-
-  def test_creatable?
-    refute SystemGroup.creatable?(@org)
-  end
-
-  def test_any_readable?
-    refute SystemGroup.any_readable?(@org)
-  end
-
-  def test_systems_readable?
-    refute @group.systems_readable?
-  end
-
-  def test_systems_deletable?
-    refute @group.systems_deletable?
-  end
-
-  def test_systems_editable?
-    refute @group.systems_editable?
-  end
-
-  def test_readable?
-    refute @group.readable?
-  end
-
-  def test_editable?
-    refute @group.editable?
-  end
-
-  def test_deletable?
-    refute @group.deletable?
-  end
-
-end
 end

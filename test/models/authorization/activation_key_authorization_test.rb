@@ -13,45 +13,45 @@
 require 'models/authorization/authorization_base'
 
 module Katello
-class ActivationKeyAuthorizationAdminTest < AuthorizationTestBase
+  class ActivationKeyAuthorizationAdminTest < AuthorizationTestBase
 
-  def setup
-    super
-    User.current = User.find(users('admin'))
+    def setup
+      super
+      User.current = User.find(users('admin'))
+    end
+
+    def test_readable
+      refute_empty ActivationKey.readable(@acme_corporation)
+    end
+
+    def test_readable?
+      assert ActivationKey.readable?(@acme_corporation)
+    end
+
+    def test_manageable?
+      assert ActivationKey.manageable?(@acme_corporation)
+    end
+
   end
 
-  def test_readable
-    refute_empty ActivationKey.readable(@acme_corporation)
+  class ActivationKeyAuthorizationNoPermsTest < AuthorizationTestBase
+
+    def setup
+      super
+      User.current = User.find(users(:restricted))
+    end
+
+    def test_readable
+      assert_empty ActivationKey.readable(@acme_corporation)
+    end
+
+    def test_readable?
+      refute ActivationKey.readable?(@acme_corporation)
+    end
+
+    def test_manageable?
+      refute ActivationKey.manageable?(@acme_corporation)
+    end
+
   end
-
-  def test_readable?
-    assert ActivationKey.readable?(@acme_corporation)
-  end
-
-  def test_manageable?
-    assert ActivationKey.manageable?(@acme_corporation)
-  end
-
-end
-
-class ActivationKeyAuthorizationNoPermsTest  < AuthorizationTestBase
-
-  def setup
-    super
-    User.current = User.find(users(:restricted))
-  end
-
-  def test_readable
-    assert_empty ActivationKey.readable(@acme_corporation)
-  end
-
-  def test_readable?
-    refute ActivationKey.readable?(@acme_corporation)
-  end
-
-  def test_manageable?
-    refute ActivationKey.manageable?(@acme_corporation)
-  end
-
-end
 end

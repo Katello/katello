@@ -11,21 +11,21 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class UserMailer < ActionMailer::Base
-  include AsyncOrchestration
+  class UserMailer < ActionMailer::Base
+    include AsyncOrchestration
 
-  default :from => Katello.config.email_reply_address
+    default :from => Katello.config.email_reply_address
 
-  def send_logins(users)
-    org = users.collect { |u| u.default_org }.first || Organization.first
-    UserMailer.async(:organization => org).logins(users, I18n.locale)
+    def send_logins(users)
+      org = users.collect { |u| u.default_org }.first || Organization.first
+      UserMailer.async(:organization => org).logins(users, I18n.locale)
+    end
+
+    def logins(users, locale)
+      I18n.locale = locale
+      @email      = users.first.mail
+      @users      = users
+      mail :to => @email, :subject => _("Katello Logins")
+    end
   end
-
-  def logins(users, locale)
-    I18n.locale = locale
-    @email = users.first.mail
-    @users = users
-    mail :to => @email, :subject => _("Katello Logins")
-  end
-end
 end

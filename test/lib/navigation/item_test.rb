@@ -13,25 +13,25 @@
 require 'katello_test_helper'
 
 module Katello
-class NavigationItemTest < ActiveSupport::TestCase
+  class NavigationItemTest < ActiveSupport::TestCase
 
-  def setup
-    @item = Navigation::Item.new('test_item', 'Test Item', true, '/katello/test/item')
+    def setup
+      @item = Navigation::Item.new('test_item', 'Test Item', true, '/katello/test/item')
+    end
+
+    def test_new
+      refute_nil @item
+    end
+
+    def test_to_json
+      item_hash = {
+          :key     => 'test_item',
+          :display => 'Test Item',
+          :url     => '/katello/test/item'
+      }
+
+      assert_equal item_hash.to_json, @item.to_json
+    end
+
   end
-
-  def test_new
-    refute_nil @item
-  end
-
-  def test_to_json
-    item_hash = {
-      :key    => 'test_item',
-      :display=> 'Test Item',
-      :url    => '/katello/test/item'
-    }
-
-    assert_equal item_hash.to_json, @item.to_json
-  end
-
-end
 end

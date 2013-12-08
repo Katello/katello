@@ -30,7 +30,7 @@ module Katello
     def_param_group :search do
       param :search, String, :desc => "Search string"
       param :offset, :number, :desc => "Starting location to retrieve data from"
-      param :limit,  :number, :desc => "Number of results to return"
+      param :limit, :number, :desc => "Number of results to return"
       param :sort, Hash do
         param :by, String, :desc => "Field to sort the results on"
         param :order, String, :desc => "How to order the sorted results (e.g. ASC for ascending)"
@@ -41,38 +41,38 @@ module Katello
     param :root_name, String, :desc => "root-node of collection contained in responses (default: 'results')"
 
     def item_search(item_class, params, options)
-      options[:sort_by] = params[:sort_by] if params[:sort_by]
+      options[:sort_by]    = params[:sort_by] if params[:sort_by]
       options[:sort_order] = params[:sort_order] if params[:sort_order]
-      options[:page_size] = params[:page_size] || current_user.page_size
+      options[:page_size]  = params[:page_size] || current_user.page_size
 
-      items = Glue::ElasticSearch::Items.new(item_class)
+      items                = Glue::ElasticSearch::Items.new(item_class)
       systems, total_count = items.retrieve(params[:search], params[:offset], options)
 
       {
-        :results  => systems,
-        :subtotal => total_count,
-        :total    => items.total_items
+          :results  => systems,
+          :subtotal => total_count,
+          :total    => items.total_items
       }
     end
 
     protected
 
-      def labelize_params(params)
-        return params[:label] unless params.try(:[], :label).nil?
-        return Util::Model.labelize(params[:name]) unless params.try(:[], :name).nil?
-      end
+    def labelize_params(params)
+      return params[:label] unless params.try(:[], :label).nil?
+      return Util::Model.labelize(params[:name]) unless params.try(:[], :name).nil?
+    end
 
-      def find_organization
-        organization_id = params[:organization_id]
-        @organization = Organization.without_deleting.having_name_or_label(organization_id).first
-      end
+    def find_organization
+      organization_id = params[:organization_id]
+      @organization   = Organization.without_deleting.having_name_or_label(organization_id).first
+    end
 
-      def sort_params
-        options = {}
-        options[:sort_by] = params[:sort_by] if params[:sort_by]
-        options[:sort_order] = params[:sort_order] if params[:sort_order]
-        options
-      end
+    def sort_params
+      options              = {}
+      options[:sort_by]    = params[:sort_by] if params[:sort_by]
+      options[:sort_order] = params[:sort_order] if params[:sort_order]
+      options
+    end
 
   end
 end

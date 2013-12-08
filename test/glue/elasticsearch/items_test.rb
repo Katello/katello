@@ -13,62 +13,62 @@
 require 'katello_test_helper'
 
 module Katello
-class GlueElasticSearchTest < ActiveSupport::TestCase
+  class GlueElasticSearchTest < ActiveSupport::TestCase
 
-  def setup
-    @FakeClass = Class.new do
-      def self.search
+    def setup
+      @FakeClass = Class.new do
+        def self.search
+        end
+
+        def self.where(*args)
+        end
+
+        def self.mapping(*args)
+          {}
+        end
       end
 
-      def self.where(*args)
+      @results = MiniTest::Mock.new
+      @results.expect(:class, 0)
+      @results.expect(:empty?, true)
+
+      @items = Glue::ElasticSearch::Items.new(@FakeClass)
+    end
+
+    def test_items
+      @results.expect(:total, 0)
+      @results.expect(:total, 0)
+      @results.expect(:results, [])
+
+      @FakeClass.stub(:search, @results) do
+        items, count = @items.retrieve("*")
+
+        assert_empty items
+        assert_equal 0, count
       end
+    end
 
-      def self.mapping(*args)
-        {}
+    def test_load_records
+      @results.expect(:length, 0)
+      @results.expect(:order, [], [[]])
+
+      @FakeClass.stub(:where, @results) do
+        @items.results = []
+        items          = @items.load_records
+
+        assert_empty items
       end
     end
 
-    @results = MiniTest::Mock.new
-    @results.expect(:class, 0)
-    @results.expect(:empty?, true)
+    def test_total_items
+      @results.expect(:total, 10)
 
-    @items = Glue::ElasticSearch::Items.new(@FakeClass)
-  end
+      @FakeClass.stub(:search, @results) do
+        total = @items.total_items
 
-  def test_items
-    @results.expect(:total, 0)
-    @results.expect(:total, 0)
-    @results.expect(:results, [])
-
-    @FakeClass.stub(:search, @results) do
-      items, count = @items.retrieve("*")
-
-      assert_empty items
-      assert_equal 0, count
+        assert_equal 10, total
+      end
     end
+
   end
-
-  def test_load_records
-    @results.expect(:length, 0)
-    @results.expect(:order, [], [[]])
-
-    @FakeClass.stub(:where, @results) do
-      @items.results = []
-      items = @items.load_records
-
-      assert_empty items
-    end
-  end
-
-  def test_total_items
-    @results.expect(:total, 10)
-
-    @FakeClass.stub(:search, @results) do
-      total = @items.total_items
-
-      assert_equal 10, total
-    end
-  end
-
-end
 end

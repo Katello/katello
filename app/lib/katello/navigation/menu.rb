@@ -11,76 +11,76 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-module Navigation
-  class Menu
+  module Navigation
+    class Menu
 
-    attr_writer :authorization # Dynamically sets the authorization rule
-    attr_accessor :key, :display, :type, :items
+      attr_writer :authorization # Dynamically sets the authorization rule
+      attr_accessor :key, :display, :type, :items
 
-    # Initalizer for the Navigation Menu object
-    def initialize(*args)
-      process_additions(*args)
-      generate
-    end
-
-    # Returns whether this item is accessible based on authorization rules
-    #   Expects either a Proc or a boolean
-    def accessible?
-      if @authorization.is_a? Proc
-        @authorization.call
-      else
-        @authorization
+      # Initalizer for the Navigation Menu object
+      def initialize(*args)
+        process_additions(*args)
+        generate
       end
-    end
 
-    # Defines the JSON structure for navigation menus
-    #
-    # @return [String] the JSON representation of a navigation menu
-    def as_json(*args)
-      {
-        :key    => @key,
-        :display => @display,
-        :type   => @type,
-        :items  => @items
-      }
-    end
-
-    # Generates the menu structure
-    def generate
-      prune
-    end
-
-    def process_additions(*args)
-      additions = Navigation::Additions.list
-
-      additions.each do |addition|
-        index =  @items.index{|item| item.key.to_sym == addition[:key].to_sym}
-        if index && addition[:type] == :delete
-          @items.delete_at(index)
-        elsif index
-          index += 1 if addition[:type] == :after
-          node = addition[:node].new(*args)
-          @items.insert(index, node)
-        end
-      end
-    end
-
-    # Recursively prunes the menu items by checking if they are accessible
-    def prune
-      @items.delete_if do |item|
-        if item.accessible?
-          if item.is_a? Navigation::Menu
-            item.prune
-            item.items.empty?
-          else
-            false
-          end
+      # Returns whether this item is accessible based on authorization rules
+      #   Expects either a Proc or a boolean
+      def accessible?
+        if @authorization.is_a? Proc
+          @authorization.call
         else
-          true
+          @authorization
         end
       end
-    end
 
+      # Defines the JSON structure for navigation menus
+      #
+      # @return [String] the JSON representation of a navigation menu
+      def as_json(*args)
+        {
+            :key     => @key,
+            :display => @display,
+            :type    => @type,
+            :items   => @items
+        }
+      end
+
+      # Generates the menu structure
+      def generate
+        prune
+      end
+
+      def process_additions(*args)
+        additions = Navigation::Additions.list
+
+        additions.each do |addition|
+          index = @items.index { |item| item.key.to_sym == addition[:key].to_sym }
+          if index && addition[:type] == :delete
+            @items.delete_at(index)
+          elsif index
+            index += 1 if addition[:type] == :after
+            node  = addition[:node].new(*args)
+            @items.insert(index, node)
+          end
+        end
+      end
+
+      # Recursively prunes the menu items by checking if they are accessible
+      def prune
+        @items.delete_if do |item|
+          if item.accessible?
+            if item.is_a? Navigation::Menu
+              item.prune
+              item.items.empty?
+            else
+              false
+            end
+          else
+            true
+          end
+        end
+      end
+
+    end
   end
-end
 end

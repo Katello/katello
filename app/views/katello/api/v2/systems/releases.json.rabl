@@ -1,5 +1,5 @@
 node :results do
-    @collection[:releases].map do |release|
-        release
-    end
+  @collection[:releases].map do |release|
+    release
+  end
 end

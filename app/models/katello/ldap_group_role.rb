@@ -11,11 +11,11 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class LdapGroupRole < ActiveRecord::Base
-  self.include_root_in_json = false
+  class LdapGroupRole < ActiveRecord::Base
+    self.include_root_in_json = false
 
-  validates :ldap_group, :uniqueness => {:scope => :role_id}
-  validates_with Validators::LdapGroupValidator, :attributes => :ldap_group
-  belongs_to :role, :class_name => "Katello::Role", :inverse_of => :ldap_group_roles
-end
+    validates :ldap_group, :uniqueness => { :scope => :role_id }
+    validates_with Validators::LdapGroupValidator, :attributes => :ldap_group
+    belongs_to :role, :class_name => "Katello::Role", :inverse_of => :ldap_group_roles
+  end
 end

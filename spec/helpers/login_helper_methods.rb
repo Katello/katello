@@ -22,16 +22,16 @@ module LoginHelperMethods
       else
         disable_user_orchestration
 
-        @user = User.create(:login => "foo-user", :password => "password", :mail => "foo-user@somewhere.com", :page_size=>25)
-        @permission = Permission.create!(:role =>@user.roles.first, :all_types => true, :name => "superadmin")
+        @user       = User.create(:login => "foo-user", :password => "password", :mail => "foo-user@somewhere.com", :page_size => 25)
+        @permission = Permission.create!(:role => @user.roles.first, :all_types => true, :name => "superadmin")
       end
 
       request.env['warden'] = mock(Warden, :user => @user, :authenticate => @user, :authenticate! => @user,
-                                   :raw_session => mock(:raw_session).as_null_object, :logout => true)
+                                   :raw_session  => mock(:raw_session).as_null_object, :logout => true)
       controller.stub!(:require_org).and_return({})
       return @user
     else
-      @mock_user = options[:user]
+      @mock_user            = options[:user]
       request.env['warden'] = mock(Warden, :user => @mock_user, :authenticate => @mock_user, :authenticate! => @mock_user)
       controller.stub!(:require_org).and_return({})
       return @mock_user
@@ -51,8 +51,8 @@ module LoginHelperMethods
   end
 
   def login_user_api user=nil
-    @mock_user = user
-    @mock_user ||= mock_model(User, :login=>"test_mock_user", :password=>"Password", :mail=>"test_mock_user@somewhere.com", :page_size=>25).as_null_object
+    @mock_user            = user
+    @mock_user            ||= mock_model(User, :login => "test_mock_user", :password => "Password", :mail => "test_mock_user@somewhere.com", :page_size => 25).as_null_object
     request.env['warden'] = mock(Warden, :user => @mock_user, :authenticate => @mock_user, :authenticate! => @mock_user)
     controller.stub!(:require_user).and_return({})
     controller.stub!(:current_user).and_return(@mock_user)

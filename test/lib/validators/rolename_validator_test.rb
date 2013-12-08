@@ -13,32 +13,32 @@
 require 'katello_test_helper'
 
 module Katello
-class RolenameValidatorTest < ActiveSupport::TestCase
+  class RolenameValidatorTest < ActiveSupport::TestCase
 
-  def setup
-    @validator = Validators::RolenameValidator.new({:attributes => [:name]})
-    @model = OpenStruct.new(:errors => {:name => []})
+    def setup
+      @validator = Validators::RolenameValidator.new({ :attributes => [:name] })
+      @model     = OpenStruct.new(:errors => { :name => [] })
+    end
+
+    def test_validate_each
+      @validator.validate_each(@model, :name, "Test2 Name_underline-dash")
+
+      assert_empty @model.errors[:name]
+    end
+
+    test "fails with more than 148 characters" do
+      cs            = [*'0'..'9', *'a'..'z', *'A'..'Z']
+      random_string = 149.times.map { cs.sample }.join
+      @validator.validate_each(@model, :name, random_string)
+
+      refute_empty @model.errors[:name]
+    end
+
+    test "fails if blank" do
+      @validator.validate_each(@model, :name, '')
+
+      refute_empty @model.errors[:name]
+    end
+
   end
-
-  def test_validate_each
-    @validator.validate_each(@model, :name, "Test2 Name_underline-dash")
-
-    assert_empty @model.errors[:name]
-  end
-
-  test "fails with more than 148 characters" do
-    cs = [*'0'..'9', *'a'..'z', *'A'..'Z']
-    random_string = 149.times.map { cs.sample }.join
-    @validator.validate_each(@model, :name, random_string)
-
-    refute_empty @model.errors[:name]
-  end
-
-  test "fails if blank" do
-    @validator.validate_each(@model, :name, '')
-
-    refute_empty @model.errors[:name]
-  end
-
-end
 end

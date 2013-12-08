@@ -18,19 +18,19 @@ module Katello::UrlConstrainedCookieStoreV30X
     response = @app.call(env)
 
     session_data = env[ActionDispatch::Session::AbstractStore::ENV_SESSION_KEY]
-    options = env[ActionDispatch::Session::AbstractStore::ENV_SESSION_OPTIONS_KEY]
+    options      = env[ActionDispatch::Session::AbstractStore::ENV_SESSION_OPTIONS_KEY]
 
     if !session_data.is_a?(ActionDispatch::Session::AbstractStore::SessionHash) || session_data.loaded? || options[:expire_after]
       session_data.send(:load!) if session_data.is_a?(ActionDispatch::Session::AbstractStore::SessionHash) && !session_data.loaded?
 
-      sid = options[:id] || generate_sid
+      sid          = options[:id] || generate_sid
       session_data = session_data.to_hash
 
       value = set_session(env, sid, session_data)
       return response unless value
 
       request = ActionDispatch::Request.new(env)
-      cookie = create_cookie(request, value, options)
+      cookie  = create_cookie(request, value, options)
       set_cookie(request, cookie.merge!(options))
     end
 
@@ -51,7 +51,7 @@ module Katello::UrlConstrainedCookieStoreV32X
     return [status, headers, body] unless commit_session?(env, session, options)
 
     session.send(:load!) unless loaded_session?(session)
-    session = session.to_hash
+    session    = session.to_hash
     session_id ||= options[:id] || generate_sid
 
     if !data = set_session(env, session_id, session, options)
@@ -79,7 +79,7 @@ class Katello::UrlConstrainedCookieStore < ActionDispatch::Session::CookieStore
   end
 
   def create_cookie(request, cookie_data, options)
-    cookie = {}
+    cookie         = {}
     cookie[:value] = cookie_data
     if options[:expire_after]
       cookie[:value]['created_at'] ||= Time.now
@@ -87,7 +87,7 @@ class Katello::UrlConstrainedCookieStore < ActionDispatch::Session::CookieStore
         cookie[:expires] = cookie[:value]['created_at'] + options[:expire_after]
       else
         cookie[:value]['created_at'] = Time.now
-        cookie[:expires] = cookie[:value]['created_at'] + options[:expire_after]
+        cookie[:expires]             = cookie[:value]['created_at'] + options[:expire_after]
       end
     end
 

@@ -12,108 +12,108 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class Api::V1::ContentViewsController < Api::V1::ApiController
-  before_filter :find_environment, :only => [:promote]
-  before_filter :find_environment_or_organization, :only => [:index]
-  before_filter :find_content_view, :only => [:show, :promote, :refresh, :destroy]
-  before_filter :authorize
+  class Api::V1::ContentViewsController < Api::V1::ApiController
+    before_filter :find_environment, :only => [:promote]
+    before_filter :find_environment_or_organization, :only => [:index]
+    before_filter :find_content_view, :only => [:show, :promote, :refresh, :destroy]
+    before_filter :authorize
 
-  def rules
-    index_test   = lambda { ContentView.any_readable?(@organization) }
-    show_test    = lambda { @view.readable? }
-    promote_test = lambda { @view.promotable? && @environment.changesets_promotable? }
-    refresh_test = lambda { @view.content_view_definition.publishable? }
-    delete_test  = lambda { @view.deletable? }
+    def rules
+      index_test   = lambda { ContentView.any_readable?(@organization) }
+      show_test    = lambda { @view.readable? }
+      promote_test = lambda { @view.promotable? && @environment.changesets_promotable? }
+      refresh_test = lambda { @view.content_view_definition.publishable? }
+      delete_test  = lambda { @view.deletable? }
 
-    {
-        :index   => index_test,
-        :show    => show_test,
-        :promote => promote_test,
-        :refresh => refresh_test,
-        :destroy => delete_test
-    }
-  end
-
-  api :GET, "/organizations/:organization_id/content_views", "List content views"
-  param :organization_id, :identifier, :desc => "organization identifier"
-  param :environment_id, :identifier, :desc => "environment identifier", :required => false
-  param :label, String, :desc => "content view label", :required => false
-  param :name, String, :desc => "content view name", :required => false
-  param :id, :identifier, :desc => "content view id", :required => false
-  def index
-    query_params.delete(:content_view)
-    query_params.delete(:environment_id)
-    query_params.delete(:organization_id)
-
-    search        = ContentView.where(query_params)
-    @content_views = if @environment
-                       search.readable(@organization).in_environment(@environment)
-                     else
-                       search.readable(@organization)
-                     end
-
-    respond :collection => @content_views
-  end
-
-  api :GET, "/content_views/:id", "Show a content view"
-  param :id, :identifier, :desc => "content view id"
-  param :environment_id, :identifier, :desc => "environment id", :required => false
-  def show
-    render :json => @view.as_json(:environment => @environment)
-  end
-
-  api :POST, "/content_views/:id/promote", "Promote a content view to next environment"
-  param :id, :identifier, :desc => "content view id"
-  param :environment_id, :identifier, :desc => "environment promoting to"
-  def promote
-    task = @view.promote_via_changeset(@environment)
-    respond_for_async :resource => task
-  end
-
-  api :POST, "/content_views/:id/refresh", "Refresh a content view"
-  param :id, :identifier, :desc => "content view id"
-  def refresh
-    version = @view.refresh_view(:async => true)
-    respond_for_async :resource => version.task_status, :status => 202
-  end
-
-  api :DELETE, "/content_views/:id"
-  param :id, :identifier, :desc => "content view id"
-  def destroy
-    @view.destroy
-    if @view.destroyed?
-      render :text => _("Deleted content view [ %s ]") % @view.name, :status => 200
-    else
-      fail HttpErrors::InternalError, _("Error while deleting content view [ %{name} ]: %{error}") %
-          { :name => @view.name, :error => @view.errors.full_messages }
+      {
+          :index   => index_test,
+          :show    => show_test,
+          :promote => promote_test,
+          :refresh => refresh_test,
+          :destroy => delete_test
+      }
     end
-  end
 
-  private
+    api :GET, "/organizations/:organization_id/content_views", "List content views"
+    param :organization_id, :identifier, :desc => "organization identifier"
+    param :environment_id, :identifier, :desc => "environment identifier", :required => false
+    param :label, String, :desc => "content view label", :required => false
+    param :name, String, :desc => "content view name", :required => false
+    param :id, :identifier, :desc => "content view id", :required => false
+    def index
+      query_params.delete(:content_view)
+      query_params.delete(:environment_id)
+      query_params.delete(:organization_id)
 
-  def find_content_view
-    @view = ContentView.find(params[:id])
-    if params[:action] != "show" && @view.default?
-      fail HttpErrors::BadRequest, _("The default content view cannot be edited, promoted, refreshed, or destroyed.")
+      search         = ContentView.where(query_params)
+      @content_views = if @environment
+                         search.readable(@organization).in_environment(@environment)
+                       else
+                         search.readable(@organization)
+                       end
+
+      respond :collection => @content_views
     end
-  end
 
-  def find_environment
-    @environment = KTEnvironment.find_by_id(params[:environment_id])
-    fail HttpErrors::NotFound, _("Couldn't find environment '%s'") % params[:environment_id] if @environment.nil?
-    @organization ||= @environment.organization
-  end
+    api :GET, "/content_views/:id", "Show a content view"
+    param :id, :identifier, :desc => "content view id"
+    param :environment_id, :identifier, :desc => "environment id", :required => false
+    def show
+      render :json => @view.as_json(:environment => @environment)
+    end
 
-  def find_environment_or_organization
-    if params[:environment_id]
+    api :POST, "/content_views/:id/promote", "Promote a content view to next environment"
+    param :id, :identifier, :desc => "content view id"
+    param :environment_id, :identifier, :desc => "environment promoting to"
+    def promote
+      task = @view.promote_via_changeset(@environment)
+      respond_for_async :resource => task
+    end
+
+    api :POST, "/content_views/:id/refresh", "Refresh a content view"
+    param :id, :identifier, :desc => "content view id"
+    def refresh
+      version = @view.refresh_view(:async => true)
+      respond_for_async :resource => version.task_status, :status => 202
+    end
+
+    api :DELETE, "/content_views/:id"
+    param :id, :identifier, :desc => "content view id"
+    def destroy
+      @view.destroy
+      if @view.destroyed?
+        render :text => _("Deleted content view [ %s ]") % @view.name, :status => 200
+      else
+        fail HttpErrors::InternalError, _("Error while deleting content view [ %{name} ]: %{error}") %
+            { :name => @view.name, :error => @view.errors.full_messages }
+      end
+    end
+
+    private
+
+    def find_content_view
+      @view = ContentView.find(params[:id])
+      if params[:action] != "show" && @view.default?
+        fail HttpErrors::BadRequest, _("The default content view cannot be edited, promoted, refreshed, or destroyed.")
+      end
+    end
+
+    def find_environment
       @environment = KTEnvironment.find_by_id(params[:environment_id])
       fail HttpErrors::NotFound, _("Couldn't find environment '%s'") % params[:environment_id] if @environment.nil?
       @organization ||= @environment.organization
-    else
-      @organization = get_organization params[:organization_id]
-      fail HttpErrors::NotFound, _("Couldn't find organization '%s'") % params[:organization_id] if @organization.nil?
     end
-  end
 
-end
+    def find_environment_or_organization
+      if params[:environment_id]
+        @environment = KTEnvironment.find_by_id(params[:environment_id])
+        fail HttpErrors::NotFound, _("Couldn't find environment '%s'") % params[:environment_id] if @environment.nil?
+        @organization ||= @environment.organization
+      else
+        @organization = get_organization params[:organization_id]
+        fail HttpErrors::NotFound, _("Couldn't find organization '%s'") % params[:organization_id] if @organization.nil?
+      end
+    end
+
+  end
 end

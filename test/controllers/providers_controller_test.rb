@@ -14,26 +14,26 @@
 require "katello_test_helper"
 
 module Katello
-class ProvidersControllerTest < ActionController::TestCase
+  class ProvidersControllerTest < ActionController::TestCase
 
-  def setup
-    setup_controller_defaults
-    @org = get_organization(:organization1)
-    @redhat_product = katello_providers(:redhat)
-    @custom_product = katello_providers(:fedora_hosted)
-    login_user(User.find(users(:admin)))
-    set_organization(@org)
+    def setup
+      setup_controller_defaults
+      @org            = get_organization(:organization1)
+      @redhat_product = katello_providers(:redhat)
+      @custom_product = katello_providers(:fedora_hosted)
+      login_user(User.find(users(:admin)))
+      set_organization(@org)
 
-    models = ["Organization", "KTEnvironment", "Provider", "Product"]
-    services = ["Candlepin", "Pulp", "ElasticSearch", "Foreman"]
-    disable_glue_layers(services, models)
-    Provider.stubs(:display_attributes).returns([])
+      models   = ["Organization", "KTEnvironment", "Provider", "Product"]
+      services = ["Candlepin", "Pulp", "ElasticSearch", "Foreman"]
+      disable_glue_layers(services, models)
+      Provider.stubs(:display_attributes).returns([])
+    end
+
+    test 'test index should be successful' do
+      get :index
+      assert_response :success
+    end
+
   end
-
-  test 'test index should be successful' do
-    get :index
-    assert_response :success
-  end
-
-end
 end

@@ -11,9 +11,9 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class RegisterWithActivationKeyContraint
-  def matches?(request)
-    request.params[:activation_keys]
+  class RegisterWithActivationKeyContraint
+    def matches?(request)
+      request.params[:activation_keys]
+    end
   end
-end
 end

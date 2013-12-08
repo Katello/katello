@@ -14,7 +14,7 @@ require 'katello_test_helper'
 
 def check_menu_items(items)
   return if items.nil?
-  keys = items.map{|i| i[:key]}
+  keys = items.map { |i| i[:key] }
   keys.uniq.must_equal(keys)
   items.each do |item|
     check_menu_items(item[:items]) if item[:items] && item[:items].is_a?(Array)
@@ -22,53 +22,53 @@ def check_menu_items(items)
 end
 
 module Katello
-describe Navigation do
+  describe Navigation do
 
-  before do
-    AppConfig = double() unless defined?(AppConfig)
-    AppConfig.stubs(:katello?) { true }
+    before do
+      AppConfig = double() unless defined?(AppConfig)
+      AppConfig.stubs(:katello?) { true }
 
-    @navigation_class = Class.new do
+      @navigation_class = Class.new do
 
-      class << self
-        define_method(:helper_method) {|s|}
-      end
-
-      define_method(:_) {|s| s}
-      def method_missing(*args)
-        if args.first.to_s =~ /_path$/
-          return "/"
-        else
-          super
+        class << self
+          define_method(:helper_method) { |s| }
         end
+
+        define_method(:_) { |s| s }
+        def method_missing(*args)
+          if args.first.to_s =~ /_path$/
+            return "/"
+          else
+            super
+          end
+        end
+        include Navigation
       end
-      include Navigation
+
+      # create an instance
+      @navigation       = @navigation_class.new
     end
 
-    # create an instance
-    @navigation = @navigation_class.new
-  end
-
-  [:menu_main,
-   :admin_main,
-   :systems_navigation,
-   :promotion_distribution_navigation,
-   :organization_navigation,
-   :system_groups_navigation,
-   :gpg_keys_navigation,
-   :activation_keys_navigation,
-   :user_navigation,
-   :promotion_errata_navigation,
-   :custom_provider_navigation,
-   :subscriptions_navigation,
-   :new_subscription_navigation,
-   :promotion_packages_navigation
+    [:menu_main,
+     :admin_main,
+     :systems_navigation,
+     :promotion_distribution_navigation,
+     :organization_navigation,
+     :system_groups_navigation,
+     :gpg_keys_navigation,
+     :activation_keys_navigation,
+     :user_navigation,
+     :promotion_errata_navigation,
+     :custom_provider_navigation,
+     :subscriptions_navigation,
+     :new_subscription_navigation,
+     :promotion_packages_navigation
     ].each do |menu|
-    describe "##{menu} (katello)" do #TODO headpin
-      subject { @navigation.send(menu) }
-      specify { check_menu_items(subject) }
+      describe "##{menu} (katello)" do #TODO headpin
+        subject { @navigation.send(menu) }
+        specify { check_menu_items(subject) }
+      end
     end
-  end
 
-end
+  end
 end

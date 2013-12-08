@@ -11,23 +11,23 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-module Navigation
-  module Menus
+  module Navigation
+    module Menus
 
-    class Banner < Navigation::Menu
+      class Banner < Navigation::Menu
 
-      include Katello::ApplicationHelper
+        include Katello::ApplicationHelper
 
-      def initialize(user)
-        @key           = :banner
-        @authorization = true
-        @items         = [
-          Navigation::Menus::User.new(user)
-        ]
-        super
+        def initialize(user)
+          @key           = :banner
+          @authorization = true
+          @items         = [
+              Navigation::Menus::User.new(user)
+          ]
+          super
+        end
+
       end
-
     end
   end
-end
 end

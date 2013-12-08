@@ -13,67 +13,67 @@
 require "katello_test_helper"
 
 module Katello
-class ContentViewsControllerTest < ActionController::TestCase
-  fixtures :all
+  class ContentViewsControllerTest < ActionController::TestCase
+    fixtures :all
 
-  def self.before_suite
-    models = ["Organization", "KTEnvironment", "User", "Product", "Repository",
-              "ContentViewEnvironment", "Filter", "ContentViewDefinitionBase",
-              "ContentViewDefinition", "ContentViewDefinitionRepository",
-              "ContentViewDefinitionProduct", "FilterRule", "PackageRule",
-              "PackageGroupRule", "ErratumRule", "ContentView", "ContentViewVersion",
-              "ContentViewVersionEnvironment"]
+    def self.before_suite
+      models = ["Organization", "KTEnvironment", "User", "Product", "Repository",
+                "ContentViewEnvironment", "Filter", "ContentViewDefinitionBase",
+                "ContentViewDefinition", "ContentViewDefinitionRepository",
+                "ContentViewDefinitionProduct", "FilterRule", "PackageRule",
+                "PackageGroupRule", "ErratumRule", "ContentView", "ContentViewVersion",
+                "ContentViewVersionEnvironment"]
 
-    services = ["Candlepin", "Pulp", "ElasticSearch"]
-    disable_glue_layers(services, models, true)
-    super
+      services = ["Candlepin", "Pulp", "ElasticSearch"]
+      disable_glue_layers(services, models, true)
+      super
+    end
+
+    def setup
+      setup_controller_defaults
+      @org = get_organization(:organization1)
+
+      login_user(User.find(users(:admin)))
+      set_organization(get_organization(:organization1))
+
+      @content_view_definition              = katello_content_view_definition_bases(:simple_cvd)
+      @content_view                         = katello_content_views(:library_dev_view)
+      @content_view.content_view_definition = @content_view_definition
+      @content_view.save!
+    end
+
+    test "DELETE destroy should be successful" do
+      content_view                         = katello_content_views(:library_view)
+      content_view.content_view_definition = @content_view_definition
+      content_view.save!
+      # success notice created
+      notify = Notifications::Notifier.new
+      notify.expects(:success).at_least_once
+      @controller.expects(:notify).at_least_once.returns(notify)
+
+      delete :destroy, :content_view_definition_id => content_view.content_view_definition.id, :id => content_view.id
+
+      assert_response :success
+      assert_nil ContentView.find_by_id(content_view.id)
+    end
+
+    test "POST refresh should be successful" do
+      # success notice created
+      notify = Notifications::Notifier.new
+      notify.expects(:success).at_least_once
+      @controller.expects(:notify).at_least_once.returns(notify)
+
+      assert_nil @content_view.versions.last.task_status
+      assert_equal @content_view.versions.last.version, 1
+
+      post :refresh, :content_view_definition_id => @content_view_definition.id, :id => @content_view.id
+
+      assert_response :success
+      assert_template :partial => 'katello/content_view_definitions/views/_view'
+
+      view = ContentView.find_by_id(@content_view.id)
+      refute_nil view.versions.last.task_status
+      assert_equal view.reload.versions.last.version, 2
+    end
   end
-
-  def setup
-    setup_controller_defaults
-    @org = get_organization(:organization1)
-
-    login_user(User.find(users(:admin)))
-    set_organization(get_organization(:organization1))
-
-    @content_view_definition = katello_content_view_definition_bases(:simple_cvd)
-    @content_view = katello_content_views(:library_dev_view)
-    @content_view.content_view_definition = @content_view_definition
-    @content_view.save!
-  end
-
-  test "DELETE destroy should be successful" do
-    content_view = katello_content_views(:library_view)
-    content_view.content_view_definition = @content_view_definition
-    content_view.save!
-    # success notice created
-    notify = Notifications::Notifier.new
-    notify.expects(:success).at_least_once
-    @controller.expects(:notify).at_least_once.returns(notify)
-
-    delete :destroy, :content_view_definition_id => content_view.content_view_definition.id, :id => content_view.id
-
-    assert_response :success
-    assert_nil ContentView.find_by_id(content_view.id)
-  end
-
-  test "POST refresh should be successful" do
-    # success notice created
-    notify = Notifications::Notifier.new
-    notify.expects(:success).at_least_once
-    @controller.expects(:notify).at_least_once.returns(notify)
-
-    assert_nil @content_view.versions.last.task_status
-    assert_equal @content_view.versions.last.version, 1
-
-    post :refresh, :content_view_definition_id => @content_view_definition.id, :id => @content_view.id
-
-    assert_response :success
-    assert_template :partial => 'katello/content_view_definitions/views/_view'
-
-    view = ContentView.find_by_id(@content_view.id)
-    refute_nil view.versions.last.task_status
-    assert_equal view.reload.versions.last.version, 2
-  end
-end
 end

@@ -7,9 +7,9 @@ attributes :environment_ids
 attributes :system_id
 
 node :name do |node|
- node.system.name
+  node.system.name
 end
 
 node :hostname do |node|
- node.system.hostname
+  node.system.hostname
 end

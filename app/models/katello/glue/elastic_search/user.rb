@@ -11,25 +11,25 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-module Glue::ElasticSearch::User
-  def self.included(base)
-    base.send :include, Ext::IndexedModel
+  module Glue::ElasticSearch::User
+    def self.included(base)
+      base.send :include, Ext::IndexedModel
 
-    base.class_eval do
-      index_options :extended_json => :extended_index_attrs,
-                    :display_attrs => [:login, :mail],
-                    :json          => { :only => [:login, :mail, :hidden] }
+      base.class_eval do
+        index_options :extended_json => :extended_index_attrs,
+                      :display_attrs => [:login, :mail],
+                      :json          => { :only => [:login, :mail, :hidden] }
 
-      mapping do
-        indexes :login, :type => 'string', :analyzer => :kt_name_analyzer
-        indexes :login_sort, :type => 'string', :index => :not_analyzed
+        mapping do
+          indexes :login, :type => 'string', :analyzer => :kt_name_analyzer
+          indexes :login_sort, :type => 'string', :index => :not_analyzed
+        end
       end
     end
-  end
 
-  def extended_index_attrs
-    { :login_sort => login.downcase }
-  end
+    def extended_index_attrs
+      { :login_sort => login.downcase }
+    end
 
-end
+  end
 end

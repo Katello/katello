@@ -14,58 +14,58 @@ require 'katello_test_helper'
 require 'support/candlepin/owner_support'
 
 module Katello
-class GlueCandlepinOwnerTestBase < ActiveSupport::TestCase
+  class GlueCandlepinOwnerTestBase < ActiveSupport::TestCase
 
-  def self.before_suite
-    @loaded_fixtures = load_fixtures
+    def self.before_suite
+      @loaded_fixtures = load_fixtures
 
-    services  = ['Pulp', 'ElasticSearch', 'Foreman']
-    models    = ['User', 'KTEnvironment', 'Organization']
-    disable_glue_layers(services, models)
+      services = ['Pulp', 'ElasticSearch', 'Foreman']
+      models   = ['User', 'KTEnvironment', 'Organization']
+      disable_glue_layers(services, models)
 
-    User.current = User.find(@loaded_fixtures['users']['admin']['id'])
-    VCR.insert_cassette('glue_candlepin_owner', :match_requests_on => [:path, :params, :method, :body_json])
+      User.current = User.find(@loaded_fixtures['users']['admin']['id'])
+      VCR.insert_cassette('glue_candlepin_owner', :match_requests_on => [:path, :params, :method, :body_json])
 
-  end
-
-  def self.after_suite
-    true
-  ensure
-    VCR.eject_cassette
-  end
-
-end
-
-class GlueCandlepinOwnerTestSLA < GlueCandlepinOwnerTestBase
-
-  def self.before_suite
-    super
-    @@org = CandlepinOwnerSupport.create_organization('GlueCandlepinOwnerTestSystem_1', 'GlueCandlepinOwnerTestSystem_1')
-  end
-
-  def self.after_suite
-    CandlepinOwnerSupport.destroy_organization(@@org.id)
-    super
-  end
-
-  def test_update_candlepin_owner_service_level
-    # Without any choices, should not be able to set a service level
-    assert_equal nil, @@org.service_level
-    e = assert_raises(RestClient::BadRequest) do
-      @@org.service_level = 'Premium'
     end
-    expected = "{\n  \"displayMessage\" : \"Service level 'Premium' is not available to units of organization GlueCandlepinOwnerTestSystem_1.\"\n}"
-    assert_equal JSON.parse(expected), JSON.parse(e.response)
-    assert_equal nil, @@org.service_level
 
-    # Should be able to set clear the default
-    @@org.service_level = ''
-    assert_equal nil, @@org.service_level
+    def self.after_suite
+      true
+    ensure
+      VCR.eject_cassette
+    end
 
-    # ...with a nil too
-    @@org.service_level = nil
-    assert_equal nil, @@org.service_level
   end
 
-end
+  class GlueCandlepinOwnerTestSLA < GlueCandlepinOwnerTestBase
+
+    def self.before_suite
+      super
+      @@org = CandlepinOwnerSupport.create_organization('GlueCandlepinOwnerTestSystem_1', 'GlueCandlepinOwnerTestSystem_1')
+    end
+
+    def self.after_suite
+      CandlepinOwnerSupport.destroy_organization(@@org.id)
+      super
+    end
+
+    def test_update_candlepin_owner_service_level
+      # Without any choices, should not be able to set a service level
+      assert_equal nil, @@org.service_level
+      e        = assert_raises(RestClient::BadRequest) do
+        @@org.service_level = 'Premium'
+      end
+      expected = "{\n  \"displayMessage\" : \"Service level 'Premium' is not available to units of organization GlueCandlepinOwnerTestSystem_1.\"\n}"
+      assert_equal JSON.parse(expected), JSON.parse(e.response)
+      assert_equal nil, @@org.service_level
+
+      # Should be able to set clear the default
+      @@org.service_level = ''
+      assert_equal nil, @@org.service_level
+
+      # ...with a nil too
+      @@org.service_level = nil
+      assert_equal nil, @@org.service_level
+    end
+
+  end
 end

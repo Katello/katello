@@ -13,22 +13,22 @@
 require 'katello_test_helper'
 
 module Katello
-class SystemTestBase < ActiveSupport::TestCase
+  class SystemTestBase < ActiveSupport::TestCase
 
-  def self.before_suite
-    services  = ['Candlepin', 'Pulp', 'ElasticSearch', 'Foreman']
-    models    = ['User', 'SystemGroup', 'KTEnvironment', 'Organization', 'Product', "ContentView", "System", "ContentViewVersion"]
-    disable_glue_layers(services, models)
+    def self.before_suite
+      services = ['Candlepin', 'Pulp', 'ElasticSearch', 'Foreman']
+      models   = ['User', 'SystemGroup', 'KTEnvironment', 'Organization', 'Product', "ContentView", "System", "ContentViewVersion"]
+      disable_glue_layers(services, models)
 
-    configure_runcible
+      configure_runcible
+    end
+
+    def setup
+      @acme_corporation = get_organization(:organization1)
+
+      @fedora = Product.find(katello_products(:fedora).id)
+      @dev    = KTEnvironment.find(katello_environments(:dev).id)
+      @system = System.find(katello_systems(:simple_server))
+    end
   end
-
-  def setup
-    @acme_corporation   = get_organization(:organization1)
-
-    @fedora             = Product.find(katello_products(:fedora).id)
-    @dev                = KTEnvironment.find(katello_environments(:dev).id)
-    @system             = System.find(katello_systems(:simple_server))
-  end
-end
 end

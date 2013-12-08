@@ -4,7 +4,7 @@ Katello::Engine.routes.draw do
 
   namespace :api do
 
-    scope "(:api_version)", :module => :v1, :defaults => {:api_version => 'v1'}, :api_version => /v1|v2/, :constraints => ApiConstraints.new(:version => 1, :default => true) do
+    scope "(:api_version)", :module => :v1, :defaults => { :api_version => 'v1' }, :api_version => /v1|v2/, :constraints => ApiConstraints.new(:version => 1, :default => true) do
 
       match '/' => 'root#resource_list'
 
@@ -60,7 +60,7 @@ Katello::Engine.routes.draw do
         end
         resources :sync_plans
         resources :tasks, :only => [:index]
-        resources :providers, :only => [:index], :constraints => {:organization_id => /[^\/]*/}
+        resources :providers, :only => [:index], :constraints => { :organization_id => /[^\/]*/ }
 
         scope :constraints => Katello::RegisterWithActivationKeyContraint.new do
           match '/systems' => 'systems#activate', :via => :post
@@ -217,7 +217,7 @@ Katello::Engine.routes.draw do
           post :index, :on => :collection, :action => :add_product
           delete :destroy, :on => :member, :action => :remove_product
         end
-        resources :packages, :controller => :changesets_content, :constraints => {:id => /[0-9a-zA-Z\-_.]+/} do
+        resources :packages, :controller => :changesets_content, :constraints => { :id => /[0-9a-zA-Z\-_.]+/ } do
           post :index, :on => :collection, :action => :add_package
           delete :destroy, :on => :member, :action => :remove_package
         end
@@ -242,15 +242,15 @@ Katello::Engine.routes.draw do
 
       resources :ping, :only => [:index]
 
-      resources :repositories, :only => [:show, :create, :update, :destroy], :constraints => {:id => /[0-9a-zA-Z\-_.]*/} do
+      resources :repositories, :only => [:show, :create, :update, :destroy], :constraints => { :id => /[0-9a-zA-Z\-_.]*/ } do
         resources :sync, :only => [:index, :create] do
           delete :index, :on => :collection, :action => :cancel
         end
         resources :packages do
           get :search, :on => :collection
         end
-        resources :errata, :only => [:index, :show], :constraints => {:id => /[0-9a-zA-Z\-\+%_.:]+/}
-        resources :distributions, :only => [:index, :show], :constraints => {:id => /[0-9a-zA-Z \-\+%_.]+/}
+        resources :errata, :only => [:index, :show], :constraints => { :id => /[0-9a-zA-Z\-\+%_.:]+/ }
+        resources :distributions, :only => [:index, :show], :constraints => { :id => /[0-9a-zA-Z \-\+%_.]+/ }
         resources :puppet_modules, :only => [:index, :show] do
           get :search, :on => :collection
         end
@@ -339,7 +339,7 @@ Katello::Engine.routes.draw do
       match '/environments/:environment_id/consumers' => 'systems#index', :via => :get
       match '/environments/:environment_id/consumers' => 'systems#create', :via => :post
       match '/consumers/:id' => 'systems#regenerate_identity_certificates', :via => :post
-      match '/users/:login/owners' => 'users#list_owners', :via => :get, :constraints => {:login => /\S+/}
+      match '/users/:login/owners' => 'users#list_owners', :via => :get, :constraints => { :login => /\S+/ }
       match '/consumers/:id/certificates' => 'candlepin_proxies#get', :via => :get, :as => :proxy_consumer_certificates_path
       match '/consumers/:id/release' => 'candlepin_proxies#get', :via => :get, :as => :proxy_consumer_releases_path
       match '/consumers/:id/compliance' => 'candlepin_proxies#get', :via => :get, :as => :proxy_consumer_compliance_path

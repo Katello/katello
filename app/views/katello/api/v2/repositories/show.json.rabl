@@ -22,7 +22,7 @@ end
 
 node :permissions do |repo|
   {
-    :deletable => repo.deletable?
+      :deletable => repo.deletable?
   }
 end
 

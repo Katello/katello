@@ -14,69 +14,69 @@ require 'katello_test_helper'
 require 'support/pulp/repository_support'
 
 module Katello
-class GluePulpErrataTestBase < ActiveSupport::TestCase
-  include RepositorySupport
+  class GluePulpErrataTestBase < ActiveSupport::TestCase
+    include RepositorySupport
 
-  def self.before_suite
-    super
-    configure_runcible
+    def self.before_suite
+      super
+      configure_runcible
 
-    services  = ['Candlepin', 'ElasticSearch', 'Foreman']
-    models    = ['Repository', 'Errata', 'Package']
-    disable_glue_layers(services, models)
+      services = ['Candlepin', 'ElasticSearch', 'Foreman']
+      models   = ['Repository', 'Errata', 'Package']
+      disable_glue_layers(services, models)
 
-    VCR.insert_cassette('pulp/content/errata')
+      VCR.insert_cassette('pulp/content/errata')
 
-    RepositorySupport.create_and_sync_repo(@loaded_fixtures['katello_repositories']['fedora_17_x86_64']['id'])
+      RepositorySupport.create_and_sync_repo(@loaded_fixtures['katello_repositories']['fedora_17_x86_64']['id'])
 
-    @@erratum_id = RepositorySupport.repo.errata.select{ |errata| errata.errata_id == 'RHEA-2010:0002' }.first.id
+      @@erratum_id = RepositorySupport.repo.errata.select { |errata| errata.errata_id == 'RHEA-2010:0002' }.first.id
+    end
+
+    def self.after_suite
+      RepositorySupport.destroy_repo
+      VCR.eject_cassette
+    end
+
   end
 
-  def self.after_suite
-    RepositorySupport.destroy_repo
-    VCR.eject_cassette
+  class GluePulpErrataTest < GluePulpErrataTestBase
+
+    def test_find
+      erratum = Errata.find(@@erratum_id)
+
+      refute_nil erratum
+      assert_kind_of Errata, erratum
+    end
+
+    def test_list_by_filters
+      errata = Errata.list_by_filter_clauses(:_id => { '$in' => [@@erratum_id] })
+
+      refute_nil errata
+      refute_empty errata
+      assert_kind_of Errata, errata.first
+    end
+
+    def test_errata_by_consumer
+      Katello.pulp_server.extensions.consumer.expects(:applicable_errata).
+          with([], [RepositorySupport.repo.pulp_id], false).returns({})
+
+      Errata.errata_by_consumer([RepositorySupport.repo])
+    end
+
+    def test_included_packages
+      erratum  = Errata.find(@@erratum_id)
+      packages = erratum.included_packages
+
+      refute_empty packages
+      refute_empty packages.select { |package| package.name == "elephant" }
+    end
+
+    def test_product_ids
+      erratum     = Errata.find(@@erratum_id)
+      product_ids = erratum.included_packages
+
+      refute_empty product_ids
+    end
+
   end
-
-end
-
-class GluePulpErrataTest < GluePulpErrataTestBase
-
-  def test_find
-    erratum = Errata.find(@@erratum_id)
-
-    refute_nil      erratum
-    assert_kind_of  Errata, erratum
-  end
-
-  def test_list_by_filters
-    errata = Errata.list_by_filter_clauses(:_id => { '$in'=> [@@erratum_id] })
-
-    refute_nil      errata
-    refute_empty     errata
-    assert_kind_of  Errata, errata.first
-  end
-
-  def test_errata_by_consumer
-    Katello.pulp_server.extensions.consumer.expects(:applicable_errata).
-        with([], [RepositorySupport.repo.pulp_id], false).returns({})
-
-    Errata.errata_by_consumer([RepositorySupport.repo])
-  end
-
-  def test_included_packages
-    erratum   = Errata.find(@@erratum_id)
-    packages  = erratum.included_packages
-
-    refute_empty packages
-    refute_empty packages.select { |package| package.name == "elephant" }
-  end
-
-  def test_product_ids
-    erratum     = Errata.find(@@erratum_id)
-    product_ids = erratum.included_packages
-
-    refute_empty product_ids
-  end
-
-end
 end

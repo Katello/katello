@@ -11,29 +11,29 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-module Util
-  class PuppetClauseGenerator
-    include  Util::FilterRuleClauseGenerator
+  module Util
+    class PuppetClauseGenerator
+      include Util::FilterRuleClauseGenerator
 
-    protected
+      protected
 
-    def fetch_rules
-      PuppetModuleRule
-    end
+      def fetch_rules
+        PuppetModuleRule
+      end
 
-    def collect_clauses(repo, rules)
-      rules.collect do |rule|
-        rule.generate_clauses(repo)
+      def collect_clauses(repo, rules)
+        rules.collect do |rule|
+          rule.generate_clauses(repo)
+        end
+      end
+
+      def whitelist_non_matcher_clause
+        { "unit_id" => { "$not" => { "$exists" => true } } }
+      end
+
+      def whitelist_all_matcher_clause
+        { "unit_id" => { "$exists" => true } }
       end
     end
-
-    def whitelist_non_matcher_clause
-      {"unit_id" => {"$not" => {"$exists" => true}}}
-    end
-
-    def whitelist_all_matcher_clause
-      {"unit_id" => {"$exists" => true}}
-    end
   end
-end
 end

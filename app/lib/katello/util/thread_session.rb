@@ -35,52 +35,52 @@ module Katello
 end
 
 module Katello
-module Util
-  module ThreadSession
+  module Util
+    module ThreadSession
 
-    # include this in the User model
-    module UserModel
-      # TODO: break up method
-      # rubocop:disable MethodLength
-      def self.included(base)
-        base.class_eval do
-          def self.current
-            Thread.current[:user]
+      # include this in the User model
+      module UserModel
+        # TODO: break up method
+        # rubocop:disable MethodLength
+        def self.included(base)
+          base.class_eval do
+            def self.current
+              Thread.current[:user]
+            end
+
+            def self.current=(o)
+              unless (o.nil? || o.is_a?(self) || o.class.name == 'RSpec::Mocks::Mock')
+                fail(ArgumentError, "Unable to set current User, expected class '#{self}', got #{o.inspect}")
+              end
+              if o.is_a?(::User)
+                debug = ["Setting current user thread-local variable to", o.firstname, o.lastname]
+                Rails.logger.debug debug.join(" ")
+              end
+              Thread.current[:user] = o
+
+              if Katello.config.use_pulp && o && o.respond_to?(:remote_id)
+                uri = URI.parse(Katello.config.pulp.url)
+
+                Katello.pulp_server = Runcible::Instance.new(
+                    :url          => "#{uri.scheme}://#{uri.host.downcase}",
+                    :api_path     => uri.path,
+                    :user         => o.remote_id,
+                    :timeout      => Katello.config.rest_client_timeout,
+                    :open_timeout => Katello.config.rest_client_timeout,
+                    :oauth        => { :oauth_secret => Katello.config.pulp.oauth_secret,
+                                       :oauth_key    => Katello.config.pulp.oauth_key },
+                    :logging      => { :logger    => ::Logging.logger['pulp_rest'],
+                                       :exception => true,
+                                       :debug     => true }
+                )
+              end
+
+            end
+
           end
-
-          def self.current=(o)
-            unless (o.nil? || o.is_a?(self) || o.class.name == 'RSpec::Mocks::Mock')
-              fail(ArgumentError, "Unable to set current User, expected class '#{self}', got #{o.inspect}")
-            end
-            if o.is_a?(::User)
-              debug = ["Setting current user thread-local variable to", o.firstname, o.lastname]
-              Rails.logger.debug debug.join(" ")
-            end
-            Thread.current[:user] = o
-
-            if Katello.config.use_pulp && o && o.respond_to?(:remote_id)
-              uri = URI.parse(Katello.config.pulp.url)
-
-              Katello.pulp_server = Runcible::Instance.new(
-                :url      => "#{uri.scheme}://#{uri.host.downcase}",
-                :api_path => uri.path,
-                :user     => o.remote_id,
-                :timeout      => Katello.config.rest_client_timeout,
-                :open_timeout => Katello.config.rest_client_timeout,
-                :oauth    => {:oauth_secret => Katello.config.pulp.oauth_secret,
-                              :oauth_key    => Katello.config.pulp.oauth_key },
-                :logging  => {:logger     => ::Logging.logger['pulp_rest'],
-                              :exception  => true,
-                              :debug      => true }
-              )
-            end
-
-          end
-
         end
       end
-    end
 
+    end
   end
-end
 end

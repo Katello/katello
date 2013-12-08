@@ -6,11 +6,11 @@ task :headpin_create_envs => :environment do
   Organization.all.each do |org|
     puts "Org #{org.name}"
     if !Katello.config.katello?
-      env_params = {:name => "Headpin",
-                    :description => "Default environment for Headpin",
-                    :prior => org.library.id,
-                    :organization_id => org.id}
-      environment =  KTEnvironment.new env_params
+      env_params  = { :name            => "Headpin",
+                      :description     => "Default environment for Headpin",
+                      :prior           => org.library.id,
+                      :organization_id => org.id }
+      environment = KTEnvironment.new env_params
       puts "Saving default environment"
       environment.save!
     end

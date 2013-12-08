@@ -11,49 +11,49 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class Api::V1::RoleLdapGroupsController < Api::V1::ApiController
+  class Api::V1::RoleLdapGroupsController < Api::V1::ApiController
 
-  before_filter :find_role
-  before_filter :authorize
+    before_filter :find_role
+    before_filter :authorize
 
-  def rules
-    index_test = lambda { Role.any_readable? }
-    edit_test  = lambda { Role.editable? }
-    {
-        :index   => index_test,
-        :create  => edit_test,
-        :destroy => edit_test,
-    }
+    def rules
+      index_test = lambda { Role.any_readable? }
+      edit_test  = lambda { Role.editable? }
+      {
+          :index   => index_test,
+          :create  => edit_test,
+          :destroy => edit_test,
+      }
+    end
+
+    api :POST, "/roles/:role_id/ldap_groups", "Add group to list of LDAP groups associated with the role"
+    param :name, String, :desc => "name of the LDAP group"
+    def create
+      @role.add_ldap_group(params[:name])
+      respond_for_status :message => _("Added LDAP group '%s'") % params[:name], :format => :text
+    end
+
+    api :DELETE, "/roles/:role_id/ldap_groups/:id", "Remove group from the list of LDAP groups associated with the role"
+    param :role_id, :identifier, :desc => "role identifier"
+    param :id, String, :desc => "ldap group (name)"
+    def destroy
+      @role.remove_ldap_group(params[:id])
+      respond :message => _("Removed LDAP group '%s'") % params[:id], :resource => false
+    end
+
+    api :GET, "/roles/:role_id/ldap_groups", "List LDAP groups associated with the role"
+    param :role_id, :identifier, :desc => "role identifier"
+    def index
+      respond :collection => @role.ldap_group_roles.where(query_params)
+    end
+
+    private
+
+    def find_role
+      @role = Role.find(params[:role_id])
+      fail HttpErrors::NotFound, _("Couldn't find user role '%s'") % params[:role_id] if @role.nil?
+      @role
+    end
+
   end
-
-  api :POST, "/roles/:role_id/ldap_groups", "Add group to list of LDAP groups associated with the role"
-  param :name, String, :desc => "name of the LDAP group"
-  def create
-    @role.add_ldap_group(params[:name])
-    respond_for_status :message => _("Added LDAP group '%s'") % params[:name], :format => :text
-  end
-
-  api :DELETE, "/roles/:role_id/ldap_groups/:id", "Remove group from the list of LDAP groups associated with the role"
-  param :role_id, :identifier, :desc => "role identifier"
-  param :id, String, :desc => "ldap group (name)"
-  def destroy
-    @role.remove_ldap_group(params[:id])
-    respond :message => _("Removed LDAP group '%s'") % params[:id], :resource => false
-  end
-
-  api :GET, "/roles/:role_id/ldap_groups", "List LDAP groups associated with the role"
-  param :role_id, :identifier, :desc => "role identifier"
-  def index
-    respond :collection => @role.ldap_group_roles.where(query_params)
-  end
-
-  private
-
-  def find_role
-    @role = Role.find(params[:role_id])
-    fail HttpErrors::NotFound, _("Couldn't find user role '%s'") % params[:role_id] if @role.nil?
-    @role
-  end
-
-end
 end

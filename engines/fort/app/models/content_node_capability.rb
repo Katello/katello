@@ -35,12 +35,12 @@ class ContentNodeCapability < NodeCapability
   end
 
   def sync(options = {})
-    env = options[:environment]
+    env  = options[:environment]
     view = options[:content_view]
     repo = options[:repository]
 
     relevant_repo_ids = repo_ids(repo, view, env)
-    task = PulpSyncStatus.using_pulp_task(self.node.system.sync_pulp_node(relevant_repo_ids))
+    task              = PulpSyncStatus.using_pulp_task(self.node.system.sync_pulp_node(relevant_repo_ids))
     task.save!
     task
   end
@@ -61,7 +61,7 @@ class ContentNodeCapability < NodeCapability
   end
 
   def calculate_bound_repos(env_list)
-    env_list.collect{|env| Repository.in_environment(env).enabled.pluck(:pulp_id)}.flatten
+    env_list.collect { |env| Repository.in_environment(env).enabled.pluck(:pulp_id) }.flatten
   end
 
 end

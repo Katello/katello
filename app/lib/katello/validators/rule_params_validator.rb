@@ -11,24 +11,24 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-module Validators
-  class RuleParamsValidator < ActiveModel::EachValidator
-    def validate_each(record, attribute, value)
-      rule_type = record.rule_type.downcase
+  module Validators
+    class RuleParamsValidator < ActiveModel::EachValidator
+      def validate_each(record, attribute, value)
+        rule_type = record.rule_type.downcase
 
-      if value && value[:units].present?
-        if !value[:units].is_a?(Array)
-          record.errors.add(attribute, _("Invalid %s rule specified. Units must be an array.") % rule_type)
-        else
-          value[:units].each do |unit|
-            unless unit.key?(:name)
-              record.errors.add(attribute, _("Invalid %s rule specified. Missing 'name'.") % rule_type)
-              break
+        if value && value[:units].present?
+          if !value[:units].is_a?(Array)
+            record.errors.add(attribute, _("Invalid %s rule specified. Units must be an array.") % rule_type)
+          else
+            value[:units].each do |unit|
+              unless unit.key?(:name)
+                record.errors.add(attribute, _("Invalid %s rule specified. Missing 'name'.") % rule_type)
+                break
+              end
             end
           end
         end
       end
     end
   end
-end
 end

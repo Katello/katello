@@ -11,7 +11,7 @@ FactoryGirl.define do
   end
 
   factory :deletion_changeset, :class => Katello::DeletionChangeset do
-    sequence(:name) {|n| "deletion_changeset#{n}"}
+    sequence(:name) { |n| "deletion_changeset#{n}" }
     state Katello::Changeset::NEW
     type "Katello::DeletionChangeset"
   end

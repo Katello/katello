@@ -11,48 +11,48 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class Api::V2::GpgKeysController < Api::V2::ApiController
+  class Api::V2::GpgKeysController < Api::V2::ApiController
 
-  before_filter :find_organization, :only => [:index]
-  before_filter :authorize
+    before_filter :find_organization, :only => [:index]
+    before_filter :authorize
 
-  def rules
-    index_test  = lambda { GpgKey.any_readable?(@organization) }
+    def rules
+      index_test = lambda { GpgKey.any_readable?(@organization) }
 
-    {
-      :index   => index_test
-    }
+      {
+          :index => index_test
+      }
+    end
+
+    api :GET, "/gpg_keys", "List gpg keys"
+    param :organization_id, :identifier, :desc => "organization identifier"
+    param_group :search, Api::V2::ApiController
+    def index
+      options                 = sort_params
+      options[:load_records?] = true
+
+      ids = GpgKey.readable(@organization).pluck(:id)
+
+      options[:filters] = [
+          { :terms => { :id => ids } }
+      ]
+
+      @search_service.model = GpgKey
+      gpg_keys, total_count = @search_service.retrieve(params[:search], params[:offset], options)
+
+      collection = {
+          :results  => gpg_keys,
+          :subtotal => total_count,
+          :total    => @search_service.total_items
+      }
+
+      respond_for_index(:collection => collection)
+    end
+
+    # apipie docs are defined in v1 controller - they remain the same
+    def show
+      respond :resource => @gpg_key
+    end
+
   end
-
-  api :GET, "/gpg_keys", "List gpg keys"
-  param :organization_id, :identifier, :desc => "organization identifier"
-  param_group :search, Api::V2::ApiController
-  def index
-    options = sort_params
-    options[:load_records?] = true
-
-    ids = GpgKey.readable(@organization).pluck(:id)
-
-    options[:filters] = [
-      {:terms => {:id => ids}}
-    ]
-
-    @search_service.model = GpgKey
-    gpg_keys, total_count = @search_service.retrieve(params[:search], params[:offset], options)
-
-    collection = {
-      :results  => gpg_keys,
-      :subtotal => total_count,
-      :total    => @search_service.total_items
-    }
-
-    respond_for_index(:collection => collection)
-  end
-
-  # apipie docs are defined in v1 controller - they remain the same
-  def show
-    respond :resource => @gpg_key
-  end
-
-end
 end

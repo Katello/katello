@@ -13,127 +13,127 @@
 require 'katello_test_helper'
 
 module Katello
-class ErratumRuleTest < ActiveSupport::TestCase
+  class ErratumRuleTest < ActiveSupport::TestCase
 
-  def self.before_suite
-    models = ["Organization", "KTEnvironment", "User", "ContentViewDefinitionBase",
-              "ContentViewDefinition", "ContentViewEnvironment", "Filter", "FilterRule",
-              "ErratumRule"]
-    disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
-  end
-
-  def setup
-    User.current = User.find(users(:admin))
-
-    @filter_rule = FactoryGirl.build(:erratum_filter_rule)
-    format = "%m/%d/%Y%:z"
-    zone = DateTime.now.zone
-    @start_date = DateTime.strptime("01/01/2013" + zone, format)
-    @end_date = DateTime.strptime("01/31/2013" + zone, format)
-  end
-
-  def test_create
-    assert @filter_rule.save
-  end
-
-  def test_bad_params
-    assert_bad_params(:date_range => {:boo => @start_date.to_i})
-    assert_bad_params(:date_range => {:start => @start_date.to_i, :bad => 1000})
-    assert_bad_params(:date_range => {:start => DateTime.now}) # has to be int not date
-    #  end must be greater than start
-    assert_bad_params(:date_range => {:start => @end_date.to_i, :end => @start_date.to_i})
-    # errata types
-    assert_bad_params(:errata_type => ['buggy'])
-    assert_bad_params(:errata_type => ['bugfix', 'secure'])
-    #id based params
-    assert_bad_params(:units => {:id_val => '100'})
-    assert_bad_params(:severity => ["low"])
-  end
-
-  def test_good_params
-    assert_good_params(:date_range => {:start => @start_date.to_i})
-    assert_good_params(:date_range => {:start => @start_date.to_i, :end => @end_date.to_i})
-    assert_good_params(:errata_type => ['bugfix', 'security', 'enhancement'])
-    assert_good_params(:units => [{:id => "foo"}, {:id => "bar"}])
-    assert_good_params({:date_range => {:start => @start_date.to_i, :end => @end_date.to_i},
-                        :errata_type => ['bugfix', 'security', 'enhancement']})
-  end
-
-  def test_date_params
-    @filter_rule.start_date = @start_date
-    expected = {'date_range' => {:start => @start_date.to_i}}
-    assert_equal(expected, @filter_rule.parameters)
-    assert_equal(@start_date.to_i, @filter_rule.start_date.to_i)
-    #test end date
-    @filter_rule.end_date = @end_date
-    expected['date_range'][:end] = @end_date.to_i
-    assert_equal(expected, @filter_rule.parameters)
-    assert_equal(@end_date.to_i, @filter_rule.end_date.to_i)
-  end
-
-  def test_errata_type_params
-    errata_types = ['bugfix', 'security', 'enhancement']
-    @filter_rule.errata_types = errata_types
-    expected = {'errata_type' => errata_types}
-    assert_equal(expected, @filter_rule.parameters)
-    assert_equal(errata_types, @filter_rule.errata_types)
-  end
-
-  def test_updates
-    assert_param_updates("end_date", @end_date) do |rule|
-      assert_nil(rule[:date_range])
+    def self.before_suite
+      models = ["Organization", "KTEnvironment", "User", "ContentViewDefinitionBase",
+                "ContentViewDefinition", "ContentViewEnvironment", "Filter", "FilterRule",
+                "ErratumRule"]
+      disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
     end
 
-    @filter_rule.start_date = @start_date
-    assert_param_updates("end_date", @end_date) do |rule|
-      assert_nil(rule['date_range'][:end])
+    def setup
+      User.current = User.find(users(:admin))
+
+      @filter_rule = FactoryGirl.build(:erratum_filter_rule)
+      format       = "%m/%d/%Y%:z"
+      zone         = DateTime.now.zone
+      @start_date  = DateTime.strptime("01/01/2013" + zone, format)
+      @end_date    = DateTime.strptime("01/31/2013" + zone, format)
     end
 
-    assert_param_updates("start_date", @start_date)  do |rule|
-      assert_nil(rule['date_range'])
+    def test_create
+      assert @filter_rule.save
     end
 
-    @filter_rule.end_date = @end_date
-    assert_param_updates("start_date", @start_date) do |rule|
-      assert_nil(rule['date_range'][:start])
+    def test_bad_params
+      assert_bad_params(:date_range => { :boo => @start_date.to_i })
+      assert_bad_params(:date_range => { :start => @start_date.to_i, :bad => 1000 })
+      assert_bad_params(:date_range => { :start => DateTime.now }) # has to be int not date
+      #  end must be greater than start
+      assert_bad_params(:date_range => { :start => @end_date.to_i, :end => @start_date.to_i })
+      # errata types
+      assert_bad_params(:errata_type => ['buggy'])
+      assert_bad_params(:errata_type => ['bugfix', 'secure'])
+      #id based params
+      assert_bad_params(:units => { :id_val => '100' })
+      assert_bad_params(:severity => ["low"])
     end
 
-    assert_param_updates("errata_types", ['bugfix', 'security', 'enhancement']) do |rule|
-      assert_nil(rule['errata_type'])
+    def test_good_params
+      assert_good_params(:date_range => { :start => @start_date.to_i })
+      assert_good_params(:date_range => { :start => @start_date.to_i, :end => @end_date.to_i })
+      assert_good_params(:errata_type => ['bugfix', 'security', 'enhancement'])
+      assert_good_params(:units => [{ :id => "foo" }, { :id => "bar" }])
+      assert_good_params({ :date_range  => { :start => @start_date.to_i, :end => @end_date.to_i },
+                           :errata_type => ['bugfix', 'security', 'enhancement'] })
     end
-  end
 
-  def assert_param_updates(message, initial_value)
-    @filter_rule.send("#{message}=", initial_value)
-    @filter_rule.save!
-    @filter_rule = ErratumRule.find(@filter_rule.id)
-    assert_equal(initial_value, @filter_rule.send("#{message}"))
-    # check for nil update
-    @filter_rule.send("#{message}=", nil)
-    assert @filter_rule.save
-    @filter_rule = ErratumRule.find(@filter_rule.id)
-    assert_nil(@filter_rule.send("#{message}"))
-    yield @filter_rule.parameters
-    @filter_rule.parameters = {}
-    @filter_rule.save!
-  end
+    def test_date_params
+      @filter_rule.start_date = @start_date
+      expected                = { 'date_range' => { :start => @start_date.to_i } }
+      assert_equal(expected, @filter_rule.parameters)
+      assert_equal(@start_date.to_i, @filter_rule.start_date.to_i)
+      #test end date
+      @filter_rule.end_date        = @end_date
+      expected['date_range'][:end] = @end_date.to_i
+      assert_equal(expected, @filter_rule.parameters)
+      assert_equal(@end_date.to_i, @filter_rule.end_date.to_i)
+    end
 
-  def assert_bad_params(params)
-    @filter_rule.parameters = params
-    assert_raises(ActiveRecord::RecordInvalid) do
+    def test_errata_type_params
+      errata_types              = ['bugfix', 'security', 'enhancement']
+      @filter_rule.errata_types = errata_types
+      expected                  = { 'errata_type' => errata_types }
+      assert_equal(expected, @filter_rule.parameters)
+      assert_equal(errata_types, @filter_rule.errata_types)
+    end
+
+    def test_updates
+      assert_param_updates("end_date", @end_date) do |rule|
+        assert_nil(rule[:date_range])
+      end
+
+      @filter_rule.start_date = @start_date
+      assert_param_updates("end_date", @end_date) do |rule|
+        assert_nil(rule['date_range'][:end])
+      end
+
+      assert_param_updates("start_date", @start_date) do |rule|
+        assert_nil(rule['date_range'])
+      end
+
+      @filter_rule.end_date = @end_date
+      assert_param_updates("start_date", @start_date) do |rule|
+        assert_nil(rule['date_range'][:start])
+      end
+
+      assert_param_updates("errata_types", ['bugfix', 'security', 'enhancement']) do |rule|
+        assert_nil(rule['errata_type'])
+      end
+    end
+
+    def assert_param_updates(message, initial_value)
+      @filter_rule.send("#{message}=", initial_value)
+      @filter_rule.save!
+      @filter_rule = ErratumRule.find(@filter_rule.id)
+      assert_equal(initial_value, @filter_rule.send("#{message}"))
+      # check for nil update
+      @filter_rule.send("#{message}=", nil)
+      assert @filter_rule.save
+      @filter_rule = ErratumRule.find(@filter_rule.id)
+      assert_nil(@filter_rule.send("#{message}"))
+      yield @filter_rule.parameters
+      @filter_rule.parameters = {}
       @filter_rule.save!
     end
 
-    @filter_rule.parameters = {:unit => "", :errata_type => ""}
-    assert_raises(ActiveRecord::RecordInvalid) do
-      @filter_rule.save!
+    def assert_bad_params(params)
+      @filter_rule.parameters = params
+      assert_raises(ActiveRecord::RecordInvalid) do
+        @filter_rule.save!
+      end
+
+      @filter_rule.parameters = { :unit => "", :errata_type => "" }
+      assert_raises(ActiveRecord::RecordInvalid) do
+        @filter_rule.save!
+      end
     end
-  end
 
-  def assert_good_params(params)
-    @filter_rule.parameters = params
-    assert @filter_rule.save
-  end
+    def assert_good_params(params)
+      @filter_rule.parameters = params
+      assert @filter_rule.save
+    end
 
-end
+  end
 end

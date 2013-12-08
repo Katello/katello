@@ -11,26 +11,26 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-module Navigation
-  module Menus
+  module Navigation
+    module Menus
 
-    class User < Navigation::Menu
+      class User < Navigation::Menu
 
-      include Katello::ApplicationHelper
+        include Katello::ApplicationHelper
 
-      def initialize(user)
-        @key           = :user
-        @display       = "#{(Katello.config[:gravatar]  && user.mail.present?) ? "#{gravatar_image_tag(user.mail)} " : ""}#{user.login}"
-        @authorization = true
-        @type          = 'dropdown'
-        @items         = [
-          Navigation::Items::UserAccount.new(user),
-          Navigation::Items::Logout.new
-        ]
-        super
+        def initialize(user)
+          @key           = :user
+          @display       = "#{(Katello.config[:gravatar] && user.mail.present?) ? "#{gravatar_image_tag(user.mail)} " : ""}#{user.login}"
+          @authorization = true
+          @type          = 'dropdown'
+          @items         = [
+              Navigation::Items::UserAccount.new(user),
+              Navigation::Items::Logout.new
+          ]
+          super
+        end
+
       end
-
     end
   end
-end
 end

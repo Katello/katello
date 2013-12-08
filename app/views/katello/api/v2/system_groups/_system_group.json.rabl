@@ -8,9 +8,9 @@ extends "katello/api/v2/common/timestamps"
 
 node :permissions do |group|
   {
-    :deletable => group.deletable?,
-    :editable => group.editable?,
-    :systems_readable => group.systems_readable?,
-    :system_editable => group.systems_editable?
+      :deletable        => group.deletable?,
+      :editable         => group.editable?,
+      :systems_readable => group.systems_readable?,
+      :system_editable  => group.systems_editable?
   }
 end

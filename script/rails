@@ -23,29 +23,29 @@ require 'katello/load_configuration'
 
 if Katello.early_config.use_ssl
   module Rails
-      class Server < ::Rack::Server
-          def default_options
-              super.merge({
-                  :Port => 3000,
-                  :environment => (Rails.env || "development").dup,
-                  :daemonize => false,
-                  :debugger => false,
-                  :pid => File.expand_path("tmp/pids/server.pid"),
-                  :config => File.expand_path("config.ru"),
-                  :SSLEnable => true,
-                  :SSLVerifyClient => ::OpenSSL::SSL::VERIFY_PEER,
-                  :SSLVerifyDepth  => 2,
-                  :SSLCACertificateFile => "/etc/candlepin/certs/candlepin-ca.crt",
-                  :SSLPrivateKey => OpenSSL::PKey::RSA.new(File.open("/etc/candlepin/certs/candlepin-ca.key").read),
-                  :SSLCertificate => OpenSSL::X509::Certificate.new(File.open("/etc/candlepin/certs/candlepin-ca.crt").read),
-                  :SSLCertName => [["CN", WEBrick::Utils::getservername]]
-              })
-          end
+    class Server < ::Rack::Server
+      def default_options
+        super.merge({
+                        :Port                 => 3000,
+                        :environment          => (Rails.env || "development").dup,
+                        :daemonize            => false,
+                        :debugger             => false,
+                        :pid                  => File.expand_path("tmp/pids/server.pid"),
+                        :config               => File.expand_path("config.ru"),
+                        :SSLEnable            => true,
+                        :SSLVerifyClient      => ::OpenSSL::SSL::VERIFY_PEER,
+                        :SSLVerifyDepth       => 2,
+                        :SSLCACertificateFile => "/etc/candlepin/certs/candlepin-ca.crt",
+                        :SSLPrivateKey        => OpenSSL::PKey::RSA.new(File.open("/etc/candlepin/certs/candlepin-ca.key").read),
+                        :SSLCertificate       => OpenSSL::X509::Certificate.new(File.open("/etc/candlepin/certs/candlepin-ca.crt").read),
+                        :SSLCertName          => [["CN", WEBrick::Utils::getservername]]
+                    })
       end
+    end
   end
 end
 
-APP_PATH = File.expand_path('../../config/application',  __FILE__)
-require File.expand_path('../../config/boot',  __FILE__)
+APP_PATH = File.expand_path('../../config/application', __FILE__)
+require File.expand_path('../../config/boot', __FILE__)
 require 'rails/commands'
 

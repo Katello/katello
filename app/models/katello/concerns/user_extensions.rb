@@ -63,12 +63,12 @@ module Katello
         belongs_to :default_environment, :class_name => "Katello::KTEnvironment", :inverse_of => :users
         serialize :preferences, Hash
 
-        validates :default_locale, :inclusion => {:in => Katello.config.available_locales, :allow_nil => true, :message => _("must be one of %s") % Katello.config.available_locales.join(', ')}
+        validates :default_locale, :inclusion => { :in => Katello.config.available_locales, :allow_nil => true, :message => _("must be one of %s") % Katello.config.available_locales.join(', ') }
         validates_with Validators::OwnRolePresenceValidator, :attributes => :katello_roles
 
         before_validation :create_own_role
         after_validation :setup_remote_id
-        before_save   :hash_password, :setup_preferences
+        before_save :hash_password, :setup_preferences
         after_save :create_or_update_default_system_registration_permission
 
         # hash the password before creating or updateing the record
@@ -141,7 +141,7 @@ module Katello
           # will never be called in that way
           User.current ||= User.first
           # user gets a dummy password and email
-          u = User.create!(:login => login)
+          u            = User.create!(:login => login)
           User.current = u
           u
         end
@@ -162,7 +162,7 @@ module Katello
               where("#{Katello::RolesUser.table_name}.user_id = ?", self.id).where(:organization_id => nil).count
           return Organization.without_deleting.all if perms > 0
 
-          Organization.without_deleting.joins(:permissions => {:role => :users}).where(:users => {:id => self.id}).uniq
+          Organization.without_deleting.joins(:permissions => { :role => :users }).where(:users => { :id => self.id }).uniq
         end
 
         def disable_helptip(key)
@@ -180,7 +180,7 @@ module Katello
           notices.each { |notice| notice.user_notices.each(&:read!) }
 
           notices = notices.map do |notice|
-            {:text => notice.text, :level => notice.level, :request_type => notice.request_type}
+            { :text => notice.text, :level => notice.level, :request_type => notice.request_type }
           end
           return notices
         end
@@ -235,7 +235,7 @@ module Katello
         end
 
         def default_locale=(locale)
-          self.preferences_hash[:user] = { } unless self.preferences_hash.key? :user
+          self.preferences_hash[:user]          = {} unless self.preferences_hash.key? :user
           self.preferences_hash[:user][:locale] = locale
         end
 
@@ -244,7 +244,7 @@ module Katello
         end
 
         def legacy_mode=(use_legacy_mode)
-          self.preferences_hash[:user] = { } unless self.preferences_hash.key? :user
+          self.preferences_hash[:user]               = {} unless self.preferences_hash.key? :user
           self.preferences_hash[:user][:legacy_mode] = use_legacy_mode.to_bool
         end
 
@@ -260,9 +260,9 @@ module Katello
 
         #set the default org if it's an actual org_id
         def default_org=(org_id)
-          self.preferences_hash[:user] = { } unless self.preferences_hash.key? :user
+          self.preferences_hash[:user] = {} unless self.preferences_hash.key? :user
           if !org_id.nil? && org_id != "nil"
-            organization = Organization.find_by_id(org_id)
+            organization                               = Organization.find_by_id(org_id)
             self.preferences_hash[:user][:default_org] = organization.id
           else
             self.preferences_hash[:user][:default_org] = nil
@@ -274,7 +274,7 @@ module Katello
         end
 
         def subscriptions_match_system_preference=(flag)
-          self.preferences_hash[:user] = { } unless self.preferences_hash.key? :user
+          self.preferences_hash[:user]                              = {} unless self.preferences_hash.key? :user
           self.preferences_hash[:user][:subscriptions_match_system] = flag
         end
 
@@ -283,7 +283,7 @@ module Katello
         end
 
         def subscriptions_match_installed_preference=(flag)
-          self.preferences_hash[:user] = { } unless self.preferences_hash.key? :user
+          self.preferences_hash[:user]                                 = {} unless self.preferences_hash.key? :user
           self.preferences_hash[:user][:subscriptions_match_installed] = flag
         end
 
@@ -292,7 +292,7 @@ module Katello
         end
 
         def subscriptions_no_overlap_preference=(flag)
-          self.preferences_hash[:user] = { } unless self.preferences_hash.key? :user
+          self.preferences_hash[:user]                            = {} unless self.preferences_hash.key? :user
           self.preferences_hash[:user][:subscriptions_no_overlap] = flag
         end
 
@@ -375,7 +375,7 @@ module Katello
           true
         end
 
-        protected
+        protected # rubocop:disable AccessControl
 
         def can_be_deleted?
           query         = Katello::Permission.joins(:resource_type, :role).
@@ -387,7 +387,7 @@ module Katello
           more_than_one_supers
         end
 
-        private
+        private # rubocop:disable AccessControl
 
         # generate a random token, that is unique within the User table for the column provided
         def generate_token(column)
@@ -406,7 +406,7 @@ module Katello
 
           org_str = org ? "organization #{org.name} (#{org.name})" : " any organization"
           logger.debug "Checking if user #{login} is allowed to #{verbs_str} in #{resource_type.inspect} " +
-            "scoped for #{tags_str} in #{org_str}"
+                           "scoped for #{tags_str} in #{org_str}"
         end
 
         def create_own_role
@@ -420,7 +420,7 @@ module Katello
 
         def super_admin_check(role)
           if role.superadmin? && role.users.length == 1
-            message = _("Cannot dissociate user '%{login}' from '%{role}' role. Need at least one user in the '%{role}' role.") % {:login => login, :role => role.name}
+            message = _("Cannot dissociate user '%{login}' from '%{role}' role. Need at least one user in the '%{role}' role.") % { :login => login, :role => role.name }
             errors[:base] << message
             fail ActiveRecord::RecordInvalid, self
           end

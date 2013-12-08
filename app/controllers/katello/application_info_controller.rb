@@ -11,31 +11,31 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class ApplicationInfoController < ApplicationController
-  skip_before_filter :authorize
+  class ApplicationInfoController < ApplicationController
+    skip_before_filter :authorize
 
-  def section_id
-    # use the dashboard layout
-    "dashboard"
-  end
+    def section_id
+      # use the dashboard layout
+      "dashboard"
+    end
 
-  def menu_definition
-    {:about => :admin_menu}.with_indifferent_access
-  end
+    def menu_definition
+      { :about => :admin_menu }.with_indifferent_access
+    end
 
-  def about
-    @ping = Ping.ping
-    @packages = Ping.packages
-    @system_info = {  _("Application") => Katello.config.app_name,
-                      _("Version")     => Katello.config.katello_version
-                   }
-    if current_user.allowed_to? :read, :organizations
-      @system_info.merge!(_("Environment") => Rails.env,
-                          _("Directory")   => Rails.root,
-                          _("Authentication") => Katello.config.warden,
-                          "Ruby" => RUBY_VERSION
-                         )
+    def about
+      @ping        = Ping.ping
+      @packages    = Ping.packages
+      @system_info = { _("Application") => Katello.config.app_name,
+                       _("Version")     => Katello.config.katello_version
+      }
+      if current_user.allowed_to? :read, :organizations
+        @system_info.merge!(_("Environment")    => Rails.env,
+                            _("Directory")      => Rails.root,
+                            _("Authentication") => Katello.config.warden,
+                            "Ruby"              => RUBY_VERSION
+        )
+      end
     end
   end
-end
 end

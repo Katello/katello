@@ -25,24 +25,24 @@ module Katello
     def setup
       setup_controller_defaults_api
       @request.env['HTTP_ACCEPT'] = 'application/json'
-      @fake_search_service = @controller.load_search_service(Support::SearchService::FakeSearchService.new)
+      @fake_search_service        = @controller.load_search_service(Support::SearchService::FakeSearchService.new)
     end
 
     def test_ping
       login_user(User.find(users(:admin)))
-      response = { :status => "ok",
-                   :services => { :pulp => { :status => "ok",
-                                             :duration_ms => "38" },
-                                  :candlepin => { :status => "ok",
-                                                  :duration_ms => "23" },
-                                  :elasticsearch => { :status => "ok",
-                                                      :duration_ms => "7" },
-                                  :pulp_auth => { :status => "ok",
-                                                  :duration_ms => "0" },
-                                  :candlepin_auth => { :status => "ok",
+      response = { :status   => "ok",
+                   :services => { :pulp           => { :status      => "ok",
+                                                       :duration_ms => "38" },
+                                  :candlepin      => { :status      => "ok",
+                                                       :duration_ms => "23" },
+                                  :elasticsearch  => { :status      => "ok",
+                                                       :duration_ms => "7" },
+                                  :pulp_auth      => { :status      => "ok",
                                                        :duration_ms => "0" },
-                                  :katello_jobs => { :status => "ok",
-                                                     :duration_ms => "0" } } }
+                                  :candlepin_auth => { :status      => "ok",
+                                                       :duration_ms => "0" },
+                                  :katello_jobs   => { :status      => "ok",
+                                                       :duration_ms => "0" } } }
       Ping.stubs(:ping).returns(response)
       get :index
 

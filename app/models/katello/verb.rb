@@ -11,41 +11,41 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class Verb < ActiveRecord::Base
-  self.include_root_in_json = false
+  class Verb < ActiveRecord::Base
+    self.include_root_in_json = false
 
-  # rubocop:disable HasAndBelongsToMany
-  # TODO: change this into has_many :through association
-  has_and_belongs_to_many :permission, :join_table => 'katello_permissions_verbs'
-  validates :verb, :length => {:maximum => 255}
+    # rubocop:disable HasAndBelongsToMany
+    # TODO: change this into has_many :through association
+    has_and_belongs_to_many :permission, :join_table => 'katello_permissions_verbs'
+    validates :verb, :length => { :maximum => 255 }
 
-  # alias for verb attribute
-  def name
-    verb
+    # alias for verb attribute
+    def name
+      verb
+    end
+
+    # used for user-friendly presentation of this record
+    def all_display_names(resource_type_name)
+      verbs = Verb.verbs_for(resource_type_name, true).merge(Verb.verbs_for(resource_type_name, false))
+      verbs[verb]
+    end
+
+    def display_name(resource_type_name, global)
+      verbs = Verb.verbs_for(resource_type_name, global)
+      verbs[verb]
+    end
+
+    def self.verbs_for(resource_type_name, global = false)
+      res_type = ResourceType::TYPES[resource_type_name]
+      return res_type[:model].list_verbs(global) if res_type && res_type[:model]
+      {}
+    end
+
+    def self.no_tag_verbs(resource_type_name)
+      res_type = ResourceType::TYPES[resource_type_name]
+      return res_type[:model].no_tag_verbs if res_type && res_type[:model] && res_type[:model].respond_to?('no_tag_verbs')
+      {}
+    end
+
   end
-
-  # used for user-friendly presentation of this record
-  def all_display_names(resource_type_name)
-    verbs  = Verb.verbs_for(resource_type_name, true).merge(Verb.verbs_for(resource_type_name, false))
-    verbs[verb]
-  end
-
-  def display_name(resource_type_name, global)
-    verbs  = Verb.verbs_for(resource_type_name, global)
-    verbs[verb]
-  end
-
-  def self.verbs_for(resource_type_name, global = false)
-    res_type = ResourceType::TYPES[resource_type_name]
-    return res_type[:model].list_verbs(global) if res_type && res_type[:model]
-    {}
-  end
-
-  def self.no_tag_verbs(resource_type_name)
-    res_type = ResourceType::TYPES[resource_type_name]
-    return res_type[:model].no_tag_verbs if res_type && res_type[:model] && res_type[:model].respond_to?('no_tag_verbs')
-    {}
-  end
-
-end
 end

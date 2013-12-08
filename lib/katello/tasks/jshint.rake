@@ -3,12 +3,12 @@ if Rails.env.development?
     require "jshintrb/jshinttask"
 
     vendor_files = [
-      'app/assets/javascripts/common/routes',
-      'app/assets/javascripts/common/bastion-routes',
-      'app/assets/javascripts/common/chosen.jquery',
-      'app/assets/javascripts/common/spin.min',
-      'app/assets/javascripts/html5/excanvas',
-      'app/assets/javascripts/html5/html5'
+        'app/assets/javascripts/common/routes',
+        'app/assets/javascripts/common/bastion-routes',
+        'app/assets/javascripts/common/chosen.jquery',
+        'app/assets/javascripts/common/spin.min',
+        'app/assets/javascripts/html5/excanvas',
+        'app/assets/javascripts/html5/html5'
     ].join(",")
 
     Jshintrb::JshintTask.new :jshint do |t|

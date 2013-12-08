@@ -16,35 +16,35 @@ module Katello
   class PoolTest < ActiveSupport::TestCase
 
     def test_active
-      active_pool = FactoryGirl.build(:pool, :active)
-      inactive_pool = FactoryGirl.build(:pool, :inactive)
-      all_subscriptions = [active_pool, inactive_pool]
+      active_pool          = FactoryGirl.build(:pool, :active)
+      inactive_pool        = FactoryGirl.build(:pool, :inactive)
+      all_subscriptions    = [active_pool, inactive_pool]
       active_subscriptions = Pool.active(all_subscriptions)
       assert_equal active_subscriptions, all_subscriptions - [inactive_pool]
     end
 
     def test_expiring_soon
-      not_expiring_soon = FactoryGirl.build(:pool, :not_expiring_soon)
-      expiring_soon_pool = FactoryGirl.build(:pool, :expiring_soon)
-      all_subscriptions = [not_expiring_soon, expiring_soon_pool]
+      not_expiring_soon           = FactoryGirl.build(:pool, :not_expiring_soon)
+      expiring_soon_pool          = FactoryGirl.build(:pool, :expiring_soon)
+      all_subscriptions           = [not_expiring_soon, expiring_soon_pool]
       expiring_soon_subscriptions = Pool.expiring_soon(all_subscriptions)
       assert_equal expiring_soon_subscriptions, all_subscriptions - [not_expiring_soon]
     end
 
     def test_recently_expired
-      unexpired = FactoryGirl.build(:pool, :unexpired)
-      recently_expired = FactoryGirl.build(:pool, :recently_expired)
-      all_subscriptions = [unexpired, recently_expired]
+      unexpired             = FactoryGirl.build(:pool, :unexpired)
+      recently_expired      = FactoryGirl.build(:pool, :recently_expired)
+      all_subscriptions     = [unexpired, recently_expired]
       expired_subscriptions = Pool.recently_expired(all_subscriptions)
       assert_equal expired_subscriptions, all_subscriptions - [unexpired]
     end
 
     def test_recently_expired_does_not_get_long_expired_subscriptions
-      unexpired = FactoryGirl.build(:pool, :unexpired)
+      unexpired        = FactoryGirl.build(:pool, :unexpired)
       recently_expired = FactoryGirl.build(:pool, :recently_expired)
-      long_expired = FactoryGirl.build(:pool, :long_expired)
+      long_expired     = FactoryGirl.build(:pool, :long_expired)
 
-      all_subscriptions = [unexpired, recently_expired, long_expired]
+      all_subscriptions     = [unexpired, recently_expired, long_expired]
       expired_subscriptions = Pool.recently_expired(all_subscriptions)
       assert_equal expired_subscriptions, all_subscriptions - [unexpired, long_expired]
     end
