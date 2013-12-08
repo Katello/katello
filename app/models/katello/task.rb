@@ -37,7 +37,7 @@ class Task < ActiveRecord::Base
   end
 
   def execution_plan
-    @execution_plan ||= ::Actions.world.persistence.load_execution_plan(self.uuid)
+    @execution_plan ||= ::ForemanTasks.world.persistence.load_execution_plan(self.uuid)
   end
 
   def input
