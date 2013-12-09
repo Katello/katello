@@ -46,6 +46,13 @@ class Api::V2::SystemsControllerTest < ActionController::TestCase
     permissions
   end
 
+  def test_index
+    get :index, :organization_id => get_organization(:organization1).label
+
+    assert_response :success
+    assert_template 'api/v2/systems/index'
+  end
+
   def test_show
     get :show, :id => @system.uuid
 
@@ -76,9 +83,8 @@ class Api::V2::SystemsControllerTest < ActionController::TestCase
 
   def test_add_system_groups
     expected_ids = @system_groups.collect {|group| group.id}
-    post :add_system_groups, :id => @system.uuid, :system => {
-        :system_group_ids => expected_ids
-    }
+    post :add_system_groups, :id => @system.uuid,
+         :system => { :system_group_ids => expected_ids }
 
     assert_response :success
     assert_template 'api/v2/systems/add_system_groups'
@@ -87,9 +93,8 @@ class Api::V2::SystemsControllerTest < ActionController::TestCase
 
   def test_add_system_groups_empty
     expected_ids = []
-    post :add_system_groups, :id => @system.uuid, :system => {
-        :system_group_ids => expected_ids
-    }
+    post :add_system_groups, :id => @system.uuid,
+         :system => { :system_group_ids => expected_ids }
 
     assert_response :success
     assert_template 'api/v2/systems/add_system_groups'
@@ -97,9 +102,8 @@ class Api::V2::SystemsControllerTest < ActionController::TestCase
   end
 
   def test_add_system_groups_nil
-    post :add_system_groups, :id => @system.uuid, :system => {
-        :system_group_ids => nil
-    }
+    post :add_system_groups, :id => @system.uuid,
+         :system => { :system_group_ids => nil }
 
     assert_response :success
     assert_template 'api/v2/systems/add_system_groups'
