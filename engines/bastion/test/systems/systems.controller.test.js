@@ -25,6 +25,7 @@ describe('Controller: SystemsController', function() {
             };
             this.removeRow = function() {};
             this.get = function() {};
+            this.enableSelectAllResults = function() {}
         };
         Routes = {
             apiSystemsPath: function() { return '/api/systems';},

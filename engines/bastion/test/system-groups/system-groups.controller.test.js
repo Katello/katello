@@ -52,9 +52,4 @@ describe('Controller: SystemGroupsController', function() {
         expect($scope.transitionTo).toHaveBeenCalledWith('system-groups.index');
     });
 
-    it('properly converts system group limit', function(){
-        expect($scope.readableGroupLimit(-1)).not.toBe(-1);
-        expect($scope.readableGroupLimit(1)).toBe(1);
-    });
-
 });
