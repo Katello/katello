@@ -96,7 +96,7 @@ class Api::V2::TasksController < Api::V2::ApiController
   private
 
   def search_tasks(search_params)
-    scope = Task.select('DISTINCT katello_tasks.*, dynflow_execution_plans.*')
+    scope = ::ForemanTasks::Task.select('DISTINCT foreman_tasks_tasks.*')
     scope = ordering_scope(scope, search_params)
     scope = search_scope(scope, search_params)
     scope = active_scope(scope, search_params)
@@ -112,15 +112,15 @@ class Api::V2::TasksController < Api::V2::ApiController
       if search_params[:user_id].blank?
         raise HttpErrors::BadRequest, _("User search_params requires user_id to be specified")
       end
-      scope.joins(:locks).where(katello_locks:
-                                { name: Lock::OWNER_LOCK_NAME,
+      scope.joins(:locks).where(foreman_tasks_locks:
+                                { name: ::ForemanTasks::Lock::OWNER_LOCK_NAME,
                                   resource_type: 'User',
                                   resource_id:   search_params[:user_id] })
     when 'resource'
       if search_params[:resource_type].blank? || search_params[:resource_id].blank?
         raise HttpErrors::BadRequest, _("Resource search_params requires resource_type and resource_id to be specified")
       end
-      scope.joins(:locks).where(katello_locks:
+      scope.joins(:locks).where(foreman_tasks_locks:
                                 { resource_type: search_params[:resource_type],
                                   resource_id:   search_params[:resource_id] })
     when 'task'
@@ -148,8 +148,7 @@ class Api::V2::TasksController < Api::V2::ApiController
   end
 
   def ordering_scope(scope, search_params)
-    scope.joins(:dynflow_execution_plan).
-        order('dynflow_execution_plans.started_at DESC')
+    scope.order('started_at DESC')
   end
 
   def task_hash(task)
@@ -163,7 +162,7 @@ class Api::V2::TasksController < Api::V2::ApiController
 
   def find_task
     # temporary searching for both Dynflow task and old-style tasks
-    @task = Task.find_by_uuid(params[:id])
+    @task = ::ForemanTasks::Task.find_by_uuid(params[:id])
     # TODO: remove once nothing goes through the old TaskStatus
     @task ||= TaskStatus.find_by_id!(params[:id])
     @organization = @task.organization
