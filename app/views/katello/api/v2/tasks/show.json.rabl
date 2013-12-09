@@ -8,7 +8,7 @@ attributes :id, :task_owner_type, :progress, :uuid, :state, :user_id, :task_owne
 attributes :pending? => :pending
 
 @result = (@task || @object).result
-@result = Util::Data::ostructize(@result)
+@result = Katello::Util::Data::ostructize(@result)
 
 node :result do
   @result
