@@ -1,7 +1,5 @@
 Katello::Engine.routes.draw do
 
-  apipie
-
   resources :system_groups do
     collection do
       get :items

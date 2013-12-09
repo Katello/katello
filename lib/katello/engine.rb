@@ -12,6 +12,13 @@ module Katello
       SimpleNavigation.config_file_paths << File.expand_path("../../../config", __FILE__)
     end
 
+    initializer "katello.apipie" do
+      # When Katello is loaded, the apidoc is restricted just to the Katello controllers.
+      # This way, it's possible to generate both Foreman bindings (when Katello is not loaded)
+      # or just Katello bindings (when Katello loaded) the same way.
+      Apipie.configuration.api_controllers_matcher = "#{Katello::Engine.root}/app/controllers/katello/api/v2/*.rb"
+    end
+
     initializer "katello.load_app_instance_data" do |app|
       app.config.paths['db/migrate'] += Katello::Engine.paths['db/migrate'].existent
       app.config.autoload_paths += Dir["#{config.root}/app/lib)"]
