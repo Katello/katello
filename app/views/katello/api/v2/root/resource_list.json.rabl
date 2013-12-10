@@ -1,3 +1,3 @@
-collection Util::Data::ostructize(@collection), :object_root => :route
+collection Katello::Util::Data::ostructize(@collection), :object_root => :route
 
 attributes :href, :rel
