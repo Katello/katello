@@ -2,8 +2,7 @@ module Actions
 
   class EntryAction < Actions::Action
     include Helpers::ArgsSerialization
-    include Helpers::Lock
-    include Helpers::NewLock
+    include ForemanTasks::ActionHelpers::Lock
 
     # what locks to use on the resource? All by default, can be overriden
     def resource_locks
@@ -27,7 +26,6 @@ module Actions
       end
       plan_self(serialize_args(resource, *related_resources, *additional_args))
       if resource.is_a? ActiveRecord::Base
-        lock(resource, resource_locks)
         lock!(resource, resource_locks)
       end
     end
