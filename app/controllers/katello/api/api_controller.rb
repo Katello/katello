@@ -147,8 +147,8 @@ class Api::ApiController < ::Api::BaseController
 
   # trigger dynflow action and return the dynflow task object
   def async_task(action, *args)
-    uuid = ::ForemanTasks.trigger(action, *args).id
-    return Task.find_by_uuid!(uuid)
+    execution_plan_id = trigger(action, *args).id
+    return ::ForemanTasks::Task::DynflowTask.find_by_external_id!(execution_plan_id)
   end
 
 end
