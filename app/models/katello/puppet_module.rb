@@ -12,12 +12,6 @@
 
 require 'rubygems/package'
 require 'zlib'
-
-module Katello
-class InvalidPuppetModuleError < Exception
-end
-end
-
 module Katello
 class PuppetModule
   include Glue::Pulp::PuppetModule if Katello.config.use_pulp
@@ -37,10 +31,10 @@ class PuppetModule
     if metadata
       return JSON.parse(metadata).with_indifferent_access
     else
-      fail InvalidPuppetModuleError, _("Could not parse metadata. Make sure the puppet module is valid.")
+      fail Katello::Errors::InvalidPuppetModuleError, _("Could not parse metadata. Make sure the puppet module is valid.")
     end
   rescue Zlib::GzipFile::Error, Gem::Package::TarInvalidError
-    raise InvalidPuppetModuleError, _("Could not parse metadata. Make sure the puppet module is valid.")
+    raise Katello::Errors::InvalidPuppetModuleError, _("Could not parse metadata. Make sure the puppet module is valid.")
   ensure
     tar_extract.close if tar_extract
   end

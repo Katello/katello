@@ -12,6 +12,9 @@
 
 module Katello
 module Errors
+
+  class InvalidPuppetModuleError < Exception; end
+
   class NotFound < StandardError; end
 
   # unauthorized access
