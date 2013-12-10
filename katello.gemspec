@@ -63,6 +63,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency "compass-960-plugin"
   gem.add_dependency "haml-rails"
   gem.add_dependency "ui_alchemy-rails", '1.0.12'
+  gem.add_dependency "deface"
 
   # Testing
   gem.add_dependency "rubocop", "0.15.0"
