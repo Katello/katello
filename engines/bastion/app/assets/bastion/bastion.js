@@ -10,22 +10,22 @@
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
  */
 
-//= require "katello/jquery-1.7.2"
+//= require "bastion/jquery/jquery"
 //= require "alchemy/jquery/plugins/jquery.periodicalupdater"
 
-//= require "alchemy/underscore"
+//= require "bastion/underscore/underscore"
 
-//= require "ui_alchemy/angular/angular"
-//= require "ui_alchemy/angular-resource/angular-resource"
-//= require "ui_alchemy/angular-sanitize/angular-sanitize"
-//= require "katello/angular-ui-router.js"
-//= require "ng-upload"
-//= require "katello/angular-gettext"
-
-//= require "ui_alchemy/alchemy/alchemy"
+//= require "bastion/angular/angular"
+//= require "bastion/angular-resource/angular-resource"
+//= require "bastion/angular-sanitize/angular-sanitize"
+//= require "bastion/angular-ui-router/angular-ui-router"
+//= require "bastion/ngUpload/ng-upload"
+//= require "bastion/angular-gettext/angular-gettext"
+//= require "bastion/angular-blocks/angular-blocks"
+//= require_tree "../../../vendor/assets/javascripts/bastion/angular-ui-bootstrap"
+//= require "bastion/alchemy/alchemy"
 
 //= require "katello/common/katello.global"
-
 //= require "katello/common/notices"
 //= require "katello/common/bastion-routes"
 //= require "katello/common/routes"
@@ -34,9 +34,6 @@
 //= require "katello/widgets/path_selector"
 
 //= require "katello/common/experimental/katello-globals.module"
-
-//= require "angular-ui-bootstrap/ui-bootstrap-0.6.0.js"
-//= require "angular-blocks/angular-blocks.js"
 
 //= require "bastion/bastion.module"
 

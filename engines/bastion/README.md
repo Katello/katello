@@ -11,8 +11,9 @@ Bastion is angularjs based web client for the Katello server. The code can be fo
 
     test/ - contains JavaScript tests broken down by the same structure as the application
 
-    vendor/assets/components - third party libraries needed in production
-    vendor/assets/dev-components - generated when `bower install --dev` is run, contains third party assets needed for testing
+    vendor/assets/javascripts - third party JavaScript libraries
+    vendor/assets/stylesheets - third party stylesheets
+    vendor/assets/fonts - third party fonts
 
     Gruntfile.js - defines the project tasks that can be run with `grunt` (e.g. `grunt ci`)
     karma.conf.js - JavaScript test configuration for the Karma test runner
@@ -31,6 +32,40 @@ To help with this, we recommend running the following before opening a pull requ
 
     grunt ci
 
+## Dependencies ##
+
+Web asset dependencies are stored in `bower.json`. This file denotes what library files are being used and their versions.
+
+### Installing a New Dependency ###
+
+In order to add a new web asset dependency, a new entry into the `bower.json` file must be made along with noting what file(s) to extract from the new package to be placed into source control. For example, to add the `angular-blocks` library, open `bower.json` and add an entry under the `dependencies` section:
+
+    "angular-blocks": "~>0.1.8"
+
+Since Bower is based off the use of a git repository to define the package contents, installing `angular-blocks` will pull down more files than we want. In order to limit the files places into source control, add an entry to the `exportsOverride` section like so:
+
+    "angular-blocks": {
+      "javascripts/bastion": "src/angular-blocks.js"
+    }
+
+If needing to extract multiple asset types, one can do:
+
+    "alchemy": {
+      "javascripts/bastion": "alchemy.js",
+      "stylesheets/bastion": "*.scss"
+    }
+
+A set of files can be included by using an array instead of a string to list the files. After defining the new dependency and the associated file(s), run the following to install the new library:
+
+    grunt bower:install
+
+### Updating Dependency ###
+
+To update a dependency, the version must be bumped in the `bower.json` file, installed and commited to source control. To bump the version, open `bower.json`, locate the proper entry and change the version number. Now, install the new version:
+
+    grunt bower:install
+
+Lastly, double check the new files with something like `git status`, add them and commit them with a message indicating that a new dependency version is being committed. We prefer that when committing a new depenendency, a single commit is generated with just the changes from the update.
 
 ## Testing ##
 
@@ -62,19 +97,19 @@ Install the local node modules defined within package.json:
     cd ~/path/to/mykatello/engines/bastion
     npm install
 
-Install the JavaScript asset libraries used for testing defined within bower.json:
+Install the JavaScript asset libraries used for testing defined within the `devDependencies` section of bower.json:
 
-    bower install --dev
+    grunt bower:dev
 
 Run 'grunt test' to ensure test setup is working.
 
-As libraries are updated or added over time, you may have to rerun `npm install` and `bower install`.  If you encounter errors such as this:
+As libraries are updated or added over time, you may have to rerun `npm install` and `grunt bower:dev`.  If you encounter errors such as this:
 
 ```
  Local Npm module "grunt-angular-gettext" not found. Is it installed?
 ```
 
-Running `npm install` and `bower install` again should fix the issue.
+Running `npm install` and `grunt bower:dev` again should fix the issue.
 
 #### Test Commands ####
 

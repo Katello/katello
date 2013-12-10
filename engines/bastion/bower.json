@@ -13,7 +13,7 @@
     "angular-gettext": "~0.1.1",
     "angular-ui-bootstrap": "0.6.0",
     "angular-ui-router": "=0.2.0",
-    "ngInfiniteScroll": "~1.0.0",
+    "angular-blocks": "~>0.1.8",
     "alchemy": ">=0.0.1",
     "underscore": "=1.5.2",
     "ngUpload": "~0.3.19",
@@ -25,6 +25,69 @@
     "angular-scenario": "=1.2.0"
   },
   "resolutions": {
-    "angular": "1.2.0"
+    "angular": "1.2.0",
+    "jquery": "=1.9.1"
+  },
+  "exportsOverride": {
+    "jquery": {
+      "javascripts/bastion": "jquery.js"
+    },
+    "json3": {
+      "javascripts/bastion": "lib/json3.js"
+    },
+    "es5-shim": {
+      "javascripts/bastion": "es5-shim.js"
+    },
+    "angular": {
+      "javascripts/bastion": "angular.js"
+    },
+    "angular-sanitize": {
+      "javascripts/bastion": "angular-sanitize.js"
+    },
+    "angular-resource": {
+      "javascripts/bastion": "angular-resource.js"
+    },
+    "angular-route": {
+      "javascripts/bastion": "angular-route.js"
+    },
+    "angular-gettext": {
+      "javascripts/bastion": "dist/angular-gettext.js"
+    },
+    "angular-blocks": {
+      "javascripts/bastion": "src/angular-blocks.js"
+    },
+    "angular-ui-bootstrap": {
+      "javascripts/bastion": [
+        "src/alert/alert.js",
+        "src/bindHtml/bindHtml.js",
+        "src/modal/modal.js",
+        "src/position/position.js",
+        "src/tabs/tabs.js",
+        "src/tooltip/tooltip.js"
+      ]
+    },
+    "angular-ui-router": {
+      "javascripts/bastion": "release/angular-ui-router.js"
+    },
+    "alchemy": {
+      "javascripts/bastion": "alchemy.js",
+      "stylesheets/bastion": "*.scss"
+    },
+    "underscore": {
+      "javascripts/bastion": "underscore.js"
+    },
+    "ngUpload": {
+      "javascripts/bastion": "ng-upload.js"
+    },
+    "bootstrap": {
+      "stylesheets/bastion": "less/*.less"
+    },
+    "font-awesome": {
+      "stylesheets/bastion": [
+        "less/*.less",
+        "scss/*.scss"
+      ],
+      "fonts/bastion": "font/*"
+    }
   }
 }
