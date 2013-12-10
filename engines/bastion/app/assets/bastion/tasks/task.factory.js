@@ -29,7 +29,13 @@ angular.module('Bastion.tasks').factory('Task',
         var resource = $resource('/katello/api/tasks/:id/:action',
             {id: '@uuid', 'organization_id': CurrentOrganization},
             {
-                query: {method: 'GET', isArray: false},
+                query: {method: 'GET', isArray: false}
+            }
+        );
+
+        var foremanTasksResource = $resource('/foreman_tasks/api/tasks/:id/:action',
+            {},
+            {
                 bulkSearch: {method:'POST', isArray: true, params: { action: 'bulk_search'}}
             }
         );
@@ -60,7 +66,7 @@ angular.module('Bastion.tasks').factory('Task',
             if(_.keys(searchParamsById).length == 0) {
                 return;
             }
-            resource.bulkSearch(bulkSearchParams(), function(response) {
+            foremanTasksResource.bulkSearch(bulkSearchParams(), function(response) {
                 try {
                     _.each(response, function(tasksSearch) {
                         var searchId = tasksSearch['search_params']['search_id'];
