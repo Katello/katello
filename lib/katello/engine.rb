@@ -4,6 +4,10 @@ module Katello
 
     isolate_namespace Katello
 
+    initializer 'katello.silenced_logger', :before => :build_middleware_stack do |app|
+      app.config.middleware.swap Rails::Rack::Logger, Katello::Middleware::SilencedLogger, {}
+    end
+
     initializer 'katello.mount_engine', :after => :build_middleware_stack do |app|
       app.routes_reloader.paths << "#{Katello::Engine.root}/config/routes/mount_engine.rb"
     end
