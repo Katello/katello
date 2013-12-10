@@ -15,7 +15,18 @@ Linux based systems.
 
 ## Development
 
-To setup a development environment begin with following the standard setup for Katello from git instructions - [development instructions](https://fedorahosted.org/katello/wiki/AdvancedInstallation#GettingupandRunningGIT). From here on in, the assumption is that you have installed Katello and converted your setup to a git checkout. If you already have a Foreman git checkout, skip ahead to the section on setting Katello up, otherwise follow the instructions below to setup a local git checkout of Foreman.
+The easiest way to set up katello, is to install the latest version of katello
+via rpm, and then clone the git code.
+
+Follow the [install steps](https://fedorahosted.org/katello/wiki/Install) from
+the Katello Wiki. When you attempt to install the packages, please install the
+following:
+
+```bash
+# yum install -y katello-all
+```
+
+Then, clone this repository into a workspace of your choosing.
 
 ### Setup Foreman
 
@@ -120,21 +131,15 @@ That's rather unfortunate. But don't worry! We can help. Just file a bug
 
 ## Contributing
 
-See
-[development instructions](https://fedorahosted.org/katello/wiki/AdvancedInstallation#GettingupandRunningGIT).
-
-What's included in this repository:
-
- * script - various development scripts
- * actual Rails app of Katello
+See [getting involved](http://www.katello.org/get-involved/).
 
 ## Contact & Resources
 
  * [Katello.org](http://katello.org)
  * [Wiki](https://fedorahosted.org/katello/wiki)
- * [User mailing list](https://fedorahosted.org/mailman/listinfo/katello)
- * [Developer mailing list](https://www.redhat.com/mailman/listinfo/katello-devel)
- * [IRC Freenode](http://freenode.net/using_the_network.shtml): #katello
+ * [Foreman User Mailing List](https://groups.google.com/forum/?fromgroups#!forum/foreman-users)
+ * [Foreman Developer mailing list](https://groups.google.com/forum/?fromgroups#!forum/foreman-dev)
+ * [IRC Freenode](http://freenode.net/using_the_network.shtml): #theforeman-dev
  * [Twitter](https://twitter.com/Katello_Project)
 
 ## Documentation
