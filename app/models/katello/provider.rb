@@ -17,7 +17,7 @@ class Provider < ActiveRecord::Base
   include Glue::ElasticSearch::Provider if Katello.config.use_elasticsearch
   include Glue::Provider
   include Glue
-  include Authorization::Provider
+  include Katello::Authorization::Provider
   include AsyncOrchestration
 
   include Ext::PermissionTagCleanup
