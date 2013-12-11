@@ -269,7 +269,7 @@
         <span class="info-label" translate>Interfaces</span>
         <div class="info-value">
           <div ng-repeat="(interfaceName, interface) in systemFacts.net.interface" >
-            <i ng-class="{'icon-plus': !expanded, 'icon-minus': expanded}" class="expand-icon clickable"
+            <i ng-class="{'icon-plus': !expanded, 'icon-minus': expanded}" class="expand-icon"
                ng-hide="editMode" ng-click="expanded = !expanded"></i>
             {{ interfaceName }}
             <div class="sub-detail" ng-show="expanded">
@@ -314,7 +314,7 @@
   <div class="advanced-info" ng-show="hasAdvancedInfo">
     <header class="details-sub-header">
        <h3>
-        <i class="expand-icon clickable" ng-class="{'icon-plus': !showAdvanced, 'icon-minus': showAdvanced}"
+        <i class="expand-icon" ng-class="{'icon-plus': !showAdvanced, 'icon-minus': showAdvanced}"
            ng-click="showAdvanced = !showAdvanced"></i>
          <span translate>Advanced Information</span>
        </h3>
