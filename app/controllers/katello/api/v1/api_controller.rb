@@ -35,6 +35,7 @@ class Api::V1::ApiController < Api::ApiController
     @query_params.delete('controller')
     @query_params.delete('action')
     @query_params.delete('format')
+    @query_params.delete('api_version')
 
     @query_params.each_pair do |k, v|
 

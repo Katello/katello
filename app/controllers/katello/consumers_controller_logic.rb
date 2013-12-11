@@ -17,7 +17,7 @@ module ConsumersControllerLogic
   # Note: Finding the provider is necessary for cross-linking in the UI
   def consumed_subscriptions(consumer)
     consumed = consumer.consumed_entitlements.collect do |entitlement|
-      pool = ::Pool.find_pool(entitlement.poolId)
+      pool = Katello::Pool.find_pool(entitlement.poolId)
       product = Product.where(:cp_id => pool.product_id).all.select do |p|
         !Provider.where(:id => p.provider_id, :organization_id => current_organization.id).first.nil?
       end
@@ -34,7 +34,7 @@ module ConsumersControllerLogic
   # Note: Finding the provider is necessary for cross-linking in the UI
   def available_subscriptions(cp_pools, organization = current_organization)
     if cp_pools
-      pools = cp_pools.collect{|cp_pool| ::Pool.find_pool(cp_pool['id'], cp_pool)}
+      pools = cp_pools.collect{|cp_pool| ::Katello::Pool.find_pool(cp_pool['id'], cp_pool)}
 
       subscriptions = pools.collect do |pool|
         product = Product.where(:cp_id => pool.product_id).all.select do |p|
