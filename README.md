@@ -60,35 +60,25 @@ Ensure you have ```libvirt-devel``` installed:
 sudo yum install libvirt-devel
 ```
 
-Now create a local gemfile, add two basic gems and install dependencies:
+Now create a local gemfile, add two basic gems, and a gem for the Katello engine, and install dependencies:
 
 ```bash
 touch bundler.d/Gemfile.local.rb
 echo "gem 'facter'" >> bundler.d/Gemfile.local.rb
 echo "gem 'puppet'" >> bundler.d/Gemfile.local.rb
-bundle install
-```
-
-Finally, create and migrate the database:
-
-```bash
-rake db:create db:migrate
-```
-
-### Setup Katello
-
-The Katello setup assumes that you have a previously setup Foreman checkout or have followed the instructions in the Setup Foreman section. The first step is to add the Katello engine and install dependencies:
-
-```bash
 echo "gem 'katello', :path => '../katello'" >> bundler.d/Gemfile.local.rb
 bundle update
 ```
 
-Now add the Katello migrations and initial seed data:
+Finally, create, migrate, and seed the database:
 
 ```bash
-rake db:migrate && rake db:seed
+rake db:create db:migrate db:seed
 ```
+
+### Setup Katello
+
+The Katello setup assumes that you have a previously setup Foreman checkout or have followed the instructions in the Setup Foreman section. 
 
 If you have set ```RAILS_RELATIVE_URL_ROOT``` in the past then you need to be sure to ```unset``` it and remove it from ```.bashrc``` or ```.bash_profile``` as appropriate.
 
@@ -98,13 +88,14 @@ unset RAILS_RELATIVE_URL_ROOT
 
 Make sure that `use_ssl: false` is set in `config/katello.yml`. (**debatable**)
 
-At this point, the development environment should be completely setup and the Katello engine functionality available. To verify this:
+### Test Run
+
+At this point, the development environment should be completely setup and the Katello engine functionality available. To verify this, go to your Foreman checkout:
 
 1. Start the development server
 
     ```bash
-    pwd
-    ~/workspace/foreman
+    cd $GITDIR/foreman
 
     rails s
     ```
