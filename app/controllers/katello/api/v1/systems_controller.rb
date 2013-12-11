@@ -76,7 +76,7 @@ class Api::V1::SystemsController < Api::V1::ApiController
         :activate                         => register_system,
         :tasks                            => index_systems,
         :task_show                        => read_system,
-        :enabled_repos                    => consumer_only,
+        :enabled_repos                    => edit_system,
         :add_system_groups                => edit_system,
         :remove_system_groups             => edit_system,
         :refresh_subscriptions            => edit_system,
