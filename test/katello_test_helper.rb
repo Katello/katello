@@ -132,6 +132,10 @@ class ActionController::TestCase
   def set_organization(org)
     session[:current_organization_id] = org.id
   end
+
+  def stub_find_organization(org)
+    Organization.stubs(:without_deleting).returns(stub(:having_name_or_label => [org]))
+  end
 end
 
 class ActiveSupport::TestCase

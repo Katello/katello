@@ -32,7 +32,6 @@ angular.module('Bastion.system-groups').controller('SystemGroupSystemsController
         params = {
             'id':          $scope.$stateParams.systemGroupId,
             'search':      $location.search().search || "",
-            'offset':      0,
             'sort_by':     'name',
             'sort_order':  'ASC',
             'paged':       true
@@ -47,7 +46,7 @@ angular.module('Bastion.system-groups').controller('SystemGroupSystemsController
             var selected = _.pluck($scope.systemsTable.getSelected(), 'uuid');
 
             $scope.isRemoving = true;
-            SystemGroup.removeSystems({id: $scope.group.id, 'system_group': {'system_ids': selected}}, function(){
+            SystemGroup.removeSystems({id: $scope.group.id, 'system_ids': selected}, function(){
                 systemsPane.table.selectAll(false);
                 systemsPane.refresh();
                 $scope.successMessages.push(gettext("Successfully removed %s systems.").replace('%s', selected.length));

@@ -29,9 +29,10 @@ module Katello
 
     def_param_group :search do
       param :search, String, :desc => "Search string"
-      param :offset, :number, :desc => "Starting location to retrieve data from"
-      param :limit,  :number, :desc => "Number of results to return"
-      param :sort, Hash do
+      param :page, :number, :desc => "Page number, starting at 1"
+      param :per_page,  :number, :desc => "Number of results per page to return"
+      param :order, String, :desc => "Sort field and order, eg. 'name DESC'"
+      param :sort, Hash, :desc => "Hash version of 'order' param" do
         param :by, String, :desc => "Field to sort the results on"
         param :order, String, :desc => "How to order the sorted results (e.g. ASC for ascending)"
       end
@@ -41,17 +42,24 @@ module Katello
     param :root_name, String, :desc => "root-node of collection contained in responses (default: 'results')"
 
     def item_search(item_class, params, options)
+      if params[:order]
+        (params[:sort_by], params[:sort_order]) = params[:order].split(' ')
+      end
       options[:sort_by] = params[:sort_by] if params[:sort_by]
       options[:sort_order] = params[:sort_order] if params[:sort_order]
-      options[:page_size] = params[:page_size] || current_user.page_size
+      options[:per_page] = params[:per_page] || ::Setting::General.entries_per_page
+      options[:page] = params[:page] || 1
+      offset = (options[:page].to_i - 1) * options[:per_page].to_i
 
-      items = Glue::ElasticSearch::Items.new(item_class)
-      systems, total_count = items.retrieve(params[:search], params[:offset], options)
+      @search_service.model = item_class
+      results, total_count = @search_service.retrieve(params[:search], offset, options)
 
       {
-        :results  => systems,
+        :results  => results,
         :subtotal => total_count,
-        :total    => items.total_items
+        :total    => @search_service.total_items,
+        :page     => options[:page],
+        :per_page => options[:per_page]
       }
     end
 
