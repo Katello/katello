@@ -30,7 +30,7 @@ describe('Controller: SystemsBulkActionSubscriptionsController', function() {
         };
         Organization = {
             query: function() {},
-            autoAttach: function() {}
+            autoAttachSubscriptions: function() {}
         };
         Task = {
             query: function() {},
@@ -57,10 +57,10 @@ describe('Controller: SystemsBulkActionSubscriptionsController', function() {
     }));
 
     it("can auto-attach available subscriptions to all systems", function() {
-        spyOn(Organization, 'autoAttach');
+        spyOn(Organization, 'autoAttachSubscriptions');
         $scope.performAutoAttachSubscriptions();
 
-        expect(Organization.autoAttach).toHaveBeenCalled();
+        expect(Organization.autoAttachSubscriptions).toHaveBeenCalled();
     });
 
 });
