@@ -62,7 +62,7 @@ angular.module('alchemy').directive('alchFormGroup', function () {
             }
             field = scope.field;
 
-            if (input.attr('type') !== "checkbox") {
+            if (input.attr('type') !== "checkbox" && input.attr('type') !== 'radio') {
                 input.addClass('form-control');
             }
 
@@ -70,10 +70,12 @@ angular.module('alchemy').directive('alchFormGroup', function () {
                 iElement.addClass('required');
             }
 
-            scope.error = controller[field].$error;
+            if (controller[field]) {
+                scope.error = controller[field].$error;
+            }
 
             scope.hasErrors = function () {
-                return controller[field].$invalid && controller[field].$dirty;
+                return controller[field] && controller[field].$invalid && controller[field].$dirty;
             };
         }
     };

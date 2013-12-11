@@ -48,6 +48,10 @@ module Authorization::GpgKey
     def manageable?
       organization.gpg_keys_manageable?
     end
+
+    def editable?
+      organization.gpg_keys_manageable?
+    end
   end
 
 end

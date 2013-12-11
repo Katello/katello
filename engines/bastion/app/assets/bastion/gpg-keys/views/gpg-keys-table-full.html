@@ -1,0 +1,21 @@
+<table alch-table="table" class="table table-striped" ng-class="{'table-mask': table.working}">
+  <thead>
+    <tr alch-table-head>
+      <th alch-table-column="name" sortable>{{ "Name" | translate }}</th>
+      <th alch-table-column="organization">{{ "Organization" | translate }}</th>
+      <th alch-table-column="products" class="number-cell">{{ "Product Count" | translate }}</th>
+      <th alch-table-column class="number-cell">{{ "Repository Count" | translate }}</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr alch-table-row ng-repeat="gpgKey in table.rows">
+      <td alch-table-cell>
+        <a class="clickable" ng-click="table.openGPGKey(gpgKey)">{{ gpgKey.name }}</a>
+      </td>
+      <td alch-table-cell>{{ gpgKey.organization.name }}</td>
+      <td alch-table-cell class="number-cell">{{ gpgKey.products.length || 0 }}</td>
+      <td alch-table-cell class="number-cell">{{ gpgKey.repositories.length || 0 }}</td>
+    </tr>
+  </tbody>
+</table>

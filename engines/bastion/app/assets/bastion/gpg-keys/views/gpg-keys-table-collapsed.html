@@ -1,0 +1,15 @@
+<table alch-table="table" class="table table-striped" ng-class="{'table-mask': table.working}">
+  <thead>
+    <tr alch-table-head>
+      <th alch-table-column="name" sortable>{{ "Name" | translate }}</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr alch-table-row ng-repeat="gpgKey in table.rows">
+      <td alch-table-cell>
+        <a class="clickable" ng-click="table.openGPGKey(gpgKey)">{{ gpgKey.name }}</a>
+      </td>
+    </tr>
+  </tbody>
+</table>

@@ -93,6 +93,10 @@ angular.module('alchemy')
                 }
 
                 return function (scope, element, attrs, alchTableController) {
+                    if (tAttrs.rowSelect !== undefined) {
+                        scope.table.rowSelect = true;
+                    }
+
                     alchTableController.addHeader(scope.header);
 
                     scope.allSelected = function (table) {

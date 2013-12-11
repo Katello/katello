@@ -1,0 +1,29 @@
+<section class="details details-full">
+  <h4 translate>Products</h4>
+  <input type="text"
+         class="form-control filter-input"
+         placeholder="{{ 'Filter' | translate }}"
+         ng-model="productSearch"/>
+
+  <table alch-table="table" class="table table-striped">
+    <thead>
+      <tr alch-table-head>
+        <th alch-table-column="name" sortable translate>Name</th>
+        <th alch-table-column="provider" sortable translate>Provider</th>
+        <th alch-table-column class="number-cell" translate>Repositories</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr alch-table-row ng-repeat="product in gpgKey.products | filter:productSearch">
+        <td alch-table-cell>
+          <a ui-sref="products.details.repositories.index({productId: product.id})">
+            {{ product.name }}
+          </a>
+        </td>
+        <td alch-table-cell>{{ product.provider.name }}</td>
+        <td alch-table-cell class="number-cell">{{ product.repository_count }}</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
