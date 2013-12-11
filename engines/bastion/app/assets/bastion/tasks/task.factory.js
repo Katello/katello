@@ -27,7 +27,7 @@ angular.module('Bastion.tasks').factory('Task',
     function ($resource, $timeout, CurrentOrganization) {
 
         var resource = $resource('/katello/api/tasks/:id/:action',
-            {id: '@uuid', 'organization_id': CurrentOrganization},
+            {id: '@id', 'organization_id': CurrentOrganization},
             {
                 query: {method: 'GET', isArray: false}
             }
@@ -121,8 +121,7 @@ angular.module('Bastion.tasks').factory('Task',
         };
 
         resource.poll = function (task, returnFunction) {
-            // TODO: remove task.id once we get rid of old TaskStatus code
-            resource.get({id: (task.id || task.uuid)}, function (data) {
+            resource.get({id: task.id}, function (data) {
                 if (data.pending) {
                     $timeout(function () {
                         resource.poll(data, returnFunction);
