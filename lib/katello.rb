@@ -15,6 +15,7 @@ require "dynflow"
 require "rest_client"
 require "i18n_data"
 require "justified/standard_error"
+require "anemone"
 
 require "runcible"
 
