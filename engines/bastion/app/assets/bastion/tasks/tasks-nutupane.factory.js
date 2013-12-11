@@ -85,31 +85,31 @@ angular.module('Bastion.tasks').factory('TasksNutupane',
                 // we reverse because we add new items to the top of
                 // the table
                 _.each(tasks.reverse(), function(task) {
-                    var existingTask = self.existingTasks[task.uuid];
+                    var existingTask = self.existingTasks[task.id];
                     if(existingTask) {
                         _.each(task, function(value, key) {
                             existingTask[key] = value;
                         });
                     } else {
                         self.table.rows.unshift(task);
-                        self.existingTasks[task.uuid] = task;
+                        self.existingTasks[task.id] = task;
                     }
                 });
             }
 
             // Removes rows that are no longer valid for the table
             self.deleteOldRows = function(tasks) {
-                var newTaskUuids = _.map(tasks, function(task) { return task.uuid }),
-                    oldTaskUuids = _.keys(self.existingTasks),
-                    uuidsToDelete = _.difference(oldTaskUuids, newTaskUuids),
+                var newTaskIds = _.map(tasks, function(task) { return task.id }),
+                    oldTaskIds = _.keys(self.existingTasks),
+                    taskIdsToDelete = _.difference(oldTaskIds, newTaskIds),
                     rowsToDelete = [];
 
-                _.each(uuidsToDelete, function(uuid) {
-                    delete self.existingTasks[uuid];
+                _.each(taskIdsToDelete, function(id) {
+                    delete self.existingTasks[id];
                 });
 
                 _.each(self.table.rows, function(row, i) {
-                    if(_.contains(uuidsToDelete, row.uuid)) {
+                    if(_.contains(taskIdsToDelete, row.id)) {
                         rowsToDelete.push(i);
                     };
                 });
