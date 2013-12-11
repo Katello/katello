@@ -14,8 +14,8 @@
 # a container like a product or content view
 
 module Katello
-class ContentSearch::Span
-  include ContentSearch::Element
-  display_attributes :rows
-end
+  class ContentSearch::Span
+    include ContentSearch::Element
+    display_attributes :rows
+  end
 end

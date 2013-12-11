@@ -11,15 +11,15 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class Dashboard::SubscriptionsWidget < Dashboard::Widget
+  class Dashboard::SubscriptionsWidget < Dashboard::Widget
 
-  def accessible?
-    current_organization && current_organization.readable?
+    def accessible?
+      current_organization && current_organization.readable?
+    end
+
+    def title
+      _("System Subscription Status")
+    end
+
   end
-
-  def title
-    _("System Subscription Status")
-  end
-
-end
 end

@@ -11,6 +11,6 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-module ActivationKeysHelper
-end
+  module ActivationKeysHelper
+  end
 end

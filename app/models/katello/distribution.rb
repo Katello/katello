@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class Distribution
-  include Glue::Pulp::Distribution if Katello.config.use_pulp
-end
+  class Distribution
+    include Glue::Pulp::Distribution if Katello.config.use_pulp
+  end
 end

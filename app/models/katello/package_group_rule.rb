@@ -11,22 +11,22 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class PackageGroupRule < FilterRule
-  validates_with Validators::PackageGroupRuleParamsValidator, :attributes => :parameters
-  def params_format
-    {:units => [[:name]]}
-  end
-
-  def generate_clauses(repo)
-    ids = parameters[:units].collect do |unit|
-      #{'name' => {"$regex" => unit[:name]}}
-      unless unit[:name].blank?
-        PackageGroup.search(unit[:name], 0, 0, [repo.pulp_id]).collect(&:package_group_id)
-      end
+  class PackageGroupRule < FilterRule
+    validates_with Validators::PackageGroupRuleParamsValidator, :attributes => :parameters
+    def params_format
+      {:units => [[:name]]}
     end
-    ids.flatten!
-    ids.compact!
-    {"id" => {"$in" => ids}} unless ids.empty?
+
+    def generate_clauses(repo)
+      ids = parameters[:units].collect do |unit|
+        #{'name' => {"$regex" => unit[:name]}}
+        unless unit[:name].blank?
+          PackageGroup.search(unit[:name], 0, 0, [repo.pulp_id]).collect(&:package_group_id)
+        end
+      end
+      ids.flatten!
+      ids.compact!
+      {"id" => {"$in" => ids}} unless ids.empty?
+    end
   end
-end
 end

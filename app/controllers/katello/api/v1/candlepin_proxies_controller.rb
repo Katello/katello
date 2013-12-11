@@ -11,33 +11,33 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class Api::V1::CandlepinProxiesController < Api::V1::ProxiesController
+  class Api::V1::CandlepinProxiesController < Api::V1::ProxiesController
 
-  # authorization rules are implemented in proxies_controller.rb
+    # authorization rules are implemented in proxies_controller.rb
 
-  def get
-    r = Resources::Candlepin::Proxy.get(@request_path)
-    logger.debug r
-    render :json => r
+    def get
+      r = Resources::Candlepin::Proxy.get(@request_path)
+      logger.debug r
+      render :json => r
+    end
+
+    def delete
+      r = Resources::Candlepin::Proxy.delete(@request_path)
+      logger.debug r
+      render :json => r
+    end
+
+    def post
+      r = Resources::Candlepin::Proxy.post(@request_path, @request_body)
+      logger.debug r
+      render :json => r
+    end
+
+    private
+
+    def logger
+      ::Logging.logger['cp_proxy']
+    end
+
   end
-
-  def delete
-    r = Resources::Candlepin::Proxy.delete(@request_path)
-    logger.debug r
-    render :json => r
-  end
-
-  def post
-    r = Resources::Candlepin::Proxy.post(@request_path, @request_body)
-    logger.debug r
-    render :json => r
-  end
-
-  private
-
-  def logger
-    ::Logging.logger['cp_proxy']
-  end
-
-end
 end

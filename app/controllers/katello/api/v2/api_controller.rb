@@ -65,22 +65,22 @@ module Katello
 
     protected
 
-      def labelize_params(params)
-        return params[:label] unless params.try(:[], :label).nil?
-        return Util::Model.labelize(params[:name]) unless params.try(:[], :name).nil?
-      end
+    def labelize_params(params)
+      return params[:label] unless params.try(:[], :label).nil?
+      return Util::Model.labelize(params[:name]) unless params.try(:[], :name).nil?
+    end
 
-      def find_organization
-        organization_id = params[:organization_id]
-        @organization = Organization.without_deleting.having_name_or_label(organization_id).first
-      end
+    def find_organization
+      organization_id = params[:organization_id]
+      @organization = Organization.without_deleting.having_name_or_label(organization_id).first
+    end
 
-      def sort_params
-        options = {}
-        options[:sort_by] = params[:sort_by] if params[:sort_by]
-        options[:sort_order] = params[:sort_order] if params[:sort_order]
-        options
-      end
+    def sort_params
+      options = {}
+      options[:sort_by] = params[:sort_by] if params[:sort_by]
+      options[:sort_order] = params[:sort_order] if params[:sort_order]
+      options
+    end
 
   end
 end

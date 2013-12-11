@@ -11,15 +11,15 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-module Navigation
-  def self.included(base)
-    base.send :include, AdministrationMenu
-    base.send :include, ContentMenu
-    base.send :include, DashboardMenu
-    base.send :include, MainMenu
-    base.send :include, NotificationsMenu
-    base.send :include, OrganizationMenu
-    base.send :include, SystemMenu
+  module Navigation
+    def self.included(base)
+      base.send :include, AdministrationMenu
+      base.send :include, ContentMenu
+      base.send :include, DashboardMenu
+      base.send :include, MainMenu
+      base.send :include, NotificationsMenu
+      base.send :include, OrganizationMenu
+      base.send :include, SystemMenu
+    end
   end
-end
 end

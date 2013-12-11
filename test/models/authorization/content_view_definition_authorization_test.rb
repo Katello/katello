@@ -14,142 +14,142 @@ require 'katello_test_helper'
 require 'support/auth_support'
 
 module Katello
-module ContentViewDefinitionAuthBase
-  def self.included(base)
-    base.extend ClassMethods
-  end
-
-  def setup
-    @admin       = User.find(users(:admin))
-    @no_perms    = User.find(users(:restricted))
-    @org         = get_organization(:organization1)
-    @cvd         = FactoryGirl.create(:content_view_definition, :organization => @org)
-  end
-
-  def teardown
-    ContentViewDefinition.delete_all
-  end
-
-  module ClassMethods
-    def before_suite
-      services  = ['Candlepin', 'Pulp', 'ElasticSearch', 'Foreman']
-      models    = ['Organization', 'KTEnvironment', 'User']
-      disable_glue_layers(services, models)
+  module ContentViewDefinitionAuthBase
+    def self.included(base)
+      base.extend ClassMethods
     end
-  end
-end
 
-class ContentViewDefinitionAuthorizationAdminTest < ActiveSupport::TestCase
-  include ContentViewDefinitionAuthBase
+    def setup
+      @admin       = User.find(users(:admin))
+      @no_perms    = User.find(users(:restricted))
+      @org         = get_organization(:organization1)
+      @cvd         = FactoryGirl.create(:content_view_definition, :organization => @org)
+    end
 
-  def setup
-    super
-    User.current = @admin
-  end
+    def teardown
+      ContentViewDefinition.delete_all
+    end
 
-  def test_readable
-    assert ContentViewDefinition.any_readable?(@org)
-    assert @cvd.readable?
-    assert ContentViewDefinition.readable(@org).length > 0
-  end
-
-  def test_creatable
-    assert ContentViewDefinition.creatable?(@org)
-  end
-
-  def test_editable
-    assert ContentViewDefinition.editable(@org).length > 0
-    assert @cvd.editable?
-  end
-
-  def test_deletable
-    assert @cvd.deletable?
-  end
-
-  def test_no_user
-    User.current = nil
-    assert_raises Errors::UserNotSet do
-      ContentViewDefinition.any_readable?(@org)
+    module ClassMethods
+      def before_suite
+        services  = ['Candlepin', 'Pulp', 'ElasticSearch', 'Foreman']
+        models    = ['Organization', 'KTEnvironment', 'User']
+        disable_glue_layers(services, models)
+      end
     end
   end
 
-end
+  class ContentViewDefinitionAuthorizationAdminTest < ActiveSupport::TestCase
+    include ContentViewDefinitionAuthBase
 
-class ContentViewDefinitionAuthorizationNoPermTest < ActiveSupport::TestCase
-  include ContentViewDefinitionAuthBase
+    def setup
+      super
+      User.current = @admin
+    end
 
-  def setup
-    super
-    User.current = @no_perms
-    @cvd.organization = @org
+    def test_readable
+      assert ContentViewDefinition.any_readable?(@org)
+      assert @cvd.readable?
+      assert ContentViewDefinition.readable(@org).length > 0
+    end
+
+    def test_creatable
+      assert ContentViewDefinition.creatable?(@org)
+    end
+
+    def test_editable
+      assert ContentViewDefinition.editable(@org).length > 0
+      assert @cvd.editable?
+    end
+
+    def test_deletable
+      assert @cvd.deletable?
+    end
+
+    def test_no_user
+      User.current = nil
+      assert_raises Errors::UserNotSet do
+        ContentViewDefinition.any_readable?(@org)
+      end
+    end
+
   end
 
-  def test_readable
-    refute ContentViewDefinition.any_readable?(@org)
-    assert_equal 0, ContentViewDefinition.readable(@org).length
-    refute @cvd.readable?
+  class ContentViewDefinitionAuthorizationNoPermTest < ActiveSupport::TestCase
+    include ContentViewDefinitionAuthBase
+
+    def setup
+      super
+      User.current = @no_perms
+      @cvd.organization = @org
+    end
+
+    def test_readable
+      refute ContentViewDefinition.any_readable?(@org)
+      assert_equal 0, ContentViewDefinition.readable(@org).length
+      refute @cvd.readable?
+    end
+
+    def test_creatable
+      refute ContentViewDefinition.creatable?(@org)
+    end
+
+    def test_editable
+      refute @cvd.editable?
+      assert_equal 0, ContentViewDefinition.editable(@org).length
+    end
+
+    def test_deletable
+      refute @cvd.deletable?
+    end
   end
 
-  def test_creatable
-    refute ContentViewDefinition.creatable?(@org)
+  class ContentViewDefinitionAuthorizationReadonlyTest < ActiveSupport::TestCase
+    include ContentViewDefinitionAuthBase, AuthorizationSupportMethods
+
+    def setup
+      super
+      User.current = @no_perms
+      allow User.current.own_role, [:read], :content_view_definitions
+    end
+
+    def test_readable
+      assert ContentViewDefinition.any_readable?(@org)
+      assert_includes ContentViewDefinition.readable(@org), @cvd
+      assert @cvd.readable?
+    end
+
+    def test_creatable
+      refute ContentViewDefinition.creatable?(@org)
+    end
+
+    def test_editable
+      refute @cvd.editable?
+      assert_equal 0, ContentViewDefinition.editable(@org).length
+    end
+
+    def test_deletable
+      refute @cvd.deletable?
+    end
   end
 
-  def test_editable
-    refute @cvd.editable?
-    assert_equal 0, ContentViewDefinition.editable(@org).length
+  # random permission
+  class ContentViewDefinitionAuthorizationTest < ActiveSupport::TestCase
+    include ContentViewDefinitionAuthBase, AuthorizationSupportMethods
+
+    def setup
+      super
+      User.current = @no_perms
+    end
+
+    def test_publishable
+      allow User.current.own_role, [:publish], :content_view_definitions
+      assert @cvd.publishable?
+      assert ContentViewDefinition.any_readable?(@org)
+      assert @cvd.readable?
+      refute @cvd.editable?
+      refute @cvd.deletable?
+    end
+
   end
-
-  def test_deletable
-    refute @cvd.deletable?
-  end
-end
-
-class ContentViewDefinitionAuthorizationReadonlyTest < ActiveSupport::TestCase
-  include ContentViewDefinitionAuthBase, AuthorizationSupportMethods
-
-  def setup
-    super
-    User.current = @no_perms
-    allow User.current.own_role, [:read], :content_view_definitions
-  end
-
-  def test_readable
-    assert ContentViewDefinition.any_readable?(@org)
-    assert_includes ContentViewDefinition.readable(@org), @cvd
-    assert @cvd.readable?
-  end
-
-  def test_creatable
-    refute ContentViewDefinition.creatable?(@org)
-  end
-
-  def test_editable
-    refute @cvd.editable?
-    assert_equal 0, ContentViewDefinition.editable(@org).length
-  end
-
-  def test_deletable
-    refute @cvd.deletable?
-  end
-end
-
-# random permission
-class ContentViewDefinitionAuthorizationTest < ActiveSupport::TestCase
-  include ContentViewDefinitionAuthBase, AuthorizationSupportMethods
-
-  def setup
-    super
-    User.current = @no_perms
-  end
-
-  def test_publishable
-    allow User.current.own_role, [:publish], :content_view_definitions
-    assert @cvd.publishable?
-    assert ContentViewDefinition.any_readable?(@org)
-    assert @cvd.readable?
-    refute @cvd.editable?
-    refute @cvd.deletable?
-  end
-
-end
 end

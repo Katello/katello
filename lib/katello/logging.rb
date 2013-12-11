@@ -32,7 +32,7 @@ module Katello
 
       if defined?(Rails::Console) && configuration.console_inline
         ::Logging.logger.root.add_appenders(
-            ::Logging.appenders.stdout(:layout => build_layout(root_configuration.pattern, configuration.colorize)))
+          ::Logging.appenders.stdout(:layout => build_layout(root_configuration.pattern, configuration.colorize)))
       end
 
       # you can add specific files per logger easily like this
@@ -57,17 +57,17 @@ module Katello
             # @return [::Logging::Logger] for yard
             def _logging_logger
               @_logging_logger ||= begin
-                yard_logger_delegator = self
-                ::Logging.logger['yard'].tap do |logger|
-                  # redefine method #level= to set also YARD logger level
-                  original_method = logger.method :level=
-                  logger.singleton_class.send :define_method, :level= do |level|
-                    yard_logger_delegator.instance_variable_set :@level, level
-                    original_method.call level
-                  end
-                  logger.level = logger.level
-                end
-              end
+                                     yard_logger_delegator = self
+                                     ::Logging.logger['yard'].tap do |logger|
+                                       # redefine method #level= to set also YARD logger level
+                                       original_method = logger.method :level=
+                                       logger.singleton_class.send :define_method, :level= do |level|
+                                         yard_logger_delegator.instance_variable_set :@level, level
+                                         original_method.call level
+                                       end
+                                       logger.level = logger.level
+                                     end
+                                   end
             end
 
             # delegate all messages to a ::Logging::Logger
@@ -193,17 +193,17 @@ module Katello
     def configure_color_scheme
       ::Logging.color_scheme('bright',
                              :levels => {
-                                 :info  => :green,
-                                 :warn  => :yellow,
-                                 :error => :red,
-                                 :fatal => [:white, :on_red]
-                             },
-                             :date   => :blue,
-                             :logger => :cyan,
-                             :line   => :yellow,
-                             :file   => :yellow,
-                             :method => :yellow
-      )
+        :info  => :green,
+        :warn  => :yellow,
+        :error => :red,
+        :fatal => [:white, :on_red]
+      },
+      :date   => :blue,
+      :logger => :cyan,
+      :line   => :yellow,
+      :file   => :yellow,
+      :method => :yellow
+                            )
     end
 
     # We need a bridge for Tire so we can log their messages to our logger

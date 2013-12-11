@@ -14,14 +14,14 @@
 # This class is a "fake" model Tag. It is returned by model objects to the
 # view layer to present possible tags which can be assigned to permissions.
 module Katello
-class VirtualTag
-  attr_accessor :name, :display_name
+  class VirtualTag
+    attr_accessor :name, :display_name
 
-  def initialize(name, display_name)
-    fail ArgumentError, "Name cannot be nil or empty" if name.nil? || name == ''
-    fail ArgumentError, "Display name cannot be nil or empty" if display_name.nil? || display_name == ''
-    self.name = name
-    self.display_name = display_name
+    def initialize(name, display_name)
+      fail ArgumentError, "Name cannot be nil or empty" if name.nil? || name == ''
+      fail ArgumentError, "Display name cannot be nil or empty" if display_name.nil? || display_name == ''
+      self.name = name
+      self.display_name = display_name
+    end
   end
-end
 end

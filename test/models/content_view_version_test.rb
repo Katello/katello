@@ -13,29 +13,29 @@
 require 'katello_test_helper'
 
 module Katello
-class ContentViewVersionTest < ActiveSupport::TestCase
+  class ContentViewVersionTest < ActiveSupport::TestCase
 
-  def self.before_suite
-    models = ["Organization", "KTEnvironment", "User", "ContentViewEnvironment"]
-    services = ["Candlepin", "Pulp", "ElasticSearch"]
-    disable_glue_layers(services, models)
+    def self.before_suite
+      models = ["Organization", "KTEnvironment", "User", "ContentViewEnvironment"]
+      services = ["Candlepin", "Pulp", "ElasticSearch"]
+      disable_glue_layers(services, models)
+    end
+
+    def after_tests
+      ContentViewDefinition.delete_all
+      ContentView.delete_all
+      Organization.delete_all
+    end
+
+    def test_create_archived_definition
+      definition = FactoryGirl.create(:content_view_definition)
+      version = FactoryGirl.create(:content_view_version)
+      version.save!
+      assert_nil version.definition_archive # no archive if no definition
+      version.content_view.content_view_definition = definition
+      version.save!
+      assert_equal definition.label, version.definition_archive.label
+    end
+
   end
-
-  def after_tests
-    ContentViewDefinition.delete_all
-    ContentView.delete_all
-    Organization.delete_all
-  end
-
-  def test_create_archived_definition
-    definition = FactoryGirl.create(:content_view_definition)
-    version = FactoryGirl.create(:content_view_version)
-    version.save!
-    assert_nil version.definition_archive # no archive if no definition
-    version.content_view.content_view_definition = definition
-    version.save!
-    assert_equal definition.label, version.definition_archive.label
-  end
-
-end
 end
