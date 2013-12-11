@@ -34,6 +34,23 @@ module.exports = function (grunt) {
 
     grunt.initConfig({
         bastion: bastionConfig,
+        bower: {
+            update: {
+                options: {
+                    targetDir: 'vendor/assets',
+                    copy: true,
+                    layout: 'byType',
+                    clearBowerDir: true
+                }
+            },
+            dev: {
+                options: {
+                    targetDir: '.tmp/bower_components',
+                    copy: false,
+                    layout: 'byType'
+                }
+            }
+        },
         clean: {
             build: '<%= bastion.dist %>'
         },
