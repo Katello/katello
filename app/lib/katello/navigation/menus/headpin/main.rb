@@ -11,24 +11,24 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-module Navigation
-  module Menus
-    module Headpin
-      class Main < Navigation::Menu
+  module Navigation
+    module Menus
+      module Headpin
+        class Main < Navigation::Menu
 
-        def initialize(organization)
-          @key           = :main_headpin
-          @authorization = true
-          @items         = [
-            Navigation::Items::Dashboard.new,
-            Navigation::Menus::Headpin::Subscriptions.new(organization),
-            Navigation::Menus::Headpin::Systems.new(organization),
-          ]
-          super
+          def initialize(organization)
+            @key           = :main_headpin
+            @authorization = true
+            @items         = [
+              Navigation::Items::Dashboard.new,
+              Navigation::Menus::Headpin::Subscriptions.new(organization),
+              Navigation::Menus::Headpin::Systems.new(organization),
+            ]
+            super
+          end
+
         end
-
       end
     end
   end
-end
 end

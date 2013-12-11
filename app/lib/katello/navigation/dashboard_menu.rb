@@ -10,17 +10,17 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 module Katello
-module Navigation
-  module DashboardMenu
+  module Navigation
+    module DashboardMenu
 
-    def menu_dashboard
-      {:key => :dashboard,
-       :name => _("Dashboard"),
-       :url => dashboard_index_path,
-       :options => {:class => 'dashboard top_level', "data-menu" => "dashboard"}
-      }
+      def menu_dashboard
+        {:key => :dashboard,
+         :name => _("Dashboard"),
+         :url => dashboard_index_path,
+         :options => {:class => 'dashboard top_level', "data-menu" => "dashboard"}
+        }
+      end
+
     end
-
   end
-end
 end

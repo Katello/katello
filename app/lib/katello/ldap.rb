@@ -13,31 +13,31 @@
 require 'ldap_fluff'
 
 module Katello
-class Ldap
+  class Ldap
 
-  def self.ldap
-    LdapFluff.new(Katello.config.ldap_fluff_config)
+    def self.ldap
+      LdapFluff.new(Katello.config.ldap_fluff_config)
+    end
+
+    def self.valid_ldap_authentication?(uid, password)
+      ldap.authenticate? uid, password
+    end
+
+    def self.ldap_groups(uid)
+      ldap.group_list(uid)
+    end
+
+    def self.is_in_groups(uid, grouplist)
+      ldap.is_in_groups?(uid, grouplist)
+    end
+
+    def self.valid_user?(uid)
+      ldap.valid_user?(uid)
+    end
+
+    def self.valid_group?(gid)
+      ldap.valid_group?(gid)
+    end
+
   end
-
-  def self.valid_ldap_authentication?(uid, password)
-    ldap.authenticate? uid, password
-  end
-
-  def self.ldap_groups(uid)
-    ldap.group_list(uid)
-  end
-
-  def self.is_in_groups(uid, grouplist)
-    ldap.is_in_groups?(uid, grouplist)
-  end
-
-  def self.valid_user?(uid)
-    ldap.valid_user?(uid)
-  end
-
-  def self.valid_group?(gid)
-    ldap.valid_group?(gid)
-  end
-
-end
 end

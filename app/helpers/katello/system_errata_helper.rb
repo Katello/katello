@@ -11,18 +11,18 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-module SystemErrataHelper
+  module SystemErrataHelper
 
-  def errata_type_class(errata)
-    case errata.type
-    when Errata::SECURITY
-      return "security_icon"
-    when Errata::ENHANCEMENT
-      return "enhancement_icon"
-    when Errata::BUGZILLA
-      return "bugzilla_icon"
+    def errata_type_class(errata)
+      case errata.type
+      when Errata::SECURITY
+        return "security_icon"
+      when Errata::ENHANCEMENT
+        return "enhancement_icon"
+      when Errata::BUGZILLA
+        return "bugzilla_icon"
+      end
     end
-  end
 
-end
+  end
 end

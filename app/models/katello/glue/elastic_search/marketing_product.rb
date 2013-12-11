@@ -11,13 +11,13 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-module Glue::ElasticSearch::MarketingProduct
+  module Glue::ElasticSearch::MarketingProduct
 
-  def self.included(base)
-    base.class_eval do
-      index_name "#{Katello.config.elastic_index}_marketing_product"
+    def self.included(base)
+      base.class_eval do
+        index_name "#{Katello.config.elastic_index}_marketing_product"
+      end
     end
-  end
 
-end
+  end
 end

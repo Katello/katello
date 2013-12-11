@@ -11,13 +11,13 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class CpConsumerUser < ::User
+  class CpConsumerUser < ::User
 
-  attr_accessor :uuid
+    attr_accessor :uuid
 
-  def cp_oauth_header
-    { 'cp-consumer' => self.uuid }
+    def cp_oauth_header
+      { 'cp-consumer' => self.uuid }
+    end
+
   end
-
-end
 end

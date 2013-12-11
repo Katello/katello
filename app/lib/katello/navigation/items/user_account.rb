@@ -11,18 +11,18 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-module Navigation
-  module Items
-    class UserAccount < Navigation::Item
+  module Navigation
+    module Items
+      class UserAccount < Navigation::Item
 
-      def initialize(user)
-        @key           = :user_account
-        @display       = _("My Account")
-        @authorization = true
-        @url           = "#{users_path(user)}#list_search=#{user.login}&panel=user_#{user.id}&panelpage=edit"
+        def initialize(user)
+          @key           = :user_account
+          @display       = _("My Account")
+          @authorization = true
+          @url           = "#{users_path(user)}#list_search=#{user.login}&panel=user_#{user.id}&panelpage=edit"
+        end
+
       end
-
     end
   end
-end
 end

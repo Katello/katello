@@ -13,38 +13,38 @@
 require 'katello_test_helper'
 
 module Katello
-class ActivationKeyTest < ActiveSupport::TestCase
+  class ActivationKeyTest < ActiveSupport::TestCase
 
-  def setup
-    @dev_key = katello_activation_keys(:dev_key)
-    @dev_view = katello_content_views(:library_dev_view)
-    @lib_view = katello_content_views(:library_view)
-  end
-
-  test "can have content view" do
-    @dev_key = katello_activation_keys(:dev_key)
-    @dev_key.content_view = @dev_view
-    assert @dev_key.save!
-    assert_not_nil @dev_key.content_view
-    assert_includes @dev_view.activation_keys, @dev_key
-  end
-
-  test "requires a content view" do
-    assert_nil @dev_key.content_view
-    refute @dev_key.save
-    assert_raises(ActiveRecord::RecordInvalid) do
-      @dev_key.save!
+    def setup
+      @dev_key = katello_activation_keys(:dev_key)
+      @dev_view = katello_content_views(:library_dev_view)
+      @lib_view = katello_content_views(:library_view)
     end
-  end
 
-  test "content view must be in environment" do
-    @dev_key.content_view = @lib_view
-    refute @dev_key.save
-    refute_empty @dev_key.errors.keys
-    assert_raises(ActiveRecord::RecordInvalid) do
-      @dev_key.save!
+    test "can have content view" do
+      @dev_key = katello_activation_keys(:dev_key)
+      @dev_key.content_view = @dev_view
+      assert @dev_key.save!
+      assert_not_nil @dev_key.content_view
+      assert_includes @dev_view.activation_keys, @dev_key
     end
-  end
 
-end
+    test "requires a content view" do
+      assert_nil @dev_key.content_view
+      refute @dev_key.save
+      assert_raises(ActiveRecord::RecordInvalid) do
+        @dev_key.save!
+      end
+    end
+
+    test "content view must be in environment" do
+      @dev_key.content_view = @lib_view
+      refute @dev_key.save
+      refute_empty @dev_key.errors.keys
+      assert_raises(ActiveRecord::RecordInvalid) do
+        @dev_key.save!
+      end
+    end
+
+  end
 end

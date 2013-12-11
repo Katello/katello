@@ -17,8 +17,8 @@ module KatelloMiniTestRunner
       begin
         if ENV['suite']
           suites = suites.select do |suite|
-                     suite.name == ENV['suite']
-                   end
+            suite.name == ENV['suite']
+          end
         end
 
         before_suites

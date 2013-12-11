@@ -11,17 +11,17 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-module Validators
-  class RolenameValidator < ActiveModel::EachValidator
-    def validate_each(record, attribute, value)
-      # If role is self-role, no need to re-validate the rolename, since it is based on the username.
-      if value && !record.is_a?(UserOwnRole)
-         # max length is 20 more than the username because we add 20 random characters
-         # on the end for the self role
-        record.errors[attribute] << N_("cannot contain characters >, <, or /") if value =~ /<|>|\//
-        KatelloNameFormatValidator.validate_length(record, attribute, value, 148, 3)
+  module Validators
+    class RolenameValidator < ActiveModel::EachValidator
+      def validate_each(record, attribute, value)
+        # If role is self-role, no need to re-validate the rolename, since it is based on the username.
+        if value && !record.is_a?(UserOwnRole)
+          # max length is 20 more than the username because we add 20 random characters
+          # on the end for the self role
+          record.errors[attribute] << N_("cannot contain characters >, <, or /") if value =~ /<|>|\//
+          KatelloNameFormatValidator.validate_length(record, attribute, value, 148, 3)
+        end
       end
     end
   end
-end
 end

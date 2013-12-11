@@ -12,204 +12,204 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class SystemGroupPackagesController < Katello::ApplicationController
+  class SystemGroupPackagesController < Katello::ApplicationController
 
-  helper SystemPackagesHelper
+    helper SystemPackagesHelper
 
-  before_filter :find_group
-  before_filter :authorize
+    before_filter :find_group
+    before_filter :authorize
 
-  def section_id
-    'systems'
-  end
+    def section_id
+      'systems'
+    end
 
-  def rules
-    edit_group = lambda{SystemGroup.find(params[:system_group_id]).systems_editable?}
-    read_group = lambda{SystemGroup.find(params[:system_group_id]).systems_readable?}
+    def rules
+      edit_group = lambda{SystemGroup.find(params[:system_group_id]).systems_editable?}
+      read_group = lambda{SystemGroup.find(params[:system_group_id]).systems_readable?}
 
-    {
-      :index => read_group,
-      :add => edit_group,
-      :remove => edit_group,
-      :update => edit_group,
-      :package_status => edit_group
-    }
-  end
+      {
+        :index => read_group,
+        :add => edit_group,
+        :remove => edit_group,
+        :update => edit_group,
+        :package_status => edit_group
+      }
+    end
 
-  def index
-    actions = [:package_install, :package_update, :package_remove,
-               :package_group_install, :package_group_remove,
-               :package_group_update]
-    jobs = @group.refreshed_jobs.joins(:task_statuses).where(
+    def index
+      actions = [:package_install, :package_update, :package_remove,
+                 :package_group_install, :package_group_remove,
+                 :package_group_update]
+      jobs = @group.refreshed_jobs.joins(:task_statuses).where(
         "#{Katello::TaskStatus.table_name}.task_type" => actions,
         "#{Katello::TaskStatus.table_name}.state" => [:waiting, :running])
 
-    render :partial => "katello/system_groups/packages/index",
-           :locals => {:jobs => jobs, :editable => @group.systems_editable?}
-  end
-
-  # TODO: break up this method
-  # rubocop:disable MethodLength
-  def add
-    if !params[:packages].blank?
-      # user entered one or more package names (as comma-separated list) in the content box
-      packages = Util::Package.validate_package_list_format(params[:packages])
-
-      if packages
-        job = @group.install_packages packages
-        notify.success _("Install of Packages '%{packages}' scheduled for System Group '%{name}'.") % {:packages => params[:packages], :name => @group.name}
-      else
-        notify.error _("One or more errors found in Package names '%s'.") % params[:packages]
-        render :text => ''
-        return
-      end
-
-    elsif !params[:groups].blank?
-      # user entered one or more package group names (as comma-separated list) in the content box
-      groups = params[:groups].split(/ *, */)
-      job = @group.install_package_groups groups
-      notify.success _("Install of Package Groups '%{groups}' scheduled for System Group '%{name}'.") % {:groups => params[:groups], :name => @group.name}
-    else
-      notify.error _("Empty request received to install Packages or Package Groups for System Group '%s'.") %
-                       @group['name']
-      render :text => ''
-      return
+      render :partial => "katello/system_groups/packages/index",
+        :locals => {:jobs => jobs, :editable => @group.systems_editable?}
     end
 
-    render :partial => 'katello/system_groups/packages/items',
-           :locals => { :editable           => @group.systems_editable?,
-                        :group_id           => @group.id,
-                        :job                => job,
-                        :include_tr_shading => false }
-  rescue Errors::SystemGroupEmptyException => e
-    if !params[:packages].blank?
-      notify.error _("Install of Packages '%{packages}' scheduled for System Group '%{name}' failed.  Reason: %{message}") %
-        {:packages => params[:packages], :name => @group.name, :message => e.message}
-    elsif !params[:groups].blank?
-      notify.error _("Install of Package Groups '%{groups}' scheduled for System Group '%{name}' failed.  Reason: %{message}") %
-        {:groups => params[:groups], :name => @group.name, :message => e.message}
-    end
-    render :text => ''
-  end
-
-  # TODO: break up this method
-  # rubocop:disable MethodLength
-  def remove
-    if !params[:packages].blank?
-      # user entered one or more package names (as comma-separated list) in the content box
-      packages = Util::Package.validate_package_list_format(params[:packages])
-
-      if packages
-        job = @group.uninstall_packages packages
-        notify.success _("Uninstall of Packages '%{packages}' scheduled for System Group '%{name}'.") % {:packages => params[:packages], :name => @group.name}
-      else
-        notify.error _("One or more errors found in Package names '%s'.") % params[:packages]
-        render :text => ''
-        return
-      end
-
-    elsif !params[:groups].blank?
-      # user entered one or more package group names (as comma-separated list) in the content box
-      groups = params[:groups].split(/ *, */)
-      job = @group.uninstall_package_groups groups
-      notify.success _("Uninstall of Package Groups '%{groups}' scheduled for System Group '%{name}'.") %
-        {:group => groups.join(','), :name => @group.name}
-    else
-      notify.error _("Empty request received to uninstall Packages or Package Groups for System Group '%s'.") %
-                       @group['name']
-      render :text => ''
-      return
-    end
-
-    render :partial => 'katello/system_groups/packages/items',
-           :locals => { :editable => @group.systems_editable?, :group_id => @group.id, :job => job,
-                        :include_tr_shading => false }
-
-  rescue Errors::SystemGroupEmptyException => e
-    if !params[:packages].blank?
-      notify.error _("Uninstall of Packages '%{packages}' scheduled for System Group '%{name}' failed.  Reason: %{message}") %
-        {:packages => params[:packages], :name => @group.name, :message => e.message}
-    elsif !params[:groups].blank?
-      notify.error _("Uninstall of Package Groups '%{groups}' scheduled for System Group '%{name}' failed.  Reason: %{message}") %
-        {:groups => params[:groups], :name => @group.name, :message => e.message}
-    end
-    render :text => ''
-  end
-
-  # TODO: break up this method
-  # rubocop:disable MethodLength
-  def update
-    if !params[:groups].blank?
-      # user entered one or more package group names (as comma-separated list) in the content box
-      groups = params[:groups].split(/ *, */)
-      job = @group.update_package_groups groups
-      notify.success _("Update of Package Groups '%{groups}' scheduled for System Group '%{name}'.") %
-        {:groups => groups.join(','), :name => @group.name}
-
-    elsif params.key?(:packages)
-      if !params[:packages].empty?
+    # TODO: break up this method
+    # rubocop:disable MethodLength
+    def add
+      if !params[:packages].blank?
         # user entered one or more package names (as comma-separated list) in the content box
         packages = Util::Package.validate_package_list_format(params[:packages])
 
         if packages
-          job = @group.update_packages packages
-          notify.success _("Update of Packages '%{packages}' scheduled for System Group '%{name}'.") %
-                             {:packages => params[:packages], :name => @group.name}
+          job = @group.install_packages packages
+          notify.success _("Install of Packages '%{packages}' scheduled for System Group '%{name}'.") % {:packages => params[:packages], :name => @group.name}
         else
           notify.error _("One or more errors found in Package names '%s'.") % params[:packages]
           render :text => ''
           return
         end
 
+      elsif !params[:groups].blank?
+        # user entered one or more package group names (as comma-separated list) in the content box
+        groups = params[:groups].split(/ *, */)
+        job = @group.install_package_groups groups
+        notify.success _("Install of Package Groups '%{groups}' scheduled for System Group '%{name}'.") % {:groups => params[:groups], :name => @group.name}
       else
-        # user didn't enter any packages... instead, they requested 'Update All'
-        job = @group.update_packages([])
-        notify.success _("Update of All Packages scheduled for System Group '%{name}'.") % {:name => @group.name}
+        notify.error _("Empty request received to install Packages or Package Groups for System Group '%s'.") %
+          @group['name']
+        render :text => ''
+        return
       end
 
-    else
-      notify.error _("Invalid request received to update Packages or Package Groups for System Group '%s'.") %
-                       @group['name']
+      render :partial => 'katello/system_groups/packages/items',
+        :locals => { :editable           => @group.systems_editable?,
+                     :group_id           => @group.id,
+                     :job                => job,
+                     :include_tr_shading => false }
+    rescue Errors::SystemGroupEmptyException => e
+      if !params[:packages].blank?
+        notify.error _("Install of Packages '%{packages}' scheduled for System Group '%{name}' failed.  Reason: %{message}") %
+          {:packages => params[:packages], :name => @group.name, :message => e.message}
+      elsif !params[:groups].blank?
+        notify.error _("Install of Package Groups '%{groups}' scheduled for System Group '%{name}' failed.  Reason: %{message}") %
+          {:groups => params[:groups], :name => @group.name, :message => e.message}
+      end
       render :text => ''
-      return
     end
 
-    render :partial => 'katello/system_groups/packages/items',
-           :locals  => { :editable           => @group.systems_editable?,
-                         :group_id           => @group.id,
-                         :job                => job,
-                         :include_tr_shading => false }
+    # TODO: break up this method
+    # rubocop:disable MethodLength
+    def remove
+      if !params[:packages].blank?
+        # user entered one or more package names (as comma-separated list) in the content box
+        packages = Util::Package.validate_package_list_format(params[:packages])
 
-  rescue Errors::SystemGroupEmptyException => e
-    if !params[:packages].blank?
-      notify.error _("Update of Packages '%{packages}' scheduled for System Group '%{group}' failed.  Reason: %{message}") %
-        {:packages => params[:packages], :group => @group.name, :message => e.message}
-    elsif !params[:groups].blank?
-      notify.error _("Update of Package Groups '%{groups}' scheduled for System Group '%{name}' failed.  Reason: %{message}") %
-        {:groups => params[:groups], :name => @group.name, :message => e.message}
+        if packages
+          job = @group.uninstall_packages packages
+          notify.success _("Uninstall of Packages '%{packages}' scheduled for System Group '%{name}'.") % {:packages => params[:packages], :name => @group.name}
+        else
+          notify.error _("One or more errors found in Package names '%s'.") % params[:packages]
+          render :text => ''
+          return
+        end
+
+      elsif !params[:groups].blank?
+        # user entered one or more package group names (as comma-separated list) in the content box
+        groups = params[:groups].split(/ *, */)
+        job = @group.uninstall_package_groups groups
+        notify.success _("Uninstall of Package Groups '%{groups}' scheduled for System Group '%{name}'.") %
+          {:group => groups.join(','), :name => @group.name}
+      else
+        notify.error _("Empty request received to uninstall Packages or Package Groups for System Group '%s'.") %
+          @group['name']
+        render :text => ''
+        return
+      end
+
+      render :partial => 'katello/system_groups/packages/items',
+        :locals => { :editable => @group.systems_editable?, :group_id => @group.id, :job => job,
+                     :include_tr_shading => false }
+
+    rescue Errors::SystemGroupEmptyException => e
+      if !params[:packages].blank?
+        notify.error _("Uninstall of Packages '%{packages}' scheduled for System Group '%{name}' failed.  Reason: %{message}") %
+          {:packages => params[:packages], :name => @group.name, :message => e.message}
+      elsif !params[:groups].blank?
+        notify.error _("Uninstall of Package Groups '%{groups}' scheduled for System Group '%{name}' failed.  Reason: %{message}") %
+          {:groups => params[:groups], :name => @group.name, :message => e.message}
+      end
+      render :text => ''
     end
-    render :text => ''
-  end
 
-  def package_status
-    # retrieve the status for the actions initiated by the client
-    response = []
-    jobs = @group.refreshed_jobs.where('jobs.id' => params[:id])
-    jobs.each do |job|
-      status_html = render_to_string(:template => 'katello/system_groups/packages/_status', :layout => false,
-                                     :locals => {:group_id => @group.id, :id => job.id, :state => job.state,
-                                                 :status_message => job.status_message})
+    # TODO: break up this method
+    # rubocop:disable MethodLength
+    def update
+      if !params[:groups].blank?
+        # user entered one or more package group names (as comma-separated list) in the content box
+        groups = params[:groups].split(/ *, */)
+        job = @group.update_package_groups groups
+        notify.success _("Update of Package Groups '%{groups}' scheduled for System Group '%{name}'.") %
+          {:groups => groups.join(','), :name => @group.name}
 
-      response << {:id => job.id, :status_html => status_html}
+      elsif params.key?(:packages)
+        if !params[:packages].empty?
+          # user entered one or more package names (as comma-separated list) in the content box
+          packages = Util::Package.validate_package_list_format(params[:packages])
+
+          if packages
+            job = @group.update_packages packages
+            notify.success _("Update of Packages '%{packages}' scheduled for System Group '%{name}'.") %
+              {:packages => params[:packages], :name => @group.name}
+          else
+            notify.error _("One or more errors found in Package names '%s'.") % params[:packages]
+            render :text => ''
+            return
+          end
+
+        else
+          # user didn't enter any packages... instead, they requested 'Update All'
+          job = @group.update_packages([])
+          notify.success _("Update of All Packages scheduled for System Group '%{name}'.") % {:name => @group.name}
+        end
+
+      else
+        notify.error _("Invalid request received to update Packages or Package Groups for System Group '%s'.") %
+          @group['name']
+        render :text => ''
+        return
+      end
+
+      render :partial => 'katello/system_groups/packages/items',
+        :locals  => { :editable           => @group.systems_editable?,
+                      :group_id           => @group.id,
+                      :job                => job,
+                      :include_tr_shading => false }
+
+    rescue Errors::SystemGroupEmptyException => e
+      if !params[:packages].blank?
+        notify.error _("Update of Packages '%{packages}' scheduled for System Group '%{group}' failed.  Reason: %{message}") %
+          {:packages => params[:packages], :group => @group.name, :message => e.message}
+      elsif !params[:groups].blank?
+        notify.error _("Update of Package Groups '%{groups}' scheduled for System Group '%{name}' failed.  Reason: %{message}") %
+          {:groups => params[:groups], :name => @group.name, :message => e.message}
+      end
+      render :text => ''
     end
 
-    render :json => response
-  end
+    def package_status
+      # retrieve the status for the actions initiated by the client
+      response = []
+      jobs = @group.refreshed_jobs.where('jobs.id' => params[:id])
+      jobs.each do |job|
+        status_html = render_to_string(:template => 'katello/system_groups/packages/_status', :layout => false,
+                                       :locals => {:group_id => @group.id, :id => job.id, :state => job.state,
+                                                   :status_message => job.status_message})
 
-  private
+        response << {:id => job.id, :status_html => status_html}
+      end
 
-  def find_group
-    @group = SystemGroup.find(params[:system_group_id])
+      render :json => response
+    end
+
+    private
+
+    def find_group
+      @group = SystemGroup.find(params[:system_group_id])
+    end
   end
-end
 end

@@ -11,46 +11,46 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class PulpTaskStatus
-  def self.any_task_running_with_vcr(async_tasks)
-    VCR.live? ? any_task_running_without_vcr(async_tasks) : false
-  end
+  class PulpTaskStatus
+    def self.any_task_running_with_vcr(async_tasks)
+      VCR.live? ? any_task_running_without_vcr(async_tasks) : false
+    end
 
-  class << self
-    alias_method_chain :any_task_running, :vcr
+    class << self
+      alias_method_chain :any_task_running, :vcr
+    end
   end
-end
 end
 
 module Katello
-module ConsumerSupport
+  module ConsumerSupport
 
-  @consumer = nil
+    @consumer = nil
 
-  def self.consumer_id
-    @consumer.id
+    def self.consumer_id
+      @consumer.id
+    end
   end
-end
 end
 
 module Katello
-module TaskSupport
+  module TaskSupport
 
-  def self.wait_on_tasks(task_list, options={})
-    ignore_exception = options.fetch(:ignore_exception, false)
+    def self.wait_on_tasks(task_list, options={})
+      ignore_exception = options.fetch(:ignore_exception, false)
 
-    task_list = [task_list] if !task_list.is_a? Array
-    PulpTaskStatus.wait_for_tasks(task_list)
+      task_list = [task_list] if !task_list.is_a? Array
+      PulpTaskStatus.wait_for_tasks(task_list)
 
-  rescue RuntimeError => e
-    if !ignore_exception
+    rescue RuntimeError => e
+      if !ignore_exception
+        puts e
+        puts e.backtrace
+      end
+    rescue => e
       puts e
       puts e.backtrace
     end
-  rescue => e
-    puts e
-    puts e.backtrace
-  end
 
-end
+  end
 end

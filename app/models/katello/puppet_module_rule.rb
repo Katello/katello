@@ -11,61 +11,61 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class PuppetModuleRule < FilterRule
-  validates_with Validators::RuleParamsValidator, :attributes => :parameters
-  validates_with Validators::RuleVersionValidator, :attributes => :parameters
+  class PuppetModuleRule < FilterRule
+    validates_with Validators::RuleParamsValidator, :attributes => :parameters
+    validates_with Validators::RuleVersionValidator, :attributes => :parameters
 
-  def params_format
-    {:units => [[:name, :author, :version, :min_version, :max_version]]}
-  end
-
-  # Returns a set of Pulp/MongoDB conditions to filter out packages in the
-  # repo repository that match parameters
-  #
-  # @param repo [Repository] a repository containing packages to filter
-  # @return [Array] an array of hashes with MongoDB conditions
-  def generate_clauses(repo)
-    ids = parameters[:units].map do |unit|
-      next if unit[:name].blank?
-
-      filters = []
-      filters << version_filter(unit)
-      filters << author_filter(unit)
-      filters.compact!
-
-      PuppetModule.search(unit[:name], :page_size => repo.puppet_module_count, :repoids => [repo.pulp_id],
-                                       :filters => filters).map(&:_id).compact
+    def params_format
+      {:units => [[:name, :author, :version, :min_version, :max_version]]}
     end
-    ids.flatten!
-    ids.compact!
-    {'unit_id' => {"$in" => ids}} unless ids.empty?
-  end
 
-  protected
+    # Returns a set of Pulp/MongoDB conditions to filter out packages in the
+    # repo repository that match parameters
+    #
+    # @param repo [Repository] a repository containing packages to filter
+    # @return [Array] an array of hashes with MongoDB conditions
+    def generate_clauses(repo)
+      ids = parameters[:units].map do |unit|
+        next if unit[:name].blank?
 
-  def version_filter(unit)
-    if unit.key?(:version)
-      {:term => {:version => unit[:version]}}
-    elsif unit.key?(:min_version) || unit.key?(:max_version)
-      range = {}
-      range[:gt] = sortable_version(unit[:min_version]) if unit[:min_version]
-      range[:lt] = sortable_version(unit[:max_version]) if unit[:max_version]
-      {:range => {:sortable_version => range}}
-    else
-      nil
+        filters = []
+        filters << version_filter(unit)
+        filters << author_filter(unit)
+        filters.compact!
+
+        PuppetModule.search(unit[:name], :page_size => repo.puppet_module_count, :repoids => [repo.pulp_id],
+                            :filters => filters).map(&:_id).compact
+      end
+      ids.flatten!
+      ids.compact!
+      {'unit_id' => {"$in" => ids}} unless ids.empty?
+    end
+
+    protected
+
+    def version_filter(unit)
+      if unit.key?(:version)
+        {:term => {:version => unit[:version]}}
+      elsif unit.key?(:min_version) || unit.key?(:max_version)
+        range = {}
+        range[:gt] = sortable_version(unit[:min_version]) if unit[:min_version]
+        range[:lt] = sortable_version(unit[:max_version]) if unit[:max_version]
+        {:range => {:sortable_version => range}}
+      else
+        nil
+      end
+    end
+
+    def author_filter(unit)
+      if unit.key?(:author) && unit[:author].present?
+        {:term => {:author => unit[:author]}}
+      else
+        nil
+      end
+    end
+
+    def sortable_version(version)
+      Util::Package.sortable_version(version)
     end
   end
-
-  def author_filter(unit)
-    if unit.key?(:author) && unit[:author].present?
-      {:term => {:author => unit[:author]}}
-    else
-      nil
-    end
-  end
-
-  def sortable_version(version)
-    Util::Package.sortable_version(version)
-  end
-end
 end

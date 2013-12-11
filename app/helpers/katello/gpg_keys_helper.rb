@@ -11,11 +11,11 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-module GpgKeysHelper
+  module GpgKeysHelper
 
-  def gpg_content_limit
-    GpgKey::MAX_CONTENT_LENGTH
+    def gpg_content_limit
+      GpgKey::MAX_CONTENT_LENGTH
+    end
+
   end
-
-end
 end

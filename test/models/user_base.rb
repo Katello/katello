@@ -12,25 +12,25 @@
 require 'katello_test_helper'
 
 module Katello
-class UserTestBase < ActiveSupport::TestCase
-  extend ActiveRecord::TestFixtures
+  class UserTestBase < ActiveSupport::TestCase
+    extend ActiveRecord::TestFixtures
 
-  def self.before_suite
-    configure_runcible
+    def self.before_suite
+      configure_runcible
 
-    services  = ['Candlepin', 'Pulp', 'ElasticSearch', 'Foreman']
-    models    = ['User', 'System', 'KTEnvironment', 'Repository', 'Organization']
-    disable_glue_layers(services, models)
-    super
+      services  = ['Candlepin', 'Pulp', 'ElasticSearch', 'Foreman']
+      models    = ['User', 'System', 'KTEnvironment', 'Repository', 'Organization']
+      disable_glue_layers(services, models)
+      super
+    end
+
+    def setup
+      @no_perms_user      = User.find(users(:one))
+      @admin              = User.find(users(:admin))
+      @acme_corporation   = get_organization(:organization1)
+
+      @dev                = KTEnvironment.find(katello_environments(:dev).id)
+    end
+
   end
-
-  def setup
-    @no_perms_user      = User.find(users(:one))
-    @admin              = User.find(users(:admin))
-    @acme_corporation   = get_organization(:organization1)
-
-    @dev                = KTEnvironment.find(katello_environments(:dev).id)
-  end
-
-end
 end

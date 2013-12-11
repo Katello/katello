@@ -11,18 +11,18 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-module Navigation
-  module Items
-    class Synchronization < Navigation::Item
+  module Navigation
+    module Items
+      class Synchronization < Navigation::Item
 
-      def initialize
-        @key           = :synchronization
-        @display       = _("Synchronization")
-        @authorization = lambda{ User.current.has_superadmin_role? }
-        @url           = sync_management_manage_path
+        def initialize
+          @key           = :synchronization
+          @display       = _("Synchronization")
+          @authorization = lambda{ User.current.has_superadmin_role? }
+          @url           = sync_management_manage_path
+        end
+
       end
-
     end
   end
-end
 end

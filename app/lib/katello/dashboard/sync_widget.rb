@@ -11,19 +11,19 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class Dashboard::SyncWidget < Dashboard::Widget
+  class Dashboard::SyncWidget < Dashboard::Widget
 
-  def accessible?
-    Katello.config.katello? && current_organization &&
+    def accessible?
+      Katello.config.katello? && current_organization &&
         current_organization.syncable?
-  end
+    end
 
-  def title
-    _("Sync Overview")
-  end
+    def title
+      _("Sync Overview")
+    end
 
-  def content_path
-    sync_dashboard_index_path
+    def content_path
+      sync_dashboard_index_path
+    end
   end
-end
 end

@@ -11,24 +11,24 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-module Navigation
-  module Menus
-    class SyncManagement < Navigation::Menu
+  module Navigation
+    module Menus
+      class SyncManagement < Navigation::Menu
 
-      def initialize(organization)
-        @key           = :sync_management
-        @display       = _("Sync Management")
-        @authorization = lambda{ organization && (organization.syncable? || Provider.any_readable?(organization)) }
-        @type          = 'flyout'
-        @items         = [
-          Navigation::Items::SyncStatus.new,
-          Navigation::Items::SyncPlans.new,
-          Navigation::Items::SyncSchedule.new
-        ]
-        super
+        def initialize(organization)
+          @key           = :sync_management
+          @display       = _("Sync Management")
+          @authorization = lambda{ organization && (organization.syncable? || Provider.any_readable?(organization)) }
+          @type          = 'flyout'
+          @items         = [
+            Navigation::Items::SyncStatus.new,
+            Navigation::Items::SyncPlans.new,
+            Navigation::Items::SyncSchedule.new
+          ]
+          super
+        end
+
       end
-
     end
   end
-end
 end

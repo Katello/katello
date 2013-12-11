@@ -11,24 +11,24 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-module Glue::ElasticSearch::GpgKey
-  def self.included(base)
-    base.send :include, Ext::IndexedModel
+  module Glue::ElasticSearch::GpgKey
+    def self.included(base)
+      base.send :include, Ext::IndexedModel
 
-    base.class_eval do
-      index_options :extended_json => :extended_index_attrs,
-                    :display_attrs => [:name, :content]
+      base.class_eval do
+        index_options :extended_json => :extended_index_attrs,
+          :display_attrs => [:name, :content]
 
-      mapping do
-        indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
-        indexes :name_sort, :type => 'string', :index => :not_analyzed
+        mapping do
+          indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
+          indexes :name_sort, :type => 'string', :index => :not_analyzed
+        end
       end
     end
-  end
 
-  def extended_index_attrs
-    {:name_sort => name.downcase}
-  end
+    def extended_index_attrs
+      {:name_sort => name.downcase}
+    end
 
-end
+  end
 end

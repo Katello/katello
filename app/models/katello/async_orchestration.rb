@@ -12,42 +12,42 @@
 #
 # based on delayed_job's DelayProxy
 module Katello
-module AsyncOrchestration
-  class AsyncOrchestrationProxy < ActiveSupport::BasicObject
-    def initialize(target, options)
-      @target = target
+  module AsyncOrchestration
+    class AsyncOrchestrationProxy < ActiveSupport::BasicObject
+      def initialize(target, options)
+        @target = target
 
-      @organization = options.delete(:organization)
+        @organization = options.delete(:organization)
 
-      @task_type = options.delete(:task_type)
+        @task_type = options.delete(:task_type)
 
-      @options = options
+        @options = options
+      end
+
+      # under 1.9.3 ActiveSupport::BasicObject inherits from ::BasicObject, which is outside of standard library namespace.
+      def method_missing(method, *args)
+        t = TaskStatus.create!(:uuid => ::UUIDTools::UUID.random_create.to_s, :user_id => ::User.current.id,
+                               :organization => @organization, :state => TaskStatus::Status::WAITING, :task_type => @task_type)
+        ::Delayed::Job.enqueue({:payload_object => AsyncOperation.new(t.id, ::User.current.login, @target, method.to_sym, args)}.merge(@options))
+        t
+      end
     end
 
-    # under 1.9.3 ActiveSupport::BasicObject inherits from ::BasicObject, which is outside of standard library namespace.
-    def method_missing(method, *args)
-      t = TaskStatus.create!(:uuid => ::UUIDTools::UUID.random_create.to_s, :user_id => ::User.current.id,
-                             :organization => @organization, :state => TaskStatus::Status::WAITING, :task_type => @task_type)
-      ::Delayed::Job.enqueue({:payload_object => AsyncOperation.new(t.id, ::User.current.login, @target, method.to_sym, args)}.merge(@options))
-      t
+    def self.included(base)
+      base.send :include, InstanceMethods
+      base.send :extend, ClassMethods
+    end
+
+    module InstanceMethods
+      def async(options = {})
+        AsyncOrchestrationProxy.new(self, options)
+      end
+    end
+
+    module ClassMethods
+      def async(options = {})
+        AsyncOrchestrationProxy.new(self, options)
+      end
     end
   end
-
-  def self.included(base)
-    base.send :include, InstanceMethods
-    base.send :extend, ClassMethods
-  end
-
-  module InstanceMethods
-    def async(options = {})
-      AsyncOrchestrationProxy.new(self, options)
-    end
-  end
-
-  module ClassMethods
-    def async(options = {})
-      AsyncOrchestrationProxy.new(self, options)
-    end
-  end
-end
 end

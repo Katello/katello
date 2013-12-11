@@ -159,10 +159,10 @@ module Katello
         def allowed_organizations
           #test for all orgs
           perms = Permission.joins(:role).joins("INNER JOIN #{Katello::RolesUser.table_name} ON #{Katello::RolesUser.table_name}.role_id = #{Katello::Role.table_name}.id").
-              where("#{Katello::RolesUser.table_name}.user_id = ?", self.id).where(:organization_id => nil).count
-          return Organization.without_deleting.all if perms > 0
+            where("#{Katello::RolesUser.table_name}.user_id = ?", self.id).where(:organization_id => nil).count
+            return Organization.without_deleting.all if perms > 0
 
-          Organization.without_deleting.joins(:permissions => {:role => :users}).where(:users => {:id => self.id}).uniq
+            Organization.without_deleting.joins(:permissions => {:role => :users}).where(:users => {:id => self.id}).uniq
         end
 
         def disable_helptip(key)
@@ -298,7 +298,7 @@ module Katello
 
         def as_json(options)
           super(options).merge 'default_organization' => default_environment.try(:organization).try(:name),
-                               'default_environment'  => default_environment.try(:name)
+            'default_environment'  => default_environment.try(:name)
         end
 
         def has_superadmin_role?
@@ -310,11 +310,11 @@ module Katello
         def verify_ldap_roles
           # get list of ldap_groups bound to roles the user is in
           ldap_groups = LdapGroupRole.
-              joins(:role => :roles_users).
-              where(:katello_roles_users => { :ldap => true, :user_id => id }).
-              select(:ldap_group).
-              uniq.
-              map(&:ldap_group)
+            joins(:role => :roles_users).
+            where(:katello_roles_users => { :ldap => true, :user_id => id }).
+            select(:ldap_group).
+            uniq.
+            map(&:ldap_group)
 
           # make sure the user is still in those groups
           # this operation is inexpensive compared to getting a new group list
@@ -379,12 +379,12 @@ module Katello
 
         def can_be_deleted?
           query         = Katello::Permission.joins(:resource_type, :role).
-              joins("INNER JOIN #{Katello::RolesUser.table_name} ON #{Katello::RolesUser.table_name}.role_id = #{Katello::Role.table_name}.id").
-              where(:katello_resource_types => { :name => :all }, :organization_id => nil)
-          is_superadmin = query.where("#{Katello::RolesUser.table_name}.user_id" => id).count > 0
-          return true unless is_superadmin
-          more_than_one_supers = query.count > 1
-          more_than_one_supers
+            joins("INNER JOIN #{Katello::RolesUser.table_name} ON #{Katello::RolesUser.table_name}.role_id = #{Katello::Role.table_name}.id").
+            where(:katello_resource_types => { :name => :all }, :organization_id => nil)
+            is_superadmin = query.where("#{Katello::RolesUser.table_name}.user_id" => id).count > 0
+            return true unless is_superadmin
+            more_than_one_supers = query.count > 1
+            more_than_one_supers
         end
 
         private
