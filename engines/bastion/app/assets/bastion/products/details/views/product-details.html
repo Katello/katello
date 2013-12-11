@@ -36,15 +36,13 @@
   <nav>
     <ul class="nav nav-tabs">
       <li ng-class="{active: isState('products.details.info')}">
-        <a class="clickable"
-           translate
+        <a translate
            ui-sref="products.details.info({productId: product.id})">
           Details
         </a>
       </li>
       <li ng-class="{active: stateIncludes('products.details.repositories')}">
-        <a class="clickable"
-           translate
+        <a translate
            ui-sref="products.details.repositories.index({productId: product.id})">
           Repositories
         </a>

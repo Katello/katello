@@ -61,7 +61,7 @@
             <td alch-table-cell>{{ package.nvrea }}</td>
             <td alch-table-cell ng-hide="currentPackagesTable.system.readonly">
 
-                <i class="clickable active icon-remove-sign" ng-hide="package.removeTask" tooltip="{{ 'Remove' | translate }}"
+                <i class="active icon-remove-sign" ng-hide="package.removeTask" tooltip="{{ 'Remove' | translate }}"
                    ng-click="currentPackagesTable.removePackage(package)"></i>
 
                 <i class="icon-spinner icon-spin" ng-show="package.removeTask.pending"></i>

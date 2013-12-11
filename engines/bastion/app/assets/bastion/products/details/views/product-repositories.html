@@ -28,7 +28,7 @@
     <tbody>
       <tr ng-repeat="repository in repositories | filter:repositorySearch" row-select>
         <td>
-          <a class="clickable" ng-href="#/products/{{ product.id }}/repositories/{{ repository.id }}">{{ repository.name }}</a>
+          <a ng-href="#/products/{{ product.id }}/repositories/{{ repository.id }}">{{ repository.name }}</a>
         </td>
         <td>{{ repository.content_type }}</td>
         <td>
