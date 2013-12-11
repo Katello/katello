@@ -11,57 +11,60 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-module Authorization::Product
-  extend ActiveSupport::Concern
+  module Authorization
+    module Product
+      extend ActiveSupport::Concern
 
-  READ_PERM_VERBS = [:read, :create, :update, :delete]
+      READ_PERM_VERBS = [:read, :create, :update, :delete]
 
-  included do
-    scope :readable, lambda{|org| all_readable(org).with_enabled_repos_only(org.library)}
-    scope :editable, lambda {|org| all_editable(org).with_enabled_repos_only(org.library)}
-    scope :syncable, lambda {|org| sync_items(org).with_enabled_repos_only(org.library)}
+      included do
+        scope :readable, lambda{|org| all_readable(org).with_enabled_repos_only(org.library)}
+        scope :editable, lambda {|org| all_editable(org).with_enabled_repos_only(org.library)}
+        scope :syncable, lambda {|org| sync_items(org).with_enabled_repos_only(org.library)}
 
-    def readable?
-      Product.all_readable(self.organization).where(:id => id).count > 0
-    end
+        def readable?
+          Katello::Product.all_readable(self.organization).where(:id => id).count > 0
+        end
 
-    def syncable?
-      Product.syncable(self.organization).where(:id => id).count > 0
-    end
+        def syncable?
+          Katello::Product.syncable(self.organization).where(:id => id).count > 0
+        end
 
-    def editable?
-      Product.all_editable(self.organization).where(:id => id).count > 0
-    end
+        def editable?
+          Katello::Product.all_editable(self.organization).where(:id => id).count > 0
+        end
 
-    def deletable?
-      promoted_repos = repositories.select { |repo| repo.promoted? }
-      editable? && promoted_repos.empty?
-    end
+        def deletable?
+          promoted_repos = repositories.select { |repo| repo.promoted? }
+          editable? && promoted_repos.empty?
+        end
 
-  end
+      end # included
 
-  module ClassMethods
+      module ClassMethods
 
-    def all_readable(org)
-      Product.where(:provider_id => Provider.readable(org).pluck(:id))
-    end
+        def all_readable(org)
+          Katello::Product.where(:provider_id => Katello::Provider.readable(org).pluck(:id))
+        end
 
-    def all_editable(org)
-      Product.where(:provider_id => Provider.editable(org).where(:provider_type => Provider::CUSTOM).pluck(:id))
-    end
+        def all_editable(org)
+          Katello::Product.where(:provider_id => Katello::Provider.editable(org).where(:provider_type => Katello::Provider::CUSTOM).pluck(:id))
+        end
 
-    def creatable?(provider)
-      provider.editable?
-    end
+        def creatable?(provider)
+          provider.editable?
+        end
 
-    def any_readable?(org)
-      Provider.any_readable?(org)
-    end
+        def any_readable?(org)
+          Katello::Provider.any_readable?(org)
+        end
 
-    def sync_items(org)
-      org.syncable? ? (joins(:provider).where("#{Katello::Provider.table_name}.organization_id" => org)) : where("0=1")
-    end
-  end
+        def sync_items(org)
+          org.syncable? ? (joins(:provider).where("#{Katello::Provider.table_name}.organization_id" => org)) : where("0=1")
+        end
 
-end
-end
+      end # ClassMethods
+
+    end # Product
+  end # Authorization
+end # Katello
