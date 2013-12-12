@@ -7,7 +7,8 @@ module Bastion
     initializer "bastion.assets.paths", :group => :all do |app|
       app.config.assets.paths << Bastion::Engine.root.join('app', 'assets')
       app.config.assets.paths << Bastion::Engine.root.join('vendor', 'assets', 'stylesheets', 'bastion')
-      app.config.assets.paths << Bastion::Engine.root.join('vendor', 'assets', 'stylesheets', 'bastion', 'font-awesome')
+      app.config.assets.paths << Bastion::Engine.root.join('vendor', 'assets', 'stylesheets', 'bastion',
+                                                           'font-awesome', 'scss')
       app.config.assets.paths << Bastion::Engine.root.join('vendor', 'assets', 'fonts')
 
       app.config.less.paths << "#{Bastion::Engine.root}/vendor/assets/stylesheets/bastion"
