@@ -30,23 +30,23 @@
  */
 angular.module('Bastion.systems').controller('SystemDetailsInfoController',
     ['$scope', '$q', '$http', 'gettext', 'Routes', 'System', 'SystemGroup', 'ContentView', 'CurrentOrganization',
-    function($scope, $q, $http, gettext, Routes, System, SystemGroup, ContentView, CurrentOrganization) {
+    function ($scope, $q, $http, gettext, Routes, System, SystemGroup, ContentView, CurrentOrganization) {
 
-        var customInfoErrorHandler = function(error) {
-            _.each(error.errors, function(errorMessage) {
+        var customInfoErrorHandler = function (error) {
+            _.each(error.errors, function (errorMessage) {
                 $scope.errorMessages.push(gettext("An error occurred updating Custom Information: ") + errorMessage);
             });
         };
 
         $scope.editContentView = false;
 
-        $scope.$on('system.loaded', function() {
+        $scope.$on('system.loaded', function () {
             $scope.setupSelector();
             $scope.systemFacts = dotNotationToObj($scope.system.facts);
             populateExcludedFacts();
         });
 
-        $scope.setEnvironment = function(environmentId) {
+        $scope.setEnvironment = function (environmentId) {
             environmentId = parseInt(environmentId, 10);
 
             if ($scope.previousEnvironment !== environmentId) {
@@ -59,7 +59,7 @@ angular.module('Bastion.systems').controller('SystemDetailsInfoController',
             }
         };
 
-        $scope.cancelContentViewUpdate = function() {
+        $scope.cancelContentViewUpdate = function () {
             if ($scope.editContentView) {
                 $scope.editContentView = false;
                 $scope.system.environment.id = $scope.previousEnvironment;
@@ -70,7 +70,7 @@ angular.module('Bastion.systems').controller('SystemDetailsInfoController',
             }
         };
 
-        $scope.saveContentView = function(system) {
+        $scope.saveContentView = function (system) {
             $scope.previousEnvironment = undefined;
             $scope.save(system);
 
@@ -78,7 +78,7 @@ angular.module('Bastion.systems').controller('SystemDetailsInfoController',
             $scope.pathSelector.enable_all();
         };
 
-        $scope.updateSystemGroups = function(systemGroups) {
+        $scope.updateSystemGroups = function (systemGroups) {
             var data, success, error, deferred = $q.defer();
 
             data = {
@@ -87,13 +87,13 @@ angular.module('Bastion.systems').controller('SystemDetailsInfoController',
                 }
             };
 
-            success = function(data) {
+            success = function (data) {
                 deferred.resolve(data);
                 $scope.successMessages.push('System Saved.');
             };
-            error = function(error) {
+            error = function (error) {
                 deferred.reject(error.data.errors);
-                _.each(error.data.errors, function(errorMessage) {
+                _.each(error.data.errors, function (errorMessage) {
                     $scope.errorMessages.push(gettext("An error occurred updating System Groups: ") + errorMessage);
                 });
             };
@@ -102,58 +102,58 @@ angular.module('Bastion.systems').controller('SystemDetailsInfoController',
             return deferred.promise;
         };
 
-        $scope.releaseVersions = function() {
+        $scope.releaseVersions = function () {
             var deferred = $q.defer();
 
-            System.releaseVersions({ id: $scope.system.uuid }, function(response) {
+            System.releaseVersions({ id: $scope.system.uuid }, function (response) {
                 deferred.resolve(response.results);
             });
 
             return deferred.promise;
         };
 
-        $scope.contentViews = function() {
+        $scope.contentViews = function () {
             var deferred = $q.defer();
 
-            ContentView.query({ 'environment_id': $scope.system.environment.id }, function(response) {
+            ContentView.query({ 'environment_id': $scope.system.environment.id }, function (response) {
                 deferred.resolve(response.results);
             });
 
             return deferred.promise;
         };
 
-        $scope.systemGroups = function() {
+        $scope.systemGroups = function () {
             var deferred = $q.defer();
 
-            SystemGroup.query({'organization_id': CurrentOrganization}, function(systemGroups) {
+            SystemGroup.query({'organization_id': CurrentOrganization}, function (systemGroups) {
                 deferred.resolve(systemGroups['results']);
             });
 
             return deferred.promise;
         };
 
-        $scope.saveCustomInfo = function(info) {
+        $scope.saveCustomInfo = function (info) {
             var url = [Routes.apiCustomInfoPath("system", $scope.system.id), info.keyname].join('/');
             return $http.put(url, {'custom_info': info}).error(customInfoErrorHandler);
         };
 
-        $scope.addCustomInfo = function(info) {
+        $scope.addCustomInfo = function (info) {
             var url, success;
             url = Routes.apiCustomInfoPath("system", $scope.system.id);
 
-            success = function() {
+            success = function () {
                 $scope.system.customInfo.push(info);
             };
 
             return $http.post(url, {'custom_info': info}).success(success).error(customInfoErrorHandler);
         };
 
-        $scope.deleteCustomInfo = function(info) {
+        $scope.deleteCustomInfo = function (info) {
             var url, success;
             url = [Routes.apiCustomInfoPath("system", $scope.system.id), info.keyname].join('/');
 
-            success = function() {
-                $scope.system.customInfo = _.filter($scope.system.customInfo, function(keyValue) {
+            success = function () {
+                $scope.system.customInfo = _.filter($scope.system.customInfo, function (keyValue) {
                     return keyValue !== info;
                 }, this);
             };
@@ -161,12 +161,12 @@ angular.module('Bastion.systems').controller('SystemDetailsInfoController',
             return $http.delete(url).success(success).error(customInfoErrorHandler);
         };
 
-        $scope.getActivationKeyLink = function(activationKey) {
+        $scope.getActivationKeyLink = function (activationKey) {
             var panel = '/!=&panel=activation_key_%s&panelpage=edit'.replace('%s', activationKey.id);
             return Routes.activationKeysPath({anchor: panel});
         };
 
-        $scope.getTemplateForType = function(value) {
+        $scope.getTemplateForType = function (value) {
             var template = 'systems/details/views/partials/system-detail-value.html';
             if (typeof(value) === 'object') {
                 template = 'systems/details/views/partials/system-detail-object.html';
@@ -195,7 +195,7 @@ angular.module('Bastion.systems').controller('SystemDetailsInfoController',
             $scope.advancedInfoLeft = {};
             $scope.advancedInfoRight = {};
             var index = 0;
-            angular.forEach($scope.systemFacts, function(value, key) {
+            angular.forEach($scope.systemFacts, function (value, key) {
                 if (index % 2 === 0) {
                     $scope.advancedInfoLeft[key] = value;
                 } else {
@@ -208,7 +208,7 @@ angular.module('Bastion.systems').controller('SystemDetailsInfoController',
 
         }
 
-        $scope.memory = function(facts) {
+        $scope.memory = function (facts) {
             var mem;
             if (facts !== undefined) {
                 if (facts.memory !== undefined) {
@@ -237,30 +237,32 @@ angular.module('Bastion.systems').controller('SystemDetailsInfoController',
             memory = parseFloat(mems[0]);
             unit = mems[1];
 
-            switch(unit) {
-                case 'B':
+            switch (unit) {
+
+            case 'B':
                 memory = 0;
                 break;
 
-                case 'kB':
+            case 'kB':
                 memory = 0;
                 break;
 
-                case 'MB':
+            case 'MB':
                 memory /= 1024;
                 break;
 
-                case 'GB':
+            case 'GB':
                 break;
 
-                case 'TB':
+            case 'TB':
                 memory *= 1024;
                 break;
 
-                default:
+            default:
                 // by default memory is in kB
                 memory /= (1024 * 1024);
                 break;
+
             }
 
             memory = Math.round(memory * 100) / 100;

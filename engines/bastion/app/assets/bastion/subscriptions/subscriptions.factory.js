@@ -23,7 +23,7 @@
  *   Provides a $resource for subscription(s).
  */
 angular.module('Bastion.subscriptions').factory('Subscriptions', ['$resource', 'Routes', 'CurrentOrganization',
-    function($resource, Routes, CurrentOrganization) {
+    function ($resource, Routes, CurrentOrganization) {
         return $resource(Routes.apiSubscriptionsPath(), {'organization_id': CurrentOrganization}, {
             query: {method: 'GET', isArray: false}
         });

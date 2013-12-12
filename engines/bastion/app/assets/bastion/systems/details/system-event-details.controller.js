@@ -23,32 +23,32 @@
  */
 angular.module('Bastion.systems').controller('SystemEventDetailsController',
     ['$scope', 'SystemTask',
-    function($scope, SystemTask) {
+    function ($scope, SystemTask) {
         var eventId, setEvent, fromState, fromParams;
 
         fromState = 'systems.details.events.index';
         fromParams = {};
 
         eventId = $scope.$stateParams.eventId;
-        setEvent = function(event) {
+        setEvent = function (event) {
             $scope.event = event;
         };
 
         //Record our from state, so we can transition back there
-        $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromStateIn, fromParamsIn) {
+        $scope.$on('$stateChangeSuccess', function (event, toState, toParams, fromStateIn, fromParamsIn) {
             if (!fromStateIn.abstract) {
                 fromState = fromStateIn;
                 fromParams = fromParamsIn;
             }
         });
 
-        $scope.event = SystemTask.get({id: eventId}, function(data) {
+        $scope.event = SystemTask.get({id: eventId}, function (data) {
             if (data.pending) {
                 SystemTask.poll(data, setEvent);
             }
         });
 
-        $scope.transitionBack = function() {
+        $scope.transitionBack = function () {
             $scope.transitionTo(fromState, fromParams);
         };
     }

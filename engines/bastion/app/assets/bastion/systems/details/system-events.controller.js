@@ -24,8 +24,8 @@
  */
 angular.module('Bastion.systems').controller('SystemEventsController',
     ['$scope', 'System', 'Nutupane',
-    function($scope, System, Nutupane) {
-        var params,eventsNutupane;
+    function ($scope, System, Nutupane) {
+        var params, eventsNutupane;
 
         params = {
             'id'   :            $scope.$stateParams.systemId,
@@ -35,7 +35,7 @@ angular.module('Bastion.systems').controller('SystemEventsController',
         };
 
         eventsNutupane = new Nutupane(System, params, 'tasks');
-        eventsNutupane.table.search = function() {
+        eventsNutupane.table.search = function () {
             eventsNutupane.table.rows = [];
 
             if (!eventsNutupane.table.working) {

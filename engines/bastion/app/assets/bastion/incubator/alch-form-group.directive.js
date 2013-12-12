@@ -29,7 +29,7 @@
                required/>
     </div>
  */
-angular.module('alchemy').directive('alchFormGroup', function() {
+angular.module('alchemy').directive('alchFormGroup', function () {
     function getInput(element) {
         var input = element.find('input');
 
@@ -53,7 +53,7 @@ angular.module('alchemy').directive('alchFormGroup', function() {
             'label': '@',
             'field': '@'
         },
-        link: function(scope, iElement, iAttrs, controller) {
+        link: function (scope, iElement, iAttrs, controller) {
             var input = getInput(iElement),
                 field;
 
@@ -72,7 +72,7 @@ angular.module('alchemy').directive('alchFormGroup', function() {
 
             scope.error = controller[field].$error;
 
-            scope.hasErrors = function() {
+            scope.hasErrors = function () {
                 return controller[field].$invalid && controller[field].$dirty;
             };
         }

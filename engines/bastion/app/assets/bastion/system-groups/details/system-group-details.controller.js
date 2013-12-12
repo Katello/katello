@@ -26,7 +26,7 @@
  */
 angular.module('Bastion.system-groups').controller('SystemGroupDetailsController',
     ['$scope', '$state', '$q', 'gettext', 'SystemGroup',
-    function($scope, $state, $q, gettext, SystemGroup) {
+    function ($scope, $state, $q, gettext, SystemGroup) {
         $scope.successMessages = [];
         $scope.errorMessages = [];
         $scope.copyErrorMessages = [];
@@ -37,42 +37,42 @@ angular.module('Bastion.system-groups').controller('SystemGroupDetailsController
             $scope.panel = {loading: true};
         }
 
-        $scope.group = SystemGroup.get({id: $scope.$stateParams.systemGroupId}, function(group) {
+        $scope.group = SystemGroup.get({id: $scope.$stateParams.systemGroupId}, function (group) {
             $scope.$broadcast('group.loaded', group);
             $scope.panel.loading = false;
         });
 
-        $scope.save = function(group) {
+        $scope.save = function (group) {
             var deferred = $q.defer();
 
-            group.$update(function(response) {
+            group.$update(function (response) {
                 deferred.resolve(response);
                 $scope.successMessages.push(gettext('System Group updated'));
-            }, function(response) {
+            }, function (response) {
                 deferred.reject(response);
                 $scope.errorMessages.push(gettext("An error occurred saving the System Group: ") + response.data.displayMessage);
             });
             return deferred.promise;
         };
 
-        $scope.copy = function(newName) {
-            SystemGroup.copy({id: $scope.group.id, 'system_group': {name: newName}}, function(response) {
+        $scope.copy = function (newName) {
+            SystemGroup.copy({id: $scope.group.id, 'system_group': {name: newName}}, function (response) {
                 $scope.showCopy = false;
                 $scope.table.addRow(response);
                 $scope.transitionTo('system-groups.details.info', {systemGroupId: response['id']});
-            }, function(response) {
+            }, function (response) {
                 $scope.copyErrorMessages.push(response.data.displayMessage);
             });
         };
 
-        $scope.removeGroup = function(group) {
+        $scope.removeGroup = function (group) {
             var id = group.id;
 
-            group.$delete(function() {
+            group.$delete(function () {
                 $scope.removeRow(id);
                 $scope.transitionTo('system-groups.index');
                 $scope.successMessages.push(gettext('System Group removed.'));
-            }, function(response) {
+            }, function (response) {
                 $scope.errorMessages.push(gettext("An error occurred removing the System Group: ") + response.data.displayMessage);
             });
         };

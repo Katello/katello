@@ -21,7 +21,7 @@
  *   Provides a $resource for organization(s).
  */
 angular.module('Bastion.organizations').factory('Organization',
-    ['$resource', function($resource) {
+    ['$resource', function ($resource) {
 
         return $resource('/katello/api/organizations/:id/:action',
             {id: '@id'},

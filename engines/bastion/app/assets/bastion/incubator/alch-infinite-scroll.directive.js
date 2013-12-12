@@ -29,34 +29,34 @@
  *     </div>
  *   </pre>
  */
-angular.module('alchemy').directive('alchInfiniteScroll', [function() {
+angular.module('alchemy').directive('alchInfiniteScroll', [function () {
     return {
-        link: function(scope, elem, attr) {
+        link: function (scope, elem, attr) {
             var raw = elem[0], loadMoreFunction = attr["alchInfiniteScroll"], result;
-            elem.bind('scroll', function() {
+            elem.bind('scroll', function () {
                 var sliderPosition = raw.scrollTop + raw.offsetHeight;
                 if (sliderPosition > 0 && sliderPosition >= raw.scrollHeight) {
                     scope.$apply(attr["alchInfiniteScroll"]);
                 }
             });
 
-            var getScrollHeight = function() {
+            var getScrollHeight = function () {
                 var scrollHeight = 0;
-                elem.children().each(function() {
+                elem.children().each(function () {
                     scrollHeight = scrollHeight + $(this).get(0).scrollHeight;
                 });
                 return scrollHeight;
             };
 
-            var isPromise = function(promise) {
+            var isPromise = function (promise) {
                 return promise && promise.hasOwnProperty('then');
             };
 
-            var loadUntilScroll = function() {
+            var loadUntilScroll = function () {
                 if (getScrollHeight() < elem.height()) {
                     result = scope.$eval(loadMoreFunction);
                     if (isPromise(result)) {
-                        result.then(function() {
+                        result.then(function () {
                             if (getScrollHeight() < elem.height()) {
                                 loadUntilScroll();
                             }

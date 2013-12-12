@@ -25,11 +25,11 @@
  */
 angular.module('Bastion.system-groups').controller('SystemGroupFormController',
     ['$scope', '$q', 'SystemGroup', 'CurrentOrganization',
-    function($scope, $q, SystemGroup, CurrentOrganization) {
+    function ($scope, $q, SystemGroup, CurrentOrganization) {
 
         $scope.group = $scope.group || new SystemGroup();
 
-        $scope.save = function(group) {
+        $scope.save = function (group) {
             group['organization_id'] = CurrentOrganization;
             group.$save(success, error);
         };
@@ -37,26 +37,26 @@ angular.module('Bastion.system-groups').controller('SystemGroupFormController',
         $scope.unlimited = true;
         $scope.group['max_systems'] = -1;
 
-        $scope.isUnlimited = function(group) {
+        $scope.isUnlimited = function (group) {
             return group['max_systems'] === -1;
-         };
+        };
 
-        $scope.inputChanged = function(group){
+        $scope.inputChanged = function (group) {
             if ($scope.isUnlimited(group)) {
                 $scope.unlimited = true;
             }
         };
 
-         $scope.unlimitedChanged = function(group) {
-             if ($scope.isUnlimited(group)) {
-                 $scope.unlimited = false;
-                 group['max_systems'] = 1;
-             }
-             else {
-                 $scope.unlimited = true;
-                 group['max_systems'] = -1;
-             }
-         };
+        $scope.unlimitedChanged = function (group) {
+            if ($scope.isUnlimited(group)) {
+                $scope.unlimited = false;
+                group['max_systems'] = 1;
+            }
+            else {
+                $scope.unlimited = true;
+                group['max_systems'] = -1;
+            }
+        };
 
         function success(response) {
             $scope.table.addRow(response);
@@ -65,7 +65,7 @@ angular.module('Bastion.system-groups').controller('SystemGroupFormController',
 
         function error(response) {
             $scope.working = false;
-            angular.forEach(response.data.errors, function(errors, field) {
+            angular.forEach(response.data.errors, function (errors, field) {
                 $scope.groupForm[field].$setValidity('', false);
                 $scope.groupForm[field].$error.messages = errors;
             });

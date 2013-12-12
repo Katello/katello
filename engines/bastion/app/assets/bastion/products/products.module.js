@@ -38,7 +38,7 @@ angular.module('Bastion.products', [
  * @description
  *   Used for systems level configuration such as setting up the ui state machine.
  */
-angular.module('Bastion.products').config(['$stateProvider', function($stateProvider) {
+angular.module('Bastion.products').config(['$stateProvider', function ($stateProvider) {
     $stateProvider.state('products', {
         abstract: true,
         controller: 'ProductsController',

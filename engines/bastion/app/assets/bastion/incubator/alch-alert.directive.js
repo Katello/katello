@@ -25,7 +25,7 @@
  *          errorMessages="errorMessages">
  *     </div>
  */
-angular.module('alchemy').directive('alchAlert', function() {
+angular.module('alchemy').directive('alchAlert', function () {
     return {
         templateUrl: 'incubator/views/alch-alert.html',
         scope: {
@@ -35,16 +35,16 @@ angular.module('alchemy').directive('alchAlert', function() {
             errorMessages: '='
         },
 
-        link: function(scope) {
+        link: function (scope) {
             scope.alerts = [];
 
             function addToAlerts(messages) {
                 scope.alerts = messages;
             }
 
-            scope.$watch('successMessages', function(messages) {
+            scope.$watch('successMessages', function (messages) {
                 if (messages && messages.length > 0) {
-                    var successMessages = _.map(messages, function(message) {
+                    var successMessages = _.map(messages, function (message) {
                         return {message: message, type: 'success'};
                     });
                     addToAlerts(successMessages);
@@ -52,9 +52,9 @@ angular.module('alchemy').directive('alchAlert', function() {
                 }
             }, true);
 
-            scope.$watch('infoMessages', function(messages) {
+            scope.$watch('infoMessages', function (messages) {
                 if (messages && messages.length > 0) {
-                    var infoMessages = _.map(messages, function(message) {
+                    var infoMessages = _.map(messages, function (message) {
                         return {message: message, type: 'info'};
                     });
                     addToAlerts(infoMessages);
@@ -62,9 +62,9 @@ angular.module('alchemy').directive('alchAlert', function() {
                 }
             }, true);
 
-            scope.$watch('warningMessages', function(messages) {
+            scope.$watch('warningMessages', function (messages) {
                 if (messages && messages.length > 0) {
-                    var warningMessages = _.map(messages, function(message) {
+                    var warningMessages = _.map(messages, function (message) {
                         return {message: message, type: 'warning'};
                     });
                     addToAlerts(warningMessages);
@@ -72,9 +72,9 @@ angular.module('alchemy').directive('alchAlert', function() {
                 }
             }, true);
 
-            scope.$watch('errorMessages', function(messages) {
+            scope.$watch('errorMessages', function (messages) {
                 if (messages && messages.length > 0) {
-                    var errorMessages = _.map(messages, function(message) {
+                    var errorMessages = _.map(messages, function (message) {
                         return {message: message, type: 'danger'};
                     });
                     addToAlerts(errorMessages);
@@ -82,7 +82,7 @@ angular.module('alchemy').directive('alchAlert', function() {
                 }
             }, true);
 
-            scope.closeAlert = function(index) {
+            scope.closeAlert = function (index) {
                 scope.alerts.splice(index, 1);
             };
         }

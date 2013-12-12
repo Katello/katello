@@ -29,7 +29,7 @@
  */
 angular.module('Bastion.systems').controller('SystemsBulkActionGroupsController',
     ['$scope', '$q', '$location', 'gettext', 'Nutupane', 'BulkAction', 'SystemGroup', 'CurrentOrganization',
-    function($scope, $q, $location, gettext, Nutupane, BulkAction, SystemGroup, CurrentOrganization) {
+    function ($scope, $q, $location, gettext, Nutupane, BulkAction, SystemGroup, CurrentOrganization) {
 
         $scope.systemGroups = {
             action: null
@@ -46,14 +46,14 @@ angular.module('Bastion.systems').controller('SystemsBulkActionGroupsController'
         var groupNutupane = new Nutupane(SystemGroup, params);
 
         $scope.detailsTable = groupNutupane.table;
-        $scope.detailsTable.closeItem = function() {};
+        $scope.detailsTable.closeItem = function () {};
 
-        $scope.confirmSystemGroupAction = function(action) {
+        $scope.confirmSystemGroupAction = function (action) {
             $scope.systemGroups.confirm = true;
             $scope.systemGroups.action = action;
         };
 
-        $scope.performSystemGroupAction = function() {
+        $scope.performSystemGroupAction = function () {
             var params, action, success, error, deferred = $q.defer();
 
             action = $scope.systemGroups.action;
@@ -63,7 +63,7 @@ angular.module('Bastion.systems').controller('SystemsBulkActionGroupsController'
 
             $scope.systemGroups.action = null;
 
-            success = function(data) {
+            success = function (data) {
                 deferred.resolve(data);
                 $scope.systemGroups.working = false;
 
@@ -72,11 +72,11 @@ angular.module('Bastion.systems').controller('SystemsBulkActionGroupsController'
                 groupNutupane.refresh();
             };
 
-            error = function(error) {
+            error = function (error) {
                 deferred.reject(error.data["errors"]);
                 $scope.systemGroups.working = false;
                 $scope.editMode = true;
-                _.each(error.data.errors, function(errorMessage) {
+                _.each(error.data.errors, function (errorMessage) {
                     $scope.errorMessages.push(gettext("An error occurred: ") + errorMessage);
                 });
             };

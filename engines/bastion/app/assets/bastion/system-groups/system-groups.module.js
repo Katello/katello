@@ -20,7 +20,7 @@
  */
 angular.module('Bastion.system-groups', ['ngResource', 'Bastion.utils', 'ui.router']);
 
-angular.module('Bastion.system-groups').config(['$stateProvider', function($stateProvider) {
+angular.module('Bastion.system-groups').config(['$stateProvider', function ($stateProvider) {
     $stateProvider.state('system-groups', {
         abstract: true,
         controller: 'SystemGroupsController',

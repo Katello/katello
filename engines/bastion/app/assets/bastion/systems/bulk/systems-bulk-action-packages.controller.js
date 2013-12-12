@@ -28,7 +28,7 @@
  */
 angular.module('Bastion.systems').controller('SystemsBulkActionPackagesController',
     ['$scope', '$q', '$location', 'BulkAction', 'SystemGroup', 'CurrentOrganization', 'gettext',
-    function($scope, $q, $location, BulkAction, SystemGroup, CurrentOrganization, gettext) {
+    function ($scope, $q, $location, BulkAction, SystemGroup, CurrentOrganization, gettext) {
 
         $scope.actionParams = {
             ids: []
@@ -41,7 +41,7 @@ angular.module('Bastion.systems').controller('SystemsBulkActionPackagesControlle
             contentType: 'package'
         };
 
-        $scope.updatePlaceholder = function(contentType) {
+        $scope.updatePlaceholder = function (contentType) {
             if (contentType === "package") {
                 $scope.content.placeholder = gettext('Enter Package Name(s)...');
             } else if (contentType === "package_group") {
@@ -49,28 +49,28 @@ angular.module('Bastion.systems').controller('SystemsBulkActionPackagesControlle
             }
         };
 
-        $scope.confirmContentAction = function(action, actionInput) {
+        $scope.confirmContentAction = function (action, actionInput) {
             $scope.content.confirm = true;
             $scope.content.action = action;
             $scope.content.actionInput = actionInput;
         };
 
-        $scope.performContentAction = function() {
+        $scope.performContentAction = function () {
             var success, error, deferred = $q.defer();
 
             $scope.content.confirm = false;
             $scope.content.workingMode = true;
 
-            success = function(data) {
+            success = function (data) {
                 deferred.resolve(data);
                 $scope.content.workingMode = false;
                 $scope.successMessages.push(data["displayMessage"]);
             };
 
-            error = function(error) {
+            error = function (error) {
                 deferred.reject(error.data["errors"]);
                 $scope.content.workingMode = false;
-                _.each(error.data.errors, function(errorMessage) {
+                _.each(error.data.errors, function (errorMessage) {
                     $scope.errorMessages.push(gettext("An error occurred installing Packages: ") + errorMessage);
                 });
             };

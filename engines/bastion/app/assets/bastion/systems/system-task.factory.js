@@ -23,21 +23,21 @@
  *   Provides a $resource for system tasks
  */
 angular.module('Bastion.systems').factory('SystemTask',
-    ['$resource', '$timeout','Routes',
-    function($resource, $timeout, Routes) {
+    ['$resource', '$timeout', 'Routes',
+    function ($resource, $timeout, Routes) {
         var resource = $resource(Routes.apiSystemsPath() + '/tasks/:id', {id: '@uuid'}, {
             get: {method: 'GET', params: {paged: false}, isArray: false}
         });
-        resource.poll = function(task, returnFunction) {
-            resource.get({id: task.id}, function(data) {
+        resource.poll = function (task, returnFunction) {
+            resource.get({id: task.id}, function (data) {
                 if (data.pending) {
-                    $timeout(function() {resource.poll(data, returnFunction)}, 1000);
+                    $timeout(function () {resource.poll(data, returnFunction)}, 1000);
                 }
-                else{
+                else {
                     returnFunction(data);
                 }
-            }, function() {
-                returnFunction({'human_readable_result':"Failed to fetch task", failed: true});
+            }, function () {
+                returnFunction({'human_readable_result': "Failed to fetch task", failed: true});
             });
         };
         return resource;

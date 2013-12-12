@@ -26,7 +26,7 @@
              working="working">
         </div>
  */
-angular.module('alchemy').directive('alchFormButtons', function() {
+angular.module('alchemy').directive('alchFormButtons', function () {
     return {
         replace: true,
         require: '^form',
@@ -36,12 +36,12 @@ angular.module('alchemy').directive('alchFormButtons', function() {
             handleSave: '&onSave',
             working: '='
         },
-        link: function(scope, iElement, iAttrs, controller) {
+        link: function (scope, iElement, iAttrs, controller) {
 
-            scope.isInvalid = function() {
+            scope.isInvalid = function () {
                 var invalid = controller.$invalid;
 
-                angular.forEach(controller, function(value) {
+                angular.forEach(controller, function (value) {
                     if (value.$error) {
                         if (value.$error.server) {
                             invalid = false;

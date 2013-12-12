@@ -21,8 +21,8 @@
  * @example
  *
  */
-angular.module('alchemy.format').filter('keyValueToString', [function() {
-    return function(toFormat, options) {
+angular.module('alchemy.format').filter('keyValueToString', [function () {
+    return function (toFormat, options) {
         var keyName, valueName, separator;
         options = options || {};
         keyName = options.keyName || 'keyname';
@@ -33,7 +33,7 @@ angular.module('alchemy.format').filter('keyValueToString', [function() {
             toFormat = [toFormat];
         }
 
-        return _.map(toFormat, function(entry) {
+        return _.map(toFormat, function (entry) {
             return [entry[keyName], entry[valueName]].join(separator);
         }).join(', ');
     };

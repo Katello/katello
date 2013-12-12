@@ -25,12 +25,12 @@
  */
 angular.module('Bastion.systems').controller('SystemRegisterController',
     ['$scope', '$location', 'Node', 'CurrentOrganization',
-    function($scope, $location, Node, CurrentOrganization) {
+    function ($scope, $location, Node, CurrentOrganization) {
 
         $scope.organization = CurrentOrganization;
         $scope.baseURL = 'http://' + $location.host();
 
-        $scope.nodes = Node.query(function(data) {
+        $scope.nodes = Node.query(function (data) {
             $scope.selectedNode = data.results[0];
         });
 

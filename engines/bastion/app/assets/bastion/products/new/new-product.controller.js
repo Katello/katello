@@ -23,7 +23,7 @@
  */
 angular.module('Bastion.products').controller('NewProductController',
     ['$scope', 'Product',
-    function($scope, Product) {
+    function ($scope, Product) {
 
         $scope.product = new Product();
         $scope.panel = {loading: true};

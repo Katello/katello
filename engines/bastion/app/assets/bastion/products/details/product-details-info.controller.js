@@ -26,7 +26,7 @@
  *   Provides the functionality for the product details action pane.
  */
 angular.module('Bastion.products').controller('ProductDetailsInfoController',
-    ['$scope', '$q', 'gettext', 'Product', 'GPGKey', 'MenuExpander', function($scope, $q, gettext, Product, GPGKey, MenuExpander) {
+    ['$scope', '$q', 'gettext', 'Product', 'GPGKey', 'MenuExpander', function ($scope, $q, gettext, Product, GPGKey, MenuExpander) {
 
         $scope.successMessages = [];
         $scope.errorMessages = [];
@@ -34,14 +34,14 @@ angular.module('Bastion.products').controller('ProductDetailsInfoController',
         $scope.menuExpander = MenuExpander;
         $scope.panel = $scope.panel || {loading: false};
 
-        $scope.product = $scope.product || Product.get({id: $scope.$stateParams.productId}, function() {
+        $scope.product = $scope.product || Product.get({id: $scope.$stateParams.productId}, function () {
             $scope.panel.loading = false;
         });
 
-        $scope.gpgKeys = function() {
+        $scope.gpgKeys = function () {
             var deferred = $q.defer();
 
-            GPGKey.query(function(gpgKeys) {
+            GPGKey.query(function (gpgKeys) {
                 var results = gpgKeys.results;
 
                 results.unshift({id: null});
@@ -51,15 +51,15 @@ angular.module('Bastion.products').controller('ProductDetailsInfoController',
             return deferred.promise;
         };
 
-        $scope.save = function(product) {
+        $scope.save = function (product) {
             var deferred = $q.defer();
 
-            product.$update(function(response) {
+            product.$update(function (response) {
                 deferred.resolve(response);
                 $scope.successMessages.push(gettext('Product Saved'));
-            }, function(response) {
+            }, function (response) {
                 deferred.reject(response);
-                _.each(response.data.errors, function(errorMessage) {
+                _.each(response.data.errors, function (errorMessage) {
                     $scope.errorMessages.push(gettext("An error occurred saving the Product: ") + errorMessage);
                 });
             });

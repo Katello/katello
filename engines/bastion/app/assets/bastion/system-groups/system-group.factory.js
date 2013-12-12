@@ -22,15 +22,15 @@
  */
 angular.module('Bastion.system-groups').factory('SystemGroup',
     ['$resource',
-    function($resource) {
+    function ($resource) {
 
     return $resource('/katello/api/system_groups/:id/:action', {id: '@id'}, {
         get: {method: 'GET', params: {fields: 'full'}},
         query: {method: 'GET', isArray: false},
         update: {method: 'PUT'},
-        copy: {method:'POST', params: {action: 'copy'}},
+        copy: {method: 'POST', params: {action: 'copy'}},
         systems: {method: 'GET', params: {action: 'systems'}},
-        removeSystems: {method: 'PUT', isArray: true, params: {action:'remove_systems'}},
-        addSystems: {method: 'PUT', isArray: true, params: {action:'add_systems'}}
+        removeSystems: {method: 'PUT', isArray: true, params: {action: 'remove_systems'}},
+        addSystems: {method: 'PUT', isArray: true, params: {action: 'add_systems'}}
     });
 }]);
