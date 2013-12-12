@@ -29,16 +29,16 @@
  */
 angular.module('Bastion.products').controller('ProductFormController',
     ['$scope', '$q', 'Product', 'Provider', 'GPGKey', 'FormUtils',
-    function($scope, $q, Product, Provider, GPGKey, FormUtils) {
+    function ($scope, $q, Product, Provider, GPGKey, FormUtils) {
 
         function fetchProviders() {
-            Provider.query(function(providers) {
+            Provider.query(function (providers) {
                 $scope.providers = providers.results;
             });
         }
 
         function fetchGpgKeys() {
-            GPGKey.query(function(gpgKeys) {
+            GPGKey.query(function (gpgKeys) {
                 $scope.gpgKeys = gpgKeys.results;
             });
         }
@@ -46,7 +46,7 @@ angular.module('Bastion.products').controller('ProductFormController',
         function populateSelects() {
             var deferred = $q.defer();
 
-            $scope.$watch("providers && gpgKeys", function(value) {
+            $scope.$watch("providers && gpgKeys", function (value) {
                 if (value !== undefined) {
                     deferred.resolve(true);
                 }
@@ -65,7 +65,7 @@ angular.module('Bastion.products').controller('ProductFormController',
 
         function error(response) {
             $scope.working = false;
-            angular.forEach(response.data.errors, function(errors, field) {
+            angular.forEach(response.data.errors, function (errors, field) {
                 $scope.productForm[field].$setValidity('server', false);
                 $scope.productForm[field].$error.messages = errors;
             });
@@ -73,18 +73,18 @@ angular.module('Bastion.products').controller('ProductFormController',
 
         $scope.product = $scope.product || new Product();
 
-        $scope.$watch('product.name', function() {
+        $scope.$watch('product.name', function () {
             if ($scope.productForm.name) {
                 $scope.productForm.name.$setValidity('server', true);
                 FormUtils.labelize($scope.product, $scope.productForm);
             }
         });
 
-        $scope.save = function(product) {
+        $scope.save = function (product) {
             product.$save(success, error);
         };
 
-        populateSelects().then(function() {
+        populateSelects().then(function () {
             $scope.panel.loading = false;
         });
     }]

@@ -23,7 +23,7 @@
  *   Provides the functionality for the product details action pane.
  */
 angular.module('Bastion.products').controller('ProductDetailsController',
-    ['$scope', '$state', 'Product', function($scope, $state, Product) {
+    ['$scope', '$state', 'Product', function ($scope, $state, Product) {
 
         $scope.successMessages = [];
         $scope.errorMessages = [];
@@ -34,15 +34,15 @@ angular.module('Bastion.products').controller('ProductDetailsController',
             $scope.panel = {loading: true};
         }
 
-        $scope.product = Product.get({id: $scope.$stateParams.productId}, function() {
+        $scope.product = Product.get({id: $scope.$stateParams.productId}, function () {
             $scope.panel.loading = false;
         });
 
 
-        $scope.removeProduct = function(product) {
+        $scope.removeProduct = function (product) {
             var id = product.id;
 
-            product.$delete(function() {
+            product.$delete(function () {
                 $scope.removeRow(id);
                 $scope.transitionTo('products.index');
             });

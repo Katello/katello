@@ -21,8 +21,8 @@
  * @example
  *
  */
-angular.module('alchemy.format').filter('unlimitedFilter', ['gettext', function(gettext) {
-    return function(limit) {
+angular.module('alchemy.format').filter('unlimitedFilter', ['gettext', function (gettext) {
+    return function (limit) {
         if (limit === -1) {
             return gettext("Unlimited");
         }

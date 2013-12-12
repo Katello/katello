@@ -39,7 +39,7 @@ module.exports = function (grunt) {
                 options: {
                     targetDir: 'vendor/assets',
                     copy: true,
-                    layout: function(type, component) {
+                    layout: function (type, component) {
                         // We provide a bit of customization here by allowing
                         // explicit path declarations if the component is included
                         // in the type. This is handy for sub-nesting within folders

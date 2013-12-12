@@ -31,7 +31,7 @@
 angular.module('Bastion.systems').controller('SystemsBulkActionSubscriptionsController',
     ['$scope', '$q', '$location', 'BulkAction', 'SystemGroup', 'CurrentOrganization', 'gettext',
      'Organization', 'Task',
-    function($scope, $q, $location, BulkAction, SystemGroup, CurrentOrganization, gettext,
+    function ($scope, $q, $location, BulkAction, SystemGroup, CurrentOrganization, gettext,
         Organization, Task) {
 
         $scope.actionParams = {
@@ -43,16 +43,16 @@ angular.module('Bastion.systems').controller('SystemsBulkActionSubscriptionsCont
             workingMode: false
         };
 
-        $scope.performAutoAttachSubscriptions = function() {
+        $scope.performAutoAttachSubscriptions = function () {
             var success, error, deferred = $q.defer();
 
             $scope.subscription.confirm = false;
             $scope.subscription.workingMode = true;
 
-            success = function(scheduledTask) {
+            success = function (scheduledTask) {
                 deferred.resolve(scheduledTask);
                 $scope.subscription.autoAttachTask = scheduledTask;
-                Task.poll(scheduledTask, function(polledTask) {
+                Task.poll(scheduledTask, function (polledTask) {
                     $scope.subscription.autoAttachTask = polledTask;
                     $scope.subscription.workingMode = false;
                 });
@@ -60,10 +60,10 @@ angular.module('Bastion.systems').controller('SystemsBulkActionSubscriptionsCont
                 $scope.successMessages.push(gettext('Successfully Scheduled Auto-attach.'));
             };
 
-            error = function(error) {
+            error = function (error) {
                 deferred.reject(error.data["errors"]);
                 $scope.subscription.workingMode = false;
-                _.each(error.data.errors, function(errorMessage) {
+                _.each(error.data.errors, function (errorMessage) {
                     $scope.errorMessages.push(gettext("An error occurred applying Subscriptions: ") + errorMessage);
                 });
             };
@@ -76,15 +76,15 @@ angular.module('Bastion.systems').controller('SystemsBulkActionSubscriptionsCont
         function autoAttachSubscriptionsInProgress() {
             // Check to see if an 'auto attach subscriptions' action is currently in progress.
             // If it is, poll on the associated task, until it is completed.
-            Organization.query({'id': CurrentOrganization}, function(organization) {
+            Organization.query({'id': CurrentOrganization}, function (organization) {
                 if (organization['owner_auto_attach_all_systems_task_id'] !== null) {
 
-                    Task.query({'id' : organization['owner_auto_attach_all_systems_task_id']}, function(task) {
+                    Task.query({'id' : organization['owner_auto_attach_all_systems_task_id']}, function (task) {
                         $scope.subscription.autoAttachTask = task;
 
                         if (task.pending) {
                             $scope.subscription.workingMode = true;
-                            Task.poll(task, function(polledTask) {
+                            Task.poll(task, function (polledTask) {
                                 $scope.subscription.autoAttachTask = polledTask;
                                 $scope.subscription.workingMode = false;
                             });

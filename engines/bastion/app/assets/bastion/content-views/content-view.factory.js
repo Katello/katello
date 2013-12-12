@@ -24,7 +24,7 @@
  */
 angular.module('Bastion.content-views').factory('ContentView',
     ['$resource', 'Routes', 'CurrentOrganization',
-    function($resource, Routes, CurrentOrganization) {
+    function ($resource, Routes, CurrentOrganization) {
 
         return $resource(Routes.apiOrganizationContentViewsPath(CurrentOrganization) + '/:id/:action',
             {id: '@id'},

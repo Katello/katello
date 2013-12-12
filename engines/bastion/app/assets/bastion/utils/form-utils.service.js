@@ -20,7 +20,7 @@
  * @description
  *   A set of utilities that are useful when using forms.
  */
-angular.module('Bastion.utils').service('FormUtils', ['$http', function($http) {
+angular.module('Bastion.utils').service('FormUtils', ['$http', function ($http) {
 
   /**
    * @ngdoc function
@@ -35,15 +35,15 @@ angular.module('Bastion.utils').service('FormUtils', ['$http', function($http) {
    * @param {ngForm} form An angular form object used to set error status on for the label property.
    * @returns {Bastion.service.FormUtils} Self for chaining.
    */
-    this.labelize = function(resource, form) {
+    this.labelize = function (resource, form) {
         $http.get(
             '/katello/organizations/default_label', {
             params: {'name': resource.name}
         })
-        .success(function(response) {
+        .success(function (response) {
             resource.label = response;
         })
-        .error(function(response) {
+        .error(function (response) {
             form.label.$setValidity('', false);
             form.label.$error.messages = response.errors;
         });

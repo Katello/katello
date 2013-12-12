@@ -7,7 +7,7 @@
  * @description
  *   Provides a menu.
  */
-angular.module('alchemy').directive('alchMenu', ['$window', function($window) {
+angular.module('alchemy').directive('alchMenu', ['$window', function ($window) {
     return {
         restrict: 'EA',
         replace: true,
@@ -16,10 +16,10 @@ angular.module('alchemy').directive('alchMenu', ['$window', function($window) {
             'compact' : '@'
         },
         templateUrl: 'incubator/views/alch-menu.html',
-        controller: ['$scope', function($scope) {
+        controller: ['$scope', function ($scope) {
             $scope.dropdown = {};
 
-            $scope.handleHover = function(item, mousein) {
+            $scope.handleHover = function (item, mousein) {
                 if (item.type === 'dropdown' && mousein) {
                     item.active = true;
                     $scope.dropdown = item.items;
@@ -35,13 +35,13 @@ angular.module('alchemy').directive('alchMenu', ['$window', function($window) {
             };
 
         }],
-        link: function(scope, element, attrs) {
+        link: function (scope, element, attrs) {
             var elementOriginalOffset;
 
             if (attrs.compact !== undefined) {
                 elementOriginalOffset = $(element).offset().top;
 
-                angular.element($window).bind('scroll', function() {
+                angular.element($window).bind('scroll', function () {
                     var windowScrollTop = $($window).scrollTop();
 
                     if (windowScrollTop > elementOriginalOffset + 2) {
@@ -49,7 +49,7 @@ angular.module('alchemy').directive('alchMenu', ['$window', function($window) {
                     } else if (windowScrollTop < elementOriginalOffset) {
                         element.parent().removeClass('compact');
                     }
-                 });
+                });
             }
         }
     };

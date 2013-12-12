@@ -24,7 +24,7 @@
  */
 angular.module('Bastion.environments').factory('Environment',
     ['$resource', 'Routes', 'CurrentOrganization',
-    function($resource, Routes, CurrentOrganization) {
+    function ($resource, Routes, CurrentOrganization) {
 
         return $resource(Routes.apiEnvironmentPath(CurrentOrganization) + '/:id/:action',
             {id: '@id'},

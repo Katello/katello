@@ -25,7 +25,7 @@
  *   Provides the functionality for the repository details pane.
  */
 angular.module('Bastion.repositories').controller('RepositoryDetailsInfoController',
-    ['$scope', '$q', 'gettext', 'Repository', 'GPGKey', function($scope, $q, gettext, Repository, GPGKey) {
+    ['$scope', '$q', 'gettext', 'Repository', 'GPGKey', function ($scope, $q, gettext, Repository, GPGKey) {
 
         $scope.successMessages = [];
         $scope.errorMessages = [];
@@ -39,10 +39,10 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
             'id': $scope.$stateParams.repositoryId
         });
 
-        $scope.gpgKeys = function() {
+        $scope.gpgKeys = function () {
             var deferred = $q.defer();
 
-            GPGKey.query(function(gpgKeys) {
+            GPGKey.query(function (gpgKeys) {
                 var results = gpgKeys.results;
 
                 results.unshift({id: null});
@@ -52,15 +52,15 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
             return deferred.promise;
         };
 
-        $scope.save = function(repository) {
+        $scope.save = function (repository) {
             var deferred = $q.defer();
 
-            repository.$update(function(response) {
+            repository.$update(function (response) {
                 deferred.resolve(response);
                 $scope.successMessages.push(gettext('Repository Saved.'));
-            }, function(response) {
+            }, function (response) {
                 deferred.reject(response);
-                _.each(response.data.errors, function(errorMessage) {
+                _.each(response.data.errors, function (errorMessage) {
                     $scope.errorMessages.push(gettext("An error occurred saving the Repository: ") + errorMessage);
                 });
             });
@@ -68,19 +68,19 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
             return deferred.promise;
         };
 
-        $scope.removeRepository = function(repository) {
-            repository.$delete(function() {
+        $scope.removeRepository = function (repository) {
+            repository.$delete(function () {
                 $scope.transitionTo('products.details.repositories.index', {productId: $scope.$stateParams.productId});
             });
         };
 
-        $scope.uploadContent = function(content) {
+        $scope.uploadContent = function (content) {
             var returnData;
 
             if (content !== "Please wait...") {
                 try {
                     returnData = JSON.parse(angular.element(content).html());
-                } catch(err) {
+                } catch (err) {
                     returnData = content;
                 }
 
@@ -99,12 +99,12 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
             }
         };
 
-        $scope.syncInProgress = function(state) {
+        $scope.syncInProgress = function (state) {
             return (state === 'running' || state === 'waiting');
         };
 
-        $scope.syncRepository = function(repository) {
-            Repository.sync({id: repository.id}, function(task) {
+        $scope.syncRepository = function (repository) {
+            Repository.sync({id: repository.id}, function (task) {
                 repository['sync_state'] = task.state;
             });
         };

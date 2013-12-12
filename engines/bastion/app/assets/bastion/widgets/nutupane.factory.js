@@ -33,7 +33,7 @@
  * @example
  *   <pre>
        angular.module('example').controller('ExampleController',
-           ['Nutupane', function(Nutupane)) {
+           ['Nutupane', function (Nutupane)) {
                var nutupane                = new Nutupane(ExampleResource);
                $scope.table                = nutupane.table;
            }]
@@ -41,8 +41,8 @@
     </pre>
  */
 angular.module('Bastion.widgets').factory('Nutupane',
-    ['$location', '$q', '$timeout', function($location, $q, $timeout) {
-        var Nutupane = function(resource, params, action) {
+    ['$location', '$q', '$timeout', function ($location, $q, $timeout) {
+        var Nutupane = function (resource, params, action) {
             var self = this;
             params = params || {};
 
@@ -70,7 +70,7 @@ angular.module('Bastion.widgets').factory('Nutupane',
                 params.page = table.resource.page + 1;
                 resource[table.action](params, function (response) {
 
-                    angular.forEach(response.results, function(row) {
+                    angular.forEach(response.results, function (row) {
                         row.selected = table.allResultsSelected;
                     });
 
@@ -83,7 +83,7 @@ angular.module('Bastion.widgets').factory('Nutupane',
 
                     // This $timeout is necessary to cause a digest cycle
                     // in order to prevent loading two sets of results.
-                    $timeout(function() {
+                    $timeout(function () {
                         deferred.resolve(response);
                         table.resource = response;
                         table.resource.page = parseInt(response.page, 10);
@@ -98,24 +98,24 @@ angular.module('Bastion.widgets').factory('Nutupane',
                 return deferred.promise;
             }
 
-            self.getParams = function() {
+            self.getParams = function () {
                 return params;
             };
 
-            self.enableSelectAllResults = function() {
+            self.enableSelectAllResults = function () {
                 self.table.selectAllResultsEnabled = true;
                 self.table.allResultsSelected = false;
             };
 
-            self.setParams = function(newParams) {
-               params = newParams;
+            self.setParams = function (newParams) {
+                params = newParams;
             };
 
-            self.searchTransform = function(term) {
+            self.searchTransform = function (term) {
                 return term;
             };
 
-            self.query = function() {
+            self.query = function () {
                 var table = self.table;
                 if (table.rows.length === 0) {
                     table.resource.page = 0;
@@ -125,15 +125,15 @@ angular.module('Bastion.widgets').factory('Nutupane',
                 return load();
             };
 
-            self.refresh = function() {
+            self.refresh = function () {
                 self.table.resource.page = 0;
                 return load(true);
             };
 
-            self.removeRow = function(id) {
+            self.removeRow = function (id) {
                 var table = self.table;
 
-                table.rows = _.reject(table.rows, function(item) {
+                table.rows = _.reject(table.rows, function (item) {
                     return item.id === id;
                 }, this);
 
@@ -143,7 +143,7 @@ angular.module('Bastion.widgets').factory('Nutupane',
                 return self.table.rows;
             };
 
-            self.getAllSelectedResults = function(identifier) {
+            self.getAllSelectedResults = function (identifier) {
                 var selected;
                 identifier = identifier || 'id';
                 selected = {
@@ -165,9 +165,9 @@ angular.module('Bastion.widgets').factory('Nutupane',
                 return selected;
             };
 
-            self.getDeselected = function() {
+            self.getDeselected = function () {
                 var deselectedRows = [];
-                angular.forEach(self.table.rows, function(row, rowIndex) {
+                angular.forEach(self.table.rows, function (row, rowIndex) {
                     if (row.selected !== true) {
                         deselectedRows.push(self.table.rows[rowIndex]);
                     }
@@ -175,7 +175,7 @@ angular.module('Bastion.widgets').factory('Nutupane',
                 return deselectedRows;
             };
 
-            self.table.search = function(searchTerm) {
+            self.table.search = function (searchTerm) {
                 $location.search('search', searchTerm);
                 self.table.resource.page = 1;
                 self.table.rows = [];
@@ -188,14 +188,14 @@ angular.module('Bastion.widgets').factory('Nutupane',
             };
 
             // Must be overridden
-            self.table.closeItem = function() {
+            self.table.closeItem = function () {
                 throw "NotImplementedError";
             };
 
-            self.table.replaceRow = function(row) {
+            self.table.replaceRow = function (row) {
                 var index, selected;
                 index = null;
-                angular.forEach(self.table.rows, function(item, itemIndex) {
+                angular.forEach(self.table.rows, function (item, itemIndex) {
                     if (item.id === row.id) {
                         index = itemIndex;
                         selected = item.selected;
@@ -208,13 +208,13 @@ angular.module('Bastion.widgets').factory('Nutupane',
                 }
             };
 
-            self.table.addRow = function(row) {
+            self.table.addRow = function (row) {
                 self.table.rows.unshift(row);
                 self.table.resource.subtotal += 1;
                 self.table.resource.total += 1;
             };
 
-            self.table.nextPage = function() {
+            self.table.nextPage = function () {
                 var table = self.table;
                 if (table.working || !table.hasMore()) {
                     return;
@@ -222,7 +222,7 @@ angular.module('Bastion.widgets').factory('Nutupane',
                 return self.query();
             };
 
-            self.table.hasMore = function() {
+            self.table.hasMore = function () {
                 var length = self.table.rows.length;
                 var subtotal = self.table.resource.subtotal;
                 return ((length === 0 && subtotal !== 0) || (length < subtotal));
@@ -230,7 +230,7 @@ angular.module('Bastion.widgets').factory('Nutupane',
 
             // Wraps the table.selectAll() function if selectAllResultsEnabled is not set
             // Otherwise provides expanded functionality
-            self.table.selectAllResults = function(selectAll) {
+            self.table.selectAllResults = function (selectAll) {
                 self.table.selectAll(selectAll);
 
                 if (self.table.selectAllResultsEnabled) {
@@ -240,11 +240,11 @@ angular.module('Bastion.widgets').factory('Nutupane',
                 }
             };
 
-            self.table.allResultsSelectCount = function() {
+            self.table.allResultsSelectCount = function () {
                 return self.table.resource.subtotal - self.getDeselected().length;
             };
 
-            self.table.sortBy = function(column) {
+            self.table.sortBy = function (column) {
                 var sort = self.table.resource.sort;
                 if (!column) {
                     return;

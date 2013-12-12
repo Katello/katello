@@ -28,7 +28,7 @@
  */
 angular.module('Bastion.systems').controller('SystemDetailsController',
     ['$scope', '$state', '$q', 'gettext', 'System', 'Organization', 'MenuExpander',
-    function($scope, $state, $q, gettext, System, Organization, MenuExpander) {
+    function ($scope, $state, $q, gettext, System, Organization, MenuExpander) {
 
         $scope.menuExpander = MenuExpander;
         $scope.successMessages = [];
@@ -40,8 +40,8 @@ angular.module('Bastion.systems').controller('SystemDetailsController',
             $scope.panel = {loading: true};
         }
 
-        $scope.system = System.get({id: $scope.$stateParams.systemId}, function(system) {
-            $scope.$watch("systemTable.rows.length > 0", function() {
+        $scope.system = System.get({id: $scope.$stateParams.systemId}, function (system) {
+            $scope.$watch("systemTable.rows.length > 0", function () {
                 $scope.systemTable.replaceRow(system);
             });
 
@@ -49,15 +49,15 @@ angular.module('Bastion.systems').controller('SystemDetailsController',
             $scope.panel.loading = false;
         });
 
-        $scope.save = function(system) {
+        $scope.save = function (system) {
             var deferred = $q.defer();
 
-            system.$update(function(response) {
+            system.$update(function (response) {
                 deferred.resolve(response);
                 $scope.successMessages.push(gettext('Save Successful.'));
-            }, function(response) {
+            }, function (response) {
                 deferred.reject(response);
-                _.each(response.data.errors, function(errorMessage) {
+                _.each(response.data.errors, function (errorMessage) {
                     $scope.errorMessages.push(gettext("An error occurred saving the System: ") + errorMessage);
                 });
             });
@@ -65,7 +65,7 @@ angular.module('Bastion.systems').controller('SystemDetailsController',
             return deferred.promise;
         };
 
-        $scope.transitionTo = function(state, params) {
+        $scope.transitionTo = function (state, params) {
             var systemId = $scope.$stateParams.systemId;
 
             if ($scope.system && $scope.system.uuid) {
@@ -81,10 +81,10 @@ angular.module('Bastion.systems').controller('SystemDetailsController',
             return false;
         };
 
-        $scope.serviceLevels = function() {
+        $scope.serviceLevels = function () {
             var deferred = $q.defer();
 
-            Organization.get(function(organization) {
+            Organization.get(function (organization) {
                 deferred.resolve(organization['service_levels']);
             });
 

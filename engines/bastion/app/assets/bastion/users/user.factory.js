@@ -23,15 +23,15 @@
  *   Provides a $resource for system subscriptions.
  */
 angular.module('Bastion.users').factory('User',
-    ['$resource', '$http', 'Routes', function($resource, $http, Routes) {
+    ['$resource', '$http', 'Routes', function ($resource, $http, Routes) {
         var resource = $resource(Routes.apiUsersPath() + '/:id', {id: '@id'});
 
-        resource.selectOrg = function(organizationId, success, error) {
+        resource.selectOrg = function (organizationId, success, error) {
             return $http.post(Routes.setOrgUserSessionPath({'org_id': organizationId}))
                 .success(success).error(error);
         };
 
-        resource.setDefaultOrg = function(userId, organizationId, success, error) {
+        resource.setDefaultOrg = function (userId, organizationId, success, error) {
             var data = {'org': organizationId};
             if (!organizationId) {
                 data = null;

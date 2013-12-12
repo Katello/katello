@@ -26,31 +26,31 @@
 /*jshint camelcase:false*/
 angular.module('Bastion.systems').controller('SystemErrataController',
     ['$scope', 'SystemErratum', 'SystemTask', 'Nutupane',
-    function($scope, SystemErratum, SystemTask, Nutupane) {
+    function ($scope, SystemErratum, SystemTask, Nutupane) {
         var errataNutupane;
 
         errataNutupane = new Nutupane(SystemErratum, {'id': $scope.$stateParams.systemId}, 'get');
         $scope.errataTable = errataNutupane.table;
         $scope.errataTable.errataFilterTerm = "";
-        $scope.errataTable.errataCompare = function(item) {
+        $scope.errataTable.errataCompare = function (item) {
             var searchText = $scope.errataTable.errataFilterTerm;
             return item.type.indexOf(searchText)  >= 0 ||
                 item.errata_id.indexOf(searchText) >= 0 ||
                 item.title.indexOf(searchText) >= 0;
         };
 
-        $scope.applySelected = function() {
+        $scope.applySelected = function () {
             var selected, errataIds = [];
             selected = $scope.errataTable.getSelected();
-            if(selected.length > 0){
-                angular.forEach(selected, function(value) {
+            if (selected.length > 0) {
+                angular.forEach(selected, function (value) {
                     errataIds.push(value.errata_id);
                 });
                 SystemErratum.apply({uuid: $scope.system.uuid, errata_ids: errataIds},
-                                   function(task) {
-                                     $scope.errataTable.selectAll(false);
-                                     $scope.transitionTo('systems.details.events.details', {eventId: task.id});
-                                   });
+                                   function (task) {
+                                        $scope.errataTable.selectAll(false);
+                                        $scope.transitionTo('systems.details.events.details', {eventId: task.id});
+                                    });
             }
         };
     }

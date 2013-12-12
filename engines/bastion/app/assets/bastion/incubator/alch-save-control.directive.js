@@ -27,7 +27,7 @@
  *          invalid="productForm.$invalid">
  *     </div>
  */
-angular.module('alchemy').directive('alchSaveControl', function() {
+angular.module('alchemy').directive('alchSaveControl', function () {
     return {
         restrict: 'AE',
         replace: true,
