@@ -13,47 +13,47 @@
 require 'katello_test_helper'
 
 module Katello
-describe Api::V1::RootController do
-  before (:each) do
-    setup_controller_defaults_api
-    @request.env["HTTP_ACCEPT"] = "application/json"
-    @packages                   = { "rel" => "packages", "href" => "/api/packages/" }
-    @systems                    = { "rel" => "systems", "href" => "/api/systems/" }
-    @tasks                      = { "rel" => "tasks", "href" => "/api/tasks/" }
-    @gpg_keys                   = { "rel" => "gpg_keys", "href" => "/api/gpg_keys/" }
-  end
-
-  def resource_list
-    get :resource_list
-  end
-
-  def json(response)
-    JSON.parse(response.body)
-  end
-
-  context "in headpin mode" do
+  describe Api::V1::RootController do
     before (:each) do
-      Katello.config.stubs(:katello?).returns(false)
+      setup_controller_defaults_api
+      @request.env["HTTP_ACCEPT"] = "application/json"
+      @packages                   = { "rel" => "packages", "href" => "/api/packages/" }
+      @systems                    = { "rel" => "systems", "href" => "/api/systems/" }
+      @tasks                      = { "rel" => "tasks", "href" => "/api/tasks/" }
+      @gpg_keys                   = { "rel" => "gpg_keys", "href" => "/api/gpg_keys/" }
     end
-    it "should not show katello apis" do
-      resource_list
-      json(response).must_include @systems
-      json(response).wont_include(@packages)
-      json(response).wont_include(@tasks)
-      json(response).wont_include(@gpg_keys)
-    end
-  end
 
-  context "in katello mode" do
-    before (:each) do
-      Katello.config.stubs(:katello?).returns(true)
+    def resource_list
+      get :resource_list
     end
-    it "should show katello apis (katello)" do #TODO headpin
-      resource_list
-      json(response).must_include(@systems)
-      json(response).must_include(@packages)
-    end
-  end
 
-end
+    def json(response)
+      JSON.parse(response.body)
+    end
+
+    context "in headpin mode" do
+      before (:each) do
+        Katello.config.stubs(:katello?).returns(false)
+      end
+      it "should not show katello apis" do
+        resource_list
+        json(response).must_include @systems
+        json(response).wont_include(@packages)
+        json(response).wont_include(@tasks)
+        json(response).wont_include(@gpg_keys)
+      end
+    end
+
+    context "in katello mode" do
+      before (:each) do
+        Katello.config.stubs(:katello?).returns(true)
+      end
+      it "should show katello apis (katello)" do #TODO headpin
+        resource_list
+        json(response).must_include(@systems)
+        json(response).must_include(@packages)
+      end
+    end
+
+  end
 end

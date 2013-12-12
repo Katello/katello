@@ -11,27 +11,27 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-module SearchHelper
-  def max_search_history
-    max_entries = Katello.config.search && Katello.config.search.max_history
-    max_entries.nil? ? 5 : max_entries
-  end
+  module SearchHelper
+    def max_search_history
+      max_entries = Katello.config.search && Katello.config.search.max_history
+      max_entries.nil? ? 5 : max_entries
+    end
 
-  def max_search_favorites
-    max_entries = Katello.config.search && Katello.config.search.max_favorites
-    max_entries.nil? ? 5 : max_entries
-  end
+    def max_search_favorites
+      max_entries = Katello.config.search && Katello.config.search.max_favorites
+      max_entries.nil? ? 5 : max_entries
+    end
 
-  def history_entries
-    @search_histories.length < max_search_history ? @search_histories.length : max_search_history
-  end
+    def history_entries
+      @search_histories.length < max_search_history ? @search_histories.length : max_search_history
+    end
 
-  def favorite_entries
-    @search_favorites.length < max_search_favorites ? @search_favorites.length : max_search_favorites
-  end
+    def favorite_entries
+      @search_favorites.length < max_search_favorites ? @search_favorites.length : max_search_favorites
+    end
 
-  def search_string(search)
-    "?search=#{search.params}#" unless search.nil? || search.params.nil?
+    def search_string(search)
+      "?search=#{search.params}#" unless search.nil? || search.params.nil?
+    end
   end
-end
 end

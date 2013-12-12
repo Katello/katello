@@ -14,147 +14,147 @@ require 'oauth'
 require 'cgi'
 
 module Katello
-class HttpResource
+  class HttpResource
 
-  class NetworkException < StandardError
-  end
-
-  class RestClientException < StandardError
-    attr_reader :service_code, :code
-    def initialize(params)
-      super params[:message]
-      @service_code = params[:service_code]
-      @code = params[:code]
-    end
-  end
-
-  class_attribute :consumer_secret, :consumer_key, :ca_cert_file, :prefix, :site, :default_headers
-
-  attr_reader :json
-
-  def initialize(json = {})
-    @json = json
-  end
-
-  def [](key)
-    @json[key]
-  end
-
-  def []=(key, value)
-    @json[key] = value
-  end
-
-  class << self
-    # children must redefine
-    def logger
-      fail NotImplementedError
+    class NetworkException < StandardError
     end
 
-    def process_response(resp)
-      logger.debug "Processing response: #{resp.code}"
-      logger.debug resp.body
-      return resp unless resp.code.to_i >= 400
-      parsed = {}
-      message = "Rest exception while processing the call"
-      service_code = ""
-      status_code = resp.code.to_s
-      begin
-        parsed = JSON.parse resp.body
-        message = parsed["displayMessage"] if parsed["displayMessage"]
-        service_code = parsed["code"] if parsed["code"]
-      rescue => error
-        logger.error "Error parsing the body: " << error.backtrace.join("\n")
-        if %w(404 500 502 503 504).member? resp.code.to_s
-          logger.error "Remote server status code " << resp.code.to_s
-          raise RestClientException, {:message => error.to_s, :service_code => service_code, :code => status_code}, caller
-        else
-          raise NetworkException, [resp.code.to_s, resp.body].reject{|s| s.nil? || s.empty?}.join(' ')
+    class RestClientException < StandardError
+      attr_reader :service_code, :code
+      def initialize(params)
+        super params[:message]
+        @service_code = params[:service_code]
+        @code = params[:code]
+      end
+    end
+
+    class_attribute :consumer_secret, :consumer_key, :ca_cert_file, :prefix, :site, :default_headers
+
+    attr_reader :json
+
+    def initialize(json = {})
+      @json = json
+    end
+
+    def [](key)
+      @json[key]
+    end
+
+    def []=(key, value)
+      @json[key] = value
+    end
+
+    class << self
+      # children must redefine
+      def logger
+        fail NotImplementedError
+      end
+
+      def process_response(resp)
+        logger.debug "Processing response: #{resp.code}"
+        logger.debug resp.body
+        return resp unless resp.code.to_i >= 400
+        parsed = {}
+        message = "Rest exception while processing the call"
+        service_code = ""
+        status_code = resp.code.to_s
+        begin
+          parsed = JSON.parse resp.body
+          message = parsed["displayMessage"] if parsed["displayMessage"]
+          service_code = parsed["code"] if parsed["code"]
+        rescue => error
+          logger.error "Error parsing the body: " << error.backtrace.join("\n")
+          if %w(404 500 502 503 504).member? resp.code.to_s
+            logger.error "Remote server status code " << resp.code.to_s
+            raise RestClientException, {:message => error.to_s, :service_code => service_code, :code => status_code}, caller
+          else
+            raise NetworkException, [resp.code.to_s, resp.body].reject{|s| s.nil? || s.empty?}.join(' ')
+          end
         end
+        fail RestClientException, {:message => message, :service_code => service_code, :code => status_code}, caller
       end
-      fail RestClientException, {:message => message, :service_code => service_code, :code => status_code}, caller
-    end
 
-    def print_debug_info(a_path, headers = {}, payload = {})
-      logger.debug "Headers: #{headers.to_json}"
-      # calling to_json on file has side-effects breaking manifest import.
-      # this fix prevents this problem
-      payload_to_print = payload.reduce({}) do |h, (k, v)|
-        h[k] = case v
-               when File then "{{file}}"
-               else v
-               end
-      end
-      logger.debug "Body: #{payload_to_print.to_json}"
-    rescue
-      logger.debug "Unable to print debug information"
-    end
-
-    def get(a_path, headers = {})
-      logger.debug "Resource GET request: #{a_path}"
-      print_debug_info(a_path, headers)
-      a_path = URI.encode(a_path)
-      client = rest_client(Net::HTTP::Get, :get, a_path)
-      result = process_response(client.get(headers))
-      result
-    rescue RestClient::Exception => e
-      raise_rest_client_exception e, a_path, "GET"
-    rescue Errno::ECONNREFUSED
-      service = a_path.split("/").second
-      fail Errors::ConnectionRefusedException, _("A backend service [ %s ] is unreachable") % service.capitalize
-    end
-
-    def post(a_path, payload = {}, headers = {})
-      logger.debug "Resource POST request: #{a_path}, #{payload}"
-      print_debug_info(a_path, headers, payload)
-      a_path = URI.encode(a_path)
-      client = rest_client(Net::HTTP::Post, :post, a_path)
-      result = process_response(client.post(payload, headers))
-      result
-    rescue RestClient::Exception => e
-      raise_rest_client_exception e, a_path, "POST"
-    rescue Errno::ECONNREFUSED
-      service = a_path.split("/").second
-      fail Errors::ConnectionRefusedException, _("A backend service [ %s ] is unreachable") % service.capitalize
-    end
-
-    def put(a_path, payload = {}, headers = {})
-      logger.debug "Resource PUT request: #{a_path}, #{payload}"
-      print_debug_info(a_path, headers, payload)
-      a_path = URI.encode(a_path)
-      client = rest_client(Net::HTTP::Put, :put, a_path)
-      result = process_response(client.put(payload, headers))
-      result
-    rescue RestClient::Exception => e
-      raise_rest_client_exception e, a_path, "PUT"
-    rescue Errno::ECONNREFUSED
-      service = a_path.split("/").second
-      fail Errors::ConnectionRefusedException, _("A backend service [ %s ] is unreachable") % service.capitalize
-    end
-
-    def delete(a_path = nil, headers = {})
-      logger.debug "Resource DELETE request: #{a_path}"
-      print_debug_info(a_path, headers)
-      a_path = URI.encode(a_path)
-      client = rest_client(Net::HTTP::Delete, :delete, a_path)
-      result = process_response(client.delete(headers))
-      result
-    rescue RestClient::Exception => e
-      raise_rest_client_exception e, a_path, "DELETE"
-    rescue Errno::ECONNREFUSED
-      service = a_path.split("/").second
-      fail Errors::ConnectionRefusedException, _("A backend service [ %s ] is unreachable") % service.capitalize
-    end
-
-    # re-raise the same exception with nicer error message
-    def raise_rest_client_exception(e, a_path, http_method)
-      # message method in rest-client is hardcoded - we need to override it
-      msg = "#{name}: #{e.message} #{e.http_body} (#{http_method} #{a_path})"
-      (class << e; self; end).instance_eval do
-        define_method(:message) do
-          msg
+      def print_debug_info(a_path, headers = {}, payload = {})
+        logger.debug "Headers: #{headers.to_json}"
+        # calling to_json on file has side-effects breaking manifest import.
+        # this fix prevents this problem
+        payload_to_print = payload.reduce({}) do |h, (k, v)|
+          h[k] = case v
+                 when File then "{{file}}"
+                 else v
+                 end
         end
+        logger.debug "Body: #{payload_to_print.to_json}"
+      rescue
+        logger.debug "Unable to print debug information"
       end
-      fail e
+
+      def get(a_path, headers = {})
+        logger.debug "Resource GET request: #{a_path}"
+        print_debug_info(a_path, headers)
+        a_path = URI.encode(a_path)
+        client = rest_client(Net::HTTP::Get, :get, a_path)
+        result = process_response(client.get(headers))
+        result
+      rescue RestClient::Exception => e
+        raise_rest_client_exception e, a_path, "GET"
+      rescue Errno::ECONNREFUSED
+        service = a_path.split("/").second
+        fail Errors::ConnectionRefusedException, _("A backend service [ %s ] is unreachable") % service.capitalize
+      end
+
+      def post(a_path, payload = {}, headers = {})
+        logger.debug "Resource POST request: #{a_path}, #{payload}"
+        print_debug_info(a_path, headers, payload)
+        a_path = URI.encode(a_path)
+        client = rest_client(Net::HTTP::Post, :post, a_path)
+        result = process_response(client.post(payload, headers))
+        result
+      rescue RestClient::Exception => e
+        raise_rest_client_exception e, a_path, "POST"
+      rescue Errno::ECONNREFUSED
+        service = a_path.split("/").second
+        fail Errors::ConnectionRefusedException, _("A backend service [ %s ] is unreachable") % service.capitalize
+      end
+
+      def put(a_path, payload = {}, headers = {})
+        logger.debug "Resource PUT request: #{a_path}, #{payload}"
+        print_debug_info(a_path, headers, payload)
+        a_path = URI.encode(a_path)
+        client = rest_client(Net::HTTP::Put, :put, a_path)
+        result = process_response(client.put(payload, headers))
+        result
+      rescue RestClient::Exception => e
+        raise_rest_client_exception e, a_path, "PUT"
+      rescue Errno::ECONNREFUSED
+        service = a_path.split("/").second
+        fail Errors::ConnectionRefusedException, _("A backend service [ %s ] is unreachable") % service.capitalize
+      end
+
+      def delete(a_path = nil, headers = {})
+        logger.debug "Resource DELETE request: #{a_path}"
+        print_debug_info(a_path, headers)
+        a_path = URI.encode(a_path)
+        client = rest_client(Net::HTTP::Delete, :delete, a_path)
+        result = process_response(client.delete(headers))
+        result
+      rescue RestClient::Exception => e
+        raise_rest_client_exception e, a_path, "DELETE"
+      rescue Errno::ECONNREFUSED
+        service = a_path.split("/").second
+        fail Errors::ConnectionRefusedException, _("A backend service [ %s ] is unreachable") % service.capitalize
+      end
+
+      # re-raise the same exception with nicer error message
+      def raise_rest_client_exception(e, a_path, http_method)
+        # message method in rest-client is hardcoded - we need to override it
+        msg = "#{name}: #{e.message} #{e.http_body} (#{http_method} #{a_path})"
+        (class << e; self; end).instance_eval do
+          define_method(:message) do
+            msg
+          end
+        end
+        fail e
     end
 
     def join_path(*args)
@@ -182,8 +182,8 @@ class HttpResource
       params[:ca_file] = self.ca_cert_file unless self.ca_cert_file.nil?
       # New OAuth consumer to setup signing the request
       consumer = OAuth::Consumer.new(self.consumer_key,
-                          self.consumer_secret,
-                          params)
+                                     self.consumer_secret,
+                                     params)
 
       # The type is passed in, GET/POST/PUT/DELETE
       request = http_type.new(url)

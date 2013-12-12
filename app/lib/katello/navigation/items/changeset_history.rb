@@ -11,18 +11,18 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-module Navigation
-  module Items
-    class ChangesetHistory < Navigation::Item
+  module Navigation
+    module Items
+      class ChangesetHistory < Navigation::Item
 
-      def initialize(organization)
-        @key           = :changeset_history
-        @display       = _("Changesets History")
-        @authorization = lambda{ organization && KTEnvironment.any_viewable_for_promotions?(organization) }
-        @url           = changesets_path
+        def initialize(organization)
+          @key           = :changeset_history
+          @display       = _("Changesets History")
+          @authorization = lambda{ organization && KTEnvironment.any_viewable_for_promotions?(organization) }
+          @url           = changesets_path
+        end
+
       end
-
     end
   end
-end
 end

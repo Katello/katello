@@ -11,29 +11,29 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-module Authorization::ContentViewVersion
-  extend ActiveSupport::Concern
+  module Authorization::ContentViewVersion
+    extend ActiveSupport::Concern
 
-  module ClassMethods
-    def readable(org)
-      view_ids = ContentView.readable(org).collect{|v| v.id}
-      joins(:content_view).where("#{Katello::ContentView.table_name}.id" => view_ids)
-    end
+    module ClassMethods
+      def readable(org)
+        view_ids = ContentView.readable(org).collect{|v| v.id}
+        joins(:content_view).where("#{Katello::ContentView.table_name}.id" => view_ids)
+      end
 
-    def promotable(org)
-      items(org, [:promote])
-    end
+      def promotable(org)
+        items(org, [:promote])
+      end
 
-    def items(org, verbs)
-      fail "scope requires an organization" if org.nil?
-      resource = :content_views
+      def items(org, verbs)
+        fail "scope requires an organization" if org.nil?
+        resource = :content_views
 
-      if ::User.allowed_all_tags?(verbs, resource, org)
-        joins(:content_view).where("#{Katello::ContentView.table_name}.organization_id" => org.id)
-      else
-        joins(:content_view).where("#{Katello::ContentView.table_name}.id in (#{::User.allowed_tags_sql(verbs, resource, org)})")
+        if ::User.allowed_all_tags?(verbs, resource, org)
+          joins(:content_view).where("#{Katello::ContentView.table_name}.organization_id" => org.id)
+        else
+          joins(:content_view).where("#{Katello::ContentView.table_name}.id in (#{::User.allowed_tags_sql(verbs, resource, org)})")
+        end
       end
     end
   end
-end
 end

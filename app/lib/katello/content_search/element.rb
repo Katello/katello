@@ -11,51 +11,51 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-module ContentSearch::Element
+  module ContentSearch::Element
 
-  def self.included(base)
-    base.class_eval do
-      extend ClassMethods
-    end
-  end
-
-  def initialize(attrs = {})
-    attrs.each {|key, val| self.send("#{key}=", val)}
-  end
-
-  def display_attributes
-    self.class.get_display_attributes
-  end
-
-  def as_json(options = {})
-    json = {}
-    fail "Display attributes not defined for #{self.class.name}" if display_attributes.nil? || display_attributes.empty?
-    display_attributes.each do |attr|
-      json[attr] = self.send(attr) if self.send(attr)
-    end
-    json
-  end
-
-  def [](key)
-    self.send(key.to_sym)
-  end
-
-  def []=(key, val)
-    self.send("#{key.to_sym}=", val)
-  end
-
-  module ClassMethods
-
-    def display_attributes(*attrs)
-      @display_attributes = attrs
-      attr_accessor(*attrs)
+    def self.included(base)
+      base.class_eval do
+        extend ClassMethods
+      end
     end
 
-    def get_display_attributes
-      @display_attributes || self.superclass.get_display_attributes
+    def initialize(attrs = {})
+      attrs.each {|key, val| self.send("#{key}=", val)}
+    end
+
+    def display_attributes
+      self.class.get_display_attributes
+    end
+
+    def as_json(options = {})
+      json = {}
+      fail "Display attributes not defined for #{self.class.name}" if display_attributes.nil? || display_attributes.empty?
+      display_attributes.each do |attr|
+        json[attr] = self.send(attr) if self.send(attr)
+      end
+      json
+    end
+
+    def [](key)
+      self.send(key.to_sym)
+    end
+
+    def []=(key, val)
+      self.send("#{key.to_sym}=", val)
+    end
+
+    module ClassMethods
+
+      def display_attributes(*attrs)
+        @display_attributes = attrs
+        attr_accessor(*attrs)
+      end
+
+      def get_display_attributes
+        @display_attributes || self.superclass.get_display_attributes
+      end
+
     end
 
   end
-
-end
 end

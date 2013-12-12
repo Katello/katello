@@ -13,81 +13,81 @@
 require 'models/authorization/authorization_base'
 
 module Katello
-class ProviderAuthorizationAdminTest < AuthorizationTestBase
+  class ProviderAuthorizationAdminTest < AuthorizationTestBase
 
-  def setup
-    super
-    User.current = User.find(users('admin'))
-    @provider = Provider.find(katello_providers('fedora_hosted'))
-    @org = @acme_corporation
+    def setup
+      super
+      User.current = User.find(users('admin'))
+      @provider = Provider.find(katello_providers('fedora_hosted'))
+      @org = @acme_corporation
+    end
+
+    def test_readable
+      refute_empty Provider.readable(@org)
+    end
+
+    def test_editable
+      refute_empty Provider.editable(@org)
+    end
+
+    def test_creatable?
+      assert Provider.creatable?(@org)
+    end
+
+    def test_any_readable?
+      assert Provider.any_readable?(@org)
+    end
+
+    def test_readable?
+      assert @provider.readable?
+    end
+
+    def test_editable?
+      assert @provider.editable?
+    end
+
+    def test_deletable?
+      assert @provider.deletable?
+    end
+
   end
 
-  def test_readable
-    refute_empty Provider.readable(@org)
+  class ProviderAuthorizationNoPermsTest < AuthorizationTestBase
+
+    def setup
+      super
+      User.current = User.find(users('restricted'))
+      @provider = Provider.find(katello_providers('fedora_hosted'))
+      @org = @acme_corporation
+    end
+
+    def test_readable
+      assert_empty Provider.readable(@org)
+    end
+
+    def test_editable
+      assert_empty Provider.editable(@org)
+    end
+
+    def test_creatable?
+      refute Provider.creatable?(@org)
+    end
+
+    def test_any_readable?
+      refute Provider.any_readable?(@org)
+    end
+
+    def test_readable?
+      refute @provider.readable?
+    end
+
+    def test_editable?
+      refute @provider.editable?
+    end
+
+    def test_deletable?
+      refute @provider.deletable?
+    end
+
   end
-
-  def test_editable
-    refute_empty Provider.editable(@org)
-  end
-
-  def test_creatable?
-    assert Provider.creatable?(@org)
-  end
-
-  def test_any_readable?
-    assert Provider.any_readable?(@org)
-  end
-
-  def test_readable?
-    assert @provider.readable?
-  end
-
-  def test_editable?
-    assert @provider.editable?
-  end
-
-  def test_deletable?
-    assert @provider.deletable?
-  end
-
-end
-
-class ProviderAuthorizationNoPermsTest < AuthorizationTestBase
-
-  def setup
-    super
-    User.current = User.find(users('restricted'))
-    @provider = Provider.find(katello_providers('fedora_hosted'))
-    @org = @acme_corporation
-  end
-
-  def test_readable
-    assert_empty Provider.readable(@org)
-  end
-
-  def test_editable
-    assert_empty Provider.editable(@org)
-  end
-
-  def test_creatable?
-    refute Provider.creatable?(@org)
-  end
-
-  def test_any_readable?
-    refute Provider.any_readable?(@org)
-  end
-
-  def test_readable?
-    refute @provider.readable?
-  end
-
-  def test_editable?
-    refute @provider.editable?
-  end
-
-  def test_deletable?
-    refute @provider.deletable?
-  end
-
-end
 end

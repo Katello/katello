@@ -11,19 +11,19 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class Api::V1::CrlsController < Api::V1::ApiController
+  class Api::V1::CrlsController < Api::V1::ApiController
 
-  before_filter :authorize
+    before_filter :authorize
 
-  def rules
-    superadmin_test = lambda { current_user.has_superadmin_role? }
-    { :index => superadmin_test }
+    def rules
+      superadmin_test = lambda { current_user.has_superadmin_role? }
+      { :index => superadmin_test }
+    end
+
+    api :GET, "/crls", "Regenerate X.509 CRL immediately and return them"
+    def index
+      render :text => Resources::Candlepin::Proxy.get('/crl')
+    end
+
   end
-
-  api :GET, "/crls", "Regenerate X.509 CRL immediately and return them"
-  def index
-    render :text => Resources::Candlepin::Proxy.get('/crl')
-  end
-
-end
 end

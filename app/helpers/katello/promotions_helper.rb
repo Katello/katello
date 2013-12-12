@@ -11,29 +11,29 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-module PromotionsHelper
-  include ActionView::Helpers::JavaScriptHelper
+  module PromotionsHelper
+    include ActionView::Helpers::JavaScriptHelper
 
-  include BreadcrumbHelper
-  include ChangesetBreadcrumbs
-  include ContentBreadcrumbs
-  include ErrataHelper
+    include BreadcrumbHelper
+    include ChangesetBreadcrumbs
+    include ContentBreadcrumbs
+    include ErrataHelper
 
-  #returns a proc to generate a url for the env_selector
-  def breadcrumb_url_proc
-    lambda do |args|
-      promotion_path(args[:environment].name,
-        :next_env_id => (args[:next_environment].id if args[:next_environment] && args[:environment].library?))
+    #returns a proc to generate a url for the env_selector
+    def breadcrumb_url_proc
+      lambda do |args|
+        promotion_path(args[:environment].name,
+                       :next_env_id => (args[:next_environment].id if args[:next_environment] && args[:environment].library?))
+      end
     end
-  end
 
-  def show_new_button?(manage_promotion, manage_deletion)
-    if @environment.library?
-      manage_promotion && @next_environment
-    else
-      manage_deletion || (manage_promotion && @next_environment)
+    def show_new_button?(manage_promotion, manage_deletion)
+      if @environment.library?
+        manage_promotion && @next_environment
+      else
+        manage_deletion || (manage_promotion && @next_environment)
+      end
     end
-  end
 
-end
+  end
 end

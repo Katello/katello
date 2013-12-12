@@ -13,48 +13,48 @@
 require 'support/pulp/task_support'
 
 module Katello
-module RepositorySupport
-  include TaskSupport
+  module RepositorySupport
+    include TaskSupport
 
-  @repo_url = "file:///var/www/test_repos/zoo"
-  @puppet_repo_url = "http://davidd.fedorapeople.org/repos/random_puppet/"
-  @repo     = nil
+    @repo_url = "file:///var/www/test_repos/zoo"
+    @puppet_repo_url = "http://davidd.fedorapeople.org/repos/random_puppet/"
+    @repo     = nil
 
-  def self.repo_id
-    @repo.id
+    def self.repo_id
+      @repo.id
+    end
+
+    def self.repo
+      @repo
+    end
+
+    def self.repo_url
+      @repo_url
+    end
+
+    def self.create_and_sync_repo(repo_id)
+      @repo = create_repo(repo_id)
+      sync_repo
+    end
+
+    def self.create_repo(repo_id)
+      @repo = Repository.find(repo_id)
+      @repo.relative_path = '/test_path/'
+      @repo.feed = @repo.content_type == 'puppet' ? @puppet_repo_url : @repo_url
+      @repo.create_pulp_repo
+    ensure
+      return @repo
+    end
+
+    def self.sync_repo
+      tasks = @repo.sync
+      TaskSupport.wait_on_tasks(tasks)
+    end
+
+    def self.destroy_repo
+      @repo.destroy_repo
+    rescue RestClient::ResourceNotFound => e
+    end
+
   end
-
-  def self.repo
-    @repo
-  end
-
-  def self.repo_url
-    @repo_url
-  end
-
-  def self.create_and_sync_repo(repo_id)
-    @repo = create_repo(repo_id)
-    sync_repo
-  end
-
-  def self.create_repo(repo_id)
-    @repo = Repository.find(repo_id)
-    @repo.relative_path = '/test_path/'
-    @repo.feed = @repo.content_type == 'puppet' ? @puppet_repo_url : @repo_url
-    @repo.create_pulp_repo
-  ensure
-    return @repo
-  end
-
-  def self.sync_repo
-    tasks = @repo.sync
-    TaskSupport.wait_on_tasks(tasks)
-  end
-
-  def self.destroy_repo
-    @repo.destroy_repo
-  rescue RestClient::ResourceNotFound => e
-  end
-
-end
 end

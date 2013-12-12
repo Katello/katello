@@ -41,7 +41,7 @@ module Katello
 
     initializer "logging" do |app|
       if caller.last =~ /script\/delayed_job:\d+$/ ||
-          ((caller[-10..-1] || []).any? {|l| l =~ /\/rake/} && ARGV.include?("jobs:work"))
+        ((caller[-10..-1] || []).any? {|l| l =~ /\/rake/} && ARGV.include?("jobs:work"))
         Katello::Logging.configure(:prefix => 'delayed_')
         Delayed::Worker.logger = ::Logging.logger['app']
       else
@@ -58,7 +58,7 @@ module Katello
         :type => :po,
         :ignore_fuzzy => true,
         :report_warning => false
-        })
+      })
       FastGettext.default_text_domain = 'katello'
 
       # Model extensions

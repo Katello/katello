@@ -11,18 +11,18 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-module Glue::ElasticSearch::Permission
-  def self.included(base)
-    base.class_eval do
-      after_save :update_related_index
+  module Glue::ElasticSearch::Permission
+    def self.included(base)
+      base.class_eval do
+        after_save :update_related_index
+      end
     end
-  end
 
-  def update_related_index
-    if self.name_changed?
-      self.role.update_index
+    def update_related_index
+      if self.name_changed?
+        self.role.update_index
+      end
     end
-  end
 
-end
+  end
 end

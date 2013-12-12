@@ -14,91 +14,91 @@ require 'models/authorization/authorization_base'
 require 'support/auth_support'
 
 module Katello
-class UserAuthorizationAdminTest < AuthorizationTestBase
+  class UserAuthorizationAdminTest < AuthorizationTestBase
 
-  def setup
-    super
-    User.current = User.find(users('admin'))
-    @user = User.find(users('restricted'))
+    def setup
+      super
+      User.current = User.find(users('admin'))
+      @user = User.find(users('restricted'))
+    end
+
+    def test_creatable?
+      assert User.creatable?
+    end
+
+    def test_any_readable?
+      assert User.any_readable?
+    end
+
+    def test_readable?
+      assert @user.readable?
+    end
+
+    def test_editable?
+      assert @user.editable?
+    end
+
+    def test_deletable?
+      assert @user.deletable?
+    end
+
+    def test_admin_deletable?
+      refute User.current.deletable?
+    end
+
+    def test_readable
+      assert_includes User.readable, @user
+    end
+
   end
 
-  def test_creatable?
-    assert User.creatable?
+  class UserAuthorizationNoPermsTest < AuthorizationTestBase
+
+    def setup
+      super
+      User.current = User.find(users('restricted'))
+      @user = User.current
+    end
+
+    def test_creatable?
+      refute User.creatable?
+    end
+
+    def test_any_readable?
+      refute User.any_readable?
+    end
+
+    def test_readable?
+      refute @user.readable?
+    end
+
+    def test_editable?
+      refute @user.editable?
+    end
+
+    def test_deletable?
+      refute @user.deletable?
+    end
+
   end
 
-  def test_any_readable?
-    assert User.any_readable?
+  class UserOrganizationAccess < AuthorizationTestBase
+    include AuthorizationSupportMethods
+
+    def setup
+      super
+      @user = @no_perms_user
+      @org = @acme_corporation
+      @org2 = FactoryGirl.create(:organization, :label=>"foolabel", :name=>"fooname")
+    end
+
+    def test_access_two_orgs
+      assert_equal 0, @user.allowed_organizations.size
+
+      allow(@user.own_role, [:read], :providers, nil, @org)
+      allow(@user.own_role,[:read], :providers, nil, @org2)
+
+      assert_equal 2, @user.allowed_organizations.size
+    end
   end
-
-  def test_readable?
-    assert @user.readable?
-  end
-
-  def test_editable?
-    assert @user.editable?
-  end
-
-  def test_deletable?
-    assert @user.deletable?
-  end
-
-  def test_admin_deletable?
-    refute User.current.deletable?
-  end
-
-  def test_readable
-    assert_includes User.readable, @user
-  end
-
-end
-
-class UserAuthorizationNoPermsTest < AuthorizationTestBase
-
-  def setup
-    super
-    User.current = User.find(users('restricted'))
-    @user = User.current
-  end
-
-  def test_creatable?
-    refute User.creatable?
-  end
-
-  def test_any_readable?
-    refute User.any_readable?
-  end
-
-  def test_readable?
-    refute @user.readable?
-  end
-
-  def test_editable?
-    refute @user.editable?
-  end
-
-  def test_deletable?
-    refute @user.deletable?
-  end
-
-end
-
-class UserOrganizationAccess < AuthorizationTestBase
-  include AuthorizationSupportMethods
-
-  def setup
-    super
-    @user = @no_perms_user
-    @org = @acme_corporation
-    @org2 = FactoryGirl.create(:organization, :label=>"foolabel", :name=>"fooname")
-  end
-
-  def test_access_two_orgs
-    assert_equal 0, @user.allowed_organizations.size
-
-    allow(@user.own_role, [:read], :providers, nil, @org)
-    allow(@user.own_role,[:read], :providers, nil, @org2)
-
-    assert_equal 2, @user.allowed_organizations.size
-  end
-end
 end

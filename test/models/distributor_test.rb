@@ -13,32 +13,32 @@
 require 'katello_test_helper'
 
 module Katello
-class DistributorTest < ActiveSupport::TestCase
+  class DistributorTest < ActiveSupport::TestCase
 
-  def self.before_suite
-    models = ["Organization", "KTEnvironment", "User", "Distributor"]
-    services = ["Candlepin", "Pulp", "ElasticSearch"]
-    disable_glue_layers(services, models, true)
+    def self.before_suite
+      models = ["Organization", "KTEnvironment", "User", "Distributor"]
+      services = ["Candlepin", "Pulp", "ElasticSearch"]
+      disable_glue_layers(services, models, true)
+    end
+
+    def self.after_suite
+      Distributor.delete_all
+    end
+
+    def setup
+      @distributor = Distributor.find(katello_distributors(:acme_distributor))
+    end
+
+    def test_create
+      new_distributor = @distributor.dup
+      refute new_distributor.save
+      new_distributor.name = "ACME Distributor2"
+      assert new_distributor.valid?
+    end
+
+    def test_update
+      assert @distributor.save!
+    end
+
   end
-
-  def self.after_suite
-    Distributor.delete_all
-  end
-
-  def setup
-    @distributor = Distributor.find(katello_distributors(:acme_distributor))
-  end
-
-  def test_create
-    new_distributor = @distributor.dup
-    refute new_distributor.save
-    new_distributor.name = "ACME Distributor2"
-    assert new_distributor.valid?
-  end
-
-  def test_update
-    assert @distributor.save!
-  end
-
-end
 end

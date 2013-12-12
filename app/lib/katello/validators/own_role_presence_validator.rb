@@ -11,15 +11,15 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-module Validators
-  class OwnRolePresenceValidator < ActiveModel::Validator
-    def validate(record)
-      unless record.katello_roles.any? {|r| r.type == 'Katello::UserOwnRole'}
-        if record.errors[:katello_roles] << _("Own Role must be included in roles '%s'") % record.katello_roles
-          return
+  module Validators
+    class OwnRolePresenceValidator < ActiveModel::Validator
+      def validate(record)
+        unless record.katello_roles.any? {|r| r.type == 'Katello::UserOwnRole'}
+          if record.errors[:katello_roles] << _("Own Role must be included in roles '%s'") % record.katello_roles
+            return
+          end
         end
       end
     end
   end
-end
 end

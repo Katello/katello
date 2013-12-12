@@ -65,82 +65,82 @@ module Katello
         key, rest = keys.first, keys[1..-1]
         fail ArgumentError, 'supply at least one key' unless key
         key?(key) && self[key] && if rest.empty?
-                                    true
-                                  elsif self[key].is_a?(Node)
-                                    self[key].present?(*rest)
-                                  else
-                                    false
-                                  end
-      end
-
-      # allows access keys by method call
-      # @raise [NoKye] when `key` is missing
-      def method_missing(method, *args, &block)
-        if key?(method)
-          self[method]
-        else
-          begin
-            super
-          rescue NoMethodError
-            raise NoKey, method.to_s
-          end
-        end
-      end
-
-      # respond to implementation according to method missing
-      def respond_to?(method, include_private = false)
-        key?(method) || super
-      end
-
-      # does not supports Hashes in Arrays
-      def deep_merge!(hash_or_config)
-        return self if hash_or_config.nil?
-        other_config = convert hash_or_config
-        other_config.each do |key, other_value|
-          value     = key?(key) && self[key]
-          self[key] = if value.is_a?(Node) && other_value.is_a?(Node)
-                        value.deep_merge!(other_value)
-                      elsif value.is_a?(Node) && other_value.nil?
-                        self[key]
-                      else
-                        other_value
-                      end
-        end
-        self
-      end
-
-      def to_hash
-        @data.inject({}) do |hash, (k, v)|
-          hash.update k => (v.is_a?(Node) ? v.to_hash : v)
-        end
-      end
-
-      private
-
-      # converts config like deep structure by finding Hashes deeply and converting them to Config
-      def convert(obj)
-        case obj
-        when Node
-          obj
-        when Hash
-          Node.new convert_hash obj
-        when Array
-          obj.map { |o| convert o }
-        else
-          obj
-        end
-      end
-
-      # converts Hash by symbolizing keys and allowing only symbols as keys
-      def convert_hash(hash)
-        fail ArgumentError, "#{hash.inspect} is not a Hash" unless hash.is_a?(Hash)
-
-        hash.keys.each do |key|
-          hash[key.to_s] = convert hash.delete(key)
-        end
-
-        hash
+        true
+      elsif self[key].is_a?(Node)
+        self[key].present?(*rest)
+      else
+        false
       end
     end
+
+    # allows access keys by method call
+    # @raise [NoKye] when `key` is missing
+    def method_missing(method, *args, &block)
+      if key?(method)
+        self[method]
+      else
+        begin
+          super
+        rescue NoMethodError
+          raise NoKey, method.to_s
+        end
+      end
+    end
+
+    # respond to implementation according to method missing
+    def respond_to?(method, include_private = false)
+      key?(method) || super
+    end
+
+    # does not supports Hashes in Arrays
+    def deep_merge!(hash_or_config)
+      return self if hash_or_config.nil?
+      other_config = convert hash_or_config
+      other_config.each do |key, other_value|
+        value     = key?(key) && self[key]
+        self[key] = if value.is_a?(Node) && other_value.is_a?(Node)
+                      value.deep_merge!(other_value)
+                    elsif value.is_a?(Node) && other_value.nil?
+                      self[key]
+                    else
+                      other_value
+                    end
+      end
+      self
+    end
+
+    def to_hash
+      @data.inject({}) do |hash, (k, v)|
+        hash.update k => (v.is_a?(Node) ? v.to_hash : v)
+      end
+    end
+
+    private
+
+    # converts config like deep structure by finding Hashes deeply and converting them to Config
+    def convert(obj)
+      case obj
+      when Node
+        obj
+      when Hash
+        Node.new convert_hash obj
+      when Array
+        obj.map { |o| convert o }
+      else
+        obj
+      end
+    end
+
+    # converts Hash by symbolizing keys and allowing only symbols as keys
+    def convert_hash(hash)
+      fail ArgumentError, "#{hash.inspect} is not a Hash" unless hash.is_a?(Hash)
+
+      hash.keys.each do |key|
+        hash[key.to_s] = convert hash.delete(key)
+      end
+
+      hash
+    end
   end
+end
 end

@@ -14,47 +14,47 @@
 require File.expand_path("system_base", File.dirname(__FILE__))
 
 module Katello
-class SystemClassTest < SystemTestBase
-  def test_as_json
-    options = {}
-    system_json = @system.as_json options
+  class SystemClassTest < SystemTestBase
+    def test_as_json
+      options = {}
+      system_json = @system.as_json options
 
-    assert_equal 'Simple Server', system_json['name']
-    assert_equal 'Dev', system_json['environment']['name']
-  end
-end
-
-class SystemCreateTest < SystemTestBase
-
-  def setup
-    super
+      assert_equal 'Simple Server', system_json['name']
+      assert_equal 'Dev', system_json['environment']['name']
+    end
   end
 
-  def teardown
-    @system.destroy
-  end
+  class SystemCreateTest < SystemTestBase
 
-  def test_create
-    @system = build(:system, :alabama, :name => 'alabama', :description => 'Alabama system', :environment => @dev, :uuid => '1234')
-    assert @system.save!
-    refute_nil @system.content_view
-    assert @system.content_view.default?
-  end
+    def setup
+      super
+    end
 
-  def test_create_with_content_view
-    @system = build(:system, :alabama, :name => 'alabama', :description => 'Alabama system', :environment => @dev, :uuid => '1234')
-    @system.content_view = ContentView.find(katello_content_views(:library_dev_view))
-    assert @system.save
-    refute @system.content_view.default?
-  end
+    def teardown
+      @system.destroy
+    end
 
-  def test_i18n_name
-    @system = build(:system, :alabama, :name => 'alabama', :description => 'Alabama system', :environment => @dev, :uuid => '1234')
-    name = "ಬoo0000"
-    @system.name = name
-    @system.content_view = ContentView.find(katello_content_views(:library_dev_view))
-    assert @system.save!
-    refute_nil System.find_by_name(name)
+    def test_create
+      @system = build(:system, :alabama, :name => 'alabama', :description => 'Alabama system', :environment => @dev, :uuid => '1234')
+      assert @system.save!
+      refute_nil @system.content_view
+      assert @system.content_view.default?
+    end
+
+    def test_create_with_content_view
+      @system = build(:system, :alabama, :name => 'alabama', :description => 'Alabama system', :environment => @dev, :uuid => '1234')
+      @system.content_view = ContentView.find(katello_content_views(:library_dev_view))
+      assert @system.save
+      refute @system.content_view.default?
+    end
+
+    def test_i18n_name
+      @system = build(:system, :alabama, :name => 'alabama', :description => 'Alabama system', :environment => @dev, :uuid => '1234')
+      name = "ಬoo0000"
+      @system.name = name
+      @system.content_view = ContentView.find(katello_content_views(:library_dev_view))
+      assert @system.save!
+      refute_nil System.find_by_name(name)
+    end
   end
-end
 end

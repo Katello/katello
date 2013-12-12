@@ -11,102 +11,102 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class Api::V1::RolesController < Api::V1::ApiController
+  class Api::V1::RolesController < Api::V1::ApiController
 
-  before_filter :find_role, :only => [:show, :update, :destroy]
-  before_filter :find_optional_organization, :only => [:available_verbs]
-  before_filter :authorize
-  respond_to :json
+    before_filter :find_role, :only => [:show, :update, :destroy]
+    before_filter :find_optional_organization, :only => [:available_verbs]
+    before_filter :authorize
+    respond_to :json
 
-  def rules
-    index_test  = lambda { Role.any_readable? }
-    create_test = lambda { Role.creatable? }
-    read_test   = lambda { Role.any_readable? }
-    edit_test   = lambda { Role.editable? }
-    delete_test = lambda { Role.deletable? }
+    def rules
+      index_test  = lambda { Role.any_readable? }
+      create_test = lambda { Role.creatable? }
+      read_test   = lambda { Role.any_readable? }
+      edit_test   = lambda { Role.editable? }
+      delete_test = lambda { Role.deletable? }
 
-    {
+      {
         :index           => index_test,
         :show            => read_test,
         :create          => create_test,
         :update          => edit_test,
         :destroy         => delete_test,
         :available_verbs => read_test
-    }
-  end
+      }
+    end
 
-  def param_rules
-    {
+    def param_rules
+      {
         :create => { :role => [:name, :description] },
         :update => { :role => [:name, :description] },
-    }
-  end
-
-  def_param_group :role do
-    param :role, Hash, :required => true, :action_aware => true do
-      param :name, String, :required => true
-      param :description, String, :allow_nil => true
-    end
-  end
-
-  api :GET, "/roles", "List roles"
-  param :name, String
-  def index
-    respond :collection => (Role.readable.non_self.where query_params)
-  end
-
-  api :GET, "/roles/:id", "Show a role"
-  def show
-    respond
-  end
-
-  api :POST, "/roles", "Create a role"
-  param_group :role
-  def create
-    respond :resource => Role.create!(params[:role])
-  end
-
-  api :PUT, "/roles/:id", "Update a role"
-  param_group :role
-  def update
-    @role.update_attributes!(params[:role])
-    @role.save!
-    respond
-  end
-
-  api :DELETE, "/roles/:id", "Destroy a role"
-  def destroy
-    @role.destroy
-    respond :message => _("Deleted role '%s'") % params[:id]
-  end
-
-  api :GET, "/roles/available_verbs", "List all available verbs that can be set to roles"
-  param :organization_id, :identifier, :desc => "With this option specified the listed tags are scoped to the organization."
-  def available_verbs
-    details = {}
-
-    org_id = @organization ? @organization.id : nil
-
-    ResourceType::TYPES.each do |type, value|
-      details[type]         = {}
-      details[type][:verbs] = Verb.verbs_for(type, false).collect { |name, display_name| VirtualTag.new(name, display_name) }
-      details[type][:verbs].sort! { |a, b| a.display_name <=> b.display_name }
-      details[type][:tags]         = Tag.tags_for(type, org_id).collect { |t| VirtualTag.new(t.name, t.display_name) }
-      details[type][:no_tag_verbs] = Verb.no_tag_verbs(type)
-      details[type][:global]       = value["global"]
-      details[type][:name]         = value["name"]
+      }
     end
 
-    respond_for_show :resource => details
+    def_param_group :role do
+      param :role, Hash, :required => true, :action_aware => true do
+        param :name, String, :required => true
+        param :description, String, :allow_nil => true
+      end
+    end
+
+    api :GET, "/roles", "List roles"
+    param :name, String
+    def index
+      respond :collection => (Role.readable.non_self.where query_params)
+    end
+
+    api :GET, "/roles/:id", "Show a role"
+    def show
+      respond
+    end
+
+    api :POST, "/roles", "Create a role"
+    param_group :role
+    def create
+      respond :resource => Role.create!(params[:role])
+    end
+
+    api :PUT, "/roles/:id", "Update a role"
+    param_group :role
+    def update
+      @role.update_attributes!(params[:role])
+      @role.save!
+      respond
+    end
+
+    api :DELETE, "/roles/:id", "Destroy a role"
+    def destroy
+      @role.destroy
+      respond :message => _("Deleted role '%s'") % params[:id]
+    end
+
+    api :GET, "/roles/available_verbs", "List all available verbs that can be set to roles"
+    param :organization_id, :identifier, :desc => "With this option specified the listed tags are scoped to the organization."
+    def available_verbs
+      details = {}
+
+      org_id = @organization ? @organization.id : nil
+
+      ResourceType::TYPES.each do |type, value|
+        details[type]         = {}
+        details[type][:verbs] = Verb.verbs_for(type, false).collect { |name, display_name| VirtualTag.new(name, display_name) }
+        details[type][:verbs].sort! { |a, b| a.display_name <=> b.display_name }
+        details[type][:tags]         = Tag.tags_for(type, org_id).collect { |t| VirtualTag.new(t.name, t.display_name) }
+        details[type][:no_tag_verbs] = Verb.no_tag_verbs(type)
+        details[type][:global]       = value["global"]
+        details[type][:name]         = value["name"]
+      end
+
+      respond_for_show :resource => details
+    end
+
+    private
+
+    def find_role
+      @role = Role.find(params[:id])
+      fail HttpErrors::NotFound, _("Couldn't find user role '%s'") % params[:id] if @role.nil?
+      @role
+    end
+
   end
-
-  private
-
-  def find_role
-    @role = Role.find(params[:id])
-    fail HttpErrors::NotFound, _("Couldn't find user role '%s'") % params[:id] if @role.nil?
-    @role
-  end
-
-end
 end

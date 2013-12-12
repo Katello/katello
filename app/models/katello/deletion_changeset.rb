@@ -12,70 +12,70 @@
 
 require 'set'
 module Katello
-class DeletionChangeset < Changeset
-  use_index_of Changeset if Katello.config.use_elasticsearch
-  def apply(options = { })
-    options = { :async => true, :notify => false }.merge options
+  class DeletionChangeset < Changeset
+    use_index_of Changeset if Katello.config.use_elasticsearch
+    def apply(options = { })
+      options = { :async => true, :notify => false }.merge options
 
-    check_review_state!
-    validate_content_view_tasks_complete!
+      check_review_state!
+      validate_content_view_tasks_complete!
 
-    # check no collision exists
-    check_collisions!
+      # check no collision exists
+      check_collisions!
 
-    self.state = Changeset::DELETING
-    self.save!
-
-    if options[:async]
-      task  = self.async(:organization => self.environment.organization).delete_content(options[:notify])
-      self.task_status = task
+      self.state = Changeset::DELETING
       self.save!
-      self.task_status
-    else
-      self.task_status = nil
+
+      if options[:async]
+        task  = self.async(:organization => self.environment.organization).delete_content(options[:notify])
+        self.task_status = task
+        self.save!
+        self.task_status
+      else
+        self.task_status = nil
+        self.save!
+        delete_content(options[:notify])
+      end
+    end
+
+    def delete_content(notify = false)
+      update_progress! '0'
+      update_progress! '10'
+      from_env = self.environment
+
+      update_progress! '30'
+      delete_views from_env
+      update_progress! '70'
+      update_progress! '100'
+
+      self.promotion_date = Time.now
+      self.state          = Changeset::DELETED
+
+      Glue::Event.trigger(Katello::Actions::ChangesetPromote, self)
+
       self.save!
-      delete_content(options[:notify])
+
+      if notify
+        message = _("Successfully deleted changeset '%s'.") % self.name
+        Notify.success message, :request_type => "changesets___delete", :organization => self.environment.organization
+      end
+
+    rescue => e
+      self.state = Changeset::FAILED
+      self.save!
+      Rails.logger.error(e)
+      Rails.logger.error(e.backtrace.join("\n"))
+      if notify
+        Notify.exception _("Failed to delete changeset '%s'. Check notices for more details") % self.name, e,
+          :request_type => "changesets___delete", :organization => self.environment.organization
+      end
+      raise e
+    end
+
+    def delete_views(from_env)
+      self.content_views.each do |view|
+        view.delete(from_env)
+      end
     end
   end
-
-  def delete_content(notify = false)
-    update_progress! '0'
-    update_progress! '10'
-    from_env = self.environment
-
-    update_progress! '30'
-    delete_views from_env
-    update_progress! '70'
-    update_progress! '100'
-
-    self.promotion_date = Time.now
-    self.state          = Changeset::DELETED
-
-    Glue::Event.trigger(Katello::Actions::ChangesetPromote, self)
-
-    self.save!
-
-    if notify
-      message = _("Successfully deleted changeset '%s'.") % self.name
-      Notify.success message, :request_type => "changesets___delete", :organization => self.environment.organization
-    end
-
-  rescue => e
-    self.state = Changeset::FAILED
-    self.save!
-    Rails.logger.error(e)
-    Rails.logger.error(e.backtrace.join("\n"))
-    if notify
-      Notify.exception _("Failed to delete changeset '%s'. Check notices for more details") % self.name, e,
-                   :request_type => "changesets___delete", :organization => self.environment.organization
-    end
-    raise e
-  end
-
-  def delete_views(from_env)
-    self.content_views.each do |view|
-      view.delete(from_env)
-    end
-  end
-end
 end

@@ -14,80 +14,80 @@
 require "katello_test_helper"
 
 module Katello
-class Api::V2::SubscriptionsControllerTest < ActionController::TestCase
+  class Api::V2::SubscriptionsControllerTest < ActionController::TestCase
 
-  def self.before_suite
-    models = ["System"]
-    disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
-    super
+    def self.before_suite
+      models = ["System"]
+      disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
+      super
+    end
+
+    def models
+      @system = katello_systems(:simple_server)
+      @products = katello_products
+    end
+
+    def permissions
+      @read_permission = UserPermission.new(:read_systems, :organizations, nil, @system.organization)
+      @create_permission = UserPermission.new(:register_systems, :organizations, nil, @system.organization)
+      @update_permission = UserPermission.new(:update_systems, :organizations, nil, @system.organization)
+      @no_permission = NO_PERMISSION
+    end
+
+    def setup
+      setup_controller_defaults_api
+      login_user(User.find(users(:admin)))
+      @request.env['HTTP_ACCEPT'] = 'application/json'
+      System.any_instance.stubs(:subscribe).returns(true)
+      System.any_instance.stubs(:unsubscribe).returns(true)
+      System.any_instance.stubs(:unsubscribe_all).returns(true)
+      System.any_instance.stubs(:filtered_pools).returns([])
+      System.any_instance.stubs(:releaseVer).returns(1)
+      System.any_instance.stubs(:consumed_entitlements).returns([])
+      @fake_search_service = @controller.load_search_service(Support::SearchService::FakeSearchService.new)
+
+      models
+      permissions
+    end
+
+    def test_index
+      get :index, :system_id => @system.uuid
+
+      assert_response :success
+      assert_template 'api/v2/subscriptions/index'
+    end
+
+    def test_available
+      System.any_instance.expects(:filtered_pools)
+      get :available, :system_id => @system.uuid
+
+      assert_response :success
+      assert_template 'api/v2/subscriptions/index'
+    end
+
+    def test_create
+      System.any_instance.expects(:subscribe)
+      post :create, :system_id => @system.uuid, :quantity => 1, :pool => 'redhat'
+
+      assert_response :success
+      assert_template 'api/v2/subscriptions/create'
+    end
+
+    def test_destroy
+      System.any_instance.expects(:unsubscribe)
+      post :destroy, :system_id => @system.uuid, :id => 1
+
+      assert_response :success
+      assert_template 'api/v2/subscriptions/show'
+    end
+
+    def test_destroy_all
+      System.any_instance.expects(:unsubscribe_all)
+      post :destroy_all, :system_id => @system.uuid, :id => 1
+
+      assert_response :success
+      assert_template 'api/v2/subscriptions/show'
+    end
+
   end
-
-  def models
-    @system = katello_systems(:simple_server)
-    @products = katello_products
-  end
-
-  def permissions
-    @read_permission = UserPermission.new(:read_systems, :organizations, nil, @system.organization)
-    @create_permission = UserPermission.new(:register_systems, :organizations, nil, @system.organization)
-    @update_permission = UserPermission.new(:update_systems, :organizations, nil, @system.organization)
-    @no_permission = NO_PERMISSION
-  end
-
-  def setup
-    setup_controller_defaults_api
-    login_user(User.find(users(:admin)))
-    @request.env['HTTP_ACCEPT'] = 'application/json'
-    System.any_instance.stubs(:subscribe).returns(true)
-    System.any_instance.stubs(:unsubscribe).returns(true)
-    System.any_instance.stubs(:unsubscribe_all).returns(true)
-    System.any_instance.stubs(:filtered_pools).returns([])
-    System.any_instance.stubs(:releaseVer).returns(1)
-    System.any_instance.stubs(:consumed_entitlements).returns([])
-    @fake_search_service = @controller.load_search_service(Support::SearchService::FakeSearchService.new)
-
-    models
-    permissions
-  end
-
-  def test_index
-    get :index, :system_id => @system.uuid
-
-    assert_response :success
-    assert_template 'api/v2/subscriptions/index'
-  end
-
-  def test_available
-    System.any_instance.expects(:filtered_pools)
-    get :available, :system_id => @system.uuid
-
-    assert_response :success
-    assert_template 'api/v2/subscriptions/index'
-  end
-
-  def test_create
-    System.any_instance.expects(:subscribe)
-    post :create, :system_id => @system.uuid, :quantity => 1, :pool => 'redhat'
-
-    assert_response :success
-    assert_template 'api/v2/subscriptions/create'
-  end
-
-  def test_destroy
-    System.any_instance.expects(:unsubscribe)
-    post :destroy, :system_id => @system.uuid, :id => 1
-
-    assert_response :success
-    assert_template 'api/v2/subscriptions/show'
-  end
-
-  def test_destroy_all
-    System.any_instance.expects(:unsubscribe_all)
-    post :destroy_all, :system_id => @system.uuid, :id => 1
-
-    assert_response :success
-    assert_template 'api/v2/subscriptions/show'
-  end
-
-end
 end

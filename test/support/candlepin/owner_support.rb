@@ -13,40 +13,40 @@
 require 'katello_test_helper'
 
 module Katello
-module CandlepinOwnerSupport
+  module CandlepinOwnerSupport
 
-  @organization = nil
+    @organization = nil
 
-  def self.organization_id
-    @organization.id
-  end
-
-  def self.organization
-    @organization
-  end
-
-  def self.create_organization(name, label)
-    @organization = Organization.new
-    @organization.name = name
-    @organization.label = label
-    @organization.description = 'New Organization'
-
-    VCR.use_cassette('support/candlepin/organization', :match_requests_on => [:path, :params, :method, :body_json]) do
-      @organization.set_owner
+    def self.organization_id
+      @organization.id
     end
-  rescue => e
-    puts e
-  ensure
-    return @organization
-  end
 
-  def self.destroy_organization(id=@organization_id, cassette='support/candlepin/organization')
-    VCR.use_cassette(cassette, :match_requests_on => [:path, :params, :method, :body_json]) do
-      @organization.del_owner
+    def self.organization
+      @organization
     end
-  rescue RestClient::ResourceNotFound => e
-    puts e
-  end
 
-end
+    def self.create_organization(name, label)
+      @organization = Organization.new
+      @organization.name = name
+      @organization.label = label
+      @organization.description = 'New Organization'
+
+      VCR.use_cassette('support/candlepin/organization', :match_requests_on => [:path, :params, :method, :body_json]) do
+        @organization.set_owner
+      end
+    rescue => e
+      puts e
+    ensure
+      return @organization
+    end
+
+    def self.destroy_organization(id=@organization_id, cassette='support/candlepin/organization')
+      VCR.use_cassette(cassette, :match_requests_on => [:path, :params, :method, :body_json]) do
+        @organization.del_owner
+      end
+    rescue RestClient::ResourceNotFound => e
+      puts e
+    end
+
+  end
 end

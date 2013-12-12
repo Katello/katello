@@ -71,7 +71,7 @@ module Katello
           exception_watch(result[:services][:thumbslug]) do
             begin
               RestClient.get "#{url}/ping"
-            # rubocop:disable HandleExceptions
+              # rubocop:disable HandleExceptions
             rescue OpenSSL::SSL::SSLError
               # We want to see this error, because it means that Thumbslug
               # is running and refused our (non-existent) ssl cert.
