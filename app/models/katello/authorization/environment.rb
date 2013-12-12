@@ -36,6 +36,14 @@ module Authorization::Environment
       end
     end
 
+    def systems_editable(org)
+      if  org.systems_editable?
+        where(:organization_id => org)
+      else
+        authorized_items(org, [:update_systems])
+      end
+    end
+
     def systems_registerable(org)
       if org.systems_registerable?
         where(:organization_id => org)

@@ -46,9 +46,12 @@ angular.module('Bastion.systems').controller('SystemsController',
         var nutupane = new Nutupane(System, params);
         $scope.systemTable = nutupane.table;
         $scope.removeRow = nutupane.removeRow;
+        $scope.nutupane = nutupane;
+
+        nutupane.enableSelectAllResults();
 
         if ($location.search()['select_all']) {
-            nutupane.selectAllMode = true;
+            nutupane.table.selectAllResults();
         }
 
         $scope.systemTable.getStatusColor = SystemsHelper.getStatusColor;

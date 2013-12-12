@@ -47,7 +47,7 @@ module Katello
       end
       options[:sort_by] = params[:sort_by] if params[:sort_by]
       options[:sort_order] = params[:sort_order] if params[:sort_order]
-      options[:per_page] = params[:per_page] || ::Setting::General.entries_per_page
+      options[:per_page] = params[:per_page] || ::Setting::General.entries_per_page  unless options[:full_result]
       options[:page] = params[:page] || 1
       offset = (options[:page].to_i - 1) * options[:per_page].to_i
 

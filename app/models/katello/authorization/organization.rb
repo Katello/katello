@@ -113,6 +113,10 @@ module Authorization::Organization
       ::User.allowed_to?(SYSTEMS_READABLE, :organizations, nil, self)
     end
 
+    def systems_editable?
+      ::User.allowed_to?([:update_systems], :organizations, nil, self)
+    end
+
     def systems_deletable?
       ::User.allowed_to?([:delete_systems], :organizations, nil, self)
     end

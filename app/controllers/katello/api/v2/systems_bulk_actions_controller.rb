@@ -11,18 +11,33 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class Api::V2::SystemsBulkActionsController < Api::V2::SystemsController
+class Api::V2::SystemsBulkActionsController < Api::V2::ApiController
 
-  before_filter :find_systems
+  before_filter :find_organization, :only => [:bulk_add_system_groups, :bulk_remove_system_groups]
+  before_filter :find_editable_systems, :only => [:bulk_add_system_groups, :bulk_remove_system_groups]
+  before_filter :find_systems, :except => [:bulk_add_system_groups, :bulk_remove_system_groups]
+  before_filter :find_groups, :only => [:bulk_add_system_groups, :bulk_remove_system_groups]
   before_filter :authorize
+
+  def_param_group :bulk_params do
+    param :include, Hash, :required => true, :action_aware => true do
+      param :search, String, :required => false, :desc => "Search string for systems to perform an action on"
+      param :ids, Array, :required => false, :desc => "List of system ids to perform an action on"
+    end
+    param :exclude, Hash, :required => true, :action_aware => true do
+      param :ids, Array, :required => false, :desc => "List of system ids to exclude and not run an action on"
+    end
+  end
 
   def rules
     bulk_delete_systems = lambda{ System.any_systems_deletable?(@systems) }
     bulk_edit_systems = lambda{ System.any_systems_editable?(@systems) }
+    bulk_groups = lambda{ SystemGroup.assert_editable(@system_groups) }
 
-    hash = super
-    hash[:bulk_add_system_groups] = bulk_edit_systems
-    hash[:bulk_remove_system_groups] = bulk_edit_systems
+    hash = {}
+    #System groups are looked up via filters, handling permissions
+    hash[:bulk_add_system_groups] = bulk_groups
+    hash[:bulk_remove_system_groups] = bulk_groups
     hash[:install_content] = bulk_edit_systems
     hash[:update_content] = bulk_edit_systems
     hash[:remove_content] = bulk_edit_systems
@@ -32,93 +47,46 @@ class Api::V2::SystemsBulkActionsController < Api::V2::SystemsController
 
   api :PUT, "/systems/add_system_groups",
       "Add one or more system groups to one or more systems"
-  param :ids, Array, :desc => "List of system ids", :required => true
+  param_group :bulk_params
   param :system_group_ids, Array, :desc => "List of system group ids", :required => true
   def bulk_add_system_groups
-    successful_systems = []
-    failed_systems = []
-
     unless params[:system_group_ids].blank?
-      @system_groups = SystemGroup.where(:id => params[:system_group_ids])
+      display_messages = []
 
-      # perform some pre-validation of the request
-      # e.g. are any of the groups not editable or will their membership be exceeded by the request?
-      invalid_perms = []
-      max_systems_exceeded = []
+      @system_groups.each do |group|
+        pre_group_count = group.system_ids.count
+        group.system_ids =  (group.system_ids + @systems.collect { |s| s.id }).uniq
+        group.save!
 
-      @system_groups.each do |system_group|
-        if !system_group.editable?
-          invalid_perms.push(system_group.name)
-        elsif (system_group.max_systems != SystemGroup::UNLIMITED_SYSTEMS) && ((system_group.systems.length + @systems.length) > system_group.max_systems)
-          max_systems_exceeded.push(system_group.name)
-        end
+        final_count = group.system_ids.count - pre_group_count
+        display_messages << _("Successfully added %{count} system(s) to system group %{group}.") %
+            {:count => final_count, :group => group.name }
       end
-
-      if !invalid_perms.empty?
-        fail HttpErrors::BadRequest, _("Group membership modification is not allowed for system group(s): %s") % invalid_perms.join(', ')
-      elsif !max_systems_exceeded.empty?
-        fail HttpErrors::BadRequest, _("Maximum number of systems exceeded for system group(s): %s") % max_systems_exceeded.join(', ')
-      end
-
-      @systems.each do |system|
-        begin
-          system.system_group_ids = (system.system_group_ids + @system_groups.collect{ |g| g.id }).uniq
-          system.save!
-          successful_systems.push(system.name)
-        rescue
-          failed_systems.push(system.name)
-        end
-      end
-
-      display_message = _("Successfully added system groups to selected systems.")
     end
 
-    respond_for_show :template => 'bulk_action', :resource => { 'displayMessage' => display_message }
+    respond_for_show :template => 'bulk_action', :resource => { 'displayMessages' => display_messages }
   end
 
   api :PUT, "/systems/remove_system_groups",
       "Remove one or more system groups to one or more systems"
-  param :ids, Array, :desc => "List of system ids", :required => true
+  param_group :bulk_params
   param :system_group_ids, Array, :desc => "List of system group ids", :required => true
   def bulk_remove_system_groups
-    successful_systems = []
-    failed_systems = []
-    groups_info = {} # hash to store system group id to name mapping
-    systems_summary = {} # hash to store system to system group mapping, for groups removed from the system
+    display_messages = []
 
     unless params[:system_group_ids].blank?
-      @system_groups = SystemGroup.where(:id => params[:system_group_ids])
+      @system_groups.each do |group|
+        pre_group_count = group.system_ids.count
+        group.system_ids =  (group.system_ids - @systems.collect { |s| s.id }).uniq
+        group.save!
 
-      # does the user have permission to modify the requested system groups?
-      invalid_perms = []
-      @system_groups.each do |system_group|
-        if !system_group.editable?
-          invalid_perms.push(system_group.name)
-        end
-        groups_info[system_group.id] = system_group.name
+        final_count = pre_group_count - group.system_ids.count
+        display_messages << _("Successfully removed %{count} systems from system group %{group}.") %
+            {:count => final_count, :group => group.name }
       end
-
-      if !invalid_perms.empty?
-        fail HttpErrors::BadRequest, _("Group membership modification is not allowed for system group(s): %s") % invalid_perms.join(', ')
-      end
-
-      @systems.each do |system|
-        begin
-          groups_removed = system.system_group_ids & groups_info.keys
-          system.system_group_ids = (system.system_group_ids - groups_info.keys).uniq
-          system.save!
-
-          systems_summary[system] = groups_removed.collect{ |g| groups_info[g] }
-          successful_systems.push(system.name)
-        rescue
-          failed_systems.push(system.name)
-        end
-      end
-
-      display_message = _("Successfully removed system groups from selected systems.")
     end
 
-    respond_for_show :template => 'bulk_action', :resource => { 'displayMessage' => display_message }
+    respond_for_show :template => 'bulk_action', :resource => { 'displayMessages' => display_messages }
   end
 
   api :PUT, "/systems/install_content", "Install content on one or more systems"
@@ -227,7 +195,63 @@ class Api::V2::SystemsBulkActionsController < Api::V2::SystemsController
   private
 
   def find_systems
+    #deprecated find_systems
     @systems = System.find(params[:ids])
+  end
+
+  def find_groups
+    @system_groups = SystemGroup.where(:id => params[:system_group_ids])
+  end
+
+  #takes a structure like:
+  # included: {
+  #      ids: [],
+  #      search: 'search_term'
+  #  },
+  #  excluded: {
+  #      ids: []
+  #  }
+  # and looks up editable systems for it
+  def find_editable_systems
+    params[:included] ||= {}
+    params[:excluded] ||= {}
+    @systems = []
+    unless params[:included][:ids].blank?
+      @systems = System.editable(@organization).where(:id => params[:included][:ids])
+      @systems.where('id not in (?)', params[:excluded]) unless params[:excluded][:ids].blank?
+    end
+
+    if params[:included][:search]
+      ids = find_system_ids_by_search(params[:included][:search])
+      search_systems = System.editable(@organization).where(:id => ids)
+      search_systems = search_systems.where('id not in (?)', params[:excluded][:ids]) unless params[:excluded][:ids].blank?
+      @systems = @systems + search_systems
+    end
+  end
+
+  def find_system_ids_by_search(search)
+    options = {
+        :filters       => System.readable_search_filters(@organization),
+        :load_records? => false,
+        :full_result => true,
+        :fields => [:id]
+    }
+    item_search(System, {:search => search}, options)[:results].collect{|i| i.id}
+  end
+
+  def validate_group_membership_limit
+    max_systems_exceeded = []
+    system_ids = @systems.collect{|i| i.id}
+
+    @system_groups.each do |system_group|
+      computed_count = (system_group.system_ids + system_ids).uniq.length
+      if system_group.max_systems != SystemGroup::UNLIMITED_SYSTEMS && computed_count > system_group.max_systems
+        max_systems_exceeded.push(system_group.name)
+      end
+    end
+    if !max_systems_exceeded.empty?
+      fail HttpErrors::BadRequest, _("Maximum number of systems exceeded for system group(s): %s") % max_systems_exceeded.join(', ')
+    end
   end
 
 end
