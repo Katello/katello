@@ -25,7 +25,7 @@ angular.module('Bastion.providers').factory('Provider',
     ['$resource', 'CurrentOrganization', function ($resource, CurrentOrganization) {
 
         return $resource('/katello/api/providers/:id/:action',
-            {id: '@id', 'organization_id': CurrentOrganization},
+            {id: '@id', 'organization_id': CurrentOrganization, 'provider_type': 'Custom'},
             {
                 query:  {method: 'GET'}
             }
