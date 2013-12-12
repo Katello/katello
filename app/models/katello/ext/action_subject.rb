@@ -24,6 +24,10 @@ module Ext
       end
     end
 
+    def action_input_key
+      self.class.name.underscore[/\w*\Z/]
+    end
+
     def to_action_input
       if self.new_record?
         raise "The resource needs to be saved first"
