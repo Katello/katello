@@ -246,10 +246,6 @@ class System < ActiveRecord::Base
     [:read, :write]
   end
 
-  def self.available_locks
-    [:read, :write]
-  end
-
   def related_resources
     self.organization
   end

@@ -19,7 +19,10 @@ module Actions
         def add_object(object)
           case object
           when ActiveRecord::Base
-            key = object.class.name.underscore[/\w*\Z/]
+            unless object.respond_to?(:action_input_key)
+              raise "Serialized model has to repond to :action_input_key method"
+            end
+            key = object.action_input_key
             value = object_to_value(object)
             add(key, value)
           when Hash
