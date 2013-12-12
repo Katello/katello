@@ -24,7 +24,7 @@ module Actions
           param :args, array_of(String)
         end
 
-        def run_pulp_task
+        def invoke_external_task
           pulp_extensions.consumer.install_content(input[:consumer_uuid],
                                                    input[:type],
                                                    input[:args])
