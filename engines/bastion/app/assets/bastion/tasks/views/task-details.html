@@ -30,11 +30,14 @@
 
       <div class="detail">
           <span class="info-label" translate>Parameters</span>
-          <span class="info-value">
-            <span ng-repeat="inputPart in task.humanized.input">
-              <task-input-part  data="inputPart"></task-input-part>
-              <span ng-show="!$last">; </span>
+          <span class="info-value" ng-switch="isArray(task.humanized.input)">
+            <span ng-switch-when="true">
+              <span ng-repeat="inputPart in task.humanized.input">
+                <task-input-part  data="inputPart"></task-input-part>
+                <span ng-show="!$last">; </span>
+              </span>
             </span>
+            <span ng-switch-default>{{task.humanized.input}}</span>
           </span>
       </div>
 
