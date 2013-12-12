@@ -4,7 +4,16 @@ module Actions
     include Helpers::ArgsSerialization
     include ForemanTasks::ActionHelpers::Lock
 
-    # what locks to use on the resource? All by default, can be overriden
+    # what locks to use on the resource? All by default, can be overriden.
+    # It might one or more locks available for the resource. This following
+    # special values are supported as well:
+    #
+    #  * `:all`:        lock all possible operations (all locks defined in resource's
+    #                   `available_locks` method. Only tasks that link to the resource are
+    #                   allowed while running this task
+    #  * `:exclusive`:  same as `:all` + doesn't allow even linking to the resoruce.
+    #                   typical example is deleting a container, preventing all actions
+    #                   heppening on it's sub-resources (such a system).
     def resource_locks
       :all
     end
@@ -26,7 +35,11 @@ module Actions
       end
       plan_self(serialize_args(resource, *related_resources, *additional_args))
       if resource.is_a? ActiveRecord::Base
-        lock!(resource, resource_locks)
+        if resource_locks == :exclusive
+          exclusive_lock!(resource)
+        else
+          lock!(resource, resource_locks)
+        end
       end
     end
 
