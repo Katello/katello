@@ -54,6 +54,10 @@ angular.module('Bastion.systems').controller('TaskDetailsController',
             }
         }
 
+        $scope.isArray = function(model) {
+            return (model instanceof Array) ? "true" : "false";
+        }
+
         $scope.$on('$destroy', function() {
             $scope.unregisterSearch();
         });
