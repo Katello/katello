@@ -32,6 +32,8 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
         $scope.uploadSuccessMessages = [];
         $scope.uploadErrorMessages = [];
 
+        $scope.progress = {uploading: false};
+
         $scope.repository = Repository.get({
             'product_id': $scope.$stateParams.productId,
             'id': $scope.$stateParams.repositoryId
@@ -72,7 +74,7 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
             });
         };
 
-        $scope.uploadContent = function(content, completed) {
+        $scope.uploadContent = function(content) {
             var returnData;
 
             if (content !== "Please wait...") {
@@ -86,14 +88,14 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
                     returnData = content;
                 }
 
-                if (completed && returnData !== null && returnData['status'] === 'success') {
+                if (returnData !== null && returnData['status'] === 'success') {
                     $scope.uploadSuccessMessages = [gettext('Puppet module successfully uploaded')];
                     $scope.repository.$get();
                 } else {
-                    $scope.uploadErrorMessages = [gettext('Error during upload: ') + returnData];
+                    $scope.uploadErrorMessages = [gettext('Error during upload: ') + returnData.displayMessage];
                 }
 
-                $scope.uploading = false;
+                $scope.progress.uploading = false;
             }
         };
 

@@ -27,7 +27,7 @@ class PuppetModuleTest < ActiveSupport::TestCase
 
   def test_parse_metadata_with_bad_file
     filepath = __FILE__
-    assert_raises(InvalidPuppetModuleError) do
+    assert_raises(Katello::Errors::InvalidPuppetModuleError) do
       PuppetModule.parse_metadata(filepath)
     end
   end
