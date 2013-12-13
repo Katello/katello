@@ -54,6 +54,7 @@ class Api::V2::ProvidersController < Api::V2::ApiController
     param :provider_type, ["Red Hat", "Custom"], :desc => "The type of the provider"
   end
 
+  api :GET, "/providers", "Show all providers"
   api :GET, "/organizations/:organization_id/providers", "Show all providers" 
   param_group :search, Api::V2::ApiController
   param :organization_id, :identifier, :desc => "organization identifier", :required => true
