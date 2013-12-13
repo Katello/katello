@@ -9,35 +9,36 @@ Katello::Engine.routes.draw do
 
   namespace :api do
 
-    # new v2 routes that point to v2
     scope "(:api_version)", :module => :v2, :defaults => {:api_version => 'v2'}, :api_version => /v1|v2/, :constraints => ApiConstraints.new(:version => 2) do
 
-      match '/' => 'root#resource_list'
+      ##############################
+      # re-routes alphabetical
+      ##############################
 
-      # Alphabetical resources
+      root :to => 'root#resource_list'
 
-      resources :organizations, :only => [] do
-        resources :system_groups, :only => [:index, :create]
+      api_resources :environments, :only => [] do
+        api_resources :systems, :only => [:index]
       end
 
-      resources :system_groups, :only => [:index, :create, :show, :update] do
+      api_resources :organizations, :only => [] do
+        api_resources :system_groups, :only => [:index, :create]
+        api_resources :systems, :only => [:index]
+      end
+
+      api_resources :system_groups, :only => [:index, :create, :show, :update] do
         member do
           post :copy
-          get :systems  # TODO: move below when @adprice systems pull-request
           put :add_systems
           put :remove_systems
         end
-        # resources :systems, :only => [:index]
+        api_resources :systems, :only => [:index]
       end
 
-      # TODO: Reorganize below into above alphabetical as each v2 controller is updated
+      api_resources :systems, :only => [:index]
 
-      # Headpin does not support system creation
-      if Katello.config.katello?
-        onlies = [:show, :destroy, :create, :index, :update]
-      else
-        onlies = [:show, :destroy, :index, :update]
-      end
+      ##############################
+      ##############################
 
       api_resources :organizations do
         member do
@@ -52,7 +53,7 @@ Katello::Engine.routes.draw do
         scope :constraints => Katello::RegisterWithActivationKeyContraint.new do
           match '/systems' => 'systems#activate', :via => :post
         end
-        api_resources :systems, :only => [:index, :create] do
+        api_resources :systems, :only => [:create] do
           get :report, :on => :collection
         end
         api_resources :distributors, :only => [:index, :create]
@@ -82,7 +83,8 @@ Katello::Engine.routes.draw do
         api_resources :errata, :only => [:index, :create], :controller => :system_group_errata
       end
 
-      api_resources :systems, :only => onlies do
+      api_resources :systems,
+                    :only => (Katello.config.katello? ? [:show, :destroy, :create, :update] : [:show, :destroy, :update]) do
         member do
           get :packages, :action => :package_profile
           get :errata
@@ -247,7 +249,7 @@ Katello::Engine.routes.draw do
         scope :constraints => Katello::RegisterWithActivationKeyContraint.new do
           match '/systems' => 'systems#activate', :via => :post
         end
-        api_resources :systems, :only => [:create, :index] do
+        api_resources :systems, :only => [:create] do
           get :report, :on => :collection
         end
         api_resources :distributors, :only => [:create, :index]
@@ -336,7 +338,7 @@ Katello::Engine.routes.draw do
       match '/owners/:organization_id/environments' => 'environments#rhsm_index', :via => :get
       match '/owners/:organization_id/pools' => 'candlepin_proxies#get', :via => :get, :as => :proxy_owner_pools_path
       match '/owners/:organization_id/servicelevels' => 'candlepin_proxies#get', :via => :get, :as => :proxy_owner_servicelevels_path
-      match '/environments/:environment_id/consumers' => 'systems#index', :via => :get
+      match '/environments/:environment_id/consumers' => 'systems#index', :via => :get #TODO: does this need to stay or be moved over to v2 controller also (e.g. - systems#index_v1_compat)?
       match '/environments/:environment_id/consumers' => 'systems#create', :via => :post
       match '/consumers/:id' => 'systems#regenerate_identity_certificates', :via => :post
       match '/consumers/:id/certificates' => 'candlepin_proxies#get', :via => :get, :as => :proxy_consumer_certificates_path

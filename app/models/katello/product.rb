@@ -19,7 +19,7 @@ class Product < ActiveRecord::Base
   include Glue::Pulp::Repos if Katello.config.use_pulp
   include Glue if Katello.config.use_cp || Katello.config.use_pulp
 
-  include Authorization::Product
+  include Katello::Authorization::Product
   include AsyncOrchestration
 
   include Ext::LabelFromName

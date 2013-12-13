@@ -65,22 +65,56 @@ module Katello
 
     protected
 
-      def labelize_params(params)
-        return params[:label] unless params.try(:[], :label).nil?
-        return Util::Model.labelize(params[:name]) unless params.try(:[], :name).nil?
-      end
+    def labelize_params(params)
+      return params[:label] unless params.try(:[], :label).nil?
+      return Util::Model.labelize(params[:name]) unless params.try(:[], :name).nil?
+    end
 
-      def find_organization
-        organization_id = params[:organization_id]
-        @organization = Organization.without_deleting.having_name_or_label(organization_id).first
-      end
+    def find_organization
+      organization_id = params[:organization_id]
+      @organization = Organization.without_deleting.having_name_or_label(organization_id).first
+    end
 
-      def sort_params
-        options = {}
-        options[:sort_by] = params[:sort_by] if params[:sort_by]
-        options[:sort_order] = params[:sort_order] if params[:sort_order]
-        options
+    def sort_params
+      options = {}
+      options[:sort_by] = params[:sort_by] if params[:sort_by]
+      options[:sort_order] = params[:sort_order] if params[:sort_order]
+      options
+    end
+
+    def find_optional_organization
+      org_id = organization_id
+      return if org_id.nil?
+
+      @organization = get_organization(org_id)
+      fail HttpErrors::NotFound, _("Couldn't find organization '%s'") % org_id if @organization.nil?
+      @organization
+    end
+
+    def organization_id
+      key = organization_id_keys.find { |k| !params[k].nil? }
+      return params[key]
+    end
+
+    def organization_id_keys
+      return [:organization_id]
+    end
+
+    def get_organization(org_id)
+      # name/label is always unique
+      return Organization.without_deleting.having_name_or_label(org_id).first
+    end
+
+    def find_default_organization_and_or_environment
+      return if params.key?(:organization_id) || params.key?(:owner) || params.key?(:environment_id)
+
+      @environment = current_user.default_environment
+      if @environment
+        @organization = @environment.organization
+      else
+        fail HttpErrors::NotFound, _("You have not set a default organization and environment on the user %s.") % current_user.login
       end
+    end
 
   end
 end
