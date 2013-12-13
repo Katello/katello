@@ -75,7 +75,18 @@ rake db:create db:migrate db:seed
 
 ### Setup Katello
 
-The Katello setup assumes that you have a previously setup Foreman checkout or have followed the instructions in the Setup Foreman section. 
+The Katello setup assumes that you have a previously setup Foreman checkout or have followed the instructions in the Setup Foreman section. The first step is to add the Katello engine and install dependencies:
+
+```bash
+echo "gemspec :path => '../katello'", :development_group => :katello_dev >> bundler.d/Gemfile.local.rb
+bundle update
+```
+
+Now add the Katello migrations and initial seed data:
+
+```bash
+rake db:migrate && rake db:seed
+```
 
 If you have set ```RAILS_RELATIVE_URL_ROOT``` in the past then you need to be sure to ```unset``` it and remove it from ```.bashrc``` or ```.bash_profile``` as appropriate.
 
