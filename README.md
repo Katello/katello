@@ -60,17 +60,10 @@ Ensure you have ```libvirt-devel``` installed:
 sudo yum install libvirt-devel
 ```
 
-Now create a local gemfile with the Katello engine gem, then install dependencies:
+Finally, create the initial database.
 
 ```bash
-echo "gem 'katello', :path => '../katello'" >> bundler.d/Gemfile.local.rb
-bundle update
-```
-
-Finally, create, migrate, and seed the database:
-
-```bash
-rake db:create db:migrate db:seed
+rake db:create
 ```
 
 ### Setup Katello
@@ -82,7 +75,7 @@ echo "gemspec :path => '../katello', :development_group => :katello_dev" >> bund
 bundle update
 ```
 
-Now add the Katello migrations and initial seed data:
+Now migrate the database and load initial seed data:
 
 ```bash
 rake db:migrate && rake db:seed
