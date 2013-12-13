@@ -60,12 +60,9 @@ Ensure you have ```libvirt-devel``` installed:
 sudo yum install libvirt-devel
 ```
 
-Now create a local gemfile, add two basic gems, and a gem for the Katello engine, and install dependencies:
+Now create a local gemfile with the Katello engine gem, then install dependencies:
 
 ```bash
-touch bundler.d/Gemfile.local.rb
-echo "gem 'facter'" >> bundler.d/Gemfile.local.rb
-echo "gem 'puppet'" >> bundler.d/Gemfile.local.rb
 echo "gem 'katello', :path => '../katello'" >> bundler.d/Gemfile.local.rb
 bundle update
 ```
