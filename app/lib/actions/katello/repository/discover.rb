@@ -13,7 +13,7 @@
 module Actions
   module Katello
     module Repository
-      class Discover < Actions::Action
+      class Discover < Actions::Base
 
         input_format do
           param :url, String

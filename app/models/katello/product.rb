@@ -14,7 +14,7 @@ module Katello
 class Product < ActiveRecord::Base
   self.include_root_in_json = false
 
-  include Ext::ActionSubject
+  include ForemanTasks::Concerns::ActionSubject
   include Glue::ElasticSearch::Product if Katello.config.use_elasticsearch
   include Glue::Candlepin::Product if Katello.config.use_cp
   include Glue::Pulp::Repos if Katello.config.use_pulp
