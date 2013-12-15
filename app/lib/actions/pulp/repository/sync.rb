@@ -13,7 +13,7 @@
 module Actions
   module Pulp
     module Repository
-      class Sync < Actions::Action
+      class Sync < Actions::Base
 
         include Helpers::RemoteAction
         include Helpers::PulpTask
