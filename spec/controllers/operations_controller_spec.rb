@@ -13,42 +13,42 @@
 require 'katello_test_helper'
 
 module Katello
-describe OperationsController do
+  describe OperationsController do
 
-  include LocaleHelperMethods
-  include OrganizationHelperMethods
-  include AuthorizationHelperMethods
+    include LocaleHelperMethods
+    include OrganizationHelperMethods
+    include AuthorizationHelperMethods
 
-  before do
-    setup_controller_defaults
-  end
-
-  describe "rules" do
-    describe "GET index - on users" do
-      let(:action) {:index}
-      let(:req) { get 'index' }
-      let(:authorized_user) do
-        user_with_permissions { |u| u.can(:read, :users,nil, nil) }
-      end
-      let(:unauthorized_user) do
-        user_without_permissions
-      end
-      it_should_behave_like "protected action"
+    before do
+      setup_controller_defaults
     end
 
-    describe "GET index - on roles" do
-      let(:action) {:index}
-      let(:req) { get 'index' }
-      let(:authorized_user) do
-        user_with_permissions { |u| u.can(:read, :roles,nil, nil) }
+    describe "rules" do
+      describe "GET index - on users" do
+        let(:action) {:index}
+        let(:req) { get 'index' }
+        let(:authorized_user) do
+          user_with_permissions { |u| u.can(:read, :users,nil, nil) }
+        end
+        let(:unauthorized_user) do
+          user_without_permissions
+        end
+        it_should_behave_like "protected action"
       end
-      let(:unauthorized_user) do
-        user_without_permissions
+
+      describe "GET index - on roles" do
+        let(:action) {:index}
+        let(:req) { get 'index' }
+        let(:authorized_user) do
+          user_with_permissions { |u| u.can(:read, :roles,nil, nil) }
+        end
+        let(:unauthorized_user) do
+          user_without_permissions
+        end
+        it_should_behave_like "protected action"
       end
-      it_should_behave_like "protected action"
+
     end
 
   end
-
-end
 end

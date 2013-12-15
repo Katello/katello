@@ -10,12 +10,12 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 module Katello
-module Navigation
-  module MainMenu
-    def menu_main
-      menu = [menu_dashboard, menu_contents, menu_systems]
-      menu
+  module Navigation
+    module MainMenu
+      def menu_main
+        menu = [menu_dashboard, menu_contents, menu_systems]
+        menu
+      end
     end
   end
-end
 end

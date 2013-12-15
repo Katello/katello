@@ -13,121 +13,121 @@
 require 'katello_test_helper'
 
 module Katello
-describe Notifications do
+  describe Notifications do
 
-  before (:each) do
-    @notice_string           = 'This is a single string notification.'
-    @notice_string_array     = [@notice_string, @notice_string + '2', @notice_string + '3', @notice_string +'4']
-    @notice_validation_error = ActiveRecord::RecordInvalid.new(User.create())
-    @notice_standard_error   = StandardError.new()
-    @notice_standard_error.set_backtrace caller
-  end
-
-  let(:controller) do
-    controller = stub
-    controller.stubs(
-      :requested_action => 'a_controller___an_action',
-      :flash => {},
-      :notices_url => 'http://localhost:3000/katello/notices'
-    )
-    controller
-  end
-  let(:notifier) { Notifications::Notifier.new(controller) }
-
-  describe 'create a notification that is asynchronous' do
-    describe 'with the notice as a string' do
-      it 'should generate a notice (katello)' do #TODO headpin
-        pre_count = Notice.count
-        notifier.message @notice_string
-        (Notice.count - pre_count).must_equal(1)
-      end
-    end
-
-    describe 'with the notice as an array' do
-      it 'should generate a notice (katello)' do #TODO headpin
-        pre_count = Notice.count
-        notifier.message @notice_string_array
-        (Notice.count - pre_count).must_equal(1)
-      end
-    end
-
-    describe 'with the notice as an ActiveRecord::RecordInvalid exception' do
-      it 'should generate a notice (katello)' do #TODO headpin
-        pre_count = Notice.count
-        notifier.exception @notice_validation_error, :asynchronous => true, :persist => true
-        (Notice.count - pre_count).must_equal(1)
-      end
-    end
-
-    describe 'with the notice as a RuntimeError exception' do
-      it 'should generate a notice (katello)' do #TODO headpin
-        pre_count = Notice.count
-        notifier.exception @notice_standard_error, :asynchronous => true
-        (Notice.count - pre_count).must_equal(1)
-      end
-    end
-  end
-
-  describe 'create a notification that is synchronous' do
     before (:each) do
-      User.stubs(:current).returns(@user)
+      @notice_string           = 'This is a single string notification.'
+      @notice_string_array     = [@notice_string, @notice_string + '2', @notice_string + '3', @notice_string +'4']
+      @notice_validation_error = ActiveRecord::RecordInvalid.new(User.create())
+      @notice_standard_error   = StandardError.new()
+      @notice_standard_error.set_backtrace caller
     end
 
-    describe 'with the notice as a string' do
-      it 'should generate a notice (katello)' do #TODO headpin
-        pre_count = Notice.count
-        notifier.success(@notice_string)
-        (Notice.count - pre_count).must_equal(1)
-      end
+    let(:controller) do
+      controller = stub
+      controller.stubs(
+        :requested_action => 'a_controller___an_action',
+        :flash => {},
+        :notices_url => 'http://localhost:3000/katello/notices'
+      )
+      controller
     end
+    let(:notifier) { Notifications::Notifier.new(controller) }
 
-    describe 'with the notice as an array' do
-      it 'should generate a notice (katello)' do #TODO headpin
-        pre_count = Notice.count
-        notifier.success(@notice_string_array)
-        (Notice.count - pre_count).must_equal(1)
-      end
-    end
-
-    describe 'with the notice as an ActiveRecord::RecordInvalid exception' do
-      it 'should generate a notice (katello)' do #TODO headpin
-        pre_count = Notice.count
-        notifier.exception(@notice_validation_error, :persist => true)
-        (Notice.count - pre_count).must_equal(1)
-      end
-    end
-
-    describe 'with the notice as a RuntimeError exception' do
-      it 'should generate a notice (katello)' do #TODO headpin
-        pre_count = Notice.count
-        notifier.exception(@notice_standard_error)
-        (Notice.count - pre_count).must_equal(1)
-      end
-    end
-
-    describe 'and does not persist' do
+    describe 'create a notification that is asynchronous' do
       describe 'with the notice as a string' do
         it 'should generate a notice (katello)' do #TODO headpin
-        pre_count = Notice.count
-        notifier.success(@notice_string, { :persist => false })
-        (Notice.count - pre_count).must_equal(0)
+          pre_count = Notice.count
+          notifier.message @notice_string
+          (Notice.count - pre_count).must_equal(1)
+        end
+      end
+
+      describe 'with the notice as an array' do
+        it 'should generate a notice (katello)' do #TODO headpin
+          pre_count = Notice.count
+          notifier.message @notice_string_array
+          (Notice.count - pre_count).must_equal(1)
+        end
+      end
+
+      describe 'with the notice as an ActiveRecord::RecordInvalid exception' do
+        it 'should generate a notice (katello)' do #TODO headpin
+          pre_count = Notice.count
+          notifier.exception @notice_validation_error, :asynchronous => true, :persist => true
+          (Notice.count - pre_count).must_equal(1)
+        end
+      end
+
+      describe 'with the notice as a RuntimeError exception' do
+        it 'should generate a notice (katello)' do #TODO headpin
+          pre_count = Notice.count
+          notifier.exception @notice_standard_error, :asynchronous => true
+          (Notice.count - pre_count).must_equal(1)
         end
       end
     end
-  end
 
-  describe 'create an errors notification' do
-    before (:each) do
-      User.stubs(:current).returns(@user)
+    describe 'create a notification that is synchronous' do
+      before (:each) do
+        User.stubs(:current).returns(@user)
+      end
+
+      describe 'with the notice as a string' do
+        it 'should generate a notice (katello)' do #TODO headpin
+          pre_count = Notice.count
+          notifier.success(@notice_string)
+          (Notice.count - pre_count).must_equal(1)
+        end
+      end
+
+      describe 'with the notice as an array' do
+        it 'should generate a notice (katello)' do #TODO headpin
+          pre_count = Notice.count
+          notifier.success(@notice_string_array)
+          (Notice.count - pre_count).must_equal(1)
+        end
+      end
+
+      describe 'with the notice as an ActiveRecord::RecordInvalid exception' do
+        it 'should generate a notice (katello)' do #TODO headpin
+          pre_count = Notice.count
+          notifier.exception(@notice_validation_error, :persist => true)
+          (Notice.count - pre_count).must_equal(1)
+        end
+      end
+
+      describe 'with the notice as a RuntimeError exception' do
+        it 'should generate a notice (katello)' do #TODO headpin
+          pre_count = Notice.count
+          notifier.exception(@notice_standard_error)
+          (Notice.count - pre_count).must_equal(1)
+        end
+      end
+
+      describe 'and does not persist' do
+        describe 'with the notice as a string' do
+          it 'should generate a notice (katello)' do #TODO headpin
+            pre_count = Notice.count
+            notifier.success(@notice_string, { :persist => false })
+            (Notice.count - pre_count).must_equal(0)
+          end
+        end
+      end
     end
 
-    it 'should have the level set to :error (katello)' do #TODO headpin
-      pre_count = Notice.count
-      notifier.error(@notice_string)
-      Notice.where(:text => @notice_string, :level => 'error').wont_be_empty
-      (Notice.count - pre_count).must_equal(1)
-    end
-  end
+    describe 'create an errors notification' do
+      before (:each) do
+        User.stubs(:current).returns(@user)
+      end
 
-end
+      it 'should have the level set to :error (katello)' do #TODO headpin
+        pre_count = Notice.count
+        notifier.error(@notice_string)
+        Notice.where(:text => @notice_string, :level => 'error').wont_be_empty
+        (Notice.count - pre_count).must_equal(1)
+      end
+    end
+
+  end
 end

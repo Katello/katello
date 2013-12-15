@@ -11,48 +11,48 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-module Navigation
-  class Item
-    include Navigation::Utils
-    include Katello::Engine.routes.url_helpers
+  module Navigation
+    class Item
+      include Navigation::Utils
+      include Katello::Engine.routes.url_helpers
 
-    attr_accessor :authorization # Dynamically sets the authorization rule
-    attr_reader :key, :display, :url
+      attr_accessor :authorization # Dynamically sets the authorization rule
+      attr_reader :key, :display, :url
 
-    # Initalizer for the Navigation Item object
-    #
-    # @param key           [String]  unique token representing this item
-    # @param display       [String]  the text that will be displayed when this item is rendered
-    # @param authorization [Boolean] boolean that determines if this item should be pruned
-    # @param url           [String]  the url associated with this navigation item
-    def initialize(key, display, authorization, url)
-      @key            = key
-      @display        = display
-      @url            = url
-      @authorization  = authorization
-    end
-
-    # Returns whether this item is accessible based on authorization rules
-    #   Expects either a Proc or a boolean
-    def accessible?
-      if @authorization.is_a? Proc
-        @authorization.call
-      else
-        @authorization
+      # Initalizer for the Navigation Item object
+      #
+      # @param key           [String]  unique token representing this item
+      # @param display       [String]  the text that will be displayed when this item is rendered
+      # @param authorization [Boolean] boolean that determines if this item should be pruned
+      # @param url           [String]  the url associated with this navigation item
+      def initialize(key, display, authorization, url)
+        @key            = key
+        @display        = display
+        @url            = url
+        @authorization  = authorization
       end
-    end
 
-    # Defines the JSON structure for navigation menu items
-    #
-    # @return [String] the JSON representation of the navigation item
-    def as_json(*args)
-      {
-        :key    => @key,
-        :display => @display,
-        :url    => @url
-      }
-    end
+      # Returns whether this item is accessible based on authorization rules
+      #   Expects either a Proc or a boolean
+      def accessible?
+        if @authorization.is_a? Proc
+          @authorization.call
+        else
+          @authorization
+        end
+      end
 
+      # Defines the JSON structure for navigation menu items
+      #
+      # @return [String] the JSON representation of the navigation item
+      def as_json(*args)
+        {
+          :key    => @key,
+          :display => @display,
+          :url    => @url
+        }
+      end
+
+    end
   end
-end
 end

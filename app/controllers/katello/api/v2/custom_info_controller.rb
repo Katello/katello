@@ -11,47 +11,47 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class Api::V2::CustomInfoController < Api::V1::CustomInfoController
+  class Api::V2::CustomInfoController < Api::V1::CustomInfoController
 
-  include Api::V2::Rendering
+    include Api::V2::Rendering
 
-  resource_description do
-    api_version "v2"
-  end
+    resource_description do
+      api_version "v2"
+    end
 
-  def_param_group :informable_identifier do
+    def_param_group :informable_identifier do
+      param :informable_type, String, :desc => "name of the resource", :required => true
+      param :informable_id, :identifier, :desc => "resource identifier", :required => true
+    end
+
+    def_param_group :custom_info do
+      param :custom_info, Hash, :required => true, :action_aware => true do
+        param :keyname, String, :required => true
+        param :value, String, :required => true
+      end
+    end
+
+    api :POST, "/custom_info/:informable_type/:informable_id", "Create custom info"
     param :informable_type, String, :desc => "name of the resource", :required => true
     param :informable_id, :identifier, :desc => "resource identifier", :required => true
-  end
-
-  def_param_group :custom_info do
     param :custom_info, Hash, :required => true, :action_aware => true do
       param :keyname, String, :required => true
       param :value, String, :required => true
     end
-  end
+    def create
+      respond :resource => @informable.custom_info.create!(params[:custom_info])
+    end
 
-  api :POST, "/custom_info/:informable_type/:informable_id", "Create custom info"
-  param :informable_type, String, :desc => "name of the resource", :required => true
-  param :informable_id, :identifier, :desc => "resource identifier", :required => true
-  param :custom_info, Hash, :required => true, :action_aware => true do
-    param :keyname, String, :required => true
-    param :value, String, :required => true
-  end
-  def create
-    respond :resource => @informable.custom_info.create!(params[:custom_info])
-  end
+    api :PUT, "/custom_info/:informable_type/:informable_id/:keyname", "Update custom info"
+    param_group :informable_identifier
+    param :keyname, String, :desc => "Custom info key", :required => true
+    param :custom_info, Hash, :required => true, :action_aware => true do
+      param :value, String, :required => true
+    end
+    def update
+      @single_custom_info.update_attributes!(params[:custom_info].slice(:value))
+      respond :resource => @single_custom_info
+    end
 
-  api :PUT, "/custom_info/:informable_type/:informable_id/:keyname", "Update custom info"
-  param_group :informable_identifier
-  param :keyname, String, :desc => "Custom info key", :required => true
-  param :custom_info, Hash, :required => true, :action_aware => true do
-    param :value, String, :required => true
   end
-  def update
-    @single_custom_info.update_attributes!(params[:custom_info].slice(:value))
-    respond :resource => @single_custom_info
-  end
-
-end
 end

@@ -14,72 +14,72 @@
 require "katello_test_helper"
 
 module Katello
-class Api::V2::ProvidersControllerTest < ActionController::TestCase
+  class Api::V2::ProvidersControllerTest < ActionController::TestCase
 
-  def self.before_suite
-    models = ["Provider"]
-    disable_glue_layers(["ElasticSearch"], models)
-    super
-  end
+    def self.before_suite
+      models = ["Provider"]
+      disable_glue_layers(["ElasticSearch"], models)
+      super
+    end
 
-  def models
-    @organization = get_organization(:organization1)
-  end
+    def models
+      @organization = get_organization(:organization1)
+    end
 
-  def permissions
-    @read_permission = UserPermission.new(:read, :providers)
-    @create_permission = UserPermission.new(:create, :providers)
-    @update_permission = UserPermission.new(:update, :providers)
-    @no_permission = NO_PERMISSION
-  end
+    def permissions
+      @read_permission = UserPermission.new(:read, :providers)
+      @create_permission = UserPermission.new(:create, :providers)
+      @update_permission = UserPermission.new(:update, :providers)
+      @no_permission = NO_PERMISSION
+    end
 
-  def setup
-    setup_controller_defaults_api
-    login_user(User.find(users(:admin)))
-    @request.env['HTTP_ACCEPT'] = 'application/json'
-    @fake_search_service = @controller.load_search_service(Support::SearchService::FakeSearchService.new)
-    models
-    permissions
-  end
+    def setup
+      setup_controller_defaults_api
+      login_user(User.find(users(:admin)))
+      @request.env['HTTP_ACCEPT'] = 'application/json'
+      @fake_search_service = @controller.load_search_service(Support::SearchService::FakeSearchService.new)
+      models
+      permissions
+    end
 
-  def test_index
-    get :index, :organization_id => @organization.label
-
-    assert_response :success
-    assert_template 'api/v2/providers/index'
-  end
-
-  def test_index_protected
-    allowed_perms = [@read_permission, @update_permission]
-    denied_perms = [@no_permission]
-
-    assert_protected_action(:index, allowed_perms, denied_perms) do
+    def test_index
       get :index, :organization_id => @organization.label
+
+      assert_response :success
+      assert_template 'api/v2/providers/index'
     end
-  end
 
-  def test_create
-    post :create, :name => 'Fedora Provider',
-                  :organization_id => @organization.label
+    def test_index_protected
+      allowed_perms = [@read_permission, @update_permission]
+      denied_perms = [@no_permission]
 
-    assert_response :success
-    assert_template 'api/v2/providers/show'
-  end
-
-  def test_create_fail
-    post :create
-
-    assert_response :unprocessable_entity
-  end
-
-  def test_create_protected
-    allowed_perms = [@create_permission]
-    denied_perms = [@read_permission, @no_permission]
-
-    assert_protected_action(:create, allowed_perms, denied_perms) do
-      post :create, :organization_id => @organization.label
+      assert_protected_action(:index, allowed_perms, denied_perms) do
+        get :index, :organization_id => @organization.label
+      end
     end
-  end
 
-end
+    def test_create
+      post :create, :name => 'Fedora Provider',
+        :organization_id => @organization.label
+
+      assert_response :success
+      assert_template 'api/v2/providers/show'
+    end
+
+    def test_create_fail
+      post :create
+
+      assert_response :unprocessable_entity
+    end
+
+    def test_create_protected
+      allowed_perms = [@create_permission]
+      denied_perms = [@read_permission, @no_permission]
+
+      assert_protected_action(:create, allowed_perms, denied_perms) do
+        post :create, :organization_id => @organization.label
+      end
+    end
+
+  end
 end

@@ -37,10 +37,10 @@ module Katello
           status = options[:status] || 200
 
           render :template => "katello/api/v2/#{resource_name}/#{action}",
-                 :status => status,
-                 :locals => { :object_name => options[:object_name],
-                              :root_name => options[:root_name] },
-                 :layout => "katello/api/v2/layouts/#{options[:layout]}"
+            :status => status,
+            :locals => { :object_name => options[:object_name],
+                         :root_name => options[:root_name] },
+            :layout => "katello/api/v2/layouts/#{options[:layout]}"
         end
 
         def respond_with_template_resource(action, resource_name, options = {})

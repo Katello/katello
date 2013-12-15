@@ -14,123 +14,123 @@
 require "katello_test_helper"
 
 module Katello
-class Api::V2::ProductsControllerTest < ActionController::TestCase
+  class Api::V2::ProductsControllerTest < ActionController::TestCase
 
-  def self.before_suite
-    models = ["Product"]
-    disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
-    super
-  end
+    def self.before_suite
+      models = ["Product"]
+      disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
+      super
+    end
 
-  def models
-    @organization = get_organization(:organization1)
-    @provider = katello_providers(:fedora_hosted)
-    @product = katello_products(:empty_product)
-  end
+    def models
+      @organization = get_organization(:organization1)
+      @provider = katello_providers(:fedora_hosted)
+      @product = katello_products(:empty_product)
+    end
 
-  def permissions
-    @read_permission = UserPermission.new(:read, :providers)
-    @create_permission = UserPermission.new(:create, :providers)
-    @update_permission = UserPermission.new(:update, :providers)
-    @no_permission = NO_PERMISSION
-  end
+    def permissions
+      @read_permission = UserPermission.new(:read, :providers)
+      @create_permission = UserPermission.new(:create, :providers)
+      @update_permission = UserPermission.new(:update, :providers)
+      @no_permission = NO_PERMISSION
+    end
 
-  def setup
-    setup_controller_defaults_api
-    login_user(User.find(users(:admin)))
-    @request.env['HTTP_ACCEPT'] = 'application/json'
-    @fake_search_service = @controller.load_search_service(Support::SearchService::FakeSearchService.new)
-    models
-    permissions
-  end
+    def setup
+      setup_controller_defaults_api
+      login_user(User.find(users(:admin)))
+      @request.env['HTTP_ACCEPT'] = 'application/json'
+      @fake_search_service = @controller.load_search_service(Support::SearchService::FakeSearchService.new)
+      models
+      permissions
+    end
 
-  def test_index
-    get :index, :organization_id => @organization.label
-
-    assert_response :success
-    assert_template 'api/v2/products/index'
-  end
-
-  def test_index_protected
-    allowed_perms = [@read_permission, @update_permission]
-    denied_perms = [@no_permission]
-
-    assert_protected_action(:index, allowed_perms, denied_perms) do
+    def test_index
       get :index, :organization_id => @organization.label
+
+      assert_response :success
+      assert_template 'api/v2/products/index'
     end
-  end
 
-  def test_create
-    post :create, :name => 'Fedora Product',
-                  :provider_id => @provider.id,
-                  :description => 'This is my cool new product.'
+    def test_index_protected
+      allowed_perms = [@read_permission, @update_permission]
+      denied_perms = [@no_permission]
 
-    assert_response :success
-    assert_template 'api/v2/products/show'
-  end
-
-  def test_create_fail
-    post :create, :description => 'This is my cool new product.'
-
-    assert_response :unprocessable_entity
-  end
-
-  def test_create_protected
-    allowed_perms = [@create_permission]
-    denied_perms = [@read_permission, @no_permission]
-
-    assert_protected_action(:create, allowed_perms, denied_perms) do
-      post :create, :provider_id => @provider.id
+      assert_protected_action(:index, allowed_perms, denied_perms) do
+        get :index, :organization_id => @organization.label
+      end
     end
-  end
 
-  def test_show
-    get :show, :id => @product.cp_id
+    def test_create
+      post :create, :name => 'Fedora Product',
+        :provider_id => @provider.id,
+        :description => 'This is my cool new product.'
 
-    assert_response :success
-    assert_template 'api/v2/products/show'
-  end
+      assert_response :success
+      assert_template 'api/v2/products/show'
+    end
 
-  def test_show_protected
-    allowed_perms = [@read_permission, @update_permission, @create_permission]
-    denied_perms = [@no_permission]
+    def test_create_fail
+      post :create, :description => 'This is my cool new product.'
 
-    assert_protected_action(:show, allowed_perms, denied_perms) do
+      assert_response :unprocessable_entity
+    end
+
+    def test_create_protected
+      allowed_perms = [@create_permission]
+      denied_perms = [@read_permission, @no_permission]
+
+      assert_protected_action(:create, allowed_perms, denied_perms) do
+        post :create, :provider_id => @provider.id
+      end
+    end
+
+    def test_show
       get :show, :id => @product.cp_id
+
+      assert_response :success
+      assert_template 'api/v2/products/show'
     end
-  end
 
-  def test_update
-    get :update, :id => @product.cp_id, :name => 'New Name'
+    def test_show_protected
+      allowed_perms = [@read_permission, @update_permission, @create_permission]
+      denied_perms = [@no_permission]
 
-    assert_response :success
-    assert_template 'api/v2/products/show'
-    assert_equal assigns[:product].name, 'New Name'
-  end
-
-  def test_update_protected
-    allowed_perms = [@update_permission, @create_permission]
-    denied_perms = [@no_permission, @read_permission]
-
-    assert_protected_action(:destroy, allowed_perms, denied_perms) do
-      get :destroy, :id => @product.cp_id, :name => 'New Name'
+      assert_protected_action(:show, allowed_perms, denied_perms) do
+        get :show, :id => @product.cp_id
+      end
     end
-  end
 
-  def test_destroy
-    get :destroy, :id => @product.cp_id
+    def test_update
+      get :update, :id => @product.cp_id, :name => 'New Name'
 
-    assert_response :success
-  end
+      assert_response :success
+      assert_template 'api/v2/products/show'
+      assert_equal assigns[:product].name, 'New Name'
+    end
 
-  def test_destroy_protected
-    allowed_perms = [@update_permission, @create_permission]
-    denied_perms = [@no_permission, @read_permission]
+    def test_update_protected
+      allowed_perms = [@update_permission, @create_permission]
+      denied_perms = [@no_permission, @read_permission]
 
-    assert_protected_action(:destroy, allowed_perms, denied_perms) do
+      assert_protected_action(:destroy, allowed_perms, denied_perms) do
+        get :destroy, :id => @product.cp_id, :name => 'New Name'
+      end
+    end
+
+    def test_destroy
       get :destroy, :id => @product.cp_id
-    end
-  end
 
-end
+      assert_response :success
+    end
+
+    def test_destroy_protected
+      allowed_perms = [@update_permission, @create_permission]
+      denied_perms = [@no_permission, @read_permission]
+
+      assert_protected_action(:destroy, allowed_perms, denied_perms) do
+        get :destroy, :id => @product.cp_id
+      end
+    end
+
+  end
 end

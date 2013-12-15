@@ -11,113 +11,113 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class SystemGroupEventsController < Katello::ApplicationController
-  before_filter :find_group
-  before_filter :authorize
+  class SystemGroupEventsController < Katello::ApplicationController
+    before_filter :find_group
+    before_filter :authorize
 
-  helper SystemGroupEventsHelper
+    helper SystemGroupEventsHelper
 
-  def section_id
-    'systems'
-  end
-
-  def rules
-    read_group = lambda{@group.readable?}
-
-    {
-      :index => read_group,
-      :items => read_group,
-      :show => read_group,
-      :event_status => read_group,
-      :more_items => read_group
-    }
-  end
-
-  def index
-    render :partial => 'katello/system_groups/events/index', :locals => {:group => @group, :jobs => jobs}
-  end
-
-  def show
-    job = @group.jobs.where("#{Job.table_name}.id" => params[:id]).first
-    if job.nil?
-      render :nothing => true
-    else
-      render :partial => 'katello/system_groups/events/show',
-             :locals => {:group => @group, :job => job}
+    def section_id
+      'systems'
     end
-  end
 
-  def event_status
-    # retrieve the status for the actions initiated by the client
-    statuses = {:jobs => [], :tasks => []}
+    def rules
+      read_group = lambda{@group.readable?}
 
-    @group.refreshed_jobs.where(:id => params[:job_id]).collect do |status|
-      statuses[:jobs] << {
-        :id => status.id,
-        :pending? => status.pending?,
-        :status_html => render_to_string(:template => 'katello/system_groups/events/_items', :layout => false,
-                                         :locals => {:include_tr => false, :group => @group, :job => status})
+      {
+        :index => read_group,
+        :items => read_group,
+        :show => read_group,
+        :event_status => read_group,
+        :more_items => read_group
       }
     end
 
-    TaskStatus.where(:id => params[:task_id]).collect do |status|
-      statuses[:tasks] << {
-        :id => status.id,
-        :pending? => status.pending?,
-        :status_html => render_to_string(:template => 'katello/system_groups/events/_system_items', :layout => false,
-                                         :locals => {:include_tr => false, :t => status})
-      }
+    def index
+      render :partial => 'katello/system_groups/events/index', :locals => {:group => @group, :jobs => jobs}
     end
 
-    render :json => statuses
-  end
-
-  def more_items
-    if params.key?(:offset)
-      offset = params[:offset].to_i
-    else
-      offset = current_user.page_size
-    end
-
-    statuses = jobs(current_user.page_size + offset)
-    statuses = statuses[offset..statuses.length]
-    if statuses
-      render(:partial => 'katello/system_groups/events/more_items', :locals => {:cycle_extra => offset.odd?, :group => @group, :jobs => statuses})
-    else
-      render :nothing => true
-    end
-  end
-
-  def items
-    render_proc = lambda do |items, options|
-      if items && !items.empty?
-        render_to_string(:partial => 'katello/system_groups/events/more_items', :locals => {:cycle_extra => false, :group => @group, :jobs => items})
+    def show
+      job = @group.jobs.where("#{Job.table_name}.id" => params[:id]).first
+      if job.nil?
+        render :nothing => true
       else
-        "<tr><td>" + _("No events matching your search criteria.") + "</td></tr>"
+        render :partial => 'katello/system_groups/events/show',
+          :locals => {:group => @group, :job => job}
       end
     end
-    search = params[:search]
-    render_panel_direct(Job, {:no_search_history => true, :render_list_proc => render_proc},
-                        search, params[:offset] || 0, [:id, 'desc'],
-                        :filter => {:job_owner_id => [@group.id], :task_owner_type => SystemGroup.class.name},
-                        :load => true,
-                        :simple_query => "#{search}")
-  end
 
-  protected
+    def event_status
+      # retrieve the status for the actions initiated by the client
+      statuses = {:jobs => [], :tasks => []}
 
-  def find_group
-    @group = SystemGroup.find(params[:system_group_id])
-  end
+      @group.refreshed_jobs.where(:id => params[:job_id]).collect do |status|
+        statuses[:jobs] << {
+          :id => status.id,
+          :pending? => status.pending?,
+          :status_html => render_to_string(:template => 'katello/system_groups/events/_items', :layout => false,
+                                           :locals => {:include_tr => false, :group => @group, :job => status})
+        }
+      end
 
-  helper_method :jobs
-  def jobs(page_size = current_user.page_size)
-    @group.jobs.order('id desc').limit(page_size)
-  end
+      TaskStatus.where(:id => params[:task_id]).collect do |status|
+        statuses[:tasks] << {
+          :id => status.id,
+          :pending? => status.pending?,
+          :status_html => render_to_string(:template => 'katello/system_groups/events/_system_items', :layout => false,
+                                           :locals => {:include_tr => false, :t => status})
+        }
+      end
 
-  helper_method :total_events_length
-  def total_events_length
-    @group.jobs.length
+      render :json => statuses
+    end
+
+    def more_items
+      if params.key?(:offset)
+        offset = params[:offset].to_i
+      else
+        offset = current_user.page_size
+      end
+
+      statuses = jobs(current_user.page_size + offset)
+      statuses = statuses[offset..statuses.length]
+      if statuses
+        render(:partial => 'katello/system_groups/events/more_items', :locals => {:cycle_extra => offset.odd?, :group => @group, :jobs => statuses})
+      else
+        render :nothing => true
+      end
+    end
+
+    def items
+      render_proc = lambda do |items, options|
+        if items && !items.empty?
+          render_to_string(:partial => 'katello/system_groups/events/more_items', :locals => {:cycle_extra => false, :group => @group, :jobs => items})
+        else
+          "<tr><td>" + _("No events matching your search criteria.") + "</td></tr>"
+        end
+      end
+      search = params[:search]
+      render_panel_direct(Job, {:no_search_history => true, :render_list_proc => render_proc},
+                          search, params[:offset] || 0, [:id, 'desc'],
+                          :filter => {:job_owner_id => [@group.id], :task_owner_type => SystemGroup.class.name},
+                          :load => true,
+                          :simple_query => "#{search}")
+    end
+
+    protected
+
+    def find_group
+      @group = SystemGroup.find(params[:system_group_id])
+    end
+
+    helper_method :jobs
+    def jobs(page_size = current_user.page_size)
+      @group.jobs.order('id desc').limit(page_size)
+    end
+
+    helper_method :total_events_length
+    def total_events_length
+      @group.jobs.length
+    end
   end
-end
 end

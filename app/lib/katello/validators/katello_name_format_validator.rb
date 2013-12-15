@@ -12,23 +12,23 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-module Validators
-  class KatelloNameFormatValidator < ActiveModel::EachValidator
-    def validate_each(record, attribute, value)
-      if value
-        NoTrailingSpaceValidator.validate_trailing_space(record, attribute, value)
-        KatelloNameFormatValidator.validate_length(record, attribute, value)
-      else
-        record.errors[attribute] << N_("cannot be blank")
+  module Validators
+    class KatelloNameFormatValidator < ActiveModel::EachValidator
+      def validate_each(record, attribute, value)
+        if value
+          NoTrailingSpaceValidator.validate_trailing_space(record, attribute, value)
+          KatelloNameFormatValidator.validate_length(record, attribute, value)
+        else
+          record.errors[attribute] << N_("cannot be blank")
+        end
       end
-    end
 
-    def self.validate_length(record, attribute, value, max_length = 255, min_length = 1)
-      if value
-        record.errors[attribute] << _("cannot contain more than %s characters") % max_length unless value.length <= max_length
-        record.errors[attribute] << _("must contain at least %s character") % min_length unless value.length >= min_length
+      def self.validate_length(record, attribute, value, max_length = 255, min_length = 1)
+        if value
+          record.errors[attribute] << _("cannot contain more than %s characters") % max_length unless value.length <= max_length
+          record.errors[attribute] << _("must contain at least %s character") % min_length unless value.length >= min_length
+        end
       end
     end
   end
-end
 end

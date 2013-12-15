@@ -13,90 +13,90 @@
 require 'katello_test_helper'
 
 module Katello
-describe Api::V1::SubscriptionsController do
-  include SystemHelperMethods
-  include OrchestrationHelper
-  include OrganizationHelperMethods
-  include AuthorizationHelperMethods
+  describe Api::V1::SubscriptionsController do
+    include SystemHelperMethods
+    include OrchestrationHelper
+    include OrganizationHelperMethods
+    include AuthorizationHelperMethods
 
-  let(:facts) { { "distribution.name" => "Fedora" } }
-  let(:uuid) { '1234' }
+    let(:facts) { { "distribution.name" => "Fedora" } }
+    let(:uuid) { '1234' }
 
-  let(:user_with_read_permissions) { user_with_permissions { |u| u.can(:read_systems, :organizations, nil, @organization) } }
-  let(:user_without_read_permissions) { user_without_permissions }
-  let(:user_with_update_permissions) { user_with_permissions { |u| u.can([:read_systems, :update_systems], :organizations, nil, @organization) } }
-  let(:user_without_update_permissions) { user_without_permissions }
+    let(:user_with_read_permissions) { user_with_permissions { |u| u.can(:read_systems, :organizations, nil, @organization) } }
+    let(:user_without_read_permissions) { user_without_permissions }
+    let(:user_with_update_permissions) { user_with_permissions { |u| u.can([:read_systems, :update_systems], :organizations, nil, @organization) } }
+    let(:user_without_update_permissions) { user_without_permissions }
 
-  before (:each) do
-    setup_controller_defaults_api
-    disable_org_orchestration
+    before (:each) do
+      setup_controller_defaults_api
+      disable_org_orchestration
 
-    Resources::Candlepin::Consumer.stubs(:create).returns({ :uuid => uuid, :owner => { :key => uuid } })
-    Resources::Candlepin::Consumer.stubs(:update).returns(true)
+      Resources::Candlepin::Consumer.stubs(:create).returns({ :uuid => uuid, :owner => { :key => uuid } })
+      Resources::Candlepin::Consumer.stubs(:update).returns(true)
 
-    Katello.pulp_server.extensions.consumer.stubs(:create).returns({ :id => uuid })
-    Katello.pulp_server.extensions.consumer.stubs(:update).returns(true)
+      Katello.pulp_server.extensions.consumer.stubs(:create).returns({ :id => uuid })
+      Katello.pulp_server.extensions.consumer.stubs(:update).returns(true)
 
-    @organization  = Organization.create!(:name => 'test_org', :label => 'test_org')
-    @environment_1 = create_environment(:name => 'test_1', :label => 'test_1', :prior => @organization.library.id, :organization => @organization)
-    @system        = create_system(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts, :uuid => uuid)
-    System.stubs(:first).returns(@system)
-  end
-
-  describe "create a subscription" do
-    let(:action) { :create }
-    let(:req) { post :create, :system_id => @system.id, :pool => "poolidXYZ", :quantity => 1 }
-    let(:authorized_user) { user_with_update_permissions }
-    let(:unauthorized_user) { user_without_update_permissions }
-    it_should_behave_like "protected action"
-
-    it "requires pool and quantity to be specified (katello)" do #TODO headpin
-      post :create, :system_id => @system.id
-      response.code.must_equal "400"
+      @organization  = Organization.create!(:name => 'test_org', :label => 'test_org')
+      @environment_1 = create_environment(:name => 'test_1', :label => 'test_1', :prior => @organization.library.id, :organization => @organization)
+      @system        = create_system(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts, :uuid => uuid)
+      System.stubs(:first).returns(@system)
     end
 
-    context "subscribes" do
-      it "to one pool (katello)" do #TODO headpin
-        Resources::Candlepin::Consumer.expects(:consume_entitlement).once.with(@system.uuid, "poolidXYZ", "1")
-        post :create, :system_id => @system.id, :pool => "poolidXYZ", :quantity => '1'
-      end
-    end
-
-    context "unsubscribes" do
-      it "from one pool (katello)" do #TODO headpin
-        Resources::Candlepin::Consumer.expects(:remove_entitlement).once.with(@system.uuid, "poolidXYZ")
-        post :destroy, :system_id => @system.id, :id => "poolidXYZ"
-      end
-
-      it "from one pool by serial (katello)" do #TODO headpin
-        Resources::Candlepin::Consumer.expects(:remove_certificate).once.with(@system.uuid, "serialidXYZ")
-        post :destroy_by_serial, :system_id => @system.id, :serial_id => "serialidXYZ"
-      end
-
-      it "from all pools (katello)" do #TODO headpin
-        Resources::Candlepin::Consumer.expects(:remove_entitlements).once.with(@system.uuid)
-        post :destroy_all, :system_id => @system.id
-      end
-    end
-
-    describe "list subscriptions" do
-      let(:action) { :index }
-      let(:req) { get :index, :system_id => @system.id }
-      let(:authorized_user) { user_with_read_permissions }
-      let(:unauthorized_user) { user_without_read_permissions }
+    describe "create a subscription" do
+      let(:action) { :create }
+      let(:req) { post :create, :system_id => @system.id, :pool => "poolidXYZ", :quantity => 1 }
+      let(:authorized_user) { user_with_update_permissions }
+      let(:unauthorized_user) { user_without_update_permissions }
       it_should_behave_like "protected action"
 
-      it "should find System (katello)" do #TODO heapdin
-        System.expects(:first).once.with(has_entries(:conditions => { :uuid => @system.uuid })).returns(@system)
-        get :index, :system_id => @system.uuid
+      it "requires pool and quantity to be specified (katello)" do #TODO headpin
+        post :create, :system_id => @system.id
+        response.code.must_equal "400"
       end
 
-      it "should retrieve Consumer's errata from pulp (katello)" do #TODO headpin
-        Resources::Candlepin::Consumer.expects(:entitlements).once.with(uuid).returns([])
-        get :index, :system_id => @system.uuid
+      context "subscribes" do
+        it "to one pool (katello)" do #TODO headpin
+          Resources::Candlepin::Consumer.expects(:consume_entitlement).once.with(@system.uuid, "poolidXYZ", "1")
+          post :create, :system_id => @system.id, :pool => "poolidXYZ", :quantity => '1'
+        end
       end
+
+      context "unsubscribes" do
+        it "from one pool (katello)" do #TODO headpin
+          Resources::Candlepin::Consumer.expects(:remove_entitlement).once.with(@system.uuid, "poolidXYZ")
+          post :destroy, :system_id => @system.id, :id => "poolidXYZ"
+        end
+
+        it "from one pool by serial (katello)" do #TODO headpin
+          Resources::Candlepin::Consumer.expects(:remove_certificate).once.with(@system.uuid, "serialidXYZ")
+          post :destroy_by_serial, :system_id => @system.id, :serial_id => "serialidXYZ"
+        end
+
+        it "from all pools (katello)" do #TODO headpin
+          Resources::Candlepin::Consumer.expects(:remove_entitlements).once.with(@system.uuid)
+          post :destroy_all, :system_id => @system.id
+        end
+      end
+
+      describe "list subscriptions" do
+        let(:action) { :index }
+        let(:req) { get :index, :system_id => @system.id }
+        let(:authorized_user) { user_with_read_permissions }
+        let(:unauthorized_user) { user_without_read_permissions }
+        it_should_behave_like "protected action"
+
+        it "should find System (katello)" do #TODO heapdin
+          System.expects(:first).once.with(has_entries(:conditions => { :uuid => @system.uuid })).returns(@system)
+          get :index, :system_id => @system.uuid
+        end
+
+        it "should retrieve Consumer's errata from pulp (katello)" do #TODO headpin
+          Resources::Candlepin::Consumer.expects(:entitlements).once.with(uuid).returns([])
+          get :index, :system_id => @system.uuid
+        end
+      end
+
     end
-
   end
-end
 end
