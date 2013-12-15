@@ -19,7 +19,7 @@ class System < Katello::Model
   define_hooks :add_system_group_hook, :remove_system_group_hook,
                :as_json_hook
 
-  include Ext::ActionSubject
+  include ForemanTasks::Concerns::ActionSubject
   include Glue::Candlepin::Consumer if Katello.config.use_cp
   include Glue::Pulp::Consumer if Katello.config.use_pulp
   include Glue if Katello.config.use_cp || Katello.config.use_pulp

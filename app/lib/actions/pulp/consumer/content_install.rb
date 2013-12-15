@@ -13,7 +13,7 @@
 module Actions
   module Pulp
     module Consumer
-      class ContentInstall < Actions::Action
+      class ContentInstall < Actions::Base
 
         include Helpers::RemoteAction
         include Helpers::PulpTask

@@ -16,7 +16,7 @@ class Repository < Katello::Model
 
   before_destroy :assert_deletable
 
-  include Ext::ActionSubject
+  include ForemanTasks::Concerns::ActionSubject
   include Glue::Candlepin::Content if (Katello.config.use_cp && Katello.config.use_pulp)
   include Glue::Pulp::Repo if Katello.config.use_pulp
   include Glue::ElasticSearch::Repository if Katello.config.use_elasticsearch
