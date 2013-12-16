@@ -32,6 +32,7 @@ end
 optparse.parse!
 
 use_foreman = system('rpm -q foreman &>/dev/null')
+use_splice = system('rpm -q spacewalk-splice-tool &>/dev/null')
 
 # Check that we are running as root
 if Process.uid != 0
@@ -105,6 +106,14 @@ SIGNO = [
 "/var/log/signo"
 ]
 
+SPLICE = [
+"/var/log/splice",
+"/etc/splice",
+"/etc/httpd/conf.d/splice.conf",
+"/etc/cron.d/spacewalk-sst-sync",
+"/etc/cron.d/splice-sst-sync"
+]
+
 # Exclude these files from the debug
 EXCLUDES = [
 "/etc/tomcat6/keystore",
@@ -129,6 +138,7 @@ sources += CANDLEPIN
 sources += PULP if deployment == 'katello'
 sources += SIGNO if deployment == 'katello'
 sources += FOREMAN if use_foreman
+sources += SPLICE if use_splice
 sources += THUMBSLUG if deployment == 'headpin'
 
 # Collect the files
