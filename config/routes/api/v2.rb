@@ -15,27 +15,53 @@ Katello::Engine.routes.draw do
       # re-routes alphabetical
       ##############################
 
+      # we don't want headpin to be able to create system directly
+      system_onlies = Katello.config.katello? ? [:index, :show, :destroy, :create, :update] : [:index, :show, :destroy, :update]
+
       root :to => 'root#resource_list'
 
       api_resources :environments, :only => [] do
-        api_resources :systems, :only => [:index]
+        api_resources :systems, :only => system_onlies do
+          get :report, :on => :collection
+        end
+        scope :constraints => Katello::RegisterWithActivationKeyContraint.new do
+          match '/systems' => 'systems#activate', :via => :post
+        end
       end
 
       api_resources :organizations, :only => [] do
         api_resources :system_groups, :only => [:index, :create]
-        api_resources :systems, :only => [:index]
+        api_resources :systems, :only => system_onlies do
+          get :report, :on => :collection
+        end
+        scope :constraints => Katello::RegisterWithActivationKeyContraint.new do
+          match '/systems' => 'systems#activate', :via => :post
+        end
       end
 
-      api_resources :system_groups, :only => [:index, :create, :show, :update] do
+      api_resources :system_groups, :only => system_onlies do
         member do
           post :copy
           put :add_systems
           put :remove_systems
         end
-        api_resources :systems, :only => [:index]
+        api_resources :systems, :only => system_onlies
       end
 
-      api_resources :systems, :only => [:index]
+      api_resources :systems, :only => system_onlies do
+        member do
+          get :tasks
+          get :available_system_groups, :action => :available_system_groups
+          post :system_groups, :action => :add_system_groups
+          delete :system_groups, :action => :remove_system_groups
+          get :packages, :action => :package_profile
+          get :errata
+          get :pools
+          get :releases
+          put :enabled_repos
+          put :refresh_subscriptions
+        end
+      end
 
       ##############################
       ##############################
@@ -50,12 +76,6 @@ Katello::Engine.routes.draw do
         api_resources :sync_plans, :only => [:index, :create]
         api_resources :tasks, :only => [:index, :show]
         api_resources :providers, :only => [:index], :constraints => {:organization_id => /[^\/]*/}
-        scope :constraints => Katello::RegisterWithActivationKeyContraint.new do
-          match '/systems' => 'systems#activate', :via => :post
-        end
-        api_resources :systems, :only => [:create] do
-          get :report, :on => :collection
-        end
         api_resources :distributors, :only => [:index, :create]
         resource :uebercert, :only => [:show]
 
@@ -88,22 +108,8 @@ Katello::Engine.routes.draw do
         api_resources :errata, :only => [:index, :create], :controller => :system_group_errata
       end
 
-      api_resources :systems,
-                    :only => (Katello.config.katello? ? [:show, :destroy, :create, :update] : [:show, :destroy, :update]) do
-        member do
-          get :packages, :action => :package_profile
-          get :errata
-          get :pools
-          get :releases
-          get :tasks
-          put :enabled_repos
-          get :available_system_groups, :action => :available_system_groups
-          post :system_groups, :action => :add_system_groups
-          delete :system_groups, :action => :remove_system_groups
-          put :refresh_subscriptions
-        end
+      api_resources :systems, :only => [] do
         collection do
-          match "/tasks/:task_id" => "systems#task", :via => :get
           match '/add_system_groups' => 'systems_bulk_actions#bulk_add_system_groups', :via => :put
           match '/remove_system_groups' => 'systems_bulk_actions#bulk_remove_system_groups', :via => :put
           match '/install_content' => 'systems_bulk_actions#install_content', :via => :put
@@ -246,12 +252,6 @@ Katello::Engine.routes.draw do
       end
 
       api_resources :environments, :only => [:show, :update, :destroy] do
-        scope :constraints => Katello::RegisterWithActivationKeyContraint.new do
-          match '/systems' => 'systems#activate', :via => :post
-        end
-        api_resources :systems, :only => [:create] do
-          get :report, :on => :collection
-        end
         api_resources :distributors, :only => [:create, :index]
         api_resources :products, :only => [:index] do
           get :repositories, :on => :member

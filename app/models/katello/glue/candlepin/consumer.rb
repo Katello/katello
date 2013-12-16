@@ -562,7 +562,7 @@ module Glue::Candlepin::Consumer
                         :finish_time => event[:timestamp],
                         :progress => "100",
                         :result => event[:messageText]}
-        unless self.task_statuses.where('task_statuses.uuid' => event_status[:task_id]).exists?
+        unless self.task_statuses.where('katello_task_statuses.uuid' => event_status[:task_id]).exists?
           TaskStatus.make(self, event_status, :candlepin_event, :event => event)
         end
       end

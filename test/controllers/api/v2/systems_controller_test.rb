@@ -91,8 +91,7 @@ class Api::V2::SystemsControllerTest < ActionController::TestCase
 
   def test_add_system_groups
     expected_ids = @system_groups.collect {|group| group.id}
-    post :add_system_groups, :id => @system.uuid,
-         :system => { :system_group_ids => expected_ids }
+    post :add_system_groups, :id => @system.uuid, :system_group_ids => expected_ids
 
     assert_response :success
     assert_template 'api/v2/systems/add_system_groups'
@@ -101,8 +100,7 @@ class Api::V2::SystemsControllerTest < ActionController::TestCase
 
   def test_add_system_groups_empty
     expected_ids = []
-    post :add_system_groups, :id => @system.uuid,
-         :system => { :system_group_ids => expected_ids }
+    post :add_system_groups, :id => @system.uuid, :system_group_ids => expected_ids
 
     assert_response :success
     assert_template 'api/v2/systems/add_system_groups'
@@ -110,22 +108,11 @@ class Api::V2::SystemsControllerTest < ActionController::TestCase
   end
 
   def test_add_system_groups_nil
-    post :add_system_groups, :id => @system.uuid,
-         :system => { :system_group_ids => nil }
+    post :add_system_groups, :id => @system.uuid, :system_group_ids => nil
 
     assert_response :success
     assert_template 'api/v2/systems/add_system_groups'
     assert_equal @system.system_group_ids, []
-  end
-
-  def test_task
-    task = TaskStatus.new
-    task.expects(:refresh).returns(task)
-    TaskStatus.stubs(:find).with("blah").returns(task)
-    get :task, :task_id=>"blah"
-
-    assert_template 'api/v2/systems/task'
-    assert_response :success
   end
 
 end
