@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Red Hat, Inc.
+ * Copyright 2013-2014 Red Hat, Inc.
  *
  * This software is licensed to you under the GNU General Public
  * License as published by the Free Software Foundation; either version
@@ -31,8 +31,8 @@
  *   within the table.
  */
 angular.module('Bastion.subscriptions').controller('SubscriptionsController',
-    ['$scope', '$q', '$location', 'gettext', 'Nutupane', 'Subscription', 'Provider', 'CurrentOrganization', 'unlimitedFilterFilter',
-    function ($scope, $q, $location, gettext, Nutupane, Subscription, Provider, CurrentOrganization, unlimitedFilterFilter) {
+    ['$scope', '$filter', '$q', '$location', 'gettext', 'Nutupane', 'Subscription', 'Provider', 'CurrentOrganization', 'SubscriptionsHelper',
+    function ($scope, $filter, $q, $location, gettext, Nutupane, Subscription, Provider, CurrentOrganization, SubscriptionsHelper) {
 
         var params = {
             'organization_id':  CurrentOrganization,
@@ -53,10 +53,22 @@ angular.module('Bastion.subscriptions').controller('SubscriptionsController',
             $scope.transitionTo('subscriptions.index');
         };
 
+        $scope.groupedSubscriptions = {};
+        $scope.$watch('table.rows', function (rows) {
+            $scope.groupedSubscriptions = SubscriptionsHelper.groupByProductName(rows);
+        });
+
         $scope.formatConsumed = function (subscription) {
-            var quantity = unlimitedFilterFilter(subscription.quantity);
+            var quantity = $filter('unlimitedFilter')(subscription.quantity);
 
             return gettext('%(consumed)s out of %(quantity)s').replace('%(consumed)s', subscription.consumed).replace('%(quantity)s', quantity);
+        };
+
+        $scope.formatInstanceBased = function (subscription) {
+            if (subscription['instance_multiplier'] === undefined || subscription['instance_multiplier'] === "" || subscription['instance_multiplier'] === 0) {
+                return gettext("No");
+            }
+            return gettext("Yes");
         };
 
         $scope.subscriptionType = function (subscription) {

@@ -4,7 +4,8 @@ module Katello
       module Rendering
 
         def respond_for_show(options = {})
-          respond_with_template_resource(options[:template] || 'show', controller_name, options)
+          respond_with_template_resource(options[:template] || 'show', options[:resource_name] || controller_name,
+                                         options)
         end
 
         def respond_for_index(options = {})

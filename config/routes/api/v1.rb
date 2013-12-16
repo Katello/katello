@@ -59,9 +59,6 @@ Katello::Engine.routes.draw do
         resources :tasks, :only => [:index]
         resources :providers, :only => [:index], :constraints => {:organization_id => /[^\/]*/}
 
-        scope :constraints => Katello::RegisterWithActivationKeyContraint.new do
-          match '/systems' => 'systems#activate', :via => :post
-        end
         resources :systems, :only => [:index, :create] do
           get :report, :on => :collection
 
@@ -70,15 +67,6 @@ Katello::Engine.routes.draw do
           end
         end
         resources :distributors, :only => [:index, :create]
-        resources :activation_keys, :only => [:index, :create, :destroy, :show, :update] do
-          member do
-            post :system_groups, :action => :add_system_groups
-            delete :system_groups, :action => :remove_system_groups
-
-            post :pools, :action => :add_pool
-            delete "pools/:poolid", :action => :remove_pool
-          end
-        end
         resources :repositories, :only => [] do
         end
         resource :uebercert, :only => [:show]
@@ -270,9 +258,6 @@ Katello::Engine.routes.draw do
       end
 
       resources :environments, :only => [:show, :update, :destroy] do
-        scope :constraints => Katello::RegisterWithActivationKeyContraint.new do
-          match '/systems' => 'systems#activate', :via => :post
-        end
         resources :systems, :only => [:create, :index] do
           get :report, :on => :collection
         end
@@ -280,7 +265,6 @@ Katello::Engine.routes.draw do
         resources :products, :only => [:index] do
           get :repositories, :on => :member
         end
-        resources :activation_keys, :only => [:index, :create]
 
         member do
           get :releases
@@ -288,11 +272,6 @@ Katello::Engine.routes.draw do
       end
 
       resources :gpg_keys, :only => [:show, :update, :destroy] do
-      end
-
-      resources :activation_keys do
-        post :pools, :action => :add_pool, :on => :member
-        delete "pools/:poolid", :action => :remove_pool, :on => :member
       end
 
       resources :errata, :only => [:index]

@@ -18,7 +18,7 @@ class ContentViewTest < ActiveSupport::TestCase
   def self.before_suite
     models = ["Organization", "KTEnvironment", "User", "ContentViewEnvironment","ContentViewDefinitionBase",
               "ContentViewDefinition", "Repository", "ContentView", "ContentViewVersion",
-              "ComponentContentView", "System"]
+              "ComponentContentView", "System", "ActivationKey"]
     services = ["Candlepin", "Pulp", "ElasticSearch"]
     disable_glue_layers(services, models, true)
   end

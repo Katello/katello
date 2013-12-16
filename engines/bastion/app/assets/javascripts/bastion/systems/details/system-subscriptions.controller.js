@@ -13,95 +13,69 @@
 
 /**
  * @ngdoc object
- * @name  Bastion.subscriptions.controller:SystemSubscriptionsController
+ * @name  Bastion.systems.controller:SystemSubscriptionsController
  *
  * @requires $scope
+ * @requires $location
  * @requires gettext
+ * @requires Subscription
  * @requires System
  * @requires Nutupane
+ * @requires SystemsHelper
+ * @requires SubscriptionsHelper
  *
  * @description
  *   Provides the functionality for the system details action pane.
  */
 angular.module('Bastion.systems').controller('SystemSubscriptionsController',
-    ['$scope', 'gettext', 'SystemSubscription', 'System', 'Nutupane', 'SystemsHelper',
-    function ($scope, gettext, SystemSubscription, System, Nutupane, SystemsHelper) {
-        var currentSubscriptionsNutupane,
-            availableSubscriptionsNutupane,
-            successHandler,
-            errorHandler,
-            refresh;
+    ['$scope', '$location', 'gettext', 'Subscription', 'System', 'Nutupane', 'SystemsHelper', 'SubscriptionsHelper',
+    function ($scope, $location, gettext, Subscription, System, Nutupane, SystemsHelper, SubscriptionsHelper) {
+        var subscriptionsPane, params;
 
-        successHandler = function () {
-            refresh();
-            $scope.successMessages.push(gettext('Subscriptions updated.'));
+        params = {
+            'id':          $scope.$stateParams.systemId,
+            'search':      $location.search().search || "",
+            'sort_by':     'name',
+            'sort_order':  'ASC',
+            'paged':       true
         };
 
-        errorHandler = function (error) {
-            _.each(error.data["errors"], function (errorMessage) {
-                $scope.errorMessages.push(gettext('An error occurred updating the subscription: ') + errorMessage);
+        subscriptionsPane = new Nutupane(System, params, 'subscriptions');
+        $scope.subscriptionsTable = subscriptionsPane.table;
+        $scope.subscriptionsTable.closeItem = function () {};
+        $scope.isRemoving = false;
+
+        $scope.groupedSubscriptions = {};
+        $scope.$watch('subscriptionsTable.rows', function (rows) {
+            $scope.groupedSubscriptions = SubscriptionsHelper.groupByProductName(rows);
+        });
+
+        $scope.disableRemoveButton = function () {
+            return $scope.subscriptionsTable.numSelected === 0 || $scope.isRemoving || !$scope.system.permissions.editable;
+        };
+
+        $scope.removeSelected = function () {
+            var selected;
+            selected = SubscriptionsHelper.getSelectedSubscriptions($scope.subscriptionsTable);
+
+            $scope.isRemoving = true;
+            System.removeSubscriptions({uuid: $scope.system.uuid, 'subscriptions': selected}, function () {
+                subscriptionsPane.table.selectAll(false);
+                subscriptionsPane.refresh();
+                $scope.successMessages.push(gettext("Successfully removed %s subscriptions.").replace('%s', selected.length));
+                $scope.isRemoving = false;
+            }, function (response) {
+                $scope.isRemoving = false;
+                $scope.errorMessages.push(gettext("An error occurred removing the subscriptions.") + response.data.displayMessage);
             });
-            availableSubscriptionsNutupane.table.working = false;
-            currentSubscriptionsNutupane.table.working = false;
         };
 
-        currentSubscriptionsNutupane = new Nutupane(SystemSubscription, {systemId: $scope.$stateParams.systemId});
-        $scope.currentSubscriptionsTable = currentSubscriptionsNutupane.table;
-        currentSubscriptionsNutupane.query();
-
-        availableSubscriptionsNutupane = new Nutupane(System, {id: $scope.$stateParams.systemId}, 'availableSubscriptions');
-        $scope.availableSubscriptionsTable = availableSubscriptionsNutupane.table;
-        availableSubscriptionsNutupane.query();
-
-        refresh = function () {
-            availableSubscriptionsNutupane.table.selectAll(false);
-            availableSubscriptionsNutupane.refresh();
-            currentSubscriptionsNutupane.table.selectAll(false);
-            currentSubscriptionsNutupane.refresh();
-            $scope.system.$get();
-        };
-
-        $scope.removeSubscriptions = function () {
-            var selectedRows = $scope.currentSubscriptionsTable.getSelected(),
-                allSelected = $scope.currentSubscriptionsTable.allSelected;
-
-            availableSubscriptionsNutupane.table.working = true;
-            currentSubscriptionsNutupane.table.working = true;
-
-            if (allSelected) {
-                SystemSubscription.remove({systemId: $scope.system.uuid}, successHandler, errorHandler);
-            } else {
-                _.each(selectedRows, function (row) {
-                    SystemSubscription.remove({systemId: $scope.system.uuid, id: row.entitlementId},
-                        successHandler, errorHandler);
-                });
-            }
-        };
-
-        $scope.attachSubscriptions = function () {
-            var selectedRows = $scope.availableSubscriptionsTable.getSelected();
-
-            _.each(selectedRows, function (row) {
-                var quantity = row.amount || 1;
-                SystemSubscription.save({systemId: $scope.system.uuid, pool: row['cp_id'], quantity: quantity}, successHandler, errorHandler);
-            });
-
-        };
+/*
+http://projects.theforeman.org/issues/4253
 
         $scope.autoAttachSubscriptions = function () {
             System.refreshSubscriptions({uuid: $scope.system.uuid});
             refresh();
-        };
-
-        $scope.availableSubscriptionsTable.range = function (start, end, step) {
-            var range = [];
-            start = start || 0;
-            step = step || 1;
-
-            if (end) {
-                range = _.range(start, end, step);
-            }
-            return range;
         };
 
         $scope.availableSubscriptionsTable.matchSystem = false;
@@ -132,5 +106,6 @@ angular.module('Bastion.systems').controller('SystemSubscriptionsController',
         };
 
         $scope.getStatusColor = SystemsHelper.getStatusColor;
+*/
     }
 ]);

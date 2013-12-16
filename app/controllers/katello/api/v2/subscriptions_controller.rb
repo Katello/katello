@@ -14,131 +14,136 @@ module Katello
 class Api::V2::SubscriptionsController < Api::V2::ApiController
   include ConsumersControllerLogic
 
+  before_filter :find_activation_key
   before_filter :find_system
-  before_filter :find_optional_organization, :only => [:index]
-  before_filter :find_organization, :only => [:show, :upload]
+  before_filter :find_optional_organization, :only => [:index, :available]
+  before_filter :find_organization, :only => [:upload]
   before_filter :find_subscription, :only => [:show]
   before_filter :find_provider
   before_filter :authorize
 
+  before_filter :load_search_service, :only => [:index, :available]
+
   resource_description do
-    description "Systems subscriptions management."
+    description "Subscriptions management."
     api_version 'v2'
   end
 
   def rules
-    read_test = lambda { @system ? @system.readable? : @provider.readable? }
+    read_test = lambda do
+      return @system.readable? if @system
+      return ActivationKey.readable(@activation_key.organization) if @activation_key
+      @provider.readable?
+    end
     available_test = lambda { Organization.any_readable? }
-    system_modification_test = lambda { @system.editable? }
+    modification_test = lambda do
+      return @system.editable? if @system
+      return ActivationKey.manageable?(@activation_key.organization) if @activation_key
+      return @distributor.editable? if @distributor
+      @provider.editable?
+    end
     edit_test = lambda { @provider.editable? }
 
     {
       :index => read_test,
       :show => read_test,
-      :create => system_modification_test,
-      :destroy => system_modification_test,
-      :destroy_all => system_modification_test,
+      :create => modification_test,
+      :destroy => modification_test,
+      :destroy_all => modification_test,
       :available => available_test,
       :upload => edit_test
     }
   end
 
-  api :GET, "/systems/:system_id/subscriptions", "List system subscriptions"
+  api :GET, "/systems/:system_id/subscriptions", "List a system's subscriptions"
   api :GET, "/organizations/:organization_id/subscriptions", "List organization subscriptions"
+  api :GET, "/activation_keys/:activation_key_id/subscriptions", "List an activation key's subscriptions"
   param :system_id, String, :desc => "UUID of the system", :required => false
-  param :organization_id, :identifier, :desc => "Organization id", :required => false
-  # rubocop:disable SymbolName
+  param :activation_key_id, String, :desc => "Activation key ID", :required => false
+  param :organization_id, :identifier, :desc => "Organization ID", :required => false
   def index
-    if @system
-      subs = @system.consumed_entitlements
-      subscriptions = {
-          :subscriptions => subs,
-          :subtotal => subs.count,
-          :total => subs.count
-      }
-    else
-      filters = []
+    subscriptions = if @system
+                      index_system
+                    elsif @activation_key
+                      index_activation_key
+                    else
+                      index_organization
+                    end
 
-      # Limit subscriptions to current org and Red Hat provider
-      filters << {:term => {:org => [@organization.label]}}
-      filters << {:term => {:provider_id => [@organization.redhat_provider.id]}}
-
-      options = {
-          :filters => filters,
-          :load_records? => false,
-          :default_field => :productName
-      }
-
-      # Without any search terms, reindex all subscriptions in elasticsearch. This is to ensure
-      # that the latest information is searchable.
-      if params[:offset].to_i == 0 && params[:search].blank?
-        @organization.redhat_provider.index_subscriptions
-      end
-
-      subscriptions = item_search(Pool, params, options)
-    end
-
-    respond(:collection => subscriptions)
+    respond_for_index(:collection => subscriptions)
   end
 
   api :GET, "/organizations/:organization_id/subscriptions/:id", "Show a subscription"
-  param :organization_id, :number, :desc => "Organization identifier", :required => true
+  api :GET, "/subscriptions/:id", "Show a subscription"
+  param :organization_id, :number, :desc => "Organization identifier"
   param :id, :number, :desc => "Subscription identifier", :required => true
   def show
     respond :resource => @subscription
   end
 
-  api :GET, "/systems/:system_id/subscriptions/available", "List available subscriptions"
-  param :system_id, String, :desc => "UUID of the system", :required => true
-  param :match_system, :bool, :desc => "Return subscriptions that match system"
-  param :match_installed, :bool, :desc => "Return subscriptions that match installed"
-  param :no_overlap, :bool, :desc => "Return subscriptions that don't overlap"
   def available
-    params[:match_system] = params[:match_system].to_bool if params[:match_system]
-    params[:match_installed] = params[:match_installed].to_bool if params[:match_installed]
-    params[:no_overlap] = params[:no_overlap].to_bool if params[:no_overlap]
+    subscriptions = if @system
+                      available_system
+                    elsif @activation_key
+                      available_activation_key
+                    else
+                      available_organization
+                    end
 
-    pools = @system.filtered_pools(params[:match_system], params[:match_installed],
-      params[:no_overlap])
-    available = available_subscriptions(pools, @system.organization)
-
-    collection = {
-        :results => available,
-        :subtotal => available.count,
-        :total => available.count
-    }
-
-    respond_for_index(:collection => collection, :template => :index)
+    respond_for_index(:collection => subscriptions, :template => 'index')
   end
 
   api :POST, "/systems/:system_id/subscriptions", "Create a subscription"
-  param :system_id, String, :desc => "UUID of the system", :required => true
-  param :subscription, Hash, :required => true, :action_aware => true do
-    param :pool, String, :desc => "Subscription Pool uuid", :required => true
-    param :quantity, :number, :desc => "Number of subscription to use", :required => true
+  api :POST, "/activation_keys/:activation_key_id/subscriptions", "Create a subscription"
+  param :system_id, String, :desc => "UUID of the system"
+  param :activation_key_id, String, :desc => "ID of the activation key"
+  param :subscriptions, Hash, :required => true, :action_aware => true do
+    param :subscription, Hash, :required => true, :action_aware => true do
+      param :id, String, :desc => "Subscription Pool uuid", :required => true
+      param :quantity, :number, :desc => "Number of subscription to use", :required => true
+    end
   end
   def create
-    expected_params = params.slice(:pool, :quantity)
-    fail HttpErrors::BadRequest, _("Please provide pool and quantity") if expected_params.count != 2
-    @system.subscribe(expected_params[:pool], expected_params[:quantity])
-    respond :resource => @system
+    object = @system || @activation_key || @distributor
+    subscription_params[:subscriptions].each do |subscription|
+      object.subscribe(subscription[:subscription][:id], subscription[:subscription][:quantity])
+    end
+
+    subscriptions = if @system
+                      index_system
+                    elsif @activation_key
+                      index_activation_key
+                    else
+                      index_organization
+                    end
+
+    respond_for_index(:collection => subscriptions, :template => 'index')
   end
 
   api :DELETE, "/systems/:system_id/subscriptions/:id", "Delete a subscription"
   param :id, :number, :desc => "Entitlement id"
   param :system_id, String, :desc => "UUID of the system", :required => true
   def destroy
-    expected_params = params.slice(:id)
-    fail HttpErrors::BadRequest, _("Please provide subscription ID") if expected_params.count != 1
-    @system.unsubscribe(expected_params[:id])
-    respond_for_show :resource => @system
-  end
+    object = @system || @activation_key || @distributor
+    if params[:subscription]
+      subscription_params[:subscriptions].each do |subscription|
+        object.unsubscribe(subscription[:subscription][:id])
+      end
+    elsif params[:id]
+      object.unsubscribe(params[:id])
+    else
+      @system.unsubscribe_all
+    end
 
-  api :DELETE, "/systems/:system_id/subscriptions", "Delete all system subscriptions"
-  param :system_id, String, :desc => "UUID of the system", :required => true
-  def destroy_all
-    @system.unsubscribe_all
-    respond_for_show :resource => @system
+    subscriptions = if @system
+                      index_system
+                    elsif @activation_key
+                      index_activation_key
+                    else
+                      index_organization
+                    end
+
+    respond_for_index(:collection => subscriptions, :template => 'index')
   end
 
   api :POST, "/organizations/:organization_id/subscriptions/upload", "Upload a subscription manifest"
@@ -173,12 +178,161 @@ class Api::V2::SubscriptionsController < Api::V2::ApiController
     @system = System.find_by_uuid!(params[:system_id]) if params[:system_id]
   end
 
+  def find_activation_key
+    @activation_key = ActivationKey.find_by_id!(params[:activation_key_id]) if params[:activation_key_id]
+  end
+
   def find_provider
+    @organization = @system.organization if @system
+    @organization = @activation_key.organization if @activation_key
+    @organization = @subscription.organization if @subscription
     @provider = @organization.redhat_provider if @organization
   end
 
   def find_subscription
-    @subscription = Pool.find_by_organization_and_id!(@organization, params[:id])
+    @subscription = Pool.find_by_id!(params[:id])
   end
+
+  private
+
+  def index_system
+    subs = @system.consumed_entitlements
+    # TODO: pluck id and call elasticsearch?
+    subscriptions = {
+        :results => subs,
+        :subtotal => subs.count,
+        :total => subs.count,
+        :page => 1,
+        :per_page => subs.count
+    }
+
+    return subscriptions
+  end
+
+  def index_activation_key
+    @organization = @activation_key.organization
+    subs = activation_key_subscriptions(@activation_key.get_key_pools)
+    # TODO: pluck id and call elasticsearch?
+    subscriptions = {
+        :results => subs,
+        :subtotal => subs.count,
+        :total => subs.count,
+        :page => 1,
+        :per_page => subs.count
+    }
+
+    return subscriptions
+  end
+
+  def index_organization
+    filters = []
+    filters << {:term => {:org => [@organization.label]}}
+
+    options = {
+        :filters => filters,
+        :load_records? => false,
+        :default_field => :product_name
+    }
+
+    # TODO: remove this fragile logic
+    # Without any search terms, reindex all subscriptions in elasticsearch. This is to ensure
+    # that the latest information is searchable.
+    if params[:offset].to_i == 0 && params[:search].blank?
+      @organization.redhat_provider.index_subscriptions
+    end
+
+    subscriptions = item_search(Pool, params, options)
+
+    return subscriptions
+  end
+
+  api :GET, "/systems/:system_id/subscriptions/available", "List available subscriptions"
+  param :system_id, String, :desc => "UUID of the system", :required => true
+  param :match_system, :bool, :desc => "Return subscriptions that match system"
+  param :match_installed, :bool, :desc => "Return subscriptions that match installed"
+  param :no_overlap, :bool, :desc => "Return subscriptions that don't overlap"
+  def available_system
+    params[:match_system] = params[:match_system].to_bool if params[:match_system]
+    params[:match_installed] = params[:match_installed].to_bool if params[:match_installed]
+    params[:no_overlap] = params[:no_overlap].to_bool if params[:no_overlap]
+    pools = @system.filtered_pools(params[:match_system], params[:match_installed],
+                                   params[:no_overlap])
+    available = available_subscriptions(pools, @system.organization)
+
+    subscriptions = {
+        :results => available,
+        :subtotal => available.count,
+        :total => available.count
+    }
+
+    return subscriptions
+  end
+
+  def available_activation_key
+    @organization = @activation_key.organization
+    all_pools = @activation_key.get_pools
+    key_pool_ids = @activation_key.get_key_pools.collect {|pool| pool[:id]}
+    pools = all_pools.collect {|pool| pool if !key_pool_ids.include? pool[:id]}.compact
+    subs = activation_key_subscriptions(pools)
+    subscriptions = {
+        :results => subs,
+        :subtotal => subs.count,
+        :total => subs.count,
+        :page => 1,
+        :per_page => subs.count
+    }
+
+    return subscriptions
+  end
+
+  def available_organization
+    # TODO: perhaps /organizations/:organization_id/available to return just subs w/ unused quantity?
+    # TODO: or just those w/ repos enabled?  (eg. sub-mgr list --available)
+
+    filters = []
+    filters << {:terms => {:cp_id => subscriptions.collect(&:cp_id)}}
+    filters << {:term => {:org => [@organization.label]}}
+    filters << {:term => {:provider_id => [@organization.redhat_provider.id]}}
+    options = {
+        :filters => filters,
+        :load_records? => false,
+        :default_field => :product_name
+    }
+
+    # TODO: remove this fragile logic
+    # Without any search terms, reindex all subscriptions in elasticsearch. This is to ensure
+    # that the latest information is searchable.
+    if params[:offset].to_i == 0 && params[:search].blank?
+      @organization.redhat_provider.index_subscriptions
+    end
+
+    subscriptions = item_search(Pool, params, options)
+
+    return subscriptions
+  end
+
+  def activation_key_subscriptions(cp_pools)
+    if cp_pools
+      pools = cp_pools.collect{|cp_pool| Pool.find_pool(cp_pool['id'], cp_pool)}
+
+      subscriptions = pools.collect do |pool|
+        product = Product.where(:cp_id => pool.product_id).first
+        next if product.nil?
+        pool.provider_id = product.provider_id
+        pool
+      end
+      subscriptions.compact!
+    else
+      subscriptions = []
+    end
+
+    return subscriptions
+  end
+
+  def subscription_params
+    params.require(:subscription).permit(:id, :subscriptions => [:subscription => [:id, :quantity]])
+    params[:subscription]
+  end
+
 end
 end

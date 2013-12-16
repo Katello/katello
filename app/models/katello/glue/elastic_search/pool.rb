@@ -48,7 +48,30 @@ module Glue::ElasticSearch::Pool
           "derived"   => @pool_derived,
           "provider_id" => provider_id,
           "stacking_id" => @stacking_id,
-          "multi_entitlement" => @multi_entitlement
+          "multi_entitlement" => @multi_entitlement,
+
+          # TODO: Bug #4005: allow Rabl.render(object, 'something/show') to work
+          #       http://projects.theforeman.org/issues/4005#change-12796
+          #       Ideally, as_json would be replaced w/ rabl output which would solve this need
+          #       for duplication and sync between rabl and elasticsearch indexing.
+          #       See also views/katello/api/v2/subscriptions/show.json.rabl
+          "cp_id" => @cp_id,  # TODO: not working / blank
+          "organization" => @organization,  # TODO: not working / blank
+          "start_date" => @start_date,
+          "end_date"   => @end_date,
+          "account_number" => @account_number,
+          "available" => @available,
+          "virt_only" => @virt_only,
+          "sockets" => @sockets,
+          "core"      => @core,
+          "ram"       => @ram,
+          "instance_multiplier" => @instance_multiplier,
+          "provided_products" => @provided_products,
+          "systems" => @systems,
+          "distributors" => @distributors,
+          "host" => @host,
+          "account_number"   => @account_number,
+          "contract_number"  => @contract_number,
         }
       end
 
