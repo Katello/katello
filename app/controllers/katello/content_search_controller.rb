@@ -303,7 +303,7 @@ class ContentSearchController < Katello::ApplicationController
 
   def repo_errata
     offset = params[:offset] || 0
-    errata = Errata.search('', :start => offset, :page_size => current_user.page_size,
+    errata = Errata.legacy_search('', :start => offset, :page_size => current_user.page_size,
                                :filters => {:repoids => [@repo.pulp_id]})
 
     rows = errata.collect do |e|
@@ -396,7 +396,7 @@ class ContentSearchController < Katello::ApplicationController
               Package.search('', offset, current_user.page_size,
                              repo_map.keys, [:nvrea_sort, "ASC"], process_search_mode)
             when :errata
-              Errata.search('', :start => offset, :page_size => current_user.page_size,
+              Errata.legacy_search('', :start => offset, :page_size => current_user.page_size,
                                 :filters => {:repoids =>  repo_map.keys}, :search_mode => process_search_mode)
             when :puppet_module
               PuppetModule.search('', { :start => offset, :page_size => current_user.page_size,

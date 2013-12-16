@@ -46,50 +46,39 @@ describe('Directive: alchAlert', function() {
         scope.successMessages = ['hello'];
         scope.$digest();
 
-        expect(elementScope.alerts.length).toBe(1);
-        expect(elementScope.alerts[0].message).toBe('hello');
-        expect(elementScope.alerts[0].type).toBe('success');
-
-        expect(scope.successMessages.length).toBe(0);
+        expect(elementScope.alerts['success'].length).toBe(1);
+        expect(elementScope.alerts['success'][0]).toBe('hello');
     });
 
     it("should display info alerts", function() {
         scope.infoMessages = ['hello'];
         scope.$digest();
 
-        expect(elementScope.alerts.length).toBe(1);
-        expect(elementScope.alerts[0].message).toBe('hello');
-        expect(elementScope.alerts[0].type).toBe('info');
-
-        expect(scope.infoMessages.length).toBe(0);
+        expect(elementScope.alerts['info'].length).toBe(1);
+        expect(elementScope.alerts['info'][0]).toBe('hello');
     });
 
     it("should display warning alerts", function() {
         scope.warningMessages = ['hello'];
         scope.$digest();
 
-        expect(elementScope.alerts.length).toBe(1);
-        expect(elementScope.alerts[0].message).toBe('hello');
-        expect(elementScope.alerts[0].type).toBe('warning');
-
-        expect(scope.warningMessages.length).toBe(0);
+        expect(elementScope.alerts['warning'].length).toBe(1);
+        expect(elementScope.alerts['warning'][0]).toBe('hello');
     });
 
     it("should display success alerts", function() {
         scope.errorMessages = ['hello'];
         scope.$digest();
 
-        expect(elementScope.alerts.length).toBe(1);
-        expect(elementScope.alerts[0].message).toBe('hello');
-        expect(elementScope.alerts[0].type).toBe('danger');
-
-        expect(scope.errorMessages.length).toBe(0);
+        expect(elementScope.alerts['danger'].length).toBe(1);
+        expect(elementScope.alerts['danger'][0]).toBe('hello');
     });
 
     it("provides a way to close alerts", function() {
-        elementScope.alerts = ['yo!', 'hello'];
-        elementScope.closeAlert(1);
-        expect(elementScope.alerts.length).toBe(1);
+        elementScope.alerts = {success: ['yo!', 'hello'], danger: ['foo']};
+        elementScope.closeAlert('success', 1);
+        expect(elementScope.alerts['success'].length).toBe(1);
+        expect(elementScope.alerts['danger'].length).toBe(1);
     });
 
 });

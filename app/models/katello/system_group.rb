@@ -119,7 +119,7 @@ class SystemGroup < ActiveRecord::Base
   def install_errata(errata_ids)
     fail Errors::SystemGroupEmptyException if self.systems.empty?
     perform_group_action do |consumer_group|
-      pulp_job = consumer_group.install_consumer_errata(groups)
+      pulp_job = consumer_group.install_consumer_errata(errata_ids)
       save_job(pulp_job, :errata_install, :errata_ids, errata_ids)
     end
   end
@@ -189,7 +189,7 @@ class SystemGroup < ActiveRecord::Base
 
   def save_job(pulp_job, job_type, parameters_type, parameters)
     job = Job.create!(:pulp_id => pulp_job.first[:task_group_id], :job_owner => self)
-    job.create_tasks(self, pulp_job, job_type, parameters_type => parameters)
+    job.create_tasks(self.org, pulp_job, job_type, parameters_type => parameters)
     job
   end
 

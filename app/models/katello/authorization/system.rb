@@ -53,6 +53,18 @@ module Authorization::System
       end
     end
 
+    def deletable(org)
+      if org.systems_deletable?
+        where(:environment_id => org.environment_ids)
+      else
+        where_clause = "#{System.table_name}.environment_id in (#{KTEnvironment.systems_deletable(org).select(:id).to_sql})"
+        where_clause += " or "
+        where_clause += "#{SystemSystemGroup.table_name}.system_group_id in (#{SystemGroup.systems_deletable(org).select(:id).to_sql})"
+        joins("left outer join #{SystemSystemGroup.table_name} on #{System.table_name}.id =
+                                    #{SystemSystemGroup.table_name}.system_id").where(where_clause)
+      end
+    end
+
     def any_readable?(org)
       org.systems_readable? ||
         KTEnvironment.systems_readable(org).count > 0 ||

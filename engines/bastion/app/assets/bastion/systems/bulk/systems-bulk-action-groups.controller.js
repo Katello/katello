@@ -30,12 +30,14 @@
 angular.module('Bastion.systems').controller('SystemsBulkActionGroupsController',
     ['$scope', '$q', '$location', 'gettext', 'Nutupane', 'BulkAction', 'SystemGroup', 'CurrentOrganization',
     function ($scope, $q, $location, gettext, Nutupane, BulkAction, SystemGroup, CurrentOrganization) {
+        var groupNutupane, params;
 
         $scope.systemGroups = {
             action: null
         };
+        $scope.setState(false, [], []);
 
-        var params = {
+        params = {
             'organization_id':  CurrentOrganization,
             'offset':           0,
             'sort_by':          'name',
@@ -43,8 +45,9 @@ angular.module('Bastion.systems').controller('SystemsBulkActionGroupsController'
             'paged':            true
         };
 
-        var groupNutupane = new Nutupane(SystemGroup, params);
+        groupNutupane = new Nutupane(SystemGroup, params);
 
+        $scope.setState(false, [], []);
         $scope.detailsTable = groupNutupane.table;
         $scope.detailsTable.closeItem = function () {};
 
@@ -62,23 +65,18 @@ angular.module('Bastion.systems').controller('SystemsBulkActionGroupsController'
             params['system_group_ids'] = groupNutupane.getAllSelectedResults('id').included.ids;
 
             $scope.systemGroups.action = null;
+            $scope.setState(true, [], []);
 
             success = function (data) {
                 deferred.resolve(data);
-                $scope.systemGroups.working = false;
-
-                $scope.successMessages = data["displayMessages"];
-                $scope.errorMessages = [];
+                $scope.setState(false, data["displayMessages"], []);
                 groupNutupane.refresh();
             };
 
             error = function (error) {
                 deferred.reject(error.data["errors"]);
-                $scope.systemGroups.working = false;
+                $scope.setState(false, [], [error.data.displayMessage]);
                 $scope.editMode = true;
-                _.each(error.data.errors, function (errorMessage) {
-                    $scope.errorMessages.push(gettext("An error occurred: ") + errorMessage);
-                });
             };
 
             if (action === 'add') {

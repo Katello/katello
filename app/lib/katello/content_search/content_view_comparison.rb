@@ -140,7 +140,7 @@ module ContentSearch
                   Package.search('', offset, page_size, view_repos.map(&:pulp_id),
                                  [:nvrea_sort, "ASC"], search_mode)
                 when :errata
-                  Errata.search('', :start => offset, :page_size => page_size,
+                  Errata.legacy_search('', :start => offset, :page_size => page_size,
                                     :filters => {:repoids => view_repos.map(&:pulp_id)},
                                     :search_mode => search_mode)
                 when :puppet_module

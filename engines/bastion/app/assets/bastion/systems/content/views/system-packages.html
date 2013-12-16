@@ -47,7 +47,7 @@
   </div>
 
   <div alch-table="currentPackagesTable">
-    <div alch-container-scroll control-width="table" alch-infinite-scroll="currentPackagesTable.nextPage()">
+    <div alch-container-scroll control-width="table" alch-infinite-scroll="currentPackagesTable.nextPage()" data="currentPackagesTable.rows">
       <table ng-class="{'table-mask': currentPackagesTable.working}" class="table table-striped">
         <thead>
           <tr alch-table-head>

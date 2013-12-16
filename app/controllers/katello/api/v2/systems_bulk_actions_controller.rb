@@ -13,11 +13,31 @@
 module Katello
 class Api::V2::SystemsBulkActionsController < Api::V2::ApiController
 
-  before_filter :find_organization, :only => [:bulk_add_system_groups, :bulk_remove_system_groups]
-  before_filter :find_editable_systems, :only => [:bulk_add_system_groups, :bulk_remove_system_groups]
-  before_filter :find_systems, :except => [:bulk_add_system_groups, :bulk_remove_system_groups]
+  before_filter :find_organization
+  before_filter :load_search_service
+  before_filter :find_editable_systems, :except => [:destroy_systems, :applicable_errata]
+  before_filter :find_deletable_systems, :only => [:destroy_systems]
+  before_filter :find_readable_systems, :only => [:applicable_errata]
+
   before_filter :find_groups, :only => [:bulk_add_system_groups, :bulk_remove_system_groups]
+  before_filter :validate_content_action, :only => [:install_content, :update_content, :remove_content]
   before_filter :authorize
+
+  PARAM_ACTIONS = {
+      :install_content => {
+          :package => :install_packages,
+          :package_group => :install_package_groups,
+          :errata => :install_errata
+      },
+      :update_content => {
+          :package => :update_packages,
+          :package_group => :update_package_groups,
+      },
+      :remove_content => {
+          :package => :uninstall_packages,
+          :package_group => :uninstall_package_groups
+      }
+  }.with_indifferent_access
 
   def_param_group :bulk_params do
     param :include, Hash, :required => true, :action_aware => true do
@@ -30,22 +50,21 @@ class Api::V2::SystemsBulkActionsController < Api::V2::ApiController
   end
 
   def rules
-    bulk_delete_systems = lambda{ System.any_systems_deletable?(@systems) }
-    bulk_edit_systems = lambda{ System.any_systems_editable?(@systems) }
     bulk_groups = lambda{ SystemGroup.assert_editable(@system_groups) }
 
     hash = {}
-    #System groups are looked up via filters, handling permissions
     hash[:bulk_add_system_groups] = bulk_groups
     hash[:bulk_remove_system_groups] = bulk_groups
-    hash[:install_content] = bulk_edit_systems
-    hash[:update_content] = bulk_edit_systems
-    hash[:remove_content] = bulk_edit_systems
-    hash[:destroy_systems] = bulk_delete_systems
+    #the actions do validation upon system lookup.  See find_*_systems filters
+    hash[:applicable_errata] = lambda{true}
+    hash[:install_content] = lambda{true}
+    hash[:update_content] = lambda{true}
+    hash[:remove_content] = lambda{true}
+    hash[:destroy_systems] = lambda{true}
     hash
   end
 
-  api :PUT, "/systems/add_system_groups",
+  api :PUT, "/systems/bulk/add_system_groups",
       "Add one or more system groups to one or more systems"
   param_group :bulk_params
   param :system_group_ids, Array, :desc => "List of system group ids", :required => true
@@ -67,7 +86,7 @@ class Api::V2::SystemsBulkActionsController < Api::V2::ApiController
     respond_for_show :template => 'bulk_action', :resource => { 'displayMessages' => display_messages }
   end
 
-  api :PUT, "/systems/remove_system_groups",
+  api :PUT, "/systems/bulk/remove_system_groups",
       "Remove one or more system groups to one or more systems"
   param_group :bulk_params
   param :system_group_ids, Array, :desc => "List of system group ids", :required => true
@@ -89,144 +108,98 @@ class Api::V2::SystemsBulkActionsController < Api::V2::ApiController
     respond_for_show :template => 'bulk_action', :resource => { 'displayMessages' => display_messages }
   end
 
-  api :PUT, "/systems/install_content", "Install content on one or more systems"
-  param :ids, Array, :desc => "List of system ids", :required => true
+  api :POST, "/systems/bulk/applicable_errata",
+      "Fetch applicable errata for a system."
+  param_group :bulk_params
+  def applicable_errata
+    @search_service = nil #reload search service after systems are loaded
+    load_search_service
+    results = item_search(Katello::Errata, params, {}) do |service|
+      Katello::Errata.search_applicable_for_consumers(@systems.collect{|i| i.uuid}, service)
+    end
+
+    respond_for_index(:collection => results)
+  end
+
+  api :PUT, "/systems/bulk/install_content", "Install content on one or more systems"
+  param_group :bulk_params
   param :content_type, String,
         :desc => "The type of content.  The following types are supported: 'package', 'package_group' and 'errata'.",
         :required => true
   param :content, Array, :desc => "List of content (e.g. package names, package group names or errata ids)", :required => true
   def install_content
-    if params[:content_type].blank?
-      fail HttpErrors::BadRequest, _("A content_type must be provided.")
-    end
-
-    if params[:content].blank?
-      fail HttpErrors::BadRequest, _("No content has been provided.")
-
-    else
-      if params[:content_type].to_sym == :package
-        @systems.each{ |system| system.install_packages params[:content] }
-        display_message = _("Successfully scheduled install of package(s): %s") % params[:content].join(', ')
-
-      elsif params[:content_type].to_sym == :package_group
-        @systems.each{ |system| system.install_package_groups params[:content] }
-        display_message = _("Successfully scheduled install of package group(s): %s") % params[:content].join(', ')
-
-      elsif params[:content_type].to_sym == :errata
-        @systems.each{ |system| system.install_errata params[:content] }
-        display_message = _("Successfully scheduled install of errata(s): %s") % params[:content].join(', ')
-      end
-    end
-
-    respond_for_show :template => 'bulk_action', :resource => { 'displayMessage' => display_message }
+    content_action
   end
 
-  api :PUT, "/systems/update_content", "Update content on one or more systems"
+  api :PUT, "/systems/bulk/update_content", "Update content on one or more systems"
   param :ids, Array, :desc => "List of system ids", :required => true
   param :content_type, String,
         :desc => "The type of content.  The following types are supported: 'package' and 'package_group.",
         :required => true
   param :content, Array, :desc => "List of content (e.g. package or package group names)", :required => true
   def update_content
-    if params[:content_type].blank?
-      fail HttpErrors::BadRequest, _("A content_type must be provided.")
-    end
-
-    if params[:content].blank?
-      fail HttpErrors::BadRequest, _("No content has been provided.")
-
-    else
-      if params[:content_type].to_sym == :package
-        @systems.each do |system|
-          system.update_packages params[:content]
-        end
-
-        if params[:content].blank?
-          display_message = _("Successfully scheduled update of all packages")
-        else
-          display_message = _("Successfully scheduled update of package(s): %s") % params[:content].join(', ')
-        end
-
-      elsif params[:content_type].to_sym == :package_group
-        @systems.each{ |system| system.install_package_groups params[:content] }
-        display_message = _("Successfully scheduled update of package group(s): %s") % params[:content].join(', ')
-      end
-    end
-
-    respond_for_show :template => 'bulk_action', :resource => { 'displayMessage' => display_message }
+    content_action
   end
 
-  api :PUT, "/systems/remove_content", "Remove content on one or more systems"
+  api :PUT, "/systems/bulk/remove_content", "Remove content on one or more systems"
   param :ids, Array, :desc => "List of system ids", :required => true
   param :content_type, String,
         :desc => "The type of content.  The following types are supported: 'package' and 'package_group.",
         :required => true
   param :content, Array, :desc => "List of content (e.g. package or package group names)", :required => true
   def remove_content
-    if params[:content_type].blank?
-      fail HttpErrors::BadRequest, _("A content_type must be provided.")
-    end
-
-    if params[:content].blank?
-      fail HttpErrors::BadRequest, _("No content has been provided.")
-
-    else
-      if params[:content_type].to_sym == :package
-        @systems.each{ |system| system.uninstall_packages params[:content] }
-        display_message = _("Successfully scheduled uninstall of package(s): %s") % params[:content].join(', ')
-
-      elsif params[:content_type].to_sym == :package_group
-        @systems.each{ |system| system.uninstall_package_groups params[:content] }
-        display_message = _("Successfully scheduled uninstall of package group(s): %s") % params[:content].join(', ')
-      end
-    end
-
-    respond_for_show :template => 'bulk_action', :resource => { 'displayMessage' => display_message }
+    content_action
   end
 
-  api :PUT, "/systems/destroy", "Destroy one or more systems"
+  api :PUT, "/systems/bulk/destroy", "Destroy one or more systems"
   param :ids, Array, :desc => "List of system ids", :required => true
   def destroy_systems
     @systems.each{ |system| system.destroy }
     display_message = _("Successfully removed %s systems") % @systems.length
-    respond_for_show :template => 'bulk_action', :resource => { 'displayMessage' => display_message }
+    respond_for_show :template => 'bulk_action', :resource => { 'displayMessages' => [display_message] }
   end
 
   private
-
-  def find_systems
-    #deprecated find_systems
-    @systems = System.find(params[:ids])
-  end
 
   def find_groups
     @system_groups = SystemGroup.where(:id => params[:system_group_ids])
   end
 
-  #takes a structure like:
-  # included: {
-  #      ids: [],
-  #      search: 'search_term'
-  #  },
-  #  excluded: {
-  #      ids: []
-  #  }
-  # and looks up editable systems for it
+  def find_readable_systems
+    find_systems(:readable)
+  end
+
   def find_editable_systems
+    find_systems(:editable)
+  end
+
+  def find_deletable_systems
+    find_systems(:deletable)
+  end
+
+  def find_systems(perm_method)
+    #works on a structure of param_group bulk_params and transforms it into a list of systems
     params[:included] ||= {}
     params[:excluded] ||= {}
     @systems = []
     unless params[:included][:ids].blank?
-      @systems = System.editable(@organization).where(:id => params[:included][:ids])
+      @systems = System.send(perm_method, @organization).where(:id => params[:included][:ids])
       @systems.where('id not in (?)', params[:excluded]) unless params[:excluded][:ids].blank?
     end
 
     if params[:included][:search]
       ids = find_system_ids_by_search(params[:included][:search])
-      search_systems = System.editable(@organization).where(:id => ids)
+      search_systems = System.send(perm_method, @organization).where(:id => ids)
       search_systems = search_systems.where('id not in (?)', params[:excluded][:ids]) unless params[:excluded][:ids].blank?
       @systems = @systems + search_systems
     end
+
+    if params[:included][:ids].blank? && params[:included][:search].nil?
+      fail HttpErrors::BadRequest, _("No systems have been specified.")
+    elsif @systems.empty?
+      fail HttpErrors::Forbidden, _("Action unauthorized to be performed on selected systems.")
+    end
+    @systems
   end
 
   def find_system_ids_by_search(search)
@@ -249,8 +222,24 @@ class Api::V2::SystemsBulkActionsController < Api::V2::ApiController
         max_systems_exceeded.push(system_group.name)
       end
     end
+
     if !max_systems_exceeded.empty?
       fail HttpErrors::BadRequest, _("Maximum number of systems exceeded for system group(s): %s") % max_systems_exceeded.join(', ')
+    end
+  end
+
+  def content_action
+    action = Katello::BulkActions.new(User.current, @organization, @systems)
+    job = action.send(PARAM_ACTIONS[params[:action]][params[:content_type]],  params[:content])
+    respond_for_show :template => 'job', :resource => job
+  end
+
+  def validate_content_action
+    fail HttpErrors::BadRequest, _("A content_type must be provided.") if params[:content_type].blank?
+    fail HttpErrors::BadRequest, _("No content has been provided.") if params[:content].blank?
+
+    if PARAM_ACTIONS[params[:action]][params[:content_type]].nil?
+      fail HttpErrors::BadRequest, _("Invalid content type %s") % params[:content_type]
     end
   end
 

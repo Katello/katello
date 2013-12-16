@@ -61,8 +61,9 @@ class Job < ActiveRecord::Base
     end
   end
 
-  def create_tasks(owner, pulp_tasks, task_type, parameters)
+  def create_tasks(organization, pulp_tasks, task_type, parameters)
     # create an array of task status objects
+
     tasks = []
     pulp_tasks.each do |task|
       # if the task was returned with a UUID belonging to a system, associate that system with the task
@@ -72,7 +73,7 @@ class Job < ActiveRecord::Base
       end
 
       task_status = PulpTaskStatus.new(
-          :organization => owner.organization,
+          :organization => organization,
           :task_owner => system,
           :task_type => task_type,
           :parameters => parameters
@@ -87,6 +88,7 @@ class Job < ActiveRecord::Base
       self.task_statuses = tasks
       self.save!
     end
+
     tasks
   end
 

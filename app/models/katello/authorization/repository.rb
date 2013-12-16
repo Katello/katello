@@ -50,7 +50,7 @@ module Authorization::Repository
     end
 
     def any_readable?(organization)
-      Product.any_readable?(organization)
+      Katello::Product.any_readable?(organization)
     end
 
     def libraries_content_readable(org)

@@ -71,77 +71,70 @@ class Api::V2::SystemsBulkActionsControllerTest < ActionController::TestCase
   end
 
   def test_install_package
-    @system1.expects(:install_packages).with(["foo"]).returns(TaskStatus.new)
-    @system2.expects(:install_packages).with(["foo"]).returns(TaskStatus.new)
+    BulkActions.any_instance.expects(:install_packages).once.returns(Job.new)
 
-    put :install_content, :ids => @system_ids, :organization_id => @org.label,
+    put :install_content,  :included => {:ids => @system_ids}, :organization_id => @org.label,
         :content_type => 'package', :content => ['foo']
 
     assert_response :success
   end
 
   def test_update_package
-    @system1.expects(:update_packages).with(["foo"]).returns(TaskStatus.new)
-    @system2.expects(:update_packages).with(["foo"]).returns(TaskStatus.new)
+    BulkActions.any_instance.expects(:update_packages).once.returns(Job.new)
 
-    put :update_content, :ids => @system_ids, :organization_id => @org.label,
+    put :update_content, :included => {:ids => @system_ids}, :organization_id => @org.label,
         :content_type => 'package', :content => ['foo']
 
     assert_response :success
   end
 
   def test_remove_package
-    @system1.expects(:uninstall_packages).with(["foo"]).returns(TaskStatus.new)
-    @system2.expects(:uninstall_packages).with(["foo"]).returns(TaskStatus.new)
+    BulkActions.any_instance.expects(:uninstall_packages).once.returns(Job.new)
 
-    put :remove_content, :ids => @system_ids, :organization_id => @org.label,
+    put :remove_content, :included => {:ids => @system_ids}, :organization_id => @org.label,
         :content_type => 'package', :content => ['foo']
 
     assert_response :success
   end
 
   def test_install_package_group
-    @system1.expects(:install_package_groups).with(["foo group"]).returns(TaskStatus.new)
-    @system2.expects(:install_package_groups).with(["foo group"]).returns(TaskStatus.new)
+    BulkActions.any_instance.expects(:install_package_groups).once.returns(Job.new)
 
-    put :install_content, :ids => @system_ids, :organization_id => @org.label,
+    put :install_content, :included => {:ids => @system_ids}, :organization_id => @org.label,
         :content_type => 'package_group', :content => ['foo group']
 
     assert_response :success
   end
 
   def test_update_package_group
-    @system1.expects(:install_package_groups).with(["foo group"]).returns(TaskStatus.new)
-    @system2.expects(:install_package_groups).with(["foo group"]).returns(TaskStatus.new)
+    BulkActions.any_instance.expects(:update_package_groups).once.returns(Job.new)
 
-    put :update_content, :ids => @system_ids, :organization_id => @org.label,
+    put :update_content, :included => {:ids => @system_ids}, :organization_id => @org.label,
         :content_type => 'package_group', :content => ['foo group']
 
     assert_response :success
   end
 
   def test_remove_package_group
-    @system1.expects(:uninstall_package_groups).with(["foo group"]).returns(TaskStatus.new)
-    @system2.expects(:uninstall_package_groups).with(["foo group"]).returns(TaskStatus.new)
+    BulkActions.any_instance.expects(:uninstall_package_groups).once.returns(Job.new)
 
-    put :remove_content, :ids => @system_ids, :organization_id => @org.label,
+    put :remove_content, :included => {:ids => @system_ids}, :organization_id => @org.label,
         :content_type => 'package_group', :content => ['foo group']
 
     assert_response :success
   end
 
   def test_install_errata
-    @system1.expects(:install_errata).with(["RHSA-2013:0123"]).returns(TaskStatus.new)
-    @system2.expects(:install_errata).with(["RHSA-2013:0123"]).returns(TaskStatus.new)
+    BulkActions.any_instance.expects(:install_errata).once.returns(Job.new)
 
-    put :install_content, :ids => @system_ids, :organization_id => @org.label,
+    put :install_content, :included => {:ids => @system_ids}, :organization_id => @org.label,
         :content_type => 'errata', :content => ['RHSA-2013:0123']
 
     assert_response :success
   end
 
   def test_destroy_systems
-    put :destroy_systems, :ids => @system_ids
+    put :destroy_systems, :included => {:ids => @system_ids}, :organization_id => @org.label
 
     assert_response :success
     assert_nil System.find_by_id(@system1.id)
@@ -150,7 +143,7 @@ class Api::V2::SystemsBulkActionsControllerTest < ActionController::TestCase
 
   def test_permissions
     good_perms = [@update_permission]
-    good_group_perm = [@update_group_perm]
+    good_group_perm = [@update_group_perm + @update_permission]
     bad_perms = [@read_permission, @delete_permission, @no_permission]
 
     assert_protected_action(:bulk_add_system_groups, good_group_perm, bad_perms) do
@@ -166,22 +159,25 @@ class Api::V2::SystemsBulkActionsControllerTest < ActionController::TestCase
     end
 
     assert_protected_action(:install_content, good_perms, bad_perms) do
-      put :install_content, :ids => @system_ids, :content_type => 'package', :content => ['foo']
+      put :install_content, :included => {:ids => @system_ids}, :organization_id => @org.label,
+          :content_type => 'package', :content => ['foo']
     end
 
     assert_protected_action(:update_content, good_perms, bad_perms) do
-      put :update_content, :ids => @system_ids, :content_type => 'package', :content => ['foo']
+      put :update_content, :included => {:ids => @system_ids}, :organization_id => @org.label,
+          :content_type => 'package', :content => ['foo']
     end
 
     assert_protected_action(:remove_content, good_perms, bad_perms) do
-      put :remove_content, :ids => @system_ids, :content_type => 'package', :content => ['foo']
+      put :remove_content, :included => {:ids => @system_ids}, :organization_id => @org.label,
+          :content_type => 'package', :content => ['foo']
     end
 
     good_perms = [@delete_permission]
     bad_perms = [@read_permission, @update_permission, @no_permission]
 
     assert_protected_action(:destroy_systems, good_perms, bad_perms) do
-      put :destroy_systems, :ids => @system_ids
+      put :destroy_systems, :included => {:ids => @system_ids}, :organization_id => @org.label
     end
   end
 

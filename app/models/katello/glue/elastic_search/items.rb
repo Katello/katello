@@ -15,7 +15,7 @@ module Glue
   module ElasticSearch
     class Items
 
-      attr_accessor :obj_class, :query_string, :results, :total, :filters
+      attr_accessor :obj_class, :query_string, :results, :total, :filters, :search_options
       alias_method :model=, :obj_class=
 
       def initialize(obj_class = nil)
@@ -48,11 +48,11 @@ module Glue
       #   whether or not to load the active record object (defaults to false)
       # TODO: break up method
       # rubocop:disable MethodLength
-      def retrieve(query_string, start = 0, search_options = {})
-        search_options = search_options.with_indifferent_access
-        @query_string = query_string
-        @filters      = search_options[:filters] || []
-        start         = start || 0
+      def retrieve(query_string = nil, offset = 0, search_options = {})
+        search_options = @search_options || search_options.with_indifferent_access
+        query_string = query_string || @query_string
+        @filters      = search_options[:filters] || @filters
+        start         = offset || search_options[:offset] || 0
         all_rows      = false
         sort_by       = search_options.fetch(:sort_by, 'name_sort')
         sort_order    = search_options[:sort_order] || 'ASC'
@@ -64,10 +64,10 @@ module Glue
         query_options = {}
         query_options[:default_field] = search_options[:default_field] || 'name'
 
-        if @query_string.blank?
+        if query_string.blank?
           all_rows = true
         elsif search_options[:simple_query] && !Katello.config.simple_search_tokens.any?{|s| search.downcase.match(s)}
-          @query_string = search_options[:simple_query]
+          query_string  = search_options[:simple_query]
         end
 
         page_size = if search_options[:page]
@@ -78,7 +78,7 @@ module Glue
         filters = @filters
         filters = [filters] if !filters.is_a? Array
 
-        @results = @obj_class.search :load => false do
+        @results = @obj_class.search(:load => false) do
           query do
             if all_rows
               all

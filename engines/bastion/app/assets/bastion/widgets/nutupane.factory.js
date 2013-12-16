@@ -81,6 +81,11 @@ angular.module('Bastion.widgets').factory('Nutupane',
                     }
                     table.resource.page = parseInt(response.page, 10);
 
+                    if (table.initialSelectAll) {
+                        table.selectAll(true);
+                        table.initialSelectAll = false;
+                    }
+
                     // This $timeout is necessary to cause a digest cycle
                     // in order to prevent loading two sets of results.
                     $timeout(function () {
@@ -94,8 +99,11 @@ angular.module('Bastion.widgets').factory('Nutupane',
                         table.resource.offset = table.rows.length;
                     }, 0);
                     table.working = false;
+                    table.refreshing = false;
                 });
+
                 return deferred.promise;
+
             }
 
             self.getParams = function () {
@@ -131,7 +139,13 @@ angular.module('Bastion.widgets').factory('Nutupane',
             };
 
             self.removeRow = function (id) {
-                var table = self.table;
+                var foundItem, table = self.table;
+
+                angular.forEach(table.rows, function (item) {
+                    if (item.id === id) {
+                        foundItem = item;
+                    }
+                });
 
                 table.rows = _.reject(table.rows, function (item) {
                     return item.id === id;
@@ -139,6 +153,10 @@ angular.module('Bastion.widgets').factory('Nutupane',
 
                 table.resource.total = table.resource.total - 1;
                 table.resource.subtotal = table.resource.subtotal - 1;
+                if (foundItem && foundItem.selected) {
+                    table.numSelected = table.numSelected - 1;
+                }
+
 
                 return self.table.rows;
             };
@@ -163,6 +181,11 @@ angular.module('Bastion.widgets').factory('Nutupane',
                     selected.included.ids = _.pluck(self.table.getSelected(), identifier);
                 }
                 return selected;
+            };
+
+            self.anyResultsSelected = function () {
+                var results = self.getAllSelectedResults();
+                return results.included.search !== undefined || results.included.ids.length > 0;
             };
 
             self.getDeselected = function () {
@@ -238,8 +261,13 @@ angular.module('Bastion.widgets').factory('Nutupane',
 
             // Wraps the table.selectAll() function if selectAllResultsEnabled is not set
             // Otherwise provides expanded functionality
+
             self.table.selectAllResults = function (selectAll) {
-                self.table.selectAll(selectAll);
+                if (self.table.selectAll) {
+                    self.table.selectAll(selectAll);
+                } else {
+                    self.table.initialSelectAll = true;
+                }
 
                 if (self.table.selectAllResultsEnabled) {
                     self.table.selectAllDisabled = selectAll;

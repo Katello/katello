@@ -50,7 +50,7 @@ angular.module('Bastion.systems').controller('SystemsController',
         nutupane.enableSelectAllResults();
 
         if ($location.search()['select_all']) {
-            nutupane.table.selectAllResults();
+            nutupane.table.selectAllResults(true);
         }
 
         $scope.systemTable.getStatusColor = SystemsHelper.getStatusColor;

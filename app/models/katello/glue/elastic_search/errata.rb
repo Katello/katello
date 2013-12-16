@@ -109,9 +109,17 @@ module Glue::ElasticSearch::Errata
         end
       end
 
-      def self.search(query, options)
+      def self.search(options = {}, &block)
+        Tire.search(self.index, &block).results
+      end
+
+      def self.mapping
+        Tire.index(self.index).mapping
+      end
+
+      def self.legacy_search(query, options)
         options = options.with_indifferent_access
-        start = options.fetch(:start, 0)
+        start = options.fetch(:start, nil) || options.fetch(:offset, 0) #support start & offset for now
         page_size = options.fetch(:page_size, User.current.page_size)
         filters = options.fetch(:filters, {})
         sort = options.fetch(:sort, [:issued, "desc"])

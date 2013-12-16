@@ -31,18 +31,25 @@
  */
 angular.module('alchemy').directive('alchInfiniteScroll', [function () {
     return {
-        link: function (scope, elem, attr) {
-            var raw = elem[0], loadMoreFunction = attr["alchInfiniteScroll"], result;
-            elem.bind('scroll', function () {
+        scope: {
+            data: '=',
+            loadMoreFunction: '&alchInfiniteScroll',
+            skipInitialLoad: '='
+        },
+        controller: function ($scope, $element) {
+
+            var result, raw = $element[0];
+
+            $element.bind('scroll', function () {
                 var sliderPosition = raw.scrollTop + raw.offsetHeight;
                 if (sliderPosition > 0 && sliderPosition >= raw.scrollHeight) {
-                    scope.$apply(attr["alchInfiniteScroll"]);
+                    $scope.loadMoreFunction();
                 }
             });
 
             var getScrollHeight = function () {
                 var scrollHeight = 0;
-                elem.children().each(function () {
+                $element.children().each(function () {
                     scrollHeight = scrollHeight + $(this).get(0).scrollHeight;
                 });
                 return scrollHeight;
@@ -53,11 +60,12 @@ angular.module('alchemy').directive('alchInfiniteScroll', [function () {
             };
 
             var loadUntilScroll = function () {
-                if (getScrollHeight() < elem.height()) {
-                    result = scope.$eval(loadMoreFunction);
+                var result;
+                if (getScrollHeight() < $element.height()) {
+                    result = $scope.loadMoreFunction();
                     if (isPromise(result)) {
                         result.then(function () {
-                            if (getScrollHeight() < elem.height()) {
+                            if (getScrollHeight() < $element.height()) {
                                 loadUntilScroll();
                             }
                         });
@@ -65,10 +73,11 @@ angular.module('alchemy').directive('alchInfiniteScroll', [function () {
                 }
             };
 
-            // load first batch of results and continue loading until there are enough to scroll
-            result = scope.$eval(loadMoreFunction);
-            if (isPromise(result)) {
-                result.then(loadUntilScroll);
+            if (!$scope.skipInitialLoad && ($scope.data === undefined || $scope.data.length === 0)) {
+                result = $scope.loadMoreFunction();
+                if (isPromise(result)) {
+                    result.then(loadUntilScroll);
+                }
             }
         }
     };

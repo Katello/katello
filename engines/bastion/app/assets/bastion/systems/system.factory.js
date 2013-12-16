@@ -57,8 +57,9 @@ angular.module('Bastion.systems').factory('System',
 angular.module('Bastion.systems').factory('BulkAction',
     ['$resource', 'Routes',
     function ($resource, Routes) {
-        return $resource(Routes.apiSystemsPath() + '/:action', {}, {
+        return $resource(Routes.apiSystemsPath() + '/bulk/:action', {}, {
             addSystemGroups: {method: 'PUT', params: {action: 'add_system_groups'}},
+            applicableErrata: {method: 'POST', params: {action: 'applicable_errata'}},
             removeSystemGroups: {method: 'PUT', params: {action: 'remove_system_groups'}},
             installContent: {method: 'PUT', params: {action: 'install_content'}},
             updateContent: {method: 'PUT', params: {action: 'update_content'}},

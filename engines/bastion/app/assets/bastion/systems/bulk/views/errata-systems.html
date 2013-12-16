@@ -1,0 +1,28 @@
+
+<a ui-sref="systems.bulk-actions.errata.list">
+  <i class="icon-backward"></i>
+  {{ "Back To Errata List" | translate }}
+</a>
+
+<h3 translate>Applicable systems for {{ erratum.errata_id }} </h3>
+
+<div class="details details-full">
+  <section>
+    <table class="table">
+      <thead>
+        <tr>
+          <th translate>
+            Name
+          </th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr ng-repeat="system in erratum.applicable_consumers">
+          <td>{{ system.name }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+</div>
+

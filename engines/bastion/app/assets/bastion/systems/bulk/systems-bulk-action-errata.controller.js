@@ -20,71 +20,93 @@
  * @requires $location
  * @requires BulkAction
  * @requires SystemGroup
- * @requires Organization
+ * @requires Nutupane
+ * @requires CurrentOrganization
+ * @requires Erratum
  * @requires gettext
  *
  * @description
  *   A controller for providing bulk action functionality to the systems page.
  */
 angular.module('Bastion.systems').controller('SystemsBulkActionErrataController',
-    ['$scope', '$q', '$location', 'BulkAction', 'SystemGroup', 'CurrentOrganization', 'gettext',
-    function ($scope, $q, $location, BulkAction, SystemGroup, CurrentOrganization, gettext) {
+    ['$scope', '$q', '$location', 'BulkAction', 'SystemGroup', 'Nutupane', 'CurrentOrganization', 'Erratum', 'gettext',
+    function ($scope, $q, $location, BulkAction, SystemGroup, Nutupane, CurrentOrganization, Erratum, gettext) {
 
-        $scope.actionParams = {
-            ids: []
-        };
+        var nutupane;
 
-        $scope.content = {
-            confirm: false,
-            workingMode: false,
-            placeholder: gettext('Enter Errata Ids(s)...'),
-            contentType: 'errata'
-        };
+        nutupane = new Nutupane(BulkAction, {}, 'applicableErrata');
+        nutupane.table.closeItem = function () {};
+        $scope.detailsTable = nutupane.table;
+        $scope.detailsTable.errataFilterTerm = "";
+        $scope.detailsTable.skipInitialLoad = true;
+        $scope.outOfDate = false;
+        $scope.initialLoad = true;
 
-        $scope.confirmContentAction = function (action, actionInput) {
-            $scope.content.confirm = true;
-            $scope.content.action = action;
-            $scope.content.actionInput = actionInput;
-        };
+        $scope.setState(false, [], []);
 
-        $scope.performContentAction = function () {
-            var success, error, deferred = $q.defer();
-
-            $scope.content.confirm = false;
-            $scope.content.workingMode = true;
-
-            success = function (data) {
-                deferred.resolve(data);
-                $scope.content.workingMode = false;
-                $scope.successMessages.push(data["displayMessage"]);
-            };
-
-            error = function (error) {
-                deferred.reject(error.data["errors"]);
-                $scope.content.workingMode = false;
-                _.each(error.data.errors, function (errorMessage) {
-                    $scope.errorMessages.push(gettext("An error occurred installing Errata: ") + errorMessage);
+        $scope.fetchErrata = function () {
+            var params =  $scope.nutupane.getAllSelectedResults('id');
+            params['organization_id'] = CurrentOrganization;
+            nutupane.setParams(params);
+            $scope.detailsTable.working = true;
+            $scope.outOfDate = false;
+            if ($scope.nutupane.anyResultsSelected()) {
+                nutupane.refresh().then(function () {
+                    $scope.detailsTable.working = false;
+                    $scope.outOfDate = false;
                 });
-
-            };
-
-            initContentAction($scope.content);
-
-            if ($scope.content.action === "install") {
-                BulkAction.installContent($scope.actionParams, success, error);
-            } else if ($scope.content.action === "update") {
-                BulkAction.updateContent($scope.actionParams, success, error);
-            } else if ($scope.content.action === "remove") {
-                BulkAction.removeContent($scope.actionParams, success, error);
             }
-
-            return deferred.promise;
+            else {
+                $scope.detailsTable.working = false;
+            }
         };
 
-        function initContentAction(content) {
-            $scope.actionParams['content_type'] = content.contentType;
-            $scope.actionParams['content'] = content.content.split(/ *, */);
-            $scope.actionParams['ids'] = $scope.getSelectedSystemIds();
+        $scope.$watch('nutupane.table.rows', function () {
+            if ($scope.initialLoad) {
+                $scope.initialLoad = false;
+                $scope.fetchErrata();
+            }
+        });
+
+        $scope.$watch('nutupane.table.numSelected', function () {
+            if (!$scope.detailsTable.working) {
+                $scope.outOfDate = true;
+            }
+        });
+
+        $scope.transitionToErrata = function (erratum) {
+            fetchErratum(erratum['errata_id']);
+            $scope.transitionTo('systems.bulk-actions.errata.details', {errataId: erratum['errata_id']});
+        };
+
+        $scope.transitionToErrataSystems = function (erratum) {
+            $scope.erratum = erratum;
+            $scope.transitionTo('systems.bulk-actions.errata.systems', {errataId: erratum['errata_id']});
+        };
+
+        $scope.installErrata = function () {
+            var params = installParams();
+            $scope.setState(true, [], []);
+            BulkAction.installContent(params,
+                function () {
+                    $scope.setState(false, [gettext("Successfully scheduled installation of %s errata .").replace('%s',
+                                            params.content.length)], []);
+                },
+                function (data) {
+                    $scope.setState(false, [], data.errors);
+                });
+        };
+
+        function installParams() {
+            var params = $scope.nutupane.getAllSelectedResults();
+            params['content_type'] = 'errata';
+            params.content = _.pluck($scope.detailsTable.getSelected(), 'errata_id');
+            params['organization_id'] = CurrentOrganization;
+            return params;
+        }
+
+        function fetchErratum(errataId) {
+            $scope.erratum = Erratum.get({id: errataId, 'organization_id': CurrentOrganization});
         }
 
     }]

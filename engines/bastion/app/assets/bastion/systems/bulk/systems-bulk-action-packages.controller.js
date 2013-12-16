@@ -30,13 +30,10 @@ angular.module('Bastion.systems').controller('SystemsBulkActionPackagesControlle
     ['$scope', '$q', '$location', 'BulkAction', 'SystemGroup', 'CurrentOrganization', 'gettext',
     function ($scope, $q, $location, BulkAction, SystemGroup, CurrentOrganization, gettext) {
 
-        $scope.actionParams = {
-            ids: []
-        };
+        $scope.setState(false, [], []);
 
         $scope.content = {
             confirm: false,
-            workingMode: false,
             placeholder: gettext('Enter Package Name(s)...'),
             contentType: 'package'
         };
@@ -56,42 +53,48 @@ angular.module('Bastion.systems').controller('SystemsBulkActionPackagesControlle
         };
 
         $scope.performContentAction = function () {
-            var success, error, deferred = $q.defer();
+            var success, error, params, deferred = $q.defer();
 
             $scope.content.confirm = false;
-            $scope.content.workingMode = true;
+            $scope.setState(true, [], []);
 
             success = function (data) {
                 deferred.resolve(data);
-                $scope.content.workingMode = false;
-                $scope.successMessages.push(data["displayMessage"]);
+                $scope.setState(false, [successMessage($scope.content.action)], []);
             };
 
             error = function (error) {
-                deferred.reject(error.data["errors"]);
-                $scope.content.workingMode = false;
-                _.each(error.data.errors, function (errorMessage) {
-                    $scope.errorMessages.push(gettext("An error occurred installing Packages: ") + errorMessage);
-                });
+                $scope.setState(false, [], error.data.errors);
+                deferred.reject(error.data.errors);
             };
 
-            initContentAction($scope.content);
-
+            params = installParams();
             if ($scope.content.action === "install") {
-                BulkAction.installContent($scope.actionParams, success, error);
+                BulkAction.installContent(params, success, error);
             } else if ($scope.content.action === "update") {
-                BulkAction.updateContent($scope.actionParams, success, error);
+                BulkAction.updateContent(params, success, error);
             } else if ($scope.content.action === "remove") {
-                BulkAction.removeContent($scope.actionParams, success, error);
+                BulkAction.removeContent(params, success, error);
             }
 
             return deferred.promise;
         };
 
-        function initContentAction(content) {
-            $scope.actionParams['content_type'] = content.contentType;
-            $scope.actionParams['content'] = content.content.split(/ *, */);
-            $scope.actionParams['ids'] = $scope.getSelectedSystemIds();
+        function successMessage(type) {
+            var messages = {
+                install: gettext("Succesfully scheduled package installation"),
+                update: gettext("Succesfully scheduled package update"),
+                remove: gettext("Succesfully scheduled package removal")
+            };
+            return messages[type];
+        }
+
+        function installParams() {
+            var params = $scope.nutupane.getAllSelectedResults();
+            params['content_type'] = $scope.content.contentType;
+            params['content'] = $scope.content.content.split(/ *, */);
+            params['organization_id'] = CurrentOrganization;
+            return params;
         }
 
     }]

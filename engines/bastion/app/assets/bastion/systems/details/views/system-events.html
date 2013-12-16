@@ -13,7 +13,7 @@
 </div>
 
 <div alch-table="eventsTable">
-  <div alch-container-scroll control-width="table" alch-infinite-scroll="eventsTable.nextPage()">
+  <div alch-container-scroll control-width="table" alch-infinite-scroll="eventsTable.nextPage()" data="eventsTable.rows">
     <table ng-class="{'table-mask': eventsTable.working}" class="table table-striped">
       <thead>
       <tr alch-table-head>

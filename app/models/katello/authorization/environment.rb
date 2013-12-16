@@ -44,6 +44,14 @@ module Authorization::Environment
       end
     end
 
+    def systems_deletable(org)
+      if  org.systems_deletable?
+        where(:organization_id => org)
+      else
+        authorized_items(org, [:delete_systems])
+      end
+    end
+
     def systems_registerable(org)
       if org.systems_registerable?
         where(:organization_id => org)

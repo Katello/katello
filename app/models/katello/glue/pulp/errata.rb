@@ -51,6 +51,14 @@ module Glue::Pulp::Errata
       end
 
       def self.applicable_for_consumers(uuids, type = nil)
+        search = Glue::ElasticSearch::Items.new(Katello::Errata)
+        search.filters = [{:term => {:type => type}}] if type
+        search.search_options = {:full_result => true}
+        results, _ = self.search_applicable_for_consumers(uuids, search)
+        results
+      end
+
+      def self.search_applicable_for_consumers(uuids, search_service)
         id_system_hash = Hash.new { |h, k| h[k] = [] }
         response = Katello.pulp_server.extensions.consumer.applicable_errata(uuids)
 
@@ -61,17 +69,17 @@ module Glue::Pulp::Errata
           end
         end
 
-        return [] if id_system_hash.empty?
-        filters = {:id => id_system_hash.keys}
-        filters[:type] = type unless type.blank?
+        return [[], 0] if id_system_hash.empty?
+        search_service.filters << {:terms => {:id => id_system_hash.keys} }
+        found_errata, total = search_service.retrieve
 
-        found_errata = Katello::Errata.search("", :start => 0, :page_size => id_system_hash.size,
-                                              :filters => filters, :fields => Katello::Errata::SHORT_FIELDS)
-        found_errata.collect do |erratum|
+        found_errata = found_errata.collect do |erratum|
           e = Katello::Errata.new_from_search(erratum.as_json)
           e.applicable_consumers = id_system_hash[e.id]
           e
         end
+
+        [found_errata, total]
       end
 
       def self.list_by_filter_clauses(clauses)

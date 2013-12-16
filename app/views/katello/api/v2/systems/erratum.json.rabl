@@ -5,4 +5,6 @@ node :packages do |e|
   e.included_packages.collect{ |pkg| pkg.nvrea }.sort
 end
 
+attributes :applicable_consumers
+
 attributes :type

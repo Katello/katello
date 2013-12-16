@@ -53,7 +53,7 @@
       <span ng-hide="$root.$state.current.collapsed">{{ "Loading..." | translate }}</span>
     </div>
 
-    <div alch-container-scroll control-width="table" alch-infinite-scroll="table.nextPage()">
+    <div alch-container-scroll control-width="table" alch-infinite-scroll="table.nextPage()" data="table.rows">
       <div ui-view="table"></div>
     </div>
   </div>

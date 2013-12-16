@@ -60,7 +60,7 @@ class ErratumRule < FilterRule
       # errata_id..
       # ids = parameters[:units].collect do |unit|
       #   if unit[:id] && !unit[:id].blank?
-      #     results = Errata.search(unit[:id], 0, 0, [repo.pulp_id], {},
+      #     results = Errata.legacy_search(unit[:id], 0, 0, [repo.pulp_id], {},
       #                         [:errata_id_sort, "DESC"],'errata_id').collect(&:errata_id)
       #   end
       # end.compact.flatten

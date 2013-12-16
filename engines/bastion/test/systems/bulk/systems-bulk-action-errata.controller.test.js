@@ -12,68 +12,78 @@
  **/
 
 describe('Controller: SystemsBulkActionErrataController', function() {
-    var $scope, $q, gettext, BulkAction, SystemGroup, Organization, Task, CurrentOrganization;
+    var $scope, $q, gettext, BulkAction, SystemGroup, selectedErrata,
+         selectedSystems, CurrentOrganization, Nutupane;
 
     beforeEach(module('Bastion.systems', 'Bastion.test-mocks'));
 
     beforeEach(function() {
         BulkAction = {
-            addSystemGroups: function() {},
-            removeSystemGroups: function() {},
-            installContent: function() {},
-            updateContent: function() {},
-            removeContent: function() {},
-            removeSystems: function() {}
-        };
-        SystemGroup = {
-            query: function() {}
-        };
-        Organization = {
-            query: function() {},
-            autoAttach: function() {}
-        };
-        Task = {
-            query: function() {},
-            poll: function() {}
+            installContent: function() {}
         };
         gettext = function() {};
         CurrentOrganization = 'foo';
+        selectedErrata = [1, 2, 3, 4]
+        selectedSystems = {included: {ids: [1, 2, 3]}};
+        Nutupane = function() {
+            this.table = {
+                showColumns: function () {},
+                getSelected: function () {return selectedErrata}
+            };
+
+        };
     });
 
     beforeEach(inject(function($controller, $rootScope, $q) {
         $scope = $rootScope.$new();
-        $scope.getSelectedSystemIds = function() {
-            return [1,2,3]
+        $scope.nutupane = {};
+        $scope.nutupane.getAllSelectedResults = function () { return selectedSystems }
+        $scope.setState = function(){};
+
+        $scope.detailsTable = {};
+
+        $scope.table = {
+            rows: [],
+            numSelected: 5
         };
 
         $controller('SystemsBulkActionErrataController', {$scope: $scope,
             $q: $q,
             BulkAction: BulkAction,
             SystemGroup: SystemGroup,
+            Nutupane: Nutupane,
             gettext: gettext,
-            Organization: Organization,
-            CurrentOrganization: CurrentOrganization,
-            Task: Task});
+            CurrentOrganization: CurrentOrganization
+      	});
     }));
 
-    it("can install errata on multiple systems", function() {
-        $scope.content = {
-            action: 'install',
-            contentType: 'errata',
-            content: 'RHSA-2013:0848, RHBA-2012:0777'
-        };
+    it("can install errata on multiple systems", function () {
 
         spyOn(BulkAction, 'installContent');
-        $scope.performContentAction();
+        $scope.installErrata();
 
         expect(BulkAction.installContent).toHaveBeenCalledWith(
-            {
-                ids: $scope.getSelectedSystemIds(),
-                content_type: $scope.content.contentType,
-                content: $scope.content.content.split(/ *, */)
-            },
+            _.extend(selectedSystems, {
+                content_type: 'errata',
+                content: [1, 2, 3]
+            }),
             jasmine.any(Function), jasmine.any(Function)
         );
     });
+
+    it("Should fetch new errata on initial load", function () {
+        $scope.initialLoad = true;
+        spyOn($scope, 'fetchErrata');
+        $scope.$apply();
+        expect($scope.fetchErrata).toHaveBeenCalled();
+    });
+
+    it("watches for table row changes", function () {
+        $scope.outOfDate = false;
+        $scope.initialLoad = false;
+        $scope.table.numSelected = $scope.table.numSelected + 1;
+        $scope.$apply();
+        expect($scope.outOfDate).toBe(true);
+    })
 
 });
