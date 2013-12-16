@@ -26,8 +26,8 @@ class Api::V1::SystemsController < Api::V1::ApiController
   before_filter :find_system, :only => [:destroy, :show, :update, :regenerate_identity_certificates,
                                         :upload_package_profile, :errata, :package_profile, :subscribe,
                                         :unsubscribe, :subscriptions, :pools, :enabled_repos, :releases,
-                                        :add_system_groups, :remove_system_groups, :refresh_subscriptions, :checkin,
-                                        :subscription_status]
+                                        :available_system_groups, :add_system_groups, :remove_system_groups,
+                                        :refresh_subscriptions, :checkin, :subscription_status]
   before_filter :find_content_view, :only => [:create, :update]
 
   before_filter :authorize, :except => [:activate, :upload_package_profile]
@@ -77,6 +77,7 @@ class Api::V1::SystemsController < Api::V1::ApiController
         :tasks                            => index_systems,
         :task_show                        => read_system,
         :enabled_repos                    => edit_system,
+        :available_system_groups          => edit_system,
         :add_system_groups                => edit_system,
         :remove_system_groups             => edit_system,
         :refresh_subscriptions            => edit_system,

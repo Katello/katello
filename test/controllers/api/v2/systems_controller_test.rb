@@ -31,6 +31,7 @@ class Api::V2::SystemsControllerTest < ActionController::TestCase
     @read_permission = UserPermission.new(:read_systems, :organizations, nil, @system.organization)
     @create_permission = UserPermission.new(:register_systems, :organizations, nil, @system.organization)
     @update_permission = UserPermission.new(:update_systems, :organizations, nil, @system.organization)
+    @edit_permission = UserPermission.new(:edit_systems, :organizations, nil, @system.organization)
     @no_permission = NO_PERMISSION
   end
 
@@ -79,6 +80,13 @@ class Api::V2::SystemsControllerTest < ActionController::TestCase
 
     assert_response :success
     assert_template 'api/v2/systems/tasks'
+  end
+
+  def test_available_system_groups
+    get :available_system_groups, :id => @system.uuid
+
+    assert_response :success
+    assert_template 'api/v2/systems/available_system_groups'
   end
 
   def test_add_system_groups

@@ -8,7 +8,7 @@ attributes :location
 attributes :content_view, :content_view_id
 
 child :system_groups => :systemGroups do
-  attributes :id, :name
+  attributes :id, :name, :description, :max_systems, :total_systems
 end
 
 child :custom_info => :customInfo do

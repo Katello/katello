@@ -21,16 +21,14 @@
  * @requires gettext
  * @requires Routes
  * @requires System
- * @requires SystemGroup
  * @requires ContentView
- * @requires CurrentOrganization
  *
  * @description
  *   Provides the functionality for the system details action pane.
  */
 angular.module('Bastion.systems').controller('SystemDetailsInfoController',
-    ['$scope', '$q', '$http', 'gettext', 'Routes', 'System', 'SystemGroup', 'ContentView', 'CurrentOrganization',
-    function ($scope, $q, $http, gettext, Routes, System, SystemGroup, ContentView, CurrentOrganization) {
+    ['$scope', '$q', '$http', 'gettext', 'Routes', 'System', 'ContentView',
+        function ($scope, $q, $http, gettext, Routes, System, ContentView) {
 
         var customInfoErrorHandler = function (error) {
             _.each(error.errors, function (errorMessage) {
@@ -78,30 +76,6 @@ angular.module('Bastion.systems').controller('SystemDetailsInfoController',
             $scope.pathSelector.enable_all();
         };
 
-        $scope.updateSystemGroups = function (systemGroups) {
-            var data, success, error, deferred = $q.defer();
-
-            data = {
-                system: {
-                    "system_group_ids": _.pluck(systemGroups, "id")
-                }
-            };
-
-            success = function (data) {
-                deferred.resolve(data);
-                $scope.successMessages.push('System Saved.');
-            };
-            error = function (error) {
-                deferred.reject(error.data.errors);
-                _.each(error.data.errors, function (errorMessage) {
-                    $scope.errorMessages.push(gettext("An error occurred updating System Groups: ") + errorMessage);
-                });
-            };
-
-            System.saveSystemGroups({id: $scope.system.uuid}, data, success, error);
-            return deferred.promise;
-        };
-
         $scope.releaseVersions = function () {
             var deferred = $q.defer();
 
@@ -117,16 +91,6 @@ angular.module('Bastion.systems').controller('SystemDetailsInfoController',
 
             ContentView.query({ 'environment_id': $scope.system.environment.id }, function (response) {
                 deferred.resolve(response.results);
-            });
-
-            return deferred.promise;
-        };
-
-        $scope.systemGroups = function () {
-            var deferred = $q.defer();
-
-            SystemGroup.query({'organization_id': CurrentOrganization}, function (systemGroups) {
-                deferred.resolve(systemGroups['results']);
             });
 
             return deferred.promise;
