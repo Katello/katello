@@ -107,18 +107,22 @@ class Api::V1::ActivationKeysController < Api::V1::ApiController
     respond :message => _("Deleted activation key '%s'") % params[:id], :status => 204
   end
 
-  api :POST, "/activation_keys/:id/pools", "Create an entitlement pool within an activation key"
+  api :POST, "/activation_keys/:id/pools/:poolid", "Create an entitlement pool within an activation key"
   def add_pool
-    @activation_key.key_pools.create(:pool => @pool) unless @activation_key.pools.include?(@pool)
+    #@activation_key.key_pools.create(:pool => @pool) unless @activation_key.pools.include?(@pool)
+    @activation_key.add_pools(@pool.cp_id)
     respond_for_show
   end
 
   api :DELETE, "/activation_keys/:id/pools/:poolid", "Delete an entitlement pool within an activation key"
   def remove_pool
+=begin
     unless @activation_key.pools.include?(@pool)
       fail HttpErrors::NotFound, _("Couldn't find pool '%{pool}' in activation_key '%{ak}'") % { :pool => @pool.cp_id, :ak => @activation_key.name }
     end
     @activation_key.pools.delete(@pool)
+=end
+    @activation_key.remove_pools(@pool.cp_id)
     respond_for_show
   end
 

@@ -18,8 +18,6 @@ class Pool < ActiveRecord::Base
   include Glue::ElasticSearch::Pool if Katello.config.use_elasticsearch
 
   self.table_name = "katello_pools"
-  has_many :key_pools, :class_name => "Katello::KeyPool", :foreign_key => "pool_id", :dependent => :destroy
-  has_many :activation_keys, :through => :key_pools
 
   # Some fields are are not native to the Candlepin object but are useful for searching
   attr_accessor :cp_provider_id

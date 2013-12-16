@@ -127,13 +127,7 @@ class ActivationKeysController < Katello::ApplicationController
   def add_subscriptions
     if params.key? :subscription_id
       params[:subscription_id].keys.each do |pool|
-        kt_pool = Pool.where(:cp_id => pool)[0]
-
-        if kt_pool.nil?
-          Pool.create!(:cp_id => pool, :key_pools => [KeyPool.create!(:activation_key => @activation_key)])
-        else
-          KeyPool.create!(:activation_key_id => @activation_key.id, :pool_id => kt_pool.id)
-        end
+        @activation_key.add_pools(pool)
       end
     end
     notify.success _("Subscriptions successfully added to Activation Key '%s'.") % @activation_key.name
@@ -143,15 +137,7 @@ class ActivationKeysController < Katello::ApplicationController
   def remove_subscriptions
     if params.key? :subscription_id
       params[:subscription_id].keys.each do |pool|
-        kt_pool = Pool.where(:cp_id => pool)[0]
-
-        if kt_pool
-          key_sub = KeyPool.where(:activation_key_id => @activation_key.id, :pool_id => kt_pool.id)[0]
-
-          if key_sub
-            key_sub.destroy
-          end
-        end
+        @activation_key.remove_pools(pool)
       end
     end
     notify.success _("Subscriptions successfully removed from Activation Key '%s'.") % @activation_key.name
@@ -301,7 +287,7 @@ class ActivationKeysController < Katello::ApplicationController
     available_pools = all_pools.clone
 
     # remove pools that have been consumed from the list
-    consumed = @activation_key.pools
+    consumed = @activation_key.get_key_pools
     consumed.each do |pool|
       available_pools.delete(pool.cp_id)
     end
@@ -314,7 +300,7 @@ class ActivationKeysController < Katello::ApplicationController
   # in the array is for a pool and the elements of the hash are details for that pool
   def retrieve_applied_pools(all_pools)
     applied_pools = {}
-    @activation_key.pools.each do |pool|
+    @activation_key.get_key_pools.each do |pool|
       applied_pools[pool.product_name] ||= []
       applied_pools[pool.product_name] << pool
     end
@@ -336,7 +322,7 @@ class ActivationKeysController < Katello::ApplicationController
 
     all_pools = {}
 
-    cp_pools = Resources::Candlepin::Owner.pools current_organization.label
+    cp_pools = @activation_key.get_pools
     if cp_pools
       # Pool objects
       pools = cp_pools.collect{|cp_pool| Pool.find_pool(cp_pool['id'], cp_pool)}
