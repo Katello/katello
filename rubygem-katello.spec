@@ -185,6 +185,9 @@ GEMFILE
 
 %changelog
 * Mon Dec 16 2013 Jason Montleon <jmontleo@redhat.com> 1.5.0-9
+- Tag rubygem-katello-1.5.0-9 
+
+* Mon Dec 16 2013 Jason Montleon <jmontleo@redhat.com> 1.5.0-9
 - fixes for engine packaging (jmontleo@redhat.com)
 - Merge remote-tracking branch 'upstream/master' into engine-packaging
   (jmontleo@redhat.com)
