@@ -71,7 +71,8 @@ rake db:create
 The Katello setup assumes that you have a previously setup Foreman checkout or have followed the instructions in the Setup Foreman section. The first step is to add the Katello engine and install dependencies:
 
 ```bash
-echo "gemspec :path => '../katello', :development_group => :katello_dev" >> bundler.d/katello.local.rb
+cd bundler.d && ln -s ../../katello/doc/katello.local.rb
+cd ..
 bundle update
 ```
 
