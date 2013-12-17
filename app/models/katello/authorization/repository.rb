@@ -15,10 +15,6 @@ module Authorization::Repository
   extend ActiveSupport::Concern
 
   included do
-    # only repositories in a given environment
-    scope :in_environment, lambda { |env|
-                             where(environment_id: env.id)
-                           }
 
     def readable?
       product.readable?
