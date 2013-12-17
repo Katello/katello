@@ -36,6 +36,12 @@
           Subscriptions
         </a>
       </li>
+      <li ng-class="{active: isState('systems.details.system-groups.list')}">
+        <a class="clickable" translate
+           ui-sref="systems.details.system-groups.list">
+          System Groups
+        </a>
+      </li>
       <li ng-class="{active: stateIncludes('systems.details.events')}">
         <a translate
            ui-sref="systems.details.events.index">

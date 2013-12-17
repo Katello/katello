@@ -17,8 +17,6 @@ describe('Controller: SystemDetailsInfoController', function() {
         gettext,
         Routes,
         System,
-        SystemGroup,
-        CurrentOrganization,
         mockContentViews;
 
     beforeEach(module(
@@ -37,17 +35,14 @@ describe('Controller: SystemDetailsInfoController', function() {
             ContentView = $injector.get('MockResource').$new();
 
         System = $injector.get('MockResource').$new();
-        SystemGroup = $injector.get('MockResource').$new();
         $scope = $injector.get('$rootScope').$new();
 
         System.releaseVersions = function(params, callback) {
             callback.apply(this, [['RHEL6']]);
         };
-        System.saveSystemGroups = function() {};
 
         spyOn(System, 'releaseVersions').andReturn(['RHEL6']);
 
-        CurrentOrganization = 'foo';
         Routes = {
             apiCustomInfoPath: function(informable, id) {
                 return ['/api', informable, id].join('/')
@@ -73,9 +68,7 @@ describe('Controller: SystemDetailsInfoController', function() {
             gettext: gettext,
             Routes: Routes,
             System: System,
-            SystemGroup: SystemGroup,
             ContentView: ContentView,
-            CurrentOrganization: CurrentOrganization
         });
 
         $scope.system = new System({
@@ -97,19 +90,6 @@ describe('Controller: SystemDetailsInfoController', function() {
         $scope.releaseVersions().then(function(releases) {
             expect(releases).toEqual(['RHEL6']);
         });
-    });
-
-    it("populates organizational system groups via the SystemGroups factory.", function() {
-        spyOn(SystemGroup, 'query');
-        $scope.systemGroups();
-        expect(SystemGroup.query).toHaveBeenCalledWith({'organization_id': CurrentOrganization}, jasmine.any(Function));
-    });
-
-    it("allows updating the system's groups", function() {
-        var expected = { system : { system_group_ids : [ 1, 2 ] } };
-        spyOn(System, 'saveSystemGroups');
-        $scope.updateSystemGroups([{id: 1, name: "lalala"}, {id: 2, name: "hello!"}])
-        expect(System.saveSystemGroups).toHaveBeenCalledWith({id: 2}, expected, jasmine.any(Function), jasmine.any(Function));
     });
 
     it("sets edit mode to false when saving a content view", function() {

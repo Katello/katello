@@ -1,0 +1,66 @@
+<section class="nutupane-sub-section" >
+
+  <div class="nutupane-bar">
+
+    <div class="col-sm-3">
+      <div class="input-group input-group">
+        <input type="text"
+               class="form-control"
+               placeholder="{{ 'Filter' | translate }}"
+               ng-model="systemGroupFilter"/>
+      </div>
+    </div>
+
+    <div class="fr select-action">
+      <span class="nutupane-info">
+        <span translate>{{ systemGroupsTable.numSelected }} Selected</span>
+        <span>|</span>
+        <a class="deselect-action"
+           translate
+           ng-class="{ 'disabled-link' : systemGroupsTable.numSelected == 0 }"
+           ng-click="systemGroupsTable.selectAll(false)">
+          Deselect All
+        </a>
+      </span>
+
+      <button class="btn btn-primary"
+              translate
+              ng-disabled="systemGroupsTable.numSelected == 0 || systemGroupsTable.working"
+              ng-click="removeSystemGroups()">
+        Remove Selected
+      </button>
+    </div>
+  </div>
+
+  <div alch-table="systemGroupsTable" class="nutupane">
+    <div alch-container-scroll control-width="systemGroupsTable" alch-infinite-scroll="systemGroupsTable.nextPage()">
+
+      <div class="loading-mask icon-3x" ng-show="systemGroupsTable.working && systemGroupsTable.rows.length == 0">
+        <i class="icon-spinner icon-spin"></i>
+        {{ "Loading..." | translate }}
+      </div>
+
+      <table ng-class="{'table-mask': systemGroupsTable.working}" class="table table-full table-striped">
+        <thead>
+        <tr alch-table-head row-select>
+          <th alch-table-column="name" translate>Name</th>
+          <th alch-table-column="description" translate>Description</th>
+          <th alch-table-column="capacity" translate>Capacity</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr alch-table-row ng-repeat="systemGroup in systemGroupsTable.rows | filter:systemGroupFilter" row-select="systemGroup">
+          <td alch-table-cell>
+            <a ui-sref="system-groups.details.info({systemGroupId: systemGroup.id})">
+              {{ systemGroup.name }}
+            </a>
+          </td>
+          <td alch-table-cell>{{ systemGroup.description }}</td>
+          <td alch-table-cell>{{ systemGroup.total_systems }} / {{ systemGroup.max_systems | unlimitedFilter }}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
