@@ -11,35 +11,35 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-module RolesPermissions::UserOwnRole
-  include  Katello::ProxyAssociationOwner
+  module RolesPermissions::UserOwnRole
+    include  Katello::ProxyAssociationOwner
 
-  def find_own_role
-    where(:type => 'Katello::UserOwnRole').first
-  end
-
-  def find_or_create_own_role(auser)
-    role = find_own_role
-    return role if role
-
-    role_name = ""
-    loop do
-      role_name = "#{auser.login}_#{Password.generate_random_string(20)}"
-      break unless Katello::UserOwnRole.exists?(:name => role_name)
+    def find_own_role
+      where(:type => 'Katello::UserOwnRole').first
     end
 
-    proxy_association_owner.katello_roles << (role = Katello::UserOwnRole.new(:name => role_name))
-    role
-  end
+    def find_or_create_own_role(auser)
+      role = find_own_role
+      return role if role
 
-  def destroy_own_role
-    role = find_own_role
-    return unless role
-    role.destroy
+      role_name = ""
+      loop do
+        role_name = "#{auser.login}_#{Password.generate_random_string(20)}"
+        break unless Katello::UserOwnRole.exists?(:name => role_name)
+      end
 
-    unless role.destroyed?
-      Rails.logger.error error.to_s
+      proxy_association_owner.katello_roles << (role = Katello::UserOwnRole.new(:name => role_name))
+      role
+    end
+
+    def destroy_own_role
+      role = find_own_role
+      return unless role
+      role.destroy
+
+      unless role.destroyed?
+        Rails.logger.error error.to_s
+      end
     end
   end
-end
 end

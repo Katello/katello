@@ -11,19 +11,19 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class ContentViewVersionEnvironment < ActiveRecord::Base
-  self.include_root_in_json = false
+  class ContentViewVersionEnvironment < ActiveRecord::Base
+    self.include_root_in_json = false
 
-  belongs_to :environment, :class_name => 'Katello::KTEnvironment', :inverse_of => :content_view_version_environments
-  belongs_to :content_view_version, :inverse_of => :content_view_version_environments
+    belongs_to :environment, :class_name => 'Katello::KTEnvironment', :inverse_of => :content_view_version_environments
+    belongs_to :content_view_version, :inverse_of => :content_view_version_environments
 
-  before_create :verify_not_exists
+    before_create :verify_not_exists
 
-  def verify_not_exists
-    if self.content_view_version.environments.include?(self.environment)
-      fail _("Content View %{view} is already in environment %{env}") % {:view => self.content_view_version.content_view.name, :env => self.environment.name}
+    def verify_not_exists
+      if self.content_view_version.environments.include?(self.environment)
+        fail _("Content View %{view} is already in environment %{env}") % {:view => self.content_view_version.content_view.name, :env => self.environment.name}
+      end
     end
-  end
 
-end
+  end
 end

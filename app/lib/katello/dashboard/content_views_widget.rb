@@ -11,20 +11,20 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class Dashboard::ContentViewsWidget < Dashboard::Widget
+  class Dashboard::ContentViewsWidget < Dashboard::Widget
 
-  def accessible?
-    Katello.config.katello? && current_organization &&
+    def accessible?
+      Katello.config.katello? && current_organization &&
         ContentView.any_readable?(current_organization)
-  end
+    end
 
-  def title
-    _("Content Views Overview")
-  end
+    def title
+      _("Content Views Overview")
+    end
 
-  def content_path
-    content_views_dashboard_index_path
-  end
+    def content_path
+      content_views_dashboard_index_path
+    end
 
-end
+  end
 end

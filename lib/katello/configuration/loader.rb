@@ -19,10 +19,10 @@ module Katello
     # processes configuration loading from config_files
     class Loader
       attr_reader :config_file_paths,
-                  :validation,
-                  :default_config_file_path,
-                  :config_post_process,
-                  :load_yml_post_process
+        :validation,
+        :default_config_file_path,
+        :config_post_process,
+        :load_yml_post_process
 
       # @param [Hash] options
       # @option options [Array<String>] :config_file_paths paths to look for configuration files (first one is used)
@@ -67,17 +67,17 @@ module Katello
       # @return [Hash{String => Hash}] database configurations
       def database_configs
         @database_configs ||= begin
-          %w(production development test).inject({}) do |hash, environment|
-            common = config_data.common.database.to_hash
-            if config_data.present?(environment.to_sym, :database)
-              hash.update(
-                  environment =>
-                      common.merge(config_data[environment.to_sym].database.to_hash).stringify_keys)
-            else
-              hash
-            end
-          end
-        end
+                                %w(production development test).inject({}) do |hash, environment|
+                                  common = config_data.common.database.to_hash
+                                  if config_data.present?(environment.to_sym, :database)
+                                    hash.update(
+                                      environment =>
+                                      common.merge(config_data[environment.to_sym].database.to_hash).stringify_keys)
+                                  else
+                                    hash
+                                  end
+                                end
+                              end
       end
 
       private

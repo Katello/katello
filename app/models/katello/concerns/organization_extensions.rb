@@ -71,7 +71,7 @@ module Katello
         validates :name, :uniqueness => true, :presence => true
         validates_with Validators::KatelloNameFormatValidator, :attributes => :name
         validates :label, :uniqueness => { :message => _("already exists (including organizations being deleted)") },
-                  :presence => true
+          :presence => true
         validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
         validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
         validate :unique_name_and_label
@@ -179,9 +179,9 @@ module Katello
 
         def self.check_informable_type!(informable_type, options = {})
           defaults = {
-              :message => _("Informable Type must be one of the following [ %{list} ]") %
-                  { :list => ALLOWED_DEFAULT_INFO_TYPES.join(", ") },
-              :error => RuntimeError
+            :message => _("Informable Type must be one of the following [ %{list} ]") %
+            { :list => ALLOWED_DEFAULT_INFO_TYPES.join(", ") },
+            :error => RuntimeError
           }
           options = defaults.merge(options)
 
@@ -238,7 +238,7 @@ module Katello
           products.any?(&:syncable_content?)
         end
 
-      private
+        private
 
         def start_discovery_task(url, notify = false)
           task_id = AsyncOperation.current_task_id

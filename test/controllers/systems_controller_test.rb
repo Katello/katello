@@ -14,47 +14,47 @@
 require "katello_test_helper"
 
 module Katello
-describe SystemsController do
+  describe SystemsController do
 
-  before do
-    models = ["Organization", "KTEnvironment", "User", "Filter",
+    before do
+      models = ["Organization", "KTEnvironment", "User", "Filter",
                 "FilterRule", "ErratumRule", "PackageRule", "PackageGroupRule",
                 "ContentViewEnvironment", "ContentViewDefinition", "System"]
-    disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
-    setup_controller_defaults
-    @system = katello_systems(:simple_server)
-    @org = @system.organization
-    set_organization(@org)
-  end
-
-  describe "update"  do
-    before do
-      @content_view = katello_content_views(:library_dev_view)
-      @cv_id = @content_view.id
-      @env_id = @system.environment.id
-      @subscribe_permission = UserPermission.new(:subscribe, :content_views, @cv_id, @content_view.organization)
-      @edit_system_perm = UserPermission.new(:update_systems, :environments,
-                          @env_id, @system.environment.organization)
-
-      @req = lambda do
-        put :update, :id => @system.id, :system => {:content_view_id => @cv_id}
-      end
+      disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
+      setup_controller_defaults
+      @system = katello_systems(:simple_server)
+      @org = @system.organization
+      set_organization(@org)
     end
 
-    it "permission" do
-      master_perm = @subscribe_permission + @edit_system_perm
-      action = :update
-      assert_authorized(
-                :permission => master_perm,
-                :action => action,
-                :request => @req
-      )
-      refute_authorized(
+    describe "update"  do
+      before do
+        @content_view = katello_content_views(:library_dev_view)
+        @cv_id = @content_view.id
+        @env_id = @system.environment.id
+        @subscribe_permission = UserPermission.new(:subscribe, :content_views, @cv_id, @content_view.organization)
+        @edit_system_perm = UserPermission.new(:update_systems, :environments,
+                                               @env_id, @system.environment.organization)
+
+        @req = lambda do
+          put :update, :id => @system.id, :system => {:content_view_id => @cv_id}
+        end
+      end
+
+      it "permission" do
+        master_perm = @subscribe_permission + @edit_system_perm
+        action = :update
+        assert_authorized(
+          :permission => master_perm,
+          :action => action,
+          :request => @req
+        )
+        refute_authorized(
           :permission => [@edit_system_perm, @subscribe_permission, NO_PERMISSION],
           :action => action,
           :request => @req
-      )
+        )
+      end
     end
   end
-end
 end

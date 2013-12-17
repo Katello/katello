@@ -11,79 +11,79 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-module Errors
+  module Errors
 
-  class InvalidPuppetModuleError < Exception; end
+    class InvalidPuppetModuleError < Exception; end
 
-  class NotFound < StandardError; end
+    class NotFound < StandardError; end
 
-  # unauthorized access
-  class SecurityViolation < StandardError; end
+    # unauthorized access
+    class SecurityViolation < StandardError; end
 
-  class UserNotSet < SecurityViolation; end
+    class UserNotSet < SecurityViolation; end
 
-  class OrchestrationException < StandardError; end
+    class OrchestrationException < StandardError; end
 
-  class TemplateContentException < StandardError; end
+    class TemplateContentException < StandardError; end
 
-  class TemplateExportException < StandardError; end
+    class TemplateExportException < StandardError; end
 
-  class ChangesetContentException < StandardError; end
+    class ChangesetContentException < StandardError; end
 
-  class ConflictException < StandardError; end
+    class ConflictException < StandardError; end
 
-  class ContentViewRepositoryOverlap < StandardError; end
+    class ContentViewRepositoryOverlap < StandardError; end
 
-  class ContentViewDefinitionBadContent < StandardError; end
+    class ContentViewDefinitionBadContent < StandardError; end
 
-  class ContentViewTaskInProgress < StandardError; end
+    class ContentViewTaskInProgress < StandardError; end
 
-  class SystemGroupEmptyException < StandardError
-    def message
-      _("System group is empty.")
-    end
-  end
-
-  class ConnectionRefusedException < StandardError; end
-
-  class UsageLimitExhaustedException < StandardError; end
-
-  class UnsupportedActionException < StandardError
-    attr_reader :action, :receiver
-
-    def initialize(action, receiver, message)
-      @action, @receiver = action, receiver
-      super(message)
-    end
-  end
-
-  class TemplateValidationException < StandardError
-    attr_accessor :errors
-
-    def initialize(msg, errors = [])
-      @errors = errors
-      super(msg)
+    class SystemGroupEmptyException < StandardError
+      def message
+        _("System group is empty.")
+      end
     end
 
-    def errors
-      return @errors
+    class ConnectionRefusedException < StandardError; end
+
+    class UsageLimitExhaustedException < StandardError; end
+
+    class UnsupportedActionException < StandardError
+      attr_reader :action, :receiver
+
+      def initialize(action, receiver, message)
+        @action, @receiver = action, receiver
+        super(message)
+      end
     end
 
-    def message
-      if @errors.nil?
-        "#{to_s}: " + _("No errors")
-      else
-        "#{to_s}: #{errors.join(', ')}"
+    class TemplateValidationException < StandardError
+      attr_accessor :errors
+
+      def initialize(msg, errors = [])
+        @errors = errors
+        super(msg)
+      end
+
+      def errors
+        return @errors
+      end
+
+      def message
+        if @errors.nil?
+          "#{to_s}: " + _("No errors")
+        else
+          "#{to_s}: #{errors.join(', ')}"
+        end
+      end
+    end
+
+    class PuppetConflictException < StandardError
+      attr_accessor :conflicts
+
+      def initialize(conflicts)
+        self.conflicts = conflicts
       end
     end
   end
-
-  class PuppetConflictException < StandardError
-    attr_accessor :conflicts
-
-    def initialize(conflicts)
-      self.conflicts = conflicts
-    end
-  end
-end
 end

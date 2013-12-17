@@ -13,54 +13,54 @@
 require 'katello_test_helper'
 
 module Katello
-class PackageRuleTest < ActiveSupport::TestCase
+  class PackageRuleTest < ActiveSupport::TestCase
 
-  def self.before_suite
-    models = ["Organization", "KTEnvironment", "User", "ContentViewDefinitionBase",
-              "ContentViewDefinition", "ContentViewEnvironment", "Filter", "FilterRule",
-              "PackageRule"]
-    disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models, true)
-  end
-
-  def setup
-    User.current = User.find(users(:admin))
-    @filter_rule = FactoryGirl.build(:package_filter_rule)
-  end
-
-  def test_create
-    assert @filter_rule.save
-  end
-
-  def test_bad_params
-    assert_bad_params(:foo => {:boo => 100})
-    assert_bad_params(:units => "cool")
-    assert_bad_params(:units => [{:name => "foo", :min_version => "3.0"}, {:min_version => "3.0"}]) # no name
-    assert_bad_params(:units => [{:name => "foo", :min_version => "3.0",
-                                    :max_version => "4.5", :blah => "33"}]) # invalid param
-    assert_bad_params(:units => [{:name => "foo", :min_version => "3.0",
-                                  :max_version => "4.5", :version => "33"}]) # version , min max specified
-
-  end
-
-  def test_good_params
-    assert_good_params(:units => [{:name => "foo"}, {:name => "bar"}])
-    assert_good_params(:units => [{:name => "foo", :min_version => "3.0"},
-                                  {:name => "foo", :version => "3.0"},
-                                  {:name => "foo*", :max_version => "4.0"}
-                      ])
-  end
-
-  def assert_bad_params(params)
-    @filter_rule.parameters = params
-    assert_raises(ActiveRecord::RecordInvalid) do
-      @filter_rule.save!
+    def self.before_suite
+      models = ["Organization", "KTEnvironment", "User", "ContentViewDefinitionBase",
+                "ContentViewDefinition", "ContentViewEnvironment", "Filter", "FilterRule",
+                "PackageRule"]
+      disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models, true)
     end
-  end
 
-  def assert_good_params(params)
-    @filter_rule.parameters = params
-    assert @filter_rule.save
-  end
+    def setup
+      User.current = User.find(users(:admin))
+      @filter_rule = FactoryGirl.build(:package_filter_rule)
+    end
 
-end
+    def test_create
+      assert @filter_rule.save
+    end
+
+    def test_bad_params
+      assert_bad_params(:foo => {:boo => 100})
+      assert_bad_params(:units => "cool")
+      assert_bad_params(:units => [{:name => "foo", :min_version => "3.0"}, {:min_version => "3.0"}]) # no name
+      assert_bad_params(:units => [{:name => "foo", :min_version => "3.0",
+                                    :max_version => "4.5", :blah => "33"}]) # invalid param
+      assert_bad_params(:units => [{:name => "foo", :min_version => "3.0",
+                                    :max_version => "4.5", :version => "33"}]) # version , min max specified
+
+    end
+
+    def test_good_params
+      assert_good_params(:units => [{:name => "foo"}, {:name => "bar"}])
+      assert_good_params(:units => [{:name => "foo", :min_version => "3.0"},
+                                    {:name => "foo", :version => "3.0"},
+                                    {:name => "foo*", :max_version => "4.0"}
+      ])
+    end
+
+    def assert_bad_params(params)
+      @filter_rule.parameters = params
+      assert_raises(ActiveRecord::RecordInvalid) do
+        @filter_rule.save!
+      end
+    end
+
+    def assert_good_params(params)
+      @filter_rule.parameters = params
+      assert @filter_rule.save
+    end
+
+  end
 end

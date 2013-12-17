@@ -13,45 +13,45 @@
 require 'katello_test_helper'
 
 module Katello
-class PackageGroupRuleTest < ActiveSupport::TestCase
+  class PackageGroupRuleTest < ActiveSupport::TestCase
 
-  def self.before_suite
-    models = ["Organization", "KTEnvironment", "User", "ContentViewDefinitionBase",
-              "ContentViewDefinition", "ContentViewEnvironment", "Filter", "FilterRule",
-              "PackageGroupRule"]
-    disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
-  end
-
-  def setup
-    User.current = User.find(users(:admin))
-    @filter_rule = FactoryGirl.build(:package_group_filter_rule)
-  end
-
-  def test_create
-    assert @filter_rule.save
-  end
-
-  def test_bad_params
-    assert_bad_params(:foo => {:boo => 100})
-    assert_bad_params(:units => "cool")
-    assert_bad_params(:units => [{:name => "foo"}, {:min_version => "3.0"}]) # no name
-  end
-
-  def test_good_params
-    assert_good_params(:units => [{:name => "foo"}, {:name => "bar"}])
-  end
-
-  def assert_bad_params(params)
-    @filter_rule.parameters = params
-    assert_raises(ActiveRecord::RecordInvalid) do
-      @filter_rule.save!
+    def self.before_suite
+      models = ["Organization", "KTEnvironment", "User", "ContentViewDefinitionBase",
+                "ContentViewDefinition", "ContentViewEnvironment", "Filter", "FilterRule",
+                "PackageGroupRule"]
+      disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
     end
-  end
 
-  def assert_good_params(params)
-    @filter_rule.parameters = params
-    assert @filter_rule.save
-  end
+    def setup
+      User.current = User.find(users(:admin))
+      @filter_rule = FactoryGirl.build(:package_group_filter_rule)
+    end
 
-end
+    def test_create
+      assert @filter_rule.save
+    end
+
+    def test_bad_params
+      assert_bad_params(:foo => {:boo => 100})
+      assert_bad_params(:units => "cool")
+      assert_bad_params(:units => [{:name => "foo"}, {:min_version => "3.0"}]) # no name
+    end
+
+    def test_good_params
+      assert_good_params(:units => [{:name => "foo"}, {:name => "bar"}])
+    end
+
+    def assert_bad_params(params)
+      @filter_rule.parameters = params
+      assert_raises(ActiveRecord::RecordInvalid) do
+        @filter_rule.save!
+      end
+    end
+
+    def assert_good_params(params)
+      @filter_rule.parameters = params
+      assert @filter_rule.save
+    end
+
+  end
 end

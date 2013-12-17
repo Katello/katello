@@ -13,190 +13,190 @@
 require 'katello_test_helper'
 
 module Katello
-class ContentViewTest < ActiveSupport::TestCase
+  class ContentViewTest < ActiveSupport::TestCase
 
-  def self.before_suite
-    models = ["Organization", "KTEnvironment", "User", "ContentViewEnvironment","ContentViewDefinitionBase",
-              "ContentViewDefinition", "Repository", "ContentView", "ContentViewVersion",
-              "ComponentContentView", "System"]
-    services = ["Candlepin", "Pulp", "ElasticSearch"]
-    disable_glue_layers(services, models, true)
-  end
-
-  def setup
-    User.current      = User.find(users(:admin))
-    @acme_corporation = get_organization(:organization1)
-
-    @library          = KTEnvironment.find(katello_environments(:library).id)
-    @dev              = KTEnvironment.find(katello_environments(:dev).id)
-    @default_view     = ContentView.find(katello_content_views(:acme_default))
-    @library_view     = ContentView.find(katello_content_views(:library_view))
-    @library_dev_view = ContentView.find(katello_content_views(:library_dev_view))
-  end
-
-  def test_create
-    assert ContentView.create(FactoryGirl.attributes_for(:content_view))
-  end
-
-  def test_label
-    content_view = FactoryGirl.build(:content_view)
-    content_view.label = ""
-    assert content_view.save
-    assert content_view.label.present?
-  end
-
-  def test_create_with_content_view_definition
-    content_view = FactoryGirl.build(:content_view, :with_definition)
-    refute content_view.content_view_definition.nil?
-    assert content_view.save
-  end
-
-  def test_create_without_content_view_definition
-    content_view = FactoryGirl.build(:content_view)
-    assert content_view.content_view_definition.nil?
-    assert content_view.save
-  end
-
-  def test_bad_name
-    content_view = FactoryGirl.build(:content_view, :name => "")
-    assert content_view.invalid?
-    refute content_view.save
-    assert content_view.errors.has_key?(:name)
-  end
-
-  def test_duplicate_name
-    attrs = FactoryGirl.attributes_for(:content_view,
-                                       :name => @library_dev_view.name
-                                      )
-    assert_raises(ActiveRecord::RecordInvalid) do
-      ContentView.create!(attrs)
+    def self.before_suite
+      models = ["Organization", "KTEnvironment", "User", "ContentViewEnvironment","ContentViewDefinitionBase",
+                "ContentViewDefinition", "Repository", "ContentView", "ContentViewVersion",
+                "ComponentContentView", "System"]
+      services = ["Candlepin", "Pulp", "ElasticSearch"]
+      disable_glue_layers(services, models, true)
     end
-    cv = ContentView.create(attrs)
-    refute cv.persisted?
-    refute cv.save
-  end
 
-  def test_bad_label
-    content_view = FactoryGirl.build(:content_view)
-    content_view.label = "Bad Label"
+    def setup
+      User.current      = User.find(users(:admin))
+      @acme_corporation = get_organization(:organization1)
 
-    assert content_view.invalid?
-    #TODO: RAILS32 Re-work for Rails 3.2
-    #assert_equal 1, content_view.errors.length
-    assert content_view.errors.has_key?(:label)
-  end
+      @library          = KTEnvironment.find(katello_environments(:library).id)
+      @dev              = KTEnvironment.find(katello_environments(:dev).id)
+      @default_view     = ContentView.find(katello_content_views(:acme_default))
+      @library_view     = ContentView.find(katello_content_views(:library_view))
+      @library_dev_view = ContentView.find(katello_content_views(:library_dev_view))
+    end
 
-  def test_component_content_views
-    content_view = FactoryGirl.create(:content_view_with_definition)
-    definition = FactoryGirl.create(:content_view_definition, :composite)
-    definition.component_content_views << content_view
+    def test_create
+      assert ContentView.create(FactoryGirl.attributes_for(:content_view))
+    end
 
-    refute_empty definition.component_content_views
-    refute_empty definition.components
-    assert_includes definition.component_content_views, content_view
-    assert_includes content_view.composite_content_view_definitions, definition
-  end
+    def test_label
+      content_view = FactoryGirl.build(:content_view)
+      content_view.label = ""
+      assert content_view.save
+      assert content_view.label.present?
+    end
 
-  def test_content_view_environments
-    assert_includes @library_view.environments, @library
-    assert_includes @library.content_views, @library_view
-  end
+    def test_create_with_content_view_definition
+      content_view = FactoryGirl.build(:content_view, :with_definition)
+      refute content_view.content_view_definition.nil?
+      assert content_view.save
+    end
 
-  def test_environment_content_view_env_destroy
-    env = @dev
-    cve = env.content_views.first.content_view_environments.where(:environment_id=>env.id).first
-    env.destroy
-    assert_nil ContentViewEnvironment.find_by_id(cve.id)
-  end
+    def test_create_without_content_view_definition
+      content_view = FactoryGirl.build(:content_view)
+      assert content_view.content_view_definition.nil?
+      assert content_view.save
+    end
 
-  def test_changesets
-    content_view = FactoryGirl.create(:content_view)
-    environment = FactoryGirl.build_stubbed(:environment)
-    changeset = FactoryGirl.create(:changeset, :environment => environment)
-    content_view.changesets << changeset
-    assert_includes changeset.content_views.map(&:id), content_view.id
-    assert_equal content_view.changeset_content_views,
-      changeset.changeset_content_views
-  end
+    def test_bad_name
+      content_view = FactoryGirl.build(:content_view, :name => "")
+      assert content_view.invalid?
+      refute content_view.save
+      assert content_view.errors.has_key?(:name)
+    end
 
-  def test_promote
-    Repository.any_instance.stubs(:clone_contents).returns([])
-    Repository.any_instance.stubs(:checksum_type).returns(nil)
-    content_view = @library_view
-    refute_includes content_view.environments, @dev
-    content_view.promote(@library, @dev)
-    assert_includes content_view.environments, @dev
-    refute_empty ContentViewEnvironment.where(:content_view_id => content_view,
+    def test_duplicate_name
+      attrs = FactoryGirl.attributes_for(:content_view,
+                                         :name => @library_dev_view.name
+                                        )
+      assert_raises(ActiveRecord::RecordInvalid) do
+        ContentView.create!(attrs)
+      end
+      cv = ContentView.create(attrs)
+      refute cv.persisted?
+      refute cv.save
+    end
+
+    def test_bad_label
+      content_view = FactoryGirl.build(:content_view)
+      content_view.label = "Bad Label"
+
+      assert content_view.invalid?
+      #TODO: RAILS32 Re-work for Rails 3.2
+      #assert_equal 1, content_view.errors.length
+      assert content_view.errors.has_key?(:label)
+    end
+
+    def test_component_content_views
+      content_view = FactoryGirl.create(:content_view_with_definition)
+      definition = FactoryGirl.create(:content_view_definition, :composite)
+      definition.component_content_views << content_view
+
+      refute_empty definition.component_content_views
+      refute_empty definition.components
+      assert_includes definition.component_content_views, content_view
+      assert_includes content_view.composite_content_view_definitions, definition
+    end
+
+    def test_content_view_environments
+      assert_includes @library_view.environments, @library
+      assert_includes @library.content_views, @library_view
+    end
+
+    def test_environment_content_view_env_destroy
+      env = @dev
+      cve = env.content_views.first.content_view_environments.where(:environment_id=>env.id).first
+      env.destroy
+      assert_nil ContentViewEnvironment.find_by_id(cve.id)
+    end
+
+    def test_changesets
+      content_view = FactoryGirl.create(:content_view)
+      environment = FactoryGirl.build_stubbed(:environment)
+      changeset = FactoryGirl.create(:changeset, :environment => environment)
+      content_view.changesets << changeset
+      assert_includes changeset.content_views.map(&:id), content_view.id
+      assert_equal content_view.changeset_content_views,
+        changeset.changeset_content_views
+    end
+
+    def test_promote
+      Repository.any_instance.stubs(:clone_contents).returns([])
+      Repository.any_instance.stubs(:checksum_type).returns(nil)
+      content_view = @library_view
+      refute_includes content_view.environments, @dev
+      content_view.promote(@library, @dev)
+      assert_includes content_view.environments, @dev
+      refute_empty ContentViewEnvironment.where(:content_view_id => content_view,
                                                 :environment_id => @dev)
-  end
-
-  def test_destroy
-    count = ContentView.count
-    refute @library_dev_view.destroy
-    assert ContentView.exists?(@library_dev_view.id)
-    assert_equal count, ContentView.count
-    assert @library_view.destroy
-    assert_equal count-1, ContentView.count
-  end
-
-  def test_delete
-    view = @library_dev_view
-    view.delete(@dev)
-    refute_includes view.environments, @dev
-  end
-
-  def test_delete_last_env
-    view = @library_view
-    view.delete(@library)
-    assert_empty ContentView.where(:label=>view.label)
-  end
-
-  def test_default_scope
-    refute_empty ContentView.default
-    assert_empty ContentView.default.select{|v| !v.default}
-    assert_includes ContentView.default, @library.default_content_view
-  end
-
-  def test_non_default_scope
-    refute_empty ContentView.non_default
-    assert_empty ContentView.non_default.select{|v| v.default}
-  end
-
-  def test_destroy_content_view_versions
-    content_view = @library_view
-    content_view_version = @library_view.versions.first
-    refute_nil content_view_version
-    assert content_view.destroy
-    assert_nil ContentViewVersion.find_by_id(content_view_version.id)
-  end
-
-  def test_all_version_library_instances_empty
-    assert_empty @library_dev_view.all_version_library_instances
-  end
-
-  def test_all_version_library_instances_empty
-    refute_empty @library_view.all_version_library_instances
-  end
-
-  def test_components_not_in_env
-    composite_view = katello_content_views(:composite_view)
-
-    assert_equal 2, composite_view.components_not_in_env(@dev).length
-    assert_equal composite_view.content_view_definition.component_content_views.sort,
-      composite_view.components_not_in_env(@dev).sort
-  end
-
-  def test_refresh
-    composite_view = katello_content_views(:composite_view)
-
-    mock_definition = mock()
-    mock_definition.expects(:ready_to_publish?).returns(false)
-    composite_view.stubs(:content_view_definition).returns(mock_definition)
-
-    assert_raises(RuntimeError) do
-      composite_view.refresh_view
     end
-  end
 
-end
+    def test_destroy
+      count = ContentView.count
+      refute @library_dev_view.destroy
+      assert ContentView.exists?(@library_dev_view.id)
+      assert_equal count, ContentView.count
+      assert @library_view.destroy
+      assert_equal count-1, ContentView.count
+    end
+
+    def test_delete
+      view = @library_dev_view
+      view.delete(@dev)
+      refute_includes view.environments, @dev
+    end
+
+    def test_delete_last_env
+      view = @library_view
+      view.delete(@library)
+      assert_empty ContentView.where(:label=>view.label)
+    end
+
+    def test_default_scope
+      refute_empty ContentView.default
+      assert_empty ContentView.default.select{|v| !v.default}
+      assert_includes ContentView.default, @library.default_content_view
+    end
+
+    def test_non_default_scope
+      refute_empty ContentView.non_default
+      assert_empty ContentView.non_default.select{|v| v.default}
+    end
+
+    def test_destroy_content_view_versions
+      content_view = @library_view
+      content_view_version = @library_view.versions.first
+      refute_nil content_view_version
+      assert content_view.destroy
+      assert_nil ContentViewVersion.find_by_id(content_view_version.id)
+    end
+
+    def test_all_version_library_instances_empty
+      assert_empty @library_dev_view.all_version_library_instances
+    end
+
+    def test_all_version_library_instances_empty
+      refute_empty @library_view.all_version_library_instances
+    end
+
+    def test_components_not_in_env
+      composite_view = katello_content_views(:composite_view)
+
+      assert_equal 2, composite_view.components_not_in_env(@dev).length
+      assert_equal composite_view.content_view_definition.component_content_views.sort,
+        composite_view.components_not_in_env(@dev).sort
+    end
+
+    def test_refresh
+      composite_view = katello_content_views(:composite_view)
+
+      mock_definition = mock()
+      mock_definition.expects(:ready_to_publish?).returns(false)
+      composite_view.stubs(:content_view_definition).returns(mock_definition)
+
+      assert_raises(RuntimeError) do
+        composite_view.refresh_view
+      end
+    end
+
+  end
 end

@@ -14,20 +14,20 @@
 require 'katello_test_helper'
 
 module Katello
-class OrganizationDestroyerTest < ActiveSupport::TestCase
+  class OrganizationDestroyerTest < ActiveSupport::TestCase
 
-  def self.before_suite
-    services  = ['Candlepin', 'Pulp', 'ElasticSearch']
-    models    = ['Organization', 'KTEnvironment', 'ContentView',
-                 'ContentViewEnvironment']
-    disable_glue_layers(services, models, true)
-  end
+    def self.before_suite
+      services  = ['Candlepin', 'Pulp', 'ElasticSearch']
+      models    = ['Organization', 'KTEnvironment', 'ContentView',
+                   'ContentViewEnvironment']
+      disable_glue_layers(services, models, true)
+    end
 
-  def test_non_async_destroy
-    org = FactoryGirl.create(:organization)
-    User.current = User.find(users(:admin))
-    OrganizationDestroyer.destroy(org, :async => false)
-    refute Organization.exists?(org.id)
+    def test_non_async_destroy
+      org = FactoryGirl.create(:organization)
+      User.current = User.find(users(:admin))
+      OrganizationDestroyer.destroy(org, :async => false)
+      refute Organization.exists?(org.id)
+    end
   end
-end
 end

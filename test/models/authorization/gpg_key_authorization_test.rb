@@ -13,70 +13,70 @@
 require 'models/authorization/authorization_base'
 
 module Katello
-class GpgKeyAuthorizationAdminTest < AuthorizationTestBase
+  class GpgKeyAuthorizationAdminTest < AuthorizationTestBase
 
-  def setup
-    super
-    User.current = User.find(users('admin'))
-    @key = GpgKey.find(katello_gpg_keys('fedora_gpg_key'))
+    def setup
+      super
+      User.current = User.find(users('admin'))
+      @key = GpgKey.find(katello_gpg_keys('fedora_gpg_key'))
+    end
+
+    def test_readable
+      refute_empty GpgKey.readable(@acme_corporation)
+    end
+
+    def test_manageable
+      refute_empty GpgKey.manageable(@acme_corporation)
+    end
+
+    def test_createable?
+      assert GpgKey.createable?(@acme_corporation)
+    end
+
+    def test_any_readable?
+      assert GpgKey.any_readable?(@acme_corporation)
+    end
+
+    def test_key_readable
+      assert @key.readable?
+    end
+
+    def test_key_manageable?
+      assert @key.manageable?
+    end
   end
 
-  def test_readable
-    refute_empty GpgKey.readable(@acme_corporation)
+  class GpgKeyAuthorizationNoPermsTest < AuthorizationTestBase
+
+    def setup
+      super
+      User.current = User.find(users('restricted'))
+      @key = GpgKey.find(katello_gpg_keys('fedora_gpg_key'))
+    end
+
+    def test_readable
+      assert_empty GpgKey.readable(@acme_corporation)
+    end
+
+    def test_manageable
+      assert_empty GpgKey.manageable(@acme_corporation)
+    end
+
+    def test_createable?
+      refute GpgKey.createable?(@acme_corporation)
+    end
+
+    def test_any_readable?
+      refute GpgKey.any_readable?(@acme_corporation)
+    end
+
+    def test_key_readable
+      refute @key.readable?
+    end
+
+    def test_key_manageable?
+      refute @key.manageable?
+    end
+
   end
-
-  def test_manageable
-    refute_empty GpgKey.manageable(@acme_corporation)
-  end
-
-  def test_createable?
-    assert GpgKey.createable?(@acme_corporation)
-  end
-
-  def test_any_readable?
-    assert GpgKey.any_readable?(@acme_corporation)
-  end
-
-  def test_key_readable
-    assert @key.readable?
-  end
-
-  def test_key_manageable?
-     assert @key.manageable?
-  end
-end
-
-class GpgKeyAuthorizationNoPermsTest < AuthorizationTestBase
-
-  def setup
-    super
-    User.current = User.find(users('restricted'))
-    @key = GpgKey.find(katello_gpg_keys('fedora_gpg_key'))
-  end
-
-  def test_readable
-    assert_empty GpgKey.readable(@acme_corporation)
-  end
-
-  def test_manageable
-    assert_empty GpgKey.manageable(@acme_corporation)
-  end
-
-  def test_createable?
-    refute GpgKey.createable?(@acme_corporation)
-  end
-
-  def test_any_readable?
-    refute GpgKey.any_readable?(@acme_corporation)
-  end
-
-  def test_key_readable
-    refute @key.readable?
-  end
-
-  def test_key_manageable?
-     refute @key.manageable?
-  end
-
-end
 end

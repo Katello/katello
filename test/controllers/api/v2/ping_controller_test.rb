@@ -33,16 +33,16 @@ module Katello
       response = { :status => "ok",
                    :services => { :pulp => { :status => "ok",
                                              :duration_ms => "38" },
-                                  :candlepin => { :status => "ok",
-                                                  :duration_ms => "23" },
-                                  :elasticsearch => { :status => "ok",
-                                                      :duration_ms => "7" },
-                                  :pulp_auth => { :status => "ok",
-                                                  :duration_ms => "0" },
-                                  :candlepin_auth => { :status => "ok",
-                                                       :duration_ms => "0" },
-                                  :katello_jobs => { :status => "ok",
-                                                     :duration_ms => "0" } } }
+                                             :candlepin => { :status => "ok",
+                                                             :duration_ms => "23" },
+                                                             :elasticsearch => { :status => "ok",
+                                                                                 :duration_ms => "7" },
+                                                                                 :pulp_auth => { :status => "ok",
+                                                                                                 :duration_ms => "0" },
+                                                                                                 :candlepin_auth => { :status => "ok",
+                                                                                                                      :duration_ms => "0" },
+                                                                                                                      :katello_jobs => { :status => "ok",
+                                                                                                                                         :duration_ms => "0" } } }
       Ping.stubs(:ping).returns(response)
       get :index
 

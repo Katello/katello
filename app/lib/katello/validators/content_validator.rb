@@ -11,13 +11,13 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-module Validators
-  class ContentValidator < ActiveModel::EachValidator
-    def validate_each(record, attribute, value)
-      value.encode("UTF-8", 'binary') unless value.blank?
-    rescue Encoding::UndefinedConversionError
-      record.errors[attribute] << (options[:message] || _("cannot be a binary file."))
+  module Validators
+    class ContentValidator < ActiveModel::EachValidator
+      def validate_each(record, attribute, value)
+        value.encode("UTF-8", 'binary') unless value.blank?
+      rescue Encoding::UndefinedConversionError
+        record.errors[attribute] << (options[:message] || _("cannot be a binary file."))
+      end
     end
   end
-end
 end

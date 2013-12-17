@@ -11,20 +11,20 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-module LayoutHelper
-  def stylesheet(*args)
-    args.map { |arg| content_for(:stylesheets) { stylesheet_link_tag(arg) } }
-    return ""
-  end
+  module LayoutHelper
+    def stylesheet(*args)
+      args.map { |arg| content_for(:stylesheets) { stylesheet_link_tag(arg) } }
+      return ""
+    end
 
-  def javascript(*args, &block)
-    if block
-      content_for(:inline_javascript) { block.call }
+    def javascript(*args, &block)
+      if block
+        content_for(:inline_javascript) { block.call }
+      end
+      if args
+        args.map { |arg| content_for(:javascripts) { javascript_include_tag(arg) } }
+      end
+      return ""
     end
-    if args
-      args.map { |arg| content_for(:javascripts) { javascript_include_tag(arg) } }
-    end
-    return ""
   end
-end
 end

@@ -13,30 +13,30 @@
 require 'katello_test_helper'
 
 module Katello
-module Pulp
-  class UserSupport < ActiveSupport::TestCase
+  module Pulp
+    class UserSupport < ActiveSupport::TestCase
 
-    def self.hidden_user
-      @loaded_fixtures = load_fixtures
-      id = @loaded_fixtures['users']['admin']['id']
-      User.find(id)
-    end
-
-    def self.setup_hidden_user
-      VCR.use_cassette('pulp/user/hidden') do
-        user = hidden_user
-        user.set_pulp_user({:password => user.password})
-        user.set_super_user_role
+      def self.hidden_user
+        @loaded_fixtures = load_fixtures
+        id = @loaded_fixtures['users']['admin']['id']
+        User.find(id)
       end
-    end
 
-    def self.delete_hidden_user
-      VCR.use_cassette('pulp/user/hidden') do
-        user = hidden_user
-        user.del_pulp_user
+      def self.setup_hidden_user
+        VCR.use_cassette('pulp/user/hidden') do
+          user = hidden_user
+          user.set_pulp_user({:password => user.password})
+          user.set_super_user_role
+        end
       end
-    end
 
+      def self.delete_hidden_user
+        VCR.use_cassette('pulp/user/hidden') do
+          user = hidden_user
+          user.del_pulp_user
+        end
+      end
+
+    end
   end
-end
 end

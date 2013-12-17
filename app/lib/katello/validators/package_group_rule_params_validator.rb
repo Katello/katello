@@ -11,18 +11,19 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-module Validators
-  class PackageGroupRuleParamsValidator < ActiveModel::EachValidator
-    def validate_each(record, attribute, value)
-      if value
-        unless value[:units].blank?
-          if !value[:units].is_a?(Array)
-            record.errors.add(attribute, _("Invalid package rule specified. Units must be an array."))
-          else
-            value[:units].each do |unit|
-              unless unit.key?(:name)
-                record.errors.add(attribute, _("Invalid package group rule specified. Missing package 'name'."))
-                break
+  module Validators
+    class PackageGroupRuleParamsValidator < ActiveModel::EachValidator
+      def validate_each(record, attribute, value)
+        if value
+          unless value[:units].blank?
+            if !value[:units].is_a?(Array)
+              record.errors.add(attribute, _("Invalid package rule specified. Units must be an array."))
+            else
+              value[:units].each do |unit|
+                unless unit.key?(:name)
+                  record.errors.add(attribute, _("Invalid package group rule specified. Missing package 'name'."))
+                  break
+                end
               end
             end
           end
@@ -30,5 +31,4 @@ module Validators
       end
     end
   end
-end
 end

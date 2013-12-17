@@ -11,36 +11,36 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-module Util
+  module Util
 
-  module Model
+    module Model
 
-    # hardcoded model names (uses kp_ prefix)
-    def self.table_to_model_hash
-      {
-        "kt_environment" => "KTEnvironment"
-      }
-    end
+      # hardcoded model names (uses kp_ prefix)
+      def self.table_to_model_hash
+        {
+          "kt_environment" => "KTEnvironment"
+        }
+      end
 
-    # convert Rails Model name to Class or nil when no such table name exists
-    def self.table_to_class(name)
-      class_name = table_to_model_hash[name] || name.classify
-      class_name.constantize
-    rescue NameError
-      # constantize throws NameError
-      return nil
-    end
+      # convert Rails Model name to Class or nil when no such table name exists
+      def self.table_to_class(name)
+        class_name = table_to_model_hash[name] || name.classify
+        class_name.constantize
+      rescue NameError
+        # constantize throws NameError
+        return nil
+      end
 
-    def self.labelize(name)
-      if name
-        (name.ascii_only? && name.length <= 128) ? name.gsub(/[^a-z0-9\-_]/i, "_") : uuid
+      def self.labelize(name)
+        if name
+          (name.ascii_only? && name.length <= 128) ? name.gsub(/[^a-z0-9\-_]/i, "_") : uuid
+        end
+      end
+
+      def self.uuid
+        UUIDTools::UUID.random_create.to_s
       end
     end
 
-    def self.uuid
-      UUIDTools::UUID.random_create.to_s
-    end
   end
-
-end
 end

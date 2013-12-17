@@ -11,18 +11,18 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-module Navigation
-  module Items
-    class SyncSchedule < Navigation::Item
+  module Navigation
+    module Items
+      class SyncSchedule < Navigation::Item
 
-      def initialize
-        @key           = :sync_schedule
-        @display       = _("Sync Schedule")
-        @authorization = true
-        @url           = sync_schedules_index_path
+        def initialize
+          @key           = :sync_schedule
+          @display       = _("Sync Schedule")
+          @authorization = true
+          @url           = sync_schedules_index_path
+        end
+
       end
-
     end
   end
-end
 end

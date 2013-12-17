@@ -13,96 +13,96 @@
 require 'katello_test_helper'
 
 module Katello
-class FilterTest < ActiveSupport::TestCase
+  class FilterTest < ActiveSupport::TestCase
 
-  def self.before_suite
-    models = ["Organization", "KTEnvironment", "User","Filter", "ContentViewEnvironment",
-              "ContentViewDefinitionBase", "ContentViewDefinition", "Product", "Repository"]
-    disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models, true)
-  end
-
-  def setup
-    User.current = User.find(users(:admin))
-    @filter = FactoryGirl.build(:filter)
-    @repo = Repository.find(katello_repositories(:fedora_17_x86_64).id)
-    @product = Product.find(katello_products(:fedora).id)
-  end
-
-  def test_create
-     assert @filter.save
-  end
-
-  def test_composite_definition
-    # filter should not get created for a composite content view definition
-    content_view_def = FactoryGirl.create(:content_view_definition, :composite)
-    filter = FactoryGirl.build(:filter, :content_view_definition_id => content_view_def.id)
-    assert_nil Filter.find_by_id(filter.id)
-    refute Filter.exists?(filter.id)
-  end
-
-  def test_bad_name
-    filter = FactoryGirl.build(:filter, :name => "")
-    assert filter.invalid?
-    assert filter.errors.has_key?(:name)
-  end
-
-  def test_duplicate_name
-    @filter.save!
-    attrs = FactoryGirl.attributes_for(:filter,
-                                       :name => @filter.name,
-                                       :content_view_definition_id => @filter.content_view_definition_id
-                                      )
-    assert_raises(ActiveRecord::RecordInvalid) do
-      Filter.create!(attrs)
+    def self.before_suite
+      models = ["Organization", "KTEnvironment", "User","Filter", "ContentViewEnvironment",
+                "ContentViewDefinitionBase", "ContentViewDefinition", "Product", "Repository"]
+      disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models, true)
     end
-    filter_item = Filter.create(attrs)
-    refute filter_item.persisted?
-    refute filter_item.save
-  end
 
-  def test_add_bad_repo
-    @filter.repositories << @repo
-    assert_raises(ActiveRecord::RecordInvalid) do
+    def setup
+      User.current = User.find(users(:admin))
+      @filter = FactoryGirl.build(:filter)
+      @repo = Repository.find(katello_repositories(:fedora_17_x86_64).id)
+      @product = Product.find(katello_products(:fedora).id)
+    end
+
+    def test_create
+      assert @filter.save
+    end
+
+    def test_composite_definition
+      # filter should not get created for a composite content view definition
+      content_view_def = FactoryGirl.create(:content_view_definition, :composite)
+      filter = FactoryGirl.build(:filter, :content_view_definition_id => content_view_def.id)
+      assert_nil Filter.find_by_id(filter.id)
+      refute Filter.exists?(filter.id)
+    end
+
+    def test_bad_name
+      filter = FactoryGirl.build(:filter, :name => "")
+      assert filter.invalid?
+      assert filter.errors.has_key?(:name)
+    end
+
+    def test_duplicate_name
       @filter.save!
+      attrs = FactoryGirl.attributes_for(:filter,
+                                         :name => @filter.name,
+                                         :content_view_definition_id => @filter.content_view_definition_id
+                                        )
+      assert_raises(ActiveRecord::RecordInvalid) do
+        Filter.create!(attrs)
+      end
+      filter_item = Filter.create(attrs)
+      refute filter_item.persisted?
+      refute filter_item.save
     end
-  end
 
-  def test_add_good_repo
-    cvd =  @filter.content_view_definition
-    cvd.repositories << @repo
-    cvd.save!
-    @filter.repositories << @repo
-    assert @filter.save
-    refute_empty Filter.find(@filter.id).repositories
-  end
-
-  def test_add_bad_product
-    @filter.products << @product
-    assert_raises(ActiveRecord::RecordInvalid) do
-      @filter.save!
+    def test_add_bad_repo
+      @filter.repositories << @repo
+      assert_raises(ActiveRecord::RecordInvalid) do
+        @filter.save!
+      end
     end
-  end
 
-  def test_add_good_product
-    cvd =  @filter.content_view_definition
-    cvd.products << @product
-    cvd.save!
-    @filter.products << @product
-    assert @filter.save
-    refute_empty Filter.find(@filter.id).products
-  end
+    def test_add_good_repo
+      cvd =  @filter.content_view_definition
+      cvd.repositories << @repo
+      cvd.save!
+      @filter.repositories << @repo
+      assert @filter.save
+      refute_empty Filter.find(@filter.id).repositories
+    end
 
-  def test_archive
-    filter = create(:filter)
-    filter_count = Filter.count
-    archive = filter.content_view_definition.archive
-    refute_empty archive.filters
-    assert_equal filter_count+1, Filter.count
-    refute_equal filter.content_view_definition.filters.map(&:id).sort,
-      archive.filters.map(&:id).sort
-  end
+    def test_add_bad_product
+      @filter.products << @product
+      assert_raises(ActiveRecord::RecordInvalid) do
+        @filter.save!
+      end
+    end
 
-s  def test_content_definition_delete_repo
+    def test_add_good_product
+      cvd =  @filter.content_view_definition
+      cvd.products << @product
+      cvd.save!
+      @filter.products << @product
+      assert @filter.save
+      refute_empty Filter.find(@filter.id).products
+    end
+
+    def test_archive
+      filter = create(:filter)
+      filter_count = Filter.count
+      archive = filter.content_view_definition.archive
+      refute_empty archive.filters
+      assert_equal filter_count+1, Filter.count
+      refute_equal filter.content_view_definition.filters.map(&:id).sort,
+        archive.filters.map(&:id).sort
+    end
+
+    s  def test_content_definition_delete_repo
     @filter.save!
     cvd =  @filter.content_view_definition
     cvd.repositories << @repo

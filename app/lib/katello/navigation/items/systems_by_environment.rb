@@ -11,18 +11,18 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-module Navigation
-  module Items
-    class SystemsByEnvironment < Navigation::Item
+  module Navigation
+    module Items
+      class SystemsByEnvironment < Navigation::Item
 
-      def initialize(organization)
-        @key           = :systems_by_environment
-        @display       = _("By Environment")
-        @authorization = lambda{ organization && System.any_readable?(organization) }
-        @url           = environments_systems_path
+        def initialize(organization)
+          @key           = :systems_by_environment
+          @display       = _("By Environment")
+          @authorization = lambda{ organization && System.any_readable?(organization) }
+          @url           = environments_systems_path
+        end
+
       end
-
     end
   end
-end
 end

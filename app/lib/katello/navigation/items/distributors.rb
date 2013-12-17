@@ -11,18 +11,18 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-module Navigation
-  module Items
-    class Distributors < Navigation::Item
+  module Navigation
+    module Items
+      class Distributors < Navigation::Item
 
-      def initialize(organization)
-        @key           = :distributors
-        @display       =  _("Subscription Manager Applications")
-        @authorization = lambda{ organization && organization.readable? }
-        @url           = distributors_path
+        def initialize(organization)
+          @key           = :distributors
+          @display       =  _("Subscription Manager Applications")
+          @authorization = lambda{ organization && organization.readable? }
+          @url           = distributors_path
+        end
+
       end
-
     end
   end
-end
 end
