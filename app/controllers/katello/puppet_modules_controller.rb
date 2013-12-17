@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class PuppetModulesController < ApplicationController
+class PuppetModulesController < Katello::ApplicationController
   before_filter :find_puppet_module, only: [:show]
   before_filter :find_filter, except: [:show]
   before_filter :authorize

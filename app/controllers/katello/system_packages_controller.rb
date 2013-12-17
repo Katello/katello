@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class SystemPackagesController < ApplicationController
+class SystemPackagesController < Katello::ApplicationController
 
   before_filter :find_system
   before_filter :authorize

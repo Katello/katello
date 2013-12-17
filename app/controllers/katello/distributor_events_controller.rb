@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class DistributorEventsController < ApplicationController
+class DistributorEventsController < Katello::ApplicationController
   before_filter :find_distributor
   before_filter :authorize
 

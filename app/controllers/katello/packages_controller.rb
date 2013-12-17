@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class PackagesController < ApplicationController
+class PackagesController < Katello::ApplicationController
   before_filter :lookup_package, except: [:auto_complete]
   before_filter :find_filter, only: [:auto_complete]
   before_filter :authorize

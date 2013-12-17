@@ -16,7 +16,7 @@ require 'ostruct'
 # TODO: start date range not working?  start:2012-01-31 fails but start:"2012-01-31" works
 
 module Katello
-class SubscriptionsController < ApplicationController
+class SubscriptionsController < Katello::ApplicationController
 
   before_filter :find_provider
   before_filter :find_subscription, :except => [:index, :items, :new, :upload, :delete_manifest, :history, :history_items, :edit_manifest, :refresh_manifest]
@@ -174,7 +174,7 @@ class SubscriptionsController < ApplicationController
       @provider.delete_manifest :async => true, :notify => true
     rescue => error
       if error.respond_to?(:response)
-        display_message = ApplicationController.parse_display_message(error.response)
+        display_message = Katello::ApplicationController.parse_display_message(error.response)
       elsif error.message
         display_message = error.message
       else
@@ -197,7 +197,7 @@ class SubscriptionsController < ApplicationController
                                                                     :async => true, :notify => true
       rescue => error
         if error.respond_to?(:response)
-          display_message = ApplicationController.parse_display_message(error.response)
+          display_message = Katello::ApplicationController.parse_display_message(error.response)
         elsif error.message
           display_message = error.message
         else
@@ -225,7 +225,7 @@ class SubscriptionsController < ApplicationController
       @provider.refresh_manifest @upstream, :async => true, :notify => true
     rescue => error
       if error.respond_to?(:response)
-        display_message = ApplicationController.parse_display_message(error.response)
+        display_message = Katello::ApplicationController.parse_display_message(error.response)
       elsif error.message
         display_message = error.message
       else

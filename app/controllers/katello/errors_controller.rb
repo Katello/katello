@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class ErrorsController < ApplicationController
+class ErrorsController < Katello::ApplicationController
   skip_before_filter :require_user, :require_org
   skip_before_filter :authorize # ok - is used by warden
 
