@@ -17,7 +17,6 @@ module.exports = function(config) {
             '.tmp/bower_components/angular-mocks/angular-mocks.js',
             'vendor/assets/javascripts/bastion/angular-sanitize/angular-sanitize.js',
             'vendor/assets/javascripts/bastion/angular-resource/angular-resource.js',
-            'vendor/assets/javascripts/bastion/ngInfiniteScroll/ng-infinite-scroll.js',
             'vendor/assets/javascripts/bastion/alchemy/alchemy.js',
             'vendor/assets/javascripts/bastion/underscore/underscore.js',
             'vendor/assets/javascripts/bastion/angular-ui-router/angular-ui-router.js',
