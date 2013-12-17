@@ -1,0 +1,164 @@
+<section ng-cloak alch-container-scroll>
+
+  <div class="row nutupane-bar">
+    <h2 class="col-sm-4">
+      <div data-block="header" translate>
+        Lifecycle Environment Paths
+      </div>
+    </h2>
+
+    <button class="fr btn btn-primary"
+            ng-click="initiateCreatePath()"
+            ng-hide="readonly()">
+      <i class="icon-plus"></i>
+      {{ "New Environment Path" | translate }}
+    </button>
+  </div>
+
+  <section class="row nutupane-sub-section">
+
+    <div class="col-sm-12">
+
+      <div alch-alert success-messages="successMessages" error-messages="errorMessages"></div>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th translate>Environment Path</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr ng-repeat="row in environmentsTable.rows"
+              ng-controller="PathController"
+              ng-show="row.path.length > 0"
+              path-id="{{ row.pathId = $index }}">
+
+            <td>
+              <div class="path_selector">
+                <ul>
+                  <li ng-repeat="env in row.path">
+                    <label ng-click="selectEnvironment(env.environment)"
+                           ng-class="{active: workingOn.environment === env.environment}">
+                      <div>
+                        {{ env.environment.name }}
+                      </div>
+                    </label>
+                  </li>
+                  <li ng-hide="row.permissions.readonly">
+                    <label ng-click="initiateCreateEnvironment()">
+                      <div class="icon-plus"></div>
+                    </label>
+                  </li>
+                </ul>
+              </div>
+
+              <section ng-show="row.showCreate && !row.permissions.readonly">
+                <header class="details-header">
+                  <h2 class="fl" translate>Create Environment</h2>
+
+                  <div class="fr">
+                    <button class="btn btn-default"
+                            ng-click="close()" translate>Close</button>
+                  </div>
+                </header>
+
+                <div class="details">
+                  <form name="environmentForm" class="form-horizontal" novalidate role="form">
+
+                    <div alch-form-group label="{{ 'Name' | translate }}">
+                      <input id="name"
+                             name="name"
+                             ng-model="environment.name"
+                             type="text"
+                             tabindex="1"
+                             autofocus
+                             required/>
+                    </div>
+
+                    <div alch-form-group label="{{ 'Label' | translate }}">
+                      <input id="label"
+                             name="label"
+                             ng-model="environment.label"
+                             type="text"
+                             tabindex="2"
+                             required/>
+                    </div>
+
+                    <div alch-form-group label="{{ 'Description' | translate }}">
+                      <textarea id="description"
+                                name="description"
+                                ng-model="environment.description"
+                                tabindex="3">
+                      </textarea>
+                    </div>
+
+                    <div alch-form-buttons
+                         on-cancel="close()"
+                         on-save="create(environment)"
+                         working="workingOn.busy">
+                    </div>
+                  </form>
+                </div>
+              </section>
+
+              <section ng-show="row.showEdit">
+
+                <header class="details-header">
+                  <h2 class="fl" translate>Environment {{ workingOn.environment.name }}</h2>
+
+                  <div class="fr">
+
+                    <div alch-modal="remove(workingOn.environment)" model="environment"
+                         modal-header='Remove Environment "{{workingOn.environment.name}}"?'
+                         modal-body='Are you sure you want to remove environment "{{ workingOn.environment.name }}"?'></div>
+
+                    <button class="btn btn-danger"
+                            ng-show="isLastEnvironment(workingOn.environment) && !row.permissions.readonly"
+                            ng-click="openModal()"
+                            translate>
+                      Remove Environment
+                    </button>
+
+                    <button class="btn btn-default"
+                            ng-click="close()" translate>Close</button>
+                  </div>
+                </header>
+
+                <br/>
+                <div class="details">
+                  <div class="detail">
+                    <span class="info-label" translate>Name</span>
+                  <span class="info-value"
+                        alch-edit-text="workingOn.environment.name"
+                        readonly="row.permissions.readonly"
+                        on-save="update(workingOn.environment)">
+                  </span>
+                  </div>
+
+                  <div class="detail">
+                    <span class="info-label" translate>Label</span>
+                    <span class="info-value">{{ workingOn.environment.label }}</span>
+                  </div>
+
+                  <div class="detail">
+                    <span class="info-label" translate>Description</span>
+                  <span class="info-value"
+                        alch-edit-textarea="workingOn.environment.description"
+                        readonly="row.permissions.readonly"
+                        on-save="update(workingOn.environment)">
+                  </span>
+                  </div>
+                </div>
+              </section>
+
+            </td>
+          </tr>
+
+        </tbody>
+      </table>
+
+    </div>
+  </section>
+
+</section>

@@ -11,15 +11,90 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class Api::V2::EnvironmentsController < Api::V1::EnvironmentsController
+class Api::V2::EnvironmentsController < Api::V2::ApiController
 
-  include Api::V2::Rendering
+  before_filter :find_environment, :only => [:show, :update, :destroy]
+  before_filter :find_organization
+  before_filter :authorize
+
+  def rules
+    manage_rule = lambda { @organization.environments_manageable? }
+    view_rule   = lambda { @organization.readable? }
+    {
+        :create       => manage_rule,
+        :update       => manage_rule,
+        :destroy      => manage_rule,
+        :paths        => view_rule
+    }
+  end
+
+  def_param_group :environment do
+    param :environment, Hash, :required => true, :action_aware => true do
+      param :name, :identifier, :desc => "name of the environment (identifier)", :required => true
+      param :description, String
+    end
+  end
+
+  api :POST, "/organizations/:organization_id/environments", "Create an environment in an organization"
+  param :organization_id, :identifier, :desc => "organization identifier"
+  param_group :environment
+  param :environment, Hash, :required => true do
+    param :prior, :identifier, :required => true, :desc => <<-DESC
+        identifier of an environment that is prior the new environment in the chain, it has to be
+        either library or an environment at the end of the chain
+    DESC
+  end
+  def create
+    params[:label] = labelize_params(params)
+    environment_params = params.slice(:name, :label, :description, :prior)
+    @environment = KTEnvironment.new(environment_params)
+    @organization.environments << @environment
+    fail ActiveRecord::RecordInvalid.new(@environment) unless @environment.valid?
+    @organization.save!
+    respond_for_show(:resource => @environment)
+  end
+
+  api :PUT, "/organizations/:organization_id/environments/:id", "Update an environment"
+  param :organization_id, :identifier, :desc => "organization identifier"
+  param :id, :identifier, :desc => "environment numeric identifier", :required => true
+  param :name, String, :required => true, :desc => "environment name"
+  param :description, String, :desc => "environment description"
+  def update
+    @environment.attributes = params.slice(:name, :description)
+    @environment.save!
+    respond_for_show(:resource => @environment)
+  end
+
+  api :DELETE, "/organizations/:organization_id/products/:id", "Destroy an environment"
+  param :organization_id, :identifier, :desc => "organization identifier"
+  param :id, :number, :desc => "environment numeric identifier"
+  def destroy
+    @environment.destroy
+    respond_for_destroy
+  end
 
   api :GET, "/organizations/:organization_id/environments/systems_registerable", "List environments that systems can be registered to"
   param :organization_id, :identifier, :desc => "organization identifier"
   def systems_registerable
     @environments = KTEnvironment.systems_registerable(@organization)
-    respond_for_index :collection => @environments
+    respond_for_index(:collection => @environments)
+  end
+
+  api :GET, "/organizations/:organization_id/environments/paths", "List environment paths"
+  def paths
+    paths = @organization.promotion_paths.inject([]) do |result, path|
+      result << { :path => [@organization.library] + path }
+    end
+    respond_for_index(:collection => paths, :template => :paths)
+  end
+
+  protected
+
+  def find_environment
+    @environment = KTEnvironment.find(params[:id])
+    fail HttpErrors::NotFound, _("Couldn't find environment '%s'") % params[:id] if @environment.nil?
+    @organization = @environment.organization
+    @environment
   end
 
 end

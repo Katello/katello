@@ -20,6 +20,25 @@
  */
 angular.module('Bastion.environments', [
     'ngResource',
+    'alchemy',
+    'alch-templates',
     'ui.router',
     'Bastion.widgets'
 ]);
+
+/**
+ * @ngdoc object
+ * @name Bastion.environments.config
+ *
+ * @requires $stateProvider
+ *
+ * @description
+ *   Used for systems level configuration such as setting up the ui state machine.
+ */
+angular.module('Bastion.environments').config(['$stateProvider', function($stateProvider) {
+    $stateProvider.state('environments', {
+        controller: 'EnvironmentsController',
+        url: '/environments',
+        templateUrl: 'environments/views/environments.html'
+    });
+}]);
