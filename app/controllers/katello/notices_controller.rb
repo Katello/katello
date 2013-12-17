@@ -14,7 +14,7 @@
 # and open the template in the editor.
 
 module Katello
-class NoticesController < ApplicationController
+class NoticesController < Katello::ApplicationController
 
   skip_before_filter :authorize, :require_org
   before_filter :notices_authorize

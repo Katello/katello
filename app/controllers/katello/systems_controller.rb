@@ -13,7 +13,7 @@
 
 # rubocop:disable SymbolName
 module Katello
-class SystemsController < ApplicationController
+class SystemsController < Katello::ApplicationController
   include SystemsHelper
   include ConsumersControllerLogic
 

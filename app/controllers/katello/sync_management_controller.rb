@@ -12,7 +12,7 @@
 
 # rubocop:disable ClassVars
 module Katello
-class SyncManagementController < ApplicationController
+class SyncManagementController < Katello::ApplicationController
   include TranslationHelper
   include ActionView::Helpers::DateHelper
   include ActionView::Helpers::NumberHelper

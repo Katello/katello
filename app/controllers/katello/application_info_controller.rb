@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class ApplicationInfoController < ApplicationController
+class ApplicationInfoController < Katello::ApplicationController
   skip_before_filter :authorize
 
   def section_id
