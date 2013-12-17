@@ -64,7 +64,7 @@ module Glue
         query_options = {}
         query_options[:default_field] = search_options[:default_field] || 'name'
 
-        if @query_string.nil? || @query_string == ''
+        if @query_string.blank?
           all_rows = true
         elsif search_options[:simple_query] && !Katello.config.simple_search_tokens.any?{|s| search.downcase.match(s)}
           @query_string = search_options[:simple_query]

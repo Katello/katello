@@ -1,0 +1,80 @@
+<section>
+  <div class="details">
+    <h4 translate>Red Hat Provider Details</h4>
+
+    <div class="detail">
+      <span class="info-label" translate>Repository URL</span>
+      <span class="info-value"
+        alch-edit-text="provider.repository_url"
+        on-save="save(provider)"
+        readonly="provider.readonly">
+      </span>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="details">
+    <h4 translate>Subscription Manifest</h4>
+
+    <div class="detail">
+      <span class="info-label" translate>Upstream Subscription Managment Application</span>
+      <span class="info-value" ng-show="upstream.uuid != undefined">
+        <a href="{{ manifestLink }}" target="_blank">{{ manifestName }}</a>
+      </span>
+      <span class="info-value" ng-show="upstream.uuid == undefined" translate>No subscription manifest imported</span>
+    </div>
+
+    <div class="detail pull-left" ng-show="upstream != null">
+      <button class="btn btn-danger" ng-click="deleteManifest(provider)">
+        {{ "Delete Manifest" | translate }}
+      </button>
+      <button class="btn btn-default" ng-disabled="upstream.idCert == undefined || upstream.idCert.cert == undefined"
+        ng-click="refreshManifest(provider)">
+        {{ "Refresh Manifest" | translate }}
+      </button>
+      <span ng-show="upstream.idCert == undefined || upstream.idCert.cert == undefined"
+        translate>
+        Refreshing manifest not suppported by this manifest.
+      </span>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h4 translate>Upload New Manifest</h4>
+
+  <div alch-alert error-messages="uploadErrorMessages"></div>
+
+  <form class="form labels_top"
+    action="/katello/api/v2/organizations/{{ organizationId }}/subscriptions/upload"
+    ng-upload="uploadManifest(content, completed)"
+    upload-options-enable-controls>
+
+    <div class="control-group">
+      <div class="input">
+        <input type="file" name="content"/>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <div class="control-button">
+        <button class="primary" upload-submit ng-click="progress.uploading = true">
+          <i class="icon-spinner icon-spin" ng-show="progress.uploading"></i>
+          <span ng-show="progress.uploading" translate>Uploading...</span>
+          <span ng-hide="progress.uploading" translate>Upload</span>
+        </button>
+      </div>
+    </div>
+
+  </form>
+
+</section>
+
+<section>
+  <h4 translate>Manifest History</h4>
+
+  <div ng-include="'subscriptions/manifest/views/manifest-import-history.html'"></div>
+
+  <a ui-sref="subscriptions.manifest.history()" ng-show="showHistoryMoreLink" translate>More...</a>
+</section>

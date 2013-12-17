@@ -564,6 +564,18 @@ module Glue::Provider
       ids = Resources::Candlepin::Content.all.map{ |c| c['id'] }
       ids
     end
+
+    def candlepin_ping
+      @candlepin_ping ||= Resources::Candlepin::CandlepinPing.ping
+    end
+
+    def rules_source
+      redhat_provider? ? candlepin_ping['rulesSource'] : ''
+    end
+
+    def rules_version
+      redhat_provider? ? candlepin_ping['rulesVersion'] : ''
+    end
   end
 
 end

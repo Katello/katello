@@ -13,8 +13,9 @@
 module Katello
 class Api::V2::ProvidersController < Api::V2::ApiController
 
-  before_filter :find_provider, :only => [:discovery]
   before_filter :find_organization, :only => [:index, :create]
+  before_filter :find_provider, :only => [:discovery, :update, :delete_manifest,
+                                          :refresh_manifest, :show]
   before_filter :authorize
 
   def_param_group :provider do
@@ -24,10 +25,16 @@ class Api::V2::ProvidersController < Api::V2::ApiController
   def rules
     index_test  = lambda { Provider.any_readable?(@organization) }
     create_test = lambda { @organization.nil? ? true : Provider.creatable?(@organization) }
+    show_test = lambda { @provider.readable? }
+    edit_test = lambda { @provider.editable? }
 
     {
       :index                    => index_test,
-      :create                   => create_test
+      :create                   => create_test,
+      :show                     => show_test,
+      :update                   => edit_test,
+      :delete_manifest          => edit_test,
+      :refresh_manifest         => edit_test
     }
   end
 
@@ -39,6 +46,7 @@ class Api::V2::ProvidersController < Api::V2::ApiController
 
   api :GET, "/providers", "List providers"
   param_group :search, Api::V2::ApiController
+  param :provider_type, String, "Filter providers by type ('Custom' or 'Red Hat')"
   def index
     options = sort_params
     options[:load_records?] = true
@@ -46,10 +54,16 @@ class Api::V2::ProvidersController < Api::V2::ApiController
     ids = Provider.readable(@organization).pluck(:id)
 
     options[:filters] = [
-      {:not => {:term => {:provider_type => Provider::REDHAT}}},
       {:term => {:organization_id => @organization.id}},
       {:terms => {:id => ids}}
     ]
+
+    if params[:type].blank?
+      options[:filters] << {:not => {:term => {:provider_type => Provider::REDHAT}}}
+    else
+      # TODO: Fix after github issue #3494
+      #options[:filters] << {:term => {:provider_type => params[:provider_type]}}
+    end
 
     @search_service.model = Provider
     providers, total_count = @search_service.retrieve(params[:search], params[:offset], options)
@@ -71,6 +85,46 @@ class Api::V2::ProvidersController < Api::V2::ApiController
       p.provider_type ||= Provider::CUSTOM
     end
     respond_for_show(:resource => provider)
+  end
+
+  api :PUT, "/providers/:id", "Update the provider"
+  param :id, :number, :desc => "Provider identifier", :required => true
+  param :repository_url, String, :desc => "Provider repository url"
+  def update
+    @provider.repository_url = params[:repository_url] unless params[:repository_url].blank?
+    @provider.save!
+
+    respond_for_show(:resource => @provider)
+  end
+
+  api :GET, "/providers/:id", "Get a provider"
+  param :id, :number, :desc => "Provider numeric identifier", :required => true
+  def show
+    respond_for_show(:resource => @provider)
+  end
+
+  api :POST, "/providers/:id/delete_manifest", "Delete manifest from Red Hat provider"
+  param :id, :number, :desc => "Provider numeric identifier", :required => true
+  def delete_manifest
+    if @provider.yum_repo?
+      fail HttpErrors::BadRequest, _("Manifests cannot be deleted for a custom provider.")
+    end
+
+    @provider.delete_manifest
+    respond_for_status :message => _("Manifest deleted")
+  end
+
+  api :POST, "/providers/:id/refresh_manifest", "Refresh previously imported manifest for Red Hat provider"
+  param :id, :number, :desc => "Provider numeric identifier", :required => true
+  def refresh_manifest
+    if @provider.yum_repo?
+      fail HttpErrors::BadRequest, _("Manifests cannot be refreshed for a custom provider.")
+    end
+
+    details  = @provider.organization.owner_details
+    upstream = details['upstreamConsumer'].blank? ? {} : details['upstreamConsumer']
+    @provider.refresh_manifest(upstream, :async => true, :notify => false)
+    respond_for_async :resource => @provider.manifest_task
   end
 
   private

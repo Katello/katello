@@ -1,0 +1,17 @@
+<table class="table table-striped manifest-history">
+  <thead>
+    <tr>
+      <th translate>Message</th>
+      <th translate>Time</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="status in manifestStatuses">
+      <td>
+        <span ng-class="status.status == 'FAILURE' ? 'icon-warning-sign' : 'icon-ok'" />
+        {{ status.statusMessage }}
+      </td>
+      <td>{{ status.created | date:"short" }}</td>
+    </tr>
+  </tbody>
+</table>

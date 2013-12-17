@@ -40,6 +40,7 @@ class Api::V2::ProvidersControllerTest < ActionController::TestCase
     @fake_search_service = @controller.load_search_service(Support::SearchService::FakeSearchService.new)
     models
     permissions
+    Provider.any_instance.stubs(:owner_imports).returns([])
   end
 
   def test_index

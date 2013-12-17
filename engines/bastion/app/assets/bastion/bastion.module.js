@@ -34,6 +34,7 @@ angular.module('Bastion', [
     'Katello.globals',
     'Bastion.i18n',
     'Bastion.menu',
+    'Bastion.subscriptions',
     'Bastion.systems',
     'Bastion.environments',
     'Bastion.content-views',
