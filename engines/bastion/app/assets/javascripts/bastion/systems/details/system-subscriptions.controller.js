@@ -83,7 +83,7 @@ angular.module('Bastion.systems').controller('SystemSubscriptionsController',
 
             _.each(selectedRows, function (row) {
                 var quantity = row.amount || 1;
-                SystemSubscription.save({systemId: $scope.system.uuid, pool: row['cp_id'], quantity: quantity}, successHandler, errorHandler);
+                SystemSubscription.save({systemId: $scope.system.uuid, 'subscription_id': row['cp_id'], quantity: quantity}, successHandler, errorHandler);
             });
 
         };

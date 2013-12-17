@@ -86,7 +86,7 @@ class Api::V2::SubscriptionsControllerTest < ActionController::TestCase
 
   def test_create
     System.any_instance.expects(:subscribe)
-    post :create, :system_id => @system.uuid, :quantity => 1, :pool => 'redhat'
+    post(:create, {:system_id => @system.uuid, :subscription => {:quantity => 1, :subscription_id => 'redhat'}})
 
     assert_response :success
     assert_template 'api/v2/subscriptions/create'
