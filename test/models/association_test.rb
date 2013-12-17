@@ -29,7 +29,7 @@ describe 'associations' do
   end
 
   ActiveRecord::Base.subclasses.each do |model|
-    next unless model.table_name.starts_with?('katello_')
+    next unless model.table_name && model.table_name.starts_with?('katello_')
 
     describe model do
       model.reflect_on_all_associations(:belongs_to).each do |association|

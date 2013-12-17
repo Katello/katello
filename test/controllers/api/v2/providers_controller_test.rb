@@ -80,7 +80,7 @@ class Api::V2::ProvidersControllerTest < ActionController::TestCase
   end
 
   def test_create
-    post :create, :name => 'Fedora Provider',
+    post :create, :provider => {:name => 'Fedora Provider'},
                   :organization_id => @organization.label
 
     assert_response :success
@@ -90,7 +90,7 @@ class Api::V2::ProvidersControllerTest < ActionController::TestCase
   def test_create_fail
     post :create
 
-    assert_response :unprocessable_entity
+    assert_response 400
   end
 
   def test_create_protected

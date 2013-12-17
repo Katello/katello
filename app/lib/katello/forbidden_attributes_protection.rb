@@ -10,11 +10,19 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-module Katello
-  class Model < ActiveRecord::Base
-    self.abstract_class = true
+# setup strong_parameters
+require 'strong_parameters'
 
-    # remove once foreman has strong_parameters or Rails 4
-    include Katello::ForbiddenAttributesProtection
+# role our own strong params integration so we can turn it off with a global
+module Katello
+  module ForbiddenAttributesProtection
+    def sanitize_for_mass_assignment(*options)
+      new_attributes = options.first
+      if !new_attributes.respond_to?(:permitted?) || new_attributes.permitted? || !Thread.current[:strong_parameters]
+        super
+      else
+        fail ActiveModel::ForbiddenAttributes, "Mass assignment called with an unpermitted hash"
+      end
+    end
   end
 end

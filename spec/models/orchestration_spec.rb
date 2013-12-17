@@ -15,7 +15,7 @@ require 'katello/errors'
 
 module Katello
 describe Glue do
-  class UserNotice < ActiveRecord::Base # needed a class with an AR base
+  class UserNotice < Katello::Model # needed a class with an AR base
     include Glue
 
     def process q

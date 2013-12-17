@@ -15,13 +15,6 @@ class Api::V2::PermissionsController < Api::V1::PermissionsController
 
   include Api::V2::Rendering
 
-  def param_rules
-    {
-        :create => { :permission => [:name, :description, :role_id, :organization_id, :verbs, :tags, :type, :all_tags,
-                                     :all_verbs] }
-    }
-  end
-
   resource_description do
     api_version "v2"
   end
@@ -38,12 +31,12 @@ class Api::V2::PermissionsController < Api::V1::PermissionsController
     param :all_verbs, :bool, :desc => "True if the permission should use all verbs"
   end
   def create
-    perm_attrs = params[:permission]
+    perm_attrs = params[:permission].permit(:name, :description, :organization_id, :type)
     perm_attrs.merge!(
         :role          => @role,
         :organization  => @organization,
         :all_tags      => (params[:all_tags].to_bool if params[:all_tags]),
-        :all_verbs      => (params[:all_verbs].to_bool if params[:all_verbs]),
+        :all_verbs     => (params[:all_verbs].to_bool if params[:all_verbs]),
         :verb_values   => perm_attrs[:verbs] || [],
         :tag_values    => perm_attrs[:tags] || [],
         :resource_type => ResourceType.find_or_create_by_name(perm_attrs[:type])

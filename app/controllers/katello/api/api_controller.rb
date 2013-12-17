@@ -19,6 +19,7 @@ class Api::ApiController < ::Api::BaseController
   before_filter :require_user
   before_filter :verify_ldap
   before_filter :add_candlepin_version_header
+  before_filter :turn_off_strong_params
 
   # override warden current_user (returns nil because there is no user in that scope)
   def current_user

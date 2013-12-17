@@ -46,13 +46,6 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
     }
   end
 
-  def param_rules
-    {
-      :create => [:name, :label, :product_id, :unprotected, :content_type,
-                  :url, :gpg_key_id, :organization_id, :repository],
-    }
-  end
-
   api :GET, "/repositories", "List of repositories"
   param :organization_id, :number, :required => true, :desc => "id of an organization to show repositories in"
   param :product_id, :number, :required => false, :desc => "id of a product to show repositories of"
@@ -148,7 +141,7 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
   end
 
   def repository_params
-    params.slice(:gpg_key_id, :feed, :unprotected)
+    params.require(:repository).permit(:feed, :gpg_key_id, :unprotected)
   end
 
 end

@@ -41,12 +41,6 @@ class Api::V2::ProductsController < Api::V2::ApiController
     }
   end
 
-  def param_rules
-    {
-      :create => [:name, :label, :description, :provider_id, :gpg_key_id, :product]
-    }
-  end
-
   api :GET, "/products", "List of products"
   api :GET, "/subscriptions/:subscription_id/products", "List of subscription products"
   param_group :search, Api::V2::ApiController
@@ -82,7 +76,7 @@ class Api::V2::ProductsController < Api::V2::ApiController
   api :POST, "/products", "Create a product"
   param_group :product
   def create
-    params[:label] = labelize_params(params)
+    params[:product][:label] = labelize_params(params[:product]) if params[:product]
 
     product = Product.create!(product_params)
 
@@ -99,7 +93,7 @@ class Api::V2::ProductsController < Api::V2::ApiController
   param :id, :number, :desc => "product numeric identifier"
   param_group :product
   def update
-    reset_gpg_keys = (params[:gpg_key_id] != @product.gpg_key_id)
+    reset_gpg_keys = (product_params[:gpg_key_id] != @product.gpg_key_id)
 
     @product.update_attributes!(product_params)
     @product.reset_repo_gpgs! if reset_gpg_keys
@@ -118,7 +112,7 @@ class Api::V2::ProductsController < Api::V2::ApiController
   protected
 
   def find_provider
-    @provider = Provider.find(params[:provider_id]) if params[:provider_id]
+    @provider = Provider.find(params[:product][:provider_id]) if params[:product] && params[:product][:provider_id]
   end
 
   def find_product
@@ -126,7 +120,7 @@ class Api::V2::ProductsController < Api::V2::ApiController
   end
 
   def product_params
-    params.slice(:name, :label, :provider_id, :gpg_key_id, :description)
+    params.require(:product).permit(:name, :label, :provider_id, :gpg_key_id, :description)
   end
 
 end

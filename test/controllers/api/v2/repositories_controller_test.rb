@@ -140,7 +140,7 @@ class Api::V2::RepositoriesControllerTest < ActionController::TestCase
   end
 
   def test_update
-    put :update, :id => @repository.id, :gpg_key_id => 1
+    put :update, :id => @repository.id, :repository => {:gpg_key_id => 1}
 
     assert_response :success
     assert_template 'api/v2/repositories/show'

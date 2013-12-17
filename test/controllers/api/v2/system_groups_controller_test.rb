@@ -64,10 +64,10 @@ module Katello
     end
 
     def test_create
-      results = JSON.parse(post(:create, :name => 'Group A',
-                    :organization_id => @organization.label,
-                    :description => 'Group A, World Cup 2014').body)
+      post :create, :organization_id => @organization,
+        :system_group => {:name => 'Group A', :description => 'Group A, World Cup 2014'}
 
+      results = JSON.parse(response.body)
       assert_equal results['name'], 'Group A'
       assert_equal results['max_systems'], -1
       assert_equal results['organization_id'], @organization.id

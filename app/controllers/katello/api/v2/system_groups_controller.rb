@@ -75,11 +75,11 @@ class Api::V2::SystemGroupsController <  Api::V2::ApiController
   param :organization_id, :identifier, :desc => "organization identifier", :required => true
   param_group :system_group
   def create
-    if params[:system_ids]
-      params[:system_ids] = system_ids_to_uuids(params[:system_ids])
+    if params[:system_group] && params[:system_group].key?(:system_ids)
+      params[:system_group][:system_ids] = system_ids_to_uuids(params[:system_group][:system_ids])
     end
 
-    @system_group = SystemGroup.new(params.slice(:name, :description, :max_systems, :system_ids))
+    @system_group = SystemGroup.new(system_group_params)
     @system_group.organization = @organization
     @system_group.save!
     respond
@@ -89,10 +89,11 @@ class Api::V2::SystemGroupsController <  Api::V2::ApiController
   param :id, :identifier, :desc => "Id of the system group", :required => true
   param_group :system_group
   def update
-    params[:system_ids] = system_uuids_to_ids(params[:system_ids]) if params[:system_ids]
+    if params[:system_group] && params[:system_group].key?(:system_ids)
+      params[:system_group][:system_ids] = system_ids_to_uuids(params[:system_group][:system_ids])
+    end
 
-    @system_group.attributes = params.slice(:name, :description, :system_ids, :max_systems)
-    @system_group.save!
+    @system_group.update_attributes(system_group_params)
     respond
   end
 
@@ -195,6 +196,10 @@ class Api::V2::SystemGroupsController <  Api::V2::ApiController
     system_ids = System.where(:uuid => ids).collect { |s| s.id }
     fail Errors::NotFound.new(_("Systems [%s] not found.") % ids.join(',')) if system_ids.blank?
     system_ids
+  end
+
+  def system_group_params
+    params.require(:system_group).permit(:name, :description, :max_systems, :system_ids)
   end
 
 end
