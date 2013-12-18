@@ -17,7 +17,7 @@ module Navigation
 
       def initialize(organization)
         @key           = :environments
-        @display       = _("Lifecycle Environment Paths")
+        @display       = _("Lifecycle Environments")
         @authorization = lambda{ organization && organization.readable? }
         @url           = environments_path + '/all'
       end

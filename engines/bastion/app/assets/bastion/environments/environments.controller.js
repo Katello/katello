@@ -26,17 +26,14 @@
  */
 angular.module('Bastion.environments').controller('EnvironmentsController',
     ['$scope', '$timeout', '$http', 'Routes', 'CurrentOrganization',
-        function($scope, $timeout, $http, Routes, CurrentOrganization) {
+        function ($scope, $timeout, $http, Routes, CurrentOrganization) {
 
             $scope.successMessages = [];
             $scope.errorMessages = [];
-
-            if (!$scope.environmentsTable) {
-                $scope.environmentsTable = {rows: []};
-            }
+            $scope.environmentsTable = {rows: []};
 
             $http.get(Routes.apiOrganizationEnvironmentsPath(CurrentOrganization) + '/paths')
-            .success(function(paths) {
+            .success(function (paths) {
                 $scope.environmentsTable.rows = paths;
             });
 
@@ -50,7 +47,7 @@ angular.module('Bastion.environments').controller('EnvironmentsController',
                 $scope.environmentsTable.rows[0].showCreate = true;
             };
 
-            $scope.readonly = function() {
+            $scope.readonly = function () {
                 if ($scope.environmentsTable.rows.length > 0) {
                     return $scope.environmentsTable.rows[0].permissions.readonly;
                 } else {

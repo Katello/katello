@@ -35,7 +35,7 @@ angular.module('Bastion.environments', [
  * @description
  *   Used for systems level configuration such as setting up the ui state machine.
  */
-angular.module('Bastion.environments').config(['$stateProvider', function($stateProvider) {
+angular.module('Bastion.environments').config(['$stateProvider', function ($stateProvider) {
     $stateProvider.state('environments', {
         controller: 'EnvironmentsController',
         url: '/environments',

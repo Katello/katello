@@ -85,6 +85,8 @@ class Api::V2::EnvironmentsController < Api::V2::ApiController
     paths = @organization.promotion_paths.inject([]) do |result, path|
       result << { :path => [@organization.library] + path }
     end
+    paths = [{ :path => [@organization.library] }] if paths.empty?
+
     respond_for_index(:collection => paths, :template => :paths)
   end
 

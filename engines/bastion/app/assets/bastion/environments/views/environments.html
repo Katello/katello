@@ -63,7 +63,8 @@
                   </div>
                 </header>
 
-                <div class="details">
+                <br/>
+                <div>
                   <form name="environmentForm" class="form-horizontal" novalidate role="form">
 
                     <div alch-form-group label="{{ 'Name' | translate }}">
@@ -96,7 +97,7 @@
                     <div alch-form-buttons
                          on-cancel="close()"
                          on-save="create(environment)"
-                         working="workingOn.busy">
+                         working="working">
                     </div>
                   </form>
                 </div>
@@ -129,11 +130,11 @@
                 <div class="details">
                   <div class="detail">
                     <span class="info-label" translate>Name</span>
-                  <span class="info-value"
-                        alch-edit-text="workingOn.environment.name"
-                        readonly="row.permissions.readonly"
-                        on-save="update(workingOn.environment)">
-                  </span>
+                    <span class="info-value"
+                          alch-edit-text="workingOn.environment.name"
+                          readonly="row.permissions.readonly"
+                          on-save="update(workingOn.environment)">
+                    </span>
                   </div>
 
                   <div class="detail">
@@ -143,11 +144,11 @@
 
                   <div class="detail">
                     <span class="info-label" translate>Description</span>
-                  <span class="info-value"
-                        alch-edit-textarea="workingOn.environment.description"
-                        readonly="row.permissions.readonly"
-                        on-save="update(workingOn.environment)">
-                  </span>
+                    <span class="info-value"
+                          alch-edit-textarea="workingOn.environment.description"
+                          readonly="row.permissions.readonly"
+                          on-save="update(workingOn.environment)">
+                    </span>
                   </div>
                 </div>
               </section>
