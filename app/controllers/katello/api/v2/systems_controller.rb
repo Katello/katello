@@ -27,11 +27,13 @@ class Api::V2::SystemsController < Api::V2::ApiController
   before_filter :find_system, :only => [:destroy, :show, :update, :regenerate_identity_certificates,
                                         :upload_package_profile, :errata, :package_profile, :subscribe,
                                         :unsubscribe, :subscriptions, :pools, :enabled_repos, :releases,
-                                        :add_system_groups, :remove_system_groups, :refresh_subscriptions, :checkin,
+                                        :available_system_groups, :add_system_groups, :remove_system_groups,
+                                        :refresh_subscriptions, :checkin,
                                         :subscription_status] # TODO: this should probably be :except
   before_filter :find_content_view, :only => [:create, :update]
 
   before_filter :authorize, :except => [:activate, :upload_package_profile]
+  before_filter :load_search_service, :only => [:index, :available_system_groups]
 
   def organization_id_keys
     [:organization_id, :owner]
@@ -79,6 +81,7 @@ class Api::V2::SystemsController < Api::V2::ApiController
         :task                             => lambda { true },
         :task_show                        => read_system,
         :enabled_repos                    => consumer_only,
+        :available_system_groups          => edit_system,
         :add_system_groups                => edit_system,
         :remove_system_groups             => edit_system,
         :refresh_subscriptions            => edit_system,
@@ -154,6 +157,22 @@ class Api::V2::SystemsController < Api::V2::ApiController
     @system_groups = @system.system_groups
     @custom_info = @system.custom_info
     respond
+  end
+
+  api :GET, "/systems/:id/available_system_groups", "List system groups the system does not belong to"
+  param_group :search, Api::V2::ApiController
+  param :name, String, :desc => "system group name to filter by"
+  def available_system_groups
+    filters = [:terms => {:id => SystemGroup.readable(@system.organization).pluck(:id) - @system.system_group_ids}]
+    filters << {:term => {:name => params[:name].downcase}} if params[:name]
+
+    options = {
+        :filters       => filters,
+        :load_records? => true
+    }
+
+    system_groups = item_search(SystemGroup, params, options)
+    respond_for_index(:collection => system_groups)
   end
 
   api :POST, "/systems/:id/system_groups", "Replace existing list of system groups"

@@ -129,15 +129,6 @@
         <span class="info-label" translate>Release</span>
         <span class="info-value">{{ systemFacts.uname["release"] }}</span>
       </div>
-
-      <div class="detail">
-        <span class="info-label" translate>System Groups</span>
-        <span class="info-value"
-              alch-edit-multiselect="system.systemGroups"
-              formatter="arrayToString"
-              options="systemGroups()"
-              on-save="updateSystemGroups(value)"></span>
-      </div>
       
       <div class="detail">
         <span class="info-label" translate>Arch</span>
