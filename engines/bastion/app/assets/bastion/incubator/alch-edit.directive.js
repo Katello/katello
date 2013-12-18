@@ -161,7 +161,7 @@ angular.module('alchemy')
         // Watch the model and displayed values for changes
         // and update the displayed value accordingly.
         $scope.$watch('model + displayValue', function (newValue) {
-            if (newValue) {
+            if (newValue !== undefined) {
                 $scope.updateDisplay($scope.model);
             }
         });
@@ -207,7 +207,7 @@ angular.module('alchemy')
                 handleSave: '&onSave',
                 handleCancel: '&onCancel'
             },
-            templateUrl: 'incubator/views/alch-edit-textarea.html'
+            templateUrl: 'incubator/views/alch-edit-checkbox.html'
         };
     })
     .directive('alchEditCustom', function () {

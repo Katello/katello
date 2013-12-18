@@ -71,11 +71,18 @@ module Glue::Pulp::Repo
       when :create
         pre_queue.create(:name => "create pulp repo: #{self.name}", :priority => 2, :action => [self, :create_pulp_repo])
       when :update
-        if self.feed_changed? && !self.product.provider.redhat_provider?
+        if self.pulp_update_needed?
           pre_queue.create(:name => "update pulp repo: #{self.name}", :priority => 2,
                            :action => [self, :refresh_pulp_repo, nil, nil, nil])
         end
+        if self.unprotected_changed?
+          post_queue.create(:name => "generate metadata for pulp repo #{self.name}", :priority => 3, :action => [self, :generate_metadata])
+        end
       end
+    end
+
+    def pulp_update_needed?
+      (self.feed_changed? || self.unprotected_changed?) && !self.product.provider.redhat_provider?
     end
 
     def last_sync

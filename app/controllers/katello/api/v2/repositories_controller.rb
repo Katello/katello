@@ -148,7 +148,7 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
   end
 
   def repository_params
-    params.slice(:gpg_key_id, :feed)
+    params.slice(:gpg_key_id, :feed, :unprotected)
   end
 
 end
