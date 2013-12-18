@@ -87,7 +87,9 @@ Requires: createrepo >= 0.9.9-18%{?dist}
 Requires: elasticsearch
 Requires: foreman >= 1.3.0
 Requires: java-openjdk
-Requires: katello-selinux
+# Still Requires katello-common which clashes with
+# new build - will re-enable after fixing
+#Requires: katello-selinux
 Requires: libvirt-devel
 Requires: lsof
 Requires: node-installer
@@ -111,7 +113,6 @@ Requires: %{?scl_prefix}rubygem-tire => 0.6.0
 Requires: %{?scl_prefix}rubygem-tire < 0.7
 Requires: %{?scl_prefix}rubygem-logging >= 1.8.0
 Requires: %{?scl_prefix}rubygem-hooks 
-Requires: %{?scl_prefix}rubygem-logger 
 Requires: %{?scl_prefix}rubygem-dynflow >= 0.1.0
 Requires: %{?scl_prefix}rubygem-justified 
 Requires: %{?scl_prefix}rubygem-delayed_job => 3.0.2
