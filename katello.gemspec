@@ -37,7 +37,6 @@ Gem::Specification.new do |gem|
   gem.add_dependency "tire", "~> 0.6.0"
   gem.add_dependency "logging", ">= 1.8.0"
   gem.add_dependency "hooks"
-  gem.add_dependency "logger"
   gem.add_dependency "dynflow", ">= 0.1.0"
   gem.add_dependency "justified"
 
