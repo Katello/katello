@@ -21,6 +21,7 @@ module Navigation
         @type          = 'dropdown'
         @authorization = lambda{ organization }
         @items         = [
+          Navigation::Items::Environments.new(organization),
           Navigation::Menus::Subscriptions.new(organization),
           Navigation::Menus::Providers.new(organization),
           Navigation::Menus::SyncManagement.new(organization),
