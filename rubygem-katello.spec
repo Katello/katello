@@ -87,7 +87,6 @@ Requires: createrepo >= 0.9.9-18%{?dist}
 Requires: elasticsearch
 Requires: foreman >= 1.3.0
 Requires: java-openjdk
-Requires: katello-common
 Requires: katello-selinux
 Requires: libvirt-devel
 Requires: lsof
