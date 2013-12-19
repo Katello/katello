@@ -24,6 +24,7 @@ Katello::Engine.routes.draw do
       api_resources :organizations, :only => [] do
         api_resources :system_groups, :only => [:index, :create]
         api_resources :systems, :only => [:index]
+        api_resources :providers, :only => [:index, :create, :show, :destroy, :update]
       end
 
       api_resources :system_groups, :only => [:index, :create, :show, :update] do

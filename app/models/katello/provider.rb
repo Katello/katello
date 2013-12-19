@@ -34,7 +34,7 @@ class Provider < ActiveRecord::Base
   belongs_to :task_status, :inverse_of => :provider
   belongs_to :discovery_task, :class_name => "Katello::TaskStatus", :dependent => :destroy, :inverse_of => :provider
   has_many :products, :class_name => "Katello::Product", :inverse_of => :provider, :dependent => :destroy
-  has_many :repositories, through: :products
+  has_many :repositories, :through => :products
 
   validates :name, :uniqueness => {:scope => :organization_id}
   validates :provider_type, :inclusion => {:in => TYPES,
@@ -176,6 +176,14 @@ class Provider < ActiveRecord::Base
 
   def as_json(*args)
     super.merge('organization_label' => self.organization.label)
+  end
+  
+  def total_products
+    products.length
+  end
+  
+  def total_repositories
+    repositories.length
   end
 
   protected
