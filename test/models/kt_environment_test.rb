@@ -27,10 +27,11 @@ class KTEnvironmentTestBase < ActiveSupport::TestCase
   end
 
   def setup
+    @acme_corporation     = get_organization(:organization1)
+
     @library              = KTEnvironment.find(katello_environments(:library).id)
     @dev                  = KTEnvironment.find(katello_environments(:dev).id)
     @staging              = KTEnvironment.find(katello_environments(:staging).id)
-    @acme_corporation     = Organization.find(katello_organizations(:acme_corporation).id)
   end
 
 end

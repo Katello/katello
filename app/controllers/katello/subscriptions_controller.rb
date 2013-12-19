@@ -67,7 +67,6 @@ class SubscriptionsController < Katello::ApplicationController
     render :index
   end
 
-  # TODO: remove this method and route since nutupane (experimental mode) uses the api method subscriptions_controller#organization_index
   def items
     query_string = params[:search]
     offset = params[:offset].to_i || 0
@@ -75,7 +74,11 @@ class SubscriptionsController < Katello::ApplicationController
 
     # Limit subscriptions to current org and Red Hat provider
     filters << {:term => {:org => current_organization.label}}
-    filters << {:term => {:provider_id => current_organization.redhat_provider.id}}
+    filters << {:term => {:provider_id => @provider.id}}
+    # Date range filters for expiration. These are few and don't fit into search dropdown
+    # capabilities so for now get name of expiration filter from querystring.
+    filters << Pool.expiration_filter(params[:expiration_filter])
+    filters.compact!
 
     options = {
         :filters => filters,
@@ -90,7 +93,7 @@ class SubscriptionsController < Katello::ApplicationController
     # Without any search terms, reindex all subscriptions in elasticsearch. This is to insure
     # that the latest information is searchable.
     if offset == 0 && query_string.blank?
-      current_organization.redhat_provider.index_subscriptions
+      @provider.index_subscriptions
     end
 
     items = Glue::ElasticSearch::Items.new(Pool)
@@ -171,7 +174,7 @@ class SubscriptionsController < Katello::ApplicationController
       @provider.delete_manifest :async => true, :notify => true
     rescue => error
       if error.respond_to?(:response)
-        display_message = ApplicationController.parse_display_message(error.response)
+        display_message = Katello::ApplicationController.parse_display_message(error.response)
       elsif error.message
         display_message = error.message
       else
@@ -194,7 +197,7 @@ class SubscriptionsController < Katello::ApplicationController
                                                                     :async => true, :notify => true
       rescue => error
         if error.respond_to?(:response)
-          display_message = ApplicationController.parse_display_message(error.response)
+          display_message = Katello::ApplicationController.parse_display_message(error.response)
         elsif error.message
           display_message = error.message
         else
@@ -222,7 +225,7 @@ class SubscriptionsController < Katello::ApplicationController
       @provider.refresh_manifest @upstream, :async => true, :notify => true
     rescue => error
       if error.respond_to?(:response)
-        display_message = ApplicationController.parse_display_message(error.response)
+        display_message = Katello::ApplicationController.parse_display_message(error.response)
       elsif error.message
         display_message = error.message
       else
@@ -281,7 +284,7 @@ class SubscriptionsController < Katello::ApplicationController
   end
 
   def find_subscription
-    @subscription = Pool.find_pool(params[:id])
+    @subscription = Katello::Pool.find_pool(params[:id])
   end
 
   def setup_options
@@ -297,7 +300,7 @@ class SubscriptionsController < Katello::ApplicationController
                        :ajax_load  => true,
                        :ajax_scroll => items_subscriptions_path,
                        :actions => nil,
-                       :search_class => Pool,
+                       :search_class => Katello::Pool,
                        :accessor => 'unused'
                       }
   end

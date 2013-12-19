@@ -5,10 +5,12 @@
     </tr>
   </thead>
 
+  <div data-extend-template="layouts/select-all-results.html"></div>
+
   <tbody>
     <tr alch-table-row ng-repeat="system in systemTable.rows" row-select="system">
       <td alch-table-cell>
-        <a class="clickable" ui-sref="systems.details.info({systemId: system.uuid})">
+        <a ui-sref="systems.details.info({systemId: system.uuid})">
           {{ system.name }}
         </a>
         <i class="icon-chevron-right selected-icon" ng-show="system.selected"></i>

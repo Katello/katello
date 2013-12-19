@@ -22,7 +22,7 @@
  * @description
  * A controller for all menu related functionality.
  */
-angular.module('Bastion.menu').controller('MenuController', ['$scope', '$location', 'Menus', function($scope, $location, Menus) {
+angular.module('Bastion.menu').controller('MenuController', ['$scope', '$location', 'Menus', function ($scope, $location, Menus) {
     $scope.menu       = Menus.menu;
     $scope.bannerMenu  = Menus.bannerMenu;
     $scope.adminMenu = Menus.adminMenu;
@@ -33,7 +33,7 @@ angular.module('Bastion.menu').controller('MenuController', ['$scope', '$locatio
      * Set the active menu item.
      * @param menuItem the menuItem to make active.
      */
-    $scope.setActiveMenuItem = function(menuItem) {
+    $scope.setActiveMenuItem = function (menuItem) {
         if (menuItem) {
             $scope.menu.activeItem = menuItem;
             $scope.adminMenu.activeItem = menuItem;
@@ -49,7 +49,7 @@ angular.module('Bastion.menu').controller('MenuController', ['$scope', '$locatio
      * @param menuItems
      * @returns the active menu item.
      */
-    $scope.getActiveMenuItem = function(menuItems) {
+    $scope.getActiveMenuItem = function (menuItems) {
         var activeMenuItem;
         for (var i = 0; i < menuItems.length; i += 1) {
             var menuItem = menuItems[i];
@@ -67,7 +67,7 @@ angular.module('Bastion.menu').controller('MenuController', ['$scope', '$locatio
     };
 
     // Combine all menu items and figure out which one ought to be active.
-    var allMenus = $scope.menu.items.concat($scope.bannerMenu.items).
-        concat($scope.adminMenu.items).concat($scope.notices);
+    var allMenus = $scope.menu.items.concat($scope.bannerMenu.items)
+        .concat($scope.adminMenu.items).concat($scope.notices);
     $scope.setActiveMenuItem($scope.getActiveMenuItem(allMenus));
 }]);

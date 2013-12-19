@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class UsersController < ApplicationController
+class UsersController < Katello::ApplicationController
   include AutoCompleteSearch
 
   def section_id

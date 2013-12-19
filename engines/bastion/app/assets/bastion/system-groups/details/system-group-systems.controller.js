@@ -26,13 +26,12 @@
  */
 angular.module('Bastion.system-groups').controller('SystemGroupSystemsController',
     ['$scope', '$location', 'gettext', 'Nutupane', 'SystemGroup',
-    function($scope, $location, gettext, Nutupane, SystemGroup) {
+    function ($scope, $location, gettext, Nutupane, SystemGroup) {
         var systemsPane, params;
 
         params = {
             'id':          $scope.$stateParams.systemGroupId,
             'search':      $location.search().search || "",
-            'offset':      0,
             'sort_by':     'name',
             'sort_order':  'ASC',
             'paged':       true
@@ -40,19 +39,19 @@ angular.module('Bastion.system-groups').controller('SystemGroupSystemsController
 
         systemsPane = new Nutupane(SystemGroup, params, 'systems');
         $scope.systemsTable = systemsPane.table;
-        $scope.systemsTable.closeItem = function() {};
+        $scope.systemsTable.closeItem = function () {};
         $scope.isRemoving = false;
 
-        $scope.removeSelected = function() {
+        $scope.removeSelected = function () {
             var selected = _.pluck($scope.systemsTable.getSelected(), 'uuid');
 
             $scope.isRemoving = true;
-            SystemGroup.removeSystems({id: $scope.group.id, 'system_group': {'system_ids': selected}}, function(){
+            SystemGroup.removeSystems({id: $scope.group.id, 'system_ids': selected}, function () {
                 systemsPane.table.selectAll(false);
                 systemsPane.refresh();
                 $scope.successMessages.push(gettext("Successfully removed %s systems.").replace('%s', selected.length));
                 $scope.isRemoving = false;
-            }, function(response) {
+            }, function (response) {
                 $scope.isRemoving = false;
                 $scope.errorMessages.push(gettext("An error occurred removing the systems.") + response.data.displayMessage);
             });

@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class SyncPlansController < ApplicationController
+class SyncPlansController < Katello::ApplicationController
   include AutoCompleteSearch
 
   before_filter :get_plan, :only => [:destroy, :edit, :show]

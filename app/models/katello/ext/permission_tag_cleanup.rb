@@ -14,7 +14,7 @@ module Katello
 module Ext::PermissionTagCleanup
   def self.included(base)
     base.class_eval do
-      if base == Katello::Organization
+      if base == Organization
         after_destroy :delete_organization_associated_permission_tags
       else
         after_destroy :delete_associated_permission_tags

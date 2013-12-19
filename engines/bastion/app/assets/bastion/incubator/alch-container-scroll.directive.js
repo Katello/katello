@@ -19,11 +19,11 @@ angular.module('alchemy').directive('alchContainerScroll', ['$window', '$timeout
     return {
         restrict: 'A',
 
-        compile: function(tElement, attrs) {
+        compile: function (tElement, attrs) {
             tElement.addClass("container-scroll-wrapper");
             return function (scope, element) {
                 var windowElement = angular.element($window);
-                var addScroll = function() {
+                var addScroll = function () {
                     var windowWidth = windowElement.width(),
                         windowHeight = windowElement.height(),
                         offset = element.offset().top;
@@ -35,7 +35,7 @@ angular.module('alchemy').directive('alchContainerScroll', ['$window', '$timeout
 
                 };
                 windowElement.bind('resize', addScroll);
-                $timeout(function() {
+                $timeout(function () {
                     windowElement.trigger('resize');
                 }, 0);
             };

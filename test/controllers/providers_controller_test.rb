@@ -18,7 +18,7 @@ class ProvidersControllerTest < ActionController::TestCase
 
   def setup
     setup_controller_defaults
-    @org = katello_organizations(:acme_corporation)
+    @org = get_organization(:organization1)
     @redhat_product = katello_providers(:redhat)
     @custom_product = katello_providers(:fedora_hosted)
     login_user(User.find(users(:admin)))

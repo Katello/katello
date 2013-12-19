@@ -25,6 +25,7 @@ class AuthorizationTestBase < ActiveSupport::TestCase
     Katello.config[:warden] = 'database'
     @no_perms_user      = User.find(users(:restricted))
     @admin              = User.find(users(:admin))
+    @acme_corporation   = get_organization(:organization1)
 
     @fedora_hosted        = Provider.find(katello_providers(:fedora_hosted))
     @fedora_17_x86_64     = Repository.find(katello_repositories(:fedora_17_x86_64).id)
@@ -32,7 +33,6 @@ class AuthorizationTestBase < ActiveSupport::TestCase
     @fedora               = Product.find(katello_products(:fedora).id)
     @library              = KTEnvironment.find(katello_environments(:library).id)
     @dev                  = KTEnvironment.find(katello_environments(:dev).id)
-    @acme_corporation     = Organization.find(katello_organizations(:acme_corporation).id)
     @unassigned_gpg_key   = GpgKey.find(katello_gpg_keys(:unassigned_gpg_key).id)
     @system             = System.find(katello_systems(:simple_server))
   end

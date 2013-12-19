@@ -26,11 +26,11 @@ describe ProductsController do
 
   before do
     setup_controller_defaults
+    @organization = new_test_org
   end
 
   describe "rules" do
     before do
-      @organization = new_test_org
       @provider = Provider.create!(:provider_type=>Provider::CUSTOM, :name=>"foo1", :organization=>@organization)
       Provider.stubs(:find).returns(@provider)
       @product = OpenStruct.new(:provider => @provider, :id => 1000)
@@ -93,7 +93,6 @@ describe ProductsController do
       disable_org_orchestration
       disable_user_orchestration
       set_default_locale
-      @organization = new_test_org
       @provider = Provider.create!(:provider_type=>Provider::CUSTOM, :name=>"foo1", :organization=>@organization)
       Provider.stubs(:find).returns(@provider)
       test_gpg_content = File.open("#{Katello::Engine.root}/spec/assets/gpg_test_key").read

@@ -2,14 +2,21 @@ module Katello
 
   class Engine < ::Rails::Engine
 
+    isolate_namespace Katello
+
     initializer 'katello.mount_engine', :after => :build_middleware_stack do |app|
       app.routes_reloader.paths << "#{Katello::Engine.root}/config/routes/mount_engine.rb"
     end
 
-    isolate_namespace Katello
-
     initializer "katello.simple_navigation" do |app|
       SimpleNavigation.config_file_paths << File.expand_path("../../../config", __FILE__)
+    end
+
+    initializer "katello.apipie" do
+      # When Katello is loaded, the apidoc is restricted just to the Katello controllers.
+      # This way, it's possible to generate both Foreman bindings (when Katello is not loaded)
+      # or just Katello bindings (when Katello loaded) the same way.
+      Apipie.configuration.api_controllers_matcher = "#{Katello::Engine.root}/app/controllers/katello/api/v2/*.rb"
     end
 
     initializer "katello.load_app_instance_data" do |app|
@@ -26,6 +33,10 @@ module Katello
     initializer "katello.paths" do |app|
       app.routes_reloader.paths << "#{Katello::Engine.root}/config/routes/api/v1.rb"
       app.routes_reloader.paths << "#{Katello::Engine.root}/config/routes/api/v2.rb"
+    end
+
+    initializer "katello.helpers" do |app|
+      ActionView::Base.send :include, Katello::TaxonomyHelper
     end
 
     initializer "logging" do |app|
@@ -52,6 +63,11 @@ module Katello
 
       # Model extensions
       ::User.send :include, Katello::Concerns::UserExtensions
+      ::Organization.send :include, Katello::Concerns::OrganizationExtensions
+    end
+
+    initializer 'katello.register_plugin', :after => :disable_dependency_loading do
+      require 'katello/plugin'
     end
 
     rake_tasks do

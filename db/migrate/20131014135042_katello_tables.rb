@@ -353,30 +353,6 @@ class KatelloTables < ActiveRecord::Migration
 
     add_index "katello_notices", ["organization_id"], :name => "index_notices_on_organization_id"
 
-    create_table "katello_organizations", :force => true do |t|
-      t.string   "name"
-      t.text     "description"
-      t.string   "label"
-      t.datetime "created_at",                            :null => false
-      t.datetime "updated_at",                            :null => false
-      t.integer  "deletion_task_id"
-      t.text     "default_info"
-      t.integer  "apply_info_task_id"
-      t.integer  "owner_auto_attach_all_systems_task_id"
-    end
-
-    add_index "katello_organizations", ["deletion_task_id"], :name => "index_organizations_on_task_id"
-    add_index "katello_organizations", ["label"], :name => "index_organizations_on_cp_key", :unique => true
-    add_index "katello_organizations", ["name"], :name => "index_organizations_on_name", :unique => true
-
-    create_table "katello_organizations_users", :id => false, :force => true do |t|
-      t.integer "organization_id"
-      t.integer "user_id"
-    end
-
-    add_index "katello_organizations_users", ["organization_id"], :name => "index_organizations_users_on_organization_id"
-    add_index "katello_organizations_users", ["user_id"], :name => "index_organizations_users_on_user_id"
-
     create_table "katello_permission_tags", :force => true do |t|
       t.integer  "permission_id"
       t.integer  "tag_id"
@@ -670,8 +646,6 @@ end
     drop_table "katello_node_capabilities"
     drop_table "katello_nodes"
     drop_table "katello_notices"
-    drop_table "katello_organizations"
-    drop_table "katello_organizations_users"
     drop_table "katello_permission_tags"
     drop_table "katello_permissions"
     drop_table "katello_permissions_verbs"

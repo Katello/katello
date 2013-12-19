@@ -23,7 +23,7 @@ class Api::V2::ProvidersControllerTest < ActionController::TestCase
   end
 
   def models
-    @organization = katello_organizations(:acme_corporation)
+    @organization = get_organization(:organization1)
   end
 
   def permissions

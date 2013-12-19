@@ -15,16 +15,20 @@ require 'base64'
 
 module Katello
 class ApplicationController < ::ApplicationController
-  layout 'katello/layouts/katello'
   include Katello::Menu
   include Notifications::ControllerHelper
   include Profiling
   include KTLocale
+  include ::HomeHelper
+
+  layout 'katello/layouts/katello'
+
   clear_helpers
 
   helper UIAlchemy::TranslationHelper
+  helper ::ApplicationHelper
+  helper ::TaxonomyHelper
   helper_method :current_organization
-  helper_method :render_correct_nav
   before_filter :require_org
   #before_filter :check_deleted_org
 
@@ -189,10 +193,8 @@ class ApplicationController < ::ApplicationController
   end
 
   def current_organization
-    # ENGINE: Remove from this function when db:seed can populate an initial
-    #         Katello organization, supderamin Role and assign to the user
     if !session[:current_organization_id]
-      @current_org = Katello::Organization.first
+      @current_org = Organization.current
       return @current_org
     else
       begin
@@ -264,7 +266,7 @@ class ApplicationController < ::ApplicationController
       #the menu definition does not exist, return false
       session[:menu_back] = false
       session[:notifications] = false
-      render_menu(1)
+      #render_menu(1)
     end
   end
 

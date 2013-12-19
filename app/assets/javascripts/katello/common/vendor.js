@@ -10,8 +10,7 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
 
-//= require "katello/jquery-1.7.2"
-//= require "alchemy/underscore"
+//= require "bastion/underscore/underscore"
 //= require "alchemy/jquery-ui-1.8.11.custom/js/jquery-ui-1.8.11.custom.min"
 //= require "alchemy/jquery/plugins/jquery.hoverIntent"
 //= require "alchemy/jquery/plugins/jquery.ui.totop"
@@ -31,9 +30,8 @@
 //= require "alchemy/jquery/plugins/jquery.ajaxfileupload"
 //= require "alchemy/jquery/plugins/jquery.fancyqueries"
 //= require "alchemy/jquery/plugins/jquery.ba-resize"
-//= require "ui_alchemy/angular/angular"
-//= require "ui_alchemy/angular-resource/angular-resource"
-//= require "ui_alchemy/angular-sanitize/angular-sanitize"
-//= require "ui_alchemy/ngInfiniteScroll/ng-infinite-scroll"
-//= require "ui_alchemy/alchemy/alchemy"
-//= require "katello/angular-ui-router.js"
+//= require "bastion/angular/angular"
+//= require "bastion/angular-resource/angular-resource"
+//= require "bastion/angular-sanitize/angular-sanitize"
+//= require "bastion/alchemy/alchemy"
+//= require "bastion/angular-ui-router/angular-ui-router"

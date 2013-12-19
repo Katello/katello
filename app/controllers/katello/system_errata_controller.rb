@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class SystemErrataController < ApplicationController
+class SystemErrataController < Katello::ApplicationController
 
   before_filter :find_system, :only => [:install, :index, :items, :errata_status]
   before_filter :authorize

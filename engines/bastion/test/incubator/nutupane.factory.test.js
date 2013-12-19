@@ -53,7 +53,10 @@ describe('Factory: Nutupane', function() {
         beforeEach(function() {
             nutupane = new Nutupane(Resource);
             nutupane.table.working = false;
+            nutupane.table.selectAll = function() {};
+            nutupane.table.getSelected = function() {};
             nutupane.table.rows = [{id: 0, value: "value0"}, {id:1, value: "value1"}];
+            nutupane.table.resource = Resource;
         });
 
         it("providing a method to fetch records for the table", function() {
@@ -156,9 +159,67 @@ describe('Factory: Nutupane', function() {
             expect(nutupane.table.rows.length).toBe(9);
         });
 
+        it("provides a way to enable select all results", function(){
+           nutupane.enableSelectAllResults();
+           expect(nutupane.table.selectAllResultsEnabled).toBe(true);
+        });
+
+        it("provides a way to select all results", function() {
+            nutupane.enableSelectAllResults();
+            spyOn(nutupane.table, 'selectAll');
+
+            nutupane.table.selectAllResults(true);
+
+            expect(nutupane.table.selectAll).toHaveBeenCalledWith(true);
+            expect(nutupane.table.selectAllDisabled).toBe(true);
+            expect(nutupane.table.allResultsSelected).toBe(true);
+            expect(nutupane.table.numSelected).toBe(nutupane.table.resource.subtotal);
+        });
+
+        it("provides a way to de-select all results", function(){
+            nutupane.enableSelectAllResults();
+            nutupane.table.numSelected = 0;
+            spyOn(nutupane.table, 'selectAll');
+            nutupane.table.selectAllResults(false);
+
+            expect(nutupane.table.selectAll).toHaveBeenCalledWith(false);
+            expect(nutupane.table.selectAllDisabled).toBe(false);
+            expect(nutupane.table.allResultsSelected).toBe(false);
+            expect(nutupane.table.numSelected).toBe(0);
+        });
+
+        it("provides a way to get deselected items", function(){
+            var deselected;
+            nutupane.enableSelectAllResults();
+            nutupane.table.rows = expectedResult;
+            angular.forEach(nutupane.table.rows, function(item, itemIndex) {
+                item.selected = true;
+            });
+            nutupane.table.rows[0].selected = false
+            deselected = nutupane.getDeselected();
+
+            expect(deselected.length).toBe(1);
+            expect(deselected[0]).toBe(nutupane.table.rows[0]);
+        });
+
+        it("provides a way to retrieve selected result items", function(){
+            var results;
+            nutupane.enableSelectAllResults();
+            nutupane.table.selectAllResults(true);
+            nutupane.table.searchTerm = "FOO"
+
+            angular.forEach(nutupane.table.rows, function(item, itemIndex) {
+                item.selected = true;
+            });
+            nutupane.table.rows[0].selected = false;
+            results = nutupane.getAllSelectedResults('id');
+            expect(results.excluded.ids[0]).toBe(nutupane.table.rows[0]['id']);
+            expect(results.included.search).toBe("FOO");
+        });
+
         describe("provides a way to sort the table", function() {
             it ("defaults the sort to ascending if the previous sort does not match the new sort.", function() {
-                var expectedParams = {sort_by: 'name', sort_order: 'ASC', offset: 0, search: ''};
+                var expectedParams = {sort_by: 'name', sort_order: 'ASC', search: '', page: 1};
                 nutupane.table.resource.sort = {};
 
                 spyOn(Resource, 'query');
@@ -168,7 +229,7 @@ describe('Factory: Nutupane', function() {
             });
 
             it("toggles the sort order if already sorting by that column", function() {
-                var expectedParams = {sort_by: 'name', sort_order: 'DESC', offset: 0, search: ''};
+                var expectedParams = {sort_by: 'name', sort_order: 'DESC', search: '', page: 1};
                 nutupane.table.resource.sort = {
                     by: 'name',
                     order: 'ASC'

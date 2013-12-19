@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class ErrataController < ApplicationController
+class ErrataController < Katello::ApplicationController
   before_filter :lookup_errata, except: [:auto_complete]
   before_filter :find_filter
   before_filter :authorize

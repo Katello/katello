@@ -25,14 +25,14 @@
  */
 angular.module('Bastion.products').controller('ProductRepositoriesController',
     ['$scope', 'Repository', 'CurrentOrganization',
-    function($scope, Repository, CurrentOrganization) {
+    function ($scope, Repository, CurrentOrganization) {
         if ($scope.$stateParams.productId && !$scope.$stateParams.repositoryId) {
             Repository.query({
                 'product_id': $scope.$stateParams.productId,
                 'library': true,
                 'organization_id': CurrentOrganization,
                 'enabled': true
-            }, function(response) {
+            }, function (response) {
                 $scope.repositories = response.results;
             });
         }

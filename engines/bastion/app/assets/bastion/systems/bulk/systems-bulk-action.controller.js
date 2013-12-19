@@ -26,7 +26,7 @@
  */
 angular.module('Bastion.systems').controller('SystemsBulkActionController',
     ['$scope', '$q', '$location', 'gettext', 'BulkAction',
-    function($scope, $q, $location, gettext, BulkAction) {
+    function ($scope, $q, $location, gettext, BulkAction) {
         $scope.successMessages = [];
         $scope.errorMessages = [];
 
@@ -39,7 +39,7 @@ angular.module('Bastion.systems').controller('SystemsBulkActionController',
             ids: []
         };
 
-        $scope.performRemoveSystems = function() {
+        $scope.performRemoveSystems = function () {
             var success, error, deferred = $q.defer();
 
             $scope.removeSystems.confirm = false;
@@ -47,9 +47,9 @@ angular.module('Bastion.systems').controller('SystemsBulkActionController',
 
             $scope.actionParams.ids = $scope.getSelectedSystemIds();
 
-            success = function(data) {
+            success = function (data) {
                 deferred.resolve(data);
-                angular.forEach($scope.systemTable.getSelected(), function(row) {
+                angular.forEach($scope.systemTable.getSelected(), function (row) {
                     $scope.removeRow(row.id);
                 });
 
@@ -57,10 +57,10 @@ angular.module('Bastion.systems').controller('SystemsBulkActionController',
                 $scope.successMessages.push(data["displayMessage"]);
             };
 
-            error = function(error) {
+            error = function (error) {
                 deferred.reject(error.data["errors"]);
                 $scope.removeSystems.workingMode = false;
-                _.each(error.data.errors, function(errorMessage) {
+                _.each(error.data.errors, function (errorMessage) {
                     $scope.errorMessages.push(gettext("An error occurred removing the Systems: ") + errorMessage);
                 });
             };
@@ -70,7 +70,7 @@ angular.module('Bastion.systems').controller('SystemsBulkActionController',
             return deferred.promise;
         };
 
-        $scope.getSelectedSystemIds = function() {
+        $scope.getSelectedSystemIds = function () {
             var rows = $scope.systemTable.getSelected();
             return _.pluck(rows, 'id');
         };

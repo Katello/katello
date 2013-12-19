@@ -1,5 +1,4 @@
 require 'katello/api/constraints/activation_key_constraint'
-require 'katello/api/constraints/api_version_constraint'
 require 'katello/api/mapper_extensions'
 
 class ActionDispatch::Routing::Mapper
@@ -10,17 +9,36 @@ Katello::Engine.routes.draw do
 
   namespace :api do
 
-    # new v2 routes that point to v2
-    scope :module => :v2, :constraints => Katello::ApiVersionConstraint.new(:version => 2) do
+    scope "(:api_version)", :module => :v2, :defaults => {:api_version => 'v2'}, :api_version => /v1|v2/, :constraints => ApiConstraints.new(:version => 2) do
 
-      match '/' => 'root#resource_list'
+      ##############################
+      # re-routes alphabetical
+      ##############################
 
-      # Headpin does not support system creation
-      if Katello.config.katello?
-        onlies = [:show, :destroy, :create, :index, :update]
-      else
-        onlies = [:show, :destroy, :index, :update]
+      root :to => 'root#resource_list'
+
+      api_resources :environments, :only => [] do
+        api_resources :systems, :only => [:index]
       end
+
+      api_resources :organizations, :only => [] do
+        api_resources :system_groups, :only => [:index, :create]
+        api_resources :systems, :only => [:index]
+      end
+
+      api_resources :system_groups, :only => [:index, :create, :show, :update] do
+        member do
+          post :copy
+          put :add_systems
+          put :remove_systems
+        end
+        api_resources :systems, :only => [:index]
+      end
+
+      api_resources :systems, :only => [:index]
+
+      ##############################
+      ##############################
 
       api_resources :organizations do
         member do
@@ -35,7 +53,7 @@ Katello::Engine.routes.draw do
         scope :constraints => Katello::RegisterWithActivationKeyContraint.new do
           match '/systems' => 'systems#activate', :via => :post
         end
-        api_resources :systems, :only => [:index, :create] do
+        api_resources :systems, :only => [:create] do
           get :report, :on => :collection
         end
         api_resources :distributors, :only => [:index, :create]
@@ -56,12 +74,8 @@ Katello::Engine.routes.draw do
 
       api_resources :system_groups do
         member do
-          get :systems
           get :history
           match "/history/:job_id" => "system_groups#history_show", :via => :get
-          put :add_systems
-          post :copy
-          put :remove_systems
           delete :destroy_systems
         end
 
@@ -69,7 +83,8 @@ Katello::Engine.routes.draw do
         api_resources :errata, :only => [:index, :create], :controller => :system_group_errata
       end
 
-      api_resources :systems, :only => onlies do
+      api_resources :systems,
+                    :only => (Katello.config.katello? ? [:show, :destroy, :create, :update] : [:show, :destroy, :update]) do
         member do
           get :packages, :action => :package_profile
           get :errata
@@ -205,6 +220,7 @@ Katello::Engine.routes.draw do
       end
 
       api_resources :ping, :only => [:index]
+      match "/status" => "ping#server_status", :via => :get
 
       api_resources :repositories, :only => [:index, :create, :show, :update, :destroy], :constraints => { :id => /[0-9a-zA-Z\-_.]*/ } do
         api_resources :sync, :only => [:index] do
@@ -233,7 +249,7 @@ Katello::Engine.routes.draw do
         scope :constraints => Katello::RegisterWithActivationKeyContraint.new do
           match '/systems' => 'systems#activate', :via => :post
         end
-        api_resources :systems, :only => [:create, :index] do
+        api_resources :systems, :only => [:create] do
           get :report, :on => :collection
         end
         api_resources :distributors, :only => [:create, :index]
@@ -296,9 +312,6 @@ Katello::Engine.routes.draw do
       api_resources :tasks, :only => [:show]
       api_resources :about, :only => [:index]
 
-      match "/version" => "ping#version", :via => :get
-      match "/status" => "ping#server_status", :via => :get
-
       # api custom information
       match '/custom_info/:informable_type/:informable_id' => 'custom_info#create', :via => :post, :as => :create_custom_info
       match '/custom_info/:informable_type/:informable_id' => 'custom_info#index', :via => :get, :as => :custom_info
@@ -312,7 +325,7 @@ Katello::Engine.routes.draw do
     end # module v2
 
     # routes that didn't change in v2 and point to v1
-    scope :module => :v1, :constraints => Katello::ApiVersionConstraint.new(:version => 2) do
+    scope :module => :v1, :constraints => ApiConstraints.new(:version => 2) do
 
       api_resources :crls, :only => [:index]
 
@@ -325,7 +338,7 @@ Katello::Engine.routes.draw do
       match '/owners/:organization_id/environments' => 'environments#rhsm_index', :via => :get
       match '/owners/:organization_id/pools' => 'candlepin_proxies#get', :via => :get, :as => :proxy_owner_pools_path
       match '/owners/:organization_id/servicelevels' => 'candlepin_proxies#get', :via => :get, :as => :proxy_owner_servicelevels_path
-      match '/environments/:environment_id/consumers' => 'systems#index', :via => :get
+      match '/environments/:environment_id/consumers' => 'systems#index', :via => :get #TODO: does this need to stay or be moved over to v2 controller also (e.g. - systems#index_v1_compat)?
       match '/environments/:environment_id/consumers' => 'systems#create', :via => :post
       match '/consumers/:id' => 'systems#regenerate_identity_certificates', :via => :post
       match '/consumers/:id/certificates' => 'candlepin_proxies#get', :via => :get, :as => :proxy_consumer_certificates_path

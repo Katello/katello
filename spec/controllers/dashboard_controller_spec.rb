@@ -18,6 +18,9 @@ describe DashboardController do
 
   before (:each) do
     setup_controller_defaults
+    @organization = get_organization(:organization1)
+    @controller.stubs(:current_organization).returns(@organization)
+
     Resources::Candlepin::OwnerInfo.stubs(:find).returns({})
     Katello::SystemGroup.any_instance.stubs(:errata).returns([])
   end

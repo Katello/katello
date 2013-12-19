@@ -1,4 +1,4 @@
-object Util::Data.ostructize(@collection)
+object Katello::Util::Data.ostructize(@collection)
 
 attributes :id, :name, :description
 attributes :_id, :_content_type_id, :_ns, :_storage_path

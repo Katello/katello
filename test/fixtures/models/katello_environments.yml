@@ -3,29 +3,29 @@ library:
   description:    This is the Library
   library:        true
   label:          library_label
-  organization_id: <%= ActiveRecord::Fixtures.identify(:acme_corporation) %>
+  organization_id: <%= ActiveRecord::Fixtures.identify(:organization1) %>
 
 dev:
   name:           Dev
   description:    Dev environment.
   label:          dev_label
-  organization_id: <%= ActiveRecord::Fixtures.identify(:acme_corporation) %>
+  organization_id: <%= ActiveRecord::Fixtures.identify(:organization1) %>
 
 staging:
   name:           Staging
   description:    Staging environment.
   label:          staging_label
-  organization_id: <%= ActiveRecord::Fixtures.identify(:acme_corporation) %>
+  organization_id: <%= ActiveRecord::Fixtures.identify(:organization1) %>
 
 candlepin_library:
   name:           Library
   description:    This is the Library
   library:        true
   label:          candlepin_library
-  organization_id: <%= ActiveRecord::Fixtures.identify(:candlepin_org) %>
+  organization_id: <%= ActiveRecord::Fixtures.identify(:organization2) %>
 
 candlepin_dev:
   name:           Candlepin Dev
   description:    Dev environment.
   label:          candlepin_dev_label
-  organization_id: <%= ActiveRecord::Fixtures.identify(:candlepin_org) %>
+  organization_id: <%= ActiveRecord::Fixtures.identify(:organization2) %>

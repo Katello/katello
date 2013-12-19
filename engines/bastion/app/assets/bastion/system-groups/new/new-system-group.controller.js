@@ -23,7 +23,7 @@
  */
 angular.module('Bastion.system-groups').controller('NewSystemGroupController',
     ['$scope', 'SystemGroup',
-    function($scope, SystemGroup) {
+    function ($scope, SystemGroup) {
 
         $scope.group = new SystemGroup();
         $scope.panel = {loading: false};

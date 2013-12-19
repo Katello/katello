@@ -79,7 +79,6 @@ class Repository < ActiveRecord::Base
   scope :has_feed, where('feed IS NOT NULL')
   scope :in_default_view, joins(:content_view_version => :content_view).
     where("#{Katello::ContentView.table_name}.default" => true)
-  scope :in_environment, lambda { |env| where(environment_id: env.id) }
 
   scope :yum_type, where(:content_type => YUM_TYPE)
   scope :file_type, where(:content_type => FILE_TYPE)

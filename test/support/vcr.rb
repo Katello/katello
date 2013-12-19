@@ -14,7 +14,7 @@ def configure_vcr
   end
 
   if mode != :none
-    system("sudo cp -rf #{File.expand_path('../', __FILE__)}/fixtures/test_repos /var/www/")
+    system("sudo cp -rf #{Katello::Engine.root}/test/fixtures/test_repos /var/www/")
   end
 
   VCR.configure do |c|

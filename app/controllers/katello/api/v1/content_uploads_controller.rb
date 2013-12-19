@@ -79,7 +79,7 @@ class Api::V1::ContentUploadsController < Api::V1::ApiController
       fail HttpErrors::BadRequest, _("No file uploaded")
     end
 
-  rescue ::InvalidPuppetModuleError => error
+  rescue Katello::Errors::InvalidPuppetModuleError => error
     respond_for_exception(
       error,
       :status => :unprocessable_entity,

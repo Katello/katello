@@ -23,7 +23,7 @@
  *   Provides a wrapper around angular-ui's modal dialog service.
  */
 angular.module('alchemy').directive('alchModal',
-    ['$templateCache', '$modal', function($templateCache, $modal) {
+    ['$templateCache', '$modal', function ($templateCache, $modal) {
     return {
         // To be expanded when we add additional type of modals
         templateUrl: 'incubator/views/alch-modal-remove.html',
@@ -35,38 +35,38 @@ angular.module('alchemy').directive('alchModal',
             modalHeader: '@',
             modalBody: '@'
         },
-        compile: function(element) {
-            return function(scope) {
+        compile: function (element) {
+            return function (scope) {
                 var modalInstance, modalController, modalId;
 
                 modalId = 'alchModal%d.html'.replace('%d', Math.random().toString());
 
-                modalController = ['$scope', '$modalInstance', 'model', function($scope, $modalInstance, model) {
+                modalController = ['$scope', '$modalInstance', 'model', function ($scope, $modalInstance, model) {
                     $scope[scope.modelName] = model;
                     $scope['modalHeader'] = scope.modalHeader;
                     $scope['modalBody'] = scope.modalBody;
 
-                    $scope.ok = function() {
+                    $scope.ok = function () {
                         $modalInstance.close();
                     };
 
-                    $scope.cancel = function() {
+                    $scope.cancel = function () {
                         $modalInstance.dismiss('cancel');
                     };
                 }];
 
-                scope.openModal = function() {
+                scope.openModal = function () {
                     modalInstance = $modal.open({
                         templateUrl: modalId,
                         controller: modalController,
                         resolve: {
-                            model: function() {
+                            model: function () {
                                 return scope[scope.modelName];
                             }
                         }
                     });
 
-                    modalInstance.result.then(function() {
+                    modalInstance.result.then(function () {
                         scope.action();
                     });
                 };

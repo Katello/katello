@@ -6,7 +6,7 @@
     = link_to _("Remove User"), { :controller => "users", :action => "destroy", :id => @user.id }, :confirm => _('Are you sure?'), :method => :delete, :class=>"remove_item", :remote=>true
 
 = content_for :navigation do
-  = render_menu(1..2, user_navigation)
+  = render_subnav_menu(1..2, user_navigation)
 
 = content_for :content do
   .grid_10#role

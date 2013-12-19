@@ -28,7 +28,7 @@ class ContentView < ActiveRecord::Base
 
   belongs_to :content_view_definition, :class_name => "Katello::ContentViewDefinition", :inverse_of => :content_views
   alias_method :definition, :content_view_definition
-  belongs_to :organization, :inverse_of => :content_views, :class_name => "Katello::Organization"
+  belongs_to :organization, :inverse_of => :content_views, :class_name => "Organization"
 
   has_many :content_view_environments, :class_name => "Katello::ContentViewEnvironment", :dependent => :destroy
 

@@ -35,6 +35,7 @@ class Api::V1::ApiController < Api::ApiController
     @query_params.delete('controller')
     @query_params.delete('action')
     @query_params.delete('format')
+    @query_params.delete('api_version')
 
     @query_params.each_pair do |k, v|
 
@@ -76,7 +77,7 @@ class Api::V1::ApiController < Api::ApiController
 
   def get_organization(org_id)
     # name/label is always unique
-    return Katello::Organization.without_deleting.having_name_or_label(org_id).first
+    return Organization.without_deleting.having_name_or_label(org_id).first
   end
 
   def organization_id

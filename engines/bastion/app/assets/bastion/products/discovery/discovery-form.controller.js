@@ -29,33 +29,33 @@
  */
 angular.module('Bastion.products').controller('DiscoveryFormController',
     ['$scope', '$q', 'CurrentOrganization', 'Provider', 'Product', 'Repository', 'GPGKey', 'FormUtils',
-    function($scope, $q, CurrentOrganization, Provider, Product, Repository, GPGKey, FormUtils) {
+    function ($scope, $q, CurrentOrganization, Provider, Product, Repository, GPGKey, FormUtils) {
 
         $scope.discovery = $scope.discovery || {selected: []};
         $scope.panel = $scope.panel || {loading: false};
 
-        $scope.$watch('createRepoChoices.product.name', function() {
+        $scope.$watch('createRepoChoices.product.name', function () {
             FormUtils.labelize($scope.createRepoChoices.product, $scope.productForm);
         });
 
         $scope.createRepoChoices = {
-          existingProductId: undefined,
-          newProduct: 'false',
-          product : new Product(),
-          unprotected: true,
-          creating: false
+            existingProductId: undefined,
+            newProduct: 'false',
+            product : new Product(),
+            unprotected: true,
+            creating: false
         };
 
-        angular.forEach($scope.discovery.selected, function(repo) {
+        angular.forEach($scope.discovery.selected, function (repo) {
             //Add a fake form to keep track of validations
             repo.form = {
                     messages: '',
                     $invalid: false
-            };
+                };
             FormUtils.labelize(repo, repo.form);
         });
 
-        Provider.query(function(values) {
+        Provider.query(function (values) {
             $scope.providers = filterEditable(values.results);
 
             if ($scope.providers.length > 0) {
@@ -63,7 +63,7 @@ angular.module('Bastion.products').controller('DiscoveryFormController',
             }
         });
 
-        Product.query({'organization_id': CurrentOrganization}, function(values) {
+        Product.query({'organization_id': CurrentOrganization}, function (values) {
             $scope.products = filterEditable(values.results);
 
             if ($scope.products.length > 0) {
@@ -74,23 +74,23 @@ angular.module('Bastion.products').controller('DiscoveryFormController',
             $scope.panel.loading = false;
         });
 
-        $scope.creating = function() {
+        $scope.creating = function () {
             return $scope.createRepoChoices.creating;
         };
 
         $scope.gpgKeys = GPGKey.query();
 
-        $scope.$watch('discovery.selected', function(newList, oldList) {
+        $scope.$watch('discovery.selected', function (newList, oldList) {
             if (newList) {
-                angular.forEach(newList, function(newItem, position) {
+                angular.forEach(newList, function (newItem, position) {
                     if (oldList === undefined || newItem.name !== oldList[position].name) {
                         FormUtils.labelize(newItem, newItem.form);
                     }
                 });
             }
-        }, function(newList, oldList) {
+        }, function (newList, oldList) {
             var isEqual = true;
-            angular.forEach(newList, function(newItem, position) {
+            angular.forEach(newList, function (newItem, position) {
                 if (newList[position].name !== oldList[position].name) {
                     isEqual = false;
                 }
@@ -98,7 +98,7 @@ angular.module('Bastion.products').controller('DiscoveryFormController',
             return isEqual;
         });
 
-        $scope.createRepos = function() {
+        $scope.createRepos = function () {
             $scope.createRepoChoices.creating = true;
 
             if ($scope.createRepoChoices.newProduct === "true") {
@@ -120,7 +120,7 @@ angular.module('Bastion.products').controller('DiscoveryFormController',
         function productCreateError(response) {
             $scope.createRepoChoices.creating = false;
             $scope.productForm.$setDirty();
-            angular.forEach(response.data.errors, function(errors, field) {
+            angular.forEach(response.data.errors, function (errors, field) {
                 $scope.productForm[field].$setValidity('', false);
                 $scope.productForm[field].messages = errors;
             });
@@ -136,7 +136,7 @@ angular.module('Bastion.products').controller('DiscoveryFormController',
                 toCreate.creating = true;
                 toCreate.form.$invalid = false;
 
-                repoObject.$save(function() {
+                repoObject.$save(function () {
                     toCreate.creating = false;
                     toCreate.created = true;
                     createNextRepo();
@@ -149,7 +149,7 @@ angular.module('Bastion.products').controller('DiscoveryFormController',
 
         function getNextRepoToCreate() {
             var found;
-            angular.forEach($scope.discovery.selected, function(repo) {
+            angular.forEach($scope.discovery.selected, function (repo) {
                 if (repo.created !== true && found === undefined) {
                     found = repo;
                 }

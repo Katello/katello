@@ -28,12 +28,11 @@
  */
 angular.module('Bastion.products').controller('ProductsController',
     ['$scope', '$location', 'Nutupane', 'Product', 'CurrentOrganization',
-    function($scope, $location, Nutupane, Product, CurrentOrganization) {
+    function ($scope, $location, Nutupane, Product, CurrentOrganization) {
 
         var params = {
             'organization_id':  CurrentOrganization,
             'search':           $location.search().search || "",
-            'offset':           0,
             'sort_by':          'name',
             'sort_order':       'ASC',
             'enabled' :         true,
@@ -44,7 +43,7 @@ angular.module('Bastion.products').controller('ProductsController',
         $scope.productTable = nutupane.table;
         $scope.removeRow = nutupane.removeRow;
 
-        $scope.productTable.closeItem = function() {
+        $scope.productTable.closeItem = function () {
             $scope.transitionTo('products.index');
         };
 

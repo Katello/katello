@@ -15,6 +15,7 @@ require "dynflow"
 require "rest_client"
 require "i18n_data"
 require "justified/standard_error"
+require "anemone"
 
 require "runcible"
 
@@ -23,6 +24,7 @@ require "haml-rails"
 require "compass-rails"
 require "ninesixty"
 require "ui_alchemy-rails"
+require "deface"
 
 require "uuidtools"
 require "delayed_job"

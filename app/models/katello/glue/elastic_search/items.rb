@@ -35,7 +35,7 @@ module Glue
       # @option       search_options :default_field
       #   The field that should be used by the search engine when a user performs
       #   a search without specifying field.
-      # @option       search_options :page_size
+      # @option       search_options :per_page
       #   Specifies the number of results to return
       # @option       search_options :sort_by
       #   The model field on which to sort
@@ -70,7 +70,11 @@ module Glue
           @query_string = search_options[:simple_query]
         end
 
-        page_size = search_options[:page_size] || total_items
+        page_size = if search_options[:page]
+                      search_options[:per_page] || ::Setting::General.entries_per_page
+                    else
+                      search_options[:per_page] || total_items
+                    end
         filters = @filters
         filters = [filters] if !filters.is_a? Array
 

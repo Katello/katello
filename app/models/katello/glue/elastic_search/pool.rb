@@ -135,6 +135,17 @@ module Glue::ElasticSearch::Pool
       def self.index
         "#{Katello.config.elastic_index}_pool"
       end
+
+      def self.expiration_filter(filter_name)
+        if filter_name.present?
+          if filter_name == 'recent'
+            {:range => {:end => {:gte => Date.today - Pool::DAYS_RECENTLY_EXPIRED, :lt => Date.today}}}
+          elsif filter_name == 'soon'
+            {:range => {:end => {:lte => Date.today + Pool::DAYS_EXPIRING_SOON}}}
+          end
+        end
+      end
+
     end
   end
 

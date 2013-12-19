@@ -22,9 +22,10 @@ class DeletionChangesetTest < ActiveSupport::TestCase
   end
 
   def setup
+    @acme_corporation     = get_organization(:organization1)
+
     @library              = KTEnvironment.find(katello_environments(:library).id)
     @dev                  = KTEnvironment.find(katello_environments(:dev).id)
-    @acme_corporation     = Organization.find(katello_organizations(:acme_corporation).id)
     @product              = Product.find(katello_products(:fedora))
     @repo_dev             = Repository.find(katello_repositories(:fedora_17_x86_64_dev))
     @repo_library         = Repository.find(katello_repositories(:fedora_17_x86_64))

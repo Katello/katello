@@ -22,7 +22,7 @@
  *   Provides a $resource for product or list of providers.
  */
 angular.module('Bastion.providers').factory('Provider',
-    ['$resource', 'CurrentOrganization', function($resource, CurrentOrganization) {
+    ['$resource', 'CurrentOrganization', function ($resource, CurrentOrganization) {
 
         return $resource('/katello/api/providers/:id/:action',
             {id: '@id', 'organization_id': CurrentOrganization},

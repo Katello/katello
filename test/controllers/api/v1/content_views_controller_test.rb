@@ -31,7 +31,7 @@ class Api::V1::ContentViewsControllerTest < ActionController::TestCase
     @content_view.update_attribute(:content_view_definition_id, @definition.id)
     @environment = katello_environments(:staging)
     @dev = katello_environments(:dev)
-    @organization = katello_organizations(:acme_corporation)
+    @organization = get_organization(:organization1)
 
     @read_permission = UserPermission.new(:read, :content_views)
     @env_promote_permission = UserPermission.new(:promote_changesets, :environments, @environment.id)

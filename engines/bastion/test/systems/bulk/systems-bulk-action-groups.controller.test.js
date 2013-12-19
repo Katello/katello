@@ -12,11 +12,13 @@
  **/
 
 describe('Controller: SystemsBulkActionGroupsController', function() {
-    var $scope, $q, gettext, BulkAction, SystemGroup, Organization, Task, CurrentOrganization;
+    var $scope, $q, gettext, BulkAction, SystemGroup, Organization, 
+        Task, CurrentOrganization, Nutupane, $location, groupIds;
 
     beforeEach(module('Bastion.systems', 'Bastion.test-mocks'));
 
     beforeEach(function() {
+        groupIds =  ['group1', 'group2'];
         BulkAction = {
             addSystemGroups: function() {},
             removeSystemGroups: function() {},
@@ -32,6 +34,14 @@ describe('Controller: SystemsBulkActionGroupsController', function() {
             query: function() {},
             autoAttach: function() {}
         };
+        Nutupane = function() {
+           this.getAllSelectedResults = function() {
+               return { 
+                   included: { ids: groupIds }
+               };
+            };
+            this.table = { };
+        };
         Task = {
             query: function() {},
             poll: function() {}
@@ -40,63 +50,61 @@ describe('Controller: SystemsBulkActionGroupsController', function() {
         CurrentOrganization = 'foo';
     });
 
+    beforeEach(inject(function($injector) {
+        $location = $injector.get('$location');
+    }));
+
     beforeEach(inject(function($controller, $rootScope, $q) {
         $scope = $rootScope.$new();
-        $scope.getSelectedSystemIds = function() {
-            return [1,2,3]
-        };
+        $scope.nutupane = new Nutupane()
+        $scope.nutupane.getAllSelectedResults = function() {
+            return {
+                included: {
+                    ids: ['sys1', 'sys2']
+                }
+            }
+        }
 
         $controller('SystemsBulkActionGroupsController', {$scope: $scope,
             $q: $q,
+            $location: $location,
             BulkAction: BulkAction,
             SystemGroup: SystemGroup,
+            Nutupane: Nutupane,
             gettext: gettext,
             Organization: Organization,
             CurrentOrganization: CurrentOrganization,
             Task: Task});
     }));
 
-    it("can retrieve system groups", function() {
-        spyOn(SystemGroup, 'query');
-        $scope.getSystemGroups();
-
-        expect(SystemGroup.query).toHaveBeenCalled();
-    });
-
     it("can add system groups to multiple systems", function() {
         $scope.systemGroups = {
-            action: 'add',
-            groups: [{id: 8}, {id: 9}]
+            action: 'add'
         };
 
         spyOn(BulkAction, 'addSystemGroups');
         $scope.performSystemGroupAction();
 
-        expect(BulkAction.addSystemGroups).toHaveBeenCalledWith(
-            {
-                ids: $scope.getSelectedSystemIds(),
-                system_group_ids: _.pluck($scope.systemGroups.groups, 'id')
-            },
-            jasmine.any(Function), jasmine.any(Function)
-        );
+        expected = $scope.nutupane.getAllSelectedResults();
+        expected.system_group_ids = groupIds;
+        expected.organization_id = CurrentOrganization;
+        expect(BulkAction.addSystemGroups).toHaveBeenCalledWith(expected,
+            jasmine.any(Function), jasmine.any(Function));
     });
 
     it("can remove system groups from multiple systems", function() {
         $scope.systemGroups = {
-            action: 'remove',
-            groups: [{id: 8}, {id: 9}]
+            action: 'remove'
         };
 
         spyOn(BulkAction, 'removeSystemGroups');
         $scope.performSystemGroupAction();
 
-        expect(BulkAction.removeSystemGroups).toHaveBeenCalledWith(
-            {
-                ids: $scope.getSelectedSystemIds(),
-                system_group_ids: _.pluck($scope.systemGroups.groups, 'id')
-            },
-            jasmine.any(Function), jasmine.any(Function)
-        );
+        expected = $scope.nutupane.getAllSelectedResults();
+        expected.system_group_ids = groupIds;
+        expected.organization_id = CurrentOrganization;
+        expect(BulkAction.removeSystemGroups).toHaveBeenCalledWith(expected,
+            jasmine.any(Function), jasmine.any(Function));
     });
 
 });

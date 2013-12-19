@@ -38,7 +38,7 @@ angular.module('Bastion.systems', [
  * @description
  *   Used for systems level configuration such as setting up the ui state machine.
  */
-angular.module('Bastion.systems').config(['$stateProvider', function($stateProvider) {
+angular.module('Bastion.systems').config(['$stateProvider', function ($stateProvider) {
     $stateProvider.state('systems', {
         abstract: true,
         controller: 'SystemsController',
@@ -161,11 +161,11 @@ angular.module('Bastion.systems').config(['$stateProvider', function($stateProvi
 
 
     $stateProvider.state('systems.details.errata', {
-         abstract: true,
-         collapsed: true,
-         controller: 'SystemErrataController',
-         template: '<div ui-view></div>'
-     })
+        abstract: true,
+        collapsed: true,
+        controller: 'SystemErrataController',
+        template: '<div ui-view></div>'
+    })
     .state('systems.details.errata.index', {
         url: '/errata/',
         collapsed: true,

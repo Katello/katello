@@ -21,8 +21,8 @@
  * @example
  *
  */
-angular.module('alchemy.format').filter('defaultNumberString', function() {
-    return function(toFormat, options) {
+angular.module('alchemy.format').filter('defaultNumberString', function () {
+    return function (toFormat, options) {
         var formattedValue = (toFormat || '').toString();
         options = options || {};
 

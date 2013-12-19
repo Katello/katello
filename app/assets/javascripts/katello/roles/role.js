@@ -11,4 +11,6 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
 
-KT.panel.list.registerPage('roles', { create : 'new_role' });
+$(document).ready(function () {
+    KT.panel.list.registerPage('roles', { create : 'new_role' });
+});

@@ -153,9 +153,15 @@ end
 
 class GluePulpChangeFeedTest < GluePulpRepoTestBase
 
-  def setup
+  def self.before_suite
+    super
     VCR.insert_cassette('pulp/repository/feed_change')
     @@fedora_17_x86_64.create_pulp_repo
+  end
+
+  def self.after_suite
+    @@fedora_17_x86_64.destroy_repo
+    VCR.eject_cassette
   end
 
   def test_feed_change
@@ -164,11 +170,6 @@ class GluePulpChangeFeedTest < GluePulpRepoTestBase
     @@fedora_17_x86_64.save!
     pulps_feed = Repository.find(@@fedora_17_x86_64.id).pulp_repo_facts['importers'].first['config']['feed']
     assert_equal new_feed, pulps_feed
-  end
-
-  def teardown
-    @@fedora_17_x86_64.destroy_repo
-    VCR.eject_cassette
   end
 end
 

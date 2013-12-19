@@ -30,7 +30,7 @@
  */
 angular.module('Bastion.systems').controller('SystemsController',
     ['$scope', '$location', 'gettext', 'Nutupane', 'System', 'CurrentOrganization', 'SystemsHelper',
-    function($scope, $location, gettext, Nutupane, System, CurrentOrganization, SystemsHelper) {
+    function ($scope, $location, gettext, Nutupane, System, CurrentOrganization, SystemsHelper) {
 
         $scope.successMessages = [];
         $scope.errorMessages = [];
@@ -38,7 +38,6 @@ angular.module('Bastion.systems').controller('SystemsController',
         var params = {
             'organization_id':  CurrentOrganization,
             'search':           $location.search().search || "",
-            'offset':           0,
             'sort_by':          'name',
             'sort_order':       'ASC',
             'paged':            true
@@ -47,21 +46,24 @@ angular.module('Bastion.systems').controller('SystemsController',
         var nutupane = new Nutupane(System, params);
         $scope.systemTable = nutupane.table;
         $scope.removeRow = nutupane.removeRow;
+        $scope.nutupane = nutupane;
+
+        nutupane.enableSelectAllResults();
 
         if ($location.search()['select_all']) {
-            nutupane.selectAllMode = true;
+            nutupane.table.selectAllResults();
         }
 
         $scope.systemTable.getStatusColor = SystemsHelper.getStatusColor;
 
-        $scope.systemTable.closeItem = function() {
+        $scope.systemTable.closeItem = function () {
             $scope.transitionTo('systems.index');
         };
 
         $scope.table = $scope.systemTable;
 
         $scope.removeSystem = function (system) {
-            system.$remove(function() {
+            system.$remove(function () {
                 $scope.removeRow(system.id);
                 $scope.successMessages.push(gettext('System %s has been deleted.').replace('%s', system.name));
                 $scope.transitionTo('systems.index');

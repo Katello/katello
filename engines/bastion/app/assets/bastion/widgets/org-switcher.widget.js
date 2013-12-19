@@ -32,14 +32,14 @@
  */
 angular.module('Bastion.widgets').directive('orgSwitcher',
     ['$window', '$document', 'Routes', 'CurrentUser', 'User', 'CurrentOrganization', 'Organization',
-    function($window, $document, Routes, CurrentUser, User, CurrentOrganization, Organization) {
+    function ($window, $document, Routes, CurrentUser, User, CurrentOrganization, Organization) {
 
     return {
         restrict: 'A',
         scope: true,
         templateUrl: 'widgets/views/org-switcher.html',
 
-        controller: ['$scope', function($scope) {
+        controller: ['$scope', function ($scope) {
             $scope.visible = false;
             $scope.working = false;
 
@@ -47,13 +47,13 @@ angular.module('Bastion.widgets').directive('orgSwitcher',
                 $scope.currentOrganization = Organization.get({'id': CurrentOrganization});
             }
 
-            $scope.toggleVisibility = function() {
+            $scope.toggleVisibility = function () {
                 $scope.visible = !$scope.visible;
             };
 
-            $scope.refresh = function() {
+            $scope.refresh = function () {
                 $scope.working = true;
-                $scope.user = User.get({'id': CurrentUser}, function(response) {
+                $scope.user = User.get({'id': CurrentUser}, function (response) {
                     $scope.working = false;
                     if (response.preferences.user) {
                         $scope.favoriteOrg = response.preferences.user['default_org'];
@@ -63,10 +63,10 @@ angular.module('Bastion.widgets').directive('orgSwitcher',
                 });
             };
 
-            $scope.selectOrg = function(organization) {
+            $scope.selectOrg = function (organization) {
                 $scope.visible = false;
 
-                User.selectOrg(organization.id, function() {
+                User.selectOrg(organization.id, function () {
                     $window.location = Routes.dashboardIndexPath();
                 });
             };
@@ -77,12 +77,12 @@ angular.module('Bastion.widgets').directive('orgSwitcher',
                     organizationId = null;
                 }
 
-                User.setDefaultOrg($scope.user.id, organizationId, function() {
+                User.setDefaultOrg($scope.user.id, organizationId, function () {
                     $scope.favoriteOrg = organizationId;
                 });
             };
 
-            $scope.$watch('visible', function(newValue, oldValue) {
+            $scope.$watch('visible', function (newValue, oldValue) {
                 if (newValue && (newValue !== oldValue)) {
                     $scope.refresh();
                 }

@@ -11,7 +11,10 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
 
-KT.panel.list.registerPage('changesets',
+
+
+$(document).ready(function() {
+    KT.panel.list.registerPage('changesets',
                             { 'extra_params' :
                                 [ { hash_id     : 'env_id',
                                     init_func     : function(){
@@ -27,8 +30,6 @@ KT.panel.list.registerPage('changesets',
                                 ]
                             });
 
-
-$(document).ready(function() {
 
     //Set the callback on the environment selector
     env_select.click_callback = function(env_id) {

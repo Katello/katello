@@ -220,12 +220,12 @@ class Api::V1::EnvironmentsController < Api::V1::ApiController
 
   def get_content_view_environments(name = nil)
     environments = ContentViewEnvironment.joins(:content_view => :organization).
-        where("#{Katello::Organization.table_name}.id = ?", @organization.id)
+        where("#{Organization.table_name}.id = ?", @organization.id)
     environments = environments.where("#{Katello::ContentViewEnvironment.table_name}.name = ?", name) if name
 
     if environments.empty?
       environments = ContentViewEnvironment.joins(:content_view => :organization).
-          where("#{Katello::Organization.table_name}.id = ?", @organization.id)
+          where("#{Organization.table_name}.id = ?", @organization.id)
       environments = environments.where("#{Katello::ContentViewEnvironment.table_name}.label = ?", name) if name
     end
 

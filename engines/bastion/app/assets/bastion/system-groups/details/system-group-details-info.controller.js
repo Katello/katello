@@ -21,20 +21,20 @@
  *   Provides the functionality for the system group details action pane.
  */
 angular.module('Bastion.system-groups').controller('SystemGroupDetailsInfoController',
-    ['$scope', function($scope) {
+    ['$scope', function ($scope) {
 
         $scope.limitTranslations = {"-1": "Unlimited"};
-        $scope.isUnlimited = function(group) {
-           return group['max_systems'] === -1;
-         };
+        $scope.isUnlimited = function (group) {
+            return group['max_systems'] === -1;
+        };
 
-         $scope.unlimitedChanged = function() {
-             if ($scope.isUnlimited($scope.group)) {
-                 $scope.group['max_systems']= 1;
-             } else {
-                 $scope.group['max_systems'] = -1;
-             }
-         };
+        $scope.unlimitedChanged = function () {
+            if ($scope.isUnlimited($scope.group)) {
+                $scope.group['max_systems'] = 1;
+            } else {
+                $scope.group['max_systems'] = -1;
+            }
+        };
 
     }]
 );

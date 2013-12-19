@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class DashboardController < ApplicationController
+class DashboardController < Katello::ApplicationController
 
   helper ErrataHelper
 
@@ -70,6 +70,17 @@ class DashboardController < ApplicationController
 
   def subscriptions
     render :partial => "subscriptions", :locals => {:quantity => quantity}
+  end
+
+  def subscriptions_totals
+    subscriptions = current_organization.redhat_provider.index_subscriptions
+
+    render :partial => "subscriptions_totals", :locals => {
+      :quantity                             => nil,
+      :total_active_subscriptions           => Katello::Pool.active(subscriptions).count,
+      :total_expiring_subscriptions         => Katello::Pool.expiring_soon(subscriptions).count,
+      :total_recently_expired_subscriptions => Katello::Pool.recently_expired(subscriptions).count
+    }
   end
 
   def notices

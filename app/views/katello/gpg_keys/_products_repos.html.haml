@@ -8,7 +8,7 @@
     = link_to _("Remove GPG Key"), {:action => "destroy", :controller => "gpg_keys"}, :method => :delete, :confirm => _('Are you sure you want to delete this GPG Key?'), :class => "remove_item", :remote=>true
 
 = content_for :navigation do
-  = render_menu(1..2, gpg_keys_navigation)
+  = render_subnav_menu(1..2, gpg_keys_navigation)
 
 = content_for :content do
   #products_repos

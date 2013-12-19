@@ -29,12 +29,11 @@
  */
 angular.module('Bastion.system-groups').controller('SystemGroupsController',
     ['$scope', '$location', 'gettext', 'Nutupane', 'SystemGroup', 'CurrentOrganization',
-    function($scope, $location, gettext, Nutupane, SystemGroup, CurrentOrganization) {
+    function ($scope, $location, gettext, Nutupane, SystemGroup, CurrentOrganization) {
 
         var params = {
             'organization_id':  CurrentOrganization,
             'search':           $location.search().search || "",
-            'offset':           0,
             'sort_by':          'name',
             'sort_order':       'ASC',
             'paged':            true
@@ -44,19 +43,9 @@ angular.module('Bastion.system-groups').controller('SystemGroupsController',
         $scope.table = nutupane.table;
         $scope.removeRow = nutupane.removeRow;
 
-        $scope.table.closeItem = function() {
+        $scope.table.closeItem = function () {
             $scope.transitionTo('system-groups.index');
         };
-
-        $scope.readableGroupLimit = function(total) {
-            if(total === -1) {
-                return gettext("Unlimited");
-            }
-            else {
-                return total;
-            }
-        };
-        $scope.table.readableGroupLimit = $scope.readableGroupLimit;
 
     }]
 );

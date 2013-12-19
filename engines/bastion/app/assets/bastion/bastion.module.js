@@ -24,7 +24,12 @@ angular.module('Bastion', [
     'alchemy.format',
     'alch-templates',
     'ngSanitize',
-    'ui.bootstrap',
+    'ui.bootstrap.alert',
+    'ui.bootstrap.modal',
+    'ui.bootstrap.position',
+    'ui.bootstrap.bindHtml',
+    'ui.bootstrap.tooltip',
+    'ui.bootstrap.tabs',
     'angular-blocks',
     'Katello.globals',
     'Bastion.i18n',
@@ -55,16 +60,16 @@ angular.module('Bastion', [
  */
 angular.module('Bastion').config(
     ['$httpProvider', '$urlRouterProvider', '$provide',
-    function($httpProvider, $urlRouterProvider, $provide) {
+    function ($httpProvider, $urlRouterProvider, $provide) {
         $httpProvider.defaults.headers.common = {
             Accept: 'application/json, text/plain, version=2; */*',
             'X-XSRF-TOKEN': $('meta[name=csrf-token]').attr('content')
         };
         $urlRouterProvider.otherwise("/");
 
-        $provide.factory('PrefixInterceptor', ['$q', '$templateCache', function($q, $templateCache) {
+        $provide.factory('PrefixInterceptor', ['$q', '$templateCache', function ($q, $templateCache) {
             return {
-                request: function(config) {
+                request: function (config) {
                     if (config.url.indexOf('.html') !== -1) {
                         if ($templateCache.get(config.url) === undefined) {
                             config.url = '/' + config.url;
@@ -96,7 +101,7 @@ angular.module('Bastion').config(
  *   Set up some common state related functionality and set the current language.
  */
 angular.module('Bastion').run(['$rootScope', '$state', '$stateParams', '$templateCache', 'gettextCatalog', 'currentLocale', '$location',
-    function($rootScope, $state, $stateParams, $templateCache, gettextCatalog, currentLocale, $location) {
+    function ($rootScope, $state, $stateParams, $templateCache, gettextCatalog, currentLocale, $location) {
 
         $rootScope.$state = $state;
         $rootScope.$stateParams = $stateParams;
@@ -116,16 +121,16 @@ angular.module('Bastion').run(['$rootScope', '$state', '$stateParams', '$templat
         gettextCatalog.currentLanguage = currentLocale;
 
         $rootScope.$on('$stateChangeStart',
-            function() {
+            function () {
             //save location.search so we can add it back after transition is done
             this.locationSearch = $location.search();
         });
 
         $rootScope.$on('$stateChangeSuccess',
-            function() {
+            function () {
                 //restore all query string parameters back to $location.search
                 $location.search(this.locationSearch);
-        });
+            });
 
         // Temporary workaround until angular-ui-bootstrap releases bootstrap 3 support.
         $templateCache.put('template/modal/backdrop.html', '<div class="modal-backdrop fade" ng-class="{in: animate}" ng-style="{\'z-index\': 1040 + index*10}"></div>');

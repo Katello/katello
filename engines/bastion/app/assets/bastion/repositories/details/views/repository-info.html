@@ -1,6 +1,6 @@
 <div>
   <a ng-href="#/products/{{ repository.product.cp_id }}/repositories">
-    <i class="icon-backward clickable"></i>
+    <i class="icon-backward"></i>
     {{ "Back to Repository List" | translate }}
   </a>
 
@@ -149,7 +149,7 @@
 
     <form class="form labels_top"
           action="/katello/api/repositories/{{ repository.id }}/content_uploads/file"
-          ng-upload
+          ng-upload="uploadContent(content)"
           upload-options-enable-controls>
 
       <div class="control-group">
@@ -160,10 +160,10 @@
 
       <div class="control-group">
         <div class="control-button">
-          <button class="primary" upload-submit="uploadContent(content, completed)" ng-click="uploading = true">
-            <i class="icon-spinner icon-spin" ng-show="uploading"></i>
-            <span ng-show="uploading" translate>Uploading...</span>
-            <span ng-hide="uploading" translate>Upload</span>
+          <button class="primary" upload-submit ng-click="progress.uploading = true">
+            <i class="icon-spinner icon-spin" ng-show="progress.uploading"></i>
+            <span ng-show="progress.uploading" translate>Uploading...</span>
+            <span ng-hide="progress.uploading" translate>Upload</span>
           </button>
         </div>
       </div>

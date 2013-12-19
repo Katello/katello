@@ -25,6 +25,7 @@ class Api::V2::SystemsBulkActionsControllerTest < ActionController::TestCase
     @read_permission = UserPermission.new(:read_systems, :organizations, nil, @system1.organization)
     @update_permission = UserPermission.new(:update_systems, :organizations, nil, @system1.organization)
     @delete_permission = UserPermission.new(:delete_systems, :organizations, nil, @system1.organization)
+    @update_group_perm = UserPermission.new(:update, :system_groups, [@system_group1.id, @system_group2.id], @system1.organization)
     @no_permission = NO_PERMISSION
   end
 
@@ -39,35 +40,42 @@ class Api::V2::SystemsBulkActionsControllerTest < ActionController::TestCase
     @systems = [@system1, @system2]
     @system_ids = @systems.map(&:id)
 
+    @org = get_organization(:organization1)
     @system_group1 = katello_system_groups(:simple_group)
     @system_group2 = katello_system_groups(:another_simple_group)
 
     permissions
 
+    System.any_instance.stubs(:update_system_groups)
     System.stubs(:find).returns(@systems)
   end
 
   def test_add_system_group
-    assert_equal 1, @system1.system_groups.length # system initially has simple_group
-    put :bulk_add_system_groups, :ids => @system_ids, :system_group_ids => [@system_group1.id, @system_group2.id]
+    assert_equal 1, @system1.system_groups.count # system initially has simple_group
+    put :bulk_add_system_groups, {:included => {:ids => @system_ids},
+                                  :organization_id => @org.label,
+                                  :system_group_ids => [@system_group1.id, @system_group2.id]}
 
     assert_response :success
-    assert_equal 2, @system1.system_groups.length
+    assert_equal 2, @system1.system_groups.count
   end
 
   def test_remove_system_group
-    assert_equal 1, @system1.system_groups.length # system initially has simple_group
-    put :bulk_remove_system_groups, :ids => @system_ids, :system_group_ids => [@system_group1.id, @system_group2.id]
+    assert_equal 1, @system1.system_groups.count # system initially has simple_group
+    put :bulk_remove_system_groups, {:included => {:ids => @system_ids},
+                                      :organization_id => @org.label,
+                                      :system_group_ids => [@system_group1.id, @system_group2.id]}
 
     assert_response :success
-    assert_equal 0, @system1.system_groups.length
+    assert_equal 0, @system1.system_groups.count
   end
 
   def test_install_package
     @system1.expects(:install_packages).with(["foo"]).returns(TaskStatus.new)
     @system2.expects(:install_packages).with(["foo"]).returns(TaskStatus.new)
 
-    put :install_content, :ids => @system_ids, :content_type => 'package', :content => ['foo']
+    put :install_content, :ids => @system_ids, :organization_id => @org.label,
+        :content_type => 'package', :content => ['foo']
 
     assert_response :success
   end
@@ -76,7 +84,8 @@ class Api::V2::SystemsBulkActionsControllerTest < ActionController::TestCase
     @system1.expects(:update_packages).with(["foo"]).returns(TaskStatus.new)
     @system2.expects(:update_packages).with(["foo"]).returns(TaskStatus.new)
 
-    put :update_content, :ids => @system_ids, :content_type => 'package', :content => ['foo']
+    put :update_content, :ids => @system_ids, :organization_id => @org.label,
+        :content_type => 'package', :content => ['foo']
 
     assert_response :success
   end
@@ -85,7 +94,8 @@ class Api::V2::SystemsBulkActionsControllerTest < ActionController::TestCase
     @system1.expects(:uninstall_packages).with(["foo"]).returns(TaskStatus.new)
     @system2.expects(:uninstall_packages).with(["foo"]).returns(TaskStatus.new)
 
-    put :remove_content, :ids => @system_ids, :content_type => 'package', :content => ['foo']
+    put :remove_content, :ids => @system_ids, :organization_id => @org.label,
+        :content_type => 'package', :content => ['foo']
 
     assert_response :success
   end
@@ -94,7 +104,8 @@ class Api::V2::SystemsBulkActionsControllerTest < ActionController::TestCase
     @system1.expects(:install_package_groups).with(["foo group"]).returns(TaskStatus.new)
     @system2.expects(:install_package_groups).with(["foo group"]).returns(TaskStatus.new)
 
-    put :install_content, :ids => @system_ids, :content_type => 'package_group', :content => ['foo group']
+    put :install_content, :ids => @system_ids, :organization_id => @org.label,
+        :content_type => 'package_group', :content => ['foo group']
 
     assert_response :success
   end
@@ -103,7 +114,8 @@ class Api::V2::SystemsBulkActionsControllerTest < ActionController::TestCase
     @system1.expects(:install_package_groups).with(["foo group"]).returns(TaskStatus.new)
     @system2.expects(:install_package_groups).with(["foo group"]).returns(TaskStatus.new)
 
-    put :update_content, :ids => @system_ids, :content_type => 'package_group', :content => ['foo group']
+    put :update_content, :ids => @system_ids, :organization_id => @org.label,
+        :content_type => 'package_group', :content => ['foo group']
 
     assert_response :success
   end
@@ -112,7 +124,8 @@ class Api::V2::SystemsBulkActionsControllerTest < ActionController::TestCase
     @system1.expects(:uninstall_package_groups).with(["foo group"]).returns(TaskStatus.new)
     @system2.expects(:uninstall_package_groups).with(["foo group"]).returns(TaskStatus.new)
 
-    put :remove_content, :ids => @system_ids, :content_type => 'package_group', :content => ['foo group']
+    put :remove_content, :ids => @system_ids, :organization_id => @org.label,
+        :content_type => 'package_group', :content => ['foo group']
 
     assert_response :success
   end
@@ -121,7 +134,8 @@ class Api::V2::SystemsBulkActionsControllerTest < ActionController::TestCase
     @system1.expects(:install_errata).with(["RHSA-2013:0123"]).returns(TaskStatus.new)
     @system2.expects(:install_errata).with(["RHSA-2013:0123"]).returns(TaskStatus.new)
 
-    put :install_content, :ids => @system_ids, :content_type => 'errata', :content => ['RHSA-2013:0123']
+    put :install_content, :ids => @system_ids, :organization_id => @org.label,
+        :content_type => 'errata', :content => ['RHSA-2013:0123']
 
     assert_response :success
   end
@@ -136,14 +150,19 @@ class Api::V2::SystemsBulkActionsControllerTest < ActionController::TestCase
 
   def test_permissions
     good_perms = [@update_permission]
+    good_group_perm = [@update_group_perm]
     bad_perms = [@read_permission, @delete_permission, @no_permission]
 
-    assert_protected_action(:bulk_add_system_groups, good_perms, bad_perms) do
-      put :bulk_add_system_groups, :ids => @system_ids, :system_group_ids => [@system_group1.id, @system_group2.id]
+    assert_protected_action(:bulk_add_system_groups, good_group_perm, bad_perms) do
+      put :bulk_add_system_groups,  {:included => {:ids => @system_ids},
+                                        :organization_id => @org.label,
+                                        :system_group_ids => [@system_group1.id, @system_group2.id]}
     end
 
-    assert_protected_action(:bulk_remove_system_groups, good_perms, bad_perms) do
-      put :bulk_remove_system_groups, :ids => @system_ids, :system_group_ids => [@system_group1.id, @system_group2.id]
+    assert_protected_action(:bulk_remove_system_groups, good_group_perm, bad_perms) do
+      put :bulk_remove_system_groups,  {:included => {:ids => @system_ids},
+                                        :organization_id => @org.label,
+                                        :system_group_ids => [@system_group1.id, @system_group2.id]}
     end
 
     assert_protected_action(:install_content, good_perms, bad_perms) do

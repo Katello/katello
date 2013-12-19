@@ -28,9 +28,10 @@ $(document).ready(function() {
 
         btn.parent().find(".options").toggle();
     });
+
+    KT.panel.list.registerPage('content_view_definitions', { create : 'new_content_view_definition' });
 });
 
-KT.panel.list.registerPage('content_view_definitions', { create : 'new_content_view_definition' });
 
 KT.panel.set_expand_cb(function() {
     $('a.remove.disabled').tipsy({ fade:true, gravity:'s', delayIn:500, html:true, className:'content_definition-tipsy',

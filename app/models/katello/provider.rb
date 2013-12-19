@@ -17,7 +17,7 @@ class Provider < ActiveRecord::Base
   include Glue::ElasticSearch::Provider if Katello.config.use_elasticsearch
   include Glue::Provider
   include Glue
-  include Authorization::Provider
+  include Katello::Authorization::Provider
   include AsyncOrchestration
 
   include Ext::PermissionTagCleanup
@@ -30,7 +30,7 @@ class Provider < ActiveRecord::Base
 
   serialize :discovered_repos, Array
 
-  belongs_to :organization, :inverse_of => :providers, :class_name => "Katello::Organization"
+  belongs_to :organization, :inverse_of => :providers, :class_name => "Organization"
   belongs_to :task_status, :inverse_of => :provider
   belongs_to :discovery_task, :class_name => "Katello::TaskStatus", :dependent => :destroy, :inverse_of => :provider
   has_many :products, :class_name => "Katello::Product", :inverse_of => :provider, :dependent => :destroy

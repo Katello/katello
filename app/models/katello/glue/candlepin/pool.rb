@@ -22,7 +22,8 @@ module Glue::Candlepin::Pool
       lazy_accessor :remote_data, :pool_derived, :product_name, :consumed, :quantity, :available, :support_level, :support_type,
         :start_date, :end_date, :attrs, :owner, :product_id, :account_number, :contract_number,
         :source_pool_id, :host_id, :virt_only, :virt_limit, :multi_entitlement, :stacking_id,
-        :arch, :sockets, :cores, :ram, :description, :product_family, :variant, :provided_products, :instance_multiplier, :suggested_quantity,
+        :arch, :sockets, :cores, :ram, :description, :product_family, :variant, :provided_products,
+        :active, :instance_multiplier, :suggested_quantity,
         :initializer => (lambda do |s|
                            json = Resources::Candlepin::Pool.find(cp_id)
                            # symbol "attributes" is reserved by Rails and cannot be used
@@ -45,7 +46,7 @@ module Glue::Candlepin::Pool
 
     def initialize(attrs = nil, options = {})
       if !attrs.nil? && attrs.member?('id')
-        # initializing from cadlepin json
+        # initializing from candlepin json
         load_remote_data(attrs)
         super({:cp_id => attrs['id']}, options)
       else
@@ -80,6 +81,7 @@ module Glue::Candlepin::Pool
       @account_number = attrs['accountNumber']
       @contract_number = attrs['contractNumber']
       @provided_products = attrs['providedProducts']
+      @active = attrs['activeSubscription']
       @source_pool_id = nil
       @host_id = nil
       @virt_only = false

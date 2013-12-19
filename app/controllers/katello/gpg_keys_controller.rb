@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class GpgKeysController < ApplicationController
+class GpgKeysController < Katello::ApplicationController
   include AutoCompleteSearch
 
   before_filter :require_user

@@ -17,7 +17,7 @@ class Api::V1::SystemsController < Api::V1::ApiController
 
   skip_before_filter :set_default_response_format, :only => :report
 
-  before_filter :verify_presence_of_organization_or_environment, :only => [:create, :index, :activate]
+  before_filter :find_default_organization_and_or_environment, :only => [:create, :index, :activate]
   before_filter :find_optional_organization, :only => [:create, :hypervisors_update, :index, :activate, :report, :tasks]
   before_filter :find_only_environment, :only => [:create]
   before_filter :find_environment, :only => [:index, :report, :tasks]
@@ -76,7 +76,7 @@ class Api::V1::SystemsController < Api::V1::ApiController
         :activate                         => register_system,
         :tasks                            => index_systems,
         :task_show                        => read_system,
-        :enabled_repos                    => consumer_only,
+        :enabled_repos                    => edit_system,
         :add_system_groups                => edit_system,
         :remove_system_groups             => edit_system,
         :refresh_subscriptions            => edit_system,
@@ -521,7 +521,7 @@ This information is then used for computing the errata available for the system.
     end
   end
 
-  def verify_presence_of_organization_or_environment
+  def find_default_organization_and_or_environment
     # This has to grab the first default org associated with this user AND
     # the environment that goes with him.
     return if params.key?(:organization_id) || params.key?(:owner) || params.key?(:environment_id)

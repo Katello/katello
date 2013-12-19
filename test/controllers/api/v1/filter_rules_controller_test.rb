@@ -32,7 +32,7 @@ describe Api::V1::FilterRulesController do
     before do
       @filter = katello_filters(:populated_filter)
       @cvd = @filter.content_view_definition
-      @organization = @cvd.organization
+      @organization = get_organization(:organization1)
       @rule_id =  @filter.rules.first.id
       @req = lambda do
         delete :destroy, :organization_id => @organization.label,
@@ -68,7 +68,7 @@ describe Api::V1::FilterRulesController do
   it "create permission" do
     @filter = katello_filters(:populated_filter)
     @cvd = @filter.content_view_definition
-    @organization = @cvd.organization
+    @organization = get_organization(:organization1)
     perms = ContentViewDefinitionSupport.generate_permissions(@cvd, @organization)
     @req = lambda do
       post :create, :organization_id => @organization.label,
@@ -99,8 +99,9 @@ describe Api::V1::FilterRulesController do
   ].each do |content, rule|
     [true, false].each do |inclusion|
       it "should create a filter #{content} rule for inclusion = #{inclusion}" do
+        @organization = get_organization(:organization1)
         rule = rule.with_indifferent_access
-        post :create, :organization_id => @filter.content_view_definition.organization.label,
+        post :create, :organization_id => @organization.label,
              :content_view_definition_id=> @filter.content_view_definition.id,
              :filter_id => @filter.id.to_s, :content => content, :inclusion => inclusion,
              :rule => rule.to_json
@@ -122,7 +123,7 @@ describe Api::V1::FilterRulesController do
     inclusion = true
     rule = {:date_range => {:start => "2013-04-15T15:44:48-04:00",
                            :end => "2013-05-15T15:44:48-04:00"}}.with_indifferent_access
-    post :create, :organization_id => @filter.content_view_definition.organization.label,
+    post :create, :organization_id => @organization.label,
          :content_view_definition_id=> @filter.content_view_definition.id,
          :filter_id => @filter.id.to_s, :content => content, :inclusion => inclusion,
          :rule => rule.to_json

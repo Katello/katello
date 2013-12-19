@@ -87,7 +87,7 @@ class Distributor < ActiveRecord::Base
   end
 
   def init_default_custom_info
-    self.organization.default_info["distributor"].each do |k|
+    self.organization.default_info_hash["distributor"].each do |k|
       self.custom_info.create!(:keyname => k)
     end
   end

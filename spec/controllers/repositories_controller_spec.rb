@@ -75,6 +75,9 @@ describe RepositoriesController do
      before(:each) do
        setup_controller_defaults
 
+       @organization = get_organization(:organization1)
+       @controller.stubs(:current_organization).returns(@organization)
+
        Provider.stubs(:find).returns(stub(:id => 1))
        Product.stubs(:find).returns(@product = stub)
        @product.stubs(:editable?).returns(true)
