@@ -139,7 +139,7 @@ class Api::V2::SystemsController < Api::V2::ApiController
     if params[:environment_id]
       filters << {:terms => {:environment_id => [params[:environment_id]] }}
     elsif params[:system_group_id]
-      filters << {:terms => {:system_group_id => [params[:system_group_id]] }}
+      filters << {:terms => {:system_group_ids => [params[:system_group_id]] }}
     else
       filters << readable_filters
     end
@@ -477,7 +477,6 @@ class Api::V2::SystemsController < Api::V2::ApiController
     return unless params.key?(:system_group_id)
 
     @system_group = SystemGroup.find(params[:system_group_id])
-    fail HttpErrors::NotFound, _("Couldn't find system group '%s'") % params[:system_group_id] if @system_group.nil?
   end
 
   def find_only_environment
