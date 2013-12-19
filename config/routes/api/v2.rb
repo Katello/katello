@@ -92,6 +92,7 @@ Katello::Engine.routes.draw do
           get :releases
           get :tasks
           put :enabled_repos
+          get :available_system_groups, :action => :available_system_groups
           post :system_groups, :action => :add_system_groups
           delete :system_groups, :action => :remove_system_groups
           put :refresh_subscriptions

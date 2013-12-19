@@ -33,7 +33,12 @@ angular.module('Bastion.systems').factory('System',
             saveSystemGroups: {method: 'POST', params: {action: 'system_groups'}},
             refreshSubscriptions: {method: 'PUT', params: {action: 'refresh_subscriptions'}},
             availableSubscriptions: {method: 'GET', params: {action: 'subscriptions', action2: 'available'}},
-            tasks: {method: 'GET', params: {action: 'tasks', paged: true}}
+            tasks: {method: 'GET', params: {action: 'tasks', paged: true}},
+            availableSystemGroups: {method: 'GET', params: {action: 'available_system_groups'}},
+            systemGroups: {method: 'GET', transformResponse: function (data) {
+                var system = angular.fromJson(data);
+                return {results: system.systemGroups};
+            }}
         });
 
     }]

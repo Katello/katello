@@ -1,0 +1,18 @@
+<h4 translate>System Group Management</h4>
+<nav>
+  <ul class="nav nav-tabs">
+    <li ng-class="{active: isState('systems.details.system-groups.list')}">
+      <a ui-sref="systems.details.system-groups.list">
+        <span translate>List/Remove</span>
+      </a>
+    </li>
+
+    <li ng-class="{active: isState('systems.details.system-groups.add')}">
+      <a ui-sref="systems.details.system-groups.add">
+        <span translate>Add</span>
+      </a>
+    </li>
+  </ul>
+</nav>
+
+<div ui-view></div>

@@ -223,9 +223,17 @@ angular.module('Bastion.widgets').factory('Nutupane',
             };
 
             self.table.hasMore = function () {
-                var length = self.table.rows.length;
-                var subtotal = self.table.resource.subtotal;
-                return ((length === 0 && subtotal !== 0) || (length < subtotal));
+                var length = self.table.rows.length,
+                    subtotal = self.table.resource.subtotal,
+                    hasMore = false;
+
+                if (!subtotal) {
+                    hasMore = false;
+                } else {
+                    var justBegun = (length === 0 && subtotal !== 0);
+                    hasMore = (length < subtotal) || justBegun;
+                }
+                return hasMore;
             };
 
             // Wraps the table.selectAll() function if selectAllResultsEnabled is not set

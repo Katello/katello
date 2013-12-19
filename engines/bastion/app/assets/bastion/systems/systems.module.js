@@ -114,6 +114,24 @@ angular.module('Bastion.systems').config(['$stateProvider', function ($stateProv
         templateUrl: 'systems/details/views/system-subscriptions.html'
     });
 
+    $stateProvider.state('systems.details.system-groups', {
+        abstract: true,
+        collapsed: true,
+        templateUrl: 'systems/details/views/system-groups.html'
+    })
+    .state('systems.details.system-groups.list', {
+        url: '/system-groups',
+        collapsed: true,
+        controller: 'SystemSystemGroupsController',
+        templateUrl: 'systems/details/views/system-groups-table.html'
+    })
+    .state('systems.details.system-groups.add', {
+        url: '/system-groups/add',
+        collapsed: true,
+        controller: 'SystemAddSystemGroupsController',
+        templateUrl: 'systems/details/views/system-groups-table.html'
+    });
+
     $stateProvider.state("systems.bulk-actions", {
         abstract: true,
         collapsed: true,
