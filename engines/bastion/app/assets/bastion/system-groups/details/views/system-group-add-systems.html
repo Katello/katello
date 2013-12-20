@@ -46,7 +46,7 @@
   <div alch-table="addSystemsTable" class="nutupane">
     <div alch-container-scroll control-width="addSystemsTable" alch-infinite-scroll="addSystemsTable.nextPage()" data="addSystemsTable.rows">
 
-      <div class="loading-mask icon-3x" ng-show="addSystemsTable.working && addSystemsTable.rows.length == 0">
+      <div class="loading-mask" ng-show="addSystemsTable.working && addSystemsTable.rows.length == 0">
         <i class="icon-spinner icon-spin"></i>
         {{ "Loading..." | translate }}
       </div>

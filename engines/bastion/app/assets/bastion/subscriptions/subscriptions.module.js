@@ -19,7 +19,6 @@
  *   Module for subscriptions
  */
 angular.module('Bastion.subscriptions', [
-    'Katello.globals',
     'ngResource',
     'alchemy',
     'alch-templates',

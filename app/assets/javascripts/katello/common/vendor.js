@@ -30,8 +30,3 @@
 //= require "alchemy/jquery/plugins/jquery.ajaxfileupload"
 //= require "alchemy/jquery/plugins/jquery.fancyqueries"
 //= require "alchemy/jquery/plugins/jquery.ba-resize"
-//= require "bastion/angular/angular"
-//= require "bastion/angular-resource/angular-resource"
-//= require "bastion/angular-sanitize/angular-sanitize"
-//= require "bastion/alchemy/alchemy"
-//= require "bastion/angular-ui-router/angular-ui-router"

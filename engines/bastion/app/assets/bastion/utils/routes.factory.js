@@ -19,8 +19,8 @@
  * @description
  *   Provides a wrapper factory around KT.routes.
  */
-angular.module('Bastion.utils').factory('Routes', ['RootURL', function (RootURL) {
-    BASTION.KT.routes.options.prefix = RootURL;
+angular.module('Bastion.utils').factory('Routes', function () {
+    BASTION.KT.routes.options.prefix = '/katello';
     return BASTION.KT.routes;
-}]);
+});
 

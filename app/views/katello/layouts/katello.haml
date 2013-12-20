@@ -15,10 +15,9 @@
   = yield(:katello_javascripts)
 
 = content_for(:inline_javascripts) do
+  :plain
+    KT.routes.options.prefix = "#{Katello.config.url_prefix}";
   = render :partial => "katello/common/common_i18n"
-  = render :partial => 'katello/common/config'
-  = render :partial => 'katello/common/ajax_notices'
-  = render :partial => 'katello/common/notification'
 
 = content_for(:content) do
   %article#maincontent

@@ -30,9 +30,9 @@ $(document).ready(function () {
     left.resize(function () {
         var apanel = $('.panel');
         panelLeft = left.width();
-        $('.block').not('#new').width(panelLeft - 17);
+        $('.block').not('#new').width(panelLeft - 2);
         apanel.width((page_width - 21) - panelLeft);
-        right.width((page_width - 62) - panelLeft);
+        right.width(page_width - panelLeft - 19);
         if (apanel.hasClass('opened')) {
             apanel.css({
                 "left": (panelLeft)

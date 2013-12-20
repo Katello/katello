@@ -1,12 +1,18 @@
 Foreman::Plugin.register :katello do
   requires_foreman '> 1.3'
 
-  sub_menu :top_menu, :content, :caption=> N_('Content'), :after=> :monitor_menu do
+  sub_menu :top_menu, :content, :caption => N_('Content'), :after => :monitor_menu do
+    menu :top_menu,
+         :environments,
+         :caption => N_('Lifecycle Environments'),
+         :url_hash => {:controller => 'katello/environments',
+                       :action => 'all'},
+         :engine => Katello::Engine
     menu :top_menu,
          :red_hat_subscriptions,
          :caption => N_('Red Hat Subscriptions'),
          :url_hash => {:controller => 'katello/subscriptions',
-                       :action => 'index'},
+                       :action => 'all'},
          :engine => Katello::Engine
     menu :top_menu,
          :subscription_manager_applications,
@@ -122,6 +128,15 @@ Foreman::Plugin.register :katello do
        :engine => Katello::Engine,
        :parent => :monitor_menu,
        :after => :dashboard
+
+  menu :admin_menu,
+       :notices,
+       :caption => N_('Content Notices'),
+       :url_hash => {:controller => 'katello/notices',
+                     :action => 'show'},
+       :engine => Katello::Engine,
+       :parent => :administer_menu,
+       :after => :organizations
 
   menu :admin_menu,
        :content_roles,

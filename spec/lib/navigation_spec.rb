@@ -49,17 +49,12 @@ describe Navigation do
     @navigation = @navigation_class.new
   end
 
-  [:menu_main,
-   :admin_main,
-   :systems_navigation,
+  [:systems_navigation,
    :promotion_distribution_navigation,
    :organization_navigation,
-   :system_groups_navigation,
    :gpg_keys_navigation,
    :activation_keys_navigation,
-   :user_navigation,
    :promotion_errata_navigation,
-   :custom_provider_navigation,
    :subscriptions_navigation,
    :new_subscription_navigation,
    :promotion_packages_navigation

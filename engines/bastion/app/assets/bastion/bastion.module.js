@@ -31,7 +31,6 @@ angular.module('Bastion', [
     'ui.bootstrap.tooltip',
     'ui.bootstrap.tabs',
     'angular-blocks',
-    'Katello.globals',
     'Bastion.i18n',
     'Bastion.menu',
     'Bastion.subscriptions',

@@ -11,8 +11,6 @@
  */
 
 //= require "bastion/jquery/jquery"
-//= require "alchemy/jquery/plugins/jquery.periodicalupdater"
-
 //= require "bastion/underscore/underscore"
 
 //= require "bastion/angular/angular"
@@ -26,14 +24,10 @@
 //= require "bastion/alchemy/alchemy"
 
 //= require "katello/common/katello.global"
-//= require "katello/common/notices"
 //= require "katello/common/bastion-routes"
-//= require "katello/common/routes"
 //= require "katello/common/katello.common"
 //= require "katello/common/env_select_scroll"
 //= require "katello/widgets/path_selector"
-
-//= require "katello/common/experimental/katello-globals.module"
 
 //= require "bastion/bastion.module"
 

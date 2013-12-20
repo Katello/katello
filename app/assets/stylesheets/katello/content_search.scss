@@ -147,12 +147,13 @@ table.changelog {
     border-bottom: 1px solid $comparison_grid-border-color;
 
     h2 {
-        padding: 0 0 0 17px;
-        font-size: 18px;
-        line-height: $browse_box_header-height;
-        vertical-align: middle;
-        float: left;
-        font-weight: normal;
+      padding: 0 0 0 17px;
+      font-size: 18px;
+      line-height: $browse_box_header-height;
+      vertical-align: middle;
+      float: left;
+      font-weight: normal;
+      margin-top: 0;
     }
 
     aside {
@@ -409,10 +410,9 @@ table.changelog {
       }
 
       .row_header {
-        width: $comparison_grid_filter-width - 6;
         padding: 8px 3px;
         border-bottom: 1px solid $comparison_grid_border-color;
-        height: $comparison_grid_row-height - 16;
+        height: $comparison_grid_row-height;
         vertical-align: bottom;
         font-weight: bold;
 
@@ -438,19 +438,16 @@ table.changelog {
       .grid_row_level_2 {
         padding-left: 20px;
         padding-right: 9px;
-        width: $comparison_grid_filter-width - 29;
         font-weight: normal;
 
         &[data-collapsed] {
           padding-left: 9px;
-          width: $comparison_grid_filter-width - 18;
         }
       }
 
       .grid_row_level_3 {
         padding-left: 25px;
         padding-right: 10px;
-        width: $comparison_grid_filter-width - 35;
         font-weight: normal;
 
         span {
@@ -463,7 +460,6 @@ table.changelog {
       .grid_row_level_4 {
         padding-left: 25px;
         padding-right: 10px;
-        width: $comparison_grid_filter-width - 35;
         font-weight: normal;
 
         span {

@@ -19,12 +19,3 @@
  *   Module for storing Katello global variables and constants.
  */
 angular.module('Katello.globals', []);
-
-/**
- * @ngdoc value
- * @name  Katello.globals.value:notices
- *
- * @description
- *   Provides a value wrapper around Katello's notices object.
- */
-angular.module('Katello.globals').value('notices', notices);

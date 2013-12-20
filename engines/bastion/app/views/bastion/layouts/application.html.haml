@@ -12,8 +12,7 @@
   %script{ :type => "text/javascript" }
     :plain
       angular.module('Bastion').value('currentLocale', '#{I18n.locale}');
-    = render :partial => 'katello/common/config'
-    = render :partial => 'katello/common/ajax_notices'
-    = render :partial => 'katello/common/notification'
+      angular.module('Bastion').value('CurrentOrganization', "#{current_organization.label if current_organization}");
+      angular.module('Bastion').value('CurrentUser', "#{current_user.id if current_user}");
 
 = render :file => "layouts/base"
