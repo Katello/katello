@@ -2,11 +2,10 @@
 object @object
 
 case @object
-when ::Katello::Task
-  extends 'katello/api/v2/tasks/dynflow_task_show'
+when ::ForemanTasks::Task
+  extends 'foreman_tasks/api/tasks/show'
 when ::Katello::TaskStatus
   extends 'katello/api/v2/tasks/task_status_show'
 else
   raise "Unsupported task type: #{@object.class.name}"
 end
-

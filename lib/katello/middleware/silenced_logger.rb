@@ -10,26 +10,26 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-module Actions
-  module Pulp
-    module Consumer
-      class ContentUninstall < Actions::Base
+module Katello
+  module Middleware
+    class SilencedLogger < Rails::Rack::Logger
 
-        include Helpers::RemoteAction
-        include Helpers::PulpTask
+      def prefixes
+        Katello.config.logging.ignored_paths
+      end
 
-        input_format do
-          param :consumer_uuid, String
-          param :type, ['rpm', 'package_group']
-          param :args, array_of(String)
+      def initialize(app, options = {})
+        @app = app
+      end
+
+      def call(env)
+        old_level = Rails.logger.level
+        if prefixes.any? {|path|  env["PATH_INFO"].include?(path) }
+          Rails.logger.level = Logger::WARN
         end
-
-        def invoke_external_task
-          pulp_extensions.consumer.uninstall_content(input[:consumer_uuid],
-                                                     input[:type],
-                                                     input[:args])
-        end
-
+        @app.call(env)
+      ensure
+        Rails.logger.level = old_level
       end
     end
   end

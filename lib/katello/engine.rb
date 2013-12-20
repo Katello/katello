@@ -2,6 +2,10 @@ module Katello
 
   class Engine < ::Rails::Engine
 
+    initializer 'katello.silenced_logger', :before => :build_middleware_stack do |app|
+      app.config.middleware.swap Rails::Rack::Logger, Katello::Middleware::SilencedLogger, {}
+    end
+
     initializer 'katello.mount_engine', :after => :build_middleware_stack do |app|
       app.routes_reloader.paths << "#{Katello::Engine.root}/config/routes/mount_engine.rb"
     end
@@ -13,9 +17,10 @@ module Katello
     end
 
     initializer "katello.register_actions" do |app|
-      require 'actions'
-      Actions::DelayedWorkerInjector.load
-      Actions::Base.eager_load!
+      ForemanTasks.dynflow_initialize
+      ForemanTasks.eager_load_paths.concat(%W[#{Katello::Engine.root}/app/lib/actions
+                                              #{Katello::Engine.root}/app/lib/headpin/actions
+                                              #{Katello::Engine.root}/app/lib/katello/actions])
     end
 
     initializer "katello.load_app_instance_data" do |app|

@@ -27,9 +27,15 @@ angular.module('Bastion.tasks').factory('Task',
     function($resource, $timeout, CurrentOrganization) {
 
         var resource = $resource('/katello/api/tasks/:id/:action',
-            {id: '@uuid', 'organization_id': CurrentOrganization},
+            {id: '@id', 'organization_id': CurrentOrganization},
             {
-                query: {method: 'GET', isArray: false},
+                query: {method: 'GET', isArray: false}
+            }
+        );
+
+        var foremanTasksResource = $resource('/foreman_tasks/api/tasks/:id/:action',
+            {},
+            {
                 bulkSearch: {method:'POST', isArray: true, params: { action: 'bulk_search'}}
             }
         );
@@ -60,7 +66,7 @@ angular.module('Bastion.tasks').factory('Task',
             if(_.keys(searchParamsById).length == 0) {
                 return;
             }
-            resource.bulkSearch(bulkSearchParams(), function(response) {
+            foremanTasksResource.bulkSearch(bulkSearchParams(), function(response) {
                 try {
                     _.each(response, function(tasksSearch) {
                         var searchId = tasksSearch['search_params']['search_id'];
@@ -115,8 +121,7 @@ angular.module('Bastion.tasks').factory('Task',
         };
 
         resource.poll = function(task, returnFunction) {
-            // TODO: remove task.id once we get rid of old TaskStatus code
-            resource.get({id: (task.id || task.uuid)}, function(data) {
+            resource.get({id: task.id}, function(data) {
                 if (data.pending) {
                     $timeout(function() {
                         resource.poll(data, returnFunction);

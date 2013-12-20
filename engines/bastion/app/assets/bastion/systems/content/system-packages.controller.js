@@ -30,8 +30,10 @@ angular.module('Bastion.systems').controller('SystemPackagesController',
         var packagesNutupane, packageActions, openEventInfo;
 
         openEventInfo = function(event) {
-            if(event.uuid) {
-                $scope.transitionTo('systems.details.tasks.details', {taskId: event.uuid});
+            // when the event has label defined, it means it commes
+            // from foreman-tasks
+            if(event.label) {
+                $scope.transitionTo('systems.details.tasks.details', {taskId: event.id});
             } else {
                 $scope.transitionTo('systems.details.events.details', {eventId: event.id});
             }

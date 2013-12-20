@@ -19,7 +19,7 @@ class System < ActiveRecord::Base
   define_hooks :add_system_group_hook, :remove_system_group_hook,
                :as_json_hook
 
-  include Ext::ActionSubject
+  include ForemanTasks::Concerns::ActionSubject
   include Glue::Candlepin::Consumer if Katello.config.use_cp
   include Glue::Pulp::Consumer if Katello.config.use_pulp
   include Glue if Katello.config.use_cp || Katello.config.use_pulp
@@ -240,10 +240,6 @@ class System < ActiveRecord::Base
       options[:methods].each{ |method| hash[method] = self.send(method) }
     end
     hash.with_indifferent_access
-  end
-
-  def self.available_locks
-    [:read, :write]
   end
 
   def self.available_locks

@@ -142,13 +142,13 @@ class Api::ApiController < ::Api::BaseController
   end
 
   def trigger(action, *args)
-    ::Actions.trigger(action, *args)
+    ::ForemanTasks.trigger(action, *args)
   end
 
   # trigger dynflow action and return the dynflow task object
   def async_task(action, *args)
-    uuid = ::Actions.trigger(action, *args).id
-    return Task.find_by_uuid!(uuid)
+    execution_plan_id = trigger(action, *args).id
+    return ::ForemanTasks::Task::DynflowTask.find_by_external_id!(execution_plan_id)
   end
 
 end
