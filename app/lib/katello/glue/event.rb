@@ -42,7 +42,7 @@ module Glue
     end
 
     def self.trigger(event_class, *args)
-      uuid, _, finished = *::Actions.trigger(event_class, *args)
+      uuid, _, finished = *::ForemanTasks.trigger(event_class, *args)
       ::Logging.logger['glue'].debug("Started plan with #{uuid}")
       finished.wait
       ::Logging.logger['glue'].debug("Finished plan with #{uuid}")
