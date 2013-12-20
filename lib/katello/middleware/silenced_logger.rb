@@ -14,7 +14,9 @@ module Katello
   module Middleware
     class SilencedLogger < Rails::Rack::Logger
 
-      PREFIXES = Katello.config.logging.ignored_paths
+      def prefixes
+        Katello.config.logging.ignored_paths
+      end
 
       def initialize(app, options = {})
         @app = app
@@ -22,7 +24,7 @@ module Katello
 
       def call(env)
         old_level = Rails.logger.level
-        if PREFIXES.any? {|path|  env["PATH_INFO"].include?(path) }
+        if prefixes.any? {|path|  env["PATH_INFO"].include?(path) }
           Rails.logger.level = Logger::WARN
         end
         @app.call(env)
