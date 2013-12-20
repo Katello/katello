@@ -31,7 +31,7 @@ describe('Factory: Environment', function() {
         };
 
         Routes = {
-            apiEnvironmentPath: function(organizationId) {}
+            apiOrganizationEnvironmentsPath: function(organizationId) {}
         };
 
         $resource = function() {

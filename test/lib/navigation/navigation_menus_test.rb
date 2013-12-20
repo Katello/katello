@@ -47,7 +47,7 @@ class NavigationMenusTest < ActiveSupport::TestCase
     menu = Navigation::Menus::Content.new(@acme_corporation)
 
     assert_equal  _('Content'), menu.display
-    assert_equal  6, menu.items.length
+    assert_equal  7, menu.items.length
     assert_equal  'dropdown', menu.type
     assert        menu.accessible?
   end
