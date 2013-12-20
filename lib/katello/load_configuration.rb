@@ -91,6 +91,7 @@ module Katello
                                          end
 
           root = config.logging.loggers.root
+          raise 'trying to set configuraiton to early, no Rails.root' unless Rails.root
           root[:path] = "#{Rails.root}/log" unless root.key?(:path) if environment
           root[:type] ||= 'file'
 
