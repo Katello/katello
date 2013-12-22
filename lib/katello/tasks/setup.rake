@@ -18,11 +18,13 @@ namespace :katello do
     end
 
     task :candlepin do
-      system(service_stop.gsub("%s", "tomcat6"))
+      tomcat = File.exists?('/var/lib/tomcat') ? 'tomcat' : 'tomcat6'
+
+      system(service_stop.gsub("%s", tomcat))
       system("sudo /usr/share/candlepin/cpdb --drop --create")
       system("sudo /usr/share/candlepin/cpsetup -s -k `sudo cat /etc/katello/keystore_password-file`")
-      system("sudo cp /etc/tomcat6/server.xml.original /etc/tomcat6/server.xml")
-      system(service_start.gsub("%s", "tomcat6"))
+      system("sudo cp /etc/#{tomcat}/server.xml.original /etc/#{tomcat}/server.xml")
+      system(service_start.gsub("%s", tomcat))
       puts "Candlepin database reset."
     end
 
