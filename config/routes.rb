@@ -200,6 +200,7 @@ Katello::Engine.routes.draw do
       get :system_groups
       get :subscriptions
       get :subscriptions_totals
+      get :utilization
       put :update
     end
   end

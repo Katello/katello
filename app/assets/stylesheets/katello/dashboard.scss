@@ -162,6 +162,95 @@ $col_width: (($static_width) * 0.5);
       }
     }
 
+    #dashboard_utilization {
+      overflow: auto;
+      table {
+        margin: 10px 0 40px;
+        width: 800px;
+        font-size: 95%;
+        border: 0;
+        border-collapse: separate;
+        border-spacing: 0;
+        thead:first-child tr:first-child > th:first-child,
+        tbody:first-child tr:first-child > td:first-child {
+          @include border-top-left-radius(3px);
+        }
+        thead:first-child tr:first-child > th:last-child,
+        tbody:first-child tr:first-child > td:last-child {
+          @include border-top-right-radius(3px);
+        }
+        thead:last-child tr:last-child > th:first-child,
+        tbody:last-child tr:last-child > td:first-child {
+          @include border-bottom-left-radius(3px);
+        }
+        thead:last-child tr:last-child > th:last-child,
+        tbody:last-child tr:last-child > td:last-child {
+          @include border-bottom-right-radius(3px);
+        }
+        tbody tr:last-child td {
+          border-bottom: 1px solid #ddd;
+        }
+        tbody tr td:last-child,
+        thead tr th:last-child {
+          border-right: 1px solid #ddd;
+        }
+        td.center, th.center {
+          text-align: center;
+        }
+        td.used-available {
+          border: 1px solid #d8d8d8;
+        }
+        td, th {
+          padding: 4px 6px;
+          span.available, span.used {
+            display: block;
+            float: left;
+            width: 48%;
+            z-index: 3;
+            text-shadow: 0 1px 0 rgba(255,255,255,.9);
+          }
+          span.used {
+            margin-left: 2%;
+          }
+          span.available {
+            text-align: right;
+            margin-right: 2%;
+          }
+          span.bar {
+            display: block;
+            border: 1px solid #ddd;
+            @include border-radius(2px);
+            height: 14px;
+            width: auto;
+            z-index: 1;
+          }
+          span.indicator {
+            display: block;
+            height: 100%;
+            background: #dfdfdf;
+            z-index: 2;
+          }
+        }
+        thead {
+          th.product-name { width: 33%; }
+          th.used-available { width: 20%; }
+          th.total { width: 10%; }
+          th {
+            border-right: 0;
+            border-bottom: 0;
+            font-family: $headlinefont;
+            font-weight: bold;
+            text-transform: inherit;
+          }
+        }
+        td, th {
+          background-color: #fff;
+          border-left: 1px solid #ddd;
+          border-top: 1px solid #ddd;
+        }
+      }
+    }
+
     #dashboard_errata {
       .scroll-pane {
         height: $height - 26;

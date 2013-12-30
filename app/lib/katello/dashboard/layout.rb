@@ -17,6 +17,7 @@ module Dashboard
     AVAILABLE_WIDGETS = %w(
       subscriptions
       subscriptions_totals
+      utilization
       notices
       content_views
       sync

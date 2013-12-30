@@ -83,6 +83,14 @@ class DashboardController < Katello::ApplicationController
     }
   end
 
+  def utilization
+    products = Katello::Product.in_org(current_organization).select { |product| product.total_subscriptions.present? }
+    render :partial => "utilization", :locals => {
+      :quantity => products.count,
+      :products => products
+    }
+  end
+
   def notices
     render :partial => "notices", :locals => {:quantity => quantity}
   end

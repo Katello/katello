@@ -1,0 +1,35 @@
+#dashboard_utilization.widget.scroll-pane{"data-quantity"=>quantity}
+  - if products.any?
+    %table.table.table-bordered
+      %thead
+        %tr
+          %th.product-name #{_("Product")}
+          %th.used-available
+            %span.used #{_("Attached")}
+            %span.available #{_("Available")}
+          %th.total.center #{_("Total")}
+          %th #{_("Virtual System Limit")}
+          %th #{_("Virtual Systems Used")}
+      %tbody
+        - products.each do |product|
+          %tr
+            %td
+              = link_to product.name, "/katello/products#/products/#{product.cp_id}/info"
+            %td.left-no-border.used_available
+              %span.used
+                #{product.consumed_subscriptions}
+              %span.available
+                #{unlimited(product.available_subscriptions)}
+              %span.bar
+                %span.indicator{:style => "width: #{(product.consumed_subscriptions/product.available_subscriptions.to_f)*100.0}%"}
+            %td.center
+              #{product.total_subscriptions}
+            %td
+              #{unlimited(product.virtual_system_limit)} #{_("per subscription")}
+            %td
+              - if product.virtual_system_limit != 0
+                #{product.virtual_systems_used} #{_("of")} #{unlimited(product.virtual_systems_available)}
+              - else
+                &nbsp;
+  - else
+    #{_("No products were found having subscriptions.")}
