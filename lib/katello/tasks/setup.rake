@@ -58,6 +58,8 @@ namespace :katello do
 
     # Otherwise migration fails since it currently requires a reloaded environment
     system('rake db:migrate')
+    # Load configuration needed by db:seed first
+    require './config/initializers/foreman.rb'
     Rake::Task['db:seed'].invoke
   end
 end
