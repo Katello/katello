@@ -42,10 +42,10 @@ module Glue
     end
 
     def self.trigger(event_class, *args)
-      uuid, _, finished = *::Actions.trigger(event_class, *args)
-      ::Logging.logger['glue'].debug("Started plan with #{uuid}")
-      finished.wait
-      ::Logging.logger['glue'].debug("Finished plan with #{uuid}")
+      run = ::ForemanTasks.trigger(event_class, *args)
+      ::Logging.logger['glue'].debug("Started plan with #{run.id}")
+      run.finished.wait
+      ::Logging.logger['glue'].debug("Finished plan with #{run.id}")
       # execution_plan.failed_steps.each do |step|
       #   Notify.warning(_("Failed to perform additional action %{action}: %{message}") %
       #                  { :action => step.action_class.name,
