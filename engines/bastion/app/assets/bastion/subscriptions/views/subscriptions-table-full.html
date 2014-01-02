@@ -1,0 +1,31 @@
+<table class="table table-striped" ng-class="{'table-mask': table.working}">
+  <thead>
+    <tr alch-table-head>
+      <th alch-table-column="name" sortable>{{ "Name" | translate }}</th>
+      <th alch-table-column="consumed" sortable class="align-center">{{ "Consumed" | translate }}</th>
+      <th alch-table-column="type" sortable>{{ "Type" | translate }}</th>
+      <th alch-table-column="startDate" sortable>{{ "Starts" | translate }}</th>
+      <th alch-table-column="endDate" sortable>{{ "Expires" | translate }}</th>
+      <th alch-table-column="supportLevel">{{ "SLA" | translate }}</th>
+      <th alch-table-column="contractNumber" sortable>{{ "Contract #" | translate }}</th>
+      <th alch-table-column="accountNumber" sortable>{{ "Account #" | translate }}</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr alch-table-row ng-repeat="subscription in table.rows">
+      <td alch-table-cell>
+        <a ui-sref="subscriptions.details.info({subscriptionId: subscription.cp_id})">
+          {{ subscription.product_name }}
+        </a>
+      </td>
+      <td alch-table-cell>{{ formatConsumed(subscription) }}</td>
+      <td alch-table-cell>{{ subscriptionType(subscription) }}</td>
+      <td alch-table-cell>{{ subscription.startDate | date:"short" }}</td>
+      <td alch-table-cell>{{ subscription.endDate | date:"short" }}</td>
+      <td alch-table-cell>{{ subscription.sla }}</td>
+      <td alch-table-cell>{{ subscription.contractNumber }}</td>
+      <td alch-table-cell>{{ subscription.accountNumber }}</td>
+    </tr>
+  </tbody>
+</table>

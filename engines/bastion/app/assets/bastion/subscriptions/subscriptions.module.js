@@ -18,4 +18,102 @@
  * @description
  *   Module for subscriptions
  */
-angular.module('Bastion.subscriptions', ['Katello.globals', 'ngResource']);
+angular.module('Bastion.subscriptions', [
+    'Katello.globals',
+    'ngResource',
+    'alchemy',
+    'alch-templates',
+    'ui.router',
+    'Bastion.widgets'
+]);
+
+/**
+ * @ngdoc object
+ * @name Bastion.subscriptions.config
+ *
+ * @requires $stateProvider
+ *
+ * @description
+ *   Used for subscriptions level configuration such as setting up the ui state machine.
+ */
+angular.module('Bastion.subscriptions').config(['$stateProvider', function ($stateProvider) {
+    $stateProvider.state('subscriptions', {
+        abstract: true,
+        controller: 'SubscriptionsController',
+        templateUrl: 'subscriptions/views/subscriptions.html'
+    });
+
+    $stateProvider.state('subscriptions.index', {
+        url: '/subscriptions',
+        views: {
+            'table': {
+                templateUrl: 'subscriptions/views/subscriptions-table-full.html'
+            }
+        }
+    })
+
+    .state('subscriptions.details', {
+        abstract: true,
+        url: '/subscriptions/:subscriptionId',
+        collapsed: true,
+        views: {
+            'table': {
+                templateUrl: 'subscriptions/views/subscriptions-table-collapsed.html'
+            },
+            'action-panel': {
+                controller: 'SubscriptionDetailsController',
+                templateUrl: 'subscriptions/details/views/subscription-details.html'
+            }
+        }
+    })
+    .state('subscriptions.details.info', {
+        url: '/info',
+        collapsed: true,
+        templateUrl: 'subscriptions/details/views/subscription-info.html'
+    })
+    .state('subscriptions.details.products', {
+        url: '/products',
+        collapsed: true,
+        controller: 'SubscriptionProductsController',
+        templateUrl: 'subscriptions/details/views/subscription-products.html'
+    })
+    .state('subscriptions.details.associations', {
+        url: '/associations',
+        collapsed: true,
+        templateUrl: 'subscriptions/details/views/subscription-associations.html'
+    })
+
+    // manifest states
+    .state('subscriptions.manifest', {
+        abstract: true,
+        collapsed: true,
+        views: {
+            'table': {
+                templateUrl: 'subscriptions/views/subscriptions-table-collapsed.html'
+            },
+            'action-panel': {
+                controller: 'ManifestController',
+                templateUrl: 'subscriptions/manifest/views/manifest.html'
+            }
+        }
+    })
+    .state('subscriptions.manifest.import', {
+        url: '/subscriptions/manifest/import/:providerId',
+        collapsed: true,
+        controller: 'ManifestImportController',
+        templateUrl: 'subscriptions/manifest/views/manifest-import.html'
+    })
+    .state('subscriptions.manifest.details', {
+        url: '/subscriptions/manifest/details/:providerId',
+        collapsed: true,
+        controller: 'ManifestDetailsController',
+        templateUrl: 'subscriptions/manifest/views/manifest-details.html'
+    })
+    .state('subscriptions.manifest.history', {
+        url: '/subscriptions/manifest/history/:providerId',
+        collapsed: true,
+        controller: 'ManifestHistoryController',
+        templateUrl: 'subscriptions/manifest/views/manifest-import-history.html'
+    });
+
+}]);

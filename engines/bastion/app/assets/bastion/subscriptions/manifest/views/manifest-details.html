@@ -1,0 +1,46 @@
+<div class="details pull-left">
+  <section>
+    <h4 translate>Subscription Details</h4>
+
+    <div class="detail">
+      <span class="info-label" translate>Upstream Subscription</span>
+      <span class="info-value">{{ upstream.name }}</span>
+    </div>
+
+    <div class="detail">
+      <span class="info-label" translate>Upstream Type</span>
+      <span class="info-value">{{ upstream.type.label }}</span>
+    </div>
+
+    <div class="detail">
+      <span class="info-label" translate>Upstream User</span>
+      <span class="info-value">{{ manifestImport.generatedBy }}</span>
+    </div>
+
+    <div class="detail">
+      <span class="info-label" translate>Generated On</span>
+      <span class="info-value">{{ manifestImport.generatedDate | date:"short" }}</span>
+    </div>
+
+    <div class="detail">
+      <span class="info-label" translate>Last Updated</span>
+      <span class="info-value">{{ upstream.updated | date:"short" }}</span>
+    </div>
+
+  </section>
+
+  <section>
+    <h4 translate>Subscription Server Details</h4>
+
+    <div class="detail">
+      <span class="info-label" translate>Rules Source</span>
+      <span class="info-value">{{ provider.rules_source }}</span>
+    </div>
+
+    <div class="detail">
+      <span class="info-label" translate>Rules Version</span>
+      <span class="info-value">{{ provider.rules_version }}</span>
+    </div>
+
+  </section>
+</div>

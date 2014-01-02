@@ -1,0 +1,92 @@
+<div class="details pull-left">
+  <section>
+    <h4 translate>Subscription Info</h4>
+
+    <div class="detail">
+      <span class="info-label" translate>Name</span>
+      <span class="info-value">{{ subscription.product_name }}</span>
+    </div>
+
+    <div class="detail">
+      <span class="info-label" translate>Description</span>
+      <span class="info-value">{{ subscription.description }}</span>
+    </div>
+
+    <div class="detail">
+      <span class="info-label" translate>Consumed</span>
+      <span class="info-value">{{ formatConsumed(subscription) }}</span>
+    </div>
+
+    <div class="detail">
+      <span class="info-label" translate>Starts</span>
+      <span class="info-value">{{ subscription.start_date | date:"short" }}</span>
+    </div>
+
+    <div class="detail">
+      <span class="info-label" translate>Ends</span>
+      <span class="info-value">{{ subscription.end_date | date:"short" }}</span>
+    </div>
+
+    <div class="detail">
+      <span class="info-label" translate>Contract Number</span>
+      <span class="info-value">{{ subscription.contract_number }}</span>
+    </div>
+
+    <div class="detail">
+      <span class="info-label" translate>Account Number</span>
+      <span class="info-value">{{ subscription.account_number }}</span>
+    </div>
+
+    <div class="detail">
+      <span class="info-label" translate>Support Level</span>
+      <span class="info-value">{{ subscription.support_level }}</span>
+    </div>
+
+    <div class="detail">
+      <span class="info-label" translate>Support Type</span>
+      <span class="info-value">{{ subscription.support_type }}</span>
+    </div>
+
+    <div class="detail">
+      <span class="info-label" translate>Arch.</span>
+      <span class="info-value">{{ subscription.arch }}</span>
+    </div>
+
+    <div class="detail">
+      <span class="info-label" translate>Limits</span>
+      <span class="info-value">{{ subscriptionLimits(subscription) }}</span>
+    </div>
+
+    <div class="detail">
+      <span class="info-label" translate>Multi-entitlement</span>
+      <span class="info-value">{{ subscription.multi_entitlement | booleanToYesNo }}</span>
+    </div>
+
+    <div class="detail">
+      <span class="info-label" translate>Instance-based</span>
+      <span class="info-value">{{ subscription.instance_multiplier | booleanToYesNo }}</span>
+    </div>
+
+    <div class="detail" ng-hide="subscription.stacking_id == ''">
+      <span class="info-label" translate>Stacking ID</span>
+      <span class="info-value">{{ subscription.stacking_id }}</span>
+    </div>
+
+    <div class="detail" ng-hide="subscription.source_pool_id == undefined || subscription.source_pool_id == ''">
+      <span class="info-label" translate>Virt Guest From</span>
+      <span class="info-value">{{ subscription.product_name }}</span>
+    </div>
+
+    <div class="detail" ng-hide="subscription.host_id == undefined || subscription.host_id == ''">
+      <span class="info-label" translate>Required Host</span>
+      <span class="info-value">{{ subscription.host.name }}</span>
+    </div>
+  </section>
+
+  <section ng-show="subscription.provided_products.length > 0" class="subscription-products">
+    <h4 translate>Provided Products</h4>
+    <div class="detail" ng-repeat="product in subscription.provided_products">
+      <div class="product">{{ product.name }}</div>
+    </div>
+  </section>
+</div>

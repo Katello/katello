@@ -4,6 +4,10 @@ attributes :id
 attributes :name
 attributes :label
 attributes :description
+attributes :repository_url
+attributes :owner_imports
+attributes :rules_version
+attributes :rules_source
 
 extends 'katello/api/v2/common/org_reference'
 

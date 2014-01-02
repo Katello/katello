@@ -1,0 +1,35 @@
+<div class="details pull-left">
+  <section>
+
+    <div ng-show="products.length < 1" translate>
+      No provided products.
+    </div>
+
+    <div ng-repeat="product in products">
+      <h4>{{ product.name }}</h4>
+
+      <div class="product-content" ng-repeat="content in product.productContent">
+
+        <div class="detail">
+          <span class="info-label" translate>Content Download URL</span>
+          <span class="info-value">{{ content.content.contentUrl }}</span>
+        </div>
+
+        <div class="detail">
+          <span class="info-label" translate>GPG Key URL</span>
+          <span class="info-value">{{ content.content.gpgUrl }}</span>
+        </div>
+
+        <div class="detail">
+          <span class="info-label" translate>Repo Type</span>
+          <span class="info-value">{{ content.content.type }}</span>
+        </div>
+
+        <div class="detail">
+          <span class="info-label" translate>Enabled by Default</span>
+          <span class="info-value">{{ content.enabled }}</span>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

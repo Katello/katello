@@ -9,23 +9,23 @@
  * NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
  * have received a copy of GPLv2 along with this software; if not, see
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
- **/
+*/
 
 /**
- * @ngdoc service
- * @name  Bastion.subscriptions.factory:Subscription
+ * @ngdoc object
+ * @name  Bastion.subscriptions.controller:ManifestHistoryController
  *
- * @requires $resource
- * @requires Routes
- * @requires CurrentOrganization
+ * @requires $scope
  *
  * @description
- *   Provides a $resource for a subscription or list of subscriptions
+ *   Controls the import of a manifest.
  */
-angular.module('Bastion.subscriptions').factory('Subscription', ['$resource', 'CurrentOrganization',
-    function ($resource, CurrentOrganization) {
-        return $resource('/katello/api/organizations/:org/subscriptions/:id/:action', {'org': CurrentOrganization}, {
-            query: {method: "GET"}
+angular.module('Bastion.subscriptions').controller('ManifestHistoryController',
+    ['$scope', function ($scope) {
+
+        $scope.provider.$promise.then(function () {
+            $scope.manifestStatuses = $scope.manifestHistory($scope.provider);
+            $scope.panel.loading = false;
         });
     }]
 );

@@ -9,6 +9,7 @@ attributes :marketing_product
 attributes :provider_id
 attributes :sync_plan_id
 attributes :gpg_key_id
+attributes :productContent
 
 node :repository_count do |product|
   product.repositories.enabled.count

@@ -15,6 +15,9 @@ class Api::V2::SubscriptionsController < Api::V2::ApiController
   include ConsumersControllerLogic
 
   before_filter :find_system
+  before_filter :find_organization, :only => [:index, :show, :upload]
+  before_filter :find_subscription, :only => [:show]
+  before_filter :find_provider
   before_filter :authorize
 
   resource_description do
@@ -25,29 +28,65 @@ class Api::V2::SubscriptionsController < Api::V2::ApiController
   end
 
   def rules
-    index_test = lambda { @system.readable? }
+    read_test = lambda { @system ? @system.readable? : @provider.readable? }
     available_test = lambda { Organization.any_readable? }
     system_modification_test = lambda { @system.editable? }
+    edit_test = lambda { @provider.editable? }
 
     {
-      :index => index_test,
+      :index => read_test,
+      :show => read_test,
       :create => system_modification_test,
       :destroy => system_modification_test,
       :destroy_all => system_modification_test,
-      :available => available_test
+      :available => available_test,
+      :upload => edit_test
     }
   end
 
-  api :GET, "/systems/:system_id/subscriptions", "List subscriptions"
-  param :system_id, String, :desc => "UUID of the system", :required => true
+  api :GET, "/systems/:system_id/subscriptions", "List system subscriptions"
+  api :GET, "/organization/:organization_id/subscriptions", "List organization subscriptions"
+  param :system_id, String, :desc => "UUID of the system", :required => false
+  param :organization_id, :identifier, :desc => "Organization id", :required => false
+  # rubocop:disable SymbolName
   def index
-    subscriptions = {
-        :subscriptions => @system.consumed_entitlements,
-        :subtotal => @system.consumed_entitlements.count,
-        :total => @system.consumed_entitlements.count
-    }
+    if @system
+      subs = @system.consumed_entitlements
+      subscriptions = {
+          :subscriptions => subs,
+          :subtotal => subs.count,
+          :total => subs.count
+      }
+    else
+      filters = []
+
+      # Limit subscriptions to current org and Red Hat provider
+      filters << {:term => {:org => [@organization.label]}}
+      filters << {:term => {:provider_id => [@organization.redhat_provider.id]}}
+
+      options = {
+          :filters => filters,
+          :load_records? => false,
+          :default_field => :productName
+      }
+
+      # Without any search terms, reindex all subscriptions in elasticsearch. This is to ensure
+      # that the latest information is searchable.
+      if params[:offset].to_i == 0 && params[:search].blank?
+        @organization.redhat_provider.index_subscriptions
+      end
+
+      subscriptions = item_search(Pool, params, options)
+    end
 
     respond(:collection => subscriptions)
+  end
+
+  api :GET, "/organizations/:organization_id/subscriptions/:id", "Show a subscription"
+  param :organization_id, :number, :desc => "Organization identifier", :required => true
+  param :id, :number, :desc => "Subscription identifier", :required => true
+  def show
+    respond :resource => @subscription
   end
 
   api :GET, "/systems/:system_id/subscriptions/available", "List available subscriptions"
@@ -65,7 +104,7 @@ class Api::V2::SubscriptionsController < Api::V2::ApiController
     available = available_subscriptions(pools, @system.organization)
 
     collection = {
-        :subscriptions => available,
+        :results => available,
         :subtotal => available.count,
         :total => available.count
     }
@@ -103,12 +142,40 @@ class Api::V2::SubscriptionsController < Api::V2::ApiController
     respond_for_show :resource => @system
   end
 
+  api :POST, "/organizations/:organization_id/subscriptions/upload", "Upload a subscription manifest"
+  param :organization_id, :identifier, :desc => "Organization id", :required => true
+  def upload
+    begin
+      # candlepin requires that the file has a zip file extension
+      temp_file = File.new(File.join("#{Rails.root}/tmp", "import_#{SecureRandom.hex(10)}.zip"), 'wb+', 0600)
+      temp_file.write params[:content].read
+    ensure
+      temp_file.close
+    end
+
+    @provider.import_manifest(File.expand_path(temp_file.path), :force => false,
+                              :async => false, :notify => false)
+
+    collection = {
+      :results => @organization.pools,
+      :subtotal => @organization.pools.count,
+      :total => @organization.pools.count
+    }
+    respond_for_index(:collection => collection, :template => :index)
+  end
+
   protected
 
   def find_system
-    @system = System.first(:conditions => { :uuid => params[:system_id] })
-    fail HttpErrors::NotFound, _("Couldn't find system '%s'") % params[:system_id] if @system.nil?
-    @system
+    @system = System.find_by_uuid!(params[:system_id]) if params[:system_id]
+  end
+
+  def find_provider
+    @provider = @organization.redhat_provider if @organization
+  end
+
+  def find_subscription
+    @subscription = Pool.find_by_organization_and_id!(@organization, params[:id])
   end
 end
 end

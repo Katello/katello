@@ -18,7 +18,6 @@
  * @requires $scope
  * @requires gettext
  * @requires System
- * @requires Subscriptions
  * @requires Nutupane
  *
  * @description

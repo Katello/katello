@@ -34,6 +34,7 @@ describe SubscriptionsController do
         # No upstreamUuid in owner details means no manifest is loaded, and no async tasks
         Resources::Candlepin::Owner.stubs(:find).returns({})
         Provider.stubs(:task_status).returns(nil)
+        User.any_instance.stubs(:legacy_mode).returns(true)
       end
 
       it "should open new panel for user with update permissions" do

@@ -48,12 +48,19 @@ class Api::V2::ProductsController < Api::V2::ApiController
   end
 
   api :GET, "/products", "List of products"
+  api :GET, "/subscriptions/:subscription_id/products", "List of subscription products"
   param_group :search, Api::V2::ApiController
+  param :subscription_id, :number, :desc => "Subscription identifier"
   def index
     options = sort_params
     options[:load_records?] = true
 
     ids = Product.all_readable(@organization).pluck(:id)
+
+    if (subscription_id = params[:subscription_id])
+      @subscription = Pool.find_by_organization_and_id!(@organization, subscription_id)
+      ids &= @subscription.products.pluck("#{Product.table_name}.id")
+    end
 
     options[:filters] = [
       {:terms => {:id => ids}}

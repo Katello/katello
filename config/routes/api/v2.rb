@@ -70,6 +70,11 @@ Katello::Engine.routes.draw do
 
         api_resources :content_views, :only => [:index, :create]
         api_resources :content_view_definitions, :only => [:index, :create]
+        api_resources :subscriptions, :only => [:index, :upload, :show] do
+          collection do
+            post :upload
+          end
+        end
       end
 
       api_resources :system_groups do
@@ -141,12 +146,6 @@ Katello::Engine.routes.draw do
         end
       end
       match "/distributor_versions" => "distributors#versions", :via => :get, :as => :distributor_versions
-
-      api_resources :subscriptions, :only => [] do
-        collection do
-          get :index, :action => :organization_index
-        end
-      end
 
       api_resources :providers do
         api_resources :sync, :only => [:index, :create] do
@@ -293,6 +292,10 @@ Katello::Engine.routes.draw do
         end
       end
 
+      api_resources :subscriptions, :only => [] do
+        api_resources :products, :only => [:index]
+      end
+
       api_resources :users do
         get :report, :on => :collection
         get :sync_ldap_roles, :on => :collection
@@ -364,7 +367,7 @@ Katello::Engine.routes.draw do
         match 'status/memory' => 'status#memory', :via => :get
       end
 
-    end # module v1
+    end # module v2
 
   end # '/api' namespace
 end
