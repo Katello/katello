@@ -56,6 +56,14 @@
 
       <li>
         <a translate
+           ui-sref="systems.bulk-actions.environment"
+           ng-class="{active: isState('systems.bulk-actions.environment')}">
+          System Content
+        </a>
+      </li>
+
+      <li>
+        <a translate
            ui-sref="systems.bulk-actions.subscriptions"
            ng-class="{active: isState('systems.bulk-actions.subscriptions')}">
           Subscriptions
@@ -75,9 +83,7 @@
 
     <div class="alert alert-info" ng-show="state.working">
       <i class="icon-spinner inline-icon icon-spin"></i>
-      <p translate>
-        Processing
-      </p>
+      {{ 'Processing' | translate }}
     </div>
 
     <span ng-disabled="table.numSelected == 0">

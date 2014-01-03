@@ -64,7 +64,8 @@ angular.module('Bastion.systems').factory('BulkAction',
             installContent: {method: 'PUT', params: {action: 'install_content'}},
             updateContent: {method: 'PUT', params: {action: 'update_content'}},
             removeContent: {method: 'PUT', params: {action: 'remove_content'}},
-            removeSystems: {method: 'PUT', params: {action: 'destroy'}}
+            removeSystems: {method: 'PUT', params: {action: 'destroy'}},
+            environmentContentView: {method: 'PUT', params: {action: 'environment_content_view'}}
         });
     }]
 );

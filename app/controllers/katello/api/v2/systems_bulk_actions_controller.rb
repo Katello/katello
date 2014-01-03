@@ -19,6 +19,9 @@ class Api::V2::SystemsBulkActionsController < Api::V2::ApiController
   before_filter :find_deletable_systems, :only => [:destroy_systems]
   before_filter :find_readable_systems, :only => [:applicable_errata]
 
+  before_filter :find_environment, :only => [:environment_content_view]
+  before_filter :find_content_view, :only => [:environment_content_view]
+
   before_filter :find_groups, :only => [:bulk_add_system_groups, :bulk_remove_system_groups]
   before_filter :validate_content_action, :only => [:install_content, :update_content, :remove_content]
   before_filter :authorize
@@ -51,6 +54,7 @@ class Api::V2::SystemsBulkActionsController < Api::V2::ApiController
 
   def rules
     bulk_groups = lambda{ SystemGroup.assert_editable(@system_groups) }
+    registerable = lambda{ @environment.systems_registerable? && @view.subscribable?}
 
     hash = {}
     hash[:bulk_add_system_groups] = bulk_groups
@@ -61,6 +65,7 @@ class Api::V2::SystemsBulkActionsController < Api::V2::ApiController
     hash[:update_content] = lambda{true}
     hash[:remove_content] = lambda{true}
     hash[:destroy_systems] = lambda{true}
+    hash[:environment_content_view] = registerable
     hash
   end
 
@@ -132,7 +137,7 @@ class Api::V2::SystemsBulkActionsController < Api::V2::ApiController
   end
 
   api :PUT, "/systems/bulk/update_content", "Update content on one or more systems"
-  param :ids, Array, :desc => "List of system ids", :required => true
+  param_group :bulk_params
   param :content_type, String,
         :desc => "The type of content.  The following types are supported: 'package' and 'package_group.",
         :required => true
@@ -142,7 +147,7 @@ class Api::V2::SystemsBulkActionsController < Api::V2::ApiController
   end
 
   api :PUT, "/systems/bulk/remove_content", "Remove content on one or more systems"
-  param :ids, Array, :desc => "List of system ids", :required => true
+  param_group :bulk_params
   param :content_type, String,
         :desc => "The type of content.  The following types are supported: 'package' and 'package_group.",
         :required => true
@@ -152,11 +157,26 @@ class Api::V2::SystemsBulkActionsController < Api::V2::ApiController
   end
 
   api :PUT, "/systems/bulk/destroy", "Destroy one or more systems"
-  param :ids, Array, :desc => "List of system ids", :required => true
+  param_group :bulk_params
   def destroy_systems
     @systems.each{ |system| system.destroy }
     display_message = _("Successfully removed %s systems") % @systems.length
     respond_for_show :template => 'bulk_action', :resource => { 'displayMessages' => [display_message] }
+  end
+
+  api :PUT, "/systems/bulk/environment_content_view", "Assign the environment and content view to one or more systems"
+  param_group :bulk_params
+  param :environment_id, Integer
+  param :content_view_id, Integer
+  def environment_content_view
+    @systems.each do |system|
+      system.content_view = @view
+      system.environment = @environment
+      system.save!
+    end
+    display_message = _("Successfully reassigned %{count} systems to %{cv} in %{env}.") %
+        {:count => @systems.length, :cv => @view.name, :env => @environment.name}
+    respond_for_show :template => 'bulk_action', :resource => { 'displayMessages' => [display_message]}
   end
 
   private
@@ -241,6 +261,14 @@ class Api::V2::SystemsBulkActionsController < Api::V2::ApiController
     if PARAM_ACTIONS[params[:action]][params[:content_type]].nil?
       fail HttpErrors::BadRequest, _("Invalid content type %s") % params[:content_type]
     end
+  end
+
+  def find_environment
+    @environment = KTEnvironment.find(params[:environment_id])
+  end
+
+  def find_content_view
+    @view = ContentView.find(params[:content_view_id])
   end
 
 end
