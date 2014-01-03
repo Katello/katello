@@ -85,8 +85,7 @@ class Api::V2::SystemPackagesController < Api::V2::ApiController
   private
 
   def find_system
-    @system = System.first(:conditions => { :uuid => params[:system_id] })
-    fail HttpErrors::NotFound, _("Couldn't find system '%s'") % params[:system_id] if @system.nil?
+    @system = System.find_by_uuid!(params[:system_id])
     @system
   end
 
