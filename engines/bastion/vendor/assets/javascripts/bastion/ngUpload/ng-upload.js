@@ -6,11 +6,11 @@
 //
 // <div ng-app="app">
 //   <div ng-controller="mainCtrl">
-//    <form action="/uploads" 
-//      ng-upload="completed(content)"> 
+//    <form action="/uploads"
+//      ng-upload="completed(content)">
 //      ng-upload-loading="loading()"
 //      <input type="file" name="avatar"></input>
-//      <input type="submit" value="Upload" 
+//      <input type="submit" value="Upload"
 //         ng-disabled="$isUploading"></input>
 //    </form>
 //  </div>
@@ -101,7 +101,7 @@ angular.module('ngUpload', [])
         // }
         var fn = attrs.ngUpload ? $parse(attrs.ngUpload) : null;
         var loading = attrs.ngUploadLoading ? $parse(attrs.ngUploadLoading) : null;
-        
+
         if ( attrs.hasOwnProperty( "uploadOptionsConvertHidden" ) ) {
             // Allow blank or true
             options.convertHidden = attrs.uploadOptionsConvertHidden != "false";
@@ -143,19 +143,18 @@ angular.module('ngUpload', [])
         element.after(iframe);
 
         setLoadingState(false);
-
         // Start upload
         element.bind('submit', function uploadStart() {
           // perform check before submit file
           if (options.beforeSubmit) { return options.beforeSubmit(); }
           // If convertHidden option is enabled, set the value of hidden fields to the eval of the ng-model
           if (options.convertHidden) {
-            angular.forEach(element.find('input'), function(element) {
-              element = angular.element(element);
-              if (element.attr('ng-model') &&
-                element.attr('type') &&
-                element.attr('type') == 'hidden') {
-                element.attr('value', scope.$eval(element.attr('ng-model')));
+            angular.forEach(element.find('input'), function(el) {
+              var _el = angular.element(el);
+              if (_el.attr('ng-model') &&
+                _el.attr('type') &&
+                _el.attr('type') == 'hidden') {
+                _el.attr('value', scope.$eval(_el.attr('ng-model')));
               }
             });
           }
@@ -185,7 +184,7 @@ angular.module('ngUpload', [])
             iframe[0].contentWindow.document).body;
           var content;
           try {
-            content = angular.fromJson(bodyContent.innerText);
+            content = angular.fromJson(bodyContent.innerText || bodyContent.textContent);
           } catch (e) {
             // Fall back to html if json parse failed
             content = bodyContent.innerHTML;
