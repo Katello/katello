@@ -24,10 +24,11 @@ module Katello
     end
 
     initializer "katello.register_actions" do |app|
-      ForemanTasks.dynflow_initialize
-      ForemanTasks.eager_load_paths.concat(%W[#{Katello::Engine.root}/app/lib/actions
-                                              #{Katello::Engine.root}/app/lib/headpin/actions
-                                              #{Katello::Engine.root}/app/lib/katello/actions])
+      ForemanTasks.dynflow.require!
+      action_paths = %W[#{Katello::Engine.root}/app/lib/actions
+                        #{Katello::Engine.root}/app/lib/headpin/actions
+                        #{Katello::Engine.root}/app/lib/katello/actions]
+      ForemanTasks.dynflow.config.eager_load_paths.concat(action_paths)
     end
 
     initializer "katello.load_app_instance_data" do |app|
