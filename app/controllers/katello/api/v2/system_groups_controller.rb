@@ -187,8 +187,7 @@ class Api::V2::SystemGroupsController <  Api::V2::ApiController
   private
 
   def find_system_group
-    @system_group = SystemGroup.where(:id => params[:id]).first
-    fail HttpErrors::NotFound, _("Couldn't find system group '%s'") % params[:id] if @system_group.nil?
+    @system_group = SystemGroup.find(params[:id])
   end
 
   def system_uuids_to_ids(ids)

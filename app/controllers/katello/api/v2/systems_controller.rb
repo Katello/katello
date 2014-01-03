@@ -270,7 +270,6 @@ class Api::V2::SystemsController < Api::V2::ApiController
     return unless params.key?(:environment_id)
 
     @environment = KTEnvironment.find(params[:environment_id])
-    fail HttpErrors::NotFound, _("Couldn't find environment '%s'") % params[:environment_id] if @environment.nil?
     @organization = @environment.organization
     @environment
   end
@@ -278,8 +277,7 @@ class Api::V2::SystemsController < Api::V2::ApiController
   def find_system_group
     return unless params.key?(:system_group_id)
 
-    @system_group = SystemGroup.find(params[:system_group_id])
-    fail HttpErrors::NotFound, _("Couldn't find system group '%s'") % params[:system_group_id] if @system_group.nil?
+    @system_group = SystemGroup.find_by_id(params[:system_group_id])
   end
 
   def find_only_environment

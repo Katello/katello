@@ -57,25 +57,19 @@ class Api::V2::ErrataController < Api::V2::ApiController
   def find_environment
     if params.key?(:environment_id)
       @environment = KTEnvironment.find(params[:environment_id])
-      fail HttpErrors::NotFound, _("Couldn't find environment '%s'") % params[:environment_id] if @environment.nil?
-      @environment
     end
   end
 
   def find_repository
     if params.key?(:repository_id)
       @repo = Repository.find(params[:repository_id])
-      fail HttpErrors::NotFound, _("Couldn't find repository '%s'") % params[:repository_id] if @repo.nil?
       @environment ||= @repo.environment
-      @repo
     end
   end
 
   def find_erratum
     @erratum = Errata.find(params[:id])
-    fail HttpErrors::NotFound, _("Erratum with id '%s' not found") % params[:id] if @erratum.nil?
     fail HttpErrors::NotFound, _("Erratum '%s' not found within the repository") % params[:id] unless @erratum.repoids.include? @repo.pulp_id
-    @erratum
   end
 
   def require_repo_or_environment
