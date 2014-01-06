@@ -60,7 +60,7 @@ angular.module('Bastion.widgets').factory('Nutupane',
             resource.total = "0";
             resource.results = [];
 
-            self.load = function(replace) {
+            self.load = function (replace) {
                 var deferred = $q.defer(),
                     table = self.table;
 
@@ -103,8 +103,7 @@ angular.module('Bastion.widgets').factory('Nutupane',
                 });
 
                 return deferred.promise;
-
-            }
+            };
 
             self.getParams = function () {
                 return params;

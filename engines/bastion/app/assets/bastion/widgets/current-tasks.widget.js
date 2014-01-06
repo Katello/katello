@@ -13,25 +13,25 @@
 
 angular.module('Bastion.widgets').directive('currentTasks',
     ['$document', 'CurrentUser', 'Task',
-    function($document, CurrentUser, Task) {
+    function ($document, CurrentUser, Task) {
 
         return {
             restrict: 'A',
             scope: true,
             templateUrl: 'widgets/views/current-tasks.html',
 
-            controller: ['$scope', function($scope) {
+            controller: ['$scope', function ($scope) {
                 $scope.visible = false;
                 $scope.currentUser = CurrentUser;
                 $scope.count = 0;
 
-                $scope.toggleVisibility = function() {
+                $scope.toggleVisibility = function () {
                     $scope.visible = !$scope.visible;
                 };
 
-                $scope.updateTasks = function(tasks) {
+                $scope.updateTasks = function (tasks) {
                     $scope.count = tasks.length;
-                }
+                };
 
                 // Hide the current tasks list if the user clicks outside of it
                 var currentTasksMenu = angular.element('#currentTasks');
@@ -45,8 +45,8 @@ angular.module('Bastion.widgets').directive('currentTasks',
                     }
                 });
             }],
-            link: function(scope) {
-                Task.registerSearch({ active_only: true, type: 'user', user_id: CurrentUser}, scope.updateTasks);
+            link: function (scope) {
+                Task.registerSearch({ 'active_only': true, 'type': 'user', 'user_id': CurrentUser}, scope.updateTasks);
             }
         };
     }]);

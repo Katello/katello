@@ -12,20 +12,21 @@
  **/
 angular.module('Bastion.tasks')
     .filter('progressClasses', function () {
-        return function(task) {
-            if(!task) {
-                return ""
+        return function (task) {
+            if (!task) {
+                return "";
             }
             var classes = [];
-            switch(task.state) {
-            case "running": case "pending":
+            switch (task.state) {
+            case "running":
+            case "pending":
                 classes.push("active");
                 break;
-            case "stopped": case "paused": default:
+            default:
                 classes.push("");
                 break;
             }
 
             return classes.join(' ');
         };
-    })
+    });

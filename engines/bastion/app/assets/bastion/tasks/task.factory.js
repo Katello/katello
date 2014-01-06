@@ -23,8 +23,8 @@
  *   Provides a $resource for task(s).
  */
 angular.module('Bastion.tasks').factory('Task',
-    ['$resource', '$timeout', 'CurrentOrganization',
-    function ($resource, $timeout, CurrentOrganization) {
+    ['$resource', '$timeout', '$log', 'CurrentOrganization',
+    function ($resource, $timeout, $log, CurrentOrganization) {
 
         var resource = $resource('/katello/api/tasks/:id/:action',
             {id: '@id', 'organization_id': CurrentOrganization},
@@ -36,17 +36,17 @@ angular.module('Bastion.tasks').factory('Task',
         var foremanTasksResource = $resource('/foreman_tasks/api/tasks/:id/:action',
             {},
             {
-                bulkSearch: {method:'POST', isArray: true, params: { action: 'bulk_search'}}
+                bulkSearch: {method: 'POST', isArray: true, params: { action: 'bulk_search'}}
             }
         );
 
 
         var bulkSearchRunning = false, searchIdGenerator = 0,
-            searchParamsById = {},  callbackById = {}, timoutId;
+            searchParamsById = {},  callbackById = {};
 
         function bulkSearchParams() {
-            var searches = []
-            _.each(searchParamsById, function(searchParams, id) {
+            var searches = [];
+            _.each(searchParamsById, function (searchParams, id) {
                 searchParams['search_id'] = id;
                 searches.push(searchParams);
             });
@@ -54,56 +54,56 @@ angular.module('Bastion.tasks').factory('Task',
         }
 
         function taskProgressbar(task) {
-            var type = task.result == 'error' ? 'danger' : 'success';
-            return { value: task.progress * 100, type: type }
-        };
+            var type = task.result === 'error' ? 'danger' : 'success';
+            return { value: task.progress * 100, type: type };
+        }
 
         function schedulePoll() {
-            $timeout(function() { updateProgress(true); }, 1500);
+            $timeout(function () { updateProgress(true); }, 1500);
         }
 
         function updateProgress(periodic) {
-            if(_.keys(searchParamsById).length == 0) {
+            if (_.keys(searchParamsById).length === 0) {
                 return;
             }
-            foremanTasksResource.bulkSearch(bulkSearchParams(), function(response) {
+            foremanTasksResource.bulkSearch(bulkSearchParams(), function (response) {
                 try {
-                    _.each(response, function(tasksSearch) {
+                    _.each(response, function (tasksSearch) {
                         var searchId = tasksSearch['search_params']['search_id'];
                         var callback = callbackById[searchId];
                         try {
-                        _.each(tasksSearch['results'], function(task) {
-                            task.progressbar = taskProgressbar(task);
-                        });
-                            if(tasksSearch['search_params']['type'] == 'task') {
+                            _.each(tasksSearch['results'], function (task) {
+                                task.progressbar = taskProgressbar(task);
+                            });
+                            if (tasksSearch['search_params']['type'] === 'task') {
                                 callback(tasksSearch['results'][0]);
                             } else {
                                 callback(tasksSearch['results']);
                             }
                         }
-                        catch(e) {
-                            console.log(e);
+                        catch (e) {
+                            $log.error(e);
                         }
                     });
                 }
                 finally {
                     // schedule the next update
-                    if(periodic) { schedulePoll(); };
+                    if (periodic) { schedulePoll(); }
                 }
-            }, function() {
-                if(periodic) { schedulePoll(); };
+            }, function () {
+                if (periodic) { schedulePoll(); }
             });
         }
 
         function ensureBulkSearchRunning() {
-            if(!bulkSearchRunning) {
+            if (!bulkSearchRunning) {
                 bulkSearchRunning = true;
                 updateProgress(true);
             }
         }
 
         function generateSearchId() {
-            searchIdGenerator++;
+            searchIdGenerator += 1;
             return searchIdGenerator;
         }
 
@@ -113,12 +113,12 @@ angular.module('Bastion.tasks').factory('Task',
             callbackById[searchId] = callback;
             ensureBulkSearchRunning();
             return searchId;
-        };
+        }
 
         function deleteSearch(searchId) {
             delete callbackById[searchId];
             delete searchParamsById[searchId];
-        };
+        }
 
         resource.poll = function (task, returnFunction) {
             resource.get({id: task.id}, function (data) {
@@ -153,16 +153,16 @@ angular.module('Bastion.tasks').factory('Task',
           * @return {Number} the autogenerated id of the condition
           *        that can be used for unregistering the search later on
           */
-        resource.registerSearch = function(searchParams, callback) {
+        resource.registerSearch = function (searchParams, callback) {
             return addSearch(searchParams, callback);
-        }
+        };
 
         /**
           * Unregisters the search from polling.
           *
           * @param {Number} id the value returned by the registerSearch
           */
-        resource.unregisterSearch = function(id) { deleteSearch(id); }
+        resource.unregisterSearch = function (id) { deleteSearch(id); };
 
         return resource;
     }]

@@ -12,7 +12,7 @@
  */
 
 angular.module('Bastion.tasks').directive('taskInputPart',
-    function() {
+    function () {
         return {
             restrict: 'E',
             template: '<span ng-if="!link()">{{text()}}</span>' +
@@ -20,20 +20,20 @@ angular.module('Bastion.tasks').directive('taskInputPart',
             scope: {
                 data: '=',
             },
-            link: function(scope) {
-                scope.text = function() {
-                    if(typeof(scope.data) == 'string') {
+            link: function (scope) {
+                scope.text = function () {
+                    if (typeof(scope.data) === 'string') {
                         return scope.data;
                     } else {
                         return scope.data[1].text;
                     }
-                },
+                };
 
-                scope.link = function() {
-                    if(typeof(scope.data) != 'string' && scope.data[1]) {
+                scope.link = function () {
+                    if (typeof(scope.data) !== 'string' && scope.data[1]) {
                         return scope.data[1].link;
                     }
-                }
+                };
             }
         };
     }

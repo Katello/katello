@@ -12,19 +12,19 @@
  **/
 angular.module('Bastion.tasks')
     .filter('taskInputReduce', function () {
-        return function(humanizedTaskInput, skippedParts) {
-            if(typeof(humanizedTaskInput) == 'string' || !skippedParts) {
+        return function (humanizedTaskInput, skippedParts) {
+            if (typeof(humanizedTaskInput) === 'string' || !skippedParts) {
                 return humanizedTaskInput;
             }
-            if (typeof skippedParts == 'string') {
+            if (typeof skippedParts === 'string') {
                 skippedParts = skippedParts.split(',');
             }
-            return _.reject(humanizedTaskInput, function(part) {
-                if(part.length == 2) {
+            return _.reject(humanizedTaskInput, function (part) {
+                if (part.length === 2) {
                     return _.contains(skippedParts, part[0]);
                 } else {
                     return false;
                 }
             });
         };
-    })
+    });

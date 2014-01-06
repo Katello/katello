@@ -23,7 +23,7 @@
  */
 angular.module('Bastion.systems').controller('TaskDetailsController',
     ['$scope', '$state', 'Task',
-    function($scope, $state, Task) {
+    function ($scope, $state, Task) {
         var taskId, fromState, fromParams;
 
         fromState = $state.current.data.defaultBackState;
@@ -31,37 +31,37 @@ angular.module('Bastion.systems').controller('TaskDetailsController',
         taskId = $scope.$stateParams.taskId;
 
         //Record our from state, so we can transition back there
-        $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromStateIn, fromParamsIn) {
+        $scope.$on('$stateChangeSuccess', function (event, toState, toParams, fromStateIn, fromParamsIn) {
             if (!fromStateIn.abstract) {
                 fromState = fromStateIn;
                 fromParams = fromParamsIn;
             }
         });
 
-        $scope.transitionBack = function() {
+        $scope.transitionBack = function () {
             $scope.transitionTo(fromState, fromParams);
         };
 
-        $scope.unregisterSearch = function() {
+        $scope.unregisterSearch = function () {
             Task.unregisterSearch($scope.searchId);
             $scope.searchId = undefined;
-        }
+        };
 
-        $scope.updateTask = function(task) {
+        $scope.updateTask = function (task) {
             $scope.task = task;
-            if(!$scope.task.pending) {
+            if (!$scope.task.pending) {
                 $scope.unregisterSearch();
             }
-        }
+        };
 
-        $scope.isArray = function(model) {
+        $scope.isArray = function (model) {
             return (model instanceof Array) ? "true" : "false";
-        }
+        };
 
-        $scope.$on('$destroy', function() {
+        $scope.$on('$destroy', function () {
             $scope.unregisterSearch();
         });
 
-        $scope.searchId = Task.registerSearch({ type: 'task', task_id: taskId }, $scope.updateTask)
+        $scope.searchId = Task.registerSearch({ 'type': 'task', 'task_id': taskId }, $scope.updateTask);
     }
 ]);

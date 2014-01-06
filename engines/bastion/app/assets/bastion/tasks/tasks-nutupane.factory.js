@@ -33,7 +33,7 @@
  * @example
  *   <pre>
        angular.module('example').controller('ExampleController',
-           ['Nutupane', function(Nutupane)) {
+           ['Nutupane', function (Nutupane)) {
                var nutupane                = new Nutupane(ExampleResource);
                $scope.table                = nutupane.table;
            }]
@@ -41,38 +41,38 @@
     </pre>
  */
 angular.module('Bastion.tasks').factory('TasksNutupane',
-    ['Task', 'Nutupane', function(Task, Nutupane) {
-        var TasksNutupane = function() {
+    ['Task', 'Nutupane', function (Task, Nutupane) {
+        var TasksNutupane = function () {
             var self = this;
 
             Nutupane.call(self, Task, {});
 
-            self.existingTasks = {}
+            self.existingTasks = {};
 
-            self.registerSearch = function(params) {
-                if(!self.searchId) {
+            self.registerSearch = function (params) {
+                if (!self.searchId) {
                     self.searchId = Task.registerSearch(params, self.updateTasks);
                 }
             };
 
-            self.unregisterSearch = function(params) {
-                if(self.searchId) {
+            self.unregisterSearch = function () {
+                if (self.searchId) {
                     Task.unregisterSearch(self.searchId);
                     self.searchId = undefined;
                 }
             };
 
-            self.load = function(replace) {
+            self.load = function () {
                 self.table.working = true;
             };
 
-            self.updateTasks = function(tasks) {
+            self.updateTasks = function (tasks) {
                 self.refreshTasks(tasks);
                 self.deleteOldRows(tasks);
                 self.table.working = false;
             };
 
-            self.table.search = function() {
+            self.table.search = function () {
                 self.table.resource.offset = 0;
                 self.table.rows = [];
                 if (!self.table.working) {
@@ -81,13 +81,13 @@ angular.module('Bastion.tasks').factory('TasksNutupane',
             };
 
             // Updates values for existing tasks and adds new rows
-            self.refreshTasks = function(tasks) {
+            self.refreshTasks = function (tasks) {
                 // we reverse because we add new items to the top of
                 // the table
-                _.each(tasks.reverse(), function(task) {
+                _.each(tasks.reverse(), function (task) {
                     var existingTask = self.existingTasks[task.id];
-                    if(existingTask) {
-                        _.each(task, function(value, key) {
+                    if (existingTask) {
+                        _.each(task, function (value, key) {
                             existingTask[key] = value;
                         });
                     } else {
@@ -95,30 +95,30 @@ angular.module('Bastion.tasks').factory('TasksNutupane',
                         self.existingTasks[task.id] = task;
                     }
                 });
-            }
+            };
 
             // Removes rows that are no longer valid for the table
-            self.deleteOldRows = function(tasks) {
-                var newTaskIds = _.map(tasks, function(task) { return task.id }),
+            self.deleteOldRows = function (tasks) {
+                var newTaskIds = _.map(tasks, function (task) { return task.id }),
                     oldTaskIds = _.keys(self.existingTasks),
                     taskIdsToDelete = _.difference(oldTaskIds, newTaskIds),
                     rowsToDelete = [];
 
-                _.each(taskIdsToDelete, function(id) {
+                _.each(taskIdsToDelete, function (id) {
                     delete self.existingTasks[id];
                 });
 
-                _.each(self.table.rows, function(row, i) {
-                    if(_.contains(taskIdsToDelete, row.id)) {
+                _.each(self.table.rows, function (row, i) {
+                    if (_.contains(taskIdsToDelete, row.id)) {
                         rowsToDelete.push(i);
-                    };
+                    }
                 });
 
-                _.each(rowsToDelete.reverse(), function(i) {
+                _.each(rowsToDelete.reverse(), function (i) {
                     self.table.rows.splice(i, 1);
                 });
-            }
-        }
+            };
+        };
         return TasksNutupane;
     }]);
 

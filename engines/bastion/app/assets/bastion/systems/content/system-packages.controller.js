@@ -32,7 +32,7 @@ angular.module('Bastion.systems').controller('SystemPackagesController',
         openEventInfo = function (event) {
             // when the event has label defined, it means it commes
             // from foreman-tasks
-            if(event.label) {
+            if (event.label) {
                 $scope.transitionTo('systems.details.tasks.details', {taskId: event.id});
             } else {
                 $scope.transitionTo('systems.details.events.details', {eventId: event.id});

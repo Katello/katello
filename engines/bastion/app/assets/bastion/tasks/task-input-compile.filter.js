@@ -12,18 +12,18 @@
  **/
 angular.module('Bastion.tasks')
     .filter('taskInputCompile', function () {
-        return function(humanizedTaskInput) {
-            if(typeof(humanizedTaskInput) == 'string') {
+        return function (humanizedTaskInput) {
+            if (typeof(humanizedTaskInput) === 'string') {
                 return humanizedTaskInput;
             }
-            var parts = _.map(humanizedTaskInput, function(part) {
-                if(part.length == 2) {
+            var parts = _.map(humanizedTaskInput, function (part) {
+                if (part.length === 2) {
                     return part[1].text;
                 } else {
-                    return part
+                    return part;
                 }
             });
 
             return parts.join('; ');
         };
-    })
+    });

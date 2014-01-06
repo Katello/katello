@@ -32,7 +32,7 @@ angular.module('Bastion.tasks', [
  * @description
  *   Used for systems level configuration such as setting up the ui state machine.
  */
-angular.module('Bastion.tasks').config(['$stateProvider', function($stateProvider) {
+angular.module('Bastion.tasks').config(['$stateProvider', function ($stateProvider) {
     $stateProvider.state('tasks', {
         abstract: true,
         templateUrl: 'tasks/views/tasks.html'

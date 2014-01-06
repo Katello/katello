@@ -23,13 +23,11 @@
  */
 angular.module('Bastion.tasks').directive('tasksTable',
     ['TasksNutupane',
-    function(TasksNutupane) {
-        var tasksNutupane = new TasksNutupane();
-
+    function (TasksNutupane) {
         return {
             restrict: 'E',
-            templateUrl: function(element, attrs) {
-                if(attrs.templateUrl) {
+            templateUrl: function (element, attrs) {
+                if (attrs.templateUrl) {
                     return attrs.templateUrl;
                 } else {
                     return 'tasks/views/tasks-table.html';
@@ -44,7 +42,7 @@ angular.module('Bastion.tasks').directive('tasksTable',
                 detailsState: '@',
                 knownContext: '@'
             },
-            controller: ['$scope', '$state', function($scope, $state) {
+            controller: ['$scope', '$state', function ($scope, $state) {
                 // we need to set the tasksTable before the template
                 // is compiled. Therefore we're doing that in the
                 // controller
@@ -52,33 +50,33 @@ angular.module('Bastion.tasks').directive('tasksTable',
                 $scope.tasksTable = $scope.tasksNutupane.table;
 
                 // to be able to navigate to task details from the table
-                $scope.tasksNutupane.table.gotoDetails = function(taskId) {
+                $scope.tasksNutupane.table.gotoDetails = function (taskId) {
                     $state.go($scope.detailsState, { taskId: taskId });
                 };
             }],
-            link: function(scope, element, attrs) {
-                scope.$watch('resourceId', function(resourceId) {
-                    if(resourceId) {
+            link: function (scope, element) {
+                scope.$watch('resourceId', function (resourceId) {
+                    if (resourceId) {
                         scope.tasksNutupane.registerSearch({ 'type': 'resource',
                                                              'active_only': scope.activeOnly,
                                                              'resource_type': scope.resourceType,
                                                              'resource_id': resourceId });
                     }
                 });
-                scope.$watch('userId', function(userId) {
-                    if(userId) {
+                scope.$watch('userId', function (userId) {
+                    if (userId) {
                         scope.tasksNutupane.registerSearch({ 'type': 'user',
                                                              'active_only': scope.activeOnly,
                                                              'user_id': userId });
                     }
                 });
 
-                scope.$watch('all', function() {
+                scope.$watch('all', function () {
                     scope.tasksNutupane.registerSearch({ 'type': 'all',
                                                          'active_only': scope.activeOnly });
                 });
 
-                element.bind('$destroy', function() {
+                element.bind('$destroy', function () {
                     scope.tasksNutupane.unregisterSearch();
                 });
             }

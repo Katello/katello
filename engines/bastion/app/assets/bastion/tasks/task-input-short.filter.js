@@ -12,10 +12,10 @@
  **/
 angular.module('Bastion.tasks')
     .filter('taskInputShort', function () {
-        return function(humanizedTaskInput) {
-            if(typeof(humanizedTaskInput) == 'string') {
+        return function (humanizedTaskInput) {
+            if (typeof(humanizedTaskInput) === 'string') {
                 return humanizedTaskInput;
             }
             return _.first(humanizedTaskInput, 1);
         };
-    })
+    });
