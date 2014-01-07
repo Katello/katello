@@ -49,5 +49,37 @@ describe('Factory: Provider', function() {
         });
     });
 
+    it('provides a way to update a provider', function() {
+        var provider = providers.records[0];
+
+        provider['repository_url'] = 'http://wikipedia.org';
+        $httpBackend.expectPUT('/katello/api/providers/1').respond(provider);
+
+        Provider.update({'repository_url': 'http://wikipedia.org', id: 1}, function(record) {
+            expect(record).toBeDefined();
+            expect(record.repository_url).toBe('http://wikipedia.org');
+        });
+    });
+
+    it('provides a way to refresh a manifest', function() {
+        var provider = providers.records[0];
+
+        $httpBackend.expectPOST('/katello/api/providers/1/refresh_manifest').respond(provider);
+
+        Provider.refreshManifest({ organization_id: 'ACME', id: provider.id }, function(record) {
+            expect(record.id).toBe(provider.id);
+        });
+    });
+
+    it('provides a way to delete a manifest', function() {
+        var provider = providers.records[0];
+
+        $httpBackend.expectPOST('/katello/api/providers/1/delete_manifest').respond(provider);
+
+        Provider.deleteManifest({ organization_id: 'ACME', id: provider.id }, function(record) {
+            expect(record.id).toBe(provider.id);
+        });
+    });
+
 });
 

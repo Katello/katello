@@ -17,7 +17,6 @@
  *
  * @requires $scope
  * @requires $q
- * @requires gettext
  * @requires CurrentOrganization
  * @requires Organization
  *
@@ -25,8 +24,8 @@
  *   Controls the import of a manifest.
  */
 angular.module('Bastion.subscriptions').controller('ManifestDetailsController',
-    ['$scope', '$q', 'gettext', 'CurrentOrganization', 'Organization',
-    function ($scope, $q, gettext, CurrentOrganization, Organization) {
+    ['$scope', '$q', 'CurrentOrganization', 'Organization',
+    function ($scope, $q, CurrentOrganization, Organization) {
 
         $scope.organization = Organization.get({id: CurrentOrganization});
 

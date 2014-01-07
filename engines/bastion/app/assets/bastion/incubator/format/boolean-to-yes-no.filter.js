@@ -25,7 +25,7 @@ angular.module('alchemy.format').filter('booleanToYesNo', ['gettext', function (
         yesValue = yesValue || gettext("Yes");
         noValue = noValue || gettext("No");
 
-        if (boolValue !== undefined && boolValue !== null) {
+        if (boolValue !== '' && boolValue !== null && boolValue !== undefined) {
             return (boolValue === true) ? yesValue : noValue;
         } else {
             return "";

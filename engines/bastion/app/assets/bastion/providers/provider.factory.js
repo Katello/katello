@@ -25,9 +25,10 @@ angular.module('Bastion.providers').factory('Provider',
     ['$resource', 'CurrentOrganization', function ($resource, CurrentOrganization) {
 
         return $resource('/katello/api/providers/:id/:action',
-            {'id': '@id', 'organization_id': CurrentOrganization},
+            {'id': '@id'},
             {
-                'query':  {'method': 'GET', params: {'provider_type': 'Custom'}},
+                'query':  {'method': 'GET', params: {'provider_type': 'Custom', 'organization_id': CurrentOrganization}},
+                'save':   {params: {'organization_id': CurrentOrganization}},
                 'update': {'method': 'PUT'},
                 'deleteManifest': {'method': 'POST', 'params': {'action': 'delete_manifest'}},
                 'refreshManifest': {'method': 'POST', 'params': {'action': 'refresh_manifest'}}

@@ -145,6 +145,8 @@ class Api::V2::SubscriptionsController < Api::V2::ApiController
   api :POST, "/organizations/:organization_id/subscriptions/upload", "Upload a subscription manifest"
   param :organization_id, :identifier, :desc => "Organization id", :required => true
   def upload
+    fail HttpErrors::BadRequest, _("No manifest file uploaded") if params[:content].blank?
+
     begin
       # candlepin requires that the file has a zip file extension
       temp_file = File.new(File.join("#{Rails.root}/tmp", "import_#{SecureRandom.hex(10)}.zip"), 'wb+', 0600)

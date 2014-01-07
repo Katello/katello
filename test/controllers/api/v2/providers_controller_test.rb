@@ -25,6 +25,7 @@ class Api::V2::ProvidersControllerTest < ActionController::TestCase
   def models
     @organization = get_organization(:organization1)
     @provider = katello_providers(:fedora_hosted)
+    @rh_provider = katello_providers(:redhat)
   end
 
   def permissions
@@ -108,6 +109,20 @@ class Api::V2::ProvidersControllerTest < ActionController::TestCase
     assert_template %w(katello/api/v2/common/show katello/api/v2/layouts/resource)
   end
 
+  def test_redhat_update
+    put :update, :id => @rh_provider.id, :repository_url => 'http://google.com'
+
+    assert_response :success
+    assert_template %w(katello/api/v2/common/show katello/api/v2/layouts/resource)
+  end
+
+  def test_redhat_update_fail
+    put :update, :id => @rh_provider.id,
+                 :name => "Microsoft"
+
+    assert_equal "Red Hat Provider", @rh_provider.reload.name
+  end
+
   def test_update_protected
     allowed_perms = [@update_permission]
     denied_perms = [@read_permission, @no_permission]
@@ -145,5 +160,47 @@ class Api::V2::ProvidersControllerTest < ActionController::TestCase
       delete :destroy, :id => @provider.id
     end
   end
+
+  def test_show_protected
+    allowed_perms = [@read_permission]
+    denied_perms = [@no_permission]
+
+    assert_protected_action(:show, allowed_perms, denied_perms) do
+      get :show, :id => @provider.id
+    end
+  end
+
+  def test_manifest_actions_protected
+    allowed_perms = [@update_permission]
+    denied_perms = [@no_permission, @read_permission]
+
+    assert_protected_action(:delete_manifest, allowed_perms, denied_perms) do
+      post :delete_manifest, :id => @provider.id
+    end
+
+    assert_protected_action(:refresh_manifest, allowed_perms, denied_perms) do
+      post :refresh_manifest, :id => @provider.id
+    end
+  end
+
+  def test_delete_manifest
+    Provider.stubs(:find).returns(@provider)
+    @provider.stubs(:yum_repo?).returns(false)
+    @provider.expects(:delete_manifest).returns(true)
+
+    post :delete_manifest, :id => @provider.id
+    assert_response :success
+  end
+
+  def test_refresh_manifest
+    Provider.stubs(:find).returns(@provider)
+    @provider.organization.stubs(:owner_details).returns({})
+    @provider.stubs(:yum_repo?).returns(false)
+    @provider.expects(:refresh_manifest).returns(true)
+
+    post :refresh_manifest, :id => @provider.id
+    assert_response :success
+  end
+
 end
 end
