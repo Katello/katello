@@ -60,6 +60,27 @@ class UserCreateTest < UserTestBase
 
 end
 
+class UserCreateFailNoEmailTest < UserTestBase
+
+  def setup
+    super
+    @user = build(:user, :batman)
+    @user.auth_source = auth_sources(:one)
+    @user.mail = nil
+  end
+
+  def teardown
+    @user.destroy
+  end
+
+  def test_create
+    @user.save
+    @user.valid?
+    assert @user.errors.messages.key?(:mail)
+  end
+
+end
+
 class UserTest < UserTestBase
 
   def setup
