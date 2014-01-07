@@ -46,18 +46,18 @@ class Api::V2::ProvidersController < Api::V2::ApiController
 
   def param_rules
     {
-      :index            => [:search, :page, :per_page, :sort_order, :sort_by, :provider_type, :organization_id],
-      :show             => [:id],
-      :create           => [:name, :description, :provider_type, :organization_id],
-      :update           => [:id, :name, :description, :provider_type],
-      :destroy          => [:id],
-      :import_manifest  => [:id, :import, :force],
-      :refresh_manifest => [:id],
-      :delete_manifest  => [:id]
+      :index            => [:provider, :id, :search, :page, :per_page, :sort, :sort_order, :sort_by, :provider_type, :organization_id],
+      :show             => [:provider, :id],
+      :create           => [:provider, :name, :description, :provider_type, :organization_id],
+      :update           => [:provider, :id, :name, :description, :provider_type],
+      :destroy          => [:provider, :id],
+      :import_manifest  => [:provider, :id, :import, :force],
+      :refresh_manifest => [:provider, :id],
+      :delete_manifest  => [:provider, :id]
     }
   end
 
-  def_param_group :provider_group do
+  def_param_group :provider do
     param :name, String, :desc => "name of the provider", :required => true
     param :description, String, :desc => "description of the provider"
     param :provider_type, Provider::TYPES, :desc => "The type of the provider"
@@ -72,23 +72,10 @@ class Api::V2::ProvidersController < Api::V2::ApiController
     options = sort_params
     options[:load_records?] = true
 
-    ids = Provider.readable(@organization).pluck(:id)
-
-    options[:filters] = [
-      {:term => {:organization_id => @organization.id}},
-      {:terms => {:id => ids}}
-    ]
-    options[:filters] << {:term => {:provider_type => params[:provider_type]}} if params[:provider_type]
-    if params[:type].blank?
-      options[:filters] << {:not => {:term => {:provider_type => Provider::REDHAT}}}
-    else
-      # TODO: Fix after github issue #3494
-      #options[:filters] << {:term => {:provider_type => params[:provider_type]}}
-    end
+    ids = Provider.readable(@organization).where(:provider_type => params[:provider_type] || 'Custom').pluck(:id)
+    options[:filters] = [{:terms => {:id => ids}}]
 
     @search_service.model = Provider
-    providers, total_count = @search_service.retrieve(params[:search], params[:offset], options)
-
     respond(:collection => item_search(Provider, params, options))
   end
 
@@ -100,7 +87,7 @@ class Api::V2::ProvidersController < Api::V2::ApiController
 
   api :POST, "/providers", "Create a provider"
   param :organization_id, :identifier, :desc => "Organization identifier", :required => true
-  param_group :provider_group
+  param_group :provider
   def create
     provider = Provider.create!(provider_params) do |p|
       p.organization  = @organization
@@ -112,7 +99,7 @@ class Api::V2::ProvidersController < Api::V2::ApiController
 
   api :PUT, "/providers/:id", "Update a provider"
   param :id, :number, :desc => "Provider numeric identifier", :required => true, :allow_nil => false
-  param_group :provider_group
+  param_group :provider
   def update
     @provider.update_attributes!(provider_params)
 

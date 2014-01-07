@@ -17,8 +17,8 @@ module Katello
 class Api::V2::ProvidersControllerTest < ActionController::TestCase
 
   def self.before_suite
-    models = [%w(Provider Organization Repository Product)]
-    disable_glue_layers(%w(Candlepin Pulp, ElasticSearch), models)
+    models = %w(Provider Organization Repository Product)
+    disable_glue_layers(%w(Candlepin Pulp ElasticSearch), models)
     super
   end
 
@@ -105,7 +105,7 @@ class Api::V2::ProvidersControllerTest < ActionController::TestCase
     put :update, :id => @provider.id, :name => 'CentOS Provider'
 
     assert_response :success
-    assert_template 'api/v2/common/update'
+    assert_template %w(katello/api/v2/common/show katello/api/v2/layouts/resource)
   end
 
   def test_update_protected
@@ -118,10 +118,23 @@ class Api::V2::ProvidersControllerTest < ActionController::TestCase
   end
 
   def test_destroy
-    put :update, :id => @provider.id, :name => 'CentOS Provider'
+    provider_sans_repos = @provider.dup
+    provider_sans_repos.name = "new provider"
+    provider_sans_repos.repositories.delete_all
+    provider_sans_repos.save!
 
+    delete :destroy, :id => provider_sans_repos.id
+
+    assert provider_sans_repos.repositories.none? { |p| p.promoted? }
     assert_response :success
-    assert_template 'api/v2/common/update'
+    assert_template %w(katello/api/v2/common/show katello/api/v2/layouts/resource)
+  end
+
+  def test_destroy_fail
+    delete :destroy, :id => @provider.id
+
+    assert @provider.repositories.any? { |p| p.promoted? }
+    assert_response :bad_request
   end
 
   def test_destroy_protected
