@@ -29,7 +29,7 @@ angular.module('Bastion.organizations').factory('Organization',
                 query:  {method: 'GET', isArray: false},
                 repoDiscover: { method: 'POST', params: {action: 'repo_discover'}},
                 cancelRepoDiscover: {method: 'POST', params: {action: 'cancel_repo_discover'}},
-                autoAttach: {method: 'POST', params: {action: 'auto_attach'}}
+                autoAttachSubscriptions: {method: 'POST', params: {action: 'autoattach_subscriptions'}}
             }
         );
 

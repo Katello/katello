@@ -88,7 +88,7 @@ angular.module('Bastion.systems').controller('SystemSubscriptionsController',
 
         };
 
-        $scope.autoAttach = function () {
+        $scope.autoAttachSubscriptions = function () {
             System.refreshSubscriptions({uuid: $scope.system.uuid});
             refresh();
         };

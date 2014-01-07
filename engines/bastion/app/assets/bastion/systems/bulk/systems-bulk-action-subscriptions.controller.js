@@ -68,7 +68,7 @@ angular.module('Bastion.systems').controller('SystemsBulkActionSubscriptionsCont
                 });
             };
 
-            Organization.autoAttach({}, success, error);
+            Organization.autoAttachSubscriptions({}, success, error);
 
             return deferred.promise;
         };

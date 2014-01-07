@@ -29,7 +29,12 @@ Katello::Engine.routes.draw do
         end
       end
 
-      api_resources :organizations, :only => [] do
+      api_resources :organizations, :only => [:index, :show, :update, :create, :destroy] do
+        member do
+          post :repo_discover
+          post :cancel_repo_discover
+          post :autoattach_subscriptions
+        end
         api_resources :system_groups, :only => [:index, :create]
         api_resources :systems, :only => system_onlies do
           get :report, :on => :collection
@@ -67,10 +72,6 @@ Katello::Engine.routes.draw do
       ##############################
 
       api_resources :organizations do
-        member do
-          post :repo_discover
-          post :cancel_repo_discover
-        end
         api_resources :products, :only => [:index]
         api_resources :environments
         api_resources :sync_plans, :only => [:index, :create]
@@ -85,8 +86,6 @@ Katello::Engine.routes.draw do
         match '/default_info/:informable_type' => 'organization_default_info#create', :via => :post, :as => :create_default_info
         match '/default_info/:informable_type/*keyname' => 'organization_default_info#destroy', :via => :delete, :as => :destroy_default_info
         match '/default_info/:informable_type/apply' => 'organization_default_info#apply_to_all', :via => :post, :as => :apply_default_info
-
-        match '/auto_attach' => 'organizations#auto_attach_all_systems', :via => :post, :as => :auto_attach_all_systems
 
         api_resources :content_views, :only => [:index, :create]
         api_resources :content_view_definitions, :only => [:index, :create]
