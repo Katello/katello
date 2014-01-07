@@ -19,7 +19,9 @@ module Katello
 class SubscriptionsController < Katello::ApplicationController
 
   before_filter :find_provider
-  before_filter :find_subscription, :except => [:index, :items, :new, :upload, :delete_manifest, :history, :history_items, :edit_manifest, :refresh_manifest]
+  before_filter :find_subscription, :except => [:index, :items, :new, :upload, :delete_manifest,
+                                                :history, :history_items, :edit_manifest,
+                                                :refresh_manifest, :all]
   before_filter :authorize
   before_filter :setup_options, :only => [:index, :items]
 
@@ -31,6 +33,7 @@ class SubscriptionsController < Katello::ApplicationController
     edit_provider_test = lambda{@provider.editable?}
     {
       :index => read_provider_test,
+      :all => read_provider_test,
       :items => read_provider_test,
       :edit => read_provider_test,  # Note: edit is the callback for sliding out right panel
       :products => read_provider_test,
@@ -52,19 +55,26 @@ class SubscriptionsController < Katello::ApplicationController
   end
 
   def index
-
-    # If no manifest imported yet or one is currently being imported, open the "new" panel.
-    # Originally had intended to open the "new" panel when last import was an error, but this
-    # is too restrictive, preventing viewing of previously imported subscriptions.
-    if @provider.editable?
-      details = current_organization.owner_details
-      if (details['upstreamConsumer'].nil? ||
-          (!@provider.task_status.nil? && !@provider.task_status.finish_time))
-        @panel_options[:initial_state] = {:panel => :new}
+    if current_user.legacy_mode
+      # If no manifest imported yet or one is currently being imported, open the "new" panel.
+      # Originally had intended to open the "new" panel when last import was an error, but this
+      # is too restrictive, preventing viewing of previously imported subscriptions.
+      if @provider.editable?
+        details = current_organization.owner_details
+        if (details['upstreamConsumer'].nil? ||
+            (!@provider.task_status.nil? && !@provider.task_status.finish_time))
+          @panel_options[:initial_state] = {:panel => :new}
+        end
       end
-    end
 
-    render :index
+      render :index
+    else
+      render 'bastion/layouts/application', :layout => false
+    end
+  end
+
+  def all
+    redirect_to action: 'index', anchor: '/subscriptions'
   end
 
   def items

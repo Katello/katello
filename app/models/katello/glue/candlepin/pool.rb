@@ -40,6 +40,12 @@ module Glue::Candlepin::Pool
         return pool
       end
     end
+
+    def find_by_organization_and_id!(organization, pool_id)
+      subscription = find_by_organization_and_id(organization, pool_id)
+      fail ActiveRecord::RecordNotFound if subscription.nil?
+      subscription
+    end
   end
 
   module InstanceMethods
@@ -148,6 +154,26 @@ module Glue::Candlepin::Pool
           @suggested_quantity = attrs['calculatedAttributes']['suggested_quantity'].to_i
         end
       end if attrs['calculatedAttributes']
+    end
+
+    def products
+      Product.where(:cp_id => provided_products.map { |prod| prod[:productId] })
+    end
+
+    def systems
+      System.all_by_pool(cp_id)
+    end
+
+    def activation_keys
+      ActivationKey.joins(:pools).where("#{self.class.table_name}.cp_id" => cp_id)
+    end
+
+    def distributors
+      Distributor.all_by_pool(cp_id)
+    end
+
+    def host
+      System.find_by_uuid(host_id) if host_id
     end
 
   end

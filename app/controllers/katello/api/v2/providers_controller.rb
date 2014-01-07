@@ -16,7 +16,7 @@ class Api::V2::ProvidersController < Api::V2::ApiController
   before_filter :find_organization, :only => [:index, :create]
   before_filter :find_provider, :only => [:show, :update, :destroy, :products, :import_products,
                                           :refresh_products, :import_manifest, :delete_manifest, :product_create,
-                                          :import_manifest_progress, :refresh_manifest]
+                                          :import_manifest_progress, :refresh_manifest, :discovery]
   before_filter :authorize
 
   def rules
@@ -25,10 +25,11 @@ class Api::V2::ProvidersController < Api::V2::ApiController
     read_test   = lambda { @provider.readable? }
     edit_test   = lambda { @provider.editable? }
     delete_test = lambda { @provider.deletable? }
+    show_test = lambda { @provider.readable? }
 
     {
       :index                    => index_test,
-      :show                     => index_test,
+      :show                     => show_test,
       :create                   => create_test,
       :update                   => edit_test,
       :destroy                  => delete_test,
@@ -66,7 +67,7 @@ class Api::V2::ProvidersController < Api::V2::ApiController
   api :GET, "/organizations/:organization_id/providers", "List of all providers for a given organization"
   param_group :search, Api::V2::ApiController
   param :organization_id, :identifier, :desc => "organization identifier", :required => true
-  param :provider_type, Provider::TYPES, :desc => "filter the index by provider type"
+  param :provider_type, String, "Filter providers by type ('Custom' or 'Red Hat')"
   def index
     options = sort_params
     options[:load_records?] = true
@@ -77,8 +78,16 @@ class Api::V2::ProvidersController < Api::V2::ApiController
       {:term => {:organization_id => @organization.id}},
       {:terms => {:id => ids}}
     ]
-
     options[:filters] << {:term => {:provider_type => params[:provider_type]}} if params[:provider_type]
+    if params[:type].blank?
+      options[:filters] << {:not => {:term => {:provider_type => Provider::REDHAT}}}
+    else
+      # TODO: Fix after github issue #3494
+      #options[:filters] << {:term => {:provider_type => params[:provider_type]}}
+    end
+
+    @search_service.model = Provider
+    providers, total_count = @search_service.retrieve(params[:search], params[:offset], options)
 
     respond(:collection => item_search(Provider, params, options))
   end
@@ -219,6 +228,46 @@ class Api::V2::ProvidersController < Api::V2::ApiController
     gpg  = GpgKey.readable(@provider.organization).find_by_name!(product_params[:gpg_key_name]) unless product_params[:gpg_key_name].blank?
     prod = @provider.add_custom_product(labelize_params(product_params), product_params[:name], product_params[:description], product_params[:url], gpg)
     respond_for_create :resource => prod
+  end
+
+  api :PUT, "/providers/:id", "Update the provider"
+  param :id, :number, :desc => "Provider identifier", :required => true
+  param :repository_url, String, :desc => "Provider repository url"
+  def update
+    @provider.repository_url = params[:repository_url] unless params[:repository_url].blank?
+    @provider.save!
+
+    respond_for_show(:resource => @provider)
+  end
+
+  api :GET, "/providers/:id", "Get a provider"
+  param :id, :number, :desc => "Provider numeric identifier", :required => true
+  def show
+    respond_for_show(:resource => @provider)
+  end
+
+  api :POST, "/providers/:id/delete_manifest", "Delete manifest from Red Hat provider"
+  param :id, :number, :desc => "Provider numeric identifier", :required => true
+  def delete_manifest
+    if @provider.yum_repo?
+      fail HttpErrors::BadRequest, _("Manifests cannot be deleted for a custom provider.")
+    end
+
+    @provider.delete_manifest
+    respond_for_status :message => _("Manifest deleted")
+  end
+
+  api :POST, "/providers/:id/refresh_manifest", "Refresh previously imported manifest for Red Hat provider"
+  param :id, :number, :desc => "Provider numeric identifier", :required => true
+  def refresh_manifest
+    if @provider.yum_repo?
+      fail HttpErrors::BadRequest, _("Manifests cannot be refreshed for a custom provider.")
+    end
+
+    details  = @provider.organization.owner_details
+    upstream = details['upstreamConsumer'].blank? ? {} : details['upstreamConsumer']
+    @provider.refresh_manifest(upstream, :async => true, :notify => false)
+    respond_for_async :resource => @provider.manifest_task
   end
 
   private

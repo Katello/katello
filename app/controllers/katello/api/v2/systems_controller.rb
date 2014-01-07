@@ -18,9 +18,9 @@ class Api::V2::SystemsController < Api::V2::ApiController
   skip_before_filter :set_default_response_format, :only => :report
 
   before_filter :find_default_organization_and_or_environment, :only => [:create, :index, :activate]
-  before_filter :find_optional_organization, :only => [:create, :hypervisors_update, :index, :activate, :report, :tasks]
+  before_filter :find_optional_organization, :only => [:create, :hypervisors_update, :index, :activate, :report]
   before_filter :find_only_environment, :only => [:create]
-  before_filter :find_environment, :only => [:index, :report, :tasks]
+  before_filter :find_environment, :only => [:index, :report]
   before_filter :find_system_group, :only => [:index]
   before_filter :find_environment_and_content_view, :only => [:create]
   before_filter :find_hypervisor_environment_and_content_view, :only => [:hypervisors_update]
@@ -29,14 +29,35 @@ class Api::V2::SystemsController < Api::V2::ApiController
                                         :unsubscribe, :subscriptions, :pools, :enabled_repos, :releases,
                                         :available_system_groups, :add_system_groups, :remove_system_groups,
                                         :refresh_subscriptions, :checkin,
-                                        :subscription_status] # TODO: this should probably be :except
+                                        :subscription_status, :tasks] # TODO: this should probably be :except
   before_filter :find_content_view, :only => [:create, :update]
+  before_filter :load_search_service, :only => [:index, :tasks]
 
   before_filter :authorize, :except => [:activate, :upload_package_profile]
   before_filter :load_search_service, :only => [:index, :available_system_groups]
 
   def organization_id_keys
     [:organization_id, :owner]
+  end
+
+  def param_rules
+    {
+      :create => [:system, :facts, :installed_products, :name, :type, :cp_type, :service_level, :location, :content_view_id, :environment_id, :organization_id],
+      :index => [:search, :page, :per_page, :sort_order, :sort_by, :system, :name, :pool_id, :uuid, :organization_id, :environment_id, :system_group_id],
+      :show => [:system, :id],
+      :update => [:system, :id, :facts, :installed_products, :name, :type, :cp_type, :service_level, :location, :environment_id, :content_view_id],
+      :delete => [:system, :id],
+      :tasks => [:system, :id],
+      :available_system_groups => [:system, :id, :search, :page, :per_page, :sort_order, :sort_by],
+      :add_system_groups => [:system, :id, :system_group_ids],
+      :remove_system_groups => [:system, :id, :system_group_ids],
+      :report => [:system, :environment_id, :organization_id],
+      :package_profile => [:system, :id],
+      :errata => [:system, :id],
+      :pools => [:system, :id, :match_system, :match_installed, :no_overlap],
+      :releases => [:system, :id],
+      :activate => [:system, :facts, :installed_products, :name, :type, :cp_type, :service_level, :location, :content_view_id, :environment_id, :organization_id, :activation_keys]
+    }
   end
 
   # TODO: break up this method
@@ -77,8 +98,7 @@ class Api::V2::SystemsController < Api::V2::ApiController
         :pools                            => read_system,
         :releases                         => read_system,
         :activate                         => register_system,
-        :tasks                            => lambda { find_system && @system.readable? },
-        :task                             => lambda { true },
+        :tasks                            => lambda { @system.readable? },
         :task_show                        => read_system,
         :enabled_repos                    => consumer_only,
         :available_system_groups          => edit_system,
@@ -90,28 +110,29 @@ class Api::V2::SystemsController < Api::V2::ApiController
   end
 
   def_param_group :system do
-    param :facts, Hash, :desc => "Key-value hash of system-specific facts", :action_aware => true
-    param :installedProducts, Array, :desc => "List of products installed on the system", :action_aware => true
+    param :facts, Hash, :desc => "Key-value hash of system-specific facts", :action_aware => true do
+      param :fact, String, :desc => "Any number of facts about this system"
+    end
+    param :installed_products, Array, :desc => "List of products installed on the system", :action_aware => true
     param :name, String, :desc => "Name of the system", :required => true, :action_aware => true
     param :type, String, :desc => "Type of the system, it should always be 'system'", :required => true, :action_aware => true
-    param :serviceLevel, String, :allow_nil => true, :desc => "A service level for auto-healing process, e.g. SELF-SUPPORT", :action_aware => true
+    param :service_level, String, :allow_nil => true, :desc => "A service level for auto-healing process, e.g. SELF-SUPPORT", :action_aware => true
     param :location, String, :desc => "Physical location of the system"
     param :content_view_id, :identifier
     param :environment_id, :identifier
   end
 
-  api :GET, "/environments/:environment_id/consumers", "List systems (compatibilty)" # according to v2 routes, this should go to v1 controller
-  api :GET, "/environments/:environment_id/systems", "List systems in environment"
-  api :GET, "/organizations/:organization_id/systems", "List systems in an organization"
-  api :GET, "/system_groups/:system_group_id/systems", "List systems in a system group"
   api :GET, "/systems", "List systems"
+  api :GET, "/organizations/:organization_id/systems", "List systems in an organization"
+  api :GET, "/environments/:environment_id/systems", "List systems in environment"
+  api :GET, "/system_groups/:system_group_id/systems", "List systems in a system group"
   param :name, String, :desc => "Filter systems by name"
   param :pool_id, String, :desc => "Filter systems by subscribed pool"
-  param :search, String, :desc => "Filter systems by advanced search query"
   param :uuid, String, :desc => "Filter systems by uuid"
   param :organization_id, String, :desc => "Specify the organization", :required => true
   param :environment_id, String, :desc => "Filter by environment"
   param :system_group_id, String, :desc => "Filter by system group"
+  param_group :search, Api::V2::ApiController
   def index
     filters = []
 
@@ -133,22 +154,50 @@ class Api::V2::SystemsController < Api::V2::ApiController
     respond_for_index(:collection => item_search(System, params, options))
   end
 
-  api :POST, "/environments/:environment_id/consumers", "Register a system in environment (compatibility reason)"
-  api :POST, "/environments/:environment_id/systems", "Register a system in environment"
   api :POST, "/systems", "Register a system"
-  param_group :system
+  api :POST, "/environments/:environment_id/systems", "Register a system in environment"
+  api :POST, "/system_groups/:system_group_id/systems", "Register a system in environment"
+  param :name, String, :desc => "Name of the system", :required => true, :action_aware => true
+  param :description, String, :desc => "Description of the system"
+  param :location, String, :desc => "Physical location of the system"
+  param :facts, Hash, :desc => "Key-value hash of system-specific facts", :action_aware => true, :required => true do
+    param :fact, String, :desc => "Any number of facts about this system"
+  end
+  param :type, String, :desc => "Type of the system, it should always be 'system'", :required => true, :action_aware => true
+  param :guest_ids, Array, :desc => "IDs of the guests running on this system"
+  param :installed_products, Array, :desc => "List of products installed on the system", :action_aware => true
+  param :release_ver, String, :desc => "Release version of the system"
+  param :service_level, String, :allow_nil => true, :desc => "A service level for auto-healing process, e.g. SELF-SUPPORT", :action_aware => true
+  param :last_checkin, String, :desc => "Last check-in time of this system"
+  param :organization_id, String, :desc => "Specify the organization", :required => true
+  param :environment_id, String, :desc => "Specify the environment"
+  param :content_view_id, String, :desc => "Specify the content view"
+  param :system_group_id, String, :desc => "Specify the system group"
   def create
-    @system = System.create!(system_params.merge(:environment  => @environment,
-                                                 :content_view => @content_view,
-                                                 :serviceLevel => params[:service_level]))
+    @system = System.create!(system_params(params).merge(:environment  => @environment,
+                                                         :content_view => @content_view))
     respond_for_create
   end
 
-  api :PUT, "/consumers/:id", "Update system information (compatibility)"
   api :PUT, "/systems/:id", "Update system information"
-  param_group :system
+  param :name, String, :desc => "Name of the system", :required => true, :action_aware => true
+  param :description, String, :desc => "Description of the system"
+  param :location, String, :desc => "Physical location of the system"
+  param :facts, Hash, :desc => "Key-value hash of system-specific facts", :action_aware => true, :required => true do
+    param :fact, String, :desc => "Any number of facts about this system"
+  end
+  param :type, String, :desc => "Type of the system, it should always be 'system'", :required => true, :action_aware => true
+  param :guest_ids, Array, :desc => "IDs of the guests running on this system"
+  param :installed_products, Array, :desc => "List of products installed on the system", :action_aware => true
+  param :release_ver, String, :desc => "Release version of the system"
+  param :service_level, String, :allow_nil => true, :desc => "A service level for auto-healing process, e.g. SELF-SUPPORT", :action_aware => true
+  param :last_checkin, String, :desc => "Last check-in time of this system"
+  param :environment_id, String, :desc => "Specify the environment"
+  param :content_view_id, String, :desc => "Specify the content view"
   def update
-    super
+    @system.update_attributes!(system_params(params))
+
+    respond_for_update
   end
 
   api :GET, "/systems/:id", "Show a system"
@@ -175,15 +224,31 @@ class Api::V2::SystemsController < Api::V2::ApiController
     respond_for_index(:collection => system_groups)
   end
 
-  api :POST, "/systems/:id/system_groups", "Replace existing list of system groups"
-  param :system, Hash, :required => true do
-    param :system_group_ids, Array, :desc => "List of group ids the system belongs to", :required => true
+  api :DELETE, "/systems/:id", "Unregister a system"
+  param :id, String, :desc => "UUID of the system", :required => true
+  def destroy
+    @system.destroy
+    respond :message => _("Deleted system '%s'") % params[:id], :status => 204
   end
+
+  api :POST, "/systems/:id/system_groups", "Replace existing list of system groups"
+  param :id, String, :desc => "UUID of the system", :required => true
+  param :system_group_ids, Array, :desc => "List of group ids the system belongs to", :required => true
   def add_system_groups
-    ids = params[:system][:system_group_ids] || []
-    @system.system_group_ids = ids.uniq
+    ids = params[:system_group_ids]
+    @system.system_group_ids = ids.try(:uniq)
     @system.save!
     respond_for_create
+  end
+
+  api :DELETE, '/systems/:id/system_groups', "Remove the list of given system groups"
+  param :id, String, :desc => "UUID of the system", :required => true
+  param :system_group_ids, Array, :desc => "List of system groups ids to remove from the system", :required => true
+  def remove_system_groups
+    ids = params[:system_group_ids].map(&:to_i)
+    @system.system_group_ids -= ids
+    @system.save!
+    respond_for_show(:resource => @system)
   end
 
   api :GET, "/systems/:id/packages", "List packages installed on the system"
@@ -202,7 +267,7 @@ class Api::V2::SystemsController < Api::V2::ApiController
   param :id, String, :desc => "UUID of the system", :required => true
   def refresh_subscriptions
     @system.refresh_subscriptions
-    respond_for_show
+    respond_for_show(:resource => @system)
   end
 
   api :GET, "/systems/:id/errata", "List errata available for the system"
@@ -219,41 +284,174 @@ class Api::V2::SystemsController < Api::V2::ApiController
   end
 
   api :GET, "/systems/:id/tasks", "List async tasks for the system"
+  param :id, String, :desc => "UUID of the system", :required => true
   def tasks
     @system.refresh_tasks
-    query_string = params[:name] ? "name:#{params[:name]}" : params[:search]
 
     filters = [{:terms => {:task_owner_id => [@system.id]}},
-               {:terms => {:task_owner_type => [System.class_name]}}]
-    options = {
-        :filters       => filters,
-        :load_records? => true,
-        :default_field => 'message'
-    }
-    options[:sort_by] = params[:sort_by] if params[:sort_by]
-    options[:sort_order] = params[:sort_order] if params[:sort_order]
+               {:terms => {:task_owner_type => ["System"]}}]
 
-    if params[:paged]
-      options[:page_size] = params[:page_size] || current_user.page_size
-    end
+    options = { :filters       => filters,
+                :load_records? => true }
 
-    items = Glue::ElasticSearch::Items.new(TaskStatus)
-    tasks, total_count = items.retrieve(query_string, params[:offset], options)
-
-    tasks = {
-      :records  => tasks,
-      :subtotal => total_count,
-      :total    => items.total_items
-    }
-
-    respond_for_index(:collection => tasks)
+    respond_for_index(:collection => item_search(TaskStatus, params, options))
   end
 
-  api :GET, "/systems/task/:task_id", "Grab a single system task"
-  param :task_id, String, :desc => "Id of the task", :required => true
-  def task
-    task = TaskStatus.find(params[:task_id]).refresh
-    respond_for_show(:resource => task, :template => :task)
+  # TODO: break this mehtod up
+  api :GET, "/environments/:environment_id/systems/report", "Get system reports for the environment"
+  api :GET, "/organizations/:organization_id/systems/report", "Get system reports for the organization"
+  def report # rubocop:disable MethodLength
+    data = @environment.nil? ? @organization.systems.readable(@organization) : @environment.systems.readable(@organization)
+
+    data = data.flatten.map do |r|
+      r.reportable_data(
+          :only    => [:uuid, :name, :location, :created_at, :updated_at],
+          :methods => [:environment, :organization, :compliance_color, :compliant_until, :custom_info]
+      )
+    end
+
+    system_report = Util::ReportTable.new(
+        :data         => data,
+        :column_names => %w(name uuid location organization environment created_at updated_at
+                            compliance_color compliant_until custom_info),
+        :transforms   => lambda do |r|
+                           r.organization    = r.organization.name
+                           r.environment     = r.environment.name
+                           r.created_at      = r.created_at.to_s
+                           r.updated_at      = r.updated_at.to_s
+                           r.compliant_until = r.compliant_until.to_s
+                           r.custom_info     = r.custom_info.collect { |info| info.to_s }.join(", ")
+                         end
+    )
+    respond_to do |format|
+      format.text { render :text => system_report.as(:text) }
+      format.csv { render :text => system_report.as(:csv) }
+    end
+  end
+
+  api :GET, "/systems/:id/pools", "List pools a system is subscribed to"
+  param :id, String, :desc => "UUID of the system", :required => true
+  param :match_system, [true, false], :desc => "Match pools to system"
+  param :match_installed, [true, false], :desc => "Match pools to installed"
+  param :no_overlap, [true, false], :desc => "allow overlap"
+  def pools
+    match_system    = params.key?(:match_system) ? params[:match_system].to_bool : false
+    match_installed = params.key?(:match_installed) ? params[:match_installed].to_bool : false
+    no_overlap      = params.key?(:no_overlap) ? params[:no_overlap].to_bool : false
+
+    cp_pools = @system.filtered_pools(match_system, match_installed, no_overlap)
+    response = { :records => cp_pools,
+                 :total => cp_pools.size,
+                 :subtotal => cp_pools.size }
+
+    respond_for_index :collection => response
+  end
+
+  api :GET, "/systems/:id/releases", "Show releases available for the system"
+  param :id, String, :desc => "UUID of the system", :required => true
+  desc <<-DESC
+    A hint for choosing the right value for the releaseVer param
+  DESC
+  def releases
+    response = { :results => @system.available_releases,
+                 :total => @system.available_releases.size,
+                 :subtotal => @system.available_releases.size }
+    respond_for_index :collection => response
+  end
+
+  # used for registering with activation keys
+  api :POST, "/organizations/:organization_id/systems", "Register a system with activation key"
+  param :name, String, :desc => "Name of the system", :required => true, :action_aware => true
+  param :description, String, :desc => "Description of the system"
+  param :location, String, :desc => "Physical location of the system"
+  param :facts, Hash, :desc => "Key-value hash of system-specific facts", :action_aware => true, :required => true do
+    param :fact, String, :desc => "Any number of facts about this system"
+  end
+  param :type, String, :desc => "Type of the system, it should always be 'system'", :required => true, :action_aware => true
+  param :guest_ids, Array, :desc => "IDs of the guests running on this system"
+  param :installed_products, Array, :desc => "List of products installed on the system", :action_aware => true
+  param :release_ver, String, :desc => "Release version of the system"
+  param :service_level, String, :allow_nil => true, :desc => "A service level for auto-healing process, e.g. SELF-SUPPORT", :action_aware => true
+  param :last_checkin, String, :desc => "Last check-in time of this system"
+  param :organization_id, String, :desc => "Specify the organization", :required => true
+  param :environment_id, String, :desc => "Specify the environment"
+  param :content_view_id, String, :desc => "Specify the content view"
+  param :system_group_id, String, :desc => "Specify the system group"
+  param :activation_keys, String, :desc => "comma-separated list of activation-key IDs", :required => true
+  def activate
+    # Activation keys are userless by definition so use the internal generic user
+    # Set it before calling find_activation_keys to allow communication with candlepin
+    User.current    = User.hidden.first
+    activation_keys = find_activation_keys
+    ActiveRecord::Base.transaction do
+      # create new system entry
+      @system = System.new(system_params)
+
+      # register system - we apply ak in reverse order so when they conflict e.g. in environment, the first wins.
+      activation_keys.reverse_each { |ak| ak.apply_to_system(@system) }
+      @system.save!
+
+      # subscribe system - if anything goes wrong subscriptions are deleted in Candlepin and exception is rethrown
+      activation_keys.each do |ak|
+        ak.subscribe_system(@system)
+        ak.system_groups.each do |group|
+          group.system_ids = (group.system_ids + [@system.id]).uniq
+          group.save!
+        end
+      end
+
+      respond_for_create
+    end
+  end
+
+  api :PUT, "/systems/:id/enabled_repos", "Update the information about enabled repositories"
+  desc <<-DESC
+    Used by katello-agent to keep the information about enabled repositories up to date.
+    This information is then used for computing the errata available for the system.
+  DESC
+  param :enabled_repos, Hash, :required => true do
+    param :repos, Array, :required => true do
+      params :baseurl, Array, :description => "List of enabled repo urls for the repo (Only first is used.)", :required => false
+    end
+  end
+  param :id, String, :desc => "UUID of the system", :required => true
+  def enabled_repos
+    repos_params = params['enabled_repos'] rescue raise(HttpErrors::BadRequest, _("Expected attribute is missing:") + " enabled_repos")
+    repos_params = repos_params['repos'] || []
+
+    unknown_paths = []
+    repos = []
+    repos_params.each do |repo|
+      if !repo['baseurl'].blank?
+        path = URI(repo['baseurl'].first).path
+        possible_repos = Repository.where(:relative_path => path.gsub('/pulp/repos/', ''))
+        if possible_repos.empty?
+          unknown_paths << path
+          logger.warn("System #{@system.name} (#{@system.id}) requested binding to unknown repo #{path}")
+        else
+          repos << possible_repos.first
+          logger.warn("System #{@system.name} (#{@system.id}) requested binding to path #{path} matching" +
+                       "#{possible_repos.size} repositories.") if possible_repos.size > 1
+        end
+      else
+        logger.warn("System #{@system.name} (#{@system.id}) attempted to bind to unspecific repo (#{repo}).")
+      end
+    end
+
+    pulp_ids = repos.collect{|r| r.pulp_id}
+    processed_ids, error_ids = @system.enable_yum_repos(pulp_ids)
+
+    result                  = {}
+    result[:processed_ids]  = processed_ids
+    result[:error_ids]      = error_ids
+    result[:unknown_labels] = unknown_paths
+    if error_ids.present? || unknown_paths.present?
+      result[:result] = "error"
+    else
+      result[:result] = "ok"
+    end
+
+    respond_for_show :resource => result
   end
 
   private
@@ -351,8 +549,8 @@ class Api::V2::SystemsController < Api::V2::ApiController
     end
   end
 
-  def system_params
-    system_params = params.slice(:name, :owner, :facts, :installedProducts)
+  def system_params(params)
+    system_params = params.slice(:name, :description, :location, :owner, :facts)
 
     if params.key?(:cp_type)
       system_params[:cp_type] = params[:cp_type]
@@ -360,7 +558,57 @@ class Api::V2::SystemsController < Api::V2::ApiController
       system_params[:cp_type] = params[:type]
     end
 
+    { :guest_ids => :guestIds,
+      :installed_products => :installedProducts,
+      :release_ver => :releaseVer,
+      :service_level => :serviceLevel,
+      :last_checkin => :lastCheckin }.each do |snake, camel|
+      if params[snake]
+        system_params[camel] = params[snake]
+      elsif params[camel]
+        system_params[camel] = params[camel]
+      end
+    end
+    system_params[:installedProducts] = [] if system_params.key?(:installedProducts) && system_params[:installedProducts].nil?
+
+    unless User.consumer?
+      system_params.merge!(params.slice(:environment_id, :content_view_id))
+      system_params[:content_view_id] = nil if system_params[:content_view_id] == false
+      system_params[:content_view_id] = params[:content_view][:id] if params[:content_view]
+      system_params[:environment_id] = params[:environment][:id] if params[:environment]
+    end
+
     system_params
+  end
+
+  def find_activation_keys
+    if ak_names = params[:activation_keys]
+      ak_names        = ak_names.split(",")
+      activation_keys = ak_names.map do |ak_name|
+        activation_key = @organization.activation_keys.find_by_name(ak_name)
+        fail HttpErrors::NotFound, _("Couldn't find activation key '%s'") % ak_name unless activation_key
+        activation_key
+      end
+    else
+      activation_keys = []
+    end
+    if activation_keys.empty?
+      fail HttpErrors::BadRequest, _("At least one activation key must be provided")
+    end
+    activation_keys
+  end
+
+  def setup_content_view(cv_id)
+    return if @content_view
+    organization = @organization
+    organization ||= @system.organization if @system
+    organization ||= @environment.organization if @environment
+    if cv_id && organization
+      @content_view = ContentView.readable(organization).find_by_id(cv_id)
+      fail HttpErrors::NotFound, _("Couldn't find content view '%s'") % cv_id if @content_view.nil?
+    else
+      @content_view = nil
+    end
   end
 
 end

@@ -20,12 +20,12 @@
  * @requires CurrentOrganization
  *
  * @description
- *   Provides a $resource for subscription(s).
+ *   Provides a $resource for a subscription or list of subscriptions
  */
-angular.module('Bastion.subscriptions').factory('Subscriptions', ['$resource', 'Routes', 'CurrentOrganization',
-    function ($resource, Routes, CurrentOrganization) {
-        return $resource(Routes.apiSubscriptionsPath(), {'organization_id': CurrentOrganization}, {
-            query: {method: 'GET', isArray: false}
+angular.module('Bastion.subscriptions').factory('Subscription', ['$resource', 'CurrentOrganization',
+    function ($resource, CurrentOrganization) {
+        return $resource('/katello/api/organizations/:org/subscriptions/:id/:action', {'org': CurrentOrganization}, {
+            query: {method: "GET"}
         });
     }]
 );

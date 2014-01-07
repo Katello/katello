@@ -179,6 +179,7 @@ Katello::Engine.routes.draw do
       get :consumers
     end
     collection do
+      get :all
       get :items
       post :upload
       post :delete_manifest

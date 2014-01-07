@@ -134,7 +134,7 @@ class NavigationItemsTest < ActiveSupport::TestCase
     item = Navigation::Items::Subscriptions.new(@acme_corporation)
 
     assert_equal  _('Red Hat Subscriptions'), item.display
-    assert_equal  subscriptions_path, item.url
+    assert_equal  all_subscriptions_path, item.url
     assert        item.accessible?
   end
 
