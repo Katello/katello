@@ -13,32 +13,16 @@
 
 /**
  * @ngdoc service
- * @name  Bastion.widgets.service:Nutupane
+ * @name  Bastion.widgets.service:TaskNutupane
  *
  * @requires $location
  * @requires $q
  * @requires $timeout
  *
  * @description
- *   Defines the Nutupane factory for adding common functionality to the Nutupane master-detail
- *   pattern.  Note that the API Nutupane uses must provide a response of the following structure:
- *
- *   {
- *      offset: 25,
- *      subtotal: 50,
- *      total: 100,
- *      results: [...]
- *   }
- *
- * @example
- *   <pre>
-       angular.module('example').controller('ExampleController',
-           ['Nutupane', function (Nutupane)) {
-               var nutupane                = new Nutupane(ExampleResource);
-               $scope.table                = nutupane.table;
-           }]
-       );
-    </pre>
+ *   Defines TasksNutupane factory that uses Task.registerSearch as
+ *   source of data instead of the standard `query` method. This
+ *   effectively creates Nutupane table that is updated by polling.
  */
 angular.module('Bastion.tasks').factory('TasksNutupane',
     ['Task', 'Nutupane', function (Task, Nutupane) {

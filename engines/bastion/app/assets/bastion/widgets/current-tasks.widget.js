@@ -11,6 +11,21 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
  **/
 
+/**
+ * @ngdoc directive
+ * @name Bastion.widgets.directive:currentTasks
+ *
+ * @requires $document
+ * @requires CurrentUser
+ * @requires Task
+ *
+ * @description
+ *  Provides a widget showing current number of runnings tasks, popping
+ *  up the table of recent tasks when clicked on.
+ *
+ * @example
+    <span current-tasks></span>
+ */
 angular.module('Bastion.widgets').directive('currentTasks',
     ['$document', 'CurrentUser', 'Task',
     function ($document, CurrentUser, Task) {

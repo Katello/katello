@@ -10,6 +10,15 @@
  have received a copy of GPLv2 along with this software; if not, see
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
  **/
+
+/**
+ * @ngdoc filter
+ * @name  Bastion.tasks.filter:progressClasses
+ *
+ * @description
+ *   Converts the state of the task to the css classes for bootsrap
+ *   progressbar to look active/passive.
+ */
 angular.module('Bastion.tasks')
     .filter('progressClasses', function () {
         return function (task) {

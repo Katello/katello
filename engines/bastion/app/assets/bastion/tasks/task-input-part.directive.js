@@ -11,6 +11,13 @@
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
  */
 
+/**
+ * @ngdoc directive
+ * @name  Bastion.tasks.directive:taskInputPart
+ *
+ * @description
+ *   Converts part of task humanized structure into a link if possible
+ */
 angular.module('Bastion.tasks').directive('taskInputPart',
     function () {
         return {

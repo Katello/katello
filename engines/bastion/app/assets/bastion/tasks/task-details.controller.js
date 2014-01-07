@@ -13,13 +13,14 @@
 
 /**
  * @ngdoc object
- * @name  Bastion.systems.controller:SystemEventDetailsController
+ * @name  Bastion.systems.controller:TaskDetailsController
  *
  * @requires $scope
- * @requires SystemTask
+ * @requires $state
+ * @requires Task
  *
  * @description
- *   Provides the functionality for the details of a system event.
+ *   Provides the functionality for the details of a task.
  */
 angular.module('Bastion.systems').controller('TaskDetailsController',
     ['$scope', '$state', 'Task',

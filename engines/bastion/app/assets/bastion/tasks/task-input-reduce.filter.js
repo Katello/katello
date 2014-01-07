@@ -10,6 +10,15 @@
  have received a copy of GPLv2 along with this software; if not, see
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
  **/
+
+/**
+ * @ngdoc filter
+ * @name  Bastion.tasks.filter:taskInputReduce
+ *
+ * @description
+ *   Omits the parts of task humanized input that are not necessary to
+ *   show (such as repository name in tasks list or a repository)
+ */
 angular.module('Bastion.tasks')
     .filter('taskInputReduce', function () {
         return function (humanizedTaskInput, skippedParts) {

@@ -12,14 +12,36 @@
  */
 
 /**
- * @ngdoc object
- * @name  Bastion.systems.controller:SystemEventDetailsController
+ * @ngdoc directive
+ * @name  Bastion.tasks.directive:tasksTable
  *
  * @requires $scope
- * @requires SystemTask
+ * @requires TasksNutupane
  *
  * @description
- *   Provides the functionality for the details of a system event.
+ *   Directive to show list of tasks for given resource/user using TasksNutupane.
+ *   The basic conditions used for searching the tasks are provided in
+ *   the attributes.
+ *
+ * @param {string} resourceType The type of resource that the tasks
+ *   should be shown for, e.g. 'Katello::Repository'
+ * @param {string} resourceId The id of resource that the tasks should
+ *   be shown for (in case resourceType is specified)
+ * @param {string} userId The id of user that the tasks should
+ *   be shown for
+ * @param {boolean} activeOnly Reduce the list of tasks only for active
+ * @param {boolean} all Don't apply any implicit search params
+ * @param {string} detailsState What state should be transitioned to
+ *   for showing details of the task
+ * @param {string} knownContext What parts of humanized task inputs
+ *   can be skipped because are obvious from the context the table is in
+ * @example
+ *   <pre>
+        <tasks-table  details-state="products.details.tasks.details"
+                      known-context="product,organization"
+                      resource-type="Katello::Product"
+                      resource-id="{{ product.katello_id }}"/>
+     </pre>
  */
 angular.module('Bastion.tasks').directive('tasksTable',
     ['TasksNutupane',

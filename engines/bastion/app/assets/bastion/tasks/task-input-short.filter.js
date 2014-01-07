@@ -10,6 +10,16 @@
  have received a copy of GPLv2 along with this software; if not, see
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
  **/
+
+/**
+ * @ngdoc filter
+ * @name  Bastion.tasks.filter:taskInputCompile
+ *
+ * @description
+ *   Produces the shortest possible version of humanized input of a
+ *   task, used for list of recent user tasks.
+ */
+
 angular.module('Bastion.tasks')
     .filter('taskInputShort', function () {
         return function (humanizedTaskInput) {

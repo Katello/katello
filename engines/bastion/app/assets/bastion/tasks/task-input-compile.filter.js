@@ -10,6 +10,14 @@
  have received a copy of GPLv2 along with this software; if not, see
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
  **/
+
+/**
+ * @ngdoc filter
+ * @name  Bastion.tasks.filter:taskInputCompile
+ *
+ * @description
+ *   Converts the task humanized structure into a flat string
+ */
 angular.module('Bastion.tasks')
     .filter('taskInputCompile', function () {
         return function (humanizedTaskInput) {
