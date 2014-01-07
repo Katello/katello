@@ -44,6 +44,9 @@ Katello::Engine.routes.draw do
         end
       end
 
+      api_resources :ping, :only => [:index]
+      match "/status" => "ping#server_status", :via => :get
+
       api_resources :system_groups, :only => system_onlies do
         member do
           post :copy
@@ -223,9 +226,6 @@ Katello::Engine.routes.draw do
         api_attachable_resources :templates, :controller => :changesets_content
         api_attachable_resources :content_views, :controller => :changesets_content
       end
-
-      api_resources :ping, :only => [:index]
-      match "/status" => "ping#server_status", :via => :get
 
       api_resources :repositories, :only => [:index, :create, :show, :update, :destroy], :constraints => { :id => /[0-9a-zA-Z\-_.]*/ } do
         api_resources :sync, :only => [:index] do
