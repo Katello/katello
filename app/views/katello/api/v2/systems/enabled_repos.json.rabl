@@ -1,5 +1,3 @@
-object false
+object Katello::Util::Data::ostructize(@resource)
 
-child Katello::Util::Data::ostructize(@resource) => :result do
-  attributes :error_ids, :result, :processed_ids, :unknown_labels
-end
+attributes :error_ids, :result, :processed_ids, :unknown_labels
