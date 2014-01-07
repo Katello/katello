@@ -42,6 +42,18 @@ Katello::Engine.routes.draw do
         scope :constraints => Katello::RegisterWithActivationKeyContraint.new do
           match '/systems' => 'systems#activate', :via => :post
         end
+        api_resources :providers, :only => [:index]
+      end
+
+      api_resources :providers, :only => [:index, :create, :show, :destroy, :update] do
+        member do
+          post :delete_manifest
+          post :import_manifest
+          post :product_create
+          get :products
+          post :refresh_manifest
+          put :refresh_products
+        end
       end
 
       api_resources :system_groups, :only => system_onlies do
@@ -77,6 +89,13 @@ Katello::Engine.routes.draw do
         api_resources :sync_plans, :only => [:index, :create]
         api_resources :tasks, :only => [:index, :show]
         api_resources :providers, :only => [:index], :constraints => {:organization_id => /[^\/]*/}
+        scope :constraints => Katello::RegisterWithActivationKeyContraint.new do
+          match '/systems' => 'systems#activate', :via => :post
+        end
+        api_resources :systems, :only => [:create] do
+          get :report, :on => :collection
+        end
+
         api_resources :distributors, :only => [:index, :create]
         resource :uebercert, :only => [:show]
 
@@ -155,14 +174,6 @@ Katello::Engine.routes.draw do
       api_resources :providers do
         api_resources :sync, :only => [:index, :create] do
           delete :index, :on => :collection, :action => :cancel
-        end
-        member do
-          post :import_manifest
-          post :delete_manifest
-          put :refresh_products
-          post :product_create
-          get :products
-          post :discovery
         end
       end
 

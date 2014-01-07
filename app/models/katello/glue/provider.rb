@@ -135,6 +135,7 @@ module Glue::Provider
     def last_sync
       sync_times = []
       self.products.each do |prod|
+        break unless prod.respond_to?(:last_sync)
         sync = prod.last_sync
         sync_times << sync unless sync.nil?
       end
