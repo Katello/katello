@@ -44,7 +44,7 @@ class Api::V2::SystemsController < Api::V2::ApiController
     {
       :create => [:system, :facts, :installed_products, :name, :type, :cp_type, :service_level, :location, :content_view_id, :environment_id, :organization_id],
       :index => [:search, :page, :per_page, :sort_order, :sort_by, :system, :name, :pool_id, :uuid, :organization_id, :environment_id, :system_group_id],
-      :show => [:system, :id],
+      :show => [:system, :id, :fields],
       :update => [:system, :id, :facts, :installed_products, :name, :type, :cp_type, :service_level, :location, :environment_id, :content_view_id],
       :delete => [:system, :id],
       :tasks => [:system, :id],

@@ -39,8 +39,7 @@ angular.module('Bastion.systems').controller('SystemsController',
             'organization_id':  CurrentOrganization,
             'search':           $location.search().search || "",
             'sort_by':          'name',
-            'sort_order':       'ASC',
-            'paged':            true
+            'sort_order':       'ASC'
         };
 
         var nutupane = new Nutupane(System, params);
