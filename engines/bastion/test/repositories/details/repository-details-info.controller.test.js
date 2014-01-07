@@ -12,7 +12,7 @@
  **/
 
 describe('Controller: RepositoryDetailsInfoController', function() {
-    var $scope, gettext;
+    var $scope, $state, gettext;
 
     beforeEach(module(
         'Bastion.repositories',
@@ -26,6 +26,7 @@ describe('Controller: RepositoryDetailsInfoController', function() {
             Repository = $injector.get('MockResource').$new();
 
         $scope = $injector.get('$rootScope').$new();
+        $state = $injector.get('$state');
         $scope.$stateParams = {
             productId: 1,
             repositoryId: 1
@@ -46,6 +47,7 @@ describe('Controller: RepositoryDetailsInfoController', function() {
 
         $controller('RepositoryDetailsInfoController', {
             $scope: $scope,
+            $state: $state,
             $q: $q,
             gettext: gettext,
             Repository: Repository,
@@ -122,8 +124,8 @@ describe('Controller: RepositoryDetailsInfoController', function() {
     });
 
     it('should provide a method to sync a repository', function() {
+        spyOn($state, 'go');
         $scope.syncRepository($scope.repository);
-
-        expect($scope.repository['sync_state']).toBe('running');
+        expect($state.go).toHaveBeenCalled();
     });
 });

@@ -105,7 +105,7 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
 
         $scope.syncRepository = function (repository) {
             Repository.sync({id: repository.id}, function (task) {
-                $state.go('products.details.tasks.details', {taskId: task.uuid});
+                $state.go('products.details.tasks.details', {taskId: task.id});
             });
         };
 

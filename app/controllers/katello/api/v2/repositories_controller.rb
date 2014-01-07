@@ -107,7 +107,7 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
   param :id, :identifier, :required => true, :desc => "repository id"
   def sync
     task = async_task(::Actions::Katello::Repository::Sync, @repository)
-    render :json => { uuid: task.id }
+    respond_for_async :resource => task
   end
 
   api :PUT, "/repositories/:id", "Update a repository"
