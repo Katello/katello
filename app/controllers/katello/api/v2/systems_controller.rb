@@ -31,10 +31,9 @@ class Api::V2::SystemsController < Api::V2::ApiController
                                         :refresh_subscriptions, :checkin,
                                         :subscription_status, :tasks] # TODO: this should probably be :except
   before_filter :find_content_view, :only => [:create, :update]
-  before_filter :load_search_service, :only => [:index, :tasks]
 
   before_filter :authorize, :except => [:activate, :upload_package_profile]
-  before_filter :load_search_service, :only => [:index, :available_system_groups]
+  before_filter :load_search_service, :only => [:index, :available_system_groups, :tasks]
 
   def organization_id_keys
     [:organization_id, :owner]
@@ -47,13 +46,13 @@ class Api::V2::SystemsController < Api::V2::ApiController
       :show => [:system, :id, :fields],
       :update => [:system, :id, :facts, :installed_products, :name, :type, :cp_type, :service_level, :location, :environment_id, :content_view_id],
       :delete => [:system, :id],
-      :tasks => [:system, :id],
+      :tasks => [:system, :id, :page, :paged, :sort_by, :sort_order],
       :available_system_groups => [:system, :id, :search, :page, :per_page, :sort_order, :sort_by],
       :add_system_groups => [:system, :id, :system_group_ids],
       :remove_system_groups => [:system, :id, :system_group_ids],
       :report => [:system, :environment_id, :organization_id],
-      :package_profile => [:system, :id],
-      :errata => [:system, :id],
+      :package_profile => [:system, :id, :page],
+      :errata => [:system, :id, :page],
       :pools => [:system, :id, :match_system, :match_installed, :no_overlap],
       :releases => [:system, :id],
       :activate => [:system, :facts, :installed_products, :name, :type, :cp_type, :service_level, :location, :content_view_id, :environment_id, :organization_id, :activation_keys]
