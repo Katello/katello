@@ -28,7 +28,10 @@ describe('Controller: SystemGroupDetailsController', function() {
 
         $scope.$stateParams = {systemGroupId: 1};
         $scope.removeRow = function() {};
-        $scope.table = {addRow: function() {}};
+        $scope.table = {
+            addRow: function() {},
+            replaceRow: function() {}
+        };
 
         gettext = function(message) {
             return message;
