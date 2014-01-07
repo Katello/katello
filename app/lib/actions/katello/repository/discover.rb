@@ -28,7 +28,7 @@ module Actions
         end
 
         def run
-          repo_discovery = RepoDiscovery.new(input[:url])
+          repo_discovery = ::Katello::RepoDiscovery.new(input[:url])
           output[:repo_urls] = []
           found = lambda { |path| output[:repo_urls] << path }
           # TODO: implement task cancelling

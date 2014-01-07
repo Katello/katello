@@ -87,7 +87,7 @@ angular.module('Bastion.products').controller('DiscoveryController',
         $scope.updateTask = function (task) {
             setDiscoveryDetails(task);
             if (!task.pending) {
-                Task.unregisterScope($scope.taskSearchId);
+                Task.unregisterSearch($scope.taskSearchId);
             }
         },
 
@@ -96,7 +96,7 @@ angular.module('Bastion.products').controller('DiscoveryController',
             $scope.discoveryTable.rows = [];
             $scope.discoveryTable.selectAll(false);
             Organization.repoDiscover({id: CurrentOrganization, url: $scope.discovery.url}, function (task) {
-                $scope.taskSearchId = Task.registerSearch({ 'type': 'task', 'task_id': task.uuid }, $scope.updateTask);
+                $scope.taskSearchId = Task.registerSearch({ 'type': 'task', 'task_id': task.id }, $scope.updateTask);
             });
         };
 
