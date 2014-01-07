@@ -129,7 +129,6 @@ angular.module('Bastion.widgets').factory('Nutupane',
                 }
                 params.search = table.searchTerm || "";
                 params.search = self.searchTransform(params.search);
-                self.load();
                 return self.load();
             };
 
