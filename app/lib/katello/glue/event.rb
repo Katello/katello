@@ -19,17 +19,18 @@ module Glue
     def self.included(base)
       base.class_eval do
         after_create :trigger_create_event
+        after_commit :execute_action
         before_destroy :trigger_destroy_event
       end
     end
 
     def trigger_create_event
-      Glue::Event.trigger(create_event, self) if create_event
+      plan_action(create_event, self) if create_event
       return true
     end
 
     def trigger_destroy_event
-      Glue::Event.trigger(destroy_event, self) if destroy_event
+      plan_action(destroy_event, self) if destroy_event
       return true
     end
 
@@ -39,6 +40,23 @@ module Glue
 
     # define the Dynflow action to be triggered before destroy
     def destroy_event
+    end
+
+    def plan_action(event_class, *args)
+      @execution_plan = ::ForemanTasks.dynflow.world.plan(event_class, *args)
+      planned        = @execution_plan.state == :planned
+      unless planned
+        errors = @execution_plan.steps.values.map(&:error).compact
+        # we raise error so that the whole transaction is rollbacked
+        raise errors.map(&:message).join('; ')
+      end
+    end
+
+    def execute_action
+      if @execution_plan
+        ::ForemanTasks.dynflow.world.execute(@execution_plan.id)
+      end
+      return true
     end
 
     def self.trigger(event_class, *args)
