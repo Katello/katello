@@ -14,9 +14,8 @@ module Katello
 class Api::V2::ProvidersController < Api::V2::ApiController
 
   before_filter :find_organization, :only => [:index, :create]
-  before_filter :find_provider, :only => [:show, :update, :destroy, :products, :import_products,
-                                          :refresh_products, :import_manifest, :delete_manifest, :product_create,
-                                          :import_manifest_progress, :refresh_manifest, :discovery]
+  before_filter :find_provider, :only => [:show, :update, :destroy, :products, :import_products, :refresh_products,
+                                          :import_manifest, :delete_manifest, :product_create, :refresh_manifest]
   before_filter :authorize
 
   def rules
@@ -62,7 +61,6 @@ class Api::V2::ProvidersController < Api::V2::ApiController
     ids = Provider.readable(@organization).where(:provider_type => params[:provider_type] || 'Custom').pluck(:id)
     options[:filters] = [{:terms => {:id => ids}}]
 
-    @search_service.model = Provider
     respond(:collection => item_search(Provider, params, options))
   end
 
@@ -138,7 +136,7 @@ class Api::V2::ProvidersController < Api::V2::ApiController
     respond_for_async :resource => @provider.manifest_task
   end
 
-  api :POST, "/providers/:id/refresh_manifest", "Refresh previously imported manifest for Red Hat provider"
+  api :PUT, "/providers/:id/refresh_manifest", "Refresh previously imported manifest for Red Hat provider"
   param :id, :number, :desc => "Provider numeric identifier", :required => true
   def refresh_manifest
     fail HttpErrors::BadRequest, _("Manifests cannot be imported for a custom provider.") unless @provider.redhat_provider?
@@ -147,7 +145,7 @@ class Api::V2::ProvidersController < Api::V2::ApiController
     upstream = details['upstreamConsumer'].blank? ? {} : details['upstreamConsumer']
 
     @provider.refresh_manifest(upstream, :async => true, :notify => false)
-    respond_for_async :resource => @provider.manifest_task
+    respond_for_async :resource => @provider.manifest_task, :status => :accepted
   end
 
   api :POST, "/providers/:id/delete_manifest", "Delete manifest from Red Hat provider"
@@ -159,7 +157,7 @@ class Api::V2::ProvidersController < Api::V2::ApiController
     respond_for_status :message => _("Manifest deleted")
   end
 
-  api :POST, "/providers/:id/refresh_products", "Refresh products for Red Hat provider"
+  api :PUT, "/providers/:id/refresh_products", "Refresh products for Red Hat provider"
   param :id, :number, :desc => "Provider numeric identifier", :required => true
   def refresh_products
     fail HttpErrors::BadRequest, _("Products cannot be refreshed for custom provider.") unless @provider.redhat_provider?
@@ -204,46 +202,6 @@ class Api::V2::ProvidersController < Api::V2::ApiController
     respond_for_create :resource => prod
   end
 
-  api :PUT, "/providers/:id", "Update the provider"
-  param :id, :number, :desc => "Provider identifier", :required => true
-  param :repository_url, String, :desc => "Provider repository url"
-  def update
-    @provider.repository_url = params[:repository_url] unless params[:repository_url].blank?
-    @provider.save!
-
-    respond_for_show(:resource => @provider)
-  end
-
-  api :GET, "/providers/:id", "Get a provider"
-  param :id, :number, :desc => "Provider numeric identifier", :required => true
-  def show
-    respond_for_show(:resource => @provider)
-  end
-
-  api :POST, "/providers/:id/delete_manifest", "Delete manifest from Red Hat provider"
-  param :id, :number, :desc => "Provider numeric identifier", :required => true
-  def delete_manifest
-    if @provider.yum_repo?
-      fail HttpErrors::BadRequest, _("Manifests cannot be deleted for a custom provider.")
-    end
-
-    @provider.delete_manifest
-    respond_for_status :message => _("Manifest deleted")
-  end
-
-  api :POST, "/providers/:id/refresh_manifest", "Refresh previously imported manifest for Red Hat provider"
-  param :id, :number, :desc => "Provider numeric identifier", :required => true
-  def refresh_manifest
-    if @provider.yum_repo?
-      fail HttpErrors::BadRequest, _("Manifests cannot be refreshed for a custom provider.")
-    end
-
-    details  = @provider.organization.owner_details
-    upstream = details['upstreamConsumer'].blank? ? {} : details['upstreamConsumer']
-    @provider.refresh_manifest(upstream, :async => false, :notify => false)
-    respond_for_status :message => _("Manifest refreshed")
-  end
-
   private
 
     def find_provider
@@ -253,7 +211,7 @@ class Api::V2::ProvidersController < Api::V2::ApiController
     end
 
     def provider_params
-      if params[:action] == "update" && provider.redhat_provider?
+      if params[:action] == "update" && @provider.redhat_provider?
         params.require(:provider).permit(:repository_url)
       else
         params.require(:provider).permit(:name)

@@ -31,7 +31,7 @@ angular.module('Bastion.providers').factory('Provider',
                 'save':   {'method': 'POST', 'params': {'organization_id': CurrentOrganization}},
                 'update': {'method': 'PUT'},
                 'deleteManifest': {'method': 'POST', 'params': {'action': 'delete_manifest'}},
-                'refreshManifest': {'method': 'POST', 'params': {'action': 'refresh_manifest'}}
+                'refreshManifest': {'method': 'PUT', 'params': {'action': 'refresh_manifest'}}
             }
         );
     }]
