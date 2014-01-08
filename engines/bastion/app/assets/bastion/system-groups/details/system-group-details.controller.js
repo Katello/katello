@@ -48,6 +48,7 @@ angular.module('Bastion.system-groups').controller('SystemGroupDetailsController
             group.$update(function (response) {
                 deferred.resolve(response);
                 $scope.successMessages.push(gettext('System Group updated'));
+                $scope.table.replaceRow(response);
             }, function (response) {
                 deferred.reject(response);
                 $scope.errorMessages.push(gettext("An error occurred saving the System Group: ") + response.data.displayMessage);
