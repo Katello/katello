@@ -35,7 +35,7 @@ module ControllerSupport
 
       if params[:authorized]
         msg = "Expected response for #{action} to be a <success>, but was <#{response.status}> instead. \n" +
-                                                "#{user.own_role.summary}"
+          "#{user.own_role.summary}"
         assert_response :success, msg
       else
         msg = "Security Violation (403) expected for #{action}, got #{response.status} instead. \n#{user.own_role.summary}"
@@ -46,9 +46,9 @@ module ControllerSupport
 
   def assert_protected_action(action_name, allowed_perms, denied_perms, &block)
     assert_authorized(
-              :permission => allowed_perms,
-              :action => action_name,
-              :request => block
+        :permission => allowed_perms,
+        :action => action_name,
+        :request => block
     )
     refute_authorized(
         :permission => denied_perms,

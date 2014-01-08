@@ -20,7 +20,7 @@ Katello::Engine.routes.draw do
 
       root :to => 'root#resource_list'
 
-      api_resources :environments, :only => [] do
+      api_resources :environments, :only => [:index, :show, :create, :update, :destroy] do
         api_resources :systems, :only => system_onlies do
           get :report, :on => :collection
         end
@@ -30,6 +30,11 @@ Katello::Engine.routes.draw do
       end
 
       api_resources :organizations, :only => [:index, :show, :update, :create, :destroy] do
+        api_resources :environments, :only => [:index, :show, :create, :update, :destroy] do
+          collection do
+            get :paths
+          end
+        end
         member do
           post :repo_discover
           post :cancel_repo_discover
@@ -88,12 +93,6 @@ Katello::Engine.routes.draw do
 
       api_resources :organizations do
         api_resources :products, :only => [:index]
-        api_resources :environments do
-          collection do
-            get :paths
-          end
-        end
-
         api_resources :sync_plans, :only => [:index, :create]
         api_resources :tasks, :only => [:index, :show]
         api_resources :providers, :only => [:index], :constraints => {:organization_id => /[^\/]*/}
@@ -268,7 +267,7 @@ Katello::Engine.routes.draw do
         end
       end
 
-      api_resources :environments, :only => [:show, :update, :destroy] do
+      api_resources :environments, :only => [] do
         api_resources :distributors, :only => [:create, :index]
         api_resources :products, :only => [:index] do
           get :repositories, :on => :member

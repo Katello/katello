@@ -80,14 +80,23 @@ module Katello
 
     protected
 
+    def is_database_id?(num)
+      Integer(num)
+      true
+    rescue
+      false
+    end
+
     def labelize_params(params)
       return params[:label] unless params.try(:[], :label).nil?
       return Util::Model.labelize(params[:name]) unless params.try(:[], :name).nil?
     end
 
     def find_organization
-      organization_id = params[:organization_id]
-      @organization = Organization.without_deleting.having_name_or_label(organization_id).first
+      @organization = find_optional_organization
+      fail HttpErrors::NotFound, _("One of parameters [ %s ] required but not specified.") %
+          organization_id_keys.join(", ") if @organization.nil?
+      @organization
     end
 
     def sort_params
