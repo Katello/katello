@@ -19,12 +19,13 @@ class GluePulpRepoTestBase < ActiveSupport::TestCase
 
   def self.before_suite
     super
-    configure_runcible
 
     services  = ['Candlepin', 'ElasticSearch', 'Foreman']
     models    = ['KTEnvironment', 'Repository', 'Package', 'ContentView',
                  'Organization', 'Product', 'ContentViewEnvironment']
     disable_glue_layers(services, models, true)
+
+    configure_runcible
 
     @@fedora_17_x86_64 = Repository.find(@loaded_fixtures['katello_repositories']['fedora_17_x86_64']['id'])
     @@fedora_17_x86_64.relative_path = '/test_path/'

@@ -14,7 +14,7 @@ module Katello
 class EnvironmentsController < Katello::ApplicationController
   respond_to :html, :js
 
-  before_filter :find_organization, :only => [:show, :edit, :update, :destroy, :index, :new, :create, :default_label, :products]
+  before_filter :find_organization, :only => [:show, :edit, :update, :destroy, :new, :create, :default_label, :products]
   before_filter :authorize
   before_filter :find_environment, :only => [:show, :edit, :update, :destroy, :products, :content_views]
   skip_before_filter :require_org
@@ -24,10 +24,13 @@ class EnvironmentsController < Katello::ApplicationController
   end
 
   def rules
+    index_rule = lambda{Organization.any_readable?}
     manage_rule = lambda{@organization.environments_manageable?}
     view_rule = lambda{@organization.readable?}
     view_akey_rule = lambda{ActivationKey.readable?(current_organization)}
     {
+      :index => index_rule,
+      :all => index_rule,
       :new => manage_rule,
       :edit => view_rule,
       :create => manage_rule,
@@ -45,6 +48,14 @@ class EnvironmentsController < Katello::ApplicationController
       :create => {:kt_environment => [:name, :label, :description, :prior]},
       :update => {:kt_environment  => [:name, :description, :prior]}
     }
+  end
+
+  def index
+    render 'bastion/layouts/application', :layout => false
+  end
+
+  def all
+    redirect_to action: 'index', :anchor => '/environments'
   end
 
   # GET /environments/new
