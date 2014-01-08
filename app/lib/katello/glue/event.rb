@@ -64,27 +64,6 @@ module Glue
       ::Logging.logger['glue'].debug("Started plan with #{run.id}")
       run.finished.wait
       ::Logging.logger['glue'].debug("Finished plan with #{run.id}")
-      # execution_plan.failed_steps.each do |step|
-      #   Notify.warning(_("Failed to perform additional action %{action}: %{message}") %
-      #                  { :action => step.action_class.name,
-      #                    :message => step.error['message'] },
-      #                  { :asynchronous => true, :persist => true })
-      # end
-
-      # log_message = execution_plan.steps.map do |step|
-      #   message = "#{step.action_class.name}:#{step.status}:#{step.input.inspect} -> #{step.output.inspect}"
-      #   if step.status == 'error'
-      #     message << "#{step.error['exception']}: #{step.error['message']}\n"
-      #     message << step.error['backtrace'].join("\n")
-      #   end
-      #     message
-      # end.join("\n")
-
-      # if execution_plan.failed_steps.any?
-      #   ::Logging.logger['glue'].error(log_message)
-      # else
-      #   ::Logging.logger['glue'].debug(log_message)
-      # end
     end
   end
 end
