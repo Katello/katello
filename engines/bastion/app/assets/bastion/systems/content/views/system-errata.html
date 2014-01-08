@@ -29,7 +29,7 @@
 </div>
 
 <div alch-table="errataTable">
-  <div alch-container-scroll control-width="table" alch-infinite-scroll="errataTable.nextPage()">
+  <div alch-container-scroll control-width="table" alch-infinite-scroll="errataTable.nextPage()" data="errataTable.rows">
     <table ng-class="{'table-mask': errataTable.working}" class="table table-striped">
       <thead>
         <tr alch-table-head row-select>
@@ -44,7 +44,7 @@
         <tr alch-table-row ng-repeat="erratum in errataTable.rows | filter:errataTable.errataCompare" row-select="erratum">
           <td alch-table-cell >{{ erratum.type }}</td>
           <td alch-table-cell >
-            <a ui-sref="systems.details.errata.details({errataId: erratum.errata_id})">
+            <a ng-click="transitionToErratum(erratum)">
               {{ erratum.errata_id }}
             </a>
           </td>

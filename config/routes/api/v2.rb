@@ -133,12 +133,13 @@ Katello::Engine.routes.draw do
 
       api_resources :systems, :only => [] do
         collection do
-          match '/add_system_groups' => 'systems_bulk_actions#bulk_add_system_groups', :via => :put
-          match '/remove_system_groups' => 'systems_bulk_actions#bulk_remove_system_groups', :via => :put
-          match '/install_content' => 'systems_bulk_actions#install_content', :via => :put
-          match '/update_content' => 'systems_bulk_actions#update_content', :via => :put
-          match '/remove_content' => 'systems_bulk_actions#remove_content', :via => :put
-          match '/destroy' => 'systems_bulk_actions#destroy_systems', :via => :put
+          match '/bulk/add_system_groups' => 'systems_bulk_actions#bulk_add_system_groups', :via => :put
+          match '/bulk/remove_system_groups' => 'systems_bulk_actions#bulk_remove_system_groups', :via => :put
+          match '/bulk/install_content' => 'systems_bulk_actions#install_content', :via => :put
+          match '/bulk/applicable_errata' => 'systems_bulk_actions#applicable_errata', :via => :post
+          match '/bulk/update_content' => 'systems_bulk_actions#update_content', :via => :put
+          match '/bulk/remove_content' => 'systems_bulk_actions#remove_content', :via => :put
+          match '/bulk/destroy' => 'systems_bulk_actions#destroy_systems', :via => :put
         end
         api_resources :subscriptions, :only => [:create, :index, :destroy] do
           collection do
@@ -330,6 +331,8 @@ Katello::Engine.routes.draw do
       api_resources :sync_plans, :only => [:show, :update, :destroy]
       api_resources :tasks, :only => [:show]
       api_resources :about, :only => [:index]
+
+      api_resources :errata, :only => [:show]
 
       # api custom information
       match '/custom_info/:informable_type/:informable_id' => 'custom_info#create', :via => :post, :as => :create_custom_info

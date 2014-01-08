@@ -43,7 +43,7 @@
   </div>
 
   <div alch-table="systemsTable" class="nutupane">
-    <div alch-container-scroll control-width="systemsTable" alch-infinite-scroll="systemsTable.nextPage()">
+    <div alch-container-scroll control-width="systemsTable" alch-infinite-scroll="systemsTable.nextPage()" data="systemsTable.rows">
 
       <div class="loading-mask icon-3x" ng-show="systemsTable.working && systemsTable.rows.length == 0">
         <i class="icon-spinner icon-spin"></i>

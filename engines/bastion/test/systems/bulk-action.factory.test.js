@@ -44,32 +44,32 @@ describe('Factory: BulkAction', function() {
     });
 
     it('provides a way to add system groups to systems', function() {
-        $httpBackend.expect('PUT', '/katello/api/systems/add_system_groups', systemGroupParams).respond();
+        $httpBackend.expect('PUT', '/katello/api/systems/bulk/add_system_groups', systemGroupParams).respond();
         BulkAction.addSystemGroups(systemGroupParams);
     });
 
     it('provides a way to remove system groups from systems', function() {
-        $httpBackend.expect('PUT', '/katello/api/systems/remove_system_groups', systemGroupParams).respond();
+        $httpBackend.expect('PUT', '/katello/api/systems/bulk/remove_system_groups', systemGroupParams).respond();
         BulkAction.removeSystemGroups(systemGroupParams);
     });
 
     it('provides a way to install content on systems', function() {
-        $httpBackend.expect('PUT', '/katello/api/systems/install_content', systemParams).respond();
+        $httpBackend.expect('PUT', '/katello/api/systems/bulk/install_content', systemParams).respond();
         BulkAction.installContent(systemParams);
     });
 
     it('provides a way to update content on systems', function() {
-        $httpBackend.expect('PUT', '/katello/api/systems/update_content', systemParams).respond();
+        $httpBackend.expect('PUT', '/katello/api/systems/bulk/update_content', systemParams).respond();
         BulkAction.updateContent(systemParams);
     });
 
     it('provides a way to remove content from systems', function() {
-        $httpBackend.expect('PUT', '/katello/api/systems/remove_content', systemParams).respond();
+        $httpBackend.expect('PUT', '/katello/api/systems/bulk/remove_content', systemParams).respond();
         BulkAction.removeContent(systemParams);
     });
 
     it('provides a way to remove systems', function() {
-        $httpBackend.expect('PUT', '/katello/api/systems/destroy', systemParams).respond();
+        $httpBackend.expect('PUT', '/katello/api/systems/bulk/destroy', systemParams).respond();
         BulkAction.removeSystems(systemParams);
     });
 });

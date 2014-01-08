@@ -12,7 +12,8 @@
  **/
 
 describe('Controller: SystemsBulkActionPackagesController', function() {
-    var $scope, $q, gettext, BulkAction, SystemGroup, Organization, Task, CurrentOrganization;
+    var $scope, $q, gettext, BulkAction, SystemGroup, Organization,
+		Task, CurrentOrganization, selected;
 
     beforeEach(module('Bastion.systems', 'Bastion.test-mocks'));
 
@@ -38,14 +39,14 @@ describe('Controller: SystemsBulkActionPackagesController', function() {
         };
         gettext = function() {};
         CurrentOrganization = 'foo';
+        selected = {included: {ids: [1, 2, 3]}}
     });
 
     beforeEach(inject(function($controller, $rootScope, $q) {
         $scope = $rootScope.$new();
-
-        $scope.getSelectedSystemIds = function() {
-            return [1,2,3]
-        };
+        $scope.nutupane = {};
+        $scope.nutupane.getAllSelectedResults = function () { return selected }
+        $scope.setState = function(){};
 
         $controller('SystemsBulkActionPackagesController', {$scope: $scope,
             $q: $q,
@@ -68,11 +69,10 @@ describe('Controller: SystemsBulkActionPackagesController', function() {
         $scope.performContentAction();
 
         expect(BulkAction.installContent).toHaveBeenCalledWith(
-            {
-                ids: $scope.getSelectedSystemIds(),
+            _.extend({}, selected, {
                 content_type: $scope.content.contentType,
                 content: $scope.content.content.split(/ *, */)
-            },
+            }),
             jasmine.any(Function), jasmine.any(Function)
         );
     });
@@ -88,11 +88,10 @@ describe('Controller: SystemsBulkActionPackagesController', function() {
         $scope.performContentAction();
 
         expect(BulkAction.updateContent).toHaveBeenCalledWith(
-            {
-                ids: $scope.getSelectedSystemIds(),
+            _.extend({}, selected, {
                 content_type: $scope.content.contentType,
                 content: $scope.content.content.split(/ *, */)
-            },
+            }),
             jasmine.any(Function), jasmine.any(Function)
         );
     });
@@ -108,11 +107,10 @@ describe('Controller: SystemsBulkActionPackagesController', function() {
         $scope.performContentAction();
 
         expect(BulkAction.removeContent).toHaveBeenCalledWith(
-            {
-                ids: $scope.getSelectedSystemIds(),
+            _.extend({}, selected, {
                 content_type: $scope.content.contentType,
                 content: $scope.content.content.split(/ *, */)
-            },
+            }),
             jasmine.any(Function), jasmine.any(Function)
         );
     });
@@ -128,11 +126,10 @@ describe('Controller: SystemsBulkActionPackagesController', function() {
         $scope.performContentAction();
 
         expect(BulkAction.installContent).toHaveBeenCalledWith(
-            {
-                ids: $scope.getSelectedSystemIds(),
+            _.extend({}, selected, {
                 content_type: $scope.content.contentType,
                 content: $scope.content.content.split(/ *, */)
-            },
+            }),
             jasmine.any(Function), jasmine.any(Function)
         );
     });
@@ -148,11 +145,10 @@ describe('Controller: SystemsBulkActionPackagesController', function() {
         $scope.performContentAction();
 
         expect(BulkAction.updateContent).toHaveBeenCalledWith(
-            {
-                ids: $scope.getSelectedSystemIds(),
+            _.extend({}, selected, {
                 content_type: $scope.content.contentType,
                 content: $scope.content.content.split(/ *, */)
-            },
+            }),
             jasmine.any(Function), jasmine.any(Function)
         );
     });
@@ -168,11 +164,10 @@ describe('Controller: SystemsBulkActionPackagesController', function() {
         $scope.performContentAction();
 
         expect(BulkAction.removeContent).toHaveBeenCalledWith(
-            {
-                ids: $scope.getSelectedSystemIds(),
+            _.extend({}, selected, {
                 content_type: $scope.content.contentType,
                 content: $scope.content.content.split(/ *, */)
-            },
+            }),
             jasmine.any(Function), jasmine.any(Function)
         );
     });

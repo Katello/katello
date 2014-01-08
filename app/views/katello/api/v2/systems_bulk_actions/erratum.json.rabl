@@ -1,0 +1,1 @@
+extends "katello/api/v2/errata/show"

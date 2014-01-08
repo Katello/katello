@@ -20,6 +20,7 @@ class Api::V2::ErrataController < Api::V2::ApiController
     api_version 'v2'
   end
 
+  before_filter :find_organization, :only => [:show]
   before_filter :find_environment, :only => [:index]
   before_filter :find_repository, :only => [:index, :show]
   before_filter :find_erratum, :only => [:show]
@@ -28,7 +29,7 @@ class Api::V2::ErrataController < Api::V2::ApiController
 
   def rules
     env_readable = lambda { @environment.contents_readable? }
-    readable     = lambda { @repo.environment.contents_readable? && @repo.product.readable? }
+    readable     = lambda { Repository.any_readable?(@organization) }
     {
         :index => env_readable,
         :show  => readable,
@@ -48,6 +49,7 @@ class Api::V2::ErrataController < Api::V2::ApiController
   end
 
   api :GET, "/repositories/:repository_id/errata/:id", "Show an erratum"
+  api :GET, "/errata/:id", "Show an erratum"
   def show
     respond :resource => @erratum
   end
@@ -73,8 +75,9 @@ class Api::V2::ErrataController < Api::V2::ApiController
 
   def find_erratum
     @erratum = Errata.find(params[:id])
+    @erratum ||= Errata.find_by_errata_id(params[:id])
     fail HttpErrors::NotFound, _("Erratum with id '%s' not found") % params[:id] if @erratum.nil?
-    fail HttpErrors::NotFound, _("Erratum '%s' not found within the repository") % params[:id] unless @erratum.repoids.include? @repo.pulp_id
+    fail HttpErrors::NotFound, _("Erratum '%s' not found within the repository") % params[:id] unless @repo.nil? || @erratum.repoids.include?(@repo.pulp_id)
     @erratum
   end
 

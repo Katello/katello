@@ -1,10 +1,10 @@
 object @resource
 
-extends 'katello/api/v2/errata/_attributes'
+attributes :title, :id, :errata_id
+attributes :issued
 
-child Katello::Util::Data::ostructize(@object.pkglist) => :pkglist do
-  attributes :short, :name
-  child :packages => :packages do
-    attributes :version, :arch, :release, :src, :filename, :epoch, :name
-  end
+node :applicable_consumers do |e|
+  Katello::System.where(:uuid => e.applicable_consumers).select([:name, :uuid]).collect{|i| {:name=> i.name, :uuid => i.uuid}}
 end
+
+attributes :type

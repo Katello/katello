@@ -39,6 +39,11 @@ angular.module('Bastion.systems').controller('SystemErrataController',
                 item.title.indexOf(searchText) >= 0;
         };
 
+        $scope.errataTable.transitionToErratum = function (erratum) {
+            loadErratum(erratum.errata_id);
+            $scope.transitionTo('systems.details.errata.details', {errataId: erratum.errata_id});
+        };
+
         $scope.applySelected = function () {
             var selected, errataIds = [];
             selected = $scope.errataTable.getSelected();
@@ -53,5 +58,14 @@ angular.module('Bastion.systems').controller('SystemErrataController',
                                     });
             }
         };
+
+        function loadErratum(errataId) {
+            $scope.erratum = SystemErratum.get({'id': $scope.$stateParams.systemId,
+                'errata_id': errataId});
+        }
+
+        if ($scope.$stateParams.errataId) {
+            loadErratum($scope.$stateParams.errataId);
+        }
     }
 ]);

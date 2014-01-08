@@ -12,7 +12,7 @@
  **/
 
 describe('Controller: SystemsBulkActionGroupsController', function() {
-    var $scope, $q, gettext, BulkAction, SystemGroup, Organization, 
+    var $scope, $q, gettext, BulkAction, SystemGroup, Organization,
         Task, CurrentOrganization, Nutupane, $location, groupIds;
 
     beforeEach(module('Bastion.systems', 'Bastion.test-mocks'));
@@ -36,7 +36,7 @@ describe('Controller: SystemsBulkActionGroupsController', function() {
         };
         Nutupane = function() {
            this.getAllSelectedResults = function() {
-               return { 
+               return {
                    included: { ids: groupIds }
                };
             };
@@ -56,14 +56,15 @@ describe('Controller: SystemsBulkActionGroupsController', function() {
 
     beforeEach(inject(function($controller, $rootScope, $q) {
         $scope = $rootScope.$new();
-        $scope.nutupane = new Nutupane()
+        $scope.setState = function(){};
+        $scope.nutupane = new Nutupane();
         $scope.nutupane.getAllSelectedResults = function() {
             return {
                 included: {
                     ids: ['sys1', 'sys2']
                 }
             }
-        }
+        };
 
         $controller('SystemsBulkActionGroupsController', {$scope: $scope,
             $q: $q,

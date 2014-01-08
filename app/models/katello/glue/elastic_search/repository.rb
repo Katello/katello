@@ -191,7 +191,7 @@ module Glue::ElasticSearch::Repository
     end
 
     def errata_count
-      results = Katello::Errata.search('', :page_size => 1, :filters => {:repoids => [self.pulp_id]})
+      results = Katello::Errata.legacy_search('', :page_size => 1, :filters => {:repoids => [self.pulp_id]})
       results.empty? ? 0 : results.total
     end
 

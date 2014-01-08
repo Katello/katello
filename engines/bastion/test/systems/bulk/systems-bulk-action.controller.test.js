@@ -12,11 +12,12 @@
  **/
 
 describe('Controller: SystemsBulkActionController', function() {
-    var $scope, $q, gettext, BulkAction, SystemGroup, Organization, Task, CurrentOrganization;
+    var $scope, $q, selected, gettext, BulkAction, SystemGroup, Organization, Task, CurrentOrganization;
 
     beforeEach(module('Bastion.systems', 'Bastion.test-mocks'));
 
     beforeEach(function() {
+        selected = {included: {ids: [1, 2, 3]}};
         BulkAction = {
             addSystemGroups: function() {},
             removeSystemGroups: function() {},
@@ -42,18 +43,15 @@ describe('Controller: SystemsBulkActionController', function() {
 
     beforeEach(inject(function($controller, $rootScope, $q) {
         $scope = $rootScope.$new();
-        $scope.systemTable = {
-            getSelected: function() {return [
-                {id: 1},
-                {id: 2},
-                {id: 3}
-            ];}
-        };
+
+        $scope.nutupane = {};
+        $scope.nutupane.getAllSelectedResults = function () { return selected };
 
         $controller('SystemsBulkActionController', {$scope: $scope,
             $q: $q,
             BulkAction: BulkAction,
             SystemGroup: SystemGroup,
+            CurrentOrganization: 'foo',
             gettext: gettext,
             Organization: Organization,
             CurrentOrganization: CurrentOrganization,
@@ -64,8 +62,7 @@ describe('Controller: SystemsBulkActionController', function() {
         spyOn(BulkAction, 'removeSystems');
         $scope.performRemoveSystems();
 
-        expect(BulkAction.removeSystems).toHaveBeenCalledWith(
-            {ids: _.pluck($scope.systemTable.getSelected(), 'id')},
+        expect(BulkAction.removeSystems).toHaveBeenCalledWith(_.extend(selected, {'organization_id': 'foo'}),
             jasmine.any(Function), jasmine.any(Function)
         );
     });

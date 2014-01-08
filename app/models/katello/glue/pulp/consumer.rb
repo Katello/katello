@@ -121,7 +121,7 @@ module Glue::Pulp::Consumer
       if ids.empty?
         []
       else
-        errata = Katello::Errata.search("", :start => 0, :page_size => errata_ids.size,
+        errata = Katello::Errata.legacy_search("", :start => 0, :page_size => errata_ids.size,
                                      :filters => {:id => ids}, :fields => Katello::Errata::SHORT_FIELDS)
         errata.collect{|e| Katello::Errata.new_from_search(e.as_json)}
       end

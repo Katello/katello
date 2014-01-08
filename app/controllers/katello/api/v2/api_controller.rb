@@ -47,13 +47,23 @@ module Katello
       end
       options[:sort_by] = params[:sort_by] if params[:sort_by]
       options[:sort_order] = params[:sort_order] if params[:sort_order]
-      options[:per_page] = params[:per_page] || ::Setting::General.entries_per_page  unless options[:full_result]
-      options[:page] = params[:page] || 1
-      offset = (options[:page].to_i - 1) * options[:per_page].to_i
+
+      unless options[:full_result]
+        options[:per_page] = params[:per_page] || ::Setting::General.entries_per_page
+        options[:page] = params[:page] || 1
+        offset = (options[:page].to_i - 1) * options[:per_page].to_i
+      end
 
       @search_service.model = item_class
-      results, total_count = @search_service.retrieve(params[:search], offset, options)
 
+      if block_given?
+        options[:offset] = offset
+        @search_service.search_options = options
+        @search_service.query_string = params[:search]
+        results, total_count = yield(@search_service)
+      else
+        results, total_count = @search_service.retrieve(params[:search], offset, options)
+      end
       {
         :results  => results,
         :subtotal => total_count,

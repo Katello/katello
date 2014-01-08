@@ -20,13 +20,14 @@
  * @requires $location
  * @requires gettext
  * @requires BulkAction
+ * @requires CurrentOrganization
  *
  * @description
  *   A controller for providing bulk action functionality to the systems page.
  */
 angular.module('Bastion.systems').controller('SystemsBulkActionController',
-    ['$scope', '$q', '$location', 'gettext', 'BulkAction',
-    function ($scope, $q, $location, gettext, BulkAction) {
+    ['$scope', '$q', '$location', 'gettext', 'BulkAction', 'CurrentOrganization',
+    function ($scope, $q, $location, gettext, BulkAction, CurrentOrganization) {
         $scope.successMessages = [];
         $scope.errorMessages = [];
 
@@ -35,44 +36,48 @@ angular.module('Bastion.systems').controller('SystemsBulkActionController',
             workingMode: false
         };
 
+        $scope.state = {
+            successMessages: [],
+            errorMessages: [],
+            working: false
+        };
+
+        $scope.setState = function (working, success, errors) {
+            $scope.state.working = working;
+            $scope.state.successMessages = success;
+            $scope.state.errorMessages = errors;
+        };
+
         $scope.actionParams = {
             ids: []
         };
 
         $scope.performRemoveSystems = function () {
-            var success, error, deferred = $q.defer();
+            var params, success, error, deferred = $q.defer();
 
             $scope.removeSystems.confirm = false;
-            $scope.removeSystems.workingMode = true;
+            $scope.state.working = true;
 
-            $scope.actionParams.ids = $scope.getSelectedSystemIds();
+            params = $scope.nutupane.getAllSelectedResults();
+            params['organization_id'] = CurrentOrganization;
 
             success = function (data) {
                 deferred.resolve(data);
                 angular.forEach($scope.systemTable.getSelected(), function (row) {
                     $scope.removeRow(row.id);
-                });
 
-                $scope.removeSystems.workingMode = false;
-                $scope.successMessages.push(data["displayMessage"]);
+                });
+                $scope.setState(false, data.displayMessages, []);
             };
 
             error = function (error) {
                 deferred.reject(error.data["errors"]);
-                $scope.removeSystems.workingMode = false;
-                _.each(error.data.errors, function (errorMessage) {
-                    $scope.errorMessages.push(gettext("An error occurred removing the Systems: ") + errorMessage);
-                });
+                $scope.setState(false, [], error.data["errors"]);
             };
 
-            BulkAction.removeSystems($scope.actionParams, success, error);
+            BulkAction.removeSystems(params, success, error);
 
             return deferred.promise;
-        };
-
-        $scope.getSelectedSystemIds = function () {
-            var rows = $scope.systemTable.getSelected();
-            return _.pluck(rows, 'id');
         };
 
     }]

@@ -1,3 +1,6 @@
-<div alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">
-  {{alert.message}}
+<div ng-repeat="type in types">
+  <div alert ng-repeat="alert in alerts[type]" type="type" close="closeAlert(type, $index)">
+    {{ alert }}
+  </div>
 </div>
+

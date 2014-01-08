@@ -2,7 +2,6 @@ module Katello
   module Actions
 
     require 'katello/actions/changeset_promote'
-
     require "katello/actions/content_view_create"
     require 'katello/actions/content_view_demote'
     require 'katello/actions/content_view_promote'

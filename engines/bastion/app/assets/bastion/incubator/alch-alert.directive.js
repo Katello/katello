@@ -36,54 +36,31 @@ angular.module('alchemy').directive('alchAlert', function () {
         },
 
         link: function (scope) {
-            scope.alerts = [];
+            scope.alerts = {};
+            scope.types = ['success', 'info', 'warning', 'danger'];
 
-            function addToAlerts(messages) {
-                scope.alerts = messages;
+            function handleMessages(type, messages) {
+                scope.alerts[type] =  messages;
             }
 
             scope.$watch('successMessages', function (messages) {
-                if (messages && messages.length > 0) {
-                    var successMessages = _.map(messages, function (message) {
-                        return {message: message, type: 'success'};
-                    });
-                    addToAlerts(successMessages);
-                    scope.successMessages = [];
-                }
+                handleMessages('success', messages);
             }, true);
 
             scope.$watch('infoMessages', function (messages) {
-                if (messages && messages.length > 0) {
-                    var infoMessages = _.map(messages, function (message) {
-                        return {message: message, type: 'info'};
-                    });
-                    addToAlerts(infoMessages);
-                    scope.infoMessages = [];
-                }
+                handleMessages('info', messages);
             }, true);
 
             scope.$watch('warningMessages', function (messages) {
-                if (messages && messages.length > 0) {
-                    var warningMessages = _.map(messages, function (message) {
-                        return {message: message, type: 'warning'};
-                    });
-                    addToAlerts(warningMessages);
-                    scope.warningMessages = [];
-                }
+                handleMessages('warning', messages);
             }, true);
 
             scope.$watch('errorMessages', function (messages) {
-                if (messages && messages.length > 0) {
-                    var errorMessages = _.map(messages, function (message) {
-                        return {message: message, type: 'danger'};
-                    });
-                    addToAlerts(errorMessages);
-                    scope.errorMessages = [];
-                }
+                handleMessages('danger', messages);
             }, true);
 
-            scope.closeAlert = function (index) {
-                scope.alerts.splice(index, 1);
+            scope.closeAlert = function (type, index) {
+                scope.alerts[type].splice(index, 1);
             };
         }
     };

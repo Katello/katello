@@ -14,11 +14,6 @@
   <button class="btn btn-default" ng-click="performSystemGroupAction()" translate>Yes</button>
 </div>
 
-<div class="alert alert-info" ng-show="systemGroups.working && !systemGroups.action" translate>
-  <i class="icon-spinner inline-icon icon-spin"></i>
-  Processing
-</div>
-
 <section>
   <div data-extend-template="layouts/details-nutupane.html">
 
@@ -40,7 +35,7 @@
       </button>
     </div>
 
-    <table data-block="table"  class="table table-striped" ng-class="{'table-mask': systemGroups.working}">
+    <table data-block="table"  class="table table-striped" ng-class="{'table-mask': state.working}">
       <thead>
         <tr alch-table-head row-select>
           <th alch-table-column="name">{{ "Name" | translate }}</th>

@@ -26,6 +26,7 @@ angular.module('Bastion.systems', [
     'Bastion.widgets',
     'Bastion.subscriptions',
     'Bastion.nodes',
+    'Bastion.errata',
     'Bastion.system-groups'
 ]);
 
@@ -152,10 +153,25 @@ angular.module('Bastion.systems').config(['$stateProvider', function ($stateProv
         templateUrl: 'systems/bulk/views/bulk-actions-packages.html'
     })
     .state('systems.bulk-actions.errata', {
-        url: '/systems/bulk-actions/errata',
+        abstract: true,
         collapsed: true,
         controller: 'SystemsBulkActionErrataController',
+        template: '<div ui-view></div>'
+    })
+    .state('systems.bulk-actions.errata.list', {
+        collapsed: true,
+        url: '/systems/bulk-actions/errata',
         templateUrl: 'systems/bulk/views/bulk-actions-errata.html'
+    })
+    .state('systems.bulk-actions.errata.details', {
+        collapsed: true,
+        url: '/systems/bulk-actions/errata/:errataId',
+        templateUrl: 'systems/bulk/views/errata-details.html'
+    })
+    .state('systems.bulk-actions.errata.systems', {
+        collapsed: true,
+        url: '/systems/bulk-actions/errata/:errataId/systems',
+        templateUrl: 'systems/bulk/views/errata-systems.html'
     })
     .state('systems.bulk-actions.groups', {
         url: '/systems/bulk-actions/groups',

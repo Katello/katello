@@ -127,6 +127,17 @@ describe('Factory: Nutupane', function() {
             expect(nutupane.table.rows).not.toContain(row);
         });
 
+        it("decrements num selected if removed row is selected.", function() {
+               var row = nutupane.table.rows[0];
+               row.selected = true;
+               nutupane.table.numSelected = 1;
+
+               nutupane.removeRow(row.id);
+               expect(nutupane.table.rows.length).toBe(1);
+               expect(nutupane.table.rows).not.toContain(row);
+               expect(nutupane.table.numSelected).toBe(0);
+        });
+
         it("providing a method that fetches more data", function() {
             nutupane.table.rows = [];
             spyOn(Resource, 'query');
