@@ -137,14 +137,9 @@ Katello::Engine.routes.draw do
     end
   end
 
-  resources :gpg_keys do
+  resources :gpg_keys, :only => [:index] do
     collection do
-      get :auto_complete_search
-      get :items
-    end
-    member do
-      get :products_repos
-      post :update
+      get :all
     end
   end
 

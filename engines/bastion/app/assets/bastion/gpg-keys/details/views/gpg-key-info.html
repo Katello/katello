@@ -1,0 +1,39 @@
+<div class="details fl gpg-details" >
+  <div class="detail">
+    <span class="info-label" translate>Name</span>
+    <span class="info-value"
+          alch-edit-text="gpgKey.name"
+          on-save="save(gpgKey)"
+          readonly="gpgKey.readonly">
+    </span>
+  </div>
+  <div class="detail" ng-if="!gpgKey.readonly">
+    <span class="info-label" translate>Upload GPG Key</span>
+    <span class="info-value">
+        <form action="/katello/api/v2/gpg_keys/{{ gpgKey.id }}/content"
+              ng-upload="uploadContent(content)"
+              upload-options-enable-controls>
+
+          <div class="control-group">
+              <input type="file" name="content"/>
+
+              <button class="btn btn-default" upload-submit ng-click="progress.uploading = true">
+                <i class="icon-spinner icon-spin" ng-show="progress.uploading"></i>
+                <span ng-show="progress.uploading" translate>Uploading...</span>
+                <span ng-hide="progress.uploading" translate>Upload</span>
+              </button>
+          </div>
+        </form>
+    </span>
+  </div>
+
+  <div class="detail">
+    <span class="info-label" translate>Content</span>
+    <span class="gpg-alch-edit info-value"
+        alch-edit-textarea="gpgKey.content"
+        readonly="gpgKey.readonly"
+        on-save="save(gpgKey)">
+     </span>
+  </div>
+
+</div>

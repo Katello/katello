@@ -1,0 +1,48 @@
+<section class="nutupane-details" ng-cloak alch-container-scroll>
+
+  <header class="details-header new-header">
+    <h2 class="fl" translate>
+      GPG Key {{ gpgKey.name }}
+    </h2>
+
+    <div class="details-actions fr">
+      <button class="btn btn-danger"
+              ng-click="openModal()"
+              ng-disabled="!gpgKey.permissions.deletable"
+              translate>
+        Remove GPG Key
+      </button>
+
+      <button class="btn btn-default" ng-click="table.closeItem()">
+        <i class="icon-remove"></i>
+        <span translate>Close</span>
+      </button>
+
+      <div alch-modal="removeGPGKey(gpgKey)"
+           model="gpgKey"
+           modal-header="{{ 'Remove GPG Key ' + gpgKey.name + '?' | translate }}"
+           modal-body="{{ 'Are you sure you want to remove GPG key ' + gpgKey.name + '?' | translate }}">
+      </div>
+
+    </div>
+  </header>
+
+  <nav class="details-navigation">
+    <ul>
+      <li ng-class="{active: isState('gpgKeys.details.info')}">
+        <a ui-sref="gpgKeys.details.info" translate>Details</a>
+      </li>
+
+      <li ng-class="{active: stateIncludes('gpgKeys.details.products')}">
+        <a ui-sref="gpgKeys.details.products" translate>Products</a>
+      </li>
+
+      <li ng-class="{active: stateIncludes('gpgKeys.details.repositories')}">
+        <a ui-sref="gpgKeys.details.repositories" translate>Repositories</a>
+      </li>
+    </ul>
+  </nav>
+  <div alch-alert success-messages="successMessages" error-messages="errorMessages"></div>
+
+  <section class="nutupane-sub-section" ui-view></section>
+</section>

@@ -1,0 +1,33 @@
+<section class="details details-full">
+  <h4 translate>Repositories</h4>
+
+  <input type="text"
+         class="form-control filter-input"
+         placeholder="{{ 'Filter' | translate }}"
+         ng-model="repositorySearch"/>
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th translate>Name</th>
+        <th translate>Product</th>
+        <th translate>Type</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr ng-repeat="repository in gpgKey.repositories | filter:repositorySearch">
+        <td>
+          <a ng-href="#/products/{{ repository.product.id }}/repositories/{{ repository.id }}">{{ repository.name }}</a>
+        </td>
+        <td>
+          <a ui-sref="products.details.repositories.index({productId: repository.product.id})">
+            {{ repository.product.name }}
+          </a>
+        </td>
+        <td>{{ repository.content_type }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+</section>

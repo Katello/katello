@@ -46,7 +46,7 @@ Foreman::Plugin.register :katello do
          :gpg_keys,
          :caption => N_('GPG keys'),
          :url_hash => {:controller => 'katello/gpg_keys',
-                       :action => 'index'},
+                       :action => 'all'},
          :engine => Katello::Engine
 
     divider :top_menu, :parent => :content

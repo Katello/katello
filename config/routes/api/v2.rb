@@ -283,8 +283,9 @@ Katello::Engine.routes.draw do
         end
       end
 
-      api_resources :gpg_keys, :only => [:index, :show, :update, :destroy] do
+      api_resources :gpg_keys, :only => [:index, :create, :show, :update, :destroy] do
         get :content, :on => :member
+        post :content, :on => :member
       end
 
       api_resources :activation_keys, :only => [:destroy, :show, :update] do
