@@ -11,7 +11,9 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
 
-KT.panel.list.registerPage('sync_plans', { create : 'new_sync_plan' });
+$(document).ready(function() {
+    KT.panel.list.registerPage('sync_plans', { create : 'new_sync_plan' });
+});
 
 $(document).ready(function() {
   //set the date picker and time picker to only initialize on callback of the panel expansion

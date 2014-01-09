@@ -1,13 +1,26 @@
 // Third-party Libraries
-@import "rcue/rcue";
+//
+// Temporary namespace to prevent Boostrap3/RCUE from
+// Colliding with Boostrap2 from Foreman core
+.rcue-styles {
+  @import "rcue/rcue";
 
-// Bastion Components
-@import "nutupane";
-@import "systems";
-@import "overrides";
-@import "helpers";
-@import "forms";
+  // Bastion Components
+  @import "nutupane";
+  @import "systems";
+  @import "overrides";
+  @import "helpers";
+  @import "forms";
 
-a {
-  cursor: pointer;
+  a {
+    cursor: pointer;
+  }
+
+  [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+    display: none;
+  }
+}
+
+.maincontent {
+  margin-top: 40px;
 }

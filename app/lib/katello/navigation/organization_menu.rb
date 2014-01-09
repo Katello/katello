@@ -19,16 +19,6 @@ module Navigation
       end
     end
 
-    def menu_organization
-      {:key => :organizations,
-       :name => _("Organizations"),
-       :url => :sub_level,
-       :options => {:class => 'organizations top_level', "data-menu" => "organizations"},
-       :if => lambda{current_organization && Organization.any_readable?},
-       :items => [menu_org_list]
-      }
-    end
-
     def menu_org_list
       {:key => :org_list,
        :name => _("List"),

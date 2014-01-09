@@ -1,5 +1,3 @@
-require 'ui_alchemy-rails'
-
 module Bastion
   class Engine < ::Rails::Engine
     isolate_namespace Bastion

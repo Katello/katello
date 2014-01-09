@@ -12,6 +12,7 @@
 
 module Katello
 module LayoutHelper
+
   def stylesheet(*args)
     args.map { |arg| content_for(:stylesheets) { stylesheet_link_tag(arg) } }
     return ""
@@ -19,12 +20,13 @@ module LayoutHelper
 
   def javascript(*args, &block)
     if block
-      content_for(:inline_javascript) { block.call }
+      content_for(:inline_javascripts) { block.call }
     end
     if args
-      args.map { |arg| content_for(:javascripts) { javascript_include_tag(arg) } }
+      args.map { |arg| content_for(:katello_javascripts) { javascript_include_tag(arg) } }
     end
     return ""
   end
+
 end
 end

@@ -1,29 +1,18 @@
-= content_for(:title) do
-  = project_name + "-" + default_title
-
-= content_for(:stylesheets_block) do
+= content_for(:stylesheets) do
   = stylesheet_link_tag "stylesheets/less/bastion"
   = stylesheet_link_tag "stylesheets/scss/bastion"
   = yield :stylesheets
 
-= content_for(:body) do
-  = generate_menu
-  %nav{'ng-include' => "'../menu/views/menu.html'"}
-  %article.maincontent
+= content_for(:content) do
+  %article.maincontent.rcue-styles{'ng-app' => "Bastion"}
     %section{'ui-view' => ''}
 
-= content_for(:javascripts_block) do
+= content_for(:javascripts) do
   = javascript_include_tag 'bastion'
   %script{ :type => "text/javascript" }
-    -if protect_against_forgery?
-      :plain
-        var AUTH_TOKEN = #{form_authenticity_token.inspect};
-        angular.module('Bastion').value('currentLocale', '#{I18n.locale}');
-    = render :partial => 'katello/common/config'
-    = render :partial => 'katello/common/ajax_notices'
-    = render :partial => 'katello/common/notification'
-    = yield :inline_javascript
+    :plain
+      angular.module('Bastion').value('currentLocale', '#{I18n.locale}');
+      angular.module('Bastion').value('CurrentOrganization', "#{current_organization.label if current_organization}");
+      angular.module('Bastion').value('CurrentUser', "#{current_user.id if current_user}");
 
-  = yield :javascripts
-
-= render :file => "bastion/layouts/base", :locals => { :ng_app_name=>"Bastion" }
+= render :file => "layouts/base"

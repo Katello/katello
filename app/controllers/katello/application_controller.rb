@@ -15,16 +15,20 @@ require 'base64'
 
 module Katello
 class ApplicationController < ::ApplicationController
-  layout 'katello/layouts/katello'
   include Katello::Menu
   include Notifications::ControllerHelper
   include Profiling
   include KTLocale
+  include ::HomeHelper
+
+  layout 'katello/layouts/katello'
+
   clear_helpers
 
   helper UIAlchemy::TranslationHelper
+  helper ::ApplicationHelper
+  helper ::TaxonomyHelper
   helper_method :current_organization
-  helper_method :render_correct_nav
   before_filter :require_org
   #before_filter :check_deleted_org
 
@@ -262,7 +266,7 @@ class ApplicationController < ::ApplicationController
       #the menu definition does not exist, return false
       session[:menu_back] = false
       session[:notifications] = false
-      render_menu(1)
+      #render_menu(1)
     end
   end
 

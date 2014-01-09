@@ -1,45 +1,27 @@
-= content_for(:title) do
-  = project_name
-  = "-"
-  = default_title
+- if controller.respond_to?(:section_id)
+  - section_id = controller.section_id
+- elsif @body_id
+  - section_id = @body_id
+- else
+  - section_id = "generic"
 
-= content_for(:stylesheets_block) do
-  = stylesheet_link_tag "katello/katello"
-  = stylesheet_link_tag "katello/#{controller.section_id}"
-  = yield :stylesheets
+= content_for(:stylesheets) do
+  = stylesheet "katello/katello"
+  = stylesheet "katello/#{controller.section_id}"
 
-= content_for(:head) do
-  = csrf_meta_tag
-  / [if lt IE 9]
-    = javascript_include_tag  :html5
-  / [if IE]
-    = stylesheet_link_tag :ie
-
-= content_for(:body) do
-  = generate_menu
-  %article{ 'ng-app' => 'Katello' }
-    = render :file => '../../app/assets/bastion/menu/views/menu.html'
-  #wrapper
-    %article#maincontent
-      %section.maincontent.container_16
-        = yield
-
-= content_for(:footer) do
-  = render :partial => "katello/common/footer"
-
-= content_for(:javascripts_block) do
+= content_for(:javascripts) do
   = javascript_include_tag "katello/common/vendor"
   = javascript_include_tag "katello/common"
-  %script{ :type => "text/javascript" }
-    -if protect_against_forgery?
-      :plain
-        var AUTH_TOKEN = #{form_authenticity_token.inspect};
-    = render :partial => "katello/common/common_i18n"
-    = render :partial => 'katello/common/config'
-    = render :partial => 'katello/common/ajax_notices'
-    = render :partial => 'katello/common/notification'
-    = yield :inline_javascript
+  = yield(:katello_javascripts)
 
-  = yield :javascripts
+= content_for(:inline_javascripts) do
+  :plain
+    KT.routes.options.prefix = "#{Katello.config.url_prefix}";
+  = render :partial => "katello/common/common_i18n"
 
-= render :file => 'alchemy/layouts/base'
+= content_for(:content) do
+  %article#maincontent
+    %section.maincontent.container_16{:id => section_id}
+      = yield
+
+= render :template => 'layouts/base'

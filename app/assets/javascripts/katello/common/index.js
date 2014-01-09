@@ -27,28 +27,3 @@
 //= require "katello/widgets/path_selector"
 //= require "katello/common/env_select_scroll"
 //= require "katello/common/env_select"
-//= require "katello/common/experimental/katello-globals.module"
-
-//= require "katello/common/katello.module"
-
-//= require "bastion/angular-gettext/angular-gettext"
-//= require "bastion/i18n/i18n.module"
-
-//= require "bastion/incubator/alch-menu.directive.js"
-//= require "bastion/incubator/alch-dropdown.directive.js"
-//= require "bastion/incubator/alch-flyout.directive.js"
-
-//= require "bastion/widgets/widgets.module.js"
-//= require "bastion/widgets/org-switcher.widget.js"
-
-//= require "bastion/menu/menu.module.js"
-//= require "bastion/menu/menu.controller.js"
-
-//= require "bastion/organizations/organizations.module.js"
-//= require "bastion/organizations/organization.factory.js"
-
-//= require "bastion/users/users.module.js"
-//= require "bastion/users/user.factory.js"
-
-//= require "bastion/utils/utils.module"
-//= require "bastion/utils/routes.factory"

@@ -1,20 +1,13 @@
 @import "compass";
-@import "compass/reset";
 @import "katello/overrides";
-@import "alchemy/composites/shell";
-@import "alchemy/composites/content_elements";
-@import "alchemy/components/helpers";
 @import "alchemy-forms/forms";
 @import "alchemy-buttons/buttons";
 
-@import "bastion/stylesheets/widgets/org-switcher";
-@import "bastion/stylesheets/scss/menu";
 @import "bastion/font-awesome/scss/font-awesome";
 
 @import "katello/katello_base";
 
 @import "katello/look";
-@import "katello/header";
 @import "katello/grid";
 
 @import "katello/fancyqueries";
@@ -72,7 +65,7 @@ ul { -webkit-padding-start: 0; }
     cursor: default;
   }
 }
-.hidden { display: none; }
+.hidden { display: none; visibility: visible; }
 .invisible { visibility: hidden; }
 .outlined { outline: 2px solid $kselected_color; }
 .alt { background-color: lighten($lightgrey_color, 35%) !important; }
@@ -809,8 +802,7 @@ fieldset {
   padding: 4px 10px 8px 5px;
   cursor:pointer;
   position: relative;
-  width: 95%;
-  height: 30px;
+  height: 45px;
   font-size: 90%;
   &.active {
     background-color: $kselected_color;
@@ -939,7 +931,7 @@ fieldset {
       height: 250px;
     }
   }
-  .close {
+  .panel-close {
     position: absolute;
     top: 9px;
     right: 20px;
@@ -1355,7 +1347,6 @@ footer a {
   background: white;
   margin: 40px auto;
   box-sizing: border-box;
-  padding-top: 40px;
   padding-bottom: 20px;
   width: 1172px;
   padding-left: 20px;
@@ -1366,21 +1357,6 @@ footer a {
   width: $static_width;
   margin: 0 auto;
   position: relative;
-}
-
-.logo {
-  text-indent: -5555px;
-  width: 100px;
-  height: 15px;
-  display: block;
-  margin-top: 5px;
-}
-.katello-logo {
-  background: $katello_logo_img;
-}
-
-.headpin-logo {
-  background: $headpin_logo_img;
 }
 
 .simple-box {
@@ -1490,4 +1466,9 @@ pre {
     list-style-type: disc;
   }
 
+}
+
+ul {
+  list-style: none;
+  margin: 0;
 }
