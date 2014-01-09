@@ -11,7 +11,6 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-# rubocop:disable SymbolName
 module Katello
 class TasksController < Katello::ApplicationController
 
@@ -27,7 +26,7 @@ class TasksController < Katello::ApplicationController
   end
 
   def all
-    redirect_to action: 'index', :anchor => '/tasks'
+    redirect_to :action => 'index', :anchor => '/tasks'
   end
 
 end
