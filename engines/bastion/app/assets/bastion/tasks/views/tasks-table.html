@@ -19,7 +19,7 @@
               </div>
             </td>
             <td alch-table-cell>
-              <a class="clickable active" ng-click="tasksTable.gotoDetails(task.id)">
+              <a class="active" ng-click="tasksTable.gotoDetails(task.id)">
                 {{ task.humanized.action }}
                 {{ task.humanized.input | taskInputReduce:knownContext | taskInputCompile }}
               </a>
