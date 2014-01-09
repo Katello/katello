@@ -1,14 +1,14 @@
 <section class="nutupane-sub-section">
   <div alch-table="tasksTable">
     <div alch-container-scroll control-width="table" alch-infinite-scroll="tasksTable.nextPage()">
-      <table ng-class="{'table-mask': tasksTable.working}" class="table table-full table-striped">
+      <table ng-class="{'table-mask': tasksTable.working}" class="table table-full table-striped tasks-table">
         <thead>
-        <tr alch-table-head>
-          <th alch-table-column="Status" style="width: 10%" translate>Status</th>
-          <th alch-table-column="Event" translate>Event</th>
-          <th alch-table-column="User" style="width: 15%" translate>User</th>
-          <th alch-table-column="Date" translate>Date</th>
-        </tr>
+          <tr alch-table-head>
+            <th alch-table-column="Status" class='task-status' translate>Status</th>
+            <th alch-table-column="Event" translate>Event</th>
+            <th alch-table-column="User" class='task-user' translate>User</th>
+            <th alch-table-column="Date" translate>Date</th>
+          </tr>
         </thead>
 
         <tbody>
