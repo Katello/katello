@@ -98,10 +98,7 @@ angular.module('Bastion.systems').config(['$stateProvider', function ($stateProv
     .state('systems.details.tasks.index', {
         url: '/tasks',
         collapsed: true,
-        template: '<tasks-table  details-state="systems.details.tasks.details"' +
-                  '              known-context="system,organization"' +
-                  '              resource-type="Katello::System"' +
-                  '              resource-id="{{ system.id }}"/>'
+        templateUrl: 'systems/details/views/system-tasks.html'
     })
     .state('systems.details.tasks.details', {
         url: '/tasks/:taskId',

@@ -39,7 +39,7 @@ angular.module('Bastion.tasks').config(['$stateProvider', function ($stateProvid
     })
     .state('tasks.index', {
         url: '/tasks',
-        template: '<tasks-table  details-state="tasks.details" all/>'
+        templateUrl: 'tasks/views/tasks-index.html'
     })
     .state('tasks.details', {
         url: '/tasks/:taskId',

@@ -158,10 +158,7 @@ angular.module('Bastion.products').config(['$stateProvider', function ($statePro
     .state('products.details.tasks.index', {
         url: '/tasks',
         collapsed: true,
-        template: '<tasks-table  details-state="products.details.tasks.details"' +
-                  '              known-context="product,organization"' +
-                  '              resource-type="Katello::Product"' +
-                  '              resource-id="{{ product.katello_id }}"/>'
+        templateUrl: 'products/details/views/product-tasks.html'
     })
     .state('products.details.tasks.details', {
         url: '/tasks/:taskId',
