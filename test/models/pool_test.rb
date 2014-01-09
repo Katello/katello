@@ -48,6 +48,19 @@ module Katello
       expired_subscriptions = Pool.recently_expired(all_subscriptions)
       assert_equal expired_subscriptions, all_subscriptions - [unexpired, long_expired]
     end
+
+    def test_find_by_organization_and_id
+      test_raises(ActiveRecord::RecordNotFound) do
+        Pool.find_by_organization_and_id!(katello_organizations(:acme_corporation), 3)
+      end
+    end
+
+    def test_systems
+      active_pool = FactoryGirl.build(:pool, :active)
+      systems = [katello_systems(:simple_server)]
+      System.expects(:all_by_pool_id).with(active_pool.cp_id).returns(systems)
+      assert_equal active_pool.systems, systems
+    end
   end
 
 end

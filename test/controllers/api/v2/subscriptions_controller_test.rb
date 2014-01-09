@@ -25,12 +25,14 @@ class Api::V2::SubscriptionsControllerTest < ActionController::TestCase
   def models
     @system = katello_systems(:simple_server)
     @products = katello_products
+    @organization = get_organization(:organization1)
   end
 
   def permissions
-    @read_permission = UserPermission.new(:read_systems, :organizations, nil, @system.organization)
+    @read_permission = UserPermission.new(:read, :organizations, @organization.id)
     @create_permission = UserPermission.new(:register_systems, :organizations, nil, @system.organization)
     @update_permission = UserPermission.new(:update_systems, :organizations, nil, @system.organization)
+    @edit_permission = UserPermission.new(:update, :organizations)
     @no_permission = NO_PERMISSION
   end
 
@@ -50,11 +52,28 @@ class Api::V2::SubscriptionsControllerTest < ActionController::TestCase
     permissions
   end
 
-  def test_index
+  def test_system_index
     get :index, :system_id => @system.uuid
 
     assert_response :success
     assert_template 'api/v2/subscriptions/index'
+  end
+
+  def test_index
+    Provider.any_instance.stubs(:index_subscriptions).returns(true)
+    get :index, :organization_id => @organization.label
+
+    assert_response :success
+    assert_template 'api/v2/subscriptions/index'
+  end
+
+  def test_index_protected
+    allowed_perms = [@read_permission]
+    denied_perms = [@no_permission]
+
+    assert_protected_action(:index, allowed_perms, denied_perms) do
+      get :index, :organization_id => @organization.label
+    end
   end
 
   def test_available
@@ -89,5 +108,27 @@ class Api::V2::SubscriptionsControllerTest < ActionController::TestCase
     assert_template 'api/v2/subscriptions/show'
   end
 
+  def test_blank_upload
+    post :upload, :organization_id => @organization.label
+    assert_response 400
+  end
+
+  def test_upload
+    Provider.any_instance.stubs(:import_manifest)
+    Organization.any_instance.stubs(:pools).returns([])
+    test_document = File.join(Engine.root, "test", "fixtures", "files", "puppet_module.tar.gz")
+    manifest = Rack::Test::UploadedFile.new(test_document, '')
+    post :upload, :organization_id => @organization.label, :content => manifest
+    assert_response :success
+  end
+
+  def test_upload_protected
+    allowed_perms = [@edit_permission]
+    denied_perms = [@read_permission, @no_permission]
+
+    assert_protected_action(:upload, allowed_perms, denied_perms) do
+      post :upload, :organization_id => @organization.label
+    end
+  end
 end
 end

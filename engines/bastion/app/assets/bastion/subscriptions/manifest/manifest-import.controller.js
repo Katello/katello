@@ -34,15 +34,11 @@ angular.module('Bastion.subscriptions').controller('ManifestImportController',
         $scope.progress = {uploading: false};
         $scope.showHistoryMoreLink = false;
 
-        $scope.$on('$stateChangeSuccess', function (event, toState) {
-            if (toState.name === 'subscriptions.manifest.import') {
-                $scope.organization = Organization.get({id: CurrentOrganization});
+        $scope.organization = Organization.get({id: CurrentOrganization});
 
-                $q.all([$scope.provider.$promise, $scope.organization.$promise]).then(function () {
-                    $scope.panel.loading = false;
-                    initializeManifestDetails($scope.organization, $scope.provider);
-                });
-            }
+        $q.all([$scope.provider.$promise, $scope.organization.$promise]).then(function () {
+            $scope.panel.loading = false;
+            initializeManifestDetails($scope.organization, $scope.provider);
         });
 
         $scope.save = function (provider) {

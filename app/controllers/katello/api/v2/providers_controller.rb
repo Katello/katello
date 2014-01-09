@@ -48,8 +48,8 @@ class Api::V2::ProvidersController < Api::V2::ApiController
     {
       :index            => [:provider, :id, :search, :page, :per_page, :sort, :sort_order, :sort_by, :provider_type, :organization_id],
       :show             => [:provider, :id],
-      :create           => [:provider, :name, :description, :provider_type, :organization_id],
-      :update           => [:provider, :id, :name, :description, :provider_type],
+      :create           => [:provider, :name, :description, :organization_id],
+      :update           => [:provider, :id, :name, :description, :repository_url],
       :destroy          => [:provider, :id],
       :import_manifest  => [:provider, :id, :import, :force],
       :refresh_manifest => [:provider, :id],
@@ -253,8 +253,8 @@ class Api::V2::ProvidersController < Api::V2::ApiController
 
     details  = @provider.organization.owner_details
     upstream = details['upstreamConsumer'].blank? ? {} : details['upstreamConsumer']
-    @provider.refresh_manifest(upstream, :async => true, :notify => false)
-    respond_for_async :resource => @provider.manifest_task
+    @provider.refresh_manifest(upstream, :async => false, :notify => false)
+    respond_for_status :message => _("Manifest refreshed")
   end
 
   private
@@ -266,7 +266,11 @@ class Api::V2::ProvidersController < Api::V2::ApiController
     end
 
     def provider_params
-      params[:provider] && params[:provider].slice(:name) || params.slice(:name)
+      if @provider && @provider.redhat_provider?
+        params[:provider] && params[:provider].slice(:repository_url)
+      else
+        params[:provider] && params[:provider].slice(:name) || params.slice(:name)
+      end
     end
 end
 end
