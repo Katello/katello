@@ -13,7 +13,7 @@
 
 /**
  * @ngdoc object
- * @name  Bastion.systems.controller:TaskDetailsController
+ * @name  Bastion.tasks.controller:TaskDetailsController
  *
  * @requires $scope
  * @requires $state
@@ -22,7 +22,7 @@
  * @description
  *   Provides the functionality for the details of a task.
  */
-angular.module('Bastion.systems').controller('TaskDetailsController',
+angular.module('Bastion.tasks').controller('TaskDetailsController',
     ['$scope', '$state', 'Task',
     function ($scope, $state, Task) {
         var taskId, fromState, fromParams;
