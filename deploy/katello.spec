@@ -25,7 +25,7 @@
 
 Name:           katello
 Version:        1.5.0
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
 
@@ -149,6 +149,10 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Fri Jan 10 2014 Mike McCune <mmccune@redhat.com> 1.5.0-11
+- resurrect the old katello specfile for non-ruby configs and scripts
+  (mmccune@redhat.com)
+
 * Fri Jan 10 2014 Mike McCune <mmccune@redhat.com> 1.5.0-10
 - initial revision of resurrected katello package
 
