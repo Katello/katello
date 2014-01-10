@@ -12,35 +12,6 @@ body {
   overflow: hidden;
 }
 
-.status_icon {
-  height: 15px;
-  width: 15px;
-  background: $status_icons_green_small;
-  //margin: 2px 1px 1px 1px;
-
-  &.green {
-    background: $status_icons_green_small;
-  }
-  &.yellow {
-    background: $status_icons_yellow_small;
-  }
-  &.red {
-    background: $status_icons_red_small;
-  }
-}
-
-[class*="icon-"] {
-  &.green {
-    color: $green2;
-  }
-  &.yellow {
-    color: $o2;
-  }
-  &.red {
-    color: $rh-red2;
-  }
-}
-
 .inline-confirmation {
   @include border-radius(5px);
   @include box-shadow(rgba(0,0,0,0.4), 2px 2px 2px);
@@ -147,10 +118,6 @@ input[type="checkbox"] {
   background: rgb(250, 250, 250);
   margin-top: 20px;
   padding: 8px;
-}
-
-.page-error {
-  color: $rh-red2 !important;
 }
 
 //used for small panes such 'copy' actions

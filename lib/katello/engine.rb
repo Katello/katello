@@ -27,7 +27,7 @@ module Katello
     initializer "katello.assets.paths", :group => :all do |app|
       app.config.assets.paths << "#{::UIAlchemy::Engine.root}/vendor/assets/ui_alchemy/alchemy-forms"
       app.config.assets.paths << "#{::UIAlchemy::Engine.root}/vendor/assets/ui_alchemy/alchemy-buttons"
-      app.config.sass.load_paths << "#{Bastion::Engine.root}/vendor/assets/components/font-awesome/scss"
+      #app.config.sass.load_paths << "#{Bastion::Engine.root}/vendor/assets/components/font-awesome/scss"
     end
 
     initializer "katello.paths" do |app|
@@ -50,6 +50,16 @@ module Katello
 
       app.config.logger = ::Logging.logger['app']
       app.config.active_record.logger = ::Logging.logger['sql']
+    end
+
+    initializer :register_assets do |app|
+      if Rails.env.production?
+        assets = YAML.load_file("#{Katello::Engine.root}/public/assets/manifest.yml")
+
+        assets.each_pair do |file, digest|
+          app.config.assets.digests[file] = digest
+        end
+      end
     end
 
     config.to_prepare do
@@ -82,6 +92,7 @@ module Katello
       load "#{Katello::Engine.root}/lib/katello/tasks/regenerate_repo_metadata.rake"
       load "#{Katello::Engine.root}/lib/katello/tasks/reindex.rake"
       load "#{Katello::Engine.root}/lib/katello/tasks/rubocop.rake"
+      load "#{Katello::Engine.root}/lib/katello/tasks/asset_compile.rake"
     end
 
   end
