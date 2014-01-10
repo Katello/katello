@@ -19,6 +19,8 @@ Gem::Specification.new do |gem|
   gem.files += Dir["engines/fort/{app,config,db,lib}/**/*"]
   gem.files += Dir["engines/bastion/{README.md,fort.gemspec}"]
 
+  gem.executables << 'katello-jobs'
+
   gem.require_paths = ["lib"]
 
   # Core Dependencies

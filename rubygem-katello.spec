@@ -15,6 +15,14 @@
 %global gem_docdir %{gem_dir}/doc/%{gem_name}-%{version}
 %endif
 
+%if "%{?scl}" == "ruby193"
+    %global scl_ruby /usr/bin/ruby193-ruby
+    %global scl_rake /usr/bin/ruby193-rake
+%else
+    %global scl_ruby /usr/bin/ruby
+    %global scl_rake /usr/bin/rake
+%endif
+
 Summary: Katello
 Name: %{?scl_prefix}rubygem-%{gem_name}
 
@@ -150,10 +158,17 @@ This package contains documentation for rubygem-%{gem_name}.
 
 %prep
 %setup -n %{pkg_name}-%{version} -q -c -T
+
 mkdir -p .%{gem_dir}
 %{?scl:scl enable %{scl} "}
 gem install --local --install-dir .%{gem_dir} --force %{SOURCE0}
 %{?scl:"}
+
+%if %{?scl:1}%{!?scl:0}
+    #replace shebangs for SCL
+    find .%{gem_dir}/bin/ -type f | xargs sed -ri '1sX(/usr/bin/ruby|/usr/bin/env ruby)X%{scl_ruby}X'
+%endif
+
 
 %build
 
@@ -161,6 +176,10 @@ gem install --local --install-dir .%{gem_dir} --force %{SOURCE0}
 mkdir -p %{buildroot}%{gem_dir}
 cp -a .%{gem_dir}/* \
         %{buildroot}%{gem_dir}/
+
+mkdir -p %{buildroot}/%{_root_bindir}
+mv %{buildroot}%{gem_dir}/bin/* %{buildroot}/%{_root_bindir}
+rmdir %{buildroot}%{gem_dir}/bin
 
 mkdir -p %{buildroot}%{foreman_bundlerd_dir}
 cat <<GEMFILE > %{buildroot}%{foreman_bundlerd_dir}/%{gem_name}.rb
@@ -179,6 +198,7 @@ GEMFILE
 %exclude %{gem_cache}
 %{gem_spec}
 %{foreman_bundlerd_dir}/%{gem_name}.rb
+%{_root_bindir}/katello-jobs
 
 %files doc
 %{gem_dir}/doc/%{gem_name}-%{version}
