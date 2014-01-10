@@ -718,6 +718,52 @@ module Resources
       end
     end
 
+    class ActivationKey < CandlepinResource
+      class << self
+
+        def get(id = nil)
+          akeys_json = super(path(id), self.default_headers).body
+          akeys = JSON.parse(akeys_json)
+          akeys = [akeys] unless id.nil?
+          Util::Data.array_with_indifferent_access akeys
+        end
+
+        def create(name, owner_key)
+          url = "/candlepin/owners/#{owner_key}/activation_keys"
+          JSON.parse(self.post(url, {:name=>name}.to_json, self.default_headers).body).with_indifferent_access
+        end
+
+        def destroy(id)
+          raise ArgumentError, "activation key id has to be specified" unless id
+          self.delete(path(id), self.default_headers).code.to_i
+        end
+
+        def pools(owner_key)
+          Candlepin::Owner.pools(owner_key)
+        end
+
+        def key_pools(id)
+          kp_json = Candlepin::CandlepinResource.get(join_path(path(id), "pools"), self.default_headers).body
+          key_pools = JSON.parse(kp_json)
+          Util::Data.array_with_indifferent_access key_pools
+        end
+
+        def add_pools(id, pool_id, quantity)
+          pool = self.post(join_path(path(id), "pools/#{pool_id}"), {:quantity=>quantity}.to_json, self.default_headers)
+          JSON.parse(pool).with_indifferent_access
+        end
+
+        def remove_pools(id, pool_id)
+          pool = self.delete(join_path(path(id), "pools/#{pool_id}"), self.default_headers)
+          JSON.parse(pool).with_indifferent_access
+        end
+
+        def path(id = nil)
+          "/candlepin/activation_keys/#{id}"
+        end
+      end
+    end
+
   end
 end
 end
