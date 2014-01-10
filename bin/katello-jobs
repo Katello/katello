@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+
+require "/usr/share/foreman/config/environment"
+require 'delayed/command'
+Delayed::Command.new(ARGV).daemonize

@@ -15,19 +15,19 @@ fi
 
 prog=katello-jobs
 RETVAL=0
-KATELLO_USER=${KATELLO_USER:-katello}
-KATELLO_HOME=${KATELLO_HOME:-/usr/share/katello}
-KATELLO_DATA_DIR=${KATELLO_DATA_DIR:-/var/lib/katello}
+KATELLO_USER=${KATELLO_USER:-foreman}
+KATELLO_HOME=${KATELLO_HOME:-/usr/share/foreman}
+KATELLO_DATA_DIR=${KATELLO_DATA_DIR:-/var/lib/foreman}
 KATELLO_ENV=${KATELLO_ENV:-production}
 KATELLO_JOB_WORKERS=${KATELLO_JOB_WORKERS:-1}
 KATELLO_JOB_PARAMS=${KATELLO_JOB_PARAMS:--p katello}
 KATELLO_PID_DIR=$KATELLO_HOME/tmp/pids
 KATELLO_PID=$KATELLO_PID_DIR/delayed_job*monitor.pid
 KATELLO_PIDS_ALL=$KATELLO_PID_DIR/delayed_job*.pid
+JOB_SCRIPT="/usr/bin/katello-jobs"
 export RAILS_ENV=$KATELLO_ENV
 export KATELLO_LOGGING=${KATELLO_LOGGING:-warn}
 export KATELLO_LOGGING_SQL=${KATELLO_LOGGING_SQL:-warn}
-KATELLO_PREFIX=${KATELLO_PREFIX:-/katello}
 export RAILS_RELATIVE_URL_ROOT=$KATELLO_PREFIX
 export BUNDLER_EXT_GROUPS
 export BUNDLER_EXT_NOSTRICT
@@ -119,12 +119,6 @@ status_q() {
 
 start() {
 
-    if [ ! -f $KATELLO_DATA_DIR/db_seed_done ]; then
-        echo "Please run katello-configure first"
-        echo_failure
-        return 1
-    fi
-
     echo -n $"Starting $prog: "
     status_q
     STATUS=$?
@@ -140,14 +134,14 @@ start() {
         # rails expects you to run from the root of the app
         pushd ${KATELLO_HOME} >/dev/null
         # start jobs
-        runuser -s /bin/bash - katello -c "\
+        runuser -s /bin/bash - foreman -c "\
             BUNDLER_EXT_NOSTRICT='$BUNDLER_EXT_NOSTRICT' \
             BUNDLER_EXT_HOME='$BUNDLER_EXT_HOME' \
             RAILS_RELATIVE_URL_ROOT='$RAILS_RELATIVE_URL_ROOT' \
             RAILS_ENV='$RAILS_ENV' \
             KATELLO_LOGGING='$KATELLO_LOGGING' \
             KATELLO_LOGGING_SQL='$KATELLO_LOGGING_SQL' \
-            script/delayed_job $KATELLO_JOB_PARAMS -m -n $KATELLO_JOB_WORKERS start &>>/var/log/katello/jobs-startup.log"
+            $JOB_SCRIPT $KATELLO_JOB_PARAMS -m -n $KATELLO_JOB_WORKERS start &>>/var/log/foreman/jobs-startup.log"
         RETVAL=$?
         if [ $RETVAL = 0 ]; then
             echo_success
@@ -168,14 +162,14 @@ stop() {
     if [ 0$STATUS -eq 0 -o 0$STATUS -eq 10 ]; then
         # rails expects you to run from the root of the app
         pushd ${KATELLO_HOME} >/dev/null
-        runuser -s /bin/bash - katello -c "\
+        runuser -s /bin/bash - foreman -c "\
             BUNDLER_EXT_NOSTRICT='$BUNDLER_EXT_NOSTRICT' \
             BUNDLER_EXT_HOME='$BUNDLER_EXT_HOME' \
             RAILS_RELATIVE_URL_ROOT='$RAILS_RELATIVE_URL_ROOT' \
             RAILS_ENV='$RAILS_ENV' \
             KATELLO_LOGGING='$KATELLO_LOGGING' \
             KATELLO_LOGGING_SQL='$KATELLO_LOGGING_SQL' \
-            script/delayed_job $KATELLO_JOB_PARAMS -m -n $KATELLO_JOB_WORKERS stop &>>/var/log/katello/jobs-startup.log"
+            $JOB_SCRIPT $KATELLO_JOB_PARAMS -m -n $KATELLO_JOB_WORKERS stop &>>/var/log/foreman/jobs-startup.log"
         if [ 0$KATELLO_JOB_WORKERS -eq 1 ]; then
             if [ -f $KATELLO_PID_DIR/delayed_job_monitor.pid ]; then
                 echo -n $"Stopping delayed_job_monitor: "
