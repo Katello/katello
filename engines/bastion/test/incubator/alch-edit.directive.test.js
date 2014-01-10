@@ -23,6 +23,7 @@ describe('Directive: alchEdit', function() {
         'incubator/views/alch-edit-textarea.html',
         'incubator/views/alch-edit-select.html',
         'incubator/views/alch-edit-add-item.html',
+        'incubator/views/alch-edit-checkbox.html',
         'incubator/views/alch-edit-add-remove-cancel.html',
         'incubator/views/alch-edit-multiselect.html',
         'incubator/views/alch-edit-save-cancel.html'));

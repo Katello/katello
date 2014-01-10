@@ -54,8 +54,18 @@
     </div>
 
     <div class="detail">
-      <span class="info-label" translate>Protected</span>
-      <span class="info-value">{{ !repository.unprotected }}</span>
+      <span class="info-label" translate>Publish via HTTPS</span>
+      <span class="info-value" translate> true </span>
+    </div>
+
+    <div class="detail">
+      <span class="info-label" translate>Publish via HTTP</span>
+      <span class="info-value"
+            alch-edit-checkbox="repository.unprotected"
+            on-save="save(repository)"
+            readonly="repository.readonly">
+      </span>
+
     </div>
 
     <div class="detail">
