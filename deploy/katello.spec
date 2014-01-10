@@ -41,6 +41,7 @@ Provides a package for managing application life-cycle for Linux systems.
 Requires:       wget
 Requires:       curl
 
+BuildRequires: asciidoc
 %prep
 %setup -q
 
