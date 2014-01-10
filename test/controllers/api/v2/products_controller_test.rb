@@ -61,16 +61,17 @@ class Api::V2::ProductsControllerTest < ActionController::TestCase
   end
 
   def test_create
-    post :create, :name => 'Fedora Product',
-                  :provider_id => @provider.id,
-                  :description => 'This is my cool new product.'
+    post :create, :product => {:name => 'Fedora Product',
+                               :provider_id => @provider.id,
+                               :description => 'This is my cool new product.'
+                              }
 
     assert_response :success
     assert_template 'api/v2/products/show'
   end
 
   def test_create_fail
-    post :create, :description => 'This is my cool new product.'
+    post :create, :product => {:description => 'This is my cool new product.'}
 
     assert_response :unprocessable_entity
   end
@@ -80,7 +81,7 @@ class Api::V2::ProductsControllerTest < ActionController::TestCase
     denied_perms = [@read_permission, @no_permission]
 
     assert_protected_action(:create, allowed_perms, denied_perms) do
-      post :create, :provider_id => @provider.id
+      post :create, :product => {:provider_id => @provider.id}
     end
   end
 
@@ -101,7 +102,7 @@ class Api::V2::ProductsControllerTest < ActionController::TestCase
   end
 
   def test_update
-    get :update, :id => @product.cp_id, :name => 'New Name'
+    get :update, :id => @product.cp_id, :product => {:name => 'New Name'}
 
     assert_response :success
     assert_template 'api/v2/products/show'
@@ -113,7 +114,7 @@ class Api::V2::ProductsControllerTest < ActionController::TestCase
     denied_perms = [@no_permission, @read_permission]
 
     assert_protected_action(:destroy, allowed_perms, denied_perms) do
-      get :destroy, :id => @product.cp_id, :name => 'New Name'
+      get :destroy, :id => @product.cp_id, :product => {:name => 'New Name'}
     end
   end
 

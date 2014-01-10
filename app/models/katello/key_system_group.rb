@@ -12,7 +12,7 @@
 #
 
 module Katello
-class KeySystemGroup < ActiveRecord::Base
+class KeySystemGroup < Katello::Model
   self.include_root_in_json = false
 
   belongs_to :activation_key, :inverse_of => :key_system_groups

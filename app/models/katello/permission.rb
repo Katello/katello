@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class Permission < ActiveRecord::Base
+class Permission < Katello::Model
   self.include_root_in_json = false
 
   include Katello::Glue::ElasticSearch::Permission if Katello.config.use_elasticsearch

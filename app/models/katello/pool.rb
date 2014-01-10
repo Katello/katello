@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class Pool < ActiveRecord::Base
+class Pool < Katello::Model
   self.include_root_in_json = false
 
   include Glue::Candlepin::Pool

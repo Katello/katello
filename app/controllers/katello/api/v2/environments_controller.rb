@@ -45,8 +45,7 @@ class Api::V2::EnvironmentsController < Api::V2::ApiController
     DESC
   end
   def create
-    params[:label] = labelize_params(params)
-    environment_params = params.slice(:name, :label, :description, :prior)
+    params[:environment][:label] = labelize_params(params[:environment]) if params[:environment]
     @environment = KTEnvironment.new(environment_params)
     @organization.environments << @environment
     fail ActiveRecord::RecordInvalid.new(@environment) unless @environment.valid?
@@ -60,8 +59,7 @@ class Api::V2::EnvironmentsController < Api::V2::ApiController
   param :name, String, :required => true, :desc => "environment name"
   param :description, String, :desc => "environment description"
   def update
-    @environment.attributes = params.slice(:name, :description)
-    @environment.save!
+    @environment.update_attributes!(environment_params)
     respond_for_show(:resource => @environment)
   end
 
@@ -97,6 +95,12 @@ class Api::V2::EnvironmentsController < Api::V2::ApiController
     fail HttpErrors::NotFound, _("Couldn't find environment '%s'") % params[:id] if @environment.nil?
     @organization = @environment.organization
     @environment
+  end
+
+  def environment_params
+    attrs = [:name, :description]
+    attrs.push(:label, :prior) if params[:action] == "create"
+    params.require(:environment).permit(*attrs)
   end
 
 end

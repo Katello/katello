@@ -12,7 +12,7 @@
 #
 
 module Katello
-class KeyPool < ActiveRecord::Base
+class KeyPool < Katello::Model
   self.include_root_in_json = false
 
   belongs_to :activation_key, :class_name => "Katello::ActivationKey", :inverse_of => :key_pools

@@ -39,6 +39,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency "hooks"
   gem.add_dependency "dynflow", ">= 0.1.0"
   gem.add_dependency "justified"
+  gem.add_dependency "strong_parameters", "~> 0.2.2" # remove after we upgrade to Rails 4
 
   gem.add_dependency "delayed_job", "~> 3.0.2"
   gem.add_dependency "delayed_job_active_record", "~> 0.3.3"

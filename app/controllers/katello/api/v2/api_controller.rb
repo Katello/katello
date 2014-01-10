@@ -22,9 +22,14 @@ module Katello
     include AuthorizationRules
 
     before_filter :load_search_service, :only => [:index]
+    before_filter :turn_on_strong_params
 
     resource_description do
       api_version 'v2'
+    end
+
+    rescue_from(ActionController::ParameterMissing) do |parameter_missing_exception|
+      render :text => _("Missing values for #{parameter_missing_exception.param}."), :status => :bad_request
     end
 
     def_param_group :search do
@@ -124,6 +129,16 @@ module Katello
       else
         fail HttpErrors::NotFound, _("You have not set a default organization and environment on the user %s.") % current_user.login
       end
+    end
+
+    def param_rules
+      # we're using strong params in v2
+      {}
+    end
+
+    def turn_on_strong_params
+      # prevent create and update_attributes from being called without strong params
+      Thread.current[:strong_parameters] = true
     end
 
   end

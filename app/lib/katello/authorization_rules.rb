@@ -90,5 +90,9 @@ module AuthorizationRules
     {}
   end
 
+  def turn_off_strong_params
+    Thread.current[:strong_parameters] = false
+  end
+
 end
 end

@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class RolesUser < ActiveRecord::Base
+class RolesUser < Katello::Model
   self.include_root_in_json = false
 
   belongs_to :role, :inverse_of => :roles_users, :class_name => "Katello::Role"

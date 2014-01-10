@@ -39,26 +39,6 @@ class Api::V2::SystemsController < Api::V2::ApiController
     [:organization_id, :owner]
   end
 
-  def param_rules
-    {
-      :create => [:system, :facts, :installed_products, :name, :type, :cp_type, :service_level, :location, :content_view_id, :environment_id, :organization_id],
-      :index => [:search, :page, :per_page, :sort_order, :sort_by, :system, :name, :pool_id, :uuid, :organization_id, :environment_id, :system_group_id],
-      :show => [:system, :id, :fields],
-      :update => [:system, :id, :facts, :installed_products, :name, :type, :cp_type, :service_level, :location, :environment_id, :content_view_id],
-      :delete => [:system, :id],
-      :tasks => [:system, :id, :page, :paged, :sort_by, :sort_order],
-      :available_system_groups => [:system, :id, :search, :page, :per_page, :sort_order, :sort_by],
-      :add_system_groups => [:system, :id, :system_group_ids],
-      :remove_system_groups => [:system, :id, :system_group_ids],
-      :report => [:system, :environment_id, :organization_id],
-      :package_profile => [:system, :id, :page],
-      :errata => [:system, :id, :page],
-      :pools => [:system, :id, :match_system, :match_installed, :no_overlap],
-      :releases => [:system, :id],
-      :activate => [:system, :facts, :installed_products, :name, :type, :cp_type, :service_level, :location, :content_view_id, :environment_id, :organization_id, :activation_keys]
-    }
-  end
-
   # TODO: break up this method
   # rubocop:disable MethodLength
   def rules
@@ -548,11 +528,11 @@ class Api::V2::SystemsController < Api::V2::ApiController
   end
 
   def system_params(params)
-    system_params = params.slice(:name, :description, :location, :owner, :facts)
+    system_params = params.require(:system).permit(:name, :description, :location, :owner, :facts)
 
-    if params.key?(:cp_type)
+    if params[:system].key?(:cp_type)
       system_params[:cp_type] = params[:cp_type]
-    elsif params.key?(:type)
+    elsif params[:system].key?(:type)
       system_params[:cp_type] = params[:type]
     end
 
@@ -561,19 +541,19 @@ class Api::V2::SystemsController < Api::V2::ApiController
       :release_ver => :releaseVer,
       :service_level => :serviceLevel,
       :last_checkin => :lastCheckin }.each do |snake, camel|
-      if params[snake]
+      if params[:system][snake]
         system_params[camel] = params[snake]
-      elsif params[camel]
+      elsif params[:system][camel]
         system_params[camel] = params[camel]
       end
     end
     system_params[:installedProducts] = [] if system_params.key?(:installedProducts) && system_params[:installedProducts].nil?
 
     unless User.consumer?
-      system_params.merge!(params.slice(:environment_id, :content_view_id))
+      system_params.merge!(params[:system].permit(:environment_id, :content_view_id))
       system_params[:content_view_id] = nil if system_params[:content_view_id] == false
-      system_params[:content_view_id] = params[:content_view][:id] if params[:content_view]
-      system_params[:environment_id] = params[:environment][:id] if params[:environment]
+      system_params[:content_view_id] = params[:system][:content_view][:id] if params[:system][:content_view]
+      system_params[:environment_id] = params[:system][:environment][:id] if params[:system][:environment]
     end
 
     system_params

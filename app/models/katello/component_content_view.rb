@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class ComponentContentView < ActiveRecord::Base
+class ComponentContentView < Katello::Model
   self.include_root_in_json = false
 
   belongs_to :content_view_definition, :class_name => "ContentViewDefinitionBase",

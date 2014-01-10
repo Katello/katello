@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class JobTask < ActiveRecord::Base
+class JobTask < Katello::Model
   self.include_root_in_json = false
 
   belongs_to :job, :inverse_of => :job_tasks

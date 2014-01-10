@@ -28,21 +28,13 @@ class Api::V2::UsersController < Api::V1::UsersController
     end
   end
 
-  def param_rules
-    { :create => { :user => [:login, :password, :email, :disabled, :default_environment_id, :default_locale] },
-      :update => { :user => [:password, :email, :disabled, :default_environment_id, :default_locale] }
-    }
-  end
-
   api :POST, "/users", "Create an user"
   param_group :user
   param :user, Hash, :required => true do
     param :login, String, :required => true
   end
   def create
-    user_attrs = params[:user]
-
-    @user = User.create!(user_attrs)
+    @user = User.create!(user_params)
 
     if user_attrs[:default_environment_id]
       @user.default_environment = KTEnvironment.find(user_attrs[:default_environment_id])
@@ -62,12 +54,40 @@ class Api::V2::UsersController < Api::V1::UsersController
   api :PUT, "/users/:id", "Update an user"
   param_group :user
   def update
-    super
+    @user.update_attributes!(user_params)
+
+    if params[:user].key?(:default_organization_id)
+      if params[:user][:default_organization_id].present?
+        @organization = Organization.where(:label => params[:user][:default_organization_id]).first
+        @user.default_environment = @organization.library
+        @user.default_org = @organization.id
+      else
+        @user.default_environment = nil
+      end
+    end
+
+    if !params[:default_locale].blank?
+      #TODO: this should be placed in model validations
+      if Katello.config.available_locales.include? user_params[:default_locale]
+        @user.default_locale = user_params[:default_locale]
+      end
+    end
+
+    @user.save!
+    respond
   end
 
   # rhsm
   def list_owners
     respond_for_index :collection => @user.allowed_organizations
+  end
+
+  private
+
+  def user_params
+    attrs = [:password, :email, :disabled, :default_environment_id, :default_locale]
+    attrs << :login if params[:action] == "create"
+    params[:user].permit(attrs)
   end
 
 end

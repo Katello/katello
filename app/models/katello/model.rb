@@ -11,13 +11,10 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class PermissionTag < Katello::Model
-  self.include_root_in_json = false
+  class Model < ActiveRecord::Base
+    self.abstract_class = true
 
-  belongs_to :permission, :inverse_of => :tags
-
-  def to_s
-    tag_id.to_s
+    # remove once foreman has strong_parameters or Rails 4
+    include Katello::ForbiddenAttributesProtection
   end
-end
 end

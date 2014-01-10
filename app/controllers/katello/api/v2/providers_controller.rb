@@ -44,19 +44,6 @@ class Api::V2::ProvidersController < Api::V2::ApiController
     }
   end
 
-  def param_rules
-    {
-      :index            => [:provider, :id, :search, :page, :per_page, :sort, :sort_order, :sort_by, :provider_type, :organization_id],
-      :show             => [:provider, :id],
-      :create           => [:provider, :name, :description, :organization_id],
-      :update           => [:provider, :id, :name, :description, :repository_url],
-      :destroy          => [:provider, :id],
-      :import_manifest  => [:provider, :id, :import, :force],
-      :refresh_manifest => [:provider, :id],
-      :delete_manifest  => [:provider, :id]
-    }
-  end
-
   def_param_group :provider do
     param :name, String, :desc => "name of the provider", :required => true
     param :description, String, :desc => "description of the provider"
@@ -266,10 +253,10 @@ class Api::V2::ProvidersController < Api::V2::ApiController
     end
 
     def provider_params
-      if @provider && @provider.redhat_provider?
-        params[:provider] && params[:provider].slice(:repository_url)
+      if params[:action] == "update" && provider.redhat_provider?
+        params.require(:provider).permit(:repository_url)
       else
-        params[:provider] && params[:provider].slice(:name) || params.slice(:name)
+        params.require(:provider).permit(:name)
       end
     end
 end

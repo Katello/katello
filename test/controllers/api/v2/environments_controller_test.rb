@@ -46,10 +46,11 @@ module Katello
     def test_create
       Organization.any_instance.stubs(:save!).returns(@organization)
       post :create, :organization_id => @organization.label,
-                    :name => 'dev env',
-                    :label => 'dev_env',
-                    :description => 'This environment is for development.',
-                    :prior => @library.id
+        :environment => {:name => 'dev env',
+                         :label => 'dev_env',
+                         :description => 'This environment is for development.',
+                         :prior => @library.id
+                        }
 
       assert_response :success
       assert_template 'api/v2/environments/show'
@@ -58,7 +59,7 @@ module Katello
     def test_create_fail
       Organization.any_instance.stubs(:save!).returns(@organization)
       post :create, :organization_id => @organization.label,
-                    :description => 'This environment is for development.'
+        :environment => {:description => 'This environment is for development.'}
 
       assert_response :unprocessable_entity
     end
@@ -70,16 +71,17 @@ module Katello
 
       assert_protected_action(:create, allowed_perms, denied_perms) do
         post :create, :organization_id => @organization.label,
-             :name => 'dev env',
-             :label => 'dev_env',
-             :description => 'This environment is for development.',
-             :prior => @library.id
+          :environment => {:name => 'dev env',
+                           :label => 'dev_env',
+                           :description => 'This environment is for development.',
+                           :prior => @library.id
+        }
       end
     end
 
     def test_update
-      put :update, :organization_id => @organization.label,
-                   :id => @staging.id, :name => 'New Name'
+      put :update, :organization_id => @organization.label, :id => @staging.id,
+        :environment => {:name => 'New Name'}
 
       assert_response :success
       assert_template 'api/v2/environments/show'
@@ -92,7 +94,7 @@ module Katello
 
       assert_protected_action(:destroy, allowed_perms, denied_perms) do
         put :update, :organization_id => @organization.label,
-                     :id => @staging.id, :name => 'New Name'
+                     :id => @staging.id, :environment => {:name => 'New Name'}
       end
     end
 

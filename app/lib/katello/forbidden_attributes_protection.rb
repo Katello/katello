@@ -10,14 +10,19 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+# setup strong_parameters
+require 'strong_parameters'
+
+# role our own strong params integration so we can turn it off with a global
 module Katello
-class PermissionTag < Katello::Model
-  self.include_root_in_json = false
-
-  belongs_to :permission, :inverse_of => :tags
-
-  def to_s
-    tag_id.to_s
+  module ForbiddenAttributesProtection
+    def sanitize_for_mass_assignment(*options)
+      new_attributes = options.first
+      if !new_attributes.respond_to?(:permitted?) || new_attributes.permitted? || !Thread.current[:strong_parameters]
+        super
+      else
+        fail ActiveModel::ForbiddenAttributes, "Mass assignment called with an unpermitted hash"
+      end
+    end
   end
-end
 end
