@@ -1,5 +1,5 @@
 module Katello
-class ChangesetContentView < ActiveRecord::Base
+class ChangesetContentView < Katello::Model
   self.include_root_in_json = false
 
   belongs_to :changeset, :inverse_of => :changeset_content_views

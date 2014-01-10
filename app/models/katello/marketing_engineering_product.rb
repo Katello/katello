@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class MarketingEngineeringProduct < ActiveRecord::Base
+class MarketingEngineeringProduct < Katello::Model
   self.include_root_in_json = false
 
   belongs_to :marketing_product, :class_name => "Product", :inverse_of => :marketing_engineering_products

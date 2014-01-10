@@ -10,7 +10,7 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 module Katello
-class ContentViewDefinitionRepository < ActiveRecord::Base
+class ContentViewDefinitionRepository < Katello::Model
   self.include_root_in_json = false
 
   belongs_to :content_view_definition, :inverse_of => :content_view_definition_repositories,

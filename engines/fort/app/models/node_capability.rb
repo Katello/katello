@@ -12,7 +12,7 @@
 
 require 'content_node_capability'
 
-class NodeCapability < ActiveRecord::Base
+class NodeCapability < Katello::Model
 
   belongs_to :node, :inverse_of => :capabilities
 

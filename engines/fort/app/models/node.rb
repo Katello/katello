@@ -12,7 +12,7 @@
 
 require 'node_capability'
 
-class Node < ActiveRecord::Base
+class Node < Katello::Model
   include Authorization::Node
 
   belongs_to :system, :inverse_of => :node
