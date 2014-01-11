@@ -34,14 +34,15 @@ License:        GPLv2
 URL:            http://www.katello.org
 Source0:        https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
 
-%description
-Provides a package for managing application life-cycle for Linux systems.
-
 # service-wait dependency
 Requires:       wget
 Requires:       curl
 
 BuildRequires: asciidoc
+
+%description
+Provides a package for managing application life-cycle for Linux systems.
+
 %prep
 %setup -q
 
