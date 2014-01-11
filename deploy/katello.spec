@@ -39,6 +39,7 @@ Requires:       wget
 Requires:       curl
 
 BuildRequires: asciidoc
+BuildRequires: util-linux
 
 %description
 Provides a package for managing application life-cycle for Linux systems.
