@@ -8,7 +8,7 @@ namespace :test do
     # doesn't override our test runner
     ENV['TESTOPTS'] = "#{ENV['TESTOPTS']} #{Katello::Engine.root}/test/katello_test_runner.rb"
 
-    spec_task = Rake::TestTask.new('katello_spec_task') do |t|
+    spec_task = Rake::TestTask.new('spec') do |t|
       t.libs << ["test", "#{Katello::Engine.root}/test", "spec", "#{Katello::Engine.root}/spec"]
       t.test_files = [
         "#{Katello::Engine.root}/spec/helpers/**/*_spec.rb",
@@ -21,7 +21,7 @@ namespace :test do
       t.verbose = true
     end
 
-    test_task = Rake::TestTask.new('katello_test_task') do |t|
+    test_task = Rake::TestTask.new('test') do |t|
       t.libs << ["test", "#{Katello::Engine.root}/test"]
       t.test_files = [
         "#{Katello::Engine.root}/test/controllers/api/v1/*_test.rb",
