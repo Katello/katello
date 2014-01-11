@@ -9,7 +9,7 @@
 #main.container_16
   = one_panel('products', @products, @products_options)
   = one_panel('plans', @plans, @plans_options)
-  = form_tag sync_schedules_apply_path, :method => "post", :id => "sync_schedule_form" do
+  = form_tag apply_sync_schedules_path, :method => "post", :id => "sync_schedule_form" do
     = hidden_field_tag :data
     = button_to _("Apply Selected Plan to Selected Products"), {:action => "apply",
       :controller => "sync_schedules"}, :disabled => !@organization.syncable?, :method => :post, :class => 'dialogbutton fr', :id => 'apply_button'
