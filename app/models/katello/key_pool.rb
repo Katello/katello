@@ -12,7 +12,8 @@
 #
 
 module Katello
-class KeyPool < Katello::Model
+class KeyPool < ActiveRecord::Base
+  include Katello::ForbiddenAttributesProtection
   self.include_root_in_json = false
 
   belongs_to :activation_key, :class_name => "Katello::ActivationKey", :inverse_of => :key_pools

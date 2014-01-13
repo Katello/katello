@@ -12,7 +12,8 @@
 #
 
 module Katello
-class KeySystemGroup < Katello::Model
+class KeySystemGroup < ActiveRecord::Base
+  include Katello::ForbiddenAttributesProtection
   self.include_root_in_json = false
 
   belongs_to :activation_key, :inverse_of => :key_system_groups

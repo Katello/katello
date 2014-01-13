@@ -12,7 +12,8 @@
 
 require 'content_node_capability'
 
-class NodeCapability < Katello::Model
+class NodeCapability < ActiveRecord::Base
+  include Katello::ForbiddenAttributesProtection
 
   belongs_to :node, :inverse_of => :capabilities
 

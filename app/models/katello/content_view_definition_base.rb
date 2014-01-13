@@ -11,7 +11,8 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class ContentViewDefinitionBase < Katello::Model
+class ContentViewDefinitionBase < ActiveRecord::Base
+  include Katello::ForbiddenAttributesProtection
   self.include_root_in_json = false
 
   belongs_to :organization, :inverse_of => :content_view_definitions, :class_name => "Organization"

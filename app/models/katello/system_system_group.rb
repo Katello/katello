@@ -12,7 +12,8 @@
 #
 
 module Katello
-class SystemSystemGroup < Katello::Model
+class SystemSystemGroup < ActiveRecord::Base
+  include Katello::ForbiddenAttributesProtection
   self.include_root_in_json = false
 
   belongs_to :system, :inverse_of => :system_system_groups

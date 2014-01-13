@@ -58,7 +58,8 @@ end
 end
 
 module Katello
-class ResourceType < Katello::Model
+class ResourceType < ActiveRecord::Base
+  include Katello::ForbiddenAttributesProtection
   has_one :permission, :class_name => "Katello::Permission", :dependent => :destroy
   validates :name, :length => { :maximum => 255 }
 
