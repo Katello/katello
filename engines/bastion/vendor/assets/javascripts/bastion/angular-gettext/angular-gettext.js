@@ -1,6 +1,8 @@
-if (typeof jQuery === 'undefined') {
-  throw new Error('Angular-gettext depends on jQuery, be sure to include it!');
-}
+// Commenting this check out as it breaks asset compilation on RHEL6
+// with the current version of therubyracer (0.11.0beta5)
+//if (typeof jQuery === 'undefined') {
+//  throw new Error('Angular-gettext depends on jQuery, be sure to include it!');
+//}
 angular.module('gettext', []);
 angular.module('gettext').factory('gettext', function () {
   return function (str) {

@@ -1,6 +1,11 @@
 desc 'Compile Katello assets'
-task 'assets:precompile:katello' => ['assets:environment'] do
+task 'assets:precompile:katello' do
  
+  # Partially load the Rails environment to avoid
+  # the need of a database being setup
+  Rails.application.initialize!(:assets)
+  Sprockets::Bootstrap.new(Rails.application).run
+
   def compile_assets(args)
     precompile = args.fetch(:precompile, [])
 
@@ -11,7 +16,6 @@ task 'assets:precompile:katello' => ['assets:environment'] do
     config = Rails.application.config
     config.assets.digests = {}
     config.assets.manifest = File.join(target)
-    config.assets.initialize_on_precompile = false
 
     config.assets.compile = args.fetch(:compile, true)
     config.assets.compress = args.fetch(:compress, true)
