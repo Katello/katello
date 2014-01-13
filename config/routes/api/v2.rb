@@ -143,6 +143,7 @@ Katello::Engine.routes.draw do
           match '/bulk/update_content' => 'systems_bulk_actions#update_content', :via => :put
           match '/bulk/remove_content' => 'systems_bulk_actions#remove_content', :via => :put
           match '/bulk/destroy' => 'systems_bulk_actions#destroy_systems', :via => :put
+          match '/bulk/environment_content_view' => 'systems_bulk_actions#environment_content_view', :via => :put
         end
         api_resources :subscriptions, :only => [:create, :index, :destroy] do
           collection do

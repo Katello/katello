@@ -26,6 +26,11 @@ class Api::V2::SystemsBulkActionsControllerTest < ActionController::TestCase
     @update_permission = UserPermission.new(:update_systems, :organizations, nil, @system1.organization)
     @delete_permission = UserPermission.new(:delete_systems, :organizations, nil, @system1.organization)
     @update_group_perm = UserPermission.new(:update, :system_groups, [@system_group1.id, @system_group2.id], @system1.organization)
+
+    @subscribe_perms =  UserPermission.new(:subscribe, :content_views, @view.id, @system1.organization) +
+                             UserPermission.new(:register_systems, :environments, @library.id, @system1.organization)
+    @subscribe_perms << @update_permission
+
     @no_permission = NO_PERMISSION
   end
 
@@ -34,13 +39,15 @@ class Api::V2::SystemsBulkActionsControllerTest < ActionController::TestCase
     login_user(User.find(users(:admin)))
     @request.env['HTTP_ACCEPT'] = 'application/json'
 
-    @system1 = katello_systems(:simple_server)
-    @system2 = katello_systems(:simple_server2)
+    @system1 = System.find(katello_systems(:simple_server))
+    @system2 = System.find(katello_systems(:simple_server2))
     @system_ids = [@system1.id, @system2.id]
     @systems = [@system1, @system2]
     @system_ids = @systems.map(&:id)
 
     @org = get_organization(:organization1)
+    @view = katello_content_views(:library_view)
+    @library = @org.library
     @system_group1 = katello_system_groups(:simple_group)
     @system_group2 = katello_system_groups(:another_simple_group)
 
@@ -141,6 +148,16 @@ class Api::V2::SystemsBulkActionsControllerTest < ActionController::TestCase
     assert_nil System.find_by_id(@system2.id)
   end
 
+  def test_content_view_environment
+    put :environment_content_view, :included => {:ids => @system_ids}, :organization_id => @org.label,
+        :environment_id => @library.id, :content_view_id => @view.id
+
+    assert_response :success
+    system = System.find_by_id(@system1)
+    assert_equal @view.id, system.content_view_id
+    assert_equal @library.id, system.environment_id
+  end
+
   def test_permissions
     good_perms = [@update_permission]
     good_group_perm = [@update_group_perm + @update_permission]
@@ -178,6 +195,16 @@ class Api::V2::SystemsBulkActionsControllerTest < ActionController::TestCase
 
     assert_protected_action(:destroy_systems, good_perms, bad_perms) do
       put :destroy_systems, :included => {:ids => @system_ids}, :organization_id => @org.label
+    end
+  end
+
+  def test_environment_content_view_permission
+    good_perms = [@subscribe_perms]
+    bad_perms = [@read_permission, @delete_permission, @no_permission]
+
+    assert_protected_action(:environment_content_view, good_perms, bad_perms) do
+      put :environment_content_view, :included => {:ids => @system_ids}, :organization_id => @org.label,
+          :environment_id => @library.id, :content_view_id => @view.id
     end
   end
 

@@ -184,6 +184,12 @@ angular.module('Bastion.systems').config(['$stateProvider', function ($stateProv
         collapsed: true,
         controller: 'SystemsBulkActionSubscriptionsController',
         templateUrl: 'systems/bulk/views/bulk-actions-subscriptions.html'
+    })
+    .state('systems.bulk-actions.environment', {
+        url: '/systems/bulk-actions/bulk-environment',
+        collapsed: true,
+        controller: 'SystemsBulkActionEnvironmentController',
+        templateUrl: 'systems/bulk/views/bulk-actions-environment.html'
     });
 
     $stateProvider.state('systems.details.packages', {
