@@ -72,10 +72,7 @@ KATELLO_HEADPIN = [
 "/var/log/katello",
 "/etc/katello/client.conf",
 "/etc/katello/katello.yml",
-"/etc/katello/mapping.yml",
-"/etc/katello/thin.yml",
 "/etc/katello/katello-configure.conf",
-"/etc/httpd/conf.d/katello.conf",
 "/etc/katello/environment.rb"
 ]
 
@@ -94,16 +91,9 @@ PULP = [
 FOREMAN = [
 "/var/log/foreman",
 "/etc/foreman/settings.yaml",
-"/etc/foreman/thin.yml",
 "/etc/foreman/email.yaml",
 "/etc/foreman/database.yml",
 "/etc/sysconfig/foreman"
-]
-
-SIGNO = [
-"/etc/signo/thin.yml",
-"/etc/signo/sso.yml",
-"/var/log/signo"
 ]
 
 SPLICE = [
@@ -136,7 +126,6 @@ sources += KATELLO_HEADPIN
 sources += ELASTIC_SEARCH
 sources += CANDLEPIN
 sources += PULP if deployment == 'katello'
-sources += SIGNO if deployment == 'katello'
 sources += FOREMAN if use_foreman
 sources += SPLICE if use_splice
 sources += THUMBSLUG if deployment == 'headpin'
