@@ -133,6 +133,7 @@ Requires: %{?scl_prefix}rubygem-compass-960-plugin
 Requires: %{?scl_prefix}rubygem-haml-rails 
 Requires: %{?scl_prefix}rubygem-ui_alchemy-rails = 1.0.12
 Requires: %{?scl_prefix}rubygem-deface
+Requires: %{?scl_prefix}rubygem-strong_parameters
 BuildRequires: %{?scl_prefix}rubygems
 BuildArch: noarch
 Provides: rubygem(katello) = %{version}
