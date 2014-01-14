@@ -4,9 +4,10 @@ task 'assets:precompile:katello' do
   # Partially load the Rails environment to avoid
   # the need of a database being setup
   Rails.application.initialize!(:assets)
-  Sprockets::Bootstrap.new(Rails.application).run
 
   def compile_assets(args)
+    require 'uglifier'
+
     precompile = args.fetch(:precompile, [])
 
     _ = ActionView::Base
@@ -14,14 +15,16 @@ task 'assets:precompile:katello' do
     target = File.join(Katello::Engine.root, 'public', 'assets')
 
     config = Rails.application.config
-    config.assets.digests = {}
-    config.assets.manifest = File.join(target)
-
-    config.assets.compile = args.fetch(:compile, true)
-    config.assets.compress = args.fetch(:compress, true)
-    config.assets.digest  = args.fetch(:digest, true)
-
     env = Rails.application.assets
+
+    config.assets.digests   = {}
+    config.assets.manifest  = File.join(target)
+    config.assets.compile   = args.fetch(:compile, true)
+    config.assets.compress  = args.fetch(:compress, true)
+    config.assets.digest    = args.fetch(:digest, true)
+    config.assets.js_compressor = Uglifier.new(:mangle => false)
+
+    Sprockets::Bootstrap.new(Rails.application).run
     compiler = Sprockets::StaticCompiler.new(env,
                                              target,
                                              precompile,
