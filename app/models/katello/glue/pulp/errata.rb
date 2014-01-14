@@ -129,22 +129,14 @@ module Glue::Pulp::Errata
     end
 
     def products
-      products = []
-
-      self.repoids.each do |repoid|
-        # there is a problem, that Pulp in versino <= 0.0.265-1 doesn't remove
-        # repo frmo errata when deleting repository. Therefore there might be a
-        # situation that repo is not in Pulp anymore, see BZ 790356
-        if repo = Repository.where(:pulp_id => repoid)[0]
-          products << repo.product
-        end
-      end
-
-      products.uniq
+      # there is a problem, that Pulp in versino <= 0.0.265-1 doesn't remove
+      # repo frmo errata when deleting repository. Therefore there might be a
+      # situation that repo is not in Pulp anymore, see BZ 790356
+      Product.where(:id => self.product_ids)
     end
 
     def product_ids
-      products.map(&:id)
+      Repository.where(:pulp_id => self.repo_ids).pluck(:product_id).uniq
     end
 
     def product_cp_ids
