@@ -150,15 +150,22 @@ Katello::Engine.routes.draw do
     end
   end
 
-  get  "sync_schedules/index"
-  post "sync_schedules/apply"
+  resources :sync_schedules do
+    collection do
+      get :index
+      post :apply
+    end
+  end
 
-  get "sync_management/manage"
-  get "sync_management/index"
-  post "sync_management/sync"
-  get  "sync_management/sync_status"
-  get  "sync_management/product_status"
-  resources :sync_management, :only => [:destroy]
+  resources :sync_management, :only => [:destroy] do
+    collection do
+      get :manage
+      get :index
+      get :sync_status
+      get :product_status
+      post :sync
+    end
+  end
 
   get "notices/note_count"
   get "notices/get_new"
