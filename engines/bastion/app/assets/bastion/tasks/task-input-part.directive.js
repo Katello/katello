@@ -21,7 +21,7 @@
 angular.module('Bastion.tasks').directive('taskInputPart',
     function () {
         return {
-            restrict: 'E',
+            restrict: 'A',
             template: '<span ng-if="!link()">{{text()}}</span>' +
                       '<a ng-if="link()" href="{{link()}}">{{text()}}</a>',
             scope: {

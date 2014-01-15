@@ -33,7 +33,7 @@
         <span class="info-value" ng-switch="isArray(task.humanized.input)">
           <span ng-switch-when="true">
             <span ng-repeat="inputPart in task.humanized.input">
-              <task-input-part  data="inputPart"></task-input-part>
+              <span task-input-part  data="inputPart"></span>
               <span ng-show="!$last">; </span>
             </span>
           </span>
@@ -53,7 +53,7 @@
       </div>
 
        <div ng-class="task | progressClasses" class="progress progress-striped">
-         <progress percent="task.progressbar"></progress>
+         <span progress percent="task.progressbar"></span>
        </div>
     </section>
 

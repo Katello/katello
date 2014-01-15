@@ -138,7 +138,7 @@ angular.module('Bastion').run(['$rootScope', '$state', '$stateParams', '$templat
         $templateCache.put('template/modal/window.html', '<div class="modal fade {{ windowClass }}" ng-class="{in: animate}" ng-style="{\'z-index\': 1050 + index*10, display: \'block\'}" ng-click="close($event)"><div class="modal-dialog"><div class="modal-content" ng-transclude></div></div></div>');
         $templateCache.put('template/tooltip/tooltip-popup.html', '<div class="tooltip {{placement}}" ng-class="{ in: isOpen(), fade: animation() }"><div class="tooltip-arrow"></div><div class="tooltip-inner" ng-bind="content"></div></div>');
         $templateCache.put('template/alert/alert.html', '<div class="alert" ng-class=\'type && "alert-" + type\'><button ng-show="closeable" type="button" class="close" ng-click="close()">&times;</button><div ng-transclude></div></div>');
-        $templateCache.put('template/progressbar/progress.html', '<div class="progress"><progressbar ng-repeat="bar in bars" width="bar.to" old="bar.from" animate="bar.animate" type="bar.type"></progressbar></div>');
+        $templateCache.put('template/progressbar/progress.html', '<div class="progress"><div progressbar ng-repeat="bar in bars" width="bar.to" old="bar.from" animate="bar.animate" type="bar.type"></div></div>');
         $templateCache.put('template/progressbar/bar.html', '<div class="progress-bar" role="progressbar" ng-class=\'type && "progress-bar-" + type\'></div>');
     }
 ]);

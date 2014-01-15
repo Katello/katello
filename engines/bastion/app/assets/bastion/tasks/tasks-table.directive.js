@@ -37,17 +37,17 @@
  *   can be skipped because are obvious from the context the table is in
  * @example
  *   <pre>
-        <tasks-table  details-state="products.details.tasks.details"
-                      known-context="product,organization"
-                      resource-type="Katello::Product"
-                      resource-id="{{ product.katello_id }}"/>
+        <div tasks-table  details-state="products.details.tasks.details"
+                          known-context="product,organization"
+                          resource-type="Katello::Product"
+                          resource-id="{{ product.katello_id }}"/>
      </pre>
  */
 angular.module('Bastion.tasks').directive('tasksTable',
     ['TasksNutupane',
     function (TasksNutupane) {
         return {
-            restrict: 'E',
+            restrict: 'A',
             templateUrl: function (element, attrs) {
                 if (attrs.templateUrl) {
                     return attrs.templateUrl;

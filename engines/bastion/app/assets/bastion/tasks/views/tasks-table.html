@@ -15,7 +15,7 @@
           <tr alch-table-row ng-repeat="task in tasksTable.rows">
             <td alch-table-cell>
               <div ng-class="task | progressClasses" class="progress progress-striped">
-                <progress percent="task.progressbar"></progress>
+                <span progress percent="task.progressbar"></span>
               </div>
             </td>
             <td alch-table-cell>
