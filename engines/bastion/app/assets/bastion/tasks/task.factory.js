@@ -73,6 +73,7 @@ angular.module('Bastion.tasks').factory('Task',
 
         function updateProgress(periodic) {
             if (_.keys(searchParamsById).length === 0) {
+                bulkSearchRunning = false;
                 return;
             }
             foremanTasksResource.bulkSearch(bulkSearchParams(), function (response) {
