@@ -11,7 +11,8 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class ChangesetUser < Katello::Model
+class ChangesetUser < ActiveRecord::Base
+  include Katello::ForbiddenAttributesProtection
   self.include_root_in_json = false
 
   belongs_to :changeset, :inverse_of => :users

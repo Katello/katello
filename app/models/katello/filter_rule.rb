@@ -11,7 +11,8 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class FilterRule < Katello::Model
+class FilterRule < ActiveRecord::Base
+  include Katello::ForbiddenAttributesProtection
   self.include_root_in_json = false
 
   belongs_to :filter, :class_name => "Katello::Filter", :inverse_of => :rules

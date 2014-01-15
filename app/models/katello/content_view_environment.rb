@@ -11,7 +11,8 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class ContentViewEnvironment < Katello::Model
+class ContentViewEnvironment < ActiveRecord::Base
+  include Katello::ForbiddenAttributesProtection
   self.include_root_in_json = false
 
   include Glue::Candlepin::Environment if Katello.config.use_cp

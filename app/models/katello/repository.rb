@@ -11,7 +11,8 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class Repository < Katello::Model
+class Repository < ActiveRecord::Base
+  include Katello::ForbiddenAttributesProtection
   self.include_root_in_json = false
 
   before_destroy :assert_deletable

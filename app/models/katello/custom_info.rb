@@ -11,7 +11,8 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class CustomInfo < Katello::Model
+class CustomInfo < ActiveRecord::Base
+  include Katello::ForbiddenAttributesProtection
   self.include_root_in_json = false
 
   attr_accessible :keyname, :value, :org_default

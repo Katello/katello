@@ -1,5 +1,6 @@
 module Katello
-class ChangesetContentView < Katello::Model
+class ChangesetContentView < ActiveRecord::Base
+  include Katello::ForbiddenAttributesProtection
   self.include_root_in_json = false
 
   belongs_to :changeset, :inverse_of => :changeset_content_views

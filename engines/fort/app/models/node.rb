@@ -12,7 +12,8 @@
 
 require 'node_capability'
 
-class Node < Katello::Model
+class Node < ActiveRecord::Base
+  include Katello::ForbiddenAttributesProtection
   include Authorization::Node
 
   belongs_to :system, :inverse_of => :node

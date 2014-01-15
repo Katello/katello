@@ -11,7 +11,8 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class LdapGroupRole < Katello::Model
+class LdapGroupRole < ActiveRecord::Base
+  include Katello::ForbiddenAttributesProtection
   self.include_root_in_json = false
 
   validates :ldap_group, :uniqueness => {:scope => :role_id}
