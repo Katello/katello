@@ -52,7 +52,7 @@
         <span class="info-value">{{ task.result }}</span>
       </div>
 
-       <div ng-class="task | progressClasses" class="progress progress-striped">
+       <div ng-class="{ active: (task.state === 'pending' || task.state === 'running') }" class="progress progress-striped">
          <span progress percent="task.progressbar"></span>
        </div>
     </section>
