@@ -236,6 +236,10 @@ group :katello do
 end 
 GEMFILE
 
+mkdir -p %{buildroot}%{foreman_dir}/public/assets
+ln -s %{gem_instdir}/public/assets/katello %{buildroot}%{foreman_dir}/public/assets/katello
+ln -s %{gem_instdir}/public/assets/bastion %{buildroot}%{foreman_dir}/public/assets/bastion
+
 %clean
 %{__rm} -rf %{buildroot}
 
@@ -245,6 +249,8 @@ GEMFILE
 %exclude %{gem_cache}
 %{gem_spec}
 %{foreman_bundlerd_dir}/%{gem_name}.rb
+%{foreman_dir}/public/assets/katello
+%{foreman_dir}/public/assets/bastion
 
 %files doc
 %{gem_dir}/doc/%{gem_name}-%{version}
