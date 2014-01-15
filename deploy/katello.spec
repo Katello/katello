@@ -77,7 +77,6 @@ install -m 755 script/katello-remove-orphans %{buildroot}%{_sysconfdir}/cron.wee
 #copy init scripts and sysconfigs
 install -Dp -m0644 %{confdir}/%{name}.sysconfig %{buildroot}%{_sysconfdir}/sysconfig/%{name}
 install -Dp -m0644 %{confdir}/service-wait.sysconfig %{buildroot}%{_sysconfdir}/sysconfig/service-wait
-install -Dp -m0755 %{confdir}/%{name}.init %{buildroot}%{_initddir}/%{name}
 install -Dp -m0755 %{confdir}/%{name}-jobs.init %{buildroot}%{_initddir}/%{name}-jobs
 install -Dp -m0644 %{confdir}/%{name}.logrotate %{buildroot}%{_sysconfdir}/logrotate.d/%{name}
 
@@ -125,7 +124,6 @@ usermod -a -G katello-shared tomcat
 %config %{_sysconfdir}/logrotate.d/%{name}
 %config(noreplace) %{_sysconfdir}/sysconfig/%{name}
 %config(noreplace) %{_sysconfdir}/sysconfig/service-wait
-%{_initddir}/%{name}
 %{_initddir}/%{name}-jobs
 %{homedir}/script/service-wait
 %defattr(-, katello, katello)
