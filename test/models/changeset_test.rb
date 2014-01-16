@@ -133,6 +133,8 @@ class ChangesetTest < ActiveSupport::TestCase
   end
 
   def test_content_view_re_promote
+    Environment.stubs(:find_by_katello_id).returns(environments(:testing))
+
     view         = @library_dev_view
     changeset    = FactoryGirl.create(:deletion_changeset,
                                       :environment => @dev)

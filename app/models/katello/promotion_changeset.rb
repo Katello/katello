@@ -68,6 +68,8 @@ class PromotionChangeset < Changeset
     update_view_cp_content(to_env)
     update_progress! '70'
     trigger_repository_change(to_env)
+    update_progress! '80'
+    update_foreman_content(to_env)
     update_progress! '100'
 
     self.promotion_date = Time.now
@@ -102,6 +104,12 @@ class PromotionChangeset < Changeset
   def update_view_cp_content(to_env)
     self.content_views.collect do |view|
       view.update_cp_content(to_env)
+    end
+  end
+
+  def update_foreman_content(to_env)
+    self.content_views.collect do |view|
+      Katello::Foreman.update_foreman_content(to_env.organization, to_env, view)
     end
   end
 

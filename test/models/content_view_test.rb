@@ -122,6 +122,8 @@ class ContentViewTest < ActiveSupport::TestCase
   def test_promote
     Repository.any_instance.stubs(:clone_contents).returns([])
     Repository.any_instance.stubs(:checksum_type).returns(nil)
+    Repository.any_instance.stubs(:uri).returns('http://test_uri/')
+    Repository.any_instance.stubs(:bootable_distribution).returns(nil)
     content_view = @library_view
     refute_includes content_view.environments, @dev
     content_view.promote(@library, @dev)

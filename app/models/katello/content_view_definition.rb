@@ -90,7 +90,9 @@ class ContentViewDefinition < ContentViewDefinitionBase
     end
     view.update_cp_content(view.organization.library)
     view.versions.first.trigger_repository_changes
+
     Glue::Event.trigger(Katello::Actions::ContentViewPublish, view)
+    Katello::Foreman.update_foreman_content(view.organization, view.organization.library, view)
 
     if notify
       message = _("Successfully published content view '%{view_name}' from definition '%{definition_name}'.") %
