@@ -5,13 +5,13 @@
     <div class="fr">
       <button class="btn btn-danger"
               translate
-              ng-disabled="system.readonly || removeSystems.workingMode"
+              ng-disabled="system.readonly || removingSystems"
               ng-click="openModal()"
-              ng-hide="removeSystems.workingMode">
+              ng-hide="removingSystems">
         Remove Systems
       </button>
 
-      <span ng-show="removeSystems.workingMode">
+      <span ng-show="removingSystems">
         <i class="icon-spinner inline-icon icon-spin"></i>
         <span>{{ "Removing Systems" | translate }}</span>
       </span>

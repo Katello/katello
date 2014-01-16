@@ -2647,14 +2647,6 @@
   sync_plans_path: function(options) {
   return Utils.build_path([], ["format"], [2,[2,[7,"/",false],[6,"sync_plans",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
   },
-// sync_schedules_apply => /sync_schedules/apply(.:format)
-  sync_schedules_apply_path: function(options) {
-  return Utils.build_path([], ["format"], [2,[2,[2,[2,[7,"/",false],[6,"sync_schedules",false]],[7,"/",false]],[6,"apply",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
-  },
-// sync_schedules_index => /sync_schedules/index(.:format)
-  sync_schedules_index_path: function(options) {
-  return Utils.build_path([], ["format"], [2,[2,[2,[2,[7,"/",false],[6,"sync_schedules",false]],[7,"/",false]],[6,"index",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);
-  },
 // system => /systems/:id(.:format)
   system_path: function(_id, options) {
   return Utils.build_path(["id"], ["format"], [2,[2,[2,[2,[7,"/",false],[6,"systems",false]],[7,"/",false]],[3,"id",false]],[1,[2,[8,".",false],[3,"format",false]],false]], arguments);

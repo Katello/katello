@@ -27,24 +27,11 @@
 angular.module('Bastion.providers').controller('NewProviderController',
     ['$scope', 'Provider', 'CurrentOrganization',
     function ($scope, Provider, CurrentOrganization) {
-        var fromState, fromParams;
-
         $scope.provider = new Provider({'organization_id': CurrentOrganization});
         $scope.panel.loading = false;
 
         $scope.save = function (provider) {
             provider.$save(success, error);
-        };
-
-        $scope.$on('$stateChangeSuccess', function (event, toState, toParams, fromStateIn, fromParamsIn) {
-            if (!fromStateIn.abstract) {
-                fromState = fromStateIn;
-                fromParams = fromParamsIn;
-            }
-        });
-
-        $scope.transitionBack = function () {
-            $scope.transitionTo(fromState, fromParams);
         };
 
         function success() {

@@ -66,6 +66,7 @@ module FixtureTestCase
     self.set_fixture_class :katello_resource_types => "Katello::ResourceType"
     self.set_fixture_class :katello_roles_users => "Katello::RoleUser"
     self.set_fixture_class :katello_roles => "Katello::Role"
+    self.set_fixture_class :katello_sync_plans => "Katello::SyncPlan"
     self.set_fixture_class :katello_system_groups => "Katello::SystemGroup"
     self.set_fixture_class :katello_systems => "Katello::System"
     self.set_fixture_class :katello_system_system_groups => "Katello::SystemSystemGroup"

@@ -25,6 +25,7 @@ describe('Controller: NewProviderController', function() {
         $scope.providerForm = $injector.get('MockForm');
         $scope.product = {};
         $scope.panel = {};
+        $scope.transitionBack = function () {};
 
         $controller('NewProviderController', {
             $scope: $scope,

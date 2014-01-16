@@ -15,7 +15,8 @@
 describe('Directive: alchTable', function() {
     var scope,
         compile,
-        tableElement;
+        tableElement,
+        chooseTableElement;
 
     beforeEach(module('alchemy'));
 
@@ -53,7 +54,26 @@ describe('Directive: alchTable', function() {
               '</table>' +
             '</div>');
 
+        chooseTableElement = angular.element(
+            '<div alch-table="table">' +
+              '<table>' +
+                '<thead class="hidden">' +
+                  '<tr alch-table-head row-choice>' +
+                    '<th alch-table-column>{{ "Name" }}</th>' +
+                  '</tr>' +
+                '</thead>' +
+                '<tbody>' +
+                  '<tr alch-table-row ng-repeat="item in table.rows" row-choice="item">' +
+                    '<td alch-table-cell>{{ item.name }}</td>' +
+                    '<td alch-table-cell>{{ item.style }}</td>' +
+                  '</tr>' +
+                '</tbody>' +
+              '</table>' +
+            '</div>');
+
+
         compile(tableElement)(scope);
+        compile(chooseTableElement)(scope);
         scope.$digest();
     });
 
@@ -109,6 +129,14 @@ describe('Directive: alchTable', function() {
             expect(scope.table.numSelected).toEqual(0);
             expect(scope.table.allSelected).toEqual(false);
             expect(scope.table.rows[0].selected).toEqual(false);
+        });
+
+        it("should set the chosen row", function() {
+            var row = { id: 1 };
+
+            tableController.itemChosen(row);
+
+            expect(scope.table.chosenRow).toBe(row);
         });
 
     });
@@ -176,6 +204,25 @@ describe('Directive: alchTable', function() {
 
                 expect(checkbox.is(':checked')).toBe(true);
                 expect(row.hasClass('active-row')).toBe(true);
+            });
+
+            it("should choose a row and add 'active-row' class", function() {
+                var row = angular.element(chooseTableElement.find('tbody').find('tr')[0]),
+                    radio = row.find('.row-choice').find('input');
+
+                radio.trigger('click');
+
+                expect(row.hasClass('active-row')).toBe(true);
+            });
+
+            it("should only allow one row to be selected at a time", function() {
+                var radios= angular.element(chooseTableElement.find('input'));
+
+
+                angular.element(radios[0]).trigger('click');
+                angular.element(radios[1]).trigger('click');
+
+                expect(chooseTableElement.find('.active-row').length).toBe(1);
             });
         });
 

@@ -12,7 +12,7 @@
  **/
 
 describe('Controller: RepositoryDetailsInfoController', function() {
-    var $scope, gettext;
+    var $scope, gettext, Repository;
 
     beforeEach(module(
         'Bastion.repositories',
@@ -30,11 +30,6 @@ describe('Controller: RepositoryDetailsInfoController', function() {
             productId: 1,
             repositoryId: 1
         };
-
-        new Repository({
-            'sync_state': 'finished'
-        });
-
 
         gettext = function(message) {
             return message;
@@ -90,13 +85,6 @@ describe('Controller: RepositoryDetailsInfoController', function() {
         expect($scope.errorMessages.length).toBe(1);
     });
 
-    it('should provide a way to remove a repository', function() {
-        spyOn($scope, 'transitionTo');
-        $scope.removeRepository($scope.repository);
-
-        expect($scope.transitionTo).toHaveBeenCalled();
-    });
-
     it('should set an error message if a file upload status is not success', function() {
         $scope.uploadContent('<pre>"There was an error"</pre>', true);
 
@@ -121,7 +109,7 @@ describe('Controller: RepositoryDetailsInfoController', function() {
         expect($scope.syncInProgress('running')).toBe(true);
     });
 
-    it('should provide a method to sync a repository', function() {
+    it("provides a way to sync a repository", function() {
         $scope.syncRepository($scope.repository);
 
         expect($scope.repository['sync_state']).toBe('running');

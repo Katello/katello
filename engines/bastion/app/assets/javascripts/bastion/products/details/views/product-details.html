@@ -20,11 +20,11 @@
       </i>
       <button class="btn"
               ng-class="{'btn-danger': product.permissions.deletable, 'btn-default': !product.permissions.deletable}"
-              translate
               ng-hide="product.readonly"
               ng-click="openModal()"
               ng-disabled="!product.permissions.deletable">
-        Remove Product
+        <i class="icon-trash"></i>
+        {{ "Remove Product" | translate }}
       </button>
       <button class="btn btn-default" ui-sref="products.index">
         <i class="icon-remove"></i>
@@ -35,7 +35,7 @@
 
   <nav>
     <ul class="nav nav-tabs">
-      <li ng-class="{active: isState('products.details.info')}">
+      <li ng-class="{active: stateIncludes('products.details.info')}">
         <a translate
            ui-sref="products.details.info({productId: product.id})">
           Details

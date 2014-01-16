@@ -46,7 +46,7 @@ angular.module('Bastion.systems').factory('System',
 
 /**
  * @ngdoc service
- * @name  Bastion.systems.factory:BulkAction
+ * @name  Bastion.systems.factory:SystemBulkAction
  *
  * @requires $resource
  * @requires Routes
@@ -54,7 +54,7 @@ angular.module('Bastion.systems').factory('System',
  * @description
  *   Provides a $resource for bulk actions on systems.
  */
-angular.module('Bastion.systems').factory('BulkAction',
+angular.module('Bastion.systems').factory('SystemBulkAction',
     ['$resource', 'Routes',
     function ($resource, Routes) {
         return $resource(Routes.apiSystemsPath() + '/bulk/:action', {}, {

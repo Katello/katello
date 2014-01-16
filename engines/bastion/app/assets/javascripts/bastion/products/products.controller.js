@@ -30,7 +30,7 @@ angular.module('Bastion.products').controller('ProductsController',
     ['$scope', '$location', 'Nutupane', 'Product', 'CurrentOrganization',
     function ($scope, $location, Nutupane, Product, CurrentOrganization) {
 
-        var params = {
+        var watch, params = {
             'organization_id':  CurrentOrganization,
             'search':           $location.search().search || "",
             'sort_by':          'name',
@@ -47,6 +47,18 @@ angular.module('Bastion.products').controller('ProductsController',
             $scope.transitionTo('products.index');
         };
 
+        $scope.productTable.refresh = nutupane.refresh;
+
         $scope.table = $scope.productTable;
+
+        watch = $scope.$watch('productTable.rows', function (rows) {
+            if (_.isArray(rows) && !_.isEmpty(rows)) {
+                angular.forEach(rows, function (row) {
+                    row.repositoriesByState = _.groupBy(row.repositories, 'sync_state');
+                });
+                watch();
+            }
+        });
+
     }]
 );

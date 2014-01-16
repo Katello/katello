@@ -1,5 +1,5 @@
 #
-# Copyright 2013 Red Hat, Inc.
+# Copyright 2014 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -11,41 +11,107 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class Api::V2::SyncPlansController < Api::V1::SyncPlansController
+class Api::V2::SyncPlansController < Api::V2::ApiController
+  respond_to :json
 
-  include Api::V2::Rendering
-
-  resource_description do
-    api_version "v2"
-  end
+  before_filter :find_organization, :only => [:create, :index]
+  before_filter :find_plan, :only => [:update, :show, :destroy]
+  before_filter :authorize
 
   def_param_group :sync_plan do
-    param :sync_plan, Hash, :required => true, :action_aware => true do
-      param :name, String, :desc => "sync plan name", :required => true
-      param :interval, SyncPlan::TYPES, :desc => "how often synchronization should run"
-      param :sync_date, String, :desc => "start datetime of synchronization"
-      param :description, String, :desc => "sync plan description"
+    param :name, String, :desc => "sync plan name", :required => true, :action_aware => true
+    param :interval, SyncPlan::TYPES, :desc => "how often synchronization should run", :required => true, :action_aware => true
+    param :sync_date, String, :desc => "start datetime of synchronization", :required => true, :action_aware => true
+    param :description, String, :desc => "sync plan description"
+  end
+
+  def rules
+    access_test = lambda { Provider.any_readable?(@organization) }
+
+    {
+        :index   => access_test,
+        :show    => access_test,
+        :create  => access_test,
+        :update  => access_test,
+        :destroy => access_test
+    }
+  end
+
+  api :GET, "/organizations/:organization_id/sync_plans", "List sync plans"
+  param :organization_id, :identifier, :desc => "Filter products by organization name or label", :required => true
+  param :name, String, :desc => "filter by name"
+  param :sync_date, String, :desc => "filter by sync date"
+  param :interval, SyncPlan::TYPES, :desc => "filter by interval"
+  def index
+    filters = []
+
+    if params[:sync_date]
+      filters << {:terms => {:sync_date => [params[:sync_date]] }}
+    elsif params[:interval]
+      filters << {:terms => {:interval => [params[:interval]] }}
     end
+
+    options = {
+        :filters => filters
+    }
+
+    respond_for_index(:collection => item_search(SyncPlan, params, options))
   end
 
-  api :GET, "/sync_plans/:id", "Show a sync plan"
-  param :id, :number, :desc => "sync plan numeric identifier", :required => true
-  def show
-    super
+  api :POST, "/organizations/:organization_id/sync_plans", "Create a sync plan"
+  param :organization_id, :identifier, :desc => "Filter products by organization name or label", :required => true
+  param_group :sync_plan
+  def create
+    sync_date = sync_plan_params[:sync_date].to_time
+
+    if !sync_date.kind_of?(Time)
+      fail _("Date format is incorrect.")
+    end
+
+    @sync_plan = SyncPlan.new(sync_plan_params)
+    @sync_plan.organization = @organization
+    @sync_plan.save!
+
+    respond_for_show(:resource => @sync_plan)
   end
 
-  api :PUT, "/sync_plans/:id", "Update a sync plan"
+  api :PUT, "/organizations/:organization_id/sync_plans/:id", "Update a sync plan"
+  param :organization_id, :identifier, :desc => "Filter products by organization name or label", :required => true
   param :id, :number, :desc => "sync plan numeric identifier", :required => true
   param_group :sync_plan
   def update
-    super
+    sync_date = sync_plan_params.try(:[], :sync_date).try(:to_time)
+
+    if !sync_date.nil? && !sync_date.kind_of?(Time)
+      fail _("Date format is incorrect.")
+    end
+
+    @sync_plan.update_attributes!(sync_plan_params)
+    @sync_plan.save!
+    @sync_plan.products.each { |p| p.save! }
+
+    respond_for_show(:resource => @sync_plan)
   end
 
-  api :DELETE, "/sync_plans/:id", "Destroy a sync plan"
+  api :DELETE, "/organizations/:organization_id/sync_plans/:id", "Destroy a sync plan"
+  param :organization_id, :identifier, :desc => "Filter products by organization name or label", :required => true
   param :id, :number, :desc => "sync plan numeric identifier"
   def destroy
-    super
+    @sync_plan.destroy
+    respond :message => _("Deleted sync plan '%s'") % params[:id], :resource => @sync_plan
   end
 
+  protected
+
+  def find_plan
+    @sync_plan = SyncPlan.find(params[:id])
+    fail HttpErrors::NotFound, _("Couldn't find sync plan '%{plan}' in organization '%{org}'") % { :plan => params[:id], :org => params[:organization_id] } if @sync_plan.nil?
+    @organization ||= @sync_plan.organization
+    @sync_plan
+  end
+
+  def sync_plan_params
+    params.require(:sync_plan).permit(:name, :description, :interval, :sync_date)
+  end
 end
 end

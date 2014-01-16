@@ -20,6 +20,7 @@
  * @requires Product
  * @requires Provider
  * @requires GPGKey
+ * @requires SyncPlan
  * @requires FormUtils
  *
  * @description
@@ -28,8 +29,8 @@
  *   within the table.
  */
 angular.module('Bastion.products').controller('ProductFormController',
-    ['$scope', '$q', 'Product', 'Provider', 'GPGKey', 'FormUtils',
-    function ($scope, $q, Product, Provider, GPGKey, FormUtils) {
+    ['$scope', '$q', 'Product', 'Provider', 'GPGKey', 'SyncPlan', 'FormUtils',
+    function ($scope, $q, Product, Provider, GPGKey, SyncPlan, FormUtils) {
 
         function fetchProviders() {
             Provider.query(function (providers) {
@@ -43,10 +44,16 @@ angular.module('Bastion.products').controller('ProductFormController',
             });
         }
 
+        function fetchSyncPlans() {
+            SyncPlan.query(function (syncPlans) {
+                $scope.syncPlans = syncPlans.results;
+            });
+        }
+
         function populateSelects() {
             var deferred = $q.defer();
 
-            $scope.$watch("providers && gpgKeys", function (value) {
+            $scope.$watch("providers && gpgKeys && syncPlans", function (value) {
                 if (value !== undefined) {
                     deferred.resolve(true);
                 }
@@ -54,6 +61,7 @@ angular.module('Bastion.products').controller('ProductFormController',
 
             fetchProviders();
             fetchGpgKeys();
+            fetchSyncPlans();
 
             return deferred.promise;
         }
