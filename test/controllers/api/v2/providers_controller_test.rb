@@ -80,8 +80,11 @@ class Api::V2::ProvidersControllerTest < ActionController::TestCase
   end
 
   def test_create
-    post :create, :provider => {:name => 'Fedora Provider'},
-                  :organization_id => @organization.label
+    post :create,
+      :organization_id => @organization.name,
+      :provider => {
+        :name => "Fedora Provider"
+      }
 
     assert_response :success
     assert_template 'api/v2/common/create'
@@ -90,7 +93,7 @@ class Api::V2::ProvidersControllerTest < ActionController::TestCase
   def test_create_fail
     post :create
 
-    assert_response 400
+    assert_response 404
   end
 
   def test_create_protected

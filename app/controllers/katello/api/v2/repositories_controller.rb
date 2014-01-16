@@ -13,7 +13,7 @@
 module Katello
 class Api::V2::RepositoriesController < Api::V2::ApiController
 
-  before_filter :find_organization, :only => [:index, :show]
+  before_filter :find_organization, :only => [:index]
   before_filter :find_product, :only => [:index]
   before_filter :find_product_for_create, :only => [:create]
   before_filter :find_repository, :only => [:show, :update, :destroy, :sync]

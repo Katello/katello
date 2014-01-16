@@ -15,7 +15,8 @@ class Api::V2::SubscriptionsController < Api::V2::ApiController
   include ConsumersControllerLogic
 
   before_filter :find_system
-  before_filter :find_organization, :only => [:index, :show, :upload]
+  before_filter :find_optional_organization, :only => [:index]
+  before_filter :find_organization, :only => [:show, :upload]
   before_filter :find_subscription, :only => [:show]
   before_filter :find_provider
   before_filter :authorize

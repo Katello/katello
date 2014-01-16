@@ -3,7 +3,6 @@ require 'factory_girl_rails'
 require "webmock/minitest"
 require "mocha/setup"
 
-
 require "#{Katello::Engine.root}/test/support/minitest/spec/shared_examples"
 require "#{Katello::Engine.root}/spec/helpers/login_helper_methods"
 require "#{Katello::Engine.root}/spec/helpers/locale_helper_methods"

@@ -45,23 +45,27 @@ module Katello
 
     def test_create
       Organization.any_instance.stubs(:save!).returns(@organization)
-      post :create, :organization_id => @organization.label,
-        :environment => {:name => 'dev env',
-                         :label => 'dev_env',
-                         :description => 'This environment is for development.',
-                         :prior => @library.id
-                        }
+      post :create,
+        :organization_id => @organization.label,
+        :environment => {
+          :name => 'dev env',
+          :label => 'dev_env',
+          :description => 'This environment is for development.',
+          :prior => @library.id
+        }
 
       assert_response :success
-      assert_template 'api/v2/environments/show'
     end
 
     def test_create_fail
       Organization.any_instance.stubs(:save!).returns(@organization)
-      post :create, :organization_id => @organization.label,
-        :environment => {:description => 'This environment is for development.'}
+      post :create,
+        :organization_id => @organization.label,
+        :environment => {
+          :description => 'This environment is for development.'
+        }
 
-      assert_response :unprocessable_entity
+      assert_response :bad_request
     end
 
     def test_create_protected
@@ -70,22 +74,27 @@ module Katello
       denied_perms = [@read_permission, @no_permission]
 
       assert_protected_action(:create, allowed_perms, denied_perms) do
-        post :create, :organization_id => @organization.label,
-          :environment => {:name => 'dev env',
-                           :label => 'dev_env',
-                           :description => 'This environment is for development.',
-                           :prior => @library.id
-        }
+        post :create,
+          :organization_id => @organization.label,
+          :environment => {
+            :name => 'dev env',
+            :label => 'dev_env',
+            :description => 'This environment is for development.',
+            :prior => @library.id
+          }
       end
     end
 
     def test_update
-      put :update, :organization_id => @organization.label, :id => @staging.id,
-        :environment => {:name => 'New Name'}
+      put :update,
+        :organization_id => @organization.label,
+        :id => @staging.id,
+        :environment => {
+          :new_name => 'New Name'
+        }
 
       assert_response :success
-      assert_template 'api/v2/environments/show'
-      assert_equal assigns[:environment].name, 'New Name'
+      assert_template 'api/v2/common/update'
     end
 
     def test_update_protected
@@ -93,8 +102,12 @@ module Katello
       denied_perms = [@no_permission, @read_permission]
 
       assert_protected_action(:destroy, allowed_perms, denied_perms) do
-        put :update, :organization_id => @organization.label,
-                     :id => @staging.id, :environment => {:name => 'New Name'}
+        put :update,
+          :organization_id => @organization.label,
+          :id => @staging.id,
+          :environment => {
+            :new_name => 'New Name'
+          }
       end
     end
 
