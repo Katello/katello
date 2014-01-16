@@ -42,11 +42,14 @@ module Glue::Pulp::User
     end
 
     def set_pulp_user(args = {})
-      password = args.fetch(:password, Password.generate_random_string(16))
+      perform_with_admin do
+        password = args.fetch(:password, Password.generate_random_string(16))
+        Katello.pulp_server.resources.user.create(self.remote_id,
+                                                  {:name => self.remote_id,
+                                                   :password => password})
+      end
 
-      Katello.pulp_server.resources.user.create(self.remote_id,
-                                                {:name => self.remote_id,
-                                                 :password => password})
+      true
     rescue RestClient::ExceptionWithResponse => e
       if e.http_code == 409
         Rails.logger.info "pulp user #{self.remote_id}: already exists. continuing"
@@ -61,7 +64,9 @@ module Glue::Pulp::User
     end
 
     def set_super_user_role
-      Katello.pulp_server.resources.role.add "super-users", self.remote_id
+      perform_with_admin do
+        Katello.pulp_server.resources.role.add "super-users", self.remote_id
+      end
       true #assume everything is ok unless there was an exception thrown
     end
 
@@ -89,6 +94,25 @@ module Glue::Pulp::User
       pre_queue.create(:name => "remove 'super-user' from: #{self.remote_id}", :priority => 3, :action => [self, :del_super_admin_role])
       pre_queue.create(:name => "delete pulp user: #{self.remote_id}", :priority => 4, :action => [self, :del_pulp_user])
     end
+  end
+
+  private
+
+  def perform_with_admin
+    used_admin_user = false
+    # During db:seed, the foreman user may not be setup correctly for pulp communication
+    #  so lets used a mocked 'admin' user instead
+    if Katello.pulp_server.nil? || Katello.pulp_server.config['user'].blank?
+      used_admin_user = true
+      old_pulp_server = Katello.pulp_server
+      User.current = User.new(:remote_id => Katello.config.pulp.default_login,
+                              :login => Katello.config.pulp.default_login)
+    end
+
+    to_return = yield
+
+    Katello.pulp_server = old_pulp_server if used_admin_user
+    to_return
   end
 
 end
