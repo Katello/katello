@@ -22,9 +22,10 @@ namespace :katello do
 
       system(service_stop.gsub("%s", tomcat))
       system("sudo /usr/share/candlepin/cpdb --drop --create")
+      # If you see errors with 'javax.crypto.BadPaddingException: Given final block not properly padded'
+      # it is due to a candlepin dev setup with a different password on the keystre
+      # than in this file.
       system("sudo /usr/share/candlepin/cpsetup -s -k `sudo cat /etc/katello/keystore_password-file`")
-      system("sudo cp /etc/#{tomcat}/server.xml.original /etc/#{tomcat}/server.xml")
-      system(service_start.gsub("%s", tomcat))
       puts "Candlepin database reset."
     end
 
