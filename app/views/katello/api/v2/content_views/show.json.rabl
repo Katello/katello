@@ -1,4 +1,4 @@
-object @content_view
+object @view
 
 extends 'katello/api/v2/common/identifier'
 extends 'katello/api/v2/common/org_reference'

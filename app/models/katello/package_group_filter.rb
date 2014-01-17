@@ -9,12 +9,24 @@
 # NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
-module Katello
-class ContentViewDefinitionRepository < Katello::Model
-  self.include_root_in_json = false
 
-  belongs_to :content_view_definition, :inverse_of => :content_view_definition_repositories,
-                                       :class_name => "Katello::ContentViewDefinitionBase"
-  belongs_to :repository, :inverse_of => :content_view_definition_repositories
+module Katello
+class PackageGroupFilter < Filter
+  validates_with Validators::PackageGroupRuleParamsValidator, :attributes => :parameters
+  def params_format
+    {:units => [[:name]]}
+  end
+
+  def generate_clauses(repo)
+    ids = parameters[:units].collect do |unit|
+      #{'name' => {"$regex" => unit[:name]}}
+      unless unit[:name].blank?
+        PackageGroup.search(unit[:name], 0, 0, [repo.pulp_id]).collect(&:package_group_id)
+      end
+    end
+    ids.flatten!
+    ids.compact!
+    {"id" => {"$in" => ids}} unless ids.empty?
+  end
 end
 end

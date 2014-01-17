@@ -50,9 +50,9 @@ class Repository < Katello::Model
            :class_name  => 'Katello::Repository',
            :dependent   => :restrict,
            :foreign_key => :library_instance_id
-  has_many :content_view_definition_repositories, :class_name => "Katello::ContentViewDefinitionRepository",
+  has_many :content_view_repositories, :class_name => "Katello::ContentViewRepository",
            :dependent => :destroy
-  has_many :content_view_definitions, :through => :content_view_definition_repositories
+  has_many :content_views, :through => :content_view_repositories
   # rubocop:disable HasAndBelongsToMany
   # TODO: change this into has_many :through association
   has_and_belongs_to_many :filters, :class_name => "Katello::Filter", :join_table => :katello_filters_repositories
@@ -177,7 +177,7 @@ class Repository < Katello::Model
       Repository.in_environment(env).where(:library_instance_id => lib_id).
           joins(:content_view_version => :content_view).where("#{Katello::ContentView.table_name}.default" => true).first
     else
-      # this repo is part of a content view that was published from a user created definition
+      # this repo is part of a content view that was published from a user created view
       self.content_view.get_repo_clone(env, self).first
     end
   end
@@ -214,13 +214,13 @@ class Repository < Katello::Model
     "#{org}/#{cve.label}/#{content_path}"
   end
 
-  def self.repo_id(product_label, repo_label, env_label, organization_label, view_label)
-    [organization_label, env_label, view_label, product_label, repo_label].compact.join("-").gsub(/[^-\w]/, "_")
+  def self.repo_id(product_label, repo_label, env_label, organization_label, view_label, version)
+    [organization_label, env_label, view_label, version, product_label, repo_label].compact.join("-").gsub(/[^-\w]/, "_")
   end
 
-  def clone_id(env, content_view)
+  def clone_id(env, content_view, version = nil)
     Repository.repo_id(self.product.label, self.label, env.label,
-                             env.organization.label, content_view.label)
+                             env.organization.label, content_view.label, version)
   end
 
   def trigger_contents_changed(options)
@@ -255,7 +255,7 @@ class Repository < Katello::Model
 
   # TODO: break up method
   # rubocop:disable MethodLength
-  def create_clone(to_env, content_view = nil)
+  def create_clone(to_env, content_view = nil, version = nil)
     content_view = to_env.default_content_view if content_view.nil?
     view_version = content_view.version(to_env)
     fail _("View %{view} has not been promoted to %{env}") %
@@ -290,7 +290,7 @@ class Repository < Katello::Model
                            :unprotected => self.unprotected
                            )
     clone.checksum_type = self.checksum_type if self.checksum_type
-    clone.pulp_id = clone.clone_id(to_env, content_view)
+    clone.pulp_id = clone.clone_id(to_env, content_view, version)
     clone.relative_path = Repository.clone_repo_path(self, to_env, content_view)
     clone.save!
     return clone
