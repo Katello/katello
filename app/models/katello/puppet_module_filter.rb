@@ -11,12 +11,12 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class PackageRule < FilterRule
+class PuppetModuleFilter < Filter
   validates_with Validators::RuleParamsValidator, :attributes => :parameters
   validates_with Validators::RuleVersionValidator, :attributes => :parameters
 
   def params_format
-    {:units => [[:name, :version, :min_version, :max_version]]}
+    {:units => [[:name, :author, :version, :min_version, :max_version]]}
   end
 
   # Returns a set of Pulp/MongoDB conditions to filter out packages in the
@@ -25,29 +25,47 @@ class PackageRule < FilterRule
   # @param repo [Repository] a repository containing packages to filter
   # @return [Array] an array of hashes with MongoDB conditions
   def generate_clauses(repo)
-    pkg_filenames = parameters[:units].map do |unit|
+    ids = parameters[:units].map do |unit|
       next if unit[:name].blank?
 
-      filter = version_filter(unit)
-      Package.search(unit[:name], 0, repo.package_count, [repo.pulp_id],
-                      [:nvrea_sort, "ASC"], :all, 'name', filter).collect(&:filename).compact
-    end
-    pkg_filenames.flatten!
-    pkg_filenames.compact!
+      filters = []
+      filters << version_filter(unit)
+      filters << author_filter(unit)
+      filters.compact!
 
-    {'filename' => {"$in" => pkg_filenames}} unless pkg_filenames.empty?
+      PuppetModule.search(unit[:name], :page_size => repo.puppet_module_count, :repoids => [repo.pulp_id],
+                                       :filters => filters).map(&:_id).compact
+    end
+    ids.flatten!
+    ids.compact!
+    {'unit_id' => {"$in" => ids}} unless ids.empty?
   end
 
   protected
 
   def version_filter(unit)
     if unit.key?(:version)
-      Util::Package.version_eq_filter(unit[:version])
+      {:term => {:version => unit[:version]}}
     elsif unit.key?(:min_version) || unit.key?(:max_version)
-      Util::Package.version_filter(unit[:min_version], unit[:max_version])
+      range = {}
+      range[:gt] = sortable_version(unit[:min_version]) if unit[:min_version]
+      range[:lt] = sortable_version(unit[:max_version]) if unit[:max_version]
+      {:range => {:sortable_version => range}}
     else
       nil
     end
+  end
+
+  def author_filter(unit)
+    if unit.key?(:author) && unit[:author].present?
+      {:term => {:author => unit[:author]}}
+    else
+      nil
+    end
+  end
+
+  def sortable_version(version)
+    Util::Package.sortable_version(version)
   end
 end
 end

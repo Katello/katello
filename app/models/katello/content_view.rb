@@ -17,6 +17,7 @@ class ContentView < Katello::Model
   include Ext::LabelFromName
   include Authorization::ContentView
   include Glue::ElasticSearch::ContentView if Katello.config.use_elasticsearch
+  include AsyncOrchestration
 
   include Glue::Event
 
@@ -26,8 +27,6 @@ class ContentView < Katello::Model
 
   before_destroy :confirm_not_promoted # RAILS3458: this needs to come before associations
 
-  belongs_to :content_view_definition, :class_name => "Katello::ContentViewDefinition", :inverse_of => :content_views
-  alias_method :definition, :content_view_definition
   belongs_to :organization, :inverse_of => :content_views, :class_name => "Organization"
 
   has_many :content_view_environments, :class_name => "Katello::ContentViewEnvironment", :dependent => :destroy
@@ -37,8 +36,11 @@ class ContentView < Katello::Model
 
   has_many :component_content_views, :class_name => "Katello::ComponentContentView", :dependent => :destroy
   has_many :distributors, :class_name => "Katello::Distributor", :dependent => :restrict
-  has_many :composite_content_view_definitions,
-    :through => :component_content_views, :source => "content_view_definition"
+  has_many :composite_content_views, :class_name => "ContentView"
+  has_many :content_views, :through => :component_content_views
+  has_many :content_view_repositories, :dependent => :destroy
+  has_many :repositories, :through => :content_view_repositories
+  has_many :filters, :dependent => :destroy
 
   has_many :changeset_content_views, :class_name => "Katello::ChangesetContentView", :dependent => :destroy
   has_many :changesets, :through => :changeset_content_views
@@ -55,18 +57,11 @@ class ContentView < Katello::Model
 
   scope :default, where(:default => true)
   scope :non_default, where(:default => false)
+  scope :composite, where(:composite => true)
 
   def self.in_environment(env)
     joins(:content_view_versions => :content_view_version_environments).
       where("#{Katello::ContentViewVersionEnvironment.table_name}.environment_id = ?", env.id)
-  end
-
-  def self.composite(composite = true)
-    joins(:content_view_definition).where("#{Katello::ContentViewDefinitionBase.table_name}.composite = ?", composite)
-  end
-
-  def composite
-    content_view_definition.try(:composite?)
   end
 
   def components_not_in_env(env)
@@ -111,7 +106,6 @@ class ContentView < Katello::Model
   def as_json(options = {})
     result = self.attributes
     result['organization'] = self.organization.try(:name)
-    result['definition']   = self.content_view_definition.try(:name)
     result['environments'] = environments.map{|e| e.try(:name)}
     result['versions'] = versions.map(&:version)
     result['versions_details'] = versions.map do |v|
@@ -147,6 +141,10 @@ class ContentView < Katello::Model
     version(env).content_view_version_environments.select {|cvve| cvve.environment_id == env.id}
   end
 
+   def resulting_products
+     (self.repositories.collect{|r| r.product}).uniq
+   end
+
   def repos(env)
     version = version(env)
     if version
@@ -178,7 +176,7 @@ class ContentView < Katello::Model
     end
   end
 
-  def products(env)
+  def version_products(env)
     repos = repos(env)
     Product.joins(:repositories).where("#{Katello::Repository.table_name}.id" => repos.map(&:id)).uniq
   end
@@ -266,38 +264,25 @@ class ContentView < Katello::Model
   # Refresh the content view, creating a new version in the library.  The new version will be returned.
   # TODO: break up method
   # rubocop:disable MethodLength
-  def refresh_view(options = { })
-    if !content_view_definition.ready_to_publish?
-      fail _("Cannot refresh view. Check definition for repository conflicts.")
+  def publish(options = { })
+    # TODO: check for puppet name conflicts
+    if !ready_to_publish?
+      fail _("Cannot publish view. Check for repository conflicts.")
     end
-    content_view_definition.check_puppet_names!
-    options = { :async => true, :notify => false }.merge options
+    options = { :async => true, :notify => false }.merge(options)
 
     # retrieve the 'next' version id to use
-    next_version_id = self.versions.maximum(:version) + 1
-
-    # retrieve the version that is currently in the library and remove the library association.
-    # at this point, we don't want to delete the version as we need to reference the repos it
-    # contains during the refresh
-    library_version = self.version(self.organization.library)
+    next_version_id = (self.versions.maximum(:version) || 0) + 1
 
     # create a new version
     version = ContentViewVersion.new(:version => next_version_id, :content_view => self)
     version.environments << organization.library
     version.save!
 
-    #move all the existing repos over to the new version
-    library_version.repos(organization.library).scoped(:readonly => false).each do |repo|
-      repo.content_view_version = version
-      repo.save!
-    end
-    library_version.reload
-    library_version.delete(self.organization.library)
-
     if options[:async]
-      task  = version.async(:organization => self.organization,
-                            :task_type => TaskStatus::TYPES[:content_view_refresh][:type]).
-                      refresh_version(options[:notify])
+      task  = self.async(:organization => self.organization,
+                         :task_type => TaskStatus::TYPES[:content_view_refresh][:type]).
+        generate_repos(version, options[:notify])
 
       version.task_status = task
       version.save!
@@ -310,7 +295,7 @@ class ContentView < Katello::Model
                                :task_type => TaskStatus::TYPES[:content_view_refresh][:type])
       version.save!
       begin
-        version.refresh_version(options[:notify])
+        generate_repos(version, options[:notify])
         version.task_status.update_attributes!(:state => Katello::TaskStatus::Status::FINISHED)
       rescue => e
         version.task_status.update_attributes!(:state => Katello::TaskStatus::Status::ERROR)
@@ -318,6 +303,79 @@ class ContentView < Katello::Model
       end
     end
     version
+  end
+
+  def generate_repos(version, notify = false)
+    repositories.each do |repo|
+      cloned = repo.create_clone(self.organization.library, self, version.version)
+      associate_contents(cloned)
+    end
+    update_cp_content(self.organization.library)
+    version.trigger_repository_changes
+    Glue::Event.trigger(Katello::Actions::ContentViewPublish, self)
+
+    if notify
+      message = _("Successfully published content view '%s'.") % name
+      Notify.success(message, :request_type => "content_view___publish",
+                              :organization => self.organization)
+    end
+  rescue => e
+    Rails.logger.error(e)
+    Rails.logger.error(e.backtrace.join("\n"))
+
+    if notify
+      message = _("Failed to publish content view '%s'.") % self.name
+      Notify.exception(message, e, :request_type => "content_view___publish",
+                                   :organization => self.organization)
+    end
+
+    raise e
+  end
+
+  def associate_contents(cloned)
+    if cloned.puppet?
+      associate_puppet(cloned)
+    else
+      associate_yum_types(cloned)
+    end
+  end
+
+  def ready_to_publish?
+    !has_puppet_repo_conflicts? && !has_repo_conflicts?
+  end
+
+  def has_repo_conflicts?
+    # Check to see if there is a repo conflict in the component views. A
+    # conflict exists if the same repo exists in more than one of those
+    # component views.
+    if self.composite?
+      repos_hash = self.views_repos
+      repos_hash.each do |view_id, repo_ids|
+        repos_hash.each do |other_view_id, other_repo_ids|
+          return true if (view_id != other_view_id) && !repo_ids.intersection(other_repo_ids).empty?
+        end
+      end
+    end
+    false
+  end
+
+  def has_puppet_repo_conflicts?
+    # Check to see if there is a puppet conflict in the component views. A
+    # conflict exists if more than one view has a puppet repo
+    if self.composite?
+      repos = component_content_views.map { |view| view.repos(organization.library) }.flatten
+      return repos.select(&:puppet?).length > 1
+    end
+    false
+  end
+
+  def views_repos
+    # For composite content views
+    # Retrieve a hash where, key=view.id and value=Set(view's repo library instance ids)
+    self.component_content_views.inject({}) do |view_repos, view|
+      view_repos.update view.id => view.repos(self.organization.library).
+          inject(Set.new) { |ids, repo| ids << repo.library_instance_id }
+    end
   end
 
   def update_cp_content(env)
@@ -332,8 +390,8 @@ class ContentView < Katello::Model
   def add_environment(env)
     if self.content_view_environments.where(:environment_id => env.id).empty?
       ContentViewEnvironment.create!(:name => env.name,
-                                     :label => self.generate_cp_environment_label(env),
-                                     :cp_id => self.generate_cp_environment_id(env),
+                                     :label => generate_cp_environment_label(env),
+                                     :cp_id => generate_cp_environment_id(env),
                                      :environment_id => env.id,
                                      :content_view => self)
     end
@@ -359,7 +417,7 @@ class ContentView < Katello::Model
     ContentViewEnvironment.where(:content_view_id => self, :environment_id => env).first.cp_id
   end
 
-  protected
+  private
 
   def generate_cp_environment_label(env)
     # The label for a default view, will simply be the env label; otherwise, it
@@ -380,7 +438,7 @@ class ContentView < Katello::Model
   def get_repos_to_promote(from_env, to_env)
     # Retrieve the repos that will end up in the to_env as a result of promoting this view.
     # The structure will be a hash, where key=repo.library_instance_id and value=repo
-    if self.content_view_definition.try(:composite?)
+    if self.composite?
       # For a composite view, the repos are based upon the component_content_views
       # currently in the to_env
       promoting_repos = Repository.in_environment(to_env).
@@ -442,5 +500,91 @@ class ContentView < Katello::Model
     return true
   end
 
+   def associate_puppet(cloned)
+    repo = cloned.library_instance_id ? cloned.library_instance : cloned
+    applicable_filters = filters.applicable(repo)
+
+    applicable_rules_count = PuppetModuleRule.where(:filter_id => applicable_filters).count
+    copy_clauses = nil
+
+    if applicable_rules_count > 0
+      clause_gen = Util::PuppetClauseGenerator.new(repo, applicable_filters)
+      clause_gen.generate
+      copy_clauses = clause_gen.copy_clause
+    end
+
+    # final check here, if copy_clauses is nil there were
+    # rules for this set of filters
+    # This means none of the filter rules were successful in generating clauses.
+    # This implies that there are no packages to copy over.
+
+    if applicable_rules_count == 0 || copy_clauses
+      pulp_task = repo.clone_contents_by_filter(cloned, FilterRule::PUPPET_MODULE, copy_clauses)
+      PulpTaskStatus.wait_for_tasks([pulp_task])
+    end
+  end
+
+  def associate_yum_types(cloned)
+    # Intended Behaviour
+    # Includes are cumulative -> If you say include errata and include packages, its the sum
+    # Excludes are processed after includes
+    # Excludes dont handle dependency. So if you say Include errata with pkgs P1, P2
+    #         and exclude P1  and P1 has a dependency P1d1, what gets copied over is P1d1, P2
+
+    # Another important aspect. PackageGroups & Errata are merely convinient ways to say "copy packages"
+    # Its all about the packages
+
+    # Algorithm:
+    # 1) Compute all the packages to be whitelist/blacklist. In this process grok all the packages
+    #    belonging to Errata/Package  groups etc  (work done by PackageClauseGenerator)
+    # 2) Copy Packages (Whitelist - Blacklist) with their dependencies
+    # 3) Unassociate the blacklisted items from the clone. This is so that if the deps were among
+    #    the blacklisted packages, they would have gotten copied along in the previous step.
+    # 4) Copy all errata and package groups
+    # 5) Prune errata and package groups that have no existing packagea in the cloned repo
+    # 6) Index for search.
+
+    repo = cloned.library_instance_id ? cloned.library_instance : cloned
+    applicable_filters = filters.applicable(repo)
+    applicable_rules_count = FilterRule.yum_types.where(:filter_id => applicable_filters).count
+    copy_clauses = nil
+    remove_clauses = nil
+    process_errata_and_groups = false
+
+    if applicable_rules_count > 0
+      clause_gen = Util::PackageClauseGenerator.new(repo, applicable_filters)
+      clause_gen.generate
+      copy_clauses = clause_gen.copy_clause
+      remove_clauses = clause_gen.remove_clause
+    end
+
+    # final check here, if copy_clauses is nil AND there were
+    # rules for this set of filters
+    # This means none of the filter rules were successful in generating clauses.
+    # This implies that there are no packages to copy over.
+
+    if applicable_rules_count == 0 || copy_clauses
+      pulp_task = repo.clone_contents_by_filter(cloned, FilterRule::PACKAGE, copy_clauses)
+      PulpTaskStatus.wait_for_tasks([pulp_task])
+      process_errata_and_groups = true
+    end
+
+    if remove_clauses
+      pulp_task = cloned.unassociate_by_filter(FilterRule::PACKAGE, remove_clauses)
+      PulpTaskStatus.wait_for_tasks([pulp_task])
+      process_errata_and_groups = true
+    end
+
+    if process_errata_and_groups
+      group_tasks = [FilterRule::ERRATA, FilterRule::PACKAGE_GROUP].collect do |content_type|
+        repo.clone_contents_by_filter(cloned, content_type, nil)
+      end
+      PulpTaskStatus.wait_for_tasks(group_tasks)
+      cloned.purge_empty_groups_errata
+    end
+
+    PulpTaskStatus.wait_for_tasks([repo.clone_distribution(cloned)])
+    PulpTaskStatus.wait_for_tasks([repo.clone_file_metadata(cloned)])
+  end
 end
 end

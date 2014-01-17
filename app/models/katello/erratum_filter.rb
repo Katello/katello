@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class ErratumRule < FilterRule
+class ErratumFilter < Filter
 
   ERRATA_TYPES = {'bugfix' => _('Bug Fix'),
                   'enhancement' => _('Enhancement'),

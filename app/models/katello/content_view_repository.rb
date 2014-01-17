@@ -10,12 +10,11 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 module Katello
-class ContentViewDefinitionProduct < Katello::Model
+class ContentViewRepository < Katello::Model
   self.include_root_in_json = false
 
-  belongs_to :content_view_definition,
-             :class_name => "Katello::ContentViewDefinitionBase",
-             :inverse_of => :content_view_definition_products
-  belongs_to :product, :inverse_of => :content_view_definition_products
+  belongs_to :content_view, :inverse_of => :content_view_repositories,
+                                       :class_name => "Katello::ContentView"
+  belongs_to :repository, :inverse_of => :content_view_repositories
 end
 end
