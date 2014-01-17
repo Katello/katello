@@ -226,6 +226,7 @@ export BUNDLER_EXT_GROUPS="default assets katello"
 
 popd
 rm -rf ./usr
+rm %{buildroot}%{gem_instdir}/config/katello.yml
 
 mkdir -p %{buildroot}%{foreman_bundlerd_dir}
 cat <<GEMFILE > %{buildroot}%{foreman_bundlerd_dir}/%{gem_name}.rb
