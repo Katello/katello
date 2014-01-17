@@ -102,7 +102,6 @@ Requires: java-openjdk
 #Requires: katello-selinux
 Requires: libvirt-devel
 Requires: lsof
-Requires: node-installer
 Requires: postgresql
 Requires: postgresql-server
 Requires: v8
