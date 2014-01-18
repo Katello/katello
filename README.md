@@ -161,6 +161,16 @@ This documentation is intended for developers, user documentation can be found o
 -   {file:doc/YARDDocumentation.md}
 -   {file:doc/Graphs.md}
 
+## Running rails commands
+
+First cd into the katello directory. Run `gem list` to make sure you have
+access to your foreman set of gems. Then you should just be able to run rails
+commands like normal:
+
+```
+rails generate model test
+```
+
 ### Debugging
 
 -   {file:doc/how_to/add_praise.md Enabling Praise} - raise/exception investigation
