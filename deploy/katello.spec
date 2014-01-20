@@ -37,6 +37,7 @@ Source0:        https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}
 # service-wait dependency
 Requires:       wget
 Requires:       curl
+Requires:       %{?scl_prefix}rubygem-katello
 
 BuildRequires: asciidoc
 BuildRequires: util-linux
