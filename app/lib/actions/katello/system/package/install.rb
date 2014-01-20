@@ -19,11 +19,13 @@ module Actions
           include Helpers::PulpPackagesPresenter
 
           def plan(system, packages)
+            Type! system, ::Katello::System
+
             action_subject(system, :packages => packages)
             plan_action(Pulp::Consumer::ContentInstall,
                         consumer_uuid: system.uuid,
-                        type: 'rpm',
-                        args: packages)
+                        type:          'rpm',
+                        args:          packages)
           end
 
           def humanized_name
@@ -37,15 +39,15 @@ module Actions
 
           def cli_example
             if task_input[:organization].nil? ||
-                  task_input[:system].nil? ||
-                  task_input[:packages].nil?
+                task_input[:system].nil? ||
+                task_input[:packages].nil?
               return ""
             end
-        <<-EXAMPLE
+            <<-EXAMPLE
 katello system packages --org '#{task_input[:organization][:name]}'\\
                         --name '#{task_input[:system][:name]}'\\
                         --install '#{task_input[:packages].join(',')}'
-        EXAMPLE
+            EXAMPLE
           end
 
         end
