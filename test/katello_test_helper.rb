@@ -209,3 +209,6 @@ def disable_glue_layers(services=[], models=[], force_reload=false)
     FactoryGirl.reload
   end
 end
+
+require 'dynflow/testing'
+Mocha::Mock.send :include, Dynflow::Testing::Mimic
