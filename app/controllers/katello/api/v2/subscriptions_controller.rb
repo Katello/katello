@@ -23,8 +23,6 @@ class Api::V2::SubscriptionsController < Api::V2::ApiController
 
   resource_description do
     description "Systems subscriptions management."
-    param :system_id, :identifier, :desc => "System uuid", :required => true
-
     api_version 'v2'
   end
 
@@ -144,7 +142,9 @@ class Api::V2::SubscriptionsController < Api::V2::ApiController
   end
 
   api :POST, "/organizations/:organization_id/subscriptions/upload", "Upload a subscription manifest"
+  api :POST, "/subscriptions/upload", "Upload a subscription manifest"
   param :organization_id, :identifier, :desc => "Organization id", :required => true
+  param :content, String, :desc => "Subscription manifest file", :required => true
   def upload
     fail HttpErrors::BadRequest, _("No manifest file uploaded") if params[:content].blank?
 
