@@ -51,7 +51,7 @@ module Katello
       let(:action_planned) { create_and_plan_action action_class, url = 'http://' }
 
       it 'plans' do
-        assert_action_run_planned action_planned
+        assert_run_phase action_planned
       end
 
       it 'runs' do
@@ -71,7 +71,7 @@ module Katello
         action.stubs :action_subject
         plan_action action, repository
 
-        assert_action_plan action, ::Actions::Pulp::Repository::Sync
+        assert_action_planed action, ::Actions::Pulp::Repository::Sync
       end
     end
   end

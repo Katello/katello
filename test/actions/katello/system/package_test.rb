@@ -29,13 +29,13 @@ module Katello
     describe 'Install' do
       let(:action_class) { namespace::Install }
 
-      specify { assert_action_plan action, ::Actions::Pulp::Consumer::ContentInstall }
+      specify { assert_action_planed action, ::Actions::Pulp::Consumer::ContentInstall }
     end
 
     describe 'Remove' do
       let(:action_class) { namespace::Remove }
 
-      specify { assert_action_plan action, ::Actions::Pulp::Consumer::ContentUninstall }
+      specify { assert_action_planed action, ::Actions::Pulp::Consumer::ContentUninstall }
     end
   end
 end
