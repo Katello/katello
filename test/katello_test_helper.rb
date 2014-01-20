@@ -212,3 +212,4 @@ end
 
 require 'dynflow/testing'
 Mocha::Mock.send :include, Dynflow::Testing::Mimic
+Dynflow::Testing.logger_adapter.level = 1
