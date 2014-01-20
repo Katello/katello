@@ -13,9 +13,9 @@
 require 'katello_test_helper'
 
 module Katello
-  space = ::Actions::Katello::System::Package
+  namespace = ::Actions::Katello::System::Package
 
-  describe space do
+  describe namespace do
     include Dynflow::Testing
 
     let(:system) { mock('a_system', uuid: 'uuid').mimic!(::Katello::System) }
@@ -27,15 +27,15 @@ module Katello
     end
 
     describe 'Install' do
-      let(:action_class) { space::Install }
+      let(:action_class) { namespace::Install }
 
-      specify { assert_action_plan_planned action, ::Actions::Pulp::Consumer::ContentInstall }
+      specify { assert_action_plan action, ::Actions::Pulp::Consumer::ContentInstall }
     end
 
     describe 'Remove' do
-      let(:action_class) { space::Remove }
+      let(:action_class) { namespace::Remove }
 
-      specify { assert_action_plan_planned action, ::Actions::Pulp::Consumer::ContentUninstall }
+      specify { assert_action_plan action, ::Actions::Pulp::Consumer::ContentUninstall }
     end
   end
 end

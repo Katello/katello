@@ -13,9 +13,9 @@
 require 'katello_test_helper'
 
 module Katello
-  space = ::Actions::Katello::Repository
+  namespace = ::Actions::Katello::Repository
 
-  describe space do
+  describe namespace do
     include Dynflow::Testing
 
     describe 'Create' do
@@ -28,17 +28,17 @@ module Katello
                             save!:             true,
                             product:           product,
                             generate_metadata: nil
-        action_class = space::Create
+        action_class = namespace::Create
 
         action = create_action action_class
-        action.stubs :action_subject
+        action.expects(:action_subject).with(repository)
         plan_action action, repository
       end
     end
 
     describe 'Destroy' do
       it 'plans' do
-        action_class = space::Destroy
+        action_class = namespace::Destroy
         repository   = mock 'repository', destroy: true
         action       = create_action action_class
         action.stubs :action_subject
@@ -47,16 +47,14 @@ module Katello
     end
 
     describe 'Discover' do
+      action_class = namespace::Discover
+      let(:action_planned) { create_and_plan_action action_class, url = 'http://' }
+
       it 'plans' do
-        action_class = space::Discover
-        action       = create_and_plan_action action_class, url = 'http://'
-        assert_action_run_planned action
+        assert_action_run_planned action_planned
       end
 
       it 'runs' do
-        action_class   = space::Discover
-        action_planned = create_and_plan_action action_class, url = 'http://'
-
         ::Katello::RepoDiscovery.
             expects(:new).
             returns(mock('discovery', run: nil))
@@ -67,13 +65,13 @@ module Katello
 
     describe 'Sync' do
       it 'plans' do
-        action_class = space::Sync
+        action_class = namespace::Sync
         repository   = mock 'repository', pulp_id: 1
         action       = create_action action_class
         action.stubs :action_subject
         plan_action action, repository
 
-        assert_action_plan_planned action, ::Actions::Pulp::Repository::Sync
+        assert_action_plan action, ::Actions::Pulp::Repository::Sync
       end
     end
   end
