@@ -607,11 +607,9 @@ class KatelloTables < ActiveRecord::Migration
       t.datetime "created_at", :null => false
       t.datetime "updated_at", :null => false
     end
+  end
 
-end
-
-
-######### DOWN ###########3
+  ######### DOWN ############
 
   def self.down
     drop_table "katello_activation_keys"
