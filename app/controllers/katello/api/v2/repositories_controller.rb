@@ -16,7 +16,7 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
   before_filter :find_organization, :only => [:index]
   before_filter :find_product, :only => [:index]
   before_filter :find_product_for_create, :only => [:create]
-  before_filter :find_repository, :only => [:show, :update, :destroy, :sync]
+  before_filter :find_repository, :only => [:show, :update, :destroy, :sync, :enable]
   before_filter :authorize
 
   def_param_group :repo do
@@ -109,6 +109,22 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
     fail HttpErrors::BadRequest, _("A Red Hat repository cannot be updated.") if @repository.redhat?
     @repository.update_attributes!(repository_params)
     respond_for_show(:resource => @repository)
+  end
+
+  api :POST, "/repositories/:id/enable", "Enable or disable a repository"
+  param :id, :identifier, :required => true
+  param :enable, :bool, :required => true, :desc => "flag that enables/disables the repository"
+  def enable
+    fail HttpErrors::NotFound, _("Disable/enable is not supported for custom repositories.") if !@repository.redhat?
+
+    @repository.enabled = query_params[:enable]
+    @repository.save!
+
+    if @repository.enabled?
+      render :text => _("Repository '%s' enabled.") % @repository.name, :status => 200
+    else
+      render :text => _("Repository '%s' disabled.") % @repository.name, :status => 200
+    end
   end
 
   api :DELETE, "/repositories/:id", "Destroy a repository"

@@ -71,6 +71,15 @@ Katello::Engine.routes.draw do
         end
       end
 
+      api_resources :ping, :only => [:index]
+      match "/status" => "ping#server_status", :via => :get
+
+      api_resources :repositories do
+        member do
+          put :enable
+        end
+      end
+
       api_resources :system_groups, :only => system_onlies do
         member do
           post :copy
