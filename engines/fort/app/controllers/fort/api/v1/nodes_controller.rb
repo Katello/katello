@@ -9,8 +9,8 @@
 # NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
-
-class Api::V1::NodesController < Api::V1::ApiController
+module Fort
+class Api::V1::NodesController < Katello::Api::V1::ApiController
 
   respond_to :json
 
@@ -63,7 +63,7 @@ class Api::V1::NodesController < Api::V1::ApiController
 
   api :GET, "/nodes/by_uuid/:uuid", "Get details about a node on a registered system"
   def show_by_uuid
-    system = System.find_by_uuid!(params[:uuid])
+    system = Katello::System.find_by_uuid!(params[:uuid])
     @node = Node.find_by_system_id(system.id)
     unless @node
       fail HttpErrors::NotFound, _("System %s is not a registered node") % params[:uuid]
@@ -81,7 +81,7 @@ class Api::V1::NodesController < Api::V1::ApiController
     end
   end
   def create
-    system = System.find_by_uuid!(params[:node][:system_uuid])
+    system = Katello::System.find_by_uuid!(params[:node][:system_uuid])
     node_params = { :system_id => system.id }.merge(params[:node].slice(:environment_ids))
     @node = Node.new(node_params)
     @node.save!
@@ -128,4 +128,5 @@ class Api::V1::NodesController < Api::V1::ApiController
     @environment = KTEnvironment.find(params[:environment_id]) if params[:environment_id]
   end
 
+end
 end

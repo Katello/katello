@@ -78,13 +78,6 @@ class AddForeignKeysEngine < ActiveRecord::Migration
     add_foreign_key "katello_marketing_engineering_products", "katello_products", :name => "marketing_engineering_products_engineering_product_id_fk", :column => "engineering_product_id"
     add_foreign_key "katello_marketing_engineering_products", "katello_products", :name => "marketing_engineering_products_marketing_product_id_fk", :column => "marketing_product_id"
 
-    add_foreign_key "katello_node_capabilities", "katello_nodes", :name => "node_capabilities_node_id_fk", :column => 'node_id'
-
-    add_foreign_key "katello_nodes", "katello_systems", :name => "nodes_system_id_fk", :column => 'system_id'
-
-    add_foreign_key "katello_nodes_environments", "katello_environments", :name => "nodes_environments_environment_id_fk", :column => 'environment_id'
-    add_foreign_key "katello_nodes_environments", "katello_nodes", :name => "nodes_environments_node_id_fk", :column => 'node_id'
-
     add_foreign_key "katello_permission_tags", "katello_permissions", :name => "permission_tags_permission_id_fk", :column => 'permission_id'
 
     add_foreign_key "katello_permissions", "katello_resource_types", :name => "permissions_resource_type_id_fk", :column => 'resource_type_id'

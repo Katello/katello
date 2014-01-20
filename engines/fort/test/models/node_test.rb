@@ -9,10 +9,11 @@
 # NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
+require "fort_test_helper"
 
-class NodeTestBase < MiniTest::Rails::ActiveSupport::TestCase
-  extend ActiveRecord::TestFixtures
-  fixtures :all
+class NodeTestBase < ActiveSupport::TestCase
+
+  require "#{Katello::Engine.root}/test/support/runcible"
 
   def self.before_suite
     configure_runcible
@@ -28,8 +29,8 @@ end
 class NodeTest < NodeTestBase
 
   def setup
-    @system = System.find(systems(:simple_server))
-    @dev    = KTEnvironment.find(environments(:dev).id)
+    @system = Katello::System.find(katello_systems(:simple_server))
+    @dev    = Katello::KTEnvironment.find(katello_environments(:dev).id)
   end
 
   def test_create
@@ -67,7 +68,7 @@ end
 class NodeSystemDeleteTest < NodeTestBase
 
   def setup
-    @system = System.find(systems(:simple_server))
+    @system = Katello::System.find(katello_systems(:simple_server))
     @system.set_pulp_consumer
     @system.stubs(:set_candlepin_consumer).returns(true)
     @system.stubs(:del_candlepin_consumer).returns(true)
