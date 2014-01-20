@@ -23,29 +23,32 @@ module Actions
         end
 
         def invoke_external_task
-          sync_options               = {}
-          sync_options[:max_speed]   ||= ::Katello.config.pulp.sync_KBlimit if ::Katello.config.pulp.sync_KBlimit # set bandwidth limit
-          sync_options[:num_threads] ||= ::Katello.config.pulp.sync_threads if ::Katello.config.pulp.sync_threads # set threads per sync
+          sync_options = {}
 
-          pulp_tasks          = pulp_resources.repository.sync(input[:pulp_id], { override_config: sync_options })
-          output[:pulp_tasks] = pulp_tasks
+          if ::Katello.config.pulp.sync_KBlimit
+            # set bandwidth limit
+            sync_options[:max_speed] ||= ::Katello.config.pulp.sync_KBlimit
+          end
+          if ::Katello.config.pulp.sync_threads
+            # set threads per sync
+            sync_options[:num_threads] ||= ::Katello.config.pulp.sync_threads
+          end
+
+          output[:pulp_tasks] = pulp_tasks =
+              pulp_resources.repository.sync(input[:pulp_id], { override_config: sync_options })
 
           # TODO: would be better polling for the whole task group to make sure
           # we're really finished at the end.
           # Look at it once we have more Pulp actions rewritten so that we can find
           # a common pattern.
-          pulp_task           = pulp_tasks.find do |task|
-            task['tags'].include?("pulp:action:sync")
-          end
-          return pulp_task
+          pulp_tasks.find { |task| task['tags'].include?('pulp:action:sync') }
         end
 
         def run_progress
-          sync_task        = output[:pulp_task]
-          content_progress = sync_task &&
-              sync_task[:progress] &&
-              sync_task[:progress][:yum_importer] &&
-              sync_task[:progress][:yum_importer][:content]
+          content_progress = external_task &&
+              external_task[:progress] &&
+              external_task[:progress][:yum_importer] &&
+              external_task[:progress][:yum_importer][:content]
 
           if content_progress && content_progress[:size_total].to_i > 0
             left = content_progress[:size_left].to_f / content_progress[:size_total]
