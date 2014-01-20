@@ -5,7 +5,7 @@ task 'assets:precompile:katello' do
   # the need of a database being setup
   Rails.application.initialize!(:assets)
 
-  def compile_assets(args)
+  def compile_assets(args = {})
     require 'uglifier'
 
     precompile = args.fetch(:precompile, [])
@@ -18,7 +18,7 @@ task 'assets:precompile:katello' do
     env = Rails.application.assets
 
     config.assets.digests   = {}
-    config.assets.manifest  = File.join(target)
+    config.assets.manifest  = File.join(target, 'katello')
     config.assets.compile   = args.fetch(:compile, true)
     config.assets.compress  = args.fetch(:compress, true)
     config.assets.digest    = args.fetch(:digest, true)
@@ -34,36 +34,48 @@ task 'assets:precompile:katello' do
     compiler.compile
   end
 
+  def find_assets(args = {})
+    type = args.fetch(:type, nil)
+    asset_dir = "#{Katello::Engine.root}/app/assets/#{type}/"
+
+    asset_paths = Dir[File.join(asset_dir, '**', '*') ].reject { |file| File.directory?(file) }
+    asset_paths.each { |file| file.slice!(asset_dir) }
+
+    asset_paths
+  end
+
   def compile_fonts
     compile_assets(
-      precompile: [/\.(?:svg|eot|woff|ttf)$/],
+      precompile: [/bastion\S+.(?:svg|eot|woff|ttf)$/],
       digest: false
     )
   end
 
   def compile_javascript_stylesheets
-    asset_dir = "#{Katello::Engine.root}/app/assets/javascripts/"
-
-    asset_paths = Dir[File.join(asset_dir, '**', '*') ].reject { |file| File.directory?(file) }
-    asset_paths.each do |file| 
-      file.slice!(asset_dir)
-    end
+    javascripts = find_assets(:type => 'javascripts')
+    images = find_assets(:type => 'images')
 
     precompile = [
       'katello/katello.css',
-      'stylesheets/less/bastion.css',
-      'stylesheets/scss/bastion.css',
-      'bastion.js',
+      'bastion/less/bastion.css',
+      'bastion/scss/bastion.css',
+      'bastion/bastion.js',
     ]
+    precompile.concat(javascripts)
+    precompile.concat(images)
 
-    asset_paths.each do |asset|
-      precompile.append(asset)
+    # Used to add index manifest files to the paths for
+    # proper resolution and addition when running Rails 3.2.8
+    # in the SCL
+    precompile.each do |asset|
+      if File.basename(asset)[/[^\.]+/, 0] == 'index'
+        asset.sub!(/\/index\./, '.')
+        precompile << asset
+      end
     end
 
-
-    compile_assets(
-      precompile: precompile
-    )
+    compile_assets(:precompile => precompile, :digest => false)
+    compile_assets(:precompile => precompile)
   end
 
   compile_fonts
