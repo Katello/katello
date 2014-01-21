@@ -132,7 +132,7 @@ Requires: %{?scl_prefix}rubygem-gettext_i18n_rails
 Requires: %{?scl_prefix}rubygem-i18n_data >= 0.2.6
 Requires: %{?scl_prefix}rubygem-apipie-rails >= 0.0.13
 Requires: %{?scl_prefix}rubygem-maruku 
-Requires: %{?scl_prefix}rubygem-runcible = 1.0.8
+Requires: %{?scl_prefix}rubygem-runcible >= 1.0.8
 Requires: %{?scl_prefix}rubygem-ruby-openid
 Requires: %{?scl_prefix}rubygem-anemone 
 Requires: %{?scl_prefix}rubygem-simple-navigation >= 3.3.4
@@ -162,7 +162,7 @@ BuildRequires: %{?scl_prefix}rubygem-gettext_i18n_rails
 BuildRequires: %{?scl_prefix}rubygem-i18n_data >= 0.2.6
 BuildRequires: %{?scl_prefix}rubygem-apipie-rails >= 0.0.13
 BuildRequires: %{?scl_prefix}rubygem-maruku 
-BuildRequires: %{?scl_prefix}rubygem-runcible = 1.0.8
+BuildRequires: %{?scl_prefix}rubygem-runcible >= 1.0.8
 BuildRequires: %{?scl_prefix}rubygem-ruby-openid
 BuildRequires: %{?scl_prefix}rubygem-anemone 
 BuildRequires: %{?scl_prefix}rubygem-simple-navigation >= 3.3.4
