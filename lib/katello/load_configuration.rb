@@ -91,7 +91,7 @@ module Katello
         config[:katello_version] ||= if git_checkout?
                                        git_commit_hash
                                      elsif can_do_shell_command?(:rpm)
-                                       rpm_package_name
+                                       rpm_package_name(config)
                                      else
                                        N_("Unknown")
                                      end
@@ -147,8 +147,8 @@ module Katello
     $?.exitstatus.zero? ? "git: #{hash}" : N_("Unknown") # rubocop:disable SpecialGlobalVars
   end
 
-  def self.rpm_package_name
-    package = config.katello? ? 'katello-common' : 'katello-headpin'
+  def self.rpm_package_name(config)
+    package = config.katello? ? 'katello' : 'katello-headpin'
     rpm = %x{rpm -q #{package} --queryformat '%{VERSION}-%{RELEASE}' 2>&1}
     $?.exitstatus.zero? ? rpm : N_("Unknown") # rubocop:disable SpecialGlobalVars
   end
