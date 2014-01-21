@@ -41,7 +41,7 @@ module Katello
         action_class = namespace::Destroy
         repository   = mock 'repository', destroy: true
         action       = create_action action_class
-        action.stubs :action_subject
+        action.stubs(:action_subject).with(repository)
         plan_action action, repository
       end
     end
@@ -68,7 +68,7 @@ module Katello
         action_class = namespace::Sync
         repository   = mock 'repository', pulp_id: 1
         action       = create_action action_class
-        action.stubs :action_subject
+        action.stubs(:action_subject).with(repository)
         plan_action action, repository
 
         assert_action_planed action, ::Actions::Pulp::Repository::Sync

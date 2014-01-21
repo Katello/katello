@@ -22,8 +22,8 @@ module Katello
     let(:action_class) { raise NotImplementedError }
     let(:action) do
       action = create_action action_class
-      action.stubs :action_subject
-      plan_action action, system, packages = %w(vim vi)
+      action.stubs(:action_subject).with(system, :packages => packages = %w(vim vi))
+      plan_action action, system, packages
     end
 
     describe 'Install' do
