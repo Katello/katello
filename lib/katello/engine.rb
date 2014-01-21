@@ -23,6 +23,7 @@ module Katello
       app.config.paths['db/migrate'] += Katello::Engine.paths['db/migrate'].existent
       app.config.autoload_paths += Dir["#{config.root}/app/lib"]
       app.config.autoload_paths += Dir["#{config.root}/app/services/katello"]
+      app.config.autoload_paths += Dir["#{config.root}/app/views/foreman"]
     end
 
     initializer "katello.assets.paths", :group => :all do |app|
@@ -38,6 +39,8 @@ module Katello
 
     initializer "katello.helpers" do |app|
       ActionView::Base.send :include, Katello::TaxonomyHelper
+      ActionView::Base.send :include, Katello::HostsAndHostgroupsHelper
+      ActionView::Base.send :include, Katello::KatelloUrlsHelper
     end
 
     initializer "logging" do |app|
