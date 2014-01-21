@@ -29,7 +29,7 @@ Summary: Katello
 Name: %{?scl_prefix}rubygem-%{gem_name}
 
 Version: 1.5.0
-Release: 9%{dist}
+Release: 10%{dist}
 Group: Development/Ruby
 License: Distributable
 URL: http://www.katello.org
@@ -256,6 +256,8 @@ ln -s %{gem_instdir}/public/assets/bastion %{buildroot}%{foreman_dir}/public/ass
 %{gem_dir}/doc/%{gem_name}-%{version}
 
 %changelog
+* Tue Jan 21 2014 Mike McCune <mmccune@redhat.com> 1.5.0-10
+- rebuild with latest in master
 * Mon Dec 16 2013 Jason Montleon <jmontleo@redhat.com> 1.5.0-9
 - Tag rubygem-katello-1.5.0-9 
 
