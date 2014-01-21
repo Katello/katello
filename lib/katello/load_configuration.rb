@@ -90,7 +90,7 @@ module Katello
 
         config[:katello_version] ||= if git_checkout?
                                        git_commit_hash
-                                     elsif can_do_shell_command(:rpm)
+                                     elsif can_do_shell_command?(:rpm)
                                        rpm_package_name
                                      else
                                        N_("Unknown")
