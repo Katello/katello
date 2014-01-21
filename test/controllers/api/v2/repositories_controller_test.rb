@@ -144,7 +144,7 @@ class Api::V2::RepositoriesControllerTest < ActionController::TestCase
     put :update, :id => @repository.id, :repository => {:gpg_key_id => key.id}
 
     assert_response :success
-    assert_template 'api/v2/repositories/show'
+    assert_template %w(katello/api/v2/common/update, katello/api/v2/layouts/resource)
   end
 
   def test_update_protected
@@ -154,6 +154,22 @@ class Api::V2::RepositoriesControllerTest < ActionController::TestCase
     assert_protected_action(:update, allowed_perms, denied_perms) do
       put :update, :id => @repository.id
     end
+  end
+
+  def test_update_fail_if_redhat
+    Repository.any_instance.stubs(:redhat?).returns(true)
+
+    put :update, :id => @repository.id, :repository => {:gpg_key_id => 1}
+
+    assert_response :bad_request
+  end
+
+  def test_fail_if_custom_repository_enabled
+    Repository.any_instance.stubs(:redhat?).returns(false)
+
+    put :update, :id => @repository.id, :repository => {:enabled => 1}
+
+    assert_response :bad_request
   end
 
   def test_destroy

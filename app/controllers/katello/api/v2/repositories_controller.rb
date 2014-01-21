@@ -16,7 +16,7 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
   before_filter :find_organization, :only => [:index]
   before_filter :find_product, :only => [:index]
   before_filter :find_product_for_create, :only => [:create]
-  before_filter :find_repository, :only => [:show, :update, :destroy, :sync, :enable]
+  before_filter :find_repository, :only => [:show, :update, :destroy, :sync]
   before_filter :authorize
 
   def_param_group :repo do
@@ -105,26 +105,17 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
   api :PUT, "/repositories/:id", "Update a repository"
   param :id, :identifier, :required => true, :desc => "repository id"
   param :gpg_key_id, :number, :desc => "id of a gpg key that will be assigned to this repository"
+  param :enabled, :bool, :desc => "flag that enables/disables the repository"
   def update
-    fail HttpErrors::BadRequest, _("A Red Hat repository cannot be updated.") if @repository.redhat?
-    @repository.update_attributes!(repository_params)
-    respond_for_show(:resource => @repository)
-  end
-
-  api :POST, "/repositories/:id/enable", "Enable or disable a repository"
-  param :id, :identifier, :required => true
-  param :enable, :bool, :required => true, :desc => "flag that enables/disables the repository"
-  def enable
-    fail HttpErrors::NotFound, _("Disable/enable is not supported for custom repositories.") if !@repository.redhat?
-
-    @repository.enabled = query_params[:enable]
-    @repository.save!
-
-    if @repository.enabled?
-      render :text => _("Repository '%s' enabled.") % @repository.name, :status => 200
+    if redhat_repository_params[:enabled].present?
+      fail HttpErrors::BadRequest, _("Disable/enable is not supported for custom repositories.") if !@repository.redhat?
+      @repository.enabled = redhat_repository_params[:enabled].to_bool
     else
-      render :text => _("Repository '%s' disabled.") % @repository.name, :status => 200
+      fail HttpErrors::BadRequest, _("A Red Hat repository cannot be updated.") if @repository.redhat?
+      @repository.gpg_key_id = repository_params[:gpg_key_id]
     end
+    @repository.save!
+    respond_for_update(:resource => @repository)
   end
 
   api :DELETE, "/repositories/:id", "Destroy a repository"
@@ -159,5 +150,8 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
     params.require(:repository).permit(:feed, :gpg_key_id, :unprotected)
   end
 
+  def redhat_repository_params
+    params.require(:repository).permit(:enabled)
+  end
 end
 end
