@@ -16,7 +16,7 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
   before_filter :find_organization, :only => [:index]
   before_filter :find_product, :only => [:index]
   before_filter :find_product_for_create, :only => [:create]
-  before_filter :find_repository, :only => [:show, :update, :destroy, :sync]
+  before_filter :find_repository, :only => [:show, :destroy, :sync]
   before_filter :authorize
 
   def_param_group :repo do
@@ -33,7 +33,15 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
     index_test  = lambda { Repository.any_readable?(@organization) }
     create_test = lambda { Repository.creatable?(@product) }
     read_test   = lambda { @repository.readable? }
-    edit_test   = lambda { @repository.editable? }
+    edit_test   = lambda do
+      # find_repository here instead of before_filter to ensure it exists
+      find_repository
+      if @repository.custom?
+        @repository.product.editable?
+      else
+        @repository.organization.redhat_manageable?
+      end
+    end
     sync_test   = lambda { @repository.syncable? }
 
     {
