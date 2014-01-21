@@ -64,7 +64,7 @@ describe('Factory: Provider', function() {
     it('provides a way to refresh a manifest', function() {
         var provider = providers.records[0];
 
-        $httpBackend.expectPOST('/katello/api/providers/1/refresh_manifest').respond(provider);
+        $httpBackend.expectPUT('/katello/api/providers/1/refresh_manifest').respond(provider);
 
         Provider.refreshManifest({ organization_id: 'ACME', id: provider.id }, function(record) {
             expect(record.id).toBe(provider.id);

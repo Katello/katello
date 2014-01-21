@@ -15,8 +15,6 @@ module Katello
     module Product
       extend ActiveSupport::Concern
 
-      READ_PERM_VERBS = [:read, :create, :update, :delete]
-
       included do
         scope :readable, lambda{|org| all_readable(org).with_enabled_repos_only(org.library)}
         scope :editable, lambda {|org| all_editable(org).with_enabled_repos_only(org.library)}
