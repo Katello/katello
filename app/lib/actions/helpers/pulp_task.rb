@@ -3,24 +3,27 @@ module Actions
     module PulpTask
       include Dynflow::Action::Polling
 
-      private
+      def done?
+        !!external_task[:finish_time]
+      end
 
       def external_task
         output[:pulp_task]
       end
+
+      private
 
       def external_task=(external_task_data)
         output[:pulp_task] = external_task_data
       end
 
       def poll_external_task
-        as_pulp_user { ::Katello.pulp_server.resources.task.poll(external_task[:task_id]) }
+        as_pulp_user { task_resource.poll(external_task[:task_id]) }
       end
 
-      def done?
-        !!external_task[:finish_time]
+      def task_resource
+        ::Katello.pulp_server.resources.task
       end
-
     end
   end
 end

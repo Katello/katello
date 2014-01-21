@@ -17,6 +17,7 @@ module Actions
 
         def plan(repository)
           repository.save!
+          # TODO should be done in other actions
           org = repository.product.organization
           org.default_content_view.update_cp_content(org.library)
           repository.generate_metadata
