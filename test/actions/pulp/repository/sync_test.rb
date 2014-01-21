@@ -11,30 +11,26 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require 'katello_test_helper'
+require 'support/actions/pulp_task'
+require 'support/actions/remote_action'
 
 module Katello
   action_class = ::Actions::Pulp::Repository::Sync
 
   describe action_class do
     include Dynflow::Testing
+    include Support::Actions::PulpTask
+    include Support::Actions::RemoteAction
 
-    def progress_hash(left, total)
-      { 'task_id'  => '76fb4115-2ec4-4945-815b-0f9d216b4183',
-        'progress' => {
-            'yum_importer' => {
-                'content' => {
-                    'size_total' => total,
-                    'size_left'  => left } } } }
-
+    before do
+      stub_remote_user
     end
 
     it 'runs' do
-      User.stubs(:current).returns mock('user', remote_id: 'user')
       action        = create_action action_class
-      task1         = { 'tags'    => ['pulp:action:sync'],
-                        'task_id' => '76fb4115-2ec4-4945-815b-0f9d216b4183' }
-      task2         = task1.merge progress_hash 6, 8
-      task3         = task1.merge(progress_hash 0, 8).merge('finish_time' => 'now')
+      task1         = task_base.merge( 'tags'    => ['pulp:action:sync'])
+      task2         = task1.merge(task_progress_hash 6, 8)
+      task3         = task1.merge(task_progress_hash 0, 8).merge(task_finished_hash)
       pulp_response = [task1, { 'task_id' => 'other' }]
 
       plan_action action, pulp_id: 'pulp-id'
@@ -43,10 +39,7 @@ module Katello
                               sync: pulp_response
         pulp_resources = mock 'pulp_resources', repository: repository
         action.expects(:pulp_resources).returns(pulp_resources)
-        action.
-            stubs(:task_resource).
-            returns(mock('task_resource').
-                        tap { |m| m.expects(:poll).twice.returns(task2, task3) })
+        stub_task_poll action, task2, task3
       end
 
       action.external_task.must_equal(task1)
