@@ -87,6 +87,12 @@ class ContentViewVersion < Katello::Model
 
     self.content_view.update_cp_content(self.content_view.organization.library) if Katello.config.use_cp
 
+    Glue::Event.trigger(Katello::Actions::ContentViewRefresh, self.content_view)
+
+    Katello::Foreman.update_foreman_content(self.content_view.organization,
+                                            self.content_view.organization.library,
+                                            self.content_view)
+
     if notify
       message = _("Successfully generated content view '%{view_name}' version %{view_version}.") %
           {:view_name => self.content_view.name, :view_version => self.version}
@@ -94,8 +100,6 @@ class ContentViewVersion < Katello::Model
       Notify.success(message, :request_type => "content_view_definitions___refresh",
                               :organization => self.content_view.organization)
     end
-
-    Glue::Event.trigger(Katello::Actions::ContentViewRefresh, self.content_view)
 
   rescue => e
     Rails.logger.error(e)

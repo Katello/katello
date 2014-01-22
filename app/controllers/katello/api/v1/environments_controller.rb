@@ -80,7 +80,7 @@ class Api::V1::EnvironmentsController < Api::V1::ApiController
     {
         :create     => { :environment => %w(name label description prior) },
         :update     => { :environment => %w(name description prior) },
-        :index      => [:name, :library, :id, :organization_id, :environment],
+        :index      => [:name, :label, :library, :id, :organization_id, :environment],
         :rhsm_index => [:name, :library, :id, :organization_id, :environment]
     }
   end
