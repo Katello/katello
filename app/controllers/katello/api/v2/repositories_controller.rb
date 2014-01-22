@@ -130,12 +130,12 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
   protected
 
   def find_product
-    @product = Product.find_by_cp_id(params[:product_id], @organization) if params[:product_id]
+    @product = Product.find_by_id(params[:product_id], @organization) if params[:product_id]
   end
 
   def find_product_for_create
     #Since we're using cp_id, product happens to be unique per org
-    @product = Product.find_by_cp_id(params[:product_id]) if params[:product_id]
+    @product = Product.find_by_id(params[:product_id]) if params[:product_id]
   end
 
   def find_repository
