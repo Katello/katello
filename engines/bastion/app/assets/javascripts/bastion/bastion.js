@@ -10,7 +10,6 @@
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
  */
 
-//= require "bastion/jquery/jquery"
 //= require "bastion/underscore/underscore"
 
 //= require "bastion/angular/angular"

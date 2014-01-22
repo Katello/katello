@@ -12,7 +12,7 @@ module.exports = function(config) {
             'app/assets/javascripts/bastion/**/*.html': ['ng-html2js']
         },
         files: [
-            'vendor/assets/javascripts/bastion/jquery/jquery.js',
+            '.tmp/bower_components/jquery/jquery.js',
             'vendor/assets/javascripts/bastion/angular/angular.js',
             '.tmp/bower_components/angular-mocks/angular-mocks.js',
             'vendor/assets/javascripts/bastion/angular-sanitize/angular-sanitize.js',
