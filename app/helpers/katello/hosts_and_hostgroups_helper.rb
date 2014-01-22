@@ -28,17 +28,22 @@ module Katello
     def grouped_env_options
       grouped_options = envs_by_kt_org.sort_by(&:first).map do |kt_org_label, envs_by_org|
         optgroup = %[<optgroup label="#{kt_org_label}">]
+
         opts = envs_by_org.sort_by(&:katello_id).reduce({}) do |env_options, env|
           selected = env.id == (@host || @hostgroup).environment_id ? "selected" : ""
           kt_env_label = env.katello_id.split('/')[1]
           env_options[kt_env_label] ||= selected
           env_options
-        end.sort_by(&:first).map do |kt_env_label, selected|
+        end
+
+        opts = opts.sort_by(&:first).map do |kt_env_label, selected|
           %[<option value="#{kt_org_label}/#{kt_env_label}" class="kt-env" #{selected}>#{kt_env_label}</option>]
-        end.join
-        optgroup << opts
+        end
+
+        optgroup << opts.join
         optgroup << '</optgroup>'
-      end.join
+      end
+      grouped_options = grouped_options.join
       grouped_options.insert(0, %[<option value=""></option>])
       grouped_options.html_safe
     end
@@ -48,9 +53,9 @@ module Katello
         selected = env.id == (@host || @hostgroup).environment_id ? "selected" : ""
         env_text = env.katello_id ? env.katello_id.split('/')[2] : env.name
         %[<option value="#{env.id}" data-katello-id="#{env.katello_id}" #{selected}>#{env_text}</option>]
-      end.join
+      end
 
-      return cv_options.html_safe
+      return cv_options.join.html_safe
     end
   end
 end

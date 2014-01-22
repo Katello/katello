@@ -64,7 +64,7 @@ module Katello
 
         # Foreman and Puppet uses RedHat name for Red Hat Enterprise Linux
         def normalize_name(name)
-          name.sub('Red Hat Enterprise Linux','RedHat')
+          name.sub('Red Hat Enterprise Linux', 'RedHat')
         end
 
         # takes repo uri from Katello and makes installation media url

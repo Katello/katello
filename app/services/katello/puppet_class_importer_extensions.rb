@@ -18,14 +18,15 @@ module Katello
 
       included do
         def update_environment(environment)
+          change_types = %w(new obsolete updated)
           changed  = self.changes
 
-          ["new", "obsolete", "updated"].each do |kind|
+          change_types.each do |kind|
             changed[kind].slice!(environment.name) unless changed[kind].empty?
           end
 
           # PuppetClassImporter expects [kind][env] to be in json format
-          ["new", "obsolete", "updated"].each do |kind|
+          change_types.each do |kind|
             unless (envs = changed[kind]).empty?
               envs.keys.sort.each do |env|
                 changed[kind][env] = changed[kind][env].to_json

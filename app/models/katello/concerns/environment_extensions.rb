@@ -34,15 +34,15 @@ module Katello
         end
 
         def construct_katello_id(org, env, content_view)
-          raise ArgumentError, "org has to be specified" if org.nil?
-          raise ArgumentError, "env has to be specified" if env.nil?
+          fail ArgumentError, "org has to be specified" if org.nil?
+          fail ArgumentError, "env has to be specified" if env.nil?
           [org.label, env.label, content_view.label].reject(&:blank?).join('/')
         end
 
         # content_view_id provides the uniqueness of the name
         def construct_name(org, env, content_view)
           name = ["KT", org.label, env.label, content_view.label, content_view.id].reject(&:blank?).join('_')
-          return name.gsub('-','_')
+          return name.gsub('-', '_')
         end
       end
     end
