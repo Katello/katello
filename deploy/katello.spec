@@ -99,8 +99,7 @@ chmod +x %{buildroot}%{homedir}/script/*
 install -m 644 man/katello-service.8 %{buildroot}/%{_mandir}/man8
 
 %post
-#Add /etc/rc*.d links for the script
-/sbin/chkconfig --add %{name}
+#Add /etc/rc*.d link
 /sbin/chkconfig --add %{name}-jobs
 
 #Generate secret token if the file does not exist
@@ -148,8 +147,6 @@ exit 0
 if [ $1 -eq 0 ] ; then
     /sbin/service %{name}-jobs stop >/dev/null 2>&1
     /sbin/chkconfig --del %{name}-jobs
-    /sbin/service %{name} stop >/dev/null 2>&1
-    /sbin/chkconfig --del %{name}
 fi
 
 %changelog
