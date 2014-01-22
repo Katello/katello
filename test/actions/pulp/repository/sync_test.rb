@@ -45,12 +45,12 @@ module Katello
       action.external_task.must_equal(task1)
       action.run_progress.must_equal 0.01
 
-      clock_progress action
+      progress_action_time action
       action.external_task.must_equal task2
       action.run_progress.must_equal 0.25
       action.wont_be :done?
 
-      clock_progress action
+      progress_action_time action
       action.external_task.must_equal task3
       action.run_progress.must_equal 1
       action.must_be :done?

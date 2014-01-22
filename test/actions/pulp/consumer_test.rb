@@ -43,7 +43,7 @@ module Katello
       end
 
       action.wont_be :done?
-      clock_progress action
+      progress_action_time action
       action.must_be :done?
     end
 
