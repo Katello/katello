@@ -37,10 +37,6 @@ class Api::V2::SystemGroupsController <  Api::V2::ApiController
     }
   end
 
-  resource_description do
-    api_version "v2"
-  end
-
   def_param_group :system_group do
     param :name, String, :required => true, :desc => "System group name"
     param :system_ids, Array, :required => false, :desc => "List of system uuids to be in the group"

@@ -114,7 +114,7 @@ class HttpResource
       raise_rest_client_exception e, a_path, "POST"
     rescue Errno::ECONNREFUSED
       service = a_path.split("/").second
-      fail Errors::ConnectionRefusedException, _("A backend service [ %s ] is unreachable") % service.capitalize
+      fail Katello::Errors::ConnectionRefusedException, _("A backend service [ %s ] is unreachable") % service.capitalize
     end
 
     def put(a_path, payload = {}, headers = {})

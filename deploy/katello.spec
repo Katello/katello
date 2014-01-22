@@ -37,6 +37,8 @@ Source0:        https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}
 # service-wait dependency
 Requires:       wget
 Requires:       curl
+Requires:       %{?scl_prefix}rubygem-katello
+Requires:       katello-installer
 
 BuildRequires: asciidoc
 BuildRequires: util-linux
@@ -77,7 +79,6 @@ install -m 755 script/katello-remove-orphans %{buildroot}%{_sysconfdir}/cron.wee
 #copy init scripts and sysconfigs
 install -Dp -m0644 %{confdir}/%{name}.sysconfig %{buildroot}%{_sysconfdir}/sysconfig/%{name}
 install -Dp -m0644 %{confdir}/service-wait.sysconfig %{buildroot}%{_sysconfdir}/sysconfig/service-wait
-install -Dp -m0755 %{confdir}/%{name}.init %{buildroot}%{_initddir}/%{name}
 install -Dp -m0755 %{confdir}/%{name}-jobs.init %{buildroot}%{_initddir}/%{name}-jobs
 install -Dp -m0644 %{confdir}/%{name}.logrotate %{buildroot}%{_sysconfdir}/logrotate.d/%{name}
 
@@ -98,8 +99,7 @@ chmod +x %{buildroot}%{homedir}/script/*
 install -m 644 man/katello-service.8 %{buildroot}/%{_mandir}/man8
 
 %post
-#Add /etc/rc*.d links for the script
-/sbin/chkconfig --add %{name}
+#Add /etc/rc*.d link
 /sbin/chkconfig --add %{name}-jobs
 
 #Generate secret token if the file does not exist
@@ -125,7 +125,6 @@ usermod -a -G katello-shared tomcat
 %config %{_sysconfdir}/logrotate.d/%{name}
 %config(noreplace) %{_sysconfdir}/sysconfig/%{name}
 %config(noreplace) %{_sysconfdir}/sysconfig/service-wait
-%{_initddir}/%{name}
 %{_initddir}/%{name}-jobs
 %{homedir}/script/service-wait
 %defattr(-, katello, katello)
@@ -148,8 +147,6 @@ exit 0
 if [ $1 -eq 0 ] ; then
     /sbin/service %{name}-jobs stop >/dev/null 2>&1
     /sbin/chkconfig --del %{name}-jobs
-    /sbin/service %{name} stop >/dev/null 2>&1
-    /sbin/chkconfig --del %{name}
 fi
 
 %changelog

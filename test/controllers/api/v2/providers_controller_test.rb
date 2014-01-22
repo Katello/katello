@@ -71,7 +71,7 @@ class Api::V2::ProvidersControllerTest < ActionController::TestCase
   end
 
   def test_show_protected
-    allowed_perms = [@read_permission, @create_permission, @update_permission, @delete_permission]
+    allowed_perms = [@read_permission]
     denied_perms = [@no_permission]
 
     assert_protected_action(:show, allowed_perms, denied_perms) do
@@ -80,8 +80,11 @@ class Api::V2::ProvidersControllerTest < ActionController::TestCase
   end
 
   def test_create
-    post :create, :provider => {:name => 'Fedora Provider'},
-                  :organization_id => @organization.label
+    post :create,
+      :organization_id => @organization.name,
+      :provider => {
+        :name => "Fedora Provider"
+      }
 
     assert_response :success
     assert_template 'api/v2/common/create'
@@ -90,7 +93,7 @@ class Api::V2::ProvidersControllerTest < ActionController::TestCase
   def test_create_fail
     post :create
 
-    assert_response 400
+    assert_response 404
   end
 
   def test_create_protected
@@ -102,15 +105,8 @@ class Api::V2::ProvidersControllerTest < ActionController::TestCase
     end
   end
 
-  def test_update
-    put :update, :id => @provider.id, :name => 'CentOS Provider'
-
-    assert_response :success
-    assert_template %w(katello/api/v2/common/show katello/api/v2/layouts/resource)
-  end
-
   def test_redhat_update
-    put :update, :id => @rh_provider.id, :repository_url => 'http://google.com'
+    put :update, :id => @rh_provider.id, :provider => {:repository_url => 'http://google.com', :name => 'G+'}
 
     assert_response :success
     assert_template %w(katello/api/v2/common/show katello/api/v2/layouts/resource)
@@ -161,15 +157,6 @@ class Api::V2::ProvidersControllerTest < ActionController::TestCase
     end
   end
 
-  def test_show_protected
-    allowed_perms = [@read_permission]
-    denied_perms = [@no_permission]
-
-    assert_protected_action(:show, allowed_perms, denied_perms) do
-      get :show, :id => @provider.id
-    end
-  end
-
   def test_manifest_actions_protected
     allowed_perms = [@update_permission]
     denied_perms = [@no_permission, @read_permission]
@@ -185,7 +172,7 @@ class Api::V2::ProvidersControllerTest < ActionController::TestCase
 
   def test_delete_manifest
     Provider.stubs(:find).returns(@provider)
-    @provider.stubs(:yum_repo?).returns(false)
+    @provider.stubs(:redhat_provider?).returns(true)
     @provider.expects(:delete_manifest).returns(true)
 
     post :delete_manifest, :id => @provider.id
@@ -194,13 +181,15 @@ class Api::V2::ProvidersControllerTest < ActionController::TestCase
 
   def test_refresh_manifest
     Provider.stubs(:find).returns(@provider)
+    task_status = TaskStatus.new(:organization_id => @organization.id, :task_type => "refresh manifest")
+
+    @provider.stubs(:redhat_provider?).returns(true)
+    @provider.stubs(:manifest_task).returns(task_status)
     @provider.organization.stubs(:owner_details).returns({})
-    @provider.stubs(:yum_repo?).returns(false)
     @provider.expects(:refresh_manifest).returns(true)
 
-    post :refresh_manifest, :id => @provider.id
-    assert_response :success
+    put :refresh_manifest, :id => @provider.id
+    assert_response :accepted
   end
-
 end
 end

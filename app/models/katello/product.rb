@@ -26,7 +26,7 @@ class Product < Katello::Model
   include Ext::LabelFromName
 
   attr_accessible :name, :label, :description, :provider_id, :provider,
-                  :gpg_key_id, :gpg_key, :cp_id
+                  :gpg_key_id, :gpg_key, :cp_id, :sync_plan_id
 
   has_many :marketing_engineering_products, :class_name => "Katello::MarketingEngineeringProduct",
            :foreign_key => :engineering_product_id, :dependent => :destroy

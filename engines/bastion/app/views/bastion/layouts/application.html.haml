@@ -1,6 +1,6 @@
 = content_for(:stylesheets) do
-  = stylesheet_link_tag "stylesheets/less/bastion"
-  = stylesheet_link_tag "stylesheets/scss/bastion"
+  = stylesheet_link_tag "bastion/less/bastion"
+  = stylesheet_link_tag "bastion/scss/bastion"
   = yield :stylesheets
 
 = content_for(:content) do
@@ -8,7 +8,7 @@
     %section{'ui-view' => ''}
 
 = content_for(:javascripts) do
-  = javascript_include_tag 'bastion'
+  = javascript_include_tag 'bastion/bastion'
   %script{ :type => "text/javascript" }
     :plain
       angular.module('Bastion').value('currentLocale', '#{I18n.locale}');

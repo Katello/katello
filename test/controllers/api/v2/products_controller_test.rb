@@ -18,7 +18,7 @@ class Api::V2::ProductsControllerTest < ActionController::TestCase
 
   def self.before_suite
     models = ["Product"]
-    disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
+    disable_glue_layers(%w(Candlepin Pulp ElasticSearch), models)
     super
   end
 
@@ -37,8 +37,6 @@ class Api::V2::ProductsControllerTest < ActionController::TestCase
 
   def setup
     setup_controller_defaults_api
-    login_user(User.find(users(:admin)))
-    @request.env['HTTP_ACCEPT'] = 'application/json'
     @fake_search_service = @controller.load_search_service(Support::SearchService::FakeSearchService.new)
     models
     permissions
@@ -51,8 +49,14 @@ class Api::V2::ProductsControllerTest < ActionController::TestCase
     assert_template 'api/v2/products/index'
   end
 
+  def test_index_fail_without_organization_id
+    get :index
+
+    assert_response :not_found
+  end
+
   def test_index_protected
-    allowed_perms = [@read_permission, @update_permission]
+    allowed_perms = [@read_permission]
     denied_perms = [@no_permission]
 
     assert_protected_action(:index, allowed_perms, denied_perms) do
@@ -61,19 +65,27 @@ class Api::V2::ProductsControllerTest < ActionController::TestCase
   end
 
   def test_create
-    post :create, :product => {:name => 'Fedora Product',
-                               :provider_id => @provider.id,
-                               :description => 'This is my cool new product.'
-                              }
+    product_params = {
+      :name => 'fedora product',
+      :provider_id => @provider.id,
+      :description => 'this is my cool new product.'
+    }
+    post :create, :product => product_params
 
     assert_response :success
-    assert_template 'api/v2/products/show'
+    assert_template %w(katello/api/v2/common/create katello/api/v2/layouts/resource)
   end
 
-  def test_create_fail
-    post :create, :product => {:description => 'This is my cool new product.'}
+  def test_create_fail_without_product
+    post :create, :organization_id => @organization.label
+    assert_response :bad_request
+  end
 
-    assert_response :unprocessable_entity
+  def test_create_fail_with_only_provider_id
+    # without provider_id it's 500 and this test is for 422 errors
+    post :create, :provider_id => @provider.id
+
+    assert_response :bad_request
   end
 
   def test_create_protected
@@ -81,12 +93,12 @@ class Api::V2::ProductsControllerTest < ActionController::TestCase
     denied_perms = [@read_permission, @no_permission]
 
     assert_protected_action(:create, allowed_perms, denied_perms) do
-      post :create, :product => {:provider_id => @provider.id}
+      post :create, :product => {:provider_id => @provider.id}, :organization_id => @organization.label
     end
   end
 
   def test_show
-    get :show, :id => @product.cp_id
+    get :show, :id => @product.id
 
     assert_response :success
     assert_template 'api/v2/products/show'
@@ -97,29 +109,53 @@ class Api::V2::ProductsControllerTest < ActionController::TestCase
     denied_perms = [@no_permission]
 
     assert_protected_action(:show, allowed_perms, denied_perms) do
-      get :show, :id => @product.cp_id
+      get :show, :id => @product.id
     end
   end
 
   def test_update
-    get :update, :id => @product.cp_id, :product => {:name => 'New Name'}
+    put :update, :id => @product.id, :product => {:name => 'New Name'}
 
     assert_response :success
-    assert_template 'api/v2/products/show'
+    assert_template %w(katello/api/v2/common/update katello/api/v2/layouts/resource)
     assert_equal assigns[:product].name, 'New Name'
   end
 
-  def test_update_protected
-    allowed_perms = [@update_permission, @create_permission]
-    denied_perms = [@no_permission, @read_permission]
+  def test_update_product_requires_name
+    put :update, :id => @product.id, :product => {:name => nil}
 
-    assert_protected_action(:destroy, allowed_perms, denied_perms) do
-      get :destroy, :id => @product.cp_id, :product => {:name => 'New Name'}
+    assert_response :unprocessable_entity
+    assert_template %w(katello/api/v2/common/update katello/api/v2/layouts/resource)
+    assert_equal assigns[:product].name, nil
+  end
+
+  def test_update_sync_plan
+    put :update, :id => @product.id, :product => {:sync_plan_id => 1}
+
+    assert_response :success
+    assert_template %w(katello/api/v2/common/update katello/api/v2/layouts/resource)
+    assert_equal assigns[:product].sync_plan_id, 1
+  end
+
+  def test_remove_sync_plan
+    put :update, :id => @product.id, :product => {:sync_plan_id => nil, :provider_id => @provider.id}
+
+    assert_response :success
+    assert_template %w(katello/api/v1/common/update katello/api/v2/layouts/resource)
+    assert_equal assigns[:product].sync_plan_id, nil
+  end
+
+  def test_update_protected
+    allowed_perms = [@update_permission]
+    denied_perms = [@read_permission, @no_permission]
+
+    assert_protected_action(:update, allowed_perms, denied_perms) do
+      put :update, :id => @product.id, :name => 'New Name'
     end
   end
 
   def test_destroy
-    get :destroy, :id => @product.cp_id
+    delete :destroy, :id => @product.id
 
     assert_response :success
   end
@@ -129,7 +165,7 @@ class Api::V2::ProductsControllerTest < ActionController::TestCase
     denied_perms = [@no_permission, @read_permission]
 
     assert_protected_action(:destroy, allowed_perms, denied_perms) do
-      get :destroy, :id => @product.cp_id
+      delete :destroy, :id => @product.id
     end
   end
 

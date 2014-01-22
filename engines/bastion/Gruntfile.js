@@ -24,7 +24,7 @@ module.exports = function (grunt) {
 
     // configurable paths
     var bastionConfig = {
-        src: 'app/assets/bastion',
+        src: 'app/assets/javascripts/bastion',
         dist: 'dist'
     };
 
@@ -129,8 +129,8 @@ module.exports = function (grunt) {
                 configFile: 'karma.conf.js',
                 reporters: ['progress', 'coverage'],
                 preprocessors: {
-                    'app/assets/bastion/**/*.html': ['ng-html2js'],
-                    'app/assets/bastion/**/*.js': ['coverage']
+                    'app/assets/javascripts/bastion/**/*.html': ['ng-html2js'],
+                    'app/assets/javascripts/bsation/**/*.js': ['coverage']
                 },
                 coverageReporter: {
                     type: 'cobertura',
@@ -147,7 +147,7 @@ module.exports = function (grunt) {
                     id: 'bastion_api',
                     title: 'API Reference',
                     scripts: [
-                        'app/assets/bastion/'
+                        bastionConfig.src
                     ]
                 }]
             }],

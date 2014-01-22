@@ -66,7 +66,7 @@ module Katello
 
     initializer :register_assets do |app|
       if Rails.env.production?
-        assets = YAML.load_file("#{Katello::Engine.root}/public/assets/manifest.yml")
+        assets = YAML.load_file("#{Katello::Engine.root}/public/assets/katello/manifest.yml")
 
         assets.each_pair do |file, digest|
           app.config.assets.digests[file] = digest

@@ -37,6 +37,7 @@ module Katello
       param :page, :number, :desc => "Page number, starting at 1"
       param :per_page,  :number, :desc => "Number of results per page to return"
       param :order, String, :desc => "Sort field and order, eg. 'name DESC'"
+      param :full_results, BooleanValidator, :desc => "Whether or not to show all results"
       param :sort, Hash, :desc => "Hash version of 'order' param" do
         param :by, String, :desc => "Field to sort the results on"
         param :order, String, :desc => "How to order the sorted results (e.g. ASC for ascending)"
@@ -52,6 +53,7 @@ module Katello
       end
       options[:sort_by] = params[:sort_by] if params[:sort_by]
       options[:sort_order] = params[:sort_order] if params[:sort_order]
+      options[:full_result] = params[:full_result] if params[:full_result]
 
       unless options[:full_result]
         options[:per_page] = params[:per_page] || ::Setting::General.entries_per_page
@@ -80,14 +82,23 @@ module Katello
 
     protected
 
+    def is_database_id?(num)
+      Integer(num)
+      true
+    rescue
+      false
+    end
+
     def labelize_params(params)
       return params[:label] unless params.try(:[], :label).nil?
       return Util::Model.labelize(params[:name]) unless params.try(:[], :name).nil?
     end
 
     def find_organization
-      organization_id = params[:organization_id]
-      @organization = Organization.without_deleting.having_name_or_label(organization_id).first
+      @organization = find_optional_organization
+      fail HttpErrors::NotFound, _("One of parameters [ %s ] required but not specified.") %
+          organization_id_keys.join(", ") if @organization.nil?
+      @organization
     end
 
     def sort_params

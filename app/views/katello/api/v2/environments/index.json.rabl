@@ -1,3 +1,3 @@
-collection @collection, :object_root => :environment
+object false
 
-extends 'katello/api/v2/environments/show'
+extends 'katello/api/v2/common/index'

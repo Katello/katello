@@ -25,8 +25,8 @@ Gem::Specification.new do |gem|
   gem.add_dependency "rails"
   gem.add_dependency "json"
   gem.add_dependency "oauth"
-  gem.add_dependency "rack-openid"
   gem.add_dependency "rest-client"
+  gem.add_dependency "ruby-openid"
 
   gem.add_dependency "net-ldap"
   gem.add_dependency "ldap_fluff", ">= 0.2.2"
@@ -52,7 +52,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency "maruku"
 
   # Pulp
-  gem.add_dependency "runcible", "1.0.7"
+  gem.add_dependency "runcible", "1.0.8"
   gem.add_dependency "anemone"
 
   # UI

@@ -54,7 +54,6 @@ module Glue::ElasticSearch::Errata
               :id           => { :type => 'string', :index => :not_analyzed},
               :errata_id    => { :type => 'string', :analyzer => :snowball},
               :errata_id_exact => { :type => 'string', :index => :not_analyzed},
-              :product_ids  => { :type => 'integer', :analyzer => :kt_name_analyzer},
               :severity     => { :type => 'string', :analyzer => :kt_name_analyzer},
               :type         => { :type => 'string', :analyzer => :kt_name_analyzer},
               :title        => { :type => 'string', :analyzer => :title_analyzer},
@@ -74,7 +73,6 @@ module Glue::ElasticSearch::Errata
           :errata_id_exact => self.errata_id,
           :errata_id_sort => self.errata_id,
           :id_title => self.errata_id + ' : ' + self.title,
-          :product_ids => self.product_ids,
           :issued => self.issued.split[0]
         }
       end
@@ -87,9 +85,9 @@ module Glue::ElasticSearch::Errata
         filter_for_errata[:repoids] = repos.collect{|r| r.pulp_id} if !repos.empty?
 
         options = { :start => 0, :page_size => 1, :filters => filter_for_errata }
-        first = self.search('', options)
+        first = self.legacy_search('', options)
         options[:page_size] = first.total
-        self.search('', options).collect{ |e| Errata.new(e.as_json) }
+        self.legacy_search('', options).collect{ |e| Errata.new(e.as_json) }
       end
 
       def self.repos_for_filter(filter)

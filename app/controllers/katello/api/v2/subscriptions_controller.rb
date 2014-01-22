@@ -15,15 +15,14 @@ class Api::V2::SubscriptionsController < Api::V2::ApiController
   include ConsumersControllerLogic
 
   before_filter :find_system
-  before_filter :find_organization, :only => [:index, :show, :upload]
+  before_filter :find_optional_organization, :only => [:index]
+  before_filter :find_organization, :only => [:show, :upload]
   before_filter :find_subscription, :only => [:show]
   before_filter :find_provider
   before_filter :authorize
 
   resource_description do
     description "Systems subscriptions management."
-    param :system_id, :identifier, :desc => "System uuid", :required => true
-
     api_version 'v2'
   end
 
@@ -143,7 +142,9 @@ class Api::V2::SubscriptionsController < Api::V2::ApiController
   end
 
   api :POST, "/organizations/:organization_id/subscriptions/upload", "Upload a subscription manifest"
+  api :POST, "/subscriptions/upload", "Upload a subscription manifest"
   param :organization_id, :identifier, :desc => "Organization id", :required => true
+  param :content, File, :desc => "Subscription manifest file", :required => true
   def upload
     fail HttpErrors::BadRequest, _("No manifest file uploaded") if params[:content].blank?
 

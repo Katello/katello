@@ -9,10 +9,10 @@ module.exports = function(config) {
         reporters: ['progress'],
         singleRun: false,
         preprocessors: {
-            'app/assets/bastion/**/*.html': ['ng-html2js']
+            'app/assets/javascripts/bastion/**/*.html': ['ng-html2js']
         },
         files: [
-            'vendor/assets/javascripts/bastion/jquery/jquery.js',
+            '.tmp/bower_components/jquery/jquery.js',
             'vendor/assets/javascripts/bastion/angular/angular.js',
             '.tmp/bower_components/angular-mocks/angular-mocks.js',
             'vendor/assets/javascripts/bastion/angular-sanitize/angular-sanitize.js',
@@ -24,20 +24,19 @@ module.exports = function(config) {
             'vendor/assets/javascripts/bastion/ngUpload/ng-upload.js',
 
             '../../app/assets/javascripts/katello/common/katello.global.js',
-            '../../app/assets/javascripts/katello/common/katello.module.js',
             '../../app/assets/javascripts/katello/common/notices.js',
             '../../app/assets/javascripts/katello/common/experimental/katello-globals.module.js',
 
             // Must load modules first
-            'app/assets/bastion/**/*.module.js',
-            'app/assets/bastion/**/*.js ',
-            'app/assets/bastion/**/*.html',
+            'app/assets/javascripts/bastion/**/*.module.js',
+            'app/assets/javascripts/bastion/**/*.js ',
+            'app/assets/javascripts/bastion/**/*.html',
 
             'test/test-mocks.module.js',
             'test/**/*test.js'
         ],
         ngHtml2JsPreprocessor: {
-            stripPrefix: 'app/assets/bastion/'
+            stripPrefix: 'app/assets/javascripts/bastion/'
         }
     });
 };

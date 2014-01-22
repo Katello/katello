@@ -11,117 +11,123 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class Api::V2::ProductsController < Api::V2::ApiController
+  class Api::V2::ProductsController < Api::V2::ApiController
 
-  before_filter :find_provider, :only => [:create]
-  before_filter :find_organization, :only => [:index]
-  before_filter :find_product, :only => [:show, :update, :destroy]
-  before_filter :authorize
+    before_filter :find_provider, :only => [:create]
+    before_filter :find_organization, :only => [:index]
+    before_filter :find_product, :only => [:update, :destroy, :show]
+    before_filter :authorize
 
-  def_param_group :product do
-    param :name, String, :required => true
-    param :label, String, :required => false
-    param :provider_id, :number, :required => true, :desc => "Provider the product belongs to"
-    param :description, String, :desc => "Product description"
-    param :gpg_key_id, :identifier, :desc => "identifier of the gpg key"
-  end
-
-  def rules
-    index_test = lambda { Product.any_readable?(@organization) }
-    create_test = lambda { @provider.nil? ? true : Product.creatable?(@provider) }
-    read_test  = lambda { @product.readable? }
-    edit_test  = lambda { @product.editable? }
-
-    {
-      :index => index_test,
-      :create => create_test,
-      :show => read_test,
-      :update => edit_test,
-      :destroy => edit_test
-    }
-  end
-
-  api :GET, "/products", "List of products"
-  api :GET, "/subscriptions/:subscription_id/products", "List of subscription products"
-  param_group :search, Api::V2::ApiController
-  param :subscription_id, :number, :desc => "Subscription identifier"
-  def index
-    options = sort_params
-    options[:load_records?] = true
-
-    ids = Product.all_readable(@organization).pluck(:id)
-
-    if (subscription_id = params[:subscription_id])
-      @subscription = Pool.find_by_organization_and_id!(@organization, subscription_id)
-      ids &= @subscription.products.pluck("#{Product.table_name}.id")
+    def_param_group :product do
+      param :name, String, :required => true
+      param :label, String, :required => false
+      param :provider_id, :number, :required => true, :desc => "Provider the product belongs to"
+      param :description, String, :desc => "Product description"
+      param :gpg_key_id, :number, :desc => "Identifier of the GPG key"
+      param :sync_plan_id, :number, :desc => "Plan numeric identifier", :allow_nil => true
     end
 
-    options[:filters] = [
-      {:terms => {:id => ids}}
-    ]
-    options[:filters] << {:term => {:enabled => params[:enabled]}} if params.key?(:enabled)
+    def rules
+      index_test = lambda { Product.any_readable?(@organization) }
+      create_test = lambda { @provider.nil? ? true : Product.creatable?(@provider) }
+      read_test  = lambda { @product.readable? }
+      edit_test  = lambda { @product.editable? || @product.syncable? }
 
-    @search_service.model = Product
-    products, total_count = @search_service.retrieve(params[:search], params[:offset], options)
+      {
+        :index => index_test,
+        :create => create_test,
+        :show => read_test,
+        :update => edit_test,
+        :destroy => edit_test
+      }
+    end
 
-    collection = {
-      :results  => products,
-      :subtotal => total_count,
-      :total    => @search_service.total_items
-    }
+    api :GET, "/products", "List of organization products"
+    api :GET, "/subscriptions/:subscription_id/products", "List of subscription products in an organization"
+    api :GET, "/organizations/:organization_id/products", "List of products in an organization"
+    param :name, :identifier, :desc => "Filter products by name"
+    param :organization_id, :identifier, :desc => "Filter products by organization name or label", :required => true
+    param :subscription_id, :number, :desc => "Filter products by subscription identifier"
+    param_group :search, Api::V2::ApiController
+    def index
+      filters = [filter_terms(product_ids_filter)]
+      # TODO: support enabled filter in products. Product currently has
+      # an enabled method, and elasticsearch has mappings, but filtering
+      # errors. See elasticsearch output.
+      # filters << filter_terms(enabled_filter) if enabled_filter.present?
+      options = sort_params.merge(:filters => filters, :load_records? => true)
+      @collection = item_search(Product, params, options)
+      respond_for_index(:collection => @collection)
+    end
 
-    respond_for_index :collection => collection
+    api :POST, "/products", "Create a product"
+    param_group :product
+    def create
+      params[:product][:label] = labelize_params(product_params) if product_params
+      product = Product.create!(product_params)
+
+      respond(:resource => product)
+    end
+
+    api :GET, "/products/:id", "Show a product"
+    param :id, :number, :desc => "product numeric identifier", :required => true
+    def show
+      respond_for_show(:resource => @product)
+    end
+
+    api :PUT, "/products/:id", "Updates a product"
+    param :id, :number, :desc => "product numeric identifier", :required => true, :allow_nil => false
+    param_group :product
+    def update
+      fail HttpErrors::BadRequest, _("Red Hat products cannot be updated.") if @product.redhat?
+
+      reset_gpg_keys = (product_params[:gpg_key_id] != @product.gpg_key_id)
+      @product.reset_repo_gpgs! if reset_gpg_keys
+      @product.update_attributes!(product_params)
+
+      respond(:resource => @product.reload)
+    end
+
+    api :DELETE, "/products/:id", "Destroy a product"
+    param :id, :number, :desc => "product numeric identifier"
+    def destroy
+      @product.destroy
+
+      respond
+    end
+
+    protected
+
+    def find_provider
+      @provider = Provider.find(product_params[:provider_id]) if product_params[:provider_id] || organization.provider
+    end
+
+    def find_product
+      @product = Product.find_by_id(params[:id]) if params[:id]
+    end
+
+    def product_ids_filter
+      ids = Product.all_readable(@organization).pluck(:id)
+      if (subscription_id = params[:subscription_id])
+        @subscription = Pool.find_by_organization_and_id!(@organization, subscription_id)
+        ids &= @subscription.products.pluck("#{Product.table_name}.id")
+      end
+      {:id => ids}
+    end
+
+    def product_params
+      params.require(:product).permit(:name, :label, :description, :provider_id, :gpg_key_id, :sync_plan_id)
+    end
+
+    def enabled_filter
+      if (enabled = params[:enabled])
+        {:enabled => enabled}
+      end
+    end
+
+    def filter_terms(terms)
+      {:terms => terms}
+    end
+
   end
-
-  api :POST, "/products", "Create a product"
-  param_group :product
-  def create
-    params[:product][:label] = labelize_params(params[:product]) if params[:product]
-
-    product = Product.create!(product_params)
-
-    respond_for_show(:resource => product)
-  end
-
-  api :GET, "/products/:id", "Show a product"
-  param :id, :number, :desc => "product numeric identifier"
-  def show
-    respond_for_show(:resource => @product)
-  end
-
-  api :PUT, "/products/:id", "Update a product"
-  param :id, :number, :desc => "product numeric identifier"
-  param_group :product
-  def update
-    reset_gpg_keys = (product_params[:gpg_key_id] != @product.gpg_key_id)
-
-    @product.update_attributes!(product_params)
-    @product.reset_repo_gpgs! if reset_gpg_keys
-
-    respond_for_show(:resource => @product.reload)
-  end
-
-  api :DELETE, "/products/:id", "Destroy a product"
-  param :id, :number, :desc => "product numeric identifier"
-  def destroy
-    @product.destroy
-
-    respond_for_destroy
-  end
-
-  protected
-
-  def find_provider
-    @provider = Provider.find(params[:product][:provider_id]) if params[:product] && params[:product][:provider_id]
-  end
-
-  def find_product
-    @product = Product.find_by_cp_id(params[:id], params[:organization_id]) if params[:id]
-  end
-
-  def product_params
-    params.require(:product).permit(:name, :label, :provider_id, :gpg_key_id, :description)
-  end
-
-end
 end
