@@ -57,7 +57,7 @@ If needing to extract multiple asset types, one can do:
 
 A set of files can be included by using an array instead of a string to list the files. After defining the new dependency and the associated file(s), run the following to install the new library:
 
-    grunt bower:install
+    grunt bower:update
 
 ### Updating a Dependency ###
 
