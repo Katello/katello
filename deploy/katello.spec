@@ -38,7 +38,10 @@ Source0:        https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}
 Requires:       wget
 Requires:       curl
 Requires:       %{?scl_prefix}rubygem-katello
-Requires:       katello-installer
+Requires:       %{name}-installer
+Requires:       rubygem-hammer_cli 
+Requires:       rubygem-hammer_cli_foreman
+Requires:       rubygem-hammer_cli_katello_bridge
 
 BuildRequires: asciidoc
 BuildRequires: util-linux
