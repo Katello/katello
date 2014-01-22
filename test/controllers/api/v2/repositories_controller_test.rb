@@ -76,9 +76,9 @@ class Api::V2::RepositoriesControllerTest < ActionController::TestCase
     product.expect(:editable?, @product.editable?)
     product.expect(:gpg_key, nil)
 
-    Product.stub(:find_by_cp_id, product) do
+    Product.stub(:find, product) do
       post :create, :name => 'Fedora Repository',
-                    :product_id => @product.cp_id,
+                    :product_id => @product.id,
                     :url => 'http://www.google.com',
                     :content_type => 'yum'
 
@@ -103,9 +103,9 @@ class Api::V2::RepositoriesControllerTest < ActionController::TestCase
       key
     ])
 
-    Product.stub(:find_by_cp_id, product) do
+    Product.stub(:find, product) do
       post :create, :name => 'Fedora Repository',
-                    :product_id => @product.cp_id,
+                    :product_id => @product.id,
                     :url => 'http://www.google.com',
                     :content_type => 'yum'
 
@@ -119,7 +119,7 @@ class Api::V2::RepositoriesControllerTest < ActionController::TestCase
     denied_perms = [@read_permission, @no_permission]
 
     assert_protected_action(:create, allowed_perms, denied_perms) do
-      post :create, :product_id => @product.cp_id
+      post :create, :product_id => @product.id
     end
   end
 
