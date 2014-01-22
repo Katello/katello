@@ -40,7 +40,7 @@
         <div tasks-table  details-state="products.details.tasks.details"
                           known-context="product,organization"
                           resource-type="Katello::Product"
-                          resource-id="{{ product.katello_id }}"/>
+                          resource-id="{{ product.id }}"/>
      </pre>
  */
 angular.module('Bastion.tasks').directive('tasksTable',
