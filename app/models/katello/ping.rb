@@ -88,7 +88,7 @@ module Katello
 
         # candlepin - ping with oauth
         exception_watch(result[:services][:candlepin_auth]) do
-          Resources::Candlepin::CandlepinPing.ping
+          Katello::Resources::Candlepin::CandlepinPing.ping
         end
 
         # katello jobs - TODO we should not spawn processes
