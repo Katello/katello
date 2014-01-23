@@ -77,7 +77,7 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
         $scope.uploadContent = function (content) {
             var returnData;
 
-            if (content !== "Please wait...") {
+            if (content) {
                 try {
                     returnData = JSON.parse(angular.element(content).html());
                 } catch (err) {
