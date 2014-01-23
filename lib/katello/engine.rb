@@ -96,6 +96,13 @@ module Katello
 
       # Service extensions
       require "#{Katello::Engine.root}/app/services/katello/puppet_class_importer_extensions"
+
+      # We need to explicitly load this files because Foreman has
+      # similar strucuture and if the Foreman files are loaded first,
+      # autoloading doesn't work.
+      require_dependency "#{Katello::Engine.root}/app/controllers/katello/api/api_controller"
+      require_dependency "#{Katello::Engine.root}/app/controllers/katello/api/v1/api_controller"
+      require_dependency "#{Katello::Engine.root}/app/controllers/katello/api/v2/api_controller"
       ::PuppetClassImporter.send :include, Katello::Services::PuppetClassImporterExtensions
     end
 
