@@ -59,17 +59,17 @@ module Actions
       #end
 
       def as_cp_user(&block)
-        input[:remote_user] or raise 'missing :remote_user'
+        fail 'missing :remote_user' unless input[:remote_user]
         User.set_cp_config('cp-user' => input[:remote_user], &block)
       end
 
       def as_pulp_user(&block)
-        input[:remote_user] or raise 'missing :remote_user'
+        fail 'missing :remote_user' unless input[:remote_user]
         User.set_pulp_config(input[:remote_user], &block)
       end
 
       def as_foreman_user
-        input[:remote_user] or raise 'missing :remote_user'
+        fail 'missing :remote_user' unless input[:remote_user]
         Thread.current[:foreman_user] = input[:remote_user]
         yield
       ensure

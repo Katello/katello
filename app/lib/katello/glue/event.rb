@@ -48,7 +48,7 @@ module Glue
       unless planned
         errors = @execution_plan.steps.values.map(&:error).compact
         # we raise error so that the whole transaction is rollbacked
-        raise errors.map(&:message).join('; ')
+        fail errors.map(&:message).join('; ')
       end
     end
 

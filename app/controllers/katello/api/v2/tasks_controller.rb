@@ -30,8 +30,6 @@ class Api::V2::TasksController < Api::V2::ApiController
       end
 
     end
-    # TODO: fix permissions check
-    dummy = lambda { true }
     {
       :index  => test,
       :show  => test,

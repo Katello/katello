@@ -284,6 +284,5 @@ class System < Katello::Model
       self.custom_info.each { |c| hash[c.keyname] = c.value } if self.custom_info
       hash
     end
-
-  end
+end
 end

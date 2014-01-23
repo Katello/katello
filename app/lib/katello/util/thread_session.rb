@@ -94,7 +94,6 @@ module Util
             Thread.current[:cp_oauth_header] = nil if block_given?
           end
 
-
         end
       end
     end

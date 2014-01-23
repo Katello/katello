@@ -21,7 +21,6 @@ class Repository < Katello::Model
   include Glue::Pulp::Repo if Katello.config.use_pulp
   include Glue::ElasticSearch::Repository if Katello.config.use_elasticsearch
 
-
   include Glue if (Katello.config.use_cp || Katello.config.use_pulp)
   include Authorization::Repository
 
