@@ -179,7 +179,11 @@ module Glue::Pulp::Repo
         dist.auto_publish = true
         [dist]
       when Repository::PUPPET_TYPE
-        repo_path =  File.join(Katello.config.puppet_repo_root, self.puppet_environment_name, 'modules')
+        repo_path =  File.join(Katello.config.puppet_repo_root,
+                               Environment.construct_name(self.environment.organization,
+                                                          self.environment,
+                                                          self.content_view),
+                               'modules')
         puppet_install_dist =
             Runcible::Models::PuppetInstallDistributor.new(repo_path,
                                                            {:id => self.pulp_id, :auto_publish => true})
@@ -187,15 +191,6 @@ module Glue::Pulp::Repo
       else
         fail _("Unexpected repo type %s") % self.content_type
       end
-    end
-
-    def puppet_environment_name
-      name = ["KT",
-              self.environment.organization.label,
-              self.environment.label,
-              self.content_view.label,
-              self.content_view.id.to_s].reject(&:blank?).join('_')
-      return name.gsub('-', '_')
     end
 
     def nodes_distributor
@@ -366,6 +361,19 @@ module Glue::Pulp::Repo
         Katello::Distribution.new(dist)
       end
       @repo_distributions
+    end
+
+    def bootable_distribution
+      return unless self.unprotected
+
+      # Not every distribution from Pulp represents a bootable
+      # repo. Determine based on the files in the repo.
+      return self.distributions.find do |distribution|
+        distribution.files.any? do |file|
+          file[:relativepath].include?("vmlinuz") ||
+              file[:relativepath].include?("pxeboot")
+        end
+      end
     end
 
     def package_groups

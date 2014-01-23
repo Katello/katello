@@ -33,7 +33,9 @@ module Katello
 
     initializer "katello.load_app_instance_data" do |app|
       app.config.paths['db/migrate'] += Katello::Engine.paths['db/migrate'].existent
-      app.config.autoload_paths += Dir["#{config.root}/app/lib)"]
+      app.config.autoload_paths += Dir["#{config.root}/app/lib"]
+      app.config.autoload_paths += Dir["#{config.root}/app/services/katello"]
+      app.config.autoload_paths += Dir["#{config.root}/app/views/foreman"]
     end
 
     initializer "katello.assets.paths", :group => :all do |app|
@@ -49,6 +51,8 @@ module Katello
 
     initializer "katello.helpers" do |app|
       ActionView::Base.send :include, Katello::TaxonomyHelper
+      ActionView::Base.send :include, Katello::HostsAndHostgroupsHelper
+      ActionView::Base.send :include, Katello::KatelloUrlsHelper
     end
 
     initializer "logging" do |app|
@@ -84,8 +88,15 @@ module Katello
       FastGettext.default_text_domain = 'katello'
 
       # Model extensions
-      ::User.send :include, Katello::Concerns::UserExtensions
+      ::Environment.send :include, Katello::Concerns::EnvironmentExtensions
+      ::Medium.send :include, Katello::Concerns::MediumExtensions
+      ::Operatingsystem.send :include, Katello::Concerns::OperatingsystemExtensions
       ::Organization.send :include, Katello::Concerns::OrganizationExtensions
+      ::User.send :include, Katello::Concerns::UserExtensions
+
+      # Service extensions
+      require "#{Katello::Engine.root}/app/services/katello/puppet_class_importer_extensions"
+      ::PuppetClassImporter.send :include, Katello::Services::PuppetClassImporterExtensions
     end
 
     initializer 'katello.register_plugin', :after => :disable_dependency_loading do

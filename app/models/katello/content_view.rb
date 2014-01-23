@@ -247,14 +247,21 @@ class ContentView < Katello::Model
 
   def delete(from_env)
     if from_env.library? && in_non_library_environment?
-      fail Errors::ChangesetContentException.new(_("Cannot delete view while it exits in environments"))
+      fail Errors::ChangesetContentException.new(_("Cannot delete view while it exists in environments"))
     end
+
     version = self.version(from_env)
     if version.nil?
       fail Errors::ChangesetContentException.new(_("Cannot delete from %s, view does not exist there.") % from_env.name)
     end
     version = ContentViewVersion.find(version.id)
+
     Glue::Event.trigger(Katello::Actions::ContentViewDemote, self, from_env)
+
+    if foreman_env = Environment.find_by_katello_id(self.organization, from_env, self)
+      foreman_env.destroy
+    end
+
     version.delete(from_env)
     self.destroy if self.versions.empty?
   end

@@ -24,13 +24,8 @@ angular.module('Bastion', [
     'alchemy.format',
     'alch-templates',
     'ngSanitize',
-    'ui.bootstrap.alert',
-    'ui.bootstrap.modal',
-    'ui.bootstrap.position',
-    'ui.bootstrap.bindHtml',
-    'ui.bootstrap.tooltip',
-    'ui.bootstrap.tabs',
-    'ui.bootstrap.progressbar',
+    'ui.bootstrap',
+    'ui.bootstrap.tpls',
     'angular-blocks',
     'Bastion.i18n',
     'Bastion.menu',
@@ -101,8 +96,8 @@ angular.module('Bastion').config(
  * @description
  *   Set up some common state related functionality and set the current language.
  */
-angular.module('Bastion').run(['$rootScope', '$state', '$stateParams', '$templateCache', 'gettextCatalog', 'currentLocale', '$location',
-    function ($rootScope, $state, $stateParams, $templateCache, gettextCatalog, currentLocale, $location) {
+angular.module('Bastion').run(['$rootScope', '$state', '$stateParams', 'gettextCatalog', 'currentLocale', '$location',
+    function ($rootScope, $state, $stateParams, gettextCatalog, currentLocale, $location) {
 
         $rootScope.$state = $state;
         $rootScope.$stateParams = $stateParams;
@@ -132,13 +127,5 @@ angular.module('Bastion').run(['$rootScope', '$state', '$stateParams', '$templat
                 //restore all query string parameters back to $location.search
                 $location.search(this.locationSearch);
             });
-
-        // Temporary workaround until angular-ui-bootstrap releases bootstrap 3 support.
-        $templateCache.put('template/modal/backdrop.html', '<div class="modal-backdrop fade" ng-class="{in: animate}" ng-style="{\'z-index\': 1040 + index*10}"></div>');
-        $templateCache.put('template/modal/window.html', '<div class="modal fade {{ windowClass }}" ng-class="{in: animate}" ng-style="{\'z-index\': 1050 + index*10, display: \'block\'}" ng-click="close($event)"><div class="modal-dialog"><div class="modal-content" ng-transclude></div></div></div>');
-        $templateCache.put('template/tooltip/tooltip-popup.html', '<div class="tooltip {{placement}}" ng-class="{ in: isOpen(), fade: animation() }"><div class="tooltip-arrow"></div><div class="tooltip-inner" ng-bind="content"></div></div>');
-        $templateCache.put('template/alert/alert.html', '<div class="alert" ng-class=\'type && "alert-" + type\'><button ng-show="closeable" type="button" class="close" ng-click="close()">&times;</button><div ng-transclude></div></div>');
-        $templateCache.put('template/progressbar/progress.html', '<div class="progress"><div progressbar ng-repeat="bar in bars" width="bar.to" old="bar.from" animate="bar.animate" type="bar.type"></div></div>');
-        $templateCache.put('template/progressbar/bar.html', '<div class="progress-bar" role="progressbar" ng-class=\'type && "progress-bar-" + type\'></div>');
     }
 ]);

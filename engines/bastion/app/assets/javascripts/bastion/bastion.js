@@ -19,7 +19,7 @@
 //= require "bastion/ngUpload/ng-upload"
 //= require "bastion/angular-gettext/angular-gettext"
 //= require "bastion/angular-blocks/angular-blocks"
-//= require_tree "../../../../vendor/assets/javascripts/bastion/angular-ui-bootstrap"
+//= require_tree "../../../../vendor/assets/javascripts/bastion/angular-bootstrap"
 //= require "bastion/alchemy/alchemy"
 
 //= require "katello/common/katello.global"

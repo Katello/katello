@@ -36,7 +36,7 @@ module Katello
         include AsyncOrchestration
         include Ext::PermissionTagCleanup
 
-        include Authorization::Organization
+        include Katello::Authorization::Organization
         include Glue::ElasticSearch::Organization if Katello.config.use_elasticsearch
 
         include Ext::LabelFromName
