@@ -58,23 +58,25 @@ KT.redhat_provider_page = (function($) {
     var repoChange = function(checkbox) {
 
         var name = checkbox.attr("name"),
-            options = {},
-            url = checkbox.attr("data-url"),
+            repo_data = checkbox.data(),
+            options = {
+              url: repo_data.url,
+              product_id: repo_data.productId,
+              organization_id: repo_data.organizationId,
+              repository: { enabled: null }
+            },
             id = checkbox.attr("value"),
             set_checkbox = checkbox.parents(".repo_set").find('.repo_set_enable');
-
-        options['repository'] = {};
         if (checkbox.attr("checked") !== undefined) {
-            options['repository']['enabled'] = "1";
+            options.repository.enabled = "1";
         } else {
-            options['repository']['enabled'] = "0";
+            options.repository.enabled = "0";
         }
-
         $(checkbox).hide();
         $('#spinner_'+id).removeClass('hidden').show();
         $.ajax({
             type: "PUT",
-            url: url,
+            url: options.url,
             data: options,
             cache: false,
             success: function(data, textStatus, jqXHR){

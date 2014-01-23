@@ -17,8 +17,8 @@ module Katello
 class Api::V2::RepositoriesControllerTest < ActionController::TestCase
 
   def self.before_suite
-    models = ["Repository", "Product"]
-    disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
+    models = %w(Repository Product)
+    disable_glue_layers(%w(Candlepin Pulp ElasticSearch), models)
     super
   end
 
@@ -48,10 +48,16 @@ class Api::V2::RepositoriesControllerTest < ActionController::TestCase
   end
 
   def test_index
-    get :index, :organization_id => @organization.label
+    get :index, :organization_id => @organization.label, :product_id => @product.id
 
     assert_response :success
     assert_template 'api/v2/repositories/index'
+  end
+
+  def test_index_fail_when_product_not_found
+    get :index, :organization_id => @organization.label
+
+    assert_response :not_found
   end
 
   def test_index_protected
@@ -59,7 +65,7 @@ class Api::V2::RepositoriesControllerTest < ActionController::TestCase
     denied_perms = [@no_permission]
 
     assert_protected_action(:index, allowed_perms, denied_perms) do
-      get :index, :organization_id => @organization.label
+      get :index, :organization_id => @organization.label, :product_id => @product.id
     end
   end
 
@@ -140,11 +146,17 @@ class Api::V2::RepositoriesControllerTest < ActionController::TestCase
   end
 
   def test_update
-    key = GpgKey.find(katello_gpg_keys('fedora_gpg_key'))
-    put :update, :id => @repository.id, :repository => {:gpg_key_id => key.id}
+    Repository.stubs(:find_unique => @repository)
+
+    put :update, {
+      :id              => @repository.label,
+      :product_id      => @product.label,
+      :organization_id => @organization.label,
+      :repository      => @repository.as_json
+    }
 
     assert_response :success
-    assert_template %w(katello/api/v2/common/update, katello/api/v2/layouts/resource)
+    assert_template %w(katello/api/v2/common/update katello/api/v2/layouts/resource)
   end
 
   def test_update_protected
@@ -152,7 +164,12 @@ class Api::V2::RepositoriesControllerTest < ActionController::TestCase
     denied_perms = [@no_permission, @delete_permission]
 
     assert_protected_action(:update, allowed_perms, denied_perms) do
-      put :update, :id => @repository.id
+      put :update, {
+        :id              => @repository.label,
+        :product_id      => @product.label,
+        :repository      => {:gpg_key_id => 1},
+        :organization_id => @organization.label
+      }
     end
   end
 
@@ -164,10 +181,30 @@ class Api::V2::RepositoriesControllerTest < ActionController::TestCase
     assert_response :bad_request
   end
 
-  def test_fail_if_custom_repository_enabled
+  def test_update_fail_if_custom_repository_enabled
     Repository.any_instance.stubs(:redhat?).returns(false)
 
     put :update, :id => @repository.id, :repository => {:enabled => 1}
+
+    assert_response :bad_request
+  end
+
+  def test_update_fail_without_product_id
+    put :update, {
+      :id              => @repository.label,
+      :repository      => {:gpg_key_id => 1},
+      :organization_id => @organization.label
+    }
+
+    assert_response :bad_request
+  end
+
+  def test_update_fail_without_organization_id
+    put :update, {
+      :id              => @repository.label,
+      :repository      => {:gpg_key_id => 1},
+      :product_id      => @product.label
+    }
 
     assert_response :bad_request
   end
