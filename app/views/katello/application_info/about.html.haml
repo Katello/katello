@@ -16,11 +16,11 @@
               %th= _("Component")
               %th= _("Status")
               %th= _("Message")
-            - @ping[:status].sort.each do |component, status|
+            - @ping[:services].sort.each do |component, status|
               %tr
-                %td= component_status_icon(status[:result])
+                %td= component_status_icon(status[:status])
                 %th= component
-                %td= status[:result].downcase == 'ok' ? _('OK') : _('FAIL')
+                %td= status[:status].downcase == 'ok' ? _('OK') : _('FAIL')
                 %td= status[:message]
     .dash
       .dashhead
