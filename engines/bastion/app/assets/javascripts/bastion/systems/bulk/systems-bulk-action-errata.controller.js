@@ -18,7 +18,7 @@
  * @requires $scope
  * @requires $q
  * @requires $location
- * @requires BulkAction
+ * @requires SystemBulkAction
  * @requires SystemGroup
  * @requires Nutupane
  * @requires CurrentOrganization
@@ -29,12 +29,12 @@
  *   A controller for providing bulk action functionality to the systems page.
  */
 angular.module('Bastion.systems').controller('SystemsBulkActionErrataController',
-    ['$scope', '$q', '$location', 'BulkAction', 'SystemGroup', 'Nutupane', 'CurrentOrganization', 'Erratum', 'gettext',
-    function ($scope, $q, $location, BulkAction, SystemGroup, Nutupane, CurrentOrganization, Erratum, gettext) {
+    ['$scope', '$q', '$location', 'SystemBulkAction', 'SystemGroup', 'Nutupane', 'CurrentOrganization', 'Erratum', 'gettext',
+    function ($scope, $q, $location, SystemBulkAction, SystemGroup, Nutupane, CurrentOrganization, Erratum, gettext) {
 
         var nutupane;
 
-        nutupane = new Nutupane(BulkAction, {}, 'applicableErrata');
+        nutupane = new Nutupane(SystemBulkAction, {}, 'applicableErrata');
         nutupane.table.closeItem = function () {};
         $scope.detailsTable = nutupane.table;
         $scope.detailsTable.errataFilterTerm = "";
@@ -87,7 +87,7 @@ angular.module('Bastion.systems').controller('SystemsBulkActionErrataController'
         $scope.installErrata = function () {
             var params = installParams();
             $scope.setState(true, [], []);
-            BulkAction.installContent(params,
+            SystemBulkAction.installContent(params,
                 function () {
                     $scope.setState(false, [gettext("Successfully scheduled installation of %s errata .").replace('%s',
                                             params.content.length)], []);

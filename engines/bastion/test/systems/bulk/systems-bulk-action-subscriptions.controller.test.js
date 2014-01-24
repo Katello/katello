@@ -12,12 +12,12 @@
  **/
 
 describe('Controller: SystemsBulkActionSubscriptionsController', function() {
-    var $scope, $q, gettext, BulkAction, SystemGroup, Organization, Task, CurrentOrganization;
+    var $scope, $q, gettext, SystemBulkAction, SystemGroup, Organization, Task, CurrentOrganization;
 
     beforeEach(module('Bastion.systems', 'Bastion.test-mocks'));
 
     beforeEach(function() {
-        BulkAction = {
+        SystemBulkAction = {
             addSystemGroups: function() {},
             removeSystemGroups: function() {},
             installContent: function() {},
@@ -48,7 +48,7 @@ describe('Controller: SystemsBulkActionSubscriptionsController', function() {
 
         $controller('SystemsBulkActionSubscriptionsController', {$scope: $scope,
             $q: $q,
-            BulkAction: BulkAction,
+            SystemBulkAction: SystemBulkAction,
             SystemGroup: SystemGroup,
             gettext: gettext,
             Organization: Organization,

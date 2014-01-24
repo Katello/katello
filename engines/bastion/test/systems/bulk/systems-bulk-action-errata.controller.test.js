@@ -12,13 +12,13 @@
  **/
 
 describe('Controller: SystemsBulkActionErrataController', function() {
-    var $scope, $q, gettext, BulkAction, SystemGroup, selectedErrata,
+    var $scope, $q, gettext, SystemBulkAction, SystemGroup, selectedErrata,
          selectedSystems, CurrentOrganization, Nutupane;
 
     beforeEach(module('Bastion.systems', 'Bastion.test-mocks'));
 
     beforeEach(function() {
-        BulkAction = {
+        SystemBulkAction = {
             installContent: function() {}
         };
         gettext = function() {};
@@ -49,7 +49,7 @@ describe('Controller: SystemsBulkActionErrataController', function() {
 
         $controller('SystemsBulkActionErrataController', {$scope: $scope,
             $q: $q,
-            BulkAction: BulkAction,
+            SystemBulkAction: SystemBulkAction,
             SystemGroup: SystemGroup,
             Nutupane: Nutupane,
             gettext: gettext,
@@ -59,10 +59,10 @@ describe('Controller: SystemsBulkActionErrataController', function() {
 
     it("can install errata on multiple systems", function () {
 
-        spyOn(BulkAction, 'installContent');
+        spyOn(SystemBulkAction, 'installContent');
         $scope.installErrata();
 
-        expect(BulkAction.installContent).toHaveBeenCalledWith(
+        expect(SystemBulkAction.installContent).toHaveBeenCalledWith(
             _.extend(selectedSystems, {
                 content_type: 'errata',
                 content: [1, 2, 3]

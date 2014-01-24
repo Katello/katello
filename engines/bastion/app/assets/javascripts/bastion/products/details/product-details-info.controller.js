@@ -19,6 +19,7 @@
  * @requires $q
  * @requires gettext
  * @requires Product
+ * @requires SyncPlan
  * @requires GPGKey
  * @requires MenuExpander
  *
@@ -26,7 +27,8 @@
  *   Provides the functionality for the product details action pane.
  */
 angular.module('Bastion.products').controller('ProductDetailsInfoController',
-    ['$scope', '$q', 'gettext', 'Product', 'GPGKey', 'MenuExpander', function ($scope, $q, gettext, Product, GPGKey, MenuExpander) {
+    ['$scope', '$q', 'gettext', 'Product', 'SyncPlan', 'GPGKey', 'MenuExpander',
+    function ($scope, $q, gettext, Product, SyncPlan, GPGKey, MenuExpander) {
 
         $scope.successMessages = [];
         $scope.errorMessages = [];
@@ -51,6 +53,10 @@ angular.module('Bastion.products').controller('ProductDetailsInfoController',
             return deferred.promise;
         };
 
+        $scope.syncPlans = function () {
+            return SyncPlan.query().$promise;
+        };
+
         $scope.save = function (product) {
             var deferred = $q.defer();
 
@@ -59,7 +65,7 @@ angular.module('Bastion.products').controller('ProductDetailsInfoController',
                 $scope.successMessages.push(gettext('Product Saved'));
             }, function (response) {
                 deferred.reject(response);
-                _.each(response.data.errors, function (errorMessage) {
+                angular.forEach(response.data.errors, function (errorMessage) {
                     $scope.errorMessages.push(gettext("An error occurred saving the Product: ") + errorMessage);
                 });
             });
@@ -67,5 +73,24 @@ angular.module('Bastion.products').controller('ProductDetailsInfoController',
             return deferred.promise;
         };
 
+        $scope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState) {
+            if (fromState.name === 'products.details.info.new-sync-plan') {
+                $scope.product.$update();
+            }
+        });
+
+        $scope.syncProduct = function () {
+            $scope.productSyncing = true;
+            $scope.product.$sync(function () {
+                $scope.productSyncing = false;
+                $scope.successMessages.push(gettext("Successfully started sync for %s products, you are free to leave this page.")
+                    .replace('%s', $scope.product.name));
+            }, function (response) {
+                $scope.productSyncing = false;
+                _.each(response.data.errors, function (errorMessage) {
+                    $scope.errorMessages.push(gettext("An error occurred saving the Product: ") + errorMessage);
+                });
+            });
+        };
     }]
 );

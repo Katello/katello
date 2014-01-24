@@ -10,6 +10,8 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+require 'time'
+
 module Katello
 class SyncPlan < Katello::Model
   self.include_root_in_json = false
@@ -57,7 +59,7 @@ class SyncPlan < Katello::Model
   end
 
   def plan_day
-    WEEK_DAYS[self.sync_date.strftime('%e').to_i]
+    WEEK_DAYS[self.sync_date.strftime('%A').to_i]
   end
 
   def plan_date(localtime = true)
@@ -71,7 +73,7 @@ class SyncPlan < Katello::Model
   end
 
   def schedule_format
-    if self.interval != NONE
+    if self.interval != NONE && DURATION[self.interval]
       format = self.sync_date.iso8601 << "/P" << DURATION[self.interval]
     else
       if self.sync_date < Time.now
@@ -85,6 +87,40 @@ class SyncPlan < Katello::Model
 
   def plan_zone
     self.sync_date.strftime('%Z')
+  end
+
+  def next_sync
+    now = Time.zone.local_to_utc(Time.now)
+    next_sync = self.sync_date
+
+    if self.sync_date < now
+      hours = self.sync_date.hour - now.hour
+      minutes = self.sync_date.min - now.min
+      seconds = self.sync_date.sec - now.sec
+
+      case self.interval
+      when HOURLY
+        if self.sync_date.min < now.min
+          minutes += 60
+        end
+        next_sync = now.advance(:minutes => minutes, :seconds => seconds)
+      when DAILY
+        sync_time = Time.at(self.sync_date.hour * 60 * 60 + self.sync_date.min * 60 + self.sync_date.sec)
+        now_time = Time.at(now.hour * 60 * 60 + now.min * 60 + now.sec)
+        if sync_time < now_time
+          hours += 24
+        end
+        next_sync = now.advance(:hours => hours, :minutes => minutes, :seconds => seconds)
+      when WEEKLY
+        days = 7 + self.sync_date.wday - now.wday
+        next_sync = now.change(:hour => self.sync_date.hour, :min => self.sync_date.min,
+                               :sec => self.sync_date.sec).advance(:days => days)
+      else
+        next_sync = nil
+      end
+    end
+
+    next_sync
   end
 
 end

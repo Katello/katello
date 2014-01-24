@@ -20,7 +20,7 @@
  * @requires $location
  * @requires gettext
  * @requires Nutupane
- * @requires BulkAction
+ * @requires SystemBulkAction
  * @requires SystemGroup
  * @requires CurrentOrganization
  *
@@ -28,8 +28,8 @@
  *   A controller for providing bulk action functionality to the systems page.
  */
 angular.module('Bastion.systems').controller('SystemsBulkActionGroupsController',
-    ['$scope', '$q', '$location', 'gettext', 'Nutupane', 'BulkAction', 'SystemGroup', 'CurrentOrganization',
-    function ($scope, $q, $location, gettext, Nutupane, BulkAction, SystemGroup, CurrentOrganization) {
+    ['$scope', '$q', '$location', 'gettext', 'Nutupane', 'SystemBulkAction', 'SystemGroup', 'CurrentOrganization',
+    function ($scope, $q, $location, gettext, Nutupane, SystemBulkAction, SystemGroup, CurrentOrganization) {
         var groupNutupane, params;
 
         $scope.systemGroups = {
@@ -80,9 +80,9 @@ angular.module('Bastion.systems').controller('SystemsBulkActionGroupsController'
             };
 
             if (action === 'add') {
-                BulkAction.addSystemGroups(params, success, error);
+                SystemBulkAction.addSystemGroups(params, success, error);
             } else if (action === 'remove') {
-                BulkAction.removeSystemGroups(params, success, error);
+                SystemBulkAction.removeSystemGroups(params, success, error);
             }
 
             return deferred.promise;

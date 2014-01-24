@@ -97,14 +97,12 @@ describe SyncPlansController do
         data = plan_create
         data[:sync_plan][:plan_date] = '01/101/11'
         post :create, data
-        SyncPlan.first.must_be_nil
         response.must_respond_with(400)
       end
 
       it "should have a unique name" do
         must_notify_with(:exception)
         SyncPlan.create!  :name => 'myplan', :interval => 'weekly', :sync_date => DateTime.now, :organization => @controller.current_organization
-        SyncPlan.first.wont_be_nil
         post :create, plan_create
         response.must_respond_with(422)
       end
@@ -114,7 +112,6 @@ describe SyncPlansController do
         data = plan_create
         data[:sync_plan][:name] = ''
         post :create, data
-        SyncPlan.first.must_be_nil
         response.must_respond_with(422)
       end
 

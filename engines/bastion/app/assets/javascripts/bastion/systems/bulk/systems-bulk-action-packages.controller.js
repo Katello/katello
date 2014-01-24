@@ -18,7 +18,7 @@
  * @requires $scope
  * @requires $q
  * @resource $location
- * @requires BulkAction
+ * @requires SystemBulkAction
  * @requires SystemGroup
  * @requires CurrentOrganization
  * @requires gettext
@@ -27,8 +27,8 @@
  *   A controller for providing bulk action functionality to the systems page.
  */
 angular.module('Bastion.systems').controller('SystemsBulkActionPackagesController',
-    ['$scope', '$q', '$location', 'BulkAction', 'SystemGroup', 'CurrentOrganization', 'gettext',
-    function ($scope, $q, $location, BulkAction, SystemGroup, CurrentOrganization, gettext) {
+    ['$scope', '$q', '$location', 'SystemBulkAction', 'SystemGroup', 'CurrentOrganization', 'gettext',
+    function ($scope, $q, $location, SystemBulkAction, SystemGroup, CurrentOrganization, gettext) {
 
         $scope.setState(false, [], []);
 
@@ -70,11 +70,11 @@ angular.module('Bastion.systems').controller('SystemsBulkActionPackagesControlle
 
             params = installParams();
             if ($scope.content.action === "install") {
-                BulkAction.installContent(params, success, error);
+                SystemBulkAction.installContent(params, success, error);
             } else if ($scope.content.action === "update") {
-                BulkAction.updateContent(params, success, error);
+                SystemBulkAction.updateContent(params, success, error);
             } else if ($scope.content.action === "remove") {
-                BulkAction.removeContent(params, success, error);
+                SystemBulkAction.removeContent(params, success, error);
             }
 
             return deferred.promise;
