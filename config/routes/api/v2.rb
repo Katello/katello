@@ -29,6 +29,10 @@ Katello::Engine.routes.draw do
         end
       end
 
+      api_resources :gpg_keys, :only => [:index, :show, :create, :update, :destroy] do
+        post :content, :on => :member
+      end
+
       api_resources :organizations, :only => [:index, :show, :update, :create, :destroy] do
         api_resources :environments, :only => [:index, :show, :create, :update, :destroy] do
           collection do
@@ -110,7 +114,7 @@ Katello::Engine.routes.draw do
         resource :uebercert, :only => [:show]
 
         api_resources :activation_keys, :only => [:index, :create]
-        api_resources :gpg_keys, :only => [:index, :create]
+        api_resources :gpg_keys, :only => [:index]
 
         match '/default_info/:informable_type' => 'organization_default_info#create', :via => :post, :as => :create_default_info
         match '/default_info/:informable_type/*keyname' => 'organization_default_info#destroy', :via => :delete, :as => :destroy_default_info
@@ -284,11 +288,6 @@ Katello::Engine.routes.draw do
           get :releases
           get :repositories
         end
-      end
-
-      api_resources :gpg_keys, :only => [:index, :create, :show, :update, :destroy] do
-        get :content, :on => :member
-        post :content, :on => :member
       end
 
       api_resources :activation_keys, :only => [:destroy, :show, :update] do
