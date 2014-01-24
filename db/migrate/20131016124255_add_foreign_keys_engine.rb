@@ -3,7 +3,6 @@ class AddForeignKeysEngine < ActiveRecord::Migration
   def change
     add_foreign_key "katello_activation_keys", "katello_content_views", :column => 'content_view_id', :name => "activation_keys_content_view_id_fk"
     add_foreign_key "katello_activation_keys", "katello_environments", :column => 'environment_id', :name => "activation_keys_environment_id_fk"
-    add_foreign_key "katello_activation_keys", "katello_organizations", :column => 'organization_id', :name => "activation_keys_organization_id_fk"
     add_foreign_key "katello_activation_keys", "users", :column => 'user_id', :name => "activation_keys_user_id_fk"
 
     add_foreign_key "katello_changeset_content_views", "katello_changesets", :column => 'changeset_id', :name => "changeset_content_views_changeset_id_fk"
@@ -19,7 +18,6 @@ class AddForeignKeysEngine < ActiveRecord::Migration
     add_foreign_key "katello_component_content_views", "katello_content_views", :name => "component_content_views_content_view_id_fk", :column => "content_view_id"
 
     add_foreign_key "katello_content_view_definition_bases", "katello_content_view_definition_bases", :name => "content_view_definition_bases_source_id_fk", :column => "source_id"
-    add_foreign_key "katello_content_view_definition_bases", "katello_organizations", :name => "content_view_definition_bases_organization_id_fk", :column => "organization_id"
 
     add_foreign_key "katello_content_view_definition_products", "katello_content_view_definition_bases", :name => "content_view_definition_products_content_view_definition_id_fk", :column => "content_view_definition_id"
     add_foreign_key "katello_content_view_definition_products", "katello_products", :name => "content_view_definition_products_product_id_fk", :column => "product_id"
@@ -38,18 +36,12 @@ class AddForeignKeysEngine < ActiveRecord::Migration
     add_foreign_key "katello_content_view_versions", "katello_content_views", :name => "content_view_versions_content_view_id_fk", :column => "content_view_id"
 
     add_foreign_key "katello_content_views", "katello_content_view_definition_bases", :name => "content_views_content_view_definition_id_fk", :column => "content_view_definition_id"
-    add_foreign_key "katello_content_views", "katello_organizations", :name => "content_views_organization_id_fk", :column => 'organization_id'
 
     add_foreign_key "katello_distributors", "katello_content_views", :name => "distributors_content_view_id_fk", :column => 'content_view_id'
     add_foreign_key "katello_distributors", "katello_environments", :name => "distributors_environment_id_fk", :column => "environment_id"
 
     add_foreign_key "katello_environment_priors", "katello_environments", :name => "environment_priors_environment_id_fk", :column => 'environment_id'
     add_foreign_key "katello_environment_priors", "katello_environments", :name => "environment_priors_prior_id_fk", :column => "prior_id"
-
-    add_foreign_key "katello_environment_system_groups", "katello_environments", :name => "environment_system_groups_environment_id_fk", :column => 'environment_id'
-    add_foreign_key "katello_environment_system_groups", "katello_system_groups", :name => "environment_system_groups_system_group_id_fk", :column => 'system_group_id'
-
-    add_foreign_key "katello_environments", "katello_organizations", :name => "environments_organization_id_fk", :column => 'organization_id'
 
     add_foreign_key "katello_filter_rules", "katello_filters", :name => "filters_rules_filter_id_fk", :column => 'filter_id'
 
@@ -60,8 +52,6 @@ class AddForeignKeysEngine < ActiveRecord::Migration
 
     add_foreign_key "katello_filters_repositories", "katello_filters", :name => "filters_repositories_filter_id_fk", :column => 'filter_id'
     add_foreign_key "katello_filters_repositories", "katello_repositories", :name => "filters_repositories_repository_id_fk", :column => "repository_id"
-
-    add_foreign_key "katello_gpg_keys", "katello_organizations", :name => "gpg_keys_organization_id_fk", :column => 'organization_id'
 
     add_foreign_key "katello_help_tips", "users", :name => "help_tips_user_id_fk", :column => 'user_id'
 
@@ -86,17 +76,8 @@ class AddForeignKeysEngine < ActiveRecord::Migration
     add_foreign_key "katello_nodes_environments", "katello_environments", :name => "nodes_environments_environment_id_fk", :column => 'environment_id'
     add_foreign_key "katello_nodes_environments", "katello_nodes", :name => "nodes_environments_node_id_fk", :column => 'node_id'
 
-    add_foreign_key "katello_notices", "katello_organizations", :name => "notices_organization_id_fk", :column => 'organization_id'
-
-    add_foreign_key "katello_organizations", "katello_task_statuses", :name => "organizations_apply_info_task_id_fk", :column => "apply_info_task_id"
-    add_foreign_key "katello_organizations", "katello_task_statuses", :name => "organizations_deletion_task_id_fk", :column => "deletion_task_id"
-
-    add_foreign_key "katello_organizations_users", "katello_organizations", :name => "organizations_users_organization_id_fk", :column => 'organization_id'
-    add_foreign_key "katello_organizations_users", "users", :name => "organizations_users_user_id_fk", :column => 'user_id'
-
     add_foreign_key "katello_permission_tags", "katello_permissions", :name => "permission_tags_permission_id_fk", :column => 'permission_id'
 
-    add_foreign_key "katello_permissions", "katello_organizations", :name => "permissions_organization_id_fk", :column => 'organization_id'
     add_foreign_key "katello_permissions", "katello_resource_types", :name => "permissions_resource_type_id_fk", :column => 'resource_type_id'
     add_foreign_key "katello_permissions", "katello_roles", :name => "permissions_role_id_fk", :column => 'role_id'
 
@@ -107,7 +88,6 @@ class AddForeignKeysEngine < ActiveRecord::Migration
     add_foreign_key "katello_products", "katello_providers", :name => "products_provider_id_fk", :column => 'provider_id'
     add_foreign_key "katello_products", "katello_sync_plans", :name => "products_sync_plan_id_fk", :column => 'sync_plan_id'
 
-    add_foreign_key "katello_providers", "katello_organizations", :name => "providers_organization_id_fk", :column => 'organization_id'
     add_foreign_key "katello_providers", "katello_task_statuses", :name => "providers_discovery_task_id_fk", :column => "discovery_task_id"
     add_foreign_key "katello_providers", "katello_task_statuses", :name => "providers_task_status_id_fk", :column => "task_status_id"
 
@@ -122,12 +102,8 @@ class AddForeignKeysEngine < ActiveRecord::Migration
 
     add_foreign_key "katello_search_histories", "users", :name => "search_histories_user_id_fk", :column => 'user_id'
 
-    add_foreign_key "katello_sync_plans", "katello_organizations", :name => "sync_plans_organization_id_fk", :column => 'organization_id'
-
     add_foreign_key "katello_system_activation_keys", "katello_activation_keys", :name => "system_activation_keys_activation_key_id_fk", :column => 'activation_key_id'
     add_foreign_key "katello_system_activation_keys", "katello_systems", :name => "system_activation_keys_system_id_fk", :column => 'system_id'
-
-    add_foreign_key "katello_system_groups", "katello_organizations", :name => "system_groups_organization_id_fk", :column => 'organization_id'
 
     add_foreign_key "katello_system_system_groups", "katello_system_groups", :name => "system_system_groups_system_group_id_fk", :column => 'system_group_id'
     add_foreign_key "katello_system_system_groups", "katello_systems", :name => "system_system_groups_system_id_fk", :column => 'system_id'
@@ -135,7 +111,6 @@ class AddForeignKeysEngine < ActiveRecord::Migration
     add_foreign_key "katello_systems", "katello_content_views", :name => "systems_content_view_id_fk", :column => 'content_view_id'
     add_foreign_key "katello_systems", "katello_environments", :name => "systems_environment_id_fk", :column => 'environment_id'
 
-    add_foreign_key "katello_task_statuses", "katello_organizations", :name => "task_statuses_organization_id_fk", :column => 'organization_id'
     add_foreign_key "katello_task_statuses", "users", :name => "task_statuses_user_id_fk", :column => 'user_id'
 
     add_foreign_key "katello_user_notices", "katello_notices", :name => "user_notices_notice_id_fk", :column => 'notice_id'
