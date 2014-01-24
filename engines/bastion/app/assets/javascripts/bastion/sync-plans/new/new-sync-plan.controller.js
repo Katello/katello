@@ -38,7 +38,11 @@ angular.module('Bastion.sync-plans').controller('NewSyncPlanController',
         function success(response) {
             $scope.working = false;
             $scope.successMessages = response.displayMessages;
-            $scope.product['sync_plan_id'] = $scope.syncPlan.id;
+            if ($scope.product) {
+                $scope.product['sync_plan_id'] = $scope.syncPlan.id;
+            } else if ($scope.syncPlanTable) {
+                $scope.syncPlanTable.rows.unshift($scope.syncPlan);
+            }
             $scope.transitionBack();
         }
 
