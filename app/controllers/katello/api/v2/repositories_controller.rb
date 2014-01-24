@@ -136,7 +136,8 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
       fail HttpErrors::BadRequest, _("Disable/enable is not supported for custom repositories.") if @repository.enabled_changed?
     end
     @repository.update_attributes!(repo_params)
-    respond(:resource => @repository)
+
+    respond_for_update(:resource => @repository)
   end
 
   api :DELETE, "/repositories/:id", "Destroy a repository"
