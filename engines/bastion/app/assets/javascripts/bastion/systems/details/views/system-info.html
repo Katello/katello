@@ -211,11 +211,10 @@
           <p translate>You must select a new content view before your change of environment can be saved. Use the cancel button on content view selection to revert your environment selection.</p>
         </div>
         <span class="info-label" translate>Environment</span>
-        <span id="environment_path_selector" 
-              readonly="system.readonly"
-              path-selector="system.environment.id"
-              organization="system.environment.organization.name"
-              on-change="setEnvironment(environmentId)">
+        <span path-selector="environments"
+              ng-model="system.environment"
+              mode="singleSelect"
+              disable-trigger="disableEnvironmentSelection">
         </span>
       </div>
 

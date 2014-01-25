@@ -32,13 +32,24 @@ describe('Controller: SystemDetailsInfoController', function() {
         var $controller = $injector.get('$controller'),
             $q = $injector.get('$q'),
             $http = $injector.get('$http'),
-            ContentView = $injector.get('MockResource').$new();
+            ContentView = $injector.get('MockResource').$new(),
+            Organization = $injector.get('MockResource').$new();
 
         System = $injector.get('MockResource').$new();
         $scope = $injector.get('$rootScope').$new();
 
         System.releaseVersions = function(params, callback) {
             callback.apply(this, [['RHEL6']]);
+        };
+
+        Organization.registerableEnvironments = function(params, callback) {
+            var response = [[{name: 'Library', id: 1}]];
+
+            if (callback) {
+                callback.apply(this, response);
+            }
+
+            return response;
         };
 
         spyOn(System, 'releaseVersions').andReturn(['RHEL6']);
@@ -59,7 +70,11 @@ describe('Controller: SystemDetailsInfoController', function() {
             enable_all: function() {},
             disable_all: function() {}
         };
-        $scope.save = function() {};
+        $scope.save = function() {
+            var deferred = $q.defer();
+            deferred.resolve();
+            return deferred.promise;
+        };
 
         $controller('SystemDetailsInfoController', {
             $scope: $scope,
@@ -69,6 +84,8 @@ describe('Controller: SystemDetailsInfoController', function() {
             Routes: Routes,
             System: System,
             ContentView: ContentView,
+            Organization: Organization,
+            CurrentOrganization: 'ACME_Corporation'
         });
 
         $scope.system = new System({
@@ -106,6 +123,7 @@ describe('Controller: SystemDetailsInfoController', function() {
     });
 
     describe("populates advanced system information", function () {
+
         it("creates the system facts object by converting dot notation response to an object.", function() {
             expect(typeof $scope.systemFacts).toBe("object");
             expect(typeof $scope.systemFacts.lscpu).toBe("object");
@@ -131,16 +149,18 @@ describe('Controller: SystemDetailsInfoController', function() {
         });
 
         it('should set the environment and force a content view to be selected', function() {
-            $scope.setEnvironment(2);
+            $scope.system.environment = {name: 'Dev', id: 2};
+            $scope.$digest();
 
             expect($scope.system.environment.id).toBe(2);
-            expect($scope.previousEnvironment).toBe(1);
+            expect($scope.originalEnvironment.id).toBe(1);
             expect($scope.editContentView).toBe(true);
+            expect($scope.disableEnvironmentSelection).toBe(true);
         });
 
         it('should reset the system environment when cancelling a content view update', function() {
             $scope.editContentView = true;
-            $scope.previousEnvironment = 2;
+            $scope.originalEnvironment.id = 2;
             $scope.cancelContentViewUpdate();
 
             expect($scope.system.environment.id).toBe(2);
