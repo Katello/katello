@@ -17,4 +17,8 @@ child :versions => :versions do
   attributes :environment_ids
 end
 
+child :repositories => :repositories do
+  attributes :id, :name
+end
+
 extends 'katello/api/v2/common/timestamps'
