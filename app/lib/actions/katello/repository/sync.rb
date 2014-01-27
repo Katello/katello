@@ -30,19 +30,6 @@ module Actions
           _("Synchronize")
         end
 
-        def cli_example
-          if task_input[:organization].nil? ||
-                task_input[:product].nil? ||
-                task_input[:repository].nil?
-            return ""
-          end
-        <<-EXAMPLE
-katello repo synchronize --org '#{task_input[:organization][:name]}'\\
-                         --product '#{task_input[:product][:name]}'\\
-                         --name '#{task_input[:repository][:name]}'
-        EXAMPLE
-        end
-
         def finalize
           repo = ::Katello::Repository.find(input[:repository][:id])
           repo.index_content
