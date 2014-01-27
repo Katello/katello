@@ -18,8 +18,8 @@ class Util::PackageClauseGeneratorTest < MiniTest::Rails::ActiveSupport::TestCas
   INCLUDE_ALL_PACKAGES = {"filename" => {"$exists" => true}}
 
   def self.before_suite
-    models = ["Organization", "KTEnvironment", "User","ContentViewEnvironment", "ContentViewDefinitionBase",
-              "ContentViewDefinition", "Filter", "FilterRule", "ContentView",
+    models = ["Organization", "KTEnvironment", "User","ContentViewEnvironment",
+              "Filter", "FilterRule", "ContentView",
               "PackageRule", "PackageGroupRule", "ErratumRule"]
     disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models, true)
   end

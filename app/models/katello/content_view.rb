@@ -176,6 +176,11 @@ class ContentView < Katello::Model
     end
   end
 
+  def products(env)
+    repos = repos(env)
+    Product.joins(:repositories).where("#{Katello::Repository.table_name}.id" => repos.map(&:id)).uniq
+  end
+
   def version_products(env)
     repos = repos(env)
     Product.joins(:repositories).where("#{Katello::Repository.table_name}.id" => repos.map(&:id)).uniq
@@ -509,7 +514,7 @@ class ContentView < Katello::Model
     return true
   end
 
-   def associate_puppet(cloned)
+  def associate_puppet(cloned)
     repo = cloned.library_instance_id ? cloned.library_instance : cloned
     applicable_filters = filters.applicable(repo)
 

@@ -26,7 +26,7 @@ class GlueCandlepinConsumerTestBase < ActiveSupport::TestCase
     super
 
     services  = ['Pulp', 'ElasticSearch', 'Foreman']
-    models    = ['System', 'KTEnvironment', 'Organization', 'Product', 'ContentView', 'ContentViewDefinition', 'ContentViewEnvironment', 'ContentViewVersion', "Distributor"]
+    models    = ['System', 'KTEnvironment', 'Organization', 'Product', 'ContentView', 'ContentViewEnvironment', 'ContentViewVersion', "Distributor"]
     disable_glue_layers(services, models)
 
     User.current = User.find(@loaded_fixtures['users']['admin']['id'])

@@ -16,8 +16,8 @@ module Katello
 class ContentViewTest < ActiveSupport::TestCase
 
   def self.before_suite
-    models = ["Organization", "KTEnvironment", "User", "ContentViewEnvironment","ContentViewDefinitionBase",
-              "ContentViewDefinition", "Repository", "ContentView", "ContentViewVersion",
+    models = ["Organization", "KTEnvironment", "User", "ContentViewEnvironment",
+              "Repository", "ContentView", "ContentViewVersion",
               "ComponentContentView", "System"]
     services = ["Candlepin", "Pulp", "ElasticSearch"]
     disable_glue_layers(services, models, true)
