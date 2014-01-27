@@ -68,8 +68,8 @@ module Actions
           if errors = task_output[:result][:errors]
             ret.concat(errors)
           end
+          return ret.join("\n")
         end
-        return ret.join("\n")
       end
 
       protected
