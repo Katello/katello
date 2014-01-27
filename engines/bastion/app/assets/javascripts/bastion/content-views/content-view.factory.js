@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Red Hat, Inc.
+ * Copyright 2014 Red Hat, Inc.
  *
  * This software is licensed to you under the GNU General Public
  * License as published by the Free Software Foundation; either version
@@ -16,24 +16,23 @@
  * @name  Bastion.content-views.factory:ContentView
  *
  * @requires $resource
- * @requires Routes
  * @requires CurrentOrganization
  *
  * @description
  *   Provides a $resource for interacting with environments.
  */
 angular.module('Bastion.content-views').factory('ContentView',
-    ['$resource', 'Routes', 'CurrentOrganization',
-    function ($resource, Routes, CurrentOrganization) {
+    ['$resource', 'CurrentOrganization',
+    function ($resource, CurrentOrganization) {
 
-        return $resource('/content_views/:id/:action',
-            {id: '@id'},
+        return $resource('/katello/api/v2/content_views/:id/:action',
+            {id: '@id', 'organization_id': CurrentOrganization},
             {
-                update: {method: 'PUT'},
                 query:  {method: 'GET', isArray: false},
-                versions: {method: 'GET', isArray: false, params: {action: versions}},
-                publish: {method: 'POST', params: {action: publish}},
-                puppetModules: {method: 'GET', isArray: false, params: {action: puppet_modules}}
+                update: {method: 'PUT'},
+                publish: {method: 'POST', params: {action: 'publish'}},
+                //versions: {method: 'GET', isArray: false, params: {action: versions}},
+                //puppetModules: {method: 'GET', isArray: false, params: {action: puppet_modules}}
             }
         );
 

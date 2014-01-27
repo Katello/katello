@@ -24,11 +24,10 @@
  *   within the table.
  */
 angular.module('Bastion.content-views').controller('ContentViewFiltersController',
-    ['$scope', 'ContentView',
-    function($scope, ContentView) {
+    ['$scope', function ($scope) {
 
         $scope.table = {};
-        $scope.contentView.$filters(function(filters) {
+        $scope.contentView.$filters(function (filters) {
             $scope.contentView.filters = filters.results;
             $scope.table.rows = $scope.contentView.filters;
         });

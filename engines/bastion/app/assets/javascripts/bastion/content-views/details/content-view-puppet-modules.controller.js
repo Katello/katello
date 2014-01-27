@@ -16,7 +16,6 @@
  * @name  Bastion.content-views.controller:ContentViewPuppetModulesController
  *
  * @requires $scope
- * @requires ContentView
  *
  * @description
  *   Provides the functionality specific to ContentViews for use with the Nutupane UI pattern.
@@ -24,11 +23,10 @@
  *   within the table.
  */
 angular.module('Bastion.content-views').controller('ContentViewPuppetModulesController',
-    ['$scope', 'ContentView',
-    function($scope, ContentView) {
+    ['$scope', function ($scope) {
 
         $scope.table = {};
-        $scope.contentView.$versions(function(versions) {
+        $scope.contentView.$versions(function (versions) {
             $scope.contentView.versions = versions.results;
             $scope.table.rows = $scope.contentView.versions;
         });

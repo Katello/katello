@@ -24,8 +24,7 @@
  *   within the table.
  */
 angular.module('Bastion.content-views').controller('ContentViewFilterDetailsErrataController',
-    ['$scope', 'ContentView',
-    function($scope, ContentView) {
+    ['$scope', function ($scope) {
 
         $scope.filter = $scope.contentView.filters[$scope.$stateParams.filterId - 1];
         $scope.filterBy = 'date';
@@ -37,7 +36,7 @@ angular.module('Bastion.content-views').controller('ContentViewFilterDetailsErra
 
         $scope.filterRules = [];
 
-        $scope.addRule = function(rule) {
+        $scope.addRule = function (rule) {
             rule.added = new Date();
             rule.detail = 'all';
             $scope.filterRules.push(rule);

@@ -24,14 +24,12 @@
  *   within the table.
  */
 angular.module('Bastion.content-views').controller('ContentViewFiltersNewController',
-    ['$scope', 'ContentView',
-    function($scope, ContentView) {
+    ['$scope', function ($scope) {
 
         $scope.filter = {};
 
-        $scope.save = function(filter) {
-            $scope.contentView.$addFilter(filter, function() {
-                console.log(filter);
+        $scope.save = function (filter) {
+            $scope.contentView.$addFilter(filter, function () {
                 $scope.transitionTo('content-views-details.filters.list', {contentViewId: $scope.contentView.id});
             });
         };

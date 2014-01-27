@@ -18,39 +18,44 @@
  * @requires $scope
  * @requires ContentView
  * @requires FormUtils
+ * @requires CurrentOrganization
  *
  * @description
  */
 angular.module('Bastion.content-views').controller('NewContentViewController',
-    ['$scope', 'ContentView', 'FormUtils',
-    function($scope, ContentView, FormUtils) {
+    ['$scope', 'ContentView', 'FormUtils', 'CurrentOrganization',
+    function ($scope, ContentView, FormUtils, CurrentOrganization) {
 
-        $scope.contentView = new ContentView();
+        $scope.contentView = new ContentView({'organization_id': CurrentOrganization});
         $scope.createOption = 'new';
         $scope.table = {};
 
-        ContentView.query({}, function(response) {
+        ContentView.query({}, function (response) {
             $scope.table.rows = response.results;
         });
 
-        $scope.save = function(contentView) {
+        $scope.save = function (contentView) {
             contentView.$save(success, error);
         };
 
-        $scope.$watch('contentView.name', function() {
+        $scope.$watch('contentView.name', function () {
             if ($scope.contentViewForm.name) {
                 $scope.contentViewForm.name.$setValidity('server', true);
-                $scope.contentView.label = $scope.contentView.name;
-                //FormUtils.labelize($scope.contentView, $scope.contentViewForm);
+                FormUtils.labelize($scope.contentView, $scope.contentViewForm);
             }
         });
 
         function success(response) {
-            $scope.transitionTo('content-views-details.products.available', {contentViewId: response.id});
+            $scope.$parent.table.addRow(response);
+            $scope.transitionTo('content-views.details.repositories.available', {contentViewId: response.id});
         }
 
         function error(response) {
-            console.log('error');
+            $scope.working = false;
+            angular.forEach(response.data.errors, function (errors, field) {
+                $scope.contentViewForm[field].$setValidity('server', false);
+                $scope.contentViewForm[field].$error.messages = errors;
+            });
         }
 
     }]

@@ -16,7 +16,6 @@
  * @name  Bastion.content-views.controller:ContentViewFilterDetailsController
  *
  * @requires $scope
- * @requires ContentView
  *
  * @description
  *   Provides the functionality specific to ContentViews for use with the Nutupane UI pattern.
@@ -24,8 +23,7 @@
  *   within the table.
  */
 angular.module('Bastion.content-views').controller('ContentViewFilterDetailsPackageController',
-    ['$scope', 'ContentView',
-    function($scope, ContentView) {
+    ['$scope', function ($scope) {
 
         $scope.filter = $scope.contentView.filters[$scope.$stateParams.filterId - 1];
         $scope.rule = {
@@ -34,7 +32,7 @@ angular.module('Bastion.content-views').controller('ContentViewFilterDetailsPack
 
         $scope.filterRules = [];
 
-        $scope.addRule = function(rule) {
+        $scope.addRule = function (rule) {
             rule.added = new Date();
             rule.detail = 'all';
             $scope.filterRules.push(rule);

@@ -25,16 +25,16 @@
  */
 angular.module('Bastion.content-views').controller('ContentViewPromotionController',
     ['$scope', 'ContentView', 'CurrentOrganization', '$http',
-    function($scope, ContentView, CurrentOrganization, $http) {
+    function ($scope, ContentView, CurrentOrganization, $http) {
 
         $scope.promotion = {};
 
         $http.get('/katello/organizations/' + CurrentOrganization + '/environments/registerable_paths')
-            .success(function(paths) {
+            .success(function (paths) {
 
-                angular.forEach($scope.version.environments, function(environment) {
-                    angular.forEach(paths, function(path) {
-                        angular.forEach(path, function(item, index) {
+                angular.forEach($scope.version.environments, function (environment) {
+                    angular.forEach(paths, function (path) {
+                        angular.forEach(path, function (item, index) {
                             if (environment.id.toString() === item.id.toString()) {
                                 if (index + 1 < path.length) {
                                     path[index + 1].selectable = true;
@@ -47,22 +47,12 @@ angular.module('Bastion.content-views').controller('ContentViewPromotionControll
                 $scope.availableEnvironments =  paths;
             });
 
-        $scope.contentView.$version($scope.$stateParams.versionId, function(version) {
+        $scope.contentView.$version($scope.$stateParams.versionId, function (version) {
             $scope.version = version;
         });
 
-        $scope.$watch('setupSelector', function(selector) {
-            if (selector !== undefined) {
-                selector().then(function () {
-                    angular.forEach($scope.version.environments, function(environment) {
-                        $scope.pathSelector.set_selected(environment.id);
-                    });
-                });
-            }
-        });
-
-        $scope.promote = function() {
-            angular.forEach($scope.availableEnvironments, function(path) {
+        $scope.promote = function () {
+            angular.forEach($scope.availableEnvironments, function (path) {
                 if (path.selectable) {
                     $scope.contentView.version.environments.push(path);
                 }

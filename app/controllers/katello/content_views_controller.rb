@@ -1,5 +1,5 @@
 #
-# Copyright 2013 Red Hat, Inc.
+# Copyright 2014 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -11,26 +11,26 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class ContentViewsController < Katello::ApplicationController
+  class ContentViewsController < Katello::ApplicationController
 
-  before_filter :authorize
+    before_filter :authorize
 
-  def rules
-    index_rule = lambda { true }
+    def rules
+      index_rule = lambda { true }
 
-    {
-      :index => index_rule,
-      :all => index_rule
-    }
+      {
+        :index => index_rule,
+        :all => index_rule
+      }
+    end
+
+    def index
+      render 'bastion/layouts/application', :layout => false
+    end
+
+    def all
+      redirect_to :action => 'index', :anchor => '/content_views'
+    end
+
   end
-
-  def index
-    render 'bastion/layouts/application', :layout => false
-  end
-
-  def all
-    redirect_to :action => 'index', :anchor => '/content_views'
-  end
-
-end
 end

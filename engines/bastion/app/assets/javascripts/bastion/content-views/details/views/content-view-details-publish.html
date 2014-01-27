@@ -9,7 +9,7 @@
   </p>
 
   <header class="details-header">
-    <h3>Version Details</h3>
+    <h3 translate>Version Details</h3>
   </header>
 
   <form name="versionForm" class="form-horizontal" role="form" novalidate>
@@ -18,19 +18,17 @@
       <span>{{ contentView.versions.length + 1 }}</span>
     </div>
 
-    <div alch-form-group label="{{ 'Name' | translate }}">
+    <div alch-form-group label="{{ 'Comment' | translate }}">
       <textarea id="comment"
                 name="comment"
                 ng-model="version.description"
-                tabindex="1"
-                autofocus
-                required/>
+                tabindex="1">
       </textarea>
     </div>
 
     <div alch-form-buttons
-         on-cancel="transitionTo('content-views-details.versions', {contentViewId: contentView.id})"
-         on-save="publish(version)">
+         on-cancel="transitionTo('content-views.details.versions', {contentViewId: contentView.id})"
+         on-save="publish(contentView, version)">
     </div>
   </form>
 

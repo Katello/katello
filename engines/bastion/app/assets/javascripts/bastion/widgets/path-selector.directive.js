@@ -20,13 +20,12 @@
  * @example
  */
 angular.module('Bastion.widgets').directive('pathSelector',
-    [function() {
+    [function () {
     return {
         restrict: 'AE',
         scope: {
             paths: '=pathSelector',
         },
-        templateUrl: 'widgets/views/path-selector.html',
-        link: function(scope) {}
+        templateUrl: 'widgets/views/path-selector.html'
     };
 }]);

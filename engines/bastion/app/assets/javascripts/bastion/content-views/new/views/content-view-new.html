@@ -1,17 +1,18 @@
-<section class="details-section" ng-cloak alch-container-scroll>
+<section class="nutupane-details" ng-cloak alch-container-scroll>
 
-  <ol class="breadcrumb row">
-    <li><a ui-sref="content-views.index" translate>Content Views List</a></li>
-    <li>Create New View</li>
-  </ol>
-
-  <header class="row">
-    <h2 class="col-sm-12" translate>New Content View</h2>
+  <header class="new-header details-header">
+    <h2 class="fl" translate>New Content View</h2>
+    <div class="fr">
+      <button class="btn btn-default" ui-sref="content-views.index">
+        <i class="icon-remove"></i>
+        {{ "Close" | translate }}
+      </button>
+    </div>
   </header>
 
   <div class="row">
     <form name="optionsForm" class="col-sm-12">
-      <label class="radio-inline">
+      <label class="radio-inline" ng-hide="true">
         <input type="radio"
                ng-model="createOption"
                name="createOptions"
@@ -20,7 +21,7 @@
                checked/>
         {{ "Create new view" | translate }}
       </label>
-      <label class="radio-inline">
+      <label class="radio-inline" ng-hide="true">
         <input type="radio"
                ng-model="createOption"
                name="createOptions"

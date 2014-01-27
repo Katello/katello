@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Red Hat, Inc.
+ * Copyright 2014 Red Hat, Inc.
  *
  * This software is licensed to you under the GNU General Public
  * License as published by the Free Software Foundation; either version
@@ -16,7 +16,6 @@
  * @name  Bastion.content-views.controller:ContentViewsController
  *
  * @requires $scope
- * @requires $location
  * @requires Nutupane
  * @requires ContentView
  * @requires CurrentOrganization
@@ -27,16 +26,16 @@
  *   within the table.
  */
 angular.module('Bastion.content-views').controller('ContentViewsController',
-    ['$scope', '$location', 'Nutupane', 'ContentView', 'CurrentOrganization',
-    function($scope, $location, Nutupane, ContentView, CurrentOrganization) {
+    ['$scope', 'Nutupane', 'ContentView', 'CurrentOrganization',
+    function ($scope, Nutupane, ContentView, CurrentOrganization) {
 
         var nutupane = new Nutupane(ContentView, {
             'organization_id':  CurrentOrganization,
             'sort_by':          'name',
-            'sort_order':       'ASC',
-            'enabled' :         true
+            'sort_order':       'ASC'
         });
 
         $scope.table = nutupane.table;
+        $scope.removeRow = nutupane.removeRow;
     }]
 );

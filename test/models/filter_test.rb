@@ -25,6 +25,7 @@ class FilterTest < ActiveSupport::TestCase
     User.current = User.find(users(:admin))
     @filter = FactoryGirl.build(:filter)
     @repo = Repository.find(katello_repositories(:fedora_17_x86_64).id)
+    ContentView.any_instance.stubs(:reindex_on_association_change).returns(true)
   end
 
   def test_create

@@ -4,27 +4,34 @@
       <th alch-table-column>{{ "Name" | translate }}</th>
       <th alch-table-column>{{ "Created" | translate }}</th>
       <th alch-table-column>{{ "Environments" | translate }}</th>
-      <th alch-table-column>{{ "Products" | translate }}</th>
       <th alch-table-column>{{ "Repositories" | translate }}</th>
-      <th alch-table-column>{{ "Puppet Modules" | translate }}</th>
-      <th alch-table-column>{{ "Author" | translate }}</th>
     </tr>
   </thead>
 
   <tbody>
     <tr alch-table-row ng-repeat="contentView in table.rows" row-select="contentView">
       <td alch-table-cell>
-        <a ui-sref="content-views-details.versions({contentViewId: contentView.id})">
+        <a ng-if="contentView.versions.length !== 0"
+           ui-sref="content-views.details.versions({contentViewId: contentView.id})">
+          {{ contentView.name }}
+        </a>
+        <a ng-if="contentView.versions.length === 0"
+           ui-sref="content-views.details.repositories.available({contentViewId: contentView.id})">
           {{ contentView.name }}
         </a>
         <i class="icon-chevron-right selected-icon" ng-show="contentView.selected"></i>
       </td>
-      <td alch-table-cell>{{ contentView.created | date:"medium" }}</td>
-      <td alch-table-cell>{{ contentView.environments }}</td>
-      <td alch-table-cell class="number-cell">{{ contentView.counts.products }}</td>
-      <td alch-table-cell class="number-cell">{{ contentView.counts.repositories }}</td>
-      <td alch-table-cell class="number-cell">{{ contentView.counts.puppet_modules }}</td>
-      <td alch-table-cell>{{ contentView.user }}</td>
+      <td alch-table-cell>{{ contentView.created_at | date:"medium" }}</td>
+      <td alch-table-cell>
+        <span ng-if="contentView.environments.length !== 0"
+              ng-repeat="environment in contentView.environments">
+                {{ environment.name }}<span ng-if="!$last">, </span>
+        </span>
+        <span ng-if="contentView.environments.length === 0" translate>
+          Not yet published
+        </span>
+      </td>
+      <td alch-table-cell class="number-cell">{{ contentView.repositories.length }}</td>
     </tr>
   </tbody>
 </table>

@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Red Hat, Inc.
+ * Copyright 2014 Red Hat, Inc.
  *
  * This software is licensed to you under the GNU General Public
  * License as published by the Free Software Foundation; either version
@@ -16,32 +16,32 @@
  * @name  Bastion.content-views.factory:ContentView
  *
  * @description
- *   Provides a $Resource for interacting with environments.
+ *   Provides a mock $Resource for interacting with content views.
  */
 angular.module('Bastion.content-views').factory('ContentView',
-    [function($resource, Routes, CurrentOrganization) {
+    [function () {
 
-        var Resource = function(id, create) {
+        var Resource = function (id, create) {
             var name = id ? 'Content View ' + id : '',
                 label = id ? 'content_view_' + id : '',
                 generatedVersions = [],
                 counts = {
                     products: 0,
                     repositories: 0,
-                    puppet_modules: 0
+                    puppetModules: 0
                 };
 
             this.id = id;
 
             if (id !== undefined && !create) {
-                versions.call(this, function(response) {
+                versions.call(this, function (response) {
                     generatedVersions = response.results;
                 });
 
                 counts = {
                     products: id + id,
                     repositories: id * id,
-                    puppet_modules: id * id - id
+                    puppetModules: id * id - id
                 };
             }
 
@@ -76,7 +76,7 @@ angular.module('Bastion.content-views').factory('ContentView',
             };
         };
 
-        var Version = function(id) {
+        var Version = function (id) {
             return {
                 id: id,
                 name: 'Version ' + id,
@@ -86,7 +86,7 @@ angular.module('Bastion.content-views').factory('ContentView',
                     {
                         id: 1,
                         name: 'Library'
-                    },{
+                    }, {
                         id: 2,
                         name: 'Dev'
                     }
@@ -94,8 +94,8 @@ angular.module('Bastion.content-views').factory('ContentView',
                 counts: {
                     products: id + id,
                     repositories: id * id,
-                    packages: id^id,
-                    puppet_modules: id * id - id,
+                    packages: id * id,
+                    puppetModules: id * id - id,
                     errata: {
                         bugs: id,
                         security: id + id,
@@ -106,7 +106,7 @@ angular.module('Bastion.content-views').factory('ContentView',
             };
         };
 
-        var Filter = function(id) {
+        var Filter = function (id) {
             return {
                 id: id,
                 name: 'Version ' + id,
@@ -117,7 +117,7 @@ angular.module('Bastion.content-views').factory('ContentView',
                     products: 0,
                     repositories: 0,
                     packages: 0,
-                    puppet_modules: id * id - id,
+                    puppetModules: id * id - id,
                     errata: {
                         bugs: 0,
                         security: 0,
@@ -127,7 +127,7 @@ angular.module('Bastion.content-views').factory('ContentView',
             };
         };
 
-        var save = function(successCallback, errorCallback) {
+        var save = function (successCallback) {
             var view = new Resource(results.length + 1, true);
 
             view.name = this.name;
@@ -136,7 +136,7 @@ angular.module('Bastion.content-views').factory('ContentView',
             successCallback(view);
         };
 
-        var versions = function(callback) {
+        var versions = function (callback) {
             var versions = generateVersions(this.id);
 
             if (this.id < 10) {
@@ -154,10 +154,10 @@ angular.module('Bastion.content-views').factory('ContentView',
             });
         };
 
-        var version = function(params, callback) {
+        var version = function (params, callback) {
             var found;
 
-            angular.forEach(this.versions, function(version) {
+            angular.forEach(this.versions, function (version) {
                 if (params.toString() === version.id.toString()) {
                     found = version;
                 }
@@ -166,7 +166,7 @@ angular.module('Bastion.content-views').factory('ContentView',
             callback(found);
         };
 
-        var publish = function(params, callback) {
+        var publish = function (params, callback) {
             var version = new Version(this.versions.length + 1);
 
             version.name = params.name;
@@ -175,8 +175,8 @@ angular.module('Bastion.content-views').factory('ContentView',
             callback(version);
         };
 
-        var puppetModules = function(callback) {
-            var modules = generatePuppetModules(this.id);
+        var puppetModules = function (callback) {
+            var modules = [];
 
             if (this.modules.length === 0) {
                 this.modules = modules;
@@ -193,7 +193,7 @@ angular.module('Bastion.content-views').factory('ContentView',
             });
         };
 
-        var filters = function(callback) {
+        var filters = function (callback) {
             var filters = this.filters;
 
             callback({
@@ -207,7 +207,7 @@ angular.module('Bastion.content-views').factory('ContentView',
             });
         };
 
-        var addFilter = function(params, callback) {
+        var addFilter = function (params, callback) {
             var filter = new Filter(this.filters.length + 1);
 
             filter.name = params.name;
@@ -218,9 +218,7 @@ angular.module('Bastion.content-views').factory('ContentView',
             callback(filter);
         };
 
-        var results = generateViews(10, save, versions, publish, puppetModules);
-
-        Resource.query = function(params, callback) {
+        Resource.query = function (params, callback) {
             callback({
                 offset: 0,
                 total: 10,
@@ -232,10 +230,10 @@ angular.module('Bastion.content-views').factory('ContentView',
             });
         };
 
-        Resource.get = function(params, callback) {
+        Resource.get = function (params, callback) {
             var view;
 
-            angular.forEach(results, function(result) {
+            angular.forEach(results, function (result) {
                 if (params.id.toString() === result.id.toString()) {
                     view = result;
                 }
@@ -246,11 +244,11 @@ angular.module('Bastion.content-views').factory('ContentView',
             return view;
         };
 
-        function generateViews(numViews, save, versions, publish, puppetModules) {
+        function generateViews(numViews) {
             var views = [],
                 i;
 
-            for(i = 1; i <= numViews; i += 1) {
+            for (i = 1; i <= numViews; i += 1) {
                 views.push(new Resource(i));
             }
 
@@ -261,12 +259,14 @@ angular.module('Bastion.content-views').factory('ContentView',
             var versions = [],
                 i;
 
-            for(i = 1; i <= numVersions; i += 1) {
+            for (i = 1; i <= numVersions; i += 1) {
                 versions.push(new Version(i));
             }
 
             return versions;
         }
+
+        var results = generateViews(10, save, versions, publish);
 
         return Resource;
 

@@ -41,6 +41,7 @@ module Katello
       @request.env['HTTP_ACCEPT'] = 'application/json'
       @request.env['CONTENT_TYPE'] = 'application/json'
       @fake_search_service = @controller.load_search_service(Support::SearchService::FakeSearchService.new)
+      ContentView.any_instance.stubs(:reindex_on_association_change).returns(true)
       models
       permissions
     end

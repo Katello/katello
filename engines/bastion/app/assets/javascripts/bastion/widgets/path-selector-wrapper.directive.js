@@ -23,7 +23,7 @@
  * @example
  */
 angular.module('Bastion.widgets').directive('pathSelectorWrapper',
-    ['$document', '$http', 'Routes', function($document, $http, Routes) {
+    ['$document', '$http', 'Routes', function ($document, $http, Routes) {
     return {
         restrict: 'AE',
         scope: {
@@ -33,18 +33,18 @@ angular.module('Bastion.widgets').directive('pathSelectorWrapper',
             onChange: '&',
             mode: '@'
         },
-        link: function(scope) {
+        link: function (scope) {
             var pathSelect;
 
-            scope.$watch('pathSelector', function(selected) {
+            scope.$watch('pathSelector', function (selected) {
                 if (selected !== undefined && pathSelect) {
                     pathSelect.set_selected(selected);
                 }
             });
 
-            scope.$parent.setupSelector = function() {
+            scope.$parent.setupSelector = function () {
                 return $http.get(Routes.organizationEnvironmentsPath(scope.organization()) + '/registerable_paths')
-                            .success(function(paths) {
+                            .success(function (paths) {
                                 var options = {
                                         inline: true,
                                         'select_mode': scope.mode ? scope.mode : 'single',
@@ -60,7 +60,7 @@ angular.module('Bastion.widgets').directive('pathSelectorWrapper',
                                     options
                                 );
 
-                                $document.bind(pathSelect.get_select_event(), function() {
+                                $document.bind(pathSelect.get_select_event(), function () {
                                     var environments = pathSelect.get_selected();
 
                                     scope.pathSelector = Object.keys(environments)[0];

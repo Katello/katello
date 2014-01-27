@@ -44,8 +44,9 @@ class ContentView < Katello::Model
 
   has_many :distributors, :class_name => "Katello::Distributor", :dependent => :restrict
   has_many :content_view_repositories, :dependent => :destroy
-  has_many :repositories, :through => :content_view_repositories, :after_remove => :remove_repository,
-    :class_name => "Katello::Repository"
+  has_many :repositories, :through => :content_view_repositories, :class_name => "Katello::Repository",
+           :after_remove => :remove_repository,
+           :after_add => :add_repository
   has_many :filters, :dependent => :destroy, :class_name => "Katello::Filter"
 
   has_many :changeset_content_views, :class_name => "Katello::ChangesetContentView", :dependent => :destroy
@@ -454,6 +455,12 @@ class ContentView < Katello::Model
         filter_item.save!
       end
     end
+
+    reindex_on_association_change(repository)
+  end
+
+  def add_repository(repository)
+    reindex_on_association_change(repository)
   end
 
   private

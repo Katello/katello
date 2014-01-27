@@ -1,5 +1,5 @@
 /**
- Copyright 2013 Red Hat, Inc.
+ Copyright 2014 Red Hat, Inc.
 
  This software is licensed to you under the GNU General Public
  License as published by the Free Software Foundation; either version
@@ -20,7 +20,7 @@
  * @description
  *   State routes defined for the content views module.
  */
-angular.module('Bastion.content-views').config(['$stateProvider', function($stateProvider) {
+angular.module('Bastion.content-views').config(['$stateProvider', function ($stateProvider) {
     $stateProvider.state('content-views', {
         abstract: true,
         controller: 'ContentViewsController',
@@ -35,85 +35,113 @@ angular.module('Bastion.content-views').config(['$stateProvider', function($stat
         }
     })
 
-    .state('content-views-new', {
+    .state('content-views.new', {
+        collapsed: true,
         url: '/content_views/new',
-        controller: 'NewContentViewController',
-        templateUrl: 'content-views/new/views/content-view-new.html'
+        views: {
+            'table': {
+                templateUrl: 'content-views/views/content-views-table-collapsed.html'
+            },
+            'action-panel': {
+                controller: 'NewContentViewController',
+                templateUrl: 'content-views/new/views/content-view-new.html'
+            }
+        }
     })
 
-    .state('content-views-details', {
+    .state('content-views.details', {
         abstract: true,
         url: '/content_views/:contentViewId',
-        controller: 'ContentViewDetailsController',
-        templateUrl: 'content-views/details/views/content-view-details.html'
+        views: {
+            'table': {
+                templateUrl: 'content-views/views/content-views-table-collapsed.html'
+            },
+            'action-panel': {
+                controller: 'ContentViewDetailsController',
+                templateUrl: 'content-views/details/views/content-view-details.html'
+            }
+        }
     })
-    .state('content-views-details.versions', {
+    .state('content-views.details.versions', {
+        collapsed: true,
         url: '/versions',
         controller: 'ContentViewVersionsController',
         templateUrl: 'content-views/details/views/content-view-details-versions.html'
     })
-    .state('content-views-details.promotion', {
+    .state('content-views.details.promotion', {
+        collapsed: true,
         url: '/versions/:versionId/promotion',
         controller: 'ContentViewPromotionController',
         templateUrl: 'content-views/details/views/content-view-promotion.html'
     })
-    .state('content-views-details.products', {
+    .state('content-views.details.repositories', {
         abstract: true,
+        collapsed: true,
         template: '<div ui-view></div>'
     })
-    .state('content-views-details.products.list', {
-        url: '/products',
-        controller: 'ContentViewProductsController',
-        templateUrl: 'content-views/details/views/content-view-details-products.html'
+    .state('content-views.details.repositories.list', {
+        collapsed: true,
+        url: '/repositories',
+        controller: 'ContentViewRepositoriesListController',
+        templateUrl: 'content-views/details/views/content-view-details-repositories.html'
     })
-    .state('content-views-details.products.available', {
-        url: '/products/available',
-        controller: 'ContentViewAvailableProductsController',
-        templateUrl: 'content-views/details/views/content-view-details-products.html'
+    .state('content-views.details.repositories.available', {
+        collapsed: true,
+        url: '/repositories/available',
+        controller: 'ContentViewAvailableRepositoriesController',
+        templateUrl: 'content-views/details/views/content-view-details-repositories.html'
     })
-    .state('content-views-details.puppet-modules', {
+    .state('content-views.details.puppet-modules', {
+        collapsed: true,
         url: '/puppet_modules',
         controller: 'ContentViewPuppetModulesController',
         templateUrl: 'content-views/details/views/content-view-details-puppet-modules.html'
     })
-    .state('content-views-details.info', {
-        controller: 'ContentViewInfoController',
+    .state('content-views.details.info', {
+        collapsed: true,
         templateUrl: 'content-views/details/views/content-view-details-info.html'
     })
-    .state('content-views-details.publish', {
+    .state('content-views.details.publish', {
+        collapsed: true,
         url: '/publish',
         controller: 'ContentViewPublishController',
         templateUrl: 'content-views/details/views/content-view-details-publish.html'
     })
 
-    .state('content-views-details.filters', {
+    .state('content-views.details.filters', {
         abstract: true,
+        collapsed: true,
         controller: 'ContentViewFiltersController',
         template: '<div ui-view></div>'
     })
-    .state('content-views-details.filters.list', {
+    .state('content-views.details.filters.list', {
+        collapsed: true,
         url: '/filters',
         templateUrl: 'content-views/details/filters/views/content-view-details-filters.html'
     })
-    .state('content-views-details.filters.new', {
+    .state('content-views.details.filters.new', {
+        collapsed: true,
         url: '/filters/new',
         controller: 'ContentViewFiltersNewController',
         templateUrl: 'content-views/details/filters/views/content-view-details-filters-new.html'
     })
-    .state('content-views-details.filters.details', {
+    .state('content-views.details.filters.details', {
         abstract: true,
+        collapsed: true,
         controller: 'ContentViewFilterDetailsController',
         templateUrl: 'content-views/details/filters/views/content-view-filter-details.html'
     })
-    .state('content-views-details.filters.details.packages', {
+    .state('content-views.details.filters.details.packages', {
+        collapsed: true,
         url: '/filters/:filterId/packages',
         controller: 'ContentViewFilterDetailsPackageController',
         templateUrl: 'content-views/details/filters/views/content-view-filter-details-packages.html'
     })
-    .state('content-views-details.filters.details.errata', {
+    .state('content-views.details.filters.details.errata', {
+        collapsed: true,
         url: '/filters/:filterId/errata',
         controller: 'ContentViewFilterDetailsErrataController',
         templateUrl: 'content-views/details/filters/views/content-view-filter-details-errata.html'
-    })
+    });
 
 }]);

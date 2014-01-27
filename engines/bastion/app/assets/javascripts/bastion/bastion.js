@@ -60,7 +60,6 @@
 
 //= require "bastion/content-views/content-views.module"
 //= require_tree "./content-views"
-//= stub "bastion/content-views/content-view.factory"
 
 //= require "bastion/errata/errata.module"
 //= require_tree "./errata"
