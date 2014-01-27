@@ -27,7 +27,7 @@ class ContentView < Katello::Model
 
   before_destroy :confirm_not_promoted # RAILS3458: this needs to come before associations
 
-  belongs_to :organization, :inverse_of => :content_views, :class_name => "Organization"
+  belongs_to :organization, :inverse_of => :content_views, :class_name => "::Organization"
 
   has_many :content_view_environments, :class_name => "Katello::ContentViewEnvironment", :dependent => :destroy
 

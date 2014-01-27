@@ -265,7 +265,7 @@ module Glue::Pulp::Repos
     def repo_id(content_name, env_label = nil)
       return if content_name.nil?
       return content_name if content_name.include?(self.organization.label) && content_name.include?(self.label.to_s)
-      Repository.repo_id(self.label.to_s, content_name.to_s, env_label, self.organization.label, nil)
+      Repository.repo_id(self.label.to_s, content_name.to_s, env_label, self.organization.label, nil, nil)
     end
 
     def repo_url(content_url)
