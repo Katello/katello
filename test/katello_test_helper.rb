@@ -17,6 +17,9 @@ require "#{Katello::Engine.root}/spec/support/shared_examples/protected_action_s
 require "#{Katello::Engine.root}/spec/support/custom_matchers"
 require "#{Katello::Engine.root}/test/support/vcr"
 require "#{Katello::Engine.root}/test/support/runcible"
+require "#{Katello::Engine.root}/test/support/actions/remote_action"
+require "#{Katello::Engine.root}/test/support/actions/pulp_task"
+require "#{Katello::Engine.root}/test/support/foreman_tasks/task"
 require 'support/auth_support'
 require 'support/controller_support'
 require 'support/search_service'
