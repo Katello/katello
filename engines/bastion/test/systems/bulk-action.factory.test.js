@@ -11,9 +11,9 @@
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
  **/
 
-describe('Factory: BulkAction', function() {
+describe('Factory: SystemBulkAction', function() {
     var $httpBackend,
-        BulkAction,
+        SystemBulkAction,
         systemParams,
         systemGroupParams;
 
@@ -36,7 +36,7 @@ describe('Factory: BulkAction', function() {
 
     beforeEach(inject(function($injector) {
         $httpBackend = $injector.get('$httpBackend');
-        BulkAction = $injector.get('BulkAction');
+        SystemBulkAction = $injector.get('SystemBulkAction');
     }));
 
     afterEach(function() {
@@ -45,31 +45,31 @@ describe('Factory: BulkAction', function() {
 
     it('provides a way to add system groups to systems', function() {
         $httpBackend.expect('PUT', '/katello/api/systems/bulk/add_system_groups', systemGroupParams).respond();
-        BulkAction.addSystemGroups(systemGroupParams);
+        SystemBulkAction.addSystemGroups(systemGroupParams);
     });
 
     it('provides a way to remove system groups from systems', function() {
         $httpBackend.expect('PUT', '/katello/api/systems/bulk/remove_system_groups', systemGroupParams).respond();
-        BulkAction.removeSystemGroups(systemGroupParams);
+        SystemBulkAction.removeSystemGroups(systemGroupParams);
     });
 
     it('provides a way to install content on systems', function() {
         $httpBackend.expect('PUT', '/katello/api/systems/bulk/install_content', systemParams).respond();
-        BulkAction.installContent(systemParams);
+        SystemBulkAction.installContent(systemParams);
     });
 
     it('provides a way to update content on systems', function() {
         $httpBackend.expect('PUT', '/katello/api/systems/bulk/update_content', systemParams).respond();
-        BulkAction.updateContent(systemParams);
+        SystemBulkAction.updateContent(systemParams);
     });
 
     it('provides a way to remove content from systems', function() {
         $httpBackend.expect('PUT', '/katello/api/systems/bulk/remove_content', systemParams).respond();
-        BulkAction.removeContent(systemParams);
+        SystemBulkAction.removeContent(systemParams);
     });
 
     it('provides a way to remove systems', function() {
         $httpBackend.expect('PUT', '/katello/api/systems/bulk/destroy', systemParams).respond();
-        BulkAction.removeSystems(systemParams);
+        SystemBulkAction.removeSystems(systemParams);
     });
 });

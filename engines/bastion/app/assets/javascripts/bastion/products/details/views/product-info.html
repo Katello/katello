@@ -1,3 +1,5 @@
+<div alch-alert success-messages="successMessages" error-messages="errorMessages"></div>
+
 <div class="details fl">
   <section>
     <h4 translate>Basic Information</h4>
@@ -41,5 +43,64 @@
       </span>
     </div>
 
+  </section>
+</div>
+
+<div class="details fr">
+  <section>
+    <h4 translate>Sync Status</h4>
+
+    <div ng-include="'products/details/partials/sync-status.html'"></div>
+
+    <div class="detail">
+      <span class="info-label" translate>Sync Plan</span>
+      <span class="info-value"
+            alch-edit-select="product.sync_plan.name"
+            options="syncPlans()"
+            options-format="option.id as option.name for option in options.results"
+            selector="product.sync_plan_id"
+            on-save="save(product)"
+            deletable="product.sync_plan_id != null"
+            on-delete="product.sync_plan_id = null; save(product)">
+      </span>
+    </div>
+
+    <div class="detail">
+      <span class="info-label" translate>Last Sync</span>
+      <span class="info-value">{{ product.sync_status.finish_time | date:'medium' }}</span>
+    </div>
+
+    <div class="detail">
+      <span class="info-label" translate>Next Sync</span>
+      <span class="info-value" ng-show="product.sync_plan.next_sync">
+        {{ product.sync_plan.next_sync | date:'medium' }}
+      </span>
+      <span class="info-value" ng-hide="product.sync_plan.next_sync" translate>
+        Synced manually, no interval set.
+      </span>
+    </div>
+
+    <div class="detail">
+      <span class="info-label" translate>Sync State</span>
+      <span class="info-value">
+        <a href="/katello/sync_management">{{ product.sync_status.state }}</a>
+      </span>
+    </div>
+
+    <div class="detail">
+      <button class="btn btn-default"
+              ui-sref="products.details.info.new-sync-plan">
+        <i class="icon-plus"></i>
+        <span translate>New Sync Plan</span>
+      </button>
+
+      <button class="btn btn-default"
+              ng-click="syncProduct()">
+        <i class="icon-spinner icon-spin" ng-show="productSyncing"></i>
+        <span ng-show="productSyncing" translate>Syncing...</span>
+        <i ng-hide="productSyncing" class="icon-refresh"></i>
+        <span ng-hide="productSyncing" translate>Sync Now</span>
+      </button>
+    </div>
   </section>
 </div>

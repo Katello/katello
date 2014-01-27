@@ -46,7 +46,7 @@ angular.module('Bastion.repositories').controller('NewRepositoryController',
         };
 
         function success(response) {
-            $scope.repositories.push(response);
+            $scope.repositoriesTable.rows.push(response);
             $scope.transitionTo('products.details.repositories.index', {productId: $scope.$stateParams.productId});
         }
 

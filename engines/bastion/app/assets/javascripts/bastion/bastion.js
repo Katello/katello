@@ -81,6 +81,9 @@
 //= require "bastion/repositories/repositories.module.js"
 //= require_tree "./repositories"
 
+//= require "bastion/sync-plans/sync-plans.module.js"
+//= require_tree "./sync-plans"
+
 //= require "bastion/tasks/tasks.module.js"
 //= require_tree "./tasks"
 

@@ -92,9 +92,21 @@
   <section>
     <h4 translate>Sync Status</h4>
 
+    <div ng-include="'products/details/partials/sync-status.html'"></div>
+
     <div class="detail">
       <span class="info-label" translate>Last Sync</span>
-      <span class="info-value">{{ repository.last_sync | date:'short' }}</span>
+      <span class="info-value">{{ repository.last_sync | date:'medium' }}</span>
+    </div>
+
+    <div class="detail">
+      <span class="info-label" translate>Next Sync</span>
+      <span class="info-value" ng-show="repository.product.sync_plan.next_sync">
+        {{ repository.product.sync_plan.next_sync | date:'medium' }}
+      </span>
+      <span class="info-value" ng-hide="repository.product.sync_plan.next_sync" translate>
+        Synced manually, no interval set.
+      </span>
     </div>
 
     <div class="detail">

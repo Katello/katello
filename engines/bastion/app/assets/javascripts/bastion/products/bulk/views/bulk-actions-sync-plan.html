@@ -1,0 +1,59 @@
+<section class="details details-full">
+  <div alch-alert success-messages="successMessages" error-messages="errorMessages"></div>
+
+  <input type="text"
+         class="form-control filter-input"
+         placeholder="{{ 'Filter' | translate }}"
+         ng-model="syncPlanSearch"/>
+
+  <span class="pull-right">
+
+    <button class="btn btn-default"
+        ui-sref="products.bulk-actions.sync-plan.new"
+        translate>
+      Create Sync Plan
+    </button>
+    <button class="btn btn-danger"
+            ng-click="removeSyncPlan()">
+      <i class="icon-spinner icon-spin" ng-show="updatingSyncPlans && !syncPlanTable.chosenRow"></i>
+      <span ng-show="updatingSyncPlans && !syncPlanTable.chosenRow" translate>Unattaching...</span>
+      <i ng-hide="updatingSyncPlans && !syncPlanTable.chosenRow" class="icon-remove"></i>
+      <span ng-hide="updatingSyncPlans && !syncPlanTable.chosenRow" translate>Unattach Sync Plan</span>
+    </button>
+    <button class="btn btn-primary"
+            ng-click="updateSyncPlan()"
+            ng-disabled="!syncPlanTable.chosenRow">
+      <i class="icon-spinner icon-spin" ng-show="updatingSyncPlans && syncPlanTable.chosenRow"></i>
+      <span ng-show="updatingSyncPlans && syncPlanTable.chosenRow" translate>Updating...</span>
+      <i ng-hide="updatingSyncPlans && syncPlanTable.chosenRow" class="icon-refresh"></i>
+      <span ng-hide="updatingSyncPlans && syncPlanTable.chosenRow" translate>Update Sync Plan</span>
+    </button>
+  </span>
+
+  <div class="nutupane">
+    <table alch-table="syncPlanTable"
+           class="table table-striped"
+           ng-class="{'table-mask': syncPlanTable.working}">
+      <thead>
+        <tr alch-table-head row-choice>
+          <th alch-table-column="name" translate>Name</th>
+          <th alch-table-column="description" translate>Description</th>
+          <th alch-table-column="interval" translate>Interval</th>
+          <th alch-table-column="sync-date" translate>Start Date</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr alch-table-row
+            row-choice="syncPlan"
+            ng-repeat="syncPlan in syncPlanTable.rows | filter:syncPlanSearch">
+          <td alch-table-cell>{{ syncPlan.name }}</td>
+          <td alch-table-cell>{{ syncPlan.description }}</td>
+          <td alch-table-cell>{{ syncPlan.interval | capitalize }}</td>
+          <td alch-table-cell>{{ syncPlan.sync_date }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</section>

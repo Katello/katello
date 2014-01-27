@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Red Hat, Inc.
+ * Copyright 2014 Red Hat, Inc.
  *
  * This software is licensed to you under the GNU General Public
  * License as published by the Free Software Foundation; either version
@@ -34,5 +34,27 @@ angular.module('Bastion.repositories').factory('Repository',
             }
         );
 
+    }]
+);
+
+/**
+ * @ngdoc service
+ * @name  Bastion.repositories.factory:RepositoryBulkAction
+ *
+ * @requires $resource
+ * @requires Routes
+ *
+ * @description
+ *   Provides a $resource for bulk actions on repositories.
+ */
+angular.module('Bastion.repositories').factory('RepositoryBulkAction',
+    ['$resource', 'CurrentOrganization', function ($resource, CurrentOrganization) {
+        return $resource('/katello/api/repositories/bulk/:action',
+            {'organization_id': CurrentOrganization},
+            {
+                removeRepositories: {method: 'PUT', params: {action: 'destroy'}},
+                syncRepositories: {method: 'POST', params: {action: 'sync'}}
+            }
+        );
     }]
 );

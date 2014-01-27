@@ -49,6 +49,15 @@ module Authorization::Repository
       where(product_id: prod_ids, :environment_id => env.id)
     end
 
+    def all_syncable(organization)
+      organization.syncable?
+    end
+
+    def all_deletable(repositories)
+      deletable = repositories.collect{|r| r.deletable?}
+      !deletable.include?(false)
+    end
+
     def any_readable?(organization)
       Katello::Product.any_readable?(organization)
     end

@@ -12,14 +12,14 @@
  **/
 
 describe('Controller: SystemsBulkActionGroupsController', function() {
-    var $scope, $q, gettext, BulkAction, SystemGroup, Organization,
+    var $scope, $q, gettext, SystemBulkAction, SystemGroup, Organization,
         Task, CurrentOrganization, Nutupane, $location, groupIds;
 
     beforeEach(module('Bastion.systems', 'Bastion.test-mocks'));
 
     beforeEach(function() {
         groupIds =  ['group1', 'group2'];
-        BulkAction = {
+        SystemBulkAction = {
             addSystemGroups: function() {},
             removeSystemGroups: function() {},
             installContent: function() {},
@@ -69,7 +69,7 @@ describe('Controller: SystemsBulkActionGroupsController', function() {
         $controller('SystemsBulkActionGroupsController', {$scope: $scope,
             $q: $q,
             $location: $location,
-            BulkAction: BulkAction,
+            SystemBulkAction: SystemBulkAction,
             SystemGroup: SystemGroup,
             Nutupane: Nutupane,
             gettext: gettext,
@@ -83,13 +83,13 @@ describe('Controller: SystemsBulkActionGroupsController', function() {
             action: 'add'
         };
 
-        spyOn(BulkAction, 'addSystemGroups');
+        spyOn(SystemBulkAction, 'addSystemGroups');
         $scope.performSystemGroupAction();
 
         expected = $scope.nutupane.getAllSelectedResults();
         expected.system_group_ids = groupIds;
         expected.organization_id = CurrentOrganization;
-        expect(BulkAction.addSystemGroups).toHaveBeenCalledWith(expected,
+        expect(SystemBulkAction.addSystemGroups).toHaveBeenCalledWith(expected,
             jasmine.any(Function), jasmine.any(Function));
     });
 
@@ -98,13 +98,13 @@ describe('Controller: SystemsBulkActionGroupsController', function() {
             action: 'remove'
         };
 
-        spyOn(BulkAction, 'removeSystemGroups');
+        spyOn(SystemBulkAction, 'removeSystemGroups');
         $scope.performSystemGroupAction();
 
         expected = $scope.nutupane.getAllSelectedResults();
         expected.system_group_ids = groupIds;
         expected.organization_id = CurrentOrganization;
-        expect(BulkAction.removeSystemGroups).toHaveBeenCalledWith(expected,
+        expect(SystemBulkAction.removeSystemGroups).toHaveBeenCalledWith(expected,
             jasmine.any(Function), jasmine.any(Function));
     });
 

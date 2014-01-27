@@ -38,7 +38,6 @@ angular.module('Bastion.products').controller('ProductDetailsController',
             $scope.panel.loading = false;
         });
 
-
         $scope.removeProduct = function (product) {
             var id = product.id;
 

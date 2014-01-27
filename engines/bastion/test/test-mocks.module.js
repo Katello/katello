@@ -25,7 +25,11 @@ angular.module('Bastion.test-mocks').run(['$state', '$stateParams', '$rootScope'
 
 angular.module('Bastion.test-mocks').factory('MockResource', function() {
     function resourceGenerator() {
-        var Resource, mockResource, errorResponse;
+        var Resource, mockResource, successResponse, errorResponse;
+
+        successResponse ={
+            displayMessages: ['success']
+        };
 
         errorResponse = {
             data: {
@@ -44,7 +48,7 @@ angular.module('Bastion.test-mocks').factory('MockResource', function() {
             $get: function() {},
             $save: function(success, error) {
                 if (!this.failed) {
-                    success();
+                    success(successResponse);
                 } else {
                     error(errorResponse);
                 }

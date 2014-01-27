@@ -25,6 +25,7 @@ angular.module('Bastion.products', [
     'ui.router',
     'Bastion.widgets',
     'Bastion.providers',
+    'Bastion.sync-plans',
     'Bastion.gpg-keys',
     'Bastion.tasks'
 ]);
@@ -78,6 +79,12 @@ angular.module('Bastion.products').config(['$stateProvider', function ($statePro
         controller: 'NewProviderController',
         templateUrl: 'providers/new/views/provider-new.html'
     })
+    .state('products.new.sync-plan', {
+        url: '/products/new/sync-plan',
+        collapsed: true,
+        controller: 'NewSyncPlanController',
+        templateUrl: 'sync-plans/views/new-sync-plan.html'
+    })
 
     .state("products.discovery", {
         collapsed: true,
@@ -126,6 +133,16 @@ angular.module('Bastion.products').config(['$stateProvider', function ($statePro
         controller: 'ProductDetailsInfoController',
         templateUrl: 'products/details/views/product-info.html'
     })
+    .state('products.details.info.new-sync-plan', {
+        url: '/sync-plan/new',
+        collapsed: true,
+        views: {
+            '@products.details': {
+                controller: 'NewSyncPlanController',
+                templateUrl: 'sync-plans/views/new-sync-plan.html'
+            }
+        }
+    })
 
     .state('products.details.repositories', {
         abstract: true,
@@ -168,4 +185,39 @@ angular.module('Bastion.products').config(['$stateProvider', function ($statePro
         templateUrl: 'tasks/views/task-details.html'
     });
 
+    $stateProvider.state("products.bulk-actions", {
+        abstract: true,
+        collapsed: true,
+        views: {
+            'table': {
+                templateUrl: 'products/views/products-table-collapsed.html'
+            },
+            'action-panel': {
+                controller: 'ProductsBulkActionController',
+                templateUrl: 'products/bulk/views/bulk-actions.html'
+            }
+        }
+    })
+    .state('products.bulk-actions.sync', {
+        url: '/products/bulk-actions/sync',
+        collapsed: true,
+        controller: 'ProductsBulkActionSyncController',
+        templateUrl: 'products/bulk/views/bulk-actions-sync.html'
+    })
+    .state('products.bulk-actions.sync-plan', {
+        url: '/products/bulk-actions/sync-plan',
+        collapsed: true,
+        controller: 'ProductsBulkActionSyncPlanController',
+        templateUrl: 'products/bulk/views/bulk-actions-sync-plan.html'
+    })
+    .state('products.bulk-actions.sync-plan.new', {
+        url: '/products/bulk-actions/sync-plan/new',
+        collapsed: true,
+        views: {
+            '@products.bulk-actions': {
+                controller: 'NewSyncPlanController',
+                templateUrl: 'sync-plans/views/new-sync-plan.html'
+            }
+        }
+    });
 }]);

@@ -32,13 +32,14 @@ module Katello
       create_test = lambda { @provider.nil? ? true : Product.creatable?(@provider) }
       read_test  = lambda { @product.readable? }
       edit_test  = lambda { @product.editable? || @product.syncable? }
+      delete_test = lambda { @product.deletable?}
 
       {
         :index => index_test,
         :create => create_test,
         :show => read_test,
         :update => edit_test,
-        :destroy => edit_test
+        :destroy => delete_test
       }
     end
 
