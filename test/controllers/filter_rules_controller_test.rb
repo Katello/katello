@@ -247,8 +247,8 @@ class FilterRulesControllerTest < ActionController::TestCase
         :id => rule.id, :parameter => {"errata_type" => ['security']}
 
     assert_response :success
-    assert_equal rule.reload.parameters, { "date_range" => { start: start_date.to_i,
-                                                             end:   end_date.to_i },
+    assert_equal rule.reload.parameters, { "date_range" => { "start" => start_date.to_i,
+                                                             "end" =>   end_date.to_i },
                                            "errata_type" => ['security']}
   end
 
