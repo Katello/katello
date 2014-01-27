@@ -32,8 +32,8 @@ module Actions
       #                               fullname: "m17n-db-datafiles-1.5.5-1.1.el6.noarch",
       #                               dependency: true ] }
       def task_output
-        return {} unless action_details
-        pulp_task = action_details.output[:pulp_task]
+        return {} unless details_action
+        pulp_task = details_action.output[:pulp_task]
         return {} unless pulp_task
         task_output = {}
 
@@ -59,7 +59,16 @@ module Actions
 
       def humanized_output
         if task_output[:result] && (packages = task_output[:result][:packages])
-          return packages.map { |package| package[:fullname] }.join("\n")
+          ret = []
+          if packages.any?
+            packages.each { |package| ret <<  package[:fullname] }
+          else
+            ret << humanized_no_package
+          end
+          if errors = task_output[:result][:errors]
+            ret.concat(errors)
+          end
+          return ret.join("\n")
         end
       end
 
@@ -69,9 +78,7 @@ module Actions
         Pulp::PackageRemove
       end
 
-      private
-
-      def action_details
+      def details_action
         all_actions.find { |action| action.is_a? pulp_subaction }
       end
 
@@ -92,11 +99,21 @@ module Actions
         end
       end
 
+      def rpm_result(pulp_task)
+        if pulp_task[:result] && pulp_task[:result][:details]
+          return pulp_task[:result][:details][:rpm]
+        end
+      end
+
+      def rpm_result_details(pulp_task)
+        rpm_result = rpm_result(pulp_task)
+        if rpm_result && rpm_result[:details]
+          return rpm_result[:details]
+        end
+      end
+
       def task_output_result(pulp_task)
-        if pulp_task[:result] &&
-              pulp_task[:result][:details] &&
-              (rpm_result = pulp_task[:result][:details][:rpm]) &&
-              rpm_result[:details][:resolved]
+        if rpm_result = self.rpm_result(pulp_task)
           packages = rpm_result[:details][:resolved].map do |package|
             task_output_package(package, false)
           end
@@ -104,7 +121,7 @@ module Actions
             task_output_package(package, true)
           end
           { success: rpm_result[:succeeded],
-            errors: rpm_result[:errors],
+            errors: task_output_errors(pulp_task),
             packages: packages + dependent_packages }
         end
       end
@@ -113,6 +130,24 @@ module Actions
         { name:       package[:name],
           fullname:   package[:qname],
           dependency: dependency }
+      end
+
+      def task_output_errors(pulp_task)
+        rpm_result_details = self.rpm_result_details(pulp_task)
+        if rpm_result_details[:errors]
+          rpm_result_details[:errors].map do |package, message|
+            "#{package}: #{message}"
+          end
+        end
+      end
+
+      def humanized_no_package
+        case details_action
+        when Actions::Pulp::Consumer::ContentInstall
+          _("No new packages installed")
+        when Actions::Pulp::Consumer::ContentUninstall
+          _("No packages removed")
+        end
       end
 
     end

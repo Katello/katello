@@ -24,6 +24,13 @@ require 'support/auth_support'
 require 'support/controller_support'
 require 'support/search_service'
 
+require 'dynflow/testing'
+Mocha::Mock.send :include, Dynflow::Testing::Mimic
+Dynflow::Testing.logger_adapter.level = 1
+require 'support/actions/fixtures'
+require 'support/actions/pulp_task'
+require 'support/actions/remote_action'
+
 FactoryGirl.definition_file_paths = ["#{Katello::Engine.root}/test/factories"]
 FactoryGirl.find_definitions
 
@@ -211,7 +218,3 @@ def disable_glue_layers(services=[], models=[], force_reload=false)
     FactoryGirl.reload
   end
 end
-
-require 'dynflow/testing'
-Mocha::Mock.send :include, Dynflow::Testing::Mimic
-Dynflow::Testing.logger_adapter.level = 1
