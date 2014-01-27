@@ -18,9 +18,9 @@ module Support
                       :input, :output, :humanized, :cli_example].inject({}) { |h, k| h.update k => nil }
         task       = mock('task', task_attrs).mimic!(::ForemanTasks::Task)
         block      ||= if args_expected.empty?
-                         -> (*_) { true }
+                         lambda { |*args| true }
                        else
-                         -> (*args) { args == args_expected }
+                         lambda { |*args|  args == args_expected }
                        end
 
         @controller.

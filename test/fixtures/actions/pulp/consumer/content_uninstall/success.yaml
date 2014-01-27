@@ -1,0 +1,74 @@
+--- 
+  pulp_task: 
+    task_group_id: 
+    exception: 
+    traceback: 
+    "_href": /pulp/api/v2/tasks/53212418-50ff-4e8d-8605-0bc36995e0e6/
+    task_id: "53212418-50ff-4e8d-8605-0bc36995e0e6"
+    call_request_tags: 
+      - "pulp:consumer:87c20448-fef4-4809-a0ca-729fdb61c8ee"
+      - "pulp:action:unit_uninstall"
+    reasons: []
+    start_time: "2014-01-27T13:29:10Z"
+    tags: 
+      - "pulp:consumer:87c20448-fef4-4809-a0ca-729fdb61c8ee"
+      - "pulp:action:unit_uninstall"
+    state: finished
+    finish_time: "2014-01-27T13:29:14Z"
+    dependency_failures: {}
+    schedule_id: 
+    progress: 
+      steps: 
+        - - "Refresh Repository Metadata"
+          - true
+        - - "Downloading Packages"
+          - true
+        - - "Running Test Transaction"
+          - true
+        - - "Running Transaction"
+          - true
+      details: {}
+    call_request_group_id: 
+    call_request_id: "53212418-50ff-4e8d-8605-0bc36995e0e6"
+    principal_login: admin
+    response: accepted
+    result: 
+      details: 
+        rpm: 
+          details: 
+            resolved: 
+              - name: libXmu
+                qname: libXmu-1.1.1-2.el6.x86_64
+                epoch: "0"
+                version: "1.1.1"
+                release: "2.el6"
+                arch: x86_64
+                repoid: installed
+            deps: 
+              - name: emacs
+                qname: "1:emacs-23.1-21.el6_2.3.x86_64"
+                epoch: "1"
+                version: "23.1"
+                release: "21.el6_2.3"
+                arch: x86_64
+                repoid: installed
+              - name: libXaw
+                qname: libXaw-1.0.11-2.el6.x86_64
+                epoch: "0"
+                version: "1.0.11"
+                release: "2.el6"
+                arch: x86_64
+                repoid: installed
+              - name: libotf
+                qname: libotf-0.9.9-3.1.el6.x86_64
+                epoch: "0"
+                version: "0.9.9"
+                release: "3.1.el6"
+                arch: x86_64
+                repoid: installed
+          succeeded: true
+      num_changes: 4
+      succeeded: true
+      reboot: 
+        scheduled: false
+        details: {}
