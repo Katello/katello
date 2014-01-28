@@ -22,13 +22,15 @@
  * @requires Routes
  * @requires System
  * @requires ContentView
+ * @requires Organization
+ * @requires CurrentOrganization
  *
  * @description
  *   Provides the functionality for the system details action pane.
  */
 angular.module('Bastion.systems').controller('SystemDetailsInfoController',
-    ['$scope', '$q', '$http', 'gettext', 'Routes', 'System', 'ContentView',
-        function ($scope, $q, $http, gettext, Routes, System, ContentView) {
+    ['$scope', '$q', '$http', 'gettext', 'Routes', 'System', 'ContentView', 'Organization', 'CurrentOrganization',
+        function ($scope, $q, $http, gettext, Routes, System, ContentView, Organization, CurrentOrganization) {
 
         var customInfoErrorHandler = function (error) {
             _.each(error.errors, function (errorMessage) {
@@ -37,43 +39,40 @@ angular.module('Bastion.systems').controller('SystemDetailsInfoController',
         };
 
         $scope.editContentView = false;
+        $scope.disableEnvironmentSelection = false;
+        $scope.environments = [];
+
+        $scope.environments = Organization.registerableEnvironments({organizationId: CurrentOrganization});
 
         $scope.$on('system.loaded', function () {
-            $scope.setupSelector();
             $scope.systemFacts = dotNotationToObj($scope.system.facts);
             populateExcludedFacts();
+            $scope.originalEnvironment = $scope.system.environment;
         });
 
-        $scope.setEnvironment = function (environmentId) {
-            environmentId = parseInt(environmentId, 10);
-
-            if ($scope.previousEnvironment !== environmentId) {
-                $scope.previousEnvironment = $scope.system.environment.id;
-                $scope.system.environment.id = environmentId;
-                $scope.editContentView = true;
-
-                /*jshint camelcase:false*/
-                $scope.pathSelector.disable_all();
+        $scope.$watch('system.environment', function (environment) {
+            if (environment && $scope.originalEnvironment) {
+                if (environment.id !== $scope.originalEnvironment.id) {
+                    $scope.editContentView = true;
+                    $scope.disableEnvironmentSelection = true;
+                }
             }
-        };
+        });
 
         $scope.cancelContentViewUpdate = function () {
             if ($scope.editContentView) {
                 $scope.editContentView = false;
-                $scope.system.environment.id = $scope.previousEnvironment;
-
-                /*jshint camelcase:false*/
-                $scope.pathSelector.enable_all();
-                $scope.pathSelector.select($scope.previousEnvironment);
+                $scope.system.environment = $scope.originalEnvironment;
+                $scope.disableEnvironmentSelection = false;
             }
         };
 
         $scope.saveContentView = function (system) {
-            $scope.previousEnvironment = undefined;
-            $scope.save(system);
-
-            /*jshint camelcase:false*/
-            $scope.pathSelector.enable_all();
+            $scope.editContentView = false;
+            $scope.save(system).then(function (system) {
+                $scope.originalEnvironment = system.environment;
+            });
+            $scope.disableEnvironmentSelection = false;
         };
 
         $scope.releaseVersions = function () {
