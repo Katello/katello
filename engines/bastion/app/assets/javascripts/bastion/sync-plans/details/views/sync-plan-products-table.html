@@ -1,0 +1,83 @@
+<section class="nutupane-sub-section">
+  <div alch-alert success-messages="successMessages" error-messages="errorMessages"></div>
+
+  <div class="nutupane-bar">
+
+    <div class="col-sm-3">
+      <input type="text"
+             class="form-control"
+             placeholder="{{ 'Filter' | translate }}"
+             ng-model="productFilter"/>
+    </div>
+
+    <div class="fr select-action">
+      <span class="nutupane-info">
+        <span translate>{{ productsTable.numSelected }} Selected</span>
+        <span>|</span>
+        <a class="deselect-action"
+           translate
+           ng-class="{ 'disabled-link' : productsTable.numSelected == 0 }"
+           ng-click="productsTable.selectAll(false)">
+          Deselect All
+        </a>
+      </span>
+
+      <button ng-if="isState('sync-plans.details.products.list')"
+              class="btn btn-primary"
+              translate
+              ng-disabled="productsTable.numSelected == 0 || productsTable.working"
+              ng-click="removeProducts()">
+        Remove Selected
+      </button>
+      <button ng-if="isState('sync-plans.details.products.add')"
+              class="btn btn-primary"
+              translate
+              ng-disabled="productsTable.numSelected == 0 || productsTable.working"
+              ng-click="addProducts()">
+        Add Selected
+      </button>
+
+    </div>
+  </div>
+
+  <div alch-table="productsTable" class="nutupane">
+    <div alch-container-scroll control-width="productsTable" alch-infinite-scroll="productsTable.nextPage()">
+
+      <div ng-show="productsTable.rows.length == 0">
+        <div class="loading-mask" ng-show="productsTable.working">
+          <i class="icon-spinner icon-spin"></i>
+          {{ "Loading..." | translate }}
+        </div>
+
+        <p ng-hide="productsTable.working" translate>No Products to show.</p>
+      </div>
+
+      <table ng-show="productsTable.rows.length > 0"
+             ng-class="{'table-mask': productsTable.working}" class="table table-full table-striped">
+        <thead>
+        <tr alch-table-head row-select="product">
+          <th alch-table-column="name" translate>Name</th>
+          <th alch-table-column="description" translate>Description</th>
+          <th alch-table-column="sync_status" translate>Sync Status</th>
+          <th alch-table-column class="number-cell">{{ "Repositories" | translate }}</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr alch-table-row ng-repeat="product in productsTable.rows | filter:productFilter" row-select="product">
+          <td alch-table-cell>
+            <a ui-sref="products.details.info({productId: product.id})">
+              {{ product.name }}
+            </a>
+          </td>
+          <td alch-table-cell>{{ product.description }}</td>
+          <td alch-table-cell>
+            <div ng-include="'products/views/partials/product-table-sync-status.html'"></div>
+          </td>
+          <td alch-table-cell class="number-cell">{{ product.repository_count }}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
