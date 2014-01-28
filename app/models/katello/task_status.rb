@@ -133,7 +133,6 @@ class TaskStatus < Katello::Model
 
   def as_json(options = {})
     json = super :methods => :pending?
-    json.merge(options) if options
 
     if ('Katello::System' == task_owner_type)
       methods = [:description, :result_description, :overall_status]
