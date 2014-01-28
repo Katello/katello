@@ -180,7 +180,7 @@ module Glue::ElasticSearch::Errata
       end
 
       def self.index_errata errata_ids
-        errata = errata_ids.collect do{ |errata_id|
+        errata = errata_ids.collect do |errata_id|
           erratum = self.find(errata_id)
           erratum.as_json.merge(erratum.index_options)
         end

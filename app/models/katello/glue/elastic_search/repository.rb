@@ -45,7 +45,7 @@ module Glue::ElasticSearch::Repository
     end
 
     def index_packages(force=false)
-      Tire.index ::Package.index do
+      Tire.index Katello::Package.index do
         create :settings => Katello::Package.index_settings, :mappings => Katello::Package.index_mapping
       end
 
@@ -53,21 +53,21 @@ module Glue::ElasticSearch::Repository
         print "SlowImport\n"
         pkgs = self.packages.collect{|pkg| pkg.as_json.merge(pkg.index_options)}
         pkgs.each_slice(Katello.config.pulp.bulk_load_size) do |sublist|
-          Tire.index ::Package.index do
+          Tire.index ::Katello::Package.index do
             import sublist
           end if !sublist.empty?
         end
       else
         print "FastImport\n"
         pkg_ids = self.package_ids
-        Package.update_repoids(pkg_ids, [self.pulp_id])
+        Katello::Package.update_repoids(pkg_ids, [self.pulp_id])
       end
     end
 
     def clear_packages_index
       # for each of the packages in the repo, unassociate the repo from the package
       pkg_ids = self.package_ids
-      Package.update_package_repoids(pkg_ids, [], [self.pulp_id])
+      Katello::Package.update_package_repoids(pkg_ids, [], [self.pulp_id])
 
 
       pkgs = self.packages.collect{|pkg| pkg.as_json.merge(pkg.index_options)}
@@ -99,13 +99,13 @@ module Glue::ElasticSearch::Repository
     def index_errata(force=false)
       if self.content_view.default? || force
         errata = self.errata.collect{|err| err.as_json.merge(err.index_options)}
-        Errata.create_index
-        Tire.index Errata.index do
+        Katello::Errata.create_index
+        Tire.index Katello::Errata.index do
           import errata
         end unless errata.empty?
       else
         errata_ids = self.errata_ids
-        Errata.update_repoids(errata_ids, [self.pulp_id], [])
+        Katello::Errata.update_repoids(errata_ids, [self.pulp_id], [])
       end
     end
 
@@ -115,8 +115,8 @@ module Glue::ElasticSearch::Repository
       pulp_id = self.pulp_id
 
       unless errata.empty?
-        Errata.create_index
-        Tire.index Errata.index do
+        Katello::Errata.create_index
+        Tire.index Katello::Errata.index do
           import errata do |documents|
             documents.each do |document|
               if !document["repoids"].nil? && document["repoids"].length > 1

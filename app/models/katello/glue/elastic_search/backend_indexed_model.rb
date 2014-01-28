@@ -9,7 +9,7 @@
 # NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
-
+module Katello
 module Glue::ElasticSearch::BackendIndexedModel
 
 
@@ -30,20 +30,38 @@ module Glue::ElasticSearch::BackendIndexedModel
       remove_ids.each{ |remove_id| script +=  "ctx._source.#{field}.remove(\"#{remove_id}\");" }
 
       payload = {:script=>script}
-      Tire.index obj_class.index do
-        object_ids.each do |id|
-          update obj_class.search_type, id, payload
-        end
 
+      #single update
+      #Tire.index obj_class.index do
+      #  object_ids.each do |id|
+      #    update obj_class.search_type, id, payload
+      #  end
+      #end
+
+      #bulk update
+
+      documents = object_ids.map do |id|
+        {
+          :_id=> id,
+          :_type => obj_class.search_type,
+          :script => script
+        }
       end
+      #debugger
+      Tire.index(obj_class.index).bulk_update(documents)
+
+
+
       Tire.index(self.index).refresh
     end
 
     def create_index
+      class_obj = self
       Tire.index self.index do
-        create :settings => self.index_settings, :mappings => self.index_mapping
-      end unless Tire.index(self.index).exists?
+        create :settings => class_obj.index_settings, :mappings => class_obj.index_mapping
+      end unless Tire.index(class_obj.index).exists?
     end
   end
 
+end
 end

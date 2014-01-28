@@ -20,7 +20,7 @@ module Glue::ElasticSearch::PackageGroup
       include Glue::ElasticSearch::BackendIndexedModel
       def index_options
         {
-          "_type" => ::PackageGroup.search_type,
+          "_type" => Katello::PackageGroup.search_type,
           "name_autocomplete" => name
         }
       end
