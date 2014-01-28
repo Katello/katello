@@ -20,7 +20,7 @@ Katello::Engine.routes.draw do
 
       root :to => 'root#resource_list'
 
-      api_resources :content_views, :only => [:update, :show] do
+      api_resources :content_views do
         member do
           post :publish
           post :promote
