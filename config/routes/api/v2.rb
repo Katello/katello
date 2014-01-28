@@ -20,6 +20,17 @@ Katello::Engine.routes.draw do
 
       root :to => 'root#resource_list'
 
+      api_resources :content_views, :only => [:update, :show] do
+        member do
+          post :publish
+          post :promote
+          post :refresh
+        end
+        resources :filters, :controller => :filters do
+          resources :rules, :controller => :filter_rules, :only => [:create, :destroy]
+        end
+      end
+
       api_resources :environments, :only => [:index, :show, :create, :update, :destroy] do
         api_resources :systems, :only => system_onlies do
           get :report, :on => :collection
@@ -34,6 +45,7 @@ Katello::Engine.routes.draw do
       end
 
       api_resources :organizations, :only => [:index, :show, :update, :create, :destroy] do
+        api_resources :content_views, :only => [:index, :create]
         api_resources :environments, :only => [:index, :show, :create, :update, :destroy] do
           collection do
             get :paths
@@ -120,8 +132,6 @@ Katello::Engine.routes.draw do
         match '/default_info/:informable_type/*keyname' => 'organization_default_info#destroy', :via => :delete, :as => :destroy_default_info
         match '/default_info/:informable_type/apply' => 'organization_default_info#apply_to_all', :via => :post, :as => :apply_default_info
 
-        api_resources :content_views, :only => [:index, :create]
-        api_resources :content_view_definitions, :only => [:index, :create]
         api_resources :subscriptions, :only => [:index, :upload, :show] do
           collection do
             post :upload
@@ -190,50 +200,6 @@ Katello::Engine.routes.draw do
       api_resources :providers do
         api_resources :sync, :only => [:index, :create] do
           delete :index, :on => :collection, :action => :cancel
-        end
-      end
-
-      api_resources :content_view_definitions, :only => [:update, :show, :destroy] do
-        member do
-          post :publish
-          post :clone
-        end
-        resources :products, :controller => :content_view_definitions, :only => [] do
-          collection do
-            get :index, :action => :list_products
-            put :index, :action => :update_products
-            get :all, :action => :list_all_products
-          end
-        end
-        resources :repositories, :controller => :content_view_definitions, :only => [] do
-          collection do
-            get :index, :action => :list_repositories
-            put :index, :action => :update_repositories
-          end
-        end
-        get :content_views
-        put :content_views, :action => :update_content_views
-        resources :filters, :controller => :filters, :only => [:index, :show, :create, :destroy] do
-          resources :products, :controller => :filters, :only => [] do
-            collection do
-              get :index, :action => :list_products
-              put :index, :action => :update_products
-            end
-          end
-          resources :repositories, :controller => :filters, :only => [] do
-            collection do
-              get :index, :action => :list_repositories
-              put :index, :action => :update_repositories
-            end
-          end
-          resources :rules, :controller => :filter_rules, :only => [:create, :destroy]
-        end
-      end
-
-      api_resources :content_views, :only => [:update, :show] do
-        member do
-          post :promote
-          post :refresh
         end
       end
 

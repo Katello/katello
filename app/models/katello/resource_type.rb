@@ -111,8 +111,6 @@ class ResourceType < Katello::Model
         :providers => { :model => Katello::Provider, :name => _("Providers"), :global => false},
         :users => { :model => User, :name => _("Users"), :global => true},
         :roles => { :model => Katello::Role, :name => _("Roles"), :global => true},
-        :content_view_definitions => { :model => Katello::ContentViewDefinition,
-                                       :name => _("Content View Definitions"), :global => false},
         :content_views => { :model => Katello::ContentView, :name => _("Content View"), :global => false},
         :all => { :model => Katello::DefaultModel, :name => _("All"), :global => false}
     }.with_indifferent_access

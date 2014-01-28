@@ -21,7 +21,7 @@ module Glue::ElasticSearch::ContentView
     include Ext::IndexedModel
 
     index_options :extended_json => :extended_index_attrs,
-                  :json => {:only => [:name, :description]},
+                  :json => {:only => [:id, :name, :label, :description]},
                   :display_attrs => [:name, :description]
 
     mapping do

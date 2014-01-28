@@ -14,8 +14,8 @@ module Katello
 class Filter < Katello::Model
   self.include_root_in_json = false
 
-  belongs_to :content_view_definition,
-             :class_name => "Katello::ContentViewDefinitionBase",
+  belongs_to :content_view,
+             :class_name => "Katello::ContentView",
              :inverse_of => :filters
   has_many :rules, :class_name => "Katello::FilterRule", :dependent => :destroy
 
@@ -24,10 +24,10 @@ class Filter < Katello::Model
   has_and_belongs_to_many :repositories, :uniq => true, :class_name => "Katello::Repository", :join_table => :katello_filters_repositories
   has_and_belongs_to_many :products, :uniq => true, :class_name => "Katello::Product", :join_table => :katello_filters_products
 
-  validate :validate_content_definition
+  validate :validate_content_view
   validate :validate_products_and_repos
   validates :name, :presence => true, :allow_blank => false,
-                   :uniqueness => {:scope => :content_view_definition_id}
+                   :uniqueness => {:scope => :content_view_id}
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name
 
   def self.applicable(repo)
@@ -37,16 +37,16 @@ class Filter < Katello::Model
   end
 
   def as_json(options = {})
-    super(options).update("content_view_definition_label" => content_view_definition.label,
-                          "organization" => content_view_definition.organization.label,
+    super(options).update("content_view_label" => content_view.label,
+                          "organization" => content_view.organization.label,
                           "products" =>  products.collect(&:name),
                           "repos" => repositories.collect(&:name),
                           "rules" => rules)
   end
 
-  def validate_content_definition
-    if self.content_view_definition.composite?
-      errors.add(:base, _("cannot contain filters if composite definition"))
+  def validate_content_view
+    if self.content_view.composite?
+      errors.add(:base, _("cannot contain filters if composite view"))
     end
   end
 
@@ -54,16 +54,16 @@ class Filter < Katello::Model
     prod_diff = self.products - cvd.resulting_products
     repo_diff = self.repositories - cvd.repos
     unless prod_diff.empty?
-      errors.add(:base, _("cannot contain filters whose products do not belong to this content view definition"))
+      errors.add(:base, _("cannot contain filters whose products do not belong to this content view"))
     end
     unless repo_diff.empty?
-      errors.add(:base, _("cannot contain filters whose repositories do not belong to this content view definition"))
+      errors.add(:base, _("cannot contain filters whose repositories do not belong to this content view"))
     end
   end
 
   def clone_for_archive
     filter = Filter.new(:name => self.name)
-    filter.content_view_definition_id = nil
+    filter.content_view_id = nil
     filter.products = self.products
     filter.repositories = self.repositories
     if Rails.version >= "3.1"
@@ -95,7 +95,7 @@ class Filter < Katello::Model
   protected
 
   def validate_products_and_repos
-    validate_filter_products_and_repos(self.errors, self.content_view_definition)
+    validate_filter_products_and_repos(self.errors, self.content_view)
   end
 
 end
