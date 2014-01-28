@@ -14,34 +14,96 @@ module Katello
 class Filter < Katello::Model
   self.include_root_in_json = false
 
+  include Glue::ElasticSearch::Filter if Katello.config.use_elasticsearch
+
+  PACKAGE         = Package::CONTENT_TYPE
+  PACKAGE_GROUP   = PackageGroup::CONTENT_TYPE
+  ERRATA          = Errata::CONTENT_TYPE
+  PUPPET_MODULE   = PuppetModule::CONTENT_TYPE
+  CONTENT_TYPES   = [PACKAGE, PACKAGE_GROUP, ERRATA, PUPPET_MODULE]
+  YUM_CONTENT_OPTIONS = { _('Packages') => PACKAGE, _('Package Groups') => PACKAGE_GROUP, _('Errata') => ERRATA }
+  PUPPET_CONTENT_OPTIONS = { _('Puppet Modules') => PUPPET_MODULE }
+  CONTENT_OPTIONS = YUM_CONTENT_OPTIONS.merge(PUPPET_CONTENT_OPTIONS)
+
   belongs_to :content_view,
              :class_name => "Katello::ContentView",
              :inverse_of => :filters
-  has_many :rules, :class_name => "Katello::FilterRule", :dependent => :destroy
 
   # rubocop:disable HasAndBelongsToMany
   # TODO: change these into has_many :through associations
-  has_and_belongs_to_many :repositories, :uniq => true, :class_name => "Katello::Repository", :join_table => :katello_filters_repositories
-  has_and_belongs_to_many :products, :uniq => true, :class_name => "Katello::Product", :join_table => :katello_filters_products
+  has_and_belongs_to_many :repositories,
+                          :uniq => true,
+                          :class_name => "Katello::Repository",
+                          :join_table => :katello_filters_repositories
+
+  serialize :parameters, Hash
+  validates_with Validators::SerializedParamsValidator, :attributes => :parameters
 
   validate :validate_content_view
-  validate :validate_products_and_repos
+  validate :validate_repos
   validates :name, :presence => true, :allow_blank => false,
-                   :uniqueness => {:scope => :content_view_id}
+            :uniqueness => { :scope => :content_view_id }
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name
 
+  scope :whitelist, where(:inclusion => true)
+  scope :blacklist, where(:inclusion => false)
+
+  scope :yum_types, where(:type => [PackageGroupFilter.name, ErratumFilter.name, PackageFilter.name])
+
+  def params_format
+    {}
+  end
+
+  def parameters
+    write_attribute(:parameters, {}) unless self[:parameters]
+    self[:parameters]
+  end
+
+  def content_type
+    {
+      PackageFilter => PACKAGE,
+      ErratumFilter => ERRATA,
+      PackageGroupFilter => PACKAGE_GROUP,
+      PuppetModuleFilter => PUPPET_MODULE
+    }[self.class]
+  end
+
+  def self.class_for(content_type)
+    case content_type
+      when PACKAGE
+        PackageFilter
+      when PACKAGE_GROUP
+        PackageGroupFilter
+      when ERRATA
+        ErratumFilter
+      when PUPPET_MODULE
+        PuppetModuleFilter
+      else
+        params = { :content_type => content_type, :content_types => CONTENT_TYPES.join(", ") }
+        fail _("Invalid content type '%{ content_type }' provided. Content types can be one of %{ content_types }") % params
+    end
+  end
+
+  def filter_type
+    CONTENT_OPTIONS.key(content_type)
+  end
+
+  def self.create_for(content_type, options)
+    clazz = class_for(content_type)
+    clazz.create!(options)
+  end
+
   def self.applicable(repo)
-    query = %{katello_filters.id in (select filter_id from  katello_filters_repositories where repository_id = #{repo.id})
-              OR katello_filters.id in (select filter_id from  katello_filters_products where product_id = #{repo.product_id}) }
+    query = %{ katello_filters.id in (select filter_id from  katello_filters_repositories where repository_id = #{repo.id}) }
     where(query).select("DISTINCT katello_filters.id")
   end
 
   def as_json(options = {})
     super(options).update("content_view_label" => content_view.label,
                           "organization" => content_view.organization.label,
-                          "products" =>  products.collect(&:name),
                           "repos" => repositories.collect(&:name),
-                          "rules" => rules)
+                          "content" => content_type,
+                          "parameters" => parameters)
   end
 
   def validate_content_view
@@ -50,38 +112,15 @@ class Filter < Katello::Model
     end
   end
 
-  def validate_filter_products_and_repos(errors, cvd)
-    prod_diff = self.products - cvd.resulting_products
-    repo_diff = self.repositories - cvd.repos
-    unless prod_diff.empty?
-      errors.add(:base, _("cannot contain filters whose products do not belong to this content view"))
-    end
+  def validate_filter_repos(errors, content_view)
+    repo_diff = repositories - content_view.repositories
     unless repo_diff.empty?
       errors.add(:base, _("cannot contain filters whose repositories do not belong to this content view"))
     end
   end
 
-  def clone_for_archive
-    filter = Filter.new(:name => self.name)
-    filter.content_view_id = nil
-    filter.products = self.products
-    filter.repositories = self.repositories
-    if Rails.version >= "3.1"
-      filter.rules = self.rules.map(&:dup)
-    else
-      filter.rules = self.rules.map(&:clone)
-    end
-
-    filter
-  end
-
   def resulting_products
-    (self.products + self.repositories.collect{|r| r.product}).uniq
-  end
-
-  def repos(env)
-    repos = self.products.map { |prod| prod.repos(env) }.flatten.reject(&:puppet?)
-    repos + repositories
+    repositories.collect{|r| r.product}.uniq
   end
 
   def puppet_repository
@@ -94,8 +133,8 @@ class Filter < Katello::Model
 
   protected
 
-  def validate_products_and_repos
-    validate_filter_products_and_repos(self.errors, self.content_view)
+  def validate_repos
+    validate_filter_repos(self.errors, self.content_view)
   end
 
 end

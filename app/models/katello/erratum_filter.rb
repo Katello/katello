@@ -12,27 +12,31 @@
 
 module Katello
 class ErratumFilter < Filter
+  use_index_of Filter if Katello.config.use_elasticsearch
 
-  ERRATA_TYPES = {'bugfix' => _('Bug Fix'),
-                  'enhancement' => _('Enhancement'),
-                  'security' => _('Security')}.with_indifferent_access
+  CONTENT_TYPE = Errata::CONTENT_TYPE
 
-  validates_with Validators::ErratumRuleParamsValidator, :attributes => :parameters
+  ERRATA_TYPES = { 'bugfix' => _('Bug Fix'),
+                   'enhancement' => _('Enhancement'),
+                   'security' => _('Security') }.with_indifferent_access
+
+  before_create :set_parameters
+
+  validates_with Validators::ErratumFilterParamsValidator, :attributes => :parameters
 
   def params_format
-    {:units => [[:id]], :date_range => [:start, :end], :errata_type => {}}
+    { :units => [[:id]], :date_range => [:start, :end], :errata_type => {}, :inclusion => {}, :created_at => {} }
   end
 
   [:start, :end].each do |date_type|
-    define_method("#{date_type}_date") do
-      dt = parameters["date_range"].try(:[], date_type)
-      Time.at(dt) if dt
+    define_method("#{ date_type }_date") do
+      parameters["date_range"].try(:[], date_type)
     end
 
-    define_method("#{date_type}_date=") do |date|
+    define_method("#{ date_type }_date=") do |date|
       parameters["date_range"] ||= {}
       if date
-        parameters["date_range"][date_type] = date.to_i
+        parameters["date_range"][date_type] = date
       else
         parameters["date_range"].delete(date_type)
         parameters.delete("date_range") if parameters["date_range"].empty?
@@ -64,22 +68,20 @@ class ErratumFilter < Filter
       #                         [:errata_id_sort, "DESC"],'errata_id').collect(&:errata_id)
       #   end
       # end.compact.flatten
-      ids = parameters[:units].collect do |unit|
-        unit[:id]
-      end
+      ids = parameters[:units].collect{ |unit| unit[:id] }
       ids.compact!
 
-      {"id" => {"$in" => ids}}  unless ids.empty?
+      { "id" => { "$in" => ids } } unless ids.empty?
     else
       if parameters.key? "date_range"
         dr = {}
         dr["$gte"] = start_date.as_json if start_date
         dr["$lte"] = end_date.as_json if end_date
-        rule_clauses << {"issued" => dr}
+        rule_clauses << { "issued" => dr }
       end
       if errata_types
           # {"type": {"$in": ["security", "enhancement", "bugfix"]}
-        rule_clauses << {"type" => {"$in" => errata_types}}
+        rule_clauses << { "type" => { "$in" => errata_types } }
       end
 
       case rule_clauses.size
@@ -88,7 +90,7 @@ class ErratumFilter < Filter
       when 1
         return rule_clauses.first
       else
-        return {'$and' => rule_clauses}
+        return { '$and' => rule_clauses }
       end
     end
   end
@@ -103,5 +105,16 @@ class ErratumFilter < Filter
     json_val.delete("parameters")
     json_val
   end
+
+  private
+
+  def set_parameters
+    unless parameters.blank?
+      parameters[:created_at] = Time.zone.now
+      parameters[:inclusion] = false unless parameters.has_key?(:inclusion)
+    end
+    self
+  end
+
 end
 end

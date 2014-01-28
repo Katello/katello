@@ -12,11 +12,17 @@
 
 module Katello
 class PackageFilter < Filter
-  validates_with Validators::RuleParamsValidator, :attributes => :parameters
-  validates_with Validators::RuleVersionValidator, :attributes => :parameters
+  use_index_of Filter if Katello.config.use_elasticsearch
+
+  CONTENT_TYPE = Package::CONTENT_TYPE
+
+  before_create :set_parameters
+
+  validates_with Validators::FilterParamsValidator, :attributes => :parameters
+  validates_with Validators::FilterVersionValidator, :attributes => :parameters
 
   def params_format
-    {:units => [[:name, :version, :min_version, :max_version]]}
+    { :units => [[:name, :version, :min_version, :max_version, :inclusion, :created_at]] }
   end
 
   # Returns a set of Pulp/MongoDB conditions to filter out packages in the
@@ -35,7 +41,7 @@ class PackageFilter < Filter
     pkg_filenames.flatten!
     pkg_filenames.compact!
 
-    {'filename' => {"$in" => pkg_filenames}} unless pkg_filenames.empty?
+    { 'filename' => { "$in" => pkg_filenames } } unless pkg_filenames.empty?
   end
 
   protected
@@ -48,6 +54,15 @@ class PackageFilter < Filter
     else
       nil
     end
+  end
+
+  private
+
+  def set_parameters
+    parameters[:units].each do |unit|
+      unit[:created_at] = Time.zone.now
+      unit[:inclusion] = false unless unit.has_key?(:inclusion)
+    end if !parameters.blank? && parameters.has_key?(:units)
   end
 end
 end

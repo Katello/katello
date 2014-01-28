@@ -15,10 +15,8 @@ class RefactorContentViews < ActiveRecord::Migration
 
     # katello filters
     rename_column :katello_filters, :content_view_definition_id, :content_view_id
-    add_column :katello_filters, :all_repositories, :boolean
     add_column :katello_filters, :type, :string
     add_column :katello_filters, :parameters, :text
-    add_column :katello_filters, :inclusion, :boolean
 
     # TODO: content view archival
 
@@ -71,6 +69,5 @@ class RefactorContentViews < ActiveRecord::Migration
     remove_column :katello_filters, :all_repositories
     remove_column :katello_filters, :type
     remove_column :katello_filters, :parameters
-    remove_column :katello_filters, :inclusion
   end
 end
