@@ -27,6 +27,7 @@ angular.module('Bastion', [
     'ui.bootstrap',
     'ui.bootstrap.tpls',
     'angular-blocks',
+    'Bastion.custom-info',
     'Bastion.i18n',
     'Bastion.menu',
     'Bastion.subscriptions',
@@ -42,8 +43,9 @@ angular.module('Bastion', [
     'Bastion.system-groups',
     'Bastion.gpg-keys',
     'Bastion.tasks',
-    'Bastion.custom-info',
-    'Bastion.activation-keys'
+    'Bastion.activation-keys',
+    'templates'
+
 ]);
 
 /**
