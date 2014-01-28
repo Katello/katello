@@ -52,10 +52,7 @@ module Katello
     param_group :search, Api::V2::ApiController
     def index
       filters = [filter_terms(product_ids_filter)]
-      # TODO: support enabled filter in products. Product currently has
-      # an enabled method, and elasticsearch has mappings, but filtering
-      # errors. See elasticsearch output.
-      # filters << filter_terms(enabled_filter) if enabled_filter.present?
+      filters << enabled_filter unless  params[:enabled] == 'false'
       options = sort_params.merge(:filters => filters, :load_records? => true)
       @collection = item_search(Product, params, options)
       respond_for_index(:collection => @collection)
@@ -121,9 +118,7 @@ module Katello
     end
 
     def enabled_filter
-      if (enabled = params[:enabled])
-        {:enabled => enabled}
-      end
+      filter_terms({:enabled => [true]})
     end
 
     def filter_terms(terms)
