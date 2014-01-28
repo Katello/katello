@@ -27,7 +27,7 @@ module ContentViewDefinitionAuthBase
   end
 
   def teardown
-    ContentViewDefinition.delete_all
+    ContentViewDefinition.destroy_all
   end
 
   module ClassMethods

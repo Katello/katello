@@ -22,9 +22,9 @@ class ContentViewVersionTest < ActiveSupport::TestCase
   end
 
   def after_tests
-    ContentViewDefinition.delete_all
-    ContentView.delete_all
-    Organization.delete_all
+    ContentViewDefinition.destroy_all
+    ContentView.destroy_all
+    Organization.destroy_all
   end
 
   def test_create_archived_definition

@@ -14,22 +14,31 @@ class AddForeignKeysEngine < ActiveRecord::Migration
     add_foreign_key "katello_changesets", "katello_environments", :column => 'environment_id', :name => "changesets_environment_id_fk"
     add_foreign_key "katello_changesets", "katello_task_statuses", :column => 'task_status_id', :name => "changesets_task_status_id_fk"
 
-    add_foreign_key "katello_component_content_views", "katello_content_view_definition_bases", :name => "component_content_views_content_view_definition_id_fk", :column => "content_view_definition_id"
+    add_foreign_key "katello_component_content_views", "katello_content_view_definition_bases",
+                            :name => "component_content_views_content_view_definition_id_fk", :column => "content_view_definition_id"
     add_foreign_key "katello_component_content_views", "katello_content_views", :name => "component_content_views_content_view_id_fk", :column => "content_view_id"
 
-    add_foreign_key "katello_content_view_definition_bases", "katello_content_view_definition_bases", :name => "content_view_definition_bases_source_id_fk", :column => "source_id"
+    add_foreign_key "katello_content_view_definition_bases", "katello_content_view_definition_bases",
+                            :name => "content_view_definition_bases_source_id_fk", :column => "source_id"
 
-    add_foreign_key "katello_content_view_definition_products", "katello_content_view_definition_bases", :name => "content_view_definition_products_content_view_definition_id_fk", :column => "content_view_definition_id"
-    add_foreign_key "katello_content_view_definition_products", "katello_products", :name => "content_view_definition_products_product_id_fk", :column => "product_id"
+    add_foreign_key "katello_content_view_definition_products", "katello_content_view_definition_bases",
+                            :name => "content_view_definition_products_content_view_definition_id_fk", :column => "content_view_definition_id"
+    add_foreign_key "katello_content_view_definition_products", "katello_products",
+                            :name => "content_view_definition_products_product_id_fk", :column => "product_id"
 
-    add_foreign_key "katello_content_view_definition_repositories", "katello_content_view_definition_bases", :name => "CV_definition_repositories_CV_definition_id_fk", :column => "content_view_definition_id"
-    add_foreign_key "katello_content_view_definition_repositories", "katello_repositories", :name => "content_view_definition_repositories_repository_id_fk", :column => "repository_id"
+    add_foreign_key "katello_content_view_definition_repositories", "katello_content_view_definition_bases",
+                            :name => "CV_definition_repositories_CV_definition_id_fk", :column => "content_view_definition_id"
+    add_foreign_key "katello_content_view_definition_repositories", "katello_repositories",
+                            :name => "content_view_definition_repositories_repository_id_fk", :column => "repository_id"
 
-    add_foreign_key "katello_content_view_environments", "katello_content_views", :name => "content_view_environments_content_view_id_fk", :column => "content_view_id"
+    add_foreign_key "katello_content_view_environments", "katello_content_views",
+                             :name => "content_view_environments_content_view_id_fk", :column => "content_view_id"
     add_foreign_key "katello_content_view_environments", "katello_environments", :name => "content_view_environments_environment_id_fk", :column => "environment_id"
 
-    add_foreign_key "katello_content_view_version_environments", "katello_content_view_versions", :name => "content_view_version_environments_content_view_version_id_fk", :column => "content_view_version_id"
-    add_foreign_key "katello_content_view_version_environments", "katello_environments", :name => "content_view_version_environments_environment_id_fk", :column => "environment_id"
+    add_foreign_key "katello_content_view_version_environments", "katello_content_view_versions",
+                            :name => "content_view_version_environments_content_view_version_id_fk", :column => "content_view_version_id"
+    add_foreign_key "katello_content_view_version_environments", "katello_environments",
+                            :name => "content_view_version_environments_environment_id_fk", :column => "environment_id"
 
     add_foreign_key "katello_content_view_versions", "katello_content_view_definition_bases", :name => "content_view_versions_content_view_definition_archive_id_fk", :column => "definition_archive_id"
     add_foreign_key "katello_content_view_versions", "katello_content_view_definition_bases", :name => "content_view_versions_definition_archive_id_fk", :column => "definition_archive_id"
