@@ -23,7 +23,7 @@ module Katello
       Apipie.configuration.api_controllers_matcher = "#{Katello::Engine.root}/app/controllers/katello/api/v2/*.rb"
     end
 
-    initializer "katello.register_actions" do |app|
+    initializer "katello.register_actions", :before => 'foreman_tasks.initialize_dynflow' do |app|
       ForemanTasks.dynflow.require!
       action_paths = %W[#{Katello::Engine.root}/app/lib/actions
                         #{Katello::Engine.root}/app/lib/headpin/actions
