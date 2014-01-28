@@ -33,7 +33,7 @@ angular.module('Bastion.gpg-keys').controller('NewGPGKeyController',
         $scope.contentFormType = 'paste';
 
         $scope.uploadContent = function (content) {
-            if (content && (content !== "Please wait...")) {
+            if (content) {
                 if (content.errors === undefined) {
                     $scope.table.addRow(content);
                     $scope.uploadStatus = 'success';

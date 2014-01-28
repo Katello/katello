@@ -102,8 +102,7 @@ angular.module('Bastion.subscriptions').controller('ManifestImportController',
 
         $scope.uploadManifest = function (content) {
             var returnData;
-
-            if (content !== "Please wait...") {
+            if (content) {
                 try {
                     returnData = JSON.parse(angular.element(content).html());
                 } catch (err) {

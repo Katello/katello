@@ -39,18 +39,6 @@ describe('Controller: SystemEventDetailsController', function() {
         $controller('SystemEventDetailsController', {$scope: $scope, SystemTask: SystemTask});
     }));
 
-    it("provides a way to go back to event list by default", function() {
-        $scope.transitionBack();
-        expect($scope.transitionTo).toHaveBeenCalledWith('systems.details.events.index', {});
-    });
-
-    it("provides a way to go back to any page", function() {
-        var fromParams = {foo:1};
-        $scope.$broadcast('$stateChangeSuccess', '', '', 'blah.blah', fromParams);
-        $scope.transitionBack();
-        expect($scope.transitionTo).toHaveBeenCalledWith('blah.blah', fromParams);
-    });
-
     it("sets event", function() {
         expect(SystemTask.get).toHaveBeenCalledWith({id: '3'}, jasmine.any(Function));
         expect($scope.event).toBe(mockEvent);

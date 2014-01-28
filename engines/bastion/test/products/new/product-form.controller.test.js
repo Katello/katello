@@ -24,7 +24,8 @@ describe('Controller: ProductFormController', function() {
             $q = $injector.get('$q'),
             Product = $injector.get('MockResource').$new(),
             Provider = $injector.get('MockResource').$new(),
-            GPGKey = $injector.get('MockResource').$new();
+            GPGKey = $injector.get('MockResource').$new(),
+            SyncPlan = $injector.get('MockResource').$new();
 
         $scope = $injector.get('$rootScope').$new();
         $httpBackend = $injector.get('$httpBackend');
@@ -45,6 +46,7 @@ describe('Controller: ProductFormController', function() {
             Product: Product,
             Provider: Provider,
             GPGKey: GPGKey,
+            SyncPlan: SyncPlan,
             FormUtils: FormUtils
         });
     }));

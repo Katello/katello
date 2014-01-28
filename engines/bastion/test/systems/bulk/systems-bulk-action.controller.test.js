@@ -12,13 +12,13 @@
  **/
 
 describe('Controller: SystemsBulkActionController', function() {
-    var $scope, $q, selected, gettext, BulkAction, SystemGroup, Organization, Task, CurrentOrganization;
+    var $scope, $q, selected, gettext, SystemBulkAction, SystemGroup, Organization, Task, CurrentOrganization;
 
     beforeEach(module('Bastion.systems', 'Bastion.test-mocks'));
 
     beforeEach(function() {
         selected = {included: {ids: [1, 2, 3]}};
-        BulkAction = {
+        SystemBulkAction = {
             addSystemGroups: function() {},
             removeSystemGroups: function() {},
             installContent: function() {},
@@ -49,7 +49,7 @@ describe('Controller: SystemsBulkActionController', function() {
 
         $controller('SystemsBulkActionController', {$scope: $scope,
             $q: $q,
-            BulkAction: BulkAction,
+            SystemBulkAction: SystemBulkAction,
             SystemGroup: SystemGroup,
             CurrentOrganization: 'foo',
             gettext: gettext,
@@ -59,10 +59,10 @@ describe('Controller: SystemsBulkActionController', function() {
     }));
 
     it("can a remove multiple systems", function() {
-        spyOn(BulkAction, 'removeSystems');
+        spyOn(SystemBulkAction, 'removeSystems');
         $scope.performRemoveSystems();
 
-        expect(BulkAction.removeSystems).toHaveBeenCalledWith(_.extend(selected, {'organization_id': 'foo'}),
+        expect(SystemBulkAction.removeSystems).toHaveBeenCalledWith(_.extend(selected, {'organization_id': 'foo'}),
             jasmine.any(Function), jasmine.any(Function)
         );
     });

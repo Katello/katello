@@ -29,7 +29,7 @@ module Katello
         end
 
         def editable?
-          Katello::Product.all_editable(self.organization).where(:id => id).count > 0
+          self.provider.editable?
         end
 
         def deletable?
@@ -47,6 +47,33 @@ module Katello
 
         def all_editable(org)
           Katello::Product.where(:provider_id => Katello::Provider.editable(org).where(:provider_type => Katello::Provider::CUSTOM).pluck(:id))
+        end
+
+        def assert_deletable(products)
+          invalid_perms = products.select{ |product| !product.deletable? }.collect{ |product| product.name }
+
+          unless invalid_perms.empty?
+            fail Errors::SecurityViolation, _("Product deletion is not allowed for product(s): %s") % invalid_perms.join(', ')
+          end
+          true
+        end
+
+        def assert_syncable(products)
+          invalid_perms = products.select{ |product| !product.syncable? }.collect{ |product| product.name }
+
+          unless invalid_perms.empty?
+            fail Errors::SecurityViolation, _("Product syncing is not allowed for product(s): %s") % invalid_perms.join(', ')
+          end
+          true
+        end
+
+        def assert_editable(products)
+          invalid_perms = products.select{ |product| !product.editable? }.collect{ |product| product.name }
+
+          unless invalid_perms.empty?
+            fail Errors::SecurityViolation, _("Product modification is not allowed for product(s): %s") % invalid_perms.join(', ')
+          end
+          true
         end
 
         def creatable?(provider)

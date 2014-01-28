@@ -12,13 +12,13 @@
  **/
 
 describe('Controller: SystemsBulkActionPackagesController', function() {
-    var $scope, $q, gettext, BulkAction, SystemGroup, Organization,
+    var $scope, $q, gettext, SystemBulkAction, SystemGroup, Organization,
 		Task, CurrentOrganization, selected;
 
     beforeEach(module('Bastion.systems', 'Bastion.test-mocks'));
 
     beforeEach(function() {
-        BulkAction = {
+        SystemBulkAction = {
             addSystemGroups: function() {},
             removeSystemGroups: function() {},
             installContent: function() {},
@@ -50,7 +50,7 @@ describe('Controller: SystemsBulkActionPackagesController', function() {
 
         $controller('SystemsBulkActionPackagesController', {$scope: $scope,
             $q: $q,
-            BulkAction: BulkAction,
+            SystemBulkAction: SystemBulkAction,
             SystemGroup: SystemGroup,
             gettext: gettext,
             Organization: Organization,
@@ -65,10 +65,10 @@ describe('Controller: SystemsBulkActionPackagesController', function() {
             content: 'zip, zsh, xterm'
         };
 
-        spyOn(BulkAction, 'installContent');
+        spyOn(SystemBulkAction, 'installContent');
         $scope.performContentAction();
 
-        expect(BulkAction.installContent).toHaveBeenCalledWith(
+        expect(SystemBulkAction.installContent).toHaveBeenCalledWith(
             _.extend({}, selected, {
                 content_type: $scope.content.contentType,
                 content: $scope.content.content.split(/ *, */)
@@ -84,10 +84,10 @@ describe('Controller: SystemsBulkActionPackagesController', function() {
             content: 'zip, zsh, xterm'
         };
 
-        spyOn(BulkAction, 'updateContent');
+        spyOn(SystemBulkAction, 'updateContent');
         $scope.performContentAction();
 
-        expect(BulkAction.updateContent).toHaveBeenCalledWith(
+        expect(SystemBulkAction.updateContent).toHaveBeenCalledWith(
             _.extend({}, selected, {
                 content_type: $scope.content.contentType,
                 content: $scope.content.content.split(/ *, */)
@@ -103,10 +103,10 @@ describe('Controller: SystemsBulkActionPackagesController', function() {
             content: 'zip, zsh, xterm'
         };
 
-        spyOn(BulkAction, 'removeContent');
+        spyOn(SystemBulkAction, 'removeContent');
         $scope.performContentAction();
 
-        expect(BulkAction.removeContent).toHaveBeenCalledWith(
+        expect(SystemBulkAction.removeContent).toHaveBeenCalledWith(
             _.extend({}, selected, {
                 content_type: $scope.content.contentType,
                 content: $scope.content.content.split(/ *, */)
@@ -122,10 +122,10 @@ describe('Controller: SystemsBulkActionPackagesController', function() {
             content: 'Backup Client, Development Tools'
         };
 
-        spyOn(BulkAction, 'installContent');
+        spyOn(SystemBulkAction, 'installContent');
         $scope.performContentAction();
 
-        expect(BulkAction.installContent).toHaveBeenCalledWith(
+        expect(SystemBulkAction.installContent).toHaveBeenCalledWith(
             _.extend({}, selected, {
                 content_type: $scope.content.contentType,
                 content: $scope.content.content.split(/ *, */)
@@ -141,10 +141,10 @@ describe('Controller: SystemsBulkActionPackagesController', function() {
             content: 'Backup Client, Development Tools'
         };
 
-        spyOn(BulkAction, 'updateContent');
+        spyOn(SystemBulkAction, 'updateContent');
         $scope.performContentAction();
 
-        expect(BulkAction.updateContent).toHaveBeenCalledWith(
+        expect(SystemBulkAction.updateContent).toHaveBeenCalledWith(
             _.extend({}, selected, {
                 content_type: $scope.content.contentType,
                 content: $scope.content.content.split(/ *, */)
@@ -160,10 +160,10 @@ describe('Controller: SystemsBulkActionPackagesController', function() {
             content: 'Backup Client, Development Tools'
         };
 
-        spyOn(BulkAction, 'removeContent');
+        spyOn(SystemBulkAction, 'removeContent');
         $scope.performContentAction();
 
-        expect(BulkAction.removeContent).toHaveBeenCalledWith(
+        expect(SystemBulkAction.removeContent).toHaveBeenCalledWith(
             _.extend({}, selected, {
                 content_type: $scope.content.contentType,
                 content: $scope.content.content.split(/ *, */)

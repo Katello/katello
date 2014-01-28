@@ -17,24 +17,69 @@
  *
  * @requires $scope
  * @requires Repository
+ * @requires RepositoryBulkAction
  * @requires CurrentOrganization
+ * @requires Nutupane
  *
  *
  * @description
  *   Provides the functionality for manipulating repositories attached to a product.
  */
 angular.module('Bastion.products').controller('ProductRepositoriesController',
-    ['$scope', 'Repository', 'CurrentOrganization',
-    function ($scope, Repository, CurrentOrganization) {
-        if ($scope.$stateParams.productId && !$scope.$stateParams.repositoryId) {
-            Repository.query({
-                'product_id': $scope.$stateParams.productId,
-                'library': true,
-                'organization_id': CurrentOrganization,
-                'enabled': true
-            }, function (response) {
-                $scope.repositories = response.results;
+    ['$scope', 'Repository', 'RepositoryBulkAction', 'CurrentOrganization', 'Nutupane',
+    function ($scope, Repository, RepositoryBulkAction, CurrentOrganization, Nutupane) {
+        var repositoriesNutupane = new Nutupane(Repository, {
+            'product_id': $scope.$stateParams.productId,
+            'library': true,
+            'organization_id': CurrentOrganization,
+            'enabled': true
+        });
+
+        $scope.successMessages = [];
+        $scope.errorMessages = [];
+
+        $scope.repositoriesTable = repositoriesNutupane.table;
+        repositoriesNutupane.query();
+
+        $scope.syncSelectedRepositories = function () {
+            var params = getParams();
+
+            $scope.syncInProgress = true;
+            RepositoryBulkAction.syncRepositories(params, success, error).$promise.then(function () {
+                repositoriesNutupane.refresh();
+                $scope.syncInProgress = false;
             });
+        };
+
+        $scope.removeSelectedRepositories = function () {
+            var params = getParams();
+
+            $scope.removingRepositories = true;
+            RepositoryBulkAction.removeRepositories(params, success, error).$promise.then(function () {
+                repositoriesNutupane.refresh();
+                $scope.removingRepositories = false;
+            });
+        };
+
+        $scope.removeRepository = function (repository) {
+            repositoriesNutupane.removeRow(repository.id);
+            repository.$delete(function () {
+                $scope.transitionTo('products.details.repositories.index', {productId: $scope.$stateParams.productId});
+            });
+        };
+
+        function getParams() {
+            return {
+                ids: repositoriesNutupane.getAllSelectedResults('id').included.ids
+            };
+        }
+
+        function success(response) {
+            $scope.successMessages = response.displayMessages;
+        }
+
+        function error(response) {
+            $scope.successMessages = response.data.errors;
         }
     }]
 );

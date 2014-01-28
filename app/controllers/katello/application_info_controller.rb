@@ -29,7 +29,7 @@ class ApplicationInfoController < Katello::ApplicationController
     @system_info = {  _("Application") => Katello.config.app_name,
                       _("Version")     => Katello.config.katello_version
                    }
-    if current_user.allowed_to? :read, :organizations
+    if ::User.allowed_to?(:read, :organizations)
       @system_info.merge!(_("Environment") => Rails.env,
                           _("Directory")   => Rails.root,
                           _("Authentication") => Katello.config.warden,

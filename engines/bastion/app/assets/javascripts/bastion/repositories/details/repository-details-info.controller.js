@@ -68,16 +68,10 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
             return deferred.promise;
         };
 
-        $scope.removeRepository = function (repository) {
-            repository.$delete(function () {
-                $scope.transitionTo('products.details.repositories.index', {productId: $scope.$stateParams.productId});
-            });
-        };
-
         $scope.uploadContent = function (content) {
             var returnData;
 
-            if (content !== "Please wait...") {
+            if (content) {
                 try {
                     returnData = JSON.parse(angular.element(content).html());
                 } catch (err) {

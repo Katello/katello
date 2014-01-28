@@ -1,62 +1,100 @@
 <section class="details details-full">
+  <div alch-alert success-messages="successMessages" error-messages="errorMessages"></div>
   <h4 translate>Repositories</h4>
 
   <input type="text"
          class="form-control filter-input"
          placeholder="{{ 'Filter' | translate }}"
          ng-model="repositorySearch"/>
-  <button class="btn btn-primary fr"
-          translate
-          ng-disabled="product.readonly"
-          ui-sref="products.details.repositories.new({productId: product.id})">
-    Create Repository
-  </button>
 
-  <table class="table table-striped">
+  <span class="pull-right">
+
+      <button class="btn btn-danger"
+              ng-disabled="removingRepositories || repositoriesTable.numSelected == 0"
+              ng-click="openModal()">
+        <span ng-show="removingRepositories">
+          <i class="icon-spinner inline-icon icon-spin"></i>
+          <span>{{ "Removing Repositories" | translate }}</span>
+        </span>
+        <span ng-hide="removingRepositories">
+          <i class="icon-trash"></i>
+          {{ "Remove Repositories" | translate }}
+        </span>
+      </button>
+
+
+      <div alch-modal="removeSelectedRepositories()" model="table"
+           modal-header='Remove {{ repositoriesTable.numSelected  }} Repositories?'
+           modal-body='Are you sure you want to remove the {{ repositoriesTable.numSelected }} repositories selected?'></div>
+
+    <button class="btn btn-default"
+            ng-click="syncSelectedRepositories()"
+            ng-disabled="repositoriesTable.numSelected == 0">
+      <i class="icon-spinner icon-spin" ng-show="syncInProgress"></i>
+      <span ng-show="syncInProgress" translate>Syncing...</span>
+      <i ng-hide="syncInProgress" class="icon-refresh"></i>
+      <span ng-hide="syncInProgress" translate>Sync Now</span>
+    </button>
+    <button class="btn btn-primary"
+            translate
+            ng-disabled="product.readonly"
+            ui-sref="products.details.repositories.new({productId: product.id})">
+      Create Repository
+    </button>
+  </span>
+
+  <table alch-table="repositoriesTable"
+         class="table table-striped"
+         ng-class="{'table-mask': repositoriesTable.working}">
     <thead>
-      <tr>
-        <th translate>Name</th>
-        <th translate>Type</th>
-        <th translate>Last Sync</th>
-        <th translate>Sync State</th>
-        <th class="number-cell" translate>Packages</th>
-        <th class="number-cell" translate>Errata</th>
-        <th class="number-cell" translate>Puppet Modules</th>
+      <tr alch-table-head row-select>
+        <th alch-table-column="name" translate>Name</th>
+        <th alch-table-column="type" translate>Type</th>
+        <th alch-table-column="sync-status" translate>Sync Status</th>
+        <th alch-table-column="content" translate>Content</th>
       </tr>
     </thead>
 
     <tbody>
-      <tr ng-repeat="repository in repositories | filter:repositorySearch" row-select>
-        <td>
+      <tr alch-table-row
+          row-select="repository"
+          ng-repeat="repository in repositoriesTable.rows | filter:repositorySearch">
+        <td alch-table-cell>
           <a ng-href="#/products/{{ product.id }}/repositories/{{ repository.id }}">{{ repository.name }}</a>
         </td>
-        <td>{{ repository.content_type }}</td>
-        <td>
+        <td alch-table-cell>{{ repository.content_type }}</td>
+        <td alch-table-cell>
           <span ng-show="repository.feed">
-            {{ repository.last_sync | date:"short" }}
+            <span ng-show="repository.last_sync == null" translate>
+              Not Synced
+            </span>
+            <span ng-hide="repository.last_sync == null">
+              <a href="sync_management/index">{{ repository.sync_state | capitalize}}</a>
+              ({{ repository.last_sync | date:"short" }})
+            </span>
           </span>
           <span ng-hide="repository.feed" translate>N/A</span>
         </td>
-        <td>
-          <span ng-show="repository.feed">
-            <a href="sync_management/index">{{ repository.sync_state }}</a>
+        <td alch-table-cell>
+          <span ng-show="repository.content_type == 'puppet'">
+            <a translate ng-href="/katello/content_search#/!=&search[subgrid][repo_id]={{ repository.id }}&search[subgrid][type]=repo_puppet_modules">
+              {{ repository.content_counts.puppet_module || 0 }} Puppet Modules
+            </a>
           </span>
-          <span ng-hide="repository.feed" translate>N/A</span>
-        </td>
-        <td class="number-cell">
-          <a ng-href="/katello/content_search#/!=&search[subgrid][repo_id]={{ repository.id }}&search[subgrid][type]=repo_packages">
-            {{ repository.content_counts.rpm || 0 }}
-          </a>
-        </td>
-        <td class="number-cell">
-          <a ng-href="/katello/content_search#/!=&search[subgrid][repo_id]={{ repository.id }}&search[subgrid][type]=repo_errata">
-          {{ repository.content_counts.erratum || 0 }}
-          </a>
-        </td>
-        <td class="number-cell">
-          <a ng-href="/katello/content_search#/!=&search[subgrid][repo_id]={{ repository.id }}&search[subgrid][type]=repo_puppet_modules">
-          {{ repository.content_counts.puppet_module || 0 }}
-          </a>
+
+          <span ng-hide="repository.content_type == 'puppet'">
+            <div>
+              <a translate ng-href="/katello/content_search#/!=&search[subgrid][repo_id]={{ repository.id }}&search[subgrid][type]=repo_packages">
+                {{ repository.content_counts.rpm || 0 }} Packages
+              </a>
+            </div>
+
+            <div>
+              <a translate ng-href="/katello/content_search#/!=&search[subgrid][repo_id]={{ repository.id }}&search[subgrid][type]=repo_errata">
+                {{ repository.content_counts.erratum || 0 }} Errata
+              </a>
+            </div>
+          </span>
         </td>
       </tr>
     </tbody>
