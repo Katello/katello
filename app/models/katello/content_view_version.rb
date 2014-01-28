@@ -92,8 +92,9 @@ class ContentViewVersion < Katello::Model
     end
   end
 
-  def trigger_repository_changes
-    Repository.trigger_contents_changed(self.repositories, :wait => true, :reindex => true)
+  def trigger_repository_changes(options = {})
+    Repository.trigger_contents_changed(self.repositories, :wait => true, :reindex => true,
+                                        :cloned_repo_overrides => options.fetch(:cloned_repo_overrides, []))
   end
 
   private

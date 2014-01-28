@@ -244,9 +244,17 @@ class Repository < Katello::Model
     wait = options.fetch(:wait, false)
     reindex = options.fetch(:reindex, true) && Katello.config.use_elasticsearch
     publish = options.fetch(:publish, true) && Katello.config.use_pulp
+    cloned_repo_overrides = options.fetch(:cloned_repo_overrides, [])
 
     tasks = []
-    tasks += repos.flat_map{|repo| repo.generate_metadata} if publish
+    if publish
+      tasks += repos.flat_map do |repo|
+        clone = cloned_repo_overrides.find do |c|
+          repo.library_instance_id == c.id || repo.library_instance_id == c.library_instance_id
+        end
+        repo.generate_metadata(:cloned_repo_override => clone)
+      end
+    end
     repos.each{|repo| repo.generate_applicability } #don't wait on applicability
     repos.each{|repo| repo.index_content } if reindex
 

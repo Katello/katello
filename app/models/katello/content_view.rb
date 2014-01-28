@@ -323,10 +323,12 @@ class ContentView < Katello::Model
       associate_contents(cloned)
     end
     update_cp_content(self.organization.library)
-    version.trigger_repository_changes
+
+    clone_overrides = self.repositories.select{|r| self.filters.applicable(r).empty?}
+    version.trigger_repository_changes(:cloned_repo_overrides => clone_overrides)
 
     Glue::Event.trigger(Katello::Actions::ContentViewPublish, self)
-    Katello::Foreman.update_foreman_content(view.organization, view.organization.library, view)
+    Katello::Foreman.update_foreman_content(self.organization, self.organization.library, self)
 
     if notify
       message = _("Successfully published content view '%s'.") % name
