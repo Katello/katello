@@ -44,7 +44,7 @@ class Api::V2::SubscriptionsController < Api::V2::ApiController
   end
 
   api :GET, "/systems/:system_id/subscriptions", "List system subscriptions"
-  api :GET, "/organization/:organization_id/subscriptions", "List organization subscriptions"
+  api :GET, "/organizations/:organization_id/subscriptions", "List organization subscriptions"
   param :system_id, String, :desc => "UUID of the system", :required => false
   param :organization_id, :identifier, :desc => "Organization id", :required => false
   # rubocop:disable SymbolName

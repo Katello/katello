@@ -31,10 +31,10 @@ class PuppetModule
     if metadata
       return JSON.parse(metadata).with_indifferent_access
     else
-      fail Katello::Errors::InvalidPuppetModuleError, _("Could not parse metadata. Make sure the puppet module is valid.")
+      fail Katello::Errors::InvalidPuppetModuleError, _("Invalid puppet module. Please make sure the puppet module contains a metadata.json file and is properly compressed.")
     end
   rescue Zlib::GzipFile::Error, Gem::Package::TarInvalidError
-    raise Katello::Errors::InvalidPuppetModuleError, _("Could not parse metadata. Make sure the puppet module is valid.")
+    raise Katello::Errors::InvalidPuppetModuleError, _("Could not unarchive puppet module. Please make sure the puppet module has been compressed properly.")
   ensure
     tar_extract.close if tar_extract
   end

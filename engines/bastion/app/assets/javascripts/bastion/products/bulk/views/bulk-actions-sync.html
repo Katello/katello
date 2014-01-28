@@ -1,0 +1,37 @@
+<div>
+  <header translate>Press 'Sync Now' below to begin syncing the following product(s).</header>
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th translate>Name</th>
+        <th translate>Description</th>
+        <th translate>Repositories</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr ng-repeat="product in productTable.getSelected()">
+        <td>
+          <a ui-sref="products.details.info({ productId: product.id })">{{ product.name }}</a>
+        </td>
+        <td>{{ product.description }}</td>
+        <td>
+          <span ng-repeat="repository in product.repositories">
+            {{ repository.name }}<span ng-show="!$last">, </span>
+          </span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="pull-left">
+    <button class="btn btn-default"
+            ng-click="syncProducts()">
+      <i class="icon-spinner icon-spin" ng-show="syncingProducts"></i>
+      <span ng-show="syncingProducts" translate>Syncing...</span>
+      <i ng-hide="syncingProducts" class="icon-refresh"></i>
+      <span ng-hide="syncingProducts" translate>Sync Now</span>
+    </button>
+  </div>
+</div>

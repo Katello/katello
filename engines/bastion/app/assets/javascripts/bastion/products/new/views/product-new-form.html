@@ -39,11 +39,20 @@
     </select>
   </div>
 
+  <div alch-form-group label="{{ 'Sync Plan' | translate }}">
+    <select id="sync_plan_id"
+            name="sync_plan_id"
+            ng-model="product.sync_plan_id"
+            ng-options="syncPlan.id as syncPlan.name for syncPlan in syncPlans"
+            tabindex="5">
+    </select>
+    <a ui-sref="products.new.sync-plan" translate>+ New Sync Plan</a>
+  </div>
+
   <div alch-form-group label="{{ 'Description' | translate }}">
     <textarea id="description"
               name="description"
-              ng-model="product.description"
-              tabindex="5">
+              ng-model="p6">
     </textarea>
   </div>
 

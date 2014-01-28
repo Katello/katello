@@ -1,9 +1,11 @@
-<table alch-table="table" class="table table-striped" ng-class="{'table-mask': productTable.working}">
+<table class="table table-striped" ng-class="{'table-mask': productTable.working}">
   <thead>
     <tr alch-table-head row-select>
       <th alch-table-column="name" sortable>{{ "Name" | translate }}</th>
+      <th alch-table-column="description" sortable>{{ "Description" | translate }}</th>
       <th alch-table-column="provider" sortable>{{ "Provider" | translate }}</th>
-      <th alch-table-column="organization" sortable>{{ "Organization" | translate }}</th>
+      <th alch-table-column="sync_status" sortable>{{ "Sync Status" | translate }}</th>
+      <th alch-table-column="sync_plan" sortable>{{ "Sync Plan" | translate }}</th>
       <th alch-table-column class="number-cell">{{ "Repositories" | translate }}</th>
     </tr>
   </thead>
@@ -16,8 +18,29 @@
         </a>
         <i class="icon-chevron-right selected-icon" ng-show="product.selected"></i>
       </td>
+      <td alch-table-cell>{{ product.description }}</td>
       <td alch-table-cell>{{ product.provider.name }}</td>
-      <td alch-table-cell>{{ product.organization.name }}</td>
+      <td alch-table-cell>
+        <ul class="list-unstyled" ng-show="product.sync_status.finish_time">
+          <p translate>Last synced on {{ product.sync_status.finish_time | date:'short' }}</p>
+          <li ng-repeat="(key, value) in product.repositoriesByState">
+            <a href="/katello/sync_management">{{ key | capitalize }}</a>:
+            <span translate
+                  translate-n="value.length"
+                  translate-plural="{{ value.length }} repositories">
+              {{ value.length }} repository
+            </span>
+          </li>
+        </ul>
+        <span ng-hide="product.sync_status.finish_time" translate>Never synced</span>
+      </td>
+      <td alch-table-cell>
+        {{ product.sync_plan.name }}
+        <span ng-hide="product.sync_plan" translate>None</span>
+        <span ng-show="product.sync_plan">
+          ({{ product.sync_plan.interval }})
+        </span>
+      </td>
       <td alch-table-cell class="number-cell">{{ product.repository_count }}</td>
     </tr>
   </tbody>

@@ -3,7 +3,7 @@
     <span class="editable-value">{{ displayValue }}</span>
     <span class="fr">
       <i class="icon-edit inline-icon" ng-hide="editMode || readonly"></i>
-      <i class="icon-remove inline-icon" ng-click="delete($event)" ng-show="deletable"></i>
+      <i class="icon-remove inline-icon" ng-click="delete($event)" ng-show="deletable && !editMode"></i>
     </span>
   </div>
 

@@ -98,6 +98,7 @@ angular.module('Bastion').config(
  */
 angular.module('Bastion').run(['$rootScope', '$state', '$stateParams', 'gettextCatalog', 'currentLocale', '$location',
     function ($rootScope, $state, $stateParams, gettextCatalog, currentLocale, $location) {
+        var fromState, fromParams;
 
         $rootScope.$state = $state;
         $rootScope.$stateParams = $stateParams;
@@ -108,6 +109,12 @@ angular.module('Bastion').run(['$rootScope', '$state', '$stateParams', 'gettextC
         };
 
         $rootScope.stateIncludes = $state.includes;
+
+        $rootScope.transitionBack = function () {
+            if (fromState) {
+                $state.transitionTo(fromState, fromParams);
+            }
+        };
 
         // Set the current language
         gettextCatalog.currentLanguage = currentLocale;
@@ -123,9 +130,16 @@ angular.module('Bastion').run(['$rootScope', '$state', '$stateParams', 'gettextC
         });
 
         $rootScope.$on('$stateChangeSuccess',
-            function () {
+            function (event, toState, toParams, fromStateIn, fromParamsIn) {
                 //restore all query string parameters back to $location.search
                 $location.search(this.locationSearch);
-            });
+
+                //Record our from state, so we can transition back there
+                if (!fromStateIn.abstract) {
+                    fromState = fromStateIn;
+                    fromParams = fromParamsIn;
+                }
+            }
+        );
     }
 ]);

@@ -237,6 +237,8 @@ angular.module('alchemy')
                 handleOptions: '&options',
                 handleSave: '&onSave',
                 handleCancel: '&onCancel',
+                deletable: '=deletable',
+                handleDelete: '&onDelete',
                 editTrigger: '='
             },
             templateUrl: 'incubator/views/alch-edit-select.html',

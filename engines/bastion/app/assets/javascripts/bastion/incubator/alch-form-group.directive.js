@@ -31,16 +31,20 @@
  */
 angular.module('alchemy').directive('alchFormGroup', function () {
     function getInput(element) {
-        var input = element.find('input');
+        // table is used for bootstrap3 date/time pickers
+        var input = element.find('table');
 
         if (input.length === 0) {
-            input = element.find('select');
+            input = element.find('input');
 
             if (input.length === 0) {
-                input = element.find('textarea');
+                input = element.find('select');
+
+                if (input.length === 0) {
+                    input = element.find('textarea');
+                }
             }
         }
-
         return input;
     }
 
@@ -55,6 +59,7 @@ angular.module('alchemy').directive('alchFormGroup', function () {
         },
         link: function (scope, iElement, iAttrs, controller) {
             var input = getInput(iElement),
+                type = input.attr('type'),
                 field;
 
             if (!scope.field) {
@@ -62,7 +67,7 @@ angular.module('alchemy').directive('alchFormGroup', function () {
             }
             field = scope.field;
 
-            if (input.attr('type') !== "checkbox" && input.attr('type') !== 'radio') {
+            if (['checkbox', 'radio', 'time'].indexOf(type) === -1) {
                 input.addClass('form-control');
             }
 

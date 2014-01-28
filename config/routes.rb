@@ -150,13 +150,6 @@ Katello::Engine.routes.draw do
     end
   end
 
-  resources :sync_schedules do
-    collection do
-      get :index
-      post :apply
-    end
-  end
-
   resources :sync_management, :only => [:destroy] do
     collection do
       get :manage

@@ -28,6 +28,9 @@ end
 
 child :product do |product|
   attribute :cp_id
+  node :sync_plan do |sync_plan|
+    partial('katello/api/v2/sync_plans/show', :object => product.sync_plan)
+  end
 end
 
 child :environment => :environment do |repo|
