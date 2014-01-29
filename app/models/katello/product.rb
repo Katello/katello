@@ -14,6 +14,7 @@ module Katello
 class Product < Katello::Model
   self.include_root_in_json = false
 
+  include ForemanTasks::Concerns::ActionSubject
   include Glue::ElasticSearch::Product if Katello.config.use_elasticsearch
   include Glue::Candlepin::Product if Katello.config.use_cp
   include Glue::Pulp::Repos if Katello.config.use_pulp
@@ -216,6 +217,14 @@ class Product < Katello::Model
 
   def syncable_content?
     repositories.any?(&:feed?)
+  end
+
+  def related_resources
+    self.provider
+  end
+
+  def to_action_input
+    super.merge(cp_id: cp_id)
   end
 
   protected

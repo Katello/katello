@@ -19,6 +19,7 @@ class System < Katello::Model
   define_hooks :add_system_group_hook, :remove_system_group_hook,
                :as_json_hook
 
+  include ForemanTasks::Concerns::ActionSubject
   include Glue::Candlepin::Consumer if Katello.config.use_cp
   include Glue::Pulp::Consumer if Katello.config.use_pulp
   include Glue if Katello.config.use_cp || Katello.config.use_pulp
@@ -241,6 +242,18 @@ class System < Katello::Model
     hash.with_indifferent_access
   end
 
+  def self.available_locks
+    [:read, :write]
+  end
+
+  def related_resources
+    self.organization
+  end
+
+  def to_action_input
+    super.merge(uuid: uuid)
+  end
+
   private
 
     def refresh_running_tasks
@@ -271,6 +284,5 @@ class System < Katello::Model
       self.custom_info.each { |c| hash[c.keyname] = c.value } if self.custom_info
       hash
     end
-
 end
 end

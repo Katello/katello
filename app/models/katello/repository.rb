@@ -16,6 +16,7 @@ class Repository < Katello::Model
 
   before_destroy :assert_deletable
 
+  include ForemanTasks::Concerns::ActionSubject
   include Glue::Candlepin::Content if (Katello.config.use_cp && Katello.config.use_pulp)
   include Glue::Pulp::Repo if Katello.config.use_pulp
   include Glue::ElasticSearch::Repository if Katello.config.use_elasticsearch
@@ -23,14 +24,15 @@ class Repository < Katello::Model
   include Glue if (Katello.config.use_cp || Katello.config.use_pulp)
   include Authorization::Repository
 
-  include Glue::Event
-  def destroy_event
-    Katello::Actions::RepositoryDestroy
-  end
-
-  def create_event
-    Katello::Actions::RepositoryCreate
-  end
+  # NG_TODO: update engines to use Actions::Katello::Repository actions
+  # include Glue::Event
+  # def destroy_event
+  #   Katello::Actions::RepositoryDestroy
+  # end
+  #
+  # def create_event
+  #   Katello::Actions::RepositoryCreate
+  # end
 
   include AsyncOrchestration
   include Ext::LabelFromName
@@ -318,6 +320,10 @@ class Repository < Katello::Model
     else
       []
     end
+  end
+
+  def related_resources
+    self.product
   end
 
   protected

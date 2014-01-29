@@ -10,14 +10,21 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-module Katello
-  module Actions
-    class RepositoryCreate < Dynflow::Action
+module Actions
+  module Katello
+    module Repository
+      class Destroy < Actions::EntryAction
 
-      def plan(repo)
-        # third party plugins can hook here to perform additional actions
+        def plan(repository)
+          action_subject(repository)
+          repository.destroy
+        end
+
+        def humanized_name
+          _("Delete")
+        end
+
       end
-
     end
   end
 end

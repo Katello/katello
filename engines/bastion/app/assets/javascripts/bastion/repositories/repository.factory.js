@@ -30,7 +30,7 @@ angular.module('Bastion.repositories').factory('Repository',
             {
                 update: { method: 'PUT' },
                 query: { method: 'GET' },
-                sync: {method: 'POST', params: {action: 'sync'}}
+                sync: { method: 'POST', params: { action: 'sync' } }
             }
         );
 

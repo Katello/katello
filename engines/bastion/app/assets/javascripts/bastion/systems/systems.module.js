@@ -90,6 +90,24 @@ angular.module('Bastion.systems').config(['$stateProvider', function ($stateProv
         templateUrl: 'systems/details/views/system-info.html'
     });
 
+    $stateProvider.state('systems.details.tasks', {
+        abstract: true,
+        collapsed: true,
+        template: '<div ui-view></div>'
+    })
+    .state('systems.details.tasks.index', {
+        url: '/tasks',
+        collapsed: true,
+        templateUrl: 'systems/details/views/system-tasks.html'
+    })
+    .state('systems.details.tasks.details', {
+        url: '/tasks/:taskId',
+        collapsed: true,
+        data: { defaultBackState: 'systems.details.tasks.index' },
+        controller: 'TaskDetailsController',
+        templateUrl: 'tasks/views/task-details.html'
+    });
+
     $stateProvider.state('systems.details.events', {
         abstract: true,
         collapsed: true,

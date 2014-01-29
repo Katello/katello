@@ -4,6 +4,10 @@ module Katello
 
     isolate_namespace Katello
 
+    initializer 'katello.silenced_logger', :before => :build_middleware_stack do |app|
+      app.config.middleware.swap Rails::Rack::Logger, Katello::Middleware::SilencedLogger, {}
+    end
+
     initializer 'katello.mount_engine', :after => :build_middleware_stack do |app|
       app.routes_reloader.paths << "#{Katello::Engine.root}/config/routes/mount_engine.rb"
     end
@@ -17,6 +21,14 @@ module Katello
       # This way, it's possible to generate both Foreman bindings (when Katello is not loaded)
       # or just Katello bindings (when Katello loaded) the same way.
       Apipie.configuration.api_controllers_matcher = "#{Katello::Engine.root}/app/controllers/katello/api/v2/*.rb"
+    end
+
+    initializer "katello.register_actions", :before => 'foreman_tasks.initialize_dynflow' do |app|
+      ForemanTasks.dynflow.require!
+      action_paths = %W[#{Katello::Engine.root}/app/lib/actions
+                        #{Katello::Engine.root}/app/lib/headpin/actions
+                        #{Katello::Engine.root}/app/lib/katello/actions]
+      ForemanTasks.dynflow.config.eager_load_paths.concat(action_paths)
     end
 
     initializer "katello.load_app_instance_data" do |app|
@@ -84,6 +96,13 @@ module Katello
 
       # Service extensions
       require "#{Katello::Engine.root}/app/services/katello/puppet_class_importer_extensions"
+
+      # We need to explicitly load this files because Foreman has
+      # similar strucuture and if the Foreman files are loaded first,
+      # autoloading doesn't work.
+      require_dependency "#{Katello::Engine.root}/app/controllers/katello/api/api_controller"
+      require_dependency "#{Katello::Engine.root}/app/controllers/katello/api/v1/api_controller"
+      require_dependency "#{Katello::Engine.root}/app/controllers/katello/api/v2/api_controller"
       ::PuppetClassImporter.send :include, Katello::Services::PuppetClassImporterExtensions
     end
 

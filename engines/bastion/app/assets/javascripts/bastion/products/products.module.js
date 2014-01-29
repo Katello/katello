@@ -167,6 +167,24 @@ angular.module('Bastion.products').config(['$stateProvider', function ($statePro
         templateUrl: 'repositories/details/views/repository-info.html'
     });
 
+    $stateProvider.state('products.details.tasks', {
+        abstract: true,
+        collapsed: true,
+        template: '<div ui-view></div>'
+    })
+    .state('products.details.tasks.index', {
+        url: '/tasks',
+        collapsed: true,
+        templateUrl: 'products/details/views/product-tasks.html'
+    })
+    .state('products.details.tasks.details', {
+        url: '/tasks/:taskId',
+        collapsed: true,
+        data: { defaultBackState: 'products.details.tasks.index' },
+        controller: 'TaskDetailsController',
+        templateUrl: 'tasks/views/task-details.html'
+    });
+
     $stateProvider.state("products.bulk-actions", {
         abstract: true,
         collapsed: true,

@@ -142,9 +142,27 @@ angular.module('Bastion.test-mocks').factory('MockForm', function() {
 angular.module('Bastion.test-mocks').factory('MockTask',  ['MockResource',
     function(MockResource) {
         var myMock = MockResource.$new();
+        var searchIdGenerator = 0;
+        myMock.registeredSearches = {};
 
         myMock.poll = function(task, finishedCallBack) {
             myMock.get(task, finishedCallBack);
+        };
+
+        myMock.registerSearch = function(searchParams, callback) {
+            searchIdGenerator += 1;
+            var searchId = searchIdGenerator;
+            myMock.registeredSearches[searchId] = callback;
+        };
+
+        myMock.unregisterSearch = function(id) {
+            delete myMock.registeredSearches[id];
+        };
+
+        myMock.simulateBulkSearch = function (taskData) {
+            _.each(myMock.registeredSearches, function (callback) {
+                callback(taskData);
+            });
         };
         return myMock;
     }
@@ -155,10 +173,9 @@ angular.module('Bastion.test-mocks').factory('MockOrganization',  ['MockResource
         var myMock = MockResource.$new();
 
         myMock.mockDiscoveryTask = {
-            id: 'discovery_task',
             pending: false,
-            parameters: {url: 'http://fake/'},
-            result: ['http://fake/foo']
+            input: 'http://fake/',
+            output: ['http://fake/foo']
         };
 
         myMock.cancelRepoDiscover = function(params, success) {
