@@ -1,0 +1,172 @@
+--- 
+  pulp_tasks: 
+    - task_group_id: "5b58362b-3ef0-4fbb-88c1-445b7c075610"
+      exception: 
+      traceback: 
+      "_href": /pulp/api/v2/task_groups/5b58362b-3ef0-4fbb-88c1-445b7c075610/
+      task_id: c1658630-d4cd-4653-9522-df35d4311e47
+      call_request_tags: 
+        - "pulp:repository:ACME_Corporation-zoo1-zoo3"
+        - "pulp:action:sync"
+      reasons: []
+      start_time: 
+      tags: 
+        - "pulp:repository:ACME_Corporation-zoo1-zoo3"
+        - "pulp:action:sync"
+      state: waiting
+      finish_time: 
+      dependency_failures: {}
+      schedule_id: 
+      progress: {}
+      call_request_group_id: "5b58362b-3ef0-4fbb-88c1-445b7c075610"
+      call_request_id: c1658630-d4cd-4653-9522-df35d4311e47
+      principal_login: admin
+      response: accepted
+      result: 
+    - task_group_id: "5b58362b-3ef0-4fbb-88c1-445b7c075610"
+      exception: 
+      traceback: 
+      "_href": /pulp/api/v2/task_groups/5b58362b-3ef0-4fbb-88c1-445b7c075610/
+      task_id: a01fef3b-7a32-4d9a-a350-2a9b08fa62de
+      call_request_tags: 
+        - "pulp:repository:ACME_Corporation-zoo1-zoo3"
+        - "pulp:action:auto_publish"
+        - "pulp:action:publish"
+      reasons: []
+      start_time: 
+      tags: 
+        - "pulp:repository:ACME_Corporation-zoo1-zoo3"
+        - "pulp:action:auto_publish"
+        - "pulp:action:publish"
+      state: waiting
+      finish_time: 
+      dependency_failures: {}
+      schedule_id: 
+      progress: {}
+      call_request_group_id: "5b58362b-3ef0-4fbb-88c1-445b7c075610"
+      call_request_id: a01fef3b-7a32-4d9a-a350-2a9b08fa62de
+      principal_login: admin
+      response: accepted
+      result: 
+    - task_group_id: "5b58362b-3ef0-4fbb-88c1-445b7c075610"
+      exception: 
+      traceback: 
+      "_href": /pulp/api/v2/task_groups/5b58362b-3ef0-4fbb-88c1-445b7c075610/
+      task_id: f1707c81-e931-4c2c-8bf3-0a645e787596
+      call_request_tags: 
+        - "pulp:repository:ACME_Corporation-zoo1-zoo3"
+        - "pulp:action:auto_publish"
+        - "pulp:action:publish"
+      reasons: []
+      start_time: 
+      tags: 
+        - "pulp:repository:ACME_Corporation-zoo1-zoo3"
+        - "pulp:action:auto_publish"
+        - "pulp:action:publish"
+      state: waiting
+      finish_time: 
+      dependency_failures: {}
+      schedule_id: 
+      progress: {}
+      call_request_group_id: "5b58362b-3ef0-4fbb-88c1-445b7c075610"
+      call_request_id: f1707c81-e931-4c2c-8bf3-0a645e787596
+      principal_login: admin
+      response: accepted
+      result: 
+  pulp_task: 
+    task_group_id: "5b58362b-3ef0-4fbb-88c1-445b7c075610"
+    exception: 
+    traceback: 
+    "_href": /pulp/api/v2/tasks/c1658630-d4cd-4653-9522-df35d4311e47/
+    task_id: c1658630-d4cd-4653-9522-df35d4311e47
+    call_request_tags: 
+      - "pulp:repository:ACME_Corporation-zoo1-zoo3"
+      - "pulp:action:sync"
+    reasons: []
+    start_time: "2014-01-29T21:33:17Z"
+    tags: 
+      - "pulp:repository:ACME_Corporation-zoo1-zoo3"
+      - "pulp:action:sync"
+    state: finished
+    finish_time: "2014-01-29T21:33:19Z"
+    dependency_failures: {}
+    schedule_id: 
+    progress: 
+      yum_importer: 
+        content: 
+          size_total: 0
+          items_left: 0
+          items_total: 0
+          state: FINISHED
+          size_left: 0
+          details: 
+            rpm_total: 0
+            rpm_done: 0
+            drpm_total: 0
+            drpm_done: 0
+          error_details: []
+        comps: 
+          state: FINISHED
+        distribution: 
+          items_total: 0
+          state: FINISHED
+          error_details: []
+          items_left: 0
+        errata: 
+          state: FINISHED
+        metadata: 
+          state: FINISHED
+    call_request_group_id: "5b58362b-3ef0-4fbb-88c1-445b7c075610"
+    call_request_id: c1658630-d4cd-4653-9522-df35d4311e47
+    principal_login: admin
+    response: accepted
+    result: 
+      importer_id: yum_importer
+      exception: 
+      repo_id: ACME_Corporation-zoo1-zoo3
+      traceback: 
+      started: "2014-01-29T22:33:17+01:00"
+      "_ns": repo_sync_results
+      completed: "2014-01-29T22:33:19+01:00"
+      importer_type_id: yum_importer
+      error_message: 
+      summary: 
+        content: 
+          state: FINISHED
+        comps: 
+          state: FINISHED
+        distribution: 
+          state: FINISHED
+        errata: 
+          state: FINISHED
+        metadata: 
+          state: FINISHED
+      added_count: 0
+      result: success
+      updated_count: 3
+      details: 
+        content: 
+          size_total: 0
+          items_left: 0
+          items_total: 0
+          state: FINISHED
+          size_left: 0
+          details: 
+            rpm_total: 0
+            rpm_done: 0
+            drpm_total: 0
+            drpm_done: 0
+          error_details: []
+        comps: 
+          state: FINISHED
+        distribution: 
+          items_total: 0
+          state: FINISHED
+          error_details: []
+          items_left: 0
+        errata: 
+          state: FINISHED
+        metadata: 
+          state: FINISHED
+      id: "52e9739ff6732207c868ddef"
+      removed_count: 0

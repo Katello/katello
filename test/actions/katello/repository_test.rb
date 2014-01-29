@@ -17,6 +17,7 @@ module Katello
 
   describe namespace do
     include Dynflow::Testing
+    include Support::Actions::Fixtures
 
     describe 'Create' do
       it 'plans' do
@@ -64,14 +65,63 @@ module Katello
     end
 
     describe 'Sync' do
+
+      let(:action_class) { namespace::Sync }
+      let(:pulp_action_class) { ::Actions::Pulp::Repository::Sync }
+
       it 'plans' do
-        action_class = namespace::Sync
         repository   = mock 'repository', pulp_id: 1
         action       = create_action action_class
         action.stubs(:action_subject).with(repository)
         plan_action action, repository
 
-        assert_action_planed action, ::Actions::Pulp::Repository::Sync
+        assert_action_planed action, pulp_action_class
+      end
+
+      describe 'progress' do
+        let :action do
+          create_action(action_class).tap do |action|
+            action.stubs(details_action: details_action)
+          end
+        end
+
+        let(:details_action) { fixture_action(pulp_action_class, output: fixture_variant) }
+
+        describe 'successfully synchronized' do
+          let(:fixture_variant) { :success }
+
+          specify do
+            action.humanized_output.must_equal "New packages: 32 (76.7 KB)"
+          end
+        end
+
+        describe 'successfully synchronized without new packages' do
+          let(:fixture_variant) { :success_no_packages }
+
+          specify do
+            action.humanized_output.must_equal "No new packages"
+          end
+        end
+
+        describe 'syncing packages in progress' do
+          let(:fixture_variant) { :progress_packages }
+
+          specify do
+            action.humanized_output.must_equal "New packages: 20/32 (48 KB/76.7 KB)"
+          end
+
+          specify do
+            details_action.run_progress.must_be_within_delta 0.6256
+          end
+        end
+
+        describe 'downloading metadata in progress' do
+          let(:fixture_variant) { :progress_metadata }
+
+          specify do
+            action.humanized_output.must_equal "Processing metadata"
+          end
+        end
       end
     end
   end
