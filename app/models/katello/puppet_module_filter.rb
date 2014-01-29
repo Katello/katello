@@ -79,8 +79,8 @@ class PuppetModuleFilter < Filter
   def set_parameters
     parameters[:units].each do |unit|
       unit[:created_at] = Time.zone.now
-      unit[:inclusion] = false unless unit.has_key?(:inclusion)
-    end if !parameters.blank? && parameters.has_key?(:units)
+      unit[:inclusion] = false unless unit.key?(:inclusion)
+    end if !parameters.blank? && parameters.key?(:units)
   end
 
 end

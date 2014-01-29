@@ -46,8 +46,8 @@ module Validators
 
     def _check_date_range(record, attribute, value)
       date_range = value[:date_range]
-      start_date_int = date_range[:start].to_time.to_i if date_range.has_key?(:start)
-      end_date_int = date_range[:end].to_time.to_i if date_range.has_key?(:end)
+      start_date_int = date_range[:start].to_time.to_i if date_range.key?(:start)
+      end_date_int = date_range[:end].to_time.to_i if date_range.key?(:end)
 
       if start_date_int && (!(start_date_int.is_a?(Fixnum)) || !(date_range[:start].is_a?(String)))
         record.errors.add(attribute, _("The erratum filter parameter start date is in an invalid format or type."))

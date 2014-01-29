@@ -111,7 +111,7 @@ class ErratumFilter < Filter
   def set_parameters
     unless parameters.blank?
       parameters[:created_at] = Time.zone.now
-      parameters[:inclusion] = false unless parameters.has_key?(:inclusion)
+      parameters[:inclusion] = false unless parameters.key?(:inclusion)
     end
     self
   end

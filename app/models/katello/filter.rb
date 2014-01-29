@@ -70,17 +70,17 @@ class Filter < Katello::Model
 
   def self.class_for(content_type)
     case content_type
-      when PACKAGE
-        PackageFilter
-      when PACKAGE_GROUP
-        PackageGroupFilter
-      when ERRATA
-        ErratumFilter
-      when PUPPET_MODULE
-        PuppetModuleFilter
-      else
-        params = { :content_type => content_type, :content_types => CONTENT_TYPES.join(", ") }
-        fail _("Invalid content type '%{ content_type }' provided. Content types can be one of %{ content_types }") % params
+    when PACKAGE
+      PackageFilter
+    when PACKAGE_GROUP
+      PackageGroupFilter
+    when ERRATA
+      ErratumFilter
+    when PUPPET_MODULE
+      PuppetModuleFilter
+    else
+      params = { :content_type => content_type, :content_types => CONTENT_TYPES.join(", ") }
+      fail _("Invalid content type '%{ content_type }' provided. Content types can be one of %{ content_types }") % params
     end
   end
 
