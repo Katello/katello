@@ -100,6 +100,7 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
     respond_for_index :collection => collection
   end
 
+  api :POST, "/organizations/:organization_id/repositories/:id", "Create a repository"
   api :POST, "/repositories", "Create a repository"
   param_group :repo
   def create
