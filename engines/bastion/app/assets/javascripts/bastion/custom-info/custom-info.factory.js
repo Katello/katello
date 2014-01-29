@@ -1,4 +1,3 @@
-/*global BASTION*/
 /**
  * Copyright 2013 Red Hat, Inc.
  *
@@ -10,17 +9,27 @@
  * NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
  * have received a copy of GPLv2 along with this software; if not, see
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
- */
+ **/
 
 /**
  * @ngdoc service
- * @name  Bastion.utils.factory:Routes
+ * @name  Bastion.custom-info.factory:CustomInfo
+ *
+ * @requires $resource
  *
  * @description
- *   Provides a wrapper factory around KT.routes.
+ *   Provides a $resource for interacting with custom info.
  */
-angular.module('Bastion.utils').factory('Routes', function () {
-    BASTION.KT.routes.options.prefix = '/katello';
-    return BASTION.KT.routes;
-});
+angular.module('Bastion.custom-info').factory('CustomInfo',
+    ['$resource', function ($resource) {
 
+        return $resource('/api/v2/custom_info/:type/:id/:action',
+            {},
+            {
+                update: { method: 'PUT' },
+                query:  { method: 'GET', isArray: false}
+            }
+        );
+
+    }]
+);

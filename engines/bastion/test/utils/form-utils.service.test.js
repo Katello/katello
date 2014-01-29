@@ -24,7 +24,7 @@ describe('Service:formUtils', function() {
     it("provides a function that turns a name into a label", function() {
         var model = {name: 'ChangedName'}, modelForm = {};
 
-        $httpBackend.expectGET('/katello/organizations/default_label?name=ChangedName').respond('changed_name');
+        $httpBackend.expectGET('/organizations/default_label?name=ChangedName').respond('changed_name');
 
         FormUtils.labelize(model, modelForm);
         $httpBackend.flush();

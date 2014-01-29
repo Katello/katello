@@ -20,18 +20,11 @@ describe('Factory: SystemBulkAction', function() {
     beforeEach(module('Bastion.systems'));
 
     beforeEach(module(function($provide) {
-        var routes,
-            systemIds = [1, 2, 3],
+        var systemIds = [1, 2, 3],
             systemGroupIds = [8, 9];
-
-        routes = {
-            apiSystemsPath: function() {return '/katello/api/systems'}
-        };
 
         systemParams = {ids: systemIds};
         systemGroupParams = {ids: systemIds, system_group_ids: systemGroupIds};
-
-        $provide.value('Routes', routes);
     }));
 
     beforeEach(inject(function($injector) {
@@ -44,32 +37,32 @@ describe('Factory: SystemBulkAction', function() {
     });
 
     it('provides a way to add system groups to systems', function() {
-        $httpBackend.expect('PUT', '/katello/api/systems/bulk/add_system_groups', systemGroupParams).respond();
+        $httpBackend.expect('PUT', '/api/v2/systems/bulk/add_system_groups', systemGroupParams).respond();
         SystemBulkAction.addSystemGroups(systemGroupParams);
     });
 
     it('provides a way to remove system groups from systems', function() {
-        $httpBackend.expect('PUT', '/katello/api/systems/bulk/remove_system_groups', systemGroupParams).respond();
+        $httpBackend.expect('PUT', '/api/v2/systems/bulk/remove_system_groups', systemGroupParams).respond();
         SystemBulkAction.removeSystemGroups(systemGroupParams);
     });
 
     it('provides a way to install content on systems', function() {
-        $httpBackend.expect('PUT', '/katello/api/systems/bulk/install_content', systemParams).respond();
+        $httpBackend.expect('PUT', '/api/v2/systems/bulk/install_content', systemParams).respond();
         SystemBulkAction.installContent(systemParams);
     });
 
     it('provides a way to update content on systems', function() {
-        $httpBackend.expect('PUT', '/katello/api/systems/bulk/update_content', systemParams).respond();
+        $httpBackend.expect('PUT', '/api/v2/systems/bulk/update_content', systemParams).respond();
         SystemBulkAction.updateContent(systemParams);
     });
 
     it('provides a way to remove content from systems', function() {
-        $httpBackend.expect('PUT', '/katello/api/systems/bulk/remove_content', systemParams).respond();
+        $httpBackend.expect('PUT', '/api/v2/systems/bulk/remove_content', systemParams).respond();
         SystemBulkAction.removeContent(systemParams);
     });
 
     it('provides a way to remove systems', function() {
-        $httpBackend.expect('PUT', '/katello/api/systems/bulk/destroy', systemParams).respond();
+        $httpBackend.expect('PUT', '/api/v2/systems/bulk/destroy', systemParams).respond();
         SystemBulkAction.removeSystems(systemParams);
     });
 });

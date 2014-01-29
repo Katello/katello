@@ -49,8 +49,8 @@ describe('Controller: ManifestImportController', function() {
             $httpBackend = $injector.get('$httpBackend'),
             gettext;
 
-        $httpBackend.expectGET('/api/katello/organization/ACME').respond(organization);
-        $httpBackend.expectGET('/api/katello/providers/1').respond(provider);
+        $httpBackend.expectGET('/api/organization/ACME').respond(organization);
+        $httpBackend.expectGET('/api/providers/1').respond(provider);
 
         $scope = $injector.get('$rootScope').$new();
         $q = $injector.get('$q');
@@ -93,7 +93,7 @@ describe('Controller: ManifestImportController', function() {
     it('should provide a method to save a provider', function() {
         var promise;
 
-        $httpBackend.expectPUT('/api/katello/providers/1').respond(provider);
+        $httpBackend.expectPUT('/api/providers/1').respond(provider);
         promise = $scope.save($scope.provider);
         promise.then(function() {
             expect($scope.successMessages.length).toBe(1);
@@ -102,7 +102,7 @@ describe('Controller: ManifestImportController', function() {
     });
 
     it('should provide a method to delete a manifest', function() {
-        $httpBackend.expectPOST('/api/katello/providers/1/delete_manifest').respond(provider);
+        $httpBackend.expectPOST('/api/providers/1/delete_manifest').respond(provider);
         spyOn($scope.provider, '$deleteManifest').andCallThrough();
         $scope.deleteManifest($scope.provider);
         $q.all([$scope.provider.$promise, $scope.organization.$promise]).then(function () {
@@ -112,7 +112,7 @@ describe('Controller: ManifestImportController', function() {
     });
 
     it('should provide a method to refresh a manifest', function() {
-        $httpBackend.expectPOST('/api/katello/providers/1/refresh_manifest').respond(provider);
+        $httpBackend.expectPOST('/api/providers/1/refresh_manifest').respond(provider);
         spyOn($scope.provider, '$refreshManifest').andCallThrough();
         $scope.refreshManifest($scope.provider);
         $q.all([$scope.provider.$promise, $scope.organization.$promise]).then(function () {

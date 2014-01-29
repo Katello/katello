@@ -13,7 +13,6 @@
 
 describe('Factory: Environment', function() {
     var $resource,
-        Routes,
         environments;
 
     beforeEach(module('Bastion.environments', 'Bastion.utils'));
@@ -28,10 +27,6 @@ describe('Factory: Environment', function() {
             subtotal: 5,
             limit: 5,
             offset: 0
-        };
-
-        Routes = {
-            apiOrganizationEnvironmentsPath: function(organizationId) {}
         };
 
         $resource = function() {
@@ -50,7 +45,6 @@ describe('Factory: Environment', function() {
         };
 
         $provide.value('$resource', $resource);
-        $provide.value('Routes', Routes);
         $provide.value('CurrentOrganization', 'ACME');
     }));
 

@@ -26,12 +26,15 @@ angular.module('Bastion.gpg-keys').controller('GPGKeyDetailsInfoController',
     ['$scope', 'GPGKey', 'gettext', function ($scope, GPGKey, gettext) {
 
         $scope.panel = $scope.panel || {loading: false};
+        $scope.progress = {uploading: false};
 
         $scope.gpgKey = $scope.gpgKey || GPGKey.get({id: $scope.$stateParams.gpgKeyId}, function () {
             $scope.panel.loading = false;
         });
 
-        $scope.progress = {uploading: false};
+        $scope.gpgKey.$promise.then(function () {
+            $scope.uploadURL = $scope.RootURL + '/api/v2/gpg_keys/' + $scope.gpgKey.id + '/content';
+        });
 
         $scope.uploadContent = function (content) {
             if (content && (content !== "Please wait...")) {

@@ -42,7 +42,7 @@ describe('Factory: Provider', function() {
     });
 
     it('provides a way to get a list of providers', function() {
-        $httpBackend.expectGET('/katello/api/providers?organization_id=ACME&provider_type=Custom').respond(providers);
+        $httpBackend.expectGET('/api/v2/providers?organization_id=ACME&provider_type=Custom').respond(providers);
 
         Provider.query({ organization_id: 'ACME' }, function(providers) {
             expect(providers.records.length).toBe(2);
@@ -53,7 +53,7 @@ describe('Factory: Provider', function() {
         var provider = providers.records[0];
 
         provider['repository_url'] = 'http://wikipedia.org';
-        $httpBackend.expectPUT('/katello/api/providers/1').respond(provider);
+        $httpBackend.expectPUT('/api/v2/providers/1').respond(provider);
 
         Provider.update({'repository_url': 'http://wikipedia.org', id: 1}, function(record) {
             expect(record).toBeDefined();
@@ -64,7 +64,7 @@ describe('Factory: Provider', function() {
     it('provides a way to refresh a manifest', function() {
         var provider = providers.records[0];
 
-        $httpBackend.expectPUT('/katello/api/providers/1/refresh_manifest').respond(provider);
+        $httpBackend.expectPUT('/api/v2/providers/1/refresh_manifest').respond(provider);
 
         Provider.refreshManifest({ organization_id: 'ACME', id: provider.id }, function(record) {
             expect(record.id).toBe(provider.id);
@@ -74,7 +74,7 @@ describe('Factory: Provider', function() {
     it('provides a way to delete a manifest', function() {
         var provider = providers.records[0];
 
-        $httpBackend.expectPOST('/katello/api/providers/1/delete_manifest').respond(provider);
+        $httpBackend.expectPOST('/api/v2/providers/1/delete_manifest').respond(provider);
 
         Provider.deleteManifest({ organization_id: 'ACME', id: provider.id }, function(record) {
             expect(record.id).toBe(provider.id);

@@ -17,15 +17,14 @@
  *
  * @requires $resource
  * @requires $timeout
- * @requires Routes
  *
  * @description
  *   Provides a $resource for system tasks
  */
 angular.module('Bastion.systems').factory('SystemTask',
-    ['$resource', '$timeout', 'Routes',
-    function ($resource, $timeout, Routes) {
-        var resource = $resource(Routes.apiSystemsPath() + '/tasks/:id', {id: '@uuid'}, {
+    ['$resource', '$timeout',
+    function ($resource, $timeout) {
+        var resource = $resource('/api/v2/systems/tasks/:id', {id: '@uuid'}, {
             get: {method: 'GET', params: {paged: false}, isArray: false}
         });
         resource.poll = function (task, returnFunction) {
