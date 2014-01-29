@@ -10,7 +10,7 @@ require "gettext_i18n_rails"
 require "i18n_data"
 require "hooks"
 require "foreigner"
-require "dynflow"
+require "foreman-tasks"
 require "rest_client"
 require "i18n_data"
 require "justified/standard_error"
@@ -29,7 +29,6 @@ require "uuidtools"
 require "delayed_job"
 
 require File.expand_path("../engines/bastion/lib/bastion", File.dirname(__FILE__))
-require "headpin/headpin"
 require "monkeys/string_to_bool"
 
 # ENGINE: Re-enable after fixing migrations in Katello proper
@@ -41,6 +40,6 @@ module Katello
   require "katello/engine"
   require "katello/load_configuration"
   require "katello/logging"
-  require "katello/actions/actions"
+  require 'katello/middleware/silenced_logger.rb'
 
 end

@@ -142,5 +142,15 @@ class Api::ApiController < ::Api::BaseController
     subject_string.sub(/\/CN=/i, '')
   end
 
+  def trigger(action, *args)
+    ::ForemanTasks.trigger(action, *args)
+  end
+
+  # trigger dynflow action and return the dynflow task object
+  def async_task(action, *args)
+    execution_plan_id = trigger(action, *args).id
+    return ::ForemanTasks::Task::DynflowTask.find_by_external_id!(execution_plan_id)
+  end
+
 end
 end

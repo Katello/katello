@@ -47,6 +47,12 @@
           Repositories
         </a>
       </li>
+      <li ng-class="{active: stateIncludes('products.details.tasks')}">
+        <a translate
+           ui-sref="products.details.tasks.index({productId: product.id})">
+          Tasks
+        </a>
+      </li>
       <li ng-repeat="menuItem in menuExpander.getMenu('product')">
         <a href="{{ menuItem.url }}">
           {{ menuItem.label }}

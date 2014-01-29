@@ -17,9 +17,18 @@ require "#{Katello::Engine.root}/spec/support/shared_examples/protected_action_s
 require "#{Katello::Engine.root}/spec/support/custom_matchers"
 require "#{Katello::Engine.root}/test/support/vcr"
 require "#{Katello::Engine.root}/test/support/runcible"
+
 require 'support/auth_support'
 require 'support/controller_support'
 require 'support/search_service'
+
+require 'dynflow/testing'
+Mocha::Mock.send :include, Dynflow::Testing::Mimic
+Dynflow::Testing.logger_adapter.level = 1
+require "#{Katello::Engine.root}/test/support/actions/fixtures"
+require "#{Katello::Engine.root}/test/support/actions/pulp_task"
+require "#{Katello::Engine.root}/test/support/actions/remote_action"
+require "#{Katello::Engine.root}/test/support/foreman_tasks/task"
 
 FactoryGirl.definition_file_paths = ["#{Katello::Engine.root}/test/factories"]
 FactoryGirl.find_definitions
