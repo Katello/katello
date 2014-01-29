@@ -35,12 +35,17 @@ class ContentView < Katello::Model
   alias_method :versions, :content_view_versions
 
   has_many :component_content_views, :class_name => "Katello::ComponentContentView", :dependent => :destroy
+  has_many :content_views, :through => :component_content_views, :source => :component_content_view
+
+  has_many :composite_content_views, :class_name => "Katello::ContentView",
+           :through => :composite_component_content_views
+  has_many :composite_component_content_views, :class_name => "Katello::ComponentContentView",
+           :dependent => :destroy
+
   has_many :distributors, :class_name => "Katello::Distributor", :dependent => :restrict
-  has_many :composite_content_views, :class_name => "ContentView"
-  has_many :content_views, :through => :component_content_views
   has_many :content_view_repositories, :dependent => :destroy
   has_many :repositories, :through => :content_view_repositories, :after_remove => :remove_repository
-  has_many :filters, :dependent => :destroy
+  has_many :filters, :dependent => :destroy, :class_name => "Katello::Filter"
 
   has_many :changeset_content_views, :class_name => "Katello::ChangesetContentView", :dependent => :destroy
   has_many :changesets, :through => :changeset_content_views
@@ -69,7 +74,7 @@ class ContentView < Katello::Model
     # list of component content views, if any, that do not exist in the environment
     # provided.
     if composite
-      content_view_definition.component_content_views.select("distinct #{Katello::ContentView.table_name}.*").
+      content_views.select("distinct #{Katello::ContentView.table_name}.*").
               joins(:content_view_versions => :content_view_version_environments).
               where(["#{Katello::ContentViewVersionEnvironment.table_name}.content_view_version_id "\
                      "NOT IN (SELECT content_view_version_id FROM "\
