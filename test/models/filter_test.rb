@@ -17,7 +17,7 @@ class FilterTest < ActiveSupport::TestCase
 
   def self.before_suite
     models = ["Organization", "KTEnvironment", "User","Filter", "ContentViewEnvironment",
-              "ContentViewDefinitionBase", "ContentViewDefinition", "Product", "Repository"]
+               "Product", "Repository"]
     disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models, true)
   end
 
