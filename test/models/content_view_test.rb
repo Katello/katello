@@ -111,7 +111,9 @@ class ContentViewTest < ActiveSupport::TestCase
 
   def test_changesets
     content_view = FactoryGirl.create(:content_view)
-    environment = FactoryGirl.build_stubbed(:environment)
+    environment = FactoryGirl.create(:environment,
+              :prior => content_view.organization.library,
+              :organization => content_view.organization)
     changeset = FactoryGirl.create(:changeset, :environment => environment)
     content_view.changesets << changeset
     assert_includes changeset.content_views.map(&:id), content_view.id

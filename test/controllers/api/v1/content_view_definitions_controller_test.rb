@@ -37,7 +37,7 @@ describe Api::V1::ContentViewDefinitionsController do
   end
 
   after do
-    ContentViewDefinition.delete_all
+    ContentViewDefinition.destroy_all
   end
 
   describe "index" do

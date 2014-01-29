@@ -140,7 +140,8 @@ class Api::V2::RepositoriesControllerTest < ActionController::TestCase
   end
 
   def test_update
-    put :update, :id => @repository.id, :repository => {:gpg_key_id => 1}
+    key = GpgKey.find(katello_gpg_keys('fedora_gpg_key'))
+    put :update, :id => @repository.id, :repository => {:gpg_key_id => key.id}
 
     assert_response :success
     assert_template 'api/v2/repositories/show'

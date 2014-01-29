@@ -32,11 +32,11 @@ class ContentViewDefinitionTest < ActiveSupport::TestCase
   end
 
   def after_tests
-    ContentViewDefinition.delete_all
-    ContentView.delete_all
-    Organization.delete_all
-    Product.delete_all
-    Repository.delete_all
+    ContentViewDefinition.destroy_all
+    ContentView.destroy_all
+    Organization.destroy_all
+    Product.destroy_all
+    Repository.destroy_all
   end
 
   def test_create
