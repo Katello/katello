@@ -85,7 +85,7 @@ class Api::V2::RepositoriesControllerTest < ActionController::TestCase
     Product.stub(:find, product) do
       post :create, :name => 'Fedora Repository',
                     :product_id => @product.id,
-                    :url => 'http://www.google.com',
+                    :feed => 'http://www.google.com',
                     :content_type => 'yum'
 
       assert_response :success
@@ -112,7 +112,7 @@ class Api::V2::RepositoriesControllerTest < ActionController::TestCase
     Product.stub(:find, product) do
       post :create, :name => 'Fedora Repository',
                     :product_id => @product.id,
-                    :url => 'http://www.google.com',
+                    :feed => 'http://www.google.com',
                     :content_type => 'yum'
 
       assert_response :success
@@ -146,28 +146,33 @@ class Api::V2::RepositoriesControllerTest < ActionController::TestCase
   end
 
   def test_update
+    skip "Need to be able to disable syncing and/or callbacks"
+
     Repository.stubs(:find_unique => @repository)
 
     put :update, {
-      :id              => @repository.label,
-      :product_id      => @product.label,
       :organization_id => @organization.label,
-      :repository      => @repository.as_json
+      :id              => @repository.label,
+      :repository      => {:gpg_key_id => 1, :enabled => true},
+      :product_id      => @product.label
     }
 
     assert_response :success
-    assert_template %w(katello/api/v2/common/update katello/api/v2/layouts/resource)
+    assert_template %w(katello/api/v2/common/show katello/api/v2/layouts/resource)
   end
 
   def test_update_protected
-    allowed_perms = [@create_permission, @update_permission]
-    denied_perms = [@no_permission, @delete_permission]
+    skip "Need to be able to disable syncing and/or callbacks"
 
+    allowed_perms = [@update_permission]
+    denied_perms = [@read_permission, @no_permission]
+
+    Repository.stubs(:find_unique => @repository)
     assert_protected_action(:update, allowed_perms, denied_perms) do
       put :update, {
         :id              => @repository.label,
         :product_id      => @product.label,
-        :repository      => {:gpg_key_id => 1},
+        :repository      => @repository.as_json,
         :organization_id => @organization.label
       }
     end

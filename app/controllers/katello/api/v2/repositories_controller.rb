@@ -16,7 +16,6 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
   before_filter :find_organization, :only => [:index]
   before_filter :find_product, :only => [:index]
   before_filter :find_product_for_create, :only => [:create]
-  # TODO: convert to rely on find_repository
   before_filter :find_repository_by_id, :only => [:show, :destroy, :sync]
   before_filter :find_repository, :only => [:update]
   before_filter :authorize
@@ -137,7 +136,7 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
     end
     @repository.update_attributes!(repo_params)
 
-    respond_for_update(:resource => @repository)
+    respond_for_update(:resource => @repository, :template => :show)
   end
 
   api :DELETE, "/repositories/:id", "Destroy a repository"
