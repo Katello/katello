@@ -1,11 +1,25 @@
 simple_filter:
-  name:                      Simple Filter
-  content_view_definition_id: <%= ActiveRecord::Fixtures.identify(:simple_cvd) %>
+  name:            Simple Filter
+  content_view_id: <%= ActiveRecord::Fixtures.identify(:library_view) %>
 
-populated_filter:
-  name:                      Populated Filter
-  content_view_definition_id: <%= ActiveRecord::Fixtures.identify(:populated_cvd) %>
+populated_package_filter:
+  name:            Populated Package Filter
+  content_view_id: <%= ActiveRecord::Fixtures.identify(:library_view) %>
+  type:            <%= Katello::PackageFilter.name %>
+  parameters:      <%= HashWithIndifferentAccess.new({:units => Array.new([HashWithIndifferentAccess.new({:name => "xterm.*", :inclusion => true})])}).to_yaml.inspect %>
+
+populated_package_group_filter:
+  name:            Populated Package Group Filter
+  content_view_id: <%= ActiveRecord::Fixtures.identify(:library_view) %>
+  type:            <%= Katello::PackageGroupFilter.name %>
+  parameters:      <%= HashWithIndifferentAccess.new({:units => Array.new([HashWithIndifferentAccess.new({:name => "Basic Client", :inclusion => true})])}).to_yaml.inspect %>
+
+populated_erratum_filter:
+  name:            Populated Erratum Filter
+  content_view_id: <%= ActiveRecord::Fixtures.identify(:library_view) %>
+  type:            <%= Katello::ErratumFilter.name %>
+  parameters:      <%= HashWithIndifferentAccess.new({:units => Array.new([HashWithIndifferentAccess.new({:id => "RHSA-2013-1234"})]), :inclusion => true}).to_yaml.inspect %>
 
 populated_filter_with_repos_and_filters:
-  name:                      Populated Filter
-  content_view_definition_id: <%= ActiveRecord::Fixtures.identify(:populated_with_repos_and_filters) %>
+  name:            Populated Filter
+  content_view_id: <%= ActiveRecord::Fixtures.identify(:library_view) %>

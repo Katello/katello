@@ -1,24 +1,16 @@
 object @resource
 
-attributes :id, :name
-attributes :content_view_definition_id
+extends 'katello/api/v2/common/identifier'
 
-node :content_view_definition_label do |res|
-  res.content_view_definition.label
-end
-node :organization do |res|
-  res.content_view_definition.organization.label
+child :content_view => :content_view do
+  extends 'katello/api/v2/content_views/show'
 end
 
-child :rules do
-  extends 'katello/api/v2/filter_rules/show'
-end
-
-child :repositories do
+child :repositories => :repositories do
   attributes :id, :name
 end
-child :products do
-  attributes :id, :name
-end
+
+node(:type) { |filter| filter.type.constantize::CONTENT_TYPE }
+attributes :parameters
 
 extends 'katello/api/v2/common/timestamps'

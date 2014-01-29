@@ -52,14 +52,9 @@ module OrganizationHelperMethods
     if !env.library? && !env.default_content_view
       return env.content_views.first unless env.content_views.empty?
 
-      count = ContentViewDefinition.count + 1
-      definition = ContentViewDefinition.create!(:name => "test def #{count}", :label => "test_def_#{count}",
-                                              :description => 'test description',
-                                              :organization => env.organization)
       count = ContentView.count + 1
       view = ContentView.create!(:name => "test view #{count}", :label => "test_view_#{count}",
-                              :organization => env.organization,
-                              :content_view_definition => definition)
+                              :organization => env.organization)
 
       version = ContentViewVersion.new(:content_view => view,
                                        :version => 1)

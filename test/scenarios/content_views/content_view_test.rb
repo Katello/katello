@@ -28,8 +28,8 @@
 #  def self.before_suite
 #    loaded_fixtures = load_fixtures
 #
-#    models = ["Organization", "KTEnvironment", "User", "ContentViewEnvironment","ContentViewDefinitionBase",
-#              "ContentViewDefinition", "Repository", "ContentView", "ContentViewVersion",
+#    models = ["Organization", "KTEnvironment", "User", "ContentViewEnvironment",
+#              "Repository", "ContentView", "ContentViewVersion",
 #              "ComponentContentView", "System", "Product", "ContentViewVersion", "ContentViewDefinitionArchive",
 #              "Filter", "PackageRule", "ErratumRule", "Changeset", "PromotionChangeset"]
 #    disable_glue_layers([], models, true)

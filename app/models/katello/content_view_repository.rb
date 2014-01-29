@@ -9,12 +9,12 @@
 # NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
-
 module Katello
-class ComponentContentView < Katello::Model
+class ContentViewRepository < Katello::Model
   self.include_root_in_json = false
 
-  belongs_to :composite_content_view, :class_name => "Katello::ContentView"
-  belongs_to :component_content_view, :class_name => "Katello::ContentView"
+  belongs_to :content_view, :inverse_of => :content_view_repositories,
+                                       :class_name => "Katello::ContentView"
+  belongs_to :repository, :inverse_of => :content_view_repositories
 end
 end
