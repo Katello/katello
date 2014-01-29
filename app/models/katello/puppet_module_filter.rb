@@ -12,11 +12,17 @@
 
 module Katello
 class PuppetModuleFilter < Filter
-  validates_with Validators::RuleParamsValidator, :attributes => :parameters
-  validates_with Validators::RuleVersionValidator, :attributes => :parameters
+  use_index_of Filter if Katello.config.use_elasticsearch
+
+  CONTENT_TYPE = PuppetModule::CONTENT_TYPE
+
+  before_create :set_parameters
+
+  validates_with Validators::FilterParamsValidator, :attributes => :parameters
+  validates_with Validators::FilterVersionValidator, :attributes => :parameters
 
   def params_format
-    {:units => [[:name, :author, :version, :min_version, :max_version]]}
+    { :units => [[:name, :author, :version, :min_version, :max_version, :inclusion, :created_at]] }
   end
 
   # Returns a set of Pulp/MongoDB conditions to filter out packages in the
@@ -38,19 +44,19 @@ class PuppetModuleFilter < Filter
     end
     ids.flatten!
     ids.compact!
-    {'unit_id' => {"$in" => ids}} unless ids.empty?
+    { 'unit_id' => { "$in" => ids } } unless ids.empty?
   end
 
   protected
 
   def version_filter(unit)
     if unit.key?(:version)
-      {:term => {:version => unit[:version]}}
+      { :term => { :version => unit[:version] } }
     elsif unit.key?(:min_version) || unit.key?(:max_version)
       range = {}
       range[:gt] = sortable_version(unit[:min_version]) if unit[:min_version]
       range[:lt] = sortable_version(unit[:max_version]) if unit[:max_version]
-      {:range => {:sortable_version => range}}
+      { :range => { :sortable_version => range } }
     else
       nil
     end
@@ -58,7 +64,7 @@ class PuppetModuleFilter < Filter
 
   def author_filter(unit)
     if unit.key?(:author) && unit[:author].present?
-      {:term => {:author => unit[:author]}}
+      { :term => { :author => unit[:author] } }
     else
       nil
     end
@@ -67,5 +73,15 @@ class PuppetModuleFilter < Filter
   def sortable_version(version)
     Util::Package.sortable_version(version)
   end
+
+  private
+
+  def set_parameters
+    parameters[:units].each do |unit|
+      unit[:created_at] = Time.zone.now
+      unit[:inclusion] = false unless unit.key?(:inclusion)
+    end if !parameters.blank? && parameters.key?(:units)
+  end
+
 end
 end

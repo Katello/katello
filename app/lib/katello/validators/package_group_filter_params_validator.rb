@@ -12,18 +12,18 @@
 
 module Katello
 module Validators
-  class RuleParamsValidator < ActiveModel::EachValidator
+  class PackageGroupFilterParamsValidator < ActiveModel::EachValidator
     def validate_each(record, attribute, value)
-      rule_type = record.rule_type.downcase
-
-      if value && value[:units].present?
-        if !value[:units].is_a?(Array)
-          record.errors.add(attribute, _("Invalid %s rule specified. Units must be an array.") % rule_type)
-        else
-          value[:units].each do |unit|
-            unless unit.key?(:name)
-              record.errors.add(attribute, _("Invalid %s rule specified. Missing 'name'.") % rule_type)
-              break
+      if value
+        unless value[:units].blank?
+          if !value[:units].is_a?(Array)
+            record.errors.add(attribute, _("Invalid package group filter parameter specified. Units must be an array."))
+          else
+            value[:units].each do |unit|
+              unless unit.key?(:name)
+                record.errors.add(attribute, _("Invalid package group filter parameter specified. Missing package 'name'."))
+                break
+              end
             end
           end
         end

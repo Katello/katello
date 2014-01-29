@@ -12,9 +12,15 @@
 
 module Katello
 class PackageGroupFilter < Filter
-  validates_with Validators::PackageGroupRuleParamsValidator, :attributes => :parameters
+  use_index_of Filter if Katello.config.use_elasticsearch
+
+  CONTENT_TYPE = PackageGroup::CONTENT_TYPE
+
+  before_create :set_parameters
+
+  validates_with Validators::PackageGroupFilterParamsValidator, :attributes => :parameters
   def params_format
-    {:units => [[:name]]}
+    { :units => [[:name, :inclusion, :created_at]] }
   end
 
   def generate_clauses(repo)
@@ -26,7 +32,17 @@ class PackageGroupFilter < Filter
     end
     ids.flatten!
     ids.compact!
-    {"id" => {"$in" => ids}} unless ids.empty?
+    { "id" => { "$in" => ids } } unless ids.empty?
   end
+
+  private
+
+  def set_parameters
+    parameters[:units].each do |unit|
+      unit[:created_at] = Time.zone.now
+      unit[:inclusion] = false unless unit.key?(:inclusion)
+    end if !parameters.blank? && parameters.key?(:units)
+  end
+
 end
 end

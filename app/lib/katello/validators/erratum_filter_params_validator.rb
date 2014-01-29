@@ -12,12 +12,12 @@
 
 module Katello
 module Validators
-  class ErratumRuleParamsValidator < ActiveModel::EachValidator
+  class ErratumFilterParamsValidator < ActiveModel::EachValidator
     def validate_each(record, attribute, value)
       if value
         if value.key?("units") && (value.key?("date_range") ||
                                    value.key?("errata_type"))
-          record.errors.add(attribute, _("Errata rules cannot contain both id and date_range/errata_type criteria."))
+          record.errors.add(attribute, _("Errata filters cannot contain both id and date_range/errata_type criteria."))
         end
         if value.key?(:date_range)
           _check_date_range(record, attribute, value)
@@ -32,12 +32,12 @@ module Validators
     def _check_errata_type(record, attribute, value)
       errata_type = value[:errata_type]
       if errata_type.is_a?(Array)
-        invalid_types = errata_type.collect(&:to_s) - ErratumRule::ERRATA_TYPES.keys
+        invalid_types = errata_type.collect(&:to_s) - ErratumFilter::ERRATA_TYPES.keys
         unless invalid_types.empty?
           record.errors.add(attribute,
                             _("Invalid erratum types %{invalid_types} provided. Erratum type can be any of %{valid_types}") %
                             { :invalid_types => invalid_types.join(","),
-                              :valid_types => ErratumRule::ERRATA_TYPES.keys.join(",")})
+                              :valid_types => ErratumFilter::ERRATA_TYPES.keys.join(",")})
         end
       else
         record.errors.add(attribute, _("The erratum type must be an array. Invalid value provided"))
@@ -46,18 +46,18 @@ module Validators
 
     def _check_date_range(record, attribute, value)
       date_range = value[:date_range]
-      start_date_int = date_range[:start]
-      end_date_int = date_range[:end]
+      start_date_int = date_range[:start].to_time.to_i if date_range.key?(:start)
+      end_date_int = date_range[:end].to_time.to_i if date_range.key?(:end)
 
-      if start_date_int && !(start_date_int.is_a?(Fixnum))
-        record.errors.add(attribute, _("The erratum rule start date is in an invalid format or type."))
+      if start_date_int && (!(start_date_int.is_a?(Fixnum)) || !(date_range[:start].is_a?(String)))
+        record.errors.add(attribute, _("The erratum filter parameter start date is in an invalid format or type."))
       end
-      if end_date_int && !(end_date_int.is_a?(Fixnum))
-        record.errors.add(attribute, _("The erratum rule end date is in an invalid format or type."))
+      if end_date_int && (!(end_date_int.is_a?(Fixnum)) || !(date_range[:end].is_a?(String)))
+        record.errors.add(attribute, _("The erratum filter parameter end date is in an invalid format or type."))
       end
 
       if start_date_int && end_date_int && !(start_date_int <= end_date_int)
-        record.errors.add(attribute, _("Invalid date range. The erratum rule start date must come before the end date"))
+        record.errors.add(attribute, _("Invalid date range. The erratum filter parameter start date must come before the end date"))
       end
     end
   end

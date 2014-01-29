@@ -12,12 +12,12 @@
 
 module Katello
 module Validators
-  class RuleVersionValidator < ActiveModel::EachValidator
+  class FilterVersionValidator < ActiveModel::EachValidator
     def validate_each(record, attribute, value)
       if value && value[:units].present? && value[:units].is_a?(Array)
         value[:units].each do |unit|
           if unit.key?(:version) && (unit.key?(:min_version) || unit.key?(:max_version))
-            ver_msg = _("Invalid rule combination specified, 'version'" +
+            ver_msg = _("Invalid filter parameter combination specified, 'version'" +
                         " and 'min_version' or 'max_version' cannot be specified in the same tuple")
 
             record.errors.add(attribute, ver_msg)

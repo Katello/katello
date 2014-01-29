@@ -39,7 +39,7 @@ class ContentView < Katello::Model
   has_many :composite_content_views, :class_name => "ContentView"
   has_many :content_views, :through => :component_content_views
   has_many :content_view_repositories, :dependent => :destroy
-  has_many :repositories, :through => :content_view_repositories
+  has_many :repositories, :through => :content_view_repositories, :after_remove => :remove_repository
   has_many :filters, :dependent => :destroy
 
   has_many :changeset_content_views, :class_name => "Katello::ChangesetContentView", :dependent => :destroy
@@ -429,6 +429,19 @@ class ContentView < Katello::Model
 
   def cp_environment_id(env)
     ContentViewEnvironment.where(:content_view_id => self, :environment_id => env).first.cp_id
+  end
+
+  protected
+
+  def remove_repository(repository)
+    filters.each do |filter_item|
+      repo_exists = Repository.unscoped.joins(:filters).where(
+          Filter.table_name => {:id => filter_item.id}, :id => repository.id).count
+      if repo_exists
+        filter_item.repositories.delete(repository)
+        filter_item.save!
+      end
+    end
   end
 
   private

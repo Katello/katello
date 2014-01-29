@@ -56,7 +56,7 @@ namespace :test do
           "#{Katello::Engine.root}/test/models/changeset_test.rb",
           #"#{Katello::Engine.root}/test/models/content_view_test.rb",
           "#{Katello::Engine.root}/test/models/deletion_changeset_test.rb",
-          #"#{Katello::Engine.root}/test/models/filter_test.rb",
+          "#{Katello::Engine.root}/test/models/filter_test.rb",
           "#{Katello::Engine.root}/test/models/kt_environment_test.rb",
           "#{Katello::Engine.root}/test/models/organization_test.rb",
           "#{Katello::Engine.root}/test/models/organization_destroyer_test.rb",

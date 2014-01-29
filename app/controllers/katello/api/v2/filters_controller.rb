@@ -11,88 +11,94 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class Api::V2::FiltersController < Api::V1::FiltersController
+class Api::V2::FiltersController < Api::V2::ApiController
+  respond_to :json
 
-  skip_before_filter :find_organization
+  before_filter :find_content_view
+  before_filter :find_filter, :except => [:index, :create]
+  before_filter :authorize
 
-  include Api::V2::Rendering
+  wrap_parameters :include => (Filter.attribute_names + %w(repository_ids))
 
-  api :GET, "/content_view_definitions/:content_view_definition_id/filters",
-      "List filters"
-  param :content_view_definition_id, String, :desc => "id of the content view definition", :required => true
-  def index
-    super
+  def rules
+    view_readable = lambda { @view.readable? }
+    view_editable = lambda { @view.editable? }
+
+    {
+        :index   => view_readable,
+        :create  => view_editable,
+        :show    => view_readable,
+        :update  => view_editable,
+        :destroy => view_editable
+    }
   end
 
-  api :POST, "/content_view_definitions/:content_view_definition_id/filters",
-      "Create a filter for a content view definition"
-  param :content_view_definition_id, String, :desc => "id of the content view definition", :required => true
+  api :GET, "/content_views/:content_view_id/filters", "List filters"
+  param :content_view_id, :number, :desc => "content view identifier", :required => true
+  def index
+    options = sort_params
+    options[:load_records?] = true
+    options[:filters] = [{ :terms => { :id => @view.filter_ids } }]
+
+    @search_service.model = Filter
+    respond(:collection => item_search(Filter, params, options))
+  end
+
+  api :POST, "/content_views/:content_view_id/filters",
+      "Create a filter for a content view"
+  param :content_view_id, :number, :desc => "content view identifier", :required => true
   param :filter, Hash, :required => true, :action_aware => true do
     param :name, String, :desc => "name of the filter", :required => true
+    param :type, String, :desc => "type of filter (e.g. rpm, package_group, erratum, puppet_module)", :required => true
+    param :parameters, Hash, :desc => "the filter parameter rules"
   end
   def create
-    filter = Filter.create!(:content_view_definition => @definition, :name => params[:filter][:name])
+    filter = Filter.create_for(params[:type], filter_params.merge(:content_view => @view))
     respond :resource => filter
   end
 
-  api :GET, "/content_view_definitions/:content_view_definition_id/filters/:id",
-      "Show filter info"
-  param :content_view_definition_id, String, :desc => "id of the content view definition", :required => true
-  param :id, String, :desc => "name of the filter", :required => true
+  api :GET, "/content_views/:content_view_id/filters/:id", "Show filter info"
+  param :content_view_id, :number, :desc => "content view identifier", :required => true
+  param :id, :number, :desc => "filter identifier", :required => true
   def show
-    super
+    respond :resource => @filter
   end
 
-  api :DELETE, "/content_view_definitions/:content_view_definition_id/filters/:id",
-      "Delete a filter"
-  param :content_view_definition_id, String, :desc => "id of the content view definition", :required => true
-  param :id, String, :desc => "name of the filter", :required => true
+  api :PUT, "/content_views/:content_view_id/filters/:id", "Update a filter"
+  param :content_view_id, :number, :desc => "Content view identifier", :required => true
+  param :id, :number, :desc => "id of the filter", :required => true
+  param :name, String, :desc => "New name for the filter"
+  param :repository_ids, Array, :desc => "List of repository ids"
+  def update
+    @filter.update_attributes!(filter_params)
+    respond :resource => @filter
+  end
+
+  api :DELETE, "/content_views/:content_view_id/filters/:id", "Delete a filter"
+  param :content_view_id, :number, :desc => "content view identifier", :required => true
+  param :id, :number, :desc => "filter identifier", :required => true
   def destroy
-    super
-  end
-
-  api :GET, "/content_view_definitions/:content_view_definition_id/filters/:id/products",
-      "List all the products for a content view definition filter"
-  param :content_view_definition_id, String, :desc => "id of the content view definition", :required => true
-  param :id, String, :desc => "name of the filter", :required => true
-  def list_products
-    super
-  end
-
-  api :PUT, "/content_view_definitions/:content_view_definition_id/filters/:id/products",
-      "Update products for a content view definition filter"
-  param :content_view_definition_id, :identifier, :required => true,
-                                                  :desc => "content view definition identifier"
-  param :id, String, :desc => "name of the filter", :required => true
-  param :products, Array, :desc => "Updated list of product ids", :required => true
-  def update_products
-    _update_products! params
-    respond_for_update :resource => @filter
-  end
-
-  api :GET, "/content_view_definitions/:content_view_definition_id/filters/:id/repositories",
-      "List all the repositories for a content view definition filter"
-  param :content_view_definition_id, String, :desc => "id of the content view definition", :required => true
-  param :id, String, :desc => "name of the filter", :required => true
-  def list_repositories
-    super
-  end
-
-  api :PUT, "/content_view_definitions/:content_view_definition_id/filters/:id/repositories",
-      "Update repositories for a content view definition filter"
-  param :content_view_definition_id, String, :desc => "id of the content view definition", :required => true
-  param :id, String, :desc => "name of the filter", :required => true
-  param :repos, Array, :desc => "Updated list of repo ids", :required => true
-  def update_repositories
-    _update_repositories! params
-    respond_for_update :resource => @filter
+    @filter.destroy
+    respond :resource => @filter
   end
 
   private
 
-  def find_definition
-    @definition   = ContentViewDefinition.find(params[:content_view_definition_id])
-    @organization ||= @definition.organization
+  def find_content_view
+    @view = ContentView.find(params[:content_view_id])
+  end
+
+  def find_filter
+    id = params[:id] || params[:filter_id]
+    @filter = Filter.where(:content_view_id => @view).find(id)
+  end
+
+  def filter_params
+    filter_parameters = params.require(:filter).permit(:name, :repository_ids => [])
+
+    # the :parameters will be vaildated by the model layer (e.g. PackageFilter)
+    filter_parameters[:parameters] = params[:filter][:parameters].with_indifferent_access
+    filter_parameters
   end
 
 end
