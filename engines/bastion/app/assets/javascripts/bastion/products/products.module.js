@@ -83,7 +83,7 @@ angular.module('Bastion.products').config(['$stateProvider', function ($statePro
         url: '/products/new/sync-plan',
         collapsed: true,
         controller: 'NewSyncPlanController',
-        templateUrl: 'sync-plans/new/views/new-sync-plan.html'
+        templateUrl: 'sync-plans/new/views/new-sync-plan-form.html'
     })
 
     .state("products.discovery", {
@@ -133,13 +133,13 @@ angular.module('Bastion.products').config(['$stateProvider', function ($statePro
         controller: 'ProductDetailsInfoController',
         templateUrl: 'products/details/views/product-info.html'
     })
-    .state('products.details.info.new-sync-plan', {
+    .state('products.details.info.new-sync-plan-form', {
         url: '/sync-plan/new',
         collapsed: true,
         views: {
             '@products.details': {
                 controller: 'NewSyncPlanController',
-                templateUrl: 'sync-plans/new/views/new-sync-plan.html'
+                templateUrl: 'sync-plans/new/views/new-sync-plan-form.html'
             }
         }
     })
@@ -198,7 +198,7 @@ angular.module('Bastion.products').config(['$stateProvider', function ($statePro
         views: {
             '@products.bulk-actions': {
                 controller: 'NewSyncPlanController',
-                templateUrl: 'sync-plans/new/views/new-sync-plan.html'
+                templateUrl: 'sync-plans/new/views/new-sync-plan-form.html'
             }
         }
     });
