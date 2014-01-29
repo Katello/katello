@@ -100,7 +100,13 @@ Katello::Engine.routes.draw do
 
       api_resources :organizations do
         api_resources :products, :only => [:index]
-        api_resources :sync_plans, :only => [:index, :create]
+        api_resources :sync_plans do
+          member do
+            get :available_products
+            put :add_products
+            put :remove_products
+          end
+        end
         api_resources :tasks, :only => [:index, :show]
         api_resources :providers, :only => [:index], :constraints => {:organization_id => /[^\/]*/}
         scope :constraints => Katello::RegisterWithActivationKeyContraint.new do

@@ -29,7 +29,12 @@ angular.module('Bastion.organizations').factory('Organization',
                 query:  {method: 'GET', isArray: false},
                 repoDiscover: { method: 'POST', params: {action: 'repo_discover'}},
                 cancelRepoDiscover: {method: 'POST', params: {action: 'cancel_repo_discover'}},
-                autoAttachSubscriptions: {method: 'POST', params: {action: 'autoattach_subscriptions'}}
+                autoAttachSubscriptions: {method: 'POST', params: {action: 'autoattach_subscriptions'}},
+                registerableEnvironments: {
+                    method: 'GET',
+                    url: '/katello/organizations/:organizationId/environments/registerable_paths',
+                    isArray: true
+                }
             }
         );
 

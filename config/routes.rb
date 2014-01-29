@@ -143,10 +143,9 @@ Katello::Engine.routes.draw do
     end
   end
 
-  resources :sync_plans, :only => [:index, :create, :new, :edit, :update, :show, :destroy, :auto_complete_search] do
+  resources :sync_plans, :only => [:index] do
     collection do
-      get :auto_complete_search
-      get :items
+      get :all
     end
   end
 
