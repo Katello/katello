@@ -37,6 +37,7 @@ module Katello
     end
 
     api :GET, "/organizations/:organization_id/content_views", "List content views"
+    api :GET, "/content_views", "List content views"
     param :organization_id, :identifier, :desc => "organization identifier"
     param :environment_id, :identifier, :desc => "environment identifier", :required => false
     param :label, String, :desc => "content view label", :required => false
@@ -44,6 +45,7 @@ module Katello
     param :id, :identifier, :desc => "content view id", :required => false
     def index
       options = sort_params
+      options[:load_records?] = true
 
       ids = if @environment
               ContentView.readable(@organization).in_environment(@environment).pluck(:id)
@@ -57,6 +59,7 @@ module Katello
     end
 
     api :POST, "/organizations/:organization_id/content_views", "Create a content view"
+    api :POST, "/content_views", "Create a content view"
     param :organization_id, :identifier, :desc => "Organization identifier"
     param :name, String, :desc => "Name of the content view"
     param :description, String, :desc => "Description of the content view"
