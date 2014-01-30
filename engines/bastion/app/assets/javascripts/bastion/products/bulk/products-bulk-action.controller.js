@@ -59,6 +59,7 @@ angular.module('Bastion.products').controller('ProductsBulkActionController',
                 $scope.table.selectAll(false);
                 $scope.successMessages = data["displayMessages"];
                 $scope.removingProducts = false;
+                $scope.transitionTo('products.index');
             };
 
             error = function (error) {

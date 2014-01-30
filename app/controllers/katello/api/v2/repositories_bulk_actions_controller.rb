@@ -43,7 +43,7 @@ module Katello
       display_messages = []
 
       @repositories.each{ |repository| repository.sync }
-      display_messages << _("Successfully synced %s repositories") % @repositories.length
+      display_messages << _("Successfully started sync for %s repositories, you are free to leave this page.") % @repositories.length
       respond_for_show :template => 'bulk_action', :resource => { 'displayMessages' => display_messages }
     end
 
