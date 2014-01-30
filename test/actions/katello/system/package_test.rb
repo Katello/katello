@@ -36,12 +36,13 @@ module Katello
       describe '#humanized_output' do
         let :action do
           create_action(action_class).tap do |action|
-            action.stubs(details_action: details_action)
+            action.stubs(all_actions: [pulp_action])
           end
         end
+        let(:pulp_action) { fixture_action(pulp_action_class, output: fixture_variant) }
 
         describe 'successfully installed' do
-          let(:details_action) { fixture_action(pulp_action_class, output: :success) }
+          let(:fixture_variant) {  :success }
 
           specify do
             action.humanized_output.must_equal <<-OUTPUT.chomp
@@ -54,7 +55,7 @@ libotf-0.9.9-3.1.el6.x86_64
         end
 
         describe 'no packages installed' do
-          let(:details_action) { fixture_action(pulp_action_class, output: :no_packages) }
+          let(:fixture_variant) {  :no_packages }
 
           specify do
             action.humanized_output.must_equal "No new packages installed"
@@ -62,7 +63,7 @@ libotf-0.9.9-3.1.el6.x86_64
         end
 
         describe 'with error' do
-          let(:details_action) { fixture_action(pulp_action_class, output: :error) }
+          let(:fixture_variant) {  :error }
 
           specify do
             action.humanized_output.must_equal <<-MSG.chomp
@@ -83,12 +84,13 @@ emacss: No package(s) available to install
       describe '#humanized_output' do
         let :action do
           create_action(action_class).tap do |action|
-            action.stubs(details_action: details_action)
+            action.stubs(all_actions: [pulp_action])
           end
         end
+        let(:pulp_action) { fixture_action(pulp_action_class, output: fixture_variant) }
 
         describe 'successfully uninstalled' do
-          let(:details_action) { fixture_action(pulp_action_class, output: :success) }
+          let(:fixture_variant) {  :success }
 
           specify do
             action.humanized_output.must_equal <<-OUTPUT.chomp
@@ -101,7 +103,7 @@ libotf-0.9.9-3.1.el6.x86_64
         end
 
         describe 'no packages uninstalled' do
-          let(:details_action) { fixture_action(pulp_action_class, output: :no_packages) }
+          let(:fixture_variant) {  :no_packages }
 
           specify do
             action.humanized_output.must_equal "No packages removed"

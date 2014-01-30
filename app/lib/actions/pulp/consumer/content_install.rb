@@ -17,6 +17,7 @@ module Actions
 
         include Helpers::RemoteAction
         include Helpers::PulpTask
+        include Helpers::Presenter
 
         input_format do
           param :consumer_uuid, String
@@ -30,6 +31,9 @@ module Actions
                                                    input[:args])
         end
 
+        def presenter
+          Consumer::ContentPresenter.new(self)
+        end
       end
     end
   end

@@ -81,11 +81,11 @@ module Katello
       describe 'progress' do
         let :action do
           create_action(action_class).tap do |action|
-            action.stubs(details_action: details_action)
+            action.stubs(all_actions: [pulp_action])
           end
         end
 
-        let(:details_action) { fixture_action(pulp_action_class, output: fixture_variant) }
+        let(:pulp_action) { fixture_action(pulp_action_class, output: fixture_variant) }
 
         describe 'successfully synchronized' do
           let(:fixture_variant) { :success }
@@ -111,7 +111,7 @@ module Katello
           end
 
           specify do
-            details_action.run_progress.must_be_within_delta 0.6256
+            pulp_action.run_progress.must_be_within_delta 0.6256
           end
         end
 

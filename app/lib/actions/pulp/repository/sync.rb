@@ -17,6 +17,7 @@ module Actions
 
         include Helpers::RemoteAction
         include Helpers::PulpTask
+        include Helpers::Presenter
 
         input_format do
           param :repo_id, Integer
@@ -45,21 +46,113 @@ module Actions
         end
 
         def run_progress
-          content_progress = external_task &&
-              external_task[:progress] &&
-              external_task[:progress][:yum_importer] &&
-              external_task[:progress][:yum_importer][:content]
-
-          if content_progress && content_progress[:size_total].to_i > 0
-            left = content_progress[:size_left].to_f / content_progress[:size_total]
-            1 - left
-          else
-            0.01
-          end
+          presenter.progress
         end
 
         def run_progress_weight
           10
+        end
+
+        def presenter
+          Sync::Presenter.new(self)
+        end
+
+        class Presenter < Helpers::Presenter::Base
+
+          # TODO: in Rails 4.0, the logic is possible to use from ActiveSupport
+          include ActionView::Helpers::NumberHelper
+
+          def humanized_output
+            if action.external_task
+              humanized_details
+            end
+          end
+
+          def progress
+            if action.external_task && size_total > 0
+              size_done.to_f / size_total
+            else
+              0.01
+            end
+          end
+
+          private
+
+          def humanized_details
+            ret = []
+            if content_details && content_details[:state] != 'NOT_STARTED'
+              if items_total > 0
+                ret << (_("New packages: %s (%s)") % [count_summary, size_summary])
+              else
+                ret << _("No new packages")
+              end
+            end
+            if metadata_details  && metadata_details[:state] == 'IN_PROGRESS'
+              ret << _("Processing metadata")
+            end
+            return ret.join("\n")
+          end
+
+          def count_summary
+            if content_details[:state] == "IN_PROGRESS"
+              "#{items_done}/#{items_total}"
+            else
+              items_done
+            end
+          end
+
+          def size_summary
+            if content_details[:state] == "IN_PROGRESS"
+              "#{number_to_human_size(size_done)}/#{number_to_human_size(size_total)}"
+            else
+              number_to_human_size(size_total)
+            end
+          end
+
+          def task_result
+            action.external_task[:result]
+          end
+
+          def task_result_details
+            task_result && task_result[:details]
+          end
+
+          def task_progress
+            action.external_task[:progress]
+          end
+
+          def task_progress_details
+            task_progress && task_progress[:yum_importer]
+          end
+
+          def task_details
+            task_result_details || task_progress_details
+          end
+
+          def content_details
+            task_details && task_details[:content]
+          end
+
+          def metadata_details
+            task_details && task_details[:metadata]
+          end
+
+          def items_done
+            items_total - content_details[:items_left]
+          end
+
+          def items_total
+            content_details[:items_total].to_i
+          end
+
+          def size_done
+            size_total - content_details[:size_left]
+          end
+
+          def size_total
+            (content_details && content_details[:size_total]).to_i
+          end
+
         end
 
       end
