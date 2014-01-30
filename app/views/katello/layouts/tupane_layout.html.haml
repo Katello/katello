@@ -32,8 +32,9 @@
 - if content_for?(:custom)
   = yield :custom
 
-- if content_for?(:inline_javascript)
+- if content_for?(:inline_javascripts)
   %script{ :type => "text/javascript" }
-    = yield :inline_javascript
+    = yield :inline_javascripts
+
 = yield :katello_javascripts
 = yield :stylesheets
