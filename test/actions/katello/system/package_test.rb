@@ -13,9 +13,7 @@
 require 'katello_test_helper'
 
 module Katello
-  namespace = ::Actions::Katello::System::Package
-
-  describe namespace do
+  describe ::Actions::Katello::System::Package do
     include Dynflow::Testing
     include Support::Actions::Fixtures
 
@@ -28,7 +26,7 @@ module Katello
     end
 
     describe 'Install' do
-      let(:action_class) { namespace::Install }
+      let(:action_class) { ::Actions::Katello::System::Package::Install }
       let(:pulp_action_class) { ::Actions::Pulp::Consumer::ContentInstall }
 
       specify { assert_action_planed action, pulp_action_class }
@@ -76,8 +74,8 @@ emacss: No package(s) available to install
     end
 
     describe 'Remove' do
+      let(:action_class) { ::Actions::Katello::System::Package::Remove }
       let(:pulp_action_class) { ::Actions::Pulp::Consumer::ContentUninstall }
-      let(:action_class) { namespace::Remove }
 
       specify { assert_action_planed action, pulp_action_class }
 

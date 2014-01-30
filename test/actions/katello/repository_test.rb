@@ -13,13 +13,14 @@
 require 'katello_test_helper'
 
 module Katello
-  namespace = ::Actions::Katello::Repository
 
-  describe namespace do
+  describe ::Actions::Katello::Repository do
     include Dynflow::Testing
     include Support::Actions::Fixtures
 
-    describe 'Create' do
+    describe "Create" do
+      let(:action_class) { ::Actions::Katello::Repository::Create }
+
       it 'plans' do
         # TODO remove this mocking when action is broken down
         cp           = mock 'cp', update_cp_content: nil
@@ -29,7 +30,6 @@ module Katello
                             save!:             true,
                             product:           product,
                             generate_metadata: nil
-        action_class = namespace::Create
 
         action = create_action action_class
         action.expects(:action_subject).with(repository)
@@ -38,8 +38,9 @@ module Katello
     end
 
     describe 'Destroy' do
+      let(:action_class) { ::Actions::Katello::Repository::Destroy }
+
       it 'plans' do
-        action_class = namespace::Destroy
         repository   = mock 'repository', destroy: true
         action       = create_action action_class
         action.stubs(:action_subject).with(repository)
@@ -48,7 +49,7 @@ module Katello
     end
 
     describe 'Discover' do
-      action_class = namespace::Discover
+      let(:action_class) { ::Actions::Katello::Repository::Discover }
       let(:action_planned) { create_and_plan_action action_class, url = 'http://' }
 
       it 'plans' do
@@ -66,7 +67,7 @@ module Katello
 
     describe 'Sync' do
 
-      let(:action_class) { namespace::Sync }
+      let(:action_class) { ::Actions::Katello::Repository::Sync }
       let(:pulp_action_class) { ::Actions::Pulp::Repository::Sync }
 
       it 'plans' do
