@@ -16,7 +16,7 @@ module Actions
       module Package
         class Remove < Actions::EntryAction
 
-          include Helpers::PulpPackagesPresenter
+          include Helpers::Presenter
 
           def plan(system, packages)
             action_subject(system, :packages => packages)
@@ -30,9 +30,12 @@ module Actions
             _("Remove package")
           end
 
-          # Used by PulpPackagesPresenter to find the details about the task
-          def pulp_subaction
-            Pulp::Consumer::ContentUninstall
+          def humanized_input
+            [input[:packages].join(", ")] + super
+          end
+
+          def presenter
+            Helpers::Presenter::Delegated.new(self, Pulp::Consumer::ContentUninstall)
           end
 
         end

@@ -13,9 +13,7 @@
 require 'katello_test_helper'
 
 module Katello
-  namespace = ::Actions::Katello::System::Package
-
-  describe namespace do
+  describe ::Actions::Katello::System::Package do
     include Dynflow::Testing
     include Support::Actions::Fixtures
 
@@ -28,7 +26,7 @@ module Katello
     end
 
     describe 'Install' do
-      let(:action_class) { namespace::Install }
+      let(:action_class) { ::Actions::Katello::System::Package::Install }
       let(:pulp_action_class) { ::Actions::Pulp::Consumer::ContentInstall }
 
       specify { assert_action_planed action, pulp_action_class }
@@ -36,12 +34,13 @@ module Katello
       describe '#humanized_output' do
         let :action do
           create_action(action_class).tap do |action|
-            action.stubs(details_action: details_action)
+            action.stubs(all_actions: [pulp_action])
           end
         end
+        let(:pulp_action) { fixture_action(pulp_action_class, output: fixture_variant) }
 
         describe 'successfully installed' do
-          let(:details_action) { fixture_action(pulp_action_class, output: :success) }
+          let(:fixture_variant) {  :success }
 
           specify do
             action.humanized_output.must_equal <<-OUTPUT.chomp
@@ -54,7 +53,7 @@ libotf-0.9.9-3.1.el6.x86_64
         end
 
         describe 'no packages installed' do
-          let(:details_action) { fixture_action(pulp_action_class, output: :no_packages) }
+          let(:fixture_variant) {  :no_packages }
 
           specify do
             action.humanized_output.must_equal "No new packages installed"
@@ -62,7 +61,7 @@ libotf-0.9.9-3.1.el6.x86_64
         end
 
         describe 'with error' do
-          let(:details_action) { fixture_action(pulp_action_class, output: :error) }
+          let(:fixture_variant) {  :error }
 
           specify do
             action.humanized_output.must_equal <<-MSG.chomp
@@ -75,20 +74,21 @@ emacss: No package(s) available to install
     end
 
     describe 'Remove' do
+      let(:action_class) { ::Actions::Katello::System::Package::Remove }
       let(:pulp_action_class) { ::Actions::Pulp::Consumer::ContentUninstall }
-      let(:action_class) { namespace::Remove }
 
       specify { assert_action_planed action, pulp_action_class }
 
       describe '#humanized_output' do
         let :action do
           create_action(action_class).tap do |action|
-            action.stubs(details_action: details_action)
+            action.stubs(all_actions: [pulp_action])
           end
         end
+        let(:pulp_action) { fixture_action(pulp_action_class, output: fixture_variant) }
 
         describe 'successfully uninstalled' do
-          let(:details_action) { fixture_action(pulp_action_class, output: :success) }
+          let(:fixture_variant) {  :success }
 
           specify do
             action.humanized_output.must_equal <<-OUTPUT.chomp
@@ -101,7 +101,7 @@ libotf-0.9.9-3.1.el6.x86_64
         end
 
         describe 'no packages uninstalled' do
-          let(:details_action) { fixture_action(pulp_action_class, output: :no_packages) }
+          let(:fixture_variant) {  :no_packages }
 
           specify do
             action.humanized_output.must_equal "No packages removed"

@@ -16,7 +16,7 @@ module Actions
       module Package
         class Install < Actions::EntryAction
 
-          include Helpers::PulpPackagesPresenter
+          include Helpers::Presenter
 
           def plan(system, packages)
             Type! system, ::Katello::System
@@ -32,9 +32,12 @@ module Actions
             _("Install package")
           end
 
-          # Used by PulpPackagesPresenter to find the details about the task
-          def pulp_subaction
-            Pulp::Consumer::ContentInstall
+          def humanized_input
+            [input[:packages].join(", ")] + super
+          end
+
+          def presenter
+            Helpers::Presenter::Delegated.new(self, Pulp::Consumer::ContentInstall)
           end
         end
       end

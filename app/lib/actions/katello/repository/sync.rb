@@ -16,6 +16,7 @@ module Actions
       class Sync < Actions::EntryAction
 
         include Helpers::RemoteAction
+        include Helpers::Presenter
 
         input_format do
           param :id, Integer
@@ -26,15 +27,18 @@ module Actions
           plan_action(Pulp::Repository::Sync, pulp_id: repo.pulp_id)
         end
 
-        def humanized_name
-          _("Synchronize")
-        end
-
         def finalize
           repo = ::Katello::Repository.find(input[:repository][:id])
           repo.index_content
         end
 
+        def humanized_name
+          _("Synchronize")
+        end
+
+        def presenter
+          Helpers::Presenter::Delegated.new(self, Pulp::Repository::Sync)
+        end
       end
     end
   end
