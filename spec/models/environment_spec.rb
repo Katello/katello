@@ -97,7 +97,6 @@ describe KTEnvironment do
       @third_product = Product.create!(:name =>"prod3", :label=> "prrod3",:cp_id => '45678', :provider => @provider)
       @fourth_product = Product.create!(:name =>"prod4", :label => "prod4", :cp_id => '32683', :provider => @provider)
       @environment = create_environment({:name=>@env_name, :organization => @organization, :label=> @env_name, :prior => @organization.library})
-
       FactoryGirl.create(:repository, product: @first_product, environment: @environment,
                              content_view_version_id: @environment.content_view_versions.first.id)
       FactoryGirl.create(:repository, product: @third_product, environment: @environment,
@@ -141,22 +140,28 @@ describe KTEnvironment do
         lambda { KTEnvironment.find(id)}.must_raise(ActiveRecord::RecordNotFound)
       end
     end
+
     describe "available products" do
 
       before(:each) do
-        @prior_env = KTEnvironment.new({:name=>@environment.name + '-prior', :label=> @environment.name + '-prior', :prior => @environment.id})
-        @organization.environments << @prior_env
-        @prior_env.save!
-        @organization.save!
+        @prior_env = create_environment(:name=>@environment.name + '-prior', :label=> @environment.name + '-prior',
+                                        :prior => @environment.id, :organization => @organization)
 
-        FactoryGirl.create(:repository, environment: @prior_env, product: @first_product, content_view_version_id: 1)
-        FactoryGirl.create(:repository, environment: @prior_env, product: @second_product, content_view_version_id: 1)
-        FactoryGirl.create(:repository, environment: @prior_env, product: @third_product, content_view_version_id: 1)
+        FactoryGirl.create(:repository, environment: @prior_env, product: @first_product,
+                                        content_view_version_id: @prior_env.content_view_versions.first.id)
+        FactoryGirl.create(:repository, environment: @prior_env, product: @second_product,
+                                        content_view_version_id: @prior_env.content_view_versions.first.id)
+        FactoryGirl.create(:repository, environment: @prior_env, product: @third_product,
+                                        content_view_version_id: @prior_env.content_view_versions.first.id)
 
-        FactoryGirl.create(:repository, environment: @organization.library, product: @first_product, content_view_version_id: 1)
-        FactoryGirl.create(:repository, environment: @organization.library, product: @second_product, content_view_version_id: 1)
-        FactoryGirl.create(:repository, environment: @organization.library, product: @third_product, content_view_version_id: 1)
-        FactoryGirl.create(:repository, environment: @organization.library, product: @fourth_product, content_view_version_id: 1)
+        FactoryGirl.create(:repository, environment: @organization.library, product: @first_product,
+                                        content_view_version_id: @organization.library.content_view_versions.first.id)
+        FactoryGirl.create(:repository, environment: @organization.library, product: @second_product,
+                                        content_view_version_id: @organization.library.content_view_versions.first.id)
+        FactoryGirl.create(:repository, environment: @organization.library, product: @third_product,
+                                        content_view_version_id: @organization.library.content_view_versions.first.id)
+        FactoryGirl.create(:repository, environment: @organization.library, product: @fourth_product,
+                                        content_view_version_id: @organization.library.content_view_versions.first.id)
       end
 
       it "should return products from prior env" do

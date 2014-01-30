@@ -119,7 +119,7 @@ rake katello:reset
 
 That's rather unfortunate. But don't worry! We can help. Just file a bug
 [on our Bugzilla](https://bugzilla.redhat.com/enter_bug.cgi?product=Katello) or
-[in Github](https://github.com/Katello/katello/issues).
+[in our project tracker](http://projects.theforeman.org/projects/katello).
 
 
 ## Contributing

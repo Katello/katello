@@ -130,11 +130,12 @@ class Api::V2::ProductsControllerTest < ActionController::TestCase
   end
 
   def test_update_sync_plan
-    put :update, :id => @product.id, :product => {:sync_plan_id => 1}
+    sync_plan = katello_sync_plans(:sync_plan_hourly)
+    put :update, :id => @product.id, :product => {:sync_plan_id => sync_plan.id}
 
     assert_response :success
     assert_template %w(katello/api/v2/common/update katello/api/v2/layouts/resource)
-    assert_equal assigns[:product].sync_plan_id, 1
+    assert_equal assigns[:product].sync_plan_id, sync_plan.id
   end
 
   def test_remove_sync_plan

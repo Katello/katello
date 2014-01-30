@@ -169,7 +169,7 @@
 
     <div alch-alert success-messages="uploadSuccessMessages" error-messages="uploadErrorMessages"></div>
 
-    <form class="form labels_top"
+    <form role="form"
           action="/katello/api/repositories/{{ repository.id }}/content_uploads/file"
           ng-upload="uploadContent(content)"
           upload-options-enable-controls>

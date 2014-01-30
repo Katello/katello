@@ -57,8 +57,7 @@ task 'assets:precompile:katello' do
 
     precompile = [
       'katello/katello.css',
-      'bastion/less/bastion.css',
-      'bastion/scss/bastion.css',
+      'bastion/bastion.css',
       'bastion/bastion.js',
     ]
     precompile.concat(javascripts)
