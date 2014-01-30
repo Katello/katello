@@ -6,6 +6,7 @@ class RefactorContentViews < ActiveRecord::Migration
     drop_table :katello_filter_rules
 
     add_column :katello_content_views, :composite, :boolean
+    add_column :katello_content_view_versions, :user, :string
     remove_column :katello_content_views, :content_view_definition_id
 
     rename_column :katello_component_content_views, :content_view_definition_id, :component_content_view_id
@@ -58,6 +59,7 @@ class RefactorContentViews < ActiveRecord::Migration
     end
 
     remove_column :katello_content_views, :composite
+    remove_column :katello_content_view_versions, :user
     add_column :katello_content_views, :content_view_definition_id, :integer
 
     rename_column :katello_component_content_views, :component_content_view_id, :content_view_definition_id
