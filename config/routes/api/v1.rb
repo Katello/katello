@@ -323,17 +323,17 @@ Katello::Engine.routes.draw do
 
       # subscription-manager support
       scope :constraints => Katello::RegisterWithActivationKeyContraint.new do
-        match '/consumers' => 'systems#activate', :via => :post
+        match '/consumers' => 'candlepin_proxies#consumer_activate', :via => :post
       end
-      match '/hypervisors' => 'systems#hypervisors_update', :via => :post
-      resources :consumers, :controller => 'systems'
-      match '/owners/:organization_id/environments' => 'environments#rhsm_index', :via => :get
+      match '/hypervisors' => 'candlepin_proxies#hypervisors_update', :via => :post
+      match '/owners/:organization_id/environments' => 'candlepin_proxies#rhsm_index', :via => :get
       match '/owners/:organization_id/pools' => 'candlepin_proxies#get', :via => :get, :as => :proxy_owner_pools_path
       match '/owners/:organization_id/servicelevels' => 'candlepin_proxies#get', :via => :get, :as => :proxy_owner_servicelevels_path
-      match '/environments/:environment_id/consumers' => 'systems#index', :via => :get
-      match '/environments/:environment_id/consumers' => 'systems#create', :via => :post
-      match '/consumers/:id' => 'systems#regenerate_identity_certificates', :via => :post
-      match '/users/:login/owners' => 'users#list_owners', :via => :get, :constraints => {:login => /\S+/}
+      match '/environments/:environment_id/consumers' => 'candlepin_proxies#consumer_create', :via => :post
+      match '/consumers/:id' => 'candlepin_proxies#consumer_show', :via => :get
+      match '/consumers/:id' => 'candlepin_proxies#regenerate_identity_certificates', :via => :post
+      match '/consumers/:id' => 'candlepin_proxies#consumer_destroy', :via => :delete
+      match '/users/:login/owners' => 'candlepin_proxies#list_owners', :via => :get, :constraints => {:login => /\S+/}
       match '/consumers/:id/certificates' => 'candlepin_proxies#get', :via => :get, :as => :proxy_consumer_certificates_path
       match '/consumers/:id/release' => 'candlepin_proxies#get', :via => :get, :as => :proxy_consumer_releases_path
       match '/consumers/:id/compliance' => 'candlepin_proxies#get', :via => :get, :as => :proxy_consumer_compliance_path
@@ -350,9 +350,10 @@ Katello::Engine.routes.draw do
       match '/deleted_consumers' => 'candlepin_proxies#get', :via => :get, :as => :proxy_deleted_consumers_path
       match '/entitlements/:id' => 'candlepin_proxies#get', :via => :get, :as => :proxy_entitlements_path
       match '/subscriptions' => 'candlepin_proxies#post', :via => :post, :as => :proxy_subscriptions_post_path
-      match '/consumers/:id/profile/' => 'systems#upload_package_profile', :via => :put
-      match '/consumers/:id/packages/' => 'systems#upload_package_profile', :via => :put
-      match '/consumers/:id/checkin/' => 'systems#checkin', :via => :put
+      match '/consumers/:id/content_overrides' => 'candlepin_proxies#get', :via => :get, :as => :proxy_consumer_content_overrides_path
+      match '/consumers/:id/profile/' => 'candlepin_proxies#upload_package_profile', :via => :put
+      match '/consumers/:id/packages/' => 'candlepin_proxies#upload_package_profile', :via => :put
+      match '/consumers/:id/checkin/' => 'candlepin_proxies#checkin', :via => :put
 
       # development / debugging support
       if Rails.env == "development"
