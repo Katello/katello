@@ -66,13 +66,6 @@ Foreman::Plugin.register :katello do
 
     divider :top_menu, :parent => :content
     menu :top_menu,
-         :content_view_definitions,
-         :caption => N_('Content View Definitions'),
-         :url_hash => {:controller => 'katello/content_view_definitions',
-                       :action => 'index'},
-         :engine => Katello::Engine
-
-    menu :top_menu,
          :content_search,
          :caption => N_('Content Search'),
          :url_hash => {:controller => 'katello/content_search',

@@ -88,42 +88,6 @@ Katello::Engine.routes.draw do
         match '/default_info/:informable_type' => 'organization_default_info#create', :via => :post, :as => :create_default_info
         match '/default_info/:informable_type/*keyname' => 'organization_default_info#destroy', :via => :delete, :as => :destroy_default_info
         match '/default_info/:informable_type/apply' => 'organization_default_info#apply_to_all', :via => :post, :as => :apply_default_info
-
-        resources :content_views, :only => [:index, :show, :destroy]
-        resources :content_view_definitions do
-          member do
-            post :publish
-            post :clone
-          end
-          resources :products, :controller => :content_view_definitions, :only => [] do
-            collection do
-              get :index, :action => :list_products
-              put :index, :action => :update_products
-              get :all, :action => :list_all_products
-            end
-          end
-          resources :repositories, :controller => :content_view_definitions, :only => [] do
-            collection do
-              get :index, :action => :list_repositories
-              put :index, :action => :update_repositories
-            end
-          end
-          resources :filters, :controller => :filters, :only => [:index, :show, :create, :destroy] do
-            resources :products, :controller => :filters, :only => [] do
-              collection do
-                get :index, :action => :list_products
-                put :index, :action => :update_products
-              end
-            end
-            resources :repositories, :controller => :filters, :only => [] do
-              collection do
-                get :index, :action => :list_repositories
-                put :index, :action => :update_repositories
-              end
-            end
-            resources :rules, :controller => :filter_rules, :only => [:create, :destroy]
-          end
-        end
       end
 
       resources :systems, :only => onlies do
@@ -190,18 +154,6 @@ Katello::Engine.routes.draw do
       resources :subscriptions, :only => [] do
         collection do
           get :index, :action => :organization_index
-        end
-      end
-
-      resources :content_view_definitions, :only => [:destroy, :content_views] do
-        get :content_views, :on => :member
-        put :content_views, :on => :member, :action => :update_content_views
-      end
-
-      resources :content_views, :only => [:promote, :show] do
-        member do
-          post :promote
-          post :refresh
         end
       end
 
