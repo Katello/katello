@@ -137,5 +137,21 @@ class Filter < Katello::Model
     validate_filter_repos(self.errors, self.content_view)
   end
 
+  def get_created_at(previous_parameters, current_unit)
+    # Check to see if the unit was previously part of the filter.
+    # If it was, return the original created_at timestamp; otherwise,
+    # return the current time
+    found_unit = nil
+    if !previous_parameters.blank? && previous_parameters.key?(:units)
+      previous_parameters[:units].each do |previous_unit|
+        created_at = previous_unit.delete(:created_at)
+        if (previous_unit == current_unit)
+          found_unit = previous_unit.merge({ :created_at => created_at })
+          break
+        end
+      end
+    end
+    found_unit.nil? ? Time.zone.now : found_unit[:created_at]
+  end
 end
 end

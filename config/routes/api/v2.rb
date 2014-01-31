@@ -26,8 +26,9 @@ Katello::Engine.routes.draw do
           post :promote
           post :refresh
         end
-        api_resources :filters, :controller => :filters
+        api_resources :filters, :only => [:index, :create], :controller => :filters
       end
+      api_resources :filters, :only => [:show, :update, :destroy], :controller => :filters
 
       api_resources :environments, :only => [:index, :show, :create, :update, :destroy] do
         api_resources :systems, :only => system_onlies do
