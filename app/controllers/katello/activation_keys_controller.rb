@@ -24,6 +24,10 @@ module Katello
       }
     end
 
+    def title
+      _('Activation Keys')
+    end
+    
     def index
       render 'bastion/layouts/application', :layout => false
     end

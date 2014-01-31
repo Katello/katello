@@ -30,6 +30,10 @@ class FilterRulesController < Katello::ApplicationController
     'contents'
   end
 
+  def title
+    _('Filters')
+  end
+
   def rules
     show_rule    = lambda { @view_definition.readable? }
     manage_rule  = lambda { @view_definition.editable? }
