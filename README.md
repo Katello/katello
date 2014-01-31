@@ -107,6 +107,16 @@ At this point, the development environment should be completely setup and the Ka
 4. Create an initial Foreman organization
 5. Navigate to the Katello engine (e.g. `http://<hostname>:3000/katello`)
 
+### Start the background jobs processor
+
+You also will need the delayed_jobs engine to be running to process Katello's async tasks.  To start it do:
+
+    ```bash
+    cd $GITDIR/foreman
+
+    rake jobs:work
+    ```
+
 ### Reset Development Environment
 
 In order to reset the development environment, all backend data and the database needs to be reset. To reiterate, the following will destroy all data in Pulp, Candlepin and your Foreman/Katello database. From the Foreman checkout run:
