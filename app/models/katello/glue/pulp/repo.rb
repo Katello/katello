@@ -688,10 +688,13 @@ module Glue::Pulp::Repo
       sync_history_item['state'] == PulpTaskStatus::Status::FINISHED.to_s
     end
 
-    def generate_metadata(force = false)
+    def generate_metadata(options = {})
+      force_regeneration = options.fetch(:force_regeneration, false)
+      cloned_repo_override = options.fetch(:cloned_repo_override, nil)
+
       tasks = []
-      clone = self.content_view_version.repositories.where(:library_instance_id => self.library_instance_id).where("id != #{self.id}").first
-      if self.environment.library? || force || clone.nil?
+      clone = cloned_repo_override || self.content_view_version.repositories.where(:library_instance_id => self.library_instance_id).where("id != #{self.id}").first
+      if force_regeneration || (self.environment.library? &&  cloned_repo_override.nil?)
         tasks << self.publish_distributor
       else
         tasks << self.publish_clone_distributor(clone)
