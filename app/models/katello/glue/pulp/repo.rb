@@ -120,7 +120,7 @@ module Glue::Pulp::Repo
 
     def create_pulp_repo
       #if we are in library, no need for an distributor, but need to sync
-      if self.environment.library?
+      if self.environment.nil? || self.environment.library?
         importer = generate_importer
       else
         #if not in library, no need for sync info, but we need a distributor
@@ -694,7 +694,7 @@ module Glue::Pulp::Repo
 
       tasks = []
       clone = cloned_repo_override || self.content_view_version.repositories.where(:library_instance_id => self.library_instance_id).where("id != #{self.id}").first
-      if force_regeneration || (self.environment.library? &&  cloned_repo_override.nil?)
+      if force_regeneration || (self.environment.nil? &&  cloned_repo_override.nil?)
         tasks << self.publish_distributor
       else
         tasks << self.publish_clone_distributor(clone)

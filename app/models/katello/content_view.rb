@@ -157,7 +157,7 @@ class ContentView < Katello::Model
     if version
       version.repositories.in_environment(env)
     else
-      []
+      Repository.where("0=1")
     end
   end
 
@@ -280,45 +280,33 @@ class ContentView < Katello::Model
     environments.where(:library => false).length > 0
   end
 
-  # Refresh the content view, creating a new version in the library.  The new version will be returned.
-  # TODO: break up method
-  # rubocop:disable MethodLength
   def publish(options = { })
-    fail "Cannot publish content view without a logged in user." if User.current.nil?
-    # TODO: check for puppet name conflicts
     if !ready_to_publish?
       fail _("Cannot publish view. Check for repository conflicts.")
     end
+    fail "Cannot publish content view without a logged in user." if User.current.nil?
     options = { :async => true, :notify => false }.merge(options)
 
-    # retrieve the 'next' version id to use
-    next_version_id = (self.versions.maximum(:version) || 0) + 1
-
-    # create a new version
-    version = ContentViewVersion.new(:version => next_version_id,
-                                     :content_view => self,
-                                     :user => User.current.login,
-                                     :environments => [organization.library]
-                                    )
-    version.save!
+    version = create_new_version
 
     if options[:async]
       task  = self.async(:organization => self.organization,
                          :task_type => TaskStatus::TYPES[:content_view_refresh][:type]).
-        generate_repos(version, options[:notify])
+        publish_content(version, options[:notify])
 
       version.task_status = task
       version.save!
     else
-      version.task_status = Katello::TaskStatus.create!(
-                               :uuid => ::UUIDTools::UUID.random_create.to_s,
-                               :user_id => ::User.current.id,
-                               :organization => self.organization,
-                               :state => Katello::TaskStatus::Status::WAITING,
-                               :task_type => TaskStatus::TYPES[:content_view_refresh][:type])
-      version.save!
+      version.create_task_status!(
+        :uuid => ::UUIDTools::UUID.random_create.to_s,
+        :user_id => ::User.current.id,
+        :organization => self.organization,
+        :state => Katello::TaskStatus::Status::WAITING,
+        :task_type => TaskStatus::TYPES[:content_view_refresh][:type]
+      )
+
       begin
-        generate_repos(version, options[:notify])
+        publish_content(version, options[:notify])
         version.task_status.update_attributes!(:state => Katello::TaskStatus::Status::FINISHED)
       rescue => e
         version.task_status.update_attributes!(:state => Katello::TaskStatus::Status::ERROR)
@@ -328,18 +316,20 @@ class ContentView < Katello::Model
     version
   end
 
-  def generate_repos(version, notify = false)
-    repositories.each do |repo|
-      cloned = repo.create_clone(self.organization.library, self, version.version)
-      associate_contents(cloned)
-    end
+  def publish_content(version, notify = false)
+    # 1. generate the version repositories
+    publish_version_content(version)
+
+    # 2. generate the library repositories
+    publish_library_content
+
+    # 3. update candlepin, etc
     update_cp_content(self.organization.library)
 
     clone_overrides = self.repositories.select{|r| self.filters.applicable(r).empty?}
     version.trigger_repository_changes(:cloned_repo_overrides => clone_overrides)
 
     Glue::Event.trigger(Katello::Actions::ContentViewPublish, self)
-    Katello::Foreman.update_foreman_content(self.organization, self.organization.library, self)
 
     if notify
       message = _("Successfully published content view '%s'.") % name
@@ -357,6 +347,52 @@ class ContentView < Katello::Model
     end
 
     raise e
+  end
+
+  def publish_library_content
+    async_tasks = []
+    # prepare the repos currently in the library for the refresh
+    repos(organization.library).each do |repo|
+      if repository_ids.include?(repo.library_instance_id)
+        # this repo is in both the content view and in the library,
+        # so clear it and later we'll regenerate the content... this is more
+        # efficient than deleting the repo and recreating it...
+        async_tasks +=  repo.clear_contents
+      else
+        # this repo no longer exists in the view, so destroy it
+        repo.destroy
+      end
+    end
+    PulpTaskStatus.wait_for_tasks async_tasks unless async_tasks.blank?
+
+    async_tasks = []
+    repos_to_filter = []
+    repositories.each do |repo|
+      # the repos from the content view are based upon initial synced repos, we need to
+      # determine if each of those repos has been cloned in library
+      library_clone = get_repo_clone(organization.library, repo).first
+      if library_clone.nil?
+        # this repo doesn't currently exist in the library
+        clone = repo.create_clone(:environment => organization.library, :content_view => self)
+        repos_to_filter << clone
+      else
+        # this repo already exists in the library, so update it
+        library_clone = Repository.find(library_clone) # reload readonly obj
+        repos_to_filter << library_clone
+      end
+    end
+    repos_to_filter.each do |repo|
+      self.associate_contents(repo)
+    end
+
+    PulpTaskStatus.wait_for_tasks async_tasks.flatten(1)
+  end
+
+  def publish_version_content(version)
+    repositories.each do |repo|
+      cloned = repo.create_clone(:content_view => self, :version => version)
+      associate_contents(cloned)
+    end
   end
 
   def associate_contents(cloned)
@@ -548,24 +584,17 @@ class ContentView < Katello::Model
 
   def associate_puppet(cloned)
     repo = cloned.library_instance_id ? cloned.library_instance : cloned
-    applicable_filters = filters.applicable(repo)
-
-    applicable_rules_count = PuppetModuleRule.where(:filter_id => applicable_filters).count
+    applicable_filters = filters.applicable(repo).puppet
     copy_clauses = nil
 
-    if applicable_rules_count > 0
+    if applicable_filters.any?
       clause_gen = Util::PuppetClauseGenerator.new(repo, applicable_filters)
       clause_gen.generate
       copy_clauses = clause_gen.copy_clause
     end
 
-    # final check here, if copy_clauses is nil there were
-    # rules for this set of filters
-    # This means none of the filter rules were successful in generating clauses.
-    # This implies that there are no packages to copy over.
-
-    if applicable_rules_count == 0 || copy_clauses
-      pulp_task = repo.clone_contents_by_filter(cloned, FilterRule::PUPPET_MODULE, copy_clauses)
+    if applicable_filters.empty? || copy_clauses
+      pulp_task = repo.clone_contents_by_filter(cloned, Filter::PUPPET_MODULE, copy_clauses)
       PulpTaskStatus.wait_for_tasks([pulp_task])
     end
   end
@@ -591,38 +620,32 @@ class ContentView < Katello::Model
     # 6) Index for search.
 
     repo = cloned.library_instance_id ? cloned.library_instance : cloned
-    applicable_filters = filters.applicable(repo)
-    applicable_rules_count = FilterRule.yum_types.where(:filter_id => applicable_filters).count
+    applicable_filters = filters.applicable(repo).yum
     copy_clauses = nil
     remove_clauses = nil
     process_errata_and_groups = false
 
-    if applicable_rules_count > 0
+    if applicable_filters.any?
       clause_gen = Util::PackageClauseGenerator.new(repo, applicable_filters)
       clause_gen.generate
       copy_clauses = clause_gen.copy_clause
       remove_clauses = clause_gen.remove_clause
     end
 
-    # final check here, if copy_clauses is nil AND there were
-    # rules for this set of filters
-    # This means none of the filter rules were successful in generating clauses.
-    # This implies that there are no packages to copy over.
-
-    if applicable_rules_count == 0 || copy_clauses
-      pulp_task = repo.clone_contents_by_filter(cloned, FilterRule::PACKAGE, copy_clauses)
+    if applicable_filters.empty? || copy_clauses
+      pulp_task = repo.clone_contents_by_filter(cloned, Filter::PACKAGE, copy_clauses)
       PulpTaskStatus.wait_for_tasks([pulp_task])
       process_errata_and_groups = true
     end
 
     if remove_clauses
-      pulp_task = cloned.unassociate_by_filter(FilterRule::PACKAGE, remove_clauses)
+      pulp_task = cloned.unassociate_by_filter(Filter::PACKAGE, remove_clauses)
       PulpTaskStatus.wait_for_tasks([pulp_task])
       process_errata_and_groups = true
     end
 
     if process_errata_and_groups
-      group_tasks = [FilterRule::ERRATA, FilterRule::PACKAGE_GROUP].collect do |content_type|
+      group_tasks = [Filter::ERRATA, Filter::PACKAGE_GROUP].collect do |content_type|
         repo.clone_contents_by_filter(cloned, content_type, nil)
       end
       PulpTaskStatus.wait_for_tasks(group_tasks)
@@ -631,6 +654,16 @@ class ContentView < Katello::Model
 
     PulpTaskStatus.wait_for_tasks([repo.clone_distribution(cloned)])
     PulpTaskStatus.wait_for_tasks([repo.clone_file_metadata(cloned)])
+  end
+
+  def create_new_version
+    next_version_id = (self.versions.maximum(:version) || 0) + 1
+
+    ContentViewVersion.create!(:version => next_version_id,
+                               :content_view => self,
+                               :user => User.current.login,
+                               :environments => [organization.library]
+                              )
   end
 end
 end

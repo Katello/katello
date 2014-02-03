@@ -48,7 +48,8 @@ class Filter < Katello::Model
   scope :whitelist, where(:inclusion => true)
   scope :blacklist, where(:inclusion => false)
 
-  scope :yum_types, where(:type => [PackageGroupFilter.name, ErratumFilter.name, PackageFilter.name])
+  scope :yum, where(:type => [PackageGroupFilter.name, ErratumFilter.name, PackageFilter.name])
+  scope :puppet, where(:type => PuppetModuleFilter.name)
 
   def params_format
     {}

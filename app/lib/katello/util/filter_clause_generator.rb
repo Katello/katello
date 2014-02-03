@@ -12,7 +12,7 @@
 
 module Katello
 module Util
-  module FilterRuleClauseGenerator
+  module FilterClauseGenerator
     def initialize(repo, filters)
       @repo = repo
       @filters = filters
@@ -60,13 +60,13 @@ module Util
     end
 
     def clauses_for(list_type)
-      # fetch the applicable content type rules - fetch_rules implemented
-      # by subclasses. idea is those content type  rule classes would
+      # fetch the applicable content type filters - fetch_filters implemented
+      # by subclasses. idea is those content type  filter classes would
       # implement whitelist, blacklist scopes.
-      rules = fetch_rules.send(list_type).where(:filter_id => @filters) # abstract
-      if rules.any?
-        # generate the clauses from rules to be implemented by subclasses
-        clauses = collect_clauses(@repo, rules) # abstract
+      filters = fetch_filters.send(list_type).where(:id => @filters) # abstract
+      if filters.any?
+        # generate the clauses from filters to be implemented by subclasses
+        clauses = collect_clauses(@repo, filters) # abstract
         clauses.delete_if {|cls| cls.blank?}
         if clauses.any?
           clauses
@@ -79,7 +79,7 @@ module Util
           # meaning "do not copy any unit has an id"
           # We need this to not make the "copy" happen if whitelists had no items to copy.
           # example scenario for this path
-          # FilterRule  --> [Whitelist Rules-> [include "NON matching"]]
+          # Filter  --> [Whitelist Rules-> [include "NON matching"]]
 
           [whitelist_non_matcher_clause] # abstract
         end
@@ -90,7 +90,7 @@ module Util
         # meaning "copy any unit that has an id"
         # We need this to not make the "copy" copy everything.
         # example scenario for this path
-        # FilterRule  -->  [Whitelist Rules-> [<none provided>], Blacklist Rule -> [remove foo]]
+        # Filter  -->  [Whitelist Rules-> [<none provided>], Blacklist Rule -> [remove foo]]
         #
         [whitelist_all_matcher_clause] # abstract
       end
