@@ -32,7 +32,7 @@ module Actions
         private
 
         def task_result
-          action.external_task[:result]
+          action.external_task && action.external_task[:result]
         end
 
         def task_result_details

@@ -48,7 +48,7 @@ module Actions
         end
 
         def humanized_output
-          @delegated_actions.map(&:humanized_output).join("\n")
+          @delegated_actions.map(&:humanized_output).compact.join("\n")
         end
 
       end
