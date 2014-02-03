@@ -48,9 +48,10 @@ module Katello
       options[:load_records?] = true
 
       ids = if @environment
-              ContentView.readable(@organization).in_environment(@environment).pluck(:id)
+              # TODO: move environment to an ES filter
+              ContentView.non_default.readable(@organization).in_environment(@environment).pluck(:id)
             else
-              ContentView.readable(@organization).pluck(:id)
+              ContentView.non_default.readable(@organization).pluck(:id)
             end
       options[:filters] = [{:terms => {:id => ids}}]
 
@@ -102,7 +103,7 @@ module Katello
     private
 
     def find_content_view
-      @view = ContentView.find(params[:id])
+      @view = ContentView.non_default.find(params[:id])
     end
 
     def view_params

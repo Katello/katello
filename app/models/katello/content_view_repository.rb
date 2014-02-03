@@ -14,7 +14,8 @@ class ContentViewRepository < Katello::Model
   self.include_root_in_json = false
 
   belongs_to :content_view, :inverse_of => :content_view_repositories,
-                                       :class_name => "Katello::ContentView"
-  belongs_to :repository, :inverse_of => :content_view_repositories
+    :class_name => "Katello::ContentView"
+  belongs_to :repository, :inverse_of => :content_view_repositories,
+    :class_name => "Katello::Repository"
 end
 end

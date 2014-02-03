@@ -44,7 +44,8 @@ class ContentView < Katello::Model
 
   has_many :distributors, :class_name => "Katello::Distributor", :dependent => :restrict
   has_many :content_view_repositories, :dependent => :destroy
-  has_many :repositories, :through => :content_view_repositories, :after_remove => :remove_repository
+  has_many :repositories, :through => :content_view_repositories, :after_remove => :remove_repository,
+    :class_name => "Katello::Repository"
   has_many :filters, :dependent => :destroy, :class_name => "Katello::Filter"
 
   has_many :changeset_content_views, :class_name => "Katello::ChangesetContentView", :dependent => :destroy
@@ -282,6 +283,7 @@ class ContentView < Katello::Model
   # TODO: break up method
   # rubocop:disable MethodLength
   def publish(options = { })
+    fail "Cannot publish content view without a logged in user." if User.current.nil?
     # TODO: check for puppet name conflicts
     if !ready_to_publish?
       fail _("Cannot publish view. Check for repository conflicts.")
@@ -292,8 +294,11 @@ class ContentView < Katello::Model
     next_version_id = (self.versions.maximum(:version) || 0) + 1
 
     # create a new version
-    version = ContentViewVersion.new(:version => next_version_id, :content_view => self)
-    version.environments << organization.library
+    version = ContentViewVersion.new(:version => next_version_id,
+                                     :content_view => self,
+                                     :user => User.current.login,
+                                     :environments => [organization.library]
+                                    )
     version.save!
 
     if options[:async]
