@@ -20,7 +20,7 @@ class ErratumFilter < Filter
                    'enhancement' => _('Enhancement'),
                    'security' => _('Security') }.with_indifferent_access
 
-  before_create :set_parameters
+  before_save :set_parameters
 
   validates_with Validators::ErratumFilterParamsValidator, :attributes => :parameters
 
@@ -109,8 +109,17 @@ class ErratumFilter < Filter
   private
 
   def set_parameters
+    # Check to see if the parameters have changed, if they have update
+    # update the created_at timestamp; otherwise, keep the old timestamp
     unless parameters.blank?
-      parameters[:created_at] = Time.zone.now
+      unless parameters_was.blank?
+        created_at = parameters_was.delete(:created_at)
+        if parameters == parameters_was
+          parameters[:created_at] = created_at
+        end
+      end
+
+      parameters[:created_at] = Time.zone.now unless parameters.key?(:created_at)
       parameters[:inclusion] = false unless parameters.key?(:inclusion)
     end
     self

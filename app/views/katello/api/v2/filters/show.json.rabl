@@ -7,7 +7,7 @@ child :content_view => :content_view do
 end
 
 child :repositories => :repositories do
-  attributes :id, :name
+  attributes :id, :name, :label
 end
 
 node(:type) { |filter| filter.type.constantize::CONTENT_TYPE }

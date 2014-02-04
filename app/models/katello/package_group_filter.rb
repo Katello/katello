@@ -16,7 +16,7 @@ class PackageGroupFilter < Filter
 
   CONTENT_TYPE = PackageGroup::CONTENT_TYPE
 
-  before_create :set_parameters
+  before_save :set_parameters
 
   validates_with Validators::PackageGroupFilterParamsValidator, :attributes => :parameters
   def params_format
@@ -39,7 +39,7 @@ class PackageGroupFilter < Filter
 
   def set_parameters
     parameters[:units].each do |unit|
-      unit[:created_at] = Time.zone.now
+      unit[:created_at] = get_created_at(parameters_was, unit)
       unit[:inclusion] = false unless unit.key?(:inclusion)
     end if !parameters.blank? && parameters.key?(:units)
   end
