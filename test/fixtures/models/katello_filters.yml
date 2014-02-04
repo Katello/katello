@@ -1,5 +1,6 @@
 simple_filter:
   name:            Simple Filter
+  type:            <%= Katello::PackageFilter.name %>
   content_view_id: <%= ActiveRecord::Fixtures.identify(:library_view) %>
 
 populated_package_filter:
