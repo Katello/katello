@@ -127,6 +127,10 @@ module Util
             :english_name => N_("content view publish"),
             :type => :content_view_publish
         },
+       :content_view_node_publish => {
+            :english_name => N_("content view node publish"),
+            :type => :content_view_node_publish
+        },
        :content_view_refresh => {
             :english_name => N_("content view refresh"),
             :type => :content_view_refresh

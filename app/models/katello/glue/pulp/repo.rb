@@ -691,7 +691,6 @@ module Glue::Pulp::Repo
     def generate_metadata(options = {})
       force_regeneration = options.fetch(:force_regeneration, false)
       cloned_repo_override = options.fetch(:cloned_repo_override, nil)
-
       tasks = []
       clone = cloned_repo_override || self.content_view_version.repositories.where(:library_instance_id => self.library_instance_id).where("id != #{self.id}").first
       if force_regeneration || (self.environment.library? &&  cloned_repo_override.nil?)
@@ -699,7 +698,14 @@ module Glue::Pulp::Repo
       else
         tasks << self.publish_clone_distributor(clone)
       end
-      tasks << self.publish_node_distributor if self.find_node_distributor
+      if self.find_node_distributor
+        if options[:node_publish_async]
+          self.async(:organization => self.organization,
+                           :task_type => TaskStatus::TYPES[:content_view_node_publish][:type]).publish_node_distributor
+        else
+          tasks << self.publish_node_distributor
+        end
+      end
       tasks
     end
 
@@ -711,6 +717,7 @@ module Glue::Pulp::Repo
     def publish_node_distributor
       dist = self.find_node_distributor
       Katello.pulp_server.extensions.repository.publish(self.pulp_id, dist['id'])
+      Glue::Event.trigger(Katello::Actions::NodeMetadataGenerate, self)
     end
 
     def publish_clone_distributor(source_repo)
