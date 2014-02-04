@@ -16,16 +16,16 @@
  * @name  Bastion.systems.factory:SystemSubscription
  *
  * @requires $resource
- * @requires Routes
  *
  * @description
  *   Provides a $resource for system subscriptions.
  */
 angular.module('Bastion.systems').factory('SystemSubscription',
-    ['$resource', 'Routes',
-        function ($resource, Routes) {
-            return $resource(Routes.apiSystemsPath() + '/:systemId/subscriptions/:id', {systemId: '@systemId', id: '@id'}, {
-                query: {method: 'GET', isArray: false, params: {paged: true}}
-            });
-        }]
+    ['$resource', function ($resource) {
+
+        return $resource('/api/v2/systems/:systemId/subscriptions/:id', {systemId: '@systemId', id: '@id'}, {
+            query: {method: 'GET', isArray: false, params: {paged: true}}
+        });
+
+    }]
 );

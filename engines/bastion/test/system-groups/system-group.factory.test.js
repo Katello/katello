@@ -34,7 +34,7 @@ describe('Factory: SystemGroup', function() {
     });
 
     it('makes a request to get the system group list from the API.', function() {
-        $httpBackend.expectGET('/katello/api/system_groups').respond(systemGroups);
+        $httpBackend.expectGET('/api/system_groups').respond(systemGroups);
 
         SystemGroup.query(function(response) {
             expect(response.results.length).toBe(systemGroups.results.length);
@@ -49,7 +49,7 @@ describe('Factory: SystemGroup', function() {
         var group = systemGroups.results[0];
 
         group.name = 'NewRepositoryName';
-        $httpBackend.expectPUT('/katello/api/system_groups/0').respond(group);
+        $httpBackend.expectPUT('/api/system_groups/0').respond(group);
 
         SystemGroup.update({name: group.name, id: 0}, function(response) {
             expect(response).toBeDefined();
@@ -59,7 +59,7 @@ describe('Factory: SystemGroup', function() {
 
     it('provides a way to add systems', function() {
         var systems = [{id: 1}, {id: 2}];
-        $httpBackend.expectPUT('/katello/api/system_groups/0/add_systems').respond(systems);
+        $httpBackend.expectPUT('/api/system_groups/0/add_systems').respond(systems);
         SystemGroup.addSystems({'system_group': {'system_ids': [1,2]} , id: 0}, function(response) {
             expect(response).toBeDefined();
             expect(response.length).toBe(systems.length);
@@ -68,7 +68,7 @@ describe('Factory: SystemGroup', function() {
 
     it('provides a way to remove systems', function() {
         var systems = [{id: 1}, {id: 2}];
-        $httpBackend.expectPUT('/katello/api/system_groups/0/remove_systems').respond(systems);
+        $httpBackend.expectPUT('/api/system_groups/0/remove_systems').respond(systems);
         SystemGroup.removeSystems({'system_group': {'system_ids': [1,2]} , id: 0}, function(response) {
             expect(response).toBeDefined();
             expect(response.length).toBe(systems.length);
@@ -77,7 +77,7 @@ describe('Factory: SystemGroup', function() {
 
     it('provides a way to list systems', function() {
         var systems = {results: [{id: 1}, {id: 2}]};
-        $httpBackend.expectGET('/katello/api/system_groups/0/systems').respond(systems);
+        $httpBackend.expectGET('/api/system_groups/0/systems').respond(systems);
         SystemGroup.systems({id: 0}, function(response) {
             expect(response).toBeDefined();
             expect(response.length).toBe(systems.length);

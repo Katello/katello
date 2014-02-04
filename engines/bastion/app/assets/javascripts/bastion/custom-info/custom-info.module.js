@@ -12,20 +12,12 @@
  **/
 
 /**
- * @ngdoc service
- * @name  Bastion.errata.factory:Erratum
- *
- * @requires $resource
+ * @ngdoc module
+ * @name  Bastion.custom-info
  *
  * @description
- *   Provides a $resource for Errata
+ *   Module for custom info related functionality.
  */
-angular.module('Bastion.errata').factory('Erratum',
-    ['$resource', function ($resource) {
-
-        return $resource('/api/v2/errata/:id/', {id: '@id'}, {
-            query:  { method: 'GET'}
-        });
-
-    }]
-);
+angular.module('Bastion.custom-info', [
+    'ngResource'
+]);

@@ -23,21 +23,21 @@
  */
 angular.module('Bastion.sync-plans').factory('SyncPlan',
     ['$resource', 'CurrentOrganization',
-        function ($resource, CurrentOrganization) {
+    function ($resource, CurrentOrganization) {
 
-            return $resource('/katello/api/organizations/:organizationId/sync_plans/:id/:action',
-                {id: '@id', organizationId: CurrentOrganization}, {
-                    update: { method: 'PUT' },
-                    query: { method: 'GET', params: {'full_result': true}},
-                    availableProducts: {method: 'GET', params: {action: 'available_products'}},
-                    addProducts: {method: 'PUT', params: {action: 'add_products'}},
-                    removeProducts: {method: 'PUT', params: {action: 'remove_products'}},
-                    products: {method: 'GET', transformResponse: function (data) {
-                        var syncPlan = angular.fromJson(data);
-                        return {results: syncPlan.products};
-                    }}
-                }
-            );
+        return $resource('/api/v2/organizations/:organizationId/sync_plans/:id/:action',
+            {id: '@id', organizationId: CurrentOrganization}, {
+                update: { method: 'PUT' },
+                query: { method: 'GET', params: {'full_result': true}},
+                availableProducts: {method: 'GET', params: {action: 'available_products'}},
+                addProducts: {method: 'PUT', params: {action: 'add_products'}},
+                removeProducts: {method: 'PUT', params: {action: 'remove_products'}},
+                products: {method: 'GET', transformResponse: function (data) {
+                    var syncPlan = angular.fromJson(data);
+                    return {results: syncPlan.products};
+                }}
+            }
+        );
 
-        }]
+    }]
 );

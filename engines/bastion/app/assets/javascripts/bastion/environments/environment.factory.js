@@ -16,21 +16,20 @@
  * @name  Bastion.environments.factory:Environment
  *
  * @requires $resource
- * @requires Routes
  * @requires CurrentOrganization
  *
  * @description
  *   Provides a $resource for interacting with environments.
  */
 angular.module('Bastion.environments').factory('Environment',
-    ['$resource', 'Routes', 'CurrentOrganization',
-    function ($resource, Routes, CurrentOrganization) {
+    ['$resource', 'CurrentOrganization',
+    function ($resource, CurrentOrganization) {
 
-        return $resource(Routes.apiOrganizationEnvironmentsPath(CurrentOrganization) + '/:id/:action',
-            {id: '@id'},
+        return $resource('/api/v2/environments/:id/:action',
+            {id: '@id', 'organization_id': CurrentOrganization},
             {
-                update: { method: 'PUT' },
-                query:  { method: 'GET' }
+                update: {method: 'PUT'},
+                query: {method: 'GET'}
             }
         );
 

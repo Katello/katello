@@ -23,7 +23,7 @@ angular.module('Bastion.test-mocks').run(['$state', '$stateParams', '$rootScope'
     }
 ]);
 
-angular.module('Bastion.test-mocks').factory('MockResource', function() {
+angular.module('Bastion.test-mocks').factory('MockResource', ['$q', function($q) {
     function resourceGenerator() {
         var Resource, mockResource, successResponse, errorResponse;
 
@@ -62,7 +62,8 @@ angular.module('Bastion.test-mocks').factory('MockResource', function() {
             },
             $delete: function(callback) {
                 callback();
-            }
+            },
+            $promise: $q.defer().promise
         };
 
         Resource = function(parameters) {
@@ -109,9 +110,30 @@ angular.module('Bastion.test-mocks').factory('MockResource', function() {
             return Resource.mockResources;
         };
 
-        Resource.save = function(params, success, error) {
-            success(params);
-            return new Resource(params);
+        Resource.save = function(params, data, success, error) {
+            var item = new Resource(data);
+
+            Resource.mockResources.results.push(item);
+            success(item);
+
+            return item;
+        };
+
+        Resource.update = function(params, data, success, error) {
+            var item = Resource.get(params);
+
+            item = angular.extend(item, data);
+
+            if (success) {
+                success(item);
+            }
+            return item;
+        };
+
+        Resource.delete = function(params, success, error) {
+            params = null;
+            delete params;
+            return true;
         };
 
         return Resource;
@@ -122,7 +144,7 @@ angular.module('Bastion.test-mocks').factory('MockResource', function() {
                 return resourceGenerator();
             }
     };
-});
+}]);
 
 angular.module('Bastion.test-mocks').factory('MockForm', function() {
     return {
