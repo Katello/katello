@@ -4,6 +4,11 @@ module VCR
   def self.live?
     VCR.configuration.default_cassette_options[:record] != :none
   end
+
+  def self.cassette_path
+    "#{Katello::Engine.root}/test/fixtures/vcr_cassettes"
+  end
+
 end
 
 def configure_vcr
@@ -18,7 +23,7 @@ def configure_vcr
   end
 
   VCR.configure do |c|
-    c.cassette_library_dir = "#{Katello::Engine.root}/test/fixtures/vcr_cassettes"
+    c.cassette_library_dir = VCR.cassette_path
     c.hook_into :webmock
 
     if ENV['record'] == "false" && mode != :none

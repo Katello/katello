@@ -44,3 +44,5 @@ module Katello
   require "katello/actions/actions"
 
 end
+
+require File.expand_path("../engines/fort/lib/fort", File.dirname(__FILE__))

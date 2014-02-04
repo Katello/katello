@@ -10,17 +10,16 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'node_capability'
-
 class Node < Katello::Model
   include Authorization::Node
 
-  belongs_to :system, :inverse_of => :node
+  belongs_to :system, :inverse_of => :node, :class_name => 'Katello::System'
+
   has_many :capabilities, :class_name => 'NodeCapability', :dependent => :destroy
   # rubocop:disable HasAndBelongsToMany
   # TODO: change this into has_many :through association
-  has_and_belongs_to_many :environments, :class_name => KTEnvironment, :join_table => 'nodes_environments',
-                                         :association_foreign_key => 'environment_id'
+  has_and_belongs_to_many :environments, :class_name => Katello::KTEnvironment, :join_table => 'nodes_environments',
+                                         :association_foreign_key => 'katello_environment_id'
 
   after_save :update_environments
 

@@ -10,8 +10,6 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'content_node_capability'
-
 class NodeCapability < Katello::Model
 
   belongs_to :node, :inverse_of => :capabilities

@@ -17,9 +17,9 @@ require "#{Katello::Engine.root}/spec/support/shared_examples/protected_action_s
 require "#{Katello::Engine.root}/spec/support/custom_matchers"
 require "#{Katello::Engine.root}/test/support/vcr"
 require "#{Katello::Engine.root}/test/support/runcible"
-require 'support/auth_support'
-require 'support/controller_support'
-require 'support/search_service'
+require "#{Katello::Engine.root}/test/support/auth_support"
+require "#{Katello::Engine.root}/test/support/controller_support"
+require "#{Katello::Engine.root}/test/support/search_service"
 
 FactoryGirl.definition_file_paths = ["#{Katello::Engine.root}/test/factories"]
 FactoryGirl.find_definitions
@@ -75,6 +75,7 @@ module FixtureTestCase
   end
 
   module ClassMethods
+
     def before_suite
       load_fixtures
       self.fixture_path = "#{Katello::Engine.root}/test/fixtures/models"

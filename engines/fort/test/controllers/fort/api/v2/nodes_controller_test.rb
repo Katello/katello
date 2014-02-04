@@ -11,79 +11,89 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require "test_helper"
+require "fort_test_helper"
 
-require 'support/fake_node_capability'
-
-class Api::V1::NodeCapabilitiesControllerTest < MiniTest::Rails::ActionController::TestCase
-  fixtures :all
+module Fort
+class Api::V2::NodesControllerTest < ActionController::TestCase
 
   def setup
-    @org = organizations(:acme_corporation)
+    setup_controller_defaults_api
+    @org =  get_organization(:organization1)
+    @library = @org.library
     login_user(User.find(users(:admin)), @org)
-
-    @system = System.find(systems(:simple_server))
-    @node = Node.create(:system => @system)
+    @system = Katello::System.find(katello_systems(:simple_server))
 
     @read_perm = UserPermission.new(:read, :organizations, nil, nil)
     @edit_perm = UserPermission.new(:manage_nodes, :organizations, nil, nil)
+
   end
 
   test 'test index should be successful' do
-    get :index, :node_id => @node.id
+    get :index
     assert_response :success
+
     assert_protected_action(:index, [@read_perm, @edit_perm], [NO_PERMISSION]) do
-      get :index, :node_id => @node.id
+      get :index
     end
   end
 
   test "test_show_should_be_successful" do
-    FakeNodeCapability.create!(:node => @node)
+    node = Node.create(:system => @system)
 
-    get :show, :node_id => @node.id, :id => FakeNodeCapability::TYPE
+    get :show, :id => node.id
     assert_response :success
 
     assert_protected_action(:show, [@read_perm, @edit_perm], [NO_PERMISSION]) do
-      get :show, :node_id => @node.id, :id => FakeNodeCapability::TYPE
+      get :show, :id => node.id
     end
   end
 
   test "test create should be successful" do
-    post :create, :node_id => @node.id, :capability => {:type => FakeNodeCapability::TYPE}
+    post :create, :node => {:system_id => @system.id}
     assert_response :success
 
     assert_protected_action(:create, [@edit_perm], [@read_perm, NO_PERMISSION]) do
-      post :create, :node_id => @node.id, :capability => {:type => FakeNodeCapability::TYPE}
+      post :create, :node => {:system_id => @system.id}
     end
-
   end
 
   test "test destroy should be successful" do
-    FakeNodeCapability.create!(:node => @node)
+    node = Node.create(:system => @system)
 
-    delete :destroy, :node_id => @node.id, :id => FakeNodeCapability::TYPE
+    delete :destroy, :id => node.id
     assert_response :success
-    assert_empty Node.find(@node.id).capabilities
+    assert_empty Node.where(:id => node.id)
   end
 
   test "test_destroy permission" do
-    FakeNodeCapability.create!(:node => @node)
-
+    node = Node.create(:system => @system)
     assert_protected_action(:destroy, [@edit_perm], [@read_perm, NO_PERMISSION]) do
-      delete :destroy, :node_id => @node.id, :id => FakeNodeCapability::TYPE
+      delete :destroy, :id => node.id
+    end
+  end
+
+  test "test system should be successful" do
+    node = Node.create(:system => @system)
+
+    post :sync, :id => node.id
+    assert_response :success
+
+    assert_protected_action(:sync, [@edit_perm], [@read_perm, NO_PERMISSION]) do
+      post :sync, :id => node.id
     end
   end
 
   test "test update should be successful" do
-    FakeNodeCapability.create!(:node => @node)
+    node = Node.create(:system => @system)
 
-    post :update, :node_id => @node.id, :id => FakeNodeCapability::TYPE, :capability => {:configuration => {:foo => 'bar'}}
+    put :update, {:id => node.id, :node => {:environment_ids => [@library.id]}}
     assert_response :success
+    assert_includes Node.find(node.id).environments, @library
 
     assert_protected_action(:update, [@edit_perm], [@read_perm, NO_PERMISSION]) do
-      post :update, :node_id => @node.id, :id => FakeNodeCapability::TYPE, :capability => {:configuration => {:foo => 'bar'}}
+      put :update, {:id => node.id}
     end
-
   end
 
+end
 end
