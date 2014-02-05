@@ -83,6 +83,8 @@ angular.module('Bastion').config(
                         if ($templateCache.get(config.url) === undefined) {
                             config.url = '/' + config.url;
                         }
+                    } else if (config.url.match(/^\/\//)) {
+                        config.url = config.url.replace(/^\/\//, '/');
                     } else {
                         config.url = RootURL + config.url;
                     }
