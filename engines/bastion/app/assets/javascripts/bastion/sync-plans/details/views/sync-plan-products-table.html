@@ -24,17 +24,15 @@
 
       <button ng-if="isState('sync-plans.details.products.list')"
               class="btn btn-primary"
-              translate
               ng-disabled="productsTable.numSelected == 0 || productsTable.working"
               ng-click="removeProducts()">
-        Remove Selected
+        {{ 'Remove Selected' | translate}}
       </button>
       <button ng-if="isState('sync-plans.details.products.add')"
               class="btn btn-primary"
-              translate
               ng-disabled="productsTable.numSelected == 0 || productsTable.working"
               ng-click="addProducts()">
-        Add Selected
+        {{ 'Add Selected' | translate }}
       </button>
 
     </div>
