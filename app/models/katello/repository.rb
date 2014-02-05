@@ -106,6 +106,14 @@ class Repository < Katello::Model
       .where("#{Katello::ContentViewVersion.table_name}.content_view_id" => views.map(&:id))
   end
 
+  def self.find_unique(label, product_label, organization_label)
+    joins(:product => {:provider => :organization}).where({
+      "#{Katello::Repository.table_name}" => {:label => label},
+      "#{Katello::Product.table_name}"    => {:label => product_label},
+      :taxonomies                         => {:label => organization_label}
+    }).readonly(false).first
+  end
+
   def puppet?
     content_type == PUPPET_TYPE
   end

@@ -28,7 +28,7 @@ angular.module('Bastion.repositories').factory('Repository',
         return $resource('/api/v2/repositories/:id/:action',
             {id: '@id', 'organization_id': CurrentOrganization},
             {
-                update: { method: 'PUT' },
+                update: { method: 'PUT', params: { id: '@label', product_id: '@product.label' } },
                 query: { method: 'GET' },
                 sync: {method: 'POST', params: {action: 'sync'}}
             }

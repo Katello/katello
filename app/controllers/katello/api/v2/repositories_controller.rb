@@ -16,24 +16,43 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
   before_filter :find_organization, :only => [:index]
   before_filter :find_product, :only => [:index]
   before_filter :find_product_for_create, :only => [:create]
-  before_filter :find_repository, :only => [:show, :update, :destroy, :sync]
+  before_filter :find_repository_by_id, :only => [:show, :destroy, :sync]
+  before_filter :find_repository, :only => [:update]
   before_filter :authorize
 
   def_param_group :repo do
     param :name, String, :required => true
     param :label, String, :required => false
     param :product_id, :number, :required => true, :desc => "Product the repository belongs to"
-    param :url, :undef, :required => true, :desc => "repository source url"
+    param :feed, String, :required => true, :desc => "repository source url"
     param :gpg_key_name, String, :desc => "name of a gpg key that will be assigned to the new repository"
     param :enabled, :bool, :desc => "flag that enables/disables the repository"
     param :content_type, String, :desc => "type of repo (either 'yum' or 'puppet', defaults to 'yum')"
+  end
+
+  def_param_group :repo_update do
+    param :feed, String, :desc => "repository source url"
+    param :gpg_key_id, :number, :desc => "gpg_key_id assigned to repository"
+    param :unprotected, :bool, :desc => "flag that determines whether repository is protected or not"
+  end
+
+  def_param_group :repo_unique_id do
+    param :product_id, :identifier, :required => true, :desc => "product label unique to organization of the repository to find"
+    param :organization_id, :identifier, :required => true, :desc => "organization label used with product label to find a repository"
+    param :id, :identifier, :required => true, :desc => "repository label used with product and organization labels to find a repository"
   end
 
   def rules
     index_test  = lambda { Repository.any_readable?(@organization) }
     create_test = lambda { Repository.creatable?(@product) }
     read_test   = lambda { @repository.readable? }
-    edit_test   = lambda { @repository.editable? }
+    edit_test   = lambda do
+      if @repository.custom?
+        @repository.product.editable?
+      else
+        @repository.organization.redhat_manageable?
+      end
+    end
     sync_test   = lambda { @repository.syncable? }
 
     {
@@ -81,6 +100,7 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
     respond_for_index :collection => collection
   end
 
+  api :POST, "/organizations/:organization_id/repositories/:id", "Create a repository"
   api :POST, "/repositories", "Create a repository"
   param_group :repo
   def create
@@ -90,7 +110,7 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
       gpg_key = GpgKey.find(params[:gpg_key_id])
     end
 
-    repository = @product.add_repo(params[:label], params[:name], params[:url],
+    repository = @product.add_repo(params[:label], params[:name], params[:feed],
                                    params[:content_type], params[:unprotected], gpg_key)
 
     respond_for_show(:resource => repository)
@@ -102,13 +122,22 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
     respond_for_show(:resource => @repository)
   end
 
+  api :PUT, "/organizations/:organization_id/repositories/:id", "Update a repository"
   api :PUT, "/repositories/:id", "Update a repository"
-  param :id, :identifier, :required => true, :desc => "repository id"
-  param :gpg_key_id, :number, :desc => "id of a gpg key that will be assigned to this repository"
+  param :enabled, :bool, :desc => "flag that enables/disables the repository"
+  param_group :repo_unique_id
+  param_group :repo_update
   def update
-    fail HttpErrors::BadRequest, _("A Red Hat repository cannot be updated.") if @repository.redhat?
-    @repository.update_attributes!(repository_params)
-    respond_for_show(:resource => @repository)
+    @repository.enabled = repo_params[:enabled].to_s.to_bool
+    if @repository.redhat?
+      unpermitted_params = repo_params.keys - %w(enabled)
+      fail HttpErrors::BadRequest, _("A Red Hat repository can only be enabled or disabled.") if unpermitted_params.size > 0
+    else
+      fail HttpErrors::BadRequest, _("Disable/enable is not supported for custom repositories.") if @repository.enabled_changed?
+    end
+    @repository.update_attributes!(repo_params)
+
+    respond_for_update(:resource => @repository, :template => :show)
   end
 
   api :DELETE, "/repositories/:id", "Destroy a repository"
@@ -125,23 +154,31 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
     respond_for_async(:resource => @repository.sync.first)
   end
 
-  protected
-
-  def find_product
-    @product = Product.find(params[:product_id]) if params[:product_id]
-  end
-
   def find_product_for_create
     @product = Product.find(params[:product_id])
   end
 
+  protected
+
+  def find_product
+    @product = Product.find(params[:product_id])
+  end
+
+  def find_repository_by_id
+    @repository = Repository.find(params[:id])
+  end
+
   def find_repository
-    @repository = Repository.find(params[:id]) if params[:id]
+    @repository = Repository.find_unique(*repo_unique_id_params)
+    fail HttpErrors::BadRequest, _("The repository was not found.") unless @repository.present?
   end
 
-  def repository_params
-    params.require(:repository).permit(:feed, :gpg_key_id, :unprotected)
+  def repo_params
+    params.require(:repository).permit(:feed, :gpg_key_id, :unprotected, :enabled)
   end
 
+  def repo_unique_id_params
+    %w(id product_id organization_id).map { |key| params.require(key) }
+  end
 end
 end

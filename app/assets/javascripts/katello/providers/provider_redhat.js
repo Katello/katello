@@ -48,7 +48,6 @@ $(document).ready(function() {
 
         if(!icon.hasClass('disabled')){
             checkbox = row.find('.repo_set_enable');
-            console.log(checkbox);
             KT.redhat_provider_page.repoSetChange(checkbox, true);
         }
     });
@@ -59,22 +58,25 @@ KT.redhat_provider_page = (function($) {
     var repoChange = function(checkbox) {
 
         var name = checkbox.attr("name"),
-            options = {},
-            url = checkbox.attr("data-url"),
+            repo_data = checkbox.data(),
+            options = {
+              url: repo_data.url,
+              product_id: repo_data.productId,
+              organization_id: repo_data.organizationId,
+              repository: { enabled: null }
+            },
             id = checkbox.attr("value"),
             set_checkbox = checkbox.parents(".repo_set").find('.repo_set_enable');
-
         if (checkbox.attr("checked") !== undefined) {
-            options['repo'] = "1";
+            options.repository.enabled = "1";
         } else {
-            options['repo'] = "0";
+            options.repository.enabled = "0";
         }
-
         $(checkbox).hide();
         $('#spinner_'+id).removeClass('hidden').show();
         $.ajax({
             type: "PUT",
-            url: url,
+            url: options.url,
             data: options,
             cache: false,
             success: function(data, textStatus, jqXHR){

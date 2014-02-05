@@ -10,7 +10,7 @@
         %td
           %label
             =image_tag( "katello/icons/spinner.gif", :class=>"hidden fl", :id=>"spinner_#{repo.id}", :style=>"margin-right:1px;")
-            %input.repo_enable{:id=>"input_repo_#{repo.id}", :type=>:checkbox, :value=>repo.id, "data-url" => enable_repo_path(repo.id),
+            %input.repo_enable{:id=>"input_repo_#{repo.id}", :type=>:checkbox, :value=>repo.label, "data-url" => "/katello/api/v2/repositories/#{repo.label}", "data-product-id" => repo.product.label, "data-organization-id" => repo.product.organization.label,
                   :disabled =>(repo.promoted? || !@provider.editable?), :checked=>(:checked if repo.enabled?)}
         %td
           #{repo.name}

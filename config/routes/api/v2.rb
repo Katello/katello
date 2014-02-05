@@ -46,6 +46,7 @@ Katello::Engine.routes.draw do
         end
         api_resources :products, :only => [:index]
         api_resources :providers, :only => [:index]
+        api_resources :repositories, :only => [:create, :update]
         api_resources :system_groups, :only => [:index, :create]
         api_resources :systems, :only => system_onlies do
           get :report, :on => :collection
@@ -70,6 +71,9 @@ Katello::Engine.routes.draw do
           put :refresh_products
         end
       end
+
+      api_resources :ping, :only => [:index]
+      match "/status" => "ping#server_status", :via => :get
 
       api_resources :system_groups, :only => system_onlies do
         member do

@@ -1,3 +1,3 @@
 child :organization do |r|
-  attribute :name
+  attributes :name, :label
 end
