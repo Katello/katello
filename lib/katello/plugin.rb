@@ -24,7 +24,7 @@ Foreman::Plugin.register :katello do
          :activation_keys,
          :caption => N_('Activation Keys'),
          :url_hash => {:controller => 'katello/activation_keys',
-                       :action => 'index'},
+                       :action => 'all'},
          :engine => Katello::Engine
 
     divider :top_menu, :parent => :content

@@ -14,16 +14,16 @@ module Katello
 class ActivationKey < Katello::Model
   self.include_root_in_json = false
 
+  include Glue::Candlepin::ActivationKey if Katello.config.use_cp
   include Glue::ElasticSearch::ActivationKey if Katello.config.use_elasticsearch
+  include Glue if Katello.config.use_cp
   include Authorization::ActivationKey
+  include Ext::LabelFromName
 
   belongs_to :organization, :inverse_of => :activation_keys
   belongs_to :environment, :class_name => "KTEnvironment", :inverse_of => :activation_keys
   belongs_to :user, :inverse_of => :activation_keys, :class_name => "::User"
   belongs_to :content_view, :inverse_of => :activation_keys
-
-  has_many :key_pools, :class_name => "Katello::KeyPool", :dependent => :destroy
-  has_many :pools, :through => :key_pools
 
   has_many :key_system_groups, :class_name => "Katello::KeySystemGroup", :dependent => :destroy
   has_many :system_groups, :through => :key_system_groups
@@ -31,9 +31,9 @@ class ActivationKey < Katello::Model
   has_many :system_activation_keys, :class_name => "Katello::SystemActivationKey", :dependent => :destroy
   has_many :systems, :through => :system_activation_keys
 
-  after_find :validate_pools
-
   before_validation :set_default_content_view, :unless => :persisted?
+  validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
+  validates :label, :uniqueness => {:scope => :organization_id}, :presence => true
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name
   validates :name, :presence => true
   validates :name, :uniqueness => {:scope => :organization_id}
@@ -146,24 +146,6 @@ class ActivationKey < Katello::Model
 
   def set_default_content_view
     self.content_view = self.environment.try(:default_content_view) unless self.content_view
-  end
-
-  # Fetch each of the pools from candlepin, removing any that no longer
-  # exist (eg. from loss of a Virtual Guest pool)
-  def validate_pools
-    obsolete_pools = []
-    self.pools.each do |pool|
-      begin
-        Resources::Candlepin::Pool.find(pool.cp_id)
-      rescue RestClient::ResourceNotFound
-        obsolete_pools << pool
-      end
-    end
-    updated_pools = self.pools - obsolete_pools
-    if self.pools != updated_pools
-      self.pools = updated_pools
-      self.save!
-    end
   end
 
 end

@@ -27,7 +27,7 @@ module Glue::Candlepin::Consumer
 
       as_json_hook :consumer_as_json
 
-      attr_accessible :cp_type, :owner, :serviceLevel, :installedProducts, :facts
+      attr_accessible :cp_type, :owner, :serviceLevel, :installedProducts, :facts, :guestIds
 
       lazy_accessor :href, :facts, :cp_type, :href, :idCert, :owner, :lastCheckin, :created, :guestIds,
                     :installedProducts, :autoheal, :releaseVer, :serviceLevel, :capabilities, :entitlementStatus,
@@ -469,69 +469,19 @@ module Glue::Candlepin::Consumer
       avail_pools
     end
 
-    # TODO: break up method
-    # rubocop:disable MethodLength
     def consumed_entitlements
-      consumed_entitlements = self.entitlements.collect do |entitlement|
-
-        pool = self.get_pool(entitlement["pool"]["id"])
-
-        sla = ""
-        sockets = ""
-        pool["productAttributes"].each do |attr|
-          if attr["name"] == "support_level"
-            sla = attr["value"]
-          elsif attr["name"] == "sockets"
-            sockets = attr["value"]
-          end
-        end
-
-        type = _("physical")
-        pool["attributes"].each do |attr|
-          if attr["name"] == "virt_only" && attr["value"] == "true"
-            type = _("virtual")
-          end
-        end
-
-        provided_products = []
-        pool["providedProducts"].each do |cp_product|
-          product = Katello::Product.where(:cp_id => cp_product["productId"]).first
-          if product
-            provided_products << product
-          end
-        end
-
-        quantity = !entitlement["quantity"].nil? ? entitlement["quantity"] : pool["quantity"]
-
-        serials = []
-        entitlement['certificates'].each do |certificate|
-          if certificate.key?('serial')
-            serials << certificate['serial']
-          end
-        end
-
-        OpenStruct.new(:entitlementId => entitlement["id"],
-                       :poolId => entitlement["pool"]["id"],
-                       :serials => serials,
-                       :poolName => pool["productName"],
-                       :consumed => pool["consumed"],
-                       :quantity => quantity,
-                       :sla => sla,
-                       :sockets => sockets,
-                       :endDate => Date.parse(pool["endDate"]),
-                       :startDate => Date.parse(pool["startDate"]),
-                       :contractNumber => pool["contractNumber"],
-                       :providedProducts => provided_products,
-                       :accountNumber => pool["accountNumber"],
-                       :productId => pool["productId"],
-                       :poolType => type)
+      self.entitlements.collect do |entitlement|
+        pool = self.get_pool(entitlement['pool']['id'])
+        entitlement_pool = Katello::Pool.new(pool)
+        entitlement_pool['cp_id'] = entitlement['id']
+        entitlement_pool['subscription_id'] = entitlement['pool']['id']
+        entitlement_pool['quantity'] = entitlement['quantity']
+        entitlement_pool
       end
-      consumed_entitlements.sort! { |a, b| a.poolName <=> b.poolName }
-      consumed_entitlements
     end
 
     def compliant?
-      return self.compliance['compliant'] == true
+      self.compliance['compliant']
     end
 
     # As a convenience and common terminology

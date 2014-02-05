@@ -86,26 +86,28 @@ class Api::V2::SubscriptionsControllerTest < ActionController::TestCase
 
   def test_create
     System.any_instance.expects(:subscribe)
-    post :create, :system_id => @system.uuid, :quantity => 1, :pool => 'redhat'
+    post :create, :system_id => @system.uuid, :subscription => {
+        :subscriptions => [:subscription => {:id => 'redhat', :quantity => 1}]}
 
     assert_response :success
-    assert_template 'api/v2/subscriptions/create'
+    assert_template 'katello/api/v2/subscriptions/index'
   end
 
   def test_destroy
     System.any_instance.expects(:unsubscribe)
-    post :destroy, :system_id => @system.uuid, :id => 1
+    delete :destroy, :system_id => @system.uuid, :subscription => {
+        :subscriptions => [:subscription => {:id => 1}]}
 
     assert_response :success
-    assert_template 'api/v2/subscriptions/show'
+    assert_template 'katello/api/v2/subscriptions/index'
   end
 
   def test_destroy_all
     System.any_instance.expects(:unsubscribe_all)
-    post :destroy_all, :system_id => @system.uuid, :id => 1
+    delete :destroy, :system_id => @system.uuid
 
     assert_response :success
-    assert_template 'api/v2/subscriptions/show'
+    assert_template 'katello/api/v2/subscriptions/index'
   end
 
   def test_blank_upload

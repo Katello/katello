@@ -14,7 +14,7 @@
 
     <div class="detail">
       <span class="info-label" translate>Consumed</span>
-      <span class="info-value">{{ formatConsumed(subscription) }}</span>
+      <span class="info-value">{{ subscription | subscriptionConsumedFilter }}</span>
     </div>
 
     <div class="detail">
@@ -64,7 +64,7 @@
 
     <div class="detail">
       <span class="info-label" translate>Instance-based</span>
-      <span class="info-value">{{ subscription.instance_multiplier | booleanToYesNo }}</span>
+      <span class="info-value">{{ formatInstanceBased(subscription) }}</span>
     </div>
 
     <div class="detail" ng-hide="subscription.stacking_id == ''">
@@ -73,7 +73,7 @@
     </div>
 
     <div class="detail" ng-hide="subscription.source_pool_id == undefined || subscription.source_pool_id == ''">
-      <span class="info-label" translate>Virt Guest From</span>
+      <span class="info-label" translate>Virtual Guest From</span>
       <span class="info-value">{{ subscription.product_name }}</span>
     </div>
 
