@@ -35,7 +35,7 @@ angular.module('Bastion.tasks').factory('Task',
     ['$resource', '$timeout', '$log', 'CurrentOrganization',
     function ($resource, $timeout, $log, CurrentOrganization) {
 
-        var resource = $resource('/katello/api/tasks/:id/:action',
+        var resource = $resource('/api/v2/tasks/:id/:action',
             {id: '@id', 'organization_id': CurrentOrganization},
             {
                 query: {method: 'GET', isArray: false}

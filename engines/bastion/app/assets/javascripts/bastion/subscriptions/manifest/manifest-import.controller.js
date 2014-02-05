@@ -30,9 +30,9 @@ angular.module('Bastion.subscriptions').controller('ManifestImportController',
     function ($scope, $q, gettext, CurrentOrganization, Provider, Organization) {
 
         $scope.uploadErrorMessages = [];
-        $scope.organizationId = CurrentOrganization;
         $scope.progress = {uploading: false};
         $scope.showHistoryMoreLink = false;
+        $scope.uploadURL = $scope.RootURL + '/api/v2/organizations/' + CurrentOrganization + '/subscriptions/upload';
 
         $scope.organization = Organization.get({id: CurrentOrganization});
 

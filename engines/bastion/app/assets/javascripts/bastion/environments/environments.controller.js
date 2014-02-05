@@ -17,23 +17,21 @@
  *
  * @requires $scope
  * @requires $timeout
- * @requires $http
- * @requires Routes
+ * @requires Organization
  * @requires CurrentOrganization
  *
  * @description
  *   Provides the functionality for the environments path page.
  */
 angular.module('Bastion.environments').controller('EnvironmentsController',
-    ['$scope', '$timeout', '$http', 'Routes', 'CurrentOrganization',
-        function ($scope, $timeout, $http, Routes, CurrentOrganization) {
+    ['$scope', '$timeout', 'Organization', 'CurrentOrganization',
+        function ($scope, $timeout, Organization, CurrentOrganization) {
 
             $scope.successMessages = [];
             $scope.errorMessages = [];
             $scope.environmentsTable = {rows: []};
 
-            $http.get(Routes.apiOrganizationEnvironmentsPath(CurrentOrganization) + '/paths')
-            .success(function (paths) {
+            Organization.paths({id: CurrentOrganization}, function (paths) {
                 $scope.environmentsTable.rows = paths;
             });
 

@@ -41,8 +41,18 @@ angular.module('Bastion', [
     'Bastion.sync-plans',
     'Bastion.system-groups',
     'Bastion.gpg-keys',
-    'Bastion.tasks'
+    'Bastion.tasks',
+    'Bastion.custom-info'
 ]);
+
+/**
+ * @ngdoc constant
+ * @name Bastion.constant:RootURL
+ *
+ * @description
+ *   Provides a configurable URL root for all requests.
+ */
+angular.module('Bastion').constant('RootURL', '/katello');
 
 /**
  * @ngdoc config
@@ -50,14 +60,16 @@ angular.module('Bastion', [
  *
  * @requires $httpProvider
  * @requires $urlRouterProvider
+ * @requires $provide
+ * @requires RootURL
  *
  * @description
  *   Used for establishing application wide configuration such as adding the Rails CSRF token
  *   to every request.
  */
 angular.module('Bastion').config(
-    ['$httpProvider', '$urlRouterProvider', '$provide',
-    function ($httpProvider, $urlRouterProvider, $provide) {
+    ['$httpProvider', '$urlRouterProvider', '$provide', 'RootURL',
+    function ($httpProvider, $urlRouterProvider, $provide, RootURL) {
         $httpProvider.defaults.headers.common = {
             Accept: 'application/json, text/plain, version=2; */*',
             'X-XSRF-TOKEN': $('meta[name=csrf-token]').attr('content')
@@ -71,6 +83,8 @@ angular.module('Bastion').config(
                         if ($templateCache.get(config.url) === undefined) {
                             config.url = '/' + config.url;
                         }
+                    } else {
+                        config.url = RootURL + config.url;
                     }
 
                     return config || $q.when(config);
@@ -93,17 +107,19 @@ angular.module('Bastion').config(
  * @requires gettextCatalog
  * @requires currentLocale
  * @requires $location
+ * @requires RootURL
  *
  * @description
  *   Set up some common state related functionality and set the current language.
  */
-angular.module('Bastion').run(['$rootScope', '$state', '$stateParams', 'gettextCatalog', 'currentLocale', '$location',
-    function ($rootScope, $state, $stateParams, gettextCatalog, currentLocale, $location) {
+angular.module('Bastion').run(['$rootScope', '$state', '$stateParams', 'gettextCatalog', 'currentLocale', '$location', 'RootURL',
+    function ($rootScope, $state, $stateParams, gettextCatalog, currentLocale, $location, RootURL) {
         var fromState, fromParams;
 
         $rootScope.$state = $state;
         $rootScope.$stateParams = $stateParams;
         $rootScope.transitionTo = $state.transitionTo;
+        $rootScope.RootURL = RootURL;
 
         $rootScope.isState = function (stateName) {
             return $state.is(stateName);

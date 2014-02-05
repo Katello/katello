@@ -1,13 +1,6 @@
-// Commenting this check out as it breaks asset compilation on RHEL6
-// with the current version of therubyracer (0.11.0beta5)
-//if (typeof jQuery === 'undefined') {
-//  throw new Error('Angular-gettext depends on jQuery, be sure to include it!');
-//}
 angular.module('gettext', []);
-angular.module('gettext').factory('gettext', function () {
-  return function (str) {
-    return str;
-  };
+angular.module('gettext').constant('gettext', function (str) {
+  return str;
 });
 angular.module('gettext').factory('gettextCatalog', [
   'gettextPlurals',
@@ -59,6 +52,16 @@ angular.module('gettext').directive('translate', [
   '$interpolate',
   '$parse',
   function (gettextCatalog, $interpolate, $parse) {
+    var trim = function () {
+        if (!String.prototype.trim) {
+          return function (value) {
+            return typeof value === 'string' ? value.replace(/^\s*/, '').replace(/\s*$/, '') : value;
+          };
+        }
+        return function (value) {
+          return typeof value === 'string' ? value.trim() : value;
+        };
+      }();
     return {
       transclude: 'element',
       priority: 499,
@@ -71,9 +74,11 @@ angular.module('gettext').directive('translate', [
           };
           assert(!attrs.translatePlural || attrs.translateN, 'translate-n', 'translate-plural');
           assert(!attrs.translateN || attrs.translatePlural, 'translate-plural', 'translate-n');
+          assert(!attrs.ngIf, 'ng-if', 'translate');
+          assert(!attrs.ngSwitchWhen, 'ng-switch-when', 'translate');
           var countFn = $parse(attrs.translateN);
           transclude($scope, function (clone) {
-            var input = $.trim(clone.html());
+            var input = trim(clone.html());
             clone.removeAttr('translate');
             $element.replaceWith(clone);
             return $scope.$watch(function () {

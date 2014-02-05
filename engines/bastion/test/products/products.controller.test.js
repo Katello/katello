@@ -13,8 +13,7 @@
 
 describe('Controller: ProductsController', function() {
     var $scope,
-        Nutupane,
-        Routes;
+        Nutupane;
 
     beforeEach(module('Bastion.products', 'Bastion.test-mocks'));
 

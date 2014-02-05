@@ -16,16 +16,14 @@
  * @name  Bastion.systems.factory:System
  *
  * @requires $resource
- * @requires Routes
  *
  * @description
  *   Provides a $resource for system or list of systems.
  */
 angular.module('Bastion.systems').factory('System',
-    ['$resource', 'Routes',
-    function ($resource, Routes) {
+    ['$resource', function ($resource) {
 
-        return $resource(Routes.apiSystemsPath() + '/:id/:action/:action2', {id: '@uuid'}, {
+        return $resource('/api/v2/systems/:id/:action/:action2', {id: '@uuid'}, {
             get: {method: 'GET', params: {fields: 'full'}},
             update: {method: 'PUT'},
             query: {method: 'GET', isArray: false},
@@ -49,15 +47,13 @@ angular.module('Bastion.systems').factory('System',
  * @name  Bastion.systems.factory:SystemBulkAction
  *
  * @requires $resource
- * @requires Routes
  *
  * @description
  *   Provides a $resource for bulk actions on systems.
  */
 angular.module('Bastion.systems').factory('SystemBulkAction',
-    ['$resource', 'Routes',
-    function ($resource, Routes) {
-        return $resource(Routes.apiSystemsPath() + '/bulk/:action', {}, {
+    ['$resource', function ($resource) {
+        return $resource('/api/v2/systems/bulk/:action', {}, {
             addSystemGroups: {method: 'PUT', params: {action: 'add_system_groups'}},
             applicableErrata: {method: 'POST', params: {action: 'applicable_errata'}},
             removeSystemGroups: {method: 'PUT', params: {action: 'remove_system_groups'}},

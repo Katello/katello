@@ -93,5 +93,5 @@
 //= require "bastion/tasks/tasks.module.js"
 //= require_tree "./tasks"
 
-//= require "bastion/users/users.module.js"
-//= require_tree "./users"
+//= require "bastion/custom-info/custom-info.module.js"
+//= require_tree "./custom-info"

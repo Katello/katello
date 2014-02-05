@@ -25,7 +25,7 @@ angular.module('Bastion.repositories').factory('Repository',
     ['$resource', 'CurrentOrganization',
     function ($resource, CurrentOrganization) {
 
-        return $resource('/katello/api/repositories/:id/:action',
+        return $resource('/api/v2/repositories/:id/:action',
             {id: '@id', 'organization_id': CurrentOrganization},
             {
                 update: { method: 'PUT' },
@@ -42,14 +42,14 @@ angular.module('Bastion.repositories').factory('Repository',
  * @name  Bastion.repositories.factory:RepositoryBulkAction
  *
  * @requires $resource
- * @requires Routes
+ * @requires CurrentOrganization
  *
  * @description
  *   Provides a $resource for bulk actions on repositories.
  */
 angular.module('Bastion.repositories').factory('RepositoryBulkAction',
     ['$resource', 'CurrentOrganization', function ($resource, CurrentOrganization) {
-        return $resource('/katello/api/repositories/bulk/:action',
+        return $resource('/api/v2/repositories/bulk/:action',
             {'organization_id': CurrentOrganization},
             {
                 removeRepositories: {method: 'PUT', params: {action: 'destroy'}},

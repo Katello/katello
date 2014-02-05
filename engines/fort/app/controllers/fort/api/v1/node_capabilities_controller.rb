@@ -10,7 +10,8 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-class Api::V1::NodeCapabilitiesController < Api::V1::ApiController
+module Fort
+class Api::V1::NodeCapabilitiesController < Katello::Api::V1::ApiController
 
   before_filter :authorize
   before_filter :find_node
@@ -81,4 +82,5 @@ class Api::V1::NodeCapabilitiesController < Api::V1::ApiController
     #Note that the user is passing in the type as param :id
     @capability = @node.capabilities.detect{ |c| c.is_a? NodeCapability.class_for(params[:id]) }
   end
+end
 end

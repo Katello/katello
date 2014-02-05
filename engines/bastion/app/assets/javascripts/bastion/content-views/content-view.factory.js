@@ -16,18 +16,17 @@
  * @name  Bastion.content-views.factory:ContentView
  *
  * @requires $resource
- * @requires Routes
  * @requires CurrentOrganization
  *
  * @description
  *   Provides a $resource for interacting with environments.
  */
 angular.module('Bastion.content-views').factory('ContentView',
-    ['$resource', 'Routes', 'CurrentOrganization',
-    function ($resource, Routes, CurrentOrganization) {
+    ['$resource', 'CurrentOrganization',
+    function ($resource, CurrentOrganization) {
 
-        return $resource(Routes.apiOrganizationContentViewsPath(CurrentOrganization) + '/:id/:action',
-            {id: '@id'},
+        return $resource('/api/v2/organizations/:organizationId/content_views/:id/:action',
+            {id: '@id', organizationId: CurrentOrganization},
             {
                 update: { method: 'PUT' },
                 query:  { method: 'GET', isArray: false}

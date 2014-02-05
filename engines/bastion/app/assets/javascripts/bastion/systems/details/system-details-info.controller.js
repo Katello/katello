@@ -17,9 +17,8 @@
  *
  * @requires $scope
  * @requires $q
- * @requires $http
  * @requires gettext
- * @requires Routes
+ * @requires CustomInfo
  * @requires System
  * @requires ContentView
  * @requires Organization
@@ -29,8 +28,8 @@
  *   Provides the functionality for the system details action pane.
  */
 angular.module('Bastion.systems').controller('SystemDetailsInfoController',
-    ['$scope', '$q', '$http', 'gettext', 'Routes', 'System', 'ContentView', 'Organization', 'CurrentOrganization',
-        function ($scope, $q, $http, gettext, Routes, System, ContentView, Organization, CurrentOrganization) {
+    ['$scope', '$q', 'gettext', 'CustomInfo', 'System', 'ContentView', 'Organization', 'CurrentOrganization',
+        function ($scope, $q, gettext, CustomInfo, System, ContentView, Organization, CurrentOrganization) {
 
         var customInfoErrorHandler = function (error) {
             _.each(error.errors, function (errorMessage) {
@@ -96,37 +95,50 @@ angular.module('Bastion.systems').controller('SystemDetailsInfoController',
         };
 
         $scope.saveCustomInfo = function (info) {
-            var url = [Routes.apiCustomInfoPath("system", $scope.system.id), info.keyname].join('/');
-            return $http.put(url, {'custom_info': info}).error(customInfoErrorHandler);
+            return CustomInfo.update({
+                id: $scope.system.id,
+                type: 'system',
+                action: info.keyname
+            }, {
+                'custom_info': info
+            },
+            function () {},
+            customInfoErrorHandler);
         };
 
         $scope.addCustomInfo = function (info) {
-            var url, success;
-            url = Routes.apiCustomInfoPath("system", $scope.system.id);
+            var success = function () {
+                    $scope.system.customInfo.push(info);
+                };
 
-            success = function () {
-                $scope.system.customInfo.push(info);
-            };
-
-            return $http.post(url, {'custom_info': info}).success(success).error(customInfoErrorHandler);
+            return CustomInfo.save({
+                id: $scope.system.id,
+                type: 'system'
+            }, {
+                'custom_info': info
+            },
+            success,
+            customInfoErrorHandler);
         };
 
         $scope.deleteCustomInfo = function (info) {
-            var url, success;
-            url = [Routes.apiCustomInfoPath("system", $scope.system.id), info.keyname].join('/');
+            var success = function () {
+                    $scope.system.customInfo = _.filter($scope.system.customInfo, function (keyValue) {
+                        return keyValue !== info;
+                    }, this);
+                };
 
-            success = function () {
-                $scope.system.customInfo = _.filter($scope.system.customInfo, function (keyValue) {
-                    return keyValue !== info;
-                }, this);
-            };
-
-            return $http.delete(url).success(success).error(customInfoErrorHandler);
+            return CustomInfo.delete({
+                id: $scope.system.id,
+                type: 'system',
+                action: info.keyname
+            },
+            success,
+            customInfoErrorHandler);
         };
 
         $scope.getActivationKeyLink = function (activationKey) {
-            var panel = '/!=&panel=activation_key_%s&panelpage=edit'.replace('%s', activationKey.id);
-            return Routes.activationKeysPath({anchor: panel});
+            return $scope.RootURL + '/activation_keys!=&panel=activation_key_%s&panelpage=edit'.replace('%s', activationKey.id);
         };
 
         $scope.getTemplateForType = function (value) {

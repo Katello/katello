@@ -43,3 +43,5 @@ module Katello
   require 'katello/middleware/silenced_logger.rb'
 
 end
+
+require File.expand_path("../engines/fort/lib/fort", File.dirname(__FILE__))

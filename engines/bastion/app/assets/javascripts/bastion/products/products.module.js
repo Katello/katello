@@ -133,7 +133,7 @@ angular.module('Bastion.products').config(['$stateProvider', function ($statePro
         controller: 'ProductDetailsInfoController',
         templateUrl: 'products/details/views/product-info.html'
     })
-    .state('products.details.info.new-sync-plan-form', {
+    .state('products.details.info.new-sync-plan', {
         url: '/sync-plan/new',
         collapsed: true,
         views: {

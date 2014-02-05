@@ -45,7 +45,7 @@ describe('Factory: Subscription', function() {
     });
 
     it('provides a way to get a list of subscriptions', function() {
-        $httpBackend.expectGET('/katello/api/organizations/ACME/subscriptions').respond(subscriptions);
+        $httpBackend.expectGET('/api/v2/organizations/ACME/subscriptions').respond(subscriptions);
 
         Subscription.query(function(subscriptions) {
             expect(subscriptions.results.length).toBe(2);
@@ -53,7 +53,7 @@ describe('Factory: Subscription', function() {
     });
 
     it('provides a way to get a subscription', function() {
-        $httpBackend.expectGET('/katello/api/organizations/ACME/subscriptions/1').respond(subscription);
+        $httpBackend.expectGET('/api/v2/organizations/ACME/subscriptions/1').respond(subscription);
         Subscription.get({ id: 1 }, function(results) {
             expect(results.id).toBe(subscription.id);
         });

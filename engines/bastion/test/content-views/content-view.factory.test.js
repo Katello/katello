@@ -13,7 +13,6 @@
 
 describe('Factory: ContentView', function() {
     var $resource,
-        Routes,
         contentViews;
 
     beforeEach(module('Bastion.content-views', 'Bastion.utils'));
@@ -28,10 +27,6 @@ describe('Factory: ContentView', function() {
             subtotal: 5,
             limit: 5,
             offset: 0
-        };
-
-        Routes = {
-            apiOrganizationContentViewsPath: function(organizationId) {}
         };
 
         $resource = function() {
@@ -50,7 +45,6 @@ describe('Factory: ContentView', function() {
         };
 
         $provide.value('$resource', $resource);
-        $provide.value('Routes', Routes);
         $provide.value('CurrentOrganization', 'ACME');
     }));
 

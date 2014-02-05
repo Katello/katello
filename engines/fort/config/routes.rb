@@ -1,14 +1,13 @@
-require 'api/constraints/api_version_constraint'
-require 'api/mapper_extensions'
+require 'katello/api/mapper_extensions'
 
 class ActionDispatch::Routing::Mapper
   include Katello::Routing::MapperExtensions
 end
 
-Rails.application.routes.draw do
+Fort::Engine.routes.draw do
 
   namespace :api do
-    scope :module => :v1, :constraints => ApiVersionConstraint.new(:version => 1, :default => true) do
+    scope "(:api_version)", :module => :v1, :defaults => {:api_version => 'v1'}, :api_version => /v1|v2/, :constraints => ApiConstraints.new(:version => 1, :default => true) do
       resources :nodes do
         member do
           post :sync
@@ -20,11 +19,11 @@ Rails.application.routes.draw do
       end
     end
 
-    scope :module => :v2, :constraints => ApiVersionConstraint.new(:version => 2) do
+    scope "(:api_version)", :module => :v2, :defaults => {:api_version => 'v2'}, :api_version => /v1|v2/, :constraints => ApiConstraints.new(:version => 2) do
 
       api_resources :nodes do
         member do
-          :sync
+          post :sync
         end
         collection do
           get '/by_uuid/:uuid' => "nodes#show_by_uuid"
