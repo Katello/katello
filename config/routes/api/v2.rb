@@ -20,6 +20,10 @@ Katello::Engine.routes.draw do
 
       root :to => 'root#resource_list'
 
+      api_resources :distributors, :only => [] do
+        api_resources :subscriptions, :only => [:create]
+      end
+
       api_resources :environments, :only => [:index, :show, :create, :update, :destroy] do
         api_resources :systems, :only => system_onlies do
           get :report, :on => :collection
@@ -79,6 +83,8 @@ Katello::Engine.routes.draw do
         end
         api_resources :systems, :only => system_onlies
       end
+
+      api_resources :subscriptions, :only => [:create]
 
       api_resources :systems, :only => system_onlies do
         member do
@@ -157,7 +163,7 @@ Katello::Engine.routes.draw do
           match '/bulk/destroy' => 'systems_bulk_actions#destroy_systems', :via => :put
           match '/bulk/environment_content_view' => 'systems_bulk_actions#environment_content_view', :via => :put
         end
-        api_resources :subscriptions, :only => [:create, :index, :destroy] do
+        api_resources :subscriptions, :only => [:index, :destroy] do
           collection do
             match '/' => 'subscriptions#destroy_all', :via => :delete
             match '/serials/:serial_id' => 'subscriptions#destroy_by_serial', :via => :delete

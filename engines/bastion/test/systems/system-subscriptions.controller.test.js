@@ -158,7 +158,7 @@ describe('Controller: SystemSubscriptionsController', function() {
             $scope.attachSubscriptions();
 
             expect(SystemSubscription.save).toHaveBeenCalledWith({systemId: 'abcde',
-                    pool: 'b', quantity: 1}, jasmine.any(Function), jasmine.any(Function)
+                    subscription_id: 'b', quantity: 1}, jasmine.any(Function), jasmine.any(Function)
             );
         });
     });

@@ -14,7 +14,8 @@ module Katello
 class Api::V2::SubscriptionsController < Api::V2::ApiController
   include ConsumersControllerLogic
 
-  before_filter :find_system
+  before_filter :find_system, :except => [:create]
+  before_filter :find_system_or_distributor, :only => [:create]
   before_filter :find_optional_organization, :only => [:index]
   before_filter :find_organization, :only => [:show, :upload]
   before_filter :find_subscription, :only => [:show]
@@ -111,16 +112,18 @@ class Api::V2::SubscriptionsController < Api::V2::ApiController
     respond_for_index(:collection => collection, :template => :index)
   end
 
-  api :POST, "/systems/:system_id/subscriptions", "Create a subscription"
-  param :system_id, String, :desc => "UUID of the system", :required => true
-  param :subscription, Hash, :required => true, :action_aware => true do
-    param :pool, String, :desc => "Subscription Pool uuid", :required => true
-    param :quantity, :number, :desc => "Number of subscription to use", :required => true
-  end
+  api :POST, "/subscriptions/:subscription_id",
+      "Attach a subscription to a system or distributor"
+  api :POST, "/systems/:system_id/subscriptions",
+      "Attach a subscription to a system"
+  api :POST, "/distributors/:distributor_id/subscriptions",
+      "Attach a subscription to a subscription manager application"
+  param :system_id, String, :desc => "UUID of the system"
+  param :distributor_id, String, :desc => "UUID of the subscription manager application"
+  param :subscription_id, String, :desc => "Subscription UUID", :required => true
+  param :quantity, :number, :desc => "Number of subscriptions to attach (defaults to suggested quantity)"
   def create
-    expected_params = params.slice(:pool, :quantity)
-    fail HttpErrors::BadRequest, _("Please provide pool and quantity") if expected_params.count != 2
-    @system.subscribe(expected_params[:pool], expected_params[:quantity])
+    @system.subscribe(subscriptions_params)
     respond :resource => @system
   end
 
@@ -177,8 +180,26 @@ class Api::V2::SubscriptionsController < Api::V2::ApiController
     @provider = @organization.redhat_provider if @organization
   end
 
+  def find_system_or_distributor
+    if params[:system_id]
+      find_system
+      fail HttpErrors::NotFound, _("Couldn't find system '%s'") % params[:system_id] if @system.nil?
+    elsif params[:distributor_id]
+      @distributor = Distributor.find_by_uuid(params[:distributor_id])
+      fail HttpErrors::NotFound, _("Couldn't find subscription manager application '%s'") %
+                                 params[:distributor_id] if @distributor.nil?
+    end
+    @system ? @system : @distributor
+  end
+
   def find_subscription
-    @subscription = Pool.find_by_organization_and_id!(@organization, params[:id])
+    @subscription = Pool.find_pool(subscriptions_params[:subscription_id])
+    fail HttpErrors::NotFound, _("Couldn't find subscription '%s'") % params[:subscription_id] if @subscription.nil?
+  end
+
+  def subscriptions_params
+    attrs = [:subscription_id, :quantity]
+    params.require(:subscription).permit(*attrs)
   end
 end
 end
