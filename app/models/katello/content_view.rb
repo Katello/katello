@@ -30,6 +30,7 @@ class ContentView < Katello::Model
   belongs_to :organization, :inverse_of => :content_views, :class_name => "::Organization"
 
   has_many :content_view_environments, :class_name => "Katello::ContentViewEnvironment", :dependent => :destroy
+  has_many :environments, :class_name => "Katello::KTEnvironment", :through => :content_view_environments
 
   has_many :content_view_versions, :class_name => "Katello::ContentViewVersion", :dependent => :destroy
   alias_method :versions, :content_view_versions
@@ -72,8 +73,8 @@ class ContentView < Katello::Model
   scope :composite, where(:composite => true)
 
   def self.in_environment(env)
-    joins(:content_view_versions => :content_view_version_environments).
-      where("#{Katello::ContentViewVersionEnvironment.table_name}.environment_id = ?", env.id)
+    joins(:content_view_environments).
+      where("#{Katello::ContentViewEnvironment.table_name}.environment_id = ?", env.id)
   end
 
   def components_not_in_env(env)
@@ -133,10 +134,6 @@ class ContentView < Katello::Model
     end
 
     result
-  end
-
-  def environments
-    KTEnvironment.joins(:content_view_versions).where("#{Katello::ContentViewVersion.table_name}.content_view_id" => self.id)
   end
 
   def in_environment?(env)
@@ -419,13 +416,15 @@ class ContentView < Katello::Model
   # Associate an environment with this content view.  This can occur whenever
   # a version of the view is promoted to an environment.  It is necessary for
   # candlepin to become aware that the view is available for consumers.
-  def add_environment(env)
+  def add_environment(env, version)
     if self.content_view_environments.where(:environment_id => env.id).empty?
       ContentViewEnvironment.create!(:name => env.name,
                                      :label => generate_cp_environment_label(env),
                                      :cp_id => generate_cp_environment_id(env),
                                      :environment_id => env.id,
-                                     :content_view => self)
+                                     :content_view => self,
+                                     :content_view_version => version
+                                    )
     end
   end
 

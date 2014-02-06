@@ -18,14 +18,16 @@ class ContentViewVersion < Katello::Model
   include Authorization::ContentViewVersion
 
   belongs_to :content_view, :class_name => "Katello::ContentView", :inverse_of => :content_view_versions
-  has_many :content_view_version_environments, :class_name => "Katello::ContentViewVersionEnvironment",
-           :dependent => :destroy
-  has_many :environments, :through      => :content_view_version_environments,
+  has_many :content_view_environments, :class_name => "Katello::ContentViewEnvironment",
+           :dependent => :nullify
+  has_many :environments, :through      => :content_view_environments,
                           :class_name   => "Katello::KTEnvironment",
                           :inverse_of   => :content_view_versions,
-                          :before_add    => :add_environment,
-                          :after_remove => :remove_environment
-
+                          :after_remove => :remove_environment do
+                            def <<(env)
+                              proxy_association.owner.add_environment(env)
+                            end
+                          end
   has_many :repositories, :class_name => "Katello::Repository", :dependent => :destroy
   has_one :task_status, :class_name => "Katello::TaskStatus", :as => :task_owner, :dependent => :destroy
 
@@ -67,8 +69,8 @@ class ContentViewVersion < Katello::Model
   end
 
   def self.in_environment(env)
-    joins(:content_view_version_environments).where("#{Katello::ContentViewVersionEnvironment.table_name}.environment_id" => env).
-        order("#{Katello::ContentViewVersionEnvironment.table_name}.environment_id")
+    joins(:content_view_environments).where("#{Katello::ContentViewEnvironment.table_name}.environment_id" => env)
+      .order("#{Katello::ContentViewEnvironment.table_name}.environment_id")
   end
 
   def deletable?(from_env)
@@ -97,14 +99,28 @@ class ContentViewVersion < Katello::Model
                                         :cloned_repo_overrides => options.fetch(:cloned_repo_overrides, []))
   end
 
-  private
-
-  def add_environment(env)
-    content_view.add_environment(env) if content_view.content_view_versions.in_environment(env).count == 0
+  def environments=(envs)
+    envs.each do |environment|
+      add_environment(environment)
+    end
   end
 
+  def add_environment(env)
+    if content_view.environments.include?(env)
+      # use the existing content_view_environment
+      cve = ContentViewEnvironment.find_by_environment_id_and_content_view_id(env, content_view_id)
+      self.content_view_environments << cve
+    else
+      content_view_environments.build(:environment_id => env.id,
+                                      :content_view_id => content_view_id
+                                     )
+    end
+  end
+
+  private
+
   def remove_environment(env)
-    content_view.remove_environment(env)  unless content_view.content_view_versions.in_environment(env).count > 1
+    content_view.remove_environment(env) unless content_view.content_view_versions.in_environment(env).count > 1
   end
 
 end

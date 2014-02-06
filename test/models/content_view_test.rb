@@ -177,5 +177,43 @@ class ContentViewTest < ActiveSupport::TestCase
     assert_equal composite_view.content_view_definition.component_content_views.sort,
       composite_view.components_not_in_env(@dev).sort
   end
+
+  def test_unique_environments
+    3.times do |i|
+      ContentViewVersion.create!(:version => i + 2,
+                                 :content_view => @library_dev_view,
+                                 :user => User.current,
+                                 :environments => [@library_dev_view.organization.library]
+                                )
+    end
+    @library_dev_view.add_environment(@library_dev_view.organization.library, ContentViewVersion.last)
+
+    assert_equal 2, @library_dev_view.environments.length
+  end
+
+  def test_content_view_environment_version
+    [5, 6, 7].each do |i|
+      ContentViewVersion.create!(:version => i,
+                                 :content_view => @library_dev_view,
+                                 :user => User.current,
+                                 :environments => [@library_dev_view.organization.library]
+                                )
+    end
+
+    cve = ContentViewEnvironment.where(:environment_id => @library_dev_view.organization.library,
+                                       :content_view_id => @library_dev_view).first
+    assert_equal 7, cve.content_view_version.version
+
+    version = ContentViewVersion.new(:version => 8,
+                                     :content_view => @library_dev_view,
+                                     :user => User.current)
+    version.environments << @library_dev_view.organization.library
+    version.save!
+    cve = ContentViewEnvironment.where(:environment_id => @library_dev_view.organization.library,
+                                       :content_view_id => @library_dev_view
+                                      ).first
+    assert_equal 8, cve.content_view_version.version
+  end
+
 end
 end
