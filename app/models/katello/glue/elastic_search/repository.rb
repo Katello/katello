@@ -33,10 +33,16 @@ module Glue::ElasticSearch::Repository
     end
 
     def extended_index_attrs
-      {:environment => self.environment.name, :environment_id => self.environment.id, :clone_ids => self.clones.pluck(:pulp_id),
-       :product => self.product.name, :product_id => self.product.id,
-       :default_content_view => self.content_view_version.has_default_content_view?,
-       :name_sort => self.name }
+      {
+        :environment => self.environment.name,
+        :environment_id => self.environment.id,
+        :clone_ids => self.clones.pluck(:pulp_id),
+        :product => self.product.name,
+        :product_id => self.product.id,
+        :default_content_view => self.content_view_version.has_default_content_view?,
+        :name_sort => self.name,
+        :content_view_ids => self.content_views.pluck(:id)
+      }
     end
 
     def update_related_index

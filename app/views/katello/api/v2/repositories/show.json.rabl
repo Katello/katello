@@ -27,7 +27,9 @@ node :permissions do |repo|
 end
 
 child :product do |product|
+  attribute :id
   attribute :cp_id
+  attribute :name
   node :sync_plan do |sync_plan|
     partial('katello/api/v2/sync_plans/show', :object => product.sync_plan)
   end

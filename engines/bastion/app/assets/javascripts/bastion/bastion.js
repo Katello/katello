@@ -20,6 +20,7 @@
 //= require "bastion/angular-gettext/angular-gettext"
 //= require "bastion/angular-blocks/angular-blocks"
 //= require_tree "../../../../vendor/assets/javascripts/bastion/angular-bootstrap"
+//= require "bastion/angular-animate/angular-animate"
 //= require "bastion/alchemy/alchemy"
 
 //= require "katello/common/katello.global"
