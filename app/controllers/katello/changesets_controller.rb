@@ -74,6 +74,10 @@ class ChangesetsController < Katello::ApplicationController
     'contents'
   end
 
+  def title
+    _('Changesets')
+  end
+
   ####
   # Promotion methods
   ####
