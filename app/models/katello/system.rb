@@ -19,6 +19,10 @@ class System < Katello::Model
   define_hooks :add_system_group_hook, :remove_system_group_hook,
                :as_json_hook
 
+  SYSTEM_GUEST = "Guest"
+  SYSTEM_HOST = "Host"
+  SYSTEM_HYPERVISOR = "Hypervisor"
+
   include Glue::Candlepin::Consumer if Katello.config.use_cp
   include Glue::Pulp::Consumer if Katello.config.use_pulp
   include Glue if Katello.config.use_cp || Katello.config.use_pulp
@@ -198,13 +202,13 @@ class System < Katello::Model
 
   def type
     if respond_to?(:guest) && guest
-      _("Guest")
+      _(SYSTEM_GUEST)
     else
       case self
       when Hypervisor
-        _("Hypervisor")
+        _(SYSTEM_HYPERVISOR)
       else
-        _("Host")
+        _(SYSTEM_HOST)
       end
     end
   end

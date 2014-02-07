@@ -211,11 +211,40 @@ class Product < Katello::Model
 
   def environments
     KTEnvironment.where(:organization_id => organization.id).
-      where("library = ? OR id IN (?)", true, repositories.map(&:environment_id))
+      where("#{KTEnvironment.table_name}.library = ? OR #{KTEnvironment.table_name}.id IN (?)",
+            true,
+            repositories.map(&:environment_id))
   end
 
   def syncable_content?
     repositories.any?(&:feed?)
+  end
+
+  def consumed_subscriptions
+    subscriptions.map(&:consumed).reduce(&:+)
+  end
+
+  def available_subscriptions
+    subscriptions.map(&:available).reduce(&:+)
+  end
+
+  def total_subscriptions
+    subscriptions.map(&:quantity).reduce(&:+)
+  end
+
+  def virtual_system_limit
+    subscriptions.first.virt_limit
+  end
+
+  def virtual_systems_used
+    systems = environments.joins(:systems).flat_map(&:systems).select do |system|
+      system.type == Katello::System::SYSTEM_GUEST
+    end
+    systems.count
+  end
+
+  def virtual_systems_available
+    total_subscriptions * virtual_system_limit
   end
 
   protected

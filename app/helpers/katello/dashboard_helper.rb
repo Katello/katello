@@ -219,5 +219,8 @@ module DashboardHelper
     _("Click on the widget title text to drag and drop.")
   end
 
+  def unlimited(quantity)
+    quantity < 0 ? _("Unlimited") : quantity
+  end
 end
 end

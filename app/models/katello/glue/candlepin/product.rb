@@ -107,6 +107,12 @@ module Glue::Candlepin::Product
       @productContent = attrs.collect { |pc| Candlepin::ProductContent.new pc }
     end
 
+    def subscriptions
+      owner_pools = Resources::Candlepin::Owner.pools(organization.label)
+      pools = owner_pools.map { |cp_pool| Katello::Pool.find_pool(cp_pool['id'], cp_pool) }
+      pools.select { |pool| pool.product_id == cp_id }
+    end
+
     def support_level
       return _attr(:support_level)
     end
