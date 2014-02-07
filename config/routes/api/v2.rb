@@ -135,7 +135,6 @@ Katello::Engine.routes.draw do
       ##############################
 
       api_resources :organizations do
-        api_resources :products, :only => [:index]
         api_resources :sync_plans do
           member do
             get :available_products
@@ -325,7 +324,7 @@ Katello::Engine.routes.draw do
         end
       end
 
-      api_resources :products, :only => [:index, :show, :update, :destroy, :create] do
+      api_resources :products, :only => [] do
         api_resources :repositories, :only => [:create, :index]
         get :repositories, :on => :member
         api_resources :sync, :only => [:index, :create] do

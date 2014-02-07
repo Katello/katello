@@ -43,19 +43,25 @@ module Katello
       }
     end
 
-    api :GET, "/products", "List of organization products"
+    api :GET, "/products", "List products"
     api :GET, "/subscriptions/:subscription_id/products", "List of subscription products in an organization"
     api :GET, "/organizations/:organization_id/products", "List of products in an organization"
-    param :name, :identifier, :desc => "Filter products by name"
-    param :organization_id, :identifier, :desc => "Filter products by organization name or label", :required => true
-    param :subscription_id, :number, :desc => "Filter products by subscription identifier"
+    param :organization_id, :identifier, :desc => "Filter products by organization", :required => true
+    param :subscription_id, :identifier, :desc => "Filter products by subscription"
+    param :name, String, :desc => "Filter products by name"
+    param :enabled, :bool, :desc => "Filter products by enabled or disabled"
     param_group :search, Api::V2::ApiController
     def index
-      filters = [filter_terms(product_ids_filter)]
-      filters << enabled_filter unless  params[:enabled] == 'false'
-      options = sort_params.merge(:filters => filters, :load_records? => true)
-      @collection = item_search(Product, params, options)
-      respond_for_index(:collection => @collection)
+      filters = []
+
+      filters << {:terms => {:id => product_ids_filter(params[:subscription_id])}}
+      filters << {:terms => {:name => [params[:name]]}} if params[:name]
+      filters << {:terms => {:enabled => [params[:enabled].to_bool]}} if params[:enabled]
+      options = {
+        :filters => filters,
+        :load_records? => true
+      }.merge(sort_params)
+      respond(:collection => item_search(Product, params, options))
     end
 
     api :POST, "/products", "Create a product"
@@ -104,25 +110,17 @@ module Katello
       @product = Product.find_by_id(params[:id]) if params[:id]
     end
 
-    def product_ids_filter
+    def product_ids_filter(subscription_id = nil)
       ids = Product.all_readable(@organization).pluck(:id)
-      if (subscription_id = params[:subscription_id])
+      if subscription_id
         @subscription = Pool.find_by_organization_and_id!(@organization, subscription_id)
         ids &= @subscription.products.pluck("#{Product.table_name}.id")
       end
-      {:id => ids}
+      ids
     end
 
     def product_params
       params.require(:product).permit(:name, :label, :description, :provider_id, :gpg_key_id, :sync_plan_id)
-    end
-
-    def enabled_filter
-      filter_terms({:enabled => [true]})
-    end
-
-    def filter_terms(terms)
-      {:terms => terms}
     end
 
   end
