@@ -95,3 +95,6 @@
 
 //= require "bastion/custom-info/custom-info.module.js"
 //= require_tree "./custom-info"
+
+//= require "bastion/activation-keys/activation-keys.module.js"
+//= require_tree "./activation-keys"

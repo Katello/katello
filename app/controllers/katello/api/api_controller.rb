@@ -124,7 +124,8 @@ class Api::ApiController < ::Api::BaseController
   end
 
   def client_cert_from_request
-    cert = request.env['SSL_CLIENT_CERT'] || request.env['HTTP_SSL_CLIENT_CERT']
+    cert = request.env['SSL_CLIENT_CERT'] || request.env['HTTP_SSL_CLIENT_CERT'] ||
+        ENV['SSL_CLIENT_CERT'] || ENV['HTTP_SSL_CLIENT_CERT']
     return nil if cert.blank? || cert == "(null)"
     # apache does not preserve new lines in cert file - work-around:
     if cert.include?("-----BEGIN CERTIFICATE----- ")

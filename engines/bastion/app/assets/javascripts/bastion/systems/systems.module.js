@@ -127,10 +127,21 @@ angular.module('Bastion.systems').config(['$stateProvider', function ($stateProv
     });
 
     $stateProvider.state('systems.details.subscriptions', {
+        abstract: true,
+        collapsed: true,
+        templateUrl: 'systems/details/views/system-subscriptions.html'
+    })
+    .state('systems.details.subscriptions.list', {
         url: '/subscriptions',
         collapsed: true,
         controller: 'SystemSubscriptionsController',
-        templateUrl: 'systems/details/views/system-subscriptions.html'
+        templateUrl: 'systems/details/views/system-subscriptions-list.html'
+    })
+    .state('systems.details.subscriptions.add', {
+        url: '/add-subscriptions',
+        collapsed: true,
+        controller: 'SystemAddSubscriptionsController',
+        templateUrl: 'systems/details/views/system-add-subscriptions.html'
     });
 
     $stateProvider.state('systems.details.system-groups', {

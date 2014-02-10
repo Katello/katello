@@ -20,6 +20,17 @@ Katello::Engine.routes.draw do
 
       root :to => 'root#resource_list'
 
+      api_resources :activation_keys, :only => [:index, :create, :show, :update] do
+        api_resources :subscriptions, :only => [:create, :index, :destroy] do
+          collection do
+            match '/' => 'subscriptions#destroy', :via => :put
+            match '/available' => 'subscriptions#available', :via => :get
+          end
+        end
+      end
+
+      api_resources :content_views, :only => [:index]
+
       api_resources :environments, :only => [:index, :show, :create, :update, :destroy] do
         api_resources :systems, :only => system_onlies do
           get :report, :on => :collection
@@ -34,6 +45,8 @@ Katello::Engine.routes.draw do
       end
 
       api_resources :organizations, :only => [:index, :show, :update, :create, :destroy] do
+        api_resources :activation_keys, :only => [:index]
+        api_resources :content_views, :only => [:index]
         api_resources :environments, :only => [:index, :show, :create, :update, :destroy] do
           collection do
             get :paths
@@ -46,6 +59,11 @@ Katello::Engine.routes.draw do
         end
         api_resources :products, :only => [:index]
         api_resources :providers, :only => [:index]
+        api_resources :subscriptions, :only => [:index] do
+          collection do
+            match '/available' => 'subscriptions#available', :via => :get
+          end
+        end
         api_resources :system_groups, :only => [:index, :create]
         api_resources :systems, :only => system_onlies do
           get :report, :on => :collection
@@ -92,6 +110,13 @@ Katello::Engine.routes.draw do
           get :releases
           put :enabled_repos
           put :refresh_subscriptions
+        end
+        api_resources :subscriptions, :only => [:create, :index, :destroy] do
+          collection do
+            match '/' => 'subscriptions#destroy', :via => :delete
+            match '/available' => 'subscriptions#available', :via => :get
+            match '/serials/:serial_id' => 'subscriptions#destroy_by_serial', :via => :delete
+          end
         end
       end
 
@@ -156,13 +181,6 @@ Katello::Engine.routes.draw do
           match '/bulk/remove_content' => 'systems_bulk_actions#remove_content', :via => :put
           match '/bulk/destroy' => 'systems_bulk_actions#destroy_systems', :via => :put
           match '/bulk/environment_content_view' => 'systems_bulk_actions#environment_content_view', :via => :put
-        end
-        api_resources :subscriptions, :only => [:create, :index, :destroy] do
-          collection do
-            match '/' => 'subscriptions#destroy_all', :via => :delete
-            match '/serials/:serial_id' => 'subscriptions#destroy_by_serial', :via => :delete
-            match '/available' => 'subscriptions#available', :via => :get
-          end
         end
         resource :packages, :only => [], :controller => :system_packages do
           collection do

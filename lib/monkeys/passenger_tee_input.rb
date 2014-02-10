@@ -9,13 +9,24 @@
 # NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
-#
 
-module Katello
-class KeyPool < Katello::Model
-  self.include_root_in_json = false
+# In the candlepin proxy controllers we pass the request body
+# straight from the request through to candlepin
+# This does not have a seek() method which rest client needs
+# to log properly.
+module PhusionPassenger
+  module Utils
 
-  belongs_to :activation_key, :class_name => "Katello::ActivationKey", :inverse_of => :key_pools
-  belongs_to :pool, :class_name => "Katello::Pool", :inverse_of => :key_pools
-end
+    class TeeInput
+
+      def seek(position)
+        if position == 0
+           rewind
+        else
+           fail "Seeking not supported to non zero position"
+        end
+      end
+
+    end
+  end
 end

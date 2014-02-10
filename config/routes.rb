@@ -116,24 +116,9 @@ Katello::Engine.routes.draw do
     end
   end
 
-  resources :activation_keys do
+  resources :activation_keys, :only => [:index] do
     collection do
-      get :auto_complete_search
-      get :items
-      get :subscriptions
-    end
-    member do
-      get :applied_subscriptions
-      get :available_subscriptions
-      post :remove_subscriptions
-      post :add_subscriptions
-
-      post :update
-
-      get :system_groups
-      get :systems
-      put :add_system_groups
-      put :remove_system_groups
+      get :all
     end
   end
 

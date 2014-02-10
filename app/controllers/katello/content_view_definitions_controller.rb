@@ -28,6 +28,10 @@ class ContentViewDefinitionsController < Katello::ApplicationController
     'contents'
   end
 
+  def title
+    _('Content View Definitions')
+  end
+
   def rules
     index_rule   = lambda { ContentViewDefinition.any_readable?(current_organization) }
     show_rule    = lambda { @view_definition.readable? }

@@ -11,19 +11,51 @@
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
  **/
 
-describe('Controller: SystemSubscriptionsController', function() {
-    var $scope, SystemSubscription, gettext, Nutupane, subscription, expectedTable, expectedRows;
+describe('Controller: SystemAddSubscriptionsController', function() {
+    var $scope,
+        $controller,
+        gettext,
+        System,
+        Subscription,
+        Nutupane,
+        expectedTable,
+        expectedRows,
+        SystemsHelper,
+        SubscriptionsHelper;
 
-    // load the systems module and template
-    beforeEach(module('Bastion.systems', 'Bastion.test-mocks'));
+    beforeEach(module(
+        'Bastion.systems',
+        'Bastion.subscriptions',
+        'Bastion.test-mocks',
+        'systems/details/views/system-groups.html',
+        'systems/views/systems.html',
+        'systems/views/systems-table-full.html'
+    ));
 
-    // Set up mocks
-    beforeEach(function() {
+    beforeEach(inject(function($injector) {
+        var $controller = $injector.get('$controller'),
+            $q = $injector.get('$q');
+
+        System = $injector.get('MockResource').$new();
+        $scope = $injector.get('$rootScope').$new();
+        $location = $injector.get('$location');
+        SystemsHelper = $injector.get('SystemsHelper');
+        SubscriptionsHelper = $injector.get('SubscriptionsHelper');
+
+        System.addSubscriptions = function() {};
+
+        gettext = function(message) {
+            return message;
+        };
+
         expectedRows = [];
 
         expectedTable = {
             showColumns: function() {},
             getSelected: function() {
+                return expectedRows;
+            },
+            rows: function () {
                 return expectedRows;
             },
             selectAll: function() {},
@@ -49,29 +81,51 @@ describe('Controller: SystemSubscriptionsController', function() {
             available: 0,
             selected: false
         }
-    });
 
-    // Initialize controller
-    beforeEach(inject(function($controller, $rootScope) {
-        $scope = $rootScope.$new();
-
-        $controller('SystemSubscriptionsController', {
+        $controller('SystemAddSubscriptionsController', {
             $scope: $scope,
+            $location: $location,
             gettext: gettext,
-            SystemSubscription: SystemSubscription,
-            System: {},
-            Nutupane: Nutupane
+            CurrentOrganization: 'organization',
+            Subscription: Subscription,
+            System: System,
+            Nutupane: Nutupane,
+            SystemsHelper: SystemsHelper,
+            SubscriptionsHelper: SubscriptionsHelper
+        });
+
+        $scope.system = new System({
+            uuid: 12345,
+            subscriptions: [{subscription: {id: 1, quantity: 11}}, {subscription: {id: 2, quantity: 22}}]
         });
     }));
 
-    it("sets up the current subscriptions nutupane table.", function() {
-        expect($scope.currentSubscriptionsTable).toBe(expectedTable);
+    it('attaches the nutupane table to the scope', function() {
+        expect($scope.addSubscriptionsTable).toBeDefined();
     });
 
-    it("sets up the available subscriptions nutupane table.", function() {
-        expect($scope.availableSubscriptionsTable).toBe(expectedTable);
+    it("allows removing system groups from the system", function() {
+
+        var expected = {uuid: 12345, subscriptions: [
+                                                      {subscription: {id: 2, quantity: 0}},
+                                                      {subscription: {id: 3, quantity: 1}},
+                                                      {subscription: {id: 4, quantity: 1}}
+                                                    ]};
+        spyOn(System, 'addSubscriptions');
+
+        $scope.addSubscriptionsTable.getSelected = function() {
+            return [
+                     {id: 2, 'multi_entitlement': true},
+                     {id: 3, 'multi_entitlement': true, 'amount': 1},
+                     {id: 4, 'multi_entitlement': false}
+                   ];
+        };
+
+        $scope.addSelected();
+        expect(System.addSubscriptions).toHaveBeenCalledWith(expected, jasmine.any(Function), jasmine.any(Function));
     });
 
+    /*
     describe("provides a filter for the available display", function() {
         var expected;
 
@@ -162,5 +216,5 @@ describe('Controller: SystemSubscriptionsController', function() {
             );
         });
     });
+    */
 });
-

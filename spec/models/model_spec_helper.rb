@@ -82,6 +82,10 @@ rKH9OkgKEvwkf8zQjO/XSvuoac83uBEFgKXJwYLHPA3U20JrchKU7klLwzSsmrXA
 -----END RSA PRIVATE KEY-----
 EOKEY
 
+  def disable_activation_key_orchestration
+    Resources::Candlepin::ActivationKey.stubs(:create).returns({:id => '123'})
+  end
+
   def disable_product_orchestration
     Resources::Candlepin::Product.stubs(:get).returns([{:productContent => []}]) #return a fresh hash, as add_repo modified it
     Resources::Candlepin::Product.stubs(:add_content).returns(true)

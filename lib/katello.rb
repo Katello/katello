@@ -18,6 +18,7 @@ require "anemone"
 
 require "runcible"
 
+require "angular-rails-templates"
 require "simple_navigation"
 require "haml-rails"
 require "compass-rails"

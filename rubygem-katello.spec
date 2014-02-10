@@ -106,7 +106,8 @@ Requires: postgresql
 Requires: postgresql-server
 Requires: v8
 Requires: %{?scl_prefix}rubygems
-Requires: %{?scl_prefix}rubygem-rails 
+Requires: %{?scl_prefix}rubygem-angular-rails-templates >= 0.0.4
+Requires: %{?scl_prefix}rubygem-rails
 Requires: %{?scl_prefix}rubygem-json 
 Requires: %{?scl_prefix}rubygem-oauth 
 Requires: %{?scl_prefix}rubygem-rest-client
@@ -144,6 +145,7 @@ Requires: %{?scl_prefix}rubygem-ui_alchemy-rails = 1.0.12
 Requires: %{?scl_prefix}rubygem-deface
 Requires: %{?scl_prefix}rubygem-strong_parameters
 BuildRequires: foreman >= 1.3.0
+BuildRequires: %{?scl_prefix}rubygem-angular-rails-templates >= 0.0.4
 BuildRequires: %{?scl_prefix}rubygem-net-ldap 
 BuildRequires: %{?scl_prefix}rubygem-ldap_fluff >= 0.2.2
 BuildRequires: %{?scl_prefix}rubygem-sqlite3

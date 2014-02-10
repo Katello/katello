@@ -56,6 +56,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency "anemone"
 
   # UI
+  gem.add_dependency "angular-rails-templates", ">= 0.0.4"
   gem.add_dependency "simple-navigation", ">= 3.3.4"
   gem.add_dependency "less-rails"
   gem.add_dependency "sass-rails"
@@ -66,7 +67,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency "deface"
 
   # Testing
-  gem.add_development_dependency "rubocop", "0.15.0"
+  gem.add_development_dependency "rubocop", "0.17.0"
   gem.add_development_dependency "factory_girl_rails", "~> 1.4.0"
   gem.add_development_dependency "minitest-tags"
   gem.add_development_dependency "mocha", "~> 0.14.0"
