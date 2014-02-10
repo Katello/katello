@@ -37,7 +37,7 @@ module Actions
       end
 
       def run_with_remote_user(event = nil)
-        as_remote_user { run_without_remote_user event }
+        as_remote_user { run_without_remote_user(*Array(event)) }
       end
 
       def finalize_with_remote_user
