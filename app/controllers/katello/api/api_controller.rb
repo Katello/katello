@@ -14,6 +14,7 @@ module Katello
 class Api::ApiController < ::Api::BaseController
   include Profiling
   include KTLocale
+  include ForemanTasks::Triggers
 
   respond_to :json
   before_filter :require_user
@@ -140,16 +141,6 @@ class Api::ApiController < ::Api::BaseController
 
   def drop_cn_prefix_from_subject(subject_string)
     subject_string.sub(/\/CN=/i, '')
-  end
-
-  def trigger(action, *args)
-    ::ForemanTasks.trigger(action, *args)
-  end
-
-  # trigger dynflow action and return the dynflow task object
-  def async_task(action, *args)
-    execution_plan_id = trigger(action, *args).id
-    return ::ForemanTasks::Task::DynflowTask.find_by_external_id!(execution_plan_id)
   end
 
 end

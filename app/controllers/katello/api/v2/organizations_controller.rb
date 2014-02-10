@@ -13,6 +13,9 @@
 module Katello
   class Api::V2::OrganizationsController < ::Api::V2::OrganizationsController
 
+    include Api::V2::Rendering
+    include ForemanTasks::Triggers
+
     before_filter :local_find_taxonomy, :only => %w{repo_discover cancel_repo_discover}
 
     def local_find_taxonomy
@@ -84,16 +87,6 @@ module Katello
 
     def resource_identifying_attributes
       %w(id label)
-    end
-
-    private
-
-    def respond_for_async(options = {})
-      resource = options[:resource] || get_resource
-      status   = options[:status] || :ok
-      format   = options[:format] || :json
-
-      render format => resource, :status => status
     end
 
   end
