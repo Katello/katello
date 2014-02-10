@@ -13,9 +13,7 @@
 module Fort
   module Actions
 
-    class ChangesetPublishAction < Dynflow::Action
-
-      include ::Actions::Helpers::RemoteAction
+    class ChangesetPublishAction < ::Actions::Pulp::Action
 
       def self.subscribe
         Katello::Actions::ChangesetPromote

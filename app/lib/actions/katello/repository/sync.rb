@@ -15,7 +15,6 @@ module Actions
     module Repository
       class Sync < Actions::EntryAction
 
-        include Helpers::RemoteAction
         include Helpers::Presenter
 
         input_format do
@@ -25,11 +24,7 @@ module Actions
         def plan(repo)
           action_subject(repo)
           plan_action(Pulp::Repository::Sync, pulp_id: repo.pulp_id)
-        end
-
-        def finalize
-          repo = ::Katello::Repository.find(input[:repository][:id])
-          repo.index_content
+          plan_action(ElasticSearch::Reindex, repo)
         end
 
         def humanized_name

@@ -12,19 +12,31 @@
 
 module Actions
   module Pulp
-    module User
-      class SetSuperuser < Pulp::Action
+    class Task < Pulp::Action
+      include Dynflow::Action::Polling
 
-        input_format do
-          param :remote_id, String
-          param :pulp_user, String
-        end
+      def done?
+        !!external_task[:finish_time]
+      end
 
-        def run
-          output[:response] = pulp_resources.role.add("super-users", input[:remote_id])
-        end
+      def external_task
+        output[:pulp_task]
+      end
 
+      private
+
+      def external_task=(external_task_data)
+        output[:pulp_task] = external_task_data
+      end
+
+      def poll_external_task
+        task_resource.poll(external_task[:task_id])
+      end
+
+      def task_resource
+        ::Katello.pulp_server.resources.task
       end
     end
   end
 end
+

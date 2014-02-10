@@ -13,9 +13,7 @@
 module Fort
   module Actions
 
-    class ContentViewRefresh < Dynflow::Action
-
-      include ::Actions::Helpers::RemoteAction
+    class ContentViewRefresh <  ::Actions::Pulp::Action
 
       def self.subscribe
         Katello::Actions::ContentViewRefresh

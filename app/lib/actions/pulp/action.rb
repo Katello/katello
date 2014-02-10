@@ -12,19 +12,18 @@
 
 module Actions
   module Pulp
-    module User
-      class SetSuperuser < Pulp::Action
+    class Action < Dynflow::Action
+      middleware.use ::Actions::Middleware::RemoteAction
 
-        input_format do
-          param :remote_id, String
-          param :pulp_user, String
-        end
-
-        def run
-          output[:response] = pulp_resources.role.add("super-users", input[:remote_id])
-        end
-
+      def pulp_resources
+        ::Katello.pulp_server.resources
       end
+
+      def pulp_extensions
+        ::Katello.pulp_server.extensions
+      end
+
     end
   end
 end
+

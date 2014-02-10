@@ -14,7 +14,7 @@ module Actions
   module ElasticSearch
     class Reindex < Dynflow::Action
 
-      include Helpers::RemoteAction
+      middleware.use ::Actions::Middleware::RemoteAction
 
       def plan(record)
         plan_self(id: record.id,

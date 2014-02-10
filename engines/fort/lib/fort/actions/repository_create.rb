@@ -13,9 +13,7 @@
 module Fort
   module Actions
 
-    class RepositoryCreateAction < Dynflow::Action
-
-      include ::Actions::Helpers::RemoteAction
+    class RepositoryCreateAction < ::Actions::Pulp::Action
 
       def self.subscribe
         Katello::Actions::RepositoryCreate

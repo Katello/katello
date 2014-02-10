@@ -14,10 +14,7 @@
 module Actions
   module Pulp
     module User
-      class Create < Dynflow::Action
-
-        include Helpers::RemoteAction
-
+      class Create < Pulp::Action
         input_format do
           param :remote_id, String
         end

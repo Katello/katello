@@ -13,10 +13,8 @@
 module Actions
   module Pulp
     module Repository
-      class Sync < Actions::Base
+      class Sync < Pulp::Task
 
-        include Helpers::RemoteAction
-        include Helpers::PulpTask
         include Helpers::Presenter
 
         input_format do

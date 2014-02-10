@@ -13,10 +13,8 @@
 module Actions
   module Pulp
     module Consumer
-      class ContentUninstall < Actions::Base
+      class ContentUninstall < Pulp::Task
 
-        include Helpers::RemoteAction
-        include Helpers::PulpTask
         include Helpers::Presenter
 
         input_format do
