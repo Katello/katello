@@ -13,10 +13,8 @@
 module Actions
   module Pulp
     module Consumer
-      class ContentInstall < Actions::Base
+      class ContentInstall < Pulp::Task
 
-        include Helpers::RemoteAction
-        include Helpers::PulpTask
         include Helpers::Presenter
 
         input_format do

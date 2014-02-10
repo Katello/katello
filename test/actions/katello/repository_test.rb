@@ -77,6 +77,7 @@ module Katello
         plan_action action, repository
 
         assert_action_planed action, pulp_action_class
+        assert_action_planed action, ::Actions::ElasticSearch::Reindex
       end
 
       describe 'progress' do

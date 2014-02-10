@@ -23,18 +23,12 @@ module Katello
         include Glue::Pulp::User if Katello.config.use_pulp
         include Glue::ElasticSearch::User if Katello.config.use_elasticsearch
         include Glue if Katello.config.use_cp || Katello.config.use_pulp
+        include ForemanTasks::Concerns::ActionSubject
 
-        include Glue::Event
-
-        def create_event
-          Headpin::Actions::UserCreate
+        def create_action
+          sync_action!
+          ::Actions::Headpin::User::Create
         end
-
-        def destroy_event
-          Headpin::Actions::UserDestroy
-        end
-
-        include AsyncOrchestration
 
         include Ext::IndexedModel
 

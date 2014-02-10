@@ -1,5 +1,5 @@
 #
-# Copyright 2013 Red Hat, Inc.
+# Copyright 2014 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -12,27 +12,18 @@
 
 module Actions
   module Katello
-    module Repository
-      class Sync < Actions::EntryAction
+    module User
+      class Create < Dynflow::Action
 
-        include Helpers::Presenter
-
-        input_format do
-          param :id, Integer
+        def self.subscribe
+          Headpin::User::Create
         end
 
-        def plan(repo)
-          action_subject(repo)
-          plan_action(Pulp::Repository::Sync, pulp_id: repo.pulp_id)
-          plan_action(ElasticSearch::Reindex, repo)
-        end
-
-        def humanized_name
-          _("Synchronize")
-        end
-
-        def presenter
-          Helpers::Presenter::Delegated.new(self, Pulp::Repository::Sync)
+        def plan(user)
+          sequence do
+            plan_action(Pulp::User::Create, remote_id: user.remote_id)
+            plan_action(Pulp::User::SetSuperuser, remote_id: user.remote_id)
+          end
         end
       end
     end

@@ -11,29 +11,19 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Actions
-  module Katello
-    module Repository
-      class Sync < Actions::EntryAction
-
-        include Helpers::Presenter
+  module Pulp
+    module User
+      class SetSuperuser < Pulp::Action
 
         input_format do
-          param :id, Integer
+          param :remote_id, String
+          param :pulp_user, String
         end
 
-        def plan(repo)
-          action_subject(repo)
-          plan_action(Pulp::Repository::Sync, pulp_id: repo.pulp_id)
-          plan_action(ElasticSearch::Reindex, repo)
+        def run
+          output[:response] = pulp_resources.role.add("super-users", input[:remote_id])
         end
 
-        def humanized_name
-          _("Synchronize")
-        end
-
-        def presenter
-          Helpers::Presenter::Delegated.new(self, Pulp::Repository::Sync)
-        end
       end
     end
   end

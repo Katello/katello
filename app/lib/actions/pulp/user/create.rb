@@ -10,29 +10,25 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+
 module Actions
-  module Katello
-    module Repository
-      class Sync < Actions::EntryAction
-
-        include Helpers::Presenter
-
+  module Pulp
+    module User
+      class Create < Pulp::Action
         input_format do
-          param :id, Integer
+          param :remote_id, String
         end
 
-        def plan(repo)
-          action_subject(repo)
-          plan_action(Pulp::Repository::Sync, pulp_id: repo.pulp_id)
-          plan_action(ElasticSearch::Reindex, repo)
-        end
-
-        def humanized_name
-          _("Synchronize")
-        end
-
-        def presenter
-          Helpers::Presenter::Delegated.new(self, Pulp::Repository::Sync)
+        def run
+          user_params = { name: input[:remote_id],
+                          password: Password.generate_random_string(16) }
+          output[:response] = pulp_resources.user.create(input[:remote_id], user_params)
+        rescue RestClient::ExceptionWithResponse => e
+          if e.http_code == 409
+            Rails.logger.info "pulp user #{input[:remote_id]}: already exists. continuing"
+          else
+            raise e
+          end
         end
       end
     end

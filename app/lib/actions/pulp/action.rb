@@ -11,30 +11,19 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Actions
-  module Katello
-    module Repository
-      class Sync < Actions::EntryAction
+  module Pulp
+    class Action < Dynflow::Action
+      middleware.use ::Actions::Middleware::RemoteAction
 
-        include Helpers::Presenter
-
-        input_format do
-          param :id, Integer
-        end
-
-        def plan(repo)
-          action_subject(repo)
-          plan_action(Pulp::Repository::Sync, pulp_id: repo.pulp_id)
-          plan_action(ElasticSearch::Reindex, repo)
-        end
-
-        def humanized_name
-          _("Synchronize")
-        end
-
-        def presenter
-          Helpers::Presenter::Delegated.new(self, Pulp::Repository::Sync)
-        end
+      def pulp_resources
+        ::Katello.pulp_server.resources
       end
+
+      def pulp_extensions
+        ::Katello.pulp_server.extensions
+      end
+
     end
   end
 end
+

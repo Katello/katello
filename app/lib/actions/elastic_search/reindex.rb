@@ -1,5 +1,5 @@
 #
-# Copyright 2013 Red Hat, Inc.
+# Copyright 2014 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -10,25 +10,28 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-module Fort
-  module Actions
+module Actions
+  module ElasticSearch
+    class Reindex < Dynflow::Action
 
-    class ContentViewRefresh <  ::Actions::Pulp::Action
+      middleware.use ::Actions::Middleware::RemoteAction
 
-      def self.subscribe
-        Katello::Actions::ContentViewRefresh
+      def plan(record)
+        plan_self(id: record.id,
+                  class_name: record.class.name)
       end
 
-      def run
-        view = ContentView.find(input['id'])
-        env = view.organization.library
-        Node.with_environment(env).each do |node|
-          node.sync(:environment => env, :content_view => view)
-        end
+      input_format do
+        param :id
+        param :class_name
+      end
+
+      def finalize
+        model_class = input['class_name'].constantize
+        record = model_class.find(input['id'])
+        record.update_index
       end
 
     end
-
   end
-
 end
