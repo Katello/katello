@@ -16,7 +16,7 @@ module Katello
     before_filter :verify_presence_of_organization_or_environment, :only => [:index]
     before_filter :find_environment, :only => [:index, :create, :update]
     before_filter :find_optional_organization, :only => [:index]
-    before_filter :find_activation_key, :only => [:show, :update,
+    before_filter :find_activation_key, :only => [:show, :update, :destroy,
                                                   :available_system_groups, :add_system_groups, :remove_system_groups]
     before_filter :authorize
     before_filter :load_search_service, :only => [:index, :available_system_groups]
@@ -37,6 +37,7 @@ module Katello
         :show                 => read_test,
         :create               => manage_test,
         :update               => manage_test,
+        :destroy              => manage_test,
         :available_system_groups  => manage_test,
         :add_system_groups        => manage_test,
         :remove_system_groups     => manage_test
@@ -84,7 +85,7 @@ module Katello
       respond
     end
 
-    api :PUT, "/activation_keys/:id", "Update a activation key"
+    api :PUT, "/activation_keys/:id", "Update an activation key"
     param :id, :identifier, :desc => "ID of the activation key", :required => true
     param :organization_id, :identifier, :desc => "organization identifier", :required => true
     param :name, String, :desc => "name", :required => true
@@ -94,6 +95,13 @@ module Katello
     param :usage_limit, :number, :desc => "maximum number of uses"
     def update
       @activation_key.update_attributes(activation_key_params)
+      respond
+    end
+
+    api :DELETE, "/activation_keys/:id", "Destroy an activation key"
+    param :id, :identifier, :desc => "ID of the activation key", :required => true
+    def destroy
+      @activation_key.destroy
       respond
     end
 

@@ -14,7 +14,7 @@ attributes :usage_count, :user_id, :usage_limit, :pools, :system_template_id
 
 node :permissions do |activation_key|
   {
-    :editable => true
+    :editable => activation_key.class.manageable?(activation_key.organization)
   }
 end
 
