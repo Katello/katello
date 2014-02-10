@@ -55,7 +55,7 @@ describe('Controller: NewContentViewController', function() {
         expect(contentView.$save).toHaveBeenCalled();
         expect($scope.$parent.table.addRow).toHaveBeenCalled();
         expect($scope.transitionTo).toHaveBeenCalledWith('content-views.details.repositories.available',
-                                                         {contentViewId: undefined})
+                                                         {contentViewId: 1})
     });
 
     it('should fetch a label whenever the name changes', function() {

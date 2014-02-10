@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Red Hat, Inc.
+ * Copyright 2014 Red Hat, Inc.
  *
  * This software is licensed to you under the GNU General Public
  * License as published by the Free Software Foundation; either version
@@ -18,7 +18,8 @@ describe('Controller: ContentViewPublishController', function() {
 
     beforeEach(inject(function($injector) {
         var $controller = $injector.get('$controller'),
-            ContentView = $injector.get('MockResource').$new();
+            ContentView = $injector.get('MockResource').$new(),
+            gettext = $injector.get('gettextMock');
 
         $scope = $injector.get('$rootScope').$new();
 
@@ -30,7 +31,8 @@ describe('Controller: ContentViewPublishController', function() {
         spyOn($scope, 'transitionTo');
 
         $controller('ContentViewPublishController', {
-            $scope: $scope
+            $scope: $scope,
+            gettext: gettext
         });
     }));
 

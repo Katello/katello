@@ -7,6 +7,12 @@ attributes :composite
 attributes :repository_ids
 attributes :component_ids
 
+node :last_published do |content_view|
+  if !content_view.versions.empty?
+    content_view.versions.last.created_at
+  end
+end
+
 child :environments => :environments do
   attributes :id, :name, :label
 end

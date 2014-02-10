@@ -1,6 +1,8 @@
+object @resource
+
 attributes :id, :errata_id, :title, :summary, :description, :status
 attributes :version, :release, :updated, :_href, :issued, :pushcount
-attributes :type, :_type, :severity, :solution, :rights, :from_str, :reboot_suggested
+attributes :type, :severity, :solution, :rights, :from_str, :reboot_suggested
 attributes :references, :sort
 attributes :children
 

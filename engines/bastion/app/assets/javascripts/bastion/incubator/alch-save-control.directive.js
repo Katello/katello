@@ -31,7 +31,7 @@ angular.module('alchemy').directive('alchSaveControl', function () {
     return {
         restrict: 'AE',
         replace: true,
-        templateUrl: 'widgets/views/save-control.html',
+        templateUrl: 'incubator/views/alch-save-control.html',
         scope: {
             handleSave: '&onSave',
             handleCancel: '&onCancel',

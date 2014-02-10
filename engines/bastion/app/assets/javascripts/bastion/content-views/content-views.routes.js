@@ -66,7 +66,7 @@ angular.module('Bastion.content-views').config(['$stateProvider', function ($sta
         collapsed: true,
         url: '/versions',
         controller: 'ContentViewVersionsController',
-        templateUrl: 'content-views/details/views/content-view-details-versions.html'
+        templateUrl: 'content-views/details/views/content-view-versions.html'
     })
     .state('content-views.details.promotion', {
         collapsed: true,
@@ -83,65 +83,114 @@ angular.module('Bastion.content-views').config(['$stateProvider', function ($sta
         collapsed: true,
         url: '/repositories',
         controller: 'ContentViewRepositoriesListController',
-        templateUrl: 'content-views/details/views/content-view-details-repositories.html'
+        templateUrl: 'content-views/details/views/content-view-repositories.html'
     })
     .state('content-views.details.repositories.available', {
         collapsed: true,
         url: '/repositories/available',
         controller: 'ContentViewAvailableRepositoriesController',
-        templateUrl: 'content-views/details/views/content-view-details-repositories.html'
+        templateUrl: 'content-views/details/views/content-view-repositories.html'
     })
+
     .state('content-views.details.puppet-modules', {
+        abstract: true,
         collapsed: true,
-        url: '/puppet_modules',
-        controller: 'ContentViewPuppetModulesController',
-        templateUrl: 'content-views/details/views/content-view-details-puppet-modules.html'
+        template: '<div ui-view></div>'
     })
+    .state('content-views.details.puppet-modules.list', {
+        collapsed: true,
+        url: '/puppet_modules/list',
+        controller: 'ContentViewPuppetModulesListController',
+        templateUrl: 'content-views/details/views/content-view-puppet-modules.html'
+    })
+    .state('content-views.details.puppet-modules.available', {
+        collapsed: true,
+        url: '/puppet_modules/available',
+        controller: 'ContentViewAvailablePuppetModulesController',
+        templateUrl: 'content-views/details/views/content-view-puppet-modules.html'
+    })
+
     .state('content-views.details.info', {
         collapsed: true,
-        templateUrl: 'content-views/details/views/content-view-details-info.html'
+        url: '/info',
+        templateUrl: 'content-views/details/views/content-view-info.html'
     })
     .state('content-views.details.publish', {
         collapsed: true,
         url: '/publish',
         controller: 'ContentViewPublishController',
-        templateUrl: 'content-views/details/views/content-view-details-publish.html'
+        templateUrl: 'content-views/details/views/content-view-publish.html'
     })
 
     .state('content-views.details.filters', {
         abstract: true,
         collapsed: true,
-        controller: 'ContentViewFiltersController',
+        controller: 'FiltersController',
         template: '<div ui-view></div>'
     })
     .state('content-views.details.filters.list', {
         collapsed: true,
         url: '/filters',
-        templateUrl: 'content-views/details/filters/views/content-view-details-filters.html'
+        templateUrl: 'content-views/details/filters/views/filters.html'
     })
     .state('content-views.details.filters.new', {
         collapsed: true,
         url: '/filters/new',
-        controller: 'ContentViewFiltersNewController',
-        templateUrl: 'content-views/details/filters/views/content-view-details-filters-new.html'
+        controller: 'NewFilterController',
+        templateUrl: 'content-views/details/filters/views/new-filter.html'
     })
     .state('content-views.details.filters.details', {
         abstract: true,
         collapsed: true,
-        controller: 'ContentViewFilterDetailsController',
-        templateUrl: 'content-views/details/filters/views/content-view-filter-details.html'
+        controller: 'FilterDetailsController',
+        templateUrl: 'content-views/details/filters/views/filter-details.html'
     })
-    .state('content-views.details.filters.details.packages', {
+    .state('content-views.details.filters.details.rpm', {
         collapsed: true,
         url: '/filters/:filterId/packages',
-        controller: 'ContentViewFilterDetailsPackageController',
-        templateUrl: 'content-views/details/filters/views/content-view-filter-details-packages.html'
+        controller: 'PackageFilterController',
+        templateUrl: 'content-views/details/filters/views/package-filter.html'
     })
-    .state('content-views.details.filters.details.errata', {
+    .state('content-views.details.filters.details.package_group', {
+        abstract: true,
         collapsed: true,
-        url: '/filters/:filterId/errata',
-        controller: 'ContentViewFilterDetailsErrataController',
-        templateUrl: 'content-views/details/filters/views/content-view-filter-details-errata.html'
+        template: '<div ui-view></div>'
+    })
+    .state('content-views.details.filters.details.package_group.list', {
+        collapsed: true,
+        url: '/filters/:filterId/package_groups/list',
+        controller: 'PackageGroupFilterListController',
+        templateUrl: 'content-views/details/filters/views/package-group-filter.html'
+    })
+    .state('content-views.details.filters.details.package_group.available', {
+        collapsed: true,
+        url: '/filters/:filterId/package_groups/available',
+        controller: 'AvailablePackageGroupFilterController',
+        templateUrl: 'content-views/details/filters/views/package-group-filter.html'
+    })
+    .state('content-views.details.filters.details.erratum', {
+        abstract: true,
+        collapsed: true,
+        controller: 'ErrataFilterController',
+        templateUrl: 'content-views/details/filters/views/errata-filter.html'
+    })
+    .state('content-views.details.filters.details.erratum.list', {
+        collapsed: true,
+        url: '/filters/:filterId/errata/list',
+        controller: 'ErrataFilterListController',
+        templateUrl: 'content-views/details/filters/views/errata-filter-table.html'
+    })
+    .state('content-views.details.filters.details.erratum.available', {
+        collapsed: true,
+        url: '/filters/:filterId/errata/available',
+        controller: 'AvailableErrataFilterController',
+        templateUrl: 'content-views/details/filters/views/errata-filter-table.html'
+    })
+    .state('content-views.details.filters.details.erratum.dateType', {
+        collapsed: true,
+        url: '/filters/:filterId/errata/date_type',
+        controller: 'DateTypeErrataFilterController',
+        templateUrl: 'content-views/details/filters/views/date-type-errata-filter.html'
     });
 
 }]);

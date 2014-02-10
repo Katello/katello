@@ -137,17 +137,19 @@ angular.module('Bastion.widgets').factory('Nutupane',
                 return self.load(true);
             };
 
-            self.removeRow = function (id) {
+            self.removeRow = function (id, field) {
                 var foundItem, table = self.table;
 
+                field = field || 'id';
+
                 angular.forEach(table.rows, function (item) {
-                    if (item.id === id) {
+                    if (item[field] === id) {
                         foundItem = item;
                     }
                 });
 
                 table.rows = _.reject(table.rows, function (item) {
-                    return item.id === id;
+                    return item[field] === id;
                 }, this);
 
                 table.resource.total = table.resource.total - 1;
@@ -155,7 +157,6 @@ angular.module('Bastion.widgets').factory('Nutupane',
                 if (foundItem && foundItem.selected) {
                     table.numSelected = table.numSelected - 1;
                 }
-
 
                 return self.table.rows;
             };
