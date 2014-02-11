@@ -38,11 +38,8 @@ module Katello
 
     api :GET, "/organizations/:organization_id/content_views", "List content views"
     api :GET, "/content_views", "List content views"
-    param :organization_id, :identifier, :desc => "organization identifier"
-    param :environment_id, :identifier, :desc => "environment identifier", :required => false
-    param :label, String, :desc => "content view label", :required => false
-    param :name, String, :desc => "content view name", :required => false
-    param :id, :identifier, :desc => "content view id", :required => false
+    param :organization_id, :identifier, :desc => "organization identifier", :required => true
+    param :environment_id, :identifier, :desc => "environment identifier"
     def index
       options = sort_params
       options[:load_records?] = true
@@ -61,11 +58,11 @@ module Katello
 
     api :POST, "/organizations/:organization_id/content_views", "Create a content view"
     api :POST, "/content_views", "Create a content view"
-    param :organization_id, :identifier, :desc => "Organization identifier"
-    param :name, String, :desc => "Name of the content view"
+    param :organization_id, :identifier, :desc => "Organization identifier", :required => true
+    param :name, String, :desc => "Name of the content view", :required => true
     param :description, String, :desc => "Description of the content view"
-    param :label, String, :required => false
-    param :repositoriy_ids, Array, :required => false, :desc => "List of repository ids"
+    param :label, String, :desc => "Content view label"
+    param :repositoriy_ids, Array, :desc => "List of repository ids"
     def create
       @view = ContentView.create!(view_params) do |view|
         view.organization = @organization
