@@ -15,8 +15,8 @@ describe('Controller: SystemDetailsInfoController', function() {
     var $scope,
         $controller,
         gettext,
-        Routes,
         System,
+        CustomInfo,
         mockContentViews;
 
     beforeEach(module(
@@ -32,8 +32,10 @@ describe('Controller: SystemDetailsInfoController', function() {
         var $controller = $injector.get('$controller'),
             $q = $injector.get('$q'),
             $http = $injector.get('$http'),
-            ContentView = $injector.get('MockResource').$new();
+            ContentView = $injector.get('MockResource').$new(),
+            Organization = $injector.get('MockResource').$new();
 
+        CustomInfo = $injector.get('MockResource').$new(),
         System = $injector.get('MockResource').$new();
         $scope = $injector.get('$rootScope').$new();
 
@@ -41,13 +43,17 @@ describe('Controller: SystemDetailsInfoController', function() {
             callback.apply(this, [['RHEL6']]);
         };
 
-        spyOn(System, 'releaseVersions').andReturn(['RHEL6']);
+        Organization.registerableEnvironments = function(params, callback) {
+            var response = [[{name: 'Library', id: 1}]];
 
-        Routes = {
-            apiCustomInfoPath: function(informable, id) {
-                return ['/api', informable, id].join('/')
+            if (callback) {
+                callback.apply(this, response);
             }
+
+            return response;
         };
+
+        spyOn(System, 'releaseVersions').andReturn(['RHEL6']);
 
         gettext = function(message) {
             return message;
@@ -59,16 +65,21 @@ describe('Controller: SystemDetailsInfoController', function() {
             enable_all: function() {},
             disable_all: function() {}
         };
-        $scope.save = function() {};
+        $scope.save = function() {
+            var deferred = $q.defer();
+            deferred.resolve();
+            return deferred.promise;
+        };
 
         $controller('SystemDetailsInfoController', {
             $scope: $scope,
             $q: $q,
-            $http: $http,
             gettext: gettext,
-            Routes: Routes,
+            CustomInfo: CustomInfo,
             System: System,
             ContentView: ContentView,
+            Organization: Organization,
+            CurrentOrganization: 'ACME_Corporation'
         });
 
         $scope.system = new System({
@@ -106,6 +117,7 @@ describe('Controller: SystemDetailsInfoController', function() {
     });
 
     describe("populates advanced system information", function () {
+
         it("creates the system facts object by converting dot notation response to an object.", function() {
             expect(typeof $scope.systemFacts).toBe("object");
             expect(typeof $scope.systemFacts.lscpu).toBe("object");
@@ -131,16 +143,18 @@ describe('Controller: SystemDetailsInfoController', function() {
         });
 
         it('should set the environment and force a content view to be selected', function() {
-            $scope.setEnvironment(2);
+            $scope.system.environment = {name: 'Dev', id: 2};
+            $scope.$digest();
 
             expect($scope.system.environment.id).toBe(2);
-            expect($scope.previousEnvironment).toBe(1);
+            expect($scope.originalEnvironment.id).toBe(1);
             expect($scope.editContentView).toBe(true);
+            expect($scope.disableEnvironmentSelection).toBe(true);
         });
 
         it('should reset the system environment when cancelling a content view update', function() {
             $scope.editContentView = true;
-            $scope.previousEnvironment = 2;
+            $scope.originalEnvironment.id = 2;
             $scope.cancelContentViewUpdate();
 
             expect($scope.system.environment.id).toBe(2);
@@ -150,6 +164,7 @@ describe('Controller: SystemDetailsInfoController', function() {
 
     describe("handles custom info CRUD operations", function() {
         var $httpBackend, info, expectedUrl, expectedData;
+
         beforeEach(function() {
 
             inject(function(_$httpBackend_) {
@@ -158,32 +173,24 @@ describe('Controller: SystemDetailsInfoController', function() {
 
             $scope.system = {id: 1, customInfo: []};
             info = {id: 1, keyname: 'key', value: 'value'};
-            expectedUrl = [Routes.apiCustomInfoPath('system', 1), info.keyname].join('/');
             expectedData = {'custom_info': info};
         });
 
-        afterEach(function() {
-            $httpBackend.verifyNoOutstandingExpectation();
-            $httpBackend.verifyNoOutstandingRequest();
+        it("should provide a way to update custom info", function() {
+            $scope.system.customInfo = [{id: 1, name: 'CustomInfo1'}];
+            expect($scope.saveCustomInfo({name: 'CustomInfo2'}).custom_info.name).toBe('CustomInfo2');
         });
 
-        it("by posting to the API on save", function() {
-            $httpBackend.expectPUT(expectedUrl, expectedData).respond();
-            $scope.saveCustomInfo(info);
-            $httpBackend.flush();
-        });
-
-        it("by posting to the API on create", function() {
-            expectedUrl = Routes.apiCustomInfoPath('system', 1);
-            $httpBackend.expectPOST(expectedUrl, expectedData).respond();
+        it("should provide a way to create custom info", function() {
             $scope.addCustomInfo(info);
-            $httpBackend.flush();
+
+            expect($scope.system.customInfo.length).toBe(1);
         });
 
-        it("by posting to the API on delete", function() {
-            $httpBackend.expectDELETE(expectedUrl).respond();
-            $scope.deleteCustomInfo(info);
-            $httpBackend.flush();
+        it("should provide a way to delete custom info", function() {
+            var customInfo = {keyname: 'CustomInfo1'};
+            $scope.system.customInfo = [customInfo];
+            expect($scope.deleteCustomInfo(customInfo)).toBe(true);
         });
     });
 });

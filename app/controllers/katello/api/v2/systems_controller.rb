@@ -15,6 +15,8 @@ module Katello
 class Api::V2::SystemsController < Api::V2::ApiController
   respond_to :json
 
+  wrap_parameters :include => (System.attribute_names + %w(type facts, guest_ids, installed_products))
+
   skip_before_filter :set_default_response_format, :only => :report
 
   before_filter :find_default_organization_and_or_environment, :only => [:create, :index, :activate]
@@ -528,13 +530,15 @@ class Api::V2::SystemsController < Api::V2::ApiController
   end
 
   def system_params(params)
-    system_params = params.require(:system).permit(:name, :description, :location, :owner, :facts)
+    system_params = params.require(:system).permit(:name, :description, :location, :owner, :type, {:facts => []}, :guest_ids)
 
-    if params[:system].key?(:cp_type)
-      system_params[:cp_type] = params[:cp_type]
-    elsif params[:system].key?(:type)
+    if params[:system].key?(:type)
       system_params[:cp_type] = params[:type]
+      system_params.delete(:type)
     end
+
+    # TODO: permit :facts above not working, why?
+    system_params[:facts] = params[:facts] if params[:facts]
 
     { :guest_ids => :guestIds,
       :installed_products => :installedProducts,

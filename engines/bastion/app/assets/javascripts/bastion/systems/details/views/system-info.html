@@ -1,3 +1,5 @@
+<span page-title ng-model="system">{{ 'System' | translate }} {{ system.name }}</span>
+
 <section>
 
   <div class="details fl">
@@ -93,7 +95,7 @@
       </div>
 
       <div class="detail">
-        <span class="info-label" 
+        <span class="info-label"
               translate
               translate-n="system.activation_keys.length"
               translate-plural="Activation Keys">
@@ -129,12 +131,12 @@
         <span class="info-label" translate>Release</span>
         <span class="info-value">{{ systemFacts.uname["release"] }}</span>
       </div>
-      
+
       <div class="detail">
         <span class="info-label" translate>Arch</span>
         <span class="info-value">{{ systemFacts.uname["machine"] }}</span>
-      </div>     
-      
+      </div>
+
       <div class="detail">
         <span class="info-label" translate>Number of CPUs</span>
         <span class="info-value">{{ systemFacts.cpu["cpu(s)"] }}</span>
@@ -211,11 +213,10 @@
           <p translate>You must select a new content view before your change of environment can be saved. Use the cancel button on content view selection to revert your environment selection.</p>
         </div>
         <span class="info-label" translate>Environment</span>
-        <span id="environment_path_selector" 
-              readonly="system.readonly"
-              path-selector-wrapper="system.environment.id"
-              organization="system.environment.organization.name"
-              on-change="setEnvironment(environmentId)">
+        <span path-selector="environments"
+              ng-model="system.environment"
+              mode="singleSelect"
+              disable-trigger="disableEnvironmentSelection">
         </span>
       </div>
 

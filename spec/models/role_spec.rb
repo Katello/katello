@@ -20,9 +20,11 @@ describe Role do
   include AuthorizationHelperMethods
 
   before do
+    user = users(:admin)
+    user.remote_id = 'admin'
+    User.current = user
     disable_user_orchestration
     disable_org_orchestration
-    User.current = users(:admin)
   end
 
   describe "role in valid state should be valid" do

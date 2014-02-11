@@ -34,6 +34,10 @@ class PromotionsController < Katello::ApplicationController
     'contents'
   end
 
+  def title
+    _('Promotions')
+  end
+
   def show
     access_envs = accessible_environments
     setup_environment_selector(current_organization, access_envs)

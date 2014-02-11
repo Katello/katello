@@ -23,7 +23,7 @@
 angular.module('Bastion.products').factory('Product',
     ['$resource', function ($resource) {
 
-        return $resource('/katello/api/products/:id/:action', {id: '@id'}, {
+        return $resource('/api/products/:id/:action', {id: '@id'}, {
             query: { method: 'GET'},
             update: { method: 'PUT'},
             sync: { method: 'POST', isArray: true, params: { action: 'sync' }},
@@ -38,14 +38,13 @@ angular.module('Bastion.products').factory('Product',
  * @name  Bastion.products.factory:ProductBulkAction
  *
  * @requires $resource
- * @requires Routes
  *
  * @description
  *   Provides a $resource for bulk actions on products.
  */
 angular.module('Bastion.products').factory('ProductBulkAction',
     ['$resource', function ($resource) {
-        return $resource('/katello/api/products/bulk/:action', {}, {
+        return $resource('/api/products/bulk/:action', {}, {
             removeProducts: {method: 'PUT', params: {action: 'destroy'}},
             syncProducts: {method: 'PUT', params: {action: 'sync'}},
             updateProductSyncPlan: {method: 'PUT', params: {action: 'sync_plan'}}

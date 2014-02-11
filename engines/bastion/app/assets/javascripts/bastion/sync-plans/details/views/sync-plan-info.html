@@ -1,0 +1,48 @@
+<span page-title ng-model="syncPlan">{{ 'Sync Plan:' | translate }} {{ syncPlan.name }}</span>
+
+<div alch-alert success-messages="successMessages" error-messages="errorMessages"></div>
+
+<div class="details fl">
+  <section>
+    <h4 translate>Basic Information</h4>
+
+    <div class="detail">
+      <span class="info-label" translate>Name</span>
+      <span class="info-value"
+            alch-edit-text="syncPlan.name"
+            on-save="save(syncPlan)"
+            readonly="syncPlan.readonly">
+      </span>
+    </div>
+
+    <div class="detail">
+      <span class="info-label" translate>Description</span>
+      <span class="info-value"
+            alch-edit-textarea="syncPlan.description"
+            on-save="save(syncPlan)"
+            readonly="syncPlan.readonly">
+      </span>
+    </div>
+
+    <div class="detail">
+      <span class="info-label" translate>Start Date</span>
+      <span class="info-value">{{ syncPlan.sync_date | date:'medium' }}</span>
+    </div>
+
+    <div class="detail">
+      <span class="info-label" translate>Next Sync</span>
+      <span class="info-value">{{ syncPlan.next_sync | date:'medium' }}</span>
+    </div>
+
+    <div class="detail">
+      <span class="info-label" translate>Interval</span>
+      <span class="info-value"
+            alch-edit-select="syncPlan.interval"
+            selector="syncPlan.interval"
+            options="intervals"
+            options-format="value for value in options"
+            on-save="save(syncPlan)">
+      </span>
+    </div>
+  </section>
+</div>

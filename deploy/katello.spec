@@ -41,7 +41,7 @@ Requires:       %{?scl_prefix}rubygem-katello
 Requires:       %{name}-installer
 Requires:       rubygem-hammer_cli 
 Requires:       rubygem-hammer_cli_foreman
-Requires:       rubygem-hammer_cli_katello_bridge
+Requires:       rubygem-hammer_cli_katello
 
 BuildRequires: asciidoc
 BuildRequires: util-linux

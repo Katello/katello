@@ -1,0 +1,93 @@
+<section>
+
+  <div class="details pull-left">
+    <section>
+      <div class="detail">
+        <span class="info-label" translate>Name</span>
+        <span class="info-value"
+              alch-edit-text="activationKey.name"
+              readonly="activationKey.readonly"
+              on-save="save(activationKey)">
+        </span>
+      </div>
+
+      <div class="detail">
+        <span class="info-label" translate>Label</span>
+        <span class="info-value">{{ activationKey.label }}</span>
+      </div>
+
+      <div class="detail">
+        <span class="info-label" translate>Description</span>
+        <span class="info-value"
+              alch-edit-textarea="activationKey.description"
+              readonly="activationKey.readonly"
+              on-save="save(activationKey)">
+        </span>
+      </div>
+
+      <div class="detail">
+
+        <span class="info-label" translate>System Limit</span>
+
+        <span class="info-value"
+              alch-edit-custom="activationKey.usage_limit"
+              readonly="activationKey.readonly"
+              formatter="defaultNumberString"
+              formatter-options="limitTranslations"
+              on-save="save(activationKey)">
+
+          <div class="form input">
+            <div>
+              <span translate>
+                Unlimited Systems:
+              </span>
+              <input type='checkbox'
+                   ng-model="unlimited"
+                   ng-checked="isUnlimited(activationKey)"
+                   ng-change="unlimitedChanged()"/>
+            </div>
+            <div ng-hide="isUnlimited(activationKey)" >
+              <span translate>
+                Limit:
+              </span>
+              <input ng-model="activationKey.usage_limit"
+                     name="usage_limit"
+                     type="number"
+                     tabindex="2"/>
+              <span class="note error" ng-show="activationKeyForm.usage_limit.$invalid">
+                <ul><li ng-repeat="message in activationKeyForm.usage_limit.$error.messages">{{ message }}</li></ul>
+              </span>
+            </div>
+          </div>
+
+        </span>
+      </div>
+
+      <div class="detail">
+        <span class="info-label" translate>Content View</span>
+        <span class="info-value"
+              alch-edit-select="activationKey.content_view.name"
+              readonly="activationKey.readonly"
+              selector="activationKey.content_view.id"
+              options="contentViews()"
+              on-cancel="cancelContentViewUpdate()"
+              on-save="saveContentView(activationKey)"
+              edit-trigger="editContentView">
+        </span>
+      </div>
+
+      <div class="detail">
+        <div alert type="'info'" ng-show="editContentView">
+          <p translate>You must select a new content view before your change of environment can be saved. Use the cancel button on content view selection to revert your environment selection.</p>
+        </div>
+        <span class="info-label" translate>Environment</span>
+        <span path-selector="environments"
+              ng-model="activationKey.environment"
+              mode="singleSelect"
+              disable-trigger="disableEnvironmentSelection">
+        </span>
+      </div>
+
+    </section>
+  </div>
+</section>

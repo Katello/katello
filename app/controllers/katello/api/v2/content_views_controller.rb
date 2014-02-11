@@ -16,6 +16,8 @@ module Katello
 
     before_filter :find_content_view, :except => [:index, :create]
     before_filter :find_organization, :only => [:index, :create]
+    before_filter :find_environment, :only => [:index]
+
     before_filter :authorize
 
     wrap_parameters :include => (ContentView.attribute_names + %w(repository_ids))
@@ -55,6 +57,7 @@ module Katello
       @search_service.model = ContentView
       respond(:collection => item_search(ContentView, params, options))
     end
+
 
     api :POST, "/organizations/:organization_id/content_views", "Create a content view"
     api :POST, "/content_views", "Create a content view"
@@ -98,7 +101,6 @@ module Katello
     end
 
     private
-
     def find_content_view
       @view = ContentView.non_default.find(params[:id])
     end
@@ -107,6 +109,12 @@ module Katello
       attrs = [:name, :description, {:repository_ids => []}]
       attrs.push(:label) if action_name == "create"
       params.require(:content_view).permit(*attrs)
+    end
+
+    def find_environment
+      return unless params.key?(:environment_id)
+      @environment = KTEnvironment.find(params[:environment_id])
+      fail HttpErrors::NotFound, _("Couldn't find environment '%s'") % params[:environment_id] if @environment.nil?
     end
   end
 end

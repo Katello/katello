@@ -13,36 +13,32 @@
 require "katello_test_helper"
 
 module Katello
-describe Api::V1::ProxiesController do
-  before do
-    setup_engine_routes
-  end
-
-  describe "routing" do
-
-    let(:systems_controller) { "katello/api/v1/systems" }
-    let(:proxies_controller) { "katello/api/v1/candlepin_proxies" }
-
-    it "should route to the correct controller actions" do
-      {:controller => systems_controller, :action => "index", :api_version => "v1"}.must_recognize({ :method => "get", :path => "/api/consumers" })
-      {:controller => systems_controller, :action => "show", :id => "1", :api_version => "v1"}.must_recognize({ :method => "get", :path => "/api/consumers/1" })
-      {:controller => systems_controller, :action => "create", :api_version => "v1"}.must_recognize({ :method => "post", :path => "/api/consumers" })
-      {:controller => systems_controller, :action => "regenerate_identity_certificates", :id => "1", :api_version => "v1"}.must_recognize({ :method => "post", :path => "/api/consumers/1" })
-      {:controller => systems_controller, :action => "destroy", :id => "1", :api_version => "v1"}.must_recognize({ :method => "delete", :path => "/api/consumers/1" })
-
-      ({:controller => proxies_controller, :action => "get", :id => "1", :api_version => "v1"}).must_recognize({ :method => "get", :path => "/api/consumers/1/certificates" })
-      ({:controller => proxies_controller, :action => "get", :id => "1", :api_version => "v1"}).must_recognize({ :method => "get", :path => "/api/consumers/1/certificates/serials" })
-      ({:controller => proxies_controller, :action => "get", :id => "1", :api_version => "v1"}).must_recognize({ :method => "get", :path => "/api/consumers/1/entitlements" })
-      ({:controller => proxies_controller, :action => "post", :id => "1", :api_version => "v1"}).must_recognize({ :method => "post", :path => "/api/consumers/1/entitlements" })
-      ({:controller => proxies_controller, :action => "delete", :id => "1", :api_version => "v1"}).must_recognize({ :method => "delete", :path => "/api/consumers/1/entitlements" })
-      ({:controller => proxies_controller, :action => "delete", :consumer_id => "1", :id => "1", :api_version => "v1"}).must_recognize({ :method => "delete", :path => "/api/consumers/1/certificates/1" })
-      ({:controller => proxies_controller, :action => "get", :api_version => "v1"}).must_recognize({ :method => "get", :path => "/api/pools" })
-      ({:controller => proxies_controller, :action => "get", :id => "1", :api_version => "v1"}).must_recognize({ :method => "get", :path => "/api/entitlements/1" })
-      ({:controller => proxies_controller, :action => "post", :api_version => "v1"}).must_recognize({ :method => "post", :path => "/api/subscriptions" })
-
-      {:controller => systems_controller, :action => "upload_package_profile", :id => "1", :api_version => "v1"}.must_recognize({ :method => "put", :path => "/api/consumers/1/profile/" })
+  describe Api::V1::CandlepinProxiesController do
+    before do
+      setup_engine_routes
     end
 
+    describe "routing" do
+
+      let(:proxies_controller) { "katello/api/v1/candlepin_proxies" }
+
+      it "should route to the correct controller actions" do
+        {:controller => proxies_controller, :action => "consumer_show", :id => "1", :api_version => "v1"}.must_recognize({ :method => "get", :path => "/api/consumers/1" })
+        {:controller => proxies_controller, :action => "consumer_create", :environment_id => "Library", :api_version => "v1"}.must_recognize({ :method => "post", :path => "/api/environments/Library/consumers" })
+        {:controller => proxies_controller, :action => "regenerate_identity_certificates", :id => "1", :api_version => "v1"}.must_recognize({ :method => "post", :path => "/api/consumers/1" })
+        {:controller => proxies_controller, :action => "consumer_destroy", :id => "1", :api_version => "v1"}.must_recognize({ :method => "delete", :path => "/api/consumers/1" })
+        ({:controller => proxies_controller, :action => "get", :id => "1", :api_version => "v1"}).must_recognize({ :method => "get", :path => "/api/consumers/1/certificates" })
+        ({:controller => proxies_controller, :action => "get", :id => "1", :api_version => "v1"}).must_recognize({ :method => "get", :path => "/api/consumers/1/certificates/serials" })
+        ({:controller => proxies_controller, :action => "get", :id => "1", :api_version => "v1"}).must_recognize({ :method => "get", :path => "/api/consumers/1/entitlements" })
+        ({:controller => proxies_controller, :action => "post", :id => "1", :api_version => "v1"}).must_recognize({ :method => "post", :path => "/api/consumers/1/entitlements" })
+        ({:controller => proxies_controller, :action => "delete", :id => "1", :api_version => "v1"}).must_recognize({ :method => "delete", :path => "/api/consumers/1/entitlements" })
+        ({:controller => proxies_controller, :action => "delete", :consumer_id => "1", :id => "1", :api_version => "v1"}).must_recognize({ :method => "delete", :path => "/api/consumers/1/certificates/1" })
+        ({:controller => proxies_controller, :action => "get", :api_version => "v1"}).must_recognize({ :method => "get", :path => "/api/pools" })
+        ({:controller => proxies_controller, :action => "get", :id => "1", :api_version => "v1"}).must_recognize({ :method => "get", :path => "/api/entitlements/1" })
+        ({:controller => proxies_controller, :action => "post", :api_version => "v1"}).must_recognize({ :method => "post", :path => "/api/subscriptions" })
+        {:controller => proxies_controller, :action => "upload_package_profile", :id => "1", :api_version => "v1"}.must_recognize({ :method => "put", :path => "/api/consumers/1/profile/" })
+      end
+
+    end
   end
-end
 end

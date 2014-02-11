@@ -37,7 +37,7 @@ angular.module('Bastion.utils').service('FormUtils', ['$http', function ($http) 
    */
     this.labelize = function (resource, form) {
         $http.get(
-            '/katello/organizations/default_label', {
+            '/organizations/default_label', {
             params: {'name': resource.name}
         })
         .success(function (response) {

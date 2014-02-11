@@ -1,0 +1,54 @@
+<form name="syncPlanForm" class="form-horizontal" novalidate role="form">
+ <div alch-form-group label="{{ 'Name' | translate }}">
+   <input id="name"
+          name="name"
+          ng-model="syncPlan.name"
+          type="text"
+          tabindex="1"
+          autofocus
+          required/>
+ </div>
+
+ <div alch-form-group label="{{ 'Description' | translate }}">
+   <textarea id="description"
+             name="description"
+             ng-model="syncPlan.description"
+             tabindex="2">
+   </textarea>
+ </div>
+
+
+ <div alch-form-group label="{{ 'Interval' | translate }}">
+   <select id="interval"
+           name="interval"
+           ng-model="syncPlan.interval"
+           ng-options="interval for interval in intervals"
+           tabindex="3">
+   </select>
+ </div>
+
+ <div alch-form-group label="{{ 'Start Date' | translate }}">
+   <input type="text" datepicker-popup
+          id="startDate"
+          name="startDate"
+          ng-model="syncPlan.startDate"
+          show-weeks="false"
+          tabindex="4"
+          required/>
+ </div>
+
+ <div alch-form-group label="{{ 'Start Time' | translate }} ({{ syncPlan.startTime | date:'Z' }} GMT)">
+   <input type="time" timepicker show-meridian="false"
+          id="startTime"
+          name="startTime"
+          ng-model="syncPlan.startTime"
+          tabindex="5"
+          required/>
+ </div>
+
+ <div alch-form-buttons
+      on-cancel="transitionBack()"
+      on-save="createSyncPlan(syncPlan)"
+      working="working">
+ </div>
+</form>

@@ -26,6 +26,10 @@ class NoticesController < Katello::ApplicationController
     'notifications'
   end
 
+  def title
+    _('Notifications')
+  end
+
   def menu_definition
     { :show => :notices_menu }.with_indifferent_access
   end

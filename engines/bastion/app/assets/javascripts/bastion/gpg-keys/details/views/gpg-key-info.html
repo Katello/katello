@@ -10,7 +10,8 @@
   <div class="detail" ng-if="!gpgKey.readonly">
     <span class="info-label" translate>Upload GPG Key</span>
     <span class="info-value">
-        <form action="/katello/api/v2/gpg_keys/{{ gpgKey.id }}/content"
+        <form role="form"
+              action="{{ uploadURL }}"
               ng-upload="uploadContent(content)"
               upload-options-enable-controls>
 

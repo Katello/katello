@@ -1,3 +1,5 @@
+<span page-title>{{ 'Lifecycle Environment Paths' | translate }}</span>
+
 <section ng-cloak alch-container-scroll>
 
   <div class="row nutupane-bar">
@@ -34,24 +36,23 @@
               ng-show="row.path.length > 0"
               path-id="{{ row.pathId = $index }}">
 
-            <td>
-              <div class="path_selector">
-                <ul>
-                  <li ng-repeat="env in row.path">
-                    <label ng-click="selectEnvironment(env.environment)"
-                           ng-class="{active: workingOn.environment === env.environment}">
-                      <div>
-                        {{ env.environment.name }}
-                      </div>
-                    </label>
-                  </li>
-                  <li ng-hide="row.permissions.readonly">
-                    <label ng-click="initiateCreateEnvironment()">
-                      <div class="icon-plus"></div>
-                    </label>
-                  </li>
-                </ul>
-              </div>
+            <td class="path-selector">
+              <ul class="path-list">
+                <li class="path-list-item" ng-repeat="env in row.path">
+                  <label ng-click="selectEnvironment(env.environment)"
+                         ng-class="{active: workingOn.environment === env.environment}"
+                         class="path-list-item-label">
+                    <div>
+                      {{ env.environment.name }}
+                    </div>
+                  </label>
+                </li>
+                <li class="path-list-item" ng-hide="row.permissions.readonly">
+                  <label ng-click="initiateCreateEnvironment()" class="path-list-item-label">
+                    <i class="icon-plus"></i>
+                  </label>
+                </li>
+              </ul>
 
               <section ng-show="row.showCreate && !row.permissions.readonly">
                 <header class="details-header">

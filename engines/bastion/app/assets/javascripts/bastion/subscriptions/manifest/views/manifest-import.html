@@ -46,10 +46,10 @@
 
   <div alch-alert error-messages="uploadErrorMessages"></div>
 
-  <form class="form labels_top"
-    action="/katello/api/v2/organizations/{{ organizationId }}/subscriptions/upload"
-    ng-upload="uploadManifest(content, completed)"
-    upload-options-enable-controls>
+  <form role="form"
+        action="{{ uploadURL }}"
+        ng-upload="uploadManifest(content, completed)"
+        upload-options-enable-controls>
 
     <div class="control-group">
       <div class="input">

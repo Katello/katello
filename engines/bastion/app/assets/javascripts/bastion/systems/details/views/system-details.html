@@ -1,3 +1,5 @@
+<span page-title ng-model="system">{{ 'System:' | translate }} {{ system.name }}</span>
+
 <div class="loading-mask loading-mask-panel" ng-show="panel.loading">
   <i class="icon-spinner icon-spin"></i>
   {{ "Loading..." | translate }}
@@ -30,9 +32,9 @@
           Details
         </a>
       </li>
-      <li ng-class="{active: isState('systems.details.subscriptions')}">
+      <li ng-class="{active: isState('systems.details.subscriptions.list')}">
         <a translate
-           ui-sref="systems.details.subscriptions">
+           ui-sref="systems.details.subscriptions.list">
           Subscriptions
         </a>
       </li>
