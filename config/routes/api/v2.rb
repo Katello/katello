@@ -41,6 +41,7 @@ Katello::Engine.routes.draw do
           post :promote
           post :refresh
         end
+        api_resources :puppet_modules, :controller => :content_view_puppet_modules
         api_resources :filters, :only => [:index, :create], :controller => :filters
         api_resources :repositories, :only => [:index]
       end
@@ -104,6 +105,8 @@ Katello::Engine.routes.draw do
           put :refresh_products
         end
       end
+
+      api_resources :puppet_modules, :only => [:index, :show]
 
       api_resources :system_groups, :only => system_onlies do
         member do

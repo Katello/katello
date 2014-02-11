@@ -14,6 +14,12 @@ child :repositories => :repositories do
   attributes :id, :name, :label
 end
 
+child :puppet_modules => :puppet_modules do
+  attributes :id, :name, :author, :uuid
+  attributes :created_at
+  attributes :updated_at
+end
+
 child :versions => :versions do
   attributes :id, :version
   attributes :created_at => :published

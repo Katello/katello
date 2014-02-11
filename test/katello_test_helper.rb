@@ -47,6 +47,7 @@ module FixtureTestCase
     self.set_fixture_class :katello_content_view_repositories => "Katello::ContentViewRepository"
     self.set_fixture_class :katello_content_view_environments => "Katello::ContentViewEnvironment"
     self.set_fixture_class :katello_content_views => "Katello::ContentView"
+    self.set_fixture_class :katello_content_view_puppet_modules => "Katello::ContentViewPuppetModule"
     self.set_fixture_class :katello_content_view_version_environments => "Katello::ContentViewVersionEnvironment"
     self.set_fixture_class :katello_content_view_versions => "Katello::ContentViewVersion"
     self.set_fixture_class :katello_distributors => "Katello::Distributor"

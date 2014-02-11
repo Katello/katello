@@ -403,8 +403,8 @@ class ContentSearchController < Katello::ApplicationController
               Errata.legacy_search('', :start => offset, :page_size => current_user.page_size,
                                 :filters => {:repoids =>  repo_map.keys}, :search_mode => process_search_mode)
             when :puppet_module
-              PuppetModule.search('', { :start => offset, :page_size => current_user.page_size,
-                                        :repoids => repo_map.keys, :search_mode => process_search_mode })
+              PuppetModule.legacy_search('', { :start => offset, :page_size => current_user.page_size,
+                                               :repoids => repo_map.keys, :search_mode => process_search_mode })
             end
 
     rows = units.collect do |unit|
