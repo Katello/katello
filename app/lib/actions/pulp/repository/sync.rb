@@ -13,7 +13,7 @@
 module Actions
   module Pulp
     module Repository
-      class Sync < Pulp::Task
+      class Sync < Pulp::AsyncTask
 
         include Helpers::Presenter
 
