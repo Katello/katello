@@ -175,11 +175,15 @@ module Glue::ElasticSearch::Errata
         Util::Support.array_with_total
       end
 
-      def self.update_repoids pkg_ids, add_repoids=[], remove_repoids=[]
-         update_array(pkg_ids, 'repoids', add_repoids, remove_repoids)
+      def self.add_indexed_repoid(errata_ids, repoid)
+        update_array(errata_ids, 'repoids', [repoid], [])
       end
 
-      def self.index_errata errata_ids
+      def self.remove_indexed_repoid(errata_ids, repoid)
+        update_array(errata_ids, 'repoids', [], [repoid])
+      end
+
+      def self.index_errata(errata_ids)
         errata = errata_ids.collect do |errata_id|
           erratum = self.find(errata_id)
           erratum.as_json.merge(erratum.index_options)

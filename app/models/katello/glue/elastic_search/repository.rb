@@ -44,13 +44,31 @@ module Glue::ElasticSearch::Repository
       self.product.provider.update_index if self.product.provider.respond_to? :update_index
     end
 
-    def index_packages(force=false)
-      Tire.index Katello::Package.index do
-        create :settings => Katello::Package.index_settings, :mappings => Katello::Package.index_mapping
+    def indexed_package_ids
+      repo_id = self.pulp_id
+      search = Tire::Search::Search.new(Katello::Package.index)
+
+      search.instance_eval do
+        fields [:id]
+        query do
+          all
+        end
+        filter :term, {:repoids => repo_id}
       end
 
+      total = search.perform.results.total
+
+      search.instance_eval do
+        size total
+      end
+
+      search.perform.results.collect{|p| p.id}
+    end
+
+    def index_packages(force = false)
+      Katello::Package.create_index
+
       if self.content_view.default? || force
-        print "SlowImport\n"
         pkgs = self.packages.collect{|pkg| pkg.as_json.merge(pkg.index_options)}
         pkgs.each_slice(Katello.config.pulp.bulk_load_size) do |sublist|
           Tire.index ::Katello::Package.index do
@@ -58,17 +76,18 @@ module Glue::ElasticSearch::Repository
           end if !sublist.empty?
         end
       else
-        print "FastImport\n"
         pkg_ids = self.package_ids
-        Katello::Package.update_repoids(pkg_ids, [self.pulp_id])
+        search_pkg_ids = self.indexed_package_ids
+
+        Katello::Package.add_indexed_repoid(pkg_ids - search_pkg_ids, self.pulp_id)
+        Katello::Package.remove_indexed_repoid(search_pkg_ids - pkg_ids, self.pulp_id)
       end
     end
 
     def clear_packages_index
       # for each of the packages in the repo, unassociate the repo from the package
       pkg_ids = self.package_ids
-      Katello::Package.update_package_repoids(pkg_ids, [], [self.pulp_id])
-
+      Katello::Package.remove_indexed_repoid(pkg_ids, self.pulp_id)
 
       pkgs = self.packages.collect{|pkg| pkg.as_json.merge(pkg.index_options)}
       pulp_id = self.pulp_id
@@ -96,7 +115,13 @@ module Glue::ElasticSearch::Repository
       Tire.index('katello_package').refresh
     end
 
-    def index_errata(force=false)
+    def indexed_errata_ids
+      options = {:repoids => [self.pulp_id], :fields => [:id], :start => 0, :page_size => 1}
+      options[:page_size] = ::Katello::Errata.legacy_search("", options).total
+      ::Katello::Errata.legacy_search("", options).collect{|e| e.id}
+    end
+
+    def index_errata(force = false)
       if self.content_view.default? || force
         errata = self.errata.collect{|err| err.as_json.merge(err.index_options)}
         Katello::Errata.create_index
@@ -105,7 +130,10 @@ module Glue::ElasticSearch::Repository
         end unless errata.empty?
       else
         errata_ids = self.errata_ids
-        Katello::Errata.update_repoids(errata_ids, [self.pulp_id], [])
+        search_errata_ids = self.indexed_errata_ids
+
+        Katello::Errata.add_indexed_repoid(errata_ids - search_errata_ids, self.pulp_id)
+        Katello::Errata.remove_indexed_repoid(search_errata_ids - errata_ids, self.pulp_id)
       end
     end
 

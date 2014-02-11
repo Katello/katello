@@ -132,7 +132,7 @@ module Glue::ElasticSearch::Package
 
       # TODO: break up method
       # rubocop:disable MethodLength
-      def self.search(query, start = 0, page_size = 15, repoids = nil, sort = [:nvrea_sort, "ASC"],
+      def self.search(query, start = 0, page_size = 15, repoids = nil, sort = [:nvrea_sort, "asc"],
                       search_mode = :all, default_field = 'nvrea', filters = [])
         if !Tire.index(self.index).exists? || (repoids && repoids.empty?)
           return Util::Support.array_with_total
@@ -175,11 +175,21 @@ module Glue::ElasticSearch::Package
         Util::Support.array_with_total
       end
 
-      def self.update_repoids pkg_ids, add_repoids=[], remove_repoids=[]
-         update_array(pkg_ids, 'repoids', add_repoids, remove_repoids)
+      def self.add_indexed_repoid(pkg_ids, repoid)
+        if !repoid.kind_of?(Array)
+          repoid = [repoid]
+        end
+        update_array(pkg_ids, 'repoids', repoid, [])
       end
 
-      def self.index_packages pkg_ids
+      def self.remove_indexed_repoid(pkg_ids, repoid)
+        if !repoid.kind_of?(Array)
+          repoid = [repoid]
+        end
+        update_array(pkg_ids, 'repoids', [], repoid)
+      end
+
+      def self.index_packages(pkg_ids)
         pkgs = pkg_ids.collect do |pkg_id|
           pkg = self.find(pkg_id)
           pkg.as_json.except('changelog', 'files', 'filelist').merge(pkg.index_options)

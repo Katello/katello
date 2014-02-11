@@ -71,7 +71,7 @@ module Glue::ElasticSearch::PackageGroup
         search.results
       end
 
-      def self.search(query, start, page_size, repoid = nil, sort = [:name_sort, "ASC"],
+      def self.search(query, start, page_size, repoid = nil, sort = [:name_sort, "asc"],
                       default_field = 'name')
         return Util::Support.array_with_total if !Tire.index(self.index).exists?
 

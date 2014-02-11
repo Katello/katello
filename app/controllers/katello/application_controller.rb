@@ -521,13 +521,11 @@ class ApplicationController < ::ApplicationController
   # @option search_options [true, false] :load whether or not to load the active record object (defaults to false)
   def render_panel_direct(obj_class, panel_options, search, start, sort, search_options = {})
 
-
     filters = search_options[:filter] || []
     load = search_options[:load] || false
     all_rows = false
     skip_render = search_options[:skip_render] || false
     page_size = search_options[:page_size] || current_user.page_size
-    start ||= 0
 
     start ||= 0
 
@@ -562,7 +560,6 @@ class ApplicationController < ::ApplicationController
 
         filters = [filters] unless filters.is_a?(Array)
         filters.each { |i| filter :terms, i } if !filters.empty?
-
 
         size page_size if page_size > 0
         from start

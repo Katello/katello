@@ -12,7 +12,6 @@
 module Katello
 module Glue::ElasticSearch::BackendIndexedModel
 
-
   def self.included(base)
     base.send :include, InstanceMethods
     base.send :extend, ClassMethods
@@ -23,35 +22,20 @@ module Glue::ElasticSearch::BackendIndexedModel
   end
 
   module ClassMethods
-    def update_array object_ids, field, add_ids, remove_ids
+    def update_array(object_ids, field, add_ids, remove_ids)
       obj_class = self
       script = ""
       add_ids.each{ |add_id| script += "ctx._source.#{field}.add(\"#{add_id}\");" }
       remove_ids.each{ |remove_id| script +=  "ctx._source.#{field}.remove(\"#{remove_id}\");" }
 
-      payload = {:script=>script}
-
-      #single update
-      #Tire.index obj_class.index do
-      #  object_ids.each do |id|
-      #    update obj_class.search_type, id, payload
-      #  end
-      #end
-
-      #bulk update
-
       documents = object_ids.map do |id|
         {
-          :_id=> id,
+          :_id => id,
           :_type => obj_class.search_type,
           :script => script
         }
       end
-      #debugger
       Tire.index(obj_class.index).bulk_update(documents)
-
-
-
       Tire.index(self.index).refresh
     end
 
