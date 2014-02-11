@@ -25,7 +25,7 @@ module Actions
           output[:response] = pulp_resources.user.create(input[:remote_id], user_params)
         rescue RestClient::ExceptionWithResponse => e
           if e.http_code == 409
-            Rails.logger.info "pulp user #{input[:remote_id]}: already exists. continuing"
+            action_logger.info "pulp user #{input[:remote_id]}: already exists. continuing"
           else
             raise e
           end
