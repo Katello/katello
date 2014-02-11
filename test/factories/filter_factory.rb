@@ -13,7 +13,4 @@ FactoryGirl.define do
 
   factory :package_group_filter, :class => Katello::PackageGroupFilter, :parent => :filter do
   end
-
-  factory :puppet_module_filter, :class => Katello::PuppetModuleFilter, :parent => :filter do
-  end
 end

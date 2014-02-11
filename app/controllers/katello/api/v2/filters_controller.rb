@@ -48,7 +48,7 @@ class Api::V2::FiltersController < Api::V2::ApiController
       "Create a filter for a content view"
   param :content_view_id, :identifier, :desc => "content view identifier", :required => true
   param :name, String, :desc => "name of the filter", :required => true
-  param :type, String, :desc => "type of filter (e.g. rpm, package_group, erratum, puppet_module)", :required => true
+  param :type, String, :desc => "type of filter (e.g. rpm, package_group, erratum)", :required => true
   param :repository_ids, Array, :desc => "List of repository ids"
   param :parameters, String, :desc => "the filter parameters rules"
   def create
