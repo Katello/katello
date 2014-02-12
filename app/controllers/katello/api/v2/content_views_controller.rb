@@ -114,7 +114,6 @@ module Katello
     def find_environment
       return unless params.key?(:environment_id)
       @environment = KTEnvironment.find(params[:environment_id])
-      fail HttpErrors::NotFound, _("Couldn't find environment '%s'") % params[:environment_id] if @environment.nil?
     end
   end
 end
