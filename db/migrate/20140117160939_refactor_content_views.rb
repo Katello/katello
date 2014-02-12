@@ -1,5 +1,19 @@
 class RefactorContentViews < ActiveRecord::Migration
   def up
+    remove_foreign_key "katello_component_content_views", :name => "component_content_views_content_view_definition_id_fk"
+    remove_foreign_key "katello_content_view_definition_bases", :name => "content_view_definition_bases_source_id_fk"
+    remove_foreign_key "katello_content_view_definition_products", :name => "content_view_definition_products_content_view_definition_id_fk"
+    remove_foreign_key "katello_content_view_definition_products", :name => "content_view_definition_products_product_id_fk"
+
+    remove_foreign_key "katello_content_view_definition_repositories", :name => "CV_definition_repositories_CV_definition_id_fk"
+    remove_foreign_key "katello_content_view_versions", :name => "content_view_versions_content_view_definition_archive_id_fk"
+    remove_foreign_key "katello_content_view_versions", :name => "content_view_versions_definition_archive_id_fk"
+    remove_foreign_key "katello_content_views", :name => "content_views_content_view_definition_id_fk"
+    remove_foreign_key "katello_filters", :name => "filters_content_view_definition_id_fk"
+    remove_foreign_key "katello_filters_products", :name => "filters_product_filter_id_fk"
+    remove_foreign_key "katello_filters_products", :name => "filters_product_product_id_fk"
+    remove_foreign_key "katello_filter_rules", :name => "filters_rules_filter_id_fk"
+
     drop_table :katello_content_view_definition_bases
     drop_table :katello_content_view_definition_products
     drop_table :katello_filters_products
@@ -71,5 +85,27 @@ class RefactorContentViews < ActiveRecord::Migration
     remove_column :katello_filters, :all_repositories
     remove_column :katello_filters, :type
     remove_column :katello_filters, :parameters
+
+    add_foreign_key "katello_component_content_views", "katello_content_view_definition_bases",
+                            :name => "component_content_views_content_view_definition_id_fk", :column => "content_view_definition_id"
+
+    add_foreign_key "katello_content_view_definition_bases", "katello_content_view_definition_bases",
+                            :name => "content_view_definition_bases_source_id_fk", :column => "source_id"
+
+    add_foreign_key "katello_content_view_definition_products", "katello_content_view_definition_bases",
+                            :name => "content_view_definition_products_content_view_definition_id_fk", :column => "content_view_definition_id"
+    add_foreign_key "katello_content_view_definition_products", "katello_products",
+                            :name => "content_view_definition_products_product_id_fk", :column => "product_id"
+    add_foreign_key "katello_content_view_definition_repositories", "katello_content_view_definition_bases",
+                            :name => "CV_definition_repositories_CV_definition_id_fk", :column => "content_view_definition_id"
+    add_foreign_key "katello_content_view_versions", "katello_content_view_definition_bases", :name => "content_view_versions_content_view_definition_archive_id_fk", :column => "definition_archive_id"
+    add_foreign_key "katello_content_view_versions", "katello_content_view_definition_bases", :name => "content_view_versions_definition_archive_id_fk", :column => "definition_archive_id"
+    add_foreign_key "katello_content_views", "katello_content_view_definition_bases", :name => "content_views_content_view_definition_id_fk", :column => "content_view_definition_id"
+
+    add_foreign_key "katello_filters", "katello_content_view_definition_bases", :name => "filters_content_view_definition_id_fk", :column => "content_view_definition_id"
+    add_foreign_key "katello_filters_products", "katello_filters", :name => "filters_product_filter_id_fk", :column => 'filter_id'
+    add_foreign_key "katello_filters_products", "katello_products", :name => "filters_product_product_id_fk", :column => "product_id"
+    add_foreign_key "katello_filter_rules", "katello_filters", :name => "filters_rules_filter_id_fk", :column => 'filter_id'
+
   end
 end
