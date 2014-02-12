@@ -42,7 +42,7 @@ module Support
       end
 
       def interface_fixture_file(action, variant)
-        action_path = action.action_class.name.underscore.sub('actions/','')
+        action_path = action.class.name.underscore.sub('actions/','')
         action_path << "/#{variant}.yaml"
         fixture_file(action_path)
       end
