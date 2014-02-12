@@ -251,7 +251,7 @@ module Glue::Candlepin::Consumer
       when :hypervisor
         # it's already saved = do nothing
       when :create
-        pre_queue.create(:name => "create candlepin consumer: #{self.name}", :priority => 2, :action => [self, :set_candlepin_consumer])
+        #pre_queue.create(:name => "create candlepin consumer: #{self.name}", :priority => 2, :action => [self, :set_candlepin_consumer])
       when :update
         pre_queue.create(:name => "update candlepin consumer: #{self.name}", :priority => 3, :action => [self, :update_candlepin_consumer])
       end
