@@ -34,6 +34,8 @@
 angular.module('Bastion.tasks').factory('Task',
     ['$resource', '$timeout', '$log', 'CurrentOrganization',
     function ($resource, $timeout, $log, CurrentOrganization) {
+        var bulkSearchRunning = false, searchIdGenerator = 0,
+            searchParamsById = {},  callbackById = {};
 
         var resource = $resource('/api/v2/tasks/:id/:action',
             {id: '@id', 'organization_id': CurrentOrganization},
@@ -48,10 +50,6 @@ angular.module('Bastion.tasks').factory('Task',
                 bulkSearch: {method: 'POST', isArray: true, params: { action: 'bulk_search'}}
             }
         );
-
-
-        var bulkSearchRunning = false, searchIdGenerator = 0,
-            searchParamsById = {},  callbackById = {};
 
         function bulkSearchParams() {
             var searches = [];

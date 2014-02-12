@@ -15,9 +15,8 @@
  * @ngdoc service
  * @name  Bastion.widgets.service:TaskNutupane
  *
- * @requires $location
- * @requires $q
- * @requires $timeout
+ * @requires Task
+ * @requires Nutupane
  *
  * @description
  *   Defines TasksNutupane factory that uses Task.registerSearch as

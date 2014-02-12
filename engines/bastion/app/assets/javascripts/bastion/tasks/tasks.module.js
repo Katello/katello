@@ -44,7 +44,6 @@ angular.module('Bastion.tasks').config(['$stateProvider', function ($stateProvid
     .state('tasks.details', {
         url: '/tasks/:taskId',
         collapsed: true,
-        data: { defaultBackState: 'tasks.index' },
         controller: 'TaskDetailsController',
         templateUrl: 'tasks/views/task-details-standalone.html'
     });

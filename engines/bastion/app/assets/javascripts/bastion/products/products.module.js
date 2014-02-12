@@ -180,7 +180,6 @@ angular.module('Bastion.products').config(['$stateProvider', function ($statePro
     .state('products.details.tasks.details', {
         url: '/tasks/:taskId',
         collapsed: true,
-        data: { defaultBackState: 'products.details.tasks.index' },
         controller: 'TaskDetailsController',
         templateUrl: 'tasks/views/task-details.html'
     });

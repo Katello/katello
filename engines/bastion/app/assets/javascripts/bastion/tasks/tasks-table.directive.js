@@ -15,7 +15,6 @@
  * @ngdoc directive
  * @name  Bastion.tasks.directive:tasksTable
  *
- * @requires $scope
  * @requires TasksNutupane
  *
  * @description

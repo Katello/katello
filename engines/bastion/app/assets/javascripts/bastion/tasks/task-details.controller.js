@@ -16,32 +16,18 @@
  * @name  Bastion.tasks.controller:TaskDetailsController
  *
  * @requires $scope
- * @requires $state
+ * @requires $rootScope
  * @requires Task
  *
  * @description
  *   Provides the functionality for the details of a task.
  */
 angular.module('Bastion.tasks').controller('TaskDetailsController',
-    ['$scope', '$state', 'Task',
-    function ($scope, $state, Task) {
+    ['$scope', 'Task',
+    function ($scope, Task) {
         var taskId, fromState, fromParams;
 
-        fromState = $state.current.data.defaultBackState;
-        fromParams = {};
         taskId = $scope.$stateParams.taskId;
-
-        //Record our from state, so we can transition back there
-        $scope.$on('$stateChangeSuccess', function (event, toState, toParams, fromStateIn, fromParamsIn) {
-            if (!fromStateIn.abstract) {
-                fromState = fromStateIn;
-                fromParams = fromParamsIn;
-            }
-        });
-
-        $scope.transitionBack = function () {
-            $scope.transitionTo(fromState, fromParams);
-        };
 
         $scope.unregisterSearch = function () {
             Task.unregisterSearch($scope.searchId);
@@ -55,9 +41,7 @@ angular.module('Bastion.tasks').controller('TaskDetailsController',
             }
         };
 
-        $scope.isArray = function (model) {
-            return (model instanceof Array) ? "true" : "false";
-        };
+        $scope.isArray = _.isArray;
 
         $scope.$on('$destroy', function () {
             $scope.unregisterSearch();

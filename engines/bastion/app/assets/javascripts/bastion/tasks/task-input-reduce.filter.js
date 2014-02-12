@@ -22,10 +22,10 @@
 angular.module('Bastion.tasks')
     .filter('taskInputReduce', function () {
         return function (humanizedTaskInput, skippedParts) {
-            if (typeof(humanizedTaskInput) === 'string' || !skippedParts) {
+            if (_.isString(humanizedTaskInput) || !skippedParts) {
                 return humanizedTaskInput;
             }
-            if (typeof skippedParts === 'string') {
+            if (_.isString(skippedParts)) {
                 skippedParts = skippedParts.split(',');
             }
             return _.reject(humanizedTaskInput, function (part) {

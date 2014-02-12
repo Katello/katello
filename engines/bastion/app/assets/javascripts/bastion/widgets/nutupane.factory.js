@@ -134,7 +134,7 @@ angular.module('Bastion.widgets').factory('Nutupane',
 
             self.refresh = function () {
                 self.table.resource.page = 0;
-                self.load(true);
+                return self.load(true);
             };
 
             self.removeRow = function (id) {

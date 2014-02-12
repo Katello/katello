@@ -29,7 +29,7 @@ angular.module('Bastion.tasks').directive('taskInputPart',
             },
             link: function (scope) {
                 scope.text = function () {
-                    if (typeof(scope.data) === 'string') {
+                    if (_.isString(scope.data)) {
                         return scope.data;
                     } else {
                         return scope.data[1].text;
@@ -37,7 +37,7 @@ angular.module('Bastion.tasks').directive('taskInputPart',
                 };
 
                 scope.link = function () {
-                    if (typeof(scope.data) !== 'string' && scope.data[1]) {
+                    if (!_.isString(scope.data) && scope.data[1]) {
                         return scope.data[1].link;
                     }
                 };

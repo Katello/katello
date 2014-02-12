@@ -36,6 +36,8 @@ angular.module('Bastion.widgets').directive('currentTasks',
             templateUrl: 'widgets/views/current-tasks.html',
 
             controller: ['$scope', function ($scope) {
+                // Hide the current tasks list if the user clicks outside of it
+                var currentTasksMenu = angular.element('#currentTasks');
                 $scope.visible = false;
                 $scope.currentUser = CurrentUser;
                 $scope.count = 0;
@@ -48,8 +50,6 @@ angular.module('Bastion.widgets').directive('currentTasks',
                     $scope.count = tasks.length;
                 };
 
-                // Hide the current tasks list if the user clicks outside of it
-                var currentTasksMenu = angular.element('#currentTasks');
                 $document.bind('click', function (event) {
                     var target = angular.element(event.target);
                     if (!currentTasksMenu.find(target).length) {

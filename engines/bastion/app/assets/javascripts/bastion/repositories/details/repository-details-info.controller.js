@@ -16,6 +16,7 @@
  * @name  Bastion.repositories.controller:RepositoryDetailsInfoController
  *
  * @requires $scope
+ * @requires $state
  * @requires $q
  * @requires gettext
  * @requires Repository
