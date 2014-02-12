@@ -31,9 +31,6 @@ module Actions
                                   service_level:       system.serviceLevel,
                                   uuid:                "",
                                   capabiliteis:        system.capabilities)
-          plan_action(Pulp::Consumer::Create,
-                      uuid: cp_create.output[:response][:uuid],
-                      name: system.name)
           system.save!
           action_subject system, uuid: cp_create.output[:response][:uuid]
           plan_action ElasticSearch::Reindex, system
