@@ -19,17 +19,6 @@
            required/>
   </div>
 
-  <div alch-form-group label="{{ 'Provider' | translate }}">
-    <select id="provider_id"
-            name="provider_id"
-            ng-model="product.provider_id"
-            ng-options="provider.id as provider.name for provider in providers"
-            tabindex="3"
-            required>
-    </select>
-    <a ui-sref="products.new.provider" translate>+ New Provider</a>
-  </div>
-
   <div alch-form-group label="{{ 'GPG Key' | translate }}">
     <select id="gpg_key_id"
             name="gpg_key_id"
