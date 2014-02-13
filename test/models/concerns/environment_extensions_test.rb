@@ -25,7 +25,7 @@ module Katello
       User.current = User.find(users(:admin))
       @katello_id = "KT_Org_Env_View_1"
 
-      @org = get_organization(:organization1)
+      @org = get_organization
       @org.label = @org.label.gsub(' ', '_')
       @env = KTEnvironment.find(katello_environments(:dev))
       @content_view = ContentView.find(katello_content_views(:library_dev_view))

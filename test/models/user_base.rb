@@ -27,7 +27,7 @@ class UserTestBase < ActiveSupport::TestCase
   def setup
     @no_perms_user      = User.find(users(:one))
     @admin              = User.find(users(:admin))
-    @acme_corporation   = get_organization(:organization1)
+    @acme_corporation   = get_organization
 
     @dev                = KTEnvironment.find(katello_environments(:dev).id)
   end

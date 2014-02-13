@@ -16,7 +16,6 @@ require 'support/content_view_definition_support'
 
 module Katello
 describe Api::V1::FilterRulesController do
-  fixtures :all
 
   before do
     models = ["Organization", "KTEnvironment", "User", "Filter",
@@ -32,7 +31,7 @@ describe Api::V1::FilterRulesController do
     before do
       @filter = katello_filters(:populated_filter)
       @cvd = @filter.content_view_definition
-      @organization = get_organization(:organization1)
+      @organization = get_organization
       @rule_id =  @filter.rules.first.id
       @req = lambda do
         delete :destroy, :organization_id => @organization.label,
@@ -68,7 +67,7 @@ describe Api::V1::FilterRulesController do
   it "create permission" do
     @filter = katello_filters(:populated_filter)
     @cvd = @filter.content_view_definition
-    @organization = get_organization(:organization1)
+    @organization = get_organization
     perms = ContentViewDefinitionSupport.generate_permissions(@cvd, @organization)
     @req = lambda do
       post :create, :organization_id => @organization.label,
@@ -99,7 +98,7 @@ describe Api::V1::FilterRulesController do
   ].each do |content, rule|
     [true, false].each do |inclusion|
       it "should create a filter #{content} rule for inclusion = #{inclusion}" do
-        @organization = get_organization(:organization1)
+        @organization = get_organization
         rule = rule.with_indifferent_access
         post :create, :organization_id => @organization.label,
              :content_view_definition_id=> @filter.content_view_definition.id,

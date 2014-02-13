@@ -25,7 +25,7 @@ module ContentViewAuthBase
   def setup
     @admin       = User.find(users(:admin))
     @no_perms    = User.find(users(:restricted))
-    @org         = get_organization(:organization1)
+    @org         = get_organization
     @view        = FactoryGirl.build(:content_view, :organization => @org)
   end
 

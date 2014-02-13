@@ -148,14 +148,14 @@ class RepositoryInstanceTest < RepositoryTestBase
   end
 
   def test_repo_id
-    @acme_corporation   = get_organization(:organization1)
+    @acme_corporation   = get_organization
 
     @fedora             = Product.find(katello_products(:fedora).id)
     @library            = KTEnvironment.find(katello_environments(:library).id)
 
     repo_id = Repository.repo_id(@fedora.label, @fedora_17_x86_64.label, @library.label,
                                  @acme_corporation.label, @library.default_content_view.label)
-    assert_equal "Organization_1-library_label-org_default_label-fedora_label-fedora_17_x86_64_label", repo_id
+    assert_equal "Empty_Organization-library_label-org_default_label-fedora_label-fedora_17_x86_64_label", repo_id
   end
 
   def test_clone_repo_path_for_component

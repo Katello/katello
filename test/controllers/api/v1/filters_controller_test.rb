@@ -36,7 +36,7 @@ describe Api::V1::FiltersController do
     Product.any_instance.stubs(:last_sync).returns(nil)
     Product.any_instance.stubs(:sync_plan).returns(nil)
     @cvd = @filter.content_view_definition
-    @organization = get_organization(:organization1)
+    @organization = get_organization
 
     perms = ContentViewDefinitionSupport.generate_permissions(@cvd, @organization)
     @readable_permissions = perms.readable
@@ -183,7 +183,7 @@ describe Api::V1::FiltersController do
     before do
       @filter = katello_filters(:populated_filter)
       @cvd = @filter.content_view_definition
-      @organization = get_organization(:organization1)
+      @organization = get_organization
       @product = @cvd.products.first
       @filter.products << @product
       @filter.save!
@@ -223,7 +223,7 @@ describe Api::V1::FiltersController do
     before do
       @filter = katello_filters(:populated_filter)
       @cvd = @filter.content_view_definition
-      @organization = get_organization(:organization1)
+      @organization = get_organization
       @product_id = @cvd.products.first.cp_id
       refute_includes(@filter.products, @product_id)
       @req = lambda do
@@ -262,7 +262,7 @@ describe Api::V1::FiltersController do
     before do
       @filter = katello_filters(:populated_filter)
       @cvd = @filter.content_view_definition
-      @organization = get_organization(:organization1)
+      @organization = get_organization
       @repo = @cvd.repositories.first
       @filter.repositories << @repo
       @filter.save!
@@ -301,7 +301,7 @@ describe Api::V1::FiltersController do
     before do
       @filter = katello_filters(:populated_filter)
       @cvd = @filter.content_view_definition
-      @organization = get_organization(:organization1)
+      @organization = get_organization
       @repo_id = @cvd.repositories.first.id
       refute_includes(@filter.repositories, @repo_id)
 

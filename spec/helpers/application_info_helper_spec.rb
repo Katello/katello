@@ -30,9 +30,12 @@ describe ApplicationInfoHelper do
       Katello.config[:warden] = 'ldap'
       Katello.config[:validate_ldap] = false
       User.stubs(:cp_oauth_header).returns("abc123")
-      @org = Organization.create!(:name => "Haskell_Curry_Inc",
-                                  :label => "haskell_curry_inc"
-                                 )
+
+      as_admin do
+        @org = Organization.create!(:name => "Haskell_Curry_Inc",
+                                    :label => "haskell_curry_inc"
+                                   )
+      end
       @user = users(:one)
     end
 

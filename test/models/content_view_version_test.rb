@@ -27,8 +27,12 @@ class ContentViewVersionTest < ActiveSupport::TestCase
     Organization.destroy_all
   end
 
+  def setup
+    User.current = User.find(users(:admin))
+  end
+
   def test_create_archived_definition
-    definition = FactoryGirl.create(:content_view_definition)
+    definition = FactoryGirl.create(:content_view_definition, :organization => get_organization)
     version = FactoryGirl.create(:content_view_version)
     version.save!
     assert_nil version.definition_archive # no archive if no definition
