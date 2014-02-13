@@ -24,7 +24,7 @@ class Api::V2::ProvidersController < Api::V2::ApiController
     read_test   = lambda { @provider.readable? }
     edit_test   = lambda { @provider.editable? }
     delete_test = lambda { @provider.deletable? }
-    show_test = lambda { @provider.readable? }
+    show_test   = lambda { @provider.readable? }
 
     {
       :index                    => index_test,
@@ -44,7 +44,7 @@ class Api::V2::ProvidersController < Api::V2::ApiController
   end
 
   def_param_group :provider do
-    param :name, String, :desc => "name of the provider", :required => true
+    param :name, String, :desc => "name of the provider"
     param :description, String, :desc => "description of the provider"
     param :provider_type, Provider::TYPES, :desc => "The type of the provider"
   end
@@ -76,9 +76,16 @@ class Api::V2::ProvidersController < Api::V2::ApiController
   def create
     provider = Provider.create!(provider_params) do |p|
       p.organization  = @organization
-      p.provider_type ||= Provider::CUSTOM
+      p.provider_type = params[:provider]["provider_type"] if params[:provider].member? "provider_type"
+      p.description = params[:provider]["description"] if params[:provider].member? "description"
+      if params[:provider].member? "name"
+        p.name = params[:provider]["name"]
+        p.provider_type ||= Provider::CUSTOM
+      else
+        p.name = SecureRandom.uuid
+        p.provider_type = Provider::ANONYMOUS
+      end
     end
-
     respond(:resource => provider)
   end
 
@@ -213,7 +220,7 @@ class Api::V2::ProvidersController < Api::V2::ApiController
     def provider_params
       if params[:action] == "update" && @provider.redhat_provider?
         params.require(:provider).permit(:repository_url)
-      else
+      elsif params[:action] != "create"
         params.require(:provider).permit(:name)
       end
     end
