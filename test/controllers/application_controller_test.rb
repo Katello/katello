@@ -30,7 +30,7 @@ class AControllerTest < ActionController::TestCase
 
   def setup
     setup_controller_defaults
-    @org = get_organization(:organization1)
+    @org = get_organization
     Katello.config.stubs(hide_exceptions: true)
   end
 

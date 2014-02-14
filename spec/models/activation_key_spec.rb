@@ -27,7 +27,7 @@ module Katello
       disable_product_orchestration
       disable_activation_key_orchestration
 
-      @organization = get_organization(:organization1)
+      @organization = get_organization
       @environment_1 = katello_environments(:dev)
       @environment_2 = katello_environments(:staging)
       @akey = ActivationKey.create(:name => aname, :description => adesc, :organization => @organization,

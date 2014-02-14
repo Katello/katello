@@ -23,7 +23,7 @@ describe KTEnvironment do
     before do
       disable_product_orchestration
       disable_org_orchestration
-      @organization = get_organization(:organization1)
+      @organization = get_organization
       @environment = katello_environments(:dev)
     end
 

@@ -27,7 +27,7 @@ class KTEnvironmentTestBase < ActiveSupport::TestCase
   end
 
   def setup
-    @acme_corporation     = get_organization(:organization1)
+    @acme_corporation     = get_organization
 
     @library              = KTEnvironment.find(katello_environments(:library).id)
     @dev                  = KTEnvironment.find(katello_environments(:dev).id)
@@ -54,6 +54,7 @@ class KTEnvironmentTest < KTEnvironmentTestBase
   end
 
   def test_destroy_library
+    User.current = User.find(users(:admin))
     org = FactoryGirl.create(:organization)
     env = org.library
     env.destroy

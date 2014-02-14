@@ -23,7 +23,7 @@ module Katello
     end
 
     def models
-      @organization = get_organization(:organization1)
+      @organization = get_organization
       @sync_plan = katello_sync_plans(:sync_plan_hourly)
       @products = katello_products(:fedora, :redhat, :empty_product)
     end

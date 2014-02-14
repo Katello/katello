@@ -23,7 +23,7 @@ describe FilterRulesController do
     disable_org_orchestration
     disable_user_orchestration
 
-    @organization = get_organization(:organization1)
+    @organization = get_organization
     @controller.stubs(:current_organization).returns(@organization)
   end
 

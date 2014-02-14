@@ -24,8 +24,8 @@ class OrganizationDestroyerTest < ActiveSupport::TestCase
   end
 
   def test_non_async_destroy
-    org = FactoryGirl.create(:organization)
     User.current = User.find(users(:admin))
+    org = FactoryGirl.create(:organization)
     OrganizationDestroyer.destroy(org, :async => false)
     refute Organization.exists?(org.id)
   end

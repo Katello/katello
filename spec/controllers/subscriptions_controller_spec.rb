@@ -23,7 +23,7 @@ describe SubscriptionsController do
 
   describe "GET index" do
     before (:each) do
-      @organization = new_test_org
+      @organization = get_organization
       @controller.stubs(:current_organization).returns(@organization)
       setup_controller_defaults
       @provider = @organization.redhat_provider

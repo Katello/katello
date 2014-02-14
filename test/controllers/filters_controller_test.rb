@@ -27,7 +27,7 @@ class FiltersControllerTest < ActionController::TestCase
 
   def setup
     setup_controller_defaults
-    @org = get_organization(:organization1)
+    @org = get_organization
     set_organization(@org)
 
     @product = Product.find(katello_products(:redhat).id)
