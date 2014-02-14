@@ -40,7 +40,7 @@ module Actions
       class Delegated < Base
 
         def initialize(action, *delegated_action_classes)
-          @delegated_actions = action.all_actions.find_all do |subaction|
+          @delegated_actions = action.execution_plan.actions.find_all do |subaction|
             delegated_action_classes.any? do |action_class|
               subaction.is_a? action_class
             end
