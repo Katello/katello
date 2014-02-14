@@ -70,9 +70,6 @@ class Api::V2::ProvidersController < Api::V2::ApiController
     respond
   end
 
-  api :POST, "/providers", "Create a provider"
-  param :organization_id, :identifier, :desc => "Organization identifier", :required => true
-  param_group :provider
   def create
     provider = Provider.create!(provider_params) do |p|
       p.organization  = @organization
@@ -98,8 +95,6 @@ class Api::V2::ProvidersController < Api::V2::ApiController
     respond
   end
 
-  api :DELETE, "/providers/:id", "Destroy a provider"
-  param :id, :number, :desc => "Provider numeric identifier", :required => true
   def destroy
     #
     # TODO: these should really be done as validations, but the orchestration engine currently converts them into OrchestrationExceptions
