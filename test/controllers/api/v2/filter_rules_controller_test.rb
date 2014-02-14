@@ -14,18 +14,18 @@
 require "katello_test_helper"
 
 module Katello
-  class Api::V2::FiltersControllerTest < ActionController::TestCase
+  class Api::V2::FilterRulesControllerTest < ActionController::TestCase
 
     def self.before_suite
       models = ["ContentView", "ContentViewEnvironment", "ContentViewVersion",
-                "Repository"]
+                "Repository", "Filter", "PackageFilter", "PackageFilterRule"]
       disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models, true)
       super
     end
 
     def models
-      @content_view = katello_content_views(:library_view)
       @filter = katello_filters(:simple_filter)
+      @rule = katello_package_filter_rules(:package_rule)
     end
 
     def permissions
@@ -45,10 +45,10 @@ module Katello
     end
 
     def test_index
-      get :index, :content_view_id => @content_view.id
+      get :index, :filter_id => @filter.id
 
       assert_response :success
-      assert_template 'api/v2/filters/index'
+      assert_template 'api/v2/filter_rules/index'
     end
 
     def test_index_protected
@@ -56,19 +56,17 @@ module Katello
       denied_perms = [@no_permission]
 
       assert_protected_action(:index, allowed_perms, denied_perms) do
-        get :index, :content_view_id => @content_view.id
+        get :index, :filter_id => @filter.id
       end
     end
 
     def test_create
-      @content_view = katello_content_views(:library_dev_view)
-      assert_empty @content_view.filters
-
-      post :create, :content_view_id => @content_view.id, :name => "My Filter", :type => "rpm"
+      post :create, :filter_id => @filter.id, :name => "testpkg", :version => "10.0"
 
       assert_response :success
-      assert_template %w(katello/api/v2/filters/show)
-      assert_includes @content_view.reload.filters.map(&:name), "My Filter"
+      assert_template %w(katello/api/v2/filter_rules/show)
+      assert_equal @filter.reload.package_rules.first.name, "testpkg"
+      assert_equal @filter.package_rules.first.version, "10.0"
     end
 
     def test_create_protected
@@ -76,15 +74,15 @@ module Katello
       denied_perms = [@read_permission, @no_permission]
 
       assert_protected_action(:create, allowed_perms, denied_perms) do
-        post :create, :name => "Test", :content_view_id => @content_view.id
+        post :create, :filter_id => @filter.id, :name => "testpkg", :version => "10.0"
       end
     end
 
     def test_show
-      get :show, :content_view_id => @filter.content_view_id, :id => @filter.id
+      get :show, :filter_id => @filter.id, :id => @rule.id
 
       assert_response :success
-      assert_template 'api/v2/filters/show'
+      assert_template 'api/v2/filter_rules/show'
     end
 
     def test_show_protected
@@ -92,29 +90,19 @@ module Katello
       denied_perms = [@no_permission]
 
       assert_protected_action(:show, allowed_perms, denied_perms) do
-        get :show, :content_view_id => @filter.content_view_id, :id => @filter.id
+        get :show, :filter_id => @filter.id, :id => @rule.id
       end
     end
 
-    def test_update_name
-      put :update, :content_view_id => @filter.content_view_id, :id => @filter, :name => "New Filter Name"
+    def test_update
+      refute_equal @rule.name, "testpkg"
+      refute_equal @rule.version, "10.0"
+
+      put :update, :filter_id => @filter.id, :id => @rule.id, :name => "testpkg", :version => "10.0"
 
       assert_response :success
-      assert_template 'api/v2/common/update'
-      assert_equal @filter.reload.name, "New Filter Name"
-    end
-
-    def test_update_repositories
-      repository = Repository.find(katello_repositories(:fedora_17_x86_64).id)
-      @content_view.repositories << repository
-      @content_view.save
-      refute_includes @filter.repositories(true).map(&:id), repository.id
-
-      put :update, :content_view_id => @filter.content_view_id, :id => @filter,
-          :repository_ids => [repository.id]
-
-      assert_response :success
-      assert_includes @filter.repositories(true).map(&:id), repository.id
+      assert_equal @rule.reload.name, "testpkg"
+      assert_equal @rule.version, "10.0"
     end
 
     def test_update_protected
@@ -122,15 +110,15 @@ module Katello
       denied_perms = [@no_permission, @read_permission]
 
       assert_protected_action(:update, allowed_perms, denied_perms) do
-        put :update, :content_view_id => @filter.content_view_id, :id => @filter.id, :name => "new name"
+        put :update, :filter_id => @filter.id, :id => @rule.id, :name => "new name"
       end
     end
 
     def test_destroy
-      delete :destroy, :content_view_id => @filter.content_view_id, :id => @filter.id
+      delete :destroy, :filter_id => @filter.id, :id => @rule.id
 
       assert_response :success
-      assert_nil Filter.find_by_id(@filter.id)
+      assert_nil PackageFilterRule.find_by_id(@rule.id)
     end
 
     def test_destroy_protected
@@ -138,7 +126,7 @@ module Katello
       denied_perms = [@read_permission, @no_permission]
 
       assert_protected_action(:destroy, allowed_perms, denied_perms) do
-        delete :destroy, :content_view_id => @filter.content_view_id, :id => @filter.id
+        delete :destroy, :filter_id => @filter.id, :id => @rule.id
       end
     end
   end

@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-  module Glue::ElasticSearch::Filter
+  module Glue::ElasticSearch::PackageFilterRule
     extend ActiveSupport::Concern
 
     module ClassMethods
@@ -21,20 +21,25 @@ module Katello
       include Ext::IndexedModel
 
       index_options :extended_json => :extended_index_attrs,
-                    :json => { :only => [:id, :type, :name, :inclusion] },
+                    :json => { :only => [:id,
+                                         :name,
+                                         :version,
+                                         :min_version,
+                                         :max_version,
+                                         :created_at,
+                                         :updated_at]
+                             },
                     :display_attrs => [:name]
 
       mapping do
         indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
         indexes :name_sort, :type => 'string', :index => :not_analyzed
-        indexes :type, :type => 'string', :index => :not_analyzed
-        indexes :inclusion, :type => 'boolean'
       end
 
       def extended_index_attrs
         {
           :name_sort => name.downcase,
-          :content_view_id => self.content_view_id
+          :filter_id => self.filter_id
         }
       end
 

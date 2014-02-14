@@ -36,7 +36,7 @@ class Api::V2::PuppetModulesController < Api::V2::ApiController
     respond(:collection => item_search(PuppetModule, params, options))
   end
 
-  api :GET, "/puppet_modules", "List puppet modules"
+  api :GET, "/puppet_modules/:id", "Show a puppet module"
   api :GET, "/repositories/:repository_id/puppet_modules/:id", "Show a puppet module"
   param :repository_id, :identifier, :desc => "repository identifier", :required => true
   param :id, String, :desc => "puppet module identifier", :required => true

@@ -16,12 +16,8 @@ class PackageGroupFilter < Filter
 
   CONTENT_TYPE = PackageGroup::CONTENT_TYPE
 
-  before_save :set_parameters
-
-  validates_with Validators::PackageGroupFilterParamsValidator, :attributes => :parameters
-  def params_format
-    { :units => [[:name, :inclusion, :created_at]] }
-  end
+  has_many :package_group_rules, :dependent => :destroy, :foreign_key => :filter_id,
+           :class_name => "Katello::PackageGroupFilterRule"
 
   def generate_clauses(repo)
     ids = parameters[:units].collect do |unit|
@@ -33,15 +29,6 @@ class PackageGroupFilter < Filter
     ids.flatten!
     ids.compact!
     { "id" => { "$in" => ids } } unless ids.empty?
-  end
-
-  private
-
-  def set_parameters
-    parameters[:units].each do |unit|
-      unit[:created_at] = get_created_at(parameters_was, unit)
-      unit[:inclusion] = false unless unit.key?(:inclusion)
-    end if !parameters.blank? && parameters.key?(:units)
   end
 
 end

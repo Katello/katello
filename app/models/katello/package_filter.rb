@@ -16,14 +16,8 @@ class PackageFilter < Filter
 
   CONTENT_TYPE = Package::CONTENT_TYPE
 
-  before_save :set_parameters
-
-  validates_with Validators::FilterParamsValidator, :attributes => :parameters
-  validates_with Validators::FilterVersionValidator, :attributes => :parameters
-
-  def params_format
-    { :units => [[:name, :version, :min_version, :max_version, :inclusion, :created_at]] }
-  end
+  has_many :package_rules, :dependent => :destroy, :foreign_key => :filter_id,
+           :class_name => "Katello::PackageFilterRule"
 
   # Returns a set of Pulp/MongoDB conditions to filter out packages in the
   # repo repository that match parameters
@@ -56,13 +50,5 @@ class PackageFilter < Filter
     end
   end
 
-  private
-
-  def set_parameters
-    parameters[:units].each do |unit|
-      unit[:created_at] = get_created_at(parameters_was, unit)
-      unit[:inclusion] = false unless unit.key?(:inclusion)
-    end if !parameters.blank? && parameters.key?(:units)
-  end
 end
 end

@@ -1,5 +1,5 @@
 #
-# Copyright 2013 Red Hat, Inc.
+# Copyright 2014 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -11,15 +11,18 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-module Validators
-  class FilterVersionValidator < ActiveModel::Validator
-    def validate(record)
-      if !record.version.blank? && (!record.min_version.blank? || !record.max_version.blank?)
-        invalid_parameters = _("Invalid filter rule specified, 'version' cannot be specified in the" +
-                               " same tuple as 'min_version' or 'max_version'")
-        record.errors[:base] << invalid_parameters
-      end
-    end
+  class ErratumFilterRule < Katello::Model
+    self.include_root_in_json = false
+
+    include Glue::ElasticSearch::ErratumFilterRule if Katello.config.use_elasticsearch
+
+    belongs_to :filter,
+               :class_name => "Katello::ErratumFilter",
+               :inverse_of => :erratum_rules
+
+    serialize :types, Array
+
+    validates :errata_id, :uniqueness => { :scope => :filter_id }
+    validates_with Validators::ErratumFilterRuleValidator
   end
-end
 end
