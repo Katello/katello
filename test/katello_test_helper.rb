@@ -72,14 +72,15 @@ module FixtureTestCase
     self.set_fixture_class :katello_system_system_groups => "Katello::SystemSystemGroup"
     self.set_fixture_class :katello_task_statuses => "Katello::TaskStatus"
     self.set_fixture_class :katello_user_notices => "Katello::UserNotice"
+
+    load_fixtures
+    self.fixture_path = "#{Katello::Engine.root}/test/fixtures/models"
+    fixtures(:all)
   end
 
   module ClassMethods
 
     def before_suite
-      load_fixtures
-      self.fixture_path = "#{Katello::Engine.root}/test/fixtures/models"
-      fixtures(:all)
       @loaded_fixtures = load_fixtures
 
       @@admin = ::User.find(@loaded_fixtures['users']['admin']['id'])
@@ -92,7 +93,6 @@ end
 class ActionController::TestCase
   include LocaleHelperMethods
   include ControllerSupport
-  include FixtureTestCase
 
   def setup_engine_routes
     @routes = Katello::Engine.routes
@@ -156,10 +156,6 @@ class ActiveSupport::TestCase
     organization
   end
 
-end
-
-class ActionController::IntegrationTest
-  include FixtureTestCase
 end
 
 def disable_glue_layers(services=[], models=[], force_reload=false)
