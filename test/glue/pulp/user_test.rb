@@ -13,7 +13,7 @@
 require 'katello_test_helper'
 
 module Katello
-class GluePulpUserTest < GluePulpUserTestBase
+class GluePulpUserTest < ActiveSupport::TestCase
 
   def self.before_suite
     super
