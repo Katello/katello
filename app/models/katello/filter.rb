@@ -19,11 +19,8 @@ class Filter < Katello::Model
   PACKAGE         = Package::CONTENT_TYPE
   PACKAGE_GROUP   = PackageGroup::CONTENT_TYPE
   ERRATA          = Errata::CONTENT_TYPE
-  PUPPET_MODULE   = PuppetModule::CONTENT_TYPE
-  CONTENT_TYPES   = [PACKAGE, PACKAGE_GROUP, ERRATA, PUPPET_MODULE]
-  YUM_CONTENT_OPTIONS = { _('Packages') => PACKAGE, _('Package Groups') => PACKAGE_GROUP, _('Errata') => ERRATA }
-  PUPPET_CONTENT_OPTIONS = { _('Puppet Modules') => PUPPET_MODULE }
-  CONTENT_OPTIONS = YUM_CONTENT_OPTIONS.merge(PUPPET_CONTENT_OPTIONS)
+  CONTENT_TYPES   = [PACKAGE, PACKAGE_GROUP, ERRATA]
+  CONTENT_OPTIONS = { _('Packages') => PACKAGE, _('Package Groups') => PACKAGE_GROUP, _('Errata') => ERRATA }
 
   belongs_to :content_view,
              :class_name => "Katello::ContentView",
@@ -63,8 +60,7 @@ class Filter < Katello::Model
     {
       PackageFilter => PACKAGE,
       ErratumFilter => ERRATA,
-      PackageGroupFilter => PACKAGE_GROUP,
-      PuppetModuleFilter => PUPPET_MODULE
+      PackageGroupFilter => PACKAGE_GROUP
     }[self.class]
   end
 
@@ -76,8 +72,6 @@ class Filter < Katello::Model
       PackageGroupFilter
     when ERRATA
       ErratumFilter
-    when PUPPET_MODULE
-      PuppetModuleFilter
     else
       params = { :content_type => content_type, :content_types => CONTENT_TYPES.join(", ") }
       fail _("Invalid content type '%{ content_type }' provided. Content types can be one of %{ content_types }") % params
@@ -121,14 +115,6 @@ class Filter < Katello::Model
 
   def resulting_products
     repositories.collect{|r| r.product}.uniq
-  end
-
-  def puppet_repository
-    repositories.puppet_type.first
-  end
-
-  def puppet_repository_id
-    puppet_repository.try(:id)
   end
 
   protected
