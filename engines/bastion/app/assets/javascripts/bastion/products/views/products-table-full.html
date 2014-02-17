@@ -3,7 +3,6 @@
     <tr alch-table-head row-select>
       <th alch-table-column="name" sortable>{{ "Name" | translate }}</th>
       <th alch-table-column="description" sortable>{{ "Description" | translate }}</th>
-      <th alch-table-column="provider" sortable>{{ "Provider" | translate }}</th>
       <th alch-table-column="sync_status" sortable>{{ "Sync Status" | translate }}</th>
       <th alch-table-column="sync_plan" sortable>{{ "Sync Plan" | translate }}</th>
       <th alch-table-column class="number-cell">{{ "Repositories" | translate }}</th>
@@ -19,7 +18,6 @@
         <i class="icon-chevron-right selected-icon" ng-show="product.selected"></i>
       </td>
       <td alch-table-cell>{{ product.description }}</td>
-      <td alch-table-cell>{{ product.provider.name }}</td>
       <td alch-table-cell>
         <div ng-include="'products/views/partials/product-table-sync-status.html'"></div>
       </td>
