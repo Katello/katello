@@ -434,7 +434,10 @@ module Katello
         end
 
         def generate_remote_id
-          if self.login.ascii_only?
+          if User.current.object_id == self.object_id
+            # The case when the first user is being created.
+            Katello.config.pulp.default_login
+          elsif self.login.ascii_only?
             "#{Util::Model.labelize(self.login)}-#{SecureRandom.hex(4)}"
           else
             Util::Model.uuid
