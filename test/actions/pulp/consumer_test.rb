@@ -24,43 +24,61 @@ module Katello
       stub_remote_user
     end
 
-    let(:action_class) { raise NotImplementedError }
-    let(:planned_action) do
-      create_and_plan_action action_class,
-                             consumer_uuid: 'uuid',
-                             type:          'rpm',
-                             args:          %w(vim vi)
-    end
-
-    def it_runs(invocation_method)
-      action = run_action planned_action do |action|
-        consumer        = mock('consumer', invocation_method => task_base)
-        pulp_extensions = mock 'pulp_extensions', consumer: consumer
-        action.expects(:pulp_extensions).returns(pulp_extensions)
-        stub_task_poll action, task_base.merge(task_finished_hash)
+    describe 'Create' do
+      let(:action_class) { ::Actions::Pulp::Consumer::Create }
+      let(:planned_action) do
+        create_and_plan_action action_class, uuid: 'uuid', name: 'name'
       end
-
-      action.wont_be :done?
-      progress_action_time action
-      action.must_be :done?
-    end
-
-    describe 'ContentInstall' do
-      let(:action_class) { namespace::ContentInstall }
 
       it 'runs' do
-        it_runs :install_content
+        run_action planned_action do |action|
+          consumer = mock('consumer')
+          action.expects(:pulp_extensions).returns(mock 'pulp_extensions', consumer: consumer)
+          consumer.expects(:create).with('uuid', display_name: 'name')
+        end
       end
     end
 
-    describe 'ContentInstall' do
-      let(:action_class) { namespace::ContentUninstall }
 
-      it 'runs' do
-        it_runs :uninstall_content
+    describe 'Content' do
+      let(:action_class) { raise NotImplementedError }
+      let(:planned_action) do
+        create_and_plan_action action_class,
+            consumer_uuid: 'uuid',
+            type:          'rpm',
+            args:          %w(vim vi)
       end
-    end
 
+      def it_runs(invocation_method)
+        action = run_action planned_action do |action|
+          consumer        = mock('consumer', invocation_method => task_base)
+          pulp_extensions = mock 'pulp_extensions', consumer: consumer
+          action.expects(:pulp_extensions).returns(pulp_extensions)
+          stub_task_poll action, task_base.merge(task_finished_hash)
+        end
+
+        action.wont_be :done?
+        progress_action_time action
+        action.must_be :done?
+      end
+
+      describe 'ContentInstall' do
+        let(:action_class) { namespace::ContentInstall }
+
+        it 'runs' do
+          it_runs :install_content
+        end
+      end
+
+      describe 'ContentInstall' do
+        let(:action_class) { namespace::ContentUninstall }
+
+        it 'runs' do
+          it_runs :uninstall_content
+        end
+      end
+
+    end
   end
 
 end
