@@ -30,7 +30,7 @@ class GlueCandlepinProviderTestBase < ActiveSupport::TestCase
     @@org      = Organization.find(@loaded_fixtures['taxonomies']['organization2']['id'])
     @@provider = Provider.find(@loaded_fixtures['katello_providers']['candlepin_redhat']['id'])
 
-    @@org.set_owner
+    CandlepinOwnerSupport.set_owner(@@org)
   end
 
   def self.after_suite

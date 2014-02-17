@@ -21,6 +21,7 @@ describe GpgKey, :katello => true do
   let(:organization) do
     disable_org_orchestration
     as_admin do
+      User.current.stubs(:remote_id).returns(User.current.login)
       Organization.create!(:name => "Duh", :label => "ahaha")
     end
   end

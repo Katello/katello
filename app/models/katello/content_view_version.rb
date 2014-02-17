@@ -196,7 +196,11 @@ class ContentViewVersion < Katello::Model
   private
 
   def add_environment(env)
-    content_view.add_environment(env) if content_view.content_view_versions.in_environment(env).count == 0
+    if content_view.content_view_versions.in_environment(env).empty?
+      env = content_view.add_environment(env)
+      ForemanTasks.sync_task(::Actions::Headpin::ContentView::EnvironmentCreate, env)
+    end
+
   end
 
   def remove_environment(env)
