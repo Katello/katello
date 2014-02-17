@@ -24,7 +24,10 @@ class RefactorContentViews < ActiveRecord::Migration
     add_column :katello_content_view_versions, :user, :string
     add_column :katello_content_view_environments, :content_view_version_id, :integer
     remove_column :katello_content_views, :content_view_definition_id
-    rename_column :katello_component_content_views, :content_view_definition_id, :component_content_view_id
+
+    rename_column :katello_component_content_views, :content_view_definition_id, :content_view_version_id
+    rename_table :katello_component_content_views, :katello_content_view_components
+
     rename_table :katello_content_view_definition_repositories, :katello_content_view_repositories
     rename_column :katello_content_view_repositories, :content_view_definition_id, :content_view_id
 
@@ -80,7 +83,10 @@ class RefactorContentViews < ActiveRecord::Migration
     remove_column :katello_content_view_versions, :user
     remove_column :katello_content_view_environments, :content_view_version_id
     add_column :katello_content_views, :content_view_definition_id, :integer
-    rename_column :katello_component_content_views, :component_content_view_id, :content_view_definition_id
+
+    rename_table :katello_content_view_components, :katello_component_content_views
+    rename_column :katello_component_content_views, :content_view_version_id, :content_view_definition_id
+
     rename_column :katello_content_view_repositories, :content_view_id, :content_view_definition_id
     rename_table :katello_content_view_repositories, :katello_content_view_definition_repositories
 

@@ -35,13 +35,9 @@ class ContentView < Katello::Model
   has_many :content_view_versions, :class_name => "Katello::ContentViewVersion", :dependent => :destroy
   alias_method :versions, :content_view_versions
 
-  has_many :component_content_views, :class_name => "Katello::ComponentContentView", :dependent => :destroy
-  has_many :content_views, :through => :component_content_views, :source => :component_content_view
-
-  has_many :composite_content_views, :class_name => "Katello::ContentView",
-           :through => :composite_component_content_views
-  has_many :composite_component_content_views, :class_name => "Katello::ComponentContentView",
-           :dependent => :destroy
+  has_many :content_view_components, :class_name => "Katello::ContentViewComponent", :dependent => :destroy
+  has_many :components, :through => :content_view_components, :class_name => "Katello::ContentViewVersion",
+    :source => :content_view_version
 
   has_many :distributors, :class_name => "Katello::Distributor", :dependent => :restrict
   has_many :content_view_repositories, :dependent => :destroy
@@ -391,7 +387,7 @@ class ContentView < Katello::Model
     # Check to see if there is a puppet conflict in the component views. A
     # conflict exists if more than one view has a puppet repo
     if self.composite?
-      repos = component_content_views.map { |view| view.repos(organization.library) }.flatten
+      repos = content_view_components.map { |view| view.repos(organization.library) }.flatten
       return repos.select(&:puppet?).length > 1
     end
     false

@@ -31,10 +31,17 @@ class ContentViewVersion < Katello::Model
   has_many :repositories, :class_name => "Katello::Repository", :dependent => :destroy
   has_one :task_status, :class_name => "Katello::TaskStatus", :as => :task_owner, :dependent => :destroy
 
+  has_many :content_view_components
+  has_many :composite_content_views, :through => :content_view_components
+
   scope :default_view, joins(:content_view).where("#{Katello::ContentView.table_name}.default" => true)
   scope :non_default_view, joins(:content_view).where("#{Katello::ContentView.table_name}.default" => false)
 
   def to_s
+    name
+  end
+
+  def name
     "#{content_view} #{version}"
   end
 
