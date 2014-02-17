@@ -25,7 +25,7 @@ class Api::V2::SubscriptionsControllerTest < ActionController::TestCase
   def models
     @system = katello_systems(:simple_server)
     @products = katello_products
-    @organization = get_organization(:organization1)
+    @organization = get_organization
   end
 
   def permissions

@@ -23,7 +23,7 @@ describe Changeset, :katello => true do
       disable_user_orchestration
 
       User.current  = users(:admin)
-      @organization = get_organization(:organization1)
+      @organization = get_organization
       @environment  = katello_environments(:dev)
       @changeset    = PromotionChangeset.create!(:environment => @environment, :name => "foo-changeset")
     end

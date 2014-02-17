@@ -15,14 +15,14 @@
 require 'katello_test_helper'
 
 module Katello
-describe Util::Model do
+class UtilModelSpec < ActiveSupport::TestCase
 
   it "should return tags for organization" do
     disable_org_orchestration
-    @o1 = Organization.create!(:name=>'test_org1', :label=> 'test_org1')
+    @o1 = get_organization
     @provider = Provider.create!(:provider_type=>Provider::CUSTOM, :name=>"foo1", :organization=>@o1)
     @provider2 = Provider.create!(:provider_type=>Provider::CUSTOM, :name=>"foo2", :organization=>@o1)
-    Tag.tags_for("providers", @o1.id).size.must_equal(2)
+    Tag.tags_for("providers", @o1.id).size.must_equal(4)
   end
 
   describe "labelize tests" do

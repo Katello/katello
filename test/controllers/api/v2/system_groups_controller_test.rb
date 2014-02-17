@@ -25,7 +25,7 @@ module Katello
     def models
       @system = katello_systems(:simple_server)
       @system_group = katello_system_groups(:simple_group)
-      @organization = get_organization(:organization1)
+      @organization = get_organization
 
       SystemGroup.stubs('any_readable?').with(@organization).returns(true)
       stub_find_organization(@organization)

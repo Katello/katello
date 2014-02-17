@@ -22,7 +22,7 @@ class RepositoryTestBase < ActiveSupport::TestCase
   end
 
   def setup
-    @acme_corporation     = get_organization(:organization1)
+    @acme_corporation     = get_organization
 
     @fedora_17_x86_64     = Repository.find(katello_repositories(:fedora_17_x86_64).id)
     @fedora_17_x86_64_dev = Repository.find(katello_repositories(:fedora_17_x86_64_dev).id)

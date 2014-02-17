@@ -22,7 +22,7 @@ class Api::V2::GpgKeysControllerTest < ActionController::TestCase
   end
 
   def models
-    @organization = get_organization(:organization1)
+    @organization = get_organization
     @product = Product.find(katello_products(:fedora).id)
   end
 

@@ -23,7 +23,7 @@ class Api::V2::ProductsControllerTest < ActionController::TestCase
   end
 
   def models
-    @organization = get_organization(:organization1)
+    @organization = get_organization
     @provider = katello_providers(:fedora_hosted)
     @product = katello_products(:empty_product)
   end

@@ -22,7 +22,7 @@ class ProductsControllerTest < ActionController::TestCase
     disable_glue_layers(services, models)
 
     setup_controller_defaults
-    @org = get_organization(:organization1)
+    @org = get_organization
     @environment = katello_environments(:library)
     @redhat_product = katello_products(:redhat)
     @custom_product = katello_products(:fedora)
