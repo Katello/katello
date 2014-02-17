@@ -39,4 +39,3 @@ module Actions
     end
   end
 end
-
