@@ -118,10 +118,14 @@ EOKEY
     Resources::Candlepin::Owner.stubs(:create_user).returns(true)
     Resources::Candlepin::Owner.stubs(:destroy).returns(true)
     Resources::Candlepin::Owner.stubs(:get_ueber_cert).returns({ :cert => CERT, :key => KEY })
+    disable_foreman_tasks_hooks(Organization)
+    disable_foreman_tasks_hooks(ContentView)
+    Organization.stubs(:disable_auto_reindex!).returns
     disable_env_orchestration # env is orchestrated with org - we disable this as well
   end
 
   def disable_env_orchestration
+    disable_foreman_tasks_hooks(KTEnvironment)
     Resources::Candlepin::Environment.stubs(:create).returns({})
     Resources::Candlepin::Environment.stubs(:destroy).returns({})
     Resources::Candlepin::Environment.stubs(:find).returns({ :environmentContent => [] })

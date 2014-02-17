@@ -1,4 +1,4 @@
-#
+  #
 # Copyright 2013 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
@@ -14,6 +14,7 @@ module Katello
 class ContentViewEnvironment < Katello::Model
   self.include_root_in_json = false
 
+  include ForemanTasks::Concerns::ActionSubject
   include Glue::Candlepin::Environment if Katello.config.use_cp
   include Glue if Katello.config.use_cp
 

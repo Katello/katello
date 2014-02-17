@@ -18,7 +18,6 @@ module Glue::Candlepin::Owner
     base.send :include, InstanceMethods
 
     base.class_eval do
-      before_save :save_owner_orchestration
       before_destroy :destroy_owner_orchestration
 
       validates :label,
@@ -38,14 +37,6 @@ module Glue::Candlepin::Owner
       hash = hash.merge(:service_levels => self.service_levels)
       hash = hash.merge(:service_level => self.service_level)
       hash
-    end
-
-    def set_owner
-      Rails.logger.debug _("Creating an owner in candlepin: %s") % name
-      Katello::Resources::Candlepin::Owner.create(label, name)
-    rescue => e
-      Rails.logger.error _("Failed to create candlepin owner %s") % "#{name}: #{e}, #{e.backtrace.join("\n")}"
-      raise e
     end
 
     def del_owner
@@ -90,13 +81,6 @@ module Glue::Candlepin::Owner
     rescue => e
       Rails.logger.error _("Failed to delete all systems for owner %{org} in candlepin: %{message}") % {:org => name, :message => "#{e}, #{e.backtrace.join("\n")}"}
       raise e
-    end
-
-    def save_owner_orchestration
-      case self.orchestration_for
-      when :create
-        pre_queue.create(:name => "candlepin owner for organization: #{self.name}", :priority => 3, :action => [self, :set_owner])
-      end
     end
 
     def destroy_owner_orchestration
