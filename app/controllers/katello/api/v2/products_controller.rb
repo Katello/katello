@@ -52,15 +52,15 @@ module Katello
     param :enabled, :bool, :desc => "Filter products by enabled or disabled"
     param_group :search, Api::V2::ApiController
     def index
-      filters = []
-
-      filters << {:terms => {:id => product_ids_filter(params[:subscription_id])}}
-      filters << {:terms => {:name => [params[:name]]}} if params[:name]
-      filters << {:terms => {:enabled => [params[:enabled].to_bool]}} if params[:enabled]
       options = {
-        :filters => filters,
+        :filters => [],
         :load_records? => true
-      }.merge(sort_params)
+      }
+
+      options[:filters] << {:terms => {:id => filter_by_subscription(params[:subscription_id])}}
+      options[:filters] << {:term => {:name => params[:name]}} if params[:name]
+      options[:filters] << {:term => {:enabled => params[:enabled].to_bool}} if params[:enabled]
+      options.merge!(sort_params)
       respond(:collection => item_search(Product, params, options))
     end
 
@@ -110,7 +110,7 @@ module Katello
       @product = Product.find_by_id(params[:id]) if params[:id]
     end
 
-    def product_ids_filter(subscription_id = nil)
+    def filter_by_subscription(subscription_id = nil)
       ids = Product.all_readable(@organization).pluck(:id)
       if subscription_id
         @subscription = Pool.find_by_organization_and_id!(@organization, subscription_id)
