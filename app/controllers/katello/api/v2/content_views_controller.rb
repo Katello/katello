@@ -16,6 +16,8 @@ module Katello
 
     before_filter :find_content_view, :except => [:index, :create]
     before_filter :find_organization, :only => [:index, :create]
+    before_filter :find_environment, :only => [:index]
+
     before_filter :authorize
 
     wrap_parameters :include => (ContentView.attribute_names + %w(repository_ids))
@@ -107,6 +109,11 @@ module Katello
       attrs = [:name, :description, {:repository_ids => []}]
       attrs.push(:label) if action_name == "create"
       params.require(:content_view).permit(*attrs)
+    end
+
+    def find_environment
+      return unless params.key?(:environment_id)
+      @environment = KTEnvironment.find(params[:environment_id])
     end
   end
 end

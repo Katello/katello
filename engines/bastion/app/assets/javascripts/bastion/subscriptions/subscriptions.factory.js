@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Red Hat, Inc.
+ * Copyright 2013-2014 Red Hat, Inc.
  *
  * This software is licensed to you under the GNU General Public
  * License as published by the Free Software Foundation; either version
@@ -16,7 +16,6 @@
  * @name  Bastion.subscriptions.factory:Subscription
  *
  * @requires $resource
- * @requires Routes
  * @requires CurrentOrganization
  *
  * @description
@@ -24,7 +23,7 @@
  */
 angular.module('Bastion.subscriptions').factory('Subscription', ['$resource', 'CurrentOrganization',
     function ($resource, CurrentOrganization) {
-        return $resource('/katello/api/organizations/:org/subscriptions/:id/:action', {'org': CurrentOrganization}, {
+        return $resource('/api/v2/organizations/:org/subscriptions/:id/:action', {'org': CurrentOrganization}, {
             query: {method: "GET"}
         });
     }]

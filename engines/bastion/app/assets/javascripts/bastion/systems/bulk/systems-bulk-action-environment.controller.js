@@ -16,37 +16,34 @@
  * @name  Bastion.systems.controller:SystemsBulkActionEnvironmentController
  *
  * @requires $scope
- * @requires BulkAction
+ * @requires SystemBulkAction
+ * @requires Organization
  * @requires CurrentOrganization
- * @requires $http
  * @requires ContentView
- * @requires Routes
  *
  * @description
  *   A controller for providing bulk action functionality for setting content view and environment
  */
 angular.module('Bastion.systems').controller('SystemsBulkActionEnvironmentController',
-    ['$scope', 'BulkAction', 'CurrentOrganization', '$http', 'ContentView', 'Routes',
-    function ($scope, BulkAction, CurrentOrganization, $http, ContentView, Routes) {
+    ['$scope', 'SystemBulkAction', 'Organization', 'CurrentOrganization', 'ContentView',
+    function ($scope, SystemBulkAction, Organization, CurrentOrganization, ContentView) {
 
         $scope.setState(false, [], []);
-        $scope.selected = {};
+        $scope.selected = {
+            environment: undefined,
+            contentView: undefined
+        };
 
-        $http.get(Routes.organizationEnvironmentsPath(CurrentOrganization) + '/registerable_paths').success(function (paths) {
-            $scope.promotionPaths = paths;
-        });
+        $scope.environments = Organization.registerableEnvironments({organizationId: CurrentOrganization});
 
-        $scope.setLibraryEnvironment = function () {
-            var library = $scope.promotionPaths[0][0];
-            if ($scope.selected.environment !== library) {
-                $scope.selected.environment = library;
+        $scope.$watch('selected.environment', function (environment) {
+            if (environment) {
                 $scope.fetchViews();
             }
-        };
+        });
 
         $scope.fetchViews = function () {
             $scope.fetchingContentViews = true;
-            $scope.selected.contentView = undefined;
 
             ContentView.query({ 'environment_id': $scope.selected.environment.id }, function (response) {
                 $scope.contentViews = response.results;
@@ -57,7 +54,7 @@ angular.module('Bastion.systems').controller('SystemsBulkActionEnvironmentContro
         $scope.performAction = function () {
             $scope.setState(true, [], []);
 
-            BulkAction.environmentContentView(actionParams(), function (response) {
+            SystemBulkAction.environmentContentView(actionParams(), function (response) {
                 $scope.setState(false, response.displayMessages, []);
             }, function (data) {
                 $scope.setState(false, [], data.errors);

@@ -45,7 +45,7 @@ class Api::V2::SystemsBulkActionsControllerTest < ActionController::TestCase
     @systems = [@system1, @system2]
     @system_ids = @systems.map(&:id)
 
-    @org = get_organization(:organization1)
+    @org = get_organization
     @view = katello_content_views(:library_view)
     @library = @org.library
     @system_group1 = katello_system_groups(:simple_group)

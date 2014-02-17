@@ -27,6 +27,10 @@ class DashboardController < Katello::ApplicationController
     'dashboard'
   end
 
+  def title
+    _('Welcome')
+  end
+
   def update
     if params[:columns]
       columns = params[:columns].map { |key, column| column }

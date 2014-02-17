@@ -1,0 +1,12 @@
+<ul class="list-unstyled" ng-show="product.sync_status.finish_time">
+  <p translate>Last synced on {{ product.sync_status.finish_time | date:'short' }}</p>
+  <li ng-repeat="(key, value) in product.repositoriesByState">
+    <a ng-href="{{ RootURL }}/sync_management">{{ key | capitalize }}</a>:
+            <span translate
+                  translate-n="value.length"
+                  translate-plural="{{ value.length }} repositories">
+              {{ value.length }} repository
+            </span>
+  </li>
+</ul>
+<span ng-hide="product.sync_status.finish_time" translate>Never synced</span>

@@ -12,7 +12,7 @@
  **/
 
 describe('Controller: SystemsController', function() {
-    var $scope, gettext, System, Nutupane, Routes;
+    var $scope, gettext, System, Nutupane;
 
     // load the systems module and template
     beforeEach(module('Bastion.systems', 'Bastion.test-mocks'));
@@ -26,10 +26,6 @@ describe('Controller: SystemsController', function() {
             this.removeRow = function() {};
             this.get = function() {};
             this.enableSelectAllResults = function() {}
-        };
-        Routes = {
-            apiSystemsPath: function() { return '/api/systems';},
-            editSystemPath: function(id) { return '/system/' + id;}
         };
         gettext = function(message) {
             return message;

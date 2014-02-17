@@ -24,7 +24,7 @@ describe SearchController do
 
     @user = users(:restricted)
 
-    @organization = get_organization(:organization1)
+    @organization = get_organization
     @controller.stubs(:current_organization).returns(@organization)
 
     @from_resource = "/resource"

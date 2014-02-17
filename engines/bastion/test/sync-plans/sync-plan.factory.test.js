@@ -14,12 +14,22 @@
 describe('Factory: SyncPlan', function() {
     var $httpBackend,
         SyncPlan,
-        syncPlans;
+        syncPlans,
+        products;
 
     beforeEach(module('Bastion.sync-plans'));
 
     beforeEach(module(function($provide) {
         syncPlans = {
+            records: [
+                { name: 'SyncPlan1', id: 1, products: [{id: 3, name: 'product1'}]},
+                { name: 'SyncPlan2', id: 2 }
+            ],
+            total: 2,
+            subtotal: 2
+        };
+
+        products = {
             records: [
                 { name: 'SyncPlan1', id: 1 },
                 { name: 'SyncPlan2', id: 2 }
@@ -43,7 +53,7 @@ describe('Factory: SyncPlan', function() {
     });
 
     it('provides a way to get a list of syncPlans', function() {
-        $httpBackend.expectGET('/katello/api/organizations/ACME/sync_plans?full_result=true').respond(syncPlans);
+        $httpBackend.expectGET('/api/v2/organizations/ACME/sync_plans?full_result=true').respond(syncPlans);
 
         SyncPlan.query(function(syncPlans) {
             expect(syncPlans.records.length).toBe(2);
@@ -54,11 +64,33 @@ describe('Factory: SyncPlan', function() {
         var updatedSyncPlan = syncPlans.records[0];
 
         updatedSyncPlan.name = 'NewSyncPlanName';
-        $httpBackend.expectPUT('/katello/api/organizations/ACME/sync_plans/1').respond(updatedSyncPlan);
+        $httpBackend.expectPUT('/api/v2/organizations/ACME/sync_plans/1').respond(updatedSyncPlan);
 
         SyncPlan.update({ id: 1 }, function(syncPlan) {
             expect(syncPlan).toBeDefined();
             expect(syncPlan.name).toBe('NewSyncPlanName');
         });
+    });
+
+    it('provides a way to list the available products', function() {
+        $httpBackend.expectGET('/api/v2/organizations/ACME/sync_plans/1/available_products').respond(products);
+        SyncPlan.availableProducts({id: 1}, function(products) {
+            expect(products).toBe(products);
+        });
+    });
+
+    it('provides a way to add product(s) to a syncPlan', function() {
+        $httpBackend.expectPUT('/api/v2/organizations/ACME/sync_plans/1/add_products').respond(products);
+        SyncPlan.addProducts({id: 1});
+    });
+
+    it('provides a way to remove product(s) from a syncPlan', function() {
+        $httpBackend.expectPUT('/api/v2/organizations/ACME/sync_plans/1/remove_products').respond(products);
+        SyncPlan.removeProducts({id: 1});
+    });
+
+    it("provides a way to display the syncPlan's products", function() {
+        $httpBackend.expectGET('/api/v2/organizations/ACME/sync_plans/1').respond(syncPlans.records[0]);
+        SyncPlan.products({id: 1});
     });
 });

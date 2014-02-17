@@ -23,7 +23,7 @@
 angular.module('Bastion.errata').factory('Erratum',
     ['$resource', function ($resource) {
 
-        return $resource('/katello/api/errata/:id/', {id: '@id'}, {
+        return $resource('/api/v2/errata/:id/', {id: '@id'}, {
             query:  { method: 'GET'}
         });
 

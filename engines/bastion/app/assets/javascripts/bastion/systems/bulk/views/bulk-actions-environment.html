@@ -1,3 +1,5 @@
+<span page-title>{{ 'System Bulk Content' | translate }}</span>
+
 <div class="details">
   <section>
     <h4 translate>Assign Environment and Content View</h4>
@@ -10,42 +12,13 @@
       <button class="btn btn-default" ng-click="confirm = false; performAction()" translate>Yes</button>
     </div>
 
+    <div path-selector="environments"
+         ng-model="selected.environment"
+         mode="singleSelect"
+         disable-trigger="disableEnvironmentSelection">
+    </div>
+
     <form name="systemContentForm" class="form" ng-hide="content.workingMode">
-
-      <table>
-        <thead>
-          <tr translate>
-            Environment Path
-          </tr>
-        </thead>
-
-        <tbody>
-          <tr ng-repeat="path in promotionPaths">
-
-            <td>
-               <div class="path_selector">
-                 <ul>
-                   <li ng-repeat="env in path">
-                     <label>
-                       <div ng-if="$parent.$index > 0 && $index == 0" ng-click="setLibraryEnvironment()">
-                         {{env.name }}
-                       </div>
-
-                       <div ng-if="!($parent.$index > 0 && $index == 0)">
-                         <input type="radio" name="selectedEnvironment"
-                                ng-change="fetchViews()"
-                                ng-model="selected.environment"
-                                ng-value="env"/>
-                         {{ env.name }}
-                       </div>
-                     </label>
-                   </li>
-                 </ul>
-               </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
 
       <div>
         <label translate>Content View:</label>

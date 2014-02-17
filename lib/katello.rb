@@ -18,6 +18,7 @@ require "anemone"
 
 require "runcible"
 
+require "angular-rails-templates"
 require "simple_navigation"
 require "haml-rails"
 require "compass-rails"
@@ -44,3 +45,5 @@ module Katello
   require "katello/actions/actions"
 
 end
+
+require File.expand_path("../engines/fort/lib/fort", File.dirname(__FILE__))

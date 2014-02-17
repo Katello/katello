@@ -56,8 +56,8 @@ describe('Controller: ManifestDetailsController', function() {
             Provider = $injector.get('Provider'),
             $httpBackend = $injector.get('$httpBackend');
 
-        $httpBackend.expectGET('/api/katello/organization/ACME').respond(organization);
-        $httpBackend.expectGET('/api/katello/providers/1').respond(provider);
+        $httpBackend.expectGET('/api/organization/ACME').respond(organization);
+        $httpBackend.expectGET('/api/providers/1').respond(provider);
 
         $scope = $injector.get('$rootScope').$new();
         $q = $injector.get('$q');

@@ -23,7 +23,7 @@ module Katello
     end
 
     def models
-      @organization = get_organization(:organization1)
+      @organization = get_organization
       @products = katello_products(:empty_product, :empty_product_2)
       @provider = katello_providers(:fedora_hosted)
     end

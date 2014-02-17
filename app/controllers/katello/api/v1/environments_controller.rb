@@ -44,7 +44,7 @@ class Api::V1::EnvironmentsController < Api::V1::ApiController
   end
 
   respond_to :json
-  before_filter :find_organization, :only => [:index, :rhsm_index, :create]
+  before_filter :find_organization, :only => [:index, :create]
   before_filter :find_environment, :only => [:show, :update, :destroy, :repositories, :releases]
   before_filter :find_content_view, :only => [:repositories]
   before_filter :authorize
@@ -66,7 +66,6 @@ class Api::V1::EnvironmentsController < Api::V1::ApiController
 
     {
         :index        => index_rule,
-        :rhsm_index   => index_rule,
         :show         => view_rule,
         :create       => manage_rule,
         :update       => manage_rule,
@@ -81,7 +80,6 @@ class Api::V1::EnvironmentsController < Api::V1::ApiController
         :create     => { :environment => %w(name label description prior) },
         :update     => { :environment => %w(name description prior) },
         :index      => [:name, :label, :library, :id, :organization_id, :environment],
-        :rhsm_index => [:name, :library, :id, :organization_id, :environment]
     }
   end
 
@@ -121,19 +119,6 @@ class Api::V1::EnvironmentsController < Api::V1::ApiController
       end
     end
     respond
-  end
-
-  api :GET, "/owners/:organization_id/environments", "List environments for RHSM"
-  param_group :search_params
-  def rhsm_index
-    @all_environments = get_content_view_environments(query_params[:name]).collect do |env|
-      { :id  => env.cp_id,
-        :name => env.label,
-        :display_name => env.name,
-        :description => env.content_view.description }
-    end
-
-    respond_for_index :collection => @all_environments
   end
 
   api :GET, "/environments/:id", "Show an environment"

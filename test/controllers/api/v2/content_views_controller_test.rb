@@ -24,7 +24,7 @@ module Katello
     end
 
     def models
-      @organization = get_organization(:organization1)
+      @organization = get_organization
       @library = katello_environments(:library)
       @content_view = katello_content_views(:library_dev_view)
     end

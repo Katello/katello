@@ -1,8 +1,9 @@
-<div ng-repeat="path in paths">
+
+<div class="path-selector" ng-repeat="path in paths">
   <ul class="path-list">
-    <li class="path-list-item" ng-repeat="item in path">
+    <li class="path-list-item" ng-repeat="item in path" ng-class="{ 'disabled-item': item.disabled }">
       <label class="path-list-item-label" ng-class="{ active: item.selected }" ng-mouseenter="hover = true" ng-mouseleave="hover = false">
-        <input type="checkbox" ng-model="item.selected" ng-show="item.selectable" ng-disabled="!item.selectable"/>
+        <input type="checkbox" ng-model="item.selected" ng-change="itemSelected(item)" ng-disabled="item.disabled"/>
         {{ item.name }}
       </label>
     </li>

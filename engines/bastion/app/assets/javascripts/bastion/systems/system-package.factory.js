@@ -16,20 +16,20 @@
  * @name  Bastion.systems.factory:SystemPackage
  *
  * @requires $resource
- * @requires Routes
  *
  * @description
  *   Provides a $resource for the system packages of a single system
  */
 angular.module('Bastion.systems').factory('SystemPackage',
-    ['$resource', 'Routes',
-    function ($resource, Routes) {
-        return $resource(Routes.apiSystemsPath() + '/:id/packages/:action', {id: '@uuid'}, {
+    ['$resource', function ($resource) {
+
+        return $resource('/api/v2/systems/:id/packages/:action', {id: '@uuid'}, {
             get: {method: 'GET', isArray: false},
             remove: {method: 'PUT', params: {action: 'remove'}},
             install: {method: 'PUT', params: {action: 'install'}},
             update: {method: 'PUT', params: {action: 'upgrade'}},
             updateAll: {method: 'PUT', params: {action: 'upgrade_all'}}
         });
+
     }]
 );

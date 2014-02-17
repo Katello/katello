@@ -15,7 +15,6 @@ describe('Factory: System', function() {
     var $resource,
         $q,
         System,
-        Routes,
         releaseVersions,
         availableSubscriptions,
         systemsCollection;
@@ -35,11 +34,6 @@ describe('Factory: System', function() {
         releaseVersions = ['RHEL 6', 'Burrito'];
 
         availableSubscriptions = ['subscription1', 'subscription2'];
-
-        Routes = {
-            apiSystemsPath: function() { return '/api/systems';},
-            editSystemsPath: function(id) { return '/system/' + id;}
-        };
 
         $resource = function() {
             this.get = function(id) {
@@ -71,7 +65,6 @@ describe('Factory: System', function() {
         };
 
         $provide.value('$resource', $resource);
-        $provide.value('Routes', Routes);
         $provide.value('CurrentOrganization', 'ACME');
     }));
 

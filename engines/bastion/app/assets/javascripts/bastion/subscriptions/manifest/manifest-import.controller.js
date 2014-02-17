@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Red Hat, Inc.
+ * Copyright 2013-2014 Red Hat, Inc.
  *
  * This software is licensed to you under the GNU General Public
  * License as published by the Free Software Foundation; either version
@@ -30,9 +30,9 @@ angular.module('Bastion.subscriptions').controller('ManifestImportController',
     function ($scope, $q, gettext, CurrentOrganization, Provider, Organization) {
 
         $scope.uploadErrorMessages = [];
-        $scope.organizationId = CurrentOrganization;
         $scope.progress = {uploading: false};
         $scope.showHistoryMoreLink = false;
+        $scope.uploadURL = $scope.RootURL + '/api/v2/organizations/' + CurrentOrganization + '/subscriptions/upload';
 
         $scope.organization = Organization.get({id: CurrentOrganization});
 

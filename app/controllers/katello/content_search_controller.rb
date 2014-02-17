@@ -51,6 +51,10 @@ class ContentSearchController < Katello::ApplicationController
     "content_search"
   end
 
+  def title
+    _('Content Search')
+  end
+
   def index
     render :index, :locals => { :environments => environment_paths(library_path_element("contents_readable?"),
                                                                    environment_path_element("contents_readable?")) }

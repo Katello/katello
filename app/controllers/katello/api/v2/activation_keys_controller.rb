@@ -11,31 +11,155 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
-class Api::V2::ActivationKeysController < Api::V1::ActivationKeysController
+  class Api::V2::ActivationKeysController < Api::V2::ApiController
 
-  include Api::V2::Rendering
+    before_filter :verify_presence_of_organization_or_environment, :only => [:index]
+    before_filter :find_environment, :only => [:index, :create, :update]
+    before_filter :find_optional_organization, :only => [:index]
+    before_filter :find_activation_key, :only => [:show, :update]
+    before_filter :authorize
 
-  resource_description do
-    api_version 'v2'
+    def rules
+      read_test   = lambda do
+        ActivationKey.readable?(@organization) ||
+          (ActivationKey.readable?(@environment.organization) unless @environment.nil?)
+      end
+      manage_test = lambda do
+        ActivationKey.manageable?(@organization) ||
+          (ActivationKey.manageable?(@environment.organization) unless @environment.nil?)
+      end
+      {
+        :index                => read_test,
+        :show                 => read_test,
+        :create               => manage_test,
+        :update               => manage_test
+      }
+    end
+
+    api :GET, "/activation_keys", "List activation keys"
+    api :GET, "/organizations/:organization_id/activation_keys"
+    param_group :search, Api::V2::ApiController
+    param :organization_id, :identifier, :desc => "organization identifier", :required => true
+    param :name, String, :desc => "system group name to filter by"
+    def index
+      # TODO: update filters
+      #filters = [:terms => {:id => SystemGroup.readable(@organization).pluck(:id)}]
+      #filters = [:terms => {:id => ActivationKey.where(params.slice(:name, :organization_id,
+      #                                                              :environment_id)).pluck(:id)}]
+      filters = [:terms => {:id => ActivationKey.readable(@organization).pluck(:id)}]
+      filters << {:term => {:name => params[:name].downcase}} if params[:name]
+
+      options = {
+          :filters       => filters,
+          :load_records? => true
+      }
+      respond_for_index(:collection => item_search(ActivationKey, params, options))
+    end
+
+    api :POST, "/activation_keys", "Create an activation key"
+    param :organization_id, :identifier, :desc => "organization identifier", :required => true
+    param :name, String, :desc => "name", :required => true
+    param :label, String, :desc => "unique label"
+    param :description, String, :desc => "description"
+    param :environment, Hash, :desc => "environment"
+    param :environment_id, :identifier, :desc => "environment id", :required => true
+    param :content_view_id, :identifier, :desc => "content view id", :required => true
+    param :usage_limit, :number, :desc => "maximum number of uses"
+    def create
+      @activation_key = ActivationKey.create!(activation_key_params) do |activation_key|
+        activation_key.environment = @environment
+        activation_key.organization = @environment.organization
+        activation_key.user = current_user
+      end
+      respond
+    end
+
+    api :PUT, "/activation_keys/:id", "Update a activation key"
+    param :id, :identifier, :desc => "ID of the activation key", :required => true
+    param :organization_id, :identifier, :desc => "organization identifier", :required => true
+    param :name, String, :desc => "name", :required => true
+    param :description, String, :desc => "description"
+    param :environment_id, :identifier, :desc => "environment id", :required => true
+    param :content_view_id, :identifier, :desc => "content view id", :required => true
+    param :usage_limit, :number, :desc => "maximum number of uses"
+    def update
+      @activation_key.update_attributes(activation_key_params)
+      respond
+    end
+
+    api :GET, "/activation_keys/:id", "Show an activation key"
+    param :id, :identifier, :desc => "ID of the activation key", :required => true
+    def show
+      respond
+    end
+
+    api :POST, "/activation_keys/:id/system_groups"
+    param :id, :identifier, :desc => "ID of the activation key", :required => true
+    def add_system_groups
+      ids = params[:activation_key][:system_group_ids]
+      @activation_key.system_group_ids = (@activation_key.system_group_ids + ids).uniq
+      @activation_key.save!
+      respond_for_show
+    end
+
+    api :DELETE, "/activation_keys/:id/system_groups"
+    def remove_system_groups
+      ids = params[:activation_key][:system_group_ids]
+      @activation_key.system_group_ids = (@activation_key.system_group_ids - ids).uniq
+      @activation_key.save!
+      respond_for_show
+    end
+
+    private
+
+    def find_environment
+      environment_id = params[:environment_id]
+      environment_id = params[:environment][:id] if !environment_id && params.key?(:environment)
+      return if !environment_id
+
+      @environment = KTEnvironment.find(environment_id)
+      fail HttpErrors::NotFound, _("Couldn't find environment '%s'") % params[:environment_id] if @environment.nil?
+      @environment
+    end
+
+    def find_activation_key
+      @activation_key = ActivationKey.find(params[:id])
+      fail HttpErrors::NotFound, _("Couldn't find activation key '%s'") % params[:id] if @activation_key.nil?
+      @activation_key
+    end
+
+    def find_pool
+      @pool = Pool.find_by_organization_and_id(@activation_key.organization, params[:poolid])
+    end
+
+    def find_system_groups
+      ids = params[:activation_key][:system_group_ids] if params[:activation_key]
+      @system_groups = []
+      if ids
+        ids.each do |group_id|
+          group = SystemGroup.find(group_id)
+          fail HttpErrors::NotFound, _("Couldn't find system group '%s'") % group_id if group.nil?
+          @system_groups << group
+        end
+      end
+    end
+
+    def verify_presence_of_organization_or_environment
+      return if params.key?(:organization_id) || params.key?(:environment_id)
+      fail HttpErrors::BadRequest, _("Either organization ID or environment ID needs to be specified")
+    end
+
+    def activation_key_params
+      if params[:environment] && params[:environment][:id]
+        params[:environment_id] = params[:environment][:id]
+        params.delete(:environment)
+      end
+      if params[:content_view] && params[:content_view][:id]
+        params[:content_view_id] = params[:content_view][:id]
+        params.delete(:content_view)
+      end
+      attrs = [:name, :description, :environment_id, :usage_limit, :organization_id, :content_view_id]
+      params.require(:activation_key).permit(*attrs)
+    end
   end
-
-  api :GET, "/environments/:environment_id/activation_keys", "List activation keys"
-  api :GET, "/organizations/:organization_id/activation_keys", "List activation keys"
-  param :name, :identifier, :desc => "lists by activation key name"
-  def index
-    @activation_keys = ActivationKey.where(query_params.slice(:name, :organization_id, :environment_id))
-    respond
-  end
-
-  api :POST, "/activation_keys/:id/system_groups"
-  def add_system_groups
-    super
-  end
-
-  api :DELETE, "/activation_keys/:id/system_groups"
-  def remove_system_groups
-    super
-  end
-
-end
 end

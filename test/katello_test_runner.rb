@@ -1,5 +1,5 @@
 require 'ci/reporter/minitest'
-require 'support/vcr'
+require File.expand_path("support/vcr", File.dirname(__FILE__))
 
 module KatelloMiniTestRunner
   class Unit < CI::Reporter::Runner

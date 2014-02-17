@@ -13,15 +13,11 @@
 
 describe('Controller: EnvironmentsController', function () {
     var $scope,
-        Routes,
         Environment;
 
     beforeEach(module('Bastion.environments', 'Bastion.test-mocks'));
 
     beforeEach(function () {
-        Routes = {
-            apiOrganizationEnvironmentsPath: function (organizationId) {}
-        };
         Environment = {};
     });
 
@@ -36,7 +32,6 @@ describe('Controller: EnvironmentsController', function () {
             $scope: $scope,
             $timeout: $timeout,
             $http: $http,
-            Routes:Routes,
             Environment: Environment,
             CurrentOrganization: 'CurrentOrganization'
         });

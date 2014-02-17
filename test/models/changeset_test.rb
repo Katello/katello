@@ -22,7 +22,7 @@ class ChangesetTest < ActiveSupport::TestCase
   end
 
   def setup
-    @acme_corporation     = get_organization(:organization1)
+    @acme_corporation     = get_organization
 
     @library              = KTEnvironment.find(katello_environments(:library).id)
     @dev                  = KTEnvironment.find(katello_environments(:dev).id)
@@ -151,7 +151,7 @@ class ChangesetTest < ActiveSupport::TestCase
   end
 
   def test_content_view_promotion_during_publish_or_refresh
-    task = FactoryGirl.create(:task_status, :user => User.find(users(:admin)))
+    task = FactoryGirl.create(:task_status, :user => User.find(users(:admin)), :organization => @acme_corporation)
     ContentViewVersion.any_instance.stubs(:task_status).returns(task)
     TaskStatus.any_instance.stubs(:pending?).returns(true)
 

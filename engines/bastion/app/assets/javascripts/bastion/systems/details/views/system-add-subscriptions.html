@@ -1,0 +1,99 @@
+<section class="nutupane-sub-section">
+
+  <div class="nutupane-bar">
+
+    <div class="col-sm-3">
+      <div class="input-group input-group">
+        <input type="text"
+               class="form-control"
+               placeholder="{{ 'Search...' | translate }}"
+               ng-model="addSubscriptionsTable.searchTerm"
+               on-enter="addSubscriptionsTable.search(addSubscriptionsTable.searchTerm)"/>
+        <span class="input-group-btn">
+          <button ng-click="addSubscriptionsTable.search(addSubscriptionsTable.searchTerm)" class="btn btn-default" type="button"><i class="icon-search"></i></button>
+        </span>
+      </div>
+    </div>
+
+    <div class="col-sm-3 nutupane-info">
+      <span translate>Showing {{ addSubscriptionsTable.rows.length }} of {{ addSubscriptionsTable.resource.subtotal }} ({{ addSubscriptionsTable.resource.total }} Total) Subscriptions</span>
+    </div>
+
+    <div class="fr">
+      <div class="fl nutupane-info">
+        <span translate>{{ addSubscriptionsTable.numSelected }} Selected</span>
+        <span>|</span>
+        <a class="deselect-action"
+           translate
+           ng-class="{ 'disabled-link' : addSubscriptionsTable.numSelected == 0 }"
+           ng-click="addSubscriptionsTable.selectAll(false)">
+          Deselect All
+        </a>
+      </div>
+
+      <div ng-hide="system.readonly" class="nutupane-actions fr">
+         <button class="btn btn-primary"
+                 translate
+                 ng-disabled="disableAddButton()"
+                 ng-click="addSelected()">
+           Add Selected
+         </button>
+      </div>
+
+    </div>
+  </div>
+
+  <div alch-table="addSubscriptionsTable" class="nutupane">
+    <div alch-container-scroll control-width="addSubscriptionsTable" alch-infinite-scroll="addSubscriptionsTable.nextPage()">
+
+      <div class="loading-mask icon-3x" ng-show="addSubscriptionsTable.working && addSubscriptionsTable.rows.length == 0">
+        <i class="icon-spinner icon-spin"></i>
+        {{ "Loading..." | translate }}
+      </div>
+
+      <table ng-class="{'table-mask': addSubscriptionsTable.working}" class="table table-full table-striped">
+        <thead>
+          <tr alch-table-head row-select>
+            <th alch-table-column="quantity" sortable class="align-center">{{ "Quantity" | translate }}</th>
+            <th alch-table-column="attached" sortable>{{ "Attached" | translate }}</th>
+            <th alch-table-column="startDate" sortable>{{ "Starts" | translate }}</th>
+            <th alch-table-column="endDate" sortable>{{ "Expires" | translate }}</th>
+            <th alch-table-column="supportLevel">{{ "Support Level" | translate }}</th>
+            <th alch-table-column="contractNumber" sortable>{{ "Contract" | translate }}</th>
+            <th alch-table-column="accountNumber" sortable>{{ "Account" | translate }}</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr alch-table-row ng-repeat-start="(name, subscriptions) in groupedSubscriptions">
+            <td alch-table-cell colspan="8">
+              <a ui-sref="subscriptions.details.info({subscriptionId: name})">
+                {{ name }}
+              </a>
+            </td>
+          </tr>
+          <tr alch-table-row ng-repeat-end ng-repeat="subscription in subscriptions" row-select="subscription">
+            <td alch-table-cell>
+              <span ng-hide="subscription.multi_entitlement">
+                1
+              </span>
+              <select ng-hide="!subscription.multi_entitlement"
+                      ng-model="subscription.amount"
+                      ng-options="amount for amount in amountSelectorValues(subscription)"
+                      >
+                <option value="">{{ "Automatic" | translate }}</option>
+              </select>
+            </td>
+            <td alch-table-cell>{{ subscription | subscriptionConsumedFilter }}</td>
+            <td alch-table-cell>{{ subscription.start_date | date:"shortDate" }}</td>
+            <td alch-table-cell>{{ subscription.end_date | date:"shortDate" }}</td>
+            <td alch-table-cell>{{ subscription.support_level }}</td>
+            <td alch-table-cell>{{ subscription.contract_number }}</td>
+            <td alch-table-cell>{{ subscription.account_number }}</td>
+          </tr>
+        </tbody>
+
+      </table>
+    </div>
+  </div>
+</section>

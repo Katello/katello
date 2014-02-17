@@ -1,7 +1,9 @@
 = content_for(:stylesheets) do
-  = stylesheet_link_tag "bastion/less/bastion"
-  = stylesheet_link_tag "bastion/scss/bastion"
+  = stylesheet_link_tag "bastion/bastion"
   = yield :stylesheets
+
+= content_for(:title) do
+  Katello
 
 = content_for(:content) do
   %article.maincontent.rcue-styles{'ng-app' => "Bastion"}

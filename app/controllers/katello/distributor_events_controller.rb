@@ -19,6 +19,10 @@ class DistributorEventsController < Katello::ApplicationController
     'distributors'
   end
 
+  def title
+    _('Distributor Events')
+  end
+
   def rules
     read_distributor = lambda{@distributor.readable?}
 

@@ -1,0 +1,20 @@
+<span page-title ng-model="syncPlan">{{ 'Product Management for Sync Plan:' | translate }} {{ syncPlan.name }}</span>
+
+<h4 translate>Product Management</h4>
+<nav>
+  <ul class="nav nav-tabs">
+    <li ng-class="{active: isState('sync-plans.details.products.list')}">
+      <a ui-sref="sync-plans.details.products.list">
+        <span translate>List/Remove</span>
+      </a>
+    </li>
+
+    <li ng-class="{active: isState('sync-plans.details.products.add')}">
+      <a ui-sref="sync-plans.details.products.add">
+        <span translate>Add</span>
+      </a>
+    </li>
+  </ul>
+</nav>
+
+<div ui-view></div>

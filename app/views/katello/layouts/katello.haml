@@ -18,6 +18,12 @@
     KT.routes.options.prefix = "#{Katello.config.url_prefix}";
   = render :partial => "katello/common/common_i18n"
 
+= content_for(:title) do
+  - if controller.respond_to?(:title)
+    - title = controller.title
+  - else
+    - title = "Katello"
+
 = content_for(:content) do
   %article#maincontent
     %section.maincontent.container_16{:id => section_id}

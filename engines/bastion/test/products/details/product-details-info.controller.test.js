@@ -95,9 +95,4 @@ describe('Controller: ProductDetailsInfoController', function() {
 
         expect($scope.product.$sync).toHaveBeenCalled();
     });
-
-    it('provides a way to attach a sync plan to the product', function() {
-
-    });
-
 });
