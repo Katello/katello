@@ -32,9 +32,8 @@ module Katello
 
       it 'runs' do
         run_action planned_action do |action|
-          consumer = mock('consumer')
-          action.expects(:pulp_extensions).returns(mock 'pulp_extensions', consumer: consumer)
-          consumer.expects(:create).with('uuid', display_name: 'name')
+          runcible_expects(action, :extensions, :consumer, :create).
+              with('uuid', display_name: 'name')
         end
       end
     end
@@ -51,9 +50,8 @@ module Katello
 
       def it_runs(invocation_method)
         action = run_action planned_action do |action|
-          consumer        = mock('consumer', invocation_method => task_base)
-          pulp_extensions = mock 'pulp_extensions', consumer: consumer
-          action.expects(:pulp_extensions).returns(pulp_extensions)
+          runcible_expects(action, :extensions, :consumer, invocation_method).
+              returns(task_base)
           stub_task_poll action, task_base.merge(task_finished_hash)
         end
 

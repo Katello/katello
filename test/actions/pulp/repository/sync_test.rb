@@ -33,10 +33,8 @@ module Katello
 
       plan_action action, pulp_id: 'pulp-id'
       action = run_action action do |action|
-        repository     = mock 'repository',
-                              sync: pulp_response
-        pulp_resources = mock 'pulp_resources', repository: repository
-        action.expects(:pulp_resources).returns(pulp_resources)
+        runcible_expects(action, :resources, :repository, :sync).
+            returns(pulp_response)
         stub_task_poll action, task2, task3
       end
 
