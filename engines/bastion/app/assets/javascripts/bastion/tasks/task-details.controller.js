@@ -25,7 +25,7 @@
 angular.module('Bastion.tasks').controller('TaskDetailsController',
     ['$scope', 'Task',
     function ($scope, Task) {
-        var taskId, fromState, fromParams;
+        var taskId;
 
         taskId = $scope.$stateParams.taskId;
 
