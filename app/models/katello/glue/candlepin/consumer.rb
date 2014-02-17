@@ -97,25 +97,6 @@ module Glue::Candlepin::Consumer
       json
     end
 
-    def set_candlepin_consumer
-      Rails.logger.debug "Creating a consumer in candlepin: #{name}"
-      consumer_json = Resources::Candlepin::Consumer.create(self.cp_environment_id,
-                                                            self.organization.label,
-                                                            self.name, self.cp_type,
-                                                            self.facts,
-                                                            self.installedProducts,
-                                                            self.autoheal,
-                                                            self.releaseVer,
-                                                            self.serviceLevel,
-                                                            self.uuid,
-                                                            self.capabilities)
-
-      load_from_cp(consumer_json)
-    rescue => e
-      Rails.logger.error "Failed to create candlepin consumer #{name}: #{e}, #{e.backtrace.join("\n")}"
-      raise e
-    end
-
     def load_from_cp(consumer_json)
       self.uuid = consumer_json[:uuid]
       consumer_json[:facts] ||= {'sockets' => 0}
@@ -250,8 +231,6 @@ module Glue::Candlepin::Consumer
       case orchestration_for
       when :hypervisor
         # it's already saved = do nothing
-      when :create
-        #pre_queue.create(:name => "create candlepin consumer: #{self.name}", :priority => 2, :action => [self, :set_candlepin_consumer])
       when :update
         pre_queue.create(:name => "update candlepin consumer: #{self.name}", :priority => 3, :action => [self, :update_candlepin_consumer])
       end
