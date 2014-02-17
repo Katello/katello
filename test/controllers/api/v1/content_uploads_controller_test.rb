@@ -25,7 +25,7 @@ describe Api::V1::ContentUploadsController do
   def setup
     setup_controller_defaults_api
     @repo = Repository.find(katello_repositories(:fedora_17_x86_64))
-    @org = get_organization(:organization1)
+    @org = get_organization
     @environment = katello_environments(:library)
     login_user(User.find(users(:admin)))
 

@@ -4,7 +4,7 @@ simple_cvd:
   description:  Simple CVD
   composite:    false
   type:         Katello::ContentViewDefinition
-  organization_id: <%= ActiveRecord::Fixtures.identify(:organization1) %>
+  organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>
 
@@ -14,7 +14,7 @@ populated_cvd:
   description:  This CVD has products, repositories, filters and rules
   composite:    false
   type:         Katello::ContentViewDefinition
-  organization_id: <%= ActiveRecord::Fixtures.identify(:organization1) %>
+  organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>
 
@@ -24,7 +24,7 @@ populated_with_repos_and_filters:
   description:  This CVD has repositories, filters and rules
   composite:    false
   type:         Katello::ContentViewDefinition
-  organization_id: <%= ActiveRecord::Fixtures.identify(:organization1) %>
+  organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>
 
@@ -33,6 +33,6 @@ composite_def:
   label:        Composite
   composite:    true
   type:         Katello::ContentViewDefinition
-  organization_id: <%= ActiveRecord::Fixtures.identify(:organization1) %>
+  organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>

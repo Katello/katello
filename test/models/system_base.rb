@@ -24,7 +24,7 @@ class SystemTestBase < ActiveSupport::TestCase
   end
 
   def setup
-    @acme_corporation   = get_organization(:organization1)
+    @acme_corporation   = get_organization
 
     @fedora             = Product.find(katello_products(:fedora).id)
     @dev                = KTEnvironment.find(katello_environments(:dev).id)

@@ -25,7 +25,7 @@ class Api::V2::RepositoriesControllerTest < ActionController::TestCase
   end
 
   def models
-    @organization = get_organization(:organization1)
+    @organization = get_organization
     @repository = katello_repositories(:fedora_17_unpublished)
     @product = katello_products(:fedora)
   end

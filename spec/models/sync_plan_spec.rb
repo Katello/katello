@@ -20,7 +20,7 @@ module Katello
 
     describe "SyncPlan should" do
       before(:each) do
-        @organization = get_organization(:organization1)
+        @organization = get_organization
         @plan = SyncPlan.create!({:name => 'Norman Rockwell', :organization => @organization, :sync_date => DateTime.now, :interval => 'daily'})
       end
 
@@ -132,7 +132,7 @@ module Katello
       it "reassign sync_plan to its products after update" do
         disable_product_orchestration
 
-        organization = get_organization(:organization1)
+        organization = get_organization
 
         @plan.products.create! ProductTestData::SIMPLE_PRODUCT.merge(
                                    :provider => organization.redhat_provider)

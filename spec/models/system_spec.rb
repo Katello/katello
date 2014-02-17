@@ -44,7 +44,7 @@ describe System do
   before(:each) do
     disable_org_orchestration
 
-    @organization = Organization.create!(:name=>'test_org', :label=> 'test_org')
+    @organization = get_organization
     @environment = @organization.library
 
     @system = System.new(:name => system_name,
@@ -75,11 +75,13 @@ describe System do
   end
 
   it "registers system in candlepin and pulp on create (katello)" do
-    Resources::Candlepin::Consumer.expects(:create).once.with(@environment.id.to_s, @organization.name,
-                                                                      system_name, cp_type, facts, installed_products,
-                                                                      nil, nil, nil, "1234", nil).returns({:uuid => uuid,
-                                                                                                :owner => {:key => uuid}})
+    Resources::Candlepin::Consumer.expects(:create).once.with(
+      @organization.default_content_view.cp_environment_id(@environment.id),
+      @organization.label, system_name, cp_type, facts, installed_products,
+      nil, nil, nil, "1234", nil
+    ).returns({:uuid => uuid,:owner => {:key => uuid}})
     Katello.pulp_server.extensions.consumer.expects(:create).once.with(uuid, {:display_name => system_name}).returns({:id => uuid}) if Katello.config.katello?
+
     @system.save!
   end
 
@@ -307,7 +309,7 @@ describe System do
       disable_product_orchestration
       disable_repo_orchestration
       @product = Product.create!(:name=>"prod1", :label=> "prod1", :cp_id => '12345', :provider => @organization.redhat_provider)
-      @environment = create_environment({:name=>"Dev", :label=> "Dev", :prior => @organization.library, :organization => @organization})
+      @environment = create_environment({:name=>"Dev 2", :label=> "Dev_2", :prior => @organization.library, :organization => @organization})
       environment = Katello.config.katello? ? @environment : @organization.library
       @releases = %w[6.1 6.2 6Server]
       @releases.each do |release|

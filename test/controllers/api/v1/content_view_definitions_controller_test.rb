@@ -24,7 +24,7 @@ describe Api::V1::ContentViewDefinitionsController do
     setup_controller_defaults_api
     login_user(User.find(users(:admin).id))
 
-    @organization = get_organization(:organization1)
+    @organization = get_organization
     organization_relation = stub(first: @organization)
     without_deleting = stub(having_name_or_label: organization_relation)
     Organization.stubs(:without_deleting).returns(without_deleting)

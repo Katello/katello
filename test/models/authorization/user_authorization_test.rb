@@ -89,7 +89,7 @@ class UserOrganizationAccess < AuthorizationTestBase
     super
     @user = @no_perms_user
     @org = @acme_corporation
-    @org2 = FactoryGirl.create(:organization, :label=>"foolabel", :name=>"fooname")
+    @org2 = get_organization(:organization2)
   end
 
   def test_access_two_orgs

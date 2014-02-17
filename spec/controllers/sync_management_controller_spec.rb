@@ -28,10 +28,9 @@ describe SyncManagementController do
   describe "Environment is set (katello)" do
     before (:each) do
       Katello.pulp_server.extensions.repository.stubs(:search_by_repository_ids).returns([])
-      @organization = new_test_org
+      @organization = get_organization
       @controller.stubs(:current_organization).returns(@organization)
-      @library = KTEnvironment.new
-      @library.stubs(:library?).returns(true)
+      @library = @organization.library
       @organization.stubs(:library).returns(@library)
       Glue::Pulp::Repos.stubs(:prepopulate!).returns({})
       @controller.stubs(:get_product_info).returns({})
