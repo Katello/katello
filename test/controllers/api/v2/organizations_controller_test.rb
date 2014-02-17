@@ -23,7 +23,7 @@ module Katello
     end
 
     def models
-      @organization = get_organization(:organization1)
+      @organization = get_organization
     end
 
     def setup
@@ -46,7 +46,7 @@ module Katello
     def test_show
       results = JSON.parse(get(:show, :id => @organization.id).body)
 
-      assert_equal results['name'], 'Organization 1'
+      assert_equal results['name'], @organization.name
 
       assert_response :success
       assert_template 'api/v2/organizations/show'

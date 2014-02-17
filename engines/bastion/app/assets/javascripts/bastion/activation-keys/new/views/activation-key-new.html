@@ -1,0 +1,101 @@
+<div class="loading-mask loading-mask-panel icon-3x" ng-show="panel.loading">
+  <i class="icon-spinner icon-spin"></i>
+  {{ "Loading..." | translate }}
+</div>
+
+<section class="nutupane-details" ng-cloak alch-container-scroll>
+  <header class="new-header details-header">
+    <h2 class="pull-left" translate>New Activation Key</h2>
+
+    <div class="details-actions pull-right">
+      <button class="btn btn-default" ui-sref="activation-keys.index">
+        <i class="icon-remove"></i>
+        {{ "Close" | translate }}
+      </button>
+    </div>
+  </header>
+
+  <form name="activationKeyForm" class="form-horizontal" novalidate role="form">
+
+    <div alch-form-group label="{{ 'Name' | translate }}">
+      <input id="name"
+             name="name"
+             ng-model="activationKey.name"
+             type="text"
+             tabindex="1"
+             autofocus
+             required/>
+    </div>
+
+    <div alch-form-group label="{{ 'Label' | translate }}">
+      <input id="label"
+             name="label"
+             ng-model="activationKey.label"
+             type="text"
+             tabindex="1"
+             required/>
+    </div>
+
+    <div alch-form-group label="{{ 'System Limit' | translate }}" field="usage_limit">
+      <span translate>Unlimited Systems:</span>
+      <input type="checkbox"
+             name="limit"
+             ng-model="unlimited"
+             ng-checked="isUnlimited(activationKey)"
+             ng-change="unlimitedChanged(activationKey)"/>
+
+      <div alch-form-group label="{{ 'Limit' | translate }}" ng-hide="isUnlimited(activationKey)">
+        <input id="usage_limit"
+               name="usage_limit"
+               class="form-control"
+               ng-model="activationKey.usage_limit"
+               type="number"
+               ng-change="inputChanged(activationKey)"
+               tabindex="2"/>
+      </div>
+    </div>
+
+    <div alch-form-group label="{{ 'Description' | translate }}">
+      <textarea id="description"
+                name="description"
+                ng-model="activationKey.description"
+                tabindex="3">
+      </textarea>
+    </div>
+
+    <div class="form-group required">
+      <label class="control-label col-sm-2" translate>Environment</label>
+      <div class="col-sm-5 input">
+        <span path-selector="environments"
+              ng-model="activationKey.environment"
+              mode="singleSelect"
+              disable-trigger="disableEnvironmentSelection">
+        </span>
+      </div>
+    </div>
+
+    <div alch-form-group label="{{ 'Content View' | translate }}">
+      <select id="content_view_id"
+              name="content_view_id"
+              ng-model="activationKey.content_view_id"
+              ng-options="contentView.id as contentView.name for contentView in contentViews"
+              tabindex="4"
+              autofocus
+              required>
+      </select>
+      <span class="help-block" translate>
+        If the content view selector list is blank you will need to choose a different environment that contains at least one content view.
+      </span>
+    </div>
+
+
+    <div alch-form-buttons
+         on-cancel="transitionTo('activation-keys.index')"
+         on-save="save(activationKey)"
+         working="working">
+    </div>
+
+  </form>
+
+
+</section>

@@ -14,7 +14,6 @@
 describe('Controller: SubscriptionsController', function() {
     var $scope,
         Nutupane,
-        Routes,
         unlimitedFilterFilter,
         gettext;
 

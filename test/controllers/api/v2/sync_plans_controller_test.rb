@@ -17,14 +17,15 @@ module Katello
   class Api::V2::SyncPlansControllerTest < ActionController::TestCase
 
     def self.before_suite
-      models = ["SyncPlan"]
+      models = ["SyncPlan", "Product"]
       disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
       super
     end
 
     def models
-      @organization = get_organization(:organization1)
+      @organization = get_organization
       @sync_plan = katello_sync_plans(:sync_plan_hourly)
+      @products = katello_products(:fedora, :redhat, :empty_product)
     end
 
     def permissions
@@ -113,6 +114,7 @@ module Katello
       delete :destroy, :organization_id => @organization.label, :id => @sync_plan.id
 
       assert_response :success
+      assert_template 'api/v2/sync_plans/show'
     end
 
     def test_destroy_protected
@@ -124,5 +126,56 @@ module Katello
       end
     end
 
+    def test_available_products
+      get :available_products, :id => @sync_plan.id, :organization_id => @organization.label
+
+      assert_response :success
+      assert_template 'api/v2/sync_plans/available_products'
+    end
+
+    def test_available_products_protected
+      allowed_perms = [@update_permission, @create_permission]
+      denied_perms = [@no_permission]
+
+      assert_protected_action(:available_products, allowed_perms, denied_perms) do
+        get :available_products, :id => @sync_plan.id, :organization_id => @organization.label
+      end
+    end
+
+    def test_add_products
+      put :add_products, :id => @sync_plan.id, :organization_id => @organization.label,
+          :product_ids => @products.collect{ |p| p.id}
+
+      assert_response :success
+      assert_template 'api/v2/sync_plans/show'
+    end
+
+    def test_add_products_protected
+      allowed_perms = [@update_permission, @create_permission]
+      denied_perms = [@no_permission]
+
+      assert_protected_action(:add_products, allowed_perms, denied_perms) do
+        put :add_products, :id => @sync_plan.id, :organization_id => @organization.label,
+          :product_ids => @products.collect{ |p| p.id}
+      end
+    end
+
+    def test_remove_products
+      put :remove_products, :id => @sync_plan.id, :organization_id => @organization.label,
+          :product_ids => @products.collect{ |p| p.id}
+
+      assert_response :success
+      assert_template 'api/v2/sync_plans/show'
+    end
+
+    def test_remove_products_protected
+      allowed_perms = [@update_permission, @create_permission]
+      denied_perms = [@no_permission]
+
+      assert_protected_action(:remove_products, allowed_perms, denied_perms) do
+        put :remove_products, :id => @sync_plan.id, :organization_id => @organization.label,
+            :product_ids => @products.collect{ |p| p.id}
+      end
+    end
   end
 end

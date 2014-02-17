@@ -10,15 +10,15 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+require "fort_test_helper"
+
 require 'support/fake_node_capability'
 
-class NodeCapabilityTestBase < MiniTest::Rails::ActiveSupport::TestCase
-  extend ActiveRecord::TestFixtures
-  fixtures :all
+class NodeCapabilityTestBase < ActiveSupport::TestCase
 
   def setup
-    @system = System.find(systems(:simple_server))
-    @dev    = KTEnvironment.find(environments(:dev).id)
+    @system = Katello::System.find(katello_systems(:simple_server))
+    @dev    = Katello::KTEnvironment.find(katello_environments(:dev).id)
     @node = Node.create!(:system => @system)
   end
 end

@@ -317,29 +317,6 @@ class KatelloTables < ActiveRecord::Migration
     add_index "katello_marketing_engineering_products", ["engineering_product_id"], :name => "index_marketing_engineering_products_on_engineering_product_id"
     add_index "katello_marketing_engineering_products", ["marketing_product_id"], :name => "index_marketing_engineering_products_on_marketing_product_id"
 
-    create_table "katello_node_capabilities", :force => true do |t|
-      t.integer "node_id"
-      t.text    "configuration"
-      t.string  "type"
-    end
-
-    add_index "katello_node_capabilities", ["node_id", "type"], :name => "index_node_capabilities_on_node_id_and_type", :unique => true
-
-    create_table "katello_nodes", :force => true do |t|
-      t.integer  "system_id"
-      t.datetime "created_at", :null => false
-      t.datetime "updated_at", :null => false
-    end
-
-    add_index "katello_nodes", ["system_id"], :name => "index_nodes_on_system_id", :unique => true
-
-    create_table "katello_nodes_environments", :force => true do |t|
-      t.integer "node_id"
-      t.integer "environment_id"
-    end
-
-    add_index "katello_nodes_environments", ["node_id", "environment_id"], :name => "index_nodes_environments_on_node_id_and_environment_id", :unique => true
-
     create_table "katello_notices", :force => true do |t|
       t.string   "text",            :limit => 1024,                    :null => false
       t.text     "details"
@@ -641,8 +618,6 @@ class KatelloTables < ActiveRecord::Migration
     drop_table "katello_key_system_groups"
     drop_table "katello_ldap_group_roles"
     drop_table "katello_marketing_engineering_products"
-    drop_table "katello_node_capabilities"
-    drop_table "katello_nodes"
     drop_table "katello_notices"
     drop_table "katello_permission_tags"
     drop_table "katello_permissions"

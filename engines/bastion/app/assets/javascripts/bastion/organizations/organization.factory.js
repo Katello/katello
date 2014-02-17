@@ -23,13 +23,23 @@
 angular.module('Bastion.organizations').factory('Organization',
     ['$resource', function ($resource) {
 
-        return $resource('/katello/api/organizations/:id/:action',
+        return $resource('/api/v2/organizations/:id/:action',
             {id: '@id'},
             {
                 query:  {method: 'GET', isArray: false},
                 repoDiscover: { method: 'POST', params: {action: 'repo_discover'}},
                 cancelRepoDiscover: {method: 'POST', params: {action: 'cancel_repo_discover'}},
-                autoAttachSubscriptions: {method: 'POST', params: {action: 'autoattach_subscriptions'}}
+                autoAttachSubscriptions: {method: 'POST', params: {action: 'autoattach_subscriptions'}},
+                paths: {
+                    method: 'GET',
+                    url: '/api/v2/organizations/:id/environments/paths',
+                    isArray: true
+                },
+                registerableEnvironments: {
+                    method: 'GET',
+                    url: '/organizations/:organizationId/environments/registerable_paths',
+                    isArray: true
+                }
             }
         );
 

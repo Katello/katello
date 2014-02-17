@@ -19,6 +19,10 @@ class ApplicationInfoController < Katello::ApplicationController
     "dashboard"
   end
 
+  def title
+    _('Application Information')
+  end
+
   def menu_definition
     {:about => :admin_menu}.with_indifferent_access
   end

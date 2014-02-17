@@ -29,7 +29,8 @@ module Katello
     initializer "katello.assets.paths", :group => :all do |app|
       app.config.assets.paths << "#{::UIAlchemy::Engine.root}/vendor/assets/ui_alchemy/alchemy-forms"
       app.config.assets.paths << "#{::UIAlchemy::Engine.root}/vendor/assets/ui_alchemy/alchemy-buttons"
-      #app.config.sass.load_paths << "#{Bastion::Engine.root}/vendor/assets/components/font-awesome/scss"
+      app.config.assets.paths << Bastion::Engine.root.join('vendor', 'assets', 'stylesheets', 'bastion',
+                                                           'font-awesome', 'scss')
     end
 
     initializer "katello.paths" do |app|

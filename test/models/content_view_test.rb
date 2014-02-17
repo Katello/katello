@@ -18,14 +18,14 @@ class ContentViewTest < ActiveSupport::TestCase
   def self.before_suite
     models = ["Organization", "KTEnvironment", "User", "ContentViewEnvironment",
               "Repository", "ContentView", "ContentViewVersion",
-              "ComponentContentView", "System"]
+              "ComponentContentView", "System", "ActivationKey"]
     services = ["Candlepin", "Pulp", "ElasticSearch"]
     disable_glue_layers(services, models, true)
   end
 
   def setup
     User.current      = User.find(users(:admin))
-    @acme_corporation = get_organization(:organization1)
+    @acme_corporation = get_organization
 
     @library          = KTEnvironment.find(katello_environments(:library).id)
     @dev              = KTEnvironment.find(katello_environments(:dev).id)

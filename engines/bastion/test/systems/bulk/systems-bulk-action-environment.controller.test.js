@@ -12,7 +12,7 @@
  **/
 
 describe('Controller: SystemsBulkActionEnvironmentController', function() {
-    var $scope, $q,  BulkAction, selectedSystems, CurrentOrganization, ContentView, $http, paths;
+    var $scope, BulkAction, selectedSystems, CurrentOrganization, ContentView, paths, Organization;
 
     beforeEach(module('Bastion.systems', 'Bastion.test-mocks'));
 
@@ -22,17 +22,20 @@ describe('Controller: SystemsBulkActionEnvironmentController', function() {
         };
 
         CurrentOrganization = 'foo';
-        paths = [[{name:"Library", id:1}, {name:"Dev", id:2}]]
+        paths = [[{name: "Library", id: 1}, {name: "Dev", id: 2}]]
         selectedSystems = {included: {ids: [1, 2, 3]}};
         ContentView = $injector.get('MockResource').$new();
+        Organization = $injector.get('MockResource').$new();
 
-        $http = {
-            get: function() {
-                return {
-                    success: function(success) {success(paths);}
-                }
+        Organization.registerableEnvironments = function (params, callback) {
+            var response = paths;
+
+            if (callback) {
+                callback.apply(this, response);
             }
-        }
+
+            return response;
+        };
     }));
 
     beforeEach(inject(function($controller, $rootScope, $q) {
@@ -47,26 +50,16 @@ describe('Controller: SystemsBulkActionEnvironmentController', function() {
         };
 
         $controller('SystemsBulkActionEnvironmentController', {$scope: $scope,
-            BulkAction: BulkAction,
+            SystemBulkAction: BulkAction,
+            Organization: Organization,
             CurrentOrganization: CurrentOrganization,
-            $http: $http,
-            ContentView: ContentView,
-            Routes: {organizationEnvironmentsPath: function() {return ""}}
-	});
+            ContentView: ContentView
+	    });
     }));
 
 
     it("Should fetch environments on initial load", function () {
-        expect($scope.promotionPaths).toBe(paths)
-    });
-
-    it("should set library to selected if it is clicked", function () {
-        var library = paths[0][0];
-
-        spyOn($scope, 'fetchViews');
-        $scope.setLibraryEnvironment();
-        expect($scope.selected.environment).toBe(library);
-        expect($scope.fetchViews).toHaveBeenCalled()
+        expect($scope.environments).toBe(paths)
     });
 
     it("should fetch content views", function () {

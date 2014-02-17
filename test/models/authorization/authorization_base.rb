@@ -17,7 +17,8 @@ class AuthorizationTestBase < ActiveSupport::TestCase
 
   def self.before_suite
     services  = ['Candlepin', 'Pulp', 'ElasticSearch', 'Foreman']
-    models    = ['Repository', 'KTEnvironment', 'ContentViewEnvironment', 'Organization', 'System', 'SystemGroup']
+    models    = ['Repository', 'KTEnvironment', 'ContentViewEnvironment',
+                 'Organization', 'System', 'SystemGroup']
     disable_glue_layers(services, models)
   end
 
@@ -25,7 +26,7 @@ class AuthorizationTestBase < ActiveSupport::TestCase
     Katello.config[:warden] = 'database'
     @no_perms_user      = User.find(users(:restricted))
     @admin              = User.find(users(:admin))
-    @acme_corporation   = get_organization(:organization1)
+    @acme_corporation   = get_organization
 
     @fedora_hosted        = Provider.find(katello_providers(:fedora_hosted))
     @fedora_17_x86_64     = Repository.find(katello_repositories(:fedora_17_x86_64).id)

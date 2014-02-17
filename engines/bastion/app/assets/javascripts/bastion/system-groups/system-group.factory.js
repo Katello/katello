@@ -24,7 +24,7 @@ angular.module('Bastion.system-groups').factory('SystemGroup',
     ['$resource',
     function ($resource) {
 
-    return $resource('/katello/api/system_groups/:id/:action', {id: '@id'}, {
+    return $resource('/api/system_groups/:id/:action', {id: '@id'}, {
         get: {method: 'GET', params: {fields: 'full'}},
         query: {method: 'GET', isArray: false},
         update: {method: 'PUT'},

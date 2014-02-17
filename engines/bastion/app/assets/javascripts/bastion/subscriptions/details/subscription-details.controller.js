@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Red Hat, Inc.
+ * Copyright 2013-2014 Red Hat, Inc.
  *
  * This software is licensed to you under the GNU General Public
  * License as published by the Free Software Foundation; either version
@@ -23,7 +23,8 @@
  *   Provides the functionality for the subscription details action pane.
  */
 angular.module('Bastion.subscriptions').controller('SubscriptionDetailsController',
-    ['$scope', 'gettext', 'Subscription', function ($scope, gettext, Subscription) {
+    ['$scope', 'gettext', 'Subscription',
+    function ($scope, gettext, Subscription) {
 
         if ($scope.subscription) {
             $scope.panel = {loading: false};

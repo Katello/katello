@@ -62,7 +62,10 @@ angular.module('Bastion.test-mocks').factory('MockResource', function() {
             },
             $delete: function(callback) {
                 callback();
-            }
+            },
+            $promise: {then: function(callback) {
+                callback(mockResource);
+            }}
         };
 
         Resource = function(parameters) {
@@ -109,9 +112,30 @@ angular.module('Bastion.test-mocks').factory('MockResource', function() {
             return Resource.mockResources;
         };
 
-        Resource.save = function(params, success, error) {
-            success(params);
-            return new Resource(params);
+        Resource.save = function(params, data, success, error) {
+            var item = new Resource(data);
+
+            Resource.mockResources.results.push(item);
+            success(item);
+
+            return item;
+        };
+
+        Resource.update = function(params, data, success, error) {
+            var item = Resource.get(params);
+
+            item = angular.extend(item, data);
+
+            if (success) {
+                success(item);
+            }
+            return item;
+        };
+
+        Resource.delete = function(params, success, error) {
+            params = null;
+            delete params;
+            return true;
         };
 
         return Resource;

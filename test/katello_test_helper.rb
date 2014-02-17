@@ -17,9 +17,9 @@ require "#{Katello::Engine.root}/spec/support/shared_examples/protected_action_s
 require "#{Katello::Engine.root}/spec/support/custom_matchers"
 require "#{Katello::Engine.root}/test/support/vcr"
 require "#{Katello::Engine.root}/test/support/runcible"
-require 'support/auth_support'
-require 'support/controller_support'
-require 'support/search_service'
+require "#{Katello::Engine.root}/test/support/auth_support"
+require "#{Katello::Engine.root}/test/support/controller_support"
+require "#{Katello::Engine.root}/test/support/search_service"
 
 FactoryGirl.definition_file_paths = ["#{Katello::Engine.root}/test/factories"]
 FactoryGirl.find_definitions
@@ -73,13 +73,14 @@ module FixtureTestCase
   end
 
   module ClassMethods
+
     def before_suite
       load_fixtures
       self.fixture_path = "#{Katello::Engine.root}/test/fixtures/models"
       fixtures(:all)
       @loaded_fixtures = load_fixtures
 
-      @@admin = User.find(@loaded_fixtures['users']['admin']['id'])
+      @@admin = ::User.find(@loaded_fixtures['users']['admin']['id'])
       @@admin.remote_id = @@admin.login
       User.current = @@admin
     end
@@ -140,12 +141,19 @@ class ActiveSupport::TestCase
   include FactoryGirl::Syntax::Methods
   include FixtureTestCase
 
-  def get_organization(org_sym)
-    organization = Organization.find(taxonomies(org_sym))
-    organization.label = organization.name
-    organization.save
+  def get_organization(org = nil)
+    saved_user = User.current
+    User.current = User.find(users(:admin))
+
+    org = org.nil? ? :empty_organization : org
+    organization = Organization.find(taxonomies(org.to_sym))
+    organization.setup_label_from_name
+    organization.save!
+
+    User.current = saved_user
     organization
   end
+
 end
 
 class ActionController::IntegrationTest

@@ -1,0 +1,20 @@
+<table class="table table-striped" ng-class="{'table-mask': syncPlanTable.working}">
+  <thead>
+    <tr alch-table-head row-select>
+      <th alch-table-column sortable>{{ "Name" | translate }}</th>
+    </tr>
+  </thead>
+
+  <div data-extend-template="layouts/select-all-results.html"></div>
+
+  <tbody>
+    <tr alch-table-row ng-repeat="syncPlan in syncPlanTable.rows" row-select="syncPlan">
+      <td alch-table-cell>
+        <a ui-sref="sync-plans.details.info({syncPlanId: syncPlan.id})">
+          {{ syncPlan.name }}
+        </a>
+        <i class="icon-chevron-right selected-icon" ng-show="syncPlan.selected"></i>
+      </td>
+    </tr>
+  </tbody>
+</table>

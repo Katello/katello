@@ -25,7 +25,7 @@ module Katello
     def models
       @product = katello_products(:fedora)
       @provider = katello_providers(:fedora_hosted)
-      @organization = get_organization(:organization1)
+      @organization = get_organization
     end
 
     def permissions
@@ -74,6 +74,6 @@ module Katello
         post :create, :product_id => @product.cp_id, :organization_id => @organization.label
       end
     end
-    
+
   end
 end

@@ -18,8 +18,8 @@
     <div alch-alert error-messages="errorMessages"></div>
 
     <form name="gpgKeyForm" class="form form-horizontal" novalidate role="form"
-                action="/katello/api/v2/gpg_keys?organization_id={{CurrentOrganization}}"
-                ng-upload="uploadContent(content)">
+          action="{{ uploadURL }}"
+          ng-upload="uploadContent(content)">
 
       <div alch-form-group label="{{ 'Name' | translate }}">
         <input id="name"

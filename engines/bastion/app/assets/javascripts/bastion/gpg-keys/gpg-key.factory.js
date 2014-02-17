@@ -24,7 +24,7 @@ angular.module('Bastion.gpg-keys').factory('GPGKey',
     ['$resource', 'CurrentOrganization',
     function ($resource, CurrentOrganization) {
 
-        return $resource('/katello/api/gpg_keys/:id/:action',
+        return $resource('/api/v2/gpg_keys/:id/:action',
             {id: '@id', 'organization_id': CurrentOrganization},
             {
                 query: { method: 'GET' },

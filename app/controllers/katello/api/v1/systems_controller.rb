@@ -97,7 +97,6 @@ class Api::V1::SystemsController < Api::V1::ApiController
 
   # this method is called from katello cli client and it does not work with activation keys
   # for activation keys there is method activate (see custom routes)
-  api :POST, "/environments/:environment_id/consumers", "Register a system in environment (compatibility reason)"
   api :POST, "/environments/:environment_id/systems", "Register a system in environment"
   param_group :system
   def create
@@ -122,7 +121,6 @@ DESC
   end
 
   # used for registering with activation keys
-  api :POST, "/consumers", "Register a system with activation key (compatibility)"
   api :POST, "/organizations/:organization_id/systems", "Register a system with activation key"
   param :activation_keys, String, :required => true
   param_group :system, :as => :create
@@ -152,17 +150,6 @@ DESC
     end
   end
 
-  api :POST, "/consumers/:id", "Regenerate consumer identity"
-  param :id, String, :desc => "UUID of the consumer"
-  desc <<-DESC
-Schedules the consumer identity certificate regeneration
-  DESC
-  def regenerate_identity_certificates
-    @system.regenerate_identity_certificates
-    respond_for_create
-  end
-
-  api :PUT, "/consumers/:id", "Update system information (compatibility)"
   api :PUT, "/systems/:id", "Update system information"
   param_group :system
   def update
@@ -185,7 +172,6 @@ Schedules the consumer identity certificate regeneration
     respond
   end
 
-  api :PUT, "/consumers/:id/checkin/", "Update system check-in time (compatibility)"
   api :PUT, "/systems/:id/checkin", "Update system check-in time"
   param :date, String, :desc => "check-in time"
   def checkin
@@ -193,7 +179,6 @@ Schedules the consumer identity certificate regeneration
     respond_for_show
   end
 
-  api :GET, "/environments/:environment_id/consumers", "List systems (compatibilty)"
   api :GET, "/environments/:environment_id/systems", "List systems in environment"
   api :GET, "/organizations/:organization_id/systems", "List systems in organization"
   param :name, String, :desc => "Filter systems by name"
@@ -240,14 +225,12 @@ Schedules the consumer identity certificate regeneration
     respond(:collection => systems)
   end
 
-  api :GET, "/consumers/:id", "Show a system (compatibility)"
   api :GET, "/systems/:id", "Show a system"
   param :id, String, :desc => "UUID of the system", :required => true
   def show
     respond
   end
 
-  api :DELETE, "/consumers/:id", "Unregister a system (compatibility)"
   api :DELETE, "/systems/:id", "Unregister a system"
   param :id, String, :desc => "UUID of the system", :required => true
   def destroy
@@ -292,21 +275,6 @@ A hint for choosing the right value for the releaseVer param
   param :id, String, :desc => "UUID of the system", :required => true
   def errata
     respond_for_index :collection => @system.errata
-  end
-
-  api :PUT, "/consumers/:id/packages", "Update installed packages"
-  api :PUT, "/consumers/:id/profile", "Update installed packages"
-  param :id, String, :desc => "UUID of the system", :required => true
-  def upload_package_profile
-    allowed = rules[:upload_package_profile].call
-    if allowed && Katello.config.katello?
-      fail HttpErrors::BadRequest, _("No package profile received for %s") % @system.name unless params.key?(:_json)
-      @system.upload_package_profile(params[:_json])
-      respond_for_update
-    else
-      Rails.logger.warn(_("System %s not allowed to upload package profile.") % params[:id])
-      respond_for_update :resource => {}
-    end
   end
 
   # TODO: break this mehtod up

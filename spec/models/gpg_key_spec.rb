@@ -20,7 +20,9 @@ describe GpgKey, :katello => true do
 
   let(:organization) do
     disable_org_orchestration
-    Organization.create!(:name => "Duh", :label => "ahaha")
+    as_admin do
+      Organization.create!(:name => "Duh", :label => "ahaha")
+    end
   end
 
   describe "permission checks" do

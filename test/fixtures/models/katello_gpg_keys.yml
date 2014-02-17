@@ -1,13 +1,13 @@
 fedora_gpg_key:
   name:         Fedora GPG Key
   content:      ADF#FCSFASDF$@$@ZFDDSG$#%#%ADS
-  organization_id: <%= ActiveRecord::Fixtures.identify(:organization1) %>
+  organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>
 
 unassigned_gpg_key:
   name:         Unassigned GPG Key
   content:      KJL:KDF*(DF&*(*$&(*#$JLKJD(D((D
-  organization_id: <%= ActiveRecord::Fixtures.identify(:organization1) %>
+  organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>

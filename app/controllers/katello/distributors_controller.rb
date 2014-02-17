@@ -306,6 +306,10 @@ class DistributorsController < Katello::ApplicationController
     'distributors'
   end
 
+  def title
+    _('Distributors')
+  end
+
   def destroy
     id = params[:id]
     distributor = find_distributor

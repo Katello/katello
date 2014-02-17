@@ -46,6 +46,16 @@ module Glue::Candlepin::Pool
       fail ActiveRecord::RecordNotFound if subscription.nil?
       subscription
     end
+
+    def find_by_id(pool_id)
+      Katello::Pool.find_by_cp_id(pool_id) || Pool.new(Resources::Candlepin::Pool.find(pool_id))
+    end
+
+    def find_by_id!(pool_id)
+      subscription = find_by_id(pool_id)
+      fail ActiveRecord::RecordNotFound if subscription.nil?
+      subscription
+    end
   end
 
   module InstanceMethods
@@ -69,6 +79,7 @@ module Glue::Candlepin::Pool
     # TODO: break up method
     # rubocop:disable MethodLength
     def load_remote_data(attrs)
+      @amount = attrs["amount"]
       @remote_data = attrs
       @product_name = attrs["productName"]
       @start_date = Date.parse(attrs["startDate"]) if attrs["startDate"]
@@ -165,6 +176,7 @@ module Glue::Candlepin::Pool
     end
 
     def activation_keys
+      # TODO: no longer valid - error thrown here now
       ActivationKey.joins(:pools).where("#{self.class.table_name}.cp_id" => cp_id)
     end
 
@@ -175,6 +187,8 @@ module Glue::Candlepin::Pool
     def host
       System.find_by_uuid(host_id) if host_id
     end
+
+    attr_reader :amount
 
   end
 end

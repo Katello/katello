@@ -1,0 +1,18 @@
+<span page-title>{{ 'New Sync Plan' | translate }}</span>
+
+<section class="nutupane-details" ng-cloak alch-container-scroll>
+  <header class="new-header details-header">
+    <h2 class="fl" translate>New Sync Plan</h2>
+
+    <div class="fr">
+      <button class="btn btn-default" ng-click="transitionBack()">
+        <i class="icon-remove"></i>
+        {{ "Close" | translate }}
+      </button>
+    </div>
+  </header>
+
+  <div ng-include="'sync-plans/new/views/new-sync-plan-form.html'"></div>
+
+</section>
+

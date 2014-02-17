@@ -1,0 +1,23 @@
+<nav>
+  <ul class="nav nav-tabs">
+    <li ng-class="{active: isState('activation-keys.details.subscriptions.list')}">
+      <a ui-sref="activation-keys.details.subscriptions.list">
+        <!-- TODO: other pages too - label "List" vs. "List/Remove" based on edit permissions -->
+        <span translate>
+          List/Remove
+        </span>
+      </a>
+    </li>
+
+    <!-- TODO: permissions? ng-show="activationKey.permissions.editable" -->
+    <li ng-class="{active: stateIncludes('activation-keys.details.subscriptions.add')}">
+      <a ui-sref="activation-keys.details.subscriptions.add">
+        <span translate>
+          Add
+        </span>
+      </a>
+    </li>
+  </ul>
+</nav>
+
+<div ui-view></div>

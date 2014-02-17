@@ -54,3 +54,9 @@ if params[:fields] == "full"
     end
   end
 end
+
+node :permissions do |activation_key|
+  {
+    :editable => true
+  }
+end
