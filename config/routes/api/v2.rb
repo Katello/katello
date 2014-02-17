@@ -153,9 +153,11 @@ Katello::Engine.routes.draw do
 
         api_resources :content_views, :only => [:index, :create]
         api_resources :content_view_definitions, :only => [:index, :create]
-        api_resources :subscriptions, :only => [:index, :upload, :show] do
+        api_resources :subscriptions, :only => [:index, :upload, :delete_manifest, :refresh_manifest, :show] do
           collection do
             post :upload
+            post :delete_manifest
+            put :refresh_manifest
           end
         end
       end
