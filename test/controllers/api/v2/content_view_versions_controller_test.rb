@@ -25,6 +25,7 @@ module Katello
     def models
       @organization = get_organization
       @library = katello_environments(:library)
+      @dev = katello_environments(:dev)
       @content_view = katello_content_views(:library_dev_view)
     end
 
@@ -32,6 +33,8 @@ module Katello
       @update_permission = UserPermission.new(:update, :content_views)
       @create_permission = UserPermission.new(:create, :content_views)
       @read_permission = UserPermission.new(:read, :content_views)
+      @promote_permission = UserPermission.new(:promote_changesets, :environments) +
+          UserPermission.new(:promote, :content_views)
       @no_permission = NO_PERMISSION
     end
 
@@ -71,6 +74,22 @@ module Katello
 
       assert_protected_action(:index, allowed_perms, denied_perms) do
         get :index, :content_view_id => @content_view.id
+      end
+    end
+
+    def test_promote
+      post :promote, :id => @content_view.versions.first.id, :environment_id => @dev.id
+
+      assert_response :success
+      assert_template 'katello/api/v2/common/async'
+    end
+
+    def test_promote_protected
+      allowed_perms = [@promote_permission]
+      denied_perms = [@read_permission, @update_permission, @create_permission, @no_permission]
+
+      assert_protected_action(:promote, allowed_perms, denied_perms) do
+        post :promote, :id => @content_view.versions.first.id, :environment_id => @dev.id
       end
     end
   end

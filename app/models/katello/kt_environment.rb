@@ -54,31 +54,12 @@ class KTEnvironment < Katello::Model
            :dependent => :destroy, :foreign_key => :environment_id
   has_many :distributors, :class_name => "Katello::Distributor", :inverse_of => :environment,
            :dependent => :destroy, :foreign_key => :environment_id
-  has_many :changesets, :class_name => "Katello::Changeset", :dependent => :destroy,
-           :inverse_of => :environment, :foreign_key => :environment_id
-  has_many :working_changesets, :conditions => ["state != '#{Changeset::PROMOTED}'"],
-                                :foreign_key => :environment_id,
-                                :class_name => "Katello::Changeset",
-                                :inverse_of => :environment
-
-  has_many :working_deletion_changesets, :conditions => ["state != '#{Changeset::DELETED}'"],
-                                         :foreign_key => :environment_id,
-                                         :class_name => "Katello::DeletionChangeset",
-                                         :inverse_of => :environment
-  has_many :working_promotion_changesets, :conditions => ["state != '#{Changeset::PROMOTED}'"],
-                                          :foreign_key => :environment_id,
-                                          :class_name => "Katello::PromotionChangeset",
-                                          :inverse_of => :environment
-
-  has_many :changeset_history, :conditions => {:state => Changeset::PROMOTED},
-                               :foreign_key => :environment_id,
-                               :class_name => "Katello::Changeset",
-                               :inverse_of => :environment
-
   has_many :content_view_environments, :class_name => "Katello::ContentViewEnvironment",
            :foreign_key => :environment_id, :inverse_of => :environment, :dependent => :destroy
   has_many :content_view_versions, :through => :content_view_environments, :inverse_of => :environments
   has_many :content_views, :through => :content_view_environments, :inverse_of => :environments
+  has_many :content_view_histories, :class_name => "Katello::ContentViewHistory", :dependent => :destroy,
+           :inverse_of => :environment, :foreign_key => :katello_environment_id
 
   has_many :users, :foreign_key => :default_environment_id, :inverse_of => :default_environment, :dependent => :nullify
 
@@ -161,13 +142,6 @@ class KTEnvironment < Katello::Model
   #is the environment currently being promoted to
   def promoting_to?
     self.promoting.exists?
-  end
-
-  #list changesets promoting
-  def promoting
-    Changeset.joins(:task_status).where('#{Katello::Changeset.table_name}.environment_id' => self.id,
-                                        '#{Katello::TaskStatus.table_name}.state' => [TaskStatus::Status::WAITING,
-                                                                                      TaskStatus::Status::RUNNING])
   end
 
   def is_deletable?

@@ -126,6 +126,22 @@ module Katello
       assert_template 'api/v2/common/update'
     end
 
+    def test_history
+      get :history, :id => @content_view
+
+      assert_response :success
+      assert_template 'api/v2/content_views/history'
+    end
+
+    def test_history_protected
+      allowed_perms = [@read_permission]
+      denied_perms = [@no_permission]
+
+      assert_protected_action(:history, allowed_perms, denied_perms) do
+        get :history, :id => @content_view.id
+      end
+    end
+
     def test_update_repositories
       repository = katello_repositories(:p_forge)
       refute_includes @content_view.repositories(true).map(&:id), repository.id

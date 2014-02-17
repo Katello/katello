@@ -53,7 +53,7 @@ module Katello
         has_many :search_favorites, :dependent => :destroy, :class_name => "Katello::SearchFavorite"
         has_many :search_histories, :dependent => :destroy, :class_name => "Katello::SearchHistory"
         has_many :activation_keys, :dependent => :destroy, :class_name => "Katello::ActivationKey"
-        has_many :changeset_users, :dependent => :destroy, :class_name => "Katello::ChangesetUser"
+        has_many :content_view_histories, :dependent => :nullify, :class_name => "Katello::ContentViewHistory"
         belongs_to :default_environment, :class_name => "Katello::KTEnvironment", :inverse_of => :users
         serialize :preferences, Hash
 

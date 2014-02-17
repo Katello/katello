@@ -374,21 +374,6 @@ Katello::Engine.routes.draw do
   match '/organizations/:id/edit' => 'organizations#update', :via => :put
   match '/organizations/:id/default_info/:informable_type' => 'organizations#default_info', :via => :get, :as => :organization_default_info
 
-  resources :changesets, :only => [:update, :index, :show, :create, :new, :edit, :destroy] do
-    member do
-      put :name
-      get :dependencies
-      post :apply
-      get :status, action: :changeset_status
-      get :object
-    end
-    collection do
-      get :auto_complete_search
-      get :list
-      get :items
-    end
-  end
-
   resources :environments do
     collection do
       get :all

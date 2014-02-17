@@ -38,8 +38,8 @@ Katello::Engine.routes.draw do
       api_resources :content_views do
         member do
           post :publish
-          post :promote
           post :refresh
+          get :history
           get :available_puppet_modules
         end
         api_resources :content_view_puppet_modules, :controller => :content_view_puppet_modules
@@ -55,7 +55,11 @@ Katello::Engine.routes.draw do
         api_resources :repositories, :only => [:index]
         api_resources :content_view_versions, :only => [:index]
       end
-      api_resources :content_view_versions, :only => [:index, :show]
+      api_resources :content_view_versions, :only => [:index, :show] do
+        member do
+          post :promote
+        end
+      end
 
       api_resources :environments, :only => [:index, :show, :create, :update, :destroy] do
         api_resources :activation_keys, :only => [:index, :create]
@@ -285,20 +289,6 @@ Katello::Engine.routes.draw do
         end
       end
 
-      api_resources :changesets, :only => [:show, :update, :destroy] do
-        post :apply, :on => :member, :action => :apply
-        #TODO: fix dependency resolution
-        #get :dependencies, :on => :member, :action => :dependencies
-
-        api_attachable_resources :products, :controller => :changesets_content
-        api_attachable_resources :packages, :controller => :changesets_content, :constraints => {:id => /[0-9a-zA-Z\-_.]+/}
-        api_attachable_resources :errata, :controller => :changesets_content
-        api_attachable_resources :repositories, :controller => :changesets_content, :resource_name => :repo
-        api_attachable_resources :distributions, :controller => :changesets_content
-        api_attachable_resources :templates, :controller => :changesets_content
-        api_attachable_resources :content_views, :controller => :changesets_content
-      end
-
       api_resources :repositories, :only => [:index, :create, :show, :update, :destroy], :constraints => { :id => /[0-9a-zA-Z\-_.]*/ } do
         collection do
           post :sync_complete
@@ -333,7 +323,6 @@ Katello::Engine.routes.draw do
         end
 
         api_resources :content_views, :only => [:index]
-        api_resources :changesets, :only => [:index, :create]
 
         member do
           get :releases

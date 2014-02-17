@@ -85,6 +85,7 @@ class Repository < Katello::Model
   scope :file_type, where(:content_type => FILE_TYPE)
   scope :puppet_type, where(:content_type => PUPPET_TYPE)
   scope :non_puppet, where("content_type != ?", PUPPET_TYPE)
+  scope :non_archived, where('environment_id is not NULL')
 
   def organization
     if self.environment
@@ -331,7 +332,7 @@ class Repository < Katello::Model
   # equivalent of repo
   def environmental_instances(view)
     repo = self.library_instance || self
-    search = Repository.where("library_instance_id=%s or #{Katello::Repository.table_name}.id=%s"  % [repo.id, repo.id])
+    search = Repository.non_archived.where("library_instance_id=%s or #{Katello::Repository.table_name}.id=%s"  % [repo.id, repo.id])
     search.in_content_views([view])
   end
 

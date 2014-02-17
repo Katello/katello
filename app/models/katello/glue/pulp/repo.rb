@@ -229,19 +229,6 @@ module Glue::Pulp::Repo
       end
     end
 
-    def promote(from_env, to_env)
-      if self.is_cloned_in?(to_env)
-        self.clone_contents(self.get_clone(to_env))
-      else
-        clone = self.create_clone(:environment => to_env)
-        clone_events = self.clone_contents(clone) #return clone task
-        # TODO: ensure that clone content is indexed
-        #clone.index_packages
-        #clone.index_errata
-        return clone_events
-      end
-    end
-
     def populate_from(repos_map)
       found = repos_map[self.pulp_id]
       prepopulate(found) if found
@@ -625,33 +612,6 @@ module Glue::Pulp::Repo
         # retval = date.strftime("%H:%M:%S %Y-%m-%d")
       end
       retval
-    end
-
-    def add_packages(pkg_id_list)
-      previous = self.environmental_instances(self.content_view).in_environment(self.environment.prior).first
-      Katello.pulp_server.extensions.rpm.copy(previous.pulp_id, self.pulp_id, {:ids => pkg_id_list})
-    end
-
-    def add_errata(errata_unit_id_list)
-      previous = self.environmental_instances(self.content_view).in_environment(self.environment.prior).first
-      Katello.pulp_server.extensions.errata.copy(previous.pulp_id, self.pulp_id, {:ids => errata_unit_id_list})
-    end
-
-    def add_distribution(distribution_id)
-      previous = self.environmental_instances(self.content_view).in_environment(self.environment.prior).first
-      Katello.pulp_server.extensions.distribution.copy(previous.pulp_id, self.pulp_id, {:ids => [distribution_id]})
-    end
-
-    def delete_packages(package_id_list)
-      Katello.pulp_server.extensions.rpm.unassociate_unit_ids_from_repo(self.pulp_id, package_id_list)
-    end
-
-    def delete_errata(errata_id_list)
-      Katello.pulp_server.extensions.errata.unassociate_unit_ids_from_repo(self.pulp_id, errata_id_list)
-    end
-
-    def delete_distribution(distribution_id)
-      Katello.pulp_server.extensions.distribution.unassociate_unit_ids_from_repo(self.pulp_id, [distribution_id])
     end
 
     def cancel_sync

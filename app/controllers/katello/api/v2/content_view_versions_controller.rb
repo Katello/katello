@@ -12,16 +12,18 @@
 
 module Katello
   class Api::V2::ContentViewVersionsController < Api::V2::ApiController
-    before_filter :find_content_view_version, :only => [:show]
+    before_filter :find_content_view_version, :only => [:show, :promote]
     before_filter :find_content_view
+    before_filter :find_environment, :only => [:promote]
     before_filter :authorize
 
     def rules
       read_rule = lambda { @view.readable? }
-
+      promote_rule = lambda {@environment.changesets_promotable? && @view.promotable?}
       {
-        :index => read_rule,
-        :show  => read_rule
+        :index   => read_rule,
+        :show    => read_rule,
+        :promote => promote_rule
       }
     end
 
@@ -42,6 +44,13 @@ module Katello
       respond :resource => @version
     end
 
+    api :POST, "/content_view_versions/:id/promote"
+    param :id, :identifier, :desc => "Content view version identifier", :required => true
+    param :environment_id, :identifier
+    def promote
+      respond_for_async :resource => @version.async(:organization => @organization).promote(@environment)
+    end
+
     private
 
     def find_content_view_version
@@ -51,5 +60,11 @@ module Katello
     def find_content_view
       @view = @version ? @version.content_view : ContentView.find(params[:content_view_id])
     end
+
+    def find_environment
+      return unless params.key?(:environment_id)
+      @environment = KTEnvironment.find(params[:environment_id])
+    end
+
   end
 end

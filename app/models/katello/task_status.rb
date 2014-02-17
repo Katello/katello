@@ -45,8 +45,6 @@ class TaskStatus < Katello::Model
   has_one :job_task,  :class_name => "Katello::JobTask", :dependent => :destroy
   has_one :job, :through => :job_task
 
-  has_one :changeset, :class_name => "Katello::Changeset",  :dependent => :nullify
-
   before_save :setup_task_type
 
   before_save do |status|

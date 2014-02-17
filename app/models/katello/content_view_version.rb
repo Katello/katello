@@ -28,6 +28,9 @@ class ContentViewVersion < Katello::Model
                               proxy_association.owner.add_environment(env)
                             end
                           end
+
+  has_many :history, :class_name => "Katello::ContentViewHistory", :inverse_of => :content_view_version,
+           :dependent => :destroy, :foreign_key => :katello_content_view_version_id
   has_many :repositories, :class_name => "Katello::Repository", :dependent => :destroy
   has_one :task_status, :class_name => "Katello::TaskStatus", :as => :task_owner, :dependent => :destroy
 
@@ -51,6 +54,10 @@ class ContentViewVersion < Katello::Model
 
   def repos(env)
     self.repositories.in_environment(env)
+  end
+
+  def archived_repos
+    self.repos(nil)
   end
 
   def products(env = nil)
@@ -83,6 +90,69 @@ class ContentViewVersion < Katello::Model
   def deletable?(from_env)
     !System.exists?(:environment_id => from_env, :content_view_id => self.content_view) ||
         self.content_view.versions.in_environment(from_env).count > 1
+  end
+
+  def promote(to_env)
+    history = ContentViewHistory.create!(:content_view_version => self, :user => User.current.login,
+                               :environment => to_env, :status => ContentViewHistory::IN_PROGRESS)
+
+    replacing_version = self.content_view.version(to_env)
+
+    promote_version = ContentViewVersion.find(self.id)
+    promote_version.environments << to_env unless promote_version.environments.include?(to_env)
+    promote_version.save!
+
+    if replacing_version
+      replacing_version.environments.delete(to_env)
+      PulpTaskStatus.wait_for_tasks(prepare_repos_for_promotion(replacing_version.repos(to_env), self.archived_repos))
+    end
+
+    PulpTaskStatus.wait_for_tasks(promote_repos(to_env, self.archived_repos))
+
+    Katello::Foreman.update_foreman_content(to_env.organization, to_env, self.content_view)
+    self.content_view.update_cp_content(to_env)
+    Repository.trigger_contents_changed(self.repos(to_env), :wait => true, :reindex => true)
+    history.update_attributes!(:status => ContentViewHistory::SUCCESSFUL)
+  rescue => e
+    history.update_attributes!(:status => ContentViewHistory::FAILED)
+    raise e
+  end
+
+  def prepare_repos_for_promotion(repos_to_replace, repos_to_promote)
+    tasks = repos_to_replace.inject([]) do |result, repo|
+      if repos_to_promote.detect{|r| r.library_instance_id == repo.library_instance_id}
+        # a version of this repo is being promoted, so clear it and later
+        # we'll regenerate the content... this is more efficient than
+        # destroying the repo and recreating it...
+        result += repo.clear_contents
+      else
+        # a version of this repo is not being promoted, so destroy it
+        repo.destroy
+        result
+      end
+    end
+    tasks
+  end
+
+  def promote_repos(to_env, promoting_repos)
+    # promote the repos to the target env
+    tasks = []
+    promoting_repos.each do |repo|
+      clone = self.get_repo_clone(to_env, repo).first
+      if clone.nil?
+        # this repo doesn't currently exist in the next environment, so create it
+        clone = repo.create_clone({:environment => to_env, :version => self, :content_view => self.content_view})
+        tasks << repo.clone_contents(clone)
+      else
+        # this repo already exists in the next environment, so update it
+        clone = Repository.find(clone) # reload readonly obj
+        clone.content_view_version = self
+        clone.save!
+        tasks << repo.clone_contents(clone)
+      end
+    end
+
+    tasks.flatten
   end
 
   def delete(from_env)

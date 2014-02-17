@@ -89,19 +89,6 @@ class ContentViewTest < ActiveSupport::TestCase
     assert_nil ContentViewEnvironment.find_by_id(cve.id)
   end
 
-  def test_changesets
-    skip "TODO: Fix content views"
-    content_view = FactoryGirl.create(:content_view)
-    environment = FactoryGirl.create(:environment,
-              :prior => content_view.organization.library,
-              :organization => content_view.organization)
-    changeset = FactoryGirl.create(:changeset, :environment => environment)
-    content_view.changesets << changeset
-    assert_includes changeset.content_views.map(&:id), content_view.id
-    assert_equal content_view.changeset_content_views,
-      changeset.changeset_content_views
-  end
-
   def test_promote
     skip "TODO: Fix content views"
     Repository.any_instance.stubs(:clone_contents).returns([])
