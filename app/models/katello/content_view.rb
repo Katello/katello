@@ -35,13 +35,9 @@ class ContentView < Katello::Model
   has_many :content_view_versions, :class_name => "Katello::ContentViewVersion", :dependent => :destroy
   alias_method :versions, :content_view_versions
 
-  has_many :component_content_views, :class_name => "Katello::ComponentContentView", :dependent => :destroy
-  has_many :content_views, :through => :component_content_views, :source => :component_content_view
-
-  has_many :composite_content_views, :class_name => "Katello::ContentView",
-           :through => :composite_component_content_views
-  has_many :composite_component_content_views, :class_name => "Katello::ComponentContentView",
-           :dependent => :destroy
+  has_many :content_view_components, :class_name => "Katello::ContentViewComponent", :dependent => :destroy
+  has_many :components, :through => :content_view_components, :class_name => "Katello::ContentViewVersion",
+    :source => :content_view_version
 
   has_many :distributors, :class_name => "Katello::Distributor", :dependent => :restrict
   has_many :content_view_repositories, :dependent => :destroy
@@ -75,20 +71,6 @@ class ContentView < Katello::Model
   def self.in_environment(env)
     joins(:content_view_environments).
       where("#{Katello::ContentViewEnvironment.table_name}.environment_id = ?", env.id)
-  end
-
-  def components_not_in_env(env)
-    # If this view was published from a composite definition, return the
-    # list of component content views, if any, that do not exist in the environment
-    # provided.
-    if composite
-      content_views.select("distinct #{Katello::ContentView.table_name}.*").
-              joins(:content_view_versions => :content_view_version_environments).
-              where(["#{Katello::ContentViewVersionEnvironment.table_name}.content_view_version_id "\
-                     "NOT IN (SELECT content_view_version_id FROM "\
-                     "#{Katello::ContentViewVersionEnvironment.table_name} WHERE environment_id = ?)",
-                     env])
-    end
   end
 
   def self.promoted(safe = false)
@@ -391,7 +373,7 @@ class ContentView < Katello::Model
     # Check to see if there is a puppet conflict in the component views. A
     # conflict exists if more than one view has a puppet repo
     if self.composite?
-      repos = component_content_views.map { |view| view.repos(organization.library) }.flatten
+      repos = content_view_components.map { |view| view.repos(organization.library) }.flatten
       return repos.select(&:puppet?).length > 1
     end
     false
@@ -459,11 +441,11 @@ class ContentView < Katello::Model
       end
     end
 
-    reindex_on_association_change(repository)
+    reindex_on_association_change(repository) if Katello.config.use_elasticsearch
   end
 
   def add_repository(repository)
-    reindex_on_association_change(repository)
+    reindex_on_association_change(repository) if Katello.config.use_elasticsearch
   end
 
   private

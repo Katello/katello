@@ -43,7 +43,6 @@ module FixtureTestCase
     self.pre_loaded_fixtures = true
 
     self.set_fixture_class :katello_activation_keys => "Katello::ActivationKey"
-    self.set_fixture_class :katello_component_content_views => "Katello::ComponentContentView"
     self.set_fixture_class :katello_content_view_repositories => "Katello::ContentViewRepository"
     self.set_fixture_class :katello_content_view_environments => "Katello::ContentViewEnvironment"
     self.set_fixture_class :katello_content_views => "Katello::ContentView"
