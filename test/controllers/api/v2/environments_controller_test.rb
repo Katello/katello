@@ -23,7 +23,7 @@ module Katello
     end
 
     def models
-      @organization = get_organization(:organization1)
+      @organization = get_organization
       @library = katello_environments(:library)
       @staging = katello_environments(:staging)
     end

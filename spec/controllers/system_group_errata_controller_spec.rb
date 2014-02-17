@@ -29,7 +29,7 @@ describe SystemGroupErrataController do
       disable_org_orchestration
       disable_consumer_group_orchestration
 
-      @organization = get_organization(:organization1)
+      @organization = get_organization
       @controller.stubs(:current_organization).returns(@organization)
 
       @environment = create_environment(:name=>"DEV", :label=> "DEV",

@@ -18,7 +18,7 @@ describe DashboardController do
 
   before (:each) do
     setup_controller_defaults
-    @organization = get_organization(:organization1)
+    @organization = get_organization
     @controller.stubs(:current_organization).returns(@organization)
 
     Resources::Candlepin::OwnerInfo.stubs(:find).returns({})

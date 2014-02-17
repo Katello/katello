@@ -23,7 +23,7 @@ class Api::V2::ProvidersControllerTest < ActionController::TestCase
   end
 
   def models
-    @organization = get_organization(:organization1)
+    @organization = get_organization
     @provider = katello_providers(:fedora_hosted)
     @rh_provider = katello_providers(:redhat)
   end

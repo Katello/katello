@@ -4,7 +4,7 @@ acme_default:
   default:        true
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>
-  organization_id: <%= ActiveRecord::Fixtures.identify(:organization1) %>
+  organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
 
 
 #View published only to library
@@ -14,7 +14,7 @@ library_view:
   default:        false
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>
-  organization_id: <%= ActiveRecord::Fixtures.identify(:organization1) %>
+  organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
 
 #view published to library and dev
 library_dev_view:
@@ -23,7 +23,7 @@ library_dev_view:
   default:        false
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>
-  organization_id: <%= ActiveRecord::Fixtures.identify(:organization1) %>
+  organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
 
 
 candlepin_default_cv:
@@ -58,7 +58,7 @@ component_view_1:
   default:        false
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>
-  organization_id: <%= ActiveRecord::Fixtures.identify(:organization1) %>
+  organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
 
 component_view_2:
   name:           Component view 2
@@ -66,7 +66,7 @@ component_view_2:
   default:        false
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>
-  organization_id: <%= ActiveRecord::Fixtures.identify(:organization1) %>
+  organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>
 
 composite_view:
   name:           Composite view
@@ -75,4 +75,4 @@ composite_view:
   default:        false
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>
-  organization_id: <%= ActiveRecord::Fixtures.identify(:organization1) %>
+  organization_id: <%= ActiveRecord::Fixtures.identify(:empty_organization) %>

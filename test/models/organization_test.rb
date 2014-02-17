@@ -31,6 +31,7 @@ end
 class OrganizationTestCreate < OrganizationTestBase
 
   def test_create_validate_view
+    User.current = User.find(users(:admin))
     org = Organization.create!(:name=>"TestOrg", :label=>'test_org')
     refute_nil org.library
     refute_nil org.default_content_view

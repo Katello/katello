@@ -58,7 +58,6 @@ module Katello
       respond(:collection => item_search(ContentView, params, options))
     end
 
-
     api :POST, "/organizations/:organization_id/content_views", "Create a content view"
     api :POST, "/content_views", "Create a content view"
     param :organization_id, :identifier, :desc => "Organization identifier", :required => true
@@ -101,6 +100,7 @@ module Katello
     end
 
     private
+
     def find_content_view
       @view = ContentView.non_default.find(params[:id])
     end

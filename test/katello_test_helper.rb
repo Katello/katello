@@ -80,7 +80,7 @@ module FixtureTestCase
       fixtures(:all)
       @loaded_fixtures = load_fixtures
 
-      @@admin = User.find(@loaded_fixtures['users']['admin']['id'])
+      @@admin = ::User.find(@loaded_fixtures['users']['admin']['id'])
       @@admin.remote_id = @@admin.login
       User.current = @@admin
     end
@@ -141,12 +141,19 @@ class ActiveSupport::TestCase
   include FactoryGirl::Syntax::Methods
   include FixtureTestCase
 
-  def get_organization(org_sym)
-    organization = Organization.find(taxonomies(org_sym))
-    organization.label = organization.name
-    organization.save
+  def get_organization(org = nil)
+    saved_user = User.current
+    User.current = User.find(users(:admin))
+
+    org = org.nil? ? :empty_organization : org
+    organization = Organization.find(taxonomies(org.to_sym))
+    organization.setup_label_from_name
+    organization.save!
+
+    User.current = saved_user
     organization
   end
+
 end
 
 class ActionController::IntegrationTest
