@@ -76,6 +76,20 @@ namespace :test do
       
       Rake::Task[test_task.name].invoke
     end
+
+    desc "Setup the test database"
+    task :setup do
+      ActiveRecord::Base.establish_connection('test')
+      Rake::Task['db:create'].invoke
+      Rake::Task['db:migrate'].invoke
+    end
+
+    desc "Reset the test database"
+    task :reset do
+      ActiveRecord::Base.establish_connection('test')
+      Rake::Task['db:drop'].invoke
+      Rake::Task['test:katello:setup'].invoke
+    end
   end
 
   desc "Run the entire Katello plugin test suite"
