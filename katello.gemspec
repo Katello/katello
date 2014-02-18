@@ -60,7 +60,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency "simple-navigation", ">= 3.3.4"
   gem.add_dependency "less-rails"
   gem.add_dependency "sass-rails"
-  gem.add_development_dependency "compass-rails"
+  gem.add_development_dependency "compass-rails", "< 1.1.4"
   gem.add_development_dependency "compass-960-plugin"
   gem.add_dependency "haml-rails"
   gem.add_dependency "ui_alchemy-rails", '1.0.12'
