@@ -44,20 +44,51 @@ module Glue::ElasticSearch::Repository
       self.product.provider.update_index if self.product.provider.respond_to? :update_index
     end
 
-    def index_packages
-      Tire.index Katello::Package.index do
-        create :settings => Katello::Package.index_settings, :mappings => Katello::Package.index_mapping
+    def indexed_package_ids
+      repo_id = self.pulp_id
+      search = Tire::Search::Search.new(Katello::Package.index)
+
+      search.instance_eval do
+        fields [:id]
+        query do
+          all
+        end
+        filter :term, {:repoids => repo_id}
       end
-      pkgs = self.packages.collect{|pkg| pkg.as_json.merge(pkg.index_options)}
-      pkgs.each_slice(Katello.config.pulp.bulk_load_size) do |sublist|
-        Tire.index Katello::Package.index do
-          import sublist
-        end if !sublist.empty?
+
+      total = search.perform.results.total
+
+      search.instance_eval do
+        size total
+      end
+
+      search.perform.results.collect{|p| p.id}
+    end
+
+    def index_packages(force = false)
+      Katello::Package.create_index
+
+      if self.content_view.default? || force
+        pkgs = self.packages.collect{|pkg| pkg.as_json.merge(pkg.index_options)}
+        pkgs.each_slice(Katello.config.pulp.bulk_load_size) do |sublist|
+          Tire.index ::Katello::Package.index do
+            import sublist
+          end if !sublist.empty?
+        end
+      else
+        pkg_ids = self.package_ids
+        search_pkg_ids = self.indexed_package_ids
+
+        Katello::Package.add_indexed_repoid(pkg_ids - search_pkg_ids, self.pulp_id)
+        Katello::Package.remove_indexed_repoid(search_pkg_ids - pkg_ids, self.pulp_id)
       end
     end
 
-    def update_packages_index
+    def clear_packages_index
       # for each of the packages in the repo, unassociate the repo from the package
+      pkg_ids = self.package_ids
+      Katello::Package.remove_indexed_repoid(pkg_ids, self.pulp_id)
+
       pkgs = self.packages.collect{|pkg| pkg.as_json.merge(pkg.index_options)}
       pulp_id = self.pulp_id
 
@@ -84,16 +115,25 @@ module Glue::ElasticSearch::Repository
       Tire.index('katello_package').refresh
     end
 
-    def index_errata
-      errata = self.errata.collect{|err| err.as_json.merge(err.index_options)}
-      unless errata.empty?
-        Tire.index Errata.index do
-          create :settings => Errata.index_settings, :mappings => Errata.index_mapping
-        end unless Tire.index(Errata.index).exists?
+    def indexed_errata_ids
+      options = {:repoids => [self.pulp_id], :fields => [:id], :start => 0, :page_size => 1}
+      options[:page_size] = ::Katello::Errata.legacy_search("", options).total
+      ::Katello::Errata.legacy_search("", options).collect{|e| e.id}
+    end
 
-        Tire.index Errata.index do
+    def index_errata(force = false)
+      if self.content_view.default? || force
+        errata = self.errata.collect{|err| err.as_json.merge(err.index_options)}
+        Katello::Errata.create_index
+        Tire.index Katello::Errata.index do
           import errata
-        end
+        end unless errata.empty?
+      else
+        errata_ids = self.errata_ids
+        search_errata_ids = self.indexed_errata_ids
+
+        Katello::Errata.add_indexed_repoid(errata_ids - search_errata_ids, self.pulp_id)
+        Katello::Errata.remove_indexed_repoid(search_errata_ids - errata_ids, self.pulp_id)
       end
     end
 
@@ -103,11 +143,8 @@ module Glue::ElasticSearch::Repository
       pulp_id = self.pulp_id
 
       unless errata.empty?
-        Tire.index Errata.index do
-          create :settings => Errata.index_settings, :mappings => Errata.index_mapping
-        end unless Tire.index(Errata.index).exists?
-
-        Tire.index Errata.index do
+        Katello::Errata.create_index
+        Tire.index Katello::Errata.index do
           import errata do |documents|
             documents.each do |document|
               if !document["repoids"].nil? && document["repoids"].length > 1
@@ -135,7 +172,8 @@ module Glue::ElasticSearch::Repository
 
         Tire.index Katello::PackageGroup.index do
           import package_groups_map
-        end
+        end unless package_groups_map.empty?
+
       end
     end
 
@@ -214,7 +252,7 @@ module Glue::ElasticSearch::Repository
     end
 
     def clear_content_indices
-      update_packages_index
+      clear_packages_index
       update_errata_index
       update_package_group_index
       update_puppet_modules_index
