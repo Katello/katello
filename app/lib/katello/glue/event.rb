@@ -60,10 +60,7 @@ module Glue
     end
 
     def self.trigger(event_class, *args)
-      run = ::ForemanTasks.trigger(event_class, *args)
-      ::Logging.logger['glue'].debug("Started plan with #{run.id}")
-      run.finished.wait
-      ::Logging.logger['glue'].debug("Finished plan with #{run.id}")
+      ::ForemanTasks.sync_task(event_class, *args)
     end
   end
 end
