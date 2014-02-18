@@ -67,23 +67,11 @@ class GlueCandlepinConsumerTestSystem < GlueCandlepinConsumerTestBase
     @@sys = CandlepinConsumerSupport.create_system('GlueCandlepinConsumerTestSystem_1', @@dev, @@dev_cv)
   end
 
-  def self.after_suite
-    CandlepinConsumerSupport.destroy_system(@@sys.id)
-    super
-  end
-
   def setup
     @@sys.facts['memory.memtotal'] = '256 MB'
     @@sys.facts.delete 'dmi.memory.size'
     @@sys.facts['cpu.cpu_socket(s)'] = '2'
     @@sys.facts['uname.machine'] = 'x86_64'
-  end
-
-  def test_update_candlepin_system
-    assert_equal 'x86_64', @@sys.arch
-    @@sys.arch = 'i686'
-    @@sys.update_candlepin_consumer
-    assert_equal 'i686', @@sys.arch
   end
 
   # Socket values
@@ -132,42 +120,10 @@ class GlueCandlepinConsumerTestDistributor < GlueCandlepinConsumerTestBase
     @@dist = CandlepinConsumerSupport.create_distributor('GlueCandlepinConsumerTestDistributor_1', @@dev, @@dev_cv)
   end
 
-  def self.after_suite
-    CandlepinConsumerSupport.destroy_distributor(@@dist.id)
-    super
-  end
-
-  def test_candlepin_distributor_update
-    assert_equal({"distributor_version" => Distributor.latest_version}, @@dist.facts)
-    @@dist.facts = {:some => 'fact'}
-    @@dist.update_candlepin_consumer
-    assert_equal({:some => 'fact'}, @@dist.facts)
-  end
-
   def test_candlepin_distributor_export
     skip "Not ready to test"
     assert true
     #  assert @@dist.export
-  end
-
-end
-
-class GlueCandlepinConsumerTestSecondDelete < GlueCandlepinConsumerTestBase
-
-  def test_candlepin_system_second_delete
-    @sys = CandlepinConsumerSupport.create_system('GlueCandlepinConsumerTestSecondDelete_1', @@dev, @@dev_cv)
-    # First delete
-    CandlepinConsumerSupport.destroy_system(@sys.id)
-    # Second delete
-    assert_equal true, CandlepinConsumerSupport.destroy_system(@sys.id, 'support/candlepin/system_delete')
-  end
-
-  def test_candlepin_distributor_second_delete
-    @dist = CandlepinConsumerSupport.create_distributor('GlueCandlepinConsumerTestSecondDelete_2', @@dev, @@dev_cv)
-    # First delete
-    CandlepinConsumerSupport.destroy_distributor(@dist.id)
-    # Second delete
-    assert_equal true, CandlepinConsumerSupport.destroy_distributor(@dist.id, 'support/candlepin/distributor_delete')
   end
 
 end

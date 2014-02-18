@@ -38,22 +38,7 @@ module CandlepinConsumerSupport
     @system.memory = 256
     @system.guest = false
 
-    VCR.use_cassette('support/candlepin/system', :match_requests_on => [:path, :params, :method, :body_json]) do
-      @system.set_candlepin_consumer
-    end
-  rescue => e
-    puts e
-    puts e.backtrace
-  ensure
     return @system
-  end
-
-  def self.destroy_system(id=@system_id, cassette='support/candlepin/system')
-    VCR.use_cassette(cassette, :match_requests_on => [:path, :params, :method, :body_json]) do
-      @system.del_candlepin_consumer
-    end
-  rescue RestClient::ResourceNotFound => e
-    puts e
   end
 
   @distributor = nil
@@ -75,22 +60,7 @@ module CandlepinConsumerSupport
     @distributor.content_view = cv
     @distributor.facts = {"distributor_version" => Distributor.latest_version}
 
-    VCR.use_cassette('support/candlepin/distributor', :match_requests_on => [:path, :params, :method, :body_json]) do
-      @distributor.set_candlepin_consumer
-    end
-  rescue => e
-    puts e
-    puts e.backtrace
-  ensure
     return @distributor
-  end
-
-  def self.destroy_distributor(id=@distributor_id, cassette='support/candlepin/distributor')
-    VCR.use_cassette(cassette, :match_requests_on => [:path, :params, :method, :body_json]) do
-      @distributor.del_candlepin_consumer
-    end
-  rescue RestClient::ResourceNotFound => e
-    puts e
   end
 
 end

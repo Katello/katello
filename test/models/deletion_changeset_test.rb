@@ -22,6 +22,7 @@ class DeletionChangesetTest < ActiveSupport::TestCase
   end
 
   def setup
+    User.current          = User.find(users(:admin))
     @acme_corporation     = get_organization
 
     @library              = KTEnvironment.find(katello_environments(:library).id)
