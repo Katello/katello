@@ -12,8 +12,6 @@
 
 module Katello
 class Api::V2::FiltersController < Api::V2::ApiController
-  respond_to :json
-
   before_filter :find_content_view, :only => [:index, :create]
   before_filter :find_filter, :except => [:index, :create]
   before_filter :authorize

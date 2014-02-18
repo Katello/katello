@@ -47,6 +47,11 @@ class ContentView < Katello::Model
   has_many :repositories, :through => :content_view_repositories, :class_name => "Katello::Repository",
            :after_remove => :remove_repository,
            :after_add => :add_repository
+
+  has_many :content_view_puppet_modules, :class_name => "Katello::ContentViewPuppetModule",
+           :dependent => :destroy
+  alias_method :puppet_modules, :content_view_puppet_modules
+
   has_many :filters, :dependent => :destroy, :class_name => "Katello::Filter"
 
   has_many :changeset_content_views, :class_name => "Katello::ChangesetContentView", :dependent => :destroy

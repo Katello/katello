@@ -14,7 +14,7 @@
 require 'katello_test_helper'
 
 module Katello
-  class OperatingsystemExtensionsTest < ActiveSupport::TestCase
+  class MediumExtensionsTest < ActiveSupport::TestCase
 
     def self.before_suite
       models = ["Organization", "Repository", "User"]
@@ -30,6 +30,7 @@ module Katello
 
       Repository.any_instance.stubs(:uri).returns('http://test_uri/')
       Repository.any_instance.stubs(:bootable_distribution).returns(@distro)
+      Repository.any_instance.stubs(:puppet?).returns(false)
     end
 
     def test_update_media_with_distro
