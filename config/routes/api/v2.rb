@@ -27,6 +27,12 @@ Katello::Engine.routes.draw do
             match '/available' => 'subscriptions#available', :via => :get
           end
         end
+        api_resources :system_groups, :only => [:index] do
+          member do
+            put :add_activation_keys
+            put :remove_activation_keys
+          end
+        end
       end
 
       api_resources :content_views do
@@ -41,6 +47,7 @@ Katello::Engine.routes.draw do
       api_resources :filters, :only => [:show, :update, :destroy], :controller => :filters
 
       api_resources :environments, :only => [:index, :show, :create, :update, :destroy] do
+        api_resources :activation_keys, :only => [:index, :create]
         api_resources :systems, :only => system_onlies do
           get :report, :on => :collection
         end
@@ -103,6 +110,8 @@ Katello::Engine.routes.draw do
           post :copy
           put :add_systems
           put :remove_systems
+          put :add_activation_keys
+          put :remove_activation_keys
         end
         api_resources :systems, :only => system_onlies
       end
@@ -120,6 +129,7 @@ Katello::Engine.routes.draw do
           put :enabled_repos
           put :refresh_subscriptions
         end
+        api_resources :activation_keys, :only => [:index]
         api_resources :subscriptions, :only => [:create, :index, :destroy] do
           collection do
             match '/' => 'subscriptions#destroy', :via => :delete
@@ -127,6 +137,7 @@ Katello::Engine.routes.draw do
             match '/serials/:serial_id' => 'subscriptions#destroy_by_serial', :via => :delete
           end
         end
+        api_resources :system_groups, :only => [:index]
       end
 
       ##############################
@@ -153,7 +164,6 @@ Katello::Engine.routes.draw do
         api_resources :distributors, :only => [:index, :create]
         resource :uebercert, :only => [:show]
 
-        api_resources :activation_keys, :only => [:index, :create]
         api_resources :gpg_keys, :only => [:index]
 
         match '/default_info/:informable_type' => 'organization_default_info#create', :via => :post, :as => :create_default_info
@@ -269,20 +279,12 @@ Katello::Engine.routes.draw do
           get :repositories, :on => :member
         end
 
-        api_resources :activation_keys, :only => [:index, :create]
         api_resources :content_views, :only => [:index]
         api_resources :changesets, :only => [:index, :create]
 
         member do
           get :releases
           get :repositories
-        end
-      end
-
-      api_resources :activation_keys, :only => [:destroy, :show, :update] do
-        member do
-          api_attachable_resources :system_groups, :controller => :activation_keys, :resource_name => :system_groups
-          api_attachable_resources :pools, :controller => :activation_keys
         end
       end
 

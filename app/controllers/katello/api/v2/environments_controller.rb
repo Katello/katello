@@ -98,8 +98,7 @@ module Katello
 
     api :GET, "/environments/:id", "Show an environment"
     api :GET, "/organizations/:organization_id/environments/:environment_id", "Show an environment"
-    param :id, String, :desc => "ID of the environment"
-    param :name, String, :desc => "name of the environment"
+    param :id, :number, :desc => "ID of the environment", :required => true
     param :organization_id, String, :desc => "ID of the organization"
     def show
       respond
@@ -127,9 +126,8 @@ module Katello
 
     api :PUT, "/environments/:id", "Update an environment"
     api :PUT, "/organizations/:organization_id/environments/:id", "Update an environment in an organization"
-    param :id, String, :desc => "ID of the environment"
+    param :id, :number, :desc => "ID of the environment", :required => true
     param :organization_id, String, :desc => "name of the organization"
-    param :name, String, :desc => "name of the environment"
     param :new_name, String, :desc => "new name to be given to the environment"
     param :description, String, :desc => "description of the environment"
     param :prior, String, :desc => <<-DESC
@@ -147,8 +145,7 @@ module Katello
 
     api :DELETE, "/environments/:id", "Destroy an environment"
     api :DELETE, "/organizations/:organization_id/environments/:id", "Destroy an environment in an organization"
-    param :id, String, :desc => "ID of the environment"
-    param :name, String, :desc => "name of the environment"
+    param :id, :number, :desc => "ID of the environment", :required => true
     param :organization_id, String, :desc => "organization identifier"
     def destroy
       if @environment.is_deletable?
@@ -181,25 +178,16 @@ module Katello
     protected
 
     def find_environment
-      if params[:name]
-        identifier = params[:name]
-        fail HttpErrors::NotFound, _("Parameter [ %s ] is required when passing [ %s ]") % %w(organization_id name) if params[:organization_id].nil?
-        @environment = @organization.environments.find_by_name(params[:name])
-      else
-        identifier = params[:id]
-        @environment = KTEnvironment.find(params[:id])
-      end
-      fail HttpErrors::NotFound, _("Couldn't find environment '%s'") % identifier if @environment.nil?
+      identifier = params.require(:id) || params.require(:environment).require(:id)
+      @environment = KTEnvironment.find(identifier)
+      fail HttpErrors::NotFound, _("Couldn't find environment '%s'") % identifier.to_s if @environment.nil?
+      @organization = @environment.organization
       @environment
     end
 
     def find_prior
       prior = params.require(:environment).require(:prior)
-      @prior = if is_database_id?(prior)
-                 KTEnvironment.find(prior)
-               else
-                 @organization.environments.find_by_name(prior)
-               end
+      @prior = KTEnvironment.find(prior)
       fail HttpErrors::NotFound, _("Couldn't find prior-environment '%s'") % prior.to_s if @prior.nil?
       @prior
     end

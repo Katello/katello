@@ -120,12 +120,15 @@ class Api::V2::SubscriptionsController < Api::V2::ApiController
     respond_for_index(:collection => subscriptions, :template => 'index')
   end
 
-  api :DELETE, "/systems/:system_id/subscriptions/:id", "Delete a subscription"
-  param :id, :number, :desc => "Entitlement id"
-  param :system_id, String, :desc => "UUID of the system", :required => true
+  api :DELETE, "/subscriptions/:id", "Unattach a subscription"
+  api :DELETE, "/systems/:system_id/subscriptions/:id", "Unattach a subscription"
+  api :DELETE, "/activation_keys/:activation_key_id/subscriptions/:id", "Unattach a subscription"
+  param :id, :number, :desc => "Subscription ID"
+  param :system_id, String, :desc => "UUID of the system"
+  param :activation_key_id, String, :desc => "activation key ID"
   def destroy
     object = @system || @activation_key || @distributor
-    if params[:subscription]
+    if params[:subscription].present?
       subscription_params[:subscriptions].each do |subscription|
         object.unsubscribe(subscription[:subscription][:id])
       end

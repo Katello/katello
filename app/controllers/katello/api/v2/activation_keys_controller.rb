@@ -38,14 +38,10 @@ module Katello
 
     api :GET, "/activation_keys", "List activation keys"
     api :GET, "/organizations/:organization_id/activation_keys"
-    param_group :search, Api::V2::ApiController
     param :organization_id, :identifier, :desc => "organization identifier", :required => true
-    param :name, String, :desc => "system group name to filter by"
+    param :name, String, :desc => "activation key name to filter by"
+    param_group :search, Api::V2::ApiController
     def index
-      # TODO: update filters
-      #filters = [:terms => {:id => SystemGroup.readable(@organization).pluck(:id)}]
-      #filters = [:terms => {:id => ActivationKey.where(params.slice(:name, :organization_id,
-      #                                                              :environment_id)).pluck(:id)}]
       filters = [:terms => {:id => ActivationKey.readable(@organization).pluck(:id)}]
       filters << {:term => {:name => params[:name].downcase}} if params[:name]
 
