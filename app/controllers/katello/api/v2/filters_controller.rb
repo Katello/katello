@@ -12,7 +12,8 @@
 
 module Katello
 class Api::V2::FiltersController < Api::V2::ApiController
-  before_filter :find_content_view, :only => [:index, :create]
+
+  before_filter :find_content_view
   before_filter :find_filter, :except => [:index, :create]
   before_filter :authorize
 
@@ -32,6 +33,7 @@ class Api::V2::FiltersController < Api::V2::ApiController
   end
 
   api :GET, "/content_views/:content_view_id/filters", "List filters"
+  api :GET, "/filters", "List filters"
   param :content_view_id, :identifier, :desc => "content view identifier", :required => true
   def index
     options = sort_params
@@ -42,35 +44,41 @@ class Api::V2::FiltersController < Api::V2::ApiController
     respond(:collection => item_search(Filter, params, options))
   end
 
-  api :POST, "/content_views/:content_view_id/filters",
-      "Create a filter for a content view"
+  api :POST, "/content_views/:content_view_id/filters", "Create a filter for a content view"
+  api :POST, "/filters", "Create a filter for a content view"
   param :content_view_id, :identifier, :desc => "content view identifier", :required => true
   param :name, String, :desc => "name of the filter", :required => true
   param :type, String, :desc => "type of filter (e.g. rpm, package_group, erratum)", :required => true
-  param :repository_ids, Array, :desc => "List of repository ids"
-  param :parameters, String, :desc => "the filter parameters rules"
+  param :inclusion, :bool, :desc => "specifies if content should be included or excluded, default: inclusion=false"
+  param :repository_ids, Array, :desc => "list of repository ids"
   def create
     filter = Filter.create_for(params[:type], filter_params.merge(:content_view => @view))
     respond :resource => filter
   end
 
+  api :GET, "/content_views/:content_view_id/filters/:id", "Show filter info"
   api :GET, "/filters/:id", "Show filter info"
-  param :id, :identifier, :desc => "filter identifier"
+  param :content_view_id, :identifier, :desc => "content view identifier"
+  param :id, :identifier, :desc => "filter identifier", :required => true
   def show
     respond :resource => @filter
   end
 
+  api :PUT, "/content_views/:content_view_id/filters/:id", "Update a filter"
   api :PUT, "/filters/:id", "Update a filter"
+  param :content_view_id, :identifier, :desc => "content view identifier"
   param :id, :identifier, :desc => "filter identifierr", :required => true
-  param :name, String, :desc => "New name for the filter"
-  param :repository_ids, Array, :desc => "List of repository ids"
-  param :parameters, String, :desc => "the filter parameters rules"
+  param :name, String, :desc => "new name for the filter"
+  param :inclusion, :bool, :desc => "specifies if content should be included or excluded, default: inclusion=false"
+  param :repository_ids, Array, :desc => "list of repository ids"
   def update
     @filter.update_attributes!(filter_params)
     respond :resource => @filter
   end
 
+  api :DELETE, "/content_views/:content_view_id/filters/:id", "Delete a filter"
   api :DELETE, "/filters/:id", "Delete a filter"
+  param :content_view_id, :identifier, :desc => "content view identifier"
   param :id, :identifier, :desc => "filter identifier", :required => true
   def destroy
     @filter.destroy
@@ -80,30 +88,21 @@ class Api::V2::FiltersController < Api::V2::ApiController
   private
 
   def find_content_view
-    @view = ContentView.find(params[:content_view_id])
+    @view = ContentView.find(params[:content_view_id]) if params[:content_view_id]
   end
 
   def find_filter
-    id = params[:id] || params[:filter_id]
-    @filter = Filter.find(id)
-    @view = @filter.content_view
+    if @view
+      @filter = @view.filters.find_by_id(params[:id])
+      fail HttpErrors::NotFound, _("Couldn't find Filter with id=%s") % params[:id] unless @filter
+    else
+      @filter = Filter.find(params[:id])
+      @view = @filter.content_view
+    end
   end
 
   def filter_params
-    filter_parameters = params.require(:filter).permit(:name, :repository_ids => [])
-
-    # the :parameters will be validated by the model layer (e.g. PackageFilter)
-    if params.key?(:parameters)
-      filter_parameters[:parameters] = params[:filter][:parameters].with_indifferent_access
-
-      # remove 'created_at'
-      if filter_parameters[:parameters].key?(:units)
-        filter_parameters[:parameters][:units].each{ |unit| unit.delete(:created_at) }
-      end
-      filter_parameters[:parameters].delete(:created_at)
-    end
-
-    filter_parameters
+    params.require(:filter).permit(:name, :inclusion, :repository_ids => [])
   end
 
 end

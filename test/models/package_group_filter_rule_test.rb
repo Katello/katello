@@ -13,43 +13,41 @@
 require 'katello_test_helper'
 
 module Katello
-class PackageGroupFilterTest < ActiveSupport::TestCase
+class PackageGroupFilterRuleTest < ActiveSupport::TestCase
 
   def self.before_suite
     models = ["Organization", "KTEnvironment", "User", "ContentView",
-              "ContentViewEnvironment", "Filter", "PackageGroupFilter"]
+              "ContentViewEnvironment", "Filter", "PackageGroupFilter",
+              "PackageGroupFilterRule"]
     disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
   end
 
   def setup
     User.current = User.find(users(:admin))
-    @filter = FactoryGirl.build(:package_group_filter)
+    @rule = FactoryGirl.build(:package_group_filter_rule)
   end
 
   def test_create
-    assert @filter.save
+    assert @rule.save!
+    refute_empty PackageGroupFilterRule.where(:id => @rule)
   end
 
-  def test_bad_params
-    assert_bad_params(:foo => {:boo => 100})
-    assert_bad_params(:units => "cool")
-    assert_bad_params(:units => [{:name => "foo"}, {:min_version => "3.0"}]) # no name
-  end
-
-  def test_good_params
-    assert_good_params(:units => [{:name => "foo"}, {:name => "bar"}])
-  end
-
-  def assert_bad_params(params)
-    @filter.parameters = params
+  def test_without_name
     assert_raises(ActiveRecord::RecordInvalid) do
-      @filter.save!
+      @rule.name = nil
+      @rule.save!
     end
   end
 
-  def assert_good_params(params)
-    @filter.parameters = params
-    assert @filter.save
+  def test_with_duplicate_name
+    @rule.save!
+    attrs = FactoryGirl.attributes_for(:package_filter_rule, :name => @rule.name)
+    assert_raises(ActiveRecord::RecordInvalid) do
+      PackageGroupFilterRule.create!(attrs)
+    end
+    rule_item = PackageGroupFilterRule.create(attrs)
+    refute rule_item.persisted?
+    refute rule_item.save
   end
 
 end

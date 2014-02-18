@@ -78,6 +78,34 @@ class Filter < Katello::Model
     end
   end
 
+  def self.rule_class_for(filter)
+    case filter.type
+    when PackageFilter.name
+      PackageFilterRule
+    when PackageGroupFilter.name
+      PackageGroupFilterRule
+    when ErratumFilter.name
+      ErratumFilterRule
+    else
+      params = { :content_type => filter.type, :content_types => CONTENT_TYPES.join(", ") }
+      fail _("Invalid content type '%{ content_type }' provided. Content types can be one of %{ content_types }") % params
+    end
+  end
+
+  def self.rule_ids_for(filter)
+    case filter.type
+    when PackageFilter.name
+      filter.package_rule_ids
+    when PackageGroupFilter.name
+      filter.package_group_rule_ids
+    when ErratumFilter.name
+      filter.erratum_rule_ids
+    else
+      params = { :content_type => filter.type, :content_types => CONTENT_TYPES.join(", ") }
+      fail _("Invalid content type '%{ content_type }' provided. Content types can be one of %{ content_types }") % params
+    end
+  end
+
   def filter_type
     CONTENT_OPTIONS.key(content_type)
   end

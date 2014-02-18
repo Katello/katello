@@ -42,10 +42,9 @@ Katello::Engine.routes.draw do
           post :refresh
         end
         api_resources :puppet_modules, :controller => :content_view_puppet_modules
-        api_resources :filters, :only => [:index, :create], :controller => :filters
+        api_resources :filters
         api_resources :repositories, :only => [:index]
       end
-      api_resources :filters, :only => [:show, :update, :destroy], :controller => :filters
 
       api_resources :environments, :only => [:index, :show, :create, :update, :destroy] do
         api_resources :activation_keys, :only => [:index, :create]
@@ -56,6 +55,14 @@ Katello::Engine.routes.draw do
           match '/systems' => 'systems#activate', :via => :post
         end
       end
+
+      # content view filters
+      api_resources :filters do
+        api_resources :rules, :controller => :filter_rules
+      end
+
+      # content view filter rules
+      api_resources :rules, :controller => :filter_rules
 
       api_resources :gpg_keys, :only => [:index, :show, :create, :update, :destroy] do
         post :content, :on => :member

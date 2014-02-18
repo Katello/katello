@@ -31,6 +31,7 @@ class RefactorContentViews < ActiveRecord::Migration
     # katello filters
     rename_column :katello_filters, :content_view_definition_id, :content_view_id
     add_column :katello_filters, :type, :string
+    add_column :katello_filters, :inclusion, :boolean, :default => false, :null => false
     add_column :katello_filters, :parameters, :text
   end
 
