@@ -252,7 +252,7 @@ class Repository < Katello::Model
         clone = cloned_repo_overrides.find do |c|
           repo.library_instance_id == c.id || repo.library_instance_id == c.library_instance_id
         end
-        repo.generate_metadata(:cloned_repo_override => clone)
+        repo.generate_metadata(:cloned_repo_override => clone, :node_publish_async => true)
       end
     end
     repos.each{|repo| repo.generate_applicability } #don't wait on applicability

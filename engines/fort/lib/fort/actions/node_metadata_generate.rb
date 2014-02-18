@@ -13,19 +13,19 @@
 module Fort
   module Actions
 
-    class ContentViewPublish < Dynflow::Action
+    class NodeMetadataGenerate < Dynflow::Action
 
       def self.subscribe
-        Katello::Actions::ContentViewPublish
+        Katello::Actions::NodeMetadataGenerate
       end
 
       def run
-        view = ContentView.find(input['id'])
-        env = view.organization.library
-        Node.with_environment(env).each do |node|
-          node.sync(:environment => env, :content_view => view)
+        repo = Katello::Repository.find(input['id'])
+        if repo.environment
+          Node.with_environment(repo.environment).each do |node|
+            node.sync(:repository => repo)
+          end
         end
-
       end
 
     end

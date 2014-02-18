@@ -343,7 +343,6 @@ class ContentView < Katello::Model
     clone_overrides = self.repositories.select{|r| self.filters.applicable(r).empty?}
     version.trigger_repository_changes(:cloned_repo_overrides => clone_overrides)
 
-    Glue::Event.trigger(Katello::Actions::ContentViewPublish, self)
     Katello::Foreman.update_foreman_content(self.organization, self.organization.library, self)
 
     if notify

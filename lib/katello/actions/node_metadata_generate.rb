@@ -12,19 +12,14 @@
 
 module Katello
   module Actions
-    class ContentViewPublish < Dynflow::Action
+    class NodeMetadataGenerate < Dynflow::Action
 
-      def plan(content_view)
-        plan_self('id' => content_view.id,
-                  'label' => content_view.label,
-                  'organization_label' => content_view.organization.label
-                  )
+      def plan(repo)
+        plan_self('id' => repo.id)
       end
 
       input_format do
         param :id, Integer
-        param :label, String
-        param :organization_label, String
       end
 
     end
