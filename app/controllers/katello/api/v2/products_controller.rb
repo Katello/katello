@@ -13,7 +13,7 @@
 module Katello
   class Api::V2::ProductsController < Api::V2::ApiController
 
-    before_filter :find_provider, :only => [:create]
+    before_filter :find_or_create_provider, :only => [:create]
     before_filter :find_organization, :only => [:index]
     before_filter :find_product, :only => [:update, :destroy, :show]
     before_filter :authorize
@@ -21,7 +21,7 @@ module Katello
     def_param_group :product do
       param :name, String, :required => true
       param :label, String, :required => false
-      param :provider_id, :number, :required => true, :desc => "Provider the product belongs to"
+      param :provider_id, :number, :desc => "Provider the product belongs to"
       param :description, String, :desc => "Product description"
       param :gpg_key_id, :number, :desc => "Identifier of the GPG key"
       param :sync_plan_id, :number, :desc => "Plan numeric identifier", :allow_nil => true
@@ -62,6 +62,7 @@ module Katello
     param_group :product
     def create
       params[:product][:label] = labelize_params(product_params) if product_params
+      params[:product][:provider_id] ||= @provider.id
       product = Product.create!(product_params)
 
       respond(:resource => product)
@@ -96,8 +97,9 @@ module Katello
 
     protected
 
-    def find_provider
-      @provider = Provider.find(product_params[:provider_id]) if product_params[:provider_id] || organization.provider
+    def find_or_create_provider
+      @provider = Provider.find(product_params[:provider_id]) if product_params[:provider_id]
+      @provider ||= Provider.create_anonymous!(find_organization)
     end
 
     def find_product

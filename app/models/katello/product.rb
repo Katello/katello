@@ -154,7 +154,11 @@ class Product < Katello::Model
   end
 
   def custom?
-    !(redhat?)
+    provider.custom_provider?
+  end
+
+  def anonymous?
+    provider.anonymouns_provider?
   end
 
   def gpg_key_name=(name)

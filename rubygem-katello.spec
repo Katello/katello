@@ -178,7 +178,7 @@ BuildRequires: %{?scl_prefix}rubygem(uglifier) >= 1.0.3
 BuildRequires: %{?scl_prefix}rubygem-strong_parameters
 BuildRequires: %{?scl_prefix}rubygems
 BuildArch: noarch
-Provides: rubygem(katello) = %{version}
+Provides: %{?scl_prefix}rubygem(katello) = %{version}
 
 %description
 Katello
