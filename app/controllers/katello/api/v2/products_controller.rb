@@ -18,10 +18,13 @@ module Katello
     before_filter :find_product, :only => [:update, :destroy, :show]
     before_filter :authorize
 
+    resource_description do
+      api_version "v2"
+    end
+
     def_param_group :product do
       param :name, String, :required => true
       param :label, String, :required => false
-      param :provider_id, :number, :desc => "Provider the product belongs to"
       param :description, String, :desc => "Product description"
       param :gpg_key_id, :number, :desc => "Identifier of the GPG key"
       param :sync_plan_id, :number, :desc => "Plan numeric identifier", :allow_nil => true
@@ -65,6 +68,7 @@ module Katello
     end
 
     api :POST, "/products", "Create a product"
+    param :organization_id, :identifier, "ID of the organization", :required => true
     param_group :product
     def create
       params[:product][:label] = labelize_params(product_params) if product_params
