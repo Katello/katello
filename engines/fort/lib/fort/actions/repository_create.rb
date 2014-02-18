@@ -13,7 +13,7 @@
 module Fort
   module Actions
 
-    class RepositoryCreateAction < ::Actions::Pulp::Action
+    class RepositoryCreateAction < ::Actions::Pulp::Abstract
 
       def self.subscribe
         Katello::Actions::RepositoryCreate

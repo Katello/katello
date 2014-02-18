@@ -13,7 +13,7 @@
 module Actions
   module Pulp
     module Consumer
-      class ContentInstall < Pulp::AsyncTask
+      class ContentInstall < Pulp::AbstractAsyncTask
 
         include Helpers::Presenter
 

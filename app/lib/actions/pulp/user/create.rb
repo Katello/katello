@@ -13,7 +13,7 @@
 module Actions
   module Pulp
     module User
-      class Create < Pulp::Action
+      class Create < Pulp::Abstract
         input_format do
           param :remote_id, String
         end

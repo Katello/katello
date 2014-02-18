@@ -1,5 +1,5 @@
 #
-# Copyright 2013 Red Hat, Inc.
+# Copyright 2014 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -11,19 +11,19 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Actions
-  module Pulp
-    module User
-      class SetSuperuser < Pulp::Abstract
+  module Katello
+    module System
+      class Create < Dynflow::Action
 
-        input_format do
-          param :remote_id, String
-          param :pulp_user, String
+        def self.subscribe
+          Headpin::System::Create
         end
 
-        def run
-          output[:response] = pulp_resources.role.add("super-users", input[:remote_id])
+        def plan(system)
+          plan_action(Pulp::Consumer::Create,
+                      uuid: trigger.input[:uuid],
+                      name: system.name)
         end
-
       end
     end
   end

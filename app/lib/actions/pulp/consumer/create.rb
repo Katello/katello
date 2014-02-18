@@ -12,18 +12,20 @@
 
 module Actions
   module Pulp
-    module User
-      class SetSuperuser < Pulp::Abstract
+    module Consumer
+      class Create < Pulp::Abstract
+
+        include Helpers::Presenter
 
         input_format do
-          param :remote_id, String
-          param :pulp_user, String
+          param :uuid, String
+          param :name, String
         end
 
         def run
-          output[:response] = pulp_resources.role.add("super-users", input[:remote_id])
+          output[:response] = pulp_extensions.consumer.create(input[:uuid],
+                                                              { display_name: input[:name]})
         end
-
       end
     end
   end

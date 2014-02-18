@@ -155,8 +155,10 @@ class Api::V2::SystemsController < Api::V2::ApiController
   param :content_view_id, String, :desc => "Specify the content view"
   param :system_group_id, String, :desc => "Specify the system group"
   def create
-    @system = System.create!(system_params(params).merge(:environment  => @environment,
-                                                         :content_view => @content_view))
+    @system = System.new(system_params(params).merge(:environment  => @environment,
+                                                     :content_view => @content_view))
+    sync_task(::Actions::Headpin::System::Create, @system)
+    @system.reload
     respond_for_create
   end
 

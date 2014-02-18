@@ -10,21 +10,30 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-module Actions
-  module Pulp
-    module User
-      class SetSuperuser < Pulp::Abstract
+require 'katello_test_helper'
 
-        input_format do
-          param :remote_id, String
-          param :pulp_user, String
-        end
+module Katello
+  namespace = ::Actions::Candlepin::Consumer
 
-        def run
-          output[:response] = pulp_resources.role.add("super-users", input[:remote_id])
-        end
+  describe namespace do
+    include Dynflow::Testing
+    include Support::Actions::RemoteAction
 
+    before do
+      stub_remote_user
+    end
+
+    describe 'Create' do
+      let(:action_class) { ::Actions::Candlepin::Consumer::Create }
+      let(:planned_action) do
+        create_and_plan_action action_class, cp_environment_id: 123
+      end
+
+      it 'runs' do
+        ::Katello::Resources::Candlepin::Consumer.expects(:create)
+        run_action planned_action
       end
     end
   end
+
 end

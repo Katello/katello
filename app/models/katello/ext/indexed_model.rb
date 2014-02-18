@@ -158,6 +158,7 @@ module Ext::IndexedModel
   end
 
   def to_indexed_json
+    return {} if @disable_auto_reindex
     to_ret = {}
 
     attrs = self.indexed_attributes

@@ -33,8 +33,7 @@ module Katello
 
       it 'runs' do
         run_action planned_action do |action|
-          user = mock('user', create: 'response')
-          action.expects(:pulp_resources).returns(mock 'pulp_resources', user: user)
+          runcible_expects(action, :resources, :user, :create)
         end
       end
     end
@@ -44,8 +43,7 @@ module Katello
 
       it 'runs' do
         run_action planned_action do |action|
-          role = mock('role', add: 'response')
-          action.expects(:pulp_resources).returns(mock 'pulp_resources', role: role)
+          runcible_expects(action, :resources, :role, :add)
         end
       end
     end

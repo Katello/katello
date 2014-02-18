@@ -1,5 +1,5 @@
 #
-# Copyright 2013 Red Hat, Inc.
+# Copyright 2014 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -11,18 +11,9 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Actions
-  module Pulp
-    class Action < Dynflow::Action
+  module Candlepin
+    class Abstract < Dynflow::Action
       middleware.use ::Actions::Middleware::RemoteAction
-
-      def pulp_resources
-        ::Katello.pulp_server.resources
-      end
-
-      def pulp_extensions
-        ::Katello.pulp_server.extensions
-      end
-
     end
   end
 end

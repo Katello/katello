@@ -13,7 +13,7 @@
 module Fort
   module Actions
 
-    class ContentViewPublish < ::Actions::Pulp::Action
+    class ContentViewPublish < ::Actions::Pulp::Abstract
 
       def self.subscribe
         Katello::Actions::ContentViewPublish

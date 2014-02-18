@@ -12,30 +12,17 @@
 
 module Actions
   module Pulp
-    class AsyncTask < Pulp::Action
-      include Dynflow::Action::Polling
+    class Abstract < Dynflow::Action
+      middleware.use ::Actions::Middleware::RemoteAction
 
-      def done?
-        !!external_task[:finish_time]
+      def pulp_resources
+        ::Katello.pulp_server.resources
       end
 
-      def external_task
-        output[:pulp_task]
+      def pulp_extensions
+        ::Katello.pulp_server.extensions
       end
 
-      private
-
-      def external_task=(external_task_data)
-        output[:pulp_task] = external_task_data
-      end
-
-      def poll_external_task
-        task_resource.poll(external_task[:task_id])
-      end
-
-      def task_resource
-        ::Katello.pulp_server.resources.task
-      end
     end
   end
 end
