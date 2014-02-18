@@ -24,7 +24,8 @@ describe('Controller: NewProductController', function() {
 
         $controller('NewProductController', {
             $scope: $scope,
-            Product: Product
+            Product: Product,
+            CurrentOrganization: 'ACME_Corporation'
         });
     }));
 

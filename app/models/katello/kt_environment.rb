@@ -104,7 +104,7 @@ class KTEnvironment < Katello::Model
 
   after_destroy :unset_users_with_default
 
-   ERROR_CLASS_NAME = "Environment"
+  ERROR_CLASS_NAME = "Environment"
 
   def library?
     self.library
@@ -181,12 +181,10 @@ class KTEnvironment < Katello::Model
     return true if self.organization.nil? || self.organization.being_deleted?
 
     if library?
-      errors.add :base,
-                _("Library environments may not be deleted.")
+      errors.add :base, _("Library environments may not be deleted.")
       return false
     elsif !successor.nil?
-      errors.add :base,
-                 _("Environment %s has a successor.  Only the last environment on a path can be deleted") % self.name
+      errors.add :base, _("Environment %s has a successor.  Only the last environment on a path can be deleted") % self.name
       return false
     end
 
@@ -316,9 +314,9 @@ class KTEnvironment < Katello::Model
 
   def create_default_content_view_version
     if library?
-      #Sadly this has to be created here, if it is created in the org
-      #  it will not actually exist when we go to create library and so
-      #  we can't look it up via a query (org.default_content_view)
+      # Sadly this has to be created here, if it is created in the org
+      # it will not actually exist when we go to create library and so
+      # we can't look it up via a query (org.default_content_view)
       content_view = self.organization.default_content_view
       if content_view.nil?
         content_view = Katello::ContentView.new(:default => true, :name => "Default Organization View",

@@ -22,9 +22,10 @@ class Provider < Katello::Model
 
   include Ext::PermissionTagCleanup
 
-  REDHAT = 'Red Hat'
-  CUSTOM = 'Custom'
-  TYPES = [REDHAT, CUSTOM]
+  REDHAT = 'Red Hat'.encode('utf-8')
+  CUSTOM = 'Custom'.encode('utf-8')
+  ANONYMOUS = 'Anonymous'.encode('utf-8')
+  TYPES = [REDHAT, CUSTOM, ANONYMOUS]
 
   attr_accessible :name, :description, :organization, :provider_type, :repository_url
 
@@ -52,6 +53,13 @@ class Provider < Katello::Model
 
   scope :redhat, where(:provider_type => REDHAT)
   scope :custom, where(:provider_type => CUSTOM)
+  scope :anonymous, where(:provider_type => ANONYMOUS)
+
+  def self.create_anonymous!(organization)
+    create!({:name => SecureRandom.uuid, :description => nil,
+             :organization => organization, :provider_type => ANONYMOUS,
+             :repository_url => nil})
+  end
 
   def only_one_rhn_provider
     # validate only when new record is added (skip explicit valid? calls)
@@ -85,15 +93,23 @@ class Provider < Katello::Model
   end
 
   def yum_repo?
-    provider_type == CUSTOM
+    provider_type == CUSTOM || provider_type == ANONYMOUS
   end
 
   def redhat_provider=(is_rh)
-    is_rh ? REDHAT : CUSTOM
+    is_rh ? REDHAT : ANONYMOUS # Anonymous is the now the default
   end
 
   def redhat_provider?
     provider_type == REDHAT
+  end
+
+  def custom_provider?
+    provider_type == CUSTOM
+  end
+
+  def anonymous_provider?
+    provider_type == ANONYMOUS
   end
 
   # Logic to ask a Provider if it is one that has subscriptions managed for
@@ -120,7 +136,7 @@ class Provider < Katello::Model
   # refreshes products' repositories from CDS. If new versions are released on
   # the CDN, this method will provide loading this new versions.
   def refresh_products
-    fail _("Products cannot be refreshed for custom provider.") unless self.redhat_provider?
+    fail _("Products cannot be refreshed for a custom or anonymous provider.") unless self.redhat_provider?
     self.products.engineering.each do |product|
       product.productContent.each do |pc|
         product.refresh_content(pc.content.id) if pc.katello_enabled? #only refresh PCs that are already enabled

@@ -59,7 +59,7 @@ class Api::V1::ProvidersController < Api::V1::ApiController
 
   def_param_group :provider do
     param :provider, Hash, :required => true, :action_aware => true do
-      param :name, String, :desc => "Provider name", :required => true
+      param :name, String, :desc => "Provider name"
       param :description, String, :desc => "Provider description"
       param :repository_url, String, :desc => "Repository URL"
     end
@@ -83,12 +83,20 @@ class Api::V1::ProvidersController < Api::V1::ApiController
   param :organization_id, :identifier, :desc => "Organization identifier", :required => true
   param_group :provider
   param :provider, Hash do
-    param :provider_type, ["Red Hat", "Custom"], :required => true
+    param :provider_type, ["Red Hat", "Custom", "Anonymous"], :required => false
   end
   def create
     @provider = Provider.create!(params[:provider]) do |p|
       p.organization  = @organization
-      p.provider_type ||= Provider::CUSTOM
+      p.provider_type = params[:provider]["provider_type"] if params[:provider].member? "provider_type"
+      p.description = params[:provider]["description"] if params[:provider].member? "description"
+      if params[:provider].member? "name"
+        p.name = params[:provider]["name"]
+        p.provider_type ||= Provider::CUSTOM
+      else
+        p.name = SecureRandom.uuid
+        p.provider_type = Provider::ANONYMOUS
+      end
     end
     respond
   end
