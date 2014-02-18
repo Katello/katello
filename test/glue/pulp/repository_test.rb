@@ -355,7 +355,7 @@ class GluePulpRepoOperationsTest < GluePulpRepoTestBase
 
   def test_create_clone
     staging = KTEnvironment.find(katello_environments(:staging).id)
-    clone = @@fedora_17_x86_64.create_clone(staging)
+    clone = @@fedora_17_x86_64.create_clone(:environment => staging)
 
     assert_kind_of Repository, clone
   ensure
@@ -365,7 +365,9 @@ class GluePulpRepoOperationsTest < GluePulpRepoTestBase
 
   def test_clone_contents
     dev = KTEnvironment.find(katello_environments(:dev).id)
-    @@fedora_17_x86_64_dev.relative_path = Repository.clone_repo_path(@@fedora_17_x86_64, dev, dev.default_content_view)
+    @@fedora_17_x86_64_dev.relative_path = Repository.clone_repo_path(:repository => @@fedora_17_x86_64,
+                                                                      :environment => dev,
+                                                                      :content_view => dev.default_content_view)
     @@fedora_17_x86_64_dev.create_pulp_repo
 
     task_list = @@fedora_17_x86_64.clone_contents(@@fedora_17_x86_64_dev)

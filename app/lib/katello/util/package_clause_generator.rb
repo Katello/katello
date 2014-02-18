@@ -13,18 +13,18 @@
 module Katello
 module Util
   class PackageClauseGenerator
-    include  Util::FilterRuleClauseGenerator
+    include Util::FilterClauseGenerator
 
     protected
 
-    def fetch_rules
-      FilterRule.yum_types
+    def fetch_filters
+      Filter.yum
     end
 
-    def collect_clauses(repo, rules)
-      [ErratumRule, PackageGroupRule, PackageRule].collect do |rule_class|
-        content_type_rules = rules.where(:type => rule_class)
-        make_package_clauses(repo, content_type_rules) unless content_type_rules.empty?
+    def collect_clauses(repo, filters)
+      [ErratumFilter, PackageGroupFilter, PackageFilter].collect do |filter_class|
+        content_type_filters = filters.where(:type => filter_class)
+        make_package_clauses(repo, content_type_filters) unless content_type_filters.empty?
       end
     end
 
@@ -36,10 +36,10 @@ module Util
       {"filename" => {"$exists" => true}}
     end
 
-    def make_package_clauses(repo, rules)
-      content_type = rules.first.content_type
-      pulp_content_clauses = rules.collect do |rule|
-        rule.generate_clauses(repo)
+    def make_package_clauses(repo, filters)
+      content_type = filters.first.content_type
+      pulp_content_clauses = filters.collect do |filter|
+        filter.generate_clauses(repo)
       end
       pulp_content_clauses.flatten!
       pulp_content_clauses.compact!
@@ -51,9 +51,9 @@ module Util
 
     def package_clauses_from_content(content_type, pulp_content_clauses)
       case content_type
-      when FilterRule::ERRATA
+      when Filter::ERRATA
         package_clauses_for_errata(pulp_content_clauses)
-      when FilterRule::PACKAGE_GROUP
+      when Filter::PACKAGE_GROUP
         package_clauses_for_group(pulp_content_clauses)
       else
         {"$or" => pulp_content_clauses}
