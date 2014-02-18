@@ -13,7 +13,7 @@
 module Fort
   module Actions
 
-    class ChangesetPublishAction < ::Actions::Pulp::Action
+    class ChangesetPublishAction < ::Actions::Pulp::Abstract
 
       def self.subscribe
         Katello::Actions::ChangesetPromote

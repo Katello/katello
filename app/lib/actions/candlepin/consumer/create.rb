@@ -13,7 +13,7 @@
 module Actions
   module Candlepin
     module Consumer
-      class Create < Candlepin::Action
+      class Create < Candlepin::Abstract
         input_format do
           param :cp_environment_id
           param :organization_label

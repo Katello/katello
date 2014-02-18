@@ -13,7 +13,7 @@
 module Actions
   module Pulp
     module Consumer
-      class ContentUninstall < Pulp::AsyncTask
+      class ContentUninstall < Pulp::AbstractAsyncTask
 
         include Helpers::Presenter
 

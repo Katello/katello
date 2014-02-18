@@ -13,7 +13,7 @@
 module Fort
   module Actions
 
-    class ContentViewRefresh <  ::Actions::Pulp::Action
+    class ContentViewRefresh <  ::Actions::Pulp::Abstract
 
       def self.subscribe
         Katello::Actions::ContentViewRefresh

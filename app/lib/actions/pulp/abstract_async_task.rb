@@ -12,7 +12,7 @@
 
 module Actions
   module Pulp
-    class AsyncTask < Pulp::Action
+    class AbstractAsyncTask < Pulp::Abstract
       include Dynflow::Action::Polling
 
       def done?

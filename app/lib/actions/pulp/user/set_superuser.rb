@@ -13,7 +13,7 @@
 module Actions
   module Pulp
     module User
-      class SetSuperuser < Pulp::Action
+      class SetSuperuser < Pulp::Abstract
 
         input_format do
           param :remote_id, String

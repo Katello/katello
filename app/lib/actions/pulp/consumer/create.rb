@@ -13,7 +13,7 @@
 module Actions
   module Pulp
     module Consumer
-      class Create < Pulp::Action
+      class Create < Pulp::Abstract
 
         include Helpers::Presenter
 
