@@ -24,7 +24,6 @@ module Actions
           param :autoheal
           param :release_ver
           param :service_level
-          param :uuid
           param :capabilities
         end
 

@@ -29,7 +29,6 @@ module Actions
                                   autoheal:            system.autoheal,
                                   release_ver:         system.release,
                                   service_level:       system.serviceLevel,
-                                  uuid:                "",
                                   capabiliteis:        system.capabilities)
           system.save!
           action_subject system, uuid: cp_create.output[:response][:uuid]
