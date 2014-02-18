@@ -18,13 +18,13 @@ class RefactorContentViews < ActiveRecord::Migration
     drop_table :katello_content_view_definition_products
     drop_table :katello_filters_products
     drop_table :katello_filter_rules
+    drop_table :katello_content_view_version_environments
 
     add_column :katello_content_views, :composite, :boolean
     add_column :katello_content_view_versions, :user, :string
+    add_column :katello_content_view_environments, :content_view_version_id, :integer
     remove_column :katello_content_views, :content_view_definition_id
-
     rename_column :katello_component_content_views, :content_view_definition_id, :component_content_view_id
-
     rename_table :katello_content_view_definition_repositories, :katello_content_view_repositories
     rename_column :katello_content_view_repositories, :content_view_definition_id, :content_view_id
 
@@ -32,10 +32,6 @@ class RefactorContentViews < ActiveRecord::Migration
     rename_column :katello_filters, :content_view_definition_id, :content_view_id
     add_column :katello_filters, :type, :string
     add_column :katello_filters, :parameters, :text
-
-    # TODO: content view archival
-
-    # TODO: add foreign keys
   end
 
   def down
@@ -72,17 +68,23 @@ class RefactorContentViews < ActiveRecord::Migration
       t.datetime "updated_at",                   :null => false
     end
 
+    create_table "katello_content_view_version_environments", :force => true do |t|
+      t.integer  "content_view_version_id"
+      t.integer  "environment_id"
+      t.datetime "created_at",              :null => false
+      t.datetime "updated_at",              :null => false
+    end
+
     remove_column :katello_content_views, :composite
     remove_column :katello_content_view_versions, :user
+    remove_column :katello_content_view_environments, :content_view_version_id
     add_column :katello_content_views, :content_view_definition_id, :integer
-
     rename_column :katello_component_content_views, :component_content_view_id, :content_view_definition_id
-
     rename_column :katello_content_view_repositories, :content_view_id, :content_view_definition_id
     rename_table :katello_content_view_repositories, :katello_content_view_definition_repositories
 
+    # katello filters
     rename_column :katello_filters, :content_view_id, :content_view_definition_id
-    remove_column :katello_filters, :all_repositories
     remove_column :katello_filters, :type
     remove_column :katello_filters, :parameters
 

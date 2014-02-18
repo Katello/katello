@@ -75,11 +75,10 @@ class KTEnvironment < Katello::Model
                                :class_name => "Katello::Changeset",
                                :inverse_of => :environment
 
-  has_many :content_view_version_environments, :class_name => "Katello::ContentViewVersionEnvironment",
-           :foreign_key => :environment_id, :dependent => :destroy
-  has_many :content_view_versions, :through => :content_view_version_environments, :inverse_of => :environments
   has_many :content_view_environments, :class_name => "Katello::ContentViewEnvironment",
            :foreign_key => :environment_id, :inverse_of => :environment, :dependent => :destroy
+  has_many :content_view_versions, :through => :content_view_environments, :inverse_of => :environments
+  has_many :content_views, :through => :content_view_environments, :inverse_of => :environments
 
   has_many :users, :foreign_key => :default_environment_id, :inverse_of => :default_environment, :dependent => :nullify
 
@@ -122,12 +121,6 @@ class KTEnvironment < Katello::Model
   def content_view_environment
     return nil unless self.default_content_view
     self.default_content_view.content_view_environments.where(:environment_id => self.id).first
-  end
-
-  def content_views(reload = false)
-    @content_views = nil if reload
-    @content_views ||= ContentView.joins(:content_view_versions => :content_view_version_environments).
-        where("#{Katello::ContentViewVersionEnvironment.table_name}.environment_id" => self.id)
   end
 
   def successor
@@ -319,7 +312,7 @@ class KTEnvironment < Katello::Model
       # we can't look it up via a query (org.default_content_view)
       content_view = self.organization.default_content_view
       if content_view.nil?
-        content_view = Katello::ContentView.new(:default => true, :name => "Default Organization View",
+        content_view = Katello::ContentView.create!(:default => true, :name => "Default Organization View",
                                        :organization => self.organization)
       end
 
@@ -328,7 +321,6 @@ class KTEnvironment < Katello::Model
                                          :version => 1)
         version.environments << self
         version.save!
-        content_view.save! #save content_view, since ContentViewEnvironment was added
       end
     end
   end
