@@ -29,9 +29,8 @@ module SystemHelperMethods
   end
 
   def create_system attrs
-    if attrs.with_indifferent_access[:uuid]
-      required_uuid = attrs.with_indifferent_access[:uuid]
-      Resources::Candlepin::Consumer.stubs(:create).returns({:uuid => required_uuid, :owner => {:key => required_uuid}})
+    unless attrs.with_indifferent_access[:uuid]
+      attrs[:uuid] = uuid
     end
 
     if attrs[:environment] && !attrs[:environment].library? && !attrs[:content_view]

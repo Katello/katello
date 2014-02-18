@@ -74,17 +74,6 @@ describe System do
     specify { System.new(:cp_type => cp_type, :environment => @organization.environments.first, :facts => facts).wont_be :valid? }
   end
 
-  it "registers system in candlepin and pulp on create (katello)" do
-    Resources::Candlepin::Consumer.expects(:create).once.with(
-      @organization.default_content_view.cp_environment_id(@environment.id),
-      @organization.label, system_name, cp_type, facts, installed_products,
-      nil, nil, nil, "1234", nil
-    ).returns({:uuid => uuid,:owner => {:key => uuid}})
-    Katello.pulp_server.extensions.consumer.expects(:create).once.with(uuid, {:display_name => system_name}).returns({:id => uuid}) if Katello.config.katello?
-
-    @system.save!
-  end
-
   it "adds custom info if organization has default custom info set" do
     CustomInfo.skip_callback(:save, :after, :reindex_informable)
     CustomInfo.skip_callback(:destroy, :after, :reindex_informable)
