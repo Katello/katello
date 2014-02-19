@@ -58,7 +58,7 @@ module Glue::ElasticSearch::Product
 
   def total_puppet_module_count(env, view)
     repo_ids = view.repos(env).in_product(self).collect{ |r| r.pulp_id }
-    results = Katello::PuppetModule.search('', :page_size => 1, :repoids => repo_ids)
+    results = Katello::PuppetModule.legacy_search('', :page_size => 1, :repoids => repo_ids)
     results.empty? ? 0 : results.total
   end
 

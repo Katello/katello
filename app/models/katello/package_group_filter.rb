@@ -23,7 +23,7 @@ class PackageGroupFilter < Filter
     ids = parameters[:units].collect do |unit|
       #{'name' => {"$regex" => unit[:name]}}
       unless unit[:name].blank?
-        PackageGroup.search(unit[:name], 0, 0, [repo.pulp_id]).collect(&:package_group_id)
+        PackageGroup.legacy_search(unit[:name], 0, 0, [repo.pulp_id]).collect(&:package_group_id)
       end
     end
     ids.flatten!
