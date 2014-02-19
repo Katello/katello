@@ -16,8 +16,10 @@ module Katello
     before_filter :verify_presence_of_organization_or_environment, :only => [:index]
     before_filter :find_environment, :only => [:index, :create, :update]
     before_filter :find_optional_organization, :only => [:index]
-    before_filter :find_activation_key, :only => [:show, :update]
+    before_filter :find_activation_key, :only => [:show, :update,
+                                                  :available_system_groups, :add_system_groups, :remove_system_groups]
     before_filter :authorize
+    before_filter :load_search_service, :only => [:index, :available_system_groups]
 
     def rules
       read_test   = lambda do
@@ -32,7 +34,10 @@ module Katello
         :index                => read_test,
         :show                 => read_test,
         :create               => manage_test,
-        :update               => manage_test
+        :update               => manage_test,
+        :available_system_groups  => manage_test,
+        :add_system_groups        => manage_test,
+        :remove_system_groups     => manage_test
       }
     end
 
@@ -89,10 +94,26 @@ module Katello
       respond
     end
 
-    api :POST, "/activation_keys/:id/system_groups"
+    api :GET, "/activation_keys/:id/system_groups/available", "List system groups the system does not belong to"
+    param_group :search, Api::V2::ApiController
+    param :name, String, :desc => "system group name to filter by"
+    def available_system_groups
+      filters = [:terms => {:id => SystemGroup.readable(@activation_key.organization).pluck(:id) -
+                   @activation_key.system_groups.pluck(:id)}]
+      filters << {:term => {:name => params[:name].downcase}} if params[:name]
+
+      options = {
+          :filters       => filters,
+          :load_records? => true
+      }
+
+      respond_for_index(:collection => item_search(SystemGroup, params, options))
+    end
+
+    api :PUT, "/activation_keys/:id/system_groups"
     param :id, :identifier, :desc => "ID of the activation key", :required => true
     def add_system_groups
-      ids = params[:activation_key][:system_group_ids]
+      ids = activation_key_params[:system_group_ids]
       @activation_key.system_group_ids = (@activation_key.system_group_ids + ids).uniq
       @activation_key.save!
       respond_for_show
@@ -100,7 +121,7 @@ module Katello
 
     api :DELETE, "/activation_keys/:id/system_groups"
     def remove_system_groups
-      ids = params[:activation_key][:system_group_ids]
+      ids = activation_key_params[:system_group_ids]
       @activation_key.system_group_ids = (@activation_key.system_group_ids - ids).uniq
       @activation_key.save!
       respond_for_show
@@ -154,7 +175,8 @@ module Katello
         params[:content_view_id] = params[:content_view][:id]
         params.delete(:content_view)
       end
-      attrs = [:name, :description, :environment_id, :usage_limit, :organization_id, :content_view_id]
+      attrs = [:name, :description, :environment_id, :usage_limit, :organization_id, :content_view_id,
+               :system_group_ids => []]
       params.require(:activation_key).permit(*attrs)
     end
   end
