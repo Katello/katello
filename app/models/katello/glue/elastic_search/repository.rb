@@ -34,8 +34,8 @@ module Glue::ElasticSearch::Repository
 
     def extended_index_attrs
       {
-        :environment => self.environment.name,
-        :environment_id => self.environment.id,
+        :environment => self.environment.try(:name),
+        :environment_id => self.environment.try(:id),
         :clone_ids => self.clones.pluck(:pulp_id),
         :product => self.product.name,
         :product_id => self.product.id,
