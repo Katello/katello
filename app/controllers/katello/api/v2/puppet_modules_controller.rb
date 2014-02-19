@@ -13,11 +13,15 @@
 module Katello
 class Api::V2::PuppetModulesController < Api::V2::ApiController
   before_filter :find_repository
+  before_filter :find_environment, :only => [:index]
   before_filter :authorize
   before_filter :find_puppet_module, :only => [:show]
 
   def rules
-    readable = lambda { @repo.environment.contents_readable? && @repo.product.readable? }
+    readable = lambda do
+      (@environment && @environment.contents_readable?) ||
+      (@repo.environment.contents_readable? && @repo.product.readable?)
+    end
 
     {
         :index  => readable,
@@ -26,11 +30,21 @@ class Api::V2::PuppetModulesController < Api::V2::ApiController
   end
 
   api :GET, "/puppet_modules", "List puppet modules"
+  api :GET, "/environments/:environment_id/puppet_modules", "List puppet modules"
   api :GET, "/repositories/:repository_id/puppet_modules", "List puppet modules"
+  param :environment_id, :identifier, :desc => "environment identifier"
   param :repository_id, :identifier, :desc => "repository identifier", :required => true
   def index
+    repoids = if @repo && @repo.puppet?
+                [@repo.pulp_id]
+              elsif @environment
+                @environment.puppet_repositories.map(&:pulp_id)
+              else
+                []
+              end
+
     options = sort_params
-    options[:filters] = [{ :terms => { :repoids => [@repo.pulp_id] } }]
+    options[:filters] = [{ :terms => { :repoids => repoids } }]
 
     @search_service.model = PuppetModule
     respond(:collection => item_search(PuppetModule, params, options))
@@ -46,8 +60,12 @@ class Api::V2::PuppetModulesController < Api::V2::ApiController
 
   private
 
+  def find_environment
+    @environment = KTEnvironment.find(params[:environment_id]) if params[:environment_id]
+  end
+
   def find_repository
-    @repo = Repository.find(params[:repository_id])
+    @repo = Repository.find(params[:repository_id]) if params[:repository_id]
   end
 
   def find_puppet_module

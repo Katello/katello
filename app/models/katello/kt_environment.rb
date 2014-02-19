@@ -209,6 +209,10 @@ class KTEnvironment < Katello::Model
     self.library? ? Product.in_org(self.organization) : Product.where(id: repositories.map(&:product_id))
   end
 
+  def puppet_repositories
+    Repository.readable(self).where(:content_type => Katello::Repository::PUPPET_TYPE)
+  end
+
   def as_json(options = {})
     to_ret = self.attributes
     to_ret['prior'] = self.prior &&  self.prior.name

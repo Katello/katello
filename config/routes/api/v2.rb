@@ -48,6 +48,7 @@ Katello::Engine.routes.draw do
 
       api_resources :environments, :only => [:index, :show, :create, :update, :destroy] do
         api_resources :activation_keys, :only => [:index, :create]
+        api_resources :puppet_modules, :only => [:index]
         api_resources :systems, :only => system_onlies do
           get :report, :on => :collection
         end
