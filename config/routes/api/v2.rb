@@ -83,7 +83,14 @@ Katello::Engine.routes.draw do
       api_resources :ping, :only => [:index]
       match "/status" => "ping#server_status", :via => :get
 
-      api_resources :products, :only => [:index, :show, :create, :update, :destroy]
+      api_resources :products, :only => [:index, :show, :create, :update, :destroy] do
+        api_resources :repository_sets, :only => [:index] do
+          member do
+            put :enable
+            put :disable
+          end
+        end
+      end
 
       api_resources :providers, :only => [:index, :create, :show, :destroy, :update] do
         member do
@@ -93,6 +100,13 @@ Katello::Engine.routes.draw do
           get :products
           put :refresh_manifest
           put :refresh_products
+        end
+      end
+
+      api_resources :repository_sets, :only => [:index] do
+        member do
+          put :enable
+          put :disable
         end
       end
 
@@ -331,10 +345,6 @@ Katello::Engine.routes.draw do
         get :repositories, :on => :member
         api_resources :sync, :only => [:index, :create] do
           delete :index, :on => :collection, :action => :cancel
-        end
-        api_resources :repository_sets, :only => [:index] do
-          put :enable, :on => :member
-          put :disable, :on => :member
         end
 
         collection do
