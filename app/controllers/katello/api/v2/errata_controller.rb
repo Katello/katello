@@ -20,7 +20,7 @@ class Api::V2::ErrataController < Api::V2::ApiController
     api_version 'v2'
   end
 
-  before_filter :find_organization, :only => [:show]
+  before_filter :find_optional_organization, :only => [:show]
   before_filter :find_environment, :only => [:index]
   before_filter :find_repository, :only => [:index, :show]
   before_filter :find_erratum, :only => [:show]
@@ -29,7 +29,11 @@ class Api::V2::ErrataController < Api::V2::ApiController
 
   def rules
     env_readable = lambda { @environment.contents_readable? }
-    readable     = lambda { Repository.any_readable?(@organization) }
+    readable = lambda do
+      (@organization && Repository.any_readable?(@organization)) ||
+      (@repo.environment.contents_readable? && @repo.product.readable?)
+    end
+
     {
         :index => env_readable,
         :show  => readable,
@@ -50,6 +54,8 @@ class Api::V2::ErrataController < Api::V2::ApiController
 
   api :GET, "/repositories/:repository_id/errata/:id", "Show an erratum"
   api :GET, "/errata/:id", "Show an erratum"
+  param :repository_id, :identifier, :desc => "repository identifier", :required => true
+  param :id, String, :desc => "erratum identifier", :required => true
   def show
     respond :resource => @erratum
   end

@@ -136,7 +136,7 @@ module Glue::Pulp::Errata
     end
 
     def product_ids
-      Repository.where(:pulp_id => self.repo_ids).pluck(:product_id).uniq
+      Repository.where(:pulp_id => self.repoids).pluck(:product_id).uniq
     end
 
     def product_cp_ids
