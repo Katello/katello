@@ -716,7 +716,8 @@ module Glue::Pulp::Repo
 
     def publish_node_distributor
       dist = self.find_node_distributor
-      Katello.pulp_server.extensions.repository.publish(self.pulp_id, dist['id'])
+      task = Katello.pulp_server.extensions.repository.publish(self.pulp_id, dist['id'])
+      PulpTaskStatus.wait_for_tasks([task])
       Glue::Event.trigger(Katello::Actions::NodeMetadataGenerate, self)
     end
 
