@@ -13,7 +13,9 @@
 module Katello
 module Glue
   # triggering events on model creation/deletion for better
-  # extendability
+  # extendability.
+  # TODO: This will be removed after moving the orchestration into
+  #       Dynflow actions completely
   module Event
 
     def self.included(base)
@@ -22,6 +24,16 @@ module Glue
         after_commit :execute_action
         before_destroy :trigger_destroy_event
       end
+    end
+
+    @glue_event_disabled = false
+
+    def self.disabled?
+      @glue_event_disabled
+    end
+
+    def self.disabled=(value)
+      @glue_event_disabled = value
     end
 
     def trigger_create_event
@@ -43,13 +55,9 @@ module Glue
     end
 
     def plan_action(event_class, *args)
+      return if Glue::Event.disabled?
       @execution_plan = ::ForemanTasks.dynflow.world.plan(event_class, *args)
-      planned        = @execution_plan.state == :planned
-      unless planned
-        errors = @execution_plan.steps.values.map(&:error).compact
-        # we raise error so that the whole transaction is rollbacked
-        fail errors.map(&:message).join('; ')
-      end
+      fail @execution_plan.errors.first if @execution_plan.error?
     end
 
     def execute_action
@@ -60,6 +68,7 @@ module Glue
     end
 
     def self.trigger(event_class, *args)
+      return if Glue::Event.disabled?
       ::ForemanTasks.sync_task(event_class, *args)
     end
   end

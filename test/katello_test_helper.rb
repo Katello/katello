@@ -32,6 +32,8 @@ require "#{Katello::Engine.root}/test/support/foreman_tasks/task"
 FactoryGirl.definition_file_paths = ["#{Katello::Engine.root}/test/factories"]
 FactoryGirl.find_definitions
 
+Katello::Glue::Event.disabled = true
+
 module MiniTest::Expectations
   infect_an_assertion :assert_redirected_to, :must_redirect_to
   infect_an_assertion :assert_template, :must_render_template
