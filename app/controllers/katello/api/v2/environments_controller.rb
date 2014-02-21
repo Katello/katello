@@ -86,7 +86,8 @@ module Katello
       filters = []
 
       filters << {:terms => {:organization_id => [@organization.id]}}
-      filters << {:terms => {:name => [params[:name]]}} if params[:name]
+      # See http://projects.theforeman.org/issues/4405
+      filters << {:terms => {:name => [params[:name].downcase]}} if params[:name]
       filters << {:terms => {:library => [params[:library]]}} if params[:library].present?
 
       options = {
