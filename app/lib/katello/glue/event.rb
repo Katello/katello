@@ -18,22 +18,17 @@ module Glue
   #       Dynflow actions completely
   module Event
 
-    def self.included(base)
-      base.class_eval do
-        after_create :trigger_create_event
-        after_commit :execute_action
-        before_destroy :trigger_destroy_event
+    class << self
+      def included(base)
+        base.class_eval do
+          after_create :trigger_create_event
+          after_commit :execute_action
+          before_destroy :trigger_destroy_event
+        end
       end
-    end
 
-    @glue_event_disabled = false
-
-    def self.disabled?
-      @glue_event_disabled
-    end
-
-    def self.disabled=(value)
-      @glue_event_disabled = value
+      attr_accessor :disabled
+      alias_method :disabled?, :disabled
     end
 
     def trigger_create_event
