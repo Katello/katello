@@ -328,8 +328,8 @@ class ContentSearchController < Katello::ApplicationController
 
   def repo_puppet_modules
     offset = params[:offset] || 0
-    puppet_modules = PuppetModule.search('', { :start => offset, :page_size => current_user.page_size,
-                                               :repoids => [@repo.pulp_id] })
+    puppet_modules = PuppetModule.legacy_search('', { :start => offset, :page_size => current_user.page_size,
+                                                      :repoids => [@repo.pulp_id] })
 
     rows = puppet_modules.collect do |puppet_module|
       ContentSearch::Row.new(:id         => puppet_module.id,

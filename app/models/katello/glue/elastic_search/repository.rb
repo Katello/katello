@@ -207,7 +207,7 @@ module Glue::ElasticSearch::Repository
     end
 
     def puppet_module_count
-      results = Katello::PuppetModule.search('', :page_size => 1, :repoids => [self.pulp_id])
+      results = Katello::PuppetModule.legacy_search('', :page_size => 1, :repoids => [self.pulp_id])
       results.empty? ? 0 : results.total
     end
 
