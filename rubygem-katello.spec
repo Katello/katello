@@ -118,7 +118,7 @@ Requires: %{?scl_prefix}rubygem-foreigner < 1.5
 Requires: %{?scl_prefix}rubygem-daemons >= 1.1.4
 Requires: %{?scl_prefix}rubygem-uuidtools 
 Requires: %{?scl_prefix}rubygem-rabl 
-Requires: %{?scl_prefix}rubygem-tire => 0.6.0
+Requires: %{?scl_prefix}rubygem-tire => 0.6.2
 Requires: %{?scl_prefix}rubygem-tire < 0.7
 Requires: %{?scl_prefix}rubygem-logging >= 1.8.0
 Requires: %{?scl_prefix}rubygem-hooks 
@@ -149,7 +149,7 @@ BuildRequires: %{?scl_prefix}rubygem-angular-rails-templates >= 0.0.4
 BuildRequires: %{?scl_prefix}rubygem-net-ldap 
 BuildRequires: %{?scl_prefix}rubygem-ldap_fluff >= 0.2.2
 BuildRequires: %{?scl_prefix}rubygem-sqlite3
-BuildRequires: %{?scl_prefix}rubygem-tire => 0.6.0
+BuildRequires: %{?scl_prefix}rubygem-tire => 0.6.2
 BuildRequires: %{?scl_prefix}rubygem-tire < 0.7
 BuildRequires: %{?scl_prefix}rubygem-logging >= 1.8.0
 BuildRequires: %{?scl_prefix}rubygem-hooks 

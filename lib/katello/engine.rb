@@ -124,6 +124,7 @@ module Katello
       load "#{Katello::Engine.root}/lib/katello/tasks/reindex.rake"
       load "#{Katello::Engine.root}/lib/katello/tasks/rubocop.rake"
       load "#{Katello::Engine.root}/lib/katello/tasks/asset_compile.rake"
+      load "#{Katello::Engine.root}/lib/katello/tasks/clean_backend_objects.rake"
     end
 
   end

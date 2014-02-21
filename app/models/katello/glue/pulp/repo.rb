@@ -274,6 +274,10 @@ module Glue::Pulp::Repo
       Katello.pulp_server.extensions.repository.rpm_ids(self.pulp_id)
     end
 
+    def errata_ids
+      Katello.pulp_server.extensions.repository.errata_ids(self.pulp_id)
+    end
+
     # remove errata and groups from this repo
     # that have no packages
     def purge_empty_groups_errata
@@ -332,9 +336,8 @@ module Glue::Pulp::Repo
       if @repo_errata.nil?
         #we fetch ids and then fetch errata by id, because repo errata
         #  do not contain all the info we need (bz 854260)
-        e_ids = Katello.pulp_server.extensions.repository.errata_ids(self.pulp_id)
         tmp_errata = []
-        e_ids.each_slice(Katello.config.pulp.bulk_load_size) do |sub_list|
+        self.errata_ids.each_slice(Katello.config.pulp.bulk_load_size) do |sub_list|
           tmp_errata.concat(Katello.pulp_server.extensions.errata.find_all_by_unit_ids(sub_list))
         end
         self.errata = tmp_errata

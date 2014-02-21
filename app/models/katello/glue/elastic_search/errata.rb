@@ -19,6 +19,7 @@ module Glue::ElasticSearch::Errata
   # rubocop:disable MethodLength
   def self.included(base)
     base.class_eval do
+      include Glue::ElasticSearch::BackendIndexedModel
 
       def self.index_settings
         {
@@ -67,9 +68,13 @@ module Glue::ElasticSearch::Errata
         "#{Katello.config.elastic_index}_errata"
       end
 
+      def self.search_type
+        :errata
+      end
+
       def index_options
         {
-          "_type" => :errata,
+          "_type" => Errata.search_type,
           :errata_id_exact => self.errata_id,
           :errata_id_sort => self.errata_id,
           :id_title => self.errata_id + ' : ' + self.title,
@@ -170,6 +175,14 @@ module Glue::ElasticSearch::Errata
         Util::Support.array_with_total
       end
 
+      def self.add_indexed_repoid(errata_ids, repoid)
+        update_array(errata_ids, 'repoids', [repoid], [])
+      end
+
+      def self.remove_indexed_repoid(errata_ids, repoid)
+        update_array(errata_ids, 'repoids', [], [repoid])
+      end
+
       def self.index_errata(errata_ids)
         errata = errata_ids.collect do |errata_id|
           erratum = self.find(errata_id)
@@ -184,6 +197,7 @@ module Glue::ElasticSearch::Errata
           Tire.index Errata.index do
             import errata
           end
+          Tire.index(::Errata.index).refresh
         end
       end
 

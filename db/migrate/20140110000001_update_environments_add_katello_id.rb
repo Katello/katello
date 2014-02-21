@@ -5,6 +5,6 @@ class UpdateEnvironmentsAddKatelloId < ActiveRecord::Migration
   end
 
   def down
-    remove_column :environment, :katello_id
+    remove_column :environments, :katello_id
   end
 end
