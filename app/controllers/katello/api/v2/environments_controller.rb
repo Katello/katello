@@ -166,7 +166,8 @@ module Katello
       respond_for_index :collection => @environments
     end
 
-    api :GET, "/organization/:organization_id/environments/paths", "List environment paths"
+    api :GET, "/organizations/:organization_id/environments/paths", "List environment paths"
+    param :organization_id, String, :desc => "organization identifier"
     def paths
       paths = @organization.promotion_paths.inject([]) do |result, path|
         result << { :path => [@organization.library] + path }
