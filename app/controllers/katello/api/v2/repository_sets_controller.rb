@@ -16,7 +16,7 @@ class Api::V2::RepositorySetsController < Api::V2::ApiController
 
   before_filter :find_product
   before_filter :custom_product?
-  before_filter :find_product_content, :only => [:enable, :disable]
+  before_filter :find_product_content, :except => [:index]
   before_filter :authorize
 
   def rules
@@ -27,6 +27,7 @@ class Api::V2::RepositorySetsController < Api::V2::ApiController
         :enable  => edit_product_test,
         :disable => edit_product_test,
         :index   => read_test,
+        :show    => read_test
     }
   end
 
@@ -52,9 +53,21 @@ class Api::V2::RepositorySetsController < Api::V2::ApiController
 
   api :GET, "/repository_sets", "List repository sets for a product"
   api :GET, "/products/:product_id/repository_sets", "List repository sets for a product."
-  param :product_id, :number, :required => true, :desc => "id of a product to list repository sets from"
+  param :product_id, :number, :required => true, :desc => "ID of a product to list repository sets from"
   def index
-    respond :collection => @product.productContent
+    collection = {}
+    collection[:results] = @product.productContent
+    collection[:subtotal] = collection[:results].size
+    collection[:total] = collection[:subtotal]
+    respond_for_index :collection => collection
+  end
+
+  api :GET, "/repository_sets/:id", "Get info about a repository set"
+  api :GET, "/products/:product_id/repository_sets/:id", "Get info about a repository set"
+  param :id, :number, :required => true, :desc => "ID of the repository set"
+  param :product_id, :number, :required => true, :desc => "ID of a product to list repository sets from"
+  def show
+    respond :resource => @product_content
   end
 
   private
