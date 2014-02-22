@@ -20,10 +20,6 @@ class Api::V1::RepositoriesController < Api::V1::ApiController
   before_filter :authorize
   skip_filter :set_locale, :require_user, :thread_locals, :authorize, :only => [:gpg_key_content]
 
-  skip_before_filter :authorize, :only => [:sync_complete]
-  skip_before_filter :require_org, :only => [:sync_complete]
-  skip_before_filter :require_user, :only => [:sync_complete]
-
   def rules
     edit_product_test = lambda do
       @product.custom? ? @product.editable? : @organization.redhat_manageable?
@@ -127,40 +123,6 @@ class Api::V1::RepositoriesController < Api::V1::ApiController
     else
       render :text => _("Repository '%s' disabled.") % @repository.name, :status => 200
     end
-  end
-
-  api :POST, "/repositories/:id/sync_complete"
-  param :id, :identifier, :required => true
-  desc <<-EOS
-This function is used by pulp for post sync actions.
-It is not authenticated, but does not accept requests unless
-they have been sent from localhost.  Since we go through apache
-HTTP_X_FORWARDED_FOR header should be set with original IP.
-Pulp blocks during the execution of this call, so *DO NOT* try to
-talk back to pulp within it.  Save that for the delayed job.
-Pulp doesn't send correct headers."
-  EOS
-  def sync_complete
-    forwarded = request.env["HTTP_X_FORWARDED_FOR"]
-
-    if forwarded && !['127.0.0.1', '::1'].include?(forwarded)
-      Rails.logger.error("Attempt to access sync_complete from forwarded address #{forwarded}")
-      fail Errors::SecurityViolation
-    end
-
-    repo_id = params['payload']['repo_id']
-    task_id = params['call_report']['task_id']
-    if (task = TaskStatus.find_by_uuid(task_id)) && task.user
-      User.current = task.user # we act on behalf of the user that triggered the sync
-    else
-      User.current = User.hidden.first
-    end
-
-    repo    = Repository.where(:pulp_id => repo_id).first
-    fail _("Couldn't find repository '%s'") % repo.name if repo.nil?
-    Rails.logger.info("Sync_complete called for #{repo.name}, running after_sync.")
-    repo.async(:organization => repo.environment.organization).after_sync(task_id)
-    respond_for_status
   end
 
   api :GET, "/repositories/:id/package_groups", "List all package groups in a repository"
