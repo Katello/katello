@@ -17,12 +17,16 @@ module Glue::ElasticSearch::PackageGroup
   # rubocop:disable MethodLength
   def self.included(base)
     base.class_eval do
-
+      include Glue::ElasticSearch::BackendIndexedModel
       def index_options
         {
-          "_type" => :package_group,
+          "_type" => Katello::PackageGroup.search_type,
           "name_autocomplete" => name
         }
+      end
+
+      def self.search_type
+        :package_group
       end
 
       def self.index_settings
@@ -75,7 +79,7 @@ module Glue::ElasticSearch::PackageGroup
         search.results
       end
 
-      def self.legacy_search(query, start, page_size, repoid = nil, sort = [:name_sort, "ASC"],
+      def self.legacy_search(query, start, page_size, repoid = nil, sort = [:name_sort, "asc"],
                              default_field = 'name')
         return Util::Support.array_with_total if !Tire.index(self.index).exists?
 

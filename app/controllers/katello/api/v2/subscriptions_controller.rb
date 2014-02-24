@@ -17,7 +17,7 @@ class Api::V2::SubscriptionsController < Api::V2::ApiController
   before_filter :find_activation_key
   before_filter :find_system
   before_filter :find_optional_organization, :only => [:index, :available]
-  before_filter :find_organization, :only => [:upload]
+  before_filter :find_organization, :only => [:upload, :delete_manifest, :refresh_manifest]
   before_filter :find_subscription, :only => [:show]
   before_filter :find_provider
   before_filter :authorize
@@ -51,7 +51,9 @@ class Api::V2::SubscriptionsController < Api::V2::ApiController
       :destroy => modification_test,
       :destroy_all => modification_test,
       :available => available_test,
-      :upload => edit_test
+      :upload => edit_test,
+      :delete_manifest => edit_test,
+      :refresh_manifest => edit_test
     }
   end
 
@@ -165,14 +167,26 @@ class Api::V2::SubscriptionsController < Api::V2::ApiController
     end
 
     @provider.import_manifest(File.expand_path(temp_file.path), :force => false,
-                              :async => false, :notify => false)
+                              :async => true, :notify => false)
 
-    collection = {
-      :results => @organization.pools,
-      :subtotal => @organization.pools.count,
-      :total => @organization.pools.count
-    }
-    respond_for_index(:collection => collection, :template => :index)
+    respond_for_async :resource => @provider.manifest_task
+  end
+
+  api :PUT, "/organizations/:organization_id/subscriptions/refresh_manifest", "Refresh previously imported manifest for Red Hat provider"
+  param :organization_id, :identifier, :desc => "Organization id", :required => true
+  def refresh_manifest
+    details  = @provider.organization.owner_details
+    upstream = details['upstreamConsumer'].blank? ? {} : details['upstreamConsumer']
+
+    @provider.refresh_manifest(upstream, :async => true, :notify => false)
+    respond_for_async :resource => @provider.manifest_task
+  end
+
+  api :POST, "/organizations/:organization_id/subscriptions/delete_manifest", "Delete manifest from Red Hat provider"
+  param :organization_id, :identifier, :desc => "Organization id", :required => true
+  def delete_manifest
+    @provider.delete_manifest(:async => true, :notify => false)
+    respond_for_async :resource => @provider.manifest_task
   end
 
   protected

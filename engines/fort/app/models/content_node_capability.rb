@@ -40,7 +40,7 @@ class ContentNodeCapability < NodeCapability
     repo = options[:repository]
 
     relevant_repo_ids = repo_ids(repo, view, env)
-    task = PulpSyncStatus.using_pulp_task(self.node.system.sync_pulp_node(relevant_repo_ids))
+    task = Katello::PulpSyncStatus.using_pulp_task(self.node.system.sync_pulp_node(relevant_repo_ids))
     task.save!
     task
   end
@@ -53,7 +53,7 @@ class ContentNodeCapability < NodeCapability
     elsif environment.nil? && view.nil?
       nil
     else
-      repos = Repository.enabled.in_environment(self.node.environment_ids)
+      repos = Katello::Repository.enabled.in_environment(self.node.environment_ids)
       repos = repos.in_environment(environment.id) if environment
       repos = repos.in_content_views([view]) if view
       repos.pluck(:pulp_id)
@@ -61,7 +61,7 @@ class ContentNodeCapability < NodeCapability
   end
 
   def calculate_bound_repos(env_list)
-    env_list.collect{|env| Repository.in_environment(env).enabled.pluck(:pulp_id)}.flatten
+    env_list.collect{|env| Katello::Repository.in_environment(env).enabled.pluck(:pulp_id)}.flatten
   end
 
 end
