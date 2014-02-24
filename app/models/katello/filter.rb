@@ -145,6 +145,14 @@ class Filter < Katello::Model
     repositories.collect{|r| r.product}.uniq
   end
 
+  def applicable_repos
+    if self.repositories.blank?
+      self.content_view.repositories
+    else
+      self.repositories
+    end
+  end
+
   protected
 
   def validate_repos

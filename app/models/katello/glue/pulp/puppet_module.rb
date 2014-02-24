@@ -19,10 +19,7 @@ module Glue::Pulp::PuppetModule
     base.class_eval do
       attr_accessor :_storage_path, :tag_list, :description, :license, :author,
                     :_ns, :project_page, :summary, :source, :dependencies, :version,
-                    :_content_type_id, :checksums, :_id, :types, :name, :repoids
-
-      alias_method 'id=', '_id='
-      alias_method 'id', '_id'
+                    :_content_type_id, :checksums, :id, :types, :name, :repoids
 
       def self.find(id)
         attrs = Katello.pulp_server.extensions.puppet_module.find_by_unit_id(id)
@@ -48,6 +45,7 @@ module Glue::Pulp::PuppetModule
 
   module InstanceMethods
     def initialize(params = {}, options = {})
+      params['id'] = params.delete('_id')
       params['repoids'] = params.delete(:repository_memberships) if params.key?(:repository_memberships)
       params.each_pair {|k, v| instance_variable_set("@#{k}", v) unless v.nil? }
     end

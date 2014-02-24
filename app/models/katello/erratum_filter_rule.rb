@@ -22,7 +22,7 @@ module Katello
 
     serialize :types, Array
 
-    validates :errata_id, :uniqueness => { :scope => :filter_id }
+    validates :errata_id, :uniqueness => { :scope => :filter_id }, :allow_blank => true
     validates_with Validators::ErratumFilterRuleValidator
   end
 end
