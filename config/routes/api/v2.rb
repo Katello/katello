@@ -103,7 +103,14 @@ Katello::Engine.routes.draw do
       api_resources :ping, :only => [:index]
       match "/status" => "ping#server_status", :via => :get
 
-      api_resources :products, :only => [:index, :show, :create, :update, :destroy]
+      api_resources :products, :only => [:index, :show, :create, :update, :destroy] do
+        api_resources :repository_sets, :only => [:index] do
+          member do
+            put :enable
+            put :disable
+          end
+        end
+      end
 
       api_resources :providers, :only => [:index, :create, :show, :destroy, :update] do
         member do
@@ -117,6 +124,13 @@ Katello::Engine.routes.draw do
       end
 
       api_resources :puppet_modules, :only => [:index, :show]
+
+      api_resources :repository_sets, :only => [:index] do
+        member do
+          put :enable
+          put :disable
+        end
+      end
 
       api_resources :system_groups, :only => system_onlies do
         member do
@@ -157,7 +171,6 @@ Katello::Engine.routes.draw do
       ##############################
 
       api_resources :organizations do
-        api_resources :products, :only => [:index]
         api_resources :sync_plans do
           member do
             get :available_products
@@ -183,9 +196,13 @@ Katello::Engine.routes.draw do
         match '/default_info/:informable_type/*keyname' => 'organization_default_info#destroy', :via => :delete, :as => :destroy_default_info
         match '/default_info/:informable_type/apply' => 'organization_default_info#apply_to_all', :via => :post, :as => :apply_default_info
 
-        api_resources :subscriptions, :only => [:index, :upload, :show] do
+        api_resources :content_views, :only => [:index, :create]
+        api_resources :content_view_definitions, :only => [:index, :create]
+        api_resources :subscriptions, :only => [:index, :upload, :delete_manifest, :refresh_manifest, :show] do
           collection do
             post :upload
+            post :delete_manifest
+            put :refresh_manifest
           end
         end
       end
@@ -302,15 +319,11 @@ Katello::Engine.routes.draw do
         end
       end
 
-      api_resources :products, :only => [:index, :show, :update, :destroy, :create] do
+      api_resources :products, :only => [] do
         api_resources :repositories, :only => [:create, :index]
         get :repositories, :on => :member
         api_resources :sync, :only => [:index, :create] do
           delete :index, :on => :collection, :action => :cancel
-        end
-        api_resources :repository_sets, :only => [:index] do
-          put :enable, :on => :member
-          put :disable, :on => :member
         end
 
         collection do

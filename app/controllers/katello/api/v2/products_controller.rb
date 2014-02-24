@@ -18,10 +18,13 @@ module Katello
     before_filter :find_product, :only => [:update, :destroy, :show]
     before_filter :authorize
 
+    resource_description do
+      api_version "v2"
+    end
+
     def_param_group :product do
       param :name, String, :required => true
       param :label, String, :required => false
-      param :provider_id, :number, :desc => "Provider the product belongs to"
       param :description, String, :desc => "Product description"
       param :gpg_key_id, :number, :desc => "Identifier of the GPG key"
       param :sync_plan_id, :number, :desc => "Plan numeric identifier", :allow_nil => true
@@ -43,22 +46,29 @@ module Katello
       }
     end
 
-    api :GET, "/products", "List of organization products"
+    api :GET, "/products", "List products"
     api :GET, "/subscriptions/:subscription_id/products", "List of subscription products in an organization"
     api :GET, "/organizations/:organization_id/products", "List of products in an organization"
-    param :name, :identifier, :desc => "Filter products by name"
-    param :organization_id, :identifier, :desc => "Filter products by organization name or label", :required => true
-    param :subscription_id, :number, :desc => "Filter products by subscription identifier"
+    param :organization_id, :identifier, :desc => "Filter products by organization", :required => true
+    param :subscription_id, :identifier, :desc => "Filter products by subscription"
+    param :name, String, :desc => "Filter products by name"
+    param :enabled, :bool, :desc => "Filter products by enabled or disabled"
     param_group :search, Api::V2::ApiController
     def index
-      filters = [filter_terms(product_ids_filter)]
-      filters << enabled_filter unless  params[:enabled] == 'false'
-      options = sort_params.merge(:filters => filters, :load_records? => true)
-      @collection = item_search(Product, params, options)
-      respond_for_index(:collection => @collection)
+      options = {
+        :filters => [],
+        :load_records? => true
+      }
+
+      options[:filters] << {:terms => {:id => filter_by_subscription(params[:subscription_id])}}
+      options[:filters] << {:term => {:name => params[:name].downcase}} if params[:name]
+      options[:filters] << {:term => {:enabled => params[:enabled].to_bool}} if params[:enabled]
+      options.merge!(sort_params)
+      respond(:collection => item_search(Product, params, options))
     end
 
     api :POST, "/products", "Create a product"
+    param :organization_id, :identifier, "ID of the organization", :required => true
     param_group :product
     def create
       params[:product][:label] = labelize_params(product_params) if product_params
@@ -106,25 +116,17 @@ module Katello
       @product = Product.find_by_id(params[:id]) if params[:id]
     end
 
-    def product_ids_filter
+    def filter_by_subscription(subscription_id = nil)
       ids = Product.all_readable(@organization).pluck(:id)
-      if (subscription_id = params[:subscription_id])
+      if subscription_id
         @subscription = Pool.find_by_organization_and_id!(@organization, subscription_id)
         ids &= @subscription.products.pluck("#{Product.table_name}.id")
       end
-      {:id => ids}
+      ids
     end
 
     def product_params
       params.require(:product).permit(:name, :label, :description, :provider_id, :gpg_key_id, :sync_plan_id)
-    end
-
-    def enabled_filter
-      filter_terms({:enabled => [true]})
-    end
-
-    def filter_terms(terms)
-      {:terms => terms}
     end
 
   end

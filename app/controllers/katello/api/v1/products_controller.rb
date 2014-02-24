@@ -20,6 +20,10 @@ class Api::V1::ProductsController < Api::V1::ApiController
   before_filter :verify_presence_of_organization_or_environment, :only => [:index]
   before_filter :authorize
 
+  resource_description do
+    api_version 'v1'
+  end
+
   def rules
     index_test = lambda { Product.any_readable?(@organization) }
     read_test  = lambda { @product.readable? }

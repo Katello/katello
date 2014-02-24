@@ -117,7 +117,7 @@ class Api::V2::SubscriptionsControllerTest < ActionController::TestCase
 
   def test_upload
     Provider.any_instance.stubs(:import_manifest)
-    Organization.any_instance.stubs(:pools).returns([])
+    Provider.any_instance.stubs(:manifest_task).returns(TaskStatus.new())
     test_document = File.join(Engine.root, "test", "fixtures", "files", "puppet_module.tar.gz")
     manifest = Rack::Test::UploadedFile.new(test_document, '')
     post :upload, :organization_id => @organization.label, :content => manifest
@@ -130,6 +130,40 @@ class Api::V2::SubscriptionsControllerTest < ActionController::TestCase
 
     assert_protected_action(:upload, allowed_perms, denied_perms) do
       post :upload, :organization_id => @organization.label
+    end
+  end
+
+  def test_refresh_manfiest
+    Provider.any_instance.stubs(:refresh_manifest)
+    Provider.any_instance.stubs(:organization).returns(Organization.new())
+    Organization.any_instance.stubs(:owner_details).returns("upstreamConsumer" => "JarJarBinks")
+    Provider.any_instance.stubs(:manifest_task).returns(TaskStatus.new())
+    put :refresh_manifest, :organization_id => @organization.label
+    assert_response :success
+  end
+
+  def test_refresh_protected
+    allowed_perms = [@edit_permission]
+    denied_perms = [@read_permission, @no_permission]
+
+    assert_protected_action(:refresh_manifest, allowed_perms, denied_perms) do
+      put :refresh_manifest, :organization_id => @organization.label
+    end
+  end
+
+  def test_delete_manifest
+    Provider.any_instance.stubs(:delete_manifest)
+    Provider.any_instance.stubs(:manifest_task).returns(TaskStatus.new())
+    post :delete_manifest, :organization_id => @organization.label
+    assert_response :success
+  end
+
+  def test_delete_protected
+    allowed_perms = [@edit_permission]
+    denied_perms = [@read_permission, @no_permission]
+
+    assert_protected_action(:delete_manifest, allowed_perms, denied_perms) do
+      post :delete_manifest, :organization_id => @organization.label
     end
   end
 end

@@ -86,7 +86,8 @@ module Katello
       filters = []
 
       filters << {:terms => {:organization_id => [@organization.id]}}
-      filters << {:terms => {:name => [params[:name]]}} if params[:name]
+      # See http://projects.theforeman.org/issues/4405
+      filters << {:terms => {:name => [params[:name].downcase]}} if params[:name]
       filters << {:terms => {:library => [params[:library]]}} if params[:library].present?
 
       options = {
@@ -165,7 +166,8 @@ module Katello
       respond_for_index :collection => @environments
     end
 
-    api :GET, "/organization/:organization_id/environments/paths", "List environment paths"
+    api :GET, "/organizations/:organization_id/environments/paths", "List environment paths"
+    param :organization_id, String, :desc => "organization identifier"
     def paths
       paths = @organization.promotion_paths.inject([]) do |result, path|
         result << { :path => [@organization.library] + path }
