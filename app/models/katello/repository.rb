@@ -85,7 +85,11 @@ class Repository < Katello::Model
   scope :non_puppet, where("content_type != ?", PUPPET_TYPE)
 
   def organization
-    self.environment.organization
+    if self.environment
+      self.environment.organization
+    else
+      self.content_view.organization
+    end
   end
 
   def content_view
