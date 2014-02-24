@@ -43,38 +43,6 @@ describe ProvidersController do
 
       Resources::Candlepin::Owner.stubs(:pools).returns({})
     end
-
-    it "Should be able to get repo discovery screen" do
-      get 'repo_discovery', {:id=>@provider.id}
-      must_respond_with(:success)
-    end
-
-    it "Should be able to get discovered repos" do
-      get 'discovered_repos', {:id=>@provider.id}
-      must_respond_with(:success)
-    end
-
-    it "should be able to get new discovered urls" do
-      @controller.expects(:render).twice
-      get 'new_discovered_repos', {:id=>@provider.id, :urls=>['http://redhat.com/foo']}
-      must_respond_with(:success)
-    end
-
-    it "Should be able to start discovery" do
-      url = 'http://redhat.com/foo'
-      @provider.expects(:discover_repos)
-      @provider.expects(:discovery_url=).with(url)
-      Provider.stubs(:find).returns @provider
-      post 'discover', {:id=>@provider.id, :url=>url}
-      must_respond_with(:success)
-    end
-
-    it "Should be able to cancel discovery" do
-      @provider.expects(:discovery_task=).with(nil)
-      Provider.stubs(:find).returns @provider
-      post 'cancel_discovery', {:id=>@provider.id}
-      must_respond_with(:success)
-    end
   end
 
   describe "should be able to create a custom provider (katello)" do
