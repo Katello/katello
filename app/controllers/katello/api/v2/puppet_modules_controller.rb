@@ -13,14 +13,16 @@
 module Katello
 class Api::V2::PuppetModulesController < Api::V2::ApiController
   before_filter :find_repository
+  before_filter :find_content_view, :only => [:index]
   before_filter :find_environment, :only => [:index]
   before_filter :authorize
   before_filter :find_puppet_module, :only => [:show]
 
   def rules
     readable = lambda do
+      (@view && @view.readable?) ||
       (@environment && @environment.contents_readable?) ||
-      (@repo.environment.contents_readable? && @repo.product.readable?)
+      (@repo && @repo.environment.contents_readable? && @repo.product.readable?)
     end
 
     {
@@ -30,24 +32,24 @@ class Api::V2::PuppetModulesController < Api::V2::ApiController
   end
 
   api :GET, "/puppet_modules", "List puppet modules"
+  api :GET, "/content_views/:content_view_id/puppet_modules", "List puppet modules"
   api :GET, "/environments/:environment_id/puppet_modules", "List puppet modules"
   api :GET, "/repositories/:repository_id/puppet_modules", "List puppet modules"
+  param :content_view_id, :identifier, :desc => "content view identifier"
   param :environment_id, :identifier, :desc => "environment identifier"
   param :repository_id, :identifier, :desc => "repository identifier", :required => true
   def index
-    repoids = if @repo && @repo.puppet?
-                [@repo.pulp_id]
-              elsif @environment
-                @environment.puppet_repositories.map(&:pulp_id)
-              else
-                []
-              end
+    collection = if @repo && @repo.puppet?
+                   filter_by_repoids [@repo.pulp_id]
+                 elsif @environment
+                   filter_by_repoids @environment.puppet_repositories.map(&:pulp_id)
+                 elsif @view
+                   filter_by_id @view.content_view_puppet_modules.map(&:uuid)
+                 else
+                   filter_by_repoids
+                 end
 
-    options = sort_params
-    options[:filters] = [{ :terms => { :repoids => repoids } }]
-
-    @search_service.model = PuppetModule
-    respond(:collection => item_search(PuppetModule, params, options))
+    respond(:collection => collection)
   end
 
   api :GET, "/puppet_modules/:id", "Show a puppet module"
@@ -59,6 +61,22 @@ class Api::V2::PuppetModulesController < Api::V2::ApiController
   end
 
   private
+
+  def filter_by_id(ids)
+    options = sort_params
+    options[:filters] = [{ :terms => { :id => ids } }]
+    item_search(PuppetModule, params, options)
+  end
+
+  def filter_by_repoids(repoids = [])
+    options = sort_params
+    options[:filters] = [{ :terms => { :repoids => repoids } }]
+    item_search(PuppetModule, params, options)
+  end
+
+  def find_content_view
+    @view = ContentView.non_default.find(params[:content_view_id]) if params[:content_view_id]
+  end
 
   def find_environment
     @environment = KTEnvironment.find(params[:environment_id]) if params[:environment_id]

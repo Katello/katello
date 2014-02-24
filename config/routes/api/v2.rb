@@ -40,9 +40,18 @@ Katello::Engine.routes.draw do
           post :publish
           post :promote
           post :refresh
+          get :available_puppet_modules
         end
-        api_resources :puppet_modules, :controller => :content_view_puppet_modules
-        api_resources :filters
+        api_resources :content_view_puppet_modules, :controller => :content_view_puppet_modules
+        api_resources :filters do
+          member do
+            get :available_errata
+            get :available_package_groups
+          end
+          api_resources :errata, :only => [:index]
+          api_resources :package_groups, :only => [:index]
+        end
+        api_resources :puppet_modules, :only => [:index]
         api_resources :repositories, :only => [:index]
         api_resources :content_view_versions, :only => [:index]
       end
@@ -59,9 +68,17 @@ Katello::Engine.routes.draw do
         end
       end
 
+      api_resources :errata, :only => [:index, :show]
+
       # content view filters
       api_resources :filters do
+        api_resources :errata, :only => [:index]
+        api_resources :package_groups, :only => [:index]
         api_resources :rules, :controller => :filter_rules
+        member do
+          get :available_errata
+          get :available_package_groups
+        end
       end
 
       # content view filter rules
@@ -358,8 +375,6 @@ Katello::Engine.routes.draw do
       api_resources :sync_plans, :only => [:show, :update, :destroy]
       api_resources :tasks, :only => [:show]
       api_resources :about, :only => [:index]
-
-      api_resources :errata, :only => [:show]
 
       # api custom information
       match '/custom_info/:informable_type/:informable_id' => 'custom_info#create', :via => :post, :as => :create_custom_info
