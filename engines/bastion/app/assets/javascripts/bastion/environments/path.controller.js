@@ -69,8 +69,8 @@ angular.module('Bastion.environments').controller('PathController',
             $scope.isLastEnvironment = function (environment) {
                 var lastEnvironment = false;
 
-                if ($scope.row.path.length > 0 &&
-                    $scope.row.path[$scope.row.path.length - 1].environment === environment) {
+                if ($scope.row.environments.length > 0 &&
+                    $scope.row.environments[$scope.row.environments.length - 1] === environment) {
                     lastEnvironment = true;
                 }
 
@@ -98,12 +98,12 @@ angular.module('Bastion.environments').controller('PathController',
             function removeEnvironment(environment) {
                 // Remove the environment from the path.  If it is the only environment
                 // in the path, remove the path.
-                $scope.row.path = _.reject($scope.row.path, function (item) {
-                    return item.environment === environment;
+                $scope.row.environments = _.reject($scope.row.environments, function (item) {
+                    return item === environment;
                 }, this);
 
-                if ($scope.row.path.length === 1 && $scope.row.path[0].environment.library) {
-                    $scope.row.path.splice(0, 1);
+                if ($scope.row.environments.length === 1 && $scope.row.environments[0].library) {
+                    $scope.row.environments.splice(0, 1);
                 }
             }
 
@@ -123,13 +123,13 @@ angular.module('Bastion.environments').controller('PathController',
                 var deferred = $q.defer();
 
                 $scope.workingOn.busy = true;
-                environment.prior = $scope.row.path[$scope.row.path.length - 1].environment.id;
+                environment.prior = $scope.row.environments[$scope.row.environments.length - 1].id;
 
                 Environment.save(environment, function (response) {
                     deferred.resolve(response);
 
                     // add the new environment to the path
-                    $scope.row.path.push({environment: response});
+                    $scope.row.environments.push(response);
 
                     $scope.close();
                     $scope.working = false;

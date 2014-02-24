@@ -7,14 +7,18 @@
     available in '{{ currentOrganization }}'.
   </p>
 
-  <div path-selector="availableEnvironments"></div>
+  <div path-selector="availableEnvironments"
+       ng-model="selectedEnvironment"
+       mode="singleSelect"
+       path-attribute="environments"
+       enabled-check="enabledCheck(item)"></div>
 
   <div>
     <button class="btn btn-primary btn-lg" ng-click="promote()" translate>
       Promote Version
     </button>
 
-    <a ui-sref="content-views-details.versions" class="btn btn-default btn-lg"  translate role="button">
+    <a ui-sref="content-views.details.versions" class="btn btn-default btn-lg"  translate role="button">
       Cancel
     </a>
   </div>

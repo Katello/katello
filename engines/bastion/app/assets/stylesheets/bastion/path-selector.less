@@ -31,7 +31,7 @@
         label {
           padding-right: 16px;
 
-          &:hover {
+          &:hover:not([disabled]) {
             color: white;
             background: @listhover_color;
           }
@@ -61,7 +61,7 @@
           &:after { border-left-color: @path-active-color; };
           &:hover:after { border-left-color: @listhover_color; }
         }
-        &:hover {
+        &:hover:not([disabled])  {
           background: @listhover_color;
           color: white;
           &:after { border-left-color: @listhover_color; }

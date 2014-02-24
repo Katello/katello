@@ -17,6 +17,7 @@
  *
  * @requires $scope
  * @requires gettext
+ * @requires ContentView
  *
  * @description
  *   Provides the functionality specific to ContentViews for use with the Nutupane UI pattern.
@@ -24,22 +25,22 @@
  *   within the table.
  */
 angular.module('Bastion.content-views').controller('ContentViewPublishController',
-    ['$scope', 'gettext',  function ($scope, gettext) {
+    ['$scope', 'gettext', 'ContentView',  function ($scope, gettext, ContentView) {
 
         $scope.version = {};
 
         $scope.publish = function (contentView, version) {
-            contentView.$publish(version, success, failure);
+            ContentView.publish({id: contentView.id, version: version}, success, failure);
         };
 
-        function success(view) {
-            $scope.contentView = view;
-            $scope.successMessages = [gettext('Successfully published new version.')];
-            $scope.transitionTo('content-views.details.versions', {contentViewId: view.id});
+        function success(version) {
+            $scope.contentView.versions.unshift(version);
+            $scope.$parent.successMessages = [gettext('Successfully published new version.')];
+            $scope.transitionTo('content-views.details.versions', {contentViewId: version['content_view'].id});
         }
 
         function failure(response) {
-            $scope.errorMessages = [response.data.displayMessage];
+            $scope.$parent.errorMessages = [response.data.displayMessage];
         }
 
     }]

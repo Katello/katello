@@ -12,20 +12,23 @@
  **/
 
 describe('Controller: ContentViewVersionsController', function() {
-    var $scope;
+    var $scope, versions;
 
-    beforeEach(module('Bastion.content-views', 'Bastion.test-mocks'))
+    beforeEach(module('Bastion.content-views', 'Bastion.test-mocks'));
 
     beforeEach(inject(function($injector) {
-        var $controller = $injector.get('$controller'),
-            ContentView = $injector.get('MockResource').$new();
+        var gettext = function() {},
+            $controller = $injector.get('$controller'),
+            ContentViewVersion = $injector.get('MockResource').$new();
 
         $scope = $injector.get('$rootScope').$new();
 
         $scope.contentView = ContentView.get({id: 1});
 
         $controller('ContentViewVersionsController', {
-            $scope: $scope
+            $scope: $scope,
+            gettext: gettext,
+            ContentViewVersion: ContentViewVersion
         });
     }));
 
