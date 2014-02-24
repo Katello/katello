@@ -5,6 +5,7 @@ extends 'katello/api/v2/common/org_reference'
 
 attributes :composite
 attributes :repository_ids
+attributes :component_ids
 
 child :environments => :environments do
   attributes :id, :name, :label
@@ -28,7 +29,13 @@ child :versions => :versions do
 end
 
 child :repositories => :repositories do
+  attributes :id, :name, :label
+end
+
+child :components => :components do
   attributes :id, :name
+  attributes :user, :version
+  attributes :created_at => :published
 end
 
 extends 'katello/api/v2/common/timestamps'

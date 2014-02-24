@@ -20,7 +20,7 @@ module Katello
 
     before_filter :authorize
 
-    wrap_parameters :include => (ContentView.attribute_names + %w(repository_ids))
+    wrap_parameters :include => (ContentView.attribute_names + %w(repository_ids component_ids))
 
     def rules
       index_rule   = lambda { ContentView.any_readable?(@organization) }
@@ -65,6 +65,7 @@ module Katello
     param :description, String, :desc => "Description of the content view"
     param :label, String, :desc => "Content view label"
     param :repositoriy_ids, Array, :desc => "List of repository ids"
+    param :composite, :bool, :desc => "Composite content view"
     def create
       @view = ContentView.create!(view_params) do |view|
         view.organization = @organization
@@ -79,6 +80,7 @@ module Katello
     param :name, String, :desc => "New name for the content view"
     param :description, String, :desc => "Updated description for the content view"
     param :repository_ids, Array, :desc => "List of repository ids"
+    param :component_ids, Array, :desc => "List of component content view version ids"
     def update
       @view.update_attributes!(view_params)
 
@@ -106,8 +108,8 @@ module Katello
     end
 
     def view_params
-      attrs = [:name, :description, {:repository_ids => []}]
-      attrs.push(:label) if action_name == "create"
+      attrs = [:name, :description, {:repository_ids => []}, {:component_ids => []}]
+      attrs.push(:label, :composite) if action_name == "create"
       params.require(:content_view).permit(*attrs)
     end
 

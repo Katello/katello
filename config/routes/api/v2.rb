@@ -44,7 +44,9 @@ Katello::Engine.routes.draw do
         api_resources :puppet_modules, :controller => :content_view_puppet_modules
         api_resources :filters
         api_resources :repositories, :only => [:index]
+        api_resources :content_view_versions, :only => [:index]
       end
+      api_resources :content_view_versions, :only => [:index, :show]
 
       api_resources :environments, :only => [:index, :show, :create, :update, :destroy] do
         api_resources :activation_keys, :only => [:index, :create]

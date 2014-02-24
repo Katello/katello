@@ -18,15 +18,14 @@ class ContentViewTest < ActiveSupport::TestCase
   def self.before_suite
     models = ["Organization", "KTEnvironment", "User", "ContentViewEnvironment",
               "Repository", "ContentView", "ContentViewVersion",
-              "ComponentContentView", "System", "ActivationKey"]
+              "System", "ActivationKey"]
     services = ["Candlepin", "Pulp", "ElasticSearch"]
     disable_glue_layers(services, models, true)
   end
 
   def setup
     User.current      = User.find(users(:admin))
-    @acme_corporation = get_organization
-
+    @organization     = get_organization
     @library          = KTEnvironment.find(katello_environments(:library).id)
     @dev              = KTEnvironment.find(katello_environments(:dev).id)
     @default_view     = ContentView.find(katello_content_views(:acme_default))
@@ -169,13 +168,27 @@ class ContentViewTest < ActiveSupport::TestCase
     refute_empty @library_view.all_version_library_instances
   end
 
-  def test_components_not_in_env
-    skip "TODO: Fix content view composites and components"
-    composite_view = katello_content_views(:composite_view)
+  def test_composite_content_views_with_repos
+    view = ContentView.create!(:name => "Carcosa",
+                               :organization_id => @organization.id,
+                               :composite => true)
 
-    assert_equal 2, composite_view.components_not_in_env(@dev).length
-    assert_equal composite_view.content_view_definition.component_content_views.sort,
-      composite_view.components_not_in_env(@dev).sort
+    assert_raises(ActiveRecord::RecordInvalid) do
+      view.repositories << Repository.first
+    end
+    assert_empty view.repositories
+  end
+
+  def test_content_view_components
+    assert_raises(ActiveRecord::RecordInvalid) do
+      @library_dev_view.components << @library_view.versions.first
+    end
+
+    component = ContentViewComponent.new(:content_view => @library_dev_view,
+                                         :content_view_version => @library_view.versions.first
+                                        )
+    refute component.valid?
+    refute component.save
   end
 
   def test_unique_environments
