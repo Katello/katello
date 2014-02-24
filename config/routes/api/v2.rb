@@ -40,9 +40,18 @@ Katello::Engine.routes.draw do
           post :publish
           post :promote
           post :refresh
+          get :puppet_modules
+          get :available_puppet_modules
         end
         api_resources :puppet_modules, :controller => :content_view_puppet_modules
-        api_resources :filters
+        api_resources :filters do
+          member do
+            get :errata
+            get :available_errata
+            get :package_groups
+            get :available_package_groups
+          end
+        end
         api_resources :repositories, :only => [:index]
       end
 
@@ -60,6 +69,13 @@ Katello::Engine.routes.draw do
       # content view filters
       api_resources :filters do
         api_resources :rules, :controller => :filter_rules
+
+        member do
+          get :errata
+          get :available_errata
+          get :package_groups
+          get :available_package_groups
+        end
       end
 
       # content view filter rules

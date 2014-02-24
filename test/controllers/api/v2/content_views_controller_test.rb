@@ -143,5 +143,38 @@ module Katello
         put :update, :id => @content_view.id, :name => "new name"
       end
     end
+
+    def test_puppet_modules
+      get :puppet_modules, :id => @content_view.id
+
+      assert_response :success
+      assert_template 'katello/api/v2/content_views/../puppet_modules/index'
+    end
+
+    def test_puppet_modules_protected
+      allowed_perms = [@read_permission]
+      denied_perms = [@no_permission]
+
+      assert_protected_action(:puppet_modules, allowed_perms, denied_perms) do
+        get :puppet_modules, :id => @content_view.id
+      end
+    end
+
+    def test_available_puppet_modules
+      get :available_puppet_modules, :id => @content_view.id
+
+      assert_response :success
+      assert_template 'katello/api/v2/content_views/../puppet_modules/index'
+    end
+
+    def test_available_puppet_modules_protected
+      allowed_perms = [@read_permission]
+      denied_perms = [@no_permission]
+
+      assert_protected_action(:available_puppet_modules, allowed_perms, denied_perms) do
+        get :available_puppet_modules, :id => @content_view.id
+      end
+    end
+
   end
 end
