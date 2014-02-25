@@ -22,8 +22,8 @@ module Actions
             action_subject(system, :packages => packages)
             plan_action(Pulp::Consumer::ContentUninstall,
                         consumer_uuid: system.uuid,
-                        type: 'rpm',
-                        args: packages)
+                        type:          'rpm',
+                        args:          packages)
           end
 
           def humanized_name
@@ -31,11 +31,12 @@ module Actions
           end
 
           def humanized_input
-            [input[:packages].join(", ")] + super
+            [input[:packages].join(', ')] + super
           end
 
           def presenter
-            Helpers::Presenter::Delegated.new(self, Pulp::Consumer::ContentUninstall)
+            Helpers::Presenter::Delegated.new(
+                self, planned_actions(Pulp::Consumer::ContentUninstall))
           end
 
         end

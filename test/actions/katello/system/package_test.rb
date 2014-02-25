@@ -34,7 +34,7 @@ module Katello
       describe '#humanized_output' do
         let :action do
           create_action(action_class).tap do |action|
-            action.execution_plan.stubs(actions: [pulp_action])
+            action.stubs(planned_actions: [pulp_action])
           end
         end
         let(:pulp_action) { fixture_action(pulp_action_class, output: fixture_variant) }
@@ -81,8 +81,8 @@ emacss: No package(s) available to install
 
       describe '#humanized_output' do
         let :action do
-          create_action(action_class).tap do |action|
-            action.execution_plan.stubs(actions: [pulp_action])
+          create_action_presentation(action_class).tap do |action|
+            action.stubs(planned_actions: [pulp_action])
           end
         end
         let(:pulp_action) { fixture_action(pulp_action_class, output: fixture_variant) }

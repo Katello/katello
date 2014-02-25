@@ -13,7 +13,7 @@
 module Actions
   module Helpers
     # Delegate task information to presenter object
-    module Presenter
+    module Presenter # TODO rename to Presented?
 
       def presenter
         fail NotImplementedError
@@ -24,6 +24,7 @@ module Actions
       end
 
       class Base
+        include Algebrick::TypeCheck
 
         attr_reader :action
 
@@ -38,19 +39,14 @@ module Actions
 
       # Use sub-actions for presenting the data of the task
       class Delegated < Base
-
-        def initialize(action, *delegated_action_classes)
-          @delegated_actions = action.execution_plan.actions.find_all do |subaction|
-            delegated_action_classes.any? do |action_class|
-              subaction.is_a? action_class
-            end
-          end
+        def initialize(action, delegated_actions)
+          (Type! delegated_actions, Array).all? { |a| Type! a, Presenter }
+          @delegated_actions = delegated_actions
         end
 
         def humanized_output
           @delegated_actions.map(&:humanized_output).compact.join("\n")
         end
-
       end
     end
   end

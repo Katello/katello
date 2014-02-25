@@ -32,6 +32,7 @@ module Actions
                                   capabiliteis:        system.capabilities)
           system.save!
           action_subject system, uuid: cp_create.output[:response][:uuid]
+          plan_self
           plan_action ElasticSearch::Reindex, system
         end
 

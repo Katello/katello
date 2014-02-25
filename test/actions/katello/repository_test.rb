@@ -83,8 +83,7 @@ module Katello
       describe 'progress' do
         let :action do
           create_action(action_class).tap do |action|
-            # TODO DRY this pattern
-            action.execution_plan.stubs(actions: [pulp_action])
+            action.stubs(planned_actions: [pulp_action])
           end
         end
 
