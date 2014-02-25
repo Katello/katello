@@ -28,11 +28,11 @@ module Actions
         end
 
         def humanized_name
-          _("Synchronize")
+          _("Synchronize") # TODO rename class to Synchronize and remove this method, add Sync = Synchronize
         end
 
         def presenter
-          Helpers::Presenter::Delegated.new(self, Pulp::Repository::Sync)
+          Helpers::Presenter::Delegated.new(self, planned_actions(Pulp::Repository::Sync))
         end
       end
     end

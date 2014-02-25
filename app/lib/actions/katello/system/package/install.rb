@@ -37,7 +37,7 @@ module Actions
           end
 
           def presenter
-            Helpers::Presenter::Delegated.new(self, Pulp::Consumer::ContentInstall)
+            Helpers::Presenter::Delegated.new(self, planned_actions(Pulp::Consumer::ContentInstall))
           end
         end
       end
