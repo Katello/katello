@@ -15,6 +15,7 @@ class Api::V2::FiltersController < Api::V2::ApiController
 
   before_filter :find_content_view
   before_filter :find_filter, :except => [:index, :create]
+  before_filter :load_search_service, :only => [:index, :available_errata, :available_package_groups]
   before_filter :authorize
 
   wrap_parameters :include => (Filter.attribute_names + %w(repository_ids))
@@ -24,11 +25,13 @@ class Api::V2::FiltersController < Api::V2::ApiController
     view_editable = lambda { @view.editable? }
 
     {
-        :index   => view_readable,
-        :create  => view_editable,
-        :show    => view_readable,
-        :update  => view_editable,
-        :destroy => view_editable
+        :index                    => view_readable,
+        :create                   => view_editable,
+        :show                     => view_readable,
+        :update                   => view_editable,
+        :destroy                  => view_editable,
+        :available_errata         => view_readable,
+        :available_package_groups => view_readable
     }
   end
 
@@ -67,7 +70,7 @@ class Api::V2::FiltersController < Api::V2::ApiController
   api :PUT, "/content_views/:content_view_id/filters/:id", "Update a filter"
   api :PUT, "/filters/:id", "Update a filter"
   param :content_view_id, :identifier, :desc => "content view identifier"
-  param :id, :identifier, :desc => "filter identifierr", :required => true
+  param :id, :identifier, :desc => "filter identifier", :required => true
   param :name, String, :desc => "new name for the filter"
   param :inclusion, :bool, :desc => "specifies if content should be included or excluded, default: inclusion=false"
   param :repository_ids, Array, :desc => "list of repository ids"
@@ -83,6 +86,40 @@ class Api::V2::FiltersController < Api::V2::ApiController
   def destroy
     @filter.destroy
     respond :resource => @filter
+  end
+
+  api :GET, "/content_views/:content_view_id/filters/:id/available_errata",
+      "Get errata that are available to be added to the filter"
+  api :GET, "/filters/:id/available_errata",
+      "Get errata that are available to be added to the filter"
+  param :content_view_id, :identifier, :desc => "content view identifier"
+  param :id, :identifier, :desc => "filter identifier", :required => true
+  def available_errata
+    current_errata_ids = @filter.erratum_rules.map(&:errata_id)
+    repo_ids = @filter.applicable_repos.pluck(:pulp_id)
+    search_filters = [{ :terms => { :repoids => repo_ids } },
+                      { :not => { :terms => { :errata_id_exact => current_errata_ids } } }]
+    options = { :filters => search_filters }
+
+    respond_for_index :template => '../errata/index',
+                      :collection => item_search(Errata, params, options)
+  end
+
+  api :GET, "/content_views/:content_view_id/filters/:id/available_package_groups",
+      "Get package groups that are available to be added to the filter"
+  api :GET, "/filters/:id/available_package_groups",
+      "Get package groups that are available to be added to the filter"
+  param :content_view_id, :identifier, :desc => "content view identifier"
+  param :id, :identifier, :desc => "filter identifier", :required => true
+  def available_package_groups
+    current_ids = @filter.package_group_rules.map(&:name)
+    repo_ids = @filter.applicable_repos.pluck(:pulp_id)
+    search_filters = [{ :terms => { :repo_id => repo_ids } },
+                      { :not => { :terms => { :name => current_ids } } }]
+    options = { :filters => search_filters }
+
+    respond_for_index :template => '../package_groups/index',
+                      :collection => item_search(PackageGroup, params, options)
   end
 
   private

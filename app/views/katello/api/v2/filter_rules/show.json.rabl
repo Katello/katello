@@ -2,6 +2,7 @@ object @resource
 
 extends 'katello/api/v2/common/identifier'
 
+attributes :filter_id
 attributes :version, :if => lambda { |rule| rule.respond_to?(:version) && !rule.version.blank? }
 attributes :min_version, :if => lambda { |rule| rule.respond_to?(:min_version) && !rule.min_version.blank? }
 attributes :max_version, :if => lambda { |rule| rule.respond_to?(:max_version) && !rule.max_version.blank? }

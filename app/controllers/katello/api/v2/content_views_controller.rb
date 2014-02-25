@@ -17,6 +17,7 @@ module Katello
     before_filter :find_content_view, :except => [:index, :create]
     before_filter :find_organization, :only => [:index, :create]
     before_filter :find_environment, :only => [:index]
+    before_filter :load_search_service, :only => [:index, :available_puppet_modules]
 
     before_filter :authorize
 
@@ -30,11 +31,12 @@ module Katello
       publish_rule = lambda { @view.publishable? }
 
       {
-        :index        => index_rule,
-        :show         => view_rule,
-        :create       => create_rule,
-        :update       => edit_rule,
-        :publish      => publish_rule
+        :index                    => index_rule,
+        :show                     => view_rule,
+        :create                   => create_rule,
+        :update                   => edit_rule,
+        :publish                  => publish_rule,
+        :available_puppet_modules => view_rule
       }
     end
 
@@ -99,6 +101,20 @@ module Katello
     param :id, :number, :desc => "content view numeric identifier", :required => true
     def show
       respond :resource => @view
+    end
+
+    api :GET, "/content_views/:id/available_puppet_modules",
+        "Get puppet modules that are available to be added to the content view"
+    param :id, :identifier, :desc => "content view numeric identifier", :required => true
+    def available_puppet_modules
+      current_ids = @view.content_view_puppet_modules.map(&:uuid)
+      repo_ids = @view.organization.library.puppet_repositories.pluck(:pulp_id)
+      search_filters = [{ :terms => { :repoids => repo_ids } },
+                        { :not => { :terms => { :id => current_ids } } }]
+      options = { :filters => search_filters }
+
+      respond_for_index :template => '../puppet_modules/index',
+                        :collection => item_search(PuppetModule, params, options)
     end
 
     private

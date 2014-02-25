@@ -141,5 +141,42 @@ module Katello
         delete :destroy, :content_view_id => @filter.content_view_id, :id => @filter.id
       end
     end
+
+    def test_available_errata
+      @filter = katello_filters(:populated_erratum_filter)
+      get :available_errata, :content_view_id => @filter.content_view_id, :id => @filter.id
+
+      assert_response :success
+      assert_template 'katello/api/v2/filters/../errata/index'
+    end
+
+    def test_available_errata_protected
+      @filter = katello_filters(:populated_erratum_filter)
+      allowed_perms = [@read_permission]
+      denied_perms = [@no_permission]
+
+      assert_protected_action(:available_errata, allowed_perms, denied_perms) do
+        get :available_errata, :content_view_id => @filter.content_view_id, :id => @filter.id
+      end
+    end
+
+    def test_available_package_groups
+      @filter = katello_filters(:populated_package_group_filter)
+      get :available_package_groups, :content_view_id => @filter.content_view_id, :id => @filter.id
+
+      assert_response :success
+      assert_template 'katello/api/v2/filters/../package_groups/index'
+    end
+
+    def test_available_package_groups_protected
+      @filter = katello_filters(:populated_package_group_filter)
+      allowed_perms = [@read_permission]
+      denied_perms = [@no_permission]
+
+      assert_protected_action(:available_package_groups, allowed_perms, denied_perms) do
+        get :available_package_groups, :content_view_id => @filter.content_view_id, :id => @filter.id
+      end
+    end
+
   end
 end

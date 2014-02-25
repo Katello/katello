@@ -67,11 +67,11 @@ module Katello
     param :system_id, :identifier, :desc => "system identifier"
     def index
       subscriptions = if @system
-                        index_system
+                        filter_system
                       elsif @activation_key
-                        index_activation_key
+                        filter_activation_key
                       else
-                        index_organization
+                        filter_organization
                       end
 
       respond_for_index(:collection => subscriptions)
@@ -209,7 +209,7 @@ module Katello
 
     private
 
-    def index_system
+    def filter_system
       filters = [:terms => {:id => @system.system_groups.pluck(:id)}]
 
       options = {
@@ -219,7 +219,7 @@ module Katello
       item_search(SystemGroup, params, options)
     end
 
-    def index_activation_key
+    def filter_activation_key
       filters = [:terms => {:id => @activation_key.system_groups.pluck(:id)}]
 
       options = {
@@ -229,7 +229,7 @@ module Katello
       item_search(SystemGroup, params, options)
     end
 
-    def index_organization
+    def filter_organization
       filters = [:terms => {:id => SystemGroup.readable(@organization).pluck(:id)}]
       filters << {:term => {:name => params[:name].downcase}} if params[:name]
 
