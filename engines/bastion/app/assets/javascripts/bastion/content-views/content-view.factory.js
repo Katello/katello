@@ -25,7 +25,7 @@ angular.module('Bastion.content-views').factory('ContentView',
     ['$resource', 'CurrentOrganization',
     function ($resource, CurrentOrganization) {
 
-        return $resource('/katello/api/v2/content_views/:id/:action',
+        return $resource('/api/v2/content_views/:id/:action',
             {id: '@id', 'organization_id': CurrentOrganization},
             {
                 query:  {method: 'GET', isArray: false},
