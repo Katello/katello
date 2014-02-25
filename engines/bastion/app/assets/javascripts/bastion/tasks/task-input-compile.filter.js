@@ -21,7 +21,7 @@
 angular.module('Bastion.tasks')
     .filter('taskInputCompile', function () {
         return function (humanizedTaskInput) {
-            if (_.isString(humanizedTaskInput)) {
+            if (!_.isArray(humanizedTaskInput) && !_.isObject(humanizedTaskInput)) {
                 return humanizedTaskInput;
             }
             var parts = _.map(humanizedTaskInput, function (part) {
