@@ -14,6 +14,7 @@ module Katello
 class Provider < Katello::Model
   self.include_root_in_json = false
 
+  include ForemanTasks::Concerns::ActionSubject
   include Glue::ElasticSearch::Provider if Katello.config.use_elasticsearch
   include Glue::Provider
   include Glue
@@ -183,6 +184,10 @@ class Provider < Katello::Model
 
   def total_repositories
     repositories.length
+  end
+
+  def related_resources
+    self.organization
   end
 
   protected

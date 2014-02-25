@@ -13,7 +13,6 @@
 module Katello
 class Api::V2::TasksController < Api::V2::ApiController
 
-  before_filter :find_organization, :only => [:index]
   before_filter :find_task, :only => [:show]
   before_filter :authorize
 
@@ -29,9 +28,10 @@ class Api::V2::TasksController < Api::V2::ApiController
       else
         false
       end
+
     end
     {
-      :index => test,
+      :index  => test,
       :show  => test,
     }
   end
@@ -47,13 +47,6 @@ class Api::V2::TasksController < Api::V2::ApiController
   def show
     @task.refresh
     respond_for_show
-  end
-
-  private
-
-  def find_task
-    @task         = TaskStatus.find_by_id!(params[:id])
-    @organization = @task.organization
   end
 
   private

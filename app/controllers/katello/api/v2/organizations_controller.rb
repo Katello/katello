@@ -13,6 +13,9 @@
 module Katello
   class Api::V2::OrganizationsController < ::Api::V2::OrganizationsController
 
+    include Api::V2::Rendering
+    include ForemanTasks::Triggers
+
     before_filter :local_find_taxonomy, :only => %w{repo_discover cancel_repo_discover}
 
     def local_find_taxonomy
@@ -62,20 +65,16 @@ module Katello
     param :url, String, :desc => "base url to perform repo discovery on"
     def repo_discover
       fail _("url not defined.") if params[:url].blank?
-      task = @organization.discover_repos(params[:url])
+      task = async_task(::Actions::Katello::Repository::Discover, params[:url])
       respond_for_async :resource => task
     end
 
-    api :PUT, "/organizations/:id/cancel_repo_discover", "Cancel repository discovery"
-    param :id, String, :desc => "organization id, label, or name"
+    api :PUT, "/organizations/:label/cancel_repo_discover", "Cancel repository discovery"
+    param :label, String, :desc => "Organization label"
     param :url, String, :desc => "base url to perform repo discovery on"
     def cancel_repo_discover
-      task = @organization.repo_discovery_task
-      if task.pending?
-        task.state = TaskStatus::Status::CANCELED
-        task.save!
-      end
-      respond_for_async :resource => task
+      # TODO: implement task canceling
+      render :json => { message: "not implemented" }
     end
 
     api :POST, "/organizations/:id/autoattach_subscriptions", "Auto-attach available subscriptions to all systems within an organization. Asynchronous operation."
@@ -88,16 +87,6 @@ module Katello
 
     def resource_identifying_attributes
       %w(id label)
-    end
-
-    private
-
-    def respond_for_async(options = {})
-      resource = options[:resource] || get_resource
-      status   = options[:status] || :ok
-      format   = options[:format] || :json
-
-      render format => resource, :status => status
     end
 
   end
