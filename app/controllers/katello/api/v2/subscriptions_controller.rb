@@ -110,10 +110,11 @@ class Api::V2::SubscriptionsController < Api::V2::ApiController
   end
   def create
     object = @system || @activation_key || @distributor
-    subscription_params[:subscriptions].each do |subscription|
-      object.subscribe(subscription[:subscription][:id], subscription[:subscription][:quantity])
-    end if subscription_params[:subscriptions]
-    if subscription_params[:id] && subscription_params[:quantity]
+    if subscription_params[:subscriptions]
+      subscription_params[:subscriptions].each do |subscription|
+        object.subscribe(subscription[:subscription][:id], subscription[:subscription][:quantity])
+      end
+    elsif subscription_params[:id]
       object.subscribe(subscription_params[:id], subscription_params[:quantity])
     end
 
