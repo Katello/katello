@@ -44,7 +44,7 @@ angular.module('Bastion.tasks').factory('Task',
             }
         );
 
-        var foremanTasksResource = $resource('//foreman_tasks/api/tasks/:id/:action',
+        var foremanTasksResource = $resource('/foreman_tasks/api/tasks/:id/:action',
             {},
             {
                 bulkSearch: {method: 'POST', isArray: true, params: { action: 'bulk_search'}}
