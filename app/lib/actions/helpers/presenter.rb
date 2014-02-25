@@ -13,7 +13,7 @@
 module Actions
   module Helpers
     # Delegate task information to presenter object
-    module Presenter # TODO rename to Presented?
+    module Presenter # TODO: rename to Presented?
 
       def presenter
         fail NotImplementedError

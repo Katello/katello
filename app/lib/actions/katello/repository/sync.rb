@@ -28,7 +28,7 @@ module Actions
         end
 
         def humanized_name
-          _("Synchronize") # TODO rename class to Synchronize and remove this method, add Sync = Synchronize
+          _("Synchronize") # TODO: rename class to Synchronize and remove this method, add Sync = Synchronize
         end
 
         def presenter
