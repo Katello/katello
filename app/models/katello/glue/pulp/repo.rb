@@ -534,10 +534,10 @@ module Glue::Pulp::Repo
 
     def clone_contents_by_filter(to_repo, content_type, filter_clauses, override_config = {})
       content_classes = {
-          Package::CONTENT_TYPE => :rpm,
-          PackageGroup::CONTENT_TYPE => :package_group,
-          Errata::CONTENT_TYPE => :errata,
-          PuppetModule::CONTENT_TYPE => :puppet_module
+          Katello::Package::CONTENT_TYPE => :rpm,
+          Katello::PackageGroup::CONTENT_TYPE => :package_group,
+          Katello::Errata::CONTENT_TYPE => :errata,
+          Katello::PuppetModule::CONTENT_TYPE => :puppet_module
       }
       fail "Invalid content type #{content_type} sent. It needs to be one of #{content_classes.keys}"\
                                                                      unless content_classes[content_type]
