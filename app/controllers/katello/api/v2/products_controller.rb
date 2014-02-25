@@ -61,7 +61,7 @@ module Katello
       }
 
       options[:filters] << {:terms => {:id => filter_by_subscription(params[:subscription_id])}}
-      options[:filters] << {:term => {:name => params[:name]}} if params[:name]
+      options[:filters] << {:term => {:name => params[:name].downcase}} if params[:name]
       options[:filters] << {:term => {:enabled => params[:enabled].to_bool}} if params[:enabled]
       options.merge!(sort_params)
       respond(:collection => item_search(Product, params, options))

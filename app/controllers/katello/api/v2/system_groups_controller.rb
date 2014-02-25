@@ -66,15 +66,15 @@ module Katello
     param :activation_key_id, :identifier, :desc => "activation key identifier"
     param :system_id, :identifier, :desc => "system identifier"
     def index
-      subscriptions = if @system
-                        index_system
-                      elsif @activation_key
-                        index_activation_key
-                      else
-                        index_organization
-                      end
+      results = if @system
+                  index_system
+                elsif @activation_key
+                  index_activation_key
+                else
+                  index_organization
+                end
 
-      respond_for_index(:collection => subscriptions)
+      respond_for_index(:collection => results)
     end
 
     api :POST, "/system_groups", "Create a system group"

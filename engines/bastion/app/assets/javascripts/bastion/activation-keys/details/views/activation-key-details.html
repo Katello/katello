@@ -14,7 +14,8 @@
         Remove
       </button>
 
-      <button class="btn btn-default" ng-click="showCopy = true">
+      <!-- RFE copy activation key - http://projects.theforeman.org/issues/4407 -->
+      <button class="btn btn-default" ng-click="showCopy = true" ng-hide="true">
         <i class="icon-copy"></i>
         {{ "Copy Activation Key" | translate }}
       </button>
@@ -66,11 +67,17 @@
           </span>
         </a>
       </li>
-
       <li ng-class="{active: stateIncludes('activation-keys.details.subscriptions')}">
         <a ui-sref="activation-keys.details.subscriptions.list">
           <span translate>
             Subscriptions
+          </span>
+        </a>
+      </li>
+      <li ng-class="{active: stateIncludes('activation-keys.details.system-groups')}">
+        <a ui-sref="activation-keys.details.system-groups.list">
+          <span translate>
+            System Groups
           </span>
         </a>
       </li>

@@ -22,7 +22,8 @@ angular.module('Bastion.activation-keys', [
     'ngResource',
     'ui.router',
     'Bastion.utils',
-    'Bastion.widgets'
+    'Bastion.widgets',
+    'Bastion.system-groups'
 ]);
 
 angular.module('Bastion.activation-keys').config(['$stateProvider', function ($stateProvider) {
@@ -91,6 +92,22 @@ angular.module('Bastion.activation-keys').config(['$stateProvider', function ($s
         templateUrl: 'activation-keys/details/views/activation-key-add-subscriptions.html'
     });
 
-
+    $stateProvider.state('activation-keys.details.system-groups', {
+        abstract: true,
+        collapsed: true,
+        templateUrl: 'activation-keys/details/views/activation-key-system-groups.html'
+    })
+    .state('activation-keys.details.system-groups.list', {
+        url: '/system-groups',
+        collapsed: true,
+        controller: 'ActivationKeySystemGroupsController',
+        templateUrl: 'activation-keys/details/views/activation-key-system-groups-table.html'
+    })
+    .state('activation-keys.details.system-groups.add', {
+        url: '/system-groups/add',
+        collapsed: true,
+        controller: 'ActivationKeyAddSystemGroupsController',
+        templateUrl: 'activation-keys/details/views/activation-key-system-groups-table.html'
+    });
 
 }]);
