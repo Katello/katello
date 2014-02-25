@@ -1,0 +1,69 @@
+<a href="" ng-click="transitionBack()">
+  <i class="icon-backward"></i>
+  {{ "Back" | translate }}
+</a>
+
+<h3 translate>Task Details</h3>
+
+<div class="nutupane-sub-section">
+  <div class="details">
+    <section>
+      <div class="detail">
+        <span class="info-label" translate>Action Type</span>
+        <span class="info-value">{{ task.humanized.action }}</span>
+      </div>
+
+      <div class="detail">
+        <span class="info-label" translate>User</span>
+        <span class="info-value">{{ task.username }}</span>
+      </div>
+
+      <div class="detail">
+        <span class="info-label" translate>Started At</span>
+        <span class="info-value">{{ task.started_at | date:"short"  }}</span>
+      </div>
+
+      <div class="detail">
+        <span class="info-label" translate>Finished At</span>
+        <span class="info-value">{{ task.ended_at | date:"short"  }}</span>
+      </div>
+
+      <div class="detail">
+        <span class="info-label" translate>Parameters</span>
+        <span class="info-value" ng-switch="isArray(task.humanized.input)">
+          <span ng-switch-when="true">
+            <span ng-repeat="inputPart in task.humanized.input">
+              <span task-input-part  data="inputPart"></span>
+              <span ng-show="!$last">; </span>
+            </span>
+          </span>
+          <span ng-switch-default>{{task.humanized.input}}</span>
+        </span>
+      </div>
+
+      <div class="detail">
+        <span class="info-label" translate>State</span>
+        <span class="info-value">{{ task.state }}</span>
+      </div>
+
+      <div class="detail">
+        <span class="info-label" translate>Result</span>
+        <i class="icon-spinner icon-spin" ng-show="task.pending"></i>
+        <span class="info-value">{{ task.result }}</span>
+      </div>
+
+       <div ng-class="{ active: (task.state === 'pending' || task.state === 'running') }" class="progress progress-striped">
+         <span progressbar value="task.progressbar.value" type="{{task.progressbar.type}}"></span>
+       </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <section>
+      <div class="detail">
+        <span class="info-label" translate>Details</span>
+        <pre>{{ task.humanized.output }}</pre>
+      </div>
+    </section>
+  </div>
+</div>

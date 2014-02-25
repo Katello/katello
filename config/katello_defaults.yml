@@ -263,6 +263,8 @@ common:
         enabled: true
       foreman_rest:
         enabled: true
+      action:
+        enabled: true
       roles:
         enabled: false
       # tire is a special case, all logs coming from it are debug level however they count depends
@@ -302,7 +304,7 @@ development:
   sso:
     enable: false
   logging:
-    ignored_paths: ['/notices/get_new', '/assets/']
+    ignored_paths: ['/notices/get_new', '/assets/', '/api/tasks/bulk_search']
     colorize: true
     loggers:
       root:

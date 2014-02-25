@@ -97,7 +97,9 @@ describe('Controller: DiscoveryController', function() {
     });
 
 
-    it('should fetch discovery task through org and set details', function() {
+    /* TODO: For now, we don't support loading the current disovery task
+       when reloading the page */
+    xit('should fetch discovery task through org and set details', function() {
         expect($scope.discovery.url).toBe(mockTask.parameters.url);
         expect($scope.discovery.pending).toBe(mockTask.pending);
         expect($scope.discoveryTable.rows[0].url).toBe(mockTask.result[0]);
@@ -119,16 +121,27 @@ describe('Controller: DiscoveryController', function() {
         $scope.discover();
 
         expect(Task.get).not.toHaveBeenCalled();
-        expect($scope.discoveryTable.rows[0].url).toBe(Organization.mockDiscoveryTask.result[0]);
+
+        Task.simulateBulkSearch(Organization.mockDiscoveryTask);
+
+        expect($scope.discoveryTable.rows[0].url).toBe(Organization.mockDiscoveryTask.output[0]);
         expect($scope.discoveryTable.rows[0].path).toBe('foo');
     });
 
     it('discovery should poll if task is pending', function() {
-        Organization.mockDiscoveryTask.pending = true;
-        spyOn(Task, 'poll');
-
         $scope.discover();
-        expect(Task.poll).toHaveBeenCalled();
+        Organization.mockDiscoveryTask.pending = true
+        spyOn(Task, 'unregisterSearch');
+        Task.simulateBulkSearch(Organization.mockDiscoveryTask);
+        expect(Task.unregisterSearch).not.toHaveBeenCalled();
+    });
+
+    it('discovery should stop polling if task is not pending', function() {
+        $scope.discover();
+        Organization.mockDiscoveryTask.pending = false
+        spyOn(Task, 'unregisterSearch');
+        Task.simulateBulkSearch(Organization.mockDiscoveryTask);
+        expect(Task.unregisterSearch).toHaveBeenCalled();
     });
 
 });

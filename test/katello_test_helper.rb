@@ -21,8 +21,18 @@ require "#{Katello::Engine.root}/test/support/auth_support"
 require "#{Katello::Engine.root}/test/support/controller_support"
 require "#{Katello::Engine.root}/test/support/search_service"
 
+require 'dynflow/testing'
+Mocha::Mock.send :include, Dynflow::Testing::Mimic
+Dynflow::Testing.logger_adapter.level = 1
+require "#{Katello::Engine.root}/test/support/actions/fixtures"
+require "#{Katello::Engine.root}/test/support/actions/pulp_task"
+require "#{Katello::Engine.root}/test/support/actions/remote_action"
+require "#{Katello::Engine.root}/test/support/foreman_tasks/task"
+
 FactoryGirl.definition_file_paths = ["#{Katello::Engine.root}/test/factories"]
 FactoryGirl.find_definitions
+
+Katello::Glue::Event.disabled = true
 
 module MiniTest::Expectations
   infect_an_assertion :assert_redirected_to, :must_redirect_to

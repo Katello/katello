@@ -39,14 +39,14 @@ angular.module('Bastion.products').controller('DiscoveryController',
         }
 
         setDiscoveryDetails = function (task) {
-            $scope.discovery.url = task.parameters.url;
-            $scope.discoveryTable.rows = transformRows(task.result);
-
             $scope.discovery.pending = task.pending;
 
             if (!task.pending) {
                 $scope.discovery.working = false;
             }
+
+            $scope.discovery.url = task.input;
+            $scope.discoveryTable.rows = transformRows(task.output);
         };
 
         $scope.setupSelected = function () {
@@ -84,32 +84,21 @@ angular.module('Bastion.products').controller('DiscoveryController',
             });
         };
 
-        Organization.get({id: CurrentOrganization}, function (org) {
-            if (org['discovery_task_id']) {
-                Task.get({id: org['discovery_task_id']}, function (task) {
-                    pollTask(task);
-                });
+        $scope.updateTask = function (task) {
+            setDiscoveryDetails(task);
+            if (!task.pending) {
+                Task.unregisterSearch($scope.taskSearchId);
             }
-        });
+        },
 
         $scope.discover = function () {
             $scope.discovery.pending = true;
             $scope.discoveryTable.rows = [];
             $scope.discoveryTable.selectAll(false);
-            Organization.repoDiscover({id: CurrentOrganization, url: $scope.discovery.url}, function (response) {
-                pollTask(response);
+            Organization.repoDiscover({id: CurrentOrganization, url: $scope.discovery.url}, function (task) {
+                $scope.taskSearchId = Task.registerSearch({ 'type': 'task', 'task_id': task.id }, $scope.updateTask);
             });
         };
 
-        function pollTask(task) {
-            if (task.pending) {
-                Task.poll(task, function (response) {
-                    setDiscoveryDetails(response);
-                });
-            }
-            else {
-                setDiscoveryDetails(task);
-            }
-        }
     }]
 );

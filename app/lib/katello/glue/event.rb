@@ -13,23 +13,31 @@
 module Katello
 module Glue
   # triggering events on model creation/deletion for better
-  # extendability
+  # extendability.
+  # TODO: This will be removed after moving the orchestration into
+  #       Dynflow actions completely
   module Event
 
-    def self.included(base)
-      base.class_eval do
-        after_create :trigger_create_event
-        before_destroy :trigger_destroy_event
+    class << self
+      def included(base)
+        base.class_eval do
+          after_create :trigger_create_event
+          after_commit :execute_action
+          before_destroy :trigger_destroy_event
+        end
       end
+
+      attr_accessor :disabled
+      alias_method :disabled?, :disabled
     end
 
     def trigger_create_event
-      Glue::Event.trigger(create_event, self) if create_event
+      plan_action(create_event, self) if create_event
       return true
     end
 
     def trigger_destroy_event
-      Glue::Event.trigger(destroy_event, self) if destroy_event
+      plan_action(destroy_event, self) if destroy_event
       return true
     end
 
@@ -41,30 +49,22 @@ module Glue
     def destroy_event
     end
 
+    def plan_action(event_class, *args)
+      return if Glue::Event.disabled?
+      @execution_plan = ::ForemanTasks.dynflow.world.plan(event_class, *args)
+      fail @execution_plan.errors.first if @execution_plan.error?
+    end
+
+    def execute_action
+      if @execution_plan
+        ::ForemanTasks.dynflow.world.execute(@execution_plan.id)
+      end
+      return true
+    end
+
     def self.trigger(event_class, *args)
-      execution_plan = event_class.trigger(*args)
-      execution_plan.failed_steps.each do |step|
-        Notify.warning(_("Failed to perform additional action %{action}: %{message}") %
-                       { :action => step.action_class.name,
-                         :message => step.error['message'] },
-                       { :asynchronous => true, :persist => true })
-      end
-
-      log_message = execution_plan.steps.map do |step|
-        message = "#{step.action_class.name}:#{step.status}:#{step.input.inspect} -> #{step.output.inspect}"
-        if step.status == 'error'
-          message << "#{step.error['exception']}: #{step.error['message']}\n"
-          message << step.error['backtrace'].join("\n")
-        end
-          message
-      end
-      log_message = log_message.join("\n")
-
-      if execution_plan.failed_steps.any?
-        ::Logging.logger['glue'].error(log_message)
-      else
-        ::Logging.logger['glue'].debug(log_message)
-      end
+      return if Glue::Event.disabled?
+      ::ForemanTasks.sync_task(event_class, *args)
     end
   end
 end

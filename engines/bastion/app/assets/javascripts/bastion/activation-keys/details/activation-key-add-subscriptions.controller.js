@@ -42,7 +42,7 @@ angular.module('Bastion.activation-keys').controller('ActivationKeyAddSubscripti
             'sort_order':               'ASC'
         };
 
-        addSubscriptionsPane = new Nutupane(ActivationKey, params, 'available');
+        addSubscriptionsPane = new Nutupane(ActivationKey, params, 'availableSubscriptions');
         $scope.addSubscriptionsTable = addSubscriptionsPane.table;
         $scope.isAdding  = false;
         $scope.addSubscriptionsTable.closeItem = function () {};

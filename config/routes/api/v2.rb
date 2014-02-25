@@ -27,11 +27,11 @@ Katello::Engine.routes.draw do
             match '/available' => 'subscriptions#available', :via => :get
           end
         end
-        api_resources :system_groups, :only => [:index] do
-          member do
-            put :add_activation_keys
-            put :remove_activation_keys
-          end
+        api_resources :system_groups, :only => [:index]
+        member do
+          match '/system_groups' => 'activation_keys#add_system_groups', :via => :post
+          match '/system_groups' => 'activation_keys#remove_system_groups', :via => :put
+          match '/system_groups/available' => 'activation_keys#available_system_groups', :via => :get
         end
       end
 
@@ -133,6 +133,8 @@ Katello::Engine.routes.draw do
           put :disable
         end
       end
+
+      api_resources :subscriptions, :only => [:show]
 
       api_resources :system_groups, :only => system_onlies do
         member do
@@ -289,6 +291,7 @@ Katello::Engine.routes.draw do
         api_resources :sync, :only => [:index] do
           delete :index, :on => :collection, :action => :cancel
         end
+
         api_resources :packages, :only => [:index, :show] do
           get :search, :on => :collection
         end
