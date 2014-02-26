@@ -65,54 +65,9 @@ Katello::Engine.routes.draw do
     end
   end
 
-  resources :content_view_definitions do
+  resources :content_views, :only => [:index] do
     collection do
-      get :default_label
-      get :items
-    end
-
-    member do
-      post :clone
-      get :views
-      get :publish_setup
-      post :publish
-      get :status, action: :definition_status
-      get :content
-      put :update_content
-      put :update_component_views
-    end
-
-    resources :content_views, :only => [:destroy] do
-      member do
-        post :refresh
-      end
-    end
-
-    resources :filters, :controller => :filters, :only => [:index, :new, :create, :edit, :update] do
-      collection do
-        delete :destroy_filters
-      end
-
-      resources :rules, :controller => :filter_rules, :only => [:new, :create, :edit, :update] do
-        collection do
-          delete :destroy_rules
-        end
-
-        member do
-          get :edit_inclusion
-          get :edit_parameter_list
-          get :edit_date_type_parameters
-          put :add_parameter
-          put :update_parameter
-          delete :destroy_parameters
-        end
-      end
-    end
-  end
-
-  resources :content_views do
-    collection do
-      get :auto_complete
+      get :all
     end
   end
 
@@ -418,21 +373,6 @@ Katello::Engine.routes.draw do
   end
   match '/organizations/:id/edit' => 'organizations#update', :via => :put
   match '/organizations/:id/default_info/:informable_type' => 'organizations#default_info', :via => :get, :as => :organization_default_info
-
-  resources :changesets, :only => [:update, :index, :show, :create, :new, :edit, :destroy] do
-    member do
-      put :name
-      get :dependencies
-      post :apply
-      get :status, action: :changeset_status
-      get :object
-    end
-    collection do
-      get :auto_complete_search
-      get :list
-      get :items
-    end
-  end
 
   resources :environments do
     collection do

@@ -18,8 +18,8 @@ describe SystemsController do
 
   before do
     models = ["Organization", "KTEnvironment", "User", "Filter",
-                "FilterRule", "ErratumRule", "PackageRule", "PackageGroupRule",
-                "ContentViewEnvironment", "ContentViewDefinition", "System"]
+                "ErratumFilter", "PackageFilter", "PackageGroupFilter",
+                "ContentViewEnvironment", "System"]
     disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
     setup_controller_defaults
     @system = katello_systems(:simple_server)

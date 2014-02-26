@@ -26,6 +26,7 @@ angular.module('Bastion', [
     'ngSanitize',
     'ui.bootstrap',
     'ui.bootstrap.tpls',
+    'ngAnimate',
     'angular-blocks',
     'Bastion.activation-keys',
     'Bastion.custom-info',

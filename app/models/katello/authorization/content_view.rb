@@ -16,7 +16,8 @@
 
 module Katello
 module Authorization::ContentView
-  READ_PERM_VERBS = [:read, :promote, :subscribe]
+  READ_PERM_VERBS = [:read, :create, :update, :promote, :subscribe, :publish]
+  EDIT_PERM_VERBS = [:create, :update]
 
   def self.included(base)
     base.extend ClassMethods
@@ -29,8 +30,11 @@ module Authorization::ContentView
 
   def deletable?
     return true if !Katello.config.katello?
-    return false if self.content_view_definition.nil?
-    self.content_view_definition.deletable? || self.content_view_definition.publishable?
+     ::User.allowed_to?([:delete, :create], :content_views, self.id, self.organization)
+  end
+
+  def editable?
+    ::User.allowed_to?(EDIT_PERM_VERBS, :content_views, self.id, self.organization)
   end
 
   def promotable?
@@ -40,6 +44,10 @@ module Authorization::ContentView
   def subscribable?
     return true if !Katello.config.katello?
     ::User.allowed_to?([:subscribe], :content_views, self.id, self.organization)
+  end
+
+  def publishable?
+    ::User.allowed_to?([:publish], :content_views, self.id, self.organization)
   end
 
   module ClassMethods
@@ -59,6 +67,9 @@ module Authorization::ContentView
     def list_verbs(global = false)
       {
         :read => _("Read Content Views"),
+        :create => _("Create Content Views"),
+        :update => _("Update Content Views"),
+        :publish => _("Publish Content Views"),
         :promote => _("Promote Content Views"),
         :subscribe => _("Subscribe Systems To Content Views")
       }.with_indifferent_access
@@ -86,6 +97,14 @@ module Authorization::ContentView
 
     def subscribable(org)
       items(org, [:subscribe])
+    end
+
+    def editable(org)
+      items(org, EDIT_PERM_VERBS)
+    end
+
+    def creatable?(org)
+      ::User.allowed_to?([:create], :content_views, nil, org)
     end
 
     def items(org, verbs)

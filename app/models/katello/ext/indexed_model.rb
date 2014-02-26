@@ -94,6 +94,7 @@ module Ext::IndexedModel
 
       def reindex_on_association_change(record)
         record.update_index if record.respond_to? :update_index
+        record.class.index.refresh if record.class.respond_to? :index
       end
 
       def reindex_on_update(relation, attribute)

@@ -25,7 +25,7 @@ module Authorization::Organization
     end
 
     def any_readable?
-      Organization.readable.count > 0
+      ::Organization.readable.count > 0
     end
 
     def all_editable?

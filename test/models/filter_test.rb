@@ -16,8 +16,8 @@ module Katello
 class FilterTest < ActiveSupport::TestCase
 
   def self.before_suite
-    models = ["Organization", "KTEnvironment", "User","Filter", "ContentViewEnvironment",
-              "ContentViewDefinitionBase", "ContentViewDefinition", "Product", "Repository"]
+    models = ["Organization", "KTEnvironment", "User", "Filter", "ContentViewEnvironment",
+              "ContentView", "Product", "Repository"]
     disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models, true)
   end
 
@@ -25,17 +25,18 @@ class FilterTest < ActiveSupport::TestCase
     User.current = User.find(users(:admin))
     @filter = FactoryGirl.build(:filter)
     @repo = Repository.find(katello_repositories(:fedora_17_x86_64).id)
-    @product = Product.find(katello_products(:fedora).id)
+    ContentView.any_instance.stubs(:reindex_on_association_change).returns(true)
   end
 
   def test_create
      assert @filter.save
   end
 
-  def test_composite_definition
-    # filter should not get created for a composite content view definition
-    content_view_def = FactoryGirl.create(:content_view_definition, :composite)
-    filter = FactoryGirl.build(:filter, :content_view_definition_id => content_view_def.id)
+  def test_composite_view
+    skip "skip until composite content views are supported"
+    # filter should not get created for a composite content view
+    content_view = FactoryGirl.create(:content_view, :composite)
+    filter = FactoryGirl.build(:filter, :content_view_id => content_view.id)
     assert_nil Filter.find_by_id(filter.id)
     refute Filter.exists?(filter.id)
   end
@@ -50,7 +51,7 @@ class FilterTest < ActiveSupport::TestCase
     @filter.save!
     attrs = FactoryGirl.attributes_for(:filter,
                                        :name => @filter.name,
-                                       :content_view_definition_id => @filter.content_view_definition_id
+                                       :content_view_id => @filter.content_view_id
                                       )
     assert_raises(ActiveRecord::RecordInvalid) do
       Filter.create!(attrs)
@@ -68,71 +69,29 @@ class FilterTest < ActiveSupport::TestCase
   end
 
   def test_add_good_repo
-    cvd =  @filter.content_view_definition
-    cvd.repositories << @repo
-    cvd.save!
+    view =  @filter.content_view
+    view.repositories << @repo
+    view.save!
     @filter.repositories << @repo
     assert @filter.save
     refute_empty Filter.find(@filter.id).repositories
   end
 
-  def test_add_bad_product
-    @filter.products << @product
-    assert_raises(ActiveRecord::RecordInvalid) do
-      @filter.save!
-    end
-  end
-
-  def test_add_good_product
-    cvd =  @filter.content_view_definition
-    cvd.products << @product
-    cvd.save!
-    @filter.products << @product
-    assert @filter.save
-    refute_empty Filter.find(@filter.id).products
-  end
-
-  def test_archive
-    filter = create(:filter)
-    filter_count = Filter.count
-    archive = filter.content_view_definition.archive
-    refute_empty archive.filters
-    assert_equal filter_count+1, Filter.count
-    refute_equal filter.content_view_definition.filters.map(&:id).sort,
-      archive.filters.map(&:id).sort
-  end
-
-s  def test_content_definition_delete_repo
+  def test_content_view_delete_repo
     @filter.save!
-    cvd =  @filter.content_view_definition
-    cvd.repositories << @repo
-    cvd.save!
+    view =  @filter.content_view
+    view.repositories << @repo
+    view.save!
     @repo = Repository.find(@repo.id)
     @filter = Filter.find(@filter.id)
-    refute_empty @filter.content_view_definition.repositories
+    refute_empty @filter.content_view.repositories
     @repo = Repository.find(@repo.id)
     @filter.repositories << @repo
     @filter.save!
-    cvd  = ContentViewDefinition.find(cvd)
-    cvd.repositories.delete(@repo)
-    cvd.save!
-    assert_empty cvd.filters.first.repositories
-  end
-
-  def test_content_definition_delete_product
-    @filter.save!
-    cvd =  @filter.content_view_definition
-    cvd.products << @product
-    cvd.save!
-    @product = Product.find(@product.id)
-    @filter = Filter.find(@filter.id)
-    @filter.products << @product
-    @filter.save!
-    cvd = ContentViewDefinition.find(cvd.id)
-    cvd.products.delete(@product)
-    cvd.save!
-
-    assert_empty cvd.filters.first.products
+    view  = ContentView.find(view)
+    view.repositories.delete(@repo)
+    view.save!
+    assert_empty view.filters.first.repositories
   end
 
 end

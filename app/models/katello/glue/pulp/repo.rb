@@ -120,7 +120,7 @@ module Glue::Pulp::Repo
 
     def create_pulp_repo
       #if we are in library, no need for an distributor, but need to sync
-      if self.environment.library?
+      if self.environment && self.environment.library?
         importer = generate_importer
       else
         #if not in library, no need for sync info, but we need a distributor
@@ -226,19 +226,6 @@ module Glue::Pulp::Repo
           Katello.pulp_server.extensions.repository.associate_distributor(self.pulp_id, distributor.type_id, distributor.config,
                                                                  {:distributor_id => distributor.id})
         end
-      end
-    end
-
-    def promote(from_env, to_env)
-      if self.is_cloned_in?(to_env)
-        self.clone_contents(self.get_clone(to_env))
-      else
-        clone = self.create_clone(to_env)
-        clone_events = self.clone_contents(clone) #return clone task
-        # TODO: ensure that clone content is indexed
-        #clone.index_packages
-        #clone.index_errata
-        return clone_events
       end
     end
 
@@ -534,10 +521,10 @@ module Glue::Pulp::Repo
 
     def clone_contents_by_filter(to_repo, content_type, filter_clauses, override_config = {})
       content_classes = {
-          Package::CONTENT_TYPE => :rpm,
-          PackageGroup::CONTENT_TYPE => :package_group,
-          Errata::CONTENT_TYPE => :errata,
-          PuppetModule::CONTENT_TYPE => :puppet_module
+          Katello::Package::CONTENT_TYPE => :rpm,
+          Katello::PackageGroup::CONTENT_TYPE => :package_group,
+          Katello::Errata::CONTENT_TYPE => :errata,
+          Katello::PuppetModule::CONTENT_TYPE => :puppet_module
       }
       fail "Invalid content type #{content_type} sent. It needs to be one of #{content_classes.keys}"\
                                                                      unless content_classes[content_type]
@@ -627,33 +614,6 @@ module Glue::Pulp::Repo
       retval
     end
 
-    def add_packages(pkg_id_list)
-      previous = self.environmental_instances(self.content_view).in_environment(self.environment.prior).first
-      Katello.pulp_server.extensions.rpm.copy(previous.pulp_id, self.pulp_id, {:ids => pkg_id_list})
-    end
-
-    def add_errata(errata_unit_id_list)
-      previous = self.environmental_instances(self.content_view).in_environment(self.environment.prior).first
-      Katello.pulp_server.extensions.errata.copy(previous.pulp_id, self.pulp_id, {:ids => errata_unit_id_list})
-    end
-
-    def add_distribution(distribution_id)
-      previous = self.environmental_instances(self.content_view).in_environment(self.environment.prior).first
-      Katello.pulp_server.extensions.distribution.copy(previous.pulp_id, self.pulp_id, {:ids => [distribution_id]})
-    end
-
-    def delete_packages(package_id_list)
-      Katello.pulp_server.extensions.rpm.unassociate_unit_ids_from_repo(self.pulp_id, package_id_list)
-    end
-
-    def delete_errata(errata_id_list)
-      Katello.pulp_server.extensions.errata.unassociate_unit_ids_from_repo(self.pulp_id, errata_id_list)
-    end
-
-    def delete_distribution(distribution_id)
-      Katello.pulp_server.extensions.distribution.unassociate_unit_ids_from_repo(self.pulp_id, [distribution_id])
-    end
-
     def cancel_sync
       Rails.logger.info "Cancelling synchronization of repository #{self.pulp_id}"
       history = self.sync_status
@@ -691,15 +651,24 @@ module Glue::Pulp::Repo
       sync_history_item['state'] == PulpTaskStatus::Status::FINISHED.to_s
     end
 
-    def generate_metadata(force = false)
+    def generate_metadata(options = {})
+      force_regeneration = options.fetch(:force_regeneration, false)
+      cloned_repo_override = options.fetch(:cloned_repo_override, nil)
       tasks = []
-      clone = self.content_view_version.repositories.where(:library_instance_id => self.library_instance_id).where("id != #{self.id}").first
-      if self.environment.library? || force || clone.nil?
+      clone = cloned_repo_override || self.content_view_version.repositories.where(:library_instance_id => self.library_instance_id).where("id != #{self.id}").first
+      if force_regeneration || self.content_view.default? || (self.content_view.nil? && !cloned_repo_override)
         tasks << self.publish_distributor
       else
         tasks << self.publish_clone_distributor(clone)
       end
-      tasks << self.publish_node_distributor if self.find_node_distributor
+      if self.find_node_distributor
+        if options[:node_publish_async]
+          self.async(:organization => self.organization,
+                           :task_type => TaskStatus::TYPES[:content_view_node_publish][:type]).publish_node_distributor
+        else
+          tasks << self.publish_node_distributor
+        end
+      end
       tasks
     end
 
@@ -710,7 +679,9 @@ module Glue::Pulp::Repo
 
     def publish_node_distributor
       dist = self.find_node_distributor
-      Katello.pulp_server.extensions.repository.publish(self.pulp_id, dist['id'])
+      task = Katello.pulp_server.extensions.repository.publish(self.pulp_id, dist['id'])
+      PulpTaskStatus.wait_for_tasks([task])
+      Glue::Event.trigger(::Actions::Katello::Repository::NodeMetadataGenerate, self)
     end
 
     def publish_clone_distributor(source_repo)

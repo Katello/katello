@@ -14,19 +14,20 @@ module Katello
 module Glue::ElasticSearch::PuppetModule
   extend ActiveSupport::Concern
 
-    included do
-      def index_options
-        {
-          "_type"             => :puppet_module,
-          "name_sort"         => name.downcase,
-          "name_autocomplete" => name,
-          "author_autocomplete" => author,
-          "sortable_version"  => sortable_version
-        }
-      end
+  included do
+    def index_options
+      {
+        "_type"             => :puppet_module,
+        "name_sort"         => name.downcase,
+        "name_autocomplete" => name,
+        "author_autocomplete" => author,
+        "sortable_version"  => sortable_version
+      }
     end
+  end
 
   module ClassMethods
+
     def index_settings
       {
         "index" => {
@@ -87,9 +88,17 @@ module Glue::ElasticSearch::PuppetModule
       search.results
     end
 
+    def search(options = {}, &block)
+      Tire.search(self.index, &block).results
+    end
+
+    def mapping
+      Tire.index(self.index).mapping
+    end
+
     # TODO: break up method
     # rubocop:disable MethodLength
-    def search(query, options = {})
+    def legacy_search(query, options = {})
       options = {:start => 0,
                  :page_size => 10,
                  :repoids => nil,

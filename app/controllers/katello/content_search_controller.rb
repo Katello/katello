@@ -328,8 +328,8 @@ class ContentSearchController < Katello::ApplicationController
 
   def repo_puppet_modules
     offset = params[:offset] || 0
-    puppet_modules = PuppetModule.search('', { :start => offset, :page_size => current_user.page_size,
-                                               :repoids => [@repo.pulp_id] })
+    puppet_modules = PuppetModule.legacy_search('', { :start => offset, :page_size => current_user.page_size,
+                                                      :repoids => [@repo.pulp_id] })
 
     rows = puppet_modules.collect do |puppet_module|
       ContentSearch::Row.new(:id         => puppet_module.id,
@@ -403,8 +403,8 @@ class ContentSearchController < Katello::ApplicationController
               Errata.legacy_search('', :start => offset, :page_size => current_user.page_size,
                                 :filters => {:repoids =>  repo_map.keys}, :search_mode => process_search_mode)
             when :puppet_module
-              PuppetModule.search('', { :start => offset, :page_size => current_user.page_size,
-                                        :repoids => repo_map.keys, :search_mode => process_search_mode })
+              PuppetModule.legacy_search('', { :start => offset, :page_size => current_user.page_size,
+                                               :repoids => repo_map.keys, :search_mode => process_search_mode })
             end
 
     rows = units.collect do |unit|
@@ -564,7 +564,6 @@ class ContentSearchController < Katello::ApplicationController
     repo_row_hash = ContentSearch::RepoSearch.new(:view => view, :repos => repos).row_object_hash
 
     repos.each do |repo|
-
       repo_span = spanned_repo_content(view, repo, content_type,  search_obj, 0, search_mode, environments)
       if repo_span
         rows << repo_row_hash[repo.id]
@@ -751,7 +750,7 @@ class ContentSearchController < Katello::ApplicationController
     # repos were searched by string
     unless repo_ids.is_a? Array
       search_string = repo_ids
-      repo_ids      = Repository.enabled.libraries_content_readable(current_organization).pluck("#{Katello::Repository.table_name}.id")
+      repo_ids      = Repository.enabled.non_archived.libraries_content_readable(current_organization).pluck("#{Katello::Repository.table_name}.id")
     end
 
     repo_search(search_string, repo_ids, product_ids)

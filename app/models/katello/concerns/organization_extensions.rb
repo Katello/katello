@@ -50,8 +50,7 @@ module Katello
         has_many :permissions, :class_name => "Katello::Permission", :dependent => :destroy, :inverse_of => :organization
         has_many :sync_plans, :class_name => "Katello::SyncPlan", :dependent => :destroy, :inverse_of => :organization
         has_many :system_groups, :class_name => "Katello::SystemGroup", :dependent => :destroy, :inverse_of => :organization
-        has_many :content_view_definitions, :class_name => "Katello::ContentViewDefinitionBase", :dependent => :destroy
-        has_many :content_views, :class_name => "Katello::ContentView", :dependent => :destroy
+        has_many :content_views, :class_name => "Katello::ContentView", :dependent => :destroy, :inverse_of => :organization
         has_many :task_statuses, :class_name => "Katello::TaskStatus", :dependent => :destroy, :as => :task_owner
 
         #older association

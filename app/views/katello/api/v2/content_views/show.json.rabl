@@ -1,20 +1,41 @@
-object @content_view
+object @resource
 
 extends 'katello/api/v2/common/identifier'
 extends 'katello/api/v2/common/org_reference'
 
-attributes :composite, :default
-attributes :environment_default_id
-attributes :content_view_definition_id => :definition_id
+attributes :composite
+attributes :repository_ids
+attributes :component_ids
 
 child :environments => :environments do
-  attributes :id, :name
+  attributes :id, :name, :label
+end
+
+child :repositories => :repositories do
+  attributes :id, :name, :label
+end
+
+child :puppet_modules => :puppet_modules do
+  attributes :id, :name, :author, :uuid
+  attributes :created_at
+  attributes :updated_at
 end
 
 child :versions => :versions do
   attributes :id, :version
   attributes :created_at => :published
   attributes :environment_ids
+  attributes :user
+end
+
+child :repositories => :repositories do
+  attributes :id, :name, :label
+end
+
+child :components => :components do
+  attributes :id, :name
+  attributes :user, :version
+  attributes :created_at => :published
 end
 
 extends 'katello/api/v2/common/timestamps'

@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Red Hat, Inc.
+ * Copyright 2014 Red Hat, Inc.
  *
  * This software is licensed to you under the GNU General Public
  * License as published by the Free Software Foundation; either version
@@ -25,11 +25,14 @@ angular.module('Bastion.content-views').factory('ContentView',
     ['$resource', 'CurrentOrganization',
     function ($resource, CurrentOrganization) {
 
-        return $resource('/api/v2/organizations/:organizationId/content_views/:id/:action',
-            {id: '@id', organizationId: CurrentOrganization},
+        return $resource('/api/v2/content_views/:id/:action',
+            {id: '@id', 'organization_id': CurrentOrganization},
             {
-                update: { method: 'PUT' },
-                query:  { method: 'GET', isArray: false}
+                query:  {method: 'GET', isArray: false},
+                update: {method: 'PUT'},
+                publish: {method: 'POST', params: {action: 'publish'}},
+                //versions: {method: 'GET', isArray: false, params: {action: versions}},
+                //puppetModules: {method: 'GET', isArray: false, params: {action: puppet_modules}}
             }
         );
 

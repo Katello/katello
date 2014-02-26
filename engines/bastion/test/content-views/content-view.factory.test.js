@@ -12,7 +12,7 @@
  **/
 
 describe('Factory: ContentView', function() {
-    var $resource,
+    var $httpBackend,
         contentViews;
 
     beforeEach(module('Bastion.content-views', 'Bastion.utils'));
@@ -29,50 +29,62 @@ describe('Factory: ContentView', function() {
             offset: 0
         };
 
-        $resource = function() {
-            this.get = function(id) {
-                return contentViews.results[0];
-            };
-            this.update = function(data) {
-                contentViews.results[0] = data;
-                return contentViews.results[0];
-            };
-            this.query = function() {
-                return contentViews;
-            };
-
-            return this;
-        };
-
-        $provide.value('$resource', $resource);
         $provide.value('CurrentOrganization', 'ACME');
     }));
 
-    beforeEach(inject(function(_ContentView_) {
-        ContentView = _ContentView_;
+    beforeEach(inject(function($injector) {
+        $httpBackend = $injector.get('$httpBackend');
+        ContentView = $injector.get('ContentView');
     }));
 
-    it('provides a way to get a collection of content views', function() {
-        var views = ContentView.query();
+    afterEach(function() {
+        $httpBackend.flush();
+        $httpBackend.verifyNoOutstandingExpectation();
+        $httpBackend.verifyNoOutstandingRequest();
+    });
 
-        expect(views.results.length).toBe(2);
-        expect(views.total).toBe(10);
-        expect(views.subtotal).toBe(5);
-        expect(views.offset).toBe(0);
+    it('provides a way to get a collection of content views', function() {
+        $httpBackend.expectGET('/api/v2/content_views?organization_id=ACME')
+                    .respond(contentViews);
+
+        ContentView.query(function (response) {
+            var views = response;
+
+            expect(views.results.length).toBe(2);
+            expect(views.total).toBe(10);
+            expect(views.subtotal).toBe(5);
+            expect(views.offset).toBe(0);
+        });
     });
 
     it('provides a way to get a single content view', function() {
-        var view = ContentView.get({ id: 1 });
+        $httpBackend.expectGET('/api/v2/content_views/1?organization_id=ACME')
+                    .respond(contentViews.results[0]);
 
-        expect(view).toBeDefined();
-        expect(view.name).toEqual('ContentView1');
+        ContentView.get({id: 1}, function (contentView) {
+            expect(contentView).toBeDefined();
+            expect(contentView.name).toEqual('ContentView1');
+        });
+    });
+
+    it('provides a way to create a content view', function() {
+        var contentView = {id: 1, name: 'Content View'};
+
+        $httpBackend.expectPOST('/api/v2/content_views/1?organization_id=ACME')
+                    .respond(contentView);
+
+        ContentView.save(contentView, function (contentView) {
+            expect(contentView).toBeDefined();
+            expect(contentView.name).toEqual('Content View');
+        });
     });
 
     it('provides a way to update a content view', function() {
-        var view = ContentView.update({ id: 1, name: 'NewCVName' });
+        $httpBackend.expectPUT('/api/v2/content_views/1?organization_id=ACME')
+                    .respond(contentViews.results[0]);
 
-        expect(view).toBeDefined();
-        expect(view.name).toEqual('NewCVName');
+        ContentView.update({id: 1, name: 'NewCVName'}, function (contentView) {;
+            expect(contentView).toBeDefined();
+        });
     });
 });
-

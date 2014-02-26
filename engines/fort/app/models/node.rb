@@ -26,7 +26,7 @@ class Node < Katello::Model
   validates :system_id, :presence => true
 
   def self.with_environment(env)
-    joins(:environments).where(:environments => {:id => env})
+    joins(:environments).where(:nodes_environments => {:id => env})
   end
 
   def as_json(params)

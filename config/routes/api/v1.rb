@@ -53,7 +53,6 @@ Katello::Engine.routes.draw do
 
         resources :environments do
           get :repositories, :on => :member
-          resources :changesets, :only => [:index, :create]
         end
         resources :sync_plans
         resources :tasks, :only => [:index]
@@ -76,42 +75,6 @@ Katello::Engine.routes.draw do
         match '/default_info/:informable_type' => 'organization_default_info#create', :via => :post, :as => :create_default_info
         match '/default_info/:informable_type/*keyname' => 'organization_default_info#destroy', :via => :delete, :as => :destroy_default_info
         match '/default_info/:informable_type/apply' => 'organization_default_info#apply_to_all', :via => :post, :as => :apply_default_info
-
-        resources :content_views, :only => [:index, :show, :destroy]
-        resources :content_view_definitions do
-          member do
-            post :publish
-            post :clone
-          end
-          resources :products, :controller => :content_view_definitions, :only => [] do
-            collection do
-              get :index, :action => :list_products
-              put :index, :action => :update_products
-              get :all, :action => :list_all_products
-            end
-          end
-          resources :repositories, :controller => :content_view_definitions, :only => [] do
-            collection do
-              get :index, :action => :list_repositories
-              put :index, :action => :update_repositories
-            end
-          end
-          resources :filters, :controller => :filters, :only => [:index, :show, :create, :destroy] do
-            resources :products, :controller => :filters, :only => [] do
-              collection do
-                get :index, :action => :list_products
-                put :index, :action => :update_products
-              end
-            end
-            resources :repositories, :controller => :filters, :only => [] do
-              collection do
-                get :index, :action => :list_repositories
-                put :index, :action => :update_repositories
-              end
-            end
-            resources :rules, :controller => :filter_rules, :only => [:create, :destroy]
-          end
-        end
       end
 
       resources :systems, :only => onlies do
@@ -179,48 +142,6 @@ Katello::Engine.routes.draw do
         collection do
           get :index, :action => :organization_index
         end
-      end
-
-      resources :content_view_definitions, :only => [:destroy, :content_views] do
-        get :content_views, :on => :member
-        put :content_views, :on => :member, :action => :update_content_views
-      end
-
-      resources :content_views, :only => [:promote, :show] do
-        member do
-          post :promote
-          post :refresh
-        end
-      end
-
-      resources :changesets, :only => [:show, :update, :destroy] do
-        post :promote, :on => :member, :action => :promote
-        post :apply, :on => :member, :action => :apply
-        resources :products, :controller => :changesets_content do
-          post :index, :on => :collection, :action => :add_product
-          delete :destroy, :on => :member, :action => :remove_product
-        end
-        resources :packages, :controller => :changesets_content, :constraints => {:id => /[0-9a-zA-Z\-_.]+/} do
-          post :index, :on => :collection, :action => :add_package
-          delete :destroy, :on => :member, :action => :remove_package
-        end
-        resources :errata, :controller => :changesets_content do
-          post :index, :on => :collection, :action => :add_erratum
-          delete :destroy, :on => :member, :action => :remove_erratum
-        end
-        resources :repositories, :controller => :changesets_content do
-          post :index, :on => :collection, :action => :add_repo
-          delete :destroy, :on => :member, :action => :remove_repo
-        end
-        resources :distributions, :controller => :changesets_content do
-          post :index, :on => :collection, :action => :add_distribution
-          delete :destroy, :on => :member, :action => :remove_distribution
-        end
-        resources :content_views, :controller => :changesets_content do
-          post :index, :on => :collection, :action => :add_content_view
-          delete :destroy, :on => :member, :action => :remove_content_view
-        end
-
       end
 
       resources :ping, :only => [:index]

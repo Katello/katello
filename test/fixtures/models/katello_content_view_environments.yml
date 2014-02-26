@@ -1,18 +1,21 @@
 library_default_view_environment:
-  name:           Published Library view environment
-  label:          'library_default_view_environment'
+  name:           Published Library view library environment
+  label:          'library_default_view_library'
   cp_id:          1
   environment_id: <%= ActiveRecord::Fixtures.identify(:library) %>
   content_view_id: <%= ActiveRecord::Fixtures.identify(:acme_default) %>
+  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_default_version) %>
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>
 
+# TODO: REMOVE THESE TWO
 dev_default_view_environment:
   name:           Published Dev view environment
   label:          'dev_default_view_environment'
   cp_id:          2
   environment_id: <%= ActiveRecord::Fixtures.identify(:dev) %>
   content_view_id: <%= ActiveRecord::Fixtures.identify(:acme_default) %>
+  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:dev_default_version) %>
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>
 
@@ -22,42 +25,58 @@ staging_default_view_environment:
   cp_id:          3
   environment_id: <%= ActiveRecord::Fixtures.identify(:staging) %>
   content_view_id: <%= ActiveRecord::Fixtures.identify(:acme_default) %>
+  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:staging_default_version) %>
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>
+# END TODO: REMOVE THESE TWO
 
-library_view_environment:
-  name:           Published Library view environment
-  label:          'published_library_view_environment'
+library_view_library:
+  name:           Published Library view library environment
+  label:          'published_library_view_library'
   cp_id:          4
   environment_id: <%= ActiveRecord::Fixtures.identify(:library) %>
-  content_view_id: <%= ActiveRecord::Fixtures.identify(:library) %>
+  content_view_id: <%= ActiveRecord::Fixtures.identify(:library_view) %>
+  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_view_version) %>
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>
 
-library_dev_view_environment:
-  name:           Published Library and dev view environment
-  label:          'published_dev_view_environment'
+library_dev_view_library:
+  name:           Published Library and Dev view library environment
+  label:          'published_dev_view_library'
   cp_id:          5
+  environment_id: <%= ActiveRecord::Fixtures.identify(:library) %>
+  content_view_id: <%= ActiveRecord::Fixtures.identify(:library_dev_view) %>
+  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_dev_view_version) %>
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
+
+library_dev_view_dev:
+  name:           Published Library and dev view dev environment
+  label:          'published_dev_view_dev'
+  cp_id:          6
   environment_id: <%= ActiveRecord::Fixtures.identify(:dev) %>
   content_view_id: <%= ActiveRecord::Fixtures.identify(:library_dev_view) %>
+  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_dev_view_version) %>
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>
 
-dev_componenent_view_environment:
+dev_component_view_environment:
   name:          Component Published Dev view environment
-  label:          'dev/component_view_1'
-  cp_id:          8
+  label:         'dev/component_view_1'
+  cp_id:         7
   environment_id: <%= ActiveRecord::Fixtures.identify(:dev) %>
   content_view_id: <%= ActiveRecord::Fixtures.identify(:component_view_1) %>
+  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:library_component_view_1_version) %>
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>
 
 candlepin_library_dev_cve:
-  name:           Library and Dev Content View Environment
-  label:          'candlepin_library_dev_cve'
-  content_view:   candlepin_library_dev_cv
-  cp_id:        7
+  name:         Library and Dev Content View Environment
+  label:        'candlepin_library_dev_cve'
+  content_view: candlepin_library_dev_cv
+  cp_id:        8
   environment_id: <%= ActiveRecord::Fixtures.identify(:candlepin_dev) %>
   content_view_id: <%= ActiveRecord::Fixtures.identify(:candlepin_library_dev_cv) %>
+  content_view_version_id: <%= ActiveRecord::Fixtures.identify(:candlepin_library_dev_cv_version) %>
   created_at: <%= Time.now %>
   updated_at: <%= Time.now %>

@@ -212,3 +212,11 @@ angular.module('Bastion.test-mocks').factory('MockOrganization',  ['MockResource
         return myMock;
     }
 ]);
+
+angular.module('Bastion.test-mocks').factory('gettextMock', function () {
+
+    return function (message) {
+        return message;
+    };
+
+});

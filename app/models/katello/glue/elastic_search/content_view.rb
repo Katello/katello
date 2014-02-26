@@ -21,7 +21,7 @@ module Glue::ElasticSearch::ContentView
     include Ext::IndexedModel
 
     index_options :extended_json => :extended_index_attrs,
-                  :json => {:only => [:name, :description]},
+                  :json => {:only => [:id, :name, :label, :description]},
                   :display_attrs => [:name, :description]
 
     mapping do
@@ -54,7 +54,7 @@ module Glue::ElasticSearch::ContentView
 
     def total_puppet_module_count(env)
       repoids = self.repos(env).collect{|r| r.pulp_id}
-      result = Katello::PuppetModule.search('*', :page_size => 1, :repoids => repoids)
+      result = Katello::PuppetModule.legacy_search('*', :page_size => 1, :repoids => repoids)
       result.length > 0 ? result.total : 0
     end
 

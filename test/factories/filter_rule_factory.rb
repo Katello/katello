@@ -1,19 +1,13 @@
 FactoryGirl.define do
-  factory :filter_rule, :class => Katello::FilterRule do
-    association :filter
-    inclusion true
+  factory :package_filter_rule, :class => Katello::PackageFilterRule do
+    sequence(:name) { |n| "package #{n}"}
   end
 
-  factory :package_filter_rule, :class => Katello::PackageRule, :parent => :filter_rule do
-    parameters ({:units =>[{:name =>["g*"]}]}).with_indifferent_access
+  factory :package_group_filter_rule, :class => Katello::PackageGroupFilterRule do
+    sequence(:name) { |n| "package group #{n}"}
   end
 
-  factory :erratum_filter_rule, :class => Katello::ErratumRule, :parent => :filter_rule do
-  end
-
-  factory :package_group_filter_rule, :class => Katello::PackageGroupRule, :parent => :filter_rule do
-  end
-
-  factory :puppet_module_filter_rule, :class => Katello::PuppetModuleRule, :parent => :filter_rule do
+  factory :erratum_filter_rule, :class => Katello::ErratumFilterRule do
+    sequence(:errata_id) { |n| "RHBA-2014-#{n}"}
   end
 end

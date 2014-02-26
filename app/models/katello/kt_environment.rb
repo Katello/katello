@@ -54,32 +54,12 @@ class KTEnvironment < Katello::Model
            :dependent => :destroy, :foreign_key => :environment_id
   has_many :distributors, :class_name => "Katello::Distributor", :inverse_of => :environment,
            :dependent => :destroy, :foreign_key => :environment_id
-  has_many :changesets, :class_name => "Katello::Changeset", :dependent => :destroy,
-           :inverse_of => :environment, :foreign_key => :environment_id
-  has_many :working_changesets, :conditions => ["state != '#{Changeset::PROMOTED}'"],
-                                :foreign_key => :environment_id,
-                                :class_name => "Katello::Changeset",
-                                :inverse_of => :environment
-
-  has_many :working_deletion_changesets, :conditions => ["state != '#{Changeset::DELETED}'"],
-                                         :foreign_key => :environment_id,
-                                         :class_name => "Katello::DeletionChangeset",
-                                         :inverse_of => :environment
-  has_many :working_promotion_changesets, :conditions => ["state != '#{Changeset::PROMOTED}'"],
-                                          :foreign_key => :environment_id,
-                                          :class_name => "Katello::PromotionChangeset",
-                                          :inverse_of => :environment
-
-  has_many :changeset_history, :conditions => {:state => Changeset::PROMOTED},
-                               :foreign_key => :environment_id,
-                               :class_name => "Katello::Changeset",
-                               :inverse_of => :environment
-
-  has_many :content_view_version_environments, :class_name => "Katello::ContentViewVersionEnvironment",
-           :foreign_key => :environment_id, :dependent => :destroy
-  has_many :content_view_versions, :through => :content_view_version_environments, :inverse_of => :environments
   has_many :content_view_environments, :class_name => "Katello::ContentViewEnvironment",
            :foreign_key => :environment_id, :inverse_of => :environment, :dependent => :destroy
+  has_many :content_view_versions, :through => :content_view_environments, :inverse_of => :environments
+  has_many :content_views, :through => :content_view_environments, :inverse_of => :environments
+  has_many :content_view_histories, :class_name => "Katello::ContentViewHistory", :dependent => :destroy,
+           :inverse_of => :environment, :foreign_key => :katello_environment_id
 
   has_many :users, :foreign_key => :default_environment_id, :inverse_of => :default_environment, :dependent => :nullify
 
@@ -124,12 +104,6 @@ class KTEnvironment < Katello::Model
     self.default_content_view.content_view_environments.where(:environment_id => self.id).first
   end
 
-  def content_views(reload = false)
-    @content_views = nil if reload
-    @content_views ||= ContentView.joins(:content_view_versions => :content_view_version_environments).
-        where("#{Katello::ContentViewVersionEnvironment.table_name}.environment_id" => self.id)
-  end
-
   def successor
     return self.successors[0] unless self.library?
     self.organization.promotion_paths[0][0] if !self.organization.promotion_paths.empty?
@@ -170,13 +144,6 @@ class KTEnvironment < Katello::Model
     self.promoting.exists?
   end
 
-  #list changesets promoting
-  def promoting
-    Changeset.joins(:task_status).where('#{Katello::Changeset.table_name}.environment_id' => self.id,
-                                        '#{Katello::TaskStatus.table_name}.state' => [TaskStatus::Status::WAITING,
-                                                                                      TaskStatus::Status::RUNNING])
-  end
-
   def is_deletable?
     return true if self.organization.nil? || self.organization.being_deleted?
 
@@ -214,6 +181,10 @@ class KTEnvironment < Katello::Model
 
   def products
     self.library? ? Product.in_org(self.organization) : Product.where(id: repositories.map(&:product_id))
+  end
+
+  def puppet_repositories
+    Repository.readable(self).where(:content_type => Katello::Repository::PUPPET_TYPE)
   end
 
   def as_json(options = {})
@@ -319,7 +290,7 @@ class KTEnvironment < Katello::Model
       # we can't look it up via a query (org.default_content_view)
       content_view = self.organization.default_content_view
       if content_view.nil?
-        content_view = Katello::ContentView.new(:default => true, :name => "Default Organization View",
+        content_view = Katello::ContentView.create!(:default => true, :name => "Default Organization View",
                                        :organization => self.organization)
       end
 
@@ -328,7 +299,6 @@ class KTEnvironment < Katello::Model
                                          :version => 1)
         version.environments << self
         version.save!
-        content_view.save! #save content_view, since ContentViewEnvironment was added
       end
     end
   end

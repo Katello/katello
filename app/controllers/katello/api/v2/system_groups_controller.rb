@@ -66,15 +66,15 @@ module Katello
     param :activation_key_id, :identifier, :desc => "activation key identifier"
     param :system_id, :identifier, :desc => "system identifier"
     def index
-      results = if @system
-                  index_system
-                elsif @activation_key
-                  index_activation_key
-                else
-                  index_organization
-                end
+      subscriptions = if @system
+                        filter_system
+                      elsif @activation_key
+                        filter_activation_key
+                      else
+                        filter_organization
+                      end
 
-      respond_for_index(:collection => results)
+      respond_for_index(:collection => subscriptions)
     end
 
     api :POST, "/system_groups", "Create a system group"
@@ -209,7 +209,7 @@ module Katello
 
     private
 
-    def index_system
+    def filter_system
       filters = [:terms => {:id => @system.system_groups.pluck(:id)}]
 
       options = {
@@ -219,7 +219,7 @@ module Katello
       item_search(SystemGroup, params, options)
     end
 
-    def index_activation_key
+    def filter_activation_key
       filters = [:terms => {:id => @activation_key.system_groups.pluck(:id)}]
 
       options = {
@@ -229,7 +229,7 @@ module Katello
       item_search(SystemGroup, params, options)
     end
 
-    def index_organization
+    def filter_organization
       filters = [:terms => {:id => SystemGroup.readable(@organization).pluck(:id)}]
       filters << {:term => {:name => params[:name].downcase}} if params[:name]
 

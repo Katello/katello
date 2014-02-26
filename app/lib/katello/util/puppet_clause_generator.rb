@@ -13,17 +13,17 @@
 module Katello
 module Util
   class PuppetClauseGenerator
-    include  Util::FilterRuleClauseGenerator
+    include  Util::FilterClauseGenerator
 
     protected
 
-    def fetch_rules
-      PuppetModuleRule
+    def fetch_filters
+      PuppetModuleFilter.scoped
     end
 
-    def collect_clauses(repo, rules)
-      rules.collect do |rule|
-        rule.generate_clauses(repo)
+    def collect_clauses(repo, filters)
+      filters.collect do |filter|
+        filter.generate_clauses(repo)
       end
     end
 

@@ -5,15 +5,6 @@ class AddForeignKeysEngine < ActiveRecord::Migration
     add_foreign_key "katello_activation_keys", "katello_environments", :column => 'environment_id', :name => "activation_keys_environment_id_fk"
     add_foreign_key "katello_activation_keys", "users", :column => 'user_id', :name => "activation_keys_user_id_fk"
 
-    add_foreign_key "katello_changeset_content_views", "katello_changesets", :column => 'changeset_id', :name => "changeset_content_views_changeset_id_fk"
-    add_foreign_key "katello_changeset_content_views", "katello_content_views", :column => 'content_view_id', :name => "changeset_content_views_content_view_id_fk"
-
-    add_foreign_key "katello_changeset_users", "katello_changesets", :column => 'changeset_id', :name => "changeset_users_changeset_id_fk"
-    add_foreign_key "katello_changeset_users", "users", :column => 'user_id', :name => "changeset_users_user_id_fk"
-
-    add_foreign_key "katello_changesets", "katello_environments", :column => 'environment_id', :name => "changesets_environment_id_fk"
-    add_foreign_key "katello_changesets", "katello_task_statuses", :column => 'task_status_id', :name => "changesets_task_status_id_fk"
-
     add_foreign_key "katello_component_content_views", "katello_content_view_definition_bases",
                             :name => "component_content_views_content_view_definition_id_fk", :column => "content_view_definition_id"
     add_foreign_key "katello_component_content_views", "katello_content_views", :name => "component_content_views_content_view_id_fk", :column => "content_view_id"
