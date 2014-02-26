@@ -83,10 +83,10 @@ describe('Factory: ActivationKey', function() {
         });
     });
 
-    it('ActivationKey.available GET /api/v2/activation_keys/1/subscriptions/available', function() {
+    it('ActivationKey.availableSubscriptions GET /api/v2/activation_keys/1/subscriptions/available', function() {
         $httpBackend.expectGET('/api/v2/activation_keys/1/subscriptions/available').respond(activationKeys.results[0]);
 
-        ActivationKey.available({id: 1}, function(response) {
+        ActivationKey.availableSubscriptions({id: 1}, function(response) {
             expect(response).toBeDefined();
         });
     });
@@ -103,6 +103,30 @@ describe('Factory: ActivationKey', function() {
         $httpBackend.expectPOST('/api/v2/activation_keys/1/subscriptions').respond(activationKeys.results[0]);
 
         ActivationKey.addSubscriptions({id: 1}, function(response) {
+            expect(response).toBeDefined();
+        });
+    });
+
+    it('ActivationKey.availableSystemGroups GET /api/v2/activation_keys/1/system_groups/available', function() {
+        $httpBackend.expectGET('/api/v2/activation_keys/1/system_groups/available').respond(activationKeys.results[0]);
+
+        ActivationKey.availableSystemGroups({id: 1}, function(response) {
+            expect(response).toBeDefined();
+        });
+    });
+
+    it('ActivationKey.removeSystemGroups PUT /api/v2/activation_keys/1/system_groups', function() {
+        $httpBackend.expectPUT('/api/v2/activation_keys/1/system_groups').respond(activationKeys.results[0]);
+
+        ActivationKey.removeSystemGroups({id: 1}, function(response) {
+            expect(response).toBeDefined();
+        });
+    });
+
+    it('ActivationKey.addSystemGroups POST /api/v2/activation_keys/1/system_groups', function() {
+        $httpBackend.expectPOST('/api/v2/activation_keys/1/system_groups').respond(activationKeys.results[0]);
+
+        ActivationKey.addSystemGroups({id: 1}, function(response) {
             expect(response).toBeDefined();
         });
     });

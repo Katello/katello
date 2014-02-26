@@ -12,11 +12,10 @@
 
 module Fort
   module Actions
-
-    class NodeMetadataGenerate < Dynflow::Action
+    class NodeMetadataGenerate < ::Actions::Pulp::Abstract
 
       def self.subscribe
-        Katello::Actions::NodeMetadataGenerate
+        Katello::Actions::Repository::NodeMetadataGenerate
       end
 
       def run

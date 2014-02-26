@@ -53,7 +53,16 @@ module Ext::IndexedModel
         end
       end
 
+      def disable_auto_reindex!
+        @disable_auto_reindex = true
+      end
+
+      def enable_auto_reindex!
+        @disable_auto_reindex = false
+      end
+
       def refresh_index
+        return if @disable_auto_reindex
         self.class.index.refresh if self.class.respond_to?(:index)
       end
 
@@ -89,6 +98,7 @@ module Ext::IndexedModel
       end
 
       def reindex_on_update(relation, attribute)
+        return if @disable_auto_reindex
         # If the specified attribute (e.g. name) on the current model has changed, update the related indexes
         if self.send("#{attribute}_changed?")
           related_objects = self.send(relation)
@@ -149,6 +159,7 @@ module Ext::IndexedModel
   end
 
   def to_indexed_json
+    return {} if @disable_auto_reindex
     to_ret = {}
 
     attrs = self.indexed_attributes

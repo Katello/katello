@@ -40,6 +40,7 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
       :index    => index_test,
       :create   => create_test,
       :show     => read_test,
+      :sync     => edit_test,
       :update   => edit_test,
       :destroy  => edit_test,
       :sync     => sync_test
@@ -95,7 +96,7 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
 
     repository = @product.add_repo(params[:label], params[:name], params[:url],
                                    params[:content_type], params[:unprotected], gpg_key)
-
+    trigger(::Actions::Katello::Repository::Create, repository)
     respond_for_show(:resource => repository)
   end
 
@@ -103,6 +104,13 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
   param :id, :identifier, :required => true, :desc => "repository id"
   def show
     respond_for_show(:resource => @repository)
+  end
+
+  api :POST, "/repositories/:id/sync", "Sync a repository"
+  param :id, :identifier, :required => true, :desc => "repository id"
+  def sync
+    task = async_task(::Actions::Katello::Repository::Sync, @repository)
+    respond_for_async :resource => task
   end
 
   api :PUT, "/repositories/:id", "Update a repository"
@@ -117,15 +125,9 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
   api :DELETE, "/repositories/:id", "Destroy a repository"
   param :id, :identifier, :required => true
   def destroy
-    @repository.destroy
+    trigger(::Actions::Katello::Repository::Destroy, @repository)
 
     respond_for_destroy
-  end
-
-  api :POST, "/repositories/:id/sync", "Synchronise repository"
-  param :id, :identifier, :required => true, :desc => "repository id"
-  def sync
-    respond_for_async(:resource => @repository.sync.first)
   end
 
   protected

@@ -16,6 +16,7 @@ require "katello_test_helper"
 module Katello
 class Api::V2::SystemPackagesControllerTest < ActionController::TestCase
 
+  include Support::ForemanTasks::Task
   fixtures :all
 
   def self.before_suite
@@ -40,8 +41,11 @@ class Api::V2::SystemPackagesControllerTest < ActionController::TestCase
   end
 
   def test_install_package
-    System.any_instance.expects(:install_packages).with(["foo"]).returns(TaskStatus.new)
-    put :install, :system_id => @system.uuid, :packages => ["foo"]
+    assert_async_task ::Actions::Katello::System::Package::Install do |system, packages|
+      system.id == @system.id && packages == %w(foo)
+    end
+
+    put :install, :system_id => @system.uuid, :packages => %w(foo)
 
     assert_response :success
   end
@@ -80,8 +84,11 @@ class Api::V2::SystemPackagesControllerTest < ActionController::TestCase
   end
 
   def test_remove
-    System.any_instance.expects(:uninstall_packages).with(["foo"]).returns(TaskStatus.new)
-    put :remove, :system_id => @system.uuid, :packages => ["foo"]
+    assert_async_task ::Actions::Katello::System::Package::Remove do |system, packages|
+      system.id == @system.id && packages == %w(foo)
+    end
+
+    put :remove, :system_id => @system.uuid, :packages => %w(foo)
 
     assert_response :success
   end

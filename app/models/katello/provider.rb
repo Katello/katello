@@ -14,6 +14,7 @@ module Katello
 class Provider < Katello::Model
   self.include_root_in_json = false
 
+  include ForemanTasks::Concerns::ActionSubject
   include Glue::ElasticSearch::Provider if Katello.config.use_elasticsearch
   include Glue::Provider
   include Glue
@@ -29,11 +30,8 @@ class Provider < Katello::Model
 
   attr_accessible :name, :description, :organization, :provider_type, :repository_url
 
-  serialize :discovered_repos, Array
-
   belongs_to :organization, :inverse_of => :providers, :class_name => "Organization"
   belongs_to :task_status, :inverse_of => :provider
-  belongs_to :discovery_task, :class_name => "Katello::TaskStatus", :dependent => :destroy, :inverse_of => :provider
   has_many :products, :class_name => "Katello::Product", :inverse_of => :provider, :dependent => :destroy
   has_many :repositories, :through => :products
 
@@ -176,20 +174,6 @@ class Provider < Katello::Model
     return task_status
   end
 
-  def discover_repos(notify = false)
-    fail _("Cannot discover repos for the Red Hat Provider") if self.redhat_provider?
-    fail _("Repository Discovery already in progress") if self.discovery_task && !self.discovery_task.finished?
-    fail _("Discovery URL not set.") if self.discovery_url.blank?
-    self.discovered_repos = []
-    self.discovery_task = self.async(:organization => self.organization).start_discovery_task(notify)
-    self.save!
-  end
-
-  def discovery_url=(value)
-    self.discovered_repos = []
-    write_attribute(:discovery_url, value)
-  end
-
   def as_json(*args)
     super.merge('organization_label' => self.organization.label)
   end
@@ -200,6 +184,10 @@ class Provider < Katello::Model
 
   def total_repositories
     repositories.length
+  end
+
+  def related_resources
+    self.organization
   end
 
   protected
@@ -213,35 +201,5 @@ class Provider < Katello::Model
      end
    end
 
-  private
-
-  def start_discovery_task(notify = false)
-    task_id = AsyncOperation.current_task_id
-    provider_id = self.id
-
-    #Lambda to continually update the provider
-    found_func = lambda do |url|
-      provider = Katello::Provider.find(provider_id)
-      provider.discovered_repos << url
-      provider.save!
-    end
-    #Lambda to decide to continue or not
-    #  Using the saved task_id to compare current providers
-    #  task id
-    continue_func = lambda do
-      new_prov = Katello::Provider.find(provider_id)
-      if new_prov.discovery_task.nil? || new_prov.discovery_task.id != task_id
-        return false
-      end
-      true
-    end
-
-    discover = RepoDiscovery.new(self.discovery_url)
-    discover.run(found_func, continue_func)
-
-  rescue => e
-    Notify.exception _('Repos discovery failed.'), e if notify
-    raise e
-  end
 end
 end

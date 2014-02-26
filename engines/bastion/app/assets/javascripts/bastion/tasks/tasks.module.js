@@ -19,5 +19,34 @@
  *   Module for task related functionality.
  */
 angular.module('Bastion.tasks', [
-    'ngResource'
+    'ngResource',
+    'ui.router',
 ]);
+
+/**
+ * @ngdoc object
+ * @name Bastion.products.config
+ *
+ * @requires $stateProvider
+ *
+ * @description
+ *   Used for systems level configuration such as setting up the ui state machine.
+ */
+angular.module('Bastion.tasks').config(['$stateProvider', function ($stateProvider) {
+    $stateProvider.state('tasks', {
+        abstract: true,
+        templateUrl: 'tasks/views/tasks.html'
+    })
+    .state('tasks.index', {
+        url: '/tasks',
+        templateUrl: 'tasks/views/tasks-index.html'
+    })
+    .state('tasks.details', {
+        url: '/tasks/:taskId',
+        collapsed: true,
+        controller: 'TaskDetailsController',
+        templateUrl: 'tasks/views/task-details-standalone.html'
+    });
+
+}]);
+

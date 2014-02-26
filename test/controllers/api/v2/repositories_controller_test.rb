@@ -16,6 +16,8 @@ require "katello_test_helper"
 module Katello
 class Api::V2::RepositoriesControllerTest < ActionController::TestCase
 
+  include Support::ForemanTasks::Task
+
   def self.before_suite
     models = ["Repository", "Product"]
     disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
@@ -172,7 +174,10 @@ class Api::V2::RepositoriesControllerTest < ActionController::TestCase
   end
 
   def test_sync
-    Repository.any_instance.expects(:sync).returns([{}])
+    assert_async_task ::Actions::Katello::Repository::Sync do |repo|
+      repo.id == @repository.id
+    end
+
     post :sync, :id => @repository.id
 
     assert_response :success

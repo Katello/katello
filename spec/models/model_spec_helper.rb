@@ -140,7 +140,11 @@ EOKEY
       Katello.pulp_server.resources.role.stubs(:add).returns(true)
       Katello.pulp_server.resources.role.stubs(:remove).returns(true)
     end
+    disable_foreman_tasks_hooks(User)
+  end
 
+  def disable_foreman_tasks_hooks(model)
+    model.any_instance.stubs(create_action: nil, update_action: nil, destroy_action: nil)
   end
 
   def disable_consumer_group_orchestration

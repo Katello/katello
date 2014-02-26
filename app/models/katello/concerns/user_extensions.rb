@@ -23,18 +23,12 @@ module Katello
         include Glue::Pulp::User if Katello.config.use_pulp
         include Glue::ElasticSearch::User if Katello.config.use_elasticsearch
         include Glue if Katello.config.use_cp || Katello.config.use_pulp
+        include ForemanTasks::Concerns::ActionSubject
 
-        include Glue::Event
-
-        def create_event
-          Headpin::Actions::UserCreate
+        def create_action
+          sync_action!
+          ::Actions::Headpin::User::Create
         end
-
-        def destroy_event
-          Headpin::Actions::UserDestroy
-        end
-
-        include AsyncOrchestration
 
         include Ext::IndexedModel
 
@@ -147,8 +141,12 @@ module Katello
         end
 
         def self.cp_oauth_header
-          fail Errors::UserNotSet, "unauthenticated to call a backend engine" if User.current.nil?
-          User.current.cp_oauth_header
+          fail Errors::UserNotSet, "unauthenticated to call a backend engine" if Thread.current[:cp_oauth_header].nil?
+          Thread.current[:cp_oauth_header]
+        end
+
+        def cp_oauth_header
+          { 'cp-user' => self.username }
         end
 
         # is the current user consumer? (rhsm)
@@ -436,7 +434,10 @@ module Katello
         end
 
         def generate_remote_id
-          if self.login.ascii_only?
+          if User.current.object_id == self.object_id
+            # The case when the first user is being created.
+            Katello.config.pulp.default_login
+          elsif self.login.ascii_only?
             "#{Util::Model.labelize(self.login)}-#{SecureRandom.hex(4)}"
           else
             Util::Model.uuid

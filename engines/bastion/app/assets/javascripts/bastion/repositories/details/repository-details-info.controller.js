@@ -16,6 +16,7 @@
  * @name  Bastion.repositories.controller:RepositoryDetailsInfoController
  *
  * @requires $scope
+ * @requires $state
  * @requires $q
  * @requires gettext
  * @requires Repository
@@ -25,7 +26,7 @@
  *   Provides the functionality for the repository details pane.
  */
 angular.module('Bastion.repositories').controller('RepositoryDetailsInfoController',
-    ['$scope', '$q', 'gettext', 'Repository', 'GPGKey', function ($scope, $q, gettext, Repository, GPGKey) {
+    ['$scope', '$state', '$q', 'gettext', 'Repository', 'GPGKey', function ($scope, $state, $q, gettext, Repository, GPGKey) {
 
         $scope.successMessages = [];
         $scope.errorMessages = [];
@@ -103,7 +104,7 @@ angular.module('Bastion.repositories').controller('RepositoryDetailsInfoControll
 
         $scope.syncRepository = function (repository) {
             Repository.sync({id: repository.id}, function (task) {
-                repository['sync_state'] = task.state;
+                $state.go('products.details.tasks.details', {taskId: task.id});
             });
         };
 

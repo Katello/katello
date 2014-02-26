@@ -25,6 +25,17 @@ class GluePulpConsumerTestBase < ActiveSupport::TestCase
     super
   end
 
+  def self.set_pulp_consumer(system)
+    # TODO: this tests should move to actions tests once we
+    # have more actions in Dynflow. For now just peform the
+    # things that system.set_pulp_consumer did before.
+    ForemanTasks.sync_task(::Actions::Pulp::Consumer::Create,
+                           uuid: system.uuid, name: system.name)
+  end
+
+  def set_pulp_consumer(system)
+    self.class.set_pulp_consumer(system)
+  end
 end
 
 
@@ -40,7 +51,7 @@ class GluePulpConsumerTestCreateDestroy < GluePulpConsumerTestBase
   end
 
   def test_set_pulp_consumer
-    assert @simple_server.set_pulp_consumer
+    assert set_pulp_consumer(@simple_server)
     @simple_server.del_pulp_consumer
   end
 
@@ -52,7 +63,7 @@ class GluePulpConsumerDeleteTest < GluePulpConsumerTestBase
   def setup
     VCR.insert_cassette('pulp/consumer/delete')
     @simple_server = System.find(katello_systems(:simple_server).id)
-    @simple_server.set_pulp_consumer
+    set_pulp_consumer(@simple_server)
   end
 
   def teardown
@@ -63,10 +74,6 @@ class GluePulpConsumerDeleteTest < GluePulpConsumerTestBase
     assert @simple_server.del_pulp_consumer
   end
 
-  def test_rollback_on_pulp_create
-    assert @simple_server.rollback_on_pulp_create
-  end
-
 end
 
 
@@ -75,7 +82,7 @@ class GluePulpConsumerTest < GluePulpConsumerTestBase
   def setup
     VCR.insert_cassette('pulp/consumer/consumer')
     @simple_server = System.find(katello_systems(:simple_server).id)
-    @simple_server.set_pulp_consumer
+    set_pulp_consumer(@simple_server)
   end
 
   def teardown
@@ -111,7 +118,7 @@ class GluePulpConsumerBindTest < GluePulpConsumerTestBase
     RepositorySupport.create_and_sync_repo(@loaded_fixtures['katello_repositories']['fedora_17_x86_64']['id'])
 
     @@simple_server = System.find(@loaded_fixtures['katello_systems']['simple_server']['id'])
-    @@simple_server.set_pulp_consumer
+    set_pulp_consumer(@@simple_server)
   end
 
   def self.after_suite
@@ -140,7 +147,7 @@ class GluePulpConsumerRequiresBoundRepoTest < GluePulpConsumerTestBase
 
     RepositorySupport.create_and_sync_repo(@loaded_fixtures['katello_repositories']['fedora_17_x86_64']['id'])
     @@simple_server = System.find(@loaded_fixtures['katello_systems']['simple_server']['id'])
-    @@simple_server.set_pulp_consumer
+    set_pulp_consumer(@@simple_server)
     @@simple_server.enable_yum_repos([RepositorySupport.repo.pulp_id])
   end
 

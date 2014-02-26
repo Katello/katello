@@ -162,14 +162,6 @@ module Glue::Pulp::Consumer
       del_pulp_consumer
     end
 
-    def set_pulp_consumer
-      Rails.logger.debug "Creating a consumer in pulp: #{self.name}"
-      return Katello.pulp_server.extensions.consumer.create(self.uuid, {:display_name => self.name})
-    rescue => e
-      Rails.logger.error "Failed to create pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
-      raise e
-    end
-
     def update_pulp_consumer
       return true if @changed_attributes.empty?
 
@@ -263,8 +255,6 @@ module Glue::Pulp::Consumer
     def save_pulp_orchestration
       return true if self.is_a? Hypervisor
       case orchestration_for
-      when :create
-        pre_queue.create(:name => "create pulp consumer: #{self.name}", :priority => 3, :action => [self, :set_pulp_consumer])
       when :update
         pre_queue.create(:name => "update pulp consumer: #{self.name}", :priority => 3, :action => [self, :update_pulp_consumer])
       end
