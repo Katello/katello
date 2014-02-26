@@ -12,16 +12,18 @@
 
 module Katello
   module Actions
-    class NodeMetadataGenerate < Dynflow::Action
+    module Repository
+      class NodeMetadataGenerate < Dynflow::Action
 
-      def plan(repo)
-        plan_self('id' => repo.id)
+        def plan(repo)
+          plan_self('id' => repo.id)
+        end
+
+        input_format do
+          param :id, Integer
+        end
+
       end
-
-      input_format do
-        param :id, Integer
-      end
-
     end
   end
 end
