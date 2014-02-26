@@ -169,10 +169,10 @@ class Repository < Katello::Model
   end
 
   def promoted?
-    if self.environment.library?
-      Repository.where(:library_instance_id => self.id).count > 0
-    else
+    if environment && environment.library? && Repository.where(:library_instance_id => self.id).any?
       true
+    else
+      false
     end
   end
 
@@ -231,7 +231,7 @@ class Repository < Katello::Model
 
   def clone_id(env, content_view, version = nil)
     Repository.repo_id(self.product.label, self.label, env.try(:label),
-                       env.try(:organization).try(:label), content_view.label,
+                       organization.label, content_view.label,
                        version)
   end
 
@@ -298,7 +298,7 @@ class Repository < Katello::Model
               {:to_env => to_env} if self.is_cloned_in?(to_env)
     else
       fail _("Repository has already been cloned to %{cv_name} in environment %{to_env}") %
-                {:to_env => to_env, :cv_name => content_view.name} if
+                {:to_env => to_env, :cv_name => content_view.name} if to_env &&
           content_view.repos(to_env).where(:library_instance_id => library.id).count > 0
     end
 

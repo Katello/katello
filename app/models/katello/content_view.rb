@@ -140,12 +140,12 @@ class ContentView < Katello::Model
    end
 
   def repos(env)
-    version = version(env)
-    if version
-      version.repositories.in_environment(env)
+    if env
+      repo_ids = versions.flat_map { |version| version.repositories.in_environment(env) }.map(&:id)
     else
-      Repository.where("0=1")
+      repo_ids = []
     end
+    Repository.where(:id => repo_ids)
   end
 
   def library_repos
@@ -235,7 +235,7 @@ class ContentView < Katello::Model
 
     if options[:async]
       task  = self.async(:organization => self.organization,
-                         :task_type => TaskStatus::TYPES[:content_view_refresh][:type]).
+                         :task_type => TaskStatus::TYPES[:content_view_publish][:type]).
         publish_content(version, options[:notify])
 
       version.task_status = task
@@ -243,10 +243,10 @@ class ContentView < Katello::Model
     else
       version.create_task_status!(
         :uuid => ::UUIDTools::UUID.random_create.to_s,
-        :user_id => ::User.current.id,
+        :user_id => ::User.current.try(:id),
         :organization => self.organization,
         :state => Katello::TaskStatus::Status::WAITING,
-        :task_type => TaskStatus::TYPES[:content_view_refresh][:type]
+        :task_type => TaskStatus::TYPES[:content_view_publish][:type]
       )
 
       begin
@@ -263,15 +263,17 @@ class ContentView < Katello::Model
   def publish_content(version, notify = false)
     # 1. generate the version repositories
     publish_version_content(version)
+    clone_overrides = self.repositories.select{|r| self.filters.applicable(r).empty?}
+    version.trigger_repository_changes(:cloned_repo_overrides => clone_overrides, :wait => true)
 
     # 2. generate the library repositories
-    publish_library_content
+    publish_library_content(version)
 
     # 3. update candlepin, etc
     update_cp_content(self.organization.library)
 
     clone_overrides = self.repositories.select{|r| self.filters.applicable(r).empty?}
-    version.trigger_repository_changes(:cloned_repo_overrides => clone_overrides)
+    version.trigger_repository_changes(:cloned_repo_overrides => clone_overrides, :non_archive => true)
 
     Katello::Foreman.update_foreman_content(self.organization, self.organization.library, self)
 
@@ -293,10 +295,14 @@ class ContentView < Katello::Model
     raise e
   end
 
-  def publish_library_content
+  def publish_library_content(version)
     async_tasks = []
-    # prepare the repos currently in the library for the refresh
+
+    # prepare the repos currently in the library for the publish
     repos(organization.library).each do |repo|
+      repo.content_view_version_id = version.id
+      repo.save!
+
       if repository_ids.include?(repo.library_instance_id)
         # this repo is in both the content view and in the library,
         # so clear it and later we'll regenerate the content... this is more
@@ -550,7 +556,6 @@ class ContentView < Katello::Model
 
     ContentViewVersion.create!(:version => next_version_id,
                                :content_view => self,
-                               :user => User.current.login,
                                :environments => [organization.library]
                               )
   end

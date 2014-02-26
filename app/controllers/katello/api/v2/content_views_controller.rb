@@ -93,7 +93,7 @@ module Katello
     api :POST, "/content_views/:id/publish", "Publish a content view"
     param :id, :identifier, :desc => "Content view identifier", :required => true
     def publish
-      @view.publish
+      @view.publish(:async => false)
 
       respond_for_show :resource => @view
     end
