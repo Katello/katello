@@ -1,3 +1,3 @@
-collection @collection, :object_root => :repository_set
+object false
 
-extends "katello/api/v2/repository_sets/show"
+extends 'katello/api/v2/common/index'

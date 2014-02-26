@@ -57,7 +57,7 @@ Gem::Specification.new do |gem|
 
   # UI
   gem.add_dependency "angular-rails-templates", ">= 0.0.4"
-  gem.add_dependency "simple-navigation", ">= 3.3.4"
+  gem.add_dependency "simple-navigation", ">= 3.3.4", "< 3.12.0"
   gem.add_dependency "less-rails"
   gem.add_dependency "sass-rails"
   gem.add_development_dependency "compass-rails", "< 1.1.4"
