@@ -32,7 +32,6 @@ describe ContentSearchController do
 
   describe "check packages and errata" do
     before (:each) do
-
       @organization = new_test_org #controller.current_organization
       @controller.stubs(:current_organization).returns(@organization)
       @env1 = create_environment(:name=>"env1", :label=> "env1", :organization => @organization, :prior => @organization.library)
@@ -44,8 +43,7 @@ describe ContentSearchController do
       @product.stubs(:arch).returns('noarch')
       @product.save!
       @repo_library = new_test_repo(@organization.library, @product, "repo", "#{@organization.name}/Library/prod/repo")
-      @cv_library = @organization.library.content_views.first
-      promote_content_view(@cv_library, @organization.library, @env1)
+      @cv_library = publish_content_view("ContentSearchView", @organization, [@repo_library])
       ContentView.any_instance.stubs(:total_package_count).returns(0)
       ContentView.any_instance.stubs(:total_errata_count).returns(0)
       Repository.any_instance.stubs(:package_count).returns(0)
@@ -59,10 +57,11 @@ describe ContentSearchController do
         context "#{content_type} #{mode} case" do
           before do
             @env1 = KTEnvironment.find(@env1.id)
-            content_view = @env1.content_views.where(:id => @cv_library.id).first
-            @repo = content_view.repos(@env1).first
-            Repository.stubs(:search).returns([@repo])
-            repo_filter_ids = [@repo_library.pulp_id, @repo.pulp_id].collect do |repo|
+
+            content_view = @cv_library
+            @repo = content_view.repos(@organization.library).first
+            Repository.stubs(:search).returns([@repo_library])
+            repo_filter_ids = [@repo_library.pulp_id].collect do |repo|
                   {:term => {:repoids => [repo]}}
             end
 
@@ -75,9 +74,12 @@ describe ContentSearchController do
 
           it "should return some #{content_type}" do
             setup_search(:filter => @expected_filters[mode],
+                         :query => {:match_all=>{}},
+                         :size => 25,
                          :fields => [:id, :name, :nvrea, :repoids, :type, :errata_id, :author, :version],
                          :results => [])
-            params = {"mode"=>mode.to_s, "#{content_type}"=>{"search"=>""}, "content_type"=>"#{content_type}", "repos"=>{"search"=>""}}
+            params = {"mode"=>mode.to_s, "views" => {:autocomplete => [{"id" => @organization.default_content_view.id}]},
+                      "#{content_type}"=>{"search"=>""}, "content_type"=>"#{content_type}", "repos"=>{"search"=>""}}
             post "#{content_type}", params
             must_respond_with(:success)
             result = JSON.parse(response.body)
@@ -108,7 +110,6 @@ describe ContentSearchController do
             result["rows"][0]["id"].must_equal result1.id
             result["cols"].wont_be_empty
             result["cols"][@repo_library.id.to_s].wont_be_nil
-            result["cols"][@repo.id.to_s].wont_be_nil
           end
         end
       end

@@ -30,8 +30,6 @@ module SearchHelperMethods
           (data[:query].must_equal options[:query]) if options.key?(:query)
           (SearchHelperMethods.compare_filter_params(options[:filter], data[:filter]).must_equal true) if options.key?(:filter)
           (data[:size].must_equal options[:size]) if options.key?(:size)
-          (data[:sort].must_equal options[:sort])if options.key?(:sort)
-          (data[:from].must_equal options[:from])if options.key?(:from)
 
           #http://www.fngtps.com/2007/using-openstruct-as-mock-for-activerecord/
           OpenStruct.instance_eval do

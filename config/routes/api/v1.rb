@@ -53,7 +53,6 @@ Katello::Engine.routes.draw do
 
         resources :environments do
           get :repositories, :on => :member
-          resources :changesets, :only => [:index, :create]
         end
         resources :sync_plans
         resources :tasks, :only => [:index]
@@ -143,36 +142,6 @@ Katello::Engine.routes.draw do
         collection do
           get :index, :action => :organization_index
         end
-      end
-
-      resources :changesets, :only => [:show, :update, :destroy] do
-        post :promote, :on => :member, :action => :promote
-        post :apply, :on => :member, :action => :apply
-        resources :products, :controller => :changesets_content do
-          post :index, :on => :collection, :action => :add_product
-          delete :destroy, :on => :member, :action => :remove_product
-        end
-        resources :packages, :controller => :changesets_content, :constraints => {:id => /[0-9a-zA-Z\-_.]+/} do
-          post :index, :on => :collection, :action => :add_package
-          delete :destroy, :on => :member, :action => :remove_package
-        end
-        resources :errata, :controller => :changesets_content do
-          post :index, :on => :collection, :action => :add_erratum
-          delete :destroy, :on => :member, :action => :remove_erratum
-        end
-        resources :repositories, :controller => :changesets_content do
-          post :index, :on => :collection, :action => :add_repo
-          delete :destroy, :on => :member, :action => :remove_repo
-        end
-        resources :distributions, :controller => :changesets_content do
-          post :index, :on => :collection, :action => :add_distribution
-          delete :destroy, :on => :member, :action => :remove_distribution
-        end
-        resources :content_views, :controller => :changesets_content do
-          post :index, :on => :collection, :action => :add_content_view
-          delete :destroy, :on => :member, :action => :remove_content_view
-        end
-
       end
 
       resources :ping, :only => [:index]

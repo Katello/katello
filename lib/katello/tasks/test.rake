@@ -56,7 +56,6 @@ namespace :test do
           "#{Katello::Engine.root}/test/models/distributor_test.rb",
           "#{Katello::Engine.root}/test/models/activation_key_test.rb",
           "#{Katello::Engine.root}/test/models/content_view_test.rb",
-          "#{Katello::Engine.root}/test/models/deletion_changeset_test.rb",
           "#{Katello::Engine.root}/test/models/filter_test.rb",
           "#{Katello::Engine.root}/test/models/erratum_filter_rule_test.rb",
           "#{Katello::Engine.root}/test/models/package_filter_rule_test.rb",

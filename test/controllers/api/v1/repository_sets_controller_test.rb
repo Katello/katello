@@ -17,7 +17,7 @@ module Katello
 class Api::V1::RepositorySetsControllerTest < ActionController::TestCase
 
   def setup
-    models = ["Organization", "KTEnvironment", "Changeset", "Product"]
+    models = ["Organization", "KTEnvironment", "Product"]
     services = ["Pulp", "ElasticSearch"]
     disable_glue_layers(services, models)
     setup_controller_defaults_api

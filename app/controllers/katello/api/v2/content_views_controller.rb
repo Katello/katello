@@ -36,7 +36,8 @@ module Katello
         :create                   => create_rule,
         :update                   => edit_rule,
         :publish                  => publish_rule,
-        :available_puppet_modules => view_rule
+        :available_puppet_modules => view_rule,
+        :history                  => view_rule
       }
     end
 
@@ -115,6 +116,12 @@ module Katello
 
       respond_for_index :template => '../puppet_modules/index',
                         :collection => item_search(PuppetModule, params, options)
+    end
+
+    api :GET, "/content_views/:id/history", "Show a content view's history"
+    param :id, :number, :desc => "content view numeric identifier", :required => true
+    def history
+      respond_for_index(:collection => @view.history)
     end
 
     private

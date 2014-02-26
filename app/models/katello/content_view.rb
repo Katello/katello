@@ -51,8 +51,6 @@ class ContentView < Katello::Model
 
   has_many :filters, :dependent => :destroy, :class_name => "Katello::Filter"
 
-  has_many :changeset_content_views, :class_name => "Katello::ChangesetContentView", :dependent => :destroy
-  has_many :changesets, :through => :changeset_content_views
   has_many :activation_keys, :class_name => "Katello::ActivationKey", :dependent => :restrict
   has_many :systems, :class_name => "Katello::System", :dependent => :restrict
 
@@ -126,6 +124,11 @@ class ContentView < Katello::Model
     self.versions.in_environment(env).order("#{Katello::ContentViewVersion.table_name}.id ASC").scoped(:readonly => false).last
   end
 
+  def history
+    Katello::ContentViewHistory.joins(:content_view_version).where(
+        "#{Katello::ContentViewVersion.table_name}.content_view_id" => self.id)
+  end
+
   def version_environment(env)
     # TODO: rewrite this into SQL or use content_view_environment when that
     # points to environment
@@ -194,49 +197,6 @@ class ContentView < Katello::Model
     Repository.in_environment(env).where(:library_instance_id => lib_id).
         joins(:content_view_version).
         where("#{Katello::ContentViewVersion.table_name}.content_view_id" => self.id)
-  end
-
-  def promote_via_changeset(env, apply_options = {:async => true},
-                            cs_name = "#{self.name}_#{env.name}_#{Time.now.to_i}")
-    ActiveRecord::Base.transaction do
-      cs = PromotionChangeset.create!(:name => cs_name,
-                                      :environment => env,
-                                      :state => Changeset::REVIEW
-                                     )
-      cs.add_content_view!(self)
-      return cs.apply(apply_options)
-    end
-  end
-
-  def promote(from_env, to_env)
-    fail "Cannot promote from #{from_env.name}, view does not exist there." if !self.environments.include?(from_env)
-
-    replacing_version = self.version(to_env)
-
-    promote_version = self.version(from_env)
-    promote_version = ContentViewVersion.find(promote_version.id)
-    promote_version.environments << to_env unless promote_version.environments.include?(to_env)
-    promote_version.save!
-
-    repos_to_promote = get_repos_to_promote(from_env, to_env)
-    if replacing_version
-      PulpTaskStatus.wait_for_tasks prepare_repos_for_promotion(replacing_version.repos(to_env), repos_to_promote)
-    end
-    tasks = promote_repos(promote_version, to_env, repos_to_promote)
-
-    if replacing_version
-      replacing_version = ContentViewVersion.find(replacing_version.id) if replacing_version.readonly?
-      if replacing_version.environments.length == 1
-        replacing_version.destroy
-      else
-        replacing_version.environments.delete(to_env)
-        replacing_version.save!
-      end
-    end
-
-    Glue::Event.trigger(Katello::Actions::ContentViewPromote, self, from_env, to_env)
-
-    tasks
   end
 
   def delete(from_env)
@@ -501,63 +461,6 @@ class ContentView < Katello::Model
     # for a default view, the same candlepin environment will be referenced
     # by the kt_environment and content_view_environment.
     self.default ? env.id.to_s : [env.id, self.id].join('-')
-  end
-
-  def get_repos_to_promote(from_env, to_env)
-    # Retrieve the repos that will end up in the to_env as a result of promoting this view.
-    # The structure will be a hash, where key=repo.library_instance_id and value=repo
-    if self.composite?
-      # For a composite view, the repos are based upon the component_content_views
-      # currently in the to_env
-      promoting_repos = Repository.in_environment(to_env).
-          in_content_views(self.content_view_definition.component_content_views).
-          inject({}) do |result, repo|
-        result.update repo.library_instance_id => repo
-      end
-    else
-      # For a non-composite view, the repos are based upon the repos in
-      # the from_env
-      promoting_repos = self.repos(from_env).inject({}) do |result, repo|
-        result.update repo.library_instance_id => repo
-      end
-    end
-    promoting_repos
-  end
-
-  def prepare_repos_for_promotion(repos_to_replace, repos_to_promote)
-    tasks = repos_to_replace.inject([]) do |result, repo|
-      if repos_to_promote.key?(repo.library_instance_id)
-        # a version of this repo is being promoted, so clear it and later
-        # we'll regenerate the content... this is more efficient than
-        # destroying the repo and recreating it...
-        result += repo.clear_contents
-      else
-        # a version of this repo is not being promoted, so destroy it
-        repo.destroy
-        result
-      end
-    end
-    tasks
-  end
-
-  def promote_repos(promote_version, to_env, promoting_repos)
-    # promote the repos to the target env
-    tasks = []
-    promoting_repos.each_pair do |library_instance_id, repo|
-      clone = self.get_repo_clone(to_env, repo).first
-      if clone.nil?
-        # this repo doesn't currently exist in the next environment, so create it
-        clone = repo.create_clone(:environment => to_env, :content_view => self)
-        tasks << repo.clone_contents(clone)
-      else
-        # this repo already exists in the next environment, so update it
-        clone = Repository.find(clone) # reload readonly obj
-        clone.content_view_version = promote_version
-        clone.save!
-        tasks << repo.clone_contents(clone)
-      end
-    end
-    tasks
   end
 
   def confirm_not_promoted

@@ -78,44 +78,31 @@ module DashboardHelper
         "#panel=content_view_definition_#{version.content_view.content_view_definition.id}&panelpage=views"
   end
 
-  def promotions(num = quantity)
-    return  Changeset.joins(:task_status).
-      where("#{Katello::Changeset.table_name}.environment_id" => KTEnvironment.changesets_readable(current_organization)).
-      order("#{Katello::TaskStatus.table_name}.updated_at DESC").limit(num)
+  def content_view_history(num = quantity)
+     ContentViewHistory.joins(:content_view_version => :content_view).where(
+         "#{ContentView.table_name}.id" => ContentView.readable(current_organization)).limit(num)
   end
 
-  def changeset_class(cs)
-    if cs.state == Changeset::PROMOTED
+  def history_class(cs)
+    if cs.status == ContentViewHistory::SUCCESSFUL
       "check_icon"
-    elsif cs.state == Changeset::PROMOTING && cs.task_status.start_time
+    elsif cs.status == ContentViewHistory::IN_PROGRESS
       "gears_icon"  #running
-    else
-      "clock_icon" #pending
     end
   end
 
-  def changeset_message(cs)
-    if cs.state == Changeset::PROMOTED
+  def history_message(cs)
+    if cs.status == ContentViewHistory::SUCCESSFUL
       _("Success")
-    elsif cs.state == Changeset::PROMOTING && cs.task_status.start_time
+    elsif cs.status == ContentViewHistory::IN_PROGRESS
       _("Promoting")
-    elsif cs.state == Changeset::FAILED
+    elsif cs.status == ContentViewHistory::FAILED
       _("Failed")
-    else
-      _("Pending")
     end
   end
 
   def systems_list(num = quantity)
     System.readable(current_organization).limit(num)
-  end
-
-  def changeset_path_helper(cs)
-    if cs.state == Changeset::PROMOTED
-      changesets_path + "#panel=changeset_#{cs.id}&env_id=#{cs.environment_id}"
-    else
-      promotion_path(cs.environment.prior.name)
-    end
   end
 
   def products_synced(num = quantity)

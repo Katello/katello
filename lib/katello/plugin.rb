@@ -78,21 +78,6 @@ Foreman::Plugin.register :katello do
          :url_hash => {:controller => 'katello/content_search',
                        :action => 'index'},
          :engine => Katello::Engine
-
-    divider :top_menu, :parent => :content
-    menu :top_menu,
-         :changeset_management,
-         :caption => N_('Changeset Management'),
-         :url_hash => {:controller => 'katello/promotions',
-                       :action => 'show'},
-         :engine => Katello::Engine
-
-    menu :top_menu,
-         :changeset_history,
-         :caption => N_('Changeset History'),
-         :url_hash => {:controller => 'katello/changesets',
-                       :action => 'index'},
-         :engine => Katello::Engine
   end
 
   menu :top_menu,

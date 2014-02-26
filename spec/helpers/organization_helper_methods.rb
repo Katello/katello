@@ -71,7 +71,20 @@ module OrganizationHelperMethods
     Repository.any_instance.stubs(:sync).returns([])
     Repository.any_instance.stubs(:pulp_repo_facts).returns({:clone_ids => []})
     Glue::Event.stubs(:trigger).returns({})
-    cv.promote(from_env, to_env)
+    version = cv.version(from_env)
+    version.promote(to_env)
+  end
+
+  def publish_content_view(name, org, repos)
+    Katello.pulp_server.extensions.repository.stubs(:create).returns({})
+    Repository.any_instance.stubs(:clone_contents).returns([])
+    ContentView.any_instance.stubs(:associate_yum_types).returns([])
+    Repository.stubs(:trigger_contents_changed).returns([])
+    cv = ContentView.create!(:organization => org, :name => name)
+    cv.repositories = repos
+    cv.save!
+    cv.publish(:async => false)
+    cv
   end
 
   def create_activation_key(attrs)

@@ -564,7 +564,6 @@ class ContentSearchController < Katello::ApplicationController
     repo_row_hash = ContentSearch::RepoSearch.new(:view => view, :repos => repos).row_object_hash
 
     repos.each do |repo|
-
       repo_span = spanned_repo_content(view, repo, content_type,  search_obj, 0, search_mode, environments)
       if repo_span
         rows << repo_row_hash[repo.id]
@@ -751,7 +750,7 @@ class ContentSearchController < Katello::ApplicationController
     # repos were searched by string
     unless repo_ids.is_a? Array
       search_string = repo_ids
-      repo_ids      = Repository.enabled.libraries_content_readable(current_organization).pluck("#{Katello::Repository.table_name}.id")
+      repo_ids      = Repository.enabled.non_archived.libraries_content_readable(current_organization).pluck("#{Katello::Repository.table_name}.id")
     end
 
     repo_search(search_string, repo_ids, product_ids)
