@@ -15,7 +15,7 @@ module Fort
     class NodeMetadataGenerate < ::Actions::Pulp::Abstract
 
       def self.subscribe
-        Katello::Actions::Repository::NodeMetadataGenerate
+        ::Actions::Katello::Repository::NodeMetadataGenerate
       end
 
       def run
