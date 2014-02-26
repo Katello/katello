@@ -266,10 +266,8 @@ The module definition defines the 'Bastion.systems' namespace and tells Angular 
 A resource serves as a representation of an API endpoint for an entity and provides functions to make RESTful calls. Files and factories that represent external resources should be represented by their singular model name, for example the resource for systems is in `system.factory.js` and represented by:
 
     angular.module('Bastion.systems').factory('System',
-        ['$resource', 'Routes'
-        function($resource, Routes) {
-
-            return $resource(Routes.apiSystemsPath() + '/:id/:action',
+        ['$resource', function($resource) {
+            return $resource('/api/v2/systems/:id/:action',
                 {id: '@uuid'},
                 {
                      update: {method: 'PUT'},

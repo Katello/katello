@@ -117,7 +117,7 @@ module Glue::ElasticSearch::System
 
       # Whenever a system's 'name' field changes, the objects returned by system.system_groups
       # relation are themselves reindexed.
-      update_related_indexes :system_groups, :name
+      #update_related_indexes :system_groups, :name
     end
   end
 

@@ -14,6 +14,7 @@ module Katello
 class Api::ApiController < ::Api::BaseController
   include Profiling
   include KTLocale
+  include ForemanTasks::Triggers
 
   respond_to :json
   before_filter :require_user

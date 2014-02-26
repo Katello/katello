@@ -1,0 +1,34 @@
+<section class="nutupane-sub-section">
+  <div alch-table="tasksTable">
+    <div alch-container-scroll control-width="table" alch-infinite-scroll="tasksTable.nextPage()">
+      <table ng-class="{'table-mask': tasksTable.working}" class="table table-full table-striped tasks-table">
+        <thead>
+          <tr alch-table-head>
+            <th alch-table-column="Status" class='task-status' translate>Status</th>
+            <th alch-table-column="Event" translate>Event</th>
+            <th alch-table-column="User" class='task-user' translate>User</th>
+            <th alch-table-column="Date" translate>Date</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr alch-table-row ng-repeat="task in tasksTable.rows">
+            <td alch-table-cell>
+              <div ng-class="{ active: (task.state === 'pending' || task.state === 'running') }" class="progress progress-striped">
+                <span progressbar value="task.progressbar.value" type="{{task.progressbar.type}}"></span>
+              </div>
+            </td>
+            <td alch-table-cell>
+              <a class="active" ng-click="tasksTable.gotoDetails(task.id)">
+                {{ task.humanized.action }}
+                {{ task.humanized.input | taskInputReduce:knownContext | taskInputCompile }}
+              </a>
+            </td>
+            <td alch-table-cell>{{ task.username }}</td>
+            <td alch-table-cell>{{ task.started_at | date:"short" }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>

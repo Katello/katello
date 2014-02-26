@@ -37,7 +37,7 @@ module Glue
 
     def create(options)
       options[:status] ||= default_status
-      Task.new(options).tap { |t| items << t }
+      Glue::Task.new(options).tap { |t| items << t }
     end
 
     def delete(item)
