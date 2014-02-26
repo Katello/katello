@@ -43,7 +43,7 @@ class GlueCandlepinConsumerTestBase < ActiveSupport::TestCase
     @@dev_cve.cp_id = @@dev_cv.cp_environment_id @@dev
 
     # Create the environment in candlepin
-    @@org.set_owner
+    CandlepinOwnerSupport.set_owner(@@org)
     @@dev_cve.set_environment
   end
 

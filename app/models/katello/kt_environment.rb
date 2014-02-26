@@ -13,20 +13,10 @@
 module Katello
 class KTEnvironment < Katello::Model
   self.include_root_in_json = false
-
+  include ForemanTasks::Concerns::ActionSubject
   include Authorization::Environment
   include Glue::ElasticSearch::Environment if Katello.config.use_elasticsearch
   include Glue if Katello.config.use_cp || Katello.config.use_pulp
-
-  include Glue::Event
-
-  def create_event
-    Katello::Actions::EnvironmentCreate
-  end
-
-  def destroy_event
-    Katello::Actions::EnvironmentDestroy
-  end
 
   self.table_name = "katello_environments"
   include Ext::LabelFromName
@@ -99,8 +89,6 @@ class KTEnvironment < Katello::Model
   validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
   validates_with Validators::PriorValidator
   validates_with Validators::PathDescendentsValidator
-
-  after_create :create_default_content_view_version
 
   after_destroy :unset_users_with_default
 
