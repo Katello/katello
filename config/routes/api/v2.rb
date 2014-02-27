@@ -103,6 +103,13 @@ Katello::Engine.routes.draw do
         end
       end
 
+      api_resources :repositories, :only => [] do
+        member do
+          put :enable
+          put :disable
+        end
+      end
+
       api_resources :repository_sets, :only => [:index, :show] do
         member do
           put :enable
