@@ -20,15 +20,10 @@ class PackageGroupFilter < Filter
            :class_name => "Katello::PackageGroupFilterRule"
 
   def generate_clauses(repo)
-    ids = parameters[:units].collect do |unit|
-      #{'name' => {"$regex" => unit[:name]}}
-      unless unit[:name].blank?
-        PackageGroup.legacy_search(unit[:name], 0, 0, [repo.pulp_id]).collect(&:package_group_id)
-      end
+    package_group_ids = package_group_rules.reject{ |rule| rule.name.blank? }.flat_map do |rule|
+      PackageGroup.legacy_search(rule.name, 0, 0, [repo.pulp_id]).map(&:package_group_id).compact
     end
-    ids.flatten!
-    ids.compact!
-    { "id" => { "$in" => ids } } unless ids.empty?
+    { "id" => { "$in" => package_group_ids } } unless package_group_ids.empty?
   end
 
 end
