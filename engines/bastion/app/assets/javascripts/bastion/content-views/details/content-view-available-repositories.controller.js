@@ -35,7 +35,8 @@ angular.module('Bastion.content-views').controller('ContentViewAvailableReposito
         ContentViewRepositoriesUtil($scope);
 
         nutupane = new Nutupane(Repository, {
-            'organization_id': CurrentOrganization
+            'organization_id': CurrentOrganization,
+            'library': true
         });
         nutupane.searchTransform = function (term) {
             var addition = "NOT ( content_view_ids:" + $scope.$stateParams.contentViewId + " )";
