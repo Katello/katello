@@ -19,6 +19,10 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
   before_filter :find_repository, :only => [:show, :update, :destroy, :sync]
   before_filter :authorize
 
+  skip_before_filter :authorize, :only => [:sync_complete]
+  skip_before_filter :require_org, :only => [:sync_complete]
+  skip_before_filter :require_user, :only => [:sync_complete]
+
   def_param_group :repo do
     param :name, String, :required => true
     param :label, String, :required => false
@@ -125,6 +129,33 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
     trigger(::Actions::Katello::Repository::Destroy, @repository)
 
     respond_for_destroy
+  end
+
+  api :POST, "/repositories/sync_complete"
+  desc "URL for post sync notification from pulp"
+  param 'token', String, :desc => "shared secret token", :required => true
+  param 'payload', Hash, :required => true do
+    param 'repo_id', String, :required => true
+  end
+  param 'call_report', Hash, :required => true do
+    param 'task_id', String, :required => true
+  end
+  def sync_complete
+    if params[:token] != Rack::Utils.parse_query(URI(Katello.config.post_sync_url).query)['token']
+      fail Errors::SecurityViolation.new(_("Token invalid during sync_complete."))
+    end
+
+    repo_id = params['payload']['repo_id']
+    task_id = params['call_report']['task_id']
+    task = TaskStatus.find_by_uuid(task_id)
+    User.current = (task && task.user) ?  task.user : User.hidden.first
+
+    repo    = Repository.where(:pulp_id => repo_id).first
+    fail _("Couldn't find repository '%s'") % repo_id if repo.nil?
+    Rails.logger.info("Sync_complete called for #{repo.name}, running after_sync.")
+
+    repo.async(:organization => repo.environment.organization).after_sync(task_id)
+    render :nothing => true
   end
 
   protected
