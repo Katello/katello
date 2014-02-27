@@ -28,6 +28,7 @@ class ApplicationController < ::ApplicationController
   helper UIAlchemy::TranslationHelper
   helper ::ApplicationHelper
   helper ::TaxonomyHelper
+
   helper_method :current_organization
   before_filter :require_org
   before_filter :turn_off_strong_params
