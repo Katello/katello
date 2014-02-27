@@ -18,7 +18,7 @@ class Node < Katello::Model
   has_many :capabilities, :class_name => 'NodeCapability', :dependent => :destroy
   # rubocop:disable HasAndBelongsToMany
   # TODO: change this into has_many :through association
-  has_and_belongs_to_many :environments, :class_name => Katello::KTEnvironment, :join_table => 'nodes_environments',
+  has_and_belongs_to_many :environments, :class_name => "Katello::KTEnvironment", :join_table => 'nodes_environments',
                                          :association_foreign_key => 'katello_environment_id'
 
   after_save :update_environments
@@ -26,7 +26,7 @@ class Node < Katello::Model
   validates :system_id, :presence => true
 
   def self.with_environment(env)
-    joins(:environments).where(:environments => {:id => env})
+    joins(:environments).where("#{Katello::KTEnvironment.table_name}.id" => env.id)
   end
 
   def as_json(params)

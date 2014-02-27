@@ -28,7 +28,7 @@ module Fort
       end
 
       def run
-        changeset = Changeset.find(input['id'])
+        changeset = Katello::Changeset.find(input['id'])
         environment = changeset.environment
         changeset.content_views.each do |view|
           Node.with_environment(environment).each do |node|

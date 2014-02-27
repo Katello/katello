@@ -28,7 +28,7 @@ module Fort
       end
 
       def run
-        repo = Repository.find(input['id'])
+        repo = Katello::Repository.find(input['id'])
         Node.with_environment(repo.environment).each do |node|
           node.update_environments
         end
