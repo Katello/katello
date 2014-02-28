@@ -25,9 +25,15 @@ module Fort
       app.config.paths['db/migrate'] += Fort::Engine.paths['db/migrate'].existent
     end
 
+    initializer "fort.register_actions", :before => 'foreman_tasks.initialize_dynflow' do |app|
+      app_lib_dir = "#{config.root}/app/lib"
+      app.config.autoload_paths += [app_lib_dir]
+      actions_path = "#{app_lib_dir}/fort/actions"
+      ForemanTasks.dynflow.config.eager_load_paths << actions_path
+    end
+
     config.after_initialize do
       require File.expand_path("../../app/models/node", File.dirname(__FILE__))
-      Dir[File.expand_path('../actions/*.rb', __FILE__)].each { |f| require f }
     end
 
     rake_tasks do
