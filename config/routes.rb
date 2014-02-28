@@ -4,39 +4,6 @@ Katello::Engine.routes.draw do
     collection do
       get :items
       get :all
-      get :auto_complete
-      get :validate_name
-    end
-    member do
-      post :copy
-      get :systems
-      post :add_systems
-      post :remove_systems
-      delete :destroy_systems
-      get :edit_systems
-      put :update_systems
-    end
-    resources :events, :controller => "system_group_events", :only => [:index, :show] do
-      collection do
-        get :status, action: :event_status
-        get :more_items
-        get :items
-      end
-    end
-    resources :packages, :controller => "system_group_packages", :only => [:index] do
-      collection do
-        put :add
-        put :remove
-        put :update
-        get :status, action: :package_status
-      end
-    end
-    resources :errata, :controller => "system_group_errata", :only => [:index] do
-      collection do
-        get :items
-        post :install
-        get :status, action: :errata_status
-      end
     end
   end
 
@@ -151,21 +118,10 @@ Katello::Engine.routes.draw do
   match 'notices' => 'notices#show', :via => :get
   match 'notices' => 'notices#destroy_all', :via => :delete
 
-  resources :subscriptions do
-    member do
-      get :edit
-      get :products
-      get :consumers
-    end
+  resources :subscriptions, :only => [:index] do
     collection do
       get :all
-      get :items
-      post :upload
-      post :delete_manifest
-      post :refresh_manifest
-      get :history
-      get :history_items
-      get :edit_manifest
+      get :index
     end
   end
 
@@ -184,60 +140,12 @@ Katello::Engine.routes.draw do
     end
   end
 
-  resources :systems do
-    resources :events, :only => [:index, :show], :controller => "system_events" do
-      collection do
-        get :status, action: :event_status
-        get :more_events
-        get :items
-      end
-    end
-    resources :system_packages, :only => {} do
-      collection do
-        put :add
-        post :remove
-        post :update
-        get :packages
-        get :more_packages
-        get :status, action: :package_status
-      end
-    end
-    resources :errata, :controller => "system_errata", :only => [:index, :update] do
-      collection do
-        get :items
-        post :install
-        get :status, action: :errata_status
-      end
-    end
-
-    member do
-      get :edit
-      get :subscriptions
-      post :update_subscriptions
-      get :products
-      get :more_products
-      get :facts
-      get :system_groups
-      put :add_system_groups
-      put :remove_system_groups
-      get :custom_info
-      get :releases
-    end
+  resources :systems, :only => [:index] do
     collection do
-      get :auto_complete
-      get :items
-      get :env_items
-      get :environments
       get :all
-      delete :bulk_destroy
-      post :bulk_add_system_group
-      post :bulk_remove_system_group
-      post :bulk_content_install
-      post :bulk_content_update
-      post :bulk_content_remove
-      post :bulk_errata_install
     end
   end
+
   resources :operations, :only => [:index]  do
   end
 
@@ -253,16 +161,6 @@ Katello::Engine.routes.draw do
       get :auto_complete_nvrea_library
       get :validate_name_library
       get :auto_complete
-    end
-  end
-
-  resources :errata, :only => [:show] do
-    collection do
-      get :auto_complete
-    end
-    member do
-      get :packages
-      get :short_details
     end
   end
 
@@ -300,14 +198,10 @@ Katello::Engine.routes.draw do
     end
   end
 
-  resources :products, :only => [:index, :new, :create, :edit, :update, :destroy] do
+  resources :products, :only => [:index] do
     collection do
       get :auto_complete
       get :all
-    end
-    member do
-      put :refresh_content
-      put :disable_content
     end
   end
 
@@ -480,8 +374,6 @@ Katello::Engine.routes.draw do
   root :to => "dashboard#index"
 
   match '/user_session/set_org' => 'user_sessions#set_org', :via => :post
-
-  match '/i18n/dictionary' => 'i18n#show', :via => :get
 
   match 'about', :to => "application_info#about", :as => "about"
 end
