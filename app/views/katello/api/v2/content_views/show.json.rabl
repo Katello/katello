@@ -25,7 +25,6 @@ child :versions => :versions do
   attributes :id, :version
   attributes :created_at => :published
   attributes :environment_ids
-  attributes :user
 end
 
 child :repositories => :repositories do
@@ -34,7 +33,7 @@ end
 
 child :components => :components do
   attributes :id, :name
-  attributes :user, :version
+  attributes :version, :content_view_id
   attributes :created_at => :published
 end
 
