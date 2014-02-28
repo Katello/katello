@@ -17,7 +17,7 @@ module Katello
 describe Api::V1::SystemsController do
 
   before do
-    models = ["Organization", "KTEnvironment", "User", "Filter",
+    models = ["Organization", "KTEnvironment", "User", "ContentViewFilter",
                 "ContentViewEnvironment", "System"]
     disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
     setup_controller_defaults_api

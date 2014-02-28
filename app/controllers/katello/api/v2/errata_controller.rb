@@ -41,10 +41,11 @@ class Api::V2::ErrataController < Api::V2::ApiController
 
   api :GET, "/errata", "List errata"
   api :GET, "/content_views/:content_view_id/filters/:filter_id/errata", "List errata"
-  api :GET, "/filters/:filter_id/errata", "List errata"
+  api :GET, "/content_view_filters/:content_view_filter_id/errata", "List errata"
   api :GET, "/repositories/:repository_id/errata", "List errata"
   param :content_view_id, :identifier, :desc => "content view identifier"
   param :filter_id, :identifier, :desc => "content view filter identifier"
+  param :content_view_filter_id, :identifier, :desc => "content view filter identifier"
   param :repository_id, :number, :desc => "repository identifier", :required => true
   def index
     collection = if @repo && !@repo.puppet?
@@ -89,7 +90,7 @@ class Api::V2::ErrataController < Api::V2::ApiController
       @filter = @view.filters.find_by_id(params[:filter_id])
       fail HttpErrors::NotFound, _("Couldn't find Filter with id=%s") % params[:filter_id] unless @filter
     else
-      @filter = Filter.find(params[:filter_id]) if params[:filter_id]
+      @filter = ContentViewFilter.find(params[:content_view_filter_id]) if params[:content_view_filter_id]
     end
   end
 

@@ -280,7 +280,8 @@ module Glue::Pulp::Repo
 
       #do the errata remove call
       unless errata_to_delete.empty?
-        unassociate_by_filter(ErratumFilter::CONTENT_TYPE, { "id" => { "$in" => errata_to_delete } })
+        unassociate_by_filter(ContentViewErratumFilter::CONTENT_TYPE,
+                              { "id" => { "$in" => errata_to_delete } })
       end
 
       # Remove all  package groups with no packages
@@ -290,7 +291,8 @@ module Glue::Pulp::Repo
       package_groups_to_delete.compact!
 
       unless package_groups_to_delete.empty?
-        unassociate_by_filter(PackageGroupFilter::CONTENT_TYPE, { "id" => { "$in" => package_groups_to_delete } })
+        unassociate_by_filter(ContentViewPackageGroupFilter::CONTENT_TYPE,
+                              { "id" => { "$in" => package_groups_to_delete } })
       end
     end
 
