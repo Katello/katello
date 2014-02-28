@@ -26,10 +26,8 @@ class SystemGroup < Katello::Model
   has_many :activation_keys, :through => :key_system_groups
 
   has_many :system_system_groups, :class_name => "Katello::SystemSystemGroup", :dependent => :destroy
-  has_many :systems, {:through      => :system_system_groups,
-                      :after_add    => :add_system,
-                      :after_remove => :remove_system
-                     }
+  has_many :systems, :through => :system_system_groups, :class_name => "Katello::System",
+    :after_add => :add_system, :after_remove => :remove_system
 
   has_many :jobs, :class_name => "Katello::Job", :as => :job_owner, :dependent => :nullify
 
