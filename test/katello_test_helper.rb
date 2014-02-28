@@ -220,6 +220,7 @@ def disable_glue_layers(services=[], models=[], force_reload=false)
 
   if change
     ActiveSupport::Dependencies::Reference.clear!
+    FactoryGirl.definition_file_paths = ["#{Rails.root}/test/factories", "#{Katello::Engine.root}/test/factories"]
     FactoryGirl.reload
   end
 end

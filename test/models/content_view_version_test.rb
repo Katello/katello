@@ -32,8 +32,8 @@ class ContentViewVersionTest < ActiveSupport::TestCase
   end
 
   def test_create_archived_definition
-    definition = FactoryGirl.create(:content_view_definition, :organization => get_organization)
-    version = FactoryGirl.create(:content_view_version)
+    definition = FactoryGirl.create(:katello_content_view_definition, :organization => get_organization)
+    version = FactoryGirl.create(:katello_content_view_version)
     version.save!
     assert_nil version.definition_archive # no archive if no definition
     version.content_view.content_view_definition = definition

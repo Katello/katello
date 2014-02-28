@@ -1,5 +1,5 @@
 FactoryGirl.define do
-  factory :pool do
+  factory :katello_pool do
     trait :active do
       active true
     end

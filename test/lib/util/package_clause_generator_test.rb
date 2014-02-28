@@ -181,12 +181,12 @@ class Util::PackageClauseGeneratorTest < MiniTest::Rails::ActiveSupport::TestCas
 
   def setup_filter_clause(inclusion, content_type, parameter)
     repo = Repository.find(repositories(:fedora_17_x86_64).id)
-    content_rule_hash = { FilterRule::PACKAGE => :package_filter_rule,
-                          FilterRule::PACKAGE_GROUP => :package_group_filter_rule,
-                          FilterRule::ERRATA => :erratum_filter_rule,
+    content_rule_hash = { FilterRule::PACKAGE => :katello_package_filter_rule,
+                          FilterRule::PACKAGE_GROUP => :katello_package_group_filter_rule,
+                          FilterRule::ERRATA => :katello_erratum_filter_rule,
                         }
 
-    fr_build = content_rule_hash[content_type] || :filter_rule
+    fr_build = content_rule_hash[content_type] || :katello_filter_rule
     filter_rule = FactoryGirl.build(fr_build)
     filter = filter_rule.filter
     filter_rule.inclusion = inclusion

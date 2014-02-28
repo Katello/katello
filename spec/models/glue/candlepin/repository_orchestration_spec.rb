@@ -16,9 +16,9 @@ module Katello
 describe Repository do
 
   let(:repository) do
-    repository = Repository.new(attributes_for(:repository))
-    repository.product = build(:product)
-    repository.gpg_key = build(:gpg_key)
+    repository = Repository.new(attributes_for(:katello_repository))
+    repository.product = build(:katello_product)
+    repository.gpg_key = build(:katello_gpg_key)
     repository.stubs(:content_id).returns("content_id-rand#{rand(100)}")
     repository
   end

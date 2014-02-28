@@ -24,14 +24,14 @@ describe Api::V1::ContentViewsController do
     disable_product_orchestration
     disable_user_orchestration
 
-    @org                        = FactoryGirl.create(:organization)
+    @org                        = FactoryGirl.create(:katello_organization)
     @request.env["HTTP_ACCEPT"] = "application/json"
     setup_controller_defaults_api
   end
 
   describe "index" do
     before do
-      @content_views = FactoryGirl.create_list(:content_view, 4,
+      @content_views = FactoryGirl.create_list(:katello_content_view, 4,
                                                :organization => @org)
     end
 
@@ -80,8 +80,8 @@ describe Api::V1::ContentViewsController do
 
   describe "refresh" do
     before do
-      @def                          = FactoryGirl.build_stubbed(:content_view_definition)
-      @view                         = FactoryGirl.build_stubbed(:content_view, :organization => @org)
+      @def                          = FactoryGirl.build_stubbed(:katello_content_view_definition)
+      @view                         = FactoryGirl.build_stubbed(:katello_content_view, :organization => @org)
       @view.content_view_definition = @def
       ContentView.stubs(:find).with(@view.id.to_s).returns(@view)
     end

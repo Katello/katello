@@ -25,7 +25,7 @@ class ErratumRuleTest < ActiveSupport::TestCase
   def setup
     User.current = User.find(users(:admin))
 
-    @filter_rule = FactoryGirl.build(:erratum_filter_rule)
+    @filter_rule = FactoryGirl.build(:katello_erratum_filter_rule)
     format = "%m/%d/%Y%:z"
     zone = DateTime.now.zone
     @start_date = DateTime.strptime("01/01/2013" + zone, format)

@@ -31,10 +31,10 @@ class ChangesetTest < ActiveSupport::TestCase
   end
 
   def test_add_content_view_exception
-    changeset = FactoryGirl.build_stubbed(:promotion_changeset)
-    library   = FactoryGirl.build_stubbed(:library)
-    env       = FactoryGirl.build_stubbed(:environment)
-    view      = FactoryGirl.build_stubbed(:content_view)
+    changeset = FactoryGirl.build_stubbed(:katello_promotion_changeset)
+    library   = FactoryGirl.build_stubbed(:katello_library)
+    env       = FactoryGirl.build_stubbed(:katello_environment)
+    view      = FactoryGirl.build_stubbed(:katello_content_view)
     env.stub(:prior, library) do
       changeset.environment = env
 
@@ -46,7 +46,7 @@ class ChangesetTest < ActiveSupport::TestCase
   end
 
   def test_add_content_view_check_promotion_exception
-    changeset = Factory.build(:promotion_changeset)
+    changeset = Factory.build(:katello_promotion_changeset)
     changeset.environment = @dev
 
     assert_raises(Errors::ChangesetContentException) do
@@ -58,8 +58,8 @@ class ChangesetTest < ActiveSupport::TestCase
     skip 'skipped temporarily to get travis tests working'
     Repository.any_instance.stubs(:clone_contents).returns([])
     view = @library_view
-    after_dev    = FactoryGirl.create(:environment, :prior=>@dev)
-    changeset    = FactoryGirl.create(:promotion_changeset,
+    after_dev    = FactoryGirl.create(:katello_environment, :prior=>@dev)
+    changeset    = FactoryGirl.create(:katello_promotion_changeset,
                                       :environment => after_dev)
 
     assert_raises(Errors::ChangesetContentException) do
@@ -77,7 +77,7 @@ class ChangesetTest < ActiveSupport::TestCase
   end
 
   def test_invalid_content_view_changeset_apply
-    changeset    = FactoryGirl.create(:promotion_changeset,
+    changeset    = FactoryGirl.create(:katello_promotion_changeset,
                                       :environment => @dev,
                                       :state => Changeset::REVIEW)
 
@@ -89,7 +89,7 @@ class ChangesetTest < ActiveSupport::TestCase
   end
 
   def test_content_view_changeset_apply
-    changeset    = FactoryGirl.create(:promotion_changeset,
+    changeset    = FactoryGirl.create(:katello_promotion_changeset,
                                       :environment => @dev,
                                       :state => Changeset::REVIEW)
     assert_equal changeset.add_content_view!(@library_view), [@library_view, nil]
@@ -98,7 +98,7 @@ class ChangesetTest < ActiveSupport::TestCase
 
   def test_invalid_content_view_deletion_changeset
     view         = @library_view
-    changeset    = FactoryGirl.create(:deletion_changeset,
+    changeset    = FactoryGirl.create(:katello_deletion_changeset,
                                       :environment => @dev)
 
     assert_raises(Errors::ChangesetContentException) do
@@ -120,7 +120,7 @@ class ChangesetTest < ActiveSupport::TestCase
 
   def test_content_view_changeset_deletion
     view         = @library_dev_view
-    changeset    = FactoryGirl.create(:deletion_changeset,
+    changeset    = FactoryGirl.create(:katello_deletion_changeset,
                                       :environment => @dev)
 
     assert changeset.add_content_view!(view)
@@ -136,7 +136,7 @@ class ChangesetTest < ActiveSupport::TestCase
     Environment.stubs(:find_by_katello_id).returns(environments(:testing))
 
     view         = @library_dev_view
-    changeset    = FactoryGirl.create(:deletion_changeset,
+    changeset    = FactoryGirl.create(:katello_deletion_changeset,
                                       :environment => @dev)
 
     assert changeset.add_content_view!(view)
@@ -144,20 +144,20 @@ class ChangesetTest < ActiveSupport::TestCase
     refute_includes @dev.content_views(true), view
 
     # re-promote
-    changeset    = FactoryGirl.create(:promotion_changeset,
+    changeset    = FactoryGirl.create(:katello_promotion_changeset,
                                       :environment => @dev)
     assert view.promote(@library, @dev)
     assert_includes @dev.content_views(true), view
   end
 
   def test_content_view_promotion_during_publish_or_refresh
-    task = FactoryGirl.create(:task_status, :user => User.find(users(:admin)), :organization => @acme_corporation)
+    task = FactoryGirl.create(:katello_task_status, :user => User.find(users(:admin)), :organization => @acme_corporation)
     ContentViewVersion.any_instance.stubs(:task_status).returns(task)
     TaskStatus.any_instance.stubs(:pending?).returns(true)
 
     content_view = ContentView.find(katello_content_views(:library_view))
 
-    changeset = FactoryGirl.create(:promotion_changeset,
+    changeset = FactoryGirl.create(:katello_promotion_changeset,
                                    :environment => @dev,
                                    :state => Changeset::REVIEW)
     changeset.add_content_view!(content_view)
@@ -176,7 +176,7 @@ class ChangesetTest < ActiveSupport::TestCase
   def test_destroy
     content_view = ContentView.find(katello_content_views(:library_view))
 
-    changeset = FactoryGirl.create(:promotion_changeset,
+    changeset = FactoryGirl.create(:katello_promotion_changeset,
                                    :environment => @dev)
     changeset.add_content_view!(content_view)
 

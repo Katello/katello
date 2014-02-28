@@ -35,37 +35,37 @@ class ContentViewTest < ActiveSupport::TestCase
   end
 
   def test_create
-    assert ContentView.create(FactoryGirl.attributes_for(:content_view))
+    assert ContentView.create(FactoryGirl.attributes_for(:katello_content_view))
   end
 
   def test_label
-    content_view = FactoryGirl.build(:content_view)
+    content_view = FactoryGirl.build(:katello_content_view)
     content_view.label = ""
     assert content_view.save
     assert content_view.label.present?
   end
 
   def test_create_with_content_view_definition
-    content_view = FactoryGirl.build(:content_view, :with_definition)
+    content_view = FactoryGirl.build(:katello_content_view, :with_definition)
     refute content_view.content_view_definition.nil?
     assert content_view.save
   end
 
   def test_create_without_content_view_definition
-    content_view = FactoryGirl.build(:content_view)
+    content_view = FactoryGirl.build(:katello_content_view)
     assert content_view.content_view_definition.nil?
     assert content_view.save
   end
 
   def test_bad_name
-    content_view = FactoryGirl.build(:content_view, :name => "")
+    content_view = FactoryGirl.build(:katello_content_view, :name => "")
     assert content_view.invalid?
     refute content_view.save
     assert content_view.errors.has_key?(:name)
   end
 
   def test_duplicate_name
-    attrs = FactoryGirl.attributes_for(:content_view,
+    attrs = FactoryGirl.attributes_for(:katello_content_view,
                                        :name => @library_dev_view.name
                                       )
     assert_raises(ActiveRecord::RecordInvalid) do
@@ -77,7 +77,7 @@ class ContentViewTest < ActiveSupport::TestCase
   end
 
   def test_bad_label
-    content_view = FactoryGirl.build(:content_view)
+    content_view = FactoryGirl.build(:katello_content_view)
     content_view.label = "Bad Label"
 
     assert content_view.invalid?
@@ -87,8 +87,8 @@ class ContentViewTest < ActiveSupport::TestCase
   end
 
   def test_component_content_views
-    content_view = FactoryGirl.create(:content_view_with_definition)
-    definition = FactoryGirl.create(:content_view_definition, :composite)
+    content_view = FactoryGirl.create(:katello_content_view_with_definition)
+    definition = FactoryGirl.create(:katello_content_view_definition, :composite)
     definition.component_content_views << content_view
 
     refute_empty definition.component_content_views
@@ -110,11 +110,11 @@ class ContentViewTest < ActiveSupport::TestCase
   end
 
   def test_changesets
-    content_view = FactoryGirl.create(:content_view)
-    environment = FactoryGirl.create(:environment,
+    content_view = FactoryGirl.create(:katello_content_view)
+    environment = FactoryGirl.create(:katello_environment,
               :prior => content_view.organization.library,
               :organization => content_view.organization)
-    changeset = FactoryGirl.create(:changeset, :environment => environment)
+    changeset = FactoryGirl.create(:katello_changeset, :environment => environment)
     content_view.changesets << changeset
     assert_includes changeset.content_views.map(&:id), content_view.id
     assert_equal content_view.changeset_content_views,
