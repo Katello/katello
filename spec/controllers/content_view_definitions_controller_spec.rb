@@ -116,7 +116,7 @@ describe ContentViewDefinitionsController do
       end
 
       it "should create a composite definition correctly" do
-        @component_content_view = FactoryGirl.create(:content_view)
+        @component_content_view = FactoryGirl.create(:katello_content_view)
 
         must_notify_with(:success)
         post :create, :content_view_definition=>{:name=>"foo", :composite=>true}, :content_views => {@component_content_view.id => "1"}
@@ -352,7 +352,7 @@ describe ContentViewDefinitionsController do
       it "should successfully update the puppet repository" do
         assert @definition.repositories.size == 0
         Repository.any_instance.stubs(:create_pulp_repo).returns([])
-        repo = create(:repository, :puppet, :product => @product,
+        repo = create(:katello_repository, :puppet, :product => @product,
                       :environment => @organization.library,
                       :content_view_version => @organization.library.default_content_view_version)
 

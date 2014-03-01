@@ -75,7 +75,7 @@ describe GpgKey, :katello => true do
     it 'should be destroyable' do
       gpg_key = GpgKey.create!(:name => "Gpg Key 1", :content => @test_gpg_content, :organization => @organization)
       disable_product_orchestration
-      create(:product, :fedora, provider: create(:provider, organization: organization)).tap do |product|
+      create(:katello_product, :fedora, provider: create(:katello_provider, organization: organization)).tap do |product|
         product.gpg_key = gpg_key
         product.save!
       end

@@ -55,17 +55,17 @@ class KTEnvironmentTest < KTEnvironmentTestBase
 
   def test_destroy_library
     User.current = User.find(users(:admin))
-    org = FactoryGirl.create(:organization)
+    org = FactoryGirl.create(:katello_organization)
     env = org.library
     env.destroy
     refute env.destroyed?
   end
 
   def test_products_are_unique
-    provider = create(:provider, organization: @acme_corporation)
-    product = create(:product, provider: provider)
+    provider = create(:katello_provider, organization: @acme_corporation)
+    product = create(:katello_product, provider: provider)
     2.times do
-      create(:repository, product: product, environment: @library,
+      create(:katello_repository, product: product, environment: @library,
              content_view_version: @library.default_content_view_version)
     end
 

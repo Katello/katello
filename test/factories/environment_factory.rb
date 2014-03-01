@@ -1,11 +1,11 @@
 FactoryGirl.define do
-  factory :k_t_environment, :aliases => [:environment], :class => Katello::KTEnvironment do
+  factory :katello_k_t_environment, :aliases => [:katello_environment], :class => Katello::KTEnvironment do
     sequence(:name) { |n| "Environment#{n}" }
     sequence(:label) { |n| "environment#{n}" }
-    association :organization
+    association :organization, :factory => :katello_organization
 
     trait :stubbed_org do
-      association :organization, :strategy => :build_stubbed
+      association :organization, :strategy => :build_stubbed, :factory => :katello_organization
     end
 
     trait :library do
@@ -18,7 +18,7 @@ FactoryGirl.define do
         lib.organization.library = lib
       end
     end
-    factory :library, :traits => [:library]
+    factory :katello_library, :traits => [:library]
 
     trait :with_library do
       after_build do |env|
@@ -28,7 +28,7 @@ FactoryGirl.define do
         end
       end
     end
-    factory :environment_with_library, :traits => [:with_library]
+    factory :katello_environment_with_library, :traits => [:with_library]
 
     trait :dev do
       name          "Dev"

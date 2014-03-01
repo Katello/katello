@@ -1,19 +1,19 @@
 FactoryGirl.define do
-  factory :filter_rule, :class => Katello::FilterRule do
-    association :filter
+  factory :katello_filter_rule, :class => Katello::FilterRule do
+    association :filter, :factory => :katello_filter
     inclusion true
   end
 
-  factory :package_filter_rule, :class => Katello::PackageRule, :parent => :filter_rule do
+  factory :katello_package_filter_rule, :class => Katello::PackageRule, :parent => :katello_filter_rule do
     parameters ({:units =>[{:name =>["g*"]}]}).with_indifferent_access
   end
 
-  factory :erratum_filter_rule, :class => Katello::ErratumRule, :parent => :filter_rule do
+  factory :katello_erratum_filter_rule, :class => Katello::ErratumRule, :parent => :katello_filter_rule do
   end
 
-  factory :package_group_filter_rule, :class => Katello::PackageGroupRule, :parent => :filter_rule do
+  factory :katello_package_group_filter_rule, :class => Katello::PackageGroupRule, :parent => :katello_filter_rule do
   end
 
-  factory :puppet_module_filter_rule, :class => Katello::PuppetModuleRule, :parent => :filter_rule do
+  factory :katello_puppet_module_filter_rule, :class => Katello::PuppetModuleRule, :parent => :katello_filter_rule do
   end
 end

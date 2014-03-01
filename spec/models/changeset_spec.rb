@@ -118,7 +118,7 @@ describe Changeset, :katello => true do
 
     describe "fail adding content not contained in the prior environment" do
       before do
-        @view = FactoryGirl.create(:content_view, :organization => @organization)
+        @view = FactoryGirl.create(:katello_content_view, :organization => @organization)
         content_view = stub
         content_view.stubs(:include?).returns(false)
         prior = stub

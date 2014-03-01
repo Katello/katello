@@ -44,18 +44,18 @@ class ContentViewDefinitionTest < ActiveSupport::TestCase
   end
 
   def test_bad_name
-    content_view_def = FactoryGirl.build(:content_view_definition, :name => "")
+    content_view_def = FactoryGirl.build(:katello_content_view_definition, :name => "")
     assert content_view_def.invalid?
     assert content_view_def.errors.has_key?(:name)
   end
 
   def test_utf8_name
-    content_view_def = FactoryGirl.build(:content_view_definition, :name => "올드보이")
+    content_view_def = FactoryGirl.build(:katello_content_view_definition, :name => "올드보이")
     assert content_view_def.valid?
   end
 
   def test_duplicate_name
-    attrs = FactoryGirl.attributes_for(:content_view_definition,
+    attrs = FactoryGirl.attributes_for(:katello_content_view_definition,
                                        :name => @content_view_def.name
                                       )
     assert_raises(ActiveRecord::RecordInvalid) do
@@ -67,8 +67,8 @@ class ContentViewDefinitionTest < ActiveSupport::TestCase
   end
 
   def test_destroy_with_content_views
-    content_view = FactoryGirl.create(:content_view)
-    definition = FactoryGirl.create(:content_view_definition,
+    content_view = FactoryGirl.create(:katello_content_view)
+    definition = FactoryGirl.create(:katello_content_view_definition,
                                     :content_views => [content_view])
     assert definition.destroy
     assert_nil ContentView.find_by_id(content_view.id)
@@ -119,12 +119,12 @@ class ContentViewDefinitionTest < ActiveSupport::TestCase
   def test_adding_views_to_composite_content_definition
     # verify that component views may be added to a composite view
     @content_view_def.composite = true
-    @content_view_def.component_content_views << FactoryGirl.create(:content_view)
+    @content_view_def.component_content_views << FactoryGirl.create(:katello_content_view)
     assert @content_view_def.save
   end
 
   def test_publish
-    content_view_def = FactoryGirl.create(:content_view_definition)
+    content_view_def = FactoryGirl.create(:katello_content_view_definition)
     content_view = content_view_def.publish('test_name', 'test_description', 'test_label')
     refute_nil content_view
     refute_empty content_view_def.content_views.reload
@@ -136,7 +136,7 @@ class ContentViewDefinitionTest < ActiveSupport::TestCase
   end
 
   def test_publish_composite
-    content_view_def = FactoryGirl.create(:content_view_definition)
+    content_view_def = FactoryGirl.create(:katello_content_view_definition)
     content_view_def.composite = true
     content_view_def.save!
     content_view = content_view_def.publish('test_name', 'test_description', 'test_label')
@@ -147,7 +147,7 @@ class ContentViewDefinitionTest < ActiveSupport::TestCase
   end
 
   def test_publish_composite_with_conflicts
-    content_view_def = FactoryGirl.create(:content_view_definition)
+    content_view_def = FactoryGirl.create(:katello_content_view_definition)
     content_view_def.composite = true
     content_view_def.save!
     content_view_def.stubs(:has_puppet_repo_conflicts?).returns(true)
@@ -157,7 +157,7 @@ class ContentViewDefinitionTest < ActiveSupport::TestCase
   end
 
   def test_archive
-    content_view_def = FactoryGirl.create(:content_view_definition)
+    content_view_def = FactoryGirl.create(:katello_content_view_definition)
     assert content_view_def.archive
     assert_equal 2, ContentViewDefinitionBase.where(:name => content_view_def.name).count
     assert_equal 2, ContentViewDefinitionBase.where(:label => content_view_def.label).count
@@ -165,7 +165,7 @@ class ContentViewDefinitionTest < ActiveSupport::TestCase
   end
 
   def test_copy
-    content_view_def = FactoryGirl.create(:content_view_definition)
+    content_view_def = FactoryGirl.create(:katello_content_view_definition)
     count = ContentViewDefinition.count
     assert_raises(ActiveRecord::RecordInvalid) do
       content_view_def.copy
@@ -175,9 +175,9 @@ class ContentViewDefinitionTest < ActiveSupport::TestCase
   end
 
   def test_validate_component_views
-    content_view_def = FactoryGirl.create(:content_view_definition, :composite)
+    content_view_def = FactoryGirl.create(:katello_content_view_definition, :composite)
     ContentView.any_instance.stubs(:library_repos).returns([@repo])
-    content_views = FactoryGirl.create_list(:content_view, 2)
+    content_views = FactoryGirl.create_list(:katello_content_view, 2)
 
     content_view_def.component_content_views << content_views.first
     assert_raises(Errors::ContentViewRepositoryOverlap) do
@@ -218,7 +218,7 @@ class ContentViewDefinitionTest < ActiveSupport::TestCase
     cloned.stubs(:library_instance_id).returns(repo.id)
     cloned.stubs(:library_instance).returns(repo)
 
-    package_rule1 = FactoryGirl.build(:package_filter_rule)
+    package_rule1 = FactoryGirl.build(:katello_package_filter_rule)
     filter = package_rule1.filter
     package_rule1.inclusion = true
     package_rule1.parameters = HashWithIndifferentAccess.new
@@ -257,7 +257,7 @@ class ContentViewDefinitionTest < ActiveSupport::TestCase
     cloned.stubs(:library_instance_id).returns(repo.id)
     cloned.stubs(:library_instance).returns(repo)
 
-    puppet_module_rule = FactoryGirl.build(:puppet_module_filter_rule)
+    puppet_module_rule = FactoryGirl.build(:katello_puppet_module_filter_rule)
     filter = puppet_module_rule.filter
     puppet_module_rule.inclusion = true
     puppet_module_rule.parameters = HashWithIndifferentAccess.new

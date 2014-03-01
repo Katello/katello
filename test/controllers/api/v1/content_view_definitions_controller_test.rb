@@ -42,7 +42,7 @@ describe Api::V1::ContentViewDefinitionsController do
 
   describe "index" do
     before do
-      @defs = FactoryGirl.create_list(:content_view_definition, 3,
+      @defs = FactoryGirl.create_list(:katello_content_view_definition, 3,
                                       :organization => @organization)
     end
 
@@ -97,7 +97,7 @@ describe Api::V1::ContentViewDefinitionsController do
 
   describe "publish" do
     before do
-      FactoryGirl.create_list(:content_view_definition, 2, :organization => @organization)
+      FactoryGirl.create_list(:katello_content_view_definition, 2, :organization => @organization)
     end
     let(:definition) { @organization.content_view_definitions.last }
     let(:action) { :publish }
@@ -154,7 +154,7 @@ describe Api::V1::ContentViewDefinitionsController do
 
   describe "destroy" do
     let(:action) { :destroy }
-    let(:definition) { FactoryGirl.build_stubbed(:content_view_definition) }
+    let(:definition) { FactoryGirl.build_stubbed(:katello_content_view_definition) }
     let(:req) do
       lambda do
         delete :destroy, :id => definition.id.to_s
@@ -186,9 +186,9 @@ describe Api::V1::ContentViewDefinitionsController do
 
   describe "update" do
     it "should not allow me to change the definition's org" do
-      org1 = FactoryGirl.create(:organization)
-      org2 = FactoryGirl.create(:organization)
-      content_view_definition = FactoryGirl.create(:content_view_definition,
+      org1 = FactoryGirl.create(:katello_organization)
+      org2 = FactoryGirl.create(:katello_organization)
+      content_view_definition = FactoryGirl.create(:katello_content_view_definition,
                                                    :organization => org1
                                                   )
       put :update, :id => content_view_definition.id, :organization_id => org1.id,
@@ -199,8 +199,8 @@ describe Api::V1::ContentViewDefinitionsController do
 
   describe "update_content_views" do
     it "should update the definition's components" do
-      definition = FactoryGirl.create(:content_view_definition, :composite => true)
-      views = FactoryGirl.create_list(:content_view, 2)
+      definition = FactoryGirl.create(:katello_content_view_definition, :composite => true)
+      views = FactoryGirl.create_list(:katello_content_view, 2)
       relation = stub(where: views)
       ContentView.stubs(:readable).returns(relation)
 

@@ -25,7 +25,7 @@ module Katello
       specify { assert trigger_class, action_class.subscribe }
 
       it 'plans' do
-        system = build(:system, :alabama)
+        system = build(:katello_system, :alabama)
         trigger = create_action trigger_class
         trigger.input[:uuid] = 123
         action = create_action(action_class, trigger)

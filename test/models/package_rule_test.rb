@@ -24,7 +24,7 @@ class PackageRuleTest < ActiveSupport::TestCase
 
   def setup
     User.current = User.find(users(:admin))
-    @filter_rule = FactoryGirl.build(:package_filter_rule)
+    @filter_rule = FactoryGirl.build(:katello_package_filter_rule)
   end
 
   def test_create

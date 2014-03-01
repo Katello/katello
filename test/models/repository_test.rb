@@ -19,7 +19,7 @@ class RepositoryCreateTest < RepositoryTestBase
   def setup
     super
     User.current = @admin
-    @repo = build(:repository, :fedora_17_el6,
+    @repo = build(:katello_repository, :fedora_17_el6,
                   :environment => @library,
                   :product => katello_products(:fedora),
                   :content_view_version => @library.default_content_view_version

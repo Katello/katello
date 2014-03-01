@@ -35,21 +35,21 @@ class SystemCreateTest < SystemTestBase
   end
 
   def test_create
-    @system = build(:system, :alabama, :name => 'alabama', :description => 'Alabama system', :environment => @dev, :uuid => '1234')
+    @system = build(:katello_system, :alabama, :name => 'alabama', :description => 'Alabama system', :environment => @dev, :uuid => '1234')
     assert @system.save!
     refute_nil @system.content_view
     assert @system.content_view.default?
   end
 
   def test_create_with_content_view
-    @system = build(:system, :alabama, :name => 'alabama', :description => 'Alabama system', :environment => @dev, :uuid => '1234')
+    @system = build(:katello_system, :alabama, :name => 'alabama', :description => 'Alabama system', :environment => @dev, :uuid => '1234')
     @system.content_view = ContentView.find(katello_content_views(:library_dev_view))
     assert @system.save
     refute @system.content_view.default?
   end
 
   def test_i18n_name
-    @system = build(:system, :alabama, :name => 'alabama', :description => 'Alabama system', :environment => @dev, :uuid => '1234')
+    @system = build(:katello_system, :alabama, :name => 'alabama', :description => 'Alabama system', :environment => @dev, :uuid => '1234')
     name = "ಬoo0000"
     @system.name = name
     @system.content_view = ContentView.find(katello_content_views(:library_dev_view))
