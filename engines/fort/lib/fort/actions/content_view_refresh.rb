@@ -20,7 +20,7 @@ module Fort
       end
 
       def run
-        view = ContentView.find(input['id'])
+        view = Katello::ContentView.find(input['id'])
         env = view.organization.library
         Node.with_environment(env).each do |node|
           node.sync(:environment => env, :content_view => view)

@@ -42,6 +42,7 @@ KT.panel.set_expand_cb(function() {
 
     KT.object.label.initialize();
     KT.content_view_definition.initialize();
+    KT.content_view_definition.initialize_publish();
     KT.content_view_definition.initialize_views();
     KT.content_view_definition.initialize_composite_content();
     KT.content_view_definition.initialize_create();
@@ -60,6 +61,31 @@ KT.content_view_definition = (function(){
             initialState: "expanded",
             clickableNodeNames: true,
             onNodeShow: function(){$.sparkline_display_visible();}
+        });
+    },
+    initialize_publish = function() {
+        var btn = $('#publish_button');
+        if (btn.length === 0) {
+            return;
+        }
+
+        btn.click(function(){
+            btn.addClass('disabled');
+            $('#publish_form').ajaxSubmit({
+                type: 'POST',
+                url: btn.data('url'),
+                cache: false,
+                success: function(){
+                    btn.removeClass('disabled');
+                    KT.panel.closeSubPanel($('#subpanel'));
+                    KT.panel.refreshPanel(btn.data('url-after'));
+                },
+                error: function(){
+                    // notices will handle the error
+                    btn.removeClass('disabled');
+                }
+
+            });
         });
     },
     initialize_create = function() {
@@ -473,6 +499,7 @@ KT.content_view_definition = (function(){
         initialize                   : initialize,
         initialize_composite_content : initialize_composite_content,
         initialize_create            : initialize_create,
+        initialize_publish           : initialize_publish,
         initialize_views             : initialize_views,
         set_view_repos               : function(vp) {view_repos = vp;},
         set_repos                    : function(rs) {repos = rs;}

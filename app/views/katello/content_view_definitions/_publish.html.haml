@@ -1,11 +1,9 @@
-= javascript 'katello/widgets/subpanel_new'
-
 = content_for :title do
   #{_("Publish View Definition")}
 
 = content_for :subcontent do
 
-  = kt_form_for Katello::ContentView.new, :url => publish_content_view_definition_path(@view_definition.id), :remote => true, :html => {:id => 'new_subpanel'} do |form|
+  = kt_form_for Katello::ContentView.new, :remote => true, :html => {:id => 'publish_form'} do |form|
 
     = form.text_field :name, :label => _("Name"), :class => :name_input
 
@@ -15,6 +13,8 @@
 
     = form.text_area :description, :size => "40x5", :label => _('Description'), :maxlength => default_description_limit
 
-    = form.submit _('Publish'), :class => 'publish_button subpanel_create'
+    %input#publish_button.button{ :type => 'button', :value => _("Publish"),
+                                  'data-url' => publish_content_view_definition_path(@view_definition.id),
+                                  'data-url-after' => views_content_view_definition_path(@view_definition.id) }
 
 = render :template => "katello/layouts/tupane_layout"
