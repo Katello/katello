@@ -463,8 +463,8 @@ describe Provider do
 
   it 'should be destroyable' do
     disable_product_orchestration
-    provider = create(:provider, organization: @organization)
-    create(:product, :fedora, provider: provider)
+    provider = create(:katello_provider, organization: @organization)
+    create(:katello_product, :fedora, provider: provider)
     assert provider.destroy
   end
 end

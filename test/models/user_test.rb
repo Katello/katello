@@ -40,7 +40,7 @@ class UserCreateTest < UserTestBase
 
   def setup
     super
-    @user = build(:user, :batman)
+    @user = build(:katello_user, :batman)
     @user.auth_source = auth_sources(:one)
   end
 
@@ -64,7 +64,7 @@ class UserCreateFailNoEmailTest < UserTestBase
 
   def setup
     super
-    @user = build(:user, :batman)
+    @user = build(:katello_user, :batman)
     @user.auth_source = auth_sources(:one)
     @user.mail = nil
   end

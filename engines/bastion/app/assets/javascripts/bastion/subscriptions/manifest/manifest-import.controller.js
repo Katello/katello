@@ -114,10 +114,7 @@ angular.module('Bastion.subscriptions').controller('ManifestImportController',
                 }
 
                 if (returnData !== null && returnData.errors === undefined) {
-                    $scope.saveSuccess = true;
-                    $scope.successMessages.push(gettext("Manifest successfully imported."));
-                    $scope.refreshTable();
-                    $scope.transitionTo('subscriptions.index');
+                    $scope.transitionTo('tasks.details', {taskId: returnData.id});
                 } else {
                     $scope.uploadErrorMessages = [gettext('Error during upload: ') + returnData.displayMessage];
                 }

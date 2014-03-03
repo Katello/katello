@@ -183,6 +183,26 @@ class Api::V2::RepositoriesControllerTest < ActionController::TestCase
     assert_response :success
   end
 
+  def test_sync_complete
+    token = 'imalittleteapotshortandstout'
+    Katello.config[:post_sync_url] = "http://foo.com/foo?token=#{token}"
+    TaskStatus.stubs(:find_by_uuid).returns(TaskStatus.new(:user => User.first))
+    Repository.stubs(:where).returns([@repository])
+
+    post :sync_complete, :token => token, :payload => {:repo_id => @repository.pulp_id}, :call_report => {}
+
+    assert_response :success
+  end
+
+  def test_sync_complete_bad_token
+    token = 'super_secret'
+    Katello.config[:post_sync_url] = "http://foo.com/foo?token=attacker_key"
+    post :sync_complete, :token => token, :payload => {:repo_id => @repository.pulp_id}, :call_report => {}
+
+    assert_response 403
+  end
+
+
   def test_sync_protected
     allowed_perms = [@sync_permission]
     denied_perms = [@create_permission, @read_permission,

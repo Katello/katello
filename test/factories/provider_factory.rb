@@ -1,8 +1,8 @@
 FactoryGirl.define do
-  factory :provider, :class => Katello::Provider do
+  factory :katello_provider, :class => Katello::Provider do
     sequence(:name) { |n| "Adobe #{n}" }
     provider_type "Custom"
-    association   :organization
+    association   :organization, :factory => :katello_organization
 
     trait :fedora_hosted do
       name          "FedoraHosted"
@@ -10,7 +10,7 @@ FactoryGirl.define do
       provider_type "Custom"
     end
 
-    factory :fedora_hosted_provider, :traits => [:fedora_hosted]
+    factory :katello_fedora_hosted_provider, :traits => [:fedora_hosted]
 
   end
 end

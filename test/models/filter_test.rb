@@ -23,7 +23,7 @@ class FilterTest < ActiveSupport::TestCase
 
   def setup
     User.current = User.find(users(:admin))
-    @filter = FactoryGirl.build(:filter)
+    @filter = FactoryGirl.build(:katello_filter)
     @repo = Repository.find(katello_repositories(:fedora_17_x86_64).id)
     ContentView.any_instance.stubs(:reindex_on_association_change).returns(true)
   end
@@ -35,21 +35,21 @@ class FilterTest < ActiveSupport::TestCase
   def test_composite_view
     skip "skip until composite content views are supported"
     # filter should not get created for a composite content view
-    content_view = FactoryGirl.create(:content_view, :composite)
-    filter = FactoryGirl.build(:filter, :content_view_id => content_view.id)
+    content_view = FactoryGirl.create(:katello_content_view, :composite)
+    filter = FactoryGirl.build(:katello_filter, :content_view_id => content_view.id)
     assert_nil Filter.find_by_id(filter.id)
     refute Filter.exists?(filter.id)
   end
 
   def test_bad_name
-    filter = FactoryGirl.build(:filter, :name => "")
+    filter = FactoryGirl.build(:katello_filter, :name => "")
     assert filter.invalid?
     assert filter.errors.has_key?(:name)
   end
 
   def test_duplicate_name
     @filter.save!
-    attrs = FactoryGirl.attributes_for(:filter,
+    attrs = FactoryGirl.attributes_for(:katello_filter,
                                        :name => @filter.name,
                                        :content_view_id => @filter.content_view_id
                                       )
@@ -78,7 +78,6 @@ class FilterTest < ActiveSupport::TestCase
   end
 
   def test_content_view_delete_repo
-    @filter.save!
     view =  @filter.content_view
     view.repositories << @repo
     view.save!

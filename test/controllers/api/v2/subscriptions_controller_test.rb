@@ -16,6 +16,8 @@ require "katello_test_helper"
 module Katello
 class Api::V2::SubscriptionsControllerTest < ActionController::TestCase
 
+  include Support::ForemanTasks::Task
+
   def self.before_suite
     models = ["System"]
     disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
@@ -116,8 +118,10 @@ class Api::V2::SubscriptionsControllerTest < ActionController::TestCase
   end
 
   def test_upload
-    Provider.any_instance.stubs(:import_manifest)
-    Provider.any_instance.stubs(:manifest_task).returns(TaskStatus.new())
+    assert_async_task ::Actions::Headpin::Provider::ManifestImport do |provider, path, force|
+      assert_equal(@organization.redhat_provider.id, provider.id)
+      assert_match(/\.zip$/, path)
+    end
     test_document = File.join(Engine.root, "test", "fixtures", "files", "puppet_module.tar.gz")
     manifest = Rack::Test::UploadedFile.new(test_document, '')
     post :upload, :organization_id => @organization.label, :content => manifest

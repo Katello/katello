@@ -25,7 +25,7 @@ class GluePulpUserTest < ActiveSupport::TestCase
   end
 
   def setup
-    @user = build(:user, :batman)
+    @user = build(:katello_user, :batman)
   end
 
   def test_prune_pulp_only_attributes

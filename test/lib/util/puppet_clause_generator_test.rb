@@ -88,7 +88,7 @@ class Util::PuppetClauseGeneratorTest < MiniTest::Rails::ActiveSupport::TestCase
 
   def setup_filter_clause(inclusion, parameter)
     repo = Repository.find(repositories(:fedora_17_x86_64).id)
-    filter_rule = FactoryGirl.build(:puppet_module_filter_rule)
+    filter_rule = FactoryGirl.build(:katello_puppet_module_filter_rule)
     filter = filter_rule.filter
     filter_rule.inclusion = inclusion
     filter_rule.parameters = HashWithIndifferentAccess.new(parameter)

@@ -435,7 +435,7 @@ describe Product, :katello => true do
       disable_repo_orchestration
       product = Product.create!(ProductTestData::SIMPLE_PRODUCT)
       2.times do
-        create(:repository, product: product, environment: @organization.library,
+        create(:katello_repository, product: product, environment: @organization.library,
                content_view_version: @organization.library.default_content_view_version,
                feed: "http://something")
       end
@@ -448,7 +448,7 @@ describe Product, :katello => true do
 
   it 'should be destroyable' do
     disable_repo_orchestration
-    product = create(:product, :fedora, provider: create(:provider, organization: @organization))
+    product = create(:katello_product, :fedora, provider: create(:katello_provider, organization: @organization))
     assert product.destroy
   end
 end
