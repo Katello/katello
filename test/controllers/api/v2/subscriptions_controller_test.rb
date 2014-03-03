@@ -139,9 +139,12 @@ class Api::V2::SubscriptionsControllerTest < ActionController::TestCase
 
   def test_refresh_manfiest
     Provider.any_instance.stubs(:refresh_manifest)
-    Provider.any_instance.stubs(:organization).returns(Organization.new())
+    Provider.any_instance.stubs(:organization).returns(@organization)
     Organization.any_instance.stubs(:owner_details).returns("upstreamConsumer" => "JarJarBinks")
-    Provider.any_instance.stubs(:manifest_task).returns(TaskStatus.new())
+    assert_async_task(::Actions::Headpin::Provider::ManifestRefresh) do |provider, upstream|
+      assert_equal(@organization.redhat_provider.id, provider.id)
+      assert_equal("JarJarBinks", upstream)
+    end
     put :refresh_manifest, :organization_id => @organization.label
     assert_response :success
   end
@@ -157,7 +160,9 @@ class Api::V2::SubscriptionsControllerTest < ActionController::TestCase
 
   def test_delete_manifest
     Provider.any_instance.stubs(:delete_manifest)
-    Provider.any_instance.stubs(:manifest_task).returns(TaskStatus.new())
+    assert_async_task(::Actions::Headpin::Provider::ManifestDelete) do |provider|
+      assert_equal(@organization.redhat_provider.id, provider.id)
+    end
     post :delete_manifest, :organization_id => @organization.label
     assert_response :success
   end
