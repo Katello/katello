@@ -116,7 +116,9 @@ class Filter < Katello::Model
   end
 
   def self.applicable(repo)
-    query = %{ katello_filters.id in (select filter_id from  katello_filters_repositories where repository_id = #{repo.id}) }
+    query = %{ (katello_filters.id in (select filter_id from katello_filters_repositories where repository_id = #{repo.id})) or
+               (katello_filters.id not in (select filter_id from katello_filters_repositories))
+             }
     where(query).select("DISTINCT katello_filters.id")
   end
 

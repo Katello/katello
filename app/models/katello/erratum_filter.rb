@@ -23,62 +23,31 @@ class ErratumFilter < Filter
   has_many :erratum_rules, :dependent => :destroy, :foreign_key => :filter_id,
            :class_name => "Katello::ErratumFilterRule"
 
-  [:start, :end].each do |date_type|
-    define_method("#{ date_type }_date") do
-      parameters["date_range"].try(:[], date_type)
-    end
-
-    define_method("#{ date_type }_date=") do |date|
-      parameters["date_range"] ||= {}
-      if date
-        parameters["date_range"][date_type] = date
-      else
-        parameters["date_range"].delete(date_type)
-        parameters.delete("date_range") if parameters["date_range"].empty?
-      end
-    end
-  end
-
-  def errata_types=(etypes)
-    if etypes.blank?
-      parameters.delete("errata_type")
-    else
-      parameters["errata_type"] ||= {}
-      parameters["errata_type"] = etypes
-    end
-  end
-
-  def errata_types
-    parameters["errata_type"]
-  end
-
   def generate_clauses(repo)
-    rule_clauses = []
-    if parameters.key? :units
-      # TODO: WIll add this when we have a proper analyzer for
-      # errata_id..
-      # ids = parameters[:units].collect do |unit|
-      #   if unit[:id] && !unit[:id].blank?
-      #     results = Errata.legacy_search(unit[:id], 0, 0, [repo.pulp_id], {},
-      #                         [:errata_id_sort, "DESC"],'errata_id').collect(&:errata_id)
-      #   end
-      # end.compact.flatten
-      ids = parameters[:units].collect{ |unit| unit[:id] }
-      ids.compact!
 
-      { "id" => { "$in" => ids } } unless ids.empty?
-    else
-      if parameters.key? "date_range"
-        dr = {}
-        dr["$gte"] = start_date.as_json if start_date
-        dr["$lte"] = end_date.as_json if end_date
-        rule_clauses << { "issued" => dr }
+    if filter_by_id?
+      errata_ids = erratum_rules.map(&:errata_id)
+      return { "id" => { "$in" => errata_ids } } unless errata_ids.empty?
+
+    else # filtering by date/type
+      rule_clauses = []
+      start_date = erratum_rules.first.start_date
+      end_date = erratum_rules.first.end_date
+      types = erratum_rules.first.types
+
+      unless start_date.blank? && end_date.blank?
+        date_range = {}
+        date_range["$gte"] = start_date.to_time.as_json unless start_date.blank?
+        date_range["$lte"] = end_date.to_time.as_json unless end_date.blank?
+        rule_clauses << { "issued" => date_range }
       end
-      if errata_types
-          # {"type": {"$in": ["security", "enhancement", "bugfix"]}
-        rule_clauses << { "type" => { "$in" => errata_types } }
+      unless types.blank?
+        # {"type": {"$in": ["security", "enhancement", "bugfix"]}
+        rule_clauses << { "type" => { "$in" => types } }
       end
 
+      # Currently, an errata filter that specifies a date/type, will only have
+      # single rule; therefore, we can return from here.
       case rule_clauses.size
       when 0
         return
@@ -88,17 +57,11 @@ class ErratumFilter < Filter
         return { '$and' => rule_clauses }
       end
     end
+
   end
 
-  def as_json(options = {})
-    params = Util::Support.deep_copy(parameters).with_indifferent_access
-    from_date = start_date
-    to_date = end_date
-    params[:date_range][:start]  = from_date if from_date
-    params[:date_range][:end] = to_date if to_date
-    json_val = super(options).update("rule" => params)
-    json_val.delete("parameters")
-    json_val
+  def filter_by_id?
+    !erratum_rules.blank? && !erratum_rules.first.errata_id.blank?
   end
 end
 end

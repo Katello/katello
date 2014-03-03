@@ -331,24 +331,17 @@ class ContentView < Katello::Model
         repos_to_filter << library_clone
       end
     end
+
     repos_to_filter.each do |repo|
-      self.associate_contents(repo)
+      associate_yum_types(repo) unless repo.puppet?
     end
 
     PulpTaskStatus.wait_for_tasks async_tasks.flatten(1)
   end
 
   def publish_version_content(version)
-    repositories.each do |repo|
+    repositories.non_puppet.each do |repo|
       cloned = repo.create_clone(:content_view => self, :version => version)
-      associate_contents(cloned)
-    end
-  end
-
-  def associate_contents(cloned)
-    if cloned.puppet?
-      associate_puppet(cloned)
-    else
       associate_yum_types(cloned)
     end
   end
@@ -477,22 +470,26 @@ class ContentView < Katello::Model
     return true
   end
 
-  def associate_puppet(cloned)
-    repo = cloned.library_instance_id ? cloned.library_instance : cloned
-    applicable_filters = filters.applicable(repo).puppet
-    copy_clauses = nil
-
-    if applicable_filters.any?
-      clause_gen = Util::PuppetClauseGenerator.new(repo, applicable_filters)
-      clause_gen.generate
-      copy_clauses = clause_gen.copy_clause
-    end
-
-    if applicable_filters.empty? || copy_clauses
-      pulp_task = repo.clone_contents_by_filter(cloned, Filter::PUPPET_MODULE, copy_clauses)
-      PulpTaskStatus.wait_for_tasks([pulp_task])
-    end
-  end
+  # TODO: Puppet content is no longer handled using a 'filter'.  Instead, we'll be
+  # TODO: associating puppet modules with a content view and at publish-time, building
+  # TODO: a new repo for the view with those modules.  This will be handled in a
+  # TODO: sepparate PR that will be coming soon...
+  #def associate_puppet(cloned)
+  #  repo = cloned.library_instance_id ? cloned.library_instance : cloned
+  #  applicable_filters = filters.applicable(repo).puppet
+  #  copy_clauses = nil
+  #
+  #  if applicable_filters.any?
+  #    clause_gen = Util::PuppetClauseGenerator.new(repo, applicable_filters)
+  #    clause_gen.generate
+  #    copy_clauses = clause_gen.copy_clause
+  #  end
+  #
+  #  if applicable_filters.empty? || copy_clauses
+  #    pulp_task = repo.clone_contents_by_filter(cloned, Filter::PUPPET_MODULE, copy_clauses)
+  #    PulpTaskStatus.wait_for_tasks([pulp_task])
+  #  end
+  #end
 
   def associate_yum_types(cloned)
     # Intended Behaviour
