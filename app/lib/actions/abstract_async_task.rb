@@ -1,5 +1,5 @@
 #
-# Copyright 2013 Red Hat, Inc.
+# Copyright 2014 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -10,18 +10,12 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-FactoryGirl.define do
-  factory :katello_content_view, :class => Katello::ContentView do
-    sequence(:name) { |n| "Database#{n}" }
-    description "This content view is for database content"
-    association :organization, :factory => :katello_organization
+module Actions
+  class AbstractAsyncTask < Actions::EntryAction
+    middleware.use Actions::Middleware::RemoteAction
 
-    trait :with_definition do
-      association :content_view_definition,
-        :factory => :katello_content_view_definition
+    def humanized_output
+      ""
     end
-
-    factory :katello_content_view_with_definition, :traits => [:with_definition]
   end
-
 end

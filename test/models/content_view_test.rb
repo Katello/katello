@@ -34,30 +34,30 @@ class ContentViewTest < ActiveSupport::TestCase
   end
 
   def test_create
-    assert ContentView.create(FactoryGirl.attributes_for(:content_view))
+    assert ContentView.create(FactoryGirl.attributes_for(:katello_content_view))
   end
 
   def test_label
-    content_view = FactoryGirl.build(:content_view)
+    content_view = FactoryGirl.build(:katello_content_view)
     content_view.label = ""
     assert content_view.save
     assert content_view.label.present?
   end
 
   def test_create
-    content_view = FactoryGirl.build(:content_view)
+    content_view = FactoryGirl.build(:katello_content_view)
     assert content_view.save
   end
 
   def test_bad_name
-    content_view = FactoryGirl.build(:content_view, :name => "")
+    content_view = FactoryGirl.build(:katello_content_view, :name => "")
     assert content_view.invalid?
     refute content_view.save
     assert content_view.errors.include?(:name)
   end
 
   def test_duplicate_name
-    attrs = FactoryGirl.attributes_for(:content_view,
+    attrs = FactoryGirl.attributes_for(:katello_content_view,
                                        :name => @library_dev_view.name
                                       )
     assert_raises(ActiveRecord::RecordInvalid) do
@@ -69,7 +69,7 @@ class ContentViewTest < ActiveSupport::TestCase
   end
 
   def test_bad_label
-    content_view = FactoryGirl.build(:content_view)
+    content_view = FactoryGirl.build(:katello_content_view)
     content_view.label = "Bad Label"
 
     assert content_view.invalid?

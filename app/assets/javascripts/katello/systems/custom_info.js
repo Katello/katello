@@ -11,6 +11,7 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
 
+// Only used in the distributors (?) page, can remove once that has been redone.
 var KT = (KT === undefined) ? {} : KT;
 
 KT.custom_info = (function() {

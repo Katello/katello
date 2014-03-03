@@ -24,7 +24,7 @@ class PackageGroupFilterRuleTest < ActiveSupport::TestCase
 
   def setup
     User.current = User.find(users(:admin))
-    @rule = FactoryGirl.build(:package_group_filter_rule)
+    @rule = FactoryGirl.build(:katello_package_group_filter_rule)
   end
 
   def test_create
@@ -41,7 +41,7 @@ class PackageGroupFilterRuleTest < ActiveSupport::TestCase
 
   def test_with_duplicate_name
     @rule.save!
-    attrs = FactoryGirl.attributes_for(:package_filter_rule, :name => @rule.name)
+    attrs = FactoryGirl.attributes_for(:katello_package_filter_rule, :name => @rule.name)
     assert_raises(ActiveRecord::RecordInvalid) do
       PackageGroupFilterRule.create!(attrs)
     end

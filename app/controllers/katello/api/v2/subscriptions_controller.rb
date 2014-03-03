@@ -172,10 +172,9 @@ class Api::V2::SubscriptionsController < Api::V2::ApiController
       temp_file.close
     end
 
-    @provider.import_manifest(File.expand_path(temp_file.path), :force => false,
-                              :async => true, :notify => false)
-
-    respond_for_async :resource => @provider.manifest_task
+    task = async_task(::Actions::Headpin::Provider::ManifestImport, @provider,
+                      File.expand_path(temp_file.path), params[:force])
+    respond_for_async :resource => task
   end
 
   api :PUT, "/organizations/:organization_id/subscriptions/refresh_manifest", "Refresh previously imported manifest for Red Hat provider"

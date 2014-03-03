@@ -24,10 +24,10 @@ module Katello
       let(:action) { create_action action_class }
 
       let(:system) do
-        env = build(:k_t_environment,
+        env = build(:katello_k_t_environment,
                     :library,
-                    organization: build(:organization, :acme_corporation))
-        build(:system, :alabama, environment: env)
+                    organization: build(:katello_organization, :acme_corporation))
+        build(:katello_system, :alabama, environment: env)
       end
 
       it 'plans' do

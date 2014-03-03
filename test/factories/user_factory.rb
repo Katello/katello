@@ -1,8 +1,6 @@
 FactoryGirl.define do
-  factory :user do
-    sequence(:login) { |n| "user#{n}" }
+  factory :katello_user, :class => "User" do
     sequence(:mail) { |n| "user#{n}@katello.org" }
-    password "password1"
     sequence(:remote_id) { |n| "remote#{n}" }
 
     trait :batman do

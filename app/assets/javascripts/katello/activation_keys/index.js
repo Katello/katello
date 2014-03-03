@@ -14,4 +14,3 @@
 //= require "alchemy/jquery/plugins/jquery.multiselect"
 //= require "alchemy/jquery/plugins/jquery.multiselect.filter"
 //= require "katello/activation_keys/activation_key"
-//= require "katello/system_groups/system_groups_pane"

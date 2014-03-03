@@ -207,9 +207,11 @@ module Katello
 
     #api :POST, "/environments/:environment_id/consumers", "Register a consumer in environment"
     def consumer_create
-      @system = System.create!(system_params.merge(:environment  => @environment,
-                                                   :content_view => @content_view,
-                                                   :serviceLevel => params[:service_level]))
+      @system = System.new(system_params.merge(:environment  => @environment,
+                                               :content_view => @content_view,
+                                               :serviceLevel => params[:service_level]))
+      sync_task(::Actions::Headpin::System::Create, @system)
+      @system.reload
       render :json => Resources::Candlepin::Consumer.get(@system.uuid)
     end
 

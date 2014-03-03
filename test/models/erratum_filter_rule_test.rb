@@ -25,7 +25,7 @@ class ErratumFilterRuleTest < ActiveSupport::TestCase
   def setup
     User.current = User.find(users(:admin))
 
-    @rule = FactoryGirl.build(:erratum_filter_rule)
+    @rule = FactoryGirl.build(:katello_erratum_filter_rule)
 
     @start_date = "2013-01-01"
     @end_date = "2013-01-31"
@@ -60,7 +60,7 @@ class ErratumFilterRuleTest < ActiveSupport::TestCase
 
   def test_with_duplicate_errata_id
     @rule.save!
-    attrs = FactoryGirl.attributes_for(:erratum_filter_rule, :errata_id => @rule.errata_id)
+    attrs = FactoryGirl.attributes_for(:katello_erratum_filter_rule, :errata_id => @rule.errata_id)
     assert_raises(ActiveRecord::RecordInvalid) do
       ErratumFilterRule.create!(attrs)
     end

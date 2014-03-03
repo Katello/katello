@@ -211,7 +211,7 @@ describe Api::V1::SystemsController do
         @controller.stubs(:find_activation_keys).returns([@activation_key_3])
         System.any_instance.stubs(:facts).returns(@system_data[:facts])
 
-        content_view = FactoryGirl.build_stubbed(:content_view)
+        content_view = FactoryGirl.build_stubbed(:katello_content_view)
         ContentView.stubs(:find).returns(content_view)
         content_view.stubs(:in_environment?).returns(true)
         @system_data[:activation_keys] = [@activation_key_3.name]

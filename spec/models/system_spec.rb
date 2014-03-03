@@ -177,7 +177,7 @@ describe System do
     end
 
     it "should fail if the content view is not in the enviornment" do
-      content_view = FactoryGirl.build_stubbed(:content_view)
+      content_view = FactoryGirl.build_stubbed(:katello_content_view)
       @system.stubs(:content_view_id).returns(content_view.id)
       ContentView.stubs(:find).returns(content_view)
       content_view.stubs(:in_environment?).returns(false)
