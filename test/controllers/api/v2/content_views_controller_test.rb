@@ -130,7 +130,7 @@ module Katello
       get :history, :id => @content_view
 
       assert_response :success
-      assert_template 'api/v2/content_views/history'
+      assert_template 'katello/api/v2/content_views/../content_view_histories/index'
     end
 
     def test_history_protected

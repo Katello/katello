@@ -15,7 +15,7 @@ module Katello
     before_filter :find_content_view, :except => [:index, :create]
     before_filter :find_organization, :only => [:index, :create]
     before_filter :find_environment, :only => [:index]
-    before_filter :load_search_service, :only => [:index, :available_puppet_modules]
+    before_filter :load_search_service, :only => [:index, :history, :available_puppet_modules]
     before_filter :authorize
 
     wrap_parameters :include => (ContentView.attribute_names + %w(repository_ids component_ids))
@@ -60,7 +60,6 @@ module Katello
             end
       options[:filters] = [{:terms => {:id => ids}}]
 
-      @search_service.model = ContentView
       respond(:collection => item_search(ContentView, params, options))
     end
 
@@ -121,7 +120,12 @@ module Katello
     api :GET, "/content_views/:id/history", "Show a content view's history"
     param :id, :number, :desc => "content view numeric identifier", :required => true
     def history
-      respond_for_index(:collection => @view.history)
+      options = sort_params
+      options[:load_records?] = true
+      options[:filters] = [{:term => {:content_view_id => @view.id}}]
+
+      respond_for_index :template => '../content_view_histories/index',
+                        :collection => item_search(ContentViewHistory, params, options)
     end
 
     private

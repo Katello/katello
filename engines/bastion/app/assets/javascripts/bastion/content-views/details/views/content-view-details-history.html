@@ -1,0 +1,32 @@
+<div data-extend-template="layouts/details-nutupane.html">
+
+  <div data-block="header" translate>Promotion History</div>
+
+  <div data-block="messages"></div>
+  <div data-block="selection-summary"></div>
+
+  <div data-block="table">
+    <table class="table table-striped table-bordered" ng-class="{'table-mask': detailsTable.working}">
+     <thead>
+       <tr alch-table-head>
+         <th translate>Date</th>
+         <th translate>Version</th>
+         <th translate>Environment</th>
+         <th translate>User</th>
+         <th translate>Status</th>
+       </tr>
+     </thead>
+
+     <tbody>
+       <tr alch-table-row ng-repeat="history in detailsTable.rows">
+         <td alch-table-cell>{{ history.created_at | date:'short' }}</td>
+         <td alch-table-cell>{{ history.version }} </td>
+         <td alch-table-cell>{{ history.environment.name }}</td>
+         <td alch-table-cell>{{ history.user }}</td>
+         <td alch-table-cell>{{ history.status }}</td>
+       </tr>
+     </tbody>
+    </table>
+  </div>
+
+</div>
