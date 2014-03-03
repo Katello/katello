@@ -10,17 +10,17 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-module Fort
-  module Actions
+module Actions
+  module Fort
 
-    class ChangesetPublishAction < ::Actions::Pulp::Abstract
+    class RepositoryCreate < ::Actions::Pulp::Abstract
 
       def self.subscribe
-        Katello::Actions::ChangesetPromote
+        ::Katello::Actions::RepositoryCreate
       end
 
-      def plan(changeset)
-        plan_self('id' => changeset.id)
+      def plan(repo)
+        plan_self('id' => repo.id)
       end
 
       input_format do
@@ -28,16 +28,14 @@ module Fort
       end
 
       def run
-        changeset = Changeset.find(input['id'])
-        environment = changeset.environment
-        changeset.content_views.each do |view|
-          Node.with_environment(environment).each do |node|
-            node.sync(:environment => environment, :content_view => view)
-          end
+        repo = ::Katello::Repository.find(input['id'])
+        Node.with_environment(repo.environment).each do |node|
+          node.update_environments
         end
       end
 
     end
 
   end
+
 end
