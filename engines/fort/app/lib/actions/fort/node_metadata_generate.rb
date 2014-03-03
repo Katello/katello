@@ -10,27 +10,20 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-module Fort
-  module Actions
-
-    class RepositoryCreate < ::Actions::Pulp::Abstract
+module Actions
+  module Fort
+    class NodeMetadataGenerate < ::Actions::Pulp::Abstract
 
       def self.subscribe
-        Katello::Actions::RepositoryCreate
-      end
-
-      def plan(repo)
-        plan_self('id' => repo.id)
-      end
-
-      input_format do
-        param :id, Integer
+        Actions::Katello::Repository::NodeMetadataGenerate
       end
 
       def run
         repo = ::Katello::Repository.find(input['id'])
-        Node.with_environment(repo.environment).each do |node|
-          node.update_environments
+        if repo.environment
+          Node.with_environment(repo.environment).each do |node|
+            node.sync(:repository => repo)
+          end
         end
       end
 
