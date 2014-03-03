@@ -10,16 +10,16 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-module Fort
-  module Actions
+module Actions
+  module Fort
     class NodeMetadataGenerate < ::Actions::Pulp::Abstract
 
       def self.subscribe
-        ::Actions::Katello::Repository::NodeMetadataGenerate
+        Actions::Katello::Repository::NodeMetadataGenerate
       end
 
       def run
-        repo = Katello::Repository.find(input['id'])
+        repo = ::Katello::Repository.find(input['id'])
         if repo.environment
           Node.with_environment(repo.environment).each do |node|
             node.sync(:repository => repo)
