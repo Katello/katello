@@ -13,7 +13,7 @@
 module Fort
   module Actions
 
-    class ChangesetPublishAction < ::Actions::Pulp::Abstract
+    class ChangesetPromote < ::Actions::Pulp::Abstract
 
       def self.subscribe
         Katello::Actions::ChangesetPromote
@@ -28,7 +28,7 @@ module Fort
       end
 
       def run
-        changeset = Changeset.find(input['id'])
+        changeset = ::Katello::Changeset.find(input['id'])
         environment = changeset.environment
         changeset.content_views.each do |view|
           Node.with_environment(environment).each do |node|
