@@ -12,16 +12,19 @@
 
 module Katello
   class Api::V2::ContentViewsController < Api::V2::ApiController
-    respond_to :json
-
     before_filter :find_content_view, :except => [:index, :create]
     before_filter :find_organization, :only => [:index, :create]
     before_filter :find_environment, :only => [:index]
     before_filter :load_search_service, :only => [:index, :available_puppet_modules]
-
     before_filter :authorize
 
     wrap_parameters :include => (ContentView.attribute_names + %w(repository_ids component_ids))
+
+    def_param_group :content_view do
+      param :description, String, :desc => "Description for the content view"
+      param :repository_ids, Array, :desc => "List of repository ids"
+      param :component_ids, Array, :desc => "List of component content view version ids for composite views"
+    end
 
     def rules
       index_rule   = lambda { ContentView.any_readable?(@organization) }
@@ -65,10 +68,9 @@ module Katello
     api :POST, "/content_views", "Create a content view"
     param :organization_id, :identifier, :desc => "Organization identifier", :required => true
     param :name, String, :desc => "Name of the content view", :required => true
-    param :description, String, :desc => "Description of the content view"
     param :label, String, :desc => "Content view label"
-    param :repositoriy_ids, Array, :desc => "List of repository ids"
     param :composite, :bool, :desc => "Composite content view"
+    param_group :content_view
     def create
       @view = ContentView.create!(view_params) do |view|
         view.organization = @organization
@@ -81,9 +83,7 @@ module Katello
     api :PUT, "/content_views/:id", "Update a content view"
     param :id, :number, :desc => "Content view identifier", :required => true
     param :name, String, :desc => "New name for the content view"
-    param :description, String, :desc => "Updated description for the content view"
-    param :repository_ids, Array, :desc => "List of repository ids"
-    param :component_ids, Array, :desc => "List of component content view version ids"
+    param_group :content_view
     def update
       @view.update_attributes!(view_params)
 
