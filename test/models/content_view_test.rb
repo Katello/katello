@@ -45,7 +45,7 @@ class ContentViewTest < ActiveSupport::TestCase
   end
 
   def test_create
-    content_view = FactoryGirl.build(:content_view)
+    content_view = FactoryGirl.build(:katello_content_view)
     assert content_view.save
   end
 

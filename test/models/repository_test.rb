@@ -111,7 +111,7 @@ class RepositoryInstanceTest < RepositoryTestBase
   def test_promoted?
     assert @fedora_17_x86_64.promoted?
 
-    repo = build(:repository,
+    repo = build(:katello_repository,
                  :content_view_version => @fedora_17_x86_64.content_view_version,
                  :product => @fedora_17_x86_64.product
                 )
