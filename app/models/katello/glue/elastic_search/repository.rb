@@ -41,7 +41,7 @@ module Glue::ElasticSearch::Repository
         :product_id => self.product.id,
         :default_content_view => self.content_view_version.has_default_content_view?,
         :name_sort => self.name,
-        :content_view_ids => self.content_views.pluck(:id)
+        :content_view_ids => self.content_view_ids
       }
     end
 
