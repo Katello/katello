@@ -182,7 +182,6 @@ class ContentViewTest < ActiveSupport::TestCase
     3.times do |i|
       ContentViewVersion.create!(:version => i + 2,
                                  :content_view => @library_dev_view,
-                                 :user => User.current,
                                  :environments => [@library_dev_view.organization.library]
                                 )
     end
@@ -195,7 +194,6 @@ class ContentViewTest < ActiveSupport::TestCase
     [5, 6, 7].each do |i|
       ContentViewVersion.create!(:version => i,
                                  :content_view => @library_dev_view,
-                                 :user => User.current,
                                  :environments => [@library_dev_view.organization.library]
                                 )
     end
@@ -205,8 +203,7 @@ class ContentViewTest < ActiveSupport::TestCase
     assert_equal 7, cve.content_view_version.version
 
     version = ContentViewVersion.new(:version => 8,
-                                     :content_view => @library_dev_view,
-                                     :user => User.current)
+                                     :content_view => @library_dev_view)
     version.environments << @library_dev_view.organization.library
     version.save!
     cve = ContentViewEnvironment.where(:environment_id => @library_dev_view.organization.library,

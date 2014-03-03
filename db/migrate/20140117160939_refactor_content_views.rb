@@ -21,7 +21,6 @@ class RefactorContentViews < ActiveRecord::Migration
     drop_table :katello_content_view_version_environments
 
     add_column :katello_content_views, :composite, :boolean
-    add_column :katello_content_view_versions, :user, :string
     add_column :katello_content_view_environments, :content_view_version_id, :integer
     remove_column :katello_content_views, :content_view_definition_id
 
@@ -80,7 +79,6 @@ class RefactorContentViews < ActiveRecord::Migration
     end
 
     remove_column :katello_content_views, :composite
-    remove_column :katello_content_view_versions, :user
     remove_column :katello_content_view_environments, :content_view_version_id
     add_column :katello_content_views, :content_view_definition_id, :integer
 

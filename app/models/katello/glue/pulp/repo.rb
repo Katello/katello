@@ -470,7 +470,7 @@ module Glue::Pulp::Repo
       pulp_task = pulp_tasks.select{ |i| i['tags'].include?("pulp:action:sync") }.first.with_indifferent_access
 
       task = PulpSyncStatus.using_pulp_task(pulp_task) do |t|
-        t.organization = self.environment.organization
+        t.organization = organization
         t.parameters ||= {}
         t.parameters[:options] = options
       end
@@ -488,7 +488,7 @@ module Glue::Pulp::Repo
 
       task = PulpTaskStatus.using_pulp_task(pulp_task)
       task.user ||= User.current
-      task.organization ||= self.environment.organization
+      task.organization ||= organization
       task.save!
 
       notify = task.parameters.try(:[], :options).try(:[], :notify)
