@@ -61,7 +61,7 @@ class ContentViewVersion < Katello::Model
   end
 
   def non_archive_repos
-    self.repositories.select { |repo| repo.environment.present? }
+    self.repositories.non_archived
   end
 
   def products(env = nil)
@@ -176,7 +176,7 @@ class ContentViewVersion < Katello::Model
   end
 
   def trigger_repository_changes(options = {})
-    repos_changed = options[:non_archive] ? non_archive_repos : repositories
+    repos_changed = options[:non_archive] ? non_archive_repos : repositories.reload
 
     Repository.trigger_contents_changed(repos_changed, :wait => true, :reindex => true,
                                         :cloned_repo_overrides => options.fetch(:cloned_repo_overrides, []))
