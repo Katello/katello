@@ -1,5 +1,5 @@
 #
-# Copyright 2013 Red Hat, Inc.
+# Copyright 2014 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -12,21 +12,16 @@
 
 module Actions
   module Katello
-    module Repository
-      class NodeMetadataGenerate < Dynflow::Action
+    module ContentView
+      class UpdateEnvironment < Dynflow::Action
 
-        def plan(repo)
-          plan_self('id' => repo.id)
-        end
-
-        input_format do
-          param :id, Integer
-        end
-
-        def run
-          # We define the run method for the subscribed actions
-          # to be able to run after the action
-          # TODO: remove after fixing in Dynflow
+        def plan(content_view, environment)
+          view_env = content_view.content_view_environment(environment)
+          content_ids = content_view.repos(environment).select(&:enabled).
+              map(&:content_id).uniq
+          plan_action(Candlepin::Environment::SetContent,
+                      cp_environment_id: view_env.cp_id,
+                      content_ids:       content_ids)
         end
 
       end

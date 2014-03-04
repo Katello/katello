@@ -69,7 +69,7 @@ module Glue::Pulp::Repo
     def save_repo_orchestration
       case orchestration_for
       when :create
-        pre_queue.create(:name => "create pulp repo: #{self.name}", :priority => 2, :action => [self, :create_pulp_repo])
+        #pre_queue.create(:name => "create pulp repo: #{self.name}", :priority => 2, :action => [self, :create_pulp_repo])
       when :update
         if self.pulp_update_needed?
           pre_queue.create(:name => "update pulp repo: #{self.name}", :priority => 2,

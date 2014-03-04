@@ -24,23 +24,14 @@
  *   within the table.
  */
 angular.module('Bastion.content-views').controller('ContentViewPublishController',
-    ['$scope', 'gettext',  function ($scope, gettext) {
+    ['$scope', 'gettext', 'ContentView',  function ($scope, gettext, ContentView) {
 
-        $scope.version = {};
+         $scope.version = {};
 
-        $scope.publish = function (contentView, version) {
-            contentView.$publish(version, success, failure);
+         $scope.publish = function (contentView) {
+            ContentView.publish(contentView, function (task) {
+                $scope.transitionTo('content-views.details.tasks.details', {contentViewId: contentView.id, taskId: task.id});
+            });
         };
-
-        function success(view) {
-            $scope.contentView = view;
-            $scope.successMessages = [gettext('Successfully published new version.')];
-            $scope.transitionTo('content-views.details.versions', {contentViewId: view.id});
-        }
-
-        function failure(response) {
-            $scope.errorMessages = [response.data.displayMessage];
-        }
-
     }]
 );

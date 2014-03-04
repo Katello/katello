@@ -20,10 +20,7 @@ class ContentView < Katello::Model
   include AsyncOrchestration
 
   include Glue::Event
-
-  def create_event
-    Katello::Actions::ContentViewCreate
-  end
+  include ForemanTasks::Concerns::ActionSubject
 
   before_destroy :confirm_not_promoted # RAILS3458: this needs to come before associations
 
@@ -225,10 +222,6 @@ class ContentView < Katello::Model
   end
 
   def publish(options = { })
-    if !ready_to_publish?
-      fail _("Cannot publish view. Check for repository conflicts.")
-    end
-    fail "Cannot publish content view without a logged in user." if User.current.nil?
     options = { :async => true, :notify => false }.merge(options)
 
     version = create_new_version
@@ -384,9 +377,12 @@ class ContentView < Katello::Model
     end
   end
 
+  def content_view_environment(environment)
+    self.content_view_environments.where(:environment_id => environment.id).first
+  end
+
   def update_cp_content(env)
-    # retrieve the environment and then update cp content
-    view_env = self.content_view_environments.where(:environment_id => env.id).first
+    view_env = content_view_environment(env)
     view_env.update_cp_content if view_env
   end
 
@@ -424,6 +420,15 @@ class ContentView < Katello::Model
   def cp_environment_id(env)
     ContentViewEnvironment.where(:content_view_id => self, :environment_id => env).first.cp_id
   end
+
+  def create_new_version
+    next_version_id = (self.versions.maximum(:version) || 0) + 1
+
+    ContentViewVersion.create!(:version => next_version_id,
+                               :content_view => self,
+                               :environments => [organization.library])
+  end
+
 
   protected
 
@@ -548,13 +553,8 @@ class ContentView < Katello::Model
     PulpTaskStatus.wait_for_tasks([repo.clone_file_metadata(cloned)])
   end
 
-  def create_new_version
-    next_version_id = (self.versions.maximum(:version) || 0) + 1
-
-    ContentViewVersion.create!(:version => next_version_id,
-                               :content_view => self,
-                               :environments => [organization.library]
-                              )
+  def related_resources
+    self.organization
   end
 end
 end

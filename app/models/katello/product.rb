@@ -53,6 +53,10 @@ class Product < Katello::Model
     with_repos(env, true)
   end
 
+  def library_repositories
+    self.repositories.in_default_view
+  end
+
   def self.find_by_cp_id(cp_id, organization = nil)
     query = self.where(:cp_id => cp_id).scoped(:readonly => false)
     query = query.in_org(organization) if organization

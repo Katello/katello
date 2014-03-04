@@ -1,5 +1,5 @@
 #
-# Copyright 2013 Red Hat, Inc.
+# Copyright 2014 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -11,24 +11,24 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Actions
-  module Katello
-    module Repository
-      class NodeMetadataGenerate < Dynflow::Action
-
-        def plan(repo)
-          plan_self('id' => repo.id)
-        end
-
+  module Candlepin
+    module Product
+      class ContentCreate < Candlepin::Abstract
         input_format do
-          param :id, Integer
+          param :name
+          param :type
+          param :label
+          param :content_url
         end
 
         def run
-          # We define the run method for the subscribed actions
-          # to be able to run after the action
-          # TODO: remove after fixing in Dynflow
+          output[:response] = ::Katello::Resources::Candlepin::Content.
+              create(name: input[:name],
+                     contentUrl: input[:content_url],
+                     type: input[:type],
+                     label: input[:label],
+                     vendor: ::Katello::Provider::CUSTOM)
         end
-
       end
     end
   end

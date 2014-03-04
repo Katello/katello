@@ -1,5 +1,5 @@
 #
-# Copyright 2013 Red Hat, Inc.
+# Copyright 2014 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -11,22 +11,16 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Actions
-  module Katello
+  module Pulp
     module Repository
-      class NodeMetadataGenerate < Dynflow::Action
+      class RemoveRpm < Pulp::Repository::AbstractRemoveContent
 
-        def plan(repo)
-          plan_self('id' => repo.id)
+        def content_extension
+          pulp_extensions.rpm
         end
 
-        input_format do
-          param :id, Integer
-        end
-
-        def run
-          # We define the run method for the subscribed actions
-          # to be able to run after the action
-          # TODO: remove after fixing in Dynflow
+        def criteria
+          super.merge(fields: { :unit => ::Katello::Package::PULP_SELECT_FIELDS})
         end
 
       end

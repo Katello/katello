@@ -27,6 +27,14 @@ module Actions
 
       def external_task=(external_task_data)
         output[:pulp_task] = external_task_data
+        if output[:pulp_task][:state] == 'error'
+          message = if output[:pulp_task][:exception]
+                      Array(output[:pulp_task][:exception]).join('; ')
+                    else
+                      "Pulp task error"
+                    end
+          error! message
+        end
       end
 
       def poll_external_task

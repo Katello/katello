@@ -120,6 +120,10 @@ class Repository < Katello::Model
     content_type == YUM_TYPE
   end
 
+  def file?
+    content_type == FILE_TYPE
+  end
+
   def in_default_view?
     content_view_version && content_view_version.has_default_content_view?
   end
@@ -275,7 +279,7 @@ class Repository < Katello::Model
 
   # TODO: break up method
   # rubocop:disable MethodLength
-  def create_clone(options)
+  def build_clone(options)
     to_env       = options[:environment]
     version      = options[:version]
     content_view = options[:content_view] || to_env.default_content_view
@@ -302,28 +306,32 @@ class Repository < Katello::Model
           content_view.repos(to_env).where(:library_instance_id => library.id).count > 0
     end
 
-    clone = Repository.new(:environment => to_env,
-                           :product => self.product,
-                           :cp_label => self.cp_label,
-                           :library_instance => library,
-                           :label => self.label,
-                           :name => self.name,
-                           :arch => self.arch,
-                           :major => self.major,
-                           :minor => self.minor,
-                           :enabled => self.enabled,
-                           :content_id => self.content_id,
-                           :content_view_version => to_version,
-                           :content_type => self.content_type,
-                           :unprotected => self.unprotected
-                          )
-    clone.checksum_type = self.checksum_type if self.checksum_type
-    clone.pulp_id = clone.clone_id(to_env, content_view, version.try(:version))
-    clone.relative_path = Repository.clone_repo_path(:repository => self,
-                                                     :environment => to_env,
-                                                     :content_view => content_view,
-                                                     :version => version
-                                                    )
+    Repository.new(:environment => to_env,
+                   :product => self.product,
+                   :cp_label => self.cp_label,
+                   :library_instance => library,
+                   :label => self.label,
+                   :name => self.name,
+                   :arch => self.arch,
+                   :major => self.major,
+                   :minor => self.minor,
+                   :enabled => self.enabled,
+                   :content_id => self.content_id,
+                   :content_view_version => to_version,
+                   :content_type => self.content_type,
+                   :unprotected => self.unprotected) do |clone|
+      clone.checksum_type = self.checksum_type if self.checksum_type
+      clone.pulp_id = clone.clone_id(to_env, content_view, version.try(:version))
+      clone.relative_path = Repository.clone_repo_path(:repository => self,
+                                                       :environment => to_env,
+                                                       :content_view => content_view,
+                                                       :version => version)
+    end
+
+  end
+
+  def create_clone(options)
+    clone = build_clone(options)
     clone.save!
     return clone
   end

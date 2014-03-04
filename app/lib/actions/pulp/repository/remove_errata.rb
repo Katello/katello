@@ -1,5 +1,5 @@
 #
-# Copyright 2013 Red Hat, Inc.
+# Copyright 2014 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -10,14 +10,14 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-module Katello
-  module Actions
-    class ContentViewCreate < Dynflow::Action
-
-      def plan(content_view)
-        # third party plugins can hook here to perform additional actions
+module Actions
+  module Pulp
+    module Repository
+      class RemoveErrata < Pulp::Repository::AbstractRemoveContent
+        def content_extension
+          pulp_extensions.errata
+        end
       end
-
     end
   end
 end
