@@ -1,9 +1,7 @@
 FactoryGirl.define do
   factory :katello_filter, :class => Katello::Filter do
     sequence(:name) {|n| "Database_filter#{n}" }
-    content_view
     association :content_view, :factory => :katello_content_view
-    association :repository, :factory => :katello_repository
   end
 
   factory :katello_package_filter, :class => Katello::PackageFilter, :parent => :filter do

@@ -78,6 +78,7 @@ class FilterTest < ActiveSupport::TestCase
   end
 
   def test_content_view_delete_repo
+    @filter.save!
     view =  @filter.content_view
     view.repositories << @repo
     view.save!
