@@ -17,6 +17,7 @@ class Api::V2::UsersController < Api::V1::UsersController
 
   resource_description do
     api_version "v2"
+    api_base_url "#{Katello.config.url_prefix}/api"
   end
 
   def_param_group :user do

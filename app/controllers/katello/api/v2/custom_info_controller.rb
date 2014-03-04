@@ -17,6 +17,7 @@ class Api::V2::CustomInfoController < Api::V1::CustomInfoController
 
   resource_description do
     api_version "v2"
+    api_base_url "#{Katello.config.url_prefix}/api"
   end
 
   def_param_group :informable_identifier do

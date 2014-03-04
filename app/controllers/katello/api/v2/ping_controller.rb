@@ -13,6 +13,10 @@
 module Katello
   class Api::V2::PingController < Api::V2::ApiController
 
+    resource_description do
+      api_version "v2"
+    end
+
     skip_before_filter :authorize
     skip_before_filter :require_user, :only => [:server_status]
 

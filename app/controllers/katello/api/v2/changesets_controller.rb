@@ -17,6 +17,7 @@ class Api::V2::ChangesetsController < Api::V1::ChangesetsController
 
   resource_description do
     api_version "v2"
+    api_base_url "#{Katello.config.url_prefix}/api"
   end
 
   def_param_group :changeset do

@@ -17,6 +17,7 @@ class Api::V2::RoleLdapGroupsController < Api::V1::RoleLdapGroupsController
 
   resource_description do
     api_version "v2"
+    api_base_url "#{Katello.config.url_prefix}/api"
   end
 
   api :POST, "/roles/:role_id/ldap_groups", "Add group to list of LDAP groups associated with the role"

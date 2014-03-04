@@ -19,6 +19,7 @@ class Api::V2::FilterRulesController < Api::V1::FilterRulesController
 
   resource_description do
     api_version "v2"
+    api_base_url "#{Katello.config.url_prefix}/api"
   end
 
   api :POST,
