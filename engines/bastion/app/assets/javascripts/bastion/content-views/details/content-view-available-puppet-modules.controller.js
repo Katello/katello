@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Red Hat, Inc.
+ * Copyright 2014 Red Hat, Inc.
  *
  * This software is licensed to you under the GNU General Public
  * License as published by the Free Software Foundation; either version
@@ -13,19 +13,10 @@
 
 /**
  * @ngdoc object
- * @name  Bastion.content-views.controller:ContentViewFilterDetailsController
- *
- * @requires $scope
+ * @name  Bastion.content-views.controller:AvailablePuppetModulesController
  *
  * @description
- *   Provides the functionality specific to ContentViews for use with the Nutupane UI pattern.
- *   Defines the columns to display and the transform function for how to generate each row
- *   within the table.
  */
-angular.module('Bastion.content-views').controller('ContentViewFilterDetailsController',
-    ['$scope', function ($scope) {
-
-        $scope.filter = $scope.contentView.filters[$scope.$stateParams.filterId - 1];
-
-    }]
+angular.module('Bastion.content-views').controller('AvailablePuppetModulesController',
+    [function () {}]
 );

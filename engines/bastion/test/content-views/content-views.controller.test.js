@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Red Hat, Inc.
+ * Copyright 2014 Red Hat, Inc.
  *
  * This software is licensed to you under the GNU General Public
  * License as published by the Free Software Foundation; either version
@@ -45,5 +45,6 @@ describe('Controller: ContentViewsController', function() {
     it("puts a table object on the scope", function() {
         expect($scope.table).toBeDefined();
     });
+
 });
 

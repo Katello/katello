@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Red Hat, Inc.
+ * Copyright 2014 Red Hat, Inc.
  *
  * This software is licensed to you under the GNU General Public
  * License as published by the Free Software Foundation; either version
@@ -29,7 +29,6 @@
 angular.module('Bastion.content-views').controller('ContentViewRepositoriesListController',
     ['$scope', 'Repository', 'Nutupane', 'CurrentOrganization', 'ContentViewRepositoriesUtil',
     function ($scope, Repository, Nutupane, CurrentOrganization, ContentViewRepositoriesUtil) {
-
         var nutupane;
 
         ContentViewRepositoriesUtil($scope);

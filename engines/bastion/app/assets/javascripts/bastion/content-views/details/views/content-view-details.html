@@ -1,56 +1,63 @@
 <section class="nutupane-details" ng-cloak alch-container-scroll>
 
-  <header class="details-header">
-    <h2>{{ contentView.name }}</h2>
+  <header class="details-header row">
+    <h2 class="col-sm-6">{{ contentView.name }}</h2>
 
-    <div class="col-sm-12">
+    <div class="col-sm-6">
       <div class="fr">
-        <button class="btn btn-primary" ui-sref="content-views.details.publish">
+        <a class="btn btn-primary" ui-sref="content-views.details.publish">
           <i class="icon-paste"></i>
-          {{ "Publish New Version" | translate }}
-        </button>
+          <span translate>Publish New Version</span>
+        </a>
 
-        <button ng-hide="true" class="btn btn-default" ui-sref="content-views.details.clone">
+        <a class="btn btn-default" ng-hide="true" ui-sref="content-views.details.clone">
           <i class="icon-copy"></i>
-          {{ "Clone View" | translate }}
-        </button>
+          <span translate>Clone View</span>
+        </a>
 
         <button ng-hide="true" class="btn btn-default" ui-sref="content-views.index">
           <i class="icon-trash"></i>
           {{ "Remove View" | translate }}
         </button>
 
-        <button class="btn btn-default" ui-sref="content-views.index">
+        <a class="btn btn-default" ui-sref="content-views.index">
           <i class="icon-remove"></i>
-          {{ "Close" | translate }}
-        </button>
+          <span translate>Close</span>
+        </a>
       </div>
 
     </div>
   </header>
 
-  <nav class="details-navigation">
-    <ul>
+  <nav>
+    <ul class="nav nav-tabs">
       <li ng-class="{active: isState('content-views.details.versions')}">
         <a ui-sref="content-views.details.versions" translate>
           Versions
         </a>
       </li>
 
-      <li ng-class="{active: stateIncludes('content-views.details.repositories')}">
-        <a ui-sref="content-views.details.repositories.list" translate>
-          Repositories
+      <li class="dropdown" ng-class="{active: stateIncludes('content-views.details.repositories') || stateIncludes('content-views.details.filters')}">
+        <a class="dropdown-toggle">
+          <span translate>Content</span>
+          <i class="icon-chevron-down"></i>
         </a>
+        <ul class="dropdown-menu">
+          <li>
+            <a ui-sref="content-views.details.repositories.list" translate>
+              Repositories
+            </a>
+          </li>
+          <li>
+            <a ui-sref="content-views.details.filters.list" translate>
+              Filters
+            </a>
+          </li>
+        </ul>
       </li>
 
-      <li ng-hide="true" ng-class="{active: stateIncludes('content-views.details.filters')}">
-        <a ui-sref="content-views.details.filters.list" translate>
-          Package/Errata Filters
-        </a>
-      </li>
-
-      <li ng-hide="true" ng-class="{active: isState('content-views.details.puppet-modules')}">
-        <a ui-sref="content-views.details.puppet-modules" translate>
+      <li ng-class="{active: stateIncludes('content-views.details.puppet-modules')}">
+        <a ui-sref="content-views.details.puppet-modules.list" translate>
           Puppet Modules
         </a>
       </li>

@@ -7,18 +7,17 @@
            ng-model="repositorySearch"/>
   </div>
 
-  <table alch-table="table" class="table table-striped table-bordered" ng-class="{'table-mask': table.working}">
+  <table class="table table-striped table-bordered" alch-table="table" ng-class="{'table-mask': table.working}">
     <thead>
       <tr alch-table-head row-select>
         <th alch-table-column>{{ "Version" | translate }}</th>
         <th alch-table-column>{{ "Promoted" | translate }}</th>
         <th alch-table-column>{{ "Environments" | translate }}</th>
         <th alch-table-column>{{ "Repositories" | translate }}</th>
-        <th alch-table-column>{{ "Packages" | translate }}</th>
+        <th class="col-sm-2" alch-table-column>{{ "Content" | translate }}</th>
         <th alch-table-column>{{ "Puppet Modules" | translate }}</th>
-        <th alch-table-column>{{ "Errata" | translate }}</th>
         <th alch-table-column>{{ "Author" | translate }}</th>
-        <th alch-table-column>{{ "Promote" | translate }}</th>
+        <th class="col-sm-1" alch-table-column>{{ "Promote" | translate }}</th>
       </tr>
     </thead>
 
@@ -32,17 +31,26 @@
           </li>
         </td>
         <td alch-table-cell class="number-cell">{{ version.counts.repositories }}</td>
-        <td alch-table-cell class="number-cell">{{ version.counts.packages }}</td>
-        <td alch-table-cell class="number-cell">{{ version.counts.puppet_modules }}</td>
         <td alch-table-cell>
-          <span><i class="icon-warning-sign inline-icon"></i>{{ version.counts.errata.security }}</span>
-          <span><i class="icon-bug inline-icon"></i>{{ version.counts.errata.bugs }}</span>
-          <span><i class="icon-plus-sign-alt inline-icon"></i>{{ version.counts.errata.enhancements }}</span>
+          <div translate>
+            {{ repository.content_counts.rpm || 0 }} Packages
+          </div>
+          <div translate>
+            {{ repository.content_counts.erratum || 0 }} Errata
+            <span>(</span>
+            <span><i class="icon-warning-sign inline-icon"></i>{{ version.counts.errata.security || 0 }}</span>
+            <span><i class="icon-bug inline-icon"></i>{{ version.counts.errata.bugs || 0 }}</span>
+            <span><i class="icon-plus-sign-alt inline-icon"></i>{{ version.counts.errata.enhancements || 0 }}</span>
+            <span>)</span>
+          </div>
         </td>
+        <td alch-table-cell class="number-cell">{{ version.counts.puppet_modules }}</td>
         <td alch-table-cell>{{ version.user }}</td>
-        <td>
-          <a ui-sref="content-views-details.promotion({contentViewId: contentView.id, versionId: version.id})">
-            <i class="icon-share-alt"></i>
+        <td class="action-cell">
+          <a class="btn btn-default"
+             ui-sref="content-views.details.promotion({contentViewId: contentView.id, versionId: version.id})"
+             translate>
+            Promote
           </a>
         </td>
       </tr>

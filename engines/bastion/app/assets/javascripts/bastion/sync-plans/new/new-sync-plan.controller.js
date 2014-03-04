@@ -35,13 +35,13 @@ angular.module('Bastion.sync-plans').controller('NewSyncPlanController',
         $scope.syncPlan.startTime = now;
         $scope.syncPlan.interval = $scope.intervals[0];
 
-        function success(response) {
+        function success(syncPlan) {
             $scope.working = false;
-            $scope.successMessages = response.displayMessages;
+            $scope.successMessages = [gettext('New sync plan successfully created.')];
             if ($scope.product) {
-                $scope.product['sync_plan_id'] = $scope.syncPlan.id;
+                $scope.product['sync_plan_id'] = syncPlan.id;
             } else if ($scope.syncPlanTable) {
-                $scope.syncPlanTable.rows.unshift($scope.syncPlan);
+                $scope.syncPlanTable.rows.unshift(syncPlan);
             }
             $scope.transitionBack();
         }

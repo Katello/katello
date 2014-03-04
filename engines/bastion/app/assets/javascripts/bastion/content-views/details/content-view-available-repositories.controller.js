@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Red Hat, Inc.
+ * Copyright 2014 Red Hat, Inc.
  *
  * This software is licensed to you under the GNU General Public
  * License as published by the Free Software Foundation; either version
@@ -36,7 +36,8 @@ angular.module('Bastion.content-views').controller('ContentViewAvailableReposito
 
         nutupane = new Nutupane(Repository, {
             'organization_id': CurrentOrganization,
-            'library': true
+            'library': true,
+            'content_type': 'yum'
         });
         nutupane.searchTransform = function (term) {
             var addition = "NOT ( content_view_ids:" + $scope.$stateParams.contentViewId + " )";

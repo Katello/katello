@@ -32,6 +32,7 @@ angular.module('alchemy').directive('alchContainerScroll', ['$window', '$timeout
                         element.find(attrs.controlWidth).width(windowWidth);
                     }
                     element.outerHeight(windowHeight - offset);
+                    element.height(windowHeight - offset);
                 };
                 windowElement.bind('resize', addScroll);
                 $timeout(function () {

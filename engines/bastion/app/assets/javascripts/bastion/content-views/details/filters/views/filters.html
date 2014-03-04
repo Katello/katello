@@ -1,0 +1,64 @@
+<div data-extend-template="layouts/details-nutupane.html">
+
+  <div data-block="header">
+    <h3 translate>Filters</h3>
+  </div>
+
+  <div data-block="actions">
+    <button class="btn btn-default" ui-sref="content-views.details.filters.new">
+      <i class="icon-plus"></i>
+      <span translate>New Filter</span>
+    </button>
+    <button class="btn btn-default" ng-click="removeFilters()">
+      <i class="icon-trash"></i>
+      <span translate>Remove Filters</span>
+    </button>
+  </div>
+
+  <div data-block="table">
+    <table class="table table-striped table-bordered" ng-class="{'table-mask': detailsTable.working}">
+
+      <thead>
+        <tr alch-table-head row-select>
+          <th alch-table-column>{{ "Name" | translate }}</th>
+          <th alch-table-column>{{ "Description" | translate }}</th>
+          <th alch-table-column>{{ "Updated" | translate }}</th>
+          <th alch-table-column>{{ "Content Type" | translate }}</th>
+          <th alch-table-column>{{ "Type" | translate }}</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr alch-table-row ng-repeat="filter in detailsTable.rows" row-select="filter">
+          <td alch-table-cell>
+            <a ng-if="filter.type === 'erratum' && !filter.rules[0].types"
+               ui-sref="content-views.details.filters.details.erratum.list({filterId: filter.id})">
+              {{ filter.name }}
+            </a>
+            <a ng-if="filter.type === 'erratum' && filter.rules[0].types"
+               ui-sref="content-views.details.filters.details.erratum.dateType({filterId: filter.id})">
+              {{ filter.name }}
+            </a>
+            <a ng-if="filter.type === 'rpm'"
+               ui-sref="content-views.details.filters.details.rpm({filterId: filter.id})">
+              {{ filter.name }}
+            </a>
+            <a ng-if="filter.type === 'package_group'"
+               ui-sref="content-views.details.filters.details.package_group.list({filterId: filter.id})">
+              {{ filter.name }}
+            </a>
+          </td>
+          <td alch-table-cell>{{ filter.description }}</td>
+          <td alch-table-cell>{{ filter.updated_at | date:"short" }}</td>
+          <td alch-table-cell>
+            {{ filter.type | filterContentType }}
+            <span ng-if="filter.type === 'erratum' && filter.rules[0].types">{{ '- Date and Type' | translate }}</span>
+          </td>
+          <td alch-table-cell>{{ filter.inclusion | filterType }}</td>
+        </tr>
+      </tbody>
+
+    </table>
+  </div>
+
+</div>

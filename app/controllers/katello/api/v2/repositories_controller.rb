@@ -59,6 +59,7 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
   param :content_view_id, :number, :required => false, :desc => "id of a content view to show repositories in"
   param :library, :bool, :required => false, :desc => "show repositories in Library and the default content view"
   param :enabled, :bool, :required => false, :desc => "limit to only enabled repositories"
+  param :content_type, String, :required => false, :desc => "limit to only repositories of this time"
   param_group :search, Api::V2::ApiController
   def index
     options = sort_params
@@ -76,6 +77,7 @@ class Api::V2::RepositoriesController < Api::V2::ApiController
     options[:filters] << {:term => {:environment_id => params[:environment_id]}} if params[:environment_id]
     options[:filters] << {:term => {:content_view_ids => params[:content_view_id]}} if params[:content_view_id]
     options[:filters] << {:term => {:content_view_version_id => @organization.default_content_view.versions.first.id}} if params[:library]
+    options[:filters] << {:term => {:content_type => params[:content_type]}} if params[:content_type]
 
     @search_service.model = Repository
     repositories, total_count = @search_service.retrieve(params[:search], params[:offset], options)

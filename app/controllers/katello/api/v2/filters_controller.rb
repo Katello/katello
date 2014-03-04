@@ -101,8 +101,13 @@ class Api::V2::FiltersController < Api::V2::ApiController
                       { :not => { :terms => { :errata_id_exact => current_errata_ids } } }]
     options = { :filters => search_filters }
 
+    collection = item_search(Errata, params, options)
+    collection[:results] = collection[:results].map do |erratum|
+      Katello::Errata.new_from_search(erratum.as_json)
+    end
+
     respond_for_index :template => '../errata/index',
-                      :collection => item_search(Errata, params, options)
+                      :collection => collection
   end
 
   api :GET, "/content_views/:content_view_id/filters/:id/available_package_groups",

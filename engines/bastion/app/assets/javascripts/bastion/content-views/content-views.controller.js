@@ -37,5 +37,6 @@ angular.module('Bastion.content-views').controller('ContentViewsController',
 
         $scope.table = nutupane.table;
         $scope.removeRow = nutupane.removeRow;
+
     }]
 );

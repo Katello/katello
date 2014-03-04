@@ -1,5 +1,9 @@
 <div class="details details-full">
 
+  <h3 translate>
+    Repository Selection
+  </h3>
+
   <nav>
     <ul class="nav nav-tabs">
       <li ng-class="{active: isState('content-views.details.repositories.list')}">
@@ -11,16 +15,14 @@
       </li>
 
       <li ng-class="{active: isState('content-views.details.repositories.available')}" ng-show="!contentView.permissions.editable">
-        <a ui-sref="content-views.details.repositories.available">
-          <span translate>
-            Add
-          </span>
+        <a ui-sref="content-views.details.repositories.available" translate>
+          Add
         </a>
       </li>
     </ul>
   </nav>
 
-  <div class="details-header">
+  <div class="details-header row">
     <div class="col-sm-8">
       <div class="input-group">
 
@@ -65,7 +67,11 @@
 
         <tbody>
           <tr alch-table-row ng-repeat="repository in repositoriesTable.rows | filter:repositoryFilter" row-select="repository">
-            <td alch-table-cell>{{ repository.name }}</td>
+            <td alch-table-cell>
+              <a ui-sref="products.details.repositories.info({productId: repository.product.id, repositoryId: repository.id})">
+                {{ repository.name }}
+              </a>
+            </td>
             <td alch-table-cell>{{ repository.product.name }}</td>
             <td alch-table-cell>
               <span ng-show="repository.feed">

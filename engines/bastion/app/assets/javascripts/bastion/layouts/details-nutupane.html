@@ -1,10 +1,10 @@
 <section>
+
   <div alch-alert success-messages="successMessages" error-messages="errorMessages"></div>
 
-    <h4>
-      <span data-block="header">
-      </span>
-    </h4>
+  <h4>
+    <span data-block="header"></span>
+  </h4>
 
   <div class="row nutupane-bar">
     <div class="col-sm-3">
@@ -24,20 +24,22 @@
       <span translate>Showing {{ detailsTable.rows.length }} of {{ detailsTable.resource.subtotal }} ({{ detailsTable.resource.total }} Total)</span>
     </div>
 
-    <div class="fr">
-      <div class="nutupane-info fl">
-        <span translate>{{ detailsTable.numSelected }} Selected</span>
-        <span>|</span>
-        <a class="deselect-action"
-           translate
-           ng-class="{ 'disabled-link' : detailsTable.numSelected == 0 }"
-           ng-click="detailsTable.selectAllResults(false)">
-          Deselect All
-        </a>
-      </div>
+    <div class="col-sm-6">
+      <div class="fr">
+        <span class="nutupane-info fl">
+          <span translate>{{ detailsTable.numSelected }} Selected</span>
+          <span>|</span>
+          <a class="deselect-action"
+             translate
+             ng-class="{ 'disabled-link' : detailsTable.numSelected == 0 }"
+             ng-click="detailsTable.selectAllResults(false)">
+            Deselect All
+          </a>
+        </span>
 
-      <div class="fl">
-        <div data-block="actions"></div>
+        <span class="fl">
+          <span data-block="actions"></span>
+        </span>
       </div>
     </div>
 
