@@ -14,3 +14,12 @@ child :composite_content_views do
 end
 
 extends 'katello/api/v2/common/timestamps'
+
+child :environments => :environments do
+  attributes :id, :name, :label
+end
+
+child :active_history => :active_history do
+  attributes :id
+  attributes :katello_environment_id => :environment_id
+end

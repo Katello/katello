@@ -13,14 +13,13 @@
 
 /**
  * @ngdoc module
- * @name  Bastion.content-views
+ * @name  Bastion.content-views.versions
  *
  * @description
- *   Module for content view related functionality.
+ *   Module for content view version related functionality.
  */
-angular.module('Bastion.content-views', [
+angular.module('Bastion.content-views.versions', [
     'ngResource',
     'ui.router',
-    'Bastion.content-views.versions',
     'Bastion.widgets'
 ]);

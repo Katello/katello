@@ -16,6 +16,8 @@
  * @name  Bastion.content-views.controller:ContentViewVersionsController
  *
  * @requires $scope
+ * @requires gettext
+ * @requires ContentViewVersion
  *
  * @description
  *   Provides the functionality specific to ContentViews for use with the Nutupane UI pattern.
@@ -23,9 +25,24 @@
  *   within the table.
  */
 angular.module('Bastion.content-views').controller('ContentViewVersionsController',
-    ['$scope', function ($scope) {
+    ['$scope', 'gettext', 'ContentViewVersion', function ($scope, gettext, ContentViewVersion) {
 
         $scope.table = {};
 
+        ContentViewVersion.query({'content_view_id': $scope.$stateParams.contentViewId}, function (data) {
+            $scope.versions = data.results;
+        });
+
+        $scope.status = function (version) {
+            var count = version['active_history'].length,
+                status = '';
+
+            if (count > 1) {
+                status = gettext("Promoting to %count environments.").replace('%count', count);
+            } else if (count === 1) {
+                status =  gettext("Promoting to 1 environment.");
+            }
+            return status;
+        };
     }]
 );

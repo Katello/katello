@@ -28,5 +28,7 @@ class ContentViewHistory < Katello::Model
   validates :status, :inclusion => {:in          => STATUSES,
                                     :allow_blank => false}
 
+  scope :active, where(:status => IN_PROGRESS)
+
 end
 end

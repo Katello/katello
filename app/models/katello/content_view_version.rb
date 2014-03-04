@@ -44,6 +44,10 @@ class ContentViewVersion < Katello::Model
     name
   end
 
+  def active_history
+    self.history.active
+  end
+
   def name
     "#{content_view} #{version}"
   end
@@ -96,7 +100,7 @@ class ContentViewVersion < Katello::Model
         self.content_view.versions.in_environment(from_env).count > 1
   end
 
-  def promote(to_env)
+  def promote(to_env, options = {:async => true})
     history = ContentViewHistory.create!(:content_view_version => self, :user => User.current.login,
                                :environment => to_env, :status => ContentViewHistory::IN_PROGRESS)
 
@@ -106,8 +110,17 @@ class ContentViewVersion < Katello::Model
     promote_version.environments << to_env unless promote_version.environments.include?(to_env)
     promote_version.save!
 
+    replacing_version.environments.delete(to_env) if replacing_version
+
+    if options[:async]
+      self.async(:organization => self.content_view.organization).promote_content(to_env, replacing_version, history)
+    else
+      promote_content(to_env, replacing_version, history)
+    end
+  end
+
+  def promote_content(to_env, replacing_version, history)
     if replacing_version
-      replacing_version.environments.delete(to_env)
       PulpTaskStatus.wait_for_tasks(prepare_repos_for_promotion(replacing_version.repos(to_env), self.archived_repos))
     end
 
@@ -145,7 +158,7 @@ class ContentViewVersion < Katello::Model
       clone = self.get_repo_clone(to_env, repo).first
       if clone.nil?
         # this repo doesn't currently exist in the next environment, so create it
-        clone = repo.create_clone({:environment => to_env, :version => self, :content_view => self.content_view})
+        clone = repo.create_clone({:environment => to_env, :content_view => self.content_view})
         tasks << repo.clone_contents(clone)
       else
         # this repo already exists in the next environment, so update it

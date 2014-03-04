@@ -91,9 +91,7 @@ describe('Controller: PathController', function () {
         var env = {id: 1};
 
         $scope.row = {
-            path: [
-                {environment: env}
-            ]
+            environments: [env]
         };
 
         spyOn(Environment, 'save');
@@ -126,10 +124,7 @@ describe('Controller: PathController', function () {
         var env1 = {id: 1}, env2 = {id: 2};
 
         $scope.row = {
-            path: [
-                {environment: env1},
-                {environment: env2}
-            ]
+            environments: [env1, env2]
         };
 
         expect($scope.isLastEnvironment(env1)).toBe(false);

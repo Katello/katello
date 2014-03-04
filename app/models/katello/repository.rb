@@ -116,6 +116,10 @@ class Repository < Katello::Model
     content_type == PUPPET_TYPE
   end
 
+  def archive?
+    self.environment.nil?
+  end
+
   def yum?
     content_type == YUM_TYPE
   end
