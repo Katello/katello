@@ -1,6 +1,11 @@
 <div>
 
-  <h3 translate>Promote to Next Environment</h3>
+  <a ui-sref="content-views.details.versions({contentViewId: contentView.id})" >
+    <i class="icon-backward"></i>
+    {{ "Back to Version List" | translate }}
+  </a>
+
+  <h3 translate>Promote Version {{ version.version }}</h3>
 
   <p class="details" translate>
     Choose one or more lifecycle environments from the existing promotion paths
@@ -14,7 +19,7 @@
        enabled-check="enabledCheck(item)"></div>
 
   <div>
-    <button class="btn btn-primary btn-lg" ng-click="promote()" translate>
+    <button class="btn btn-primary btn-lg" ng-disabled="promoting || !selectedEnvironment" ng-click="promote()" translate>
       Promote Version
     </button>
 
