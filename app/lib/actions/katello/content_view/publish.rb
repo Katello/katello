@@ -25,10 +25,10 @@ module Actions
 
           sequence do
             concurrence do
-              content_view.repositories.each do |repo|
+              content_view.repositories.each do |repository|
                 sequence do
-                  plan_action(Repository::CloneToVersion, repo, version)
-                  plan_action(Repository::CloneToEnvironment, version_repo(version, repo), library)
+                  clone_to_version = plan_action(Repository::CloneToVersion, repository, version)
+                  plan_action(Repository::CloneToEnvironment, clone_to_version.new_repository, library)
                 end
               end
               repos_to_delete(content_view).each do |repo|
@@ -45,10 +45,6 @@ module Actions
         end
 
         private
-
-        def version_repo(version, repo)
-          version.repositories.find_by_library_instance_id!(repo.id)
-        end
 
         def repos_to_delete(content_view)
           content_view.repos(content_view.organization.library).find_all do |repo|

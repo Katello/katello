@@ -22,7 +22,7 @@ module Actions
           plan_self
 
           org = repository.organization
-          #check the instance variable, as we do not want to go to pulp
+          # check the instance variable, as we do not want to go to pulp
           checksum_type = repository.checksum_type if self.instance_variable_get('@checksum_type')
           if repository.puppet?
             path = File.join(::Katello.config.puppet_repo_root,
@@ -46,6 +46,9 @@ module Actions
                         checksum_type: checksum_type,
                         path: path,
                         with_importer: true)
+
+            # when creating a clone, the following actions are handled by the
+            # publish/promote process
             unless clone
               content_create = plan_action(Katello::Product::ContentCreate, repository)
               plan_action(Katello::Repository::MetadataGenerate, repository)

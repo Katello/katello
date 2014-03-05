@@ -15,14 +15,17 @@ module Actions
     module Repository
       class CloneToVersion < Actions::Base
 
+        # allows accessing the build object from the superior action
+        attr_accessor :new_repository
+
         def plan(repository, content_view_version)
           content_view = content_view_version.content_view
           filters = content_view.filters.applicable(repository)
-          clone = repository.build_clone(content_view: content_view,
-                                         version: content_view_version)
+          self.new_repository = repository.build_clone(content_view: content_view,
+                                                       version: content_view_version)
           sequence do
-            plan_action(Repository::Create, clone, true)
-            plan_action(Repository::CloneContent, repository, clone, filters)
+            plan_action(Repository::Create, new_repository, true)
+            plan_action(Repository::CloneContent, repository, new_repository, filters)
           end
         end
 
