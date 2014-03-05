@@ -26,7 +26,9 @@ module Katello
     root = File.expand_path(File.join(File.dirname(__FILE__), '..', '..'))
 
     @configuration_loader ||= Configuration::Loader.new(
-      :config_file_paths        => %W(#{root}/config/katello.yml /etc/katello/katello.yml),
+      :config_file_paths        => %W(#{root}/config/katello.yml
+                                      #{Rails.root}/config/settings.plugins.d/katello.yaml
+                                      /etc/katello/katello.yml),
       :default_config_file_path => "#{root}/config/katello_defaults.yml",
 
       :validation               => lambda do |*_|
