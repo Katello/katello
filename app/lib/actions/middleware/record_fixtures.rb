@@ -24,7 +24,7 @@ module Actions
 
       def dump(variant)
         fail unless [:input, :output].include? variant
-        File.write(log_file(variant), YAML.dump(self.action.send(variant)))
+        File.write(log_file(variant), YAML.dump(action.send(variant)))
       end
 
       def log_base
@@ -32,7 +32,7 @@ module Actions
       end
 
       def log_subdirs
-        action.action_class.name.underscore
+        action.class.name.underscore
       end
 
       def log_file(variant)
