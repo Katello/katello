@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Red Hat, Inc.
+ * Copyright 2014 Red Hat, Inc.
  *
  * This software is licensed to you under the GNU General Public
  * License as published by the Free Software Foundation; either version
@@ -13,31 +13,34 @@
 
 describe('Controller: NewContentViewController', function() {
     var $scope,
+        $controller,
+        dependencies,
         FormUtils,
         ContentView;
 
     beforeEach(module('Bastion.content-views', 'Bastion.test-mocks'));
 
-    beforeEach(function() {
-        ContentView = {};
-    });
-
     beforeEach(inject(function($injector) {
-        var $controller = $injector.get('$controller'),
-            ContentView = $injector.get('MockResource').$new();
+        $controller = $injector.get('$controller');
+
+        ContentView = $injector.get('MockResource').$new();
 
         $scope = $injector.get('$rootScope').$new();
-        FormUtils = $injector.get('FormUtils');
+        FormUtils = {
+            labelize: function () {}
+        };
 
         $scope.contentViewForm = $injector.get('MockForm');
         $scope.$parent.table = {addRow: function () {}};
 
-        $controller('NewContentViewController', {
+        dependencies = {
             $scope: $scope,
             ContentView: ContentView,
             FormUtils: FormUtils,
             CurrentOrganization: 'CurrentOrganization'
-        });
+        };
+
+        $controller('NewContentViewController', dependencies);
     }));
 
     it('should attach a new content view resource on to the scope', function() {
@@ -56,6 +59,21 @@ describe('Controller: NewContentViewController', function() {
         expect($scope.$parent.table.addRow).toHaveBeenCalled();
         expect($scope.transitionTo).toHaveBeenCalledWith('content-views.details.repositories.available',
                                                          {contentViewId: 1})
+    });
+
+    it("should save a new composite content view resource", function () {
+        var contentView = $scope.contentView;
+        spyOn($scope.$parent.table, 'addRow');
+        spyOn($scope, 'transitionTo');
+        spyOn(contentView, '$save').andCallThrough();
+
+        contentView.composite = true;
+        $scope.save(contentView);
+
+        expect(contentView.$save).toHaveBeenCalled();
+        expect($scope.$parent.table.addRow).toHaveBeenCalled();
+        expect($scope.transitionTo).toHaveBeenCalledWith('content-views.details.composite-content-views.available',
+            {contentViewId: 1})
     });
 
     it('should fetch a label whenever the name changes', function() {
