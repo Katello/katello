@@ -1,5 +1,5 @@
 #
-# Copyright 2013 Red Hat, Inc.
+# Copyright 2014 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -11,19 +11,16 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Actions
-  module Katello
+  module Pulp
     module Repository
-      class Destroy < Actions::EntryAction
+      class Destroy < Pulp::Abstract
 
-        def plan(repository)
-          action_subject(repository)
-          plan_action(Pulp::Repository::Destroy, pulp_id: repository.pulp_id)
-          plan_action(Product::ContentDestroy, repository)
-          repository.destroy
+        input_format do
+          param :pulp_id
         end
 
-        def humanized_name
-          _("Delete")
+        def run
+          output[:response] = pulp_extensions.repository.delete(input[:pulp_id])
         end
 
       end

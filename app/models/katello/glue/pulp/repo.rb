@@ -22,7 +22,6 @@ module Glue::Pulp::Repo
     base.class_eval do
 
       before_save :save_repo_orchestration
-      before_destroy :destroy_repo_orchestration
 
       lazy_accessor :pulp_repo_facts,
                     :initializer => (lambda do |s|
@@ -68,8 +67,6 @@ module Glue::Pulp::Repo
   module InstanceMethods
     def save_repo_orchestration
       case orchestration_for
-      when :create
-        #pre_queue.create(:name => "create pulp repo: #{self.name}", :priority => 2, :action => [self, :create_pulp_repo])
       when :update
         if self.pulp_update_needed?
           pre_queue.create(:name => "update pulp repo: #{self.name}", :priority => 2,
@@ -240,21 +237,12 @@ module Glue::Pulp::Repo
       PulpTaskStatus.using_pulp_task(task)
     end
 
-    def destroy_repo
-      Katello.pulp_server.extensions.repository.delete(self.pulp_id)
-      true
-    end
-
     def other_repos_with_same_product_and_content
       Repository.where(:content_id => self.content_id).in_product(self.product).pluck(:pulp_id) - [self.pulp_id]
     end
 
     def other_repos_with_same_content
       Repository.where(:content_id => self.content_id).pluck(:pulp_id) - [self.pulp_id]
-    end
-
-    def destroy_repo_orchestration
-      pre_queue.create(:name => "delete pulp repo : #{self.name}", :priority => 3, :action => [self, :destroy_repo])
     end
 
     def package_ids

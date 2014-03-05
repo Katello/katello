@@ -1,5 +1,5 @@
 #
-# Copyright 2013 Red Hat, Inc.
+# Copyright 2014 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -11,21 +11,18 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Actions
-  module Katello
-    module Repository
-      class Destroy < Actions::EntryAction
-
-        def plan(repository)
-          action_subject(repository)
-          plan_action(Pulp::Repository::Destroy, pulp_id: repository.pulp_id)
-          plan_action(Product::ContentDestroy, repository)
-          repository.destroy
+  module Candlepin
+    module Product
+      class ContentRemove < Candlepin::Abstract
+        input_format do
+          param :product_id
+          param :content_id
         end
 
-        def humanized_name
-          _("Delete")
+        def run
+          output[:response] = ::Katello::Resources::Candlepin::Product.
+              remove_content(input[:product_id], input[:content_id])
         end
-
       end
     end
   end
