@@ -59,6 +59,7 @@ angular.module('Bastion.content-views').controller('ContentViewPromotionControll
         $scope.currentOrganization = CurrentOrganization;
 
         $scope.promote = function () {
+            $scope.promoting = true;
             ContentViewVersion.promote({id: $scope.version.id, 'environment_id': $scope.selectedEnvironment.id},
                 success, failure);
         };
@@ -67,11 +68,13 @@ angular.module('Bastion.content-views').controller('ContentViewPromotionControll
             var message = gettext('Successfully initiated promotion of %cv version %ver to %env.');
             message = message.replace('%cv', $scope.contentView.name).replace('%env', $scope.selectedEnvironment.name);
             message = message.replace('%ver', $scope.version.version);
+            $scope.promoting = false;
             $scope.$parent.successMessages = [message];
             $scope.transitionTo('content-views.details.versions', {contentViewId: $scope.contentView.id});
         }
 
         function failure(response) {
+            $scope.promoting = false;
             $scope.$parent.errorMessages = [response.data.displayMessage];
         }
 
