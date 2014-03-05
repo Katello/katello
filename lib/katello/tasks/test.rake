@@ -47,6 +47,7 @@ namespace :test do
           "#{Katello::Engine.root}/test/controllers/content_views_controller_test.rb",
           "#{Katello::Engine.root}/test/controllers/filter_rules_controller_test.rb",
           "#{Katello::Engine.root}/test/controllers/filters_controller_test.rb",
+          "#{Katello::Engine.root}/test/controllers/products_controller_test.rb",
           "#{Katello::Engine.root}/test/lib/repo_discovery_test.rb",
           "#{Katello::Engine.root}/test/models/authorization/*_test.rb",
           "#{Katello::Engine.root}/test/models/association_test.rb",

@@ -199,6 +199,10 @@ Katello::Engine.routes.draw do
   end
 
   resources :products, :only => [:index] do
+    member do
+      put :refresh_content
+      put :disable_content
+    end
     collection do
       get :auto_complete
       get :all
