@@ -19,7 +19,6 @@ module Actions
 
         def plan(repository, clone = false)
           repository.disable_auto_reindex!
-          repository.content_id = "not_set" # TODO: remove content_id constraint
           repository.save!
           action_subject(repository)
           plan_self
@@ -28,9 +27,9 @@ module Actions
           checksum_type = repository.checksum_type if self.instance_variable_get('@checksum_type')
           if repository.puppet?
             path = File.join(::Katello.config.puppet_repo_root,
-                             ::Katello::Environment.construct_name(repository.environment.organization,
-                                                                   repository.environment,
-                                                                   repository.content_view),
+                             ::Katello::KTEnvironment.construct_name(repository.environment.organization,
+                                                                     repository.environment,
+                                                                     repository.content_view),
                              'modules')
           else
             path = repository.relative_path
