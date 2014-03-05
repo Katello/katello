@@ -21,30 +21,39 @@ module Actions
             fail _("Cannot publish view. Check for repository conflicts.")
           end
           version = content_view.create_new_version
+          library = content_view.organization.library
+
           sequence do
             concurrence do
               content_view.repositories.each do |repo|
                 sequence do
-                  filters = content_view.filters.applicable(repo)
-                  clone = repo.build_clone(content_view: content_view,
-                                           version: version)
-                  plan_action(Repository::Create, clone, true)
-                  plan_action(Repository::CloneContent, repo, clone, filters)
-                  plan_action(Repository::Promote, clone, clone.organization.library)
+                  plan_action(Repository::CloneToVersion, repo, version)
+                  plan_action(Repository::CloneToEnvironment, version_repo(version, repo), library)
                 end
               end
-
-              # TODO: unpublish deleted repos
+              repos_to_delete(content_view).each do |repo|
+                plan_action(Repository::Destroy, repo)
+              end
             end
 
-            plan_action(ContentView::UpdateEnvironment,
-                        content_view,
-                        content_view.organization.library)
+            plan_action(ContentView::UpdateEnvironment, content_view, library)
           end
         end
 
         def humanized_name
           _("Publish")
+        end
+
+        private
+
+        def version_repo(version, repo)
+          version.repositories.find_by_library_instance_id!(repo.id)
+        end
+
+        def repos_to_delete(content_view)
+          content_view.repos(content_view.organization.library).find_all do |repo|
+            !content_view.repository_ids.include?(repo.library_instance_id)
+          end
         end
 
       end

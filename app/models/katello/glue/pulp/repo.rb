@@ -26,7 +26,11 @@ module Glue::Pulp::Repo
       lazy_accessor :pulp_repo_facts,
                     :initializer => (lambda do |s|
                                        if pulp_id
-                                         Katello.pulp_server.extensions.repository.retrieve_with_details(pulp_id)
+                                         begin
+                                           Katello.pulp_server.extensions.repository.retrieve_with_details(pulp_id)
+                                         rescue RestClient::ResourceNotFound
+                                           nil # not found = it was not orchestrated yet
+                                         end
                                        end
                                      end)
 

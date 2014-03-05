@@ -86,6 +86,7 @@ class Repository < Katello::Model
   scope :puppet_type, where(:content_type => PUPPET_TYPE)
   scope :non_puppet, where("content_type != ?", PUPPET_TYPE)
   scope :non_archived, where('environment_id is not NULL')
+  scope :archived, where(environment_id: nil)
 
   def organization
     if self.environment
@@ -320,7 +321,12 @@ class Repository < Katello::Model
                    :content_view_version => to_version,
                    :content_type => self.content_type,
                    :unprotected => self.unprotected) do |clone|
-      clone.checksum_type = self.checksum_type if self.checksum_type
+      # We need to check this becuase sometimes, we want to build the clone
+      # before the orchestration begins: ideally, lazy_accessors should not
+      # call to external services when the resource is locked on creation
+      if self.pulp_repo_facts &&  self.checksum_type
+        clone.checksum_type = self.checksum_type
+      end
       clone.pulp_id = clone.clone_id(to_env, content_view, version.try(:version))
       clone.relative_path = Repository.clone_repo_path(:repository => self,
                                                        :environment => to_env,

@@ -33,35 +33,21 @@ module Actions
 
             sequence do
               if filters.empty? || copy_clauses
-                plan_copy(Pulp::Repository::CopyRpm,
-                          source_repo, target_repo, copy_clauses)
+                plan_copy(Pulp::Repository::CopyRpm, source_repo, target_repo, copy_clauses)
                 process_errata_and_groups = true
               end
               if remove_clauses
-                plan_remove(Pulp::Repository::RemoveRpm,
-                            target_repo, remove_clauses)
+                plan_remove(Pulp::Repository::RemoveRpm, target_repo, remove_clauses)
                 process_errata_and_groups = true
               end
               if process_errata_and_groups
-                plan_copy(Pulp::Repository::CopyErrata,
-                          source_repo, target_repo, copy_clauses)
-                plan_copy(Pulp::Repository::CopyPackageGroup,
-                          source_repo, target_repo, copy_clauses)
+                plan_copy(Pulp::Repository::CopyErrata, source_repo, target_repo, copy_clauses)
+                plan_copy(Pulp::Repository::CopyPackageGroup, source_repo, target_repo, copy_clauses)
               end
               plan_copy(Pulp::Repository::CopyYumMetadataFile, source_repo, target_repo)
               plan_copy(Pulp::Repository::CopyDistribution, source_repo, target_repo)
-              plan_action(Katello::Repository::MetadataGenerate,
-                          target_repo,
-                          filters.empty? ? source_repo : nil)
-              concurrence do
-                # TODO: we need to do this only for non_archive repos
-                plan_action(Katello::Repository::NodeMetadataGenerate,
-                            target_repo)
-                # TODO: we need to do this only for non_archive repos
-                plan_action(Pulp::Repository::RegenerateApplicability,
-                            pulp_id: target_repo.pulp_id)
-                plan_action(Katello::Repository::Reindex, target_repo)
-              end
+              plan_action(Katello::Repository::MetadataGenerate, target_repo, filters.empty? ? source_repo : nil)
+              plan_action(Katello::Repository::Reindex, target_repo)
             end
           end
         end

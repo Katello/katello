@@ -16,7 +16,7 @@ module Actions
 
       # Clones the contnet of the repository into the environment
       # effectively promotion the repository to the environment
-      class Promote < Actions::Base
+      class CloneToEnvironment < Actions::Base
 
         def plan(repository, environment)
           clone = find_or_build_environment_clone(repository, environment)
@@ -28,6 +28,12 @@ module Actions
               plan_action(Repository::Clear, clone)
             end
             plan_action(Repository::CloneContent, repository, clone, [])
+            concurrence do
+              plan_action(Katello::Repository::NodeMetadataGenerate,
+                          clone)
+              plan_action(Pulp::Repository::RegenerateApplicability,
+                            pulp_id: clone.pulp_id)
+            end
           end
         end
 
